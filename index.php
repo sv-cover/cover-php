@@ -25,7 +25,7 @@
 			//sponsor banners			
 			$sponsors = new Rotator('images/sponsors/');
 			$banner = $sponsors -> get(1);
-			echo '<div class="bannerRotator"><a href="'. $banner[0]['url'] .'"><img src="images/sponsors/'. $banner[0]['filename'] .'" /></a></div>';
+			echo '<div class="bannerRotator"><a href="'. $banner[0]['url'] .'"><img src="images/sponsors/'. $banner[0]['filename'] .'" class="frontpage_banner"/></a></div>';
 			
 			//mededelingen
 			$news = new ControllerNews();
