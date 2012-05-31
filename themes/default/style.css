@@ -114,7 +114,9 @@ ul.expander{
 }
 .aff img
 {
-  border: 1px solid #F5F5F5;
+  border: 1px transparent #F5F5F5;
+  border-radius: 3px;
+  box-shadow: 0px 2px 3px #333;
 }
 .agenda {margin-bottom:8px; margin-left:0px; border-spacing:5px 15px;}
 .agenda li {
@@ -166,6 +168,24 @@ padding: 15px 2%;
 margin-bottom: 0px;
 -moz-border-radius: 0 0 5px 5px;
 border-radius: 0 0 5px 5px;
+}
+
+.bannerRotator
+{
+	width: 100%;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+.bannerRotator a
+{
+	display: block;
+	text-align: center;
+}
+.bannerRotator .frontpage_banner
+{
+	border: 1px transparent #7D7D7D;
+	border-radius: 3px;
+	box-shadow: 0px 2px 5px #333;
 }
 
 .bestuur {background-color:#b80a0a !important; color: #b80a0a !important;}
