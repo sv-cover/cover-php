@@ -1,0 +1,11 @@
+<h1><?= _('Afstudeerplaats bewerken') ?></h1>
+
+<? if (isset($errors) && count($errors) != 0) { ?>
+	<div class="error_message"><?= _('Niet alle velden zijn goed ingevuld') ?></div>
+<? } ?>
+
+<form action="afstudeerplaatsen.php" method="post">
+	<?= input_hidden('submplaats_edit', 'yes') ?>
+	<?= input_hidden('id', $iter->get_id()) ?>
+	<? $this->render_partial('plaats_form', array('data' => $iter->data, 'errors' => $errors)); ?>
+</form>

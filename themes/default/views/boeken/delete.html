@@ -1,0 +1,32 @@
+<h2> <?= _('Boeken verwijderen') ?></h2>
+<div class="error_message"> <?= _('Onderstaande boeken hebben nog steeds bestellingen staan. Als je deze boeken verwijderd, verwijder je automatisch ook de bestellingen van deze boeken. Weet je zeker dat je deze boeken wilt verwijderen?') ?></div>
+<ul>
+
+<?
+foreach ($iter as $item) {
+	if (($num = $model->num_bestellingen($item)) > 1)
+		$aantal = sprintf(_('%d bestellingen'), $num);
+	else
+		$aantal = _('1 bestelling');
+?>
+	
+	<li> <?= $item->get('vak') ?>, <span class="bold"> <?= $item->get('titel') ?></span> (<span class="italic"><?= $item->get('auteur') ?></span>), <?= $aantal ?></li>
+<? } ?>
+
+</ul>
+
+<form action="boeken.php" method="post">
+<?= input_hidden('submboekendel', 'yes'); ?>
+
+<? foreach ($iter as $item) {
+	input_hidden('id_' . $item->get_id(), 'yes');
+} ?>
+
+<div class="text_right"> <?= input_button(_('Annuleren'), 'javascript:annuleren();') ?>  <?= input_submit('subm', _('Boeken verwijderen')) ?></div>
+</form>
+
+<script type="text/javascript">
+	function annuleren() {
+		document.location = " <?= get_request() ?>";
+	}
+</script>

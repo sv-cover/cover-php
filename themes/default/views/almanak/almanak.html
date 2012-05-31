@@ -1,0 +1,86 @@
+<h1> <?= _('Almanak') ?></h1>
+	<?
+	/* Print alphabet search entry thingies */
+	$first = '';
+	$last = '';
+	
+	for ($i = 0; $i < 26; $i++) {
+		$c = chr(65 + $i);
+		$first .= '<td><a href="almanak.php?first=' . $c .'">' . $c . "</a></td>\n";
+		$last .= '<td><a href="almanak.php?last='   . $c .'">' . $c  . "</a></td>\n";
+	}
+	?>
+	<div class="messageBox">	
+	<form name="almanak" action="almanak.php" method="get">
+		<table class="almanak_navigation">
+			<tr>
+				<td class="title"> <?= _('Voornaam') ?>:</td>
+				<td class="alphabet">
+					<table class="almanak_alphabet">
+						<tr> <?= $first ?></tr>
+					</table>
+				</td>
+				<td> <?= input_text('search_first', null) ?></td></tr>
+			<tr>
+				<td class="title"> <?= _('Achternaam') ?>:</td>
+				<td class="alphabet">
+					<table class="almanak_alphabet">
+						<tr> <?= $last ?></tr>
+					</table>
+				</td>
+				<td> <?= input_text('search_last', null) ?></td>
+			</tr>
+			<tr>
+				<td class="title">Beginjaar:</td><td class="alphabet">
+				<? foreach ($model->get_distinct_years() as $jaar) { ?>
+					<a href="?search_year=<?= $jaar ?>"> <?= $jaar ?></a> 
+				<?}	// join($model->get_distinct_years()," ") .	?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" class="submit"> <?= input_submit('', 'Zoeken') ?></td>
+			</tr>
+		</table>
+	</form>
+	</div>
+	<? if ($iter === null) { ?>
+		<p> <?= _('Maak hierboven een selectie om de almanak te bekijken.') ?></p>
+		<? if (member_in_commissie(COMMISSIE_ALMANAKCIE)) { ?>
+			<a href="?csv"><?= _('Download CSV-bestand met almanakgegevens') ?></a>
+		<? } ?>
+	<? return; } ?>
+	
+	<? if (count($iter) == 0) {?>
+		<h3> <?= sprintf(_('Er zijn %s leden gevonden die voldoen aan de zoekterm(en).'), '<i><u>' . _('geen') . '</u></i>'); ?></h3>		
+	<? }elseif (count($iter) == 1) {?>
+		<h3> <?= sprintf(_('Er is %s lid gevonden die voldoet aan de zoekterm(en).'), '<i><u>1</u></i>') ?></h3>
+	<? }else {?>
+		<h3> <?= sprintf(_('Er zijn %s leden gevonden die voldoen aan de zoekterm(en).'), '<i><u>' . count($iter) . '</u></i>') ?> </h3>
+	<? } ?>
+	<div class="messageBox">
+	<table class="almanak">
+		<? $items_per_row = 4;
+		$rows = intval(ceil(count($iter) / floatval($items_per_row)));
+		
+		for ($i = 0; $i < count($iter); $i += $items_per_row) {
+			$photos = '';
+			$names = '';
+			
+			for ($n = $i; $n < $i + $items_per_row; $n++) {
+				if ($n < count($iter)) {
+					$info = $this->almanak_info($model, $iter[$n]);
+		
+					$photos .= '<td>' . $info[0] . "</td>\n";
+					$names .= '<td>' . $info[1] . "</td>\n";
+				} else {
+					$photos .= "<td></td>\n";
+					$names .= "<td></td>\n";
+				}
+			}
+			
+			echo '<tr class="photo">' . $photos . "</tr>\n";
+			echo '<tr class="name">' . $names . "</tr>\n";
+		}
+		 ?>
+	</table>
+	</div>

@@ -1,0 +1,34 @@
+<div id="nieuwe_commissie" class="beheer">
+	<form name="fnieuwecommissie" action="actieveleden.php" method="post">
+		<table>
+
+			<?= input_hidden('submactieveledennieuwecommissie', 'yes') ?>
+			<?= table_row(label(_('Naam'), 'naam', $errors, true), input_text('naam', null)) ?>
+			<?= table_row(label(_('Login'), 'login', $errors), input_text('login', null)) ?>
+			<?= table_row(label(_('Website'), 'website', $errors), input_text('website', null)) ?>
+
+			<tr>
+				<td colspan="2" class="submit"><?= input_submit('subm', _('Commissie aanmaken')) ?></td>
+			</tr>
+
+		</table>
+	</form>
+</div>
+
+<script type="text/javascript">
+	function nieuwe_commissie() {
+		div = document.getElementById("nieuwe_commissie");
+	
+		if (div.style.display == "none" || div.style.display == "") {
+			div.style.display = "block";
+			document.fnieuwecommissie.naam.focus();
+		} else {
+			div.style.display = "none";
+		}
+	}
+	
+
+	<? if (isset($errors)) {?>
+		nieuwe_commissie();
+	<? } ?>
+</script>

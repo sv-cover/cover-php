@@ -1,0 +1,78 @@
+	<div class="controls"><a href="javascript:nieuw_fotoboek();"> <?= image('new.png', _('Nieuw'), _('Nieuw fotoboek aanmaken'), 'class="button"') ?></a> <a href="javascript:nieuw_fotoboek();"> <?= _('Nieuw fotoboek') ?></a> <a href="javascript:nieuwe_fotos();"> <?= image('add.png', _('Toevoegen'), _('Foto\'s toevoegen'), 'class="button"') ?></a> <a href="javascript:nieuwe_fotos();"> <?= _('Foto\'s toevoegen') ?></a></div>
+	<div id="fotoboek_beheer" class="beheer">
+	<form name="fbeheer" action="fotoboek.php?book=<?= $iter ? $iter->get('id') : "" ?>" method="post">
+
+	<? $this->render_partial('fotoboek_edit', compact('model', 'parent', 'errors')); ?>
+
+	</form>
+	</div>
+	<div id="fotoboek_fotos" class="beheer">
+	<form name="ffotos" action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : "" )?>" method="post">
+	<table class="default_noborder">
+	<?= input_hidden('submfotoboekfotos', 'yes') ?>
+	<?= table_row(label(_('Fotoboek'), '', null, true) . ':', $iter ? $iter->get('titel') : 'Fotoboeken') ?>
+	<?= table_row(label(_('Directory'), 'directory', $errors, true) . ':', input_text('directory', null) . ' ' . input_button(_('Urls ophalen'), 'javascript:fetch_urls()')) ?>
+	<?= table_row(label(_('Foto urls'), 'urls', $errors, true) . ':', textarea_field('urls', null, $errors)) ?>
+	<?= table_row(label(_('Thumbnail urls'), 'thumbnail_urls', $errors, true) . ':', textarea_field('thumbnail_urls', null, $errors)) ?>
+	<tr><td colspan="2" class="submit"> <?= input_submit('subm', _('Foto\'s toevoegen')) ?></td></tr>
+	</table>
+	</form>
+	</div>
+	<script type="text/javascript">
+		var fetch_urls_request = null;
+
+		function nieuw_fotoboek() {
+			div = document.getElementById("fotoboek_beheer");
+		
+			if (div.style.display == "none" || div.style.display == "") {
+				div.style.display = "block"
+			} else {
+				div.style.display = "none";
+			}
+		}
+
+		function nieuwe_fotos() {
+			div = document.getElementById("fotoboek_fotos");
+		
+			if (div.style.display == "none" || div.style.display == "") {
+				div.style.display = "block";
+			} else {
+				div.style.display = "none";
+			}
+		}
+	
+		function on_fetch_urls_done() {
+			var urls = this.get_response();
+		
+			parts = urls.split("\r");
+		
+			if (parts[0] == "0") {
+				alert(parts[1]);
+			} else {
+				document.ffotos.urls.value = parts[1];
+				document.ffotos.thumbnail_urls.value = parts[2];
+			}
+		
+			fetch_urls_request = null;
+		}
+	
+		function fetch_urls() {
+			var path = document.ffotos.directory.value;
+		
+			if (fetch_urls_request == null)
+				fetch_urls_request = new Connection();
+			else
+				fetch_urls_request.abort();
+		
+			fetch_urls_request.on_task_finished = on_fetch_urls_done;
+			fetch_urls_request.get("fotoboek.php?fetch_urls=" + encodeURIComponent(path));
+		}
+			
+<? 	if (isset($errortype) && $errortype == 'nieuw') { ?>
+		nieuw_fotoboek();
+<? }	if (isset($errortype) && $errortype == 'fotos') { ?>
+		nieuwe_fotos();
+ <? } ?>
+
+	</script>
+	

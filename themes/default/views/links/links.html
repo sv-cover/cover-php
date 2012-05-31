@@ -1,0 +1,13 @@
+<h1><?= _('Links') ?></h1>
+<div class="messageBox">
+<?
+if (member_in_commissie(COMMISSIE_BESTUUR))
+	$this->render_partial('beheer', compact('model', 'iter', 'errors', 'expand'));
+ 
+$categories = $model->get_categories();
+
+foreach ($categories as $category) { ?>
+	<h2><?= $category->get('titel') ?></h2>
+	<? $this->render_partial('category', array('model' => $model, 'category' => $category)) ?>
+<? } ?>
+</div>

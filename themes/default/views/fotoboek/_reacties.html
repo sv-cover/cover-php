@@ -1,0 +1,51 @@
+<div class="bar_sep">
+
+<?
+$logged_in = logged_in();
+
+if ($logged_in) { ?>
+	<div class="buttons"><a href="javascript:nieuwe_reactie()"><?= image('add.png', _('Toevoegen'), _('Nieuwe reactie toevoegen')) ?></a> <a href="javascript:nieuwe_reactie()"><?= _('Nieuwe reactie') ?></a></div>
+<? } ?>
+
+<?= _('Reacties') ?></div>
+
+<? if ($logged_in) { ?>
+	<div id="fotoboek_reactie" class="beheer">
+	<form name="freactie" action="fotoboek.php?photo=<?= $iter->get('id') ?>" method="post">
+	<table>
+	
+	<?= input_hidden('submfotoreactie', 'yes') ?>
+	<?= table_row(member_full_name()) ?>
+	<?= table_row(textarea_field('reactie', null, $errors)) ?>
+	
+	<tr><td class="submit"><?= input_submit('subm', _('Reactie plaatsen')) ?></td></tr>
+	</table></form>
+	</div>
+	<script type="text/javascript">
+		function nieuwe_reactie() {
+			div = document.getElementById("fotoboek_reactie");
+		
+			if (div.style.display == "none" || div.style.display == "") {
+				div.style.display = "block";
+				document.freactie.reactie.focus();
+			} else {
+				div.style.display = "none";
+			}
+		}
+			
+	<? if (isset($errors) && in_array('reactie', $errors)) { ?>
+		nieuwe_reactie();
+	<? }?>
+	
+	</script>
+<? }
+
+$reacties = $model->get_reacties($iter);
+
+if (!$reacties || count($reacties) == 0) { ?>
+	<p><?= _('Er zijn nog geen reacties') ?></p>
+	<? return;
+}
+
+foreach ($reacties as $reactie)
+	$this->render_partial('reactie', compact('reactie'));

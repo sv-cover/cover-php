@@ -1,0 +1,187 @@
+@charset "iso-8859-1";
+
+body {
+	font-family: sans serif, sans, arial, verdana;
+}
+
+div.messages {
+	padding: 0.5em;
+}
+
+table.messages {
+	background: #eeeeff;
+	border: solid 1px #aaaaff;
+	padding: 0.5em;
+	width: 100%;
+}
+
+table.navigation {
+	background: #eeeeff;
+	border: solid 1px #aaaaff;
+	padding: 0.3em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	width: 100%;
+}
+
+td.header {
+	background: #e5e5ff;
+	border: solid 1px #aaaaff;
+	padding: 0.3em;
+	font-weight: bold;
+}
+
+span.comment {
+	color: #006600;
+}
+
+a:link {
+	color: #2222ff;
+}
+
+a:hover {
+	color: #aaaaff;
+}
+
+a:visited {
+	color: #000066;
+}
+
+p.code {
+	font-weight: bold;
+	margin: 0.5em;
+}
+
+p.example {
+	margin: 0;
+}
+
+div.code {
+	background: #eeeeff;
+	border: solid 1px #aaaaff;
+	font-family: courier new, courier, monospace;
+	padding: 0.5em;
+	margin: 0.5em;
+	margin-top: 0.1em;
+	font-size: 12px;
+}
+
+div.error {
+	background: #eeeeff;
+	border: solid 4px #ffaaaa;
+	margin: 30px;
+	padding: 10px;
+}
+
+table.arguments {
+	margin-top: 1.0em;
+	margin-bottom: 1.0em;
+	margin-left: 2.0em;
+}
+
+table.arguments td {
+	padding-left: 5px;
+}
+
+td.nav_title {
+	font-weight: bold;
+	text-align: center;
+}
+
+img {
+	border: 0;
+}
+
+span.item {
+	font-style: italic;
+	color: #222266;
+}
+
+div.footer {
+	font-size: 10px;
+	text-align: right;
+}
+
+div.footer img {
+	vertical-align: top;
+}
+
+div.paragraph {
+	margin-top: 15px;
+}
+
+td.right {
+	text-align: right;
+}
+
+td.left {
+	text-align: left;
+}
+
+table.navigation td.right, td.left {
+	width: 15%;
+}
+
+td.param_name {
+
+}
+
+span.italic {
+	font-style: italic;
+}
+
+span.bold {
+	font-weight: bold;
+}
+
+span.underline {
+	text-decoration: underline;
+}
+
+span.highlight {
+	font-style: italic;
+	color: #4444ff;
+}
+
+table.default {
+	border-collapse: collapse;
+}
+
+table.default td {
+	border: 1px solid #aaaaff;
+	padding: 3px;
+	vertical-align: top;
+}
+
+table.default tr.header td {
+	background: #e5e5ff;
+	padding: 0.3em;
+	font-weight: bold;
+}
+
+ul.file_listing {
+	list-style-type: none;
+}
+
+ul.file_listing img {
+	margin-right: 5px;
+}
+
+ul.file_listing li {
+	padding-bottom: 3px;
+}
+
+span.variable {
+	border-bottom: 1px dashed #3c7dc5;
+	font-family: monospace, courier new;
+	color: #666666;
+	cursor: help;
+}
+
+div.indent {
+	margin-left: 30px;
+}
+
+li.group {
+	margin-top: 15px;
+}

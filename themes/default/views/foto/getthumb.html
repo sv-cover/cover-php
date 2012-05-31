@@ -1,0 +1,13 @@
+<?
+$photo = $model->get_photo($iter);
+header("Content-Type: image/png");
+
+// Code from getthumb.php
+$large = imagecreatefromstring(pg_unescape_bytea($photo));
+// Thumbnail width
+$th = 100 * imagesy($large) / imagesx($large);
+$thumb = imagecreatetruecolor(100, $th);
+//$thumb = imagecreate(100, $th);
+imagecopyresampled($thumb, $large, 0, 0, 0, 0, 100, $th, imagesx($large), imagesy($large));
+imagepng($thumb);
+?>

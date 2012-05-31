@@ -1,0 +1,8 @@
+$member_naam heeft namens het bestuur het agendapunt $kop geweigerd om de volgende reden:
+
+$reden
+
+Met vriendelijke groeten (we're just the messenger),
+
+
+De WebCie

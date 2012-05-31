@@ -1,0 +1,130 @@
+<h1> <?= _('Gastenboek')  ?> </h1>
+<div class="messageBox">
+<div class="bar">
+	<div class="floatRight">
+		<?= $this->navigation($model) ?>
+	</div>
+	<a class="buttonNew floatLeft" href="javascript:nieuw_bericht()"> <?= _('Nieuw bericht') ?></a>
+	<a class="buttonSearch floatLeft" href="javascript:bericht_zoeken()"><?= _('Zoeken')  ?></a>
+</div>
+	
+	<div id="gastenboek_zoeken" class="gastenboek_zoeken">
+	<form name="gastenboek_zoeken" action="gastenboek.php" method="get">
+	<?= input_text('search', array('search' => $_GET['search'])) . ' ' . input_submit('subm', _('Zoeken')) ?>
+	</form>
+	</div>
+	
+	<div id="gastenboek_bericht" class="beheer">
+		<form name="gastenboek" action="gastenboek.php" method="post">
+			<table>
+	
+	<?
+	if (($member_data = logged_in())) {
+		$member_model = get_model("DataModelMember");
+		$member_iter = $member_model->get_iter($member_data['id']);
+		$email_public = $member_model->privacy_public_for_field($member_iter,'email');
+		$data['naam'] = $member_data['voornaam'];
+		$data['email'] = $email_public ? $member_data['email'] : "";
+	}
+	
+	echo input_hidden('submgastenboek', 'yes');
+	echo input_hidden('hash', '');
+	echo table_row(label(_('Naam') . ':', 'naam', $errors, true), input_text('naam', $data));
+	echo table_row(label(_('E-Mail') . ':', 'email', $errors), input_text('email', $data));
+	echo table_row(label(_('Homepage') . ':', 'url', $errors), input_text('url', null));
+	?>
+	
+	<tr><td colspan="2"><?= textarea_field('message', null, $errors) ?></td></tr>
+	<tr><td colspan="2" class="submit"><?= input_submit('subm', _('Bericht plaatsen'), 'button', 'onClick', 'if (sending) return false; sending = true;') ?></td></tr>
+	
+	</table></form>
+	<script type="text/javascript">
+		var sending = false;
+		document.gastenboek.hash.value = "<?= $model->anti_spam_hash() ?>";
+	</script>
+	</div>
+
+	<div>
+		<div class="right"><?= _('Spam') . ': ' . $model->get_spam_count() ?></div>
+		<?= _('Berichten') . ': ' . ($model->current_page * $model->posts_per_page + 1) . ' ' . _('tot en met') . ' ' . (($model->current_page + 1) * $model->posts_per_page) . ' ' . _('van') . ' ' . ($model->get_total_posts()) ?>
+	</div><br>
+	
+<?
+	$days = get_days();
+	$months = get_months();
+	
+	foreach ($iter as $ite) {
+		if ($ite->get('lustrum') == 1)
+		{}
+			// TODO: add a nice layout trick
+		else 
+			echo '<div class="replyBox"><span class="replyDetails">';
+		
+		echo '<div class="title">';
+		
+		echo '<div class="right">' . sprintf('%s %d %s, %02d:%02d', $days[$ite->get('dagnaam')], $ite->get('datum'), $months[$ite->get('maand')], $ite->get('uur'), $ite->get('minuut')) . '</div>';
+		
+		if ($ite->get('url')) {
+			$homepage = $ite->get('url');
+			
+			if (strpos($homepage, 'http://') !== 0)
+				$homepage = 'http://' . $homepage;
+			
+			echo '<a href="' . $homepage . '">' . image('home.png', _('homepage'), _('Ga naar homepage')) . '</a> ';
+		}
+		
+		if ($ite->get('email'))
+			$naam = '<a href="mailto:' . $ite->get('email') . (strpos($ite->get('email'), '@') === false ? '@ai.rug.nl' : '') . '">' . $ite->get('naam') . '</a>';
+		else
+			$naam = $ite->get('naam');
+		
+		echo $naam . '</div></span>
+		<div class="bericht">';
+			if ($model->condition)
+				$bericht = preg_replace('/(' . preg_quote($model->condition) . ')/i', '[hl]\1[/hl]', $ite->get('message'));
+			else
+				$bericht = $ite->get('message');
+
+			echo markup_parse($bericht) .
+			
+		'</div></div>';
+	}
+	?>
+	
+	<div class="_right"><?= $this->navigation($model) ?></div>
+</div>
+	<script type="text/javascript">
+		function nieuw_bericht() {
+			div = document.getElementById("gastenboek_bericht");
+			
+			if (div.style.display == "none" || div.style.display == "") {
+				div.style.display = "block";
+				
+				if (document.gastenboek.naam.value != "" && document.gastenboek.message.value == "")
+					document.gastenboek.message.focus();
+				else
+					document.gastenboek.naam.focus();
+			} else {
+				div.style.display = "none";
+			}
+		}
+		
+		function bericht_zoeken() {
+			div = document.getElementById("gastenboek_zoeken");
+			
+			if (div.style.display == "none" || div.style.display == "") {
+				div.style.display = "block";
+				document.gastenboek_zoeken.search.focus();
+			} else {
+				div.style.display = "none";
+			}
+		}
+	
+	<?	
+		if (isset($errors) && count($errors) > 0)
+			echo "nieuw_bericht();\n";
+		
+		if ($model->condition)
+			echo "bericht_zoeken();\n";			
+	?>
+</script>

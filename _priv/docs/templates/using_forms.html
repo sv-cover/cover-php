@@ -1,0 +1,62 @@
+<p>Forms are an important element of a website (especially one with all sorts
+of dynamic content). A set of functions has been written to ease the 
+creation of form elements which provide default value selection, 
+data integrity and error handling.</p>
+
+<h2>Creating form elements</h2>
+<p>A set of functions has been defined to create form elements for you which
+make it easy to have fill in default values and to provide some basic control
+over the behavior of the element. These functions are:</p>
+
+<table class="default">
+	<tr class="header"><td>Function</td><td>Description</td></tr>
+	<tr><td>#Form::input_button</td><td>Create a button element</td></tr>
+	<tr><td>#Form::input_checkbox</td><td>Create a checkbox element</td></tr>
+	<tr><td>#Form::input_hidden</td><td>Create a hidden element</td></tr>
+	<tr><td>#Form::input_password</td><td>Create a password element</td></tr>
+	<tr><td>#Form::input_radio</td><td>Create a radio element</td></tr>
+	<tr><td>#Form::input_submit</td><td>Creata a submit button element</td></tr>
+	<tr><td>#Form::input_text</td><td>Create a text element</td></tr>
+	<tr><td>#Form::select_field</td><td>Create a combobox element</td></tr>
+	<tr><td>#Form::textarea_field</td><td>Create a textarea element</td></tr>
+</table>
+
+<p>All these functions have one thing in common. The support any number of
+additional arguments besides their usual arguments. These arguments are
+interpreted as key/value pairs. These key/value pairs are then added as
+key="value" attributes to the element, with exception of a few special
+additional arguments specified below:</p>
+
+<table class="default">
+	<tr class="header"><td>Key</td><td>Value</td><td>Description</td><td>Applies to</td></tr>
+	<tr><td>field</td><td>any string</td><td>Every element has a name but 
+	this name does not always correspond to the key used in the elements 
+	default data. This parameter sets the key to be used in the data</td><td>All elements</td></tr>
+	<tr><td>nopost</td><td>true or false</td><td>This specifies whether
+	or not to get the default value for the element from the POST data.
+	By default nopost is false and thus the POST data is used as the 
+	default value when available. Set it to true if you don't want this
+	behavior</td><td>All elements</td></tr>
+	<tr><td>formatter</td><td>A callback function name</td><td>This 
+	parameter specifies a formatter function to be used to format
+	the default data to be displayed in the element.</td><td>All elements
+	except #Form::select_field</td></tr>
+	<tr><td>default</td><td>the value of the default item to select</td>
+	<td>The item in a select field which is initially selected</td>
+	<td>#Form::select_field</td></tr>
+</table>
+
+<h2>Form data validation</h2>
+<p>The #Form::check_values can be used to validate (and format) the data
+submitted by the form. It will return the valid data (optionally formatted)
+as an associative array. It will also provide an array with all the names
+of the invalid data.
+
+<h2>Handling errors</h2>
+<p>When errors occurred during the data validation you usually want to display
+these errors. In most cases all form elements have labels which tell the 
+user what data that element represents. The function #Form::label can be
+used to display such a label. When the errors from the data validation process
+are passed on to this function it will mark the label if an error occurred
+in the data represented by the label.
+

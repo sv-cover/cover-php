@@ -1,0 +1,13 @@
+<?
+if(logged_in() != false) { // laat alleen de reacties zien als er is ingelogd
+	$reacties = $model->get_last_reacties(15);
+?>
+<div class="bar_sep"><?= _('Laatste reacties') ?></div>
+
+<?
+	foreach ($reacties as $reactie) {
+		$subtitle = true;
+		$this->render_partial('reactie', compact('reactie', 'subtitle'));
+	}
+}
+?>

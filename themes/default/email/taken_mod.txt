@@ -1,0 +1,15 @@
+$member_naam heeft de volgende taak gewijzigd:
+
+Taak:         $taak
+Prioriteit:   $prioriteit
+Afgehandeld:  $afgehandeld
+Beschrijving: 
+
+$beschrijving
+
+ROOT_DIR_URItaken.php?taak=$id
+
+Met vriendelijke groeten,
+
+
+De WebCie

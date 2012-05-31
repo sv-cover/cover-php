@@ -1,0 +1,104 @@
+<h1><?= ($iter != null ? _('Wijzig agendapunt') : _('Agendapunt toevoegen')) ?></h1>
+<div class="messageBox">
+<? if (isset($errors)) { ?>
+	<p><span class="error"><?= _('Niet alle velden zijn goed ingevuld') ?></span></p>
+<? } ?>
+<form name="agenda_form" action="<?= get_request() ?>" method="post">
+<table class="agenda_edit">
+<col width="100px"><col width="20px"><col>
+<?= input_hidden('submagenda', 'yes'); ?>
+
+<? 
+$data = ($iter != null ? $iter->data : null);
+$member_data = logged_in();
+$commissies = array();
+$model = get_model('DataModelCommissie');
+
+if ($data) {
+	$data['use_tot'] = false;
+
+	foreach (array('datum', 'maand', 'jaar', 'uur', 'minuut') as $check) {
+		if ($data['van' . $check] != $data['tot' . $check]) {
+			$data['use_tot'] = true;
+			break;
+		}
+	}
+	
+	$data['use_locatie'] = $data['locatie'] ? true : false;
+}
+
+if ($data && !member_in_commissie($data['commissie'], false))
+	$commissies[$data['commissie']] = $model->get_naam($data['commissie']);
+
+foreach ($member_data['commissies'] as $commissie)
+	$commissies[$commissie] = $model->get_naam($commissie);
+?>
+
+<?= table_row(label(_('Kop'), 'kop', $errors, true) . ':', '', 
+		input_text('kop', $data, 'maxlength', '100')) ?>
+<?= table_row(label(_('Commissie'), 'commissie', $errors, true) . ':', '',
+		select_field('commissie', $commissies, $data)) ?>
+<?= table_row(label(_('Begintijd'), 'van', $errors, true) . ':', '', 
+		input_text('vandatum', $data, 'class', 'day') . ' - ' .
+		input_text('vanmaand', $data, 'class', 'month') . ' - ' .
+		input_text('vanjaar', $data, 'class', 'year') . ' ' .
+		input_text('vanuur', $data, 'class', 'time') . ' ' .
+		input_text('vanminuut', $data, 'class', 'time', 'value', '00')) ?>
+
+<?= table_row(label(_('Eindtijd'), 'tot', $errors, false) . ':',
+		input_checkbox('use_tot', $data, 'yes', 'id', 'agenda_use_tot', 'onClick', 'set_visibility(this, \'agenda_tot\')'),
+		'<div id="agenda_tot">' . 
+		input_text('totdatum', $data, 'class', 'day') . ' - ' .
+		input_text('totmaand', $data, 'class', 'month') . ' - ' .
+		input_text('totjaar', $data, 'class', 'year') . ' ' .
+		input_text('totuur', $data, 'class', 'time') . ' ' .
+		input_text('totminuut', $data, 'class', 'time') . 
+		'</div>') ?>
+
+<?= table_row(label(_('Locatie'), 'locatie', $errors, false) . ':',
+		input_checkbox('use_locatie', $data, 'yes', 'id', 'agenda_use_locatie', 'onClick', 'set_visibility(this, \'agenda_locatie\')'),
+		'<div id="agenda_locatie">' .
+		input_text('locatie', $data, 'maxlength', '100') .
+		'</div>') ?>
+
+<tr><td colspan="3"><?= textarea_field('beschrijving', $data, $errors, 'formatter', 'markup_format_text') ?></td></tr>
+<?= table_row(label(_('Prive'), 'private', $errors, false) . ':',
+		input_checkbox('private', $data),
+		'') ?>
+<tr><td class="submit" colspan="3"><?= input_submit('subm', ($iter != null ? _('Wijzigen') : _('Toevoegen'))) ?></td></tr>
+</table></form>
+
+<script type="text/javascript">
+	check_checkbox("agenda_use_tot", "agenda_tot");
+	check_checkbox("agenda_use_locatie", "agenda_locatie");
+	
+	function check_checkbox(box, div) {
+		box = document.getElementById(box);
+		div = document.getElementById(div);
+		
+		if (box.getAttribute("checked") == "checked")
+			div.style.display = "block";
+		else
+			div.style.display = "none";
+		
+	}
+
+	function set_visibility(elem, div) {
+		div = document.getElementById(div);
+
+		if (elem.checked)
+			div.style.display = "block";
+		else
+			div.style.display = "none";
+	}
+
+<? if ($iter == null) { ?>
+	var now = new Date();
+	af = document.agenda_form;
+	af.vandatum.value = now.getDate();
+	af.vanmaand.value = now.getMonth() + 1;
+	af.vanjaar.value = (now.getYear() < 1900 ? now.getYear() + 1900 : now.getYear());
+	af.vanuur.value = now.getHours() + 1;
+<? } ?>
+</script>
+</div>

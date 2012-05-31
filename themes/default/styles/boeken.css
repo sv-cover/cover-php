@@ -1,0 +1,50 @@
+div#boek_toevoegen {
+	display: none;
+	margin-right: -10px;
+	margin-left: -10px;
+	margin-top: 0px;
+	padding: 10px;
+	background-color: #cfd8e8;
+	border-top: 1px solid #8486a1;
+	border-bottom: 1px solid #8486a1;
+	margin-bottom: 15px;
+}
+
+div#boek_toevoegen table {
+	margin: 0 auto;
+}
+
+table.boeken {
+	border-collapse: collapse;
+	width: 99%;	
+}
+
+table.boeken input.text {
+	width: 120px;
+}
+
+table.boeken td.check {
+	width: 20px;
+	text-align: center;
+}
+
+table.boeken td {
+	border: 1px solid #8486a1;
+	padding: 3px;
+}
+
+table.boeken tr.r1 td {
+	background-color: #efefef;
+}
+
+table.boeken tr.submit:hover td {
+	background-color: #ffffff;
+}
+
+table.boeken tr.header:hover td {
+	background-color:  #fff392;
+}
+
+table.boeken tr:hover td {
+	background-color: #e6e7ff;
+}

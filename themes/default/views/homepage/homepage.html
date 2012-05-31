@@ -1,0 +1,13 @@
+<?
+	$languages = i18n_get_languages();
+	$language = i18n_get_language();
+		/* Show language selection */
+?>
+
+<!--
+	<div class="alignRight"><form name="flanguage" action="index.php" method="post">
+	<?= input_hidden('submindexlanguage', 'yes') . _('Taal') . ': ' ?>
+	<?= select_field('language', $languages, array('language' => $language), 'onChange', 'javascript:document.flanguage.submit();') . ' ' ?>
+	<?= input_image(get_theme_data('images/next.png')) ?>
+</form></div>
+-->

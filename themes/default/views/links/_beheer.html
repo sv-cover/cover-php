@@ -1,0 +1,175 @@
+<div class="bar"><a href="javascript:beheer();"><?= image('add.png', _('Link toevoegen'), _('Voeg een link toe'), 'class="button"') ?></a> <a href="javascript:beheer();"><?= _('Link toevoegen') ?></a></div>
+
+<?
+$cats = $model->get_categories();
+$categories = array();
+
+foreach ($cats as $cat)
+	$categories[$cat->get_id()] = $cat->get('titel'); 
+?>
+
+<div id="beheer" class="beheer">
+
+<? if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
+<h2><?= _('Categorieën') ?></h2>
+<form name="categories" method="post" action="links.php" onSubmit="javascript:fill_categorie_lijst();">
+<?= input_hidden('categorie_lijst', '')  ?>
+<?= input_hidden('submlinks_categories', 'yes') ?>
+<table>
+	<tr><td>
+	<?= select_field('categories', $categories, null, 'size', '6', 'class', 'category_list', 'onClick', 'javascript:select_current()') ?>
+	</td>
+	<td>
+	<a href="javascript:move_up();"><?= image('up.png', _('Omhoog'), _('Verplaats geselecteerde categorie naar boven')) ?></a><br><br>
+	<a href="javascript:move_down();"><?= image('down.png', _('Omlaag'), _('Verplaats geselecteerde categorie naar beneden'))  ?></a>
+	</td>
+	</tr>
+	<tr><td colspan="2">
+	<?= input_text('ctitel', null, 'id', 'category_titel') ?> <?= input_button(_('Toevoegen'), 'add_category()') ?> <?=  input_button(_('Wijzigen'), 'modify_category()') ?> <?= input_button(_('Verwijderen'), 'javascript:delete_category()') ?></td></tr>
+	<tr class="submit"><td class="submit" colspan="2"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
+</table>
+</form>
+<? } ?>
+
+<h2><?= _('Nieuw document') ?></h2>
+
+<? if (count($categories) == 0) { ?>
+<p><?= _('Er zijn nog geen categorieën om links aan toe te voegen') ?></p>
+<? } else { ?>
+<form method="post" action="links.php"><?= input_hidden('submlinks_add', 'yes') ?>
+<table>
+	<tr>
+		<td><?= label(_('Categorie'), 'categorie', $errors, true) ?>:</td>
+		<td><?= select_field('categorie', $categories, null) ?></td>
+	</tr>
+	<tr>
+		<td><?= label(_('Titel'), 'titel', $errors, true) ?>:</td>
+		<td><?= input_text('titel', null) ?></td>
+	</tr>
+	<tr>
+		<td><?= label(_('Url'), 'url', $errors, true) ?>:</td>
+		<td><?= input_text('url', null) ?></td>
+	</tr>
+	<tr>
+		<td colspan="2"><?= textarea_field('beschrijving', null, $errors) ?></td>
+	</tr>
+	<tr class="submit">
+		<td class="submit" colspan="2"><?= input_submit('subm', _('Link toevoegen')) ?></td>
+	</tr>
+</table>
+</form>
+<? } ?>
+</div>
+
+<script type="text/javascript">
+function beheer() {
+	div = document.getElementById("beheer");
+	
+	if (div.style.display == "none" || div.style.display == "") {
+		div.style.display = "block";
+	} else {
+		div.style.display = "none";
+	}
+}
+
+<? if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
+	function fill_categorie_lijst() {
+		elem = document.categories.categorie_lijst;
+		sel = document.categories.categories;
+
+		cats = new Array();
+
+		for (i = 0; i < sel.options.length; i++) {
+			if (sel.options[i].value != -1)
+				cats.push(sel.options[i].value + "=" + sel.options[i].text);
+			else
+				cats.push(sel.options[i].text);
+		}
+	
+		elem.value = cats.join(";");
+	
+		return true;
+	}
+
+	function select_current() {
+		sel = document.categories.categories;
+	
+		if (sel.selectedIndex == -1)
+			return;
+	
+		document.categories.titel.value = sel.options[sel.selectedIndex].text;
+	}
+
+	function move_category(direction) {
+		sel = document.categories.categories;
+	
+		index = sel.selectedIndex;
+		newindex = index + direction;
+
+		if (newindex < 0)
+			return;
+	
+		if (newindex >= sel.options.length)
+			return;
+	
+		/* Switch index with newindex */
+		value = sel.options[newindex].value;
+		text = sel.options[newindex].text;
+
+		sel.options[newindex].value = sel.options[index].value;
+		sel.options[newindex].text = sel.options[index].text;
+
+		sel.options[index].value = value;
+		sel.options[index].text = text;
+	
+		sel.selectedIndex = newindex;
+	}
+
+	function modify_category() {
+		var s = document.categories.ctitel.value.replace(";", "");
+
+		if (s == "")
+			return;
+
+		sel = document.categories.categories;
+	
+		if (sel.selectedIndex == -1)
+			return;
+	
+		sel.options[sel.selectedIndex].text = s;
+	}
+
+	function delete_category() {
+		sel = document.categories.categories;
+	
+		if (sel.selectedIndex == -1)
+			return;
+	
+		sel.options[sel.selectedIndex] = null;
+	}
+
+	function move_up() {
+		move_category(-1);
+	}
+
+	function move_down() {
+		move_category(1);				
+	}
+
+	function add_category() {
+		var s = document.categories.ctitel.value.replace(";", "");
+
+		if (s == "")
+			return;
+
+		sel = document.categories.categories;
+		sel.options[sel.options.length] = new Option(s, "-1");
+	
+		document.categories.ctitel.value = "";
+	}
+<? } ?>
+
+<? if (isset($expand)) {?>
+	beheer();
+<? } ?>
+</script>

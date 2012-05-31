@@ -1,0 +1,32 @@
+<?
+$jarigen = $model->get_jarigen();
+echo date('d-m');
+if (date('d-m') == '20-09'){
+	$coverage = date('Y') - 1993;
+?>
+	<a href="http://www.svcover.nl">Cover !!!</a>	[<?= $coverage ?>]<br/>
+<?
+}
+if (!$jarigen ) {
+?>
+<span class="bold"><?= _('Vandaag geen jarige leden.') ?></span>
+<? } else { ?>
+	<span class="bold">
+
+	if (count($jarigen) == 1)
+		echo _('Vandaag is er 1 lid jarig');
+	else
+		echo sprintf(_('Vandaag zijn er %d leden jarig'), count($jarigen));
+?>
+	:</span>
+<?
+}
+
+foreach ($jarigen as $jarige) {
+?>
+	hoi<br>
+	<a href="profiel.php?lid=<?= $jarige['id'] ?>"><?= $jarige['voornaam'] . ' ' . $jarige['tussenvoegsel'] . $jarige['achternaam'] ?></a>
+	[<?= $jarige['leeftijd'] ?>]<br/>
+<?
+}
+?>

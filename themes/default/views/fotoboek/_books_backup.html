@@ -1,0 +1,73 @@
+<?
+$books_per_row = 3;
+$children = $model->get_children($iter);
+
+if (!$children || count($children) == 0)
+	return;
+
+?>
+<table class="fotoboek">
+<?
+
+// Serieus...
+// Filter fotoboeken met de naam 'Chantagemap' als er niemand is ingelogd
+if(logged_in() == false) {
+	for($i = 0; $i < count($children); $i++) {
+		if(strcasecmp($children[$i]->get('titel'), "Chantagemap") == 0) {
+			unset($children[$i]);
+		}
+	}
+	// herindexeer array
+	$children = array_values($children);
+}
+
+$admin = member_in_commissie(COMMISSIE_FOTOCIE);
+
+for ($i = 0; $i < count($children); $i += $books_per_row) {
+	$images = array();
+	$titles = array();
+
+	for ($n = $i; $n < $i + $books_per_row; $n++) {
+		if ($n >= count($children)) {
+			$images[] = '';
+			$titles[] = '';
+		} else {
+			$image = $this->get_book_thumbnail($model, $children[$n]);
+			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . _('Fotoboek') . '" title="' . _('Ga naar fotoboek') . '" class="book_thumb"></a>';
+		
+			if ($admin)
+				$contents = '<div class="admin"><a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', _('Bewerken'), _('Fotoboek bewerken')) . '</a> <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', _('Verwijderen'), _('Fotoboek verwijderen')) . '</a></div>' . $contents;
+
+			$images[] = $contents;
+		
+			$title = $children[$n]->get('titel');
+			$subtitle = array();
+
+			$num = $model->get_num_children($children[$n]);
+		
+			if ($num)
+				$subtitle[] = sprintf(ngettext('%d boek', '%d boeken', $num), $num);
+
+			if ($children[$n]->get('has_photos')) {
+				$num = $children[$n]->get('num_photos');
+				$subtitle[] = sprintf(ngettext('%d foto', '%d foto\'s', $num), $num);
+			}					
+		
+			if (count($subtitle) > 0)
+				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . implode_human($subtitle) . '</span>)';
+		
+			$titles[] = $title;
+		}
+	}
+
+	?>
+	<tr class="image"><td><div class="relative"><?= implode('</div></td><td><div class="relative">', $images) ?></div></td></tr>
+	<tr class="title"><td><?= implode('</td><td>', $titles) ?></td></tr>
+<? } ?>
+</table>
+
+<script type="text/javascript">
+	function confirm_delete() {
+		return confirm("<?= str_replace('"', '\"', _('Weet je zeker dat je dit fotoboek en alle fotoboeken en foto\'s erin wilt verwijderen?')) ?>");
+	}
+</script>

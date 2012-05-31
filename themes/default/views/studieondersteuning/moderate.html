@@ -1,0 +1,97 @@
+<?  // Deze pagina is niet getest, omdat het uploaden op dit moment niet werkt. -- PdB ?>
+<h1><?= _('Studieondersteuning') ?></h1>
+
+
+<? if (count($iter) == 0) { ?>
+	<p><?= _('Er staan geen documenten in de wachtrij om goedgekeurd te worden.') ?></p>
+	<? return; ?>
+<? } ?>
+
+<p><?= _('Onderstaande documenten staan in de wachtrij om goedgekeurd te worden.') ?></p>
+<form name="so_moderate" action="<?= get_request() ?>" method="post">
+<table class="bordered" id="so_moderate">
+<?= input_hidden('submso_moderate', 'yes') ?>
+
+<? $i = 0; ?>
+
+<tr class="header">
+	<td class="text_center"><?= image('accept.png', '', _('Accepteer document')) ?></td>
+	<td class="text_center"><?= image('cancel.png', '', _('Weiger document')) ?></td>
+	<td><?= _('Vak') ?></td>
+	<td><?= _('Titel') ?></td>
+	<td><?= _('Lid') ?></td>
+	<td><?= _('Document') ?></td>
+	</tr>
+
+<? $member_model = get_model('DataModelMember');
+
+foreach ($iter as $item) {
+	if ($item->get_id() == $highlight)
+		$class = 'highlight';
+	else
+		$class = 'r' . (($i % 2) == 0 ? '0' : '1');
+
+	$member = $member_model->get_item($item->get('lid'));
+ ?>
+	<tr id="<?= $item->get_id() ?>" class="<?= $class ?>">
+
+	<td><?= input_radio('action_' . $item->get_id(), null, 'accept', 'id', 'accept_' . $item->get_id(), 'onClick', 'action_clicked(\'' . $item->get_id() . ', true)') ?></td>
+		<td><?= input_radio('action_' . $item->get_id(), null, 'cancel', 'id', 'cancel_' . $item->get_id(), 'onClick', 'action_clicked(\'' . $item->get_id() . '\', false);') ?></td>
+		<td><?= $item->get('vak') ?></td>
+		<td><?= $item->get('titel') ?></td>
+		<td><a href="profiel.php?lid=<?= $item->get('lid') ?>"><?= member_full_name($member) ?></a></td>
+		<td><a href="studieondersteuning.php?download=<?= $item->get_id() ?>"><?= $item->get('bestand') ?></a></td>
+		</tr>
+
+	<tr id="comment_<?= $item->get_id() ?>"><td colspan="2"></td><td colspan="5"><?= textarea_field('comment_' . $item->get_id(), null, null, 'rows', '4') ?></td></tr>
+
+<? 	$i++;
+} ?>
+<tr>
+	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', _('Alle documenten op accepteren zetten')) ?></a></td>
+	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', _('Alle documenten op weigeren zetten')) ?></a></td>
+	<td colspan="5" class="submit"><?= input_submit('subm', _('Toepassen')) ?></td></tr>
+
+</table></form>
+<script type="text/javascript">
+	var ids = new Array(0, <?= implode(', ', array_map(create_function('$iter', 'return $iter->get_id();'), $iters)) ?>);
+
+	function action_clicked(id, accept) {
+		div = document.getElementById("comment_" + id);
+
+		if (accept)
+			div.style.display = "none";
+		else
+			div.style.display = "";
+	}
+
+	function set_all(accept) {
+		for (i = 1; i < ids.length; i++) {
+			var id = ids[i];
+
+			if (accept)
+				radio = document.getElementById("accept_" + id);
+			else
+				radio = document.getElementById("cancel_" + id);
+
+			radio.checked = true;
+			action_clicked(id, accept);
+		}				
+	}
+
+	function accept_all() {
+		set_all(true);
+	}
+
+	function cancel_all() {
+		set_all(false);
+	}
+
+	for (i = 1; i < ids.length; i++) {
+		var id = ids[i];
+
+		/* Check radio state */
+		cancel = document.getElementById("cancel_" + id);
+		action_clicked(id, !cancel.checked);
+	}
+</script>

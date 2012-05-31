@@ -1,0 +1,33 @@
+<div class="messageBox">
+<form action="actieveleden.php?commissie=<?= $iter->get('id') ?>" method="post">
+<table class="default"><?= input_hidden('submactieveledencommissie', 'yes') ?>
+<col class="text_center"><col><col class="text_center"><col><col>
+<tr class="header">
+	<td class="text_center"><?= image('delete_small.png', _('D'), _('Verwijder actief lid')) ?></td>
+	<td><?= _('Nr') ?></td>
+	<td><?= _('Sleutel') ?></td>
+	<td><?= _('Naam') ?></td>
+	<td><?= _('Functie') ?></td>
+</tr>
+
+<? $commissie_model = get_model('DataModelCommissie');
+$leden = $commissie_model->get_leden($iter->get('id'));
+
+if ($leden && count($leden) > 0) {
+	foreach ($leden as $lid) { ?>
+		<tr>
+		<td class="text_center"><?= input_checkbox('del_' . $lid->get('actiefid'), null) ?></td>
+		<td><?= $lid->get('id') ?></td>
+		<td><?= input_checkbox('sleutel_' . $lid->get('actiefid'), $lid->data, 'yes', 'field', 'sleutel') ?></td>
+		<td><?= member_full_name($lid) ?></td>
+		<td><?= input_text('functie_' . $lid->get('actiefid'), $lid->data, 'field', 'functie') ?></td>
+		</tr>
+<? } ?>
+
+	<tr><td colspan="5" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
+<? } else { ?>
+	<tr><td colspan="5"><?= _('Deze commissie heeft nog geen leden') ?></td></tr>
+<? } ?>
+
+</table></form>
+</div>		

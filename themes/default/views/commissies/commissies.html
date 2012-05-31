@@ -1,0 +1,35 @@
+<h1> <?= _('Commissies') ?></h1>
+<div class="messageBox">
+<table class="commissies">
+
+
+<? foreach ($iter as $commissie) { ?>
+	<tr><td class="top" colspan="2"><h3><a href="show.php?id= <?= $commissie->get('page') ?>"> <?= $commissie->get('naam') ?></a></h3></td></tr>
+	
+	<? if ($commissie->get('naam') == 'KasCie')
+		$imgpath = 'images/kascietn.jpg';
+	elseif ($commissie->get('naam') == 'Raad van Advies')
+		$imgpath = 'images/rvatn.jpg';
+	else
+		$imgpath = 'images/' . $commissie->get('login') . 'tn.jpg';
+	
+	if (file_exists($imgpath)) {?>
+		<td class="top"><a href="show.php?id=<?= $commissie->get('page') ?>"><img src="<?= $imgpath ?>" alt="commissie foto"/></td>
+	<?} else {?>
+		<td></td>
+	<? }
+	
+	/* Get the first editable page */
+	$editable_model = get_model('DataModelEditable');
+	$page = $editable_model->get_iter($commissie->get('page'));
+	$content = $page->get('content');
+	
+	$desc = editable_get_summary($content, $page->get('owner'));
+	?>
+	<td class="description"> <?= $desc ?></td>
+	
+	</tr><tr><td colspan="2" class="spacer"></td></tr>
+<? } ?>
+
+</table>
+</div>

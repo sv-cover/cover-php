@@ -1,0 +1,101 @@
+<div class="bar_header"><h1><?= _('Links') ?></h1></div>
+
+<div class="messageBox">
+
+<? if (count($iter) == 0) { ?>
+	<p><?= _('Er staan geen links in de wachtrij om goedgekeurd te worden.') ?></p></div>
+<? 	return;
+} ?>
+
+
+<p><?= _('Onderstaande links staan in de wachtrij om goedgekeurd te worden.') ?></p>
+<form name="links_moderate" action="<?= get_request() ?>" method="post">
+<table class="moderate" id="table_moderate">
+<?= input_hidden('submlinks_moderate', 'yes'); ?>
+
+<? $i = 0; ?>
+
+<tr class="header">
+	<td class="text_center"><?= image('accept.png', '', _('Accepteer link')) ?></td>
+	<td class="text_center"><?= image('cancel.png', '', _('Weiger link')) ?></td>
+	<td><?= _('Categorie') ?></td>
+	<td><?= _('Link') ?></td>
+	<td><?= _('Door') ?></td>
+	</tr>
+
+<? $cats = $model->get_categories();
+$categories = array();
+
+foreach ($cats as $cat)
+	$categories[$cat->get_id()] = $cat->get('titel');
+
+foreach ($iter as $item) {
+	if ($item->get_id() == $highlight)
+		$class = 'highlight';
+	else
+		$class = 'r' . (($i % 2) == 0 ? '0' : '1'); ?>
+	
+	<tr id="<?= $item->get_id() ?>" class="<?= $class ?>">
+	
+	<td><?= input_radio('action_' . $item->get_id(), null, 'accept', 'id', 'accept_' . $item->get_id(), 'onClick', 'action_clicked(\'' . $item->get_id() . '\', true)') ?></td>
+		<td><?= input_radio('action_' . $item->get_id(), null, 'cancel', 'id', 'cancel_' . $item->get_id(), 'onClick', 'action_clicked(\'' . $item->get_id() . '\', false);') ?></td>
+		<td><?= select_field('categorie_' . $item->get('id'), $categories, $item->data, 'field', 'categorie', 'nopost', true) ?></td>
+		<td><a href="<?= normalize_url($item->get('url')) ?>"><?= $item->get('titel') ?></a><br><br><?= 
+		textarea_field('beschrijving_' . $item->get_id(), $item->data, null, 'field', 'beschrijving', 'nopost', true) ?></td>
+		<td><?= member_full_name($item->get('door')) ?></td>
+		</tr>
+	
+	<tr id="comment_<?= $item->get_id() ?>"><td colspan="2"></td><td colspan="5"><?= textarea_field('comment_' . $item->get_id(), null, null, 'rows', '4') ?></td></tr>
+	
+<? 	$i++;
+} ?>
+
+<tr>
+	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', _('Alle links op accepteren zetten')) ?></a></td>
+	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', _('Alle links op weigeren zetten')) ?></a></td>
+	<td colspan="5" class="submit"><?= input_submit('submmoderate', _('Toepassen')) ?></td></tr>
+
+</table></form>
+<script type="text/javascript">
+	var ids = new Array(0, <?= implode(', ', array_map(create_function('$iter', 'return $iter->get_id();'), $iters)) ?>);
+
+	function action_clicked(id, accept) {
+		div = document.getElementById("comment_" + id);
+
+		if (accept)
+			div.style.display = "none";
+		else
+			div.style.display = "";
+	}
+	
+	function set_all(accept) {
+		for (i = 1; i < ids.length; i++) {
+			var id = ids[i];
+			
+			if (accept)
+				radio = document.getElementById("accept_" + id);
+			else
+				radio = document.getElementById("cancel_" + id);
+			
+			radio.checked = true;
+			action_clicked(id, accept);
+		}				
+	}
+	
+	function accept_all() {
+		set_all(true);
+	}
+	
+	function cancel_all() {
+		set_all(false);
+	}
+	
+	for (i = 1; i < ids.length; i++) {
+		var id = ids[i];
+
+		/* Check radio state */
+		cancel = document.getElementById("cancel_" + id);
+		action_clicked(id, !cancel.checked);
+	}
+</script>
+</div>

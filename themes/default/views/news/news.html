@@ -1,0 +1,43 @@
+<?
+	$months = get_months();
+	$days = get_days();
+?>
+<div class="newsHeading">
+
+<?
+$member_data = logged_in();
+
+if (isset($forumid) && $member_data && count($member_data['commissies']) > 0)	{
+?>
+	<div class="controls inline"><a href="forum.php?forum=<?= $forumid ?>&startadd"><?= image('new.png', _('Toevoegen'), _('Een nieuwe mededeling toevoegen')) ?></a> <a href="forum.php?forum=<?= $forumid ?>&startadd"><?= _('Nieuwe mededeling') ?></a></div>
+<? } ?>
+<h1><?= _('Mededelingen') ?></h1></div>
+
+<?
+foreach ($iter as $item) {
+	$message = $item->get_first_message();
+	$author_info = $model->get_author_info($item);
+	$link = get_author_link($item);
+	echo '<hr class="colorAccent '. strtolower($author_info['name']) .'" />';
+	?>
+	<div class="messageBox frontpage">
+		<div class="newsTitle">
+			<div class="right">
+				<?= $item->get('datum') ?>
+			</div>
+			<span class="subject">
+				<h3><?= markup_format_text($item->get('subject')) ?></h3>
+			</span>
+			<div class="subtitle">
+				<?= _('Geplaatst door') ?>:
+				<a href="<?= $link ?>"><?= $author_info['name'] ?></a>
+			</div>
+		</div>
+		<hr class="separator" />
+		<div class="bericht">
+			<?= markup_parse($message->get('message')) ?>
+		</div>
+	</div>
+<?
+}
+?>

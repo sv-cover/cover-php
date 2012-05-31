@@ -1,0 +1,47 @@
+table.almanak_alphabet {
+	width: 90%;
+	table-layout: fixed;
+}
+
+table.almanak_alphabet td {
+	text-align: center;
+}
+
+table.almanak_navigation {
+	width: 99%;
+}
+
+table.almanak_navigation td.title {
+	font-weight: bold;
+	width: 100px;
+	text-align: right;
+}
+
+table.almanak_navigation td.alphabet {
+	width: 99%;
+	font-size: 10px;
+}
+
+table.almanak_navigation input.text {
+	width: 100px;
+	background-color: #ffffff;
+}
+
+table.almanak {
+	width: 99%;
+	margin: 0 auto;
+	table-layout: fixed;
+}
+
+table.almanak td {
+	text-align: center;
+}
+
+table.almanak tr.photo td {
+	vertical-align: bottom;
+}
+
+table.almanak tr.name td {
+	vertical-align: top;
+	padding-bottom: 15px;
+}

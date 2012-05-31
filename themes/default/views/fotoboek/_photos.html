@@ -1,0 +1,54 @@
+<?
+$photos_per_row = 3;
+$photos = $model->get_photos($iter);
+
+$admin = member_in_commissie(COMMISSIE_FOTOCIE);
+
+if (!$photos || count($photos) == 0)
+	return;
+if ($admin) { ?>
+	<form action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>" method="post" onSubmit="return confirm('<? str_replace("'", "\\'", _('Weet je zeker dat je de geselecteerde foto\'s wilt verwijderen?')) ?>');"><?= input_hidden('submfotoboekdelfotos', 'yes'); ?>
+<? } ?>
+<?
+for ($i = 0; $i < count($photos); $i += $photos_per_row) {
+	$images = array();
+	$titles = array();
+
+	for ($n = $i; $n < $i + $photos_per_row; $n++) {
+		if ($n >= count($photos)) {
+			$images[] = '';
+			$titles[] = '';
+		} else {
+			$photo = $photos[$n];
+			$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '#a"><img src="' . $photo->get('thumburl') . '"></a>';
+
+			$title = $photo->get('beschrijving');
+			$num = $photo->get('num_reacties');
+		
+			if ($photo->get('reactie'))
+				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . sprintf(ngettext('%d reactie', '%d reacties', $num), $num) . '</span>)';
+
+			if ($admin)
+				$title = input_checkbox('del_' . $photo->get('id'), null) . ' ' . $title;
+
+			$titles[] = $title;
+		}
+	}
+	//echo the images in this row
+	for ($idx = 0; $idx != $photos_per_row; ++$idx)
+		echo '
+			<div class = "foto">
+				'. $images[$idx] .'
+				<p class = "fotoTitle">
+					'. $titles[$idx] .'
+				</p>
+			</div>';
+	?>
+	<!--<tr class="image"><td><?= implode('</td><td>', $images) ?></td></tr>
+	<tr class="title"><td><?= implode('</td><td>', $titles) ?></td></tr>-->
+<? } ?>
+
+
+<? if ($admin) { ?>
+	<div class="text_right"><?= input_submit('subm', _('Geselecteerde foto\'s verwijderen')) ?></div></form>
+<? } ?>

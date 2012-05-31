@@ -1,0 +1,27 @@
+<?
+if (!$iter)
+	return;
+
+$prev = $model->get_previous_book($iter);
+$next = $model->get_next_book($iter);
+$parent = $model->get_parent($iter);
+?>
+
+<div class="bar">
+<table class="navigation">
+<tr><td>
+
+<?
+if ($prev) { ?>
+	<a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= image('previous.png', _('Vorige'), _('Ga naar vorig boek')) ?></a> <a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= $prev->get('titel') ?></a>
+<? } ?>
+
+</td><td class="text_center">
+<a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= image('up.png', _('Bovenliggende'), _('Ga naar bovenliggend boek')) ?></a> <a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= ($parent ? $parent->get('titel') : _('Fotoboeken')) ?></a>
+</td><td class="text_right">
+
+<? if ($next) { ?>
+	<a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= image('next.png', _('Volgende'), _('Ga naar volgend boek')) ?></a> <a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= $next->get('titel') ?></a>
+<? } ?>
+
+</td></tr></table></div>

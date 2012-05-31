@@ -1,0 +1,80 @@
+<? $e = $errors;
+
+$days = range(0, 31);
+unset($days[0]);
+
+$months = get_months();
+unset($months[0]);
+ ?>
+<h1><?= _('Nieuw lid toevoegen') ?></h1>
+<div class="messageBox">
+
+<? if ($message) {?>
+	<div class="message"><?= $message ?></div>
+<? } ?>
+
+<? if ($e) {?>
+	<div class="error_message"><?= _('Niet alle velden zijn goed ingevuld') ?></div>
+<? } ?>
+
+<form method="post" action="nieuwlid.php">
+<?= input_hidden('submnieuwlid', 'yes') ?>
+<table>
+
+<?= 	$this->render_text_row(_('Lidnr'), 'id', $e,
+			true, 'maxlength', 10, 'class', 'small') .
+	$this->render_text_row(_('Voornaam'), 'voornaam', $e,
+			true, 'maxlength', 25) .
+	$this->render_text_row(_('Tussenvoegsel'), 'tussenvoegsel',
+			$e, false, 'maxlength', 10,
+			'class', 'small') .
+	$this->render_text_row(_('Achternaam'), 'achternaam', $e,
+			true, 'maxlength', 25)  ?>
+	
+	<tr>
+		<td colspan="2"><hr></td>
+	</tr>
+
+	<?= table_row(label(_('Geslacht'), 'geslacht', $e, true), select_field('geslacht', array('m' => 'Man', 'v' => 'Vrouw'), null))  ?>
+	<?= table_row(label(_('Geboortedatum'), 'geboortedatum',
+			$e, true), 
+		  select_field('day', $days, null) . ' ' .
+		  select_field('month', $months, null) . ' ' .
+		  input_text('year', null, 'maxlength', 4,
+			     'class', 'small')) ?>
+
+
+	<tr><td colspan="2"><hr></td></tr>
+
+	<?= $this->render_text_row(_('Adres'), 'adres', $e, 
+			true, 'maxlength', 50) ?>
+	<?= $this->render_text_row(_('Postcode'), 'postcode', $e, 
+			true, 'maxlength', 7, 
+			'class', 'small') ?>
+	<?= $this->render_text_row(_('Woonplaats'), 'woonplaats', $e,
+			true, 'maxlength', 25) ?>
+
+			<tr><td colspan="2"><hr></td></tr>
+
+	<?= $this->render_text_row(_('E-Mail adres'), 'email', $e,
+			true, 'maxlength', 50) ?>
+	<?= $this->render_text_row(_('Telefoonnummer vast'),
+	 		'telefoonnummer_vast', $e, false,
+			'maxlength', 11) ?>
+	<?= $this->render_text_row(_('Telefoonnummer mobiel'),
+			'telefoonnummer_mobiel', $e, false,
+			'maxlength', 11) ?>
+
+	<tr><td colspan="2"><hr></td></tr>
+
+	<?= table_row(label(_('Beginjaar'), 'beginjaar', $e, true), 
+		input_text('beginjaar', 
+			array('beginjaar' => date('Y')), 
+			'maxlength', 4, 'class', 'small')) ?>
+
+	<tr><td class="submit" colspan="2">
+		<?= input_submit('subm', _('Nieuw lid toevoegen'))  ?>
+	</td></tr>
+</table>
+</form>
+</div>

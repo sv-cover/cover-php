@@ -1,0 +1,40 @@
+<toc>
+  <page>
+    <title>Introduction</title>
+    <uri>introduction.html</uri>
+  </page>
+  <page>
+    <title>Architecture</title>
+    <uri>architecture.html</uri>
+    <page>
+      <title>Data model</title>
+      <uri>data_model.html</uri>
+    </page>
+    <page>
+      <title>Model/view/controller design pattern</title>
+      <uri>model_view_controller.html</uri>
+    </page>
+    <page>
+      <title>Themes</title>
+      <uri>themes.html</uri>
+    </page>
+    <page>
+      <title>View</title>
+      <uri>view.html</uri>
+    </page>
+  </page>
+  <page>
+    <title>Internationalization</title>
+    <uri>internationalization.html</uri>
+  </page>
+  <page>
+    <title>Configuration</title>
+    <uri>configuration.html</uri>
+  </page>
+  <page>
+    <title>Using forms</title>
+    <uri>using_forms.html</uri>
+  </page>
+  <page type="classes"/>
+  <page type="groups"/>
+</toc>

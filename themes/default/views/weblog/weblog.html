@@ -1,0 +1,13 @@
+<h1><?= _('Weblog') ?></h1>
+<div class="messageBox">
+
+<? if (!$iter) { ?>
+	<p><?= _('Er zijn op dit moment geen weblogs') ?></p>
+<? 	
+	return;
+} ?>
+
+<? foreach ($iter as $item)
+	$this->render_partial("weblog", array("model" => $model, "iter" => $item));
+ ?>	
+</div>

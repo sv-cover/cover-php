@@ -1,0 +1,63 @@
+<p>This section describes how the data used by the website is modelled.</p>
+
+<h2>Data provider</h2>
+<p>Data must come from somewhere. This is what the data providers are for. The
+data provider implements a set of functions that enables you to read from, 
+write to and delete data from storage. A data provider implements the
+following set of functions:</p>
+
+<div class="messages"><table class="messages">
+<tr><td>Constructor</td><td>(dbid)</td></tr>
+<tr><td>delete</td><td>(table, condition, limit)</td></tr>
+<tr><td>escape_string</td><td>(s)</td></tr>
+<tr><td>get_last_error</td><td>()</td></tr>
+<tr><td>get_last_insert_id</td><td>()</td></tr>
+<tr><td>insert</td><td>(table, values)</td></tr>
+<tr><td>query</td><td>(query)</td></tr>
+
+<tr><td>query_first</td><td>(query)</td></tr>
+<tr><td>query_value</td><td>(query, col)</td></tr>
+<tr><td>update</td><td>(table, values, condition)</td></tr>
+</table></div>
+
+<p>The constructor uses a dbid which is a hash containing the data providers host,
+username, password and database parameters.</p>
+
+<p>Two classes implementing this are #DatabaseMysql and #DatabasePgsql.</p>
+
+<h2>Modelling specific data sets</h2>
+<p>Now that you can have data providers to provide you with data you can start
+modelling the data. A model uses the data provider to get specific data from
+the provider and to supply functions to modify and read this data in a 
+storage independent way. A simple example of modelling data would be to model
+a table in a database, but far more complex models can be made available.
+A model abtracts all the primitive data provider functions away and provides
+a more higher level language to manipulate data. Every data set (like 
+guestbook, users, forum, etc.) usually is implemented by a custom model (or 
+the generic one if the data to be modelled is simply a table). 
+A data model implements the following functions:</p>
+
+<div class="messages"><table class="messages">
+<tr><td>delete</td><td>(iter)</td></tr>
+<tr><td>get</td><td>()</td></tr>
+<tr><td>get_iter</td><td>(id)</td></tr>
+<tr><td>insert</td><td>(iter, getid)</td></tr>
+<tr><td>update</td><td>(iter)</td></tr>
+</table></div>
+
+<p>You see that every manipulation requires an iter. Iters represent one
+data item (or row) in the data model. They we'll be discussed below. A model
+is of course free to provide additional functions to get other data sets or
+to allow more complex insert or update actions. The generic data model is
+implemented in #DataModel.</p>
+
+<h2>Data iters</h2>
+<p>Data iters specify one data item exactly. They can be compared with rows
+in a database. They contain the data which can be referenced with the
+a name (column name). Data iters provide functions to change the data
+and to update these change up to the model they belong to. So you can for
+example retrieve an iter from a model, change some fields in the iter and 
+update the iter. The data iter is implemented in #DataIter.</p>
+
+<h2>Files</h2>
+All the data model files can be found in include/data/

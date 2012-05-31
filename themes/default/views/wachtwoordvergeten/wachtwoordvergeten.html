@@ -1,0 +1,10 @@
+<h1><?= _('Wachtwoord vergeten') ?></h1>
+<div class="messageBox">
+	<p><?= _('Vul hieronder je E-mail adres in en druk op de `Verzenden` knop. Hierna wordt er een mailtje naar dat adres gestuurd met verdere aanwijzingen.') ?></p>
+	<form action="wachtwoordvergeten.php" method="post">
+	<table>
+	
+	<?= table_row(label(_('E-Mail')) . ':', input_text('email', null, 'size', '35'), input_submit('submsend', _('Verzenden'))) ?>
+</table>
+</form>
+</div>

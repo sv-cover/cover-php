@@ -1,0 +1,34 @@
+<h1><?= _('Fotoboek') ?></h1>
+<div class = "messageBox clearfix">
+<? 	
+
+if (member_in_commissie(COMMISSIE_FOTOCIE)){
+	$this->render_partial("beheer", compact('errors', 'errortype', 'model', 'iter', 'parent'));
+}
+
+$this->render_partial('navigation', compact('model', 'iter'));
+
+if (!$iter) {
+	$commissie_model = get_model('DataModelCommissie');
+	$fotocie = $commissie_model->get_iter(COMMISSIE_FOTOCIE);
+?>
+	<p> <?= sprintf(_('Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, meld dat dan aan de FoToCie, dan kunnen de fotos misschien geplaatst worden in het fotoboek.'), '<a href="show.php?id=' . $fotocie->get('page') . '"> ' . _('FotoCie')  . '</a>') ?> '</p>
+<? }
+
+$include_current = false;
+
+$this->render_partial('path', compact('model', 'iter', 'include_current'));
+$this->render_partial('info', compact('model', 'iter'));
+$this->render_partial('contents', compact('model', 'iter'));
+
+?>
+
+
+<?
+if (!$iter)
+	$this->render_partial('last_reacties', compact('model'));
+
+if (!$model->get_num_photos($iter))
+	$this->render_partial('random_photos', compact('model', 'iter'));
+ ?>
+</div>

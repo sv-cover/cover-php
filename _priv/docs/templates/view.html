@@ -1,0 +1,38 @@
+<p>Views are a very important part of the website. They provide the 
+graphical user interface (what the client sees) using the data provided
+by the #data_model. Views are located in 
+<span class="highlight">themes/name/views</span>.</p>
+
+<p>A view file may define multiple views. This can be used to group views
+together (for instance views that use the same model). Every view has its
+own function:</p>
+
+<div class="code">
+view_<span class="highlight">name</span> (
+model, 
+iter, 
+params
+)</div>
+
+<table class="arguments">
+<tr>
+	<td valign="top" class="param_name">model</td>
+	<td class="right">:</td>
+	<td class="param_desc">the #DataModel for this view</td>
+</tr>
+<tr>
+	<td valign="top" class="param_name">iter</td>
+	<td class="right">:</td>
+	<td class="param_desc">the #DataIter to be used by this view</td>
+</tr>
+<tr>
+	<td valign="top" class="param_name">params</td>
+	<td class="right">:</td>
+	<td class="param_desc">a hash containing additional parameters</td>
+</tr>
+</table>
+
+<p>These functions simply <span class="highlight">echo</span> whatever needs to send to the client.</p>
+
+<p>Views can be used by using the #run_view function (located in 
+<span class="highlight">include/functions.php</span>).

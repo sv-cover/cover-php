@@ -1,0 +1,52 @@
+<p>The website uses themes to provide the layout and graphics the client
+actually sees, the so called <i>views</i>. This makes it easy to provide
+a set of different user interfaces without changing much of the underlying
+backend.</p>
+
+<p>Themes can be found in <i>themes/</i> in which every theme has its 
+sub directory. There must always be at least one theme present which is named 
+<b>default</b> (<i>themes/default/</i>). The default theme provides the 
+standard look and feel of the website. Other themes can be added but it
+is not necessary to implement all the specified views, images or emails. 
+Whenever a view, image or email can't be found in a theme the ones in the
+default theme are used.</p>
+
+<p>A theme directory looks like this:</p>
+<ul class="file_listing">
+	<li><img src="images/directory.png" alt="[DIR]"/>themes/<span class="variable" title="The name of the theme">name</span>/</li>
+	<ul class="file_listing">
+		<li><img src="images/directory.png" alt="[DIR]"/>email/</li>
+		<ul class="file_listing">
+			<li><img src="images/file.png" alt="[TXT]"/>agenda_add.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>agenda_cancel.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>agenda_mod.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>document_add.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>document_cancel.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>editable_del.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>editable_edit.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>links_add.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>links_cancel.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>taken_assign.txt</li>
+			<li><img src="images/file.png" alt="[TXT]"/>taken_mod.txt</li>
+		</ul>
+		<li><img src="images/directory.png" alt="[DIR]"/>images/</li>
+		<ul class="file_listing">
+			<li><img src="images/imagefile.png" alt="[IMG]"/>accept.png</li>
+			<li><img src="images/imagefile.png" alt="[IMG]"/>add.png</li>
+			<li><img src="images/imagefile.png" alt="[IMG]"/>...</li>
+		</ul>
+		<li><img src="images/directory.png" alt="[DIR]"/>styles/</li>
+		<ul class="file_listing">
+			<li><img src="images/file.png" alt="[CSS]"/>agenda.css</li>
+			<li><img src="images/file.png" alt="[CSS]"/>almanak.css</li>
+			<li><img src="images/file.png" alt="[CSS]"/>...</li>
+		</ul>
+		<li><img src="images/directory.png" alt="[DIR]"/>views/</li>
+		<ul class="file_listing">
+			<li><img src="images/phpfile.png" alt="[PHP]"/>footer.php</li>
+			<li><img src="images/phpfile.png" alt="[PHP]"/>header.php</li>
+			<li><img src="images/phpfile.png" alt="[PHP]"/>...</li>
+		</ul>
+		<li><img src="images/phpfile.png" alt="[DIR]"/>style.css</li>
+	</ul>
+</ul>

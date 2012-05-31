@@ -1,0 +1,28 @@
+Beste secretaris,
+
+De volgende aanvraag voor lidmaatschap is via de website gemaakt:
+
+Voornaam: $voornaam
+Tussenvoegsel: $tussenvoegsel
+Achternaam: $achternaam
+Geslacht: $geslacht
+
+Adres: $adres
+Postcode: $postcode
+Woonplaats: $woonplaats
+
+Email: $email
+Telefoonnummer: $telefoonnummer
+Geboortedatum: $geboortedatum
+
+Studentnummer: $studentnummer
+Studierichting: $studierichting
+Bank- of girorekeningnummer: $rekening
+Machtiging: $machtiging
+
+Is lid van FMF: $fmflid
+Met vriendelijke groeten,
+
+
+De WebCie
+

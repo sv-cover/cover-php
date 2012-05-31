@@ -1,0 +1,33 @@
+<?
+if(logged_in() != false) { // Laat alleen zien als er is ingelogd
+
+$photos_per_row = 3;
+$photos = $model->get_random_photos($photos_per_row);
+
+if (!$photos || count($photos) == 0)
+	return;
+?>
+
+<div class="bar_sep"><?= _('Willekeurige foto\'s') ?></div>
+<table class="fotoboek_photos">
+
+<?
+$images = array();
+$titles = array();
+
+for ($i = 0; $i < $photos_per_row; $i ++) {
+	if ($i >= count($photos)) {
+		$images[] = '';
+		$titles[] = '';
+	} else {
+		$photo = $photos[$i];
+		$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '"><img src="' . $photo->get('thumburl') . '"></a>';
+
+		$titles[] = '<a href="fotoboek.php?book=' . $photo->get('boek') . '#photo_' . $photo->get('id') . '">' . $photo->get('titel') . '</a>' . ($photo->get('jaar') ? ('<br>(<span class="bold">' . $photo->get('jaar') . '</span>)') : '');
+	}
+}?>
+
+<tr class="image"><td><?= implode('</td><td>', $images) ?></td></tr>
+<tr class="title"><td><?= implode('</td><td>', $titles) ?></td></tr>
+</table>
+<? } ?>

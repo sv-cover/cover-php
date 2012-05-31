@@ -1,0 +1,5 @@
+<?
+header("Content-Type: image/jpeg");
+
+echo pg_unescape_bytea($model->get_photo($iter));
+?>

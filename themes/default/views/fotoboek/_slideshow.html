@@ -1,0 +1,91 @@
+<div class="text_center"><?= input_button(_('Start slideshow'), 'javascript:slideshow();', 'button', 'id', 'slideshow_button') ?></div>
+
+<script type="text/javascript">
+	var slideshow_request = null;
+	var photo_id = <?= $iter->get('id') ?>;
+	var photosrc = "<?= $iter->get('url') ?>";
+	var current_id = photo_id;
+
+	var timeout = false;
+	var imagesrc = "";
+
+	function slideshow_show_next() {
+		if (imagesrc == "") {
+			timeout = true;
+			return;
+		} else if (imagesrc == "0") {
+			slideshow_stop();
+			return;
+		}
+	
+		img = document.getElementById("photo");
+		img.src = imagesrc;
+	
+		slideshow_next();
+	}
+
+	function slideshow_got_slide() {
+		var res = this.get_response();
+	
+		if (res == "") {
+			if (timeout)
+				slideshow_stop();
+			else
+				imagesrc = "0";
+
+			return;
+		}
+	
+		var vals = res.split("\n");
+	
+		current_id = vals[0];
+		imagesrc = vals[1];
+	
+		if (timeout)
+			slideshow_show_next();
+		else {
+			// Preload image
+			var img = new Image();
+			img.src = imagesrc;
+		}
+	}
+
+	function slideshow_next() {
+		// Request the next slide
+		timeout = false;
+		imagesrc = "";
+		slideshow_request.get("fotoboek.php?next_slide=" + current_id);
+		setTimeout("slideshow_show_next()", 3000);
+	}
+
+	function slideshow_start() {
+		slideshow_request = new Connection();
+		slideshow_request.on_task_finished = slideshow_got_slide;
+
+		button = document.getElementById("slideshow_button");
+		button.value = "<?= _('Stop slideshow') ?>";
+	
+		slideshow_next();
+	}
+
+	function slideshow_stop() {
+		slideshow_request.abort();
+		imagesrc = "";
+	
+		img = document.getElementById("photo");
+		img.src = photosrc;
+		current_id = photo_id;
+	
+		button = document.getElementById("slideshow_button");
+		button.value = "<?= _('Start slideshow') ?>";
+		slideshow_request = null;
+	}
+
+	function slideshow() {
+		if (slideshow_request == null)
+			slideshow_start();
+		else
+		
+			slideshow_stop();
+	}
+</script>

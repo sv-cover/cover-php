@@ -1,0 +1,13 @@
+<?
+$csv = csv_row(array(_('id'),_('voornaam'),_('tussenvoegsel'),_('achternaam'),_('adres'),_('postcode'),_('woonplaats'),_('email'),_('geboortedatum'),_('geslacht'),_('telefoonnummer_vast'),_('telefoonnummer_mobiel'),_('beginjaar'))) . "\n";
+
+foreach ($iter as $item)
+	$csv .= csv_row(array($item->get('id'),$item->get('voornaam'),$item->get('tussenvoegsel'),$item->get('achternaam'),$item->get('adres'),$item->get('postcode'),$item->get('woonplaats'),$item->get('email'),$item->get('geboortedatum'),$item->get('geslacht'),$item->get('telefoonnummer_vast'),$item->get('telefoonnummer_mobiel'),$item->get('beginjaar'))) . "\n";
+
+header('Content-Description: File Transfer');
+header('Content-Type: application/force-download');
+header('Content-Disposition: attachment; filename="almanak.csv"');
+
+echo $csv;
+exit();
+?>

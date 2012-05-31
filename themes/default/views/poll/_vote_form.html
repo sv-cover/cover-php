@@ -1,0 +1,18 @@
+<form method="post" action="forum.php?thread=<?= $iter->get('id') ?>">
+	<?= input_hidden('submforumpollvote', $iter->get('id')) ?>
+
+	<table class="poll">
+		<? foreach ($votes as $vote) {?>
+		<tr>
+			<td><?= input_radio('optie', null, $vote->get_id()) ?></td><td><?= $vote->get('optie') ?></td>
+		</tr>
+		<? } ?>
+	</table>
+
+	<div class="poll_vote">
+		<?= input_submit('subm', _('Stem'))  ?>
+		<? if (isset($enable_new) && $enable_new) {?>
+			<?= input_button(_('Nieuwe poll'), 'javascript:window.location = \'forum.php?forum=' . $iter->get('forum') . 'addpoll\'') ?>
+		<? } ?>
+	</div>
+</form>

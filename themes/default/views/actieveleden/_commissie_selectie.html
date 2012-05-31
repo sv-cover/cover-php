@@ -1,0 +1,40 @@
+<div class="bar_sep">
+	<div class="buttons">
+		<a href="javascript:nieuwe_commissie();"><?= image('add.png', '', _('Nieuwe commissie aanmaken')) ?></a>
+		<a href="javascript:nieuwe_commissie();"><?= _('Nieuwe commissie') ?></a>
+	</div>
+	<h2><?= _('Selecteer commissie') ?></h2>
+</div>
+<div class="messageBox">
+<?
+$this->render_partial('nieuwe_commissie', compact('model', 'iter', 'errors'));
+
+$commissie_model = get_model('DataModelCommissie');
+$commissies = $commissie_model->get();
+$values = array();
+
+foreach ($commissies as $commissie)
+	$values[$commissie->get('id')] = $commissie->get('naam');
+
+if (count($values) == 0) {
+	$values = array('' => '[' . _('Geen commissies beschikbaar') . ']');
+}?>
+	
+<form name="fcommissie" action="actieveleden.php" method="get">
+	Commissie: <?= select_field('commissie', $values, $iter ? array('commissie' => $iter->get('id')) : null, 'onChange', 'javascript:document.fcommissie.submit();') ?>
+	<?= input_submit('', _('Selecteren')) ?>
+	<?= input_button(_('Verwijderen'), 'javascript:verwijder_commissie()') ?>
+</form>
+
+<script type="text/javascript">
+	function verwijder_commissie() {
+		var id = document.fcommissie.commissie.value;
+	
+		if (id == "")
+			alert("<?= _('Selecteer eerst een commissie om te verwijderen') ?>");
+		else if (confirm("<?= _('Weet je zeker dat je deze commissie en bijbehorende leden en pagina\'s wilt verwijderen?') ?>"))
+		window.location = "actieveleden.php?commissie=" + id + "&del";
+	}
+</script>
+</div>
+

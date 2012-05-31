@@ -1,0 +1,30 @@
+Hallo $voornaam,
+
+Als lid van Cover heb je automatisch een profiel gekregen op de website:
+www.svcover.nl. Dit account geeft je de mogelijkheid om:
+
+- Wijzigingen van je gegevens on-line door te geven;
+- Deel te nemen aan discussies in de forums;
+- Reacties te plaatsen in de fotoboeken;
+- On-line boeken te bestellen;
+- Gebruik te maken van de studieondersteuningspagina.
+
+Inloggen op de site doe je links bovenaan de pagina. Aan het eind van dit 
+mailtje staan jouw inloggegevens. Na het inloggen kun je je profiel bekijken en
+bewerken. We raden je aan je wachtwoord te veranderen en indien gewenst je
+privacygegevens aan te passen. Deze geven aan welke informatie van je waar
+getoond mag worden.
+
+Verder kun je op de website onder 'Cover: Documenten' en in de CoverKamer 
+het huishoudelijk reglement en de statuten vinden .
+(http://www.svcover.nl/show.php?id=30)
+
+Vriendelijke groet,
+
+
+Het Cover-bestuur
+
+INLOGGEGEVENS:
+
+email:      $email
+wachtwoord: $wachtwoord

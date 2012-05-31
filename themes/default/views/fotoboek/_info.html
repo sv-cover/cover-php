@@ -1,0 +1,20 @@
+<?
+if (!$iter)
+	return;
+?>
+
+<table class="default_noborder">
+
+<? if ($iter->get('fotograaf')) { ?>
+	<tr><td class="bold"><?= _('Fotograaf') ?>:</td><td><?= $iter->get('fotograaf') ?></td></tr>
+<? }
+
+if ($iter->get('date')) { ?>
+	<tr><td class="bold"><?= _('Datum') ?>:</td><td><?= $iter->get('datum') ?></td></tr>
+<? }
+
+if ($iter->get('beschrijving')) { ?>
+	<tr><td class="bold"><?= _('Beschrijving') ?>:</td><td><?= markup_parse($iter->get('beschrijving')) ?></td></tr>
+<? } ?>
+
+</table>

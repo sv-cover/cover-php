@@ -1,0 +1,29 @@
+<div class="bar"><a href="javascript:beheer();"><?= image('add.png', '', _('Nieuwe afstudeerplaats toevoegen'), 'class="button"') ?></a> <a href="javascript:beheer();"><?= _('Nieuwe afstudeerplaats') ?></a></div>
+
+<div id="bedrijvenBeheer" class="beheer">
+<? if (isset($errors) && count($errors) > 0) { ?>
+	<div class="error_message"><?= _('Niet alle velden zijn goed ingevuld') ?></div>
+<? } ?>
+
+<form method="post" action="afstudeerplaatsen.php#beheer">
+<?= input_hidden('submplaats_add', 'yes') ?>
+<?= input_hidden('bedrijf', $iter->get_id()) ?>
+
+<? $this->render_partial('plaats_form', compact('data', 'iter', 'model', 'errors')); ?>
+</form>
+</div>
+<script type="text/javascript">
+	function beheer() {
+		div = document.getElementById("bedrijvenBeheer");
+
+		if (div.style.display == "none" || div.style.display == "") {
+			div.style.display = "block";
+		} else {
+			div.style.display = "none";
+		}
+	}
+
+<? if (isset($expand)) { ?>
+	beheer();
+<? } ?>	
+</script>

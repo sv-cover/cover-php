@@ -1,0 +1,72 @@
+<h1><?= _('Agenda') ?></h1>
+<div class="messageBox">	
+<? if (!logged_in()) { ?>
+	<p class="italic"><?= _('Log in om eventuele afgeschermde agendapunten te bekijken.') ?></p>
+<? } else { ?>
+	<div class="bar_right">
+	
+	<? if (($aantal = $model->has_moderate()) && member_in_commissie(COMMISSIE_BESTUUR)) {
+		if ($aantal == 1)
+			$s = _('Er staat nog 1 agendapunt in de wachtrij');
+		else
+			$s = sprintf(_('Er staan nog %d agendapunten in de wachtrij'), $aantal);
+
+		?><div class="left"><a href="agenda.php?agenda_moderate"><?= $s ?></a></div>
+	<? }
+	
+	$member = logged_in();
+	$member_model = get_model('DataModelMember');
+
+	if (count($member_model->get_commissies($member['id'])) > 0) { ?>
+		<a href="agenda.php?agenda_add"><?= image('add.png', _('nieuw'), _('Nieuw agendapunt toevoegen')) ?></a>
+	<? } ?>
+	</div>
+<? } ?>
+
+<table class="agenda" style="background-color: #000;">
+
+<? 
+$punten = $model->get_agendapunten(logged_in());
+$curmaand = -1;
+$months = get_months();
+$days = get_days();
+
+if (!count($punten)) { ?>
+	<p> <?= _('Er staan op dit moment geen activiteiten op de agenda.') ?></p>
+<? }
+foreach ($punten as $punt) {
+	if ($punt->get('private') && !logged_in())
+		continue;
+
+	if ($curmaand != $punt->get('vanmaand')) { ?>
+		</table>
+		<h2><?= $months[$punt->get('vanmaand')] ?></h2>
+		<table class="agenda">
+		
+		<?
+		$curmaand = $punt->get('vanmaand');
+	} ?>
+	
+	<tr>
+		<td class="vandatum"><img src="themes/default/images/kalender.png" style="float:left;"><span style="margin-left: -47px; margin-top: 15px; float: left;"><?= $punt->get('vandatum') ?></span></td>
+		<td><a class="agendalink" href="agenda.php?agenda_id=<?= $punt->get_id() ?>"><?= markup_format_text($punt->get('kop')) ?></a><br/>
+		<?= agenda_period_for_display($punt) ?><br/>
+
+	<? if ($punt->get('locatie')) { ?>
+		<?= _('Locatie') ?>: <?= markup_format_text($punt->get('locatie')) ?><br/>
+	<? }
+
+	if (member_in_commissie($punt->get('commissie')) || member_in_commissie(COMMISSIE_BESTUUR)){ ?>
+		<a href="agenda.php?agenda_del&agenda_id= <?= $punt->get_id() ?>" onClick="return confirm('<?= _('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= _('Verwijder') ?></a> - <a href="agenda.php?agenda_edit&agenda_id=<?= $punt->get_id() ?>"><?= _('Wijzig') ?></a><br/>
+	<? } ?>
+		</td>
+	</tr>
+<? } ?>
+
+</table>
+
+<p>De Coveragenda is ook beschikbaar in verschillende standaarden: 
+<a href="http://www.google.com/calendar/feeds/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic">XML</a>,
+<a href="http://www.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics">iCal</a>, 
+<a href="http://www.google.com/calendar/embed?src=s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com&ctz=Europe/Amsterdam">html</a></p>
+</div>

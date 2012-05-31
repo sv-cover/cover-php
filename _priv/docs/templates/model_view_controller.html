@@ -1,0 +1,18 @@
+<p>The CoVer website is setup in a model/view/controller design pattern. This
+means that the different functions of the website have a clean split in
+modelling the data (#data_model), viewing the data (what the client sees) and 
+controlling the data (what the server does with user requests).</p>
+
+<p>An easy to understand example of this concept is a web form which inserts
+an entry in the database. The model here is all the functions reading and
+writing from and to the database. The view is the actual web form and the
+controller is that part of the code processing the form variables and call
+functions of the model to insert something in the database.</p>
+
+<p>These three components are separated pieces of code. The model and the
+controller are not theme dependent but the view is. The model files
+can be found in <i>include/data</i> and the controller files are simply 
+the files in the html root directory (the ones the client requests). For the
+views it's a different story. Since views are themed they can be found in
+<i>themes/[name]/views</i>. How views and themes are handled is described
+in #themes.</p>

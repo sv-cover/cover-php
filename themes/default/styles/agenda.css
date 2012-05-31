@@ -1,0 +1,31 @@
+table.agenda td {
+	margin: 4px;
+}
+
+table.agenda td.vandatum {
+	color: #404040; 
+	font-size: 18pt;
+	vertical-align: top;
+}
+
+table.agenda a.agendalink {
+	font-weight: bold;
+}
+
+table.agenda_edit {
+	width: 99%;
+}
+
+table.agenda_edit select {
+	width: 200px;
+}
+
+table.agenda_edit input.day, table.agenda_edit input.month, table.agenda_edit input.time {
+	width: 3ex;
+	padding: 2px;
+}
+
+table.agenda_edit input.year {
+	width: 5ex;
+	padding: 2px;
+}

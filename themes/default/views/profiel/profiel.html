@@ -1,0 +1,201 @@
+<h1><?= sprintf(_('Profiel van %s'), $this->get_privacy_name($model, $iter)) ?></h1>
+<div class="messageBox clearfix">
+
+
+<? if (isset($errors) && count($errors) > 0) { ?>
+	<p><span class="error"><?= _('Niet alle velden zijn goed ingevuld') ?></span></p>
+		
+		<? if (isset($error_message)) {?>
+		<div class="error_message"><?= str_replace("\n", "<br>\n", $error_message) ?></div>
+		<? } ?>
+<? } ?>
+
+	<div class="floatLeft textCenter almanak">
+		<h2 id="almanak" class="profileHead">Almanakgegevens</h2>
+			<? $photo_link = "foto.php?lid_id=" . $model->get_photo_id($iter);
+			$photo_thumb_link = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
+
+			if ($model->has_picture($iter) && !$model->is_private($iter,"foto",true)) {
+				// Make the picture a link ?>
+				<a class="profielFoto" href="<?= $photo_link ?>"><img src="<?= $photo_thumb_link ?>" class="profielFoto" alt= "<?= _('lidfoto') ?>"/></a>
+			<? } else { ?>
+				<img class="profielFoto" src="<?= $photo_link ?>" />
+			<? } ?>
+			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#almanak" method="post">
+				<?= input_hidden('submprofiel_almanak', 'yes') ?>
+				<?= input_hidden('id', $iter->get('lidid')) ?>
+				<table class="profiel">
+					<tr>
+						<td width="150"></td>
+						<td></td>
+					</tr>
+					<?
+					if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
+						<tr><td><?=
+								//FIXME: Omdat 'naam' geen echt veld is, worden velden met errors hier (bijv. voornaam die te lang is) niet aangegeven -- PdB
+						 label(_('Naam'), 'naam', $errors) ?>:</td><td>
+							 <?= input_text('voornaam', $iter->data, 'class', 'naam') ?>
+							 <?= input_text('tussenvoegsel', $iter->data, 'class', 'naam') ?>
+							 <?= input_text('achternaam', $iter->data, 'class', 'naam') ?></td></tr>
+
+					<?
+						$fields = array();			
+					} else { 
+						$fields = array(array('label' => _('Naam'), 'name' => 'naam', 'data' => array('naam' => member_full_name($iter)), 'read_only' => true));
+					} 
+
+					$fields = array_merge($fields, array(
+						array('label' => _('Geboortedatum'), 'name' => 'geboortedatum', 'data' => array('geboortedatum' => format_date($iter->get('geboortedatum'))), 'read_only' => true),
+						array('label' => _('Beginjaar'), 'name' => 'beginjaar', 'read_only' => true),
+						array('label' => _('Adres'), 'name' => 'adres'),
+						array('label' => _('Postcode'), 'name' => 'postcode'),
+						array('label' => _('Woonplaats'), 'name' => 'woonplaats'),
+						array('label' => _('Tel. vast'), 'name' => 'telefoonnummer_vast'),
+						array('label' => _('Tel. mobiel'), 'name' => 'telefoonnummer_mobiel'),
+						array('label' => _('E-Mail adres'), 'name' => 'email')));
+
+					foreach ($fields as $field) {?>
+						<?= $this->privacy_parse($model, $iter, $field['label'], $field['name'], (isset($field['data']) ? $field['data'] : $iter->data), $errors, isset($field['read_only']) ? $field['read_only'] : false) ?>
+					<? } ?>
+
+					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+						<tr><td colspan="2" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
+					<? } ?>
+				</table>
+			</form>
+	</div>
+	
+	<div class="floatLeft almanak">
+			<h2 id="webgegevens" class="profilehead"><?= _('Webgegevens') ?></h2>
+			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#webgegevens" method="post">
+				<?= input_hidden('submprofiel_webgegevens', 'yes') ?>
+				<?= input_hidden('id', $iter->get('lidid')) ?>
+
+				<table class="profiel">
+					<tr>
+						<td width="150"></td>
+						<td></td>
+					</tr>
+					<?= $this->privacy_parse($model, $iter, _('Bijnaam'), 'nick', $iter->data, $errors) ?>
+					<?= $this->privacy_parse($model, $iter, _('Onderschrift'), 'onderschrift', $iter->data, $errors) ?>
+
+					<? /* Avatar */ ?>
+					<tr><td><?= label(_('Avatar'), 'avatar', $errors) ?>:</td>
+
+					<? if ($this->is_current_member($iter->get('lidid'))) {?>
+						<td><?= input_text('avatar', $iter->data, 'formatter',  'empty_to_http_formatter') ?></td>
+					<?} else {?>
+						<td><?= ($iter->get('avatar') ? ('<img src="' . $iter->get('avatar') . '" alt="' . _('avatar') . '">') : ('<span class="italic">' . _('geen') . '</span>')) ?></td>
+					<? } ?>
+					</tr>
+
+					<? /* Homepage */ ?>
+					<tr><td><?= label(_('Homepage'), 'homepage', $errors) ?>:</td>
+
+					<? if ($this->is_current_member($iter->get('lidid'))) {?>
+						<td><?= input_text('homepage', $iter->data, 'formatter', 'empty_to_http_formatter') ?></td>		
+					<?} else {?>
+						<td><?= ($iter->get('homepage') ? ('<a href="' . $iter->get('homepage') . '">' . $iter->get('homepage') . '</a>') : ('<span class="italic">' . _('geen') . '</span>')) ?></td>
+					<? } ?>
+					</tr>
+
+					<?= $this->privacy_parse($model, $iter, _('MSN Adres'), 'msn', $iter->data, $errors) ?>
+					<?= $this->privacy_parse($model, $iter, _('ICQ#'), 'icq', $iter->data, $errors) ?>
+
+					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+						<tr><td colspan="2" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
+					<? } ?>
+				</table>
+			</form>
+	</div>
+
+	<? if ($this->member_write_permission($iter->get('lidid'))) { ?>
+		<div class="floatLeft almanak">
+			<h2 class="profilehead" id="wachtwoord"><?= _('Nieuw wachtwoord') ?></h2>
+				<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#wachtwoord" method="post">
+	
+					<?= input_hidden('submprofiel_wachtwoord', 'yes') ?>
+					<?= input_hidden('id', $iter->get('lidid')) ?>
+	
+					<table class="profiel">
+						<tr>
+							<td width="150"></td>
+							<td></td>
+						</tr>
+						<?= table_row(label(_('Oud wachtwoord'), 'wachtwoord_oud', $errors) . ':', input_password('wachtwoord_oud')) ?>
+						<?= table_row(label(_('Nieuw wachtwoord'), 'wachtwoord_nieuw', $errors) . ':', input_password('wachtwoord_nieuw')) ?>
+						<?= table_row(label(_('Opnieuw'), 'wachtwoord_opnieuw', $errors) . ':', input_password('wachtwoord_opnieuw')) ?>
+	
+						<tr><td colspan="2" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
+					</table>
+				</form>
+		</div>
+		<div class="almanak clearBoth">
+			<h2 class="profilehead" id="privacy"><?= _('Privacy instellingen') ?></h2>
+			<p><?= _('Je privacy instellingen geven aan wie welke informatie mag zien.') ?></p>
+			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#privacy" method="post">
+				<?= input_hidden('submprofiel_privacy', 'yes') ?>
+				<?= input_hidden('id', $iter->get('lidid')) ?>
+		
+				<table class="privacy">
+					<tr class="header">
+						<td class="corner"></td>
+						<td><?= _('Niemand') ?></td>
+						<td><?= _('Leden') ?></td>
+						<td><?= _('Iedereen') ?></td>
+					</tr>
+		
+					<? /* Get privacy fields */
+					$fields = $model->get_privacy();
+					$privacy = $iter->get('privacy');
+		
+					foreach ($fields as $field => $nr) {
+						/* Get the 3bit value */
+						$value = (($privacy >> ($nr * 3)) & 7);
+						$data = array('privacy_' . $nr => $value);
+		
+						/* Create privacy row */ ?>
+					<tr>
+						<td class="bold"><?= field_for_display($field) ?></td>
+						<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '0') ?></td>
+						<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '1') ?></td>
+						<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '7') ?></td>
+					</tr>
+							<? } ?>
+		
+					<tr>
+						<td colspan="4" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	<? } ?>
+	
+</div>
+	
+<? if($this->is_current_member($iter->get('lidid'))) { ?>
+	<h1 id="msdnaa">MSDNAA</h2>
+	
+<script type="text/javascript">
+$().ready(function() {
+	$('#gotomsdnaa').submit(function() {
+		document.location = "http://msdn62.e-academy.com/elms/Security/Login.aspx?campus=svcover_it";
+		$('#msdnaabutton').attr('disabled', 'disabled');
+		return false;
+	});
+	$('#akkoord').change(function() {
+		if($('#akkoord:checked').val() !== undefined) {
+			$('#msdnaabutton').removeAttr('disabled');
+		} else {
+			$('#msdnaabutton').attr('disabled', 'disabled');
+		}
+	});
+});
+</script>
+	<div class="messageBox">
+	<form id="gotomsdnaa">
+		<input type="checkbox" name="akkoord" id="akkoord" value="akkoord"><label for="akkoord">Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar e-academy.</label><br />
+		<button class="button" id="msdnaabutton" disabled="disabled">Ga naar MSDNAA</button>
+	</form>
+	</div>
+<? } ?>

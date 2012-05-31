@@ -1,0 +1,33 @@
+div#veld_taak_edit input {
+	width: 350px;
+}
+
+div#veld_beschrijving_edit textarea {
+	width: 350px;
+}
+
+table#taken {
+	width: 99%;
+}
+
+table.default tr td.prioriteit_0 {
+	background-color: #fe7878;
+}
+
+span.prioriteit_0 {
+	color: #ff0000;
+	font-weight: bold;
+}
+
+table.default tr td.prioriteit_1 {
+	background-color: #ffdbdb;
+}
+
+span.prioriteit_1 {
+	color: #aa0000;
+	font-weight: bold;
+}
+
+span.prioriteit_4, table.default tr td.prioriteit_4 {
+	font-style: italic;
+}

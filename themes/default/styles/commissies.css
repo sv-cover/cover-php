@@ -1,0 +1,16 @@
+table.commissies {
+	margin: 0 auto;
+}
+
+table.commissies td.spacer {
+	padding-bottom: 10px;
+}
+
+table.commissies h3 {
+	margin: 0px;
+}
+
+table.commissies td.description {
+	font-size: 11px;
+	vertical-align: top;
+}

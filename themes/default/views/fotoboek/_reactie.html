@@ -1,0 +1,24 @@
+<?
+if (!isset($subtitle))
+	$subtitle = false;
+
+$days = get_days();
+$months = get_months();
+?>
+<div class="replyBox">
+<div class="title">
+<span class="replyDetails">
+<div class="right"><?= sprintf('%s %d %s, %02d:%02d', $days[$reactie->get('dagnaam')], $reactie->get('datum'), $months[$reactie->get('maand')], $reactie->get('uur'), $reactie->get('minuut')) ?></div><?= member_full_name($reactie->get('auteur')) ?>
+</span>
+<? if ($subtitle) { ?>
+	<div class="subtitle">
+	<?= _('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= ($reactie->get('beschrijving') ? $reactie->get('beschrijving') : _('geen titel')) ?></a><br><?= _('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('boek') ?>"><?= $reactie->get('titel') ?></a></div>
+<? } ?>
+</div>
+
+<div class="bericht">
+<?= markup_parse($reactie->get('reactie')) ?>
+</div>
+</div>
+
+<? unset($subtitle) ?>

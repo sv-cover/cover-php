@@ -1,0 +1,53 @@
+img.profiel_photo {
+	border: solid 2px black;
+}
+
+table.profiel h2 {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+table.profiel span.label {
+	font-weight: bold;
+}
+
+table.privacy {
+	border-collapse: collapse;
+	width: 99%;
+}
+table.privacy .header td{
+    color: #000;
+}
+
+table.privacy td {
+	border: 1px solid #8486a1;
+	padding: 3px;
+}
+
+table.privacy tr.header td.corner {
+	border-left: 0;
+	border-top: 0;
+	width: 150px;
+	background-color: transparent;
+}
+
+table.privacy td.submit {
+	border-left: 0;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+input.naam {
+	width: 63px;
+}
+
+a.profielFoto
+{
+	display: block;
+	text-align: center;
+}
+.profielFoto img, img.profielFoto
+{
+	border: 2px solid #666;
+	margin: 10px 0px;
+}

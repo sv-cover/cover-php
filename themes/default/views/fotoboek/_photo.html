@@ -1,0 +1,39 @@
+<? if (member_in_commissie(COMMISSIE_FOTOCIE)) { ?>
+	<div class="foto_titel"><form method="post" action="fotoboek.php?photo=<?= $iter->get('id') ?>">
+	<?= input_hidden('submfotobeschrijving', 'yes') ?>
+	<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', _('Opslaan')) ?>
+	</form></div>
+<? } elseif ($iter->get('beschrijving')) { ?>
+	<div class="foto_titel"><?= $iter->get('beschrijving') ?></div>
+<? } ?>
+
+<div id="foto" class="fotoboek_foto">
+<?
+	$prev = $model->get_previous_photo($iter, 2);
+	$next = $model->get_next_photo($iter, 2);
+?>
+<? if (count($prev) > 0) { ?>
+	<div class="prevPhoto"><a href="fotoboek.php?photo=<?= $prev[0]->get('id') ?>#a"><?= image('previous.png', _('Vorige'), _('Ga naar vorige foto')) ?></a></div>
+<? } ?>
+<? if (count($next) > 0) { ?>
+	<div class="nextPhoto"><a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a"><?= image('next.png', _('Volgende'), _('Ga naar volgende foto')) ?></a></div>
+<? } ?>
+<a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
+<img id="photo" src="<?= $iter->get('url') ?>" alt="<?= _('Foto') ?>">
+</a>
+</div>
+<script type = "text/javascript">
+	$(document).ready(function(){
+		$(document).keyup(function(event){keyPress(event);});	
+	});
+	
+	function keyPress(event)
+	{
+		if(event.keyCode == 37 && $(".prevPhoto > a").attr("href") != undefined)
+			window.location.href = $(".prevPhoto > a").attr("href");
+		else if (event.keyCode == 39 && $(".nextPhoto > a").attr("href") != undefined)
+			window.location.href = $(".nextPhoto > a").attr("href");
+		else if (event.keyCode == 38)
+			window.location.href = $(".fotoboek_path_current > a").attr("href");
+	}
+</script>

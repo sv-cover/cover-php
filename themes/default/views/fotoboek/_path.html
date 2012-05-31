@@ -1,0 +1,34 @@
+<?
+if (!$iter)
+	return;
+
+$parents = $model->get_parents($iter);
+$path = array();
+
+foreach ($parents as $parent) {
+	if ($parent)
+		$path[] = '<a href="fotoboek.php?book=' . $parent->get('id') . '">' . $parent->get('titel') . '</a>';
+	else
+		$path[] = '<a name="a" href="fotoboek.php">' . _('Fotoboeken') . '</a>';
+}
+
+?><div id="path" class="fotoboek_path"><?=  implode(' / ', $path) ?>
+
+<?
+if (count($path) > 0)
+	echo ' / ';
+
+?><span class="fotoboek_path_current"><?
+
+if ($iter)
+	$title = $iter->get('titel');
+else
+	$title = _('Fotoboeken');
+
+if ($include_current) {
+	?><a href="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>"><?= $title ?></a><?
+} else {
+	echo $title;
+} ?>
+
+</span></div>

@@ -1,0 +1,12 @@
+<h1><?= _('Fotoboek') ?> :: <?= _('Bewerken') ?></h1>
+
+<? 
+$include_current = true;
+$this->render_partial('path', compact('model', 'iter', 'include_current'));
+?>
+
+<form action="fotoboek.php?book=<?= $iter->get('id') ?>" method="post">
+
+<? $this->render_partial('fotoboek_edit', compact('model', 'iter')); ?>
+
+e</form>
