@@ -78,13 +78,13 @@
 			$admin[] = '<a href="forum.php?admin=forums">' . _('Forum') . '</a>';
 			$admin[] = '<a href="nieuwlid.php">' . _('Leden toevoegen') . '</a>';
 			$admin[] = '<a href="show.php?show_new">' . _('Pagina maken') . '</a>';
+			$admin[] = '<a href="banners.php">' . _('Advertenties') . '</a>';
 		}
 		if (member_in_commissie(COMMISSIE_BOEKCIE)) {
 			$admin[] = '<a href="boeken.php?bestellingen">' . _('Bestelde boeken') . '</a>';
 		}
 		if (member_in_commissie(COMMISSIE_EASY)) {
 			$admin[] = '<a href="taken.php">' . _('Taken') . '</a>';
-			$admin[] = '<a href="_priv/docs/api/html/">' . _('Documentatie') . '</a>';
 		}
 		
 		if (count($admin) > 0) {
@@ -99,7 +99,7 @@
 			</div>
 			</li>';
 		}
-		//<li><a href="show.php?id=54">Vacatures</a></li> tijdelijk eruit gesloopt
+		
 		$contents .= '	<li class="expander"><a href="javascript:do_expander(\'menu_cover\', true);"><img id="expander_menu_cover" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_cover\', true);">Cover</a>
 			<div id="menu_cover" class="expander_menu">
 			<ul class="expander">
@@ -119,7 +119,7 @@
 			<div id="menu_bedrijven" class="expander_menu">
 			<ul class="expander">
 				<li><a href="show.php?id=51">Bedrijfsprofielen</a></li>
-				
+				<li><a href="show.php?id=54">Vacatures</a></li>
 			</ul>
 			</div>
 			</li>
@@ -190,6 +190,7 @@
 			$admin[] = '<a href="forum.php?admin=forums">' . _('Forum') . '</a>';
 			$admin[] = '<a href="nieuwlid.php">' . _('Leden toevoegen') . '</a>';
 			$admin[] = '<a href="show.php?show_new">' . _('Pagina maken') . '</a>';
+			$admin[] = '<a href="banners.php">'. _('Advertenties') .'</a>';
 		}
 		
 		if (member_in_commissie(COMMISSIE_BOEKCIE)) {
@@ -208,7 +209,16 @@
 					<li><a href="fotoboek.php">' . _('Foto\'s') . '</a></li>
 					<li class="dropDown"><a drop="studie" href="" onclick="return false;">Studie</a></li>
 					<li><a href="show.php?id=17">' . _('Contact') . '</a></li>
-				</ul>
+				</ul><script>
+$("#verenigingClick").click(function(){
+	$(".subNav ul:visible").each( function() {
+		if (this != "#vereniging"){
+			$(this).slideToggle("slow");
+		}
+	});
+	$("#vereniging").slideToggle("slow");
+}); 
+</script>
 			</div>
 			<div class="subNav">
 		';
@@ -244,6 +254,7 @@
 				</ul>
 				<ul id="bedrijven" class="expander">
 					<li><a href="show.php?id=51">Bedrijfsprofielen</a></li>
+					<li><a href="show.php?id=54">Vacatures</a></li>
 					<li><a href="afstudeerplaatsen.php">' . _('Afstudeerplaatsen') . '</a></li>
 					<li><a href="show.php?id=56">' ._('Sponsormogelijkheden') .'</a></li>
 				</ul>
@@ -452,7 +463,7 @@
 		-->
 		
 		<script type="text/javascript" src="' . get_theme_data('data/popup.js') . '"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 		<script type = "text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
 		<script type="text/javascript" src="data/connection.js"></script>
 
