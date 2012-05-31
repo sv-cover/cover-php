@@ -1,0 +1,34 @@
+<h1>Banner rotator beheer</h1>
+<div class="messageBox">
+<? if ($iter['banners'] == false): ?>
+	<h2>Er zijn geen rotators ingesteld</h2>
+<? else: ?>
+	<h2>Bewerk een van de volgende rotators:</h2>
+	<select id="select-rotator">
+		<?php
+			foreach($iter['banners'] as $rotator)
+				echo '<option>' . $rotator['rotator-name'] . '</option>';
+		?>
+	</select>
+	<?php
+		foreach($iter['banners'] as $rotator)
+		{
+			echo '<ul id="'. $rotator["rotator-name"] .'">';
+			foreach($rotator['data'] as $banner)
+				echo '<li><img src="'. $rotator['location'] . $banner['filename'] .'" /></li>';
+			echo '</ul>';
+		}
+	?>
+<? endif; ?>
+	<h2>Maak een nieuwe rotator</h2>
+	<p>Deze functie is nog niet beschikbaar, sorry!</p>
+</div>
+<script type="text/javascript">
+	$(function()
+	{
+		$("#select-rotator").change(function()
+		{
+			alert(this.val());
+		}).trigger('change');
+	});
+</script>

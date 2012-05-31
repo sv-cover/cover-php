@@ -1,4 +1,7 @@
 <?php
+
+    require_once('Rotator.php');
+    
 	function view_footer($model, $iter, $params) {
 		?>
 				</div> <!-- CONTENTS_TEXT -->
@@ -12,7 +15,15 @@
 				</div>	
 				
 				<div class="aff column">
-					<a href="http://www.procam.nl"><img src="/images/banner_procam.gif" alt="Procam ICT"></a>
+                    <?
+                        $rotator = new Rotator('images/banners/');
+                        $banners = $rotator -> get(7);
+                        foreach ($banners as $banner)
+                        {
+                            echo '<a href="'.$banner['url'].'"><img src="images/banners/'.$banner['filename'].'" /></a><br /><br />';
+                        }
+                    ?>
+					<!--<a href="http://www.procam.nl"><img src="/images/banner_procam.gif" alt="Procam ICT"></a>
 					<br /><br />
 					<a href="http://www.cafekarakter.nl/"><img src="/images/banner_karakter.jpg" alt="Cafe Karakter"></a>
 					<br /><br />
@@ -22,9 +33,7 @@
 					<br /><br />
 					<a href="http://werkenbijtno.nl/"><img src="/images/tno.jpg" alt="Werken bij TNO"></a>
 					<br /><br />
-					<a href="http://www.axonline.nl/"><img src="/images/axonlogo.png" alt="Alumnivereniging Axon"></a>
-					<br /><br />
-					<a href="http://www.topicus.nl/"><img src="/images/topicus.png" alt="Topicus"></a>
+					<a href="http://www.axonline.nl/"><img src="/images/axonlogo.png" alt="Alumnivereniging Axon"></a>-->
 				</div>
 		</div> <!-- CONTAINER -->
 	
