@@ -463,7 +463,7 @@ $("#verenigingClick").click(function(){
 		-->
 		
 		<script type="text/javascript" src="' . get_theme_data('data/popup.js') . '"></script>
-		<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script type = "text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
 		<script type="text/javascript" src="data/connection.js"></script>
 

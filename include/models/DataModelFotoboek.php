@@ -28,7 +28,7 @@
 						id = " . intval($id);
 			if(!$logged_in) {
 				// Als je niet ingelogd bent dan mag je de chantagemap niet zien!
-				$q .= " AND titel NOT ILIKE 'chantagemap%';";
+				$q .= " AND titel NOT ILIKE 'chantagemap%' AND titel NOT ILIKE 'download grote foto\'s%';";
 			}
 			$row = $this->db->query_first($q);
 			return $this->_row_to_iter($row);
