@@ -1,30 +1,32 @@
-Hallo $voornaam,
+Beste $voornaam,
 
-Als lid van Cover heb je automatisch een profiel gekregen op de website:
-www.svcover.nl. Dit account geeft je de mogelijkheid om:
+Welkom bij Cover, de studievereniging voor Informatica en Kunstmatige Intelligentie aan de Rijksuniversiteit Groningen! Wij hopen in de komende jaren bij te kunnen dragen aan zowel je studie als je  studentenleven.
+
+Cover organiseert namelijk allerlei dingen voor haar leden, variërend van boekenverkopen aan het begin van elke periode, studiegerelateerde activiteiten zoals symposia en lezingen waar je kennis over het vakgebied wordt verbreed en daarnaast nog vele ontspannende activiteiten zoals borrels en filmavonden. Om te zien welke activiteiten de komende weken zullen plaatsvinden, kun je kijken op www.svcover.nl.
+
+Als lid van Cover heb je automatisch een profiel gekregen op onze website. Dit account geeft je de volgende mogelijkheden:
 
 - Wijzigingen van je gegevens on-line door te geven;
 - Deel te nemen aan discussies in de forums;
 - Reacties te plaatsen in de fotoboeken;
 - On-line boeken te bestellen;
-- Gebruik te maken van de studieondersteuningspagina.
 
-Inloggen op de site doe je links bovenaan de pagina. Aan het eind van dit 
-mailtje staan jouw inloggegevens. Na het inloggen kun je je profiel bekijken en
-bewerken. We raden je aan je wachtwoord te veranderen en indien gewenst je
-privacygegevens aan te passen. Deze geven aan welke informatie van je waar
-getoond mag worden.
+Inloggen op de site doe je rechts bovenaan de pagina. Aan het eind van dit mailtje staan jouw inloggegevens. Na het inloggen kun je je profiel bekijken en bewerken. We raden je aan je wachtwoord te veranderen en indien gewenst je privacygegevens aan te passen. Deze geven aan welke informatie van je waar getoond mag worden.
 
-Verder kun je op de website onder 'Cover: Documenten' en in de CoverKamer 
-het huishoudelijk reglement en de statuten vinden .
-(http://www.svcover.nl/show.php?id=30)
+Naast de website bezitten wij ook nog een verenigingskamer (Bernoulliborg kamer 5161.0044). De verenigingskamer is een uitstekende plek om andere leden te ontmoeten en tussen de colleges even bij te komen door even een spelletje te spelen op onze Wii, Xbox 360 of SNES of gewoon even op de bank te relaxen en even gezellig te kletsen. In deze kamer is ook elke donderdag vanaf 16.00 een borrel (de Dombo) waar je gezellig een drankje kunt komen drinken.
+
+Verder heeft lid zijn van Cover de volgende voordelen:
+
+-Gratis Windows 8 en andere producten uit het DreamSpark pakket dat je kunt bemachtigen via je profiel op de site.
+-10% korting bij Shirt-a-la-minute op vertoon van je ledenpas.
+
+Daarnaast heb je bij Cover ook de mogelijkheid om je te verbreden door commissiewerk te doen. Wil je meer weten over deze mogelijkheden dan kun je contact opnemen met de Commissaris Intern via intern@svcover.nl!
+
+Mocht je nog vragen hebben kun je ze mailen naar bestuur@svcover.nl of een van de bestuursleden aanspreken in onze kamer.
 
 Vriendelijke groet,
 
-
-Het Cover-bestuur
-
-INLOGGEGEVENS:
+Het Coverbestuur
 
 email:      $email
 wachtwoord: $wachtwoord

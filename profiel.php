@@ -122,7 +122,8 @@
 				foreach ($changes as $field => $value)
 					$body .= $field . ":\t" . ($value ? $value : "<verwijderd>") . " (was: " . $oud[$field] . ")\n";
 					
-				mail(get_config_value('email_bestuur'), $subject, $body, "From: webcie@ai.rug.nl\r\n");
+				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\n");
+				mail('secretaris@svcover.nl', $subject, 'De gegevens van ' . member_full_name($iter) . " zijn gewijzigd: \n\n De wijzigingen zijn te vinden op administratie@svcover.nl", "From: webcie@ai.rug.nl\r\n");
 			}
 
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#almanak');

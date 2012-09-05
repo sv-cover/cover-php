@@ -21,7 +21,7 @@
 			//check for config file
 			if (($json = file_get_contents('themes/default/views/banners/config.json')) != false)
 			{
-				//decode to 10 levels deep (arbitrarily large number) and return
+				//decode to 10 levels deep (or some other large number) and return
 				return json_decode($json, true, 10);
 			}
 			else

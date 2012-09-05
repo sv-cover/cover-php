@@ -58,7 +58,8 @@
 			// Setup e-mail
 			$mail = parse_email('lidworden.txt', $data);
 
-			mail(get_config_value('email_bestuur'), 'Lidaanvraag', $mail, 'From: Cover <bestuur@svcover.nl>');
+			mail('administratie@svcover.nl', 'Lidaanvraag', $mail, 'From: Cover <bestuur@svcover.nl>');
+			mail('secretaris@svcover.nl', 'Lidaanvraag', "Er is een nieuwe lidaanvraag ingediend. De gegevens zijn te vinden op administratie@svcover.nl", 'From: Cover <bestuur@svcover.nl>');
 			header('Location: lidworden.php?verzonden');
 		}
 		
