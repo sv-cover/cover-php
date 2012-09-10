@@ -419,7 +419,7 @@
 		echo table_row(label(_('Onderwerp/vraag'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxsize', '150'));
 		echo table_row(label(_('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors']));
 		
-		for ($i = 0; $i < 3; $i++)
+		for ($i = 0; $i < 6; $i++)
 			echo '<tr id="optie_tr_' . $i . '"><td>' . _('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';
 		
 		echo '</tbody></table><div class="bar" style="border-top: 1px solid #000000;"><span  style="padding-left: 10px;">' . 
