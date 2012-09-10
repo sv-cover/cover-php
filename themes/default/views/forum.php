@@ -601,9 +601,9 @@
 			<td class="last">';
 			$i = ($i ? 0 : 1);
 			$last = $iter->get_last_thread();
-			
+			$pages = $last->get_num_thread_pages();
 			if ($last)
-				echo $last->get('datum') . '<br><a href="forum.php?thread=' . $last->get('id') . '">' . $last->get('subject') . '</a>';
+				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#' . ($lastid == $last->get('id') ? 't' : 'p') . $lastid . '">' . $last->get('subject') . '</a>';
 			
 			echo '</td></tr>';
 			}
