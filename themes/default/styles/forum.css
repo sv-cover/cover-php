@@ -29,7 +29,7 @@ table.forum a:hover {
 	color: #004274;
 }
 table.forum, table.poll {
-	border-collapse: collapse;
+	/*border-collapse: collapse;*/
 	width: 100%;
 	float: left;
 }
@@ -79,19 +79,20 @@ table.forum td.author {
 	text-align:center;
 }
 
-table.poll td {
+.forum_poll table.poll td {
 	/*border: 1px solid #F5F5F5;*/
 	padding: 3px;
+	border-radius: 0px !important;
 }
 
-table.poll tr:nth-child(odd) { 
+/*table.poll tr:nth-child(odd) { 
 	background-color: #e8e8ff;
 	color: #000;
 }
 table.poll tr:nth-child(even) {
 	background-color: #dce0e5;	
 	color: #000;
-}
+}*/
 table.forum td.message {
 	vertical-align: top;
 	border-top: 0;
@@ -127,7 +128,7 @@ table.forum tr.r1 > td {
 {
 	border-bottom: 1px dashes #999;
 }
-.forum_poll table.votes
+.forum_poll table.votes, .forum_poll table.poll
 {
 	padding: 0px 10px;
 	
@@ -136,11 +137,15 @@ table.forum tr.r1 > td {
 {
 	border-spacing: 0px 10px;
 }
-.forum_poll table.votes td
+.forum_poll table.poll
+{
+	border-spacing: 3px 10px !important;
+}
+.forum_poll table.votes td, .forum_poll table.poll td
 {
 	padding: 10px;
 }
-.forum_poll table.votes td
+.forum_poll table.votes td, .forum_poll table.poll td
 {
 	border: 1px solid #999;
 	background-color: #ddd !important;
@@ -162,6 +167,16 @@ table.forum tr.r1 > td {
 .forum_poll table.votes td.percentage
 {
 	border-left: 0;
+}
+.forum_poll table.poll .pollvoteRadio
+{
+	width: 25px;
+}
+.forum_poll table.poll .pollvoteRadio input
+{
+	vertical-align: middle;
+	display: inline;
+	margin-left: 6px;
 }
 table.forum td.last {
 	text-align: center;
@@ -265,7 +280,7 @@ div.forum_poll ul.poll {
 	margin: 15px;
 }
 
-table.forum tr.header td, table.poll tr.header td {
+table.forum tr.header td {
 	background-color: #4d4d4d;
 	color: white;
 	text-align: center;

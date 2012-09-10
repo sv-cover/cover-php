@@ -69,6 +69,22 @@ p {
 
 table { margin:0 auto; }
 
+table.poll
+{
+	margin: 0;
+}
+table.poll tr td:nth-child(2)
+{
+	padding: 5px;
+	background-color: #d0d0d0;
+	border-radius:3px;
+}
+
+table.poll .pollvoteRadio
+{
+	width: 25px;
+}
+
 table.profiel{
 	width: 80%;
 	padding: 0px 20px;
