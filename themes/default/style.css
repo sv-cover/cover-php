@@ -72,6 +72,7 @@ table { margin:0 auto; }
 table.poll
 {
 	margin: 0;
+	width: 100%;
 }
 table.poll tr td:nth-child(2)
 {
