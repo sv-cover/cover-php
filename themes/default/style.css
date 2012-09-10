@@ -204,6 +204,7 @@ border-radius: 0 0 5px 5px;
 	border: 1px transparent #7D7D7D;
 	border-radius: 3px;
 	box-shadow: 0px 2px 5px #333;
+	max-width: 100%;
 }
 
 .bestuur {background-color:#b80a0a !important; color: #b80a0a !important;}
