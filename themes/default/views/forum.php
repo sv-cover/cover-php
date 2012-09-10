@@ -424,9 +424,9 @@
 		
 		echo '</tbody></table><div class="bar" style="border-top: 1px solid #000000;"><span  style="padding-left: 10px;">' . 
 		
-		input_button(_('Nieuwe optie'), 'add_option()') . ' ' .
-		input_submit('subm', _('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</span></div></form>
-
+		//input_button(_('Nieuwe optie'), 'add_option()') . ' ' .
+		input_submit('subm', _('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</span></div></form>';
+		/*
 		<script type="text/javascript">
 			var sending = false;
 			var num_options = 3;
@@ -458,7 +458,7 @@
 				num_options++;
 			}
 		</script>
-		';
+		';*/
 	}
 	
 	function get_authors($model, $forumid, $acl) {
