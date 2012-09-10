@@ -137,6 +137,24 @@ ul.expander{
 {
 }
 
+.bannerList
+{
+    margin: 10px 0px !important;
+    padding: 0px;
+}
+.bannerList td
+{
+    height: 150px;
+    background-color: #ddd;
+    float: left;
+    margin: 8px;
+}
+.bannerList td img
+{
+    margin: 0 auto;
+    vertical-align: middle;
+}
+
 .topbar {
 background-color:#F5F5F5;
 color:#000;

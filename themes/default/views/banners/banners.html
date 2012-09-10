@@ -7,16 +7,19 @@
 	<select id="select-rotator">
 		<?php
 			foreach($iter['banners'] as $rotator)
-				echo '<option>' . $rotator['rotator-name'] . '</option>';
+				echo '<option data-id="'.$rotator['id'].'">' . $rotator['rotator-name'] . '</option>';
 		?>
 	</select>
 	<?php
 		foreach($iter['banners'] as $rotator)
 		{
-			echo '<ul id="'. $rotator["rotator-name"] .'">';
+            //var_dump($rotator);
+			echo '<table class="bannerList" id="'. $rotator["id"] .'">
+                    <tbody>
+                        <tr>';
 			foreach($rotator['data'] as $banner)
-				echo '<li><img src="'. $rotator['location'] . $banner['filename'] .'" /></li>';
-			echo '</ul>';
+				echo '<td><img src="'. $rotator['location'] . $banner['filename'] .'" /><br /><span>'.$banner['url'].'</span></td>';
+			echo '</tr></tbody></table>';
 		}
 	?>
 <? endif; ?>
@@ -28,7 +31,9 @@
 	{
 		$("#select-rotator").change(function()
 		{
-			alert(this.val());
-		}).trigger('change');
+            $(".messageBox table").hide();
+			$("#"+$(this).find(":selected").attr('data-id')).show();
+		})
+        .trigger('change');
 	});
 </script>

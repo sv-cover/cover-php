@@ -38,7 +38,7 @@
 			{
 				$data = json_decode(file_get_contents($banner_config['location'] . 'data.json'), 10);
 
-				array_push($banners, array('rotator-name' => $banner_config['name'], 'data' => $data, 'location' => $banner_config['location']));
+				array_push($banners, array('rotator-name' => $banner_config['name'], 'id' => $banner_config['id'], 'data' => $data, 'location' => $banner_config['location']));
 			}
 			return $banners;
 		}
