@@ -14,6 +14,11 @@ h1 a:hover
 	font-size: 10px;
 }
 
+table.forum tbody
+{
+	border-spacing:0px;
+}
+
 table.forum a {
 	text-decoration: none;
 	color: #004274;
@@ -28,8 +33,12 @@ table.forum a:hover {
 	text-decoration: underline;
 	color: #004274;
 }
+
+table.forum
+{
+	border-collapse: collapse;
+}
 table.forum, table.poll {
-	/*border-collapse: collapse;*/
 	width: 100%;
 	float: left;
 }
