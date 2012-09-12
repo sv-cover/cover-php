@@ -16,7 +16,7 @@ if(logged_in() == false) {
 		if(strcasecmp($children[$i]->get('titel'), "Chantagemap") == 0) {
 			unset($children[$i]);
 		}
-		if (strcasecmp($children[$i]->get('titel'), "Download grote foto's") == 0){
+		else if (strcasecmp($children[$i]->get('titel'), "Download grote foto's") == 0){
 			unset($children[$i]);
 		}
 	}
