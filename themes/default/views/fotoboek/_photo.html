@@ -24,7 +24,8 @@
 </div>
 <script type = "text/javascript">
 	$(document).ready(function(){
-		$(document).keyup(function(event){keyPress(event);});	
+		$(document).on('keyup.nav',function(event){keyPress(event);});
+		$("textarea[name='reactie']").focus(function(){$(document).off('keyup.nav')}).blur(function(){$(document).on('keyup.nav', function(event){keyPress(event);})});
 	});
 	
 	function keyPress(event)
