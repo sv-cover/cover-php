@@ -3,15 +3,28 @@ textarea[name="reactie"]
 	width: 100%;
 }
 
-table.fotoboek {
-	width: 99%;
+table.photobookPhotos
+{
+	width: 100%;
 	border-collapse: collapse;
 }
-
-table.fotoboek td, table.fotoboek_photos td {
-	text-align: center;
+table.photobookPhotos tr:nth-child(odd) td
+{
+	background-color: #ebebeb;
+}
+table.photobookPhotos td
+{
 	width: 33%;
-	padding: 3px;
+	padding: 0px;
+	vertical-align: middle;
+	text-align: center;
+	padding: 10px 0px;
+}
+table.photobookPhotos td img
+{
+  border: 1px solid #ddd;
+  box-shadow: 1px 1px 3px #555;
+  max-width: 100%;
 }
 
 table.navigation {
@@ -22,20 +35,6 @@ table.navigation td {
 	width: 33%;
 }
 
-table.fotoboek tr.image td, table.fotoboek_photos tr.image td {
-	vertical-align: bottom;
-}
-
-table.fotoboek tr.title td, table.fotoboek_photos tr.title td {
-	vertical-align: top;
-	padding-bottom: 15px;
-	font-size: 10px;
-}
-
-table.fotoboek_photos img {
-	width: 150px;
-	border: 1px outset #8486a1;
-}
 
 div.fotoboek_path {
 	font-size: 16px;
@@ -123,12 +122,6 @@ div.relative {
 	position: relative;
 }
 
-table.fotoboek div.admin {
-	position: absolute;
-	top: 0px;
-	width: 150px;
-	text-align: right;
-}
 
 .prevPhoto img, .nextPhoto img
 {

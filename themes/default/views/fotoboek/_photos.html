@@ -9,11 +9,13 @@ if (!$photos || count($photos) == 0)
 if ($admin) { ?>
 	<form action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>" method="post" onSubmit="return confirm('<? str_replace("'", "\\'", _('Weet je zeker dat je de geselecteerde foto\'s wilt verwijderen?')) ?>');"><?= input_hidden('submfotoboekdelfotos', 'yes'); ?>
 <? } ?>
+	<table class="photobookPhotos">
+		<tbody>
 <?
 for ($i = 0; $i < count($photos); $i += $photos_per_row) {
 	$images = array();
 	$titles = array();
-
+	echo '<tr>';
 	for ($n = $i; $n < $i + $photos_per_row; $n++) {
 		if ($n >= count($photos)) {
 			$images[] = '';
@@ -36,17 +38,20 @@ for ($i = 0; $i < count($photos); $i += $photos_per_row) {
 	}
 	//echo the images in this row
 	for ($idx = 0; $idx != $photos_per_row; ++$idx)
+	{
 		echo '
-			<div class = "foto">
+			<td class = "foto">
 				'. $images[$idx] .'
 				<p class = "fotoTitle">
 					'. $titles[$idx] .'
 				</p>
-			</div>';
+			</td>';
+	}
+	echo '</tr>';	
 	?>
-	<!--<tr class="image"><td><?= implode('</td><td>', $images) ?></td></tr>
-	<tr class="title"><td><?= implode('</td><td>', $titles) ?></td></tr>-->
 <? } ?>
+		</tbody>
+	</table>
 
 
 <? if ($admin) { ?>
