@@ -39,7 +39,7 @@
 			return array();
 	}
 	
-		function create_agenda_menu($color) {
+	function create_agenda_menu($color) {
 		$model = get_model('DataModelAgenda');
 		$iters = $model->get_agendapunten(logged_in());
 		
@@ -63,11 +63,31 @@
 		return create_menu($color, 'agenda', _('Agenda'), $contents);
 	}
 	
+	function create_agenda_lustrum($color) {
+		$model = get_model('DataModelLustrum');
+		$iters = $model->get_agendapunten(logged_in());
+		
+		if (count($iters) != 0) {
+			$contents = "<ul class=\"agenda\">\n";
+			
+			for ($i = 0; $i < min(16, count($iters)); $i++) { 
+				$iter = $iters[$i];
+				$contents .= '<li class="clearfix"><span class="date">' . sprintf('%02d-%02d', $iter->get('vandatum'), $iter->get('vanmaand')) . '</span><a href="agenda.php?agenda_id=' . $iter->get_id() . '">' . $iter->get('kop') . '</a></li>';
+			}
+			
+			$contents .= "</ul>\n";
+		} else {
+			$contents .= '<p><span class="smaller">' . _('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
+		}
+		$contents = "<img src=\"images/lustrumlogo2.png\" alt=\"lustrum\">".$contents;
+		return create_menu($color, 'lustrum', _('Lust, Rum & Rock \'n Roll'), $contents);
+	}
+	
 	function create_links_menu($color) {
 		$contents = '
 		<ul class="links">
 			<li><a href="index.php">' . _('Home') . '</a></li>';
-		
+		 
 		$admin = array();
 		
 		if (member_in_commissie(COMMISSIE_BESTUUR)) {
@@ -250,7 +270,6 @@ $("#verenigingClick").click(function(){
 					<li><a href="almanak.php">' ._('Almanak') .'</a></li>
 					<li><a href="http://www.shitbestellen.nl" target="_blank">' ._('Merchandise') .'</a></li>
 					<li><a href="profiel.php#msdnaa">' ._('MSDNAA') .'</a></li>
-					<li><a href="http://www.isdecoverkameropen.nl/" target="_blank">' ._('Coverkamer') .'</a></li>
 				</ul>
 				<ul id="bedrijven" class="expander">
 					<li><a href="show.php?id=51">Bedrijfsprofielen</a></li>
@@ -485,9 +504,9 @@ $("#verenigingClick").click(function(){
 			echo '
 			}
 		</script>
-	</head>
-	<body onLoad="page_load();">
 		
+	</head>
+	<body onLoad="page_load();" id="world">
 		<div class="header">
 				' . create_message() . '
 				<div class="login">
@@ -497,6 +516,8 @@ $("#verenigingClick").click(function(){
 				$logo = '<a href="."><img src="' . get_theme_data('images/cover_logo.png') . '" alt="logo"/></a>';
 				if (date('m') == 12 && date('d') > 5 && date('d') < 27){
 					$logo = '<a href="."><img src="' . get_theme_data('images/kerstlogo.png') . '" style="margin-top: -20px;" alt="logo"/></a>';
+				} else if (date('m') == 9 && date('d') > 13 && date('d') < 21 && date('Y') == 2013){
+					$logo = '<a href="."><img src="' . get_theme_data('images/lustrumlogo.png') . '" alt="logo"/></a>';
 				}
 		echo $logo.'
 		</div>

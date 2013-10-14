@@ -8,16 +8,26 @@ if (!$children || count($children) == 0)
 ?>
 
 <?
-
+$end = count($children);
 // Serieus...
 // Filter fotoboeken met de naam 'Chantagemap' als er niemand is ingelogd
 if(logged_in() == false) {
-	for($i = 0; $i < count($children); $i++) {
+	for($i = 0; $i < $end; $i++) {
 		if(strcasecmp($children[$i]->get('titel'), "Chantagemap") == 0) {
 			unset($children[$i]);
 		}
 		else if (strcasecmp($children[$i]->get('titel'), "Download grote foto's") == 0){
 			unset($children[$i]);
+		}
+		// filter ook oude jaargangen als men niet is ingelogd
+		else {
+			$matches = Array();
+			preg_match_all("#Foto's uit ([\d]{4})/[\d]{4}#", $children[$i]->get('titel'), $matches, PREG_SET_ORDER);
+			if (!empty($matches))
+				if (!($matches[0][1] === date("Y") || $matches[0][1] === date("Y",strtotime("-1 year"))))
+				{
+					unset($children[$i]);
+				}
 		}
 	}
 	// herindexeer array

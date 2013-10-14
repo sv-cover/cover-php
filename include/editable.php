@@ -75,6 +75,8 @@
 			$fotohtml = '<div class="commissie_foto"><img src="images/kascie.jpg"></div>';
 		} elseif($owner == 14) { // RvA			
 			$fotohtml = '<div class="commissie_foto"><img src="images/rva.jpg"></div>';
+		} elseif($owner == 5) { // Brainstorm			
+			$fotohtml = '<div class="commissie_foto"><img src="images/brainstorm.gif"></div>';
 		} else {
 			$model = get_model('DataModelCommissie');
 			$login = $model->get_login($owner);

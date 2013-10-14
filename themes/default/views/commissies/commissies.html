@@ -10,6 +10,8 @@
 		$imgpath = 'images/kascietn.jpg';
 	elseif ($commissie->get('naam') == 'Raad van Advies')
 		$imgpath = 'images/rvatn.jpg';
+	elseif ($commissie->get('login') == 'bstorm')
+		$imgpath = 'images/brainstormtn.gif';
 	else
 		$imgpath = 'images/' . $commissie->get('login') . 'tn.jpg';
 	

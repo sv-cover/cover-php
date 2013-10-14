@@ -462,8 +462,8 @@
 				}
 			} else if (isset($_GET['photo']) && $_GET['photo']) {
 				$photo = $this->model->get_iter($_GET['photo']);
-				
-				if (!$photo) {
+				$book = $photo -> get('boek');
+				if (!$photo || (logged_in() == false && ($book <= 833 || $book == 938 || $book == 836))) {
 					$this->get_content('photo_not_found');
 					return;
 				}

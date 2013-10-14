@@ -1,0 +1,113 @@
+<?php
+session_start();
+?>
+<h1> <?= _('Opgeven Kleine LALA') ?></h1>
+<?php
+$commissies = _commissies_from_id($_SESSION['member_id']);
+/*
+if (!empty($_POST)){
+	if (isset($_SESSION['member_id'])){
+		$filename = 'inschrijvingen.txt';
+		$somecontent = member_full_name($_SESSION['member_id']).", ".$_COOKIE['email'].", ".$_POST['opmerkingen']." \r\n";
+
+		if (is_writable($filename)) {
+			if (!$handle = fopen($filename, 'a')) {
+				die("Er is iets fout gegaan tijdens het verwerken. Probeer het nog een keer.");
+			}
+			if (fwrite($handle, $somecontent) === FALSE) {
+				die("Er is iets fout gegaan tijdens het verwerken. Probeer het nog een keer.");
+			}
+			fclose($handle);
+
+?>
+<hr class="colorAccent bestuur">
+<div class="messageBox">
+<p>Datum: Dinsdag 15 Januari<br/>
+	Tijd: 20:00<br/>
+</p>
+<p>Het bestuur doet graag iets terug voor leden die zich actief inzetten voor de vereniging. Daarom hebben we komende dinsdag de Kleine LALA. We hebben een Running Drinks-avond. <br /><br />Het geeft overigens niet als je geen alcohol drinkt, daar is om gedacht.</p>
+<br /><br />
+Je hebt je opgegeven!
+</div>
+<?PHP 
+		$filename = "users.txt";
+		$somecontent = "-".$_SESSION['member_id']."-, ";
+		if (is_writable($filename)) {
+			$handle = fopen($filename, 'a');
+			fwrite($handle, $somecontent);
+		}
+		} else {
+			die("Er is iets fout gegaan tijdens het verwerken. Probeer het nog een keer.");
+		}
+	}
+} else 
+*/
+if (isset($_SESSION['member_id']) && count($commissies) > 0) {
+
+$filename = "users.txt";
+$handle = fopen($filename, "rb");
+$contents = fread($handle, filesize($filename));
+fclose($handle);
+if (preg_match ( "-".$_SESSION['member_id']."-" , $contents)){
+?>
+<hr class="colorAccent bestuur">
+<div class="messageBox">
+<p>Datum: Dinsdag 15 Januari<br/>
+	Tijd: 20:00<br/>
+</p>
+<p>Het bestuur doet graag iets terug voor leden die zich actief inzetten voor de vereniging. Daarom hebben we komende dinsdag de Kleine LALA. We hebben een Running Drinks-avond. <br /><br />Het geeft overigens niet als je geen alcohol drinkt, daar is om gedacht.</p>
+<br /><br />
+Je hebt je al opgegeven!
+</div>
+<?php
+} else {
+?>
+<hr class="colorAccent bestuur">
+<div class="messageBox">
+<p>Datum: Dinsdag 15 Januari<br/>
+	Tijd: 20:00<br/>
+</p>
+<p>Het bestuur doet graag iets terug voor leden die zich actief inzetten voor de vereniging. Daarom hebben we komende dinsdag de Kleine LALA. We hebben een Running Drinks-avond. <br /><br />Het geeft overigens niet als je geen alcohol drinkt, daar is om gedacht.</p>
+<br /><br />
+<?php
+/*
+<form action="" method="post">
+<table style="margin-left: 0;">
+<tr><td>Opmerkingen? Plaats ze hieronder:</td></tr>
+<tr><td><textarea cols="70" rows="5" name="opmerkingen"></textarea></td></tr>
+<tr><td><input type="submit" value="Ik geef me op!"></td></tr>
+</table>
+</form>
+*/?>
+De inschrijvingen zijn helaas dicht.
+</div>
+<?php
+}
+} else if (count($commissies) == 0 && isset($_SESSION['member_id'])) {
+?>
+<hr class="colorAccent bestuur">
+<div class="messageBox">
+<p>Datum: Dinsdag 15 Januari<br/>
+	Tijd: 20:00<br/>
+</p>
+<p>Het bestuur doet graag iets terug voor leden die zich actief inzetten voor de vereniging. Daarom hebben we komende dinsdag de Kleine LALA. We hebben een Running Drinks-avond. <br />Het geeft overigens niet als je geen alcohol drinkt, daar is om gedacht.</p>
+<br /><br />
+
+Je bent helaas geen actief lid bij Cover. <a href="mailto:intern@svcover.nl">Mail</a> de Commissaris Intern om actief te worden zodat je de volgende LALA niet hoeft te missen!
+</div>
+<?php
+} else {
+?>
+<hr class="colorAccent bestuur">
+<div class="messageBox">
+<p>Datum: Dinsdag 15 Januari<br/>
+	Tijd: 20:00<br/>
+</p>
+<p>Het bestuur doet graag iets terug voor leden die zich actief inzetten voor de vereniging. Daarom hebben we komende dinsdag de Kleine LALA. We hebben een Running Drinks-avond. <br />Het geeft overigens niet als je geen alcohol drinkt, daar is om gedacht.</p>
+<br /><br />
+
+Je moet ingelogd zijn op de Coversite om je op te kunnen geven voor de Kleine LALA.
+</div>
+<?php
+}
+?>

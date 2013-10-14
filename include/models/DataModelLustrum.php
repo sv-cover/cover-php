@@ -4,7 +4,7 @@
 	/**
 	  * A class implementing the Agenda data
 	  */
-	class DataModelAgenda extends DataModel {
+	class DataModelLustrum extends DataModel {
 		function DataModelAgenda($db) {
 			parent::DataModel($db, 'agenda');
 		}
@@ -79,7 +79,7 @@
 					FROM agenda 
 					WHERE (tot > CURRENT_TIMESTAMP OR (CURRENT_TIMESTAMP < van + interval '1 day') OR 
 					(DATE_PART('hours', van) = 0 AND CURRENT_TIMESTAMP < van + interval '1 day')) AND 
-					id NOT IN (SELECT agendaid FROM agenda_moderate) " .
+					id NOT IN (SELECT agendaid FROM agenda_moderate) AND commissie = 9 AND id <> 1809 " . 
 					(!$include_prive ? ' AND private = 0 ' : '') . "
 					ORDER BY van ASC");
 

@@ -9,7 +9,7 @@ if(!logged_in()) {
 	die("Je moet inloggen op de website van Cover om toegang te krijgen tot MSDNAA.");
 } else {
 	$user = logged_in();
-	if($user['id'] == 566) { // Smerige hack. Als Wilco inlogt, log dan in als webcie@svcover.nl (administrator)
+	if($user['id'] == 622 || $user['id'] == 825 || $user['id'] == 855) { // Smerige hack. Als Wilco inlogt, log dan in als webcie@svcover.nl (administrator)
 		$user['id'] = "webcie@svcover.nl";
 	}
 	// Maak achternaam netjes
