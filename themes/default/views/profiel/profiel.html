@@ -109,6 +109,35 @@
 			</form>
 	</div>
 
+	<?php if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
+		<div class="floatLeft almanak">
+			<h2 class="profilehead" id="zichtbaarheid"><?= _('Zichtbaarheid') ?></h2>
+				<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#zichtbaarheid" method="post">
+
+					<?= input_hidden('submprofiel_zichtbaarheid', 'yes') ?>
+					<?= input_hidden('id', $iter->get('lidid')) ?>
+
+					<table class="profiel">
+						<tr>
+							<td width="120"><span class="label">Type:</span></td>
+							<td width="150"><label><?=input_radio('type', $iter->data, 1) . '&nbsp;' . _('Zichtbaar') ?></label></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><label><?=input_radio('type', $iter->data, 4) . '&nbsp;' . _('Onzichtbaar') ?></label></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><label><?=input_radio('type', $iter->data, 2) . '&nbsp;' . _('Inactief') ?></label></td>
+						</tr>
+						<tr>
+							<td colspan="2" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td>
+						</tr>
+					</table>
+				</form>
+		</div>
+	<?php } ?>
+
 	<? if ($this->member_write_permission($iter->get('lidid'))) { ?>
 		<div class="floatLeft almanak">
 			<h2 class="profilehead" id="wachtwoord"><?= _('Nieuw wachtwoord') ?></h2>

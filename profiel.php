@@ -51,6 +51,10 @@
 			return $matches[5] . '-' . $matches[3] . '-' . $matches[1];
 		}
 
+		function _check_type($name, $value) {
+			return $value !== null && is_numeric($value) && $value >=1 && $value <= 4;
+		}
+
 		function _process_almanak($iter) {
 			if (member_in_commissie(COMMISSIE_BESTUUR)) {
 				$check = array(
@@ -210,6 +214,33 @@
 			
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#privacy');
 		}
+
+		function _process_zichtbaarheid($iter) {
+			$errors = array();
+			$message = array();
+
+			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
+				$errors[] = 'type';
+				$message[] = _('Jij mag deze gegevens niet aanpassen.');
+			} elseif (!get_post('type')) {
+				$errors[] = 'type';
+				$message[] = _('De zichtbaarheid van het profiel is niet ingevuld.');
+			} elseif (get_post('type') < 1 || get_post('type') > 4) {
+				$errors[] = 'type';
+				$message[] = _('Er is een ongeldige waarde voor zichtbaarheid ingevuld.');
+			}
+
+			if (count($errors) > 0) {
+				$error = implode("\n", $message);
+				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
+				return;
+			}
+
+			$iter->set('type', intval(get_post('type')));
+			$this->model->update($iter);
+
+			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#zichtbaarheid');
+		}
 		
 		function run_impl() {
 			$lid = null;
@@ -231,6 +262,8 @@
 				$this->_process_wachtwoord($iter);
 			elseif (isset($_POST['submprofiel_privacy']))
 				$this->_process_privacy($iter);
+			elseif (isset($_POST['submprofiel_zichtbaarheid']))
+				$this->_process_zichtbaarheid($iter);
 			else
 				$this->get_content('profiel', $iter);
 		}
