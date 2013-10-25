@@ -13,7 +13,7 @@
 			else
 				$name = member_full_name($iter);
 			
-			return array('<a href="profiel.php?lid=' . $iter->get('id') . '"><img src="' . $photo . '" alt="' . sprintf(_('foto van %s'), member_full_name($iter)) . '"></a>', $name);
+			return array('<a href="profiel.php?lid=' . $iter->get('id') . '"><img width="100" height="150" src="' . $photo . '" alt="' . sprintf(_('foto van %s'), member_full_name($iter)) . '"></a>', $name);
 		}
 	}
 ?>
