@@ -554,7 +554,11 @@
 					if (!$member)
 						return null;
 					
-					$authors[$type][$id][$field] = array('name' => member_nick_name($member), 'avatar' => $member->get('avatar'), 'email' => $member->get('email'));
+					$authors[$type][$id][$field] = array(
+						'name' => member_nick_name($member),
+						'avatar' => $member->get('avatar'),
+						'email' => $member->get('email')
+					);
 				break;
 				case 2: /* Commissie */
 					$commissie_model = get_model('DataModelCommissie');
@@ -562,8 +566,14 @@
 					
 					if (!$commissie)
 						return null;
+
+					$avatar_file = 'images/avatars/' . $commissie->get('nocaps') . '.png';
 					
-					$authors[$type][$id][$field] = array('name' => $commissie->get('naam'), 'avatar' => null, 'email' => $commissie_model->get_email($commissie->get_id()));
+					$authors[$type][$id][$field] = array(
+						'name' => $commissie->get('naam'),
+						'avatar' => file_exists($avatar_file) ? $avatar_file : null,
+						'email' => $commissie_model->get_email($commissie->get_id())
+					);
 				break;
 			}
 			
