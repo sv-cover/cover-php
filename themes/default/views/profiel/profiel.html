@@ -17,10 +17,11 @@
 
 			if ($model->has_picture($iter) && !$model->is_private($iter,"foto",true)) {
 				// Make the picture a link ?>
-				<a class="profielFoto" href="<?= $photo_link ?>"><img src="<?= $photo_thumb_link ?>" class="profielFoto" alt= "<?= _('lidfoto') ?>"/></a>
+				<a class="profielFoto" href="<?= $photo_link ?>"><img width="100" height="150" src="<?= $photo_thumb_link ?>" class="profielFoto" alt= "<?= _('lidfoto') ?>"/></a>
 			<? } else { ?>
-				<img class="profielFoto" src="<?= $photo_link ?>" />
+				<img width="100" height="150" class="profielFoto" src="<?= $photo_link ?>" />
 			<? } ?>
+			<p class="hint"><?=_('Niet tevreden met je foto? Stuur een nieuwe naar webcie@svcover.nl. Het liefst 500&times;750 groot.')?></p>
 			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#almanak" method="post">
 				<?= input_hidden('submprofiel_almanak', 'yes') ?>
 				<?= input_hidden('id', $iter->get('lidid')) ?>
