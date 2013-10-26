@@ -3,7 +3,7 @@
                 'easy' => array(
                         'host' => 'localhost',
                         'user' => 'webcie',
-                        'password' => '48r5jgor.tmykcg',
+                        'password' => '',
                         'database' => 'webcie'
                         )
                 );
