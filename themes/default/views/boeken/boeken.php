@@ -48,14 +48,14 @@
 					echo '<td>' . markup_format_text($book->get('vak')) . '</td>
 						<td>' . markup_format_text($book->get('titel')) . '</td>
 						<td>' . markup_format_text($book->get('auteur')) . '</td>
-						<td>' . ($book->get('prijs') == 0 ? 'n.n.b.' : ('&euro; ' . $book->get('prijs'))) . '</td></tr>';
+						<td>' . ($book->get('prijs') == 0 ? 'n.n.b.' : ('&euro;&nbsp;' . $book->get('prijs'))) . '</td></tr>';
 					if ($book->get('prijs') == 0)
 						$nnb = true;
 
 					$total += $book->get('prijs');
 				}
 			
-				echo '<tr class="submit"><td colspan="' . ($bestellen ? '5' : '4') . '"><br><div class="text_right"><span class="bold">' . _('Totaal bedrag: &euro; ') . number_format($total, 2) . '</span></div>';
+				echo '<tr class="submit"><td colspan="' . ($bestellen ? '5' : '4') . '"><br><div class="text_right"><span class="bold">' . _('Totaal bedrag: &euro;&nbsp;') . number_format($total, 2) . '</span></div>';
 			
 				if ($nnb) {
 					echo '<p><span class="italic">' . _('Boeken waarvan de prijs nog niet bekend is zijn niet opgenomen in de totaalprijs. De uiteindelijke totaal prijs zal dus hoger uitvallen!') . '</span></p>';
@@ -107,7 +107,7 @@
 				$books = $model->get_from_category($id);
 			
 				foreach ($books as $book) {
-					$contents .= table_row(input_checkbox('boek_' . $book->get('id'), null), $book->get('vak'), $book->get('titel'), '<span class="italic">' . $book->get('auteur') . '</span>', $book->get('prijs') == 0 ? 'n.n.b.' : ('&euro; ' . $book->get('prijs')));
+					$contents .= table_row(input_checkbox('boek_' . $book->get('id'), null), $book->get('vak'), $book->get('titel'), '<span class="italic">' . $book->get('auteur') . '</span>', $book->get('prijs') == 0 ? 'n.n.b.' : ('&euro;&nbsp;' . $book->get('prijs')));
 				}
 			
 				$contents .= '</table>';
@@ -122,7 +122,7 @@
 		}
 	
 		function toevoegen_boeken($model, $errors, $added) {
-			echo '<div class="bar"><a href="javascript:boek_toevoegen();">' . image('add.png', _('toevoegen'), _('Boek toevoegen'), 'class="button"') . '</a> <a href="javascript:boek_toevoegen();"> ' . _('Toevoegen') . '</a></div>';
+			echo '<div class="bar"><a href="javascript:boek_toevoegen();">' . image('add.png', _('toevoegen'), _('Boek toevoegen'), 'class="button"') . '</a> <a href="javascript:boek_toevoegen();">' . _('Toevoegen') . '</a></div>';
 		
 			echo '<div id="boek_toevoegen">
 				<form action="boeken.php" method="post">';
