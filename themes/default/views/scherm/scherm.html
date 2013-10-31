@@ -13,6 +13,14 @@
 			color: #C60C30;
 		}
 
+		h1 {
+			text-shadow:
+				-1px -1px 0 #fff,
+				1px -1px 0 #fff,
+				-1px 1px 0 #fff,
+				1px 1px 0 #fff;
+		}
+
 		figure {
 			margin: 1px;
 		}
@@ -25,20 +33,22 @@
 			right: 0;
 			background: white;
 
-			-webkit-transition: -webkit-transform 0.8s ease;
-			transition: -webkit-transform 0.8s ease;
+			transition: all 0.8s ease;
 		}
 
 		.slide {
 			-webkit-transform: translate(-150%, 0);
+			transform: translate(-150%, 0);
 		}
 
 		.slide.current {
 			-webkit-transform: translate(0, 0);
+			transform: translate(0, 0);
 		}
 
 		.slide.current + .slide {
 			-webkit-transform: translate(150%, 0);
+			transform: translate(150%, 0);
 		}
 
 		.slide.fotos h1 {
@@ -61,6 +71,7 @@
 
 		.slide.agenda .agenda-item {
 			clear: both;
+			font: 30px/60px sans-serif;
 		}
 
 		.slide.agenda {
@@ -76,8 +87,9 @@
 	</head>
 	<body>
 		<div class="slides-container">
-			<div data-url="scherm.php?partial=agenda" class="slide agenda "></div>
-			<div data-url="scherm.php?partial=fotos" data-onload="layout_photos(this)" data-onshow="scroll_slide(this)" data-onhide="reset_scroll_slide(this)" class="slide fotos current"></div>
+			<div data-url="scherm.php?partial=agenda" class="slide agenda current"></div>
+			<div data-url="scherm.php?partial=fotos" data-onload="layout_photos(this)" data-onshow="scroll_slide(this)" data-onhide="reset_scroll_slide(this)" class="slide fotos"></div>
+			<div data-url="scherm.php?partial=bestuurslogo" class="slide bestuurslogo"></div>
 		</div>
 		<script src="<?=get_theme_data('views/scherm/scherm.js')?>"></script>
 		<script>

@@ -28,6 +28,11 @@
 			$agenda = get_model('DataModelAgenda');
 			$this->get_content('agenda', $agenda->get_agendapunten(true));
 		}
+
+		function partial_bestuurslogo()
+		{
+			$this->get_content('bestuurslogo');
+		}
 		
 		function run_impl() {
 			// We refreshen de inhoud van één slide

@@ -2,7 +2,7 @@
 <?php foreach ($iter as $punt): ?>
 <div class="agenda-item">
 	<span class="date"><?=$this->format_date($punt) ?></span>
-	<?php if ($punt->get('locatie')): ?><span class="location"><?= markup_format_text($punt->get('locatie')) ?></span><?php endif ?>
+	<?php if ($punt->get('locatie')): ?><span class="location">in <?= markup_format_text($punt->get('locatie')) ?></span><?php endif ?>
 
 	<h3><?=markup_format_text($punt->get('kop'))?></h3>
 </div>
