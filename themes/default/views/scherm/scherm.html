@@ -74,6 +74,7 @@
 
 		.slide.agenda .agenda-item {
 			clear: both;
+			text-align: right;
 			font: 30px/60px sans-serif;
 		}
 
@@ -82,9 +83,11 @@
 		}
 
 		.slide.agenda h3 {
-			display: inline;
+			float: left;
+			margin:0;
+			padding: 0;
+			display: inline-block;
 		}
-
 
 		</style>
 	</head>
@@ -159,19 +162,34 @@
 
 						// Are we done yet?
 						if (elements.length == photos.length)
-							order_photos(photos, window.innerWidth, parseInt(window.innerHeight / 2));
+							setTimeout(function() {
+								order_photos(photos, window.innerWidth, parseInt(window.innerHeight / 2));
+							}, 10);
 					};
 				}
 			}
 
 			function scroll_slide(slide)
 			{
-
+				var container = slide.querySelector('ul');
+				var diff = container.scrollHeight - window.innerHeight;
+				console.log(container, diff);
+				container.style.webkitTransition = '-webkit-transform 19s linear';
+				container.style.webkitTransform = 'translate(0, -' + Math.max(diff, 0) + 'px)';
+				container.style.mozTransition = '-moz-transform 19s linear';
+				container.style.mozTransform = 'translate(0, -' + Math.max(diff, 0) + 'px)';
+				container.style.transition = 'transform 19s linear';
+				container.style.transform = 'translate(0, -' + Math.max(diff, 0) + 'px)';
 			}
 
 			function reset_scroll_slide(slide)
 			{
-
+				container.style.webkitTransition = 'none';
+				container.style.webkitTransform = 'translate(0, 0)';
+				container.style.mozTransition = 'none';
+				container.style.mozTransform = 'translate(0, 0)';
+				container.style.transition = 'none';
+				container.style.transform = 'translate(0, 0)';
 			}
 
 			Array.prototype.forEach.call(slides, load_slide);
