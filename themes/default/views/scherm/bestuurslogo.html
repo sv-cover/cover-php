@@ -1,1 +1,6 @@
-<img src="images/ketelbestuur.jpg" width="100%">
+<?php
+$logos = array('ketelbestuur.jpg', 'currybestuur.jpg');
+
+$logo = $logos[rand(0, count($logos) - 1)];
+?>
+<img src="images/<?=$logo?>" width="100%">
