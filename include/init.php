@@ -5,7 +5,11 @@
 	define('IN_SITE', true);
 
 	ini_set('display_errors', true);
-	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_STRICT);
+
+	if (version_compare(PHP_VERSION, '5.3.0') < 0)
+		error_reporting(E_ALL ^ E_NOTICE);
+	else
+		error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_STRICT);
 
 	require_once('functions.php');
 	require_once('i18n.php');
