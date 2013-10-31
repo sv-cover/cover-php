@@ -5,7 +5,7 @@
 	define('IN_SITE', true);
 
 	ini_set('display_errors', true);
-	error_reporting(E_ALL ^ E_NOTICE);
+	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_STRICT);
 
 	require_once('functions.php');
 	require_once('i18n.php');

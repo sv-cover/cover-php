@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cover</title>
+		<style>
+		html, body {
+			margin: 0;
+			overflow: hidden;
+			font: 24px/32px sans-serif;
+		}
+
+		h1, h2, h3 {
+			color: #C60C30;
+		}
+
+		figure {
+			margin: 1px;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: white;
+
+			-webkit-transition: -webkit-transform 0.8s ease;
+			transition: -webkit-transform 0.8s ease;
+		}
+
+		.slide {
+			-webkit-transform: translate(-150%, 0);
+		}
+
+		.slide.current {
+			-webkit-transform: translate(0, 0);
+		}
+
+		.slide.current + .slide {
+			-webkit-transform: translate(150%, 0);
+		}
+
+		.slide.fotos h1 {
+			position: absolute;
+			top: 0;
+			left: 20px;
+		}
+
+		.slide.fotos ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.slide.fotos .foto {
+			display: block;
+			float: left;
+			overflow: hidden;
+		}
+
+		.slide.agenda .agenda-item {
+			clear: both;
+		}
+
+		.slide.agenda {
+			padding: 0 40px;
+		}
+
+		.slide.agenda h3 {
+			display: inline;
+		}
+
+
+		</style>
+	</head>
+	<body>
+		<div class="slides-container">
+			<div data-url="scherm.php?partial=agenda" class="slide agenda "></div>
+			<div data-url="scherm.php?partial=fotos" data-onload="layout_photos(this)" data-onshow="scroll_slide(this)" data-onhide="reset_scroll_slide(this)" class="slide fotos current"></div>
+		</div>
+		<script src="<?=get_theme_data('views/scherm/scherm.js')?>"></script>
+		<script>
+			var slides = document.getElementsByClassName('slide');
+			
+			function load_slide(slide)
+			{
+				var request = new XMLHttpRequest();
+				request.open('GET', slide.getAttribute('data-url'), true);
+				request.onreadystatechange = function() {
+					if (request.readyState == 4) {
+						slide.innerHTML = request.responseText;
+
+						if (slide.hasAttribute('data-onload'))
+							new Function(slide.getAttribute('data-onload')).call(slide);
+					}
+				};
+				request.send();
+			}
+
+			function delay_load_slide(slide, delay)
+			{
+				setTimeout(function() { load_slide(slide); }, delay);
+			}
+
+			function next_slide()
+			{
+				for (var i = 0; i < slides.length; ++i)
+				{
+					// Vind de huidige slide
+					if (!slides[i].classList.contains('current'))
+						continue;
+
+					var next = (i + 1) % slides.length;
+					
+					// en maak de volgende slide de huidige slide :D
+					slides[i].classList.remove('current');
+					slides[next].classList.add('current');
+
+					// Eventueel run de code die bij de events hoort
+					if (slides[i].hasAttribute('data-onhide'))
+						new Function(slides[i].getAttribute('data-onhide')).call(slides[i]);
+
+					if (slides[next].hasAttribute('data-onshow'))
+						new Function(slides[next].getAttribute('data-onshow')).call(slides[next]);
+					
+					// en laad vast de slide daarna
+					delay_load_slide(slides[(i + 2) % slides.length], 1000);
+
+					// Klaar!
+					return;
+				}
+			}
+
+			function layout_photos(slide)
+			{
+				var elements = slide.querySelectorAll('.foto');
+				var photos = [];
+
+				for (var i = 0; i < elements.length; ++i)
+				{
+					elements[i].querySelector('img').onload = function() {
+						photos.push(new Photo(this.parentNode.parentNode));
+
+						// Are we done yet?
+						if (elements.length == photos.length)
+							order_photos(photos, window.innerWidth, parseInt(window.innerHeight / 2));
+					};
+				}
+			}
+
+			function scroll_slide(slide)
+			{
+
+			}
+
+			function reset_scroll_slide(slide)
+			{
+
+			}
+
+			Array.prototype.forEach.call(slides, load_slide);
+			setInterval(next_slide, 20000);
+
+			document.addEventListener('keydown', function(e) {
+				if (e.keyCode != 39)
+					return;
+
+				next_slide();
+				e.preventDefault();
+			});
+		</script>
+	</body>
+</html>

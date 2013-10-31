@@ -35,6 +35,42 @@
 			$row = $this->db->query_first($q);
 			return $this->_row_to_iter($row);
 		}
+
+		/**
+		  * Get a random photo book
+		  * @count the number of latest photo books to choose from
+		  *
+		  * @result a #DataIter
+		  */
+		function get_random_book($count = 10) {
+			$q = "
+				SELECT 
+					c.*, 
+					(TRIM(to_char(DATE_PART('day', c.date), '00')) || '-' ||
+					 TRIM(to_char(DATE_PART('month', c.date), '00')) || '-' ||
+					 DATE_PART('year', c.date)) AS datum
+				FROM 
+					foto_boeken c
+				LEFT JOIN
+					foto_boeken p
+					ON p.parent = c.id
+				WHERE
+					c.titel NOT ILIKE 'chantagemap%'
+					AND c.titel NOT ILIKE 'download grote foto''s%'
+					AND p.id IS NULL
+					AND c.date IS NOT NULL
+				ORDER BY
+					c.date DESC
+				LIMIT " . intval($count);
+
+			// Select the last 10 books
+			$rows = $this->db->query($q);
+
+			// Pick a random fotoboek
+			$book = $rows[rand(0, count($rows) - 1)];
+
+			return $this->_row_to_iter($book);
+		}
 		
 		/**
 		  * Get the photo book thumbnail
@@ -43,7 +79,7 @@
 		  * @result a #DataIter
 		  */
 		function get_book_thumbnail($book) {
-			$row = $this->db->query_first("
+			$row = $this->db->query_first(	"
 					SELECT
 						*,
 						(DATE_PART('epoch', CURRENT_TIMESTAMP) - DATE_PART('epoch', generated)) AS since
@@ -297,7 +333,8 @@
 		  */
 		function get_random_photos($num) {
 			$rows = $this->db->query("
-					SELECT 
+					SELECT
+						fotos.url,
 						fotos.thumburl, 
 						fotos.id,
 						fotos.boek,
