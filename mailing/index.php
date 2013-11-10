@@ -75,6 +75,18 @@ class Newsletter
 		include $this->template;
 		return ob_get_clean();
 	}
+
+	public function render_plain()
+	{
+		$lines = $this->render_title() . "\r\n\r\n";
+
+		foreach (array_merge($this->main, $this->sidebar) as $section) {
+			$lines .= wordwrap($section->render_plain(), 70, "\r\n", true);
+			$lines .= "\r\n\r\n";
+		}
+
+		return $lines;
+	}
 }
 
 class Newsletter_Section
@@ -117,6 +129,30 @@ class Newsletter_Section
 			 . $this->render_body()
 			 . $this->render_footer();
 	}
+
+	protected function render_plain_header()
+	{
+		return "=== {$this->title} ===\r\n\r\n";
+	}
+
+	protected function render_plain_body()
+	{
+		return '';
+	}
+
+	protected function render_plain_footer()
+	{
+		return $this->footer
+			? "\r\n\r\n$this->footer"
+			: "";
+	}
+
+	public function render_plain()
+	{
+		return $this->render_plain_header()
+			 . $this->render_plain_body()
+			 . $this->render_plain_footer();
+	}
 }
 
 class Newsletter_Section_Agenda extends Newsletter_Section
@@ -146,6 +182,19 @@ class Newsletter_Section_Agenda extends Newsletter_Section
 				htmlspecialchars($activity->get('kop'), ENT_COMPAT, 'utf-8'));
 
 		return implode("<br>\n", $lines);
+	}
+
+	protected function render_plain_body()
+	{
+		$lines = array();
+		foreach ($this->activities as $activity)
+			$lines[] = sprintf("%02d-%02d %4\$s\r\n      %3\$s",
+				$activity->get('vandatum'),
+				$activity->get('vanmaand'),
+				link_site('agenda.php?agenda_id=' . $activity->get_id()),
+				$activity->get('kop'));
+
+		return implode("\r\n", $lines);
 	}
 }
 
@@ -195,6 +244,26 @@ class Newsletter_Section_CommitteeChanges extends Newsletter_Section
 
 		return $html;
 	}
+
+	protected function render_plain_body()
+	{
+		$committees = $this->parse($this->data);
+
+		if (count($committees) == 0)
+			return;
+
+		$lines = array();
+
+		foreach ($committees as $committee => $members)
+		{
+			$lines[] = sprintf('%s:', $committee);
+
+			foreach ($members as $member)
+				$lines[] = sprintf('- %s', $member);
+		}
+
+		return implode("\r\n", $lines);
+	}
 }
 
 class Newsletter_Section_Markdown extends Newsletter_Section
@@ -204,6 +273,11 @@ class Newsletter_Section_Markdown extends Newsletter_Section
 	protected function render_body()
 	{
 		return Markdown($this->data);
+	}
+
+	protected function render_plain_body()
+	{
+		return $this->data;
 	}
 }
 
@@ -294,4 +368,19 @@ $newsletter->main['board']->data = <<< EOF
 Hopefully you have already noticed that this newsletter differs a lot from the previous one. Because we were busy designing our new newsletter, we moved this newsletter from one week ago to this Monday. The next newsletter will be sent two weeks from now. In the last couple of weeks also our new website launched: [idee.svcover.nl](http://idee.svcover.nl)! You can use it when you suddenly have inspiration. The ideas will be discussed during our board meeting.
 EOF;
 
-echo $newsletter->render();
+if (!isset($_GET['mode']))
+{	
+	echo '<style>html, body, iframe {margin:0;padding:0;border:0}</style>';
+	echo '<iframe style="border:none;" width="50%" height="100%" src="index.php?mode=html"></iframe>';
+	echo '<iframe style="border:none;" width="50%" height="100%" src="index.php?mode=text"></iframe>';
+}
+else if ($_GET['mode'] == 'html')
+{
+	header('Content-Type: text/html; charset=utf-8');
+	echo $newsletter->render();
+}
+else if ($_GET['mode'] == 'text')
+{
+	header('Content-Type: text/plain; charset=utf-8');
+	echo $newsletter->render_plain();
+}
