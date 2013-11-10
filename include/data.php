@@ -20,12 +20,12 @@
 			return $models[$name];
 		
 		if (function_exists("model_create_$name"))
-			$models[$name] = call_user_func("model_create_$name", $arg);
+			$models[$name] = call_user_func("model_create_$name");
 		else {
 			require_once('models/' . $name . '.php');
 
 			if (class_exists($name)) {
-				$models[$name] = new $name(get_db(), $arg);
+				$models[$name] = new $name(get_db());
 			} else {
 				report_error('Data', N_("Kan het model %s niet vinden"), $name);
 				$models[$name] = false;
