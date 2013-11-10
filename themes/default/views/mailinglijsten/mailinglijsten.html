@@ -1,0 +1,19 @@
+<h1><?= _('Mailinglijsten') ?></h1>
+<div class="messageBox">
+<?php foreach ($iter as $lijst): ?>
+	<div>
+		<strong><?= markup_format_text($lijst->get('naam')) ?></strong>
+		<p><?= markup_format_text($lijst->get('omschrijving')) ?></p>
+		<form method="post">
+			<input type="hidden" name="mailinglijst_id" value="<?=$lijst->get('id')?>">
+		<?php if ($lijst->get('abonnement_id')): ?>
+			<input type="hidden" name="action" value="unsubscribe">
+			<input type="hidden" name="abonnement_id" value="<?=$lijst->get('abonnement_id')?>"><p><?= _('Je bent aangemeld voor deze mailinglijst.') ?> <input type="submit" class="button" value="<?=_('Uitschrijven')?>"></p>
+		<?php else: ?>
+			<input type="hidden" name="action" value="subscribe">
+			<input type="submit" class="button" value="<?=_('Aanmelden')?>">
+		<?php endif ?>
+		</form>
+	</div>
+<?php endforeach ?>
+</div>

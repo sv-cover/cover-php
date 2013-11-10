@@ -1,0 +1,14 @@
+<h1><?=_('Mailinglijst')?> :: <?=markup_format_text($lijst->get('naam'))?></h1>
+<div class="messageBox">
+	<ul>
+	<?php foreach ($aanmeldingen as $aanmelding): ?>
+		<li>
+			<label>
+				<input type="checkbox" name="unsubscribe[]" value="<?=$aanmelding->get('abonnement_id')?>">
+				<?=$this->format_naam($aanmelding)?>
+				<em><?=$aanmelding->get('email')?></em>
+			</label>
+		</li>
+	<?php endforeach ?>
+	</ul>
+</div>
