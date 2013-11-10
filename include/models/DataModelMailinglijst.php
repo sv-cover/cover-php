@@ -79,7 +79,6 @@ class DataModelMailinglijst extends DataModel
 	public function get_aanmeldingen($lijst_id)
 	{
 		$rows = $this->db->query(sprintf('
-			-- De tabel met aangemelde leden
 			SELECT
 				m.abonnement_id,
 				l.id,
@@ -90,7 +89,7 @@ class DataModelMailinglijst extends DataModel
 			LEFT JOIN leden l ON
 				m.lid_id = l.id
 			WHERE
-				m.lijst_id = %d
+				m.mailinglijst_id = %d
 				AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 			ORDER BY
 				m.ingeschreven_op ASC',

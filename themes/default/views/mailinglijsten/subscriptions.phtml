@@ -5,8 +5,8 @@
 		<li>
 			<label>
 				<input type="checkbox" name="unsubscribe[]" value="<?=$aanmelding->get('abonnement_id')?>">
-				<?=$this->format_naam($aanmelding)?>
-				<em><?=$aanmelding->get('email')?></em>
+				<?=htmlspecialchars($aanmelding->get('naam'))?>
+				<em><?=htmlspecialchars($aanmelding->get('email'))?></em>
 			</label>
 		</li>
 	<?php endforeach ?>

@@ -3451,14 +3451,35 @@ SELECT pg_catalog.setval('so_vakken_id_seq', 33, true);
 
 SELECT pg_catalog.setval('taken_id_seq', 85, true);
 
-
 --
--- TOC entry 2619 (class 0 OID 24449)
--- Dependencies: 239
--- Data for Name: taken_subscribe; Type: TABLE DATA; Schema: public; Owner: webcie
+-- Mailinglijsten
 --
 
+CREATE SEQUENCE mailinglijsten_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
 
+CREATE TABLE mailinglijsten (
+    id integer NOT NULL DEFAULT nextval('mailinglijsten_id_seq'::regclass),
+    naam varchar(100) NOT NULL,
+    local_part varchar(100) NOT NULL,
+    omschrijving text NOT NULL,
+    publiek boolean NOT NULL DEFAULT '1',
+    CONSTRAINT mailinglijsten_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE mailinglijsten_abonnementen (
+    abonnement_id CHAR(40) NOT NULL primary key,
+    mailinglijst_id integer NOT NULL REFERENCES mailinglijsten (id),
+    lid_id integer DEFAULT NULL REFERENCES leden (id),
+    naam VARCHAR(255) DEFAULT NULL,
+    email VARCHAR(255) DEFAULT NULL,
+    ingeschreven_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    opgezegd_op timestamp DEFAULT NULL
+);
 
 --
 -- TOC entry 2390 (class 2606 OID 25986)
