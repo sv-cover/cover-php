@@ -3,9 +3,6 @@ require_once '../include/init.php';
 require_once 'markup.php';
 require_once 'markdown.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', true);
-
 function link_site($rel = '')
 {
 	return sprintf('http://www.svcover.nl/%s', $rel);
@@ -168,7 +165,7 @@ class Newsletter_Section_Agenda extends Newsletter_Section
 	{
 		$agenda = get_model('DataModelAgenda');
 
-		$this->activities = $agenda->get_agendapunten(false);
+		$this->activities = $agenda->get_agendapunten(true);
 	}
 
 	protected function render_body()
@@ -236,9 +233,9 @@ class Newsletter_Section_CommitteeChanges extends Newsletter_Section
 		{
 			$html .= sprintf('<strong>%s:</strong>', htmlspecialchars($committee, ENT_COMPAT, 'UTF-8'));
 
-			$html .= '<ul style="margin: 0; padding: 0 0 0 16px;">';
+			$html .= '<ul style="margin: 0 0 5px 0; padding: 0;">';
 			foreach ($members as $member)
-				$html .= sprintf('<li>%s</li>', htmlspecialchars($member, ENT_COMPAT, 'UTF-8'));
+				$html .= sprintf('<li style="margin: 0 0 0 16px">%s</li>', htmlspecialchars($member, ENT_COMPAT, 'UTF-8'));
 			$html .= '</ul>';
 		}
 
@@ -284,7 +281,12 @@ class Newsletter_Section_Markdown extends Newsletter_Section
 $newsletter = new Newsletter('newsletter.phtml');
 $newsletter->submission_date = new DateTime('2013-11-11');
 
-$newsletter->sidebar['agenda']->footer = 'The [complete agenda](' . link_site('agenda.php') . ') is available in multiple formats.';
+$link_agenda = link_site('agenda.php');
+$newsletter->sidebar['agenda']->footer = <<< EOF
+Every week there is a DomBo (Thursday Afternoon Social) in the SLACK at 16:00.
+
+The [complete agenda]({$link_agenda}) is available in multiple formats.
+EOF;
 
 $newsletter->sidebar['uitgehamerd']->footer = 'Thanks for all your efforts in these committees!';
 $newsletter->sidebar['uitgehamerd']->data = <<< EOF
@@ -319,12 +321,22 @@ AlmanakCie
 - Jip Maijers
 - Marten Schutten
 
+BHVcie
+- Eveline Broers
+- Annemarie Galetzka
+- Bastiaan van Loon
+- Davey Schilling
+
 EerstejaarsCie
 - Robin Entjes
 - Anco Gietema
 - Johan Groenewold
 - Henry Maathuis
 - Nicole Mascarenhas
+
+MeisCie
+- Lisette Boeijenk
+- Rayan Brouwer
 
 SLACKcie
 - Arnoud van der Meulen
@@ -340,32 +352,64 @@ EOF;
 
 $newsletter->main['committees']->data = <<< EOF
 ### Actie: Movie Night
-Datum: Dinsdag 12 November  
-Tijd: 18:00  
-Locatie: Room 280, Bernoulliborg  
+Date: Tuesday 12 November  
+Time: 18:00  
+Location: Room 280, Bernoulliborg  
 
-The minions are back! If you want to see the new adventures of these yellow creatures, then make sure you are going to the movie night, because we are going watch 'Despicable me 2' (http://www.youtube.com/watch?v=TlbnGSMJQbQ). As usual we'll be eating together and order our food at hasret-groningen.nl. If you want to eat with us, place your order at the pizzalist in the SLACK or mail the pizza and pizzanumber to actie@svcover.nl. The deadline for this is tuesday November 12th 17:00.
+The minions are back! If you want to see the new adventures of these yellow creatures, then make sure you are going to the movie night, because we are going watch [Despicable me 2](http://www.youtube.com/watch?v=TlbnGSMJQbQ). As usual we'll be eating together and order our food at hasret-groningen.nl. If you want to eat with us, place your order at the pizzalist in the SLACK or mail the pizza and pizzanumber to actie@svcover.nl. The deadline for this is tuesday November 12th 17:00.
 
 ### Actie: 'Weerwolven' Game Night
-Dinsdag 19 November  
-20:00  
-Café Atlantis  
+Date: Tuesday 19 November  
+Time: 20:00  
+Location: Café Atlantis  
 
 This month's game night is a special one. We are going to play the game 'Weerwolven'! This game quite similar to the game 'Mafia'. So if you want to join us, you should come to the game night! If you want to play other games, that's possible. We just want you to have an awesome evening. We'll see you there!
 
 ### Actie: Sinterklaasavond
-Datum: Dinsdag 26 November  
-Tijd: 17:00  
-Locatie: Room 280, Bernoulliborg  
+Date: Tuesday 26 November  
+Time: 17:00  
+Location: Room 280, Bernoulliborg  
 
 Sinterklaas is almost arriving in The Netherlands! This means we'll have a sinterklaasavond soon. This evening we are going to play a nice game with hopefully lots of presents. Do you want to be a 'Hulpsint' and make this a nice evening? You'll have to get at least 2 presents for about €5,-. Sign up by sending an email to actie@svcover.nl. The deadline is Tuesday November 19th 23:59.
 
-### MeisCie: Ballroom and latin dancing
+### MeisCie: Ballroom and Latin Dancing
+Date: Monday 25 November  
+Time: 17:00  
+Location: To be announced  
+
 The MeisCie has something special in store for you. For our first activity this year we have prepared a dancing lesson. We're not talking about dance moves you'll see at the Mambo Jambo or the Negende Cirkel. We're talking about ballroom and latin dancing! We'll teach you the basic steps of the chachacha and the quick step. For the chachacha we have prepared a few additions to make the dance more interesting. We all hope to see you and hope you'll have a good time dancing!
+
+### StudCie: Lunch Lecture TNO
+Date: Wednesday 20 November  
+Time: 13:00  
+Location: Room 5173.0151, Linaeusborg  
+
+TNO will be giving a lecture on both information security and home automation.
+
+First, Gerben Broenink will show the possibilities for injecting malware into existing android applications. He will be using a manipulated Angry Birds app during the demo to gain control of a smartphone.
+
+Second, Wilco Wijbrandi will show the FlexiblePower Application Infrastructure (FPAI), which is a home automation platform which can connect with all the smart devices in your home. This platform can be used to install applications that control your devices or connect with the smart grid.
+
+If you want a free lunch, you have to register at [our website](http://studcie.svcover.nl).
 EOF;
 
 $newsletter->main['board']->data = <<< EOF
-Hopefully you have already noticed that this newsletter differs a lot from the previous one. Because we were busy designing our new newsletter, we moved this newsletter from one week ago to this Monday. The next newsletter will be sent two weeks from now. In the last couple of weeks also our new website launched: [idee.svcover.nl](http://idee.svcover.nl)! You can use it when you suddenly have inspiration. The ideas will be discussed during our board meeting.
+### New logo
+You may have seen some spoofs on the screen in the Coverkamer, but we have a new official board logo.
+<img alt="Logo Board XXII of Cover" src="http://svcover.nl/images/bestuurxxii.png" width="400" height="225">
+
+### New newsletter
+Hopefully you have already noticed that this newsletter differs a lot from the previous one. Because we were busy designing our new newsletter, we moved this newsletter from one week ago to this Monday. The next newsletter will be sent two weeks from now.
+
+### New committee
+We have a new committee! The BHVcie is now a real committee and in this newsletter we would like to inform you about this matter.
+
+The BHVcie has two main tasks. They have to provide BHV’ers (ERO’s in Dutch) for relevant events. They also have to maintain the first aid kits. So if you need a BHV’er for an event, you can mail the committee at bhv@svcover.nl and they will provide the amount of BHV’ers needed. 
+
+The people in this committee are Annemarie Galetzka, Bastiaan van Loon, Davey Schilling and Eveline Broers. Soon we will also have a fifth member for the committee.
+
+### Idea submission station
+In the last couple of weeks also our new website launched: [idee.svcover.nl](http://idea.svcover.nl)! You can use it when you suddenly have inspiration. The ideas will be discussed during our board meeting.
 EOF;
 
 if (!isset($_GET['mode']))
