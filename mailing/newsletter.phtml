@@ -32,7 +32,7 @@
 						<table id="page" style="border-collapse:collapse;" width="700" cellspacing="0" cellpadding="20">
 							<tr>
 								<!-- Sidebar -->
-								<td bgcolor="#C60C30" width="200" valign="top" id="sidebar-cell">
+								<td bgcolor="#C60C30" width="200" valign="top" id="sidebar-cell" class="mailing-sidebar">
 									<table style="border-collapse:collapse; color:white" cellspacing="0" cellpadding="0" class="sidebar">
 										<!-- logo -->
 										<tr>
@@ -41,7 +41,7 @@
 
 										<?php foreach ($this->sidebar as $section): ?>
 										<tr>
-											<td id="<?=$section->uniqid?>">
+											<td id="<?=$section->id()?>" class="mailing-editable">
 												<?= $this->style_links($section->render()) ?>
 											</td>
 										</tr>
@@ -51,7 +51,7 @@
 								</td>
 
 								<!-- Main -->
-								<td bgcolor="#FFFFFF" valign="top" id="main-cell">
+								<td bgcolor="#FFFFFF" valign="top" id="main-cell" class="mailing-main">
 									<table style="border-collapse:collapse;" cellspacing="0" cellpadding="0">
 										<!-- Titel -->
 										<tr>
@@ -60,7 +60,7 @@
 
 										<?php foreach ($this->main as $section): ?>
 										<tr>
-											<td>
+											<td id="<?=$section->id()?>" class="mailing-editable">
 												<?= $this->style_headers($section->render()) ?>
 											</td>
 										</tr>

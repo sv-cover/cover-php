@@ -1,0 +1,54 @@
+body {
+	margin-top: 32px !important;
+}
+
+.mailing-sidebar input[type=text],
+.mailing-sidebar textarea,
+.mailing-main input[type=text],
+.mailing-main textarea {
+	width: 100%;
+}
+
+.mailing-sidebar input[name=title],
+.mailing-main input[name=title] {
+	font-size: 1.5em;
+}
+
+.mailing-sidebar textarea,
+.mailing-main textarea {
+	min-height: 4em;
+}
+
+.mailing-sidebar textarea[name=data] {
+	min-height: 16em;
+}
+
+.mailing-main textarea[name=data] {
+	min-height: 32em;
+}
+
+.mailing-edit-nav {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: white;
+	height: 32px;
+}
+
+.mailing-edit-nav li {
+	display: inline;
+	line-height: 32px;
+}
+
+.mailing-edit-nav li a {
+	display: inline-block;
+	padding: 0 .5em;
+}
+
+.mailing-edit-nav li a:hover {
+	background: #ccc;
+}
