@@ -31,7 +31,8 @@ class Newsletter_Section_CommitteeChanges extends Newsletter_Section
 
 		if (count($committees) == 0)
 		{
-			if (isset($_GET['mode']) && $_GET['mode'] == 'edit')
+			if (isset($_GET['mode']) && $_GET['mode'] == 'edit'
+				|| isset($_GET['section']) && $_GET['section'] == $this->id())
 				return parent::render();
 			else 
 				return '';

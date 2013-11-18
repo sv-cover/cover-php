@@ -1,7 +1,8 @@
 <?php
 function link_site($rel = '')
 {
-	return sprintf('http://www.svcover.nl/%s', $rel);
+	// return sprintf('http://www.svcover.nl/%s', $rel);
+	return sprintf('http://localhost/cover/cover-php/%s', $rel);
 }
 
 function default_newsletter()

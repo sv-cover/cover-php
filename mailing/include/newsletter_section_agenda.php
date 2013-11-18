@@ -11,16 +11,22 @@ class Newsletter_Section_Agenda extends Newsletter_Section
 
 	public function fetch_activities()
 	{
-		$agenda = get_model('DataModelAgenda');
+		$response = file_get_contents(link_site('api.php?method=agenda'));
+
+		if (!$response) return;
+
+		$activities = json_decode($response);
+
+		if (!is_array($activities)) return;
 
 		$this->activities = array();
 
-		foreach ($agenda->get_agendapunten(true) as $activity)
+		foreach ($activities as $activity)
 			$this->activities[] = array(
-				'id' => $activity->get_id(),
-				'vandatum' => $activity->get('vandatum'),
-				'vanmaand' => $activity->get('vanmaand'),
-				'kop' => $activity->get('kop'));
+				'id' => $activity->id,
+				'vandatum' => $activity->vandatum,
+				'vanmaand' => $activity->vanmaand,
+				'kop' => $activity->kop);
 	}
 
 	public function render()
