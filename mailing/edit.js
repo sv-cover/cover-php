@@ -6,7 +6,7 @@ $('.mailing-editable').each(function() {
 	var edit = function(e) {
 		e.preventDefault();
 
-		$.get('index.php?session=' + session_id + '&section=' + section.id + '&mode=controls', function(html) {
+		$.get(this.href, function(html) {
 			$(section).html(html);
 
 			$(section).find('form').submit(submit);
@@ -26,7 +26,8 @@ $('.mailing-editable').each(function() {
 	var addEditLink = function()
 	{
 		$(section).find('h2').first().append(
-			$('<a href="#">edit</a>')
+			$('<a>edit</a>')
+				.attr('href', 'index.php?session=' + session_id + '&section=' + section.id + '&mode=controls')
 				.click(edit)
 				.css({
 					'font-size': '12px',
