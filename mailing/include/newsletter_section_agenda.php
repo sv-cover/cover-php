@@ -2,6 +2,8 @@
 
 class Newsletter_Section_Agenda extends Newsletter_Section
 {
+	private $activities = array();
+
 	public function __construct($title)
 	{
 		parent::__construct($title);
@@ -33,7 +35,9 @@ class Newsletter_Section_Agenda extends Newsletter_Section
 				'vandatum' => $activity->vandatum,
 				'vanmaand' => $activity->vanmaand,
 				'kop' => $activity->kop,
-				'visible' => in_array($activity->id, $hidden_activities));
+				'visible' => !in_array($activity->id, $hidden_activities));
+
+		$this->activities = $activities;
 	}
 
 	public function render()
