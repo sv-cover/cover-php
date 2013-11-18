@@ -1,4 +1,19 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
+require_once 'include/document.php';
+require_once 'include/newsletter.php';
+require_once 'include/newsletter_section.php';
+require_once 'include/newsletter_section_agenda.php';
+require_once 'include/newsletter_section_committeechanges.php';
+require_once 'include/newsletter_section_markdown.php';
+require_once 'include/newsletterarchive.php';
+require_once 'markdown.php';
+
+session_start();
+
 function link_site($rel = '')
 {
 	// return sprintf('http://www.svcover.nl/%s', $rel);
@@ -34,18 +49,6 @@ function default_newsletter()
 	return $newsletter;
 }
 
-require_once 'include/document.php';
-require_once 'include/newsletter.php';
-require_once 'include/newsletter_section.php';
-require_once 'include/newsletter_section_agenda.php';
-require_once 'include/newsletter_section_committeechanges.php';
-require_once 'include/newsletter_section_markdown.php';
-require_once 'include/newsletterarchive.php';
-
-require_once '../include/init.php';
-require_once 'markup.php';
-require_once 'markdown.php';
-
 $archive = new NewsletterArchive(dirname(__FILE__) . '/archive');
 
 $javascript = <<< EOF
@@ -66,7 +69,7 @@ else
 }
 
 if (isset($_SESSION['newsletter_' . $temp_id]))
-	$newsletter = $_SESSION['newsletter_' . $temp_id];
+	$newsletter = unserialize($_SESSION['newsletter_' . $temp_id]);
 else
 	$newsletter = default_newsletter();
 
@@ -100,7 +103,7 @@ if (isset($_POST['action']))
 	}
 }
 else if (isset($_GET['section']))
-	echo $newsletter->render_section($_GET['section'], $_GET['mode']);
+	echo $newsletter->render_section($_GET['section'], isset($_GET['mode']) ? $_GET['mode'] : 'html');
 else if (isset($_GET['mode']) && $_GET['mode'] == 'text')
 {
 	header('Content-Type: text/plain');
@@ -125,4 +128,4 @@ else
 	echo $newsletter->render();
 }
 
-$_SESSION['newsletter_' . $temp_id] = $newsletter;
+$_SESSION['newsletter_' . $temp_id] = serialize($newsletter);
