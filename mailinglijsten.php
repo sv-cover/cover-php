@@ -73,7 +73,7 @@ class ControllerMailinglijsten extends Controller
 		$this->get_content('subscriptions', null, compact('lijst', 'aanmeldingen'));
 	}
 
-	protected function run_my_subscriptions_management()
+	protected function run_subscriptions_management()
 	{
 		$me = logged_in();
 	
