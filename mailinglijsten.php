@@ -26,6 +26,31 @@ class ControllerMailinglijsten extends Controller
 		$this->run_footer();
 	}
 
+	protected function _process_new_list()
+	{
+		$this->model->create_lijst(
+			$_POST['local_part'], $_POST['naam'],
+			$_POST['omschrijving'], !empty($_POST['publiek']));
+
+		header('Location: mailinglijsten.php');
+	}
+
+	protected function _process_add_subscription()
+	{
+		$this->model->aanmelden($_POST['lid_id'], $_POST['lijst_id']);
+
+		header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $_POST['lijst_id']));
+	}
+
+	protected function _process_remove_subscription()
+	{
+		$abonnement = $this->model->get_abonnement($_POST['abonnement_id']);
+
+		$this->model->afmelden($_POST['abonnement_id']);
+
+		header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $abonnement->get('lijst_id')));
+	}
+
 	protected function run_unsubscribe_confirm($abonnement_id)
 	{
 		$abonnement = $this->model->get_abonnement($abonnement_id);
@@ -36,7 +61,7 @@ class ControllerMailinglijsten extends Controller
 			$uitgeschreven = true;
 		}
 
-		$this->get_content('uitschrijven', null, compact('abonnement', 'uitgeschreven'));
+		$this->get_content('unsubscribe', null, compact('abonnement', 'uitgeschreven'));
 	}
 
 	protected function run_subscriptions_management($lijst_id)
@@ -45,10 +70,10 @@ class ControllerMailinglijsten extends Controller
 
 		$aanmeldingen = $this->model->get_aanmeldingen($lijst->get('id'));
 
-		$this->get_content('lijst', null, compact('lijst', 'aanmeldingen'));
+		$this->get_content('subscriptions', null, compact('lijst', 'aanmeldingen'));
 	}
 
-	protected function run_my_subscriptions_management()
+	protected function run_subscriptions_management()
 	{
 		$me = logged_in();
 	
@@ -68,7 +93,7 @@ class ControllerMailinglijsten extends Controller
 
 		$subscriptions = $this->model->get_lijsten($me['id']);
 
-		$this->get_content('mailinglijsten', $subscriptions);
+		$this->get_content('mailinglists', $subscriptions);
 	}
 
 	public function run_impl()

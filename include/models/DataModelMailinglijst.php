@@ -19,6 +19,7 @@ class DataModelMailinglijst extends DataModel
 			SELECT
 				l.id,
 				l.naam, 
+				l.local_part,
 				l.omschrijving,
 				l.publiek,
 				a.abonnement_id
@@ -41,7 +42,8 @@ class DataModelMailinglijst extends DataModel
 		$row = $this->db->query_first(sprintf('
 			SELECT
 				l.id,
-				l.naam, 
+				l.naam,
+				l.local_part,
 				l.omschrijving,
 				l.publiek
 			FROM
@@ -54,40 +56,66 @@ class DataModelMailinglijst extends DataModel
 		return $this->_row_to_iter($row);
 	}
 
+	public function create_lijst($local_part, $naam, $omschrijving, $publiek)
+	{
+		if (!preg_match('~^[a-z0-9][a-z0-9.\-]*[a-z0-9]+$~', $local_part))
+			return false;
+
+		if (strlen($naam) == 0)
+			return false;
+
+		$data = array(
+			'local_part' => $login,
+			'naam' => $naam,
+			'omschrijving' => $omschrijving,
+			'publiek' => $publiek ? 1 : 0
+		);
+
+		$iter = new DataIter($this, -1, $data);
+
+		return $this->insert($iter);
+	}
+
 	public function get_aanmeldingen($lijst_id)
 	{
-		$rows = $this->db->query('
+		$rows = $this->db->query(sprintf('
+			-- De tabel met aangemelde leden
 			SELECT
 				m.abonnement_id,
 				l.id,
-				l.voornaam,
-				l.tussenvoegsel,
-				l.achternaam,
-				l.email
+				coalesce(l.voornaam, m.naam) as naam,
+				coalesce(l.email, m.email) as email
 			FROM
-				mailinglijsten_abonnementen m,
-				leden l
-			WHERE
+				mailinglijsten_abonnementen m
+			LEFT JOIN leden l ON
 				m.lid_id = l.id
+			WHERE
+				m.lijst_id = %d
 				AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 			ORDER BY
-				m.ingeschreven_op ASC
-		');
+				m.ingeschreven_op ASC',
+			$lijst_id));
 
 		return $this->_rows_to_iters($rows);
 	}
 
 	public function get_abonnement_id($lid_id, $lijst_id)
 	{
+		if (ctype_digit($lid_id))
+			$query = sprintf('m.lid_id = %d', $lid_id);
+		else
+			$query = sprintf("m.email = '%s'", $this->db->escape_string($lid_id));
+
 		return $this->db->query_value(sprintf("
 			SELECT
-				abonnement_id
+				m.abonnement_id
 			FROM
-				mailinglijsten_abonnementen
+				mailinglijsten_abonnementen m
 			WHERE
-				lid_id = %d
-				AND mailinglijst_id = %d
-				AND (opgezegd_op IS NULL OR opgezegd_op > NOW())", $lid_id, $lijst_id));
+				m.mailinglijst_id = %d
+				AND (m.opgezegd_op IS NULL OR m.opgezegd_op > NOW())
+				AND %s",
+			$lid_id, $lijst_id, $query));
 	}
 
 	public function get_abonnement($abonnement_id)
@@ -119,6 +147,23 @@ class DataModelMailinglijst extends DataModel
 		$data = array(
 			'abonnement_id' => sha1(uniqid('', true)),
 			'lid_id' => intval($lid_id),
+			'mailinglijst_id' => intval($lijst_id)
+		);
+
+		$iter = new DataIter($this->model_aanmeldingen, -1, $data);
+
+		return $this->model_aanmeldingen->insert($iter);
+	}
+
+	public function aanmelden_gast($naam, $email, $lijst_id)
+	{
+		if ($this->get_abonnement_id($email, $lijst_id) !== null)
+			return;
+
+		$data = array(
+			'abonnement_id' => sha1(uniqid('', true)),
+			'naam' => $naam,
+			'email' => $email,
 			'mailinglijst_id' => intval($lijst_id)
 		);
 
