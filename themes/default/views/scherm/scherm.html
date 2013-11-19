@@ -177,7 +177,6 @@
 			{
 				var container = slide.querySelector('ul');
 				var diff = container.scrollHeight - window.innerHeight;
-				console.log(container, diff);
 				container.style.webkitTransition = '-webkit-transform 19s linear';
 				container.style.webkitTransform = 'translate(0, -' + Math.max(diff, 0) + 'px)';
 				container.style.mozTransition = '-moz-transform 19s linear';
@@ -188,6 +187,7 @@
 
 			function reset_scroll_slide(slide)
 			{
+				var container = slide.querySelector('ul');
 				container.style.webkitTransition = 'none';
 				container.style.webkitTransform = 'translate(0, 0)';
 				container.style.mozTransition = 'none';

@@ -61,7 +61,13 @@
 		function run_impl() {
 			// We refreshen de inhoud van één slide
 			if (isset($_GET['partial']) && method_exists($this, 'partial_' . $_GET['partial']))
+			{
+				header("Cache-Control: no-cache, must-revalidate");
+				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+				header("Cache-Control: no-cache, must-revalidate");
+				header("Pragma: no-cache");
 				call_user_func(array($this, 'partial_' . $_GET['partial']));
+			}
 			// Moeten we de gehele pagina opnieuw laden? Soort restart-knopje
 			elseif (isset($_GET['latest_version']))
 				echo '0';
