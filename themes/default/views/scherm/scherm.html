@@ -34,7 +34,7 @@
 			right: 0;
 			background: white;
 
-			transition: all 0.8s ease;
+			/*transition: all 0.8s ease;*/
 		}
 
 		.slide {
@@ -55,10 +55,12 @@
 			transform: translate(150%, 0);
 		}
 
-		.slide.fotos h1 {
+		.slide.fotos h1,
+		.slide.maikel h1 {
 			position: absolute;
 			top: 0;
 			left: 20px;
+			z-index: 10;
 		}
 
 		.slide.fotos ul {
@@ -97,6 +99,7 @@
 			<div data-url="scherm.php?partial=agenda" class="slide agenda current"></div>
 			<div data-url="scherm.php?partial=fotos" data-onload="layout_photos(this)" data-onshow="scroll_slide(this)" data-onhide="reset_scroll_slide(this)" class="slide fotos"></div>
 			<div data-url="scherm.php?partial=bestuurslogo" class="slide bestuurslogo"></div>
+			<div data-url="scherm.php?partial=maikel" class="slide maikel"></div>
 		</div>
 		<script src="<?=get_theme_data('views/scherm/scherm.js')?>"></script>
 		<script>

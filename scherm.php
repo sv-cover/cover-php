@@ -33,9 +33,29 @@
 		{
 			$logos = glob('./images/scherm/bestuurslogos/*.{jpg,png}', GLOB_BRACE);
 
-			$logo = $logos[rand(0, count($logos) - 1)];
+			$logo = $logos[mt_rand(0, count($logos) - 1)];
 
 			$this->get_content('bestuurslogo', null, compact('logo'));
+		}
+
+		function partial_maikel()
+		{
+			$site = file_get_contents('http://maikelzitopdingen.nl/');
+
+			if (!preg_match_all('~<h2>(.+?)</h2><h6>(.+?)</h6><img src="(.+?)"~', $site, $matches, PREG_PATTERN_ORDER))
+				return;
+
+			if (count($matches) == 0)
+				return;
+
+			$random_maikel = mt_rand(0, count($matches[1]) - 1);
+
+			$data = array(
+				'caption' => $matches[1][$random_maikel],
+				'src' => $matches[3][$random_maikel]
+			);
+
+			$this->get_content('maikel', null, $data);
 		}
 		
 		function run_impl() {
