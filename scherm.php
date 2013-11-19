@@ -31,7 +31,11 @@
 
 		function partial_bestuurslogo()
 		{
-			$this->get_content('bestuurslogo');
+			$logos = glob('./images/scherm/bestuurslogos/*.{jpg,png}', GLOB_BRACE);
+
+			$logo = $logos[rand(0, count($logos) - 1)];
+
+			$this->get_content('bestuurslogo', null, compact('logo'));
 		}
 		
 		function run_impl() {
