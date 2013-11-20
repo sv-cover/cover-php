@@ -284,7 +284,7 @@ $("#verenigingClick").click(function(){
 					<li><a href="gastenboek.php">' . _('Gastenboek') . '</a></li>
 					<li><a href="links.php">' . _('Links') . '</a></li>
 					<li><a href="boeken.php">' . _('Boeken bestellen') . '</a></li>
-					<li><a href="http://studieondersteuning.svcover.nl/">' . _('Studieondersteuning') . '</a></li>				
+					<li><a href="http://studieondersteuning.svcover.nl/">' . htmlentities(_('Tentamens & Samenvattingen')) . '</a></li>				
 				</ul>
 			</div>
 			';
