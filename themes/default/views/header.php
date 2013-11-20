@@ -283,7 +283,8 @@ $("#verenigingClick").click(function(){
 					<li><a href="show.php?id=24">' . _('Alumni') . '</a></li>
 					<li><a href="gastenboek.php">' . _('Gastenboek') . '</a></li>
 					<li><a href="links.php">' . _('Links') . '</a></li>
-					<li><a href="boeken.php">' . _('Boeken bestellen') . '</a></li>					
+					<li><a href="boeken.php">' . _('Boeken bestellen') . '</a></li>
+					<li><a href="http://studieondersteuning.svcover.nl/">' . _('Studieondersteuning') . '</a></li>				
 				</ul>
 			</div>
 			';
