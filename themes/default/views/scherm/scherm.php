@@ -15,4 +15,13 @@ class SchermView extends View {
 			$months[$punt->get('vanmaand')],
 			$punt->get('vanuur'), $punt->get('vanminuut'));
 	}
+
+	function encode_url($url)
+	{
+		$parts = explode('/', $url);
+
+		$parts = array_map('rawurlencode', $parts);
+
+		return implode('/', $parts);
+	}
 }
