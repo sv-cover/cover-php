@@ -51,11 +51,13 @@ function default_newsletter()
 $archive = new NewsletterArchive(dirname(__FILE__) . '/archive');
 
 $javascript = <<< EOF
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script src="edit.js"></script>
 EOF;
 
 $stylesheet = <<< EOF
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="edit.css">
 EOF;
 
@@ -97,6 +99,15 @@ if (isset($_POST['action']))
 			}
 			catch (Exception $e) {
 				echo 'Could not load newsletter: ' . $e->getMessage();
+			}
+			break;
+
+		case 'set-date':
+			try {
+				$newsletter->submission_date = new DateTime($_POST['date']);
+				echo 'Newsletter date changed to ' . $newsletter->submission_date->format('l j F Y');
+			}  catch (Exception $e) {
+				echo 'Could not change date: ' . $e->getMessage();
 			}
 			break;
 	}

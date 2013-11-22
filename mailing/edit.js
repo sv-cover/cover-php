@@ -88,6 +88,15 @@ $(function() {
 		}, reload);
 	};
 
+	var changeDate = function(dateText, datepicker) {
+		$(this).datepicker('hide');
+
+		$.post(document.location.href, {
+			'action': 'set-date',
+			'date': dateText
+		}, reload);
+	};
+
 	var nav = $('<ul class="mailing-edit-nav">');
 
 	nav.append('<li>Preview: <a href="index.php?session=' + session_id + '" target="_blank">HTML</a> or <a href="index.php?session=' + session_id + '&amp;mode=text" target="_blank">Text</a></li>');
@@ -97,6 +106,24 @@ $(function() {
 	nav.append($('<li>').append($('<a href="#">Load</a>').click(load)));
 
 	nav.append($('<li>').append($('<a href="#">Reset</a>').click(reset)));
+
+	nav.append($('<li>').append(
+		$('<a href="#"/>')
+			.text('Date of newsletter: ' + $('body').data('date'))
+			.click(function(e) {
+				e.preventDefault();
+
+				var x = $(this).position().left,
+					y = $(this).position().top + $(this).height();
+
+				$(this).datepicker(
+					'dialog',
+					$('body').data('date'),
+					changeDate,
+					{'dateFormat': 'yy-mm-dd'},
+					[x, y]);
+			})
+	));
 
 	$(document.body).prepend(nav);
 });
