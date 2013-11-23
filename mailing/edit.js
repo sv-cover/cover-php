@@ -162,7 +162,7 @@ $(function() {
 
 	nav.append($('<li>').append($('<a href="#">Log</a>').click(openLog)));
 
-	nav.append($('<li>').append($('<a href="#">Submit &amp; Archive</a>').click(submit)));
+	nav.append($('<li>').append($('<a href="#">Submit</a>').click(submit)));
 
 	$(document.body).prepend(nav);
 });

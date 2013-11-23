@@ -57,3 +57,7 @@ body {
 .ui-dialog-content input {
 	display: block;
 }
+
+.message-unreadable {
+	display: none;
+}
