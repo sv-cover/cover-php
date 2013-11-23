@@ -11,6 +11,8 @@ class Newsletter
 
 	public $main = array();
 
+	public $unchanged;
+
 	public function __construct($template)
 	{
 		$this->template = $template;
@@ -20,6 +22,8 @@ class Newsletter
 		$this->sidebar = array();
 
 		$this->main = array();
+
+		$this->unchanged = true;
 	}
 
 	public function render_title()
@@ -28,10 +32,10 @@ class Newsletter
 			$this->submission_date->format('jS \o\f F'));
 	}
 
-	public function render_permalink()
+	public function render_permalink($format = 'html')
 	{
-		return link_site(sprintf('newsletter/%s.html',
-			$this->submission_date->format('Ymd')));
+		return link_site(sprintf('newsletter/%s.%s',
+			$this->submission_date->format('Ymd'), $format));
 	}
 
 	public function style_headers($html)

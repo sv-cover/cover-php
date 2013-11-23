@@ -97,6 +97,46 @@ $(function() {
 		}, reload);
 	};
 
+	var openDatePicker = function(e) {
+		e.preventDefault();
+
+		var x = $(this).position().left,
+			y = $(this).position().top + $(this).height();
+
+		$(this).datepicker(
+			'dialog',
+			$('body').data('date'),
+			changeDate,
+			{'dateFormat': 'yy-mm-dd'},
+			[x, y]);
+	};
+
+	var submit = function(e) {
+		e.preventDefault();
+
+		var content = $('<div/>').html('\
+			<form>\
+				<label for="email">Email address</label>\
+				<input type="text" name="email" id="email" placeholder="mailing@svcover.nl">\
+			</form>');
+
+		content.dialog({
+			modal: true,
+			buttons: {
+				'Submit': function() {
+					$(this).dialog('close');
+					$.post(document.location.href, {
+						action: 'submit',
+						email: content.find('#email').val()
+					}, feedback);
+				},
+				'Cancel': function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+	}
+
 	var nav = $('<ul class="mailing-edit-nav">');
 
 	nav.append('<li>Preview: <a href="index.php?session=' + session_id + '" target="_blank">HTML</a> or <a href="index.php?session=' + session_id + '&amp;mode=text" target="_blank">Text</a></li>');
@@ -107,23 +147,9 @@ $(function() {
 
 	nav.append($('<li>').append($('<a href="#">Reset</a>').click(reset)));
 
-	nav.append($('<li>').append(
-		$('<a href="#"/>')
-			.text('Date of newsletter: ' + $('body').data('date'))
-			.click(function(e) {
-				e.preventDefault();
+	nav.append($('<li>').append($('<a href="#">Date of newsletter: ' + $('body').data('date') + '</a>').click(openDatePicker)));
 
-				var x = $(this).position().left,
-					y = $(this).position().top + $(this).height();
-
-				$(this).datepicker(
-					'dialog',
-					$('body').data('date'),
-					changeDate,
-					{'dateFormat': 'yy-mm-dd'},
-					[x, y]);
-			})
-	));
+	nav.append($('<li>').append($('<a href="#">Submit &amp; Archive</a>').click(submit)));
 
 	$(document.body).prepend(nav);
 });

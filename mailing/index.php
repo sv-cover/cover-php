@@ -48,6 +48,59 @@ function default_newsletter()
 	return $newsletter;
 }
 
+function archive_newsletter(Newsletter $newsletter)
+{
+	if (!file_put_contents(sprintf('../newsletter/%s.html',
+		$newsletter->submission_date->format('Ymd')), $newsletter->render()))
+		throw new Exception('Could not archive file');
+}
+
+function submit_newsletter(Newsletter $newsletter, $email)
+{
+	$notice_text = "This is a multi-part message in MIME format."
+				 . "If you cannot read it, go to " . $newsletter->render_permalink();
+
+	$plain_text = $newsletter->render_plain();
+
+	$html_text = $newsletter->render();
+
+	if (!preg_match('{<title>(.+?)</title>}', $html_text, $match))
+			throw new Exception('Could not extract subject from newsletter');
+
+	$subject = $match[1];
+
+	$mime_boundary = uniqid('np');
+
+	$message = array(
+			$notice_text,
+			"",
+			"--$mime_boundary",
+			"Content-Type: text/plain; charset=UTF-8",
+			"Content-Transfer-Encoding: 7bit",
+			"",
+			$plain_text,
+			"",
+			"--$mime_boundary",
+			"Content-Type: text/html; charset=UTF-8",
+			"Content-Transfer-Encoding: 7bit",
+			"",
+			$html_text,
+			"",
+			"--$mime_boundary--");
+
+	$headers = array(
+			'MIME-Version: 1.0',
+			'From: Bestuur Cover <bestuur@svcover.nl>',
+			'Reply-To: Bestuur Cover <bestuur@svcover.nl>',
+			'Content-Type: multipart/alternative;boundary=' . $mime_boundary);
+
+	if(!mail($email,
+			$subject,
+			implode("\r\n", $message),
+			implode("\r\n", $headers)))
+		throw new Exception('mail() failed');
+}
+
 $archive = new NewsletterArchive(dirname(__FILE__) . '/archive');
 
 $javascript = <<< EOF
@@ -108,6 +161,16 @@ if (isset($_POST['action']))
 				echo 'Newsletter date changed to ' . $newsletter->submission_date->format('l j F Y');
 			}  catch (Exception $e) {
 				echo 'Could not change date: ' . $e->getMessage();
+			}
+			break;
+
+		case 'submit':
+			try {
+				archive_newsletter($newsletter);
+				submit_newsletter($newsletter, $_POST['email']);
+				echo 'Newsletter archived and submitted to ' . $_POST['email'];
+			} catch (Exception $e) {
+				echo 'Could not submit newsletter: ' . $e->getMessage();
 			}
 			break;
 	}
