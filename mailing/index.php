@@ -193,7 +193,7 @@ else if (isset($_GET['log']))
 	if (!count($newsletter->log))
 		echo 'No messages.';
 	else
-		foreach (array_reverse($newsletter->log) as $message)
+		foreach ($newsletter->log as $message)
 			printf("%s: %s\n", $message[0]->format("Y-m-d H:i"), $message[1]);
 }
 else if (isset($_GET['mode']) && $_GET['mode'] == 'text')
