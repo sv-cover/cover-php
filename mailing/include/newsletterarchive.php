@@ -42,6 +42,8 @@ class NewsletterArchive
 		
 		$path = $this->path . '/' . $filename . '.bin';
 
+		$newsletter->log('Saved as "' . $filename . '"');
+
 		$data = serialize($newsletter);
 
 		if (!$data)

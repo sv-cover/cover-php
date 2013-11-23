@@ -50,9 +50,13 @@ function default_newsletter()
 
 function archive_newsletter(Newsletter $newsletter)
 {
-	if (!file_put_contents(sprintf('../newsletter/%s.html',
-		$newsletter->submission_date->format('Ymd')), $newsletter->render()))
+	$path = sprintf('../newsletter/%s.html',
+		$newsletter->submission_date->format('Ymd'));
+
+	if (!file_put_contents($path, $newsletter->render()))
 		throw new Exception('Could not archive file');
+
+	$newsletter->log('Archived to ' . $path);
 }
 
 function submit_newsletter(Newsletter $newsletter, $email)
@@ -99,6 +103,8 @@ function submit_newsletter(Newsletter $newsletter, $email)
 			implode("\r\n", $message),
 			implode("\r\n", $headers)))
 		throw new Exception('mail() failed');
+
+	$newsletter->log('Submitted to ' . $email);
 }
 
 $archive = new NewsletterArchive(dirname(__FILE__) . '/archive');
@@ -176,7 +182,20 @@ if (isset($_POST['action']))
 	}
 }
 else if (isset($_GET['section']))
-	echo $newsletter->render_section($_GET['section'], isset($_GET['mode']) ? $_GET['mode'] : 'html');
+{
+	echo $newsletter->render_section($_GET['section'],
+		isset($_GET['mode']) ? $_GET['mode'] : 'html');
+}
+else if (isset($_GET['log']))
+{
+	header('Content-Type: text/plain');
+
+	if (!count($newsletter->log))
+		echo 'No messages.';
+	else
+		foreach (array_reverse($newsletter->log) as $message)
+			printf("%s: %s\n", $message[0]->format("Y-m-d H:i"), $message[1]);
+}
 else if (isset($_GET['mode']) && $_GET['mode'] == 'text')
 {
 	header('Content-Type: text/plain');

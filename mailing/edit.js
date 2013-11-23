@@ -111,6 +111,17 @@ $(function() {
 			[x, y]);
 	};
 
+	var openLog = function(e) {
+		e.preventDefault();
+
+		$.get(document.location.href + '&log=true', function(response) {
+			$('<pre/>').text(response).dialog({
+				width: 800,
+				height: 500
+			});
+		});
+	};
+
 	var submit = function(e) {
 		e.preventDefault();
 
@@ -135,7 +146,7 @@ $(function() {
 				}
 			}
 		});
-	}
+	};
 
 	var nav = $('<ul class="mailing-edit-nav">');
 
@@ -148,6 +159,8 @@ $(function() {
 	nav.append($('<li>').append($('<a href="#">Reset</a>').click(reset)));
 
 	nav.append($('<li>').append($('<a href="#">Date of newsletter: ' + $('body').data('date') + '</a>').click(openDatePicker)));
+
+	nav.append($('<li>').append($('<a href="#">Log</a>').click(openLog)));
 
 	nav.append($('<li>').append($('<a href="#">Submit &amp; Archive</a>').click(submit)));
 

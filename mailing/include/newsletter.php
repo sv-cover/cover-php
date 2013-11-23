@@ -11,8 +11,10 @@ class Newsletter
 
 	public $main = array();
 
-	public $unchanged;
+	public $log = array();
 
+	public $unchanged;
+	
 	public function __construct($template)
 	{
 		$this->template = $template;
@@ -23,7 +25,14 @@ class Newsletter
 
 		$this->main = array();
 
+		$this->log = array();
+
 		$this->unchanged = true;
+	}
+
+	public function log($message)
+	{
+		$this->log[] = array(new DateTime(), $message);
 	}
 
 	public function render_title()
