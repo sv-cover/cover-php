@@ -35,8 +35,9 @@ body {
 	top: 0;
 	left: 0;
 	right: 0;
-	background: white;
+	background: #eee;
 	height: 32px;
+	box-shadow: 0 0 20px #333;
 }
 
 .mailing-edit-nav li {
@@ -47,10 +48,23 @@ body {
 .mailing-edit-nav li a {
 	display: inline-block;
 	padding: 0 .5em;
+	color: #333;
 }
 
 .mailing-edit-nav li a:hover {
 	background: #ccc;
+}
+
+.ui-dialog {
+	border: none;
+	border-radius: 0;
+	box-shadow: 0 0 60px #333;
+}
+
+.ui-dialog .ui-widget-header {
+	border-radius: 0;
+	border: 0;
+	background: transparent; 
 }
 
 .ui-dialog-content label,
@@ -58,6 +72,11 @@ body {
 	display: block;
 }
 
-.message-unreadable {
-	display: none;
+.ui-dialog-content .timestamp {
+	margin-left: 0.5em;
+	font-size: 0.8em;
+}
+
+.message-unreadable a {
+	cursor: not-allowed;
 }

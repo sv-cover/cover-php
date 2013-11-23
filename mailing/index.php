@@ -186,7 +186,7 @@ else if (isset($_GET['section']))
 	echo $newsletter->render_section($_GET['section'],
 		isset($_GET['mode']) ? $_GET['mode'] : 'html');
 }
-else if (isset($_GET['log']))
+else if (isset($_GET['mode']) && $_GET['mode'] == 'log')
 {
 	header('Content-Type: text/plain');
 
@@ -195,6 +195,11 @@ else if (isset($_GET['log']))
 	else
 		foreach ($newsletter->log as $message)
 			printf("%s: %s\n", $message[0]->format("Y-m-d H:i"), $message[1]);
+}
+else if (isset($_GET['mode']) && $_GET['mode'] == 'listing')
+{
+	header('Content-Type: applicaton/json');
+	echo json_encode($archive->listing());
 }
 else if (isset($_GET['mode']) && $_GET['mode'] == 'text')
 {

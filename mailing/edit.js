@@ -66,15 +66,37 @@ $(function() {
 	var load = function(e) {
 		e.preventDefault();
 
-		var filename = prompt('filename');
+		var filepicker = $('<div><p class="loading">Loading…</p></div>');
 
-		if (!filename)
-			return;
+		filepicker.dialog({
+			title: 'Load newsletter',
+			modal: true,
+			width: 400,
+			height: 300
+		});
 
-		$.post(document.location.href, {
-			'action': 'load',
-			'name': filename
-		}, reload);
+		$.getJSON(document.location.href + '&mode=listing', function(response) {
+			filepicker.find('.loading').remove();
+
+			var list = $('<ul/>').appendTo(filepicker);
+
+			list.on('click', 'a', function(e) {
+				e.preventDefault();
+				filepicker.dialog('close');
+
+				$.post(document.location.href, {
+					action: 'load',
+					name: $(this).text()
+				}, reload);
+			});
+
+			$.each(response, function() {
+				$('<li>')
+					.append($('<a href="#">').text(this.name))
+					.append($('<span class="timestamp">').text(this.last_modified))
+					.appendTo(list);
+			});
+		});
 	};
 
 	var reset = function(e) {
@@ -107,15 +129,20 @@ $(function() {
 			'dialog',
 			$('body').data('date'),
 			changeDate,
-			{'dateFormat': 'yy-mm-dd'},
+			{
+				dateFormat: 'yy-mm-dd',
+				firstDay: 1,
+				showButtonPanel: true
+			},
 			[x, y]);
 	};
 
 	var openLog = function(e) {
 		e.preventDefault();
 
-		$.get(document.location.href + '&log=true', function(response) {
+		$.get(document.location.href + '&mode=log', function(response) {
 			$('<pre/>').text(response).dialog({
+				title: 'Log',
 				width: 800,
 				height: 500
 			});

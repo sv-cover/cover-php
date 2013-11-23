@@ -58,6 +58,14 @@ class NewsletterArchive
 
 	public function listing()
 	{
-		return glob('*.bin');
+		$listing = array();
+
+		foreach (glob($this->path . '/*.bin') as $file)
+			$listing[] = array(
+				'name' => basename($file, '.bin'),
+				'last_modified' => date('Y-m-d H:i:s', filemtime($file))
+			);
+
+		return $listing;
 	}
 }
