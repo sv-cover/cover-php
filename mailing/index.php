@@ -211,12 +211,12 @@ else if (isset($_GET['mode']) && $_GET['mode'] == 'edit')
 	// Add JavaScript
 	$html = str_replace('</body>', $javascript . '</body>', $html);
 
-	header('Content-Type: text/html');
+	header('Content-Type: text/html; charset=UTF-8');
 	echo $html;
 }
 else
 {
-	header('Content-Type: text/html');
+	header('Content-Type: text/html; charset=UTF-8');
 	echo $newsletter->render();
 }
 
