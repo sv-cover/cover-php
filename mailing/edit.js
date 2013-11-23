@@ -140,12 +140,14 @@ $(function() {
 	var openLog = function(e) {
 		e.preventDefault();
 
+		var pre = $('<pre>Loading…</pre>').dialog({
+			title: 'Log',
+			width: 800,
+			height: 500
+		});
+
 		$.get(document.location.href + '&mode=log', function(response) {
-			$('<pre/>').text(response).dialog({
-				title: 'Log',
-				width: 800,
-				height: 500
-			});
+			pre.text(response);
 		});
 	};
 
