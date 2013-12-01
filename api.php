@@ -39,7 +39,9 @@ class ControllerApi extends Controller
 
 		$session = $session_model->create($member->get('id'));
 
-		return array('result' => $session->get('id'), 'details' => $member->data);
+		$member_data = $user_model->get_iter($member->get('id'));
+
+		return array('result' => array('session_id' => $session->get('session_id'), 'details' => $member_data->data));
 	}
 
 	public function api_session_destroy($session_id)
@@ -52,7 +54,7 @@ class ControllerApi extends Controller
 		// Get the session
 		$session_model = get_model('DataModelSession');
 
-		$session = $session_model->get($session_id);
+		$session = $session_model->get_iter($session_id);
 
 		if (!$session)
 			return array('result' => false, 'error' => 'Session not found');
@@ -72,7 +74,7 @@ class ControllerApi extends Controller
 		// Get the session
 		$session_model = get_model('DataModelSession');
 
-		$session = $session_model->get($session_id);
+		$session = $session_model->get_iter($session_id);
 
 		if (!$session)
 			return array('result' => false, 'error' => 'Session not found');
@@ -124,7 +126,7 @@ class ControllerApi extends Controller
 				break;
 
 			case 'session_test_committee':
-				$response = $this->api_session_test_committee($_POST['session_id'], $_POST['committee'])
+				$response = $this->api_session_test_committee($_POST['session_id'], $_POST['committee']);
 				break;
 
 			default:

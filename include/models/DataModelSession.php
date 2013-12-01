@@ -7,9 +7,9 @@ require_once('data/DataModel.php');
   */
 class DataModelSession extends DataModel
 {
-	public function __constructor($db)
+	public function DataModelSession($db)
 	{
-		parent::__constructor($db, 'sessions', 'session_id');
+		parent::DataModel($db, 'sessions', 'session_id');
 	}
 
 	public function create($member_id)
@@ -24,9 +24,9 @@ class DataModelSession extends DataModel
 
 		$iter = new DataIter($this, -1, $data);
 
-		$this->insert($iter, false);
+		$this->insert($iter);
 
-		return $data;
+		return $iter;
 	}
 
 	public function destroy($session_id)
