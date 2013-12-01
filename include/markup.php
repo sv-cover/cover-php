@@ -4,6 +4,16 @@
 
 	require_once('smileys.php');
 
+	function str_replace_once($search, $replace, $subject)
+	{
+		$pos = strpos($subject, $search);
+
+		if ($pos === false)
+			return $subject;
+
+		return substr_replace($subject, $replace, $pos, strlen($search));
+	}
+
 	function _markup_parse_code_real($code) {
 		$code = htmlspecialchars($code, ENT_NOQUOTES);
 		$code = str_replace("\n", '<br/>', $code);
@@ -17,35 +27,42 @@
 		return '<div class="code" title="Code">' . $code . '</div>';
 	}
 
-	function _markup_parse_begin_code(&$markup, &$codes) {
-		$codecount = 0;
+	function _markup_parse_code(&$markup, &$placeholders)
+	{
+		$count = 0;
 		
-		while (preg_match("/( *?\[code(=(.+?))?\](.*?)\[\/code\])/is", $markup, $matches) ) {
-			$codes[$codecount] = _markup_parse_code_real($matches[4]);
-
-			/* CHECK: The code thingie is weird */
-			$markup = preg_replace('/( *?\[code(=(.+?))?\](.*?)\[\/code\])/eis', '" #CODE" . $codecount++ . "#"', $markup, 1);
+		while (preg_match("/( *?\[code(=(.+?))?\](.*?)\[\/code\])/is", $markup, $match))
+		{
+			$placeholder = sprintf('#CODE%d#', $count++);
+			$placeholders[$placeholder] = _markup_parse_code_real($match[4]);
+			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
 	
-	function _markup_parse_end_code(&$markup, $codes) {
-		$markup = preg_replace('/#CODE(.*?)#/e', "\$codes[$1]", $markup);
-	}
-	
-	function _markup_parse_begin_urls(&$markup, &$urls) {
-		$linkcount = 0;
+	function _markup_parse_links(&$markup, &$placeholders)
+	{
+		$count = 0;
 
-		while (preg_match('/\[url=(.*?)\](.*?)\[\/url\]/is', $markup, $matches)) {
-			$urls[$linkcount] = '<a rel="nofollow" href="' . $matches[1] . '"' . (strpos($matches[1], 'http://') !== FALSE ? '>' : '>') . $matches[2] . '</a>';
-
-			/* CHECK: the link thingie is weird */
-			$markup = preg_replace( '/\[url=(.*?)\](.*?)\[\/url\]/eis','"#LINK".$linkcount++."#"', $markup, 1);
+		while (preg_match('/\[url=(.*?)\](.*?)\[\/url\]/is', $markup, $match))
+		{
+			$placeholder = sprintf('#LINK%d#', $count++);
+			$placeholders[$placeholder] = '<a rel="nofollow" href="' . $match[1] . '"' . (strpos($match[1], 'http://') !== FALSE ? '>' : '>') . $match[2] . '</a>';
+			
+			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
-
 	}
-	
-	function _markup_parse_end_urls(&$markup, $urls) {
-		$markup = preg_replace('/#LINK(.*?)#/e', "\$urls[$1]", $markup);
+
+	function _markup_parse_urls(&$markup, &$placeholders)
+	{
+		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match))
+		{
+			$url = preg_match('~^https?://~', $match[0]) ? $match[0] : 'http://' . $match[0];
+			
+			$placeholder = sprintf('#LINK%d#', $linkcount++);
+			$placeholders[$placeholder] = '<a rel="nofollow" href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
+
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
 	}
 	
 	function _markup_parse_quotes_real($matches) {
@@ -122,20 +139,6 @@
 		$markup = preg_replace_callback('/\[table( ([a-z]+))?\](.*?)\[\/table\]/ims', '_markup_parse_table_real', $markup);
 	}
 	
-	function _markup_parse_links_real($matches) {
-		$prefix = (!isset($matches[2]) || $matches[2] == "") ? "http://" : "";
-		$url = $prefix . $matches[1];
-		
-		
-		return '<a rel="nofollow" href="' . $url . '">' . (strlen($url) > 60 ? (substr($url, 0, 28) . '...' . substr($url, -29)) : $url) . '</a>';
-	}
-	
-	function _markup_parse_links(&$markup) {
-		$reg = "((?:(?:(irc|news|telnet|nttp|file|http|sftp|ftp|https|dav|callto):\/\/)|(?:www|ftp)[-A-Za-z0-9]*\.)[-A-Za-z0-9\.@:]+[^]'\.}>\)\s,\/\"\!]+(:[0-9]*)?(\/[-A-Za-z0-9_\$\.\+\!\*\(\),;:@&=\?\/~\#\%]*[^]'\.}>\)\s,\"\!]|\/)?)";
-
-		$markup = preg_replace_callback('/' . $reg . '/i', '_markup_parse_links_real', $markup);
-	}
-	
 	function _markup_parse_spaces(&$markup) {
 		while (preg_match('/ ( +?)/', $markup, $matches)) {
 			$sp = "";
@@ -166,15 +169,38 @@
 		$markup = str_replace($tags, $replace, $markup);
 	}
 	
-	function _markup_parse_images(&$markup) {
-		$markup = preg_replace('/\[img=(.+?)\]/', '<img src="http://$1" style="max-width: 400px;">', $markup);
+	function _markup_parse_images(&$markup, &$placeholders)
+	{
+		$count = 0;
+
+		while (preg_match('/\[img=(.+?)\]/', $markup, $match))
+		{
+			$url = preg_match('~^https?://~', $match[1]) ? $match[1] : 'http://' . $match[1];
+			$placeholder = sprintf('#IMAGE%d#', $count++);
+			$placeholders[$placeholder] = '<img src="' . $url . '" style="max-width: 400px;">';
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
 	}
-	function _markup_parse_youtube(&$markup) {
-		$markup = preg_replace('/\[youtube=(.+?)\]/', '<iframe width="420" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>', $markup);
+	function _markup_parse_youtube(&$markup)
+	{
+		$count = 0;
+
+		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match))
+		{
+			$placeholder = sprintf('#VIDEO%d#', $count++);
+			$placeholders[$placeholder] = '<iframe width="420" height="315" src="http://www.youtube.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe>';
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
 	}
 	
 	function _markup_parse_header(&$markup) {
 		$markup = preg_replace('/\[(\/)?h(.+?)\]\s*/ies', '"<$1h$2>"', $markup);
+	}
+
+	function _markup_parse_placeholders(&$markup, $placeholders)
+	{
+		foreach ($placeholders as $placeholder => $content)
+			$markup = str_replace_once($placeholder, $content, $markup);
 	}
 	
 	function _markup_process_macro_commissie($commissie) {
@@ -212,19 +238,20 @@
 		$markup .= "\n";
 
 		/* Filter code tags */
-		$codes = Array();
-		_markup_parse_begin_code($markup, $codes);
+		$placeholders = array();
+		_markup_parse_code($markup, $placeholders);
 
-		/* Filter urls */
-		$urls = Array();
-		_markup_parse_begin_urls($markup, $urls);
+		/* Parse [img=] and [youtube=] */
+		_markup_parse_images($markup, $placeholders);
+
+		_markup_parse_youtube($markup, $placeholders);
+		
+		/* Filter [url] */
+		_markup_parse_links($markup, $placeholders);
 
 		/* Replace scary stuff and re-replace not so very scary stuff */
 		$markup = htmlspecialchars($markup, ENT_NOQUOTES);
 		$markup = str_replace('&amp;', '&', $markup);
-
-		/* Parse links */
-		_markup_parse_links($markup);
 
 		/* Parse quotes */
 		_markup_parse_quotes($markup);
@@ -235,20 +262,18 @@
 		/* Parse spaces */
 		_markup_parse_spaces($markup);
 		
+		/* Parse bare links */
+		_markup_parse_urls($markup, $placeholders);
+
 		/* Parse smileys */
 		_markup_parse_smileys($markup);
 
 		/* Put codes and links back */
-		_markup_parse_end_code($markup, $codes);
-		_markup_parse_end_urls($markup, $urls);
+		_markup_parse_placeholders($markup, $placeholders);
 
 		/* Parse simple tags */
 		_markup_parse_simple($markup);
 
-		/* Parse images */
-		_markup_parse_images($markup);
-		_markup_parse_youtube($markup);
-		
 		/* Parse header */
 		_markup_parse_header($markup);
 		
