@@ -46,6 +46,8 @@ class ControllerApi extends Controller
 
 	public function api_session_destroy($session_id)
 	{
+		$session_model = get_model('DataModelSession');
+
 		return $session_model->destroy($session_id);
 	}
 
