@@ -155,7 +155,7 @@ if (!$session->loggedIn())
 
 if (!isset($_GET['session']))
 {
-	header('Location: index.php?session=' + $_GET['session']);
+	header('Location: index.php?session=' . $temp_id);
 	exit;
 }
 
