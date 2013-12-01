@@ -23,7 +23,7 @@ function link_site($rel = '')
 
 function link_api($method)
 {
-	return sprintf('http://localhost/cover/cover-php/api.php?method=%s', $method);
+	return sprintf('http://www.svcover.nl/api.php?method=%s', $method);
 }
 
 function default_newsletter()
