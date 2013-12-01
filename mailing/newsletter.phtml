@@ -6,8 +6,13 @@
 		<title><?= $this->render_title() ?></title>
 		<style>
 			@media (max-width: 700px) {
-				#page, #main-cell {
+				#readable-notice, #page, #main-cell {
 					width: auto !important;
+				}
+
+				#readable-notice td {
+					display: block;
+					text-align: center !important;
 				}
 			}
 
@@ -15,6 +20,16 @@
 				#page, #sidebar-cell, #main-cell {
 					display: block;
 					width: auto !important;
+				}
+			}
+
+			@media (max-width: 400px) {
+				#readable-notice {
+					text-align: center;
+				}
+
+				#readable-notice td {
+					display: inline;
 				}
 			}
 			
@@ -36,7 +51,14 @@
 				<td bgcolor="#3B3B3B">
 					<!-- table with sidebar and main section -->
 					<center>
-						<p style="color:white" class="message-unreadable">Is the newsletter unreadable? <a href="<?=$this->render_permalink()?>" style="color:white;text-decoration:underline">Read the newsletter in your web browser</a>.</p>
+						<br>
+						<table id="readable-notice" width="700" cellspacing="0" cellpadding="0">
+							<tr>
+								<td align="left" style="color: #CCCCCC; font-size: 11px">This is the newsletter that is send bi-weekly to all of our members.</td>
+								<td align="right" style="color: #CCCCCC; font-size: 11px">Is the newsletter unreadable? <a href="<?=$this->render_permalink()?>" style="color:white;text-decoration:underline">Read the newsletter in your web browser</a>.</td>
+							</tr>
+						</table>
+						<br>
 						<table id="page" style="border-collapse:collapse;" width="700" cellspacing="0" cellpadding="20">
 							<tr>
 								<!-- Sidebar -->

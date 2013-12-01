@@ -42,9 +42,8 @@ function default_newsletter()
 	$uitgehamerd->footer = 'Thanks for all your efforts in these committees!';
 
 	$colofon = new Newsletter_Section_Markdown('Colophon');
-	$colofon->data = "This is the newsletter that is send bi-weekly to all of our members.\n\n"
-			 . "Content for this newsletter can be send to [kopij@svcover.nl](mailto:kopij@svcover.nl).\n\n"
-			 . "In order to subscribe to the more frequent mailing list of Cover ([mailing@svcover.nl](mailto:mailing@svcover.nl)), send an e-mail to [administratie@svcover.nl](mailto:administratie@svcover.nl) with the subject \"Mailing\".";
+	$colofon->data = "Content for this newsletter can be send to [kopij@svcover.nl](mailto:kopij@svcover.nl).\n\n"
+				   . "In order to subscribe to the more frequent mailing list of Cover ([mailing@svcover.nl](mailto:mailing@svcover.nl)), send an e-mail to [administratie@svcover.nl](mailto:administratie@svcover.nl) with the subject \"Mailing\".";
 
 	$newsletter->sidebar = array($agenda, $ingehamerd, $uitgehamerd, $colofon);
 
