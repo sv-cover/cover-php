@@ -42,7 +42,7 @@ class NewsletterArchive
 		
 		$path = $this->path . '/' . $filename . '.bin';
 
-		$newsletter->log('Saved as "' . $filename . '"');
+		$newsletter->log('Saved as "' . $filename . '" by ' . NewsletterSession::instance()->currentUser());
 
 		$data = serialize($newsletter);
 

@@ -157,7 +157,7 @@ $(function() {
 		var content = $('<div/>').html('\
 			<form>\
 				<label for="email">Email address</label>\
-				<input type="text" name="email" id="email" placeholder="mailing@svcover.nl">\
+				<input type="text" name="email" id="email" placeholder="all@svcover.nl">\
 			</form>');
 
 		content.dialog({
@@ -177,9 +177,17 @@ $(function() {
 		});
 	};
 
+	var logOff = function(e) {
+		e.preventDefault();
+
+		$.post(document.location.href, {
+			action: 'destroy-session'
+		}, reload);
+	};
+
 	var nav = $('<ul class="mailing-edit-nav">');
 
-	nav.append('<li>Preview: <a href="index.php?session=' + session_id + '" target="_blank">HTML</a> or <a href="index.php?session=' + session_id + '&amp;mode=text" target="_blank">Text</a></li>');
+	nav.append('<li>Preview: <a href="index.php?session=' + session_id + '&amp;mode=html" target="_blank">HTML</a> or <a href="index.php?session=' + session_id + '&amp;mode=text" target="_blank">Text</a></li>');
 
 	nav.append($('<li>').append($('<a href="#">Save</a>').click(save)));
 
@@ -192,6 +200,16 @@ $(function() {
 	nav.append($('<li>').append($('<a href="#">Log</a>').click(openLog)));
 
 	nav.append($('<li>').append($('<a href="#">Submit</a>').click(submit)));
+
+	$.get(document.location.href + '&mode=session', function(response) {
+		var item = $('<li>');
+		item.css('float', 'right');
+
+		item.append($('<span>').text('Ingelogd als ' + response.voornaam));
+		item.append($('<a href="#">Log off</a>').click(logOff));
+
+		nav.append(item);
+	});
 
 	$(document.body).prepend(nav);
 });

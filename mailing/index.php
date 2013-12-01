@@ -11,6 +11,8 @@ require_once 'include/newsletter_section_committeechanges.php';
 require_once 'include/newsletter_section_markdown.php';
 require_once 'include/newsletterarchive.php';
 require_once 'markdown.php';
+require_once 'include/session.php';
+require_once 'include/template.php';
 
 session_start();
 
@@ -19,12 +21,17 @@ function link_site($rel = '')
 	return sprintf('http://www.svcover.nl/%s', $rel);
 }
 
+function link_api($method)
+{
+	return sprintf('http://localhost/cover/cover-php/api.php?method=%s', $method);
+}
+
 function default_newsletter()
 {
 	$newsletter = new Newsletter('newsletter.phtml');
 
 	$agenda = new Newsletter_Section_Agenda('Agenda');
-	$agenda->footer = "Every week there is a DomBo (Thursday Afternoon Social) in the SLACK at 16:00."
+	$agenda->footer = "Every week there is a DoMBo (Thursday Afternoon Social) in the SLACK at 16:00."
 					. "\n\n"
 					. "The [complete agenda](" . link_site('agenda.php') . ") is available in multiple formats.";
 	
@@ -56,7 +63,7 @@ function archive_newsletter(Newsletter $newsletter)
 	if (!file_put_contents($path, $newsletter->render()))
 		throw new Exception('Could not archive file');
 
-	$newsletter->log('Archived to ' . $path);
+	$newsletter->log('Archived to ' . $path . ' by ' . NewsletterSession::instance()->currentUser());
 }
 
 function submit_newsletter(Newsletter $newsletter, $email)
@@ -104,7 +111,7 @@ function submit_newsletter(Newsletter $newsletter, $email)
 			implode("\r\n", $headers)))
 		throw new Exception('mail() failed');
 
-	$newsletter->log('Submitted to ' . $email);
+	$newsletter->log('Submitted to ' . $email . ' by ' . NewsletterSession::instance()->currentUser());
 }
 
 $archive = new NewsletterArchive(dirname(__FILE__) . '/archive');
@@ -120,17 +127,39 @@ $stylesheet = <<< EOF
 <link rel="stylesheet" href="edit.css">
 EOF;
 
+$session = NewsletterSession::instance();
+
 if (isset($_GET['session']))
 	$temp_id = $_GET['session'];
 else
+	$temp_id = uniqid();
+
+if (!$session->loggedIn())
 {
-	header('Location: index.php?session=' . uniqid());
+	$error = null;
+
+	if (isset($_POST['email'], $_POST['password']))
+	{
+		try {
+			NewsletterSession::login($_POST['email'], $_POST['password']);
+			header('Location: index.php?session=' . $temp_id);
+			exit;
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+		}
+	}
+
+	echo render_template('tpl/login.phtml', compact('error'));
 	exit;
 }
 
-if (isset($_SESSION['newsletter_' . $temp_id]))
-	$newsletter = unserialize($_SESSION['newsletter_' . $temp_id]);
-else
+if (!isset($_GET['session']))
+{
+	header('Location: index.php?session=' + $_GET['session']);
+	exit;
+}
+
+if (!($newsletter = $session->get($temp_id)))
 	$newsletter = default_newsletter();
 
 if (isset($_POST['action']))
@@ -179,12 +208,26 @@ if (isset($_POST['action']))
 				echo 'Could not submit newsletter: ' . $e->getMessage();
 			}
 			break;
+
+		case 'destroy-session':
+			try {
+				$session->destroy();
+				echo 'You have been logged out';
+			} catch (Exception $e) {
+				echo 'Could not log you out: ' . $e->getMessage();
+			}
+			break;
 	}
 }
 else if (isset($_GET['section']))
 {
 	echo $newsletter->render_section($_GET['section'],
 		isset($_GET['mode']) ? $_GET['mode'] : 'html');
+}
+else if (isset($_GET['mode']) && $_GET['mode'] == 'session')
+{
+	header('Content-Type: application/json');
+	echo json_encode($session->currentUser());
 }
 else if (isset($_GET['mode']) && $_GET['mode'] == 'log')
 {
@@ -206,7 +249,12 @@ else if (isset($_GET['mode']) && $_GET['mode'] == 'text')
 	header('Content-Type: text/plain');
 	echo $newsletter->render_plain();
 }
-else if (isset($_GET['mode']) && $_GET['mode'] == 'edit')
+else if (isset($_GET['mode']) && $_GET['mode'] == 'html')
+{
+	header('Content-Type: text/html; charset=UTF-8');
+	echo $newsletter->render();
+}
+else
 {
 	$html = $newsletter->render();
 
@@ -219,10 +267,5 @@ else if (isset($_GET['mode']) && $_GET['mode'] == 'edit')
 	header('Content-Type: text/html; charset=UTF-8');
 	echo $html;
 }
-else
-{
-	header('Content-Type: text/html; charset=UTF-8');
-	echo $newsletter->render();
-}
 
-$_SESSION['newsletter_' . $temp_id] = serialize($newsletter);
+$session->set($temp_id, $newsletter);
