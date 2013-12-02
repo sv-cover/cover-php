@@ -10,7 +10,7 @@
 
 		if ($pos === false)
 			return $subject;
-
+		
 		return substr_replace($subject, $replace, $pos, strlen($search));
 	}
 
@@ -54,11 +54,13 @@
 
 	function _markup_parse_urls(&$markup, &$placeholders)
 	{
+		$linkcount = 0;
+
 		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match))
 		{
 			$url = preg_match('~^https?://~', $match[0]) ? $match[0] : 'http://' . $match[0];
 			
-			$placeholder = sprintf('#LINK%d#', $linkcount++);
+			$placeholder = sprintf('#URL%d#', $linkcount++);
 			$placeholders[$placeholder] = '<a rel="nofollow" href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
 
 			$markup = str_replace_once($match[0], $placeholder, $markup);
@@ -119,8 +121,6 @@
 			$class = 'markup_' . $class;
 		
 		$result = '<table class="' . $class . '">';
-		
-		//var_dump($contents);
 		
 		if (preg_match_all('/^\|\|(.*?)\|\|$/ims', $contents, $matches)) {
 			$maxcol = 0;
