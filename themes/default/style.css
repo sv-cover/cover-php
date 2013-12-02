@@ -146,7 +146,7 @@ ul.expander{
 	float: left;
 	height: 100%;
 }
-.agenda a { float: left; display: block; font-weight: bold; font-size: 11px; max-width: 126px; margin-left: 4px;}
+.menu_contents .agenda a { float: left; display: block; font-weight: bold; font-size: 11px; max-width: 126px; margin-left: 4px;}
 .align-right {text-align:right;}
 .align-center {text-align:center;}
 
