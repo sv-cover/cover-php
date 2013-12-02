@@ -4,6 +4,7 @@
 	require_once('include/member.php');
 	require_once('include/login.php');
 	require_once('include/form.php');
+	require_once 'include/webcal.php';
 
 	class ControllerAgenda extends Controller {
 		function ControllerAgenda() {
@@ -266,6 +267,28 @@
 			header('Location: agenda.php');
 			exit();
 		}
+
+		function get_webcal()
+		{
+			$cal = new WebCal_Calendar('Cover');
+
+			$punten = $this->model->get_agendapunten(true);
+
+			foreach ($punten as $punt)
+			{
+				$event = new WebCal_Event;
+				$event->start = new DateTime($punt->get('van'));
+				$event->end = new DateTime($punt->get('tot'));
+				$event->summary = $punt->get('kop');
+				$event->description = $punt->get('beschrijving');
+				$event->location = $punt->get('locatie');
+				$event->url = sprintf('http://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
+				$cal->add_event($event);
+			}
+
+			$cal->publish('cover.ics');
+			exit;
+		}
 		
 		function run_impl() {
 			$iter = null;
@@ -293,6 +316,8 @@
 				$this->_view_edit($iter);
 			elseif ($iter)
 				$this->get_content('agendapunt', $iter);
+			elseif (isset($_GET['format']) && $_GET['format'] == 'webcal')
+				$this->get_webcal();
 			else
 				$this->get_content('index');
 		}
