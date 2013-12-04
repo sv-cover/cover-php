@@ -79,6 +79,8 @@ class ControllerScherm
 		}
 
 		// Find the right mime type for the file
+		$extension = pathinfo($path, PATHINFO_EXTENSION);
+		
 		switch ($extension)
 		{
 			case 'jpg':
