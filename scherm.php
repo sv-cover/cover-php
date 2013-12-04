@@ -103,10 +103,10 @@ class ControllerScherm
 		header('Content-Type: ' . $mime_type);
 		
 		// Send some non-caching headers
-		header('Pragma: public');
-		header('Cache-Control: max-age=86400');
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', filemtime($path)));
-		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+		// header('Pragma: public');
+		// header('Cache-Control: max-age=86400');
+		// header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', filemtime($path)));
+		// header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 		
 		// .. and finally, send the file.
 		readfile($path);
