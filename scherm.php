@@ -1,82 +1,151 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	
-	class ControllerScherm extends Controller {
-		
-		function ControllerScherm() {
-		
-		}
-		
-		function get_content($view, $iter = null, $params = null) {
-			run_view('scherm::' . $view, null, $iter, $params);
-		}
 
-		function partial_fotos()
-		{
-			$model = get_model('DataModelFotoboek');
+require_once 'include/init.php';
+require_once 'include/markup.php';
 
-			$boek = $model->get_random_book();
+class ControllerScherm
+{
+	// private $search_paths = array(
+	// 	'./scherm/slides' => array('allow_php' => true),
+	// 	'./test/slides-bestuur' => array('allow_php' => false),
+	// 	'./test/slides-promotie' => array('allow_php' => false)
+	// );
+	private $search_paths;
 
-			$fotos = $model->get_photos($boek);
+	private $default_slide;
 
-			$this->get_content('fotos', $fotos, compact('boek'));
-		}
+	public function ControllerScherm(array $config)
+	{
+		$this->search_paths = $config['search_paths'];
 
-		function partial_agenda()
-		{
-			$agenda = get_model('DataModelAgenda');
-			$this->get_content('agenda', $agenda->get_agendapunten(true));
-		}
+		$this->default_slide = dirname(__FILE__) . '/scherm/default-slide.php';
 
-		function partial_bestuurslogo()
-		{
-			$logos = glob('./images/scherm/bestuurslogos/*.{jpg,png}', GLOB_BRACE);
-
-			$logo = $logos[mt_rand(0, count($logos) - 1)];
-
-			$this->get_content('bestuurslogo', null, compact('logo'));
-		}
-
-		function partial_maikel()
-		{
-			$site = file_get_contents('http://maikelzitopdingen.nl/');
-
-			if (!preg_match_all('~<h2>(.+?)</h2><h6>(.+?)</h6><img src="(.+?)"~', $site, $matches, PREG_PATTERN_ORDER))
-				return;
-
-			if (count($matches) == 0)
-				return;
-
-			$random_maikel = mt_rand(0, count($matches[1]) - 1);
-
-			$data = array(
-				'caption' => $matches[1][$random_maikel],
-				'src' => $matches[3][$random_maikel]
-			);
-
-			$this->get_content('maikel', null, $data);
-		}
-		
-		function run_impl() {
-			// We refreshen de inhoud van één slide
-			if (isset($_GET['partial']) && method_exists($this, 'partial_' . $_GET['partial']))
-			{
-				header("Cache-Control: no-cache, must-revalidate");
-				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-				header("Cache-Control: no-cache, must-revalidate");
-				header("Pragma: no-cache");
-				call_user_func(array($this, 'partial_' . $_GET['partial']));
-			}
-			// Moeten we de gehele pagina opnieuw laden? Soort restart-knopje
-			elseif (isset($_GET['latest_version']))
-				echo '0';
-			// Laad de pagina
-			else
-				$this->get_content('scherm');
-		}
+		$this->slides = $this->search_slides(array_keys($this->search_paths));
 	}
+
+	protected function search_slides($search_paths)
+	{
+		$slides = array();
+
+		foreach ($search_paths as $path)
+		{
+			foreach (scandir($path) as $folder)
+			{
+				// Skip dot files
+				if ($folder{0} == '.')
+					continue;
+
+				// Skip anything not a folder
+				if (!is_dir($path . '/' . $folder))
+					continue;
+
+				// If it contains a custom slide, add it to the list
+				if (file_exists($path . '/' . $folder . '/slide.php'))
+					$slides[sha1($path . '/' . $folder)] = $path . '/' . $folder;
+
+				// Or if it is just a folder with files, include it as well
+				else if (glob($path . '/' . $folder . '/*.{jpg,png}', GLOB_BRACE))
+					$slides[sha1($path . '/' . $folder)] = $path . '/' . $folder;
+			}
+		}
+
+		return $slides;
+	}
+
+	protected function run_slide()
+	{
+		chdir($this->slides[$this->slide]);
+
+		header("Cache-Control: no-cache, must-revalidate");
+		header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+		header("Cache-Control: no-cache, must-revalidate");
+		header("Pragma: no-cache");
+
+		if (file_exists('slide.php'))
+			include 'slide.php';
+		else
+			include $this->default_slide;
+	}
+
+	protected function run_resource($resource)
+	{
+		$path = $this->slides[$this->slide] . '/' . $resource;
+
+		if (!file_exists($path))
+		{
+			header('Status: 404 Not Found');
+			echo 'Resource not found';
+			return;
+		}
+
+		// Find the right mime type for the file
+		switch ($extension)
+		{
+			case 'jpg':
+			case 'jpeg':
+				$mime_type = 'image/jpeg';
+				break;
+
+			case 'gif':
+				$mime_type = 'image/gif';
+				break;
+
+			case 'png':
+				$mime_type = 'image/png';
+				break;
+
+			default:
+				$mime_type = 'application/octet-stream';
+				break;
+		}
+
+		// Send the mime type
+		header('Content-Type: ' . $mime_type);
+		
+		// Send some non-caching headers
+		header('Pragma: public');
+		header('Cache-Control: max-age=86400');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', filemtime($path)));
+		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+		
+		// .. and finally, send the file.
+		readfile($path);
+	}
+
+	protected function link_resource($resource)
+	{
+		return sprintf("scherm.php?slide=%s&resource=%s",
+			urlencode($this->slide),
+			urlencode($resource));
+	}
+
+	protected function run_scherm()
+	{
+		run_view('scherm::scherm', null, null, array('slides' => $this->slides));
+	}
+
+	public function run()
+	{
+		if (isset($_GET['slide']))
+		{
+			if (!isset($this->slides[$_GET['slide']]))
+			{
+				header('Status: 400 Not Found');
+				echo 'Slide not found';
+				return;
+			}
 	
-	$controller = new ControllerScherm();
-	$controller->run();
-?>
+			$this->slide = $_GET['slide'];
+			
+			if(isset($_GET['resource']))
+				$this->run_resource($_GET['resource']);
+			else
+				$this->run_slide();
+		}
+		else
+			$this->run_scherm();		
+	}
+}
+
+$controller = new ControllerScherm(include 'scherm/config.php');
+$controller->run();

@@ -55,37 +55,37 @@
 			transform: translate(150%, 0);
 		}
 
-		.slide.fotos h1,
-		.slide.maikel h1 {
+		.slide .collage h1,
+		.slide .maikel h1 {
 			position: absolute;
 			top: 0;
 			left: 20px;
 			z-index: 10;
 		}
 
-		.slide.fotos ul {
+		.slide .collage ul {
 			margin: 0;
 			padding: 0;
 			list-style: none;
 		}
 
-		.slide.fotos .foto {
+		.slide .collage .foto {
 			display: block;
 			float: left;
 			overflow: hidden;
 		}
 
-		.slide.agenda .agenda-item {
+		.slide .agenda .agenda-item {
 			clear: both;
 			text-align: right;
 			font: 30px/60px sans-serif;
 		}
 
-		.slide.agenda {
+		.slide .agenda {
 			padding: 0 40px;
 		}
 
-		.slide.agenda h3 {
+		.slide .agenda h3 {
 			float: left;
 			margin:0;
 			padding: 0;
@@ -96,10 +96,11 @@
 	</head>
 	<body>
 		<div class="slides-container">
-			<div data-time="20" data-url="scherm.php?partial=agenda" class="slide agenda current"></div>
-			<div data-time="20" data-url="scherm.php?partial=fotos" data-onload="layout_photos(this)" data-onshow="scroll_slide(this)" data-onhide="reset_scroll_slide(this)" class="slide fotos"></div>
-			<div data-time="20" data-url="scherm.php?partial=bestuurslogo" class="slide bestuurslogo"></div>
-			<div data-time="10" data-url="scherm.php?partial=maikel" class="slide maikel"></div>
+			<?php foreach ($slides as $slide => $options): ?>
+			<div class="slide"
+				data-url="scherm.php?slide=<?=$slide?>"
+				data-time="20"></div>
+			<?php endforeach ?>
 		</div>
 		<script src="<?=get_theme_data('views/scherm/scherm.js')?>"></script>
 		<script>
@@ -113,8 +114,12 @@
 					if (request.readyState == 4) {
 						slide.innerHTML = request.responseText;
 
-						if (slide.hasAttribute('data-onload'))
-							new Function(slide.getAttribute('data-onload')).call(slide);
+						// Evaluate all the JavaScript code blocks
+						Array.prototype.forEach.call(
+							slide.querySelectorAll('script'),
+							function(script) {
+								new Function(script.innerHTML).call(slide);
+							});
 					}
 				};
 				request.send();
@@ -139,13 +144,6 @@
 					slides[i].classList.remove('current');
 					slides[next].classList.add('current');
 
-					// Eventueel run de code die bij de events hoort
-					if (slides[i].hasAttribute('data-onhide'))
-						new Function(slides[i].getAttribute('data-onhide')).call(slides[i]);
-
-					if (slides[next].hasAttribute('data-onshow'))
-						new Function(slides[next].getAttribute('data-onshow')).call(slides[next]);
-					
 					// en laad vast de slide daarna
 					delay_load_slide(slides[(i + 2) % slides.length], 1000);
 
@@ -213,6 +211,7 @@
 			Array.prototype.forEach.call(slides, load_slide);
 			// setInterval(next_slide, 20000);
 
+			slides[0].classList.add('current');
 			queue_next_slide(slides[0].getAttribute('data-time'));
 
 			document.addEventListener('keydown', function(e) {
