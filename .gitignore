@@ -6,3 +6,4 @@ phppgadmin
 webmail
 include/config.inc
 include/data/DBIds.php
+scherm/config.php
