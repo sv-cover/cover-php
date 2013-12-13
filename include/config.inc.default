@@ -13,6 +13,9 @@
 		/* i18n */
 		'i18n_domain' => 'cover-web',
 		'i18n_path' => '/home/student/easy/share/locale',
-		'locale' => 'nl_NL'
+		'locale' => 'nl_NL',
+
+		/* Scherm */
+		'path_to_bestuur_slides' => dirname(__FILE__) . '/../test/bestuur-slides',
+		'path_to_promotie_slides' => dirname(__FILE__) . '/../test/promotie-slides'
 	);
-?>

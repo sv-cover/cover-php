@@ -11,7 +11,7 @@
 	  */
 	function _member_data_from_session() {
 		$model = get_model('DataModelMember');
-		$member = $model->get_iter($_SESSION['member_id']);
+		$member = $model->get_iter(session_get_member_id());
 		
 		if (!$member)
 			return null;
@@ -65,16 +65,19 @@
 
 		if (!$member)
 			return false;
-		
-		$_SESSION['member_id'] = $member->get('id');
-		
-		if ($remember) {
-			$time = time() + 24 * 3600 * 31 * 12;
-			
-			setcookie("email", $email, $time);
-			setcookie("pass", $pass, $time);
-			setcookie("hash", md5($email . $pass . COOKIE_KEY), $time);
-		}
+
+		$session_model = get_model('DataModelSession');
+
+		$timeout = $remember ? '7 DAY' : '1 HOUR';
+
+		$session = $session_model->create($member->get('id'),
+			$_SERVER['REMOTE_ADDR'],
+			$_SERVER['HTTP_USER_AGENT'],
+			$timeout);
+
+		setcookie('cover_session_id',
+			$session->get('session_id'),
+			strtotime('+' . $timeout));
 
 		return _member_data_from_session();
 	}
@@ -84,28 +87,13 @@
 	  * cookie will be cleared and the member data from the session
 	  * will be cleared (thus effectively logging out the member)
 	  */
-	function logout() {
-		setcookie("email");
-		setcookie("pass");
-		setcookie("hash");
+	function logout()
+	{
+		$session_model = get_model('DataModelSession');
 
-		unset($_SESSION['member_id']);
-	}
+		$session_model->destroy($_COOKIE['cover_session_id']);
 
-	/** @group Login
-	  * Tries to login a member from a cookie
-	  *
-	  * @result false if member couldn't be logged in from a cookie or
-	  * memberdata otherwise
-	  */
-	function _try_login_from_cookie() {
-		if (!isset($_COOKIE['email']) || !isset($_COOKIE['pass']) || !isset($_COOKIE['hash']))
-			return false;
-
-		if ($_COOKIE['hash'] != md5($_COOKIE['email'] . $_COOKIE['pass'] . COOKIE_KEY))
-			return false;
-		
-		return login($_COOKIE['email'], $_COOKIE['pass'], true);
+		setcookie('cover_session_id');
 	}
 
 	/** @group Login
@@ -117,21 +105,36 @@
 	  * @result false if no member is logged in or the memberdata is
 	  * there is a member logged in at the moment
 	  */	
-	function logged_in() {
+	function logged_in()
+	{
 		static $logged_in = null;
 		
-		if ($logged_in !== null)
-			return $logged_in;
-		
-		$logged_in = false;
-		
-		if (isset($_SESSION['member_id']))
-			$logged_in = _member_data_from_session();
+		if ($logged_in === null)
+		{
+			$member_id = session_get_member_id();
 
-		if (!$logged_in)
-			$logged_in = _try_login_from_cookie();
-		
+			if ($member_id === null)
+				return $logged_in = null;
+
+			$logged_in = _member_data_from_session();
+		}
+
 		return $logged_in;
+	}
+
+	function session_get_member_id()
+	{
+		if (empty($_COOKIE['cover_session_id']))
+			return null;
+
+		$session_model = get_model('DataModelSession');
+
+		$session = $session_model->resume($_COOKIE['cover_session_id']);
+
+		if (!$session)
+			return null;
+
+		return $session->get('member_id');
 	}
 
 ?>

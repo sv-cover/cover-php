@@ -11,8 +11,8 @@
 		function run_impl() {
 			$referer = $_POST['referer'];
 
-			if (get_post('email') && get_post('pass')) {
-				login(get_post('email'), md5(get_post('pass')), get_post('remember') == 'yes');
+			if (get_post('email') && get_post('password')) {
+				login(get_post('email'), md5(get_post('password')), get_post('remember') == 'yes');
 				header("Location: $referer");
 				exit();
 			}

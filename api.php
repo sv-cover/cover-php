@@ -26,7 +26,7 @@ class ControllerApi extends Controller
 		return $activities;
 	}
 
-	public function api_session_create($email, $password)
+	public function api_session_create($email, $password, $application)
 	{
 		$user_model = get_model('DataModelMember');
 
@@ -37,7 +37,7 @@ class ControllerApi extends Controller
 
 		$session_model = get_model('DataModelSession');
 
-		$session = $session_model->create($member->get('id'));
+		$session = $session_model->create($member->get('id'), $_SERVER['REMOTE_ADDR'], $application);
 
 		$member_data = $user_model->get_iter($member->get('id'));
 
@@ -116,7 +116,8 @@ class ControllerApi extends Controller
 				break;
 
 			case 'session_create':
-				$response = $this->api_session_create($_POST['email'], $_POST['password']);
+				$response = $this->api_session_create($_POST['email'], $_POST['password'],
+					isset($_POST['application']) ? $_POST['application'] : 'api');
 				break;
 
 			case 'session_destroy':

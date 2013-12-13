@@ -399,8 +399,8 @@ $("#verenigingClick").click(function(){
 		<form action="dologin.php" method="post">
 		<table>
 		<tr><td><a href="wachtwoordvergeten.php">wachtwoord vergeten?</a></td><td><a href="lidworden.php">lid worden?</a></td></tr>
-		<tr><td colspan="2"><label for="email">E-mail adres: </label>' . input_text('email', null, 'class', 'textField', 'id', 'email','value', _('email'), 'onFocus', 'javascript:clear_text(this, \'email\');') . '</td><td></td></tr>
-		<tr><td colspan="2"><label for="pass">Wachtwoord: </label>' . input_password('pass', null, 'class', 'textField', 'id', 'pass', 'value', 'password', 'onFocus', 'javascript:clear_text(this, \'\');') . '</td></tr>
+		<tr><td colspan="2"><label for="email">E-mail adres: </label>' . input_text('email', null, 'class', 'textField', 'id', 'email') . '</td><td></td></tr>
+		<tr><td colspan="2"><label for="password">Wachtwoord: </label>' . input_password('password', null, 'class', 'textField', 'id', 'password') . '</td></tr>
 		<tr><td>' . input_checkbox('remember', null, 'yes', 'checked', 'checked') . ' ' . _('Blijvend') . '</td><td class="text_right"><input type="hidden" name="referer" value="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '"/>' . input_submit('subm', _('Inloggen')) . '</tr></table>
 		</form>';
 		
