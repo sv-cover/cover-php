@@ -13,7 +13,7 @@ class Newsletter_Section_Agenda extends Newsletter_Section
 
 	public function fetch_activities()
 	{
-		$response = file_get_contents(link_site('api.php?method=agenda'));
+		$response = file_get_contents(link_api('agenda'));
 
 		if (!$response) return;
 

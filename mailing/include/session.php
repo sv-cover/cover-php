@@ -88,6 +88,11 @@ class NewsletterSession
 			: array());
 	}
 
+	public function sessionId()
+	{
+		return $_SESSION['cover_session_id'];
+	}
+
 	public function loggedIn()
 	{
 		return isset($_SESSION['user_authorized'])
@@ -99,7 +104,7 @@ class NewsletterSession
 		// Try to kill the session at the API-side as well
 		http_json_request(
 			link_api('session_destroy'),
-			array('session_id' => $_SESSION['cover_session_id']));
+			array('session_id' => $this->sessionId()));
 
 		$_SESSION['user_authorized'] = false;
 

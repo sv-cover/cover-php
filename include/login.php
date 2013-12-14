@@ -121,19 +121,30 @@
 		return $logged_in;
 	}
 
+	function session_get_session_id()
+	{
+		if (!empty($_GET['session_id']))
+			return $_GET['session_id'];
+
+		if (!empty($_COOKIE['cover_session_id']))
+			return $_COOKIE['cover_session_id'];
+
+		return null;
+	}
+
 	function session_get_member_id()
 	{
-		if (empty($_COOKIE['cover_session_id']))
+		$session_id = session_get_session_id();
+
+		if ($session_id === null)
 			return null;
 
 		$session_model = get_model('DataModelSession');
 
-		$session = $session_model->resume($_COOKIE['cover_session_id']);
+		$session = $session_model->resume($session_id);
 
 		if (!$session)
 			return null;
 
 		return $session->get('member_id');
 	}
-
-?>

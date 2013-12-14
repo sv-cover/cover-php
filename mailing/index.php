@@ -23,7 +23,13 @@ function link_site($rel = '')
 
 function link_api($method)
 {
-	return sprintf('http://www.svcover.nl/api.php?method=%s', $method);
+	$session = NewsletterSession::instance();
+
+	$session_param = $session->loggedIn()
+		? sprintf('&session_id=%s', $session->sessionId())
+		: '';
+
+	return link_site(sprintf('api.php?method=%s%s', $method, $session_param));
 }
 
 function default_newsletter()

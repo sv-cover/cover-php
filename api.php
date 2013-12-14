@@ -16,7 +16,7 @@ class ControllerApi extends Controller
 
 		$activities = array();
 
-		foreach ($agenda->get_agendapunten(true) as $activity)
+		foreach ($agenda->get_agendapunten(logged_in()) as $activity)
 			$activities[] = array(
 				'id' => $activity->get_id(),
 				'vandatum' => $activity->get('vandatum'),
