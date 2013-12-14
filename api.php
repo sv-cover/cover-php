@@ -37,7 +37,7 @@ class ControllerApi extends Controller
 
 		$session_model = get_model('DataModelSession');
 
-		$session = $session_model->create($member->get('id'), $_SERVER['REMOTE_ADDR'], $application);
+		$session = $session_model->create($member->get('id'), $application);
 
 		$member_data = $user_model->get_iter($member->get('id'));
 

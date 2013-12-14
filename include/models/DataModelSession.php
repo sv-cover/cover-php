@@ -27,7 +27,11 @@ class DataModelSession extends DataModel
 		if ($data)
 		{
 			// Update last active
-			$this->db->query("UPDATE {$this->table} SET last_active_on = NOW() WHERE {$id_string}");
+			$update = array(
+				'last_active_on' => 'NOW()',
+				'ip_address' => $_SERVER['REMOTE_ADDR']);
+
+			$this->db->update($this->table, $update, $id_string, array('last_active_on'));
 
 			return new $this->dataiter($this, $data[$this->id], $data);
 		}
@@ -35,14 +39,14 @@ class DataModelSession extends DataModel
 			return $data;
 	}
 
-	public function create($member_id, $ip_address, $application, $timeout = '7 DAY')
+	public function create($member_id, $application, $timeout = '7 DAY')
 	{
 		$session_id = sha1(uniqid('session', true));
 
 		$data = array(
 			'session_id' => $session_id,
 			'member_id' => (int) $member_id,
-			'ip_address' => $ip_address,
+			'ip_address' => $_SERVER['REMOTE_ADDR'],
 			'application' => $application,
 			'created_on' => date('Y-m-d H:i:s'),
 			'last_active_on' => date('Y-m-d H:i:s'),

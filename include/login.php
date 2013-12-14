@@ -71,7 +71,6 @@
 		$timeout = $remember ? '7 DAY' : '1 HOUR';
 
 		$session = $session_model->create($member->get('id'),
-			$_SERVER['REMOTE_ADDR'],
 			$_SERVER['HTTP_USER_AGENT'],
 			$timeout);
 
