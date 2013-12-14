@@ -68,5 +68,8 @@ foreach ($punten as $punt) {
 <p>De Coveragenda is ook beschikbaar in verschillende standaarden: 
 <a href="http://www.google.com/calendar/feeds/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic">XML</a>,
 <a href="http://www.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics">iCal</a>, 
+<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+<a href="agenda.php?format=webcal&amp;session_id=<?=session_get_session_id()?>">iCal (experimenteel)</a>, 
+<?php endif ?>
 <a href="http://www.google.com/calendar/embed?src=s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com&ctz=Europe/Amsterdam">html</a></p>
 </div>
