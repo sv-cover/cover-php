@@ -1,0 +1,9 @@
+<h1> <?= _('Besturen') ?></h1>
+<div class="messageBox">
+<?php foreach ($iter as $bestuur): ?>
+	<div>
+		<h3><a href="show.php?id= <?= $bestuur->get('page') ?>"> <?= $bestuur->get('naam') ?></a></h3>
+		<p class="description"><?=$this->get_summary($bestuur->get('page'))?></p>
+	</div>
+<?php endforeach ?>
+</div>
