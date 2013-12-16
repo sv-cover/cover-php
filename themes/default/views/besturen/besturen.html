@@ -1,9 +1,18 @@
-<h1> <?= _('Besturen') ?></h1>
+<div class="bestuur-page">
+	<?= $this->parse_bestuursfoto($bestuur, $page) ?>
+</div>
+
 <div class="messageBox">
-<?php foreach ($iter as $bestuur): ?>
-	<div>
-		<h3><a href="show.php?id= <?= $bestuur->get('page') ?>"> <?= $bestuur->get('naam') ?></a></h3>
-		<p class="description"><?=$this->get_summary($bestuur->get('page'))?></p>
+<?php foreach ($iter as $a_bestuur): ?>
+	<div style="float: left; width: 250px; height: 60px;">
+		<h3><a href="besturen.php?id=<?= $a_bestuur->get('id') ?>"><?= $a_bestuur->get('naam') ?></a></h3>
+		<p class="description"><?=$this->get_summary($a_bestuur->get('page'))?></p>
 	</div>
 <?php endforeach ?>
+<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
+	<div style="float: left; width: 250px; height: 60px;">
+		<a href="besturen.php?add_bestuur"><?=_('Nieuw bestuur toevoegen...')?></a>
+	</div>
+<?php endif ?>
+	<hr style="clear:both; border:none;">
 </div>

@@ -181,26 +181,38 @@
 			$pages[$pagenr] = $page;
 
 			$iter->set($field, $this->_pages_join($pages));
-			$this->model->update($iter);
+			$success = $this->model->update($iter);
 
-			$data = $this->_prepare_mail($iter, $pagenr + 1, get_post($field));
-			
-			if ($data['email']) {
-				$body = parse_email('editable_edit.txt', $data);
-				$subject = 'Pagina ' . $data['titel'] . ' (' . ($pagenr + 1) . ') gewijzigd';
+			if ($success !== null)
+			{
+				$data = $this->_prepare_mail($iter, $pagenr + 1, get_post($field));
+				
+				if ($data['email']) {
+					$body = parse_email('editable_edit.txt', $data);
+					$subject = 'Pagina ' . $data['titel'] . ' (' . ($pagenr + 1) . ') gewijzigd';
 
-				foreach ($data['email'] as $email)
-					mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
+					foreach ($data['email'] as $email)
+						mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
+				}
 			}
 
-			if (isset($_GET['xmlrequest'])) {
+			if (isset($_GET['xmlrequest']))
+			{
 				ob_end_clean();
 				
-				echo sprintf(_('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+				if ($success !== null)
+					printf(_('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+				else
+					echo $this->model->db->get_last_error();
+
 				exit();
 			}
 
-			$_SESSION['alert'] = sprintf(_('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+			if ($success !== null)
+				$_SESSION['alert'] = sprintf(_('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+			else
+				$_SESSION['alert'] = $this->model->db->get_last_error();
+
 			header('Location: ' . add_request(get_request(), 'editable_edit&editable_language=' . $this->_get_language()));
 			exit();
 		}
