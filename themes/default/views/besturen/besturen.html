@@ -2,17 +2,17 @@
 	<?= $this->parse_bestuursfoto($bestuur, $page) ?>
 </div>
 
-<div class="messageBox">
+<div class="messageBox besturen-lijst">
 <?php foreach ($iter as $a_bestuur): ?>
-	<div style="float: left; width: 250px; height: 60px;">
+	<div class="bestuur <? if ($a_bestuur->get('id') == $bestuur->get('id')) echo 'active' ?>">
 		<h3><a href="besturen.php?id=<?= $a_bestuur->get('id') ?>"><?= $a_bestuur->get('naam') ?></a></h3>
 		<p class="description"><?=$this->get_summary($a_bestuur->get('page'))?></p>
 	</div>
 <?php endforeach ?>
 <?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
-	<div style="float: left; width: 250px; height: 60px;">
-		<a href="besturen.php?add_bestuur"><?=_('Nieuw bestuur toevoegen...')?></a>
+	<div class="bestuur">
+		<a href="besturen.php?add_bestuur" class="add-new-bestuur"><?=_('Nieuw bestuur toevoegen...')?></a>
 	</div>
 <?php endif ?>
-	<hr style="clear:both; border:none;">
+	<div class="clearBoth"></div>
 </div>
