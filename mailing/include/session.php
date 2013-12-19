@@ -32,7 +32,8 @@ class NewsletterSession
 			link_api('session_create'),
 			array(
 				'email' => $email,
-				'password' => $password
+				'password' => $password,
+				'application' => 'Newsletter editor'
 			));
 
 		if (!$data->result)
