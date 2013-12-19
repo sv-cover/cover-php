@@ -44,7 +44,7 @@ class ControllerScherm
 					$slides[sha1($path . '/' . $folder)] = $path . '/' . $folder;
 
 				// Or if it is just a folder with files, include it as well
-				else if (glob($path . '/' . $folder . '/*.{jpg,png}', GLOB_BRACE))
+				else if (glob($path . '/' . $folder . '/*.{jpg,png,svg}', GLOB_BRACE))
 					$slides[sha1($path . '/' . $folder)] = $path . '/' . $folder;
 			}
 		}

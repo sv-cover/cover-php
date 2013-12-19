@@ -1,6 +1,6 @@
 <?php
 
-$posters = glob('./*.{jpg,png}', GLOB_BRACE);
+$posters = glob('./*.{jpg,png,svg}', GLOB_BRACE);
 
 $poster = $posters[mt_rand(0, count($posters) - 1)];
 ?>
