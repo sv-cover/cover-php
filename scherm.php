@@ -126,6 +126,11 @@ class ControllerScherm
 		run_view('scherm::scherm', null, null, array('slides' => $this->slides));
 	}
 
+	protected function generate_etag()
+	{
+		return md5(implode('', array_keys($this->slides)));
+	}
+
 	public function run()
 	{
 		if (isset($_GET['slide']))
@@ -142,7 +147,10 @@ class ControllerScherm
 			if(isset($_GET['resource']))
 				$this->run_resource($_GET['resource']);
 			else
+			{
+				header('X-Scherm-ETag: ' . $this->generate_etag());
 				$this->run_slide();
+			}
 		}
 		else
 			$this->run_scherm();		

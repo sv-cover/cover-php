@@ -105,13 +105,31 @@
 		<script src="<?=get_theme_data('views/scherm/scherm.js')?>"></script>
 		<script>
 			var slides = document.getElementsByClassName('slide');
-			
+
+			var currentETag = null;
+
+			function checkETag(request)
+			{
+				var etag = request.getResponseHeader('X-Scherm-ETag');
+
+				if (etag === null)
+					return;
+
+				if (currentETag === null)
+					return currentETag = etag;
+
+				if (currentETag != etag)
+					document.location.reload();
+			}
+
 			function load_slide(slide)
 			{
 				var request = new XMLHttpRequest();
 				request.open('GET', slide.getAttribute('data-url'), true);
 				request.onreadystatechange = function() {
 					if (request.readyState == 4) {
+						checkETag(request);
+
 						slide.innerHTML = request.responseText;
 
 						// Evaluate all the JavaScript code blocks
