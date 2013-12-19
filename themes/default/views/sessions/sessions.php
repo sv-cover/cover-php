@@ -5,10 +5,8 @@ class SessionsView extends View
 {
 	protected $__file = __FILE__;
 
-	protected function format_time($timestring)
+	protected function format_relative_time($time)
 	{
-		$time = strtotime($timestring);
-
 		$diff = time() - $time;
 
 		if ($diff == 0)
@@ -28,22 +26,31 @@ class SessionsView extends View
 			}
 			if ($day_diff == 1) return _('Gisteren');
 			if ($day_diff < 7) return sprintf(_('%d dagen geleden'), $day_diff);
-			if ($day_diff < 31) return sprintf(_('%d weken geleden'), floor($day_diff / 7));
-			if ($day_diff < 60) return _('afgelopen maand');
-			return date('F Y', $time);
+			// if ($day_diff < 31) return sprintf(_('%d weken geleden'), floor($day_diff / 7));
+			// if ($day_diff < 60) return _('afgelopen maand');
+			return date('d-m-Y H:i:s', $time);
 		}
 		else
-			return date('d/m/Y', $time);
+			return date('d-m-Y', $time);
 	}
 
-	protected function format_application($application)
+	protected function format_time($timestring)
+	{
+		$time = strtotime($timestring);
+
+		return sprintf('<span title="%s">%s</span>',
+			date('d-m-Y H:i:s', $time),
+			$this->format_relative_time($time));
+	}
+
+	protected function format_nice_application($application)
 	{
 		$known_browsers = array(
 			'Firefox' => 'Firefox',
 			'MS Internet Explorer' => 'MSIE',
 			'iPad' => 'iPad',
 			'Android' => 'Android',
-			'Chrome' => 'Chrome',
+			'Chrome' => 'Google Chrome',
 			'Safari' => 'Safari');
 
 		foreach ($known_browsers as $name => $hint)
@@ -51,5 +58,12 @@ class SessionsView extends View
 				return $name;
 
 		return $application;
+	}
+
+	protected function format_application($application)
+	{
+		return sprintf('<abbr title="%s">%s</a>',
+			markup_format_text($application),
+			$this->format_nice_application($application));
 	}
 }

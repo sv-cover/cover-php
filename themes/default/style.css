@@ -747,3 +747,11 @@ div.beheer table {
 .besturen-lijst .add-new-bestuur {
 	line-height: 60px;
 }
+
+.sessions-table {
+	width: 100%;
+}
+
+.sessions-table th {
+	text-align: left;
+}
