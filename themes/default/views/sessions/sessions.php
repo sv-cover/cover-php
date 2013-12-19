@@ -50,7 +50,7 @@ class SessionsView extends View
 			'MS Internet Explorer' => 'MSIE',
 			'iPad' => 'iPad',
 			'Android' => 'Android',
-			'Chrome' => 'Google Chrome',
+			'Google Chrome' => 'Chrome',
 			'Safari' => 'Safari');
 
 		foreach ($known_browsers as $name => $hint)
