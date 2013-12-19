@@ -27,8 +27,8 @@ class SessionsView extends View
 				if ($diff < 86400) return sprintf(_('%d uren geleden'), floor($diff / 3600));
 			}
 			if ($day_diff == 1) return _('Gisteren');
-			if ($day_diff < 7) return sprintf(_('%d dagen geleden', $day_diff));
-			if ($day_diff < 31) return sprintf(_('%d weken geleden', floor($day_diff / 7)));
+			if ($day_diff < 7) return sprintf(_('%d dagen geleden'), $day_diff);
+			if ($day_diff < 31) return sprintf(_('%d weken geleden'), floor($day_diff / 7));
 			if ($day_diff < 60) return _('afgelopen maand');
 			return date('F Y', $time);
 		}
