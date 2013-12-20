@@ -6,6 +6,8 @@ $boek = $model->get_random_book();
 
 $fotos = $model->get_photos($boek);
 
+// Willekeurige volgorde!
+shuffle($fotos);
 ?>
 <div class="collage">
 	<h1><?=$boek->get('titel')?></h1>
