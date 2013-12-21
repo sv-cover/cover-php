@@ -51,7 +51,7 @@ class ControllerApi extends Controller
 		return $session_model->destroy($session_id);
 	}
 
-	public function session_get_member($session_id)
+	public function api_session_get_member($session_id)
 	{
 		// Get the session
 		$session_model = get_model('DataModelSession');
