@@ -63,7 +63,7 @@ class ControllerApi extends Controller
 
 		$user_model = get_model('DataModelMember');
 
-		$member = $user_model->get($session->get('member_id'));
+		$member = $user_model->get_iter($session->get('member_id'));
 
 		if (!$member)
 			return array('result' => false, 'error' => 'Member not found');
