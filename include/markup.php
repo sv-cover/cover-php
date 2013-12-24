@@ -177,7 +177,7 @@
 		{
 			$url = preg_match('~^https?://~', $match[1]) ? $match[1] : 'http://' . $match[1];
 			$placeholder = sprintf('#IMAGE%d#', $count++);
-			$placeholders[$placeholder] = '<img src="' . $url . '" style="max-width: 400px;">';
+			$placeholders[$placeholder] = '<img src="' . $url . '" style="max-width: 100%;">';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
