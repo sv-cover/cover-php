@@ -22,7 +22,7 @@
 	function N_($message) {
 		return $message;
 	}
-	
+
 	/** @group i18n
 	  * Initialize the internationalization stuff
 	  *
@@ -31,13 +31,13 @@
 		/* Bind the the domain name to the location of the locale files */
 		if (HAS_GETTEXT)
 		{
-			bindtextdomain(get_config_value('i18n_domain'), get_config_value('i18n_path'));
+			bindtextdomain('cover-web', dirname(__FILE__) . '/../locale');
 		
 			/* Set the charset to UTF-8 */
-			bind_textdomain_codeset(get_config_value('i18n_domain'), 'ISO-8859-15');
+			bind_textdomain_codeset('cover-web', 'ISO-8859-15');
 
 			/* Set the domain to use */
-			textdomain(get_config_value('i18n_domain'));
+			textdomain('cover-web');
 		}
 
 		/* Set language to use */
@@ -75,9 +75,9 @@
 	}
 	
 	function _i18n_language_map() {
-		return array(	'nl_NL.ISO-8859-15' => 'nl',
-				'en_US.ISO-8859-15' => 'en',
-				'de_DE.ISO-8859-15' => 'de');
+		return array(
+			'nl_NL.ISO-8859-15' => 'nl',
+			'en_US.ISO-8859-15' => 'en');
 	}
 	
 	/** @group i18n
@@ -91,9 +91,9 @@
 		if ($languages !== null)
 			return $languages;
 		
-		$languages = array(	'nl' => 'Nederlands',
-					'en' => 'English',
-					'de' => 'Deutsch');
+		$languages = array(
+			'nl' => 'Nederlands',
+			'en' => 'English');
 		
 		return $languages;
 	}
