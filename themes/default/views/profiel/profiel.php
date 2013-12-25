@@ -43,7 +43,7 @@ class ProfielView extends View {
 				return '';
 
 			/* Setup the label */
-			$result = '<tr><td>' . label($label, $name, $errors) . ':</td><td>';
+			$result = '<tr><td>' . label($label, __($name), $errors) . ':</td><td>';
 
 			/* Show an input text field when there is write permission and
 			 * there is data */

@@ -72,6 +72,10 @@
 	function __($message_id) {
 		return i18n_translation::get_reader()->translate($message_id);
 	}
+
+	function _ngettext($singular, $plural, $number) {
+		return i18n_translation::get_reader()->ngettext($singular, $plural, $number);
+	}
 	
 	/** @group i18n
 	  * Get the current locale

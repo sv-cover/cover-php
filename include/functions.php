@@ -407,7 +407,7 @@
 		$words = explode('_', $field);
 		$first = array_shift($words);
 		
-		return ucfirst($first) . (count($words) > 0 ? (' ' . implode(' ', $words)) : '');
+		return __(ucfirst($first) . (count($words) > 0 ? (' ' . implode(' ', $words)) : ''));
 	}
 	
 	/** @group Functions

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2013-12-25 13:02+0100\n"
+"POT-Creation-Date: 2013-12-25 13:40+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Generator: Poedit 1.6.3\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
-"X-Poedit-KeywordsList: __\n"
+"X-Poedit-KeywordsList: __;_ngettext\n"
 "X-Poedit-SearchPath-0: ../../../..\n"
 
 #: ../../../../cover-php/actieveleden.php:15
@@ -1170,6 +1170,7 @@ msgid "Verwijder geselecteerde groepen"
 msgstr "Remove selected groups"
 
 #: ../../../../cover-php/themes/default/views/forum.php:1155
+#: ../../../../cover-php/themes/default/views/header.php:226
 #: ../../../../cover-php/themes/default/views/profiel/profiel.phtml:181
 msgid "Leden"
 msgstr "Members"
@@ -1265,6 +1266,10 @@ msgstr "Ordered books"
 msgid "Beheer"
 msgstr "Admin"
 
+#: ../../../../cover-php/themes/default/views/header.php:123
+msgid "Cover"
+msgstr "Cover"
+
 #: ../../../../cover-php/themes/default/views/header.php:126
 #: ../../../../cover-php/themes/default/views/header.php:264
 msgid "Lid/donateur worden"
@@ -1299,10 +1304,30 @@ msgstr "Sister unions"
 msgid "Documenten"
 msgstr "Documents"
 
+#: ../../../../cover-php/themes/default/views/header.php:138
+#: ../../../../cover-php/themes/default/views/header.php:227
+msgid "Bedrijven"
+msgstr "Companies"
+
+#: ../../../../cover-php/themes/default/views/header.php:141
+#: ../../../../cover-php/themes/default/views/header.php:275
+msgid "Bedrijfsprofielen"
+msgstr "Company profiles"
+
+#: ../../../../cover-php/themes/default/views/header.php:142
+#: ../../../../cover-php/themes/default/views/header.php:276
+msgid "Vacatures"
+msgstr "Vacancies"
+
 #: ../../../../cover-php/themes/default/views/header.php:148
 #: ../../../../cover-php/themes/default/views/header.php:229
 msgid "Foto's"
 msgstr "Photos"
+
+#: ../../../../cover-php/themes/default/views/header.php:151
+#: ../../../../cover-php/themes/default/views/header.php:281
+msgid "K.I."
+msgstr "A.I."
 
 #: ../../../../cover-php/themes/default/views/header.php:154
 #: ../../../../cover-php/themes/default/views/header.php:164
@@ -1313,6 +1338,11 @@ msgstr "The study"
 #: ../../../../cover-php/themes/default/views/header.php:283
 msgid "Alumni"
 msgstr "Alumni"
+
+#: ../../../../cover-php/themes/default/views/header.php:161
+#: ../../../../cover-php/themes/default/views/header.php:282
+msgid "Informatica"
+msgstr "Computer Science"
 
 #: ../../../../cover-php/themes/default/views/header.php:169
 #: ../../../../cover-php/themes/default/views/header.php:231
@@ -1326,6 +1356,14 @@ msgstr "Menu"
 #: ../../../../cover-php/themes/default/views/header.php:221
 msgid "Documentatie"
 msgstr "Documentation"
+
+#: ../../../../cover-php/themes/default/views/header.php:225
+msgid "Vereniging"
+msgstr "Association"
+
+#: ../../../../cover-php/themes/default/views/header.php:230
+msgid "Studie"
+msgstr "Study"
 
 #: ../../../../cover-php/themes/default/views/header.php:266
 msgid "ALV (historie)"
@@ -1342,14 +1380,6 @@ msgstr "MSDNAA"
 #: ../../../../cover-php/themes/default/views/header.php:278
 msgid "Sponsormogelijkheden"
 msgstr "Sponsorship opportunities"
-
-#: ../../../../cover-php/themes/default/views/header.php:281
-msgid "K.I."
-msgstr "A.I."
-
-#: ../../../../cover-php/themes/default/views/header.php:282
-msgid "Informatica"
-msgstr "Computer Science"
 
 #: ../../../../cover-php/themes/default/views/header.php:287
 msgid "Tentamens & Samenvattingen"
@@ -1370,9 +1400,7 @@ msgstr "It's nobody's birthday today"
 #: ../../../../cover-php/themes/default/views/header.php:385
 #, php-format
 msgid "Er is vandaag %d jarige:"
-msgid_plural "Er zijn vandaag %d jarigen:"
-msgstr[0] "%d has their birthday today"
-msgstr[1] "%d have their birthday today"
+msgstr "There is %d birthday today:"
 
 #: ../../../../cover-php/themes/default/views/header.php:401
 msgid "wachtwoord vergeten?"
@@ -1406,6 +1434,14 @@ msgstr "Logged in"
 #: ../../../../cover-php/themes/default/views/header.php:414
 msgid "Uitloggen"
 msgstr "Logout"
+
+#: ../../../../cover-php/themes/default/views/header.php:417
+msgid "De CoverKamer is <b>open</b>"
+msgstr "The Coverkamer is <b>open</b>"
+
+#: ../../../../cover-php/themes/default/views/header.php:419
+msgid "De CoverKamer is <b>dicht</b>"
+msgstr "The Coverkamer is <b>closed</b>"
 
 #: ../../../../cover-php/themes/default/views/header.php:437
 #: ../../../../cover-php/themes/default/views/agenda/index.phtml:10

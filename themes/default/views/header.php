@@ -120,7 +120,7 @@
 			</li>';
 		}
 		
-		$contents .= '	<li class="expander"><a href="javascript:do_expander(\'menu_cover\', true);"><img id="expander_menu_cover" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_cover\', true);">Cover</a>
+		$contents .= '	<li class="expander"><a href="javascript:do_expander(\'menu_cover\', true);"><img id="expander_menu_cover" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_cover\', true);">' . __('Cover') . '</a>
 			<div id="menu_cover" class="expander_menu">
 			<ul class="expander">
 				<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
@@ -135,11 +135,11 @@
 			</ul>
 			</div>
 			</li>
-			<li class="expander"><a href="javascript:do_expander(\'menu_bedrijven\', true);"><img id="expander_menu_bedrijven" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_bedrijven\', true);">Bedrijven</a>
+			<li class="expander"><a href="javascript:do_expander(\'menu_bedrijven\', true);"><img id="expander_menu_bedrijven" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_bedrijven\', true);">' . __('Bedrijven') . '</a>
 			<div id="menu_bedrijven" class="expander_menu">
 			<ul class="expander">
-				<li><a href="show.php?id=51">Bedrijfsprofielen</a></li>
-				<li><a href="show.php?id=54">Vacatures</a></li>
+				<li><a href="show.php?id=51">' . __('Bedrijfsprofielen') . '</a></li>
+				<li><a href="show.php?id=54">' . __('Vacatures') . '</a></li>
 			</ul>
 			</div>
 			</li>
@@ -148,7 +148,7 @@
 			<li><a href="fotoboek.php">' . __('Foto\'s') . '</a></li>
 			<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
 			<li><a href="weblog.php">' . __('Weblog') . '</a></li>
-			<li class="expander"><a href="javascript:do_expander(\'menu_ki\', true);"><img id="expander_menu_ki" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_ki\', true);">K.I.</a>
+			<li class="expander"><a href="javascript:do_expander(\'menu_ki\', true);"><img id="expander_menu_ki" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_ki\', true);">' . __('K.I.') . '</a>
 			<div id="menu_ki" class="expander_menu">
 			<ul class="expander">
 				<li><a href="show.php?id=23">' . __('De studie') . '</a></li>
@@ -158,7 +158,7 @@
 			</ul>
 			</div>
 			</li>
-			<li class="expander"><a href="javascript:do_expander(\'menu_inf\', true);"><img id="expander_menu_inf" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_inf\', true);">Informatica</a>
+			<li class="expander"><a href="javascript:do_expander(\'menu_inf\', true);"><img id="expander_menu_inf" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_inf\', true);">' . __('Informatica') . '</a>
 			<div id="menu_inf" class="expander_menu">
 			<ul class="expander">
 				<li><a href="show.php?id=41">' . __('De studie') . '</a></li>
@@ -222,12 +222,12 @@
 		}
 		
 		$content .= '
-					<li class="dropDown"><a drop="vereniging" href="" onclick="return false;">Vereniging</a></li>
-					<li class="dropDown"><a drop="leden" href="" onclick="return false;">Leden</a></li>
-					<li class="dropDown"><a drop="bedrijven" href="" onclick="return false;">Bedrijven</a></li>
+					<li class="dropDown"><a drop="vereniging" href="" onclick="return false;">' . __('Vereniging') . '</a></li>
+					<li class="dropDown"><a drop="leden" href="" onclick="return false;">' . __('Leden') . '</a></li>
+					<li class="dropDown"><a drop="bedrijven" href="" onclick="return false;">' . __('Bedrijven') . '</a></li>
 					<li><a href="forum.php">' . __('Forum') . '</a></li>
 					<li><a href="fotoboek.php">' . __('Foto\'s') . '</a></li>
-					<li class="dropDown"><a drop="studie" href="" onclick="return false;">Studie</a></li>
+					<li class="dropDown"><a drop="studie" href="" onclick="return false;">' . __('Studie') . '</a></li>
 					<li><a href="show.php?id=17">' . __('Contact') . '</a></li>
 				</ul><script>
 $("#verenigingClick").click(function(){
@@ -272,8 +272,8 @@ $("#verenigingClick").click(function(){
 					<li><a href="profiel.php#msdnaa">' .__('MSDNAA') .'</a></li>
 				</ul>
 				<ul id="bedrijven" class="expander">
-					<li><a href="show.php?id=51">Bedrijfsprofielen</a></li>
-					<li><a href="show.php?id=54">Vacatures</a></li>
+					<li><a href="show.php?id=51">' . __('Bedrijfsprofielen') . '</a></li>
+					<li><a href="show.php?id=54">' . __('Vacatures') . '</a></li>
 					<li><a href="afstudeerplaatsen.php">' . __('Afstudeerplaatsen') . '</a></li>
 					<li><a href="show.php?id=56">' .__('Sponsormogelijkheden') .'</a></li>
 				</ul>
@@ -382,7 +382,7 @@ $("#verenigingClick").click(function(){
 		if (!$jarigen || count($jarigen) == 0)
 			$contents .=  __('Er zijn vandaag geen jarigen');
 		else 
-			$contents .= sprintf(ngettext('Er is vandaag %d jarige:', 'Er zijn vandaag %d jarigen:', count($jarigen)), count($jarigen));
+			$contents .= sprintf(_ngettext('Er is vandaag %d jarige:', 'Er zijn vandaag %d jarigen:', count($jarigen)), count($jarigen));
 		
 		$contents .= '<br>';
 		
@@ -414,9 +414,9 @@ $("#verenigingClick").click(function(){
 			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . '">' . __('Uitloggen') . '</a>
 			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . __('Profiel') . '</a>';
 			if($ck_open) {
-				$output .= "<p class=\"clearBoth\">De CoverKamer is <b>open</b></p>";
+				$output .= "<p class=\"clearBoth\">" . __('De CoverKamer is <b>open</b>') . "</p>";
 			} else {
-				$output .= "<p class=\"clearBoth\">De CoverKamer is <b>dicht</b></p>";
+				$output .= "<p class=\"clearBoth\">" . __('De CoverKamer is <b>dicht</b>') . "</p>";
 			}
 			return $output;
 		} else {
