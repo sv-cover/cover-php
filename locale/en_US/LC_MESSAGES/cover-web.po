@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2013-12-25 13:40+0100\n"
+"POT-Creation-Date: 2013-12-25 15:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Generator: Poedit 1.6.3\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
-"X-Poedit-KeywordsList: __;_ngettext\n"
+"X-Poedit-KeywordsList: __;_ngettext:1,2\n"
 "X-Poedit-SearchPath-0: ../../../..\n"
 
 #: ../../../../cover-php/actieveleden.php:15
@@ -1400,7 +1400,9 @@ msgstr "It's nobody's birthday today"
 #: ../../../../cover-php/themes/default/views/header.php:385
 #, php-format
 msgid "Er is vandaag %d jarige:"
-msgstr "There is %d birthday today:"
+msgid_plural "Er zijn vandaag %d jarigen:"
+msgstr[0] "There is %d birthday today:"
+msgstr[1] "There are %d birthdays today:"
 
 #: ../../../../cover-php/themes/default/views/header.php:401
 msgid "wachtwoord vergeten?"
