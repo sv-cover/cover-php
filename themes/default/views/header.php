@@ -187,11 +187,6 @@
 
 		return create_menu($color, 'links', __('Menu'), $contents);
 	}
-
-	function create_facebook_menu($color) {
-		$contents = '<iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fstudievereniging.cover&amp;width=170&amp;layout=standard&amp;action=like&amp;show_faces=true&amp;share=false&amp;height=80&amp;appId=267704860012006" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:170px; height:80px;" allowTransparency="true"></iframe>';
-		return create_menu($color, 'facebook', __('Facebook'), $contents);
-	}
 	
 	function createTopMenu() {
 		$content = '
