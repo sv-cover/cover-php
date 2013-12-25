@@ -1,11 +1,11 @@
-<h2><?= _('Bestellingen') ?></h2>
+<h2><?= __('Bestellingen') ?></h2>
 <div class="messageBox">
 <form action="boeken.php?bestellingen" method="post"><table class="boeken">
 <?= input_hidden('submboekendelbestellingen', 'yes') ?>
 <tr class="header">
-	<td><a href="<?= add_request(get_request('order_by'), 'order_by=boek') ?>"><?= _('Boek') ?></a></td>
-	<td><a href="<?= add_request(get_request('order_by'), 'order_by=lid') ?>"><?= _('Lid') ?></a></td>
-	<td width="50px"><a href="<?= add_request(get_request('order_by'), 'order_by=prijs') ?>"><?= _('Prijs') ?></a></td>
+	<td><a href="<?= add_request(get_request('order_by'), 'order_by=boek') ?>"><?= __('Boek') ?></a></td>
+	<td><a href="<?= add_request(get_request('order_by'), 'order_by=lid') ?>"><?= __('Lid') ?></a></td>
+	<td width="50px"><a href="<?= add_request(get_request('order_by'), 'order_by=prijs') ?>"><?= __('Prijs') ?></a></td>
 </tr>
 
 <? 
@@ -23,18 +23,18 @@ foreach ($iter as $item) {
 <? 	$i = !$i;
 } ?>
 <tr class="submit"><td class="submit" colspan="3">
-<?= input_submit('subm', _('Alle bestellingen verwijderen'), 'button', 'onClick', 'return confirm(\'' . _('Weet je zeker dat je alle bestellingen wilt verwijderen?') . '\')') ?>
+<?= input_submit('subm', __('Alle bestellingen verwijderen'), 'button', 'onClick', 'return confirm(\'' . __('Weet je zeker dat je alle bestellingen wilt verwijderen?') . '\')') ?>
 
-<?= input_button(_('Afdrukken'), 'javascript:afdrukken()') ?>
+<?= input_button(__('Afdrukken'), 'javascript:afdrukken()') ?>
 
-<?= input_button(_('Download'), 'javascript:download()') ?></td></tr>
+<?= input_button(__('Download'), 'javascript:download()') ?></td></tr>
 </table>
 
-<h2><?= _('Aantal bestellingen per boek') ?></h2>
+<h2><?= __('Aantal bestellingen per boek') ?></h2>
 <table class="boeken">
 	<tr class="header">
-		<td><?= _('Boek') ?></td>
-		<td width="20px"><?= _('Aantal') ?></td>
+		<td><?= __('Boek') ?></td>
+		<td width="20px"><?= __('Aantal') ?></td>
 	</tr>
 <?
 $iter = $model->get_by_book();
@@ -52,15 +52,15 @@ foreach ($iter as $item) {
 }
 ?>
 
-<tr class="submit"><td class="submit" colspan="2"><?= input_button(_('Afdrukken'), 'javascript:afdrukken_by_book()') ?> <?= input_button(_('Download'), 'javascript:download_by_book()') ?></td></tr>
+<tr class="submit"><td class="submit" colspan="2"><?= input_button(__('Afdrukken'), 'javascript:afdrukken_by_book()') ?> <?= input_button(__('Download'), 'javascript:download_by_book()') ?></td></tr>
 </table>
 
-<h2><?= _('Aantal bestellingen per lid') ?></h2>
+<h2><?= __('Aantal bestellingen per lid') ?></h2>
 <table class="boeken">
 	<tr class="header">
-		<td><?= _('Lid') ?></td>
-		<td width="20px"><?= _('Aantal') ?></td>
-		<td width="50px"><?= _('Totaalprijs') ?></td>
+		<td><?= __('Lid') ?></td>
+		<td width="20px"><?= __('Aantal') ?></td>
+		<td width="50px"><?= __('Totaalprijs') ?></td>
 	</tr>
 
 <? $iter = $model->get_by_member();
@@ -87,10 +87,10 @@ foreach ($iter as $item) {
 }
 
 if ($star) { ?>
-	<tr class="submit"><td colspan="3"><span class="italic">* <?= _('Niet van alle boeken zijn de prijzen bekend, het totaalbedrag valt daarom lager uit dan het daadwerkelijke totaalbedrag') ?></span></td></tr>
+	<tr class="submit"><td colspan="3"><span class="italic">* <?= __('Niet van alle boeken zijn de prijzen bekend, het totaalbedrag valt daarom lager uit dan het daadwerkelijke totaalbedrag') ?></span></td></tr>
 <? } ?>
 
-<tr class="submit"><td class="submit" colspan="3"><?= input_button(_('Afdrukken'), 'javascript:afdrukken_by_member()') ?> <?= input_button(_('Download'), 'javascript:download_by_member()') ?></td></tr>
+<tr class="submit"><td class="submit" colspan="3"><?= input_button(__('Afdrukken'), 'javascript:afdrukken_by_member()') ?> <?= input_button(__('Download'), 'javascript:download_by_member()') ?></td></tr>
 </table>
 </div>
 <script type="text/javascript">

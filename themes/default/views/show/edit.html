@@ -2,7 +2,7 @@
 <h1>Nieuwe pagina toevoegen</h1>
 
 <? if (isset($errors)) { ?>
-	<p><span class="error"><?= _('Niet alle velden zijn goed ingevuld') ?></span></p>
+	<p><span class="error"><?= __('Niet alle velden zijn goed ingevuld') ?></span></p>
 <? } ?>
 
 <form name="show_form" action="<?= get_request() ?>" method="post">
@@ -19,14 +19,14 @@ foreach ($commissies as $commissie)
 	$values[$commissie->get('id')] = $commissie->get('naam');
 ?>
 <col width="100px"><col>
-<?= table_row(label(_('Titel'), 'titel', $errors, true) . ':',
+<?= table_row(label(__('Titel'), 'titel', $errors, true) . ':',
 		input_text('titel', null)) ?>
-<?= table_row(label(_('Commissie'), 'owner', $errors, true) . ':',
+<?= table_row(label(__('Commissie'), 'owner', $errors, true) . ':',
 		select_field('owner', $values, null) ?>
 
 <tr><td colspan="2"> <?= textarea_field('content', null, $errors, 'formatter', 'markup_format_text') ?> 
 	</td></tr>
-<tr><td colspan="2" class="submit"><?= input_submit('subm', _('Pagina maken')) ?></td></tr>
+<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Pagina maken')) ?></td></tr>
 
 <table></form>
 </div>

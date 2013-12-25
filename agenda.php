@@ -12,7 +12,7 @@
 		}
 		
 		function get_content($view = 'index', $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Agenda')));
+			$this->run_header(array('title' => __('Agenda')));
 			run_view('agenda::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
@@ -158,14 +158,14 @@
 			$data['id'] = $id;
 
 			if ($override) {
-				$_SESSION['alert'] = _('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
+				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
 				$body = parse_email('agenda_mod.txt', $data);
 				$subject = 'Gewijzigd agendapunt ' . $data['kop'];
 				
 				if ($data['kop'] != $iter->get('kop'))
 					$subject .= ' (was ' .  $iter->get('kop') . ')';
 			} else {
-				$_SESSION['alert'] = _('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
+				$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
 				$body = parse_email('agenda_add.txt', $data);
 				$subject = 'Nieuw agendapunt ' . $data['kop'];
 			}
@@ -213,7 +213,7 @@
 			$cancelled = array();
 
 			foreach ($_POST as $field => $value) {
-				if (!preg_match('/action_([0-9]+)/i', $field, $matches))
+				if (!preg_match('/action__([0-9]+)/i', $field, $matches))
 					continue;
 				
 				$id = $matches[1];
@@ -257,12 +257,12 @@
 
 			if (count($cancelled_un) == 1)
 				if (count($cancelled) == 1) {
-					$_SESSION['alert'] = sprintf(_('De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt.'), $s);
+					$_SESSION['alert'] = sprintf(__('De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt.'), $s);
 				} else {
-					$_SESSION['alert'] = sprintf(_('De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
+					$_SESSION['alert'] = sprintf(__('De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
 				}
 			elseif (count($cancelled_un) > 0)
-				$_SESSION['alert'] = sprintf(_('De commissies %s zijn op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
+				$_SESSION['alert'] = sprintf(__('De commissies %s zijn op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
 			
 			header('Location: agenda.php');
 			exit();

@@ -11,7 +11,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Advertenties')));
+			$this->run_header(array('title' => __('Advertenties')));
 			run_view('banners::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

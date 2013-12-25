@@ -1,36 +1,36 @@
 <? $easiers = $this->taken_get_easiers();
 $prioriteiten = $model->get_prioriteiten(); ?>
 
-<div class="right"><a href="taken.php"><?= image('previous.png', _('taken'), _('Terug naar taken'), 'class="top"') ?></a> <a href="taken.php"><?= _('taken') ?></a></div>
-<h1><?= _('Taak :: ') . $iter->get('id') ?></h1>
+<div class="right"><a href="taken.php"><?= image('previous.png', __('taken'), __('Terug naar taken'), 'class="top"') ?></a> <a href="taken.php"><?= __('taken') ?></a></div>
+<h1><?= __('Taak :: ') . $iter->get('id') ?></h1>
 <form name="f" action="taken.php" method="post"><?= input_hidden('submtaken_edit', 'yes') . input_hidden('id', $iter->get_id()) ?>
 <table class="default_noborder" id="taken">
 	<tr>
-		<td><span class="bold"><?= _('Taak') ?>:</span></td>
-		<td><div class="right"><a href="javascript:start_edit(\'veld_taak\');"><?= image('edit_small.png', _('bewerken'), _('Bewerk taak')) ?></a></div><div id="veld_taak"><span class="highlight"><?= $iter->get('taak') ?></span></div><div id="veld_taak_edit" class="hidden"><?= input_text('taak', $iter->data, 'class', 'fill') ?></div></td>
+		<td><span class="bold"><?= __('Taak') ?>:</span></td>
+		<td><div class="right"><a href="javascript:start_edit(\'veld_taak\');"><?= image('edit_small.png', __('bewerken'), __('Bewerk taak')) ?></a></div><div id="veld_taak"><span class="highlight"><?= $iter->get('taak') ?></span></div><div id="veld_taak_edit" class="hidden"><?= input_text('taak', $iter->data, 'class', 'fill') ?></div></td>
 	</tr>
 	<tr>
-		<td><span class="bold"><?= _('Toegewezen') ?>:</span></td>
+		<td><span class="bold"><?= __('Toegewezen') ?>:</span></td>
 		<td><?= select_field('toegewezen', $easiers, $iter->data) ?></td>
 	</tr>
 	<tr>
-		<td><span class="bold"><?= _('Prioriteit') ?>:</span></td>
+		<td><span class="bold"><?= __('Prioriteit') ?>:</span></td>
 		<td><?= select_field('prioriteit', $prioriteiten, $iter->data) ?></td>
 	</tr>
 		<tr>
-			<td><?= label(_('Notificatie'), 'subscribed', $errors, true) ?>:</td>
+			<td><?= label(__('Notificatie'), 'subscribed', $errors, true) ?>:</td>
 			<td><?= input_checkbox('subscribed', $iter->data) ?></td>
 		</tr>
 	<tr>
-		<td><span class="bold"><?= _('Afgehandeld') ?>:</span></td>
+		<td><span class="bold"><?= __('Afgehandeld') ?>:</span></td>
 		<td><?= input_checkbox('afgehandeld', $iter->data, 'yes') ?></td>
 	</tr>
 	<tr>
-		<td><span class="bold"><?= _('Beschrijving') ?>:</span></td>
-		<td><div class="right"><a href="javascript:start_edit(\'veld_beschrijving\');"><?= image('edit_small.png', _('bewerken'), _('Bewerk taak')) ?></a></div><div id="veld_beschrijving"><?= $this->parse_taaknrs(markup_parse($iter->get('beschrijving'))) ?></div><div id="veld_beschrijving_edit" class="hidden"><?= textarea_field('beschrijving', $iter->data, $errors) ?></div></td>
+		<td><span class="bold"><?= __('Beschrijving') ?>:</span></td>
+		<td><div class="right"><a href="javascript:start_edit(\'veld_beschrijving\');"><?= image('edit_small.png', __('bewerken'), __('Bewerk taak')) ?></a></div><div id="veld_beschrijving"><?= $this->parse_taaknrs(markup_parse($iter->get('beschrijving'))) ?></div><div id="veld_beschrijving_edit" class="hidden"><?= textarea_field('beschrijving', $iter->data, $errors) ?></div></td>
 	</tr>
 	<tr class="submit"><td class="submit" colspan="2">
-	<?= input_button(_('Commentaar toevoegen'), 'javascript:add_comment()') ?> <?= input_submit('subm', _('Opslaan')) ?>
+	<?= input_button(__('Commentaar toevoegen'), 'javascript:add_comment()') ?> <?= input_submit('subm', __('Opslaan')) ?>
 	</td></tr>
 </table>
 <script type="text/javascript">

@@ -11,7 +11,7 @@
 		}
 		
 		function get_content($view = '', $params = null) {
-			$this->run_header(Array('title' => _('Wachtwoord vergeten')));
+			$this->run_header(Array('title' => __('Wachtwoord vergeten')));
 			run_view('wachtwoordvergeten' . ($view ? ('::' . $view) : ''), null, null, $params);
 			$this->run_footer();
 		}
@@ -35,7 +35,7 @@
 				$model = new DataModel(get_db(), 'confirm');
 				$model->insert(new DataIter($model, -1, $values));
 				
-				$subject = _('Aanvraag nieuw wachtwoord');
+				$subject = __('Aanvraag nieuw wachtwoord');
 				$body = "Iemand heeft een nieuw wachtwoord aangevraagd voor het account van dit e-mailadres op de Cover website. Om dit te bevestigen open je het volgende adres in je browser:\n\nhttp://www.svcover.nl/confirm.php?key=$confkey\n\nWeet je hier niks vanaf dat kan je dit mailtje negeren.\n\nMet vriendelijke groeten,\n\nDe WebCie";
 				
 				mail(get_post('email'), $subject, $body, "From: webcie@ai.rug.nl\r\n");

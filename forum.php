@@ -13,7 +13,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Forum')));
+			$this->run_header(array('title' => __('Forum')));
 			run_view('forum::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
@@ -724,8 +724,8 @@
 
 				if ($iter->get('forum') == $news_forum->get_id()) {
 					//Message is a news post. We have to notify the owner of the deletion
-					$subject = _('Mededeling verwijderd');
-					$body =  sprintf(_("De mededeling met het onderwerp '%s' is verwijderd door het bestuur. Mocht je vragen hebben hierover, kun je het bestuur mailen op bestuur@svcover.nl.\n\nMet vriendelijke groeten,\n\nDe WebCie"), $iter->get('subject'));
+					$subject = __('Mededeling verwijderd');
+					$body =  sprintf(__("De mededeling met het onderwerp '%s' is verwijderd door het bestuur. Mocht je vragen hebben hierover, kun je het bestuur mailen op bestuur@svcover.nl.\n\nMet vriendelijke groeten,\n\nDe WebCie"), $iter->get('subject'));
 
 					$author = $this->model->get_author_info($iter);
 					mail($author['email'], $subject, $body, "From: webcie@ai.rug.nl\r\n");

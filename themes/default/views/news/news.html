@@ -9,9 +9,9 @@ $member_data = logged_in();
 
 if (isset($forumid) && $member_data && count($member_data['commissies']) > 0)	{
 ?>
-	<div class="controls inline"><a href="forum.php?forum=<?= $forumid ?>&startadd"><?= image('new.png', _('Toevoegen'), _('Een nieuwe mededeling toevoegen')) ?></a> <a href="forum.php?forum=<?= $forumid ?>&startadd"><?= _('Nieuwe mededeling') ?></a></div>
+	<div class="controls inline"><a href="forum.php?forum=<?= $forumid ?>&startadd"><?= image('new.png', __('Toevoegen'), __('Een nieuwe mededeling toevoegen')) ?></a> <a href="forum.php?forum=<?= $forumid ?>&startadd"><?= __('Nieuwe mededeling') ?></a></div>
 <? } ?>
-<h1><?= _('Mededelingen') ?></h1></div>
+<h1><?= __('Mededelingen') ?></h1></div>
 
 <?
 foreach ($iter as $item) {
@@ -29,7 +29,7 @@ foreach ($iter as $item) {
 				<h3><?= markup_format_text($item->get('subject')) ?></h3>
 			</span>
 			<div class="subtitle">
-				<?= _('Geplaatst door') ?>:
+				<?= __('Geplaatst door') ?>:
 				<a href="<?= $link ?>"><?= $author_info['name'] ?></a>
 			</div>
 		</div>

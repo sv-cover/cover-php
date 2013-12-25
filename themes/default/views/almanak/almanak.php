@@ -9,11 +9,11 @@
 			$photo = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
 
 			if ($model->is_private($iter, 'naam'))
-				$name = '<span class="italic">' . _('onbekend') . '</span>';
+				$name = '<span class="italic">' . __('onbekend') . '</span>';
 			else
 				$name = member_full_name($iter);
 			
-			return array('<a href="profiel.php?lid=' . $iter->get('id') . '"><img width="100" height="150" src="' . $photo . '" alt="' . sprintf(_('foto van %s'), member_full_name($iter)) . '"></a>', $name);
+			return array('<a href="profiel.php?lid=' . $iter->get('id') . '"><img width="100" height="150" src="' . $photo . '" alt="' . sprintf(__('foto van %s'), member_full_name($iter)) . '"></a>', $name);
 		}
 	}
 ?>

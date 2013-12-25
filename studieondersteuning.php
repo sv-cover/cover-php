@@ -13,7 +13,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null, $show_editable = true) {
-			$this->run_header(array('title' => _('Studieondersteuning')));
+			$this->run_header(array('title' => __('Studieondersteuning')));
 			
 			if ($show_editable) {
 				$editable = new ControllerEditable('Studieondersteuning');
@@ -94,7 +94,7 @@
 				return;
 			
 			foreach ($_POST as $field => $value) {
-				if (!preg_match('/del_([0-9]+)/i', $field, $matches))
+				if (!preg_match('/del__([0-9]+)/i', $field, $matches))
 					continue;
 
 				$id = $matches[1];
@@ -118,7 +118,7 @@
 			$cancelled = array();
 
 			foreach ($_POST as $field => $value) {
-				if (!preg_match('/action_([0-9]+)/i', $field, $matches))
+				if (!preg_match('/action__([0-9]+)/i', $field, $matches))
 					continue;
 				
 				$id = $matches[1];
@@ -159,12 +159,12 @@
 
 			if (count($cancelled_un) == 1)
 				if (count($cancelled) == 1) {
-					$_SESSION['alert'] = sprintf(_('%s is op de hoogte gesteld van het weigeren van het document.'), $s);
+					$_SESSION['alert'] = sprintf(__('%s is op de hoogte gesteld van het weigeren van het document.'), $s);
 				} else {
-					$_SESSION['alert'] = sprintf(_('%s is op de hoogte gesteld van het weigeren van de documenten.'), $s);
+					$_SESSION['alert'] = sprintf(__('%s is op de hoogte gesteld van het weigeren van de documenten.'), $s);
 				}
 			elseif (count($cancelled_un) > 0)
-				$_SESSION['alert'] = sprintf(_('%s zijn op de hoogte gesteld van het weigeren van de documenten.'), $s);
+				$_SESSION['alert'] = sprintf(__('%s zijn op de hoogte gesteld van het weigeren van de documenten.'), $s);
 			
 			header('Location: studieondersteuning.php');
 			exit();

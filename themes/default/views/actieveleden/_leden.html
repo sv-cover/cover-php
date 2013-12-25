@@ -3,11 +3,11 @@
 <table class="default"><?= input_hidden('submactieveledencommissie', 'yes') ?>
 <col class="text_center"><col><col class="text_center"><col><col>
 <tr class="header">
-	<td class="text_center"><?= image('delete_small.png', _('D'), _('Verwijder actief lid')) ?></td>
-	<td><?= _('Nr') ?></td>
-	<td><?= _('Sleutel') ?></td>
-	<td><?= _('Naam') ?></td>
-	<td><?= _('Functie') ?></td>
+	<td class="text_center"><?= image('delete_small.png', __('D'), __('Verwijder actief lid')) ?></td>
+	<td><?= __('Nr') ?></td>
+	<td><?= __('Sleutel') ?></td>
+	<td><?= __('Naam') ?></td>
+	<td><?= __('Functie') ?></td>
 </tr>
 
 <? $commissie_model = get_model('DataModelCommissie');
@@ -24,9 +24,9 @@ if ($leden && count($leden) > 0) {
 		</tr>
 <? } ?>
 
-	<tr><td colspan="5" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
+	<tr><td colspan="5" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
 <? } else { ?>
-	<tr><td colspan="5"><?= _('Deze commissie heeft nog geen leden') ?></td></tr>
+	<tr><td colspan="5"><?= __('Deze commissie heeft nog geen leden') ?></td></tr>
 <? } ?>
 
 </table></form>

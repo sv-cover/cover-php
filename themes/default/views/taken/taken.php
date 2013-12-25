@@ -18,7 +18,7 @@ class TakenView extends View {
 		function taken_get_easiers() {
 			$commissie_model = get_model('DataModelCommissie');
 			$leden = $commissie_model->get_leden(COMMISSIE_EASY);
-			$easiers = array(0 => _('Niemand'));
+			$easiers = array(0 => __('Niemand'));
 
 			foreach ($leden as $lid)
 				$easiers[$lid->get_id()] = $lid->get('voornaam');

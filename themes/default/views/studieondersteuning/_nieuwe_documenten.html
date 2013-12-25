@@ -1,37 +1,37 @@
-<div class="bar_sep" id="nieuw"><?= _('Nieuw document') ?></div>
-<p><?= _('Het is op dit moment niet mogelijk om nieuwe documenten toe te voegen.') ?></p>
+<div class="bar_sep" id="nieuw"><?= __('Nieuw document') ?></div>
+<p><?= __('Het is op dit moment niet mogelijk om nieuwe documenten toe te voegen.') ?></p>
 
 <? /*
 		* Deze pagina is nog niet omgezet, aangezien het uploaden op dit moment niet werkt. -- PdB
 		*
-  	<p>' . sprintf(_('Voor het onderhouden van deze pagina hebben we jouw hulp nodig. Heb je nog een samenvatting, een tentamen, aantekeningen of andere documenten van een vak die handig kunnen zijn voor andere studenten, digitaliseer die dan indien nodig en verstuur ze met het formulier hieronder. Met dit formulier kan je ook zien wat voor documenten er per vak toegestaan zijn. Je kan natuurlijk ook altijd mailen naar %s.'), '<a href="mailto:bestuur@svcover.nl">Cover</a>') . '</p>';
+  	<p>' . sprintf(__('Voor het onderhouden van deze pagina hebben we jouw hulp nodig. Heb je nog een samenvatting, een tentamen, aantekeningen of andere documenten van een vak die handig kunnen zijn voor andere studenten, digitaliseer die dan indien nodig en verstuur ze met het formulier hieronder. Met dit formulier kan je ook zien wat voor documenten er per vak toegestaan zijn. Je kan natuurlijk ook altijd mailen naar %s.'), '<a href="mailto:bestuur@svcover.nl">Cover</a>') . '</p>';
 
   	if (isset($errors) && count($errors))
-  		echo '<div class="error_message">' . _('Niet alle velden zijn goed ingevuld') . '</div>';
+  		echo '<div class="error_message">' . __('Niet alle velden zijn goed ingevuld') . '</div>';
 
   	echo '<form enctype="multipart/form-data" action="http://www.ai.rug.nl/cgi-bin/cgiwrap/easy/soupload.pl" method="post">' . input_hidden('MAX_FILE_SIZE', '5000000') . input_hidden('type', 'so') . '
   		<table class="bordered">
-  		<tr><td class="top">' . label(_('Vak'), 'vak', $errors, true) . ':</td><td>';
+  		<tr><td class="top">' . label(__('Vak'), 'vak', $errors, true) . ':</td><td>';
 
-$jaren = array( 1 => _('1e jaar'),
-		2 => _('2e jaar'),
-		3 => _('3e jaar'),
-		4 => _('4e jaar'),
-		5 => _('5e jaar'),
-		0 => _('Overige'));
+$jaren = array( 1 => __('1e jaar'),
+		2 => __('2e jaar'),
+		3 => __('3e jaar'),
+		4 => __('4e jaar'),
+		5 => __('5e jaar'),
+		0 => __('Overige'));
 
 echo select_field('jaar', $jaren, array('jaar' => 1), 'size', '6', 'class', 'document', 'onChange', 'javascript:year_changed();', 'id', 'document_jaren');
 echo '&nbsp; &nbsp; ';
 echo select_field('vak', array(), null, 'size', '6', 'class', 'document', 'id', 'document_vakken', 'onChange', 'javascript:vak_changed();');
 echo '</td></tr>
-<tr><td>' . _('Aantekeningen') . ':</td><td id="aantekeningen"></td></tr>
-<tr><td>' . _('Tentamens') . ':</td><td id="tentamens"></td></tr>
-<tr><td>' . _('Bijzonderheden') . ':</td><td id="bijzonder"></td></tr>
-<tr><td>' . label(_('Titel'), 'titel', $errors, true) . ':</td>
+<tr><td>' . __('Aantekeningen') . ':</td><td id="aantekeningen"></td></tr>
+<tr><td>' . __('Tentamens') . ':</td><td id="tentamens"></td></tr>
+<tr><td>' . __('Bijzonderheden') . ':</td><td id="bijzonder"></td></tr>
+<tr><td>' . label(__('Titel'), 'titel', $errors, true) . ':</td>
 	<td>' . input_text('titel', null) . '</td></tr>
-    	<tr><td>' . label(_('Bestand'), 'bestand', $errors, true) . ':</td>
+    	<tr><td>' . label(__('Bestand'), 'bestand', $errors, true) . ':</td>
     		<td><input type="file" name="bestand"></td></tr>
-    	<tr class="submit"><td class="submit" colspan="2">' . input_submit('subm', _('Document toevoegen')) . '</td></tr>
+    	<tr class="submit"><td class="submit" colspan="2">' . input_submit('subm', __('Document toevoegen')) . '</td></tr>
     	</table>
 
     	<script type="text/javascript">';
@@ -78,9 +78,9 @@ echo '</td></tr>
     			if (vaksel.value != null) {
     				var vak = vakken[parseInt(sel.value)][vaksel.selectedIndex];
 
-    				aantekeningen = (vak[2] ? "' . _('Toegestaan') . '" : "' . _('Niet toegestaan') . '");
-    				tentamens = (vak[3] ? "' . _('Toegestaan') . '" : "' . _('Niet toegestaan') . '");
-    				bijzonder = (vak[4] ? vak[4] : "' . _('Geen') . '");
+    				aantekeningen = (vak[2] ? "' . __('Toegestaan') . '" : "' . __('Niet toegestaan') . '");
+    				tentamens = (vak[3] ? "' . __('Toegestaan') . '" : "' . __('Niet toegestaan') . '");
+    				bijzonder = (vak[4] ? vak[4] : "' . __('Geen') . '");
     			}
 
     			document.getElementById("aantekeningen").innerHTML = aantekeningen;

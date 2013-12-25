@@ -2,7 +2,7 @@
 $links = $model->get_links($category->get_id());
 
 if (!$links || count($links) == 0) { ?>
-	<p><?= _('Er zijn geen links beschikbaar') ?></p>
+	<p><?= __('Er zijn geen links beschikbaar') ?></p>
 <? 	return;
 } 
 
@@ -29,6 +29,6 @@ if ($admin) { ?>
 <? } ?>
 
 <? if ($admin) { ?>
-	<div class="text_right"><br><?= input_submit('subm', _('Geselecteerde links verwijderen')) ?></div>
+	<div class="text_right"><br><?= input_submit('subm', __('Geselecteerde links verwijderen')) ?></div>
 	</form>
 <? } ?>

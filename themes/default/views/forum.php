@@ -4,29 +4,29 @@
 	require_once('poll/poll.php');
 
 	function view_auth($model, $iter, $params = null) {
-		echo '<h1>' . _('Forum') . '</h1>
-		<div class="error_message">' . _('Je kunt niet schrijven in dit forum') . '</div>';
+		echo '<h1>' . __('Forum') . '</h1>
+		<div class="error_message">' . __('Je kunt niet schrijven in dit forum') . '</div>';
 	}
 	
 	function view_not_editable($model, $iter, $params = null) {
-		echo '<h1>' . _('Forum') . '</h1>
-		<div class="error_message">' . _('Je hebt geen permissie om dit bericht te wijzigen') . '</div>';
+		echo '<h1>' . __('Forum') . '</h1>
+		<div class="error_message">' . __('Je hebt geen permissie om dit bericht te wijzigen') . '</div>';
 	}
 	
 	function view_thread_not_found($model, $iter, $params = null) {
-		echo '<h1>' . _('Forum') . '</h1>
-		<div class="error_message">' . _('Dat bericht bestaat niet') . '</div>';
+		echo '<h1>' . __('Forum') . '</h1>
+		<div class="error_message">' . __('Dat bericht bestaat niet') . '</div>';
 	}
 
 	function view_message_not_found($model, $iter, $params = null) {
-		echo '<h1>' . _('Forum') . '</h1>
-		<div class="error_message">' . _('Dat bericht bestaat niet') . '</div>';
+		echo '<h1>' . __('Forum') . '</h1>
+		<div class="error_message">' . __('Dat bericht bestaat niet') . '</div>';
 	}
 	
 	function view_thread($model, $iter, $params = null) {
 		$forum = $model->get_iter($iter->get('forum'), -1);
 
-		echo '<h1><a href="forum.php">' . _('Forum') . '</a> :: <a href="forum.php?forum=' . $forum->get('id') . '">' . $forum->get('name') . '</a></h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $forum->get('id') . '">' . $forum->get('name') . '</a></h1>';
 		/*
 		<h2>' . $iter->get('subject') . '</h2>
 		*/
@@ -45,9 +45,9 @@
 		$canwrite = $model->check_acl($iter->get('forum'), ACL_REPLY);
 
 		if ($canwrite)
-			$bar .= '<span id="newbericht" class="button" style="padding-left: 10px;">'.image('new.png', _('nieuw'), _('Nieuw bericht toevoegen')) . ' <span class="messageText">' . _('Nieuw antwoord') . '</span></span>'; 
+			$bar .= '<span id="newbericht" class="button" style="padding-left: 10px;">'.image('new.png', __('nieuw'), __('Nieuw bericht toevoegen')) . ' <span class="messageText">' . __('Nieuw antwoord') . '</span></span>'; 
 		else
-			$bar .= _('Je kunt niet antwoorden in dit forum');
+			$bar .= __('Je kunt niet antwoorden in dit forum');
 
 	
 
@@ -83,7 +83,7 @@
 				
 				$posts = $model->get_author_stats($message, $total);
 				
-				echo '<br><span class="smaller">' . _('Posts') . ': ' . $posts .
+				echo '<br><span class="smaller">' . __('Posts') . ': ' . $posts .
 				'<br>(' . sprintf('%02.02f', floatval($posts) / $total * 100) . '%)</span>';
 			} else {
 				echo 'Onbekend';
@@ -98,10 +98,10 @@
 				echo '<a href="forum.php?modmessage=' . $message->get('id') . '&page=' . $page . '">' . image('edit_small.png') . '</a>';
 				
 			if ($admin)
-				echo ' <a href="forum.php?delmessage=' . $message->get('id') . '&page=' . $page . '">' . image('delete_small.png', _('verwijder'), _('Verwijder bericht')) . '</a>';
+				echo ' <a href="forum.php?delmessage=' . $message->get('id') . '&page=' . $page . '">' . image('delete_small.png', __('verwijder'), __('Verwijder bericht')) . '</a>';
 			
 			
-			echo ' <a href="javascript:void(0)" onclick="quote(' . $message->get('id') . ', \'' . $author_info['name'] . '\');">' . image('quote.png', _('quote'), _('Quote geselecteerde tekst van bericht')) . '</a></div>';
+			echo ' <a href="javascript:void(0)" onclick="quote(' . $message->get('id') . ', \'' . $author_info['name'] . '\');">' . image('quote.png', __('quote'), __('Quote geselecteerde tekst van bericht')) . '</a></div>';
 
 			echo markup_parse($message->get('message'));
 			
@@ -131,12 +131,12 @@
 		$canwrite = $model->check_acl($iter->get('forum'), ACL_REPLY);
 
 		if ($canwrite)
-			$bar .= '<span id="newbericht2" class="button" style="padding-left: 10px;">'.image('new.png', _('nieuw'), _('Nieuw bericht toevoegen')) . ' <span class="messageText">' . _('Nieuw antwoord') . '</span></span>'; 
+			$bar .= '<span id="newbericht2" class="button" style="padding-left: 10px;">'.image('new.png', __('nieuw'), __('Nieuw bericht toevoegen')) . ' <span class="messageText">' . __('Nieuw antwoord') . '</span></span>'; 
 		else
-			$bar .= _('Je kunt niet antwoorden in dit forum');
+			$bar .= __('Je kunt niet antwoorden in dit forum');
 
 		if ($iter->editable()) {
-			$bar .= '<div class="text_right" style="padding-left: 10px;"><form method="post" action="forum.php"><br />' . input_hidden('thread_id', $iter->id) . input_hidden('submforummovethread', 'yes') . _('Verplaats bericht naar') . ': <select name="forum_id">';
+			$bar .= '<div class="text_right" style="padding-left: 10px;"><form method="post" action="forum.php"><br />' . input_hidden('thread_id', $iter->id) . input_hidden('submforummovethread', 'yes') . __('Verplaats bericht naar') . ': <select name="forum_id">';
 			
 			foreach ($model->get() as $forum) {
 				if ($model->check_acl($forum->id, ACL_WRITE))
@@ -153,22 +153,22 @@
 	}
 
 	function view_forum_not_found($model, $iter, $params = null) {
-		echo '<h1>' . _('Forum') . '</h1>
-		<div class="error_message">' . _('Dat forum bestaat niet') . '</div>';		
+		echo '<h1>' . __('Forum') . '</h1>
+		<div class="error_message">' . __('Dat forum bestaat niet') . '</div>';		
 	}
 	
 	function render_new_message($authors, $parent, $subm, $params, $subject = true) {
 		echo '<div id="forum_bericht" class="beheer" ">
 		<form name="forum" action="forum.php" method="post">
-		<div class="right"><a href="javascript:message_preview();">' . image('preview.png', _('voorbeeld'), _('Voorbeeld tonen'), 'class="button" id="message_preview"'), '</a></div>
+		<div class="right"><a href="javascript:message_preview();">' . image('preview.png', __('voorbeeld'), __('Voorbeeld tonen'), 'class="button" id="message_preview"'), '</a></div>
 		<table>';
 
 		echo input_hidden($subm, 'yes');
 		echo input_hidden('parent_id', $parent->get('id'));
-		echo table_row(label(_('Auteur'), 'author', $params['errors'], true) . ':', select_field('author', $authors, null));
+		echo table_row(label(__('Auteur'), 'author', $params['errors'], true) . ':', select_field('author', $authors, null));
 		
 		if ($subject)
-			echo table_row(label(_('Onderwerp'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxlength', '250'));
+			echo table_row(label(__('Onderwerp'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxlength', '250'));
 
 		echo '<tr><td colspan="2">
 		<div id="message_content">
@@ -177,7 +177,7 @@
 		<div id="message_preview_content">
 		</div>
 		</td></tr>';
-		echo '<tr><td colspan="2" class="submit">' . input_submit('subm', _('Bericht plaatsen'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</td></tr>';
+		echo '<tr><td colspan="2" class="submit">' . input_submit('subm', __('Bericht plaatsen'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</td></tr>';
 		echo '</table></form>
 		</div>
 		<script type="text/javascript">
@@ -206,7 +206,7 @@
 				}
 
 				var divpreview = document.getElementById("message_preview_content");
-				var text = "' . _('Bezig met laden') . '";
+				var text = "' . __('Bezig met laden') . '";
 
 				if (message_loading == 4)
 					message_loading = 0;
@@ -247,8 +247,8 @@
 				
 				if (img.src.match("preview.png$")) {
 					img.src = "themes/' . get_theme() . '/images/edit.png";
-					img.title = "' . _('Voorbeeld sluiten') . '";
-					img.alt = "' . _('voorbeeld sluiten') . '";
+					img.title = "' . __('Voorbeeld sluiten') . '";
+					img.alt = "' . __('voorbeeld sluiten') . '";
 					
 					div.style.display = "none";
 					divpreview.style.display = "block";
@@ -256,8 +256,8 @@
 					message_request_preview();
 				} else {
 					img.src = "themes/' . get_theme() . '/images/preview.png";
-					img.title = "' . _('Voorbeeld tonen') . '";
-					img.alt = "' . _('voorbeeld') . '";
+					img.title = "' . __('Voorbeeld tonen') . '";
+					img.alt = "' . __('voorbeeld') . '";
 					
 					div.style.display = "block";
 					divpreview.style.display = "none";
@@ -340,8 +340,8 @@
 	}
 	
 	function view_add_poll($model, $iter, $params = null) {
-		/*echo '<h2><a href="forum.php">' . _('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></h2>';
-		echo '<h2>' . _('Nieuwe poll toevoegen') . '</h2>';
+		/*echo '<h2><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></h2>';
+		echo '<h2>' . __('Nieuwe poll toevoegen') . '</h2>';
 		
 		$config_model = get_model('DataModelConfiguratie');
 		$id = $config_model->get_value('poll_forum');
@@ -358,10 +358,10 @@
 			}
 		}
 
-		echo '<p>' . _('Gebruik het onderstaande formulier om een nieuwe poll toe te voegen.') . '</p>';
+		echo '<p>' . __('Gebruik het onderstaande formulier om een nieuwe poll toe te voegen.') . '</p>';
 		
 		if (isset($params['errors']) && count($params['errors']) > 0)
-			echo '<div class="error_message">' . _('Niet alle velden zijn goed ingevuld (er moet minstens 1 optie ingevuld zijn') . '</div>';
+			echo '<div class="error_message">' . __('Niet alle velden zijn goed ingevuld (er moet minstens 1 optie ingevuld zijn') . '</div>';
 
 		$authors = get_authors($model, $iter->get('id'), ACL_POLL);
 
@@ -372,21 +372,21 @@
 		<table class="default_noborder">
 		<tbody id="options_table">';
 		
-		echo table_row(label(_('Auteur'), 'author', $params['errors'], true) . ':', select_field('author', $authors, null));
-		echo table_row(label(_('Onderwerp/vraag'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxsize', '150'));
-		echo table_row(label(_('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors']));
+		echo table_row(label(__('Auteur'), 'author', $params['errors'], true) . ':', select_field('author', $authors, null));
+		echo table_row(label(__('Onderwerp/vraag'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxsize', '150'));
+		echo table_row(label(__('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors']));
 		
 		for ($i = 0; $i < 3; $i++)
-			echo '<tr id="optie_tr_' . $i . '"><td>' . _('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';
+			echo '<tr id="optie_tr_' . $i . '"><td>' . __('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';
 		
 		echo '</tbody><tr class="submit"><td class="submit" colspan="2">' . 
 		
-		input_button(_('Nieuwe optie'), 'add_option()') . ' ' .
-		input_submit('subm', _('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '
+		input_button(__('Nieuwe optie'), 'add_option()') . ' ' .
+		input_submit('subm', __('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '
 		
 		</td></tr>
 		</table></form>'; */
-		echo '<h1><a href="forum.php">' . _('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></h1>';
 		echo '<div class="topbar"></div><table class="poll"><tr class="header"><td colspan="2">Nieuwe poll toevoegen.</td></tr>';
 		
 		$config_model = get_model('DataModelConfiguratie');
@@ -404,10 +404,10 @@
 			}
 		}
 
-		echo '<tr><td colspan="2">' . _('Gebruik het onderstaande formulier om een nieuwe poll toe te voegen.') . '</td></tr>';
+		echo '<tr><td colspan="2">' . __('Gebruik het onderstaande formulier om een nieuwe poll toe te voegen.') . '</td></tr>';
 		
 		if (isset($params['errors']) && count($params['errors']) > 0)
-			echo '<tr><td colspan="2">' . _('Niet alle velden zijn goed ingevuld (er moet minstens 1 optie ingevuld zijn') . '</td></tr>';
+			echo '<tr><td colspan="2">' . __('Niet alle velden zijn goed ingevuld (er moet minstens 1 optie ingevuld zijn') . '</td></tr>';
 
 		$authors = get_authors($model, $iter->get('id'), ACL_POLL);
 
@@ -417,17 +417,17 @@
 		
 		<tbody id="options_table">';
 		
-		echo '<tr><td style="border: none;">'.label(_('Auteur'), 'author', $params['errors'], true) . ':</td><td>'. select_field('author', $authors, null).'</td></tr>';
-		echo table_row(label(_('Onderwerp/vraag'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxsize', '150'));
-		echo table_row(label(_('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors']));
+		echo '<tr><td style="border: none;">'.label(__('Auteur'), 'author', $params['errors'], true) . ':</td><td>'. select_field('author', $authors, null).'</td></tr>';
+		echo table_row(label(__('Onderwerp/vraag'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxsize', '150'));
+		echo table_row(label(__('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors']));
 		
 		for ($i = 0; $i < 6; $i++)
-			echo '<tr id="optie_tr_' . $i . '"><td>' . _('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';
+			echo '<tr id="optie_tr_' . $i . '"><td>' . __('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';
 		
 		echo '</tbody></table><div class="bar" style="border-top: 1px solid #000000;"><span  style="padding-left: 10px;">' . 
 		
-		//input_button(_('Nieuwe optie'), 'add_option()') . ' ' .
-		input_submit('subm', _('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</span></div></form>';
+		//input_button(__('Nieuwe optie'), 'add_option()') . ' ' .
+		input_submit('subm', __('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</span></div></form>';
 		/*
 		<script type="text/javascript">
 			var sending = false;
@@ -446,7 +446,7 @@
 				tr.appendChild(document.createElement("td"));
 				tr.appendChild(document.createElement("td"));
 
-				tr.childNodes[0].appendChild(document.createTextNode("' . _('Optie') . ' " + (num_options + 1) + ":"));
+				tr.childNodes[0].appendChild(document.createTextNode("' . __('Optie') . ' " + (num_options + 1) + ":"));
 				
 				inp = document.createElement("input");
 				inp.setAttribute("type", "text");
@@ -484,7 +484,7 @@
 				return;
 			}
 		}
-		echo '<h1><a href="forum.php">' . _('Forum') . '</a> :: ' . $iter->get('name') . '</h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: ' . $iter->get('name') . '</h1>';
 		$i = 0;
 		$page = $params['page'];
 		$threads = $model->get_threads($iter, $page, $max);
@@ -498,12 +498,12 @@
 		$canpoll = $model->check_acl($iter->get('id'), ACL_POLL);
 
 		if ($canwrite)
-			$bar .= '<span id="newbericht" class="button" style="padding-left: 10px;">'.image('new.png', _('nieuw'), _('Nieuw bericht toevoegen')) . ' <span class="messageText">' . _('Nieuw antwoord') . '</span></span>';
+			$bar .= '<span id="newbericht" class="button" style="padding-left: 10px;">'.image('new.png', __('nieuw'), __('Nieuw bericht toevoegen')) . ' <span class="messageText">' . __('Nieuw antwoord') . '</span></span>';
 		
 		if ($canpoll)
-			$bar .= '<a href="forum.php?forum=' . $iter->get('id') . '&addpoll"><span id="newpoll" class="button">' . image('new.png', _('nieuw'), _('Nieuwe poll toevoegen')) . _('Nieuwe poll') . '</span></a>';
+			$bar .= '<a href="forum.php?forum=' . $iter->get('id') . '&addpoll"><span id="newpoll" class="button">' . image('new.png', __('nieuw'), __('Nieuwe poll toevoegen')) . __('Nieuwe poll') . '</span></a>';
 		if (!$canpoll && !$canwrite)
-			$bar .= _('Je kunt niet schrijven in dit forum');
+			$bar .= __('Je kunt niet schrijven in dit forum');
 			
 		$bar .= '</div>';
 		
@@ -521,17 +521,17 @@
 			<col class="commentcount">
 			<col class="last">
 			<tr class="header">
-			<td colspan="2">' . _('Onderwerp') . '</td>
-			<td class="text_center">' . _('Auteur') . '</td>
-			<td>' . _('Reacties') . '</td>
-			<td class="text_center">' . _('Laatste') . '</td>
+			<td colspan="2">' . __('Onderwerp') . '</td>
+			<td class="text_center">' . __('Auteur') . '</td>
+			<td>' . __('Reacties') . '</td>
+			<td class="text_center">' . __('Laatste') . '</td>
 		</tr>';
 		
 		$member_model = get_model('DataModelMember');
 		
 		foreach ($threads as $thread) {
 			echo '<tr class="r' . $i . '"><td class="icon">' . image($model->thread_unread($thread->get('id')) ? 'thread_new.png' : 'thread.png', '', '') . '</td>
-			<td class="subject"><a href="forum.php?thread=' . $thread->get('id') . '"><span class="subject">' . ($thread->get('poll') ? ('[' . _('Poll') . '] ') : '') . $thread->get('subject') . '</span></a>';
+			<td class="subject"><a href="forum.php?thread=' . $thread->get('id') . '"><span class="subject">' . ($thread->get('poll') ? ('[' . __('Poll') . '] ') : '') . $thread->get('subject') . '</span></a>';
 			
 			$pages = $thread->get_num_thread_pages();
 			$i = ($i ? 0 : 1);
@@ -543,14 +543,14 @@
 				for ($p = 0; $p < $pages; $p++)
 					$nav[] = $link . '&page=' . $p . '">' . ($p + 1) . '</a>';
 				
-				echo '<br><span class="smaller">[ ' . _('Pagina') . ': ' . implode(', ', $nav) . ' ]</span>';
+				echo '<br><span class="smaller">[ ' . __('Pagina') . ': ' . implode(', ', $nav) . ' ]</span>';
 			}
 			
 			$link = get_author_link($thread);
 			$author_info = $model->get_author_info($thread);
 
 			echo '</td>
-			<td class="text_center">' . ($author_info['name'] ? ('<a href="' . $link .  '">' . $author_info['name'] . '</a>') : _('Onbekend')) . '</td>
+			<td class="text_center">' . ($author_info['name'] ? ('<a href="' . $link .  '">' . $author_info['name'] . '</a>') : __('Onbekend')) . '</td>
 			<td class="text_center">' . $thread->get_num_messages() . '</td>
 			<td class="last">';
 
@@ -580,7 +580,7 @@
 	}
 
 	function view_fora($model, $iters, $params = null) {
-		echo '<h1>' . _('Forum') . '</h1>
+		echo '<h1>' . __('Forum') . '</h1>
 		<div class="topbar"></div><table class="forum">
 		<col class="icon">
 		<col class="forum">
@@ -626,7 +626,7 @@
 	
 	/* Admin stuff */
 	function render_admin_menu($sub) {
-		$menu = array('forums' => _('Forums'), 'rights' => _('Rechten'), 'groups' => _('Groepen'), 'special' => ('Speciale forums'));
+		$menu = array('forums' => __('Forums'), 'rights' => __('Rechten'), 'groups' => __('Groepen'), 'special' => ('Speciale forums'));
 		echo '<div class="admin_menu">
 		<ul>';
 		
@@ -638,7 +638,7 @@
 	}
 	
 	function render_admin_forums($model, $params) {
-		echo '<h2>' . _('Volgorde') . '</h2>';
+		echo '<h2>' . __('Volgorde') . '</h2>';
 		
 		$forums = $model->get(false);
 		$headers = $model->get_headers();
@@ -661,11 +661,11 @@
 			' . select_field('forums', $values, null, 'size', '10', 'class', 'forum_list', 'onChange', 'javascript:select_current()', 'onKeyPress', 'javascript:on_key_down(event)') . '
 			</td>
 			<td>
-			<a href="javascript:move_up();">' . image('up.png', _('Omhoog'), _('Verplaats geselecteerd forum naar boven')) . '</a><br><br>' . '<a href="javascript:move_down();">' . image('down.png', _('Omlaag'), _('Verplaats geselecteerd forum naar beneden'))  . '</a>
+			<a href="javascript:move_up();">' . image('up.png', __('Omhoog'), __('Verplaats geselecteerd forum naar boven')) . '</a><br><br>' . '<a href="javascript:move_down();">' . image('down.png', __('Omlaag'), __('Verplaats geselecteerd forum naar beneden'))  . '</a>
 			</td>
 			</tr>
-			<tr><td colspan="2">' . input_text('hname', null, 'id', 'header_name') . ' ' . input_button(_('Toevoegen'), 'add_header()') . ' ' . input_button(_('Wijzigen'), 'modify_header()') . ' ' . input_button(_('Verwijderen'), 'javascript:delete_header()') . '</td></tr>
-			<tr class="submit"><td class="submit" colspan="2">' . input_submit('subm', _('Opslaan')) . '</td></tr>
+			<tr><td colspan="2">' . input_text('hname', null, 'id', 'header_name') . ' ' . input_button(__('Toevoegen'), 'add_header()') . ' ' . input_button(__('Wijzigen'), 'modify_header()') . ' ' . input_button(__('Verwijderen'), 'javascript:delete_header()') . '</td></tr>
+			<tr class="submit"><td class="submit" colspan="2">' . input_submit('subm', __('Opslaan')) . '</td></tr>
 		</table>
 		</form>
 		<script type="text/javascript">
@@ -827,24 +827,24 @@
 		</script>
 		';
 		
-		echo '<div class="bar"><div class="right"><a href="javascript:nieuw_forum()">' . image('new.png', _('nieuw'), _('Nieuw forum toevoegen'), 'class="button"') . '</a> <a href="javascript:nieuw_forum()">' . _('Nieuw forum') . '</a></div><h2>' . _('Forums') . '</h2></div>
+		echo '<div class="bar"><div class="right"><a href="javascript:nieuw_forum()">' . image('new.png', __('nieuw'), __('Nieuw forum toevoegen'), 'class="button"') . '</a> <a href="javascript:nieuw_forum()">' . __('Nieuw forum') . '</a></div><h2>' . __('Forums') . '</h2></div>
 
 		<div id="forum_nieuw" class="beheer">
 		<form name="forum" action="forum.php" method="post">
 		<table>';
 
 		echo input_hidden('submforumnieuw', 'yes');
-		echo table_row(label(_('Naam'), 'name', $params['errors'], true) . ':', input_text('name', null));
-		echo '<tr><td colspan="2">' . label(_('Beschrijving'), 'description', $params['errors'], true) . ':<br>' . textarea_field('description', null, $params['errors'], 'class', 'small') . '</td></tr>';
-		echo '<tr><td colspan="2" class="submit">' . input_submit('subm', _('Forum toevoegen')) . '</td></tr>';
+		echo table_row(label(__('Naam'), 'name', $params['errors'], true) . ':', input_text('name', null));
+		echo '<tr><td colspan="2">' . label(__('Beschrijving'), 'description', $params['errors'], true) . ':<br>' . textarea_field('description', null, $params['errors'], 'class', 'small') . '</td></tr>';
+		echo '<tr><td colspan="2" class="submit">' . input_submit('subm', __('Forum toevoegen')) . '</td></tr>';
 		echo '</table></form>
 		</div>	
 		<form action="forum.php" method="post">
 		' . input_hidden('submforumforums', 'yes') . '
 		<table class="moderate">
 			<tr class="header">
-				<td>' . image('delete_small.png', 'D', _('Verwijder geselecteerde forums')) . '</td>
-				<td>' . _('Forum') . '</td>
+				<td>' . image('delete_small.png', 'D', __('Verwijder geselecteerde forums')) . '</td>
+				<td>' . __('Forum') . '</td>
 			</tr>';
 		
 		$i = 0;
@@ -859,7 +859,7 @@
 			$i = ($i ? 0 : 1);
 		}
 		
-		echo '<tr><td class="submit" colspan="2">' . input_submit('subm', _('Opslaan')) . '</td></tr>';
+		echo '<tr><td class="submit" colspan="2">' . input_submit('subm', __('Opslaan')) . '</td></tr>';
 		
 		echo '</table></form>
 		<script type="text/javascript">
@@ -887,10 +887,10 @@
 	}
 	
 	function render_member_selection($model, $show_groups) {
-		$types = array(-1 => _('Iedereen'), 1 => _('Lid'), 2 => _('Commissie'));
+		$types = array(-1 => __('Iedereen'), 1 => __('Lid'), 2 => __('Commissie'));
 		
 		if ($show_groups)
-			$types[3] = _('Groep');
+			$types[3] = __('Groep');
 
 		echo '<table class="default">';
 		
@@ -902,24 +902,24 @@
 				$values[$group->get('id')] = $group->get('name');
 			
 			echo '<tr>
-				<td>' . label(_('Groep'), 'guid', null, true) . ':</td>
+				<td>' . label(__('Groep'), 'guid', null, true) . ':</td>
 				<td>' . select_field('guid', $values, null) . '</td>
 				</tr>';
 		}
 		
 		echo '<tr>
-				<td class="small">' . label(_('Type'), 'type', null, true) . ':</td>
+				<td class="small">' . label(__('Type'), 'type', null, true) . ':</td>
 				<td>' . select_field('type', $types, null, 'onChange', 'javascript:type_changed()') . '</td>
 			</tr>
 			<tr>
-				<td>' . label(_('Naam'), 'name', null, true) . ':</td>
+				<td>' . label(__('Naam'), 'name', null, true) . ':</td>
 				<td>
 					<div class="hidden" id="name_everyone">
-						' . _('Iedereen') . '
+						' . __('Iedereen') . '
 					</div>
 					<div class="hidden" id="name_member">
 						' .
-					select_field('member', array(0 => '[' . _('Zoeken') . ' &gt;&gt;]'), null), '<a href="javascript:zoek_leden();">' . image('previous.png', '<<', _('Zoeken naar leden'), 'class="middle"') . '</a> ' . input_text('voornaam', null, 'class', 'small', 'onKeyPress', 'return search_key_down(event)') . '
+					select_field('member', array(0 => '[' . __('Zoeken') . ' &gt;&gt;]'), null), '<a href="javascript:zoek_leden();">' . image('previous.png', '<<', __('Zoeken naar leden'), 'class="middle"') . '</a> ' . input_text('voornaam', null, 'class', 'small', 'onKeyPress', 'return search_key_down(event)') . '
 					</div>
 					<div class="hidden" id="name_commissie">
 						';
@@ -952,15 +952,15 @@
 			
 			if ($show_groups) {
 				echo '<tr>
-					<td>' . label(_('Rechten'), 'rights', null, false) . ':</td>
-					<td>' . input_checkbox('read', array('read' => 'yes')) . ' ' . _('Lezen') . '<br>
-					' .	input_checkbox('write', null) . ' ' . _('Schrijven') . '<br>
-					' .	input_checkbox('reply', null) . ' ' . _('Antwoorden') . '<br>
-					' . 	input_checkbox('poll', null) . ' ' . _('Poll') . '</td>
+					<td>' . label(__('Rechten'), 'rights', null, false) . ':</td>
+					<td>' . input_checkbox('read', array('read' => 'yes')) . ' ' . __('Lezen') . '<br>
+					' .	input_checkbox('write', null) . ' ' . __('Schrijven') . '<br>
+					' .	input_checkbox('reply', null) . ' ' . __('Antwoorden') . '<br>
+					' . 	input_checkbox('poll', null) . ' ' . __('Poll') . '</td>
 				</tr>';
 			}
 			
-			echo '<tr><td class="submit" colspan="2">' . input_submit('subm', $show_groups ? _('Rechten toevoegen') : 'Lid toevoegen') . '</td></tr>
+			echo '<tr><td class="submit" colspan="2">' . input_submit('subm', $show_groups ? __('Rechten toevoegen') : 'Lid toevoegen') . '</td></tr>
 		</table>
 		</form>
 		<script type="text/javascript">
@@ -993,7 +993,7 @@
 				delete_all_names();
 				
 				if (values == "") {
-					sel.options[sel.options.length] = new Option("[' . _('Geen leden gevonden') . ']", "0");
+					sel.options[sel.options.length] = new Option("[' . __('Geen leden gevonden') . ']", "0");
 				} else {
 					values = values.split("\n");
 					
@@ -1022,10 +1022,10 @@
 				var query = document.fforum.voornaam.value;
 				
 				if (query == "") {
-					alert("' . _('Je moet wel een naam invullen') . '");
+					alert("' . __('Je moet wel een naam invullen') . '");
 					return;
 				} else if (query.length < 3) {
-					alert("' . _('Geef minstens 3 letters op om naar te zoeken') . '");
+					alert("' . __('Geef minstens 3 letters op om naar te zoeken') . '");
 					return;
 				}
 				
@@ -1066,19 +1066,19 @@
 	}
 	
 	function render_admin_rights_forum($model, $forum, $params) {
-		echo '<h2>' . _('Rechten') . ' :: ' . $forum->get('name') . '</h2>
+		echo '<h2>' . __('Rechten') . ' :: ' . $forum->get('name') . '</h2>
 		<div class="smaller">' . markup_parse($forum->get('description')) . '</div><br>
 		<form method="post" action="forum.php?admin=rights&forum=' . $forum->get('id') . '">
 		' . input_hidden('submforumrights', 'yes') . '
 		<table class="moderate">
 			<tr class="header">
-				<td>' . image('delete_small.png', 'D', _('Verwijder geselecteerde rechten')) . '</td>
-				<td>' . _('Type') . '</td>
-				<td>' . _('Naam') . '</td>
-				<td>' . _('Lees') . '</td>
-				<td>' . _('Schrijf') . '</td>
-				<td>' . _('Antw.') . '</td>
-				<td>' . _('Poll') . '</td>
+				<td>' . image('delete_small.png', 'D', __('Verwijder geselecteerde rechten')) . '</td>
+				<td>' . __('Type') . '</td>
+				<td>' . __('Naam') . '</td>
+				<td>' . __('Lees') . '</td>
+				<td>' . __('Schrijf') . '</td>
+				<td>' . __('Antw.') . '</td>
+				<td>' . __('Poll') . '</td>
 			</tr>';
 		
 		$rights = $forum->get_rights();
@@ -1103,10 +1103,10 @@
 			echo '</tr>';
 		}
 		
-		echo '<tr><td colspan="7" class="submit">' . input_submit('subm', _('Opslaan')) . '</td></tr>
+		echo '<tr><td colspan="7" class="submit">' . input_submit('subm', __('Opslaan')) . '</td></tr>
 		</table></form>';
 		
-		echo '<h2>' . _('Rechten toevoegen') . '</h2>
+		echo '<h2>' . __('Rechten toevoegen') . '</h2>
 		<form name="fforum" action="forum.php?admin=rights&forum=' . $forum->get('id') . '" method="post">
 		' . input_hidden('submforumrightsnieuw', 'yes');
 		
@@ -1127,12 +1127,12 @@
 		$values = get_forum_values($model);
 		
 		echo '<form action="forum.php" method="get">' . input_hidden('admin', 'rights') .
-		_('Selecteer forum') . ': ' . select_field('forum', $values, $forum ? array('forum' => $forum->get('id')) : null, 'onChange', 'javascript:submit()') .
-		' ' . input_submit('', _('Selecteren')) . '</form>';
+		__('Selecteer forum') . ': ' . select_field('forum', $values, $forum ? array('forum' => $forum->get('id')) : null, 'onChange', 'javascript:submit()') .
+		' ' . input_submit('', __('Selecteren')) . '</form>';
 	}
 	
 	function render_admin_rights($model, $forum, $params) {
-		echo '<h2>' . _('Rechten') . '</h2>';		
+		echo '<h2>' . __('Rechten') . '</h2>';		
 		render_admin_forum_selection($model, $forum);
 
 		if ($forum)
@@ -1140,7 +1140,7 @@
 	}
 	
 	function render_admin_groups($model, $params) {
-		echo '<h2>' . _('Groepen') . '</h2>';
+		echo '<h2>' . __('Groepen') . '</h2>';
 		
 		$groups = $model->get_groups();
 		
@@ -1150,9 +1150,9 @@
 			' . input_hidden('submforumgroups', 'yes') . '
 			<table class="moderate">
 				<tr class="header">
-					<td class="delete">' . image('delete_small.png', 'D', _('Verwijder geselecteerde groepen')) . '</td>
-					<td>' . _('Naam') . '</td>
-					<td>' . _('Leden') . '</td>
+					<td class="delete">' . image('delete_small.png', 'D', __('Verwijder geselecteerde groepen')) . '</td>
+					<td>' . __('Naam') . '</td>
+					<td>' . __('Leden') . '</td>
 				</tr>';
 
 			foreach ($groups as $group) {
@@ -1165,7 +1165,7 @@
 				$mems = array();
 
 				foreach ($members as $member) {
-					$mems[] = $model->get_acl_name($member) . ' (<a href="forum.php?admin=groups&delmember=' . $member->get('id') . '">' . _('verwijder') . '</a>)';
+					$mems[] = $model->get_acl_name($member) . ' (<a href="forum.php?admin=groups&delmember=' . $member->get('id') . '">' . __('verwijder') . '</a>)';
 				}
 				
 				echo implode('<br>', $mems);
@@ -1174,22 +1174,22 @@
 				</tr>';
 			}
 			
-			echo '<tr><td colspan="3" class="submit">' . input_submit('subm', _('Opslaan')) . '</td></tr>
+			echo '<tr><td colspan="3" class="submit">' . input_submit('subm', __('Opslaan')) . '</td></tr>
 			</table></form>';
 		} else {
-			echo '<div>' . _('Er zijn nog geen groepen') . '</div>';
+			echo '<div>' . __('Er zijn nog geen groepen') . '</div>';
 		}
 		
-		echo '<h2>' . _('Nieuwe groep') . '</h2>
+		echo '<h2>' . __('Nieuwe groep') . '</h2>
 		<form method="post" action="forum.php?admin=groups">
 		' . input_hidden('submforumgroupsnieuw', 'yes') . '
 		<table class="default">
 			<tr>
-				<td class="small">' . label(_('Naam'), 'name', $params['errors'], true) . ':</td>
+				<td class="small">' . label(__('Naam'), 'name', $params['errors'], true) . ':</td>
 				<td>' . input_text('name', null, 'errors', $params['errors']) . '</td>
 			</tr>
 			<tr>
-				<td colspan="2" class="submit">' . input_submit('subm', _('Groep toevoegen')) . '</td>
+				<td colspan="2" class="submit">' . input_submit('subm', __('Groep toevoegen')) . '</td>
 			</tr>
 		</table>
 		</form>';
@@ -1197,7 +1197,7 @@
 		if (count($groups) == 0)
 			return;
 		
-		echo '<h2>' . _('Leden toevoegen') . '</h2>
+		echo '<h2>' . __('Leden toevoegen') . '</h2>
 		<form name="fforum" method="post" action="forum.php?admin=groups">
 		' . input_hidden('submforumgroupsmembers', 'yes');
 		
@@ -1205,11 +1205,11 @@
 	}
 	
 	function render_admin_special($model, $params) {
-		echo '<h2>' . _('Speciale forums') . '</h2>';
+		echo '<h2>' . __('Speciale forums') . '</h2>';
 		
 		$values = get_forum_values($model);
 		$values = array(0 => 'Geen') + $values;
-		$special = array('poll' => _('Polls'), 'news' => _('Mededelingen'), 'weblog' => _('Weblog'));
+		$special = array('poll' => __('Polls'), 'news' => __('Mededelingen'), 'weblog' => __('Weblog'));
 		$config_model = get_model('DataModelConfiguratie');
 
 		echo '<form action="forum.php?admin=special" method="post">' . input_hidden('submforumspecial', 'yes') . '
@@ -1227,12 +1227,12 @@
 				</tr>';
 		}
 		
-		echo '<tr><td class="submit" colspan="2">' . input_submit('subm', _('Opslaan')) . '</td></tr>
+		echo '<tr><td class="submit" colspan="2">' . input_submit('subm', __('Opslaan')) . '</td></tr>
 		</table>';
 	}
 	
 	function view_admin($model, $iter, $params = null) {
-		echo '<h1>' . _('Forum') . ' :: ' . _('Admin') . '</h1>
+		echo '<h1>' . __('Forum') . ' :: ' . __('Admin') . '</h1>
 			<div class="messageBox">';
 		render_admin_menu($params['sub']);
 		
@@ -1254,8 +1254,8 @@
 	}
 	
 	function view_mod_message($model, $iter, $params = null) {
-		echo '<div class="right"><a href="javascript:message_preview();">' . image('preview.png', _('voorbeeld'), _('Voorbeeld tonen'), 'class="button" id="message_preview"'), '</a></div>
-		<h1>' . _('Forum') . ' :: ' . _('Wijzig bericht') . '</h1>
+		echo '<div class="right"><a href="javascript:message_preview();">' . image('preview.png', __('voorbeeld'), __('Voorbeeld tonen'), 'class="button" id="message_preview"'), '</a></div>
+		<h1>' . __('Forum') . ' :: ' . __('Wijzig bericht') . '</h1>
 		<form name="forum" action="forum.php" method="post">
 		<table class="forum">';
 
@@ -1264,13 +1264,13 @@
 		echo input_hidden('page', $params['page']);
 
 		$author = $model->get_author_info($iter);
-		echo table_row(label(_('Auteur'), '', null, true) . ':', $author['name']);
-		echo table_row(label(_('Datum'), '', null, true) . ':', $iter->datum);
+		echo table_row(label(__('Auteur'), '', null, true) . ':', $author['name']);
+		echo table_row(label(__('Datum'), '', null, true) . ':', $iter->datum);
 		
 		if ($iter->is_first_message())
 		{
 			$thread = $model->get_thread($iter->thread);
-			echo table_row(label(_('Onderwerp'), 'subject', $params['errors'], true) . ':', input_text('subject', $thread->data, 'maxlength', '250'));
+			echo table_row(label(__('Onderwerp'), 'subject', $params['errors'], true) . ':', input_text('subject', $thread->data, 'maxlength', '250'));
 		}
 
 		echo '<tr><td colspan="2">
@@ -1280,7 +1280,7 @@
 		<div id="message_preview_content">
 		</div>
 		</td></tr>';
-		echo '<tr><td colspan="2" class="submit">' . input_submit('subm', _('Bericht wijzigen'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</td></tr>';
+		echo '<tr><td colspan="2" class="submit">' . input_submit('subm', __('Bericht wijzigen'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</td></tr>';
 		echo '</table></form>
 		<script type="text/javascript">
 			var sending = false;
@@ -1290,7 +1290,7 @@
 	}
 	
 	function view_del_message($model, $iter, $params = null) {
-		echo '<h1>' . _('Forum') . ' :: ' . _('Bericht verwijderen') . '</h1>
+		echo '<h1>' . __('Forum') . ' :: ' . __('Bericht verwijderen') . '</h1>
 		<div class="error_message">Weet je zeker dat je dit bericht wilt verwijderen?';
 		
 		if ($iter->is_first_message())

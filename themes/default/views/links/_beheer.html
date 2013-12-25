@@ -1,4 +1,4 @@
-<div class="bar"><a href="javascript:beheer();"><?= image('add.png', _('Link toevoegen'), _('Voeg een link toe'), 'class="button"') ?></a> <a href="javascript:beheer();"><?= _('Link toevoegen') ?></a></div>
+<div class="bar"><a href="javascript:beheer();"><?= image('add.png', __('Link toevoegen'), __('Voeg een link toe'), 'class="button"') ?></a> <a href="javascript:beheer();"><?= __('Link toevoegen') ?></a></div>
 
 <?
 $cats = $model->get_categories();
@@ -11,7 +11,7 @@ foreach ($cats as $cat)
 <div id="beheer" class="beheer">
 
 <? if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
-<h2><?= _('Categorieën') ?></h2>
+<h2><?= __('Categorieën') ?></h2>
 <form name="categories" method="post" action="links.php" onSubmit="javascript:fill_categorie_lijst();">
 <?= input_hidden('categorie_lijst', '')  ?>
 <?= input_hidden('submlinks_categories', 'yes') ?>
@@ -20,41 +20,41 @@ foreach ($cats as $cat)
 	<?= select_field('categories', $categories, null, 'size', '6', 'class', 'category_list', 'onClick', 'javascript:select_current()') ?>
 	</td>
 	<td>
-	<a href="javascript:move_up();"><?= image('up.png', _('Omhoog'), _('Verplaats geselecteerde categorie naar boven')) ?></a><br><br>
-	<a href="javascript:move_down();"><?= image('down.png', _('Omlaag'), _('Verplaats geselecteerde categorie naar beneden'))  ?></a>
+	<a href="javascript:move_up();"><?= image('up.png', __('Omhoog'), __('Verplaats geselecteerde categorie naar boven')) ?></a><br><br>
+	<a href="javascript:move_down();"><?= image('down.png', __('Omlaag'), __('Verplaats geselecteerde categorie naar beneden'))  ?></a>
 	</td>
 	</tr>
 	<tr><td colspan="2">
-	<?= input_text('ctitel', null, 'id', 'category_titel') ?> <?= input_button(_('Toevoegen'), 'add_category()') ?> <?=  input_button(_('Wijzigen'), 'modify_category()') ?> <?= input_button(_('Verwijderen'), 'javascript:delete_category()') ?></td></tr>
-	<tr class="submit"><td class="submit" colspan="2"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
+	<?= input_text('ctitel', null, 'id', 'category_titel') ?> <?= input_button(__('Toevoegen'), 'add_category()') ?> <?=  input_button(__('Wijzigen'), 'modify_category()') ?> <?= input_button(__('Verwijderen'), 'javascript:delete_category()') ?></td></tr>
+	<tr class="submit"><td class="submit" colspan="2"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
 </table>
 </form>
 <? } ?>
 
-<h2><?= _('Nieuw document') ?></h2>
+<h2><?= __('Nieuw document') ?></h2>
 
 <? if (count($categories) == 0) { ?>
-<p><?= _('Er zijn nog geen categorieën om links aan toe te voegen') ?></p>
+<p><?= __('Er zijn nog geen categorieën om links aan toe te voegen') ?></p>
 <? } else { ?>
 <form method="post" action="links.php"><?= input_hidden('submlinks_add', 'yes') ?>
 <table>
 	<tr>
-		<td><?= label(_('Categorie'), 'categorie', $errors, true) ?>:</td>
+		<td><?= label(__('Categorie'), 'categorie', $errors, true) ?>:</td>
 		<td><?= select_field('categorie', $categories, null) ?></td>
 	</tr>
 	<tr>
-		<td><?= label(_('Titel'), 'titel', $errors, true) ?>:</td>
+		<td><?= label(__('Titel'), 'titel', $errors, true) ?>:</td>
 		<td><?= input_text('titel', null) ?></td>
 	</tr>
 	<tr>
-		<td><?= label(_('Url'), 'url', $errors, true) ?>:</td>
+		<td><?= label(__('Url'), 'url', $errors, true) ?>:</td>
 		<td><?= input_text('url', null) ?></td>
 	</tr>
 	<tr>
 		<td colspan="2"><?= textarea_field('beschrijving', null, $errors) ?></td>
 	</tr>
 	<tr class="submit">
-		<td class="submit" colspan="2"><?= input_submit('subm', _('Link toevoegen')) ?></td>
+		<td class="submit" colspan="2"><?= input_submit('subm', __('Link toevoegen')) ?></td>
 	</tr>
 </table>
 </form>

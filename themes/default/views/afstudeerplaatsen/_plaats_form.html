@@ -1,12 +1,12 @@
 <table>
 		<tr>
-			<td><?= label(_('Opdracht'), 'opdracht', $errors, true) ?>:</td>
+			<td><?= label(__('Opdracht'), 'opdracht', $errors, true) ?>:</td>
 			<td><?= input_text('opdracht', $data) ?></td>
 		</tr>
 		<tr>
 			<td colspan="2"><?= textarea_field('beschrijving', $data, $errors) ?></td>
 		</tr>
 		<tr class="submit">
-			<td class="submit" colspan="2"><?= input_submit('subm', $data == null ? _('Afstudeerplaats toevoegen') : _('Afstudeerplaats wijzigen')) ?></td>
+			<td class="submit" colspan="2"><?= input_submit('subm', $data == null ? __('Afstudeerplaats toevoegen') : __('Afstudeerplaats wijzigen')) ?></td>
 		</tr>
 	</table>

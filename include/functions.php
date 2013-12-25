@@ -43,8 +43,8 @@
 		$formatargs = array_slice(func_get_args(), 2);
 		$description = vsprintf($descformat, $formatargs);
 		
-		echo '<div class="error"><h3>' . _($group) . ' ' . _('Fout') . '</h3>';
-		echo '<p>' . vsprintf(_($descformat), $formatargs) . '</p>';
+		echo '<div class="error"><h3>' . __($group) . ' ' . __('Fout') . '</h3>';
+		echo '<p>' . vsprintf(__($descformat), $formatargs) . '</p>';
 		
 		if (get_config_value('report_errors', false)) {
 			$to = get_config_value('report_to');
@@ -55,9 +55,9 @@
 			$body .= _get_backtrace('report_error');
 			
 			if (!mail($to, $subject, $body))
-				echo "<p>" . _("De webmaster is NIET op de hoogte gesteld. Stel de webmaster op de hoogte wanneer dit probleem zich voor blijft doen") . "</p>";
+				echo "<p>" . __("De webmaster is NIET op de hoogte gesteld. Stel de webmaster op de hoogte wanneer dit probleem zich voor blijft doen") . "</p>";
 			else
-				echo "<p>" . _("De webmaster is op de hoogte gesteld van het probleem") . "</p>";
+				echo "<p>" . __("De webmaster is op de hoogte gesteld van het probleem") . "</p>";
 		}
 	
 		echo '</div>';
@@ -118,18 +118,18 @@
 			if (is_array($params))
 				return $view->$function(array_merge($params, array("model" => $model, "iter" => $iter)));
 
-			return report_error(N_("View"), N_("De meegeleverde $params aan functie %s is geen array, maar een: %s"), $name, $params);				
+			return report_error(N__("View"), N__("De meegeleverde $params aan functie %s is geen array, maar een: %s"), $name, $params);				
 		}
 		
 		if (!_load_view("../themes/" . get_theme() . "/views/$name.php"))
 			if (!_load_view("../themes/default/views/$name.php"))
-				return report_error(N_("View"), N_("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme());
+				return report_error(N__("View"), N__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme());
 
 		/* Locate the function */
 		if (function_exists("view_$function"))
 			return call_user_func("view_$function", $model, $iter, $params);
 		else
-			return report_error(N_("View"), N_("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme());
+			return report_error(N__("View"), N__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme());
 	}
 	
 	/**
@@ -174,7 +174,7 @@
 		static $days = null;
 		
 		if (!$days)
-			$days = Array(_('Zondag'), _('Maandag'), _('Dinsdag'), _('Woensdag'), _('Donderdag'), _('Vrijdag'), _('Zaterdag'), _('Zondag'));
+			$days = Array(__('Zondag'), __('Maandag'), __('Dinsdag'), __('Woensdag'), __('Donderdag'), __('Vrijdag'), __('Zaterdag'), __('Zondag'));
 		
 		return $days;
 	}
@@ -189,7 +189,7 @@
 		static $months = null;
 		
 		if (!$months)
-			$months = Array(_('geen'), _('Januari'), _('Februari'), _('Maart'), _('April'), _('Mei'), _('Juni'), _('Juli'), _('Augustus'), _('September'), _('Oktober'), _('November'), _('December'));
+			$months = Array(__('geen'), __('Januari'), __('Februari'), __('Maart'), __('April'), __('Mei'), __('Juni'), __('Juli'), __('Augustus'), __('September'), __('Oktober'), __('November'), __('December'));
 		
 		return $months;	
 	}
@@ -336,11 +336,11 @@
 			if (file_exists('themes/default/email/' . $email))
 				$contents = file('themes/default/email/' . $email);
 			else {
-				report_error(N_("Email"), N_("De email `%s` kan niet gevonden worden (thema: %s)"), $email, get_theme());
+				report_error(N__("Email"), N__("De email `%s` kan niet gevonden worden (thema: %s)"), $email, get_theme());
 				return false;
 			}
 		else {
-			report_error(N_("Email"), N_("De email `%s` kan niet gevonden worden (thema: %s)"), $email, get_theme());
+			report_error(N__("Email"), N__("De email `%s` kan niet gevonden worden (thema: %s)"), $email, get_theme());
 			return false;
 		}
 
@@ -425,7 +425,7 @@
 		elseif ($len == 1)
 			return $list[0];
 		else
-			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . _('en') . ' ' . $list[$len - 1];
+			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('en') . ' ' . $list[$len - 1];
 	}
 	
 	/** @group Functions

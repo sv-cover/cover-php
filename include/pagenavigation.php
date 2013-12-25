@@ -1,9 +1,9 @@
 <?php
 	function page_navigation($url, $current, $max, $nav_num = 10) {
-		$nav = '<div class="page_navigation">' . _('Ga naar pagina') . ': ';
+		$nav = '<div class="page_navigation">' . __('Ga naar pagina') . ': ';
 
 		if ($current != 0)
-			$nav .= '<a href="' . add_request($url, 'page=' . ($current - 1)) . '">' . image('previous.png', _('vorige'), _('Vorige pagina') . '</a>');
+			$nav .= '<a href="' . add_request($url, 'page=' . ($current - 1)) . '">' . image('previous.png', __('vorige'), __('Vorige pagina') . '</a>');
 		
 		$nav_min = max(0, $current - ($nav_num / 2));
 		$nav_max = min($max, $current + ($nav_num / 2) - 1);
@@ -19,7 +19,7 @@
 		}
 		
 		if ($current != $max)
-			$nav .= '<a href="' . add_request($url, 'page=' . ($current + 1)) . '">' . image('next.png', _('volgende'), _('Volgende pagina')) . '</a>';
+			$nav .= '<a href="' . add_request($url, 'page=' . ($current + 1)) . '">' . image('next.png', __('volgende'), __('Volgende pagina')) . '</a>';
 		
 		return $nav . "</div>\n";
 	}

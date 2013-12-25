@@ -12,9 +12,9 @@
 		}
 
 		function view_verzonden($model, $iter, $params = null) {
-			echo '<h1>' . _('Lidmaatschapsformulier') . '</h1>
+			echo '<h1>' . __('Lidmaatschapsformulier') . '</h1>
 			<p>Je lidmaatschapsaanvraag is verstuurd.</p>
-			<h2>' . _('Opmerkingen') . '</h2>
+			<h2>' . __('Opmerkingen') . '</h2>
 			<ul>
 				<li>Contributie wordt zolang je lid bent van Cover jaarlijks van je bank- of girorekening afgeschreven.</li>
 				<li>Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt.</li>

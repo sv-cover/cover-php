@@ -10,9 +10,9 @@
 	</table>
 
 	<div class="poll_vote">
-		<?= input_submit('subm', _('Stem'))  ?>
+		<?= input_submit('subm', __('Stem'))  ?>
 		<? if (isset($enable_new) && $enable_new) {?>
-			<?= input_button(_('Nieuwe poll'), 'javascript:window.location = \'forum.php?forum=' . $iter->get('forum') . 'addpoll\'') ?>
+			<?= input_button(__('Nieuwe poll'), 'javascript:window.location = \'forum.php?forum=' . $iter->get('forum') . 'addpoll\'') ?>
 		<? } ?>
 	</div>
 </form>

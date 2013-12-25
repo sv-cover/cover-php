@@ -29,7 +29,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Nieuw lid')));
+			$this->run_header(array('title' => __('Nieuw lid')));
 			run_view('nieuwlid::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

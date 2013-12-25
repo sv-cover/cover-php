@@ -13,8 +13,8 @@ $total_calc = max(1, $total); ?>
 	<td class="percentage"><?= $percentage ?>%</td></tr>
 <? } ?>
 
-<tr><td colspan="2"><?= _('Aantal stemmen') ?>:<?= $total ?></td></tr>
+<tr><td colspan="2"><?= __('Aantal stemmen') ?>:<?= $total ?></td></tr>
 
 <? if (isset($enable_new) && $enable_new) ?>
-	<tr><td colspan="2"><?= input_button(_('Nieuwe poll'), 'javascript:window.location = \'forum.php?forum=' . $iter->get('forum') . '&addpoll\'') ?></td></tr>
+	<tr><td colspan="2"><?= input_button(__('Nieuwe poll'), 'javascript:window.location = \'forum.php?forum=' . $iter->get('forum') . '&addpoll\'') ?></td></tr>
 </table>

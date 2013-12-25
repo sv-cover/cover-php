@@ -10,7 +10,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Commissies')));
+			$this->run_header(array('title' => __('Commissies')));
 			run_view('commissies::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

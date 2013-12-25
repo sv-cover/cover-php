@@ -13,8 +13,8 @@ foreach ($iter as $item) {
 	
 	if ($admin) { ?>
 		<div class="right">
-			<a href="afstudeerplaatsen.php?editbedrijf=<?= $item->get_id() ?>"> <?= image('edit_small.png', _('Bewerken'), _('Bewerk bedrijf')) ?> </a> 
-			<a href="afstudeerplaatsen.php?delbedrijf=<?= $item->get_id() ?>" onClick="return verwijderen();"><?= image('delete_small.png', _('Verwijderen'), _('Verwijder bedrijf')) ?></a>
+			<a href="afstudeerplaatsen.php?editbedrijf=<?= $item->get_id() ?>"> <?= image('edit_small.png', __('Bewerken'), __('Bewerk bedrijf')) ?> </a> 
+			<a href="afstudeerplaatsen.php?delbedrijf=<?= $item->get_id() ?>" onClick="return verwijderen();"><?= image('delete_small.png', __('Verwijderen'), __('Verwijder bedrijf')) ?></a>
 		</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 <? } ?>
 
@@ -27,7 +27,7 @@ foreach ($iter as $item) {
 <? if ($admin) { ?>
 	<script type="text/javascript">
 		function verwijderen() {
-			return confirm("<?= _('Weet je zeker dat je dit bedrijf en alle bijbehorende afstudeerplaatsen wilt verwijderen?') ?>");
+			return confirm("<?= __('Weet je zeker dat je dit bedrijf en alle bijbehorende afstudeerplaatsen wilt verwijderen?') ?>");
 		}
 	</script>
 <? } ?>

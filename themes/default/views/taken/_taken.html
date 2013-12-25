@@ -1,10 +1,10 @@
 <? // function render_taken($model, $iters, $easiers, $highlight = true) { ?>
 <table class="default">
 	<tr class="header">
-		<td><?= _('Nr') ?></td>
-		<td><?= _('Taak') ?></td>
-		<td><?= _('Prio') ?></td>
-		<td><?= _('Toegewezen') ?></td>
+		<td><?= __('Nr') ?></td>
+		<td><?= __('Taak') ?></td>
+		<td><?= __('Prio') ?></td>
+		<td><?= __('Toegewezen') ?></td>
 	</tr>
 
 <? $i = 0;
@@ -15,7 +15,7 @@ foreach ($iter as $item) {
 	if ($item->get('toegewezen'))
 		$toegewezen = $easiers[$item->get('toegewezen')];
 	else
-		$toegewezen = '<span class="italic">' . _('niemand') . '</span>';
+		$toegewezen = '<span class="italic">' . __('niemand') . '</span>';
 
 	if ($highlight && $item->get('toegewezen') && $item->get('toegewezen') == $member_data['id']) {?>
 		<tr class="highlight">

@@ -12,7 +12,7 @@ $months = get_months();
 </span>
 <? if ($subtitle) { ?>
 	<div class="subtitle">
-	<?= _('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= ($reactie->get('beschrijving') ? $reactie->get('beschrijving') : _('geen titel')) ?></a><br><?= _('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('boek') ?>"><?= $reactie->get('titel') ?></a></div>
+	<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= ($reactie->get('beschrijving') ? $reactie->get('beschrijving') : __('geen titel')) ?></a><br><?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('boek') ?>"><?= $reactie->get('titel') ?></a></div>
 <? } ?>
 </div>
 

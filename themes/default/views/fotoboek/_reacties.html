@@ -4,10 +4,10 @@
 $logged_in = logged_in();
 
 if ($logged_in) { ?>
-	<div class="buttons"><a href="javascript:nieuwe_reactie()"><?= image('add.png', _('Toevoegen'), _('Nieuwe reactie toevoegen')) ?></a> <a href="javascript:nieuwe_reactie()"><?= _('Nieuwe reactie') ?></a></div>
+	<div class="buttons"><a href="javascript:nieuwe_reactie()"><?= image('add.png', __('Toevoegen'), __('Nieuwe reactie toevoegen')) ?></a> <a href="javascript:nieuwe_reactie()"><?= __('Nieuwe reactie') ?></a></div>
 <? } ?>
 
-<?= _('Reacties') ?></div>
+<?= __('Reacties') ?></div>
 
 <? if ($logged_in) { ?>
 	<div id="fotoboek_reactie" class="beheer">
@@ -18,7 +18,7 @@ if ($logged_in) { ?>
 	<?= table_row(member_full_name()) ?>
 	<?= table_row(textarea_field('reactie', null, $errors)) ?>
 	
-	<tr><td class="submit"><?= input_submit('subm', _('Reactie plaatsen')) ?></td></tr>
+	<tr><td class="submit"><?= input_submit('subm', __('Reactie plaatsen')) ?></td></tr>
 	</table></form>
 	</div>
 	<script type="text/javascript">
@@ -43,7 +43,7 @@ if ($logged_in) { ?>
 $reacties = $model->get_reacties($iter);
 
 if (!$reacties || count($reacties) == 0) { ?>
-	<p><?= _('Er zijn nog geen reacties') ?></p>
+	<p><?= __('Er zijn nog geen reacties') ?></p>
 	<? return;
 }
 

@@ -12,7 +12,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Kleine LALA 2012/2013')));
+			$this->run_header(array('title' => __('Kleine LALA 2012/2013')));
 			run_view('lala::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

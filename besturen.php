@@ -13,7 +13,7 @@ class ControllerBesturen extends Controller
 
 	public function get_content($view, $iter = null, $params = null)
 	{
-		$this->run_header(array('title' => _('Besturen')));
+		$this->run_header(array('title' => __('Besturen')));
 		run_view('besturen::' . $view, $this->model, $iter, $params);
 		$this->run_footer();
 	}

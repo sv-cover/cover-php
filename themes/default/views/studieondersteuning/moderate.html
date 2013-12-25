@@ -1,13 +1,13 @@
 <?  // Deze pagina is niet getest, omdat het uploaden op dit moment niet werkt. -- PdB ?>
-<h1><?= _('Studieondersteuning') ?></h1>
+<h1><?= __('Studieondersteuning') ?></h1>
 
 
 <? if (count($iter) == 0) { ?>
-	<p><?= _('Er staan geen documenten in de wachtrij om goedgekeurd te worden.') ?></p>
+	<p><?= __('Er staan geen documenten in de wachtrij om goedgekeurd te worden.') ?></p>
 	<? return; ?>
 <? } ?>
 
-<p><?= _('Onderstaande documenten staan in de wachtrij om goedgekeurd te worden.') ?></p>
+<p><?= __('Onderstaande documenten staan in de wachtrij om goedgekeurd te worden.') ?></p>
 <form name="so_moderate" action="<?= get_request() ?>" method="post">
 <table class="bordered" id="so_moderate">
 <?= input_hidden('submso_moderate', 'yes') ?>
@@ -15,12 +15,12 @@
 <? $i = 0; ?>
 
 <tr class="header">
-	<td class="text_center"><?= image('accept.png', '', _('Accepteer document')) ?></td>
-	<td class="text_center"><?= image('cancel.png', '', _('Weiger document')) ?></td>
-	<td><?= _('Vak') ?></td>
-	<td><?= _('Titel') ?></td>
-	<td><?= _('Lid') ?></td>
-	<td><?= _('Document') ?></td>
+	<td class="text_center"><?= image('accept.png', '', __('Accepteer document')) ?></td>
+	<td class="text_center"><?= image('cancel.png', '', __('Weiger document')) ?></td>
+	<td><?= __('Vak') ?></td>
+	<td><?= __('Titel') ?></td>
+	<td><?= __('Lid') ?></td>
+	<td><?= __('Document') ?></td>
 	</tr>
 
 <? $member_model = get_model('DataModelMember');
@@ -48,9 +48,9 @@ foreach ($iter as $item) {
 <? 	$i++;
 } ?>
 <tr>
-	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', _('Alle documenten op accepteren zetten')) ?></a></td>
-	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', _('Alle documenten op weigeren zetten')) ?></a></td>
-	<td colspan="5" class="submit"><?= input_submit('subm', _('Toepassen')) ?></td></tr>
+	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', __('Alle documenten op accepteren zetten')) ?></a></td>
+	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', __('Alle documenten op weigeren zetten')) ?></a></td>
+	<td colspan="5" class="submit"><?= input_submit('subm', __('Toepassen')) ?></td></tr>
 
 </table></form>
 <script type="text/javascript">

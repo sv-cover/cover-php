@@ -6,7 +6,7 @@ unset($days[0]);
 $months = get_months();
 unset($months[0]);
  ?>
-<h1><?= _('Nieuw lid toevoegen') ?></h1>
+<h1><?= __('Nieuw lid toevoegen') ?></h1>
 <div class="messageBox">
 
 <? if ($message) {?>
@@ -14,29 +14,29 @@ unset($months[0]);
 <? } ?>
 
 <? if ($e) {?>
-	<div class="error_message"><?= _('Niet alle velden zijn goed ingevuld') ?></div>
+	<div class="error_message"><?= __('Niet alle velden zijn goed ingevuld') ?></div>
 <? } ?>
 
 <form method="post" action="nieuwlid.php">
 <?= input_hidden('submnieuwlid', 'yes') ?>
 <table>
 
-<?= 	$this->render_text_row(_('Lidnr'), 'id', $e,
+<?= 	$this->render_text_row(__('Lidnr'), 'id', $e,
 			true, 'maxlength', 10, 'class', 'small') .
-	$this->render_text_row(_('Voornaam'), 'voornaam', $e,
+	$this->render_text_row(__('Voornaam'), 'voornaam', $e,
 			true, 'maxlength', 25) .
-	$this->render_text_row(_('Tussenvoegsel'), 'tussenvoegsel',
+	$this->render_text_row(__('Tussenvoegsel'), 'tussenvoegsel',
 			$e, false, 'maxlength', 10,
 			'class', 'small') .
-	$this->render_text_row(_('Achternaam'), 'achternaam', $e,
+	$this->render_text_row(__('Achternaam'), 'achternaam', $e,
 			true, 'maxlength', 25)  ?>
 	
 	<tr>
 		<td colspan="2"><hr></td>
 	</tr>
 
-	<?= table_row(label(_('Geslacht'), 'geslacht', $e, true), select_field('geslacht', array('m' => 'Man', 'v' => 'Vrouw'), null))  ?>
-	<?= table_row(label(_('Geboortedatum'), 'geboortedatum',
+	<?= table_row(label(__('Geslacht'), 'geslacht', $e, true), select_field('geslacht', array('m' => 'Man', 'v' => 'Vrouw'), null))  ?>
+	<?= table_row(label(__('Geboortedatum'), 'geboortedatum',
 			$e, true), 
 		  select_field('day', $days, null) . ' ' .
 		  select_field('month', $months, null) . ' ' .
@@ -46,34 +46,34 @@ unset($months[0]);
 
 	<tr><td colspan="2"><hr></td></tr>
 
-	<?= $this->render_text_row(_('Adres'), 'adres', $e, 
+	<?= $this->render_text_row(__('Adres'), 'adres', $e, 
 			true, 'maxlength', 50) ?>
-	<?= $this->render_text_row(_('Postcode'), 'postcode', $e, 
+	<?= $this->render_text_row(__('Postcode'), 'postcode', $e, 
 			true, 'maxlength', 7, 
 			'class', 'small') ?>
-	<?= $this->render_text_row(_('Woonplaats'), 'woonplaats', $e,
+	<?= $this->render_text_row(__('Woonplaats'), 'woonplaats', $e,
 			true, 'maxlength', 25) ?>
 
 			<tr><td colspan="2"><hr></td></tr>
 
-	<?= $this->render_text_row(_('E-Mail adres'), 'email', $e,
+	<?= $this->render_text_row(__('E-Mail adres'), 'email', $e,
 			true, 'maxlength', 50) ?>
-	<?= $this->render_text_row(_('Telefoonnummer vast'),
+	<?= $this->render_text_row(__('Telefoonnummer vast'),
 	 		'telefoonnummer_vast', $e, false,
 			'maxlength', 11) ?>
-	<?= $this->render_text_row(_('Telefoonnummer mobiel'),
+	<?= $this->render_text_row(__('Telefoonnummer mobiel'),
 			'telefoonnummer_mobiel', $e, false,
 			'maxlength', 11) ?>
 
 	<tr><td colspan="2"><hr></td></tr>
 
-	<?= table_row(label(_('Beginjaar'), 'beginjaar', $e, true), 
+	<?= table_row(label(__('Beginjaar'), 'beginjaar', $e, true), 
 		input_text('beginjaar', 
 			array('beginjaar' => date('Y')), 
 			'maxlength', 4, 'class', 'small')) ?>
 
 	<tr><td class="submit" colspan="2">
-		<?= input_submit('subm', _('Nieuw lid toevoegen'))  ?>
+		<?= input_submit('subm', __('Nieuw lid toevoegen'))  ?>
 	</td></tr>
 </table>
 </form>

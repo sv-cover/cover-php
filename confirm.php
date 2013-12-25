@@ -36,8 +36,8 @@
 
         		$model->update_profiel($profieliter);
 
-			$subject = _('Nieuw wachtwoord');
-			$body =  sprintf(_("Het wachtwoord van het account op dit E-Mail adres van de Cover site is gewijzigd. Je kunt nu inloggen met de volgende gegevens:\n\nE-Mail:\t\t%s\nWachtwoord:\t%s\n\nMet vriendelijke groeten,\n\nDe WebCie"), $member->get('email'), $newpass);
+			$subject = __('Nieuw wachtwoord');
+			$body =  sprintf(__("Het wachtwoord van het account op dit E-Mail adres van de Cover site is gewijzigd. Je kunt nu inloggen met de volgende gegevens:\n\nE-Mail:\t\t%s\nWachtwoord:\t%s\n\nMet vriendelijke groeten,\n\nDe WebCie"), $member->get('email'), $newpass);
 			
 			mail($member->get('email'), $subject, $body, "From: webcie@ai.rug.nl\r\n");
 			$this->get_content('wachtwoord_success', array('email' => $member->get('email')));

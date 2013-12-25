@@ -1,4 +1,4 @@
-<h1><?= _('Lidmaatschapsformulier') ?></h1>
+<h1><?= __('Lidmaatschapsformulier') ?></h1>
 <div class="messageBox">
 <? $e = $errors;
 
@@ -27,48 +27,48 @@ overschrijving ongedaan te maken.</p>
 <div class="message"><?= $message ?></div>
 <? } 
 if ($e) {?>
-<div class="error_message"><?= _('Niet alle velden zijn goed ingevuld') ?></div>
+<div class="error_message"><?= __('Niet alle velden zijn goed ingevuld') ?></div>
 <? } ?>
 <form method="post" action="lidworden.php"><?= input_hidden('submlidworden', 'yes') ?>
 <table>
 
-	<?=$this->render_text_row(_('Voornaam'), 'voornaam', $e, true) ?>
-	<?=$this->render_text_row(_('Tussenvoegsel'), 'tussenvoegsel', $e, false, 'class', 'small') ?>
-	<?=$this->render_text_row(_('Achternaam'), 'achternaam', $e, true) ?>
+	<?=$this->render_text_row(__('Voornaam'), 'voornaam', $e, true) ?>
+	<?=$this->render_text_row(__('Tussenvoegsel'), 'tussenvoegsel', $e, false, 'class', 'small') ?>
+	<?=$this->render_text_row(__('Achternaam'), 'achternaam', $e, true) ?>
 
-	<?= table_row(label(_('Geslacht'), 'geslacht', $e, true), select_field('geslacht', array('m' => 'Man', 'v' => 'Vrouw'), null))  ?>
+	<?= table_row(label(__('Geslacht'), 'geslacht', $e, true), select_field('geslacht', array('m' => 'Man', 'v' => 'Vrouw'), null))  ?>
 
 
-	<?=$this->render_text_row(_('Adres'), 'adres', $e, true) ?>
-	<?=$this->render_text_row(_('Postcode'), 'postcode', $e, true, 'class', 'small') ?>
-	<?=$this->render_text_row(_('Woonplaats'), 'woonplaats', $e, true) ?>
-	<?=$this->render_text_row(_('Telefoonnummer'), 'telefoonnummer', $e, false) ?>
-	<?=$this->render_text_row(_('E-Mail adres'), 'email', $e, true) ?>
+	<?=$this->render_text_row(__('Adres'), 'adres', $e, true) ?>
+	<?=$this->render_text_row(__('Postcode'), 'postcode', $e, true, 'class', 'small') ?>
+	<?=$this->render_text_row(__('Woonplaats'), 'woonplaats', $e, true) ?>
+	<?=$this->render_text_row(__('Telefoonnummer'), 'telefoonnummer', $e, false) ?>
+	<?=$this->render_text_row(__('E-Mail adres'), 'email', $e, true) ?>
 
-	<?= table_row(label(_('Geboortedatum'), 'geboortedatum', $e, true), 
+	<?= table_row(label(__('Geboortedatum'), 'geboortedatum', $e, true), 
 		  select_field('day', $days, null) . ' ' .
 		  select_field('month', $months, null) . ' ' .
 		  input_text('year', null, 'maxlength', 4,
 			     'class', 'small')) ?>
 
-	<?=$this->render_text_row(_('Studentnummer'), 'studentnummer', $e, true) ?>
-	<?=$this->render_text_row(_('Studierichting'), 'studierichting', $e, true) ?>
+	<?=$this->render_text_row(__('Studentnummer'), 'studentnummer', $e, true) ?>
+	<?=$this->render_text_row(__('Studierichting'), 'studierichting', $e, true) ?>
 
-	<?=$this->render_text_row(_('Bank- of <br>girorekeningnummer'), 'rekening', $e, true) ?>
+	<?=$this->render_text_row(__('Bank- of <br>girorekeningnummer'), 'rekening', $e, true) ?>
 
-	<?= table_row(label('Machtiging', 'machtiging', $e, true), input_checkbox('machtiging', null) . ' ' . _('Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch van mijn rekening af te schrijven (verplicht)')) ?>
+	<?= table_row(label('Machtiging', 'machtiging', $e, true), input_checkbox('machtiging', null) . ' ' . __('Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch van mijn rekening af te schrijven (verplicht)')) ?>
 
-	<?=$this->render_text_row(_('Wat is de kleur van gras? (ik ben geen bot)'), 'spam', $e, true) ?>
+	<?=$this->render_text_row(__('Wat is de kleur van gras? (ik ben geen bot)'), 'spam', $e, true) ?>
 
 	<tr>
 		<td class="submit" colspan="2"><br>
 		<br>
-		<?= input_submit('subm', _('Aanvraag versturen')) ?></td>
+		<?= input_submit('subm', __('Aanvraag versturen')) ?></td>
 	</tr>
 </table>
 </form>
 
-<h2><?= _('Opmerkingen') ?></h2>
+<h2><?= __('Opmerkingen') ?></h2>
 <ul>
 	<li>Contributie wordt zolang je lid bent van Cover jaarlijks van
 	je bank- of girorekening afgeschreven.</li>

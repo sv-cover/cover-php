@@ -27,7 +27,7 @@
 			if (class_exists($name)) {
 				$models[$name] = new $name(get_db());
 			} else {
-				report_error('Data', N_("Kan het model %s niet vinden"), $name);
+				report_error('Data', N__("Kan het model %s niet vinden"), $name);
 				$models[$name] = false;
 			}
 		}

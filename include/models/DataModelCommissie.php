@@ -97,7 +97,7 @@
 			$value = $this->get_login($id);
 					
 			if (!$value)
-				$value = _('onbekend');
+				$value = __('onbekend');
 			
 			return $value . '@ai.rug.nl';
 		}

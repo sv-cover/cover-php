@@ -33,10 +33,10 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			$titles[] = '';
 		} else {
 			$image = $this->get_book_thumbnail($model, $children[$n]);
-			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . _('Fotoboek') . '" title="' . _('Ga naar fotoboek') . '" class="book_thumb"></a>';
+			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a>';
 		
 			if ($admin)
-				$contents = '<div class="admin"><a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', _('Bewerken'), _('Fotoboek bewerken')) . '</a> <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', _('Verwijderen'), _('Fotoboek verwijderen')) . '</a></div>' . $contents;
+				$contents = '<div class="admin"><a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a> <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a></div>' . $contents;
 
 			$images[] = $contents;
 		
@@ -68,6 +68,6 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 
 <script type="text/javascript">
 	function confirm_delete() {
-		return confirm("<?= str_replace('"', '\"', _('Weet je zeker dat je dit fotoboek en alle fotoboeken en foto\'s erin wilt verwijderen?')) ?>");
+		return confirm("<?= str_replace('"', '\"', __('Weet je zeker dat je dit fotoboek en alle fotoboeken en foto\'s erin wilt verwijderen?')) ?>");
 	}
 </script>

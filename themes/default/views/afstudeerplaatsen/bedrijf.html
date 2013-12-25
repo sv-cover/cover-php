@@ -1,4 +1,4 @@
-<h1><?= _('Afstudeerplaatsen') ?></h1>
+<h1><?= __('Afstudeerplaatsen') ?></h1>
 <div class="messageBox">
 <? $admin = member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_PRCIE);
 
@@ -17,39 +17,39 @@ if (strpos($email, '@') === false)
 
 <table class="default_noborder">
 	<tr>
-		<td><?= _('Naam') ?>:</td>
+		<td><?= __('Naam') ?>:</td>
 		<td><?= $iter->get('naam') ?></td>
 	</tr>
 	<tr>
-		<td><?= _('Adres') ?>:</td>
+		<td><?= __('Adres') ?>:</td>
 		<td><?= $iter->get('adres') ?></td>
 	</tr>
 	<tr>
-		<td><?= _('Postcode') ?>:</td>
+		<td><?= __('Postcode') ?>:</td>
 		<td><?= $iter->get('postcode') ?></td>
 	</tr>
 	<tr>
-		<td><?= _('Plaats') ?>:</td>
+		<td><?= __('Plaats') ?>:</td>
 		<td><?= $iter->get('plaats') ?></td>
 	</tr>
 	<tr>
-		<td><?= _('Telefoon') ?>:</td>
+		<td><?= __('Telefoon') ?>:</td>
 		<td><?= $iter->get('telefoonnummer') ?></td>
 	</tr>
 	<tr>
-		<td><?= _('Website') ?>:</td>
+		<td><?= __('Website') ?>:</td>
 		<td><?= $website ? ('<a href="' . $website . '">' . $website . '</a>')  : $website ?></td>
 	</tr>
 	<tr>
-		<td><?= _('E-Mail') ?>:</td>
+		<td><?= __('E-Mail') ?>:</td>
 		<td><?= $email ? ('<a href="mailto:' . $email . '">' . $email . '</a>')  : $email ?></td>
 	</tr>
 	<tr>
-		<td><?= _('Contactpersoon') ?>:</td>
+		<td><?= __('Contactpersoon') ?>:</td>
 		<td><?= $iter->get('contactpersoon') ?></td>
 	</tr>
 	<tr>
-		<td><?= _('Beschrijving') ?>:</td>
+		<td><?= __('Beschrijving') ?>:</td>
 		<td><?= markup_parse($iter->get('beschrijving')) ?></td>
 	</tr>
 </table>
@@ -60,13 +60,13 @@ if (count($stages) == 0)
 	return;
  ?>
 </div>
-<div class="bar_sep"><h1><?= _('Concrete opdrachten') ?></h1></div>
+<div class="bar_sep"><h1><?= __('Concrete opdrachten') ?></h1></div>
 <div class="messageBox">
 <? foreach ($stages as $stage) {
 	if ($admin) { ?>
 		<div class="right">
-			<a href="afstudeerplaatsen.php?editplaats=<?= $stage->get_id() ?>"><?= image('edit_small.png', _('Bewerken'), _('Bewerk bedrijf')) ?></a>
-			<a href="afstudeerplaatsen.php?delplaats=<?= $stage->get_id() ?>" onClick="return verwijderen();"><?= image('delete_small.png', _('Verwijderen'), _('Verwijder bedrijf')) ?></a>
+			<a href="afstudeerplaatsen.php?editplaats=<?= $stage->get_id() ?>"><?= image('edit_small.png', __('Bewerken'), __('Bewerk bedrijf')) ?></a>
+			<a href="afstudeerplaatsen.php?delplaats=<?= $stage->get_id() ?>" onClick="return verwijderen();"><?= image('delete_small.png', __('Verwijderen'), __('Verwijder bedrijf')) ?></a>
 		</div>
 	<h3><?= $stage->get('opdracht') ?></h3>
 	<p><?= markup_parse($stage->get('beschrijving')) ?></p>
@@ -76,7 +76,7 @@ if (count($stages) == 0)
 <? if ($admin) { ?>
 	<script type="text/javascript">
 		function verwijderen() {
-			return confirm("<?= _('Weet je zeker dat je deze afstudeerplaats wilt verwijderen?') ?>");
+			return confirm("<?= __('Weet je zeker dat je deze afstudeerplaats wilt verwijderen?') ?>");
 		}
 	</script>
 <? } ?>

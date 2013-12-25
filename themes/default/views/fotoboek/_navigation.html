@@ -13,15 +13,15 @@ $parent = $model->get_parent($iter);
 
 <?
 if ($prev) { ?>
-	<a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= image('previous.png', _('Vorige'), _('Ga naar vorig boek')) ?></a> <a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= $prev->get('titel') ?></a>
+	<a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= image('previous.png', __('Vorige'), __('Ga naar vorig boek')) ?></a> <a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= $prev->get('titel') ?></a>
 <? } ?>
 
 </td><td class="text_center">
-<a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= image('up.png', _('Bovenliggende'), _('Ga naar bovenliggend boek')) ?></a> <a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= ($parent ? $parent->get('titel') : _('Fotoboeken')) ?></a>
+<a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= image('up.png', __('Bovenliggende'), __('Ga naar bovenliggend boek')) ?></a> <a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= ($parent ? $parent->get('titel') : __('Fotoboeken')) ?></a>
 </td><td class="text_right">
 
 <? if ($next) { ?>
-	<a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= image('next.png', _('Volgende'), _('Ga naar volgend boek')) ?></a> <a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= $next->get('titel') ?></a>
+	<a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= image('next.png', __('Volgende'), __('Ga naar volgend boek')) ?></a> <a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= $next->get('titel') ?></a>
 <? } ?>
 
 </td></tr></table></div>

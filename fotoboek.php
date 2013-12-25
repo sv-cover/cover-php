@@ -13,7 +13,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Fotoboek')));
+			$this->run_header(array('title' => __('Fotoboek')));
 			run_view('fotoboek::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
@@ -220,19 +220,19 @@
 			$photos = '/home/student/fotocie/www/fotos/' . $path;
 
 			if (!file_exists($photos)) {
-				echo "0\r" . _('Het opgegeven pad bestaat niet');
+				echo "0\r" . __('Het opgegeven pad bestaat niet');
 				exit();
 			}
 			
 			if (!preg_match('/^fotos(.*)$/', $path, $matches)) {
-				echo "0\r" . _('Het opgegeven pad is niet in het juiste formaat');
+				echo "0\r" . __('Het opgegeven pad is niet in het juiste formaat');
 				exit();
 			}
 			
 			$thumbnails = '/home/student/fotocie/www/thumbnails/thumbnails' . $matches[1];
 			
 			if (!file_exists($thumbnails)) {
-				echo "0\r" . _('De thumbnails voor het opgegeven pad kunnen niet worden gevonden');
+				echo "0\r" . __('De thumbnails voor het opgegeven pad kunnen niet worden gevonden');
 				exit();
 			}
 			
@@ -245,7 +245,7 @@
 						continue;
 					
 					if (!file_exists($thumbnails . '/' . $file)) {
-						echo "0\r" . sprintf(_('De thumbnail voor %s bestaat niet'), $file);
+						echo "0\r" . sprintf(__('De thumbnail voor %s bestaat niet'), $file);
 						closedir($dh);
 						exit();
 					}
@@ -256,7 +256,7 @@
 
 				closedir($dh);
 			} else {
-				echo "0\r" . _('De directory met foto\'s kon niet worden geopend om te lezen');
+				echo "0\r" . __('De directory met foto\'s kon niet worden geopend om te lezen');
 				exit();
 			}
 			

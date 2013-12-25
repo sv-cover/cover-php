@@ -29,7 +29,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Profiel')));
+			$this->run_header(array('title' => __('Profiel')));
 			run_view('profiel::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
@@ -83,7 +83,7 @@
 			$data = check_values($check, $errors);
 		
 			if (count($errors) > 0) {
-				$error = _('De volgende velden zijn onjuist ingevuld: ') . implode(', ', array_map('field_for_display', $errors));
+				$error = __('De volgende velden zijn onjuist ingevuld: ') . implode(', ', array_map('field_for_display', $errors));
 				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
 				return;
 			}
@@ -151,7 +151,7 @@
 			$data = check_values($check, $errors);
 		
 			if (count($errors) > 0) {
-				$error = _('De volgende velden zijn te lang: ') . implode(', ', array_map('field_for_display', $errors));
+				$error = __('De volgende velden zijn te lang: ') . implode(', ', array_map('field_for_display', $errors));
 				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
 				return;
 			}
@@ -181,15 +181,15 @@
 
 			if (!get_post('wachtwoord_oud') || md5(get_post('wachtwoord_oud')) != $iter->get('wachtwoord')) {
 				$errors[] = 'wachtwoord_oud';
-				$message[] = _('Het huidige wachtwoord is onjuist.');
+				$message[] = __('Het huidige wachtwoord is onjuist.');
 			}
 			
 			if (!get_post('wachtwoord_nieuw')) {
 				$errors[] = 'wachtwoord_nieuw';
-				$message[] = _('Het nieuwe wachtwoord is niet ingevuld.');
+				$message[] = __('Het nieuwe wachtwoord is niet ingevuld.');
 			} elseif (!get_post('wachtwoord_opnieuw') || get_post('wachtwoord_nieuw') != get_post('wachtwoord_opnieuw')) {
 				$errors[] = 'wachtwoord_opnieuw';
-				$message[] = _('Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld.');
+				$message[] = __('Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld.');
 			}
 			
 			if (count($errors) > 0) {
@@ -227,13 +227,13 @@
 
 			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
 				$errors[] = 'type';
-				$message[] = _('Jij mag deze gegevens niet aanpassen.');
+				$message[] = __('Jij mag deze gegevens niet aanpassen.');
 			} elseif (!get_post('type')) {
 				$errors[] = 'type';
-				$message[] = _('De zichtbaarheid van het profiel is niet ingevuld.');
+				$message[] = __('De zichtbaarheid van het profiel is niet ingevuld.');
 			} elseif (get_post('type') < 1 || get_post('type') > 4) {
 				$errors[] = 'type';
-				$message[] = _('Er is een ongeldige waarde voor zichtbaarheid ingevuld.');
+				$message[] = __('Er is een ongeldige waarde voor zichtbaarheid ingevuld.');
 			}
 
 			if (count($errors) > 0) {

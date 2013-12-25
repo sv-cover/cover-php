@@ -10,7 +10,7 @@
 		}
 		
 		function get_page_content($id) {
-			$this->run_header(array('title' => _('Show')));		
+			$this->run_header(array('title' => __('Show')));		
 
 			$editable = new ControllerEditable($id);
 			$editable->run();
@@ -19,7 +19,7 @@
 		}
 		
 		function get_content($view, $params = null) {
-			$this->run_header(array('title' => _('Show')));
+			$this->run_header(array('title' => __('Show')));
 			run_view('show::' . $view, $this->model, null, $params);
 			$this->run_footer();
 		}
@@ -67,7 +67,7 @@
 				
 			$iter = new DataIter($this->model, -1, $data);
 			$id = $this->model->insert($iter, true);
-			$_SESSION['alert'] = sprintf(_('Er is een nieuwe pagina aangemaakt met het id %d.'), $id);
+			$_SESSION['alert'] = sprintf(__('Er is een nieuwe pagina aangemaakt met het id %d.'), $id);
 
 			header('Location: show.php?id=' . $id);
 			exit();

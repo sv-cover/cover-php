@@ -1,15 +1,15 @@
-<h1><?= _('Agenda') ?></h1>
+<h1><?= __('Agenda') ?></h1>
 <div class="messageBox">	
 <? if (!logged_in()) { ?>
-	<p class="italic"><?= _('Log in om eventuele afgeschermde agendapunten te bekijken.') ?></p>
+	<p class="italic"><?= __('Log in om eventuele afgeschermde agendapunten te bekijken.') ?></p>
 <? } else { ?>
 	<div class="bar_right">
 	
 	<? if (($aantal = $model->has_moderate()) && member_in_commissie(COMMISSIE_BESTUUR)) {
 		if ($aantal == 1)
-			$s = _('Er staat nog 1 agendapunt in de wachtrij');
+			$s = __('Er staat nog 1 agendapunt in de wachtrij');
 		else
-			$s = sprintf(_('Er staan nog %d agendapunten in de wachtrij'), $aantal);
+			$s = sprintf(__('Er staan nog %d agendapunten in de wachtrij'), $aantal);
 
 		?><div class="left"><a href="agenda.php?agenda_moderate"><?= $s ?></a></div>
 	<? }
@@ -18,7 +18,7 @@
 	$member_model = get_model('DataModelMember');
 
 	if (count($member_model->get_commissies($member['id'])) > 0) { ?>
-		<a href="agenda.php?agenda_add"><?= image('add.png', _('nieuw'), _('Nieuw agendapunt toevoegen')) ?></a>
+		<a href="agenda.php?agenda_add"><?= image('add.png', __('nieuw'), __('Nieuw agendapunt toevoegen')) ?></a>
 	<? } ?>
 	</div>
 <? } ?>
@@ -32,7 +32,7 @@ $months = get_months();
 $days = get_days();
 
 if (!count($punten)) { ?>
-	<p> <?= _('Er staan op dit moment geen activiteiten op de agenda.') ?></p>
+	<p> <?= __('Er staan op dit moment geen activiteiten op de agenda.') ?></p>
 <? }
 foreach ($punten as $punt) {
 	if ($punt->get('private') && !logged_in())
@@ -53,11 +53,11 @@ foreach ($punten as $punt) {
 		<?= agenda_period_for_display($punt) ?><br/>
 
 	<? if ($punt->get('locatie')) { ?>
-		<?= _('Locatie') ?>: <?= markup_format_text($punt->get('locatie')) ?><br/>
+		<?= __('Locatie') ?>: <?= markup_format_text($punt->get('locatie')) ?><br/>
 	<? }
 
 	if (member_in_commissie($punt->get('commissie')) || member_in_commissie(COMMISSIE_BESTUUR)){ ?>
-		<a href="agenda.php?agenda_del&agenda_id= <?= $punt->get_id() ?>" onClick="return confirm('<?= _('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= _('Verwijder') ?></a> - <a href="agenda.php?agenda_edit&agenda_id=<?= $punt->get_id() ?>"><?= _('Wijzig') ?></a><br/>
+		<a href="agenda.php?agenda_del&agenda_id= <?= $punt->get_id() ?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a> - <a href="agenda.php?agenda_edit&agenda_id=<?= $punt->get_id() ?>"><?= __('Wijzig') ?></a><br/>
 	<? } ?>
 		</td>
 	</tr>

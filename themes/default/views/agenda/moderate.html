@@ -1,22 +1,22 @@
-<h1><?= _('Agenda') ?></h1>
+<h1><?= __('Agenda') ?></h1>
 <div class="messageBox">
 <? if (count($iter) == 0) { ?>
-	<p><?= _('Er staan geen agendapunten in de wachtrij om goedgekeurd te worden.') ?></p></div>
+	<p><?= __('Er staan geen agendapunten in de wachtrij om goedgekeurd te worden.') ?></p></div>
 	<? return;
 } ?>
 
-<p><?= _('Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden.') ?></p>
+<p><?= __('Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden.') ?></p>
 <form name="agenda_moderate" action="<?= get_request() ?>" method="post">
 <table class="moderate" id="table_moderate">
 <?= input_hidden('submagenda_moderate', 'yes');?>
 
 <tr class="header">
-<td class="text_center"><?= image('accept.png', '', _('Accepteer agendapunt')) ?></td>
-<td class="text_center"><?= image('cancel.png', '', _('Weiger agendapunt')) ?></td>
-<td><?= _('Kop') ?></td>
-<td><?= _('Datum') ?></td>
-<td><?= _('Commissie') ?></td>
-<td><?= _('Prive') ?></td>
+<td class="text_center"><?= image('accept.png', '', __('Accepteer agendapunt')) ?></td>
+<td class="text_center"><?= image('cancel.png', '', __('Weiger agendapunt')) ?></td>
+<td><?= __('Kop') ?></td>
+<td><?= __('Datum') ?></td>
+<td><?= __('Commissie') ?></td>
+<td><?= __('Prive') ?></td>
 </tr>
 <? 
 
@@ -46,9 +46,9 @@ foreach ($iter as $item) {
 }
 ?>
 <tr>
-	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', _('Alle agendapunten op accepteren zetten')) ?></a></td>
-	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', _('Alle agendapunten op weigeren zetten')) ?></a></td>
-	<td colspan="5" class="submit"><?= input_submit('submmoderate', _('Toepassen')) ?></td></tr>
+	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', __('Alle agendapunten op accepteren zetten')) ?></a></td>
+	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', __('Alle agendapunten op weigeren zetten')) ?></a></td>
+	<td colspan="5" class="submit"><?= input_submit('submmoderate', __('Toepassen')) ?></td></tr>
 </table></form>
 </div>
 <script type="text/javascript">

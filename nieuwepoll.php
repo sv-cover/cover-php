@@ -14,7 +14,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Poll toevoegen')));
+			$this->run_header(array('title' => __('Poll toevoegen')));
 			run_view('poll::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

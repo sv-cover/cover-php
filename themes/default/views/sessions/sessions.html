@@ -1,14 +1,14 @@
-<h2><?= _('Sessies') ?></h2>
+<h2><?= __('Sessies') ?></h2>
 <div class="messageBox">
 	<form method="post" action="sessions.php">
 		<table class="sessions-table">
 			<thead>
 				<tr>
 					<th>&nbsp;</th>
-					<th><?= _('IP-adres') ?></th>
-					<th><?= _('Applicatie') ?></th>
-					<th><?= _('Ingelogd') ?></th>
-					<th><?= _('Laatst actief') ?></th>
+					<th><?= __('IP-adres') ?></th>
+					<th><?= __('Applicatie') ?></th>
+					<th><?= __('Ingelogd') ?></th>
+					<th><?= __('Laatst actief') ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -23,6 +23,6 @@
 				<?php endforeach ?>
 			</tbody>
 		</table>
-		<input type="submit" class="button" name="destroy" value="<?=_('Beëindig geselecteerde sessies') ?>">
+		<input type="submit" class="button" name="destroy" value="<?=__('Beëindig geselecteerde sessies') ?>">
 	</form>
 </div>

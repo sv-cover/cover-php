@@ -53,14 +53,14 @@
 			
 			$contents .= "</ul>\n";
 		} else {
-			$contents .= '<p><span class="smaller">' . _('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
+			$contents .= '<p><span class="smaller">' . __('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
 		}
 		
-		$contents .= '<p><span class="smaller"><a href="agenda.php"><b>' . _('Volledige agenda') . '</b></a></span></p>';
+		$contents .= '<p><span class="smaller"><a href="agenda.php"><b>' . __('Volledige agenda') . '</b></a></span></p>';
 		
 		$contents .= create_jarigen();
 		
-		return create_menu($color, 'agenda', _('Agenda'), $contents);
+		return create_menu($color, 'agenda', __('Agenda'), $contents);
 	}
 	
 	function create_agenda_lustrum($color) {
@@ -77,38 +77,38 @@
 			
 			$contents .= "</ul>\n";
 		} else {
-			$contents .= '<p><span class="smaller">' . _('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
+			$contents .= '<p><span class="smaller">' . __('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
 		}
 		$contents = "<img src=\"images/lustrumlogo2.png\" alt=\"lustrum\">".$contents;
-		return create_menu($color, 'lustrum', _('Lust, Rum & Rock \'n Roll'), $contents);
+		return create_menu($color, 'lustrum', __('Lust, Rum & Rock \'n Roll'), $contents);
 	}
 	
 	function create_links_menu($color) {
 		$contents = '
 		<ul class="links">
-			<li><a href="index.php">' . _('Home') . '</a></li>';
+			<li><a href="index.php">' . __('Home') . '</a></li>';
 		 
 		$admin = array();
 		
 		if (member_in_commissie(COMMISSIE_BESTUUR)) {
-			$admin[] = '<a href="agenda.php?agenda_moderate">' . _('Agenda') . '</a>';
-			$admin[] = '<a href="links.php?links_moderate">' . _('Links') . '</a>';
-			$admin[] = '<a href="studieondersteuning.php?so_moderate">' . _('Studieondersteuning') . '</a>';
-			$admin[] = '<a href="actieveleden.php">' . _('Commissies') . '</a>';
-			$admin[] = '<a href="forum.php?admin=forums">' . _('Forum') . '</a>';
-			$admin[] = '<a href="nieuwlid.php">' . _('Leden toevoegen') . '</a>';
-			$admin[] = '<a href="show.php?show_new">' . _('Pagina maken') . '</a>';
-			$admin[] = '<a href="banners.php">' . _('Advertenties') . '</a>';
+			$admin[] = '<a href="agenda.php?agenda_moderate">' . __('Agenda') . '</a>';
+			$admin[] = '<a href="links.php?links_moderate">' . __('Links') . '</a>';
+			$admin[] = '<a href="studieondersteuning.php?so_moderate">' . __('Studieondersteuning') . '</a>';
+			$admin[] = '<a href="actieveleden.php">' . __('Commissies') . '</a>';
+			$admin[] = '<a href="forum.php?admin=forums">' . __('Forum') . '</a>';
+			$admin[] = '<a href="nieuwlid.php">' . __('Leden toevoegen') . '</a>';
+			$admin[] = '<a href="show.php?show_new">' . __('Pagina maken') . '</a>';
+			$admin[] = '<a href="banners.php">' . __('Advertenties') . '</a>';
 		}
 		if (member_in_commissie(COMMISSIE_BOEKCIE)) {
-			$admin[] = '<a href="boeken.php?bestellingen">' . _('Bestelde boeken') . '</a>';
+			$admin[] = '<a href="boeken.php?bestellingen">' . __('Bestelde boeken') . '</a>';
 		}
 		if (member_in_commissie(COMMISSIE_EASY)) {
-			$admin[] = '<a href="taken.php">' . _('Taken') . '</a>';
+			$admin[] = '<a href="taken.php">' . __('Taken') . '</a>';
 		}
 		
 		if (count($admin) > 0) {
-			$contents .= '<li class="expander"><a href="javascript:do_expander(\'menu_admin\', true);"><img id="expander_menu_admin" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_admin\', true);">' . _('Beheer') . '</a>
+			$contents .= '<li class="expander"><a href="javascript:do_expander(\'menu_admin\', true);"><img id="expander_menu_admin" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_admin\', true);">' . __('Beheer') . '</a>
 			<div id="menu_admin" class="expander_menu">
 			<ul class="expander">';
 			
@@ -123,15 +123,15 @@
 		$contents .= '	<li class="expander"><a href="javascript:do_expander(\'menu_cover\', true);"><img id="expander_menu_cover" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_cover\', true);">Cover</a>
 			<div id="menu_cover" class="expander_menu">
 			<ul class="expander">
-				<li><a href="show.php?id=18">' . _('Lid/donateur worden') . '</a></li>
-				<li><a href="show.php?id=16">' . _('Actief worden') . '</a></li>
-				<li><a href="show.php?id=25">' . _('ALV') . '</a></li>
-				<li><a href="show.php?id=0">' . _('Bestuur') . '</a></li>
-				<li><a href="commissies.php">' . _('Commissies') . '</a></li>
-				<li><a href="boeken.php">' . _('Boeken bestellen') . '</a></li>
-				<li><a href="studieondersteuning.php">' . _('Studieondersteuning') . '</a></li>
-				<li><a href="show.php?id=28">' . _('Zusterverenigingen') . '</a></li>
-				<li><a href="show.php?id=30">' . _('Documenten') . '</a></li>
+				<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
+				<li><a href="show.php?id=16">' . __('Actief worden') . '</a></li>
+				<li><a href="show.php?id=25">' . __('ALV') . '</a></li>
+				<li><a href="show.php?id=0">' . __('Bestuur') . '</a></li>
+				<li><a href="commissies.php">' . __('Commissies') . '</a></li>
+				<li><a href="boeken.php">' . __('Boeken bestellen') . '</a></li>
+				<li><a href="studieondersteuning.php">' . __('Studieondersteuning') . '</a></li>
+				<li><a href="show.php?id=28">' . __('Zusterverenigingen') . '</a></li>
+				<li><a href="show.php?id=30">' . __('Documenten') . '</a></li>
 			</ul>
 			</div>
 			</li>
@@ -143,30 +143,30 @@
 			</ul>
 			</div>
 			</li>
-			<li><a href="almanak.php">' . _('Almanak') . '</a></li>
-			<li><a href="forum.php">' . _('Forum') . '</a></li>
-			<li><a href="fotoboek.php">' . _('Foto\'s') . '</a></li>
-			<li><a href="gastenboek.php">' . _('Gastenboek') . '</a></li>
-			<li><a href="weblog.php">' . _('Weblog') . '</a></li>
+			<li><a href="almanak.php">' . __('Almanak') . '</a></li>
+			<li><a href="forum.php">' . __('Forum') . '</a></li>
+			<li><a href="fotoboek.php">' . __('Foto\'s') . '</a></li>
+			<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
+			<li><a href="weblog.php">' . __('Weblog') . '</a></li>
 			<li class="expander"><a href="javascript:do_expander(\'menu_ki\', true);"><img id="expander_menu_ki" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_ki\', true);">K.I.</a>
 			<div id="menu_ki" class="expander_menu">
 			<ul class="expander">
-				<li><a href="show.php?id=23">' . _('De studie') . '</a></li>
-				<li><a href="show.php?id=24">' . _('Alumni') . '</a></li>
-				<li><a href="links.php">' . _('Links') . '</a></li>
-				<li><a href="afstudeerplaatsen.php">' . _('Afstudeerplaatsen') . '</a></li>
+				<li><a href="show.php?id=23">' . __('De studie') . '</a></li>
+				<li><a href="show.php?id=24">' . __('Alumni') . '</a></li>
+				<li><a href="links.php">' . __('Links') . '</a></li>
+				<li><a href="afstudeerplaatsen.php">' . __('Afstudeerplaatsen') . '</a></li>
 			</ul>
 			</div>
 			</li>
 			<li class="expander"><a href="javascript:do_expander(\'menu_inf\', true);"><img id="expander_menu_inf" class="expander" src="' . get_theme_data('images/collapsed.png') . '" alt="collapsed"/></a> <a href="javascript:do_expander(\'menu_inf\', true);">Informatica</a>
 			<div id="menu_inf" class="expander_menu">
 			<ul class="expander">
-				<li><a href="show.php?id=41">' . _('De studie') . '</a></li>
-				<li><a href="afstudeerplaatsen.php">' . _('Afstudeerplaatsen') . '</a></li>
+				<li><a href="show.php?id=41">' . __('De studie') . '</a></li>
+				<li><a href="afstudeerplaatsen.php">' . __('Afstudeerplaatsen') . '</a></li>
 			</ul>
 			</div>
 			</li>
-			<li><a href="show.php?id=17">' . _('Contact') . '</a></li>
+			<li><a href="show.php?id=17">' . __('Contact') . '</a></li>
 		</ul>';
 
 		$names = array('cover', 'ki', 'inf');
@@ -185,50 +185,50 @@
 			}
 		}
 
-		return create_menu($color, 'links', _('Menu'), $contents);
+		return create_menu($color, 'links', __('Menu'), $contents);
 	}
 	
 	function createTopMenu() {
 		$content = '
 			<div class="headNav">
 				<ul>
-					<li><a href="index.php">' . _('Home') . '</a></li>';
+					<li><a href="index.php">' . __('Home') . '</a></li>';
 		if (member_in_commissie(COMMISSIE_BESTUUR) ||
 			member_in_commissie(COMMISSIE_BOEKCIE) ||
 			member_in_commissie(COMMISSIE_EASY))
 			$content .= '
-					<li class = "dropDown"><a drop="beheer" href="" onclick="return false;">'._('Beheer') .'</a></li>';
+					<li class = "dropDown"><a drop="beheer" href="" onclick="return false;">'.__('Beheer') .'</a></li>';
 		
 		
 				//fill up the admin menu
 		$admin = array();
 		if (member_in_commissie(COMMISSIE_BESTUUR)) {
-			$admin[] = '<a href="agenda.php?agenda_moderate">' . _('Agenda') . '</a>';
-			$admin[] = '<a href="links.php?links_moderate">' . _('Links') . '</a>';
-			$admin[] = '<a href="studieondersteuning.php?so_moderate">' . _('Studieondersteuning') . '</a>';
-			$admin[] = '<a href="actieveleden.php">' . _('Commissies') . '</a>';
-			$admin[] = '<a href="forum.php?admin=forums">' . _('Forum') . '</a>';
-			$admin[] = '<a href="nieuwlid.php">' . _('Leden toevoegen') . '</a>';
-			$admin[] = '<a href="show.php?show_new">' . _('Pagina maken') . '</a>';
-			$admin[] = '<a href="banners.php">'. _('Advertenties') .'</a>';
+			$admin[] = '<a href="agenda.php?agenda_moderate">' . __('Agenda') . '</a>';
+			$admin[] = '<a href="links.php?links_moderate">' . __('Links') . '</a>';
+			$admin[] = '<a href="studieondersteuning.php?so_moderate">' . __('Studieondersteuning') . '</a>';
+			$admin[] = '<a href="actieveleden.php">' . __('Commissies') . '</a>';
+			$admin[] = '<a href="forum.php?admin=forums">' . __('Forum') . '</a>';
+			$admin[] = '<a href="nieuwlid.php">' . __('Leden toevoegen') . '</a>';
+			$admin[] = '<a href="show.php?show_new">' . __('Pagina maken') . '</a>';
+			$admin[] = '<a href="banners.php">'. __('Advertenties') .'</a>';
 		}
 		
 		if (member_in_commissie(COMMISSIE_BOEKCIE)) {
-			$admin[] = '<a href="boeken.php?bestellingen">' . _('Bestelde boeken') . '</a>';
+			$admin[] = '<a href="boeken.php?bestellingen">' . __('Bestelde boeken') . '</a>';
 		}
 		if (member_in_commissie(COMMISSIE_EASY)) {
-			$admin[] = '<a href="taken.php">' . _('Taken') . '</a>';
-			$admin[] = '<a href="_priv/docs/api/html/">' . _('Documentatie') . '</a>';
+			$admin[] = '<a href="taken.php">' . __('Taken') . '</a>';
+			$admin[] = '<a href="_priv/docs/api/html/">' . __('Documentatie') . '</a>';
 		}
 		
 		$content .= '
 					<li class="dropDown"><a drop="vereniging" href="" onclick="return false;">Vereniging</a></li>
 					<li class="dropDown"><a drop="leden" href="" onclick="return false;">Leden</a></li>
 					<li class="dropDown"><a drop="bedrijven" href="" onclick="return false;">Bedrijven</a></li>
-					<li><a href="forum.php">' . _('Forum') . '</a></li>
-					<li><a href="fotoboek.php">' . _('Foto\'s') . '</a></li>
+					<li><a href="forum.php">' . __('Forum') . '</a></li>
+					<li><a href="fotoboek.php">' . __('Foto\'s') . '</a></li>
 					<li class="dropDown"><a drop="studie" href="" onclick="return false;">Studie</a></li>
-					<li><a href="show.php?id=17">' . _('Contact') . '</a></li>
+					<li><a href="show.php?id=17">' . __('Contact') . '</a></li>
 				</ul><script>
 $("#verenigingClick").click(function(){
 	$(".subNav ul:visible").each( function() {
@@ -258,33 +258,33 @@ $("#verenigingClick").click(function(){
 		}
 		$content .= '
 				<ul id="vereniging" class="expander">
-					<li><a href="show.php?id=0">' . _('Bestuur') . '</a></li>
-					<li><a href="commissies.php">' . _('Commissies') . '</a></li>
-					<li><a href="show.php?id=28">' . _('Zusterverenigingen') . '</a></li>
-					<li><a href="show.php?id=18">' . _('Lid/donateur worden') . '</a></li>
-					<li><a href="show.php?id=30">' . _('Documenten') . '</a></li>
-					<li><a href="show.php?id=25">' . _('ALV (historie)') . '</a></li>
-					<li><a href="weblog.php">' . _('Weblog') . '</a></li>
+					<li><a href="show.php?id=0">' . __('Bestuur') . '</a></li>
+					<li><a href="commissies.php">' . __('Commissies') . '</a></li>
+					<li><a href="show.php?id=28">' . __('Zusterverenigingen') . '</a></li>
+					<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
+					<li><a href="show.php?id=30">' . __('Documenten') . '</a></li>
+					<li><a href="show.php?id=25">' . __('ALV (historie)') . '</a></li>
+					<li><a href="weblog.php">' . __('Weblog') . '</a></li>
 				</ul>
 				<ul id="leden" class="expander">
-					<li><a href="almanak.php">' ._('Almanak') .'</a></li>
-					<li><a href="http://www.shitbestellen.nl" target="_blank">' ._('Merchandise') .'</a></li>
-					<li><a href="profiel.php#msdnaa">' ._('MSDNAA') .'</a></li>
+					<li><a href="almanak.php">' .__('Almanak') .'</a></li>
+					<li><a href="http://www.shitbestellen.nl" target="_blank">' .__('Merchandise') .'</a></li>
+					<li><a href="profiel.php#msdnaa">' .__('MSDNAA') .'</a></li>
 				</ul>
 				<ul id="bedrijven" class="expander">
 					<li><a href="show.php?id=51">Bedrijfsprofielen</a></li>
 					<li><a href="show.php?id=54">Vacatures</a></li>
-					<li><a href="afstudeerplaatsen.php">' . _('Afstudeerplaatsen') . '</a></li>
-					<li><a href="show.php?id=56">' ._('Sponsormogelijkheden') .'</a></li>
+					<li><a href="afstudeerplaatsen.php">' . __('Afstudeerplaatsen') . '</a></li>
+					<li><a href="show.php?id=56">' .__('Sponsormogelijkheden') .'</a></li>
 				</ul>
 				<ul id="studie" class="expander">
-					<li><a href="show.php?id=23">' . _('K.I.') . '</a></li>
-					<li><a href="show.php?id=41">' . _('Informatica') . '</a></li>
-					<li><a href="show.php?id=24">' . _('Alumni') . '</a></li>
-					<li><a href="gastenboek.php">' . _('Gastenboek') . '</a></li>
-					<li><a href="links.php">' . _('Links') . '</a></li>
-					<li><a href="boeken.php">' . _('Boeken bestellen') . '</a></li>
-					<li><a href="http://studieondersteuning.svcover.nl/">' . htmlentities(_('Tentamens & Samenvattingen')) . '</a></li>				
+					<li><a href="show.php?id=23">' . __('K.I.') . '</a></li>
+					<li><a href="show.php?id=41">' . __('Informatica') . '</a></li>
+					<li><a href="show.php?id=24">' . __('Alumni') . '</a></li>
+					<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
+					<li><a href="links.php">' . __('Links') . '</a></li>
+					<li><a href="boeken.php">' . __('Boeken bestellen') . '</a></li>
+					<li><a href="http://studieondersteuning.svcover.nl/">' . htmlentities(__('Tentamens & Samenvattingen')) . '</a></li>				
 				</ul>
 			</div>
 			';
@@ -331,9 +331,9 @@ $("#verenigingClick").click(function(){
 			$contents .= ob_get_contents();
 			ob_end_clean();
 		} else
-			$contents = '<p>' . _('Er is op dit moment geen poll') . '</p>';
+			$contents = '<p>' . __('Er is op dit moment geen poll') . '</p>';
 
-		return create_menu($color, 'poll', _('Poll'), $contents);
+		return create_menu($color, 'poll', __('Poll'), $contents);
 	}
 	
 	function create_onestat_menu() {
@@ -371,7 +371,7 @@ $("#verenigingClick").click(function(){
 	}
 	
 	function create_jarigen() {
-		$contents = '<p class="bold">' . _('Jarigen') . '</p>
+		$contents = '<p class="bold">' . __('Jarigen') . '</p>
 		<hr>
 		<div class="smaller">';
 
@@ -380,7 +380,7 @@ $("#verenigingClick").click(function(){
 		$jarigen = $model->get_jarigen();
 		
 		if (!$jarigen || count($jarigen) == 0)
-			$contents .=  _('Er zijn vandaag geen jarigen');
+			$contents .=  __('Er zijn vandaag geen jarigen');
 		else 
 			$contents .= sprintf(ngettext('Er is vandaag %d jarige:', 'Er zijn vandaag %d jarigen:', count($jarigen)), count($jarigen));
 		
@@ -398,10 +398,10 @@ $("#verenigingClick").click(function(){
 		$contents = '
 		<form action="dologin.php" method="post">
 		<table>
-		<tr><td><a href="wachtwoordvergeten.php">' . _('wachtwoord vergeten?') . '</a></td><td><a href="lidworden.php">' . _('lid worden') . '?</a></td></tr>
-		<tr><td colspan="2"><label for="email">' . _('E-mailadres') . ': </label>' . input_text('email', null, 'class', 'textField', 'id', 'email', 'placeholder', _('E-mailadres')) . '</td><td></td></tr>
-		<tr><td colspan="2"><label for="password">' . _('Wachtwoord') . ': </label>' . input_password('password', null, 'class', 'textField', 'id', 'password', 'placeholder', _('Wachtwoord')) . '</td></tr>
-		<tr><td>' . input_checkbox('remember', null, 'yes', 'checked', 'checked') . ' ' . _('Blijvend') . '</td><td class="text_right"><input type="hidden" name="referer" value="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '"/>' . input_submit('subm', _('Inloggen')) . '</tr></table>
+		<tr><td><a href="wachtwoordvergeten.php">' . __('wachtwoord vergeten?') . '</a></td><td><a href="lidworden.php">' . __('lid worden') . '?</a></td></tr>
+		<tr><td colspan="2"><label for="email">' . __('E-mailadres') . ': </label>' . input_text('email', null, 'class', 'textField', 'id', 'email', 'placeholder', __('E-mailadres')) . '</td><td></td></tr>
+		<tr><td colspan="2"><label for="password">' . __('Wachtwoord') . ': </label>' . input_password('password', null, 'class', 'textField', 'id', 'password', 'placeholder', __('Wachtwoord')) . '</td></tr>
+		<tr><td>' . input_checkbox('remember', null, 'yes', 'checked', 'checked') . ' ' . __('Blijvend') . '</td><td class="text_right"><input type="hidden" name="referer" value="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '"/>' . input_submit('subm', __('Inloggen')) . '</tr></table>
 		</form>';
 		
 		return $contents;
@@ -410,9 +410,9 @@ $("#verenigingClick").click(function(){
 	function create_login() {
 		if (($data = logged_in())) {
 			//require_once('../isdecoverkameropen/ck.php');
-			$output =  _('Ingelogd') . ': <b>' . $data['voornaam'] . '</b><br/>
-			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . '">' . _('Uitloggen') . '</a>
-			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . _('Profiel') . '</a>';
+			$output =  __('Ingelogd') . ': <b>' . $data['voornaam'] . '</b><br/>
+			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . '">' . __('Uitloggen') . '</a>
+			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . __('Profiel') . '</a>';
 			if($ck_open) {
 				$output .= "<p class=\"clearBoth\">De CoverKamer is <b>open</b></p>";
 			} else {
@@ -434,9 +434,9 @@ $("#verenigingClick").click(function(){
 
 		if (($aantal = $model->has_moderate())) {
 			if ($aantal == 1)
-				$cap .= _('Er staat nog 1 agendapunt in de wachtrij');
+				$cap .= __('Er staat nog 1 agendapunt in de wachtrij');
 			else
-				$cap .= sprintf(_('Er staan nog %d agendapunten in de wachtrij'), $aantal);
+				$cap .= sprintf(__('Er staan nog %d agendapunten in de wachtrij'), $aantal);
 			
 			$admin .= '<a href="agenda.php?agenda_moderate">' . $cap . "</a><br/>\n";
 		}
@@ -459,7 +459,7 @@ $("#verenigingClick").click(function(){
 	<link rel="icon" type="image/png" href="images/favicon.png">';
 		
 		
-		echo '<title>Cover :: ' . _('Studievereniging Kunstmatige Intelligentie en Informatica') . ', RuG</title>
+		echo '<title>Cover :: ' . __('Studievereniging Kunstmatige Intelligentie en Informatica') . ', RuG</title>
 		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
 		<!--[if lte IE 7]>
 			<link rel="stylesheet" href="'. get_theme_data('styleIE.css') .'" type = "text/css" />

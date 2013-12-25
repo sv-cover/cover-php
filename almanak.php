@@ -10,7 +10,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Almanak')));
+			$this->run_header(array('title' => __('Almanak')));
 			run_view('almanak::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

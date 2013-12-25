@@ -14,7 +14,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Links')));
+			$this->run_header(array('title' => __('Links')));
 			run_view('links::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
@@ -40,7 +40,7 @@
 				return;
 
 			foreach ($_POST as $field => $value) {
-				if (!preg_match('/del_([0-9]+)/i', $field, $matches))
+				if (!preg_match('/del__([0-9]+)/i', $field, $matches))
 					continue;
 				
 				if ($value != 'yes')
@@ -164,7 +164,7 @@
 			$data['member_naam'] = member_full_name();
 			$data['categorie'] = $this->model->get_categorie_naam($data['categorie']);
 
-			$_SESSION['alert'] = _('De nieuwe link is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal de link op de website geplaatst worden');
+			$_SESSION['alert'] = __('De nieuwe link is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal de link op de website geplaatst worden');
 			$body = parse_email('links_add.txt', $data);
 			$subject = 'Nieuwe link ' . $data['titel'];
 			
@@ -180,7 +180,7 @@
 			$member_model = get_model('DataModelMember');
 
 			foreach ($_POST as $field => $value) {
-				if (!preg_match('/action_([0-9]+)/i', $field, $matches))
+				if (!preg_match('/action__([0-9]+)/i', $field, $matches))
 					continue;
 				
 				$id = $matches[1];
@@ -223,12 +223,12 @@
 
 			if (count($cancelled_un) == 1)
 				if (count($cancelled) == 1) {
-					$_SESSION['alert'] = sprintf(_('%s is op de hoogte gesteld van het weigeren van de link.'), $s);
+					$_SESSION['alert'] = sprintf(__('%s is op de hoogte gesteld van het weigeren van de link.'), $s);
 				} else {
-					$_SESSION['alert'] = sprintf(_('%s is op de hoogte gesteld van het weigeren van de links.'), $s);
+					$_SESSION['alert'] = sprintf(__('%s is op de hoogte gesteld van het weigeren van de links.'), $s);
 				}
 			elseif (count($cancelled_un) > 0)
-				$_SESSION['alert'] = sprintf(_('%s zijn op de hoogte gesteld van het weigeren van de links.'), $s);
+				$_SESSION['alert'] = sprintf(__('%s zijn op de hoogte gesteld van het weigeren van de links.'), $s);
 			
 			header('Location: links.php');
 			exit();

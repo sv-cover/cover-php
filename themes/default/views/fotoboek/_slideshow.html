@@ -1,4 +1,4 @@
-<div class="text_center"><?= input_button(_('Start slideshow'), 'javascript:slideshow();', 'button', 'id', 'slideshow_button') ?></div>
+<div class="text_center"><?= input_button(__('Start slideshow'), 'javascript:slideshow();', 'button', 'id', 'slideshow_button') ?></div>
 
 <script type="text/javascript">
 	var slideshow_request = null;
@@ -63,7 +63,7 @@
 		slideshow_request.on_task_finished = slideshow_got_slide;
 
 		button = document.getElementById("slideshow_button");
-		button.value = "<?= _('Stop slideshow') ?>";
+		button.value = "<?= __('Stop slideshow') ?>";
 	
 		slideshow_next();
 	}
@@ -77,7 +77,7 @@
 		current_id = photo_id;
 	
 		button = document.getElementById("slideshow_button");
-		button.value = "<?= _('Start slideshow') ?>";
+		button.value = "<?= __('Start slideshow') ?>";
 		slideshow_request = null;
 	}
 

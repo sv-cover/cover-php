@@ -6,7 +6,7 @@
 
 	function echo_editable_page($iter, $page) {
 		if (member_in_commissie($iter->get('owner')) || member_in_commissie(COMMISSIE_BESTUUR)) {
-			$link = '<a href="' . add_request(get_request(), 'editable_edit') . '">' . image('edit.png', _('bewerken'), _('Pagina bewerken')) . '</a>';
+			$link = '<a href="' . add_request(get_request(), 'editable_edit') . '">' . image('edit.png', __('bewerken'), __('Pagina bewerken')) . '</a>';
 			
 			//if title with markup <h1>Title</h1> is found in page
 			if (preg_match('/^\<h1\>(.*?)\<\/h1\>/i', $page)) {
@@ -33,13 +33,13 @@
 	}
 	
 	function view_something_went_wrong($model, $iter, $params = null) {
-		echo '<h1>' . _('Fout') . '</h1>
+		echo '<h1>' . __('Fout') . '</h1>
 		<div class="error_message">' . $params['message'] . '</div>';
 	}
 
 	function view_editable($model, $iter, $params = null) {
 		if (!$iter) {
-			echo '<span class="error">' . _('Deze pagina bestaat niet') . '</span>';
+			echo '<span class="error">' . __('Deze pagina bestaat niet') . '</span>';
 			return;
 		}
 
@@ -53,7 +53,7 @@
 			return;
 
 		echo '<hr/>
-		<div class="text_center">' . ($pagenr != 0 ? ('<a href="' . add_request($self, 'editable_pagenr=' . ($pagenr - 1)) . '">' . image('previous.png', _('vorige'), _('Ga naar de vorige pagina'), 'class="bottom"') . '</a> ') : '');
+		<div class="text_center">' . ($pagenr != 0 ? ('<a href="' . add_request($self, 'editable_pagenr=' . ($pagenr - 1)) . '">' . image('previous.png', __('vorige'), __('Ga naar de vorige pagina'), 'class="bottom"') . '</a> ') : '');
 
 		for ($i = 0; $i < count($pages); $i++) {
 			if ($i == $pagenr)
@@ -62,31 +62,31 @@
 				echo '<a href="' . add_request($self, 'editable_pagenr=' . $i) . '">' . ($i + 1) . '</a> ';
 		}
 
-		echo ($pagenr != count($pages) - 1 ? ('<a href="' . add_request($self, 'editable_pagenr=' . ($pagenr + 1)) . '">' . image('next.png', _('volgende'), _('Ga naar de volgende pagina'), 'class="bottom"')) : '') . '</div>';
+		echo ($pagenr != count($pages) - 1 ? ('<a href="' . add_request($self, 'editable_pagenr=' . ($pagenr + 1)) . '">' . image('next.png', __('volgende'), __('Ga naar de volgende pagina'), 'class="bottom"')) : '') . '</div>';
 	}
 
 	function view_read_only($model, $iter, $params = null) {
 		echo '<h1>' . $iter->get('titel') . '</h1>
-		<p><span class="error">' . _('Deze pagina kan niet door jou worden bewerkt.') . '</span></p>';
+		<p><span class="error">' . __('Deze pagina kan niet door jou worden bewerkt.') . '</span></p>';
 	}	
 
 	function view_edit($model, $iter, $params = null) {
 		$self = get_request('editable_edit');
 
-		echo '<h1>' . _('Bewerken') . ' - ' . $iter->get('titel') . '</h1>';
+		echo '<h1>' . __('Bewerken') . ' - ' . $iter->get('titel') . '</h1>';
 		echo '<div class="messageBox">';
 		echo '<div class="bar">
 			<div class="right">
-				<a href="' . $self . '">' . image('close.png', _('sluiten'), _('Sluiten'), 'class="top"') . '</a>
+				<a href="' . $self . '">' . image('close.png', __('sluiten'), __('Sluiten'), 'class="top"') . '</a>
 
 			</div>
-			<a href="' . add_request($self, 'editable_add&editable_language=' . $params['language']) . '">' . image('new.png', _('nieuw'), _('Voeg pagina toe na deze pagina'), 'class="button"') . '</a>
-			<a href="javascript:submit_form(\'editable\', true);">' . image('save.png',  _('opslaan'), _('Sla pagina op'), 'class="button"') . '</a>
-			<a href="javascript:reset_form(\'editable\');">' . image('revert.png', _('herstellen'), _('Herstel pagina'), 'class="button"') . '</a>
-			<a href="javascript:editable_preview();">' . image('preview.png', _('voorbeeld'), _('Voorbeeld tonen'), 'class="button" id="editable_preview"'), '</a>
-			<a href="' . add_request($self, 'editable_del&editable_language=' . $params['language']) . '">' . image('delete.png', _('verwijderen'), _('Verwijder pagina'), 'class="button"'), '</a>
+			<a href="' . add_request($self, 'editable_add&editable_language=' . $params['language']) . '">' . image('new.png', __('nieuw'), __('Voeg pagina toe na deze pagina'), 'class="button"') . '</a>
+			<a href="javascript:submit_form(\'editable\', true);">' . image('save.png',  __('opslaan'), __('Sla pagina op'), 'class="button"') . '</a>
+			<a href="javascript:reset_form(\'editable\');">' . image('revert.png', __('herstellen'), __('Herstel pagina'), 'class="button"') . '</a>
+			<a href="javascript:editable_preview();">' . image('preview.png', __('voorbeeld'), __('Voorbeeld tonen'), 'class="button" id="editable_preview"'), '</a>
+			<a href="' . add_request($self, 'editable_del&editable_language=' . $params['language']) . '">' . image('delete.png', __('verwijderen'), __('Verwijder pagina'), 'class="button"'), '</a>
 			<form name="editable_language" action="' . get_request() . '" method="post" class="inline">
-				' . _('Taal') . ': ' . select_field('editable_language', i18n_get_languages(), array('editable_language' => $params['language']), 'onChange', 'javascript:change_language();') . '
+				' . __('Taal') . ': ' . select_field('editable_language', i18n_get_languages(), array('editable_language' => $params['language']), 'onChange', 'javascript:change_language();') . '
 			</form>
 		</div>
 		<div id="editable_content">
@@ -153,7 +153,7 @@
 				}
 
 				var divpreview = document.getElementById("editable_preview_content");
-				var text = "' . _('Bezig met laden') . '";
+				var text = "' . __('Bezig met laden') . '";
 
 				if (editable_loading == 4)
 					editable_loading = 0;
@@ -194,8 +194,8 @@
 				
 				if (img.src.match("preview.png$")) {
 					img.src = "themes/' . get_theme() . '/images/edit.png";
-					img.title = "' . _('Voorbeeld sluiten') . '";
-					img.alt = "' . _('voorbeeld sluiten') . '";
+					img.title = "' . __('Voorbeeld sluiten') . '";
+					img.alt = "' . __('voorbeeld sluiten') . '";
 					
 					div.style.display = "none";
 					divpreview.style.display = "block";
@@ -203,8 +203,8 @@
 					editable_request_preview();
 				} else {
 					img.src = "themes/' . get_theme() . '/images/preview.png";
-					img.title = "' . _('Voorbeeld tonen') . '";
-					img.alt = "' . _('voorbeeld') . '";
+					img.title = "' . __('Voorbeeld tonen') . '";
+					img.alt = "' . __('voorbeeld') . '";
 					
 					div.style.display = "block";
 					divpreview.style.display = "none";

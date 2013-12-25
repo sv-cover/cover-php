@@ -1,8 +1,8 @@
-<div class="bar"><a href="javascript:beheer();"><?= image('add.png', '', _('Nieuwe afstudeerplaats toevoegen'), 'class="button"') ?></a> <a href="javascript:beheer();"><?= _('Nieuwe afstudeerplaats') ?></a></div>
+<div class="bar"><a href="javascript:beheer();"><?= image('add.png', '', __('Nieuwe afstudeerplaats toevoegen'), 'class="button"') ?></a> <a href="javascript:beheer();"><?= __('Nieuwe afstudeerplaats') ?></a></div>
 
 <div id="bedrijvenBeheer" class="beheer">
 <? if (isset($errors) && count($errors) > 0) { ?>
-	<div class="error_message"><?= _('Niet alle velden zijn goed ingevuld') ?></div>
+	<div class="error_message"><?= __('Niet alle velden zijn goed ingevuld') ?></div>
 <? } ?>
 
 <form method="post" action="afstudeerplaatsen.php#beheer">

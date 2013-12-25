@@ -9,14 +9,14 @@ if (date('d-m') == '20-09'){
 }
 if (!$jarigen ) {
 ?>
-<span class="bold"><?= _('Vandaag geen jarige leden.') ?></span>
+<span class="bold"><?= __('Vandaag geen jarige leden.') ?></span>
 <? } else { ?>
 	<span class="bold">
 
 	if (count($jarigen) == 1)
-		echo _('Vandaag is er 1 lid jarig');
+		echo __('Vandaag is er 1 lid jarig');
 	else
-		echo sprintf(_('Vandaag zijn er %d leden jarig'), count($jarigen));
+		echo sprintf(__('Vandaag zijn er %d leden jarig'), count($jarigen));
 ?>
 	:</span>
 <?

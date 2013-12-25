@@ -1,9 +1,9 @@
 <h1><?= $vak->get('naam') ?></h1>
 
-<p><a href="studieondersteuning.php"><?= image('previous.png', _('Terug'), _('Ga terug naar de Studieondersteuningspagina'), 'class="top"') ?></a> <a href="studieondersteuning.php"><?= _('Terug') ?></a></p>
+<p><a href="studieondersteuning.php"><?= image('previous.png', __('Terug'), __('Ga terug naar de Studieondersteuningspagina'), 'class="top"') ?></a> <a href="studieondersteuning.php"><?= __('Terug') ?></a></p>
 
 <? if (count($iter) == 0) { ?>
-	<p><?= _('Er zijn geen documenten beschikbaar voor dit vak.') ?></p>
+	<p><?= __('Er zijn geen documenten beschikbaar voor dit vak.') ?></p>
 	<? return ?>;
 <? } ?>
 
@@ -17,10 +17,10 @@
 <tr class="header">
 
 <? if ($admin) {?>	
-	<td width="20px" class="text_center"><?= image('delete_small.png', _('Verwijder'), _('Selecteer bestanden om te verwijderen')) ?></td>
+	<td width="20px" class="text_center"><?= image('delete_small.png', __('Verwijder'), __('Selecteer bestanden om te verwijderen')) ?></td>
 <? } ?>
 
-	<td><?= _('Bestand') ?></td><td class="text_right" width="50px"><?= _('Type') ?></td>
+	<td><?= __('Bestand') ?></td><td class="text_right" width="50px"><?= __('Type') ?></td>
 </tr>
 
 <? foreach ($iter as $item) { ?>
@@ -39,7 +39,7 @@
 <? } ?>
 
 <? if ($admin) {?>
-	<tr class="submit"><td class="text_center"><a href="javascript:delete_all();"><?= image('up.png', _('Alles'), _('Selecteer alle bestanden')) ?></a></td><td class="submit" colspan="2"><?= input_submit('subm', _('Verwijderen')) ?></td></tr>
+	<tr class="submit"><td class="text_center"><a href="javascript:delete_all();"><?= image('up.png', __('Alles'), __('Selecteer alle bestanden')) ?></a></td><td class="submit" colspan="2"><?= input_submit('subm', __('Verwijderen')) ?></td></tr>
 <? } ?>
 
 </table>

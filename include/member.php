@@ -41,7 +41,7 @@
 			
 			$member_data = $iter->data;
 		} elseif (!($member_data = logged_in())) {
-			return _('Geen naam');
+			return __('Geen naam');
 		}
 
 		return $member_data['nick'];
@@ -62,7 +62,7 @@
 			
 			$member_data = $iter->data;
 		} elseif (!($member_data = logged_in())) {
-			return _('Geen naam');
+			return __('Geen naam');
 		}
 
 		return $member_data['voornaam'] . ($member_data['tussenvoegsel'] ? (' ' . $member_data['tussenvoegsel']) : '') . ' ' . $member_data['achternaam'];

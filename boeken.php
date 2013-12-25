@@ -13,7 +13,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null, $show_editable = true) {
-			$this->run_header(array('title' => _('Boeken')));
+			$this->run_header(array('title' => __('Boeken')));
 			
 			if ($show_editable) {
 				$editable = new ControllerEditable('Boeken bestellen');

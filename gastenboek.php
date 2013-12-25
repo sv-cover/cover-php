@@ -12,7 +12,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('Gastenboek')));
+			$this->run_header(array('title' => __('Gastenboek')));
 			run_view('gastenboek::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

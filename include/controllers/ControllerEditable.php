@@ -79,7 +79,7 @@
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
 				
-					echo _('Deze pagina kan niet door jou worden bewerkt.');
+					echo __('Deze pagina kan niet door jou worden bewerkt.');
 					exit();
 				}
 
@@ -96,11 +96,11 @@
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
 					
-					echo _('Er zit iets niet goed met de taalinstelling. Neem contact op met de WebCie');
+					echo __('Er zit iets niet goed met de taalinstelling. Neem contact op met de WebCie');
 					exit();
 				}
 				
-				$this->get_content('something_went_wrong', null, array('message' => sprintf(_('Er zit iets niet goed met de taalinstelling. Neem contact op met %s'), '<a href="mailto:webcie@ai.rug.nl">' . _('de Webcie') . '</a>')));
+				$this->get_content('something_went_wrong', null, array('message' => sprintf(__('Er zit iets niet goed met de taalinstelling. Neem contact op met %s'), '<a href="mailto:webcie@ai.rug.nl">' . __('de Webcie') . '</a>')));
 				return false;
 			}
 
@@ -110,11 +110,11 @@
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
 					
-					echo _('Er zit iets niet goed met de paginanummering. Neem contact op met de WebCie');
+					echo __('Er zit iets niet goed met de paginanummering. Neem contact op met de WebCie');
 					exit();
 				}
 				
-				$this->get_content('something_went_wrong', null, array('message' => sprintf(_('Er zit iets niet goed met de paginanummering. Neem contact op met %s'), '<a href="mailto:webcie@ai.rug.nl">' . _('de WebCie') . '</a>')));
+				$this->get_content('something_went_wrong', null, array('message' => sprintf(__('Er zit iets niet goed met de paginanummering. Neem contact op met %s'), '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>')));
 				return false;	
 			}
 
@@ -201,7 +201,7 @@
 				ob_end_clean();
 				
 				if ($success !== null)
-					printf(_('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+					printf(__('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
 				else
 					echo $this->model->db->get_last_error();
 
@@ -209,7 +209,7 @@
 			}
 
 			if ($success !== null)
-				$_SESSION['alert'] = sprintf(_('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+				$_SESSION['alert'] = sprintf(__('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
 			else
 				$_SESSION['alert'] = $this->model->db->get_last_error();
 
@@ -246,7 +246,7 @@
 				return;
 			
 			if (count($pages) == 1) {
-				$_SESSION['alert'] = _('Er is maar een pagina. Maak eerst een nieuwe pagina aan voordat je deze verwijdert.');
+				$_SESSION['alert'] = __('Er is maar een pagina. Maak eerst een nieuwe pagina aan voordat je deze verwijdert.');
 				header('Location: ' . add_request(get_request('editable_del'),  'editable_edit'));
 				exit();
 			}
@@ -319,7 +319,7 @@
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
 				
-					echo _('Deze pagina bestaat niet...');
+					echo __('Deze pagina bestaat niet...');
 					exit();
 				}
 				

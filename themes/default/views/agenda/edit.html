@@ -1,7 +1,7 @@
-<h1><?= ($iter != null ? _('Wijzig agendapunt') : _('Agendapunt toevoegen')) ?></h1>
+<h1><?= ($iter != null ? __('Wijzig agendapunt') : __('Agendapunt toevoegen')) ?></h1>
 <div class="messageBox">
 <? if (isset($errors)) { ?>
-	<p><span class="error"><?= _('Niet alle velden zijn goed ingevuld') ?></span></p>
+	<p><span class="error"><?= __('Niet alle velden zijn goed ingevuld') ?></span></p>
 <? } ?>
 <form name="agenda_form" action="<?= get_request() ?>" method="post">
 <table class="agenda_edit">
@@ -34,18 +34,18 @@ foreach ($member_data['commissies'] as $commissie)
 	$commissies[$commissie] = $model->get_naam($commissie);
 ?>
 
-<?= table_row(label(_('Kop'), 'kop', $errors, true) . ':', '', 
+<?= table_row(label(__('Kop'), 'kop', $errors, true) . ':', '', 
 		input_text('kop', $data, 'maxlength', '100')) ?>
-<?= table_row(label(_('Commissie'), 'commissie', $errors, true) . ':', '',
+<?= table_row(label(__('Commissie'), 'commissie', $errors, true) . ':', '',
 		select_field('commissie', $commissies, $data)) ?>
-<?= table_row(label(_('Begintijd'), 'van', $errors, true) . ':', '', 
+<?= table_row(label(__('Begintijd'), 'van', $errors, true) . ':', '', 
 		input_text('vandatum', $data, 'class', 'day') . ' - ' .
 		input_text('vanmaand', $data, 'class', 'month') . ' - ' .
 		input_text('vanjaar', $data, 'class', 'year') . ' ' .
 		input_text('vanuur', $data, 'class', 'time') . ' ' .
 		input_text('vanminuut', $data, 'class', 'time', 'value', '00')) ?>
 
-<?= table_row(label(_('Eindtijd'), 'tot', $errors, false) . ':',
+<?= table_row(label(__('Eindtijd'), 'tot', $errors, false) . ':',
 		input_checkbox('use_tot', $data, 'yes', 'id', 'agenda_use_tot', 'onClick', 'set_visibility(this, \'agenda_tot\')'),
 		'<div id="agenda_tot">' . 
 		input_text('totdatum', $data, 'class', 'day') . ' - ' .
@@ -55,17 +55,17 @@ foreach ($member_data['commissies'] as $commissie)
 		input_text('totminuut', $data, 'class', 'time') . 
 		'</div>') ?>
 
-<?= table_row(label(_('Locatie'), 'locatie', $errors, false) . ':',
+<?= table_row(label(__('Locatie'), 'locatie', $errors, false) . ':',
 		input_checkbox('use_locatie', $data, 'yes', 'id', 'agenda_use_locatie', 'onClick', 'set_visibility(this, \'agenda_locatie\')'),
 		'<div id="agenda_locatie">' .
 		input_text('locatie', $data, 'maxlength', '100') .
 		'</div>') ?>
 
 <tr><td colspan="3"><?= textarea_field('beschrijving', $data, $errors, 'formatter', 'markup_format_text') ?></td></tr>
-<?= table_row(label(_('Prive'), 'private', $errors, false) . ':',
+<?= table_row(label(__('Prive'), 'private', $errors, false) . ':',
 		input_checkbox('private', $data),
 		'') ?>
-<tr><td class="submit" colspan="3"><?= input_submit('subm', ($iter != null ? _('Wijzigen') : _('Toevoegen'))) ?></td></tr>
+<tr><td class="submit" colspan="3"><?= input_submit('subm', ($iter != null ? __('Wijzigen') : __('Toevoegen'))) ?></td></tr>
 </table></form>
 
 <script type="text/javascript">

@@ -610,10 +610,10 @@
 		function get_acl_name($acl) {
 			switch ($acl->get('type')) {
 				case -1:
-					return _('Iedereen');
+					return __('Iedereen');
 				case 1:
 					if ($acl->get('uid') == -1)
-						return _('Alle leden');
+						return __('Alle leden');
 
 					$member_model = get_model('DataModelMember');
 					$member_data = $member_model->get_iter($acl->get('uid'));
@@ -623,7 +623,7 @@
 				break;
 				case 2:
 					if ($acl->get('uid') == -1)
-						return _('Alle commissies');
+						return __('Alle commissies');
 
 					$commissie_model = get_model('DataModelCommissie');
 					$commissie_data = $commissie_model->get_iter($acl->get('uid'));
@@ -633,7 +633,7 @@
 				break;
 				case 3:
 					if ($acl->get('uid') == -1)
-						return _('Alle groepen');
+						return __('Alle groepen');
 
 					return $this->db->query_value('
 							SELECT
@@ -645,7 +645,7 @@
 				break;
 			}
 
-			return _('Onbekend');
+			return __('Onbekend');
 		}
 		
 		/**
@@ -657,18 +657,18 @@
 		function get_acl_type($acl) {
 			switch ($acl->get('type')) {
 				case -1:
-					return _('Iedereen');
+					return __('Iedereen');
 				case 1:
-					return _('Lid');
+					return __('Lid');
 				break;
 				case 2:
-					return _('Commissie');
+					return __('Commissie');
 				break;
 				case 3:
-					return _('Groep');
+					return __('Groep');
 				break;
 				default:
-					return _('Onbekend');
+					return __('Onbekend');
 				break;
 			}
 		}

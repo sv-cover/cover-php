@@ -1,14 +1,14 @@
-<div class="bar_header"><h1><?= _('Links') ?></h1></div>
+<div class="bar_header"><h1><?= __('Links') ?></h1></div>
 
 <div class="messageBox">
 
 <? if (count($iter) == 0) { ?>
-	<p><?= _('Er staan geen links in de wachtrij om goedgekeurd te worden.') ?></p></div>
+	<p><?= __('Er staan geen links in de wachtrij om goedgekeurd te worden.') ?></p></div>
 <? 	return;
 } ?>
 
 
-<p><?= _('Onderstaande links staan in de wachtrij om goedgekeurd te worden.') ?></p>
+<p><?= __('Onderstaande links staan in de wachtrij om goedgekeurd te worden.') ?></p>
 <form name="links_moderate" action="<?= get_request() ?>" method="post">
 <table class="moderate" id="table_moderate">
 <?= input_hidden('submlinks_moderate', 'yes'); ?>
@@ -16,11 +16,11 @@
 <? $i = 0; ?>
 
 <tr class="header">
-	<td class="text_center"><?= image('accept.png', '', _('Accepteer link')) ?></td>
-	<td class="text_center"><?= image('cancel.png', '', _('Weiger link')) ?></td>
-	<td><?= _('Categorie') ?></td>
-	<td><?= _('Link') ?></td>
-	<td><?= _('Door') ?></td>
+	<td class="text_center"><?= image('accept.png', '', __('Accepteer link')) ?></td>
+	<td class="text_center"><?= image('cancel.png', '', __('Weiger link')) ?></td>
+	<td><?= __('Categorie') ?></td>
+	<td><?= __('Link') ?></td>
+	<td><?= __('Door') ?></td>
 	</tr>
 
 <? $cats = $model->get_categories();
@@ -51,9 +51,9 @@ foreach ($iter as $item) {
 } ?>
 
 <tr>
-	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', _('Alle links op accepteren zetten')) ?></a></td>
-	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', _('Alle links op weigeren zetten')) ?></a></td>
-	<td colspan="5" class="submit"><?= input_submit('submmoderate', _('Toepassen')) ?></td></tr>
+	<td class="text_center"><a href="javascript:accept_all();"><?= image('up.png', '', __('Alle links op accepteren zetten')) ?></a></td>
+	<td class="text_center"><a href="javascript:cancel_all();"><?= image('up.png', '', __('Alle links op weigeren zetten')) ?></a></td>
+	<td colspan="5" class="submit"><?= input_submit('submmoderate', __('Toepassen')) ?></td></tr>
 
 </table></form>
 <script type="text/javascript">

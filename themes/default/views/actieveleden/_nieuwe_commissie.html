@@ -3,12 +3,12 @@
 		<table>
 
 			<?= input_hidden('submactieveledennieuwecommissie', 'yes') ?>
-			<?= table_row(label(_('Naam'), 'naam', $errors, true), input_text('naam', null)) ?>
-			<?= table_row(label(_('Login'), 'login', $errors), input_text('login', null)) ?>
-			<?= table_row(label(_('Website'), 'website', $errors), input_text('website', null)) ?>
+			<?= table_row(label(__('Naam'), 'naam', $errors, true), input_text('naam', null)) ?>
+			<?= table_row(label(__('Login'), 'login', $errors), input_text('login', null)) ?>
+			<?= table_row(label(__('Website'), 'website', $errors), input_text('website', null)) ?>
 
 			<tr>
-				<td colspan="2" class="submit"><?= input_submit('subm', _('Commissie aanmaken')) ?></td>
+				<td colspan="2" class="submit"><?= input_submit('subm', __('Commissie aanmaken')) ?></td>
 			</tr>
 
 		</table>

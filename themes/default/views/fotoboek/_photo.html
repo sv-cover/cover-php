@@ -1,7 +1,7 @@
 <? if (member_in_commissie(COMMISSIE_FOTOCIE)) { ?>
 	<div class="foto_titel"><form method="post" action="fotoboek.php?photo=<?= $iter->get('id') ?>">
 	<?= input_hidden('submfotobeschrijving', 'yes') ?>
-	<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', _('Opslaan')) ?>
+	<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
 	</form></div>
 <? } elseif ($iter->get('beschrijving')) { ?>
 	<div class="foto_titel"><?= $iter->get('beschrijving') ?></div>
@@ -13,13 +13,13 @@
 	$next = $model->get_next_photo($iter, 2);
 ?>
 <? if (count($prev) > 0) { ?>
-	<div class="prevPhoto"><a href="fotoboek.php?photo=<?= $prev[0]->get('id') ?>#a"><?= image('previous.png', _('Vorige'), _('Ga naar vorige foto')) ?></a></div>
+	<div class="prevPhoto"><a href="fotoboek.php?photo=<?= $prev[0]->get('id') ?>#a"><?= image('previous.png', __('Vorige'), __('Ga naar vorige foto')) ?></a></div>
 <? } ?>
 <? if (count($next) > 0) { ?>
-	<div class="nextPhoto"><a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a"><?= image('next.png', _('Volgende'), _('Ga naar volgende foto')) ?></a></div>
+	<div class="nextPhoto"><a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a"><?= image('next.png', __('Volgende'), __('Ga naar volgende foto')) ?></a></div>
 <? } ?>
 <a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
-<img id="photo" src="<?= $iter->get('url') ?>" alt="<?= _('Foto') ?>">
+<img id="photo" src="<?= $iter->get('url') ?>" alt="<?= __('Foto') ?>">
 </a>
 </div>
 <script type = "text/javascript">

@@ -12,7 +12,7 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => _('ActieveLeden')));
+			$this->run_header(array('title' => __('ActieveLeden')));
 			run_view('actieveleden::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

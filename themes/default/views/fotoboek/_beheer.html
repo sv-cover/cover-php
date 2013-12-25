@@ -1,4 +1,4 @@
-	<div class="controls"><a href="javascript:nieuw_fotoboek();"> <?= image('new.png', _('Nieuw'), _('Nieuw fotoboek aanmaken'), 'class="button"') ?></a> <a href="javascript:nieuw_fotoboek();"> <?= _('Nieuw fotoboek') ?></a> <a href="javascript:nieuwe_fotos();"> <?= image('add.png', _('Toevoegen'), _('Foto\'s toevoegen'), 'class="button"') ?></a> <a href="javascript:nieuwe_fotos();"> <?= _('Foto\'s toevoegen') ?></a></div>
+	<div class="controls"><a href="javascript:nieuw_fotoboek();"> <?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken'), 'class="button"') ?></a> <a href="javascript:nieuw_fotoboek();"> <?= __('Nieuw fotoboek') ?></a> <a href="javascript:nieuwe_fotos();"> <?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen'), 'class="button"') ?></a> <a href="javascript:nieuwe_fotos();"> <?= __('Foto\'s toevoegen') ?></a></div>
 	<div id="fotoboek_beheer" class="beheer">
 	<form name="fbeheer" action="fotoboek.php?book=<?= $iter ? $iter->get('id') : "" ?>" method="post">
 
@@ -10,11 +10,11 @@
 	<form name="ffotos" action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : "" )?>" method="post">
 	<table class="default_noborder">
 	<?= input_hidden('submfotoboekfotos', 'yes') ?>
-	<?= table_row(label(_('Fotoboek'), '', null, true) . ':', $iter ? $iter->get('titel') : 'Fotoboeken') ?>
-	<?= table_row(label(_('Directory'), 'directory', $errors, true) . ':', input_text('directory', null) . ' ' . input_button(_('Urls ophalen'), 'javascript:fetch_urls()')) ?>
-	<?= table_row(label(_('Foto urls'), 'urls', $errors, true) . ':', textarea_field('urls', null, $errors)) ?>
-	<?= table_row(label(_('Thumbnail urls'), 'thumbnail_urls', $errors, true) . ':', textarea_field('thumbnail_urls', null, $errors)) ?>
-	<tr><td colspan="2" class="submit"> <?= input_submit('subm', _('Foto\'s toevoegen')) ?></td></tr>
+	<?= table_row(label(__('Fotoboek'), '', null, true) . ':', $iter ? $iter->get('titel') : 'Fotoboeken') ?>
+	<?= table_row(label(__('Directory'), 'directory', $errors, true) . ':', input_text('directory', null) . ' ' . input_button(__('Urls ophalen'), 'javascript:fetch_urls()')) ?>
+	<?= table_row(label(__('Foto urls'), 'urls', $errors, true) . ':', textarea_field('urls', null, $errors)) ?>
+	<?= table_row(label(__('Thumbnail urls'), 'thumbnail_urls', $errors, true) . ':', textarea_field('thumbnail_urls', null, $errors)) ?>
+	<tr><td colspan="2" class="submit"> <?= input_submit('subm', __('Foto\'s toevoegen')) ?></td></tr>
 	</table>
 	</form>
 	</div>

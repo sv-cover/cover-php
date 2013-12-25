@@ -57,7 +57,7 @@ class ProfielView extends View {
 				if (strtolower($data['woonplaats']) == 'groningen')
 					$provincie = 'Groningen';
 
-				$result .= ' <a href="http://maps.google.nl/maps?f=q&hl=nl&q=' . urlencode($data['adres'] . ', ' . $provincie . ' ' . $data['postcode'] . ' ' . $data['woonplaats']) . '&ie=UTF8&z=15&om=1&iwloc=addr">' . _('opzoeken') . '</a>';
+				$result .= ' <a href="http://maps.google.nl/maps?f=q&hl=nl&q=' . urlencode($data['adres'] . ', ' . $provincie . ' ' . $data['postcode'] . ' ' . $data['woonplaats']) . '&ie=UTF8&z=15&om=1&iwloc=addr">' . __('opzoeken') . '</a>';
 
 			}
 
@@ -67,7 +67,7 @@ class ProfielView extends View {
 
 		function get_privacy_name($model, $iter) {
 			if ($model->is_private($iter, 'naam') && !$this->member_write_permission($iter->get('id')))
-				return _('Onbekend');
+				return __('Onbekend');
 			else
 				return $iter->get('nick') ? $iter->get('nick') : member_full_name($iter);
 		}
