@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2013-12-25 15:43+0100\n"
+"POT-Creation-Date: 2013-12-25 15:50+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -390,6 +390,24 @@ msgid ""
 msgstr ""
 "This action cannot be done, if this keeps occuring contact  the easy at "
 "easy@ai.rug.nl"
+
+#: ../../../../cover-php/include/editable.php:36
+#: ../../../../cover-php/themes/default/views/forum.php:1155
+#: ../../../../cover-php/themes/default/views/header.php:226
+#: ../../../../cover-php/themes/default/views/profiel/profiel.phtml:181
+msgid "Leden"
+msgstr "Members"
+
+#: ../../../../cover-php/include/editable.php:108
+msgid "Commissieagenda"
+msgstr "Committee agenda"
+
+#: ../../../../cover-php/include/editable.php:116
+#: ../../../../cover-php/themes/default/views/agenda/agendapunt.phtml:11
+#: ../../../../cover-php/themes/default/views/agenda/edit.phtml:58
+#: ../../../../cover-php/themes/default/views/agenda/index.phtml:56
+msgid "Locatie"
+msgstr "Location"
 
 #: ../../../../cover-php/include/functions.php:46
 #: ../../../../cover-php/themes/default/views/confirm.php:4
@@ -1169,12 +1187,6 @@ msgstr "Select"
 msgid "Verwijder geselecteerde groepen"
 msgstr "Remove selected groups"
 
-#: ../../../../cover-php/themes/default/views/forum.php:1155
-#: ../../../../cover-php/themes/default/views/header.php:226
-#: ../../../../cover-php/themes/default/views/profiel/profiel.phtml:181
-msgid "Leden"
-msgstr "Members"
-
 #: ../../../../cover-php/themes/default/views/forum.php:1180
 msgid "Er zijn nog geen groepen"
 msgstr "There are no groups yet"
@@ -1938,12 +1950,6 @@ msgstr "This phd position doesn't exist"
 #: ../../../../cover-php/themes/default/views/agenda/agendapunt.phtml:9
 msgid "Datum & Tijd"
 msgstr "Date & time"
-
-#: ../../../../cover-php/themes/default/views/agenda/agendapunt.phtml:11
-#: ../../../../cover-php/themes/default/views/agenda/edit.phtml:58
-#: ../../../../cover-php/themes/default/views/agenda/index.phtml:56
-msgid "Locatie"
-msgstr "Location"
 
 #: ../../../../cover-php/themes/default/views/agenda/agendapunt.phtml:15
 #: ../../../../cover-php/themes/default/views/news/news.phtml:32

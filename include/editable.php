@@ -1,4 +1,4 @@
-<?
+<?php
 
 	require_once('markup.php');
 	require_once('login.php');
@@ -33,7 +33,7 @@
 			$leden = $model->get_leden($owner);
 			
 			if ($leden) {
-				$lh = '<h3>Leden</h3>
+				$lh = '<h3>' . __('Leden') . '</h3>
 				<ul>';
 				
 				foreach ($leden as $lid)
@@ -105,7 +105,7 @@
 			return;
 		}
 
-		$ah = '<a name="activiteiten"></a><h3>Commissieagenda</h3>
+		$ah = '<a name="activiteiten"></a><h3>' . __('Commissieagenda') . '</h3>
 		<p><ul>';
 
 		foreach ($activiteiten as $punt) {
@@ -113,7 +113,7 @@
 			$ah .= agenda_period_for_display($punt) . '<br/>';
 
 			if ($punt->get('locatie'))
-				$ah .= 'Locatie: ' . $punt->get('locatie') . '<br/>';
+				$ah .= __('Locatie') . ': ' . $punt->get('locatie') . '<br/>';
 
 			$ah .= "</li>\n";
 		}
@@ -182,4 +182,3 @@
 			return '';
 		}
 	}
-?>
