@@ -2,14 +2,11 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once('config.php');
-	require_once('login.php');
+	require_once 'config.php';
+	require_once 'login.php';
+	require_once 'streams.php';
+	require_once 'gettext.php';
 	
-	define('HAS_GETTEXT', function_exists('_'));
-
-	if (!HAS_GETTEXT)
-		include('i18n_dummy.php');
-
 	/** @group i18n
 	  * A gettext noop function. This will just return the message. It's used
 	  * to be able to mark the message as a translatable string (by using
@@ -19,7 +16,7 @@
 	  *
 	  * @result the same unaltered message
 	  */
-	function N_($message) {
+	function N__($message) {
 		return $message;
 	}
 
@@ -28,21 +25,52 @@
 	  *
 	  */
 	function init_i18n() {
-		/* Bind the the domain name to the location of the locale files */
-		if (HAS_GETTEXT)
-		{
-			bindtextdomain('cover-web', dirname(__FILE__) . '/../locale');
+		i18n_translation::set_path(dirname(__FILE__) . '/../locale');
+		i18n_translation::set_locale(i18n_get_locale());
 		
-			/* Set the charset to UTF-8 */
-			bind_textdomain_codeset('cover-web', 'ISO-8859-15');
-
-			/* Set the domain to use */
-			textdomain('cover-web');
-		}
-
 		/* Set language to use */
 		putenv('LANG='.i18n_get_locale());
 		setlocale(LC_ALL, i18n_get_locale());
+	}
+
+	class i18n_translation
+	{
+		static private $root;
+
+		static private $reader;
+
+		static private $locale;
+
+		static public function get_reader() {
+			if (!self::$reader)
+				self::$reader = self::init_reader();
+
+			return self::$reader;
+		}
+
+		static public function set_path($path) {
+			self::$root = $path;
+			self::$reader = null;
+		}
+
+		static public function set_locale($locale) {
+			self::$locale = $locale;
+			self::$reader = null;
+		}
+
+		static private function init_reader() {
+			$translation = sprintf('%s/%s/LC_MESSAGES/cover-web.mo', self::$root, self::$locale);
+
+			$stream = file_exists($translation)
+				? new FileReader($translation)
+				: null;
+
+			return new gettext_reader($stream);
+		}
+	}
+
+	function __($message_id) {
+		return i18n_translation::get_reader()->translate($message_id);
 	}
 	
 	/** @group i18n
