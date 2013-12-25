@@ -104,6 +104,13 @@
 					<?= $this->privacy_parse($model, $iter, _('ICQ#'), 'icq', $iter->data, $errors) ?>
 
 					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+						<tr>
+							<td><?= label(_('Taal'), 'taal', $errors) ?></td>
+							<td><?= select_field('taal', array('nl' => _('Nederlands'), 'en' => _('Engels')), $iter->data) ?></td>
+						</tr>
+					<? } ?>
+
+					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
 						<tr><td colspan="2" class="submit"><?= input_submit('subm', _('Opslaan')) ?></td></tr>
 					<? } ?>
 				</table>

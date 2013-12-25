@@ -55,6 +55,10 @@
 			return $value !== null && is_numeric($value) && $value >=1 && $value <= 4;
 		}
 
+		function _check_language($name, $value) {
+			return in_array($value, array('nl', 'en')) ? $value : false;
+		}
+
 		function _process_almanak($iter) {
 			if (member_in_commissie(COMMISSIE_BESTUUR)) {
 				$check = array(
@@ -140,7 +144,8 @@
 				array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
 				array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
 				array('name' => 'msn', 'function' => array(&$this, '_check_size')),
-				array('name' => 'icq', 'function' => array(&$this, '_check_size'))
+				array('name' => 'icq', 'function' => array(&$this, '_check_size')),
+				array('name' => 'taal', 'function' => array($this, '_check_language'))
 			);
 			
 			$data = check_values($check, $errors);
@@ -157,8 +162,9 @@
 					'avatar',
 					'homepage', 
 					'msn',
-					'icq');
-			
+					'icq',
+					'taal');
+
 			foreach ($fields as $field)
 				if (isset($data[$field]))
 					$iter->set($field, $data[$field]);
