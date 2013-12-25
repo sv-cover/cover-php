@@ -61,6 +61,8 @@
 		}
 
 		echo '<table class="forum">';
+		echo '<col class="author">';
+		echo '<col class="message">';
 		echo '<tr class="separator"><td colspan="2">'.$iter->get('subject').'</td></tr>';	
 			//echo '<tr id="' . ($message == $iter ? 't' : 'p') . $message->get('id') . '" class="separator"><td colspan="2"></td></tr>';
 		$i = 0;
