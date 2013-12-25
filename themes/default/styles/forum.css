@@ -55,6 +55,10 @@ table.forum td {
 }
 
 table.forum col.author {
+	width: 160px;
+}
+
+table.forum.thread col.author {
 	width: 100px;
 }
 
@@ -69,6 +73,20 @@ span.subject {
 
 table.forum tr.header td {
 
+}
+
+table.forum col.icon {
+	width: 40px;
+}
+
+table.forum col.commentcount,
+table.forum col.threadcount,
+table.forum col.messagecount {
+	width: 40px;
+}
+
+table.forum col.last {
+	width: 120px;
 }
 
 table.forum td.icon {
@@ -198,6 +216,9 @@ table.forum tr.r1 > td {
 table.forum td.last {
 	text-align: center;
 	font-size: 10px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 div.onderschrift {

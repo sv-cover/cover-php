@@ -60,7 +60,7 @@
 			render_new_message($authors, $iter, 'submforumnewmessage', $params, false);
 		}
 
-		echo '<table class="forum">';
+		echo '<table class="forum thread">';
 		echo '<col class="author">';
 		echo '<col class="message">';
 		echo '<tr class="separator"><td colspan="2">'.$iter->get('subject').'</td></tr>';	
@@ -515,6 +515,11 @@
 		}
 
 		echo '<table class="forum">
+			<col class="icon">
+			<col class="subject">
+			<col class="author">
+			<col class="commentcount">
+			<col class="last">
 			<tr class="header">
 			<td colspan="2">' . _('Onderwerp') . '</td>
 			<td class="text_center">' . _('Auteur') . '</td>
@@ -576,7 +581,12 @@
 
 	function view_fora($model, $iters, $params = null) {
 		echo '<h1>' . _('Forum') . '</h1>
-		<div class="topbar"></div><table class="forum">';
+		<div class="topbar"></div><table class="forum">
+		<col class="icon">
+		<col class="forum">
+		<col class="threadcount">
+		<col class="messagecount">
+		<col class="last">';
 		$i=0;
 		$headers = $model->get_headers();
 
