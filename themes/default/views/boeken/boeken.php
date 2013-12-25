@@ -29,12 +29,12 @@
 				}
 
 				echo '<table class="boeken">
-				<tr class="header">';
+				<tr>';
 			
 				if ($bestellen)
-					echo '<td class="check">' . image('delete_small.png', __('V'), __('Verwijderen')) . '</td>';
+					echo '<th class="check">' . image('delete_small.png', __('V'), __('Verwijderen')) . '</td>';
 			
-				echo '<td>' . __('Vak') . '</td><td>' . __('Titel') . '</td><td>' . __('Auteur') . '</td><td>' . __('Prijs') .  "</td></tr>\n";
+				echo '<th>' . __('Vak') . '</th><th>' . __('Titel') . '</th><th>' . __('Auteur') . '</th><th>' . __('Prijs') .  "</th></tr>\n";
 
 				$total = 0;
 				$nnb = false;
@@ -94,31 +94,39 @@
 				return;
 			}
 		
-			echo '<form action="boeken.php" method="post">
-				<table class="fill"><tr><td> ' .
-				input_hidden('submboekenbestel', 'yes');	
+			echo '<form action="boeken.php" method="post">'
+				. input_hidden('submboekenbestel', 'yes');
 			
 			$notebook = new Notebook('boeken');
 
 			foreach ($categories as $id => $name) {
 				$contents = '<table class="boeken">
-				<tr class="header"><td class="check"></td><td>' . __('Vak') . '</td><td>' . __('Titel') . '</td><td>' . __('Auteur') . '</td><td>' . __('Prijs') . '</td></tr>';
+					<col class="check">
+					<col class="course">
+					<col class="title">
+					<col class="author">
+					<col class="price">
+				<tr>
+					<th class="check"></th>
+					<th>' . __('Vak') . '</th>
+					<th>' . __('Titel') . '</th>
+					<th>' . __('Auteur') . '</th>
+					<th>' . __('Prijs') . '</th>
+				</tr>';
 			
 				$books = $model->get_from_category($id);
 			
 				foreach ($books as $book) {
-					$contents .= table_row(input_checkbox('boek_' . $book->get('id'), null), $book->get('vak'), $book->get('titel'), '<span class="italic">' . $book->get('auteur') . '</span>', $book->get('prijs') == 0 ? 'n.n.b.' : ('&euro;&nbsp;' . $book->get('prijs')));
+					$contents .= table_row(input_checkbox('boek_' . $book->get('id'), null), $book->get('vak'), $book->get('titel'), '<span class="italic">' . $book->get('auteur') . '</span>', $book->get('prijs') == 0 ? __('n.n.b.') : ('&euro;&nbsp;' . $book->get('prijs')));
 				}
 			
 				$contents .= '</table>';
 				$notebook->add_page($name, $contents);
 			}
 		
-			echo $notebook->render() . '</td></tr>
-			<tr><td class="submit">' . input_submit('subm', __('Bestellen')) . '</td></tr>
-			</table>		
-			</form>
-			';
+			echo $notebook->render()
+				. input_submit('subm', __('Bestellen'))
+				. '</form>';
 		}
 	
 		function toevoegen_boeken($model, $errors, $added) {
@@ -189,12 +197,12 @@
 			echo input_hidden('submboekenedit', 'yes');
 			echo '<table class="boeken" id="lijst_boeken">';
 		
-			echo '<tr class="header"><td class="check">' . image('delete_small.png', __('V'), __('Verwijderen')) . '</td>
-						<td class="check">' . image('lock_small.png', __('S'), __('Niet meer te bestellen')) . '</td>
-						<td>' . __('Vak') . '</td>
-						<td>' . __('Titel') . '</td>
-						<td>' . __('Auteur') . '</td>
-						<td>' . __('Prijs') . '</td></tr>';
+			echo '<tr><th class="check">' . image('delete_small.png', __('V'), __('Verwijderen')) . '</th>
+						<th class="check">' . image('lock_small.png', __('S'), __('Niet meer te bestellen')) . '</th>
+						<th>' . __('Vak') . '</th>
+						<th>' . __('Titel') . '</th>
+						<th>' . __('Auteur') . '</th>
+						<th>' . __('Prijs') . '</th></tr>';
 		
 			foreach ($books as $book) {
 				$status = array('status' => $book->get('status') ? 0 : 1);
@@ -283,9 +291,9 @@
 
 			echo '<h1>' . __('Aantal bestellingen per boek') . '</h1>
 			<table class="boeken">
-			<tr class="header">
-				<td>' . __('Boek') . '</td>
-				<td width="20px">' . __('Aantal') . '</td>
+			<tr>
+				<th>' . __('Boek') . '</th>
+				<th width="20px">' . __('Aantal') . '</th>
 			</tr>';
 		
 			$i = true;
@@ -343,10 +351,10 @@
 
 			echo '<h1>' . __('Aantal bestellingen per lid') . '</h1>
 			<table class="boeken">
-			<tr class="header">
-				<td>' . __('Lid') . '</td>
-				<td width="20px">' . __('Aantal') . '</td>
-				<td width="50px">' . __('Totaalprijs') . '</td>
+			<tr>
+				<th>' . __('Lid') . '</th>
+				<th width="20px">' . __('Aantal') . '</th>
+				<th width="50px">' . __('Totaalprijs') . '</th>
 			</tr>';
 		
 			$i = true;
@@ -384,10 +392,10 @@
 
 			echo '<h1>' . __('Bestellingen') . '</h1>
 			<table class="boeken">
-			<tr class="header">
-				<td>' . __('Boek') . '</td>
-				<td>' . __('Lid') . '</td>
-				<td width="20px">' . __('Prijs') . '</td>
+			<tr>
+				<th>' . __('Boek') . '</th>
+				<th>' . __('Lid') . '</th>
+				<th width="20px">' . __('Prijs') . '</th>
 			</tr>';
 		
 			$i = true;

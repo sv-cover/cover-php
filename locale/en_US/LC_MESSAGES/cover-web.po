@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2013-12-25 16:34+0100\n"
+"POT-Creation-Date: 2013-12-25 19:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -668,10 +668,10 @@ msgstr "Unknown"
 
 #: ../../../../cover-php/include/models/DataModelForum.php:662
 #: ../../../../cover-php/themes/default/views/forum.php:890
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:326
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:347
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:389
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:413
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:334
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:355
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:397
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:421
 #: ../../../../cover-php/themes/default/views/actieveleden/_nieuw_lid.phtml:16
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:7
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:61
@@ -905,9 +905,9 @@ msgstr "that forum doesn't exist"
 #: ../../../../cover-php/themes/default/views/forum.php:525
 #: ../../../../cover-php/themes/default/views/forum.php:1267
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:37
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:105
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:139
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:196
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:113
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:147
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:204
 msgid "Auteur"
 msgstr "Author"
 
@@ -1041,7 +1041,7 @@ msgid "Verplaats geselecteerd forum naar beneden"
 msgstr "Move the selected forum down"
 
 #: ../../../../cover-php/themes/default/views/forum.php:667
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:125
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:133
 #: ../../../../cover-php/themes/default/views/agenda/edit.phtml:68
 #: ../../../../cover-php/themes/default/views/fotoboek/_beheer.phtml:1
 #: ../../../../cover-php/themes/default/views/fotoboek/_reacties.phtml:7
@@ -1051,7 +1051,7 @@ msgid "Toevoegen"
 msgstr "Add"
 
 #: ../../../../cover-php/themes/default/views/forum.php:667
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:217
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:225
 #: ../../../../cover-php/themes/default/views/agenda/edit.phtml:68
 #: ../../../../cover-php/themes/default/views/links/_beheer.phtml:28
 msgid "Wijzigen"
@@ -1059,7 +1059,7 @@ msgstr "Edit"
 
 #: ../../../../cover-php/themes/default/views/forum.php:667
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:35
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:192
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:200
 #: ../../../../cover-php/themes/default/views/actieveleden/_commissie_selectie.phtml:26
 #: ../../../../cover-php/themes/default/views/afstudeerplaatsen/afstudeerplaatsen.phtml:17
 #: ../../../../cover-php/themes/default/views/afstudeerplaatsen/bedrijf.phtml:69
@@ -1270,7 +1270,7 @@ msgstr "Make a page"
 #: ../../../../cover-php/themes/default/views/header.php:104
 #: ../../../../cover-php/themes/default/views/header.php:217
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:17
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:174
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:182
 msgid "Bestelde boeken"
 msgstr "Ordered books"
 
@@ -1303,7 +1303,7 @@ msgstr "Governing Board"
 
 #: ../../../../cover-php/themes/default/views/header.php:131
 #: ../../../../cover-php/themes/default/views/header.php:287
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:169
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:177
 msgid "Boeken bestellen"
 msgstr "Order books"
 
@@ -1477,28 +1477,28 @@ msgstr "There are still %d calendar events waiting to be approved."
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computer Science"
 
-#: ../../../../cover-php/themes/default/views/almanak/almanak.php:16
+#: ../../../../cover-php/themes/default/views/almanak/almanak.php:23
 #, php-format
 msgid "foto van %s"
 msgstr "Photo of %s"
 
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:35
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:192
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:200
 msgid "V"
 msgstr "V"
 
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:37
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:105
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:137
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:194
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:111
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:145
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:202
 #: ../../../../cover-php/themes/default/views/studieondersteuning/moderate.phtml:20
 msgid "Vak"
 msgstr "Course"
 
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:37
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:105
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:138
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:195
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:112
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:146
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:203
 #: ../../../../cover-php/themes/default/views/fotoboek/_fotoboek_edit.phtml:12
 #: ../../../../cover-php/themes/default/views/links/_beheer.phtml:46
 #: ../../../../cover-php/themes/default/views/show/edit.phtml:22
@@ -1507,11 +1507,11 @@ msgid "Titel"
 msgstr "Title"
 
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:37
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:105
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:140
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:197
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:390
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:413
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:114
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:148
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:205
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:398
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:421
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:8
 msgid "Prijs"
 msgstr "Price"
@@ -1541,7 +1541,7 @@ msgid "Beschikbare boeken"
 msgstr "Available books"
 
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:85
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:170
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:178
 msgid "De deadline om boeken te bestellen is verstreken"
 msgstr "The deadline to order books has passed"
 
@@ -1549,111 +1549,115 @@ msgstr "The deadline to order books has passed"
 msgid "Momenteel zijn er geen boeken te bestellen"
 msgstr "At the moment there are no books to order"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:118
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:120
+msgid "n.n.b."
+msgstr "t.b.d."
+
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:128
 msgid "Bestellen"
 msgstr "Order"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:125
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:184
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:133
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:192
 #: ../../../../cover-php/themes/default/views/taken/taken.phtml:5
 msgid "toevoegen"
 msgstr "add"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:125
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:141
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:133
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:149
 msgid "Boek toevoegen"
 msgstr "Add book"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:136
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:144
 #: ../../../../cover-php/themes/default/views/links/_beheer.phtml:42
 #: ../../../../cover-php/themes/default/views/links/moderate.phtml:21
 msgid "Categorie"
 msgstr "Category"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:140
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:148
 msgid "0 = nog niet bekend"
 msgstr "0 = not known yet"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:175
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:183
 msgid "Deze pagina is alleen beschikbaar voor de Boekcie"
 msgstr "This page is only available for the book committee"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:183
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:191
 #, php-format
 msgid "Er zijn geen boeken dit moment. Je kunt wel boeken %s."
 msgstr "There are no books at this moment. You can order %s."
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:193
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:201
 msgid "S"
 msgstr "S"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:193
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:201
 msgid "Niet meer te bestellen"
 msgstr "Not available for ordering"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:214
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:222
 msgid "Bestellingen vastzetten"
 msgstr "Accept orders"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:215
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:216
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:223
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:224
 #: ../../../../cover-php/themes/default/views/studieondersteuning/vak.phtml:42
 msgid "Alles"
 msgstr "All"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:215
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:223
 msgid "Alles selecteren om te verwijderen"
 msgstr "Select everything to delete orders"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:216
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:224
 msgid "Alles selecteren om te vast te zetten"
 msgstr "Select everything to accept orders"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:247
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:248
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:255
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:256
 msgid "Niet gevonden"
 msgstr "Not found"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:255
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:263
 msgid "Lijst met bestelde boeken"
 msgstr "List with ordered books"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:268
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:287
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:388
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:413
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:276
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:295
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:396
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:421
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:6
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:36
 #: ../../../../cover-php/themes/default/views/fotoboek/_reactie.phtml:15
 msgid "Boek"
 msgstr "Book"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:268
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:288
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:326
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:348
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:276
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:296
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:334
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:356
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:37
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:62
 msgid "Aantal"
 msgstr "Number"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:284
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:292
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:33
 msgid "Aantal bestellingen per boek"
 msgstr "Amount of orders per book"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:326
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:349
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:334
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:357
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:63
 msgid "Totaalprijs"
 msgstr "Total price"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:344
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:352
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:58
 msgid "Aantal bestellingen per lid"
 msgstr "Amount of orders per member"
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:375
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:383
 msgid ""
 "De prijzen zijn niet van alle boeken al bekend, het totaalbedrag valt daarom "
 "lager uit dan het daadwerkelijke totaalbedrag"
@@ -1661,7 +1665,7 @@ msgstr ""
 "The total amount is sometimes lower than the actual amount since we do not "
 "have a price estimate for every book."
 
-#: ../../../../cover-php/themes/default/views/boeken/boeken.php:385
+#: ../../../../cover-php/themes/default/views/boeken/boeken.php:393
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:1
 msgid "Bestellingen"
 msgstr "Orders"
