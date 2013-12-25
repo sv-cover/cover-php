@@ -100,8 +100,8 @@ class ControllerBesturen extends Controller
 		// Sort then on their canonical names: $betuur->get('login')
 		usort($iters, array($this, '_compare_bestuur'));
 
-		// By default, select the last bestuur to display
-		$bestuur = end($iters);
+		// By default, select the second last bestuur to display
+		$bestuur = $iters[count($iters) - 2];
 
 		// And if another bestuur was selected, change to that page
 		if (isset($_GET['id']))
