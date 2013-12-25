@@ -41,6 +41,7 @@
 		}
 
 		/* Set language to use */
+		putenv('LANG='.i18n_get_locale());
 		setlocale(LC_ALL, i18n_get_locale());
 	}
 	
@@ -76,8 +77,8 @@
 	
 	function _i18n_language_map() {
 		return array(
-			'nl_NL.ISO-8859-15' => 'nl',
-			'en_US.ISO-8859-15' => 'en');
+			'nl_NL' => 'nl',
+			'en_US' => 'en');
 	}
 	
 	/** @group i18n
