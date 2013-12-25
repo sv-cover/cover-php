@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2013-12-25 16:19+0100\n"
+"POT-Creation-Date: 2013-12-25 16:22+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -23,7 +23,7 @@ msgstr "Active Members"
 #: ../../../../cover-php/afstudeerplaatsen.php:17
 #: ../../../../cover-php/themes/default/views/header.php:157
 #: ../../../../cover-php/themes/default/views/header.php:165
-#: ../../../../cover-php/themes/default/views/header.php:277
+#: ../../../../cover-php/themes/default/views/header.php:278
 #: ../../../../cover-php/themes/default/views/afstudeerplaatsen/auth.phtml:1
 #: ../../../../cover-php/themes/default/views/afstudeerplaatsen/auth_commissie.phtml:1
 #: ../../../../cover-php/themes/default/views/afstudeerplaatsen/bedrijf.phtml:1
@@ -84,7 +84,7 @@ msgstr ""
 
 #: ../../../../cover-php/almanak.php:13
 #: ../../../../cover-php/themes/default/views/header.php:146
-#: ../../../../cover-php/themes/default/views/header.php:270
+#: ../../../../cover-php/themes/default/views/header.php:271
 #: ../../../../cover-php/themes/default/views/almanak/almanak.phtml:1
 msgid "Almanak"
 msgstr "Almanak"
@@ -107,7 +107,7 @@ msgstr "Books"
 #: ../../../../cover-php/themes/default/views/header.php:97
 #: ../../../../cover-php/themes/default/views/header.php:130
 #: ../../../../cover-php/themes/default/views/header.php:209
-#: ../../../../cover-php/themes/default/views/header.php:262
+#: ../../../../cover-php/themes/default/views/header.php:263
 #: ../../../../cover-php/themes/default/views/commissies/commissies.phtml:1
 msgid "Commissies"
 msgstr "Committees"
@@ -220,7 +220,7 @@ msgstr "The directory with photos could not be read"
 
 #: ../../../../cover-php/gastenboek.php:15
 #: ../../../../cover-php/themes/default/views/header.php:149
-#: ../../../../cover-php/themes/default/views/header.php:284
+#: ../../../../cover-php/themes/default/views/header.php:285
 #: ../../../../cover-php/themes/default/views/gastenboek/gastenboek.phtml:1
 msgid "Gastenboek"
 msgstr "Guestbook"
@@ -237,7 +237,7 @@ msgstr "Become Active"
 #: ../../../../cover-php/themes/default/views/header.php:95
 #: ../../../../cover-php/themes/default/views/header.php:156
 #: ../../../../cover-php/themes/default/views/header.php:207
-#: ../../../../cover-php/themes/default/views/header.php:285
+#: ../../../../cover-php/themes/default/views/header.php:286
 #: ../../../../cover-php/themes/default/views/links/auth_bestuur.phtml:1
 #: ../../../../cover-php/themes/default/views/links/links.phtml:1
 #: ../../../../cover-php/themes/default/views/links/moderate.phtml:1
@@ -276,7 +276,7 @@ msgid "Nieuw lid"
 msgstr "New member"
 
 #: ../../../../cover-php/profiel.php:32
-#: ../../../../cover-php/themes/default/views/header.php:415
+#: ../../../../cover-php/themes/default/views/header.php:416
 #: ../../../../cover-php/themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
@@ -370,7 +370,7 @@ msgstr "Request a new password"
 #: ../../../../cover-php/weblog.php:13
 #: ../../../../cover-php/themes/default/views/forum.php:1212
 #: ../../../../cover-php/themes/default/views/header.php:150
-#: ../../../../cover-php/themes/default/views/header.php:267
+#: ../../../../cover-php/themes/default/views/header.php:268
 #: ../../../../cover-php/themes/default/views/weblog/weblog.phtml:1
 msgid "Weblog"
 msgstr "Weblog"
@@ -993,7 +993,7 @@ msgstr "Last"
 #: ../../../../cover-php/themes/default/views/forum.php:534
 #: ../../../../cover-php/themes/default/views/forum.php:959
 #: ../../../../cover-php/themes/default/views/forum.php:1081
-#: ../../../../cover-php/themes/default/views/header.php:336
+#: ../../../../cover-php/themes/default/views/header.php:337
 msgid "Poll"
 msgstr "Poll"
 
@@ -1284,7 +1284,7 @@ msgid "Cover"
 msgstr "Cover"
 
 #: ../../../../cover-php/themes/default/views/header.php:126
-#: ../../../../cover-php/themes/default/views/header.php:264
+#: ../../../../cover-php/themes/default/views/header.php:265
 msgid "Lid/donateur worden"
 msgstr "Become a Member/donator"
 
@@ -1302,18 +1302,18 @@ msgid "Bestuur"
 msgstr "Governing Board"
 
 #: ../../../../cover-php/themes/default/views/header.php:131
-#: ../../../../cover-php/themes/default/views/header.php:286
+#: ../../../../cover-php/themes/default/views/header.php:287
 #: ../../../../cover-php/themes/default/views/boeken/boeken.php:169
 msgid "Boeken bestellen"
 msgstr "Order books"
 
 #: ../../../../cover-php/themes/default/views/header.php:133
-#: ../../../../cover-php/themes/default/views/header.php:263
+#: ../../../../cover-php/themes/default/views/header.php:264
 msgid "Zusterverenigingen"
 msgstr "Sister unions"
 
 #: ../../../../cover-php/themes/default/views/header.php:134
-#: ../../../../cover-php/themes/default/views/header.php:265
+#: ../../../../cover-php/themes/default/views/header.php:266
 msgid "Documenten"
 msgstr "Documents"
 
@@ -1323,12 +1323,12 @@ msgid "Bedrijven"
 msgstr "Companies"
 
 #: ../../../../cover-php/themes/default/views/header.php:141
-#: ../../../../cover-php/themes/default/views/header.php:275
+#: ../../../../cover-php/themes/default/views/header.php:276
 msgid "Bedrijfsprofielen"
 msgstr "Company profiles"
 
 #: ../../../../cover-php/themes/default/views/header.php:142
-#: ../../../../cover-php/themes/default/views/header.php:276
+#: ../../../../cover-php/themes/default/views/header.php:277
 msgid "Vacatures"
 msgstr "Vacancies"
 
@@ -1338,7 +1338,7 @@ msgid "Foto's"
 msgstr "Photos"
 
 #: ../../../../cover-php/themes/default/views/header.php:151
-#: ../../../../cover-php/themes/default/views/header.php:281
+#: ../../../../cover-php/themes/default/views/header.php:282
 msgid "K.I."
 msgstr "A.I."
 
@@ -1348,12 +1348,12 @@ msgid "De studie"
 msgstr "The study"
 
 #: ../../../../cover-php/themes/default/views/header.php:155
-#: ../../../../cover-php/themes/default/views/header.php:283
+#: ../../../../cover-php/themes/default/views/header.php:284
 msgid "Alumni"
 msgstr "Alumni"
 
 #: ../../../../cover-php/themes/default/views/header.php:161
-#: ../../../../cover-php/themes/default/views/header.php:282
+#: ../../../../cover-php/themes/default/views/header.php:283
 msgid "Informatica"
 msgstr "Computer Science"
 
@@ -1378,98 +1378,102 @@ msgstr "Association"
 msgid "Studie"
 msgstr "Study"
 
-#: ../../../../cover-php/themes/default/views/header.php:266
+#: ../../../../cover-php/themes/default/views/header.php:262
+msgid "Vorige besturen"
+msgstr "Previous Boards"
+
+#: ../../../../cover-php/themes/default/views/header.php:267
 msgid "ALV (historie)"
 msgstr "GA (history)"
 
-#: ../../../../cover-php/themes/default/views/header.php:271
+#: ../../../../cover-php/themes/default/views/header.php:272
 msgid "Merchandise"
 msgstr "Merchandise"
 
-#: ../../../../cover-php/themes/default/views/header.php:272
+#: ../../../../cover-php/themes/default/views/header.php:273
 msgid "MSDNAA"
 msgstr "MSDNAA"
 
-#: ../../../../cover-php/themes/default/views/header.php:278
+#: ../../../../cover-php/themes/default/views/header.php:279
 msgid "Sponsormogelijkheden"
 msgstr "Sponsorship opportunities"
 
-#: ../../../../cover-php/themes/default/views/header.php:287
+#: ../../../../cover-php/themes/default/views/header.php:288
 msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
-#: ../../../../cover-php/themes/default/views/header.php:334
+#: ../../../../cover-php/themes/default/views/header.php:335
 msgid "Er is op dit moment geen poll"
 msgstr "There is no poll at the moment"
 
-#: ../../../../cover-php/themes/default/views/header.php:374
+#: ../../../../cover-php/themes/default/views/header.php:375
 msgid "Jarigen"
 msgstr "Birthdays"
 
-#: ../../../../cover-php/themes/default/views/header.php:383
+#: ../../../../cover-php/themes/default/views/header.php:384
 msgid "Er zijn vandaag geen jarigen"
 msgstr "It's nobody's birthday today"
 
-#: ../../../../cover-php/themes/default/views/header.php:385
+#: ../../../../cover-php/themes/default/views/header.php:386
 #, php-format
 msgid "Er is vandaag %d jarige:"
 msgid_plural "Er zijn vandaag %d jarigen:"
 msgstr[0] "There is %d birthday today:"
 msgstr[1] "There are %d birthdays today:"
 
-#: ../../../../cover-php/themes/default/views/header.php:401
+#: ../../../../cover-php/themes/default/views/header.php:402
 msgid "wachtwoord vergeten?"
 msgstr "Forgot your password?"
 
-#: ../../../../cover-php/themes/default/views/header.php:401
+#: ../../../../cover-php/themes/default/views/header.php:402
 msgid "lid worden"
 msgstr "Become Active"
 
-#: ../../../../cover-php/themes/default/views/header.php:402
+#: ../../../../cover-php/themes/default/views/header.php:403
 msgid "E-mailadres"
 msgstr "E-Mail address"
 
-#: ../../../../cover-php/themes/default/views/header.php:403
+#: ../../../../cover-php/themes/default/views/header.php:404
 msgid "Wachtwoord"
 msgstr "Password"
 
-#: ../../../../cover-php/themes/default/views/header.php:404
+#: ../../../../cover-php/themes/default/views/header.php:405
 msgid "Blijvend"
 msgstr "Permanent"
 
-#: ../../../../cover-php/themes/default/views/header.php:404
+#: ../../../../cover-php/themes/default/views/header.php:405
 msgid "Inloggen"
 msgstr "Login"
 
-#: ../../../../cover-php/themes/default/views/header.php:413
+#: ../../../../cover-php/themes/default/views/header.php:414
 #: ../../../../cover-php/themes/default/views/sessions/sessions.phtml:10
 msgid "Ingelogd"
 msgstr "Logged in"
 
-#: ../../../../cover-php/themes/default/views/header.php:414
+#: ../../../../cover-php/themes/default/views/header.php:415
 msgid "Uitloggen"
 msgstr "Logout"
 
-#: ../../../../cover-php/themes/default/views/header.php:417
+#: ../../../../cover-php/themes/default/views/header.php:418
 msgid "De CoverKamer is <b>open</b>"
 msgstr "The Coverkamer is <b>open</b>"
 
-#: ../../../../cover-php/themes/default/views/header.php:419
+#: ../../../../cover-php/themes/default/views/header.php:420
 msgid "De CoverKamer is <b>dicht</b>"
 msgstr "The Coverkamer is <b>closed</b>"
 
-#: ../../../../cover-php/themes/default/views/header.php:437
+#: ../../../../cover-php/themes/default/views/header.php:438
 #: ../../../../cover-php/themes/default/views/agenda/index.phtml:10
 msgid "Er staat nog 1 agendapunt in de wachtrij"
 msgstr "There is still 1 calendar event waiting to be approved."
 
-#: ../../../../cover-php/themes/default/views/header.php:439
+#: ../../../../cover-php/themes/default/views/header.php:440
 #: ../../../../cover-php/themes/default/views/agenda/index.phtml:12
 #, php-format
 msgid "Er staan nog %d agendapunten in de wachtrij"
 msgstr "There are still %d calendar events waiting to be approved."
 
-#: ../../../../cover-php/themes/default/views/header.php:462
+#: ../../../../cover-php/themes/default/views/header.php:463
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computer Science"
 

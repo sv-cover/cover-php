@@ -24,7 +24,14 @@
 	/* Get the first editable page */
 	$editable_model = get_model('DataModelEditable');
 	$page = $editable_model->get_iter($commissie->get('page'));
-	$content = $page->get('content');
+
+	$language = i18n_get_language();
+
+	$property = isset($page->data['content_' . $language])
+		? 'content_' . $language
+		: 'content';
+
+	$content = $page->get($property);
 	
 	$desc = editable_get_summary($content, $page->get('owner'));
 	?>

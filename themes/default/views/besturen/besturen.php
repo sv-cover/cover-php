@@ -10,11 +10,7 @@ class BesturenView extends View
 	{
 		$editable_model = get_model('DataModelEditable');
 		
-		$page = $editable_model->get_iter($page_id);
-		
-		$content = $page->get('content');
-	
-		return editable_get_summary($content, $page->get('owner'));
+		return $editable_model->get_summary($page_id);
 	}
 
 	public function has_bestuursfoto($bestuur)

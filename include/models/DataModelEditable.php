@@ -21,5 +21,16 @@
 					FROM pages
 					WHERE titel = '" . $this->escape_string($title) . "'"));
 		}
+
+		function get_summary($id) {
+			$page = $this->get_iter($id);
+
+			$lang_spec_prop = 'content_' . i18n_get_language();
+
+			$content = !empty($page->data[$lang_spec_prop])
+				? $page->get($lang_spec_prop)
+				: $page->get('content');
+
+			return editable_get_summary($content, $page->get('owner'));
+		}
 	}
-?>
