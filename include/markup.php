@@ -46,7 +46,7 @@
 		while (preg_match('/\[url=(.*?)\](.*?)\[\/url\]/is', $markup, $match))
 		{
 			$placeholder = sprintf('#LINK%d#', $count++);
-			$placeholders[$placeholder] = '<a rel="nofollow" href="' . $match[1] . '"' . (strpos($match[1], 'http://') !== FALSE ? '>' : '>') . $match[2] . '</a>';
+			$placeholders[$placeholder] = '<a rel="nofollow" href="' . $match[1] . '"' . (strpos($match[1], 'http://') !== FALSE ? '>' : '>') . markup_parse($match[2], $placeholders) . '</a>';
 			
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
@@ -234,11 +234,13 @@
 	  *
 	  * @result a string with all the markup replaced by html
 	  */
-	function markup_parse($markup) {
+	function markup_parse($markup, &$placeholders = null) {
+		if (!$placeholders)
+			$placeholders = array();
+		
 		$markup .= "\n";
 
 		/* Filter code tags */
-		$placeholders = array();
 		_markup_parse_code($markup, $placeholders);
 
 		/* Parse [img=] and [youtube=] */
