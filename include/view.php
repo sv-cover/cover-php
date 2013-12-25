@@ -1,7 +1,7 @@
 <?
 /**
   * A Class implementing the default view. New views should subclass this one.
-  * creating functions in the same directory as the view, with the extension .html
+  * creating functions in the same directory as the view, with the extension .phtml
   * will allow a call to function_name().
   *
   */
@@ -12,7 +12,7 @@ class View {
 	}
 	
 	/**
-	 * Renders the file with the name of _$name.html in the directory of 
+	 * Renders the file with the name of _$name.phtml in the directory of 
 	 * the view
 	 *
 	 * @name the name of the partial to be rendered
@@ -23,7 +23,7 @@ class View {
 	 **/
 	function render_partial($name, $params = array())
 	{
-		$filename = dirname($this->__file) . '/_' . $name . '.html';
+		$filename = dirname($this->__file) . '/_' . $name . '.phtml';
 
 		if (file_exists($filename))
 		{
@@ -37,7 +37,7 @@ class View {
 	}
 	
 	/**
-	 * Renders the file with the name of _$name.html in the directory of 
+	 * Renders the file with the name of _$name.phtml in the directory of 
 	 * the view and returns the resulting string
 	 *
 	 * @name the name of the partial to be rendered
@@ -58,7 +58,7 @@ class View {
 	}
 	
 	function __call($name, $args) {
-		$filename = dirname($this->__file) . '/' . $name . '.html';
+		$filename = dirname($this->__file) . '/' . $name . '.phtml';
 		
 		if (file_exists($filename))
 		{
