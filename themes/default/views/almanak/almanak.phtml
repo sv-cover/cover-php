@@ -31,14 +31,14 @@
 				<td> <?= input_text('search_last', null) ?></td>
 			</tr>
 			<tr>
-				<td class="title">Beginjaar:</td><td class="alphabet">
+				<td class="title"><?= __('Beginjaar') ?>:</td><td class="alphabet">
 				<? foreach ($model->get_distinct_years() as $jaar) { ?>
 					<a href="?search_year=<?= $jaar ?>"> <?= $jaar ?></a> 
 				<?}	// join($model->get_distinct_years()," ") .	?>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="3" class="submit"> <?= input_submit('', 'Zoeken') ?></td>
+				<td colspan="3" class="submit"> <?= input_submit('', __('Zoeken')) ?></td>
 			</tr>
 		</table>
 	</form>

@@ -37,7 +37,7 @@
 				<ul>';
 				
 				foreach ($leden as $lid)
-					$lh .= '<li><a href="profiel.php?lid=' . $lid->get('id') . '">' . $lid->get('voornaam') . ' ' . $lid->get('tussenvoegsel') . ' ' . $lid->get('achternaam') . '</a>' . ($lid->get('functie') ? (' - ' . $lid->get('functie')) : '') . "</li>\n";
+					$lh .= '<li><a href="profiel.php?lid=' . $lid->get('id') . '">' . $lid->get('voornaam') . ' ' . $lid->get('tussenvoegsel') . ' ' . $lid->get('achternaam') . '</a>' . ($lid->get('functie') ? (' - ' . __($lid->get('functie'))) : '') . "</li>\n";
 					
 				$lh .= '</ul>';
 			} else {

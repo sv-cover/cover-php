@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2013-12-25 15:50+0100\n"
+"POT-Creation-Date: 2013-12-25 16:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1116,6 +1116,7 @@ msgstr "Type"
 
 #: ../../../../cover-php/themes/default/views/forum.php:922
 #: ../../../../cover-php/themes/default/views/actieveleden/_nieuw_lid.phtml:17
+#: ../../../../cover-php/themes/default/views/almanak/almanak.phtml:41
 #: ../../../../cover-php/themes/default/views/gastenboek/gastenboek.phtml:8
 #: ../../../../cover-php/themes/default/views/gastenboek/gastenboek.phtml:13
 msgid "Zoeken"
@@ -2071,6 +2072,12 @@ msgstr "First name"
 msgid "Achternaam"
 msgstr "Last name"
 
+#: ../../../../cover-php/themes/default/views/almanak/almanak.phtml:34
+#: ../../../../cover-php/themes/default/views/nieuwlid/nieuwlid.phtml:70
+#: ../../../../cover-php/themes/default/views/profiel/profiel.phtml:50
+msgid "Beginjaar"
+msgstr "Starting year"
+
 #: ../../../../cover-php/themes/default/views/almanak/almanak.phtml:47
 msgid "Maak hierboven een selectie om de almanak te bekijken."
 msgstr "Make a selection above to view the almanac"
@@ -2664,11 +2671,6 @@ msgstr "Phone number"
 msgid "Telefoonnummer mobiel"
 msgstr "Mobile phone number"
 
-#: ../../../../cover-php/themes/default/views/nieuwlid/nieuwlid.phtml:70
-#: ../../../../cover-php/themes/default/views/profiel/profiel.phtml:50
-msgid "Beginjaar"
-msgstr "Starting year"
-
 #: ../../../../cover-php/themes/default/views/poll/_vote_form.phtml:13
 msgid "Stem"
 msgstr "Vote"
@@ -2688,6 +2690,10 @@ msgstr "Can't find this member. Contact the %s if the problem keeps occurring"
 #, php-format
 msgid "Profiel van %s"
 msgstr "Profile of %s"
+
+#: ../../../../cover-php/themes/default/views/profiel/profiel.phtml:14
+msgid "Almanakgegevens"
+msgstr "Personal data"
 
 #: ../../../../cover-php/themes/default/views/profiel/profiel.phtml:20
 msgid "lidfoto"
