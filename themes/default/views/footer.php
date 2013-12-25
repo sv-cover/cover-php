@@ -11,6 +11,7 @@
 				<? echo create_agenda_menu('green'); ?>
 				<!--<? echo create_links_menu('yellow'); ?>-->
 				<? echo create_poll_menu('blue'); ?>
+				<? echo create_facebook_menu('blue'); ?>
 				<? echo create_onestat_menu();	?>
 			
 				</div>	
