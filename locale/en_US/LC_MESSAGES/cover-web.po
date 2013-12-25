@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2013-12-25 16:22+0100\n"
+"POT-Creation-Date: 2013-12-25 16:34+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -2681,7 +2681,7 @@ msgstr "Vote"
 
 #: ../../../../cover-php/themes/default/views/poll/_vote_results.phtml:16
 msgid "Aantal stemmen"
-msgstr "Amount of votes"
+msgstr "Number of votes"
 
 #: ../../../../cover-php/themes/default/views/profiel/not_found.phtml:2
 #, php-format

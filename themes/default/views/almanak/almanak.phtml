@@ -70,16 +70,13 @@
 				if ($n < count($iter)) {
 					$info = $this->almanak_info($model, $iter[$n]);
 		
-					$photos .= '<td>' . $info[0] . "</td>\n";
-					$names .= '<td>' . $info[1] . "</td>\n";
+					$photos .= '<td>' . $info . "</td>\n";
 				} else {
 					$photos .= "<td></td>\n";
-					$names .= "<td></td>\n";
 				}
 			}
 			
 			echo '<tr class="photo">' . $photos . "</tr>\n";
-			echo '<tr class="name">' . $names . "</tr>\n";
 		}
 		 ?>
 	</table>

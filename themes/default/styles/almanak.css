@@ -13,7 +13,7 @@ table.almanak_navigation {
 
 table.almanak_navigation td.title {
 	font-weight: bold;
-	width: 100px;
+	white-space: nowrap;
 	text-align: right;
 }
 
@@ -37,11 +37,11 @@ table.almanak td {
 	text-align: center;
 }
 
-table.almanak tr.photo td {
+table.almanak tr td {
 	vertical-align: bottom;
+	padding-bottom: 15px;
 }
 
-table.almanak tr.name td {
-	vertical-align: top;
-	padding-bottom: 15px;
+table.almanak td .name {
+	display: block;
 }
