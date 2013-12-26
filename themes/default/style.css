@@ -755,3 +755,50 @@ div.beheer table {
 .sessions-table th {
 	text-align: left;
 }
+
+#language-switch {
+	position: absolute;
+	right: 20px;
+	top: 0;
+	line-height: 40px;
+	display: block;
+}
+
+#language-switch button {
+	display: none;
+}
+
+#language-switch label > * {
+	display: none;
+}
+
+#language-switch label span {
+	font-weight: normal;
+	float: left;
+	padding: 0 4px;
+	background-image: url('images/menubg.png');
+	background-repeat:repeat-x;
+}
+
+#language-switch label:hover span {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* Show the currently chosen language */
+#language-switch input[checked] + span {
+	display: block;
+	float: right;
+}
+
+#language-switch:hover label > span {
+	display: block;
+}
+
+#language-switch:hover input[checked] + span {
+	font-weight: normal;
+}
+
+.headNav > ul {
+	margin-right: 80px;
+}

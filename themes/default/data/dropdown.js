@@ -70,3 +70,11 @@ function showSubMenu(name)
 					   });
 	}
 }
+
+jQuery(function($) {
+	$('#language-switch label').click(function(e) {
+		e.preventDefault();
+		$(this).find('input[type=radio]').prop('checked', true);
+		$(this.form).submit();
+	});
+});

@@ -58,7 +58,11 @@
 				$_SESSION['taal'] = $language;
 			}
 			
-			header('Location: index.php');
+			$return_path = isset($_POST['return_to'])
+				? $_POST['return_to']
+				: 'index.php';
+
+			header('Location: ' . $return_path);
 			exit();
 		}
 		

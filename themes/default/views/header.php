@@ -216,9 +216,9 @@
 		if (member_in_commissie(COMMISSIE_BOEKCIE)) {
 			$admin[] = '<a href="boeken.php?bestellingen">' . __('Bestelde boeken') . '</a>';
 		}
+
 		if (member_in_commissie(COMMISSIE_EASY)) {
 			$admin[] = '<a href="taken.php">' . __('Taken') . '</a>';
-			$admin[] = '<a href="_priv/docs/api/html/">' . __('Documentatie') . '</a>';
 		}
 		
 		$content .= '
@@ -229,16 +229,28 @@
 					<li><a href="fotoboek.php">' . __('Foto\'s') . '</a></li>
 					<li class="dropDown"><a drop="studie" href="" onclick="return false;">' . __('Studie') . '</a></li>
 					<li><a href="show.php?id=17">' . __('Contact') . '</a></li>
-				</ul><script>
-$("#verenigingClick").click(function(){
-	$(".subNav ul:visible").each( function() {
-		if (this != "#vereniging"){
-			$(this).slideToggle("slow");
+				</ul>';
+
+		$language_options = array();
+
+		foreach (i18n_get_languages() as $code => $language) {
+			$language_options[] = sprintf('
+				<label id="lang-%1$s">
+					<input type="radio" name="language" value="%1$s"%3$s>
+					<span>%2$s</span>
+				</label>',
+				$code, $language,
+				i18n_get_language() == $code ? ' checked="checked"' : '');
 		}
-	});
-	$("#vereniging").slideToggle("slow");
-}); 
-</script>
+
+		$content .= '
+				<form method="post" id="language-switch" action="index.php">
+					<input type="hidden" name="submindexlanguage" value="1">
+					<input type="hidden" name="return_to" value="' . htmlentities($_SERVER['REQUEST_URI'], ENT_QUOTES) . '">
+					' . implode("\n", $language_options) . '
+					<button type="submit">' . __('Verander taal') . '</button>
+				</form>
+				</form>
 			</div>
 			<div class="subNav">
 		';
