@@ -12,7 +12,8 @@ a[class*="buttonNew"] { background:url("images/new.png") no-repeat scroll left c
 a[class*="buttonSearch"] { background:url("images/search.png") no-repeat scroll left center; padding-left:26px; margin:0px 3px; display:block; line-height: 24px; min-height:24px; }
 
 body {
-	background:url("images/swoosh.png") no-repeat scroll top center transparent; background-color:#3B3B3B;
+	background:url("images/swoosh.png") no-repeat scroll top center transparent;
+	background-color:#3B3B3B;
 	padding:0px 15px;
 	font-family: verdana, sans, "sans serif";
 	font-size: 12px;
@@ -758,28 +759,28 @@ div.beheer table {
 
 #language-switch {
 	position: absolute;
-	right: 20px;
+	right: 4px;
 	top: 0;
-	line-height: 40px;
+	line-height: 24px;
 	display: block;
+	margin: 8px;
+	background: #3B3B3B;
+	border-radius: 3px;
 }
 
-#language-switch button {
+/* Hide submit button and radio buttons */
+#language-switch button,
+#language-switch label > input {
 	display: none;
 }
 
-#language-switch label > * {
-	display: none;
-}
-
-#language-switch label span {
+#language-switch label > span {
 	font-weight: normal;
 	float: left;
 	padding: 0 4px;
-	background-image: url('images/menubg.png');
-	background-repeat:repeat-x;
 }
 
+/* Underline as a link on hover */
 #language-switch label:hover span {
 	text-decoration: underline;
 	cursor: pointer;
@@ -787,18 +788,5 @@ div.beheer table {
 
 /* Show the currently chosen language */
 #language-switch input[checked] + span {
-	display: block;
-	float: right;
-}
-
-#language-switch:hover label > span {
-	display: block;
-}
-
-#language-switch:hover input[checked] + span {
-	font-weight: normal;
-}
-
-.headNav > ul {
-	margin-right: 80px;
+	text-decoration: underline;
 }

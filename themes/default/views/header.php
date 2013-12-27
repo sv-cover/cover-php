@@ -239,7 +239,7 @@
 					<input type="radio" name="language" value="%1$s"%3$s>
 					<span>%2$s</span>
 				</label>',
-				$code, $language,
+				$code, strtoupper($code),
 				i18n_get_language() == $code ? ' checked="checked"' : '');
 		}
 
