@@ -158,9 +158,9 @@
 			$data['parent'] = $book ? intval($book->get('id')) : 0;
 
 			$iter = new DataIter($this->model, -1, $data);
-			$this->model->insert_book($iter);
+			$new_book_id = $this->model->insert_book($iter);
 			
-			header('Location: fotoboek.php' . $book ? ('?book=' . $book->get('id')) : '');
+			header('Location: fotoboek.php?book=' . $new_book_id);
 		}
 		
 		function _process_fotoboek_edit($book) {

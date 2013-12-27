@@ -504,7 +504,7 @@
 		  * @result whether or not the insert was successful
 		  */
 		function insert_book($iter) {
-			return $this->_insert('foto_boeken', $iter, false);
+			return $this->_insert('foto_boeken', $iter, true);
 		}
 
 		/**
