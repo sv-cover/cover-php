@@ -9,7 +9,7 @@ if (member_in_commissie(COMMISSIE_FOTOCIE)){
 $this->render_partial('navigation', compact('model', 'iter'));
 
 if(logged_in())
-	echo('<a target="_blank" href="http://fotocie.svcover.nl/upload" title="Upload foto\'s als niet-fotocie lid"><div class="button" style="float:right; margin-left:10px">Upload foto\'s</div></a>');
+	echo '<a target="_blank" href="http://fotocie.svcover.nl/upload" title="' . __('Upload foto\'s als niet-fotocie lid') . '"><div class="button" style="float:right; margin-left:10px">' . __('Upload foto\'s') . '</div></a>';
 
 if (!$iter) {
 	$commissie_model = get_model('DataModelCommissie');
@@ -17,7 +17,7 @@ if (!$iter) {
 
 
 ?>
-	<p> <?= sprintf(__('Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, meld dat dan aan de FoToCie, of gebruik de knop \'Upload foto\'s\' rechts van deze tekst.'), '<a href="show.php?id=' . $fotocie->get('page') . '"> ' . __('FotoCie')  . '</a>') ?> '</p>
+	<p><?= sprintf(__('Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, meld dat dan aan de FoToCie, of gebruik de knop \'Upload foto\'s\' rechts van deze tekst.'), '<a href="show.php?id=' . $fotocie->get('page') . '">' . __('FotoCie')  . '</a>') ?></p>
 <? 
 }
 
