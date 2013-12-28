@@ -2462,11 +2462,11 @@ msgstr "This given book doesn't exist"
 
 #: ../../../../cover-php/themes/default/views/fotoboek/fotoboek.phtml:12
 msgid "Upload foto's als niet-fotocie lid"
-msgstr "Upload photo's as a non-FotoCie member"
+msgstr "Upload photos as a non-FotoCie member"
 
 #: ../../../../cover-php/themes/default/views/fotoboek/fotoboek.phtml:12
 msgid "Upload foto's"
-msgstr "Upload photo's"
+msgstr "Upload photos"
 
 #: ../../../../cover-php/themes/default/views/fotoboek/fotoboek.phtml:20
 #, php-format
@@ -2478,7 +2478,7 @@ msgid ""
 msgstr ""
 "Welcome at Covers photo book. This part of the site is maintained by the %s. "
 "Please inform the FotoCie when you made photos at an activity so they can "
-"add them to the photo book or use the 'Upload photo's' button on the right."
+"add them to the photo book or use the 'Upload photos' button on the right."
 
 #: ../../../../cover-php/themes/default/views/fotoboek/fotoboek.phtml:20
 msgid "FotoCie"
