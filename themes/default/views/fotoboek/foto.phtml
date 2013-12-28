@@ -3,7 +3,7 @@
 <div class="messageBox">
 
 <?
-	$book = $model->get_book($iter->get('boek'));
+	$book = $model->get_book($iter->get('boek'), logged_in());
 	
 	$this->render_partial('path', array('iter' => $book, 'include_current' => true, 'model' => $model));
 	$this->render_partial('photo', compact('model', 'iter'));
