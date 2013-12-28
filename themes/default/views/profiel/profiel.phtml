@@ -106,7 +106,7 @@
 					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
 						<tr>
 							<td><?= label(__('Taal'), 'taal', $errors) ?></td>
-							<td><?= select_field('taal', array('nl' => __('Nederlands'), 'en' => __('Engels')), $iter->data) ?></td>
+							<td><?= select_field('taal', i18n_get_languages(), $iter->data) ?></td>
 						</tr>
 					<? } ?>
 
