@@ -52,7 +52,7 @@ foreach ($iter as $item) {
 </table></form>
 </div>
 <script type="text/javascript">
-	var ids = new Array(0, <?= implode(', ', array_map(create_function('$item', 'return $item->get_id();'), $ites)) ?>);
+	var ids = new Array(0, <?= implode(', ', array_map(create_function('$item', 'return $item->get_id();'), $iter)) ?>);
 
 	function action_clicked(id, accept) {
 		div = document.getElementById("comment_" + id);

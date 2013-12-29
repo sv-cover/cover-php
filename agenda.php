@@ -213,7 +213,7 @@
 			$cancelled = array();
 
 			foreach ($_POST as $field => $value) {
-				if (!preg_match('/action__([0-9]+)/i', $field, $matches))
+				if (!preg_match('/action_([0-9]+)/i', $field, $matches))
 					continue;
 				
 				$id = $matches[1];
