@@ -206,6 +206,15 @@ margin-bottom: 0px;
 border-radius: 0 0 5px 5px;
 }
 
+.messageBox .bar {
+	background: transparent;
+}
+
+.messageBox .right {
+	position: absolute;
+	right: 18px;
+}
+
 .bannerRotator
 {
 	width: 100%;
@@ -261,7 +270,8 @@ border-radius: 0 0 5px 5px;
   border: 1px solid #666;
   border-radius: 3px;
   background-color: #ddd;
-  padding: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
 }
 .button:hover
 {
@@ -348,9 +358,10 @@ border-radius: 0 0 5px 5px;
 .floatLeft { float:left; }
 .floatRight { float:right; }
 
-.frontpage
+.messageBox.frontpage
 {
-	margin-bottom: 15px !important;
+	padding-top: 30px;
+	margin-bottom: 15px;
 }
 
 #gastenboek_bericht table
@@ -417,6 +428,14 @@ border-radius: 0 0 5px 5px;
 		color-stop(0.6, rgb(245,245,245))
 	);
 }
+
+a.button {
+	color: black;
+	text-decoration: none;
+	display: inline-block;
+	font-weight: normal;
+}
+
 .login .textField 
 {
 	border:0; padding: 3px;
@@ -496,8 +515,9 @@ border-radius: 0 0 5px 5px;
 	color: #C60C30;
 }
 .messageBox {
+	position: relative;
 	color:#000000;
-	padding:30px 15px;
+	padding:15px;
 	margin-bottom: 30px;
 	background: #f5f5f5 url('images/cbox-bg.png') repeat-x scroll left top ;
 	border-bottom-left-radius:4px; border-bottom-right-radius:5px;

@@ -387,7 +387,8 @@
 		</td></tr>
 		</table></form>'; */
 		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></h1>';
-		echo '<div class="topbar"></div><table class="poll"><tr class="header"><td colspan="2">Nieuwe poll toevoegen.</td></tr>';
+		echo '<div class="messageBox">';
+		echo '<table class=""><tr class="header"><td colspan="2">Nieuwe poll toevoegen.</td></tr>';
 		
 		$config_model = get_model('DataModelConfiguratie');
 		$id = $config_model->get_value('poll_forum');
@@ -424,10 +425,10 @@
 		for ($i = 0; $i < 6; $i++)
 			echo '<tr id="optie_tr_' . $i . '"><td>' . __('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';
 		
-		echo '</tbody></table><div class="bar" style="border-top: 1px solid #000000;"><span  style="padding-left: 10px;">' . 
+		echo '</tbody></table><span  style="padding-left: 10px;">' . 
 		
 		//input_button(__('Nieuwe optie'), 'add_option()') . ' ' .
-		input_submit('subm', __('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</span></div></form>';
+		input_submit('subm', __('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '</span></form></div>';
 		/*
 		<script type="text/javascript">
 			var sending = false;
