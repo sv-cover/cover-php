@@ -103,6 +103,23 @@ class ControllerApi extends Controller
 		return array('result' => $member_in_committee);
 	}
 
+	public function api_get_committees($member_id)
+	{
+		// Find in which committees the member is active
+		$member_model = get_model('DataModelMember');
+
+		$member_committees = $member_model->get_commissies($member_id);
+
+		$committee_model = get_model('DataModelCommissie');
+
+		$committees = array();
+
+		foreach ($member_committees as $committee_id)
+			$committees[$committee_id] = $committee_model->get_naam($committee_id);
+
+		return array('result' => $committees);
+	}
+
 	public function run_impl()
 	{
 		$method = isset($_GET['method'])
@@ -111,25 +128,39 @@ class ControllerApi extends Controller
 
 		switch ($method)
 		{
+			// GET api.php?method=agenda
 			case 'agenda':
 				$response = $this->api_agenda();
 				break;
 
+			// POST api.php?method=session_create
 			case 'session_create':
 				$response = $this->api_session_create($_POST['email'], $_POST['password'],
 					isset($_POST['application']) ? $_POST['application'] : 'api');
 				break;
 
+			// POST api.php?method=session_destroy
 			case 'session_destroy':
 				$response = $this->api_session_destroy($_POST['session_id']);
 				break;
 
+			// GET api.php?method=session_get_member&session_id={session}
 			case 'session_get_member':
-				$response = $this->api_session_get_member($_POST['session_id']);
+				// For legacy reasons a post session id is still accepted but this method should be accessed using a GET request.
+				$response = $this->api_session_get_member(empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id']);
 				break;
 
+			// GET api.php?method=session_test_committee&session_id={session}&committee=webcie
 			case 'session_test_committee':
-				$response = $this->api_session_test_committee($_POST['session_id'], $_POST['committee']);
+				// Again, legacy reasons.
+				$response = $this->api_session_test_committee(
+					empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id'],
+					empty($_POST['committee']) ? $_GET['committee'] : $_POST['committee']);
+				break;
+
+			// GET api.php?method=get_committees&member_id=709
+			case 'get_committees':
+				$response = $this->api_get_committees($_GET['member_id']);
 				break;
 
 			default:
