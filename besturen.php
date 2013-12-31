@@ -58,7 +58,7 @@ class ControllerBesturen extends Controller
 
 		$bestuur_id = $this->model->insert($iter, true);
 
-		header('Location: besturen.php?id=' . $bestuur_id . '&editable_edit');
+		header('Location: besturen.php?editable_edit=' . $page_id . '#' . $bestuur_id);
 	}
 
 	public function _do_edit()
@@ -84,7 +84,7 @@ class ControllerBesturen extends Controller
 		
 		$editable_model->update($editable);
 
-		header('Location: besturen.php?id=' . $bestuur->get('id'));
+		header('Location: besturen.php#' . $bestuur->get('id'));
 	}
 
 	public function _view_add()
@@ -100,23 +100,21 @@ class ControllerBesturen extends Controller
 		// Sort then on their canonical names: $betuur->get('login')
 		usort($iters, array($this, '_compare_bestuur'));
 
-		// By default, select the second last bestuur to display
-		$bestuur = $iters[count($iters) - 2];
-
-		// And if another bestuur was selected, change to that page
-		if (isset($_GET['id']))
-			$bestuur = $this->model->get_iter($_GET['id']);
-
 		// Create and run the editable content area (capture output)
-		$editable = new ControllerEditable($bestuur->get('page'));
-		$page = $this->capture($editable);
+		$pages = array();
+
+		foreach ($iters as $bestuur)
+		{
+			$editable = new ControllerEditable($bestuur->get('page'));
+			$pages[$bestuur->get('id')] = $this->capture($editable);
+		}
 		
-		$this->get_content('besturen', $iters, compact('bestuur', 'page'));
+		$this->get_content('besturen', $iters, compact('pages'));
 	}
 
 	public function _compare_bestuur($left, $right)
 	{
-		return strnatcmp($left->get('login'), $right->get('login'));
+		return -1 * strnatcmp($left->get('login'), $right->get('login'));
 	}
 
 	protected function capture(Controller $controller)

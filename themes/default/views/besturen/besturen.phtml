@@ -1,18 +1,28 @@
-<div class="bestuur-page">
-	<?= $this->parse_bestuursfoto($bestuur, $page) ?>
-</div>
+<div class="timeline-container">
+	<div class="timeline-line"></div>
+	<div class="timeline">
+		<div class="timeline-event has-header">
+			<?php
+				$editable = new ControllerEditable('Oudbesturenpagina');
+				$editable->run();
+			?>
+		</div>
+	<?php foreach ($iter as $bestuur): ?>
+		<div class="bestuur timeline-event has-header">
+			<?= $this->parse_bestuursfoto($bestuur, $pages[$bestuur->get('id')]) ?>
+		</div>
+	<?php endforeach ?>
 
-<div class="messageBox besturen-lijst">
-<?php foreach ($iter as $a_bestuur): ?>
-	<div class="bestuur <? if ($a_bestuur->get('id') == $bestuur->get('id')) echo 'active' ?>">
-		<h3><a href="besturen.php?id=<?= $a_bestuur->get('id') ?>"><?= $a_bestuur->get('naam') ?></a></h3>
-		<p class="description"><?=$this->get_summary($a_bestuur->get('page'))?></p>
+	<div class="timeline-event full-width">
+		<div class="messageBox">
+			<p>XX-XX-19XX: Cover werd opgericht.</p>
+		</div>
 	</div>
-<?php endforeach ?>
-<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
-	<div class="bestuur">
-		<a href="besturen.php?add_bestuur" class="add-new-bestuur"><?=__('Nieuw bestuur toevoegen...')?></a>
+
+	<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
+		<div class="timeline-footer">
+			<a href="besturen.php?add_bestuur" class="add-new-bestuur"><?=__('Nieuw bestuur toevoegen...')?></a>
+		</div>
+	<?php endif ?>
 	</div>
-<?php endif ?>
-	<div class="clearBoth"></div>
 </div>

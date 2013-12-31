@@ -733,22 +733,6 @@ div.beheer table {
 	width: 90%;
 }
 
-.besturen-lijst .bestuur {
-	float: left;
-	width: 210px;
-	padding: 0 10px;
-	height: 75px;
-}
-
-.besturen-lijst .bestuur.active {
-	background-color: white;
-	border-radius: 4px;
-}
-
-.besturen-lijst .add-new-bestuur {
-	line-height: 60px;
-}
-
 .sessions-table {
 	width: 100%;
 }
@@ -789,4 +773,76 @@ div.beheer table {
 /* Show the currently chosen language */
 #language-switch input[checked] + span {
 	text-decoration: underline;
+}
+
+.timeline-container {
+	position: relative;
+	overflow: hidden;
+}
+
+.timeline-line {
+	height: 100%;
+	position: absolute;
+	left: 50%;
+	width: 2px;
+	background: #b80a0a;
+	bottom: 10px;
+	margin-left: -1px;
+	z-index: 10;
+}
+
+.timeline-footer {
+	clear: both;
+	text-align: center;
+}
+
+.timeline-event {
+	width: 49%;
+	border-radius: 4px;
+	position: relative;
+}
+
+.timeline-event.full-width {
+	width: 100%;
+	clear: both;
+	z-index: 15;
+}
+
+.timeline-event:nth-child(even) {
+	float: right;
+	clear: right;
+}
+
+.timeline-event:nth-child(odd) {
+	float: left;
+	clear: left;
+}
+
+.timeline-event:before {
+	border: 7px solid;
+	content: '';
+	display: block;
+	position: absolute;
+	z-index: 5;
+}
+
+.timeline-event:nth-child(even):before {
+	border-color: transparent #f5f5f5 transparent transparent;
+	top: 10px;
+	right: 100%;
+}
+
+.timeline-event:nth-child(odd):before {
+	border-color: transparent transparent transparent #f5f5f5;
+	top: 10px;
+	left: 100%;
+}
+
+.timeline-event.has-header:before {
+	top: 50px;
+}
+
+.timeline-event .messageBox {
+	padding: 15px;
+	border-radius: 5px;
 }
