@@ -6,7 +6,7 @@
 
 	function echo_editable_page($iter, $page) {
 		if (member_in_commissie($iter->get('owner')) || member_in_commissie(COMMISSIE_BESTUUR)) {
-			$link = '<a href="' . add_request(get_request(), 'editable_edit') . '">' . image('edit.png', __('bewerken'), __('Pagina bewerken')) . '</a>';
+			$link = '<a href="' . add_request(get_request(), 'editable_edit=' . $iter->get('id')) . '">' . image('edit.png', __('bewerken'), __('Pagina bewerken')) . '</a>';
 			
 			//if title with markup <h1>Title</h1> is found in page
 			if (preg_match('/^\<h1\>(.*?)\<\/h1\>/i', $page)) {
@@ -80,7 +80,7 @@
 				<a href="' . $self . '">' . image('close.png', __('sluiten'), __('Sluiten'), 'class="top"') . '</a>
 
 			</div>
-			<a href="' . add_request($self, 'editable_add&editable_language=' . $params['language']) . '">' . image('new.png', __('nieuw'), __('Voeg pagina toe na deze pagina'), 'class="button"') . '</a>
+			<a href="' . add_request($self, 'editable_add=' . $iter->get('id') . '&editable_language=' . $params['language']) . '">' . image('new.png', __('nieuw'), __('Voeg pagina toe na deze pagina'), 'class="button"') . '</a>
 			<a href="javascript:submit_form(\'editable\', true);">' . image('save.png',  __('opslaan'), __('Sla pagina op'), 'class="button"') . '</a>
 			<a href="javascript:reset_form(\'editable\');">' . image('revert.png', __('herstellen'), __('Herstel pagina'), 'class="button"') . '</a>
 			<a href="javascript:editable_preview();">' . image('preview.png', __('voorbeeld'), __('Voorbeeld tonen'), 'class="button" id="editable_preview"'), '</a>
@@ -108,7 +108,7 @@
 
 		echo '<form name="editable" method="post" action="' . $self . '"><p>';
 		echo input_hidden('editable_id', $iter->get_id());
-		echo input_hidden('submeditable', 'yes');
+		echo input_hidden('submeditable', $iter->get_id());
 		echo input_hidden('editable_pagenr', $pagenr);
 		echo input_hidden('editable_language', $params['language']);
 		

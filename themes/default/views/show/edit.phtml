@@ -22,7 +22,7 @@ foreach ($commissies as $commissie)
 <?= table_row(label(__('Titel'), 'titel', $errors, true) . ':',
 		input_text('titel', null)) ?>
 <?= table_row(label(__('Commissie'), 'owner', $errors, true) . ':',
-		select_field('owner', $values, null) ?>
+		select_field('owner', $values, null)) ?>
 
 <tr><td colspan="2"> <?= textarea_field('content', null, $errors, 'formatter', 'markup_format_text') ?> 
 	</td></tr>

@@ -213,7 +213,7 @@
 			else
 				$_SESSION['alert'] = $this->model->db->get_last_error();
 
-			header('Location: ' . add_request(get_request(), 'editable_edit&editable_language=' . $this->_get_language()));
+			header('Location: ' . add_request(get_request(), 'editable_edit=' . $iter->get('id') . '&editable_language=' . $this->_get_language()));
 			exit();
 		}
 	
@@ -233,7 +233,7 @@
 			$iter->set($field, $this->_pages_join($pages));
 			$this->model->update($iter);
 
-			header('Location: ' . add_request(get_request('editable_add', 'editable_pagenr', 'editable_language'), 'editable_edit&editable_pagenr=' . ($pagenr + 1) . '&editable_language=' . $this->_get_language()));
+			header('Location: ' . add_request(get_request('editable_add', 'editable_pagenr', 'editable_language'), 'editable_edit=' . $iter->get('id') . '&editable_pagenr=' . ($pagenr + 1) . '&editable_language=' . $this->_get_language()));
 			exit();
 		}
 
@@ -247,7 +247,7 @@
 			
 			if (count($pages) == 1) {
 				$_SESSION['alert'] = __('Er is maar een pagina. Maak eerst een nieuwe pagina aan voordat je deze verwijdert.');
-				header('Location: ' . add_request(get_request('editable_del'),  'editable_edit'));
+				header('Location: ' . add_request(get_request('editable_del'),  'editable_edit=' . $iter->get('id')));
 				exit();
 			}
 			
@@ -267,7 +267,7 @@
 					mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
 			}
 			
-			header('Location: ' . add_request(get_request('editable_del', 'editable_pagenr', 'editable_language'),  'editable_edit&editable_pagenr=' . min($pagenr, count($pages) - 1) . '&editable_language=' . $this->_get_language()));
+			header('Location: ' . add_request(get_request('editable_del', 'editable_pagenr', 'editable_language'),  'editable_edit=' . $iter->get('id') . '&editable_pagenr=' . min($pagenr, count($pages) - 1) . '&editable_language=' . $this->_get_language()));
 			
 			exit();
 		}
@@ -324,13 +324,13 @@
 				}
 				
 				$this->get_content('editable', $page);
-			} elseif (isset($_POST['submeditable']))
+			} elseif (isset($_POST['submeditable']) && $_POST['submeditable'] == $page->get('id'))
 				$this->_do_save($page);
-			elseif (isset($_GET['editable_add']))
+			elseif (isset($_GET['editable_add']) && $_GET['editable_add'] == $page->get('id'))
 				$this->_do_add($page);
-			elseif (isset($_GET['editable_del']))
+			elseif (isset($_GET['editable_del']) && $_GET['editable_del'] == $page->get('id'))
 				$this->_do_del($page);
-			elseif (isset($_GET['editable_edit']))
+			elseif (isset($_GET['editable_edit']) && $_GET['editable_edit'] == $page->get('id'))
 				$this->_view_edit($page);
 			else
 				$this->_view_editable($page);
