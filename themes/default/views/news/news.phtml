@@ -9,7 +9,7 @@ $member_data = logged_in();
 
 if (isset($forumid) && $member_data && count($member_data['commissies']) > 0)	{
 ?>
-	<div class="controls inline"><a href="forum.php?forum=<?= $forumid ?>&startadd"><?= image('new.png', __('Toevoegen'), __('Een nieuwe mededeling toevoegen')) ?></a> <a href="forum.php?forum=<?= $forumid ?>&startadd"><?= __('Nieuwe mededeling') ?></a></div>
+	<div class="controls inline"><a href="forum.php?forum=<?= $forumid ?>&startadd"><?= image('new.png', __('Toevoegen'), __('Een nieuwe mededeling toevoegen')) ?><?= __('Nieuwe mededeling') ?></a></div>
 <? } ?>
 <h1><?= __('Mededelingen') ?></h1></div>
 

@@ -75,11 +75,8 @@
 
 		echo '<h1>' . __('Bewerken') . ' - ' . $iter->get('titel') . '</h1>';
 		echo '<div class="messageBox">';
-		echo '<div class="bar">
-			<div class="right">
-				<a href="' . $self . '">' . image('close.png', __('sluiten'), __('Sluiten'), 'class="top"') . '</a>
-
-			</div>
+		echo '<div class="control-bar">
+			<a href="' . $self . '" class="right">' . image('close.png', __('sluiten'), __('Sluiten'), 'class="top"') . '</a>
 			<a href="' . add_request($self, 'editable_add=' . $iter->get('id') . '&editable_language=' . $params['language']) . '">' . image('new.png', __('nieuw'), __('Voeg pagina toe na deze pagina'), 'class="button"') . '</a>
 			<a href="javascript:submit_form(\'editable\', true);">' . image('save.png',  __('opslaan'), __('Sla pagina op'), 'class="button"') . '</a>
 			<a href="javascript:reset_form(\'editable\');">' . image('revert.png', __('herstellen'), __('Herstel pagina'), 'class="button"') . '</a>
