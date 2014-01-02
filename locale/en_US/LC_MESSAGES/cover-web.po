@@ -2179,7 +2179,7 @@ msgstr "Add board"
 
 #: ../../../../cover-php/themes/default/views/besturen/besturen.phtml:14
 msgid "Nieuw bestuur toevoegen..."
-msgstr "Add a new board…"
+msgstr "Add a new board..."
 
 #: ../../../../cover-php/themes/default/views/boeken/bestellingen.phtml:26
 msgid "Alle bestellingen verwijderen"

@@ -832,6 +832,7 @@ div.beheer table {
 	width: 100%;
 	clear: both;
 	z-index: 15;
+	text-align: center;
 }
 
 .timeline-event:nth-child(even) {
@@ -844,7 +845,12 @@ div.beheer table {
 	clear: left;
 }
 
-.timeline-event:before {
+.timeline-event .messageBox {
+	padding: 15px;
+	border-radius: 5px;
+}
+
+.timeline-event .messageBox:before {
 	border: 7px solid;
 	content: '';
 	display: block;
@@ -852,23 +858,15 @@ div.beheer table {
 	z-index: 5;
 }
 
-.timeline-event:nth-child(even):before {
+.timeline-event:nth-child(even) .messageBox:before {
 	border-color: transparent #f5f5f5 transparent transparent;
 	top: 10px;
 	right: 100%;
 }
 
-.timeline-event:nth-child(odd):before {
+.timeline-event:nth-child(odd) .messageBox:before {
 	border-color: transparent transparent transparent #f5f5f5;
 	top: 10px;
 	left: 100%;
 }
 
-.timeline-event.has-header:before {
-	top: 50px;
-}
-
-.timeline-event .messageBox {
-	padding: 15px;
-	border-radius: 5px;
-}
