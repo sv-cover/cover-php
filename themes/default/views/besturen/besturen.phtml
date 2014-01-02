@@ -14,9 +14,10 @@
 	<?php endforeach ?>
 
 	<div class="timeline-event full-width">
-		<div class="messageBox">
-			<p>XX-XX-19XX: Cover werd opgericht.</p>
-		</div>
+		<?php
+			$editable = new ControllerEditable('Oprichting Cover');
+			$editable->run();
+		?>
 	</div>
 
 	<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
