@@ -310,12 +310,14 @@
 
 		/* Check if date part (not time) is not the same */
 		if (substr($iter->get('van'), 0, 10) != substr($iter->get('tot'), 0, 10)) {
-			return 'van ' . agenda_date_for_display($iter, 'van') . ' ' . agenda_time_for_display($iter, 'van') .
-			     ' tot ' . agenda_date_for_display($iter, 'tot') . ' ' . agenda_time_for_display($iter, 'tot');
+			return sprintf(__('van %s %s tot %s %s'),
+				agenda_date_for_display($iter, 'van'), agenda_time_for_display($iter, 'van'),
+				agenda_date_for_display($iter, 'tot'), agenda_time_for_display($iter, 'tot'));
 		} else {
-			return agenda_date_for_display($iter, 'van') . 
-					', van ' . agenda_time_for_display($iter, 'van') . 
-					' tot ' . agenda_time_for_display($iter, 'tot');
+			return sprintf(__('%s, van %s tot %s'),
+				agenda_date_for_display($iter, 'van'),
+				agenda_time_for_display($iter, 'van'),
+				agenda_time_for_display($iter, 'tot'));
 		}
 	}
 	
