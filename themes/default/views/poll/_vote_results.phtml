@@ -15,6 +15,7 @@ $total_calc = max(1, $total); ?>
 
 <tr><td colspan="2"><?= __('Aantal stemmen') ?>:<?= $total ?></td></tr>
 
-<? if (isset($enable_new) && $enable_new) ?>
+<?php if (isset($enable_new) && $enable_new): ?>
 	<tr><td colspan="2"><?= input_button(__('Nieuwe poll'), 'javascript:window.location = \'forum.php?forum=' . $iter->get('forum') . '&addpoll\'') ?></td></tr>
+<?php endif ?>
 </table>

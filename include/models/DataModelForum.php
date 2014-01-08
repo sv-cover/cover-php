@@ -427,7 +427,8 @@
 			$row = $this->db->query_first('
 					SELECT
 						*,
-						to_char(date, \'DD-MM-YYYY, HH24:MI\') AS datum
+						to_char(date, \'DD-MM-YYYY, HH24:MI\') AS datum,
+						date_part(\'day\', CURRENT_TIMESTAMP - date) AS since
 					FROM
 						forum_threads
 					WHERE

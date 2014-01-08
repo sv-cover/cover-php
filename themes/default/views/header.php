@@ -324,23 +324,13 @@
 
 	function create_poll_menu($color) {
 		$poll_model = get_model('DataModelPoll');
-		$forum_model = get_model('DataModelForum');
-		$config_model = get_model('DataModelConfiguratie');
-		
-		$id = $config_model->get_value('poll_forum');
-		
-		/* Get last thread */
-		if ($id) {
-			$forum = $forum_model->get_iter($id);
-			
-			if ($forum)
-				$thread = $forum->get_newest_thread();
-		}
+		$thread = $poll_model->get_latest_poll();
 
 		if ($thread) {
 			$contents = '<p><a href="forum.php?thread=' . $thread->get('id') . '">' . $thread->get('subject') . '</a></p>';
 			ob_start();
-			run_view('poll', $poll_model, $thread, array('enable_new' => logged_in() && $thread->get('since') >= 14));
+			run_view('poll', $poll_model, $thread, array(
+				'enable_new' => $poll_model->can_create_new_poll()));
 			$contents .= ob_get_contents();
 			ob_end_clean();
 		} else
