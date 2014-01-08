@@ -17,8 +17,8 @@
 			if (!$current_user)
 				return false;
 
-			// Board or EASY? Yes, you can create a poll
-			if (member_in_commissie(COMMISSIE_BESTUUR))
+			// EASY? Yes, you can create a poll
+			if (member_in_commissie(COMMISSIE_EASY))
 				return true;
 
 			// Otherwise look at the last poll and see how many days
