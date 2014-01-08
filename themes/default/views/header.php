@@ -412,15 +412,9 @@
 	
 	function create_login() {
 		if (($data = logged_in())) {
-			//require_once('../isdecoverkameropen/ck.php');
 			$output =  __('Ingelogd') . ': <b>' . $data['voornaam'] . '</b><br/>
 			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . '">' . __('Uitloggen') . '</a>
 			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . __('Profiel') . '</a>';
-			if($ck_open) {
-				$output .= "<p class=\"clearBoth\">" . __('De CoverKamer is <b>open</b>') . "</p>";
-			} else {
-				$output .= "<p class=\"clearBoth\">" . __('De CoverKamer is <b>dicht</b>') . "</p>";
-			}
 			return $output;
 		} else {
 			return create_login_form();
