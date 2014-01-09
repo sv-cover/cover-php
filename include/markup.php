@@ -180,7 +180,7 @@
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
-	function _markup_parse_youtube(&$markup)
+	function _markup_parse_youtube(&$markup, &$placeholders)
 	{
 		$count = 0;
 
