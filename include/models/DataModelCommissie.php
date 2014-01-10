@@ -99,7 +99,7 @@
 			if (!$value)
 				$value = __('onbekend');
 			
-			return $value . '@ai.rug.nl';
+			return $value . '@svcover.nl';
 		}
 		
 		/**

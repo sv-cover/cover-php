@@ -9,12 +9,27 @@
 			parent::DataModel($db, 'agenda');
 		}
 		
-		function get() {
+		function get($from = null, $till = null, $confirmed_only = false) {
+
+			$conditions = array();
+
+			if ($from !== null)
+				$conditions[] = "agenda.tot >= date '$from'";
+
+			if ($till !== null)
+				$conditions[] = "agenda.tot < date '$till'";
+
+			if ($confirmed_only)
+				$conditions[] = "agenda.id NOT IN (SELECT a_m.agendaid FROM agenda_moderate a_m)";
+
+			$where_clause = empty($conditions) ? '' : 'WHERE ' . implode(' AND ', $conditions);
+
 			$rows = $this->db->query('
 					SELECT
-						*, ' . $this->_generate_select() . '
+						agenda.*, ' . $this->_generate_select() . '
 					FROM
 						agenda
+					' . $where_clause . '
 					ORDER BY
 						van ASC');
 			
