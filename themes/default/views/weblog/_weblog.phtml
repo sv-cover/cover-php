@@ -5,7 +5,7 @@ $message = $iter->get_first_message();
 echo '
 	<div class="weblogPost">
 		<div class="details">
-			<img class="weblog_head" src="images/heads/' . $this->_get_weblog_head($iter) . '">
+			<img class="weblog_head" width="100" height="100" src="foto.php?lid_id=' . $iter->get('author') . '&amp;get_thumb=circle&amp;width=200">
 			<a class="author" href="' . get_author_link($iter) . '">' . $author_info['name'] . '</a>
 		</div>
 		<div class="weblog">

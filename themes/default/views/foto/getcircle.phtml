@@ -1,0 +1,28 @@
+<?php
+
+$circle = new Imagick();
+$circle->newImage($width, $width, 'none');
+$circle->setimagematte(true);
+
+$draw = new ImagickDraw();
+$draw->setfillcolor('#000');
+$draw->circle($width / 2, $width / 2, 2, $width / 2);
+$circle->drawimage($draw);
+
+$imagick = new Imagick();
+$imagick->readImageBlob(pg_unescape_bytea($model->get_photo($iter)));
+$imagick->scaleImage($width, 0);
+$imagick->cropimage($width, $width, 0, 0);
+$imagick->compositeimage($circle, Imagick::COMPOSITE_COPYOPACITY, 0, 0);
+
+header('Pragma: public');
+header('Cache-Control: max-age=86400');
+header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+header('Content-Type: image/png');
+
+$out = fopen('php://output', 'w');
+$imagick->setImageFormat('png');
+$imagick->writeImageFile($out);
+fclose($out);
+
+$imagick->destroy();

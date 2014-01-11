@@ -29,8 +29,13 @@
 		  */
 		function get_thumb($lidid) {
 			$iter = $this->model->get_iter($lidid);
-
 			run_view('foto::getthumb', $this->model, $iter, null);
+		}
+
+		function get_circle_thumb($lidid, $width)
+		{
+			$iter = $this->model->get_iter($lidid);
+			run_view('foto::getcircle', $this->model, $iter, compact('width'));
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
@@ -42,8 +47,15 @@
 				$this->get_content('geenfoto');
 			elseif ($_GET['lid_id'] == -2)
 				$this->get_content('incognito');
-			elseif (isset($_GET['get_thumb'])) 
-				$this->get_thumb($_GET['lid_id']);
+			elseif (isset($_GET['get_thumb']))
+				switch ($_GET['get_thumb'])
+				{
+					case 'circle':
+						$this->get_circle_thumb($_GET['lid_id'], !empty($_GET['width']) ? $_GET['width'] : 100);
+						break;
+					default:
+						$this->get_thumb($_GET['lid_id']);
+				}
 			else
 				$this->get_photo($_GET['lid_id']);
 		}
