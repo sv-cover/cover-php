@@ -4,7 +4,7 @@
 	<table class="poll">
 		<? foreach ($votes as $vote) {?>
 		<tr>
-			<td class="pollvoteRadio"><?= input_radio('optie', null, $vote->get_id(), 'id', $vote->get_id()) ?></td><td><label for="<? echo $vote -> get_id() ?>"><?= $vote->get('optie') ?></label></td>
+			<td class="pollvoteRadio"><?= input_radio('optie', null, $vote->get_id(), 'id', $vote->get_id()) ?></td><td><label for="<? echo $vote -> get_id() ?>"><?=htmlspecialchars($vote->get('optie')) ?></label></td>
 		</tr>
 		<? } ?>
 	</table>

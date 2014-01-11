@@ -117,7 +117,14 @@
 				$books = $model->get_from_category($id);
 			
 				foreach ($books as $book) {
-					$contents .= table_row(input_checkbox('boek_' . $book->get('id'), null), $book->get('vak'), $book->get('titel'), '<span class="italic">' . $book->get('auteur') . '</span>', $book->get('prijs') == 0 ? __('n.n.b.') : ('&euro;&nbsp;' . $book->get('prijs')));
+					$contents .= table_row(
+						input_checkbox('boek_' . $book->get('id'), null),
+						htmlspecialchars($book->get('vak')),
+						htmlspecialchars($book->get('titel')),
+						'<span class="italic">' . htmlspecialchars($book->get('auteur')) . '</span>',
+						$book->get('prijs') == 0
+							? __('n.n.b.')
+							: ('&euro;&nbsp;' . $book->get('prijs')));
 				}
 			
 				$contents .= '</table>';
@@ -302,7 +309,7 @@
 				$class = 'r' . ($i ? '0' : '1');
 			
 				echo '<tr class="' . $class . '">
-					<td>' . $iter->get('titel') . '</td>';
+					<td>' . htmlspecialchars($iter->get('titel')) . '</td>';
 			
 				echo '<td class="text_right">' . $iter->get('aantal') . '</td>
 				</tr>';
@@ -364,7 +371,7 @@
 				$class = 'r' . ($i ? '0' : '1');
 			
 				echo '<tr class="' . $class . '">
-					<td>' . member_full_name($iter) . '</td>';
+					<td>' . htmlspecialchars(member_full_name($iter)) . '</td>';
 			
 				echo '<td class="text_right">' . $iter->get('aantal_bestellingen') . '</td>';
 			
@@ -404,9 +411,9 @@
 				$class = 'r' . ($i ? '0' : '1');
 			
 				echo '<tr class="' . $class . '">
-					<td>' . $iter->get('titel') . '</td>';
+					<td>' . htmlspecialchars($iter->get('titel')) . '</td>';
 			
-				echo '<td>' . member_full_name($iter) . '</td>
+				echo '<td>' . htmlspecialchars(member_full_name($iter)) . '</td>
 				<td class="text_right">'. ($iter->get('prijs') == 0 ? 'n.n.b.' : ('&euro; ' . money_format('%.2n', $iter->get('prijs')))) . '</td>
 				</tr>';
 			

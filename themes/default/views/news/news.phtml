@@ -18,7 +18,7 @@ foreach ($iter as $item) {
 	$message = $item->get_first_message();
 	$author_info = $model->get_author_info($item);
 	$link = get_author_link($item);
-	echo '<hr class="colorAccent '. strtolower($author_info['name']) .'" />';
+	echo '<hr class="colorAccent '. htmlspecialchars(strtolower($author_info['name']), ENT_QUOTES) .'" />';
 	?>
 	<div class="messageBox frontpage">
 		<div class="newsTitle">
@@ -30,7 +30,7 @@ foreach ($iter as $item) {
 			</span>
 			<div class="subtitle">
 				<?= __('Geplaatst door') ?>:
-				<a href="<?= $link ?>"><?= $author_info['name'] ?></a>
+				<a href="<?=htmlspecialchars($link, ENT_QUOTES) ?>"><?= htmlspecialchars($author_info['name']) ?></a>
 			</div>
 		</div>
 		<hr class="separator" />

@@ -44,7 +44,7 @@ foreach ($iter as $item) {
 	$class = 'r' . ($i ? '0' : '1'); ?>
 
 	<tr class="<?= $class ?>">
-		<td><?= $item->get('titel') ?></td>
+		<td><?= htmlspecialchars($item->get('titel')) ?></td>
 		<td class="text_right"><?= $item->get('aantal') ?></td>
 		</tr>
 
@@ -71,7 +71,7 @@ foreach ($iter as $item) {
 	$class = 'r' . ($i ? '0' : '1'); ?>
 
 	<tr class="<?= $class ?>">
-		<td><?= member_full_name($item) ?></td>
+		<td><?= htmlspecialchars(member_full_name($item)) ?></td>
 		<td class="text_right"><?= $item->get('aantal_bestellingen') ?></td>
 
 	<? $total = money_format('%.2n', $this->totaalprijs($model, $item->get('id'), $nnb));

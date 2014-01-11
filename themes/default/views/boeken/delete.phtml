@@ -10,7 +10,7 @@ foreach ($iter as $item) {
 		$aantal = __('1 bestelling');
 ?>
 	
-	<li> <?= $item->get('vak') ?>, <span class="bold"> <?= $item->get('titel') ?></span> (<span class="italic"><?= $item->get('auteur') ?></span>), <?= $aantal ?></li>
+	<li> <?= $item->get('vak') ?>, <span class="bold"> <?= htmlspecialchars($item->get('titel')) ?></span> (<span class="italic"><?= htmlspecialchars($item->get('auteur')) ?></span>), <?= $aantal ?></li>
 <? } ?>
 
 </ul>
@@ -27,6 +27,6 @@ foreach ($iter as $item) {
 
 <script type="text/javascript">
 	function annuleren() {
-		document.location = " <?= get_request() ?>";
+		document.location = "<?= addslashes(get_request()) ?>";
 	}
 </script>

@@ -4,7 +4,7 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 ?>
 <!-- color accent for each 'commissie' -->
 <h1><?= $iter->get('kop') ?></h1>
-<hr class="colorAccent <? echo strtolower($commissie_model -> get_naam($commissie -> get('page')));?>">
+<hr class="colorAccent <? echo strtolower($commissie_model->get_naam($commissie->get('page')));?>">
 <div class="messageBox">
 <p><?= __('Datum & Tijd') ?>: <?= agenda_period_for_display($iter, 'van') ?><br/>
 <? if ($iter->get('locatie')) { ?>
@@ -12,6 +12,6 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 <? } ?>
 </p>
 <p><?= markup_parse($iter->get('beschrijving')) ?></p>
-<p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="show.php?id=<?= $commissie->get('page') ?>"><?= $commissie->get('naam') ?></a></span></p>
+<p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="show.php?id=<?= $commissie->get('page') ?>"><?= htmlspecialchars($commissie->get('naam')) ?></a></span></p>
 <p><a href="agenda.php"><?= image('agenda.png', __('agenda'), __('Volledige agenda bekijken'), 'class="top"') ?></a> <a href="agenda.php"><?= __('Volledige agenda') ?></a></p>
 </div>

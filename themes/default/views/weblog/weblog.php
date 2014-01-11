@@ -9,9 +9,9 @@
 				return 'none.png';
 
 			if (file_exists('images/heads/' . $iter->get('author') . '.png'))
-				return $iter->get('author') . '.png';
+				return 'images/heads/' . $iter->get('author') . '.png';
 			else
-				return 'none.png';
+				return 'foto.php?lid_id=' . $iter->get('author') . '&get_thumb=circle&width=200';
 		}
 		
 	}

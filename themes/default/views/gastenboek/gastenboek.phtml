@@ -70,13 +70,15 @@
 			if (strpos($homepage, 'http://') !== 0)
 				$homepage = 'http://' . $homepage;
 			
-			echo '<a href="' . $homepage . '">' . image('home.png', __('homepage'), __('Ga naar homepage')) . '</a> ';
+			echo '<a href="' . htmlspecialchars($homepage, ENT_QUOTES) . '">' . image('home.png', __('homepage'), __('Ga naar homepage')) . '</a> ';
 		}
 		
 		if ($ite->get('email'))
-			$naam = '<a href="mailto:' . $ite->get('email') . (strpos($ite->get('email'), '@') === false ? '@ai.rug.nl' : '') . '">' . $ite->get('naam') . '</a>';
+			$naam = sprintf('<a href="mailto:%s">%s</a>',
+					htmlspecialchars($ite->get('email') . (strpos($ite->get('email'), '@') === false ? '@ai.rug.nl' : ''), ENT_QUOTES),
+					htmlspecialchars($ite->get('naam')));
 		else
-			$naam = $ite->get('naam');
+			$naam = htmlspecialchars($ite->get('naam'));
 		
 		echo $naam . '</div></span>
 		<div class="bericht">';

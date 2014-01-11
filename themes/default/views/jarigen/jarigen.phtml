@@ -4,7 +4,7 @@ echo date('d-m');
 if (date('d-m') == '20-09'){
 	$coverage = date('Y') - 1993;
 ?>
-	<a href="http://www.svcover.nl">Cover !!!</a>	[<?= $coverage ?>]<br/>
+	<a href="http://www.svcover.nl">Cover !!!</a> [<?= $coverage ?>]<br/>
 <?
 }
 if (!$jarigen ) {
@@ -25,7 +25,7 @@ if (!$jarigen ) {
 foreach ($jarigen as $jarige) {
 ?>
 	hoi<br>
-	<a href="profiel.php?lid=<?= $jarige['id'] ?>"><?= $jarige['voornaam'] . ' ' . $jarige['tussenvoegsel'] . $jarige['achternaam'] ?></a>
+	<a href="profiel.php?lid=<?= $jarige['id'] ?>"><?= htmlspecialchars($jarige['voornaam'] . ' ' . $jarige['tussenvoegsel'] . $jarige['achternaam']) ?></a>
 	[<?= $jarige['leeftijd'] ?>]<br/>
 <?
 }

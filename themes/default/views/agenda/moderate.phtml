@@ -35,7 +35,7 @@ foreach ($iter as $item) {
 	<td><?= input_radio('action_' . $item->get_id(), null, 'cancel', 'id', 'cancel_' . $item->get_id(), 'onClick', 'action_clicked(\'' . $item->get_id() . '\', false);') ?></td>
 	<td><a href="agenda.php?agenda_id=<?= $item->get_id() ?>"><?= $item->get('kop') ?></a></td>
 	<td><?= agenda_date_for_display($item, 'van') . ' ' . agenda_time_for_display($item, 'van') ?></td>
-	<td><?= $commissie_model->get_naam($item->get('commissie')) ?></td>
+	<td><?= htmlspecialchars($commissie_model->get_naam($item->get('commissie'))) ?></td>
 	<td><?= input_checkbox('private_' . $item->get_id(), $item->data, 'yes', 'field', 'private') ?></td>
 	</tr>
 	

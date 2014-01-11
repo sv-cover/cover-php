@@ -8,10 +8,15 @@
 		function almanak_info($model, $iter) {
 			$photo = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
 
-			if ($model->is_private($iter, 'naam'))
-				$name = '<em>' . __('onbekend') . '</em>';
+			if ($model->is_private($iter, 'naam')) {
+				$format = '<em>%s</em>';
+				$name = __('onbekend');
+			}
 			else
+			{
+				$format = '%s';
 				$name = member_full_name($iter);
+			}
 			
 			return sprintf('
 				<a href="profiel.php?lid=%d">
@@ -19,9 +24,9 @@
 					<span class="name">%s</span>
 				</a>',
 					$iter->get('id'),
-					$photo,
-					sprintf(__('foto van %s'), strip_tags($name)),
-					$name);
+					htmlspecialchars($photo, ENT_QUOTES),
+					sprintf(__('foto van %s'), htmlspecialchars($name, ENT_QUOTES)),
+					sprintf($format, htmlspecialchars($name)));
 		}
 	}
 ?>

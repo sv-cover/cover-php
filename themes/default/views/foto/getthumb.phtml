@@ -13,4 +13,3 @@ $thumb = imagecreatetruecolor(100, $th);
 //$thumb = imagecreate(100, $th);
 imagecopyresampled($thumb, $large, 0, 0, 0, 0, 100, $th, imagesx($large), imagesy($large));
 imagepng($thumb);
-?>

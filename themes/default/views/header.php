@@ -412,7 +412,7 @@
 	
 	function create_login() {
 		if (($data = logged_in())) {
-			$output =  __('Ingelogd') . ': <b>' . $data['voornaam'] . '</b><br/>
+			$output =  __('Ingelogd') . ': <b>' . htmlspecialchars($data['voornaam']) . '</b><br/>
 			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . '">' . __('Uitloggen') . '</a>
 			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . __('Profiel') . '</a>';
 			return $output;
@@ -428,6 +428,7 @@
 		/* Check for moderates */
 		$model = get_model('DataModelAgenda');
 		$admin = '';
+		$cap = '';
 
 		if (($aantal = $model->has_moderate())) {
 			if ($aantal == 1)

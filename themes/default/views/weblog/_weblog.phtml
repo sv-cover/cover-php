@@ -5,13 +5,13 @@ $message = $iter->get_first_message();
 echo '
 	<div class="weblogPost">
 		<div class="details">
-			<img class="weblog_head" width="100" height="100" src="foto.php?lid_id=' . $iter->get('author') . '&amp;get_thumb=circle&amp;width=200">
-			<a class="author" href="' . get_author_link($iter) . '">' . $author_info['name'] . '</a>
+			<img class="weblog_head" width="100" height="100" src="' . htmlspecialchars($this->_get_weblog_head($iter), ENT_QUOTES) . '">
+			<a class="author" href="' . htmlspecialchars(get_author_link($iter), ENT_QUOTES) . '">' . htmlspecialchars($author_info['name']) . '</a>
 		</div>
 		<div class="weblog">
 			<div class="weblog_header">
 				<div class="weblog_date">' . $iter->get('datum') . '</div>
-				<a href="forum.php?thread=' . $iter->get('id') . '">' . $iter->get('subject') . '</a>
+				<a href="forum.php?thread=' . $iter->get('id') . '">' . htmlspecialchars($iter->get('subject')) . '</a>
 			</div>
 			' .	markup_parse($message->get('message')) . '
 			<div class="text_right replies">
