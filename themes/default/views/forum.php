@@ -79,7 +79,7 @@
 				echo '<span class="bold">' . ($link ? ('<a href="' . $link . '">') : '') . $author_info['name'] . ($link ? '</a>' : '') . '</span><br>';
 				
 				if ($author_info['avatar'])
-					echo '<img class="avatar" src="' . $author_info['avatar'] . '" alt="Avatar">';
+					echo '<img class="avatar" src="' . htmlspecialchars($author_info['avatar'], ENT_QUOTES) . '" alt="Avatar">';
 				
 				$posts = $model->get_author_stats($message, $total);
 				
