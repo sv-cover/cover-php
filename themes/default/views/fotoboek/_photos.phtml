@@ -22,9 +22,9 @@ for ($i = 0; $i < count($photos); $i += $photos_per_row) {
 			$titles[] = '';
 		} else {
 			$photo = $photos[$n];
-			$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '#a"><img src="' . $photo->get('thumburl') . '"></a>';
+			$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '#a"><img src="' . htmlspecialchars($photo->get('thumburl'), ENT_QUOTES) . '"></a>';
 
-			$title = $photo->get('beschrijving');
+			$title = htmlspecialchars($photo->get('beschrijving'));
 			$num = $photo->get('num_reacties');
 		
 			if ($photo->get('reactie'))

@@ -7,7 +7,7 @@ $path = array();
 
 foreach ($parents as $parent) {
 	if ($parent)
-		$path[] = '<a href="fotoboek.php?book=' . $parent->get('id') . '">' . $parent->get('titel') . '</a>';
+		$path[] = '<a href="fotoboek.php?book=' . $parent->get('id') . '">' . htmlspecialchars($parent->get('titel')) . '</a>';
 	else
 		$path[] = '<a name="a" href="fotoboek.php">' . __('Fotoboeken') . '</a>';
 }
@@ -26,9 +26,9 @@ else
 	$title = __('Fotoboeken');
 
 if ($include_current) {
-	?><a href="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>"><?= $title ?></a><?
+	?><a href="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>"><?= htmlspecialchars($title) ?></a><?
 } else {
-	echo $title;
+	echo htmlspecialchars($title);
 } ?>
 
 </span></div>

@@ -69,7 +69,7 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			}					
 		
 			if (count($subtitle) > 0)
-				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . implode_human($subtitle) . '</span>)';
+				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . htmlspecialchars(implode_human($subtitle)) . '</span>)';
 		
 			$titles[] = $title;
 		}
@@ -89,6 +89,6 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 </div>
 <script type="text/javascript">
 	function confirm_delete() {
-		return confirm("<?= str_replace('"', '\"', __('Weet je zeker dat je dit fotoboek en alle fotoboeken en foto\'s erin wilt verwijderen?')) ?>");
+		return confirm('<?= addslashes(__("Weet je zeker dat je dit fotoboek en alle fotoboeken en foto's erin wilt verwijderen?")) ?>');
 	}
 </script>

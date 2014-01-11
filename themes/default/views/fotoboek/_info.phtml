@@ -6,7 +6,7 @@ if (!$iter)
 <table class="default_noborder">
 
 <? if ($iter->get('fotograaf')) { ?>
-	<tr><td class="bold"><?= __('Fotograaf') ?>:</td><td><?= $iter->get('fotograaf') ?></td></tr>
+	<tr><td class="bold"><?= __('Fotograaf') ?>:</td><td><?= htmlspecialchars($iter->get('fotograaf')) ?></td></tr>
 <? }
 
 if ($iter->get('date')) { ?>

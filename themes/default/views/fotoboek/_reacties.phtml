@@ -15,7 +15,7 @@ if ($logged_in) { ?>
 	<table>
 	
 	<?= input_hidden('submfotoreactie', 'yes') ?>
-	<?= table_row(member_full_name()) ?>
+	<?= table_row(htmlspecialchars(member_full_name())) ?>
 	<?= table_row(textarea_field('reactie', null, $errors)) ?>
 	
 	<tr><td class="submit"><?= input_submit('subm', __('Reactie plaatsen')) ?></td></tr>

@@ -26,7 +26,7 @@
 	function view_thread($model, $iter, $params = null) {
 		$forum = $model->get_iter($iter->get('forum'), -1);
 
-		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $forum->get('id') . '">' . $forum->get('name') . '</a></h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $forum->get('id') . '">' . htmlspecialchars($forum->get('name')) . '</a></h1>';
 		/*
 		<h2>' . $iter->get('subject') . '</h2>
 		*/
@@ -63,7 +63,7 @@
 		echo '<table class="forum thread">';
 		echo '<col class="author">';
 		echo '<col class="message">';
-		echo '<tr class="separator"><td colspan="2">'.$iter->get('subject').'</td></tr>';	
+		echo '<tr class="separator"><td colspan="2">'.htmlspecialchars($iter->get('subject')).'</td></tr>';	
 			//echo '<tr id="' . ($message == $iter ? 't' : 'p') . $message->get('id') . '" class="separator"><td colspan="2"></td></tr>';
 		$i = 0;
 		$admin = member_in_commissie(COMMISSIE_BESTUUR);
@@ -76,7 +76,7 @@
 			echo '<tr class="r' . $i . '"><td class="author">';
 			
 			if ($author_info && $author_info['name']) {
-				echo '<span class="bold">' . ($link ? ('<a href="' . $link . '">') : '') . $author_info['name'] . ($link ? '</a>' : '') . '</span><br>';
+				echo '<span class="bold">' . ($link ? ('<a href="' . $link . '">') : '') . htmlspecialchars($author_info['name']) . ($link ? '</a>' : '') . '</span><br>';
 				
 				if ($author_info['avatar'])
 					echo '<img class="avatar" src="' . htmlspecialchars($author_info['avatar'], ENT_QUOTES) . '" alt="Avatar">';
@@ -101,7 +101,7 @@
 				echo ' <a href="forum.php?delmessage=' . $message->get('id') . '&page=' . $page . '">' . image('delete_small.png', __('verwijder'), __('Verwijder bericht')) . '</a>';
 			
 			
-			echo ' <a href="javascript:void(0)" onclick="quote(' . $message->get('id') . ', \'' . $author_info['name'] . '\');">' . image('quote.png', __('quote'), __('Quote geselecteerde tekst van bericht')) . '</a></div>';
+			echo ' <a href="javascript:void(0)" onclick="quote(' . $message->get('id') . ', \'' . htmlspecialchars(addslashes($author_info['name']), ENT_QUOTES) . '\');">' . image('quote.png', __('quote'), __('Quote geselecteerde tekst van bericht')) . '</a></div>';
 
 			echo markup_parse($message->get('message'));
 			
@@ -112,10 +112,7 @@
 				run_view('poll', $poll_model, $iter);
 				echo '</div>';
 			}
-			
-			if ($author && $author->get('onderschrift'))
-				echo '<div class="onderschrift">' . markup_parse($author->get('onderschrift')) . '</div>';
-			
+
 			echo '
 			</td></tr>';
 			
@@ -140,7 +137,7 @@
 			
 			foreach ($model->get() as $forum) {
 				if ($model->check_acl($forum->id, ACL_WRITE))
-					$bar .= '<option value="' . $forum->id . '"' . ($forum->id == $iter->forum ? ' selected="selected"' : '') . '>' . $forum->name . '</option>';
+					$bar .= '<option value="' . $forum->id . '"' . ($forum->id == $iter->forum ? ' selected="selected"' : '') . '>' . htmlspecialchars($forum->name) . '</option>';
 			}
 			
 			$bar .='</select> <input class="noborder" type="image" src="' . get_theme_data('images/next.png') . '"></form></div>';
@@ -340,55 +337,9 @@
 	}
 	
 	function view_add_poll($model, $iter, $params = null) {
-		/*echo '<h2><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></h2>';
-		echo '<h2>' . __('Nieuwe poll toevoegen') . '</h2>';
-		
-		$config_model = get_model('DataModelConfiguratie');
-		$id = $config_model->get_value('poll_forum');
-		
-		if ($id && $iter->get('id') == $id) {
-			/* Get the last thread *//*
-			$thread = $iter->get_last_thread();
-			
-			if ($thread && $thread->get('since') < 14 && !member_in_commissie(COMISSIE_EASY)) {
-				$num = 14 - $thread->get('since');
-
-				echo '<div class="error_message">' . sprintf(ngettext('Je kunt hier pas over %d dag weer een poll plaatsen', 'Je kunt hier pas over %d dagen weer een poll plaatsen', $num), $num) . '</div>';
-				return;
-			}
-		}
-
-		echo '<p>' . __('Gebruik het onderstaande formulier om een nieuwe poll toe te voegen.') . '</p>';
-		
-		if (isset($params['errors']) && count($params['errors']) > 0)
-			echo '<div class="error_message">' . __('Niet alle velden zijn goed ingevuld (er moet minstens 1 optie ingevuld zijn') . '</div>';
-
-		$authors = get_authors($model, $iter->get('id'), ACL_POLL);
-
-		echo '
-		<form action="forum.php?forum=' . $iter->get('id') . '&addpoll" method="post">' . 
-		input_hidden('submforumpollnieuw', 'yes') . '
-		
-		<table class="default_noborder">
-		<tbody id="options_table">';
-		
-		echo table_row(label(__('Auteur'), 'author', $params['errors'], true) . ':', select_field('author', $authors, null));
-		echo table_row(label(__('Onderwerp/vraag'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxsize', '150'));
-		echo table_row(label(__('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors']));
-		
-		for ($i = 0; $i < 3; $i++)
-			echo '<tr id="optie_tr_' . $i . '"><td>' . __('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';
-		
-		echo '</tbody><tr class="submit"><td class="submit" colspan="2">' . 
-		
-		input_button(__('Nieuwe optie'), 'add_option()') . ' ' .
-		input_submit('subm', __('Opslaan'), 'button', 'onClick', 'if (sending) return false; sending = true;') . '
-		
-		</td></tr>
-		</table></form>'; */
-		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . htmlspecialchars($iter->get('name')) . '</a></h1>';
 		echo '<div class="messageBox">';
-		echo '<table class=""><tr class="header"><td colspan="2">Nieuwe poll toevoegen.</td></tr>';
+		echo '<table class=""><tr class="header"><td colspan="2">' . __('Nieuwe poll toevoegen.') . '</td></tr>';
 		
 		$config_model = get_model('DataModelConfiguratie');
 		$id = $config_model->get_value('poll_forum');
@@ -485,7 +436,7 @@
 				return;
 			}
 		}
-		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: ' . $iter->get('name') . '</h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: ' . htmlspecialchars($iter->get('name')) . '</h1>';
 		$i = 0;
 		$page = $params['page'];
 		$threads = $model->get_threads($iter, $page, $max);
@@ -532,7 +483,7 @@
 		
 		foreach ($threads as $thread) {
 			echo '<tr class="r' . $i . '"><td class="icon">' . image($model->thread_unread($thread->get('id')) ? 'thread_new.png' : 'thread.png', '', '') . '</td>
-			<td class="subject"><a href="forum.php?thread=' . $thread->get('id') . '"><span class="subject">' . ($thread->get('poll') ? ('[' . __('Poll') . '] ') : '') . $thread->get('subject') . '</span></a>';
+			<td class="subject"><a href="forum.php?thread=' . $thread->get('id') . '"><span class="subject">' . ($thread->get('poll') ? ('[' . __('Poll') . '] ') : '') . htmlspecialchars($thread->get('subject')) . '</span></a>';
 			
 			$pages = $thread->get_num_thread_pages();
 			$i = ($i ? 0 : 1);
@@ -551,7 +502,7 @@
 			$author_info = $model->get_author_info($thread);
 
 			echo '</td>
-			<td class="text_center">' . ($author_info['name'] ? ('<a href="' . $link .  '">' . $author_info['name'] . '</a>') : __('Onbekend')) . '</td>
+			<td class="text_center">' . ($author_info['name'] ? ('<a href="' . $link .  '">' . htmlspecialchars($author_info['name']) . '</a>') : __('Onbekend')) . '</td>
 			<td class="text_center">' . $thread->get_num_messages() . '</td>
 			<td class="last">';
 
@@ -600,7 +551,7 @@
 			}
 			
 			if ($lastheader) {
-				echo '<tr class="forum_header"><td colspan="5">' . $lastheader->get('name') . '</td></tr>';
+				echo '<tr class="forum_header"><td colspan="5">' . htmlspecialchars($lastheader->get('name')) . '</td></tr>';
 				$i=0;
 			}
 			if (!($iter->get('id') == 7 && !logged_in())){
@@ -608,7 +559,7 @@
 			$num_messages = $iter->get_num_forum_messages();
 
 			echo '<tr class="r' . $i . '"><td class="icon">' . image($model->forum_unread($iter->get('id')) ? 'thread_new.png' : 'thread.png', '', '') . '</td>
-			<td class="forum"><span class="bold"><a href="forum.php?forum=' . $iter->get('id') . '">' . $iter->get('name') . '</a></span><div class="smaller">' . markup_parse($iter->get('description')) . '</div></td>
+			<td class="forum"><span class="bold"><a href="forum.php?forum=' . $iter->get('id') . '">' . htmlspecialchars($iter->get('name')) . '</a></span><div class="smaller">' . markup_parse($iter->get('description')) . '</div></td>
 			<td class="text_center">' . $num_threads . '</td>
 			<td class="text_center">' . $num_messages . '</td>
 			<td class="last">';
@@ -616,7 +567,7 @@
 			$last = $iter->get_last_thread();
 			$pages = $last->get_num_thread_pages();
 			if ($last)
-				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#' . ($lastid == $last->get('id') ? 't' : 'p') . $lastid . '">' . $last->get('subject') . '</a>';
+				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#' . ($lastid == $last->get('id') ? 't' : 'p') . $lastid . '">' . htmlspecialchars($last->get('subject')) . '</a>';
 			
 			echo '</td></tr>';
 			}
@@ -632,7 +583,7 @@
 		<ul>';
 		
 		foreach ($menu as $id => $name)
-			echo '<li' . ($sub == $id ? ' class="selected"' : '') . '><a href="forum.php?admin=' . $id . '">' . $name . '</a></li>';
+			echo '<li' . ($sub == $id ? ' class="selected"' : '') . '><a href="forum.php?admin=' . $id . '">' . htmlspecialchars($name) . '</a></li>';
 		
 		echo '</ul>
 		</div>';
@@ -1067,7 +1018,7 @@
 	}
 	
 	function render_admin_rights_forum($model, $forum, $params) {
-		echo '<h2>' . __('Rechten') . ' :: ' . $forum->get('name') . '</h2>
+		echo '<h2>' . __('Rechten') . ' :: ' . htmlspecialchars($forum->get('name')) . '</h2>
 		<div class="smaller">' . markup_parse($forum->get('description')) . '</div><br>
 		<form method="post" action="forum.php?admin=rights&forum=' . $forum->get('id') . '">
 		' . input_hidden('submforumrights', 'yes') . '

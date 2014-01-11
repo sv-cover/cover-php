@@ -4,7 +4,7 @@
 
 		for ($i = 0; $i < $num; $i++) {
 			if ($i < count($iters))
-				$slide = '<img class="' . ($current ? 'current' : 'slide') . '" src="' . $iters[$i]->get('thumburl') . '" alt="' . __('Foto') . '">';
+				$slide = '<img class="' . ($current ? 'current' : 'slide') . '" src="' . htmlspecialchars($iters[$i]->get('thumburl'), ENT_QUOTES) . '" alt="' . __('Foto') . '">';
 			else
 				$slide = '';
 		

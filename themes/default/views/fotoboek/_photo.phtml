@@ -4,7 +4,7 @@
 	<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
 	</form></div>
 <? } elseif ($iter->get('beschrijving')) { ?>
-	<div class="foto_titel"><?= $iter->get('beschrijving') ?></div>
+	<div class="foto_titel"><?= htmlspecialchars($iter->get('beschrijving')) ?></div>
 <? } ?>
 
 <div id="foto" class="fotoboek_foto">
@@ -19,7 +19,7 @@
 	<div class="nextPhoto"><a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a"><?= image('next.png', __('Volgende'), __('Ga naar volgende foto')) ?></a></div>
 <? } ?>
 <a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
-<img id="photo" src="<?= $iter->get('url') ?>" alt="<?= __('Foto') ?>">
+<img id="photo" src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>">
 </a>
 </div>
 <script type = "text/javascript">

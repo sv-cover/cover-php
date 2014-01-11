@@ -12,7 +12,7 @@
 	<div class="poll_vote">
 		<?= input_submit('subm', __('Stem'))  ?>
 		<? if (isset($enable_new) && $enable_new) {?>
-			<?= input_button(__('Nieuwe poll'), 'javascript:window.location = \'forum.php?forum=' . $iter->get('forum') . 'addpoll\'') ?>
+			<a class="button" href="forum.php?forum=<?=$iter->get('forum')?>&amp;addpoll=true"><?=__('Nieuwe poll') ?></a>
 		<? } ?>
 	</div>
 </form>

@@ -65,7 +65,7 @@
 		$result = '<input';
 
 		foreach ($attributes as $attribute => $value)
-			$result .= ' ' . $attribute . '="' . $value . '"';
+			$result .= ' ' . $attribute . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
 		
 		return $result . '/>';
 	}
@@ -290,22 +290,18 @@
 		$options = '';
 
 		foreach ($values as $val => $title)
-			$options .= '<option value="' . $val . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . $title . "</option>\n";
+			$options .= '<option value="' . htmlspecialchars($val, ENT_QUOTES) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . htmlspecialchars($title) . "</option>\n";
 		
 		$result = '<select name="' . $name . '"';
 		
 		foreach ($params as $attribute => $value)
-			$result .= ' ' . $attribute . '="' . $value . '"';
+			$result .= ' ' . $attribute . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
 		
 		return $result . ">\n" . $options . "</select>";
 	}
 	
 	function _textarea_format_default($value) {
-		$value = str_replace('&', '&amp;', $value);
-		$value = str_replace('<', '&lt;', $value);
-		$value = str_replace('>', '&gt;', $value);
-		
-		return $value;
+		return htmlspecialchars($value);
 	}
 	
 	/** @group Form
@@ -360,7 +356,7 @@
 		$result = '<textarea name="' . $name . '"';
 		
 		foreach ($params as $attribute => $val)
-			$result .= ' ' . $attribute . '="' . $val . '"';
+			$result .= ' ' . $attribute . '="' . htmlspecialchars($val, ENT_QUOTES) . '"';
 		
 		return $result . ">\n" . $value . "</textarea>";
 	}
@@ -379,6 +375,8 @@
 			$field = $name;
 			$name = ucfirst($name);
 		}
+
+		$name = htmlspecialchars($name);
 				
 		if ($errors && in_array($field, $errors))
 			$name = '<span class="label_error">' . $name . '</span>';
