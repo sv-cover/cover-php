@@ -15,7 +15,7 @@
 			'\:-\(|\:\(' => 'sad.gif',
 			'\;-\)|\;\)' => 'wink.gif',
 			'\;-\(|\;\(' => 'cry.gif',
-			'\:-\||\:\|' => 'border.gif',
+			'\:-\||\:\|' => 'bored.gif',
 			'\:-@|\:@' => 'yell.gif',
 			'8-o|8o' => 'bigeyes.gif',
 			'\:-d|\:d' => 'laugh.gif',
