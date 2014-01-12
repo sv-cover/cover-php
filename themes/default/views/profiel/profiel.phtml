@@ -17,9 +17,9 @@
 
 			if ($model->has_picture($iter) && !$model->is_private($iter,"foto",true)) {
 				// Make the picture a link ?>
-				<a class="profielFoto" href="<?= $photo_link ?>"><img width="100" height="150" src="<?= $photo_thumb_link ?>" class="profielFoto" alt= "<?= __('lidfoto') ?>"/></a>
+				<a class="profielFoto" href="<?= htmlspecialchars($photo_link, ENT_QUOTES) ?>"><img width="100" height="150" src="<?= htmlspecialchars($photo_thumb_link, ENT_QUOTES) ?>" class="profielFoto" alt= "<?= __('lidfoto') ?>"/></a>
 			<? } else { ?>
-				<img width="100" height="150" class="profielFoto" src="<?= $photo_link ?>" />
+				<img width="100" height="150" class="profielFoto" src="<?= htmlspecialchars($photo_link, ENT_QUOTES) ?>" />
 			<? } ?>
 			<p class="hint"><?=__('Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het liefst 500&times;750 groot.')?></p>
 			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#almanak" method="post">
@@ -86,7 +86,7 @@
 					<? if ($this->is_current_member($iter->get('lidid'))) {?>
 						<td><?= input_text('avatar', $iter->data, 'formatter',  'empty_to_http_formatter') ?></td>
 					<?} else {?>
-						<td><?= ($iter->get('avatar') ? ('<img src="' . $iter->get('avatar') . '" alt="' . __('avatar') . '">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
+						<td><?= ($iter->get('avatar') ? ('<img src="' . htmlspecialchars($iter->get('avatar'), ENT_QUOTES) . '" alt="' . __('avatar') . '">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
 					<? } ?>
 					</tr>
 
@@ -96,7 +96,7 @@
 					<? if ($this->is_current_member($iter->get('lidid'))) {?>
 						<td><?= input_text('homepage', $iter->data, 'formatter', 'empty_to_http_formatter') ?></td>		
 					<?} else {?>
-						<td><?= ($iter->get('homepage') ? ('<a href="' . $iter->get('homepage') . '">' . $iter->get('homepage') . '</a>') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
+						<td><?= ($iter->get('homepage') ? ('<a href="' . htmlspecialchars($iter->get('homepage'), ENT_QUOTES) . '">' . htmlspecialchars($iter->get('homepage')) . '</a>') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
 					<? } ?>
 					</tr>
 
