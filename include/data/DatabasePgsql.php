@@ -31,7 +31,7 @@
 			$params[] = 'host=' . ($dbid['host'] ? $dbid['host'] : 'localhost');
 			
 			/* Add port if needed */
-			if ($dbid['port'])
+			if (isset($dbid['port']))
 				$params[] = 'port=' . $dbid['port'];
 			
 			/* Add user */
@@ -44,7 +44,7 @@
 			$params[] = 'dbname=' . $dbid['database'];
 			
 			/* Open connection */
-			$this->resource = @pg_connect(implode(' ', $params));
+			$this->resource = pg_connect(implode(' ', $params));
 			
 			if (!$this->resource)
 				trigger_error('Could not connect to database: ' . $php_errormsg);
