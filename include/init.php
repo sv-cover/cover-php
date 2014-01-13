@@ -19,6 +19,8 @@
 	set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
 	ini_set('magic_quotes_gpc', 0);
 
+	date_default_timezone_set('Europe/Amsterdam');
+
 	/* Initialize session */
 	session_start();
 
