@@ -2,6 +2,11 @@
 	require_once('data/DataModel.php');
 	require_once('login.php');
 
+	define('MEMBER_STATUS_LID', 1);
+	define('MEMBER_STATUS_LID_ONZICHTBAAR', 4);
+	define('MEMBER_STATUS_LID_AF', 2);
+	define('MEMBER_STATUS_DONATEUR', 5);
+
 	/**
 	  * A class implementing the Member data
 	  */
@@ -123,7 +128,12 @@
 					leden.email = '" . $this->escape_string($email) . "' AND 
 					profielen.wachtwoord = '" . $this->escape_string($passwd) . "'");
 
-			if (!$row || ($row['type'] != 1 && $row['type'] != 4))
+			$active_member_types = array(
+				MEMBER_STATUS_LID,
+				MEMBER_STATUS_LID_ONZICHTBAAR,
+				MEMBER_STATUS_DONATEUR);
+
+			if (!$row || !in_array($row['type'], $active_member_types))
 				return false;
 
 			return $this->_row_to_iter($row);
@@ -228,7 +238,7 @@
 				return true;
 			elseif ($value == 7) /* Visible to all */
 				return false;
-			elseif (($value & 1) && !logged_in()) /* Visible to members */
+			elseif (($value & 1) && !logged_in_as_active_member()) /* Visible to members */
 				return true;
 			else
 				return false;
@@ -274,14 +284,14 @@
 			if (!$first && !$last) {
 				$rows = $this->db->query('SELECT * 
 						FROM leden
-						WHERE type = 1
+						WHERE type = ' . MEMBER_STATUS_LID . '
 						ORDER BY achternaam, voornaam');
 				return $this->_rows_to_iters($rows);
 			}
 
 			$query = 'SELECT *
 					FROM leden
-					WHERE type = 1 ';
+					WHERE type = ' . MEMBER_STATUS_LID . ' ';
 			$order = array();
 			
 			if ($first) {
@@ -319,7 +329,7 @@
 
 			$query = "SELECT *
 					FROM leden
-					WHERE type = 1 AND (voornaam ILIKE '%$name%' OR achternaam ILIKE '%$name%');";
+					WHERE type = " . MEMBER_STATUS_LID . " AND (voornaam ILIKE '%$name%' OR achternaam ILIKE '%$name%');";
 					
 			$rows = $this->db->query($query);			
 			return $this->_rows_to_iters($rows);			
@@ -333,7 +343,7 @@
 		function get_from_search_year($year) {
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type = 1 AND 
+					WHERE type = " . MEMBER_STATUS_LID . " AND 
 					beginjaar = " . intval($year) . "
 					ORDER BY achternaam");
 			
@@ -348,7 +358,7 @@
 		function get_distinct_years() {
 			$rows = $this->db->query("SELECT DISTINCT beginjaar
 						FROM leden
-						WHERE type = 1");
+						WHERE type = " . MEMBER_STATUS_LID);
 			$rows = $this->_rows_to_iters($rows);
 			$years = array();
 			foreach ($rows as $row) {
@@ -367,7 +377,7 @@
 		function get_from_last_character($char) {
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type = 1 AND 
+					WHERE type = " . MEMBER_STATUS_LID . " AND 
 					achternaam ILIKE '" . $this->escape_string($char) . "%'
 					ORDER BY achternaam");
 			
@@ -383,7 +393,7 @@
 		function get_from_first_character($char) {
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type = 1 AND 
+					WHERE type = " . MEMBER_STATUS_LID . " AND 
 					voornaam ILIKE '" . $this->escape_string($char) . "%' 
 					ORDER BY voornaam");
 			

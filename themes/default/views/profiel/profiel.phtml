@@ -128,15 +128,19 @@
 					<table class="profiel">
 						<tr>
 							<td width="120"><span class="label">Type:</span></td>
-							<td width="150"><label><?=input_radio('type', $iter->data, 1) . '&nbsp;' . __('Zichtbaar') ?></label></td>
+							<td width="150"><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><label><?=input_radio('type', $iter->data, 4) . '&nbsp;' . __('Onzichtbaar') ?></label></td>
+							<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><label><?=input_radio('type', $iter->data, 2) . '&nbsp;' . __('Inactief') ?></label></td>
+							<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Dontateur') ?></label></td>
 						</tr>
 						<tr>
 							<td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>

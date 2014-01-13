@@ -121,6 +121,18 @@
 		return $logged_in;
 	}
 
+	function logged_in_as_active_member()
+	{
+		$logged_in = logged_in();
+
+		if (!$logged_in)
+			return false;
+
+		return in_array($logged_in['type'], array(
+			MEMBER_STATUS_LID,
+			MEMBER_STATUS_LID_ONZICHTBAAR));
+	}
+
 	function session_get_session_id()
 	{
 		if (!empty($_GET['session_id']))
