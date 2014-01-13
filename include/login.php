@@ -74,9 +74,23 @@
 			$_SERVER['HTTP_USER_AGENT'],
 			$timeout);
 
+		// Set the cookie. Doesn't really matter it is set for such a long time,
+		// inactive sessions will be removed from the database and rendered
+		// invalid automatically.
+		$cookie_time = time() + 24 * 3600 * 31 * 12;
+
+		// Determine the host name for the cookie (try to be as broad as possible so sd.svcover.nl can profit from it)
+		if (preg_match('/([^.]+)\.(?:[a-z\.]{2,6})$/i', $_SERVER['HTTP_HOST'], $match))
+			$domain = $match[1];
+		else if ($_SERVER['HTTP_HOST'] != 'localhost')
+			$domain = $_SERVER['HTTP_HOST'];
+		else
+			$domain = null;
+
 		setcookie('cover_session_id',
 			$session->get('session_id'),
-			strtotime('+' . $timeout));
+			$cookie_time,
+			'/', $domain);
 
 		return _member_data_from_session();
 	}
