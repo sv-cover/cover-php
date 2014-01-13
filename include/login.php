@@ -110,6 +110,7 @@
 
 		$session_model->destroy($_COOKIE['cover_session_id']);
 
+		setcookie('cover_session_id', null, time() - 24 * 3600);
 		set_domain_cookie('cover_session_id', null, time() - 24 * 3600);
 	}
 
