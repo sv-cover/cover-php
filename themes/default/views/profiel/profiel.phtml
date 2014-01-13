@@ -240,3 +240,13 @@ $().ready(function() {
 	</form>
 	</div>
 <? } ?>
+
+<? if($this->is_current_member($iter->get('lidid'))): ?>
+	<div class="messageBox">
+		<p><?= sprintf(__('Je bent ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
+	</div>
+<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
+	<div class="messageBox">
+		<p><?= sprintf(__('Deze persoon is ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn sessies.') ?></a></p>
+	</div>
+<?php endif ?>

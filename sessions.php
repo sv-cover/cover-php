@@ -1,6 +1,7 @@
 <?php
 
 require_once 'include/init.php';
+require_once 'include/member.php';
 require_once 'controllers/Controller.php';
 
 class ControllerSessions extends Controller
@@ -26,6 +27,15 @@ class ControllerSessions extends Controller
 			exit;
 		}
 
+		if (isset($_GET['lidid']) && member_in_commissie($member['id'], COMMISSIE_EASY))
+		{
+			$member_model = get_model('DataModelMember');
+			$selected_member = $member_model->get_iter($_GET['lidid']);
+
+			if ($selected_member)
+				$member = $selected_member->data;
+		}
+
 		if (isset($_POST['sessions']))
 		{
 			foreach ($_POST['sessions'] as $session_id)
@@ -42,7 +52,7 @@ class ControllerSessions extends Controller
 
 		$sessions = $this->model->getActive($member['id']);
 
-		$this->get_content('sessions', $sessions);
+		$this->get_content('sessions', $sessions, compact('member'));
 	}
 }
 

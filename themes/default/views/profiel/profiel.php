@@ -72,5 +72,11 @@ class ProfielView extends View {
 				return $iter->get('nick') ? $iter->get('nick') : member_full_name($iter);
 		}
 
+		public function get_active_session_count($member_id)
+		{
+			$model = get_model('DataModelSession');
+			
+			return count($model->getActive($member_id));
+		}
+
 }
-?>
