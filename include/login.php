@@ -48,6 +48,19 @@
 		return $member_commissies;
 	}
 
+	function set_domain_cookie($name, $value, $cookie_time)
+	{
+		// Determine the host name for the cookie (try to be as broad as possible so sd.svcover.nl can profit from it)
+		if (preg_match('/([^.]+)\.(?:[a-z\.]{2,6})$/i', $_SERVER['HTTP_HOST'], $match))
+			$domain = $match[0];
+		else if ($_SERVER['HTTP_HOST'] != 'localhost')
+			$domain = $_SERVER['HTTP_HOST'];
+		else
+			$domain = null;
+
+		setcookie($name, $value, $cookie_time, '/', $domain);
+	}
+
 	/** @group Login
 	  * Login a member by email and password. Optionally sets a cookie
 	  * to remember the member.
@@ -79,18 +92,9 @@
 		// invalid automatically.
 		$cookie_time = time() + 24 * 3600 * 31 * 12;
 
-		// Determine the host name for the cookie (try to be as broad as possible so sd.svcover.nl can profit from it)
-		if (preg_match('/([^.]+)\.(?:[a-z\.]{2,6})$/i', $_SERVER['HTTP_HOST'], $match))
-			$domain = $match[0];
-		else if ($_SERVER['HTTP_HOST'] != 'localhost')
-			$domain = $_SERVER['HTTP_HOST'];
-		else
-			$domain = null;
-
-		setcookie('cover_session_id',
+		set_domain_cookie('cover_session_id',
 			$session->get('session_id'),
-			$cookie_time,
-			'/', $domain);
+			$cookie_time);
 
 		return _member_data_from_session();
 	}
@@ -106,7 +110,7 @@
 
 		$session_model->destroy($_COOKIE['cover_session_id']);
 
-		setcookie('cover_session_id');
+		set_domain_cookie('cover_session_id', null, time() - 24 * 3600);
 	}
 
 	/** @group Login
