@@ -16,7 +16,7 @@
 				<tr>
 					<td><input type="checkbox" name="sessions[]" value="<?=$session->get_id()?>"></td>
 					<td><?=$session->get('ip_address')?></td>
-					<td><?=htmlspecialchars($this->format_application($session->get('application')))?></td>
+					<td><?=$this->format_application($session->get('application'))?></td>
 					<td><?=$this->format_time($session->get('created_on'))?></td>
 					<td><?=$this->format_time($session->get('last_active_on'))?></td>
 				</tr>
