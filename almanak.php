@@ -7,6 +7,14 @@
 
 		function ControllerAlmanak() {
 			$this->model = get_model('DataModelMember');
+
+			if (member_in_commissie(COMMISSIE_BESTUUR))
+				$this->model->visible_types = array(
+					MEMBER_STATUS_LID,
+					MEMBER_STATUS_LID_ONZICHTBAAR,
+					MEMBER_STATUS_LID_AF,
+					MEMBER_STATUS_DONATEUR
+				);
 		}
 		
 		function get_content($view, $iter = null, $params = null) {

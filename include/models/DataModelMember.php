@@ -10,7 +10,13 @@
 	/**
 	  * A class implementing the Member data
 	  */
-	class DataModelMember extends DataModel {
+	class DataModelMember extends DataModel
+	{
+		public $visible_types = array(
+			MEMBER_STATUS_LID,
+			MEMBER_STATUS_DONATEUR
+		);
+
 		function DataModelMember($db) {
 			parent::DataModel($db, 'leden');
 		}
@@ -49,7 +55,7 @@
 					WHERE 
 						EXTRACT(MONTH FROM geboortedatum) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND
 						EXTRACT(DAY FROM geboortedatum) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND 
-						type = 1 AND
+						type IN (' . implode(',', $this->visible_types) . ') AND
 						geboortedatum <> \'1970-01-01\'
 					ORDER BY
 						voornaam, tussenvoegsel, achternaam');
@@ -284,14 +290,14 @@
 			if (!$first && !$last) {
 				$rows = $this->db->query('SELECT * 
 						FROM leden
-						WHERE type = ' . MEMBER_STATUS_LID . '
+						WHERE type IN (' . implode(',', $this->visible_types) . ')
 						ORDER BY achternaam, voornaam');
 				return $this->_rows_to_iters($rows);
 			}
 
 			$query = 'SELECT *
 					FROM leden
-					WHERE type = ' . MEMBER_STATUS_LID . ' ';
+					WHERE type IN (' . implode(',', $this->visible_types) . ') ';
 			$order = array();
 			
 			if ($first) {
@@ -329,7 +335,8 @@
 
 			$query = "SELECT *
 					FROM leden
-					WHERE type = " . MEMBER_STATUS_LID . " AND (voornaam ILIKE '%$name%' OR achternaam ILIKE '%$name%');";
+					WHERE type IN (" . implode(',', $this->visible_types) . ")
+					AND (voornaam ILIKE '%$name%' OR achternaam ILIKE '%$name%');";
 					
 			$rows = $this->db->query($query);			
 			return $this->_rows_to_iters($rows);			
@@ -343,8 +350,8 @@
 		function get_from_search_year($year) {
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type = " . MEMBER_STATUS_LID . " AND 
-					beginjaar = " . intval($year) . "
+					WHERE type IN (" . implode(',', $this->visible_types) . ")
+					AND beginjaar = " . intval($year) . "
 					ORDER BY achternaam");
 			
 			return $this->_rows_to_iters($rows);		
@@ -358,7 +365,8 @@
 		function get_distinct_years() {
 			$rows = $this->db->query("SELECT DISTINCT beginjaar
 						FROM leden
-						WHERE type = " . MEMBER_STATUS_LID);
+						WHERE type IN (" . implode(',', $this->visible_types) . ")
+						ORDER BY beginjaar ASC");
 			$rows = $this->_rows_to_iters($rows);
 			$years = array();
 			foreach ($rows as $row) {
@@ -377,8 +385,8 @@
 		function get_from_last_character($char) {
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type = " . MEMBER_STATUS_LID . " AND 
-					achternaam ILIKE '" . $this->escape_string($char) . "%'
+					WHERE type IN (" . implode(',', $this->visible_types) . ")
+					AND achternaam ILIKE '" . $this->escape_string($char) . "%'
 					ORDER BY achternaam");
 			
 			return $this->_rows_to_iters($rows);		
@@ -393,8 +401,8 @@
 		function get_from_first_character($char) {
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type = " . MEMBER_STATUS_LID . " AND 
-					voornaam ILIKE '" . $this->escape_string($char) . "%' 
+					WHERE type IN (" . implode(',', $this->visible_types) . ")
+					AND voornaam ILIKE '" . $this->escape_string($char) . "%' 
 					ORDER BY voornaam");
 			
 			return $this->_rows_to_iters($rows);

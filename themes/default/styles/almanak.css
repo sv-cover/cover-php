@@ -1,47 +1,59 @@
-table.almanak_alphabet {
+.almanak_alphabet {
 	width: 90%;
 	table-layout: fixed;
 }
 
-table.almanak_alphabet td {
+.almanak_alphabet td {
 	text-align: center;
 }
 
-table.almanak_navigation {
+.almanak_navigation {
 	width: 99%;
 }
 
-table.almanak_navigation td.title {
+.almanak_navigation td.title {
 	font-weight: bold;
 	white-space: nowrap;
 	text-align: right;
 }
 
-table.almanak_navigation td.alphabet {
+.almanak_navigation td.alphabet {
 	width: 99%;
 	font-size: 10px;
 }
 
-table.almanak_navigation input.text {
+.almanak_navigation input.text {
 	width: 100px;
 	background-color: #ffffff;
 }
 
-table.almanak {
+.almanak {
 	width: 99%;
 	margin: 0 auto;
 	table-layout: fixed;
 }
 
-table.almanak td {
+.almanak td {
 	text-align: center;
 }
 
-table.almanak tr td {
+.almanak tr td {
 	vertical-align: bottom;
 	padding-bottom: 15px;
 }
 
-table.almanak td .name {
+.almanak td .name {
 	display: block;
+}
+
+.almanak .status {
+	font-size: 0.8em;
+}
+
+.almanak .status-lid-af {
+	opacity: 0.3;
+}
+
+.almanak .status-lid-af .name {
+	text-decoration: line-through;
 }
