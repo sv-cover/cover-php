@@ -9,7 +9,7 @@
 			parent::DataModel($db);
 		}
 		
-		function can_create_new_poll()
+		function can_create_new_poll(&$days = nul)
 		{
 			$current_user = logged_in();
 
@@ -32,7 +32,9 @@
 			// Threshold is 7 days by default, unless you where the author of the previous poll
 			$threshold = $thread->get('author') == $current_user['id'] ? 14 : 7;
 
-			return $thread->get('since') >= $threshold;
+			$days = $threshold - $thread->get('since');
+
+			return $days <= 0;
 		}
 
 		function get_latest_poll()

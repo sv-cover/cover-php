@@ -343,14 +343,12 @@
 		
 		$config_model = get_model('DataModelConfiguratie');
 		$id = $config_model->get_value('poll_forum');
+		$poll_model = get_model('DataModelPoll');
 		
 		if ($id && $iter->get('id') == $id) {
 			/* Get the last thread */
-			$thread = $iter->get_last_thread();
-			
-			if ($thread && $thread->get('since') < 14 && !member_in_commissie(COMISSIE_EASY)) {
-				$num = 14 - $thread->get('since');
-
+			if (!$poll_model->can_create_new_poll($num))
+			{
 				echo '<tr><td colspan="2">' . sprintf(ngettext('Je kunt hier pas over %d dag weer een poll plaatsen', 'Je kunt hier pas over %d dagen weer een poll plaatsen', $num), $num) . '</td></tr>';
 				return;
 			}
