@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-01-14 11:35+0100\n"
+"POT-Creation-Date: 2014-01-16 11:34+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -105,12 +105,13 @@ msgstr "Books"
 #: ../../../themes/default/views/header.php:209
 #: ../../../themes/default/views/header.php:275
 #: ../../../themes/default/views/commissies/commissies.phtml:1
+#: ../../../themes/default/views/profiel/profiel.phtml:152
 msgid "Commissies"
 msgstr "Committees"
 
 #: ../../../confirm.php:39
-#: ../../../themes/default/views/profiel/profiel.phtml:155
 #: ../../../themes/default/views/profiel/profiel.phtml:167
+#: ../../../themes/default/views/profiel/profiel.phtml:179
 msgid "Nieuw wachtwoord"
 msgstr "New password"
 
@@ -144,12 +145,12 @@ msgstr ""
 #: ../../../themes/default/views/forum.php:29
 #: ../../../themes/default/views/forum.php:153
 #: ../../../themes/default/views/forum.php:340
-#: ../../../themes/default/views/forum.php:439
-#: ../../../themes/default/views/forum.php:535
-#: ../../../themes/default/views/forum.php:799
-#: ../../../themes/default/views/forum.php:1187
-#: ../../../themes/default/views/forum.php:1210
-#: ../../../themes/default/views/forum.php:1245
+#: ../../../themes/default/views/forum.php:437
+#: ../../../themes/default/views/forum.php:533
+#: ../../../themes/default/views/forum.php:797
+#: ../../../themes/default/views/forum.php:1185
+#: ../../../themes/default/views/forum.php:1208
+#: ../../../themes/default/views/forum.php:1243
 #: ../../../themes/default/views/header.php:98
 #: ../../../themes/default/views/header.php:147
 #: ../../../themes/default/views/header.php:210
@@ -264,40 +265,40 @@ msgstr "%s have been notified that the links have been denied."
 msgid "Nieuw lid"
 msgstr "New member"
 
-#: ../../../profiel.php:32 ../../../themes/default/views/header.php:417
+#: ../../../profiel.php:30 ../../../themes/default/views/header.php:417
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
 
-#: ../../../profiel.php:86
+#: ../../../profiel.php:84
 msgid "De volgende velden zijn onjuist ingevuld: "
 msgstr "The following fields are not correctly filled in: "
 
-#: ../../../profiel.php:154
+#: ../../../profiel.php:150
 msgid "De volgende velden zijn te lang: "
 msgstr "The following fields are to long: "
 
-#: ../../../profiel.php:184
+#: ../../../profiel.php:178
 msgid "Het huidige wachtwoord is onjuist."
 msgstr "The current password is incorrect"
 
-#: ../../../profiel.php:189
+#: ../../../profiel.php:183
 msgid "Het nieuwe wachtwoord is niet ingevuld."
 msgstr "The new password hasn't been filled in"
 
-#: ../../../profiel.php:192
+#: ../../../profiel.php:186
 msgid "Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld."
 msgstr "The new password hasn't been filled in correctly twice"
 
-#: ../../../profiel.php:230
+#: ../../../profiel.php:224
 msgid "Jij mag deze gegevens niet aanpassen."
 msgstr "Sorry, you are not allowed to edit this data."
 
-#: ../../../profiel.php:233
+#: ../../../profiel.php:227
 msgid "De zichtbaarheid van het profiel is niet ingevuld."
 msgstr "The visibility of the profile has not been selected."
 
-#: ../../../profiel.php:236
+#: ../../../profiel.php:230
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
@@ -354,7 +355,7 @@ msgstr "Forgot your password?"
 msgid "Aanvraag nieuw wachtwoord"
 msgstr "Request a new password"
 
-#: ../../../weblog.php:13 ../../../themes/default/views/forum.php:1164
+#: ../../../weblog.php:13 ../../../themes/default/views/forum.php:1162
 #: ../../../themes/default/views/header.php:150
 #: ../../../themes/default/views/header.php:280
 #: ../../../themes/default/views/weblog/weblog.phtml:1
@@ -378,9 +379,9 @@ msgstr ""
 "easy@ai.rug.nl"
 
 #: ../../../include/editable.php:36
-#: ../../../themes/default/views/forum.php:1107
+#: ../../../themes/default/views/forum.php:1105
 #: ../../../themes/default/views/header.php:226
-#: ../../../themes/default/views/profiel/profiel.phtml:185
+#: ../../../themes/default/views/profiel/profiel.phtml:198
 msgid "Leden"
 msgstr "Members"
 
@@ -626,16 +627,16 @@ msgstr ""
 msgid "Deze pagina bestaat niet..."
 msgstr "This page does not exist..."
 
-#: ../../../include/models/DataModelCommissie.php:100
+#: ../../../include/models/DataModelCommissie.php:125
 #: ../../../themes/default/views/almanak/almanak.php:13
 msgid "onbekend"
 msgstr "unknown"
 
 #: ../../../include/models/DataModelForum.php:614
 #: ../../../include/models/DataModelForum.php:661
-#: ../../../themes/default/views/forum.php:842
-#: ../../../themes/default/views/forum.php:870
-#: ../../../themes/default/views/profiel/profiel.phtml:186
+#: ../../../themes/default/views/forum.php:840
+#: ../../../themes/default/views/forum.php:868
+#: ../../../themes/default/views/profiel/profiel.phtml:199
 msgid "Iedereen"
 msgstr "Everyone"
 
@@ -653,13 +654,13 @@ msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:649
 #: ../../../include/models/DataModelForum.php:672
-#: ../../../themes/default/views/forum.php:505
+#: ../../../themes/default/views/forum.php:503
 #: ../../../themes/default/views/profiel/profiel.php:70
 msgid "Onbekend"
 msgstr "Unknown"
 
 #: ../../../include/models/DataModelForum.php:663
-#: ../../../themes/default/views/forum.php:842
+#: ../../../themes/default/views/forum.php:840
 #: ../../../themes/default/views/boeken/boeken.php:341
 #: ../../../themes/default/views/boeken/boeken.php:362
 #: ../../../themes/default/views/boeken/boeken.php:404
@@ -667,13 +668,13 @@ msgstr "Unknown"
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:16
 #: ../../../themes/default/views/boeken/bestellingen.phtml:7
 #: ../../../themes/default/views/boeken/bestellingen.phtml:61
-#: ../../../themes/default/views/profiel/profiel.phtml:131
+#: ../../../themes/default/views/profiel/profiel.phtml:128
 #: ../../../themes/default/views/studieondersteuning/moderate.phtml:22
 msgid "Lid"
 msgstr "Member"
 
 #: ../../../include/models/DataModelForum.php:666
-#: ../../../themes/default/views/forum.php:842
+#: ../../../themes/default/views/forum.php:840
 #: ../../../themes/default/views/agenda/edit.phtml:39
 #: ../../../themes/default/views/agenda/moderate.phtml:18
 #: ../../../themes/default/views/show/edit.phtml:24
@@ -681,8 +682,8 @@ msgid "Commissie"
 msgstr "Committee"
 
 #: ../../../include/models/DataModelForum.php:669
-#: ../../../themes/default/views/forum.php:845
-#: ../../../themes/default/views/forum.php:857
+#: ../../../themes/default/views/forum.php:843
+#: ../../../themes/default/views/forum.php:855
 msgid "Groep"
 msgstr "Group"
 
@@ -761,9 +762,9 @@ msgstr "Close"
 #: ../../../themes/default/views/editable.php:80
 #: ../../../themes/default/views/forum.php:48
 #: ../../../themes/default/views/forum.php:131
-#: ../../../themes/default/views/forum.php:453
-#: ../../../themes/default/views/forum.php:456
-#: ../../../themes/default/views/forum.php:782
+#: ../../../themes/default/views/forum.php:451
+#: ../../../themes/default/views/forum.php:454
+#: ../../../themes/default/views/forum.php:780
 #: ../../../themes/default/views/agenda/index.phtml:21
 msgid "nieuw"
 msgstr "new"
@@ -792,7 +793,7 @@ msgstr "Revert changes"
 #: ../../../themes/default/views/editable.php:204
 #: ../../../themes/default/views/forum.php:160
 #: ../../../themes/default/views/forum.php:257
-#: ../../../themes/default/views/forum.php:1209
+#: ../../../themes/default/views/forum.php:1207
 msgid "voorbeeld"
 msgstr "preview"
 
@@ -800,7 +801,7 @@ msgstr "preview"
 #: ../../../themes/default/views/editable.php:203
 #: ../../../themes/default/views/forum.php:160
 #: ../../../themes/default/views/forum.php:256
-#: ../../../themes/default/views/forum.php:1209
+#: ../../../themes/default/views/forum.php:1207
 msgid "Voorbeeld tonen"
 msgstr "Show preview"
 
@@ -814,7 +815,7 @@ msgstr "Delete page"
 
 #: ../../../themes/default/views/editable.php:86
 #: ../../../themes/default/views/homepage/homepage.phtml:9
-#: ../../../themes/default/views/profiel/profiel.phtml:108
+#: ../../../themes/default/views/profiel/profiel.phtml:105
 msgid "Taal"
 msgstr "Language"
 
@@ -834,7 +835,7 @@ msgid "voorbeeld sluiten"
 msgstr "close preview"
 
 #: ../../../themes/default/views/forum.php:8
-#: ../../../themes/default/views/forum.php:458
+#: ../../../themes/default/views/forum.php:456
 msgid "Je kunt niet schrijven in dit forum"
 msgstr "You can't write in this forum"
 
@@ -849,13 +850,13 @@ msgstr "That message doesn't exist"
 
 #: ../../../themes/default/views/forum.php:48
 #: ../../../themes/default/views/forum.php:131
-#: ../../../themes/default/views/forum.php:453
+#: ../../../themes/default/views/forum.php:451
 msgid "Nieuw bericht toevoegen"
 msgstr "Add a new message"
 
 #: ../../../themes/default/views/forum.php:48
 #: ../../../themes/default/views/forum.php:131
-#: ../../../themes/default/views/forum.php:453
+#: ../../../themes/default/views/forum.php:451
 msgid "Nieuw antwoord"
 msgstr "New reply"
 
@@ -869,7 +870,7 @@ msgid "Posts"
 msgstr "Posts"
 
 #: ../../../themes/default/views/forum.php:101
-#: ../../../themes/default/views/forum.php:1120
+#: ../../../themes/default/views/forum.php:1118
 msgid "verwijder"
 msgstr "delete"
 
@@ -894,9 +895,9 @@ msgid "Dat forum bestaat niet"
 msgstr "that forum doesn't exist"
 
 #: ../../../themes/default/views/forum.php:165
-#: ../../../themes/default/views/forum.php:372
-#: ../../../themes/default/views/forum.php:477
-#: ../../../themes/default/views/forum.php:1219
+#: ../../../themes/default/views/forum.php:370
+#: ../../../themes/default/views/forum.php:475
+#: ../../../themes/default/views/forum.php:1217
 #: ../../../themes/default/views/boeken/boeken.php:37
 #: ../../../themes/default/views/boeken/boeken.php:113
 #: ../../../themes/default/views/boeken/boeken.php:154
@@ -905,8 +906,8 @@ msgid "Auteur"
 msgstr "Author"
 
 #: ../../../themes/default/views/forum.php:168
-#: ../../../themes/default/views/forum.php:476
-#: ../../../themes/default/views/forum.php:1225
+#: ../../../themes/default/views/forum.php:474
+#: ../../../themes/default/views/forum.php:1223
 msgid "Onderwerp"
 msgstr "Subject"
 
@@ -919,125 +920,125 @@ msgstr "Add a message"
 msgid "Nieuwe poll toevoegen."
 msgstr "Add a new poll"
 
-#: ../../../themes/default/views/forum.php:354
+#: ../../../themes/default/views/forum.php:352
 #, php-format
 msgid "Je kunt hier pas over %d dag weer een poll plaatsen"
 msgid_plural "Je kunt hier pas over %d dagen weer een poll plaatsen"
 msgstr[0] "You can only add a new poll here in %d day"
 msgstr[1] "You can only add a new poll here in %d days"
 
-#: ../../../themes/default/views/forum.php:359
+#: ../../../themes/default/views/forum.php:357
 msgid "Gebruik het onderstaande formulier om een nieuwe poll toe te voegen."
 msgstr "Use the following form to add a new poll"
 
-#: ../../../themes/default/views/forum.php:362
+#: ../../../themes/default/views/forum.php:360
 msgid ""
 "Niet alle velden zijn goed ingevuld (er moet minstens 1 optie ingevuld zijn"
 msgstr ""
 "You haven't filled in all the fields correctly (there must be at least one "
 "option)"
 
-#: ../../../themes/default/views/forum.php:373
+#: ../../../themes/default/views/forum.php:371
 msgid "Onderwerp/vraag"
 msgstr "Subject/question"
 
-#: ../../../themes/default/views/forum.php:374
+#: ../../../themes/default/views/forum.php:372
 msgid "Omschrijving"
 msgstr "Description"
 
-#: ../../../themes/default/views/forum.php:377
+#: ../../../themes/default/views/forum.php:375
 msgid "Optie"
 msgstr "Option"
 
-#: ../../../themes/default/views/forum.php:382
-#: ../../../themes/default/views/forum.php:620
-#: ../../../themes/default/views/forum.php:814
-#: ../../../themes/default/views/forum.php:1058
-#: ../../../themes/default/views/forum.php:1129
-#: ../../../themes/default/views/forum.php:1182
+#: ../../../themes/default/views/forum.php:380
+#: ../../../themes/default/views/forum.php:618
+#: ../../../themes/default/views/forum.php:812
+#: ../../../themes/default/views/forum.php:1056
+#: ../../../themes/default/views/forum.php:1127
+#: ../../../themes/default/views/forum.php:1180
 #: ../../../themes/default/views/actieveleden/_leden.phtml:27
 #: ../../../themes/default/views/fotoboek/_photo.phtml:4
 #: ../../../themes/default/views/links/_beheer.phtml:29
 #: ../../../themes/default/views/profiel/profiel.phtml:63
-#: ../../../themes/default/views/profiel/profiel.phtml:114
-#: ../../../themes/default/views/profiel/profiel.phtml:146
-#: ../../../themes/default/views/profiel/profiel.phtml:170
-#: ../../../themes/default/views/profiel/profiel.phtml:208
+#: ../../../themes/default/views/profiel/profiel.phtml:111
+#: ../../../themes/default/views/profiel/profiel.phtml:143
+#: ../../../themes/default/views/profiel/profiel.phtml:182
+#: ../../../themes/default/views/profiel/profiel.phtml:221
 #: ../../../themes/default/views/taken/taak.phtml:33
 msgid "Opslaan"
 msgstr "Save"
 
-#: ../../../themes/default/views/forum.php:456
+#: ../../../themes/default/views/forum.php:454
 msgid "Nieuwe poll toevoegen"
 msgstr "Add a new poll"
 
-#: ../../../themes/default/views/forum.php:456
+#: ../../../themes/default/views/forum.php:454
 #: ../../../themes/default/views/poll/_vote_form.phtml:15
 #: ../../../themes/default/views/poll/_vote_results.phtml:19
 msgid "Nieuwe poll"
 msgstr "New poll"
 
-#: ../../../themes/default/views/forum.php:478
+#: ../../../themes/default/views/forum.php:476
 #: ../../../themes/default/views/fotoboek/_reacties.phtml:10
 #: ../../../themes/default/views/weblog/_weblog.phtml:19
 msgid "Reacties"
 msgstr "Replies"
 
-#: ../../../themes/default/views/forum.php:479
+#: ../../../themes/default/views/forum.php:477
 msgid "Laatste"
 msgstr "Last"
 
-#: ../../../themes/default/views/forum.php:486
-#: ../../../themes/default/views/forum.php:911
-#: ../../../themes/default/views/forum.php:1033
+#: ../../../themes/default/views/forum.php:484
+#: ../../../themes/default/views/forum.php:909
+#: ../../../themes/default/views/forum.php:1031
 #: ../../../themes/default/views/header.php:339
 msgid "Poll"
 msgstr "Poll"
 
-#: ../../../themes/default/views/forum.php:498
+#: ../../../themes/default/views/forum.php:496
 msgid "Pagina"
 msgstr "Page"
 
-#: ../../../themes/default/views/forum.php:581
-#: ../../../themes/default/views/forum.php:782
+#: ../../../themes/default/views/forum.php:579
+#: ../../../themes/default/views/forum.php:780
 msgid "Forums"
 msgstr "Forums"
 
-#: ../../../themes/default/views/forum.php:581
-#: ../../../themes/default/views/forum.php:907
-#: ../../../themes/default/views/forum.php:1021
-#: ../../../themes/default/views/forum.php:1087
+#: ../../../themes/default/views/forum.php:579
+#: ../../../themes/default/views/forum.php:905
+#: ../../../themes/default/views/forum.php:1019
+#: ../../../themes/default/views/forum.php:1085
 msgid "Rechten"
 msgstr "Rights"
 
-#: ../../../themes/default/views/forum.php:581
-#: ../../../themes/default/views/forum.php:1095
+#: ../../../themes/default/views/forum.php:579
+#: ../../../themes/default/views/forum.php:1093
 msgid "Groepen"
 msgstr "Groups"
 
-#: ../../../themes/default/views/forum.php:593
+#: ../../../themes/default/views/forum.php:591
 msgid "Volgorde"
 msgstr "Order"
 
-#: ../../../themes/default/views/forum.php:616
+#: ../../../themes/default/views/forum.php:614
 #: ../../../themes/default/views/links/_beheer.phtml:23
 msgid "Omhoog"
 msgstr "Up"
 
-#: ../../../themes/default/views/forum.php:616
+#: ../../../themes/default/views/forum.php:614
 msgid "Verplaats geselecteerd forum naar boven"
 msgstr "Move the selected forum up"
 
-#: ../../../themes/default/views/forum.php:616
+#: ../../../themes/default/views/forum.php:614
 #: ../../../themes/default/views/links/_beheer.phtml:24
 msgid "Omlaag"
 msgstr "Down"
 
-#: ../../../themes/default/views/forum.php:616
+#: ../../../themes/default/views/forum.php:614
 msgid "Verplaats geselecteerd forum naar beneden"
 msgstr "Move the selected forum down"
 
-#: ../../../themes/default/views/forum.php:619
+#: ../../../themes/default/views/forum.php:617
 #: ../../../themes/default/views/boeken/boeken.php:140
 #: ../../../themes/default/views/agenda/edit.phtml:68
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:1
@@ -1047,14 +1048,14 @@ msgstr "Move the selected forum down"
 msgid "Toevoegen"
 msgstr "Add"
 
-#: ../../../themes/default/views/forum.php:619
+#: ../../../themes/default/views/forum.php:617
 #: ../../../themes/default/views/boeken/boeken.php:232
 #: ../../../themes/default/views/agenda/edit.phtml:68
 #: ../../../themes/default/views/links/_beheer.phtml:28
 msgid "Wijzigen"
 msgstr "Edit"
 
-#: ../../../themes/default/views/forum.php:619
+#: ../../../themes/default/views/forum.php:617
 #: ../../../themes/default/views/boeken/boeken.php:35
 #: ../../../themes/default/views/boeken/boeken.php:207
 #: ../../../themes/default/views/actieveleden/_commissie_selectie.phtml:26
@@ -1067,19 +1068,19 @@ msgstr "Edit"
 msgid "Verwijderen"
 msgstr "Delete"
 
-#: ../../../themes/default/views/forum.php:782
+#: ../../../themes/default/views/forum.php:780
 msgid "Nieuw forum toevoegen"
 msgstr "Add a new forum"
 
-#: ../../../themes/default/views/forum.php:782
+#: ../../../themes/default/views/forum.php:780
 msgid "Nieuw forum"
 msgstr "New forum"
 
-#: ../../../themes/default/views/forum.php:789
-#: ../../../themes/default/views/forum.php:867
-#: ../../../themes/default/views/forum.php:1029
-#: ../../../themes/default/views/forum.php:1106
-#: ../../../themes/default/views/forum.php:1140
+#: ../../../themes/default/views/forum.php:787
+#: ../../../themes/default/views/forum.php:865
+#: ../../../themes/default/views/forum.php:1027
+#: ../../../themes/default/views/forum.php:1104
+#: ../../../themes/default/views/forum.php:1138
 #: ../../../themes/default/views/actieveleden/_leden.phtml:9
 #: ../../../themes/default/views/actieveleden/_nieuwe_commissie.phtml:6
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
@@ -1090,28 +1091,28 @@ msgstr "New forum"
 msgid "Naam"
 msgstr "Name"
 
-#: ../../../themes/default/views/forum.php:790
+#: ../../../themes/default/views/forum.php:788
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:52
 #: ../../../themes/default/views/fotoboek/_info.phtml:17
 #: ../../../themes/default/views/taken/taak.phtml:29
 msgid "Beschrijving"
 msgstr "Description"
 
-#: ../../../themes/default/views/forum.php:791
+#: ../../../themes/default/views/forum.php:789
 msgid "Forum toevoegen"
 msgstr "Add forum"
 
-#: ../../../themes/default/views/forum.php:798
+#: ../../../themes/default/views/forum.php:796
 msgid "Verwijder geselecteerde forums"
 msgstr "Remove selected forums"
 
-#: ../../../themes/default/views/forum.php:863
-#: ../../../themes/default/views/forum.php:1028
+#: ../../../themes/default/views/forum.php:861
+#: ../../../themes/default/views/forum.php:1026
 #: ../../../themes/default/views/studieondersteuning/vak.phtml:23
 msgid "Type"
 msgstr "Type"
 
-#: ../../../themes/default/views/forum.php:874
+#: ../../../themes/default/views/forum.php:872
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:17
 #: ../../../themes/default/views/almanak/almanak.phtml:41
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:8
@@ -1119,122 +1120,122 @@ msgstr "Type"
 msgid "Zoeken"
 msgstr "Search"
 
-#: ../../../themes/default/views/forum.php:874
+#: ../../../themes/default/views/forum.php:872
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:18
 msgid "Zoeken naar leden"
 msgstr "Search for members"
 
-#: ../../../themes/default/views/forum.php:908
+#: ../../../themes/default/views/forum.php:906
 msgid "Lezen"
 msgstr "Read"
 
-#: ../../../themes/default/views/forum.php:909
+#: ../../../themes/default/views/forum.php:907
 msgid "Schrijven"
 msgstr "Write"
 
-#: ../../../themes/default/views/forum.php:910
+#: ../../../themes/default/views/forum.php:908
 msgid "Antwoorden"
 msgstr "Reply"
 
-#: ../../../themes/default/views/forum.php:915
-#: ../../../themes/default/views/forum.php:1061
+#: ../../../themes/default/views/forum.php:913
+#: ../../../themes/default/views/forum.php:1059
 msgid "Rechten toevoegen"
 msgstr "Add rights"
 
-#: ../../../themes/default/views/forum.php:948
+#: ../../../themes/default/views/forum.php:946
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:53
 msgid "Geen leden gevonden"
 msgstr "No members found"
 
-#: ../../../themes/default/views/forum.php:977
+#: ../../../themes/default/views/forum.php:975
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:82
 msgid "Je moet wel een naam invullen"
 msgstr "You have to fill in a name"
 
-#: ../../../themes/default/views/forum.php:980
+#: ../../../themes/default/views/forum.php:978
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:85
 msgid "Geef minstens 3 letters op om naar te zoeken"
 msgstr "There is a 3 letter search minimum"
 
-#: ../../../themes/default/views/forum.php:1027
+#: ../../../themes/default/views/forum.php:1025
 msgid "Verwijder geselecteerde rechten"
 msgstr "Remove selected rights"
 
-#: ../../../themes/default/views/forum.php:1030
+#: ../../../themes/default/views/forum.php:1028
 msgid "Lees"
 msgstr "Read"
 
-#: ../../../themes/default/views/forum.php:1031
+#: ../../../themes/default/views/forum.php:1029
 msgid "Schrijf"
 msgstr "Write"
 
-#: ../../../themes/default/views/forum.php:1032
+#: ../../../themes/default/views/forum.php:1030
 msgid "Antw."
 msgstr "Replies"
 
-#: ../../../themes/default/views/forum.php:1082
+#: ../../../themes/default/views/forum.php:1080
 msgid "Selecteer forum"
 msgstr "Select forum"
 
-#: ../../../themes/default/views/forum.php:1083
+#: ../../../themes/default/views/forum.php:1081
 #: ../../../themes/default/views/actieveleden/_commissie_selectie.phtml:25
 msgid "Selecteren"
 msgstr "Select"
 
-#: ../../../themes/default/views/forum.php:1105
+#: ../../../themes/default/views/forum.php:1103
 msgid "Verwijder geselecteerde groepen"
 msgstr "Remove selected groups"
 
-#: ../../../themes/default/views/forum.php:1132
+#: ../../../themes/default/views/forum.php:1130
 msgid "Er zijn nog geen groepen"
 msgstr "There are no groups yet"
 
-#: ../../../themes/default/views/forum.php:1135
+#: ../../../themes/default/views/forum.php:1133
 msgid "Nieuwe groep"
 msgstr "New group"
 
-#: ../../../themes/default/views/forum.php:1144
+#: ../../../themes/default/views/forum.php:1142
 msgid "Groep toevoegen"
 msgstr "Add group"
 
-#: ../../../themes/default/views/forum.php:1152
+#: ../../../themes/default/views/forum.php:1150
 #: ../../../themes/default/views/header.php:99
 #: ../../../themes/default/views/header.php:211
 msgid "Leden toevoegen"
 msgstr "Add a member"
 
-#: ../../../themes/default/views/forum.php:1160
+#: ../../../themes/default/views/forum.php:1158
 msgid "Speciale forums"
 msgstr "Special forums"
 
-#: ../../../themes/default/views/forum.php:1164
+#: ../../../themes/default/views/forum.php:1162
 msgid "Polls"
 msgstr "Polls"
 
-#: ../../../themes/default/views/forum.php:1164
+#: ../../../themes/default/views/forum.php:1162
 #: ../../../themes/default/views/news/news.phtml:14
 msgid "Mededelingen"
 msgstr "Announcements"
 
-#: ../../../themes/default/views/forum.php:1187
+#: ../../../themes/default/views/forum.php:1185
 msgid "Admin"
 msgstr "Admin"
 
-#: ../../../themes/default/views/forum.php:1210
+#: ../../../themes/default/views/forum.php:1208
 msgid "Wijzig bericht"
 msgstr "Edit message"
 
-#: ../../../themes/default/views/forum.php:1220
+#: ../../../themes/default/views/forum.php:1218
 #: ../../../themes/default/views/agenda/moderate.phtml:17
 #: ../../../themes/default/views/fotoboek/_info.phtml:13
 msgid "Datum"
 msgstr "Date"
 
-#: ../../../themes/default/views/forum.php:1235
+#: ../../../themes/default/views/forum.php:1233
 msgid "Bericht wijzigen"
 msgstr "Edit message"
 
-#: ../../../themes/default/views/forum.php:1245
+#: ../../../themes/default/views/forum.php:1243
 msgid "Bericht verwijderen"
 msgstr "Remove message"
 
@@ -1471,13 +1472,14 @@ msgid "Onzichtbaar"
 msgstr "Hidden"
 
 #: ../../../themes/default/views/almanak/almanak.php:37
-#: ../../../themes/default/views/profiel/profiel.phtml:139
+#: ../../../themes/default/views/profiel/profiel.phtml:136
 msgid "Lid af"
 msgstr "Previously a member"
 
 #: ../../../themes/default/views/almanak/almanak.php:42
+#: ../../../themes/default/views/profiel/profiel.phtml:140
 msgid "Donateur"
-msgstr "Donor"
+msgstr "Donator"
 
 #: ../../../themes/default/views/almanak/almanak.php:55
 #, php-format
@@ -1729,7 +1731,7 @@ msgstr[0] "%d documents"
 msgstr[1] "%d documents"
 
 #: ../../../themes/default/views/taken/taken.php:21
-#: ../../../themes/default/views/profiel/profiel.phtml:184
+#: ../../../themes/default/views/profiel/profiel.phtml:197
 msgid "Niemand"
 msgstr "Nobody"
 
@@ -2753,57 +2755,49 @@ msgstr "Avatar"
 msgid "avatar"
 msgstr "avatar"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:103
-msgid "MSN Adres"
-msgstr "MSN adress"
-
-#: ../../../themes/default/views/profiel/profiel.phtml:104
-msgid "ICQ#"
-msgstr "ICQ#"
-
-#: ../../../themes/default/views/profiel/profiel.phtml:122
+#: ../../../themes/default/views/profiel/profiel.phtml:119
 msgid "Zichtbaarheid"
 msgstr "Visibility"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:135
+#: ../../../themes/default/views/profiel/profiel.phtml:132
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:143
-msgid "Dontateur"
-msgstr "Donor"
+#: ../../../themes/default/views/profiel/profiel.phtml:153
+msgid "Lid van de volgende commissies:"
+msgstr "Member of the following committees:"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:166
+#: ../../../themes/default/views/profiel/profiel.phtml:178
 msgid "Oud wachtwoord"
 msgstr "Old password"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:168
+#: ../../../themes/default/views/profiel/profiel.phtml:180
 msgid "Opnieuw"
 msgstr "Again"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:175
+#: ../../../themes/default/views/profiel/profiel.phtml:188
 msgid "Privacy instellingen"
 msgstr "Privacy settings"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:176
+#: ../../../themes/default/views/profiel/profiel.phtml:189
 msgid "Je privacy instellingen geven aan wie welke informatie mag zien."
 msgstr "Edit your privacy preferences to indicate who can see what info"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:246
+#: ../../../themes/default/views/profiel/profiel.phtml:259
 #, php-format
 msgid "Je bent ingelogd met %d browsers."
 msgstr "You are logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:246
+#: ../../../themes/default/views/profiel/profiel.phtml:259
 msgid "Beheer je sessies."
 msgstr "Manage your sessions."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:250
+#: ../../../themes/default/views/profiel/profiel.phtml:263
 #, php-format
 msgid "Deze persoon is ingelogd met %d browsers."
 msgstr "This person is logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:250
+#: ../../../themes/default/views/profiel/profiel.phtml:263
 msgid "Beheer zijn sessies."
 msgstr "Manage his sessions."
 
@@ -2825,7 +2819,8 @@ msgid "Laatst actief"
 msgstr "Last active"
 
 #: ../../../themes/default/views/sessions/sessions.phtml:26
-msgid "Beëindig geselecteerde sessies"
+#, fuzzy
+msgid "Sluit geselecteerde sessies"
 msgstr "End selected sessions"
 
 #: ../../../themes/default/views/studieondersteuning/_nieuwe_documenten.phtml:2
@@ -3040,6 +3035,15 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "MSN Adres"
+#~ msgstr "MSN adress"
+
+#~ msgid "ICQ#"
+#~ msgstr "ICQ#"
+
+#~ msgid "Dontateur"
+#~ msgstr "Donor"
 
 #~ msgid "Poll toevoegen"
 #~ msgstr "Add poll"
