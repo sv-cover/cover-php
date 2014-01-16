@@ -100,9 +100,6 @@
 					<? } ?>
 					</tr>
 
-					<?= $this->privacy_parse($model, $iter, __('MSN Adres'), 'msn', $iter->data, $errors) ?>
-					<?= $this->privacy_parse($model, $iter, __('ICQ#'), 'icq', $iter->data, $errors) ?>
-
 					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
 						<tr>
 							<td><?= label(__('Taal'), 'taal', $errors) ?></td>

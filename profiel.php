@@ -23,8 +23,6 @@
 				'onderschrift' => 200,
 				'avatar' => 100,
 				'homepage' => 255,
-				'msn' => 100,
-				'icq' => 15,
 				'nick' => 50);
 		}
 		
@@ -143,8 +141,6 @@
 				array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
 				array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
 				array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
-				array('name' => 'msn', 'function' => array(&$this, '_check_size')),
-				array('name' => 'icq', 'function' => array(&$this, '_check_size')),
 				array('name' => 'taal', 'function' => array($this, '_check_language'))
 			);
 			
@@ -161,8 +157,6 @@
 					'onderschrift', 
 					'avatar',
 					'homepage', 
-					'msn',
-					'icq',
 					'taal');
 
 			foreach ($fields as $field)
