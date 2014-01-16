@@ -33,6 +33,22 @@
 				profielen.nick,
 				profielen.taal';
 		}
+
+		public function get_all()
+		{
+			$rows = $this->db->query("
+				SELECT
+					*
+				FROM
+					leden
+				WHERE
+					type IN (" . implode(',', $this->visible_types) . ")
+				ORDER BY
+					leden.achternaam ASC,
+					leden.voornaam ASC");
+
+			return $this->_rows_to_iters($rows);
+		}
 		
 		function get_iter($id) {
 			$row = $this->db->query_first('SELECT ' . $this->_generate_select() . ' 
