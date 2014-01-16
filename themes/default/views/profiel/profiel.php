@@ -79,4 +79,11 @@ class ProfielView extends View {
 			return count($model->getActive($member_id));
 		}
 
+		public function get_commissies($iter)
+		{
+			$model = get_model('DataModelCommissie');
+
+			return $model->get_commissies_for_member($iter->get('id'));
+		}
+
 }

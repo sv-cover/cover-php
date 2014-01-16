@@ -120,35 +120,50 @@
 	<?php if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
 		<div class="floatLeft almanak">
 			<h2 class="profilehead" id="zichtbaarheid"><?= __('Zichtbaarheid') ?></h2>
-				<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#zichtbaarheid" method="post">
+			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#zichtbaarheid" method="post">
 
-					<?= input_hidden('submprofiel_zichtbaarheid', 'yes') ?>
-					<?= input_hidden('id', $iter->get('lidid')) ?>
+				<?= input_hidden('submprofiel_zichtbaarheid', 'yes') ?>
+				<?= input_hidden('id', $iter->get('lidid')) ?>
 
-					<table class="profiel">
-						<tr>
-							<td width="120"><span class="label">Type:</span></td>
-							<td width="150"><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Dontateur') ?></label></td>
-						</tr>
-						<tr>
-							<td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
-						</tr>
-					</table>
-				</form>
+				<table class="profiel">
+					<tr>
+						<td width="120"><span class="label">Type:</span></td>
+						<td width="150"><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Dontateur') ?></label></td>
+					</tr>
+					<tr>
+						<td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
+					</tr>
+				</table>
+			</form>
 		</div>
 	<?php } ?>
+
+	<?php if ($commissies = $this->get_commissies($iter)): ?>
+	<div class="floatLeft almanak">
+		<h2 class="profilehead" id="commissies"><?= __('Commissies') ?></h2>
+		<p><?= htmlspecialchars(__('Lid van de volgende commissies:')) ?></p>
+		<ul>
+			<?php foreach ($commissies as $commissie): ?>
+			<li>
+				<a href="show.php?id=<?=$commissie->get('page')?>"><?=htmlspecialchars($commissie->get('naam'))?></a>
+				- <span class="functie"><?=htmlspecialchars($commissie->get('functie')) ?></span>
+			</li>
+			<?php endforeach ?>
+		</ul>
+	</div>
+	<?php endif ?>
 
 	<? if ($this->member_write_permission($iter->get('lidid'))) { ?>
 		<div class="floatLeft almanak">
@@ -171,6 +186,7 @@
 					</table>
 				</form>
 		</div>
+
 		<div class="almanak clearBoth">
 			<h2 class="profilehead" id="privacy"><?= __('Privacy instellingen') ?></h2>
 			<p><?= __('Je privacy instellingen geven aan wie welke informatie mag zien.') ?></p>

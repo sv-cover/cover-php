@@ -69,6 +69,31 @@
 			return $iters;
 		}
 
+		function get_commissies_for_member($lid_id)
+		{
+			$rows = $this->db->query("
+				SELECT
+					c.id,
+					c.naam,
+					c.page,
+					al.functie
+				FROM
+					actieveleden al
+				RIGHT JOIN commissies c ON
+					al.commissieid = c.id
+				WHERE
+					al.lidid = " . intval($lid_id) ."
+				GROUP by
+					c.id,
+					c.naam,
+					c.page,
+					al.functie
+				ORDER BY
+					c.naam ASC");
+
+			return $this->_rows_to_iters($rows);
+		}
+
 		/**
 		  * Get the login name of a specific commissie
 		  * @id the commissie id
