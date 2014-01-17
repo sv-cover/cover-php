@@ -8,9 +8,9 @@ $agenda_model = get_model('DataModelAgenda');
 
 $commissie_model = get_model('DataModelCommissie');
 
-$from = new DateTime('-2 day');
+$from = new DateTime('-1 day');
 
-$till = new DateTime('-1 day');
+$till = new DateTime();
 
 $agenda_items = $agenda_model->get($from->format('Y-m-d'), $till->format('Y-m-d'), true);
 
