@@ -61,6 +61,12 @@ class ControllerScherm
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Pragma: no-cache");
 
+		// E-tag to check whether we need to reload
+		header('X-Scherm-ETag: ' . $this->generate_etag());
+		
+		// Proper content type (hopefully)
+		header('Content-Type: text/html; charset=ISO-8859-15');
+
 		if (file_exists('slide.php'))
 			include 'slide.php';
 		else
@@ -104,13 +110,7 @@ class ControllerScherm
 		// Send the mime type
 		header('Content-Type: ' . $mime_type);
 		
-		// Send some non-caching headers
-		// header('Pragma: public');
-		// header('Cache-Control: max-age=86400');
-		// header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', filemtime($path)));
-		// header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-		
-		// .. and finally, send the file.
+		// Send the file.
 		readfile($path);
 	}
 
@@ -123,6 +123,7 @@ class ControllerScherm
 
 	protected function run_scherm()
 	{
+		header('Content-Type: text/html; charset=ISO-8859-15');
 		run_view('scherm::scherm', null, null, array('slides' => $this->slides));
 	}
 
@@ -133,6 +134,8 @@ class ControllerScherm
 
 	public function run()
 	{
+		header('Content-Type: text/html; charset=ISO-8859-15');
+
 		if (isset($_GET['slide']))
 		{
 			if (!isset($this->slides[$_GET['slide']]))
@@ -147,10 +150,7 @@ class ControllerScherm
 			if(isset($_GET['resource']))
 				$this->run_resource($_GET['resource']);
 			else
-			{
-				header('X-Scherm-ETag: ' . $this->generate_etag());
 				$this->run_slide();
-			}
 		}
 		else
 			$this->run_scherm();		
