@@ -2,10 +2,18 @@
 
 $commissie_model = get_model('DataModelCommissie');
 
-$commissies = $commissie_model->get(false);
+// for debugging purposes
+if (isset($_GET['commissie'])) {
+	$commissie = $commissie_model->get_iter($_GET['commissie']);
+}
+// Pick a random commissie
+else {
+	$commissies = $commissie_model->get(false);
 
-while (empty($commissie))
-	$commissie = $commissies[mt_rand(0, count($commissies))];
+	// Apparently sometimes a commissie is empty?
+	while (empty($commissie))
+		$commissie = $commissies[mt_rand(0, count($commissies))];
+}
 
 $leden = $commissie_model->get_leden($commissie->get('id'));
 
@@ -20,7 +28,7 @@ function _full_name($lid) {
 	<h2 style="font-size: 80px; margin: 80px 0;"><?=htmlspecialchars($commissie->get('naam'))?></h2>
 	<?php foreach ($leden as $lid): ?>
 	<div style="display: inline-block; padding: 50px">
-		<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;get_thumb=circle&amp;width=400" width="200" height="200">
+		<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;get_thumb=circle&amp;width=200" width="200" height="200">
 		<span style="display: block; font-size: 20px;"><?=htmlspecialchars(_full_name($lid))?></span>
 		<span style="display: block; font-size: 14px;"><?=htmlspecialchars($lid->get('functie'))?></span>
 	</div>
