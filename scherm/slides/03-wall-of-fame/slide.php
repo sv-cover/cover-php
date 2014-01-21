@@ -4,7 +4,8 @@ $commissie_model = get_model('DataModelCommissie');
 
 $commissies = $commissie_model->get(false);
 
-$commissie = $commissies[mt_rand(0, count($commissies))];
+while (empty($commissie))
+	$commissie = $commissies[mt_rand(0, count($commissies))];
 
 $leden = $commissie_model->get_leden($commissie->get('id'));
 
