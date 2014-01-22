@@ -339,16 +339,6 @@
 		return create_menu($color, 'poll', __('Poll'), $contents);
 	}
 	
-	function create_onestat_menu() {
-		?>
-		<div <?= member_in_commissie(COMMISSIE_EASY) ? "" : 'style="visibility: hidden"' ?>>
-		<?
-			include("onestat.txt");
-		?>
-		</div>
-		<?
-	}
-
 	function create_menu($color, $name, $title, $contents) {
 		echo '
 		<div class="menuItem">
