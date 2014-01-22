@@ -187,7 +187,7 @@
 		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match))
 		{
 			$placeholder = sprintf('#VIDEO%d#', $count++);
-			$placeholders[$placeholder] = '<div class="youtube-container"><iframe src="http://www.youtube.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe></div>';
+			$placeholders[$placeholder] = '<div class="youtube-container"><iframe src="//www.youtube.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe></div>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
