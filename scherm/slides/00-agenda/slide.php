@@ -17,14 +17,15 @@ function slide_format_date($punt)
 }
 
 ?>
-<div class="agenda">
-	<h1>Agenda</h1>
+<div style="overflow: hidden">
+	<h1 style="text-indent: 20px;">Agenda</h1>
 	<?php foreach ($punten as $punt): ?>
-	<div class="agenda-item">
-		<span class="date"><?=slide_format_date($punt) ?></span>
-		<?php if ($punt->get('locatie')): ?><span class="location">in <?= markup_format_text($punt->get('locatie')) ?></span><?php endif ?>
-
+	<div style="display: block; float: left; width: 840px; height: 140px; margin: 0 20px 0 40px; padding: 20px; border-bottom: 1px solid #ccc">
 		<h3><?=markup_format_text($punt->get('kop'))?></h3>
+		<span class="date"><?=slide_format_date($punt) ?></span>
+		<?php if ($punt->get('locatie')): ?>
+			<span class="location">in <?= markup_format_text($punt->get('locatie')) ?></span>
+		<?php endif ?>
 	</div>
 	<?php endforeach ?>
 </div>
