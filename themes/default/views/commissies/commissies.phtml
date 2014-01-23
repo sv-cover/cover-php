@@ -11,7 +11,7 @@
 		<?php $imgpath = $this->get_commissie_thumb($commissie) ?>
 		<?php if ($imgpath): ?>
 			<td class="top"><a href="show.php?id=<?= $commissie->get('page') ?>">
-				<img src="<?= $imgpath ?>" alt="commissie foto">
+				<img src="<?= $imgpath ?>" alt="commissie foto" width="200">
 			</td>
 		<? else: ?>
 			<td></td>
