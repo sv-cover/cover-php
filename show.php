@@ -9,8 +9,14 @@
 			$this->model = get_model('DataModelEditable');
 		}
 		
-		function get_page_content($id) {
-			$this->run_header(array('title' => __('Show')));		
+		function get_page_content($id)
+		{
+			$params = array();
+
+			if ($title = $this->model->get_title($id))
+				$params['title'] = $title;
+
+			$this->run_header($params);
 
 			$editable = new ControllerEditable($id);
 			$editable->run();

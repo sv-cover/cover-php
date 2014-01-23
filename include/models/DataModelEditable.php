@@ -22,14 +22,29 @@
 					WHERE titel = '" . $this->escape_string($title) . "'"));
 		}
 
-		function get_summary($id) {
+		function get_content($id, &$page = null)
+		{
 			$page = $this->get_iter($id);
 
 			$lang_spec_prop = 'content_' . i18n_get_language();
 
-			$content = !empty($page->data[$lang_spec_prop])
+			return !empty($page->data[$lang_spec_prop])
 				? $page->get($lang_spec_prop)
 				: $page->get('content');
+		}
+
+		function get_title($id)
+		{
+			$content = $this->get_content($id, $page);
+
+			return preg_match('/^\[h1\](.*?)\[\/h1\]/i', $content, $match)
+				? $match[1]
+				: null;
+		}
+
+		function get_summary($id)
+		{
+			$content = $this->get_content($id, $page);
 
 			return editable_get_summary($content, $page->get('owner'));
 		}

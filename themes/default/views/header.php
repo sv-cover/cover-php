@@ -446,8 +446,12 @@
 	<meta http-equiv="Content-type" content="text/html; charset=ISO-8859-15">
 	<link rel="icon" type="image/png" href="images/favicon.png">';
 		
+		$title = 'Cover :: ' . __('Studievereniging Kunstmatige Intelligentie en Informatica') . ', RuG';
+
+		if (isset($params['title']))
+			$title = $params['title'] . ' :: ' . $title;
 		
-		echo '<title>Cover :: ' . __('Studievereniging Kunstmatige Intelligentie en Informatica') . ', RuG</title>
+		echo '<title>' . htmlspecialchars($title) . '</title>
 		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
 		<!--[if lte IE 7]>
 			<link rel="stylesheet" href="'. get_theme_data('styleIE.css') .'" type = "text/css" />
