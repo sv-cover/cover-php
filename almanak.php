@@ -46,6 +46,14 @@
 			$iters = $this->model->get_from_last_character($_GET['last']);
 			$this->get_content('almanak', $iters);
 		}
+
+		function _process_status() {
+			if (!member_in_commissie(COMMISSIE_BESTUUR))
+				return $this->get_content('auth');
+			
+			$iters = $this->model->get_from_status($_GET['status']);
+			$this->get_content('almanak', $iters);
+		}
 		
 		function _process_csv() {
 			if (member_in_commissie(COMMISSIE_ALMANAKCIE)) {
@@ -66,6 +74,8 @@
 				$this->_process_first();
 			elseif (isset($_GET['last']))
 				$this->_process_last();
+			elseif (isset($_GET['status']))
+				$this->_process_status();
 			elseif (isset($_GET['csv']))
 				$this->_process_csv();
 			else

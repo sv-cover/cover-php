@@ -423,6 +423,16 @@
 			
 			return $this->_rows_to_iters($rows);
 		}
+
+		function get_from_status($status)
+		{
+			$rows = $this->db->query("SELECT *
+					FROM leden
+					WHERE type =  " . intval($status)  . "
+					ORDER BY voornaam");
+
+			return $this->_rows_to_iters($rows);
+		}
 		
 		/**
 		  * Insert a profiel
