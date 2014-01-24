@@ -18,7 +18,7 @@ session_start();
 
 function link_site($rel = '')
 {
-	return sprintf('http://www.svcover.nl/%s', $rel);
+	return sprintf('https://www.svcover.nl/%s', $rel);
 }
 
 function link_api($method)
