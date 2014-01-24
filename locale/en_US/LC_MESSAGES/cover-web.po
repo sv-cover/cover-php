@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-01-16 11:34+0100\n"
+"POT-Creation-Date: 2014-01-24 11:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -265,7 +265,7 @@ msgstr "%s have been notified that the links have been denied."
 msgid "Nieuw lid"
 msgstr "New member"
 
-#: ../../../profiel.php:30 ../../../themes/default/views/header.php:417
+#: ../../../profiel.php:30 ../../../themes/default/views/header.php:407
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
@@ -302,11 +302,11 @@ msgstr "The visibility of the profile has not been selected."
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
-#: ../../../show.php:13 ../../../show.php:22
+#: ../../../show.php:28
 msgid "Show"
 msgstr "Show"
 
-#: ../../../show.php:70
+#: ../../../show.php:76
 #, php-format
 msgid "Er is een nieuwe pagina aangemaakt met het id %d."
 msgstr "A new page has been added with id %d"
@@ -445,7 +445,7 @@ msgid "Zaterdag"
 msgstr "Saturday"
 
 #: ../../../include/functions.php:192
-#: ../../../themes/default/views/almanak/almanak.phtml:54
+#: ../../../themes/default/views/almanak/almanak.phtml:65
 #: ../../../themes/default/views/profiel/profiel.phtml:89
 #: ../../../themes/default/views/profiel/profiel.phtml:99
 msgid "geen"
@@ -666,6 +666,7 @@ msgstr "Unknown"
 #: ../../../themes/default/views/boeken/boeken.php:404
 #: ../../../themes/default/views/boeken/boeken.php:428
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:16
+#: ../../../themes/default/views/almanak/almanak.phtml:44
 #: ../../../themes/default/views/boeken/bestellingen.phtml:7
 #: ../../../themes/default/views/boeken/bestellingen.phtml:61
 #: ../../../themes/default/views/profiel/profiel.phtml:128
@@ -1114,7 +1115,7 @@ msgstr "Type"
 
 #: ../../../themes/default/views/forum.php:872
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:17
-#: ../../../themes/default/views/almanak/almanak.phtml:41
+#: ../../../themes/default/views/almanak/almanak.phtml:52
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:8
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:13
 msgid "Zoeken"
@@ -1404,66 +1405,66 @@ msgstr "Exams & Summaries"
 msgid "Er is op dit moment geen poll"
 msgstr "There is no poll at the moment"
 
-#: ../../../themes/default/views/header.php:377
+#: ../../../themes/default/views/header.php:367
 msgid "Jarigen"
 msgstr "Birthdays"
 
-#: ../../../themes/default/views/header.php:386
+#: ../../../themes/default/views/header.php:376
 msgid "Er zijn vandaag geen jarigen"
 msgstr "It's nobody's birthday today"
 
-#: ../../../themes/default/views/header.php:388
+#: ../../../themes/default/views/header.php:378
 #, php-format
 msgid "Er is vandaag %d jarige:"
 msgid_plural "Er zijn vandaag %d jarigen:"
 msgstr[0] "There is %d birthday today:"
 msgstr[1] "There are %d birthdays today:"
 
-#: ../../../themes/default/views/header.php:404
+#: ../../../themes/default/views/header.php:394
 msgid "wachtwoord vergeten?"
 msgstr "Forgot your password?"
 
-#: ../../../themes/default/views/header.php:404
+#: ../../../themes/default/views/header.php:394
 msgid "lid worden"
 msgstr "Become Active"
 
-#: ../../../themes/default/views/header.php:405
+#: ../../../themes/default/views/header.php:395
 msgid "E-mailadres"
 msgstr "E-Mail address"
 
-#: ../../../themes/default/views/header.php:406
+#: ../../../themes/default/views/header.php:396
 msgid "Wachtwoord"
 msgstr "Password"
 
-#: ../../../themes/default/views/header.php:407
+#: ../../../themes/default/views/header.php:397
 msgid "Blijvend"
 msgstr "Permanent"
 
-#: ../../../themes/default/views/header.php:407
+#: ../../../themes/default/views/header.php:397
 msgid "Inloggen"
 msgstr "Login"
 
-#: ../../../themes/default/views/header.php:415
+#: ../../../themes/default/views/header.php:405
 #: ../../../themes/default/views/sessions/sessions.phtml:10
 msgid "Ingelogd"
 msgstr "Logged in"
 
-#: ../../../themes/default/views/header.php:416
+#: ../../../themes/default/views/header.php:406
 msgid "Uitloggen"
 msgstr "Logout"
 
-#: ../../../themes/default/views/header.php:435
+#: ../../../themes/default/views/header.php:425
 #: ../../../themes/default/views/agenda/index.phtml:10
 msgid "Er staat nog 1 agendapunt in de wachtrij"
 msgstr "There is still 1 calendar event waiting to be approved."
 
-#: ../../../themes/default/views/header.php:437
+#: ../../../themes/default/views/header.php:427
 #: ../../../themes/default/views/agenda/index.phtml:12
 #, php-format
 msgid "Er staan nog %d agendapunten in de wachtrij"
 msgstr "There are still %d calendar events waiting to be approved."
 
-#: ../../../themes/default/views/header.php:460
+#: ../../../themes/default/views/header.php:449
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computer Science"
 
@@ -1472,11 +1473,13 @@ msgid "Onzichtbaar"
 msgstr "Hidden"
 
 #: ../../../themes/default/views/almanak/almanak.php:37
+#: ../../../themes/default/views/almanak/almanak.phtml:46
 #: ../../../themes/default/views/profiel/profiel.phtml:136
 msgid "Lid af"
 msgstr "Previously a member"
 
 #: ../../../themes/default/views/almanak/almanak.php:42
+#: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:140
 msgid "Donateur"
 msgstr "Donator"
@@ -2090,21 +2093,31 @@ msgstr "Last name"
 msgid "Beginjaar"
 msgstr "Starting year"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:47
+#: ../../../themes/default/views/almanak/almanak.phtml:42
+#: ../../../themes/default/views/profiel/profiel.phtml:119
+msgid "Zichtbaarheid"
+msgstr "Visibility"
+
+#: ../../../themes/default/views/almanak/almanak.phtml:45
+#: ../../../themes/default/views/profiel/profiel.phtml:132
+msgid "Lid (verborgen)"
+msgstr "Member (hidden)"
+
+#: ../../../themes/default/views/almanak/almanak.phtml:58
 msgid "Maak hierboven een selectie om de almanak te bekijken."
 msgstr "Make a selection above to view the almanac"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:49
+#: ../../../themes/default/views/almanak/almanak.phtml:60
 msgid "Download CSV-bestand met almanakgegevens"
 msgstr "Download CSV file with almanak data"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:54
-#: ../../../themes/default/views/almanak/almanak.phtml:58
+#: ../../../themes/default/views/almanak/almanak.phtml:65
+#: ../../../themes/default/views/almanak/almanak.phtml:69
 #, php-format
 msgid "Er zijn %s leden gevonden die voldoen aan de zoekterm(en)."
 msgstr "There are %s members that coincide with your searching criteria."
 
-#: ../../../themes/default/views/almanak/almanak.phtml:56
+#: ../../../themes/default/views/almanak/almanak.phtml:67
 #, php-format
 msgid "Er is %s lid gevonden die voldoet aan de zoekterm(en)."
 msgstr "There is %s member that coincide with your searching criteria."
@@ -2477,7 +2490,7 @@ msgstr "Upload photos"
 msgid ""
 "Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden "
 "door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, meld "
-"dat dan aan de FoToCie, of gebruik de knop 'Upload foto's' rechts van deze "
+"dat dan aan de FotoCie, of gebruik de knop 'Upload foto's' rechts van deze "
 "tekst."
 msgstr ""
 "Welcome at Covers photo book. This part of the site is maintained by the %s. "
@@ -2755,14 +2768,6 @@ msgstr "Avatar"
 msgid "avatar"
 msgstr "avatar"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:119
-msgid "Zichtbaarheid"
-msgstr "Visibility"
-
-#: ../../../themes/default/views/profiel/profiel.phtml:132
-msgid "Lid (verborgen)"
-msgstr "Member (hidden)"
-
 #: ../../../themes/default/views/profiel/profiel.phtml:153
 msgid "Lid van de volgende commissies:"
 msgstr "Member of the following committees:"
@@ -2819,7 +2824,6 @@ msgid "Laatst actief"
 msgstr "Last active"
 
 #: ../../../themes/default/views/sessions/sessions.phtml:26
-#, fuzzy
 msgid "Sluit geselecteerde sessies"
 msgstr "End selected sessions"
 
