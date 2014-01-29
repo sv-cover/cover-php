@@ -124,12 +124,25 @@ class WebCal_Event
 		return implode("\r\n", array(
 			'BEGIN:VEVENT',
 			'DTSTART;TZID=Europe/Amsterdam:' . gmdate('Ymd\THis\Z', $start),
-			'SUMMARY:' . $this->summary,
-			'LOCATION:' . $this->location,
-			'DESCRIPTION:' . $this->description,
-			'URL;VALUE=URI:' . $this->url,
-			'DTEND;TXID=Europe/Amsterda:' . gmdate('Ymd\THis\Z', $end),
+			'SUMMARY:' . $this->_encode($this->summary),
+			'LOCATION:' . $this->_encode($this->location),
+			'DESCRIPTION:' . $this->_encode($this->description),
+			'URL;VALUE=URI:' . $this->_encode($this->url),
+			'DTEND;TZID=Europe/Amsterda:' . gmdate('Ymd\THis\Z', $end),
 			'END:VEVENT'
 		));
+	}
+
+	protected function _encode($text)
+	{
+		$encoding = array(
+			"\r" => '',
+			"\n" => '\n',
+			"\\" => '\\\\',
+			 ";" => '\\;',
+			 "," => '\\,'
+		);
+
+		return strtr($text, $encoding);
 	}
 }
