@@ -83,10 +83,6 @@
 		return create_menu($color, 'lustrum', __('Lust, Rum & Rock \'n Roll'), $contents);
 	}
 	
-	function create_links_menu($color) {
-		return '';
-	}
-	
 	function createTopMenu() {
 		$content = '
 			<div class="headNav">
@@ -175,7 +171,7 @@
 					<li><a href="show.php?id=28">' . __('Zusterverenigingen') . '</a></li>
 					<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
 					<li><a href="show.php?id=30">' . __('Documenten') . '</a></li>
-					<li><a href="show.php?id=25">' . __('ALV (historie)') . '</a></li>
+					<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
 					<li><a href="weblog.php">' . __('Weblog') . '</a></li>
 				</ul>
 				<ul id="leden" class="expander">
@@ -193,8 +189,6 @@
 					<li><a href="show.php?id=23">' . __('K.I.') . '</a></li>
 					<li><a href="show.php?id=41">' . __('Informatica') . '</a></li>
 					<li><a href="show.php?id=24">' . __('Alumni') . '</a></li>
-					<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
-					<!-- <li><a href="links.php">' . __('Links') . '</a></li> -->
 					<li><a href="boeken.php">' . __('Boeken bestellen') . '</a></li>
 					<li><a href="http://studieondersteuning.svcover.nl/">' . htmlentities(__('Tentamens & Samenvattingen')) . '</a></li>				
 				</ul>
