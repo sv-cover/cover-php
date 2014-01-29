@@ -13,5 +13,11 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 </p>
 <p><?= markup_parse($iter->get('beschrijving')) ?></p>
 <p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="show.php?id=<?= $commissie->get('page') ?>"><?= htmlspecialchars($commissie->get('naam')) ?></a></span></p>
-<p><a href="agenda.php"><?= image('agenda.png', __('agenda'), __('Volledige agenda bekijken'), 'class="top"') ?></a> <a href="agenda.php"><?= __('Volledige agenda') ?></a></p>
+<p>
+	<a href="agenda.php"><?= image('agenda.png', __('agenda'), __('Volledige agenda bekijken'), 'class="top"') ?> <?= __('Volledige agenda') ?></a>
+	<?php if (member_in_commissie($iter->get('commissie')) || member_in_commissie(COMMISSIE_BESTUUR)): ?>
+	- <a href="agenda.php?agenda_edit&amp;agenda_id=<?= $iter->get_id() ?>"><?= __('Wijzig') ?></a>
+	- <a href="agenda.php?agenda_del&amp;agenda_id=<?= $iter->get_id() ?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a>
+	<?php endif ?>
+</p>
 </div>
