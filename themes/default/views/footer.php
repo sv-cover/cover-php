@@ -9,7 +9,6 @@
 				<div class="menu column">
 				<? //echo create_agenda_lustrum('green'); ?>
 				<? echo create_agenda_menu('green'); ?>
-				<!--<? echo create_links_menu('yellow'); ?>-->
 				<? echo create_poll_menu('blue'); ?>
 			
 				</div>	
