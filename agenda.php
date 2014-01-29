@@ -274,11 +274,13 @@
 
 			$punten = $this->model->get_agendapunten(true);
 
+			$timezone = new DateTimeZone('Europe/Amsterdam');
+
 			foreach ($punten as $punt)
 			{
 				$event = new WebCal_Event;
-				$event->start = new DateTime($punt->get('van'));
-				$event->end = new DateTime($punt->get('tot'));
+				$event->start = new DateTime($punt->get('van'), $timezone);
+				$event->end = new DateTime($punt->get('tot'), $timezone);
 				$event->summary = $punt->get('kop');
 				$event->description = $punt->get('beschrijving');
 				$event->location = $punt->get('locatie');

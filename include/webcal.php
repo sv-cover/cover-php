@@ -123,12 +123,12 @@ class WebCal_Event
 		
 		return implode("\r\n", array(
 			'BEGIN:VEVENT',
-			'DTSTART;TZID=Europe/Amsterdam:' . date('Ymd\THis\Z', $start),
+			'DTSTART;TZID=Europe/Amsterdam:' . gmdate('Ymd\THis\Z', $start),
 			'SUMMARY:' . $this->_encode($this->summary),
 			'LOCATION:' . $this->_encode($this->location),
 			'DESCRIPTION:' . $this->_encode($this->description),
 			'URL;VALUE=URI:' . $this->_encode($this->url),
-			'DTEND;TZID=Europe/Amsterda:' . date('Ymd\THis\Z', $end),
+			'DTEND;TZID=Europe/Amsterda:' . gmdate('Ymd\THis\Z', $end),
 			'END:VEVENT'
 		));
 	}
