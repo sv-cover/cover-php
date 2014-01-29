@@ -4,6 +4,9 @@ $agenda = get_model('DataModelAgenda');
 
 $punten = $agenda->get_agendapunten(true);
 
+// Only 10 items fit on the screen at the same time.
+$punten = array_slice($punten, 0, 10);
+
 function slide_format_date($punt)
 {
 	$days = get_days();
