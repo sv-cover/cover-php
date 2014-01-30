@@ -888,4 +888,5 @@ div.beheer table {
 
 .commissie_foto img {
 	max-width: 100%;
+	max-height: 600px;
 }
