@@ -37,7 +37,7 @@
 		{
 			$content = $this->get_content($id, $page);
 
-			return preg_match('/^\[h1\](.*?)\[\/h1\]/i', $content, $match)
+			return preg_match('/\[h1\](.*?)\[\/h1\]/i', $content, $match)
 				? $match[1]
 				: null;
 		}
