@@ -29,5 +29,22 @@
 		function delete_by_commissie($id) {
 			return $this->db->delete('actieveleden', 'commissieid = ' . intval($id));
 		}
+
+		function get_active_members()
+		{
+			$rows = $this->db->query('SELECT DISTINCT
+				l.id,
+				l.voornaam,
+				l.tussenvoegsel,
+				l.achternaam,
+				l.email,
+				COUNT(a.commissieid) as commissie_count
+				FROM actieveleden a
+				LEFT JOIN leden l ON a.lidid = l.id
+				GROUP BY l.id, l.voornaam, l.tussenvoegsel, l.achternaam, l.email
+				ORDER BY voornaam, tussenvoegsel, achternaam ASC');
+
+			return $this->_rows_to_iters($rows);
+		}
 	}
 ?>

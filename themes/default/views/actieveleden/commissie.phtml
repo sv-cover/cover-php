@@ -5,5 +5,7 @@ $this->render_partial('commissie_selectie', compact('model', 'iter', 'errors'));
 if ($iter) {
 	$this->render_partial('leden', compact('model', 'iter'));
 	$this->render_partial('nieuw_lid', compact('model', 'iter', 'errors'));
+} else {
+	$this->render_partial('overzicht', compact('model'));
 }
 ?>

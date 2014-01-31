@@ -1,0 +1,27 @@
+<div class="messageBox">
+<table class="default">
+	<col class="text_center">
+	<col>
+	<col class="text_center">
+	<col>
+	<col>
+	<thead>
+		<tr class="header">
+			<th><?= __('ID') ?></th>
+			<th><?= __('Naam') ?></th>
+			<th><?= __('Email') ?></th>
+			<th><?= __('Commissies') ?></th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php foreach ($model->get_active_members() as $lid): ?>
+			<tr>
+				<td><?= $lid->get('id') ?></td>
+				<td><a href="profiel.php?lid=<?=$lid->get('id')?>"><?= htmlspecialchars(member_full_name($lid)) ?></a></td>
+				<td><?= htmlspecialchars($lid->get('email')) ?></td>
+				<td><?= $lid->get('commissie_count') ?></td>
+			</tr>
+	<? endforeach ?>
+	</tbody>
+</table>
+</div>		
