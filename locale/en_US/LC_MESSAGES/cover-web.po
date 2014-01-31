@@ -85,7 +85,7 @@ msgstr ""
 #: ../../../themes/default/views/header.php:283
 #: ../../../themes/default/views/almanak/almanak.phtml:1
 msgid "Almanak"
-msgstr "Almanak"
+msgstr "Almanac"
 
 #: ../../../banners.php:14 ../../../themes/default/views/header.php:101
 #: ../../../themes/default/views/header.php:213
@@ -2109,7 +2109,7 @@ msgstr "Make a selection above to view the almanac"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:60
 msgid "Download CSV-bestand met almanakgegevens"
-msgstr "Download CSV file with almanak data"
+msgstr "Download CSV file with almanac data"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:65
 #: ../../../themes/default/views/almanak/almanak.phtml:69
@@ -2127,7 +2127,7 @@ msgid ""
 "Dit deel van de website is alleen toegankelijk voor leden van de "
 "Almanakcommissie."
 msgstr ""
-"This part of the website is only accessible for members of the Almanak "
+"This part of the website is only accessible for members of the Almanac "
 "committee."
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
