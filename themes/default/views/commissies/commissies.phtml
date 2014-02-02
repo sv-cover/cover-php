@@ -1,7 +1,7 @@
 <h1> <?= __('Commissies') ?></h1>
 <div class="messageBox commissie-index">
 <?php foreach ($iter as $commissie): ?>
-	<?php $imgpath = $this->get_commissie_photo($commissie); ?>
+	<?php $imgpath = $this->get_commissie_thumb($commissie); ?>
 	<a class="commissie" href="show.php?id=<?= $commissie->get('page') ?>" <?php if ($imgpath): ?>style="background-image: url(<?=$imgpath?>)"<?php endif?>>
 		<span class="overlay">
 			<span class="name"><?= htmlspecialchars($commissie->get('naam')) ?></span>
