@@ -7,10 +7,20 @@ class CommissiesView extends View
 
 	public function get_commissie_thumb($commissie)
 	{
+		return $this->find_image($commissie->get('login') . 'tn');
+	}
+
+	public function get_commissie_photo($commissie)
+	{
+		return $this->find_image($commissie->get('login'));
+	}
+
+	private function find_image($basename)
+	{
 		$search_paths = array(
-			'images/' . $commissie->get('login') . 'tn.gif',
-			'images/' . $commissie->get('login') . 'tn.png',
-			'images/' . $commissie->get('login') . 'tn.jpg');
+			'images/' . $basename . '.gif',
+			'images/' . $basename . '.png',
+			'images/' . $basename . '.jpg');
 
 		foreach ($search_paths as $path)
 			if (file_exists($path))

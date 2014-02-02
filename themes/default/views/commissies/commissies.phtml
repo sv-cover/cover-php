@@ -1,30 +1,12 @@
 <h1> <?= __('Commissies') ?></h1>
-<div class="messageBox">
-<table class="commissies">
-<? foreach ($iter as $commissie): ?>
-	<tr>
-		<td class="top" colspan="2">
-			<h3><a href="show.php?id=<?= $commissie->get('page') ?>"><?= htmlspecialchars($commissie->get('naam')) ?></a></h3>
-		</td>
-	</tr>
-	<tr>
-		<?php $imgpath = $this->get_commissie_thumb($commissie) ?>
-		<?php if ($imgpath): ?>
-			<td class="top"><a href="show.php?id=<?= $commissie->get('page') ?>">
-				<img src="<?= $imgpath ?>" alt="commissie foto" width="200">
-			</td>
-		<? else: ?>
-			<td></td>
-		<? endif ?>
-	
-		<td class="description">
-			<?= $this->get_summary($commissie) ?>
-		</td>
-	
-	</tr>
-	<tr>
-		<td colspan="2" class="spacer"></td>
-	</tr>
+<div class="messageBox commissie-index">
+<?php foreach ($iter as $commissie): ?>
+	<?php $imgpath = $this->get_commissie_photo($commissie); ?>
+	<a class="commissie" href="show.php?id=<?= $commissie->get('page') ?>" <?php if ($imgpath): ?>style="background-image: url(<?=$imgpath?>)"<?php endif?>>
+		<span class="overlay">
+			<span class="name"><?= htmlspecialchars($commissie->get('naam')) ?></span>
+			<span class="summary"><?= $this->get_summary($commissie) ?></span>
+		</span>
+	</a>
 <? endforeach ?>
-</table>
 </div>
