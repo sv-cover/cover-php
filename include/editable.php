@@ -34,7 +34,7 @@
 			
 			if ($leden) {
 				$lh = '<div class="commissie-members">
-					<h3>' . __('Leden') . '</h3>
+					<h3 class="alignCenter">' . __('Leden') . '</h3>
 					<ul>';
 				
 				foreach ($leden as $lid)
