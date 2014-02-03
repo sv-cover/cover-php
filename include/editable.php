@@ -33,13 +33,20 @@
 			$leden = $model->get_leden($owner);
 			
 			if ($leden) {
-				$lh = '<h3>' . __('Leden') . '</h3>
-				<ul>';
+				$lh = '<div class="commissie-members">
+					<h3>' . __('Leden') . '</h3>
+					<ul>';
 				
 				foreach ($leden as $lid)
-					$lh .= '<li><a href="profiel.php?lid=' . $lid->get('id') . '">' . htmlspecialchars($lid->get('voornaam') . ' ' . $lid->get('tussenvoegsel') . ' ' . $lid->get('achternaam')) . '</a>' . htmlspecialchars($lid->get('functie') ? (' - ' . __($lid->get('functie'))) : '') . "</li>\n";
+					$lh .= '<li>
+						<a href="profiel.php?lid=' . $lid->get('id') . '" class="commissie-member">
+							<img src="foto.php?lid_id=' . $lid->get('id') .'&amp;get_thumb=circle&amp;width=200" width="100" height="100">
+							<span class="name">' . htmlspecialchars(member_full_name($lid)) . '</span>
+							<span class="function">' . htmlspecialchars($lid->get('functie') ? __($lid->get('functie')) : '') . "</span>
+						</a>
+					</li>\n";
 					
-				$lh .= '</ul>';
+				$lh .= '</ul></div>';
 			} else {
 				$lh = '';
 			}

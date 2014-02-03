@@ -1,16 +1,43 @@
-table.commissies {
-	margin: 0 auto;
+.commissie-index .commissie {
+	display: inline-block;
+	width: 250px;
+	height: 150px;
+	margin: 10px;
+	background-color: #c60c30;
+	background-position: 50% 50%;
+	background-size: cover;
+	overflow: hidden;
+	border-radius: 4px;
+	position: relative;
 }
 
-table.commissies td.spacer {
-	padding-bottom: 10px;
+.commissie-index .commissie .overlay {
+	display: block;
+	padding: 2px 8px;
+	position: absolute;
+	top: 114px;
+	bottom: 0;
+	overflow: hidden;
+	background: rgba(0, 0, 0, 0.7);
+	color: white;
+	transition: all 150ms ease-in-out;
 }
 
-table.commissies h3 {
-	margin: 0px;
+.commissie-index .commissie:hover .overlay {
+	top: 0;
+	bottom: 0;
 }
 
-table.commissies td.description {
-	font-size: 11px;
-	vertical-align: top;
+.commissie-index .commissie .name {
+	display: block;
+	font-size: 20px;
+	line-height: 32px;
+	margin-bottom: 8px;
 }
+
+.commissie-index .commissie .summary {
+	display: block;
+	font-weight: normal;
+	line-height: 20px;
+}
+
