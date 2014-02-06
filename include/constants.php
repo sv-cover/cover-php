@@ -7,7 +7,7 @@
 
 	define('COOKIE_KEY', 'hardnekkig');
 	define('ROOT_DIR_PATH', preg_replace('/include$/', '', dirname(__FILE__)));
-	define('ROOT_DIR_URI', 'http://www.svcover.nl/');
+	define('ROOT_DIR_URI', 'https://www.svcover.nl/');
 	define('INCLUDE_PATH', dirname(__FILE__));
 	
 	define('COMMISSIE_BESTUUR', 0);
