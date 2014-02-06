@@ -3,13 +3,16 @@ $photo = $model->get_photo($iter);
 header('Pragma: public');
 header('Cache-Control: max-age=86400');
 header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-header("Content-Type: image/png");
+header('Content-Type: image/jpeg');
 
 // Code from getthumb.php
 $large = imagecreatefromstring(pg_unescape_bytea($photo));
 // Thumbnail width
-$th = 100 * imagesy($large) / imagesx($large);
-$thumb = imagecreatetruecolor(100, $th);
+$th = 200 * imagesy($large) / imagesx($large);
+$thumb = imagecreatetruecolor(200, $th);
 //$thumb = imagecreate(100, $th);
-imagecopyresampled($thumb, $large, 0, 0, 0, 0, 100, $th, imagesx($large), imagesy($large));
-imagepng($thumb);
+imagecopyresampled($thumb, $large, 0, 0, 0, 0, 200, $th, imagesx($large), imagesy($large));
+
+// The thumbs are already double resolution for retina displays, the quality
+// can be a bit lower than the default 75-85.
+imagejpeg($thumb, null, 60);
