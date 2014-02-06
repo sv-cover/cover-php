@@ -148,13 +148,11 @@
 	}
 	
 	function _markup_parse_smileys(&$markup) {
-		$smileys_path = 'themes/' . get_theme . '/images/smileys';
+		$smileys_path = 'themes/' . get_theme() . '/images/smileys';
 		
 		if (!file_exists(ROOT_DIR_PATH . $smileys_path))
 			$smileys_path = 'themes/default/images/smileys';
 		
-		$smileys_path = ROOT_DIR_URI . $smileys_path;
-
 		$markup = trim($markup);
 		$smileys = get_smileys();
 		
