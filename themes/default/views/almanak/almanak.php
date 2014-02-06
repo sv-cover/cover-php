@@ -45,7 +45,9 @@
 			
 			return sprintf('
 				<a href="profiel.php?lid=%d" class="%s">
-					<img width="100" height="150" src="%s" alt="%s">
+					<div class="photo">
+						<img width="100" height="150" src="%s" alt="%s">
+					</div>
 					<span class="name">%s</span>
 					%s
 				</a>',
