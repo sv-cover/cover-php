@@ -294,43 +294,44 @@
 		}
 		
 		/**
-		  * Get members by searching in their first and last names.
-		  * Only a part of the name needs to be matched.
-		  * @first a part of the first name to search for
-		  * @last a part of the last name to search for
+		  * Get members by searching in their first and last names and their
+		  * addresses. Only a part of the data needs to be matched.
+		  * @query a part of the name or address to search for
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_from_search_first_last($first, $last) {
-			
-			if (!$first && !$last) {
-				$rows = $this->db->query('SELECT * 
-						FROM leden
-						WHERE type IN (' . implode(',', $this->visible_types) . ')
-						ORDER BY achternaam, voornaam');
-				return $this->_rows_to_iters($rows);
+		function get_from_search($query)
+		{
+			// All possible fields to search in
+			$conditions = array();
+
+			// All fields that are mandatory
+			$filters = array();
+
+			// Always only display visible types
+			$filters[] = 'type IN (' . implode(',', $this->visible_types) . ')';
+
+			// If we find a year in the query, treat it with care
+			if (preg_match('/(^|\s+)(19|20)\d\d($|\s+)/', $query, $match)) {
+				$filters[] = 'beginjaar = ' . intval($match[0]);
+				$query = str_replace($match[0], '', $query);
 			}
+
+			// Full name
+			$conditions[] = "(voornaam || CASE  WHEN char_length(tussenvoegsel) > 0 THEN ' ' || tussenvoegsel ELSE '' END || ' ' || achternaam) ILIKE '%" . $this->escape_string($query) . "%'";
+			
+			// Address
+			$conditions[] = "(adres || ' ' || postcode) ILIKE '%" . $this->escape_string($query) . "%'";
+
+			// Filter by the search conditions
+			$filters[] = '(' . implode(' OR ', $conditions) . ')';
 
 			$query = 'SELECT *
 					FROM leden
-					WHERE type IN (' . implode(',', $this->visible_types) . ') ';
-			$order = array();
-			
-			if ($first) {
-				$query .= " AND voornaam ILIKE '%" . $this->escape_string($first) . "%'";
-				$order[] = 'voornaam';
-			}
-			
-			if ($last) {
-				$query .= " AND achternaam ILIKE '%" . $this->escape_string($last) . "%'";
-				$order[] = 'achternaam';
-			}
+					WHERE ' . implode(' AND ', $filters) . '
+					ORDER BY voornaam ASC, achternaam ASC';
 
-			
-			if (count($order) > 0)
-				$query .= ' ORDER BY ' . implode(', ', $order);
-						
-			$rows = $this->db->query($query);			
+			$rows = $this->db->query($query);
 			return $this->_rows_to_iters($rows);			
 		}
 		

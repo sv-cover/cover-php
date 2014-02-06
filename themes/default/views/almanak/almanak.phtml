@@ -1,40 +1,17 @@
 <h1> <?= __('Almanak') ?></h1>
-	<?
-	/* Print alphabet search entry thingies */
-	$first = '';
-	$last = '';
-	
-	for ($i = 0; $i < 26; $i++) {
-		$c = chr(65 + $i);
-		$first .= '<td><a href="almanak.php?first=' . $c .'">' . $c . "</a></td>\n";
-		$last .= '<td><a href="almanak.php?last='   . $c .'">' . $c  . "</a></td>\n";
-	}
-	?>
 	<div class="messageBox">	
 	<form name="almanak" action="almanak.php" method="get">
 		<table class="almanak_navigation">
 			<tr>
-				<td class="title"> <?= __('Voornaam') ?>:</td>
-				<td class="alphabet">
-					<table class="almanak_alphabet">
-						<tr> <?= $first ?></tr>
-					</table>
-				</td>
-				<td> <?= input_text('search_first', null) ?></td></tr>
-			<tr>
-				<td class="title"> <?= __('Achternaam') ?>:</td>
-				<td class="alphabet">
-					<table class="almanak_alphabet">
-						<tr> <?= $last ?></tr>
-					</table>
-				</td>
-				<td> <?= input_text('search_last', null) ?></td>
+				<td class="title"> <?= __('Naam') ?>:</td>
+				<td colspan="2"><input type="search" name="query" value="<?=htmlspecialchars($query, ENT_QUOTES)?>" placeholder="e.g. a name, address, year or combination"></td>
 			</tr>
 			<tr>
-				<td class="title"><?= __('Beginjaar') ?>:</td><td class="alphabet" colspan="2">
-				<? foreach ($model->get_distinct_years() as $jaar) { ?>
-					<a href="?search_year=<?= $jaar ?>"> <?= $jaar ?></a> 
-				<?}	// join($model->get_distinct_years()," ") .	?>
+				<td class="title"><?= __('Beginjaar') ?>:</td>
+				<td class="alphabet" colspan="2">
+				<?php foreach ($model->get_distinct_years() as $jaar): ?>
+					<a href="?search_year=<?= $jaar ?>"><?= $jaar ?></a>
+				<?php endforeach ?>
 				</td>
 			</tr>
 			<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
@@ -49,7 +26,7 @@
 			</tr>
 			<?php endif ?>
 			<tr>
-				<td colspan="3" class="submit"> <?= input_submit('', __('Zoeken')) ?></td>
+				<td colspan="3" class="submit"><?= input_submit('', __('Zoeken')) ?></td>
 			</tr>
 		</table>
 	</form>
