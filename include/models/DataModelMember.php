@@ -311,20 +311,18 @@
 			// Always only display visible types
 			$filters[] = 'type IN (' . implode(',', $this->visible_types) . ')';
 
-			// If we find a year in the query, treat it with care
-			if (preg_match('/(^|\s+)(19|20)\d\d($|\s+)/', $query, $match)) {
-				$filters[] = 'beginjaar = ' . intval($match[0]);
-				$query = str_replace($match[0], '', $query);
+			foreach ($this->_parse_search_query($query) as $token)
+			{
+				// If we find a year in the query, treat it with care
+				if (preg_match('/^(19|20)\d\d$/', $token))
+					$filters[] = 'beginjaar = ' . $token;
+				// Otherwise it is just a string that needs to be matched with the full name or address
+				else
+					$filters[] = "(
+						(voornaam || CASE  WHEN char_length(tussenvoegsel) > 0 THEN ' ' || tussenvoegsel ELSE '' END || ' ' || achternaam) ILIKE '%" . $this->escape_string($token) . "%'
+						OR (adres || ' ' || postcode) ILIKE '%" . $this->escape_string($token) . "%'
+					)";
 			}
-
-			// Full name
-			$conditions[] = "(voornaam || CASE  WHEN char_length(tussenvoegsel) > 0 THEN ' ' || tussenvoegsel ELSE '' END || ' ' || achternaam) ILIKE '%" . $this->escape_string($query) . "%'";
-			
-			// Address
-			$conditions[] = "(adres || ' ' || postcode) ILIKE '%" . $this->escape_string($query) . "%'";
-
-			// Filter by the search conditions
-			$filters[] = '(' . implode(' OR ', $conditions) . ')';
 
 			$query = 'SELECT *
 					FROM leden
@@ -333,6 +331,29 @@
 
 			$rows = $this->db->query($query);
 			return $this->_rows_to_iters($rows);			
+		}
+
+		private function _parse_search_query($query)
+		{
+			$tokens = array();
+			
+			$token = strtok($query, ' ');
+
+			while ($token)
+			{ 
+				// find double quoted tokens 
+				if ($token{0} == '"')
+					$token = substr($token, 1) . ' ' . strtok('"');
+				
+				// find single quoted tokens 
+				elseif ($token{0} == "'")
+					$token = substr($token, 1) . ' ' . strtok("'");
+
+				$tokens[] = $token; 
+				$token = strtok(' '); 
+			}
+
+			return $tokens;
 		}
 		
 		/** @author Pieter de Bie
