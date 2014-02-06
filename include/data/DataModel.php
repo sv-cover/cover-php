@@ -72,7 +72,7 @@
 			$result = $this->id . ' = ';
 			
 			if ($this->id == 'id')
-				return $result . $value;
+				return $result . intval($value);
 			else
 				return $result . "'" . $this->escape_string($value) . "'";
 		}
