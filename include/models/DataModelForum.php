@@ -457,7 +457,7 @@
 			if (!$this->check_acl($forum->get('id'), ACL_READ))
 				return null;
 
-			$max = $forum->get_num_forum_pages() - 1;
+			$max = max($forum->get_num_forum_pages() - 1, 0);
 			$page = min($max, max(0, intval($page)));
 			
 			$this->current_page = $page;
