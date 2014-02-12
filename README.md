@@ -10,7 +10,7 @@ Note that all the code in this repository is property of Cover. You are allowed 
 Please, if you find a bug or security issue, please report it by making an issue on the Bitbucket repository or by notifying the WebCie at webcie@svcover.nl.
 
 ## Contribute
-If you want to contribute code please fork this repository, create a new branch in which you implement your fix or feature, make sure it merges with the most up to date code in our master branch. (i.e. Just `git rebase master` when your master branch is in sync.)
+If you want to contribute code please fork this repository, create a new branch in which you implement your fix or feature, make sure it merges with the most up to date code in our master branch. (i.e. Just `git rebase master` when your master branch is in sync.) When the code is ready to be set live create a pull request and the WebCie will test and review your contribution.
 
 ## Running locally
 To run the Cover site you need a webserver with PHP (at least 5.2 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database (8.2 and 9.3 both seem to work so I guess it doesn't really matter which version.)
