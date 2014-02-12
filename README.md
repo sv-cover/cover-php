@@ -15,12 +15,12 @@ If you want to contribute code please fork this repository, create a new branch 
 ## Running locally
 To run the Cover site you need a webserver with PHP (at least 5.2 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database (8.2 and 9.3 both seem to work so I guess it doesn't really matter which version.)
 
-Run the include/data/structure.sql script on your database. This should give you the basic database structure and content necessary to run the website. Copy the contents of the file include/data/DBIds.php.default file to a file named include/data/DBIds.php and input your own database configuration data.
+Run the `include/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website. Copy the contents of the file `include/data/DBIds.php.default` file to a file named `include/data/DBIds.php` and input your own database configuration data.
 
-Do the same for config/config.inc.default. Copy its contents to config/config.php and adjust the values where needed.
+Do the same for `config/config.inc.default`. Copy its contents to `config/config.php` and adjust the values where needed.
 
-That should be it, the website should work now. You can log in with:
-email: user@example.com  
-password: password
+That should be it, the website should work now. You can log in with:  
+email: `user@example.com`  
+password: `password`
 
 Have fun!
