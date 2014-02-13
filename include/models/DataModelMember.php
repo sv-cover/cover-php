@@ -65,6 +65,7 @@
 						voornaam,
 						tussenvoegsel,
 						achternaam,
+						privacy,
 						(EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM geboortedatum)) AS leeftijd
 					FROM
 						leden

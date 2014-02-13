@@ -27,7 +27,12 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => __('Profiel')));
+
+			$title = $iter
+				? member_full_name($iter)
+				: __('Profiel');
+
+			$this->run_header(compact('title'));
 			run_view('profiel::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

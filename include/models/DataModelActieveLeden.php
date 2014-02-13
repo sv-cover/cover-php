@@ -16,7 +16,8 @@
 			$rows = $this->db->query('SELECT id,
 					voornaam,
 					tussenvoegsel,
-					achternaam
+					achternaam,
+					privacy,
 					FROM leden
 					WHERE (voornaam ILIKE \'%' . $this->escape_string($query) . '%\' OR
 					achternaam ILIKE \'%' . $this->escape_string($query) . '%\')
@@ -38,6 +39,7 @@
 				l.tussenvoegsel,
 				l.achternaam,
 				l.email,
+				l.privacy,
 				COUNT(a.commissieid) as commissie_count
 				FROM actieveleden a
 				LEFT JOIN leden l ON a.lidid = l.id

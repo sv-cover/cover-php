@@ -342,7 +342,7 @@
 
 			foreach ($iters as $iter) {
 				$total = money_format('%.2n', $this->totaalprijs($model, $iter->get('id'), $nnb));
-				$csv .= csv_row(array(member_full_name($iter), $iter->get('aantal_bestellingen'), $total . ($nnb ? '*' : ''))) . "\n";
+				$csv .= csv_row(array(member_full_name($iter, true), $iter->get('aantal_bestellingen'), $total . ($nnb ? '*' : ''))) . "\n";
 			}
 		
 			header('Content-Description: File Transfer');
@@ -371,7 +371,7 @@
 				$class = 'r' . ($i ? '0' : '1');
 			
 				echo '<tr class="' . $class . '">
-					<td>' . htmlspecialchars(member_full_name($iter)) . '</td>';
+					<td>' . htmlspecialchars(member_full_name($iter, true)) . '</td>';
 			
 				echo '<td class="text_right">' . $iter->get('aantal_bestellingen') . '</td>';
 			
@@ -413,7 +413,7 @@
 				echo '<tr class="' . $class . '">
 					<td>' . htmlspecialchars($iter->get('titel')) . '</td>';
 			
-				echo '<td>' . htmlspecialchars(member_full_name($iter)) . '</td>
+				echo '<td>' . htmlspecialchars(member_full_name($iter, true)) . '</td>
 				<td class="text_right">'. ($iter->get('prijs') == 0 ? 'n.n.b.' : ('&euro; ' . money_format('%.2n', $iter->get('prijs')))) . '</td>
 				</tr>';
 			
@@ -428,7 +428,7 @@
 			$csv = csv_row(array(__('Boek'), __('Lid'), __('Prijs'))) . "\n";
 
 			foreach ($iters as $iter)			
-				$csv .= csv_row(array($iter->get('titel'), member_full_name($iter), $iter->get('prijs') == 0 ? 'n.n.b.' : money_format('%.2n', $iter->get('prijs')))) . "\n";
+				$csv .= csv_row(array($iter->get('titel'), member_full_name($iter, true), $iter->get('prijs') == 0 ? 'n.n.b.' : money_format('%.2n', $iter->get('prijs')))) . "\n";
 		
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/force-download');

@@ -54,6 +54,7 @@
 					leden.tussenvoegsel, 
 					leden.achternaam, 
 					leden.email, 
+					leden.privacy,
 					actieveleden.functie,
 					actieveleden.sleutel,
 					actieveleden.id AS actiefid
