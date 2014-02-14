@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-14 15:21+0100\n"
+"POT-Creation-Date: 2014-02-14 15:24+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -431,7 +431,7 @@ msgstr "No name"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: ../../../include/models/DataModelCommissie.php:129
+#: ../../../include/models/DataModelCommissie.php:135
 #: ../../../themes/default/views/almanak/almanak.php:13
 msgid "onbekend"
 msgstr "unknown"
@@ -601,6 +601,14 @@ msgstr "General Member"
 #: ../../../themes/default/views/fotoboek/_info.phtml:9
 msgid "Fotograaf"
 msgstr "Photographer"
+
+#: ../../../locale/strings.php:9
+msgid "Commissaris Intern"
+msgstr "Commissioner of Internal Affairs"
+
+#: ../../../locale/strings.php:10
+msgid "Commissaris Extern"
+msgstr "Commissioner of External Affairs"
 
 #: ../../../nieuwlid.php:32
 msgid "Nieuw lid"

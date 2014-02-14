@@ -6,3 +6,5 @@ __('Secretaris');
 __('Penningmeester');
 __('Algemeen lid');
 __('Fotograaf');
+__('Commissaris Intern')
+__('Commissaris Extern')

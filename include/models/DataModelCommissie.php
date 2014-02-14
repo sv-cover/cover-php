@@ -25,7 +25,13 @@
 		}
 		
 		function get_functies() {
-			static $functies = Array('voorzitter' => 3, 'secretaris' => 2, 'penningmeester' => 1, 'algemeen lid' => 0);
+			static $functies = Array(
+				'voorzitter' => 5,
+				'secretaris' => 4,
+				'penningmeester' => 3,
+				'commissaris intern' => 2,
+				'commissaris extern' => 1,
+				'algemeen lid' => 0);
 			
 			return $functies;
 		}
