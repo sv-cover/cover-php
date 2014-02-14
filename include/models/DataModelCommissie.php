@@ -29,17 +29,20 @@
 			
 			return $functies;
 		}
+
+		function _get_functie($functie) {
+			$functies = $this->get_functies();
+			$functie = strtolower($functie);
+			return isset($functies[$functie]) ? $functies[$functie] : 0;
+		}
 		
 		function _sort_leden($a, $b) {
-			$functies = $this->get_functies();
+			$pattern = '/\s*[,\/]\s*/';
+
+			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a->get('functie'))));
+			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b->get('functie'))));
 			
-			$afunctie = strtolower($a->get('functie'));
-			$bfunctie = strtolower($b->get('functie'));
-			
-			if ($functies[$afunctie] == $functies[$bfunctie])
-				return 0;
-			
-			return ($functies[$afunctie] < $functies[$bfunctie]) ? 1 : -1;
+			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
 		}
 		
 		/**

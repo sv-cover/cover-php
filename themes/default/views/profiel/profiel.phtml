@@ -155,7 +155,7 @@
 			<?php foreach ($commissies as $commissie): ?>
 			<li>
 				<a href="show.php?id=<?=$commissie->get('page')?>"><?=htmlspecialchars($commissie->get('naam'))?></a>
-				- <span class="functie"><?=htmlspecialchars($commissie->get('functie')) ?></span>
+				- <span class="functie"><?=htmlspecialchars(__translate_parts($commissie->get('functie'), ',/')) ?></span>
 			</li>
 			<?php endforeach ?>
 		</ul>

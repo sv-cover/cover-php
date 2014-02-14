@@ -73,6 +73,17 @@
 		return i18n_translation::get_reader()->translate($message_id);
 	}
 
+	function __translate_parts($message, $separators = ',') {
+		$pattern = '/(\s*[' . preg_quote($separators, '/') . ']+\s*)/';
+		$parts = preg_split($pattern, $message, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		foreach ($parts as &$part)
+			if (!preg_match($pattern, $part))
+				$part = __($part);
+
+		return implode('', $parts);
+	}
+
 	function _ngettext($singular, $plural, $number) {
 		return i18n_translation::get_reader()->ngettext($singular, $plural, $number);
 	}
