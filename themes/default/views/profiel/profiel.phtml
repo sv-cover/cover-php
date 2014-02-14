@@ -230,24 +230,19 @@
 <? if($this->is_current_member($iter->get('lidid'))) { ?>
 	<h1 id="msdnaa">Dreamspark (voorheen MSDNAA)</h2>
 	
-<script type="text/javascript">
-$().ready(function() {
-	$('#gotomsdnaa').submit(function() {
-		document.location = "http://msdn62.e-academy.com/elms/Security/Login.aspx?campus=svcover_it";
-		$('#msdnaabutton').attr('disabled', 'disabled');
-		return false;
+	<script type="text/javascript">
+	$().ready(function() {
+		$('#gotomsdnaa').submit(function() {
+			$('#msdnaabutton').prop('disabled', true);
+		});
+		$('#akkoord').change(function() {
+			$('#msdnaabutton').prop('disabled', !$('#akkoord').is(':checked'));
+		});
 	});
-	$('#akkoord').change(function() {
-		if($('#akkoord:checked').val() !== undefined) {
-			$('#msdnaabutton').removeAttr('disabled');
-		} else {
-			$('#msdnaabutton').attr('disabled', 'disabled');
-		}
-	});
-});
-</script>
+	</script>
+
 	<div class="messageBox">
-	<form id="gotomsdnaa">
+	<form id="gotomsdnaa" action="elms2.php" method="post">
 		<input type="checkbox" name="akkoord" id="akkoord" value="akkoord"><label for="akkoord">Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar Microsoft</label><br />
 		<button class="button" id="msdnaabutton" disabled="disabled">Ga naar Dreamspark</button>
 	</form>
