@@ -176,6 +176,7 @@
 				</ul>
 				<ul id="leden" class="expander">
 					<li><a href="almanak.php">' .__('Almanak') .'</a></li>
+					<li><a href="mailinglijsten.php">' .__('Mailinglijsten') .'</a></li>
 					<li><a href="http://www.shitbestellen.nl" target="_blank">' .__('Merchandise') .'</a></li>
 					<li><a href="profiel.php#msdnaa">' .__('MSDNAA') .'</a></li>
 				</ul>

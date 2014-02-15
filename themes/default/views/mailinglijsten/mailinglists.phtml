@@ -20,10 +20,10 @@
 			<input type="hidden" name="mailinglijst_id" value="<?=$lijst->get('id')?>">
 		<?php if ($lijst->get('abonnement_id')): ?>
 			<input type="hidden" name="action" value="unsubscribe">
-			<input type="hidden" name="abonnement_id" value="<?=$lijst->get('abonnement_id')?>"><p><?= _('Je bent aangemeld voor deze mailinglijst.') ?> <input type="submit" class="button" value="<?=_('Uitschrijven')?>"></p>
+			<input type="hidden" name="abonnement_id" value="<?=$lijst->get('abonnement_id')?>"><p><?= __('Je bent aangemeld voor deze mailinglijst.') ?> <input type="submit" class="button" value="<?=__('Uitschrijven')?>"></p>
 		<?php else: ?>
 			<input type="hidden" name="action" value="subscribe">
-			<input type="submit" class="button" value="<?=_('Aanmelden')?>">
+			<input type="submit" class="button" value="<?=__('Aanmelden')?>">
 		<?php endif ?>
 		</form>
 	</div>
