@@ -6,6 +6,11 @@
 	require_once('data.php');
 	require_once('view.php');
 
+	function _dump($arg) {
+		var_dump($arg);
+		return $arg;
+	}
+
 	function _get_backtrace() {
 		$skip = func_get_args();
 		$skip[] = '_get_backtrace';

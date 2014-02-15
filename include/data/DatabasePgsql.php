@@ -210,7 +210,7 @@
 		  */
 		function get_last_insert_id() {
 			return $this->query_value("SELECT currval('" . 
-					$this->last_insert_table . "_id_seq')");
+					$this->last_insert_table . "_id_seq'::regclass)");
 		}
 		
 		/**

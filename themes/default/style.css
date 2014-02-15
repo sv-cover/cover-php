@@ -272,6 +272,7 @@ border-radius: 0 0 5px 5px;
   background-color: #ddd;
   padding: 4px 8px;
   cursor: pointer;
+  font: 12px sans-serif;
 }
 .button:hover
 {
@@ -538,6 +539,12 @@ a.button {
 {
   margin: 5px 0px;
 }
+
+.messageBox a.button {
+	color: black;
+	text-decoration: none;
+}
+
 .messageBox ul {
   list-style-position: inside;
   margin: 10px 0px;
@@ -917,4 +924,41 @@ div.beheer table {
 .commissie-members .commissie-member .function {
 	display: block;
 	font-weight: normal;
+}
+
+.popup {
+	z-index: 10;
+	position: fixed;
+	top: 120px;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 400px;
+	background: white;
+	padding: 20px;
+	color: black;
+}
+
+.popup form > div {
+	margin-bottom: 10px;
+}
+
+.popup form label {
+	display: block;
+}
+
+.popup form input + label {
+	display: inline-block;
+}
+
+.hide-by-default {
+	display: none;
+}
+
+.mailinglists .mailinglist {
+	margin-bottom: 1em;
+}
+
+.mailinglists .list-name {
+	display: inline-block; 
 }
