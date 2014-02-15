@@ -1,6 +1,7 @@
 <?php
 
 require_once 'include/init.php';
+require_once 'include/member.php';
 require_once 'controllers/Controller.php';
 
 class ControllerMailinglijsten extends Controller
@@ -28,11 +29,14 @@ class ControllerMailinglijsten extends Controller
 
 	protected function _process_new_list()
 	{
-		$this->model->create_lijst(
+		$id = $this->model->create_lijst(
 			$_POST['adres'], $_POST['naam'],
 			$_POST['omschrijving'], !empty($_POST['publiek']));
 
-		header('Location: mailinglijsten.php');
+		if ($id > 0)
+			return header('Location: mailinglijsten.php?lijst_id=' . $id);
+		
+		echo 'Error';
 	}
 
 	protected function _process_add_subscription()
@@ -68,12 +72,33 @@ class ControllerMailinglijsten extends Controller
 	{
 		$lijst = $this->model->get_lijst($lijst_id);
 
+		if (!empty($_POST['unsubscribe']))
+		{
+			foreach ($_POST['unsubscribe'] as $abonnement_id)
+				$this->model->afmelden($abonnement_id);
+
+			header('Location: mailinglijsten.php?lijst_id=' . $lijst_id);
+			return;
+		}
+
+		if (isset($_POST['adres'], $_POST['naam'], $_POST['omschrijving']))
+		{
+			$lijst->set('adres', $_POST['adres']);
+			$lijst->set('naam', $_POST['naam']);
+			$lijst->set('omschrijving', $_POST['omschrijving']);
+			$lijst->set('publiek', (string) !empty($_POST['publiek']));
+			$lijst->update();
+
+			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
+			return;
+		}
+
 		$aanmeldingen = $this->model->get_aanmeldingen($lijst->get('id'));
 
 		$this->get_content('subscriptions', null, compact('lijst', 'aanmeldingen'));
 	}
 
-	protected function run_my_subscriptions_management()
+	protected function run_my_subscriptions_management($lid_id)
 	{
 		$me = logged_in();
 	
@@ -82,7 +107,7 @@ class ControllerMailinglijsten extends Controller
 			switch ($_POST['action'])
 			{
 				case 'subscribe':
-					$this->model->aanmelden($me['id'], $_POST['mailinglijst_id']);
+					$this->model->aanmelden($lid_id, $_POST['mailinglijst_id']);
 					break;
 
 				case 'unsubscribe':
@@ -91,21 +116,36 @@ class ControllerMailinglijsten extends Controller
 			}
 		}
 
-		$subscriptions = $this->model->get_lijsten($me['id'], false);
+		$subscriptions = $this->model->get_lijsten($lid_id, false);
 
 		$this->get_content('mailinglists', $subscriptions);
 	}
 
 	public function run_impl()
 	{
+		// Unsubscribe link? Show the unsubscribe confirmation page
 		if (!empty($_GET['abonnement_id']))
-			$this->run_unsubscribe_confirm($_GET['abonnement_id']);
-		elseif (logged_in() && !empty($_GET['lijst_id']))
-			$this->run_subscriptions_management($_GET['lijst_id']);
-		elseif (logged_in())
-			$this->run_my_subscriptions_management();
+			return $this->run_unsubscribe_confirm($_GET['abonnement_id']);
+
+		// Manage the subscriptions to a list
+		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['lijst_id']))
+			return $this->run_subscriptions_management($_GET['lijst_id']);
+
+		// Manage the subscriptions of a member other than yourself
+		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['lid_id']))
+			return $this->run_my_subscriptions_management($_GET['lid_id']);
+
+		// No list but a post request -> create a new list
+		elseif (member_in_commissie(COMMISSIE_EASY) && isset($_GET['lijst_id']))
+			return $this->_process_new_list();
+
+		// Manage your own subscriptions
+		elseif ($me = logged_in())
+			return $this->run_my_subscriptions_management($me['id']);
+
+		// There isn't really anything you can do when not logged in, Sorry!
 		else
-			$this->get_content('auth');
+			return $this->get_content('auth');
 	}
 }
 

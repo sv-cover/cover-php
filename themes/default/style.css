@@ -918,3 +918,40 @@ div.beheer table {
 	display: block;
 	font-weight: normal;
 }
+
+.popup {
+	z-index: 10;
+	position: fixed;
+	top: 120px;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 400px;
+	background: white;
+	padding: 20px;
+	color: black;
+}
+
+.popup form > div {
+	margin-bottom: 10px;
+}
+
+.popup form label {
+	display: block;
+}
+
+.popup form input + label {
+	display: inline-block;
+}
+
+.hide-by-default {
+	display: none;
+}
+
+.mailinglists .mailinglist {
+	margin-bottom: 1em;
+}
+
+.mailinglists .list-name {
+	display: inline-block; 
+}

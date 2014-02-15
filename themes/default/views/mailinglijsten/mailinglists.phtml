@@ -1,9 +1,17 @@
 <h1><?= _('Mailinglijsten') ?></h1>
-<div class="messageBox">
+<div class="messageBox mailinglists">
 <?php foreach ($iter as $lijst): ?>
-	<div>
-		<strong><?= markup_format_text($lijst->get('naam')) ?></strong>
-		<p><?= markup_format_text($lijst->get('omschrijving')) ?></p>
+	<div class="mailinglist">
+		<h3 class="list-name">
+		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+		<a href="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>"><?= markup_format_text($lijst->get('naam')) ?></a>
+		<?php else: ?>
+		<?= markup_format_text($lijst->get('naam')) ?>
+		<?php endif ?>
+		</h3>
+		
+		<em class="list-email"><?= htmlspecialchars($lijst->get('adres')) ?></em>
+		<p class="list-description"><?= markup_format_text($lijst->get('omschrijving')) ?></p>
 		<form method="post">
 			<input type="hidden" name="mailinglijst_id" value="<?=$lijst->get('id')?>">
 		<?php if ($lijst->get('abonnement_id')): ?>
@@ -17,3 +25,47 @@
 	</div>
 <?php endforeach ?>
 </div>
+
+<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+<div id="new-list-popup" class="popup hide-by-default">
+	<form method="post" action="mailinglijsten.php?lijst_id=">
+		<div>
+			<label for="adres"><?=__('Lijstadres:') ?></label>
+			<input id="adres" type="email" name="adres" placeholder="e.g. lijstnaam@svcover.nl">
+		</div>
+		<div>
+			<label for="naam"><?=__('Naam:') ?></label>
+			<input id="naam" type="text" name="naam">
+		</div>
+		<div>
+			<label for="omschrijving">Omschrijving:</label>
+			<textarea id="omschrijving" name="omschrijving"></textarea>
+		</div>
+		<div>
+			<input id="publiek" type="checkbox" name="publiek">
+			<label for="publiek"><?=__('Mensen mogen zichzelf aanmelden voor deze lijst.')?></label>
+		</div>
+		<div class="controls">
+			<button class="button" type="submit"><?=__('Maak lijst')?></button>
+			<button class="button" type="reset"><?=__('Annuleer')?></button>
+		</div>
+	</form>
+</div>
+
+<script>
+$(function() {
+	$('#new-list-popup button[type=reset]').click(function() {
+		$('#new-list-popup').hide();
+	});
+
+	$('.mailinglists').append(
+		$('<button>')
+			.addClass('button')
+			.text('<?=__('Maak nieuwe mailinglijst...')?>')
+			.click(function(e) {
+				e.preventDefault();
+				$('#new-list-popup').show();
+			}));
+})
+</script>
+<?php endif ?>

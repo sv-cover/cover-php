@@ -1,5 +1,6 @@
 <h1><?=_('Mailinglijst')?> :: <?=markup_format_text($lijst->get('naam'))?></h1>
 <div class="messageBox">
+	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
 	<ul>
 	<?php foreach ($aanmeldingen as $aanmelding): ?>
 		<li>
@@ -11,4 +12,6 @@
 		</li>
 	<?php endforeach ?>
 	</ul>
+	<button class="button" type="submit"><?=__('Meld geselecteerde adressen af')?>
+	</form>
 </div>

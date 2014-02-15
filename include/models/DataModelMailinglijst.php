@@ -73,12 +73,12 @@ class DataModelMailinglijst extends DataModel
 			'adres' => $adres,
 			'naam' => $naam,
 			'omschrijving' => $omschrijving,
-			'publiek' => $publiek ? 1 : 0
+			'publiek' => (string) ($publiek ? 1 : 0)
 		);
 
 		$iter = new DataIter($this, -1, $data);
 
-		return $this->insert($iter);
+		return $this->insert($iter, true);
 	}
 
 	public function get_aanmeldingen($lijst_id)
