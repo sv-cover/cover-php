@@ -62,9 +62,7 @@ class DataModelMailinglijst extends DataModel
 			FROM
 				mailinglijsten l
 			WHERE
-				' . $query . '
-			ORDER BY
-				l.naam ASC');
+				' . $query);
 
 		return $this->_row_to_iter($row);
 	}
@@ -105,7 +103,7 @@ class DataModelMailinglijst extends DataModel
 				m.mailinglijst_id = %d
 				AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 			ORDER BY
-				m.ingeschreven_op ASC',
+				naam ASC',
 			$lijst_id));
 
 		return $this->_rows_to_iters($rows);
