@@ -37,7 +37,9 @@ foreach ($aanmeldingen as $aanmelding)
 	// Personize the message for the receiver
 	$variables = array(
 		'[NAAM]' => $aanmelding->get('naam'),
-		'[ABONNEMENT_ID]' => $aanmelding->get('abonnement_id')
+		'[NAME]' => $aanmelding->get('naam'),
+		'[ABONNEMENT_ID]' => $aanmelding->get('abonnement_id'),
+		'[UNSUBSCRIBE]' => sprintf('<a href="https://svcover.nl/mailinglijsten.php?abonnement_id=%s">Click here to unsubscribe.</a>', $aanmelding->get('abonnement_id'))
 	);
 
 	$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
