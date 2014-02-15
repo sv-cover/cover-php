@@ -347,6 +347,7 @@
 		
 		echo '<title>' . htmlspecialchars($title) . '</title>
 		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 		<!--[if lte IE 7]>
 			<link rel="stylesheet" href="'. get_theme_data('styleIE.css') .'" type = "text/css" />
 		<![endif]-->';
@@ -363,14 +364,10 @@
 		echo '<script type="text/javascript" src="' . get_theme_data('data/expander.js') . '"></script>
 		<script type="text/javascript" src="' . get_theme_data('data/common.js') . '"></script>
 		
-		<!--<script type = "text/javascript" src = "' . get_theme_data('data/menu.js') . '"></script>
-<script type = "text/javascript" src = "' . get_theme_data('data/jsTrace.js') . '"></script>
-<script type = "text/javascript" src = "' . get_theme_data('data/dom-drag.js') . '"></script>
-		-->
-		
+		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 		<script type="text/javascript" src="' . get_theme_data('data/popup.js') . '"></script>
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-		<script type = "text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
+		<script type="text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
 		<script type="text/javascript" src="data/connection.js"></script>
 
 		<script type="text/javascript">
