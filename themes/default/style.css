@@ -272,6 +272,7 @@ border-radius: 0 0 5px 5px;
   background-color: #ddd;
   padding: 4px 8px;
   cursor: pointer;
+  font: 12px sans-serif;
 }
 .button:hover
 {
@@ -538,6 +539,12 @@ a.button {
 {
   margin: 5px 0px;
 }
+
+.messageBox a.button {
+	color: black;
+	text-decoration: none;
+}
+
 .messageBox ul {
   list-style-position: inside;
   margin: 10px 0px;
