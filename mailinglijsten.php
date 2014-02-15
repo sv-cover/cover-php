@@ -125,11 +125,28 @@ class ControllerMailinglijsten extends Controller
 		$this->get_content('mailinglists', $subscriptions);
 	}
 
+	protected function run_autocomplete($query)
+	{
+		$model = get_model('DataModelMember');
+
+		$suggestions = array();
+
+		foreach ($model->search_first_last($query) as $member)
+			$suggestions[] = array(
+				'id' => $member->get('id'),
+				'naam' => member_full_name($member));
+
+		echo json_encode($suggestions);
+	}
+
 	public function run_impl()
 	{
 		// Unsubscribe link? Show the unsubscribe confirmation page
 		if (!empty($_GET['abonnement_id']))
 			return $this->run_unsubscribe_confirm($_GET['abonnement_id']);
+
+		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['autocomplete']))
+			return $this->run_autocomplete($_GET['naam']);
 
 		// Manage the subscriptions to a list
 		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['lijst_id']))
