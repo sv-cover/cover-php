@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-15 17:18+0100\n"
+"POT-Creation-Date: 2014-02-15 18:45+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -78,7 +78,7 @@ msgid ""
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events"
 
-#: ../../../almanak.php:21 ../../../themes/default/views/header.php:178
+#: ../../../almanak.php:22 ../../../themes/default/views/header.php:178
 #: ../../../themes/default/views/almanak/almanak.phtml:1
 msgid "Almanak"
 msgstr "Almanac"
@@ -99,13 +99,13 @@ msgstr "Books"
 #: ../../../themes/default/views/header.php:170
 #: ../../../themes/default/views/actieveleden/_overzicht.phtml:13
 #: ../../../themes/default/views/commissies/commissies.phtml:1
-#: ../../../themes/default/views/profiel/profiel.phtml:152
+#: ../../../themes/default/views/profiel/profiel.phtml:156
 msgid "Commissies"
 msgstr "Committees"
 
 #: ../../../confirm.php:39
-#: ../../../themes/default/views/profiel/profiel.phtml:167
-#: ../../../themes/default/views/profiel/profiel.phtml:179
+#: ../../../themes/default/views/profiel/profiel.phtml:171
+#: ../../../themes/default/views/profiel/profiel.phtml:183
 msgid "Nieuw wachtwoord"
 msgstr "New password"
 
@@ -287,7 +287,7 @@ msgstr "This page does not exist..."
 #: ../../../include/editable.php:37
 #: ../../../themes/default/views/forum.php:1107
 #: ../../../themes/default/views/header.php:121
-#: ../../../themes/default/views/profiel/profiel.phtml:198
+#: ../../../themes/default/views/profiel/profiel.phtml:202
 msgid "Leden"
 msgstr "Members"
 
@@ -351,7 +351,7 @@ msgid "Zaterdag"
 msgstr "Saturday"
 
 #: ../../../include/functions.php:197
-#: ../../../themes/default/views/almanak/almanak.phtml:65
+#: ../../../themes/default/views/almanak/almanak.phtml:66
 #: ../../../themes/default/views/profiel/profiel.phtml:89
 #: ../../../themes/default/views/profiel/profiel.phtml:99
 msgid "geen"
@@ -440,7 +440,7 @@ msgstr "unknown"
 #: ../../../include/models/DataModelForum.php:661
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/forum.php:870
-#: ../../../themes/default/views/profiel/profiel.phtml:199
+#: ../../../themes/default/views/profiel/profiel.phtml:203
 msgid "Iedereen"
 msgstr "Everyone"
 
@@ -708,10 +708,16 @@ msgstr "Previously a member"
 #: ../../../themes/default/views/almanak/almanak.php:42
 #: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:140
+msgid "Erelid"
+msgstr "Honorary Member"
+
+#: ../../../themes/default/views/almanak/almanak.php:47
+#: ../../../themes/default/views/almanak/almanak.phtml:48
+#: ../../../themes/default/views/profiel/profiel.phtml:144
 msgid "Donateur"
 msgstr "Donator"
 
-#: ../../../themes/default/views/almanak/almanak.php:55
+#: ../../../themes/default/views/almanak/almanak.php:60
 #, php-format
 msgid "foto van %s"
 msgstr "Photo of %s"
@@ -1220,9 +1226,9 @@ msgstr "Option"
 #: ../../../themes/default/views/links/_beheer.phtml:29
 #: ../../../themes/default/views/profiel/profiel.phtml:63
 #: ../../../themes/default/views/profiel/profiel.phtml:111
-#: ../../../themes/default/views/profiel/profiel.phtml:143
-#: ../../../themes/default/views/profiel/profiel.phtml:182
-#: ../../../themes/default/views/profiel/profiel.phtml:221
+#: ../../../themes/default/views/profiel/profiel.phtml:147
+#: ../../../themes/default/views/profiel/profiel.phtml:186
+#: ../../../themes/default/views/profiel/profiel.phtml:225
 #: ../../../themes/default/views/taken/taak.phtml:33
 msgid "Opslaan"
 msgstr "Save"
@@ -1345,7 +1351,7 @@ msgstr "Type"
 
 #: ../../../themes/default/views/forum.php:874
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:17
-#: ../../../themes/default/views/almanak/almanak.phtml:52
+#: ../../../themes/default/views/almanak/almanak.phtml:53
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:8
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:13
 msgid "Zoeken"
@@ -1707,7 +1713,7 @@ msgstr[0] "%d documents"
 msgstr[1] "%d documents"
 
 #: ../../../themes/default/views/taken/taken.php:21
-#: ../../../themes/default/views/profiel/profiel.phtml:197
+#: ../../../themes/default/views/profiel/profiel.phtml:201
 msgid "Niemand"
 msgstr "Nobody"
 
@@ -2098,21 +2104,21 @@ msgstr "Visibility"
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:58
+#: ../../../themes/default/views/almanak/almanak.phtml:59
 msgid "Maak hierboven een selectie om de almanak te bekijken."
 msgstr "Make a selection above to view the almanac"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:60
+#: ../../../themes/default/views/almanak/almanak.phtml:61
 msgid "Download CSV-bestand met almanakgegevens"
 msgstr "Download CSV file with almanac data"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:65
-#: ../../../themes/default/views/almanak/almanak.phtml:69
+#: ../../../themes/default/views/almanak/almanak.phtml:66
+#: ../../../themes/default/views/almanak/almanak.phtml:70
 #, php-format
 msgid "Er zijn %s leden gevonden die voldoen aan de zoekterm(en)."
 msgstr "There are %s members that coincide with your searching criteria."
 
-#: ../../../themes/default/views/almanak/almanak.phtml:67
+#: ../../../themes/default/views/almanak/almanak.phtml:68
 #, php-format
 msgid "Er is %s lid gevonden die voldoet aan de zoekterm(en)."
 msgstr "There is %s member that coincide with your searching criteria."
@@ -2846,41 +2852,41 @@ msgstr "Avatar"
 msgid "avatar"
 msgstr "avatar"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:153
+#: ../../../themes/default/views/profiel/profiel.phtml:157
 msgid "Lid van de volgende commissies:"
 msgstr "Member of the following committees:"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:178
+#: ../../../themes/default/views/profiel/profiel.phtml:182
 msgid "Oud wachtwoord"
 msgstr "Old password"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:180
+#: ../../../themes/default/views/profiel/profiel.phtml:184
 msgid "Opnieuw"
 msgstr "Again"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:188
+#: ../../../themes/default/views/profiel/profiel.phtml:192
 msgid "Privacy instellingen"
 msgstr "Privacy settings"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:189
+#: ../../../themes/default/views/profiel/profiel.phtml:193
 msgid "Je privacy instellingen geven aan wie welke informatie mag zien."
 msgstr "Edit your privacy preferences to indicate who can see what info"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:254
+#: ../../../themes/default/views/profiel/profiel.phtml:258
 #, php-format
 msgid "Je bent ingelogd met %d browsers."
 msgstr "You are logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:254
+#: ../../../themes/default/views/profiel/profiel.phtml:258
 msgid "Beheer je sessies."
 msgstr "Manage your sessions."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:258
+#: ../../../themes/default/views/profiel/profiel.phtml:262
 #, php-format
 msgid "Deze persoon is ingelogd met %d browsers."
 msgstr "This person is logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:258
+#: ../../../themes/default/views/profiel/profiel.phtml:262
 msgid "Beheer zijn sessies."
 msgstr "Manage his sessions."
 
