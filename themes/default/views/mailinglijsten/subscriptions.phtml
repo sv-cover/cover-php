@@ -18,6 +18,26 @@
 
 <div class="messageBox">
 	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<div>
+			<label for="naam"><?=__('Naam:') ?></label>
+			<input id="naam" type="text" name="naam" value="<?=htmlspecialchars($lijst->get('naam'), ENT_QUOTES)?>">
+		</div>
+		<div>
+			<label for="omschrijving">Omschrijving:</label>
+			<textarea id="omschrijving" name="omschrijving"><?=htmlspecialchars($lijst->get('omschrijving'))?></textarea>
+		</div>
+		<div>
+			<input id="publiek" type="checkbox" name="publiek" <?php if ($lijst->get('publiek')) echo 'checked' ?>>
+			<label for="publiek"><?=__('Mensen mogen zichzelf aanmelden voor deze lijst.')?></label>
+		</div>
+		<div class="controls">
+			<button class="button" type="submit"><?=__('Update lijst')?></button>
+		</div>
+	</form>
+</div>
+
+<div class="messageBox">
+	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
 		<label for="lid_id">Lidnummer(s):</label>
 		<input type="text" id="lid_id" name="subscribe">
 		<button type="submit" class="button"><?=__('Meld aan')?></button>

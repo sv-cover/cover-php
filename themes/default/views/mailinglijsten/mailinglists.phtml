@@ -9,8 +9,12 @@
 		<?= markup_format_text($lijst->get('naam')) ?>
 		<?php endif ?>
 		</h3>
-		
+
 		<em class="list-email"><?= htmlspecialchars($lijst->get('adres')) ?></em>
+		<?php if (!$lijst->get('publiek')): ?>
+		<em class="list-public-status"><?=__('Verborgen')?></em>
+		<?php endif ?>
+
 		<p class="list-description"><?= markup_format_text($lijst->get('omschrijving')) ?></p>
 		<form method="post">
 			<input type="hidden" name="mailinglijst_id" value="<?=$lijst->get('id')?>">

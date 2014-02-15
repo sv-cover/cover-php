@@ -85,11 +85,11 @@ class ControllerMailinglijsten extends Controller
 		}
 
 		// If data to update the metadata of the list is passed on, well, make use of it.
-		if (isset($_POST['adres'], $_POST['naam'], $_POST['omschrijving']))
+		if (isset($_POST['naam'], $_POST['omschrijving']))
 		{
 			$lijst->set('naam', $_POST['naam']);
 			$lijst->set('omschrijving', $_POST['omschrijving']);
-			$lijst->set('publiek', (string) !empty($_POST['publiek']));
+			$lijst->set('publiek', empty($_POST['publiek']) ? '0' : '1');
 			$lijst->update();
 
 			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
@@ -119,7 +119,8 @@ class ControllerMailinglijsten extends Controller
 			}
 		}
 
-		$subscriptions = $this->model->get_lijsten($lid_id, false);
+		$subscriptions = $this->model->get_lijsten($lid_id,
+			!member_in_commissie(COMMISSIE_EASY)); // public only? Only if not WebCie.
 
 		$this->get_content('mailinglists', $subscriptions);
 	}
