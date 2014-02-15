@@ -21,7 +21,7 @@ class DataModelMailinglijst extends DataModel
 
 	public function get_lijsten($lid_id, $public_only = true)
 	{
-		$where_clause = $public_only ? 'WHERE l.publiek = 1' : '';
+		$where_clause = $public_only ? 'WHERE l.publiek = TRUE' : '';
 
 		$rows = $this->db->query('
 			SELECT
