@@ -16,8 +16,7 @@
 			$rows = $this->db->query('SELECT id,
 					voornaam,
 					tussenvoegsel,
-					achternaam,
-					privacy,
+					achternaam
 					FROM leden
 					WHERE (voornaam ILIKE \'%' . $this->escape_string($query) . '%\' OR
 					achternaam ILIKE \'%' . $this->escape_string($query) . '%\')
