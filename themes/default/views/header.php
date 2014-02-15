@@ -412,7 +412,6 @@
 		</div>
 		<div class="container clearfix">
 			<div class="center column" id="contents">';
-		//echo(var_dump(logged_in()));
 	}
 
 ?>

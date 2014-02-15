@@ -196,7 +196,7 @@
 			$query = $query . ' ' . $k . ') ' . $v . ');';
 			
 			/* Execute query */
-			$this->query(_dump($query));
+			$this->query($query);
 			
 			/* Save last insertion table so we can use it in 
 			   get_last_insert_id */
@@ -209,8 +209,8 @@
 		  * @result the id of the last inserted row
 		  */
 		function get_last_insert_id() {
-			return $this->query_value(_dump("SELECT currval('" . 
-					$this->last_insert_table . "_id_seq'::regclass)"));
+			return $this->query_value("SELECT currval('" . 
+					$this->last_insert_table . "_id_seq'::regclass)");
 		}
 		
 		/**
