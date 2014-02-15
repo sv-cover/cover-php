@@ -39,13 +39,6 @@ class ControllerMailinglijsten extends Controller
 		echo 'Error';
 	}
 
-	protected function _process_add_subscription()
-	{
-		$this->model->aanmelden($_POST['lid_id'], $_POST['lijst_id']);
-
-		header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $_POST['lijst_id']));
-	}
-
 	protected function _process_remove_subscription()
 	{
 		$abonnement = $this->model->get_abonnement($_POST['abonnement_id']);
@@ -72,18 +65,28 @@ class ControllerMailinglijsten extends Controller
 	{
 		$lijst = $this->model->get_lijst($lijst_id);
 
+		// Someone ordered someone execu.. unsubcribed? Bye bye.
 		if (!empty($_POST['unsubscribe']))
 		{
 			foreach ($_POST['unsubscribe'] as $abonnement_id)
 				$this->model->afmelden($abonnement_id);
 
-			header('Location: mailinglijsten.php?lijst_id=' . $lijst_id);
+			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
 			return;
 		}
 
+		if (!empty($_POST['subscribe']))
+		{
+			foreach (preg_split('/[\s,]+/', $_POST['subscribe']) as $lid_id)
+				$this->model->aanmelden($lid_id, $lijst->get('id'));
+
+			header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $lijst->get('id')));
+			return;
+		}
+
+		// If data to update the metadata of the list is passed on, well, make use of it.
 		if (isset($_POST['adres'], $_POST['naam'], $_POST['omschrijving']))
 		{
-			$lijst->set('adres', $_POST['adres']);
 			$lijst->set('naam', $_POST['naam']);
 			$lijst->set('omschrijving', $_POST['omschrijving']);
 			$lijst->set('publiek', (string) !empty($_POST['publiek']));

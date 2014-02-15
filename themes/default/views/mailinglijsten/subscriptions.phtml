@@ -15,3 +15,11 @@
 	<button class="button" type="submit"><?=__('Meld geselecteerde adressen af')?>
 	</form>
 </div>
+
+<div class="messageBox">
+	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<label for="lid_id">Lidnummer(s):</label>
+		<input type="text" id="lid_id" name="subscribe">
+		<button type="submit" class="button"><?=__('Meld aan')?></button>
+	</form>
+</div>
