@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-15 18:45+0100\n"
+"POT-Creation-Date: 2014-02-15 22:59+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -620,6 +620,7 @@ msgid "Nieuw lid"
 msgstr "New member"
 
 #: ../../../profiel.php:33 ../../../themes/default/views/header.php:301
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:57
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
@@ -1207,7 +1208,7 @@ msgid "Onderwerp/vraag"
 msgstr "Subject/question"
 
 #: ../../../themes/default/views/forum.php:372
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:26
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:18
 msgid "Omschrijving"
 msgstr "Description"
 
@@ -1322,7 +1323,8 @@ msgstr "New forum"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:20
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:22
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:45
 #: ../../../themes/default/views/profiel/profiel.phtml:37
 #: ../../../themes/default/views/profiel/profiel.phtml:45
 msgid "Naam"
@@ -1856,6 +1858,7 @@ msgstr "You haven't filled in all the fields correctly"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:7
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:24
 #: ../../../themes/default/views/lidworden/lidworden.phtml:42
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:5
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:49
 #: ../../../themes/default/views/profiel/profiel.phtml:51
 msgid "Adres"
@@ -2563,6 +2566,7 @@ msgid "Telefoonnummer"
 msgstr "Phone number"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:46
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:46
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
 #: ../../../themes/default/views/profiel/profiel.phtml:56
 msgid "E-Mail adres"
@@ -2680,67 +2684,63 @@ msgstr "Put all links to accept"
 msgid "Alle links op weigeren zetten"
 msgstr "Put all links to deny"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:15
-msgid "Verborgen"
-msgstr "Hidden"
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:6
+msgid "Nieuwe mailinglijst"
+msgstr "New mailing list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:23
-msgid "Je bent aangemeld voor deze mailinglijst."
-msgstr "You are subscribed to this mailinglist."
-
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:23
-msgid "Uitschrijven"
-msgstr "Unsubscribe"
-
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
-msgid "Aanmelden"
-msgstr "Subscribe"
-
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:37
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:12
 msgid "Lijstadres:"
 msgstr "List address:"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:41
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:16
 msgid "Naam:"
 msgstr "Name:"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:50
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:31
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:25
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:23
 msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
 msgstr "People can subscribe to this list."
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:53
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:28
 msgid "Maak lijst"
 msgstr "Make list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:54
-msgid "Annuleer"
-msgstr "Cancel"
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:46
+msgid "Verborgen"
+msgstr "Hidden"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:68
-msgid "Maak nieuwe mailinglijst..."
-msgstr "Make a new mailing list..."
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:54
+msgid "Je bent aangemeld voor deze mailinglijst."
+msgstr "You are subscribed to this mailinglist."
+
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:54
+msgid "Uitschrijven"
+msgstr "Unsubscribe"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:57
+msgid "Aanmelden"
+msgstr "Subscribe"
 
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:1
 #: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:1
 msgid "Mailinglijst"
 msgstr "Mailing list"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:15
-msgid "Meld geselecteerde adressen af"
-msgstr "Unsubscribe selected"
-
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:34
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:26
 msgid "Update lijst"
 msgstr "Update list"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:41
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:33
 msgid "Lidnummer(s)"
 msgstr "Member id(s)"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:43
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:35
 msgid "Meld aan"
 msgstr "Subscribe"
+
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:65
+msgid "Meld geselecteerde adressen af"
+msgstr "Unsubscribe selected"
 
 #: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:4
 msgid "Je staat niet (meer) op deze mailinglijst ingeschreven."
@@ -3123,6 +3123,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Annuleer"
+#~ msgstr "Cancel"
 
 #~ msgid "Cover"
 #~ msgstr "Cover"

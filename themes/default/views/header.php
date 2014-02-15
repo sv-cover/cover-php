@@ -346,8 +346,8 @@
 			$title = $params['title'] . ' :: ' . $title;
 		
 		echo '<title>' . htmlspecialchars($title) . '</title>
-		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
 		<!--[if lte IE 7]>
 			<link rel="stylesheet" href="'. get_theme_data('styleIE.css') .'" type = "text/css" />
 		<![endif]-->';
@@ -361,11 +361,11 @@
 		if ($controller == 'gastenboek')
 			echo '<link rel="alternate" type="application/rss+xml" title="RSS" href="gastenboek.php?rss">' . "\n";
 		
-		echo '<script type="text/javascript" src="' . get_theme_data('data/expander.js') . '"></script>
-		<script type="text/javascript" src="' . get_theme_data('data/common.js') . '"></script>
-		
+		echo '
 		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script type="text/javascript" src="' . get_theme_data('data/expander.js') . '"></script>
+		<script type="text/javascript" src="' . get_theme_data('data/common.js') . '"></script>
 		<script type="text/javascript" src="' . get_theme_data('data/popup.js') . '"></script>
 		<script type="text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
 		<script type="text/javascript" src="data/connection.js"></script>

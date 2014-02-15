@@ -283,6 +283,10 @@ border-radius: 0 0 5px 5px;
   background: #aaa;
 }
 
+.button img {
+	vertical-align: middle;
+}
+
 .buttons
 {
   background-color: #E5E5E5;
@@ -553,6 +557,18 @@ a.button {
 .messageBox h1, .messageBox h2, .messageBox h3, .messageBox h4
 {
   color: #333;
+}
+
+.messageBox .section {
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.messageBox .section:last-child {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
 }
 
 .newsheading { clear:both; height:55px;}
@@ -926,33 +942,26 @@ div.beheer table {
 	font-weight: normal;
 }
 
-.popup {
-	z-index: 10;
-	position: fixed;
-	top: 120px;
-	left: 0;
-	right: 0;
-	margin: auto;
-	width: 400px;
-	background: white;
-	padding: 20px;
-	color: black;
+.vertical-form {
+	clear: both;
 }
 
-.popup form > div {
+.vertical-form div {
 	margin-bottom: 10px;
 }
 
-.popup form label {
+.vertical-form label {
 	display: block;
 }
 
-.popup form input + label {
-	display: inline-block;
+.vertical-form input[type=text],
+.vertical-form input[type=email],
+.vertical-form textarea {
+	width: 100%;
 }
 
-.hide-by-default {
-	display: none;
+.vertical-form input + label {
+	display: inline-block;
 }
 
 .mailinglists .mailinglist {
@@ -961,4 +970,21 @@ div.beheer table {
 
 .mailinglists .list-name {
 	display: inline-block; 
+}
+
+table.full-width {
+	width: 100%;
+}
+
+form input[type=text],
+form input[type=email],
+form textarea {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 4px;
+}
+
+.ui-widget-overlay {
+	background: #000;
 }

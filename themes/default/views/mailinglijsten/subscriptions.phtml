@@ -1,48 +1,74 @@
 <h1><?=_('Mailinglijst')?> :: <?=markup_format_text($lijst->get('naam'))?></h1>
 <div class="messageBox">
-	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
-	<ul>
-	<?php foreach ($aanmeldingen as $aanmelding): ?>
-		<li>
-			<label>
-				<input type="checkbox" name="unsubscribe[]" value="<?=$aanmelding->get('abonnement_id')?>">
-				<?=htmlspecialchars($aanmelding->get('naam'))?>
-				<em><?=htmlspecialchars($aanmelding->get('email'))?></em>
-			</label>
-		</li>
-	<?php endforeach ?>
-	</ul>
-	<button class="button" type="submit"><?=__('Meld geselecteerde adressen af')?>
-	</form>
+	<div class="section">
+		<p>
+			<em><?=__('Adres') ?>: <?=htmlspecialchars($lijst->get('adres'))?></em>
+			<?=markup_parse($lijst->get('omschrijving'))?>
+			<a href="#mailinglist-settings">Edit</a>
+		</p>
+	</div>
+
+	<div id="mailinglist-settings" class="section hide-by-default">
+		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+			<div>
+				<label for="naam"><?=__('Naam') ?>:</label>
+				<input id="naam" type="text" name="naam" value="<?=htmlspecialchars($lijst->get('naam'), ENT_QUOTES)?>">
+			</div>
+			<div>
+				<label for="omschrijving"><?=__('Omschrijving') ?>:</label>
+				<textarea id="omschrijving" name="omschrijving"><?=htmlspecialchars($lijst->get('omschrijving'))?></textarea>
+			</div>
+			<div>
+				<input id="publiek" type="checkbox" name="publiek" <?php if ($lijst->get('publiek')) echo 'checked' ?>>
+				<label for="publiek"><?=__('Mensen mogen zichzelf aanmelden voor deze lijst.')?></label>
+			</div>
+			<div class="controls">
+				<button class="button" type="submit"><?=__('Update lijst')?></button>
+			</div>
+		</form>
+	</div>
+
+	<div class="section">
+		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+			<label for="lid_id"><?=__('Lidnummer(s)')?>:</label>
+			<input type="text" id="lid_id" name="subscribe">
+			<button type="submit" class="button"><?=__('Meld aan')?></button>
+		</form>
+	</div>
+
+	<div class="section">
+		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<table class="full-width">
+			<thead>
+				<tr>
+					<th width="20"></th>
+					<th><?=__('Naam')?></th>
+					<th><?=__('E-Mail adres')?></th>
+					<th width="40"></th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($aanmeldingen as $aanmelding): ?>
+				<tr>
+					<td><input type="checkbox" id="<?=$aanmelding->get('abonnement_id')?>" name="unsubscribe[]" value="<?=$aanmelding->get('abonnement_id')?>"></td>
+					<td><label for="<?=$aanmelding->get('abonnement_id')?>"><?=htmlspecialchars($aanmelding->get('naam'))?></label></td>
+					<td><?=htmlspecialchars($aanmelding->get('email'))?></td>
+					<?php if ($aanmelding->get('id')): ?>
+					<td><a href="profiel.php?lidid=<?=$aanmelding->get('id')?>"><?=__('Profiel')?></a></td>
+					<?php else: ?>
+					<td></td>
+					<?php endif ?>
+				</tr>
+			<?php endforeach ?>
+			</tbody>
+		</table>
+		<button class="button" type="submit"><?=__('Meld geselecteerde adressen af')?></button>
+		</form>
+	</div>
 </div>
 
-<div class="messageBox">
-	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
-		<div>
-			<label for="naam"><?=__('Naam') ?>:</label>
-			<input id="naam" type="text" name="naam" value="<?=htmlspecialchars($lijst->get('naam'), ENT_QUOTES)?>">
-		</div>
-		<div>
-			<label for="omschrijving"><?=__('Omschrijving') ?>:</label>
-			<textarea id="omschrijving" name="omschrijving"><?=htmlspecialchars($lijst->get('omschrijving'))?></textarea>
-		</div>
-		<div>
-			<input id="publiek" type="checkbox" name="publiek" <?php if ($lijst->get('publiek')) echo 'checked' ?>>
-			<label for="publiek"><?=__('Mensen mogen zichzelf aanmelden voor deze lijst.')?></label>
-		</div>
-		<div class="controls">
-			<button class="button" type="submit"><?=__('Update lijst')?></button>
-		</div>
-	</form>
-</div>
 
-<div class="messageBox">
-	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
-		<label for="lid_id"><?=__('Lidnummer(s)')?>:</label>
-		<input type="text" id="lid_id" name="subscribe">
-		<button type="submit" class="button"><?=__('Meld aan')?></button>
-	</form>
-</div>
+
 <script>
 jQuery(function($) {
 	function split(val) {

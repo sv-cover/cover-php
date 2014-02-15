@@ -46,3 +46,11 @@ function submit_form(name, xmlrequest) {
 function reset_form(name) {
 	document.forms[name].reset();
 }
+
+jQuery(function($) {
+	$('.hide-by-default').hide();
+
+	$("a[href^='#']").click(function(e) {
+		$(this.href.match(/(#.+)$/)[1]).show();
+	});
+});
