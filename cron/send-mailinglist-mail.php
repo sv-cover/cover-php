@@ -13,7 +13,7 @@ $mailinglijsten_model = get_model('DataModelMailinglijst');
 $message = file_get_contents('php://stdin');
 
 // Append '[Cover]' to the subject
-$message = preg_replace('/^Subject: ((+?)$/m', 'Subject: [Cover] $1', $message, 1);
+$message = preg_replace('/^Subject: (.+?)$/m', 'Subject: [Cover] $1', $message, 1);
 
 // Search for the adressed mailing list
 if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match)) {
