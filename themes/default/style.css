@@ -956,6 +956,7 @@ div.beheer table {
 
 .vertical-form input[type=text],
 .vertical-form input[type=email],
+.vertical-form input[type=password],
 .vertical-form textarea {
 	width: 100%;
 }
@@ -978,6 +979,7 @@ table.full-width {
 
 form input[type=text],
 form input[type=email],
+form input[type=password],
 form textarea {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
