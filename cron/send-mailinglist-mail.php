@@ -11,9 +11,10 @@ $mailinglijsten_model = get_model('DataModelMailinglijst');
 
 $lijst = $mailinglijsten_model->get_lijst($argv[1]);
 
-if (!$lijst)
+if (!$lijst) {
 	echo "Lijst niet gevonden\n";
 	return -1;
+}
 
 $message = file_get_contents('php://stdin');
 
@@ -34,7 +35,7 @@ foreach ($aanmeldingen as $aanmelding)
 
 	// Start sendmail with the target email address as argument
 	$sendmail = proc_open(
-		$_ENV['SENDMAIL'] . ' -io ' . escapeshellarg($aanmelding->get('email')),
+		getenv('SENDMAIL') . ' -io ' . escapeshellarg($aanmelding->get('email')),
 		$descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
