@@ -37,6 +37,11 @@
 					$status = __('Lid af');
 					break;
 
+				case MEMBER_STATUS_ERELID:
+					$classes[] = 'status-erelid';
+					$status = __('Erelid');
+					break;
+
 				case MEMBER_STATUS_DONATEUR:
 					$classes[] = 'status-donateur';
 					$status = __('Donateur');
