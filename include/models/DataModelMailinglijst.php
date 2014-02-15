@@ -19,7 +19,7 @@ class DataModelMailinglijst extends DataModel
 			SELECT
 				l.id,
 				l.naam, 
-				l.local_part,
+				l.adres,
 				l.omschrijving,
 				l.publiek,
 				a.abonnement_id
@@ -39,33 +39,38 @@ class DataModelMailinglijst extends DataModel
 
 	public function get_lijst($lijst_id)
 	{
-		$row = $this->db->query_first(sprintf('
+		if (is_numeric($lijst_id))
+			$query = sprintf('l.id = %d', $lijst_id);
+		else
+			$query = sprintf("l.adres = '%s'", $this->db->escape_string($lijst_id));
+		
+		$row = $this->db->query_first('
 			SELECT
 				l.id,
 				l.naam,
-				l.local_part,
+				l.adres,
 				l.omschrijving,
 				l.publiek
 			FROM
 				mailinglijsten l
 			WHERE
-				l.id = %d
+				' . $query . '
 			ORDER BY
-				l.naam ASC', $lijst_id));
+				l.naam ASC');
 
 		return $this->_row_to_iter($row);
 	}
 
-	public function create_lijst($local_part, $naam, $omschrijving, $publiek)
+	public function create_lijst($adres, $naam, $omschrijving, $publiek)
 	{
-		if (!preg_match('~^[a-z0-9][a-z0-9.\-]*[a-z0-9]+$~', $local_part))
+		if (!filter_var($adres, FILTER_VALIDATE_EMAIL))
 			return false;
 
 		if (strlen($naam) == 0)
 			return false;
 
 		$data = array(
-			'local_part' => $login,
+			'adres' => $adres,
 			'naam' => $naam,
 			'omschrijving' => $omschrijving,
 			'publiek' => $publiek ? 1 : 0
@@ -123,6 +128,7 @@ class DataModelMailinglijst extends DataModel
 			SELECT
 				l.id,
 				l.naam, 
+				l.adres,
 				l.omschrijving,
 				l.publiek,
 				a.abonnement_id

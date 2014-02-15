@@ -3465,7 +3465,7 @@ CREATE SEQUENCE mailinglijsten_id_seq
 CREATE TABLE mailinglijsten (
     id integer NOT NULL DEFAULT nextval('mailinglijsten_id_seq'::regclass),
     naam varchar(100) NOT NULL,
-    local_part varchar(100) NOT NULL,
+    adres varchar(255) NOT NULL UNIQUE,
     omschrijving text NOT NULL,
     publiek boolean NOT NULL DEFAULT '1',
     CONSTRAINT mailinglijsten_pkey PRIMARY KEY (id)

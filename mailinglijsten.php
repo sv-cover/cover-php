@@ -29,7 +29,7 @@ class ControllerMailinglijsten extends Controller
 	protected function _process_new_list()
 	{
 		$this->model->create_lijst(
-			$_POST['local_part'], $_POST['naam'],
+			$_POST['adres'], $_POST['naam'],
 			$_POST['omschrijving'], !empty($_POST['publiek']));
 
 		header('Location: mailinglijsten.php');
