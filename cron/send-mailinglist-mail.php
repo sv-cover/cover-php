@@ -35,7 +35,7 @@ foreach ($aanmeldingen as $aanmelding)
 
 	// Start sendmail with the target email address as argument
 	$sendmail = proc_open(
-		getenv('SENDMAIL') . ' -io ' . escapeshellarg($aanmelding->get('email')),
+		getenv('SENDMAIL') . ' -oi ' . escapeshellarg($aanmelding->get('email')),
 		$descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
