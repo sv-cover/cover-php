@@ -43,7 +43,7 @@
 				COUNT(a.commissieid) as commissie_count
 				FROM actieveleden a
 				LEFT JOIN leden l ON a.lidid = l.id
-				GROUP BY l.id, l.voornaam, l.tussenvoegsel, l.achternaam, l.email
+				GROUP BY l.id, l.voornaam, l.tussenvoegsel, l.achternaam, l.email, l.privacy
 				ORDER BY voornaam, tussenvoegsel, achternaam ASC');
 
 			return $this->_rows_to_iters($rows);
