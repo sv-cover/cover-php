@@ -3467,7 +3467,7 @@ CREATE TABLE mailinglijsten (
     naam varchar(100) NOT NULL,
     adres varchar(255) NOT NULL UNIQUE,
     omschrijving text NOT NULL,
-    publiek boolean NOT NULL DEFAULT '1',
+    publiek boolean NOT NULL DEFAULT TRUE,
     CONSTRAINT mailinglijsten_pkey PRIMARY KEY (id)
 );
 

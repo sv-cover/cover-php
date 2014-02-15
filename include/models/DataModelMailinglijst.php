@@ -11,6 +11,14 @@ class DataModelMailinglijst extends DataModel
 		$this->model_aanmeldingen = new DataModel($db, 'mailinglijsten_abonnementen', 'abonnement_id');
 	}
 
+	public function _row_to_iter($row)
+	{
+		if ($row)
+			$row['publiek'] = $row['publiek'] == 't';
+
+		return parent::_row_to_iter($row);
+	}
+
 	public function get_lijsten($lid_id, $public_only = true)
 	{
 		$where_clause = $public_only ? 'WHERE l.publiek = 1' : '';
@@ -73,7 +81,7 @@ class DataModelMailinglijst extends DataModel
 			'adres' => $adres,
 			'naam' => $naam,
 			'omschrijving' => $omschrijving,
-			'publiek' => (string) ($publiek ? 1 : 0)
+			'publiek' => $publiek ? '1' : '0'
 		);
 
 		$iter = new DataIter($this, -1, $data);
