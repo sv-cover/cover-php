@@ -123,7 +123,7 @@
 	  * @result false if no member is logged in or the memberdata is
 	  * there is a member logged in at the moment
 	  */	
-	function logged_in()
+	function logged_in($property = null)
 	{
 		static $logged_in = null;
 		
@@ -132,12 +132,14 @@
 			$member_id = session_get_member_id();
 
 			if ($member_id === null)
-				return $logged_in = null;
+				return $logged_in = false;
 
 			$logged_in = _member_data_from_session();
 		}
 
-		return $logged_in;
+		return $logged_in !== false && $property !== null
+			? $logged_in[$property]
+			: $logged_in;
 	}
 
 	function logged_in_as_active_member()
