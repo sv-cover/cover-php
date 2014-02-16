@@ -23,7 +23,7 @@ class ControllerMailinglijsten extends Controller
 	public function get_content($view, $iter = null, $params = null)
 	{
 		$this->run_header(array('title' => _('Mailinglijsten')));
-		run_view('mailinglijsten::' . $view, $this->model, $iter, $params);
+		run_view($view, $this->model, $iter, $params);
 		$this->run_footer();
 	}
 
@@ -58,7 +58,7 @@ class ControllerMailinglijsten extends Controller
 			$uitgeschreven = true;
 		}
 
-		$this->get_content('unsubscribe', null, compact('abonnement', 'uitgeschreven'));
+		$this->get_content('mailinglijsten::unsubscribe', null, compact('abonnement', 'uitgeschreven'));
 	}
 
 	protected function run_subscriptions_management($lijst_id)
@@ -98,12 +98,20 @@ class ControllerMailinglijsten extends Controller
 
 		$aanmeldingen = $this->model->get_aanmeldingen($lijst->get('id'));
 
-		$this->get_content('subscriptions', null, compact('lijst', 'aanmeldingen'));
+		$this->get_content('mailinglijsten::subscriptions', null, compact('lijst', 'aanmeldingen'));
 	}
 
 	protected function run_my_subscriptions_management($lid_id)
 	{
-		$me = logged_in();
+		$member_model = get_model('DataModelMember');
+
+		$member = $member_model->get_iter($lid_id);
+
+		if (!$member) {
+			header('Status: 404 Not found');
+			$this->get_content('common::not_found');
+			return;
+		}
 	
 		if (!empty($_POST['action']))
 		{
@@ -117,12 +125,19 @@ class ControllerMailinglijsten extends Controller
 					$this->model->afmelden($_POST['abonnement_id']);
 					break;
 			}
+
+			if ($lid_id == logged_in('id'))
+				header('Location: mailinglijsten.php');
+			else
+				header('Location: mailinglijsten.php?lid_id=' . $lid_id);
+
+			return;
 		}
 
 		$subscriptions = $this->model->get_lijsten($lid_id,
 			!member_in_commissie(COMMISSIE_EASY)); // public only? Only if not WebCie.
 
-		$this->get_content('mailinglists', $subscriptions);
+		$this->get_content('mailinglijsten::mailinglists', $subscriptions, compact('member'));
 	}
 
 	protected function run_autocomplete($query)
@@ -166,7 +181,7 @@ class ControllerMailinglijsten extends Controller
 
 		// There isn't really anything you can do when not logged in, Sorry!
 		else
-			return $this->get_content('auth');
+			return $this->get_content('common::auth');
 	}
 }
 
