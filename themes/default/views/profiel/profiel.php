@@ -79,6 +79,21 @@ class ProfielView extends View {
 			return count($model->getActive($member_id));
 		}
 
+		public function get_active_subscription_count($member_id)
+		{
+			$model = get_model('DataModelMailinglijst');
+
+			$all_lists = $model->get_lijsten($member_id, !member_in_commissie(COMMISSIE_BESTUUR));
+
+			$subscriptions = 0;
+
+			foreach ($all_lists as $list)
+				if ($list->get('abonnement_id') != null)
+					$subscriptions++;
+
+			return $subscriptions;
+		}
+
 		public function get_commissies($iter)
 		{
 			$model = get_model('DataModelCommissie');

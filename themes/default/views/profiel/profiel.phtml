@@ -230,11 +230,33 @@
 			</form>
 		</div>
 	<? } ?>
-	
 </div>
+
+<h2><?= __('Mailinglijsten')?></h2>
+<? if($this->is_current_member($iter->get('lidid'))): ?>
+	<div class="messageBox">
+		<p><?= sprintf(__('Je bent aangemeld voor %d mailinglijsten.'), $this->get_active_subscription_count($iter->get('lidid'))) ?> <a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
+	</div>
+<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
+	<div class="messageBox">
+		<p><?= sprintf(__('Deze persoon is aangemeld voor %d mailinglijsten.'), $this->get_active_subscription_count($iter->get('lidid'))) ?> <a href="mailinglijsten.php?lid_id=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar abonnementen.') ?></a></p>
+	</div>
+<?php endif ?>
+
+<h2><?= __('Sessies')?></h2>
+<? if($this->is_current_member($iter->get('lidid'))): ?>
+	<div class="messageBox">
+		<p><?= sprintf(__('Je bent ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
+	</div>
+<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
+	<div class="messageBox">
+		<p><?= sprintf(__('Deze persoon is ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar sessies.') ?></a></p>
+	</div>
+<?php endif ?>
+
 	
 <? if($this->is_current_member($iter->get('lidid'))) { ?>
-	<h1 id="msdnaa">Dreamspark (voorheen MSDNAA)</h2>
+	<h2 id="msdnaa"><?=__('Dreamspark (voorheen MSDNAA)')?></h2>
 	
 	<script type="text/javascript">
 	$().ready(function() {
@@ -249,18 +271,8 @@
 
 	<div class="messageBox">
 	<form id="gotomsdnaa" action="elms2.php" method="post">
-		<input type="checkbox" name="akkoord" id="akkoord" value="akkoord"><label for="akkoord">Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar Microsoft</label><br />
-		<button class="button" id="msdnaabutton" disabled="disabled">Ga naar Dreamspark</button>
+		<input type="checkbox" name="akkoord" id="akkoord" value="akkoord"><label for="akkoord"><?=__('Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar Microsoft.')?></label><br />
+		<button class="button" id="msdnaabutton" disabled="disabled"><?=__('Ga naar Dreamspark')?></button>
 	</form>
 	</div>
 <? } ?>
-
-<? if($this->is_current_member($iter->get('lidid'))): ?>
-	<div class="messageBox">
-		<p><?= sprintf(__('Je bent ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
-	</div>
-<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
-	<div class="messageBox">
-		<p><?= sprintf(__('Deze persoon is ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn sessies.') ?></a></p>
-	</div>
-<?php endif ?>
