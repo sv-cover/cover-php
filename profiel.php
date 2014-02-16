@@ -178,9 +178,12 @@
 			$errors = array();
 			$message = array();
 
-			if (!get_post('wachtwoord_oud') || md5(get_post('wachtwoord_oud')) != $iter->get('wachtwoord')) {
-				$errors[] = 'wachtwoord_oud';
-				$message[] = __('Het huidige wachtwoord is onjuist.');
+			// Only test the old password if we are not a member of the board
+			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
+				if (!get_post('wachtwoord_oud') || md5(get_post('wachtwoord_oud')) != $iter->get('wachtwoord')) {
+					$errors[] = 'wachtwoord_oud';
+					$message[] = __('Het huidige wachtwoord is onjuist.');
+				}
 			}
 			
 			if (!get_post('wachtwoord_nieuw')) {

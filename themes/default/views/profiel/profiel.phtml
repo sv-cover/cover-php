@@ -179,7 +179,9 @@
 							<td width="150"></td>
 							<td></td>
 						</tr>
+						<?php if (!member_in_commissie(COMMISSIE_BESTUUR)): ?>
 						<?= table_row(label(__('Oud wachtwoord'), 'wachtwoord_oud', $errors) . ':', input_password('wachtwoord_oud')) ?>
+						<?php endif ?>
 						<?= table_row(label(__('Nieuw wachtwoord'), 'wachtwoord_nieuw', $errors) . ':', input_password('wachtwoord_nieuw')) ?>
 						<?= table_row(label(__('Opnieuw'), 'wachtwoord_opnieuw', $errors) . ':', input_password('wachtwoord_opnieuw')) ?>
 	
