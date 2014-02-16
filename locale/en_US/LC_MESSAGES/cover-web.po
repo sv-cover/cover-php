@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-15 22:59+0100\n"
+"POT-Creation-Date: 2014-02-16 18:09+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -105,7 +105,7 @@ msgstr "Committees"
 
 #: ../../../confirm.php:39
 #: ../../../themes/default/views/profiel/profiel.phtml:171
-#: ../../../themes/default/views/profiel/profiel.phtml:183
+#: ../../../themes/default/views/profiel/profiel.phtml:185
 msgid "Nieuw wachtwoord"
 msgstr "New password"
 
@@ -287,7 +287,7 @@ msgstr "This page does not exist..."
 #: ../../../include/editable.php:37
 #: ../../../themes/default/views/forum.php:1107
 #: ../../../themes/default/views/header.php:121
-#: ../../../themes/default/views/profiel/profiel.phtml:202
+#: ../../../themes/default/views/profiel/profiel.phtml:204
 msgid "Leden"
 msgstr "Members"
 
@@ -440,7 +440,7 @@ msgstr "unknown"
 #: ../../../include/models/DataModelForum.php:661
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/forum.php:870
-#: ../../../themes/default/views/profiel/profiel.phtml:203
+#: ../../../themes/default/views/profiel/profiel.phtml:205
 msgid "Iedereen"
 msgstr "Everyone"
 
@@ -612,6 +612,8 @@ msgstr "Commissioner of External Affairs"
 
 #: ../../../mailinglijsten.php:25 ../../../themes/default/views/header.php:179
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:1
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:1
+#: ../../../themes/default/views/profiel/profiel.phtml:235
 msgid "Mailinglijsten"
 msgstr "Mailing lists"
 
@@ -633,27 +635,27 @@ msgstr "The following fields are not correctly filled in: "
 msgid "De volgende velden zijn te lang: "
 msgstr "The following fields are to long: "
 
-#: ../../../profiel.php:183
+#: ../../../profiel.php:185
 msgid "Het huidige wachtwoord is onjuist."
 msgstr "The current password is incorrect"
 
-#: ../../../profiel.php:188
+#: ../../../profiel.php:191
 msgid "Het nieuwe wachtwoord is niet ingevuld."
 msgstr "The new password hasn't been filled in"
 
-#: ../../../profiel.php:191
+#: ../../../profiel.php:194
 msgid "Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld."
 msgstr "The new password hasn't been filled in correctly twice"
 
-#: ../../../profiel.php:229
+#: ../../../profiel.php:232
 msgid "Jij mag deze gegevens niet aanpassen."
 msgstr "Sorry, you are not allowed to edit this data."
 
-#: ../../../profiel.php:232
+#: ../../../profiel.php:235
 msgid "De zichtbaarheid van het profiel is niet ingevuld."
 msgstr "The visibility of the profile has not been selected."
 
-#: ../../../profiel.php:235
+#: ../../../profiel.php:238
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
@@ -908,6 +910,7 @@ msgstr "Edit"
 
 #: ../../../themes/default/views/boeken/boeken.php:262
 #: ../../../themes/default/views/boeken/boeken.php:263
+#: ../../../themes/default/views/common.php:8
 msgid "Niet gevonden"
 msgstr "Not found"
 
@@ -962,6 +965,17 @@ msgstr ""
 #: ../../../themes/default/views/boeken/bestellingen.phtml:1
 msgid "Bestellingen"
 msgstr "Orders"
+
+#: ../../../themes/default/views/common.php:3
+#: ../../../themes/default/views/actieveleden/auth.phtml:1
+#: ../../../themes/default/views/banners/auth.phtml:1
+#: ../../../themes/default/views/nieuwlid/auth.phtml:1
+msgid "Geen toegang"
+msgstr "No access"
+
+#: ../../../themes/default/views/common.php:9
+msgid "De pagina die je zocht bestaat niet."
+msgstr "The page you where looking for does not exist."
 
 #: ../../../themes/default/views/confirm.php:4
 #: ../../../themes/default/views/confirm.php:9
@@ -1228,8 +1242,8 @@ msgstr "Option"
 #: ../../../themes/default/views/profiel/profiel.phtml:63
 #: ../../../themes/default/views/profiel/profiel.phtml:111
 #: ../../../themes/default/views/profiel/profiel.phtml:147
-#: ../../../themes/default/views/profiel/profiel.phtml:186
-#: ../../../themes/default/views/profiel/profiel.phtml:225
+#: ../../../themes/default/views/profiel/profiel.phtml:188
+#: ../../../themes/default/views/profiel/profiel.phtml:227
 #: ../../../themes/default/views/taken/taak.phtml:33
 msgid "Opslaan"
 msgstr "Save"
@@ -1715,7 +1729,7 @@ msgstr[0] "%d documents"
 msgstr[1] "%d documents"
 
 #: ../../../themes/default/views/taken/taken.php:21
-#: ../../../themes/default/views/profiel/profiel.phtml:201
+#: ../../../themes/default/views/profiel/profiel.phtml:203
 msgid "Niemand"
 msgstr "Nobody"
 
@@ -1822,12 +1836,6 @@ msgstr "ID"
 #: ../../../themes/default/views/actieveleden/_overzicht.phtml:12
 msgid "Email"
 msgstr "Email"
-
-#: ../../../themes/default/views/actieveleden/auth.phtml:1
-#: ../../../themes/default/views/banners/auth.phtml:1
-#: ../../../themes/default/views/nieuwlid/auth.phtml:1
-msgid "Geen toegang"
-msgstr "No access"
 
 #: ../../../themes/default/views/actieveleden/auth.phtml:2
 #: ../../../themes/default/views/banners/auth.phtml:2
@@ -2709,22 +2717,22 @@ msgstr "Make list"
 msgid "Verborgen"
 msgstr "Hidden"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:54
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:55
 msgid "Je bent aangemeld voor deze mailinglijst."
 msgstr "You are subscribed to this mailinglist."
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:54
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:55
+#, php-format
+msgid "%s is aangemeld voor deze mailinglijst."
+msgstr "%s is subscribed to this mailinglist."
+
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:55
 msgid "Uitschrijven"
 msgstr "Unsubscribe"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:57
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:58
 msgid "Aanmelden"
 msgstr "Subscribe"
-
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:1
-#: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:1
-msgid "Mailinglijst"
-msgstr "Mailing list"
 
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:26
 msgid "Update lijst"
@@ -2741,6 +2749,10 @@ msgstr "Subscribe"
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:65
 msgid "Meld geselecteerde adressen af"
 msgstr "Unsubscribe selected"
+
+#: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:1
+msgid "Mailinglijst"
+msgstr "Mailing list"
 
 #: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:4
 msgid "Je staat niet (meer) op deze mailinglijst ingeschreven."
@@ -2856,39 +2868,75 @@ msgstr "avatar"
 msgid "Lid van de volgende commissies:"
 msgstr "Member of the following committees:"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:182
+#: ../../../themes/default/views/profiel/profiel.phtml:183
 msgid "Oud wachtwoord"
 msgstr "Old password"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:184
+#: ../../../themes/default/views/profiel/profiel.phtml:186
 msgid "Opnieuw"
 msgstr "Again"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:192
+#: ../../../themes/default/views/profiel/profiel.phtml:194
 msgid "Privacy instellingen"
 msgstr "Privacy settings"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:193
+#: ../../../themes/default/views/profiel/profiel.phtml:195
 msgid "Je privacy instellingen geven aan wie welke informatie mag zien."
 msgstr "Edit your privacy preferences to indicate who can see what info"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:258
+#: ../../../themes/default/views/profiel/profiel.phtml:238
+#, php-format
+msgid "Je bent aangemeld voor %d mailinglijsten."
+msgstr "You are subscribed to %d mailing lists."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:238
+msgid "Beheer je abonnementen."
+msgstr "Manage your subscriptions."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:242
+#, php-format
+msgid "Deze persoon is aangemeld voor %d mailinglijsten."
+msgstr "This person is subscribed to %d mailing lists."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:242
+msgid "Beheer zijn/haar abonnementen."
+msgstr "Manage his/her subscriptions."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:246
+msgid "Sessies"
+msgstr "Sessions"
+
+#: ../../../themes/default/views/profiel/profiel.phtml:249
 #, php-format
 msgid "Je bent ingelogd met %d browsers."
 msgstr "You are logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:258
+#: ../../../themes/default/views/profiel/profiel.phtml:249
 msgid "Beheer je sessies."
 msgstr "Manage your sessions."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:262
+#: ../../../themes/default/views/profiel/profiel.phtml:253
 #, php-format
 msgid "Deze persoon is ingelogd met %d browsers."
 msgstr "This person is logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:262
-msgid "Beheer zijn sessies."
-msgstr "Manage his sessions."
+#: ../../../themes/default/views/profiel/profiel.phtml:253
+msgid "Beheer zijn/haar sessies."
+msgstr "Manage his/her sessions."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:259
+msgid "Dreamspark (voorheen MSDNAA)"
+msgstr "Dreamspark (formerly known as MSDNAA)"
+
+#: ../../../themes/default/views/profiel/profiel.phtml:274
+msgid ""
+"Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar "
+"Microsoft."
+msgstr "I agree with sending my name and e-mail address to Microsoft."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:275
+msgid "Ga naar Dreamspark"
+msgstr "Continue to Dreamspark"
 
 #: ../../../themes/default/views/sessions/sessions.phtml:1
 #, php-format
