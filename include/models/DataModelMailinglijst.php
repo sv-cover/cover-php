@@ -1,6 +1,7 @@
 <?php
 
 require_once 'data/DataModel.php';
+require_once 'models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
 
 class DataModelMailinglijst extends DataModel
 {
@@ -101,6 +102,7 @@ class DataModelMailinglijst extends DataModel
 				m.lid_id = l.id
 			WHERE
 				m.mailinglijst_id = %d
+				AND l.type <> ' . MEMBER_STATUS_LID_AF . '
 				AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 			ORDER BY
 				naam ASC',
