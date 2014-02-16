@@ -54,7 +54,7 @@
 					<td><label for="<?=$aanmelding->get('abonnement_id')?>"><?=htmlspecialchars($aanmelding->get('naam'))?></label></td>
 					<td><?=htmlspecialchars($aanmelding->get('email'))?></td>
 					<?php if ($aanmelding->get('id')): ?>
-					<td><a href="profiel.php?lidid=<?=$aanmelding->get('id')?>"><?=__('Profiel')?></a></td>
+					<td><a href="profiel.php?lid=<?=$aanmelding->get('id')?>"><?=__('Profiel')?></a></td>
 					<?php else: ?>
 					<td></td>
 					<?php endif ?>
