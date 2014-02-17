@@ -43,15 +43,6 @@
 				return i18n_get_language();
 		}
 		
-		function _get_pagenr() {
-			if (isset($_POST['editable_pagenr']))
-				return intval(get_post('editable_pagenr'));
-			elseif (isset($_GET['editable_pagenr']))
-				return intval($_GET['editable_pagenr']);
-			else
-				return 0;
-		}
-		
 		function _get_content_field() {
 			$language = $this->_get_language();
 
@@ -67,14 +58,13 @@
 		  * currently logged in member has write access to the page
 		  * , parses the page number and splits the pages
 		  * @iter a #DataIter of the editable page
-		  * @pagenr reference; location of the page number
-		  * @pages reference; location of the pages array
+		  * @page reference; location of the page content
 		  *
 		  * @result true if all preprocessing went fine, false
 		  * otherwise. This function already gets the content for
 		  * the view showing the error when it returns false
 		  */
-		function _page_prepare($iter, &$pagenr, &$pages, &$field) {
+		function _page_prepare($iter, &$page, &$field) {
 			if (!member_in_commissie($iter->get('owner')) && !member_in_commissie(COMMISSIE_BESTUUR)) {
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
@@ -87,7 +77,6 @@
 				return false;
 			}
 
-			$pagenr = $this->_get_pagenr();
 			$language = $this->_get_language();
 			$field = $this->_get_content_field();
 			
@@ -104,38 +93,14 @@
 				return false;
 			}
 
-			$pages = editable_split_pages($iter->get($field));
-			
-			if ($pagenr < 0 || $pagenr >= count($pages)) {
-				if (isset($_GET['xmlrequest'])) {
-					ob_end_clean();
-					
-					echo __('Er zit iets niet goed met de paginanummering. Neem contact op met de WebCie');
-					exit();
-				}
-				
-				$this->get_content('something_went_wrong', null, array('message' => sprintf(__('Er zit iets niet goed met de paginanummering. Neem contact op met %s'), '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>')));
-				return false;	
-			}
+			$page = $iter->get($field);
 
 			return true;	
 		}
 		
-		/**
-		  * Joins an array of pages together with appropriate 
-		  * [page][/page] markup
-		  * @pages an array of pages
-		  *
-		  * @result a string with all the pages
-		  */
-		function _pages_join($pages) {
-			return (count($pages) > 1 ? ('[page]' . implode('[/page][page]', $pages) . '[/page]') : $pages[0]);
-		}
-		
-		function _prepare_mail($iter, $pagenr, $page) {
+		function _prepare_mail($iter, $page) {
 			$data = $iter->data;
 			$data['member_naam'] = member_full_name();
-			$data['pagenr'] = $pagenr;
 			$data['page'] = $page;
 			$data['taal'] = $this->_get_language();
 			
@@ -167,7 +132,7 @@
 		  * @iter a #DataIter of the editable page
 		  */
 		function _do_save($iter) {
-			if (!$this->_page_prepare($iter, $pagenr, $pages, $field))
+			if (!$this->_page_prepare($iter, $page, $field))
 				return;
 			
 			$page = false;
@@ -178,18 +143,16 @@
 			if (!$page)
 				$page = get_post($field);
 
-			$pages[$pagenr] = $page;
-
-			$iter->set($field, $this->_pages_join($pages));
+			$iter->set($field, $page);
 			$success = $this->model->update($iter);
 
 			if ($success !== null)
 			{
-				$data = $this->_prepare_mail($iter, $pagenr + 1, get_post($field));
+				$data = $this->_prepare_mail($iter, get_post($field));
 				
 				if ($data['email']) {
 					$body = parse_email('editable_edit.txt', $data);
-					$subject = 'Pagina ' . $data['titel'] . ' (' . ($pagenr + 1) . ') gewijzigd';
+					$subject = 'Pagina ' . $data['titel'] . ' gewijzigd';
 
 					foreach ($data['email'] as $email)
 						mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
@@ -201,7 +164,7 @@
 				ob_end_clean();
 				
 				if ($success !== null)
-					printf(__('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+					printf(__('De pagina %s is opgeslagen.'), $iter->get('titel'));
 				else
 					echo $this->model->db->get_last_error();
 
@@ -209,66 +172,11 @@
 			}
 
 			if ($success !== null)
-				$_SESSION['alert'] = sprintf(__('De pagina %s (%d) is opgeslagen.'), $iter->get('titel'), $pagenr + 1);
+				$_SESSION['alert'] = sprintf(__('De pagina %s is opgeslagen.'), $iter->get('titel'));
 			else
 				$_SESSION['alert'] = $this->model->db->get_last_error();
 
 			header('Location: ' . add_request(get_request(), 'editable_edit=' . $iter->get('id') . '&editable_language=' . $this->_get_language()));
-			exit();
-		}
-	
-		/**
-		  * Adds a new empty page to an editable page
-		  * @iter a #DataIter of the editable page
-		  */
-		function _do_add($iter) {
-			if (!$this->_page_prepare($iter, $pagenr, $pages, $field))
-				return;
-			
-			for ($i = count($pages) - 1; $i > $pagenr; $i--)
-				$pages[$i + 1] = $pages[$i];
-
-			$pages[$pagenr + 1] = "";
-
-			$iter->set($field, $this->_pages_join($pages));
-			$this->model->update($iter);
-
-			header('Location: ' . add_request(get_request('editable_add', 'editable_pagenr', 'editable_language'), 'editable_edit=' . $iter->get('id') . '&editable_pagenr=' . ($pagenr + 1) . '&editable_language=' . $this->_get_language()));
-			exit();
-		}
-
-		/**
-		  * Deletes a page from an editable page
-		  * @iter a #DataIter of the editable page
-		  */
-		function _do_del($iter) {
-			if (!$this->_page_prepare($iter, $pagenr, $pages, $field))
-				return;
-			
-			if (count($pages) == 1) {
-				$_SESSION['alert'] = __('Er is maar een pagina. Maak eerst een nieuwe pagina aan voordat je deze verwijdert.');
-				header('Location: ' . add_request(get_request('editable_del'),  'editable_edit=' . $iter->get('id')));
-				exit();
-			}
-			
-			$page = $pages[$pagenr];
-			unset($pages[$pagenr]);
-			
-			$iter->set($field, $this->_pages_join($pages));
-			$this->model->update($iter);
-			
-			$data = $this->_prepare_mail($iter, $pagenr + 1, $page);
-			
-			if ($data['email']) {
-				$body = parse_email('editable_del.txt', $data);
-				$subject = 'Pagina ' . $data['titel'] . ' (' . ($pagenr + 1) . ') verwijderd';
-				
-				foreach ($data['email'] as $email)
-					mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
-			}
-			
-			header('Location: ' . add_request(get_request('editable_del', 'editable_pagenr', 'editable_language'),  'editable_edit=' . $iter->get('id') . '&editable_pagenr=' . min($pagenr, count($pages) - 1) . '&editable_language=' . $this->_get_language()));
-			
 			exit();
 		}
 		
@@ -286,7 +194,6 @@
 		}
 		
 		function _view_editable($page) {
-			$pagenr = $this->_get_pagenr();
 			$language = $this->_get_language();
 			$field = $this->_get_content_field();
 
@@ -295,10 +202,9 @@
 				$field = 'content';
 			}
 
-			$pages = editable_parse($page->get($field), $page->get('owner'));
-			$pagenr = max(0, min(count($pages) - 1, $pagenr));
-
-			$params = array('pagenr' => $pagenr, 'pages' => $pages, 'language' => $language, 'field' => $field);
+			$content = editable_parse($page->get($field), $page->get('owner'));
+			
+			$params = array('page' => $content, 'language' => $language, 'field' => $field);
 			
 			$this->get_content('editable', $page, $params);
 		}
@@ -326,10 +232,6 @@
 				$this->get_content('editable', $page);
 			} elseif (isset($_POST['submeditable']) && $_POST['submeditable'] == $page->get('id'))
 				$this->_do_save($page);
-			elseif (isset($_GET['editable_add']) && $_GET['editable_add'] == $page->get('id'))
-				$this->_do_add($page);
-			elseif (isset($_GET['editable_del']) && $_GET['editable_del'] == $page->get('id'))
-				$this->_do_del($page);
 			elseif (isset($_GET['editable_edit']) && $_GET['editable_edit'] == $page->get('id'))
 				$this->_view_edit($page);
 			else

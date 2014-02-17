@@ -7,26 +7,6 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	/** @group Editable
-	  * Get an array of pages of which an editable page consists
-	  * @content the editable page content
-	  *
-	  * @result an array of pages
-	  */
-	function editable_split_pages($content) {
-		$amount = preg_match_all('/\[page\](.*?)\[\/page\]/is', $content, $matches);
-
-		if (!$amount)
-			return Array($content);
-
-		$splitpages = Array();
-
-		foreach ($matches[1] as $page)
-			$splitpages[] = $page;
-
-		return $splitpages;
-	}
-
 	function _editable_parse_commissie_leden(&$page, $owner) {
 		if (strstr($page, '[commissie_leden]')) {
 			$model = get_model('DataModelCommissie');
@@ -150,27 +130,20 @@
 	  *
 	  * @result an array of pages with all markup replaced by html
 	  */
-	function editable_parse($content, $owner) {
-		$splitpages = editable_split_pages($content);
+	function editable_parse($page, $owner) {
+		_editable_parse_commissie_summary($page, $owner);
 
-		foreach ($splitpages as $page) {
-			_editable_parse_commissie_summary($page, $owner);
+		$page = markup_parse($page);
 
-			$page = markup_parse($page);
-
-			_editable_parse_commissie_poll($page, $owner);
-			_editable_parse_commissie_leden($page, $owner);
-			_editable_parse_commissie_email($page, $owner);
-			_editable_parse_commissie_foto($page, $owner);
-			_editable_parse_commissie_agenda($page, $owner);
-			
-			_editable_parse_commissie_prive($page, $owner);
-			
-			$page = markup_clean($page);
-			$pages[] = $page;
-		}
-
-    		return $pages;
+		_editable_parse_commissie_poll($page, $owner);
+		_editable_parse_commissie_leden($page, $owner);
+		_editable_parse_commissie_email($page, $owner);
+		_editable_parse_commissie_foto($page, $owner);
+		_editable_parse_commissie_agenda($page, $owner);
+		
+		_editable_parse_commissie_prive($page, $owner);
+		
+		return markup_clean($page);
 	}
 	
 	/** @group Editable

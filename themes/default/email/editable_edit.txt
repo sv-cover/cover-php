@@ -1,6 +1,6 @@
 $member_naam heeft namens $commissie_naam de volgende pagina gewijzigd:
 
-Titel: $titel ($pagenr)
+Titel: $titel
 Taal:  $taal
 
 $page
