@@ -22,7 +22,11 @@ class ControllerMailinglijsten extends Controller
 
 	public function get_content($view, $iter = null, $params = null)
 	{
-		$this->run_header(array('title' => _('Mailinglijsten')));
+		$this->run_header(array(
+			'title' => isset($params['lijst'])
+				? ucfirst($params['lijst']->get('naam')) . ' ' . __('Mailinglijst')
+				: __('Mailinglijsten')));
+
 		run_view($view, $this->model, $iter, $params);
 		$this->run_footer();
 	}
