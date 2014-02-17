@@ -53,7 +53,7 @@
 	  * of the currently logged in one
 	  * @result the currently logged in members full name
 	  */
-	function member_full_name($iter = null, $override_privacy = false)
+	function member_full_name($iter = null, $override_privacy = false, $be_kind = true)
 	{
 		$model = get_model('DataModelMember');
 
@@ -62,12 +62,12 @@
 			if (is_numeric($iter))
 				$iter = $model->get_iter($iter);
 
-			$is_self = ($data = logged_in()) && $data['lidid'] == $iter->get('lidid');
+			$is_self = logged_in('id') == $iter->get('id');
 		}
 		// No argument provided, get the full name of the currently logged in member.
 		else {
 			$iter = ($data = logged_in())
-				? new DataIter($model, $data['lidid'], $data)
+				? new DataIter($model, $data['id'], $data)
 				: null;
 
 			$is_self = true;
@@ -76,6 +76,9 @@
 		// When the user is not found (or not logged in)
 		if (!$iter)
 			return __('Geen naam');
+
+		if ($be_kind && $is_self)
+			return __('Jij!');
 
 		// Or when the privacy settings prevent their name from being displayed
 		if (!$override_privacy
