@@ -154,11 +154,8 @@
 	  * @result a string containing the summary or an empty string if
 	  * no summary could be found
 	  */
-	function editable_get_summary($content, $owner) {
-		if (preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches)) {
-			$pages = editable_parse($matches[1], $owner);
-			return $pages[0];
-		} else {
-			return '';
-		}
+	function editable_get_summary($content, $owner)
+	{
+		return preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches)
+			? editable_parse($matches[1], $owner) : '';
 	}
