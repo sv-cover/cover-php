@@ -33,6 +33,23 @@
 			<label for="lid_id"><?=__('Lidnummer(s)')?>:</label>
 			<input type="text" id="lid_id" name="subscribe">
 			<button type="submit" class="button"><?=__('Meld aan')?></button>
+			<a href="#mailinglist-add-gast"><?=__('Niet-lid aanmelden voor mailinglijst')?></a>
+		</form>
+	</div>
+
+	<div id="mailinglist-add-gast" class="section hide-by-default">
+		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+			<div>
+				<label for="gast-naam"><?=__('Naam')?>:</label>
+				<input type="text" id="gast-naam" name="naam">
+			</div>
+			<div>
+				<label for="gast-email"><?=__('E-Mail adres')?>:</label>
+				<input type="email" id="gast-email" name="email">
+			</div>
+			<div class="controls">
+				<button type="submit" class="button"><?=__('Meld aan')?></button>
+			</div>
 		</form>
 	</div>
 

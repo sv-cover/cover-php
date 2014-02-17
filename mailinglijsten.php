@@ -88,6 +88,14 @@ class ControllerMailinglijsten extends Controller
 			return;
 		}
 
+		if (!empty($_POST['naam']) && !empty($_POST['email']))
+		{
+			$this->model->aanmelden_gast($_POST['naam'], $_POST['email'], $lijst->get('id'));
+
+			header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $lijst->get('id')));
+			return;
+		}
+
 		// If data to update the metadata of the list is passed on, well, make use of it.
 		if (isset($_POST['naam'], $_POST['omschrijving']))
 		{

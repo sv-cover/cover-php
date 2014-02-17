@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-17 09:08+0100\n"
+"POT-Creation-Date: 2014-02-17 16:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -447,7 +447,7 @@ msgstr "Member"
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/agenda/edit.phtml:39
 #: ../../../themes/default/views/agenda/moderate.phtml:18
-#: ../../../themes/default/views/show/edit.phtml:24
+#: ../../../themes/default/views/show/edit.phtml:21
 msgid "Commissie"
 msgstr "Committee"
 
@@ -589,7 +589,12 @@ msgstr "Commissioner of Internal Affairs"
 msgid "Commissaris Extern"
 msgstr "Commissioner of External Affairs"
 
-#: ../../../mailinglijsten.php:25 ../../../themes/default/views/header.php:179
+#: ../../../mailinglijsten.php:27
+#: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:1
+msgid "Mailinglijst"
+msgstr "Mailing list"
+
+#: ../../../mailinglijsten.php:28 ../../../themes/default/views/header.php:179
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:1
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:1
 #: ../../../themes/default/views/profiel/profiel.phtml:235
@@ -601,7 +606,7 @@ msgid "Nieuw lid"
 msgstr "New member"
 
 #: ../../../profiel.php:33 ../../../themes/default/views/header.php:301
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:57
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:74
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
@@ -746,7 +751,7 @@ msgstr "Course"
 #: ../../../themes/default/views/boeken/boeken.php:210
 #: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:12
 #: ../../../themes/default/views/links/_beheer.phtml:46
-#: ../../../themes/default/views/show/edit.phtml:22
+#: ../../../themes/default/views/show/edit.phtml:19
 #: ../../../themes/default/views/studieondersteuning/moderate.phtml:21
 msgid "Titel"
 msgstr "Title"
@@ -1300,7 +1305,8 @@ msgstr "New forum"
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:20
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:45
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:43
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:62
 #: ../../../themes/default/views/profiel/profiel.phtml:37
 #: ../../../themes/default/views/profiel/profiel.phtml:45
 msgid "Naam"
@@ -1483,7 +1489,7 @@ msgid "Beheer"
 msgstr "Admin"
 
 #: ../../../themes/default/views/header.php:107
-#: ../../../themes/default/views/show/edit.phtml:29
+#: ../../../themes/default/views/show/edit.phtml:25
 msgid "Pagina maken"
 msgstr "Make a page"
 
@@ -1821,7 +1827,7 @@ msgstr "New phd position"
 #: ../../../themes/default/views/lidworden/lidworden.phtml:30
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:17
 #: ../../../themes/default/views/profiel/profiel.phtml:6
-#: ../../../themes/default/views/show/edit.phtml:5
+#: ../../../themes/default/views/show/edit.phtml:12
 msgid "Niet alle velden zijn goed ingevuld"
 msgstr "You haven't filled in all the fields correctly"
 
@@ -2536,7 +2542,8 @@ msgid "Telefoonnummer"
 msgstr "Phone number"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:46
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:46
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:47
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:63
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
 #: ../../../themes/default/views/profiel/profiel.phtml:56
 msgid "E-Mail adres"
@@ -2705,16 +2712,17 @@ msgid "Lidnummer(s)"
 msgstr "Member id(s)"
 
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:35
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:51
 msgid "Meld aan"
 msgstr "Subscribe"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:65
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:36
+msgid "Niet-lid aanmelden voor mailinglijst"
+msgstr "Subscribe a non-member tot the mailing list"
+
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:82
 msgid "Meld geselecteerde adressen af"
 msgstr "Unsubscribe selected"
-
-#: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:1
-msgid "Mailinglijst"
-msgstr "Mailing list"
 
 #: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:4
 msgid "Je staat niet (meer) op deze mailinglijst ingeschreven."
@@ -2920,6 +2928,10 @@ msgstr "Last active"
 #: ../../../themes/default/views/sessions/sessions.phtml:26
 msgid "Sluit geselecteerde sessies"
 msgstr "End selected sessions"
+
+#: ../../../themes/default/views/show/edit.phtml:9
+msgid "Nieuwe pagina toevoegen"
+msgstr "Create a new page"
 
 #: ../../../themes/default/views/studieondersteuning/_nieuwe_documenten.phtml:2
 msgid "Het is op dit moment niet mogelijk om nieuwe documenten toe te voegen."
@@ -3133,6 +3145,10 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#, fuzzy
+#~ msgid "E-mail Adres"
+#~ msgstr "E-Mail address"
 
 #~ msgid ""
 #~ "Er zit iets niet goed met de paginanummering. Neem contact op met de "
