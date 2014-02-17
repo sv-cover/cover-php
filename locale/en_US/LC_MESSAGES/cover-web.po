@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-16 18:09+0100\n"
+"POT-Creation-Date: 2014-02-17 09:08+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -227,75 +227,48 @@ msgstr "The directory with photos could not be read"
 msgid "Gastenboek"
 msgstr "Guestbook"
 
-#: ../../../include/controllers/ControllerEditable.php:82
-#: ../../../themes/default/views/editable.php:70
+#: ../../../include/controllers/ControllerEditable.php:72
+#: ../../../themes/default/views/editable.php:54
 msgid "Deze pagina kan niet door jou worden bewerkt."
 msgstr "This page can not be edited by you."
 
-#: ../../../include/controllers/ControllerEditable.php:99
+#: ../../../include/controllers/ControllerEditable.php:88
 msgid ""
 "Er zit iets niet goed met de taalinstelling. Neem contact op met de WebCie"
 msgstr ""
 "Something is wrong with the language setting. Please contact the WebCie."
 
-#: ../../../include/controllers/ControllerEditable.php:103
+#: ../../../include/controllers/ControllerEditable.php:92
 #, php-format
 msgid "Er zit iets niet goed met de taalinstelling. Neem contact op met %s"
 msgstr "Something is wrong with the language settings. Contact the %s"
 
-#: ../../../include/controllers/ControllerEditable.php:103
+#: ../../../include/controllers/ControllerEditable.php:92
 msgid "de Webcie"
 msgstr "the WebCie"
 
-#: ../../../include/controllers/ControllerEditable.php:113
-msgid ""
-"Er zit iets niet goed met de paginanummering. Neem contact op met de WebCie"
-msgstr "The page numbers is incorrect. Please contact the WebCie"
-
-#: ../../../include/controllers/ControllerEditable.php:117
+#: ../../../include/controllers/ControllerEditable.php:167
+#: ../../../include/controllers/ControllerEditable.php:175
 #, php-format
-msgid "Er zit iets niet goed met de paginanummering. Neem contact op met %s"
-msgstr "The page numbering is incorrect. Contact the %s"
+msgid "De pagina %s is opgeslagen."
+msgstr "The page %s has been saved."
 
-#: ../../../include/controllers/ControllerEditable.php:117
-#: ../../../include/view.php:89 ../../../include/view.php:97
-#: ../../../themes/default/views/common.php:4
-#: ../../../themes/default/views/confirm.php:5
-#: ../../../themes/default/views/agenda/not_found.phtml:3
-#: ../../../themes/default/views/profiel/not_found.phtml:2
-#: ../../../themes/default/views/studieondersteuning/vak_not_found.phtml:2
-msgid "de WebCie"
-msgstr "the WebCie"
-
-#: ../../../include/controllers/ControllerEditable.php:204
-#: ../../../include/controllers/ControllerEditable.php:212
-#, php-format
-msgid "De pagina %s (%d) is opgeslagen."
-msgstr "The page %s (%d) has been saved."
-
-#: ../../../include/controllers/ControllerEditable.php:249
-msgid ""
-"Er is maar een pagina. Maak eerst een nieuwe pagina aan voordat je deze "
-"verwijdert."
-msgstr ""
-"There is only one page. First make a new page before you remove this one."
-
-#: ../../../include/controllers/ControllerEditable.php:322
+#: ../../../include/controllers/ControllerEditable.php:228
 msgid "Deze pagina bestaat niet..."
 msgstr "This page does not exist..."
 
-#: ../../../include/editable.php:37
+#: ../../../include/editable.php:17
 #: ../../../themes/default/views/forum.php:1107
 #: ../../../themes/default/views/header.php:121
 #: ../../../themes/default/views/profiel/profiel.phtml:204
 msgid "Leden"
 msgstr "Members"
 
-#: ../../../include/editable.php:115
+#: ../../../include/editable.php:95
 msgid "Commissieagenda"
 msgstr "Committee agenda"
 
-#: ../../../include/editable.php:123
+#: ../../../include/editable.php:103
 #: ../../../themes/default/views/agenda/agendapunt.phtml:11
 #: ../../../themes/default/views/agenda/edit.phtml:58
 #: ../../../themes/default/views/agenda/index.phtml:56
@@ -432,7 +405,6 @@ msgid "Onbekend"
 msgstr "Unknown"
 
 #: ../../../include/models/DataModelCommissie.php:135
-#: ../../../themes/default/views/almanak/almanak.php:13
 msgid "onbekend"
 msgstr "unknown"
 
@@ -490,7 +462,6 @@ msgid "Ga naar pagina"
 msgstr "Go to page"
 
 #: ../../../include/pagenavigation.php:6
-#: ../../../themes/default/views/editable.php:56
 msgid "vorige"
 msgstr "previous"
 
@@ -499,7 +470,6 @@ msgid "Vorige pagina"
 msgstr "Previous page"
 
 #: ../../../include/pagenavigation.php:22
-#: ../../../themes/default/views/editable.php:65
 msgid "volgende"
 msgstr "next"
 
@@ -524,6 +494,15 @@ msgstr ""
 #: ../../../themes/default/views/common.php:4
 msgid "aanvragen"
 msgstr "request"
+
+#: ../../../include/view.php:89 ../../../include/view.php:97
+#: ../../../themes/default/views/common.php:4
+#: ../../../themes/default/views/confirm.php:5
+#: ../../../themes/default/views/agenda/not_found.phtml:3
+#: ../../../themes/default/views/profiel/not_found.phtml:2
+#: ../../../themes/default/views/studieondersteuning/vak_not_found.phtml:2
+msgid "de WebCie"
+msgstr "the WebCie"
 
 #: ../../../include/view.php:97
 #, php-format
@@ -698,29 +677,33 @@ msgstr "%s have been notified that their documents have been denied."
 msgid "Taken"
 msgstr "Tasks"
 
-#: ../../../themes/default/views/almanak/almanak.php:32
+#: ../../../themes/default/views/almanak/almanak.php:12
+msgid "Jij!"
+msgstr "You!"
+
+#: ../../../themes/default/views/almanak/almanak.php:27
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../themes/default/views/almanak/almanak.php:37
+#: ../../../themes/default/views/almanak/almanak.php:32
 #: ../../../themes/default/views/almanak/almanak.phtml:46
 #: ../../../themes/default/views/profiel/profiel.phtml:136
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../themes/default/views/almanak/almanak.php:42
+#: ../../../themes/default/views/almanak/almanak.php:37
 #: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:140
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../themes/default/views/almanak/almanak.php:47
+#: ../../../themes/default/views/almanak/almanak.php:42
 #: ../../../themes/default/views/almanak/almanak.phtml:48
 #: ../../../themes/default/views/profiel/profiel.phtml:144
 msgid "Donateur"
 msgstr "Donator"
 
-#: ../../../themes/default/views/almanak/almanak.php:60
+#: ../../../themes/default/views/almanak/almanak.php:55
 #, php-format
 msgid "foto van %s"
 msgstr "Photo of %s"
@@ -1024,15 +1007,7 @@ msgstr "Edit page"
 msgid "Deze pagina bestaat niet"
 msgstr "This page does not exist"
 
-#: ../../../themes/default/views/editable.php:56
-msgid "Ga naar de vorige pagina"
-msgstr "Go to the previous page"
-
-#: ../../../themes/default/views/editable.php:65
-msgid "Ga naar de volgende pagina"
-msgstr "Go to next page"
-
-#: ../../../themes/default/views/editable.php:76
+#: ../../../themes/default/views/editable.php:60
 #: ../../../themes/default/views/afstudeerplaatsen/afstudeerplaatsen.phtml:16
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:68
 #: ../../../themes/default/views/fotoboek/_books.phtml:54
@@ -1041,85 +1016,63 @@ msgstr "Go to next page"
 msgid "Bewerken"
 msgstr "Edit"
 
-#: ../../../themes/default/views/editable.php:79
+#: ../../../themes/default/views/editable.php:63
 msgid "sluiten"
 msgstr "close"
 
-#: ../../../themes/default/views/editable.php:79
+#: ../../../themes/default/views/editable.php:63
 msgid "Sluiten"
 msgstr "Close"
 
-#: ../../../themes/default/views/editable.php:80
-#: ../../../themes/default/views/forum.php:48
-#: ../../../themes/default/views/forum.php:131
-#: ../../../themes/default/views/forum.php:451
-#: ../../../themes/default/views/forum.php:454
-#: ../../../themes/default/views/forum.php:782
-#: ../../../themes/default/views/agenda/index.phtml:21
-msgid "nieuw"
-msgstr "new"
-
-#: ../../../themes/default/views/editable.php:80
-msgid "Voeg pagina toe na deze pagina"
-msgstr "Add page after this page"
-
-#: ../../../themes/default/views/editable.php:81
+#: ../../../themes/default/views/editable.php:64
 msgid "opslaan"
 msgstr "save"
 
-#: ../../../themes/default/views/editable.php:81
+#: ../../../themes/default/views/editable.php:64
 msgid "Sla pagina op"
 msgstr "Save page"
 
-#: ../../../themes/default/views/editable.php:82
+#: ../../../themes/default/views/editable.php:65
 msgid "herstellen"
 msgstr "revert"
 
-#: ../../../themes/default/views/editable.php:82
+#: ../../../themes/default/views/editable.php:65
 msgid "Herstel pagina"
 msgstr "Revert changes"
 
-#: ../../../themes/default/views/editable.php:83
-#: ../../../themes/default/views/editable.php:204
+#: ../../../themes/default/views/editable.php:66
+#: ../../../themes/default/views/editable.php:164
 #: ../../../themes/default/views/forum.php:160
 #: ../../../themes/default/views/forum.php:257
 #: ../../../themes/default/views/forum.php:1209
 msgid "voorbeeld"
 msgstr "preview"
 
-#: ../../../themes/default/views/editable.php:83
-#: ../../../themes/default/views/editable.php:203
+#: ../../../themes/default/views/editable.php:66
+#: ../../../themes/default/views/editable.php:163
 #: ../../../themes/default/views/forum.php:160
 #: ../../../themes/default/views/forum.php:256
 #: ../../../themes/default/views/forum.php:1209
 msgid "Voorbeeld tonen"
 msgstr "Show preview"
 
-#: ../../../themes/default/views/editable.php:84
-msgid "verwijderen"
-msgstr "delete"
-
-#: ../../../themes/default/views/editable.php:84
-msgid "Verwijder pagina"
-msgstr "Delete page"
-
-#: ../../../themes/default/views/editable.php:86
+#: ../../../themes/default/views/editable.php:68
 #: ../../../themes/default/views/homepage/homepage.phtml:9
 #: ../../../themes/default/views/profiel/profiel.phtml:105
 msgid "Taal"
 msgstr "Language"
 
-#: ../../../themes/default/views/editable.php:153
+#: ../../../themes/default/views/editable.php:113
 #: ../../../themes/default/views/forum.php:206
 msgid "Bezig met laden"
 msgstr "Busy loading"
 
-#: ../../../themes/default/views/editable.php:194
+#: ../../../themes/default/views/editable.php:154
 #: ../../../themes/default/views/forum.php:247
 msgid "Voorbeeld sluiten"
 msgstr "Close preview"
 
-#: ../../../themes/default/views/editable.php:195
+#: ../../../themes/default/views/editable.php:155
 #: ../../../themes/default/views/forum.php:248
 msgid "voorbeeld sluiten"
 msgstr "close preview"
@@ -1137,6 +1090,15 @@ msgstr "You don't have permission to edit this message."
 #: ../../../themes/default/views/forum.php:23
 msgid "Dat bericht bestaat niet"
 msgstr "That message doesn't exist"
+
+#: ../../../themes/default/views/forum.php:48
+#: ../../../themes/default/views/forum.php:131
+#: ../../../themes/default/views/forum.php:451
+#: ../../../themes/default/views/forum.php:454
+#: ../../../themes/default/views/forum.php:782
+#: ../../../themes/default/views/agenda/index.phtml:21
+msgid "nieuw"
+msgstr "new"
 
 #: ../../../themes/default/views/forum.php:48
 #: ../../../themes/default/views/forum.php:131
@@ -3171,6 +3133,35 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid ""
+#~ "Er zit iets niet goed met de paginanummering. Neem contact op met de "
+#~ "WebCie"
+#~ msgstr "The page numbers is incorrect. Please contact the WebCie"
+
+#~ msgid "Er zit iets niet goed met de paginanummering. Neem contact op met %s"
+#~ msgstr "The page numbering is incorrect. Contact the %s"
+
+#~ msgid ""
+#~ "Er is maar een pagina. Maak eerst een nieuwe pagina aan voordat je deze "
+#~ "verwijdert."
+#~ msgstr ""
+#~ "There is only one page. First make a new page before you remove this one."
+
+#~ msgid "Ga naar de vorige pagina"
+#~ msgstr "Go to the previous page"
+
+#~ msgid "Ga naar de volgende pagina"
+#~ msgstr "Go to next page"
+
+#~ msgid "Voeg pagina toe na deze pagina"
+#~ msgstr "Add page after this page"
+
+#~ msgid "verwijderen"
+#~ msgstr "delete"
+
+#~ msgid "Verwijder pagina"
+#~ msgstr "Delete page"
 
 #~ msgid "Annuleer"
 #~ msgstr "Cancel"
