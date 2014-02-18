@@ -42,7 +42,7 @@
 					<?
 						$fields = array();			
 					} else { 
-						$fields = array(array('label' => __('Naam'), 'name' => 'naam', 'data' => array('naam' => member_full_name($iter)), 'read_only' => true));
+						$fields = array(array('label' => __('Naam'), 'name' => 'naam', 'data' => array('naam' => member_full_name($iter, false, false)), 'read_only' => true));
 					} 
 
 					$fields = array_merge($fields, array(

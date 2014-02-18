@@ -100,7 +100,7 @@
 		
 		function _prepare_mail($iter, $page) {
 			$data = $iter->data;
-			$data['member_naam'] = member_full_name();
+			$data['member_naam'] = member_full_name(null, true, false);
 			$data['page'] = $page;
 			$data['taal'] = $this->_get_language();
 			
