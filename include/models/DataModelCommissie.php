@@ -18,7 +18,7 @@
 		  */
 		function get($include_hidden = true) {
 			$rows = $this->db->query('SELECT * FROM commissies ' .
-					(!$include_hidden ? ' WHERE hidden <> 1') . 
+					(!$include_hidden ? ' WHERE hidden <> 1' : '') . 
 					' ORDER BY naam');
 			
 			return $this->_rows_to_iters($rows);
