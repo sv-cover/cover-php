@@ -316,7 +316,8 @@ CREATE TABLE commissies (
     login character varying(50),
     website character varying(100),
     nocaps text,
-    page integer
+    page integer,
+    hidden integer DEFAULT 0
 );
 
 
@@ -1323,31 +1324,31 @@ INSERT INTO boeken_categorie VALUES (6, 'Keuzevakken Bachelor');
 -- Data for Name: commissies; Type: TABLE DATA; Schema: public; Owner: webcie
 --
 
-INSERT INTO commissies VALUES (16, 'SympoCie', 'sympocie', NULL, NULL, 19);
-INSERT INTO commissies VALUES (15, 'Foetsie', 'foetsie', NULL, NULL, 15);
-INSERT INTO commissies VALUES (13, 'McCie', 'mccie', '/~mccie/', NULL, 13);
-INSERT INTO commissies VALUES (11, 'StudCie', 'studcie', NULL, 'studcie', 11);
-INSERT INTO commissies VALUES (8, 'IntroCie', 'introcie', NULL, 'introcie', 8);
-INSERT INTO commissies VALUES (6, 'ExCie', 'excie', NULL, 'excie', 6);
-INSERT INTO commissies VALUES (3, 'BoekCie', 'boekcie', NULL, 'boekcie', 3);
-INSERT INTO commissies VALUES (2, 'Actie', 'actie', NULL, 'actie', 2);
-INSERT INTO commissies VALUES (24, 'Promotie', 'promotie', '', 'promotie', 48);
-INSERT INTO commissies VALUES (25, 'MeisCie', 'meiscie', '', 'meiscie', 49);
-INSERT INTO commissies VALUES (1, 'WebCie', 'webcie', NULL, 'webcie', 1);
-INSERT INTO commissies VALUES (20, 'Conditie', 'conditie', 'http://conditie.svcover.nl', 'conditie', 44);
-INSERT INTO commissies VALUES (0, 'Bestuur', 'xxii', NULL, 'bestuur', 0);
-INSERT INTO commissies VALUES (27, 'BHVcie', 'bhvcie', 'http://bhvcie.svcover.nl', 'bhvcie', 81);
-INSERT INTO commissies VALUES (18, 'SLACKcie', 'slackcie', NULL, 'slackcie', 42);
-INSERT INTO commissies VALUES (7, 'FotoCie', 'fotocie', NULL, 'fotocie', 7);
-INSERT INTO commissies VALUES (17, 'EerstejaarsCie', 'eerstejaarscie', 'http://www.ai.rug.nl/~eerstejaarscie/', 'eerstejaarscie', 39);
-INSERT INTO commissies VALUES (21, 'LanCie', 'lancie', 'lancie.svcover.nl', 'lancie', 45);
-INSERT INTO commissies VALUES (22, 'PCie', 'pcie', 'pcie.svcover.nl', 'pcie', 46);
-INSERT INTO commissies VALUES (12, 'KasCie', 'kascie', NULL, NULL, 12);
-INSERT INTO commissies VALUES (14, 'Raad van Advies', 'rva', NULL, NULL, 14);
-INSERT INTO commissies VALUES (5, 'Brainstorm', 'brainstorm', NULL, 'brainstorm', 5);
-INSERT INTO commissies VALUES (26, 'PRcie', 'prcie', 'prcie.svcover.nl', 'prcie', 50);
-INSERT INTO commissies VALUES (4, 'AlmanakCie', 'almanakcie', NULL, 'almanakcie', 4);
-INSERT INTO commissies VALUES (9, 'LustrumCie', 'lustrumcie', NULL, 'lustrumcie', 9);
+INSERT INTO commissies VALUES (16, 'SympoCie', 'sympocie', NULL, NULL, 19, 0);
+INSERT INTO commissies VALUES (15, 'Foetsie', 'foetsie', NULL, NULL, 15, 0);
+INSERT INTO commissies VALUES (13, 'McCie', 'mccie', '/~mccie/', NULL, 13, 0);
+INSERT INTO commissies VALUES (11, 'StudCie', 'studcie', NULL, 'studcie', 11, 0);
+INSERT INTO commissies VALUES (8, 'IntroCie', 'introcie', NULL, 'introcie', 8, 0);
+INSERT INTO commissies VALUES (6, 'ExCie', 'excie', NULL, 'excie', 6, 0);
+INSERT INTO commissies VALUES (3, 'BoekCie', 'boekcie', NULL, 'boekcie', 3, 0);
+INSERT INTO commissies VALUES (2, 'Actie', 'actie', NULL, 'actie', 2, 0);
+INSERT INTO commissies VALUES (24, 'Promotie', 'promotie', '', 'promotie', 48, 0);
+INSERT INTO commissies VALUES (25, 'MeisCie', 'meiscie', '', 'meiscie', 49, 0);
+INSERT INTO commissies VALUES (1, 'WebCie', 'webcie', NULL, 'webcie', 1, 0);
+INSERT INTO commissies VALUES (20, 'Conditie', 'conditie', 'http://conditie.svcover.nl', 'conditie', 44, 0);
+INSERT INTO commissies VALUES (0, 'Bestuur', 'bestuur', NULL, 'bestuur', 0, 1);
+INSERT INTO commissies VALUES (27, 'BHVcie', 'bhvcie', 'http://bhvcie.svcover.nl', 'bhvcie', 81, 0);
+INSERT INTO commissies VALUES (18, 'SLACKcie', 'slackcie', NULL, 'slackcie', 42, 0);
+INSERT INTO commissies VALUES (7, 'FotoCie', 'fotocie', NULL, 'fotocie', 7, 0);
+INSERT INTO commissies VALUES (17, 'EerstejaarsCie', 'eerstejaarscie', 'http://www.ai.rug.nl/~eerstejaarscie/', 'eerstejaarscie', 39, 0);
+INSERT INTO commissies VALUES (21, 'LanCie', 'lancie', 'lancie.svcover.nl', 'lancie', 45, 0);
+INSERT INTO commissies VALUES (22, 'PCie', 'pcie', 'pcie.svcover.nl', 'pcie', 46, 0);
+INSERT INTO commissies VALUES (12, 'KasCie', 'kascie', NULL, NULL, 12, 0);
+INSERT INTO commissies VALUES (14, 'Raad van Advies', 'rva', NULL, NULL, 14, 0);
+INSERT INTO commissies VALUES (5, 'Brainstorm', 'brainstorm', NULL, 'brainstorm', 5, 0);
+INSERT INTO commissies VALUES (26, 'PRcie', 'prcie', 'prcie.svcover.nl', 'prcie', 50, 0);
+INSERT INTO commissies VALUES (4, 'AlmanakCie', 'almanakcie', NULL, 'almanakcie', 4, 0);
+INSERT INTO commissies VALUES (9, 'LustrumCie', 'lustrumcie', NULL, 'lustrumcie', 9, 0);
 
 
 --

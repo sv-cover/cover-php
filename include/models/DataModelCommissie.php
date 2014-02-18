@@ -16,9 +16,9 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get($include_bestuur = true) {
+		function get($include_hidden = true) {
 			$rows = $this->db->query('SELECT * FROM commissies ' .
-					(!$include_bestuur ? ' WHERE id != ' . COMMISSIE_BESTUUR : '') . 
+					(!$include_hidden ? ' WHERE hidden <> 1') . 
 					' ORDER BY naam');
 			
 			return $this->_rows_to_iters($rows);
