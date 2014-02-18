@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-17 16:30+0100\n"
+"POT-Creation-Date: 2014-02-19 00:33+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -396,7 +396,11 @@ msgstr "and"
 msgid "Geen naam"
 msgstr "No name"
 
-#: ../../../include/member.php:85
+#: ../../../include/member.php:81
+msgid "Jij!"
+msgstr "You!"
+
+#: ../../../include/member.php:88
 #: ../../../include/models/DataModelForum.php:649
 #: ../../../include/models/DataModelForum.php:672
 #: ../../../themes/default/views/forum.php:503
@@ -412,6 +416,7 @@ msgstr "unknown"
 #: ../../../include/models/DataModelForum.php:661
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/forum.php:870
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:24
 #: ../../../themes/default/views/profiel/profiel.phtml:205
 msgid "Iedereen"
 msgstr "Everyone"
@@ -447,6 +452,8 @@ msgstr "Member"
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/agenda/edit.phtml:39
 #: ../../../themes/default/views/agenda/moderate.phtml:18
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:19
 #: ../../../themes/default/views/show/edit.phtml:21
 msgid "Commissie"
 msgstr "Committee"
@@ -606,7 +613,7 @@ msgid "Nieuw lid"
 msgstr "New member"
 
 #: ../../../profiel.php:33 ../../../themes/default/views/header.php:301
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:74
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:84
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
@@ -682,33 +689,29 @@ msgstr "%s have been notified that their documents have been denied."
 msgid "Taken"
 msgstr "Tasks"
 
-#: ../../../themes/default/views/almanak/almanak.php:12
-msgid "Jij!"
-msgstr "You!"
-
-#: ../../../themes/default/views/almanak/almanak.php:27
+#: ../../../themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../themes/default/views/almanak/almanak.php:32
+#: ../../../themes/default/views/almanak/almanak.php:29
 #: ../../../themes/default/views/almanak/almanak.phtml:46
 #: ../../../themes/default/views/profiel/profiel.phtml:136
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../themes/default/views/almanak/almanak.php:37
+#: ../../../themes/default/views/almanak/almanak.php:34
 #: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:140
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../themes/default/views/almanak/almanak.php:42
+#: ../../../themes/default/views/almanak/almanak.php:39
 #: ../../../themes/default/views/almanak/almanak.phtml:48
 #: ../../../themes/default/views/profiel/profiel.phtml:144
 msgid "Donateur"
 msgstr "Donator"
 
-#: ../../../themes/default/views/almanak/almanak.php:55
+#: ../../../themes/default/views/almanak/almanak.php:52
 #, php-format
 msgid "foto van %s"
 msgstr "Photo of %s"
@@ -1189,7 +1192,8 @@ msgid "Onderwerp/vraag"
 msgstr "Subject/question"
 
 #: ../../../themes/default/views/forum.php:372
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:18
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:30
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:28
 msgid "Omschrijving"
 msgstr "Description"
 
@@ -1304,9 +1308,10 @@ msgstr "New forum"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:20
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:43
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:62
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:24
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:53
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:72
 #: ../../../themes/default/views/profiel/profiel.phtml:37
 #: ../../../themes/default/views/profiel/profiel.phtml:45
 msgid "Naam"
@@ -1649,6 +1654,18 @@ msgstr "Membership application form"
 #: ../../../themes/default/views/lidworden/lidworden.phtml:71
 msgid "Opmerkingen"
 msgstr "Notes"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:25
+msgid "Alleen mensen op de mailinglijst"
+msgstr "Only people subscribed to this mailing list"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:26
+msgid "Alleen *@svcover.nl adressen"
+msgstr "Only *@svcover.nl addresses"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:27
+msgid "Alleen de commissie van de lijst"
+msgstr "Only the committee this list belongs to"
 
 #: ../../../themes/default/views/profiel/profiel.php:60
 msgid "opzoeken"
@@ -2542,8 +2559,8 @@ msgid "Telefoonnummer"
 msgstr "Phone number"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:46
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:47
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:63
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:57
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:73
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
 #: ../../../themes/default/views/profiel/profiel.phtml:56
 msgid "E-Mail adres"
@@ -2666,61 +2683,70 @@ msgid "Nieuwe mailinglijst"
 msgstr "New mailing list"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:12
-msgid "Lijstadres:"
-msgstr "List address:"
+msgid "Lijstadres"
+msgstr "List email address:"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:16
-msgid "Naam:"
-msgstr "Name:"
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
+msgid "Toegang"
+msgstr "Access"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:25
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:23
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:18
+msgid "Wie mag e-mails sturen naar deze lijst?"
+msgstr "Who can send emails to this list?"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:23
+msgid "Welke commissie mag bepalen wie er op de lijst staat?"
+msgstr "Which committee may subscribe and unsubscribe people to this list?"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:35
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:33
 msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
 msgstr "People can subscribe to this list."
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:28
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:38
 msgid "Maak lijst"
 msgstr "Make list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:46
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:56
 msgid "Verborgen"
 msgstr "Hidden"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:55
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:65
 msgid "Je bent aangemeld voor deze mailinglijst."
 msgstr "You are subscribed to this mailinglist."
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:55
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:65
 #, php-format
 msgid "%s is aangemeld voor deze mailinglijst."
 msgstr "%s is subscribed to this mailinglist."
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:55
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:65
 msgid "Uitschrijven"
 msgstr "Unsubscribe"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:58
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:68
 msgid "Aanmelden"
 msgstr "Subscribe"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:26
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:36
 msgid "Update lijst"
 msgstr "Update list"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:33
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:43
 msgid "Lidnummer(s)"
 msgstr "Member id(s)"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:35
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:51
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:45
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:61
 msgid "Meld aan"
 msgstr "Subscribe"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:36
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:46
 msgid "Niet-lid aanmelden voor mailinglijst"
 msgstr "Subscribe a non-member tot the mailing list"
 
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:82
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:92
 msgid "Meld geselecteerde adressen af"
 msgstr "Unsubscribe selected"
 
@@ -3146,6 +3172,9 @@ msgstr "Send"
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
 
+#~ msgid "Naam:"
+#~ msgstr "Name:"
+
 #, fuzzy
 #~ msgid "E-mail Adres"
 #~ msgstr "E-Mail address"
@@ -3324,9 +3353,6 @@ msgstr "There are no blog posts at this moment."
 
 #~ msgid "Document toevoegen"
 #~ msgstr "Add document"
-
-#~ msgid "Toegestaan"
-#~ msgstr "Accepted"
 
 #~ msgid "Niet toegestaan"
 #~ msgstr "Not allowed"
