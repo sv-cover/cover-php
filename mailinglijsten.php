@@ -35,7 +35,10 @@ class ControllerMailinglijsten extends Controller
 	{
 		$id = $this->model->create_lijst(
 			$_POST['adres'], $_POST['naam'],
-			$_POST['omschrijving'], !empty($_POST['publiek']));
+			$_POST['omschrijving'],
+			!empty($_POST['publiek']),
+			$_POST['toegang'],
+			$_POST['commissie']);
 
 		if ($id > 0)
 			return header('Location: mailinglijsten.php?lijst_id=' . $id);
@@ -102,6 +105,12 @@ class ControllerMailinglijsten extends Controller
 			$lijst->set('naam', $_POST['naam']);
 			$lijst->set('omschrijving', $_POST['omschrijving']);
 			$lijst->set('publiek', empty($_POST['publiek']) ? '0' : '1');
+			$lijst->set('toegang', $_POST['toegang']);
+
+			// Only the board can change the owner of a list
+			if (member_in_commissie(COMMISSIE_BESTUUR))
+				$lijst->set('commissie', $_POST['commissie']);
+
 			$lijst->update();
 
 			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
@@ -172,11 +181,11 @@ class ControllerMailinglijsten extends Controller
 		if (!empty($_GET['abonnement_id']))
 			return $this->run_unsubscribe_confirm($_GET['abonnement_id']);
 
-		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['autocomplete']))
+		elseif (!empty($_GET['autocomplete']))
 			return $this->run_autocomplete($_GET['naam']);
 
 		// Manage the subscriptions to a list
-		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['lijst_id']))
+		elseif (!empty($_GET['lijst_id']) && $this->model->member_can_edit($_GET['lijst_id']))
 			return $this->run_subscriptions_management($_GET['lijst_id']);
 
 		// Manage the subscriptions of a member other than yourself

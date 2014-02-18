@@ -9,15 +9,25 @@
 	<div id="new-list" class="section hide-by-default">
 		<form method="post" class="vertical-form" action="mailinglijsten.php?lijst_id=">
 			<div>
-				<label for="adres"><?=__('Lijstadres:') ?></label>
+				<label for="adres"><?=__('Lijstadres') ?>:</label>
 				<input id="adres" type="email" name="adres" placeholder="e.g. lijstnaam@svcover.nl">
 			</div>
+			<div class="inline-block">
+				<label for="toegang"><?=__('Toegang')?>:</label>
+				<?=select_field('toegang', $this->get_all_toegang_options(), null, 'id', 'toegang')?>
+				<small><?=__('Wie mag e-mails sturen naar deze lijst?')?></small>
+			</div>
+			<div class="inline-block">
+				<label for="commissie"><?=__('Commissie')?>:</label>
+				<?=select_field('commissie', $this->get_all_commissies(), null, 'id', 'commissie') ?>
+				<small><?=__('Welke commissie mag bepalen wie er op de lijst staat?')?></small>
+			</div>
 			<div>
-				<label for="naam"><?=__('Naam:') ?></label>
+				<label for="naam"><?=__('Naam') ?>:</label>
 				<input id="naam" type="text" name="naam">
 			</div>
 			<div>
-				<label for="omschrijving">Omschrijving:</label>
+				<label for="omschrijving"><?=__('Omschrijving')?>:</label>
 				<textarea id="omschrijving" name="omschrijving"></textarea>
 			</div>
 			<div>
@@ -34,7 +44,7 @@
 <?php foreach ($iter as $lijst): ?>
 	<div class="mailinglist">
 		<h3 class="list-name">
-		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+		<?php if ($model->member_can_edit($lijst)): ?>
 		<a href="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>"><?= markup_format_text($lijst->get('naam')) ?></a>
 		<?php else: ?>
 		<?= markup_format_text($lijst->get('naam')) ?>

@@ -5,6 +5,11 @@ require_once 'models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
 
 class DataModelMailinglijst extends DataModel
 {
+	const TOEGANG_IEDEREEN = 1;
+	const TOEGANG_DEELNEMERS = 2;
+	const TOEGANG_COVER = 3;
+	const TOEGANG_EIGENAAR = 4;
+
 	public function __construct($db)
 	{
 		parent::__construct($db, 'mailinglijsten');
@@ -14,7 +19,7 @@ class DataModelMailinglijst extends DataModel
 
 	public function _row_to_iter($row)
 	{
-		if ($row)
+		if ($row && isset($row['publiek']))
 			$row['publiek'] = $row['publiek'] == 't';
 
 		return parent::_row_to_iter($row);
@@ -22,7 +27,13 @@ class DataModelMailinglijst extends DataModel
 
 	public function get_lijsten($lid_id, $public_only = true)
 	{
-		$where_clause = $public_only ? 'WHERE l.publiek = TRUE' : '';
+		if ($public_only)
+			if ($commissies = logged_in('commissies'))
+				$where_clause = 'WHERE (l.publiek = TRUE OR l.commissie IN (' . implode(', ', $commissies) . '))';
+			else
+				$where_clause = 'WHERE l.publiek = TRUE';
+		else
+			$where_clause = '';
 
 		$rows = $this->db->query('
 			SELECT
@@ -31,6 +42,8 @@ class DataModelMailinglijst extends DataModel
 				l.adres,
 				l.omschrijving,
 				l.publiek,
+				l.toegang,
+				l.commissie,
 				a.abonnement_id
 			FROM
 				mailinglijsten l
@@ -59,7 +72,9 @@ class DataModelMailinglijst extends DataModel
 				l.naam,
 				l.adres,
 				l.omschrijving,
-				l.publiek
+				l.publiek,
+				l.toegang,
+				l.commissie
 			FROM
 				mailinglijsten l
 			WHERE
@@ -68,7 +83,7 @@ class DataModelMailinglijst extends DataModel
 		return $this->_row_to_iter($row);
 	}
 
-	public function create_lijst($adres, $naam, $omschrijving, $publiek)
+	public function create_lijst($adres, $naam, $omschrijving, $publiek, $toegang, $commissie)
 	{
 		if (!filter_var($adres, FILTER_VALIDATE_EMAIL))
 			return false;
@@ -76,11 +91,23 @@ class DataModelMailinglijst extends DataModel
 		if (strlen($naam) == 0)
 			return false;
 
+		if (!in_array($toegang, array(
+			self::TOEGANG_IEDEREEN,
+			self::TOEGANG_DEELNEMERS,
+			self::TOEGANG_COVER,
+			self::TOEGANG_EIGENAAR)))
+			return false;
+
+		if (!ctype_digit($commissie))
+			return false;
+
 		$data = array(
 			'adres' => $adres,
 			'naam' => $naam,
 			'omschrijving' => $omschrijving,
-			'publiek' => $publiek ? '1' : '0'
+			'publiek' => $publiek ? '1' : '0',
+			'toegang' => $toegang,
+			'commissie' => $commissie
 		);
 
 		$iter = new DataIter($this, -1, $data);
@@ -139,6 +166,8 @@ class DataModelMailinglijst extends DataModel
 				l.adres,
 				l.omschrijving,
 				l.publiek,
+				l.toegang,
+				l.commissie,
 				a.abonnement_id
 			FROM
 				mailinglijsten_abonnementen a,
@@ -193,5 +222,17 @@ class DataModelMailinglijst extends DataModel
 			sprintf("abonnement_id = '%s'",
 				$this->db->escape_string($abonnement_id)),
 			array('opgezegd_op'));
+	}
+
+	public function member_can_edit($lijst)
+	{
+		if (is_numeric($lijst))
+			$lijst = $this->get_iter($lijst);
+
+		if (!$lijst)
+			return false;
+
+		return member_in_commissie(COMMISSIE_BESTUUR)
+			|| member_in_commissie($lijst->get('commissie'));
 	}
 }

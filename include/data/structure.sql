@@ -3468,7 +3468,12 @@ CREATE TABLE mailinglijsten (
     adres varchar(255) NOT NULL UNIQUE,
     omschrijving text NOT NULL,
     publiek boolean NOT NULL DEFAULT TRUE,
-    CONSTRAINT mailinglijsten_pkey PRIMARY KEY (id)
+    toegang integer,
+    commissie integer NOT NULL DEFAULT 0,
+    CONSTRAINT mailinglijsten_pkey PRIMARY KEY (id),
+    CONSTRAINT mailinglijsten_commissie_fkey FOREIGN KEY (id)
+        REFERENCES commissies (id) MATCH SIMPLE
+        ON UPDATE CASCADE ON DELETE SET DEFAULT
 );
 
 CREATE TABLE mailinglijsten_abonnementen (
