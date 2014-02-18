@@ -70,6 +70,9 @@
 	}
 
 	function __($message_id) {
+		if ($message_id == '')
+			return '';
+
 		return i18n_translation::get_reader()->translate($message_id);
 	}
 
