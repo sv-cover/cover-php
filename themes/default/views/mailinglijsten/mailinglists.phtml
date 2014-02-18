@@ -62,7 +62,7 @@
 		<?php if ($lijst->get('abonnement_id')): ?>
 			<input type="hidden" name="action" value="unsubscribe">
 			<input type="hidden" name="abonnement_id" value="<?=$lijst->get('abonnement_id')?>">
-			<p><?= $member->get('id') == logged_in('id') ? __('Je bent aangemeld voor deze mailinglijst.') : sprintf(__('%s is aangemeld voor deze mailinglijst.'), markup_format_text($member->get('voornaam'))) ?> <input type="submit" class="button" value="<?=__('Uitschrijven')?>"></p>
+			<p><input type="submit" class="button" value="<?=__('Uitschrijven')?>"> <?= $member->get('id') == logged_in('id') ? __('Je bent aangemeld voor deze mailinglijst.') : sprintf(__('%s is aangemeld voor deze mailinglijst.'), markup_format_text($member->get('voornaam'))) ?></p>
 		<?php else: ?>
 			<input type="hidden" name="action" value="subscribe">
 			<input type="submit" class="button" value="<?=__('Aanmelden')?>">
