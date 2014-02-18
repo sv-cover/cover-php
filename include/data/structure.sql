@@ -3463,17 +3463,13 @@ CREATE SEQUENCE mailinglijsten_id_seq
   CACHE 1;
 
 CREATE TABLE mailinglijsten (
-    id integer NOT NULL DEFAULT nextval('mailinglijsten_id_seq'::regclass),
+    id integer NOT NULL DEFAULT nextval('mailinglijsten_id_seq'::regclass) PRIMARY KEY,
     naam varchar(100) NOT NULL,
     adres varchar(255) NOT NULL UNIQUE,
     omschrijving text NOT NULL,
     publiek boolean NOT NULL DEFAULT TRUE,
     toegang integer,
-    commissie integer NOT NULL DEFAULT 0,
-    CONSTRAINT mailinglijsten_pkey PRIMARY KEY (id),
-    CONSTRAINT mailinglijsten_commissie_fkey FOREIGN KEY (id)
-        REFERENCES commissies (id) MATCH SIMPLE
-        ON UPDATE CASCADE ON DELETE SET DEFAULT
+    commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT
 );
 
 CREATE TABLE mailinglijsten_abonnementen (
