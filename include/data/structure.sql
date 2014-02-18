@@ -3486,6 +3486,22 @@ CREATE TABLE mailinglijsten_abonnementen (
     opgezegd_op timestamp DEFAULT NULL
 );
 
+CREATE SEQUENCE mailinglijsten_berichten_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE mailinglijsten_berichten (
+    id integer NOT NULL DEFAULT nextval('mailinglijsten_berichten_id_seq'::regclass),
+    mailinglijst integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+    bericht TEXT NOT NULL,
+    return_code integer NOT NULL,
+    verwerkt_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    CONSTRAINT mailinglijsten_berichten_pkey PRIMARY KEY (id)
+);
+
 --
 -- TOC entry 2390 (class 2606 OID 25986)
 -- Name: actieveleden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 

@@ -31,14 +31,8 @@ function parse_email_address($email)
 		return false;
 }
 
-function main()
+function process_message($message, &$lijst)
 {
-	// Read the complete email from the stdin
-	$message = file_get_contents('php://stdin');
-
-	if ($message === false || trim($message) == '')
-		return RETURN_FAILURE_MESSAGE_EMPTY;
-
 	$mailinglijsten_model = get_model('DataModelMailinglijst');
 
 	// Search who send it
@@ -185,6 +179,25 @@ function verbose($return_value)
 		echo "(code $return_value)\n";
 
 	return $return_value;
+}
+
+function main()
+{
+	// Read the complete email from the stdin.
+	$message = file_get_contents('php://stdin');
+
+	if ($message === false || trim($message) == '')
+		return RETURN_FAILURE_MESSAGE_EMPTY;
+
+	// Process the message: parse it and send it to the list.
+	$return_code = process_message($message, $lijst);
+
+	// Archive the message.
+	$archief = get_model('DataModelMailinglijstArchief');
+	$archief->archive($message, $lijst, $return_code);
+
+	// Return the result of the processing step.
+	return $return_code;
 }
 
 exit(verbose(main()));
