@@ -65,6 +65,12 @@ function process_message($message, &$lijst)
 			foreach ($aanmeldingen as $aanmelding)
 				if ($aanmelding->get('email') == $from)
 					break 2;
+
+			// Also test whether the owner is sending mail, he should also be accepted.
+			$commissie_model = get_model('DataModelCommissie');
+			$commissie_adres = $commissie_model->get_email($lijst->get('commissie'));
+			if ($from == $commissie_adres)
+				break;
 			
 			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
 
