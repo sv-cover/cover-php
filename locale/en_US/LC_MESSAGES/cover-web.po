@@ -2830,7 +2830,7 @@ msgid ""
 "liefst 500&times;750 groot."
 msgstr ""
 "Not satisfied with your photo? Submit a new one to webcie@ai.rug.nl. "
-"Preferably with the dimensions 500&times;700."
+"Preferably with the dimensions 500&times;750."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:54
 msgid "Tel. vast"
