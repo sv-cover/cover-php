@@ -554,9 +554,14 @@
 					
 					if (!$member)
 						return null;
+
+					$name = member_nick_name($member);
+
+					if ($name == '')
+						$name = member_full_name($member, false, true);
 					
 					$authors[$type][$id][$field] = array(
-						'name' => member_nick_name($member),
+						'name' => $name,
 						'avatar' => $member->get('avatar'),
 						'email' => $member->get('email')
 					);
