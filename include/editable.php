@@ -21,7 +21,7 @@
 					$lh .= '<li>
 						<a href="profiel.php?lid=' . $lid->get('id') . '" class="commissie-member">
 							<img src="foto.php?lid_id=' . $lid->get('id') .'&amp;get_thumb=circle&amp;width=200" width="100" height="100">
-							<span class="name">' . htmlspecialchars(member_full_name($lid)) . '</span>
+							<span class="name">' . htmlspecialchars(member_full_name($lid, false, true)) . '</span>
 							<span class="function">' . htmlspecialchars($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '') . "</span>
 						</a>
 					</li>\n";

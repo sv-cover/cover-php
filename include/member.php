@@ -53,7 +53,7 @@
 	  * of the currently logged in one
 	  * @result the currently logged in members full name
 	  */
-	function member_full_name($iter = null, $override_privacy = false, $be_kind = true)
+	function member_full_name($iter = null, $override_privacy = true, $be_kind = false)
 	{
 		$model = get_model('DataModelMember');
 

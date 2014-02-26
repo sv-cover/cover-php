@@ -273,6 +273,7 @@
 		
 		$contents .= '<br>';
 		
+		// FIXME: Laat nooit jarigen zien die deze gegevens verborgen hebben volgens hun privay settings!
 		foreach ($jarigen as $jarige) {
 			$contents .= '<a href="profiel.php?lid=' . $jarige->get('id') . '">' . member_full_name($jarige) . '</a> (' . $jarige->get('leeftijd') . ')<br>';
 		}

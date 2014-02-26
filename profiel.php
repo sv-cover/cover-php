@@ -29,7 +29,7 @@
 		function get_content($view, $iter = null, $params = null) {
 
 			$title = $iter
-				? member_full_name($iter)
+				? member_full_name($iter, false, true)
 				: __('Profiel');
 
 			$this->run_header(compact('title'));
