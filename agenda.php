@@ -12,7 +12,11 @@
 		}
 		
 		function get_content($view = 'index', $iter = null, $params = null) {
-			$this->run_header(array('title' => __('Agenda')));
+			$title = isset($_GET['year'])
+				? sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1)
+				: __('Agenda');
+
+			$this->run_header(compact('title'));
 			run_view('agenda::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}

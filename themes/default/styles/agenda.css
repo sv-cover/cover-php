@@ -29,3 +29,7 @@ table.agenda_edit input.year {
 	width: 5ex;
 	padding: 2px;
 }
+
+.next-year {
+	float: right;
+}

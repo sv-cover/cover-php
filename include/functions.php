@@ -7,7 +7,7 @@
 	require_once('view.php');
 
 	function _dump($arg) {
-		var_dump($arg);
+		printf('<code style="overflow-x:scroll;display:block;background:white;padding:10px;border:1px solid black;"><pre>%s</pre></code>', $arg);
 		return $arg;
 	}
 

@@ -1,4 +1,4 @@
-<h1><?= __('Agenda') ?></h1>
+<h1><?= $this->get_title() ?></h1>
 <div class="messageBox">	
 <? if (!logged_in()) { ?>
 	<p class="italic"><?= __('Log in om eventuele afgeschermde agendapunten te bekijken.') ?></p>
@@ -23,10 +23,19 @@
 	</div>
 <? } ?>
 
+<?php if (($prev_year = $this->get_previous_year()) !== null): ?>
+<a href="agenda.php?year=<?=$prev_year?>" class="prev-year"><?printf(__('Toon alles uit het jaar %d-%d'), $prev_year, $prev_year + 1)?></a>
+<?php endif ?>
+
+<?php if (($next_year = $this->get_next_year()) !== null): ?>
+<a href="agenda.php?year=<?=$next_year?>" class="next-year"><?printf(__('Toon alles uit het jaar %d-%d'), $next_year, $next_year + 1)?></a>
+<?php endif ?>
+
+
 <table class="agenda" style="background-color: #000;">
 
-<? 
-$punten = $model->get_agendapunten(logged_in());
+<?php 
+$punten = $this->get_paged_agendapunten();
 $curmaand = -1;
 $months = get_months();
 $days = get_days();
@@ -35,9 +44,6 @@ if (!count($punten)) { ?>
 	<p> <?= __('Er staan op dit moment geen activiteiten op de agenda.') ?></p>
 <? }
 foreach ($punten as $punt) {
-	if ($punt->get('private') && !logged_in())
-		continue;
-
 	if ($curmaand != $punt->get('vanmaand')) { ?>
 		</table>
 		<h2><?= $months[$punt->get('vanmaand')] ?></h2>
@@ -65,7 +71,7 @@ foreach ($punten as $punt) {
 
 </table>
 
-<p>De Coveragenda is ook beschikbaar in verschillende standaarden: 
+<p><?=__('De Coveragenda is ook beschikbaar in verschillende standaarden:')?> 
 <a href="http://www.google.com/calendar/feeds/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic">XML</a>,
 <a href="http://www.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics">iCal</a>, 
 <?php if (member_in_commissie(COMMISSIE_EASY)): ?>
