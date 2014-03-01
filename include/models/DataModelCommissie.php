@@ -121,6 +121,16 @@
 				return $value;
 		}
 
+		function get_from_email($email)
+		{
+			if (substr($email, -11) == '@svcover.nl')
+				$email = substr($email, 0, -11);
+
+			$row = $this->db->query_first("SELECT * FROM commissies WHERE login = '" . $this->escape_string(strtolower($email)) . "'");
+
+			return $this->_row_to_iter($row);
+		}
+
 		/**
 		  * Get the email address of a commissie (composed of the
 		  * login name (see #DataModelCommissie::get_login))
@@ -134,7 +144,7 @@
 			if (!$value)
 				$value = __('onbekend');
 			
-			return $value . '@svcover.nl';
+			return strstr($value, '@') ? $value : $value . '@svcover.nl';
 		}
 		
 		/**

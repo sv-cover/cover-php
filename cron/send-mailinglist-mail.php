@@ -7,6 +7,7 @@ require_once 'include/init.php';
 define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
 define('RETURN_COULD_NOT_DETERMINE_LIST', 103);
+define('RETURN_COULD_NOT_DETERMINE_COMMITTEE', 104);
 define('RETURN_NOT_ALLOWED_NOT_SUBSCRIBED', 401);
 define('RETURN_NOT_ALLOWED_NOT_COVER', 402);
 define('RETURN_NOT_ALLOWED_NOT_OWNER', 403);
@@ -31,7 +32,44 @@ function parse_email_address($email)
 		return false;
 }
 
-function process_message($message, &$lijst)
+function process_message_committee($message, &$committee)
+{
+	$commissie_model = get_model('DataModelCommissie');
+
+	// Search who send it
+	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
+		return RETURN_COULD_NOT_DETERMINE_SENDER;
+
+	// Search for the adressed committee
+	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
+		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
+
+	// Find that committee
+	if (!($committee = $commissie_model->get_from_email($to)))
+		return RETURN_COULD_NOT_DETERMINE_COMMITTEE;
+
+	$members = $commissie_model->get_leden($committee->get('id'));
+
+	foreach ($members as $member)
+	{
+		echo "Sending mail to " . $member->get('voornaam') . " <" . $member->get('email') . ">: ";
+
+		$variables = array(
+			'[NAAM]' => $member->get('voornaam'),
+			'[NAME]' => $member->get('voornaam'),
+			'[COMMISSIE]' => $committee->get('naam'),
+			'[COMMITTEE]' => $committee->get('naam')
+		);
+
+		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+
+		echo send_message($personalized_message, $member->get('email')), "\n";
+	}
+
+	return 0;
+}
+
+function process_message_mailinglist($message, &$lijst)
 {
 	$mailinglijsten_model = get_model('DataModelMailinglijst');
 
@@ -40,11 +78,11 @@ function process_message($message, &$lijst)
 		return RETURN_COULD_NOT_DETERMINE_SENDER;
 
 	// Search for the adressed mailing list
-	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match))
+	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
 	// Find that mailing list
-	if (!($lijst = $mailinglijsten_model->get_lijst($match[1])))
+	if (!($lijst = $mailinglijsten_model->get_lijst($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
 
 	// Append '[Cover]' to the subject
@@ -109,39 +147,43 @@ function process_message($message, &$lijst)
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
 
-		// Set up the proper pipes and thingies for the sendmail call;
-		$descriptors = array(
-			0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-			2 => array("pipe", "a")   // stderr is a file to write to
-		);
-
-		$cwd = '/';
-
-		$env = array();
-
-		// Start sendmail with the target email address as argument
-		$sendmail = proc_open(
-			getenv('SENDMAIL') . ' -oi ' . escapeshellarg($aanmelding->get('email')),
-			$descriptors, $pipes, $cwd, $env);
-
-		// Write message to the stdin of sendmail
-		fwrite($pipes[0], $personalized_message);
-		fclose($pipes[0]);
-
-		// Read the stdout
-		// echo "  out: " . stream_get_contents($pipes[1]) . "\n";
-		fclose($pipes[1]);
-
-		// Read the stderr 
-		// echo "  err: " . stream_get_contents($pipes[2]) . "\n";
-		fclose($pipes[2]);
-
-		echo proc_close($sendmail);
-		echo "\n";
+		echo send_message($personalized_message, $aanmelding->get('email')), "\n";
 	}
 
 	return 0;
+}
+
+function send_message($message, $email)
+{
+	// Set up the proper pipes and thingies for the sendmail call;
+	$descriptors = array(
+		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+		1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+		2 => array("pipe", "a")   // stderr is a file to write to
+	);
+
+	$cwd = '/';
+
+	$env = array();
+
+	// Start sendmail with the target email address as argument
+	$sendmail = proc_open(
+		getenv('SENDMAIL') . ' -oi ' . escapeshellarg($email),
+		$descriptors, $pipes, $cwd, $env);
+
+	// Write message to the stdin of sendmail
+	fwrite($pipes[0], $message);
+	fclose($pipes[0]);
+
+	// Read the stdout
+	// echo "  out: " . stream_get_contents($pipes[1]) . "\n";
+	fclose($pipes[1]);
+
+	// Read the stderr 
+	// echo "  err: " . stream_get_contents($pipes[2]) . "\n";
+	fclose($pipes[2]);
+
+	return proc_close($sendmail);
 }
 
 function verbose($return_value)
@@ -192,15 +234,25 @@ function main()
 	// Read the complete email from the stdin.
 	$message = file_get_contents('php://stdin');
 
+	$lijst = null;
+	$comissie = null;
+
 	if ($message === false || trim($message) == '')
 		return RETURN_FAILURE_MESSAGE_EMPTY;
 
-	// Process the message: parse it and send it to the list.
-	$return_code = process_message($message, $lijst);
+	// First try sending the message to a committee
+	$return_code = process_message_committee($message, $commissie);
+
+	// If that didn't work, try sending it to a mailing list
+	if ($return_code == RETURN_COULD_NOT_DETERMINE_COMMITTEE)
+	{
+		// Process the message: parse it and send it to the list.
+		$return_code = process_message_mailinglist($message, $lijst);
+	}
 
 	// Archive the message.
 	$archief = get_model('DataModelMailinglijstArchief');
-	$archief->archive($message, $lijst, $return_code);
+	$archief->archive($message, $lijst, $commissie, $return_code);
 
 	// Return the result of the processing step.
 	return $return_code;

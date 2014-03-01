@@ -9,11 +9,12 @@ class DataModelMailinglijstArchief extends DataModel
 		parent::__construct($db, 'mailinglijsten_berichten');
 	}
 
-	public function archive($bericht, $lijst, $return_code)
+	public function archive($bericht, $lijst, $commissie, $return_code)
 	{
 		$data = array(
 			'bericht' => $bericht,
 			'mailinglijst' => $lijst ? $lijst->get('id') : null,
+			'commissie' => $commissie ? $commissie->get('id') : null,
 			'return_code' => $return_code
 		);
 

@@ -311,7 +311,7 @@ ALTER TABLE public.commissies_id_seq OWNER TO webcie;
 --
 
 CREATE TABLE commissies (
-    id smallint DEFAULT nextval('commissies_id_seq'::regclass) NOT NULL,
+    id smallint DEFAULT nextval('commissies_id_seq'::regclass) NOT NULL PRIMARY KEY,
     naam character varying(25) NOT NULL,
     login character varying(50),
     website character varying(100),
@@ -3474,7 +3474,7 @@ CREATE TABLE mailinglijsten (
 );
 
 CREATE TABLE mailinglijsten_abonnementen (
-    abonnement_id CHAR(40) NOT NULL primary key,
+    abonnement_id CHAR(40) NOT NULL PRIMARY KEY,
     mailinglijst_id integer NOT NULL REFERENCES mailinglijsten (id),
     lid_id integer DEFAULT NULL REFERENCES leden (id),
     naam VARCHAR(255) DEFAULT NULL,
@@ -3491,12 +3491,12 @@ CREATE SEQUENCE mailinglijsten_berichten_id_seq
   CACHE 1;
 
 CREATE TABLE mailinglijsten_berichten (
-    id integer NOT NULL DEFAULT nextval('mailinglijsten_berichten_id_seq'::regclass),
+    id integer NOT NULL DEFAULT nextval('mailinglijsten_berichten_id_seq'::regclass) PRIMARY KEY
     mailinglijst integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+    commissie integer DEFAULT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     bericht TEXT NOT NULL,
     return_code integer NOT NULL,
-    verwerkt_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
-    CONSTRAINT mailinglijsten_berichten_pkey PRIMARY KEY (id)
+    verwerkt_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
 
 --
@@ -3560,15 +3560,6 @@ ALTER TABLE ONLY boeken_categorie
 
 ALTER TABLE ONLY boeken
     ADD CONSTRAINT boeken_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2404 (class 2606 OID 26000)
--- Name: commissies_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY commissies
-    ADD CONSTRAINT commissies_pkey PRIMARY KEY (id);
 
 
 --
