@@ -21,12 +21,13 @@ table.agenda_edit select {
 }
 
 table.agenda_edit input.day, table.agenda_edit input.month, table.agenda_edit input.time {
-	width: 3ex;
+	width: 24px;
 	padding: 2px;
+	text-align: right;
 }
 
 table.agenda_edit input.year {
-	width: 5ex;
+	width: 36px;
 	padding: 2px;
 }
 
