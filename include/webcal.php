@@ -68,6 +68,8 @@ class WebCal_Calendar extends WebCal
 
 class WebCal_Event extends WebCal
 {
+	public $uid;
+
 	public $start;
 	
 	public $end;
@@ -91,13 +93,33 @@ class WebCal_Event extends WebCal
 			? $this->end->format('U')
 			: $this->end;
 
-		$out = array(
-			'BEGIN:VEVENT',
-			'DTSTART:' . gmdate('Ymd\THis\Z', $start)
-		);
+		$out = array('BEGIN:VEVENT');
 
-		if ($end)
+		// Is this an whole day event? If so, only add the date.
+		if (date('Hi', $start) == '0000' && (!$end || date('Hi', $end) == '0000'))
+		{
+			// Is there an end date? Yes? Good! Otherwise, make the event one day long.
+			if (!$end)
+				$end = $start + 24 * 3600;
+			
+			$out[] = 'DTSTART;VALUE=DATE:' . date('Ymd', $start);
+			$out[] = 'DTEND;VALUE=DATE:' . date('Ymd', $end);
+		}
+		// No it is not, just add date and time.
+		else
+		{
+			// Is there an end time? Yes? Good! Otherwise let the event be till the end of the day.
+			if (!$end)
+				$end = mktime(0, 0, 0, gmdate('n', $start), gmdate('j', $start), gmdate('Y', $start)) + 24 * 3600;
+
+			$out[] = 'DTSTART:' . gmdate('Ymd\THis\Z', $start);
 			$out[] = 'DTEND:' . gmdate('Ymd\THis\Z', $end);
+		}
+
+		// Add some optional fields to the calendar item
+		
+		if ($this->uid)
+			$out[] = 'UID:' . $this->_encode($this->uid);
 
 		if ($this->summary)
 			$out[] = 'SUMMARY:' . $this->_encode($this->summary);

@@ -284,6 +284,7 @@
 			foreach ($punten as $punt)
 			{
 				$event = new WebCal_Event;
+				$event->uid = $punt->get_id() . '@svcover.nl';
 				$event->start = new DateTime($punt->get('van'), $timezone);
 
 				if ($punt->get('van') != $punt->get('tot'))
