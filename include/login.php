@@ -181,3 +181,35 @@
 
 		return $session->get('member_id');
 	}
+
+	/**
+	 * Returns a calendar session with a bit longer time to live. When exporting
+	 * links with a session id for external services (like Google Calendar) you
+	 * should use this function. This way when the user logs off he/she does not
+	 * destroy the session used by that external service.
+	 *
+	 * @var $application the application identifier/name
+	 * @return the session id string if a session was created or found and null
+	 * if the user is not logged in.
+	 */
+	function session_get_application_session_id($application)
+	{
+		$member_id = logged_in('id');
+
+		// No way we can create a session specifically for the calendar for this user
+		if (!$member_id)
+			return null;
+
+		$session_model = get_model('DataModelSession');
+
+		// First try to find an already active calendar session id
+		$sessions = $session_model->getActive($member_id);
+
+		foreach ($sessions as $session)
+			if ($session->get('application') == $application)
+				return $session->get('session_id');
+
+		// None found, let's create one
+		$session = $session_model->create($member_id, $application, '1 MONTH');
+		return $session->get('session_id');
+	}
