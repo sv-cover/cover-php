@@ -284,7 +284,10 @@
 			{
 				$event = new WebCal_Event;
 				$event->start = new DateTime($punt->get('van'), $timezone);
-				$event->end = new DateTime($punt->get('tot'), $timezone);
+
+				if ($punt->get('van') != $punt->get('tot'))
+					$event->end = new DateTime($punt->get('tot'), $timezone);
+				
 				$event->summary = $punt->get('kop');
 				$event->description = $punt->get('beschrijving');
 				$event->location = $punt->get('locatie');

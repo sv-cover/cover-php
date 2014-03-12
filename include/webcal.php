@@ -1,39 +1,7 @@
 <?php
 
-class WebCal_Timezone
-{	
-	public $name = 'Europe/Amsterdam';
-	
-	public function export()
-	{
-		return implode("\r\n", array(
-			'BEGIN:VTIMEZONE',
-	 		'TZID:Europe/Amsterdam',
-			'BEGIN:DAYLIGHT',
-			'TZOFFSETFROM:+0100',
-			'TZOFFSETTO:+0200',
-			'DTSTART:19810329T020000',
-			'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
-			'TZNAME:CEST',
-			'END:DAYLIGHT',
-			'BEGIN:STANDARD',
-			'TZOFFSETFROM:+0200',
-			'TZOFFSETTO:+0100',
-			'DTSTART:19961027T030000',
-			'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
-			'TZNAME:CET',
-			'END:STANDARD',
-			'END:VTIMEZONE'
-		));
-	}
-}
-
 class WebCal_Calendar
 {
-	public $timezones = array();
-
-	public $default_timezone;
-
 	public $events = array();
 
 	public $name;
@@ -43,21 +11,11 @@ class WebCal_Calendar
 	public function __construct($name)
 	{
 		$this->name = $name;
-		
-		$this->add_timezone(new WebCal_Timezone('Europe/Amsterdam'), true);
 	}
 	
 	public function add_event(WebCal_Event $event)
 	{
 		$this->events[] = $event;
-	}
-	
-	public function add_timezone(WebCal_Timezone $timezone, $make_default = false)
-	{
-		$this->timezones[] = $timezone;
-		
-		if ($make_default)
-			$this->default_timezone = $timezone;
 	}
 	
 	public function export()
@@ -70,12 +28,8 @@ class WebCal_Calendar
 			'PRODID:-//IkHoefGeen.nl//NONSGML v1.0//EN',
 			'X-WR-CALNAME:' . $this->name,
 			'X-WR-CALDESC:' . $this->description,
-				'X-WR-RELCALID:' . md5($this->name),
-			'X-WR-TIMEZONE:' . $this->default_timezone->name
+			'X-WR-RELCALID:' . md5($this->name)
 		);
-		
-		foreach ($this->timezones as $timezone)
-			$out[] = $timezone->export();
 		
 		foreach ($this->events as $event)
 			$out[] = $event->export();
@@ -120,17 +74,30 @@ class WebCal_Event
 		$end = $this->end instanceof DateTime
 			? $this->end->format('U')
 			: $this->end;
-		
-		return implode("\r\n", array(
+
+		$lines = array(
 			'BEGIN:VEVENT',
-			'DTSTART;TZID=Europe/Amsterdam:' . gmdate('Ymd\THis\Z', $start),
-			'SUMMARY:' . $this->_encode($this->summary),
-			'LOCATION:' . $this->_encode($this->location),
-			'DESCRIPTION:' . $this->_encode($this->description),
-			'URL;VALUE=URI:' . $this->_encode($this->url),
-			'DTEND;TZID=Europe/Amsterda:' . gmdate('Ymd\THis\Z', $end),
-			'END:VEVENT'
-		));
+			'DTSTART:' . gmdate('Ymd\THis\Z', $start)
+		);
+
+		if ($end)
+			$lines[] = 'DTEND:' . gmdate('Ymd\THis\Z', $end);
+
+		if ($this->summary)
+			$lines[] = 'SUMMARY:' . $this->_encode($this->summary);
+
+		if ($this->description)
+			$lines[] = 'DESCRIPTION:' . $this->_encode($this->description);
+
+		if ($this->location)
+			$lines[] = 'LOCATION:' . $this->_encode($this->location);
+
+		if ($this->url)
+			$lines[] = 'URL;VALUE=URI:' . $this->_encode($this->url);
+
+		$lines[] = 'END:VEVENT';
+		
+		return implode("\r\n", $lines);
 	}
 
 	protected function _encode($text)
