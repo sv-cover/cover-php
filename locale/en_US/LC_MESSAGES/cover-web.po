@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-02-27 01:38+0100\n"
+"POT-Creation-Date: 2014-03-12 23:54+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -82,6 +82,10 @@ msgid ""
 "agendapunten."
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events"
+
+#: ../../../agenda.php:278
+msgid "Alle activiteiten van studievereniging Cover"
+msgstr "All activities of study association Cover"
 
 #: ../../../almanak.php:22 ../../../themes/default/views/header.php:178
 #: ../../../themes/default/views/almanak/almanak.phtml:1
@@ -413,7 +417,7 @@ msgstr "You!"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: ../../../include/models/DataModelCommissie.php:135
+#: ../../../include/models/DataModelCommissie.php:145
 msgid "onbekend"
 msgstr "unknown"
 

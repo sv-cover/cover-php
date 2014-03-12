@@ -1,6 +1,22 @@
 <?php
 
-class WebCal_Calendar
+abstract class WebCal
+{
+	protected function _encode($text)
+	{
+		$encoding = array(
+			"\r" => '',
+			"\n" => '\n',
+			"\\" => '\\\\',
+			 ";" => '\\;',
+			 "," => '\\,'
+		);
+
+		return strtr($text, $encoding);
+	}
+}
+
+class WebCal_Calendar extends WebCal
 {
 	public $events = array();
 
@@ -26,8 +42,8 @@ class WebCal_Calendar
 			'CALSCALE:GREGORIAN',
 			'VERSION:2.0',
 			'PRODID:-//IkHoefGeen.nl//NONSGML v1.0//EN',
-			'X-WR-CALNAME:' . $this->name,
-			'X-WR-CALDESC:' . $this->description,
+			'X-WR-CALNAME:' . $this->_encode($this->name),
+			'X-WR-CALDESC:' . $this->_encode($this->description),
 			'X-WR-RELCALID:' . md5($this->name)
 		);
 		
@@ -50,7 +66,7 @@ class WebCal_Calendar
 	}
 }
 
-class WebCal_Event
+class WebCal_Event extends WebCal
 {
 	public $start;
 	
@@ -75,41 +91,28 @@ class WebCal_Event
 			? $this->end->format('U')
 			: $this->end;
 
-		$lines = array(
+		$out = array(
 			'BEGIN:VEVENT',
 			'DTSTART:' . gmdate('Ymd\THis\Z', $start)
 		);
 
 		if ($end)
-			$lines[] = 'DTEND:' . gmdate('Ymd\THis\Z', $end);
+			$out[] = 'DTEND:' . gmdate('Ymd\THis\Z', $end);
 
 		if ($this->summary)
-			$lines[] = 'SUMMARY:' . $this->_encode($this->summary);
+			$out[] = 'SUMMARY:' . $this->_encode($this->summary);
 
 		if ($this->description)
-			$lines[] = 'DESCRIPTION:' . $this->_encode($this->description);
+			$out[] = 'DESCRIPTION:' . $this->_encode($this->description);
 
 		if ($this->location)
-			$lines[] = 'LOCATION:' . $this->_encode($this->location);
+			$out[] = 'LOCATION:' . $this->_encode($this->location);
 
 		if ($this->url)
-			$lines[] = 'URL;VALUE=URI:' . $this->_encode($this->url);
+			$out[] = 'URL;VALUE=URI:' . $this->_encode($this->url);
 
-		$lines[] = 'END:VEVENT';
+		$out[] = 'END:VEVENT';
 		
-		return implode("\r\n", $lines);
-	}
-
-	protected function _encode($text)
-	{
-		$encoding = array(
-			"\r" => '',
-			"\n" => '\n',
-			"\\" => '\\\\',
-			 ";" => '\\;',
-			 "," => '\\,'
-		);
-
-		return strtr($text, $encoding);
+		return implode("\r\n", $out);
 	}
 }

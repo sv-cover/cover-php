@@ -275,6 +275,7 @@
 		function get_webcal()
 		{
 			$cal = new WebCal_Calendar('Cover');
+			$cal->description = __('Alle activiteiten van studievereniging Cover');
 
 			$punten = $this->model->get_agendapunten(true);
 
@@ -291,7 +292,7 @@
 				$event->summary = $punt->get('kop');
 				$event->description = $punt->get('beschrijving');
 				$event->location = $punt->get('locatie');
-				$event->url = sprintf('http://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
+				$event->url = sprintf('https://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
 				$cal->add_event($event);
 			}
 
