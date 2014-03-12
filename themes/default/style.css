@@ -990,3 +990,8 @@ form textarea {
 .ui-widget-overlay {
 	background: #000;
 }
+
+.cover-logo {
+	width: 200px;
+	height: 65.5px;
+}

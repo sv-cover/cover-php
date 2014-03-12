@@ -398,12 +398,7 @@
 				' . create_login() . '
 				</div>';
 				
-				$logo = '<a href="."><img src="' . get_theme_data('images/cover_logo.png') . '" alt="logo"/></a>';
-				if (date('m') == 12 && date('d') > 5 && date('d') < 27){
-					$logo = '<a href="."><img src="' . get_theme_data('images/kerstlogo.png') . '" style="margin-top: -20px;" alt="logo"/></a>';
-				} else if (date('m') == 9 && date('d') > 13 && date('d') < 21 && date('Y') == 2013){
-					$logo = '<a href="."><img src="' . get_theme_data('images/lustrumlogo.png') . '" alt="logo"/></a>';
-				}
+				$logo = '<a href="."><img class="cover-logo" src="' . get_theme_data('images/cover_logo.png') . '" alt="logo"/></a>';
 		echo $logo.'
 		</div>
 		<div class="topMenu clearfix">
