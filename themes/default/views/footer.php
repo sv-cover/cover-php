@@ -35,6 +35,9 @@
 		  ga('send', 'pageview');
 
 		</script>
+		<?php if (date('md') == '0401'): ?>
+		<script src="<?=get_theme_data('data/professionalism.js')?>"></script>
+		<?php endif ?>
 	</body>
 </html>
 <?php
