@@ -794,6 +794,13 @@ CREATE TABLE leden (
 
 ALTER TABLE public.leden OWNER TO webcie;
 
+CREATE TABLE studies (
+    lidid integer NOT NULL,
+    studie character varying(100)
+);
+
+ALTER TABLE public.studies OWNER TO webcie;
+
 --
 -- TOC entry 218 (class 1259 OID 24341)
 -- Name: lid_fotos_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie

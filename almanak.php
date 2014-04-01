@@ -58,7 +58,32 @@
 		
 		function _process_csv() {
 			if (member_in_commissie(COMMISSIE_ALMANAKCIE)) {
-				$iters = $this->model->get_from_search_first_last("","");
+				$iters = $this->model->get_from_search_first_last(null, null);
+
+				// Filter all previous and hidden members
+				$this->model->visible_types = array(MEMBER_STATUS_LID,
+					MEMBER_STATUS_ERELID, MEMBER_STATUS_DONATEUR);
+
+				$iters = array_filter($iters, array($this->model, 'is_visible'));
+
+				// Filter all hidden information (set the field to null)
+				$privacy_fields = $this->model->get_privacy();
+
+				// Remove the fields that have to be exported
+				unset($privacy_fields['voornaam'], $privacy_fields['achternaam']);
+
+				foreach ($iters as $iter)
+				{
+					foreach ($iter->data as $field => $value)
+						if (array_key_exists($field, $privacy_fields))
+							if (($this->model->get_privacy_for_field($iter, $field) & 1) === 0)
+								$iter->data[$field] = null;
+
+					$iter->data['status'] = $this->model->get_status($iter);
+
+					$iter->data['studie'] = implode(', ', $iter->get('studie'));
+				}
+
 				run_view('almanak::csv',$this->model,$iters,null);
 			}
 			else {

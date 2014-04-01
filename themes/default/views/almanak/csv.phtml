@@ -1,8 +1,8 @@
 <?
-$csv = csv_row(array(__('id'),__('voornaam'),__('tussenvoegsel'),__('achternaam'),__('adres'),__('postcode'),__('woonplaats'),__('email'),__('geboortedatum'),__('geslacht'),__('telefoonnummer_vast'),__('telefoonnummer_mobiel'),__('beginjaar'))) . "\n";
+$csv = csv_row(array(__('id'),__('voornaam'),__('tussenvoegsel'),__('achternaam'),__('adres'),__('postcode'),__('woonplaats'),__('email'),__('geboortedatum'),__('geslacht'),__('telefoonnummer_vast'),__('telefoonnummer_mobiel'),__('studie'),__('beginjaar'),__('status'))) . "\n";
 
 foreach ($iter as $item)
-	$csv .= csv_row(array($item->get('id'),$item->get('voornaam'),$item->get('tussenvoegsel'),$item->get('achternaam'),$item->get('adres'),$item->get('postcode'),$item->get('woonplaats'),$item->get('email'),$item->get('geboortedatum'),$item->get('geslacht'),$item->get('telefoonnummer_vast'),$item->get('telefoonnummer_mobiel'),$item->get('beginjaar'))) . "\n";
+	$csv .= csv_row(array($item->get('id'),$item->get('voornaam'),$item->get('tussenvoegsel'),$item->get('achternaam'),$item->get('adres'),$item->get('postcode'),$item->get('woonplaats'),$item->get('email'),$item->get('geboortedatum'),$item->get('geslacht'),$item->get('telefoonnummer_vast'),$item->get('telefoonnummer_mobiel'),$item->get('studie'),$item->get('beginjaar'),$item->get('status'))) . "\n";
 
 header('Content-Description: File Transfer');
 header('Content-Type: application/force-download');

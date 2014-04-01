@@ -269,6 +269,11 @@
 			else
 				return false;
 		}
+
+		public function is_visible($iter)
+		{
+			return in_array($iter->get('type'), $this->visible_types);
+		}
 		
 		/**
 		  * Return the privacy value for a field
@@ -280,8 +285,8 @@
 			
 			if ($privacy == null)
 				$privacy = $this->get_privacy();
-			
-			if (!in_array($field, $privacy))
+	
+			if (!array_key_exists($field, $privacy))
 				return false;
 			
 			$value = ($iter->get('privacy') >> ($privacy[$field] * 3)) & 7;
@@ -307,35 +312,67 @@
 		  */
 		function get_from_search_first_last($first, $last) {
 			
-			if (!$first && !$last) {
-				$rows = $this->db->query('SELECT * 
-						FROM leden
-						WHERE type IN (' . implode(',', $this->visible_types) . ')
-						ORDER BY achternaam, voornaam');
-				return $this->_rows_to_iters($rows);
-			}
-
-			$query = 'SELECT *
-					FROM leden
-					WHERE type IN (' . implode(',', $this->visible_types) . ') ';
+			$query = 'SELECT l.*, s.studie
+				FROM leden l
+				LEFT JOIN studies s ON s.lidid = l.id
+				WHERE l.type IN (' . implode(',', $this->visible_types) . ') ';
+			
 			$order = array();
 			
 			if ($first) {
-				$query .= " AND voornaam ILIKE '%" . $this->escape_string($first) . "%'";
-				$order[] = 'voornaam';
+				$query .= " AND l.voornaam ILIKE '%" . $this->escape_string($first) . "%'";
+				$order[] = 'l.voornaam';
 			}
 			
 			if ($last) {
-				$query .= " AND achternaam ILIKE '%" . $this->escape_string($last) . "%'";
-				$order[] = 'achternaam';
+				$query .= " AND l.achternaam ILIKE '%" . $this->escape_string($last) . "%'";
+				$order[] = 'l.achternaam';
 			}
 
-			
 			if (count($order) > 0)
 				$query .= ' ORDER BY ' . implode(', ', $order);
 						
-			$rows = $this->db->query($query);			
-			return $this->_rows_to_iters($rows);			
+			$rows = $this->db->query($query);
+
+			$rows = $this->_aggregate_rows($rows, array('studie'), 'id');
+
+			return $this->_rows_to_iters($rows);
+		}
+
+		/**
+		 * @author Jelmer van der Linde
+		 * Group rows by $group_by_column and in the process turn all fields
+		 * named in $aggregate_fields into arrays. This is a bit of a dirty
+		 * (Ok, a really dirty replacement) for array_agg in Postgres.
+		 *
+		 * @rows the raw database rows
+		 * @aggregate_fields fields that need to be collected for each group
+		 * @group_by_column name of the column which identifies the group
+		 * @result array of groupes
+		 */
+		protected function _aggregate_rows($rows, array $aggregate_fields, $group_by_column)
+		{
+			$grouped = array();
+
+			foreach ($rows as $row)
+			{
+				$key = $row[$group_by_column];
+
+				if (isset($grouped[$key]))
+				{
+					foreach ($aggregate_fields as $field)
+						$grouped[$key][$field][] = $row[$field];
+				}
+				else
+				{
+					$grouped[$key] = $row;
+					
+					foreach ($aggregate_fields as $field)
+						$grouped[$key][$field] = array($row[$field]);
+				}
+			}
+
+			return array_values($grouped);
 		}
 		
 		/** @author Pieter de Bie
@@ -438,6 +475,30 @@
 			return $this->_rows_to_iters($rows);
 		}
 		
+		function get_status($iter)
+		{
+			switch ($iter->get('type'))
+			{
+				case MEMBER_STATUS_LID:
+					return __('Lid');
+
+				case MEMBER_STATUS_LID_ONZICHTBAAR:
+					return __('Onzichtbaar');
+
+				case MEMBER_STATUS_LID_AF:
+					return __('Lid af');
+
+				case MEMBER_STATUS_ERELID:
+					return __('Erelid');
+
+				case MEMBER_STATUS_DONATEUR:
+					return __('Donateur');
+
+				default:
+					return __('Onbekend');
+			}
+		}
+
 		/**
 		  * Insert a profiel
 		  * @iter a #DataIter representing the profiel
