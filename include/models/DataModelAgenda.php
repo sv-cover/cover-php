@@ -89,14 +89,18 @@
 			elseif ($include_prive && $agendapunten_prive != null)
 				return $agendapunten_prive;
 			
-			$punten = $this->db->query("SELECT *, " .
-					$this->_generate_select() . "
-					FROM agenda 
-					WHERE (tot > CURRENT_TIMESTAMP OR (CURRENT_TIMESTAMP < van + interval '1 day') OR 
-					(DATE_PART('hours', van) = 0 AND CURRENT_TIMESTAMP < van + interval '1 day')) AND 
-					id NOT IN (SELECT agendaid FROM agenda_moderate) " .
-					(!$include_prive ? ' AND private = 0 ' : '') . "
-					ORDER BY van ASC");
+			$punten = $this->db->query("SELECT
+					agenda.*,
+					c.naam as commissie__naam,
+					c.page as commissie__page,
+					" . $this->_generate_select() . "
+					FROM agenda
+					LEFT JOIN commissies c ON c.id = agenda.commissie
+					WHERE (agenda.tot > CURRENT_TIMESTAMP OR (CURRENT_TIMESTAMP < agenda.van + interval '1 day') OR 
+					(DATE_PART('hours', agenda.van) = 0 AND CURRENT_TIMESTAMP < agenda.van + interval '1 day')) AND 
+					agenda.id NOT IN (SELECT agendaid FROM agenda_moderate) " .
+					(!$include_prive ? ' AND agenda.private = 0 ' : '') . "
+					ORDER BY agenda.van ASC");
 
 			if ($include_prive) {
 				$agendapunten_prive = $this->_rows_to_iters($punten);

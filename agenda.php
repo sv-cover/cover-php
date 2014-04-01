@@ -290,7 +290,7 @@
 				if ($punt->get('van') != $punt->get('tot'))
 					$event->end = new DateTime($punt->get('tot'), $timezone);
 				
-				$event->summary = $punt->get('kop');
+				$event->summary = sprintf('%s: %s', $punt->get('commissie__naam'), $punt->get('kop'));
 				$event->description = $punt->get('beschrijving');
 				$event->location = $punt->get('locatie');
 				$event->url = sprintf('https://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
