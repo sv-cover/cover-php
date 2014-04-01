@@ -156,6 +156,7 @@
 			$active_member_types = array(
 				MEMBER_STATUS_LID,
 				MEMBER_STATUS_LID_ONZICHTBAAR,
+				MEMBER_STATUS_ERELID,
 				MEMBER_STATUS_DONATEUR);
 
 			if (!$row || !in_array($row['type'], $active_member_types))
