@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-03-12 23:54+0100\n"
+"POT-Creation-Date: 2014-04-04 14:29+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -412,6 +412,7 @@ msgstr "You!"
 #: ../../../include/member.php:88
 #: ../../../include/models/DataModelForum.php:654
 #: ../../../include/models/DataModelForum.php:677
+#: ../../../include/models/DataModelMember.php:498
 #: ../../../themes/default/views/forum.php:503
 #: ../../../themes/default/views/profiel/profiel.php:70
 msgid "Onbekend"
@@ -443,6 +444,7 @@ msgid "Alle groepen"
 msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:668
+#: ../../../include/models/DataModelMember.php:483
 #: ../../../themes/default/views/boeken/boeken.php:341
 #: ../../../themes/default/views/boeken/boeken.php:362
 #: ../../../themes/default/views/boeken/boeken.php:404
@@ -472,6 +474,32 @@ msgstr "Committee"
 #: ../../../themes/default/views/forum.php:857
 msgid "Groep"
 msgstr "Group"
+
+#: ../../../include/models/DataModelMember.php:486
+#: ../../../themes/default/views/almanak/almanak.php:24
+msgid "Onzichtbaar"
+msgstr "Hidden"
+
+#: ../../../include/models/DataModelMember.php:489
+#: ../../../themes/default/views/almanak/almanak.php:29
+#: ../../../themes/default/views/almanak/almanak.phtml:46
+#: ../../../themes/default/views/profiel/profiel.phtml:136
+msgid "Lid af"
+msgstr "Previously a member"
+
+#: ../../../include/models/DataModelMember.php:492
+#: ../../../themes/default/views/almanak/almanak.php:34
+#: ../../../themes/default/views/almanak/almanak.phtml:47
+#: ../../../themes/default/views/profiel/profiel.phtml:140
+msgid "Erelid"
+msgstr "Honorary Member"
+
+#: ../../../include/models/DataModelMember.php:495
+#: ../../../themes/default/views/almanak/almanak.php:39
+#: ../../../themes/default/views/almanak/almanak.phtml:48
+#: ../../../themes/default/views/profiel/profiel.phtml:144
+msgid "Donateur"
+msgstr "Donator"
 
 #: ../../../include/pagenavigation.php:3
 msgid "Ga naar pagina"
@@ -571,39 +599,43 @@ msgstr "%s has been notified that the links have been denied."
 msgid "%s zijn op de hoogte gesteld van het weigeren van de links."
 msgstr "%s have been notified that the links have been denied."
 
-#: ../../../locale/strings.php:3
+#: ../../../locale/strings.php:9
 msgid "Voorzitter"
 msgstr "Chairman"
 
-#: ../../../locale/strings.php:4
+#: ../../../locale/strings.php:10
 msgid "Vice-voorzitter"
 msgstr "Vice Chairman"
 
-#: ../../../locale/strings.php:5
+#: ../../../locale/strings.php:11
 msgid "Secretaris"
 msgstr "Secretary"
 
-#: ../../../locale/strings.php:6
+#: ../../../locale/strings.php:12
 msgid "Penningmeester"
 msgstr "Treasurer"
 
-#: ../../../locale/strings.php:7
+#: ../../../locale/strings.php:13
 msgid "Algemeen lid"
 msgstr "General Member"
 
-#: ../../../locale/strings.php:8
+#: ../../../locale/strings.php:14
 #: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:14
 #: ../../../themes/default/views/fotoboek/_info.phtml:9
 msgid "Fotograaf"
 msgstr "Photographer"
 
-#: ../../../locale/strings.php:9
+#: ../../../locale/strings.php:15
 msgid "Commissaris Intern"
 msgstr "Commissioner of Internal Affairs"
 
-#: ../../../locale/strings.php:10
+#: ../../../locale/strings.php:16
 msgid "Commissaris Extern"
 msgstr "Commissioner of External Affairs"
+
+#: ../../../locale/strings.php:17
+msgid "Ouderejaars lid"
+msgstr "Senior member"
 
 #: ../../../mailinglijsten.php:27
 #: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:1
@@ -698,28 +730,6 @@ msgstr "%s have been notified that their documents have been denied."
 #: ../../../themes/default/views/taken/taken.phtml:7
 msgid "Taken"
 msgstr "Tasks"
-
-#: ../../../themes/default/views/almanak/almanak.php:24
-msgid "Onzichtbaar"
-msgstr "Hidden"
-
-#: ../../../themes/default/views/almanak/almanak.php:29
-#: ../../../themes/default/views/almanak/almanak.phtml:46
-#: ../../../themes/default/views/profiel/profiel.phtml:136
-msgid "Lid af"
-msgstr "Previously a member"
-
-#: ../../../themes/default/views/almanak/almanak.php:34
-#: ../../../themes/default/views/almanak/almanak.phtml:47
-#: ../../../themes/default/views/profiel/profiel.phtml:140
-msgid "Erelid"
-msgstr "Honorary Member"
-
-#: ../../../themes/default/views/almanak/almanak.php:39
-#: ../../../themes/default/views/almanak/almanak.phtml:48
-#: ../../../themes/default/views/profiel/profiel.phtml:144
-msgid "Donateur"
-msgstr "Donator"
 
 #: ../../../themes/default/views/almanak/almanak.php:52
 #, php-format
@@ -2196,8 +2206,16 @@ msgid "telefoonnummer_mobiel"
 msgstr "mobile phone number"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
+msgid "studie"
+msgstr "Study"
+
+#: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "beginjaar"
 msgstr "starting year"
+
+#: ../../../themes/default/views/almanak/csv.phtml:2
+msgid "status"
+msgstr "Status"
 
 #: ../../../themes/default/views/besturen/add.phtml:6
 msgid "Bestuursnaam:"
