@@ -166,10 +166,16 @@
 		modal: true,
 		autoOpen: false,
 		width: 600,
+		heigt: 500,
+		minWidth: 600,
+		minHeight: 500,
 		open: function() {	
 			// Center the picker at the same location as the map
 			var picker = initStickerLocationPicker();
 			picker.setCenter($('#sticker-map').data('google-map').getCenter());
+		},
+		resize: function() {
+			google.maps.event.trigger(initStickerLocationPicker(), 'resize');
 		}
 	});
 
