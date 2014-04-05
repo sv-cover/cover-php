@@ -172,12 +172,12 @@
 					<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
 					<li><a href="show.php?id=30">' . __('Documenten') . '</a></li>
 					<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
-					<li><a href="stickers.php">' . __('Stickerkaart') . '</a></li>
 					<li><a href="weblog.php">' . __('Weblog') . '</a></li>
 				</ul>
 				<ul id="leden" class="expander">
 					<li><a href="almanak.php">' .__('Almanak') .'</a></li>
 					<li><a href="mailinglijsten.php">' .__('Mailinglijsten') .'</a></li>
+					<li><a href="stickers.php">' . __('Stickerkaart') . '</a></li>
 					<li><a href="http://www.shitbestellen.nl" target="_blank">' .__('Merchandise') .'</a></li>
 					<li><a href="profiel.php#msdnaa">' .__('MSDNAA') .'</a></li>
 				</ul>
