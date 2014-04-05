@@ -3506,6 +3506,17 @@ CREATE TABLE mailinglijsten_berichten (
     verwerkt_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
 
+
+CREATE TABLE stickers (
+  id serial NOT NULL,
+  label text,
+  omschrijving text,
+  lat double precision,
+  lng double precision,
+  toegevoegd_op date,
+  CONSTRAINT stickersmap_pk PRIMARY KEY (id)
+);
+
 --
 -- TOC entry 2390 (class 2606 OID 25986)
 -- Name: actieveleden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 

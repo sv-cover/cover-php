@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-04-04 14:29+0100\n"
+"POT-Creation-Date: 2014-04-05 18:22+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -281,6 +281,7 @@ msgstr "Committee agenda"
 #: ../../../themes/default/views/agenda/agendapunt.phtml:11
 #: ../../../themes/default/views/agenda/edit.phtml:58
 #: ../../../themes/default/views/agenda/index.phtml:62
+#: ../../../themes/default/views/stickers/map.phtml:45
 msgid "Locatie"
 msgstr "Location"
 
@@ -701,6 +702,10 @@ msgstr "Show"
 msgid "Er is een nieuwe pagina aangemaakt met het id %d."
 msgstr "A new page has been added with id %d"
 
+#: ../../../stickers.php:16
+msgid "Stickers"
+msgstr "Stickers"
+
 #: ../../../studieondersteuning.php:16
 #: ../../../themes/default/views/header.php:103
 #: ../../../themes/default/views/studieondersteuning/auth_bestuur.phtml:1
@@ -859,6 +864,7 @@ msgstr "Add book"
 #: ../../../themes/default/views/fotoboek/_reacties.phtml:7
 #: ../../../themes/default/views/links/_beheer.phtml:28
 #: ../../../themes/default/views/news/news.phtml:12
+#: ../../../themes/default/views/stickers/map.phtml:5
 msgid "Toevoegen"
 msgstr "Add"
 
@@ -2997,6 +3003,35 @@ msgstr "End selected sessions"
 #: ../../../themes/default/views/show/edit.phtml:9
 msgid "Nieuwe pagina toevoegen"
 msgstr "Create a new page"
+
+#: ../../../themes/default/views/stickers/map.phtml:6
+#: ../../../themes/default/views/stickers/map.phtml:28
+msgid "Sticker toevoegen"
+msgstr "Add sticker"
+
+#: ../../../themes/default/views/stickers/map.phtml:10
+msgid "Stickerkaart"
+msgstr "Sticker map"
+
+#: ../../../themes/default/views/stickers/map.phtml:21
+msgid "Verwijder sticker"
+msgstr "Delete sticker"
+
+#: ../../../themes/default/views/stickers/map.phtml:35
+msgid "Label"
+msgstr "Label"
+
+#: ../../../themes/default/views/stickers/map.phtml:40
+msgid "Boodschap"
+msgstr "Message"
+
+#: ../../../themes/default/views/stickers/map.phtml:45
+msgid "Sleep of klik met de rechter muisknop om de marker te plaatsen"
+msgstr "Drag or right click to place the marker"
+
+#: ../../../themes/default/views/stickers/map.phtml:52
+msgid "Zet sticker op kaart"
+msgstr "Add sticker to map"
 
 #: ../../../themes/default/views/studieondersteuning/_nieuwe_documenten.phtml:2
 msgid "Het is op dit moment niet mogelijk om nieuwe documenten toe te voegen."

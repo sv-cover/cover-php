@@ -172,6 +172,7 @@
 					<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
 					<li><a href="show.php?id=30">' . __('Documenten') . '</a></li>
 					<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
+					<li><a href="stickers.php">' . __('Stickerkaart') . '</a></li>
 					<li><a href="weblog.php">' . __('Weblog') . '</a></li>
 				</ul>
 				<ul id="leden" class="expander">

@@ -1,0 +1,180 @@
+<div class="pageheading">
+	<?php if (logged_in()): ?>
+	<div class="controls inline">
+		<a href="#add-sticker-dialog" id="add-sticker-button">
+			<img src="<?=get_theme_data('images/add.png')?>" alt="<?=__('Toevoegen')?>">
+			<?=__('Sticker toevoegen')?>
+		</a>
+	</div>
+	<?php endif ?>
+	<h1><?=__('Stickerkaart')?></h1>
+</div>
+
+<div id="sticker-map">
+	<div id="sticker-info-window">
+		<h3 class="sticker-label"></h3>
+		<p class="sticker-description"></p>
+		<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
+		<form method="post" action="">
+			<input type="hidden" name="action" value="remove_sticker">
+			<input type="hidden" name="id">
+			<button type="submit" class="button"><?=__('Verwijder sticker')?></button>
+		</form>
+		<?php endif ?>
+	</div>
+</div>
+
+<?php if (logged_in()): ?>
+<div id="add-sticker-dialog" title="<?=__('Sticker toevoegen')?>">
+	<form method="post" action="" class="vertical-form">
+		<input type="hidden" name="action" value="add_sticker">
+		<input type="hidden" id="sticker-lat" name="lat">
+		<input type="hidden" id="sticker-lng" name="lng">
+		
+		<div>
+			<label for="sticker-label"><?=__('Label')?>:</label>
+			<input type="text" name="label" id="sticker-label">
+		</div>
+
+		<div>
+			<label for="sticker-description"><?=__('Boodschap')?>:</label>
+			<textarea name="description" id="sticker-description"></textarea>
+		</div>
+
+		<div>
+			<label for="sticker-location"><?=__('Locatie')?>: <small><?=__('Sleep of klik met de rechter muisknop om de marker te plaatsen')?></small></label>
+			<div id="sticker-location">
+				<div id="sticker-location-map"></div>
+			</div>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=__('Zet sticker op kaart')?></button>
+		</div>
+	</form>
+</div>
+<?php endif ?>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&sensor=false"></script>
+<script type="text/javascript">
+	var stickers = <?=json_encode(array_map(function($sticker) { return $sticker->data; }, $iter))?>;
+
+	var highlightedStickerId = /sticker=(\d+)/.test(document.location.href)
+		? document.location.href.match(/sticker=(\d+)/)[1]
+		: null;
+
+	// Initialize the sticker map
+	$(function() {
+		var canvas = $('#sticker-map');
+
+		var description = $('#sticker-info-window').detach();
+
+		var mapOptions = {
+			center: new google.maps.LatLng(<?=$this->getLocation() ?>),
+			zoom: 12
+		};
+
+		var map = new google.maps.Map(canvas.get(0), mapOptions);
+
+		var infoWindow = new google.maps.InfoWindow({
+			content: description.get(0),
+			maxWidth: 300
+		});
+
+		canvas.data('google-map', map);
+
+		// Place a marker for each of the stickers
+		$.each(stickers, function() {
+			var sticker = this;
+
+			var marker = new google.maps.Marker({
+				title: sticker.label,
+				position: new google.maps.LatLng(sticker.lat,sticker.lng),
+				map: map
+			});
+
+			// If this is the newly added marker, animate it
+			if (highlightedStickerId == sticker.id)
+			{
+				// Remove the marker from the map (so it doesn't already show up)
+				marker.setMap(null); 
+
+				// When the map is loaded, drop the marker
+				var listener = google.maps.event.addListener(map, 'tilesloaded', function() {
+					marker.setMap(map);
+					marker.setAnimation(google.maps.Animation.DROP);
+
+					// Remove this listener so it won't drop a second time
+					google.maps.event.removeListener(listener);
+				});
+			}
+
+			// Also, when clicking a marker, fill the info window and open it.
+			google.maps.event.addListener(marker, 'click', function() {
+				description.find('input[name=id]').val(sticker.id);
+				description.find('.sticker-label').text(sticker.label);
+				description.find('.sticker-description')
+					.text(sticker.omschrijving);
+
+				infoWindow.open(map, marker);
+			});
+		});
+	});
+
+	// Initialize the sticker location picker
+	var initStickerLocationPicker = function() {
+		var canvas = $('#sticker-location-map');
+
+		if (canvas.data('google-map'))
+			return canvas.data('google-map');
+
+		var mapOptions = {
+			center: new google.maps.LatLng(53.20, 6.56),
+			zoom: 11,
+			streetViewControl: false,
+			mapTypeControl: false
+		};
+
+		// The small map
+		var map = new google.maps.Map(canvas.get(0), mapOptions);
+
+		// The draggable marker
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(53.20, 6.56),
+			draggable: true,
+			map: map
+		});
+
+		// When right-clicking somewhere on the map, place the marker at that point
+		google.maps.event.addListener(map, 'rightclick', function(e) {
+			marker.setPosition(e.latLng);
+		});
+
+		// Update the hidden input fields when the marker changes position
+		google.maps.event.addListener(marker, 'position_changed', function(e) {
+			$('#sticker-lat').val(marker.getPosition().lat());
+			$('#sticker-lng').val(marker.getPosition().lng());
+		});
+
+		// Make the map easily available through the dom element
+		canvas.data('google-map', map);
+
+		return map;
+	};
+
+	$('#add-sticker-dialog').dialog({
+		modal: true,
+		autoOpen: false,
+		width: 600,
+		open: function() {	
+			// Center the picker at the same location as the map
+			var picker = initStickerLocationPicker();
+			picker.setCenter($('#sticker-map').data('google-map').getCenter());
+		}
+	});
+
+	$('#add-sticker-button').click(function(e) {
+		e.preventDefault();
+		$('#add-sticker-dialog').dialog('open');
+	});
+</script>
