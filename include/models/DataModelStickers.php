@@ -21,7 +21,9 @@ class DataModelStickers extends DataModel
 	{
 		$toegevoegd_op = date('Y-m-d');
 
-		$data = compact('label', 'omschrijving', 'lat', 'lng', 'toegevoegd_op');
+		$toegevoegd_door = logged_in('id');
+
+		$data = compact('label', 'omschrijving', 'lat', 'lng', 'toegevoegd_op', 'toegevoegd_door');
 
 		$iter = new DataIter($this->model, -1, $data);
 

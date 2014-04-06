@@ -3514,6 +3514,7 @@ CREATE TABLE stickers (
   lat double precision,
   lng double precision,
   toegevoegd_op date,
+  toegevoegd_door integer,
   CONSTRAINT stickersmap_pk PRIMARY KEY (id)
 );
 
