@@ -55,7 +55,7 @@
 </div>
 <?php endif ?>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&sensor=false"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&amp;sensor=false"></script>
 <script type="text/javascript">
 	var stickers = <?=json_encode(array_map(function($sticker) { return $sticker->data; }, $iter))?>;
 
@@ -71,7 +71,8 @@
 
 		var mapOptions = {
 			center: new google.maps.LatLng(<?=$this->getLocation() ?>),
-			zoom: 12
+			zoom: 12,
+			streetViewControl: false
 		};
 
 		var map = new google.maps.Map(canvas.get(0), mapOptions);
@@ -132,7 +133,7 @@
 			center: new google.maps.LatLng(53.20, 6.56),
 			zoom: 11,
 			streetViewControl: false,
-			mapTypeControl: false
+			mapTypeControl: true
 		};
 
 		// The small map
@@ -173,6 +174,7 @@
 			// Center the picker at the same location as the map
 			var picker = initStickerLocationPicker();
 			picker.setCenter($('#sticker-map').data('google-map').getCenter());
+			picker.setZoom($('#sticker-map').data('google-map').getZoom());
 		},
 		resize: function() {
 			google.maps.event.trigger(initStickerLocationPicker(), 'resize');
