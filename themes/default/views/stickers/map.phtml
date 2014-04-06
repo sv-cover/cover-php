@@ -94,6 +94,16 @@
 				map: map
 			});
 
+			var showInfoWindow = function() {
+				// Fill in the fields
+				description.find('input[name=id]').val(sticker.id);
+				description.find('.sticker-label').text(sticker.label);
+				description.find('.sticker-description').text(sticker.omschrijving);
+
+				// Pop open the window at the place of the marker
+				infoWindow.open(map, marker);
+			};
+
 			// If this is the newly added marker, animate it
 			if (highlightedStickerId == sticker.id)
 			{
@@ -105,20 +115,16 @@
 					marker.setMap(map);
 					marker.setAnimation(google.maps.Animation.DROP);
 
+					// Also open up the info window
+					setTimeout(showInfoWindow, 500);
+
 					// Remove this listener so it won't drop a second time
 					google.maps.event.removeListener(listener);
 				});
 			}
 
 			// Also, when clicking a marker, fill the info window and open it.
-			google.maps.event.addListener(marker, 'click', function() {
-				description.find('input[name=id]').val(sticker.id);
-				description.find('.sticker-label').text(sticker.label);
-				description.find('.sticker-description')
-					.text(sticker.omschrijving);
-
-				infoWindow.open(map, marker);
-			});
+			google.maps.event.addListener(marker, 'click', showInfoWindow);
 		});
 	});
 
