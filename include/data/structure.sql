@@ -3510,11 +3510,11 @@ CREATE TABLE mailinglijsten_berichten (
 CREATE TABLE stickers (
   id serial NOT NULL,
   label text,
-  omschrijving text,
+  omschrijving text NOT NULL DEFAULT '',
   lat double precision,
   lng double precision,
   toegevoegd_op date,
-  toegevoegd_door integer,
+  toegevoegd_door integer DEFAULT NULL REFERENCES leden (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
   CONSTRAINT stickersmap_pk PRIMARY KEY (id)
 );
 
