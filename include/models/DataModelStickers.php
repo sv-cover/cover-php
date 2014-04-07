@@ -30,6 +30,30 @@ class DataModelStickers extends DataModel
 		return $this->insert($iter, true);
 	}
 
+	public function getNearbyStickers($sticker_id, $limit)
+	{
+		$rows = $this->db->query(sprintf("SELECT s.*,
+				DEGREES(
+					ACOS(
+						COS(RADIANS(s.lat)) * COS(RADIANS(c.lat)) * COS(RADIANS(s.lng) - RADIANS(c.lng))
+						+ SIN(RADIANS(s.lat)) * SIN(RADIANS(c.lat))
+					)
+				) * 111.045 as distance -- distance in KM
+				FROM {$this->table} s
+				RIGHT JOIN {$this->table} c ON c.id = %d
+				ORDER BY distance ASC
+				LIMIT %d", $sticker_id, $limit);
+
+		return $this->_rows_to_iters($rows);
+	}
+
+	public function getRecentStickers($limit)
+	{
+		$rows = $this->db->query("SELECT * FROM {$this->table} ORDER BY toegevoegd_op DESC LIMIT {$limit}");
+
+		return $this->_rows_to_iters($rows);
+	}
+
 	public function getStickersInRange(GeoPoint $upperleft, GeoPoint $lowerright, $group = false)
 	{
 
