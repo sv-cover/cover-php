@@ -102,6 +102,10 @@ class ControllerScherm
 				$mime_type = 'image/png';
 				break;
 
+			case 'svg':
+				$mime_type = 'image/svg+xml';
+				break;
+
 			default:
 				$mime_type = 'application/octet-stream';
 				break;
