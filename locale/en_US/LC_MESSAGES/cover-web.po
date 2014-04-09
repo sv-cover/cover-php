@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-04-09 10:34+0100\n"
+"POT-Creation-Date: 2014-04-09 10:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -645,6 +645,10 @@ msgstr "Commissioner Boo-boo"
 #: ../../../locale/strings.php:19
 msgid "Commissaris Verbanddoos"
 msgstr "Commissioner Bandage box"
+
+#: ../../../locale/strings.php:20
+msgid "Promohomo"
+msgstr "Promotion Homosexual"
 
 #: ../../../mailinglijsten.php:27
 #: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:1

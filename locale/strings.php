@@ -17,3 +17,4 @@ __('Commissaris Extern');
 __('Ouderejaars lid');
 __('Commissaris Kusje');
 __('Commissaris Verbanddoos');
+__('Promohomo');
