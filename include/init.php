@@ -21,6 +21,9 @@
 
 	date_default_timezone_set('Europe/Amsterdam');
 
+	/* Import composer packages */
+	require_once dirname(__FILE__) . '/../vendor/autoload.php';
+
 	/* Initialize session */
 	session_start();
 

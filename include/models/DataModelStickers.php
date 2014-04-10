@@ -30,7 +30,7 @@ class DataModelStickers extends DataModel
 		return $this->insert($iter, true);
 	}
 
-	public function getNearbyStickers($sticker_id, $limit)
+	public function getNearbyStickers($sticker, $limit)
 	{
 		$rows = $this->db->query(sprintf("SELECT s.*,
 				DEGREES(
@@ -42,7 +42,7 @@ class DataModelStickers extends DataModel
 				FROM {$this->table} s
 				RIGHT JOIN {$this->table} c ON c.id = %d
 				ORDER BY distance ASC
-				LIMIT %d", $sticker_id, $limit);
+				LIMIT %d", $sticker->get('id'), $limit));
 
 		return $this->_rows_to_iters($rows);
 	}
@@ -54,8 +54,10 @@ class DataModelStickers extends DataModel
 		return $this->_rows_to_iters($rows);
 	}
 
-	public function getStickersInRange(GeoPoint $upperleft, GeoPoint $lowerright, $group = false)
+	public function getRandomSticker()
 	{
+		$row = $this->db->query_first("SELECT * FROM {$this->table} ORDER BY RANDOM() DESC LIMIT 1");
 
+		return $this->_row_to_iter($row);
 	}
 }
