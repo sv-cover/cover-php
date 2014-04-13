@@ -192,7 +192,7 @@
 		  * @result a #DataIter
 		  */
 		function get_previous_book($book) {
-			if (!$book)
+			if (!$book || !$book->has('date'))
 				return null;
 
 			$row = $this->db->query_first("
@@ -221,7 +221,7 @@
 		  * @result a #DataIter
 		  */
 		function get_next_book($book) {
-			if (!$book)
+			if (!$book || !$book->has('date'))
 				return null;
 
 			$row = $this->db->query_first("
