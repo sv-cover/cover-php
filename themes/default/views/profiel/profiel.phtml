@@ -1,4 +1,4 @@
-<h1><?= sprintf(__('Profiel van %s'), member_full_name($iter, false, false)) ?></h1>
+<h1><?= markup_format_text(sprintf(__('Profiel van %s'), member_full_name($iter, false, false))) ?></h1>
 <div class="messageBox clearfix">
 
 
@@ -256,6 +256,37 @@
 	</div>
 <?php endif ?>
 
+<?php if($this->is_current_member($iter->get('lidid'))): ?>
+	<?php $facebook_button = 'login' ?>
+	<h2 id="facebook"><?= __('Facebook')?></h2>
+	<div class="messageBox">
+		<p>
+		<?php
+			if ($this->facebook->getUser())
+			{
+				try {
+					$me = get_facebook()->api('/me', 'GET');
+					echo markup_format_text(sprintf(__('Je bent ingelogd als %s.'), $me['name']));
+					$facebook_button = 'logout';
+				} catch (FacebookException $e) {
+					echo __('Je bent niet langer gekoppeld aan Facebook.');
+					$facebook_button = 'login';
+				}
+			}
+			else
+			{
+				echo __('Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan.');
+			}
+		?>
+
+		<?php if ($facebook_button == 'login'): ?>
+			<a class="button connect-facebook-button" href="<?=$this->facebook->getLoginUrl()?>"><?= __('Koppel Facebook') ?></a>
+		<?php elseif ($facebook_button == 'logout'): ?>
+			<a class="button connect-facebook-button" href="<?=$this->facebook->getLogoutUrl()?>"><?= __('Ontkoppel Facebook') ?></a>
+		<?php endif ?>
+		</p>
+	</div>
+<?php endif ?>
 	
 <?php if($this->is_current_member($iter->get('lidid'))): ?>
 	<h2 id="msdnaa"><?=__('Dreamspark (voorheen MSDNAA)')?></h2>

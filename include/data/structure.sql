@@ -97,7 +97,7 @@ CREATE TABLE agenda (
     locatie character varying(100),
     private smallint DEFAULT 0,
     lustrum smallint DEFAULT 0,
-    facebook_id bigint DEFAULT NULL
+    facebook_id character varying(20) DEFAULT NULL
 );
 
 

@@ -6,12 +6,25 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 <h1><?= $iter->get('kop') ?></h1>
 <hr class="colorAccent <? echo strtolower($commissie_model->get_naam($commissie->get('page')));?>">
 <div class="messageBox">
+<?php if ($cover_photo = $this->get_cover_photo($iter)): ?>
+	<img src="<?=$cover_photo?>" class="event-cover-photo">
+<?php endif ?>
 <p><?= __('Datum & Tijd') ?>: <?= agenda_period_for_display($iter, 'van') ?><br/>
 <? if ($iter->get('locatie')) { ?>
 	<?= __('Locatie')?>: <?= markup_format_text($iter->get('locatie')) ?><br/>
 <? } ?>
 </p>
 <p><?= markup_parse($iter->get('beschrijving')) ?></p>
+
+<ul>
+<?php foreach ($this->get_attending($iter) as $attendee): ?>
+	<li>
+		<img src="<?=markup_format_text($attendee['picture']['data']['url'])?>">
+		<span class="name"><?=markup_format_text($attendee['name']) ?></span>
+	</li>
+<?php endforeach ?>
+</ul>
+
 <p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="show.php?id=<?= $commissie->get('page') ?>"><?= htmlspecialchars($commissie->get('naam')) ?></a></span></p>
 <p>
 	<a href="agenda.php"><?= image('agenda.png', __('agenda'), __('Volledige agenda bekijken'), 'class="top"') ?> <?= __('Volledige agenda') ?></a>

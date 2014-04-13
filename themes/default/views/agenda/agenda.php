@@ -1,6 +1,7 @@
 <?php
-	require_once('include/login.php');
-	require_once('include/markup.php');
+	require_once 'include/login.php';
+	require_once 'include/markup.php';
+	require_once 'include/facebook.php';
 	
 	class AgendaView extends View {
 		protected $__file = __FILE__;
@@ -10,6 +11,42 @@
 		public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
+
+			$this->facebook = get_facebook();
+		}
+
+		public function get_cover_photo($item)
+		{
+			if (!$item->has('facebook_id'))
+				return null;
+
+			try {
+				$reponse = $this->facebook->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
+
+				if (isset($reponse['cover']))
+					return $reponse['cover']['source'];
+			} catch (Exception $e) {
+				//
+			}
+
+			return null;
+		}
+
+		public function get_attending($item)
+		{
+			if (!$item->has('facebook_id'))
+				return array();
+
+			try {
+				$response = $this->facebook->api('/' . $item->get('facebook_id') . '/attending?fields=name,picture', 'GET');
+
+				if (isset($response['data']))
+					return $response['data'];
+			} catch (Exception $e) {
+				//
+			}
+
+			return array();
 		}
 
 		public function get_title()

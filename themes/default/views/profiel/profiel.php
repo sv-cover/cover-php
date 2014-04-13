@@ -1,5 +1,7 @@
 <?php
-require_once('form.php');
+require_once 'form.php';
+require_once 'markup.php';
+require_once 'facebook.php';
 
 function empty_to_http_formatter($value) {
 	if (!$value)
@@ -11,6 +13,11 @@ function empty_to_http_formatter($value) {
 
 class ProfielView extends View {
 		protected $__file = __FILE__;
+
+		public function __construct()
+		{
+			$this->facebook = get_facebook();
+		}
 
 		function is_current_member($lidid) {
 			static $is_current = null;
