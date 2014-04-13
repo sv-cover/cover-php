@@ -76,6 +76,7 @@
 			$handle = @pg_query($this->resource, $query);
 
 			if ($handle === false) {
+				throw new RuntimeException('Query failed: ' . $this->get_last_error());
 				/* An error occurred */
 				return null;
 			} else if ($handle !== true) {
@@ -280,12 +281,14 @@
 		  *
 		  * @result true if delete was successful, false otherwise
 		  */
-		function delete($table, $condition = '', $limit = 1) {
+		function delete($table, $condition, $limit = 1) {
 			if (!$this->resource)
 				return false;
 
-			return $this->query('DELETE FROM "' . $table . '" ' . ($condition ? 
-					('WHERE ' . $condition . ' ') : ''));
+			if (!$condition)
+				throw new RuntimeException('Are you really really sure you want to delete everything?');
+
+			return $this->query('DELETE FROM "' . $table . '" WHERE ' . $condition .  ($limit ? ' LIMIT ' . $limit : ''));
 		}
 
 		/**
