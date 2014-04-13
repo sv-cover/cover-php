@@ -3475,7 +3475,7 @@ CREATE TABLE mailinglijsten (
     naam varchar(100) NOT NULL,
     adres varchar(255) NOT NULL UNIQUE,
     omschrijving text NOT NULL,
-    type integer NOT NULL, 
+    type integer NOT NULL DEFAULT 1, -- default type is opt-in
     publiek boolean NOT NULL DEFAULT TRUE,
     toegang integer,
     commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT
