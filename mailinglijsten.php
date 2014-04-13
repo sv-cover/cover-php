@@ -150,11 +150,11 @@ class ControllerMailinglijsten extends Controller
 		$this->get_content('mailinglijsten::subscriptions', null, compact('lijst', 'aanmeldingen'));
 	}
 
-	protected function run_my_subscriptions_management($lid_id)
+	protected function run_my_subscriptions_management()
 	{
 		$member_model = get_model('DataModelMember');
 
-		$member = $member_model->get_iter($lid_id);
+		$member = $member_model->get_iter(logged_in('id'));
 
 		if (!$member) {
 			header('Status: 404 Not found');
@@ -169,25 +169,21 @@ class ControllerMailinglijsten extends Controller
 			switch ($_POST['action'])
 			{
 				case 'subscribe':
-					if ($this->model->member_can_subscribe($lijst, $lid_id))
-						$this->model->aanmelden($lijst, $lid_id);
+					if ($this->model->member_can_subscribe($lijst))
+						$this->model->aanmelden($lijst, logged_in('id'));
 					break;
 
 				case 'unsubscribe':
-					if ($this->model->member_can_unsubscribe($lijst, $lid_id))
-						$this->model->afmelden($lijst, $lid_id);
+					if ($this->model->member_can_unsubscribe($lijst))
+						$this->model->afmelden($lijst, logged_in('id'));
 					break;
 			}
 
-			if ($lid_id == logged_in('id'))
-				header('Location: mailinglijsten.php');
-			else
-				header('Location: mailinglijsten.php?lid_id=' . $lid_id);
-
+			header('Location: mailinglijsten.php');
 			return;
 		}
 
-		$subscriptions = $this->model->get_lijsten($lid_id,
+		$subscriptions = $this->model->get_lijsten(logged_in('id'),
 			!member_in_commissie(COMMISSIE_BESTUUR)); // public only? Only if not WebCie.
 
 		$this->get_content('mailinglijsten::mailinglists', $subscriptions, compact('member'));
@@ -222,10 +218,6 @@ class ControllerMailinglijsten extends Controller
 				return $this->run_admin_subscriptions_management($_GET['lijst_id']);
 			else
 				return $this->run_subscriptions_management($_GET['lijst_id']);
-
-		// Manage the subscriptions of a member other than yourself
-		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['lid_id']))
-			return $this->run_my_subscriptions_management($_GET['lid_id']);
 
 		// No list but a post request -> create a new list
 		elseif (member_in_commissie(COMMISSIE_EASY) && isset($_GET['lijst_id']))

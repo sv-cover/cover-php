@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-04-09 11:17+0100\n"
+"POT-Creation-Date: 2014-04-13 10:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Generator: Poedit 1.6.4\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
-"X-Poedit-KeywordsList: __;_ngettext:1,2\n"
+"X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
 "X-Poedit-SearchPath-0: ../../..\n"
 
 #: ../../../actieveleden.php:15
@@ -236,6 +236,14 @@ msgstr "The directory with photos could not be read"
 msgid "Gastenboek"
 msgstr "Guestbook"
 
+#: ../../../include/controllers/Controller.php:85
+msgid ""
+"Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
+"de WebCie (webcie@svcover.nl)"
+msgstr ""
+"Sorry, something went horribly wrong. Please try again in a bit or contact "
+"the WebCie (webcie@svcover.nl)"
+
 #: ../../../include/controllers/ControllerEditable.php:72
 #: ../../../themes/default/views/editable.php:54
 msgid "Deze pagina kan niet door jou worden bewerkt."
@@ -427,7 +435,7 @@ msgstr "unknown"
 #: ../../../include/models/DataModelForum.php:666
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/forum.php:870
-#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:24
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:32
 #: ../../../themes/default/views/profiel/profiel.phtml:205
 msgid "Iedereen"
 msgstr "Everyone"
@@ -464,7 +472,7 @@ msgstr "Member"
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/agenda/edit.phtml:39
 #: ../../../themes/default/views/agenda/moderate.phtml:18
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:19
 #: ../../../themes/default/views/show/edit.phtml:21
 msgid "Commissie"
@@ -660,6 +668,7 @@ msgid "Mailinglijst"
 msgstr "Mailing list"
 
 #: ../../../mailinglijsten.php:28 ../../../themes/default/views/header.php:179
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:1
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:1
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:1
 #: ../../../themes/default/views/profiel/profiel.phtml:236
@@ -1234,7 +1243,7 @@ msgid "Onderwerp/vraag"
 msgstr "Subject/question"
 
 #: ../../../themes/default/views/forum.php:372
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:30
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:35
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:28
 msgid "Omschrijving"
 msgstr "Description"
@@ -1350,7 +1359,7 @@ msgstr "New forum"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:20
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:31
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:24
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:53
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:72
@@ -1376,6 +1385,7 @@ msgstr "Remove selected forums"
 
 #: ../../../themes/default/views/forum.php:863
 #: ../../../themes/default/views/forum.php:1028
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:16
 #: ../../../themes/default/views/studieondersteuning/vak.phtml:23
 msgid "Type"
 msgstr "Type"
@@ -1702,15 +1712,23 @@ msgstr "Membership application form"
 msgid "Opmerkingen"
 msgstr "Notes"
 
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:24
+msgid "Opt-in"
+msgstr "Opt-in"
+
 #: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:25
+msgid "Opt-out"
+msgstr "Opt-out"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:33
 msgid "Alleen mensen op de mailinglijst"
 msgstr "Only people subscribed to this mailing list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:26
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:34
 msgid "Alleen *@svcover.nl adressen"
 msgstr "Only *@svcover.nl addresses"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:27
+#: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:35
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
@@ -1898,6 +1916,7 @@ msgstr "You haven't filled in all the fields correctly"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:7
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:24
 #: ../../../themes/default/views/lidworden/lidworden.phtml:42
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:5
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:5
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:49
 #: ../../../themes/default/views/profiel/profiel.phtml:51
@@ -2743,6 +2762,21 @@ msgstr "Put all links to accept"
 msgid "Alle links op weigeren zetten"
 msgstr "Put all links to deny"
 
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:13
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
+msgid "Uitschrijven"
+msgstr "Unsubscribe"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:14
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
+msgid "Je bent aangemeld voor deze mailinglijst."
+msgstr "You are subscribed to this mailinglist."
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:17
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:67
+msgid "Aanmelden"
+msgstr "Subscribe"
+
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:6
 msgid "Nieuwe mailinglijst"
 msgstr "New mailing list"
@@ -2751,48 +2785,41 @@ msgstr "New mailing list"
 msgid "Lijstadres"
 msgstr "List email address:"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:16
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:18
+msgid "Op basis waarvan wordt de lijst gevuld?"
+msgstr "What type of list is this?"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
 msgid "Toegang"
 msgstr "Access"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:18
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:23
 msgid "Wie mag e-mails sturen naar deze lijst?"
 msgstr "Who can send emails to this list?"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:23
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:28
 msgid "Welke commissie mag bepalen wie er op de lijst staat?"
 msgstr "Which committee may subscribe and unsubscribe people to this list?"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:35
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:40
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:33
 msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
 msgstr "People can subscribe to this list."
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:38
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:43
 msgid "Maak lijst"
 msgstr "Make list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:56
-msgid "Verborgen"
-msgstr "Hidden"
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:57
+#, fuzzy
+msgid "Privé"
+msgstr "Private"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:65
-msgid "Uitschrijven"
-msgstr "Unsubscribe"
-
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:65
-msgid "Je bent aangemeld voor deze mailinglijst."
-msgstr "You are subscribed to this mailinglist."
-
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:65
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
 #, php-format
 msgid "%s is aangemeld voor deze mailinglijst."
 msgstr "%s is subscribed to this mailinglist."
-
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:68
-msgid "Aanmelden"
-msgstr "Subscribe"
 
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:36
 msgid "Update lijst"
@@ -2947,8 +2974,10 @@ msgstr "Edit your privacy preferences to indicate who can see what info"
 
 #: ../../../themes/default/views/profiel/profiel.phtml:238
 #, php-format
-msgid "Je bent aangemeld voor %d mailinglijsten."
-msgstr "You are subscribed to %d mailing lists."
+msgid "Je bent aangemeld voor %d mailinglijst."
+msgid_plural "Je bent aangemeld voor %d mailinglijsten."
+msgstr[0] "You are subscribed to %d mailing list."
+msgstr[1] "You are subscribed to %d mailing lists."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:238
 msgid "Beheer je abonnementen."
@@ -2956,12 +2985,10 @@ msgstr "Manage your subscriptions."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:243
 #, php-format
-msgid "Deze persoon is aangemeld voor %d mailinglijsten."
-msgstr "This person is subscribed to %d mailing lists."
-
-#: ../../../themes/default/views/profiel/profiel.phtml:243
-msgid "Beheer zijn/haar abonnementen."
-msgstr "Manage his/her subscriptions."
+msgid "Deze persoon is aangemeld voor %d mailinglijst."
+msgid_plural "Deze persoon is aangemeld voor %d mailinglijsten."
+msgstr[0] "This person is subscribed to %d mailing list."
+msgstr[1] "This person is subscribed to %d mailing lists."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:248
 #: ../../../themes/default/views/profiel/profiel.phtml:253
@@ -2970,8 +2997,10 @@ msgstr "Sessions"
 
 #: ../../../themes/default/views/profiel/profiel.phtml:250
 #, php-format
-msgid "Je bent ingelogd met %d browsers."
-msgstr "You are logged in with %d browsers."
+msgid "Je bent ingelogd met %d browser."
+msgid_plural "Je bent ingelogd met %d browsers."
+msgstr[0] "You are logged in with %d browser."
+msgstr[1] "You are logged in with %d browsers."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:250
 msgid "Beheer je sessies."
@@ -2979,8 +3008,10 @@ msgstr "Manage your sessions."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:255
 #, php-format
-msgid "Deze persoon is ingelogd met %d browsers."
-msgstr "This person is logged in with %d browsers."
+msgid "Deze persoon is ingelogd met %d browser."
+msgid_plural "Deze persoon is ingelogd met %d browsers."
+msgstr[0] "This person is logged in with %d browser."
+msgstr[1] "This person is logged in with %d browsers."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:255
 msgid "Beheer zijn/haar sessies."
@@ -3262,6 +3293,12 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Verborgen"
+#~ msgstr "Hidden"
+
+#~ msgid "Beheer zijn/haar abonnementen."
+#~ msgstr "Manage his/her subscriptions."
 
 #~ msgid "Naam:"
 #~ msgstr "Name:"

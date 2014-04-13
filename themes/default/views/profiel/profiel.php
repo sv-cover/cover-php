@@ -88,7 +88,7 @@ class ProfielView extends View {
 			$subscriptions = 0;
 
 			foreach ($all_lists as $list)
-				if ($list->get('abonnement_id') != null && $list->get('publiek'))
+				if ($list->get('subscribed'))
 					$subscriptions++;
 
 			return $subscriptions;

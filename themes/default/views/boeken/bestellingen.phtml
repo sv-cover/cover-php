@@ -17,7 +17,7 @@ foreach ($iter as $item) {
 	<tr class="<?= $class ?>">
 		<td><?= $item->get('titel') ?></td>
 		<td><?= member_full_name($item) ?></td>
-		<td class="text_right"><?= ($item->get('prijs') == 0 ? 'n.n.b.' : ('&euro;&nbsp;' . money_format('%.2n',  $item->get('prijs')))) ?></td>
+		<td class="text_right"><?= ($item->get('prijs') == 0 ? 'n.n.b.' : ('&euro;&nbsp;' . money_format('%!.2n',  $item->get('prijs')))) ?></td>
 		</tr>
 
 <? 	$i = !$i;
@@ -74,7 +74,7 @@ foreach ($iter as $item) {
 		<td><?= htmlspecialchars(member_full_name($item)) ?></td>
 		<td class="text_right"><?= $item->get('aantal_bestellingen') ?></td>
 
-	<? $total = money_format('%.2n', $this->totaalprijs($model, $item->get('id'), $nnb));
+	<? $total = money_format('%!.2n', $this->totaalprijs($model, $item->get('id'), $nnb));
 
 	if ($nnb)
 		$star = true; ?>

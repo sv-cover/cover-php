@@ -90,6 +90,10 @@
 	function _ngettext($singular, $plural, $number) {
 		return i18n_translation::get_reader()->ngettext($singular, $plural, $number);
 	}
+
+	function __N($singular, $plural, $number) {
+		return sprintf(_ngettext($singular, $plural, $number), $number);
+	}
 	
 	/** @group i18n
 	  * Get the current locale

@@ -54,7 +54,7 @@
 
 		<em class="list-email"><?= htmlspecialchars($lijst->get('adres')) ?></em>
 		<?php if (!$lijst->get('publiek')): ?>
-		<em class="list-public-status"><?=__('PrivÃ©')?></em>
+		<em class="list-public-status"><?=__('Privé')?></em>
 		<?php endif ?>
 
 		<p class="list-description"><?= markup_parse($lijst->get('omschrijving')) ?></p>

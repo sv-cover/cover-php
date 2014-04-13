@@ -235,24 +235,24 @@
 <? if($this->is_current_member($iter->get('lidid'))): ?>
 	<h2><?= __('Mailinglijsten')?></h2>
 	<div class="messageBox">
-		<p><?= sprintf(__('Je bent aangemeld voor %d mailinglijsten.'), $this->get_active_subscription_count($iter->get('lidid'))) ?> <a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
+		<p><?= __N('Je bent aangemeld voor %d mailinglijst.', 'Je bent aangemeld voor %d mailinglijsten.', $this->get_active_subscription_count($iter->get('lidid'))) ?> <a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
 	</div>
 <?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
 	<h2><?= __('Mailinglijsten')?></h2>
 	<div class="messageBox">
-		<p><?= sprintf(__('Deze persoon is aangemeld voor %d mailinglijsten.'), $this->get_active_subscription_count($iter->get('lidid'))) ?> <a href="mailinglijsten.php?lid_id=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar abonnementen.') ?></a></p>
+		<p><?= __N('Deze persoon is aangemeld voor %d mailinglijst.', 'Deze persoon is aangemeld voor %d mailinglijsten.', $this->get_active_subscription_count($iter->get('lidid'))) ?></p>
 	</div>
 <?php endif ?>
 
 <? if($this->is_current_member($iter->get('lidid'))): ?>
 	<h2><?= __('Sessies')?></h2>
 	<div class="messageBox">
-		<p><?= sprintf(__('Je bent ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
+		<p><?= __N('Je bent ingelogd met %d browser.', 'Je bent ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
 	</div>
 <?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
 	<h2><?= __('Sessies')?></h2>
 	<div class="messageBox">
-		<p><?= sprintf(__('Deze persoon is ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar sessies.') ?></a></p>
+		<p><?= __N('Deze persoon is ingelogd met %d browser.', 'Deze persoon is ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar sessies.') ?></a></p>
 	</div>
 <?php endif ?>
 
