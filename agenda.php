@@ -82,7 +82,7 @@
 			if (trim($value) == '')
 				return null;
 
-			if (strlen($value) == 15  && ctype_digit($value))
+			if (strlen($value) <= 20  && ctype_digit($value))
 				return $value;
 
 			return false;
