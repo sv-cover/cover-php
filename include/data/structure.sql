@@ -3483,7 +3483,7 @@ CREATE TABLE mailinglijsten (
 
 CREATE TABLE mailinglijsten_abonnementen (
     abonnement_id CHAR(40) NOT NULL PRIMARY KEY,
-    mailinglijst_id integer NOT NULL REFERENCES mailinglijsten (id),
+    mailinglijst_id integer NOT NULL REFERENCES mailinglijsten (id) ON UPDATE CASCADE ON DELETE CASCADE,
     lid_id integer DEFAULT NULL REFERENCES leden (id),
     naam VARCHAR(255) DEFAULT NULL,
     email VARCHAR(255) DEFAULT NULL,
