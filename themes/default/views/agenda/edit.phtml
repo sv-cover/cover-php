@@ -60,6 +60,10 @@ foreach ($member_data['commissies'] as $commissie)
 		'<div id="agenda_locatie">' .
 		input_text('locatie', $data, 'maxlength', '100') .
 		'</div>') ?>
+
+<?= table_row(label(__('Facebook Event'), 'facebook_id', $errors, false) . ':', '',
+		input_text('facebook_id', $data, 'maxlength', '15', 'size', '15')) ?>
+
 		<tr>
 			<td colspan="3">
 				<?= textarea_field('beschrijving', $data, $errors, 'formatter', 'markup_format_text') ?>

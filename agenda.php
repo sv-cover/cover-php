@@ -78,6 +78,16 @@
 			return $this->_check_length('locatie', $locatie);
 		}
 
+		function _check_facebook_id($name, $value) {
+			if (trim($value) == '')
+				return null;
+
+			if (strlen($value) == 15  && ctype_digit($value))
+				return $value;
+
+			return false;
+		}
+
 		function _action_prepare($iter) {
 			/* Only logged in members can attempt to do this */
 			if (!logged_in()) {
@@ -99,14 +109,15 @@
 			$errors = array();
 			$data = check_values(
 				array(
-					array('name' => 'kop', 'function' => array(&$this, '_check_length')),
+					array('name' => 'kop', 'function' => array($this, '_check_length')),
 					'beschrijving',
 					array('name' => 'commissie', 'function' => 'check_value_toint'),
-					array('name' => 'van', 'function' => array(&$this, '_check_datum')),
-					array('name' => 'tot', 'function' => array(&$this, '_check_datum')),
-					array('name' => 'locatie', 'function' => array(&$this, '_check_locatie')),
+					array('name' => 'van', 'function' => array($this, '_check_datum')),
+					array('name' => 'tot', 'function' => array($this, '_check_datum')),
+					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
 					array('name' => 'private', 'function' => 'check_value_checkbox'),
 					array('name' => 'extern', 'function' => 'check_value_checkbox')),
+					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
 				$errors);
 
 			if (count($errors) != 0) {
