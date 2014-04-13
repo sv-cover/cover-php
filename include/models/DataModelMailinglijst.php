@@ -91,7 +91,7 @@ class DataModelMailinglijst extends DataModel
 		if (is_numeric($lijst_id))
 			$query = sprintf('l.id = %d', $lijst_id);
 		else
-			$query = sprintf("l.adres = '%s'", $this->db->escape_string($lijst_id));
+			$query = sprintf("l.adres = '%s'", $this->db->escape_string(strtolower($lijst_id)));
 		
 		$row = $this->db->query_first('
 			SELECT
@@ -135,7 +135,7 @@ class DataModelMailinglijst extends DataModel
 			throw new InvalidArgumentException('Invalid commissie');
 
 		$data = array(
-			'adres' => $adres,
+			'adres' => strtolower($adres),
 			'naam' => $naam,
 			'omschrijving' => $omschrijving,
 			'publiek' => $publiek ? '1' : '0',
