@@ -89,7 +89,7 @@ function process_message_mailinglist($message, &$lijst)
 	$message = preg_replace('/^Subject: (.+?)$/m', 'Subject: [Cover] $1', $message, 1);
 
 	// Find everyone who is subscribed to that list
-	$aanmeldingen = $mailinglijsten_model->get_aanmeldingen($lijst->get('id'));
+	$aanmeldingen = $mailinglijsten_model->get_aanmeldingen($lijst);
 
 	switch ($lijst->get('toegang'))
 	{
@@ -134,16 +134,32 @@ function process_message_mailinglist($message, &$lijst)
 
 	foreach ($aanmeldingen as $aanmelding)
 	{
+		// Skip subscriptions without an e-mail address silently
+		if (trim($aanmelding->get('email')) == '')
+			continue;
+
 		echo "Sending mail to " . $aanmelding->get('naam') . " <" . $aanmelding->get('email') . ">: ";
 
 		// Personize the message for the receiver
 		$variables = array(
 			'[NAAM]' => $aanmelding->get('naam'),
-			'[NAME]' => $aanmelding->get('naam'),
-			'[ABONNEMENT_ID]' => $aanmelding->get('abonnement_id'),
-			'[UNSUBSCRIBE]' => sprintf('<a href="https://svcover.nl/mailinglijsten.php?abonnement_id=%s">Click here to unsubscribe from the %s mailinglist.</a>',
-				$aanmelding->get('abonnement_id'), htmlspecialchars($lijst->get('naam')))
+			'[NAME]' => $aanmelding->get('naam')
 		);
+
+		if ($aanmelding->has('lid_id'))
+			$variables['[LID_ID]'] = $aanmelding->get('lid_id');
+
+		// If this is an opt-in list, you'll have an subscription id and we can fill the placeholder
+		if ($aanmelding->has('abonnement_id'))
+			$variables['[ABONNEMENT_ID]'] = $aanmelding->get('abonnement_id');
+
+		// If you are allowed to unsubscribe, parse the placeholder correctly (different for opt-in and opt-out lists)
+		if ($lijst->get('publiek'))
+			$variables['[UNSUBSCRIBE]'] = $lijst->get('type')
+				? sprintf('<a href="https://www.svcover.nl/mailinglijsten.php?abonnement_id=%s">Click here to unsubscribe from the %s mailinglist.</a>',
+						$aanmelding->get('abonnement_id'), htmlspecialchars($lijst->get('naam')))
+				: sprintf('<a href="https://www.svcover.nl/mailinglijsten.php?lijst_id=%d">Click here to unsubscribe from the %s mailinglist.</a>',
+					$lijst->get('id'), htmlspecialchars($lijst->get('naam')));
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
 

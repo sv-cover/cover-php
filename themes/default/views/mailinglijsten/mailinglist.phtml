@@ -1,0 +1,20 @@
+<h1><?=__('Mailinglijsten')?> :: <?=markup_format_text($lijst->get('naam'))?></h1>
+<div class="messageBox">
+	<div class="section">
+		<p>
+			<em><?=__('Adres') ?>: <?=htmlspecialchars($lijst->get('adres'))?></em>
+			<?=markup_parse($lijst->get('omschrijving'))?>
+		</p>
+	</div>
+
+	<form method="post" action="">
+	<?php if ($model->is_aangemeld($lijst, logged_in('id'))): ?>
+		<input type="hidden" name="action" value="unsubscribe">
+		<p><input type="submit" class="button" value="<?=__('Uitschrijven')?>">
+		<?= __('Je bent aangemeld voor deze mailinglijst.') ?></p>
+	<?php elseif($model->member_can_subscribe($lijst)): ?>
+		<input type="hidden" name="action" value="subscribe">
+		<input type="submit" class="button" value="<?=__('Aanmelden')?>">
+	<?php endif ?>
+	</form>
+</div>

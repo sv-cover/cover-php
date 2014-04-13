@@ -77,8 +77,8 @@
 			<tbody>
 			<?php foreach ($aanmeldingen as $aanmelding): ?>
 				<tr>
-					<td><input type="checkbox" id="<?=$aanmelding->get('abonnement_id')?>" name="unsubscribe[]" value="<?=$aanmelding->get('abonnement_id')?>"></td>
-					<td><label for="<?=$aanmelding->get('abonnement_id')?>"><?=htmlspecialchars($aanmelding->get('naam'))?></label></td>
+					<td><input type="checkbox" id="<?=$this->uid($aanmelding)?>" name="unsubscribe[]" value="<?=$aanmelding->has('abonnement_id') ? $aanmelding->get('abonnement_id') : $aanmelding->get('lid_id') ?>"></td>
+					<td><label for="<?=$this->uid($aanmelding)?>"><?=htmlspecialchars($aanmelding->get('naam'))?></label></td>
 					<td><?=htmlspecialchars($aanmelding->get('email'))?></td>
 					<?php if ($aanmelding->get('id')): ?>
 					<td><a href="profiel.php?lid=<?=$aanmelding->get('id')?>"><?=__('Profiel')?></a></td>

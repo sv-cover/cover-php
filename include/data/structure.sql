@@ -3475,6 +3475,7 @@ CREATE TABLE mailinglijsten (
     naam varchar(100) NOT NULL,
     adres varchar(255) NOT NULL UNIQUE,
     omschrijving text NOT NULL,
+    type integer NOT NULL, 
     publiek boolean NOT NULL DEFAULT TRUE,
     toegang integer,
     commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT
@@ -3490,20 +3491,20 @@ CREATE TABLE mailinglijsten_abonnementen (
     opgezegd_op timestamp DEFAULT NULL
 );
 
-CREATE SEQUENCE mailinglijsten_berichten_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
 CREATE TABLE mailinglijsten_berichten (
-    id integer NOT NULL DEFAULT nextval('mailinglijsten_berichten_id_seq'::regclass) PRIMARY KEY
+    id serial NOT NULL PRIMARY KEY
     mailinglijst integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     commissie integer DEFAULT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     bericht TEXT NOT NULL,
     return_code integer NOT NULL,
     verwerkt_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+);
+
+CREATE TABLE mailinglijsten_opt_out (
+    id serial NOT NULL PRIMARY KEY,
+    mailinglijst_id integer NOT NULL REFERENCES mailinglijsten (id),
+    lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    opgezegd_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
 
 

@@ -37,6 +37,7 @@ class ControllerMailinglijsten extends Controller
 			$_POST['adres'], $_POST['naam'],
 			$_POST['omschrijving'],
 			!empty($_POST['publiek']),
+			$_POST['type'],
 			$_POST['toegang'],
 			$_POST['commissie']);
 
@@ -50,7 +51,7 @@ class ControllerMailinglijsten extends Controller
 	{
 		$abonnement = $this->model->get_abonnement($_POST['abonnement_id']);
 
-		$this->model->afmelden($_POST['abonnement_id']);
+		$this->model->afmelden_via_abonnement_id($_POST['abonnement_id']);
 
 		header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $abonnement->get('lijst_id')));
 	}
@@ -71,12 +72,38 @@ class ControllerMailinglijsten extends Controller
 	protected function run_subscriptions_management($lijst_id)
 	{
 		$lijst = $this->model->get_lijst($lijst_id);
+		
+		$aangemeld = $this->model->is_aangemeld($lijst, logged_in('id'));
+		
+		if (isset($_POST['action']) && $_POST['action'] == 'subscribe')
+		{
+			$this->model->aanmelden($lijst, logged_in('id'));
+			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
+			return;
+		}
+
+		if (isset($_POST['action']) && $_POST['action'] == 'unsubscribe')
+		{
+			$this->model->afmelden($lijst, logged_in('id'));
+			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
+			return;
+		}
+
+		$this->get_content('mailinglijsten::mailinglist', null, compact('lijst', 'aangemeld'));
+	}
+
+	protected function run_admin_subscriptions_management($lijst_id)
+	{
+		$lijst = $this->model->get_lijst($lijst_id);
 
 		// Someone ordered someone execu.. unsubcribed? Bye bye.
 		if (!empty($_POST['unsubscribe']))
 		{
-			foreach ($_POST['unsubscribe'] as $abonnement_id)
-				$this->model->afmelden($abonnement_id);
+			foreach ($_POST['unsubscribe'] as $lid_id)
+				if (!ctype_digit($lid_id))
+					$this->model->afmelden_via_abonnement_id($lid_id);
+				else
+					$this->model->afmelden($lijst, $lid_id);
 
 			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
 			return;
@@ -85,7 +112,8 @@ class ControllerMailinglijsten extends Controller
 		if (!empty($_POST['subscribe']))
 		{
 			foreach (preg_split('/[\s,]+/', $_POST['subscribe']) as $lid_id)
-				$this->model->aanmelden($lid_id, $lijst->get('id'));
+				if (!empty($lid_id))
+					$this->model->aanmelden($lijst, $lid_id);
 
 			header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $lijst->get('id')));
 			return;
@@ -93,7 +121,7 @@ class ControllerMailinglijsten extends Controller
 
 		if (!empty($_POST['naam']) && !empty($_POST['email']))
 		{
-			$this->model->aanmelden_gast($_POST['naam'], $_POST['email'], $lijst->get('id'));
+			$this->model->aanmelden_gast($lijst, $_POST['naam'], $_POST['email']);
 
 			header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $lijst->get('id')));
 			return;
@@ -117,7 +145,7 @@ class ControllerMailinglijsten extends Controller
 			return;
 		}
 
-		$aanmeldingen = $this->model->get_aanmeldingen($lijst->get('id'));
+		$aanmeldingen = $this->model->get_aanmeldingen($lijst);
 
 		$this->get_content('mailinglijsten::subscriptions', null, compact('lijst', 'aanmeldingen'));
 	}
@@ -136,14 +164,18 @@ class ControllerMailinglijsten extends Controller
 	
 		if (!empty($_POST['action']))
 		{
+			$lijst = $this->model->get_lijst($_POST['mailinglijst_id']);
+
 			switch ($_POST['action'])
 			{
 				case 'subscribe':
-					$this->model->aanmelden($lid_id, $_POST['mailinglijst_id']);
+					if ($this->model->member_can_subscribe($lijst, $lid_id))
+						$this->model->aanmelden($lijst, $lid_id);
 					break;
 
 				case 'unsubscribe':
-					$this->model->afmelden($_POST['abonnement_id']);
+					if ($this->model->member_can_unsubscribe($lijst, $lid_id))
+						$this->model->afmelden($lijst, $lid_id);
 					break;
 			}
 
@@ -156,7 +188,7 @@ class ControllerMailinglijsten extends Controller
 		}
 
 		$subscriptions = $this->model->get_lijsten($lid_id,
-			!member_in_commissie(COMMISSIE_EASY)); // public only? Only if not WebCie.
+			!member_in_commissie(COMMISSIE_BESTUUR)); // public only? Only if not WebCie.
 
 		$this->get_content('mailinglijsten::mailinglists', $subscriptions, compact('member'));
 	}
@@ -185,8 +217,11 @@ class ControllerMailinglijsten extends Controller
 			return $this->run_autocomplete($_GET['naam']);
 
 		// Manage the subscriptions to a list
-		elseif (!empty($_GET['lijst_id']) && $this->model->member_can_edit($_GET['lijst_id']))
-			return $this->run_subscriptions_management($_GET['lijst_id']);
+		elseif (!empty($_GET['lijst_id']))
+			if ($this->model->member_can_edit($_GET['lijst_id']))
+				return $this->run_admin_subscriptions_management($_GET['lijst_id']);
+			else
+				return $this->run_subscriptions_management($_GET['lijst_id']);
 
 		// Manage the subscriptions of a member other than yourself
 		elseif (member_in_commissie(COMMISSIE_BESTUUR) && !empty($_GET['lid_id']))

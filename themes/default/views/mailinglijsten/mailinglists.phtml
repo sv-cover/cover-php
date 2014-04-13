@@ -13,6 +13,11 @@
 				<input id="adres" type="email" name="adres" placeholder="e.g. lijstnaam@svcover.nl">
 			</div>
 			<div class="inline-block">
+				<label for="type"><?=__('Type')?>:</label>
+				<?=select_field('type', $this->get_all_type_options(), null, 'id', 'type')?>
+				<small><?=__('Op basis waarvan wordt de lijst gevuld?')?></small>
+			</div>
+			<div class="inline-block">
 				<label for="toegang"><?=__('Toegang')?>:</label>
 				<?=select_field('toegang', $this->get_all_toegang_options(), null, 'id', 'toegang')?>
 				<small><?=__('Wie mag e-mails sturen naar deze lijst?')?></small>
@@ -44,26 +49,20 @@
 <?php foreach ($iter as $lijst): ?>
 	<div class="mailinglist">
 		<h3 class="list-name">
-		<?php if ($model->member_can_edit($lijst)): ?>
-		<a href="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>"><?= markup_format_text($lijst->get('naam')) ?></a>
-		<?php else: ?>
-		<?= markup_format_text($lijst->get('naam')) ?>
-		<?php endif ?>
+			<a href="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>"><?= markup_format_text($lijst->get('naam')) ?></a>
 		</h3>
 
 		<em class="list-email"><?= htmlspecialchars($lijst->get('adres')) ?></em>
 		<?php if (!$lijst->get('publiek')): ?>
-		<em class="list-public-status"><?=__('Verborgen')?></em>
+		<em class="list-public-status"><?=__('Privé')?></em>
 		<?php endif ?>
 
 		<p class="list-description"><?= markup_parse($lijst->get('omschrijving')) ?></p>
-		<form method="post">
-			<input type="hidden" name="mailinglijst_id" value="<?=$lijst->get('id')?>">
-		<?php if ($lijst->get('abonnement_id')): ?>
+		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<?php if ($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst)): ?>
 			<input type="hidden" name="action" value="unsubscribe">
-			<input type="hidden" name="abonnement_id" value="<?=$lijst->get('abonnement_id')?>">
 			<p><input type="submit" class="button" value="<?=__('Uitschrijven')?>"> <?= $member->get('id') == logged_in('id') ? __('Je bent aangemeld voor deze mailinglijst.') : sprintf(__('%s is aangemeld voor deze mailinglijst.'), markup_format_text($member->get('voornaam'))) ?></p>
-		<?php else: ?>
+		<?php elseif (!$lijst->get('subscribed') && $model->member_can_subscribe($lijst)): ?>
 			<input type="hidden" name="action" value="subscribe">
 			<input type="submit" class="button" value="<?=__('Aanmelden')?>">
 		<?php endif ?>

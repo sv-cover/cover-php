@@ -34,6 +34,10 @@
 		function get_id() {
 			return $this->_id;
 		}
+
+		function has($field) {
+			return isset($this->data[$field]);
+		}
 		
 		/**
 		  * Get iter data

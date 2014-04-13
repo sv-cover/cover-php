@@ -144,7 +144,7 @@
 		  */
 		function _row_to_iter($row) {
 			if ($row)
-				return new $this->dataiter($this, $row[$this->id], $row);
+				return new $this->dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
 			else
 				return $row;
 		}
@@ -172,11 +172,28 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get() {
-			if (!$this->db || !$this->table)
-				return Array();
+		function get()
+		{
+			return $this->find('');
+		}
 
-			$rows = $this->db->query('SELECT * FROM ' . $this->table);
+		/**
+		 * Get all rows in the model that satisfy the conditions.
+		 * @conditions the SQL 'where' clause that needs to be satisfied
+		 *
+		 * @result an array of #DataIter
+		 */
+		function find($conditions)
+		{
+			if (!$this->db || !$this->table)
+				return array();
+
+			$query = 'SELECT * FROM ' . $this->table;
+
+			if ($conditions)
+				$query .= ' WHERE ' . $conditions;
+
+			$rows = $this->db->query($query);
 			
 			return $this->_rows_to_iters($rows);			
 		}

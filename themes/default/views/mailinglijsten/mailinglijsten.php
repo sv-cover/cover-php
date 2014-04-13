@@ -18,6 +18,14 @@ class MailinglijstenView extends View
 		return $values;
 	}
 
+	public function get_all_type_options()
+	{
+		return array(
+			DataModelMailinglijst::TYPE_OPT_IN => __('Opt-in'),
+			DataModelMailinglijst::TYPE_OPT_OUT => __('Opt-out')
+		);
+	}
+
 	public function get_all_toegang_options()
 	{
 		return array(
@@ -26,5 +34,13 @@ class MailinglijstenView extends View
 			DataModelMailinglijst::TOEGANG_COVER => __('Alleen *@svcover.nl adressen'),
 			DataModelMailinglijst::TOEGANG_EIGENAAR => __('Alleen de commissie van de lijst')
 		);
+	}
+
+	public function uid($abonnement)
+	{
+		return sprintf('aanmelding%s',
+			$abonnement->has('abonnement_id')
+				? $abonnement->get('abonnement_id')
+				: $abonnement->get('lid_id'));
 	}
 }
