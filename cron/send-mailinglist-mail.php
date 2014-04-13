@@ -169,6 +169,25 @@ function process_message_mailinglist($message, &$lijst)
 	return 0;
 }
 
+function process_return_to_sender($message, $return_code)
+{
+	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
+		return RETURN_COULD_NOT_DETERMINE_SENDER;
+
+	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
+		$to = null;
+
+	$subject = preg_match('/^Subject: (.+?)$/m', $message, $match)
+		? $match[1]
+		: 'Could not deliver message';
+
+	$notice = 'Sorry, but your message' . ($to ? ' to ' . $to : '') . " could not be delivered:\n" . get_error_message($return_code);
+
+	echo "Return message to sender $from\n";
+	
+	mail($from, $subject, $notice, null, '-fwebcie@svcover.nl');
+}
+
 function send_message($message, $email)
 {
 	// Set up the proper pipes and thingies for the sendmail call;
@@ -202,45 +221,43 @@ function send_message($message, $email)
 	return proc_close($sendmail);
 }
 
-function verbose($return_value)
+function get_error_message($return_value)
 {
 	switch ($return_value)
 	{
 		case RETURN_COULD_NOT_DETERMINE_SENDER:
-			echo "Error: Could not determine sender.";
-			break;
+			return "Error: Could not determine sender.";
 
 		case RETURN_COULD_NOT_DETERMINE_DESTINATION:
-			echo "Error: Could not determine destination.";
-			break;
+			return "Error: Could not determine destination.";
 
 		case RETURN_COULD_NOT_DETERMINE_LIST:
-			echo "Error: Could not determine mailing list.";
-			break;
+			return "Error: Could not determine mailing list.";
 
 		case RETURN_NOT_ALLOWED_NOT_SUBSCRIBED:
-			echo "Not allowed: Sender not subscribed to list.";
-			break;
+			return "Not allowed: Sender not subscribed to list.";
 
 		case RETURN_NOT_ALLOWED_NOT_COVER:
-			echo "Not allowed: Sender does not match *@svcover.nl.";
-			break;
+			return "Not allowed: Sender does not match *@svcover.nl.";
 
 		case RETURN_NOT_ALLOWED_NOT_OWNER:
-			echo "Not allowed: Sender not the owner of the list.";
-			break;
+			return "Not allowed: Sender not the owner of the list.";
 
 		case RETURN_NOT_ALLOWED_UNKNOWN_POLICY:
-			echo "Not allowed: Unknown list policy.";
-			break;
+			return "Not allowed: Unknown list policy.";
 
 		case RETURN_FAILURE_MESSAGE_EMPTY:
-			echo "Error: Message empty.";
-			break;
-	}
+			return "Error: Message empty.";
 
+		default:
+			return "(code $return_value)";
+	}
+}
+
+function verbose($return_value)
+{
 	if ($return_value !== 0)
-		echo "(code $return_value)\n";
+		echo get_error_message($return_value);
 
 	return $return_value;
 }
@@ -269,6 +286,9 @@ function main()
 	// Archive the message.
 	$archief = get_model('DataModelMailinglijstArchief');
 	$archief->archive($message, $lijst, $commissie, $return_code);
+
+	if ($return_code != 0)
+		process_return_to_sender($message, $return_code);
 
 	// Return the result of the processing step.
 	return $return_code;
