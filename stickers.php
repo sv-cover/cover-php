@@ -94,7 +94,7 @@ class ControllerStickers extends Controller
 		if ($iter && $this->model->memberCanEditSticker($iter))
 			$this->model->setPhoto($iter, fopen($_FILES['photo']['tmp_name'], 'rb'));
 
-		header('Location: stickers.php');
+		header('Location: stickers.php?sticker=' . $iter->get('id'));
 		exit;
 	}
 }
