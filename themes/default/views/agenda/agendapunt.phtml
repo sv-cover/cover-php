@@ -22,7 +22,7 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 <ul>
 <?php foreach ($this->get_attending($iter) as $attendee): ?>
 	<li>
-		<img src="<?=markup_format_text($attendee['picture']['data']['url'])?>">
+		<img src="https://graph.facebook.com/<?=$attendee['id']?>/picture/?width=200&amp;height=200" style="border-radius: 50%; border: 1px solid #ccc;" width="100" height="100">
 		<span class="name"><?=markup_format_text($attendee['name']) ?></span>
 	</li>
 <?php endforeach ?>
