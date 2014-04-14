@@ -73,7 +73,20 @@ class DataModelStickers extends DataModel
 
 	public function getNearbyStickers($sticker, $limit)
 	{
-		$rows = $this->db->query(sprintf("SELECT s.*,
+		$rows = $this->db->query(sprintf("SELECT
+				s.id,
+				s.label,
+				s.omschrijving,
+				s.lat,
+				s.lng,
+				s.toegevoegd_op,
+				s.toegevoegd_door,
+				s.foto IS NOT NULL as foto,
+				l.id as toegevoegd_door__id,
+				l.voornaam as toegevoegd_door__voornaam,
+				l.tussenvoegsel as toegevoegd_door__tussenvoegsel,
+				l.achternaam as toegevoegd_door__achternaam,
+				l.privacy as toegevoegd_door__privacy,
 				DEGREES(
 					ACOS(
 						COS(RADIANS(s.lat)) * COS(RADIANS(c.lat)) * COS(RADIANS(s.lng) - RADIANS(c.lng))
@@ -82,6 +95,7 @@ class DataModelStickers extends DataModel
 				) * 111.045 as distance -- distance in KM
 				FROM {$this->table} s
 				RIGHT JOIN {$this->table} c ON c.id = %d
+				LEFT JOIN leden l ON l.id = s.toegevoegd_door
 				ORDER BY distance ASC
 				LIMIT %d", $sticker->get('id'), $limit));
 
@@ -90,14 +104,14 @@ class DataModelStickers extends DataModel
 
 	public function getRecentStickers($limit)
 	{
-		$rows = $this->db->query("SELECT * FROM {$this->table} ORDER BY toegevoegd_op DESC LIMIT {$limit}");
+		$rows = $this->find($this->_generate_query() . " ORDER BY s.toegevoegd_op DESC LIMIT " . intval($limit));
 
 		return $this->_rows_to_iters($rows);
 	}
 
 	public function getRandomSticker()
 	{
-		$row = $this->db->query_first("SELECT * FROM {$this->table} ORDER BY RANDOM() DESC LIMIT 1");
+		$row = $this->db->query_first($this->_generate_query() . " ORDER BY RANDOM() DESC LIMIT 1");
 
 		return $this->_row_to_iter($row);
 	}
