@@ -440,7 +440,7 @@ border-radius: 0 0 5px 5px;
 	);
 }
 
-a.button {
+.button {
 	color: black;
 	text-decoration: none;
 	display: inline-block;
@@ -987,6 +987,23 @@ form textarea {
 	padding: 4px;
 }
 
+.file-upload-button {
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+}
+
+.file-upload-button input {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0;
+	padding: 0;
+	cursor: pointer;
+	opacity: 0;
+}
+
 .ui-widget-overlay {
 	background: #000;
 }
@@ -1008,14 +1025,27 @@ form textarea {
 	padding: 10px 0 10px 10px;
 }
 
-#sticker-info-window .sticker-label,
-#sticker-info-window .sticker-description {
+#sticker-info-window,
+#sticker-info-window a {
 	color: black;
 }
 
-#sticker-info-window button {
-	display: block;
-	margin: 14px auto 4px auto;
+#sticker-info-window .sticker-photo > img {
+	width: 300px;
+}
+
+#sticker-info-window .controls {
+	text-align: center;
+	height: auto;
+}
+
+#sticker-info-window .controls form {
+	display: inline;
+}
+
+#sticker-info-window .controls .button {
+	display: inline-block;
+	vertical-align: bottom;
 }
 
 #add-sticker-dialog form {

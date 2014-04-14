@@ -12,15 +12,28 @@
 
 <div id="sticker-map">
 	<div id="sticker-info-window">
+		<a href="" class="sticker-photo" target="_new">
+			<img src="">
+		</a>
 		<h3 class="sticker-label"></h3>
+		<small class="sticker-user"><?=__('Geplakt door')?> <a href="#"></a></small>
 		<p class="sticker-description"></p>
-		<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
-		<form method="post" action="">
-			<input type="hidden" name="action" value="remove_sticker">
-			<input type="hidden" name="id">
-			<button type="submit" class="button"><?=__('Verwijder sticker')?></button>
-		</form>
-		<?php endif ?>
+		<div class="controls">
+			<form method="post" action="" class="remove-sticker-form">
+				<input type="hidden" name="action" value="remove_sticker">
+				<input type="hidden" name="id">
+				<button type="submit" class="button"><?=__('Verwijder sticker')?></button>
+			</form>
+
+			<form method="post" action="" enctype="multipart/form-data" class="add-photo-form">
+				<input type="hidden" name="action" value="add_photo">
+				<input type="hidden" name="id">
+				<div class="file-upload-button button">
+					<span><?=__('Kies foto') ?></span>
+					<input type="file" name="photo">
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 
@@ -57,7 +70,7 @@
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&amp;sensor=false"></script>
 <script type="text/javascript">
-	var stickers = <?=json_encode(array_map(function($sticker) { return $sticker->data; }, $iter))?>;
+	var stickers = <?=$this->encodeStickers($iter)?>;
 
 	var highlightedStickerId = /sticker=(\d+)/.test(document.location.href)
 		? document.location.href.match(/sticker=(\d+)/)[1]
@@ -84,6 +97,16 @@
 
 		canvas.data('google-map', map);
 
+		description.find('input[type=file]').change(function(e) {
+			if (this.value)
+				this.form.submit();
+		});
+
+		description.find('.remove-sticker-form').submit(function(e) {
+			if (!confirm('Do you really want to delete this sticker?'))
+				e.preventDefault();
+		})
+
 		// Place a marker for each of the stickers
 		$.each(stickers, function() {
 			var sticker = this;
@@ -99,6 +122,20 @@
 				description.find('input[name=id]').val(sticker.id);
 				description.find('.sticker-label').text(sticker.label);
 				description.find('.sticker-description').text(sticker.omschrijving);
+				description.find('.controls').toggle(sticker.editable);
+				description.find('.sticker-photo').toggle(sticker.foto != null);
+				description.find('.sticker-user').toggle(sticker.toegevoegd_door_id != null);
+
+				// If it is known who added this sticker, show the 'by-line'
+				if (sticker.toegevoegd_door_id)
+					description.find('.sticker-user').show().find('a')
+						.attr('href', 'profiel.php?lid=' + sticker.toegevoegd_door_id)
+						.text(sticker.toegevoegd_door_naam);
+
+				if (sticker.foto) {
+					description.find('.sticker-photo').attr('href', sticker.foto);
+					description.find('.sticker-photo > img').attr('src', sticker.foto);
+				}
 
 				// Pop open the window at the place of the marker
 				infoWindow.open(map, marker);

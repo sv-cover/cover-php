@@ -13,6 +13,7 @@ class DataModelStickers extends DataModel
 	{
 		$row['lat'] = (double) $row['lat'];
 		$row['lng'] = (double) $row['lng'];
+		$row['foto'] = $row['foto'] == 't';
 
 		return parent::_row_to_iter($row);
 	}
@@ -28,6 +29,46 @@ class DataModelStickers extends DataModel
 		$iter = new DataIter($this->model, -1, $data);
 
 		return $this->insert($iter, true);
+	}
+
+	public function getPhoto($sticker)
+	{
+		$result = $this->db->query_first("SELECT foto FROM {$this->table} WHERE id = " . $sticker->get('id'));
+
+		return pg_unescape_bytea($result['foto']);
+	}
+
+	public function setPhoto($sticker, $fp)
+	{
+		$data = stream_get_contents($fp);
+
+		if (!$data)
+			throw new Exception('Could not read stream');
+
+		$this->db->query("UPDATE {$this->table} SET foto = '" . pg_escape_bytea($data) . "' WHERE id = " . $sticker->get('id'));
+	}
+
+	protected function _generate_query($conditions)
+	{
+		return "SELECT 
+				s.id,
+				s.label,
+				s.omschrijving,
+				s.lat,
+				s.lng,
+				s.toegevoegd_op,
+				s.toegevoegd_door,
+				s.foto IS NOT NULL as foto,
+				l.id as toegevoegd_door__id,
+				l.voornaam as toegevoegd_door__voornaam,
+				l.tussenvoegsel as toegevoegd_door__tussenvoegsel,
+				l.achternaam as toegevoegd_door__achternaam,
+				l.privacy as toegevoegd_door__privacy
+			FROM
+				{$this->table} s
+			LEFT JOIN leden l ON
+				l.id = s.toegevoegd_door
+			" . ($conditions ? " WHERE {$conditions}" : "");
 	}
 
 	public function getNearbyStickers($sticker, $limit)
@@ -59,5 +100,10 @@ class DataModelStickers extends DataModel
 		$row = $this->db->query_first("SELECT * FROM {$this->table} ORDER BY RANDOM() DESC LIMIT 1");
 
 		return $this->_row_to_iter($row);
+	}
+
+	public function memberCanEditSticker($sticker)
+	{
+		return member_in_commissie(COMMISSIE_BESTUUR) || $sticker->get('toegevoegd_door') == logged_in('id');
 	}
 }

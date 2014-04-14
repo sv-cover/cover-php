@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-04-13 10:58+0100\n"
+"POT-Creation-Date: 2014-04-14 17:29+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -289,7 +289,7 @@ msgstr "Committee agenda"
 #: ../../../themes/default/views/agenda/agendapunt.phtml:11
 #: ../../../themes/default/views/agenda/edit.phtml:58
 #: ../../../themes/default/views/agenda/index.phtml:62
-#: ../../../themes/default/views/stickers/map.phtml:45
+#: ../../../themes/default/views/stickers/map.phtml:58
 msgid "Locatie"
 msgstr "Location"
 
@@ -3057,27 +3057,36 @@ msgid "Nieuwe pagina toevoegen"
 msgstr "Create a new page"
 
 #: ../../../themes/default/views/stickers/map.phtml:6
-#: ../../../themes/default/views/stickers/map.phtml:28
+#: ../../../themes/default/views/stickers/map.phtml:41
 msgid "Sticker toevoegen"
 msgstr "Add sticker"
 
-#: ../../../themes/default/views/stickers/map.phtml:21
+#: ../../../themes/default/views/stickers/map.phtml:19
+#, fuzzy
+msgid "Geplakt door"
+msgstr "Placed by"
+
+#: ../../../themes/default/views/stickers/map.phtml:25
 msgid "Verwijder sticker"
 msgstr "Delete sticker"
 
-#: ../../../themes/default/views/stickers/map.phtml:35
+#: ../../../themes/default/views/stickers/map.phtml:32
+msgid "Kies foto"
+msgstr "Choose photo"
+
+#: ../../../themes/default/views/stickers/map.phtml:48
 msgid "Label"
 msgstr "Label"
 
-#: ../../../themes/default/views/stickers/map.phtml:40
+#: ../../../themes/default/views/stickers/map.phtml:53
 msgid "Boodschap"
 msgstr "Message"
 
-#: ../../../themes/default/views/stickers/map.phtml:45
+#: ../../../themes/default/views/stickers/map.phtml:58
 msgid "Sleep of klik met de rechter muisknop om de marker te plaatsen"
 msgstr "Drag or right click to place the marker"
 
-#: ../../../themes/default/views/stickers/map.phtml:52
+#: ../../../themes/default/views/stickers/map.phtml:65
 msgid "Zet sticker op kaart"
 msgstr "Add sticker to map"
 

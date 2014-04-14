@@ -9,6 +9,7 @@
 		var $changes = null; /** Array containing the fields that have changed */
 		var $literals = null; /** Array containing the fields that should be used literally */
 		var $db = null;
+		var $namespace = '';
 		
 		/**
 		  * Create a new DataIter
@@ -16,11 +17,12 @@
 		  * @id the id of the iter
 		  * @data the data of the iter (a hashtable)
 		  */
-		function DataIter($model, $id, $data) {
+		function DataIter($model, $id, $data, $namespace = '') {
 			$this->model = $model;
 			$this->data = $data;
 			$this->_id = $id;			
 			$this->db = $model->db;
+			$this->namespace = $namespace;
 			
 			$this->changes = array();
 			$this->literals = array();
@@ -36,7 +38,7 @@
 		}
 
 		function has($field) {
-			return isset($this->data[$field]);
+			return isset($this->data[$this->namespace . $field]);
 		}
 		
 		/**
@@ -46,7 +48,7 @@
 		  * @result the data in the field
 		  */
 		function get($field) {
-			return $this->data[$field];
+			return $this->data[$this->namespace . $field];
 		}
 		
 		/**
@@ -61,7 +63,7 @@
 				unset($this->literals[$index]);
 
 			/* Return if value hasn't really changed */
-			if ($this->data[$field] == $value && $this->_id != -1)
+			if ($this->data[$this->namespace . $field] == $value && $this->_id != -1)
 				return;
 
 			/* Add field to changes if it's not already changed */
@@ -69,7 +71,7 @@
 				$this->changes[] = $field;
 
 			/* Store new value */
-			$this->data[$field] = $value;
+			$this->data[$this->namespace . $field] = $value;
 		}
 		
 		/**
@@ -79,7 +81,7 @@
 		  */
 		function set_literal($field, $value) {
 			/* Return if value hasn't really changed */
-			if ($this->data[$field] == $value && $this->_id != -1)
+			if ($this->data[$this->namespace . $field] == $value && $this->_id != -1)
 				return;
 
 			/* Add field to changes if it's not already changed */
@@ -91,7 +93,7 @@
 				$this->literals[] = $field;
 
 			/* Store new value */
-			$this->data[$field] = $value;
+			$this->data[$this->namespace . $field] = $value;
 		}
 		
 		/**
@@ -141,9 +143,14 @@
 			$changes = array();
 
 			foreach ($this->changes as $change)
-				$changes[$change] = $this->data[$change];
+				$changes[$change] = $this->data[$this->namespace . $change];
 			
 			return $changes;
+		}
+
+		public function getIter($field)
+		{
+			return new self(null, -1, $this->data, $field . '__');
 		}
 		
 		/**

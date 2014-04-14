@@ -188,10 +188,7 @@
 			if (!$this->db || !$this->table)
 				return array();
 
-			$query = 'SELECT * FROM ' . $this->table;
-
-			if ($conditions)
-				$query .= ' WHERE ' . $conditions;
+			$query = $this->_generate_query($conditions);
 
 			$rows = $this->db->query($query);
 			
@@ -243,6 +240,11 @@
 		  */
 		function get_affected_rows() {
 			return $this->db->get_affected_rows();
+		}
+
+		protected function _generate_query($where)
+		{
+			return "SELET * FROM {$this->table}" . ($where ? " WHERE {$where}" : "");
 		}
 	}
 ?>
