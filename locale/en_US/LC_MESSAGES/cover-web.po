@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-04-14 17:29+0100\n"
+"POT-Creation-Date: 2014-04-14 17:35+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -2812,7 +2812,6 @@ msgid "Maak lijst"
 msgstr "Make list"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:57
-#, fuzzy
 msgid "Privé"
 msgstr "Private"
 
@@ -3062,7 +3061,6 @@ msgid "Sticker toevoegen"
 msgstr "Add sticker"
 
 #: ../../../themes/default/views/stickers/map.phtml:19
-#, fuzzy
 msgid "Geplakt door"
 msgstr "Placed by"
 
@@ -3073,6 +3071,10 @@ msgstr "Delete sticker"
 #: ../../../themes/default/views/stickers/map.phtml:32
 msgid "Kies foto"
 msgstr "Choose photo"
+
+#: ../../../themes/default/views/stickers/map.phtml:33
+msgid "Voeg een foto toe bij deze sticker. Alleen JPEG-plaatjes mogen."
+msgstr "Add a photo to this sticker. Only JPEG-images are allowed."
 
 #: ../../../themes/default/views/stickers/map.phtml:48
 msgid "Label"
