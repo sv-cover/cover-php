@@ -134,7 +134,7 @@
 
 				if (sticker.foto) {
 					description.find('.sticker-photo').attr('href', sticker.foto);
-					description.find('.sticker-photo > img').attr('src', sticker.foto);
+					description.find('.sticker-photo > img').attr('src', sticker.foto + '&thumbnail=true');
 				}
 
 				// Pop open the window at the place of the marker

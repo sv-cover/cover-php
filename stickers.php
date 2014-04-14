@@ -30,7 +30,7 @@ class ControllerStickers extends Controller
 			$this->_remove_sticker($_POST);
 
 		else if (isset($_GET['photo']))
-			$this->run_photo($_GET['photo']);
+			$this->run_photo($_GET['photo'], !empty($_GET['thumbnail']));
 
 		$this->run_map();
 	}
@@ -42,7 +42,7 @@ class ControllerStickers extends Controller
 		$this->get_content('map', $stickers);
 	}
 
-	public function run_photo($id)
+	public function run_photo($id, $thumbnail = false)
 	{
 		$iter = $this->model->get_iter($id);
 
@@ -58,7 +58,20 @@ class ControllerStickers extends Controller
 		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 		header('Content-Type: image/jpeg');
 
-		echo $this->model->getPhoto($iter);
+		if ($thumbnail)
+		{
+			$large = imagecreatefromstring($this->model->getPhoto($iter));
+			$width = 600;
+			$height = $width * imagesy($large) / imagesx($large);
+			$thumb = imagecreatetruecolor($width, $height);
+			imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $height, imagesx($large), imagesy($large));
+			imagejpeg($thumb);
+		}
+		else
+		{
+			echo $this->model->getPhoto($iter);
+		}
+
 		exit;
 	}
 
