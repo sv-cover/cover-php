@@ -35,7 +35,7 @@ class StickersView extends View
 				'foto' => $iter->get('foto') ? 'stickers.php?photo=' . $iter->get('id') : null,
 				'toegevoegd_op' => $iter->get('toegevoegd_op'),
 				'toegevoegd_door_id' => $iter->get('toegevoegd_door'),
-				'toegevoegd_door_naam' => $iter->has('toegevoegd_door')
+				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
 					? member_full_name($iter->getIter('toegevoegd_door'), false, true)
 					: null,
 				'editable' => $this->model->memberCanEditSticker($iter)
