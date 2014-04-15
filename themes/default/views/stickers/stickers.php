@@ -28,15 +28,15 @@ class StickersView extends View
 		{
 			$sticker = array(
 				'id' => $iter->get('id'),
-				'label' => $iter->get('label'),
-				'omschrijving' => $iter->get('omschrijving'),
+				'label' => iconv('ISO-8859-15', 'UTF-8', $iter->get('label')),
+				'omschrijving' => iconv('ISO-8859-15', 'UTF-8', $iter->get('omschrijving')),
 				'lat' => $iter->get('lat'),
 				'lng' => $iter->get('lng'),
 				'foto' => $iter->get('foto') ? 'stickers.php?photo=' . $iter->get('id') : null,
 				'toegevoegd_op' => $iter->get('toegevoegd_op'),
 				'toegevoegd_door_id' => $iter->get('toegevoegd_door'),
 				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
-					? iconv('UTF-8', 'ISO-8859-15', member_full_name($iter->getIter('toegevoegd_door'), false, true))
+					? iconv('ISO-8859-15', 'UTF-8', member_full_name($iter->getIter('toegevoegd_door'), false, true))
 					: null,
 				'editable' => $this->model->memberCanEditSticker($iter)
 			);
