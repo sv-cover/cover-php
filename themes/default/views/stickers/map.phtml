@@ -124,7 +124,7 @@
 				description.find('.sticker-description').text(sticker.omschrijving);
 				description.find('.controls').toggle(sticker.editable);
 				description.find('.sticker-photo').toggle(sticker.foto != null);
-				description.find('.sticker-user').toggle(sticker.toegevoegd_door_id != null);
+				description.find('.sticker-user').toggle(sticker.toegevoegd_door_naam != null);
 
 				// If it is known who added this sticker, show the 'by-line'
 				if (sticker.toegevoegd_door_naam)

@@ -38,7 +38,8 @@ class StickersView extends View
 				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
 					? member_full_name($iter->getIter('toegevoegd_door'), false, true)
 					: null,
-				'editable' => $this->model->memberCanEditSticker($iter)
+				'editable' => $this->model->memberCanEditSticker($iter),
+				'tmp' => $iter->data
 			);
 
 			$stickers[] = $sticker;
