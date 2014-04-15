@@ -104,14 +104,14 @@ class DataModelStickers extends DataModel
 
 	public function getRecentStickers($limit)
 	{
-		$rows = $this->find($this->_generate_query() . " ORDER BY s.toegevoegd_op DESC LIMIT " . intval($limit));
+		$rows = $this->find($this->_generate_query('') . " ORDER BY s.toegevoegd_op DESC LIMIT " . intval($limit));
 
 		return $this->_rows_to_iters($rows);
 	}
 
 	public function getRandomSticker()
 	{
-		$row = $this->db->query_first($this->_generate_query() . " ORDER BY RANDOM() DESC LIMIT 1");
+		$row = $this->db->query_first($this->_generate_query('') . " ORDER BY RANDOM() DESC LIMIT 1");
 
 		return $this->_row_to_iter($row);
 	}
