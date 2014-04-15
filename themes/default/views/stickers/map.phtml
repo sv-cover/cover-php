@@ -127,7 +127,7 @@
 				description.find('.sticker-user').toggle(sticker.toegevoegd_door_id != null);
 
 				// If it is known who added this sticker, show the 'by-line'
-				if (sticker.toegevoegd_door_id)
+				if (sticker.toegevoegd_door_naam)
 					description.find('.sticker-user').show().find('a')
 						.attr('href', 'profiel.php?lid=' + sticker.toegevoegd_door_id)
 						.text(sticker.toegevoegd_door_naam);
