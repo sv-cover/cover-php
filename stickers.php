@@ -60,12 +60,8 @@ class ControllerStickers extends Controller
 
 		if ($thumbnail)
 		{
-			$large = imagecreatefromstring($this->model->getPhoto($iter));
-			$width = 600;
-			$height = $width * imagesy($large) / imagesx($large);
-			$thumb = imagecreatetruecolor($width, $height);
-			imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $height, imagesx($large), imagesy($large));
-			imagejpeg($thumb);
+			$thumb_file = $this->_generate_thumbnail($iter);
+			readfile($thumb_file);
 		}
 		else
 		{
@@ -94,7 +90,10 @@ class ControllerStickers extends Controller
 		$iter = $this->model->get_iter($data['id']);
 
 		if ($iter && $this->model->memberCanEditSticker($iter))
+		{
 			$this->model->delete($iter);
+			$this->_delete_thumbnail($iter);
+		}
 
 		header('Location: stickers.php');
 		exit;
@@ -109,6 +108,36 @@ class ControllerStickers extends Controller
 
 		header('Location: stickers.php?sticker=' . $iter->get('id'));
 		exit;
+	}
+
+	protected function _generate_thumbnail($sticker)
+	{
+		$cache_file = 'tmp/stickers/' . $sticker->get('id') . '.jpg';
+
+		// Is the cache file up to date? Then we are done
+		if (!file_exists($cache_file) || filemtime($cache_file) < $sticker->get('foto_mtime'))
+		{		
+			$large = imagecreatefromstring($this->model->getPhoto($sticker));
+			$width = 600;
+			$height = $width * imagesy($large) / imagesx($large);
+			$thumb = imagecreatetruecolor($width, $height);
+			imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $height, imagesx($large), imagesy($large));
+
+			if (!file_exists(dirname($cache_file)))
+				mkdir(dirname($cache_file), 0777, true);
+
+			imagejpeg($thumb, $cache_file);
+		}
+
+		return $cache_file;
+	}
+
+	protected function _delete_thumbnail($sticker)
+	{
+		$cache_file = 'tmp/stickers/' . $sticker->get('id') . '.jpg';
+
+		if (file_exists($cache_file))
+			unlink($cache_file);
 	}
 }
 

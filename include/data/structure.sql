@@ -3517,6 +3517,7 @@ CREATE TABLE stickers (
   toegevoegd_op date,
   toegevoegd_door integer DEFAULT NULL REFERENCES leden (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
   foto bytea DEFAULT NULL,
+  foto_mtime timestamp without time zone,
   CONSTRAINT stickersmap_pk PRIMARY KEY (id)
 );
 

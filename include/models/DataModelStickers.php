@@ -45,7 +45,7 @@ class DataModelStickers extends DataModel
 		if (!$data)
 			throw new Exception('Could not read stream');
 
-		$this->db->query("UPDATE {$this->table} SET foto = '" . pg_escape_bytea($data) . "' WHERE id = " . $sticker->get('id'));
+		$this->db->query("UPDATE {$this->table} SET foto_mtime = NOW(), foto = '" . pg_escape_bytea($data) . "' WHERE id = " . $sticker->get('id'));
 	}
 
 	protected function _generate_query($conditions)
@@ -59,6 +59,7 @@ class DataModelStickers extends DataModel
 				s.toegevoegd_op,
 				s.toegevoegd_door,
 				s.foto IS NOT NULL as foto,
+				s.foto_mtime as foto_mtime,
 				l.id as toegevoegd_door__id,
 				l.voornaam as toegevoegd_door__voornaam,
 				l.tussenvoegsel as toegevoegd_door__tussenvoegsel,
