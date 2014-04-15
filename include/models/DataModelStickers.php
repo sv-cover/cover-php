@@ -119,6 +119,6 @@ class DataModelStickers extends DataModel
 	public function memberCanEditSticker($sticker)
 	{
 		return member_in_commissie(COMMISSIE_BESTUUR)
-			|| (($sticker->get('toegevoegd_door') != null && $sticker->get('toegevoegd_door') == logged_in('id'));
+			|| ($sticker->get('toegevoegd_door') != null && $sticker->get('toegevoegd_door') == logged_in('id'));
 	}
 }
