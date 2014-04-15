@@ -128,7 +128,7 @@
 
 				// If it is known who added this sticker, show the 'by-line'
 				if (sticker.toegevoegd_door_naam)
-					description.find('.sticker-user').show().find('a')
+					description.find('.sticker-user > a')
 						.attr('href', 'profiel.php?lid=' + sticker.toegevoegd_door_id)
 						.text(sticker.toegevoegd_door_naam);
 
@@ -169,8 +169,8 @@
 	var initStickerLocationPicker = function() {
 		var canvas = $('#sticker-location-map');
 
-		if (canvas.data('google-map'))
-			return canvas.data('google-map');
+		if (canvas.data('picker'))
+			return canvas.data('picker');
 
 		var mapOptions = {
 			center: new google.maps.LatLng(53.20, 6.56),
@@ -189,21 +189,24 @@
 			map: map
 		});
 
+		var updatePositionFields = function() {
+			$('#sticker-lat').val(marker.getPosition().lat());
+			$('#sticker-lng').val(marker.getPosition().lng());
+		};
+
 		// When right-clicking somewhere on the map, place the marker at that point
 		google.maps.event.addListener(map, 'rightclick', function(e) {
 			marker.setPosition(e.latLng);
 		});
 
 		// Update the hidden input fields when the marker changes position
-		google.maps.event.addListener(marker, 'position_changed', function(e) {
-			$('#sticker-lat').val(marker.getPosition().lat());
-			$('#sticker-lng').val(marker.getPosition().lng());
-		});
+		google.maps.event.addListener(marker, 'position_changed', updatePositionFields);
 
 		// Make the map easily available through the dom element
-		canvas.data('google-map', map);
+		var picker = {map: map, marker: marker};
+		canvas.data('picker', picker);
 
-		return map;
+		return picker;
 	};
 
 	$('#add-sticker-dialog').dialog({
@@ -216,8 +219,10 @@
 		open: function() {	
 			// Center the picker at the same location as the map
 			var picker = initStickerLocationPicker();
-			picker.setCenter($('#sticker-map').data('google-map').getCenter());
-			picker.setZoom($('#sticker-map').data('google-map').getZoom());
+
+			picker.map.setCenter($('#sticker-map').data('google-map').getCenter());
+			picker.map.setZoom($('#sticker-map').data('google-map').getZoom());
+			picker.marker.setPosition($('#sticker-map').data('google-map').getCenter());
 		},
 		resize: function() {
 			google.maps.event.trigger(initStickerLocationPicker(), 'resize');
