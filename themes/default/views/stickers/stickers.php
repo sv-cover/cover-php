@@ -36,7 +36,7 @@ class StickersView extends View
 				'toegevoegd_op' => $iter->get('toegevoegd_op'),
 				'toegevoegd_door_id' => $iter->get('toegevoegd_door'),
 				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
-					? htmlentities(member_full_name($iter->getIter('toegevoegd_door'), false, true))
+					? iconv('UTF-8', 'ISO-8859-15', member_full_name($iter->getIter('toegevoegd_door'), false, true))
 					: null,
 				'editable' => $this->model->memberCanEditSticker($iter)
 			);
