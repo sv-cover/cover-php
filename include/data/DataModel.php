@@ -68,7 +68,7 @@
 		  *
 		  * @result a id = value string
 		  */
-		function _id_string($value) {
+		protected function _id_string($value) {
 			$result = $this->id . ' = ';
 			
 			if ($this->id == 'id')
@@ -205,13 +205,9 @@
 			if (!$this->db || !$this->table)
 				return null;
 
-			$data = $this->db->query_first('SELECT * FROM ' . $this->table . 
-					' WHERE ' . $this->_id_string($id));
+			$data = $this->db->query_first($this->_generate_query($this->_id_string($id)));
 
-			if ($data)
-				return new $this->dataiter($this, $data[$this->id], $data);
-			else
-				return $data;
+			return $this->_row_to_iter($data);
 		}
 		
 		/**
@@ -244,7 +240,6 @@
 
 		protected function _generate_query($where)
 		{
-			return "SELET * FROM {$this->table}" . ($where ? " WHERE {$where}" : "");
+			return "SELECT * FROM {$this->table}" . ($where ? " WHERE {$where}" : "");
 		}
 	}
-?>

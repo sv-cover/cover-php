@@ -59,7 +59,7 @@ class DataModelStickers extends DataModel
 				s.toegevoegd_op,
 				s.toegevoegd_door,
 				s.foto IS NOT NULL as foto,
-				s.foto_mtime as foto_mtime,
+				EXTRACT(EPOCH FROM s.foto_mtime) as foto_mtime,
 				l.id as toegevoegd_door__id,
 				l.voornaam as toegevoegd_door__voornaam,
 				l.tussenvoegsel as toegevoegd_door__tussenvoegsel,
@@ -70,6 +70,11 @@ class DataModelStickers extends DataModel
 			LEFT JOIN leden l ON
 				l.id = s.toegevoegd_door
 			" . ($conditions ? " WHERE {$conditions}" : "");
+	}
+
+	protected function _id_string($value)
+	{
+		return sprintf('s.id = %d', $value);
 	}
 
 	public function getNearbyStickers($sticker, $limit)
