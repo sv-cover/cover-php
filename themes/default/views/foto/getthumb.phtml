@@ -1,9 +1,20 @@
 <?php
-$cache_file = 'tmp/almanac/' . $iter->get('id') . '.jpg';
 
-$photo_mtime = $model->get_photo_mtime($iter);
+// Skip cache if the photo is hidden or anything
+$skip_cache = $model->get_photo_id($iter) <= 0;
 
-$use_cache = file_exists($cache_file) && $photo_mtime < filemtime($cache_file);
+// If we skip the cache, write the thumnail directly to the output
+$cache_file = $skip_cache
+	? 'php://output'
+	: 'tmp/almanac/' . $iter->get('id') . '.jpg';
+
+$use_cache = !$skip_cache && file_exists($cache_file) && $model->get_photo_mtime($iter) < filemtime($cache_file);
+
+header('Pragma: public');
+header('Cache-Control: max-age=86400');
+header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+header('Content-Type: image/jpeg');
+header('X-Source: ' . ($use_cache ? 'cache' : 'database'));
 
 if (!$use_cache)
 {
@@ -24,9 +35,6 @@ if (!$use_cache)
 	imagejpeg($thumb, $cache_file);
 }
 
-header('Pragma: public');
-header('Cache-Control: max-age=86400');
-header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-header('Content-Type: image/jpeg');
-header('X-Source: ' . ($use_cache ? 'cache' : 'database'));
-readfile($cache_file);
+// Only if the cache was used, fetch the image from the cache file
+if (!$skip_cache)
+	readfile($cache_file);
