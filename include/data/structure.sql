@@ -824,7 +824,8 @@ ALTER TABLE public.lid_fotos_id_seq OWNER TO webcie;
 CREATE TABLE lid_fotos (
     id integer DEFAULT nextval('lid_fotos_id_seq'::regclass) NOT NULL,
     lid_id integer,
-    foto bytea
+    foto bytea,
+    foto_mtime timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
 
 

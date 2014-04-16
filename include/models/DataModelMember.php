@@ -90,9 +90,22 @@
 		  * @result the raw picture data
 		  */
 		function get_photo($iter) {
-			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter));
+			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
 
 			return $photo['foto'];
+		}
+
+		public function get_photo_mtime($iter)
+		{
+			$row = $this->db->query_first('SELECT EXTRACT(EPOCH FROM foto_mtime) as mtime FROM lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
+
+			return (int) $row['mtime'] - 7200; // timezone difference?
+ 		}
+
+		public function set_photo($iter, $fh)
+		{
+			$this->db->query(sprintf("INSERT INTO lid_fotos (lid_id, foto, foto_mtime) VALUES (%d, '%s', NOW())",
+				$iter->get('id'), pg_escape_bytea(stream_get_contents($fh))));
 		}
 
 		/** 

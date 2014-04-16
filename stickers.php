@@ -114,8 +114,10 @@ class ControllerStickers extends Controller
 	{
 		$cache_file = 'tmp/stickers/' . $sticker->get('id') . '.jpg';
 
+		$use_cache = file_exists($cache_file) && filemtime($cache_file) > $sticker->get('foto_mtime');
+
 		// Is the cache file up to date? Then we are done
-		if (!file_exists($cache_file) || filemtime($cache_file) < $sticker->get('foto_mtime'))
+		if (!$use_cache)
 		{		
 			$large = imagecreatefromstring($this->model->getPhoto($sticker));
 			$width = 600;
@@ -128,6 +130,8 @@ class ControllerStickers extends Controller
 
 			imagejpeg($thumb, $cache_file);
 		}
+
+		header('X-Source: ' . ($use_cache ? 'cache' : 'database'));
 
 		return $cache_file;
 	}

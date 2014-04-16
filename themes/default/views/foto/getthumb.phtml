@@ -1,15 +1,32 @@
 <?php
-$photo = $model->get_photo($iter);
+$cache_file = 'tmp/almanac/' . $iter->get('id') . '.jpg';
+
+$photo_mtime = $model->get_photo_mtime($iter);
+
+$use_cache = file_exists($cache_file) && $photo_mtime < filemtime($cache_file);
+
+if (!$use_cache)
+{
+	$photo = $model->get_photo($iter);
+
+	// Code from getthumb.php
+	$large = imagecreatefromstring(pg_unescape_bytea($photo));
+	// Thumbnail width
+	$width = 200;
+	$th = $width * imagesy($large) / imagesx($large);
+	$thumb = imagecreatetruecolor($width, $th);
+	//$thumb = imagecreate($width, $th);
+	imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $th, imagesx($large), imagesy($large));
+
+	if (!file_exists(dirname($cache_file)))
+		mkdir(dirname($cache_file), 0777, true);
+
+	imagejpeg($thumb, $cache_file);
+}
+
 header('Pragma: public');
 header('Cache-Control: max-age=86400');
 header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-header("Content-Type: image/png");
-
-// Code from getthumb.php
-$large = imagecreatefromstring(pg_unescape_bytea($photo));
-// Thumbnail width
-$th = 100 * imagesy($large) / imagesx($large);
-$thumb = imagecreatetruecolor(100, $th);
-//$thumb = imagecreate(100, $th);
-imagecopyresampled($thumb, $large, 0, 0, 0, 0, 100, $th, imagesx($large), imagesy($large));
-imagepng($thumb);
+header('Content-Type: image/jpeg');
+header('X-Source: ' . ($use_cache ? 'cache' : 'database'));
+readfile($cache_file);
