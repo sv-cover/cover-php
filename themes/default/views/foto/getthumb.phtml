@@ -4,9 +4,7 @@
 $skip_cache = $model->get_photo_id($iter) <= 0;
 
 // If we skip the cache, write the thumnail directly to the output
-$cache_file = $skip_cache
-	? 'php://output'
-	: 'tmp/almanac/' . $iter->get('id') . '.jpg';
+$cache_file = $skip_cache ? null : 'tmp/almanac/' . $iter->get('id') . '.jpg';
 
 $use_cache = !$skip_cache && file_exists($cache_file) && $model->get_photo_mtime($iter) < filemtime($cache_file);
 
@@ -29,12 +27,12 @@ if (!$use_cache)
 	//$thumb = imagecreate($width, $th);
 	imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $th, imagesx($large), imagesy($large));
 
-	if (!file_exists(dirname($cache_file)))
+	if ($cache_file && !file_exists(dirname($cache_file)))
 		mkdir(dirname($cache_file), 0777, true);
 
 	imagejpeg($thumb, $cache_file);
 }
 
 // Only if the cache was used, fetch the image from the cache file
-if (!$skip_cache)
+if ($cache_file)
 	readfile($cache_file);
