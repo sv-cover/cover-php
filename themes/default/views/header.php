@@ -393,7 +393,7 @@
 		
 	</head>
 	<body onLoad="page_load();" id="world">
-		<div class="header">
+		<div class="header clearfix">
 				' . create_message() . '
 				<div class="login">
 				' . create_login() . '
