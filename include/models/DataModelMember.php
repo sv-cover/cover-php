@@ -89,10 +89,10 @@
 		  *
 		  * @result the raw picture data
 		  */
-		function get_photo($iter) {
+		public function get_photo($iter) {
 			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
 
-			return $photo['foto'];
+			return $photo ? pg_unescape_bytea($photo['foto']) : null;
 		}
 
 		public function get_photo_mtime($iter)

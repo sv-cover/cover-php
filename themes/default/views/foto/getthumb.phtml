@@ -19,7 +19,7 @@ if (!$use_cache)
 	$photo = $model->get_photo($iter);
 
 	// Code from getthumb.php
-	$large = imagecreatefromstring(pg_unescape_bytea($photo));
+	$large = imagecreatefromstring($photo);
 	// Thumbnail width
 	$width = 200;
 	$th = $width * imagesy($large) / imagesx($large);
