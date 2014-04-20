@@ -114,32 +114,36 @@
 		set_domain_cookie('cover_session_id', null, time() - 24 * 3600);
 	}
 
-	/** @group Login
-	  * Check whether a member is currently logged in. When this function
-	  * is first called it will check if a member is still in the session,
-	  * if so it returns that data. If this is not the case it tries to
-	  * login the user from a cookie
-	  *
-	  * @result false if no member is logged in or the memberdata is
-	  * there is a member logged in at the moment
-	  */	
-	function logged_in($property = null)
+	// Make this function overridable for dump scripts etc.
+	if (!function_exists('logged_in'))
 	{
-		static $logged_in = null;
-		
-		if ($logged_in === null)
+		/** @group Login
+		  * Check whether a member is currently logged in. When this function
+		  * is first called it will check if a member is still in the session,
+		  * if so it returns that data. If this is not the case it tries to
+		  * login the user from a cookie
+		  *
+		  * @result false if no member is logged in or the memberdata is
+		  * there is a member logged in at the moment
+		  */	
+		function logged_in($property = null)
 		{
-			$member_id = session_get_member_id();
+			static $logged_in = null;
+			
+			if ($logged_in === null)
+			{
+				$member_id = session_get_member_id();
 
-			if ($member_id === null)
-				return $logged_in = false;
+				if ($member_id === null)
+					return $logged_in = false;
 
-			$logged_in = _member_data_from_session();
+				$logged_in = _member_data_from_session();
+			}
+
+			return $logged_in !== false && $property !== null
+				? $logged_in[$property]
+				: $logged_in;
 		}
-
-		return $logged_in !== false && $property !== null
-			? $logged_in[$property]
-			: $logged_in;
 	}
 
 	function logged_in_as_active_member()
