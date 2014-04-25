@@ -46,6 +46,9 @@
 		
 		$attributes = Array('type' => $params['type']);
 
+		if (!isset($params['id']))
+			$attributes['id'] = 'field-' . $name;
+
 		if ($name)
 			$attributes['name'] = $name;
 
@@ -289,6 +292,9 @@
 		unset($params['default']);
 		$options = '';
 
+		if (!isset($params['id']))
+			$params['id'] = 'field-' . $name;
+
 		foreach ($values as $val => $title)
 			$options .= '<option value="' . htmlspecialchars($val, ENT_QUOTES) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . htmlspecialchars($title) . "</option>\n";
 		
@@ -377,14 +383,16 @@
 		}
 
 		$name = htmlspecialchars($name);
+		$classes = array('label');
 				
 		if ($errors && in_array($field, $errors))
-			$name = '<span class="label_error">' . $name . '</span>';
+			$classes[] = 'label_error';
 
 		if ($required === true)
-			$name = '<span class="label_required">' . $name . '</span>';
+			$classes[] = 'label_required';
 		
-		return '<span class="label">' . $name . '</span>';
+		return sprintf('<label for="field-%s" class="%s">%s</label>',
+			$field, implode(' ', $classes), $name);
 	}
 
 	/** @group Form

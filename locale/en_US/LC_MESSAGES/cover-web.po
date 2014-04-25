@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-04-14 17:35+0100\n"
+"POT-Creation-Date: 2014-04-25 14:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -21,7 +21,7 @@ msgid "ActieveLeden"
 msgstr "Active Members"
 
 #: ../../../afstudeerplaatsen.php:17
-#: ../../../themes/default/views/header.php:187
+#: ../../../themes/default/views/header.php:190
 #: ../../../themes/default/views/afstudeerplaatsen/auth.phtml:1
 #: ../../../themes/default/views/afstudeerplaatsen/auth_commissie.phtml:1
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:1
@@ -36,8 +36,8 @@ msgid "Agenda %d-%d"
 msgstr "Calendar %d-%d"
 
 #: ../../../agenda.php:17 ../../../themes/default/views/agenda/agenda.php:19
-#: ../../../themes/default/views/header.php:63
-#: ../../../themes/default/views/header.php:101
+#: ../../../themes/default/views/header.php:66
+#: ../../../themes/default/views/header.php:104
 #: ../../../themes/default/views/agenda/commissie.phtml:2
 #: ../../../themes/default/views/agenda/login.phtml:2
 #: ../../../themes/default/views/agenda/moderate.phtml:1
@@ -45,7 +45,7 @@ msgstr "Calendar %d-%d"
 msgid "Agenda"
 msgstr "Calendar"
 
-#: ../../../agenda.php:165
+#: ../../../agenda.php:166
 msgid ""
 "De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar "
 "gekeken heeft zal het punt op de website gewijzigd worden."
@@ -53,7 +53,7 @@ msgstr ""
 "The changes to the calendar event are waiting for approval. Once the "
 "governing board has accepted the event, it shall be placed on the website."
 
-#: ../../../agenda.php:172
+#: ../../../agenda.php:173
 msgid ""
 "Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar "
 "gekeken heeft zal het punt op de website geplaatst worden"
@@ -61,21 +61,21 @@ msgstr ""
 "The new calendar event is now waiting for approval. Once the governing board "
 "has accepted the event, it shall be placed on the website."
 
-#: ../../../agenda.php:264
+#: ../../../agenda.php:265
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar event."
 
-#: ../../../agenda.php:266
+#: ../../../agenda.php:267
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:269
+#: ../../../agenda.php:270
 #, php-format
 msgid ""
 "De commissies %s zijn op de hoogte gesteld van het weigeren van de "
@@ -83,16 +83,16 @@ msgid ""
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:278
+#: ../../../agenda.php:279
 msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
-#: ../../../almanak.php:22 ../../../themes/default/views/header.php:178
+#: ../../../almanak.php:22 ../../../themes/default/views/header.php:181
 #: ../../../themes/default/views/almanak/almanak.phtml:1
 msgid "Almanak"
 msgstr "Almanac"
 
-#: ../../../banners.php:14 ../../../themes/default/views/header.php:108
+#: ../../../banners.php:14 ../../../themes/default/views/header.php:111
 msgid "Advertenties"
 msgstr "Ads"
 
@@ -104,8 +104,8 @@ msgstr "Boards"
 msgid "Boeken"
 msgstr "Books"
 
-#: ../../../commissies.php:13 ../../../themes/default/views/header.php:104
-#: ../../../themes/default/views/header.php:170
+#: ../../../commissies.php:13 ../../../themes/default/views/header.php:107
+#: ../../../themes/default/views/header.php:173
 #: ../../../themes/default/views/actieveleden/_overzicht.phtml:13
 #: ../../../themes/default/views/commissies/commissies.phtml:1
 #: ../../../themes/default/views/profiel/profiel.phtml:156
@@ -170,8 +170,8 @@ msgstr ""
 #: ../../../themes/default/views/forum.php:1187
 #: ../../../themes/default/views/forum.php:1210
 #: ../../../themes/default/views/forum.php:1245
-#: ../../../themes/default/views/header.php:105
-#: ../../../themes/default/views/header.php:123
+#: ../../../themes/default/views/header.php:108
+#: ../../../themes/default/views/header.php:126
 msgid "Forum"
 msgstr "Forum"
 
@@ -231,7 +231,7 @@ msgstr "The thumbnail for %s does not exist"
 msgid "De directory met foto's kon niet worden geopend om te lezen"
 msgstr "The directory with photos could not be read"
 
-#: ../../../gastenboek.php:15 ../../../themes/default/views/header.php:174
+#: ../../../gastenboek.php:15 ../../../themes/default/views/header.php:177
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:1
 msgid "Gastenboek"
 msgstr "Guestbook"
@@ -276,7 +276,7 @@ msgstr "This page does not exist..."
 
 #: ../../../include/editable.php:17
 #: ../../../themes/default/views/forum.php:1107
-#: ../../../themes/default/views/header.php:121
+#: ../../../themes/default/views/header.php:124
 #: ../../../themes/default/views/profiel/profiel.phtml:204
 msgid "Leden"
 msgstr "Members"
@@ -396,17 +396,27 @@ msgstr "November"
 msgid "December"
 msgstr "December"
 
-#: ../../../include/functions.php:318
+#: ../../../include/functions.php:322
 #, php-format
 msgid "van %s %s tot %s %s"
 msgstr "from %s %s till %s %s"
 
-#: ../../../include/functions.php:322
+#: ../../../include/functions.php:326
 #, php-format
 msgid "%s, van %s tot %s"
 msgstr "%s, from %s till %s"
 
-#: ../../../include/functions.php:435
+#: ../../../include/functions.php:343
+#, php-format
+msgid "van %s tot %s %s"
+msgstr "from %s till %s %s"
+
+#: ../../../include/functions.php:348
+#, php-format
+msgid "van %s tot %s"
+msgstr "from %s till %s"
+
+#: ../../../include/functions.php:459
 msgid "en"
 msgstr "and"
 
@@ -421,7 +431,7 @@ msgstr "You!"
 #: ../../../include/member.php:88
 #: ../../../include/models/DataModelForum.php:654
 #: ../../../include/models/DataModelForum.php:677
-#: ../../../include/models/DataModelMember.php:498
+#: ../../../include/models/DataModelMember.php:511
 #: ../../../themes/default/views/forum.php:503
 #: ../../../themes/default/views/profiel/profiel.php:70
 msgid "Onbekend"
@@ -453,7 +463,7 @@ msgid "Alle groepen"
 msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:668
-#: ../../../include/models/DataModelMember.php:483
+#: ../../../include/models/DataModelMember.php:496
 #: ../../../themes/default/views/boeken/boeken.php:341
 #: ../../../themes/default/views/boeken/boeken.php:362
 #: ../../../themes/default/views/boeken/boeken.php:404
@@ -484,26 +494,26 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: ../../../include/models/DataModelMember.php:486
+#: ../../../include/models/DataModelMember.php:499
 #: ../../../themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../include/models/DataModelMember.php:489
+#: ../../../include/models/DataModelMember.php:502
 #: ../../../themes/default/views/almanak/almanak.php:29
 #: ../../../themes/default/views/almanak/almanak.phtml:46
 #: ../../../themes/default/views/profiel/profiel.phtml:136
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../include/models/DataModelMember.php:492
+#: ../../../include/models/DataModelMember.php:505
 #: ../../../themes/default/views/almanak/almanak.php:34
 #: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:140
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../include/models/DataModelMember.php:495
+#: ../../../include/models/DataModelMember.php:508
 #: ../../../themes/default/views/almanak/almanak.php:39
 #: ../../../themes/default/views/almanak/almanak.phtml:48
 #: ../../../themes/default/views/profiel/profiel.phtml:144
@@ -578,7 +588,7 @@ msgstr "Little LALA 2012/2013"
 msgid "Lid worden"
 msgstr "Become Active"
 
-#: ../../../links.php:17 ../../../themes/default/views/header.php:102
+#: ../../../links.php:17 ../../../themes/default/views/header.php:105
 #: ../../../themes/default/views/links/auth_bestuur.phtml:1
 #: ../../../themes/default/views/links/links.phtml:1
 #: ../../../themes/default/views/links/moderate.phtml:1
@@ -667,7 +677,7 @@ msgstr "Promotion Homosexual"
 msgid "Mailinglijst"
 msgstr "Mailing list"
 
-#: ../../../mailinglijsten.php:28 ../../../themes/default/views/header.php:179
+#: ../../../mailinglijsten.php:28 ../../../themes/default/views/header.php:182
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:1
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:1
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:1
@@ -680,7 +690,7 @@ msgstr "Mailing lists"
 msgid "Nieuw lid"
 msgstr "New member"
 
-#: ../../../profiel.php:33 ../../../themes/default/views/header.php:303
+#: ../../../profiel.php:33 ../../../themes/default/views/header.php:306
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:84
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
@@ -732,7 +742,7 @@ msgid "Stickers"
 msgstr "Stickers"
 
 #: ../../../studieondersteuning.php:16
-#: ../../../themes/default/views/header.php:103
+#: ../../../themes/default/views/header.php:106
 #: ../../../themes/default/views/studieondersteuning/auth_bestuur.phtml:1
 #: ../../../themes/default/views/studieondersteuning/moderate.phtml:2
 #: ../../../themes/default/views/studieondersteuning/vak_not_found.phtml:1
@@ -754,7 +764,7 @@ msgstr "%s has been notified that the documents has been denied."
 msgid "%s zijn op de hoogte gesteld van het weigeren van de documenten."
 msgstr "%s have been notified that their documents have been denied."
 
-#: ../../../taken.php:17 ../../../themes/default/views/header.php:116
+#: ../../../taken.php:17 ../../../themes/default/views/header.php:119
 #: ../../../themes/default/views/taken/auth.phtml:1
 #: ../../../themes/default/views/taken/not_found.phtml:1
 #: ../../../themes/default/views/taken/taken.phtml:7
@@ -768,7 +778,7 @@ msgstr "Photo of %s"
 
 #: ../../../themes/default/views/boeken/boeken.php:17
 #: ../../../themes/default/views/boeken/boeken.php:189
-#: ../../../themes/default/views/header.php:112
+#: ../../../themes/default/views/header.php:115
 msgid "Bestelde boeken"
 msgstr "Ordered books"
 
@@ -884,7 +894,7 @@ msgstr "Add book"
 
 #: ../../../themes/default/views/boeken/boeken.php:140
 #: ../../../themes/default/views/forum.php:619
-#: ../../../themes/default/views/agenda/edit.phtml:68
+#: ../../../themes/default/views/agenda/edit.phtml:82
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:1
 #: ../../../themes/default/views/fotoboek/_reacties.phtml:7
 #: ../../../themes/default/views/links/_beheer.phtml:28
@@ -904,7 +914,7 @@ msgid "0 = nog niet bekend"
 msgstr "0 = not known yet"
 
 #: ../../../themes/default/views/boeken/boeken.php:184
-#: ../../../themes/default/views/header.php:194
+#: ../../../themes/default/views/header.php:197
 msgid "Boeken bestellen"
 msgstr "Order books"
 
@@ -945,7 +955,7 @@ msgstr "Select everything to accept orders"
 
 #: ../../../themes/default/views/boeken/boeken.php:232
 #: ../../../themes/default/views/forum.php:619
-#: ../../../themes/default/views/agenda/edit.phtml:68
+#: ../../../themes/default/views/agenda/edit.phtml:82
 #: ../../../themes/default/views/links/_beheer.phtml:28
 msgid "Wijzigen"
 msgstr "Edit"
@@ -1293,7 +1303,7 @@ msgstr "Last"
 #: ../../../themes/default/views/forum.php:484
 #: ../../../themes/default/views/forum.php:911
 #: ../../../themes/default/views/forum.php:1033
-#: ../../../themes/default/views/header.php:234
+#: ../../../themes/default/views/header.php:237
 msgid "Poll"
 msgstr "Poll"
 
@@ -1477,7 +1487,7 @@ msgid "Groep toevoegen"
 msgstr "Add group"
 
 #: ../../../themes/default/views/forum.php:1152
-#: ../../../themes/default/views/header.php:106
+#: ../../../themes/default/views/header.php:109
 msgid "Leden toevoegen"
 msgstr "Add a member"
 
@@ -1495,7 +1505,7 @@ msgid "Mededelingen"
 msgstr "Announcements"
 
 #: ../../../themes/default/views/forum.php:1164
-#: ../../../themes/default/views/header.php:175 ../../../weblog.php:13
+#: ../../../themes/default/views/header.php:178 ../../../weblog.php:13
 #: ../../../themes/default/views/weblog/weblog.phtml:1
 msgid "Weblog"
 msgstr "Weblog"
@@ -1522,183 +1532,188 @@ msgstr "Edit message"
 msgid "Bericht verwijderen"
 msgstr "Remove message"
 
-#: ../../../themes/default/views/header.php:56
-#: ../../../themes/default/views/header.php:80
+#: ../../../themes/default/views/header.php:52
+#: ../../../themes/default/views/agenda/edit.phtml:77
+msgid "Externe activiteit"
+msgstr "External activity"
+
+#: ../../../themes/default/views/header.php:59
+#: ../../../themes/default/views/header.php:83
 #: ../../../themes/default/views/agenda/index.phtml:44
 msgid "Er staan op dit moment geen activiteiten op de agenda."
 msgstr "There are no activities on the calendar at the moment. "
 
-#: ../../../themes/default/views/header.php:59
-#: ../../../themes/default/views/agenda/agendapunt.phtml:17
+#: ../../../themes/default/views/header.php:62
+#: ../../../themes/default/views/agenda/agendapunt.phtml:20
 msgid "Volledige agenda"
 msgstr "Complete calendar"
 
-#: ../../../themes/default/views/header.php:83
+#: ../../../themes/default/views/header.php:86
 msgid "Lust, Rum & Rock 'n Roll"
 msgstr "Lust, Rum & Rock 'n Roll"
 
-#: ../../../themes/default/views/header.php:90
+#: ../../../themes/default/views/header.php:93
 msgid "Home"
 msgstr "Home"
 
-#: ../../../themes/default/views/header.php:95
+#: ../../../themes/default/views/header.php:98
 msgid "Beheer"
 msgstr "Admin"
 
-#: ../../../themes/default/views/header.php:107
+#: ../../../themes/default/views/header.php:110
 #: ../../../themes/default/views/show/edit.phtml:25
 msgid "Pagina maken"
 msgstr "Make a page"
 
-#: ../../../themes/default/views/header.php:120
+#: ../../../themes/default/views/header.php:123
 msgid "Vereniging"
 msgstr "Association"
 
-#: ../../../themes/default/views/header.php:122
+#: ../../../themes/default/views/header.php:125
 msgid "Bedrijven"
 msgstr "Companies"
 
-#: ../../../themes/default/views/header.php:124
+#: ../../../themes/default/views/header.php:127
 msgid "Foto's"
 msgstr "Photos"
 
-#: ../../../themes/default/views/header.php:125
+#: ../../../themes/default/views/header.php:128
 msgid "Studie"
 msgstr "Study"
 
-#: ../../../themes/default/views/header.php:126
+#: ../../../themes/default/views/header.php:129
 msgid "Contact"
 msgstr "Contact"
 
-#: ../../../themes/default/views/header.php:146
+#: ../../../themes/default/views/header.php:149
 msgid "Verander taal"
 msgstr "Change Language"
 
-#: ../../../themes/default/views/header.php:168
+#: ../../../themes/default/views/header.php:171
 msgid "Bestuur"
 msgstr "Governing Board"
 
-#: ../../../themes/default/views/header.php:169
+#: ../../../themes/default/views/header.php:172
 msgid "Vorige besturen"
 msgstr "Previous Boards"
 
-#: ../../../themes/default/views/header.php:171
+#: ../../../themes/default/views/header.php:174
 msgid "Zusterverenigingen"
 msgstr "Sister unions"
 
-#: ../../../themes/default/views/header.php:172
+#: ../../../themes/default/views/header.php:175
 msgid "Lid/donateur worden"
 msgstr "Become a Member/donator"
 
-#: ../../../themes/default/views/header.php:173
+#: ../../../themes/default/views/header.php:176
 msgid "Documenten"
 msgstr "Documents"
 
-#: ../../../themes/default/views/header.php:180
+#: ../../../themes/default/views/header.php:183
 #: ../../../themes/default/views/stickers/map.phtml:10
 msgid "Stickerkaart"
 msgstr "Sticker map"
 
-#: ../../../themes/default/views/header.php:181
+#: ../../../themes/default/views/header.php:184
 msgid "Merchandise"
 msgstr "Merchandise"
 
-#: ../../../themes/default/views/header.php:182
+#: ../../../themes/default/views/header.php:185
 msgid "MSDNAA"
 msgstr "MSDNAA"
 
-#: ../../../themes/default/views/header.php:185
+#: ../../../themes/default/views/header.php:188
 msgid "Bedrijfsprofielen"
 msgstr "Company profiles"
 
-#: ../../../themes/default/views/header.php:186
+#: ../../../themes/default/views/header.php:189
 msgid "Vacatures"
 msgstr "Vacancies"
 
-#: ../../../themes/default/views/header.php:188
+#: ../../../themes/default/views/header.php:191
 msgid "Sponsormogelijkheden"
 msgstr "Sponsorship opportunities"
 
-#: ../../../themes/default/views/header.php:191
+#: ../../../themes/default/views/header.php:194
 msgid "K.I."
 msgstr "A.I."
 
-#: ../../../themes/default/views/header.php:192
+#: ../../../themes/default/views/header.php:195
 msgid "Informatica"
 msgstr "Computer Science"
 
-#: ../../../themes/default/views/header.php:193
+#: ../../../themes/default/views/header.php:196
 msgid "Alumni"
 msgstr "Alumni"
 
-#: ../../../themes/default/views/header.php:195
+#: ../../../themes/default/views/header.php:198
 msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
-#: ../../../themes/default/views/header.php:232
+#: ../../../themes/default/views/header.php:235
 msgid "Er is op dit moment geen poll"
 msgstr "There is no poll at the moment"
 
-#: ../../../themes/default/views/header.php:262
+#: ../../../themes/default/views/header.php:265
 msgid "Jarigen"
 msgstr "Birthdays"
 
-#: ../../../themes/default/views/header.php:271
+#: ../../../themes/default/views/header.php:274
 msgid "Er zijn vandaag geen jarigen"
 msgstr "It's nobody's birthday today"
 
-#: ../../../themes/default/views/header.php:273
+#: ../../../themes/default/views/header.php:276
 #, php-format
 msgid "Er is vandaag %d jarige:"
 msgid_plural "Er zijn vandaag %d jarigen:"
 msgstr[0] "There is %d birthday today:"
 msgstr[1] "There are %d birthdays today:"
 
-#: ../../../themes/default/views/header.php:290
+#: ../../../themes/default/views/header.php:293
 msgid "wachtwoord vergeten?"
 msgstr "Forgot your password?"
 
-#: ../../../themes/default/views/header.php:290
+#: ../../../themes/default/views/header.php:293
 msgid "lid worden"
 msgstr "Become Active"
 
-#: ../../../themes/default/views/header.php:291
+#: ../../../themes/default/views/header.php:294
 msgid "E-mailadres"
 msgstr "E-Mail address"
 
-#: ../../../themes/default/views/header.php:292
+#: ../../../themes/default/views/header.php:295
 msgid "Wachtwoord"
 msgstr "Password"
 
-#: ../../../themes/default/views/header.php:293
+#: ../../../themes/default/views/header.php:296
 msgid "Blijvend"
 msgstr "Permanent"
 
-#: ../../../themes/default/views/header.php:293
+#: ../../../themes/default/views/header.php:296
 msgid "Inloggen"
 msgstr "Login"
 
-#: ../../../themes/default/views/header.php:301
+#: ../../../themes/default/views/header.php:304
 #: ../../../themes/default/views/sessions/sessions.phtml:10
 msgid "Ingelogd"
 msgstr "Logged in"
 
-#: ../../../themes/default/views/header.php:302
+#: ../../../themes/default/views/header.php:305
 msgid "Uitloggen"
 msgstr "Logout"
 
-#: ../../../themes/default/views/header.php:321
+#: ../../../themes/default/views/header.php:324
 #: ../../../themes/default/views/agenda/index.phtml:10
 msgid "Er staat nog 1 agendapunt in de wachtrij"
 msgstr "There is still 1 calendar event waiting to be approved."
 
-#: ../../../themes/default/views/header.php:323
+#: ../../../themes/default/views/header.php:326
 #: ../../../themes/default/views/agenda/index.phtml:12
 #, php-format
 msgid "Er staan nog %d agendapunten in de wachtrij"
 msgstr "There are still %d calendar events waiting to be approved."
 
-#: ../../../themes/default/views/header.php:345
+#: ../../../themes/default/views/header.php:348
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computer Science"
 
@@ -2028,29 +2043,33 @@ msgid "Datum & Tijd"
 msgstr "Date & time"
 
 #: ../../../themes/default/views/agenda/agendapunt.phtml:15
+msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
+msgstr "This activity is not organised by Cover"
+
+#: ../../../themes/default/views/agenda/agendapunt.phtml:18
 #: ../../../themes/default/views/news/news.phtml:32
 msgid "Geplaatst door"
 msgstr "Placed by"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:17
+#: ../../../themes/default/views/agenda/agendapunt.phtml:20
 msgid "agenda"
 msgstr "calendar"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:17
+#: ../../../themes/default/views/agenda/agendapunt.phtml:20
 msgid "Volledige agenda bekijken"
 msgstr "View complete calendar"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:19
+#: ../../../themes/default/views/agenda/agendapunt.phtml:22
 #: ../../../themes/default/views/agenda/index.phtml:66
 msgid "Wijzig"
 msgstr "Modify"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:20
+#: ../../../themes/default/views/agenda/agendapunt.phtml:23
 #: ../../../themes/default/views/agenda/index.phtml:66
 msgid "Weet je zeker dat je dit agendapunt wilt verwijderen?"
 msgstr "Are you sure you want to delete this calendar event"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:20
+#: ../../../themes/default/views/agenda/agendapunt.phtml:23
 #: ../../../themes/default/views/agenda/index.phtml:66
 #: ../../../themes/default/views/studieondersteuning/vak.phtml:20
 msgid "Verwijder"
@@ -2081,10 +2100,9 @@ msgstr "Starting time"
 msgid "Eindtijd"
 msgstr "End time"
 
-#: ../../../themes/default/views/agenda/edit.phtml:65
-#: ../../../themes/default/views/agenda/moderate.phtml:19
-msgid "Prive"
-msgstr "Private"
+#: ../../../themes/default/views/agenda/edit.phtml:71
+msgid "Alleen zichtbaar voor leden"
+msgstr "Only visible to members"
 
 #: ../../../themes/default/views/agenda/index.phtml:4
 msgid "Log in om eventuele afgeschermde agendapunten te bekijken."
@@ -2124,6 +2142,10 @@ msgstr "Accept calendar event"
 #: ../../../themes/default/views/agenda/moderate.phtml:15
 msgid "Weiger agendapunt"
 msgstr "Deny calendar event"
+
+#: ../../../themes/default/views/agenda/moderate.phtml:19
+msgid "Prive"
+msgstr "Private"
 
 #: ../../../themes/default/views/agenda/moderate.phtml:49
 msgid "Alle agendapunten op accepteren zetten"

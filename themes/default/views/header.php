@@ -47,8 +47,11 @@
 			$contents = "<ul class=\"agenda\">\n";
 			
 			for ($i = 0; $i < min(10, count($iters)); $i++) {
-				$iter = $iters[$i];
-				$contents .= '<li class="clearfix"><span class="date">' . sprintf('%02d-%02d', $iter->get('vandatum'), $iter->get('vanmaand')) . '</span><a href="agenda.php?agenda_id=' . $iter->get_id() . '">' . $iter->get('kop') . '</a></li>';
+				$iter = $iters[$i];				
+				$details = $iter->get('extern')
+					? __('Externe activiteit')
+					: agenda_short_period_for_display($iter);
+				$contents .= '<li class="clearfix"><span class="date">' . sprintf('%02d-%02d', $iter->get('vandatum'), $iter->get('vanmaand')) . '</span><a href="agenda.php?agenda_id=' . $iter->get_id() . '"><span class="title">' . $iter->get('kop') . '</span><span class="details">' . $details . '</span></a></li>';
 			}
 			
 			$contents .= "</ul>\n";

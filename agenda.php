@@ -105,7 +105,8 @@
 					array('name' => 'van', 'function' => array(&$this, '_check_datum')),
 					array('name' => 'tot', 'function' => array(&$this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array(&$this, '_check_locatie')),
-					array('name' => 'private', 'function' => 'check_value_checkbox')),
+					array('name' => 'private', 'function' => 'check_value_checkbox'),
+					array('name' => 'extern', 'function' => 'check_value_checkbox')),
 				$errors);
 
 			if (count($errors) != 0) {
@@ -290,7 +291,9 @@
 				if ($punt->get('van') != $punt->get('tot'))
 					$event->end = new DateTime($punt->get('tot'), $timezone);
 				
-				$event->summary = sprintf('%s: %s', $punt->get('commissie__naam'), $punt->get('kop'));
+				$event->summary = $punt->get('extern')
+					? $punt->get('kop')
+					: sprintf('%s: %s', $punt->get('commissie__naam'), $punt->get('kop'));
 				$event->description = $punt->get('beschrijving');
 				$event->location = $punt->get('locatie');
 				$event->url = sprintf('https://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());

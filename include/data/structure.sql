@@ -96,7 +96,8 @@ CREATE TABLE agenda (
     tot timestamp with time zone,
     locatie character varying(100),
     private smallint DEFAULT 0,
-    lustrum smallint DEFAULT 0
+    lustrum smallint DEFAULT 0,
+    extern NOT NULL smallint DEFAULT 0
 );
 
 

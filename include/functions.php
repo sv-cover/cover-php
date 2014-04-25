@@ -296,6 +296,10 @@
 			return $days[$iter->get($field . 'dagnaam')] . ' ' . $iter->get($field . 'datum') . ' ' . $months[$iter->get('totmaand')];
 		}
 	}
+
+	function agenda_short_date_for_display($iter, $field) {
+		return $iter->get($field . 'datum') . ' ' . $months[$iter->get($field . 'maand')];
+	}
 	
 	/** @group Functions
 	  * Get a string for display of the van -> tot of an agendapunt
@@ -324,6 +328,26 @@
 				agenda_time_for_display($iter, 'van'),
 				agenda_time_for_display($iter, 'tot'));
 		}
+	}
+
+	function agenda_short_period_for_display($iter)
+	{	
+		$months = get_months();
+
+		// Same time?
+		if ($iter->get('van') == $iter->get('tot'))
+			return agenda_time_for_display($iter, 'van');
+
+		// Not the same end date?
+		if ($iter->get('vandatum') != $iter->get('totdatum') - ($iter->get('totuur') < 10 ? 1 : 0))
+			return sprintf(__('van %s tot %s %s'),
+				agenda_short_date_for_display($iter, 'van'),
+				agenda_short_date_for_display($iter, 'tot'),
+				$months[$iter->get('totmaand')]);
+
+		return sprintf(__('van %s tot %s'),
+				agenda_time_for_display($iter, 'van'),
+				agenda_time_for_display($iter, 'tot'));
 	}
 	
 	/** @group Functions

@@ -11,6 +11,9 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 	<?= __('Locatie')?>: <?= markup_format_text($iter->get('locatie')) ?><br/>
 <? } ?>
 </p>
+<?php if ($iter->get('extern')): ?>
+	<p><?= __('Deze activiteit wordt niet georganiseerd door Cover zelf.') ?></p>
+<?php endif ?>
 <p><?= markup_parse($iter->get('beschrijving')) ?></p>
 <p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="show.php?id=<?= $commissie->get('page') ?>"><?= htmlspecialchars($commissie->get('naam')) ?></a></span></p>
 <p>

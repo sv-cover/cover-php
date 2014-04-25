@@ -60,13 +60,30 @@ foreach ($member_data['commissies'] as $commissie)
 		'<div id="agenda_locatie">' .
 		input_text('locatie', $data, 'maxlength', '100') .
 		'</div>') ?>
-
-<tr><td colspan="3"><?= textarea_field('beschrijving', $data, $errors, 'formatter', 'markup_format_text') ?></td></tr>
-<?= table_row(label(__('Prive'), 'private', $errors, false) . ':',
-		input_checkbox('private', $data),
-		'') ?>
-<tr><td class="submit" colspan="3"><?= input_submit('subm', ($iter != null ? __('Wijzigen') : __('Toevoegen'))) ?></td></tr>
-</table></form>
+		<tr>
+			<td colspan="3">
+				<?= textarea_field('beschrijving', $data, $errors, 'formatter', 'markup_format_text') ?>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<?= input_checkbox('private', $data) ?>
+				<?= label(__('Alleen zichtbaar voor leden'), 'private', $errors, false) ?>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<?= input_checkbox('extern', $data) ?>
+				<?= label(__('Externe activiteit'), 'extern', $errors, false) ?>
+			</td>
+		</tr>
+		<tr>
+			<td class="submit" colspan="3">
+				<?= input_submit('subm', ($iter != null ? __('Wijzigen') : __('Toevoegen'))) ?>
+			</td>
+		</tr>
+	</table>
+</form>
 
 <script type="text/javascript">
 	check_checkbox("agenda_use_tot", "agenda_tot");
