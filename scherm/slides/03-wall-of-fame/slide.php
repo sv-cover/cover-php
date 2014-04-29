@@ -30,7 +30,7 @@ function _full_name($lid) {
 	<div style="display: inline-block; padding: 50px">
 		<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;get_thumb=circle&amp;width=200" width="200" height="200">
 		<span style="display: block; font-size: 20px;"><?=htmlspecialchars(_full_name($lid))?></span>
-		<span style="display: block; font-size: 14px;"><?=htmlspecialchars($lid->get('functie'))?></span>
+		<span style="display: block; font-size: 14px;"><?=htmlspecialchars($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '')?></span>
 	</div>
 	<?php endforeach ?>
 </div>
