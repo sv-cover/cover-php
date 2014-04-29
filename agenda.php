@@ -28,7 +28,7 @@
 			if ($name == 'tot' && !get_post('use_tot'))
 				return null;
 			
-			$fields = array('maand', 'datum', 'jaar');
+			$fields = array('jaar', 'maand', 'datum');
 			
 			/* Check for valid numbers */
 			$value = '';
@@ -233,8 +233,16 @@
 					
 					/* Remove the agendapunt this one overrides */
 					if ($iter->get('overrideid') != 0)
-						$this->model->delete($this->model->get_iter($iter->get('overrideid')));
+					{
+						$old_agenda_item = $this->model->get_iter($iter->get('overrideid'));
+
+						// The old agenda item may already be deleted.
+						if ($old_agenda_item)
+							$this->model->delete($old_agenda_item);
+					}
 					
+					exit;
+
 					$iter = $this->model->get_iter($id);
 					$iter->set('private', get_post('private_' . $id) ? 1 : 0);
 					$this->model->update($iter);
