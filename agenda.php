@@ -241,8 +241,6 @@
 							$this->model->delete($old_agenda_item);
 					}
 					
-					exit;
-
 					$iter = $this->model->get_iter($id);
 					$iter->set('private', get_post('private_' . $id) ? 1 : 0);
 					$this->model->update($iter);
