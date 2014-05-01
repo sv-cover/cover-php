@@ -259,9 +259,14 @@
 			} else
 				$lid = $_GET['lid'];
 			
+			// If the member was not found, return 404
 			if ($lid == null || !($iter = $this->model->get_iter($lid)))
 				return $this->get_content('not_found');
 			
+			// If the member was found, but is officially 'deleted', also return a 404
+			if ($iter->get('type') == MEMBER_STATUS_LID_AF && !member_in_commissie(COMMISSIE_BESTUUR))
+				return $this->get_content('not_found');
+
 			if (isset($_POST['submprofiel_almanak']))
 				$this->_process_almanak($iter);
 			elseif (isset($_POST['submprofiel_webgegevens']))
