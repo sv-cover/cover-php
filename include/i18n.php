@@ -87,6 +87,35 @@
 		return implode('', $parts);
 	}
 
+	/**
+	 * Give a number the correct suffix. E.g. 1, 2, 3 will become 1st, 2nd and
+	 * 3th, depending on the locale returned bij i18n_get_locale().
+	 *
+	 * @param int $n the number
+	 * @return string number with suffix.
+	 */
+	function ordinal($n) {
+		switch (i18n_get_locale())
+		{
+			case 'nl_NL':
+				if ($n >= 20)
+					return sprintf('%dste', $n);
+				else
+					return sprintf('%de', $n);
+
+			case 'en_US':
+				if ($n == 1)
+					return sprintf('%dst', $n);
+				elseif ($n == 2)
+					return sprintf('%dnd', $n);
+				else
+					return sprintf('%dth', $n);
+
+			default:
+				return sprintf('%d', $n);
+		}
+	}
+
 	function _ngettext($singular, $plural, $number) {
 		return i18n_translation::get_reader()->ngettext($singular, $plural, $number);
 	}

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-04-25 14:58+0100\n"
+"POT-Creation-Date: 2014-05-02 00:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -61,21 +61,21 @@ msgstr ""
 "The new calendar event is now waiting for approval. Once the governing board "
 "has accepted the event, it shall be placed on the website."
 
-#: ../../../agenda.php:265
+#: ../../../agenda.php:271
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar event."
 
-#: ../../../agenda.php:267
+#: ../../../agenda.php:273
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:270
+#: ../../../agenda.php:276
 #, php-format
 msgid ""
 "De commissies %s zijn op de hoogte gesteld van het weigeren van de "
@@ -83,7 +83,7 @@ msgid ""
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:279
+#: ../../../agenda.php:285
 msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
@@ -341,7 +341,7 @@ msgstr "Friday"
 msgid "Zaterdag"
 msgstr "Saturday"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:197 ../../../include/functions.php:206
 #: ../../../themes/default/views/almanak/almanak.phtml:66
 #: ../../../themes/default/views/profiel/profiel.phtml:89
 #: ../../../themes/default/views/profiel/profiel.phtml:99
@@ -364,7 +364,7 @@ msgstr "March"
 msgid "April"
 msgstr "April"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:197 ../../../include/functions.php:206
 msgid "Mei"
 msgstr "May"
 
@@ -396,27 +396,75 @@ msgstr "November"
 msgid "December"
 msgstr "December"
 
-#: ../../../include/functions.php:322
+#: ../../../include/functions.php:206
+msgid "Jan"
+msgstr "Jan"
+
+#: ../../../include/functions.php:206
+msgid "Feb"
+msgstr "Feb"
+
+#: ../../../include/functions.php:206
+msgid "Mrt"
+msgstr "Mar"
+
+#: ../../../include/functions.php:206
+msgid "Apr"
+msgstr "Apr"
+
+#: ../../../include/functions.php:206
+msgid "Jun"
+msgstr "Jun"
+
+#: ../../../include/functions.php:206
+msgid "Jul"
+msgstr "Jul"
+
+#: ../../../include/functions.php:206
+msgid "Aug"
+msgstr "Aug"
+
+#: ../../../include/functions.php:206
+msgid "Sept"
+msgstr "Sept"
+
+#: ../../../include/functions.php:206
+msgid "Okt"
+msgstr "Oct"
+
+#: ../../../include/functions.php:206
+msgid "Nov"
+msgstr "Nov"
+
+#: ../../../include/functions.php:206
+msgid "Dec"
+msgstr "Dec"
+
+#: ../../../include/functions.php:349
+msgid "$day $month"
+msgstr "$month $day|ordinal"
+
+#: ../../../include/functions.php:372
 #, php-format
 msgid "van %s %s tot %s %s"
 msgstr "from %s %s till %s %s"
 
-#: ../../../include/functions.php:326
+#: ../../../include/functions.php:376
 #, php-format
 msgid "%s, van %s tot %s"
 msgstr "%s, from %s till %s"
 
-#: ../../../include/functions.php:343
+#: ../../../include/functions.php:389
 #, php-format
-msgid "van %s tot %s %s"
-msgstr "from %s till %s %s"
+msgid "vanaf %s"
+msgstr "starts at %s"
 
-#: ../../../include/functions.php:348
+#: ../../../include/functions.php:404 ../../../include/functions.php:407
 #, php-format
-msgid "van %s tot %s"
-msgstr "from %s till %s"
+msgid "%s tot %s"
+msgstr "%s till %s"
 
-#: ../../../include/functions.php:459
+#: ../../../include/functions.php:519
 msgid "en"
 msgstr "and"
 
@@ -3326,6 +3374,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "van %s tot %s %s"
+#~ msgstr "from %s till %s %s"
 
 #~ msgid "Verborgen"
 #~ msgstr "Hidden"
