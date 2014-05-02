@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-05-02 00:19+0100\n"
+"POT-Creation-Date: 2014-05-02 11:20+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -440,31 +440,44 @@ msgstr "Nov"
 msgid "Dec"
 msgstr "Dec"
 
-#: ../../../include/functions.php:349
-msgid "$day $month"
-msgstr "$month $day|ordinal"
+#: ../../../include/functions.php:341
+msgid "$from_dayname $from_day $from_month"
+msgstr "$from_dayname $from_day|ordinal of $from_month"
 
-#: ../../../include/functions.php:372
-#, php-format
-msgid "van %s %s tot %s %s"
-msgstr "from %s %s till %s %s"
+#: ../../../include/functions.php:343
+msgid "$from_dayname $from_day $from_month, $from_time"
+msgstr "$from_dayname $from_day|ordinal of $from_month, $from_time"
 
-#: ../../../include/functions.php:376
-#, php-format
-msgid "%s, van %s tot %s"
-msgstr "%s, from %s till %s"
+#: ../../../include/functions.php:348
+msgid ""
+"$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day "
+"$till_month $till_time"
+msgstr ""
+"$from_dayname $from_day|ordinal of $from_month $from_time till $till_dayname "
+"$till_day|ordinal of $till_month $till_time"
 
-#: ../../../include/functions.php:389
-#, php-format
-msgid "vanaf %s"
-msgstr "starts at %s"
+#: ../../../include/functions.php:350
+msgid "$from_dayname $from_day $from_month, $from_time tot $till_time"
+msgstr ""
+"$from_dayname $from_day|ordinal of $from_month, $from_time tot $till_time"
 
-#: ../../../include/functions.php:404 ../../../include/functions.php:407
-#, php-format
-msgid "%s tot %s"
-msgstr "%s till %s"
+#: ../../../include/functions.php:374
+msgid "vanaf $from_time"
+msgstr "starts at $from_time"
 
-#: ../../../include/functions.php:519
+#: ../../../include/functions.php:381
+msgid "$from_day $from_month tot $till_day $till_month"
+msgstr "$from_month $from_day|ordinal till $till_month $till_day|ordinal"
+
+#: ../../../include/functions.php:383
+msgid "$from_day tot $till_day $till_month"
+msgstr "$from_day|ordinal till $till_day|ordinal of $till_month"
+
+#: ../../../include/functions.php:386
+msgid "$from_time tot $till_time"
+msgstr "$from_time till $till_time"
+
+#: ../../../include/functions.php:505
 msgid "en"
 msgstr "and"
 
@@ -3374,6 +3387,21 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "van %s %s tot %s %s"
+#~ msgstr "from %s %s till %s %s"
+
+#~ msgid "%s, van %s tot %s"
+#~ msgstr "%s, from %s till %s"
+
+#~ msgid "$day $month"
+#~ msgstr "$day|ordinal of $month"
+
+#~ msgid "vanaf %s"
+#~ msgstr "starts at %s"
+
+#~ msgid "%s tot %s"
+#~ msgstr "%s till %s"
 
 #~ msgid "van %s tot %s %s"
 #~ msgstr "from %s till %s %s"

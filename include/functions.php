@@ -327,87 +327,72 @@
 	}
 
 	/** @group Functions
-	  * Get a string to be used for display from an agendapunt date
-	  * @iter a #DataIter of an agendapunt
-	  * @field the field to use (either 'van' or 'tot')
-	  *
-	  * @result a string ready for display with formatted date
-	  */
-	function agenda_date_for_display($iter, $field) {
-		$days = get_days();
-		$months = get_months();		
-		if($field == 'van') {	
-			return $days[$iter->get($field . 'dagnaam')] . ' ' . $iter->get($field . 'datum') . ' ' . $months[$iter->get('vanmaand')];
-		} else { 
-			return $days[$iter->get($field . 'dagnaam')] . ' ' . $iter->get($field . 'datum') . ' ' . $months[$iter->get('totmaand')];
-		}
-	}
-
-	function agenda_short_date_for_display($iter, $field) {
-		$months = get_short_months();
-
-		return format_string(__('$day $month'), array(
-				'day' => $iter->get($field . 'datum'),
-				'month' => $months[$iter->get($field . 'maand')]));
-	}
-	
-	/** @group Functions
 	  * Get a string for display of the van -> tot of an agendapunt
 	  * @iter a #Dataiter of an agendapunt
 	  *
 	  * @result a string ready for display
 	  */
 	function agenda_period_for_display($iter) {
+		// If there is no till date, leave it out
 		if (!$iter->get('tot') || $iter->get('tot') == $iter->get('van')) {
-			$s = agenda_date_for_display($iter, 'van');
 			
+			// There is no time specified
 			if ($iter->get('vanuur') + 0 == 0)
-				return $s;
-			
-			return $s . ', ' . agenda_time_for_display($iter, 'van');
+				$format = __('$from_dayname $from_day $from_month');
+			else
+				$format = __('$from_dayname $from_day $from_month, $from_time');
 		}
 
 		/* Check if date part (not time) is not the same */
-		if (substr($iter->get('van'), 0, 10) != substr($iter->get('tot'), 0, 10)) {
-			return sprintf(__('van %s %s tot %s %s'),
-				agenda_date_for_display($iter, 'van'), agenda_time_for_display($iter, 'van'),
-				agenda_date_for_display($iter, 'tot'), agenda_time_for_display($iter, 'tot'));
+		else if (substr($iter->get('van'), 0, 10) != substr($iter->get('tot'), 0, 10)) {
+			$format = __('$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day $till_month $till_time');
 		} else {
-			return sprintf(__('%s, van %s tot %s'),
-				agenda_date_for_display($iter, 'van'),
-				agenda_time_for_display($iter, 'van'),
-				agenda_time_for_display($iter, 'tot'));
+			$format = __('$from_dayname $from_day $from_month, $from_time tot $till_time');
 		}
+
+		$days = get_days();
+		$months = get_months();
+		
+		return format_string($format, array(
+			'from_dayname' => $days[$iter->get('vandagnaam')],
+			'from_day' => $iter->get('vandatum'),
+			'from_month' => $months[$iter->get('vanmaand')],
+			'from_time' => agenda_time_for_display($iter, 'van'),
+			'till_dayname' => $days[$iter->get('totdagnaam')],
+			'till_day' => $iter->get('totdatum'),
+			'till_month' => $months[$iter->get('totmaand')],
+			'till_time' => agenda_time_for_display($iter, 'tot')
+		));
 	}
 
 	function agenda_short_period_for_display($iter)
 	{	
-		$months = get_months();
+		$months = get_short_months();
 
 		// Same time? Only display start time.
 		if ($iter->get('van') == $iter->get('tot'))
-			return sprintf(__('vanaf %s'), agenda_time_for_display($iter, 'van'));
+			$format = __('vanaf $from_time');
 
 		// Not the same end date? Show the day range instead of the times
-		if ($iter->get('vandatum') != $iter->get('totdatum') - ($iter->get('totuur') < 10 ? 1 : 0))
+		elseif ($iter->get('vandatum') != $iter->get('totdatum') - ($iter->get('totuur') < 10 ? 1 : 0))
 		{
 			// Not the same month? Add month name as well
 			if ($iter->get('vanmaand') != $iter->get('totmaand'))
-				$from_day = agenda_short_date_for_display($iter, 'van');
+				$format = __('$from_day $from_month tot $till_day $till_month');
 			else
-				$from_day = $iter->get('vandatum');
-
-			$till_day = agenda_short_date_for_display($iter, 'tot');
-
-			// 29 mei tot 3 april
-			// 29 may till 3 april
-			return sprintf(__('%s tot %s'), $from_day, $till_day);
+				$format = __('$from_day tot $till_day $till_month');
 		}
+		else
+			$format = __('$from_time tot $till_time');
 
-		// Nope, just display start and end time.
-		return sprintf(__('%s tot %s'),
-				agenda_time_for_display($iter, 'van'),
-				agenda_time_for_display($iter, 'tot'));
+		return format_string($format, array(
+			'from_day' => $iter->get('vandatum'),
+			'from_month' => $months[$iter->get('vanmaand')],
+			'from_time' => agenda_time_for_display($iter, 'van'),
+			'till_day' => $iter->get('totdatum'),
+			'till_month' => $months[$iter->get('totmaand')],
+			'till_time' => agenda_time_for_display($iter, 'tot')
+		));
 	}
 	
 	/** @group Functions
