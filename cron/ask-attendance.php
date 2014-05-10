@@ -16,6 +16,10 @@ $agenda_items = $agenda_model->get($from->format('Y-m-d'), $till->format('Y-m-d'
 
 foreach ($agenda_items as $agenda_item)
 {
+	// Skip external activities
+	if ($agenda_item->get('extern'))
+		continue;
+
 	$email_address = $commissie_model->get_email($agenda_item->get('commissie'));
 
 	$data = array('commissie_naam' => $commissie_model->get_naam($agenda_item->get('commissie')));
