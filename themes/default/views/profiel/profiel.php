@@ -1,5 +1,6 @@
 <?php
-require_once('form.php');
+require_once 'form.php';
+require_once 'markup.php';
 
 function empty_to_http_formatter($value) {
 	if (!$value)
@@ -79,17 +80,17 @@ class ProfielView extends View {
 			return count($model->getActive($member_id));
 		}
 
-		public function get_active_subscription_count($member_id)
+		public function get_active_subscriptions($member_id)
 		{
 			$model = get_model('DataModelMailinglijst');
 
 			$all_lists = $model->get_lijsten($member_id, !member_in_commissie(COMMISSIE_BESTUUR));
 
-			$subscriptions = 0;
+			$subscriptions = array();
 
 			foreach ($all_lists as $list)
 				if ($list->get('subscribed'))
-					$subscriptions++;
+					$subscriptions[] = $list;
 
 			return $subscriptions;
 		}

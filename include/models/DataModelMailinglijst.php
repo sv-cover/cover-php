@@ -43,6 +43,9 @@ class DataModelMailinglijst extends DataModel
 		else
 			$where_clause = '';
 
+		// FIXME deze query houdt geen rekening met leden.type = MEMBER_STATUS_LID
+		// voor opt-out lijsten en leden.type <> MEMBER_STATUS_LID_AF voor opt-in
+		// lijsten.
 		$rows = $this->db->query('
 			SELECT
 				l.id,

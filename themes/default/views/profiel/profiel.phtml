@@ -1,4 +1,4 @@
-<h1><?= sprintf(__('Profiel van %s'), member_full_name($iter, false, false)) ?></h1>
+<h1><?= sprintf(__('Profiel van %s'), markup_format_text(member_full_name($iter, false, false))) ?></h1>
 <div class="messageBox clearfix">
 
 
@@ -233,19 +233,27 @@
 </div>
 
 <?php if ($iter->get('type') != MEMBER_STATUS_LID_AF): ?>
-	<?php if($this->is_current_member($iter->get('lidid'))): ?>
-		<h2><?= __('Mailinglijsten')?></h2>
-		<div class="messageBox">
-			<p><?= __N('Je bent aangemeld voor %d mailinglijst.', 'Je bent aangemeld voor %d mailinglijsten.', $this->get_active_subscription_count($iter->get('lidid'))) ?> <a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
-		</div>
-	<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
-		<h2><?= __('Mailinglijsten')?></h2>
-		<div class="messageBox">
-			<p><?= __N('Deze persoon is aangemeld voor %d mailinglijst.', 'Deze persoon is aangemeld voor %d mailinglijsten.', $this->get_active_subscription_count($iter->get('lidid'))) ?></p>
-		</div>
+	<?php if ($this->is_current_member($iter->get('lidid')) || member_in_commissie(COMMISSIE_EASY)): ?>
+	<h2><?= __('Mailinglijsten')?></h2>
+	<div class="messageBox">
+		<?php $subscriptions = $this->get_active_subscriptions($iter->get('lidid')) ?>
+		<?php if($this->is_current_member($iter->get('lidid'))): ?>
+			<p><?= __N('Je bent aangemeld voor %d mailinglijst.', 'Je bent aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
+		<?php else: ?>
+			<p><?= __N('Deze persoon is aangemeld voor %d mailinglijst.', 'Deze persoon is aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
+		<?php endif ?>
+		<ul>
+			<?php foreach ($subscriptions as $subscription): ?>
+			<li><a href="mailinglijsten.php?lijst_id=<?=$subscription->get('id')?>"><?=markup_format_text($subscription->get('naam'))?></a></li>
+			<?php endforeach ?>
+		</ul>
+		<?php if($this->is_current_member($iter->get('lidid'))): ?>
+		<p><a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
+		<?php endif ?>
+	</div>
 	<?php endif ?>
 
-	<? if($this->is_current_member($iter->get('lidid'))): ?>
+	<?php if($this->is_current_member($iter->get('lidid'))): ?>
 		<h2><?= __('Sessies')?></h2>
 		<div class="messageBox">
 			<p><?= __N('Je bent ingelogd met %d browser.', 'Je bent ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
