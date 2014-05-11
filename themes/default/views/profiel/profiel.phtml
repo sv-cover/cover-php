@@ -33,8 +33,8 @@
 					<input type="file" name="photo" accept="image/jpeg" title="<?=__('Alleen JPEG-plaatjes mogen.')?>" onchange="if (this.value) this.form.submit()">
 				</div>
 			</form>
-			<?php else: ?>
-				<p class="hint"><?=__('Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het liefst 500&times;750 groot.')?></p>
+			<?php elseif ($this->is_current_member($iter)): ?>
+				<p class="hint"><?=__('Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het liefst met een verhouding van 3:2, bijvoorbeeld 500&times;750.')?></p>
 			<?php endif ?>
 			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>" method="post">
 				<?= input_hidden('submprofiel_almanak', 'yes') ?>

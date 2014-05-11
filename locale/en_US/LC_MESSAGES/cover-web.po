@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-05-12 00:04+0100\n"
+"POT-Creation-Date: 2014-05-12 00:17+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -492,7 +492,7 @@ msgstr "You!"
 #: ../../../include/member.php:88
 #: ../../../include/models/DataModelForum.php:654
 #: ../../../include/models/DataModelForum.php:677
-#: ../../../include/models/DataModelMember.php:511
+#: ../../../include/models/DataModelMember.php:510
 #: ../../../themes/default/views/forum.php:503
 #: ../../../themes/default/views/profiel/profiel.php:71
 msgid "Onbekend"
@@ -524,7 +524,7 @@ msgid "Alle groepen"
 msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:668
-#: ../../../include/models/DataModelMember.php:496
+#: ../../../include/models/DataModelMember.php:495
 #: ../../../themes/default/views/boeken/boeken.php:341
 #: ../../../themes/default/views/boeken/boeken.php:362
 #: ../../../themes/default/views/boeken/boeken.php:404
@@ -555,26 +555,26 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: ../../../include/models/DataModelMember.php:499
+#: ../../../include/models/DataModelMember.php:498
 #: ../../../themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../include/models/DataModelMember.php:502
+#: ../../../include/models/DataModelMember.php:501
 #: ../../../themes/default/views/almanak/almanak.php:29
 #: ../../../themes/default/views/almanak/almanak.phtml:46
 #: ../../../themes/default/views/profiel/profiel.phtml:150
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../include/models/DataModelMember.php:505
+#: ../../../include/models/DataModelMember.php:504
 #: ../../../themes/default/views/almanak/almanak.php:34
 #: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:154
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../include/models/DataModelMember.php:508
+#: ../../../include/models/DataModelMember.php:507
 #: ../../../themes/default/views/almanak/almanak.php:39
 #: ../../../themes/default/views/almanak/almanak.phtml:48
 #: ../../../themes/default/views/profiel/profiel.phtml:158
@@ -3034,10 +3034,10 @@ msgstr "Only JPEG-images are allowed."
 #: ../../../themes/default/views/profiel/profiel.phtml:37
 msgid ""
 "Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het "
-"liefst 500&times;750 groot."
+"liefst met een verhouding van 3:2, bijvoorbeeld 500&times;750."
 msgstr ""
 "Not satisfied with your photo? Submit a new one to webcie@ai.rug.nl. "
-"Preferably with the dimensions 500&times;750."
+"Preferably with a ratio of 3:2, for example 500&times;750."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:68
 msgid "Tel. vast"
