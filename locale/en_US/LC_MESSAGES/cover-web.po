@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-05-11 22:33+0100\n"
+"POT-Creation-Date: 2014-05-12 00:04+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -108,13 +108,13 @@ msgstr "Books"
 #: ../../../themes/default/views/header.php:173
 #: ../../../themes/default/views/actieveleden/_overzicht.phtml:13
 #: ../../../themes/default/views/commissies/commissies.phtml:1
-#: ../../../themes/default/views/profiel/profiel.phtml:156
+#: ../../../themes/default/views/profiel/profiel.phtml:170
 msgid "Commissies"
 msgstr "Committees"
 
 #: ../../../confirm.php:39
-#: ../../../themes/default/views/profiel/profiel.phtml:171
 #: ../../../themes/default/views/profiel/profiel.phtml:185
+#: ../../../themes/default/views/profiel/profiel.phtml:199
 msgid "Nieuw wachtwoord"
 msgstr "New password"
 
@@ -277,7 +277,7 @@ msgstr "This page does not exist..."
 #: ../../../include/editable.php:17
 #: ../../../themes/default/views/forum.php:1107
 #: ../../../themes/default/views/header.php:124
-#: ../../../themes/default/views/profiel/profiel.phtml:204
+#: ../../../themes/default/views/profiel/profiel.phtml:218
 msgid "Leden"
 msgstr "Members"
 
@@ -343,8 +343,8 @@ msgstr "Saturday"
 
 #: ../../../include/functions.php:197 ../../../include/functions.php:206
 #: ../../../themes/default/views/almanak/almanak.phtml:66
-#: ../../../themes/default/views/profiel/profiel.phtml:89
-#: ../../../themes/default/views/profiel/profiel.phtml:99
+#: ../../../themes/default/views/profiel/profiel.phtml:103
+#: ../../../themes/default/views/profiel/profiel.phtml:113
 msgid "geen"
 msgstr "none"
 
@@ -494,7 +494,7 @@ msgstr "You!"
 #: ../../../include/models/DataModelForum.php:677
 #: ../../../include/models/DataModelMember.php:511
 #: ../../../themes/default/views/forum.php:503
-#: ../../../themes/default/views/profiel/profiel.php:70
+#: ../../../themes/default/views/profiel/profiel.php:71
 msgid "Onbekend"
 msgstr "Unknown"
 
@@ -507,7 +507,7 @@ msgstr "unknown"
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/forum.php:870
 #: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:32
-#: ../../../themes/default/views/profiel/profiel.phtml:205
+#: ../../../themes/default/views/profiel/profiel.phtml:219
 msgid "Iedereen"
 msgstr "Everyone"
 
@@ -534,7 +534,7 @@ msgstr "Groups"
 #: ../../../themes/default/views/almanak/almanak.phtml:44
 #: ../../../themes/default/views/boeken/bestellingen.phtml:7
 #: ../../../themes/default/views/boeken/bestellingen.phtml:61
-#: ../../../themes/default/views/profiel/profiel.phtml:128
+#: ../../../themes/default/views/profiel/profiel.phtml:142
 #: ../../../themes/default/views/studieondersteuning/moderate.phtml:22
 msgid "Lid"
 msgstr "Member"
@@ -545,7 +545,6 @@ msgstr "Member"
 #: ../../../themes/default/views/agenda/moderate.phtml:19
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:33
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:19
 #: ../../../themes/default/views/show/edit.phtml:21
 msgid "Commissie"
 msgstr "Committee"
@@ -564,21 +563,21 @@ msgstr "Hidden"
 #: ../../../include/models/DataModelMember.php:502
 #: ../../../themes/default/views/almanak/almanak.php:29
 #: ../../../themes/default/views/almanak/almanak.phtml:46
-#: ../../../themes/default/views/profiel/profiel.phtml:136
+#: ../../../themes/default/views/profiel/profiel.phtml:150
 msgid "Lid af"
 msgstr "Previously a member"
 
 #: ../../../include/models/DataModelMember.php:505
 #: ../../../themes/default/views/almanak/almanak.php:34
 #: ../../../themes/default/views/almanak/almanak.phtml:47
-#: ../../../themes/default/views/profiel/profiel.phtml:140
+#: ../../../themes/default/views/profiel/profiel.phtml:154
 msgid "Erelid"
 msgstr "Honorary Member"
 
 #: ../../../include/models/DataModelMember.php:508
 #: ../../../themes/default/views/almanak/almanak.php:39
 #: ../../../themes/default/views/almanak/almanak.phtml:48
-#: ../../../themes/default/views/profiel/profiel.phtml:144
+#: ../../../themes/default/views/profiel/profiel.phtml:158
 msgid "Donateur"
 msgstr "Donator"
 
@@ -742,9 +741,7 @@ msgstr "Mailing list"
 #: ../../../mailinglijsten.php:28 ../../../themes/default/views/header.php:182
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:1
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:1
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:1
-#: ../../../themes/default/views/profiel/profiel.phtml:236
-#: ../../../themes/default/views/profiel/profiel.phtml:241
+#: ../../../themes/default/views/profiel/profiel.phtml:251
 msgid "Mailinglijsten"
 msgstr "Mailing lists"
 
@@ -754,7 +751,6 @@ msgstr "New member"
 
 #: ../../../profiel.php:33 ../../../themes/default/views/header.php:306
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:100
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:84
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
@@ -790,6 +786,24 @@ msgstr "The visibility of the profile has not been selected."
 #: ../../../profiel.php:238
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
+
+#: ../../../profiel.php:261
+#, php-format
+msgid "Het fotobestand is te groot. Het maximum is %s."
+msgstr "The image file is too large. The maximum file size is %s."
+
+#: ../../../profiel.php:265
+#, php-format
+msgid "Het bestand is niet geupload. Foutcode %d."
+msgstr "The image hasn't been uploaded correctly. PHP reports error code %d."
+
+#: ../../../profiel.php:268
+msgid "Bestand is niet een door PHP geupload bestand."
+msgstr "The image file is not a file uploaded by PHP."
+
+#: ../../../profiel.php:271
+msgid "Het geuploadde bestand kon niet worden gelezen."
+msgstr "The uploaded file could not be read."
 
 #: ../../../show.php:28
 msgid "Show"
@@ -1191,7 +1205,7 @@ msgstr "Show preview"
 
 #: ../../../themes/default/views/editable.php:68
 #: ../../../themes/default/views/homepage/homepage.phtml:9
-#: ../../../themes/default/views/profiel/profiel.phtml:105
+#: ../../../themes/default/views/profiel/profiel.phtml:119
 msgid "Taal"
 msgstr "Language"
 
@@ -1319,7 +1333,6 @@ msgstr "Subject/question"
 #: ../../../themes/default/views/forum.php:372
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:42
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:35
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:28
 msgid "Omschrijving"
 msgstr "Description"
 
@@ -1336,11 +1349,11 @@ msgstr "Option"
 #: ../../../themes/default/views/actieveleden/_leden.phtml:27
 #: ../../../themes/default/views/fotoboek/_photo.phtml:4
 #: ../../../themes/default/views/links/_beheer.phtml:29
-#: ../../../themes/default/views/profiel/profiel.phtml:63
-#: ../../../themes/default/views/profiel/profiel.phtml:111
-#: ../../../themes/default/views/profiel/profiel.phtml:147
-#: ../../../themes/default/views/profiel/profiel.phtml:188
-#: ../../../themes/default/views/profiel/profiel.phtml:227
+#: ../../../themes/default/views/profiel/profiel.phtml:77
+#: ../../../themes/default/views/profiel/profiel.phtml:125
+#: ../../../themes/default/views/profiel/profiel.phtml:161
+#: ../../../themes/default/views/profiel/profiel.phtml:202
+#: ../../../themes/default/views/profiel/profiel.phtml:241
 #: ../../../themes/default/views/taken/taak.phtml:33
 msgid "Opslaan"
 msgstr "Save"
@@ -1438,11 +1451,8 @@ msgstr "New forum"
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:69
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:88
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:31
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:24
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:53
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:72
-#: ../../../themes/default/views/profiel/profiel.phtml:37
-#: ../../../themes/default/views/profiel/profiel.phtml:45
+#: ../../../themes/default/views/profiel/profiel.phtml:51
+#: ../../../themes/default/views/profiel/profiel.phtml:59
 msgid "Naam"
 msgstr "Name"
 
@@ -1815,7 +1825,7 @@ msgstr "Only *@svcover.nl addresses"
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
-#: ../../../themes/default/views/profiel/profiel.php:60
+#: ../../../themes/default/views/profiel/profiel.php:61
 msgid "opzoeken"
 msgstr "lookup"
 
@@ -1862,7 +1872,7 @@ msgstr[0] "%d documents"
 msgstr[1] "%d documents"
 
 #: ../../../themes/default/views/taken/taken.php:21
-#: ../../../themes/default/views/profiel/profiel.phtml:203
+#: ../../../themes/default/views/profiel/profiel.phtml:217
 msgid "Niemand"
 msgstr "Nobody"
 
@@ -1991,7 +2001,7 @@ msgstr "New phd position"
 #: ../../../themes/default/views/agenda/edit.phtml:4
 #: ../../../themes/default/views/lidworden/lidworden.phtml:30
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:17
-#: ../../../themes/default/views/profiel/profiel.phtml:6
+#: ../../../themes/default/views/profiel/profiel.phtml:7
 #: ../../../themes/default/views/show/edit.phtml:12
 msgid "Niet alle velden zijn goed ingevuld"
 msgstr "You haven't filled in all the fields correctly"
@@ -2000,9 +2010,8 @@ msgstr "You haven't filled in all the fields correctly"
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:24
 #: ../../../themes/default/views/lidworden/lidworden.phtml:42
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:5
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:5
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:49
-#: ../../../themes/default/views/profiel/profiel.phtml:51
+#: ../../../themes/default/views/profiel/profiel.phtml:65
 msgid "Adres"
 msgstr "Adress"
 
@@ -2010,7 +2019,7 @@ msgstr "Adress"
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:28
 #: ../../../themes/default/views/lidworden/lidworden.phtml:43
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:51
-#: ../../../themes/default/views/profiel/profiel.phtml:52
+#: ../../../themes/default/views/profiel/profiel.phtml:66
 msgid "Postcode"
 msgstr "Zipcode"
 
@@ -2252,17 +2261,17 @@ msgstr "Last name"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:34
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:70
-#: ../../../themes/default/views/profiel/profiel.phtml:50
+#: ../../../themes/default/views/profiel/profiel.phtml:64
 msgid "Beginjaar"
 msgstr "Starting year"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:42
-#: ../../../themes/default/views/profiel/profiel.phtml:119
+#: ../../../themes/default/views/profiel/profiel.phtml:133
 msgid "Zichtbaarheid"
 msgstr "Visibility"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:45
-#: ../../../themes/default/views/profiel/profiel.phtml:132
+#: ../../../themes/default/views/profiel/profiel.phtml:146
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
@@ -2676,7 +2685,7 @@ msgid "Nieuw bericht"
 msgstr "New message"
 
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:34
-#: ../../../themes/default/views/profiel/profiel.phtml:94
+#: ../../../themes/default/views/profiel/profiel.phtml:108
 msgid "Homepage"
 msgstr "Homepage"
 
@@ -2724,7 +2733,7 @@ msgstr "Gender"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:44
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:54
-#: ../../../themes/default/views/profiel/profiel.phtml:53
+#: ../../../themes/default/views/profiel/profiel.phtml:67
 msgid "Woonplaats"
 msgstr "Place of residence"
 
@@ -2735,16 +2744,14 @@ msgstr "Phone number"
 #: ../../../themes/default/views/lidworden/lidworden.phtml:46
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:73
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:89
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:57
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:73
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
-#: ../../../themes/default/views/profiel/profiel.phtml:56
+#: ../../../themes/default/views/profiel/profiel.phtml:70
 msgid "E-Mail adres"
 msgstr "E-Mail address"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:48
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:39
-#: ../../../themes/default/views/profiel/profiel.phtml:49
+#: ../../../themes/default/views/profiel/profiel.phtml:63
 msgid "Geboortedatum"
 msgstr "Birthdate"
 
@@ -2875,18 +2882,15 @@ msgstr "Properties"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:28
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
 msgid "Toegang"
 msgstr "Access"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:47
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:40
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:33
 msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
 msgstr "People can subscribe to this list."
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:50
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:36
 msgid "Update lijst"
 msgstr "Update list"
 
@@ -2895,24 +2899,19 @@ msgid "Aanmeldingen"
 msgstr "Subscriptions"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:59
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:43
 msgid "Lidnummer(s)"
 msgstr "Member id(s)"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:61
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:77
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:45
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:61
 msgid "Meld aan"
 msgstr "Subscribe"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:62
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:46
 msgid "Niet-lid aanmelden voor mailinglijst"
 msgstr "Subscribe a non-member tot the mailing list"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:108
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:92
 msgid "Meld geselecteerde adressen af"
 msgstr "Unsubscribe selected"
 
@@ -3015,15 +3014,24 @@ msgstr "Can't find this member. Contact the %s if the problem keeps occurring"
 msgid "Profiel van %s"
 msgstr "Profile of %s"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:14
+#: ../../../themes/default/views/profiel/profiel.phtml:16
 msgid "Almanakgegevens"
 msgstr "Personal data"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:20
+#: ../../../themes/default/views/profiel/profiel.phtml:25
 msgid "lidfoto"
 msgstr "Member picture"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:24
+#: ../../../themes/default/views/profiel/profiel.phtml:32
+#: ../../../themes/default/views/stickers/map.phtml:32
+msgid "Kies foto"
+msgstr "Choose photo"
+
+#: ../../../themes/default/views/profiel/profiel.phtml:33
+msgid "Alleen JPEG-plaatjes mogen."
+msgstr "Only JPEG-images are allowed."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:37
 msgid ""
 "Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het "
 "liefst 500&times;750 groot."
@@ -3031,110 +3039,110 @@ msgstr ""
 "Not satisfied with your photo? Submit a new one to webcie@ai.rug.nl. "
 "Preferably with the dimensions 500&times;750."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:54
+#: ../../../themes/default/views/profiel/profiel.phtml:68
 msgid "Tel. vast"
 msgstr "Home phone number"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:55
+#: ../../../themes/default/views/profiel/profiel.phtml:69
 msgid "Tel. mobiel"
 msgstr "Mob. phone number"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:70
+#: ../../../themes/default/views/profiel/profiel.phtml:84
 msgid "Webgegevens"
 msgstr "Webinformation"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:80
+#: ../../../themes/default/views/profiel/profiel.phtml:94
 msgid "Bijnaam"
 msgstr "Nickname"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:81
+#: ../../../themes/default/views/profiel/profiel.phtml:95
 msgid "Onderschrift"
 msgstr "Signature"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:84
+#: ../../../themes/default/views/profiel/profiel.phtml:98
 msgid "Avatar"
 msgstr "Avatar"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:89
+#: ../../../themes/default/views/profiel/profiel.phtml:103
 msgid "avatar"
 msgstr "avatar"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:157
+#: ../../../themes/default/views/profiel/profiel.phtml:171
 msgid "Lid van de volgende commissies:"
 msgstr "Member of the following committees:"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:183
+#: ../../../themes/default/views/profiel/profiel.phtml:197
 msgid "Oud wachtwoord"
 msgstr "Old password"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:186
+#: ../../../themes/default/views/profiel/profiel.phtml:200
 msgid "Opnieuw"
 msgstr "Again"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:194
+#: ../../../themes/default/views/profiel/profiel.phtml:208
 msgid "Privacy instellingen"
 msgstr "Privacy settings"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:195
+#: ../../../themes/default/views/profiel/profiel.phtml:209
 msgid "Je privacy instellingen geven aan wie welke informatie mag zien."
 msgstr "Edit your privacy preferences to indicate who can see what info"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:238
+#: ../../../themes/default/views/profiel/profiel.phtml:255
 #, php-format
 msgid "Je bent aangemeld voor %d mailinglijst."
 msgid_plural "Je bent aangemeld voor %d mailinglijsten."
 msgstr[0] "You are subscribed to %d mailing list."
 msgstr[1] "You are subscribed to %d mailing lists."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:238
-msgid "Beheer je abonnementen."
-msgstr "Manage your subscriptions."
-
-#: ../../../themes/default/views/profiel/profiel.phtml:243
+#: ../../../themes/default/views/profiel/profiel.phtml:257
 #, php-format
 msgid "Deze persoon is aangemeld voor %d mailinglijst."
 msgid_plural "Deze persoon is aangemeld voor %d mailinglijsten."
 msgstr[0] "This person is subscribed to %d mailing list."
 msgstr[1] "This person is subscribed to %d mailing lists."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:248
-#: ../../../themes/default/views/profiel/profiel.phtml:253
+#: ../../../themes/default/views/profiel/profiel.phtml:265
+msgid "Beheer je abonnementen."
+msgstr "Manage your subscriptions."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:271
+#: ../../../themes/default/views/profiel/profiel.phtml:276
 msgid "Sessies"
 msgstr "Sessions"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:250
+#: ../../../themes/default/views/profiel/profiel.phtml:273
 #, php-format
 msgid "Je bent ingelogd met %d browser."
 msgid_plural "Je bent ingelogd met %d browsers."
 msgstr[0] "You are logged in with %d browser."
 msgstr[1] "You are logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:250
+#: ../../../themes/default/views/profiel/profiel.phtml:273
 msgid "Beheer je sessies."
 msgstr "Manage your sessions."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:255
+#: ../../../themes/default/views/profiel/profiel.phtml:278
 #, php-format
 msgid "Deze persoon is ingelogd met %d browser."
 msgid_plural "Deze persoon is ingelogd met %d browsers."
 msgstr[0] "This person is logged in with %d browser."
 msgstr[1] "This person is logged in with %d browsers."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:255
+#: ../../../themes/default/views/profiel/profiel.phtml:278
 msgid "Beheer zijn/haar sessies."
 msgstr "Manage his/her sessions."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:261
+#: ../../../themes/default/views/profiel/profiel.phtml:284
 msgid "Dreamspark (voorheen MSDNAA)"
 msgstr "Dreamspark (formerly known as MSDNAA)"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:264
+#: ../../../themes/default/views/profiel/profiel.phtml:287
 msgid ""
 "Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar "
 "Microsoft."
 msgstr "I agree with sending my name and e-mail address to Microsoft."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:265
+#: ../../../themes/default/views/profiel/profiel.phtml:288
 msgid "Ga naar Dreamspark"
 msgstr "Continue to Dreamspark"
 
@@ -3175,10 +3183,6 @@ msgstr "Placed by"
 #: ../../../themes/default/views/stickers/map.phtml:25
 msgid "Verwijder sticker"
 msgstr "Delete sticker"
-
-#: ../../../themes/default/views/stickers/map.phtml:32
-msgid "Kies foto"
-msgstr "Choose photo"
 
 #: ../../../themes/default/views/stickers/map.phtml:33
 msgid "Voeg een foto toe bij deze sticker. Alleen JPEG-plaatjes mogen."

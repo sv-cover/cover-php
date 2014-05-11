@@ -249,6 +249,36 @@
 
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#zichtbaarheid');
 		}
+
+		protected function _process_photo($iter)
+		{
+			$error = null;
+
+			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_EASY))
+				return $this->get_content('common::auth');
+
+			else if ($_FILES['photo']['errpr'] == UPLOAD_ERR_INI_SIZE)
+				$error = sprintf(__('Het fotobestand is te groot. Het maximum is %s.'),
+					ini_get('upload_max_filesize') . ' bytes');
+
+			elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
+				$error = sprintf(__('Het bestand is niet geupload. Foutcode %d.'), $_FILES['photo']['error']);
+
+			elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
+				$error = __('Bestand is niet een door PHP geupload bestand.');
+			
+			elseif (!($fh = fopen($_FILES['photo']['tmp_name'], 'rb')))
+				$error = __('Het geuploadde bestand kon niet worden gelezen.');
+
+			if ($error)
+				return $this->get_content('profiel', $iter, array('errors' => array('photo'), 'error_message' => $error));
+
+			$this->model->set_photo($iter, $fh);
+
+			fclose($fh);
+
+			header('Location: profiel.php?lid=' . $iter->get('lidid') . '&force_reload_photo=true#almanak');
+		}
 		
 		function run_impl() {
 			$lid = null;
@@ -269,6 +299,8 @@
 
 			if (isset($_POST['submprofiel_almanak']))
 				$this->_process_almanak($iter);
+			elseif (isset($_FILES['photo']))
+				$this->_process_photo($iter);
 			elseif (isset($_POST['submprofiel_webgegevens']))
 				$this->_process_webgegevens($iter);
 			elseif (isset($_POST['submprofiel_wachtwoord']))
