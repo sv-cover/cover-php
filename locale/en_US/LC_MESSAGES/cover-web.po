@@ -459,7 +459,7 @@ msgstr ""
 #: ../../../include/functions.php:350
 msgid "$from_dayname $from_day $from_month, $from_time tot $till_time"
 msgstr ""
-"$from_dayname $from_day|ordinal of $from_month, $from_time tot $till_time"
+"$from_dayname $from_day|ordinal of $from_month, $from_time till $till_time"
 
 #: ../../../include/functions.php:374
 msgid "vanaf $from_time"
@@ -2909,7 +2909,7 @@ msgstr "Subscribe"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:62
 msgid "Niet-lid aanmelden voor mailinglijst"
-msgstr "Subscribe a non-member tot the mailing list"
+msgstr "Subscribe a non-member to the mailing list"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:108
 msgid "Meld geselecteerde adressen af"
