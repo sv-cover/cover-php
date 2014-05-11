@@ -18,9 +18,10 @@ class CommissiesView extends View
 	private function find_image($basename)
 	{
 		$search_paths = array(
-			'images/' . $basename . '.gif',
-			'images/' . $basename . '.png',
-			'images/' . $basename . '.jpg');
+			'images/' . $basename . '.gif', // Brainstorm
+			'images/' . $basename . '.jpg', // Small photo
+			'images/' . $basename . '.png'	// Committee logo
+		);
 
 		foreach ($search_paths as $path)
 			if (file_exists($path))
