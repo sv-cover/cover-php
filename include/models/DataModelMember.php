@@ -84,7 +84,6 @@
     
 		/**
 		  * Returns the photo of member with given id as a string.
-		  * Still needs to be unescaped with pg_unescape_bytea()
 		  * @iter a #DataIter
 		  *
 		  * @result the raw picture data
