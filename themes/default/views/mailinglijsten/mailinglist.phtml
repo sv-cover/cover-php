@@ -1,6 +1,6 @@
 <h1><?=__('Mailinglijsten')?> :: <?=markup_format_text($lijst->get('naam'))?></h1>
 <div class="messageBox">
-	<div class="section">
+	<div class="section mailinglist-header">
 		<p>
 			<em><?=__('Adres') ?>: <?=htmlspecialchars($lijst->get('adres'))?></em>
 			<?=markup_parse($lijst->get('omschrijving'))?>
@@ -18,3 +18,155 @@
 	<?php endif ?>
 	</form>
 </div>
+
+<?php if ($model->member_can_edit($lijst->get('id'))): ?>
+<div id="mailinglist-settings" class="messageBox hide-by-default">
+	<h2><?=__('Eigenschappen')?></h2>
+	<div class="section">
+		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+			<div class="inline-block">
+				<label for="toegang"><?=__('Toegang')?>:</label>
+				<?=select_field('toegang', $this->get_all_toegang_options(), $lijst->data, 'id', 'toegang')?>
+			</div>
+			<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
+			<div class="inline-block">
+				<label for="commissie"><?=__('Commissie')?>:</label>
+				<?=select_field('commissie', $this->get_all_commissies(), $lijst->data, 'id', 'commissie') ?>
+			</div>
+			<?php endif ?>
+			<div>
+				<label for="naam"><?=__('Naam') ?>:</label>
+				<input id="naam" type="text" name="naam" value="<?=htmlspecialchars($lijst->get('naam'), ENT_QUOTES)?>">
+			</div>
+			<div>
+				<label for="omschrijving"><?=__('Omschrijving') ?>:</label>
+				<textarea id="omschrijving" name="omschrijving"><?=htmlspecialchars($lijst->get('omschrijving'))?></textarea>
+			</div>
+			<div>
+				<input id="publiek" type="checkbox" name="publiek" <?php if ($lijst->get('publiek')) echo 'checked' ?>>
+				<label for="publiek"><?=__('Mensen mogen zichzelf aanmelden voor deze lijst.')?></label>
+			</div>
+			
+			<button class="button" type="submit"><?=__('Update lijst')?></button>
+		</form>
+	</div>
+</div>
+
+<div class="messageBox">
+	<h2><?=__('Aanmeldingen')?></h2>
+	<div class="section">
+		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+			<label for="lid_id"><?=__('Lidnummer(s)')?>:</label>
+			<input type="text" id="lid_id" name="subscribe">
+			<button type="submit" class="button"><?=__('Meld aan')?></button>
+			<a href="#mailinglist-add-gast"><?=__('Niet-lid aanmelden voor mailinglijst')?></a>
+		</form>
+	</div>
+
+	<div id="mailinglist-add-gast" class="section hide-by-default">
+		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+			<div>
+				<label for="gast-naam"><?=__('Naam')?>:</label>
+				<input type="text" id="gast-naam" name="naam">
+			</div>
+			<div>
+				<label for="gast-email"><?=__('E-Mail adres')?>:</label>
+				<input type="email" id="gast-email" name="email">
+			</div>
+			<div class="controls">
+				<button type="submit" class="button"><?=__('Meld aan')?></button>
+			</div>
+		</form>
+	</div>
+
+	<div class="section">
+		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<table class="full-width">
+			<thead>
+				<tr>
+					<th width="20"></th>
+					<th><?=__('Naam')?></th>
+					<th><?=__('E-Mail adres')?></th>
+					<th width="40"></th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($aanmeldingen as $aanmelding): ?>
+				<tr>
+					<td><input type="checkbox" id="<?=$this->uid($aanmelding)?>" name="unsubscribe[]" value="<?=$aanmelding->has('abonnement_id') ? $aanmelding->get('abonnement_id') : $aanmelding->get('lid_id') ?>"></td>
+					<td><label for="<?=$this->uid($aanmelding)?>"><?=htmlspecialchars($aanmelding->get('naam'))?></label></td>
+					<td><?=htmlspecialchars($aanmelding->get('email'))?></td>
+					<?php if ($aanmelding->get('lid_id')): ?>
+					<td><a href="profiel.php?lid=<?=$aanmelding->get('lid_id')?>"><?=__('Profiel')?></a></td>
+					<?php else: ?>
+					<td></td>
+					<?php endif ?>
+				</tr>
+			<?php endforeach ?>
+			</tbody>
+		</table>
+		<button class="button" type="submit"><?=__('Meld geselecteerde adressen af')?></button>
+		</form>
+	</div>
+</div>
+
+<script>
+jQuery(function($) {
+	function split(val) {
+		return val.split(/,\s*/);
+	}
+
+	function extractLast(term) {
+		return split(term).pop();
+	}
+
+	$('.mailinglist-header > p').append(
+		$('<a>')
+			.attr({'href': '#mailinglist-settings'})
+			.text(<?=json_encode(__('Bewerken'))?>));
+	
+	$('#lid_id')
+		.bind('keydown', function(e) {
+			if (event.keyCode === $.ui.keyCode.TAB
+				&& $(this).data('ui-autocomplete').menu.active)
+				e.preventDefault();
+		})
+		.autocomplete({
+			source: function(request, response) {
+				$.getJSON('mailinglijsten.php', {
+					'autocomplete': true,
+					'naam': extractLast(request.term)
+				}, response);
+			},
+			search: function() {
+				// custom minLength
+				var term = extractLast(this.value);
+
+				if (term.length < 2)
+					return false;
+			},
+			focus: function() {
+				return false;
+			},
+			select: function(event, ui) {
+				var terms = split(this.value);
+				// remove the current input
+				terms.pop();
+				// add the selected item
+				terms.push(ui.item.id);
+				// add placeholder to get the comma-and-space at the end
+				terms.push('');
+				this.value = terms.join(', ');
+				return false;
+			}
+		})
+		.data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $('<li>').append(
+				$('<a>').append(
+					$('<span class="naam">').text(item.naam)
+				)
+			).appendTo(ul);
+		};
+});
+</script>
+<?php endif ?>

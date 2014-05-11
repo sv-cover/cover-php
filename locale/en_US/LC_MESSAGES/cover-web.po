@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-05-02 11:20+0100\n"
+"POT-Creation-Date: 2014-05-11 22:33+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -542,7 +542,8 @@ msgstr "Member"
 #: ../../../include/models/DataModelForum.php:671
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/agenda/edit.phtml:39
-#: ../../../themes/default/views/agenda/moderate.phtml:18
+#: ../../../themes/default/views/agenda/moderate.phtml:19
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:33
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:19
 #: ../../../themes/default/views/show/edit.phtml:21
@@ -752,6 +753,7 @@ msgid "Nieuw lid"
 msgstr "New member"
 
 #: ../../../profiel.php:33 ../../../themes/default/views/header.php:306
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:100
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:84
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
@@ -1143,6 +1145,7 @@ msgstr "This page does not exist"
 #: ../../../themes/default/views/fotoboek/_books.phtml:54
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:39
 #: ../../../themes/default/views/fotoboek/edit_fotoboek.phtml:1
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:126
 msgid "Bewerken"
 msgstr "Edit"
 
@@ -1314,6 +1317,7 @@ msgid "Onderwerp/vraag"
 msgstr "Subject/question"
 
 #: ../../../themes/default/views/forum.php:372
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:42
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:35
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:28
 msgid "Omschrijving"
@@ -1430,6 +1434,9 @@ msgstr "New forum"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:20
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:38
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:69
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:88
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:31
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:24
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:53
@@ -1580,7 +1587,7 @@ msgid "Wijzig bericht"
 msgstr "Edit message"
 
 #: ../../../themes/default/views/forum.php:1220
-#: ../../../themes/default/views/agenda/moderate.phtml:17
+#: ../../../themes/default/views/agenda/moderate.phtml:18
 #: ../../../themes/default/views/fotoboek/_info.phtml:13
 msgid "Datum"
 msgstr "Date"
@@ -2149,7 +2156,7 @@ msgid "Agendapunt toevoegen"
 msgstr "Add a calendar event"
 
 #: ../../../themes/default/views/agenda/edit.phtml:37
-#: ../../../themes/default/views/agenda/moderate.phtml:16
+#: ../../../themes/default/views/agenda/moderate.phtml:17
 msgid "Kop"
 msgstr "Head"
 
@@ -2196,27 +2203,27 @@ msgid ""
 "Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden."
 msgstr "The calendar events below are put up for approval"
 
-#: ../../../themes/default/views/agenda/moderate.phtml:14
+#: ../../../themes/default/views/agenda/moderate.phtml:15
 msgid "Accepteer agendapunt"
 msgstr "Accept calendar event"
 
-#: ../../../themes/default/views/agenda/moderate.phtml:15
+#: ../../../themes/default/views/agenda/moderate.phtml:16
 msgid "Weiger agendapunt"
 msgstr "Deny calendar event"
 
-#: ../../../themes/default/views/agenda/moderate.phtml:19
+#: ../../../themes/default/views/agenda/moderate.phtml:20
 msgid "Prive"
 msgstr "Private"
 
-#: ../../../themes/default/views/agenda/moderate.phtml:49
+#: ../../../themes/default/views/agenda/moderate.phtml:53
 msgid "Alle agendapunten op accepteren zetten"
 msgstr "Put all calendar events to accept"
 
-#: ../../../themes/default/views/agenda/moderate.phtml:50
+#: ../../../themes/default/views/agenda/moderate.phtml:54
 msgid "Alle agendapunten op weigeren zetten"
 msgstr "Put all calendar events to deny"
 
-#: ../../../themes/default/views/agenda/moderate.phtml:51
+#: ../../../themes/default/views/agenda/moderate.phtml:55
 #: ../../../themes/default/views/links/moderate.phtml:56
 #: ../../../themes/default/views/studieondersteuning/moderate.phtml:53
 msgid "Toepassen"
@@ -2726,6 +2733,8 @@ msgid "Telefoonnummer"
 msgstr "Phone number"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:46
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:73
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:89
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:57
 #: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:73
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
@@ -2860,6 +2869,53 @@ msgstr "You are subscribed to this mailinglist."
 msgid "Aanmelden"
 msgstr "Subscribe"
 
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:24
+msgid "Eigenschappen"
+msgstr "Properties"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:28
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
+msgid "Toegang"
+msgstr "Access"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:47
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:40
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:33
+msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
+msgstr "People can subscribe to this list."
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:50
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:36
+msgid "Update lijst"
+msgstr "Update list"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:56
+msgid "Aanmeldingen"
+msgstr "Subscriptions"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:59
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:43
+msgid "Lidnummer(s)"
+msgstr "Member id(s)"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:61
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:77
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:45
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:61
+msgid "Meld aan"
+msgstr "Subscribe"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:62
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:46
+msgid "Niet-lid aanmelden voor mailinglijst"
+msgstr "Subscribe a non-member tot the mailing list"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:108
+#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:92
+msgid "Meld geselecteerde adressen af"
+msgstr "Unsubscribe selected"
+
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:6
 msgid "Nieuwe mailinglijst"
 msgstr "New mailing list"
@@ -2872,11 +2928,6 @@ msgstr "List email address:"
 msgid "Op basis waarvan wordt de lijst gevuld?"
 msgstr "What type of list is this?"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:14
-msgid "Toegang"
-msgstr "Access"
-
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:23
 msgid "Wie mag e-mails sturen naar deze lijst?"
 msgstr "Who can send emails to this list?"
@@ -2884,11 +2935,6 @@ msgstr "Who can send emails to this list?"
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:28
 msgid "Welke commissie mag bepalen wie er op de lijst staat?"
 msgstr "Which committee may subscribe and unsubscribe people to this list?"
-
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:40
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:33
-msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
-msgstr "People can subscribe to this list."
 
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:43
 msgid "Maak lijst"
@@ -2902,27 +2948,6 @@ msgstr "Private"
 #, php-format
 msgid "%s is aangemeld voor deze mailinglijst."
 msgstr "%s is subscribed to this mailinglist."
-
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:36
-msgid "Update lijst"
-msgstr "Update list"
-
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:43
-msgid "Lidnummer(s)"
-msgstr "Member id(s)"
-
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:45
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:61
-msgid "Meld aan"
-msgstr "Subscribe"
-
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:46
-msgid "Niet-lid aanmelden voor mailinglijst"
-msgstr "Subscribe a non-member tot the mailing list"
-
-#: ../../../themes/default/views/mailinglijsten/subscriptions.phtml:92
-msgid "Meld geselecteerde adressen af"
-msgstr "Unsubscribe selected"
 
 #: ../../../themes/default/views/mailinglijsten/unsubscribe.phtml:4
 msgid "Je staat niet (meer) op deze mailinglijst ingeschreven."

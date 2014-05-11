@@ -50,7 +50,7 @@ function reset_form(name) {
 jQuery(function($) {
 	$('.hide-by-default').hide();
 
-	$("a[href^='#']").click(function(e) {
+	$(document).on('click', "a[href^='#']", function(e) {
 		$(this.href.match(/(#.+)$/)[1]).show();
 	});
 });

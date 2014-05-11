@@ -72,9 +72,7 @@ class ControllerMailinglijsten extends Controller
 	protected function run_subscriptions_management($lijst_id)
 	{
 		$lijst = $this->model->get_lijst($lijst_id);
-		
-		$aangemeld = $this->model->is_aangemeld($lijst, logged_in('id'));
-		
+
 		if (isset($_POST['action']) && $_POST['action'] == 'subscribe')
 		{
 			$this->model->aanmelden($lijst, logged_in('id'));
@@ -89,15 +87,8 @@ class ControllerMailinglijsten extends Controller
 			return;
 		}
 
-		$this->get_content('mailinglijsten::mailinglist', null, compact('lijst', 'aangemeld'));
-	}
-
-	protected function run_admin_subscriptions_management($lijst_id)
-	{
-		$lijst = $this->model->get_lijst($lijst_id);
-
 		// Someone ordered someone execu.. unsubcribed? Bye bye.
-		if (!empty($_POST['unsubscribe']))
+		if (!empty($_POST['unsubscribe']) && $this->model->member_can_edit($_GET['lijst_id']))
 		{
 			foreach ($_POST['unsubscribe'] as $lid_id)
 				if (!ctype_digit($lid_id))
@@ -109,7 +100,7 @@ class ControllerMailinglijsten extends Controller
 			return;
 		}
 
-		if (!empty($_POST['subscribe']))
+		if (!empty($_POST['subscribe']) && $this->model->member_can_edit($_GET['lijst_id']))
 		{
 			foreach (preg_split('/[\s,]+/', $_POST['subscribe']) as $lid_id)
 				if (!empty($lid_id))
@@ -119,7 +110,7 @@ class ControllerMailinglijsten extends Controller
 			return;
 		}
 
-		if (!empty($_POST['naam']) && !empty($_POST['email']))
+		if (!empty($_POST['naam']) && !empty($_POST['email']) && $this->model->member_can_edit($_GET['lijst_id']))
 		{
 			$this->model->aanmelden_gast($lijst, $_POST['naam'], $_POST['email']);
 
@@ -128,7 +119,7 @@ class ControllerMailinglijsten extends Controller
 		}
 
 		// If data to update the metadata of the list is passed on, well, make use of it.
-		if (isset($_POST['naam'], $_POST['omschrijving']))
+		if (isset($_POST['naam'], $_POST['omschrijving']) && $this->model->member_can_edit($_GET['lijst_id']))
 		{
 			$lijst->set('naam', $_POST['naam']);
 			$lijst->set('omschrijving', $_POST['omschrijving']);
@@ -145,9 +136,11 @@ class ControllerMailinglijsten extends Controller
 			return;
 		}
 
+		$aangemeld = $this->model->is_aangemeld($lijst, logged_in('id'));
+
 		$aanmeldingen = $this->model->get_aanmeldingen($lijst);
 
-		$this->get_content('mailinglijsten::subscriptions', null, compact('lijst', 'aanmeldingen'));
+		$this->get_content('mailinglijsten::mailinglist', null, compact('lijst', 'aanmeldingen', 'aangemeld'));
 	}
 
 	protected function run_my_subscriptions_management()
@@ -214,10 +207,7 @@ class ControllerMailinglijsten extends Controller
 
 		// Manage the subscriptions to a list
 		elseif (!empty($_GET['lijst_id']))
-			if ($this->model->member_can_edit($_GET['lijst_id']))
-				return $this->run_admin_subscriptions_management($_GET['lijst_id']);
-			else
-				return $this->run_subscriptions_management($_GET['lijst_id']);
+			return $this->run_subscriptions_management($_GET['lijst_id']);
 
 		// No list but a post request -> create a new list
 		elseif (member_in_commissie(COMMISSIE_EASY) && isset($_GET['lijst_id']))
