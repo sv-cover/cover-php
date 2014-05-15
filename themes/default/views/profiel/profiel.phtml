@@ -251,7 +251,7 @@
 	<h2><?= __('Mailinglijsten')?></h2>
 	<div class="messageBox">
 		<?php $subscriptions = $this->get_active_subscriptions($iter->get('lidid')) ?>
-		<?php if($this->is_current_member($iter->get('lidid'))): ?>
+		<?php if($this->is_current_member($iter)): ?>
 			<p><?= __N('Je bent aangemeld voor %d mailinglijst.', 'Je bent aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
 		<?php else: ?>
 			<p><?= __N('Deze persoon is aangemeld voor %d mailinglijst.', 'Deze persoon is aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
