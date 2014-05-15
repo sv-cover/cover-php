@@ -13,25 +13,22 @@ function empty_to_http_formatter($value) {
 class ProfielView extends View {
 		protected $__file = __FILE__;
 
-		function is_current_member($lidid) {
+		function is_current_member($iter) {
 			static $is_current = null;
 
 			if ($is_current !== null)
 				return $is_current;
 
-			$member_data = logged_in();
-			$is_current = ($member_data && $member_data['id'] == $lidid);
-
-			return $is_current;
+			return $is_current = logged_in('id') == $iter->get('lidid');
 		}
 
-		function member_write_permission($lidid) {
+		function member_write_permission($iter) {
 			static $perms = null;
 
 			if ($perms !== null)
 				return $perms;
 
-			$perms = ($this->is_current_member($lidid) || member_in_commissie(COMMISSIE_BESTUUR));
+			$perms = ($this->is_current_member($iter) || member_in_commissie(COMMISSIE_BESTUUR));
 
 			return $perms;
 		}

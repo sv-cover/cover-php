@@ -73,7 +73,7 @@
 						<?= $this->privacy_parse($model, $iter, $field['label'], $field['name'], (isset($field['data']) ? $field['data'] : $iter->data), $errors, isset($field['read_only']) ? $field['read_only'] : false) ?>
 					<? } ?>
 
-					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+					<? if ($this->member_write_permission($iter)) {?>
 						<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
 					<? } ?>
 				</table>
@@ -97,7 +97,7 @@
 					<? /* Avatar */ ?>
 					<tr><td><?= label(__('Avatar'), 'avatar', $errors) ?>:</td>
 
-					<? if ($this->is_current_member($iter->get('lidid'))) {?>
+					<? if ($this->is_current_member($iter)) {?>
 						<td><?= input_text('avatar', $iter->data, 'formatter',  'empty_to_http_formatter') ?></td>
 					<?} else {?>
 						<td><?= ($iter->get('avatar') ? ('<img src="' . htmlspecialchars($iter->get('avatar'), ENT_QUOTES) . '" alt="' . __('avatar') . '">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
@@ -107,21 +107,21 @@
 					<? /* Homepage */ ?>
 					<tr><td><?= label(__('Homepage'), 'homepage', $errors) ?>:</td>
 
-					<? if ($this->is_current_member($iter->get('lidid'))) {?>
+					<? if ($this->is_current_member($iter)) {?>
 						<td><?= input_text('homepage', $iter->data, 'formatter', 'empty_to_http_formatter') ?></td>		
 					<?} else {?>
 						<td><?= ($iter->get('homepage') ? ('<a href="' . htmlspecialchars($iter->get('homepage'), ENT_QUOTES) . '">' . htmlspecialchars($iter->get('homepage')) . '</a>') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
 					<? } ?>
 					</tr>
 
-					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+					<? if ($this->member_write_permission($iter)) {?>
 						<tr>
 							<td><?= label(__('Taal'), 'taal', $errors) ?></td>
 							<td><?= select_field('taal', i18n_get_languages(), $iter->data) ?></td>
 						</tr>
 					<? } ?>
 
-					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+					<? if ($this->member_write_permission($iter)) {?>
 						<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
 					<? } ?>
 				</table>
@@ -180,7 +180,7 @@
 	</div>
 	<?php endif ?>
 
-	<? if ($this->member_write_permission($iter->get('lidid'))) { ?>
+	<? if ($this->member_write_permission($iter)) { ?>
 		<div class="floatLeft almanak">
 			<h2 class="profilehead" id="wachtwoord"><?= __('Nieuw wachtwoord') ?></h2>
 				<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#wachtwoord" method="post">
@@ -247,7 +247,7 @@
 </div>
 
 <?php if ($iter->get('type') != MEMBER_STATUS_LID_AF): ?>
-	<?php if ($this->is_current_member($iter->get('lidid')) || member_in_commissie(COMMISSIE_EASY)): ?>
+	<?php if ($this->is_current_member($iter) || member_in_commissie(COMMISSIE_EASY)): ?>
 	<h2><?= __('Mailinglijsten')?></h2>
 	<div class="messageBox">
 		<?php $subscriptions = $this->get_active_subscriptions($iter->get('lidid')) ?>
@@ -261,13 +261,13 @@
 			<li><a href="mailinglijsten.php?lijst_id=<?=$subscription->get('id')?>"><?=markup_format_text($subscription->get('naam'))?></a></li>
 			<?php endforeach ?>
 		</ul>
-		<?php if($this->is_current_member($iter->get('lidid'))): ?>
+		<?php if($this->is_current_member($iter)): ?>
 		<p><a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
 		<?php endif ?>
 	</div>
 	<?php endif ?>
 
-	<?php if($this->is_current_member($iter->get('lidid'))): ?>
+	<?php if($this->is_current_member($iter)): ?>
 		<h2><?= __('Sessies')?></h2>
 		<div class="messageBox">
 			<p><?= __N('Je bent ingelogd met %d browser.', 'Je bent ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
@@ -280,7 +280,7 @@
 	<?php endif ?>
 
 		
-	<?php if($this->is_current_member($iter->get('lidid'))): ?>
+	<?php if($this->is_current_member($iter)): ?>
 		<h2 id="msdnaa"><?=__('Dreamspark (voorheen MSDNAA)')?></h2>
 		<div class="messageBox">
 		<form id="gotomsdnaa" action="elms2.php" method="post">
