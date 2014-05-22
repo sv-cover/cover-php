@@ -30,10 +30,11 @@
 				'studentnummer',
 				'studierichting',
 				'rekening',
-				'year'				
+				'year',
+				'fase'
 				), $errors);
 			// 20090907 update t.b.v. anti-spam
-			if(strcasecmp($_POST['spam'], 'groen') != 0) {
+			if(!in_array($_POST['spam'], array('groen', 'green', 'coverrood', 'cover red'))) {
 				$errors[] = 'spam';
 			}
 			if($_POST['machtiging'] != 'yes') {
@@ -53,14 +54,15 @@
 			$data['telefoonnummer'] = $_POST['telefoonnummer'];
 			$data['geboortedatum'] = $_POST['day'] . '-' . $_POST['month'] . '-' . $_POST['year'];
 			$data['machtiging'] = $_POST['machtiging'] == 'yes' ? 'Ja' : 'Nee';
-			$data['fmflid'] = $_POST['fmflid'] == 'yes' ? 'Ja' : 'Nee';
 
 			// Setup e-mail
 			$mail = parse_email('lidworden.txt', $data);
 
 			mail('administratie@svcover.nl', 'Lidaanvraag', $mail, 'From: Cover <bestuur@svcover.nl>');
+
 			mail('secretaris@svcover.nl', 'Lidaanvraag', "Er is een nieuwe lidaanvraag ingediend. De gegevens zijn te vinden op administratie@svcover.nl", 'From: Cover <bestuur@svcover.nl>');
-			header('Location: lidworden.php?verzonden');
+			
+			header('Location: lidworden.php?verzonden=true');
 		}
 		
 		function run_impl() {

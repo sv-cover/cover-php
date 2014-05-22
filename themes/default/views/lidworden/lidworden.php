@@ -13,14 +13,14 @@
 
 		function view_verzonden($model, $iter, $params = null) {
 			echo '<h1>' . __('Lidmaatschapsformulier') . '</h1>
-			<p>Je lidmaatschapsaanvraag is verstuurd.</p>
+			<p>' . __('Je lidmaatschapsaanvraag is verstuurd.') . '</p>
 			<h2>' . __('Opmerkingen') . '</h2>
 			<ul>
-				<li>Contributie wordt zolang je lid bent van Cover jaarlijks van je bank- of girorekening afgeschreven.</li>
-				<li>Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt.</li>
-				<li>Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de secretaris.</li>
-				<li>Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, schriftelijk melden bij de secretaris of in je profiel op de Cover website aanpassen.</li>
-				<li>De contributie bedraagt ¤ 10,- per jaar</li>
+				<li>' . __('Contributie wordt zolang je lid bent van Cover jaarlijks van je bankrekening afgeschreven.') . '</li>
+				<li>' . __('Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt.') . '</li>
+				<li>' . __('Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de secretaris.') . '</li>
+				<li>' . __('Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, schriftelijk melden bij de secretaris of in je profiel op de Cover website aanpassen.') . '</li>
+				<li>' . __('De contributie bedraagt &euro; 10,- per jaar') . '</li>
 			</ul>';
 		}	
 		

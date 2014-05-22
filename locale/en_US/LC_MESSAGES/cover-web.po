@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-05-12 00:17+0100\n"
+"POT-Creation-Date: 2014-05-22 10:56+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -494,7 +494,6 @@ msgstr "You!"
 #: ../../../include/models/DataModelForum.php:677
 #: ../../../include/models/DataModelMember.php:510
 #: ../../../themes/default/views/forum.php:503
-#: ../../../themes/default/views/profiel/profiel.php:71
 msgid "Onbekend"
 msgstr "Unknown"
 
@@ -1800,10 +1799,50 @@ msgstr "Study Association for Artificial Intelligence and Computer Science"
 msgid "Lidmaatschapsformulier"
 msgstr "Membership application form"
 
+#: ../../../themes/default/views/lidworden/lidworden.php:16
+msgid "Je lidmaatschapsaanvraag is verstuurd."
+msgstr "Your membership application has been submitted."
+
 #: ../../../themes/default/views/lidworden/lidworden.php:17
-#: ../../../themes/default/views/lidworden/lidworden.phtml:71
+#: ../../../themes/default/views/lidworden/lidworden.phtml:63
 msgid "Opmerkingen"
 msgstr "Notes"
+
+#: ../../../themes/default/views/lidworden/lidworden.php:19
+#: ../../../themes/default/views/lidworden/lidworden.phtml:65
+msgid ""
+"Contributie wordt zolang je lid bent van Cover jaarlijks van je bankrekening "
+"afgeschreven."
+msgstr ""
+"Membership fee will be charged annually from your bank account for as long "
+"as you are a member of Cover."
+
+#: ../../../themes/default/views/lidworden/lidworden.php:20
+#: ../../../themes/default/views/lidworden/lidworden.phtml:66
+msgid "Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt."
+msgstr "You are a member until you graduate or cancel your membership."
+
+#: ../../../themes/default/views/lidworden/lidworden.php:21
+#: ../../../themes/default/views/lidworden/lidworden.phtml:67
+msgid ""
+"Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de "
+"secretaris."
+msgstr "Termination of membership shall be done in writing to the secretary."
+
+#: ../../../themes/default/views/lidworden/lidworden.php:22
+#: ../../../themes/default/views/lidworden/lidworden.phtml:68
+msgid ""
+"Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, "
+"schriftelijk melden bij de secretaris of in je profiel op de Cover website "
+"aanpassen."
+msgstr ""
+"You can update your personal details by sending an email to board@svcover."
+"nl, by writing to the secretary or by updating your profile on the Cover "
+"website."
+
+#: ../../../themes/default/views/lidworden/lidworden.php:23
+msgid "De contributie bedraagt &euro; 10,- per jaar"
+msgstr "The membership fee is &euro; 10,- per year."
 
 #: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:24
 msgid "Opt-in"
@@ -1825,7 +1864,7 @@ msgstr "Only *@svcover.nl addresses"
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
-#: ../../../themes/default/views/profiel/profiel.php:61
+#: ../../../themes/default/views/profiel/profiel.php:58
 msgid "opzoeken"
 msgstr "lookup"
 
@@ -1999,7 +2038,7 @@ msgstr "New phd position"
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf_edit.phtml:4
 #: ../../../themes/default/views/afstudeerplaatsen/plaats_edit.phtml:4
 #: ../../../themes/default/views/agenda/edit.phtml:4
-#: ../../../themes/default/views/lidworden/lidworden.phtml:30
+#: ../../../themes/default/views/lidworden/lidworden.phtml:21
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:17
 #: ../../../themes/default/views/profiel/profiel.phtml:7
 #: ../../../themes/default/views/show/edit.phtml:12
@@ -2008,7 +2047,7 @@ msgstr "You haven't filled in all the fields correctly"
 
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:7
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:24
-#: ../../../themes/default/views/lidworden/lidworden.phtml:42
+#: ../../../themes/default/views/lidworden/lidworden.phtml:33
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:5
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:49
 #: ../../../themes/default/views/profiel/profiel.phtml:65
@@ -2017,7 +2056,7 @@ msgstr "Adress"
 
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:11
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:28
-#: ../../../themes/default/views/lidworden/lidworden.phtml:43
+#: ../../../themes/default/views/lidworden/lidworden.phtml:34
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:51
 #: ../../../themes/default/views/profiel/profiel.phtml:66
 msgid "Postcode"
@@ -2248,13 +2287,13 @@ msgstr ""
 "often."
 
 #: ../../../themes/default/views/almanak/almanak.phtml:17
-#: ../../../themes/default/views/lidworden/lidworden.phtml:35
+#: ../../../themes/default/views/lidworden/lidworden.phtml:26
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:26
 msgid "Voornaam"
 msgstr "First name"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:25
-#: ../../../themes/default/views/lidworden/lidworden.phtml:37
+#: ../../../themes/default/views/lidworden/lidworden.phtml:28
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:31
 msgid "Achternaam"
 msgstr "Last name"
@@ -2721,27 +2760,76 @@ msgstr "Today there are no birthdays"
 msgid "Opgeven Kleine LALA"
 msgstr "Register for Little LALA"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:36
+#: ../../../themes/default/views/lidworden/lidworden.phtml:11
+msgid ""
+"De ondergetekende meldt zich hierbij aan als lid van Cover, de "
+"studievereniging voor Kunstmatige Intelligentie en Informatica."
+msgstr ""
+"The undersigned hereby applies for a membership of Cover, the study "
+"association for Artificial Intelligence and Computing Science."
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:12
+msgid ""
+"De ondergetekende verklaart hierbij gedurende zijn/haar lidmaatschap akkoord "
+"te gaan met de volgende eisen."
+msgstr ""
+"The undersigned hereby agrees to comply with the following requirements "
+"during his/her membership."
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:13
+msgid ""
+"De ondergetekende verplicht zich zijn/haar gegevens correct in te vullen en "
+"wijzigingen door te geven."
+msgstr ""
+"The undersigned is required to enter his/her personal details correctly and "
+"to keep them up to date."
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:14
+msgid ""
+"Tevens machtigt de ondergetekende Cover jaarlijks de contributie van zijn of "
+"haar bankrekening af te schrijven. Indien gewenst zullen boekenverkopen en "
+"overige activiteiten via automatische incasso's geschieden."
+msgstr ""
+"The undersigned authorises Cover to charge the annual membership fee from "
+"his/her bank account. If desired, book sales and other activities will be "
+"payed by direct debit."
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:15
+msgid ""
+"Bij een onterechte overschrijving heeft de ondergetekende 30 dagen de tijd "
+"om deze overschrijving ongedaan te maken."
+msgstr ""
+"In the case of a wrongful transfer, the undersigned has 30 days to undo the "
+"transfer."
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:27
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:28
 msgid "Tussenvoegsel"
 msgstr "Infix"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:39
-#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
-msgid "Geslacht"
+#: ../../../themes/default/views/lidworden/lidworden.phtml:30
+msgid "Gender"
 msgstr "Gender"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:44
+#: ../../../themes/default/views/lidworden/lidworden.phtml:30
+msgid "Man"
+msgstr "Male"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:30
+msgid "Vrouw"
+msgstr "Female"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:35
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:54
 #: ../../../themes/default/views/profiel/profiel.phtml:67
 msgid "Woonplaats"
 msgstr "Place of residence"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:45
+#: ../../../themes/default/views/lidworden/lidworden.phtml:36
 msgid "Telefoonnummer"
 msgstr "Phone number"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:46
+#: ../../../themes/default/views/lidworden/lidworden.phtml:37
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:73
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:89
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
@@ -2749,25 +2837,41 @@ msgstr "Phone number"
 msgid "E-Mail adres"
 msgstr "E-Mail address"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:48
+#: ../../../themes/default/views/lidworden/lidworden.phtml:39
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:39
 #: ../../../themes/default/views/profiel/profiel.phtml:63
 msgid "Geboortedatum"
 msgstr "Birthdate"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:54
+#: ../../../themes/default/views/lidworden/lidworden.phtml:45
 msgid "Studentnummer"
 msgstr "Student number"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:55
+#: ../../../themes/default/views/lidworden/lidworden.phtml:46
 msgid "Studierichting"
 msgstr "Study"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:57
-msgid "Bank- of <br>girorekeningnummer"
-msgstr "Bank number"
+#: ../../../themes/default/views/lidworden/lidworden.phtml:47
+msgid "Fase"
+msgstr "Phase"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:59
+#: ../../../themes/default/views/lidworden/lidworden.phtml:47
+msgid "Bachelor"
+msgstr "Bachelor"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:47
+msgid "Master"
+msgstr "Master"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:47
+msgid "Anders"
+msgstr "Other"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:49
+msgid "IBAN"
+msgstr "IBAN"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:51
 msgid ""
 "Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch "
 "van mijn rekening af te schrijven (verplicht)"
@@ -2775,13 +2879,17 @@ msgstr ""
 "I hereby authorise Cover to automatically deduct the membership fee (10 "
 "euros) from my bank account one time per year. (mandatory)"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:61
+#: ../../../themes/default/views/lidworden/lidworden.phtml:53
 msgid "Wat is de kleur van gras? (ik ben geen bot)"
-msgstr "What is the colour of gras? (I am not a robot)"
+msgstr "What is the colour of grass? (I am not a robot)"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:66
+#: ../../../themes/default/views/lidworden/lidworden.phtml:58
 msgid "Aanvraag versturen"
 msgstr "Submit application"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:69
+msgid "De contributie bedraagt &euro; 10,- per jaar."
+msgstr "The membership fee is &euro; 10,- per year."
 
 #: ../../../themes/default/views/links/_beheer.phtml:1
 #: ../../../themes/default/views/links/_beheer.phtml:57
@@ -2985,6 +3093,10 @@ msgstr "Add a new announcement"
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:24
 msgid "Lidnr"
 msgstr "Member id"
+
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
+msgid "Geslacht"
+msgstr "Gender"
 
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:61
 msgid "Telefoonnummer vast"
@@ -3417,6 +3529,9 @@ msgstr "Send"
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
 
+#~ msgid "Bank- of <br>girorekeningnummer"
+#~ msgstr "Bank number"
+
 #~ msgid "van %s %s tot %s %s"
 #~ msgstr "from %s %s till %s %s"
 
@@ -3557,9 +3672,6 @@ msgstr "There are no blog posts at this moment."
 
 #~ msgid "Nieuwe optie"
 #~ msgstr "New option"
-
-#~ msgid "Onder."
-#~ msgstr "Subject"
 
 #~ msgid "Ber."
 #~ msgstr "Mes."
