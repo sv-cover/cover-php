@@ -116,7 +116,7 @@
 					array('name' => 'tot', 'function' => array($this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
 					array('name' => 'private', 'function' => 'check_value_checkbox'),
-					array('name' => 'extern', 'function' => 'check_value_checkbox')),
+					array('name' => 'extern', 'function' => 'check_value_checkbox'),
 					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
 				$errors);
 
