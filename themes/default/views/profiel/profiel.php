@@ -19,7 +19,7 @@ class ProfielView extends View {
 			$this->facebook = get_facebook();
 		}
 
-		function is_current_member($lidid)
+		function is_current_member($iter)
 		{
 			static $is_current = null;
 

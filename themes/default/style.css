@@ -56,6 +56,7 @@ hr.colorAccent {
 	height:4px;
 	background-color:grey;
 	color: grey;
+	width: 100%;
 }
 
 img {border:0;}
@@ -1110,4 +1111,168 @@ form textarea {
 #add-sticker-dialog button {
 	position: absolute;
 	bottom: 8px;
+}
+
+.event-cover-photo {
+	width: 100%;
+	padding-top: 38%;
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	border-radius: 4px 4px 0 0;
+}
+
+.event-cover-photo > div {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.event-cover-photo > div > img {
+	width: 100%;
+}
+
+.event-cover-photo + .event-header {
+	background: rgba(0, 0, 0, 0.7);
+	margin: -50px 0 0 0;
+	padding: 0 15px;
+}
+
+.event-header {
+	position: relative;
+	min-height: 50px;
+	z-index: 3;
+}
+
+.event-header h1 {
+	color: white;
+	height: 50px;
+	line-height: 50px;
+	float: left;
+	display: inline-block;
+	margin: 0;
+}
+
+.event-header .rsvp-status-button {
+	margin-left: 15px;
+}
+
+.rsvp-status-button {
+	position: relative;
+	float: right;
+	z-index: 4;
+	line-height: 50px;
+}
+
+.rsvp-status-button > .current {
+	display: inline-block;
+	color: black;
+}
+
+.dropdown-button.open .dropdown-menu {
+	display: block;
+}
+
+.rsvp-status-button .dropdown-menu {
+	display: none;
+	list-style: none;
+	position: absolute;
+	top: 42px;
+	right: 0;
+	z-index: 10;
+	background: #f5f5f5;
+	
+	line-height: 32px;
+	box-shadow: 1px 1px 4px #333;
+}
+
+.rsvp-status-button .dropdown-menu:before {
+	border: 7px solid;
+	border-color: transparent transparent #f5f5f5 transparent;
+	content: '';
+	display: block;
+	position: absolute;
+	top: -14px;
+	right: 14px;
+	z-index: 5;
+}
+
+.rsvp-status-button .dropdown-menu > li  {
+	border-bottom: 1px solid #ccc;
+}
+
+.rsvp-status-button .dropdown-menu > li:last-child  {
+	border-bottom: none;
+}
+
+.rsvp-status-button .dropdown-menu > li > button {
+	cursor: pointer;
+	background: none;
+	border: none;
+	font: inherit;
+	text-align: center;
+	padding: 0 12px;
+	width: 100%;
+}
+
+.rsvp-status-button .dropdown-menu > li > button:hover {
+	text-decoration: underline;
+}
+
+.event-header .event-attendees {
+	list-style: none;
+	display: inline;
+	float: right;
+	margin-top: 6px;
+}
+
+.event-header .event-attendees li {
+	display: inline;
+	vertical-align: center;
+	line-height: auto;
+	position: relative;
+}
+
+.event-header .event-attendees li img {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 1px solid #ccc;
+}
+
+.event-header .event-attendees li .name {
+	display: none;
+}
+
+.event-header .event-attendees li:hover .name {
+	display: block;
+	position: absolute;
+	top: 16px;
+	left: 0;
+	width: auto;
+	text-align: center;
+	background: #f5f5f5;
+	color: black;
+	white-space:nowrap;
+	padding: 4px;
+	box-shadow: 1px 1px 4px #333;
+}
+
+.event-header .event-attendees li:hover .name:before {
+	border: 7px solid;
+	border-color: transparent transparent #f5f5f5 transparent;
+	content: '';
+	display: block;
+	position: absolute;
+	top: -14px;
+	left: 11px;
+	z-index: 5;
+}
+
+.event-header:after {
+	content: '';
+	clear: both;
+	display: block;
 }

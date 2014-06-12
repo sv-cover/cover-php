@@ -21,10 +21,13 @@
 				return null;
 
 			try {
-				$reponse = $this->facebook->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
+				$response = $this->facebook->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
 
-				if (isset($reponse['cover']))
-					return $reponse['cover']['source'];
+				if (isset($response['cover']))
+					return array(
+						'src' => $response['cover']['source'],
+						'x' => $response['cover']['offset_x'],
+						'y' => $response['cover']['offset_y']);
 			} catch (Exception $e) {
 				//
 			}
@@ -47,6 +50,46 @@
 			}
 
 			return array();
+		}
+
+		public function get_rsvp_status($item)
+		{
+			if (!$item->has('facebook_id') || !$this->facebook->getUser())
+				return null;
+
+			try {
+				$response = $this->facebook->api('/' . $item->get('facebook_id') . '/invited/' . $this->facebook->getUser(), 'GET');
+
+				// var_dump($response);
+
+				if (isset($response['data']) && count($response['data']))
+					return $response['data'][0];
+			} catch (Exception $e) {
+				
+			}
+
+			return null;
+		}
+
+		public function get_rsvp_status_text($rsvp_status)
+		{
+			switch ($rsvp_status['rsvp_status'])
+			{
+				case 'unsure':
+					return __('Ik ga misschien');
+
+				case 'attending':
+					return __('Ik ben erbij');
+
+				case 'declined':
+					return __('Ik ga niet');
+
+				case '':
+					return __('Neem deel');
+
+				default:
+					return markup_format_text($rsvp_status['rsvp_status']);
+			}
 		}
 
 		public function get_title()
