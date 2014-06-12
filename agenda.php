@@ -119,6 +119,27 @@
 
 			return $data;
 		}
+
+		function _changed_values($iter, $data)
+		{
+			$changed = array();
+
+			foreach ($data as $field => $value)
+			{
+				$current = $iter->get($field);
+
+				// Unfortunately, we need to 'normalize' the time fields for this to work
+				if ($field == 'van' || $field == 'tot') {
+					$current = strtotime($iter->get($field));
+					$value = strtotime($value);
+				}
+
+				if ($current != $value)
+					$changed[] = $field;
+			}
+
+			return $changed;
+		}
 		
 		function _do_process($iter) {
 			if (!$this->_action_prepare($iter))
@@ -127,56 +148,66 @@
 			if (($data = $this->_check_values($iter)) === false)
 				return;
 
+			$skip_confirmation = false;
+
+			// The board can add agenda items without confirming it (because that is a bit double)
+			if ($data['commissie'] == COMMISSIE_BESTUUR && member_in_commissie(COMMISSIE_BESTUUR, false))
+				$skip_confirmation = true;
+
+			// If you update the facebook-id, description or location, no need to reconfirm.
+			if ($iter && !array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'locatie')))
+				$skip_confirmation = true;
+
+			// Placeholders for e-mail
+			$placeholders = array(
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
+				'member_naam' => member_full_name());
+
+			// No previous item exists, create a new one
 			if (!$iter) {
 				$iter = new DataIter($this->model, -1, $data);
 				$id = $this->model->insert($iter, true);
-				$override = 0;
-			} else {
-				if ($data['commissie'] == COMMISSIE_BESTUUR && member_in_commissie(COMMISSIE_BESTUUR, false)) {
-					/* Just change it */
-					foreach ($data as $field => $value)
-						$iter->set($field, $value);
-
-					$this->model->update($iter);
-				} else {
-					$mod = new DataIter($this->model, -1, $data);
-					$id = $this->model->insert($mod, true);
-					$override = $iter->get_id();
-				}
-			}
-
-			/* Check if the post was made by bestuur, if so they
-			 * entry doesn't need moderation
-			 */
-			if ($data['commissie'] == COMMISSIE_BESTUUR && member_in_commissie(COMMISSIE_BESTUUR, false)) {			
-				header('Location: ' . get_request('agenda_add', 'agenda_edit'));
-				exit();
-			}
-			
-			$this->model->set_moderate($id, $override, true);
-	
-			$model = get_model('DataModelCommissie');
-			
-			/* Variables for email substitution */
-			$data['commissie_naam'] = $model->get_naam($data['commissie']);
-			$data['member_naam'] = member_full_name();
-			$data['id'] = $id;
-
-			if ($override) {
-				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
-				$body = parse_email('agenda_mod.txt', $data);
-				$subject = 'Gewijzigd agendapunt ' . $data['kop'];
 				
-				if ($data['kop'] != $iter->get('kop'))
-					$subject .= ' (was ' .  $iter->get('kop') . ')';
-			} else {
+				$this->model->set_moderate($id, 0, true);
+
 				$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
-				$body = parse_email('agenda_add.txt', $data);
-				$subject = 'Nieuw agendapunt ' . $data['kop'];
+
+				mail(
+					get_config_value('email_bestuur'),
+					'Nieuw agendapunt ' . $data['kop'],
+					parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
+					"From: webcie@ai.rug.nl\r\n");
 			}
-			
-			mail(get_config_value('email_bestuur'), $subject, $body, "From: webcie@ai.rug.nl\r\n");
+
+			// Previous exists and there is no need to let the board confirm it
+			else if ($skip_confirmation) {
+				foreach ($data as $field => $value)
+					$iter->set($field, $value);
+
+				$this->model->update($iter);
+
+				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn geplaatst.');
+			}
+
+			// Previous item exists but it needs to be confirmed first.
+			else {
+				$mod = new DataIter($this->model, -1, $data);
+				$id = $this->model->insert($mod, true);
+				$override = $iter->get_id();
+
+				$this->model->set_moderate($id, $override, true);
+
+				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
+
+				mail(
+					get_config_value('email_bestuur'),
+					'Gewijzigd agendapunt ' . $data['kop'] . ($mod->get('kop') != $iter->get('kop') ? ' was ' . $iter->get('kop') : ''),
+					parse_email('agenda_mod.txt', array_merge($data, $placeholders, array('id' => $id))),
+					"From: webcie@ai.rug.nl\r\n");
+			}
+
 			header('Location: ' . get_request('agenda_add', 'agenda_edit'));
+			exit;
 		}
 		
 		function _do_del($iter) {
