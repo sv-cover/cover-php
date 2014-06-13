@@ -66,8 +66,8 @@
 				</defs>
 				<g>
 					<!-- Labels of the X-axis -->
-					<text x="0" y="400" class="label"><?php echo htmlspecialchars(reset($rain_forecast)[1]); ?></text>
-					<text x="400" y="400" text-anchor="end" class="label"><?php echo htmlspecialchars(end($rain_forecast)[1]); ?></text>
+					<text x="0" y="400" class="label"><?php echo htmlspecialchars($rain_forecast[0][1]); ?></text>
+					<text x="400" y="400" text-anchor="end" class="label"><?php echo htmlspecialchars($rain_forecast[count($rain_forecast) - 1][1]); ?></text>
 					<!-- Draw a 394*347 grid (leave space for linewidth) -->
 					<g id="Grid">
 						<line class="grid-thick" x1="3"   y1="3" x2="3"   y2= "350" />
