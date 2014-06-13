@@ -20,14 +20,14 @@ class ControllerScherm
 
 		$this->default_slide = dirname(__FILE__) . '/scherm/default-slide.php';
 
-		$this->slides = $this->search_slides(array_keys($this->search_paths));
+		$this->slides = $this->search_slides($this->search_paths);
 	}
 
 	protected function search_slides($search_paths)
 	{
 		$slides = array();
 
-		foreach ($search_paths as $path)
+		foreach ($search_paths as $path => $options)
 		{
 			foreach (scandir($path) as $folder)
 			{
@@ -39,13 +39,23 @@ class ControllerScherm
 				if (!is_dir($path . '/' . $folder))
 					continue;
 
-				// If it contains a custom slide, add it to the list
-				if (file_exists($path . '/' . $folder . '/slide.php'))
-					$slides[sha1($path . '/' . $folder)] = $path . '/' . $folder;
+				$uid = sha1($path . '/' . $folder);
 
-				// Or if it is just a folder with files, include it as well
+				$slide = array('path' => $path . '/' . $folder);
+
+				// If it contains a custom slide, add it to the list
+				if (file_exists($path . '/' . $folder . '/slide.php') && !empty($options['allow_php']))
+					$slide['url'] = $path . '/' . $folder . '/slide.php';
+
+				// If it is just a folder with images, use the default slide
 				else if (glob($path . '/' . $folder . '/*.{jpg,png,svg}', GLOB_BRACE))
-					$slides[sha1($path . '/' . $folder)] = $path . '/' . $folder;
+					$slide['url'] = $this->default_slide;
+
+				// If there is a stylesheet, add it to the config.
+				if (file_exists($path . '/' . $folder . '/slide.css'))
+					$slide['stylesheet'] = $this->link_resource('slide.css', $uid);
+
+				$slides[$uid] = $slide;
 			}
 		}
 
@@ -54,7 +64,7 @@ class ControllerScherm
 
 	protected function run_slide()
 	{
-		chdir($this->slides[$this->slide]);
+		chdir($this->slides[$this->slide]['path']);
 
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
@@ -67,20 +77,17 @@ class ControllerScherm
 		// Proper content type (hopefully)
 		header('Content-Type: text/html; charset=ISO-8859-15');
 
-		if (file_exists('slide.php'))
-			include 'slide.php';
-		else
-			include $this->default_slide;
+		include $this->slides[$this->slide]['url'];
 	}
 
 	protected function run_resource($resource)
 	{
-		$path = $this->slides[$this->slide] . '/' . $resource;
+		$path = $this->slides[$this->slide]['path'] . '/' . $resource;
 
 		if (!file_exists($path))
 		{
 			header('Status: 404 Not Found');
-			echo 'Resource not found';
+			echo 'Resource not found: ' . $path;
 			return;
 		}
 
@@ -106,6 +113,10 @@ class ControllerScherm
 				$mime_type = 'image/svg+xml';
 				break;
 
+			case 'css':
+				$mime_type = 'text/css';
+				break;
+
 			default:
 				$mime_type = 'application/octet-stream';
 				break;
@@ -118,10 +129,10 @@ class ControllerScherm
 		readfile($path);
 	}
 
-	protected function link_resource($resource)
+	protected function link_resource($resource, $slide = null)
 	{
 		return sprintf("scherm.php?slide=%s&resource=%s",
-			urlencode($this->slide),
+			urlencode($slide !== null ? $slide : $this->slide),
 			urlencode($resource));
 	}
 

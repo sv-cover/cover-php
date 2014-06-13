@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Cover</title>
+		<title>Cover Scherm</title>
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400' rel='stylesheet' type='text/css'>
 		<style>
 		html, body {
 			margin: 0;
@@ -83,12 +84,17 @@
 		}
 
 		</style>
+		<?php foreach ($slides as $slide => $options): ?>
+			<?php if (!empty($options['stylesheet'])): ?>
+				<link rel="stylesheet" href="<?=htmlspecialchars($options['stylesheet'], ENT_QUOTES)?>">
+			<?php endif ?>
+		<?php endforeach ?>
 	</head>
 	<body>
 		<div class="slides-container">
 			<?php foreach ($slides as $slide => $options): ?>
 			<div class="slide"
-				data-name="<?=basename($options)?>"
+				data-name="<?=basename($options['path'])?>"
 				data-url="scherm.php?slide=<?=$slide?>"
 				data-time="20"></div>
 			<?php endforeach ?>
