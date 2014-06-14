@@ -3524,6 +3524,14 @@ CREATE TABLE stickers (
   CONSTRAINT stickersmap_pk PRIMARY KEY (id)
 );
 
+
+CREATE TABLE facebook (
+    lid_id INTEGER NOT NULL REFERENCES leden (id),
+    data_key VARCHAR(255) NOT NULL,
+    data_value TEXT NOT NULL,
+    CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key)
+);
+
 --
 -- TOC entry 2390 (class 2606 OID 25986)
 -- Name: actieveleden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 

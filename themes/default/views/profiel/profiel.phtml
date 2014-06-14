@@ -288,7 +288,7 @@
 				if ($this->facebook->getUser())
 				{
 					try {
-						$me = get_facebook()->api('/me', 'GET');
+						$me = $this->facebook->api('/me', 'GET');
 						var_dump($me);
 						echo markup_format_text(sprintf(__('Je bent ingelogd als %s.'), $me['name']));
 						$facebook_button = 'logout';
