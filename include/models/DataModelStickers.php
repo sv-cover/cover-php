@@ -93,12 +93,35 @@ class DataModelStickers extends DataModel
 				l.tussenvoegsel as toegevoegd_door__tussenvoegsel,
 				l.achternaam as toegevoegd_door__achternaam,
 				l.privacy as toegevoegd_door__privacy,
-				DEGREES(
-					ACOS(
-						COS(RADIANS(s.lat)) * COS(RADIANS(c.lat)) * COS(RADIANS(s.lng) - RADIANS(c.lng))
-						+ SIN(RADIANS(s.lat)) * SIN(RADIANS(c.lat))
+				(2. * ASIN(
+					SQRT(
+						(
+							POWER(
+								SIN(
+									RADIANS(
+										(c.lat-s.lat) / 2.
+									)
+								), 
+								2)
+							)
+						+ (
+							COS(
+								RADIANS(c.lat)
+							)
+							* COS(
+								RADIANS(s.lat)
+							)
+							* POWER(
+								SIN(
+									RADIANS(
+										(c.lng - s.lng) / 2.
+									)
+								),
+								2
+							)
+						)
 					)
-				) * 111.045 as distance -- distance in KM
+				)) * 6371 as distance -- distance in KM
 				FROM {$this->table} s
 				RIGHT JOIN {$this->table} c ON c.id = %d
 				LEFT JOIN leden l ON l.id = s.toegevoegd_door
