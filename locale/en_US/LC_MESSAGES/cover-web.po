@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-05-22 10:56+0100\n"
+"POT-Creation-Date: 2014-06-19 19:08+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -30,12 +30,12 @@ msgstr "Active Members"
 msgid "Afstudeerplaatsen"
 msgstr "PHD positions"
 
-#: ../../../agenda.php:16 ../../../themes/default/views/agenda/agenda.php:18
+#: ../../../agenda.php:17 ../../../themes/default/views/agenda/agenda.php:98
 #, php-format
 msgid "Agenda %d-%d"
 msgstr "Calendar %d-%d"
 
-#: ../../../agenda.php:17 ../../../themes/default/views/agenda/agenda.php:19
+#: ../../../agenda.php:18 ../../../themes/default/views/agenda/agenda.php:99
 #: ../../../themes/default/views/header.php:66
 #: ../../../themes/default/views/header.php:104
 #: ../../../themes/default/views/agenda/commissie.phtml:2
@@ -45,15 +45,7 @@ msgstr "Calendar %d-%d"
 msgid "Agenda"
 msgstr "Calendar"
 
-#: ../../../agenda.php:166
-msgid ""
-"De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar "
-"gekeken heeft zal het punt op de website gewijzigd worden."
-msgstr ""
-"The changes to the calendar event are waiting for approval. Once the "
-"governing board has accepted the event, it shall be placed on the website."
-
-#: ../../../agenda.php:173
+#: ../../../agenda.php:185
 msgid ""
 "Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar "
 "gekeken heeft zal het punt op de website geplaatst worden"
@@ -61,21 +53,33 @@ msgstr ""
 "The new calendar event is now waiting for approval. Once the governing board "
 "has accepted the event, it shall be placed on the website."
 
-#: ../../../agenda.php:271
+#: ../../../agenda.php:201
+msgid "De wijzigingen voor het agendapunt zijn geplaatst."
+msgstr "The changes you've made to this agenda item have been published."
+
+#: ../../../agenda.php:212
+msgid ""
+"De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar "
+"gekeken heeft zal het punt op de website gewijzigd worden."
+msgstr ""
+"The changes to the calendar event are waiting for approval. Once the "
+"governing board has accepted the event, it shall be placed on the website."
+
+#: ../../../agenda.php:314
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar event."
 
-#: ../../../agenda.php:273
+#: ../../../agenda.php:316
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:276
+#: ../../../agenda.php:319
 #, php-format
 msgid ""
 "De commissies %s zijn op de hoogte gesteld van het weigeren van de "
@@ -83,7 +87,7 @@ msgid ""
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:285
+#: ../../../agenda.php:361
 msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
@@ -286,7 +290,7 @@ msgid "Commissieagenda"
 msgstr "Committee agenda"
 
 #: ../../../include/editable.php:103
-#: ../../../themes/default/views/agenda/agendapunt.phtml:11
+#: ../../../themes/default/views/agenda/agendapunt.phtml:50
 #: ../../../themes/default/views/agenda/edit.phtml:58
 #: ../../../themes/default/views/agenda/index.phtml:62
 #: ../../../themes/default/views/stickers/map.phtml:58
@@ -847,6 +851,22 @@ msgstr "%s have been notified that their documents have been denied."
 msgid "Taken"
 msgstr "Tasks"
 
+#: ../../../themes/default/views/agenda/agenda.php:79
+msgid "Ik ga misschien"
+msgstr "I might go"
+
+#: ../../../themes/default/views/agenda/agenda.php:82
+msgid "Ik ben erbij"
+msgstr "I'm going"
+
+#: ../../../themes/default/views/agenda/agenda.php:85
+msgid "Ik ga niet"
+msgstr "I'm not going"
+
+#: ../../../themes/default/views/agenda/agenda.php:88
+msgid "Neem deel"
+msgstr "Attend"
+
 #: ../../../themes/default/views/almanak/almanak.php:52
 #, php-format
 msgid "foto van %s"
@@ -970,7 +990,7 @@ msgstr "Add book"
 
 #: ../../../themes/default/views/boeken/boeken.php:140
 #: ../../../themes/default/views/forum.php:619
-#: ../../../themes/default/views/agenda/edit.phtml:82
+#: ../../../themes/default/views/agenda/edit.phtml:86
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:1
 #: ../../../themes/default/views/fotoboek/_reacties.phtml:7
 #: ../../../themes/default/views/links/_beheer.phtml:28
@@ -1031,7 +1051,7 @@ msgstr "Select everything to accept orders"
 
 #: ../../../themes/default/views/boeken/boeken.php:232
 #: ../../../themes/default/views/forum.php:619
-#: ../../../themes/default/views/agenda/edit.phtml:82
+#: ../../../themes/default/views/agenda/edit.phtml:86
 #: ../../../themes/default/views/links/_beheer.phtml:28
 msgid "Wijzigen"
 msgstr "Edit"
@@ -1610,7 +1630,7 @@ msgid "Bericht verwijderen"
 msgstr "Remove message"
 
 #: ../../../themes/default/views/header.php:52
-#: ../../../themes/default/views/agenda/edit.phtml:77
+#: ../../../themes/default/views/agenda/edit.phtml:81
 msgid "Externe activiteit"
 msgstr "External activity"
 
@@ -1621,7 +1641,7 @@ msgid "Er staan op dit moment geen activiteiten op de agenda."
 msgstr "There are no activities on the calendar at the moment. "
 
 #: ../../../themes/default/views/header.php:62
-#: ../../../themes/default/views/agenda/agendapunt.phtml:20
+#: ../../../themes/default/views/agenda/agendapunt.phtml:60
 msgid "Volledige agenda"
 msgstr "Complete calendar"
 
@@ -1864,7 +1884,7 @@ msgstr "Only *@svcover.nl addresses"
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
-#: ../../../themes/default/views/profiel/profiel.php:58
+#: ../../../themes/default/views/profiel/profiel.php:65
 msgid "opzoeken"
 msgstr "lookup"
 
@@ -2154,38 +2174,55 @@ msgstr "Edit Phd position"
 msgid "De opgegeven afstudeerplaats bestaat niet"
 msgstr "This phd position doesn't exist"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:9
+#: ../../../themes/default/views/agenda/agendapunt.phtml:34
+msgid "Aanwezig"
+msgstr "Going"
+
+#: ../../../themes/default/views/agenda/agendapunt.phtml:35
+msgid "Misschien"
+msgstr "Maybe"
+
+#: ../../../themes/default/views/agenda/agendapunt.phtml:36
+msgid "Gaat niet"
+msgstr "Not going"
+
+#: ../../../themes/default/views/agenda/agendapunt.phtml:42
+#: ../../../themes/default/views/profiel/profiel.phtml:305
+msgid "Koppel Facebook"
+msgstr "Connect to Facebook"
+
+#: ../../../themes/default/views/agenda/agendapunt.phtml:48
 msgid "Datum & Tijd"
 msgstr "Date & time"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:15
+#: ../../../themes/default/views/agenda/agendapunt.phtml:54
 msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
 msgstr "This activity is not organised by Cover"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:18
+#: ../../../themes/default/views/agenda/agendapunt.phtml:58
 #: ../../../themes/default/views/news/news.phtml:32
 msgid "Geplaatst door"
 msgstr "Placed by"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:20
+#: ../../../themes/default/views/agenda/agendapunt.phtml:60
 msgid "agenda"
 msgstr "calendar"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:20
+#: ../../../themes/default/views/agenda/agendapunt.phtml:60
 msgid "Volledige agenda bekijken"
 msgstr "View complete calendar"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:22
+#: ../../../themes/default/views/agenda/agendapunt.phtml:62
 #: ../../../themes/default/views/agenda/index.phtml:66
 msgid "Wijzig"
 msgstr "Modify"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:23
+#: ../../../themes/default/views/agenda/agendapunt.phtml:63
 #: ../../../themes/default/views/agenda/index.phtml:66
 msgid "Weet je zeker dat je dit agendapunt wilt verwijderen?"
 msgstr "Are you sure you want to delete this calendar event"
 
-#: ../../../themes/default/views/agenda/agendapunt.phtml:23
+#: ../../../themes/default/views/agenda/agendapunt.phtml:63
 #: ../../../themes/default/views/agenda/index.phtml:66
 #: ../../../themes/default/views/studieondersteuning/vak.phtml:20
 msgid "Verwijder"
@@ -2216,7 +2253,11 @@ msgstr "Starting time"
 msgid "Eindtijd"
 msgstr "End time"
 
-#: ../../../themes/default/views/agenda/edit.phtml:71
+#: ../../../themes/default/views/agenda/edit.phtml:64
+msgid "Facebook Event"
+msgstr "Facebook Event"
+
+#: ../../../themes/default/views/agenda/edit.phtml:75
 msgid "Alleen zichtbaar voor leden"
 msgstr "Only visible to members"
 
@@ -3245,16 +3286,39 @@ msgid "Beheer zijn/haar sessies."
 msgstr "Manage his/her sessions."
 
 #: ../../../themes/default/views/profiel/profiel.phtml:284
+msgid "Facebook"
+msgstr "Facebook"
+
+#: ../../../themes/default/views/profiel/profiel.phtml:291
+#, php-format
+msgid "Je bent ingelogd als %s."
+msgstr "You are connected to the Facebook profile of %s."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:294
+msgid "Je bent niet langer gekoppeld aan Facebook."
+msgstr "Your profile is no longer connected to your Facebook account"
+
+#: ../../../themes/default/views/profiel/profiel.phtml:300
+msgid "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."
+msgstr ""
+"Connect your Facebook account to see who of your friends are attending the "
+"activities."
+
+#: ../../../themes/default/views/profiel/profiel.phtml:309
+msgid "Ontkoppel Facebook"
+msgstr "Disconnect Facebook"
+
+#: ../../../themes/default/views/profiel/profiel.phtml:317
 msgid "Dreamspark (voorheen MSDNAA)"
 msgstr "Dreamspark (formerly known as MSDNAA)"
 
-#: ../../../themes/default/views/profiel/profiel.phtml:287
+#: ../../../themes/default/views/profiel/profiel.phtml:320
 msgid ""
 "Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar "
 "Microsoft."
 msgstr "I agree with sending my name and e-mail address to Microsoft."
 
-#: ../../../themes/default/views/profiel/profiel.phtml:288
+#: ../../../themes/default/views/profiel/profiel.phtml:321
 msgid "Ga naar Dreamspark"
 msgstr "Continue to Dreamspark"
 
