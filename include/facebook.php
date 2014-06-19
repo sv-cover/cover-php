@@ -83,6 +83,11 @@ class CoverFacebook extends BaseFacebook
 
 		return $this->cache[$key] = $this->getPersistentData($key, null);
 	}
+
+	public function getCoverLoginURL()
+	{
+		return $this->getLoginURL(array('scope' => 'rsvp_event'));
+	}
 }
 
 function get_facebook()

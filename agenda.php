@@ -5,6 +5,7 @@
 	require_once('include/login.php');
 	require_once('include/form.php');
 	require_once 'include/webcal.php';
+	require_once 'include/facebook.php';
 
 	class ControllerAgenda extends Controller {
 		function ControllerAgenda() {
@@ -321,6 +322,39 @@
 			exit();
 		}
 
+		function _process_rsvp_status($iter)
+		{
+			// If the id's for agenda items had been consistend, we could have stored attendance locally.
+			// Now, that would be a giant hack. Therefore, I defer that to some other moment in time.
+
+			if (!$iter->get('facebook_id'))
+				return;
+
+			$facebook = get_facebook();
+
+			if (!$facebook->getUser())
+				return;
+
+			try {
+				switch ($_POST['rsvp_status'])
+				{
+					case 'attending':
+					case 'maybe':
+					case 'declined':
+						$result = $facebook->api(sprintf('/%d/%s' , $iter->get('facebook_id'), $_POST['rsvp_status']), 'POST');
+						break;
+
+					default:
+						throw new Exception('Unknown rsvp status');
+				}
+
+				header('Location: agenda.php?agenda_id=' . $iter->get('id'));
+			}
+			catch (Exception $e) {
+				die($e->getMessage());
+			}
+		}
+
 		function get_webcal()
 		{
 			$cal = new WebCal_Calendar('Cover');
@@ -364,7 +398,9 @@
 				}
 			}
 
-			if (isset($_POST['submagenda']))
+			if (isset($_POST['rsvp_status']))
+				$this->_process_rsvp_status($iter);
+			elseif (isset($_POST['submagenda']))
 				$this->_do_process($iter);
 			elseif (isset($_POST['submagenda_moderate']))
 				$this->_process_moderate();

@@ -272,7 +272,7 @@ border-radius: 0 0 5px 5px;
   background-color: #2a65bd !important; color: #2a65bd !important;
 }
 
-.button
+.button, .button:visited
 {
   border: 1px solid #666;
   border-radius: 3px;
@@ -280,6 +280,7 @@ border-radius: 0 0 5px 5px;
   padding: 4px 8px;
   cursor: pointer;
   font: 12px sans-serif;
+  color: #000;
 }
 .button:hover
 {
@@ -1134,12 +1135,6 @@ form textarea {
 	width: 100%;
 }
 
-.event-cover-photo + .event-header {
-	background: rgba(0, 0, 0, 0.7);
-	margin: -50px 0 0 0;
-	padding: 0 15px;
-}
-
 .event-header {
 	position: relative;
 	min-height: 50px;
@@ -1150,13 +1145,21 @@ form textarea {
 	color: white;
 	height: 50px;
 	line-height: 50px;
-	float: left;
-	display: inline-block;
 	margin: 0;
+	z-index: 2;
+}
+
+.event-header .event-cover-photo + h1 {
+	background: rgba(0, 0, 0, 0.7);
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 0 15px;
 }
 
 .event-header .rsvp-status-button {
-	margin-left: 15px;
+	margin-right: 15px;
 }
 
 .rsvp-status-button {
@@ -1222,15 +1225,19 @@ form textarea {
 }
 
 .event-header .event-attendees {
+	position: absolute;
+	bottom: 50px;
+	right: 15px;
+	left: 15px;
 	list-style: none;
-	display: inline;
-	float: right;
 	margin-top: 6px;
+	z-index: 10;
+	text-align: right;
 }
 
 .event-header .event-attendees li {
 	display: inline;
-	vertical-align: center;
+	vertical-align: bottom;
 	line-height: auto;
 	position: relative;
 }
@@ -1239,7 +1246,7 @@ form textarea {
 	width: 32px;
 	height: 32px;
 	border-radius: 50%;
-	border: 1px solid #ccc;
+	border: 1px solid #333;
 }
 
 .event-header .event-attendees li .name {
@@ -1258,6 +1265,7 @@ form textarea {
 	white-space:nowrap;
 	padding: 4px;
 	box-shadow: 1px 1px 4px #333;
+	z-index: 10;
 }
 
 .event-header .event-attendees li:hover .name:before {
@@ -1275,4 +1283,8 @@ form textarea {
 	content: '';
 	clear: both;
 	display: block;
+}
+
+form.inline-form {
+	display: inline;
 }

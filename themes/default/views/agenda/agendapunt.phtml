@@ -3,28 +3,16 @@ $commissie_model = get_model('DataModelCommissie');
 $commissie = $commissie_model->get_iter($iter->get('commissie'));
 ?>
 <!-- color accent for each 'commissie' -->
-<?php if ($cover_photo = $this->get_cover_photo($iter)): ?>
-<div class="event-cover-photo">
-	<div style="left: -<?=$cover_photo['x'];?>%; top: -<?=$cover_photo['y']; ?>%">
-		<img src="<?=$cover_photo['src']?>">
-	</div>
-</div>
-<?php endif ?>
 <div class="event-header">
-	<h1><?= $iter->get('kop') ?></h1>
-
-	<?php if ($rsvp_status = $this->get_rsvp_status($iter)): ?>
-	<div class="rsvp-status-button dropdown-button">
-		<span class="current button" tabindex="0"><?=$this->get_rsvp_status_text($rsvp_status)?></span>
-		<form method="post">
-			<ul class="dropdown-menu">
-				<li><button type="submit" name="rsvp_status" value="attending"><?=__('Aanwezig')?></button></li>
-				<li><button type="submit" name="rsvp_status" value="maybe"><?=__('Misschien')?></button></li>
-				<li><button type="submit" name="rsvp_status" value="declined"><?=__('Gaat niet')?></button></li>
-			</ul>
-		</form>
+	<?php if ($cover_photo = $this->get_cover_photo($iter)): ?>
+	<div class="event-cover-photo">
+		<div style="left: -<?=$cover_photo['x'];?>%; top: -<?=$cover_photo['y']; ?>%">
+			<img src="<?=$cover_photo['src']?>">
+		</div>
 	</div>
-	<?php endif?>
+	<?php endif ?>
+
+	<h1><?= $iter->get('kop') ?></h1>
 
 	<?php if ($attendees = $this->get_attending($iter)): ?>
 	<ul class="event-attendees">
@@ -36,6 +24,24 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 	<?php endforeach ?>
 	</ul>
 	<?php endif ?>
+
+	<?php if ($rsvp_status = $this->get_rsvp_status($iter)): ?>
+	<div class="rsvp-status-button dropdown-button">
+		<span class="current button" tabindex="0"><?=$this->get_rsvp_status_text($rsvp_status)?></span>
+		<form method="post">
+			<input type="hidden" name="agenda_id" value="<?=$iter->get('id')?>">
+			<ul class="dropdown-menu">
+				<li><button type="submit" name="rsvp_status" value="attending"><?=__('Aanwezig')?></button></li>
+				<li><button type="submit" name="rsvp_status" value="maybe"><?=__('Misschien')?></button></li>
+				<li><button type="submit" name="rsvp_status" value="declined"><?=__('Gaat niet')?></button></li>
+			</ul>
+		</form>
+	</div>
+	<?php else: ?>
+	<div class="rsvp-status-button">
+		<a href="<?=get_facebook()->getCoverLoginURL()?>" class="button"><?=__('Koppel Facebook')?></a>
+	</div>
+	<?php endif?>
 </div>
 
 <div class="messageBox">

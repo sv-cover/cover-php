@@ -14,5 +14,8 @@
 		'path_to_bestuur_slides' => dirname(__FILE__) . '/../test/bestuur-slides',
 		'path_to_promotie_slides' => dirname(__FILE__) . '/../test/promotie-slides',
 
-		'default_language' => 'en'
+		'default_language' => 'en',
+
+		'facebook_app_id' => '',
+		'facebook_app_secret' => ''
 	);

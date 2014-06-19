@@ -4,6 +4,7 @@
 	require_once('include/form.php');
 	require_once('include/member.php');
 	require_once('include/login.php');
+	require_once 'include/facebook.php';
 
 	class ControllerProfiel extends Controller {
 		var $model = null;
@@ -278,6 +279,14 @@
 
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '&force_reload_photo=true#almanak');
 		}
+
+		protected function _process_facebook_link($iter, $action)
+		{
+			if ($action == 'unlink')
+				get_facebook()->destroySession();
+
+			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#fadebook');
+		}
 		
 		function run_impl() {
 			$lid = null;
@@ -298,6 +307,8 @@
 
 			if (isset($_POST['submprofiel_almanak']))
 				$this->_process_almanak($iter);
+			elseif (isset($_POST['facebook_action']))
+				$this->_process_facebook_link($iter, $_POST['facebook_action']);
 			elseif (isset($_FILES['photo']))
 				$this->_process_photo($iter);
 			elseif (isset($_POST['submprofiel_webgegevens']))
