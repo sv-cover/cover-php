@@ -37,7 +37,7 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 			</ul>
 		</form>
 	</div>
-	<?php else: ?>
+	<?php elseif ($iter->get('facebook_id')): ?>
 	<div class="rsvp-status-button">
 		<a href="<?=get_facebook()->getCoverLoginURL()?>" class="button"><?=__('Koppel Facebook')?></a>
 	</div>
