@@ -85,6 +85,7 @@
 					return __('Ik ga niet');
 
 				case '':
+				case 'not_replied':
 					return __('Neem deel');
 
 				default:

@@ -25,6 +25,7 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 	</ul>
 	<?php endif ?>
 
+	<?php if (get_config_value('enable_facebook_rsvp', false)): ?>
 	<?php if ($rsvp_status = $this->get_rsvp_status($iter)): ?>
 	<div class="rsvp-status-button dropdown-button">
 		<span class="current button" tabindex="0"><?=$this->get_rsvp_status_text($rsvp_status)?></span>
@@ -42,6 +43,7 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 		<a href="<?=get_facebook()->getCoverLoginURL()?>" class="button"><?=__('Koppel Facebook')?></a>
 	</div>
 	<?php endif?>
+	<?php endif ?>
 </div>
 
 <div class="messageBox">

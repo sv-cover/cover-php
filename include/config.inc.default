@@ -17,5 +17,6 @@
 		'default_language' => 'en',
 
 		'facebook_app_id' => '',
-		'facebook_app_secret' => ''
+		'facebook_app_secret' => '',
+		'enable_facebook_rsvp' => false
 	);
