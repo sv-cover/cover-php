@@ -185,7 +185,7 @@
 		function get_from_name($name) {
 			$row = $this->db->query_first("SELECT * 
 					FROM commissies
-					WHERE naam = '" . $this->escape_string($name) . "'");
+					WHERE '" . $this->escape_string($name) . "' IN (naam, login, nocaps)");
 			
 			return $this->_row_to_iter($row);
 		}
