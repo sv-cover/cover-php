@@ -51,30 +51,30 @@ class DataModelStickers extends DataModel
 	protected function _generate_query($conditions)
 	{
 		return "SELECT 
-				s.id,
-				s.label,
-				s.omschrijving,
-				s.lat,
-				s.lng,
-				s.toegevoegd_op,
-				s.toegevoegd_door,
-				s.foto IS NOT NULL as foto,
-				EXTRACT(EPOCH FROM s.foto_mtime) as foto_mtime,
+				stickers.id,
+				stickers.label,
+				stickers.omschrijving,
+				stickers.lat,
+				stickers.lng,
+				stickers.toegevoegd_op,
+				stickers.toegevoegd_door,
+				stickers.foto IS NOT NULL as foto,
+				EXTRACT(EPOCH FROM stickers.foto_mtime) as foto_mtime,
 				l.id as toegevoegd_door__id,
 				l.voornaam as toegevoegd_door__voornaam,
 				l.tussenvoegsel as toegevoegd_door__tussenvoegsel,
 				l.achternaam as toegevoegd_door__achternaam,
 				l.privacy as toegevoegd_door__privacy
 			FROM
-				{$this->table} s
+				{$this->table}
 			LEFT JOIN leden l ON
-				l.id = s.toegevoegd_door
+				l.id = stickers.toegevoegd_door
 			" . ($conditions ? " WHERE {$conditions}" : "");
 	}
 
 	protected function _id_string($value)
 	{
-		return sprintf('s.id = %d', $value);
+		return sprintf('stickers.id = %d', $value);
 	}
 
 	public function getNearbyStickers($sticker, $limit)
@@ -133,7 +133,7 @@ class DataModelStickers extends DataModel
 
 	public function getRecentStickers($limit)
 	{
-		$rows = $this->find($this->_generate_query('') . " ORDER BY s.toegevoegd_op DESC LIMIT " . intval($limit));
+		$rows = $this->find($this->_generate_query('') . " ORDER BY stickers.toegevoegd_op DESC LIMIT " . intval($limit));
 
 		return $this->_rows_to_iters($rows);
 	}
