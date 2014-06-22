@@ -351,6 +351,7 @@
 			$title = $params['title'] . ' :: ' . $title;
 		
 		echo '<title>' . htmlspecialchars($title) . '</title>
+		<base href="/">
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
 		<!--[if lte IE 7]>
