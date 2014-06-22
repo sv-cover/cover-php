@@ -31,14 +31,14 @@ class DataModelStickers extends DataModel
 		return $this->insert($iter, true);
 	}
 
-	public function getPhoto($sticker)
+	public function getPhoto(DataIter $sticker)
 	{
 		$result = $this->db->query_first("SELECT foto FROM {$this->table} WHERE id = " . $sticker->get('id'));
 
 		return pg_unescape_bytea($result['foto']);
 	}
 
-	public function setPhoto($sticker, $fp)
+	public function setPhoto(DataIter $sticker, $fp)
 	{
 		$data = stream_get_contents($fp);
 
@@ -69,15 +69,15 @@ class DataModelStickers extends DataModel
 				{$this->table} s
 			LEFT JOIN leden l ON
 				l.id = s.toegevoegd_door
-			" . ($conditions ? " WHERE {$conditions}" : "");
+			" . ($conditions ? " WHERE $conditions" : "");
 	}
 
-	protected function _id_string($value)
+	protected function _id_string($value, $table = '')
 	{
-		return sprintf('s.id = %d', $value);
+		return sprintf('%sid = %d', $value);
 	}
 
-	public function getNearbyStickers($sticker, $limit)
+	public function getNearbyStickers(DataIter $sticker, $limit)
 	{
 		$rows = $this->db->query(sprintf("SELECT
 				s.id,
@@ -145,7 +145,7 @@ class DataModelStickers extends DataModel
 		return $this->_row_to_iter($row);
 	}
 
-	public function memberCanEditSticker($sticker)
+	public function memberCanEditSticker(DataIter $sticker)
 	{
 		return member_in_commissie(COMMISSIE_BESTUUR)
 			|| ($sticker->get('toegevoegd_door') != null && $sticker->get('toegevoegd_door') == logged_in('id'));

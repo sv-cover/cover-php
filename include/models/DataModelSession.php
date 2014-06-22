@@ -7,9 +7,9 @@ require_once('data/DataModel.php');
   */
 class DataModelSession extends DataModel
 {
-	public function DataModelSession($db)
+	public function __construct($db)
 	{
-		parent::DataModel($db, 'sessions', 'session_id');
+		parent::__construct($db, 'sessions', 'session_id');
 	}
 
 	public function resume($id)
@@ -28,10 +28,10 @@ class DataModelSession extends DataModel
 		{
 			// Update last active
 			$update = array(
-				'last_active_on' => 'NOW()',
+				'last_active_on' => new DatabaseLiteral('NOW()'),
 				'ip_address' => $_SERVER['REMOTE_ADDR']);
 
-			$this->db->update($this->table, $update, $id_string, array('last_active_on'));
+			$this->db->update($this->table, $update, array($this->primary_key => $id));
 
 			return new $this->dataiter($this, $data[$this->id], $data);
 		}
@@ -71,8 +71,7 @@ class DataModelSession extends DataModel
 
 	public function destroy($session_id)
 	{
-		$this->db->delete($this->table,
-			sprintf("session_id = '%s'", $this->db->escape_string($session_id)));
+		$this->db->delete($this->table, array("session_id" => $session_id));
 
 		return $this->db->get_affected_rows() == 1;
 	}

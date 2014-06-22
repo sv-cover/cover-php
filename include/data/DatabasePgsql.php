@@ -1,20 +1,24 @@
 <?php
+	require_once dirname(__FILE__) . '/Database.php';
+
 	/**
 	  * This class provides a postgresql backend with commonly used functions
 	  * like insert, update and delete
 	  */
-	class DatabasePgsql {
-		var $resource = 0;
-		var $last_result = null;
-		var $last_affected = null;
-		var $last_insert_table = null;
+	class DatabasePgsql implements Database
+	{
+		private $resource = 0;
+		private $last_result = null;
+		private $last_affected = null;
+		private $last_insert_table = null;
 
 		/**
 		  * Create new postgresql database
 		  * @dbid a hash with database information (host, port, user, password, 
 		  * dbname)
 		  */
-		function DatabasePgsql($dbid) {
+		public function __construct($dbid)
+		{
 			/* Connect to database */
 			$this->_connect($dbid);
 		}
@@ -22,7 +26,8 @@
 		/**
 		  * Make connection to database
 		  */
-		function _connect($dbid) {
+		private function _connect($dbid)
+		{
 			if ($this->resource)
 				return;
 
@@ -55,7 +60,8 @@
 		  *
 		  * @result a string with the last error
 		  */
-		function get_last_error() {
+		public function get_last_error()
+		{
 			return pg_last_error($this->resource);
 		}
 		
@@ -68,7 +74,8 @@
 		  * @result an array with for each row a hash with the values (with 
 		  * keys being the column names) or null if an error occurred
 		  */
-		function query($query, $indices = false) {
+		public function query($query, $indices = false)
+		{
 			if (!$this->resource)
 				return;
 
@@ -114,7 +121,8 @@
 		  * @result a hash with the values (with keys being the column names)
 		  * or null if there are no results (or an error occurred)
 		  */
-		function query_first($query, $indices = false) {
+		public function query_first($query, $indices = false)
+		{
 			/* Execute query */
 			$result = $this->query($query, $indices);
 			
@@ -138,7 +146,8 @@
 		  *
 		  * @result a value or null if there are no results
 		  */
-		function query_value($query, $col = 0) {
+		public function query_value($query, $col = 0)
+		{
 			/* Execute the query */
 			$result = $this->query_first($query, true);
 			
@@ -160,41 +169,30 @@
 		  * @literals optional; the fields that should be used literally in 
 		  * the query
 		  */
-		function insert($table, $values, $literals = null) {
+		public function insert($table, array $values)
+		{
 			if (!$this->resource) {
 				return false;
 			}
 
-			$query = 'INSERT INTO "' . $table . '"';
-			$keys = array_keys($values);
+			$sql_values = array();
 
-			$k = '(';
-			$v = 'VALUES(';
-
-			for ($i = 0; $i < count($keys); $i++) {
-				if ($i != 0) {
-					$k .= ', ';
-					$v .= ', ';
-				}
-
-				$k .= '"' . $keys[$i] . '"';
-
-				/* If the value is a string and it's not a
-				 * literal
-				 */
-				if (is_string($values[$keys[$i]]) && (!$literals ||
-						!in_array($keys[$i], $literals))) {
-					/* Escape the string and add quotes */
-					$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
-				} elseif ($values[$keys[$i]] === null) {
-					$v .= 'null';
-				} else {
-					/* Just add the value to the query string */
-					$v .= $values[$keys[$i]];
-				}
+			foreach ($values as $key => $value)
+			{
+				if ($value instanceof DatabaseLiteral)
+					$sql_values[] = $value->toSQL();
+				elseif ($value === null)
+					$sql_values[] = 'NULL';
+				elseif (is_int($value))
+					$sql_values[] = sprintf('%d', $value);
+				else
+					$sql_values[] = sprintf("'%s'", $this->escape_string($value));
 			}
 
-			$query = $query . ' ' . $k . ') ' . $v . ');';
+			$query = sprintf('INSERT INTO "%s" (%s) VALUES (%s)',
+				$table,
+				implode(', ', array_keys($values)),
+				implode(', ', $sql_values));
 			
 			/* Execute query */
 			$this->query($query);
@@ -209,7 +207,8 @@
 		  *
 		  * @result the id of the last inserted row
 		  */
-		function get_last_insert_id() {
+		public function get_last_insert_id()
+		{
 			return $this->query_value("SELECT currval('" . 
 					$this->last_insert_table . "_id_seq'::regclass)");
 		}
@@ -227,48 +226,92 @@
 		  *
 		  * @result true if the update was successful, false otherwise 
 		  */
-		function update($table, $values, $condition, $literals = null) {
+		public function update($table, array $values, array $conditions)
+		{
 			if (!$this->resource)
 				return false;
 
 			if (count($values) == 0)
 				return true;
 
-			$query = 'UPDATE "' . $table . '" SET ';
-			$keys = array_keys($values);
-			$k = '';
-
-			/* For all values */
-			for ($i = 0; $i < count($keys); $i++) {
-				if ($i != 0)
-					$k .= ', ';
-
-				/* Add <key>= */
-				$k .= '"' . $keys[$i] . '"=';
-
-				/* If the value is a string and it's not a
-				 * literal
-				 */
-				if (is_string($values[$keys[$i]]) && (!$literals ||
-						!in_array($keys[$i], $literals))) {
-					/* Escape the string and add quotes */
-					$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
-				} elseif ($values[$keys[$i]] === null) {
-					$k .= 'null';
-				} else {
-					/* Just add the value to the query string */
-					$k .= $values[$keys[$i]];
-				}
-			}
-
-			$query .= $k;
-
-			/* Add condition */
-			if ($condition)
-				$query .= ' WHERE ' . $condition;
+			$query = sprintf('UPDATE "%s" SET %s WHERE %s',
+				$table,
+				$this->_generate_update($values),
+				$this->_generate_where($conditions));
 
 			/* Execute query */
 			return $this->query($query);
+		}
+
+		private function _generate_update(array $values)
+		{
+			$sql_pairs = array();
+
+			foreach ($values as $key => $value)
+			{
+				if (is_int($key) && $value instanceof DatabaseLiteral)
+					$sql_pairs[] = $value->toSQL();
+				elseif ($value === null)
+					$sql_pairs[] = sprintf('"%s" = NULL', $key);
+				elseif (is_int($value))
+					$sql_pairs[] = sprintf('"%s" = %d', $key, $value);
+				elseif ($value instanceof DatabaseLiteral)
+					$sql_pairs[] = sprintf('"%s" = %s', $key, $value->toSQL());
+				else
+					$sql_pairs[] = sprintf('"%s" = \'%s\'', $key, $this->escape_string($value));
+			}
+
+			return implode(', ', $sql_pairs);
+		}
+
+		private function _generate_where(array $conditions)
+		{
+			$sql_pairs = array();
+
+			foreach ($values as $key => $value)
+			{
+				if ($value instanceof DatabaseLiteral) {
+					$sql_pairs[] = $value->toSQL();
+					continue;
+				}
+
+				$format = '"%s" = %s';
+
+				if (preg_match('/^(.+)__(gt|lt|is_null)$/', $key, $match))
+				{
+					$key = $match[1];
+
+					switch ($match[2])
+					{
+						case 'gt':
+							$format = '"%s" > %s';
+							break;
+
+						case 'lt':
+							$format = '"%s" < %s';
+							break;
+
+						case 'is_null':
+							$format = $value
+								? '"%s" IS NULL'
+								: '"%s" IS NOT NULL';
+							break;
+					}
+				}
+
+				if ($value === null) {
+					$format = '"%s" IS NULL';
+				elseif (is_int($value))
+					$value = sprintf('%d', $value);
+				else
+					$value = sprintf("'%s'", $this->escape_string($value));
+
+				$sql_pairs[] = substr_count($format, '%s') === 2
+					? sprintf($format, $key, $value);
+					: sprintf($format, $key);
+			}
+
+			return implode(' AND ', $sql_pairs);
 		}
 
 		/**
@@ -281,14 +324,14 @@
 		  *
 		  * @result true if delete was successful, false otherwise
 		  */
-		function delete($table, $condition) {
+		public function delete($table, array $conditions) {
 			if (!$this->resource)
 				return false;
 
 			if (!$condition)
 				throw new RuntimeException('Are you really really sure you want to delete everything?');
 
-			return $this->query('DELETE FROM "' . $table . '" WHERE ' . $condition);
+			return $this->query('DELETE FROM "' . $table . '" WHERE ' . $this->_generate_where($conditions));
 		}
 
 		/**
@@ -297,17 +340,8 @@
 		  *
 		  * @result the escaped string
 		  */
-		function escape_string($s) {
+		public function escape_string($s) {
 			return pg_escape_string($s);
-		}
-		
-		/**
-		  * Checks whether there is a connection
-		  *
-		  * @result true if there is a connection, false otherwise
-		  */
-		function is_connected() {
-			return ($this->resource != 0);
 		}
 		
 		/**
@@ -315,11 +349,16 @@
 		  *
 		  * @result the number of affected rows
 		  */
-		function get_affected_rows() {
+		public function get_affected_rows() {
 			if (!$this->resource)
 				return;
 
 			return $this->last_affected;
+		}
+
+		public function generate_where(array $conditions)
+		{
+			return $this->_generate_where($conditions);
 		}
     }
 ?>

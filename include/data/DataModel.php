@@ -7,10 +7,11 @@
 	  * More complex models should inherit from this base class and implement
 	  * their own insert, update, delete, get and get_iter functions 
 	  */
-	class DataModel {
-		var $db = null; /** The database backend */
-		var $table = null; /** The table to model */
-		var $dataiter = 'DataIter';
+	class DataModel
+	{
+		protected $db = null; /** The database backend */
+		protected $table = null; /** The table to model */
+		protected $dataiter = 'DataIter';
 		
 		/**
 		  * Create a new DataModel
@@ -18,10 +19,11 @@
 		  * @table the table to model 
 		  * @id optional; the field name to use as unique id
 		  */
-		function DataModel($db, $table = null, $id = 'id') {
+		public function __construct($db, $table = null, $primary_key = 'id')
+		{
 			$this->db = $db;
 			$this->table = $table;
-			$this->id = $id;
+			$this->primary_key = $primary_key;
 		}
 
 		/**
@@ -35,11 +37,12 @@
 		  * @result if getid is true the last insert id is returned, -1 
 		  * otherwise
 		  */		
-		function _insert($table, $iter, $getid = false) {
+		protected function _insert($table, DataIter $iter, $getid = false)
+		{
 			if (!$this->db)
 				return false;
 			
-			$this->db->insert($table, $iter->data, $iter->get_literals());
+			$this->db->insert($table, $iter->data);
 			
 			if ($getid)
 				return $this->db->get_last_insert_id();
@@ -55,28 +58,14 @@
 		  * @result if getid is true the last insert id is returned, -1 
 		  * otherwise
 		  */
-		function insert($iter, $getid = false) {
+		public function insert(DataIter $iter, $getid = false)
+		{
 			if (!$this->table)
 				return false;
 
 			return $this->_insert($this->table, $iter, $getid);
 		}
 		
-		/**
-		  * Generate a id = value string
-		  * @value the id value
-		  *
-		  * @result a id = value string
-		  */
-		protected function _id_string($value) {
-			$result = $this->id . ' = ';
-			
-			if ($this->id == 'id')
-				return $result . intval($value);
-			else
-				return $result . "'" . $this->escape_string($value) . "'";
-		}
-
 		/**
 		  * Update a row (sync changes in the database backend). 
 		  * Convenient function for descendents of #DataModel
@@ -85,14 +74,13 @@
 		  *
 		  * @result true if the update was successful, false otherwise 
 		  */
-		function _update($table, $iter) {
+		protected function _update($table, DataIter $iter) {
 			if (!$this->db)
 				return false;
 
 			return $this->db->update($table, 
 					$iter->get_changed_values(), 
-					$this->_id_string($iter->get_id()), 
-					$iter->get_literals());
+					array($this->primary_key => $iter->get_id()));
 		}
 		
 		/**
@@ -101,7 +89,7 @@
 		  *
 		  * @result true if the update was successful, false otherwise 
 		  */
-		function update($iter) {
+		public function update(DataIter $iter) {
 			if (!$this->table)
 				return false;
 
@@ -116,11 +104,11 @@
 		  *
 		  * @result true if the deletion was successful, false otherwise
 		  */		
-		function _delete($table, $iter) {
+		protected function _delete($table, DataIter $iter) {
 			if (!$this->db)
 				return false;
-			
-			return $this->db->delete($table, $this->_id_string($iter->get_id()));
+
+			return $this->db->delete($table, array($this->primary_key => $iter->get_id()));
 		}
 		
 		/**
@@ -129,7 +117,7 @@
 		  *
 		  * @result true if the deletion was successful, false otherwise
 		  */
-		function delete($iter) {
+		public function delete(DataIter $iter) {
 			if (!$this->table)
 				return false;
 
@@ -142,7 +130,8 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function _row_to_iter($row) {
+		protected function _row_to_iter($row)
+		{
 			if ($row)
 				return new $this->dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
 			else
@@ -155,16 +144,17 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function _rows_to_iters($rows) {
-			if ($rows) {
-				$iters = array();
-				
-				foreach ($rows as $data)
-					$iters[] = $this->_row_to_iter($data);
+		protected function _rows_to_iters($rows)
+		{
+			if (!$rows)
+				return $rows;
 
-				return $iters;
-			} else
-				return $rows;		
+			$iters = array();
+				
+			foreach ($rows as $data)
+				$iters[] = $this->_row_to_iter($data);
+
+			return $iters;
 		}
 		
 		/**
@@ -172,9 +162,9 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get()
+		public function get()
 		{
-			return $this->find('');
+			return $this->find();
 		}
 
 		/**
@@ -183,7 +173,7 @@
 		 *
 		 * @result an array of #DataIter
 		 */
-		function find($conditions)
+		public function find(array $conditions = array())
 		{
 			if (!$this->db || !$this->table)
 				return array();
@@ -192,7 +182,7 @@
 
 			$rows = $this->db->query($query);
 			
-			return $this->_rows_to_iters($rows);			
+			return $this->_rows_to_iters($rows);		
 		}
 		
 		/**
@@ -201,31 +191,23 @@
 		  *
 		  * @result a #DataIter representing the row
 		  */
-		function get_iter($id) {
+		public function get_iter($id)
+		{
 			if (!$this->db || !$this->table)
 				return null;
 
-			$data = $this->db->query_first($this->_generate_query($this->_id_string($id)));
+			$data = $this->db->query_first($this->_generate_query(array($this->primary_key => $id)));
 
 			return $this->_row_to_iter($data);
 		}
 		
 		/**
-		  * Escape a string so it can be used in queries
-		  * @s the string to be escaped
-		  *
-		  * @result the escaped string
-		  */
-		function escape_string($s) {
-			return $this->db->escape_string($s);
-		}
-
-		/**
 		  * Get the last occurred database error
 		  *
 		  * @result the last occurred database error
 		  */
-		function get_last_error() {
+		public function get_last_error()
+		{
 			return $this->db->get_last_error();
 		}
 		
@@ -234,12 +216,17 @@
 		  *
 		  * @result the number of affected rows
 		  */
-		function get_affected_rows() {
+		public function get_affected_rows()
+		{
 			return $this->db->get_affected_rows();
 		}
 
-		protected function _generate_query($where)
+		protected function _generate_query(array $conditions)
 		{
+			$where = $conditions
+				? $this->db->generate_where($conditions)
+				: '';
+
 			return "SELECT * FROM {$this->table}" . ($where ? " WHERE {$where}" : "");
 		}
 	}
