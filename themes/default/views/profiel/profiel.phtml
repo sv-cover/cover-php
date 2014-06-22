@@ -279,7 +279,7 @@
 		</div>
 	<?php endif ?>
 
-	<?php if($this->is_current_member($iter->get('lidid'))): ?>
+	<?php if($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
 		<?php $facebook_button = 'login' ?>
 		<h2 id="facebook"><?= __('Facebook')?></h2>
 		<div class="messageBox">
