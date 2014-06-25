@@ -1,22 +1,30 @@
 <?php
 	require_once 'include/login.php';
 	require_once 'include/markup.php';
-	require_once 'include/facebook.php';
+	
 	
 	class AgendaView extends View {
 		protected $__file = __FILE__;
 
 		protected $model;
 
+		protected $facebook;
+
 		public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
 
-			$this->facebook = get_facebook();
+			if (get_config_value('enable_facebook', false)) {
+				require_once 'include/facebook.php';
+				$this->facebook = get_facebook();
+			}
 		}
 
 		public function get_cover_photo($item)
 		{
+			if (!$this->facebook)
+				return null;
+
 			if (!$item->has('facebook_id'))
 				return null;
 
@@ -37,6 +45,9 @@
 
 		public function get_attending($item)
 		{
+			if (!$this->facebook)
+				return array();
+
 			if (!$item->has('facebook_id'))
 				return array();
 
@@ -54,7 +65,13 @@
 
 		public function get_rsvp_status($item)
 		{
-			if (!$item->has('facebook_id') || !$this->facebook->getUser())
+			if (!$this->facebook)
+				return null;
+
+			if (!$item->has('facebook_id'))
+				return null;
+
+			if (!$this->facebook->getUser())
 				return null;
 
 			try {
