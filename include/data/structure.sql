@@ -117,109 +117,6 @@ CREATE TABLE agenda_moderate (
 
 ALTER TABLE public.agenda_moderate OWNER TO webcie;
 
---
--- TOC entry 175 (class 1259 OID 24144)
--- Name: bedrijven_adres_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE bedrijven_adres_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bedrijven_adres_id_seq OWNER TO webcie;
-
---
--- TOC entry 176 (class 1259 OID 24146)
--- Name: bedrijven_adres; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE bedrijven_adres (
-    id integer DEFAULT nextval('bedrijven_adres_id_seq'::regclass) NOT NULL,
-    naam character varying(25) NOT NULL,
-    adres character varying(255),
-    postcode character varying(7),
-    plaats character varying(255),
-    telefoonnummer character varying(15),
-    email character varying(255),
-    contactpersoon character varying(255),
-    datum timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    beschrijving text,
-    website character varying(255)
-);
-
-
-ALTER TABLE public.bedrijven_adres OWNER TO webcie;
-
---
--- TOC entry 177 (class 1259 OID 24154)
--- Name: bedrijven_contactgegevens_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE bedrijven_contactgegevens_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bedrijven_contactgegevens_id_seq OWNER TO webcie;
-
---
--- TOC entry 178 (class 1259 OID 24156)
--- Name: bedrijven_contactgegevens; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE bedrijven_contactgegevens (
-    id integer DEFAULT nextval('bedrijven_contactgegevens_id_seq'::regclass) NOT NULL,
-    bedrijf integer NOT NULL,
-    contactpersoon character varying(255) NOT NULL,
-    contactwijze character varying(255) NOT NULL,
-    samenvatting text NOT NULL,
-    datum date NOT NULL
-);
-
-
-ALTER TABLE public.bedrijven_contactgegevens OWNER TO webcie;
-
---
--- TOC entry 179 (class 1259 OID 24163)
--- Name: bedrijven_stageplaatsen_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE bedrijven_stageplaatsen_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bedrijven_stageplaatsen_id_seq OWNER TO webcie;
-
---
--- TOC entry 180 (class 1259 OID 24165)
--- Name: bedrijven_stageplaatsen; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE bedrijven_stageplaatsen (
-    id integer DEFAULT nextval('bedrijven_stageplaatsen_id_seq'::regclass) NOT NULL,
-    bedrijf integer NOT NULL,
-    opdracht character varying(255),
-    beschrijving text
-);
-
-
-ALTER TABLE public.bedrijven_stageplaatsen OWNER TO webcie;
-
---
--- TOC entry 181 (class 1259 OID 24172)
--- Name: bestellingen; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
 
 CREATE TABLE bestellingen (
     boekid integer NOT NULL,
@@ -3531,6 +3428,29 @@ CREATE TABLE facebook (
     data_value TEXT NOT NULL,
     CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key)
 );
+
+
+CREATE SEQUENCE bedrijven_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE TABLE bedrijven (
+    id smallint DEFAULT nextval('bedrijven_id_seq'::regclass) NOT NULL PRIMARY KEY,
+    naam character varying(100) NOT NULL,
+    slogan character varying(255),
+    slug character varying(150) NOT NULL,
+    website character varying(100),
+    page integer,
+    logo bytea DEFAULT NULL,
+    logo_mtime timestamp without time zone,
+    hidden integer DEFAULT 0,
+    CONSTRAINT bedrijven_id PRIMARY KEY (id),
+    CONSTRAINT bedrijven_slug UNIQUE (slug)
+);
+
 
 --
 -- TOC entry 2390 (class 2606 OID 25986)
