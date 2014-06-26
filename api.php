@@ -163,7 +163,7 @@ class ControllerApi extends Controller
 			// GET api.php?method=session_get_member&session_id={session}
 			case 'session_get_member':
 				// For legacy reasons a post session id is still accepted but this method should be accessed using a GET request.
-				$response = $this->api_session_get_current_member(empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id']);
+				$response = $this->api_session_get_member(empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id']);
 				break;
 
 			// GET api.php?method=session_test_committee&session_id={session}&committee=webcie
