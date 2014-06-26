@@ -103,6 +103,22 @@ class ControllerApi extends Controller
 		return array('result' => $member_in_committee);
 	}
 
+	public function api_get_member($member_id)
+	{
+		$user_model = get_model('DataModelMember');
+
+		$member = $user_model->get_iter($member_id);
+
+		if (!$member)
+			return array('result' => false, 'error' => 'Member not found');
+
+		foreach ($member->data as $field => $value)
+			if ($user_model->is_private($member, $field, true))
+				$member->data[$field] = null;
+
+		return array('result' => $member->data);
+	}
+
 	public function api_get_committees($member_id)
 	{
 		// Find in which committees the member is active
@@ -147,7 +163,7 @@ class ControllerApi extends Controller
 			// GET api.php?method=session_get_member&session_id={session}
 			case 'session_get_member':
 				// For legacy reasons a post session id is still accepted but this method should be accessed using a GET request.
-				$response = $this->api_session_get_member(empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id']);
+				$response = $this->api_session_get_current_member(empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id']);
 				break;
 
 			// GET api.php?method=session_test_committee&session_id={session}&committee=webcie
@@ -156,6 +172,11 @@ class ControllerApi extends Controller
 				$response = $this->api_session_test_committee(
 					empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id'],
 					empty($_POST['committee']) ? $_GET['committee'] : $_POST['committee']);
+				break;
+
+			// GET api.php?method=get_member&member_id=709<&session_id=$session_id>
+			case 'get_member':
+				$response = $this->api_get_member($_GET['member_id']);
 				break;
 
 			// GET api.php?method=get_committees&member_id=709
