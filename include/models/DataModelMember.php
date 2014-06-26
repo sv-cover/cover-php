@@ -294,6 +294,10 @@
 		
 		function get_privacy_for_field($iter,$field) {
 			static $privacy = null;
+
+			// Hack for these three fields which are often combined.
+			if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam')))
+				$field = 'naam';
 			
 			if ($privacy == null)
 				$privacy = $this->get_privacy();

@@ -112,9 +112,15 @@ class ControllerApi extends Controller
 		if (!$member)
 			return array('result' => false, 'error' => 'Member not found');
 
+		// Hide all private fields for this user. is_private() uses
+		// logged_in() which uses the session_id get variable. So sessions
+		// are taken into account ;)
 		foreach ($member->data as $field => $value)
 			if ($user_model->is_private($member, $field, true))
 				$member->data[$field] = null;
+
+		// This one is passed as parameter anyway, it is already known.
+		$member->data['id'] = (int) $member_id;
 
 		return array('result' => $member->data);
 	}
