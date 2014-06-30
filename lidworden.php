@@ -34,7 +34,7 @@
 				'fase'
 				), $errors);
 			// 20090907 update t.b.v. anti-spam
-			if(!in_array($_POST['spam'], array('groen', 'green', 'coverrood', 'cover red'))) {
+			if(!in_array(strtolower($_POST['spam']), array('groen', 'green', 'coverrood', 'cover red'))) {
 				$errors[] = 'spam';
 			}
 			if($_POST['machtiging'] != 'yes') {
