@@ -5,10 +5,14 @@
 	class ControllerAlmanak extends Controller {
 		var $model = null;
 
-		function ControllerAlmanak() {
+		function ControllerAlmanak()
+		{
 			$this->model = get_model('DataModelMember');
 
+			// By default, show everything in the database to
+			// the board.
 			if (member_in_commissie(COMMISSIE_BESTUUR))
+			{
 				$this->model->visible_types = array(
 					MEMBER_STATUS_LID,
 					MEMBER_STATUS_LID_ONZICHTBAAR,
@@ -16,6 +20,7 @@
 					MEMBER_STATUS_ERELID,
 					MEMBER_STATUS_DONATEUR
 				);
+			}
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
@@ -24,38 +29,43 @@
 			$this->run_footer();
 		}
 		
-		function _process_search() {
-			$iters = $this->model->get_from_search($_GET['query']);
-			$this->get_content('almanak', $iters, array('query' => $_GET['query']));
+		protected function _process_search($query = '')
+		{
+			if ($query) {
+				$iters = $this->model->get_from_search($query);
+			}
+			else {
+				// Tone down all that is visible a bit.
+				$this->model->visible_types = array(
+					MEMBER_STATUS_LID,
+					MEMBER_STATUS_ERELID,
+					MEMBER_STATUS_DONATEUR
+				);
+				$iters = $this->model->get();
+			}
+
+			$this->get_content('almanak', $iters, compact('query'));
 		}
 
-		/** 
-		  * Searches the online almanak for a given year
-		  *
-		  */
-		function _process_year() {
-			$iters = $this->model->get_from_search_year($_GET['search_year']);
-			$this->get_content('almanak', $iters, array('query' => $_GET['search_year']));
-		}
-
-		function _process_status() {
+		protected function _process_status()
+		{
 			if (!member_in_commissie(COMMISSIE_BESTUUR))
 				return $this->get_content('auth');
 			
 			$iters = $this->model->get_from_status($_GET['status']);
+
 			$this->get_content('almanak', $iters, array('query' => ''));
 		}
 		
-		function _process_csv() {
+		protected function _process_csv()
+		{
 			if (member_in_commissie(COMMISSIE_ALMANAKCIE)) {
-
-				$iters = $this->model->get_all();
 
 				// Filter all previous and hidden members
 				$this->model->visible_types = array(MEMBER_STATUS_LID,
 					MEMBER_STATUS_ERELID, MEMBER_STATUS_DONATEUR);
 
-				$iters = array_filter($iters, array($this->model, 'is_visible'));
+				$iters = $this->model->get();
 
 				// Filter all hidden information (set the field to null)
 				$privacy_fields = $this->model->get_privacy();
@@ -83,16 +93,12 @@
 		}
 		
 		function run_impl() {
-			if (isset($_GET['query']))
-				$this->_process_search();
-			elseif (isset($_GET['search_year']))
-				$this->_process_year();
-			elseif (isset($_GET['status']))
+			if (isset($_GET['status']))
 				$this->_process_status();
 			elseif (isset($_GET['csv']))
 				$this->_process_csv();
 			else
-				$this->get_content('almanak', null, array('query' => ''));
+				$this->_process_search(isset($_GET['query']) ? $_GET['query'] : '');
 		}
 	}
 	
