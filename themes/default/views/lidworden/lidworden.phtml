@@ -18,7 +18,9 @@ unset($months[0]); ?>
 <div class="message"><?= $message ?></div>
 <? } 
 if ($e) {?>
-<div class="error_message"><?= __('Niet alle velden zijn goed ingevuld') ?></div>
+<div class="error-section">
+	<p><?= __('Niet alle velden zijn goed ingevuld') ?></p>
+</div>
 <? } ?>
 <form method="post" action="lidworden.php"><?= input_hidden('submlidworden', 'yes') ?>
 <table>
