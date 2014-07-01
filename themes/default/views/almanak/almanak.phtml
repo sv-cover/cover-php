@@ -1,72 +1,53 @@
-<h1> <?= __('Almanak') ?></h1>
-	<div class="messageBox">	
+<h1><?= __('Almanak') ?></h1>
+
+<div class="almanak-filter">
 	<form name="almanak" action="almanak.php" method="get">
-		<table class="almanak_navigation">
-			<tr>
-				<td class="title"> <?= __('Naam') ?>:</td>
-				<td colspan="2"><input type="search" name="query" value="<?=htmlspecialchars($query, ENT_QUOTES)?>" placeholder="e.g. a name, address, year or combination"></td>
-			</tr>
-			<tr>
-				<td class="title"><?= __('Beginjaar') ?>:</td>
-				<td class="alphabet" colspan="2">
-				<?php foreach ($model->get_distinct_years() as $jaar): ?>
-					<a href="?search_year=<?= $jaar ?>"><?= $jaar ?></a>
-				<?php endforeach ?>
-				</td>
-			</tr>
-			<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
-			<tr>
-				<td class="title"><?= __('Zichtbaarheid') ?>:</td>
-				<td colspan="2">
-					<a href="?status=<?=MEMBER_STATUS_LID?>"><?=__('Lid') ?></a>
-					<a href="?status=<?=MEMBER_STATUS_LID_ONZICHTBAAR?>"><?=__('Lid (verborgen)') ?></a>
-					<a href="?status=<?=MEMBER_STATUS_LID_AF?>"><?=__('Lid af') ?></a>
-					<a href="?status=<?=MEMBER_STATUS_ERELID?>"><?=__('Erelid') ?></a>
-					<a href="?status=<?=MEMBER_STATUS_DONATEUR?>"><?=__('Donateur') ?></a>
-				</td>
-			</tr>
-			<?php endif ?>
-			<tr>
-				<td colspan="3" class="submit"><?= input_submit('', __('Zoeken')) ?></td>
-			</tr>
-		</table>
+		<input type="search" name="query" value="<?=htmlspecialchars($query, ENT_QUOTES)?>" placeholder="<?=htmlspecialchars(__('Typ hier een naam, adres, beginjaar of combinatie daarvan...'), ENT_QUOTES)?>"></td>
 	</form>
-	</div>
-	<? if ($iter === null) { ?>
-		<p> <?= __('Maak hierboven een selectie om de almanak te bekijken.') ?></p>
-		<? if (member_in_commissie(COMMISSIE_ALMANAKCIE)) { ?>
-			<a href="?csv"><?= __('Download CSV-bestand met almanakgegevens') ?></a>
-		<? } ?>
-	<? return; } ?>
-	
-	<? if (count($iter) == 0) {?>
-		<h3> <?= sprintf(__('Er zijn %s leden gevonden die voldoen aan de zoekterm(en).'), '<i><u>' . __('geen') . '</u></i>'); ?></h3>		
-	<? }elseif (count($iter) == 1) {?>
-		<h3> <?= sprintf(__('Er is %s lid gevonden die voldoet aan de zoekterm(en).'), '<i><u>1</u></i>') ?></h3>
-	<? }else {?>
-		<h3> <?= sprintf(__('Er zijn %s leden gevonden die voldoen aan de zoekterm(en).'), '<i><u>' . count($iter) . '</u></i>') ?> </h3>
-	<? } ?>
-	<div class="messageBox">
-	<table class="almanak">
-		<? $items_per_row = 4;
-		$rows = intval(ceil(count($iter) / floatval($items_per_row)));
-		
-		for ($i = 0; $i < count($iter); $i += $items_per_row) {
-			$photos = '';
-			$names = '';
-			
-			for ($n = $i; $n < $i + $items_per_row; $n++) {
-				if ($n < count($iter)) {
-					$info = $this->almanak_info($model, $iter[$n]);
-		
-					$photos .= '<td>' . $info . "</td>\n";
-				} else {
-					$photos .= "<td></td>\n";
-				}
-			}
-			
-			echo '<tr class="photo">' . $photos . "</tr>\n";
-		}
-		 ?>
-	</table>
-	</div>
+</div>
+<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
+<div class="almanak-filter">
+	<a href="?status=<?=MEMBER_STATUS_LID?>"><?=__('Lid') ?></a>
+	<a href="?status=<?=MEMBER_STATUS_LID_ONZICHTBAAR?>"><?=__('Lid (verborgen)') ?></a>
+	<a href="?status=<?=MEMBER_STATUS_LID_AF?>"><?=__('Lid af') ?></a>
+	<a href="?status=<?=MEMBER_STATUS_ERELID?>"><?=__('Erelid') ?></a>
+	<a href="?status=<?=MEMBER_STATUS_DONATEUR?>"><?=__('Donateur') ?></a>
+</div>
+<?php endif ?>
+
+<div class="messageBox almanak">
+	<?php if (count($iter) == 0): ?>
+		<h3><?= sprintf(__('Er zijn %s leden gevonden die voldoen aan de zoekterm(en).'), '<i><u>' . __('geen') . '</u></i>'); ?></h3>		
+	<?php elseif (count($iter) == 1): ?>
+		<h3><?= sprintf(__('Er is %s lid gevonden die voldoet aan de zoekterm(en).'), '<i><u>1</u></i>') ?></h3>
+	<?php else: ?>
+		<h3><?= sprintf(__('Er zijn %s leden gevonden die voldoen aan de zoekterm(en).'), '<i><u>' . count($iter) . '</u></i>') ?> </h3>
+	<?php endif ?>
+
+	<?php if (count($iter) > 15): ?>
+	<ol>
+	<?php foreach (array_reverse($this->group_by_year($iter), true) as $year => $members): ?>
+		<?php if (is_int($year)): ?>
+		<li><a href="almanak.php?query=<?=$year?>"><?=__('Beginjaar')?> <?=$year?></a></li>
+		<?php else: ?>
+		<li><?=htmlspecialchars($year)?></li>
+		<?php endif ?>
+		<ul>
+		<?php foreach ($members as $member): ?>
+			<li><?=$this->almanak_info($model, $member)?></li>
+		<?php endforeach ?>
+		</ul>
+	<?php endforeach ?>
+	</ol>
+	<?php else: ?>
+	<ul>
+	<?php foreach ($iter as $member): ?>
+		<li><?=$this->almanak_info($model, $member)?></li>
+	<?php endforeach ?>
+	</ul>
+	<?php endif ?>
+</div>
+
+<?php if (member_in_commissie(COMMISSIE_ALMANAKCIE)): ?>
+	<a href="?csv"><?= __('Download CSV-bestand met almanakgegevens') ?></a>
+<?php endif ?>

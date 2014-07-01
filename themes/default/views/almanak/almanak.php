@@ -2,10 +2,33 @@
 	require_once('member.php');
 	require_once('csv.php');
 	
-	class AlmanakView extends View {
+	class AlmanakView extends View
+	{
 		protected $__file = __FILE__;
 
-		function almanak_info($model, $iter) {
+		protected function group_by_year(array $members)
+		{
+			$years = array();
+
+			foreach ($members as $member)
+			{
+				$beginjaar = $member->get('beginjaar')
+					? (int) $member->get('beginjaar')
+					: __('Niet beschikbaar');
+
+				if (!isset($years[$beginjaar]))
+					$years[$beginjaar] = array($member);
+				else
+					$years[$beginjaar][] = $member;
+			}
+
+			ksort($years);
+
+			return $years;
+		}
+
+		protected function almanak_info(DataModelMember $model, DataIter $iter)
+		{
 			$photo = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
 
 			$name = member_full_name($iter, false, true);

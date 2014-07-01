@@ -158,10 +158,6 @@ ul.expander{
 .align-right {text-align:right;}
 .align-center {text-align:center;}
 
-.almanak
-{
-}
-
 .bannerList
 {
     margin: 10px 0px !important;
@@ -567,7 +563,6 @@ body > .header > .login {
 	border-bottom-left-radius:4px; border-bottom-right-radius:5px;
 }
 
-.messageBox .almanak form { text-align:center; margin: 0 auto; }
 .messageBox .bericht
 {
 	margin-top: 10px;
@@ -629,9 +624,6 @@ body > .header > .login {
 
 .pcie {background-color:#00aeff !important;}
 .profilehead {text-align:center;}
-.almanak .hint {
-	width: 400px;
-}
 
 .replyBox 
 { 
