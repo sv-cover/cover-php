@@ -7,26 +7,6 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	/** @group Editable
-	  * Get an array of pages of which an editable page consists
-	  * @content the editable page content
-	  *
-	  * @result an array of pages
-	  */
-	function editable_split_pages($content) {
-		$amount = preg_match_all('/\[page\](.*?)\[\/page\]/is', $content, $matches);
-
-		if (!$amount)
-			return Array($content);
-
-		$splitpages = Array();
-
-		foreach ($matches[1] as $page)
-			$splitpages[] = $page;
-
-		return $splitpages;
-	}
-
 	function _editable_parse_commissie_leden(&$page, $owner) {
 		if (strstr($page, '[commissie_leden]')) {
 			$model = get_model('DataModelCommissie');
@@ -41,8 +21,8 @@
 					$lh .= '<li>
 						<a href="profiel.php?lid=' . $lid->get('id') . '" class="commissie-member">
 							<img src="foto.php?lid_id=' . $lid->get('id') .'&amp;get_thumb=circle&amp;width=200" width="100" height="100">
-							<span class="name">' . htmlspecialchars(member_full_name($lid)) . '</span>
-							<span class="function">' . htmlspecialchars($lid->get('functie') ? __($lid->get('functie')) : '') . "</span>
+							<span class="name">' . htmlspecialchars(member_full_name($lid, false, true)) . '</span>
+							<span class="function">' . htmlspecialchars($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '') . "</span>
 						</a>
 					</li>\n";
 					
@@ -150,27 +130,20 @@
 	  *
 	  * @result an array of pages with all markup replaced by html
 	  */
-	function editable_parse($content, $owner) {
-		$splitpages = editable_split_pages($content);
+	function editable_parse($page, $owner) {
+		_editable_parse_commissie_summary($page, $owner);
 
-		foreach ($splitpages as $page) {
-			_editable_parse_commissie_summary($page, $owner);
+		$page = markup_parse($page);
 
-			$page = markup_parse($page);
-
-			_editable_parse_commissie_poll($page, $owner);
-			_editable_parse_commissie_leden($page, $owner);
-			_editable_parse_commissie_email($page, $owner);
-			_editable_parse_commissie_foto($page, $owner);
-			_editable_parse_commissie_agenda($page, $owner);
-			
-			_editable_parse_commissie_prive($page, $owner);
-			
-			$page = markup_clean($page);
-			$pages[] = $page;
-		}
-
-    		return $pages;
+		_editable_parse_commissie_poll($page, $owner);
+		_editable_parse_commissie_leden($page, $owner);
+		_editable_parse_commissie_email($page, $owner);
+		_editable_parse_commissie_foto($page, $owner);
+		_editable_parse_commissie_agenda($page, $owner);
+		
+		_editable_parse_commissie_prive($page, $owner);
+		
+		return markup_clean($page);
 	}
 	
 	/** @group Editable
@@ -181,11 +154,8 @@
 	  * @result a string containing the summary or an empty string if
 	  * no summary could be found
 	  */
-	function editable_get_summary($content, $owner) {
-		if (preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches)) {
-			$pages = editable_parse($matches[1], $owner);
-			return $pages[0];
-		} else {
-			return '';
-		}
+	function editable_get_summary($content, $owner)
+	{
+		return preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches)
+			? editable_parse($matches[1], $owner) : '';
 	}

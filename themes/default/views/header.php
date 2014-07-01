@@ -47,8 +47,11 @@
 			$contents = "<ul class=\"agenda\">\n";
 			
 			for ($i = 0; $i < min(10, count($iters)); $i++) {
-				$iter = $iters[$i];
-				$contents .= '<li class="clearfix"><span class="date">' . sprintf('%02d-%02d', $iter->get('vandatum'), $iter->get('vanmaand')) . '</span><a href="agenda.php?agenda_id=' . $iter->get_id() . '">' . $iter->get('kop') . '</a></li>';
+				$iter = $iters[$i];				
+				$details = $iter->get('extern')
+					? __('Externe activiteit')
+					: agenda_short_period_for_display($iter);
+				$contents .= '<li class="clearfix"><span class="date">' . sprintf('%02d-%02d', $iter->get('vandatum'), $iter->get('vanmaand')) . '</span><a href="agenda.php?agenda_id=' . $iter->get_id() . '"><span class="title">' . $iter->get('kop') . '</span><span class="details">' . $details . '</span></a></li>';
 			}
 			
 			$contents .= "</ul>\n";
@@ -176,6 +179,8 @@
 				</ul>
 				<ul id="leden" class="expander">
 					<li><a href="almanak.php">' .__('Almanak') .'</a></li>
+					<li><a href="mailinglijsten.php">' .__('Mailinglijsten') .'</a></li>
+					<li><a href="stickers.php">' . __('Stickerkaart') . '</a></li>
 					<li><a href="http://www.shitbestellen.nl" target="_blank">' .__('Merchandise') .'</a></li>
 					<li><a href="profiel.php#msdnaa">' .__('MSDNAA') .'</a></li>
 				</ul>
@@ -272,6 +277,7 @@
 		
 		$contents .= '<br>';
 		
+		// FIXME: Laat nooit jarigen zien die deze gegevens verborgen hebben volgens hun privay settings!
 		foreach ($jarigen as $jarige) {
 			$contents .= '<a href="profiel.php?lid=' . $jarige->get('id') . '">' . member_full_name($jarige) . '</a> (' . $jarige->get('leeftijd') . ')<br>';
 		}
@@ -345,6 +351,7 @@
 			$title = $params['title'] . ' :: ' . $title;
 		
 		echo '<title>' . htmlspecialchars($title) . '</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
 		<!--[if lte IE 7]>
 			<link rel="stylesheet" href="'. get_theme_data('styleIE.css') .'" type = "text/css" />
@@ -359,17 +366,13 @@
 		if ($controller == 'gastenboek')
 			echo '<link rel="alternate" type="application/rss+xml" title="RSS" href="gastenboek.php?rss">' . "\n";
 		
-		echo '<script type="text/javascript" src="' . get_theme_data('data/expander.js') . '"></script>
+		echo '
+		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script type="text/javascript" src="' . get_theme_data('data/expander.js') . '"></script>
 		<script type="text/javascript" src="' . get_theme_data('data/common.js') . '"></script>
-		
-		<!--<script type = "text/javascript" src = "' . get_theme_data('data/menu.js') . '"></script>
-<script type = "text/javascript" src = "' . get_theme_data('data/jsTrace.js') . '"></script>
-<script type = "text/javascript" src = "' . get_theme_data('data/dom-drag.js') . '"></script>
-		-->
-		
 		<script type="text/javascript" src="' . get_theme_data('data/popup.js') . '"></script>
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-		<script type = "text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
+		<script type="text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
 		<script type="text/javascript" src="data/connection.js"></script>
 
 		<script type="text/javascript">
@@ -393,18 +396,13 @@
 		
 	</head>
 	<body onLoad="page_load();" id="world">
-		<div class="header">
+		<div class="header clearfix">
 				' . create_message() . '
 				<div class="login">
 				' . create_login() . '
 				</div>';
 				
-				$logo = '<a href="."><img src="' . get_theme_data('images/cover_logo.png') . '" alt="logo"/></a>';
-				if (date('m') == 12 && date('d') > 5 && date('d') < 27){
-					$logo = '<a href="."><img src="' . get_theme_data('images/kerstlogo.png') . '" style="margin-top: -20px;" alt="logo"/></a>';
-				} else if (date('m') == 9 && date('d') > 13 && date('d') < 21 && date('Y') == 2013){
-					$logo = '<a href="."><img src="' . get_theme_data('images/lustrumlogo.png') . '" alt="logo"/></a>';
-				}
+				$logo = '<a href="."><img class="cover-logo" src="' . get_theme_data('images/cover_logo.png') . '" alt="logo"/></a>';
 		echo $logo.'
 		</div>
 		<div class="topMenu clearfix">
@@ -412,7 +410,6 @@
 		</div>
 		<div class="container clearfix">
 			<div class="center column" id="contents">';
-		//echo(var_dump(logged_in()));
 	}
 
 ?>

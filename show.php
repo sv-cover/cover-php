@@ -26,13 +26,13 @@
 		
 		function get_content($view, $params = null) {
 			$this->run_header(array('title' => __('Show')));
-			run_view('show::' . $view, $this->model, null, $params);
+			run_view($view, $this->model, null, $params);
 			$this->run_footer();
 		}
 		
 		function _prepare_page() {
 			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
-				$this->get_content('auth');
+				$this->get_content('common::auth');
 				return false;
 			} else {
 				return true;
@@ -43,7 +43,7 @@
 			if (!$this->_prepare_page())
 				return;
 				
-			$this->get_content('edit');
+			$this->get_content('show::edit');
 		}
 		
 		function _check_values() {
@@ -57,7 +57,7 @@
 				$errors);
 
 			if (count($errors) != 0) {
-				$this->get_content('edit', array('errors' => $errors));
+				$this->get_content('show::edit', array('errors' => $errors));
 				return false;
 			}
 

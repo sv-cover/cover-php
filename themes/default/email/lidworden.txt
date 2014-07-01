@@ -5,7 +5,7 @@ De volgende aanvraag voor lidmaatschap is via de website gemaakt:
 Voornaam: $voornaam
 Tussenvoegsel: $tussenvoegsel
 Achternaam: $achternaam
-Geslacht: $geslacht
+Gender: $geslacht
 
 Adres: $adres
 Postcode: $postcode
@@ -16,11 +16,10 @@ Telefoonnummer: $telefoonnummer
 Geboortedatum: $geboortedatum
 
 Studentnummer: $studentnummer
-Studierichting: $studierichting
-Bank- of girorekeningnummer: $rekening
+Studierichting: $studierichting $fase
+IBAN: $rekening
 Machtiging: $machtiging
 
-Is lid van FMF: $fmflid
 Met vriendelijke groeten,
 
 

@@ -47,11 +47,12 @@ class SessionsView extends View
 	{
 		$known_browsers = array(
 			'Firefox' => 'Firefox',
-			'MS Internet Explorer' => 'MSIE',
+			'Internet Explorer' => 'MSIE',
 			'iPad' => 'iPad',
 			'Android' => 'Android',
 			'Google Chrome' => 'Chrome',
-			'Safari' => 'Safari');
+			'Safari' => 'Safari',
+			'iCal agenda feed' => 'calendar');
 
 		foreach ($known_browsers as $name => $hint)
 			if (stripos($application, $hint) !== false)

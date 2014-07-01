@@ -1,18 +1,38 @@
 <?php
-$photo = $model->get_photo($iter);
+
+// Skip cache if the photo is hidden or anything
+$skip_cache = $model->get_photo_id($iter) <= 0;
+
+// If we skip the cache, write the thumnail directly to the output
+$cache_file = $skip_cache ? null : 'tmp/almanac/' . $iter->get('id') . '.jpg';
+
+$use_cache = !$skip_cache && file_exists($cache_file) && $model->get_photo_mtime($iter) < filemtime($cache_file);
+
 header('Pragma: public');
 header('Cache-Control: max-age=86400');
 header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 header('Content-Type: image/jpeg');
+header('X-Source: ' . ($use_cache ? 'cache' : 'database'));
 
-// Code from getthumb.php
-$large = imagecreatefromstring(pg_unescape_bytea($photo));
-// Thumbnail width
-$th = 200 * imagesy($large) / imagesx($large);
-$thumb = imagecreatetruecolor(200, $th);
-//$thumb = imagecreate(100, $th);
-imagecopyresampled($thumb, $large, 0, 0, 0, 0, 200, $th, imagesx($large), imagesy($large));
+if (!$use_cache)
+{
+	$photo = $model->get_photo($iter);
 
-// The thumbs are already double resolution for retina displays, the quality
-// can be a bit lower than the default 75-85.
-imagejpeg($thumb, null, 60);
+	// Code from getthumb.php
+	$large = imagecreatefromstring($photo);
+	// Thumbnail width
+	$width = 200;
+	$th = $width * imagesy($large) / imagesx($large);
+	$thumb = imagecreatetruecolor($width, $th);
+	//$thumb = imagecreate($width, $th);
+	imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $th, imagesx($large), imagesy($large));
+
+	if ($cache_file && !file_exists(dirname($cache_file)))
+		mkdir(dirname($cache_file), 0777, true);
+
+	imagejpeg($thumb, $cache_file);
+}
+
+// Only if the cache was used, fetch the image from the cache file
+if ($cache_file)
+	readfile($cache_file);

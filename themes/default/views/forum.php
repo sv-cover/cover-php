@@ -308,7 +308,7 @@
 			
 			function toggle_bericht()
 			{
-				if ($("#forum_bericht").is(":hidden:"))
+				if ($("#forum_bericht").is(":hidden"))
 					$("#forum_bericht").show().find("textarea").focus();
 				else
 					$("#forum_bericht").hide();

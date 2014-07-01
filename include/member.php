@@ -53,18 +53,43 @@
 	  * of the currently logged in one
 	  * @result the currently logged in members full name
 	  */
-	function member_full_name($iter = null) {
+	function member_full_name($iter = null, $override_privacy = true, $be_kind = false)
+	{
+		$model = get_model('DataModelMember');
+
 		if ($iter) {
-			if (is_numeric($iter)) {
-				$model = get_model('DataModelMember');
+			// If the iter is just a member id, fetch that member is data.
+			if (is_numeric($iter))
 				$iter = $model->get_iter($iter);
-			}
-			
-			$member_data = $iter->data;
-		} elseif (!($member_data = logged_in())) {
-			return __('Geen naam');
+
+			$is_self = logged_in('id') == $iter->get('id');
+		}
+		// No argument provided, get the full name of the currently logged in member.
+		else {
+			$iter = ($data = logged_in())
+				? new DataIter($model, $data['id'], $data)
+				: null;
+
+			$is_self = true;
 		}
 
-		return $member_data['voornaam'] . ($member_data['tussenvoegsel'] ? (' ' . $member_data['tussenvoegsel']) : '') . ' ' . $member_data['achternaam'];
+		// When the user is not found (or not logged in)
+		if (!$iter)
+			return __('Geen naam');
+
+		if ($be_kind && $is_self)
+			return __('Jij!');
+
+		// Or when the privacy settings prevent their name from being displayed
+		if (!$override_privacy
+			&& $model->is_private($iter, 'naam')
+			&& !$is_self
+			&& !member_in_commissie(COMMISSIE_BESTUUR))
+			return __('Onbekend');
+
+		// Construct a member his full name
+		return $iter->get('voornaam')
+			 . ($iter->get('tussenvoegsel') ? ' ' . $iter->get('tussenvoegsel') : '')
+			 . ' ' . $iter->get('achternaam');
 	}
 ?>

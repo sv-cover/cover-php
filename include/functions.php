@@ -6,6 +6,11 @@
 	require_once('data.php');
 	require_once('view.php');
 
+	function _dump($arg) {
+		printf('<code style="overflow-x:scroll;display:block;background:white;padding:10px;border:1px solid black;"><pre>%s</pre></code>', $arg);
+		return $arg;
+	}
+
 	function _get_backtrace() {
 		$skip = func_get_args();
 		$skip[] = '_get_backtrace';
@@ -193,6 +198,15 @@
 		
 		return $months;	
 	}
+
+	function get_short_months() {
+		static $months = null;
+		
+		if (!$months)
+			$months = Array(__('geen'), __('Jan'), __('Feb'), __('Mrt'), __('Apr'), __('Mei'), __('Jun'), __('Jul'), __('Aug'), __('Sept'), __('Okt'), __('Nov'), __('Dec'));
+		
+		return $months;	
+	}
 	
 	/** @group Functions
 	  * Generate a string with random characters of a certain length
@@ -241,6 +255,43 @@
 		
 		return $self . $query;
 	}
+
+	/**
+	 * Format a string with php-style variables with optional modifiers.
+	 * 
+	 * Format description:
+	 *     $var            Will be replaced by the value of $params['var'].
+	 *     $var|modifier   Will be replaced by the value of modifier($params['var'])
+	 *
+	 * Example:
+	 *     format_string('This is the $day|ordinal day', array('day' => 5))
+	 *     results in "This is the 5th day"
+	 *
+	 * @param string $format the format of the string
+	 * @param array $params a table of variables that will be replaced
+	 * @return string a formatted string in which all the variables are replaced
+	 * as far as they can be found in $params.
+	 */
+	function format_string($format, array $params)
+	{
+		$callback =  function($match) use ($params) {
+			// If this key does not exist, just return the matched pattern
+			if (!isset($params[$match[1]]))
+				return $match[0];
+
+			// Find the value for this key
+			$value = $params[$match[1]];
+
+			// If there is a modifier, apply it
+			if (isset($match[2])) {
+				$value = call_user_func($match[2], $value);
+			}
+
+			return $value;
+		};
+
+		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z]+))?\b/i', $callback, $format);
+	}
 	
 	/** @group Functions
 	  * Add GET query string variable. The purpose of this function is
@@ -276,49 +327,72 @@
 	}
 
 	/** @group Functions
-	  * Get a string to be used for display from an agendapunt date
-	  * @iter a #DataIter of an agendapunt
-	  * @field the field to use (either 'van' or 'tot')
-	  *
-	  * @result a string ready for display with formatted date
-	  */
-	function agenda_date_for_display($iter, $field) {
-		$days = get_days();
-		$months = get_months();		
-		if($field == 'van') {
-			return $days[$iter->get($field . 'dagnaam')] . ' ' . $iter->get($field . 'datum') . ' ' . $months[$iter->get('vanmaand')];
-		} else { 
-			return $days[$iter->get($field . 'dagnaam')] . ' ' . $iter->get($field . 'datum') . ' ' . $months[$iter->get('totmaand')];
-		}
-	}
-	
-	/** @group Functions
 	  * Get a string for display of the van -> tot of an agendapunt
 	  * @iter a #Dataiter of an agendapunt
 	  *
 	  * @result a string ready for display
 	  */
 	function agenda_period_for_display($iter) {
+		// If there is no till date, leave it out
 		if (!$iter->get('tot') || $iter->get('tot') == $iter->get('van')) {
-			$s = agenda_date_for_display($iter, 'van');
 			
+			// There is no time specified
 			if ($iter->get('vanuur') + 0 == 0)
-				return $s;
-			
-			return $s . ', ' . agenda_time_for_display($iter, 'van');
+				$format = __('$from_dayname $from_day $from_month');
+			else
+				$format = __('$from_dayname $from_day $from_month, $from_time');
 		}
 
 		/* Check if date part (not time) is not the same */
-		if (substr($iter->get('van'), 0, 10) != substr($iter->get('tot'), 0, 10)) {
-			return sprintf(__('van %s %s tot %s %s'),
-				agenda_date_for_display($iter, 'van'), agenda_time_for_display($iter, 'van'),
-				agenda_date_for_display($iter, 'tot'), agenda_time_for_display($iter, 'tot'));
+		else if (substr($iter->get('van'), 0, 10) != substr($iter->get('tot'), 0, 10)) {
+			$format = __('$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day $till_month $till_time');
 		} else {
-			return sprintf(__('%s, van %s tot %s'),
-				agenda_date_for_display($iter, 'van'),
-				agenda_time_for_display($iter, 'van'),
-				agenda_time_for_display($iter, 'tot'));
+			$format = __('$from_dayname $from_day $from_month, $from_time tot $till_time');
 		}
+
+		$days = get_days();
+		$months = get_months();
+		
+		return format_string($format, array(
+			'from_dayname' => $days[$iter->get('vandagnaam')],
+			'from_day' => $iter->get('vandatum'),
+			'from_month' => $months[$iter->get('vanmaand')],
+			'from_time' => agenda_time_for_display($iter, 'van'),
+			'till_dayname' => $days[$iter->get('totdagnaam')],
+			'till_day' => $iter->get('totdatum'),
+			'till_month' => $months[$iter->get('totmaand')],
+			'till_time' => agenda_time_for_display($iter, 'tot')
+		));
+	}
+
+	function agenda_short_period_for_display($iter)
+	{	
+		$months = get_short_months();
+
+		// Same time? Only display start time.
+		if ($iter->get('van') == $iter->get('tot'))
+			$format = __('vanaf $from_time');
+
+		// Not the same end date? Show the day range instead of the times
+		elseif ($iter->get('vandatum') != $iter->get('totdatum') - ($iter->get('totuur') < 10 ? 1 : 0))
+		{
+			// Not the same month? Add month name as well
+			if ($iter->get('vanmaand') != $iter->get('totmaand'))
+				$format = __('$from_day $from_month tot $till_day $till_month');
+			else
+				$format = __('$from_day tot $till_day $till_month');
+		}
+		else
+			$format = __('$from_time tot $till_time');
+
+		return format_string($format, array(
+			'from_day' => $iter->get('vandatum'),
+			'from_month' => $months[$iter->get('vanmaand')],
+			'from_time' => agenda_time_for_display($iter, 'van'),
+			'till_day' => $iter->get('totdatum'),
+			'till_month' => $months[$iter->get('totmaand')],
+			'till_time' => agenda_time_for_display($iter, 'tot')
+		));
 	}
 	
 	/** @group Functions
@@ -349,6 +423,7 @@
 		$s = '';
 		
 		foreach ($contents as $line) {
+			// FIXME: use format_string here which is much, much safer than evaluating regular expressions.
 			$line = preg_replace('/([A-Z]+_[A-Z_]+)/e', 'constant(\'\1\')', $line);
 			$line = preg_replace('/\$([a-z][a-z0-9_]*)/ei', '$data[\'\1\']', $line);
 			

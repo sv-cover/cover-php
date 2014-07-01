@@ -8,16 +8,8 @@
 		function almanak_info($model, $iter) {
 			$photo = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
 
-			if ($model->is_private($iter, 'naam')) {
-				$format = '<em>%s</em>';
-				$name = __('onbekend');
-			}
-			else
-			{
-				$format = '%s';
-				$name = member_full_name($iter);
-			}
-
+			$name = member_full_name($iter, false, true);
+			
 			$classes = array();
 			$status = '';
 
@@ -35,6 +27,11 @@
 				case MEMBER_STATUS_LID_AF:
 					$classes[] = 'status-lid-af';
 					$status = __('Lid af');
+					break;
+
+				case MEMBER_STATUS_ERELID:
+					$classes[] = 'status-erelid';
+					$status = __('Erelid');
 					break;
 
 				case MEMBER_STATUS_DONATEUR:
@@ -55,7 +52,7 @@
 					implode(' ', $classes),
 					htmlspecialchars($photo, ENT_QUOTES),
 					sprintf(__('foto van %s'), htmlspecialchars($name, ENT_QUOTES)),
-					sprintf($format, htmlspecialchars($name)),
+					htmlspecialchars($name),
 					$status ? sprintf('<span class="status">(%s)</span>', htmlspecialchars($status)) : '');
 		}
 	}

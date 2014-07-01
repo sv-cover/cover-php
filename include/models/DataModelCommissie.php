@@ -16,30 +16,39 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get($include_bestuur = true) {
+		function get($include_hidden = true) {
 			$rows = $this->db->query('SELECT * FROM commissies ' .
-					(!$include_bestuur ? ' WHERE id != ' . COMMISSIE_BESTUUR : '') . 
+					(!$include_hidden ? ' WHERE hidden <> 1' : '') . 
 					' ORDER BY naam');
 			
 			return $this->_rows_to_iters($rows);
 		}
 		
 		function get_functies() {
-			static $functies = Array('voorzitter' => 3, 'secretaris' => 2, 'penningmeester' => 1, 'algemeen lid' => 0);
+			static $functies = Array(
+				'voorzitter' => 5,
+				'secretaris' => 4,
+				'penningmeester' => 3,
+				'commissaris intern' => 2,
+				'commissaris extern' => 1,
+				'algemeen lid' => 0);
 			
 			return $functies;
 		}
+
+		function _get_functie($functie) {
+			$functies = $this->get_functies();
+			$functie = strtolower($functie);
+			return isset($functies[$functie]) ? $functies[$functie] : 0;
+		}
 		
 		function _sort_leden($a, $b) {
-			$functies = $this->get_functies();
+			$pattern = '/\s*[,\/]\s*/';
+
+			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a->get('functie'))));
+			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b->get('functie'))));
 			
-			$afunctie = strtolower($a->get('functie'));
-			$bfunctie = strtolower($b->get('functie'));
-			
-			if ($functies[$afunctie] == $functies[$bfunctie])
-				return 0;
-			
-			return ($functies[$afunctie] < $functies[$bfunctie]) ? 1 : -1;
+			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
 		}
 		
 		/**
@@ -54,6 +63,7 @@
 					leden.tussenvoegsel, 
 					leden.achternaam, 
 					leden.email, 
+					leden.privacy,
 					actieveleden.functie,
 					actieveleden.sleutel,
 					actieveleden.id AS actiefid
@@ -111,6 +121,16 @@
 				return $value;
 		}
 
+		function get_from_email($email)
+		{
+			if (substr($email, -11) == '@svcover.nl')
+				$email = substr($email, 0, -11);
+
+			$row = $this->db->query_first("SELECT * FROM commissies WHERE login = '" . $this->escape_string(strtolower($email)) . "'");
+
+			return $this->_row_to_iter($row);
+		}
+
 		/**
 		  * Get the email address of a commissie (composed of the
 		  * login name (see #DataModelCommissie::get_login))
@@ -124,7 +144,7 @@
 			if (!$value)
 				$value = __('onbekend');
 			
-			return $value . '@svcover.nl';
+			return strstr($value, '@') ? $value : $value . '@svcover.nl';
 		}
 		
 		/**
@@ -165,7 +185,7 @@
 		function get_from_name($name) {
 			$row = $this->db->query_first("SELECT * 
 					FROM commissies
-					WHERE naam = '" . $this->escape_string($name) . "'");
+					WHERE '" . $this->escape_string($name) . "' IN (naam, login, nocaps)");
 			
 			return $this->_row_to_iter($row);
 		}

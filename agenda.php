@@ -12,7 +12,11 @@
 		}
 		
 		function get_content($view = 'index', $iter = null, $params = null) {
-			$this->run_header(array('title' => __('Agenda')));
+			$title = isset($_GET['year'])
+				? sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1)
+				: __('Agenda');
+
+			$this->run_header(compact('title'));
 			run_view('agenda::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
@@ -24,7 +28,7 @@
 			if ($name == 'tot' && !get_post('use_tot'))
 				return null;
 			
-			$fields = array('maand', 'datum', 'jaar');
+			$fields = array('jaar', 'maand', 'datum');
 			
 			/* Check for valid numbers */
 			$value = '';
@@ -74,6 +78,16 @@
 			return $this->_check_length('locatie', $locatie);
 		}
 
+		function _check_facebook_id($name, $value) {
+			if (trim($value) == '')
+				return null;
+
+			if (strlen($value) <= 20  && ctype_digit($value))
+				return $value;
+
+			return false;
+		}
+
 		function _action_prepare($iter) {
 			/* Only logged in members can attempt to do this */
 			if (!logged_in()) {
@@ -95,13 +109,15 @@
 			$errors = array();
 			$data = check_values(
 				array(
-					array('name' => 'kop', 'function' => array(&$this, '_check_length')),
+					array('name' => 'kop', 'function' => array($this, '_check_length')),
 					'beschrijving',
 					array('name' => 'commissie', 'function' => 'check_value_toint'),
-					array('name' => 'van', 'function' => array(&$this, '_check_datum')),
-					array('name' => 'tot', 'function' => array(&$this, '_check_datum')),
-					array('name' => 'locatie', 'function' => array(&$this, '_check_locatie')),
-					array('name' => 'private', 'function' => 'check_value_checkbox')),
+					array('name' => 'van', 'function' => array($this, '_check_datum')),
+					array('name' => 'tot', 'function' => array($this, '_check_datum')),
+					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
+					array('name' => 'private', 'function' => 'check_value_checkbox'),
+					array('name' => 'extern', 'function' => 'check_value_checkbox'),
+					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
 				$errors);
 
 			if (count($errors) != 0) {
@@ -114,6 +130,27 @@
 
 			return $data;
 		}
+
+		function _changed_values($iter, $data)
+		{
+			$changed = array();
+
+			foreach ($data as $field => $value)
+			{
+				$current = $iter->get($field);
+
+				// Unfortunately, we need to 'normalize' the time fields for this to work
+				if ($field == 'van' || $field == 'tot') {
+					$current = strtotime($iter->get($field));
+					$value = strtotime($value);
+				}
+
+				if ($current != $value)
+					$changed[] = $field;
+			}
+
+			return $changed;
+		}
 		
 		function _do_process($iter) {
 			if (!$this->_action_prepare($iter))
@@ -122,56 +159,66 @@
 			if (($data = $this->_check_values($iter)) === false)
 				return;
 
+			$skip_confirmation = false;
+
+			// The board can add agenda items without confirming it (because that is a bit double)
+			if ($data['commissie'] == COMMISSIE_BESTUUR && member_in_commissie(COMMISSIE_BESTUUR, false))
+				$skip_confirmation = true;
+
+			// If you update the facebook-id, description or location, no need to reconfirm.
+			if ($iter && !array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'locatie')))
+				$skip_confirmation = true;
+
+			// Placeholders for e-mail
+			$placeholders = array(
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
+				'member_naam' => member_full_name());
+
+			// No previous item exists, create a new one
 			if (!$iter) {
 				$iter = new DataIter($this->model, -1, $data);
 				$id = $this->model->insert($iter, true);
-				$override = 0;
-			} else {
-				if ($data['commissie'] == COMMISSIE_BESTUUR && member_in_commissie(COMMISSIE_BESTUUR, false)) {
-					/* Just change it */
-					foreach ($data as $field => $value)
-						$iter->set($field, $value);
-
-					$this->model->update($iter);
-				} else {
-					$mod = new DataIter($this->model, -1, $data);
-					$id = $this->model->insert($mod, true);
-					$override = $iter->get_id();
-				}
-			}
-
-			/* Check if the post was made by bestuur, if so they
-			 * entry doesn't need moderation
-			 */
-			if ($data['commissie'] == COMMISSIE_BESTUUR && member_in_commissie(COMMISSIE_BESTUUR, false)) {			
-				header('Location: ' . get_request('agenda_add', 'agenda_edit'));
-				exit();
-			}
-			
-			$this->model->set_moderate($id, $override, true);
-	
-			$model = get_model('DataModelCommissie');
-			
-			/* Variables for email substitution */
-			$data['commissie_naam'] = $model->get_naam($data['commissie']);
-			$data['member_naam'] = member_full_name();
-			$data['id'] = $id;
-
-			if ($override) {
-				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
-				$body = parse_email('agenda_mod.txt', $data);
-				$subject = 'Gewijzigd agendapunt ' . $data['kop'];
 				
-				if ($data['kop'] != $iter->get('kop'))
-					$subject .= ' (was ' .  $iter->get('kop') . ')';
-			} else {
+				$this->model->set_moderate($id, 0, true);
+
 				$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
-				$body = parse_email('agenda_add.txt', $data);
-				$subject = 'Nieuw agendapunt ' . $data['kop'];
+
+				mail(
+					get_config_value('email_bestuur'),
+					'Nieuw agendapunt ' . $data['kop'],
+					parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
+					"From: webcie@ai.rug.nl\r\n");
 			}
-			
-			mail(get_config_value('email_bestuur'), $subject, $body, "From: webcie@ai.rug.nl\r\n");
+
+			// Previous exists and there is no need to let the board confirm it
+			else if ($skip_confirmation) {
+				foreach ($data as $field => $value)
+					$iter->set($field, $value);
+
+				$this->model->update($iter);
+
+				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn geplaatst.');
+			}
+
+			// Previous item exists but it needs to be confirmed first.
+			else {
+				$mod = new DataIter($this->model, -1, $data);
+				$id = $this->model->insert($mod, true);
+				$override = $iter->get_id();
+
+				$this->model->set_moderate($id, $override, true);
+
+				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
+
+				mail(
+					get_config_value('email_bestuur'),
+					'Gewijzigd agendapunt ' . $data['kop'] . ($mod->get('kop') != $iter->get('kop') ? ' was ' . $iter->get('kop') : ''),
+					parse_email('agenda_mod.txt', array_merge($data, $placeholders, array('id' => $id))),
+					"From: webcie@ai.rug.nl\r\n");
+			}
+
 			header('Location: ' . get_request('agenda_add', 'agenda_edit'));
+			exit;
 		}
 		
 		function _do_del($iter) {
@@ -228,7 +275,13 @@
 					
 					/* Remove the agendapunt this one overrides */
 					if ($iter->get('overrideid') != 0)
-						$this->model->delete($this->model->get_iter($iter->get('overrideid')));
+					{
+						$old_agenda_item = $this->model->get_iter($iter->get('overrideid'));
+
+						// The old agenda item may already be deleted.
+						if ($old_agenda_item)
+							$this->model->delete($old_agenda_item);
+					}
 					
 					$iter = $this->model->get_iter($id);
 					$iter->set('private', get_post('private_' . $id) ? 1 : 0);
@@ -268,23 +321,67 @@
 			exit();
 		}
 
+		function _process_rsvp_status($iter)
+		{
+			// If the id's for agenda items had been consistend, we could have stored attendance locally.
+			// Now, that would be a giant hack. Therefore, I defer that to some other moment in time.
+
+			if (!get_config_value('enable_facebook', false))
+				return;
+
+			if (!$iter->get('facebook_id'))
+				return;
+
+			require_once 'include/facebook.php';
+			$facebook = get_facebook();
+
+			if (!$facebook->getUser())
+				return;
+
+			try {
+				switch ($_POST['rsvp_status'])
+				{
+					case 'attending':
+					case 'maybe':
+					case 'declined':
+						$result = $facebook->api(sprintf('/%d/%s' , $iter->get('facebook_id'), $_POST['rsvp_status']), 'POST');
+						break;
+
+					default:
+						throw new Exception('Unknown rsvp status');
+				}
+
+				header('Location: agenda.php?agenda_id=' . $iter->get('id'));
+			}
+			catch (Exception $e) {
+				die($e->getMessage());
+			}
+		}
+
 		function get_webcal()
 		{
 			$cal = new WebCal_Calendar('Cover');
+			$cal->description = __('Alle activiteiten van studievereniging Cover');
 
-			$punten = $this->model->get_agendapunten(true);
+			$punten = $this->model->get_agendapunten(logged_in());
 
 			$timezone = new DateTimeZone('Europe/Amsterdam');
 
 			foreach ($punten as $punt)
 			{
 				$event = new WebCal_Event;
+				$event->uid = $punt->get_id() . '@svcover.nl';
 				$event->start = new DateTime($punt->get('van'), $timezone);
-				$event->end = new DateTime($punt->get('tot'), $timezone);
-				$event->summary = $punt->get('kop');
+
+				if ($punt->get('van') != $punt->get('tot'))
+					$event->end = new DateTime($punt->get('tot'), $timezone);
+				
+				$event->summary = $punt->get('extern')
+					? $punt->get('kop')
+					: sprintf('%s: %s', $punt->get('commissie__naam'), $punt->get('kop'));
 				$event->description = $punt->get('beschrijving');
 				$event->location = $punt->get('locatie');
-				$event->url = sprintf('http://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
+				$event->url = sprintf('https://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
 				$cal->add_event($event);
 			}
 
@@ -304,7 +401,9 @@
 				}
 			}
 
-			if (isset($_POST['submagenda']))
+			if (isset($_POST['rsvp_status']))
+				$this->_process_rsvp_status($iter);
+			elseif (isset($_POST['submagenda']))
 				$this->_do_process($iter);
 			elseif (isset($_POST['submagenda_moderate']))
 				$this->_process_moderate();

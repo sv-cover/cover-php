@@ -1,19 +1,24 @@
-<h1><?= sprintf(__('Profiel van %s'), $this->get_privacy_name($model, $iter)) ?></h1>
+<h1><?= sprintf(__('Profiel van %s'), markup_format_text(member_full_name($iter, false, false))) ?></h1>
 <div class="messageBox clearfix">
 
 
-<? if (isset($errors) && count($errors) > 0) { ?>
-	<p><span class="error"><?= __('Niet alle velden zijn goed ingevuld') ?></span></p>
+<?php if (isset($errors) && count($errors) > 0): ?>
+	<div class="textCenter error-section">
+		<p><span class="error"><?= __('Niet alle velden zijn goed ingevuld') ?></span></p>
 		
-		<? if (isset($error_message)) {?>
-		<div class="error_message"><?= str_replace("\n", "<br>\n", $error_message) ?></div>
-		<? } ?>
-<? } ?>
+		<?php if (isset($error_message)): ?>
+		<p><?= str_replace("\n", "<br>\n", $error_message) ?></p>
+		<?php endif ?>
+	</div>
+<?php endif ?>
 
 	<div class="floatLeft textCenter almanak">
 		<h2 id="almanak" class="profileHead"><?= __('Almanakgegevens') ?></h2>
 			<? $photo_link = "foto.php?lid_id=" . $model->get_photo_id($iter);
 			$photo_thumb_link = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
+
+			if (!empty($_GET['force_reload_photo']))
+				$photo_thumb_link .= '&_timestamp=' . time();
 
 			if ($model->has_picture($iter) && !$model->is_private($iter,"foto",true)) {
 				// Make the picture a link ?>
@@ -21,8 +26,17 @@
 			<? } else { ?>
 				<img width="100" height="150" class="profielFoto" src="<?= htmlspecialchars($photo_link, ENT_QUOTES) ?>" />
 			<? } ?>
-			<p class="hint"><?=__('Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het liefst 500&times;750 groot.')?></p>
-			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#almanak" method="post">
+			<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_EASY)): ?>
+			<form id="upload-photo" action="profiel.php?lid=<?=$iter->get('lidid')?>" method="post" enctype="multipart/form-data">
+				<div class="file-upload-button button">
+					<span><?=__('Kies foto') ?>&hellip;</span>
+					<input type="file" name="photo" accept="image/jpeg" title="<?=__('Alleen JPEG-plaatjes mogen.')?>" onchange="if (this.value) this.form.submit()">
+				</div>
+			</form>
+			<?php elseif ($this->is_current_member($iter)): ?>
+				<p class="hint"><?=__('Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het liefst met een verhouding van 3:2, bijvoorbeeld 500&times;750.')?></p>
+			<?php endif ?>
+			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>" method="post">
 				<?= input_hidden('submprofiel_almanak', 'yes') ?>
 				<?= input_hidden('id', $iter->get('lidid')) ?>
 				<table class="profiel">
@@ -42,7 +56,7 @@
 					<?
 						$fields = array();			
 					} else { 
-						$fields = array(array('label' => __('Naam'), 'name' => 'naam', 'data' => array('naam' => member_full_name($iter)), 'read_only' => true));
+						$fields = array(array('label' => __('Naam'), 'name' => 'naam', 'data' => array('naam' => member_full_name($iter, false, false)), 'read_only' => true));
 					} 
 
 					$fields = array_merge($fields, array(
@@ -59,7 +73,7 @@
 						<?= $this->privacy_parse($model, $iter, $field['label'], $field['name'], (isset($field['data']) ? $field['data'] : $iter->data), $errors, isset($field['read_only']) ? $field['read_only'] : false) ?>
 					<? } ?>
 
-					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+					<? if ($this->member_write_permission($iter)) {?>
 						<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
 					<? } ?>
 				</table>
@@ -83,7 +97,7 @@
 					<? /* Avatar */ ?>
 					<tr><td><?= label(__('Avatar'), 'avatar', $errors) ?>:</td>
 
-					<? if ($this->is_current_member($iter->get('lidid'))) {?>
+					<? if ($this->is_current_member($iter)) {?>
 						<td><?= input_text('avatar', $iter->data, 'formatter',  'empty_to_http_formatter') ?></td>
 					<?} else {?>
 						<td><?= ($iter->get('avatar') ? ('<img src="' . htmlspecialchars($iter->get('avatar'), ENT_QUOTES) . '" alt="' . __('avatar') . '">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
@@ -93,21 +107,21 @@
 					<? /* Homepage */ ?>
 					<tr><td><?= label(__('Homepage'), 'homepage', $errors) ?>:</td>
 
-					<? if ($this->is_current_member($iter->get('lidid'))) {?>
+					<? if ($this->is_current_member($iter)) {?>
 						<td><?= input_text('homepage', $iter->data, 'formatter', 'empty_to_http_formatter') ?></td>		
 					<?} else {?>
 						<td><?= ($iter->get('homepage') ? ('<a href="' . htmlspecialchars($iter->get('homepage'), ENT_QUOTES) . '">' . htmlspecialchars($iter->get('homepage')) . '</a>') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
 					<? } ?>
 					</tr>
 
-					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+					<? if ($this->member_write_permission($iter)) {?>
 						<tr>
 							<td><?= label(__('Taal'), 'taal', $errors) ?></td>
 							<td><?= select_field('taal', i18n_get_languages(), $iter->data) ?></td>
 						</tr>
 					<? } ?>
 
-					<? if ($this->member_write_permission($iter->get('lidid'))) {?>
+					<? if ($this->member_write_permission($iter)) {?>
 						<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
 					<? } ?>
 				</table>
@@ -137,6 +151,10 @@
 					</tr>
 					<tr>
 						<td></td>
+						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_ERELID) . '&nbsp;' . __('Erelid') ?></label></td>
+					</tr>
+					<tr>
+						<td></td>
 						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Donateur') ?></label></td>
 					</tr>
 					<tr>
@@ -155,14 +173,14 @@
 			<?php foreach ($commissies as $commissie): ?>
 			<li>
 				<a href="show.php?id=<?=$commissie->get('page')?>"><?=htmlspecialchars($commissie->get('naam'))?></a>
-				- <span class="functie"><?=htmlspecialchars($commissie->get('functie')) ?></span>
+				- <span class="functie"><?=htmlspecialchars(__translate_parts($commissie->get('functie'), ',/')) ?></span>
 			</li>
 			<?php endforeach ?>
 		</ul>
 	</div>
 	<?php endif ?>
 
-	<? if ($this->member_write_permission($iter->get('lidid'))) { ?>
+	<? if ($this->member_write_permission($iter)) { ?>
 		<div class="floatLeft almanak">
 			<h2 class="profilehead" id="wachtwoord"><?= __('Nieuw wachtwoord') ?></h2>
 				<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#wachtwoord" method="post">
@@ -175,7 +193,9 @@
 							<td width="150"></td>
 							<td></td>
 						</tr>
+						<?php if (!member_in_commissie(COMMISSIE_BESTUUR)): ?>
 						<?= table_row(label(__('Oud wachtwoord'), 'wachtwoord_oud', $errors) . ':', input_password('wachtwoord_oud')) ?>
+						<?php endif ?>
 						<?= table_row(label(__('Nieuw wachtwoord'), 'wachtwoord_nieuw', $errors) . ':', input_password('wachtwoord_nieuw')) ?>
 						<?= table_row(label(__('Opnieuw'), 'wachtwoord_opnieuw', $errors) . ':', input_password('wachtwoord_opnieuw')) ?>
 	
@@ -224,42 +244,92 @@
 			</form>
 		</div>
 	<? } ?>
-	
 </div>
-	
-<? if($this->is_current_member($iter->get('lidid'))) { ?>
-	<h1 id="msdnaa">Dreamspark (voorheen MSDNAA)</h2>
-	
-<script type="text/javascript">
-$().ready(function() {
-	$('#gotomsdnaa').submit(function() {
-		document.location = "http://msdn62.e-academy.com/elms/Security/Login.aspx?campus=svcover_it";
-		$('#msdnaabutton').attr('disabled', 'disabled');
-		return false;
-	});
-	$('#akkoord').change(function() {
-		if($('#akkoord:checked').val() !== undefined) {
-			$('#msdnaabutton').removeAttr('disabled');
-		} else {
-			$('#msdnaabutton').attr('disabled', 'disabled');
-		}
-	});
-});
-</script>
-	<div class="messageBox">
-	<form id="gotomsdnaa">
-		<input type="checkbox" name="akkoord" id="akkoord" value="akkoord"><label for="akkoord">Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar Microsoft</label><br />
-		<button class="button" id="msdnaabutton" disabled="disabled">Ga naar Dreamspark</button>
-	</form>
-	</div>
-<? } ?>
 
-<? if($this->is_current_member($iter->get('lidid'))): ?>
+<?php if ($iter->get('type') != MEMBER_STATUS_LID_AF): ?>
+	<?php if ($this->is_current_member($iter) || member_in_commissie(COMMISSIE_EASY)): ?>
+	<h2><?= __('Mailinglijsten')?></h2>
 	<div class="messageBox">
-		<p><?= sprintf(__('Je bent ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
+		<?php $subscriptions = $this->get_active_subscriptions($iter->get('lidid')) ?>
+		<?php if($this->is_current_member($iter)): ?>
+			<p><?= __N('Je bent aangemeld voor %d mailinglijst.', 'Je bent aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
+		<?php else: ?>
+			<p><?= __N('Deze persoon is aangemeld voor %d mailinglijst.', 'Deze persoon is aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
+		<?php endif ?>
+		<ul>
+			<?php foreach ($subscriptions as $subscription): ?>
+			<li><a href="mailinglijsten.php?lijst_id=<?=$subscription->get('id')?>"><?=markup_format_text($subscription->get('naam'))?></a></li>
+			<?php endforeach ?>
+		</ul>
+		<?php if($this->is_current_member($iter)): ?>
+		<p><a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
+		<?php endif ?>
 	</div>
-<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
-	<div class="messageBox">
-		<p><?= sprintf(__('Deze persoon is ingelogd met %d browsers.'), $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn sessies.') ?></a></p>
-	</div>
+	<?php endif ?>
+
+	<?php if($this->is_current_member($iter)): ?>
+		<h2><?= __('Sessies')?></h2>
+		<div class="messageBox">
+			<p><?= __N('Je bent ingelogd met %d browser.', 'Je bent ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
+		</div>
+	<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
+		<h2><?= __('Sessies')?></h2>
+		<div class="messageBox">
+			<p><?= __N('Deze persoon is ingelogd met %d browser.', 'Deze persoon is ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar sessies.') ?></a></p>
+		</div>
+	<?php endif ?>
+
+	<?php if($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
+		<?php $facebook_button = 'login' ?>
+		<h2 id="facebook"><?= __('Facebook')?></h2>
+		<div class="messageBox">
+			<?php
+				if ($this->facebook->getUser())
+				{
+					try {
+						$me = $this->facebook->api('/me', 'GET');
+						echo markup_format_text(sprintf(__('Je bent ingelogd als %s.'), $me['name']));
+						$facebook_button = 'logout';
+					} catch (FacebookException $e) {
+						echo __('Je bent niet langer gekoppeld aan Facebook.');
+						$facebook_button = 'login';
+					}
+				}
+				else
+				{
+					echo __('Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan.');
+				}
+			?>
+
+			<?php if ($facebook_button == 'login'): ?>
+				<a class="button connect-facebook-button" href="<?=$this->facebook->getCoverLoginUrl()?>"><?= __('Koppel Facebook') ?></a>
+			<?php elseif ($facebook_button == 'logout'): ?>
+				<form method="post" action="" class="inline-form">
+					<input type="hidden" name="facebook_action" value="unlink">
+					<button type="submit" class="button connect-facebook-button"><?= __('Ontkoppel Facebook') ?></button>
+				</form>
+			<?php endif ?>
+			
+		</div>
+	<?php endif ?>
+
+	<?php if($this->is_current_member($iter->get('lidid'))): ?>
+		<h2 id="msdnaa"><?=__('Dreamspark (voorheen MSDNAA)')?></h2>
+		<div class="messageBox">
+		<form id="gotomsdnaa" action="elms2.php" method="post">
+			<input type="checkbox" name="akkoord" id="akkoord" value="akkoord"><label for="akkoord"><?=__('Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar Microsoft.')?></label><br />
+			<button class="button" id="msdnaabutton" disabled="disabled"><?=__('Ga naar Dreamspark')?></button>
+		</form>
+		</div>
+		<script type="text/javascript">
+		$().ready(function() {
+			$('#gotomsdnaa').submit(function() {
+				$('#msdnaabutton').prop('disabled', true);
+			});
+			$('#akkoord').change(function() {
+				$('#msdnaabutton').prop('disabled', !$('#akkoord').is(':checked'));
+			});
+		});
+		</script>
+	<?php endif ?>
 <?php endif ?>

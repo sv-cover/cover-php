@@ -60,13 +60,30 @@
 		function run() {
 			ob_start();
 			
-			$this->run_impl();
-				
+			try {
+				$this->run_impl();
+			}
+			catch(Exception $e) {
+				$this->run_exception($e);
+			}
+			
 			ob_end_flush();
 		}
 		
 		function run_impl() {
 			$this->get_content();
+		}
+
+		function run_exception(Exception $e)
+		{
+			header('Status: 500 Interal Server Error');
+
+			if (get_config_value('show_exceptions'))
+				echo '<pre>' . $e . '</pre>';
+			else {
+				ob_clean();
+				echo __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)');
+			}
 		}
 	}
 ?>

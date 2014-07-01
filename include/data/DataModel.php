@@ -68,7 +68,7 @@
 		  *
 		  * @result a id = value string
 		  */
-		function _id_string($value) {
+		protected function _id_string($value) {
 			$result = $this->id . ' = ';
 			
 			if ($this->id == 'id')
@@ -144,7 +144,7 @@
 		  */
 		function _row_to_iter($row) {
 			if ($row)
-				return new $this->dataiter($this, $row[$this->id], $row);
+				return new $this->dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
 			else
 				return $row;
 		}
@@ -172,11 +172,25 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get() {
-			if (!$this->db || !$this->table)
-				return Array();
+		function get()
+		{
+			return $this->find('');
+		}
 
-			$rows = $this->db->query('SELECT * FROM ' . $this->table);
+		/**
+		 * Get all rows in the model that satisfy the conditions.
+		 * @conditions the SQL 'where' clause that needs to be satisfied
+		 *
+		 * @result an array of #DataIter
+		 */
+		function find($conditions)
+		{
+			if (!$this->db || !$this->table)
+				return array();
+
+			$query = $this->_generate_query($conditions);
+
+			$rows = $this->db->query($query);
 			
 			return $this->_rows_to_iters($rows);			
 		}
@@ -191,13 +205,9 @@
 			if (!$this->db || !$this->table)
 				return null;
 
-			$data = $this->db->query_first('SELECT * FROM ' . $this->table . 
-					' WHERE ' . $this->_id_string($id));
+			$data = $this->db->query_first($this->_generate_query($this->_id_string($id)));
 
-			if ($data)
-				return new $this->dataiter($this, $data[$this->id], $data);
-			else
-				return $data;
+			return $this->_row_to_iter($data);
 		}
 		
 		/**
@@ -227,5 +237,9 @@
 		function get_affected_rows() {
 			return $this->db->get_affected_rows();
 		}
+
+		protected function _generate_query($where)
+		{
+			return "SELECT * FROM {$this->table}" . ($where ? " WHERE {$where}" : "");
+		}
 	}
-?>

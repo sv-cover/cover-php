@@ -28,7 +28,7 @@
 						id = " . intval($id);
 			if(!$logged_in) {
 				// Als je niet ingelogd bent dan mag je de chantagemap niet zien!
-				$q .= " AND titel NOT ILIKE 'chantagemap%' AND titel NOT ILIKE 'download grote foto\'s%'";
+				$q .= " AND titel NOT ILIKE 'chantagemap%' AND titel NOT ILIKE 'download grote foto''s%'";
 				// en je mag ook de foto's van voorgaande jaren niet zien! Dit doen we lekker op ID :'). 833 is het eerste album van 2012, die mag op dit moment zichtbaar zijn
 				$q .= " AND id >= 833;";
 			}
@@ -192,7 +192,7 @@
 		  * @result a #DataIter
 		  */
 		function get_previous_book($book) {
-			if (!$book)
+			if (!$book || !$book->has('date'))
 				return null;
 
 			$row = $this->db->query_first("
@@ -221,7 +221,7 @@
 		  * @result a #DataIter
 		  */
 		function get_next_book($book) {
-			if (!$book)
+			if (!$book || !$book->has('date'))
 				return null;
 
 			$row = $this->db->query_first("

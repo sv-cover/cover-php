@@ -1,39 +1,23 @@
 <?php
 
-class WebCal_Timezone
-{	
-	public $name = 'Europe/Amsterdam';
-	
-	public function export()
+abstract class WebCal
+{
+	protected function _encode($text)
 	{
-		return implode("\r\n", array(
-			'BEGIN:VTIMEZONE',
-	 		'TZID:Europe/Amsterdam',
-			'BEGIN:DAYLIGHT',
-			'TZOFFSETFROM:+0100',
-			'TZOFFSETTO:+0200',
-			'DTSTART:19810329T020000',
-			'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
-			'TZNAME:CEST',
-			'END:DAYLIGHT',
-			'BEGIN:STANDARD',
-			'TZOFFSETFROM:+0200',
-			'TZOFFSETTO:+0100',
-			'DTSTART:19961027T030000',
-			'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
-			'TZNAME:CET',
-			'END:STANDARD',
-			'END:VTIMEZONE'
-		));
+		$encoding = array(
+			"\r" => '',
+			"\n" => '\n',
+			"\\" => '\\\\',
+			 ";" => '\\;',
+			 "," => '\\,'
+		);
+
+		return strtr($text, $encoding);
 	}
 }
 
-class WebCal_Calendar
+class WebCal_Calendar extends WebCal
 {
-	public $timezones = array();
-
-	public $default_timezone;
-
 	public $events = array();
 
 	public $name;
@@ -43,21 +27,11 @@ class WebCal_Calendar
 	public function __construct($name)
 	{
 		$this->name = $name;
-		
-		$this->add_timezone(new WebCal_Timezone('Europe/Amsterdam'), true);
 	}
 	
 	public function add_event(WebCal_Event $event)
 	{
 		$this->events[] = $event;
-	}
-	
-	public function add_timezone(WebCal_Timezone $timezone, $make_default = false)
-	{
-		$this->timezones[] = $timezone;
-		
-		if ($make_default)
-			$this->default_timezone = $timezone;
 	}
 	
 	public function export()
@@ -68,14 +42,10 @@ class WebCal_Calendar
 			'CALSCALE:GREGORIAN',
 			'VERSION:2.0',
 			'PRODID:-//IkHoefGeen.nl//NONSGML v1.0//EN',
-			'X-WR-CALNAME:' . $this->name,
-			'X-WR-CALDESC:' . $this->description,
-				'X-WR-RELCALID:' . md5($this->name),
-			'X-WR-TIMEZONE:' . $this->default_timezone->name
+			'X-WR-CALNAME:' . $this->_encode($this->name),
+			'X-WR-CALDESC:' . $this->_encode($this->description),
+			'X-WR-RELCALID:' . md5($this->name)
 		);
-		
-		foreach ($this->timezones as $timezone)
-			$out[] = $timezone->export();
 		
 		foreach ($this->events as $event)
 			$out[] = $event->export();
@@ -96,8 +66,10 @@ class WebCal_Calendar
 	}
 }
 
-class WebCal_Event
+class WebCal_Event extends WebCal
 {
+	public $uid;
+
 	public $start;
 	
 	public $end;
@@ -120,29 +92,49 @@ class WebCal_Event
 		$end = $this->end instanceof DateTime
 			? $this->end->format('U')
 			: $this->end;
+
+		$out = array('BEGIN:VEVENT');
+
+		// Is this an whole day event? If so, only add the date.
+		if (date('Hi', $start) == '0000' && (!$end || date('Hi', $end) == '0000'))
+		{
+			// Is there an end date? Yes? Good! Otherwise, make the event one day long.
+			if (!$end)
+				$end = $start + 24 * 3600;
+			
+			$out[] = 'DTSTART;VALUE=DATE:' . date('Ymd', $start);
+			$out[] = 'DTEND;VALUE=DATE:' . date('Ymd', $end);
+		}
+		// No it is not, just add date and time.
+		else
+		{
+			// Is there an end time? Yes? Good! Otherwise let the event be till the end of the day.
+			if (!$end)
+				$end = mktime(0, 0, 0, gmdate('n', $start), gmdate('j', $start), gmdate('Y', $start)) + 24 * 3600;
+
+			$out[] = 'DTSTART:' . gmdate('Ymd\THis\Z', $start);
+			$out[] = 'DTEND:' . gmdate('Ymd\THis\Z', $end);
+		}
+
+		// Add some optional fields to the calendar item
 		
-		return implode("\r\n", array(
-			'BEGIN:VEVENT',
-			'DTSTART;TZID=Europe/Amsterdam:' . gmdate('Ymd\THis\Z', $start),
-			'SUMMARY:' . $this->_encode($this->summary),
-			'LOCATION:' . $this->_encode($this->location),
-			'DESCRIPTION:' . $this->_encode($this->description),
-			'URL;VALUE=URI:' . $this->_encode($this->url),
-			'DTEND;TZID=Europe/Amsterda:' . gmdate('Ymd\THis\Z', $end),
-			'END:VEVENT'
-		));
-	}
+		if ($this->uid)
+			$out[] = 'UID:' . $this->_encode($this->uid);
 
-	protected function _encode($text)
-	{
-		$encoding = array(
-			"\r" => '',
-			"\n" => '\n',
-			"\\" => '\\\\',
-			 ";" => '\\;',
-			 "," => '\\,'
-		);
+		if ($this->summary)
+			$out[] = 'SUMMARY:' . $this->_encode($this->summary);
 
-		return strtr($text, $encoding);
+		if ($this->description)
+			$out[] = 'DESCRIPTION:' . $this->_encode($this->description);
+
+		if ($this->location)
+			$out[] = 'LOCATION:' . $this->_encode($this->location);
+
+		if ($this->url)
+			$out[] = 'URL;VALUE=URI:' . $this->_encode($this->url);
+
+		$out[] = 'END:VEVENT';
+		
+		return implode("\r\n", $out);
 	}
 }

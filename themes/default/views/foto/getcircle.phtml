@@ -13,7 +13,7 @@ $circle->drawimage($draw);
 
 // Load image and composite mask on top of it
 $imagick = new Imagick();
-$imagick->readImageBlob(pg_unescape_bytea($model->get_photo($iter)));
+$imagick->readImageBlob($model->get_photo($iter));
 $imagick->scaleImage($width, 0);
 $imagick->cropimage($width, $width, 0, 0);
 $imagick->compositeimage($circle, Imagick::COMPOSITE_COPYOPACITY, 0, 0);

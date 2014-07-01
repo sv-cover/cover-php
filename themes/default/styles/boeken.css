@@ -19,8 +19,9 @@ table.boeken {
 	width: 99%;	
 }
 
-table.boeken input.text {
-	width: 120px;
+table.boeken input.text,
+table.boeken input.currency {
+	width: 100%;
 }
 
 table.boeken td.check {

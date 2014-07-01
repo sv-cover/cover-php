@@ -56,6 +56,7 @@ hr.colorAccent {
 	height:4px;
 	background-color:grey;
 	color: grey;
+	width: 100%;
 }
 
 img {border:0;}
@@ -148,6 +149,12 @@ ul.expander{
 	height: 100%;
 }
 .menu_contents .agenda a { float: left; display: block; font-weight: bold; font-size: 11px; max-width: 126px; margin-left: 4px;}
+
+.menu_contents .agenda .details {
+	display: block;
+	font-weight: normal;
+}
+
 .align-right {text-align:right;}
 .align-center {text-align:center;}
 
@@ -265,13 +272,15 @@ border-radius: 0 0 5px 5px;
   background-color: #2a65bd !important; color: #2a65bd !important;
 }
 
-.button
+.button, .button:visited
 {
   border: 1px solid #666;
   border-radius: 3px;
   background-color: #ddd;
   padding: 4px 8px;
   cursor: pointer;
+  font: 12px sans-serif;
+  color: #000;
 }
 .button:hover
 {
@@ -280,6 +289,10 @@ border-radius: 0 0 5px 5px;
 .button:active
 {
   background: #aaa;
+}
+
+.button img {
+	vertical-align: middle;
 }
 
 .buttons
@@ -377,19 +390,24 @@ border-radius: 0 0 5px 5px;
 }
 
 
-.header
+body > .header
 {
     color:#FFF;
     position: relative;
-    /*height: 80px;*/
-    padding: 20px;
-    max-width:1000px;
+    padding: 0;
+    max-width:1200px;
     min-width: 810px;
-    margin:0 auto;
-    margin-bottom:10px;
+    margin: 20px auto;
+    height: 82px;
 }
-.header .message
+body > .header > .message
 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 400px;
+  margin: auto;
   background-color: #666;
   border-radius: 5px;
   padding: 10px 15px;
@@ -398,17 +416,37 @@ border-radius: 0 0 5px 5px;
   text-align:center;
   border: 1px solid darkgrey;
 }
-.header .message a
+body > .header .message a
 {
   color: #fff;
   font-weight:bold;
 }
-.introcie {background-color:#18B80A !important;}
 
-.login { position:absolute; bottom:20px; right:20px; text-align:right; width: 400px; vertical-align: bottom; }
-.login table {
-	margin:0; float: right;
+body > .header > .cover-logo {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 250px;
+	height: 82px;
 }
+
+body > .header > .login {
+	position: absolute;
+	bottom: -10px;
+	right: 0;
+	text-align:right;
+	vertical-align: bottom;
+}
+
+.login > table {
+	margin: 0;
+	border-spacing: 0;
+}
+
+.login table tr > td {
+	padding: 2px 0;
+}
+
 .login table a { display:block; float:right; color:#f5f5f5; font-weight:bold; font-size:10px; margin:5px 0px; }
 .login a {color:#000; text-decoration:none;}
 .login .button 
@@ -435,7 +473,7 @@ border-radius: 0 0 5px 5px;
 	);
 }
 
-a.button {
+.button {
 	color: black;
 	text-decoration: none;
 	display: inline-block;
@@ -538,6 +576,12 @@ a.button {
 {
   margin: 5px 0px;
 }
+
+.messageBox a.button {
+	color: black;
+	text-decoration: none;
+}
+
 .messageBox ul {
   list-style-position: inside;
   margin: 10px 0px;
@@ -546,6 +590,18 @@ a.button {
 .messageBox h1, .messageBox h2, .messageBox h3, .messageBox h4
 {
   color: #333;
+}
+
+.messageBox .section {
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.messageBox .section:last-child {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
 }
 
 .newsheading { clear:both; height:55px;}
@@ -661,7 +717,8 @@ font-size: 10px;
 {
 	padding-left: 12px;
 	background-image: url("images/collapsed.png"); background-repeat:no-repeat;
-	background-position: center left;
+	background-size: 12px 12px;
+ 	background-position: center left;
 }
 .headNav li.expanded
 {
@@ -685,6 +742,26 @@ font-size: 10px;
 .textCenter, .text_center
 {
   text-align:center;
+}
+
+.error-section {
+	background: #c60c30;
+	color: white;
+	padding: 4px;
+	font-size: 1.2em;
+}
+
+.label_error:before {
+	content: '!';
+	text-align: center;
+	display: inline-block;
+	width: 1.25em;
+	height: 1.25em;
+	line-height: 1.25em;
+	margin: 0 4px;
+	background: #c60c30;
+	border-radius: 50%;
+	color: #fff;
 }
 
 .vote {
@@ -917,4 +994,310 @@ div.beheer table {
 .commissie-members .commissie-member .function {
 	display: block;
 	font-weight: normal;
+}
+
+.vertical-form {
+	clear: both;
+}
+
+.vertical-form div {
+	margin-bottom: 10px;
+}
+
+.vertical-form label {
+	display: block;
+}
+
+.vertical-form input[type=text],
+.vertical-form input[type=email],
+.vertical-form input[type=password],
+.vertical-form textarea {
+	width: 100%;
+}
+
+.vertical-form input + label {
+	display: inline-block;
+}
+
+.mailinglists .mailinglist {
+	margin-bottom: 1em;
+}
+
+.mailinglists .list-name {
+	display: inline-block; 
+}
+
+table.full-width {
+	width: 100%;
+}
+
+form input[type=text],
+form input[type=email],
+form input[type=password],
+form textarea {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 4px;
+}
+
+.file-upload-button {
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+}
+
+.file-upload-button input {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0;
+	padding: 0;
+	cursor: pointer;
+	opacity: 0;
+}
+
+.ui-widget-overlay {
+	background: #000;
+}
+
+.cover-logo {
+	width: 250px;
+	height: 82px;
+}
+
+#sticker-map {
+	width: 100%;
+	height: 640px;
+	border-radius: 4px;
+}
+
+#sticker-info-window {
+	min-width: 150px;
+	min-height: 30px;
+	padding: 10px 0 10px 10px;
+}
+
+#sticker-info-window,
+#sticker-info-window a {
+	color: black;
+}
+
+#sticker-info-window .sticker-photo > img {
+	width: 300px;
+}
+
+#sticker-info-window .controls {
+	text-align: center;
+	height: auto;
+}
+
+#sticker-info-window .controls form {
+	display: inline;
+}
+
+#sticker-info-window .controls .button {
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+#add-sticker-dialog form {
+	position: relative;
+	height: 100%;
+	min-height: 450px;
+}
+
+#sticker-location {
+	position: absolute;
+	top: 142px;
+	bottom: 42px;
+	left: 0;
+	right: 0;
+	border-radius: 4px;
+}
+
+#sticker-location-map {
+	width: 100%;
+	height: 100%;
+}
+
+#add-sticker-dialog button {
+	position: absolute;
+	bottom: 8px;
+}
+
+.event-cover-photo {
+	width: 100%;
+	padding-top: 38%;
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	border-radius: 4px 4px 0 0;
+}
+
+.event-cover-photo > div {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.event-cover-photo > div > img {
+	width: 100%;
+}
+
+.event-header {
+	position: relative;
+	min-height: 50px;
+	z-index: 3;
+}
+
+.event-header h1 {
+	color: white;
+	height: 50px;
+	line-height: 50px;
+	margin: 0;
+	z-index: 2;
+}
+
+.event-header .event-cover-photo + h1 {
+	background: rgba(0, 0, 0, 0.7);
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 0 15px;
+}
+
+.event-header .rsvp-status-button {
+	margin-right: 15px;
+}
+
+.rsvp-status-button {
+	position: relative;
+	float: right;
+	z-index: 4;
+	line-height: 50px;
+}
+
+.rsvp-status-button > .current {
+	display: inline-block;
+	color: black;
+}
+
+.dropdown-button.open .dropdown-menu {
+	display: block;
+}
+
+.rsvp-status-button .dropdown-menu {
+	display: none;
+	list-style: none;
+	position: absolute;
+	top: 42px;
+	right: 0;
+	z-index: 10;
+	background: #f5f5f5;
+	
+	line-height: 32px;
+	box-shadow: 1px 1px 4px #333;
+}
+
+.rsvp-status-button .dropdown-menu:before {
+	border: 7px solid;
+	border-color: transparent transparent #f5f5f5 transparent;
+	content: '';
+	display: block;
+	position: absolute;
+	top: -14px;
+	right: 14px;
+	z-index: 5;
+}
+
+.rsvp-status-button .dropdown-menu > li  {
+	border-bottom: 1px solid #ccc;
+}
+
+.rsvp-status-button .dropdown-menu > li:last-child  {
+	border-bottom: none;
+}
+
+.rsvp-status-button .dropdown-menu > li > button {
+	cursor: pointer;
+	background: none;
+	border: none;
+	font: inherit;
+	text-align: center;
+	padding: 0 12px;
+	width: 100%;
+}
+
+.rsvp-status-button .dropdown-menu > li > button:hover {
+	text-decoration: underline;
+}
+
+.event-header .event-attendees {
+	position: absolute;
+	bottom: 50px;
+	right: 15px;
+	left: 15px;
+	list-style: none;
+	margin-top: 6px;
+	z-index: 10;
+	text-align: right;
+}
+
+.event-header .event-attendees li {
+	display: inline;
+	vertical-align: bottom;
+	line-height: auto;
+	position: relative;
+}
+
+.event-header .event-attendees li img {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 1px solid #333;
+}
+
+.event-header .event-attendees li .name {
+	display: none;
+}
+
+.event-header .event-attendees li:hover .name {
+	display: block;
+	position: absolute;
+	top: 16px;
+	left: 0;
+	width: auto;
+	text-align: center;
+	background: #f5f5f5;
+	color: black;
+	white-space:nowrap;
+	padding: 4px;
+	box-shadow: 1px 1px 4px #333;
+	z-index: 10;
+}
+
+.event-header .event-attendees li:hover .name:before {
+	border: 7px solid;
+	border-color: transparent transparent #f5f5f5 transparent;
+	content: '';
+	display: block;
+	position: absolute;
+	top: -14px;
+	left: 11px;
+	z-index: 5;
+}
+
+.event-header:after {
+	content: '';
+	clear: both;
+	display: block;
+}
+
+form.inline-form {
+	display: inline;
 }

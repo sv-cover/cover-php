@@ -4,6 +4,7 @@
 	require_once('include/form.php');
 	require_once('include/member.php');
 	require_once('include/login.php');
+	require_once 'include/facebook.php';
 
 	class ControllerProfiel extends Controller {
 		var $model = null;
@@ -27,7 +28,11 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => __('Profiel')));
+			$title = $iter
+				? member_full_name($iter, false, true)
+				: __('Profiel');
+
+			$this->run_header(compact('title'));
 			run_view('profiel::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
@@ -173,9 +178,12 @@
 			$errors = array();
 			$message = array();
 
-			if (!get_post('wachtwoord_oud') || md5(get_post('wachtwoord_oud')) != $iter->get('wachtwoord')) {
-				$errors[] = 'wachtwoord_oud';
-				$message[] = __('Het huidige wachtwoord is onjuist.');
+			// Only test the old password if we are not a member of the board
+			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
+				if (!get_post('wachtwoord_oud') || md5(get_post('wachtwoord_oud')) != $iter->get('wachtwoord')) {
+					$errors[] = 'wachtwoord_oud';
+					$message[] = __('Het huidige wachtwoord is onjuist.');
+				}
 			}
 			
 			if (!get_post('wachtwoord_nieuw')) {
@@ -241,6 +249,44 @@
 
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#zichtbaarheid');
 		}
+
+		protected function _process_photo($iter)
+		{
+			$error = null;
+
+			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_EASY))
+				return $this->get_content('common::auth');
+
+			else if ($_FILES['photo']['errpr'] == UPLOAD_ERR_INI_SIZE)
+				$error = sprintf(__('Het fotobestand is te groot. Het maximum is %s.'),
+					ini_get('upload_max_filesize') . ' bytes');
+
+			elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
+				$error = sprintf(__('Het bestand is niet geupload. Foutcode %d.'), $_FILES['photo']['error']);
+
+			elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
+				$error = __('Bestand is niet een door PHP geupload bestand.');
+			
+			elseif (!($fh = fopen($_FILES['photo']['tmp_name'], 'rb')))
+				$error = __('Het geuploadde bestand kon niet worden gelezen.');
+
+			if ($error)
+				return $this->get_content('profiel', $iter, array('errors' => array('photo'), 'error_message' => $error));
+
+			$this->model->set_photo($iter, $fh);
+
+			fclose($fh);
+
+			header('Location: profiel.php?lid=' . $iter->get('lidid') . '&force_reload_photo=true#almanak');
+		}
+
+		protected function _process_facebook_link($iter, $action)
+		{
+			if ($action == 'unlink')
+				get_facebook()->destroySession();
+
+			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#fadebook');
+		}
 		
 		function run_impl() {
 			$lid = null;
@@ -251,11 +297,20 @@
 			} else
 				$lid = $_GET['lid'];
 			
+			// If the member was not found, return 404
 			if ($lid == null || !($iter = $this->model->get_iter($lid)))
 				return $this->get_content('not_found');
 			
+			// If the member was found, but is officially 'deleted', also return a 404
+			if ($iter->get('type') == MEMBER_STATUS_LID_AF && !member_in_commissie(COMMISSIE_BESTUUR))
+				return $this->get_content('not_found');
+
 			if (isset($_POST['submprofiel_almanak']))
 				$this->_process_almanak($iter);
+			elseif (isset($_POST['facebook_action']))
+				$this->_process_facebook_link($iter, $_POST['facebook_action']);
+			elseif (isset($_FILES['photo']))
+				$this->_process_photo($iter);
 			elseif (isset($_POST['submprofiel_webgegevens']))
 				$this->_process_webgegevens($iter);
 			elseif (isset($_POST['submprofiel_wachtwoord']))

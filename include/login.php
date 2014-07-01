@@ -114,30 +114,36 @@
 		set_domain_cookie('cover_session_id', null, time() - 24 * 3600);
 	}
 
-	/** @group Login
-	  * Check whether a member is currently logged in. When this function
-	  * is first called it will check if a member is still in the session,
-	  * if so it returns that data. If this is not the case it tries to
-	  * login the user from a cookie
-	  *
-	  * @result false if no member is logged in or the memberdata is
-	  * there is a member logged in at the moment
-	  */	
-	function logged_in()
+	// Make this function overridable for dump scripts etc.
+	if (!function_exists('logged_in'))
 	{
-		static $logged_in = null;
-		
-		if ($logged_in === null)
+		/** @group Login
+		  * Check whether a member is currently logged in. When this function
+		  * is first called it will check if a member is still in the session,
+		  * if so it returns that data. If this is not the case it tries to
+		  * login the user from a cookie
+		  *
+		  * @result false if no member is logged in or the memberdata is
+		  * there is a member logged in at the moment
+		  */	
+		function logged_in($property = null)
 		{
-			$member_id = session_get_member_id();
+			static $logged_in = null;
+			
+			if ($logged_in === null)
+			{
+				$member_id = session_get_member_id();
 
-			if ($member_id === null)
-				return $logged_in = null;
+				if ($member_id === null)
+					return $logged_in = false;
 
-			$logged_in = _member_data_from_session();
+				$logged_in = _member_data_from_session();
+			}
+
+			return $logged_in !== false && $property !== null
+				? $logged_in[$property]
+				: $logged_in;
 		}
-
-		return $logged_in;
 	}
 
 	function logged_in_as_active_member()
@@ -178,4 +184,36 @@
 			return null;
 
 		return $session->get('member_id');
+	}
+
+	/**
+	 * Returns a calendar session with a bit longer time to live. When exporting
+	 * links with a session id for external services (like Google Calendar) you
+	 * should use this function. This way when the user logs off he/she does not
+	 * destroy the session used by that external service.
+	 *
+	 * @var $application the application identifier/name
+	 * @return the session id string if a session was created or found and null
+	 * if the user is not logged in.
+	 */
+	function session_get_application_session_id($application)
+	{
+		$member_id = logged_in('id');
+
+		// No way we can create a session specifically for the calendar for this user
+		if (!$member_id)
+			return null;
+
+		$session_model = get_model('DataModelSession');
+
+		// First try to find an already active calendar session id
+		$sessions = $session_model->getActive($member_id);
+
+		foreach ($sessions as $session)
+			if ($session->get('application') == $application)
+				return $session->get('session_id');
+
+		// None found, let's create one
+		$session = $session_model->create($member_id, $application, '1 MONTH');
+		return $session->get('session_id');
 	}

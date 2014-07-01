@@ -6,7 +6,7 @@
 	require_once 'login.php';
 	require_once 'streams.php';
 	require_once 'gettext.php';
-	
+
 	/** @group i18n
 	  * A gettext noop function. This will just return the message. It's used
 	  * to be able to mark the message as a translatable string (by using
@@ -70,11 +70,58 @@
 	}
 
 	function __($message_id) {
+		if ($message_id == '')
+			return '';
+
 		return i18n_translation::get_reader()->translate($message_id);
+	}
+
+	function __translate_parts($message, $separators = ',') {
+		$pattern = '/(\s*[' . preg_quote($separators, '/') . ']+\s*)/';
+		$parts = preg_split($pattern, $message, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		foreach ($parts as &$part)
+			if (!preg_match($pattern, $part))
+				$part = __($part);
+
+		return implode('', $parts);
+	}
+
+	/**
+	 * Give a number the correct suffix. E.g. 1, 2, 3 will become 1st, 2nd and
+	 * 3th, depending on the locale returned bij i18n_get_locale().
+	 *
+	 * @param int $n the number
+	 * @return string number with suffix.
+	 */
+	function ordinal($n) {
+		switch (i18n_get_locale())
+		{
+			case 'nl_NL':
+				if ($n >= 20)
+					return sprintf('%dste', $n);
+				else
+					return sprintf('%de', $n);
+
+			case 'en_US':
+				if ($n == 1)
+					return sprintf('%dst', $n);
+				elseif ($n == 2)
+					return sprintf('%dnd', $n);
+				else
+					return sprintf('%dth', $n);
+
+			default:
+				return sprintf('%d', $n);
+		}
 	}
 
 	function _ngettext($singular, $plural, $number) {
 		return i18n_translation::get_reader()->ngettext($singular, $plural, $number);
+	}
+
+	function __N($singular, $plural, $number) {
+		return sprintf(_ngettext($singular, $plural, $number), $number);
 	}
 	
 	/** @group i18n
@@ -86,17 +133,16 @@
 		/* TODO: make this member configurable. 
 		   Default to global locale for now */
 		$member_data = logged_in();
-		$language = 'nl';
-	
+		
 		if ($member_data)
 			$language = $member_data['taal'];
 		elseif (isset($_SESSION['taal']))
 			$language = $_SESSION['taal'];
 		else
-			$language = 'nl';
+			$language = http_get_preferred_language();
 		
-		if (!i18n_valid_language($language))
-			$language = 'nl';
+		if (!isset($language) || !i18n_valid_language($language))
+			$language = get_config_value('default_language', 'nl');
 		
 		$locales = _i18n_locale_map();
 		
@@ -139,12 +185,12 @@
 	  */
 	function i18n_valid_language($language) {
 		$languages = i18n_get_languages();
-		
+
 		return isset($languages[$language]);
 	}
 
 	/** @group i18n
-	  * Get the current language (defaults to nl)
+	  * Get the current language (defaults to en)
 	  *
 	  * @result the current language
 	  */
@@ -159,7 +205,47 @@
 		if (isset($languages[$locale]))
 			return $languages[$locale];
 		else
-			return 'nl';
-		
+			return get_config_value('default_language', 'nl');	
 	}
-?>
+
+	function http_get_preferred_language($get_sorted_list = false, $accepted_languages = null)
+	{
+		if (empty($accepted_languages))
+			$accepted_languages = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+
+			// regex inspired from @GabrielAnderson on http://stackoverflow.com/questions/6038236/http-accept-language
+		if (!preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})*)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accepted_languages, $lang_parse))
+			return null;
+
+		$langs = $lang_parse[1];
+		$ranks = $lang_parse[4];
+
+		// (create an associative array 'language' => 'preference')
+		$lang2pref = array();
+		for ($i=0; $i<count($langs); $i++)
+			$lang2pref[$langs[$i]] = (float) (!empty($ranks[$i]) ? $ranks[$i] : 1);
+
+			// (comparison function for uksort)
+		$compare_language = function ($a, $b) use ($lang2pref) {
+			if ($lang2pref[$a] > $lang2pref[$b])
+				return -1;
+			elseif ($lang2pref[$a] < $lang2pref[$b])
+				return 1;
+			elseif (strlen($a) > strlen($b))
+				return -1;
+			elseif (strlen($a) < strlen($b))
+				return 1;
+			else
+				return 0;
+		};
+
+		// sort the languages by prefered language and by the most specific region
+		uksort($lang2pref, $compare_language);
+
+		if ($get_sorted_list)
+			return $lang2pref;
+
+		// return the first value's key
+		reset($lang2pref);
+		return key($lang2pref);
+	}

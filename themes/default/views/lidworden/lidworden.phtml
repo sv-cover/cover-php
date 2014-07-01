@@ -8,26 +8,19 @@ unset($days[0]);
 $months = get_months();
 unset($months[0]); ?>
 
-<p>Ondergetekende meldt zich hierbij aan als lid van Cover, de
-studievereniging voor Kunstmatige Intelligentie en Informatica.
-Ondergetekende verklaart hierbij gedurende zijn/haar lidmaatschap
-akkoord te gaan met de volgende eisen. Ondergetekende verplicht zich
-zijn/haar gegevens correct in te vullen en wijzigingen door te geven.
-Tevens machtigt de ondergetekende Cover jaarlijks de contributie van
-zijn of haar bank- of girorekening af te schrijven. Wanneer
-ondergetekende lid is geworden van de Fysische Mathematische
-Faculteitsvereniging (FMF) voor 1 juni 2006 en nog steeds FMF lid is,
-zal de jaarlijkse contributie door de FMF worden betaald zolang de FMF
-daarmee instemt. Indien gewenst zullen boekenverkopen en overige
-activiteiten via automatische incasso's geschieden. Bij een onterechte
-overschrijving heeft de ondergetekende 30 dagen de tijd om deze
-overschrijving ongedaan te maken.</p>
+<p><?=__('De ondergetekende meldt zich hierbij aan als lid van Cover, de studievereniging voor Kunstmatige Intelligentie en Informatica.')?></p>
+<p><?=__('De ondergetekende verklaart hierbij gedurende zijn/haar lidmaatschap akkoord te gaan met de volgende eisen.')?></p>
+<p><?=__('De ondergetekende verplicht zich zijn/haar gegevens correct in te vullen en wijzigingen door te geven.')?></p>
+<p><?=__('Tevens machtigt de ondergetekende Cover jaarlijks de contributie van zijn of haar bankrekening af te schrijven. Indien gewenst zullen boekenverkopen en overige activiteiten via automatische incasso\'s geschieden.')?></p>
+<p><?=__('Bij een onterechte overschrijving heeft de ondergetekende 30 dagen de tijd om deze overschrijving ongedaan te maken.')?></p>
 
 <? if ($message) {?>
 <div class="message"><?= $message ?></div>
 <? } 
 if ($e) {?>
-<div class="error_message"><?= __('Niet alle velden zijn goed ingevuld') ?></div>
+<div class="error-section">
+	<p><?= __('Niet alle velden zijn goed ingevuld') ?></p>
+</div>
 <? } ?>
 <form method="post" action="lidworden.php"><?= input_hidden('submlidworden', 'yes') ?>
 <table>
@@ -36,7 +29,7 @@ if ($e) {?>
 	<?=$this->render_text_row(__('Tussenvoegsel'), 'tussenvoegsel', $e, false, 'class', 'small') ?>
 	<?=$this->render_text_row(__('Achternaam'), 'achternaam', $e, true) ?>
 
-	<?= table_row(label(__('Geslacht'), 'geslacht', $e, true), select_field('geslacht', array('m' => 'Man', 'v' => 'Vrouw'), null))  ?>
+	<?= table_row(label(__('Gender'), 'geslacht', $e, true), select_field('geslacht', array('m' => __('Man'), 'v' => __('Vrouw')), null))  ?>
 
 
 	<?=$this->render_text_row(__('Adres'), 'adres', $e, true) ?>
@@ -53,8 +46,9 @@ if ($e) {?>
 
 	<?=$this->render_text_row(__('Studentnummer'), 'studentnummer', $e, true) ?>
 	<?=$this->render_text_row(__('Studierichting'), 'studierichting', $e, true) ?>
+	<?= table_row(label(__('Fase'), 'fase', $e, true), select_field('fase', array('b' => __('Bachelor'), 'm' => __('Master'), 'o' => __('Anders')), null))  ?>
 
-	<?=$this->render_text_row(__('Bank- of <br>girorekeningnummer'), 'rekening', $e, true) ?>
+	<?=$this->render_text_row(__('IBAN'), 'rekening', $e, true) ?>
 
 	<?= table_row(label('Machtiging', 'machtiging', $e, true), input_checkbox('machtiging', null) . ' ' . __('Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch van mijn rekening af te schrijven (verplicht)')) ?>
 
@@ -70,15 +64,10 @@ if ($e) {?>
 
 <h2><?= __('Opmerkingen') ?></h2>
 <ul>
-	<li>Contributie wordt zolang je lid bent van Cover jaarlijks van
-	je bank- of girorekening afgeschreven.</li>
-	<li>Je bent lid af wanneer je afstudeert of je lidmaatschap
-	opzegt.</li>
-	<li>Opzegging van het lidmaatschap moet schriftelijk gedaan worden
-	bij de secretaris.</li>
-	<li>Een wijziging in je gegevens kun je mailen naar
-	bestuur@svcover.nl, schriftelijk melden bij de secretaris of in je profiel
-	op de Cover website aanpassen.</li>
-	<li>De contributie bedraagt &euro; 10,- per jaar</li>
+	<li><?=__('Contributie wordt zolang je lid bent van Cover jaarlijks van je bankrekening afgeschreven.')?></li>
+	<li><?=__('Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt.')?></li>
+	<li><?=__('Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de secretaris.')?></li>
+	<li><?=__('Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, schriftelijk melden bij de secretaris of in je profiel op de Cover website aanpassen.')?></li>
+	<li><?=__('De contributie bedraagt &euro; 10,- per jaar.')?></li>
 </ul>
 </div>

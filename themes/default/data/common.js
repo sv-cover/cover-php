@@ -46,3 +46,24 @@ function submit_form(name, xmlrequest) {
 function reset_form(name) {
 	document.forms[name].reset();
 }
+
+jQuery(function($) {
+	$('.hide-by-default').hide();
+
+	$(document).on('click', "a[href^='#']", function(e) {
+		$(this.href.match(/(#.+)$/)[1]).show();
+	});
+
+	$('.dropdown-button').each(function() {
+		var $button = $(this);
+
+		$(this).find('.button').click(function() {
+			$button.toggleClass('open');
+		});
+
+		$(document).click(function(e) {
+			if ($(e.target).closest('.dropdown-button').get(0) != $button.get(0))
+				$button.removeClass('open');
+		});
+	})
+});

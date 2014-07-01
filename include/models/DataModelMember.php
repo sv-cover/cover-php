@@ -5,6 +5,7 @@
 	define('MEMBER_STATUS_LID', 1);
 	define('MEMBER_STATUS_LID_ONZICHTBAAR', 4);
 	define('MEMBER_STATUS_LID_AF', 2);
+	define('MEMBER_STATUS_ERELID', 3);
 	define('MEMBER_STATUS_DONATEUR', 5);
 
 	/**
@@ -14,6 +15,7 @@
 	{
 		public $visible_types = array(
 			MEMBER_STATUS_LID,
+			MEMBER_STATUS_ERELID,
 			MEMBER_STATUS_DONATEUR
 		);
 
@@ -65,6 +67,7 @@
 						voornaam,
 						tussenvoegsel,
 						achternaam,
+						privacy,
 						(EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM geboortedatum)) AS leeftijd
 					FROM
 						leden
@@ -81,15 +84,27 @@
     
 		/**
 		  * Returns the photo of member with given id as a string.
-		  * Still needs to be unescaped with pg_unescape_bytea()
 		  * @iter a #DataIter
 		  *
 		  * @result the raw picture data
 		  */
-		function get_photo($iter) {
-			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter));
+		public function get_photo($iter) {
+			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
 
-			return $photo['foto'];
+			return $photo ? pg_unescape_bytea($photo['foto']) : null;
+		}
+
+		public function get_photo_mtime($iter)
+		{
+			$row = $this->db->query_first('SELECT EXTRACT(EPOCH FROM foto_mtime) as mtime FROM lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
+
+			return (int) $row['mtime'] - 7200; // timezone difference?
+ 		}
+
+		public function set_photo($iter, $fh)
+		{
+			$this->db->query(sprintf("INSERT INTO lid_fotos (lid_id, foto, foto_mtime) VALUES (%d, '%s', NOW())",
+				$iter->get('id'), pg_escape_bytea(stream_get_contents($fh))));
 		}
 
 		/** 
@@ -153,6 +168,7 @@
 			$active_member_types = array(
 				MEMBER_STATUS_LID,
 				MEMBER_STATUS_LID_ONZICHTBAAR,
+				MEMBER_STATUS_ERELID,
 				MEMBER_STATUS_DONATEUR);
 
 			if (!$row || !in_array($row['type'], $active_member_types))
@@ -265,6 +281,11 @@
 			else
 				return false;
 		}
+
+		public function is_visible($iter)
+		{
+			return in_array($iter->get('type'), $this->visible_types);
+		}
 		
 		/**
 		  * Return the privacy value for a field
@@ -273,11 +294,15 @@
 		
 		function get_privacy_for_field($iter,$field) {
 			static $privacy = null;
+
+			// Hack for these three fields which are often combined.
+			if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam')))
+				$field = 'naam';
 			
 			if ($privacy == null)
 				$privacy = $this->get_privacy();
-			
-			if (!in_array($field, $privacy))
+	
+			if (!array_key_exists($field, $privacy))
 				return false;
 			
 			$value = ($iter->get('privacy') >> ($privacy[$field] * 3)) & 7;
@@ -324,12 +349,16 @@
 					)";
 			}
 
-			$query = 'SELECT *
-					FROM leden
+			$query = 'SELECT l.*, s.studie
+					FROM leden l
+					LEFT JOIN studies s ON s.lidid = l.id
 					WHERE ' . implode(' AND ', $filters) . '
 					ORDER BY voornaam ASC, achternaam ASC';
 
 			$rows = $this->db->query($query);
+
+			$rows = $this->_aggregate_rows($rows, array('studie'), 'id');
+
 			return $this->_rows_to_iters($rows);			
 		}
 
@@ -355,6 +384,42 @@
 
 			return $tokens;
 		}
+
+		/**
+		 * @author Jelmer van der Linde
+		 * Group rows by $group_by_column and in the process turn all fields
+		 * named in $aggregate_fields into arrays. This is a bit of a dirty
+		 * (Ok, a really dirty replacement) for array_agg in Postgres.
+		 *
+		 * @rows the raw database rows
+		 * @aggregate_fields fields that need to be collected for each group
+		 * @group_by_column name of the column which identifies the group
+		 * @result array of groupes
+		 */
+		protected function _aggregate_rows($rows, array $aggregate_fields, $group_by_column)
+		{
+			$grouped = array();
+
+			foreach ($rows as $row)
+			{
+				$key = $row[$group_by_column];
+
+				if (isset($grouped[$key]))
+				{
+					foreach ($aggregate_fields as $field)
+						$grouped[$key][$field][] = $row[$field];
+				}
+				else
+				{
+					$grouped[$key] = $row;
+					
+					foreach ($aggregate_fields as $field)
+						$grouped[$key][$field] = array($row[$field]);
+				}
+			}
+
+			return array_values($grouped);
+		}
 		
 		/** @author Pieter de Bie
 		  * Get members by searching in their first OR last names.
@@ -364,7 +429,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function search_first_last($name) {
+		function search_first_last($name)
+		{
 			if (!$name) {
 				return null;
 			}
@@ -456,6 +522,49 @@
 			return $this->_rows_to_iters($rows);
 		}
 		
+		function get_status($iter)
+		{
+			switch ($iter->get('type'))
+			{
+				case MEMBER_STATUS_LID:
+					return __('Lid');
+
+				case MEMBER_STATUS_LID_ONZICHTBAAR:
+					return __('Onzichtbaar');
+
+				case MEMBER_STATUS_LID_AF:
+					return __('Lid af');
+
+				case MEMBER_STATUS_ERELID:
+					return __('Erelid');
+
+				case MEMBER_STATUS_DONATEUR:
+					return __('Donateur');
+
+				default:
+					return __('Onbekend');
+			}
+		}
+
+		public function get_from_facebook_ids(array $ids)
+		{
+			$sql_ids = array_map(function($id) {
+				return sprintf("'%s'", $this->db->escape_string($id));
+			}, $ids);
+
+			$rows = $this->db->query("SELECT leden.*, facebook.data_value as facebook_id
+					FROM facebook
+					RIGHT JOIN leden ON leden.id = facebook.lid_id
+					WHERE facebook.data_key = 'user_id' and facebook.data_value IN ($sql_ids)");
+
+			$members = array();
+
+			foreach ($this->_rows_to_iters($rows) as $iter)
+				$members[$iter->get('facebook_id')] = $iter;
+
+			return $members;
+		}
+
 		/**
 		  * Insert a profiel
 		  * @iter a #DataIter representing the profiel
@@ -481,4 +590,3 @@
 			return ($val == 1);
 		}
 	}
-?>
