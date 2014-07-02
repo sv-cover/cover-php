@@ -29,10 +29,15 @@ if ($e) {?>
 	<?=$this->render_text_row(__('Tussenvoegsel'), 'tussenvoegsel', $e, false, 'class', 'small') ?>
 	<?=$this->render_text_row(__('Achternaam'), 'achternaam', $e, true) ?>
 
-	<?= table_row(label(__('Gender'), 'geslacht', $e, true), select_field('geslacht', array('m' => __('Man'), 'v' => __('Vrouw')), null))  ?>
+	<?= table_row(label(__('Gender'), 'gender', $e, true),
+		select_field('gender', array(
+			'm' => __('Man'),
+			'f' => __('Vrouw'),
+			'o' => __('Anders')
+		), null))  ?>
 
 
-	<?=$this->render_text_row(__('Adres'), 'adres', $e, true) ?>
+	<?=$this->render_text_row(__('Adres + Huisnummer'), 'adres', $e, true) ?>
 	<?=$this->render_text_row(__('Postcode'), 'postcode', $e, true, 'class', 'small') ?>
 	<?=$this->render_text_row(__('Woonplaats'), 'woonplaats', $e, true) ?>
 	<?=$this->render_text_row(__('Telefoonnummer'), 'telefoonnummer', $e, false) ?>

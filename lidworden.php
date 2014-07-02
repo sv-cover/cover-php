@@ -22,7 +22,7 @@
 			$data = check_values(array(
 				'voornaam',
 				'achternaam',
-				'geslacht',
+				'gender',
 				'adres',
 				'postcode',
 				'woonplaats',
