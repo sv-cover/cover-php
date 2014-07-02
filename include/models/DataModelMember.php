@@ -229,7 +229,7 @@
 		  *
 		  * @result an array of privacy_field_name => privacy_field_id
 		  */
-		private function get_privacy()
+		public function get_privacy()
 		{
 			$rows = $this->db->query('SELECT * FROM profielen_privacy');
 			
@@ -351,7 +351,7 @@
 
 			$rows = $this->_aggregate_rows($rows, array('studie'), 'id');
 
-			return $this->_rows_to_iters($rows);			
+			return $this->_rows_to_iters($rows);		
 		}
 
 		private function _parse_search_query($query)
