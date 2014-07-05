@@ -1,0 +1,13 @@
+<div class="page-heading">
+	<?php if (member_in_commissie(COMMISSIE_PRCIE)): ?>
+	<div class="controls inline">
+		<a href="bedrijven.php?bedrijf=<?=rawurlencode($iter->get('slug'))?>&amp;view=edit" id="edit-bedrijf-button">
+			<img src="<?=get_theme_data('images/edit.png')?>" alt="<?=__('Aanpassen')?>">
+			<?=__('Bedrijf aanpassen')?>
+		</a>
+	</div>
+	<?php endif ?>
+	<h1><?=markup_format_text($iter->get('naam'))?></h1>
+</div>
+
+<?php $editable->run() ?>

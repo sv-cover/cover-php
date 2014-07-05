@@ -194,6 +194,14 @@
 			
 			return $this->_rows_to_iters($rows);			
 		}
+
+		
+		function find_one($conditions)
+		{
+			$results = $this->find($conditions);
+
+			return $results ? $results[0] : null;
+		}
 		
 		/**
 		  * Get a specific row in the model
