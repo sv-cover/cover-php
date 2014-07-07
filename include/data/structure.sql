@@ -319,7 +319,8 @@ CREATE TABLE commissies (
     website character varying(100),
     nocaps text,
     page integer,
-    hidden integer DEFAULT 0
+    hidden integer NOT NULL DEFAULT 0,
+    vacancies integer NOT NULL DEFAULT 0
 );
 
 

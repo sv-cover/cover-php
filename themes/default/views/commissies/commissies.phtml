@@ -1,12 +1,21 @@
 <h1> <?= __('Commissies') ?></h1>
-<div class="messageBox commissie-index">
-<?php foreach ($iter as $commissie): ?>
-	<?php $imgpath = $this->get_commissie_thumb($commissie); ?>
-	<a class="commissie" href="commissies.php?commissie=<?= rawurlencode($commissie->get('login')) ?>" <?php if ($imgpath): ?>style="background-image: url(<?=$imgpath?>)"<?php endif?>>
-		<span class="overlay">
-			<span class="name"><?= htmlspecialchars($commissie->get('naam')) ?></span>
-			<span class="summary"><?= $this->get_summary($commissie) ?></span>
-		</span>
-	</a>
-<? endforeach ?>
+<div class="messageBox">
+	<ul class="commissie-index">
+	<?php foreach ($iter as $commissie): ?>
+		<li class="commissie">
+			<?php if ($commissie->get('vacancies')): ?>
+			<a href="show.php?id=<?=get_config_value('committee_vacancy_page', 0)?>" class="vacancy-badge"><?=__('Commissieleden gezocht!')?></a>
+			<?php endif ?>
+			<a href="commissies.php?commissie=<?= rawurlencode($commissie->get('login')) ?>" class="link">
+				<?php if ($imgpath = $this->get_commissie_thumb($commissie)): ?>
+					<img src="<?=htmlspecialchars($imgpath, ENT_QUOTES)?>" class="thumbnail">
+				<?php endif ?>
+				<span class="overlay">
+					<span class="name"><?= htmlspecialchars($commissie->get('naam')) ?></span>
+					<span class="summary"><?= $this->get_summary($commissie) ?></span>
+				</span>
+			</a>
+		</li>
+	<?php endforeach ?>
+	</ul>
 </div>

@@ -1,17 +1,37 @@
+ul.commissie-index {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
 .commissie-index .commissie {
 	display: inline-block;
+	position: relative;
 	width: 250px;
 	height: 150px;
 	margin: 10px;
-	background-color: #c60c30;
-	background-position: 50% 50%;
-	background-size: cover;
-	overflow: hidden;
-	border-radius: 4px;
-	position: relative;
 }
 
-.commissie-index .commissie .overlay {
+.commissie-index .commissie .link {
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #c60c30;
+	background-position: 50% 50%;
+	overflow: hidden;
+	border-radius: 4px;
+	z-index: 1;
+}
+
+.commissie-index .commissie .link .thumbnail {
+	width: 100%;
+	height: auto;
+}
+
+.commissie-index .commissie .link .overlay {
 	display: block;
 	padding: 2px 8px;
 	position: absolute;
@@ -23,7 +43,7 @@
 	transition: all 150ms ease-in-out;
 }
 
-.commissie-index .commissie:hover .overlay {
+.commissie-index .commissie .link:hover .overlay {
 	top: 0;
 	bottom: 0;
 }
@@ -41,3 +61,23 @@
 	line-height: 20px;
 }
 
+.commissie-index .commissie .vacancy-badge {
+	position: absolute;
+	top: 0px;
+	left: -10px;
+	width: 120px;
+	height: 40px;
+	line-height: 20px;
+	padding: 4px;
+	text-align: center;
+	border-radius: 4px;
+	transform: rotate(-15deg);
+	z-index: 2;
+	background: #c60c30;
+	color: #fff;
+	box-shadow: 0 0 0 3px white, 0 0 0 6px #c60c30;
+}
+
+.commissie-index .commissie .vacancy-badge:hover {
+	text-decoration: underline;
+}
