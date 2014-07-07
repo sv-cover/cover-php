@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-07-02 19:53+0100\n"
+"POT-Creation-Date: 2014-07-07 20:23+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -501,7 +501,7 @@ msgstr "You!"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: ../../../include/models/DataModelCommissie.php:145
+#: ../../../include/models/DataModelCommissie.php:156
 msgid "onbekend"
 msgstr "unknown"
 
@@ -1365,7 +1365,7 @@ msgstr "Option"
 #: ../../../themes/default/views/forum.php:1058
 #: ../../../themes/default/views/forum.php:1129
 #: ../../../themes/default/views/forum.php:1182
-#: ../../../themes/default/views/actieveleden/_leden.phtml:27
+#: ../../../themes/default/views/actieveleden/_leden.phtml:43
 #: ../../../themes/default/views/fotoboek/_photo.phtml:4
 #: ../../../themes/default/views/links/_beheer.phtml:29
 #: ../../../themes/default/views/profiel/profiel.phtml:77
@@ -1460,7 +1460,7 @@ msgstr "New forum"
 #: ../../../themes/default/views/forum.php:1029
 #: ../../../themes/default/views/forum.php:1106
 #: ../../../themes/default/views/forum.php:1140
-#: ../../../themes/default/views/actieveleden/_leden.phtml:9
+#: ../../../themes/default/views/actieveleden/_leden.phtml:18
 #: ../../../themes/default/views/actieveleden/_nieuwe_commissie.phtml:6
 #: ../../../themes/default/views/actieveleden/_overzicht.phtml:11
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
@@ -1973,31 +1973,35 @@ msgid ""
 msgstr ""
 "Are you sure that you want to delete this committee and its members and page?"
 
-#: ../../../themes/default/views/actieveleden/_leden.phtml:6
+#: ../../../themes/default/views/actieveleden/_leden.phtml:15
 msgid "D"
 msgstr "D"
 
-#: ../../../themes/default/views/actieveleden/_leden.phtml:6
+#: ../../../themes/default/views/actieveleden/_leden.phtml:15
 msgid "Verwijder actief lid"
 msgstr "Remove active member"
 
-#: ../../../themes/default/views/actieveleden/_leden.phtml:7
+#: ../../../themes/default/views/actieveleden/_leden.phtml:16
 #: ../../../themes/default/views/taken/_taken.phtml:4
 msgid "Nr"
 msgstr "Nr"
 
-#: ../../../themes/default/views/actieveleden/_leden.phtml:8
+#: ../../../themes/default/views/actieveleden/_leden.phtml:17
 msgid "Sleutel"
 msgstr "Key"
 
-#: ../../../themes/default/views/actieveleden/_leden.phtml:10
+#: ../../../themes/default/views/actieveleden/_leden.phtml:19
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:22
 msgid "Functie"
 msgstr "Function"
 
-#: ../../../themes/default/views/actieveleden/_leden.phtml:29
+#: ../../../themes/default/views/actieveleden/_leden.phtml:33
 msgid "Deze commissie heeft nog geen leden"
 msgstr "This committee doesn't have any members yet"
+
+#: ../../../themes/default/views/actieveleden/_leden.phtml:39
+msgid "Deze commissie zoekt nieuwe leden"
+msgstr "This committee is looking for new members"
 
 #: ../../../themes/default/views/actieveleden/_nieuw_lid.phtml:1
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:9
@@ -2524,6 +2528,27 @@ msgstr "1 order"
 #: ../../../themes/default/views/boeken/delete.phtml:25
 msgid "Annuleren"
 msgstr "Cancel"
+
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:8
+#, php-format
+msgid ""
+"Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg "
+"het de Commissaris Intern, %s (intern@svcover.nl)"
+msgstr ""
+"Hey, this committee is looking for new members. Are you interested?<br>Tell "
+"your Commissioner of Internal Affairs, %s by e-mailing to intern@svcover.nl."
+
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:10
+msgid ""
+"Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het "
+"de Intern via intern@svcover.nl."
+msgstr ""
+"Hey, this committee is looking for new members. Are you interested?<br>Tell "
+"your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
+
+#: ../../../themes/default/views/commissies/commissies.phtml:7
+msgid "Commissieleden gezocht!"
+msgstr "Looking for new members!"
 
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:1
 msgid "Nieuw"

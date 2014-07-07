@@ -81,3 +81,21 @@ ul.commissie-index {
 .commissie-index .commissie a.vacancy-badge:hover {
 	text-decoration: underline;
 }
+
+.committee-vacancy {
+	padding: 10px;
+	margin: 6px 6px 16px 6px;
+	line-height: 22px;
+	font-size: 14px;
+	border-radius: 4px;
+	background: #c60c30;
+	color: #fff;
+	box-shadow: 0 0 0 3px white, 0 0 0 6px #c60c30;
+}
+
+.committee-vacancy .profile-picture {
+	float: left;
+	margin: -4px 10px -4px -4px;
+	width: 60px;
+	height: 60px;
+}

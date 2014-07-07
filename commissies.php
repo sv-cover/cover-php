@@ -19,6 +19,10 @@ class ControllerCommissies extends Controller {
 	function get_page_content(DataIter $commissie)
 	{
 		$this->run_header(array('title' => $commissie->get('naam')));
+
+		if ($commissie->get('vacancies'))
+			run_view('commissies::_leden_gezocht', $this->model, $commissie);
+
 		$editable = new ControllerEditable($commissie->get('page'));
 		$editable->run();
 		$this->run_footer();

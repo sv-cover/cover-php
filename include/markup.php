@@ -224,7 +224,17 @@
 	function _markup_parse_macros(&$markup) {
 		$markup = preg_replace_callback('/\[\[([a-z_]+)\((.*?)\)\]\]/', '_markup_parse_macro_real', $markup);
 	}
+
+	function _markup_parse_emails_real($matches) {
+		return sprintf('<a href="mailto:%s">%s</a>',
+			htmlspecialchars($matches[0], ENT_QUOTES),
+			htmlspecialchars($matches[0]));
+	}
 	
+	function markup_parse_emails($markup) {
+		return preg_replace_callback('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', '_markup_parse_emails_real', $markup);
+	}
+
 	/** @group Markup
 	  * Parse markup
 	  * @markup the markup to parse

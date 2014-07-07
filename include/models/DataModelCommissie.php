@@ -79,6 +79,17 @@
 			return $iters;
 		}
 
+		function get_lid_for_functie($commissie_id, $functie)
+		{
+			$leden = $this->get_leden($commissie_id);
+
+			foreach ($leden as $lid)
+				if (strcasecmp($lid->get('functie'), $functie) === 0)
+					return $lid;
+
+			return null;
+		}
+
 		function get_commissies_for_member($lid_id)
 		{
 			$rows = $this->db->query("
