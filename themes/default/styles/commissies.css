@@ -78,6 +78,6 @@ ul.commissie-index {
 	box-shadow: 0 0 0 3px white, 0 0 0 6px #c60c30;
 }
 
-.commissie-index .commissie .vacancy-badge:hover {
+.commissie-index .commissie a.vacancy-badge:hover {
 	text-decoration: underline;
 }

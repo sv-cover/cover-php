@@ -4,7 +4,7 @@
 	<?php foreach ($iter as $commissie): ?>
 		<li class="commissie">
 			<?php if ($commissie->get('vacancies')): ?>
-			<a href="show.php?id=<?=get_config_value('committee_vacancy_page', 0)?>" class="vacancy-badge"><?=__('Commissieleden gezocht!')?></a>
+			<span class="vacancy-badge"><?=__('Commissieleden gezocht!')?></span>
 			<?php endif ?>
 			<a href="commissies.php?commissie=<?= rawurlencode($commissie->get('login')) ?>" class="link">
 				<?php if ($imgpath = $this->get_commissie_thumb($commissie)): ?>
