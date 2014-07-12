@@ -5,7 +5,7 @@
 	include('include/init.php');
 	require_once('controllers/Controller.php');
 	require_once('controllers/ControllerEditable.php');
-	require_once('controllers/ControllerNews.php');
+	require_once('announcements.php');
 	require_once('themes/default/views/Rotator.php');
 	
 	class ControllerHomepage extends Controller {
@@ -28,8 +28,8 @@
 			echo '<div class="bannerRotator"><a href="'. $banner[0]['url'] .'"><img src="images/sponsors/'. $banner[0]['filename'] .'" class="frontpage_banner"/></a></div>';
 			
 			//mededelingen
-			$news = new ControllerNews();
-			$news->run();
+			$news = new ControllerAnnouncements();
+			$news->run_embedded();
 	
 			$this->run_footer();
 		}

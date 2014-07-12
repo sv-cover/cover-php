@@ -3533,6 +3533,16 @@ CREATE TABLE facebook (
     CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key)
 );
 
+CREATE TABLE announcements (
+    id SERIAL NOT NULL,
+    committee INTEGER NOT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+    subject TEXT NOT NULL,
+    message TEXT NOT NULL,
+    created_on TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT ('now'::text)::timestamp(6) WITHOUT TIME ZONE,
+    visibility integer NOT NULL DEFAULT 0,
+    CONSTRAINT announcements_pk PRIMARY KEY (id)
+);
+
 --
 -- TOC entry 2390 (class 2606 OID 25986)
 -- Name: actieveleden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
