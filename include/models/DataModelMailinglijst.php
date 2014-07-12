@@ -3,6 +3,14 @@
 require_once 'data/DataModel.php';
 require_once 'models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
 
+class DataIterMailinglijst extends DataIter
+{
+	public function bevat_lid($lid_id)
+	{
+		return $this->model->is_aangemeld($this, $lid_id);
+	}
+}
+
 class DataModelMailinglijst extends DataModel
 {
 	const TOEGANG_IEDEREEN = 1;
@@ -12,6 +20,8 @@ class DataModelMailinglijst extends DataModel
 
 	const TYPE_OPT_IN = 1;
 	const TYPE_OPT_OUT = 2;
+
+	/* protected */ var $dataiter = 'DataIterMailinglijst';
 
 	public function __construct($db)
 	{
@@ -371,6 +381,20 @@ class DataModelMailinglijst extends DataModel
 				$this->db->escape_string($abonnement_id)),
 			array('opgezegd_op'));
 	}
+
+	public function member_can_access_archive(DataIterMailinglijst $lijst)
+	{
+		if (!logged_in())
+			return false;
+
+		if ($lijst->bevat_lid(logged_in('id')))
+			return true;
+
+		if (member_in_commissie($lijst->get('commissie')))
+			return true;
+
+		return false;
+	} 
 
 	public function member_can_edit($lijst)
 	{

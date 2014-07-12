@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-07-07 20:23+0100\n"
+"POT-Creation-Date: 2014-07-12 02:20+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.6\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -546,7 +546,7 @@ msgstr "Member"
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/agenda/edit.phtml:39
 #: ../../../themes/default/views/agenda/moderate.phtml:19
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:33
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:36
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
 #: ../../../themes/default/views/show/edit.phtml:21
 msgid "Commissie"
@@ -753,7 +753,7 @@ msgid "Nieuw lid"
 msgstr "New member"
 
 #: ../../../profiel.php:33 ../../../themes/default/views/header.php:306
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:100
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:103
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
 msgstr "Profile"
@@ -1178,7 +1178,6 @@ msgstr "This page does not exist"
 #: ../../../themes/default/views/fotoboek/_books.phtml:54
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:39
 #: ../../../themes/default/views/fotoboek/edit_fotoboek.phtml:1
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:126
 msgid "Bewerken"
 msgstr "Edit"
 
@@ -1315,6 +1314,7 @@ msgstr "that forum doesn't exist"
 #: ../../../themes/default/views/forum.php:168
 #: ../../../themes/default/views/forum.php:474
 #: ../../../themes/default/views/forum.php:1225
+#: ../../../themes/default/views/mailinglijsten/list_archive.phtml:7
 msgid "Onderwerp"
 msgstr "Subject"
 
@@ -1350,7 +1350,7 @@ msgid "Onderwerp/vraag"
 msgstr "Subject/question"
 
 #: ../../../themes/default/views/forum.php:372
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:42
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:45
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:35
 msgid "Omschrijving"
 msgstr "Description"
@@ -1466,9 +1466,9 @@ msgstr "New forum"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:20
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:38
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:69
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:88
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:41
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:72
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:91
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:31
 #: ../../../themes/default/views/profiel/profiel.phtml:51
 #: ../../../themes/default/views/profiel/profiel.phtml:59
@@ -1618,6 +1618,7 @@ msgstr "Edit message"
 #: ../../../themes/default/views/forum.php:1220
 #: ../../../themes/default/views/agenda/moderate.phtml:18
 #: ../../../themes/default/views/fotoboek/_info.phtml:13
+#: ../../../themes/default/views/mailinglijsten/list_archive.phtml:9
 msgid "Datum"
 msgstr "Date"
 
@@ -2529,7 +2530,7 @@ msgstr "1 order"
 msgid "Annuleren"
 msgstr "Cancel"
 
-#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:8
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:10
 #, php-format
 msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg "
@@ -2538,7 +2539,7 @@ msgstr ""
 "Hey, this committee is looking for new members. Are you interested?<br>Tell "
 "your Commissioner of Internal Affairs, %s by e-mailing to intern@svcover.nl."
 
-#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:10
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:12
 msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het "
 "de Intern via intern@svcover.nl."
@@ -2904,8 +2905,8 @@ msgid "Telefoonnummer"
 msgstr "Phone number"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:44
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:73
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:89
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:76
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:92
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
 #: ../../../themes/default/views/profiel/profiel.phtml:70
 msgid "E-Mail adres"
@@ -3039,6 +3040,24 @@ msgstr "Put all links to accept"
 msgid "Alle links op weigeren zetten"
 msgstr "Put all links to deny"
 
+#: ../../../themes/default/views/mailinglijsten/list_archive.phtml:2
+#, php-format
+msgid "Archief van %s"
+msgstr "Archives of %s"
+
+#: ../../../themes/default/views/mailinglijsten/list_archive.phtml:8
+msgid "Afzender"
+msgstr "Sender"
+
+#: ../../../themes/default/views/mailinglijsten/list_archive.phtml:10
+msgid "Status"
+msgstr "Status"
+
+#: ../../../themes/default/views/mailinglijsten/list_message.phtml:2
+#, php-format
+msgid "Bericht uit Archief van %s"
+msgstr "Message from the archives of %s"
+
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:13
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
 msgid "Uitschrijven"
@@ -3054,44 +3073,52 @@ msgstr "You are subscribed to this mailinglist."
 msgid "Aanmelden"
 msgstr "Subscribe"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:24
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:20
+msgid "Bekijk archief"
+msgstr "Show message archive"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:27
 msgid "Eigenschappen"
 msgstr "Properties"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:28
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:31
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
 msgid "Toegang"
 msgstr "Access"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:47
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:50
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:40
 msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
 msgstr "People can subscribe to this list."
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:50
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:53
 msgid "Update lijst"
 msgstr "Update list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:56
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:59
 msgid "Aanmeldingen"
 msgstr "Subscriptions"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:59
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:62
 msgid "Lidnummer(s)"
 msgstr "Member id(s)"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:61
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:77
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:64
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:80
 msgid "Meld aan"
 msgstr "Subscribe"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:62
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:65
 msgid "Niet-lid aanmelden voor mailinglijst"
 msgstr "Subscribe a non-member to the mailing list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:108
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:111
 msgid "Meld geselecteerde adressen af"
 msgstr "Unsubscribe selected"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:130
+msgid "Bewerk lijst"
+msgstr "Edit list properties"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:6
 msgid "Nieuwe mailinglijst"
@@ -3621,6 +3648,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Archief"
+#~ msgstr "Archived messages"
 
 #~ msgid "Bank- of <br>girorekeningnummer"
 #~ msgstr "Bank number"
