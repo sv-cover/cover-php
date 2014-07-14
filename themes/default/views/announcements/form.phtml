@@ -1,28 +1,28 @@
+<h1><?=$this->get_label($iter, __('Nieuwe mededeling plaatsen'), __('Mededeling wijzigen')) ?></h1>
 <div class="messageBox">
-	<h1><?=__('Mededeling toevoegen')?></h1>
-	<form method="post" action="announcements.php?announcement_id=<?=$iter->get('id')?>" class="vertical-form">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form">
 		<div>
-			<label for="field-committee"><?=__('Plaats namens commissie')?>:</label>
+			<?=label(__('Plaats namens commissie'), 'committee', $errors, true)?>
 			<?=select_field('committee', $this->get_committee_options(), $iter->data)?>
 		</div>
 
 		<div>
-			<label for="field-visibility"><?=__('Zichtbaar voor')?>:</label>
+			<?=label(__('Zichtbaar voor'), 'visibility', $errors, true)?>
 			<?=select_field('visibility', $this->get_visibility_options(), $iter->data)?>
 		</div>		
 
 		<div>
-			<label for="field-subject"><?=__('Onderwerp')?>:</label>
+			<?=label(__('Onderwerp'), 'subject', $errors, true)?>
 			<?=input_text('subject', $iter->data, 'required', 'required')?>
 		</div>
 
 		<div>
-			<label for="field-message"><?=__('Bericht')?>:</label>
+			<?=label(__('Bericht'), 'message', $errors, true)?>
 			<?=textarea_field('message', $iter->data)?>
 		</div>
 
 		<div>
-			<button type="submit" class="button"><?=__('Plaats mededeling')?></button>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats mededeling'), __('Wijzig mededeling')) ?></button>
 		</div>
 	</form>
 </div>

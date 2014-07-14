@@ -1,0 +1,37 @@
+<div class="newsHeading">
+	<?php if (get_policy($model)->user_can_create()): ?>
+		<div class="controls inline"><a href="announcements.php?view=create" class="open-in-dialog"><?= image('new.png', __('Toevoegen'), __('Een nieuwe mededeling toevoegen')) ?><?= __('Nieuwe mededeling') ?></a></div>
+	<?php endif ?>
+	<h1><?= __('Mededelingen') ?></h1>
+</div>
+
+<?php foreach ($iter as $item): $committee = $item->getIter('committee'); ?>
+	<hr class="colorAccent <?=$committee->get('login')?>">
+	<div class="messageBox frontpage">
+		<div class="newsTitle">
+			<div class="right">
+				<?= $item->get('created_on') ?>
+			</div>
+			<span class="subject">
+				<h3><a href="announcements.php?view=read&amp;id=<?=$item->get_id()?>" class="permalink"><?= markup_format_text($item->get('subject')) ?></a></h3>
+			</span>
+		</div>
+		
+		<hr class="separator">
+
+		<div class="bericht">
+			<?= markup_parse($item->get('message')) ?>
+		</div>
+
+		<ul class="actions">
+			<?php if (get_policy($model)->user_can_update($item)): ?>
+			<li><a href="announcements.php?view=update&amp;id=<?=$item->get_id()?>"><?=__('Wijzig')?></a></li>
+			<?php endif ?>
+			<?php if (get_policy($model)->user_can_delete($item)): ?>
+			<li><a href="announcements.php?view=delete&amp;id=<?=$item->get_id()?>"><?=__('Verwijder')?></a></li>
+			<?php endif ?>
+		</ul>
+	</div>
+<?php endforeach ?>
+
+<p class="align-center"><a href="announcements.php"><?=__('Alle mededelingen bekijken')?></a></p>

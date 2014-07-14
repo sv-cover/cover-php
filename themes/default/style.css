@@ -592,6 +592,13 @@ body > .header > .login {
   color: #333;
 }
 
+.messageBox h1 .permalink,
+.messageBox h2 .permalink,
+.messageBox h3 .permalink {
+	color: inherit;
+	font-weight: inherit;
+}
+
 .messageBox .section {
 	padding-bottom: 10px;
 	margin-bottom: 10px;
@@ -602,6 +609,22 @@ body > .header > .login {
 	border-bottom: none;
 	margin-bottom: 0;
 	padding-bottom: 0;
+}
+
+.messageBox .actions {
+	list-style: none;
+	display: inline-block;
+	margin: 1em 0 0 0;
+}
+
+.messageBox .actions li {
+	margin: 0 1em 0 0;
+	padding: 0;
+	display: inline-block;
+}
+
+.messageBox .actions li a {
+	/*font-weight: normal;*/
 }
 
 .newsheading { clear:both; height:55px;}
@@ -1008,6 +1031,10 @@ div.beheer table {
 	display: block;
 }
 
+.vertical-form label:after {
+	content: ':';
+}
+
 .vertical-form input[type=text],
 .vertical-form input[type=email],
 .vertical-form input[type=password],
@@ -1017,6 +1044,11 @@ div.beheer table {
 
 .vertical-form input + label {
 	display: inline-block;
+}
+
+.vertical-form label.label_error + input,
+.vertical-form label.label_error + textarea {
+	background-color: #e5c8cc;
 }
 
 .mailinglists .mailinglist {

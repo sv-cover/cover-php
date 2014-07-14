@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-07-12 02:20+0100\n"
+"POT-Creation-Date: 2014-07-14 21:44+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.6\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -95,6 +95,11 @@ msgstr "All activities of study association Cover"
 #: ../../../themes/default/views/almanak/almanak.phtml:1
 msgid "Almanak"
 msgstr "Almanac"
+
+#: ../../../announcements.php:16 ../../../themes/default/views/forum.php:1164
+#: ../../../themes/default/views/announcements/index.phtml:5
+msgid "Mededelingen"
+msgstr "Announcements"
 
 #: ../../../banners.php:14 ../../../themes/default/views/header.php:111
 msgid "Advertenties"
@@ -247,6 +252,10 @@ msgid ""
 msgstr ""
 "Sorry, something went horribly wrong. Please try again in a bit or contact "
 "the WebCie (webcie@svcover.nl)"
+
+#: ../../../include/controllers/ControllerCRUD.php:57
+msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
+msgstr "You are being redirected. Click here to continue."
 
 #: ../../../include/controllers/ControllerEditable.php:72
 #: ../../../themes/default/views/editable.php:54
@@ -507,6 +516,7 @@ msgstr "unknown"
 
 #: ../../../include/models/DataModelForum.php:619
 #: ../../../include/models/DataModelForum.php:666
+#: ../../../themes/default/views/announcements/announcements.php:27
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/forum.php:870
 #: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:32
@@ -872,6 +882,14 @@ msgstr "Attend"
 msgid "foto van %s"
 msgstr "Photo of %s"
 
+#: ../../../themes/default/views/announcements/announcements.php:28
+msgid "Alleen ingelogde leden"
+msgstr "Only logged in members"
+
+#: ../../../themes/default/views/announcements/announcements.php:29
+msgid "Alleen ingelogde actieve leden"
+msgstr "Only logged in active members"
+
 #: ../../../themes/default/views/boeken/boeken.php:17
 #: ../../../themes/default/views/boeken/boeken.php:189
 #: ../../../themes/default/views/header.php:115
@@ -991,10 +1009,10 @@ msgstr "Add book"
 #: ../../../themes/default/views/boeken/boeken.php:140
 #: ../../../themes/default/views/forum.php:619
 #: ../../../themes/default/views/agenda/edit.phtml:86
+#: ../../../themes/default/views/announcements/index.phtml:3
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:1
 #: ../../../themes/default/views/fotoboek/_reacties.phtml:7
 #: ../../../themes/default/views/links/_beheer.phtml:28
-#: ../../../themes/default/views/news/news.phtml:12
 #: ../../../themes/default/views/stickers/map.phtml:5
 msgid "Toevoegen"
 msgstr "Add"
@@ -1314,6 +1332,7 @@ msgstr "that forum doesn't exist"
 #: ../../../themes/default/views/forum.php:168
 #: ../../../themes/default/views/forum.php:474
 #: ../../../themes/default/views/forum.php:1225
+#: ../../../themes/default/views/announcements/form.phtml:15
 #: ../../../themes/default/views/mailinglijsten/list_archive.phtml:7
 msgid "Onderwerp"
 msgstr "Subject"
@@ -1595,11 +1614,6 @@ msgstr "Special forums"
 #: ../../../themes/default/views/forum.php:1164
 msgid "Polls"
 msgstr "Polls"
-
-#: ../../../themes/default/views/forum.php:1164
-#: ../../../themes/default/views/news/news.phtml:14
-msgid "Mededelingen"
-msgstr "Announcements"
 
 #: ../../../themes/default/views/forum.php:1164
 #: ../../../themes/default/views/header.php:178 ../../../weblog.php:13
@@ -2204,7 +2218,7 @@ msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
 msgstr "This activity is not organised by Cover"
 
 #: ../../../themes/default/views/agenda/agendapunt.phtml:60
-#: ../../../themes/default/views/news/news.phtml:32
+#: ../../../themes/default/views/announcements/single.phtml:10
 msgid "Geplaatst door"
 msgstr "Placed by"
 
@@ -2218,6 +2232,8 @@ msgstr "View complete calendar"
 
 #: ../../../themes/default/views/agenda/agendapunt.phtml:64
 #: ../../../themes/default/views/agenda/index.phtml:66
+#: ../../../themes/default/views/announcements/index.phtml:28
+#: ../../../themes/default/views/announcements/single.phtml:24
 msgid "Wijzig"
 msgstr "Modify"
 
@@ -2228,6 +2244,8 @@ msgstr "Are you sure you want to delete this calendar event"
 
 #: ../../../themes/default/views/agenda/agendapunt.phtml:65
 #: ../../../themes/default/views/agenda/index.phtml:66
+#: ../../../themes/default/views/announcements/index.phtml:31
+#: ../../../themes/default/views/announcements/single.phtml:27
 #: ../../../themes/default/views/studieondersteuning/vak.phtml:20
 msgid "Verwijder"
 msgstr "Delete"
@@ -2445,6 +2463,64 @@ msgstr "starting year"
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "status"
 msgstr "Status"
+
+#: ../../../themes/default/views/announcements/confirm_delete.phtml:1
+msgid "Mededeling verwijderen"
+msgstr "Delete announcement"
+
+#: ../../../themes/default/views/announcements/confirm_delete.phtml:4
+#, php-format
+msgid "Weet je heel zeker dat je de mededeling <em>%s</em> wil verwijderen?"
+msgstr "Are you certain you want to delete the announcement <em>%s</em>?"
+
+#: ../../../themes/default/views/announcements/confirm_delete.phtml:7
+msgid "Verwijder mededeling"
+msgstr "Delete announcement"
+
+#: ../../../themes/default/views/announcements/confirm_delete.phtml:8
+msgid "Terug naar mededeling"
+msgstr "Back to announcements"
+
+#: ../../../themes/default/views/announcements/form.phtml:1
+msgid "Nieuwe mededeling plaatsen"
+msgstr "Add a new announcement"
+
+#: ../../../themes/default/views/announcements/form.phtml:1
+msgid "Mededeling wijzigen"
+msgstr "Modify announcement"
+
+#: ../../../themes/default/views/announcements/form.phtml:5
+msgid "Plaats namens commissie"
+msgstr "Post as committee"
+
+#: ../../../themes/default/views/announcements/form.phtml:10
+msgid "Zichtbaar voor"
+msgstr "Visible to"
+
+#: ../../../themes/default/views/announcements/form.phtml:20
+msgid "Bericht"
+msgstr "Message"
+
+#: ../../../themes/default/views/announcements/form.phtml:25
+msgid "Plaats mededeling"
+msgstr "Post announcement"
+
+#: ../../../themes/default/views/announcements/form.phtml:25
+msgid "Wijzig mededeling"
+msgstr "Modify announcement"
+
+#: ../../../themes/default/views/announcements/index.phtml:3
+msgid "Een nieuwe mededeling toevoegen"
+msgstr "Add a new announcement"
+
+#: ../../../themes/default/views/announcements/index.phtml:3
+msgid "Nieuwe mededeling"
+msgstr "Add a new announcement"
+
+#: ../../../themes/default/views/announcements/index.phtml:37
+#: ../../../themes/default/views/announcements/single.phtml:22
+msgid "Alle mededelingen bekijken"
+msgstr "Show all announcements"
 
 #: ../../../themes/default/views/besturen/add.phtml:6
 msgid "Bestuursnaam:"
@@ -3179,14 +3255,6 @@ msgstr "Unsubscribe me"
 msgid "Nee, ik was gewoon nieuwsgierig"
 msgstr "No, I was just curious."
 
-#: ../../../themes/default/views/news/news.phtml:12
-msgid "Een nieuwe mededeling toevoegen"
-msgstr "Add a new announcement"
-
-#: ../../../themes/default/views/news/news.phtml:12
-msgid "Nieuwe mededeling"
-msgstr "Add a new announcement"
-
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:24
 msgid "Lidnr"
 msgstr "Member id"
@@ -3753,9 +3821,6 @@ msgstr "There are no blog posts at this moment."
 
 #~ msgid "De CoverKamer is <b>dicht</b>"
 #~ msgstr "The Coverkamer is <b>closed</b>"
-
-#~ msgid "Zichtbaar"
-#~ msgstr "Visible"
 
 #~ msgid "Inactief"
 #~ msgstr "Inactive"

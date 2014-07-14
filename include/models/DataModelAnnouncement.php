@@ -58,37 +58,4 @@ class DataModelAnnouncement extends DataModel
 		
 		return $this->_rows_to_iters($rows);
 	}
-
-	public function member_can_create_announcements()
-	{
-		return logged_in() && count(logged_in('commissies')) > 0;
-	}
-
-	public function member_can_update_announcement(DataIter $announcement)
-	{
-		return member_in_commissie($announcement->get('committee'));
-	}
-
-	public function member_can_delete_announcement(DataIter $announcement)
-	{
-		return $this->member_can_update_announcement($announcement);
-	}
-
-	public function member_can_read_announcement(DataIter $announcement)
-	{
-		switch ($announcement->get('visibility'))
-		{
-			case self::VISIBILITY_PUBLIC:
-				return true;
-
-			case self::VISIBILITY_MEMBERS:
-				return logged_in();
-
-			case self::VISIBILITY_ACTIVE_MEMBERS:
-				return logged_in() && count(logged_in('commissies')) > 0;
-
-			default:
-				return false;
-		}
-	}
 }

@@ -1,0 +1,11 @@
+<h1><?=__('Mededeling verwijderen') ?></h1>
+<div class="messageBox">
+	<form method="post" action="announcements.php?view=delete&amp;id=<?=$iter->get_id()?>" class="vertical-form">
+		<p><?=sprintf(__('Weet je heel zeker dat je de mededeling <em>%s</em> wil verwijderen?'),
+			markup_format_text($iter->get('subject')))?></p>
+		<div>
+			<button type="submit" class="button"><?=__('Verwijder mededeling') ?></button>
+			<a href="announcements.php?view=read&amp;id=<?=$iter->get_id()?>"><?=__('Terug naar mededeling')?></a>
+		</div>
+	</form>
+</div>

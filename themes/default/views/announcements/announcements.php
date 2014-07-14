@@ -3,7 +3,7 @@ require_once 'markup.php';
 require_once 'form.php';
 require_once 'include/models/DataModelAnnouncement.php';
 
-class AnnouncementsView extends View
+class AnnouncementsView extends CRUDView
 {
 	protected $__file = __FILE__;
 
