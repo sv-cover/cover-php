@@ -4,7 +4,7 @@ ALTER TABLE ONLY configuratie
 ALTER TABLE ONLY configuratie
 	DROP CONSTRAINT configuratie_key_key;
 
-INSERT INTO configuratie (key, value) VALUES (schema_version, 1);
+INSERT INTO configuratie (key, value) VALUES ('schema_version', 1);
 
 CREATE TABLE announcements (
     id SERIAL NOT NULL,
