@@ -70,7 +70,7 @@ class ControllerAnnouncements extends ControllerCRUD
 	}
 }
 
-if ($_SERVER['SCRIPT_FILENAME'] == __FILE__) {
+if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {
 	$controller = new ControllerAnnouncements();
 	$controller->run();
 }
