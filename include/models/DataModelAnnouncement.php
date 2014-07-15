@@ -35,7 +35,8 @@ class DataModelAnnouncement extends DataModel
 				{$this->table}
 			LEFT JOIN commissies c ON
 				c.id = {$this->table}.committee"
-			. ($conditions ? " WHERE $conditions" : "");
+			. ($conditions ? " WHERE $conditions" : "")
+			. " ORDER BY {$this->table}.created_on DESC";
 	}
 
 	public function get_latest($count = 5, $visibility = null)
@@ -52,7 +53,7 @@ class DataModelAnnouncement extends DataModel
 				$visibility = self::VISIBILITY_ACTIVE_MEMBERS;
 		}
 
-		$query = $this->_generate_query('visibility <= ' . intval($visibility)) . ' ORDER BY created_on DESC LIMIT ' . intval($count);
+		$query = $this->_generate_query('visibility <= ' . intval($visibility)) . ' LIMIT ' . intval($count);
 
 		$rows = $this->db->query($query);
 		

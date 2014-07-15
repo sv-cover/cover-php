@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-07-14 21:44+0100\n"
+"POT-Creation-Date: 2014-07-15 13:31+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.6\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -2218,6 +2218,7 @@ msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
 msgstr "This activity is not organised by Cover"
 
 #: ../../../themes/default/views/agenda/agendapunt.phtml:60
+#: ../../../themes/default/views/announcements/index.phtml:19
 #: ../../../themes/default/views/announcements/single.phtml:10
 msgid "Geplaatst door"
 msgstr "Placed by"
@@ -2232,7 +2233,7 @@ msgstr "View complete calendar"
 
 #: ../../../themes/default/views/agenda/agendapunt.phtml:64
 #: ../../../themes/default/views/agenda/index.phtml:66
-#: ../../../themes/default/views/announcements/index.phtml:28
+#: ../../../themes/default/views/announcements/index.phtml:32
 #: ../../../themes/default/views/announcements/single.phtml:24
 msgid "Wijzig"
 msgstr "Modify"
@@ -2244,7 +2245,7 @@ msgstr "Are you sure you want to delete this calendar event"
 
 #: ../../../themes/default/views/agenda/agendapunt.phtml:65
 #: ../../../themes/default/views/agenda/index.phtml:66
-#: ../../../themes/default/views/announcements/index.phtml:31
+#: ../../../themes/default/views/announcements/index.phtml:35
 #: ../../../themes/default/views/announcements/single.phtml:27
 #: ../../../themes/default/views/studieondersteuning/vak.phtml:20
 msgid "Verwijder"
@@ -2478,8 +2479,9 @@ msgid "Verwijder mededeling"
 msgstr "Delete announcement"
 
 #: ../../../themes/default/views/announcements/confirm_delete.phtml:8
+#: ../../../themes/default/views/announcements/form.phtml:27
 msgid "Terug naar mededeling"
-msgstr "Back to announcements"
+msgstr "Back to announcement"
 
 #: ../../../themes/default/views/announcements/form.phtml:1
 msgid "Nieuwe mededeling plaatsen"
@@ -2509,6 +2511,10 @@ msgstr "Post announcement"
 msgid "Wijzig mededeling"
 msgstr "Modify announcement"
 
+#: ../../../themes/default/views/announcements/form.phtml:29
+msgid "Terug naar alle mededelingen"
+msgstr "Back to all announcements"
+
 #: ../../../themes/default/views/announcements/index.phtml:3
 msgid "Een nieuwe mededeling toevoegen"
 msgstr "Add a new announcement"
@@ -2517,7 +2523,7 @@ msgstr "Add a new announcement"
 msgid "Nieuwe mededeling"
 msgstr "Add a new announcement"
 
-#: ../../../themes/default/views/announcements/index.phtml:37
+#: ../../../themes/default/views/announcements/index.phtml:41
 #: ../../../themes/default/views/announcements/single.phtml:22
 msgid "Alle mededelingen bekijken"
 msgstr "Show all announcements"

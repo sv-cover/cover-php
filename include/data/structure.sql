@@ -3612,7 +3612,7 @@ ALTER TABLE ONLY boeken
 --
 
 ALTER TABLE ONLY configuratie
-    ADD CONSTRAINT configuratie_key_key UNIQUE (key);
+    ADD CONSTRAINT configuratie_pkey PRIMARY KEY (key);
 
 
 --
