@@ -15,6 +15,10 @@
 			<span class="subject">
 				<h3><a href="announcements.php?view=read&amp;id=<?=$item->get_id()?>" class="permalink"><?= markup_format_text($item->get('subject')) ?></a></h3>
 			</span>
+			<div class="subtitle">
+				<?= __('Geplaatst door') ?>:
+				<a href="commissies.php?commissie=<?=rawurlencode($committee->get('login'))?>"><?= markup_format_text($committee->get('naam')) ?></a>
+			</div>
 		</div>
 		
 		<hr class="separator">
