@@ -579,4 +579,36 @@
 
 		return $pass;
 	}
-?>
+
+	function in_range($value, $min, $max)
+	{
+		return $value >= $min && $value <= $max;
+	}
+
+	function process_array(array $data, array $instructions, array &$errors = array())
+	{
+		$out = array();
+
+		foreach ($instructions as $key => $instruction)
+		{
+			if (!isset($data[$key])) {
+				$errors[] = $key;
+				continue;
+			}
+
+			$value = $data[$key];
+
+			if (isset($instruction['filter']))
+				$value = call_user_func($instruction['filter'], $value);
+
+			if (isset($instruction['valid']))
+				if (!call_user_func($instruction['valid'], $value)) {
+					$errors[] = $key;
+					continue;
+				}
+
+			$out[$key] = $value;
+		}
+
+		return $out;
+	}

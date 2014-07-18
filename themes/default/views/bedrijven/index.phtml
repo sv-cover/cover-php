@@ -1,7 +1,7 @@
 <div class="page-heading">
 	<?php if (member_in_commissie(COMMISSIE_PRCIE)): ?>
 	<div class="controls inline">
-		<a href="bedrijven.php?view=add" id="add-bedrijf-button">
+		<a href="bedrijven.php?view=create" id="add-bedrijf-button">
 			<img src="<?=get_theme_data('images/add.png')?>" alt="<?=__('Toevoegen')?>">
 			<?=__('Bedrijf toevoegen')?>
 		</a>
@@ -12,7 +12,7 @@
 <div class="messageBox bedrijven-index">
 <?php foreach ($iter as $bedrijf): ?>
 	<?php $imgpath = $this->get_bedrijf_thumb($bedrijf); ?>
-	<a class="bedrijf" href="bedrijven.php?bedrijf=<?= rawurlencode($bedrijf->get('slug')) ?>" <?php if ($imgpath): ?>style="background-image: url(<?=$imgpath?>)"<?php endif?>>
+	<a class="bedrijf" href="bedrijven.php?view=read&amp;id=<?= rawurlencode($bedrijf->get('slug')) ?>" <?php if ($imgpath): ?>style="background-image: url(<?=$imgpath?>)"<?php endif?>>
 		<span class="overlay">
 			<span class="name"><?= htmlspecialchars($bedrijf->get('naam')) ?></span>
 			<span class="summary"><?= $this->get_summary($bedrijf) ?></span>

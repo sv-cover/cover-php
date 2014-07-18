@@ -8,7 +8,7 @@ class DataModelBedrijven extends DataModel
 {
 	public function __construct($db)
 	{
-		parent::DataModel($db, 'bedrijven');
+		parent::__construct($db, 'bedrijven', 'id');
 	}
 	
 	protected function _generate_query($where)
@@ -37,6 +37,21 @@ class DataModelBedrijven extends DataModel
 		return $editable_model->insert($page, true);
 	}
 
+	public function validate($data, array &$errors)
+	{
+		return process_array($data, array(
+			'naam' => array(
+				'filter' => 'trim',
+				'valid' => function($x) { return in_range(strlen($x), 1, 100); }),
+			'slogan' => array(
+				'filter' => 'trim',
+				'valid' => function($x) { return in_range(strlen($x), 0, 255); }),
+			'website' => array(
+				'filter' => 'trim',
+				'valid' => function($x) { return in_range(strlen($x), 0, 100); })
+		), $errors);
+	}
+
 	public function insert(DataIter $bedrijf, $get_id = false)
 	{
 		$bedrijf->data['slug'] = $this->_generate_slug($bedrijf);
@@ -46,6 +61,14 @@ class DataModelBedrijven extends DataModel
 		return parent::insert($bedrijf, $get_id);
 	}
 
+	public function get_iter($id)
+	{
+		if (is_int($id) || ctype_digit($id))
+			return parent::get_iter($id);
+		else
+			return $this->get_from_name($id);
+	}
+
 	public function get($show_hidden = false)
 	{
 		return $this->find($show_hidden ? '' : 'hidden = 0');
@@ -53,7 +76,7 @@ class DataModelBedrijven extends DataModel
 
 	public function get_from_name($name)
 	{
-		return $this->find_one(sprintf("'%s' IN (naam, slug)", $this->db->escape_string($name)));
+		return $this->find_one(sprintf("slug = '%s'", $this->db->escape_string($name)));
 	}
 
 	public function set_logo(DataIter $bedrijf, $fh)

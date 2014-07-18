@@ -1,32 +1,12 @@
 <?php
-require_once('editable.php');
+require_once 'editable.php';
 
-class BedrijvenView extends View
+class BedrijvenView extends CRUDView
 {
 	protected $__file = __FILE__;
 
-	public function get_bedrijf_thumb($bedrijf)
+	public function get_bedrijf_thumb(DataIter $bedrijf)
 	{
-		return $this->find_image($bedrijf->get('login') . 'tn');
-	}
-
-	public function get_bedrijf_photo($bedrijf)
-	{
-		return $this->find_image($bedrijf->get('login'));
-	}
-
-	private function find_image($basename)
-	{
-		$search_paths = array(
-			'images/' . $basename . '.gif', // Brainstorm
-			'images/' . $basename . '.jpg', // Small photo
-			'images/' . $basename . '.png'	// Committee logo
-		);
-
-		foreach ($search_paths as $path)
-			if (file_exists($path))
-				return $path;
-
 		return null;
 	}
 

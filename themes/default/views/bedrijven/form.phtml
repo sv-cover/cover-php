@@ -1,0 +1,34 @@
+<h1><?=$this->get_label($iter, __('Nieuwe bedrijf plaatsen'), __('Bedrijf wijzigen')) ?></h1>
+
+<div class="messageBox">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form" enctype="multipart/form-data">
+		<div>
+			<?=label(__('Naam'), 'naam', $errors, true)?>
+			<?=input_text('naam', $iter->data, 'required', 'required')?>
+		</div>
+
+		<div>
+			<?=label(__('Slogan'), 'slogan', $errors)?>
+			<?=input_text('slogan', $iter->data)?>
+		</div>
+
+		<div>
+			<?=label(__('Website'), 'website', $errors)?>
+			<?=input_text('website', $iter->data)?>
+		</div>
+
+		<div>
+			<?=label(__('Logo'), 'logo', $errors)?>
+			<input type="file" name="logo" accept="image/*">
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats bedrijf'), __('Wijzig bedrijf')) ?></button>
+			<?php if ($iter->get_id() > 0): ?>
+			<a href="bedrijven.php?view=read&amp;id=<?=rawurlencode($iter->get('slug'))?>"><?=__('Terug naar bedrijf')?></a>
+			<?php else: ?>
+			<a href="bedrijven.php"><?=__('Terug naar alle bedrijven')?></a>
+			<?php endif ?>
+		</div>
+	</form>
+</div>
