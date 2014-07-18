@@ -8,6 +8,8 @@ class ControllerAnnouncements extends ControllerCRUD
 {
 	public function __construct()
 	{
+		parent::__construct();
+		
 		$this->model = get_model('DataModelAnnouncement');
 	}
 	

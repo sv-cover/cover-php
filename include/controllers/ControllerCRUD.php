@@ -6,6 +6,24 @@ require_once 'controllers/Controller.php';
 
 class ControllerCRUD extends Controller
 {
+	private $_views = array();
+
+	public function __construct()
+	{
+		parent::__construct(null);
+
+		$this->_register('create', array($this, 'run_create'));
+		$this->_register('read', array($this, 'run_read'));
+		$this->_register('update', array($this, 'run_update'));
+		$this->_register('delete', array($this, 'run_delete'));
+		$this->_register('index', array($this, 'run_index'));
+	}
+
+	protected function _register($view, $callback)
+	{
+		$this->_views[$view] = $callback;
+	}
+	
 	protected function _create($data, array &$errors)
 	{
 		$iter = new DataIter($this->model, -1, $data);
@@ -138,6 +156,11 @@ class ControllerCRUD extends Controller
 
 		return $this->get_content('index', $iters);
 	}
+
+	public function run_not_found()
+	{
+		return run_view('common::not_found');
+	}
 	
 	/* protected */ function run_impl()
 	{
@@ -151,25 +174,11 @@ class ControllerCRUD extends Controller
 				return run_view('common::not_found');
 		}
 
-		switch (isset($_GET['view']) ? $_GET['view'] : 'index')
-		{
-			case 'create':
-				return $this->run_create();
-
-			case 'read':
-				return $this->run_read($iter);
-			
-			case 'update':
-				return $this->run_update($iter);
-
-			case 'delete':
-				return $this->run_delete($iter);
-
-			case 'index':
-				return $this->run_index();
-			
-			default:
-				return run_view('common::not_found');
-		}
+		$view = isset($_GET['view']) ? $_GET['view'] : 'index';
+		
+		if (isset($this->_views[$view]))
+			return call_user_func($this->_views[$view], $iter);
+		else
+			return $this->run_not_found();
 	}
 }
