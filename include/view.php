@@ -105,7 +105,7 @@ class CRUDView extends View
 		return sprintf('%s?view=%s%s',
 			$_SERVER['SCRIPT_NAME'],
 			$this->get_label($iter, 'create', 'update'),
-			$iter ? '&id= ' . $iter->get_id() : '');
+			$iter ? '&id=' . $iter->get_id() : '');
 	}
 
 	public function get_label(DataIter $iter = null, $create_label, $update_label)
