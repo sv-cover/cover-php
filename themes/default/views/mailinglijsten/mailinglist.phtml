@@ -16,6 +16,9 @@
 		<input type="hidden" name="action" value="subscribe">
 		<input type="submit" class="button" value="<?=__('Aanmelden')?>">
 	<?php endif ?>
+	<?php if ($model->member_can_access_archive($lijst)): ?>
+		<a href="mailinglijsten.php?archive_list_id=<?=$lijst->get_id()?>" class="button"><?=__('Bekijk archief')?></a>
+	<?php endif ?>
 	</form>
 </div>
 
@@ -120,10 +123,11 @@ jQuery(function($) {
 		return split(term).pop();
 	}
 
-	$('.mailinglist-header > p').append(
+	$('.mailinglist-header + form').append(
 		$('<a>')
+			.addClass('button')
 			.attr({'href': '#mailinglist-settings'})
-			.text(<?=json_encode(__('Bewerken'))?>));
+			.text(<?=json_encode(__('Bewerk lijst'))?>));
 	
 	$('#lid_id')
 		.bind('keydown', function(e) {

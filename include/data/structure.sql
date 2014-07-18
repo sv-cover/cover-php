@@ -216,7 +216,8 @@ CREATE TABLE commissies (
     website character varying(100),
     nocaps text,
     page integer,
-    hidden integer DEFAULT 0
+    hidden integer NOT NULL DEFAULT 0,
+    vacancies integer NOT NULL DEFAULT 0
 );
 
 
@@ -3391,6 +3392,17 @@ CREATE TABLE bedrijven (
 );
 
 
+CREATE TABLE announcements (
+    id SERIAL NOT NULL,
+    committee INTEGER NOT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+    subject TEXT NOT NULL,
+    message TEXT NOT NULL,
+    created_on TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT ('now'::text)::timestamp(6) WITHOUT TIME ZONE,
+    visibility integer NOT NULL DEFAULT 0,
+    CONSTRAINT announcements_pk PRIMARY KEY (id)
+);
+
+
 --
 -- TOC entry 2390 (class 2606 OID 25986)
 -- Name: actieveleden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
@@ -3460,7 +3472,7 @@ ALTER TABLE ONLY boeken
 --
 
 ALTER TABLE ONLY configuratie
-    ADD CONSTRAINT configuratie_key_key UNIQUE (key);
+    ADD CONSTRAINT configuratie_pkey PRIMARY KEY (key);
 
 
 --

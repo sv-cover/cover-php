@@ -101,6 +101,10 @@
 				exit();
 			}
 
+			$commissie->set('vacancies', empty($_POST['vacancies']) ? 0 : 1);
+			$commissie_model = get_model('DataModelCommissie');
+			$commissie_model->update($commissie);
+
 			foreach ($_POST as $key => $value) {
 				if (strncmp($key, 'functie_', 8) != 0)
 					continue;

@@ -33,6 +33,9 @@ class ControllerMailinglijsten extends Controller
 
 	protected function _process_new_list()
 	{
+		if (!member_in_commissie(COMMISSIE_EASY))
+			return $this->get_content('common::auth');
+
 		$id = $this->model->create_lijst(
 			$_POST['adres'], $_POST['naam'],
 			$_POST['omschrijving'],
@@ -196,6 +199,34 @@ class ControllerMailinglijsten extends Controller
 		echo json_encode($suggestions);
 	}
 
+	protected function show_list_archive($list_id)
+	{
+		$lijst = $this->model->get_lijst($list_id);
+
+		if (!$this->model->member_can_access_archive($lijst))
+			return $this->get_content('common::auth');
+
+		$model = get_model('DataModelMailinglijstArchief');
+
+		$messages = $model->get_by_lijst($list_id);
+
+		return $this->get_content('mailinglijsten::list_archive', null, compact('lijst', 'messages'));
+	}
+
+	protected function show_list_message($message_id)
+	{
+		$model = get_model('DataModelMailinglijstArchief');
+
+		$message = $model->get_iter($message_id);
+
+		$lijst = $this->model->get_iter($message->get('mailinglijst'));
+
+		if (!$this->model->member_can_access_archive($lijst))
+			return $this->get_content('common::auth');
+
+		return $this->get_content('mailinglijsten::list_message', null, compact('message', 'lijst'));
+	}
+
 	public function run_impl()
 	{
 		// Unsubscribe link? Show the unsubscribe confirmation page
@@ -209,8 +240,16 @@ class ControllerMailinglijsten extends Controller
 		elseif (!empty($_GET['lijst_id']))
 			return $this->run_subscriptions_management($_GET['lijst_id']);
 
+		// Read archive
+		elseif (!empty($_GET['archive_list_id']))
+			return $this->show_list_archive($_GET['archive_list_id']);
+
+		// Read archived message
+		elseif (!empty($_GET['archive_message_id']))
+			return $this->show_list_message($_GET['archive_message_id']);
+
 		// No list but a post request -> create a new list
-		elseif (member_in_commissie(COMMISSIE_EASY) && isset($_GET['lijst_id']))
+		elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
 			return $this->_process_new_list();
 
 		// Manage your own subscriptions

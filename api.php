@@ -103,6 +103,28 @@ class ControllerApi extends Controller
 		return array('result' => $member_in_committee);
 	}
 
+	public function api_get_member($member_id)
+	{
+		$user_model = get_model('DataModelMember');
+
+		$member = $user_model->get_iter($member_id);
+
+		if (!$member)
+			return array('result' => false, 'error' => 'Member not found');
+
+		// Hide all private fields for this user. is_private() uses
+		// logged_in() which uses the session_id get variable. So sessions
+		// are taken into account ;)
+		foreach ($member->data as $field => $value)
+			if ($user_model->is_private($member, $field, true))
+				$member->data[$field] = null;
+
+		// This one is passed as parameter anyway, it is already known.
+		$member->data['id'] = (int) $member_id;
+
+		return array('result' => $member->data);
+	}
+
 	public function api_get_committees($member_id)
 	{
 		// Find in which committees the member is active
@@ -156,6 +178,11 @@ class ControllerApi extends Controller
 				$response = $this->api_session_test_committee(
 					empty($_POST['session_id']) ? $_GET['session_id'] : $_POST['session_id'],
 					empty($_POST['committee']) ? $_GET['committee'] : $_POST['committee']);
+				break;
+
+			// GET api.php?method=get_member&member_id=709<&session_id=$session_id>
+			case 'get_member':
+				$response = $this->api_get_member($_GET['member_id']);
 				break;
 
 			// GET api.php?method=get_committees&member_id=709

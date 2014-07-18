@@ -1,0 +1,14 @@
+<?php
+require_once 'markup.php';
+
+$model = get_model('DataModelCommissie');
+$commissioner = $model->get_lid_for_functie(COMMISSIE_BESTUUR, 'commissaris intern');
+?>
+<div class="committee-vacancy">
+	<?php if ($commissioner): ?>
+		<img src="foto.php?lid_id=<?=$commissioner->get('id')?>&amp;get_thumb=circle&amp;width=100" class="profile-picture">
+		<p><?=markup_parse_emails(sprintf(__('Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg het de Commissaris Intern, %s (intern@svcover.nl)'), htmlspecialchars(member_full_name($commissioner)))) ?></p>
+	<?php else: ?>
+	<p><?=markup_parse_emails(__('Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het de Intern via intern@svcover.nl.')) ?></p>
+<?php endif ?>
+</div>

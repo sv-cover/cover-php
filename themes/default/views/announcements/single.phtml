@@ -1,0 +1,30 @@
+<?php $committee = $iter->getIter('committee'); ?>
+<h1><?= markup_format_text($iter->get('subject')) ?></h1>
+<div class="messageBox frontpage">
+	<div class="newsTitle">
+		<div class="right">
+			<?= $iter->get('created_on') ?>			
+		</div>
+
+		<div class="subtitle">
+			<?= __('Geplaatst door') ?>:
+			<a href="commissies.php?commissie=<?= rawurlencode($committee->get('login')) ?>"><?=markup_format_text($committee->get('naam'))?></a>
+		</div>
+	</div>
+	
+	<hr class="separator">
+	
+	<div class="bericht">
+		<?= markup_parse($iter->get('message')) ?>
+	</div>
+
+	<ul class="actions">
+		<li><a href="announcements.php"><?=__('Alle mededelingen bekijken')?></a></li>
+		<?php if (get_policy($model)->user_can_update($iter)): ?>
+		<li><a href="announcements.php?view=update&amp;id=<?=$iter->get_id()?>"><?=__('Wijzig')?></a></li>
+		<?php endif ?>
+		<?php if (get_policy($model)->user_can_delete($iter)): ?>
+		<li><a href="announcements.php?view=delete&amp;id=<?=$iter->get_id()?>"><?=__('Verwijder')?></a></li>
+		<?php endif ?>
+	</ul>
+</div>

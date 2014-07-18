@@ -1,0 +1,33 @@
+<h1><?=$this->get_label($iter, __('Nieuwe mededeling plaatsen'), __('Mededeling wijzigen')) ?></h1>
+<div class="messageBox">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form">
+		<div>
+			<?=label(__('Plaats namens commissie'), 'committee', $errors, true)?>
+			<?=select_field('committee', $this->get_committee_options(), $iter->data)?>
+		</div>
+
+		<div>
+			<?=label(__('Zichtbaar voor'), 'visibility', $errors, true)?>
+			<?=select_field('visibility', $this->get_visibility_options(), $iter->data)?>
+		</div>		
+
+		<div>
+			<?=label(__('Onderwerp'), 'subject', $errors, true)?>
+			<?=input_text('subject', $iter->data, 'required', 'required')?>
+		</div>
+
+		<div>
+			<?=label(__('Bericht'), 'message', $errors, true)?>
+			<?=textarea_field('message', $iter->data)?>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats mededeling'), __('Wijzig mededeling')) ?></button>
+			<?php if ($iter->get_id() > 0): ?>
+			<a href="announcements.php?view=read&amp;id=<?=$iter->get_id()?>"><?=__('Terug naar mededeling')?></a>
+			<?php else: ?>
+			<a href="announcements.php"><?=__('Terug naar alle mededelingen')?></a>
+			<?php endif ?>
+		</div>
+	</form>
+</div>

@@ -97,4 +97,19 @@ class View {
 	sprintf(__('Dit deel van de website is alleen toegankelijk voor het bestuur. Vul links je E-Mail en wachtwoord in te loggen. Indien je je wachtwoord vergeten bent kun je een nieuw wachtwoord %s. Heb je problemen met inloggen, mail dan naar %s.'), '<a href="wachtwoordvergeten.php">' . __('aanvragen') . '</a>', '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>') . '</div>';
 	}
 }
-?>
+
+class CRUDView extends View
+{
+	public function get_form_action(DataIter $iter = null)
+	{
+		return sprintf('%s?view=%s%s',
+			$_SERVER['SCRIPT_NAME'],
+			$this->get_label($iter, 'create', 'update'),
+			$iter ? '&id= ' . $iter->get_id() : '');
+	}
+
+	public function get_label(DataIter $iter = null, $create_label, $update_label)
+	{
+		return $iter && $iter->get_id() > 0 ? $update_label : $create_label;
+	}
+}

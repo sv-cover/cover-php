@@ -18,5 +18,6 @@
 
 		'facebook_app_id' => '',
 		'facebook_app_secret' => '',
+		'enable_facebook' => false,
 		'enable_facebook_rsvp' => false
 	);

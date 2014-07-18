@@ -5,7 +5,6 @@
 	require_once('include/login.php');
 	require_once('include/form.php');
 	require_once 'include/webcal.php';
-	require_once 'include/facebook.php';
 
 	class ControllerAgenda extends Controller {
 		function ControllerAgenda() {
@@ -327,9 +326,13 @@
 			// If the id's for agenda items had been consistend, we could have stored attendance locally.
 			// Now, that would be a giant hack. Therefore, I defer that to some other moment in time.
 
+			if (!get_config_value('enable_facebook', false))
+				return;
+
 			if (!$iter->get('facebook_id'))
 				return;
 
+			require_once 'include/facebook.php';
 			$facebook = get_facebook();
 
 			if (!$facebook->getUser())
