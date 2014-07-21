@@ -1166,7 +1166,6 @@ SELECT pg_catalog.setval('commissies_id_seq', 27, true);
 --
 
 INSERT INTO configuratie VALUES ('weblog_forum', '26');
-INSERT INTO configuratie VALUES ('news_forum', '27');
 INSERT INTO configuratie VALUES ('poll_forum', '28');
 INSERT INTO configuratie VALUES ('spam_count', '619924');
 INSERT INTO configuratie VALUES ('boeken_bestellen', '0');
