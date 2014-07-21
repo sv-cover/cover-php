@@ -6,6 +6,10 @@ require_once 'data/DataModel.php';
   */
 class DataModelBedrijven extends DataModel
 {
+	const SIZE_NORMAL = 1;
+	const SIZE_MEDIUM = 2;
+	const SIZE_LARGE  = 3;
+	
 	public function __construct($db)
 	{
 		parent::__construct($db, 'bedrijven', 'id');
@@ -18,7 +22,7 @@ class DataModelBedrijven extends DataModel
 
 	protected function _generate_select()
 	{
-		return "id, naam, slogan, slug, website, page, hidden, logo_mtime";
+		return "id, naam, slogan, slug, website, page, size, hidden, logo_mtime";
 	}
 
 	protected function _generate_slug(DataIter $bedrijf)
@@ -48,7 +52,10 @@ class DataModelBedrijven extends DataModel
 				'valid' => function($x) { return in_range(strlen($x), 0, 255); }),
 			'website' => array(
 				'filter' => 'trim',
-				'valid' => function($x) { return in_range(strlen($x), 0, 100); })
+				'valid' => function($x) { return in_range(strlen($x), 0, 100); }),
+			'size' => array(
+				'filter' => 'intval',
+				'valid' => function($x) { return $x >= DataModelBedrijven::SIZE_NORMAL && $x <= DataModelBedrijven::SIZE_LARGE; })
 		), $errors);
 	}
 

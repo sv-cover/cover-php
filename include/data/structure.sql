@@ -3144,6 +3144,7 @@ CREATE TABLE bedrijven (
     logo bytea DEFAULT NULL,
     logo_mtime timestamp without time zone,
     hidden integer DEFAULT 0,
+    size integer NOT NULL DEFAULT 1,
     CONSTRAINT bedrijven_slug UNIQUE (slug)
 );
 

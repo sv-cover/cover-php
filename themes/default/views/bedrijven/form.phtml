@@ -23,6 +23,14 @@
 		</div>
 
 		<div>
+			<?=label(__('Grootte'), 'size', $errors)?>
+			<?=select_field('size', array(
+				DataModelBedrijven::SIZE_NORMAL => __('Normaal'),
+				DataModelBedrijven::SIZE_MEDIUM => __('Groter'),
+				DataModelBedrijven::SIZE_LARGE  => __('Grootst')), $iter->data)?>
+		</div>
+
+		<div>
 			<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats bedrijf'), __('Wijzig bedrijf')) ?></button>
 			<?php if ($iter->get_id() > 0): ?>
 			<a href="bedrijven.php?view=read&amp;id=<?=rawurlencode($iter->get('slug'))?>"><?=__('Terug naar bedrijf')?></a>
