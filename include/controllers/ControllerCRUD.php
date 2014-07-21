@@ -41,7 +41,7 @@ class ControllerCRUD extends Controller
 	protected function _update(DataIter $iter, $data, array &$erros)
 	{
 		foreach ($data as $key => $value)
-			$iter->set($key, trim($value));
+			$iter->set($key, $value);
 
 		$result = $this->model->update($iter);
 
