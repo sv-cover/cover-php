@@ -776,7 +776,7 @@ ALTER TABLE public.gastenboek OWNER TO webcie;
 --
 
 CREATE TABLE leden (
-    id integer NOT NULL,
+    id integer NOT NULL PRIMARY KEY,
     voornaam character varying(25) NOT NULL,
     tussenvoegsel character varying(10),
     achternaam character varying(25) NOT NULL,
@@ -3703,15 +3703,6 @@ ALTER TABLE ONLY fotos
 
 ALTER TABLE ONLY gastenboek
     ADD CONSTRAINT gastenboek_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2428 (class 2606 OID 26024)
--- Name: leden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY leden
-    ADD CONSTRAINT leden_pkey PRIMARY KEY (id);
 
 
 --
