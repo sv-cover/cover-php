@@ -1205,13 +1205,11 @@ INSERT INTO forum_acl VALUES (18, 26, 2, 0, 15);
 INSERT INTO forum_acl VALUES (19, 26, -1, -1, 5);
 INSERT INTO forum_acl VALUES (22, 28, -1, -1, 13);
 INSERT INTO forum_acl VALUES (23, 28, 2, -1, 5);
-INSERT INTO forum_acl VALUES (21, 27, -1, -1, 5);
 INSERT INTO forum_acl VALUES (24, 3, 2, -1, 15);
 INSERT INTO forum_acl VALUES (26, 29, 2, -1, 15);
 INSERT INTO forum_acl VALUES (27, 8, -1, -1, 15);
 INSERT INTO forum_acl VALUES (28, 30, 2, 17, 15);
 INSERT INTO forum_acl VALUES (25, 29, -1, -1, 5);
-INSERT INTO forum_acl VALUES (20, 27, 2, -1, 7);
 INSERT INTO forum_acl VALUES (48, 28, 2, 1, 15);
 INSERT INTO forum_acl VALUES (1, 9, 2, 2, 15);
 INSERT INTO forum_acl VALUES (2, 10, 2, 4, 15);
@@ -1232,13 +1230,11 @@ INSERT INTO forum_acl VALUES (18, 26, 2, 0, 15);
 INSERT INTO forum_acl VALUES (19, 26, -1, -1, 5);
 INSERT INTO forum_acl VALUES (22, 28, -1, -1, 13);
 INSERT INTO forum_acl VALUES (23, 28, 2, -1, 5);
-INSERT INTO forum_acl VALUES (21, 27, -1, -1, 5);
 INSERT INTO forum_acl VALUES (24, 3, 2, -1, 15);
 INSERT INTO forum_acl VALUES (26, 29, 2, -1, 15);
 INSERT INTO forum_acl VALUES (27, 8, -1, -1, 15);
 INSERT INTO forum_acl VALUES (28, 30, 2, 17, 15);
 INSERT INTO forum_acl VALUES (25, 29, -1, -1, 5);
-INSERT INTO forum_acl VALUES (20, 27, 2, -1, 7);
 INSERT INTO forum_acl VALUES (48, 28, 2, 1, 15);
 INSERT INTO forum_acl VALUES (1, 9, 2, 2, 15);
 INSERT INTO forum_acl VALUES (2, 10, 2, 4, 15);
@@ -1259,13 +1255,11 @@ INSERT INTO forum_acl VALUES (18, 26, 2, 0, 15);
 INSERT INTO forum_acl VALUES (19, 26, -1, -1, 5);
 INSERT INTO forum_acl VALUES (22, 28, -1, -1, 13);
 INSERT INTO forum_acl VALUES (23, 28, 2, -1, 5);
-INSERT INTO forum_acl VALUES (21, 27, -1, -1, 5);
 INSERT INTO forum_acl VALUES (24, 3, 2, -1, 15);
 INSERT INTO forum_acl VALUES (26, 29, 2, -1, 15);
 INSERT INTO forum_acl VALUES (27, 8, -1, -1, 15);
 INSERT INTO forum_acl VALUES (28, 30, 2, 17, 15);
 INSERT INTO forum_acl VALUES (25, 29, -1, -1, 5);
-INSERT INTO forum_acl VALUES (20, 27, 2, -1, 7);
 INSERT INTO forum_acl VALUES (48, 28, 2, 1, 15);
 INSERT INTO forum_acl VALUES (49, 32, 2, 18, 15);
 INSERT INTO forum_acl VALUES (51, 33, 2, 22, 15);
@@ -1410,16 +1404,8 @@ SELECT pg_catalog.setval('forum_group_member_id_seq', 42, true);
 --
 
 INSERT INTO forum_header VALUES (3, 'Algemeen', 7);
-INSERT INTO forum_header VALUES (3, 'Algemeen', 7);
-INSERT INTO forum_header VALUES (3, 'Algemeen', 7);
-INSERT INTO forum_header VALUES (2, 'Cover', 1);
-INSERT INTO forum_header VALUES (2, 'Cover', 1);
 INSERT INTO forum_header VALUES (2, 'Cover', 1);
 INSERT INTO forum_header VALUES (4, 'Website', 12);
-INSERT INTO forum_header VALUES (4, 'Website', 12);
-INSERT INTO forum_header VALUES (4, 'Website', 12);
-INSERT INTO forum_header VALUES (1, 'Commissies', 16);
-INSERT INTO forum_header VALUES (1, 'Commissies', 16);
 INSERT INTO forum_header VALUES (1, 'Commissies', 16);
 INSERT INTO forum_header VALUES (8, 'Scavenger hunt', 42);
 
@@ -1432,24 +1418,6 @@ INSERT INTO forum_header VALUES (8, 'Scavenger hunt', 42);
 
 SELECT pg_catalog.setval('forum_header_id_seq', 8, true);
 
-
---
--- TOC entry 2579 (class 0 OID 24244)
--- Dependencies: 199
--- Data for Name: forum_lastvisits; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-
-
---
--- TOC entry 2581 (class 0 OID 24250)
--- Dependencies: 201
--- Data for Name: forum_messages; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-INSERT INTO forum_messages VALUES (10861, 1277, 709, 'Your site is working :D', '2014-02-12 16:25:25.160834', 1);
-
-
 --
 -- TOC entry 2639 (class 0 OID 0)
 -- Dependencies: 200
@@ -1457,15 +1425,6 @@ INSERT INTO forum_messages VALUES (10861, 1277, 709, 'Your site is working :D', 
 --
 
 SELECT pg_catalog.setval('forum_messages_id_seq', 10861, true);
-
---
--- TOC entry 2584 (class 0 OID 24264)
--- Dependencies: 204
--- Data for Name: forum_threads; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-INSERT INTO forum_threads VALUES (1277, 27, 709, 'Testsite', '2014-02-12 16:25:25.159153', 1, 0);
-
 
 --
 -- TOC entry 2640 (class 0 OID 0)
@@ -1490,7 +1449,6 @@ INSERT INTO forums VALUES (3, 'Cover', 'Tips voor de vereniging? Activiteit was 
 INSERT INTO forums VALUES (29, 'Activiteiten', 'Bespreek hier alle uitjes, borrels en andere activiteiten binnen Cover.', 0, 3);
 INSERT INTO forums VALUES (6, 'Marktkraam', 'Verhandel hier alles, van kamers en boeken tot meubilair en je oma.', 0, 10);
 INSERT INTO forums VALUES (7, 'Roddelhoek', 'De roddels die iedereen moet weten.', 0, 11);
-INSERT INTO forums VALUES (27, 'Mededelingen', 'Belangrijke mededelingen van het bestuur en de commissies.', 0, 14);
 INSERT INTO forums VALUES (28, 'Cover polls', 'Wil je weten wat andere mensen over een bepaald onderwerp vinden, plaats dan hier een leuke poll. Deze polls komen ook op de voorpagina te staan. In dit forum kun je elke 14 dagen een nieuwe poll plaatsen.', 0, 13);
 INSERT INTO forums VALUES (26, 'Weblog', 'Weblog van het Bestuur', 0, 15);
 INSERT INTO forums VALUES (9, 'Commissie: Actie', 'Privéforum voor de Actie', 0, 17);
