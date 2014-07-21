@@ -2,6 +2,39 @@
 include 'include/init.php';
 include 'controllers/ControllerCRUD.php';
 include 'controllers/ControllerEditable.php';
+include 'controllers/ControllerImage.php';
+
+class ControllerBedrijvenLogo extends ControllerImage
+{
+	protected $format = self::FORMAT_PNG;
+
+	public function __construct($model)
+	{
+		parent::__construct(null, $model);
+	}
+
+	protected function getImage(DataIter $bedrijf)
+	{
+		$logo = $this->model->get_logo($bedrijf);
+
+		if (!$logo) $this->sendNotFoundResponse();
+
+		return $logo;
+	}
+
+	protected function getLastModified(DataIter $bedrijf)
+	{
+		return strtotime($bedrijf->get('logo_mtime'));
+	}
+}
+
+class ControllerBedrijvenLogoThumb extends ControllerBedrijvenLogo
+{
+	protected function getDimensions(Rectangle $original)
+	{
+		return new Rectangle(200, 200 * $original->height / $original->width);
+	}
+}
 
 class ControllerBedrijven extends ControllerCRUD
 {
@@ -14,6 +47,10 @@ class ControllerBedrijven extends ControllerCRUD
 		parent::__construct();
 		
 		$this->model = get_model('DataModelBedrijven');
+
+		$this->_register('logo', array(new ControllerBedrijvenLogo($this->model), 'run_image'));
+
+		$this->_register('logo-thumb', array(new ControllerBedrijvenLogoThumb($this->model), 'run_image'));
 	}
 	
 	/* protected */ function get_content($view, $iter = null, $params = null) {
@@ -63,6 +100,11 @@ class ControllerBedrijven extends ControllerCRUD
 		}
 
 		return true;
+	}
+
+	public function get_image(DataIter $bedrijf)
+	{
+		return $this->model->get_logo($bedrijf);
 	}
 }
 

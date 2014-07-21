@@ -93,16 +93,15 @@ class DataModelBedrijven extends DataModel
 			$this->_id_string($bedrijf->get_id())));
 	}
 
-	public function get_logo(DataIter $bedrijf, $if_before = 0)
+	public function get_logo(DataIter $bedrijf)
 	{
 		$logo = $this->db->query_first(sprintf("
 			SELECT
 				logo
 			FROM
 				{$this->table}
-			WHERE %s AND logo_mtime < to_timestamp(%d)",
-				$this->_id_string($bedrijf->get_id()),
-				$if_before));
+			WHERE %s",
+				$this->_id_string($bedrijf->get_id())));
 
 		return $logo ? pg_unescape_bytea($logo['logo']) : null;
 	}
