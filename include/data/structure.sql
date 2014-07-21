@@ -44,9 +44,6 @@ CREATE SEQUENCE actieveleden_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.actieveleden_id_seq OWNER TO webcie;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -64,9 +61,6 @@ CREATE TABLE actieveleden (
     sleutel integer
 );
 
-
-ALTER TABLE public.actieveleden OWNER TO webcie;
-
 --
 -- TOC entry 172 (class 1259 OID 24129)
 -- Name: agenda_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -78,9 +72,6 @@ CREATE SEQUENCE agenda_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.agenda_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 173 (class 1259 OID 24131)
@@ -101,9 +92,6 @@ CREATE TABLE agenda (
     facebook_id character varying(20) DEFAULT NULL
 );
 
-
-ALTER TABLE public.agenda OWNER TO webcie;
-
 --
 -- TOC entry 174 (class 1259 OID 24140)
 -- Name: agenda_moderate; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -113,9 +101,6 @@ CREATE TABLE agenda_moderate (
     agendaid integer NOT NULL,
     overrideid integer DEFAULT 0 NOT NULL
 );
-
-
-ALTER TABLE public.agenda_moderate OWNER TO webcie;
 
 --
 -- TOC entry 175 (class 1259 OID 24144)
@@ -128,9 +113,6 @@ CREATE SEQUENCE bedrijven_adres_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.bedrijven_adres_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 176 (class 1259 OID 24146)
@@ -151,9 +133,6 @@ CREATE TABLE bedrijven_adres (
     website character varying(255)
 );
 
-
-ALTER TABLE public.bedrijven_adres OWNER TO webcie;
-
 --
 -- TOC entry 177 (class 1259 OID 24154)
 -- Name: bedrijven_contactgegevens_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -165,9 +144,6 @@ CREATE SEQUENCE bedrijven_contactgegevens_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.bedrijven_contactgegevens_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 178 (class 1259 OID 24156)
@@ -183,9 +159,6 @@ CREATE TABLE bedrijven_contactgegevens (
     datum date NOT NULL
 );
 
-
-ALTER TABLE public.bedrijven_contactgegevens OWNER TO webcie;
-
 --
 -- TOC entry 179 (class 1259 OID 24163)
 -- Name: bedrijven_stageplaatsen_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -197,9 +170,6 @@ CREATE SEQUENCE bedrijven_stageplaatsen_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.bedrijven_stageplaatsen_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 180 (class 1259 OID 24165)
@@ -213,9 +183,6 @@ CREATE TABLE bedrijven_stageplaatsen (
     beschrijving text
 );
 
-
-ALTER TABLE public.bedrijven_stageplaatsen OWNER TO webcie;
-
 --
 -- TOC entry 181 (class 1259 OID 24172)
 -- Name: bestellingen; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -225,9 +192,6 @@ CREATE TABLE bestellingen (
     boekid integer NOT NULL,
     lidid integer NOT NULL
 );
-
-
-ALTER TABLE public.bestellingen OWNER TO webcie;
 
 --
 -- TOC entry 182 (class 1259 OID 24175)
@@ -240,9 +204,6 @@ CREATE SEQUENCE besturen_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.besturen_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 183 (class 1259 OID 24177)
@@ -257,9 +218,6 @@ CREATE TABLE besturen (
     nocaps text,
     page integer
 );
-
-
-ALTER TABLE public.besturen OWNER TO webcie;
 
 --
 -- TOC entry 184 (class 1259 OID 24184)
@@ -276,9 +234,6 @@ CREATE TABLE boeken (
     auteur character varying(100)
 );
 
-
-ALTER TABLE public.boeken OWNER TO webcie;
-
 --
 -- TOC entry 185 (class 1259 OID 24188)
 -- Name: boeken_categorie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -288,9 +243,6 @@ CREATE TABLE boeken_categorie (
     id integer NOT NULL,
     categorie text NOT NULL
 );
-
-
-ALTER TABLE public.boeken_categorie OWNER TO webcie;
 
 --
 -- TOC entry 186 (class 1259 OID 24194)
@@ -303,9 +255,6 @@ CREATE SEQUENCE commissies_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.commissies_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 187 (class 1259 OID 24196)
@@ -323,9 +272,6 @@ CREATE TABLE commissies (
     vacancies integer NOT NULL DEFAULT 0
 );
 
-
-ALTER TABLE public.commissies OWNER TO webcie;
-
 --
 -- TOC entry 188 (class 1259 OID 24203)
 -- Name: configuratie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -335,9 +281,6 @@ CREATE TABLE configuratie (
     key character varying(100) NOT NULL,
     value text NOT NULL
 );
-
-
-ALTER TABLE public.configuratie OWNER TO webcie;
 
 --
 -- TOC entry 189 (class 1259 OID 24209)
@@ -351,9 +294,6 @@ CREATE TABLE confirm (
     type text DEFAULT ''::text NOT NULL
 );
 
-
-ALTER TABLE public.confirm OWNER TO webcie;
-
 --
 -- TOC entry 190 (class 1259 OID 24217)
 -- Name: forum_acl_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -365,9 +305,6 @@ CREATE SEQUENCE forum_acl_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forum_acl_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 191 (class 1259 OID 24219)
@@ -382,9 +319,6 @@ CREATE TABLE forum_acl (
     permissions integer
 );
 
-
-ALTER TABLE public.forum_acl OWNER TO webcie;
-
 --
 -- TOC entry 192 (class 1259 OID 24223)
 -- Name: forum_group_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -397,9 +331,6 @@ CREATE SEQUENCE forum_group_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.forum_group_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 193 (class 1259 OID 24225)
 -- Name: forum_group; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -409,9 +340,6 @@ CREATE TABLE forum_group (
     id integer DEFAULT nextval('forum_group_id_seq'::regclass) NOT NULL,
     name character varying(50)
 );
-
-
-ALTER TABLE public.forum_group OWNER TO webcie;
 
 --
 -- TOC entry 194 (class 1259 OID 24229)
@@ -425,9 +353,6 @@ CREATE SEQUENCE forum_group_member_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.forum_group_member_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 195 (class 1259 OID 24231)
 -- Name: forum_group_member; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -439,9 +364,6 @@ CREATE TABLE forum_group_member (
     type smallint,
     uid integer
 );
-
-
-ALTER TABLE public.forum_group_member OWNER TO webcie;
 
 --
 -- TOC entry 196 (class 1259 OID 24235)
@@ -455,9 +377,6 @@ CREATE TABLE forum_guestnames (
     email character varying(100)
 );
 
-
-ALTER TABLE public.forum_guestnames OWNER TO webcie;
-
 --
 -- TOC entry 197 (class 1259 OID 24238)
 -- Name: forum_header_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -470,9 +389,6 @@ CREATE SEQUENCE forum_header_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.forum_header_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 198 (class 1259 OID 24240)
 -- Name: forum_header; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -483,9 +399,6 @@ CREATE TABLE forum_header (
     name character varying(150),
     "position" integer
 );
-
-
-ALTER TABLE public.forum_header OWNER TO webcie;
 
 --
 -- TOC entry 199 (class 1259 OID 24244)
@@ -498,9 +411,6 @@ CREATE TABLE forum_lastvisits (
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
-
-ALTER TABLE public.forum_lastvisits OWNER TO webcie;
-
 --
 -- TOC entry 200 (class 1259 OID 24248)
 -- Name: forum_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -512,9 +422,6 @@ CREATE SEQUENCE forum_messages_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forum_messages_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 201 (class 1259 OID 24250)
@@ -530,9 +437,6 @@ CREATE TABLE forum_messages (
     author_type smallint DEFAULT 1
 );
 
-
-ALTER TABLE public.forum_messages OWNER TO webcie;
-
 --
 -- TOC entry 202 (class 1259 OID 24259)
 -- Name: forum_sessionreads; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -543,9 +447,6 @@ CREATE TABLE forum_sessionreads (
     forum integer NOT NULL,
     thread integer NOT NULL
 );
-
-
-ALTER TABLE public.forum_sessionreads OWNER TO webcie;
 
 --
 -- TOC entry 203 (class 1259 OID 24262)
@@ -558,9 +459,6 @@ CREATE SEQUENCE forum_threads_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forum_threads_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 204 (class 1259 OID 24264)
@@ -577,9 +475,6 @@ CREATE TABLE forum_threads (
     poll integer DEFAULT 0 NOT NULL
 );
 
-
-ALTER TABLE public.forum_threads OWNER TO webcie;
-
 --
 -- TOC entry 205 (class 1259 OID 24271)
 -- Name: forum_visits; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -592,9 +487,6 @@ CREATE TABLE forum_visits (
     sessiondate timestamp without time zone
 );
 
-
-ALTER TABLE public.forum_visits OWNER TO webcie;
-
 --
 -- TOC entry 206 (class 1259 OID 24275)
 -- Name: forums_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -606,9 +498,6 @@ CREATE SEQUENCE forums_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forums_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 207 (class 1259 OID 24277)
@@ -623,9 +512,6 @@ CREATE TABLE forums (
     "position" integer DEFAULT 0
 );
 
-
-ALTER TABLE public.forums OWNER TO webcie;
-
 --
 -- TOC entry 208 (class 1259 OID 24283)
 -- Name: foto_boeken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -637,9 +523,6 @@ CREATE SEQUENCE foto_boeken_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.foto_boeken_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 209 (class 1259 OID 24285)
@@ -655,9 +538,6 @@ CREATE TABLE foto_boeken (
     beschrijving text
 );
 
-
-ALTER TABLE public.foto_boeken OWNER TO webcie;
-
 --
 -- TOC entry 210 (class 1259 OID 24293)
 -- Name: foto_boeken_thumb; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -670,9 +550,6 @@ CREATE TABLE foto_boeken_thumb (
     generated timestamp without time zone DEFAULT ('now'::text)::timestamp(6) without time zone NOT NULL
 );
 
-
-ALTER TABLE public.foto_boeken_thumb OWNER TO webcie;
-
 --
 -- TOC entry 211 (class 1259 OID 24300)
 -- Name: foto_reacties_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -684,9 +561,6 @@ CREATE SEQUENCE foto_reacties_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.foto_reacties_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 212 (class 1259 OID 24302)
@@ -701,9 +575,6 @@ CREATE TABLE foto_reacties (
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
-
-ALTER TABLE public.foto_reacties OWNER TO webcie;
-
 --
 -- TOC entry 213 (class 1259 OID 24310)
 -- Name: fotos_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -715,9 +586,6 @@ CREATE SEQUENCE fotos_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.fotos_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 214 (class 1259 OID 24312)
@@ -732,9 +600,6 @@ CREATE TABLE fotos (
     thumburl character varying(150) NOT NULL
 );
 
-
-ALTER TABLE public.fotos OWNER TO webcie;
-
 --
 -- TOC entry 215 (class 1259 OID 24319)
 -- Name: gastenboek_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -746,9 +611,6 @@ CREATE SEQUENCE gastenboek_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.gastenboek_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 216 (class 1259 OID 24321)
@@ -766,9 +628,6 @@ CREATE TABLE gastenboek (
     spam smallint,
     lustrum smallint DEFAULT 0
 );
-
-
-ALTER TABLE public.gastenboek OWNER TO webcie;
 
 --
 -- TOC entry 217 (class 1259 OID 24336)
@@ -794,15 +653,10 @@ CREATE TABLE leden (
     beginjaar integer DEFAULT date_part('year'::text, now())
 );
 
-
-ALTER TABLE public.leden OWNER TO webcie;
-
 CREATE TABLE studies (
     lidid integer NOT NULL,
     studie character varying(100)
 );
-
-ALTER TABLE public.studies OWNER TO webcie;
 
 --
 -- TOC entry 218 (class 1259 OID 24341)
@@ -816,9 +670,6 @@ CREATE SEQUENCE lid_fotos_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.lid_fotos_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 219 (class 1259 OID 24343)
 -- Name: lid_fotos; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -831,9 +682,6 @@ CREATE TABLE lid_fotos (
     foto_mtime timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
 
-
-ALTER TABLE public.lid_fotos OWNER TO webcie;
-
 --
 -- TOC entry 220 (class 1259 OID 24350)
 -- Name: links_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -845,9 +693,6 @@ CREATE SEQUENCE links_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.links_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 221 (class 1259 OID 24352)
@@ -864,9 +709,6 @@ CREATE TABLE links (
     moderated integer DEFAULT 0 NOT NULL
 );
 
-
-ALTER TABLE public.links OWNER TO webcie;
-
 --
 -- TOC entry 222 (class 1259 OID 24360)
 -- Name: links_categorie_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -879,9 +721,6 @@ CREATE SEQUENCE links_categorie_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.links_categorie_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 223 (class 1259 OID 24362)
 -- Name: links_categorie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -892,9 +731,6 @@ CREATE TABLE links_categorie (
     titel text NOT NULL,
     "order" integer NOT NULL
 );
-
-
-ALTER TABLE public.links_categorie OWNER TO webcie;
 
 --
 -- TOC entry 224 (class 1259 OID 24369)
@@ -907,9 +743,6 @@ CREATE SEQUENCE pages_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.pages_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 225 (class 1259 OID 24371)
@@ -925,9 +758,6 @@ CREATE TABLE pages (
     content_de text
 );
 
-
-ALTER TABLE public.pages OWNER TO webcie;
-
 --
 -- TOC entry 226 (class 1259 OID 24385)
 -- Name: pollopties_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -939,9 +769,6 @@ CREATE SEQUENCE pollopties_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.pollopties_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 227 (class 1259 OID 24387)
@@ -955,9 +782,6 @@ CREATE TABLE pollopties (
     stemmen smallint DEFAULT 0 NOT NULL
 );
 
-
-ALTER TABLE public.pollopties OWNER TO webcie;
-
 --
 -- TOC entry 228 (class 1259 OID 24392)
 -- Name: pollvoters; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -967,9 +791,6 @@ CREATE TABLE pollvoters (
     lid integer NOT NULL,
     poll integer NOT NULL
 );
-
-
-ALTER TABLE public.pollvoters OWNER TO webcie;
 
 --
 -- TOC entry 229 (class 1259 OID 24395)
@@ -982,9 +803,6 @@ CREATE SEQUENCE profielen_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.profielen_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 230 (class 1259 OID 24397)
@@ -1004,9 +822,6 @@ CREATE TABLE profielen (
     taal character varying(10) DEFAULT 'nl'::character varying
 );
 
-
-ALTER TABLE public.profielen OWNER TO webcie;
-
 --
 -- TOC entry 231 (class 1259 OID 24405)
 -- Name: profielen_privacy; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -1016,9 +831,6 @@ CREATE TABLE profielen_privacy (
     id integer NOT NULL,
     field text NOT NULL
 );
-
-
-ALTER TABLE public.profielen_privacy OWNER TO webcie;
 
 --
 -- TOC entry 232 (class 1259 OID 24414)
@@ -1035,9 +847,6 @@ CREATE TABLE sessions (
     application text
 );
 
-
-ALTER TABLE public.sessions OWNER TO webcie;
-
 --
 -- TOC entry 233 (class 1259 OID 24420)
 -- Name: so_documenten; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -1053,9 +862,6 @@ CREATE TABLE so_documenten (
     lid integer
 );
 
-
-ALTER TABLE public.so_documenten OWNER TO webcie;
-
 --
 -- TOC entry 234 (class 1259 OID 24428)
 -- Name: so_documenten_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -1068,9 +874,6 @@ CREATE SEQUENCE so_documenten_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.so_documenten_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 235 (class 1259 OID 24430)
 -- Name: so_vakken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -1082,9 +885,6 @@ CREATE SEQUENCE so_vakken_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.so_vakken_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 236 (class 1259 OID 24432)
@@ -1100,9 +900,6 @@ CREATE TABLE so_vakken (
     bijzonderheden character varying
 );
 
-
-ALTER TABLE public.so_vakken OWNER TO webcie;
-
 --
 -- TOC entry 237 (class 1259 OID 24439)
 -- Name: taken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -1114,9 +911,6 @@ CREATE SEQUENCE taken_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.taken_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 238 (class 1259 OID 24441)
@@ -1132,9 +926,6 @@ CREATE TABLE taken (
     prioriteit integer DEFAULT 2 NOT NULL
 );
 
-
-ALTER TABLE public.taken OWNER TO webcie;
-
 --
 -- TOC entry 239 (class 1259 OID 24449)
 -- Name: taken_subscribe; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -1144,9 +935,6 @@ CREATE TABLE taken_subscribe (
     lidid integer NOT NULL,
     taakid integer NOT NULL
 );
-
-
-ALTER TABLE public.taken_subscribe OWNER TO webcie;
 
 --
 -- TOC entry 2551 (class 0 OID 24125)
