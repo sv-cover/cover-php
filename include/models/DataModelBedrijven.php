@@ -18,7 +18,7 @@ class DataModelBedrijven extends DataModel
 
 	protected function _generate_select()
 	{
-		return "id, naam, slug, website, page, hidden, logo_mtime";
+		return "id, naam, slogan, slug, website, page, hidden, logo_mtime";
 	}
 
 	protected function _generate_slug(DataIter $bedrijf)
