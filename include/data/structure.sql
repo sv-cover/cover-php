@@ -44,9 +44,6 @@ CREATE SEQUENCE actieveleden_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.actieveleden_id_seq OWNER TO webcie;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -64,9 +61,6 @@ CREATE TABLE actieveleden (
     sleutel integer
 );
 
-
-ALTER TABLE public.actieveleden OWNER TO webcie;
-
 --
 -- TOC entry 172 (class 1259 OID 24129)
 -- Name: agenda_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -78,9 +72,6 @@ CREATE SEQUENCE agenda_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.agenda_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 173 (class 1259 OID 24131)
@@ -97,12 +88,9 @@ CREATE TABLE agenda (
     locatie character varying(100),
     private smallint DEFAULT 0,
     lustrum smallint DEFAULT 0,
-    extern NOT NULL smallint DEFAULT 0,
+    extern smallint NOT NULL DEFAULT 0,
     facebook_id character varying(20) DEFAULT NULL
 );
-
-
-ALTER TABLE public.agenda OWNER TO webcie;
 
 --
 -- TOC entry 174 (class 1259 OID 24140)
@@ -115,16 +103,11 @@ CREATE TABLE agenda_moderate (
 );
 
 
-ALTER TABLE public.agenda_moderate OWNER TO webcie;
-
 
 CREATE TABLE bestellingen (
     boekid integer NOT NULL,
     lidid integer NOT NULL
 );
-
-
-ALTER TABLE public.bestellingen OWNER TO webcie;
 
 --
 -- TOC entry 182 (class 1259 OID 24175)
@@ -137,9 +120,6 @@ CREATE SEQUENCE besturen_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.besturen_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 183 (class 1259 OID 24177)
@@ -154,9 +134,6 @@ CREATE TABLE besturen (
     nocaps text,
     page integer
 );
-
-
-ALTER TABLE public.besturen OWNER TO webcie;
 
 --
 -- TOC entry 184 (class 1259 OID 24184)
@@ -173,9 +150,6 @@ CREATE TABLE boeken (
     auteur character varying(100)
 );
 
-
-ALTER TABLE public.boeken OWNER TO webcie;
-
 --
 -- TOC entry 185 (class 1259 OID 24188)
 -- Name: boeken_categorie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -185,9 +159,6 @@ CREATE TABLE boeken_categorie (
     id integer NOT NULL,
     categorie text NOT NULL
 );
-
-
-ALTER TABLE public.boeken_categorie OWNER TO webcie;
 
 --
 -- TOC entry 186 (class 1259 OID 24194)
@@ -200,9 +171,6 @@ CREATE SEQUENCE commissies_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.commissies_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 187 (class 1259 OID 24196)
@@ -220,9 +188,6 @@ CREATE TABLE commissies (
     vacancies integer NOT NULL DEFAULT 0
 );
 
-
-ALTER TABLE public.commissies OWNER TO webcie;
-
 --
 -- TOC entry 188 (class 1259 OID 24203)
 -- Name: configuratie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -232,9 +197,6 @@ CREATE TABLE configuratie (
     key character varying(100) NOT NULL,
     value text NOT NULL
 );
-
-
-ALTER TABLE public.configuratie OWNER TO webcie;
 
 --
 -- TOC entry 189 (class 1259 OID 24209)
@@ -248,9 +210,6 @@ CREATE TABLE confirm (
     type text DEFAULT ''::text NOT NULL
 );
 
-
-ALTER TABLE public.confirm OWNER TO webcie;
-
 --
 -- TOC entry 190 (class 1259 OID 24217)
 -- Name: forum_acl_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -262,9 +221,6 @@ CREATE SEQUENCE forum_acl_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forum_acl_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 191 (class 1259 OID 24219)
@@ -279,9 +235,6 @@ CREATE TABLE forum_acl (
     permissions integer
 );
 
-
-ALTER TABLE public.forum_acl OWNER TO webcie;
-
 --
 -- TOC entry 192 (class 1259 OID 24223)
 -- Name: forum_group_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -294,9 +247,6 @@ CREATE SEQUENCE forum_group_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.forum_group_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 193 (class 1259 OID 24225)
 -- Name: forum_group; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -306,9 +256,6 @@ CREATE TABLE forum_group (
     id integer DEFAULT nextval('forum_group_id_seq'::regclass) NOT NULL,
     name character varying(50)
 );
-
-
-ALTER TABLE public.forum_group OWNER TO webcie;
 
 --
 -- TOC entry 194 (class 1259 OID 24229)
@@ -322,9 +269,6 @@ CREATE SEQUENCE forum_group_member_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.forum_group_member_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 195 (class 1259 OID 24231)
 -- Name: forum_group_member; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -336,9 +280,6 @@ CREATE TABLE forum_group_member (
     type smallint,
     uid integer
 );
-
-
-ALTER TABLE public.forum_group_member OWNER TO webcie;
 
 --
 -- TOC entry 196 (class 1259 OID 24235)
@@ -352,9 +293,6 @@ CREATE TABLE forum_guestnames (
     email character varying(100)
 );
 
-
-ALTER TABLE public.forum_guestnames OWNER TO webcie;
-
 --
 -- TOC entry 197 (class 1259 OID 24238)
 -- Name: forum_header_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -367,9 +305,6 @@ CREATE SEQUENCE forum_header_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.forum_header_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 198 (class 1259 OID 24240)
 -- Name: forum_header; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -380,9 +315,6 @@ CREATE TABLE forum_header (
     name character varying(150),
     "position" integer
 );
-
-
-ALTER TABLE public.forum_header OWNER TO webcie;
 
 --
 -- TOC entry 199 (class 1259 OID 24244)
@@ -395,9 +327,6 @@ CREATE TABLE forum_lastvisits (
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
-
-ALTER TABLE public.forum_lastvisits OWNER TO webcie;
-
 --
 -- TOC entry 200 (class 1259 OID 24248)
 -- Name: forum_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -409,9 +338,6 @@ CREATE SEQUENCE forum_messages_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forum_messages_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 201 (class 1259 OID 24250)
@@ -427,9 +353,6 @@ CREATE TABLE forum_messages (
     author_type smallint DEFAULT 1
 );
 
-
-ALTER TABLE public.forum_messages OWNER TO webcie;
-
 --
 -- TOC entry 202 (class 1259 OID 24259)
 -- Name: forum_sessionreads; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -440,9 +363,6 @@ CREATE TABLE forum_sessionreads (
     forum integer NOT NULL,
     thread integer NOT NULL
 );
-
-
-ALTER TABLE public.forum_sessionreads OWNER TO webcie;
 
 --
 -- TOC entry 203 (class 1259 OID 24262)
@@ -455,9 +375,6 @@ CREATE SEQUENCE forum_threads_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forum_threads_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 204 (class 1259 OID 24264)
@@ -474,9 +391,6 @@ CREATE TABLE forum_threads (
     poll integer DEFAULT 0 NOT NULL
 );
 
-
-ALTER TABLE public.forum_threads OWNER TO webcie;
-
 --
 -- TOC entry 205 (class 1259 OID 24271)
 -- Name: forum_visits; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -489,9 +403,6 @@ CREATE TABLE forum_visits (
     sessiondate timestamp without time zone
 );
 
-
-ALTER TABLE public.forum_visits OWNER TO webcie;
-
 --
 -- TOC entry 206 (class 1259 OID 24275)
 -- Name: forums_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -503,9 +414,6 @@ CREATE SEQUENCE forums_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.forums_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 207 (class 1259 OID 24277)
@@ -520,9 +428,6 @@ CREATE TABLE forums (
     "position" integer DEFAULT 0
 );
 
-
-ALTER TABLE public.forums OWNER TO webcie;
-
 --
 -- TOC entry 208 (class 1259 OID 24283)
 -- Name: foto_boeken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -534,9 +439,6 @@ CREATE SEQUENCE foto_boeken_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.foto_boeken_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 209 (class 1259 OID 24285)
@@ -552,9 +454,6 @@ CREATE TABLE foto_boeken (
     beschrijving text
 );
 
-
-ALTER TABLE public.foto_boeken OWNER TO webcie;
-
 --
 -- TOC entry 210 (class 1259 OID 24293)
 -- Name: foto_boeken_thumb; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -567,9 +466,6 @@ CREATE TABLE foto_boeken_thumb (
     generated timestamp without time zone DEFAULT ('now'::text)::timestamp(6) without time zone NOT NULL
 );
 
-
-ALTER TABLE public.foto_boeken_thumb OWNER TO webcie;
-
 --
 -- TOC entry 211 (class 1259 OID 24300)
 -- Name: foto_reacties_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -581,9 +477,6 @@ CREATE SEQUENCE foto_reacties_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.foto_reacties_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 212 (class 1259 OID 24302)
@@ -598,9 +491,6 @@ CREATE TABLE foto_reacties (
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
-
-ALTER TABLE public.foto_reacties OWNER TO webcie;
-
 --
 -- TOC entry 213 (class 1259 OID 24310)
 -- Name: fotos_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -612,9 +502,6 @@ CREATE SEQUENCE fotos_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.fotos_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 214 (class 1259 OID 24312)
@@ -629,9 +516,6 @@ CREATE TABLE fotos (
     thumburl character varying(150) NOT NULL
 );
 
-
-ALTER TABLE public.fotos OWNER TO webcie;
-
 --
 -- TOC entry 215 (class 1259 OID 24319)
 -- Name: gastenboek_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -643,9 +527,6 @@ CREATE SEQUENCE gastenboek_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.gastenboek_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 216 (class 1259 OID 24321)
@@ -664,16 +545,13 @@ CREATE TABLE gastenboek (
     lustrum smallint DEFAULT 0
 );
 
-
-ALTER TABLE public.gastenboek OWNER TO webcie;
-
 --
 -- TOC entry 217 (class 1259 OID 24336)
 -- Name: leden; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
 --
 
 CREATE TABLE leden (
-    id integer NOT NULL,
+    id integer NOT NULL PRIMARY KEY,
     voornaam character varying(25) NOT NULL,
     tussenvoegsel character varying(10),
     achternaam character varying(25) NOT NULL,
@@ -691,15 +569,10 @@ CREATE TABLE leden (
     beginjaar integer DEFAULT date_part('year'::text, now())
 );
 
-
-ALTER TABLE public.leden OWNER TO webcie;
-
 CREATE TABLE studies (
     lidid integer NOT NULL,
     studie character varying(100)
 );
-
-ALTER TABLE public.studies OWNER TO webcie;
 
 --
 -- TOC entry 218 (class 1259 OID 24341)
@@ -713,9 +586,6 @@ CREATE SEQUENCE lid_fotos_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.lid_fotos_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 219 (class 1259 OID 24343)
 -- Name: lid_fotos; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -728,9 +598,6 @@ CREATE TABLE lid_fotos (
     foto_mtime timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
 
-
-ALTER TABLE public.lid_fotos OWNER TO webcie;
-
 --
 -- TOC entry 220 (class 1259 OID 24350)
 -- Name: links_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -742,9 +609,6 @@ CREATE SEQUENCE links_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.links_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 221 (class 1259 OID 24352)
@@ -761,9 +625,6 @@ CREATE TABLE links (
     moderated integer DEFAULT 0 NOT NULL
 );
 
-
-ALTER TABLE public.links OWNER TO webcie;
-
 --
 -- TOC entry 222 (class 1259 OID 24360)
 -- Name: links_categorie_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -776,9 +637,6 @@ CREATE SEQUENCE links_categorie_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.links_categorie_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 223 (class 1259 OID 24362)
 -- Name: links_categorie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -789,9 +647,6 @@ CREATE TABLE links_categorie (
     titel text NOT NULL,
     "order" integer NOT NULL
 );
-
-
-ALTER TABLE public.links_categorie OWNER TO webcie;
 
 --
 -- TOC entry 224 (class 1259 OID 24369)
@@ -804,9 +659,6 @@ CREATE SEQUENCE pages_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.pages_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 225 (class 1259 OID 24371)
@@ -822,9 +674,6 @@ CREATE TABLE pages (
     content_de text
 );
 
-
-ALTER TABLE public.pages OWNER TO webcie;
-
 --
 -- TOC entry 226 (class 1259 OID 24385)
 -- Name: pollopties_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -836,9 +685,6 @@ CREATE SEQUENCE pollopties_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.pollopties_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 227 (class 1259 OID 24387)
@@ -852,9 +698,6 @@ CREATE TABLE pollopties (
     stemmen smallint DEFAULT 0 NOT NULL
 );
 
-
-ALTER TABLE public.pollopties OWNER TO webcie;
-
 --
 -- TOC entry 228 (class 1259 OID 24392)
 -- Name: pollvoters; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -864,9 +707,6 @@ CREATE TABLE pollvoters (
     lid integer NOT NULL,
     poll integer NOT NULL
 );
-
-
-ALTER TABLE public.pollvoters OWNER TO webcie;
 
 --
 -- TOC entry 229 (class 1259 OID 24395)
@@ -879,9 +719,6 @@ CREATE SEQUENCE profielen_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.profielen_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 230 (class 1259 OID 24397)
@@ -901,9 +738,6 @@ CREATE TABLE profielen (
     taal character varying(10) DEFAULT 'nl'::character varying
 );
 
-
-ALTER TABLE public.profielen OWNER TO webcie;
-
 --
 -- TOC entry 231 (class 1259 OID 24405)
 -- Name: profielen_privacy; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -913,9 +747,6 @@ CREATE TABLE profielen_privacy (
     id integer NOT NULL,
     field text NOT NULL
 );
-
-
-ALTER TABLE public.profielen_privacy OWNER TO webcie;
 
 --
 -- TOC entry 232 (class 1259 OID 24414)
@@ -932,9 +763,6 @@ CREATE TABLE sessions (
     application text
 );
 
-
-ALTER TABLE public.sessions OWNER TO webcie;
-
 --
 -- TOC entry 233 (class 1259 OID 24420)
 -- Name: so_documenten; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -950,9 +778,6 @@ CREATE TABLE so_documenten (
     lid integer
 );
 
-
-ALTER TABLE public.so_documenten OWNER TO webcie;
-
 --
 -- TOC entry 234 (class 1259 OID 24428)
 -- Name: so_documenten_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -965,9 +790,6 @@ CREATE SEQUENCE so_documenten_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.so_documenten_id_seq OWNER TO webcie;
-
 --
 -- TOC entry 235 (class 1259 OID 24430)
 -- Name: so_vakken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -979,9 +801,6 @@ CREATE SEQUENCE so_vakken_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.so_vakken_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 236 (class 1259 OID 24432)
@@ -997,9 +816,6 @@ CREATE TABLE so_vakken (
     bijzonderheden character varying
 );
 
-
-ALTER TABLE public.so_vakken OWNER TO webcie;
-
 --
 -- TOC entry 237 (class 1259 OID 24439)
 -- Name: taken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -1011,9 +827,6 @@ CREATE SEQUENCE taken_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
-ALTER TABLE public.taken_id_seq OWNER TO webcie;
 
 --
 -- TOC entry 238 (class 1259 OID 24441)
@@ -1029,9 +842,6 @@ CREATE TABLE taken (
     prioriteit integer DEFAULT 2 NOT NULL
 );
 
-
-ALTER TABLE public.taken OWNER TO webcie;
-
 --
 -- TOC entry 239 (class 1259 OID 24449)
 -- Name: taken_subscribe; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
@@ -1041,9 +851,6 @@ CREATE TABLE taken_subscribe (
     lidid integer NOT NULL,
     taakid integer NOT NULL
 );
-
-
-ALTER TABLE public.taken_subscribe OWNER TO webcie;
 
 --
 -- TOC entry 2551 (class 0 OID 24125)
@@ -1214,7 +1021,6 @@ SELECT pg_catalog.setval('commissies_id_seq', 27, true);
 --
 
 INSERT INTO configuratie VALUES ('weblog_forum', '26');
-INSERT INTO configuratie VALUES ('news_forum', '27');
 INSERT INTO configuratie VALUES ('poll_forum', '28');
 INSERT INTO configuratie VALUES ('spam_count', '619924');
 INSERT INTO configuratie VALUES ('boeken_bestellen', '0');
@@ -1253,13 +1059,11 @@ INSERT INTO forum_acl VALUES (18, 26, 2, 0, 15);
 INSERT INTO forum_acl VALUES (19, 26, -1, -1, 5);
 INSERT INTO forum_acl VALUES (22, 28, -1, -1, 13);
 INSERT INTO forum_acl VALUES (23, 28, 2, -1, 5);
-INSERT INTO forum_acl VALUES (21, 27, -1, -1, 5);
 INSERT INTO forum_acl VALUES (24, 3, 2, -1, 15);
 INSERT INTO forum_acl VALUES (26, 29, 2, -1, 15);
 INSERT INTO forum_acl VALUES (27, 8, -1, -1, 15);
 INSERT INTO forum_acl VALUES (28, 30, 2, 17, 15);
 INSERT INTO forum_acl VALUES (25, 29, -1, -1, 5);
-INSERT INTO forum_acl VALUES (20, 27, 2, -1, 7);
 INSERT INTO forum_acl VALUES (48, 28, 2, 1, 15);
 INSERT INTO forum_acl VALUES (1, 9, 2, 2, 15);
 INSERT INTO forum_acl VALUES (2, 10, 2, 4, 15);
@@ -1280,13 +1084,11 @@ INSERT INTO forum_acl VALUES (18, 26, 2, 0, 15);
 INSERT INTO forum_acl VALUES (19, 26, -1, -1, 5);
 INSERT INTO forum_acl VALUES (22, 28, -1, -1, 13);
 INSERT INTO forum_acl VALUES (23, 28, 2, -1, 5);
-INSERT INTO forum_acl VALUES (21, 27, -1, -1, 5);
 INSERT INTO forum_acl VALUES (24, 3, 2, -1, 15);
 INSERT INTO forum_acl VALUES (26, 29, 2, -1, 15);
 INSERT INTO forum_acl VALUES (27, 8, -1, -1, 15);
 INSERT INTO forum_acl VALUES (28, 30, 2, 17, 15);
 INSERT INTO forum_acl VALUES (25, 29, -1, -1, 5);
-INSERT INTO forum_acl VALUES (20, 27, 2, -1, 7);
 INSERT INTO forum_acl VALUES (48, 28, 2, 1, 15);
 INSERT INTO forum_acl VALUES (1, 9, 2, 2, 15);
 INSERT INTO forum_acl VALUES (2, 10, 2, 4, 15);
@@ -1307,13 +1109,11 @@ INSERT INTO forum_acl VALUES (18, 26, 2, 0, 15);
 INSERT INTO forum_acl VALUES (19, 26, -1, -1, 5);
 INSERT INTO forum_acl VALUES (22, 28, -1, -1, 13);
 INSERT INTO forum_acl VALUES (23, 28, 2, -1, 5);
-INSERT INTO forum_acl VALUES (21, 27, -1, -1, 5);
 INSERT INTO forum_acl VALUES (24, 3, 2, -1, 15);
 INSERT INTO forum_acl VALUES (26, 29, 2, -1, 15);
 INSERT INTO forum_acl VALUES (27, 8, -1, -1, 15);
 INSERT INTO forum_acl VALUES (28, 30, 2, 17, 15);
 INSERT INTO forum_acl VALUES (25, 29, -1, -1, 5);
-INSERT INTO forum_acl VALUES (20, 27, 2, -1, 7);
 INSERT INTO forum_acl VALUES (48, 28, 2, 1, 15);
 INSERT INTO forum_acl VALUES (49, 32, 2, 18, 15);
 INSERT INTO forum_acl VALUES (51, 33, 2, 22, 15);
@@ -1458,16 +1258,8 @@ SELECT pg_catalog.setval('forum_group_member_id_seq', 42, true);
 --
 
 INSERT INTO forum_header VALUES (3, 'Algemeen', 7);
-INSERT INTO forum_header VALUES (3, 'Algemeen', 7);
-INSERT INTO forum_header VALUES (3, 'Algemeen', 7);
-INSERT INTO forum_header VALUES (2, 'Cover', 1);
-INSERT INTO forum_header VALUES (2, 'Cover', 1);
 INSERT INTO forum_header VALUES (2, 'Cover', 1);
 INSERT INTO forum_header VALUES (4, 'Website', 12);
-INSERT INTO forum_header VALUES (4, 'Website', 12);
-INSERT INTO forum_header VALUES (4, 'Website', 12);
-INSERT INTO forum_header VALUES (1, 'Commissies', 16);
-INSERT INTO forum_header VALUES (1, 'Commissies', 16);
 INSERT INTO forum_header VALUES (1, 'Commissies', 16);
 INSERT INTO forum_header VALUES (8, 'Scavenger hunt', 42);
 
@@ -1480,24 +1272,6 @@ INSERT INTO forum_header VALUES (8, 'Scavenger hunt', 42);
 
 SELECT pg_catalog.setval('forum_header_id_seq', 8, true);
 
-
---
--- TOC entry 2579 (class 0 OID 24244)
--- Dependencies: 199
--- Data for Name: forum_lastvisits; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-
-
---
--- TOC entry 2581 (class 0 OID 24250)
--- Dependencies: 201
--- Data for Name: forum_messages; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-INSERT INTO forum_messages VALUES (10861, 1277, 709, 'Your site is working :D', '2014-02-12 16:25:25.160834', 1);
-
-
 --
 -- TOC entry 2639 (class 0 OID 0)
 -- Dependencies: 200
@@ -1505,15 +1279,6 @@ INSERT INTO forum_messages VALUES (10861, 1277, 709, 'Your site is working :D', 
 --
 
 SELECT pg_catalog.setval('forum_messages_id_seq', 10861, true);
-
---
--- TOC entry 2584 (class 0 OID 24264)
--- Dependencies: 204
--- Data for Name: forum_threads; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-INSERT INTO forum_threads VALUES (1277, 27, 709, 'Testsite', '2014-02-12 16:25:25.159153', 1, 0);
-
 
 --
 -- TOC entry 2640 (class 0 OID 0)
@@ -1538,7 +1303,6 @@ INSERT INTO forums VALUES (3, 'Cover', 'Tips voor de vereniging? Activiteit was 
 INSERT INTO forums VALUES (29, 'Activiteiten', 'Bespreek hier alle uitjes, borrels en andere activiteiten binnen Cover.', 0, 3);
 INSERT INTO forums VALUES (6, 'Marktkraam', 'Verhandel hier alles, van kamers en boeken tot meubilair en je oma.', 0, 10);
 INSERT INTO forums VALUES (7, 'Roddelhoek', 'De roddels die iedereen moet weten.', 0, 11);
-INSERT INTO forums VALUES (27, 'Mededelingen', 'Belangrijke mededelingen van het bestuur en de commissies.', 0, 14);
 INSERT INTO forums VALUES (28, 'Cover polls', 'Wil je weten wat andere mensen over een bepaald onderwerp vinden, plaats dan hier een leuke poll. Deze polls komen ook op de voorpagina te staan. In dit forum kun je elke 14 dagen een nieuwe poll plaatsen.', 0, 13);
 INSERT INTO forums VALUES (26, 'Weblog', 'Weblog van het Bestuur', 0, 15);
 INSERT INTO forums VALUES (9, 'Commissie: Actie', 'Privéforum voor de Actie', 0, 17);
@@ -3332,7 +3096,7 @@ CREATE TABLE mailinglijsten_abonnementen (
 );
 
 CREATE TABLE mailinglijsten_berichten (
-    id serial NOT NULL PRIMARY KEY
+    id serial NOT NULL PRIMARY KEY,
     mailinglijst integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     commissie integer DEFAULT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     bericht TEXT NOT NULL,
@@ -3370,15 +3134,8 @@ CREATE TABLE facebook (
 );
 
 
-CREATE SEQUENCE bedrijven_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
 CREATE TABLE bedrijven (
-    id smallint DEFAULT nextval('bedrijven_id_seq'::regclass) NOT NULL PRIMARY KEY,
+    id SERIAL NOT NULL PRIMARY KEY,
     naam character varying(100) NOT NULL,
     slogan character varying(255),
     slug character varying(150) NOT NULL,
@@ -3387,7 +3144,6 @@ CREATE TABLE bedrijven (
     logo bytea DEFAULT NULL,
     logo_mtime timestamp without time zone,
     hidden integer DEFAULT 0,
-    CONSTRAINT bedrijven_id PRIMARY KEY (id),
     CONSTRAINT bedrijven_slug UNIQUE (slug)
 );
 
@@ -3563,15 +3319,6 @@ ALTER TABLE ONLY fotos
 
 ALTER TABLE ONLY gastenboek
     ADD CONSTRAINT gastenboek_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2428 (class 2606 OID 26024)
--- Name: leden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY leden
-    ADD CONSTRAINT leden_pkey PRIMARY KEY (id);
 
 
 --
