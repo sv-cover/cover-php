@@ -97,7 +97,7 @@ CREATE TABLE agenda (
     locatie character varying(100),
     private smallint DEFAULT 0,
     lustrum smallint DEFAULT 0,
-    extern NOT NULL smallint DEFAULT 0,
+    extern smallint NOT NULL DEFAULT 0,
     facebook_id character varying(20) DEFAULT NULL
 );
 
@@ -3496,7 +3496,7 @@ CREATE TABLE mailinglijsten_abonnementen (
 );
 
 CREATE TABLE mailinglijsten_berichten (
-    id serial NOT NULL PRIMARY KEY
+    id serial NOT NULL PRIMARY KEY,
     mailinglijst integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     commissie integer DEFAULT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     bericht TEXT NOT NULL,
