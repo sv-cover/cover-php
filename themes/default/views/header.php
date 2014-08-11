@@ -111,9 +111,9 @@
 			$admin[] = '<a href="banners.php">'. __('Advertenties') .'</a>';
 		}
 		
-		if (member_in_commissie(COMMISSIE_BOEKCIE)) {
-			$admin[] = '<a href="boeken.php?bestellingen">' . __('Bestelde boeken') . '</a>';
-		}
+		// if (member_in_commissie(COMMISSIE_BOEKCIE)) {
+		// 	$admin[] = '<a href="boeken.php?bestellingen">' . __('Bestelde boeken') . '</a>';
+		// }
 
 		if (member_in_commissie(COMMISSIE_EASY)) {
 			$admin[] = '<a href="taken.php">' . __('Taken') . '</a>';
