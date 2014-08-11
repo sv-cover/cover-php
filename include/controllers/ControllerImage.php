@@ -77,8 +77,11 @@ abstract class ControllerImage extends Controller
 		$src_dim = $this->getResourceDimensions($original);
 
 		$dst_dim = $this->getDimensions($iter, $src_dim);
-		
-		$res = $this->getScaledResource($original, $src_dim, $dst_dim);
+
+		if ($src_dim != $dst_dim)
+			$res = $this->getScaledResource($original, $src_dim, $dst_dim);
+		else
+			$res = $original;
 
 		$this->saveResource($res, $target_file);
 	}
@@ -149,6 +152,10 @@ abstract class ControllerImage extends Controller
 			case self::FORMAT_PNG:
 				header('Content-Type: image/png');
 				break;
+
+			default:
+				header('Content-Type: application/octet-stream');
+				break;
 		}
 	}
 
@@ -163,6 +170,9 @@ abstract class ControllerImage extends Controller
 		$skip_cache = !empty($_GET['skip_cache']);
 
 		$last_modified = $this->getLastModified($iter);
+
+		if (!$last_modified)
+			return $this->sendNotFoundResponse();
 
 		if (!$skip_cache && $this->clientHasLatestVersion($last_modified))
 			return;

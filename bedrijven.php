@@ -15,22 +15,20 @@ class ControllerBedrijvenLogo extends ControllerImage
 
 	protected function getImage(DataIter $bedrijf)
 	{
-		$logo = $this->model->get_logo($bedrijf);
-
-		if (!$logo) $this->sendNotFoundResponse();
-
-		return $logo;
+		return $this->model->get_logo($bedrijf);
 	}
 
 	protected function getLastModified(DataIter $bedrijf)
 	{
-		return strtotime($bedrijf->get('logo_mtime'));
+		return $bedrijf->get('logo_mtime') 
+			? strtotime($bedrijf->get('logo_mtime'))
+			: null;
 	}
 }
 
-class ControllerBedrijvenLogoThumb extends ControllerBedrijvenLogo
+class ControllerBedrijvenThumb extends ControllerBedrijvenLogo
 {
-	protected function getDimensions(Rectangle $original)
+	protected function getDimensions(DataIter $bedrijf, Rectangle $original)
 	{
 		return new Rectangle(200, 200 * $original->height / $original->width);
 	}
@@ -50,7 +48,7 @@ class ControllerBedrijven extends ControllerCRUD
 
 		$this->_register('logo', array(new ControllerBedrijvenLogo($this->model), 'run_image'));
 
-		$this->_register('logo-thumb', array(new ControllerBedrijvenLogoThumb($this->model), 'run_image'));
+		$this->_register('logo-thumb', array(new ControllerBedrijvenThumb($this->model), 'run_image'));
 	}
 	
 	/* protected */ function get_content($view, $iter = null, $params = null) {
@@ -100,11 +98,6 @@ class ControllerBedrijven extends ControllerCRUD
 		}
 
 		return true;
-	}
-
-	public function get_image(DataIter $bedrijf)
-	{
-		return $this->model->get_logo($bedrijf);
 	}
 }
 
