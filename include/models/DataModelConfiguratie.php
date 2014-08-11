@@ -4,8 +4,10 @@
 	/**
 	  * A class implementing configuration data
 	  */
-	class DataModelConfiguratie extends DataModel {
-		function DataModelConfiguratie($db) {
+	class DataModelConfiguratie extends DataModel
+	{
+		function DataModelConfiguratie($db)
+		{
 			parent::DataModel($db, 'configuratie', 'key');
 		}
 		
@@ -15,12 +17,28 @@
 		  *
 		  * @result the configuration value
 		  */
-		function get_value($key, $default = null) {
+		function get_value($key, $default = null)
+		{
 			$value = $this->db->query_value('SELECT value
 						FROM configuratie
 						WHERE key = \'' . $this->escape_string($key) . '\'');
 						
 			return $value === null ? $default : $value;
+		}
+
+		/**
+		 * Override DataModel::_insert because that implementation relies on
+		 * Database::get_last_insert_id, which won't work on a non-numerical
+		 * non-automatic primary key used by the configuratie table.
+		 */
+		function _insert($table, $iter, $getid = false)
+		{
+			if (!$this->db)
+				return false;
+			
+			$this->db->insert($table, $iter->data, $iter->get_literals());
+			
+			return $getid ? $key : -1;
 		}
 		
 		/**
@@ -37,4 +55,3 @@
 				$this->db->query_value('INSERT INTO configuratie (key, value) VALUES(\'' . $this->escape_string($key) . '\', \'' . $this->escape_string($value) . '\')');
 		}
 	}
-?>
