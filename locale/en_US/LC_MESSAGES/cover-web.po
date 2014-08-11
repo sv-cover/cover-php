@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-08-11 13:32+0100\n"
+"POT-Creation-Date: 2014-08-11 13:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -2521,7 +2521,6 @@ msgid "Wijzig mededeling"
 msgstr "Modify announcement"
 
 #: ../../../themes/default/views/announcements/form.phtml:29
-#: ../../../themes/default/views/settings/form.phtml:23
 msgid "Terug naar alle mededelingen"
 msgstr "Back to all announcements"
 
@@ -3486,6 +3485,24 @@ msgstr "Last active"
 #: ../../../themes/default/views/sessions/sessions.phtml:26
 msgid "Sluit geselecteerde sessies"
 msgstr "End selected sessions"
+
+#: ../../../themes/default/views/settings/confirm_delete.phtml:1
+msgid "Sleutel verwijderen"
+msgstr "Delete key"
+
+#: ../../../themes/default/views/settings/confirm_delete.phtml:4
+#, php-format
+msgid "Weet je heel zeker dat je de sleutel <em>%s</em> wil verwijderen?"
+msgstr "Are you certain you want to delete the key <em>%s</em>?"
+
+#: ../../../themes/default/views/settings/confirm_delete.phtml:7
+msgid "Verwijder sleutel"
+msgstr "Delete key"
+
+#: ../../../themes/default/views/settings/confirm_delete.phtml:8
+#: ../../../themes/default/views/settings/form.phtml:23
+msgid "Terug naar instellingen"
+msgstr "Back to settings"
 
 #: ../../../themes/default/views/settings/form.phtml:1
 #: ../../../themes/default/views/settings/index.phtml:31
