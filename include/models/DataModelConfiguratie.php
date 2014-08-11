@@ -15,12 +15,12 @@
 		  *
 		  * @result the configuration value
 		  */
-		function get_value($key) {
+		function get_value($key, $default = null) {
 			$value = $this->db->query_value('SELECT value
 						FROM configuratie
 						WHERE key = \'' . $this->escape_string($key) . '\'');
 						
-			return $value;
+			return $value === null ? $default : $value;
 		}
 		
 		/**

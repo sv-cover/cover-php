@@ -277,7 +277,11 @@
 			// 	$this->_show_bestellingen();
 			// else
 			// 	$this->get_content('boeken', null, isset($_GET['added']) ? array('added' => true) : null);
-			$this->get_content('go_to_webshop');
+
+			$config = get_model('DataModelConfiguratie');
+			$webshop_link = $config->get_value('boekcie_webshop_link', '#');
+
+			$this->get_content('go_to_webshop', null, compact('webshop_link'));
 		}
 	}
 	
