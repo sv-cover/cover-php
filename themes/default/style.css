@@ -310,6 +310,25 @@ border-radius: 0 0 5px 5px;
   height: 24px;
   line-height: 24px;
 }
+
+.large-button {
+	font-size: 22px;
+}
+
+.boekcie-webshop-call-to-action {
+	text-align: center;
+}
+
+.boekcie-webshop-call-to-action .large-button {
+	/*padding-right: 30px;*/
+}
+
+.boekcie-webshop-call-to-action .large-button:after {
+	padding-left: 4px;
+	content:'\25b8';
+	color: #333;
+}
+
 .bold {font-weight:bold;}
 .center {
     width:100%;

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-07-15 13:31+0100\n"
+"POT-Creation-Date: 2014-08-11 12:23+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.6\n"
+"X-Generator: Poedit 1.6.7\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -2611,6 +2611,10 @@ msgstr "1 order"
 #: ../../../themes/default/views/boeken/delete.phtml:25
 msgid "Annuleren"
 msgstr "Cancel"
+
+#: ../../../themes/default/views/boeken/go_to_webshop.phtml:2
+msgid "Ga verder naar de BoekCie webshop"
+msgstr "Continue to the BoekCie webshop"
 
 #: ../../../themes/default/views/commissies/_leden_gezocht.phtml:10
 #, php-format
