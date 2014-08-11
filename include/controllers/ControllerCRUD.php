@@ -59,27 +59,27 @@ class ControllerCRUD extends Controller
 
 	public function link_to_create()
 	{
-		return sprintf('%s?view=create', $_SERVER['script_name']);
+		return sprintf('%s?view=create', $_SERVER['SCRIPT_NAME']);
 	}
 
 	public function link_to_read(DataIter $iter)
 	{
-		return sprintf('%s?view=read&id=%d', $_SERVER['script_name'], $iter->get_id());
+		return sprintf('%s?view=read&id=%s', $_SERVER['SCRIPT_NAME'], rawurlencode($iter->get_id()));
 	}
 
 	public function link_to_update(DataIter $iter)
 	{
-		return sprintf('%s?view=update&id=%d', $_SERVER['script_name'], $iter->get_id());
+		return sprintf('%s?view=update&id=%s', $_SERVER['SCRIPT_NAME'], rawurlencode($iter->get_id()));
 	}
 
 	public function link_to_delete(DataIter $iter)
 	{
-		return sprintf('%s?view=delete&id=%d', $_SERVER['script_name'], $iter->get_id());
+		return sprintf('%s?view=delete&id=%s', $_SERVER['SCRIPT_NAME'], rawurlencode($iter->get_id()));
 	}
 
 	public function link_to_index()
 	{
-		return $_SERVER['script_name'];
+		return $_SERVER['SCRIPT_NAME'];
 	}
 
 	public function run_create()
