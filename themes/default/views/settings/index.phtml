@@ -1,0 +1,37 @@
+<h1><?=__('Instellingen')?></h1>
+<div class="messageBox">
+	<table class="full-width">
+		<thead>
+			<tr>
+				<th><?=__('Sleutel')?></th>
+				<th colspan="2"><?=__('Waarde')?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($iter as $item): ?>
+				<?php if (!get_policy($model)->user_can_read($item)) continue; ?>
+				<tr>
+					<td><?=markup_format_text($item->get('key'))?></td>
+					<td><pre><?=markup_format_text($item->get('value'))?></pre></td>
+					<td>
+						<?php if (get_policy($model)->user_can_update($item)): ?>
+							<a href="<?=markup_format_text($controller->link_to_update($item))?>"><?=__('Wijzig')?></a>
+						<?php endif ?>
+						<?php if (get_policy($model)->user_can_delete($item)): ?>
+							<a href="<?=markup_format_text($controller->link_to_delete($item))?>"><?=__('Verwijder')?></a>
+						<?php endif ?>
+					</td>
+				</tr>
+			<?php endforeach ?>
+		</tbody>
+		<?php if (get_policy($model)->user_can_create()): ?>
+		<tfoot>
+			<tr>
+				<td colspan="3">
+					<a href="<?=markup_format_text($controller->link_to_create())?>"><?=__('Nieuwe sleutel toevoegen')?></a>
+				</td>
+			</tr>
+		</tfoot>
+		<?php endif ?>
+	</table>
+</div>
