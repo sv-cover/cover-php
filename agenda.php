@@ -234,7 +234,7 @@
 			if (!logged_in())
 				$this->get_content('login', $iter);
 			else
-				$this->get_content('edit', $iter);
+				$this->get_content('edit', $iter, array('errors' => array()));
 		}
 		
 		function _view_moderate($id) {

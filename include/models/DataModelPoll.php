@@ -5,11 +5,11 @@
 	  * A class implementing poll data
 	  */
 	class DataModelPoll extends DataModel {
-		function DataModelPoll($db) {
+		public function DataModelPoll($db) {
 			parent::DataModel($db);
 		}
 		
-		function can_create_new_poll(&$days = nul)
+		public function can_create_new_poll(&$days = null)
 		{
 			$current_user = logged_in();
 
@@ -37,7 +37,7 @@
 			return $days <= 0;
 		}
 
-		function get_latest_poll()
+		public function get_latest_poll()
 		{
 			$poll_model = get_model('DataModelPoll');
 			$forum_model = get_model('DataModelForum');
@@ -55,7 +55,7 @@
 			return $forum->get_newest_thread();
 		}
 
-		function get_votes($id)
+		public function get_votes($id)
 		{
 			$rows = $this->db->query('SELECT * 
 					FROM pollopties
@@ -65,7 +65,7 @@
 			return $this->_rows_to_iters($rows);
 		}
 		
-		function vote($id)
+		public function vote($id)
 		{
 			$row = $this->db->query_first('SELECT *
 					FROM pollopties
@@ -92,12 +92,12 @@
 			$this->db->insert('pollvoters', $iter->data, $iter->get_literals());
 		}
 
-		function insert_optie($iter) {
+		protected function insert_optie($iter) {
 			$this->db->insert('pollopties', $iter->data, 
 					$iter->get_literals());
 		}
 		
-		function voted($iter) {
+		public function voted($iter) {
 			if (!($member_data = logged_in()))
 				return true;
 			
@@ -131,4 +131,3 @@
 				return true;
 		}
 	}
-?>

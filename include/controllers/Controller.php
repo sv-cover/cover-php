@@ -10,9 +10,10 @@
 	  * the specified view and then the footer view
 	  */
 	class Controller {
-		var $view;
-		var $model;
-		var $iter;
+		protected $view;
+		protected $model;
+		protected $iter;
+		protected $params;
 
 		/** 
 		  * Controller constructor
@@ -21,7 +22,7 @@
 		  * @iter optional; the iter to pass on to the view
 		  * @params optional; the params to pass on to the view
 		  */
-		function Controller($view, $model = null, $iter = null, $params = null) {
+		public function Controller($view, $model = null, $iter = null, $params = null) {
 			$this->view = $view;
 			$this->model = $model;
 			$this->iter = $iter;
@@ -31,7 +32,7 @@
 		  * Convenient function which runs the header view
 		  * @params optional; the params to pass on to the header view
 		  */
-		function run_header($params = null) {
+		protected function run_header($params = null) {
 			run_view('header', null, null, $params);
 		}
 
@@ -39,7 +40,7 @@
 		  * Convenient function which runs the footer view
 		  * @params optional; the params to pass on to the footer view
 		  */
-		function run_footer($params = null) {
+		protected function run_footer($params = null) {
 			run_view('footer', null, null, $params);
 		}
 	
@@ -48,7 +49,7 @@
 		  * then the view specified in the constructor and finally
 		  * the footer
 		  */
-		function get_content() {
+		protected function get_content() {
 			$this->run_header(Array('title' => ucfirst($this->view)));
 			run_view($this->view, $this->model, $this->iter, $this->params);
 			$this->run_footer();
@@ -57,7 +58,7 @@
 		/** 
 		  * Run the controller
 		  */
-		function run() {
+		public function run() {
 			ob_start();
 			
 			try {
@@ -70,11 +71,11 @@
 			ob_end_flush();
 		}
 		
-		function run_impl() {
+		protected function run_impl() {
 			$this->get_content();
 		}
 
-		function run_exception(Exception $e)
+		protected function run_exception(Exception $e)
 		{
 			header('Status: 500 Interal Server Error');
 
@@ -86,4 +87,3 @@
 			}
 		}
 	}
-?>

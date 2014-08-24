@@ -72,8 +72,7 @@
 			$author_info = $model->get_author_info($message);
 			$link = get_author_link($message);
 
-			//echo '<tr id="' . ($message == $iter ? 't' : 'p') . $message->get('id') . '" class="separator"><td colspan="2"></td></tr>';
-			echo '<tr class="r' . $i . '"><td class="author">';
+			echo '<tr id="p' . $message->get('id') . '" class="r' . $i . '"><td class="author">';
 			
 			if ($author_info && $author_info['name']) {
 				echo '<span class="bold">' . ($link ? ('<a href="' . $link . '">') : '') . htmlspecialchars($author_info['name']) . ($link ? '</a>' : '') . '</span><br>';
@@ -566,7 +565,8 @@
 			
 			if ($last) {
 				$pages = $last->get_num_thread_pages();
-				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#' . ($lastid == $last->get('id') ? 't' : 'p') . $lastid . '">' . htmlspecialchars($last->get('subject')) . '</a>';
+				$lastid = $last->get('last_id');
+				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#p' . $lastid . '">' . htmlspecialchars($last->get('subject')) . '</a>';
 			}
 			
 			echo '</td></tr>';

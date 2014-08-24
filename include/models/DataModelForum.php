@@ -255,14 +255,16 @@
 			if ($memberid == -1) {
 				$member_data = logged_in();
 				$memberid = $member_data['id'];
+			} else {
+				$member_data = null;
 			}
 			
 			/* Check commissie perms */
-			if ($this->_check_acl_commissies($forumid, $acl, $memberid, $member_info))
+			if ($this->_check_acl_commissies($forumid, $acl, $memberid, $member_data))
 				return true;
 			
 			/* Check forum group perms */
-			if ($this->_check_acl_group($forumid, $acl, $memberid, $member_info))
+			if ($this->_check_acl_group($forumid, $acl, $memberid, $member_data))
 				return true;			
 			
 			return false;

@@ -43,10 +43,7 @@
 			return;
 		}
 
-		$pagenr = $params['pagenr'];
-		$page = $params['page'];
-
-		echo_editable_page($iter, $page);
+		echo_editable_page($iter, $params['page']);
 	}
 
 	function view_read_only($model, $iter, $params = null) {

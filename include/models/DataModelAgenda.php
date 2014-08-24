@@ -53,23 +53,19 @@
 		
 		function get_iter($id, $include_prive = true) {
 			$row = $this->db->query_first("SELECT *, " . 
-					$this->_generate_select() . "
+					$this->_generate_select() . ",
+					a_m.agendaid as moderate,
+					a_m.overrideid as overrideid
 					FROM agenda
+					LEFT JOIN agenda_moderate a_m ON
+						a_m.agendaid = agenda.id
 					WHERE id = " . intval($id) . 
-					(!$include_prive ? ' AND private = 0 ' : ''));
+					(!$include_prive ? ' AND private = 0 ' : '')
+					. " GROUP BY agenda.id, a_m.agendaid, a_m.overrideid");
 			
 			if (!$row)
 				return $row;
-			
-			$moderate = $this->db->query_first('SELECT *
-					FROM agenda_moderate
-					WHERE agendaid = ' . intval($id));
-			
-			if ($moderate !== null && $moderate !== false) {
-				$row['moderate'] = $moderate['agendaid'];
-				$row['overrideid'] = $moderate['overrideid'];
-			}
-			
+
 			return $this->_row_to_iter($row);
 		}
 		

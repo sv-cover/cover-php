@@ -17,11 +17,11 @@
 		  * @id the id of the iter
 		  * @data the data of the iter (a hashtable)
 		  */
-		function DataIter($model, $id, $data, $namespace = '') {
+		public function DataIter(DataModel $model = null, $id, $data, $namespace = '') {
 			$this->model = $model;
 			$this->data = $data;
 			$this->_id = $id;			
-			$this->db = $model->db;
+			$this->db = $model ? $model->db : null;
 			$this->namespace = $namespace;
 			
 			$this->changes = array();
@@ -33,12 +33,12 @@
 		  *
 		  * @result the id of the iter
 		  */
-		function get_id() {
+		public function get_id() {
 			return $this->_id;
 		}
 
-		function has($field) {
-			return isset($this->data[$this->namespace . $field]);
+		public function has($field) {
+			return array_key_exists($this->namespace . $field, $this->data);
 		}
 		
 		/**
@@ -47,7 +47,10 @@
 		  *
 		  * @result the data in the field
 		  */
-		function get($field) {
+		public function get($field) {
+			// if (!$this->has($field))
+			// 	throw new RuntimeException('DataIter has no property ' . $field);
+
 			return $this->data[$this->namespace . $field];
 		}
 		
@@ -56,7 +59,7 @@
 		  * @field the data field name
 		  * @value the data value
 		  */
-		function set($field, $value) {
+		public function set($field, $value) {
 			$index = array_search($field, $this->literals);
 			
 			if ($index !== false)
@@ -79,7 +82,7 @@
 		  * @field the data field name
 		  * @value the data value
 		  */
-		function set_literal($field, $value) {
+		public function set_literal($field, $value) {
 			/* Return if value hasn't really changed */
 			if ($this->data[$this->namespace . $field] == $value && $this->_id != -1)
 				return;
@@ -101,7 +104,7 @@
 		  * @values a hashtable where keys are the data field names and the 
 		  * values are the data values 
 		  */
-		function set_all($values) {
+		public function set_all($values) {
 			foreach ($values as $field => $value)
 				$this->set($field, $value);
 		}
@@ -111,7 +114,7 @@
 		  * 
 		  * @result true if update was succesful, false otherwise
 		  */
-		function update() {
+		public function update() {
 			return $this->model->update($this);
 		}
 		
@@ -120,7 +123,7 @@
 		  *
 		  * @result true if the iter has been changed, false otherwise
 		  */		
-		function has_changes() {
+		public function has_changes() {
 			return (count($this->changes) != 0);
 		}
 		
@@ -129,7 +132,7 @@
 		  *
 		  * @result an array with the data field names that have been changed
 		  */
-		function get_changes() {
+		public function get_changes() {
 			return $this->changes;
 		}
 		
@@ -139,7 +142,7 @@
 		  * @result a hash with the data field names as the keys and data values
 		  * as the values
 		  */
-		function get_changed_values() {
+		public function get_changed_values() {
 			$changes = array();
 
 			foreach ($this->changes as $change)
@@ -158,16 +161,15 @@
 		  *
 		  * @result an array with field names
 		  */
-		function get_literals() {
+		public function get_literals() {
 			return $this->literals;
 		}
 		
-		function __get($get) {
+		public function __get($get) {
 			return $this->get($get);
 		}
 		
-		function __set($key, $value) {
+		public function __set($key, $value) {
 			return $this->set($key, $value);
 		}
 	}
-?>
