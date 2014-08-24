@@ -9,10 +9,9 @@
       this.img = this.el.querySelector('img');
       this.width = this.img.width;
       this.height = this.img.height;
-      
-      this.img.setAttribute('width', '100%');
-      this.img.setAttribute('height', '');
       this.aspect_ratio = this.width / this.height;
+      this.el.style.backgroundImage = 'url(' + this.img.src + ')';
+      this.img.style.display = 'none';
     }
 
     Photo.prototype.caption = function() {

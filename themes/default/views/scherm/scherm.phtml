@@ -24,7 +24,7 @@
 		}
 
 		figure {
-			margin: 1px;
+			margin: 0;
 		}
 
 		.slide {
@@ -81,6 +81,9 @@
 			display: block;
 			float: left;
 			overflow: hidden;
+			background-size: cover;
+			border: 1px solid white;
+			margin: -1px;
 		}
 
 		</style>
@@ -194,7 +197,7 @@
 						// Are we done yet?
 						if (elements.length == photos.length)
 							setTimeout(function() {
-								order_photos(photos, window.innerWidth, parseInt(window.innerHeight / 2));
+								order_photos(photos, window.innerWidth, parseInt(window.innerHeight / 2.5));
 							}, 10);
 					};
 				}
