@@ -69,7 +69,7 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			}					
 		
 			if (count($subtitle) > 0)
-				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . htmlspecialchars(implode_human($subtitle)) . '</span>)';
+				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
 		
 			$titles[] = $title;
 		}

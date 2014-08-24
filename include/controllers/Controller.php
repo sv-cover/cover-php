@@ -2,7 +2,8 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once('functions.php');
+	require_once 'include/functions.php';
+	require_once 'include/markup.php';
 
 	/** 
 	  * A class implementing the simplest controller. This class provides

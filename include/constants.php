@@ -27,6 +27,8 @@
 	define('AUTH_LEVEL_BESTUUR', 2);
 	define('AUTH_LEVEL_WEBCIE', 3);
 
+	define('WEBSITE_ENCODING', 'UTF-8');
+
 	if (in_array($_SERVER['REMOTE_ADDR'], array('129.125.139.247', '129.125.139.237', '129.125.139.236', '129.125.139.248', '129.125.130.218')))
 		define('NETWORK', NETWORK_AI);
 	elseif (preg_match('/^129.125/', $_SERVER['REMOTE_ADDR']))

@@ -31,7 +31,7 @@ class BesturenView extends View
 
 		if ($this->has_bestuursfoto($bestuur))
 			$img_html = sprintf('<img src="%s" width="100%%">',
-				htmlspecialchars($this->get_bestuursfoto($bestuur), ENT_QUOTES));
+				markup_format_attribute($this->get_bestuursfoto($bestuur)));
 		else
 			$img_html = '';
 

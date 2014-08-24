@@ -779,8 +779,6 @@
 		function _view_preview() {
 			ob_end_clean();
 
-			$data = iconv('UTF-8', 'ISO-8859-15', get_post('message'));
-
 			if (!$data)
 				$data = get_post('message');
 

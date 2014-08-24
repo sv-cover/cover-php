@@ -1,4 +1,4 @@
-<h2><?= htmlspecialchars(sprintf(__('Sessies van %s'), $member['voornaam'])) ?></h2>
+<h2><?= mkarup_format_text(sprintf(__('Sessies van %s'), $member['voornaam'])) ?></h2>
 <div class="messageBox">
 	<form method="post" action="sessions.php">
 		<table class="sessions-table">

@@ -89,7 +89,7 @@
 		</style>
 		<?php foreach ($slides as $slide => $options): ?>
 			<?php if (!empty($options['stylesheet'])): ?>
-				<link rel="stylesheet" href="<?=htmlspecialchars($options['stylesheet'], ENT_QUOTES)?>">
+				<link rel="stylesheet" href="<?=markup_format_attribute($options['stylesheet'])?>">
 			<?php endif ?>
 		<?php endforeach ?>
 	</head>

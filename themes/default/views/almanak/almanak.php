@@ -48,10 +48,10 @@
 				</a>',
 					$iter->get('id'),
 					implode(' ', $classes),
-					htmlspecialchars($photo, ENT_QUOTES),
-					sprintf(__('foto van %s'), htmlspecialchars($name, ENT_QUOTES)),
-					htmlspecialchars($name),
-					$status ? sprintf('<span class="status">(%s)</span>', htmlspecialchars($status)) : '');
+					markup_format_attribute($photo),
+					markup_format_attribute(sprintf(__('foto van %s'), $name)),
+					markup_format_text($name),
+					$status ? sprintf('<span class="status">(%s)</span>', markup_format_text($status)) : '');
 		}
 	}
 ?>

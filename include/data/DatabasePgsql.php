@@ -42,9 +42,14 @@
 			
 			/* Add database */
 			$params[] = 'dbname=' . $dbid['database'];
+
+			/* Add client encoding */
+			$params[] = "options='--client_encoding=UTF8'";
 			
 			/* Open connection */
 			$this->resource = pg_connect(implode(' ', $params));
+
+			$this->query("SET NAMES 'UTF-8';");
 			
 			if (!$this->resource)
 				trigger_error('Could not connect to database: ' . $php_errormsg);

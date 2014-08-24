@@ -8,7 +8,7 @@
 
 <? echo '<table>' . 
 input_hidden($iter ? 'submfotoboekedit' : 'submfotoboeknieuw', 'yes') .
-table_row(label(__('Bovenliggend boek'), '', null, true) . ':', $parent ? htmlspecialchars($parent->get('titel')) : 'Fotoboeken') .
+table_row(label(__('Bovenliggend boek'), '', null, true) . ':', $parent ? markup_format_text($parent->get('titel')) : 'Fotoboeken') .
 table_row(label(__('Titel'), 'titel', $errors, true) . ':', input_text('titel', $data)) .
 table_row(label(__('Datum (dd-mm-yyyy)'), 'date', $errors) . ':', input_text('date', $data, 'field', 'datum')) .
 table_row(label(__('Fotograaf'), 'fotograaf', $errors) . ':', input_text('fotograaf', $data)) .

@@ -302,7 +302,7 @@
 	
 	function create_login() {
 		if (($data = logged_in())) {
-			$output =  __('Ingelogd') . ': <b>' . htmlspecialchars($data['voornaam']) . '</b><br/>
+			$output =  __('Ingelogd') . ': <b>' . markup_format_text($data['voornaam']) . '</b><br/>
 			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . '">' . __('Uitloggen') . '</a>
 			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . __('Profiel') . '</a>';
 			return $output;
@@ -336,14 +336,14 @@
 	}
 			
 	function view_header($model, $iter, $params) {
-		header('Content-type: text/html; charset=ISO-8859-15');
+		header('Content-type: text/html; charset=UTF-8');
 
 		echo '
 <!DOCTYPE HTML>
 <html>
 	<head>
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
-	<meta http-equiv="Content-type" content="text/html; charset=ISO-8859-15">
+	<meta http-equiv="Content-type" content="text/html; charset=' . WEBSITE_ENCODING . '">
 	<link rel="icon" type="image/png" href="images/favicon.png">';
 		
 		$title = 'Cover :: ' . __('Studievereniging Kunstmatige Intelligentie en Informatica') . ', RuG';
@@ -351,7 +351,7 @@
 		if (isset($params['title']))
 			$title = $params['title'] . ' :: ' . $title;
 		
-		echo '<title>' . htmlspecialchars($title) . '</title>
+		echo '<title>' . markup_format_text($title) . '</title>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
 		<!--[if lte IE 7]>
@@ -387,7 +387,7 @@
 			';
 			
 			if (isset($_SESSION['alert'])) {
-				echo 'alert("' . str_replace("\n", '\n', str_replace('"', '\"', $_SESSION['alert'])) . '");';
+				echo 'alert(' . json_encode((string) $_SESSION['alert']) . ');';
 				unset($_SESSION['alert']);
 			}
 

@@ -10,7 +10,7 @@ foreach ($iter as $item) {
 		$aantal = __('1 bestelling');
 ?>
 	
-	<li> <?= $item->get('vak') ?>, <span class="bold"> <?= htmlspecialchars($item->get('titel')) ?></span> (<span class="italic"><?= htmlspecialchars($item->get('auteur')) ?></span>), <?= $aantal ?></li>
+	<li> <?= $item->get('vak') ?>, <span class="bold"> <?= markup_format_text($item->get('titel')) ?></span> (<span class="italic"><?= markup_format_text($item->get('auteur')) ?></span>), <?= $aantal ?></li>
 <? } ?>
 
 </ul>

@@ -17,8 +17,8 @@
 	<?php foreach ($model->get_active_members() as $lid): ?>
 			<tr>
 				<td><?= $lid->get('id') ?></td>
-				<td><a href="profiel.php?lid=<?=$lid->get('id')?>"><?= htmlspecialchars(member_full_name($lid)) ?></a></td>
-				<td><?= htmlspecialchars($lid->get('email')) ?></td>
+				<td><a href="profiel.php?lid=<?=$lid->get('id')?>"><?= markup_format_text(member_full_name($lid)) ?></a></td>
+				<td><?= markup_format_text($lid->get('email')) ?></td>
 				<td><?= $lid->get('commissie_count') ?></td>
 			</tr>
 	<? endforeach ?>

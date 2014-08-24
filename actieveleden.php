@@ -1,8 +1,7 @@
 <?php
 	include('include/init.php');
 	include('controllers/Controller.php');
-	
-	require_once('member.php');
+	require_once'include/member.php';
 
 	class ControllerActieveLeden extends Controller {
 		var $model = null;

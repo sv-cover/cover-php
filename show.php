@@ -90,8 +90,6 @@
 
 			$iter = $this->model->get_iter(get_post('editable_id'));
 
-			$data = iconv('UTF-8', 'ISO-8859-15', get_post($field));
-
 			if (!$data)
 				$data = get_post($field);
 			

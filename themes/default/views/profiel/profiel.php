@@ -55,7 +55,7 @@ class ProfielView extends View {
 			if (member_in_commissie(COMMISSIE_BESTUUR) || ($this->member_write_permission($iter) && !$read_only))
 				$result .= input_text($name, $data);
 			else /* Show the field otherwise */
-				$result .= htmlspecialchars($data[$name]);
+				$result .= markup_format_text($data[$name]);
 
 			if ($name == 'adres' && !$model->is_private($iter, 'woonplaats') && !$model->is_private($iter, 'postcode')) {
 				$provincie = '';

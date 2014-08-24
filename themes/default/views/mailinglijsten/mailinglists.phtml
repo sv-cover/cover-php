@@ -52,9 +52,9 @@
 			<a href="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>"><?= markup_format_text($lijst->get('naam')) ?></a>
 		</h3>
 
-		<em class="list-email"><?= htmlspecialchars($lijst->get('adres')) ?></em>
+		<em class="list-email"><?= markup_format_text($lijst->get('adres')) ?></em>
 		<?php if (!$lijst->get('publiek')): ?>
-		<em class="list-public-status"><?=__('Privé')?></em>
+		<em class="list-public-status"><?=__('PrivÃ©')?></em>
 		<?php endif ?>
 
 		<p class="list-description"><?= markup_parse($lijst->get('omschrijving')) ?></p>

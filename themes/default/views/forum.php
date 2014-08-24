@@ -26,7 +26,7 @@
 	function view_thread($model, $iter, $params = null) {
 		$forum = $model->get_iter($iter->get('forum'), -1);
 
-		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $forum->get('id') . '">' . htmlspecialchars($forum->get('name')) . '</a></h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $forum->get('id') . '">' . markup_format_text($forum->get('name')) . '</a></h1>';
 		/*
 		<h2>' . $iter->get('subject') . '</h2>
 		*/
@@ -63,7 +63,7 @@
 		echo '<table class="forum thread">';
 		echo '<col class="author">';
 		echo '<col class="message">';
-		echo '<tr class="separator"><td colspan="2">'.htmlspecialchars($iter->get('subject')).'</td></tr>';	
+		echo '<tr class="separator"><td colspan="2">'.markup_format_text($iter->get('subject')).'</td></tr>';	
 			//echo '<tr id="' . ($message == $iter ? 't' : 'p') . $message->get('id') . '" class="separator"><td colspan="2"></td></tr>';
 		$i = 0;
 		$admin = member_in_commissie(COMMISSIE_BESTUUR);
@@ -75,10 +75,10 @@
 			echo '<tr id="p' . $message->get('id') . '" class="r' . $i . '"><td class="author">';
 			
 			if ($author_info && $author_info['name']) {
-				echo '<span class="bold">' . ($link ? ('<a href="' . $link . '">') : '') . htmlspecialchars($author_info['name']) . ($link ? '</a>' : '') . '</span><br>';
+				echo '<span class="bold">' . ($link ? ('<a href="' . $link . '">') : '') . markup_format_text($author_info['name']) . ($link ? '</a>' : '') . '</span><br>';
 				
 				if ($author_info['avatar'])
-					echo '<img class="avatar" src="' . htmlspecialchars($author_info['avatar'], ENT_QUOTES) . '" alt="Avatar">';
+					echo '<img class="avatar" src="' . markup_format_attribute($author_info['avatar']) . '" alt="Avatar">';
 				
 				$posts = $model->get_author_stats($message, $total);
 				
@@ -100,7 +100,7 @@
 				echo ' <a href="forum.php?delmessage=' . $message->get('id') . '&page=' . $page . '">' . image('delete_small.png', __('verwijder'), __('Verwijder bericht')) . '</a>';
 			
 			
-			echo ' <a href="javascript:void(0)" onclick="quote(' . $message->get('id') . ', \'' . htmlspecialchars(addslashes($author_info['name']), ENT_QUOTES) . '\');">' . image('quote.png', __('quote'), __('Quote geselecteerde tekst van bericht')) . '</a></div>';
+			echo ' <a href="javascript:void(0)" onclick="quote(' . $message->get('id') . ', \'' . markup_format_attribute(addslashes($author_info['name'])) . '\');">' . image('quote.png', __('quote'), __('Quote geselecteerde tekst van bericht')) . '</a></div>';
 
 			echo markup_parse($message->get('message'));
 			
@@ -136,7 +136,7 @@
 			
 			foreach ($model->get() as $forum) {
 				if ($model->check_acl($forum->id, ACL_WRITE))
-					$bar .= '<option value="' . $forum->id . '"' . ($forum->id == $iter->forum ? ' selected="selected"' : '') . '>' . htmlspecialchars($forum->name) . '</option>';
+					$bar .= '<option value="' . $forum->id . '"' . ($forum->id == $iter->forum ? ' selected="selected"' : '') . '>' . markup_format_text($forum->name) . '</option>';
 			}
 			
 			$bar .='</select> <input class="noborder" type="image" src="' . get_theme_data('images/next.png') . '"></form></div>';
@@ -336,7 +336,7 @@
 	}
 	
 	function view_add_poll($model, $iter, $params = null) {
-		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . htmlspecialchars($iter->get('name')) . '</a></h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: <a href="forum.php?forum=' . $iter->get('id') . '">' . markup_format_text($iter->get('name')) . '</a></h1>';
 		echo '<div class="messageBox">';
 		echo '<table class=""><tr class="header"><td colspan="2">' . __('Nieuwe poll toevoegen.') . '</td></tr>';
 		
@@ -433,7 +433,7 @@
 				return;
 			}
 		}
-		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: ' . htmlspecialchars($iter->get('name')) . '</h1>';
+		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: ' . markup_format_text($iter->get('name')) . '</h1>';
 		$i = 0;
 		$page = $params['page'];
 		$threads = $model->get_threads($iter, $page, $max);
@@ -480,7 +480,7 @@
 		
 		foreach ($threads as $thread) {
 			echo '<tr class="r' . $i . '"><td class="icon">' . image($model->thread_unread($thread->get('id')) ? 'thread_new.png' : 'thread.png', '', '') . '</td>
-			<td class="subject"><a href="forum.php?thread=' . $thread->get('id') . '"><span class="subject">' . ($thread->get('poll') ? ('[' . __('Poll') . '] ') : '') . htmlspecialchars($thread->get('subject')) . '</span></a>';
+			<td class="subject"><a href="forum.php?thread=' . $thread->get('id') . '"><span class="subject">' . ($thread->get('poll') ? ('[' . __('Poll') . '] ') : '') . markup_format_text($thread->get('subject')) . '</span></a>';
 			
 			$pages = $thread->get_num_thread_pages();
 			$i = ($i ? 0 : 1);
@@ -499,7 +499,7 @@
 			$author_info = $model->get_author_info($thread);
 
 			echo '</td>
-			<td class="text_center">' . ($author_info['name'] ? ('<a href="' . $link .  '">' . htmlspecialchars($author_info['name']) . '</a>') : __('Onbekend')) . '</td>
+			<td class="text_center">' . ($author_info['name'] ? ('<a href="' . $link .  '">' . markup_format_text($author_info['name']) . '</a>') : __('Onbekend')) . '</td>
 			<td class="text_center">' . $thread->get_num_messages() . '</td>
 			<td class="last">';
 
@@ -508,7 +508,7 @@
 				$lastid = $thread->get('last_id');
 
 				if ($author_info['last_name'] || $author_info['name'])
-					echo '<br><a href="forum.php?thread=' . $thread->get('id') . '&page=' . ($pages - 1) . '#' . ($lastid == $thread->get('id') ? 't' : 'p') . $lastid . '">' . ($author_info['last_name'] ? $author_info['last_name'] : $author_info['name']) . '</a>';
+					echo '<br><a href="forum.php?thread=' . $thread->get('id') . '&page=' . ($pages - 1) . '#' . ($lastid == $thread->get('id') ? 't' : 'p') . $lastid . '">' . markup_format_text($author_info['last_name'] ? $author_info['last_name'] : $author_info['name']) . '</a>';
 			}
 
 			echo '</td>
@@ -548,7 +548,7 @@
 			}
 			
 			if ($lastheader) {
-				echo '<tr class="forum_header"><td colspan="5">' . htmlspecialchars($lastheader->get('name')) . '</td></tr>';
+				echo '<tr class="forum_header"><td colspan="5">' . markup_format_text($lastheader->get('name')) . '</td></tr>';
 				$i=0;
 			}
 			if (!($iter->get('id') == 7 && !logged_in())){
@@ -556,7 +556,7 @@
 			$num_messages = $iter->get_num_forum_messages();
 
 			echo '<tr class="r' . $i . '"><td class="icon">' . image($model->forum_unread($iter->get('id')) ? 'thread_new.png' : 'thread.png', '', '') . '</td>
-			<td class="forum"><span class="bold"><a href="forum.php?forum=' . $iter->get('id') . '">' . htmlspecialchars($iter->get('name')) . '</a></span><div class="smaller">' . markup_parse($iter->get('description')) . '</div></td>
+			<td class="forum"><span class="bold"><a href="forum.php?forum=' . $iter->get('id') . '">' . markup_format_text($iter->get('name')) . '</a></span><div class="smaller">' . markup_parse($iter->get('description')) . '</div></td>
 			<td class="text_center">' . $num_threads . '</td>
 			<td class="text_center">' . $num_messages . '</td>
 			<td class="last">';
@@ -566,7 +566,7 @@
 			if ($last) {
 				$pages = $last->get_num_thread_pages();
 				$lastid = $last->get('last_id');
-				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#p' . $lastid . '">' . htmlspecialchars($last->get('subject')) . '</a>';
+				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#p' . $lastid . '">' . markup_format_text($last->get('subject')) . '</a>';
 			}
 			
 			echo '</td></tr>';
@@ -583,7 +583,7 @@
 		<ul>';
 		
 		foreach ($menu as $id => $name)
-			echo '<li' . ($sub == $id ? ' class="selected"' : '') . '><a href="forum.php?admin=' . $id . '">' . htmlspecialchars($name) . '</a></li>';
+			echo '<li' . ($sub == $id ? ' class="selected"' : '') . '><a href="forum.php?admin=' . $id . '">' . markup_format_text($name) . '</a></li>';
 		
 		echo '</ul>
 		</div>';
@@ -1018,7 +1018,7 @@
 	}
 	
 	function render_admin_rights_forum($model, $forum, $params) {
-		echo '<h2>' . __('Rechten') . ' :: ' . htmlspecialchars($forum->get('name')) . '</h2>
+		echo '<h2>' . __('Rechten') . ' :: ' . markup_format_text($forum->get('name')) . '</h2>
 		<div class="smaller">' . markup_parse($forum->get('description')) . '</div><br>
 		<form method="post" action="forum.php?admin=rights&forum=' . $forum->get('id') . '">
 		' . input_hidden('submforumrights', 'yes') . '

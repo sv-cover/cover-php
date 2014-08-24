@@ -211,7 +211,7 @@
 		if ($iter === null)
 			return '';
 		
-		return '<a href="show.php?id=' . $iter->get('page') . '">' . htmlspecialchars($iter->get('naam')) . '</a>';
+		return '<a href="show.php?id=' . $iter->get('page') . '">' . markup_format_text($iter->get('naam')) . '</a>';
 	}
 	
 	function _markup_parse_macro_real($matches) {
@@ -227,8 +227,8 @@
 
 	function _markup_parse_emails_real($matches) {
 		return sprintf('<a href="mailto:%s">%s</a>',
-			htmlspecialchars($matches[0], ENT_QUOTES),
-			htmlspecialchars($matches[0]));
+			rawurlencode($matches[0]),
+			markup_format_text($matches[0]));
 	}
 	
 	function markup_parse_emails($markup) {
@@ -319,7 +319,7 @@
 	  * @result the formatted text
 	  */
 	function markup_format_text($text) {
-		$text = htmlentities($text);
+		$text = htmlspecialchars($text, ENT_COMPAT, WEBSITE_ENCODING);
 		
 		/*$text = str_replace('&','&amp;',$str);
 		$text = str_replace('"','&quot;',$str);
@@ -327,5 +327,9 @@
 		$text = str_replace('>','&gt;',$str);*/
 
 		return $text;
+	}
+
+	function markup_format_attribute($text) {
+		return htmlspecialchars($text, ENT_QUOTES, WEBSITE_ENCODING);
 	}
 ?>

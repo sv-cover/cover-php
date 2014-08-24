@@ -75,7 +75,7 @@ class ControllerScherm
 		header('X-Scherm-ETag: ' . $this->generate_etag());
 		
 		// Proper content type (hopefully)
-		header('Content-Type: text/html; charset=ISO-8859-15');
+		header('Content-Type: text/html; charset=' . WEBSITE_ENCODING);
 
 		include $this->slides[$this->slide]['url'];
 	}
@@ -138,7 +138,7 @@ class ControllerScherm
 
 	protected function run_scherm()
 	{
-		header('Content-Type: text/html; charset=ISO-8859-15');
+		header('Content-Type: text/html; charset=' . WEBSITE_ENCODING);
 		run_view('scherm::scherm', null, null, array('slides' => $this->slides));
 	}
 
@@ -149,7 +149,7 @@ class ControllerScherm
 
 	public function run()
 	{
-		header('Content-Type: text/html; charset=ISO-8859-15');
+		header('Content-Type: text/html; charset=' . WEBSITE_ENCODING);
 
 		if (isset($_GET['slide']))
 		{

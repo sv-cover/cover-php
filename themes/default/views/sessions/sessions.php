@@ -65,6 +65,6 @@ class SessionsView extends View
 	{
 		return sprintf('<abbr title="%s">%s</a>',
 			markup_format_text($application),
-			htmlspecialchars($this->format_nice_application($application)));
+			markup_format_text($this->format_nice_application($application)));
 	}
 }

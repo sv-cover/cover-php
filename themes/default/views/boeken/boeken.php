@@ -264,13 +264,13 @@
 		}
 		
 		function bestellingen_print_header() {
-			header('Content-type: text/html; charset=ISO-8859-15');
+			header('Content-type: text/html; charset=' . WEBSITE_ENCODING);
 			echo '<html>
 				<head>
 					<title>' . __('Lijst met bestelde boeken') . '</title>
 					<link rel="stylesheet" href="themes/default/print.css" type="text/css">
 					<link rel="stylesheet" href="themes/default/print.css" type="text/css" media="print">
-					<meta http-equiv="Content-type" content="text/html; charset=ISO-8859-15">
+					<meta http-equiv="Content-type" content="text/html; charset=' . WEBSITE_ENCODING . '">
 				</head>
 				<body onLoad="setTimeout(\'window.print()\', 100);">';	
 		}

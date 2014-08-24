@@ -68,7 +68,7 @@
 		$result = '<input';
 
 		foreach ($attributes as $attribute => $value)
-			$result .= ' ' . $attribute . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+			$result .= ' ' . $attribute . '="' . markup_format_attribute($value) . '"';
 		
 		return $result . '/>';
 	}
@@ -296,18 +296,18 @@
 			$params['id'] = 'field-' . $name;
 
 		foreach ($values as $val => $title)
-			$options .= '<option value="' . htmlspecialchars($val, ENT_QUOTES) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . htmlspecialchars($title) . "</option>\n";
+			$options .= '<option value="' . markup_format_attribute($val) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . markup_format_text($title) . "</option>\n";
 		
 		$result = '<select name="' . $name . '"';
 		
 		foreach ($params as $attribute => $value)
-			$result .= ' ' . $attribute . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+			$result .= ' ' . $attribute . '="' . markup_format_attribute($value) . '"';
 		
 		return $result . ">\n" . $options . "</select>";
 	}
 	
 	function _textarea_format_default($value) {
-		return htmlspecialchars($value);
+		return markup_format_text($value);
 	}
 	
 	/** @group Form
@@ -362,7 +362,7 @@
 		$result = '<textarea name="' . $name . '"';
 		
 		foreach ($params as $attribute => $val)
-			$result .= ' ' . $attribute . '="' . htmlspecialchars($val, ENT_QUOTES) . '"';
+			$result .= ' ' . $attribute . '="' . markup_format_attribute($val) . '"';
 		
 		return $result . ">\n" . $value . "</textarea>";
 	}
@@ -382,7 +382,7 @@
 			$name = ucfirst($name);
 		}
 
-		$name = htmlspecialchars($name);
+		$name = markup_format_text($name);
 		$classes = array('label');
 				
 		if ($errors && in_array($field, $errors))

@@ -40,17 +40,17 @@
 	<div class="sidebar">
 		<div id="temp">
 			<!-- Temperature in degrees Celcius (rounded to 0 decimals) -->
-			<?php echo htmlspecialchars(round(intval($data->temperatuurGC))); ?>&deg;C
+			<?php echo round(intval($data->temperatuurGC)); ?>&deg;C
 		</div>
 		<div id="wind">
 			<!-- Wind direction -->
 			<svg id="icon-arrow" width="200px" height="200px" style="shape-rendering:geometricPrecision;">
 				<g>
-					<polygon points="100,25 67,175 133,175" transform="rotate(<?php echo htmlspecialchars(intval($data->windrichtingGR)); ?>, 100, 100)"/>
+					<polygon points="100,25 67,175 133,175" transform="rotate(<?php echo intval($data->windrichtingGR); ?>, 100, 100)"/>
 				</g>
 			</svg>
 			<!-- Wind speed in Beaufort -->
-			<?php echo htmlspecialchars($data->windsnelheidBF); ?>
+			<?php echo markup_format_text($data->windsnelheidBF); ?>
 		</div>
 		<div id="rain">
 			<svg id="rain-graph" width="400px" height="400px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision;">
@@ -66,8 +66,8 @@
 				</defs>
 				<g>
 					<!-- Labels of the X-axis -->
-					<text x="0" y="400" class="label"><?php echo htmlspecialchars($rain_forecast[0][1]); ?></text>
-					<text x="400" y="400" text-anchor="end" class="label"><?php echo htmlspecialchars($rain_forecast[count($rain_forecast) - 1][1]); ?></text>
+					<text x="0" y="400" class="label"><?php echo markup_format_text($rain_forecast[0][1]); ?></text>
+					<text x="400" y="400" text-anchor="end" class="label"><?php echo markup_format_text($rain_forecast[count($rain_forecast) - 1][1]); ?></text>
 					<!-- Draw a 394*347 grid (leave space for linewidth) -->
 					<g id="Grid">
 						<line class="grid-thick" x1="3"   y1="3" x2="3"   y2= "350" />

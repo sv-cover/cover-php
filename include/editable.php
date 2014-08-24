@@ -21,8 +21,8 @@
 					$lh .= '<li>
 						<a href="profiel.php?lid=' . $lid->get('id') . '" class="commissie-member">
 							<img src="foto.php?lid_id=' . $lid->get('id') .'&amp;get_thumb=circle&amp;width=200" width="100" height="100">
-							<span class="name">' . htmlspecialchars(member_full_name($lid, false, true)) . '</span>
-							<span class="function">' . htmlspecialchars($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '') . "</span>
+							<span class="name">' . markup_format_text(member_full_name($lid, false, true)) . '</span>
+							<span class="function">' . markup_format_text($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '') . "</span>
 						</a>
 					</li>\n";
 					
@@ -50,7 +50,7 @@
 		$model = get_model('DataModelCommissie');
 			
 		$email = $model->get_email($owner);
-		$page = str_replace('[commissie_email]', '<a href="mailto:' . htmlspecialchars($email, ENT_QUOTES) . '">E-Mail</a>', $page);
+		$page = str_replace('[commissie_email]', '<a href="mailto:' . rawurlencode($email) . '">E-Mail</a>', $page);
 	}
 	
 	function _editable_parse_commissie_foto(&$page, $owner) {
@@ -96,11 +96,11 @@
 		<p><ul>';
 
 		foreach ($activiteiten as $punt) {
-			$ah .= '<li><a href="agenda.php?id=' . $punt->get_id() . '"><b>' . htmlspecialchars($punt->get('kop')) . "</b></a><br/>\n";
+			$ah .= '<li><a href="agenda.php?id=' . $punt->get_id() . '"><b>' . markup_format_text($punt->get('kop')) . "</b></a><br/>\n";
 			$ah .= agenda_period_for_display($punt) . '<br/>';
 
 			if ($punt->get('locatie'))
-				$ah .= __('Locatie') . ': ' . htmlspecialchars($punt->get('locatie')) . '<br/>';
+				$ah .= __('Locatie') . ': ' . markup_format_text($punt->get('locatie')) . '<br/>';
 
 			$ah .= "</li>\n";
 		}

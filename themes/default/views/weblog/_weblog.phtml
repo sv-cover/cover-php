@@ -4,15 +4,15 @@ $message = $iter->get_first_message();
 ?>
 <div class="weblog-post">
 	<div class="weblog-post-details">
-		<a class="author" href="<?=htmlspecialchars(get_author_link($iter), ENT_QUOTES)?>">
-			<img class="weblog_head" width="100" height="100" src="<?=htmlspecialchars($this->_get_weblog_head($iter), ENT_QUOTES)?>">
-			<span class="name"><?=htmlspecialchars($author_info['name'])?></span>
+		<a class="author" href="<?=markup_format_attribute(get_author_link($iter))?>">
+			<img class="weblog_head" width="100" height="100" src="<?=markup_format_attribute($this->_get_weblog_head($iter))?>">
+			<span class="name"><?=markup_format_text($author_info['name'])?></span>
 		</a>
 	</div>
 	<div class="weblog-post-content">
 		<div class="weblog-post-header">
 			<div class="weblog-post-date"><?=$iter->get('datum')?></div>
-			<h3><a href="forum.php?thread=<?=$iter->get('id')?>"><?=htmlspecialchars($iter->get('subject'))?></a></h3>
+			<h3><a href="forum.php?thread=<?=$iter->get('id')?>"><?=markup_format_text($iter->get('subject'))?></a></h3>
 		</div>
 		<?=markup_parse($message->get('message'))?>
 		<p class="weblog-post-footer">

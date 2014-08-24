@@ -24,7 +24,7 @@ $leden = $commissie_model->get_leden($iter->get('id'));
 						<td class="text_center"><?= input_checkbox('del_' . $lid->get('actiefid'), null) ?></td>
 						<td><?= $lid->get('id') ?></td>
 						<td><?= input_checkbox('sleutel_' . $lid->get('actiefid'), $lid->data, 'yes', 'field', 'sleutel') ?></td>
-						<td><?= htmlspecialchars(member_full_name($lid)) ?></td>
+						<td><?= markup_format_text(member_full_name($lid)) ?></td>
 						<td><?= input_text('functie_' . $lid->get('actiefid'), $lid->data, 'field', 'functie') ?></td>
 					</tr>
 				<?php endforeach ?>

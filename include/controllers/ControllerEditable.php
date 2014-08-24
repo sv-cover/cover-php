@@ -136,10 +136,7 @@
 				return;
 			
 			$page = false;
-			
-			if (isset($_GET['xmlrequest']))
-				$page = iconv("UTF-8", "ISO-8859-15", get_post($field));
-			
+						
 			if (!$page)
 				$page = get_post($field);
 
