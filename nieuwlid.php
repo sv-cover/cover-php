@@ -80,7 +80,7 @@
 		function _check_geslacht($name, $value) {
 			$value = strtolower($value);
 			
-			if ($value != 'm' && $value != 'v')
+			if ($value != 'm' && $value != 'v' && $value != 'o')
 				return false;
 			
 			return $value;

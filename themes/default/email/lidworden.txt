@@ -5,7 +5,7 @@ De volgende aanvraag voor lidmaatschap is via de website gemaakt:
 Voornaam: $voornaam
 Tussenvoegsel: $tussenvoegsel
 Achternaam: $achternaam
-Gender: $geslacht
+Gender: $gender
 
 Adres: $adres
 Postcode: $postcode

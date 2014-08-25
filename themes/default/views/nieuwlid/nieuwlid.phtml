@@ -35,7 +35,7 @@ unset($months[0]);
 		<td colspan="2"><hr></td>
 	</tr>
 
-	<?= table_row(label(__('Geslacht'), 'geslacht', $e, true), select_field('geslacht', array('m' => 'Man', 'v' => 'Vrouw'), null))  ?>
+	<?= table_row(label(__('Gender'), 'geslacht', $e, true), select_field('geslacht', array('m' => __('Man'), 'v' => __('Vrouw'), 'o' => __('Anders')), null))  ?>
 	<?= table_row(label(__('Geboortedatum'), 'geboortedatum',
 			$e, true), 
 		  select_field('day', $days, null) . ' ' .
@@ -46,7 +46,7 @@ unset($months[0]);
 
 	<tr><td colspan="2"><hr></td></tr>
 
-	<?= $this->render_text_row(__('Adres'), 'adres', $e, 
+	<?= $this->render_text_row(__('Straatnaam + huisnummer'), 'adres', $e, 
 			true, 'maxlength', 50) ?>
 	<?= $this->render_text_row(__('Postcode'), 'postcode', $e, 
 			true, 'maxlength', 7, 
