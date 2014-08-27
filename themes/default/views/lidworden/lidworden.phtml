@@ -57,6 +57,8 @@ if ($e) {?>
 
 	<?= table_row(label('Machtiging', 'machtiging', $e, true), input_checkbox('machtiging', null) . ' ' . __('Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch van mijn rekening af te schrijven (verplicht)')) ?>
 
+	<?= table_row(label('Mailing', 'mailing', $e, false), input_checkbox('mailing', null) . ' ' . __('Ik wil graag e-mails over activiteiten van Cover ontvangen. (Dit wil je. Daarnaast, uitschrijven kan gemakkelijk via de website.)')) ?>
+
 	<?=$this->render_text_row(__('Wat is de kleur van gras? (ik ben geen bot)'), 'spam', $e, true) ?>
 
 	<tr>

@@ -20,6 +20,8 @@ Studierichting: $studierichting $fase
 IBAN: $rekening
 Machtiging: $machtiging
 
+Mailing: $mailing
+
 Met vriendelijke groeten,
 
 

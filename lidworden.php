@@ -54,6 +54,7 @@
 			$data['telefoonnummer'] = $_POST['telefoonnummer'];
 			$data['geboortedatum'] = $_POST['day'] . '-' . $_POST['month'] . '-' . $_POST['year'];
 			$data['machtiging'] = $_POST['machtiging'] == 'yes' ? 'Ja' : 'Nee';
+			$data['mailing'] = !empty($_POST['mailing']) ? 'Ja' : 'Nee';
 
 			// Setup e-mail
 			$mail = parse_email('lidworden.txt', $data);
