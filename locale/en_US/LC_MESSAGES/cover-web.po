@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-08-11 13:43+0100\n"
+"POT-Creation-Date: 2014-08-27 16:31+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,13 +10,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.7\n"
+"X-Generator: Poedit 1.6.8\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
 "X-Poedit-SearchPath-0: ../../..\n"
 
-#: ../../../actieveleden.php:15
+#: ../../../actieveleden.php:14
 msgid "ActieveLeden"
 msgstr "Active Members"
 
@@ -171,10 +171,10 @@ msgstr ""
 #: ../../../themes/default/views/forum.php:17
 #: ../../../themes/default/views/forum.php:22
 #: ../../../themes/default/views/forum.php:29
-#: ../../../themes/default/views/forum.php:153
-#: ../../../themes/default/views/forum.php:340
-#: ../../../themes/default/views/forum.php:437
-#: ../../../themes/default/views/forum.php:533
+#: ../../../themes/default/views/forum.php:152
+#: ../../../themes/default/views/forum.php:339
+#: ../../../themes/default/views/forum.php:436
+#: ../../../themes/default/views/forum.php:532
 #: ../../../themes/default/views/forum.php:799
 #: ../../../themes/default/views/forum.php:1187
 #: ../../../themes/default/views/forum.php:1210
@@ -245,7 +245,7 @@ msgstr "The directory with photos could not be read"
 msgid "Gastenboek"
 msgstr "Guestbook"
 
-#: ../../../include/controllers/Controller.php:85
+#: ../../../include/controllers/Controller.php:87
 msgid ""
 "Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
 "de WebCie (webcie@svcover.nl)"
@@ -258,7 +258,7 @@ msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
 #: ../../../include/controllers/ControllerEditable.php:72
-#: ../../../themes/default/views/editable.php:54
+#: ../../../themes/default/views/editable.php:51
 msgid "Deze pagina kan niet door jou worden bewerkt."
 msgstr "This page can not be edited by you."
 
@@ -277,13 +277,13 @@ msgstr "Something is wrong with the language settings. Contact the %s"
 msgid "de Webcie"
 msgstr "the WebCie"
 
-#: ../../../include/controllers/ControllerEditable.php:167
-#: ../../../include/controllers/ControllerEditable.php:175
+#: ../../../include/controllers/ControllerEditable.php:164
+#: ../../../include/controllers/ControllerEditable.php:172
 #, php-format
 msgid "De pagina %s is opgeslagen."
 msgstr "The page %s has been saved."
 
-#: ../../../include/controllers/ControllerEditable.php:228
+#: ../../../include/controllers/ControllerEditable.php:225
 msgid "Deze pagina bestaat niet..."
 msgstr "This page does not exist..."
 
@@ -503,10 +503,10 @@ msgid "Jij!"
 msgstr "You!"
 
 #: ../../../include/member.php:88
-#: ../../../include/models/DataModelForum.php:654
-#: ../../../include/models/DataModelForum.php:677
+#: ../../../include/models/DataModelForum.php:656
+#: ../../../include/models/DataModelForum.php:679
 #: ../../../include/models/DataModelMember.php:514
-#: ../../../themes/default/views/forum.php:503
+#: ../../../themes/default/views/forum.php:502
 msgid "Onbekend"
 msgstr "Unknown"
 
@@ -514,8 +514,8 @@ msgstr "Unknown"
 msgid "onbekend"
 msgstr "unknown"
 
-#: ../../../include/models/DataModelForum.php:619
-#: ../../../include/models/DataModelForum.php:666
+#: ../../../include/models/DataModelForum.php:621
+#: ../../../include/models/DataModelForum.php:668
 #: ../../../themes/default/views/announcements/announcements.php:27
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/forum.php:870
@@ -524,19 +524,19 @@ msgstr "unknown"
 msgid "Iedereen"
 msgstr "Everyone"
 
-#: ../../../include/models/DataModelForum.php:622
+#: ../../../include/models/DataModelForum.php:624
 msgid "Alle leden"
 msgstr "All members"
 
-#: ../../../include/models/DataModelForum.php:632
+#: ../../../include/models/DataModelForum.php:634
 msgid "Alle commissies"
 msgstr "Committees"
 
-#: ../../../include/models/DataModelForum.php:642
+#: ../../../include/models/DataModelForum.php:644
 msgid "Alle groepen"
 msgstr "Groups"
 
-#: ../../../include/models/DataModelForum.php:668
+#: ../../../include/models/DataModelForum.php:670
 #: ../../../include/models/DataModelMember.php:499
 #: ../../../themes/default/views/boeken/boeken.php:341
 #: ../../../themes/default/views/boeken/boeken.php:362
@@ -552,7 +552,7 @@ msgstr "Groups"
 msgid "Lid"
 msgstr "Member"
 
-#: ../../../include/models/DataModelForum.php:671
+#: ../../../include/models/DataModelForum.php:673
 #: ../../../themes/default/views/forum.php:842
 #: ../../../themes/default/views/agenda/edit.phtml:39
 #: ../../../themes/default/views/agenda/moderate.phtml:19
@@ -562,7 +562,7 @@ msgstr "Member"
 msgid "Commissie"
 msgstr "Committee"
 
-#: ../../../include/models/DataModelForum.php:674
+#: ../../../include/models/DataModelForum.php:676
 #: ../../../themes/default/views/forum.php:845
 #: ../../../themes/default/views/forum.php:857
 msgid "Groep"
@@ -941,9 +941,9 @@ msgstr "Title"
 #: ../../../themes/default/views/boeken/boeken.php:113
 #: ../../../themes/default/views/boeken/boeken.php:154
 #: ../../../themes/default/views/boeken/boeken.php:211
-#: ../../../themes/default/views/forum.php:165
-#: ../../../themes/default/views/forum.php:370
-#: ../../../themes/default/views/forum.php:475
+#: ../../../themes/default/views/forum.php:164
+#: ../../../themes/default/views/forum.php:369
+#: ../../../themes/default/views/forum.php:474
 #: ../../../themes/default/views/forum.php:1219
 msgid "Auteur"
 msgstr "Author"
@@ -1194,7 +1194,7 @@ msgstr "Edit page"
 msgid "Deze pagina bestaat niet"
 msgstr "This page does not exist"
 
-#: ../../../themes/default/views/editable.php:60
+#: ../../../themes/default/views/editable.php:57
 #: ../../../themes/default/views/afstudeerplaatsen/afstudeerplaatsen.phtml:16
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:68
 #: ../../../themes/default/views/fotoboek/_books.phtml:54
@@ -1203,69 +1203,69 @@ msgstr "This page does not exist"
 msgid "Bewerken"
 msgstr "Edit"
 
-#: ../../../themes/default/views/editable.php:63
+#: ../../../themes/default/views/editable.php:60
 msgid "sluiten"
 msgstr "close"
 
-#: ../../../themes/default/views/editable.php:63
+#: ../../../themes/default/views/editable.php:60
 msgid "Sluiten"
 msgstr "Close"
 
-#: ../../../themes/default/views/editable.php:64
+#: ../../../themes/default/views/editable.php:61
 msgid "opslaan"
 msgstr "save"
 
-#: ../../../themes/default/views/editable.php:64
+#: ../../../themes/default/views/editable.php:61
 msgid "Sla pagina op"
 msgstr "Save page"
 
-#: ../../../themes/default/views/editable.php:65
+#: ../../../themes/default/views/editable.php:62
 msgid "herstellen"
 msgstr "revert"
 
-#: ../../../themes/default/views/editable.php:65
+#: ../../../themes/default/views/editable.php:62
 msgid "Herstel pagina"
 msgstr "Revert changes"
 
-#: ../../../themes/default/views/editable.php:66
-#: ../../../themes/default/views/editable.php:164
-#: ../../../themes/default/views/forum.php:160
-#: ../../../themes/default/views/forum.php:257
+#: ../../../themes/default/views/editable.php:63
+#: ../../../themes/default/views/editable.php:161
+#: ../../../themes/default/views/forum.php:159
+#: ../../../themes/default/views/forum.php:256
 #: ../../../themes/default/views/forum.php:1209
 msgid "voorbeeld"
 msgstr "preview"
 
-#: ../../../themes/default/views/editable.php:66
-#: ../../../themes/default/views/editable.php:163
-#: ../../../themes/default/views/forum.php:160
-#: ../../../themes/default/views/forum.php:256
+#: ../../../themes/default/views/editable.php:63
+#: ../../../themes/default/views/editable.php:160
+#: ../../../themes/default/views/forum.php:159
+#: ../../../themes/default/views/forum.php:255
 #: ../../../themes/default/views/forum.php:1209
 msgid "Voorbeeld tonen"
 msgstr "Show preview"
 
-#: ../../../themes/default/views/editable.php:68
+#: ../../../themes/default/views/editable.php:65
 #: ../../../themes/default/views/homepage/homepage.phtml:9
 #: ../../../themes/default/views/profiel/profiel.phtml:119
 msgid "Taal"
 msgstr "Language"
 
-#: ../../../themes/default/views/editable.php:113
-#: ../../../themes/default/views/forum.php:206
+#: ../../../themes/default/views/editable.php:110
+#: ../../../themes/default/views/forum.php:205
 msgid "Bezig met laden"
 msgstr "Busy loading"
 
-#: ../../../themes/default/views/editable.php:154
-#: ../../../themes/default/views/forum.php:247
+#: ../../../themes/default/views/editable.php:151
+#: ../../../themes/default/views/forum.php:246
 msgid "Voorbeeld sluiten"
 msgstr "Close preview"
 
-#: ../../../themes/default/views/editable.php:155
-#: ../../../themes/default/views/forum.php:248
+#: ../../../themes/default/views/editable.php:152
+#: ../../../themes/default/views/forum.php:247
 msgid "voorbeeld sluiten"
 msgstr "close preview"
 
 #: ../../../themes/default/views/forum.php:8
-#: ../../../themes/default/views/forum.php:456
+#: ../../../themes/default/views/forum.php:455
 msgid "Je kunt niet schrijven in dit forum"
 msgstr "You can't write in this forum"
 
@@ -1279,110 +1279,110 @@ msgid "Dat bericht bestaat niet"
 msgstr "That message doesn't exist"
 
 #: ../../../themes/default/views/forum.php:48
-#: ../../../themes/default/views/forum.php:131
-#: ../../../themes/default/views/forum.php:451
-#: ../../../themes/default/views/forum.php:454
+#: ../../../themes/default/views/forum.php:130
+#: ../../../themes/default/views/forum.php:450
+#: ../../../themes/default/views/forum.php:453
 #: ../../../themes/default/views/forum.php:782
 #: ../../../themes/default/views/agenda/index.phtml:21
 msgid "nieuw"
 msgstr "new"
 
 #: ../../../themes/default/views/forum.php:48
-#: ../../../themes/default/views/forum.php:131
-#: ../../../themes/default/views/forum.php:451
+#: ../../../themes/default/views/forum.php:130
+#: ../../../themes/default/views/forum.php:450
 msgid "Nieuw bericht toevoegen"
 msgstr "Add a new message"
 
 #: ../../../themes/default/views/forum.php:48
-#: ../../../themes/default/views/forum.php:131
-#: ../../../themes/default/views/forum.php:451
+#: ../../../themes/default/views/forum.php:130
+#: ../../../themes/default/views/forum.php:450
 msgid "Nieuw antwoord"
 msgstr "New reply"
 
 #: ../../../themes/default/views/forum.php:50
-#: ../../../themes/default/views/forum.php:133
+#: ../../../themes/default/views/forum.php:132
 msgid "Je kunt niet antwoorden in dit forum"
 msgstr "You can't reply in this forum"
 
-#: ../../../themes/default/views/forum.php:86
+#: ../../../themes/default/views/forum.php:85
 msgid "Posts"
 msgstr "Posts"
 
-#: ../../../themes/default/views/forum.php:101
+#: ../../../themes/default/views/forum.php:100
 #: ../../../themes/default/views/forum.php:1120
 msgid "verwijder"
 msgstr "delete"
 
-#: ../../../themes/default/views/forum.php:101
+#: ../../../themes/default/views/forum.php:100
 msgid "Verwijder bericht"
 msgstr "Remove message"
 
-#: ../../../themes/default/views/forum.php:104
+#: ../../../themes/default/views/forum.php:103
 msgid "quote"
 msgstr "quote"
 
-#: ../../../themes/default/views/forum.php:104
+#: ../../../themes/default/views/forum.php:103
 msgid "Quote geselecteerde tekst van bericht"
 msgstr "Quote the selected text"
 
-#: ../../../themes/default/views/forum.php:136
+#: ../../../themes/default/views/forum.php:135
 msgid "Verplaats bericht naar"
 msgstr "Move message to"
 
-#: ../../../themes/default/views/forum.php:154
+#: ../../../themes/default/views/forum.php:153
 msgid "Dat forum bestaat niet"
 msgstr "that forum doesn't exist"
 
-#: ../../../themes/default/views/forum.php:168
-#: ../../../themes/default/views/forum.php:474
+#: ../../../themes/default/views/forum.php:167
+#: ../../../themes/default/views/forum.php:473
 #: ../../../themes/default/views/forum.php:1225
 #: ../../../themes/default/views/announcements/form.phtml:15
 #: ../../../themes/default/views/mailinglijsten/list_archive.phtml:7
 msgid "Onderwerp"
 msgstr "Subject"
 
-#: ../../../themes/default/views/forum.php:177
+#: ../../../themes/default/views/forum.php:176
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:38
 msgid "Bericht plaatsen"
 msgstr "Add a message"
 
-#: ../../../themes/default/views/forum.php:342
+#: ../../../themes/default/views/forum.php:341
 msgid "Nieuwe poll toevoegen."
 msgstr "Add a new poll"
 
-#: ../../../themes/default/views/forum.php:352
+#: ../../../themes/default/views/forum.php:351
 #, php-format
 msgid "Je kunt hier pas over %d dag weer een poll plaatsen"
 msgid_plural "Je kunt hier pas over %d dagen weer een poll plaatsen"
 msgstr[0] "You can only add a new poll here in %d day"
 msgstr[1] "You can only add a new poll here in %d days"
 
-#: ../../../themes/default/views/forum.php:357
+#: ../../../themes/default/views/forum.php:356
 msgid "Gebruik het onderstaande formulier om een nieuwe poll toe te voegen."
 msgstr "Use the following form to add a new poll"
 
-#: ../../../themes/default/views/forum.php:360
+#: ../../../themes/default/views/forum.php:359
 msgid ""
 "Niet alle velden zijn goed ingevuld (er moet minstens 1 optie ingevuld zijn"
 msgstr ""
 "You haven't filled in all the fields correctly (there must be at least one "
 "option)"
 
-#: ../../../themes/default/views/forum.php:371
+#: ../../../themes/default/views/forum.php:370
 msgid "Onderwerp/vraag"
 msgstr "Subject/question"
 
-#: ../../../themes/default/views/forum.php:372
+#: ../../../themes/default/views/forum.php:371
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:45
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:35
 msgid "Omschrijving"
 msgstr "Description"
 
-#: ../../../themes/default/views/forum.php:375
+#: ../../../themes/default/views/forum.php:374
 msgid "Optie"
 msgstr "Option"
 
-#: ../../../themes/default/views/forum.php:380
+#: ../../../themes/default/views/forum.php:379
 #: ../../../themes/default/views/forum.php:620
 #: ../../../themes/default/views/forum.php:814
 #: ../../../themes/default/views/forum.php:1058
@@ -1400,34 +1400,34 @@ msgstr "Option"
 msgid "Opslaan"
 msgstr "Save"
 
-#: ../../../themes/default/views/forum.php:454
+#: ../../../themes/default/views/forum.php:453
 msgid "Nieuwe poll toevoegen"
 msgstr "Add a new poll"
 
-#: ../../../themes/default/views/forum.php:454
+#: ../../../themes/default/views/forum.php:453
 #: ../../../themes/default/views/poll/_vote_form.phtml:15
 #: ../../../themes/default/views/poll/_vote_results.phtml:19
 msgid "Nieuwe poll"
 msgstr "New poll"
 
-#: ../../../themes/default/views/forum.php:476
+#: ../../../themes/default/views/forum.php:475
 #: ../../../themes/default/views/fotoboek/_reacties.phtml:10
 #: ../../../themes/default/views/weblog/_weblog.phtml:19
 msgid "Reacties"
 msgstr "Replies"
 
-#: ../../../themes/default/views/forum.php:477
+#: ../../../themes/default/views/forum.php:476
 msgid "Laatste"
 msgstr "Last"
 
-#: ../../../themes/default/views/forum.php:484
+#: ../../../themes/default/views/forum.php:483
 #: ../../../themes/default/views/forum.php:911
 #: ../../../themes/default/views/forum.php:1033
 #: ../../../themes/default/views/header.php:238
 msgid "Poll"
 msgstr "Poll"
 
-#: ../../../themes/default/views/forum.php:496
+#: ../../../themes/default/views/forum.php:495
 msgid "Pagina"
 msgstr "Page"
 
@@ -1489,6 +1489,7 @@ msgstr "New forum"
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:3
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:20
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
+#: ../../../themes/default/views/lidworden/lidworden.phtml:29
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:41
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:72
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:91
@@ -1694,10 +1695,12 @@ msgid "Foto's"
 msgstr "Photos"
 
 #: ../../../themes/default/views/header.php:129
+#: ../../../themes/default/views/lidworden/lidworden.phtml:65
 msgid "Studie"
 msgstr "Study"
 
 #: ../../../themes/default/views/header.php:130
+#: ../../../themes/default/views/lidworden/lidworden.phtml:52
 msgid "Contact"
 msgstr "Contact"
 
@@ -1843,12 +1846,12 @@ msgid "Je lidmaatschapsaanvraag is verstuurd."
 msgstr "Your membership application has been submitted."
 
 #: ../../../themes/default/views/lidworden/lidworden.php:17
-#: ../../../themes/default/views/lidworden/lidworden.phtml:70
+#: ../../../themes/default/views/lidworden/lidworden.phtml:100
 msgid "Opmerkingen"
 msgstr "Notes"
 
 #: ../../../themes/default/views/lidworden/lidworden.php:19
-#: ../../../themes/default/views/lidworden/lidworden.phtml:72
+#: ../../../themes/default/views/lidworden/lidworden.phtml:102
 msgid ""
 "Contributie wordt zolang je lid bent van Cover jaarlijks van je bankrekening "
 "afgeschreven."
@@ -1857,19 +1860,19 @@ msgstr ""
 "as you are a member of Cover."
 
 #: ../../../themes/default/views/lidworden/lidworden.php:20
-#: ../../../themes/default/views/lidworden/lidworden.phtml:73
+#: ../../../themes/default/views/lidworden/lidworden.phtml:103
 msgid "Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt."
 msgstr "You are a member until you graduate or cancel your membership."
 
 #: ../../../themes/default/views/lidworden/lidworden.php:21
-#: ../../../themes/default/views/lidworden/lidworden.phtml:74
+#: ../../../themes/default/views/lidworden/lidworden.phtml:104
 msgid ""
 "Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de "
 "secretaris."
 msgstr "Termination of membership shall be done in writing to the secretary."
 
 #: ../../../themes/default/views/lidworden/lidworden.php:22
-#: ../../../themes/default/views/lidworden/lidworden.phtml:75
+#: ../../../themes/default/views/lidworden/lidworden.phtml:105
 msgid ""
 "Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, "
 "schriftelijk melden bij de secretaris of in je profiel op de Cover website "
@@ -2093,15 +2096,15 @@ msgstr "You haven't filled in all the fields correctly"
 
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:7
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:24
+#: ../../../themes/default/views/lidworden/lidworden.phtml:44
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:5
-#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:49
 #: ../../../themes/default/views/profiel/profiel.phtml:65
 msgid "Adres"
 msgstr "Adress"
 
 #: ../../../themes/default/views/afstudeerplaatsen/_bedrijf_form.phtml:11
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:28
-#: ../../../themes/default/views/lidworden/lidworden.phtml:41
+#: ../../../themes/default/views/lidworden/lidworden.phtml:48
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:51
 #: ../../../themes/default/views/profiel/profiel.phtml:66
 msgid "Postcode"
@@ -2333,7 +2336,8 @@ msgid "Weiger agendapunt"
 msgstr "Deny calendar event"
 
 #: ../../../themes/default/views/agenda/moderate.phtml:20
-msgid "Prive"
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:57
+msgid "Privé"
 msgstr "Private"
 
 #: ../../../themes/default/views/agenda/moderate.phtml:53
@@ -2360,13 +2364,13 @@ msgstr ""
 "often."
 
 #: ../../../themes/default/views/almanak/almanak.phtml:17
-#: ../../../themes/default/views/lidworden/lidworden.phtml:28
+#: ../../../themes/default/views/lidworden/lidworden.phtml:32
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:26
 msgid "Voornaam"
 msgstr "First name"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:25
-#: ../../../themes/default/views/lidworden/lidworden.phtml:30
+#: ../../../themes/default/views/lidworden/lidworden.phtml:34
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:31
 msgid "Achternaam"
 msgstr "Last name"
@@ -2963,43 +2967,47 @@ msgstr ""
 "In the case of a wrongful transfer, the undersigned has 30 days to undo the "
 "transfer."
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:29
+#: ../../../themes/default/views/lidworden/lidworden.phtml:33
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:28
 msgid "Tussenvoegsel"
 msgstr "Infix"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:32
+#: ../../../themes/default/views/lidworden/lidworden.phtml:36
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
 msgid "Gender"
 msgstr "Gender"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:34
+#: ../../../themes/default/views/lidworden/lidworden.phtml:38
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
 msgid "Man"
 msgstr "Male"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:35
+#: ../../../themes/default/views/lidworden/lidworden.phtml:39
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
 msgid "Vrouw"
 msgstr "Female"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:36
-#: ../../../themes/default/views/lidworden/lidworden.phtml:54
+#: ../../../themes/default/views/lidworden/lidworden.phtml:40
+#: ../../../themes/default/views/lidworden/lidworden.phtml:70
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
 msgid "Anders"
 msgstr "Other"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:40
-msgid "Adres + Huisnummer"
-msgstr "Address"
+#: ../../../themes/default/views/lidworden/lidworden.phtml:47
+msgid "Straatnaam + Huisnummer"
+msgstr "Street name + number"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:42
+#: ../../../themes/default/views/lidworden/lidworden.phtml:49
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:54
 #: ../../../themes/default/views/profiel/profiel.phtml:67
 msgid "Woonplaats"
 msgstr "Place of residence"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:43
+#: ../../../themes/default/views/lidworden/lidworden.phtml:55
 msgid "Telefoonnummer"
 msgstr "Phone number"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:44
+#: ../../../themes/default/views/lidworden/lidworden.phtml:56
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:76
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:92
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:59
@@ -3007,37 +3015,41 @@ msgstr "Phone number"
 msgid "E-Mail adres"
 msgstr "E-Mail address"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:46
+#: ../../../themes/default/views/lidworden/lidworden.phtml:58
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:39
 #: ../../../themes/default/views/profiel/profiel.phtml:63
 msgid "Geboortedatum"
 msgstr "Birthdate"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:52
+#: ../../../themes/default/views/lidworden/lidworden.phtml:68
 msgid "Studentnummer"
 msgstr "Student number"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:53
+#: ../../../themes/default/views/lidworden/lidworden.phtml:69
 msgid "Studierichting"
 msgstr "Study"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:54
+#: ../../../themes/default/views/lidworden/lidworden.phtml:70
 msgid "Fase"
 msgstr "Phase"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:54
+#: ../../../themes/default/views/lidworden/lidworden.phtml:70
 msgid "Bachelor"
 msgstr "Bachelor"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:54
+#: ../../../themes/default/views/lidworden/lidworden.phtml:70
 msgid "Master"
 msgstr "Master"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:56
+#: ../../../themes/default/views/lidworden/lidworden.phtml:73
+msgid "Betaling"
+msgstr "Payment"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:76
 msgid "IBAN"
 msgstr "IBAN"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:58
+#: ../../../themes/default/views/lidworden/lidworden.phtml:78
 msgid ""
 "Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch "
 "van mijn rekening af te schrijven (verplicht)"
@@ -3045,15 +3057,27 @@ msgstr ""
 "I hereby authorise Cover to automatically deduct the membership fee (10 "
 "euros) from my bank account one time per year. (mandatory)"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:60
+#: ../../../themes/default/views/lidworden/lidworden.phtml:81
+msgid "Mailing"
+msgstr "Mailing list"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:84
+msgid ""
+"Ik wil graag e-mails over activiteiten van Cover ontvangen. (Dit wil je. "
+"Daarnaast, uitschrijven kan gemakkelijk via de website.)"
+msgstr ""
+"I would like to receive e-mails about activities organized by Cover. "
+"(Strongly recommended, and easy to turn off afterwards through the website.)"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:90
 msgid "Wat is de kleur van gras? (ik ben geen bot)"
 msgstr "What is the colour of grass? (I am not a robot)"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:65
+#: ../../../themes/default/views/lidworden/lidworden.phtml:95
 msgid "Aanvraag versturen"
 msgstr "Submit application"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:76
+#: ../../../themes/default/views/lidworden/lidworden.phtml:106
 msgid "De contributie bedraagt &euro; 10,- per jaar."
 msgstr "The membership fee is &euro; 10,- per year."
 
@@ -3239,10 +3263,6 @@ msgstr "Which committee may subscribe and unsubscribe people to this list?"
 msgid "Maak lijst"
 msgstr "Make list"
 
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:57
-msgid "Privé"
-msgstr "Private"
-
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
 #, php-format
 msgid "%s is aangemeld voor deze mailinglijst."
@@ -3278,9 +3298,9 @@ msgstr "No, I was just curious."
 msgid "Lidnr"
 msgstr "Member id"
 
-#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
-msgid "Geslacht"
-msgstr "Gender"
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:49
+msgid "Straatnaam + huisnummer"
+msgstr "Street name + number"
 
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:61
 msgid "Telefoonnummer vast"
@@ -3775,6 +3795,15 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Adres + Huisnummer"
+#~ msgstr "Address"
+
+#~ msgid "Prive"
+#~ msgstr "Private"
+
+#~ msgid "Geslacht"
+#~ msgstr "Gender"
 
 #~ msgid "Archief"
 #~ msgstr "Archived messages"

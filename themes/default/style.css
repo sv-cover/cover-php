@@ -1078,6 +1078,12 @@ div.beheer table {
 	display: inline-block; 
 }
 
+form > table th {
+	border-top: 1px solid #ccc;
+	padding: 4px 0;
+	text-align: left;
+}
+
 table.full-width {
 	width: 100%;
 }
@@ -1352,3 +1358,4 @@ form textarea {
 form.inline-form {
 	display: inline;
 }
+

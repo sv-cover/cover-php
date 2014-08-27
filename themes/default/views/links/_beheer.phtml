@@ -11,7 +11,7 @@ foreach ($cats as $cat)
 <div id="beheer" class="beheer">
 
 <? if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
-<h2><?= __('Categorieën') ?></h2>
+<h2><?= __('CategorieÃ«n') ?></h2>
 <form name="categories" method="post" action="links.php" onSubmit="javascript:fill_categorie_lijst();">
 <?= input_hidden('categorie_lijst', '')  ?>
 <?= input_hidden('submlinks_categories', 'yes') ?>
@@ -34,7 +34,7 @@ foreach ($cats as $cat)
 <h2><?= __('Nieuw document') ?></h2>
 
 <? if (count($categories) == 0) { ?>
-<p><?= __('Er zijn nog geen categorieën om links aan toe te voegen') ?></p>
+<p><?= __('Er zijn nog geen categorieÃ«n om links aan toe te voegen') ?></p>
 <? } else { ?>
 <form method="post" action="links.php"><?= input_hidden('submlinks_add', 'yes') ?>
 <table>
