@@ -166,6 +166,11 @@
 		if (!empty($_COOKIE['cover_session_id']))
 			return $_COOKIE['cover_session_id'];
 
+		$auto_login_ips = get_config_value('auto_login', array());
+
+		if (isset($auto_login_ips[$_SERVER['REMOTE_ADDR']]))
+			return $auto_login_ips[$_SERVER['REMOTE_ADDR']];
+
 		return null;
 	}
 
