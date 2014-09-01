@@ -12,15 +12,15 @@
 		function ControllerProfiel() {
 			$this->model = get_model('DataModelMember');
 			$this->sizes = array(
-				'voornaam' => 25,
-				'tussenvoegsel' => 10,
-				'achternaam' => 25,
-				'adres' => 50,
+				'voornaam' => 255,
+				'tussenvoegsel' => 255,
+				'achternaam' => 255,
+				'adres' => 255,
 				'postcode' => 7,
-				'woonplaats' => 25,
-				'email' => 50,
-				'telefoonnummer_vast' => 11,
-				'telefoonnummer_mobiel' => 11,
+				'woonplaats' => 255,
+				'email' => 255,
+				'telefoonnummer_vast' => 20,
+				'telefoonnummer_mobiel' => 20,
 				'onderschrift' => 200,
 				'avatar' => 100,
 				'homepage' => 255,
