@@ -26,23 +26,27 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 	<?php endif ?>
 
 	<?php if (get_config_value('enable_facebook_rsvp', false)): ?>
-	<?php if ($rsvp_status = $this->get_rsvp_status($iter)): ?>
-	<div class="rsvp-status-button dropdown-button">
-		<span class="current button" tabindex="0"><?=$this->get_rsvp_status_text($rsvp_status)?></span>
-		<form method="post">
-			<input type="hidden" name="agenda_id" value="<?=$iter->get('id')?>">
-			<ul class="dropdown-menu">
-				<li><button type="submit" name="rsvp_status" value="attending"><?=__('Aanwezig')?></button></li>
-				<li><button type="submit" name="rsvp_status" value="maybe"><?=__('Misschien')?></button></li>
-				<li><button type="submit" name="rsvp_status" value="declined"><?=__('Gaat niet')?></button></li>
-			</ul>
-		</form>
-	</div>
-	<?php elseif ($iter->get('facebook_id')): ?>
+		<?php if ($rsvp_status = $this->get_rsvp_status($iter)): ?>
+		<div class="rsvp-status-button dropdown-button">
+			<span class="current button" tabindex="0"><?=$this->get_rsvp_status_text($rsvp_status)?></span>
+			<form method="post">
+				<input type="hidden" name="agenda_id" value="<?=$iter->get('id')?>">
+				<ul class="dropdown-menu">
+					<li><button type="submit" name="rsvp_status" value="attending"><?=__('Aanwezig')?></button></li>
+					<li><button type="submit" name="rsvp_status" value="maybe"><?=__('Misschien')?></button></li>
+					<li><button type="submit" name="rsvp_status" value="declined"><?=__('Gaat niet')?></button></li>
+				</ul>
+			</form>
+		</div>
+		<?php elseif ($iter->get('facebook_id')): ?>
+		<div class="rsvp-status-button">
+			<a href="<?=get_facebook()->getCoverLoginURL()?>" class="button"><?=__('Koppel Facebook')?></a>
+		</div>
+		<?php endif?>
+	<?php elseif (get_config_value('enable_facebook', false) && $iter->get('facebook_id')): ?>
 	<div class="rsvp-status-button">
-		<a href="<?=get_facebook()->getCoverLoginURL()?>" class="button"><?=__('Koppel Facebook')?></a>
+		<a href="https://www.facebook.com/events/<?=rawurlencode($iter->get('facebook_id'))?>/" target="_blank" class="button"><?=__('Toon op Facebook')?></a>
 	</div>
-	<?php endif?>
 	<?php endif ?>
 </div>
 
