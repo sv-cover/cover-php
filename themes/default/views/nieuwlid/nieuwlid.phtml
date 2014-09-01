@@ -78,3 +78,16 @@ unset($months[0]);
 </table>
 </form>
 </div>
+
+<h1><?= __('Synchroniseer ledenbestand') ?></h1>
+<div class="messageBox">
+	<form method="post" enctype="multipart/form-data" class="vertical-form" action="">
+		<div>
+			<?=label(__('CSV Export vanuit Secretary'), 'csv_file', $e)?>
+			<input type="file" name="csv_file" id="field-csv_file">
+		</div>
+		<div class="controls">
+			<button type="submit" class="button"><?=__('Importeer ledenbestand')?></button>
+		</div>
+	</form>
+</div>

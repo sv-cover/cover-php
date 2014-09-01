@@ -61,6 +61,9 @@
 		}
 		
 		function _check_geboortedatum($name, $value) {
+			if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value))
+				return $value;
+
 			if (!get_post('day') || !get_post('month') || 
 			    !get_post('year'))
 				return false;
@@ -79,6 +82,9 @@
 		
 		function _check_geslacht($name, $value) {
 			$value = strtolower($value);
+
+			if ($value == 'f')
+				$value = 'v';
 			
 			if ($value != 'm' && $value != 'v' && $value != 'o')
 				return false;
@@ -98,8 +104,9 @@
 			return $value;
 		}
 
-		function _process_nieuwlid() {
-			$check_size = array(&$this, '_check_size');
+		public function process_nieuwlid(array $input, array &$errors)
+		{
+			$check_size = array($this, '_check_size');
 			
 			$data = check_values(array(
 					array('name' => 'id',
@@ -133,19 +140,22 @@
 					array('name' => 'geslacht',
 					      'function' => array($this,
 						'_check_geslacht'))
-				), $errors);
+				), $errors, $input);
 
-			// Check if e-mail is already in use
-			if ($this->model->get_from_email($data['email']))
+			// Check if e-mail is already in use (then it cannot be used for login)
+			$active_member_types = array(
+				MEMBER_STATUS_LID,
+				MEMBER_STATUS_LID_ONZICHTBAAR,
+				MEMBER_STATUS_ERELID,
+				MEMBER_STATUS_DONATEUR);
+
+			if (($member = $this->model->get_from_email($data['email']))
+				&& in_array($member->get('type'), $active_member_types))
 				$errors[] = 'email';
 
-			
-			if (count($errors) > 0) {
-				$this->get_content('nieuwlid', null, 
-						array('errors' => $errors));
-				return;
-			}
-			
+			if (count($errors) > 0)
+				return false;
+
 			// Create new member
 			$iter = new DataIter($this->model, -1, $data);
 			$iter->set('privacy', 958698063);
@@ -174,17 +184,60 @@
 			$data['wachtwoord'] = $passwd;
 			$mail = parse_email('nieuwlid.txt', $data);
 
-			mail($data['email'], 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
-			mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
-			header('Location: nieuwlid.php?success=' . $id);
+			// mail($data['email'], 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
+			// mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
+			
+			return $id;
+		}
+
+		protected function map_data_to_form_fields(array $data)
+		{
+			return array(
+				'id' => $data['id'],
+				'voornaam' => $data['first_name'],
+				'tussenvoegsel' => $data['family_name_preposition'],
+				'achternaam' => $data['family_name'],
+				'adres' => $data['street_name'],
+				'postcode' => $data['postal_code'],
+				'woonplaats' => $data['place'],
+				'email' => $data['email_address'],
+				'telefoonnummer_vast' => $data['phone_number'],
+				'telefoonnummer_mobiel' => '',
+				'beginjaar' => $data['year_of_enrollment'],
+				'geboortedatum' => $data['birth_date'],
+				'geslacht' => $data['gender']
+			);
 		}
 		
 		function run_impl() {
 			if (!member_in_commissie(COMMISSIE_BESTUUR))
 				return $this->get_content('auth');
 			
-			if (isset($_POST['submnieuwlid']))
-				$this->_process_nieuwlid();
+			if (isset($_POST['submnieuwlid'])) {
+				$errors = array();
+
+				if (($id = $this->process_nieuwlid($_POST, $errors)) !== false)
+					header('Location: nieuwlid.php?success=' . $id);
+				else
+					$this->get_content('nieuwlid', null, compact('errors'));
+			}
+			elseif (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {
+				$fh = fopen($_FILES['csv_file']['tmp_name'], 'rb');
+
+				$headers = fgetcsv($fh, ',');
+
+				while ($line = fgetcsv($fh, ',')) {
+					$errors = array();
+					
+					$data = $this->map_data_to_form_fields(array_combine($headers, $line));
+
+					$this->process_nieuwlid($data, $errors);
+
+					$result[$data['id']] = $errors;
+				}
+
+				$this->get_content('import', null, compact('result'));
+			}
 			else {
 				$params = array();
 				
@@ -195,7 +248,9 @@
 			}
 		}
 	}
-	
+
+if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {	
 	$controller = new ControllerNieuwlid();
 	$controller->run();
+}
 ?>

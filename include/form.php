@@ -489,7 +489,7 @@
 	  *
 	  * @result an array with name => value values
 	  */
-	function check_values($check, &$errors) {
+	function check_values($check, &$errors, array $data = null) {
 		$fields = array();
 		$errors = array();
 
@@ -506,7 +506,7 @@
 					$func = 'check_value_empty';
 			}
 			
-			$result = call_user_func($func, $name, get_post($name));
+			$result = call_user_func($func, $name, isset($data) ? $data[$name] : get_post($name));
 			
 			if ($result === false)
 				$errors[] = $name;
