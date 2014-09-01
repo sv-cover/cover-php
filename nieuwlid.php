@@ -184,8 +184,8 @@
 			$data['wachtwoord'] = $passwd;
 			$mail = parse_email('nieuwlid.txt', $data);
 
-			// mail($data['email'], 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
-			// mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
+			mail($data['email'], 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
+			mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <bestuur@svcover.nl>');
 			
 			return $id;
 		}
