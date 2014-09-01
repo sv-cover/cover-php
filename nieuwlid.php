@@ -12,15 +12,15 @@
 			$this->model = get_model('DataModelMember');
 			
 			$this->sizes = array(
-				'voornaam' => 25,
-				'tussenvoegsel' => 10,
-				'achternaam' => 25,
-				'adres' => 50,
+				'voornaam' => 255,
+				'tussenvoegsel' => 255,
+				'achternaam' => 255,
+				'adres' => 255,
 				'postcode' => 7,
-				'woonplaats' => 25,
-				'email' => 50,
-				'telefoonnummer_vast' => 11,
-				'telefoonnummer_mobiel' => 11);
+				'woonplaats' => 255,
+				'email' => 255,
+				'telefoonnummer_vast' => 20,
+				'telefoonnummer_mobiel' => 20);
 			
 			$this->optional = array(
 				'tussenvoegsel', 
@@ -103,7 +103,7 @@
 			
 			$data = check_values(array(
 					array('name' => 'id',
-						'function' => array(&$this, 
+						'function' => array($this, 
 						 '_check_id')),
 					array('name' => 'voornaam', 
 					      'function' => $check_size),
@@ -121,18 +121,17 @@
 					      'function' => $check_size),
 					array('name' => 'telefoonnummer_vast',
 					      'function' => $check_size),
-					array('name' => 
-					              'telefoonnummer_mobiel',
+					array('name' =>'telefoonnummer_mobiel',
 					      'function' => $check_size),
 					
 					array('name' => 'beginjaar',
-					      'function' => array(&$this, 
+					      'function' => array($this, 
 						'_check_beginjaar')),
 					array('name' => 'geboortedatum',
-					      'function' => array(&$this,
+					      'function' => array($this,
 						'_check_geboortedatum')),
 					array('name' => 'geslacht',
-					      'function' => array(&$this,
+					      'function' => array($this,
 						'_check_geslacht'))
 				), $errors);
 
@@ -156,7 +155,7 @@
 			
 			// Create profile for this member
 			$passwd = create_pronouncable_password();
-			$nick = member_full_name($iter);
+			$nick = member_full_name($iter, true, false);
 			
 			if (strlen($nick) > 50)
 				$nick = $iter->get('voornaam');
