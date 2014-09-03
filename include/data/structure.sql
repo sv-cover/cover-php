@@ -244,6 +244,14 @@ CREATE TABLE boeken_categorie (
     categorie text NOT NULL
 );
 
+
+CREATE TABLE cache (
+    key character(40) NOT NULL PRIMARY KEY,
+    value TEXT NOT NULL,
+    expires integer NOT NULL
+);
+
+
 --
 -- TOC entry 186 (class 1259 OID 24194)
 -- Name: commissies_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie

@@ -1,7 +1,7 @@
 <?php
 	require_once 'include/login.php';
 	require_once 'include/markup.php';
-	
+	require_once 'include/cache.php';
 	
 	class AgendaView extends View {
 		protected $__file = __FILE__;
@@ -9,6 +9,8 @@
 		protected $model;
 
 		protected $facebook;
+
+		protected $facebook_cache;
 
 		public function __construct()
 		{
@@ -28,18 +30,15 @@
 			if (!$item->has('facebook_id'))
 				return null;
 
-			try {
-				$response = $this->facebook->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
+			
+			$response = wrap_cache($this->facebook, 3600, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
 
-				if (isset($response['cover']))
-					return array(
-						'src' => $response['cover']['source'],
-						'x' => $response['cover']['offset_x'],
-						'y' => $response['cover']['offset_y']);
-			} catch (Exception $e) {
-				//
-			}
-
+			if (isset($response['cover']))
+				return array(
+					'src' => $response['cover']['source'],
+					'x' => $response['cover']['offset_x'],
+					'y' => $response['cover']['offset_y']);
+			
 			return null;
 		}
 
@@ -51,15 +50,11 @@
 			if (!$item->has('facebook_id'))
 				return array();
 
-			try {
-				$response = $this->facebook->api('/' . $item->get('facebook_id') . '/attending?fields=name,picture', 'GET');
+			$response = wrap_cache($this->facebook, 300, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '/attending?fields=name,picture', 'GET');
 
-				if (isset($response['data']))
-					return $response['data'];
-			} catch (Exception $e) {
-				//
-			}
-
+			if (isset($response['data']))
+				return $response['data'];
+			
 			return array();
 		}
 
@@ -74,17 +69,11 @@
 			if (!$this->facebook->getUser())
 				return null;
 
-			try {
-				$response = $this->facebook->api('/' . $item->get('facebook_id') . '/invited/' . $this->facebook->getUser(), 'GET');
+			$response = wrap_cache($this->facebook, 300, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '/invited/' . $this->facebook->getUser(), 'GET');
 
-				// var_dump($response);
-
-				if (isset($response['data']) && count($response['data']))
-					return $response['data'][0];
-			} catch (Exception $e) {
-				
-			}
-
+			if (isset($response['data']) && count($response['data']))
+				return $response['data'][0];
+			
 			return null;
 		}
 
