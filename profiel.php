@@ -19,8 +19,7 @@
 				'postcode' => 7,
 				'woonplaats' => 255,
 				'email' => 255,
-				'telefoonnummer_vast' => 20,
-				'telefoonnummer_mobiel' => 20,
+				'telefoonnummer' => 20,
 				'onderschrift' => 200,
 				'avatar' => 100,
 				'homepage' => 255,
@@ -76,8 +75,7 @@
 			
 			$check = array_merge($check, array(
 				array('name' => 'postcode', 'function' => array(&$this, '_check_size')),
-				array('name' => 'telefoonnummer_vast', 'function' => array(&$this, '_check_size')),
-				array('name' => 'telefoonnummer_mobiel', 'function' => array(&$this, '_check_size')),
+				array('name' => 'telefoonnummer', 'function' => array(&$this, '_check_size')),
 				array('name' => 'adres', 'function' => array(&$this, '_check_size')),
 				array('name' => 'email', 'function' => array(&$this, '_check_size')),
 				array('name' => 'woonplaats', 'function' => array(&$this, '_check_size')))
@@ -106,8 +104,7 @@
 					'adres', 
 					'postcode', 
 					'woonplaats',
-					'telefoonnummer_vast', 
-					'telefoonnummer_mobiel',
+					'telefoonnummer',
 					'email'));
 			
 			$oud = $iter->data;

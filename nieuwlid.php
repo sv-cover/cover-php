@@ -19,13 +19,11 @@
 				'postcode' => 7,
 				'woonplaats' => 255,
 				'email' => 255,
-				'telefoonnummer_vast' => 20,
-				'telefoonnummer_mobiel' => 20);
+				'telefoonnummer' => 20);
 			
 			$this->optional = array(
 				'tussenvoegsel', 
-				'telefoonnummer_vast',
-				'telefoonnummer_mobiel');
+				'telefoonnummer');
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
@@ -126,9 +124,7 @@
 					      'function' => $check_size),
 					array('name' => 'email',
 					      'function' => $check_size),
-					array('name' => 'telefoonnummer_vast',
-					      'function' => $check_size),
-					array('name' =>'telefoonnummer_mobiel',
+					array('name' =>'telefoonnummer',
 					      'function' => $check_size),
 					
 					array('name' => 'beginjaar',
@@ -201,8 +197,7 @@
 				'postcode' => $data['postal_code'],
 				'woonplaats' => $data['place'],
 				'email' => $data['email_address'],
-				'telefoonnummer_vast' => $data['phone_number'],
-				'telefoonnummer_mobiel' => '',
+				'telefoonnummer' => $data['phone_number'],
 				'beginjaar' => $data['year_of_enrollment'],
 				'geboortedatum' => $data['birth_date'],
 				'geslacht' => $data['gender']

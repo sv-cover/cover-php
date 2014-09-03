@@ -58,13 +58,10 @@ unset($months[0]);
 
 	<?= $this->render_text_row(__('E-Mail adres'), 'email', $e,
 			true, 'maxlength', 50) ?>
-	<?= $this->render_text_row(__('Telefoonnummer vast'),
-	 		'telefoonnummer_vast', $e, false,
-			'maxlength', 11) ?>
-	<?= $this->render_text_row(__('Telefoonnummer mobiel'),
-			'telefoonnummer_mobiel', $e, false,
-			'maxlength', 11) ?>
-
+	<?= $this->render_text_row(__('Telefoonnummer'),
+	 		'telefoonnummer', $e, false,
+			'maxlength', 20) ?>
+	
 	<tr><td colspan="2"><hr></td></tr>
 
 	<?= table_row(label(__('Beginjaar'), 'beginjaar', $e, true), 

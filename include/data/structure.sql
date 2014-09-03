@@ -645,8 +645,7 @@ CREATE TABLE leden (
     email character varying(255) NOT NULL,
     geboortedatum date NOT NULL,
     geslacht character(1) NOT NULL,
-    telefoonnummer_vast character varying(20),
-    telefoonnummer_mobiel character varying(20),
+    telefoonnummer character varying(20),
     privacy integer NOT NULL,
     type integer DEFAULT 1,
     machtiging smallint,
@@ -3144,8 +3143,7 @@ INSERT INTO profielen_privacy VALUES (2, 'postcode');
 INSERT INTO profielen_privacy VALUES (3, 'woonplaats');
 INSERT INTO profielen_privacy VALUES (4, 'geboortedatum');
 INSERT INTO profielen_privacy VALUES (5, 'beginjaar');
-INSERT INTO profielen_privacy VALUES (6, 'telefoonnummer_vast');
-INSERT INTO profielen_privacy VALUES (7, 'telefoonnummer_mobiel');
+INSERT INTO profielen_privacy VALUES (7, 'telefoonnummer');
 INSERT INTO profielen_privacy VALUES (8, 'email');
 INSERT INTO profielen_privacy VALUES (9, 'foto');
 
