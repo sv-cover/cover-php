@@ -92,7 +92,7 @@
 			$this->db->insert('pollvoters', $iter->data, $iter->get_literals());
 		}
 
-		protected function insert_optie($iter) {
+		public function insert_optie($iter) {
 			$this->db->insert('pollopties', $iter->data, 
 					$iter->get_literals());
 		}
