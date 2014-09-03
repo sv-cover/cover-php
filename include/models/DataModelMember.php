@@ -242,7 +242,7 @@
 		  * @result an array of privacy_field_name => privacy_field_id
 		  */
 		function get_privacy() {
-			$rows = $this->db->query('SELECT * FROM profielen_privacy');
+			$rows = $this->db->query('SELECT * FROM profielen_privacy ORDER BY id ASC');
 			
 			$privacy = array();
 			
