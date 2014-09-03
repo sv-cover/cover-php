@@ -1,5 +1,8 @@
 <?php
 
+Facebook::$CURL_OPTS[CURLOPT_CONNECTTIMEOUT] = 5;
+Facebook::$CURL_OPTS[CURLOPT_TIMEOUT] = 5;
+
 class CoverFacebook extends BaseFacebook
 {
 	private $cache = array();
