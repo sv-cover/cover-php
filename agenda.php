@@ -96,7 +96,9 @@
 			}
 			
 			/* Allow only the commissie of the agendapunt and bestuur to touch the agendapunt */
-			if ($iter != null && !member_in_commissie($iter->get('commissie')) && !member_in_commissie(COMMISSIE_BESTUUR)) {
+			if ($iter != null
+				&& !member_in_commissie($iter->get('commissie'))
+				&& !(member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))) {
 				$this->get_content('commissie');
 				return false;
 			}
@@ -238,7 +240,7 @@
 		}
 		
 		function _view_moderate($id) {
-			if (!member_in_commissie(COMMISSIE_BESTUUR))
+			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 			{
 				$this->get_content('auth_bestuur');
 				return;
@@ -251,7 +253,7 @@
 		}
 		
 		function _process_moderate() {
-			if (!member_in_commissie(COMMISSIE_BESTUUR))
+			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 			{
 				$this->get_content('auth_bestuur');
 				return;
@@ -395,7 +397,7 @@
 			if (isset($_GET['agenda_id'])) {
 				$iter = $this->model->get_iter($_GET['agenda_id'], logged_in());
 				
-				if (!$iter || ($iter->get('moderate') && !member_in_commissie(COMMISSIE_BESTUUR))) {
+				if (!$iter || ($iter->get('moderate') && !member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))) {
 					$this->get_content('not_found');
 					return;
 				}

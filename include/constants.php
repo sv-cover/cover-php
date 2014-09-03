@@ -11,6 +11,7 @@
 	define('INCLUDE_PATH', dirname(__FILE__));
 	
 	define('COMMISSIE_BESTUUR', 0);
+	define('COMMISSIE_KANDIBESTUUR', 30);
 	define('COMMISSIE_EASY', 1);
 	define('COMMISSIE_BOEKCIE', 3);
 	define('COMMISSIE_FOTOCIE', 7);
