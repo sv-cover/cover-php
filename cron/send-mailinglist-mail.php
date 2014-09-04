@@ -142,24 +142,27 @@ function process_message_mailinglist($message, &$lijst)
 
 		// Personize the message for the receiver
 		$variables = array(
-			'[NAAM]' => $aanmelding->get('naam'),
-			'[NAME]' => $aanmelding->get('naam')
+			'[NAAM]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
+			'[NAME]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
+			'[MAILINGLIST]' => htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING)
 		);
 
 		if ($aanmelding->has('lid_id'))
 			$variables['[LID_ID]'] = $aanmelding->get('lid_id');
 
-		// If this is an opt-in list, you'll have an subscription id and we can fill the placeholder
-		if ($aanmelding->has('abonnement_id'))
-			$variables['[ABONNEMENT_ID]'] = $aanmelding->get('abonnement_id');
-
 		// If you are allowed to unsubscribe, parse the placeholder correctly (different for opt-in and opt-out lists)
 		if ($lijst->get('publiek'))
-			$variables['[UNSUBSCRIBE]'] = $lijst->get('type')
-				? sprintf('<a href="https://www.svcover.nl/mailinglijsten.php?abonnement_id=%s">Click here to unsubscribe from the %s mailinglist.</a>',
-						$aanmelding->get('abonnement_id'), htmlspecialchars($lijst->get('naam')))
-				: sprintf('<a href="https://www.svcover.nl/mailinglijsten.php?lijst_id=%d">Click here to unsubscribe from the %s mailinglist.</a>',
-					$lijst->get('id'), htmlspecialchars($lijst->get('naam')));
+		{
+			$url = $lijst->get('type')== DataModelMailinglijst::TYPE_OPT_IN
+				? ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', $aanmelding->get('abonnement_id'))
+				: ROOT_DIR_URI . sprintf('mailinglijsten.php?lijst_id=%d', $lijst->get('id'));
+
+			$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING);
+
+			$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
+				htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING),
+				htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING));
+		}
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
 
