@@ -17,7 +17,7 @@
 		}
 		
 		function run_impl() {
-			if (isset($_POST['submsend'])) {
+			if (isset($_POST['submsend']) && !empty($_POST['email'])) {
 				$model = get_model('DataModelMember');
 				$iter = $model->get_from_email(get_post('email'));
 				
