@@ -108,7 +108,7 @@
 			if (count($parts) != 3)
 				return false;
 			
-			$order = array(1, 0, 2);
+			$order = array(0, 1, 2);
 			$value = '';
 
 			foreach ($order as $i) {

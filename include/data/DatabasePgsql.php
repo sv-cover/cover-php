@@ -49,7 +49,7 @@
 			/* Open connection */
 			$this->resource = pg_connect(implode(' ', $params));
 
-			$this->query("SET NAMES 'UTF-8';");
+			$this->query("SET NAMES 'UTF-8'; SET DateStyle = 'ISO, DMY';");
 			
 			if (!$this->resource)
 				trigger_error('Could not connect to database: ' . $php_errormsg);
