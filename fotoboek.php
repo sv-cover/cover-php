@@ -103,12 +103,12 @@
 			if (!$value)
 				return null;
 
-			$parts = explode('-', $value);
+			$parts = explode('-', $value); // input should be day - month - year
 			
 			if (count($parts) != 3)
 				return false;
 			
-			$order = array(0, 1, 2);
+			$order = array(2, 1, 0); // year - month - day
 			$value = '';
 
 			foreach ($order as $i) {
