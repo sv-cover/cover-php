@@ -203,7 +203,9 @@
 				$iter = new DataIter($this->model, -1, array(
 						'boek' => $book->get('id'),
 						'url' => $urls[$i],
-						'thumburl' => $thumbs[$i]));
+						'thumburl' => $thumbs[$i],
+						'added_on' => 'NOW()'),
+						array('added_on'));
 				
 				$this->model->insert($iter);
 			}

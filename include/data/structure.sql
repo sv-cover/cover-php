@@ -566,21 +566,6 @@ CREATE TABLE foto_boeken_visit (
 );
 
 
--- ZOU DIT WERKEN?
-CREATE FUNCTION fotoboek_read_status (int lid_id, int boek_id) RETURNS BOOLEAN AS $$
-    BEGIN
-        SELECT id INTO child_ids FROM foto_boeken WHERE parent = boek_id;
-
-        IF COUNT(child_ids) > 0 THEN
-            SELECT SUM(fotoboek_read_status(id)) > 0 INTO visited FROM child_ids;
-        ELSE
-            SELECT COUNT(f_b_v.last_visit) > 0 INTO visited FROM foto_boeken_visits f_b_v WHERE f_b_v.boek_id = boek_id;
-        END
-
-        RETURN visited;
-    END
-$$ LANGUAGE plpgsql;
-
 --
 -- TOC entry 211 (class 1259 OID 24300)
 -- Name: foto_reacties_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -628,7 +613,8 @@ CREATE TABLE fotos (
     boek integer NOT NULL,
     url character varying(150) NOT NULL,
     beschrijving character varying(255),
-    thumburl character varying(150) NOT NULL
+    thumburl character varying(150) NOT NULL,
+    added_on timestamp without time zone DEFAULT NULL
 );
 
 --
