@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-09-21 01:18+0100\n"
+"POT-Creation-Date: 2014-09-21 01:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -2464,7 +2464,6 @@ msgid "geslacht"
 msgstr "gender"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
-#, fuzzy
 msgid "telefoonnummer"
 msgstr "Phone number"
 
@@ -3311,18 +3310,16 @@ msgid "Straatnaam + huisnummer"
 msgstr "Street name + number"
 
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:79
-#, fuzzy
 msgid "Synchroniseer ledenbestand"
-msgstr "Select all files"
+msgstr "Sync member database"
 
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:83
 msgid "CSV Export vanuit Secretary"
-msgstr ""
+msgstr "CSV Export from Secretary"
 
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:87
-#, fuzzy
 msgid "Importeer ledenbestand"
-msgstr "Select all files"
+msgstr "Import member database"
 
 #: ../../../themes/default/views/poll/_vote_form.phtml:13
 msgid "Stem"
