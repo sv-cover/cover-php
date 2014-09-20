@@ -558,6 +558,29 @@ CREATE TABLE foto_boeken_thumb (
     generated timestamp without time zone DEFAULT ('now'::text)::timestamp(6) without time zone NOT NULL
 );
 
+CREATE TABLE foto_boeken_visit (
+    boek_id integer NOT NULL REFERENCES foto_boeken (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    last_visit timestamp without time zone DEFAULT ('now'::text)::timestamp(6) without time zone NOT NULL,
+    CONSTRAINT foto_boeken_visit_pk PRIMARY KEY (boek_id, lid_id)
+);
+
+
+-- ZOU DIT WERKEN?
+CREATE FUNCTION fotoboek_read_status (int lid_id, int boek_id) RETURNS BOOLEAN AS $$
+    BEGIN
+        SELECT id INTO child_ids FROM foto_boeken WHERE parent = boek_id;
+
+        IF COUNT(child_ids) > 0 THEN
+            SELECT SUM(fotoboek_read_status(id)) > 0 INTO visited FROM child_ids;
+        ELSE
+            SELECT COUNT(f_b_v.last_visit) > 0 INTO visited FROM foto_boeken_visits f_b_v WHERE f_b_v.boek_id = boek_id;
+        END
+
+        RETURN visited;
+    END
+$$ LANGUAGE plpgsql;
+
 --
 -- TOC entry 211 (class 1259 OID 24300)
 -- Name: foto_reacties_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie

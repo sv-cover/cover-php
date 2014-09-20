@@ -282,24 +282,71 @@
 			else
 				$parent = $book->get('id');
 			
-			$rows = $this->db->query('
-					SELECT 
-						foto_boeken.*, 
-						COUNT(foto_boeken.id) AS num_photos, 
-						fotos.boek AS has_photos
-					FROM 
-						foto_boeken
-					LEFT JOIN fotos ON (foto_boeken.id = fotos.boek)
-					WHERE 
-						foto_boeken.parent = ' . $parent . '
-					GROUP BY fotos.boek, 
-						foto_boeken.id, 
-						foto_boeken.parent, 
-						foto_boeken.beschrijving, 
-						foto_boeken.date, 
-						foto_boeken.titel, 
-						foto_boeken.fotograaf
-					ORDER BY date DESC, foto_boeken.id');
+			$select = 'SELECT
+				foto_boeken.*, 
+				COUNT(foto_boeken.id) AS num_photos, 
+				fotos.boek AS has_photos';
+
+			$from = 'FROM
+				foto_boeken';
+
+			$joins = '
+				LEFT JOIN fotos ON
+					foto_boeken.id = fotos.boek';
+
+			$where = sprintf('WHERE
+				foto_boeken.parent = %d', $parent);
+
+			$group_by = 'GROUP BY
+				fotos.boek, 
+				foto_boeken.id, 
+				foto_boeken.parent, 
+				foto_boeken.beschrijving, 
+				foto_boeken.date, 
+				foto_boeken.titel, 
+				foto_boeken.fotograaf';
+
+			$order_by = 'ORDER BY
+				date DESC,
+				foto_boeken.id';
+
+			if (logged_in())
+			{
+				$select = sprintf('
+					WITH RECURSIVE book_children (id, titel, parents) AS (
+						SELECT id, titel, ARRAY[0] FROM foto_boeken WHERE parent = %d
+					UNION ALL
+						SELECT f_b.id, f_b.titel, b_c.parents || f_b.parent
+						FROM book_children b_c, foto_boeken f_b
+						WHERE b_c.id = f_b.parent
+				)
+				', $parent) . $select;
+
+				$select .= ',
+					CASE
+						WHEN
+							COUNT(nullif(f_b_v.last_visit IS NULL, false))
+							+ COUNT(nullif(b_c.id IS NOT NULL AND f_b_c_v.last_visit IS NULL, false)) > 0 
+						THEN \'unread\'
+						ELSE \'read\'
+					END read_status';
+
+				$joins .= sprintf('
+					LEFT JOIN book_children b_c ON
+						foto_boeken.id = ANY(b_c.parents)
+					LEFT JOIN foto_boeken_visit f_b_v ON
+						f_b_v.boek_id = foto_boeken.id
+						AND f_b_v.lid_id = %d
+					LEFT JOIN foto_boeken_visit f_b_c_v ON
+						f_b_c_v.boek_id = b_c.id
+						AND f_b_c_v.lid_id = %1$d', logged_in('id'));
+			}
+			else
+			{
+				$select .= '\'read\' as read_status';
+			}
+
+			$rows = $this->db->query("$select $from $joins $where $group_by $order_by");
 
 			return $this->_rows_to_iters($rows);
 		}
@@ -567,6 +614,51 @@
 					'boek = ' . $iter->get('boek') . ' AND
 					theme = \'' . $iter->get('theme') . '\'', 
 					$iter->get_literals());
+		}
+
+		public function mark_read($lid_id, DataIter $book)
+		{
+			try {
+				$this->db->insert('foto_boeken_visit',
+					array(
+						'lid_id' => $lid_id,
+						'boek_id' => $book->get_id(),
+						'last_visit' => 'NOW()'
+					),
+					array('last_visit'));
+			} catch (Exception $e) {
+				$this->db->update('foto_boeken_visit',
+					array('last_visit' => 'NOW()'),
+					sprintf('lid_id = %d AND boek_id = %d', $lid_id, $book->get_id()),
+					array('last_visit'));
+			}
+		}
+
+		protected function mark_children_read($lid_id, DataIter $book)
+		{
+			$query = sprintf('
+				WITH RECURSIVE book_children (id, titel, parents) AS (
+						SELECT id, titel, ARRAY[0] FROM foto_boeken WHERE parent = %2$d
+					UNION ALL
+						SELECT f_b.id, f_b.titel, b_c.parents || f_b.parent
+						FROM book_children b_c, foto_boeken f_b
+						WHERE b_c.id = f_b.parent
+				)
+				INSERT INTO foto_boeken_visit (lid_id, boek_id, last_visit)
+				SELECT %1$d, b_c.id, NOW() FROM book_children b_c
+				WHERE NOT EXISTS (
+						SELECT 1
+						FROM foto_boeken_visit
+						WHERE lid_id = %1$d AND boek_id = b_c.id)', $lid_id, $book->get_id());
+
+			$this->db->query($query);
+		}
+
+		public function mark_read_recursively($lid_id, DataIter $book)
+		{
+			$this->mark_read($lid_id, $book);
+
+			$this->mark_children_read($lid_id, $book);
 		}
 	}
 ?>

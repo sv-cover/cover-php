@@ -1,5 +1,5 @@
 <h1><?= __('Fotoboek') ?></h1>
-<div class = "messageBox clearfix">
+<div class = "messageBox clearfix fotoboek-box">
 <? 	
 
 if (member_in_commissie(COMMISSIE_FOTOCIE)){
@@ -24,6 +24,7 @@ if (!$iter) {
 
 $include_current = false;
 
+$this->render_partial('mark_read_button', compact('model', 'iter'));
 $this->render_partial('path', compact('model', 'iter', 'include_current'));
 $this->render_partial('info', compact('model', 'iter'));
 $this->render_partial('contents', compact('model', 'iter'));

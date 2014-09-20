@@ -429,6 +429,20 @@
 			echo pg_unescape_bytea($thumb->get('image'));
 			exit();
 		}
+
+		protected function _process_mark_read(DataIter $book)
+		{
+			if (logged_in())
+				$this->model->mark_read_recursively(logged_in('id'), $book);
+
+			$this->_redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
+		}
+
+		protected function _redirect($link)
+		{
+			header('Location: ' . $link);
+			echo '<a href="' . htmlentities($link, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
+		}
 		
 		function _view_edit_book($book) {
 			if (!$this->_page_prepare())
@@ -481,12 +495,18 @@
 					$this->_process_fotoboek_fotos($book);
 				elseif (isset($_POST['submfotoboekdelfotos']))
 					$this->_process_fotoboek_del_fotos($book);
+				elseif (isset($_POST['mark_read_recursively']))
+					$this->_process_mark_read($book);
 				elseif (isset($_GET['delbook']))
 					$this->_process_del_book($book);
 				elseif (isset($_GET['editbook']))
 					$this->_view_edit_book($book);
-				else
+				else {
+					if ($book && logged_in())
+						$this->model->mark_read(logged_in('id'), $book);
+
 					$this->get_content('fotoboek', $book);
+				}
 			} elseif (isset($_POST['submfotobeschrijving']))
 				$this->_process_photo_description($photo);
 			elseif (isset($_POST['submfotoreactie']))

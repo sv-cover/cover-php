@@ -41,6 +41,7 @@ $admin = member_in_commissie(COMMISSIE_FOTOCIE);
 for ($i = 0; $i < count($children); $i += $books_per_row) {
 	$images = array();
 	$titles = array();
+	$status = array();
 
 	for ($n = $i; $n < $i + $books_per_row; $n++) {
 		if ($n >= count($children)) {
@@ -72,13 +73,15 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
 		
 			$titles[] = $title;
+
+			$status[] = $children[$n]->get('read_status');
 		}
 	}
 	
 	//echo the images in this row
 	for ($idx = 0; $idx != $books_per_row; ++$idx)
 		echo '
-			<div class = "fotoBoek">
+			<div class = "fotoBoek ' . $status[$idx] .'">
 				'. $images[$idx] .'
 				<p class = "bookTitle">
 					'. $titles[$idx] .'

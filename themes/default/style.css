@@ -391,7 +391,22 @@ border-radius: 0 0 5px 5px;
   border: 1px solid #ddd;
   box-shadow: 1px 1px 3px #555;
 }*/
-.fotoBoek { float: left; padding: 15px; width: 125px; height: 150px; text-align:center;}
+.fotoBoek {
+	float: left;
+	padding: 15px;
+	width: 125px;
+	height: 150px;
+	text-align: center;
+}
+
+.fotoBoek.unread .bookTitle:after {
+	content: '(new!)';
+	color: #c60c30;
+}
+
+.fotoboek-box .mark-read-button {
+	float: right;
+}
 
 .floatLeft { float:left; }
 .floatRight { float:right; }
