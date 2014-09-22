@@ -92,6 +92,7 @@
 				<ul>
 					<li><a href="index.php">' . __('Home') . '</a></li>';
 		if (member_in_commissie(COMMISSIE_BESTUUR) ||
+			member_in_commissie(COMMISSIE_KANDIBESTUUR) ||
 			member_in_commissie(COMMISSIE_BOEKCIE) ||
 			member_in_commissie(COMMISSIE_EASY))
 			$content .= '
@@ -100,10 +101,8 @@
 		
 				//fill up the admin menu
 		$admin = array();
-		if (member_in_commissie(COMMISSIE_BESTUUR)) {
+		if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 			$admin[] = '<a href="agenda.php?agenda_moderate">' . __('Agenda') . '</a>';
-			$admin[] = '<a href="links.php?links_moderate">' . __('Links') . '</a>';
-			$admin[] = '<a href="studieondersteuning.php?so_moderate">' . __('Studieondersteuning') . '</a>';
 			$admin[] = '<a href="actieveleden.php">' . __('Commissies') . '</a>';
 			$admin[] = '<a href="forum.php?admin=forums">' . __('Forum') . '</a>';
 			$admin[] = '<a href="nieuwlid.php">' . __('Leden toevoegen') . '</a>';

@@ -31,7 +31,8 @@
 		}
 		
 		function _prepare_page() {
-			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
+			if (!member_in_commissie(COMMISSIE_BESTUUR)
+				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				$this->get_content('common::auth');
 				return false;
 			} else {

@@ -62,7 +62,7 @@
 		}
 
 		function _process_almanak($iter) {
-			if (member_in_commissie(COMMISSIE_BESTUUR)) {
+			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				$check = array(
 					array('name' => 'voornaam', 'function' => array(&$this, '_check_size')),
 					array('name' => 'tussenvoegsel', 'function' => array(&$this, '_check_size')),
@@ -82,14 +82,14 @@
 			);
 			
 			$data = check_values($check, $errors);
-		
+
 			if (count($errors) > 0) {
 				$error = __('De volgende velden zijn onjuist ingevuld: ') . implode(', ', array_map('field_for_display', $errors));
 				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
 				return;
 			}
 			
-			if (member_in_commissie(COMMISSIE_BESTUUR)) {
+			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				$fields = array(
 					'voornaam',
 					'tussenvoegsel',
@@ -118,7 +118,9 @@
 			
 			$this->model->update($iter);
 			
-			if ($iter->has_changes() && !member_in_commissie(COMMISSIE_BESTUUR, false)) {
+			if ($iter->has_changes()
+				&& !member_in_commissie(COMMISSIE_BESTUUR, false)
+				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR, false)) {
 				/* Inform bestuur that the members information
 				 * has been changed
 				 */
@@ -176,7 +178,8 @@
 			$message = array();
 
 			// Only test the old password if we are not a member of the board
-			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
+			if (!member_in_commissie(COMMISSIE_BESTUUR)
+				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				if (!get_post('wachtwoord_oud') || md5(get_post('wachtwoord_oud')) != $iter->get('wachtwoord')) {
 					$errors[] = 'wachtwoord_oud';
 					$message[] = __('Het huidige wachtwoord is onjuist.');
@@ -224,7 +227,8 @@
 			$errors = array();
 			$message = array();
 
-			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
+			if (!member_in_commissie(COMMISSIE_BESTUUR)
+				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				$errors[] = 'type';
 				$message[] = __('Jij mag deze gegevens niet aanpassen.');
 			} elseif (!get_post('type')) {
@@ -251,7 +255,7 @@
 		{
 			$error = null;
 
-			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_EASY))
+			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 				return $this->get_content('common::auth');
 
 			else if ($_FILES['photo']['errpr'] == UPLOAD_ERR_INI_SIZE)
@@ -299,7 +303,9 @@
 				return $this->get_content('not_found');
 			
 			// If the member was found, but is officially 'deleted', also return a 404
-			if ($iter->get('type') == MEMBER_STATUS_LID_AF && !member_in_commissie(COMMISSIE_BESTUUR))
+			if ($iter->get('type') == MEMBER_STATUS_LID_AF
+				&& !member_in_commissie(COMMISSIE_BESTUUR)
+				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 				return $this->get_content('not_found');
 
 			if (isset($_POST['submprofiel_almanak']))

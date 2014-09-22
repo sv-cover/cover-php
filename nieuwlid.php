@@ -205,7 +205,8 @@
 		}
 		
 		function run_impl() {
-			if (!member_in_commissie(COMMISSIE_BESTUUR))
+			if (!member_in_commissie(COMMISSIE_BESTUUR)
+				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 				return $this->get_content('auth');
 			
 			if (isset($_POST['submnieuwlid'])) {

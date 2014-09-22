@@ -35,7 +35,9 @@ class ProfielView extends View {
 			if ($perms !== null)
 				return $perms;
 
-			$perms = ($this->is_current_member($iter) || member_in_commissie(COMMISSIE_BESTUUR));
+			$perms = $this->is_current_member($iter)
+				|| member_in_commissie(COMMISSIE_BESTUUR)
+				|| member_in_commissie(COMMISSIE_KANDIBESTUUR);
 
 			return $perms;
 		}
@@ -52,7 +54,9 @@ class ProfielView extends View {
 
 			/* Show an input text field when there is write permission and
 			 * there is data */
-			if (member_in_commissie(COMMISSIE_BESTUUR) || ($this->member_write_permission($iter) && !$read_only))
+			if (($this->member_write_permission($iter) && !$read_only)
+				|| member_in_commissie(COMMISSIE_BESTUUR)
+				|| member_in_commissie(COMMISSIE_KANDIBESTUUR))
 				$result .= input_text($name, $data);
 			else /* Show the field otherwise */
 				$result .= markup_format_text($data[$name]);
@@ -80,7 +84,8 @@ class ProfielView extends View {
 		{
 			$model = get_model('DataModelMailinglijst');
 
-			$all_lists = $model->get_lijsten($member_id, !member_in_commissie(COMMISSIE_BESTUUR));
+			$all_lists = $model->get_lijsten($member_id,
+				!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR));
 
 			$subscriptions = array();
 

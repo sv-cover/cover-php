@@ -26,7 +26,7 @@
 			<? } else { ?>
 				<img width="100" height="150" class="profielFoto" src="<?= markup_format_attribute($photo_link) ?>" />
 			<? } ?>
-			<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_EASY)): ?>
+			<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
 			<form id="upload-photo" action="profiel.php?lid=<?=$iter->get('lidid')?>" method="post" enctype="multipart/form-data">
 				<div class="file-upload-button button">
 					<span><?=__('Kies foto') ?>&hellip;</span>
@@ -45,7 +45,7 @@
 						<td></td>
 					</tr>
 					<?
-					if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
+					if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) { ?>
 						<tr><td><?=
 								//FIXME: Omdat 'naam' geen echt veld is, worden velden met errors hier (bijv. voornaam die te lang is) niet aangegeven -- PdB
 						 label(__('Naam'), 'naam', $errors) ?>:</td><td>
@@ -127,7 +127,7 @@
 			</form>
 	</div>
 
-	<?php if (member_in_commissie(COMMISSIE_BESTUUR)) { ?>
+	<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) { ?>
 		<div class="floatLeft almanak">
 			<h2 class="profilehead" id="zichtbaarheid"><?= __('Zichtbaarheid') ?></h2>
 			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#zichtbaarheid" method="post">
@@ -192,7 +192,7 @@
 							<td width="150"></td>
 							<td></td>
 						</tr>
-						<?php if (!member_in_commissie(COMMISSIE_BESTUUR)): ?>
+						<?php if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
 						<?= table_row(label(__('Oud wachtwoord'), 'wachtwoord_oud', $errors) . ':', input_password('wachtwoord_oud')) ?>
 						<?php endif ?>
 						<?= table_row(label(__('Nieuw wachtwoord'), 'wachtwoord_nieuw', $errors) . ':', input_password('wachtwoord_nieuw')) ?>

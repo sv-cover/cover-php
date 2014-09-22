@@ -44,7 +44,8 @@
 		}
 
 		function run_impl() {
-			if (!member_in_commissie(COMMISSIE_BESTUUR)) {
+			if (!member_in_commissie(COMMISSIE_BESTUUR)
+				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				$this->get_content('auth');
 				return;
 			}
