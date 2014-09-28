@@ -38,6 +38,13 @@
 		<?php if (date('md') == '0401'): ?>
 		<script src="<?=get_theme_data('data/professionalism.js')?>"></script>
 		<?php endif ?>
+
+		<?php if (get_config_value('show_queries', false)): ?>
+		<!--
+		<?php foreach (get_db()->history as $query)
+			printf("%f: %s\n\n", $query['duration'], $query['query']); ?>
+		-->
+		<?php endif ?>
 	</body>
 </html>
 <?php

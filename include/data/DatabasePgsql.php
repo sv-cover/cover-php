@@ -9,6 +9,8 @@
 		var $last_affected = null;
 		var $last_insert_table = null;
 
+		public $history = array();
+
 		/**
 		  * Create new postgresql database
 		  * @dbid a hash with database information (host, port, user, password, 
@@ -77,8 +79,18 @@
 			if (!$this->resource)
 				return;
 
+			$start = microtime(true);
+
 			/* Query the database */
 			$handle = @pg_query($this->resource, $query);
+
+			$duration = microtime(true) - $start;
+
+			$this->history[] = array(
+				'query' => $query,
+				'duration' => $duration,
+				'backtrace' => debug_backtrace()
+			);
 
 			if ($handle === false) {
 				throw new RuntimeException('Query failed: ' . $this->get_last_error());
