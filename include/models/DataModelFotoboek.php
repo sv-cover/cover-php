@@ -343,7 +343,8 @@
 			}
 			else
 			{
-				$select .= '\'read\' as read_status';
+				$select .= ',
+					\'read\' as read_status';
 			}
 
 			$rows = $this->db->query("$select $from $joins $where $group_by $order_by");
