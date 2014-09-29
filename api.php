@@ -71,8 +71,11 @@ class ControllerApi extends Controller
 		return array('result' => $member->data);
 	}
 
-	public function api_session_test_committee($session_id, $committee)
+	public function api_session_test_committee($session_id, $committees)
 	{
+		if (!is_array($committees))
+			$comittees = array($committees);
+
 		// Get the session
 		$session_model = get_model('DataModelSession');
 
@@ -80,14 +83,6 @@ class ControllerApi extends Controller
 
 		if (!$session)
 			return array('result' => false, 'error' => 'Session not found');
-
-		// Find the committee id
-		$committee_model = get_model('DataModelCommissie');
-
-		$committee = $committee_model->get_from_name($committee);
-
-		if (!$committee)
-			return array('result' => false, 'error' => 'Committee not found');
 
 		// Find in which committees the member is active
 		$member_model = get_model('DataModelMember');
@@ -97,10 +92,22 @@ class ControllerApi extends Controller
 		if (empty($member_committees))
 			return array('result' => false, 'error' => 'No committees found for this member');
 
-		// And finally, test whether the searched for committee and the member is committees intersect
-		$member_in_committee = in_array($committee->get('id'), $member_committees);
+		$committee_model = get_model('DataModelCommissie');
 
-		return array('result' => $member_in_committee);
+		foreach ($committees as $committee_name)
+		{
+			// Find the committee id
+			$committee = $committee_model->get_from_name($committee_name);
+
+			if (!$committee)
+				return array('result' => false, 'error' => 'Committee "' . $committee_name . '" not found');
+
+			// And finally, test whether the searched for committee and the member is committees intersect
+			if (in_array($committee->get('id'), $member_committees))
+				return array('result' => true, 'committee' => $committee->get('naam'));
+		}
+
+		return array('result' => false);
 	}
 
 	public function api_get_member($member_id)
