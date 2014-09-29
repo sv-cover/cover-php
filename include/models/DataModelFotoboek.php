@@ -409,7 +409,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_photos($book, $max = 0, $random = false) {
+		public function get_photos(DataIter $book = null, $max = 0, $random = false) {
 			if (!$book)
 				$id = 0;
 			else
