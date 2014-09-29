@@ -93,7 +93,7 @@
 					<li><a href="index.php">' . __('Home') . '</a></li>';
 		if (member_in_commissie(COMMISSIE_BESTUUR) ||
 			member_in_commissie(COMMISSIE_KANDIBESTUUR) ||
-			member_in_commissie(COMMISSIE_BOEKCIE) ||
+			// member_in_commissie(COMMISSIE_BOEKCIE) ||
 			member_in_commissie(COMMISSIE_EASY))
 			$content .= '
 					<li class = "dropDown"><a drop="beheer" href="" onclick="return false;">'.__('Beheer') .'</a></li>';
