@@ -1,41 +1,9 @@
-<?php
-	function build_slides($iters, $num, $current = false) {
-		$slides = array();
-
-		for ($i = 0; $i < $num; $i++) {
-			if ($i < count($iters))
-				$slide = '<img class="' . ($current ? 'current' : 'slide') . '" src="' . htmlspecialchars($iters[$i]->get('thumburl'), ENT_QUOTES) . '" alt="' . __('Foto') . '">';
-			else
-				$slide = '';
-		
-			if ($slide != '' && !$current)
-				$slide = '<a href="fotoboek.php?photo=' . $iters[$i]->get('id') . '">' . $slide . '</a>';
-		
-			$slides[] = $slide;
-		}
-	
-		return $slides;
-	}
-		
-	$prev = $model->get_previous_photo($iter, 2);
-	$next = $model->get_next_photo($iter, 2);
-?>
-
-<table class="slides">
-<tr>
-	<td>
-
-
-
-</td>
-
-<? $current = build_slides(array($iter), 1, true); ?>
-
-<td class="slide"><?= implode('</td><td class="slide">', array_reverse(build_slides($prev, 2))) ?></td>
-<td class="slide"><?= $current[0] ?></td>
-<td class="slide"><?= implode('</td><td class="slide">', build_slides($next, 2)) ?></td>
-<td class="text_right">
-
-</td>
-</tr>
-</table>
+<ol class="slides">
+<?php foreach ($model->get_photos($iter) as $photo): ?>
+	<li id="photo<?=$photo->get('id')?>" class="<?=$current->get('id') == $photo->get('id') ? 'current' : ''?> slide">
+		<a href="fotoboek.php?photo=<?=$photo->get('id')?>#photo<?=$photo->get('id')?>">
+			<img src="<?=markup_format_attribute($photo->get('thumburl'))?>" title="<?=markup_format_attribute($photo->get('beschrijving'))?>">
+		</a>
+	</li>
+<?php endforeach ?>
+</ol>

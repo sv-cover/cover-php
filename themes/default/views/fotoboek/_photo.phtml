@@ -8,19 +8,25 @@
 <? } ?>
 
 <div id="foto" class="fotoboek_foto">
-<?
-	$prev = $model->get_previous_photo($iter, 2);
-	$next = $model->get_next_photo($iter, 2);
-?>
-<? if (count($prev) > 0) { ?>
-	<div class="prevPhoto"><a href="fotoboek.php?photo=<?= $prev[0]->get('id') ?>#a"><?= image('previous.png', __('Vorige'), __('Ga naar vorige foto')) ?></a></div>
-<? } ?>
-<? if (count($next) > 0) { ?>
-	<div class="nextPhoto"><a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a"><?= image('next.png', __('Volgende'), __('Ga naar volgende foto')) ?></a></div>
-<? } ?>
-<a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
-<img id="photo" src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>">
-</a>
+
+<?php if ($prev = $model->get_previous_photo($iter)): ?>
+	<div class="prevPhoto">
+		<a href="fotoboek.php?photo=<?= $prev->get('id') ?>#photo<?=$prev->get('id')?>">
+			<span><?= __('Vorige') ?></span>
+		</a>
+	</div>
+<? endif ?>
+
+<?php if ($next = $model->get_next_photo($iter)): ?>
+	<div class="nextPhoto">
+		<a href="fotoboek.php?photo=<?= $next->get('id') ?>#photo<?=$next->get('id')?>">
+			<span><?= __('Volgende') ?></span>
+		</a>
+	</div>
+<?php endif ?>
+
+<img id="photo" src="<?=markup_format_attribute($iter->get('url')) ?>">
+
 </div>
 <script type = "text/javascript">
 	$(document).ready(function(){

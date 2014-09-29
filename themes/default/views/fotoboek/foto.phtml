@@ -2,13 +2,15 @@
 
 <div class="messageBox">
 
-<?
+<?php
 	$book = $model->get_book($iter->get('boek'), logged_in());
-	
+
 	$this->render_partial('path', array('iter' => $book, 'include_current' => true, 'model' => $model));
+	
 	$this->render_partial('photo', compact('model', 'iter'));
-	$this->render_partial('slides', compact('model', 'iter'));
-	$this->render_partial('slideshow', compact('model', 'iter'));
+
+	$this->render_partial('slides', array('model' => $model, 'iter' => $book, 'current' => $iter));
+
 	$this->render_partial('reacties', compact('model', 'iter', 'errors'));
 ?>
 
