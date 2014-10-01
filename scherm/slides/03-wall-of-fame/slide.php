@@ -8,11 +8,7 @@ if (isset($_GET['commissie'])) {
 }
 // Pick a random commissie
 else {
-	$commissies = $commissie_model->get(false);
-
-	// Apparently sometimes a commissie is empty?
-	while (empty($commissie))
-		$commissie = $commissies[mt_rand(0, count($commissies))];
+	$commissie = $commissie_model->get_random();
 }
 
 $leden = $commissie_model->get_leden($commissie->get('id'));

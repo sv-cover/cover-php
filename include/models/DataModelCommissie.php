@@ -200,6 +200,21 @@
 			
 			return $this->_row_to_iter($row);
 		}
+
+		function get_random()
+		{
+			$row = $this->db->query_first("SELECT c.* 
+					FROM commissies c
+					LEFT JOIN actieveleden a ON
+						a.commissieid = c.id
+					WHERE c.hidden <> 1
+					GROUP BY c.id
+					HAVING COUNT(a.id) > 0
+					ORDER BY RANDOM()
+					LIMIT 1");
+			
+			return $this->_row_to_iter($row);
+		}
 		
 		function delete($iter) {
 			parent::delete($iter);
