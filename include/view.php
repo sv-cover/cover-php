@@ -59,7 +59,7 @@ class View {
 	
 	function __call($name, $args) {
 		$filename = dirname($this->__file) . '/' . $name . '.phtml';
-		
+
 		if (file_exists($filename))
 		{
 			// Insert hash into local space
@@ -77,7 +77,10 @@ class View {
 			return true;
 		}
 		
-		echo report_error(N__("View"), N__("De gespecificeerde functie <b>%s</b> kon niet worden gevonden voor de view <b>%s</b>."), $name, $this->get_name());
+		echo report_error(
+			N__("View"),
+			N__("De gespecificeerde functie <b>%s</b> kon niet worden gevonden voor de view <b>%s</b>.")
+			. N__("Er is gezocht in <em>%s</em> en de methode <em>%s</em>"), $name, $this->get_name(), $filename, $method_name);
 		return false;
 	}
 	

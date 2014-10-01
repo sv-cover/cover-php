@@ -1,7 +1,7 @@
 <?php
-require_once('editable.php');
+require_once 'editable.php';
 
-class CommissiesView extends View
+class CommissiesView extends CRUDView
 {
 	protected $__file = __FILE__;
 

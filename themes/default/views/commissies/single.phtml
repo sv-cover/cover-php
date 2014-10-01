@@ -1,0 +1,7 @@
+<?php
+if ($iter->get('vacancies'))
+	$this->render_partial('leden_gezocht', $model, $iter);
+
+$editable = new ControllerEditable($iter->get('page'));
+$editable->run();
+?>

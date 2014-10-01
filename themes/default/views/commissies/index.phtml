@@ -1,4 +1,4 @@
-<h1> <?= __('Commissies') ?></h1>
+<h1><?= __('Commissies') ?></h1>
 <div class="messageBox">
 	<ul class="commissie-index">
 	<?php foreach ($iter as $commissie): ?>
@@ -6,7 +6,7 @@
 			<?php if ($commissie->get('vacancies')): ?>
 			<span class="vacancy-badge"><?=__('Commissieleden gezocht!')?></span>
 			<?php endif ?>
-			<a href="commissies.php?commissie=<?= rawurlencode($commissie->get('login')) ?>" class="link">
+			<a href="<?=$controller->link_to_read($commissie)?>" class="link">
 				<?php if ($imgpath = $this->get_commissie_thumb($commissie)): ?>
 					<img src="<?=markup_format_attribute($imgpath, ENT_QUOTES)?>" class="thumbnail">
 				<?php endif ?>
