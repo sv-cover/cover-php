@@ -51,6 +51,10 @@ class ControllerScherm
 				else if (glob($path . '/' . $folder . '/*.{jpg,png,svg}', GLOB_BRACE))
 					$slide['url'] = $this->default_slide;
 
+				// If it is not one of both, just skip it. It is not important.
+				else
+					continue;
+
 				// If there is a stylesheet, add it to the config.
 				if (file_exists($path . '/' . $folder . '/slide.css'))
 					$slide['stylesheet'] = $this->link_resource('slide.css', $uid);
