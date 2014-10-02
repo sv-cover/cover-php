@@ -51,6 +51,11 @@
 			else
 				return 'content_' . $language;
 		}
+
+		function _user_can_edit(DataIter $iter)
+		{
+			return member_in_commissie($iter->get('owner')) || member_in_commissie(COMMISSIE_BESTUUR);
+		}
 		
 		/**
 		  * Function that performs common preprocessing before actions
@@ -65,7 +70,7 @@
 		  * the view showing the error when it returns false
 		  */
 		function _page_prepare($iter, &$page, &$field) {
-			if (!member_in_commissie($iter->get('owner')) && !member_in_commissie(COMMISSIE_BESTUUR)) {
+			if (!$this->_user_can_edit($iter)) {
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
 				
@@ -184,7 +189,7 @@
 		function _view_edit($iter) {
 			$params = array('language' => $this->_get_language());
 
-			if (!member_in_commissie($iter->get('owner')))
+			if (!$this->_user_can_edit($iter))
 				$this->get_content('read_only', $iter, $params);
 			else
 				$this->get_content('edit', $iter, $params);
