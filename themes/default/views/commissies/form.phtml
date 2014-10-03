@@ -1,0 +1,18 @@
+<h1><?=$this->get_label($iter, __('Nieuwe commissie maken'), __('Commissie wijzigen')) ?></h1>
+<div class="messageBox">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form">
+		<div>
+			<?=label(__('Commissienaam'), 'naam', $errors, true)?>
+			<?=input_text('naam', $iter->data, 'required', 'required')?>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Maak commissie aan'), __('Wijzig commissie')) ?></button>
+			<?php if ($iter->get_id() > 0): ?>
+			<a href="<?=markup_format_attribute($controller->link_to_read($iter))?>"><?=__('Terug naar commissie')?></a>
+			<?php else: ?>
+			<a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Terug naar alle commissies')?></a>
+			<?php endif ?>
+		</div>
+	</form>
+</div>

@@ -4,32 +4,9 @@
 	require_once('markup.php');
 	require_once('member.php');
 
-	function echo_editable_page($iter, $page) {
-		if (member_in_commissie($iter->get('owner')) || member_in_commissie(COMMISSIE_BESTUUR)) {
-			$link = '<a href="' . add_request(get_request(), 'editable_edit=' . $iter->get('id')) . '">' . image('edit.png', __('bewerken'), __('Pagina bewerken')) . '</a>';
-			
-			//if title with markup <h1>Title</h1> is found in page
-			if (preg_match('/^\<h1\>(.*?)\<\/h1\>/i', $page)) {
-				//replace the <h1> tag with a bar_header div and editable button, echo the resulting page
-				echo preg_replace('/^\<h1\>(.*?)\<\/h1\>/i', '<div class="pageheading"><div class="controls inline">' . $link . '</div><h1>$1</h1></div><div class="messageBox">', $page);
-				echo '</div>';
-			} else {
-				//title is not found, echo the page as a whole
-				echo '<div class="bar"><div class="text_right">' . $link . '</div></div>';
-				echo '<div class="messageBox">'.$page.'</div>';
-			}
-		} else {
-			//member is not authorised to edit the page, echo the page as a whole
-			
-			//if title with markup <h1> is found, place outside the messageBox class
-			if (preg_match('/^\<h1\>(.*?)\<\/h1\>/i', $page)) {
-				echo preg_replace('/^\<h1\>(.*?)\<\/h1\>/i', '<h1>$1</h1><div class="messageBox">', $page);
-				echo '</div>';
-			} else {
-				//echo the page as a whole, inside the messageBox
-				echo '<div class="messageBox">'.$page.'</div>';
-			}
-		}
+	function echo_editable_page($iter, $page)
+	{
+		echo $page;
 	}
 	
 	function view_something_went_wrong($model, $iter, $params = null) {
@@ -54,9 +31,8 @@
 	function view_edit($model, $iter, $params = null) {
 		$self = get_request('editable_edit');
 
-		echo '<h1>' . __('Bewerken') . ' - ' . $iter->get('titel') . '</h1>';
-		echo '<div class="messageBox">';
-		echo '<div class="control-bar">
+		echo '
+		<div class="control-bar">
 			<a href="' . $self . '" class="right">' . image('close.png', __('sluiten'), __('Sluiten'), 'class="top"') . '</a>
 			<a href="javascript:submit_form(\'editable\', true);">' . image('save.png',  __('opslaan'), __('Sla pagina op'), 'class="button"') . '</a>
 			<a href="javascript:reset_form(\'editable\');">' . image('revert.png', __('herstellen'), __('Herstel pagina'), 'class="button"') . '</a>
@@ -85,9 +61,7 @@
 		echo '</p></form>';
 
 		echo '</div>
-		<div class="editable_preview" id="editable_preview_content">
-		</div>
-		</div>
+		<div class="editable_preview" id="editable_preview_content"></div>
 		
 		<script type="text/javascript">
 			var editable_preview_request = null;

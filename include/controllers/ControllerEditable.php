@@ -234,5 +234,22 @@
 			else
 				$this->_view_editable($page);
 		}
+
+		public function get_title()
+		{
+			return $this->model->get_title($this->id);
+		}
+
+		public function user_can_update()
+		{
+			$iter = $this->model->get_iter($this->id);
+
+			return member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie($iter->get('owner'));
+		}
+
+		public function link_to_update()
+		{
+			return add_request(get_request(), sprintf('editable_edit=%d', $this->id));
+		}
 	}
 ?>

@@ -2,22 +2,39 @@
 	<div class="timeline-line"></div>
 	<div class="timeline">
 		<div class="timeline-event has-header">
-			<?php
-				$editable = new ControllerEditable('Oudbesturenpagina');
-				$editable->run();
-			?>
+			<div class="messageBox">
+				<?php
+					$editable = new ControllerEditable('Oudbesturenpagina');
+					$editable->run();
+				?>
+			</div>
 		</div>
 	<?php foreach ($iter as $bestuur): ?>
+		<?php $editable = new ControllerEditable($bestuur->get('page')) ?>
 		<div class="bestuur timeline-event has-header">
-			<?= $this->parse_bestuursfoto($bestuur, $pages[$bestuur->get('id')]) ?>
+			<h1><?=$editable->get_title()?></h1>
+			<div class="messageBox">
+				<?php if ($editable->user_can_update()): ?>
+					<a href="<?=markup_format_attribute($editable->link_to_update())?>"><?=__('Update')?></a>
+				<?php endif ?>
+				<?php
+					ob_start();
+					$editable->run();
+					$html = ob_get_clean();
+
+					echo $this->parse_bestuursfoto($bestuur, $html);
+				?>
+			</div>
 		</div>
 	<?php endforeach ?>
 
 	<div class="timeline-event full-width">
-		<?php
-			$editable = new ControllerEditable('Oprichting Cover');
-			$editable->run();
-		?>
+		<div class="messageBox">
+			<?php
+				$editable = new ControllerEditable('Oprichting Cover');
+				$editable->run();
+			?>
+		</div>
 	</div>
 
 	<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>

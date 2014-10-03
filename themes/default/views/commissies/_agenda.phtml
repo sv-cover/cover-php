@@ -1,0 +1,25 @@
+<?php
+$activiteiten = array();
+$model = get_model('DataModelAgenda');
+
+foreach ($model->get_agendapunten(logged_in()) as $punt)
+{
+	if ($punt->get('commissie') == $iter->get('id'))
+		$activiteiten[] = $punt;
+}
+
+if (count($activiteiten)): ?>
+<a name="activiteiten"></a>
+<h3><?= __('Commissieagenda') ?></h3>
+<ul>
+<?php foreach ($activiteiten as $punt): ?>
+	<li>
+		<a href="agenda.php?id=<?=$punt->get_id()?>"><strong><?=markup_format_text($punt->get('kop'))?></strong></a><br>
+		<?=agenda_period_for_display($punt)?><br>
+		<?php if ($punt->get('locatie')): ?>
+			<?=__('Locatie') . ': ' . markup_format_text($punt->get('locatie'))?>
+		<?php endif ?>
+	</li>
+<?php endforeach ?>
+</ul>
+<?php endif ?>

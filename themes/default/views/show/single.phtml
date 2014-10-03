@@ -1,0 +1,12 @@
+<?php $editable = new ControllerEditable($iter->get('id')) ?>
+<div class="pageheading">
+	<?php if($editable->user_can_update()): ?>
+	<div class="controls inline">
+		<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
+	</div>
+	<?php endif ?>
+	<h1><?=markup_format_text($title)?></h1>
+</div>
+<div class="messageBox">
+<?php $editable->run(); ?>
+</div>

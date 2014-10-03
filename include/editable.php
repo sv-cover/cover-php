@@ -8,31 +8,8 @@
 		return;
 
 	function _editable_parse_commissie_leden(&$page, $owner) {
-		if (strstr($page, '[commissie_leden]')) {
-			$model = get_model('DataModelCommissie');
-			$leden = $model->get_leden($owner);
-			
-			if ($leden) {
-				$lh = '<div class="commissie-members">
-					<h3 class="alignCenter">' . __('Leden') . '</h3>
-					<ul>';
-				
-				foreach ($leden as $lid)
-					$lh .= '<li>
-						<a href="profiel.php?lid=' . $lid->get('id') . '" class="commissie-member">
-							<img src="foto.php?lid_id=' . $lid->get('id') .'&amp;get_thumb=circle&amp;width=200" width="100" height="100">
-							<span class="name">' . markup_format_text(member_full_name($lid, false, true)) . '</span>
-							<span class="function">' . markup_format_text($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '') . "</span>
-						</a>
-					</li>\n";
-					
-				$lh .= '</ul></div>';
-			} else {
-				$lh = '';
-			}
-			
-			$page = preg_replace('/\[commissie_leden\]/i', $lh, $page);
-		}	
+		if (strstr($page, '[commissie_leden]'))
+			$page = str_ireplace('[commissie_leden]', '', $page);
 	}
 	
 	function _editable_parse_commissie_poll(&$page, $owner) {
@@ -40,7 +17,7 @@
 			return;
 
 		/* Commissie polls are deprecated */
-		$page = str_replace('[commissie_poll]', '', $page);
+		$page = str_ireplace('[commissie_poll]', '', $page);
 	}
 	
 	function _editable_parse_commissie_email(&$page, $owner) {
@@ -54,59 +31,13 @@
 	}
 	
 	function _editable_parse_commissie_foto(&$page, $owner) {
-		if (!strstr($page,'[commissie_foto]'))
-			return;
-		
-		/* CHECK: is this necessary */
-		if ($owner == 12) { // KasCie
-			$fotohtml = '<div class="commissie_foto"><img src="images/kascie.jpg"></div>';
-		} elseif($owner == 14) { // RvA			
-			$fotohtml = '<div class="commissie_foto"><img src="images/rva.jpg"></div>';
-		} elseif($owner == 5) { // Brainstorm			
-			$fotohtml = '<div class="commissie_foto"><img src="images/brainstorm.gif"></div>';
-		} else {
-			$model = get_model('DataModelCommissie');
-			$login = $model->get_login($owner);
-
-			if (file_exists("images/$login.jpg"))
-		  		$fotohtml = '<div class="commissie_foto"><img src="images/' . $login . '.jpg"></div>';
-		}
-
-		$page = preg_replace('/\[commissie_foto\]/i', $fotohtml, $page);
+		if (strstr($page, '[commissie_foto]'))
+			$page = str_ireplace('[commissie_foto]', '', $page);
 	}
 
 	function _editable_parse_commissie_agenda(&$page, $owner) {
-		if (!strstr($page, '[commissie_agenda]'))
-			return;
-			
-		$model = get_model('DataModelAgenda');
-		$activiteiten = Array();
-		
-		/* Punten van deze commissie filteren */
-		foreach ($model->get_agendapunten(logged_in()) as $punt)
-			if ($punt->get('commissie') == $owner)
-				$activiteiten[] = $punt;
-
-		if (count($activiteiten) == 0) {
-			$page = preg_replace('/\[commissie_agenda\]/i', '', $page);
-			return;
-		}
-
-		$ah = '<a name="activiteiten"></a><h3>' . __('Commissieagenda') . '</h3>
-		<p><ul>';
-
-		foreach ($activiteiten as $punt) {
-			$ah .= '<li><a href="agenda.php?id=' . $punt->get_id() . '"><b>' . markup_format_text($punt->get('kop')) . "</b></a><br/>\n";
-			$ah .= agenda_period_for_display($punt) . '<br/>';
-
-			if ($punt->get('locatie'))
-				$ah .= __('Locatie') . ': ' . markup_format_text($punt->get('locatie')) . '<br/>';
-
-			$ah .= "</li>\n";
-		}
-		
-		$ah .= "</ul></p>\n";
-		$page = preg_replace('/\[commissie_agenda\]/i', $ah, $page);
+		if (strstr($page, '[commissie_agenda]'))
+			$page = str_ireplace('[commissie_agenda]', '', $page);
 	}
 	
 	function _editable_parse_commissie_prive(&$page, $owner) {
@@ -122,6 +53,11 @@
 		$page = preg_replace('/\[samenvatting\](.+?)\[\/samenvatting\]\s*/ism', '', $page);
 	}
 
+	function _editable_parse_commissie_header(&$page, $owner) {
+		/* Just remove because the header isn't used in general view */
+		$page = preg_replace('/\[h1\](.+?)\[\/h1\]\s*/ism', '', $page);
+	}
+
 	/** @group Editable
 	  * Parse editable page and return an array of pages with all markup
 	  * formatted in html
@@ -131,6 +67,7 @@
 	  * @result an array of pages with all markup replaced by html
 	  */
 	function editable_parse($page, $owner) {
+		_editable_parse_commissie_header($page, $owner);
 		_editable_parse_commissie_summary($page, $owner);
 
 		$page = markup_parse($page);

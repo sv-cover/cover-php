@@ -11,15 +11,16 @@
 		
 		function get_page_content($id)
 		{
-			$params = array();
+			$params = compact('id');
+
+			$iter = $this->model->get_iter($id);
 
 			if ($title = $this->model->get_title($id))
 				$params['title'] = $title;
 
 			$this->run_header($params);
 
-			$editable = new ControllerEditable($id);
-			$editable->run();
+			run_view('show::single', $this->model, $iter, $params);
 
 			$this->run_footer();
 		}
