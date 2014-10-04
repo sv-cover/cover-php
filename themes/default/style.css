@@ -982,7 +982,20 @@ div.beheer table {
 
 .timeline-event .messageBox {
 	padding: 15px;
-	border-radius: 5px;
+	border-radius: 4px;
+}
+
+.timeline-event.bestuur .messageBox {
+	padding: 0;
+	border-radius: 4px;
+}
+
+.timeline-event.bestuur .board-photo {
+	border-radius: 4px 4px 0 0;
+}
+
+.timeline-event.bestuur .messageBox .content {
+	padding: 15px;
 }
 
 .timeline-event .messageBox:before {
@@ -995,13 +1008,13 @@ div.beheer table {
 
 .timeline-event:nth-child(even) .messageBox:before {
 	border-color: transparent #f5f5f5 transparent transparent;
-	top: 10px;
+	top: 15px;
 	right: 100%;
 }
 
 .timeline-event:nth-child(odd) .messageBox:before {
 	border-color: transparent transparent transparent #f5f5f5;
-	top: 10px;
+	top: 15px;
 	left: 100%;
 }
 

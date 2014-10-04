@@ -21,13 +21,19 @@
 				<h1><?=$editable->get_title()?></h1>
 			</div>
 			<div class="messageBox">
-				<?php
-					ob_start();
-					$editable->run();
-					$html = ob_get_clean();
-
-					echo $this->parse_bestuursfoto($bestuur, $html);
+				<?php if ($this->has_bestuursfoto($bestuur))
+					printf('<img class="board-photo" src="%s" width="100%%">',
+						markup_format_attribute($this->get_bestuursfoto($bestuur)));
 				?>
+				<div class="content">
+					<?php
+						ob_start();
+						$editable->run();
+						$html = ob_get_clean();
+
+						echo $this->parse_bestuursfoto($bestuur, $html);
+					?>
+				</div>
 			</div>
 		</div>
 	<?php endforeach ?>

@@ -25,16 +25,6 @@ class BesturenView extends View
 
 	public function parse_bestuursfoto($bestuur, $html)
 	{
-		// Hack: don't apply this filter when we are editing the page
-		if (isset($_GET['editable_edit']))
-			return $html;
-
-		if ($this->has_bestuursfoto($bestuur))
-			$img_html = sprintf('<img src="%s" width="100%%">',
-				markup_format_attribute($this->get_bestuursfoto($bestuur)));
-		else
-			$img_html = '';
-
-		return str_replace('____BESTUURSFOTO____', $img_html, $html);
+		return preg_replace('/____BESTUURSFOTO____(\s+|\<br\/?\>)*/i', '', $html);
 	}
 }
