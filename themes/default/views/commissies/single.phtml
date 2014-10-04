@@ -7,7 +7,7 @@ $editable = new ControllerEditable($iter->get('page'));
 		<a href="<?=markup_format_attribute($controller->link_to_update($iter))?>"><?=__('Commissie wijzigen')?></a>
 	</div>
 	<?php endif ?>
-	<h1><?= markup_format_text($iter->get('naam')) ?></h1>
+	<h1><a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Commissies')?></a> :: <?= markup_format_text($iter->get('naam')) ?></h1>
 	</div>
 <div class="committee-page messageBox">
 	<?php $this->render_partial('foto', compact('model', 'iter')) ?>
