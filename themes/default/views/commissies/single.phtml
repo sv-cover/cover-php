@@ -8,16 +8,15 @@ $editable = new ControllerEditable($iter->get('page'));
 	</div>
 	<?php endif ?>
 	<h1><?= markup_format_text($iter->get('naam')) ?></h1>
-	</div>
+</div>
+<?php
+if ($iter->get('vacancies'))
+	$this->render_partial('leden_gezocht', compact('model', 'iter'));
+?>
 <div class="committee-page messageBox">
 	<?php $this->render_partial('foto', compact('model', 'iter')) ?>
 
 	<div class="content">
-		<?php
-		if ($iter->get('vacancies'))
-			$this->render_partial('leden_gezocht', compact('model', 'iter'));
-		?>
-
 		<?php if($editable->user_can_update()): ?>
 		<div class="controls inline">
 			<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
