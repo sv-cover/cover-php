@@ -121,7 +121,7 @@
 			elseif (!isset($_GET['id']))
 				$this->get_page_content(-1);
 			elseif ($committee = $this->_is_embedded_page($_GET['id'], 'DataModelCommissie'))
-				$this->redirect('commissies.php?view=read&id=' . $committee->get('login'), true);
+				$this->redirect('commissies.php?id=' . $committee->get('login'), true);
 			elseif ($board = $this->_is_embedded_page($_GET['id'], 'DataModelBesturen'))
 				$this->redirect('besturen.php#' .  rawurlencode($board->get('login')), true);
 			else
