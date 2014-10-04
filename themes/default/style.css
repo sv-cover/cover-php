@@ -359,12 +359,12 @@ border-radius: 0 0 5px 5px;
 .controls{
 	display: block;
 	height: 42px;
+	line-height: 42px;
 }
 .controls a
 {
 	display:inline-block;
-	height: 42px;
-	line-height: 42px;
+	height: 100%;
 	vertical-align: middle;
 }
 
@@ -377,6 +377,7 @@ border-radius: 0 0 5px 5px;
 {
   float: right;
   height: 30px;
+  line-height: 30px;
 }
 
 .clearBoth {
@@ -1104,6 +1105,10 @@ div.beheer table {
 	display: inline-block;
 }
 
+.vertical-form input + label:after {
+	content: '';
+}
+
 .vertical-form label.label_error + input,
 .vertical-form label.label_error + textarea {
 	background-color: #e5c8cc;
@@ -1398,3 +1403,7 @@ form.inline-form {
 	display: inline;
 }
 
+.contenteditable {
+	display: inline-block;
+	width: 100%;
+}

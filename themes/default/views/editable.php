@@ -33,6 +33,7 @@
 		$self = get_request('editable_edit');
 
 		echo '
+		<div class="contenteditable" id="editable' . $iter->get('id') . '">
 		<div class="control-bar">
 			<a href="' . $self . '" class="right">' . image('close.png', __('sluiten'), __('Sluiten'), 'class="top"') . '</a>
 			<a href="javascript:submit_form(\'editable\', true);">' . image('save.png',  __('opslaan'), __('Sla pagina op'), 'class="button"') . '</a>
@@ -146,5 +147,6 @@
 			function change_language() {
 				document.editable_language.submit();				
 			}
-		</script>';
+		</script>
+		</div>';
 	}

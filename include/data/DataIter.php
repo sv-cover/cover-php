@@ -37,6 +37,11 @@
 			return $this->_id;
 		}
 
+		public function has_id()
+		{
+			return $this->_id !== null && $this->_id !== -1;
+		}
+
 		public function has($field) {
 			// return array_key_exists($this->namespace . $field, $this->data);
 			return isset($this->data[$this->namespace . $field]);

@@ -25,8 +25,12 @@
 			
 			if (ctype_digit($id))
 				$this->page = $this->model->get_iter($id);
-			else
+			else {
 				$this->page = $this->model->get_iter_from_title($id);
+
+				if (!$this->page)
+					$this->page = new DataIterEditable($this->model, -1, array('titel' => $id));
+			}
 		}
 		
 		/**
@@ -249,7 +253,7 @@
 
 		public function link_to_update()
 		{
-			return add_request(get_request(), sprintf('editable_edit=%d', $this->page->get('id')));
+			return add_request(get_request(), sprintf('editable_edit=%d#editable%1$d', $this->page->get('id')));
 		}
 	}
 ?>

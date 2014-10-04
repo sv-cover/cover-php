@@ -28,7 +28,7 @@
 	<div class="section">
 		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
 			<div class="inline-block">
-				<label for="toegang"><?=__('Toegang')?>:</label>
+				<label for="toegang"><?=__('Toegang')?></label>
 				<?=select_field('toegang', $this->get_all_toegang_options(), $lijst->data, 'id', 'toegang')?>
 			</div>
 			<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
@@ -38,11 +38,11 @@
 			</div>
 			<?php endif ?>
 			<div>
-				<label for="naam"><?=__('Naam') ?>:</label>
+				<label for="naam"><?=__('Naam') ?></label>
 				<input id="naam" type="text" name="naam" value="<?=htmlspecialchars($lijst->get('naam'), ENT_QUOTES)?>">
 			</div>
 			<div>
-				<label for="omschrijving"><?=__('Omschrijving') ?>:</label>
+				<label for="omschrijving"><?=__('Omschrijving') ?></label>
 				<textarea id="omschrijving" name="omschrijving"><?=htmlspecialchars($lijst->get('omschrijving'))?></textarea>
 			</div>
 			<div>
@@ -69,11 +69,11 @@
 	<div id="mailinglist-add-gast" class="section hide-by-default">
 		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
 			<div>
-				<label for="gast-naam"><?=__('Naam')?>:</label>
+				<label for="gast-naam"><?=__('Naam')?></label>
 				<input type="text" id="gast-naam" name="naam">
 			</div>
 			<div>
-				<label for="gast-email"><?=__('E-Mail adres')?>:</label>
+				<label for="gast-email"><?=__('E-Mail adres')?></label>
 				<input type="email" id="gast-email" name="email">
 			</div>
 			<div class="controls">

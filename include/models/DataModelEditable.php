@@ -28,8 +28,6 @@
 				? $match[1]
 				: $this->get('titel');
 		}
-
-		
 	}
 
 	/**

@@ -151,7 +151,7 @@ class ControllerCRUD extends Controller
 	{
 		$iter = null;
 
-		if (!empty($_GET['id']))
+		if (isset($_GET['id']) && $_GET['id'] != '')
 		{
 			$iter = $this->_read($_GET['id']);
 

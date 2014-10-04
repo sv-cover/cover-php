@@ -113,6 +113,6 @@ class CRUDView extends View
 
 	public function get_label(DataIter $iter = null, $create_label, $update_label)
 	{
-		return $iter && $iter->get_id() ? $update_label : $create_label;
+		return $iter && $iter->has_id() ? $update_label : $create_label;
 	}
 }
