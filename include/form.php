@@ -354,11 +354,6 @@
 				$params['class'] = 'error';
 		}
 
-		if (!isset($params['cols']))
-			$params['cols'] = '70';
-		if (!isset($params['rows']))
-			$params['rows'] = '10';
-
 		$result = '<textarea name="' . $name . '"';
 		
 		foreach ($params as $attribute => $val)

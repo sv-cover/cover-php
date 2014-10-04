@@ -1,0 +1,40 @@
+<h1><?=$this->get_label($iter, __('Nieuwe commissie maken'), __('Commissie wijzigen')) ?></h1>
+<div class="messageBox">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form">
+		<div>
+			<?=label(__('Commissienaam'), 'naam', $errors, true)?>
+			<?=input_text('naam', $iter->data, 'required', 'required')?>
+		</div>
+
+		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+		<div>
+			<?=label(__('Interne naam'), 'login', $errors, true)?>
+			<?=input_text('login', $iter->data, 'required', 'required')?>
+			<p><?=__('Je wil de interne naam alleen veranderen als je een verdomd goede reden hebt. Veel interne zaken (o.a. de commissiefoto en het e-mailadres) worden via deze naam aan de commissie gekoppeld.')?></p>
+		</div>
+		<?php endif ?>
+
+		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+		<div>
+			<?=input_checkbox('hidden', $iter->data, 1)?>
+			<?=label(__('Deze commissie is verborgen'), 'hidden', $errors)?>
+			<p><?=__('Verborgen commissies worden niet getoond in het overzicht of op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de website.')?></p>
+		</div>
+		<?php endif ?>
+
+		<div>
+			<?=input_checkbox('vacancies', $iter->data, 1)?>
+			<?=label(__('Deze commissie zoekt nieuwe leden'), 'vacancies', $errors)?>
+			<p><?=__('Commissies die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm.')?></p>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Maak commissie aan'), __('Wijzig commissie')) ?></button>
+			<?php if ($iter->has_id()): ?>
+			<a href="<?=markup_format_attribute($controller->link_to_read($iter))?>"><?=__('Terug naar commissie')?></a>
+			<?php else: ?>
+			<a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Terug naar alle commissies')?></a>
+			<?php endif ?>
+		</div>
+	</form>
+</div>

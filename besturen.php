@@ -99,17 +99,8 @@ class ControllerBesturen extends Controller
 
 		// Sort then on their canonical names: $betuur->get('login')
 		usort($iters, array($this, '_compare_bestuur'));
-
-		// Create and run the editable content area (capture output)
-		$pages = array();
-
-		foreach ($iters as $bestuur)
-		{
-			$editable = new ControllerEditable($bestuur->get('page'));
-			$pages[$bestuur->get('id')] = $this->capture($editable);
-		}
 		
-		$this->get_content('besturen', $iters, compact('pages'));
+		$this->get_content('besturen', $iters);
 	}
 
 	public function _compare_bestuur($left, $right)

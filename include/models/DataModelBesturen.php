@@ -8,4 +8,11 @@ class DataModelBesturen extends DataModel
 	{
 		parent::DataModel($db, 'besturen');
 	}
+
+	public function get_from_page($page_id)
+	{
+		$hits = $this->find(sprintf('page = %d', $page_id));
+		
+		return $hits ? current($hits) : null;
+	}
 }

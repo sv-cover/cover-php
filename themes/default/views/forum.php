@@ -168,7 +168,7 @@
 
 		echo '<tr><td colspan="2">
 		<div id="message_content">
-		' . textarea_field('message', null, $params['errors']) . '
+		' . textarea_field('message', null, $params['errors'], 'cols', 70, 'rows', 9) . '
 		</div>
 		<div id="message_preview_content">
 		</div>
@@ -368,7 +368,7 @@
 		
 		echo '<tr><td style="border: none;">'.label(__('Auteur'), 'author', $params['errors'], true) . ':</td><td>'. select_field('author', $authors, null).'</td></tr>';
 		echo table_row(label(__('Onderwerp/vraag'), 'subject', $params['errors'], true) . ':', input_text('subject', null, 'maxsize', '150'));
-		echo table_row(label(__('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors']));
+		echo table_row(label(__('Omschrijving'), 'message', $params['errors'], true) . ':', textarea_field('message', null, $params['errors'], 'cols', 70, 'rows', 9));
 		
 		for ($i = 0; $i < 6; $i++)
 			echo '<tr id="optie_tr_' . $i . '"><td>' . __('Optie') . ' ' . ($i + 1) . ':</td><td>' . input_text('optie_' . $i, null, 'maxlength', 150) . '</td></tr>';

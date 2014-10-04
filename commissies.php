@@ -1,44 +1,81 @@
 <?php
 include 'include/init.php';
-include 'controllers/Controller.php';
+include 'controllers/ControllerCRUD.php';
 include 'controllers/ControllerEditable.php';
 
-class ControllerCommissies extends Controller {
-	var $model = null;
-
-	function ControllerCommissies() {
+class ControllerCommissies extends ControllerCRUD
+{	
+	public function __construct()
+	{
 		$this->model = get_model('DataModelCommissie');
 	}
-	
-	function get_content($view, $iter = null, $params = null) {
-		$this->run_header(array('title' => __('Commissies')));
-		run_view($view, $this->model, $iter, $params);
-		$this->run_footer();
-	}
 
-	function get_page_content(DataIter $commissie)
+	protected function _index()
 	{
-		$this->run_header(array('title' => $commissie->get('naam')));
+		return $this->model->get(false);
+	}
 
-		if ($commissie->get('vacancies'))
-			run_view('commissies::_leden_gezocht', $this->model, $commissie);
+	protected function _read($id)
+	{
+		if (!ctype_digit($id))
+			return $this->model->get_from_name($id);
+		else
+			return parent::_read($id);
+	}
 
-		$editable = new ControllerEditable($commissie->get('page'));
-		$editable->run();
+	public function link_to_iter(DataIter $iter, array $arguments)
+	{
+		return $this->link(array_merge(array('id' => $iter->get('login')), $arguments));
+	}
+
+	public function link_to_read(DataIter $iter)
+	{
+		return $this->link_to_iter($iter, array());
+	}
+
+	/*
+	public function link(array $arguments)
+	{
+		$link = '/committees';
+
+		if (isset($arguments['view'])) {
+			$link .= '/' . $arguments['view'];
+			unset($arguments['view']);
+		}
+
+		if (isset($arguments['id'])) {
+			$link .= '/' . $arguments['id'];
+			unset($arguments['id']);
+		}
+
+		if (!empty($arguments))
+			$link .= '?' . http_build_query($arguments);
+
+		return $link;
+	}
+	*/
+
+	function get_content($view, $iter = null, $params = array())
+	{
+		$title = $iter instanceof DataIter
+			? $iter->get('naam')
+			: __('Commissies');
+
+		$this->run_header(compact('title'));
+		
+		$params['controller'] = $this;
+		run_view('commissies::' . $view, $this->model, $iter, $params);
+		
 		$this->run_footer();
 	}
-	
-	function run_impl() {
-		if (!empty($_GET['commissie'])) {
-			if ($iter = $this->model->get_from_name($_GET['commissie'])) {
-				$this->get_page_content($iter);
-			} else {
-				$this->get_content('common::not_found');
-			}
-		} else {
-			$iters = $this->model->get(false);
-			$this->get_content('commissies::commissies', $iters);	
-		}
+
+	/* protected */ function run_impl()
+	{
+		// Support for old urls
+		if (isset($_GET['commissie']) && !isset($_GET['id']))
+			$_GET['id'] = $_GET['commissie'];
+
+		return parent::run_impl();
 	}
 }
 

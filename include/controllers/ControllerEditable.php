@@ -12,14 +12,25 @@
 	  * automated and the controller embedding this controller only
 	  * needs to instantiate and run a #ControllerEditable (great!)
 	  */
-	class ControllerEditable extends Controller {
+	class ControllerEditable extends Controller
+	{
+		public $page;
+
 		/**
 		  * ControllerEditable constructor
 		  * @id the id (or title) of the editable page
 		  */
 		function ControllerEditable($id) {
 			$this->model = get_model('DataModelEditable');
-			$this->id = $id;
+			
+			if (ctype_digit($id))
+				$this->page = $this->model->get_iter($id);
+			else {
+				$this->page = $this->model->get_iter_from_title($id);
+
+				if (!$this->page)
+					$this->page = new DataIterEditable($this->model, -1, array('titel' => $id));
+			}
 		}
 		
 		/**
@@ -218,12 +229,7 @@
 		  * page
 		  */
 		function run() {
-			if (is_numeric($this->id))
-				$page = $this->model->get_iter($this->id);
-			else
-				$page = $this->model->get_iter_from_title($this->id);
-			
-			if (!$page) {
+			if (!$this->page) {
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
 				
@@ -231,13 +237,28 @@
 					exit();
 				}
 				
-				$this->get_content('editable', $page);
-			} elseif (isset($_POST['submeditable']) && $_POST['submeditable'] == $page->get('id'))
-				$this->_do_save($page);
-			elseif (isset($_GET['editable_edit']) && $_GET['editable_edit'] == $page->get('id'))
-				$this->_view_edit($page);
+				$this->get_content('editable', $this->page);
+			} elseif (isset($_POST['submeditable']) && $_POST['submeditable'] == $this->page->get('id'))
+				$this->_do_save($this->page);
+			elseif (isset($_GET['editable_edit']) && $_GET['editable_edit'] == $this->page->get('id'))
+				$this->_view_edit($this->page);
 			else
-				$this->_view_editable($page);
+				$this->_view_editable($this->page);
+		}
+
+		public function get_title()
+		{
+			return $this->page->get_title($this->_get_language());
+		}
+
+		public function user_can_update()
+		{
+			return member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie($this->page->get('owner'));
+		}
+
+		public function link_to_update()
+		{
+			return add_request(get_request(), sprintf('editable_edit=%d#editable%1$d', $this->page->get('id')));
 		}
 	}
 ?>

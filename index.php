@@ -1,12 +1,6 @@
 <?php
-	ini_set('display_errors', true);
-	error_reporting(E_ALL ^ E_NOTICE);
-
 	include('include/init.php');
 	require_once('controllers/Controller.php');
-	require_once('controllers/ControllerEditable.php');
-	require_once('announcements.php');
-	require_once('themes/default/views/Rotator.php');
 	
 	class ControllerHomepage extends Controller {
 		function ControllerHomepage() {
@@ -18,19 +12,6 @@
 
 			run_view($this->view, $this->model, $this->iter, $this->params);
 			
-			//editable page genaamd 'startpagina'
-			$editable = new ControllerEditable('Startpagina');
-			$editable->run();
-
-			//sponsor banners			
-			$sponsors = new Rotator('images/sponsors/');
-			$banner = $sponsors -> get(1);
-			echo '<div class="bannerRotator"><a href="'. $banner[0]['url'] .'"><img src="images/sponsors/'. $banner[0]['filename'] .'" class="frontpage_banner"/></a></div>';
-			
-			//mededelingen
-			$news = new ControllerAnnouncements();
-			$news->run_embedded();
-	
 			$this->run_footer();
 		}
 		

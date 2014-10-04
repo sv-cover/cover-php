@@ -59,7 +59,7 @@ class View {
 	
 	function __call($name, $args) {
 		$filename = dirname($this->__file) . '/' . $name . '.phtml';
-		
+
 		if (file_exists($filename))
 		{
 			// Insert hash into local space
@@ -77,7 +77,10 @@ class View {
 			return true;
 		}
 		
-		echo report_error(N__("View"), N__("De gespecificeerde functie <b>%s</b> kon niet worden gevonden voor de view <b>%s</b>."), $name, $this->get_name());
+		echo report_error(
+			N__("View"),
+			N__("De gespecificeerde functie <b>%s</b> kon niet worden gevonden voor de view <b>%s</b>.")
+			. N__("Er is gezocht in <em>%s</em> en de methode <em>%s</em>"), $name, $this->get_name(), $filename, $method_name);
 		return false;
 	}
 	
@@ -110,6 +113,6 @@ class CRUDView extends View
 
 	public function get_label(DataIter $iter = null, $create_label, $update_label)
 	{
-		return $iter && $iter->get_id() ? $update_label : $create_label;
+		return $iter && $iter->has_id() ? $update_label : $create_label;
 	}
 }

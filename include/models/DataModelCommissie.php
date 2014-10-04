@@ -212,6 +212,15 @@
 					HAVING COUNT(a.id) > 0
 					ORDER BY RANDOM()
 					LIMIT 1");
+					
+			return $this->_row_to_iter($row);
+		}
+
+		function get_from_page($page_id)
+		{
+			$row = $this->db->query_first(sprintf("SELECT * 
+					FROM commissies
+					WHERE page = %d", $page_id));
 			
 			return $this->_row_to_iter($row);
 		}

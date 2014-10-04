@@ -39,9 +39,7 @@ class ControllerCRUD extends Controller
 
 	protected function _index()
 	{
-		$iters = $this->model->get();
-
-		return array_filter($iters, array(get_policy($this->model), 'user_can_read'));
+		return $this->model->get();
 	}
 
 	protected function _form_is_submitted($form)
@@ -57,24 +55,34 @@ class ControllerCRUD extends Controller
 		echo '<a href="' . htmlentities($link, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
 	}
 
+	public function link(array $arguments)
+	{
+		return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
+	}
+
+	protected function link_to_iter(DataIter $iter, array $arguments = array())
+	{
+		return $this->link(array_merge(array('id' => $iter->get_id()), $arguments));
+	}
+
 	public function link_to_create()
 	{
-		return sprintf('%s?view=create', $_SERVER['SCRIPT_NAME']);
+		return $this->link(['view' => 'create']);
 	}
 
 	public function link_to_read(DataIter $iter)
 	{
-		return sprintf('%s?view=read&id=%s', $_SERVER['SCRIPT_NAME'], rawurlencode($iter->get_id()));
+		return $this->link_to_iter($iter, ['view' => 'read']);
 	}
 
 	public function link_to_update(DataIter $iter)
 	{
-		return sprintf('%s?view=update&id=%s', $_SERVER['SCRIPT_NAME'], rawurlencode($iter->get_id()));
+		return $this->link_to_iter($iter, ['view' => 'update']);
 	}
 
 	public function link_to_delete(DataIter $iter)
 	{
-		return sprintf('%s?view=delete&id=%s', $_SERVER['SCRIPT_NAME'], rawurlencode($iter->get_id()));
+		return $this->link_to_iter($iter, ['view' => 'delete']);
 	}
 
 	public function link_to_index()
@@ -134,7 +142,7 @@ class ControllerCRUD extends Controller
 
 	public function run_index()
 	{
-		$iters = $this->_index();
+		$iters = array_filter($this->_index(), array(get_policy($this->model), 'user_can_read'));
 
 		return $this->get_content('index', $iters);
 	}
@@ -143,15 +151,20 @@ class ControllerCRUD extends Controller
 	{
 		$iter = null;
 
-		if (!empty($_GET['id']))
+		$view = isset($_GET['view']) ? $_GET['view'] : null;
+
+		if (isset($_GET['id']) && $_GET['id'] != '')
 		{
 			$iter = $this->_read($_GET['id']);
+
+			if (!$view)
+				$view = 'read';
 
 			if (!$iter)
 				return run_view('common::not_found');
 		}
 
-		switch (isset($_GET['view']) ? $_GET['view'] : 'index')
+		switch ($view ?: 'index')
 		{
 			case 'create':
 				return $this->run_create();
