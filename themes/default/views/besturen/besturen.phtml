@@ -11,8 +11,15 @@
 		</div>
 	<?php foreach ($iter as $bestuur): ?>
 		<?php $editable = new ControllerEditable($bestuur->get('page')) ?>
-		<div class="bestuur timeline-event has-header">
-			<h1><?=$editable->get_title()?></h1>
+		<div id="<?=markup_format_attribute($bestuur->get('login'))?>" class="bestuur timeline-event has-header">
+			<div class="pageheading">
+				<?php if ($editable->user_can_update()): ?>
+				<div class="controls inline">
+					<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
+				</div>
+				<?php endif ?>
+				<h1><?=$editable->get_title()?></h1>
+			</div>
 			<div class="messageBox">
 				<?php if ($editable->user_can_update()): ?>
 					<a href="<?=markup_format_attribute($editable->link_to_update())?>"><?=__('Update')?></a>
