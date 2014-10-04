@@ -17,14 +17,14 @@
 		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
 		<div>
 			<?=input_checkbox('hidden', $iter->data, 1)?>
-			<?=label(__('Verborgen'), 'hidden', $errors)?>
-			<p><?=__('Verborgen commissies worden niet getoond in de index maar zijn soms wel handig om een groep bepaalde te geven op de website.')?></p>
+			<?=label(__('Deze commissie is verborgen'), 'hidden', $errors)?>
+			<p><?=__('Verborgen commissies worden niet getoond in het overzicht of op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de website.')?></p>
 		</div>
 		<?php endif ?>
 
 		<div>
 			<?=input_checkbox('vacancies', $iter->data, 1)?>
-			<?=label(__('Zoekt leden'), 'vacancies', $errors)?>
+			<?=label(__('Deze commissie zoekt nieuwe leden'), 'vacancies', $errors)?>
 			<p><?=__('Commissies die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm.')?></p>
 		</div>
 
