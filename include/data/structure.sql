@@ -277,7 +277,8 @@ CREATE TABLE commissies (
     nocaps text,
     page integer,
     hidden integer NOT NULL DEFAULT 0,
-    vacancies integer NOT NULL DEFAULT 0
+    vacancies integer NOT NULL DEFAULT 0,
+    CONSTRAINT commissies_login_key UNIQUE(login)
 );
 
 --

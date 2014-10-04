@@ -168,7 +168,7 @@
 		}
 		$content .= '
 				<ul id="vereniging" class="expander">
-					<li><a href="show.php?id=0">' . __('Bestuur') . '</a></li>
+					<li><a href="commissies.php?id=bestuur&view=read">' . __('Bestuur') . '</a></li>
 					<li><a href="besturen.php">' . __('Vorige besturen') . '</a></li>
 					<li><a href="commissies.php">' . __('Commissies') . '</a></li>
 					<li><a href="show.php?id=28">' . __('Zusterverenigingen') . '</a></li>

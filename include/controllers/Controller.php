@@ -76,6 +76,15 @@
 			$this->get_content();
 		}
 
+		protected function redirect($url, $permanent = false)
+		{
+			if ($permanent)
+				header('Status: 301 Moved Permanently');
+
+			header('Location: ' . $url);
+			exit;
+		}
+
 		protected function run_exception(Exception $e)
 		{
 			header('Status: 500 Interal Server Error');

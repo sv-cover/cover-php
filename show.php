@@ -15,8 +15,10 @@
 
 			$iter = $this->model->get_iter($id);
 
-			if ($title = $this->model->get_title($id))
-				$params['title'] = $title;
+			if (!$iter)
+				return $this->get_content('common::not_found');
+
+			$params['title'] = $iter->get_title();
 
 			$this->run_header($params);
 
@@ -102,6 +104,12 @@
 			run_view('show::preview', $this->model, $iter, $params);
 			exit();
 		}
+
+		protected function _is_embedded_page($page_id, $model)
+		{
+			$model = get_model($model);
+			return $model->get_from_page($page_id);
+		}
 		
 		function run_impl() {
 			if (isset($_GET['preview']))
@@ -112,6 +120,10 @@
 				$this->_view_new();
 			elseif (!isset($_GET['id']))
 				$this->get_page_content(-1);
+			elseif ($committee = $this->_is_embedded_page($_GET['id'], 'DataModelCommissie'))
+				$this->redirect('commissies.php?view=read&id=' . $committee->get('login'), true);
+			elseif ($board = $this->_is_embedded_page($_GET['id'], 'DataModelBesturen'))
+				$this->redirect('besturen.php#' .  rawurlencode($board->get('login')), true);
 			else
 				$this->get_page_content($_GET['id']);
 		}
