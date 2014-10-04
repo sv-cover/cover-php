@@ -3,9 +3,9 @@ $editable = new ControllerEditable($iter->get('page'));
 ?>
 
 <div class="pageheading">
-	<?php if($editable->user_can_update()): ?>
+	<?php if (get_policy($model)->user_can_update($iter)): ?>
 	<div class="controls inline">
-		<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
+		<a href="<?=markup_format_attribute($controller->link_to_update($iter))?>"><?=__('Commissie wijzigen')?></a>
 	</div>
 	<?php endif ?>
 	<h1><?= markup_format_text($iter->get('naam')) ?></h1>
@@ -19,6 +19,12 @@ $editable = new ControllerEditable($iter->get('page'));
 
 	<?php $this->render_partial('foto', compact('model', 'iter')) ?>
 
+	<?php if($editable->user_can_update()): ?>
+	<div class="controls inline">
+		<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
+	</div>
+	<?php endif ?>
+	
 	<?php $editable->run() ?>
 
 	<?php $this->render_partial('leden', compact('model', 'iter')) ?>
