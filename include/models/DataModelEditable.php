@@ -1,10 +1,43 @@
 <?php
 	require_once('data/DataModel.php');
 
+	class DataIterEditable extends DataIter
+	{
+		public function get_content($language = null)
+		{
+			if (!$language)
+				$language = i18n_get_language();
+
+			$preferred_fields = array(
+				'content_' . $language,
+				'content_en',
+				'content');
+
+			foreach ($preferred_fields as $field)
+				if ($this->get($field))
+					return $this->get($field);
+
+			return null;
+		}
+
+		public function get_title($language = null)
+		{
+			$content = $this->get_content($language);
+		
+			return preg_match('/\[h1\](.+?)\[\/h1\]\s*/ism', $content, $match)
+				? $match[1]
+				: $this->get('titel');
+		}
+
+		
+	}
+
 	/**
 	  * A class implementing the Editable data
 	  */
 	class DataModelEditable extends DataModel {
+		/* protected */ var $dataiter = 'DataIterEditable';
+
 		function DataModelEditable($db) {
 			parent::DataModel($db, 'pages');
 		}
