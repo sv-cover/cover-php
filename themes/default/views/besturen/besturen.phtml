@@ -21,9 +21,6 @@
 				<h1><?=$editable->get_title()?></h1>
 			</div>
 			<div class="messageBox">
-				<?php if ($editable->user_can_update()): ?>
-					<a href="<?=markup_format_attribute($editable->link_to_update())?>"><?=__('Update')?></a>
-				<?php endif ?>
 				<?php
 					ob_start();
 					$editable->run();
