@@ -5,8 +5,9 @@
 	require_once('member.php');
 
 	function echo_editable_page($iter, $page)
-	{
-		echo $page;
+	{	
+		// Remove unnecessary breaks from the beginning of the page.
+		echo preg_replace('/^(\<br\/?\>\s*)+/i', '', $page);
 	}
 	
 	function view_something_went_wrong($model, $iter, $params = null) {
