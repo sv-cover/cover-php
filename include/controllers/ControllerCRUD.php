@@ -151,15 +151,20 @@ class ControllerCRUD extends Controller
 	{
 		$iter = null;
 
+		$view = isset($_GET['view']) ? $_GET['view'] : null;
+
 		if (isset($_GET['id']) && $_GET['id'] != '')
 		{
 			$iter = $this->_read($_GET['id']);
+
+			if (!$view)
+				$view = 'read';
 
 			if (!$iter)
 				return run_view('common::not_found');
 		}
 
-		switch (isset($_GET['view']) ? $_GET['view'] : 'index')
+		switch ($view ?: 'index')
 		{
 			case 'create':
 				return $this->run_create();

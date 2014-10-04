@@ -28,6 +28,11 @@ class ControllerCommissies extends ControllerCRUD
 		return $this->link(array_merge(array('id' => $iter->get('login')), $arguments));
 	}
 
+	public function link_to_read(DataIter $iter)
+	{
+		return $this->link_to_iter($iter, array());
+	}
+
 	/*
 	public function link(array $arguments)
 	{
@@ -62,6 +67,15 @@ class ControllerCommissies extends ControllerCRUD
 		run_view('commissies::' . $view, $this->model, $iter, $params);
 		
 		$this->run_footer();
+	}
+
+	/* protected */ function run_impl()
+	{
+		// Support for old urls
+		if (isset($_GET['commissie']) && !isset($_GET['id']))
+			$_GET['id'] = $_GET['commissie'];
+
+		return parent::run_impl();
 	}
 }
 
