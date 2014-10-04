@@ -144,7 +144,12 @@ class ControllerApi extends Controller
 		$committees = array();
 
 		foreach ($member_committees as $committee_id)
-			$committees[$committee_id] = $committee_model->get_naam($committee_id);
+		{
+			$committee = $committee_model->get_iter($committee_id);
+
+			if ($committee)
+				$committees[$committee->get('login')] = $committee->get('naam');
+		}
 
 		return array('result' => $committees);
 	}
