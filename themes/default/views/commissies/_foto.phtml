@@ -1,5 +1,9 @@
-<?php if (file_exists("images/" . $iter->get('login') . ".jpg")): ?>
-<div class="commissie_foto">
-	<img src="images/<?=$iter->get('login')?>.jpg">
-</div>
+<?php if ($photo = $this->get_commissie_photo($iter)): ?>
+	<?php
+		list($width, $height) = getimagesize($photo);
+		$orientation = $height > $width ? 'vertical' : 'horizontal';
+	?>
+	<div class="commissie_foto <?=$orientation?>">
+		<img src="<?=markup_format_attribute($photo)?>">
+	</div>
 <?php endif ?>
