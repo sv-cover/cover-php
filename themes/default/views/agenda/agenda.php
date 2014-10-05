@@ -115,7 +115,7 @@
 
 		public function get_current_year()
 		{
-			return time() < mktime(0, 0, 9, 1, date('Y'))
+			return time() < mktime(0, 0, 0, 9, 1, date('Y'))
 				? date('Y') - 1
 				: date('Y');
 		}
