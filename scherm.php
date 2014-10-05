@@ -48,7 +48,7 @@ class ControllerScherm
 					$slide['url'] = $path . '/' . $folder . '/slide.php';
 
 				// If it is just a folder with images, use the default slide
-				else if (glob($path . '/' . $folder . '/*.{jpg,png,svg}', GLOB_BRACE))
+				else if (glob($path . '/' . $folder . '/*.{jpg,png,svg,gif}', GLOB_BRACE))
 					$slide['url'] = $this->default_slide;
 
 				// If it is not one of both, just skip it. It is not important.
