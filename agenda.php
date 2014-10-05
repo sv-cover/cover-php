@@ -12,9 +12,12 @@
 		}
 		
 		function get_content($view = 'index', $iter = null, $params = null) {
-			$title = isset($_GET['year'])
-				? sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1)
-				: __('Agenda');
+			if ($iter instanceof DataIter)
+				$title = $iter->get('kop');
+			elseif (isset($_GET['year']))
+				$title = sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1);
+			else
+				$title = __('Agenda');
 
 			$this->run_header(compact('title'));
 			run_view('agenda::' . $view, $this->model, $iter, $params);
