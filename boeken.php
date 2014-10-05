@@ -15,10 +15,8 @@
 		function get_content($view, $iter = null, $params = null, $show_editable = true) {
 			$this->run_header(array('title' => __('Boeken')));
 			
-			if ($show_editable) {
-				$editable = new ControllerEditable('Boeken bestellen');
-				$editable->run();
-			}
+			if ($show_editable)
+				run_view('show::single', null, 'Boeken bestellen');
 
 			run_view('boeken::' . $view, $this->model, $iter, $params);
 			$this->run_footer();

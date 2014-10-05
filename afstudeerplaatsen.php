@@ -16,10 +16,8 @@
 		function get_content($view, $iter = null, $params = null, $show_editable = true) {
 			$this->run_header(array('title' => __('Afstudeerplaatsen')));
 			
-			if ($show_editable) {
-				$controller = new ControllerEditable('Afstudeerplaatsen');
-				$controller->run();
-			}
+			if ($show_editable)
+				run_view('show::single', null, 'Afstudeerplaatsen');
 			
 			run_view('afstudeerplaatsen::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
