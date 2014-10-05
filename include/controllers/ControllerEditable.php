@@ -23,7 +23,9 @@
 		function ControllerEditable($id) {
 			$this->model = get_model('DataModelEditable');
 			
-			if (ctype_digit($id))
+			if ($id instanceof DataIterEditable)
+				$this->page = $id;
+			elseif (ctype_digit($id))
 				$this->page = $this->model->get_iter($id);
 			else {
 				$this->page = $this->model->get_iter_from_title($id);
