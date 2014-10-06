@@ -28,12 +28,12 @@
 	<div class="section">
 		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
 			<div class="inline-block">
-				<label for="toegang"><?=__('Toegang')?></label>
+				<label for="toegang"><?=__('Wie mag mailen naar deze mailinglist')?></label>
 				<?=select_field('toegang', $this->get_all_toegang_options(), $lijst->data, 'id', 'toegang')?>
 			</div>
 			<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
 			<div class="inline-block">
-				<label for="commissie"><?=__('Commissie')?>:</label>
+				<label for="commissie"><?=__('Commissie')?></label>
 				<?=select_field('commissie', $this->get_all_commissies(), $lijst->data, 'id', 'commissie') ?>
 			</div>
 			<?php endif ?>

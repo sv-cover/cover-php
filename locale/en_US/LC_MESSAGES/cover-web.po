@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-10-05 00:40+0100\n"
+"POT-Creation-Date: 2014-10-06 16:24+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -30,12 +30,12 @@ msgstr "Active Members"
 msgid "Afstudeerplaatsen"
 msgstr "PHD positions"
 
-#: ../../../agenda.php:16 ../../../themes/default/views/agenda/agenda.php:105
+#: ../../../agenda.php:18 ../../../themes/default/views/agenda/agenda.php:105
 #, php-format
 msgid "Agenda %d-%d"
 msgstr "Calendar %d-%d"
 
-#: ../../../agenda.php:17 ../../../themes/default/views/agenda/agenda.php:106
+#: ../../../agenda.php:20 ../../../themes/default/views/agenda/agenda.php:106
 #: ../../../themes/default/views/header.php:66
 #: ../../../themes/default/views/header.php:105
 #: ../../../themes/default/views/agenda/commissie.phtml:2
@@ -45,7 +45,7 @@ msgstr "Calendar %d-%d"
 msgid "Agenda"
 msgstr "Calendar"
 
-#: ../../../agenda.php:186
+#: ../../../agenda.php:189
 msgid ""
 "Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar "
 "gekeken heeft zal het punt op de website geplaatst worden"
@@ -53,11 +53,11 @@ msgstr ""
 "The new calendar event is now waiting for approval. Once the governing board "
 "has accepted the event, it shall be placed on the website."
 
-#: ../../../agenda.php:202
+#: ../../../agenda.php:205
 msgid "De wijzigingen voor het agendapunt zijn geplaatst."
 msgstr "The changes you've made to this agenda item have been published."
 
-#: ../../../agenda.php:213
+#: ../../../agenda.php:216
 msgid ""
 "De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar "
 "gekeken heeft zal het punt op de website gewijzigd worden."
@@ -65,21 +65,21 @@ msgstr ""
 "The changes to the calendar event are waiting for approval. Once the "
 "governing board has accepted the event, it shall be placed on the website."
 
-#: ../../../agenda.php:315
+#: ../../../agenda.php:318
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar event."
 
-#: ../../../agenda.php:317
+#: ../../../agenda.php:320
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:320
+#: ../../../agenda.php:323
 #, php-format
 msgid ""
 "De commissies %s zijn op de hoogte gesteld van het weigeren van de "
@@ -87,7 +87,7 @@ msgid ""
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events"
 
-#: ../../../agenda.php:366
+#: ../../../agenda.php:369
 msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
@@ -113,7 +113,7 @@ msgstr "Boards"
 msgid "Boeken"
 msgstr "Books"
 
-#: ../../../commissies.php:57 ../../../themes/default/views/header.php:106
+#: ../../../commissies.php:62 ../../../themes/default/views/header.php:106
 #: ../../../themes/default/views/header.php:173
 #: ../../../themes/default/views/actieveleden/_overzicht.phtml:13
 #: ../../../themes/default/views/commissies/index.phtml:1
@@ -258,33 +258,33 @@ msgstr ""
 "Sorry, something went horribly wrong. Please try again in a bit or contact "
 "the WebCie (webcie@svcover.nl)"
 
-#: ../../../include/controllers/ControllerEditable.php:83
+#: ../../../include/controllers/ControllerEditable.php:90
 #: ../../../themes/default/views/editable.php:29
 msgid "Deze pagina kan niet door jou worden bewerkt."
 msgstr "This page can not be edited by you."
 
-#: ../../../include/controllers/ControllerEditable.php:99
+#: ../../../include/controllers/ControllerEditable.php:106
 msgid ""
 "Er zit iets niet goed met de taalinstelling. Neem contact op met de WebCie"
 msgstr ""
 "Something is wrong with the language setting. Please contact the WebCie."
 
-#: ../../../include/controllers/ControllerEditable.php:103
+#: ../../../include/controllers/ControllerEditable.php:110
 #, php-format
 msgid "Er zit iets niet goed met de taalinstelling. Neem contact op met %s"
 msgstr "Something is wrong with the language settings. Contact the %s"
 
-#: ../../../include/controllers/ControllerEditable.php:103
+#: ../../../include/controllers/ControllerEditable.php:110
 msgid "de Webcie"
 msgstr "the WebCie"
 
-#: ../../../include/controllers/ControllerEditable.php:175
-#: ../../../include/controllers/ControllerEditable.php:183
+#: ../../../include/controllers/ControllerEditable.php:182
+#: ../../../include/controllers/ControllerEditable.php:190
 #, php-format
 msgid "De pagina %s is opgeslagen."
 msgstr "The page %s has been saved."
 
-#: ../../../include/controllers/ControllerEditable.php:231
+#: ../../../include/controllers/ControllerEditable.php:238
 msgid "Deze pagina bestaat niet..."
 msgstr "This page does not exist..."
 
@@ -744,7 +744,7 @@ msgstr "Mailing lists"
 msgid "Nieuw lid"
 msgstr "New member"
 
-#: ../../../profiel.php:32 ../../../themes/default/views/header.php:291
+#: ../../../profiel.php:32 ../../../themes/default/views/header.php:306
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:103
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
@@ -799,6 +799,25 @@ msgstr "The image file is not a file uploaded by PHP."
 #: ../../../profiel.php:272
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
+
+#: ../../../scherm/slides/03-wall-of-fame/slide.php:37
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:10
+#, php-format
+msgid ""
+"Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg "
+"het de Commissaris Intern, %s (intern@svcover.nl)"
+msgstr ""
+"Hey, this committee is looking for new members. Are you interested?<br>Tell "
+"your Commissioner of Internal Affairs, %s by e-mailing to intern@svcover.nl."
+
+#: ../../../scherm/slides/03-wall-of-fame/slide.php:39
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:12
+msgid ""
+"Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het "
+"de Intern via intern@svcover.nl."
+msgstr ""
+"Hey, this committee is looking for new members. Are you interested?<br>Tell "
+"your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
 
 #: ../../../settings.php:17 ../../../themes/default/views/header.php:119
 #: ../../../themes/default/views/settings/index.phtml:1
@@ -1384,7 +1403,7 @@ msgstr "Last"
 #: ../../../themes/default/views/forum.php:483
 #: ../../../themes/default/views/forum.php:911
 #: ../../../themes/default/views/forum.php:1033
-#: ../../../themes/default/views/header.php:222
+#: ../../../themes/default/views/header.php:237
 msgid "Poll"
 msgstr "Poll"
 
@@ -1737,70 +1756,70 @@ msgstr "Alumni"
 msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
-#: ../../../themes/default/views/header.php:220
+#: ../../../themes/default/views/header.php:235
 msgid "Er is op dit moment geen poll"
 msgstr "There is no poll at the moment"
 
-#: ../../../themes/default/views/header.php:250
+#: ../../../themes/default/views/header.php:265
 msgid "Jarigen"
 msgstr "Birthdays"
 
-#: ../../../themes/default/views/header.php:259
+#: ../../../themes/default/views/header.php:274
 msgid "Er zijn vandaag geen jarigen"
 msgstr "It's nobody's birthday today"
 
-#: ../../../themes/default/views/header.php:261
+#: ../../../themes/default/views/header.php:276
 #, php-format
 msgid "Er is vandaag %d jarige:"
 msgid_plural "Er zijn vandaag %d jarigen:"
 msgstr[0] "There is %d birthday today:"
 msgstr[1] "There are %d birthdays today:"
 
-#: ../../../themes/default/views/header.php:278
+#: ../../../themes/default/views/header.php:293
 msgid "wachtwoord vergeten?"
 msgstr "Forgot your password?"
 
-#: ../../../themes/default/views/header.php:278
+#: ../../../themes/default/views/header.php:293
 msgid "lid worden"
 msgstr "Become Active"
 
-#: ../../../themes/default/views/header.php:279
+#: ../../../themes/default/views/header.php:294
 msgid "E-mailadres"
 msgstr "E-Mail address"
 
-#: ../../../themes/default/views/header.php:280
+#: ../../../themes/default/views/header.php:295
 msgid "Wachtwoord"
 msgstr "Password"
 
-#: ../../../themes/default/views/header.php:281
+#: ../../../themes/default/views/header.php:296
 msgid "Blijvend"
 msgstr "Permanent"
 
-#: ../../../themes/default/views/header.php:281
+#: ../../../themes/default/views/header.php:296
 msgid "Inloggen"
 msgstr "Login"
 
-#: ../../../themes/default/views/header.php:289
+#: ../../../themes/default/views/header.php:304
 #: ../../../themes/default/views/sessions/sessions.phtml:10
 msgid "Ingelogd"
 msgstr "Logged in"
 
-#: ../../../themes/default/views/header.php:290
+#: ../../../themes/default/views/header.php:305
 msgid "Uitloggen"
 msgstr "Logout"
 
-#: ../../../themes/default/views/header.php:309
+#: ../../../themes/default/views/header.php:324
 #: ../../../themes/default/views/agenda/index.phtml:10
 msgid "Er staat nog 1 agendapunt in de wachtrij"
 msgstr "There is still 1 calendar event waiting to be approved."
 
-#: ../../../themes/default/views/header.php:311
+#: ../../../themes/default/views/header.php:326
 #: ../../../themes/default/views/agenda/index.phtml:12
 #, php-format
 msgid "Er staan nog %d agendapunten in de wachtrij"
 msgstr "There are still %d calendar events waiting to be approved."
 
-#: ../../../themes/default/views/header.php:333
+#: ../../../themes/default/views/header.php:348
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computer Science"
 
@@ -2539,7 +2558,7 @@ msgid "Bestuur toevoegen"
 msgstr "Add board"
 
 #: ../../../themes/default/views/besturen/besturen.phtml:18
-#: ../../../themes/default/views/commissies/single.phtml:23
+#: ../../../themes/default/views/commissies/single.phtml:22
 #: ../../../themes/default/views/homepage/_introduction.phtml:8
 #: ../../../themes/default/views/show/single.phtml:5
 #: ../../../themes/default/views/taken/taak.phtml:10
@@ -2548,17 +2567,13 @@ msgid "bewerken"
 msgstr "edit"
 
 #: ../../../themes/default/views/besturen/besturen.phtml:18
-#: ../../../themes/default/views/commissies/single.phtml:23
+#: ../../../themes/default/views/commissies/single.phtml:22
 #: ../../../themes/default/views/homepage/_introduction.phtml:8
 #: ../../../themes/default/views/show/single.phtml:5
 msgid "Pagina bewerken"
 msgstr "Edit page"
 
-#: ../../../themes/default/views/besturen/besturen.phtml:25
-msgid "Update"
-msgstr "Update"
-
-#: ../../../themes/default/views/besturen/besturen.phtml:49
+#: ../../../themes/default/views/besturen/besturen.phtml:52
 msgid "Nieuw bestuur toevoegen..."
 msgstr "Add a new board..."
 
@@ -2637,23 +2652,6 @@ msgstr "Continue to the BoekCie webshop"
 #: ../../../themes/default/views/commissies/_agenda.phtml:13
 msgid "Commissieagenda"
 msgstr "Committee agenda"
-
-#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:10
-#, php-format
-msgid ""
-"Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg "
-"het de Commissaris Intern, %s (intern@svcover.nl)"
-msgstr ""
-"Hey, this committee is looking for new members. Are you interested?<br>Tell "
-"your Commissioner of Internal Affairs, %s by e-mailing to intern@svcover.nl."
-
-#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:12
-msgid ""
-"Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het "
-"de Intern via intern@svcover.nl."
-msgstr ""
-"Hey, this committee is looking for new members. Are you interested?<br>Tell "
-"your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
 
 #: ../../../themes/default/views/commissies/form.phtml:1
 msgid "Nieuwe commissie maken"
@@ -3280,14 +3278,13 @@ msgid "Eigenschappen"
 msgstr "Properties"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:31
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
-msgid "Toegang"
-msgstr "Access"
+msgid "Wie mag mailen naar deze mailinglist"
+msgstr "Who can send emails to this list"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:50
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:40
 msgid "Mensen mogen zichzelf aanmelden voor deze lijst."
-msgstr "People can subscribe to this list."
+msgstr "People can subscribe themselves to this list."
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:53
 msgid "Update lijst"
@@ -3329,6 +3326,10 @@ msgstr "List email address:"
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:18
 msgid "Op basis waarvan wordt de lijst gevuld?"
 msgstr "What type of list is this?"
+
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:21
+msgid "Toegang"
+msgstr "Access"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:23
 msgid "Wie mag e-mails sturen naar deze lijst?"
@@ -3870,6 +3871,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Update"
+#~ msgstr "Update"
 
 #~ msgid "Verborgen"
 #~ msgstr "Hidden"
