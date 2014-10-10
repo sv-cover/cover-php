@@ -180,7 +180,9 @@
 				<ul id="leden" class="expander">
 					<li><a href="almanak.php">' .__('Almanak') .'</a></li>
 					<li><a href="mailinglijsten.php">' .__('Mailinglijsten') .'</a></li>
-					<li><a href="stickers.php">' . __('Stickerkaart') . '</a></li>
+					<li><a href="https://wiki.svcover.nl/">' . __('Wiki') . '</a></li>
+					<li><a href="https://sd.svcover.nl/">' . __('Standaardocumenten') . '</a></li>
+					<li><a href="stickers.php">' . markup_format_text(__('Stickerkaart')) . '</a></li>
 					<li><a href="http://www.shitbestellen.nl" target="_blank">' .__('Merchandise') .'</a></li>
 					<li><a href="profiel.php#msdnaa">' .__('MSDNAA') .'</a></li>
 				</ul>
