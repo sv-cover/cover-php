@@ -1701,7 +1701,7 @@ msgstr "Governing Board"
 
 #: ../../../themes/default/views/header.php:172
 msgid "Vorige besturen"
-msgstr "Previous Boards"
+msgstr "Former Boards"
 
 #: ../../../themes/default/views/header.php:174
 msgid "Zusterverenigingen"
