@@ -71,6 +71,7 @@ ul.commissie-index {
 	padding: 4px;
 	text-align: center;
 	border-radius: 4px;
+	-webkit-transform: rotate(-15deg);
 	transform: rotate(-15deg);
 	z-index: 2;
 	background: #c60c30;
