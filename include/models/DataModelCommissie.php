@@ -23,6 +23,22 @@
 			
 			return $this->_rows_to_iters($rows);
 		}
+
+		function insert($iter, $getid = false)
+		{
+			if ($iter->has('vacancies') && !$iter->get('vacancies'))
+				$iter->set_literal('vacancies', 'NULL');
+			
+			return parent::insert($iter, $getid);
+		}
+
+		function update($iter)
+		{
+			if ($iter->has('vacancies') && !$iter->get('vacancies'))
+				$iter->set_literal('vacancies', 'NULL');
+			
+			return parent::update($iter);
+		}
 		
 		function get_functies() {
 			static $functies = Array(

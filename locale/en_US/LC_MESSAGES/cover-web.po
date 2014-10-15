@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-10-10 16:42+0100\n"
+"POT-Creation-Date: 2014-10-16 00:06+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -492,7 +492,7 @@ msgstr "You!"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: ../../../include/models/DataModelCommissie.php:156
+#: ../../../include/models/DataModelCommissie.php:172
 msgid "onbekend"
 msgstr "unknown"
 
@@ -801,7 +801,7 @@ msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
 #: ../../../scherm/slides/03-wall-of-fame/slide.php:37
-#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:10
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:13
 #, php-format
 msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg "
@@ -811,7 +811,7 @@ msgstr ""
 "your Commissioner of Internal Affairs, %s by e-mailing to intern@svcover.nl."
 
 #: ../../../scherm/slides/03-wall-of-fame/slide.php:39
-#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:12
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:20
 msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het "
 "de Intern via intern@svcover.nl."
@@ -2020,7 +2020,6 @@ msgid "Deze commissie heeft nog geen leden"
 msgstr "This committee doesn't have any members yet"
 
 #: ../../../themes/default/views/actieveleden/_leden.phtml:39
-#: ../../../themes/default/views/commissies/form.phtml:27
 msgid "Deze commissie zoekt nieuwe leden"
 msgstr "This committee is looking for new members"
 
@@ -2661,6 +2660,17 @@ msgstr "Continue to the BoekCie webshop"
 msgid "Commissieagenda"
 msgstr "Committee agenda"
 
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:15
+#, php-format
+msgid ""
+"Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse?<br>Zeg "
+"het <strong>voor %s</strong> tegen de Commissaris Intern, %s (intern@svcover."
+"nl)"
+msgstr ""
+"Hey, this committee is looking for new members. Are you interested? Tell "
+"your Commissioner of Internal Affairs, %2$s <strong>before %1$s</strong> by "
+"e-mailing to intern@svcover.nl."
+
 #: ../../../themes/default/views/commissies/form.phtml:1
 msgid "Nieuwe commissie maken"
 msgstr "Add a new committee"
@@ -2701,13 +2711,21 @@ msgstr ""
 "sometimes it is useful to create one to allow access to certain features of "
 "the website."
 
+#: ../../../themes/default/views/commissies/form.phtml:26
+msgid "Deze commissie zoekt nieuwe leden tot"
+msgstr "This committee is looking for new members till"
+
 #: ../../../themes/default/views/commissies/form.phtml:28
 msgid ""
 "Commissies die leden zoeken hebben een banner met het hoofd van de Intern op "
-"de website en op het scherm."
+"de website en op het scherm. De datum is de deadline. Geef een datum meer "
+"dan een jaar in de toekomst om geen specifieke te tonen. Laat het veld leeg "
+"als de commissie geen nieuwe leden zoekt."
 msgstr ""
 "A banner with the face of the Commissioner of Internal Affairs is shown on "
-"the pages of committees who have vacancies."
+"the pages of committees who have vacancies. If you don't have a specific "
+"deadline, enter a value more than a year into the future. If the committee "
+"is not looking for new members, leave the field empty."
 
 #: ../../../themes/default/views/commissies/form.phtml:32
 msgid "Maak commissie aan"

@@ -101,7 +101,7 @@
 	  * @result a password field
 	  */
 	function input_password($name) {
-		$params = _parse_rest(func_get_args(), 2);
+		$params = _parse_rest(func_get_args(), 1);
 		$params['type'] = 'password';
 		$params['nopost'] = true;
 
@@ -109,6 +109,17 @@
 			$params['class'] = 'text';
 		
 		return _input_field($name, null, $params);
+	}
+
+	function input_date($name, $data) {
+		$params = _parse_rest(func_get_args(), 2);
+		$params['type'] = 'date';
+		$params['placeholder'] = sprintf('E.g. %d-12-31', date('Y'));
+
+		if (!isset($params['class']))
+			$params['class'] = 'date';
+		
+		return _input_field($name, $data, $params);
 	}
 
 	/** @group Form

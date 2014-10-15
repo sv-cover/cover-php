@@ -23,9 +23,9 @@
 		<?php endif ?>
 
 		<div>
-			<?=input_checkbox('vacancies', $iter->data, 1)?>
-			<?=label(__('Deze commissie zoekt nieuwe leden'), 'vacancies', $errors)?>
-			<p><?=__('Commissies die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm.')?></p>
+			<?=label(__('Deze commissie zoekt nieuwe leden tot'), 'vacancies', $errors)?>
+			<?=input_date('vacancies', $iter->data)?>
+			<p><?=__('Commissies die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm. De datum is de deadline. Geef een datum meer dan een jaar in de toekomst om geen specifieke te tonen. Laat het veld leeg als de commissie geen nieuwe leden zoekt.')?></p>
 		</div>
 
 		<div>

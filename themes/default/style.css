@@ -1127,6 +1127,12 @@ div.beheer table {
 	background-color: #e5c8cc;
 }
 
+.vertical-form label + input + p,
+.vertical-form label + textarea + p,
+.vertical-form input + label + p {
+	font-size: 0.85em;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }
@@ -1146,6 +1152,7 @@ table.full-width {
 }
 
 form input[type=text],
+form input[type=date],
 form input[type=email],
 form input[type=password],
 form textarea {
