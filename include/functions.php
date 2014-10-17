@@ -27,7 +27,7 @@
 					if ($args != '')
 						$args .= ', ';
 					
-					$args .= var_export($arg, true);
+					$args .= @var_export($arg, true);
 				}
 				
 				$result .= $trace['function'] . ' (' . $args . ')';
