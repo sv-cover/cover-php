@@ -3,42 +3,17 @@
 	require_once('markup.php');
 	require_once('login.php');
 	require_once('member.php');
-	require_once 'mailinglijsten.php';
 
 	if (!defined('IN_SITE'))
 		return;
 
-	function _editable_parse_commissie_leden(&$page, $owner) {
-		if (strstr($page, '[commissie_leden]'))
-			$page = str_ireplace('[commissie_leden]', '', $page);
-	}
-	
-	function _editable_parse_commissie_poll(&$page, $owner) {
-		if (!strstr($page, '[commissie_poll]'))
-			return;
-
-		/* Commissie polls are deprecated */
-		$page = str_ireplace('[commissie_poll]', '', $page);
-	}
-	
-	function _editable_parse_commissie_email(&$page, $owner) {
-		if (!strstr($page, '[commissie_email]'))
-			return;
-
-		$model = get_model('DataModelCommissie');
-			
-		$email = $model->get_email($owner);
-		$page = str_replace('[commissie_email]', '<a href="mailto:' . rawurlencode($email) . '">E-Mail</a>', $page);
-	}
-	
-	function _editable_parse_commissie_foto(&$page, $owner) {
-		if (strstr($page, '[commissie_foto]'))
-			$page = str_ireplace('[commissie_foto]', '', $page);
-	}
-
-	function _editable_parse_commissie_agenda(&$page, $owner) {
-		if (strstr($page, '[commissie_agenda]'))
-			$page = str_ireplace('[commissie_agenda]', '', $page);
+	function _editable_parse_deprecated(&$page) {
+		$page = str_ireplace(array(
+				'[commissie_leden]',
+				'[commissie_poll]',
+				'[commissie_email]',
+				'[commissie_foto]',
+				'[commissie_agenda]'), '', $page);
 	}
 	
 	function _editable_parse_commissie_prive(&$page, $owner) {
@@ -59,25 +34,6 @@
 		$page = preg_replace('/\[h1\](.+?)\[\/h1\]\s*/ism', '', $page);
 	}
 
-	function _editable_parse_mailinglist(&$page)
-	{
-		// Find [mailinglist]email/id[/mailinglist] placeholders
-		// and replace them by clickable stuff.
-
-		$page = preg_replace_callback(
-			'/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i',
-			'_editable_replace_mailinglist_tag', $page);
-	}
-
-	function _editable_replace_mailinglist_tag($match)
-	{
-		$controller = new ControllerMailinglijsten;
-
-		ob_start();
-		$controller->run_embedded($match[1]);
-		return ob_get_clean();
-	}
-
 	/** @group Editable
 	  * Parse editable page and return an array of pages with all markup
 	  * formatted in html
@@ -87,18 +43,14 @@
 	  * @result an array of pages with all markup replaced by html
 	  */
 	function editable_parse($page, $owner) {
+		$placeholders = array();
+
+		_editable_parse_deprecated($page);
 		_editable_parse_commissie_header($page, $owner);
 		_editable_parse_commissie_summary($page, $owner);
 
 		$page = markup_parse($page);
 
-		_editable_parse_commissie_poll($page, $owner);
-		_editable_parse_commissie_leden($page, $owner);
-		_editable_parse_commissie_email($page, $owner);
-		_editable_parse_commissie_foto($page, $owner);
-		_editable_parse_commissie_agenda($page, $owner);
-		_editable_parse_mailinglist($page);
-		
 		_editable_parse_commissie_prive($page, $owner);
 		
 		return markup_clean($page);

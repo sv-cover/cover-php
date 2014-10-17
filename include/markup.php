@@ -225,14 +225,43 @@
 		$markup = preg_replace_callback('/\[\[([a-z_]+)\((.*?)\)\]\]/', '_markup_parse_macro_real', $markup);
 	}
 
-	function _markup_parse_emails_real($matches) {
-		return sprintf('<a href="mailto:%s">%s</a>',
-			rawurlencode($matches[0]),
-			markup_format_text($matches[0]));
+	function _markup_parse_emails(&$markup, &$placeholders)
+	{
+		$count = 0;
+
+		while (preg_match('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $markup, $match))
+		{
+			$placeholder = sprintf('#EMAIL%d#', $count++);
+			$placeholders[$placeholder] = sprintf('<a rel="nofollow" href="mailto:%s">%s</a>',
+				rawurlencode($match[0]), markup_format_text($match[0]));
+
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
 	}
-	
-	function markup_parse_emails($markup) {
-		return preg_replace_callback('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', '_markup_parse_emails_real', $markup);
+
+	function _markup_parse_mailinglist(&$markup, &$placeholders)
+	{
+		// Find [mailinglist]email/id[/mailinglist] placeholders
+		// and replace them by clickable stuff.
+
+		$count = 0;
+
+		while (preg_match('/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i', $markup, $match))
+		{
+			ob_start();
+			try {
+				require_once 'mailinglijsten.php';
+				$controller = new ControllerMailinglijsten();
+				$controller->run_embedded($match[1]);
+			} catch (Exception $e) {
+				echo markup_format_text($e->getMessage());
+			}
+
+			$placeholder = sprintf('#MAILINGLIST%d#', $count++);
+			$placeholders[$placeholder] = ob_get_clean();
+
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
 	}
 
 	/** @group Markup
@@ -249,6 +278,9 @@
 
 		/* Filter code tags */
 		_markup_parse_code($markup, $placeholders);
+
+		/* Replace [mailiginlist] embed */
+		_markup_parse_mailinglist($markup, $placeholders);
 
 		/* Parse [img=] and [youtube=] */
 		_markup_parse_images($markup, $placeholders);
@@ -270,15 +302,15 @@
 	
 		/* Parse spaces */
 		_markup_parse_spaces($markup);
+
+		/* Parse bare e-mails */
+		_markup_parse_emails($markup, $placeholders);
 		
 		/* Parse bare links */
 		_markup_parse_urls($markup, $placeholders);
 
 		/* Parse smileys */
 		_markup_parse_smileys($markup);
-
-		/* Put codes and links back */
-		_markup_parse_placeholders($markup, $placeholders);
 
 		/* Parse simple tags */
 		_markup_parse_simple($markup);
@@ -298,6 +330,9 @@
 		/* CHECK: this is bad! */
 		/* $markup .= '</I></B></U></S></UL></LI>';*/
 	
+		/* Put codes and links back */
+		_markup_parse_placeholders($markup, $placeholders);
+
 		return $markup;
 	}
 	
