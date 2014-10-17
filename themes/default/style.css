@@ -1427,3 +1427,16 @@ form.inline-form {
 	display: inline-block;
 	width: 100%;
 }
+
+.mailinglist-embed {
+	position: relative;
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	clear: both;
+}
+
+.mailinglist-embed h2 {
+	background: transparent url(images/mail.svg) left center / 35px no-repeat;
+	text-indent: 40px;
+}

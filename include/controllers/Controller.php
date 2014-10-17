@@ -78,6 +78,19 @@
 
 		protected function redirect($url, $permanent = false)
 		{
+			// parse and selectively rebuild the url to prevent
+			// weird tricks where a custom form redirects you to
+			// outside the Cover website.
+			$parts = parse_url($url);
+
+			$url = $parts['path'];
+
+			if (isset($parts['query']))
+				$url .= '?' . $parts['query'];
+
+			if (isset($parts['fragment']))
+				$url .= '#' . $parts['fragment'];
+
 			if ($permanent)
 				header('Status: 301 Moved Permanently');
 

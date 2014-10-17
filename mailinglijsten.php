@@ -76,17 +76,24 @@ class ControllerMailinglijsten extends Controller
 	{
 		$lijst = $this->model->get_lijst($lijst_id);
 
-		if (isset($_POST['action']) && $_POST['action'] == 'subscribe')
+		if (isset($_POST['action']))
 		{
-			$this->model->aanmelden($lijst, logged_in('id'));
-			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
-			return;
-		}
+			switch ($_POST['action'])
+			{
+				case 'subscribe':
+					if ($this->model->member_can_subscribe($lijst))
+						$this->model->aanmelden($lijst, logged_in('id'));
+					break;
 
-		if (isset($_POST['action']) && $_POST['action'] == 'unsubscribe')
-		{
-			$this->model->afmelden($lijst, logged_in('id'));
-			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
+				case 'unsubscribe':
+					if ($this->model->member_can_unsubscribe($lijst))
+						$this->model->afmelden($lijst, logged_in('id'));
+					break;
+			}
+			
+			$this->redirect(!empty($_POST['referer'])
+				? $_POST['referer']
+				: 'mailinglijsten.php?lijst_id=' . $lijst->get('id'));
 			return;
 		}
 
@@ -227,6 +234,18 @@ class ControllerMailinglijsten extends Controller
 		return $this->get_content('mailinglijsten::list_message', null, compact('message', 'lijst'));
 	}
 
+	public function run_embedded($lijst_id)
+	{
+		$lijst = $this->model->get_lijst($lijst_id);
+
+		if (!$lijst)
+			return;
+
+		$aangemeld = logged_in() && $this->model->is_aangemeld($lijst, logged_in('id'));
+
+		run_view('mailinglijsten::embedded', $this->model, $lijst, compact('aangemeld'));
+	}
+
 	public function run_impl()
 	{
 		// Unsubscribe link? Show the unsubscribe confirmation page
@@ -262,5 +281,7 @@ class ControllerMailinglijsten extends Controller
 	}
 }
 
-$controller = new ControllerMailinglijsten();
-$controller->run();
+if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {
+	$controller = new ControllerMailinglijsten();
+	$controller->run();
+}

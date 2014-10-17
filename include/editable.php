@@ -3,6 +3,7 @@
 	require_once('markup.php');
 	require_once('login.php');
 	require_once('member.php');
+	require_once 'mailinglijsten.php';
 
 	if (!defined('IN_SITE'))
 		return;
@@ -58,6 +59,25 @@
 		$page = preg_replace('/\[h1\](.+?)\[\/h1\]\s*/ism', '', $page);
 	}
 
+	function _editable_parse_mailinglist(&$page)
+	{
+		// Find [mailinglist]email/id[/mailinglist] placeholders
+		// and replace them by clickable stuff.
+
+		$page = preg_replace_callback(
+			'/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i',
+			'_editable_replace_mailinglist_tag', $page);
+	}
+
+	function _editable_replace_mailinglist_tag($match)
+	{
+		$controller = new ControllerMailinglijsten;
+
+		ob_start();
+		$controller->run_embedded($match[1]);
+		return ob_get_clean();
+	}
+
 	/** @group Editable
 	  * Parse editable page and return an array of pages with all markup
 	  * formatted in html
@@ -77,6 +97,7 @@
 		_editable_parse_commissie_email($page, $owner);
 		_editable_parse_commissie_foto($page, $owner);
 		_editable_parse_commissie_agenda($page, $owner);
+		_editable_parse_mailinglist($page);
 		
 		_editable_parse_commissie_prive($page, $owner);
 		
