@@ -2,12 +2,7 @@
 	<div class="timeline-line"></div>
 	<div class="timeline">
 		<div class="timeline-event has-header">
-			<div class="messageBox">
-				<?php
-					$editable = new ControllerEditable('Oudbesturenpagina');
-					$editable->run();
-				?>
-			</div>
+			<?php run_view('show::single', null, 'Oudbesturenpagina') ?>
 		</div>
 	<?php foreach ($iter as $bestuur): ?>
 		<?php $editable = new ControllerEditable($bestuur->get('page')) ?>
@@ -39,12 +34,7 @@
 	<?php endforeach ?>
 
 	<div class="timeline-event full-width">
-		<div class="messageBox">
-			<?php
-				$editable = new ControllerEditable('Oprichting Cover');
-				$editable->run();
-			?>
-		</div>
+		<?php run_view('show::single', null, 'Oprichting Cover') ?>
 	</div>
 
 	<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
