@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-10-16 00:06+0100\n"
+"POT-Creation-Date: 2014-10-17 12:44+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -250,7 +250,7 @@ msgstr "You are being redirected. Click here to continue."
 msgid "Gastenboek"
 msgstr "Guestbook"
 
-#: ../../../include/controllers/Controller.php:96
+#: ../../../include/controllers/Controller.php:109
 msgid ""
 "Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
 "de WebCie (webcie@svcover.nl)"
@@ -801,7 +801,6 @@ msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
 #: ../../../scherm/slides/03-wall-of-fame/slide.php:37
-#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:13
 #, php-format
 msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg "
@@ -2564,7 +2563,7 @@ msgstr "Sort order name:"
 msgid "Bestuur toevoegen"
 msgstr "Add board"
 
-#: ../../../themes/default/views/besturen/besturen.phtml:18
+#: ../../../themes/default/views/besturen/besturen.phtml:13
 #: ../../../themes/default/views/commissies/single.phtml:22
 #: ../../../themes/default/views/homepage/_introduction.phtml:8
 #: ../../../themes/default/views/show/single.phtml:5
@@ -2573,14 +2572,14 @@ msgstr "Add board"
 msgid "bewerken"
 msgstr "edit"
 
-#: ../../../themes/default/views/besturen/besturen.phtml:18
+#: ../../../themes/default/views/besturen/besturen.phtml:13
 #: ../../../themes/default/views/commissies/single.phtml:22
 #: ../../../themes/default/views/homepage/_introduction.phtml:8
 #: ../../../themes/default/views/show/single.phtml:5
 msgid "Pagina bewerken"
 msgstr "Edit page"
 
-#: ../../../themes/default/views/besturen/besturen.phtml:52
+#: ../../../themes/default/views/besturen/besturen.phtml:42
 msgid "Nieuw bestuur toevoegen..."
 msgstr "Add a new board..."
 
@@ -2660,16 +2659,25 @@ msgstr "Continue to the BoekCie webshop"
 msgid "Commissieagenda"
 msgstr "Committee agenda"
 
+#: ../../../themes/default/views/commissies/_leden_gezocht.phtml:13
+#, php-format
+msgid ""
+"Hey! Deze commissie zoekt nieuwe commissieleden.\n"
+"Heb jij interesse? Zeg het de Commissaris Intern, %s (intern@svcover.nl)"
+msgstr ""
+"Hey, this committee is looking for new members. Are you interested?\n"
+"Tell your Commissioner of Internal Affairs, %s by e-mailing to "
+"intern@svcover.nl."
+
 #: ../../../themes/default/views/commissies/_leden_gezocht.phtml:15
 #, php-format
 msgid ""
-"Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse?<br>Zeg "
-"het <strong>voor %s</strong> tegen de Commissaris Intern, %s (intern@svcover."
-"nl)"
+"Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse?\n"
+"Zeg het [b]voor %s[/b] tegen de Commissaris Intern, %s (intern@svcover.nl)"
 msgstr ""
 "Hey, this committee is looking for new members. Are you interested? Tell "
-"your Commissioner of Internal Affairs, %2$s <strong>before %1$s</strong> by "
-"e-mailing to intern@svcover.nl."
+"your Commissioner of Internal Affairs, %2$s [b]before %1$s[/b] by e-mailing "
+"to intern@svcover.nl."
 
 #: ../../../themes/default/views/commissies/form.phtml:1
 msgid "Nieuwe commissie maken"
@@ -3262,6 +3270,28 @@ msgstr "Put all links to accept"
 msgid "Alle links op weigeren zetten"
 msgstr "Put all links to deny"
 
+#: ../../../themes/default/views/mailinglijsten/embedded.phtml:11
+msgid "Log in om je aan te kunnen melden voor deze mailinglijst."
+msgstr "Sign in to subscribe to this mailing list."
+
+#: ../../../themes/default/views/mailinglijsten/embedded.phtml:14
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:13
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
+msgid "Uitschrijven"
+msgstr "Unsubscribe"
+
+#: ../../../themes/default/views/mailinglijsten/embedded.phtml:15
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:14
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
+msgid "Je bent aangemeld voor deze mailinglijst."
+msgstr "You are subscribed to this mailinglist."
+
+#: ../../../themes/default/views/mailinglijsten/embedded.phtml:18
+#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:17
+#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:67
+msgid "Aanmelden"
+msgstr "Subscribe"
+
 #: ../../../themes/default/views/mailinglijsten/list_archive.phtml:2
 #, php-format
 msgid "Archief van %s"
@@ -3279,21 +3309,6 @@ msgstr "Status"
 #, php-format
 msgid "Bericht uit Archief van %s"
 msgstr "Message from the archives of %s"
-
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:13
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
-msgid "Uitschrijven"
-msgstr "Unsubscribe"
-
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:14
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:64
-msgid "Je bent aangemeld voor deze mailinglijst."
-msgstr "You are subscribed to this mailinglist."
-
-#: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:17
-#: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:67
-msgid "Aanmelden"
-msgstr "Subscribe"
 
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:20
 msgid "Bekijk archief"
