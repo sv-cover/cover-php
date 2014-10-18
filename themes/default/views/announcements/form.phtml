@@ -24,9 +24,9 @@
 		<div>
 			<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats mededeling'), __('Wijzig mededeling')) ?></button>
 			<?php if ($iter->get_id() > 0): ?>
-			<a href="announcements.php?view=read&amp;id=<?=$iter->get_id()?>"><?=__('Terug naar mededeling')?></a>
+			<a href="<?=markup_format_text($controller->link_to_read($iter))?>"><?=__('Terug naar mededeling')?></a>
 			<?php else: ?>
-			<a href="announcements.php"><?=__('Terug naar alle mededelingen')?></a>
+			<a href="<?=markup_format_text($controller->link_to_index())?>"><?=__('Terug naar alle mededelingen')?></a>
 			<?php endif ?>
 		</div>
 	</form>
