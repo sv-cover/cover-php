@@ -151,13 +151,13 @@
 			$punten = $this->model->get($from, $till, true);
 
 			if (!logged_in())
-				$punten = array_filter($punten, array($this, '_test_is_private'));
+				$punten = array_filter($punten, array($this, '_filter_is_public'));
 
 			return $punten;
 		}
 
-		public function _test_is_private($punt)
+		public function _filter_is_public($punt)
 		{
-			return $punt->get('private');
+			return !$punt->get('private');
 		}
 	}
