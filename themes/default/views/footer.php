@@ -19,7 +19,7 @@
                         $banners = $rotator -> get(7);
                         foreach ($banners as $banner)
                         {
-                            echo '<a href="'.$banner['url'].'"><img src="images/banners/'.$banner['filename'].'" /></a><br /><br />';
+                            echo '<a href="'.$banner['url'].'" target="_new"><img src="images/banners/'.$banner['filename'].'"></a><br /><br />';
                         }
                     ?>
 				</div>
