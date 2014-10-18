@@ -348,7 +348,7 @@
 			/* Get the last thread */
 			if (!$poll_model->can_create_new_poll($num))
 			{
-				echo '<tr><td colspan="2">' . sprintf(ngettext('Je kunt hier pas over %d dag weer een poll plaatsen', 'Je kunt hier pas over %d dagen weer een poll plaatsen', $num), $num) . '</td></tr>';
+				echo '<tr><td colspan="2">' . sprintf(_ngettext('Je kunt hier pas over %d dag weer een poll plaatsen', 'Je kunt hier pas over %d dagen weer een poll plaatsen', $num), $num) . '</td></tr>';
 				return;
 			}
 		}

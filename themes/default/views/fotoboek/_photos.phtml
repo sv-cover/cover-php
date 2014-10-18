@@ -28,7 +28,7 @@ for ($i = 0; $i < count($photos); $i += $photos_per_row) {
 			$num = $photo->get('num_reacties');
 		
 			if ($photo->get('reactie'))
-				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . sprintf(ngettext('%d reactie', '%d reacties', $num), $num) . '</span>)';
+				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . sprintf(_ngettext('%d reactie', '%d reacties', $num), $num) . '</span>)';
 
 			if ($admin)
 				$title = input_checkbox('del_' . $photo->get('id'), null) . ' ' . $title;

@@ -12,7 +12,7 @@ class StudieondersteuningView extends View {
 			foreach ($iters as $iter) {
 				$num = $model->get_num_documenten($iter->get('id'));
 
-				$result .= '<li><a href="studieondersteuning.php?vak=' . $iter->get('id') . '">' . $iter->get('naam') . '</a> (' . sprintf(ngettext('%d document', '%d documenten', $num), $num) . ")</li>\n";
+				$result .= '<li><a href="studieondersteuning.php?vak=' . $iter->get('id') . '">' . $iter->get('naam') . '</a> (' . sprintf(_ngettext('%d document', '%d documenten', $num), $num) . ")</li>\n";
 
 				$total += $num;
 			}

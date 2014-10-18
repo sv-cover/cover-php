@@ -46,11 +46,11 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			$num = $model->get_num_children($children[$n]);
 		
 			if ($num)
-				$subtitle[] = sprintf(ngettext('%d boek', '%d boeken', $num), $num);
+				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $num), $num);
 
 			if ($children[$n]->get('has_photos')) {
 				$num = $children[$n]->get('num_photos');
-				$subtitle[] = sprintf(ngettext('%d foto', '%d foto\'s', $num), $num);
+				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
 			}					
 		
 			if (count($subtitle) > 0)
