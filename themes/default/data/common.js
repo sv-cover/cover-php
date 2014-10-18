@@ -70,11 +70,13 @@ jQuery(function($) {
 
 // Inline links (use data-placement-selector and data-partial-selector attributes)
 jQuery(function($) {
-	$(document).on('click', 'a[data-placement-selector]', function(e) {
+	var inline_link_handler = function(e) {
 		e.preventDefault();
 
 		var $target = $(this).closest($(this).data('placement-selector'));
-		var url = this.href;
+		var url = this.nodeName == 'FORM'
+			? this.action
+			: this.href;
 
 		if ($(this).data('partial-selector'))
 			url += ' ' + $(this).data('partial-selector');
@@ -83,8 +85,19 @@ jQuery(function($) {
 
 		$tmp = $(document.createDocumentFragment());
 
-		$tmp.load(url, function(text, status, xhr) {
-			$target.replaceWith($tmp);
-		});
-	});
+		if ($(this).attr('method') == 'post') {
+			$tmp.load(url, $(this).serializeArray(), function(text, status, xhr) {
+				console.log(xhr);
+				$target.replaceWith($tmp);
+			});
+		}
+		else
+			$tmp.load(url, function(text, status, xhr) {
+				$target.replaceWith($tmp);
+			});
+	};
+
+	$(document)
+		.on('click', 'a[data-placement-selector]', inline_link_handler)
+		.on('submit', 'form[data-placement-selector]', inline_link_handler);
 });

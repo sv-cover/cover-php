@@ -7,7 +7,7 @@
 
 <?php foreach ($iter as $item): $committee = $item->getIter('committee'); ?>
 	<hr class="colorAccent <?=$committee->get('login')?>">
-	<div class="messageBox frontpage">
+	<div class="messageBox announcement frontpage">
 		<div class="newsTitle">
 			<div class="right">
 				<?= $item->get('created_on') ?>
@@ -29,7 +29,9 @@
 
 		<ul class="actions">
 			<?php if (get_policy($model)->user_can_update($item)): ?>
-			<li><a href="announcements.php?view=update&amp;id=<?=$item->get_id()?>"><?=__('Wijzig')?></a></li>
+			<li><a href="announcements.php?view=update&amp;id=<?=$item->get_id()?>"
+				data-partial-selector=".announcement"
+				data-placement-selector=".announcement"><?=__('Wijzig')?></a></li>
 			<?php endif ?>
 			<?php if (get_policy($model)->user_can_delete($item)): ?>
 			<li><a href="announcements.php?view=delete&amp;id=<?=$item->get_id()?>"><?=__('Verwijder')?></a></li>

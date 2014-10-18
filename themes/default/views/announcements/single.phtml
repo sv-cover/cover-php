@@ -1,6 +1,6 @@
 <?php $committee = $iter->getIter('committee'); ?>
 <h1><?= markup_format_text($iter->get('subject')) ?></h1>
-<div class="messageBox frontpage">
+<div class="messageBox announcement frontpage">
 	<div class="newsTitle">
 		<div class="right">
 			<?= $iter->get('created_on') ?>			
@@ -21,7 +21,7 @@
 	<ul class="actions">
 		<li><a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Alle mededelingen bekijken')?></a></li>
 		<?php if (get_policy($model)->user_can_update($iter)): ?>
-		<li><a href="<?=markup_format_attribute($controller->link_to_update($iter))?>?>"><?=__('Wijzig')?></a></li>
+		<li><a href="<?=markup_format_attribute($controller->link_to_update($iter))?>"><?=__('Wijzig')?></a></li>
 		<?php endif ?>
 		<?php if (get_policy($model)->user_can_delete($iter)): ?>
 		<li><a href="<?=markup_format_attribute($controller->link_to_delete($iter))?>"><?=__('Verwijder')?></a></li>

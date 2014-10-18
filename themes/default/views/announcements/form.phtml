@@ -1,6 +1,6 @@
 <h1><?=$this->get_label($iter, __('Nieuwe mededeling plaatsen'), __('Mededeling wijzigen')) ?></h1>
-<div class="messageBox">
-	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form">
+<div class="messageBox announcement">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form" data-partial-selector=".announcement" data-placement-selector=".announcement">
 		<div>
 			<?=label(__('Plaats namens commissie'), 'committee', $errors, true)?>
 			<?=select_field('committee', $this->get_committee_options(), $iter->data)?>
