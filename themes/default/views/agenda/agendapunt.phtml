@@ -3,8 +3,8 @@ $commissie_model = get_model('DataModelCommissie');
 $commissie = $commissie_model->get_iter($iter->get('commissie'));
 $date = strtotime($iter->get('van'));
 ?>
-<!-- color accent for each 'commissie' -->
 <div class="event-header">
+	<!-- Facebook Cover photo (or fallback photo) -->
 	<?php if ($cover_photo = $this->get_cover_photo($iter)): ?>
 	<div class="event-cover-photo">
 		<div style="left: -<?=$cover_photo['x'];?>%; top: -<?=$cover_photo['y']; ?>%">
@@ -13,13 +13,16 @@ $date = strtotime($iter->get('van'));
 	</div>
 	<?php endif ?>
 
+	<!-- Calendar icon -->
 	<div class="calendar-icon">
 		<span class="month"><?=strftime('%b', $date)?></span>
 		<span class="day"><?=strftime('%d', $date)?></span>
 	</div>
 	
+	<!-- Event name -->
 	<h1><?= $iter->get('kop') ?></h1>
 
+	<!-- Facebook attendees -->
 	<?php if ($attendees = $this->get_attending($iter)): ?>
 	<ul class="event-attendees">
 	<?php foreach ($attendees as $attendee): ?>
@@ -33,6 +36,7 @@ $date = strtotime($iter->get('van'));
 	</ul>
 	<?php endif ?>
 
+	<!-- Facebook RSVP status -->
 	<?php if (get_config_value('enable_facebook_rsvp', false)): ?>
 		<?php if ($rsvp_status = $this->get_rsvp_status($iter)): ?>
 		<div class="rsvp-status-button dropdown-button">
@@ -58,23 +62,31 @@ $date = strtotime($iter->get('van'));
 	<?php endif ?>
 </div>
 
+<!-- Actual event -->
 <div class="messageBox">
 <p><?= __('Datum & Tijd') ?>: <?= agenda_period_for_display($iter, 'van') ?><br/>
 <? if ($iter->get('locatie')) { ?>
 	<?= __('Locatie')?>: <?= markup_format_text($iter->get('locatie')) ?><br/>
 <? } ?>
 </p>
+
+<!-- If the event is organised externally, add a clear notice to it -->
 <?php if ($iter->get('extern')): ?>
 	<p><?= __('Deze activiteit wordt niet georganiseerd door Cover zelf.') ?></p>
 <?php endif ?>
+
+<!-- Formatted description of the event -->
 <p><?= markup_parse($iter->get('beschrijving')) ?></p>
 
-<p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="show.php?id=<?= $commissie->get('page') ?>"><?= markup_format_text($commissie->get('naam')) ?></a></span></p>
-<p>
-	<a href="agenda.php"><?= image('agenda.png', __('agenda'), __('Volledige agenda bekijken'), 'class="top"') ?> <?= __('Volledige agenda') ?></a>
+<!-- Some meta-data -->
+<p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="commissies.php?commissie=<?=rawurlencode($commissie->get('login')) ?>"><?=markup_format_text($commissie->get('naam')) ?></a></span></p>
+
+<!-- Actions applicable to the event -->
+<ul class="actions">
+	<li><a href="agenda.php"><?= __('Volledige agenda') ?></a></li>
 	<?php if (member_in_commissie($iter->get('commissie')) || member_in_commissie(COMMISSIE_BESTUUR)): ?>
-	- <a href="agenda.php?agenda_edit&amp;agenda_id=<?= $iter->get_id() ?>"><?= __('Wijzig') ?></a>
-	- <a href="agenda.php?agenda_del&amp;agenda_id=<?= $iter->get_id() ?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a>
+	<li><a href="agenda.php?agenda_edit&amp;agenda_id=<?= $iter->get_id() ?>"><?= __('Wijzig') ?></a></li>
+	<li><a href="agenda.php?agenda_del&amp;agenda_id=<?= $iter->get_id() ?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a></li>
 	<?php endif ?>
-</p>
+</ul>
 </div>

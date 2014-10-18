@@ -1290,7 +1290,8 @@ form textarea {
 	height: 30px;
 	vertical-align: baseline;
 	margin-bottom: -6px;
-	border: 1px solid white;
+	margin-right: 5px;
+	border: 1px solid black;
 	border-radius: 4px;
 	text-align: center;
 }
@@ -1309,6 +1310,10 @@ form textarea {
 .calendar-icon .day {
 	bottom: 2px;
 	font-size: 15px;
+}
+
+.event-header .calendar-icon {
+	border-color: white;
 }
 
 .event-header h1 {

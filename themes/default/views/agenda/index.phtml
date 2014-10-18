@@ -44,6 +44,7 @@ if (!count($punten)) { ?>
 	<p> <?= __('Er staan op dit moment geen activiteiten op de agenda.') ?></p>
 <? }
 foreach ($punten as $punt) {
+	$date = strtotime($punt->get('van'));
 	if ($curmaand != $punt->get('vanmaand')) { ?>
 		</table>
 		<h2><?= $months[$punt->get('vanmaand')] ?></h2>
@@ -54,7 +55,12 @@ foreach ($punten as $punt) {
 	} ?>
 	
 	<tr>
-		<td class="vandatum"><img src="themes/default/images/kalender.png" style="float:left;"><span style="margin-left: -47px; margin-top: 15px; float: left;"><?= $punt->get('vandatum') ?></span></td>
+		<td class="vandatum">
+			<div class="calendar-icon">
+				<span class="month"><?=strftime('%b', $date)?></span>
+				<span class="day"><?=strftime('%d', $date)?></span>
+			</div>
+		</td>
 		<td><a class="agendalink" href="agenda.php?agenda_id=<?= $punt->get_id() ?>"><?= markup_format_text($punt->get('kop')) ?></a><br/>
 		<?= agenda_period_for_display($punt) ?><br/>
 
@@ -63,7 +69,10 @@ foreach ($punten as $punt) {
 	<? }
 
 	if (member_in_commissie($punt->get('commissie')) || member_in_commissie(COMMISSIE_BESTUUR)){ ?>
-		<a href="agenda.php?agenda_del&agenda_id= <?= $punt->get_id() ?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a> - <a href="agenda.php?agenda_edit&agenda_id=<?= $punt->get_id() ?>"><?= __('Wijzig') ?></a><br/>
+		<ul class="actions">
+			<li><a href="agenda.php?agenda_del&agenda_id=<?= $punt->get_id() ?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a></li>
+			<li><a href="agenda.php?agenda_edit&agenda_id=<?= $punt->get_id() ?>"><?= __('Wijzig') ?></a></li>
+		</ul>
 	<? } ?>
 		</td>
 	</tr>
