@@ -160,6 +160,10 @@ table.agenda {
 	color: #000;
 }
 
+.menu_contents .agenda .calendar-icon .month {
+	top: 1px;
+}
+
 .menu_contents .agenda .calendar-icon .day {
 	font-size: 12px;
 	bottom: 0px;
