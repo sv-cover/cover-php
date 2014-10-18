@@ -29,8 +29,8 @@
 		i18n_translation::set_locale(i18n_get_locale());
 		
 		/* Set language to use */
-		putenv('LANG='.i18n_get_locale());
-		setlocale(LC_ALL, i18n_get_locale());
+		putenv('LANG='.i18n_get_locale().'.UTF-8');
+		setlocale(LC_ALL, i18n_get_locale().'.UTF-8');
 	}
 
 	class i18n_translation
