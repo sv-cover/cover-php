@@ -1305,8 +1305,9 @@ form textarea {
 }
 
 .rsvp-status-button {
-	position: relative;
-	float: right;
+	position: absolute;
+	right: 0;
+	bottom: 0;
 	z-index: 4;
 	line-height: 50px;
 }
