@@ -142,6 +142,10 @@ table.agenda {
 	display: block;
 }
 
+table.agenda .vandatum {
+	vertical-align: top;
+}
+
 .menu_contents .agenda li {
 	display: block;
 	position: relative;
@@ -153,20 +157,9 @@ table.agenda {
 	position: absolute;
 	top: 2px;
 	left: 0;
-	width: 25px;
-	height: 25px;
 	border-color: #000;
 	font-weight: normal;
 	color: #000;
-}
-
-.menu_contents .agenda .calendar-icon .month {
-	top: 1px;
-}
-
-.menu_contents .agenda .calendar-icon .day {
-	font-size: 12px;
-	bottom: 0;
 }
 
 .menu_contents .agenda .details {
@@ -1312,10 +1305,10 @@ form textarea {
 .calendar-icon {
 	display: inline-block;
 	position: relative;
-	width: 30px;
-	height: 30px;
+	width: 25px;
+	height: 25px;
 	vertical-align: baseline;
-	margin-bottom: -6px;
+	margin-bottom: -3px;
 	margin-right: 5px;
 	border: 1px solid black;
 	border-radius: 4px;
@@ -1330,13 +1323,13 @@ form textarea {
 
 .calendar-icon .month {
 	text-transform: uppercase;
-	top: 2px;
+	top: 1px;
 	font-size: 8px;
 }
 
 .calendar-icon .day {
-	bottom: 1px;
-	font-size: 15px;
+	bottom: 0;
+	font-size: 13px;
 }
 
 .event-header .calendar-icon {
@@ -1355,8 +1348,8 @@ form textarea {
 .event-header .event-cover-photo + .calendar-icon {
 	position: absolute;
 	margin-bottom: 0;
-	bottom: 10px;
-	left: 10px;
+	bottom: 11.5px;
+	left: 11.5px;
 	z-index: 4;
 }
 
@@ -1367,7 +1360,7 @@ form textarea {
 	left: 0;
 	right: 0;
 	padding: 0 15px;
-	text-indent: 35px;
+	text-indent: 32px;
 }
 
 .event-header .rsvp-status-button {

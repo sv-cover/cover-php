@@ -2,16 +2,6 @@ table.agenda td {
 	margin: 4px;
 }
 
-table.agenda td.vandatum {
-	color: #404040; 
-	font-size: 18pt;
-	vertical-align: top;
-}
-
-table.agenda a.agendalink {
-	font-weight: bold;
-}
-
 table.agenda_edit {
 	width: 99%;
 }
