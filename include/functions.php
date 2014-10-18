@@ -579,4 +579,13 @@
 
 		return $pass;
 	}
+
+	function find_file(array $search_paths)
+	{
+		foreach ($search_paths as $path)
+			if (file_exists($path))
+				return $path;
+
+		return null;
+	}
 ?>

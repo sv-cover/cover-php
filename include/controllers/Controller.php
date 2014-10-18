@@ -15,6 +15,7 @@
 		protected $model;
 		protected $iter;
 		protected $params;
+		protected $embedded;
 
 		/** 
 		  * Controller constructor
@@ -59,7 +60,8 @@
 		/** 
 		  * Run the controller
 		  */
-		public function run() {
+		public function run()
+		{
 			ob_start();
 			
 			try {
@@ -71,8 +73,27 @@
 			
 			ob_end_flush();
 		}
+
+		public function run_embedded()
+		{
+			ob_start();
+			
+			$this->embedded = true;
+
+			try {
+				$this->run_impl();
+			}
+			catch(Exception $e) {
+				$this->run_exception($e);
+			}
+
+			$this->embedded = false;
+
+			return ob_get_clean();
+		}
 		
-		protected function run_impl() {
+		protected function run_impl()
+		{
 			$this->get_content();
 		}
 
@@ -95,6 +116,7 @@
 				header('Status: 301 Moved Permanently');
 
 			header('Location: ' . $url);
+			echo '<a href="' . htmlentities($url, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
 			exit;
 		}
 

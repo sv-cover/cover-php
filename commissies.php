@@ -5,6 +5,8 @@ include 'controllers/ControllerEditable.php';
 
 class ControllerCommissies extends ControllerCRUD
 {	
+	protected $_var_id = 'commissie';
+
 	public function __construct()
 	{
 		$this->model = get_model('DataModelCommissie');
@@ -25,7 +27,7 @@ class ControllerCommissies extends ControllerCRUD
 
 	public function link_to_iter(DataIter $iter, array $arguments)
 	{
-		return $this->link(array_merge(array('id' => $iter->get('login')), $arguments));
+		return $this->link(array_merge(array($this->_var_id => $iter->get('login')), $arguments));
 	}
 
 	public function link_to_read(DataIter $iter)
@@ -55,25 +57,16 @@ class ControllerCommissies extends ControllerCRUD
 	}
 	*/
 
-	function get_content($view, $iter = null, $params = array())
+	protected function _get_title($iter)
 	{
-		$title = $iter instanceof DataIter
-			? $iter->get('naam')
-			: __('Commissies');
-
-		$this->run_header(compact('title'));
-		
-		$params['controller'] = $this;
-		run_view('commissies::' . $view, $this->model, $iter, $params);
-		
-		$this->run_footer();
+		return $iter instanceof DataIter ? $iter->get('naam') : __('Commissies');
 	}
 
 	/* protected */ function run_impl()
 	{
 		// Support for old urls
-		if (isset($_GET['commissie']) && !isset($_GET['id']))
-			$_GET['id'] = $_GET['commissie'];
+		if (isset($_GET['id']) && !isset($_GET['commissie']))
+			$_GET['commissie'] = $_GET['id'];
 
 		return parent::run_impl();
 	}

@@ -19,12 +19,12 @@
 	</div>
 
 	<ul class="actions">
-		<li><a href="announcements.php"><?=__('Alle mededelingen bekijken')?></a></li>
+		<li><a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Alle mededelingen bekijken')?></a></li>
 		<?php if (get_policy($model)->user_can_update($iter)): ?>
-		<li><a href="announcements.php?view=update&amp;id=<?=$iter->get_id()?>"><?=__('Wijzig')?></a></li>
+		<li><a href="<?=markup_format_attribute($controller->link_to_update($iter))?>?>"><?=__('Wijzig')?></a></li>
 		<?php endif ?>
 		<?php if (get_policy($model)->user_can_delete($iter)): ?>
-		<li><a href="announcements.php?view=delete&amp;id=<?=$iter->get_id()?>"><?=__('Verwijder')?></a></li>
+		<li><a href="<?=markup_format_attribute($controller->link_to_delete($iter))?>"><?=__('Verwijder')?></a></li>
 		<?php endif ?>
 	</ul>
 </div>

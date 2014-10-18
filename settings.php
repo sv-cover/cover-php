@@ -10,13 +10,9 @@ class ControllerSettings extends ControllerCRUD
 		$this->model = get_model('DataModelConfiguratie');
 	}
 
-	function get_content($view, $iter = null, $params = null)
+	protected function _get_title($iter)
 	{
-		$params = array_merge(array('controller' => $this), $params !== null ? $params : array());
-
-		$this->run_header(array('title' => $iter instanceof DataIter ? $iter->get('key') : __('Instellingen')));
-		run_view('settings::' . $view, $this->model, $iter, $params);
-		$this->run_footer();
+		return $iter instanceof DataIter ? $iter->get('key') : __('Instellingen');
 	}
 
 	public function link_to_read(DataIter $item)

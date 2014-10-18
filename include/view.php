@@ -1,12 +1,19 @@
-<?
+<?php
 /**
   * A Class implementing the default view. New views should subclass this one.
   * creating functions in the same directory as the view, with the extension .phtml
   * will allow a call to function_name().
   *
   */
-class View { 
-	
+class View
+{ 	
+	protected $controller;
+
+	public function __construct(Controller $controller = null)
+	{
+		$this->controller = $controller;
+	}
+
 	function get_name() {
 		return str_replace("view", "", strtolower(get_class($this)));
 	}
@@ -63,6 +70,7 @@ class View {
 		if (file_exists($filename))
 		{
 			// Insert hash into local space
+			$controller = $this->controller;
 			extract($args[0]);
 			include($filename);
 			return true;
@@ -89,7 +97,7 @@ class View {
 	  */
 	function view_auth_common() {
 		echo '<div class="messageBox error_message">' . 
-	sprintf(__('Dit deel van de website is alleen toegankelijk voor Cover-leden. Vul links je E-Mail en wachtwoord in te loggen. Indien je je wachtwoord vergeten bent kun je een nieuw wachtwoord %s. Heb je problemen met inloggen, mail dan naar %s.'), '<a href="wachtwoordvergeten.php">' . __('aanvragen') . '</a>', '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>') . '</div>';
+		sprintf(__('Dit deel van de website is alleen toegankelijk voor Cover-leden. Vul links je E-Mail en wachtwoord in te loggen. Indien je je wachtwoord vergeten bent kun je een nieuw wachtwoord %s. Heb je problemen met inloggen, mail dan naar %s.'), '<a href="wachtwoordvergeten.php">' . __('aanvragen') . '</a>', '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>') . '</div>';
 	}
 	
 	/** 
@@ -97,7 +105,7 @@ class View {
 	  */
 	function view_auth_bestuur() {
 		echo '<div class="messageBox error_message">' . 
-	sprintf(__('Dit deel van de website is alleen toegankelijk voor het bestuur. Vul links je E-Mail en wachtwoord in te loggen. Indien je je wachtwoord vergeten bent kun je een nieuw wachtwoord %s. Heb je problemen met inloggen, mail dan naar %s.'), '<a href="wachtwoordvergeten.php">' . __('aanvragen') . '</a>', '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>') . '</div>';
+		sprintf(__('Dit deel van de website is alleen toegankelijk voor het bestuur. Vul links je E-Mail en wachtwoord in te loggen. Indien je je wachtwoord vergeten bent kun je een nieuw wachtwoord %s. Heb je problemen met inloggen, mail dan naar %s.'), '<a href="wachtwoordvergeten.php">' . __('aanvragen') . '</a>', '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>') . '</div>';
 	}
 }
 
@@ -105,10 +113,9 @@ class CRUDView extends View
 {
 	public function get_form_action(DataIter $iter = null)
 	{
-		return sprintf('%s?view=%s%s',
-			$_SERVER['SCRIPT_NAME'],
-			$this->get_label($iter, 'create', 'update'),
-			$iter ? '&id=' . rawurlencode($iter->get_id()) : '');
+		return $iter && $iter->has_id()
+			? $this->controller->link_to_update($iter)
+			: $this->controller->link_to_create();
 	}
 
 	public function get_label(DataIter $iter = null, $create_label, $update_label)

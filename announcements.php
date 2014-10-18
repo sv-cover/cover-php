@@ -11,10 +11,10 @@ class ControllerAnnouncements extends ControllerCRUD
 		$this->model = get_model('DataModelAnnouncement');
 	}
 	
-/* protected */ function get_content($view, $iter = null, $params = null)
+/* protected */ function get_content($view, $iter = null, $params = array())
 	{
 		$this->run_header(array('title' => $iter instanceof DataIter ? $iter->get('subject') : __('Mededelingen')));
-		run_view('announcements::' . $view, $this->model, $iter, $params);
+		$this->run_view('announcements::' . $view, $this->model, $iter, $params);
 		$this->run_footer();
 	}
 

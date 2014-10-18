@@ -6,6 +6,10 @@ require_once 'controllers/Controller.php';
 
 class ControllerCRUD extends Controller
 {
+	protected $_var_view = 'view';
+
+	protected $_var_id = 'id';
+
 	protected function _create($data, array &$errors)
 	{
 		$iter = new DataIter($this->model, -1, $data);
@@ -49,10 +53,54 @@ class ControllerCRUD extends Controller
 			// && in_array($_POST['_' . $form . '_nonce'], $_SESSION[$form . '_nonce']);
 	}
 
-	protected function _redirect($link)
+	protected function run_view($view, DataModel $model, $iter, array $params)
 	{
-		header('Location: ' . $link);
-		echo '<a href="' . htmlentities($link, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
+		list($view, $method) = explode('::', $view, 2);
+
+		$view_class = sprintf('%sView', $view);
+
+		$search_paths = array(
+			'themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php',
+			'themes/default/views/' . $view . '/' . $view . '.php');
+
+		$path = find_file($search_paths);
+
+		include_once $path;
+
+		$instance = new $view_class($this);
+
+		call_user_func([$instance, $method], array_merge($params, compact('model', 'iter')));
+	}
+
+	protected function _get_title($iters = null)
+	{
+		return '';
+	}
+
+	protected function _get_view_name()
+	{
+		return strtolower(substr(get_class($this), strlen('Controller')));
+	}
+
+	protected function _get_default_view_params()
+	{
+		return array_merge(
+			get_object_vars($this), // stuff like 'model' and other user defined stuff
+			array('controller' => $this));
+	}
+
+	protected function get_content($view, $iters = null, array $params = array())
+	{
+		if (!$this->embedded)
+			$this->run_header(array('title' => $this->_get_title($iters)));
+
+		if (strpos($view, '::') === false)
+			$view = $this->_get_view_name() . '::' . $view;
+
+		$this->run_view($view, $this->model, $iters, array_merge($this->_get_default_view_params(), $params));
+
+		if (!$this->embedded)
+			$this->run_footer();
 	}
 
 	public function link(array $arguments)
@@ -62,27 +110,27 @@ class ControllerCRUD extends Controller
 
 	protected function link_to_iter(DataIter $iter, array $arguments = array())
 	{
-		return $this->link(array_merge(array('id' => $iter->get_id()), $arguments));
+		return $this->link(array_merge(array($this->_var_id => $iter->get_id()), $arguments));
 	}
 
 	public function link_to_create()
 	{
-		return $this->link(['view' => 'create']);
+		return $this->link([$this->_var_view => 'create']);
 	}
 
 	public function link_to_read(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, ['view' => 'read']);
+		return $this->link_to_iter($iter, [$this->_var_view => 'read']);
 	}
 
 	public function link_to_update(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, ['view' => 'update']);
+		return $this->link_to_iter($iter, [$this->_var_view => 'update']);
 	}
 
 	public function link_to_delete(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, ['view' => 'delete']);
+		return $this->link_to_iter($iter, [$this->_var_view => 'delete']);
 	}
 
 	public function link_to_index()
@@ -99,7 +147,7 @@ class ControllerCRUD extends Controller
 
 		if ($this->_form_is_submitted('create'))
 			if ($iter = $this->_create($_POST, $errors))
-				$this->_redirect($this->link_to_read($iter));
+				$this->redirect($this->link_to_read($iter));
 
 		return $this->get_content('form', new DataIter($this->model, null, array()), compact('errors'));
 	}
@@ -121,7 +169,7 @@ class ControllerCRUD extends Controller
 
 		if ($this->_form_is_submitted('update'))
 			if ($this->_update($iter, $_POST, $errors))
-				$this->_redirect($this->link_to_read($iter));
+				$this->redirect($this->link_to_read($iter));
 
 		return $this->get_content('form', $iter, compact('errors'));
 	}
@@ -135,7 +183,7 @@ class ControllerCRUD extends Controller
 
 		if ($this->_form_is_submitted('delete'))
 			if ($iter = $this->_delete($iter, $errors))
-				$this->_redirect($this->link_to_index());
+				$this->redirect($this->link_to_index());
 
 		return $this->get_content('confirm_delete', $iter, compact('errors'));
 	}
@@ -151,11 +199,11 @@ class ControllerCRUD extends Controller
 	{
 		$iter = null;
 
-		$view = isset($_GET['view']) ? $_GET['view'] : null;
+		$view = isset($_GET[$this->_var_view]) ? $_GET[$this->_var_view] : null;
 
-		if (isset($_GET['id']) && $_GET['id'] != '')
+		if (isset($_GET[$this->_var_id]) && $_GET[$this->_var_id] != '')
 		{
-			$iter = $this->_read($_GET['id']);
+			$iter = $this->_read($_GET[$this->_var_id]);
 
 			if (!$view)
 				$view = 'read';
