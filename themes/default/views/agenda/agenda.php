@@ -38,8 +38,11 @@
 					'src' => $response['cover']['source'],
 					'x' => $response['cover']['offset_x'],
 					'y' => $response['cover']['offset_y']);
-			
-			return null;
+			else
+				return array(
+					'src' => get_theme_data('images/default_cover_photo.png'),
+					'x' => 0,
+					'y' => 0);
 		}
 
 		public function get_attending($item)
