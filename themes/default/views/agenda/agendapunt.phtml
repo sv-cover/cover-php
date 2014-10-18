@@ -18,8 +18,10 @@ $commissie = $commissie_model->get_iter($iter->get('commissie'));
 	<ul class="event-attendees">
 	<?php foreach ($attendees as $attendee): ?>
 		<li>
-			<img src="https://graph.facebook.com/<?=$attendee['id']?>/picture/?width=100&amp;height=100">
-			<span class="name"><?=markup_format_text($attendee['name']) ?></span>
+			<a href="https://facebook.com/<?=$attendee['id']?>" target="_new">
+				<img src="https://graph.facebook.com/<?=$attendee['id']?>/picture/?width=100&amp;height=100">
+				<span class="name"><?=markup_format_text($attendee['name']) ?></span>
+			</a>
 		</li>
 	<?php endforeach ?>
 	</ul>

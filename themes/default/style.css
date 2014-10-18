@@ -1380,9 +1380,15 @@ form textarea {
 
 .event-header .event-attendees li {
 	display: inline;
+}
+
+.event-header .event-attendees li a {
+	display: inline-block;
 	vertical-align: bottom;
 	line-height: auto;
 	position: relative;
+	font-weight: normal;
+	text-decoration: none;
 }
 
 .event-header .event-attendees li img {
@@ -1399,7 +1405,7 @@ form textarea {
 .event-header .event-attendees li:hover .name {
 	display: block;
 	position: absolute;
-	top: 16px;
+	top: 40px;
 	left: 0;
 	width: auto;
 	text-align: center;
