@@ -93,31 +93,6 @@
 		}
 		
 		/**
-		  * Get replies to a photo
-		  * @photo a #DataIter representing a photo
-		  *
-		  * @result an array of #DataIter
-		  */
-		function get_reacties($photo) {
-			$rows = $this->db->query("
-					SELECT 
-						*,
-						DATE_PART('dow', date) AS dagnaam, 
-						DATE_PART('day', date) AS datum, 
-						DATE_PART('month', date) AS maand, 
-						DATE_PART('hours', date) AS uur, 
-						DATE_PART('minutes', date) AS minuut
-					FROM 
-						foto_reacties
-					WHERE 
-						foto = " . $photo->get('id') . "
-					ORDER BY 
-						date");
-			
-			return $this->_rows_to_iters($rows);
-		}
-		
-		/**
 		  * Get a certain number of photos previous to a photo
 		  * @photo a #DataIter representing the photo
 		  * @num optional; the number of photos to get previous to 
@@ -128,7 +103,7 @@
 		  * @result an array of #DataIter or just a single #DataIter if
 		  * num is -1
 		  */
-		function get_previous_photo($photo, $num = -1) {
+		function get_previous_photo(DataIter $photo, $num = -1) {
 			$rows = $this->db->query("
 					SELECT 
 						*
@@ -162,7 +137,7 @@
 		  * @result an array of #DataIter or just a single #DataIter if
 		  * num is -1
 		  */
-		function get_next_photo($photo, $num = -1) {
+		function get_next_photo(DataIter $photo, $num = -1) {
 			$rows = $this->db->query("
 					SELECT 
 						*
@@ -191,7 +166,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_previous_book($book) {
+		function get_previous_book(DataIter $book) {
 			if (!$book || !$book->has('date'))
 				return null;
 
@@ -220,7 +195,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_next_book($book) {
+		function get_next_book(DataIter $book) {
 			if (!$book || !$book->has('date'))
 				return null;
 
@@ -409,7 +384,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_photos($book, $max = 0, $random = false) {
+		function get_photos(DataIter $book = null, $max = 0, $random = false) {
 			if (!$book)
 				$id = 0;
 			else
@@ -488,38 +463,6 @@
 		}
 		
 		/**
-		  * Get a certain number of last replies
-		  * @num the number of replies to get
-		  *
-		  * @result an array of #DataIter
-		  */
-		function get_last_reacties($num) {
-			$rows = $this->db->query("
-					SELECT
-						foto_reacties.*,
-						DATE_PART('dow', foto_reacties.date) AS dagnaam, 
-						DATE_PART('day', foto_reacties.date) AS datum, 
-						DATE_PART('month', foto_reacties.date) AS maand, 
-						DATE_PART('hours', foto_reacties.date) AS uur, 
-						DATE_PART('minutes', foto_reacties.date) AS minuut,
-						fotos.beschrijving,
-						fotos.boek,
-						foto_boeken.titel
-					FROM 
-						foto_reacties,
-						fotos,
-						foto_boeken
-					WHERE
-						fotos.id = foto_reacties.foto AND
-						fotos.boek = foto_boeken.id
-					ORDER BY
-						date DESC
-					LIMIT " . intval($num));
-
-			return $this->_rows_to_iters($rows);
-		}
-
-		/**
 		  * Delete a photo. This will automatically delete any replies
 		  * for the photo
 		  * @iter a #DataIter representing a photo
@@ -533,16 +476,6 @@
 			$result = $result && $this->db->delete('foto_reacties', 'foto = ' . intval($iter->get('id')));
 
 			return $result;
-		}
-
-		/**
-		  * Insert a reply
-		  * @iter a #DataIter representing a reply
-		  *
-		  * @result whether or not the insert was successful
-		  */
-		function insert_reactie($iter) {
-			return $this->_insert('foto_reacties', $iter, false);
 		}
 
 		/**

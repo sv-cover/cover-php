@@ -1,0 +1,30 @@
+<?php
+$days = get_days();
+$months = get_months();
+?>
+<div class="replyBox" id="comment<?=$iter->get_id()?>">
+	<div class="title">
+		<span class="replyDetails">
+			<div class="right"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter->get('dagnaam')], $iter->get('datum'), $months[$iter->get('maand')], $iter->get('uur'), $iter->get('minuut')) ?></div>
+			<?= markup_format_text(member_full_name($iter->get('auteur'))) ?>
+		</span>
+		<?php if (!empty($subtitle)): ?>
+		<div class="subtitle">
+		<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text(($iter->get('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a><br><?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $iter->get('boek') ?>"><?= markup_format_text($iter->get('titel')) ?></a>
+		</div>
+		<?php endif ?>
+	</div>
+
+	<div class="bericht">
+		<?= markup_parse($iter->get('reactie')) ?>
+	</div>
+
+	<ul class="actions">
+		<?php if (get_policy($model)->user_can_update($iter)): ?>
+		<li><a href="<?=markup_format_attribute($controller->link_to_update($iter))?>?>"><?=__('Wijzig')?></a></li>
+		<?php endif ?>
+		<?php if (get_policy($model)->user_can_delete($iter)): ?>
+		<li><a href="<?=markup_format_attribute($controller->link_to_delete($iter))?>"><?=__('Verwijder')?></a></li>
+		<?php endif ?>
+	</ul>
+</div>

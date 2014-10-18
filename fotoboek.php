@@ -1,9 +1,58 @@
 <?php
 	include('include/init.php');
 	include('controllers/Controller.php');
+	include('controllers/ControllerCRUD.php');
 
 	require_once('member.php');
 	require_once('form.php');
+
+	class ControllerFotoboekReacties extends ControllerCRUD
+	{
+		protected $photo;
+
+		protected $_var_view = 'comment_view';
+
+		protected $_var_id = 'comment_id';
+
+		public function __construct(DataIter $photo)
+		{
+			$this->_var_view = 'comment_view';
+
+			$this->photo = $photo;
+
+			$this->model = get_model('DataModelFotoboekReacties');
+		}
+
+		protected function _create($data, array &$errors)
+		{
+			$data['foto'] = $this->photo->get('id');
+			$data['auteur'] = logged_in('id');
+
+			return parent::_create($data, $errors);
+		}
+
+		protected function _index()
+		{
+			return $this->model->get_for_photo($this->photo);
+		}
+
+		public function link(array $arguments)
+		{
+			$arguments['photo'] = $this->photo->get('id');
+
+			return parent::link($arguments);
+		}
+
+		public function link_to_index()
+		{
+			return $this->link(array());
+		}
+
+		public function link_to_read(DataIter $iter)
+		{
+			return sprintf('%s#comment%d', $this->link_to_index(), $iter->get_id());
+		}
+	}
 
 	class ControllerFotoboek extends Controller {
 		var $model = null;
@@ -46,28 +95,6 @@
 			$photo->set('beschrijving', get_post('beschrijving'));
 			$this->model->update($photo);
 			
-			header('Location: fotoboek.php?photo=' . $photo->get('id'));
-			exit();
-		}
-		
-		function _process_photo_reactie($photo) {
-			if (!$this->_page_prepare(false))
-				return;
-			
-			if (!get_post('reactie')) {
-				$this->get_content('foto', $photo, array('errors' => array('reactie')));
-				return;
-			}
-			
-			$member_info = logged_in();
-			
-			$reactie = new DataIter($this->model, -1, 
-					array(	'foto' => intval($photo->get('id')),
-						'auteur' => intval($member_info['id']),
-						'reactie' => get_post('reactie')));
-			
-			$this->model->insert_reactie($reactie);
-
 			header('Location: fotoboek.php?photo=' . $photo->get('id'));
 			exit();
 		}
@@ -446,11 +473,18 @@
 			echo '<a href="' . htmlentities($link, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
 		}
 		
-		function _view_edit_book($book) {
+		protected function _view_edit_book($book) {
 			if (!$this->_page_prepare())
 				return;
 
 			$this->get_content('edit_fotoboek', $book);
+		}
+
+		protected function _view_photo(DataIter $photo)
+		{
+			$reactie_controller = new ControllerFotoboekReacties($photo);
+			$reacties = $reactie_controller->run_embedded();
+			$this->get_content('foto', $photo, compact('reacties'));
 		}
 		
 		function run_impl() {
@@ -463,7 +497,7 @@
 				$this->_process_next_slide($_GET['next_slide']);
 				return;
 			}
-			
+
 			if (isset($_GET['fetch_urls'])) {
 				$this->_process_fetch_urls($_GET['fetch_urls']);
 				return;
@@ -511,10 +545,8 @@
 				}
 			} elseif (isset($_POST['submfotobeschrijving']))
 				$this->_process_photo_description($photo);
-			elseif (isset($_POST['submfotoreactie']))
-				$this->_process_photo_reactie($photo);
 			else
-				$this->get_content('foto', $photo);
+				$this->_view_photo($photo);
 		}
 	}
 	

@@ -1,0 +1,38 @@
+<div class="bar_sep">
+
+<?php if (get_policy($model)->user_can_create()): ?>
+	<div class="buttons"><a href="javascript:nieuwe_reactie()"><?= image('add.png', __('Toevoegen'), __('Nieuwe reactie toevoegen')) ?></a> <a href="javascript:nieuwe_reactie()"><?= __('Nieuwe reactie') ?></a></div>
+<?php endif ?>
+
+<?= __('Reacties') ?></div>
+
+<?php if (get_policy($model)->user_can_create()): ?>
+	<div id="fotoboek_reactie" class="beheer">
+		<?php $this->form(compact('model', 'controller')) ?>
+	</div>
+	<script type="text/javascript">
+		function nieuwe_reactie() {
+			div = document.getElementById("fotoboek_reactie");
+		
+			if (div.style.display == "none" || div.style.display == "") {
+				div.style.display = "block";
+				document.freactie.reactie.focus();
+			} else {
+				div.style.display = "none";
+			}
+		}
+			
+	<?php if (isset($errors) && in_array('reactie', $errors)): ?>
+		nieuwe_reactie();
+	<?php endif ?>
+	
+	</script>
+<?php endif ?>
+
+<?php if (!$iter || count($iter) == 0): ?>
+	<p><?= __('Er zijn nog geen reacties') ?></p>
+<?php else: ?>
+	<?php foreach ($iter as $reactie): ?>
+		<?php $this->single(array('iter' => $reactie, 'model' => $model, 'controller' => $controller)) ?>
+	<?php endforeach ?>
+<?php endif ?>

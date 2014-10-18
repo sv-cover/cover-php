@@ -1,0 +1,8 @@
+<form name="freactie" action="<?=markup_format_attribute($this->get_form_action($iter))?>" method="post">
+	<table>
+		<?= table_row(markup_format_text(member_full_name($iter->auteur))) ?>
+		<?= table_row(textarea_field('reactie', $iter->data, $errors)) ?>
+	
+		<tr><td class="submit"><button type="submit" class="button"><?=$this->get_label($iter, __('Plaats reactie'), __('Werk reactie bij'))?></button></td></tr>
+	</table>
+</form>
