@@ -10,14 +10,12 @@ class ControllerAnnouncements extends ControllerCRUD
 	{
 		$this->model = get_model('DataModelAnnouncement');
 	}
-	
-/* protected */ function get_content($view, $iter = null, $params = array())
-	{
-		$this->run_header(array('title' => $iter instanceof DataIter ? $iter->get('subject') : __('Mededelingen')));
-		$this->run_view('announcements::' . $view, $this->model, $iter, $params);
-		$this->run_footer();
-	}
 
+	protected function _get_title($iter)
+	{
+		return $iter instanceof DataIter ? $iter->get('subject') : __('Mededelingen');
+	}
+	
 	protected function _validate(array $data, array &$errors)
 	{
 		if (!member_in_commissie($data['committee']))
