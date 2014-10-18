@@ -137,22 +137,44 @@ ul.expander{
   border-radius: 3px;
   box-shadow: 0px 2px 3px #333;
 }
-.agenda {margin-bottom:8px; margin-left:0px; border-spacing:5px 15px;}
-.agenda li {
-	margin: 3px 0px;
-	clear: both;
-}
-.agenda li .date
-{
+
+table.agenda {
 	display: block;
-	float: left;
-	height: 100%;
 }
-.menu_contents .agenda a { float: left; display: block; font-weight: bold; font-size: 11px; max-width: 126px; margin-left: 4px;}
+
+.menu_contents .agenda li {
+	display: block;
+	position: relative;
+	padding-left: 30px;
+	margin-bottom: 5px;
+}
+
+.menu_contents .agenda .calendar-icon {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	width: 25px;
+	height: 25px;
+	border-color: #000;
+	font-weight: normal;
+	color: #000;
+}
+
+.menu_contents .agenda .calendar-icon .day {
+	font-size: 12px;
+	bottom: 0px;
+}
 
 .menu_contents .agenda .details {
 	display: block;
 	font-weight: normal;
+}
+
+.menu hr {
+	display: block;
+	height: 1px;
+	border: none;
+	background: #000;
 }
 
 .align-right {text-align:right;}
