@@ -1,8 +1,14 @@
-<form name="freactie" action="<?=markup_format_attribute($this->get_form_action($iter))?>" method="post">
-	<table>
-		<?= table_row(markup_format_text(member_full_name($iter->auteur))) ?>
-		<?= table_row(textarea_field('reactie', $iter->data, $errors)) ?>
-	
-		<tr><td class="submit"><button type="submit" class="button"><?=$this->get_label($iter, __('Plaats reactie'), __('Werk reactie bij'))?></button></td></tr>
-	</table>
-</form>
+<div class="replyBox">
+	<form id="comment-form" name="freactie" action="<?=markup_format_attribute($this->get_form_action($iter))?>" method="post">
+		<div>
+			<p><strong><?= markup_format_text(member_full_name($iter->auteur)) ?>:</strong></p>
+			<?= textarea_field('reactie', $iter->data, $errors,
+					'placeholder', __('Typ hier je reactie…'),
+					'rows', '3') ?>
+		</div>
+		
+		<div>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats reactie'), __('Wijzig reactie')) ?></button>
+		</div>
+	</form>
+</div>

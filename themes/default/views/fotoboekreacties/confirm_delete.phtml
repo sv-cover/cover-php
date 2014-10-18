@@ -1,5 +1,5 @@
-<div class="messageBox">
-	<form method="post" action="<?=markup_format_text($controller->link_to_delete($iter))?>" class="vertical-form">
+<div class="replyBox">
+	<form id="confirm-delete-comment-form" method="post" action="<?=markup_format_text($controller->link_to_delete($iter))?>" class="vertical-form">
 		<p><?=sprintf(__('Weet je heel zeker dat je de reactie van <em>%s</em> wilt verwijderen?'),
 			markup_format_text(member_full_name($iter->get('auteur'))))?></p>
 		<div>

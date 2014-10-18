@@ -52,6 +52,21 @@
 		{
 			return sprintf('%s#comment%d', $this->link_to_index(), $iter->get_id());
 		}
+
+		public function link_to_create()
+		{
+			return parent::link_to_create() . '#comment-form';
+		}
+
+		public function link_to_update(DataIter $iter)
+		{
+			return parent::link_to_update($iter) . '#comment-form';
+		}
+
+		public function link_to_delete(DataIter $iter)
+		{
+			return parent::link_to_delete($iter) . '#confirm-delete-comment-form';
+		}
 	}
 
 	class ControllerFotoboek extends Controller {
@@ -464,15 +479,9 @@
 			if (logged_in())
 				$this->model->mark_read_recursively(logged_in('id'), $book);
 
-			$this->_redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
+			$this->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
 		}
 
-		protected function _redirect($link)
-		{
-			header('Location: ' . $link);
-			echo '<a href="' . htmlentities($link, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
-		}
-		
 		protected function _view_edit_book($book) {
 			if (!$this->_page_prepare())
 				return;

@@ -1440,3 +1440,22 @@ form.inline-form {
 	background: transparent url(images/mail.svg) left center / 35px no-repeat;
 	text-indent: 40px;
 }
+
+.heading-with-controls {
+	clear: both;
+}
+
+.heading-with-controls h2 {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.heading-with-control * {
+	line-height: 20px;
+}
+
+.create-link {
+	display: inline-block;
+	background: transparent url(images/add.png) left center / 20px no-repeat;
+	text-indent: 20px;
+}
