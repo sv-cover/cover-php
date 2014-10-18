@@ -4,7 +4,9 @@
 			markup_format_text(member_full_name($iter->get('auteur'))))?></p>
 		<div>
 			<button type="submit" class="button"><?=__('Verwijder reactie') ?></button>
-			<a href="<?=markup_format_text($controller->link_to_read($iter))?>"><?=__('Terug naar reacties')?></a>
+			<a href="<?=markup_format_text($controller->link_to_read($iter))?>"
+				data-partial-selector="#comment<?=$iter->get_id()?>"
+				data-placement-selector=".replyBox"><?=__('Terug naar foto')?></a>
 		</div>
 	</form>
 </div>

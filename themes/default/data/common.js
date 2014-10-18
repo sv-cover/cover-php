@@ -67,3 +67,24 @@ jQuery(function($) {
 		});
 	})
 });
+
+// Inline links (use data-placement-selector and data-partial-selector attributes)
+jQuery(function($) {
+	$(document).on('click', 'a[data-placement-selector]', function(e) {
+		e.preventDefault();
+
+		var $target = $(this).closest($(this).data('placement-selector'));
+		var url = this.href;
+
+		if ($(this).data('partial-selector'))
+			url += ' ' + $(this).data('partial-selector');
+
+		$target.css({'opacity': 0.5});
+
+		$tmp = $(document.createDocumentFragment());
+
+		$tmp.load(url, function(text, status, xhr) {
+			$target.replaceWith($tmp);
+		});
+	});
+});
