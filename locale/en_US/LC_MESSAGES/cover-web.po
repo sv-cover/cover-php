@@ -1392,7 +1392,7 @@ msgstr "New poll"
 #: ../../../themes/default/views/fotoboekreacties/index.phtml:2
 #: ../../../themes/default/views/weblog/_weblog.phtml:19
 msgid "Reacties"
-msgstr "Replies"
+msgstr "Comments"
 
 #: ../../../themes/default/views/forum.php:476
 msgid "Laatste"
@@ -2859,7 +2859,7 @@ msgstr "Create photo book"
 
 #: ../../../themes/default/views/fotoboek/_last_reacties.phtml:6
 msgid "Laatste reacties"
-msgstr "Last replies"
+msgstr "Last comments"
 
 #: ../../../themes/default/views/fotoboek/_mark_read_button.phtml:4
 msgid "Markeer alle boeken als gezien"
@@ -2923,8 +2923,8 @@ msgstr "Are you sure you want to delete the selected photos?"
 #, php-format
 msgid "%d reactie"
 msgid_plural "%d reacties"
-msgstr[0] "%d reply"
-msgstr[1] "%d replies"
+msgstr[0] "%d comment"
+msgstr[1] "%d comments"
 
 #: ../../../themes/default/views/fotoboek/_photos.phtml:58
 msgid "Geselecteerde foto's verwijderen"
@@ -3016,7 +3016,7 @@ msgstr "New comment"
 
 #: ../../../themes/default/views/fotoboekreacties/index.phtml:36
 msgid "Er zijn nog geen reacties"
-msgstr "There are no replies yet"
+msgstr "There are no comments yet"
 
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:7
 msgid "Nieuw bericht"
