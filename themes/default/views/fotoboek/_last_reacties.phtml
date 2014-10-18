@@ -1,7 +1,7 @@
 <?
 if(logged_in() != false) { // laat alleen de reacties zien als er is ingelogd
 	$reactie_model = get_model('DataModelFotoboekReacties');
-	$reacties = $reactie_model->get_latest(15);
+	$reacties = $reactie_model->get_latest(10);
 ?>
 <div class="bar_sep"><?= __('Laatste reacties') ?></div>
 
