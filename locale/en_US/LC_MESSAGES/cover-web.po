@@ -1275,7 +1275,7 @@ msgstr "Add a new message"
 #: ../../../themes/default/views/forum.php:130
 #: ../../../themes/default/views/forum.php:450
 msgid "Nieuw antwoord"
-msgstr "New reply"
+msgstr "New comment"
 
 #: ../../../themes/default/views/forum.php:50
 #: ../../../themes/default/views/forum.php:132
@@ -3007,13 +3007,12 @@ msgid "Wijzig reactie"
 msgstr "Edit comment"
 
 #: ../../../themes/default/views/fotoboekreacties/index.phtml:4
-#, fuzzy
 msgid "Een nieuwe reactie toevoegen"
-msgstr "Add a new reply"
+msgstr "Add a new comment"
 
 #: ../../../themes/default/views/fotoboekreacties/index.phtml:4
 msgid "Nieuwe reactie"
-msgstr "New reply"
+msgstr "New comment"
 
 #: ../../../themes/default/views/fotoboekreacties/index.phtml:36
 msgid "Er zijn nog geen reacties"
