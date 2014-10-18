@@ -1283,7 +1283,36 @@ form textarea {
 	z-index: 3;
 }
 
+.calendar-icon {
+	display: inline-block;
+	position: relative;
+	width: 30px;
+	height: 30px;
+	vertical-align: baseline;
+	margin-bottom: -6px;
+	border: 1px solid white;
+	border-radius: 4px;
+	text-align: center;
+}
+
+.calendar-icon > * {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+.calendar-icon .month {
+	top: 2px;
+	font-size: 8px;
+}
+
+.calendar-icon .day {
+	bottom: 2px;
+	font-size: 15px;
+}
+
 .event-header h1 {
+	display: inline;
 	color: white;
 	height: 50px;
 	line-height: 50px;
@@ -1291,13 +1320,22 @@ form textarea {
 	z-index: 2;
 }
 
-.event-header .event-cover-photo + h1 {
+.event-header .event-cover-photo + .calendar-icon {
+	position: absolute;
+	margin-bottom: 0;
+	bottom: 10px;
+	left: 10px;
+	z-index: 4;
+}
+
+.event-header .event-cover-photo + .calendar-icon + h1 {
 	background: rgba(0, 0, 0, 0.7);
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	padding: 0 15px;
+	text-indent: 35px;
 }
 
 .event-header .rsvp-status-button {
