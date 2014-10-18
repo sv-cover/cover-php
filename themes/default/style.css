@@ -15,7 +15,7 @@ body {
 	background:url("images/swoosh.png") no-repeat scroll top center transparent;
 	background-color:#3B3B3B;
 	padding:0px 15px;
-	font-family: verdana, sans, "sans serif";
+	font-family: verdana, sans-serif;
 	font-size: 12px;
 	color: #FFFFFF;
 }
