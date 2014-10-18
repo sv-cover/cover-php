@@ -161,7 +161,7 @@ table.agenda {
 }
 
 .menu_contents .agenda .calendar-icon .month {
-	top: 0;
+	top: 1px;
 }
 
 .menu_contents .agenda .calendar-icon .day {
@@ -1329,8 +1329,9 @@ form textarea {
 }
 
 .calendar-icon .month {
-	top: 1px;
-	font-size: 9px;
+	text-transform: uppercase;
+	top: 2px;
+	font-size: 8px;
 }
 
 .calendar-icon .day {
