@@ -1376,19 +1376,23 @@ form textarea {
 	margin-top: 6px;
 	z-index: 10;
 	text-align: right;
-}
 
-.event-header .event-attendees li {
-	display: inline;
+	display: none;
+	display: -webkit-inline-flex;
+	display: inline-flex;
+	-webkit-flex-direction: row-reverse;
+	flex-direction: row-reverse;
+	-webkit-flex-wrap: wrap-reverse;
+	flex-wrap: wrap-reverse;
 }
 
 .event-header .event-attendees li a {
-	display: inline-block;
 	vertical-align: bottom;
 	line-height: auto;
 	position: relative;
 	font-weight: normal;
 	text-decoration: none;
+	margin-left: 4px;
 }
 
 .event-header .event-attendees li img {
@@ -1405,7 +1409,7 @@ form textarea {
 .event-header .event-attendees li:hover .name {
 	display: block;
 	position: absolute;
-	top: 40px;
+	top: 15px;
 	left: 0;
 	width: auto;
 	text-align: center;
@@ -1424,7 +1428,7 @@ form textarea {
 	display: block;
 	position: absolute;
 	top: -14px;
-	left: 11px;
+	left: 10px;
 	z-index: 5;
 }
 
