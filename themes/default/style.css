@@ -662,7 +662,15 @@ body > .header > .login {
 	/*font-weight: normal;*/
 }
 
-.newsheading { clear:both; height:55px;}
+.newsHeading {
+	clear: both;
+}
+
+.newsHeading > * {
+	line-height: 29px;
+	display: inline-block;
+}
+
 .newsTitle
 {
 	margin-top: -20px;

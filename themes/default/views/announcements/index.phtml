@@ -1,11 +1,25 @@
+<?php
+$hidden_counter = 0;
+foreach ($iter as $item)
+	if (!logged_in() && !get_policy($model)->user_can_read($item))
+		$hidden_counter++;
+?>
+
 <div class="newsHeading">
 	<?php if (get_policy($model)->user_can_create()): ?>
 		<div class="controls inline"><a href="announcements.php?view=create" class="open-in-dialog"><?= image('new.png', __('Toevoegen'), __('Een nieuwe mededeling toevoegen')) ?><?= __('Nieuwe mededeling') ?></a></div>
 	<?php endif ?>
 	<h1><?= __('Mededelingen') ?></h1>
+	<?php if ($hidden_counter > 0): ?>
+	<p><?=sprintf(_ngettext(
+		'Er is %d mededeling alleen beschikbaar voor leden. Log in om deze te lezen.',
+		'Er zijn %d mededelingen alleen beschikbaar voor leden. Log in om ze te lezen.',
+		$hidden_counter), $hidden_counter) ?></p>
+	<?php endif ?>
 </div>
 
 <?php foreach ($iter as $item): $committee = $item->getIter('committee'); ?>
+	<?php if (!get_policy($model)->user_can_read($item)) continue; ?>
 	<hr class="colorAccent <?=$committee->get('login')?>">
 	<div class="messageBox announcement frontpage">
 		<div class="newsTitle">

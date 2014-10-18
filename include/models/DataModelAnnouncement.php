@@ -39,21 +39,9 @@ class DataModelAnnouncement extends DataModel
 			. " ORDER BY {$this->table}.created_on DESC";
 	}
 
-	public function get_latest($count = 5, $visibility = null)
+	public function get_latest($count = 5)
 	{
-		if ($visibility === null)
-		{
-			if (!logged_in())
-				$visibility = self::VISIBILITY_PUBLIC;
-
-			else if (count(logged_in('commissies')) === 0)
-				$visibility = self::VISIBILITY_MEMBERS;
-
-			else
-				$visibility = self::VISIBILITY_ACTIVE_MEMBERS;
-		}
-
-		$query = $this->_generate_query('visibility <= ' . intval($visibility)) . ' LIMIT ' . intval($count);
+		$query = $this->_generate_query('') . ' LIMIT ' . intval($count);
 
 		$rows = $this->db->query($query);
 		
