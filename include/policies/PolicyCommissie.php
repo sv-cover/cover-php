@@ -1,7 +1,6 @@
 <?php
 
 require_once 'include/member.php';
-require_once 'include/models/DataModelAnnouncement.php';
 
 class PolicyCommissie implements Policy
 {
