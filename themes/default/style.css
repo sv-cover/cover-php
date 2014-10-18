@@ -161,12 +161,12 @@ table.agenda {
 }
 
 .menu_contents .agenda .calendar-icon .month {
-	top: 1px;
+	top: 0;
 }
 
 .menu_contents .agenda .calendar-icon .day {
 	font-size: 12px;
-	bottom: 0px;
+	bottom: 0;
 }
 
 .menu_contents .agenda .details {
@@ -1329,12 +1329,12 @@ form textarea {
 }
 
 .calendar-icon .month {
-	top: 2px;
-	font-size: 8px;
+	top: 1px;
+	font-size: 9px;
 }
 
 .calendar-icon .day {
-	bottom: 2px;
+	bottom: 1px;
 	font-size: 15px;
 }
 
