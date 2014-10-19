@@ -9,7 +9,7 @@ class DataIterMailinglijstArchief extends DataIter
 		$end_header = strpos($this->get('bericht'), "\n\n");
 
 		return preg_match('/^' . preg_quote($name) . ': (.+?)$/im', substr($this->get('bericht'), 0, $end_header), $match)
-			? $match[1]
+			? $this->_convert_header_encoding($match[1])
 			: null;
 	}
 
@@ -24,6 +24,29 @@ class DataIterMailinglijstArchief extends DataIter
 		// beginning of the message. Alternatively, we could use the From header.
 		// return substr($this->get('bericht'), 5, strpos($this->get('bericht'), ' ', 5) - 5);
 		return $this->get_header('From');
+	}
+
+	protected function _convert_header_encoding($data)
+	{
+		$decode = function($match) {
+			switch ($match[2])
+			{
+				case 'Q':
+					$data = quoted_printable_decode($match[3]);
+					break;
+
+				case 'B':
+					$data = base64_decode($data);
+					break;
+			}
+
+			if (strcasecmp($match[1], 'utf-8') !== 0)
+				$data = iconv($match[1], 'UTF-8//TRANSLIT', $data);
+
+			return $data;
+		};
+
+		return preg_replace_callback('/=\?([a-zA-Z0-9_-]+)\?(Q|B)\?(.+?)\?=/', $decode, $data);
 	}
 }
 
