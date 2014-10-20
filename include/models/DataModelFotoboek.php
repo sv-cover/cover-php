@@ -288,23 +288,28 @@
 			if (logged_in())
 			{
 				$select = sprintf('
-					WITH RECURSIVE book_children (id, titel, parents) AS (
-						SELECT id, titel, ARRAY[0] FROM foto_boeken WHERE parent = %d
+					WITH RECURSIVE book_children (id, date, parents) AS (
+						SELECT id, date, ARRAY[0] FROM foto_boeken WHERE parent = %d
 					UNION ALL
-						SELECT f_b.id, f_b.titel, b_c.parents || f_b.parent
+						SELECT f_b.id, f_b.date, b_c.parents || f_b.parent
 						FROM book_children b_c, foto_boeken f_b
 						WHERE b_c.id = f_b.parent
 				)
 				', $parent) . $select;
 
-				$select .= ',
+				$select .= sprintf(',
 					CASE
 						WHEN
-							COUNT(nullif(f_b_v.last_visit IS NULL, false))
-							+ COUNT(nullif(b_c.id IS NOT NULL AND f_b_c_v.last_visit IS NULL, false)) > 0 
+							COUNT(nullif(
+								DATE_PART(\'year\', foto_boeken.date) > %1$d AND
+								f_b_v.last_visit IS NULL, false))
+							+ COUNT(nullif(b_c.id IS NOT NULL AND (
+								DATE_PART(\'year\', b_c.date) >= %1$d AND
+								f_b_c_v.last_visit IS NULL
+							), false)) > 0 
 						THEN \'unread\'
 						ELSE \'read\'
-					END read_status';
+					END read_status', logged_in('beginjaar'));
 
 				$joins .= sprintf('
 					LEFT JOIN book_children b_c ON
