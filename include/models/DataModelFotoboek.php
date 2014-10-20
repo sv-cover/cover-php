@@ -297,19 +297,19 @@
 				)
 				', $parent) . $select;
 
-				$select .= sprintf(',
+				$select .= sprintf(",
 					CASE
 						WHEN
 							COUNT(nullif(
-								DATE_PART(\'year\', foto_boeken.date) > %1$d AND
-								f_b_v.last_visit IS NULL, false))
+								foto_boeken.date > '%1\$d-08-23' AND -- only photo books from just before I started
+								f_b_v.last_visit IS NULL, false)) -- and which I didn't visit yet
 							+ COUNT(nullif(b_c.id IS NOT NULL AND (
-								DATE_PART(\'year\', b_c.date) >= %1$d AND
+								b_c.date >= '%1\$d-08-23' AND
 								f_b_c_v.last_visit IS NULL
 							), false)) > 0 
-						THEN \'unread\'
-						ELSE \'read\'
-					END read_status', logged_in('beginjaar'));
+						THEN 'unread'
+						ELSE 'read'
+					END read_status", logged_in('beginjaar'));
 
 				$joins .= sprintf('
 					LEFT JOIN book_children b_c ON
