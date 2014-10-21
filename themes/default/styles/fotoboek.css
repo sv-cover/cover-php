@@ -56,18 +56,6 @@ div.fotoboek_foto {
 	text-align: center;
 	margin-top: 5px;
 }
-.fotoboek_foto img {
-	margin-bottom: 20px;
-	border: 1px solid #999;
-	box-shadow: 0px 3px 7px #666;
-	max-width: 90%;
-}
-
-.fotoboek_foto img[src*="next.png"], .fotoboek_foto img[src*="previous.png"]
-{
-	width: 20px;
-	height: 16px;
-}
 
 div.foto_titel {
 	text-align: center;
@@ -122,26 +110,52 @@ div.relative {
 	position: relative;
 }
 
-
-.prevPhoto img, .nextPhoto img
-{
-	border: 0 ;
-	margin: 0;
-	box-shadow:0px 0px 0px transparent;
+.photo {
+	position: relative;
 }
 
-.prevPhoto
-{
-	float: left;
-	display:block;
-}
-.prevPhoto a
-{
-	display:block;
-	height: 100%;
+.photo img {
 	width: 100%;
 }
-.nextPhoto
-{
+
+.photo-controls {
+	height: 24px;
+	padding: 0 5px;
+}
+
+.photo-controls a,
+.photo-controls a:hover {
+	display: inline-block;
+	line-height: 24px;
+}
+
+.photo-controls form {
+	display: inline;
+}
+
+.photo-controls .prev-button {
+	float: left;
+}
+
+.photo-controls .next-button {
 	float: right;
+}
+
+.photo-controls .like-button {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	color: #004274;
+	border: none;
+	cursor: pointer;
+	line-height: 20px;
+	text-align: center;
+	font-size: 9px;
+	padding: 0;
+	background: transparent url(../images/heart.svg) 0 0 / 20px no-repeat;
+}
+
+.liked .like-button {
+	color: white;
+	background-image: url(../images/heart-filled.svg);
 }

@@ -618,6 +618,12 @@ CREATE TABLE fotos (
     added_on timestamp without time zone DEFAULT NULL
 );
 
+CREATE TABLE foto_likes (
+    foto_id integer NOT NULL REFERENCES "fotos" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    lid_id integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    liked_on timestamp without time zone DEFAULT NULL
+);
+
 --
 -- TOC entry 215 (class 1259 OID 24319)
 -- Name: gastenboek_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie

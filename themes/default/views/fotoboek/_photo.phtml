@@ -1,3 +1,8 @@
+<?php
+$like_model = get_model('DataModelFotoboekLikes');
+$likes = count($like_model->get_for_photo($iter));
+$liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
+?>
 <? if (member_in_commissie(COMMISSIE_FOTOCIE)) { ?>
 	<div class="foto_titel"><form method="post" action="fotoboek.php?photo=<?= $iter->get('id') ?>">
 	<?= input_hidden('submfotobeschrijving', 'yes') ?>
@@ -12,15 +17,25 @@
 	$prev = $model->get_previous_photo($iter, 2);
 	$next = $model->get_next_photo($iter, 2);
 ?>
-<? if (count($prev) > 0) { ?>
-	<div class="prevPhoto"><a href="fotoboek.php?photo=<?= $prev[0]->get('id') ?>#a"><?= image('previous.png', __('Vorige'), __('Ga naar vorige foto')) ?></a></div>
-<? } ?>
-<? if (count($next) > 0) { ?>
-	<div class="nextPhoto"><a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a"><?= image('next.png', __('Volgende'), __('Ga naar volgende foto')) ?></a></div>
-<? } ?>
-<a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
-<img id="photo" src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>">
-</a>
+<div class="photo <?=$liked ? 'liked' : ''?>">
+	<nav class="photo-controls">
+		<?php if (logged_in()): ?>
+		<form class="like-form" method="post" action="fotoboek.php?photo=<?=$iter->get_id()?>&amp;module=likes">
+			<input type="hidden" name="action" value="toggle">
+			<button type="submit" class="like-button like-count" title="<?=markup_format_attribute($liked ? __('Haal markering als favoriet weg') : __('Markeer als favoriet')) ?>"><?=$likes?></button>
+		</form>
+		<?php endif ?>
+		<?php if (count($prev) > 0): ?>
+		<a href="fotoboek.php?photo=<?= $prev[0]->get('id') ?>#a" class="prev-button" title="<?= markup_format_attribute(__('Ga naar vorige foto')) ?>"><?=__('Vorige')?></a>
+		<?php endif ?>
+		<?php if (count($next) > 0): ?>
+		<a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a" class="next-button" title="<?= markup_format_attribute(__('Ga naar volgende foto')) ?>"><?=__('Volgende')?></a>
+		<?php endif ?>
+	</nav>
+	<a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
+		<img id="photo" src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>">
+	</a>
+</div>
 </div>
 <script type = "text/javascript">
 	$(document).ready(function(){
@@ -37,4 +52,20 @@
 		else if (event.keyCode == 38)
 			window.location.href = $(".fotoboek_path_current > a").attr("href");
 	}
+
+	<?php if (logged_in()): ?>
+	$('.like-form').submit(function(e) {
+		e.preventDefault();
+		$form = $(this);
+		var labels = [
+			<?=json_encode(__('Haal markering als favoriet weg'))?>,
+			<?=json_encode(__('Markeer als favoriet'))?>
+		];
+		$.post($form.attr('action'), $form.serializeArray(), function(response) {
+			$form.closest('.photo').toggleClass('liked', response.liked);
+			$form.find('.like-button').attr('title', labels[response.liked ? 0 : 1]);
+			$form.find('.like-count').text(response.likes);
+		});
+	});
+	<?php endif ?>
 </script>

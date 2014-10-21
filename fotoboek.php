@@ -69,6 +69,32 @@
 		}
 	}
 
+	class ControllerFotoboekLikes extends Controller
+	{
+		public function __construct(DataIter $photo)
+		{
+			$this->photo = $photo;
+
+			$this->model = get_model('DataModelFotoboekLikes');
+		}
+
+		public function run()
+		{
+			if (logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
+				$this->model->toggle($this->photo, logged_in('id'));
+
+			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+				header('Content-Type: application/json');
+				echo json_encode(array(
+					'liked' => logged_in() && $this->model->is_liked($this->photo, logged_in('id')),
+					'likes' => count($this->model->get_for_photo($this->photo))
+				));
+			}
+			else
+				$this->redirect('fotoboek.php?photo=' . $this->photo->get_id());
+		}
+	}
+
 	class ControllerFotoboek extends Controller {
 		var $model = null;
 
@@ -495,6 +521,12 @@
 			$reacties = $reactie_controller->run_embedded();
 			$this->get_content('foto', $photo, compact('reacties'));
 		}
+
+		protected function _run_likes(DataIter $photo)
+		{
+			$likes_controller = new ControllerFotoboekLikes($photo);
+			$likes_controller->run();
+		}
 		
 		function run_impl() {
 			if (isset($_GET['book_thumb'])) {
@@ -554,6 +586,8 @@
 				}
 			} elseif (isset($_POST['submfotobeschrijving']))
 				$this->_process_photo_description($photo);
+			elseif (isset($_GET['module']) && $_GET['module'] == 'likes')
+				$this->_run_likes($photo);
 			else
 				$this->_view_photo($photo);
 		}
