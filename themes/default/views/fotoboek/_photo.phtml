@@ -46,9 +46,9 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 	function keyPress(event)
 	{
 		if(event.keyCode == 37 && $(".prev-button").attr("href") != undefined)
-			$(".prev-button").click();
+			window.location.href = $(".prev-button").attr('href');
 		else if (event.keyCode == 39 && $(".next-button").attr("href") != undefined)
-			$(".next-button").click();
+			window.location.href = $(".next-button").attr('href');
 		else if (event.keyCode == 38)
 			window.location.href = $(".fotoboek_path_current > a").attr("href");
 	}
