@@ -4,10 +4,9 @@ $model = get_model('DataModelFotoboek');
 
 $boek = $model->get_random_book();
 
-$fotos = $model->get_photos($boek);
+$fotos = $model->get_photos($boek,30,true);
 
 // Willekeurige volgorde!
-shuffle($fotos);
 ?>
 <div class="collage">
 	<h1><?=$boek->get('titel')?></h1>
