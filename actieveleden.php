@@ -100,7 +100,6 @@
 				exit();
 			}
 
-			$commissie->set('vacancies', empty($_POST['vacancies']) ? 0 : 1);
 			$commissie_model = get_model('DataModelCommissie');
 			$commissie_model->update($commissie);
 

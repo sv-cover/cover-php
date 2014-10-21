@@ -34,12 +34,6 @@ $leden = $commissie_model->get_leden($iter->get('id'));
 				</tr>
 			<?php endif ?>
 			<tr>
-				<td class="text_center"><?= input_checkbox('vacancies', $iter->data, '1') ?></td>
-				<td colspan="4">
-					<?= label(__('Deze commissie zoekt nieuwe leden'), 'vacancies') ?>
-				</td>
-			</tr>
-			<tr>
 				<td colspan="5" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
 			</tr>
 		</table>
