@@ -49,8 +49,55 @@ class DataModelFotoboekLikes extends DataModel
 		return $this->find(sprintf('foto_id = %d', $photo->get('id')));
 	}
 
-	public function get_for_lid(DataIter $member)
+	public function get_for_lid(DataIter $member, array $photos = null)
 	{
-		return $this->find(sprintf('lid_id = %d', $member->get('id')));
+		if ($photos === null)
+			$query = sprintf('lid_id = %d', $member->get_id());
+		elseif (count($photos) === 0)
+			return array();
+		else
+			$query = sprintf('lid_id = %d AND foto_id IN (%s)',
+				$member->get_id(),
+				implode(',', array_map(function($photo) {
+					return $photo->get_id();
+				}, $photos)));
+		
+		$iters = $this->find($query);
+
+		// Add foto_id as index to the array
+		return array_combine(
+			array_map(function($iter) { return $iter->get('foto_id'); }, $iters),
+			$iters);
+	}
+
+	public function count_for_photos(array $photos)
+	{
+		if (count($photos) === 0)
+			return array();
+
+		$ids = array_map(function($photo) {
+			return $photo->get_id();
+		}, $photos);
+
+		$stmt = $this->db->query(sprintf('
+			SELECT
+				foto_id,
+				COUNT(lid_id) as likes
+			FROM
+				%s
+			WHERE
+				foto_id IN (%s)
+			GROUP BY
+				foto_id',
+			$this->table, implode(',', $ids)));
+
+		return $this->_rows_to_table($stmt, 'foto_id', 'likes');
+	}
+
+	protected function _rows_to_table($rows, $key_field, $value_field)
+	{
+		return array_combine(
+			array_map(function($row) { return $row[$key_field]; }, $rows),
+			array_map(function($row) { return $row[$value_field]; }, $rows));
 	}
 }

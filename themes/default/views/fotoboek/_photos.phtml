@@ -1,6 +1,12 @@
-<?
+<?php
 $photos_per_row = 3;
 $photos = $model->get_photos($iter);
+
+$like_model = get_model('DataModelFotoboekLikes');
+$likes = $like_model->count_for_photos($photos);
+$my_likes = logged_in()
+	? $like_model->get_for_lid(logged_in_member(), $photos)
+	: array();
 
 $admin = member_in_commissie(COMMISSIE_FOTOCIE);
 
@@ -22,7 +28,12 @@ for ($i = 0; $i < count($photos); $i += $photos_per_row) {
 			$titles[] = '';
 		} else {
 			$photo = $photos[$n];
-			$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '#a"><img src="' . htmlspecialchars($photo->get('thumburl'), ENT_QUOTES) . '"></a>';
+
+			$classes = array();
+			if (isset($my_likes[$photo->get_id()]))
+				$classes[] = 'liked';
+
+			$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '#a" class="' . implode(' ', $classes) . '"><img src="' . htmlspecialchars($photo->get('thumburl'), ENT_QUOTES) . '"></a>';
 
 			$title = htmlspecialchars($photo->get('beschrijving'));
 			$num = $photo->get('num_reacties');

@@ -8,10 +8,6 @@ table.photobookPhotos
 	width: 100%;
 	border-collapse: collapse;
 }
-table.photobookPhotos tr:nth-child(odd) td
-{
-	background-color: #ebebeb;
-}
 table.photobookPhotos td
 {
 	width: 33%;
@@ -23,7 +19,6 @@ table.photobookPhotos td
 table.photobookPhotos td img
 {
   border: 1px solid #ddd;
-  box-shadow: 1px 1px 3px #555;
   max-width: 100%;
 }
 
@@ -162,3 +157,25 @@ div.relative {
 	color: white;
 	background-image: url(../images/heart-filled.svg);
 }
+
+
+.photobookPhotos .foto a {
+	position: relative;
+}
+
+.photobookPhotos .foto a.liked:after {
+	content: '';
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	width: 20px;
+	height: 20px;
+	background: transparent url(../images/heart-filled.svg) 0 0 / 20px no-repeat;
+}
+
+.button.upload-photos-button,
+.button.mark-read-button {
+	margin-top: -2px;
+	float: right;
+}
+

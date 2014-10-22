@@ -146,6 +146,23 @@
 		}
 	}
 
+	function logged_in_member()
+	{
+		static $member = null;
+
+		if ($member !== null)
+			return $member;
+
+		$id = session_get_member_id();
+
+		if ($id === null)
+			return null;
+
+		$model = get_model('DataModelMember');
+
+		return $member = $model->get_iter($id);
+	}
+
 	function logged_in_as_active_member()
 	{
 		$logged_in = logged_in();

@@ -544,7 +544,7 @@
 				return;
 			}
 			
-			if (isset($_GET['book']) && $_GET['book']) {
+			if (isset($_GET['book']) && ctype_digit($_GET['book'])) {
 				$book = $this->model->get_book($_GET['book'], logged_in());
 				
 				if (!$book) {
