@@ -173,6 +173,12 @@ div.relative {
 	background: transparent url(../images/heart-filled.svg) 0 0 / 20px no-repeat;
 }
 
+.photo-page-header:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
 .button.upload-photos-button,
 .button.mark-read-button {
 	margin-top: -2px;
