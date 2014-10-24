@@ -1459,6 +1459,22 @@ form textarea {
 	margin-left: 4px;
 }
 
+.event-header .event-attendees li:nth-child(n+40) {
+	display: none;
+}
+
+@media (max-width: 1000px) {
+	.event-header .event-attendees li:nth-child(n+30) {
+		display: none;
+	}
+}
+
+@media (max-width: 920px) {
+	.event-header .event-attendees li:nth-child(n+20) {
+		display: none;
+	}
+}
+
 .event-header .event-attendees li img {
 	width: 32px;
 	height: 32px;
