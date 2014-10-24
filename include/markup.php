@@ -335,6 +335,17 @@
 
 		return $markup;
 	}
+
+	/**
+	 * @group Markup
+	 * Remove bb-code from a text
+	 *
+	 * @markup text with bb-code
+	 * @result text stripped from bb-code
+	 */
+	function markup_strip($markup) {
+		return preg_replace('/\[[^\[\]\s]*\]/', '', $markup);
+	}
 	
 	/** @group Markup
 	  * Clear markup from redundant br tags

@@ -5,6 +5,7 @@
 	require_once('include/login.php');
 	require_once('include/form.php');
 	require_once 'include/webcal.php';
+	require_once 'include/markup.php';
 
 	class ControllerAgenda extends Controller {
 		function ControllerAgenda() {
@@ -384,7 +385,7 @@
 				$event->summary = $punt->get('extern')
 					? $punt->get('kop')
 					: sprintf('%s: %s', $punt->get('commissie__naam'), $punt->get('kop'));
-				$event->description = $punt->get('beschrijving');
+				$event->description = markup_strip($punt->get('beschrijving'));
 				$event->location = $punt->get('locatie');
 				$event->url = sprintf('https://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
 				$cal->add_event($event);
