@@ -588,4 +588,16 @@
 
 		return null;
 	}
-?>
+
+	function image_aspect($width, $height = null)
+	{
+		if (is_array($width) && $height === null)
+			return image_aspect($width[0], $width[1]);
+
+		if ($width == $height)
+			return 'square';
+		elseif ($width > $height)
+			return 'landscape';
+		else
+			return 'portrait';
+	}

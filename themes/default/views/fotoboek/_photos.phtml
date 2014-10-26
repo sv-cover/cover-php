@@ -1,5 +1,4 @@
 <?php
-$photos_per_row = 3;
 $photos = $model->get_photos($iter);
 
 $like_model = get_model('DataModelFotoboekLikes');
@@ -10,61 +9,51 @@ $my_likes = logged_in()
 
 $admin = member_in_commissie(COMMISSIE_FOTOCIE);
 
+$id = function(DataIter $photo) {
+	return sprintf('photo%d', $photo->get_id());
+};
+
+$classes = function(DataIter $photo) use ($my_likes) {
+	$classes = array();
+
+	if (isset($my_likes[$photo->get_id()]))
+		$classes[] = 'liked';
+
+	return $classes;
+};
+
+
 if (!$photos || count($photos) == 0)
 	return;
-if ($admin) { ?>
-	<form action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>" method="post" onSubmit="return confirm('<? str_replace("'", "\\'", __('Weet je zeker dat je de geselecteerde foto\'s wilt verwijderen?')) ?>');"><?= input_hidden('submfotoboekdelfotos', 'yes'); ?>
-<? } ?>
-	<table class="photobookPhotos">
-		<tbody>
-<?
-for ($i = 0; $i < count($photos); $i += $photos_per_row) {
-	$images = array();
-	$titles = array();
-	echo '<tr>';
-	for ($n = $i; $n < $i + $photos_per_row; $n++) {
-		if ($n >= count($photos)) {
-			$images[] = '';
-			$titles[] = '';
-		} else {
-			$photo = $photos[$n];
+?>
 
-			$classes = array();
-			if (isset($my_likes[$photo->get_id()]))
-				$classes[] = 'liked';
+<?php if ($admin): ?>
+	<form action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>" method="post" onSubmit="return confirm('<?= str_replace('\'', '\\\'', __('Weet je zeker dat je de geselecteerde foto\'s wilt verwijderen?')) ?>');">
+		<?= input_hidden('submfotoboekdelfotos', 'yes'); ?>
+<?php endif ?>
 
-			$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '#a" class="' . implode(' ', $classes) . '"><img src="' . htmlspecialchars($photo->get('thumburl'), ENT_QUOTES) . '"></a>';
+<ul class="photos">
+	<!-- add the 'grid-gallery' class for awesomeness -->
+	<?php foreach ($photos as $photo): ?>
+	<li id="photo_<?=$photo->get_id()?>" class="thumbnail <?=isset($my_likes[$photo->get_id()]) ? 'liked' : ''?>">
+		<?php if ($admin): ?>
+		<input type="checkbox" name="photo[]" value="<?=$photo->get_id()?>" class="selection-checkbox photo-edit-control">
+		<?php endif ?>
+		<a href="fotoboek.php?photo=<?=$photo->get_id()?>#a">
+			<img src="<?=markup_format_attribute($photo->get('thumburl'))?>" <?=($size = $photo->get_thumb_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
+			<?php if (strlen($photo->get('beschrijving')) > 0): ?>
+			<span class="description"><?=markup_format_text($photo->get('beschrijving'))?></span>
+			<?php endif ?>
+			<?php if ($photo->get('num_reacties') > 0): ?>
+			<span class="comments"><?=markup_format_text(sprintf(_ngettext('%d reactie', '%d reacties', $photo->get('num_reacties')), $photo->get('num_reacties')))?></span>
+			<?php endif ?>
+		</a>
+	</li>
+	<?php endforeach ?>
+</ul>
 
-			$title = htmlspecialchars($photo->get('beschrijving'));
-			$num = $photo->get('num_reacties');
-		
-			if ($photo->get('reactie'))
-				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . sprintf(_ngettext('%d reactie', '%d reacties', $num), $num) . '</span>)';
-
-			if ($admin)
-				$title = input_checkbox('del_' . $photo->get('id'), null) . ' ' . $title;
-
-			$titles[] = $title;
-		}
-	}
-	//echo the images in this row
-	for ($idx = 0; $idx != $photos_per_row; ++$idx)
-	{
-		echo '
-			<td class = "foto">
-				'. $images[$idx] .'
-				<p class = "fotoTitle">
-					'. $titles[$idx] .'
-				</p>
-			</td>';
-	}
-	echo '</tr>';	
-	?>
-<? } ?>
-		</tbody>
-	</table>
-
-
-<? if ($admin) { ?>
+<?php if ($admin): ?>
 	<div class="text_right"><?= input_submit('subm', __('Geselecteerde foto\'s verwijderen')) ?></div></form>
-<? } ?>
+<?php endif ?>
+
+<script src="<?=get_theme_data('data/gridgallery.js')?>"></script>
