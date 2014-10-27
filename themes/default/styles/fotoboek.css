@@ -87,7 +87,7 @@ div.fotoboek_path {
 	right: 0;
 }
 
-.photo-controls .like-button {
+.like-button {
 	display: inline-block;
 	width: 20px;
 	height: 20px;
@@ -97,11 +97,12 @@ div.fotoboek_path {
 	line-height: 20px;
 	text-align: center;
 	font-size: 9px;
+	font-weight: normal;
 	padding: 0;
 	background: transparent url(../images/heart.svg) 0 0 / 20px no-repeat;
 }
 
-.liked .photo-controls .like-button {
+.liked .like-button {
 	color: white;
 	background-image: url(../images/heart-filled.svg);
 }
@@ -118,6 +119,12 @@ div.fotoboek_path {
 	float: right;
 }
 
+.photos:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
 .photos .thumbnail {
 	position: relative;
 	float: left;
@@ -128,16 +135,6 @@ div.fotoboek_path {
 	padding: 0;
 	overflow: hidden;
 	text-align: center;
-}
-
-.photos .thumbnail.liked a:after {
-	content: '';
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	width: 20px;
-	height: 20px;
-	background: transparent url(../images/heart-filled.svg) 0 0 / 20px no-repeat;
 }
 
 .photos .thumbnail a {
@@ -172,18 +169,24 @@ div.fotoboek_path {
 	list-style: none;
 }
 
-.grid-gallery:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-
 .photos .grid-image-container {
 	float: left;
 	margin: 3px;
 	overflow: hidden;
 	position: relative;
 	text-align: left;
+}
+
+.photos .grid-image-container .selection-checkbox:checked + a:after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 1;
+	border: 4px solid #c60c30;
 }
 
 .photos .grid-image-container a {
@@ -198,6 +201,25 @@ div.fotoboek_path {
 	z-index: -1;
 }
 
+.photos .grid-image-container a:hover:after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.3);
+	z-index: 1;
+}
+
+.photos .thumbnail .like-button {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	z-index: 3;
+}
+
 .photos .grid-image-container .description,
 .photos .grid-image-container .comments {
 	position: absolute;
@@ -206,22 +228,24 @@ div.fotoboek_path {
 	right: 0;
 	padding: 5px;
 	color: white;
-	color: white;
 	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+	z-index: 3;
     /*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
 }
 
-.photos .grid-image-container .description {
-	display: none;
+.photos .grid-image-container .comments {
+	font-weight: normal;
+	opacity: 0.8;
 }
 
-.photos .grid-image-container .comments {
-	text-align: right;
-}
+.photos .grid-image-container .comments + .description {
+	bottom: 15px;
+} 
 
 .photos .grid-image-container .selection-checkbox {
-	top: 10px;
-	left: 10px;
+	top: 0;
+	left: 0;
+	margin: 5px;
 	bottom: auto;
 	right: auto;
 }

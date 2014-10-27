@@ -22,7 +22,6 @@ $classes = function(DataIter $photo) use ($my_likes) {
 	return $classes;
 };
 
-
 if (!$photos || count($photos) == 0)
 	return;
 ?>
@@ -32,7 +31,7 @@ if (!$photos || count($photos) == 0)
 		<?= input_hidden('submfotoboekdelfotos', 'yes'); ?>
 <?php endif ?>
 
-<ul class="photos">
+<ul class="photos grid-gallery">
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	<?php foreach ($photos as $photo): ?>
 	<li id="photo_<?=$photo->get_id()?>" class="thumbnail <?=isset($my_likes[$photo->get_id()]) ? 'liked' : ''?>">
@@ -40,12 +39,15 @@ if (!$photos || count($photos) == 0)
 		<input type="checkbox" name="photo[]" value="<?=$photo->get_id()?>" class="selection-checkbox photo-edit-control">
 		<?php endif ?>
 		<a href="fotoboek.php?photo=<?=$photo->get_id()?>#a">
-			<img src="<?=markup_format_attribute($photo->get('thumburl'))?>" <?=($size = $photo->get_thumb_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
-			<?php if (strlen($photo->get('beschrijving')) > 0): ?>
-			<span class="description"><?=markup_format_text($photo->get('beschrijving'))?></span>
+			<img src="<?=markup_format_attribute($photo->get('url'))?>" <?=($size = $photo->get_thumb_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
+			<?php if (isset($likes[$photo->get_id()])): ?>
+				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><?=$likes[$photo->get_id()]?></span>
 			<?php endif ?>
 			<?php if ($photo->get('num_reacties') > 0): ?>
 			<span class="comments"><?=markup_format_text(sprintf(_ngettext('%d reactie', '%d reacties', $photo->get('num_reacties')), $photo->get('num_reacties')))?></span>
+			<?php endif ?>
+			<?php if (strlen($photo->get('beschrijving')) > 0): ?>
+			<span class="description"><?=markup_format_text($photo->get('beschrijving'))?></span>
 			<?php endif ?>
 		</a>
 	</li>
