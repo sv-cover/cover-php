@@ -1,6 +1,6 @@
 /* Author: Florian Maul */
 
-var GPlusGallery = (function($) {
+var FlowGallery = (function($) {
 
 	/* ------------ PRIVATE functions ------------ */
 
@@ -106,7 +106,7 @@ var GPlusGallery = (function($) {
 		var overflow = item.el;
 		var img = overflow.find("img:first");
 
-		overflow.addClass('grid-image-container');
+		overflow.addClass('flow-image-container');
 		overflow.css("width", "" + $nz(item.vwidth, 150) + "px");
 		overflow.css("height", "" + $nz(item.theight, 150) + "px");
 
@@ -144,7 +144,7 @@ var GPlusGallery = (function($) {
 })(jQuery);
 
 $(document).ready(function() {
-	$('.grid-gallery').each(function() {
+	$('.flow-gallery').each(function() {
 		var $area = $(this);
 
 		var items = $(this).find('li').map(function() {
@@ -164,10 +164,10 @@ $(document).ready(function() {
 			};
 		}).get();
 
-		GPlusGallery.showImages($area, items);
+		FlowGallery.showImages($area, items);
 					
 		$(window).resize(function() {
-			GPlusGallery.showImages($area, items);
+			FlowGallery.showImages($area, items);
 		});
 	});
 });

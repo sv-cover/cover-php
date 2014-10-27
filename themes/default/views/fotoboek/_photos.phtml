@@ -31,7 +31,7 @@ if (!$photos || count($photos) == 0)
 		<?= input_hidden('submfotoboekdelfotos', 'yes'); ?>
 <?php endif ?>
 
-<ul class="photos grid-gallery">
+<ul class="photos flow-gallery">
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	<?php foreach ($photos as $photo): ?>
 	<li id="photo_<?=$photo->get_id()?>" class="thumbnail <?=isset($my_likes[$photo->get_id()]) ? 'liked' : ''?>">
@@ -58,4 +58,4 @@ if (!$photos || count($photos) == 0)
 	<div class="text_right"><?= input_submit('subm', __('Geselecteerde foto\'s verwijderen')) ?></div></form>
 <?php endif ?>
 
-<script src="<?=get_theme_data('data/gridgallery.js')?>"></script>
+<script src="<?=get_theme_data('data/flowgallery.js')?>"></script>

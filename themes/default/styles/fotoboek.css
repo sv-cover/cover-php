@@ -163,13 +163,13 @@ div.fotoboek_path {
 	display: block;
 }
 
-.grid-gallery {
+.flow-gallery {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-.photos .grid-image-container {
+.photos .flow-image-container {
 	float: left;
 	margin: 3px;
 	overflow: hidden;
@@ -177,7 +177,7 @@ div.fotoboek_path {
 	text-align: left;
 }
 
-.photos .grid-image-container .selection-checkbox:checked + a:after {
+.photos .flow-image-container .selection-checkbox:checked + a:after {
 	content: '';
 	display: block;
 	position: absolute;
@@ -189,19 +189,19 @@ div.fotoboek_path {
 	border: 4px solid #c60c30;
 }
 
-.photos .grid-image-container a {
+.photos .flow-image-container a {
 	position: static;
 	display: inline;
 }
 
-.photos .grid-image-container img {
+.photos .flow-image-container img {
 	width: auto;
 	height: 100%;
 	max-width: none;
 	z-index: -1;
 }
 
-.photos .grid-image-container a:hover:after {
+.photos .flow-image-container a:hover:after {
 	content: '';
 	display: block;
 	position: absolute;
@@ -220,8 +220,8 @@ div.fotoboek_path {
 	z-index: 3;
 }
 
-.photos .grid-image-container .description,
-.photos .grid-image-container .comments {
+.photos .flow-image-container .description,
+.photos .flow-image-container .comments {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -233,16 +233,16 @@ div.fotoboek_path {
     /*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
 }
 
-.photos .grid-image-container .comments {
+.photos .flow-image-container .comments {
 	font-weight: normal;
 	opacity: 0.8;
 }
 
-.photos .grid-image-container .comments + .description {
+.photos .flow-image-container .comments + .description {
 	bottom: 15px;
 } 
 
-.photos .grid-image-container .selection-checkbox {
+.photos .flow-image-container .selection-checkbox {
 	top: 0;
 	left: 0;
 	margin: 5px;
