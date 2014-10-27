@@ -97,7 +97,7 @@ class DataModelFotoboekLikes extends DataModel
 	protected function _rows_to_table($rows, $key_field, $value_field)
 	{
 		return array_combine(
-			array_map(function($row) { return $row[$key_field]; }, $rows),
-			array_map(function($row) { return $row[$value_field]; }, $rows));
+			array_map(function($row) use ($key_field) { return $row[$key_field]; }, $rows),
+			array_map(function($row) use ($value_field) { return $row[$value_field]; }, $rows));
 	}
 }
