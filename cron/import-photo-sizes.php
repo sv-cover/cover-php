@@ -13,6 +13,6 @@ for ($i = 0; $i < count($photos); ++$i)
 	printf("% 8d / % 8d (%d)\n",
 		$i, count($photos), $photos[$i]->get_id());
 	
-	$photo->get_size();
-	$photo->get_thumb_size();
+	$photos[$i]->get_size();
+	$photos[$i]->get_thumb_size();
 }
