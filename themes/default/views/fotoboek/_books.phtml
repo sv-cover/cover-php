@@ -48,8 +48,8 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			$images[] = '';
 			$titles[] = '';
 		} else {
-			$image = $this->get_book_thumbnail($model, $children[$n]);
-			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a>';
+			$image = get_theme_data('images/book.png');
+			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
 		
 			if ($admin)
 				$contents = '<div class="admin"><a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a> <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a></div>' . $contents;

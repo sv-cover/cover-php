@@ -121,26 +121,6 @@
 		}
 		
 		/**
-		  * Get the photo book thumbnail
-		  * @book a #DataIter representing a book
-		  *
-		  * @result a #DataIter
-		  */
-		function get_book_thumbnail(DataIterPhotobook $book = null) {
-			$row = $this->db->query_first(	"
-					SELECT
-						*,
-						(DATE_PART('epoch', CURRENT_TIMESTAMP) - DATE_PART('epoch', generated)) AS since
-					FROM
-						foto_boeken_thumb
-					WHERE
-						boek = " . ($book ? $book->get('id') : 0) . " AND
-						theme = '" . $this->escape_string(get_theme()) . "'");
-
-			return $this->_row_to_iter($row, 'DataIter');
-		}
-		
-		/**
 		  * Get a certain number of photos previous to a photo
 		  * @photo a #DataIter representing the photo
 		  * @num optional; the number of photos to get previous to 
@@ -534,18 +514,8 @@
 		}
 
 		/**
-		  * Delete a book thumbnail
-		  * @iter a #DataIter representing a book thumbnail
-		  *
-		  * @result whether or not the delete was successful
-		  */
-		function delete_book_thumb(DataIterPhotobook $book) {
-			return $this->db->delete('foto_boeken_thumb', 'boek = ' . $book->get('id'));
-		}
-
-		/**
 		  * Delete a book. This will automatically remove all the
-		  * photos in the book as well as the book thumbnail
+		  * photos in the book.
 		  * @iter a #DataIter representing a book
 		  *
 		  * @result whether or not the delete was successful
@@ -553,7 +523,6 @@
 		function delete_book(DataIterPhotobook $iter) {
 			$result = $this->_delete('foto_boeken', $iter);
 			
-			$this->delete_book_thumb($iter);
 			$photos = $this->get_photos($iter);
 			
 			foreach ($photos as $photo)
@@ -570,29 +539,6 @@
 		  */		
 		function update_book(DataIterPhotobook $iter) {
 			return $this->_update('foto_boeken', $iter);
-		}
-
-		/**
-		  * Insert a book thumbnail
-		  * @iter a #DataIter representing a book thumbnail
-		  *
-		  * @result whether or not the insert was successful
-		  */
-		function insert_book_thumbnail(DataIter $iter) {
-			return $this->_insert('foto_boeken_thumb', $iter);
-		}
-
-		/**
-		  * Update a book thumbnail
-		  * @iter a #DataIter representing a book thumbnail
-		  *
-		  * @result whether or not the update was successful
-		  */	
-		function update_book_thumbnail(DataIter $iter) {
-			return $this->db->update('foto_boeken_thumb', $iter->get_changed_values(), 
-					'boek = ' . $iter->get('boek') . ' AND
-					theme = \'' . $iter->get('theme') . '\'', 
-					$iter->get_literals());
 		}
 
 		public function mark_read($lid_id, DataIterPhotobook $book)

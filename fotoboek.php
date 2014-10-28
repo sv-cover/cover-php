@@ -263,7 +263,6 @@
 
 			/* Delete composite thumbnail for the book so it will
 			   get rerendered */
-			$this->model->delete_book_thumb($book);
 			$this->redirect('fotoboek.php?book=' . $book->get('id'));
 		}
 		
@@ -300,130 +299,9 @@
 				if ($photo = $this->model->get_iter($id))
 					$this->model->delete($photo);
 			
-			$this->model->delete_book_thumb($book);
-
 			$this->redirect('fotoboek.php?book=' . $book->get_id());
 		}
 		
-		function _build_book_thumb($book) {
-			static $back = null;
-			static $front = null;
-			static $width = 40;
-			static $height = 30;
-			static $left = 10;
-			static $top = 34;
-			static $space = 4;
-
-			if ($back == null) /* Create background image */
-				$back = imagecreatefrompng(get_theme_data('images/book_back.png'));
-
-			if ($front == null) /* Create foreground image */
-				$front = imagecreatefrompng(get_theme_data('images/book_front.png'));
-	
-			$composite = imagecreatetruecolor(100, 76);
-			
-			imagesavealpha($back, true);
-			imagesavealpha($front, true);
-
-			imagepalettecopy($composite, $back);
-			imagealphablending($composite, false);
-			imagesavealpha($composite, true);
-			imagecopy($composite, $back, 0, 0, 0, 0, imagesx($back), imagesy($back));
-
-			if ($book) {
-				/* Get 2 photos */
-				$photos = $this->model->get_photos($book, 2, true);
-			} else {
-				$photos = null;
-			}
-			
-			/* Create a layer of photos randomly choosen from the book */
-			if ($photos) {
-				$current = $left;
-
-				foreach ($photos as $photo) {
-					$thumb = imagecreatefromjpeg($photo->get('thumburl'));
-					
-					if (!$thumb)
-						continue;
-
-					imagecopyresampled($composite, $thumb, $current, $top, 0, 0, 40, 30, imagesx($thumb), imagesy($thumb));
-	 				$current += $width + $space;
-	 				imagedestroy($thumb);
-				}
-			}
-			
-			/* Copy/merge the front in */
-			imagealphablending($composite, true);
-			imagesavealpha($composite, true);
-			imagecopy($composite, $front, 1, 19, 0, 0, imagesx($front), imagesy($front));
-
-			/* Get the png data */
-			ob_start();
-			imagepng($composite);
-			$image = ob_get_contents();
-			ob_end_clean();
-			
-			return $image;
-		}
-		
-		function _refresh_book_thumb($book, $iter) {
-			$png = $this->_build_book_thumb($book);
-			
-			$iter->set_literal('image', "'" . pg_escape_bytea($png) . "'");
-			$iter->set_literal('generated', "('now'::text)::timestamp(6) without time zone");
-
-			$this->model->update_book_thumbnail($iter);
-			$iter = $this->model->get_book_thumbnail($book);
-			
-			return $iter;
-		}
-		
-		function _create_book_thumb($book) {
-			$png = $this->_build_book_thumb($book);
-			$iter = new DataIter($this->model, -1, array(
-					'theme' => get_theme(),
-					'boek' => $book ? $book->get('id') : 0));
-			
-			$iter->set_literal('image', "'" . pg_escape_bytea($png) . "'");
-			
-			$this->model->insert_book_thumbnail($iter);
-			$iter = $this->model->get_book_thumbnail($book);
-
-			return $iter;
-		}
-		
-		function _process_book_thumb($id) {
-			/* Try to fetch the thumbnail from the db */
-			ob_end_clean();
-			$book = $this->model->get_book($id, logged_in());
-			
-			if ($book)
-				$thumb = $this->model->get_book_thumbnail($book);
-			else
-				$thumb = null;
-			
-			if (!$thumb) {
-				/* Test if the book has any photos */
-				if ($this->model->get_num_photos($book)) {
-					$thumb = $this->_create_book_thumb($book);
-				} else {
-					/* Try to get the default thumbnail */
-					$thumb = $this->model->get_book_thumbnail(null);
-					
-					if (!$thumb)
-						$thumb = $this->_create_book_thumb(null);
-				}
-			} elseif (intval($thumb->get('since')) > 3600 * 24 * 7) {
-				/* Refresh the thumb */
-				$thumb = $this->_refresh_book_thumb($book, $thumb);
-			}
-			
-			header("Content-Type: image/png");
-			echo pg_unescape_bytea($thumb->get('image'));
-			exit();
-		}
-
 		protected function _process_mark_read(DataIterPhotobook $book)
 		{
 			if (logged_in())
@@ -456,21 +334,6 @@
 		}
 		
 		function run_impl() {
-			if (isset($_GET['book_thumb'])) {
-				$this->_process_book_thumb($_GET['book_thumb']);
-				return;
-			}
-
-			if (isset($_GET['next_slide'])) {
-				$this->_process_next_slide($_GET['next_slide']);
-				return;
-			}
-
-			if (isset($_GET['fetch_urls'])) {
-				$this->_process_fetch_urls($_GET['fetch_urls']);
-				return;
-			}
-			
 			if (isset($_GET['book'])
 				&& ctype_digit($_GET['book'])
 				&& intval($_GET['book']) > 0) {
