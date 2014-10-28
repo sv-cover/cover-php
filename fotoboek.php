@@ -98,8 +98,12 @@
 	class ControllerFotoboek extends Controller {
 		var $model = null;
 
+		protected $policy;
+
 		function ControllerFotoboek() {
 			$this->model = get_model('DataModelFotoboek');
+
+			$this->policy = get_policy($this->model);
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
@@ -319,7 +323,7 @@
 
 		protected function _view_photo(DataIterPhoto $photo)
 		{
-			$book = $this->model->get_book($photo->get('boek'), logged_in());
+			$book = $this->model->get_book($photo->get('boek'));
 
 			$reactie_controller = new ControllerFotoboekReacties($photo);
 			$reacties = $reactie_controller->run_embedded();
@@ -337,16 +341,16 @@
 			if (isset($_GET['book'])
 				&& ctype_digit($_GET['book'])
 				&& intval($_GET['book']) > 0) {
-				$book = $this->model->get_book($_GET['book'], logged_in());
+				$book = $this->model->get_book($_GET['book']);
 				
-				if (!$book) {
+				if (!$book || !$this->policy->user_can_read($book)) {
 					$this->get_content('book_not_found');
 					return;
 				}
 			} else if (isset($_GET['photo']) && $_GET['photo']) {
 				$photo = $this->model->get_iter($_GET['photo']);
-				$book = $photo -> get('boek');
-				if (!$photo || (logged_in() == false && ($book <= 833 || $book == 938 || $book == 836))) {
+				$book = $photo->get_book();
+				if (!$photo || !$this->policy->user_can_read($book)) {
 					$this->get_content('photo_not_found');
 					return;
 				}

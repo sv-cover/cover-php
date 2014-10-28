@@ -1,40 +1,14 @@
-<?
+<?php
 $books_per_row = 3;
-$children = $model->get_children($iter);
+
+$policy = get_policy($model);
+
+// Filter the invisible books and reindex the array (required for the for-loops below.)
+$children = array_values(array_filter($model->get_children($iter), array($policy, 'user_can_read')));
 
 if (!$children || count($children) == 0)
 	return;
 
-?>
-
-<?
-$end = count($children);
-// Serieus...
-// Filter fotoboeken met de naam 'Chantagemap' als er niemand is ingelogd
-if(logged_in() == false) {
-	for($i = 0; $i < $end; $i++) {
-		if(strcasecmp($children[$i]->get('titel'), "Chantagemap") == 0) {
-			unset($children[$i]);
-		}
-		else if (strcasecmp($children[$i]->get('titel'), "Download grote foto's") == 0){
-			unset($children[$i]);
-		}
-		// filter ook oude jaargangen als men niet is ingelogd
-		else {
-			$matches = Array();
-			preg_match_all("#Foto's uit ([\d]{4})/[\d]{4}#", $children[$i]->get('titel'), $matches, PREG_SET_ORDER);
-			if (!empty($matches))
-				if (!($matches[0][1] === date("Y") || $matches[0][1] === date("Y",strtotime("-1 year"))))
-				{
-					unset($children[$i]);
-				}
-		}
-	}
-	// herindexeer array
-	$children = array_values($children);
-}
-
-$admin = member_in_commissie(COMMISSIE_FOTOCIE);
 ?>
 <div class = "clearfix">
 <?
@@ -51,8 +25,11 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			$image = get_theme_data('images/book.png');
 			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
 		
-			if ($admin)
-				$contents = '<div class="admin"><a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a> <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a></div>' . $contents;
+			if ($policy->user_can_update($children[$n]))
+				$contents .= ' <a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
+
+			if ($policy->user_can_delete($children[$n]))
+				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
 
 			array_push($images,$contents);
 		

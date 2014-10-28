@@ -36,6 +36,11 @@
 
 			return array($this->get('thumbwidth'), $this->get('thumbheight'));
 		}
+
+		public function get_book()
+		{
+			return $this->model->get_book($this->get('boek'));
+		}
 	}
 
 	class DataIterPhotobook extends DataIter
@@ -63,7 +68,8 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_book($id, $logged_in = false) {
+		function get_book($id)
+		{
 			$q = "
 					SELECT 
 						*, 
@@ -74,13 +80,9 @@
 						foto_boeken
 					WHERE 
 						id = " . intval($id);
-			if(!$logged_in) {
-				// Als je niet ingelogd bent dan mag je de chantagemap niet zien!
-				$q .= " AND titel NOT ILIKE 'chantagemap%' AND titel NOT ILIKE 'download grote foto''s%'";
-				// en je mag ook de foto's van voorgaande jaren niet zien! Dit doen we lekker op ID :'). 833 is het eerste album van 2012, die mag op dit moment zichtbaar zijn
-				$q .= " AND id >= 833;";
-			}
+			
 			$row = $this->db->query_first($q);
+
 			return $this->_row_to_iter($row, 'DataIterPhotobook');
 		}
 
