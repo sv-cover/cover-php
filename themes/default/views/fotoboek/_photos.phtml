@@ -28,7 +28,7 @@ if (!$photos || count($photos) == 0)
 	<?php foreach ($photos as $photo): ?>
 	<li id="photo_<?=$photo->get_id()?>" data-id="<?=$photo->get_id()?>" class="thumbnail <?=isset($my_likes[$photo->get_id()]) ? 'liked' : ''?>">
 		<a href="fotoboek.php?photo=<?=$photo->get_id()?>#a">
-			<img src="<?=markup_format_attribute($photo->get('url'))?>" <?=($size = $photo->get_thumb_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
+			<img src="<?=markup_format_attribute($photo->get('url'))?>" <?=($size = $photo->get_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
 			<?php if (isset($likes[$photo->get_id()])): ?>
 				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><?=$likes[$photo->get_id()]?></span>
 			<?php endif ?>
