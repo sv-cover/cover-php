@@ -3,19 +3,21 @@ $like_model = get_model('DataModelFotoboekLikes');
 $likes = count($like_model->get_for_photo($iter));
 $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 ?>
-<? if (member_in_commissie(COMMISSIE_FOTOCIE)) { ?>
-	<div class="foto_titel"><form method="post" action="fotoboek.php?photo=<?= $iter->get('id') ?>">
-	<?= input_hidden('submfotobeschrijving', 'yes') ?>
-	<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
-	</form></div>
-<? } elseif ($iter->get('beschrijving')) { ?>
-	<div class="foto_titel"><?= htmlspecialchars($iter->get('beschrijving')) ?></div>
-<? } ?>
+<?php if (member_in_commissie(COMMISSIE_FOTOCIE)): ?>
+	<div class="foto_titel">
+		<form method="post" action="fotoboek.php?photo=<?= $iter->get('id') ?>">
+			<?= input_hidden('submfotobeschrijving', 'yes') ?>
+			<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
+		</form>
+	</div>
+<?php elseif ($iter->get('beschrijving')): ?>
+	<div class="foto_titel"><?=markup_format_text($iter->get('beschrijving')) ?></div>
+<?php endif ?>
 
 <div id="foto" class="fotoboek_foto">
-<?
-	$prev = $model->get_previous_photo($iter, 2);
-	$next = $model->get_next_photo($iter, 2);
+<?php
+	$prev = $model->get_previous_photo($iter, 1);
+	$next = $model->get_next_photo($iter, 1);
 ?>
 <div class="photo <?=$liked ? 'liked' : ''?>">
 	<nav class="photo-controls">
@@ -33,14 +35,17 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 		<?php endif ?>
 	</nav>
 	<a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
-		<img id="photo" src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>">
+		<img id="photo" src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>" <?=($size = $iter->get_size()) ? vsprintf('width="%d" height="%d"', $size) : '' ?>>
 	</a>
 </div>
 </div>
 <script type = "text/javascript">
 	$(document).ready(function(){
-		$(document).on('keyup.nav',function(event){keyPress(event);});
-		$("textarea[name='reactie']").focus(function(){$(document).off('keyup.nav')}).blur(function(){$(document).on('keyup.nav', function(event){keyPress(event);})});
+		$(document).on('keyup.nav', function(event){
+			// Only catch unspecific input (so no form elements)
+			if (['TEXTAREA', 'INPUT'].indexOf(event.target.nodeName) === -1)
+				keyPress(event);
+		});
 	});
 	
 	function keyPress(event)

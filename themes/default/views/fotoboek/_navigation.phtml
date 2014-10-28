@@ -1,7 +1,8 @@
-<?
+<?php
 if (!$iter)
 	return;
 
+$policy = get_policy($model);
 $prev = $model->get_previous_book($iter);
 $next = $model->get_next_book($iter);
 $parent = $model->get_parent($iter);
@@ -12,7 +13,7 @@ $parent = $model->get_parent($iter);
 <tr><td>
 
 <?
-if ($prev) { ?>
+if ($prev && $policy->user_can_read($prev)) { ?>
 	<a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= image('previous.png', __('Vorige'), __('Ga naar vorig boek')) ?></a> <a href="fotoboek.php?book=<?= $prev->get('id') ?>"><?= htmlspecialchars($prev->get('titel')) ?></a>
 <? } ?>
 
@@ -20,7 +21,7 @@ if ($prev) { ?>
 <a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= image('up.png', __('Bovenliggende'), __('Ga naar bovenliggend boek')) ?></a> <a href="fotoboek.php?book=<?= ($parent ? $parent->get('id') : '') ?>"><?= ($parent ? htmlspecialchars($parent->get('titel')) : __('Fotoboeken')) ?></a>
 </td><td class="text_right">
 
-<? if ($next) { ?>
+<? if ($next && $policy->user_can_read($next)) { ?>
 	<a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= image('next.png', __('Volgende'), __('Ga naar volgend boek')) ?></a> <a href="fotoboek.php?book=<?= $next->get('id') ?>"><?= htmlspecialchars($next->get('titel')) ?></a>
 <? } ?>
 

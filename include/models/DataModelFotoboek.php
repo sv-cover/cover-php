@@ -1,10 +1,63 @@
 <?php
 	require_once('data/DataModel.php');
 
+	class DataIterPhoto extends DataIter
+	{
+		public function get_size()
+		{
+			if (!$this->get('width') || !$this->get('height'))
+			{
+				$data = @getimagesize($this->get('url'));
+
+				if (!$data)
+					return null;
+
+				$this->set('width', $data[0]);
+				$this->set('height', $data[1]);
+				$this->model->update($this);
+			}
+
+			return array($this->get('width'), $this->get('height'));
+		}
+
+		public function get_thumb_size()
+		{
+			if (!$this->get('thumbwidth') || !$this->get('thumbheight'))
+			{
+				$data = @getimagesize($this->get('thumburl'));
+
+				if (!$data)
+					return null;
+
+				$this->set('thumbwidth', $data[0]);
+				$this->set('thumbheight', $data[1]);
+				$this->model->update($this);
+			}
+
+			return array($this->get('thumbwidth'), $this->get('thumbheight'));
+		}
+
+		public function get_book()
+		{
+			return $this->model->get_book($this->get('boek'));
+		}
+	}
+
+	class DataIterPhotobook extends DataIter
+	{
+		public function get_photos($max = 0, $random = false)
+		{
+			return $this->model->get_photos($this, $max, $random);
+		}
+	}
+
 	/**
 	  * A class implementing photo data
 	  */
-	class DataModelFotoboek extends DataModel {
+	class DataModelFotoboek extends DataModel
+	{
+		public $dataiter = 'DataIterPhoto';
+
 		function DataModelFotoboek($db) {
 			parent::DataModel($db, 'fotos');
 		}
@@ -15,7 +68,8 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_book($id, $logged_in = false) {
+		function get_book($id)
+		{
 			$q = "
 					SELECT 
 						*, 
@@ -26,14 +80,10 @@
 						foto_boeken
 					WHERE 
 						id = " . intval($id);
-			if(!$logged_in) {
-				// Als je niet ingelogd bent dan mag je de chantagemap niet zien!
-				$q .= " AND titel NOT ILIKE 'chantagemap%' AND titel NOT ILIKE 'download grote foto''s%'";
-				// en je mag ook de foto's van voorgaande jaren niet zien! Dit doen we lekker op ID :'). 833 is het eerste album van 2012, die mag op dit moment zichtbaar zijn
-				$q .= " AND id >= 833;";
-			}
+			
 			$row = $this->db->query_first($q);
-			return $this->_row_to_iter($row);
+
+			return $this->_row_to_iter($row, 'DataIterPhotobook');
 		}
 
 		/**
@@ -69,27 +119,7 @@
 			// Pick a random fotoboek
 			$book = $rows[rand(0, count($rows) - 1)];
 
-			return $this->_row_to_iter($book);
-		}
-		
-		/**
-		  * Get the photo book thumbnail
-		  * @book a #DataIter representing a book
-		  *
-		  * @result a #DataIter
-		  */
-		function get_book_thumbnail($book) {
-			$row = $this->db->query_first(	"
-					SELECT
-						*,
-						(DATE_PART('epoch', CURRENT_TIMESTAMP) - DATE_PART('epoch', generated)) AS since
-					FROM
-						foto_boeken_thumb
-					WHERE
-						boek = " . ($book ? $book->get('id') : 0) . " AND
-						theme = '" . $this->escape_string(get_theme()) . "'");
-
-			return $this->_row_to_iter($row);
+			return $this->_row_to_iter($book, 'DataIterPhotobook');
 		}
 		
 		/**
@@ -103,7 +133,7 @@
 		  * @result an array of #DataIter or just a single #DataIter if
 		  * num is -1
 		  */
-		function get_previous_photo(DataIter $photo, $num = -1) {
+		function get_previous_photo(DataIterPhoto $photo, $num = -1) {
 			$rows = $this->db->query("
 					SELECT 
 						*
@@ -123,7 +153,7 @@
 					return null;
 				}
 			else
-				return $this->_rows_to_iters($rows);	
+				return $this->_rows_to_iters($rows, 'DataIterPhoto');
 		}
 		
 		/**
@@ -137,7 +167,7 @@
 		  * @result an array of #DataIter or just a single #DataIter if
 		  * num is -1
 		  */
-		function get_next_photo(DataIter $photo, $num = -1) {
+		function get_next_photo(DataIterPhoto $photo, $num = -1) {
 			$rows = $this->db->query("
 					SELECT 
 						*
@@ -157,7 +187,7 @@
 					return null;
 				}
 			else
-				return $this->_rows_to_iters($rows);		
+				return $this->_rows_to_iters($rows, 'DataIterPhoto');		
 		}
 		
 		/**
@@ -166,8 +196,8 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_previous_book(DataIter $book) {
-			if (!$book || !$book->has('date'))
+		function get_previous_book(DataIterPhotobook $book) {
+			if (!$book->has('date'))
 				return null;
 
 			$row = $this->db->query_first("
@@ -186,7 +216,7 @@
 						id
 					LIMIT 1");
 			
-			return $this->_row_to_iter($row);
+			return $this->_row_to_iter($row, 'DataIterPhotobook');
 		}
 		
 		/**
@@ -195,8 +225,8 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_next_book(DataIter $book) {
-			if (!$book || !$book->has('date'))
+		function get_next_book(DataIterPhotobook $book) {
+			if (!$book->has('date'))
 				return null;
 
 			$row = $this->db->query_first("
@@ -215,7 +245,7 @@
 						id
 					LIMIT 1");
 
-			return $this->_row_to_iter($row);
+			return $this->_row_to_iter($row, 'DataIterPhotobook');
 		}
 		
 		/**
@@ -224,13 +254,7 @@
 		  *
 		  * @result a #DataIter or null if the book has no parent
 		  */
-		function get_parent($book) {
-			if (!$book)
-				return null;
-
-			if (!is_object($book))
-				$book = $this->get_book(intval($book));
-			
+		function get_parent(DataIterPhotobook $book) {
 			if (!$book->get('parent'))
 				return null;
 			
@@ -242,7 +266,7 @@
 					WHERE 
 						id = ' . $book->get('parent'));
 			
-			return $this->_row_to_iter($row);
+			return $this->_row_to_iter($row, 'DataIterPhotobook');
 		}
 		
 		/**
@@ -251,8 +275,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_children($book) {
-			if (!$book)
+		function get_children(DataIterPhotobook $book = null) {
+			if ($book === null)
 				$parent = 0;
 			else
 				$parent = $book->get('id');
@@ -329,7 +353,7 @@
 
 			$rows = $this->db->query("$select $from $joins $where $group_by $order_by");
 
-			return $this->_rows_to_iters($rows);
+			return $this->_rows_to_iters($rows, 'DataIterPhotobook');
 		}
 		
 		/**
@@ -338,19 +362,19 @@
 		  *
 		  * @result the number of books
 		  */
-		function get_num_children($book) {
-			if (!$book)
+		function get_num_children(DataIterPhotobook $book = null) {
+			if ($book === null)
 				$parent = 0;
 			else
 				$parent = $book->get('id');
 			
-			return $this->db->query_value('
+			return $this->db->query_value(sprintf('
 					SELECT 
 						COUNT(*) 
 					FROM 
 						foto_boeken 
 					WHERE 
-						parent = ' . $parent);
+						parent = %d', $parent));
 		}
 		
 		/**
@@ -377,7 +401,7 @@
 						RANDOM()
 					LIMIT " . intval($num));
 
-			return $this->_rows_to_iters($rows);		
+			return $this->_rows_to_iters($rows, 'DataIterPhoto');		
 		}
 		
 		/**
@@ -389,16 +413,15 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_photos(DataIter $book = null, $max = 0, $random = false) {
-			if (!$book)
+		function get_photos(DataIterPhotobook $book = null, $max = 0, $random = false) {
+			if ($book === null)
 				$id = 0;
 			else
 				$id = $book->get('id');
 			
 			$rows = $this->db->query('
 					SELECT fotos.*, 
-						COUNT(fotos.id) AS num_reacties, 
-						foto_reacties.foto AS reactie' . 
+						COUNT(foto_reacties.id) AS num_reacties' . 
 						($random ? ', RANDOM() AS ord' : '') . '
 					FROM 
 						fotos
@@ -410,12 +433,11 @@
 						fotos.boek, 
 						fotos.url, 
 						fotos.thumburl, 
-						fotos.beschrijving, 
-						foto_reacties.foto
+						fotos.beschrijving
 					ORDER BY ' . ($random ? 'ord' : 'fotos.id ASC') . '
 					' . ($max != 0 ? ('LIMIT ' . $max) : ''));
 
-			return $this->_rows_to_iters($rows);
+			return $this->_rows_to_iters($rows, 'DataIterPhoto');
 		}
 		
 		/**
@@ -424,8 +446,8 @@
 		  *
 		  * @result the number of photos
 		  */
-		function get_num_photos($book) {
-			if (!$book)
+		function get_num_photos(DataIterPhotobook $book = null) {
+			if ($book === null)
 				$parent = 0;
 			else
 				$parent = $book->get('id');
@@ -460,7 +482,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_parents($book) {
+		function get_parents(DataIterPhotobook $book = null) {
 			$result = array();
 			
 			$this->_get_parents_real($book, $result);
@@ -474,7 +496,7 @@
 		  *
 		  * @result whether or not the delete was successful
 		  */
-		function delete($iter) {
+		function delete(DataIterPhoto $iter) {
 			$result = parent::delete($iter);
 			
 			/* Delete all reacties */
@@ -489,31 +511,20 @@
 		  *
 		  * @result whether or not the insert was successful
 		  */
-		function insert_book($iter) {
+		function insert_book(DataIterPhotobook $iter) {
 			return $this->_insert('foto_boeken', $iter, true);
 		}
 
 		/**
-		  * Delete a book thumbnail
-		  * @iter a #DataIter representing a book thumbnail
-		  *
-		  * @result whether or not the delete was successful
-		  */
-		function delete_book_thumb($book) {
-			return $this->db->delete('foto_boeken_thumb', 'boek = ' . $book->get('id'));
-		}
-
-		/**
 		  * Delete a book. This will automatically remove all the
-		  * photos in the book as well as the book thumbnail
+		  * photos in the book.
 		  * @iter a #DataIter representing a book
 		  *
 		  * @result whether or not the delete was successful
 		  */		
-		function delete_book($iter) {
+		function delete_book(DataIterPhotobook $iter) {
 			$result = $this->_delete('foto_boeken', $iter);
 			
-			$this->delete_book_thumb($iter);
 			$photos = $this->get_photos($iter);
 			
 			foreach ($photos as $photo)
@@ -528,34 +539,11 @@
 		  *
 		  * @result whether or not the update was successful
 		  */		
-		function update_book($iter) {
+		function update_book(DataIterPhotobook $iter) {
 			return $this->_update('foto_boeken', $iter);
 		}
 
-		/**
-		  * Insert a book thumbnail
-		  * @iter a #DataIter representing a book thumbnail
-		  *
-		  * @result whether or not the insert was successful
-		  */
-		function insert_book_thumbnail($iter) {
-			return $this->_insert('foto_boeken_thumb', $iter);
-		}
-
-		/**
-		  * Update a book thumbnail
-		  * @iter a #DataIter representing a book thumbnail
-		  *
-		  * @result whether or not the update was successful
-		  */	
-		function update_book_thumbnail($iter) {
-			return $this->db->update('foto_boeken_thumb', $iter->get_changed_values(), 
-					'boek = ' . $iter->get('boek') . ' AND
-					theme = \'' . $iter->get('theme') . '\'', 
-					$iter->get_literals());
-		}
-
-		public function mark_read($lid_id, DataIter $book)
+		public function mark_read($lid_id, DataIterPhotobook $book)
 		{
 			try {
 				$this->db->insert('foto_boeken_visit',
@@ -573,7 +561,7 @@
 			}
 		}
 
-		protected function mark_children_read($lid_id, DataIter $book)
+		protected function mark_children_read($lid_id, DataIterPhotobook $book)
 		{
 			$query = sprintf('
 				WITH RECURSIVE book_children (id, titel, parents) AS (
@@ -593,7 +581,7 @@
 			$this->db->query($query);
 		}
 
-		public function mark_read_recursively($lid_id, DataIter $book)
+		public function mark_read_recursively($lid_id, DataIterPhotobook $book)
 		{
 			$this->mark_read($lid_id, $book);
 

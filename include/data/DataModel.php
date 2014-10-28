@@ -142,9 +142,12 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function _row_to_iter($row) {
+		function _row_to_iter($row, $dataiter = null) {
+			if (!$dataiter)
+				$dataiter = $this->dataiter;
+
 			if ($row)
-				return new $this->dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
+				return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
 			else
 				return $row;
 		}
@@ -155,12 +158,12 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function _rows_to_iters($rows) {
+		function _rows_to_iters($rows, $dataiter = null) {
 			if ($rows) {
 				$iters = array();
 				
 				foreach ($rows as $data)
-					$iters[] = $this->_row_to_iter($data);
+					$iters[] = $this->_row_to_iter($data, $dataiter);
 
 				return $iters;
 			} else

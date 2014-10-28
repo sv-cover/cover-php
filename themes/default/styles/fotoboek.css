@@ -3,25 +3,6 @@ textarea[name="reactie"]
 	width: 100%;
 }
 
-table.photobookPhotos
-{
-	width: 100%;
-	border-collapse: collapse;
-}
-table.photobookPhotos td
-{
-	width: 33%;
-	padding: 0px;
-	vertical-align: middle;
-	text-align: center;
-	padding: 10px 0px;
-}
-table.photobookPhotos td img
-{
-  border: 1px solid #ddd;
-  max-width: 100%;
-}
-
 table.navigation {
 	width: 99%;
 }
@@ -39,84 +20,51 @@ div.fotoboek_path {
 	padding-bottom: 5px;
 }
 
-span.fotoboek_path_current {
-
-}
-
-span.fotoboek_highlight {
-	font-weight: bold;
-}
-
-div.fotoboek_foto {
-	text-align: center;
-	margin-top: 5px;
-}
-
-div.foto_titel {
-	text-align: center;
-	margin-top: 15px;
-	font-size: 14px;
-	font-weight: bold;
-	background-color: #E5E5E5;
-	border: 1px solid #8486a1;
-	border-radius: 4px;
-	padding: 3px;
-}
-.foto_titel .button
-{
-	margin: 0;
-}
-
-div.foto_titel input.text {
-	width: 400px;
-}
-
-table.slides {
-	width: 99%;
-}
-
-table.slides td {
-	text-align: center;
-	vertical-align: middle;
-}
-
-table.slides td.slide {
-	width: 20%;
-}
-
-.slides img.slide
-{
-	box-shadow: 0px 2px 3px #999;
-}
-
-table.slides img.current, table.slides img.slide {
-	width: 80px;
-	height: 60px;
-	border: 1px solid #73ACFF;
-}
-
-table.slides img.current {
-	border: 2px solid #73ACFF;
-	width: 100px;
-	height: 75px;
-}
-
-div.relative {
-	position: relative;
-}
-
 .photo {
 	position: relative;
+	text-align: center;
 }
 
-.photo img {
-	max-width: 100%;
+.slides {
+	width: auto;
+	background: #ccc;
+	padding: 15px 15px;
+	margin: 15px -15px;
+	border: 1px solid #aaa;
+	border-left: 0;
+	border-right: 0;
+	list-style: none;
+}
+
+.slides:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.slides .slide {
+	display: block;
+	float: left;
+	width: 20%;
+	height: 120px;
+	padding: 5px 0;
+	overflow: hidden;
+	text-align: center;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+.slides .slide img {
+	max-width: 97%;
+	width: auto;
+	height: auto;
 }
 
 .photo-controls {
 	position: relative;
 	height: 24px;
 	padding: 0 5px;
+	text-align: center;
 }
 
 .photo-controls a,
@@ -139,7 +87,7 @@ div.relative {
 	right: 0;
 }
 
-.photo-controls .like-button {
+.like-button {
 	display: inline-block;
 	width: 20px;
 	height: 20px;
@@ -149,6 +97,7 @@ div.relative {
 	line-height: 20px;
 	text-align: center;
 	font-size: 9px;
+	font-weight: normal;
 	padding: 0;
 	background: transparent url(../images/heart.svg) 0 0 / 20px no-repeat;
 }
@@ -156,21 +105,6 @@ div.relative {
 .liked .like-button {
 	color: white;
 	background-image: url(../images/heart-filled.svg);
-}
-
-
-.photobookPhotos .foto a {
-	position: relative;
-}
-
-.photobookPhotos .foto a.liked:after {
-	content: '';
-	position: absolute;
-	bottom: 10px;
-	left: 10px;
-	width: 20px;
-	height: 20px;
-	background: transparent url(../images/heart-filled.svg) 0 0 / 20px no-repeat;
 }
 
 .photo-page-header:after {
@@ -185,3 +119,137 @@ div.relative {
 	float: right;
 }
 
+.photos:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.photos .thumbnail {
+	position: relative;
+	float: left;
+	display: block;
+	width: 33%;
+	height: 200px;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	text-align: center;
+}
+
+.photos .thumbnail a {
+	position: relative;
+	display: inline-block;
+}
+
+.photos .thumbnail img {
+	height: auto;
+}
+
+.photos .thumbnail .selection-checkbox {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 65px;
+	margin: auto;
+	z-index: 5;
+}
+
+.photos .description {
+	display: block;
+}
+
+.photos .comments {
+	display: block;
+}
+
+.flow-gallery {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.photos .flow-image-container {
+	float: left;
+	margin: 3px;
+	overflow: hidden;
+	position: relative;
+	text-align: left;
+}
+
+.photos .flow-image-container .selection-checkbox:checked + a:after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 1;
+	border: 4px solid #c60c30;
+}
+
+.photos .flow-image-container a {
+	position: static;
+	display: inline;
+}
+
+.photos .flow-image-container img {
+	width: auto;
+	height: 100%;
+	max-width: none;
+	z-index: -1;
+}
+
+.photos .flow-image-container a:hover:after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.3);
+	z-index: 1;
+}
+
+.photos .thumbnail .like-button {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	z-index: 3;
+}
+
+.photos .flow-image-container .description,
+.photos .flow-image-container .comments {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 5px;
+	color: white;
+	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+	z-index: 3;
+    /*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
+}
+
+.photos .flow-image-container .comments {
+	font-weight: normal;
+	opacity: 0.8;
+}
+
+.photos .flow-image-container .comments + .description {
+	bottom: 15px;
+} 
+
+.photos .flow-image-container .selection-checkbox {
+	top: 0;
+	left: 0;
+	margin: 5px;
+	bottom: auto;
+	right: auto;
+}
+
+.photo-edit-control {
+	/*display: none;*/
+}

@@ -613,8 +613,12 @@ CREATE TABLE fotos (
     id integer DEFAULT nextval('fotos_id_seq'::regclass) NOT NULL,
     boek integer NOT NULL,
     url character varying(150) NOT NULL,
+    width integer,
+    height integer,
     beschrijving character varying(255),
     thumburl character varying(150) NOT NULL,
+    thumbwidth integer,
+    thumbheight integer,
     added_on timestamp without time zone DEFAULT NULL
 );
 
