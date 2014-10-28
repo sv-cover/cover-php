@@ -547,18 +547,6 @@ CREATE TABLE foto_boeken (
     beschrijving text
 );
 
---
--- TOC entry 210 (class 1259 OID 24293)
--- Name: foto_boeken_thumb; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE foto_boeken_thumb (
-    boek integer NOT NULL,
-    image bytea,
-    theme character varying(20),
-    generated timestamp without time zone DEFAULT ('now'::text)::timestamp(6) without time zone NOT NULL
-);
-
 CREATE TABLE foto_boeken_visit (
     boek_id integer NOT NULL REFERENCES foto_boeken (id) ON UPDATE CASCADE ON DELETE CASCADE,
     lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -1536,14 +1524,6 @@ SELECT pg_catalog.setval('forums_id_seq', 48, true);
 --
 
 SELECT pg_catalog.setval('foto_boeken_id_seq', 995, true);
-
-
---
--- TOC entry 2590 (class 0 OID 24293)
--- Dependencies: 210
--- Data for Name: foto_boeken_thumb; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
 
 
 --
@@ -3438,16 +3418,6 @@ ALTER TABLE ONLY forums
 
 ALTER TABLE ONLY foto_boeken
     ADD CONSTRAINT foto_boeken_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2420 (class 2606 OID 26016)
--- Name: foto_boeken_thumb_boek_key; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY foto_boeken_thumb
-    ADD CONSTRAINT foto_boeken_thumb_boek_key UNIQUE (boek);
-
 
 --
 -- TOC entry 2422 (class 2606 OID 26018)
