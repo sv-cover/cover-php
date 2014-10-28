@@ -522,6 +522,34 @@ CREATE TABLE forums (
 );
 
 --
+-- TOC entry 217 (class 1259 OID 24336)
+-- Name: leden; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
+--
+
+CREATE TABLE leden (
+    id integer NOT NULL PRIMARY KEY,
+    voornaam character varying(255) NOT NULL,
+    tussenvoegsel character varying(255),
+    achternaam character varying(255) NOT NULL,
+    adres character varying(255) NOT NULL,
+    postcode character varying(7) NOT NULL,
+    woonplaats character varying(255) NOT NULL,
+    email character varying(255) NOT NULL,
+    geboortedatum date NOT NULL,
+    geslacht character(1) NOT NULL,
+    telefoonnummer character varying(20),
+    privacy integer NOT NULL,
+    type integer DEFAULT 1,
+    machtiging smallint,
+    beginjaar integer DEFAULT date_part('year'::text, now())
+);
+
+CREATE TABLE studies (
+    lidid integer NOT NULL,
+    studie character varying(100)
+);
+
+--
 -- TOC entry 208 (class 1259 OID 24283)
 -- Name: foto_boeken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
@@ -544,7 +572,8 @@ CREATE TABLE foto_boeken (
     titel character varying(50) NOT NULL,
     fotograaf character varying(25),
     date date,
-    beschrijving text
+    beschrijving text,
+    CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE foto_boeken_visit (
@@ -607,7 +636,8 @@ CREATE TABLE fotos (
     thumburl character varying(150) NOT NULL,
     thumbwidth integer,
     thumbheight integer,
-    added_on timestamp without time zone DEFAULT NULL
+    added_on timestamp without time zone DEFAULT NULL,
+    CONSTRAINT fotos_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE foto_likes (
@@ -643,34 +673,6 @@ CREATE TABLE gastenboek (
     ip character varying(50),
     spam smallint,
     lustrum smallint DEFAULT 0
-);
-
---
--- TOC entry 217 (class 1259 OID 24336)
--- Name: leden; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE leden (
-    id integer NOT NULL PRIMARY KEY,
-    voornaam character varying(255) NOT NULL,
-    tussenvoegsel character varying(255),
-    achternaam character varying(255) NOT NULL,
-    adres character varying(255) NOT NULL,
-    postcode character varying(7) NOT NULL,
-    woonplaats character varying(255) NOT NULL,
-    email character varying(255) NOT NULL,
-    geboortedatum date NOT NULL,
-    geslacht character(1) NOT NULL,
-    telefoonnummer character varying(20),
-    privacy integer NOT NULL,
-    type integer DEFAULT 1,
-    machtiging smallint,
-    beginjaar integer DEFAULT date_part('year'::text, now())
-);
-
-CREATE TABLE studies (
-    lidid integer NOT NULL,
-    studie character varying(100)
 );
 
 --
@@ -1583,7 +1585,7 @@ SELECT pg_catalog.setval('gastenboek_id_seq', 316306, true);
 -- Data for Name: leden; Type: TABLE DATA; Schema: public; Owner: webcie
 --
 
-INSERT INTO leden VALUES (709, 'Jelmer', 'van der', 'Linde', '', '', '', 'user@example.com', '1970-01-01', 'm', '', '', 1059361359, 1, NULL, 2008);
+INSERT INTO leden VALUES (709, 'Jelmer', 'van der', 'Linde', '', '', '', 'user@example.com', '1970-01-01', 'm', '', 1059361359, 1, NULL, 2008);
 
 
 --
@@ -3412,29 +3414,12 @@ ALTER TABLE ONLY forums
 
 
 --
--- TOC entry 2418 (class 2606 OID 26014)
--- Name: foto_boeken_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY foto_boeken
-    ADD CONSTRAINT foto_boeken_pkey PRIMARY KEY (id);
-
---
 -- TOC entry 2422 (class 2606 OID 26018)
 -- Name: foto_reacties_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
 --
 
 ALTER TABLE ONLY foto_reacties
     ADD CONSTRAINT foto_reacties_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2424 (class 2606 OID 26020)
--- Name: fotos_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY fotos
-    ADD CONSTRAINT fotos_pkey PRIMARY KEY (id);
 
 
 --
@@ -3512,12 +3497,12 @@ ALTER TABLE ONLY so_vakken
 --
 -- TOC entry 2626 (class 0 OID 0)
 -- Dependencies: 6
--- Name: public; Type: ACL; Schema: -; Owner: jelmer
+-- Name: public; Type: ACL; Schema: -; Owner: webcie
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM jelmer;
-GRANT ALL ON SCHEMA public TO jelmer;
+REVOKE ALL ON SCHEMA public FROM webcie;
+GRANT ALL ON SCHEMA public TO webcie;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
