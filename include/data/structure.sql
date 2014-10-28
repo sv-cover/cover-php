@@ -574,6 +574,21 @@ CREATE TABLE foto_boeken (
     date date,
     beschrijving text,
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
+<<<<<<< HEAD
+=======
+);
+
+--
+-- TOC entry 210 (class 1259 OID 24293)
+-- Name: foto_boeken_thumb; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
+--
+
+CREATE TABLE foto_boeken_thumb (
+    boek integer NOT NULL,
+    image bytea,
+    theme character varying(20),
+    generated timestamp without time zone DEFAULT ('now'::text)::timestamp(6) without time zone NOT NULL
+>>>>>>> Create tables and their primary keys before referencing to them and insert the right amount of values into "leden".
 );
 
 CREATE TABLE foto_boeken_visit (
