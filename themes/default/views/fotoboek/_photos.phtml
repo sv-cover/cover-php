@@ -7,8 +7,6 @@ $my_likes = logged_in()
 	? $like_model->get_for_lid(logged_in_member(), $photos)
 	: array();
 
-$admin = member_in_commissie(COMMISSIE_FOTOCIE);
-
 $id = function(DataIter $photo) {
 	return sprintf('photo%d', $photo->get_id());
 };
@@ -25,21 +23,12 @@ $classes = function(DataIter $photo) use ($my_likes) {
 if (!$photos || count($photos) == 0)
 	return;
 ?>
-
-<?php if ($admin): ?>
-	<form action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>" method="post" onSubmit="return confirm('<?= str_replace('\'', '\\\'', __('Weet je zeker dat je de geselecteerde foto\'s wilt verwijderen?')) ?>');">
-		<?= input_hidden('submfotoboekdelfotos', 'yes'); ?>
-<?php endif ?>
-
 <ul class="photos flow-gallery">
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	<?php foreach ($photos as $photo): ?>
-	<li id="photo_<?=$photo->get_id()?>" class="thumbnail <?=isset($my_likes[$photo->get_id()]) ? 'liked' : ''?>">
-		<?php if ($admin): ?>
-		<input type="checkbox" name="photo[]" value="<?=$photo->get_id()?>" class="selection-checkbox photo-edit-control">
-		<?php endif ?>
+	<li id="photo_<?=$photo->get_id()?>" data-id="<?=$photo->get_id()?>" class="thumbnail <?=isset($my_likes[$photo->get_id()]) ? 'liked' : ''?>">
 		<a href="fotoboek.php?photo=<?=$photo->get_id()?>#a">
-			<img src="<?=markup_format_attribute($photo->get('url'))?>" <?=($size = $photo->get_thumb_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
+			<img src="<?=markup_format_attribute($photo->get('url'))?>" <?=($size = $photo->get_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
 			<?php if (isset($likes[$photo->get_id()])): ?>
 				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><?=$likes[$photo->get_id()]?></span>
 			<?php endif ?>
@@ -53,9 +42,5 @@ if (!$photos || count($photos) == 0)
 	</li>
 	<?php endforeach ?>
 </ul>
-
-<?php if ($admin): ?>
-	<div class="text_right"><?= input_submit('subm', __('Geselecteerde foto\'s verwijderen')) ?></div></form>
-<?php endif ?>
 
 <script src="<?=get_theme_data('data/flowgallery.js')?>"></script>

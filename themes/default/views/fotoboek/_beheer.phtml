@@ -1,4 +1,10 @@
-	<div class="controls"><a href="javascript:nieuw_fotoboek();"> <?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken'), 'class="button"') ?></a> <a href="javascript:nieuw_fotoboek();"> <?= __('Nieuw fotoboek') ?></a> <a href="javascript:nieuwe_fotos();"> <?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen'), 'class="button"') ?></a> <a href="javascript:nieuwe_fotos();"> <?= __('Foto\'s toevoegen') ?></a></div>
+	<div class="controls">
+		<a href="javascript:nieuw_fotoboek();"> <?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken'), 'class="button"') ?></a>
+		<a href="javascript:nieuw_fotoboek();"> <?= __('Nieuw fotoboek') ?></a>
+		<a href="javascript:nieuwe_fotos();"> <?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen'), 'class="button"') ?></a>
+		<a href="javascript:nieuwe_fotos();"> <?= __('Foto\'s toevoegen') ?></a>
+		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?=__('Foto\'s verwijderen')?></a>
+	</div>
 	<div id="fotoboek_beheer" class="beheer">
 	<form name="fbeheer" action="fotoboek.php?book=<?= $iter ? $iter->get('id') : "" ?>" method="post">
 
@@ -37,6 +43,52 @@
 				div.style.display = "none";
 			}
 		}
+
+		function sprintf(format)
+		{
+			for (var i = 1; i < arguments.length; ++i)
+				format = format.replace(/\%d/, arguments[i]);
+
+			return format;
+		}
+
+		$(function() {
+			var checkboxes = $('.photos .thumbnail').map(function() {
+				return $('<input type="checkbox">')
+					.attr('name', 'photo[]')
+					.val($(this).data('id'))
+					.addClass('selection-checkbox photo-edit-control')
+					.appendTo(this)
+					.change(function() {
+						updateSelectionControls();
+					}).get();
+			});
+
+			var updateSelectionControls = function() {
+				$('.photo-selection-control').toggle(
+					checkboxes.is(':checked'));
+			};
+
+			$('#delete-selected-photos-button').click(function(e) {
+				e.preventDefault();
+
+				var selection = checkboxes.filter(':checked').map(function() {
+					return this.value;
+				});
+
+				if (!confirm(sprintf(<?=json_encode(__('Weet je zeker dat je %d geselecteerde foto\'s wilt verwijderen?'))?>, selection.length)))
+					return;
+
+				$.post(document.location.href, {
+					'submfotoboekdelfotos': 'yes',
+					'photo[]': selection.toArray()
+				}, function() {
+					document.location.reload();
+				});
+			});
+
+			updateSelectionControls();
+		});
 		
 <? 	if (isset($errortype) && $errortype == 'nieuw') { ?>
 		nieuw_fotoboek();

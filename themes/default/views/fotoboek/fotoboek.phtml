@@ -1,13 +1,13 @@
 <h1><?= __('Fotoboek') ?></h1>
 <div class = "messageBox clearfix fotoboek-box">
-<? 	
 
-if (member_in_commissie(COMMISSIE_FOTOCIE)){
-	$this->render_partial("beheer", compact('errors', 'errortype', 'model', 'iter', 'parent'));
-}
+<?php if ($iter
+	? get_policy($model)->user_can_update($iter)
+	: get_policy($model)->user_can_create()): ?>
+	<?php $this->render_partial("beheer", compact('errors', 'errortype', 'model', 'iter', 'parent')) ?>
+<?php endif ?>
 
-$this->render_partial('navigation', compact('model', 'iter'));
-?>
+<?php $this->render_partial('navigation', compact('model', 'iter')) ?>
 
 <?php if (!$iter): ?>
 <p><?= sprintf(__('Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, meld dat dan aan de FotoCie, of gebruik de knop \'Upload foto\'s\' rechts van deze tekst.'), '<a href="commissie.php?commissie=' . COMMISSIE_FOTOCIE . '">' . __('FotoCie')  . '</a>') ?></p>
@@ -21,6 +21,7 @@ $this->render_partial('navigation', compact('model', 'iter'));
 	$this->render_partial('path', compact('model', 'iter', 'include_current'));
 	?>
 </div>
+
 <?php
 $this->render_partial('info', compact('model', 'iter'));
 $this->render_partial('contents', compact('model', 'iter'));
