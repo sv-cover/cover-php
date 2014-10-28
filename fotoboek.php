@@ -107,7 +107,14 @@
 		}
 		
 		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => __('Fotoboek')));
+			if ($iter instanceof DataIterPhotobook)
+				$title = $iter->get('titel');
+			elseif ($iter instanceof DataIterPhoto)
+				$title = $iter->get_book()->get('titel');
+			else
+				$title = __('Fotoboek');
+
+			$this->run_header(compact('title'));
 			run_view('fotoboek::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
