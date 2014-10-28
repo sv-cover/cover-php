@@ -11,13 +11,14 @@
 	else
 		error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_STRICT);
 
+	/* Set the include path so we can include these from everywhere */
+	set_include_path('.' . PATH_SEPARATOR . dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
+	ini_set('magic_quotes_gpc', 0);
+	
 	require_once('functions.php');
 	require_once('i18n.php');
 	require_once('constants.php');
 
-	/* Set the include path so we can include these from everywhere */
-	set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
-	ini_set('magic_quotes_gpc', 0);
 
 	date_default_timezone_set('Europe/Amsterdam');
 
