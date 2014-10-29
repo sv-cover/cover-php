@@ -25,6 +25,11 @@ div.fotoboek_path {
 	text-align: center;
 }
 
+.photo img {
+	max-width: 100%;
+	height: auto;
+}
+
 .slides {
 	width: auto;
 	background: #ccc;
