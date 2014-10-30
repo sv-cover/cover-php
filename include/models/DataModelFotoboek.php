@@ -283,21 +283,22 @@
 			
 			$select = 'SELECT
 				foto_boeken.*, 
-				COUNT(foto_boeken.id) AS num_photos, 
-				fotos.boek AS has_photos';
+				COUNT(DISTINCT fotos.id) AS num_photos, 
+				COUNT(DISTINCT child_books.id) as num_books';
 
 			$from = 'FROM
 				foto_boeken';
 
 			$joins = '
 				LEFT JOIN fotos ON
-					foto_boeken.id = fotos.boek';
+					foto_boeken.id = fotos.boek
+				LEFT JOIN foto_boeken child_books ON
+					child_books.parent = foto_boeken.id';
 
 			$where = sprintf('WHERE
 				foto_boeken.parent = %d', $parent);
 
 			$group_by = 'GROUP BY
-				fotos.boek, 
 				foto_boeken.id, 
 				foto_boeken.parent, 
 				foto_boeken.beschrijving, 
@@ -421,7 +422,7 @@
 			
 			$rows = $this->db->query('
 					SELECT fotos.*, 
-						COUNT(foto_reacties.id) AS num_reacties' . 
+						COUNT(DISTINCT foto_reacties.id) AS num_reacties' . 
 						($random ? ', RANDOM() AS ord' : '') . '
 					FROM 
 						fotos
@@ -437,6 +438,38 @@
 					ORDER BY ' . ($random ? 'ord' : 'fotos.id ASC') . '
 					' . ($max != 0 ? ('LIMIT ' . $max) : ''));
 
+			return $this->_rows_to_iters($rows, 'DataIterPhoto');
+		}
+
+		function get_photos_recursive(DataIterPhotobook $book = null, $max = 0, $random = false)
+		{
+			$id = $book === null ? 0 : $book->get_id();
+
+			$query = sprintf('
+				WITH RECURSIVE book_children (id, parents) AS (
+						SELECT id, ARRAY[id] FROM foto_boeken WHERE id = %d
+					UNION ALL
+						SELECT f_b.id,  b_c.parents || f_b.parent
+						FROM book_children b_c, foto_boeken f_b
+						WHERE b_c.id = f_b.parent
+				)
+				SELECT
+					f.*
+				FROM
+					book_children b_c
+				LEFT JOIN fotos f ON
+					f.boek = b_c.id
+				GROUP BY
+					f.id', $id);
+
+			if ($random)
+				$query .= ' ORDER BY RANDOM()';
+
+			if ($max > 0)
+				$query .= sprintf(' LIMIT %d', $max);
+
+			$rows = $this->db->query($query);
+			
 			return $this->_rows_to_iters($rows, 'DataIterPhoto');
 		}
 		
