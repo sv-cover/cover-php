@@ -1,34 +1,22 @@
-<?
+<?php
 if (!$iter)
 	return;
 
+$title = $iter
+	? $iter->get('titel')
+	: __('Fotoboeken');
+
 $parents = $model->get_parents($iter);
+
 $path = array();
 
-foreach ($parents as $parent) {
-	if ($parent)
-		$path[] = '<a href="fotoboek.php?book=' . $parent->get('id') . '">' . htmlspecialchars($parent->get('titel')) . '</a>';
-	else
-		$path[] = '<a name="a" href="fotoboek.php">' . __('Fotoboeken') . '</a>';
-}
+foreach ($parents as $parent)
+	$path[] = $parent
+		? '<a href="fotoboek.php?book=' . $parent->get_id() . '">' . markup_format_text($parent->get('titel')) . '</a>'
+		: '<a href="fotoboek.php" name="a">' . __('Fotoboeken') . '</a>';
 
-?><div id="path" class="fotoboek_path"><?=  implode(' / ', $path) ?>
-
-<?
-if (count($path) > 0)
-	echo ' / ';
-
-?><span class="fotoboek_path_current"><?
-
-if ($iter)
-	$title = $iter->get('titel');
-else
-	$title = __('Fotoboeken');
-
-if ($include_current) {
-	?><a href="fotoboek.php?book=<?= ($iter ? $iter->get('id') : '') ?>"><?= htmlspecialchars($title) ?></a><?
-} else {
-	echo htmlspecialchars($title);
-} ?>
-
-</span></div>
+?>
+<div id="path" class="fotoboek_path"><?=  implode(' / ', $path) ?><?php if (count($path) > 0) echo ' / ' ?><span class="fotoboek_path_current"><?= isset($current)
+	? sprintf('<a href="fotoboek.php?book=%d#photo_%d">%s</a>',
+		$iter->get_id(), $current->get_id(), markup_format_text($title))
+	: markup_format_text($title) ?></span></div>

@@ -3,7 +3,7 @@
 <div class="messageBox">
 
 <?php
-	$this->render_partial('path', array('iter' => $book, 'include_current' => true, 'model' => $model));
+	$this->render_partial('path', array('iter' => $book, 'current' => $iter, 'model' => $model));
 	$this->render_partial('photo', compact('model', 'iter'));
 	$this->render_partial('slides', compact('model', 'iter'));
 
