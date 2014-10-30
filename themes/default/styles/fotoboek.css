@@ -104,7 +104,13 @@ div.fotoboek_path {
 	font-size: 9px;
 	font-weight: normal;
 	padding: 0;
-	background: transparent url(../images/heart.svg) 0 0 / 20px no-repeat;
+	background: transparent url(../images/heart-white.svg) 0 0 / 20px no-repeat;
+	color: white;
+}
+
+.photo-controls .like-button {
+	background-image: url(../images/heart.svg);
+	color: #004274;
 }
 
 .liked .like-button {
