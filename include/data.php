@@ -44,12 +44,18 @@
 	function get_db() {
 		static $db = null;
 		
-		if ($db == null) {
-			include('data/DBIds.php');
-			require_once('data/DatabasePgsql.php');
+		if ($db == null)
+		{
+			require  'data/DBIds.php';
+
+			$database_class = isset($dbids['easy']['class'])
+				? $dbids['easy']['class']
+				: 'DatabasePgsql';
+
+			require_once 'data/' . $database_class . '.php';
 
 			/* Create database */
-			$db = new DatabasePgsql($dbids['easy']);
+			$db = new $database_class($dbids['easy']);
 		}
 		
 		return $db;
