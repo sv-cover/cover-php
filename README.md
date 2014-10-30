@@ -17,7 +17,7 @@ To run the Cover site you need a webserver with PHP (at least 5.2 I guess) compi
 
 Run the `include/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website. Copy the contents of the file `include/data/DBIds.php.default` file to a file named `include/data/DBIds.php` and input your own database configuration data.
 
-Do the same for `config/config.inc.default`. Copy its contents to `config/config.inc` and adjust the values where needed.
+Do the same for `include/config.inc.default`. Copy its contents to `include/config.inc` and adjust the values where needed.
 
 To get all the dependencies, run `composer install` in the root directory of your repository. There should be a file named `composer.json` in there.
 
