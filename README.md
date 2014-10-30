@@ -27,10 +27,15 @@ Copy the contents of the file `include/data/DBIds.php.default` file to a file na
 Do the same for `include/config.inc.default`. Copy its contents to `include/config.inc` and adjust the values where needed.
 
 ### Set up a bare database
-Run the `include/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website.
+Run the `include/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website:
+
+```bash
+createdb --encoding=UTF8 --template=template0 webcie 
+cat include/data/structure.sql | psql webcie
+```
 
 ### Copy the database of the live site
-This is only applicable for members of the WebCie. You can easily clone the live database using the following command. Make sure you don't have to enter your password by setting up public key authentication.
+This is only applicable for members of the WebCie. You can easily clone the live database using the following command. Make sure you don't have to enter your password by setting up public key authentication first.
 
 ```bash
 createdb --encoding=UTF8 --template=template0 webcie 
