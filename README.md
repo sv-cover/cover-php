@@ -15,11 +15,31 @@ If you want to contribute code please fork this repository, create a new branch 
 ## Running locally
 To run the Cover site you need a webserver with PHP (at least 5.2 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database (8.2 and 9.3 both seem to work so I guess it doesn't really matter which version.)
 
-Run the `include/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website. Copy the contents of the file `include/data/DBIds.php.default` file to a file named `include/data/DBIds.php` and input your own database configuration data.
+To get all the dependencies, run composer in the root directory of your repository. There should be a file named `composer.json` in there:
+
+    composer install
+
+
+## Setting up the database
+Copy the contents of the file `include/data/DBIds.php.default` file to a file named `include/data/DBIds.php` and input your own database configuration data.
 
 Do the same for `include/config.inc.default`. Copy its contents to `include/config.inc` and adjust the values where needed.
 
-To get all the dependencies, run `composer install` in the root directory of your repository. There should be a file named `composer.json` in there.
+### Set up a bare database
+Run the `include/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website.
+
+### Copy the database of the live site
+This is only applicable for members of the WebCie. You can easily create a dump of the live database using this command:
+
+    pg_dump webcie | gzip > ./webcie_$(date +'%Y%m%d').gz
+
+Then you can download that file (it's about 500mb) and restore your local database to it:
+
+    dropdb webcie #if needed
+    createdb webcie
+  
+    cat ./webcie_$(date + '%Y%m%d').gz | gunzip > psql webcie
+
 
 That should be it, the website should work now. You can log in with:  
 email: `user@example.com`  
