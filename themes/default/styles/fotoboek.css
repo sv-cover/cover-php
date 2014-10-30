@@ -130,7 +130,15 @@ div.fotoboek_path {
 	float: right;
 }
 
-.photos:after {
+.photos,
+.books {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.photos:after,
+.books:after {
 	content: '';
 	display: block;
 	clear: both;
@@ -241,7 +249,6 @@ div.fotoboek_path {
 	color: white;
 	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
 	z-index: 3;
-    /*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
 }
 
 .photos .flow-image-container .comments {
@@ -263,4 +270,129 @@ div.fotoboek_path {
 
 .photo-edit-control {
 	/*display: none;*/
+}
+
+.books {
+	text-align: center;
+}
+
+.books li {
+	display: inline;
+}
+
+.books .thumbnail {
+	display: inline-block;
+	width: 200px;
+	height: 200px;
+	margin: 20px;
+	position: relative;
+	text-align: left;
+	overflow: hidden;
+}
+
+.books .thumbnail.small {
+	width: 150px;
+	height: 150px;
+}
+
+.books .thumbnail:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	background: #c60c30;
+	opacity: 0.5;
+}
+
+.books .thumbnail:hover:after {
+	background: #600615;
+}
+
+.books .thumbnail .title,
+.books .thumbnail .details {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	z-index: 3;
+	color: white;
+	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+.books a:hover .title,
+.books a:hover .details {
+	text-decoration: underline;
+}
+
+.books .thumbnail .title {
+	top: 5px;
+	font-size: 22px;
+}
+
+.books .thumbnail.small .title {
+	font-size: 16px;
+}
+
+.books .thumbnail .details {
+	bottom: 5px;
+	font-weight: normal;
+}
+
+.collage {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.collage .image {
+	width: 33%;
+	height: 33%;
+	overflow: hidden;
+	position: relative;
+	float: left;
+	border: 1px solid #f5f5f5;
+	border-width: 0 1px 1px 0;
+	box-sizing: border-box;
+}
+
+.thumbnail.small .collage .image {
+	width: 50%;
+	height: 50%;
+}
+
+.thumbnail.small .collage .image:nth-child(2n),
+.thumbnail.large .collage .image:nth-child(3n) {
+	border-right: 0;
+}
+
+.thumbnail.small .collage .image:nth-child(4n + 3),
+.thumbnail.small .collage .image:nth-child(4n + 4),
+.thumbnail.large .collage .image:nth-child(9n + 6),
+.thumbnail.large .collage .image:nth-child(9n + 7),
+.thumbnail.large .collage .image:nth-child(9n + 8), {
+	border-bottom: 0;
+}
+
+.collage .image img {
+	position: absolute;
+	width: auto;
+	height: auto;
+}
+
+.collage .image.landscape img {
+	top: 0;
+	bottom: 0;
+	height: 100%;
+	width: auto;
+}
+
+.collage .image.portrait img {
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: auto;
 }

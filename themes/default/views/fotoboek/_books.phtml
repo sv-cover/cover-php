@@ -1,74 +1,37 @@
 <?php
-$books_per_row = 3;
-
 $policy = get_policy($model);
 
 // Filter the invisible books and reindex the array (required for the for-loops below.)
 $children = array_values(array_filter($model->get_children($iter), array($policy, 'user_can_read')));
 
+$collage_size = $iter ? 'small' : 'large';
+
 if (!$children || count($children) == 0)
 	return;
-
 ?>
-<div class = "clearfix">
-<?
-for ($i = 0; $i < count($children); $i += $books_per_row) {
-	$images = array();
-	$titles = array();
-	$status = array();
+<ul class="books">
+	<?php foreach ($children as $book): ?>
+	<?php
+		$details = array();
 
-	for ($n = $i; $n < $i + $books_per_row; $n++) {
-		if ($n >= count($children)) {
-			$images[] = '';
-			$titles[] = '';
-		} else {
-			$image = get_theme_data('images/book.png');
-			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
-		
-			if ($policy->user_can_update($children[$n]))
-				$contents .= ' <a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
+		if ($book->get('num_books') > 0)
+			$details[] = sprintf(_ngettext('%d boek', '%d boeken', $book->get('num_books')), $book->get('num_books'));
 
-			if ($policy->user_can_delete($children[$n]))
-				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
-
-			array_push($images,$contents);
-		
-			$title = $children[$n]->get('titel');
-			$subtitle = array();
-
-			$num = $model->get_num_children($children[$n]);
-		
-			if ($num)
-				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $num), $num);
-
-			if ($children[$n]->get('has_photos')) {
-				$num = $children[$n]->get('num_photos');
-				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
-			}					
-		
-			if (count($subtitle) > 0)
-				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
-		
-			$titles[] = $title;
-
-			$status[] = $children[$n]->get('read_status');
-		}
-	}
-	
-	//echo the images in this row
-	for ($idx = 0; $idx != $books_per_row; ++$idx)
-		echo '
-			<div class = "fotoBoek ' . $status[$idx] .'">
-				'. $images[$idx] .'
-				<p class = "bookTitle">
-					'. $titles[$idx] .'
-				</p>
-			</div>';
-	?>
-<? } ?>
-</div>
-<script type="text/javascript">
-	function confirm_delete() {
-		return confirm('<?= addslashes(__("Weet je zeker dat je dit fotoboek en alle fotoboeken en foto's erin wilt verwijderen?")) ?>');
-	}
-</script>
+		if ($book->get('num_photos') > 0)
+			$details[] = sprintf(_ngettext('%d foto', '%d foto\'s', $book->get('num_photos')), $book->get('num_photos'));
+	?>		
+	<li>
+		<a href="fotoboek.php?book=<?=$book->get_id()?>" class="thumbnail <?=$collage_size?>">
+			<div class="collage">
+				<?php foreach ($model->get_photos_recursive($book, $collage_size == 'small' ? 4 : 9, true) as $photo): ?>
+				<div class="image <?=image_aspect($photo->get_thumb_size())?>">
+					<img src="<?=markup_format_attribute($photo->get('thumburl'))?>">
+				</div>
+				<?php endforeach ?>
+			</div>
+			<span class="title"><?=markup_format_text($book->get('titel'))?></span>
+			<span class="details"><?=implode_human($details)?></span>
+		</a>
+	</li>
+	<?php endforeach ?>
+</ul>
