@@ -140,8 +140,14 @@
 
 		function get_root_book()
 		{
+			$num_books = $this->db->query_value('SELECT COUNT(id) FROM foto_boeken WHERE parent = 0');
+			
+			$num_photos = $this->db->query_value('SELECT COUNT(id) FROM fotos WHERE boek = 0');
+
 			return new DataIterRootPhotobook($this, 0, array(
-				'titel' => __('Fotoboek')
+				'titel' => __('Fotoboek'),
+				'num_books' => $num_books,
+				'num_photos' => $num_photos
 			));
 		}
 
