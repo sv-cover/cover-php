@@ -1,7 +1,6 @@
-<? if ($model->get_num_children($iter) == 0 && $model->get_num_photos($iter) == 0) { ?>
+<?php if ($iter->count_books() == 0 && $iter->count_photos() == 0): ?>
 	<p><?= __('Er zijn nog geen foto\'s in dit fotoboek') ?></p>
-<? } else {
+<?php else:
 	$this->render_partial('books', compact('model', 'iter'));
 	$this->render_partial('photos', compact('model', 'iter'));
-}
-?>
+endif ?>

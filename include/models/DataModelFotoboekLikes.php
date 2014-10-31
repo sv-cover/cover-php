@@ -1,5 +1,24 @@
 <?php
 require_once 'data/DataModel.php';
+require_once 'models/DataModelFotoboek.php';
+
+class DataIterLikedPhotobook extends DataIterPhotobook
+{
+	public function get_id()
+	{
+		return 'liked';
+	}
+
+	public function get_books()
+	{
+		return array();
+	}
+
+	public function get_photos()
+	{
+		return $this->model->find('id IN (' . implode(',', $this->get('photo_ids')) . ')');
+	}
+}
 
 class DataModelFotoboekLikes extends DataModel
 {
@@ -92,6 +111,21 @@ class DataModelFotoboekLikes extends DataModel
 			$this->table, implode(',', $ids)));
 
 		return $this->_rows_to_table($stmt, 'foto_id', 'likes');
+	}
+
+	public function get_book(DataIter $member)
+	{
+		$favorites = array_keys($this->get_for_lid($member));
+
+		return new DataIterLikedPhotobook(get_model('DataModelFotoboek'), -1, array(
+			'titel' => __('Favoriete foto\'s'),
+			'has_photos' => count($favorites) > 0,
+			'num_photos' => count($favorites),
+			'num_books' => 0,
+			'read_status' => 'read',
+			'datum' => null,
+			'parent' => 0,
+			'photo_ids' => $favorites));
 	}
 
 	protected function _rows_to_table($rows, $key_field, $value_field)

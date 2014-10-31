@@ -45,9 +45,42 @@
 
 	class DataIterPhotobook extends DataIter
 	{
+		public function get_books()
+		{
+			return $this->model->get_children($this);
+		}
+
 		public function get_photos($max = 0, $random = false)
 		{
 			return $this->model->get_photos($this, $max, $random);
+		}
+
+		public function count_books()
+		{
+			return $this->get('num_books');
+		}
+
+		public function count_photos()
+		{
+			return $this->get('num_photos');
+		}
+	}
+
+	class DataIterRootPhotobook extends DataIterPhotobook
+	{
+		public function get_books()
+		{
+			$books = parent::get_books();
+
+			if (logged_in())
+				$books[] = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
+			
+			return $books;
+		}
+
+		public function count_books()
+		{
+			return parent::count_books() + (logged_in() ? 1 : 0);
 		}
 	}
 
@@ -70,20 +103,36 @@
 		  */
 		function get_book($id)
 		{
-			$q = "
+			$q = sprintf("
 					SELECT 
-						*, 
-						(TRIM(to_char(DATE_PART('day', date), '00')) || '-' ||
-						 TRIM(to_char(DATE_PART('month', date), '00')) || '-' ||
-						 DATE_PART('year', date)) AS datum
+						f_b.*,
+						COUNT(DISTINCT f.id) as num_photos,
+						COUNT(DISTINCT c_f_b.id) as num_books,
+						(TRIM(to_char(DATE_PART('day', f_b.date), '00')) || '-' ||
+						 TRIM(to_char(DATE_PART('month', f_b.date), '00')) || '-' ||
+						 DATE_PART('year', f_b.date)) AS datum
 					FROM 
-						foto_boeken
+						foto_boeken f_b
+					LEFT JOIN fotos f ON
+						f.boek = f_b.id
+					LEFT JOIN foto_boeken c_f_b ON
+						c_f_b.parent = f_b.id
 					WHERE 
-						id = " . intval($id);
+						f_b.id = %d
+					GROUP BY
+						f_b.id
+					", $id);
 			
 			$row = $this->db->query_first($q);
 
 			return $this->_row_to_iter($row, 'DataIterPhotobook');
+		}
+
+		function get_root_book()
+		{
+			return new DataIterRootPhotobook($this, 0, array(
+				'titel' => __('Fotoboek')
+			));
 		}
 
 		/**
@@ -95,31 +144,31 @@
 		function get_random_book($count = 10) {
 			$q = "
 				SELECT 
-					c.*, 
-					(TRIM(to_char(DATE_PART('day', c.date), '00')) || '-' ||
-					 TRIM(to_char(DATE_PART('month', c.date), '00')) || '-' ||
-					 DATE_PART('year', c.date)) AS datum
+					c.id
 				FROM 
 					foto_boeken c
 				LEFT JOIN
-					foto_boeken p
-					ON p.parent = c.id
+					fotos f
+					ON f.boek = c.id
 				WHERE
 					c.titel NOT ILIKE 'chantagemap%'
 					AND c.titel NOT ILIKE 'download grote foto''s%'
-					AND p.id IS NULL
 					AND c.date IS NOT NULL
+				GROUP BY
+					c.id
+				HAVING
+					COUNT(f.id) > 0
 				ORDER BY
 					c.date DESC
 				LIMIT " . intval($count);
 
-			// Select the last 10 books
+			// Select the last $count books
 			$rows = $this->db->query($q);
 
 			// Pick a random fotoboek
 			$book = $rows[rand(0, count($rows) - 1)];
 
-			return $this->_row_to_iter($book, 'DataIterPhotobook');
+			return $this->get_book($book['id']);
 		}
 		
 		/**
@@ -202,7 +251,7 @@
 
 			$row = $this->db->query_first("
 					SELECT 
-						*
+						id
 					FROM 
 						foto_boeken
 					WHERE 
@@ -216,7 +265,7 @@
 						id
 					LIMIT 1");
 			
-			return $this->_row_to_iter($row, 'DataIterPhotobook');
+			return $this->get_book($row['id']);
 		}
 		
 		/**
@@ -231,7 +280,7 @@
 
 			$row = $this->db->query_first("
 					SELECT 
-						*
+						id
 					FROM 
 						foto_boeken
 					WHERE 
@@ -245,7 +294,7 @@
 						id
 					LIMIT 1");
 
-			return $this->_row_to_iter($row, 'DataIterPhotobook');
+			return $this->get_book($row['id']);
 		}
 		
 		/**
@@ -258,15 +307,7 @@
 			if (!$book->get('parent'))
 				return null;
 			
-			$row = $this->db->query_first('
-					SELECT 
-						*
-					FROM 
-						foto_boeken
-					WHERE 
-						id = ' . $book->get('parent'));
-			
-			return $this->_row_to_iter($row, 'DataIterPhotobook');
+			return $this->get_book($book->get('parent'));
 		}
 		
 		/**
@@ -275,12 +316,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_children(DataIterPhotobook $book = null) {
-			if ($book === null)
-				$parent = 0;
-			else
-				$parent = $book->get('id');
-			
+		function get_children(DataIterPhotobook $book) {
 			$select = 'SELECT
 				foto_boeken.*, 
 				COUNT(DISTINCT fotos.id) AS num_photos, 
@@ -296,7 +332,7 @@
 					child_books.parent = foto_boeken.id';
 
 			$where = sprintf('WHERE
-				foto_boeken.parent = %d', $parent);
+				foto_boeken.parent = %d', $book->get_id());
 
 			$group_by = 'GROUP BY
 				foto_boeken.id, 
@@ -320,7 +356,7 @@
 						FROM book_children b_c, foto_boeken f_b
 						WHERE b_c.id = f_b.parent
 				)
-				', $parent) . $select;
+				', $book->get_id()) . $select;
 
 				$select .= sprintf(",
 					CASE
@@ -358,27 +394,6 @@
 		}
 		
 		/**
-		  * Get the number of books in a book
-		  * @book a #DataIter representing a book
-		  *
-		  * @result the number of books
-		  */
-		function get_num_children(DataIterPhotobook $book = null) {
-			if ($book === null)
-				$parent = 0;
-			else
-				$parent = $book->get('id');
-			
-			return $this->db->query_value(sprintf('
-					SELECT 
-						COUNT(*) 
-					FROM 
-						foto_boeken 
-					WHERE 
-						parent = %d', $parent));
-		}
-		
-		/**
 		  * Get a certain number of randomly selected photos
 		  * @num the number of random photos to select
 		  *
@@ -387,10 +402,7 @@
 		function get_random_photos($num) {
 			$rows = $this->db->query("
 					SELECT
-						fotos.url,
-						fotos.thumburl, 
-						fotos.id,
-						fotos.boek,
+						fotos.*,
 						DATE_PART('year', foto_boeken.date) AS jaar,
 						foto_boeken.titel
 					FROM 
@@ -414,21 +426,17 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_photos(DataIterPhotobook $book = null, $max = 0, $random = false) {
-			if ($book === null)
-				$id = 0;
-			else
-				$id = $book->get('id');
-			
+		function get_photos(DataIterPhotobook $book, $max = 0, $random = false) {
 			$rows = $this->db->query('
-					SELECT fotos.*, 
+					SELECT 
+						fotos.*, 
 						COUNT(DISTINCT foto_reacties.id) AS num_reacties' . 
 						($random ? ', RANDOM() AS ord' : '') . '
 					FROM 
 						fotos
 					LEFT JOIN foto_reacties ON (foto_reacties.foto = fotos.id)
 					WHERE 
-						boek = ' . $id . '
+						boek = ' . $book->get_id() . '
 					GROUP BY 
 						fotos.id, 
 						fotos.boek, 
@@ -441,10 +449,8 @@
 			return $this->_rows_to_iters($rows, 'DataIterPhoto');
 		}
 
-		function get_photos_recursive(DataIterPhotobook $book = null, $max = 0, $random = false)
+		function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
 		{
-			$id = $book === null ? 0 : $book->get_id();
-
 			$query = sprintf('
 				WITH RECURSIVE book_children (id, parents) AS (
 						SELECT id, ARRAY[id] FROM foto_boeken WHERE id = %d
@@ -460,7 +466,7 @@
 				LEFT JOIN fotos f ON
 					f.boek = b_c.id
 				GROUP BY
-					f.id', $id);
+					f.id', $book->get_id());
 
 			if ($random)
 				$query .= ' ORDER BY RANDOM()';
@@ -471,27 +477,6 @@
 			$rows = $this->db->query($query);
 			
 			return $this->_rows_to_iters($rows, 'DataIterPhoto');
-		}
-		
-		/**
-		  * Get the number of photos in a book
-		  * @book a #DataIter representing a book
-		  *
-		  * @result the number of photos
-		  */
-		function get_num_photos(DataIterPhotobook $book = null) {
-			if ($book === null)
-				$parent = 0;
-			else
-				$parent = $book->get('id');
-			
-			return $this->db->query_value('
-					SELECT 
-						COUNT(*) 
-					FROM 
-						fotos 
-					WHERE 
-						boek = ' . $parent);
 		}
 		
 		/**
@@ -515,7 +500,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_parents(DataIterPhotobook $book = null) {
+		function get_parents(DataIterPhotobook $book) {
 			$result = array();
 			
 			$this->_get_parents_real($book, $result);
@@ -533,7 +518,7 @@
 			$result = parent::delete($iter);
 			
 			/* Delete all reacties */
-			$result = $result && $this->db->delete('foto_reacties', 'foto = ' . intval($iter->get('id')));
+			$result = $result && $this->db->delete('foto_reacties', 'foto = ' . intval($iter->get_id()));
 
 			return $result;
 		}

@@ -345,7 +345,14 @@
 		}
 		
 		function run_impl() {
-			if (isset($_GET['book'])
+			if (isset($_GET['photo']) && $_GET['photo']) {
+				$photo = $this->model->get_iter($_GET['photo']);
+				$book = $photo->get_book();
+				if (!$photo || !$this->policy->user_can_read($book)) {
+					$this->get_content('photo_not_found');
+					return;
+				}
+			} else if (isset($_GET['book'])
 				&& ctype_digit($_GET['book'])
 				&& intval($_GET['book']) > 0) {
 				$book = $this->model->get_book($_GET['book']);
@@ -354,17 +361,13 @@
 					$this->get_content('book_not_found');
 					return;
 				}
-			} else if (isset($_GET['photo']) && $_GET['photo']) {
-				$photo = $this->model->get_iter($_GET['photo']);
-				$book = $photo->get_book();
-				if (!$photo || !$this->policy->user_can_read($book)) {
-					$this->get_content('photo_not_found');
-					return;
-				}
 			} else {
 				$photo = null;
-				$book = null;
+				$book = $this->model->get_root_book();
 			}
+
+			if (logged_in() && isset($_GET['book']) && $_GET['book'] == 'liked')
+				$book = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
 			
 			if (!$photo) {
 				if (isset($_POST['submfotoboeknieuw']))

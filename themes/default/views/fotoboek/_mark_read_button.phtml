@@ -1,4 +1,4 @@
-<?php if (logged_in() && $iter && $model->get_num_children($iter) > 0): ?>
+<?php if (logged_in() && $iter->get_id() && ctype_digit($iter->get_id()) && $iter->count_books() > 0): ?>
 <form method="post" action="">
 	<input type="hidden" name="mark_read_recursively" value="true">
 	<button type="submit" class="button mark-read-button"><?=__('Markeer alle boeken als gezien')?></button>

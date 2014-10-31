@@ -4,7 +4,7 @@ $books_per_row = 3;
 $policy = get_policy($model);
 
 // Filter the invisible books and reindex the array (required for the for-loops below.)
-$children = array_values(array_filter($model->get_children($iter), array($policy, 'user_can_read')));
+$children = array_values(array_filter($iter->get_books(), array($policy, 'user_can_read')));
 
 if (!$children || count($children) == 0)
 	return;
@@ -23,29 +23,25 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			$titles[] = '';
 		} else {
 			$image = get_theme_data('images/book.png');
-			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get('id') . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
+			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get_id() . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
 		
 			if ($policy->user_can_update($children[$n]))
-				$contents .= ' <a href="fotoboek.php?editbook&book=' . $children[$n]->get('id') . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
+				$contents .= ' <a href="fotoboek.php?editbook&book=' . $children[$n]->get_id() . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
 
 			if ($policy->user_can_delete($children[$n]))
-				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get('id') . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
+				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get_id() . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
 
 			array_push($images,$contents);
 		
 			$title = $children[$n]->get('titel');
 			$subtitle = array();
 
-			$num = $model->get_num_children($children[$n]);
-		
-			if ($num)
+			if (($num = $children[$n]->count_books()) > 0)
 				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $num), $num);
 
-			if ($children[$n]->get('has_photos')) {
-				$num = $children[$n]->get('num_photos');
+			if (($num = $children[$n]->count_photos()) > 0)
 				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
-			}					
-		
+			
 			if (count($subtitle) > 0)
 				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
 		

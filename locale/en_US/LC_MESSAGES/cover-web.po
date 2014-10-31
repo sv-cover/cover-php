@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-10-28 00:27+0100\n"
+"POT-Creation-Date: 2014-10-31 01:47+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -206,9 +206,9 @@ msgstr ""
 "\n"
 "The WebCie"
 
-#: ../../../fotoboek.php:106
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:13
-#: ../../../themes/default/views/fotoboek/_books.phtml:52
+#: ../../../fotoboek.php:115 ../../../include/models/DataModelFotoboek.php:134
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:19
+#: ../../../themes/default/views/fotoboek/_books.phtml:26
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:36
 #: ../../../themes/default/views/fotoboek/book_not_found.phtml:1
 #: ../../../themes/default/views/fotoboek/edit_fotoboek.phtml:1
@@ -527,6 +527,10 @@ msgstr "Committee"
 #: ../../../themes/default/views/forum.php:857
 msgid "Groep"
 msgstr "Group"
+
+#: ../../../include/models/DataModelFotoboekLikes.php:121
+msgid "Favoriete foto's"
+msgstr "Liked photos"
 
 #: ../../../include/models/DataModelMember.php:502
 #: ../../../themes/default/views/almanak/almanak.php:24
@@ -888,7 +892,7 @@ msgstr "V"
 #: ../../../themes/default/views/actieveleden/_commissie_selectie.phtml:26
 #: ../../../themes/default/views/afstudeerplaatsen/afstudeerplaatsen.phtml:17
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:69
-#: ../../../themes/default/views/fotoboek/_books.phtml:55
+#: ../../../themes/default/views/fotoboek/_books.phtml:32
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:39
 #: ../../../themes/default/views/links/_beheer.phtml:28
 #: ../../../themes/default/views/studieondersteuning/vak.phtml:42
@@ -991,7 +995,7 @@ msgstr "Add book"
 #: ../../../themes/default/views/forum.php:619
 #: ../../../themes/default/views/agenda/edit.phtml:86
 #: ../../../themes/default/views/announcements/index.phtml:10
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:1
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:4
 #: ../../../themes/default/views/links/_beheer.phtml:28
 #: ../../../themes/default/views/stickers/map.phtml:5
 msgid "Toevoegen"
@@ -2139,7 +2143,7 @@ msgstr "Modify phd position"
 
 #: ../../../themes/default/views/afstudeerplaatsen/afstudeerplaatsen.phtml:16
 #: ../../../themes/default/views/afstudeerplaatsen/bedrijf.phtml:68
-#: ../../../themes/default/views/fotoboek/_books.phtml:55
+#: ../../../themes/default/views/fotoboek/_books.phtml:29
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:39
 #: ../../../themes/default/views/fotoboek/edit_fotoboek.phtml:1
 msgid "Bewerken"
@@ -2749,47 +2753,57 @@ msgstr "Back to all committees"
 msgid "Commissieleden gezocht!"
 msgstr "Looking for new members!"
 
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:1
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:2
 msgid "Nieuw"
 msgstr "New"
 
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:1
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:2
 msgid "Nieuw fotoboek aanmaken"
 msgstr "Add a new photo book"
 
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:1
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:3
 msgid "Nieuw fotoboek"
 msgstr "New photo book"
 
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:1
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:16
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:4
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:5
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:22
 msgid "Foto's toevoegen"
 msgstr "Add photos"
 
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:14
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:6
+msgid "Foto's verwijderen"
+msgstr "Delete photos"
+
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:20
 msgid "Foto urls"
 msgstr "Photo urls"
 
-#: ../../../themes/default/views/fotoboek/_beheer.phtml:15
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:21
 msgid "Thumbnail urls"
 msgstr "Thumbnail urls"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:52
+#: ../../../themes/default/views/fotoboek/_beheer.phtml:79
+#, php-format
+msgid "Weet je zeker dat je %d geselecteerde foto's wilt verwijderen?"
+msgstr "Are you sure you want to delete the %d selected photos?"
+
+#: ../../../themes/default/views/fotoboek/_books.phtml:26
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:36
 msgid "Ga naar fotoboek"
 msgstr "Go to photo book"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:55
+#: ../../../themes/default/views/fotoboek/_books.phtml:29
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:39
 msgid "Fotoboek bewerken"
 msgstr "Edit photo book"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:55
+#: ../../../themes/default/views/fotoboek/_books.phtml:32
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:39
 msgid "Fotoboek verwijderen"
 msgstr "Delete photo book"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:65
+#: ../../../themes/default/views/fotoboek/_books.phtml:40
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:49
 #, php-format
 msgid "%d boek"
@@ -2797,7 +2811,7 @@ msgid_plural "%d boeken"
 msgstr[0] "%d book"
 msgstr[1] "%d books"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:69
+#: ../../../themes/default/views/fotoboek/_books.phtml:43
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:53
 #, php-format
 msgid "%d foto"
@@ -2805,7 +2819,7 @@ msgid_plural "%d foto's"
 msgstr[0] "%d photo"
 msgstr[1] "%d photos"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:95
+#: ../../../themes/default/views/fotoboek/_books.phtml:68
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:71
 msgid ""
 "Weet je zeker dat je dit fotoboek en alle fotoboeken en foto's erin wilt "
@@ -2849,35 +2863,35 @@ msgstr "Last comments"
 msgid "Markeer alle boeken als gezien"
 msgstr "Mark all books as seen"
 
-#: ../../../themes/default/views/fotoboek/_navigation.phtml:16
+#: ../../../themes/default/views/fotoboek/_navigation.phtml:17
 #: ../../../themes/default/views/fotoboek/_photo.phtml:31
 msgid "Vorige"
 msgstr "Previous"
 
-#: ../../../themes/default/views/fotoboek/_navigation.phtml:16
+#: ../../../themes/default/views/fotoboek/_navigation.phtml:17
 msgid "Ga naar vorig boek"
 msgstr "Go to the previous book"
 
-#: ../../../themes/default/views/fotoboek/_navigation.phtml:20
+#: ../../../themes/default/views/fotoboek/_navigation.phtml:21
 msgid "Bovenliggende"
 msgstr "Parent"
 
-#: ../../../themes/default/views/fotoboek/_navigation.phtml:20
+#: ../../../themes/default/views/fotoboek/_navigation.phtml:21
 msgid "Ga naar bovenliggend boek"
 msgstr "Go to parent book"
 
-#: ../../../themes/default/views/fotoboek/_navigation.phtml:20
-#: ../../../themes/default/views/fotoboek/_path.phtml:12
-#: ../../../themes/default/views/fotoboek/_path.phtml:26
+#: ../../../themes/default/views/fotoboek/_navigation.phtml:21
+#: ../../../themes/default/views/fotoboek/_path.phtml:4
+#: ../../../themes/default/views/fotoboek/_path.phtml:13
 msgid "Fotoboeken"
 msgstr "Photo books"
 
-#: ../../../themes/default/views/fotoboek/_navigation.phtml:24
+#: ../../../themes/default/views/fotoboek/_navigation.phtml:25
 #: ../../../themes/default/views/fotoboek/_photo.phtml:34
 msgid "Volgende"
 msgstr "Next"
 
-#: ../../../themes/default/views/fotoboek/_navigation.phtml:24
+#: ../../../themes/default/views/fotoboek/_navigation.phtml:25
 msgid "Ga naar volgend boek"
 msgstr "Go to next book"
 
@@ -2909,27 +2923,19 @@ msgstr "Go to next photo"
 msgid "Foto"
 msgstr "Photo"
 
-#: ../../../themes/default/views/fotoboek/_photos.phtml:30
-msgid "Weet je zeker dat je de geselecteerde foto's wilt verwijderen?"
-msgstr "Are you sure you want to delete the selected photos?"
-
-#: ../../../themes/default/views/fotoboek/_photos.phtml:44
+#: ../../../themes/default/views/fotoboek/_photos.phtml:33
 #, php-format
 msgid "%d lid vindt deze foto awesome"
 msgid_plural "%d leden vinden deze foto awesome"
 msgstr[0] "%d member thinks this photo is awesome"
 msgstr[1] "%d members think this photo totally rocks!"
 
-#: ../../../themes/default/views/fotoboek/_photos.phtml:47
+#: ../../../themes/default/views/fotoboek/_photos.phtml:36
 #, php-format
 msgid "%d reactie"
 msgid_plural "%d reacties"
 msgstr[0] "%d comment"
 msgstr[1] "%d comments"
-
-#: ../../../themes/default/views/fotoboek/_photos.phtml:58
-msgid "Geselecteerde foto's verwijderen"
-msgstr "Delete selected photos"
 
 #: ../../../themes/default/views/fotoboek/_random_photos.phtml:11
 msgid "Willekeurige foto's"
@@ -2952,7 +2958,7 @@ msgstr "Upload photos"
 msgid "Het opgegeven boek bestaat niet"
 msgstr "This given book doesn't exist"
 
-#: ../../../themes/default/views/fotoboek/fotoboek.phtml:13
+#: ../../../themes/default/views/fotoboek/fotoboek.phtml:11
 #, php-format
 msgid ""
 "Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden "
@@ -2964,7 +2970,7 @@ msgstr ""
 "Please inform the FotoCie when you made photos at an activity so they can "
 "add them to the photo book or use the 'Upload photos' button on the right."
 
-#: ../../../themes/default/views/fotoboek/fotoboek.phtml:13
+#: ../../../themes/default/views/fotoboek/fotoboek.phtml:11
 msgid "FotoCie"
 msgstr "FotoCie"
 
@@ -3929,6 +3935,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Geselecteerde foto's verwijderen"
+#~ msgstr "Delete selected photos"
 
 #~ msgid "Het opgegeven pad bestaat niet"
 #~ msgstr "The given path doesn't exist"
