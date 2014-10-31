@@ -64,6 +64,16 @@
 		{
 			return $this->get('num_photos');
 		}
+
+		public function get_next_photo(DataIterPhoto $photo, $num = -1)
+		{
+			return $this->model->get_next_photo($photo, $num);
+		}
+
+		public function get_previous_photo(DataIterPhoto $photo, $num = -1)
+		{
+			return $this->model->get_previous_photo($photo, $num);
+		}
 	}
 
 	class DataIterRootPhotobook extends DataIterPhotobook

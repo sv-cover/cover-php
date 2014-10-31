@@ -328,10 +328,8 @@
 			$this->get_content('edit_fotoboek', $book);
 		}
 
-		protected function _view_photo(DataIterPhoto $photo)
+		protected function _view_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
-			$book = $this->model->get_book($photo->get('boek'));
-
 			$reactie_controller = new ControllerFotoboekReacties($photo);
 			$reacties = $reactie_controller->run_embedded();
 
@@ -395,7 +393,7 @@
 			elseif (isset($_GET['module']) && $_GET['module'] == 'likes')
 				$this->_run_likes($photo);
 			else
-				$this->_view_photo($photo);
+				$this->_view_photo($photo, $book);
 		}
 	}
 	

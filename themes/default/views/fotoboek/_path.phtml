@@ -14,6 +14,6 @@ foreach ($parents as $parent)
 
 ?>
 <div id="path" class="fotoboek_path"><?=  implode(' / ', $path) ?><?php if (count($path) > 0) echo ' / ' ?><span class="fotoboek_path_current"><?= isset($current)
-	? sprintf('<a href="fotoboek.php?book=%d#photo_%d">%s</a>',
+	? sprintf('<a href="fotoboek.php?book=%s#photo_%d">%s</a>',
 		$iter->get_id(), $current->get_id(), markup_format_text($title))
 	: markup_format_text($title) ?></span></div>

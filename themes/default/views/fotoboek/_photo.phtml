@@ -5,7 +5,7 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 ?>
 <?php if (member_in_commissie(COMMISSIE_FOTOCIE)): ?>
 	<div class="foto_titel">
-		<form method="post" action="fotoboek.php?photo=<?= $iter->get('id') ?>">
+		<form method="post" action="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$iter->get_id() ?>">
 			<?= input_hidden('submfotobeschrijving', 'yes') ?>
 			<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
 		</form>
@@ -16,8 +16,8 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 
 <div id="foto" class="fotoboek_foto">
 <?php
-	$prev = $model->get_previous_photo($iter, 1);
-	$next = $model->get_next_photo($iter, 1);
+	$prev = $book->get_previous_photo($iter, 1);
+	$next = $book->get_next_photo($iter, 1);
 ?>
 <div class="photo <?=$liked ? 'liked' : ''?>">
 	<nav class="photo-controls">
@@ -28,13 +28,13 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 		</form>
 		<?php endif ?>
 		<?php if (count($prev) > 0): ?>
-		<a href="fotoboek.php?photo=<?= $prev[0]->get('id') ?>#a" class="prev-button" title="<?= markup_format_attribute(__('Ga naar vorige foto')) ?>"><?=__('Vorige')?></a>
+		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?= $prev[0]->get_id() ?>#a" class="prev-button" title="<?= markup_format_attribute(__('Ga naar vorige foto')) ?>"><?=__('Vorige')?></a>
 		<?php endif ?>
 		<?php if (count($next) > 0): ?>
-		<a href="fotoboek.php?photo=<?= $next[0]->get('id') ?>#a" class="next-button" title="<?= markup_format_attribute(__('Ga naar volgende foto')) ?>"><?=__('Volgende')?></a>
+		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?= $next[0]->get_id() ?>#a" class="next-button" title="<?= markup_format_attribute(__('Ga naar volgende foto')) ?>"><?=__('Volgende')?></a>
 		<?php endif ?>
 	</nav>
-	<a href="fotoboek.php?book=<?= $iter->get('boek') ?>#photo_<?= $iter->get('id') ?>">
+	<a href="fotoboek.php?book=<?= $book->get_id() ?>#photo_<?= $iter->get_id() ?>">
 		<img id="photo" src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>" <?=($size = $iter->get_size()) ? vsprintf('width="%d" height="%d"', $size) : '' ?>>
 	</a>
 </div>

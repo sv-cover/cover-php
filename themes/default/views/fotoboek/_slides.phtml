@@ -1,24 +1,6 @@
 <?php
-	function build_slides($iters, $num, $current = false) {
-		$slides = array();
-
-		for ($i = 0; $i < $num; $i++) {
-			if ($i < count($iters))
-				$slide = '<img src="' . htmlspecialchars($iters[$i]->get('thumburl'), ENT_QUOTES) . '" alt="' . __('Foto') . '">';
-			else
-				$slide = '';
-		
-			if ($slide != '' && !$current)
-				$slide = '<a href="fotoboek.php?photo=' . $iters[$i]->get('id') . '#a">' . $slide . '</a>';
-		
-			$slides[] = $slide;
-		}
-	
-		return $slides;
-	}
-		
-	$prev = $model->get_previous_photo($iter, 2);
-	$next = $model->get_next_photo($iter, 2);
+	$prev = $book->get_previous_photo($iter, 2);
+	$next = $book->get_next_photo($iter, 2);
 
 	while (count($prev) < 2)
 		array_push($prev, '');
@@ -35,7 +17,7 @@
 <?php foreach ($slides as $i => $slide): ?>
 	<?php if ($slide): ?>
 	<li class="slide <?=image_aspect($slide->get_thumb_size())?> <?=$i == 2 ? 'current' : ''?>">
-		<a href="fotoboek.php?photo=<?=$slide->get_id()?>#a">
+		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$slide->get_id()?>#a">
 			<img src="<?=markup_format_attribute($slide->get('thumburl'))?>">
 		</a>
 	</li>

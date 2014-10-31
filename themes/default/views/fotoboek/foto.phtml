@@ -4,8 +4,8 @@
 
 <?php
 	$this->render_partial('path', array('iter' => $book, 'current' => $iter, 'model' => $model));
-	$this->render_partial('photo', compact('model', 'iter'));
-	$this->render_partial('slides', compact('model', 'iter'));
+	$this->render_partial('photo', compact('model', 'iter', 'book'));
+	$this->render_partial('slides', compact('model', 'iter', 'book'));
 
 	echo $reacties;
 ?>
