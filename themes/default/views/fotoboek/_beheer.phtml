@@ -6,17 +6,17 @@
 		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?=__('Foto\'s verwijderen')?></a>
 	</div>
 	<div id="fotoboek_beheer" class="beheer">
-	<form name="fbeheer" action="fotoboek.php?book=<?= $iter ? $iter->get('id') : "" ?>" method="post">
+	<form name="fbeheer" action="fotoboek.php?book=<?=$iter->get_id()?>" method="post">
 
-	<? $this->render_partial('fotoboek_edit', compact('model', 'parent', 'errors')); ?>
+	<?php $this->render_partial('fotoboek_edit', array('model' => $model, 'errors' => $errors, 'iter' => new DataIterPhotobook($model, -1, array('parent' => $iter->get_id())))); ?>
 
 	</form>
 	</div>
 	<div id="fotoboek_fotos" class="beheer">
-	<form name="ffotos" action="fotoboek.php?book=<?= ($iter ? $iter->get('id') : "" )?>" method="post">
+	<form name="ffotos" action="fotoboek.php?book=<?=$iter->get_id()?>" method="post">
 	<table class="default_noborder">
 	<?= input_hidden('submfotoboekfotos', 'yes') ?>
-	<?= table_row(label(__('Fotoboek'), '', null, true) . ':', $iter ? $iter->get('titel') : 'Fotoboeken') ?>
+	<?= table_row(label(__('Fotoboek'), '', null, true) . ':', markup_format_text($iter->get('titel'))) ?>
 	<?= table_row(label(__('Foto urls'), 'urls', $errors, true) . ':', textarea_field('urls', null, $errors)) ?>
 	<?= table_row(label(__('Thumbnail urls'), 'thumbnail_urls', $errors, true) . ':', textarea_field('thumbnail_urls', null, $errors)) ?>
 	<tr><td colspan="2" class="submit"> <?= input_submit('subm', __('Foto\'s toevoegen')) ?></td></tr>

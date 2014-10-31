@@ -2,7 +2,7 @@
 <div class = "messageBox clearfix fotoboek-box">
 
 <?php if (get_policy($model)->user_can_update($iter) || get_policy($model)->user_can_create()): ?>
-	<?php $this->render_partial("beheer", compact('errors', 'errortype', 'model', 'iter', 'parent')) ?>
+	<?php $this->render_partial("beheer", compact('errors', 'errortype', 'model', 'iter')) ?>
 <?php endif ?>
 
 <?php $this->render_partial('navigation', compact('model', 'iter')) ?>

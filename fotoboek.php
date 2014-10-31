@@ -225,7 +225,7 @@
 			$this->redirect('fotoboek.php?book=' . $new_book_id);
 		}
 		
-		function _process_fotoboek_edit(DataModelFotoboek $book) {
+		function _process_fotoboek_edit(DataIterPhotobook $book) {
 			if (!$this->_page_prepare())
 				return;
 

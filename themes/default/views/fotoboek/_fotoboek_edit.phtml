@@ -1,18 +1,15 @@
 <? if ($iter) {
 	$data = $iter->data;
 	$parent = $model->get_parent($iter);
-} else {
-	$data = null;
-} ?>
+}
 
-
-<? echo '<table>' . 
-input_hidden($iter ? 'submfotoboekedit' : 'submfotoboeknieuw', 'yes') .
+echo '<table>' . 
+input_hidden($iter->get_id() > 0 ? 'submfotoboekedit' : 'submfotoboeknieuw', 'yes') .
 table_row(label(__('Bovenliggend boek'), '', null, true) . ':', $parent ? markup_format_text($parent->get('titel')) : 'Fotoboeken') .
 table_row(label(__('Titel'), 'titel', $errors, true) . ':', input_text('titel', $data)) .
 table_row(label(__('Datum (dd-mm-yyyy)'), 'date', $errors) . ':', input_text('date', $data, 'field', 'datum')) .
 table_row(label(__('Fotograaf'), 'fotograaf', $errors) . ':', input_text('fotograaf', $data)) .
 '<tr><td colspan="2">' . textarea_field('beschrijving', $data, $errors) . '</td></tr> 
-<tr><td colspan="2" class="submit">' . input_submit('subm', $iter ? __('Fotoboek opslaan') : __('Fotoboek aanmaken')) . '</td></tr>
+<tr><td colspan="2" class="submit">' . input_submit('subm', $iter->get_id() > 0 ? __('Fotoboek opslaan') : __('Fotoboek aanmaken')) . '</td></tr>
 </table>';
  ?>
