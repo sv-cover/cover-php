@@ -408,6 +408,46 @@
 
 			return $this->_rows_to_iters($rows, 'DataIterPhotobook');
 		}
+
+		function get_iter($id)
+		{
+			$row = $this->db->query_first(sprintf("
+				SELECT
+					fotos.*,
+					COUNT(DISTINCT foto_reacties.id) AS num_reacties
+				FROM
+					fotos
+				LEFT JOIN foto_reacties ON
+					foto_reacties.foto = fotos.id
+				WHERE
+					fotos.id = %d
+				GROUP BY
+					fotos.id
+			", $id));
+
+			return $this->_row_to_iter($row, 'DataIterPhoto');
+		}
+
+		function find($condition)
+		{
+			$rows = $this->db->query("
+				SELECT
+					fotos.*,
+					COUNT(DISTINCT foto_reacties.id) AS num_reacties
+				FROM
+					fotos
+				LEFT JOIN foto_reacties ON
+					foto_reacties.foto = fotos.id
+				WHERE
+					$condition
+				GROUP BY
+					fotos.id
+				ORDER BY
+					fotos.id ASC
+			");
+
+			return $this->_rows_to_iters($rows, 'DataIterPhoto');
+		}
 		
 		/**
 		  * Get a certain number of randomly selected photos

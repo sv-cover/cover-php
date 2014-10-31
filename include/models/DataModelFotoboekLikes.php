@@ -16,7 +16,7 @@ class DataIterLikedPhotobook extends DataIterPhotobook
 
 	public function get_photos()
 	{
-		return $this->model->find('id IN (' . implode(',', $this->get('photo_ids')) . ')');
+		return $this->model->find('fotos.id IN (' . implode(',', $this->get('photo_ids')) . ')');
 	}
 
 	public function get_next_photo(DataIterPhoto $current, $num = -1)
