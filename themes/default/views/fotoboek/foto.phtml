@@ -2,12 +2,13 @@
 
 <div class="messageBox">
 
-<?php
-	$this->render_partial('path', array('iter' => $book, 'current' => $iter, 'model' => $model));
-	$this->render_partial('photo', compact('model', 'iter', 'book'));
-	$this->render_partial('slides', compact('model', 'iter', 'book'));
+<div class="photo-page-header">
+	<?php $this->render_partial('path', array('book' => $book, 'photo' => $iter, 'model' => $model)) ?>
+</div>
 
-	echo $reacties;
-?>
+<?php $this->render_partial('photo', compact('model', 'iter', 'book', 'faces_controller', 'likes_controller')) ?>
 
+<?php $this->render_partial('slides', compact('model', 'iter', 'book')) ?>
+
+<?php echo $reacties ?>
 </div>

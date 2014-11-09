@@ -12,12 +12,11 @@
 <?php endif ?>
 
 <div class="photo-page-header">
-	<?php 
-	$include_current = false;
+<?php 
 	$this->render_partial('upload_photos_button');
 	$this->render_partial('mark_read_button', compact('model', 'iter'));
-	if ($iter->get_id() != 0) $this->render_partial('path', compact('model', 'iter'));
-	?>
+	$this->render_partial('path', array('model' => $model, 'book' => $iter));
+?>
 </div>
 
 <?php

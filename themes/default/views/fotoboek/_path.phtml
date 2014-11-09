@@ -1,19 +1,33 @@
 <?php
-$title = $iter
-	? $iter->get('titel')
-	: __('Fotoboeken');
+$generate_path = function($book) use ($model, $photo)
+{
+	$parents = array_merge($model->get_parents($book), array($book));
 
-$parents = $model->get_parents($iter);
+	$path = array();
 
-$path = array();
+	for ($i = 0; $i < count($parents); ++$i)
+	{
+		if ($i + 1 < count($parents))
+			$anchor = sprintf('#book_%s', $parents[$i + 1]->get_id());
+		elseif ($i + 1 == count($parents) && isset($photo))
+			$anchor = sprintf('#photo_%d', $photo->get_id());
+		else
+			$anchor = '';
 
-foreach ($parents as $parent)
-	$path[] = $parent
-		? '<a href="fotoboek.php?book=' . $parent->get_id() . '">' . markup_format_text($parent->get('titel')) . '</a>'
-		: '<a href="fotoboek.php" name="a">' . __('Fotoboeken') . '</a>';
+		$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
+			urlencode($parents[$i]->get_id()),
+			$anchor,
+			markup_format_text($parents[$i]->get('titel')));
+	}
 
+	return $path;
+}
 ?>
-<div id="path" class="fotoboek_path"><?=  implode(' / ', $path) ?><?php if (count($path) > 0) echo ' / ' ?><span class="fotoboek_path_current"><?= isset($current)
-	? sprintf('<a href="fotoboek.php?book=%s#photo_%d">%s</a>',
-		$iter->get_id(), $current->get_id(), markup_format_text($title))
-	: markup_format_text($title) ?></span></div>
+<div id="path" class="fotoboek_path"><?=  implode(' / ', $generate_path($book)) ?></div>
+
+<?php if (isset($photo) && ($photo_book = $photo->get_book()) && $photo_book->get_id() != $book->get_id()): ?>
+<div class="fotoboek_path original_path">
+	<?=__('Deze foto komt uit')?>
+	<?=  implode(' / ', $generate_path($photo_book)) ?>
+</div>	
+<?php endif ?>

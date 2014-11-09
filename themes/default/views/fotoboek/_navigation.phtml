@@ -3,26 +3,28 @@ if (!$iter)
 	return;
 
 $policy = get_policy($model);
-$prev = $model->get_previous_book($iter);
-$next = $model->get_next_book($iter);
-$parent = $model->get_parent($iter);
 ?>
-
 <div class="bar">
-<table class="navigation">
-<tr><td>
-
-<?
-if ($prev && $policy->user_can_read($prev)) { ?>
-	<a href="fotoboek.php?book=<?= $prev->get_id() ?>"><?= image('previous.png', __('Vorige'), __('Ga naar vorig boek')) ?></a> <a href="fotoboek.php?book=<?= $prev->get_id() ?>"><?= htmlspecialchars($prev->get('titel')) ?></a>
-<? } ?>
-
-</td><td class="text_center">
-<a href="fotoboek.php?book=<?= ($parent ? $parent->get_id() : '') ?>"><?= image('up.png', __('Bovenliggende'), __('Ga naar bovenliggend boek')) ?></a> <a href="fotoboek.php?book=<?= ($parent ? $parent->get_id() : '') ?>"><?= ($parent ? htmlspecialchars($parent->get('titel')) : __('Fotoboeken')) ?></a>
-</td><td class="text_right">
-
-<? if ($next && $policy->user_can_read($next)) { ?>
-	<a href="fotoboek.php?book=<?= $next->get_id() ?>"><?= image('next.png', __('Volgende'), __('Ga naar volgend boek')) ?></a> <a href="fotoboek.php?book=<?= $next->get_id() ?>"><?= htmlspecialchars($next->get('titel')) ?></a>
-<? } ?>
-
-</td></tr></table></div>
+	<table class="navigation">
+		<tr>
+			<td>
+			<?php if (($prev = $iter->get_previous_book()) && $policy->user_can_read($prev)): ?>
+				<a href="fotoboek.php?book=<?= $prev->get_id() ?>"><?= image('previous.png', __('Vorige'), __('Ga naar vorig boek')) ?></a>
+				<a href="fotoboek.php?book=<?= $prev->get_id() ?>"><?= htmlspecialchars($prev->get('titel')) ?></a>
+			<?php endif ?>
+			</td>
+			<td>
+			<?php if (($parent = $iter->get_parent()) && $policy->user_can_read($parent)): ?>
+				<a href="fotoboek.php?book=<?=$parent->get_id()?>"><?=image('up.png', __('Bovenliggende'), __('Ga naar bovenliggend boek')) ?></a>
+				<a href="fotoboek.php?book=<?=$parent->get_id()?>"><?=markup_format_text($parent->get('titel')) ?></a>
+			<?php endif ?>
+			</td>
+			<td>
+			<?php if (($next = $iter->get_next_book()) && $policy->user_can_read($next)): ?>
+				<a href="fotoboek.php?book=<?= $next->get_id() ?>"><?= htmlspecialchars($next->get('titel')) ?></a>
+				<a href="fotoboek.php?book=<?= $next->get_id() ?>"><?= image('next.png', __('Volgende'), __('Ga naar volgend boek')) ?></a>
+			<?php endif ?>
+			</td>
+		</tr>
+	</table>
+</div>

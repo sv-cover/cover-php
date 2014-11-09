@@ -11,21 +11,39 @@ table.navigation td {
 	width: 33%;
 }
 
-
-div.fotoboek_path {
-	font-size: 16px;
-	font-weight: bold;
-	border-bottom: 1px solid #aaa;
-	margin-bottom: 10px;
-	padding-bottom: 5px;
+table.navigation td:nth-child(1) {
+	text-align: left;
 }
 
-.photo {
-	position: relative;
+table.navigation td:nth-child(2) {
 	text-align: center;
 }
 
-.photo img {
+table.navigation td:nth-child(3) {
+	text-align: right;
+}
+
+.fotoboek_path {
+	font-size: 16px;
+	line-height: 32px;
+	font-weight: bold;
+	border-bottom: 1px solid #aaa;
+}
+
+.fotoboek_path.original_path {
+	font-size: 12px;
+	line-height: 18px;
+	font-weight: normal;
+	border: none;
+}
+
+#photo {
+	position: relative;
+	display: table;
+    margin: 0 auto;
+}
+
+#photo .full-size-photo {
 	max-width: 100%;
 	height: auto;
 }
@@ -116,6 +134,10 @@ div.fotoboek_path {
 .liked .like-button {
 	color: white;
 	background-image: url(../images/heart-filled.svg);
+}
+
+.photo-page-header {
+	margin-bottom: 10px;
 }
 
 .photo-page-header:after {

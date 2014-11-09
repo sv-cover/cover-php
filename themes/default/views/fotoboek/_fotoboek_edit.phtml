@@ -1,6 +1,6 @@
 <? if ($iter) {
 	$data = $iter->data;
-	$parent = $model->get_parent($iter);
+	$parent = $iter->get_parent();
 }
 
 echo '<table>' . 

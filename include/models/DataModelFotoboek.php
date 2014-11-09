@@ -65,14 +65,49 @@
 			return $this->get('num_photos');
 		}
 
-		public function get_next_photo(DataIterPhoto $photo, $num = -1)
+		public function get_next_photo(DataIterPhoto $current, $num = -1)
 		{
-			return $this->model->get_next_photo($photo, $num);
+			$photos = $this->get_photos();
+
+			foreach ($photos as $index => $photo)
+				if ($photo->get_id() == $current->get_id())
+					break;
+
+			if (count($photos) == $index + 1)
+				return array();
+
+			return array_slice($photos, $index + 1, min(max($num, 0), count($photos) - $index));
 		}
 
-		public function get_previous_photo(DataIterPhoto $photo, $num = -1)
+		public function get_previous_photo(DataIterPhoto $current, $num = -1)
 		{
-			return $this->model->get_previous_photo($photo, $num);
+			$photos = $this->get_photos();
+
+			foreach ($photos as $index => $photo)
+				if ($photo->get_id() == $current->get_id())
+					break;
+
+			if ($index === 0)
+				return array();
+
+			return array_reverse(array_slice($photos,
+				max($index - max($num, 0), 0),
+				min(max($num, 0), $index)));
+		}
+
+		public function get_parent()
+		{
+			return $this->model->get_book($this->get('parent'));
+		}
+
+		public function get_next_book()
+		{
+			return $this->model->get_next_book($this);
+		}
+
+		public function get_previous_book()
+		{
+			return $this->model->get_previous_book($this);
 		}
 	}
 
@@ -82,8 +117,9 @@
 		{
 			$books = parent::get_books();
 
-			if (logged_in())
+			if (logged_in()) {
 				$books[] = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
+			}
 			
 			return $books;
 		}
@@ -91,6 +127,21 @@
 		public function count_books()
 		{
 			return parent::count_books() + (logged_in() ? 1 : 0);
+		}
+
+		public function get_next_book()
+		{
+			return null;
+		}
+
+		public function get_previous_book()
+		{
+			return null;
+		}
+
+		public function get_parent()
+		{
+			return null;
 		}
 	}
 
@@ -113,6 +164,9 @@
 		  */
 		function get_book($id)
 		{
+			if ($id == 0)
+				return $this->get_root_book();
+
 			$q = sprintf("
 					SELECT 
 						f_b.*,
@@ -188,74 +242,6 @@
 		}
 		
 		/**
-		  * Get a certain number of photos previous to a photo
-		  * @photo a #DataIter representing the photo
-		  * @num optional; the number of photos to get previous to 
-		  * photo. The default value is -1 which means that only one
-		  * previous photo is being looked up and that it returns
-		  * that photo instead of an array of photos
-		  *
-		  * @result an array of #DataIter or just a single #DataIter if
-		  * num is -1
-		  */
-		function get_previous_photo(DataIterPhoto $photo, $num = -1) {
-			$rows = $this->db->query("
-					SELECT 
-						*
-					FROM 
-						fotos
-					WHERE 
-						boek = " . $photo->get('boek') . " AND
-						id < " . $photo->get('id') . "
-					ORDER BY 
-						id DESC
-					LIMIT " . ($num != -1 ? intval($num) : 1));
-			
-			if ($num == -1)
-				if ($rows && count($rows) != 0) {
-					return $this->_row_to_iter($rows[0]);
-				} else {
-					return null;
-				}
-			else
-				return $this->_rows_to_iters($rows, 'DataIterPhoto');
-		}
-		
-		/**
-		  * Get a certain number of photos next to a photo
-		  * @photo a #DataIter representing the photo
-		  * @num optional; the number of photos to get next to 
-		  * photo. The default value is -1 which means that only one
-		  * next photo is being looked up and that it returns
-		  * that photo instead of an array of photos
-		  *
-		  * @result an array of #DataIter or just a single #DataIter if
-		  * num is -1
-		  */
-		function get_next_photo(DataIterPhoto $photo, $num = -1) {
-			$rows = $this->db->query("
-					SELECT 
-						*
-					FROM 
-						fotos
-					WHERE 
-						boek = " . $photo->get('boek') . " AND
-						id > " . $photo->get('id') . "
-					ORDER BY 
-						id ASC
-					LIMIT " . ($num != -1 ? intval($num) : 1));
-			
-			if ($num == -1)
-				if ($rows && count($rows) != 0) {
-					return $this->_row_to_iter($rows[0]);
-				} else {
-					return null;
-				}
-			else
-				return $this->_rows_to_iters($rows, 'DataIterPhoto');		
-		}
-		
-		/**
 		  * Get the book before a certain book
 		  * @book a #DataIter representing a book
 		  *
@@ -311,19 +297,6 @@
 					LIMIT 1");
 
 			return $this->get_book($row['id']);
-		}
-		
-		/**
-		  * Get the parent of a book
-		  * @book a #DataIter representing a book
-		  *
-		  * @result a #DataIter or null if the book has no parent
-		  */
-		function get_parent(DataIterPhotobook $book) {
-			if (!$book->get('parent'))
-				return null;
-			
-			return $this->get_book($book->get('parent'));
 		}
 		
 		/**
@@ -536,21 +509,6 @@
 		}
 		
 		/**
-		  * Recursively get all the parents of a book
-		  * @book a #DataIter representing a book
-		  * @result the resulting array with all the parents
-		  */
-		function _get_parents_real($book, &$result) {	
-			if (!$book)
-				return;
-			
-			$parent = $this->get_parent($book);
-			$result[] = $parent;
-			
-			$this->_get_parents_real($parent, $result);
-		}
-		
-		/**
 		  * Get all the parents of a book
 		  * @book a #DataIter representing a book
 		  *
@@ -558,8 +516,10 @@
 		  */
 		function get_parents(DataIterPhotobook $book) {
 			$result = array();
+
+			while ($book = $book->get_parent())
+				$result[] = $book;
 			
-			$this->_get_parents_real($book, $result);
 			return array_reverse($result);
 		}
 		

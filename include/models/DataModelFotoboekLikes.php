@@ -18,28 +18,6 @@ class DataIterLikedPhotobook extends DataIterPhotobook
 	{
 		return $this->model->find('fotos.id IN (' . implode(',', $this->get('photo_ids')) . ')');
 	}
-
-	public function get_next_photo(DataIterPhoto $current, $num = -1)
-	{
-		$photos = $this->get_photos();
-
-		foreach ($photos as $index => $photo)
-			if ($photo->get_id() == $current->get_id())
-				break;
-
-		return array_slice($photos, $index + 1, max($num, 0));
-	}
-
-	public function get_previous_photo(DataIterPhoto $current, $num = -1)
-	{
-		$photos = $this->get_photos();
-
-		foreach ($photos as $index => $photo)
-			if ($photo->get_id() == $current->get_id())
-				break;
-
-		return array_reverse(array_slice($photos, $index - max($num, 0), max($num, 0)));
-	}
 }
 
 class DataModelFotoboekLikes extends DataModel

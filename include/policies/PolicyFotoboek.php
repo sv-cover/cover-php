@@ -33,8 +33,8 @@ class PolicyFotoboek implements Policy
 	public function user_can_update(DataIter $book)
 	{
 		return member_in_commissie(COMMISSIE_FOTOCIE)
-			&& !$book instanceof DataIterRootPhotobook
-			&& !$book instanceof DataIterLikedPhotobook;
+			&& ctype_digit($book->get_id())
+			&& $book->get_id() > 0;
 	}
 
 	public function user_can_delete(DataIter $book)

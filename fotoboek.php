@@ -100,6 +100,8 @@
 
 		protected $policy;
 
+		protected $likes_controller;
+
 		function ControllerFotoboek() {
 			$this->model = get_model('DataModelFotoboek');
 
@@ -113,6 +115,12 @@
 				$title = $iter->get_book()->get('titel');
 			else
 				$title = __('Fotoboek');
+
+			$params = array_merge(
+				array(
+					'likes_controller' => $this->likes_controller),
+				$params ?: array()
+			);
 
 			$this->run_header(compact('title'));
 			run_view('fotoboek::' . $view, $this->model, $iter, $params);
@@ -336,17 +344,11 @@
 			$this->get_content('foto', $photo, compact('book', 'reacties'));
 		}
 
-		protected function _run_likes(DataIterPhoto $photo)
-		{
-			$likes_controller = new ControllerFotoboekLikes($photo);
-			$likes_controller->run();
-		}
-		
 		function run_impl() {
 			if (isset($_GET['photo']) && $_GET['photo']) {
 				$photo = $this->model->get_iter($_GET['photo']);
 				$book = $photo->get_book();
-				if (!$photo || !$this->policy->user_can_read($book)) {
+				if (!$photo) {
 					$this->get_content('photo_not_found');
 					return;
 				}
@@ -355,7 +357,7 @@
 				&& intval($_GET['book']) > 0) {
 				$book = $this->model->get_book($_GET['book']);
 				
-				if (!$book || !$this->policy->user_can_read($book)) {
+				if (!$book) {
 					$this->get_content('book_not_found');
 					return;
 				}
@@ -366,6 +368,9 @@
 
 			if (logged_in() && isset($_GET['book']) && $_GET['book'] == 'liked')
 				$book = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
+			if ($photo) {
+				$this->likes_controller = new ControllerFotoboekLikes($photo);
+			}
 			
 			if (!$photo) {
 				if (isset($_POST['submfotoboeknieuw']))
@@ -383,15 +388,21 @@
 				elseif (isset($_GET['editbook']))
 					$this->_view_edit_book($book);
 				else {
+					if (!$this->policy->user_can_read($book))
+						return $this->get_content('book_not_found');
+
 					if ($book && logged_in())
 						$this->model->mark_read(logged_in('id'), $book);
 
 					$this->get_content('fotoboek', $book);
 				}
-			} elseif (isset($_POST['submfotobeschrijving']))
+			}
+			elseif (!$this->policy->user_can_read($book))
+				$this->get_content('book_not_found');
+			elseif (isset($_POST['submfotobeschrijving']))
 				$this->_process_photo_description($photo);
 			elseif (isset($_GET['module']) && $_GET['module'] == 'likes')
-				$this->_run_likes($photo);
+				$this->likes_controller->run();
 			else
 				$this->_view_photo($photo, $book);
 		}
