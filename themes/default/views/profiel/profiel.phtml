@@ -99,7 +99,7 @@
 					<? if ($this->is_current_member($iter)) {?>
 						<td><?= input_text('avatar', $iter->data, 'formatter',  'empty_to_http_formatter') ?></td>
 					<?} else {?>
-						<td><?= ($iter->get('avatar') ? ('<img src="' . markup_format_attribute($iter->get('avatar')) . '" alt="' . __('avatar') . '">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
+						<td><?= ($iter->get('avatar') ? ('<img src="' . markup_format_attribute($iter->get('avatar')) . '" alt="' . __('avatar') . '" class="avatar">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
 					<? } ?>
 					</tr>
 
