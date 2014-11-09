@@ -286,3 +286,94 @@ table.navigation td:nth-child(3) {
 .photo-edit-control {
 	/*display: none;*/
 }
+
+.face {
+	position: absolute;
+	border-radius: 4px;
+	border: 2px solid rgba(0, 0, 0, 0.2);
+	opacity: 0;
+	transition: opacity 100ms;
+}
+
+.face:hover,
+.tagging-enabled .face {
+	opacity: 1.0;
+}
+
+.tagging-enabled .face {
+	cursor: pointer;
+	border-color: rgba(0, 0, 0, 0.6);
+}
+
+#photo.tagging-enabled {
+	cursor: crosshair;
+}
+
+.face .delete-button {
+	width: 20px;
+	height: 20px;
+	background: transparent;
+	border: none;
+	color: white;
+	font: 12px sans-serif;
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	top: 0;
+	display: block;
+}
+
+.face .delete-button:hover {
+	background: rgba(0, 0, 0, 0.8);
+}
+
+.face .tag-label,
+.face .tag-search {
+	display: inline-block;
+	position: absolute;
+	left: 50%;
+	bottom: -24px;
+	-moz-transform: translate(-50%, 0);
+	-webkit-transform: translate(-50%, 0);
+	transform: translate(-50%, 0);
+	background: rgba(0, 0, 0, 0.8);
+	color: white;
+	padding: 0 10px;
+	border-radius: 4px;
+	font: 13px/20px sans-serif;
+	z-index: 1;
+}
+
+.face .tag-search {
+	width: 150px;
+	z-index: 2;
+}
+
+.face .tag-label .name {
+	display: inline-block;
+	white-space: nowrap;
+	color: white;
+	font-weight: normal;
+}
+
+.face.untagged .tag-label .name {
+	font-style: italic;
+}
+
+.ui-autocomplete a.profile {
+	display: block;
+	height: 45px;
+	position: relative;
+	overflow: hidden;
+	padding: 0 0 0 35px;
+}
+
+.ui-autocomplete a.profile .picture {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 30px;
+	height: auto;
+}
+
+

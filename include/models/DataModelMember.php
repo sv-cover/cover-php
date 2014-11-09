@@ -54,8 +54,12 @@
 		
 		function get_iter($id) {
 			$row = $this->db->query_first('SELECT ' . $this->_generate_select() . ' 
-					FROM leden, profielen 
-					WHERE leden.id = profielen.lidid AND leden.id = ' . intval($id));
+					FROM leden
+					LEFT JOIN profielen ON leden.id = profielen.lidid
+					WHERE leden.id = ' . intval($id));
+
+			if ($row === null)
+				throw new DataIterNotFoundException($id);
 			
 			return $this->_row_to_iter($row);
 		}
@@ -88,20 +92,21 @@
 		  *
 		  * @result the raw picture data
 		  */
-		public function get_photo($iter) {
+		public function get_photo(DataIter $iter)
+		{
 			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
 			
 			return $photo ? $this->db->read_blob($photo['foto']) : null;
 		}
 
-		public function get_photo_mtime($iter)
+		public function get_photo_mtime(DataIter $iter)
 		{
 			$row = $this->db->query_first('SELECT EXTRACT(EPOCH FROM foto_mtime) as mtime FROM lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
 
 			return (int) $row['mtime'] - 7200; // timezone difference?
  		}
 
-		public function set_photo($iter, $fh)
+		public function set_photo(DataIter $iter, $fh)
 		{
 			$this->db->query(sprintf("INSERT INTO lid_fotos (lid_id, foto, foto_mtime) VALUES (%d, '%s', NOW())",
 				$iter->get('id'), $this->db->write_blob($fh)));
@@ -114,7 +119,7 @@
 		  *
 		  * @result the id of the photo of the member
 		  */
-		function get_photo_id($iter) {
+		function get_photo_id(DataIter $iter) {
 			if (!$this->has_picture($iter)) 
 				return -1;
 			if ($this->is_private($iter,"foto",true))
@@ -129,7 +134,7 @@
 		  *
 		  * @result true if member has a picture
 		  */
-		function has_picture($iter) {
+		function has_picture(DataIter $iter) {
 			if ($this->db->query_first('SELECT id from lid_fotos WHERE lid_id = ' . $iter->get_id()))
 				return true;
 
@@ -399,17 +404,46 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function search_first_last($name) {
+		function search_first_last($name, $limit = null) {
 			if (!$name) {
 				return null;
 			}
 
 			$name = $this->escape_string($name);
 
-			$query = "SELECT *
-					FROM leden
-					WHERE type IN (" . implode(',', $this->visible_types) . ")
-					AND (voornaam ILIKE '%$name%' OR achternaam ILIKE '%$name%');";
+			$types = array(
+				MEMBER_STATUS_LID,
+				MEMBER_STATUS_LID_AF,
+				MEMBER_STATUS_ERELID,
+				MEMBER_STATUS_DONATEUR
+			);
+
+			$query = "SELECT
+					leden.*
+					FROM
+						leden
+					LEFT JOIN actieveleden ON
+						actieveleden.lidid = leden.id
+					LEFT JOIN foto_faces ON
+						foto_faces.lid_id = leden.id
+					WHERE
+						type IN (" . implode(',', $types) . ")
+						AND
+							CASE
+								WHEN coalesce(tussenvoegsel, '') = '' THEN
+									voornaam || ' ' || achternaam
+								ELSE
+									voornaam || ' ' || tussenvoegsel || ' ' || achternaam
+							END ILIKE '%{$name}%'
+					GROUP BY
+						leden.id
+					ORDER BY
+						COUNT(DISTINCT foto_faces.id) DESC,
+						COUNT(DISTINCT actieveleden.commissieid) DESC,
+						leden.voornaam ASC";
+
+			if ($limit !== null)
+				$query .= sprintf(' LIMIT %d', $limit);
 					
 			$rows = $this->db->query($query);			
 			return $this->_rows_to_iters($rows);			

@@ -27,6 +27,10 @@ class PolicyFotoboek implements Policy
 		if (preg_match("/^Foto's uit ([\d]{4})\/[\d]{4}$/i", $book->get('titel'), $matches))
 			return $matches[1] == date("Y") || $matches[1] === date("Y", strtotime("-1 year"));
 
+		// Member-specific albums are also forbidden terrain
+		if ($book instanceof DataIterFacesPhotobook)
+			return false;
+
 		return true;
 	}
 

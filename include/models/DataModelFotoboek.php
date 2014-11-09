@@ -119,6 +119,7 @@
 
 			if (logged_in()) {
 				$books[] = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
+				$books[] = get_model('DataModelFotoboekFaces')->get_book(logged_in_member());
 			}
 			
 			return $books;
@@ -126,7 +127,7 @@
 
 		public function count_books()
 		{
-			return parent::count_books() + (logged_in() ? 1 : 0);
+			return parent::count_books() + (logged_in() ? 2 : 0);
 		}
 
 		public function get_next_book()

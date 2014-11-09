@@ -95,10 +95,56 @@
 		}
 	}
 
+	class ControllerFotoboekFaces extends ControllerCRUD
+	{
+		protected $_var_view = 'faces_view';
+
+		protected $_var_id = 'face_id';
+
+		public function __construct(DataIterPhoto $photo)
+		{
+			$this->photo = $photo;
+
+			$this->model = get_model('DataModelFotoboekFaces');
+		}
+
+		protected function _create($data, array &$errors)
+		{
+			$data['foto_id'] = $this->photo->get_id();
+
+			return parent::_create($data, $errors);
+		}
+
+		protected function _update(DataIter $iter, $data, array &$errors)
+		{
+			// If lid_id is being changed, also update who changed it.
+			if (isset($data['lid_id']))
+				$data['tagged_by'] = logged_in('id');
+
+			return parent::_update($iter, $data, $errors);
+		}
+
+		protected function _index()
+		{
+			return $this->model->get_for_photo($this->photo);
+		}
+
+		public function link(array $arguments)
+		{
+			$arguments['photo'] = $this->photo->get_id();
+
+			$arguments['module'] = 'faces';
+
+			return parent::link($arguments);
+		}
+	}
+
 	class ControllerFotoboek extends Controller {
 		var $model = null;
 
 		protected $policy;
+
+		protected $faces_controller;
 
 		protected $likes_controller;
 
@@ -118,6 +164,7 @@
 
 			$params = array_merge(
 				array(
+					'faces_controller' => $this->faces_controller,
 					'likes_controller' => $this->likes_controller),
 				$params ?: array()
 			);
@@ -368,8 +415,15 @@
 
 			if (logged_in() && isset($_GET['book']) && $_GET['book'] == 'liked')
 				$book = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
+
+			elseif (isset($_GET['book']) && preg_match('/^member_(\d+)$/', $_GET['book'], $match)) {
+				$member = get_model('DataModelMember')->get_iter($match[1]);
+				$book = get_model('DataModelFotoboekFaces')->get_book($member);
+			}
+
 			if ($photo) {
 				$this->likes_controller = new ControllerFotoboekLikes($photo);
+				$this->faces_controller = new ControllerFotoboekFaces($photo);
 			}
 			
 			if (!$photo) {
@@ -403,6 +457,8 @@
 				$this->_process_photo_description($photo);
 			elseif (isset($_GET['module']) && $_GET['module'] == 'likes')
 				$this->likes_controller->run();
+			elseif (isset($_GET['module']) && $_GET['module'] == 'faces')
+				$this->faces_controller->run();
 			else
 				$this->_view_photo($photo, $book);
 		}
