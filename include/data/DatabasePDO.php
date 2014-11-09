@@ -52,12 +52,12 @@ class DatabasePDO
 		/* Open connection */
 		$this->resource = new PDO('pgsql:' . implode(';', $params));
 
-		$this->resource->exec("SET NAMES 'UTF-8'; SET DateStyle = 'ISO, DMY';");
+		$this->resource->exec("SET NAMES 'UTF-8'; SET DateStyle = 'ISO, DMY'; SET bytea_output=escape");
 		
 		if (!$this->resource)
 			trigger_error('Could not connect to database: ' . $php_errormsg);
 	}
-	
+
 	/**
 	  * Get the last occurred error
 	  *
@@ -104,14 +104,14 @@ class DatabasePDO
 
 			/* Fetch all the rows */
 			$this->last_result = $handle->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
-			
+
 			$this->last_affected = $handle->rowCount();
 
 			/* Free the query handle */
 			unset($handle);
 			
 			/* Return the results */
-			return $this->last_result;        
+			return $this->last_result;
 		}
 		
 		$this->last_affected = 0;
@@ -335,5 +335,21 @@ class DatabasePDO
 			return;
 
 		return $this->last_affected;
+	}
+
+	public function read_blob($data)
+	{
+		return stream_get_contents($data);
+	}
+
+	public function write_blob($data)
+	{
+		$oid = $this->resource->pgsqlLOBCreate();
+
+		$stream = $this->resource->pgsqlLOBOpen($oid, 'wb');
+
+		stream_copy_to_stream($data, $stream);
+		
+		return $oid;
 	}
 }

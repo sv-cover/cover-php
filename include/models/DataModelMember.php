@@ -90,8 +90,8 @@
 		  */
 		public function get_photo($iter) {
 			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
-
-			return $photo ? pg_unescape_bytea($photo['foto']) : null;
+			
+			return $photo ? $this->db->read_blob($photo['foto']) : null;
 		}
 
 		public function get_photo_mtime($iter)
@@ -104,7 +104,7 @@
 		public function set_photo($iter, $fh)
 		{
 			$this->db->query(sprintf("INSERT INTO lid_fotos (lid_id, foto, foto_mtime) VALUES (%d, '%s', NOW())",
-				$iter->get('id'), pg_escape_bytea(stream_get_contents($fh))));
+				$iter->get('id'), $this->db->write_blob($fh)));
 		}
 
 		/** 

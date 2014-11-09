@@ -35,17 +35,12 @@ class DataModelStickers extends DataModel
 	{
 		$result = $this->db->query_first("SELECT foto FROM {$this->table} WHERE id = " . $sticker->get('id'));
 
-		return pg_unescape_bytea($result['foto']);
+		return $this->db->read_blob($result['foto']);
 	}
 
 	public function setPhoto($sticker, $fp)
 	{
-		$data = stream_get_contents($fp);
-
-		if (!$data)
-			throw new Exception('Could not read stream');
-
-		$this->db->query("UPDATE {$this->table} SET foto_mtime = NOW(), foto = '" . pg_escape_bytea($data) . "' WHERE id = " . $sticker->get('id'));
+		$this->db->query("UPDATE {$this->table} SET foto_mtime = NOW(), foto = '" . $this->db->write_blob($fp) . "' WHERE id = " . $sticker->get('id'));
 	}
 
 	protected function _generate_query($conditions)

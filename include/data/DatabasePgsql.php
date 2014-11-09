@@ -338,5 +338,18 @@
 
 			return $this->last_affected;
 		}
+
+		public function read_blob($data)
+		{
+			return pg_unescape_bytea($data);
+		}
+
+		public function write_blob($stream)
+		{
+			if (!is_resource($stream))
+				throw new InvalidArgumentException();
+			
+			return pg_escape_bytea(stream_get_contents($stream));
+		}
     }
 ?>
