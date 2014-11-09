@@ -24,9 +24,26 @@
 			$this->run_footer();
 		}
 		
-		function _process_search() {
+		function _process_search_legacy() {
 			$iters = $this->model->get_from_search_first_last($_GET['search_first'], $_GET['search_last']);
 			$this->get_content('almanak', $iters);				
+		}
+
+		function _process_search($query) {
+			$iters = $this->model->search_first_last($query, 15);
+
+			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
+				array('application/json', 'text/html', '*/*'));
+
+			if ($preferred == 'application/json')
+				echo json_encode(array_map(function($lid) {
+					return array(
+						'id' => $lid->get_id(),
+						'beginjaar' => $lid->get('beginjaar'),
+						'name' => member_full_name($lid));
+				}, $iters));
+			else
+				$this->get_content('almanak', $iters);
 		}
 		
 		/** 
@@ -93,7 +110,9 @@
 		
 		function run_impl() {
 			if (isset($_GET['search_first']) || isset($_GET['search_last']))
-				$this->_process_search();
+				$this->_process_search_legacy();
+			elseif (isset($_GET['search']))
+				$this->_process_search($_GET['search']);
 			elseif (isset($_GET['search_year']))
 				$this->_process_year();
 			elseif (isset($_GET['first']))

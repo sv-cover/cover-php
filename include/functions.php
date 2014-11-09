@@ -601,3 +601,30 @@
 		else
 			return 'portrait';
 	}
+
+	function parse_http_accept($header, array $available = array())
+	{
+		$accepted = array();
+
+		foreach (explode(',', $header) as $type)
+		{
+			$type = trim($type);
+
+			if (preg_match('/;q=(\d+(?:\.\d+)?)$/', $type, $match))
+				$weight = floatval($match[1]);
+			else
+				$weight = 1.0;
+
+			$accepted[] = $type;
+			$weights[] = $weight;
+		}
+
+		array_multisort($weights, SORT_NUMERIC, SORT_DESC, $accepted);
+
+		if (count($available) > 0)
+			foreach ($accepted as $preferred)
+				if (in_array($preferred, $available))
+					return $preferred;
+
+		return $available;
+	}
