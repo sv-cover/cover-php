@@ -65,6 +65,9 @@ class ControllerCRUD extends Controller
 
 		$path = find_file($search_paths);
 
+		if ($path === null)
+			throw new RuntimeException("Could not find view class '$view_class' while trying to run view $view::$method.");
+
 		include_once $path;
 
 		$instance = new $view_class($this);
@@ -87,6 +90,54 @@ class ControllerCRUD extends Controller
 		return array_merge(
 			get_object_vars($this), // stuff like 'model' and other user defined stuff
 			array('controller' => $this));
+	}
+
+	protected function _get_preferred_response()
+	{
+		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
+			array('application/json', 'text/html', '*/*'));
+	}
+
+	protected function _send_json($data)
+	{
+		header('Content-Type: application/json');
+		echo json_encode($data, JSON_PRETTY_PRINT);
+	}
+
+	protected function _send_json_single(DataIter $iter)
+	{
+		$this->_send_json(array(
+			'iter' => $this->_json_augment_iter($iter)
+		));
+	}
+
+	protected function _send_json_index(array $iters)
+	{
+		$links = array();
+
+		if (get_policy($this->model)->user_can_create())
+			$links['create'] = $this->link_to_create();
+
+		$this->_send_json(array(
+			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
+			'_links' => $links
+		));
+	}
+
+	protected function _json_augment_iter(DataIter $iter)
+	{
+		$links = array();
+
+		if (get_policy($this->model)->user_can_read($iter))
+			$links['read'] = $this->link_to_read($iter);
+
+		if (get_policy($this->model)->user_can_update($iter))
+			$links['update'] = $this->link_to_update($iter);
+
+		if (get_policy($this->model)->user_can_delete($iter))
+			$links['delete'] = $this->link_to_delete($iter);
+
+		return array_merge($iter->data, array('_links' => $links));
 	}
 
 	protected function get_content($view, $iters = null, array $params = array())
@@ -143,13 +194,30 @@ class ControllerCRUD extends Controller
 		if (!get_policy($this->model)->user_can_create())
 			throw new Exception('You are not allowed to add new items.');
 
+		$success = false;
+
 		$errors = array();
 
 		if ($this->_form_is_submitted('create'))
 			if ($iter = $this->_create($_POST, $errors))
-				$this->redirect($this->link_to_read($iter));
+				$success = true;
 
-		return $this->get_content('form', new DataIter($this->model, null, array()), compact('errors'));
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				if ($success)
+					$this->_send_json_single($iter);
+				else
+					$this->_send_json(compact('errors'));
+				break;
+
+			default:
+				if ($success)
+					$this->redirect($this->link_to_read($iter));
+				else
+					$this->get_content('form', new DataIter($this->model, null, array()), compact('errors'));
+				break;	
+		}
 	}
 
 	public function run_read(DataIter $iter)
@@ -157,7 +225,16 @@ class ControllerCRUD extends Controller
 		if (!get_policy($this->model)->user_can_read($iter))
 			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
 
-		return $this->get_content('single', $iter);
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				$this->_send_json_single($iter);
+				break;
+
+			default:
+				return $this->get_content('single', $iter);
+				break;
+		}
 	}
 
 	public function run_update(DataIter $iter)
@@ -165,13 +242,30 @@ class ControllerCRUD extends Controller
 		if (!get_policy($this->model)->user_can_update($iter))
 			throw new Exception('You are not allowed to edit this ' . get_class($iter) . '.');
 
+		$success = false;
+
 		$errors = array();
 
 		if ($this->_form_is_submitted('update'))
 			if ($this->_update($iter, $_POST, $errors))
-				$this->redirect($this->link_to_read($iter));
+				$success = true;
 
-		return $this->get_content('form', $iter, compact('errors'));
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				if ($success)
+					$this->_send_json_single($iter);
+				else
+					$this->_send_json(compact('errors'));
+				break;
+
+			default:
+				if ($success)
+					$this->redirect($this->link_to_read($iter));
+				else
+					$this->get_content('form', $iter, compact('errors'));
+				break;	
+		}
 	}
 
 	public function run_delete(DataIter $iter)
@@ -179,20 +273,43 @@ class ControllerCRUD extends Controller
 		if (!get_policy($this->model)->user_can_delete($iter))
 			throw new Exception('You are not allowed to delete this ' . get_class($iter) . '.');
 
+		$success = false;
+
 		$errors = array();
 
 		if ($this->_form_is_submitted('delete'))
 			if ($iter = $this->_delete($iter, $errors))
-				$this->redirect($this->link_to_index());
+				$success = true;
 
-		return $this->get_content('confirm_delete', $iter, compact('errors'));
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				$this->_send_json(compact('errors'));
+				break;
+
+			default:
+				if ($success)
+					$this->redirect($this->link_to_index());
+				else
+					$this->get_content('confirm_delete', $iter, compact('errors'));
+				break;	
+		}
 	}
 
 	public function run_index()
 	{
 		$iters = array_filter($this->_index(), array(get_policy($this->model), 'user_can_read'));
 
-		return $this->get_content('index', $iters);
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				$this->_send_json_index($iters);
+				break;
+
+			default:
+				$this->get_content('index', $iters);
+				break;
+		}
 	}
 	
 	/* protected */ function run_impl()

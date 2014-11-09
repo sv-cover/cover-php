@@ -1,6 +1,18 @@
 <?php
 	require_once('DataIter.php');
 
+	class NotFoundException extends Exception {
+		//
+	}
+
+	class DataIterNotFoundException extends NotFoundException
+	{
+		public function __construct($id)
+		{
+			parent::__construct(sprintf('DataIter with id "%d" was not found', $id));
+		}
+	}
+
 	/**
 	  * This class provides a base class for accessing data. This class can
 	  * be used for very simple one-to-one, model-to-table type mappings.
@@ -69,7 +81,7 @@
 		  * @result a id = value string
 		  */
 		protected function _id_string($value) {
-			$result = $this->id . ' = ';
+			$result = $this->table . '.' . $this->id . ' = ';
 			
 			if ($this->id == 'id')
 				return $result . intval($value);
@@ -116,7 +128,7 @@
 		  *
 		  * @result true if the deletion was successful, false otherwise
 		  */		
-		function _delete($table, $iter) {
+		protected function _delete($table, $iter) {
 			if (!$this->db)
 				return false;
 			
@@ -129,7 +141,7 @@
 		  *
 		  * @result true if the deletion was successful, false otherwise
 		  */
-		function delete($iter) {
+		public function delete($iter) {
 			if (!$this->table)
 				return false;
 
@@ -209,6 +221,9 @@
 				return null;
 
 			$data = $this->db->query_first($this->_generate_query($this->_id_string($id)));
+
+			// if ($data === null)
+			// 	throw new DataIterNotFound($id);
 
 			return $this->_row_to_iter($data);
 		}

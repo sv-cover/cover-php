@@ -2,7 +2,7 @@
 	/**
 	  * This class provides access to a data row in a #DataModel
 	  */
-	class DataIter {
+	class DataIter implements JsonSerializable {
 		var $model = null; /** The model the iter belongs to */
 		var $data = null; /** The data of the iter */
 		var $_id = 0; /** The id of the iter */
@@ -159,7 +159,11 @@
 
 		public function getIter($field)
 		{
-			return new self(null, -1, $this->data, $field . '__');
+			$id = isset($this->data[$field . '__id'])
+				? $this->data[$field . '__id']
+				: -1;
+			
+			return new self(null, $id, $this->data, $field . '__');
 		}
 		
 		/**
@@ -177,5 +181,10 @@
 		
 		public function __set($key, $value) {
 			return $this->set($key, $value);
+		}
+
+		public function jsonSerialize()
+		{
+			return $this->data;
 		}
 	}
