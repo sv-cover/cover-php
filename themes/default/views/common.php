@@ -5,6 +5,7 @@
 	}
 
 	function view_not_found() {
+		header('Status: 404 Not Found');
 		echo '<h1>' . __('Niet gevonden') . '</h1>';
 		echo '<div class="messageBox error_message">' . __('De pagina die je zocht bestaat niet.') . '</div>';
 	}
