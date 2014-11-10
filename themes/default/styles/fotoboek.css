@@ -83,6 +83,12 @@ table.navigation td:nth-child(3) {
 	height: auto;
 }
 
+.slides .slide.current {
+	background: #aaa;
+	margin: -15px 0;
+	padding: 20px 0;
+}
+
 .photo-controls {
 	position: relative;
 	height: 24px;
