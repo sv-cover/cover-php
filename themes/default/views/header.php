@@ -18,7 +18,6 @@
 			'gastenboek' => 'gastenboek;markup',
 			'boeken' => 'boeken;notebook;markup',
 			'studieondersteuning' => 'studieondersteuning;notebook;markup',
-			'afstudeerplaatsen' => 'markup',
 			'index' => 'markup',
 			'show' => 'markup',
 			'links' => 'links',
@@ -199,7 +198,6 @@
 				<ul id="bedrijven" class="expander">
 					<li><a href="show.php?id=51">' . __('Bedrijfsprofielen') . '</a></li>
 					<li><a href="show.php?id=54">' . __('Vacatures') . '</a></li>
-					<li><a href="afstudeerplaatsen.php">' . __('Afstudeerplaatsen') . '</a></li>
 					<li><a href="show.php?id=56">' .__('Sponsormogelijkheden') .'</a></li>
 				</ul>
 				<ul id="studie" class="expander">
