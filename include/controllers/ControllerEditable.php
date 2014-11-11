@@ -25,7 +25,7 @@
 			
 			if ($id instanceof DataIterEditable)
 				$this->page = $id;
-			elseif (ctype_digit($id))
+			elseif (ctype_digit($id) || is_int($id))
 				$this->page = $this->model->get_iter($id);
 			else {
 				$this->page = $this->model->get_iter_from_title($id);
