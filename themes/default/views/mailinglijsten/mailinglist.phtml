@@ -97,7 +97,11 @@
 			<?php foreach ($aanmeldingen as $aanmelding): ?>
 				<tr>
 					<td><input type="checkbox" id="<?=$this->uid($aanmelding)?>" name="unsubscribe[]" value="<?=$aanmelding->has('abonnement_id') ? $aanmelding->get('abonnement_id') : $aanmelding->get('lid_id') ?>"></td>
-					<td><label for="<?=$this->uid($aanmelding)?>"><?=htmlspecialchars($aanmelding->get('naam'))?></label></td>
+					<?php if ($aanmelding->get('lid_id')): ?>
+					<td><label for="<?=$this->uid($aanmelding)?>"><?=markup_format_text(member_full_name($aanmelding->getIter('lid')))?></label></td>
+					<?php else: ?>
+					<td><label for="<?=$this->uid($aanmelding)?>"><?=markup_format_text($aanmelding->get('naam'))?></label></td>
+					<?php endif ?>
 					<td><?=htmlspecialchars($aanmelding->get('email'))?></td>
 					<?php if ($aanmelding->get('lid_id')): ?>
 					<td><a href="profiel.php?lid=<?=$aanmelding->get('lid_id')?>"><?=__('Profiel')?></a></td>

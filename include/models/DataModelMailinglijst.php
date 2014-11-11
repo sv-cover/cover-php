@@ -172,7 +172,12 @@ class DataModelMailinglijst extends DataModel
 						m.abonnement_id,
 						l.id as lid_id,
 						coalesce(l.voornaam, m.naam) as naam,
-						coalesce(l.email, m.email) as email
+						coalesce(l.email, m.email) as email,
+						l.id as lid__id,
+						l.voornaam as lid__voornaam,
+						l.tussenvoegsel as lid__tussenvoegsel,
+						l.achternaam as lid__achternaam,
+						l.privacy as lid__privacy
 					FROM
 						mailinglijsten_abonnementen m
 					LEFT JOIN leden l ON
@@ -192,7 +197,12 @@ class DataModelMailinglijst extends DataModel
 						NULL as abonnement_id,
 						l.id as lid_id,
 						l.voornaam as naam,
-						l.email
+						l.email,
+						l.id as lid__id,
+						l.voornaam as lid__voornaam,
+						l.tussenvoegsel as lid__tussenvoegsel,
+						l.achternaam as lid__achternaam,
+						l.privacy as lid__privacy
 					FROM
 						leden l
 					LEFT JOIN mailinglijsten_opt_out o ON
@@ -205,7 +215,12 @@ class DataModelMailinglijst extends DataModel
 						g.abonnement_id,
 						NULL as lid_id,
 						g.naam,
-						g.email
+						g.email,
+						NULL as lid__id,
+						NULL as lid__voornaam,
+						NULL as lid__tussenvoegsel,
+						NULL as lid__achternaam,
+						NULL as lid__privacy
 					FROM
 						mailinglijsten_abonnementen g
 					WHERE
