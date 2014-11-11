@@ -447,7 +447,7 @@
 		$canpoll = $model->check_acl($iter->get('id'), ACL_POLL);
 
 		if ($canwrite)
-			$bar .= '<span id="newbericht" class="button" style="padding-left: 10px;">'.image('new.png', __('nieuw'), __('Nieuw bericht toevoegen')) . ' <span class="messageText">' . __('Nieuw antwoord') . '</span></span>';
+			$bar .= '<span id="newbericht" class="button" style="padding-left: 10px;">'.image('new.png', __('nieuw'), __('Nieuw bericht toevoegen')) . ' <span class="messageText">' . __('Nieuw onderwerp') . '</span></span>';
 		
 		if ($canpoll)
 			$bar .= '<a href="forum.php?forum=' . $iter->get('id') . '&addpoll"><span id="newpoll" class="button">' . image('new.png', __('nieuw'), __('Nieuwe poll toevoegen')) . __('Nieuwe poll') . '</span></a>';
