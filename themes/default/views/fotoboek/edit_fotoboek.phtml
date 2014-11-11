@@ -1,12 +1,8 @@
 <h1><?= __('Fotoboek') ?> :: <?= __('Bewerken') ?></h1>
+<div class="messageBox">
+	<?php $this->render_partial('path', array('model' => $model, 'book' => $iter)) ?>
 
-<? 
-$include_current = true;
-$this->render_partial('path', compact('model', 'iter', 'include_current'));
-?>
-
-<form action="fotoboek.php?book=<?= $iter->get('id') ?>" method="post">
-
-<? $this->render_partial('fotoboek_edit', compact('model', 'iter')); ?>
-
-</form>
+	<form action="fotoboek.php?book=<?= $iter->get('id') ?>" method="post">
+		<?php $this->render_partial('fotoboek_edit', compact('model', 'iter')) ?>
+	</form>
+</div>
