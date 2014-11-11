@@ -21,7 +21,6 @@
 			'index' => 'markup',
 			'show' => 'markup',
 			'links' => 'links',
-			'taken' => 'taken;markup',
 			'almanak' => 'almanak',
 			'profiel' => 'profiel;markup',
 			'commissies' => 'commissies;markup',
@@ -124,7 +123,6 @@
 		// }
 
 		if (member_in_commissie(COMMISSIE_EASY)) {
-			$admin[] = '<a href="taken.php">' . __('Taken') . '</a>';
 			$admin[] = '<a href="settings.php">' . __('Instellingen') . '</a>';
 		}
 		
