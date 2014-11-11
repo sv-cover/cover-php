@@ -5,14 +5,13 @@
 	  * A class implementing boeken data
 	  */
 	class DataModelBoeken extends DataModel {
-		function DataModelBoeken($db) {
-			parent::DataModel($db, 'boeken');
+		public function __construct($db)
+		{
+			parent::__construct($db, 'boeken');
 		}
 		
-		function get() {
-			if (!$this->db)
-				return Array();
-
+		public function get()
+		{
 			$rows = $this->db->query('SELECT * FROM 
 					boeken
 					ORDER BY titel');

@@ -19,10 +19,11 @@
 	  * More complex models should inherit from this base class and implement
 	  * their own insert, update, delete, get and get_iter functions 
 	  */
-	class DataModel {
-		var $db = null; /** The database backend */
-		var $table = null; /** The table to model */
-		var $dataiter = 'DataIter';
+	class DataModel
+	{
+		public $db = null; /** The database backend */
+		public $table = null; /** The table to model */
+		public $dataiter = 'DataIter';
 		
 		/**
 		  * Create a new DataModel
@@ -30,7 +31,8 @@
 		  * @table the table to model 
 		  * @id optional; the field name to use as unique id
 		  */
-		function DataModel($db, $table = null, $id = 'id') {
+		public function __construct($db, $table = null, $id = 'id')
+		{
 			$this->db = $db;
 			$this->table = $table;
 			$this->id = $id;
@@ -47,16 +49,13 @@
 		  * @result if getid is true the last insert id is returned, -1 
 		  * otherwise
 		  */		
-		function _insert($table, $iter, $getid = false) {
-			if (!$this->db)
-				return false;
-			
+		protected function _insert($table, DataIter $iter, $getid = false)
+		{
 			$this->db->insert($table, $iter->data, $iter->get_literals());
 			
-			if ($getid)
-				return $this->db->get_last_insert_id();
-			else
-				return -1;
+			return $getid
+				? $this->db->get_last_insert_id()
+				: -1;
 		}
 		
 		/**
@@ -67,10 +66,11 @@
 		  * @result if getid is true the last insert id is returned, -1 
 		  * otherwise
 		  */
-		function insert($iter, $getid = false) {
+		public function insert(DataIter $iter, $getid = false)
+		{
 			if (!$this->table)
-				return false;
-
+				throw new RuntimeException(get_class($this) . '::$table is not set');
+			
 			return $this->_insert($this->table, $iter, $getid);
 		}
 		
@@ -80,13 +80,19 @@
 		  *
 		  * @result a id = value string
 		  */
-		protected function _id_string($value) {
-			$result = $this->table . '.' . $this->id . ' = ';
+		protected function _id_string($value, $table = null)
+		{
+			$result = $this->id . ' = ';
+
+			if ($table)
+				$reslt = $table . '.' . $result;
+			elseif ($this->table)
+				$result = $this->table . '.' . $result;
 			
 			if ($this->id == 'id')
 				return $result . intval($value);
 			else
-				return $result . "'" . $this->escape_string($value) . "'";
+				return $result . "'" . $this->db->escape_string($value) . "'";
 		}
 
 		/**
@@ -97,13 +103,11 @@
 		  *
 		  * @result true if the update was successful, false otherwise 
 		  */
-		function _update($table, $iter) {
-			if (!$this->db)
-				return false;
-
+		protected function _update($table, DataIter $iter)
+		{
 			return $this->db->update($table, 
 					$iter->get_changed_values(), 
-					$this->_id_string($iter->get_id()), 
+					$this->_id_string($iter->get_id(), $table), 
 					$iter->get_literals());
 		}
 		
@@ -113,9 +117,10 @@
 		  *
 		  * @result true if the update was successful, false otherwise 
 		  */
-		function update($iter) {
+		public function update(DataIter $iter)
+		{
 			if (!$this->table)
-				return false;
+				throw new RuntimeException(get_class($this) . '::$table is not set');
 
 			return $this->_update($this->table, $iter);
 		}
@@ -128,11 +133,9 @@
 		  *
 		  * @result true if the deletion was successful, false otherwise
 		  */		
-		protected function _delete($table, $iter) {
-			if (!$this->db)
-				return false;
-			
-			return $this->db->delete($table, $this->_id_string($iter->get_id()));
+		protected function _delete($table, DataIter $iter)
+		{
+			return $this->db->delete($table, $this->_id_string($iter->get_id(), $table));
 		}
 		
 		/**
@@ -141,10 +144,11 @@
 		  *
 		  * @result true if the deletion was successful, false otherwise
 		  */
-		public function delete($iter) {
+		public function delete(DataIter $iter)
+		{
 			if (!$this->table)
-				return false;
-
+				throw new RuntimeException(get_class($this) . '::$table is not set');
+			
 			return $this->_delete($this->table, $iter);
 		}
 
@@ -154,7 +158,8 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function _row_to_iter($row, $dataiter = null) {
+		/*protected*/ public function _row_to_iter($row, $dataiter = null)
+		{
 			if (!$dataiter)
 				$dataiter = $this->dataiter;
 
@@ -170,16 +175,11 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function _rows_to_iters($rows, $dataiter = null) {
-			if ($rows) {
-				$iters = array();
-				
-				foreach ($rows as $data)
-					$iters[] = $this->_row_to_iter($data, $dataiter);
-
-				return $iters;
-			} else
-				return $rows;		
+		/*protected*/ public function _rows_to_iters($rows, $dataiter = null)
+		{
+			return array_map(function ($row) use ($dataiter) {
+				return $this->_row_to_iter($row, $dataiter);
+			}, $rows);
 		}
 		
 		/**
@@ -187,7 +187,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get()
+		public function get()
 		{
 			return $this->find('');
 		}
@@ -198,11 +198,8 @@
 		 *
 		 * @result an array of #DataIter
 		 */
-		function find($conditions)
+		public function find($conditions)
 		{
-			if (!$this->db || !$this->table)
-				return array();
-
 			$query = $this->_generate_query($conditions);
 
 			$rows = $this->db->query($query);
@@ -216,46 +213,16 @@
 		  *
 		  * @result a #DataIter representing the row
 		  */
-		function get_iter($id) {
-			if (!$this->db || !$this->table)
-				return null;
-
+		public function get_iter($id)
+		{
 			$data = $this->db->query_first($this->_generate_query($this->_id_string($id)));
 
-			// if ($data === null)
-			// 	throw new DataIterNotFound($id);
+			if ($data === null)
+				throw new DataIterNotFound($id);
 
 			return $this->_row_to_iter($data);
 		}
 		
-		/**
-		  * Escape a string so it can be used in queries
-		  * @s the string to be escaped
-		  *
-		  * @result the escaped string
-		  */
-		function escape_string($s) {
-			return $this->db->escape_string($s);
-		}
-
-		/**
-		  * Get the last occurred database error
-		  *
-		  * @result the last occurred database error
-		  */
-		function get_last_error() {
-			return $this->db->get_last_error();
-		}
-		
-		/**
-		  * Get the number of affected rows
-		  *
-		  * @result the number of affected rows
-		  */
-		function get_affected_rows() {
-			return $this->db->get_affected_rows();
-		}
-
 		protected function _generate_query($where)
 		{
 			return "SELECT * FROM {$this->table}" . ($where ? " WHERE {$where}" : "");

@@ -9,15 +9,16 @@
 		var $current_page = 0;
 		var $condition = '';
 
-		function DataModelGastenboek($db) {
-			parent::DataModel($db, 'gastenboek');
+		public function __construct($db)
+		{
+			parent::__construct($db, 'gastenboek');
 		}
 		
 		function _get_condition() {
 			if (!$this->condition)
 				return '';
 			
-			return " AND message ILIKE '%" . $this->escape_string($this->condition) . "%'";
+			return " AND message ILIKE '%" . $this->db->escape_string($this->condition) . "%'";
 		}
 		
 		/**

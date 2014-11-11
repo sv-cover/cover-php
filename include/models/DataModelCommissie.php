@@ -4,9 +4,16 @@
 	/**
 	  * A class implementing the Commissie data
 	  */
-	class DataModelCommissie extends DataModel {
-		function DataModelCommissie($db) {
-			parent::DataModel($db, 'commissies');
+	class DataModelCommissie extends DataModel
+	{
+		public function __construct($db)
+		{
+			parent::__construct($db, 'commissies');
+		}
+
+		protected function _generate_query($conditions)
+		{
+			return parent::_generate_query($conditions) . ' ORDER BY naam ASC';
 		}
 		
 		/**
@@ -16,15 +23,12 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get($include_hidden = true) {
-			$rows = $this->db->query('SELECT * FROM commissies ' .
-					(!$include_hidden ? ' WHERE hidden <> 1' : '') . 
-					' ORDER BY naam');
-			
-			return $this->_rows_to_iters($rows);
+		public function get($include_hidden = true)
+		{
+			return $this->find(!$include_hidden ? 'hidden <> 1' : '');
 		}
 
-		function insert($iter, $getid = false)
+		public function insert(DataIter $iter, $getid = false)
 		{
 			if ($iter->has('vacancies') && !$iter->get('vacancies'))
 				$iter->set_literal('vacancies', 'NULL');
@@ -32,7 +36,7 @@
 			return parent::insert($iter, $getid);
 		}
 
-		function update($iter)
+		public function update(DataIter $iter)
 		{
 			if ($iter->has('vacancies') && !$iter->get('vacancies'))
 				$iter->set_literal('vacancies', 'NULL');
@@ -40,7 +44,8 @@
 			return parent::update($iter);
 		}
 		
-		function get_functies() {
+		public function get_functies()
+		{
 			static $functies = Array(
 				'voorzitter' => 5,
 				'secretaris' => 4,
@@ -52,13 +57,15 @@
 			return $functies;
 		}
 
-		function _get_functie($functie) {
+		protected function _get_functie($functie)
+		{
 			$functies = $this->get_functies();
 			$functie = strtolower($functie);
 			return isset($functies[$functie]) ? $functies[$functie] : 0;
 		}
 		
-		function _sort_leden($a, $b) {
+		protected function _sort_leden($a, $b)
+		{
 			$pattern = '/\s*[,\/]\s*/';
 
 			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a->get('functie'))));
@@ -73,7 +80,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_leden($id) {
+		public function get_leden($id)
+		{
 			$rows = $this->db->query('SELECT leden.id, 
 					leden.voornaam, 
 					leden.tussenvoegsel, 
@@ -95,7 +103,7 @@
 			return $iters;
 		}
 
-		function get_lid_for_functie($commissie_id, $functie)
+		public function get_lid_for_functie($commissie_id, $functie)
 		{
 			$leden = $this->get_leden($commissie_id);
 
@@ -106,7 +114,7 @@
 			return null;
 		}
 
-		function get_commissies_for_member($lid_id)
+		public function get_commissies_for_member($lid_id)
 		{
 			$rows = $this->db->query("
 				SELECT
@@ -137,23 +145,18 @@
 		  *
 		  * @result the login name
 		  */
-		function get_login($id) {
-			$value = $this->db->query_value('SELECT login 
+		public function get_login($id) {
+			return $this->db->query_value('SELECT login 
 					FROM commissies 
 					WHERE id = ' . intval($id));
-			
-			if (!$value)
-				return '';
-			else
-				return $value;
 		}
 
-		function get_from_email($email)
+		public function get_from_email($email)
 		{
 			if (substr($email, -11) == '@svcover.nl')
 				$email = substr($email, 0, -11);
 
-			$row = $this->db->query_first("SELECT * FROM commissies WHERE login = '" . $this->escape_string(strtolower($email)) . "'");
+			$row = $this->db->query_first("SELECT * FROM commissies WHERE login = '" . $this->db->escape_string(strtolower($email)) . "'");
 
 			return $this->_row_to_iter($row);
 		}
@@ -165,7 +168,8 @@
 		  *
 		  * @result the commissie email address
 		  */
-		function get_email($id) {
+		public function get_email($id)
+		{
 			$value = $this->get_login($id);
 					
 			if (!$value)
@@ -180,7 +184,8 @@
 		  *
 		  * @result the commissie name
 		  */
-		function get_naam($id) {
+		public function get_naam($id)
+		{
 			$value = $this->db->query_value('SELECT naam 
 					FROM commissies 
 					WHERE id = ' . intval($id));
@@ -197,7 +202,8 @@
 		  *
 		  * @result the commissie page id
 		  */
-		function get_page($id) {
+		public function get_page($id)
+		{
 			return $this->db->query_value('SELECT page 
 					FROM commissies 
 					WHERE id = ' . intval($id));
@@ -209,15 +215,16 @@
 		  *
 		  * @result a #DataIter or null if not found
 		  */
-		function get_from_name($name) {
+		public function get_from_name($name)
+		{
 			$row = $this->db->query_first("SELECT * 
 					FROM commissies
-					WHERE '" . $this->escape_string($name) . "' IN (naam, login, nocaps)");
+					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login, nocaps)");
 			
 			return $this->_row_to_iter($row);
 		}
 
-		function get_random()
+		public function get_random()
 		{
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c
@@ -232,7 +239,7 @@
 			return $this->_row_to_iter($row);
 		}
 
-		function get_from_page($page_id)
+		public function get_from_page($page_id)
 		{
 			$row = $this->db->query_first(sprintf("SELECT * 
 					FROM commissies
@@ -241,7 +248,8 @@
 			return $this->_row_to_iter($row);
 		}
 		
-		function delete($iter) {
+		public function delete(DataIter $iter)
+		{
 			parent::delete($iter);
 			
 			/* Remove forum permissions */

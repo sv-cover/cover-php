@@ -153,8 +153,9 @@
 	{
 		public $dataiter = 'DataIterPhoto';
 
-		function DataModelFotoboek($db) {
-			parent::DataModel($db, 'fotos');
+		public function __construct($db)
+		{
+			parent::__construct($db, 'fotos');
 		}
 		
 		/**
@@ -259,9 +260,9 @@
 						foto_boeken
 					WHERE 
 						parent = " . $book->get('parent') . " AND
-						((date > '" . $this->escape_string($book->get('date')) . "' AND
+						((date > '" . $this->db->escape_string($book->get('date')) . "' AND
 						id <> " . $book->get('id') . ") OR (
-						date = '" . $this->escape_string($book->get('date')) . "' AND
+						date = '" . $this->db->escape_string($book->get('date')) . "' AND
 						id < " . $book->get('id') . "))
 					ORDER BY 
 						date ASC, 
@@ -288,9 +289,9 @@
 						foto_boeken
 					WHERE 
 						parent = " . $book->get('parent') . " AND
-						((date < '" . $this->escape_string($book->get('date')) . "' AND
+						((date < '" . $this->db->escape_string($book->get('date')) . "' AND
 						id <> " . $book->get('id') . ") OR (
-						date = '" . $this->escape_string($book->get('date')) . "' AND
+						date = '" . $this->db->escape_string($book->get('date')) . "' AND
 						id > " . $book->get('id') . "))
 					ORDER BY 
 						date DESC, 

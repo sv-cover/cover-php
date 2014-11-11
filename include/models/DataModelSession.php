@@ -7,9 +7,9 @@ require_once('data/DataModel.php');
   */
 class DataModelSession extends DataModel
 {
-	public function DataModelSession($db)
+	public function __construct($db)
 	{
-		parent::DataModel($db, 'sessions', 'session_id');
+		parent::__construct($db, 'sessions', 'session_id');
 	}
 
 	public function resume($id)

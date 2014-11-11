@@ -19,11 +19,13 @@
 			MEMBER_STATUS_DONATEUR
 		);
 
-		function DataModelMember($db) {
-			parent::DataModel($db, 'leden');
+		public function __construct($db)
+		{
+			parent::__construct($db, 'leden');
 		}
 		
-		function _generate_select() {
+		protected function _generate_select()
+		{
 			return 'leden.*, 
 				profielen.lidid,
 				profielen.wachtwoord,
@@ -52,7 +54,8 @@
 			return $this->_rows_to_iters($rows);
 		}
 		
-		function get_iter($id) {
+		function get_iter($id)
+		{
 			$row = $this->db->query_first('SELECT ' . $this->_generate_select() . ' 
 					FROM leden
 					LEFT JOIN profielen ON leden.id = profielen.lidid
@@ -64,7 +67,8 @@
 			return $this->_row_to_iter($row);
 		}
 		
-		function get_jarigen() {
+		public function get_jarigen()
+		{
 			$rows = $this->db->query('
 					SELECT
 						id,
@@ -119,7 +123,7 @@
 		  *
 		  * @result the id of the photo of the member
 		  */
-		function get_photo_id(DataIter $iter) {
+		public function get_photo_id(DataIter $iter) {
 			if (!$this->has_picture($iter)) 
 				return -1;
 			if ($this->is_private($iter,"foto",true))
@@ -134,14 +138,15 @@
 		  *
 		  * @result true if member has a picture
 		  */
-		function has_picture(DataIter $iter) {
+		public function has_picture(DataIter $iter) {
 			if ($this->db->query_first('SELECT id from lid_fotos WHERE lid_id = ' . $iter->get_id()))
 				return true;
 
 			return false;
 		}
 
-		function get() {
+		public function get()
+		{
 			$rows = $this->db->query('SELECT ' . $this->_generate_select() . ' 
 					FROM leden, profielen 
 					WHERE leden.id = profielen.lidid');
@@ -161,14 +166,15 @@
 		  * @result an associative array with the member data or
 		  * false if no member could be found
 		  */
-		function login($email, $passwd) {
+		public function login($email, $passwd)
+		{
 			$row = $this->db->query_first("SELECT 
 					leden.id, 
 					leden.type
 					FROM leden, profielen 
 					WHERE leden.id = profielen.lidid AND 
-					leden.email = '" . $this->escape_string($email) . "' AND 
-					profielen.wachtwoord = '" . $this->escape_string($passwd) . "'");
+					leden.email = '" . $this->db->escape_string($email) . "' AND 
+					profielen.wachtwoord = '" . $this->db->escape_string($passwd) . "'");
 
 			$active_member_types = array(
 				MEMBER_STATUS_LID,
@@ -188,7 +194,8 @@
 		  *
 		  * @result an array of commissie ids
 		  */
-		function get_commissies($memberid) {
+		public function get_commissies($memberid)
+		{
 			$rows = $this->db->query("SELECT commissieid
 					FROM actieveleden 
 					WHERE lidid = " . intval($memberid));
@@ -211,10 +218,11 @@
 		  * @result a #DataIter or null of there is no member with
 		  * such an email address
 		  */
-		function get_from_email($email) {
+		public function get_from_email($email)
+		{
 			$row = $this->db->query_first("SELECT *
 					FROM leden
-					WHERE leden.email = '" . $this->escape_string($email) . "'");
+					WHERE leden.email = '" . $this->db->escape_string($email) . "'");
 			
 			return $this->_row_to_iter($row);
 		}
@@ -225,7 +233,8 @@
 		  *
 		  * @result true if the update was successful, false otherwise 
 		  */
-		function update_profiel($iter) {
+		public function update_profiel(DataIter $iter)
+		{
 			return $this->db->update('profielen', 
 					$iter->get_changed_values(), 'lidid = ' . $iter->get_id(), 
 					$iter->get_literals());
@@ -237,7 +246,8 @@
 		  *
 		  * @result the members full name
 		  */
-		function get_full_name($iter) {
+		public function get_full_name(DataIter $iter)
+		{
 			return $iter->get('voornaam') . ($iter->get('tussenvoegsel') ? (' ' . $iter->get('tussenvoegsel')) : '') . ' ' . $iter->get('achternaam');
 		}
 
@@ -246,7 +256,8 @@
 		  *
 		  * @result an array of privacy_field_name => privacy_field_id
 		  */
-		function get_privacy() {
+		public function get_privacy()
+		{
 			$rows = $this->db->query('SELECT * FROM profielen_privacy ORDER BY id ASC');
 			
 			$privacy = array();
@@ -271,7 +282,8 @@
 		  * is the currently logged in member.
 		  * @result true if the field is private, false otherwise
 		  */
-		function is_private($iter, $field, $self=false) {
+		public function is_private(DataIter $iter, $field, $self=false)
+		{
 			$value = $this->get_privacy_for_field($iter,$field);
 			$cur = logged_in();
 			if ($cur && $self && $cur['id'] == $iter->get_id()) {
@@ -297,7 +309,8 @@
 		  * @result integer that corresponds to privacy
 		  */
 		
-		function get_privacy_for_field($iter,$field) {
+		public function get_privacy_for_field(DataIter $iter, $field)
+		{
 			static $privacy = null;
 
 			// Hack for these three fields which are often combined.
@@ -318,7 +331,8 @@
 		 * Returns true if field is viewable for all
 		 *
 		 */
-		function privacy_public_for_field($iter,$field) {
+		public function privacy_public_for_field(DataIter $iter, $field)
+		{
 			$value = $this->get_privacy_for_field($iter,$field);
 			return ($value == 7);
 		}
@@ -331,7 +345,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_from_search_first_last($first, $last) {
+		public function get_from_search_first_last($first, $last)
+		{
 			
 			$query = 'SELECT l.*, s.studie
 				FROM leden l
@@ -341,12 +356,12 @@
 			$order = array();
 			
 			if ($first) {
-				$query .= " AND l.voornaam ILIKE '%" . $this->escape_string($first) . "%'";
+				$query .= " AND l.voornaam ILIKE '%" . $this->db->escape_string($first) . "%'";
 				$order[] = 'l.voornaam';
 			}
 			
 			if ($last) {
-				$query .= " AND l.achternaam ILIKE '%" . $this->escape_string($last) . "%'";
+				$query .= " AND l.achternaam ILIKE '%" . $this->db->escape_string($last) . "%'";
 				$order[] = 'l.achternaam';
 			}
 
@@ -404,12 +419,11 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function search_first_last($name, $limit = null) {
-			if (!$name) {
+		public function search_first_last($name, $limit = null) {
+			if (!$name)
 				return null;
-			}
 
-			$name = $this->escape_string($name);
+			$name = $this->db->escape_string($name);
 
 			$types = array(
 				MEMBER_STATUS_LID,
@@ -445,7 +459,8 @@
 			if ($limit !== null)
 				$query .= sprintf(' LIMIT %d', $limit);
 					
-			$rows = $this->db->query($query);			
+			$rows = $this->db->query($query);	
+
 			return $this->_rows_to_iters($rows);			
 		}
 		
@@ -454,7 +469,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_from_search_year($year) {
+		public function get_from_search_year($year)
+		{
 			$rows = $this->db->query("SELECT *
 					FROM leden
 					WHERE type IN (" . implode(',', $this->visible_types) . ")
@@ -469,7 +485,8 @@
 		  * 
 		  * @result an array of active years
 		  */
-		function get_distinct_years() {
+		public function get_distinct_years()
+		{
 			$rows = $this->db->query("SELECT DISTINCT beginjaar
 						FROM leden
 						WHERE type IN (" . implode(',', $this->visible_types) . ")
@@ -489,11 +506,12 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_from_last_character($char) {
+		public function get_from_last_character($char)
+		{
 			$rows = $this->db->query("SELECT *
 					FROM leden
 					WHERE type IN (" . implode(',', $this->visible_types) . ")
-					AND achternaam ILIKE '" . $this->escape_string($char) . "%'
+					AND achternaam ILIKE '" . $this->db->escape_string($char) . "%'
 					ORDER BY achternaam");
 			
 			return $this->_rows_to_iters($rows);		
@@ -505,17 +523,18 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_from_first_character($char) {
+		public function get_from_first_character($char)
+		{
 			$rows = $this->db->query("SELECT *
 					FROM leden
 					WHERE type IN (" . implode(',', $this->visible_types) . ")
-					AND voornaam ILIKE '" . $this->escape_string($char) . "%' 
+					AND voornaam ILIKE '" . $this->db->escape_string($char) . "%' 
 					ORDER BY voornaam");
 			
 			return $this->_rows_to_iters($rows);
 		}
 
-		function get_from_status($status)
+		public function get_from_status($status)
 		{
 			$rows = $this->db->query("SELECT *
 					FROM leden
@@ -525,7 +544,7 @@
 			return $this->_rows_to_iters($rows);
 		}
 		
-		function get_status($iter)
+		public function get_status($iter)
 		{
 			switch ($iter->get('type'))
 			{
@@ -574,7 +593,8 @@
 		  *
 		  * @result whether the insert was successful
 		  */	
-		function insert_profiel($iter) {
+		public function insert_profiel(DataIter $iter)
+		{
 			return $this->_insert('profielen', $iter);
 		}
 		
@@ -585,7 +605,8 @@
 		  * @result true if the member id is already used, false
 		  * otherwise
 		  */
-		function exists($memberid) {
+		public function exists($memberid)
+		{
 			$val = $this->db->query_value('SELECT 1
 					FROM leden
 					WHERE id = ' . intval($memberid));

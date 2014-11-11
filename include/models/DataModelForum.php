@@ -23,8 +23,8 @@
 		  *
 		  * @result a new DataModelForum object
 		  */
-		function DataModelForum($db) {
-			parent::DataModel($db, 'forums');
+		function __construct($db) {
+			parent::__construct($db, 'forums');
 		}
 		
 		/**

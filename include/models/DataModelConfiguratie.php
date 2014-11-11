@@ -6,9 +6,9 @@
 	  */
 	class DataModelConfiguratie extends DataModel
 	{
-		function DataModelConfiguratie($db)
+		function __construct($db)
 		{
-			parent::DataModel($db, 'configuratie', 'key');
+			parent::__construct($db, 'configuratie', 'key');
 		}
 		
 		/**
@@ -21,7 +21,7 @@
 		{
 			$value = $this->db->query_value('SELECT value
 						FROM configuratie
-						WHERE key = \'' . $this->escape_string($key) . '\'');
+						WHERE key = \'' . $this->db->escape_string($key) . '\'');
 						
 			return $value === null ? $default : $value;
 		}

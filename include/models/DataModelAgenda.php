@@ -5,11 +5,12 @@
 	  * A class implementing the Agenda data
 	  */
 	class DataModelAgenda extends DataModel {
-		function DataModelAgenda($db) {
-			parent::DataModel($db, 'agenda');
+		public function __construct($db)
+		{
+			parent::__construct($db, 'agenda');
 		}
 		
-		function get($from = null, $till = null, $confirmed_only = false) {
+		public function get($from = null, $till = null, $confirmed_only = false) {
 
 			$conditions = array();
 
@@ -36,7 +37,7 @@
 			return $this->_rows_to_iters($rows);
 		}
 		
-		function _generate_select() {
+		protected function _generate_select() {
 			return "DATE_PART('dow', agenda.van) AS vandagnaam, 
 				DATE_PART('day', agenda.van) AS vandatum, 
 				DATE_PART('year', agenda.van) AS vanjaar,
@@ -51,7 +52,8 @@
 				DATE_PART('minutes', agenda.tot) AS totminuut";
 		}
 		
-		function get_iter($id, $include_prive = true) {
+		public function get_iter($id, $include_prive = true)
+		{
 			$row = $this->db->query_first("SELECT *, " . 
 					$this->_generate_select() . ",
 					a_m.agendaid as moderate,
@@ -64,7 +66,7 @@
 					. " GROUP BY agenda.id, a_m.agendaid, a_m.overrideid");
 			
 			if (!$row)
-				return $row;
+				throw new DataIterNotFoundException($id);
 
 			return $this->_row_to_iter($row);
 		}
@@ -76,7 +78,8 @@
 		  * @result an array of #DataIter with the currently
 		  * relevant agendapunten
 		  */
-		function get_agendapunten($include_prive = false) {
+		public function get_agendapunten($include_prive = false)
+		{
 			static $agendapunten = null;
 			static $agendapunten_prive = null;
 			
@@ -107,20 +110,23 @@
 			}
 		}
 		
-		function _update_moderate($iter, $override) {
+		protected function _update_moderate(DataIter $iter, $override)
+		{
 			return $this->db->update('agenda_moderate', 
 					array('overrideid' => intval($override)), 
 					'agendaid = ' . $iter->get_id());
 		}
 		
-		function _insert_moderate($iter, $override) {
+		protected function _insert_moderate(DataIter $iter, $override)
+		{
 			return $this->db->insert(
 					'agenda_moderate', 
 					array('agendaid' => $iter->get_id(),
 						'overrideid' => intval($override)));
 		}
 		
-		function _delete_moderate($iter) {
+		protected function _delete_moderate(DataIter $iter)
+		{
 			return $this->db->delete('agenda_moderate',
 					'agendaid = ' . $iter->get_id());
 		}
@@ -132,7 +138,8 @@
 		  *
 		  * @result true if setting the need-moderation was successul
 		  */
-		function set_moderate($id, $override, $moderate) {
+		public function set_moderate($id, $override, $moderate)
+		{
 			$iter = $this->get_iter($id);
 			
 			if (!$iter)
@@ -153,7 +160,8 @@
 				return $this->_delete_moderate($iter);
 		}
 		
-		function delete($iter) {
+		public function delete(DataIter $iter)
+		{
 			/* Remove the possible moderation */
 			$this->set_moderate($iter->get_id(), 0, false);
 			
@@ -168,7 +176,8 @@
 		  * moderation and the number of agendapunten that need
 		  * moderation otherwise
 		  */
-		function has_moderate() {
+		public function has_moderate()
+		{
 			$rows = $this->db->query('SELECT * FROM agenda_moderate');
 			
 			if (!$rows || count($rows) == 0)
@@ -182,7 +191,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_moderates() {
+		public function get_moderates()
+		{
 			$rows = $this->db->query("SELECT agenda.*, agenda_moderate.overrideid, " .
 				$this->_generate_select() . " 
 				FROM agenda, agenda_moderate
@@ -200,7 +210,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_for_commissie($id, $include_priv = false) {
+		public function get_for_commissie($id, $include_prive = false)
+		{
 			$rows = $this->db->query("SELECT *, " .
 					$this->_generate_select() . "
 					FROM agenda 

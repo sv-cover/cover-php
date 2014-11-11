@@ -4,9 +4,11 @@
 	/**
 	  * A class implementing active member data
 	  */
-	class DataModelActieveLeden extends DataModel {
-		function DataModelActieveLeden($db) {
-			parent::DataModel($db, 'actieveleden');
+	class DataModelActieveLeden extends DataModel
+	{
+		public function __construct($db)
+		{
+			parent::__construct($db, 'actieveleden');
 		}
 		
 		function search_members($query) {
@@ -18,8 +20,8 @@
 					tussenvoegsel,
 					achternaam
 					FROM leden
-					WHERE (voornaam ILIKE \'%' . $this->escape_string($query) . '%\' OR
-					achternaam ILIKE \'%' . $this->escape_string($query) . '%\')
+					WHERE (voornaam ILIKE \'%' . $this->db->escape_string($query) . '%\' OR
+					achternaam ILIKE \'%' . $this->db->escape_string($query) . '%\')
 					AND type = 1
 					ORDER BY voornaam, tussenvoegsel, achternaam');
 

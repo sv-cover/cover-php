@@ -4,9 +4,9 @@ require_once 'data/DataModel.php';
 
 class DataModelBesturen extends DataModel
 {
-	public function DataModelBesturen($db)
+	public function __construct($db)
 	{
-		parent::DataModel($db, 'besturen');
+		parent::__construct($db, 'besturen');
 	}
 
 	public function get_from_page($page_id)

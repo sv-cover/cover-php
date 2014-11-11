@@ -23,7 +23,7 @@
 		public function get_title($language = null)
 		{
 			$content = $this->get_content($language);
-		
+
 			return preg_match('/\[h1\](.+?)\[\/h1\]\s*/ism', $content, $match)
 				? $match[1]
 				: $this->get('titel');
@@ -33,11 +33,13 @@
 	/**
 	  * A class implementing the Editable data
 	  */
-	class DataModelEditable extends DataModel {
-		/* protected */ var $dataiter = 'DataIterEditable';
+	class DataModelEditable extends DataModel
+	{
+		public $dataiter = 'DataIterEditable';
 
-		function DataModelEditable($db) {
-			parent::DataModel($db, 'pages');
+		public function __construct($db)
+		{
+			parent::__construct($db, 'pages');
 		}
 		
 		/**
@@ -47,13 +49,14 @@
 		  * @result a #DataIter or null of no such page could be
 		  * found
 		  */
-		function get_iter_from_title($title) {
+		public function get_iter_from_title($title)
+		{
 			return $this->_row_to_iter($this->db->query_first("SELECT * 
 					FROM pages
-					WHERE titel = '" . $this->escape_string($title) . "'"));
+					WHERE titel = '" . $this->db->escape_string($title) . "'"));
 		}
 
-		function get_content($id, &$page = null)
+		public function get_content($id, &$page = null)
 		{
 			$page = $this->get_iter($id);
 
@@ -64,7 +67,7 @@
 				: $page->get('content');
 		}
 
-		function get_title($id)
+		public function get_title($id)
 		{
 			$content = $this->get_content($id, $page);
 
@@ -73,7 +76,7 @@
 				: null;
 		}
 
-		function get_summary($id)
+		public function get_summary($id)
 		{
 			$content = $this->get_content($id, $page);
 

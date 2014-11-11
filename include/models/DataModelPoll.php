@@ -4,9 +4,11 @@
 	/**
 	  * A class implementing poll data
 	  */
-	class DataModelPoll extends DataModel {
-		public function DataModelPoll($db) {
-			parent::DataModel($db);
+	class DataModelPoll extends DataModel
+	{
+		public function __construct($db)
+		{
+			parent::__construct($db);
 		}
 		
 		public function can_create_new_poll(&$days = null)
