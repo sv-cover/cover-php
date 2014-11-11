@@ -59,6 +59,11 @@
 			$domain = null;
 
 		setcookie($name, $value, $cookie_time, '/', $domain);
+
+		if ($cookie_time === 0 || $cookie_time > time())
+			$_COOKIE[$name] = $value;
+		else
+			unset($_COOKIE[$name]);
 	}
 
 	/** @group Login
