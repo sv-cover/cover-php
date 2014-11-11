@@ -153,10 +153,10 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 
 		$('<input type="text" class="tag-search">')
 			.on('keydown', function(e) {
-				if (event.keyCode === $.ui.keyCode.TAB && $(this).data('ui-autocomplete').menu.active)
+				if (e.keyCode === $.ui.keyCode.TAB && $(this).data('ui-autocomplete').menu.active)
 					e.preventDefault();
 
-				else if (event.keyCode === $.ui.keyCode.ESCAPE) {
+				else if (e.keyCode === $.ui.keyCode.ESCAPE) {
 					$(this).val('').hide();
 					e.preventDefault();
 				}
