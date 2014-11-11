@@ -367,6 +367,35 @@
 			
 			$this->redirect('fotoboek.php?book=' . $book->get_id());
 		}
+
+		protected function _process_update_faces(DataIterPhotobook $book)
+		{
+			if (!$this->_page_prepare())
+				return;
+
+			if (!ctype_digit((string) $book->get_id()))
+				throw new Exception('You can only recognise faces in real photo books');
+
+			header('Content-Type: text/plain');
+
+			// Disable output buffering
+			while (ob_get_level())
+				ob_end_clean();
+
+			// Open the process
+			$p = popen('python opt/facedetect/suggest_faces.py ' . $book->get_id() . ' 2>&1', 'r');
+
+			if (!$p)
+				throw new Exception("Could not start process");
+
+			while (($buffer = fgets($p, 4096)) !== false)
+			{
+				echo "$buffer\n";
+				ob_flush();
+			}
+		
+			fclose($p);
+		}
 		
 		protected function _process_mark_read(DataIterPhotobook $book)
 		{
@@ -441,6 +470,8 @@
 					$this->_process_del_book($book);
 				elseif (isset($_GET['editbook']))
 					$this->_view_edit_book($book);
+				elseif (isset($_POST['update_faces']))
+					$this->_process_update_faces($book);
 				else {
 					if (!$this->policy->user_can_read($book))
 						return $this->get_content('book_not_found');
