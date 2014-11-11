@@ -339,17 +339,14 @@ class DatabasePDO
 
 	public function read_blob($data)
 	{
+		if (!is_resource($data))
+			throw new InvalidArgumentException('DatabasePDO::read_blob expected resource as argument');
+
 		return stream_get_contents($data);
 	}
 
 	public function write_blob($data)
 	{
-		$oid = $this->resource->pgsqlLOBCreate();
-
-		$stream = $this->resource->pgsqlLOBOpen($oid, 'wb');
-
-		stream_copy_to_stream($data, $stream);
-		
-		return $oid;
+		return substr($this->resource->quote(stream_get_contents($data), PDO::PARAM_LOB), 1, -1);
 	}
 }
