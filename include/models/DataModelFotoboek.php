@@ -418,7 +418,7 @@
 				GROUP BY
 					fotos.id
 				ORDER BY
-					fotos.id ASC
+					fotos.id DESC
 			");
 
 			return $this->_rows_to_iters($rows, 'DataIterPhoto');
