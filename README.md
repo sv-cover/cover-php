@@ -46,4 +46,7 @@ That should be it, the website should work now. You can log in with:
 email: `user@example.com`  
 password: `password`
 
+## Getting Face detection to work
+Face detection makes use of OpenCV and Python and the python libraries numpy and psycopg2. Make sure those are installed. If that is done correctly, the python script in opt/facedetect should work without editing.
+
 Have fun!
