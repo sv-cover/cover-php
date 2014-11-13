@@ -383,7 +383,7 @@
 				ob_end_clean();
 
 			// Open the process
-			$p = popen('python opt/facedetect/suggest_faces.py ' . $book->get_id() . ' 2>&1', 'r');
+			$p = popen(get_config_value('path_to_python', 'python') . ' opt/facedetect/suggest_faces.py ' . $book->get_id() . ' 2>&1', 'r');
 
 			if (!$p)
 				throw new Exception("Could not start process");
