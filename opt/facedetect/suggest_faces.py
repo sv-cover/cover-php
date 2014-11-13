@@ -36,18 +36,18 @@ def find_faces(url):
 
 def insert_face(foto_id, face):
 	icur.execute("""SELECT COUNT(id) FROM foto_faces WHERE foto_id = %(id)s
-		AND x > %(x)s - 5 AND x < %(x)s + 5
-		AND y > %(y)s - 5 AND y < %(y)s + 5
-		AND w > %(w)s - 5 AND w < %(w)s + 5
-		AND h > %(h)s - 5 AND h < %(h)s + 5""", {
+		AND x > %(x)s - 0.05 AND x < %(x)s + 0.05
+		AND y > %(y)s - 0.05 AND y < %(y)s + 0.05
+		AND w > %(w)s - 0.05 AND w < %(w)s + 0.05
+		AND h > %(h)s - 0.05 AND h < %(h)s + 0.05""", {
 			'id': foto_id,
 			'x': face[0], 'y': face[1],
 			'w': face[2], 'h': face[3]
 		})
 
-	# if icur.fetchone()[0] == 0:
-	icur.execute("""INSERT INTO foto_faces (foto_id, x, y, w, h) VALUES (%s, %s, %s, %s, %s)""", (foto_id,) + face)
-	return True
+	if icur.fetchone()[0] == 0:
+		icur.execute("""INSERT INTO foto_faces (foto_id, x, y, w, h) VALUES (%s, %s, %s, %s, %s)""", (foto_id,) + face)
+		return True
 
 	return False
 
@@ -65,8 +65,10 @@ for row in cur.fetchall():
 	for face in faces:
 		print("  x: %0.2f y: %0.2f w: %0.2f h: %0.2f" % face)
 		if insert_face(row[0], face):
-			print("  added!")
-		conn.commit()
+			print("  added")
+			conn.commit()
+		else:
+			print("  duplicate")
 
 
 # img = cv2.imread('sachin.jpg')
