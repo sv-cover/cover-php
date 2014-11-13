@@ -301,6 +301,10 @@ table.navigation td:nth-child(3) {
 	transition: opacity 100ms;
 }
 
+.face:hover {
+	z-index: 10;
+}
+
 .face:hover,
 .tagging-enabled .face {
 	opacity: 1.0;
