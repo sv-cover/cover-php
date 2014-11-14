@@ -30,7 +30,7 @@
 		}
 
 		function _process_search($query) {
-			$iters = $this->model->search_first_last($query, 15);
+			$iters = $this->model->search_name($query, 15);
 
 			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
 				array('application/json', 'text/html', '*/*'));
@@ -39,7 +39,7 @@
 				echo json_encode(array_map(function($lid) {
 					return array(
 						'id' => $lid->get_id(),
-						'beginjaar' => $lid->get('beginjaar'),
+						'starting_year' => $lid->get('beginjaar'),
 						'name' => member_full_name($lid));
 				}, $iters));
 			else

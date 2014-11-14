@@ -419,7 +419,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function search_first_last($name, $limit = null) {
+		public function search_name($name, $limit = null) {
 			if (!$name)
 				return null;
 
@@ -440,15 +440,17 @@
 						actieveleden.lidid = leden.id
 					LEFT JOIN foto_faces ON
 						foto_faces.lid_id = leden.id
+					LEFT JOIN profielen ON
+						profielen.lidid = leden.id
 					WHERE
 						type IN (" . implode(',', $types) . ")
-						AND
-							CASE
+						AND (CASE
 								WHEN coalesce(tussenvoegsel, '') = '' THEN
 									voornaam || ' ' || achternaam
 								ELSE
 									voornaam || ' ' || tussenvoegsel || ' ' || achternaam
 							END ILIKE '%{$name}%'
+							OR profielen.nick ILIKE '%{$name}%')
 					GROUP BY
 						leden.id
 					ORDER BY

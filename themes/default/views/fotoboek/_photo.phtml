@@ -191,6 +191,7 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 						$('<a class="profile">')
 							.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&get_thumb=thumb'))
 							.append($('<span class="name">').text(item.name))
+							.append($('<span class="starting-year">').text(item.starting_year))
 					).appendTo(ul);
 				};
 			})

@@ -386,4 +386,8 @@ table.navigation td:nth-child(3) {
 	height: auto;
 }
 
+.ui-autocomplete a.profile .starting-year {
+	display: block;
+	color: #ccc;
+}
 
