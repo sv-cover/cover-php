@@ -421,6 +421,10 @@
 		}
 
 		function run_impl() {
+			if (isset($_GET['view']) && $_GET['view'] == 'competition') {
+				$this->get_content('competition');
+				return;
+			}
 			if (isset($_GET['photo']) && $_GET['photo']) {
 				$photo = $this->model->get_iter($_GET['photo']);
 				$book = $photo->get_book();

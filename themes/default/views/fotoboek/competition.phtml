@@ -1,0 +1,50 @@
+<h1><?= __('Fotoboek') ?></h1>
+<div class = "messageBox">
+	<?php
+		$taggers = get_db()->query('SELECT l.id, l.voornaam, COUNT(f_f.id) tags FROM foto_faces f_f LEFT JOIN leden l ON l.id = f_f.tagged_by WHERE f_f.lid_id IS NOT NULL GROUP BY l.id HAVING COUNT(f_f.id) > 5 ORDER BY tags DESC');
+
+		$tagged = get_db()->query('SELECT l.id, l.voornaam, COUNT(f_f.id) tags FROM foto_faces f_f LEFT JOIN leden l ON l.id = f_f.lid_id WHERE f_f.lid_id IS NOT NULL GROUP BY l.id HAVING COUNT(f_f.id) > 5 ORDER BY tags DESC');
+	?>
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<h2>Meest taggende leden</h2>
+				<table>
+					<thead>
+						<tr>
+							<th style="text-align: left">Naam</th>
+							<th style="text-align: left">Aantal gezichten getagged</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach ($taggers as $row): ?>
+						<tr>
+							<td><a href="profiel.php?lidid=<?=$row['id']?>"><?=markup_format_text($row['voornaam'])?></a></td>
+							<td style="text-align: right"><?=markup_format_text($row['tags'])?></td>
+						</tr>
+					<?php endforeach ?>
+					</tbody>
+				</table>
+			</td>
+			<td style="vertical-align: top">
+				<h2>Meest getagde leden</h2>
+				<table>
+					<thead>
+						<tr>
+							<th style="text-align: left">Naam</th>
+							<th style="text-align: left">Aantal maal getagged</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach ($tagged as $row): ?>
+						<tr>
+							<td><a href="profiel.php?lidid=<?=$row['id']?>"><?=markup_format_text($row['voornaam'])?></a></td>
+							<td style="text-align: right"><?=markup_format_text($row['tags'])?></td>
+						</tr>
+					<?php endforeach ?>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
