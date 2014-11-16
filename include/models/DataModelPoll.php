@@ -94,9 +94,9 @@
 			$this->db->insert('pollvoters', $iter->data, $iter->get_literals());
 		}
 
-		public function insert_optie($iter) {
-			$this->db->insert('pollopties', $iter->data, 
-					$iter->get_literals());
+		public function insert_optie($iter)
+		{
+			$this->db->insert('pollopties', $iter->data, $iter->get_literals());
 		}
 		
 		public function voted($iter) {
@@ -106,15 +106,17 @@
 			$config_model = get_model('DataModelConfiguratie');
 			$id = $config_model->get_value('poll_forum');
 			
+			// If this poll is in the Polls forum on the forum, it is
+			// closed as soon as there is a newer poll.
 			if ($iter->get('forum') == $id) {
-				$forum_model = get_model('DataModelForum');
-				$forum = $forum_model->get_iter($id);
-				
-				if ($forum) {
-					$thread = $forum->get_last_thread();
-					
+				try {
+					$thread = $this->get_latest_poll();
+						
 					if ($thread->get('id') != $iter->get('id'))
 						return true;
+				} catch (DataIterNotFoundException $e) {
+					// Oh shit the configuration is fucked up and we cannot find
+					// the polls forum. Well, never mind, not that important.
 				}
 			}
 			
@@ -127,9 +129,6 @@
 						lid = ' . intval($member_data['id']) . ' AND 
 						poll = ' . $iter->get('id'));
 			
-			if ($row === null)
-				return false;
-			else
-				return true;
+			return $row !== null;
 		}
 	}
