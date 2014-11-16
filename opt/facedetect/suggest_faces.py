@@ -14,6 +14,9 @@ cur = conn.cursor()
 icur = conn.cursor()
 
 def read_image_remote(url):
+	if url[0:2] == '//':
+		url = 'https:' + url
+	
 	request = urllib2.urlopen(url)
 	data = np.asarray(bytearray(request.read()), dtype=np.uint8)
 	image = cv2.imdecode(data, cv2.CV_LOAD_IMAGE_GRAYSCALE)

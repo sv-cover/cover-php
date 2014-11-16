@@ -11,6 +11,9 @@ cur = conn.cursor()
 icur = conn.cursor()
 
 def read_image_remote(url):
+	if url[0:2] == '//':
+		url = 'https:' + url
+
 	request = urllib2.urlopen(url)
 	data = np.asarray(bytearray(request.read()), dtype=np.uint8)
 	image = cv2.imdecode(data, cv2.CV_LOAD_IMAGE_GRAYSCALE)
@@ -43,16 +46,19 @@ def crop_image(src, x, y, w, h):
 	if sy + sh > ih:
 		sy = sy - ((sy + sh) - ih)
 
-	if sh == 0:
-		raise Exception('cropped height is 0')
+	assert sx >= 0 and sx <= iw, "Value of sx (%d) is out of bounds" % sx
+	assert sy >= 0 and sy <= ih, "Value of sy (%d) is out of bounds" % sy
 
-	if sw == 0:
-		raise Exception('cropped width is 0')
+	if sh < 20:
+		raise Exception('cropped height smaller than 20')
+
+	if sw < 20:
+		raise Exception('cropped width smaller than 20')
 
 	return cv2.resize(src[sy:sy+sh, sx:sx+sw], (100, 100))
 
 
-cur.execute("SELECT f_f.id, f.url, f_f.lid_id, f_f.x, f_f.y, f_f.w, f_f.h FROM foto_faces f_f RIGHT JOIN fotos f ON f_f.foto_id = f.id WHERE f_f.lid_id IS NOT NULL ORDER BY f.id ASC");
+cur.execute("SELECT f_f.id, f.url, f_f.lid_id, f_f.x, f_f.y, f_f.w, f_f.h, f.id FROM foto_faces f_f RIGHT JOIN fotos f ON f_f.foto_id = f.id WHERE f_f.deleted = FALSE AND f_f.lid_id IS NOT NULL ORDER BY f.id DESC");
 
 img = None
 img_url = None
@@ -64,16 +70,19 @@ for row in cur.fetchall():
 		os.mkdir(os.path.dirname(face_path))
 
 	# Face is already croppped?
-	# if os.path.isfile(face_path):
-		# continue
+	if os.path.isfile(face_path):
+		continue
 
 	# Load image (if not still loaded)
 	if row[1] != img_url:
 		img = read_image_remote(row[1])
 		img_url = row[1]
 
-	crop = crop_image(img, float(row[3]), float(row[4]), float(row[5]), float(row[6]))
-	cv2.imwrite(face_path, crop)
+	try:
+		crop = crop_image(img, float(row[3]), float(row[4]), float(row[5]), float(row[6]))
+		cv2.imwrite(face_path, crop)
+	except:
+		print("%d (face of %d in photo %d) is too small" % (row[0], row[2], row[7]))
 
 # img = cv2.imread('sachin.jpg')
 # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
