@@ -19,7 +19,7 @@
 					<tbody>
 					<?php foreach ($taggers as $row): ?>
 						<tr>
-							<td><a href="profiel.php?lidid=<?=$row['id']?>"><?=markup_format_text($row['voornaam'])?></a></td>
+							<td><a href="profiel.php?lid=<?=$row['id']?>"><?=markup_format_text($row['voornaam'])?></a></td>
 							<td style="text-align: right"><?=markup_format_text($row['tags'])?></td>
 						</tr>
 					<?php endforeach ?>
@@ -38,7 +38,7 @@
 					<tbody>
 					<?php foreach ($tagged as $row): ?>
 						<tr>
-							<td><a href="profiel.php?lidid=<?=$row['id']?>"><?=markup_format_text($row['voornaam'])?></a></td>
+							<td><a href="profiel.php?lid=<?=$row['id']?>"><?=markup_format_text($row['voornaam'])?></a></td>
 							<td style="text-align: right"><?=markup_format_text($row['tags'])?></td>
 						</tr>
 					<?php endforeach ?>
