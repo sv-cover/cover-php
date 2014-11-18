@@ -37,18 +37,21 @@
 			{
 				$facebook_image = wrap_cache($this->facebook, 24 * 3600, CacheDecorator::CATCH_EXCEPTION)->api('/v2.2/' + $facebook_event['cover']['id'] . '?fields=width,height', 'GET');
 
-				$real_img_h = 784 * $facebook_image['height'] / $facebook_image['width'] - 295;
-				
-				return array(
-					'src' => $facebook_event['cover']['source'],
-					'x' => $facebook_event['cover']['offset_x'] / 784 * 100,
-					'y' => $real_img_h * $facebook_event['cover']['offset_y'] / 295);
+				if (isset($facebook_image['height'], $facebook_image['width']))
+				{
+					$real_img_h = 784 * $facebook_image['height'] / $facebook_image['width'] - 295;
+					
+					return array(
+						'src' => $facebook_event['cover']['source'],
+						'x' => $facebook_event['cover']['offset_x'] / 784 * 100,
+						'y' => $real_img_h * $facebook_event['cover']['offset_y'] / 295);
+				}
 			}
-			else
-				return array(
-					'src' => get_theme_data('images/default_cover_photo.png'),
-					'x' => 0,
-					'y' => 0);
+			
+			return array(
+				'src' => get_theme_data('images/default_cover_photo.png'),
+				'x' => 0,
+				'y' => 0);
 		}
 
 		public function get_attending($item)
