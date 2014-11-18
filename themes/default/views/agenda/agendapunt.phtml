@@ -7,8 +7,9 @@ $date = strtotime($iter->get('van'));
 	<!-- Facebook Cover photo (or fallback photo) -->
 	<?php if ($cover_photo = $this->get_cover_photo($iter)): ?>
 	<div class="event-cover-photo">
-		<div style="left: -<?=$cover_photo['x'];?>%; top: -<?=$cover_photo['y']; ?>%">
-			<img src="<?=$cover_photo['src']?>">
+		<!-- On Facebook this image is shown in an 784x295 area -->
+		<div style="<?= sprintf('left: -%0.2F%%; top: -%0.2F%%', $cover_photo['x'], $cover_photo['y']) ?>">
+			<img src="<?=$cover_photo['src']?>" style="position: absolute; left: 0; right:0; top:0">
 		</div>
 	</div>
 	<?php endif ?>

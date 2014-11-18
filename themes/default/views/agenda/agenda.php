@@ -31,13 +31,19 @@
 				return null;
 
 			
-			$response = wrap_cache($this->facebook, 3600, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
+			$facebook_event = wrap_cache($this->facebook, 3600, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
 
-			if (isset($response['cover']))
+			if (isset($facebook_event['cover']))
+			{
+				$facebook_image = wrap_cache($this->facebook, 24 * 3600, CacheDecorator::CATCH_EXCEPTION)->api('/v2.2/' + $facebook_event['cover']['id'] . '?fields=width,height', 'GET');
+
+				$real_img_h = 784 * $facebook_image['height'] / $facebook_image['width'] - 295;
+				
 				return array(
-					'src' => $response['cover']['source'],
-					'x' => $response['cover']['offset_x'],
-					'y' => $response['cover']['offset_y']);
+					'src' => $facebook_event['cover']['source'],
+					'x' => $facebook_event['cover']['offset_x'] / 784 * 100,
+					'y' => $real_img_h * $facebook_event['cover']['offset_y'] / 295);
+			}
 			else
 				return array(
 					'src' => get_theme_data('images/default_cover_photo.png'),
