@@ -425,13 +425,6 @@
 
 			$name = $this->db->escape_string($name);
 
-			$types = array(
-				MEMBER_STATUS_LID,
-				MEMBER_STATUS_LID_AF,
-				MEMBER_STATUS_ERELID,
-				MEMBER_STATUS_DONATEUR
-			);
-
 			$query = "SELECT
 					leden.*
 					FROM
@@ -443,7 +436,7 @@
 					LEFT JOIN profielen ON
 						profielen.lidid = leden.id
 					WHERE
-						type IN (" . implode(',', $types) . ")
+						type IN (" . implode(',', $this->visible_types) . ")
 						AND (CASE
 								WHEN coalesce(tussenvoegsel, '') = '' THEN
 									voornaam || ' ' || achternaam
