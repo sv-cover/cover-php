@@ -14,7 +14,7 @@ if (count($activiteiten)): ?>
 <ul>
 <?php foreach ($activiteiten as $punt): ?>
 	<li>
-		<a href="agenda.php?id=<?=$punt->get_id()?>"><strong><?=markup_format_text($punt->get('kop'))?></strong></a><br>
+		<a href="agenda.php?agenda_id=<?=$punt->get_id()?>"><strong><?=markup_format_text($punt->get('kop'))?></strong></a><br>
 		<?=agenda_period_for_display($punt)?><br>
 		<?php if ($punt->get('locatie')): ?>
 			<?=__('Locatie') . ': ' . markup_format_text($punt->get('locatie'))?>
