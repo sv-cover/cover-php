@@ -1,11 +1,36 @@
 <?php
 	require_once('data/DataModel.php');
 
+	class DataIterCommissie extends DataIter
+	{
+		public function get_members()
+		{
+			return $this->model->get_members($this);
+		}
+
+		public function set_members(array $members)
+		{
+			return $this->model->set_members($this, $members);
+		}
+	}
+
 	/**
 	  * A class implementing the Commissie data
 	  */
 	class DataModelCommissie extends DataModel
 	{
+		public $dataiter = 'DataIterCommissie';
+
+		public $fields = array(
+			'id',
+			'naam',
+			'login',
+			'website',
+			'nocaps',
+			'page',
+			'hidden',
+			'vacancies');
+
 		public function __construct($db)
 		{
 			parent::__construct($db, 'commissies');
@@ -28,12 +53,29 @@
 			return $this->find(!$include_hidden ? 'hidden <> 1' : '');
 		}
 
-		public function insert(DataIter $iter, $getid = false)
+		public function insert(DataIter $iter)
 		{
 			if ($iter->has('vacancies') && !$iter->get('vacancies'))
 				$iter->set_literal('vacancies', 'NULL');
+
+			$iter->set('nocaps', strtolower($iter->get('naam')));
 			
-			return parent::insert($iter, $getid);
+			$committee_id = parent::insert($iter);
+
+			// Create the page for this committee
+			$editable_model = get_model('DataModelEditable');
+
+			$page_data = array(
+				'owner' => $committee_id,
+				'titel' => $iter->get('naam'));
+
+			$page = new DataIter($editable_model, -1, $page_data);
+
+			$page_id = $editable_model->insert($page);
+
+			$this->db->update($this->table, array('page' => $page_id), $this->_id_string($committee_id), array());
+
+			return $committee_id;
 		}
 
 		public function update(DataIter $iter)
@@ -43,10 +85,34 @@
 			
 			return parent::update($iter);
 		}
+
+		public function delete(DataIter $iter)
+		{
+			// Remove committee page
+			$editable_model = get_model('DataModelEditable');
+
+			try {
+				$page = $editable_model->get_iter($iter->get('page'));
+				$editable_model->delete($page);
+			} catch (DataIterNotFoundException $e) {
+				// Well, never mind.
+			}
+
+			// Remove members from committee
+			$this->set_members($iter, array());
+
+			// Remove forum permissions
+			$forum_model = get_model('DataModelForum');
+			$forum_model->commissie_deleted($iter);
+
+			
+
+			return parent::delete($iter);
+		}
 		
 		public function get_functies()
 		{
-			static $functies = Array(
+			static $functies = array(
 				'voorzitter' => 5,
 				'secretaris' => 4,
 				'penningmeester' => 3,
@@ -80,20 +146,19 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function get_leden($id)
+		public function get_members(DataIterCommissie $committee)
 		{
-			$rows = $this->db->query('SELECT leden.id, 
+			$rows = $this->db->query('SELECT
+					leden.id, 
 					leden.voornaam, 
 					leden.tussenvoegsel, 
 					leden.achternaam, 
 					leden.email, 
 					leden.privacy,
-					actieveleden.functie,
-					actieveleden.sleutel,
-					actieveleden.id AS actiefid
+					actieveleden.functie
 					FROM actieveleden, leden
 					WHERE leden.id = actieveleden.lidid AND 
-					actieveleden.commissieid = ' . intval($id));
+					actieveleden.commissieid = ' . $committee->get_id());
 			
 			$iters = $this->_rows_to_iters($rows);
 			
@@ -105,13 +170,26 @@
 
 		public function get_lid_for_functie($commissie_id, $functie)
 		{
-			$leden = $this->get_leden($commissie_id);
+			$committee = $this->get_iter($commissie_id);
+
+			$leden = $this->get_members($committee);
 
 			foreach ($leden as $lid)
 				if (strcasecmp($lid->get('functie'), $functie) === 0)
 					return $lid;
 
 			return null;
+		}
+
+		public function set_members(DataIterCommissie $committee, array $members)
+		{
+			$this->db->delete('actieveleden', sprintf('commissieid = %d', $committee->get_id()));
+
+			foreach ($members as $member_id => $position)
+				$this->db->insert('actieveleden', array(
+					'commissieid' => $committee->get_id(),
+					'lidid' => intval($member_id),
+					'functie' => $position));
 		}
 
 		public function get_commissies_for_member($lid_id)
@@ -246,15 +324,6 @@
 					WHERE page = %d", $page_id));
 			
 			return $this->_row_to_iter($row);
-		}
-		
-		public function delete(DataIter $iter)
-		{
-			parent::delete($iter);
-			
-			/* Remove forum permissions */
-			$forum_model = get_model('DataModelForum');
-			$forum_model->commissie_deleted($iter);
 		}
 	}
 ?>

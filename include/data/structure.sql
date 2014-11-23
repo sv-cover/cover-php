@@ -57,8 +57,7 @@ CREATE TABLE actieveleden (
     id integer DEFAULT nextval('actieveleden_id_seq'::regclass) NOT NULL,
     lidid smallint NOT NULL,
     commissieid smallint NOT NULL,
-    functie character varying(50),
-    sleutel integer
+    functie character varying(50)
 );
 
 --

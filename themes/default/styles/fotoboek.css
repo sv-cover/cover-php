@@ -370,24 +370,7 @@ table.navigation td:nth-child(3) {
 	font-style: italic;
 }
 
-.ui-autocomplete a.profile {
-	display: block;
-	height: 45px;
-	position: relative;
-	overflow: hidden;
-	padding: 0 0 0 35px;
-}
-
-.ui-autocomplete a.profile .picture {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 30px;
-	height: auto;
-}
-
-.ui-autocomplete a.profile .starting-year {
-	display: block;
-	color: #ccc;
+.hidden img {
+	opacity: 0.5
 }
 

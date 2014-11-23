@@ -17,6 +17,26 @@ class ControllerCommissies extends ControllerCRUD
 		return $this->model->get(false);
 	}
 
+	protected function _create(array $data, array &$errors)
+	{
+		$iter = parent::_create($data, $errors);
+
+		if (!empty($data['members']))
+			$this->model->set_members($data['members']);
+
+		return $iter;
+	} 
+
+	protected function _update(DataIter $iter, array $data, array &$errors)
+	{
+		if (!parent::_update($iter, $data, $errors))
+			return false;
+
+		$this->model->set_members($iter, $data['members'] ? $data['members'] : array());
+
+		return true;
+	}
+
 	protected function _read($id)
 	{
 		if (!ctype_digit($id))

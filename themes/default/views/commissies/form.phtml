@@ -22,6 +22,34 @@
 		</div>
 		<?php endif ?>
 
+		<div class="committee-members">
+			<table>
+				<thead>
+					<tr>
+						<th><?=__('Lid')?></th>
+						<th><?=__('Functie')?></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if($iter->get_id()) foreach ($iter->get_members() as $member): ?>
+					<tr>
+						<td><?=member_full_name($member)?></td>
+						<td><input type="text" name="members[<?=$member->get_id()?>]" value="<?=markup_format_attribute($member->get('functie'))?>" class="autocomplete-function"></td>
+						<td><button type="button" class="button remove-button" title="<?=markup_format_attribute(__('Verwijder lid uit commissie'))?>">&times;</button></td>
+					</tr>
+					<?php endforeach ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td><input type="text" class="committee-member-name" placeholder="<?=__('Naam')?>"></td>
+						<td><input type="text" class="committee-member-function autocomplete-function" placeholder="<?=__('Functie')?>"></td>
+						<td><button type="button" class="button add-button"><?=__('Toevoegen')?></button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+
 		<div>
 			<?=label(__('Deze commissie zoekt nieuwe leden tot'), 'vacancies', $errors)?>
 			<?=input_date('vacancies', $iter->data)?>
@@ -38,3 +66,63 @@
 		</div>
 	</form>
 </div>
+<script>
+jQuery(function($) {
+	var $form = $('form .committee-members')
+		$member = $form.find('input.committee-member-name'),
+		$fun = $form.find('input.committee-member-function')
+		$add = $form.find('button.add-button');
+
+	$member.autocompleteAlmanac({
+		select: function(event, ui) {
+			$(this).data('member-id', ui.item.id).val(ui.item.name);
+			$fun.focus();
+			return false;
+		}
+	});
+
+	$form.find('.autocomplete-function').autocomplete({
+			delay: 0,
+			minLength: 0,
+			source: <?=json_encode(array_values(array_flip($model->get_functies())))?>
+		})
+		.focus(function(e) {
+			$(this).autocomplete('search', '');
+		});
+
+	$add.click(function(e) {
+		if (!$member.data('member-id'))
+			return;
+
+		var $row = $('<tr>');
+
+		$('<td>').text($member.val()).appendTo($row);
+
+		$('<input type="text">')
+			.attr('name', 'members[' + $member.data('member-id') + ']')
+			.val($fun.val())
+			.appendTo($('<td>').appendTo($row));
+
+		$('<button type="button">')
+			.addClass('remove-button button')
+			.html('&times;')
+			.appendTo($('<td>').appendTo($row));
+
+		$form.find('table tbody').append($row);
+
+		$fun.val('');
+		$member.data('member-id', '').val('').focus();
+	});
+
+	$fun.keypress(function(e) {
+		if (e.keyCode == $.ui.keyCode.ENTER) {
+			e.preventDefault();
+			$add.click();
+		}
+	});
+
+	$form.on('click', '.remove-button', function(e) {
+		$(this).closest('tr').remove();
+	});
+});
+</script>

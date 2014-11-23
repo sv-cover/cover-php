@@ -101,3 +101,31 @@ jQuery(function($) {
 		.on('click', 'a[data-placement-selector]', inline_link_handler)
 		.on('submit', 'form[data-placement-selector]', inline_link_handler);
 });
+
+jQuery.fn.autocompleteAlmanac = function(options)
+{
+	var defaults = {
+		minLength: 3,
+        source: function(request, response) {
+			$.getJSON('almanak.php', {
+				'search': request.term
+			}, response);
+		},
+		focus: function() {
+			return false;
+		}
+	};
+
+	jQuery.extend(defaults, options || {});
+
+	return $(this).autocomplete(defaults).each(function() {
+		$(this).data('ui-autocomplete')._renderItem = function(ul, item) {
+			return $('<li>').append(
+				$('<a class="profile">')
+					.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&get_thumb=thumb'))
+					.append($('<span class="name">').text(item.name))
+					.append($('<span class="starting-year">').text(item.starting_year))
+			).appendTo(ul);
+		};
+	});
+};

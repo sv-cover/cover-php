@@ -48,7 +48,7 @@ function process_message_committee($message, &$committee)
 	if (!($committee = $commissie_model->get_from_email($to)))
 		return RETURN_COULD_NOT_DETERMINE_COMMITTEE;
 
-	$members = $commissie_model->get_leden($committee->get('id'));
+	$members = $committee->get_members();
 
 	foreach ($members as $member)
 	{

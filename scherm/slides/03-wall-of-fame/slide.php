@@ -12,7 +12,7 @@ else {
 	$commissie = $commissie_model->get_random();
 }
 
-$leden = $commissie_model->get_leden($commissie->get('id'));
+$leden = $commissie->get_members();
 
 function _full_name($lid) {
 	return $lid->get('tussenvoegsel')

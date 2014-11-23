@@ -12,11 +12,13 @@ class ControllerCRUD extends Controller
 
 	protected function _create($data, array &$errors)
 	{
-		$iter = new DataIter($this->model, -1, $data);
+		$iter_class = $this->model->dataiter;
+		
+		$iter = new $iter_class($this->model, -1, $data);
 
-		$id = $this->model->insert($iter, true);
+		$id = $this->model->insert($iter);
 
-		return new DataIter($this->model, $id, $iter->data);
+		return new $iter_class($this->model, $id, $iter->data);
 	}
 
 	protected function _read($id)
@@ -24,10 +26,11 @@ class ControllerCRUD extends Controller
 		return $this->model->get_iter($id);
 	}
 
-	protected function _update(DataIter $iter, $data, array &$erros)
+	protected function _update(DataIter $iter, $data, array &$errors)
 	{
 		foreach ($data as $key => $value)
-			$iter->set($key, trim($value));
+			if (is_scalar($value))
+				$iter->set($key, trim($value));
 
 		$result = $this->model->update($iter);
 
@@ -36,9 +39,7 @@ class ControllerCRUD extends Controller
 
 	protected function _delete(DataIter $iter, array &$errors)
 	{
-		$result = $this->model->delete($iter);
-
-		return $result === array() || $result === true;
+		return $this->model->delete($iter) === 1;
 	}
 
 	protected function _index()
@@ -278,7 +279,7 @@ class ControllerCRUD extends Controller
 		$errors = array();
 
 		if ($this->_form_is_submitted('delete'))
-			if ($iter = $this->_delete($iter, $errors))
+			if ($this->_delete($iter, $errors))
 				$success = true;
 
 		switch ($this->_get_preferred_response())

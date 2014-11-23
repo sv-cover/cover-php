@@ -24,6 +24,7 @@
 		public $db = null; /** The database backend */
 		public $table = null; /** The table to model */
 		public $dataiter = 'DataIter';
+		public $fields = array();
 		
 		/**
 		  * Create a new DataModel
@@ -49,29 +50,31 @@
 		  * @result if getid is true the last insert id is returned, -1 
 		  * otherwise
 		  */		
-		protected function _insert($table, DataIter $iter, $getid = false)
+		protected function _insert($table, DataIter $iter)
 		{
-			$this->db->insert($table, $iter->data, $iter->get_literals());
+			$data = array();
+
+			foreach ($iter->data as $key => $value)
+				if (!$this->fields || in_array($key, $this->fields))
+					$data[$key] = $value;
 			
-			return $getid
-				? $this->db->get_last_insert_id()
-				: -1;
+			$this->db->insert($table, $data, $iter->get_literals());
+			
+			return $this->db->get_last_insert_id();
 		}
 		
 		/**
 		  * Insert a new row (syncs with the database backend)
 		  * @iter a #DataIter representing the row
-		  * @getid optional; whether to get the last insert id
 		  *
-		  * @result if getid is true the last insert id is returned, -1 
-		  * otherwise
+		  * @result the last insert id
 		  */
-		public function insert(DataIter $iter, $getid = false)
+		public function insert(DataIter $iter)
 		{
 			if (!$this->table)
 				throw new RuntimeException(get_class($this) . '::$table is not set');
 			
-			return $this->_insert($this->table, $iter, $getid);
+			return $this->_insert($this->table, $iter);
 		}
 		
 		/**
@@ -105,8 +108,14 @@
 		  */
 		protected function _update($table, DataIter $iter)
 		{
+			$data = array();
+
+			foreach ($iter->get_changed_values() as $key => $value)
+				if (!$this->fields || in_array($key, $this->fields))
+					$data[$key] = $value;
+			
 			return $this->db->update($table, 
-					$iter->get_changed_values(), 
+					$data, 
 					$this->_id_string($iter->get_id(), $table), 
 					$iter->get_literals());
 		}
@@ -218,7 +227,7 @@
 			$data = $this->db->query_first($this->_generate_query($this->_id_string($id)));
 
 			if ($data === null)
-				throw new DataIterNotFound($id);
+				throw new DataIterNotFoundException($id);
 
 			return $this->_row_to_iter($data);
 		}

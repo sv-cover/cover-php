@@ -1167,6 +1167,14 @@ div.beheer table {
 	font-size: 0.85em;
 }
 
+.vertical-form table {
+	margin: 0;
+}
+
+.vertical-form table th {
+	text-align: left;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }
@@ -1642,4 +1650,25 @@ body .ui-autocomplete .ui-menu-item {
 
 body .ui-autocomplete .ui-menu-item:last-child {
 	margin-bottom: 0;
+}
+
+body .ui-autocomplete a.profile {
+	display: block;
+	height: 45px;
+	position: relative;
+	overflow: hidden;
+	padding: 0 0 0 35px;
+}
+
+body .ui-autocomplete a.profile .picture {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 30px;
+	height: auto;
+}
+
+body .ui-autocomplete a.profile .starting-year {
+	display: block;
+	color: #ccc;
 }

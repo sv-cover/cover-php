@@ -303,7 +303,9 @@ class DatabasePDO
 		if (!$condition)
 			throw new RuntimeException('Are you really really sure you want to delete everything?');
 
-		return $this->query('DELETE FROM "' . $table . '" WHERE ' . $condition);
+		$this->query('DELETE FROM "' . $table . '" WHERE ' . $condition);
+
+		return $this->last_affected;
 	}
 
 	/**
