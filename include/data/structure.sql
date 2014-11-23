@@ -32,33 +32,9 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 SET search_path = public, pg_catalog;
 
---
--- TOC entry 170 (class 1259 OID 24123)
--- Name: actieveleden_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE actieveleden_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
-
---
--- TOC entry 171 (class 1259 OID 24125)
--- Name: actieveleden; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE actieveleden (
-    id integer DEFAULT nextval('actieveleden_id_seq'::regclass) NOT NULL,
-    lidid smallint NOT NULL,
-    commissieid smallint NOT NULL,
-    functie character varying(50)
-);
 
 --
 -- TOC entry 172 (class 1259 OID 24129)
@@ -129,11 +105,8 @@ CREATE SEQUENCE besturen_id_seq
 --
 
 CREATE TABLE besturen (
-    id smallint DEFAULT nextval('besturen_id_seq'::regclass) NOT NULL,
-    naam character varying(25) NOT NULL,
-    login character varying(50),
-    website character varying(100),
-    nocaps text,
+    id smallint NOT NULL PRIMARY KEY,
+    theme character varying(100),
     page integer
 );
 
@@ -170,25 +143,8 @@ CREATE TABLE cache (
 );
 
 
---
--- TOC entry 186 (class 1259 OID 24194)
--- Name: commissies_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE commissies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 187 (class 1259 OID 24196)
--- Name: commissies; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
 CREATE TABLE commissies (
-    id smallint DEFAULT nextval('commissies_id_seq'::regclass) NOT NULL PRIMARY KEY,
+    id SERIAL NOT NULL PRIMARY KEY,
     naam character varying(25) NOT NULL,
     login character varying(50),
     website character varying(100),
@@ -467,6 +423,13 @@ CREATE TABLE studies (
     studie character varying(100)
 );
 
+CREATE TABLE actieveleden (
+    id SERIAL NOT NULL,
+    lidid smallint NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    commissieid smallint NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    functie character varying(50)
+);
+
 --
 -- TOC entry 208 (class 1259 OID 24283)
 -- Name: foto_boeken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -575,6 +538,13 @@ CREATE TABLE foto_faces (
     deleted boolean NOT NULL DEFAULT FALSE,
     tagged_by INTEGER REFERENCES "leden" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT foto_faces_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE foto_hidden (
+    id SERIAL NOT NULL,
+    foto_id integer NOT NULL REFERENCES "fotos" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    lid_id integer REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT foto_hidden_pkey PRIMARY KEY (id)
 );
 
 --

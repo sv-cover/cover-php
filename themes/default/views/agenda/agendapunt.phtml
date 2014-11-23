@@ -1,6 +1,11 @@
 <?php
-$commissie_model = get_model('DataModelCommissie');
-$commissie = $commissie_model->get_iter($iter->get('commissie'));
+try {
+	$commissie_model = get_model('DataModelCommissie');
+	$commissie = $commissie_model->get_iter($iter->get('commissie'));
+} catch (DataIterNotFoundException $e) {
+	$commissie = null;
+}
+
 $date = strtotime($iter->get('van'));
 ?>
 <div class="event-header">
@@ -80,7 +85,9 @@ $date = strtotime($iter->get('van'));
 <p><?= markup_parse($iter->get('beschrijving')) ?></p>
 
 <!-- Some meta-data -->
+<?php if ($commissie): ?>
 <p><span class="smaller"><?= __('Geplaatst door') ?>: <a href="commissies.php?commissie=<?=rawurlencode($commissie->get('login')) ?>"><?=markup_format_text($commissie->get('naam')) ?></a></span></p>
+<?php endif ?>
 
 <!-- Actions applicable to the event -->
 <ul class="actions">
