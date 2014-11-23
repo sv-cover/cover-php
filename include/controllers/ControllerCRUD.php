@@ -39,7 +39,7 @@ class ControllerCRUD extends Controller
 
 	protected function _delete(DataIter $iter, array &$errors)
 	{
-		return $this->model->delete($iter) === 1;
+		return $this->model->delete($iter) > 0;
 	}
 
 	protected function _index()
