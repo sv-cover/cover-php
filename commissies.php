@@ -22,7 +22,7 @@ class ControllerCommissies extends ControllerCRUD
 		$iter = parent::_create($data, $errors);
 
 		if (!empty($data['members']))
-			$this->model->set_members($data['members']);
+			$this->model->set_members($iter, $data['members']);
 
 		return $iter;
 	} 
