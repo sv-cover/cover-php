@@ -21,8 +21,9 @@
 	  */
 	class DataModel
 	{
-		public $db = null; /** The database backend */
-		public $table = null; /** The table to model */
+		public $db; /** The database backend */
+		public $table; /** The table to model */
+		public $id;
 		public $dataiter = 'DataIter';
 		public $fields = array();
 		
@@ -50,7 +51,7 @@
 		  * @result if getid is true the last insert id is returned, -1 
 		  * otherwise
 		  */		
-		protected function _insert($table, DataIter $iter)
+		protected function _insert($table, DataIter $iter, $get_id = false)
 		{
 			$data = array();
 
@@ -60,7 +61,9 @@
 			
 			$this->db->insert($table, $data, $iter->get_literals());
 			
-			return $this->db->get_last_insert_id();
+			return $get_id
+				? $this->db->get_last_insert_id()
+				: -1;
 		}
 		
 		/**
@@ -74,7 +77,7 @@
 			if (!$this->table)
 				throw new RuntimeException(get_class($this) . '::$table is not set');
 			
-			return $this->_insert($this->table, $iter);
+			return $this->_insert($this->table, $iter, $this->id == 'id');
 		}
 		
 		/**
