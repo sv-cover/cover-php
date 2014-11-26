@@ -1,0 +1,17 @@
+<h1><?=__('Inloggen op Dreamspark') ?></h1>
+<div class="messageBox">
+	<form method="post" action="" class="vertical-form">
+		<p><?=markup_format_text(__('Als je doorgaat worden je naam en e-mailadres doorgegeven aan de Dreamspark webstore.'))?></p>
+		
+		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+		<div>
+			<input type="checkbox" name="log_in_as_webcie" id="field-log_in_as_webcie" value="yes">
+			<label for="field-log_in_as_webcie"><?=__('Log in als WebCie admin')?></label>
+		</div>
+		<?php endif ?>
+		
+		<div>
+			<button type="submit" class="button" name="accept_terms" value="true"><?=__('Ga verder naar Dreamspark') ?></button>
+		</div>
+	</form>
+</div>

@@ -21,5 +21,8 @@
 		'facebook_app_id' => '',
 		'facebook_app_secret' => '',
 		'enable_facebook' => false,
-		'enable_facebook_rsvp' => false
+		'enable_facebook_rsvp' => false,
+
+		'elms_id' => '',
+		'elms_secret' => ''
 	);
