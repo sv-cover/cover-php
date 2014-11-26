@@ -1,120 +1,94 @@
 <?php
 
 require_once 'include/init.php';
-require_once 'controllers/Controller.php';
+require_once 'controllers/ControllerCRUD.php';
 require_once 'controllers/ControllerEditable.php';
 
-class ControllerBesturen extends Controller
+class ControllerBesturen extends ControllerCRUD
 {
-	public function ControllerBesturen()
+	public function __construct()
 	{
 		$this->model = get_model('DataModelBesturen');
 	}
 
-	public function get_content($view, $iter = null, $params = null)
+	protected function _get_title($iters = null)
 	{
-		$this->run_header(array('title' => __('Besturen')));
-		run_view('besturen::' . $view, $this->model, $iter, $params);
-		$this->run_footer();
-	}
-
-	public function run_impl()
-	{
-		if (isset($_POST['action']) && $_POST['action'] == 'add')
-			$this->_do_add();
-		elseif (isset($_POST['action']) && $_POST['action'] == 'update')
-			$this->_do_update();
-		elseif (isset($_GET['add_bestuur']))
-			$this->_view_add();
+		if ($iters instanceof DataIter)
+			return $iters->get('naam');
 		else
-			$this->_view_besturen();
+			return __('Besturen');
 	}
 
-	public function _do_add()
+	protected function _validate(DataIter $iter, $data, array &$errors)
 	{
-		if (!member_in_commissie(COMMISSIE_BESTUUR))
-		{
-			$this->get_content('auth_bestuur');
-			return;
-		}
+		if ($iter === null && !isset($data['naam']))
+			$errors[] = 'naam';
+		elseif (isset($data['naam']) && strlen(trim($data['naam'])) === 0)
+			$errors[] = 'naam';
+
+		if ($iter === null && !isset($data['login']))
+			$errors[] = 'login';
+		elseif (isset($data['login']) && !preg_match('/^[a-z0-9]+$/i', $data['login']))
+			$errors[] = 'login';
+
+		return count($errors) === 0;
+	}
+
+	protected function _create($data, array &$errors)
+	{
+		if (!$this->_validate(null, $data, $errors))
+			return false;
 
 		$editable_model = get_model('DataModelEditable');
 
-		$data = array(
+		$page_data = array(
 			'owner' => COMMISSIE_BESTUUR,
-			'titel' => $_POST['naam']);
+			'titel' => $data['naam']);
 
-		$iter = new DataIter($editable_model, -1, $data);
+		$iter = new DataIter($editable_model, -1, $page_data);
 
 		$page_id = $editable_model->insert($iter, true);
 
-		$data = array(
-			'naam' => $_POST['naam'],
-			'login' => $_POST['login'],
-			'nocaps' => strtolower($_POST['naam']),
+		$bestuur_data = array(
+			'naam' => $data['naam'],
+			'login' => $data['login'],
+			'nocaps' => strtolower($data['naam']),
 			'page' => $page_id);
 
-		$iter = new DataIter($this->model, -1, $data);
-
-		$bestuur_id = $this->model->insert($iter, true);
-
-		header('Location: besturen.php?editable_edit=' . $page_id . '#' . $bestuur_id);
+		return parent::_create($bestuur_data, $errors);
 	}
 
-	public function _do_edit()
+	protected function _update(DataIter $bestuur, $data, array &$errors)
 	{
-		if (!member_in_commissie(COMMISSIE_BESTUUR))
-		{
-			$this->get_content('auth_bestuur');
-			return;
-		}
-
-		$bestuur = $this->model->get_iter($_GET['id']);
-
-		$bestuur->set('naam', $_POST['naam']);
-		$bestuur->set('login', $_POST['login']);
-		$bestuur->set('nocaps', strtolower($_POST['naam']));
-
-		$this->model->update($bestuur);
+		if (!$this->_validate($bestuur, $data, $errors))
+			return false;
+		
+		$data['nocaps'] = $data['naam'];
 
 		$editable_model = get_model('DataModelEditable');
 
 		$editable = $editable_model->get_iter($bestuur->get('page'));
-		$editable->set('titel', $_POST['naam']);
-		
+		$editable->set('titel', $data['naam']);
+	
 		$editable_model->update($editable);
 
-		header('Location: besturen.php#' . $bestuur->get('id'));
+		return parent::_update($bestuur, $data, $errors);
 	}
 
-	public function _view_add()
-	{
-		$this->get_content('add');
-	}
-
-	public function _view_besturen()
+	protected function _index()
 	{
 		// Find all the boards
-		$iters = $this->model->get();
+		$iters = parent::_index();
 
 		// Sort then on their canonical names: $betuur->get('login')
 		usort($iters, array($this, '_compare_bestuur'));
 		
-		$this->get_content('besturen', $iters);
+		return $iters;
 	}
 
 	public function _compare_bestuur($left, $right)
 	{
 		return -1 * strnatcmp($left->get('login'), $right->get('login'));
-	}
-
-	protected function capture(Controller $controller)
-	{
-		ob_start();
-		
-		$controller->run();
-		
-		return ob_get_clean();
 	}
 }
 

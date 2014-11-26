@@ -8,9 +8,9 @@
 		<?php $editable = new ControllerEditable($bestuur->get('page')) ?>
 		<div id="<?=markup_format_attribute($bestuur->get('login'))?>" class="bestuur timeline-event has-header">
 			<div class="pageheading">
-				<?php if ($editable->user_can_update()): ?>
+				<?php if (get_policy($model)->user_can_update($bestuur)): ?>
 				<div class="controls inline">
-					<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
+					<a href="<?=markup_format_attribute($controller->link_to_update($bestuur)) ?>"><?= image('edit.png', __('bewerken'), __('Bestuur bewerken'))?></a>
 				</div>
 				<?php endif ?>
 				<h1><?=$editable->get_title()?></h1>
@@ -20,6 +20,11 @@
 					printf('<img class="board-photo" src="%s" width="100%%">',
 						markup_format_attribute($this->get_bestuursfoto($bestuur)));
 				?>
+				<?php if ($editable->user_can_update()): ?>
+				<div class="controls inline">
+					<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
+				</div>
+				<?php endif ?>
 				<div class="content">
 					<?php
 						ob_start();
@@ -37,9 +42,9 @@
 		<?php run_view('show::single', null, 'Oprichting Cover') ?>
 	</div>
 
-	<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
+	<?php if (get_policy($model)->user_can_create()): ?>
 		<div class="timeline-footer">
-			<a href="besturen.php?add_bestuur" class="add-new-bestuur button"><?=__('Nieuw bestuur toevoegen...')?></a>
+			<a href="<?=markup_format_attribute($controller->link_to_create())?>" class="add-new-bestuur button"><?=__('Nieuw bestuur toevoegen...')?></a>
 		</div>
 	<?php endif ?>
 	</div>

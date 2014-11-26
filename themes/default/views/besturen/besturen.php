@@ -2,7 +2,7 @@
 
 require_once 'editable.php';
 
-class BesturenView extends View
+class BesturenView extends CRUDView
 {
 	protected $__file = __FILE__;
 
