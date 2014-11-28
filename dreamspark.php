@@ -42,16 +42,25 @@ class DreamsparkController extends Controller
 
 		$url .= '?' . http_build_query($request);
 
-		$response = @file_get_contents($url);
+		$options = array('http' => array(
+			'ignore_errors' => true
+		));
+
+		$context = stream_context_create($options);
+
+		$fh = fopen($url, 'r', false, $context);
+
+		$metadata = stream_get_meta_data($fh);
+
+		$response = stream_get_contents($fh);
+
+		fclose($fh);
+
+		if (!isset($metadata['wrapper_data']) || strpos($metadata['wrapper_data'][0], '200 OK') === false)
+			throw new RuntimeException('Handshake error: ' . $response);
 
 		if (!$response)
-			throw new RuntimeException('Could not connect to the ELMS endpoint');
-
-		if (!isset($GLOBALS['http_response_header']))
-			throw new RuntimeException('http_response_header is not set');
-
-		if (strpos($GLOBALS['http_response_header'], '200 OK') === false)
-			throw new RuntimeException('Handshake error: ' . $GLOBALS['http_status']);
+			throw new RuntimeException('Could not get redirect url from the ELMS endpoint');
 
 		header('Location: ' . $response);
 		printf('Redirecting to <a href="%s">%1$s</a>',
