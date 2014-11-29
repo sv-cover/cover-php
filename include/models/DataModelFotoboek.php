@@ -50,9 +50,9 @@
 			return $this->model->get_children($this);
 		}
 
-		public function get_photos($max = 0, $random = false)
+		public function get_photos()
 		{
-			return $this->model->get_photos($this, $max, $random);
+			return $this->model->get_photos($this);
 		}
 
 		public function count_books()
@@ -384,44 +384,21 @@
 			return $this->_rows_to_iters($rows, 'DataIterPhotobook');
 		}
 
-		function get_iter($id)
+		protected function _generate_query($where)
 		{
-			$row = $this->db->query_first(sprintf("
+			return "
 				SELECT
-					fotos.*,
+					{$this->table}.*,
 					COUNT(DISTINCT foto_reacties.id) AS num_reacties
 				FROM
-					fotos
+					{$this->table}
 				LEFT JOIN foto_reacties ON
-					foto_reacties.foto = fotos.id
-				WHERE
-					fotos.id = %d
+					foto_reacties.foto = {$this->table}.id
+				" . ($where ? 'WHERE ' . $where : '') . "
 				GROUP BY
-					fotos.id
-			", $id));
-
-			return $this->_row_to_iter($row, 'DataIterPhoto');
-		}
-
-		function find($condition)
-		{
-			$rows = $this->db->query("
-				SELECT
-					fotos.*,
-					COUNT(DISTINCT foto_reacties.id) AS num_reacties
-				FROM
-					fotos
-				LEFT JOIN foto_reacties ON
-					foto_reacties.foto = fotos.id
-				WHERE
-					$condition
-				GROUP BY
-					fotos.id
+					{$this->table}.id
 				ORDER BY
-					fotos.id DESC
-			");
-
-			return $this->_rows_to_iters($rows, 'DataIterPhoto');
+					{$this->table}.id DESC";
 		}
 		
 		/**
@@ -457,30 +434,12 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_photos(DataIterPhotobook $book, $max = 0, $random = false) {
-			$rows = $this->db->query('
-					SELECT 
-						fotos.*, 
-						COUNT(DISTINCT foto_reacties.id) AS num_reacties' . 
-						($random ? ', RANDOM() AS ord' : '') . '
-					FROM 
-						fotos
-					LEFT JOIN foto_reacties ON (foto_reacties.foto = fotos.id)
-					WHERE 
-						boek = ' . $book->get_id() . '
-					GROUP BY 
-						fotos.id, 
-						fotos.boek, 
-						fotos.url, 
-						fotos.thumburl, 
-						fotos.beschrijving
-					ORDER BY ' . ($random ? 'ord' : 'fotos.id ASC') . '
-					' . ($max != 0 ? ('LIMIT ' . $max) : ''));
-
-			return $this->_rows_to_iters($rows, 'DataIterPhoto');
+		public function get_photos(DataIterPhotobook $book)
+		{
+			return $this->find(sprintf('boek = %d', $book->get_id()));
 		}
 
-		function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
+		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
 		{
 			$query = sprintf('
 				WITH RECURSIVE book_children (id, parents) AS (

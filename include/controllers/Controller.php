@@ -122,6 +122,26 @@
 
 		protected function run_exception(Exception $e)
 		{
+			if ($e instanceof NotFoundException)
+				return $this->run_404($e);
+			else
+				return $this->run_500($e);
+		}
+
+		protected function run_404(NotFoundException $exception)
+		{
+			try {
+				header('Status: 404 Not Found');
+				$this->run_header(Array('title' => ucfirst($this->view)));
+				run_view('common::not_found', null, null, array('details' => $exception->getMessage()));
+				$this->run_footer();
+			} catch (Exception $e) {
+				$this->run_500($e);
+			}
+		}
+
+		protected function run_500(Exception $e)
+		{
 			header('Status: 500 Interal Server Error');
 
 			if (get_config_value('show_exceptions'))

@@ -421,17 +421,17 @@
 			$common_path = 'fotocie.svcover.nl/fotos/';
 
 			if (($path = strstr($photo->get('url'), $common_path)) === false)
-				throw new Exception('Could not determine path');
+				throw new RuntimeException('Could not determine path');
 
 			$real_path = '/home/commissies/fotocie/fotosGroot/' . substr($path, strlen($common_path));
 
 			if (!file_exists($real_path))
-				throw new Exception('Could not find file: ' . $real_path);
+				throw new NotFoundException('Could not find file: ' . $real_path);
 
 			$fh = fopen($real_path, 'rb');
 
 			if (!$fh)
-				throw new Exception('Could not open file: ' . $real_path);
+				throw new RuntimeException('Could not open file: ' . $real_path);
 
 			if (preg_match('/\.(jpg|gif)$/i', $real_path, $match))
 				header('Content-Type: image/' . strtolower($match[1]));
