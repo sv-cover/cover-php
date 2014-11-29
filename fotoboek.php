@@ -412,6 +412,36 @@
 			$this->get_content('edit_fotoboek', $book);
 		}
 
+		protected function _view_original(DataIterPhoto $photo)
+		{
+			// For now require login for these originals
+			if (!logged_in())
+				return $this->get_content('auth_common');
+
+			$common_path = 'fotocie.svcover.nl/fotos/';
+
+			if (($path = strstr($photo->get('url'), $common_path)) === false)
+				throw new Exception('Could not determine path');
+
+			$real_path = '/home/commissies/fotocie/fotosGroot/' . substr($path, strlen($common_path));
+
+			if (!file_exists($real_path))
+				throw new Exception('Could not find file: ' . $real_path);
+
+			$fh = fopen($real_path, 'rb');
+
+			if (!$fh)
+				throw new Exception('Could not open file: ' . $real_path);
+
+			if (preg_match('/\.(jpg|gif)$/i', $specific_path, $match))
+				header('Content-Type: image/' . strtolower($match[1]));
+
+			header('Content-Length: ' . filesize($real_path));
+
+			fpassthru($fh);
+			fclose($fh);
+		}
+
 		protected function _view_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
 			$reactie_controller = new ControllerFotoboekReacties($photo);
@@ -494,6 +524,8 @@
 				$this->likes_controller->run();
 			elseif (isset($_GET['module']) && $_GET['module'] == 'faces')
 				$this->faces_controller->run();
+			elseif (isset($_GET['view']) && $_GET['view'] == 'original')
+				$this->_view_original($photo);
 			else
 				$this->_view_photo($photo, $book);
 		}
