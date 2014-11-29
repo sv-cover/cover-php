@@ -77,7 +77,7 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 		else if (event.keyCode == 39 && $(".next-button").attr("href") != undefined)
 			window.location.href = $(".next-button").attr('href');
 		else if (event.keyCode == 38)
-			window.location.href = $(".fotoboek_path_current > a").attr("href");
+			window.location.href = $("#path a:last-child").attr("href");
 	}
 
 	<?php if (logged_in()): ?>
