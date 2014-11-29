@@ -21,7 +21,7 @@ for ($i = 0; $i < $photos_per_row; $i ++) {
 		$titles[] = '';
 	} else {
 		$photo = $photos[$i];
-		$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '"><img src="' . htmlspecialchars($photo->get('thumburl'), ENT_QUOTES) . '"></a>';
+		$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '"><img src="' . markup_format_attribute(strip_protocol($photo->get('thumburl'))) . '"></a>';
 
 		$titles[] = '<a href="fotoboek.php?book=' . $photo->get('boek') . '#photo_' . $photo->get('id') . '">' . $photo->get('titel') . '</a>' . ($photo->get('jaar') ? ('<br>(<span class="bold">' . $photo->get('jaar') . '</span>)') : '');
 	}
