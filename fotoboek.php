@@ -433,7 +433,7 @@
 			if (!$fh)
 				throw new Exception('Could not open file: ' . $real_path);
 
-			if (preg_match('/\.(jpg|gif)$/i', $specific_path, $match))
+			if (preg_match('/\.(jpg|gif)$/i', $real_path, $match))
 				header('Content-Type: image/' . strtolower($match[1]));
 
 			header('Content-Length: ' . filesize($real_path));
