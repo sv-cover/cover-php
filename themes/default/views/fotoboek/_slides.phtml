@@ -18,7 +18,7 @@
 	<?php if ($slide): ?>
 	<li class="slide <?=image_aspect($slide->get_thumb_size())?> <?=$i == 2 ? 'current' : ''?>">
 		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$slide->get_id()?>#a">
-			<img src="<?=markup_format_attribute($slide->get('thumburl'))?>">
+			<img src="<?=markup_format_attribute(strip_protocol($slide->get('thumburl')))?>">
 		</a>
 	</li>
 	<?php else: ?>
