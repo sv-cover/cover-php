@@ -175,7 +175,7 @@
 		}
 		$content .= '
 				<ul id="vereniging" class="expander">
-					<li><a href="commissies.php?id=bestuur&view=read">' . __('Bestuur') . '</a></li>
+					<li><a href="commissies.php?commissie=bestuur">' . __('Bestuur') . '</a></li>
 					<li><a href="besturen.php">' . __('Vorige besturen') . '</a></li>
 					<li><a href="commissies.php">' . __('Commissies') . '</a></li>
 					<li><a href="show.php?id=28">' . __('Zusterverenigingen') . '</a></li>
@@ -187,8 +187,8 @@
 				<ul id="leden" class="expander">
 					<li><a href="almanak.php">' .__('Almanak') .'</a></li>
 					<li><a href="mailinglijsten.php">' .__('Mailinglijsten') .'</a></li>
-					<li><a href="https://wiki.svcover.nl/">' . __('Wiki') . '</a></li>
-					<li><a href="https://sd.svcover.nl/">' . __('Standaardocumenten') . '</a></li>
+					<li><a href="https://wiki.svcover.nl/" target="_blank">' . __('Wiki') . '</a></li>
+					<li><a href="https://sd.svcover.nl/" target="_blank">' . __('Standaardocumenten') . '</a></li>
 					<li><a href="stickers.php">' . markup_format_text(__('Stickerkaart')) . '</a></li>
 					<li><a href="http://www.shitbestellen.nl" target="_blank">' .__('Merchandise') .'</a></li>
 					<li><a href="dreamspark.php">' .__('Dreamspark') .'</a></li>
@@ -203,7 +203,7 @@
 					<li><a href="show.php?id=41">' . __('Informatica') . '</a></li>
 					<li><a href="show.php?id=24">' . __('Alumni') . '</a></li>
 					<li><a href="boeken.php">' . __('Boeken bestellen') . '</a></li>
-					<li><a href="http://studieondersteuning.svcover.nl/">' . htmlentities(__('Tentamens & Samenvattingen')) . '</a></li>				
+					<li><a href="http://studieondersteuning.svcover.nl/" target="_blank">' . markup_format_text(__('Tentamens & Samenvattingen')) . '</a></li>				
 				</ul>
 			</div>
 			';
