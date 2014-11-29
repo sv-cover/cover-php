@@ -51,7 +51,7 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 			<!-- name label (and hidden update form) -->
 			<div class="tag-label">
 				<?php if ($face->get('lid_id')): $lid = $face->getIter('lid'); ?>
-				<a href="profiel.php?lid=<?=$lid->get_id()?>" class="name"><?=member_full_name($lid)?></a>
+				<a href="profiel.php?lid=<?=$lid->get_id()?>" class="name"><?=member_full_name($lid, false, true)?></a>
 				<?php else: ?>
 				<a class="name"><?=__('Niet getagged')?></a>
 				<?php endif ?>
