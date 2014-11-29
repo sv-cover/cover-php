@@ -269,7 +269,7 @@
 						id
 					LIMIT 1");
 			
-			return $this->get_book($row['id']);
+			return $row ? $this->get_book($row['id']) : null;
 		}
 		
 		/**
@@ -298,7 +298,7 @@
 						id
 					LIMIT 1");
 
-			return $this->get_book($row['id']);
+			return $row ? $this->get_book($row['id']) : null;
 		}
 		
 		/**
