@@ -191,7 +191,7 @@
 					<li><a href="https://sd.svcover.nl/">' . __('Standaardocumenten') . '</a></li>
 					<li><a href="stickers.php">' . markup_format_text(__('Stickerkaart')) . '</a></li>
 					<li><a href="http://www.shitbestellen.nl" target="_blank">' .__('Merchandise') .'</a></li>
-					<li><a href="profiel.php#msdnaa">' .__('MSDNAA') .'</a></li>
+					<li><a href="dreamspark.php">' .__('Dreamspark') .'</a></li>
 				</ul>
 				<ul id="bedrijven" class="expander">
 					<li><a href="show.php?id=51">' . __('Bedrijfsprofielen') . '</a></li>

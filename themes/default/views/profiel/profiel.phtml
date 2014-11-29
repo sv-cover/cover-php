@@ -312,24 +312,4 @@
 			
 		</div>
 	<?php endif ?>
-
-	<?php if($this->is_current_member($iter->get('lidid'))): ?>
-		<h2 id="msdnaa"><?=__('Dreamspark (voorheen MSDNAA)')?></h2>
-		<div class="messageBox">
-		<form id="gotomsdnaa" action="elms2.php" method="post">
-			<input type="checkbox" name="akkoord" id="akkoord" value="akkoord"><label for="akkoord"><?=__('Ik ga er mee akkoord dat mijn naam en e-mailadres worden doorgestuurd naar Microsoft.')?></label><br />
-			<button class="button" id="msdnaabutton" disabled="disabled"><?=__('Ga naar Dreamspark')?></button>
-		</form>
-		</div>
-		<script type="text/javascript">
-		$().ready(function() {
-			$('#gotomsdnaa').submit(function() {
-				$('#msdnaabutton').prop('disabled', true);
-			});
-			$('#akkoord').change(function() {
-				$('#msdnaabutton').prop('disabled', !$('#akkoord').is(':checked'));
-			});
-		});
-		</script>
-	<?php endif ?>
 <?php endif ?>
