@@ -39,8 +39,8 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 		<?php endif ?>
 	</nav>
 	
-	<div id="photo" <?php if (get_policy('DataModelFotoboekFaces')->user_can_create()) printf('data-create-action="%s"', markup_format_attribute($faces_controller->link_to_create())) ?>>
-		<img src="<?=htmlspecialchars($iter->get('url'), ENT_QUOTES) ?>" alt="<?= __('Foto') ?>" <?=($size = $iter->get_size()) ? vsprintf('width="%d" height="%d"', $size) : '' ?> class="full-size-photo">
+	<div id="photo" data-id="<?=$iter->get_id()?>" <?php if (get_policy('DataModelFotoboekFaces')->user_can_create()) printf('data-create-action="%s"', markup_format_attribute($faces_controller->link_to_create())) ?>>
+		<img src="<?=markup_format_attribute(strip_protocol($iter->get('url'))) ?>" alt="<?= __('Foto') ?>" <?=($size = $iter->get_size()) ? vsprintf('width="%d" height="%d"', $size) : '' ?> class="full-size-photo">
 
 		<?php foreach (get_model('DataModelFotoboekFaces')->get_for_photo($iter) as $face): ?>
 		<div id="face_<?=$face->get_id()?>" class="face <?=$face->get('lid_id') ? 'tagged' : 'untagged' ?>" style="<?=vsprintf("left: %0.2F%%; top: %0.2F%%; width: %0.2F%%; height: %0.2F%%;", $face->get_position())?>"

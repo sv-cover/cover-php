@@ -628,3 +628,8 @@
 
 		return $available;
 	}
+
+	function strip_protocol($url)
+	{
+		return preg_replace('/^https?:/', '', $url);
+	}
