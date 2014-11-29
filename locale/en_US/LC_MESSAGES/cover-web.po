@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-11-29 01:09+0100\n"
+"POT-Creation-Date: 2014-11-29 21:34+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -204,12 +204,11 @@ msgstr ""
 "\n"
 "The WebCie"
 
-#: ../../../fotoboek.php:197 ../../../include/models/DataModelFotoboek.php:206
+#: ../../../fotoboek.php:198 ../../../include/models/DataModelFotoboek.php:206
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:19
 #: ../../../themes/default/views/fotoboek/_books.phtml:26
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:36
 #: ../../../themes/default/views/fotoboek/book_not_found.phtml:1
-#: ../../../themes/default/views/fotoboek/competition.phtml:1
 #: ../../../themes/default/views/fotoboek/edit_fotoboek.phtml:1
 #: ../../../themes/default/views/fotoboek/foto.phtml:1
 #: ../../../themes/default/views/fotoboek/foto_backup.phtml:1
@@ -227,7 +226,7 @@ msgstr "Guestbook"
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
-#: ../../../include/controllers/Controller.php:131
+#: ../../../include/controllers/Controller.php:151
 msgid ""
 "Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
 "de WebCie (webcie@svcover.nl)"
@@ -526,7 +525,7 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: ../../../include/models/DataModelFotoboekFaces.php:71
+#: ../../../include/models/DataModelFotoboekFaces.php:72
 #: ../../../themes/default/views/profiel/profiel.phtml:39
 #, php-format
 msgid "Foto's van %s"
@@ -1019,8 +1018,9 @@ msgstr "Book"
 #: ../../../themes/default/views/boeken/boeken.php:363
 #: ../../../themes/default/views/boeken/bestellingen.phtml:37
 #: ../../../themes/default/views/boeken/bestellingen.phtml:62
+#: ../../../themes/default/views/fotoboek/competition.phtml:42
 msgid "Aantal"
-msgstr "Number"
+msgstr "Count"
 
 #: ../../../themes/default/views/boeken/boeken.php:299
 #: ../../../themes/default/views/boeken/bestellingen.phtml:33
@@ -1070,7 +1070,7 @@ msgstr ""
 "password you can %s a news password. If you have any problems, please send "
 "an email to %s."
 
-#: ../../../themes/default/views/common.php:10
+#: ../../../themes/default/views/common.php:11
 msgid "De pagina die je zocht bestaat niet."
 msgstr "The page you where looking for does not exist."
 
@@ -1393,6 +1393,8 @@ msgstr "New forum"
 #: ../../../themes/default/views/forum.php:1140
 #: ../../../themes/default/views/actieveleden/index.phtml:11
 #: ../../../themes/default/views/commissies/form.phtml:45
+#: ../../../themes/default/views/fotoboek/competition.phtml:41
+#: ../../../themes/default/views/fotoboek/competition.phtml:62
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
 #: ../../../themes/default/views/lidworden/lidworden.phtml:29
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:41
@@ -2035,6 +2037,7 @@ msgid "Alle agendapunten op weigeren zetten"
 msgstr "Put all calendar events to deny"
 
 #: ../../../themes/default/views/agenda/moderate.phtml:55
+#: ../../../themes/default/views/fotoboek/_photos.phtml:48
 #: ../../../themes/default/views/links/moderate.phtml:56
 msgid "Toepassen"
 msgstr "Apply changes"
@@ -2067,6 +2070,7 @@ msgid "Beginjaar"
 msgstr "Starting year"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:42
+#: ../../../themes/default/views/fotoboek/_photos.phtml:37
 #: ../../../themes/default/views/profiel/profiel.phtml:133
 msgid "Zichtbaarheid"
 msgstr "Visibility"
@@ -2700,19 +2704,27 @@ msgstr "Photo"
 msgid "Niet getagged"
 msgstr "Not yet tagged"
 
-#: ../../../themes/default/views/fotoboek/_photos.phtml:24
+#: ../../../themes/default/views/fotoboek/_photos.phtml:26
 #, php-format
 msgid "%d lid vindt deze foto awesome"
 msgid_plural "%d leden vinden deze foto awesome"
 msgstr[0] "%d member thinks this photo is awesome"
 msgstr[1] "%d members think this photo totally rocks!"
 
-#: ../../../themes/default/views/fotoboek/_photos.phtml:27
+#: ../../../themes/default/views/fotoboek/_photos.phtml:29
 #, php-format
 msgid "%d reactie"
 msgid_plural "%d reacties"
 msgstr[0] "%d comment"
 msgstr[1] "%d comments"
+
+#: ../../../themes/default/views/fotoboek/_photos.phtml:41
+msgid "Toon deze foto in mijn overzicht"
+msgstr "Show this photo in my photo book"
+
+#: ../../../themes/default/views/fotoboek/_photos.phtml:45
+msgid "Verberg deze foto in mijn overzicht"
+msgstr "Hide this photo from my photo book"
 
 #: ../../../themes/default/views/fotoboek/_random_photos.phtml:11
 msgid "Willekeurige foto's"
@@ -2738,6 +2750,26 @@ msgstr "Upload photos"
 #: ../../../themes/default/views/fotoboek/book_not_found.phtml:2
 msgid "Het opgegeven boek bestaat niet"
 msgstr "This given book doesn't exist"
+
+#: ../../../themes/default/views/fotoboek/competition.phtml:1
+msgid "Fotoboek statistieken"
+msgstr "Photo book statistics"
+
+#: ../../../themes/default/views/fotoboek/competition.phtml:37
+msgid "Meest taggende leden"
+msgstr "Most active taggers"
+
+#: ../../../themes/default/views/fotoboek/competition.phtml:43
+msgid "Favoriet"
+msgstr "Favorite"
+
+#: ../../../themes/default/views/fotoboek/competition.phtml:58
+msgid "Meest getagde leden"
+msgstr "Most tagged members"
+
+#: ../../../themes/default/views/fotoboek/competition.phtml:63
+msgid "Aantal maal getagged"
+msgstr "Times tagged"
 
 #: ../../../themes/default/views/fotoboek/fotoboek.phtml:11
 #, php-format
