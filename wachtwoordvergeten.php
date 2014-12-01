@@ -32,7 +32,7 @@
 						'type' => 'wachtwoord',
 						'value' => $iter->get('id'));
 				
-				$model = new DataModel(get_db(), 'confirm');
+				$model = new DataModel(get_db(), 'confirm', null);
 				$model->insert(new DataIter($model, -1, $values));
 				
 				$subject = __('Aanvraag nieuw wachtwoord');
