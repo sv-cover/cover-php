@@ -7,8 +7,10 @@
 		</p>
 	</div>
 
-	<form method="post" action="">
-	<?php if ($model->is_aangemeld($lijst, logged_in('id'))): ?>
+	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+	<?php if (!logged_in()): ?>
+		<p><?=__('Log in om je aan te kunnen melden voor deze mailinglijst.')?></p>
+	<?php elseif ($model->is_aangemeld($lijst, logged_in('id'))): ?>
 		<input type="hidden" name="action" value="unsubscribe">
 		<p><input type="submit" class="button" value="<?=__('Uitschrijven')?>">
 		<?= __('Je bent aangemeld voor deze mailinglijst.') ?></p>

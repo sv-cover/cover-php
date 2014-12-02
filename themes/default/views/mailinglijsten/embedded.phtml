@@ -17,5 +17,8 @@
 		<input type="hidden" name="action" value="subscribe">
 		<input type="submit" class="button" value="<?=__('Aanmelden')?>">
 	<?php endif ?>
+	<?php if ($model->member_can_access_archive($iter)): ?>
+		<a href="mailinglijsten.php?archive_list_id=<?=$iter->get_id()?>" class="button"><?=__('Bekijk archief')?></a>
+	<?php endif ?>
 	</form>
 </div>
