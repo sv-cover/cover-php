@@ -398,7 +398,7 @@
 				GROUP BY
 					{$this->table}.id
 				ORDER BY
-					{$this->table}.id DESC";
+					{$this->table}.id ASC";
 		}
 		
 		/**
