@@ -35,19 +35,24 @@
 <table class="agenda" style="background-color: #000;">
 
 <?php 
-$punten = $this->get_paged_agendapunten();
+if (!isset($iter))
+	$iter = $this->get_paged_agendapunten();
+
 $curmaand = -1;
 $months = get_months();
 $days = get_days();
 
-if (!count($punten)) { ?>
+if (!count($iter)) { ?>
 	<p> <?= __('Er staan op dit moment geen activiteiten op de agenda.') ?></p>
 <? }
-foreach ($punten as $punt) {
+foreach ($iter as $punt) {
 	$date = strtotime($punt->get('van'));
 	if ($curmaand != $punt->get('vanmaand')) { ?>
 		</table>
-		<h2><?= $months[$punt->get('vanmaand')] ?></h2>
+		<h2>
+			<?= $months[$punt->get('vanmaand')] ?>
+			<?= isset($show_year) && $show_year ? $punt->get('vanjaar') : '' ?>
+		</h2>
 		<table class="agenda">
 		
 		<?

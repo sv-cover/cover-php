@@ -394,6 +394,16 @@
 			$cal->publish('cover.ics');
 			exit;
 		}
+
+		public function run_index()
+		{
+			if (isset($_GET['query'])) {
+				$iter = $this->model->search($_GET['query'], null, logged_in());
+				$this->get_content('index', $iter, array('show_year' => true));
+			}
+			else
+				$this->get_content('index');
+		}
 		
 		function run_impl() {
 			$iter = null;
@@ -426,7 +436,7 @@
 			elseif (isset($_GET['format']) && $_GET['format'] == 'webcal')
 				$this->get_webcal();
 			else
-				$this->get_content('index');
+				$this->run_index();
 		}
 	}
 	

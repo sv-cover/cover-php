@@ -223,5 +223,37 @@
 					(!$include_prive ? ' AND private = 0 ' : '') . "
 					ORDER BY van ASC");
 		}
+
+		public function search($keywords, $limit = null, $include_private = false)
+		{
+			$keywords = preg_split('/\s+/', $keywords);
+
+			$search_atoms = array_map(function($keyword) {
+				return sprintf("(agenda.kop ILIKE '%%%s%%' OR agenda.beschrijving ILIKE '%%%1\$s%%')",
+					$this->db->escape_string($keyword));
+			}, $keywords);
+
+			$query = "
+				SELECT
+					agenda.*,
+					c.naam as commissie__naam,
+					c.page as commissie__page,
+					" . $this->_generate_select() . "
+				FROM
+					agenda
+				LEFT JOIN commissies c ON
+					c.id = agenda.commissie
+				WHERE
+					agenda.id NOT IN (SELECT agendaid FROM agenda_moderate)
+					" . (!$include_private ? ' AND agenda.private = 0 ' : '') . "
+					AND (" . implode(' AND ', $search_atoms) . ")
+				" . ($limit !== null ? " LIMIT " . intval($limit) : "") . "
+				ORDER BY
+					agenda.van DESC";
+
+			$rows = $this->db->query($query);
+
+			return $this->_rows_to_iters($rows);
+		}
 	}
 ?>
