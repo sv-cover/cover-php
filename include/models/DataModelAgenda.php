@@ -1,13 +1,36 @@
 <?php
-	require_once('data/DataModel.php');
+	require_once 'data/DataModel.php';
+	require_once 'include/search.php';
+	
+	class DataIterAgenda extends DataIter implements SearchResult
+	{
+		public function get_search_title()
+		{
+			return $this->get('kop');
+		}
 
-	/**
-	  * A class implementing the Agenda data
-	  */
-	class DataModelAgenda extends DataModel {
+		public function get_search_excerpt($query)
+		{
+			return sprintf('<p>%s</p>', markup_format_text($this->get('beschrijving')));
+		}
+
+		public function get_search_link()
+		{
+			return 'agenda.php?agenda_id=' . $this->get_id();
+		}
+	}
+
+	class DataModelAgenda extends DataModel implements SearchProvider
+	{
+		public $include_private = false;
+
+		public $dataiter = 'DataIterAgenda';
+
 		public function __construct($db)
 		{
 			parent::__construct($db, 'agenda');
+
+			$this->include_private = logged_in();
 		}
 		
 		public function get($from = null, $till = null, $confirmed_only = false) {
@@ -224,9 +247,9 @@
 					ORDER BY van ASC");
 		}
 
-		public function search($keywords, $limit = null, $include_private = false)
+		public function search($keywords, $limit = null)
 		{
-			$keywords = preg_split('/\s+/', $keywords);
+			$keywords = parse_search_query($keywords);
 
 			$search_atoms = array_map(function($keyword) {
 				return sprintf("(agenda.kop ILIKE '%%%s%%' OR agenda.beschrijving ILIKE '%%%1\$s%%')",
@@ -245,11 +268,11 @@
 					c.id = agenda.commissie
 				WHERE
 					agenda.id NOT IN (SELECT agendaid FROM agenda_moderate)
-					" . (!$include_private ? ' AND agenda.private = 0 ' : '') . "
-					AND (" . implode(' AND ', $search_atoms) . ")
-				" . ($limit !== null ? " LIMIT " . intval($limit) : "") . "
+					" . (!$this->include_private ? ' AND agenda.private = 0 ' : '') . "
+					AND " . implode(' AND ', $search_atoms) . "
 				ORDER BY
-					agenda.van DESC";
+					agenda.van DESC
+				" . ($limit !== null ? " LIMIT " . intval($limit) : "");
 
 			$rows = $this->db->query($query);
 
