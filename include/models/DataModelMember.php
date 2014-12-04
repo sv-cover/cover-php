@@ -1,6 +1,7 @@
 <?php
-	require_once('data/DataModel.php');
-	require_once('login.php');
+	require_once 'data/DataModel.php';
+	require_once 'include/search.php';
+	require_once 'include/login.php';
 
 	define('MEMBER_STATUS_LID', 1);
 	define('MEMBER_STATUS_LID_ONZICHTBAAR', 4);
@@ -8,16 +9,49 @@
 	define('MEMBER_STATUS_ERELID', 3);
 	define('MEMBER_STATUS_DONATEUR', 5);
 
-	/**
-	  * A class implementing the Member data
-	  */
-	class DataModelMember extends DataModel
+	class DataIterMember extends DataIter implements SearchResult
+	{
+		public function is_private($field)
+		{
+			return $this->model->is_private($this, $field);
+		}
+
+		public function get_search_title()
+		{
+			return member_full_name($this, false, true);
+		}
+
+		public function get_search_excerpt($query)
+		{
+			$rows = array();
+
+			foreach (array('adres', 'email', 'telefoonnummer') as $field)
+				if (!$this->is_private($field))
+					$rows[] = sprintf('<tr><th>%s</th><td>%s</td></tr>',
+						__($field), markup_format_text($this->get($field)));
+
+			return sprintf('
+				<img src="foto.php?lid_id=%d&amp;get_thumb=circle&amp;width=200" width="100" height="100">
+				<table class="member">%s</table>',
+				$this->get_id(),
+				implode("\r\n", $rows));
+		}
+
+		public function get_search_link()
+		{
+			return 'profiel.php?lid=' . $this->get_id();
+		}
+	}
+
+	class DataModelMember extends DataModel implements SearchProvider
 	{
 		public $visible_types = array(
 			MEMBER_STATUS_LID,
 			MEMBER_STATUS_ERELID,
 			MEMBER_STATUS_DONATEUR
 		);
+
+		public $dataiter = 'DataIterMember';
 
 		public function __construct($db)
 		{
@@ -419,9 +453,10 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function search_name($name, $limit = null) {
+		public function search_name($name, $limit = null)
+		{
 			if (!$name)
-				return null;
+				return array();
 
 			$name = $this->db->escape_string($name);
 
@@ -457,6 +492,11 @@
 			$rows = $this->db->query($query);	
 
 			return $this->_rows_to_iters($rows);			
+		}
+
+		public function search($query, $limit = null)
+		{
+			return $this->search_name($query, $limit);
 		}
 		
 		/**

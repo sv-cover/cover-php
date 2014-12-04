@@ -1,0 +1,18 @@
+<h1><?=__('Zoeken')?></h1>
+<div class="messageBox">
+	<form method="get" action="search.php">
+		<label for="field-query"><?=__('Zoekopdracht')?></label>
+		<input type="search" name="query" id="field-query" value="<?=markup_format_attribute($query)?>">
+		<button type="submit"><?=__('Zoek!')?></button>
+	</form>
+
+	<ul>
+		<?php foreach ($iter as $result): ?>
+		<li>
+			<h2><a href="<?=markup_format_attribute($result->get_search_link())?>"><?=markup_format_text($result->get_search_title())?></a></h2>
+			<?=$result->get_search_excerpt($query)?>
+		</li>
+		<?php endforeach ?>
+	</ul>
+
+</div>

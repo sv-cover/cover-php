@@ -1,7 +1,9 @@
 <?php
-	require_once('data/DataModel.php');
+	require_once 'data/DataModel.php';
+	require_once 'include/search.php';
+	require_once 'include/editable.php';
 
-	class DataIterEditable extends DataIter
+	class DataIterEditable extends DataIter implements SearchResult
 	{
 		public function get_content($language = null)
 		{
@@ -28,12 +30,31 @@
 				? $match[1]
 				: $this->get('titel');
 		}
+
+		public function get_search_title()
+		{
+			return $this->get_title();
+		}
+
+		public function get_search_excerpt($query)
+		{
+			// $text = markup_strip($this->get_content());
+
+			// return text_excerpt($text, parse_search_query($query), 20);
+
+			return editable_get_summary($this->get_content(), $this->get('owner'));
+		}
+
+		public function get_search_link()
+		{
+			return 'show.php?id=' . $this->get_id();
+		}
 	}
 
 	/**
 	  * A class implementing the Editable data
 	  */
-	class DataModelEditable extends DataModel
+	class DataModelEditable extends DataModel implements SearchProvider
 	{
 		public $dataiter = 'DataIterEditable';
 
@@ -81,5 +102,17 @@
 			$content = $this->get_content($id, $page);
 
 			return editable_get_summary($content, $page->get('owner'));
+		}
+
+		public function search($query, $limit = null)
+		{
+			$keywords = parse_search_query($query);
+
+			$text_query = implode(' & ', $keywords);
+
+			$query = sprintf("to_tsvector(content) @@ to_tsquery('%s') OR to_tsvector(content_en) @@ to_tsquery('%1\$s')",
+				$this->db->escape_string($text_query));
+
+			return $this->find($query);
 		}
 	}
