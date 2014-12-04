@@ -1,7 +1,8 @@
 <?php
-	require_once('data/DataModel.php');
+	require_once 'data/DataModel.php';
+	require_once 'include/search.php';
 
-	class DataIterCommissie extends DataIter
+	class DataIterCommissie extends DataIter implements SearchResult
 	{
 		public function get_members()
 		{
@@ -12,12 +13,35 @@
 		{
 			return $this->model->set_members($this, $members);
 		}
+
+		public function get_summary()
+		{
+			/* Get the first editable page */
+			$editable_model = get_model('DataModelEditable');
+
+			return $editable_model->get_summary($this->get('page'));
+		}
+
+		public function get_search_title()
+		{
+			return $this->get('naam');
+		}
+
+		public function get_search_excerpt($query)
+		{
+			return sprintf('<p>%s</p>', markup_format_text($this->get_summary()));
+		}
+
+		public function get_search_link()
+		{
+			return 'commissies.php?commissie=' . $this->get('login');
+		}
 	}
 
 	/**
 	  * A class implementing the Commissie data
 	  */
-	class DataModelCommissie extends DataModel
+	class DataModelCommissie extends DataModel implements SearchProvider
 	{
 		public $dataiter = 'DataIterCommissie';
 
@@ -300,6 +324,37 @@
 					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login, nocaps)");
 			
 			return $this->_row_to_iter($row);
+		}
+
+		public function search($query, $limit = null)
+		{
+			$query = sprintf("
+				SELECT
+					c.*
+				FROM
+					commissies c
+				WHERE
+					c.naam ILIKE '%%%s%%'
+				UNION
+				SELECT
+					c.*
+				FROM
+					actieveleden al
+				INNER JOIN leden l ON
+					l.id = al.lidid
+				INNER JOIN commissies c ON
+					c.id = al.commissieid
+				WHERE
+					c.hidden <> 1
+					AND (CASE
+						WHEN coalesce(tussenvoegsel, '') = '' THEN
+							voornaam || ' ' || achternaam
+						ELSE
+							voornaam || ' ' || tussenvoegsel || ' ' || achternaam
+					END ILIKE '%%%1\$s%%')",
+				$this->db->escape_string($query));
+
+			return $this->_rows_to_iters($this->db->query($query));
 		}
 
 		public function get_random()

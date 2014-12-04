@@ -10,7 +10,8 @@ class SearchController extends Controller
 	{
 		$this->providers = array(
 			get_model('DataModelMember'),
-			get_model('DataModelEditable')
+			get_model('DataModelEditable'),
+			get_model('DataModelCommissie')
 		);
 	}
 
