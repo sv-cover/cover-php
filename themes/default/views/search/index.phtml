@@ -8,7 +8,7 @@
 
 	<ul class="search-results">
 		<?php foreach ($iter as $result): ?>
-		<li>
+		<li data-search-relevance="<?=sprintf('%0.2F', $result->get_search_relevance())?>">
 			<?php $this->render_partial('single_' . $result->get_search_type(), array('iter' => $result, 'query' => $query)) ?>
 		</li>
 		<?php endforeach ?>

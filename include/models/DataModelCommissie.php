@@ -22,6 +22,11 @@
 			return $editable_model->get_summary($this->get('page'));
 		}
 
+		public function get_search_relevance()
+		{
+			return floatval($this->get('search_relevance'));
+		}
+
 		public function get_search_type()
 		{
 			return 'committee';
@@ -320,14 +325,16 @@
 		{
 			$query = sprintf("
 				SELECT
-					c.*
+					c.*,
+					1 as search_relevance
 				FROM
 					commissies c
 				WHERE
 					c.naam ILIKE '%%%s%%'
 				UNION
 				SELECT
-					c.*
+					c.*,
+					-1 as search_relevance
 				FROM
 					actieveleden al
 				INNER JOIN leden l ON

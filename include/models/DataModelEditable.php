@@ -31,6 +31,13 @@
 				: $this->get('titel');
 		}
 
+		public function get_search_relevance()
+		{
+			$rank = floatval($this->get('search_relevance'));
+			
+			return $rank / ($rank + 1);
+		}
+
 		public function get_search_type()
 		{
 			return 'page';
@@ -96,9 +103,23 @@
 
 			$text_query = implode(' & ', $keywords);
 
-			$query = sprintf("to_tsvector(content) @@ to_tsquery('%s') OR to_tsvector(content_en) @@ to_tsquery('%1\$s')",
-				$this->db->escape_string($text_query));
+			$query = "
+				SELECT
+					p.*,
+					ts_rank_cd(to_tsvector(content) || to_tsvector(content_en), query) as search_relevance
+				FROM
+					{$this->table} p,
+					to_tsquery('" . $this->db->escape_string($text_query) . "') query
+				WHERE
+					(to_tsvector(content) || to_tsvector(content_en)) @@ query
+				ORDER BY
+					search_relevance DESC";
 
-			return $this->find($query);
+			if ($limit !== null)
+				$query .= sprintf(" LIMIT %d", $limit);
+
+			$rows = $this->db->query($query);
+
+			return $this->_rows_to_iters($rows);
 		}
 	}

@@ -16,6 +16,11 @@
 			return $this->model->is_private($this, $field);
 		}
 
+		public function get_search_relevance()
+		{
+			return 1.0;
+		}
+
 		public function get_search_type()
 		{
 			return 'member';

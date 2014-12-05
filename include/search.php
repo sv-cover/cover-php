@@ -7,6 +7,8 @@ interface SearchProvider
 
 interface SearchResult
 {
+	public function get_search_relevance();
+	
 	public function get_search_type();
 }
 

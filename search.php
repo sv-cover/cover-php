@@ -30,6 +30,10 @@ class SearchController extends Controller
 		foreach ($this->providers as $provider)
 			$results = array_merge($results, $provider->search($query, 10));
 
+		usort($results, function(SearchResult $a, SearchResult $b) {
+			return $a->get_search_relevance() < $b->get_search_relevance();
+		});
+
 		return $results;
 	}
 	

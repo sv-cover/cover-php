@@ -4,6 +4,11 @@
 	
 	class DataIterAgenda extends DataIter implements SearchResult
 	{
+		public function get_search_relevance()
+		{
+			return 0.0;
+		}
+
 		public function get_search_type()
 		{
 			return 'agendapunt';
