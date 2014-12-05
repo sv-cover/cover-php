@@ -32,15 +32,14 @@ class View
 	{
 		$filename = dirname($this->__file) . '/_' . $name . '.phtml';
 
-		if (file_exists($filename))
-		{
-			// Insert hash into local space
-			extract($params);
-			include($filename);
-			return true;
-		}
+		if (!file_exists($filename))
+			throw new Exception("Partial {$name} not found");
 		
-		return false;
+		// Insert hash into local space
+		extract($params);
+		include($filename);
+		
+		return true;
 	}
 	
 	/**
