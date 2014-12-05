@@ -18,7 +18,7 @@
 
 		public function get_search_relevance()
 		{
-			return 1.0;
+			return 0.5 + normalize_search_rank($this->get('number_of_committees'));
 		}
 
 		public function get_search_type()
@@ -445,7 +445,9 @@
 			$name = $this->db->escape_string($name);
 
 			$query = "SELECT
-					leden.*
+					leden.*,
+					COUNT(DISTINCT foto_faces.id) as number_of_tags,
+					COUNT(DISTINCT actieveleden.commissieid) number_of_committees
 					FROM
 						leden
 					LEFT JOIN actieveleden ON
@@ -466,8 +468,8 @@
 					GROUP BY
 						leden.id
 					ORDER BY
-						COUNT(DISTINCT foto_faces.id) DESC,
-						COUNT(DISTINCT actieveleden.commissieid) DESC,
+						number_of_tags DESC,
+						number_of_committees DESC,
 						leden.voornaam ASC";
 
 			if ($limit !== null)

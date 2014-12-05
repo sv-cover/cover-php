@@ -33,9 +33,7 @@
 
 		public function get_search_relevance()
 		{
-			$rank = floatval($this->get('search_relevance'));
-			
-			return $rank / ($rank + 1);
+			return normalize_search_rank($this->get('search_relevance'));
 		}
 
 		public function get_search_type()

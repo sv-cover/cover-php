@@ -83,3 +83,10 @@ function parse_search_query($query)
 
 	return $parts;
 }
+
+function normalize_search_rank($rank)
+{
+	$relevance = floatval($rank);
+			
+	return $relevance / ($relevance + 1);		
+}
