@@ -120,6 +120,12 @@
 			if (isset($data['lid_id']))
 				$data['tagged_by'] = logged_in('id');
 
+			// Only a custom label XOR a lid_id can be assigned to a tag
+			if (isset($data['custom_label']))
+				$data['lid_id'] = null;
+			elseif (isset($data['lid_id']))
+				$data['custom_label'] = null;
+
 			return parent::_update($iter, $data, $errors);
 		}
 

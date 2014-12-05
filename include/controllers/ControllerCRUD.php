@@ -31,6 +31,8 @@ class ControllerCRUD extends Controller
 		foreach ($data as $key => $value)
 			if (is_scalar($value))
 				$iter->set($key, trim($value));
+			elseif (is_null($value))
+				$iter->set($key, null);
 
 		$result = $this->model->update($iter);
 
@@ -138,7 +140,7 @@ class ControllerCRUD extends Controller
 		if (get_policy($this->model)->user_can_delete($iter))
 			$links['delete'] = $this->link_to_delete($iter);
 
-		return array_merge($iter->data, array('_links' => $links));
+		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
 	}
 
 	protected function get_content($view, $iters = null, array $params = array())

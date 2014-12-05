@@ -77,6 +77,7 @@ class DataModelFotoboekFaces extends DataModel
 			foto_faces.h,
 			foto_faces.lid_id,
 			foto_faces.tagged_by,
+			foto_faces.custom_label,
 			l.id as lid__id,
 			l.voornaam as lid__voornaam,
 			l.tussenvoegsel as lid__tussenvoegsel,

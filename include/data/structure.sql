@@ -537,6 +537,7 @@ CREATE TABLE foto_faces (
     lid_id integer REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     deleted boolean NOT NULL DEFAULT FALSE,
     tagged_by INTEGER REFERENCES "leden" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    custom_label character varying (255),
     CONSTRAINT foto_faces_pkey PRIMARY KEY (id)
 );
 
