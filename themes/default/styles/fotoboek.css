@@ -315,6 +315,10 @@ table.navigation td:nth-child(3) {
 	border-color: rgba(0, 0, 0, 0.6);
 }
 
+.tagging-enabled .face .tag-label .name[href='#']:hover {
+	cursor: pointer;
+}
+
 #photo.tagging-enabled {
 	cursor: crosshair;
 }
@@ -352,6 +356,7 @@ table.navigation td:nth-child(3) {
 	border-radius: 4px;
 	font: 13px/20px sans-serif;
 	z-index: 1;
+	white-space: nowrap;
 }
 
 .face .tag-search {
@@ -366,8 +371,14 @@ table.navigation td:nth-child(3) {
 	font-weight: normal;
 }
 
+.face .tag-label .name[href='#'] {
+	text-decoration: none;
+	cursor: default;
+}
+
 .face.untagged .tag-label .name {
 	font-style: italic;
+	cursor: pointer;
 }
 
 .hidden img {
