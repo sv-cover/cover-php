@@ -36,7 +36,7 @@
 			<?php elseif ($this->is_current_member($iter)): ?>
 				<p class="hint"><?=__('Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het liefst met een verhouding van 3:2, bijvoorbeeld 500&times;750.')?></p>
 			<?php endif ?>
-			<p class="hint"><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), $iter->voornaam)) ?></a></p>
+			<p class="hint"><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a></p>
 			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>" method="post">
 				<?= input_hidden('submprofiel_almanak', 'yes') ?>
 				<?= input_hidden('id', $iter->get('lidid')) ?>
