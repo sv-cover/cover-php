@@ -22,19 +22,9 @@
 			return $editable_model->get_summary($this->get('page'));
 		}
 
-		public function get_search_title()
+		public function get_search_type()
 		{
-			return $this->get('naam');
-		}
-
-		public function get_search_excerpt($query)
-		{
-			return sprintf('<p>%s</p>', markup_format_text($this->get_summary()));
-		}
-
-		public function get_search_link()
-		{
-			return 'commissies.php?commissie=' . $this->get('login');
+			return 'committee';
 		}
 	}
 

@@ -6,11 +6,10 @@
 		<button type="submit"><?=__('Zoek!')?></button>
 	</form>
 
-	<ul>
+	<ul class="search-results">
 		<?php foreach ($iter as $result): ?>
 		<li>
-			<h2><a href="<?=markup_format_attribute($result->get_search_link())?>"><?=markup_format_text($result->get_search_title())?></a></h2>
-			<?=$result->get_search_excerpt($query)?>
+			<?php $this->render_partial('single_' . $result->get_search_type(), array('iter' => $result, 'query' => $query)) ?>
 		</li>
 		<?php endforeach ?>
 	</ul>

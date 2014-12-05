@@ -1,0 +1,11 @@
+<?php $date = strtotime($iter->get('van')); ?>
+<h2>
+	<!-- Calendar icon -->
+	<div class="calendar-icon">
+		<span class="month"><?=strftime('%b', $date)?></span>
+		<span class="day"><?=strftime('%d', $date)?></span>
+	</div>
+
+	<a href="agenda.php?agenda_id=<?=$iter->get_id()?>"><?=markup_format_text($iter->get('kop')) ?></a>
+</h2>
+<p><?=markup_parse($iter->get('beschrijving'))?></p>

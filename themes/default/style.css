@@ -1672,3 +1672,9 @@ body .ui-autocomplete a.profile .starting-year {
 	display: block;
 	color: #ccc;
 }
+
+.search-results > li {
+	list-style: none;
+	padding: 1em 0;
+	border-bottom: 1px solid #ccc;
+}

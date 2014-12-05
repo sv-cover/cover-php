@@ -31,23 +31,9 @@
 				: $this->get('titel');
 		}
 
-		public function get_search_title()
+		public function get_search_type()
 		{
-			return $this->get_title();
-		}
-
-		public function get_search_excerpt($query)
-		{
-			// $text = markup_strip($this->get_content());
-
-			// return text_excerpt($text, parse_search_query($query), 20);
-
-			return editable_get_summary($this->get_content(), $this->get('owner'));
-		}
-
-		public function get_search_link()
-		{
-			return 'show.php?id=' . $this->get_id();
+			return 'page';
 		}
 	}
 

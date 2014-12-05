@@ -1,0 +1,18 @@
+<h2>
+	<a href="profiel.php?lid=<?=$iter->get_id()?>">
+		<?=member_full_name($iter, false, true) ?>
+	</a>
+</h2>
+
+<img src="foto.php?lid_id=<?=$iter->get_id()?>&amp;get_thumb=circle&amp;width=200" width="100" height="100">
+
+<?php
+$rows = array();
+
+foreach (array('adres', 'email', 'telefoonnummer') as $field)
+	if (!$iter->is_private($field))
+		$rows[] = sprintf('<tr><th>%s</th><td>%s</td></tr>',
+			__($field), markup_format_text($iter->get($field)));
+
+printf('<table class="member">%s</table>', implode("\r\n", $rows));
+?>

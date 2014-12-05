@@ -16,30 +16,9 @@
 			return $this->model->is_private($this, $field);
 		}
 
-		public function get_search_title()
+		public function get_search_type()
 		{
-			return member_full_name($this, false, true);
-		}
-
-		public function get_search_excerpt($query)
-		{
-			$rows = array();
-
-			foreach (array('adres', 'email', 'telefoonnummer') as $field)
-				if (!$this->is_private($field))
-					$rows[] = sprintf('<tr><th>%s</th><td>%s</td></tr>',
-						__($field), markup_format_text($this->get($field)));
-
-			return sprintf('
-				<img src="foto.php?lid_id=%d&amp;get_thumb=circle&amp;width=200" width="100" height="100">
-				<table class="member">%s</table>',
-				$this->get_id(),
-				implode("\r\n", $rows));
-		}
-
-		public function get_search_link()
-		{
-			return 'profiel.php?lid=' . $this->get_id();
+			return 'member';
 		}
 	}
 

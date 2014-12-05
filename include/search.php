@@ -7,11 +7,7 @@ interface SearchProvider
 
 interface SearchResult
 {
-	public function get_search_title();
-
-	public function get_search_excerpt($query);
-
-	public function get_search_link();
+	public function get_search_type();
 }
 
 function text_excerpt($text, $keywords, $radius = 30,

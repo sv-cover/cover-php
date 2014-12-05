@@ -4,19 +4,9 @@
 	
 	class DataIterAgenda extends DataIter implements SearchResult
 	{
-		public function get_search_title()
+		public function get_search_type()
 		{
-			return $this->get('kop');
-		}
-
-		public function get_search_excerpt($query)
-		{
-			return sprintf('<p>%s</p>', markup_format_text($this->get('beschrijving')));
-		}
-
-		public function get_search_link()
-		{
-			return 'agenda.php?agenda_id=' . $this->get_id();
+			return 'agendapunt';
 		}
 	}
 
