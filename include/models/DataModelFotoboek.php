@@ -43,7 +43,7 @@
 		}
 	}
 
-	class DataIterPhotobook extends DataIter
+	class DataIterPhotobook extends DataIter implements SearchResult
 	{
 		public function get_books()
 		{
@@ -108,6 +108,22 @@
 		public function get_previous_book()
 		{
 			return $this->model->get_previous_book($this);
+		}
+
+		public function get_search_relevance()
+		{
+			$date = DateTime::createFromFormat('d-m-Y', $this->get('datum'));
+
+			$recency = $date
+				? (1.0 / (time() - $date->getTimestamp()))
+				: 0.0;
+
+			return 0.7 + $recency;
+		}
+
+		public function get_search_type()
+		{
+			return 'fotoboek';
 		}
 	}
 
@@ -192,6 +208,38 @@
 			$row = $this->db->query_first($q);
 
 			return $this->_row_to_iter($row, 'DataIterPhotobook');
+		}
+
+		public function search($keywords, $limit = null)
+		{
+			$sql_atoms = array_map(function($keyword) {
+				return sprintf("f_b.titel ILIKE '%%%s%%'", $this->db->escape_string($keyword));
+			}, parse_search_query($keywords));
+
+			$query = "SELECT 
+					f_b.*,
+					COUNT(DISTINCT f.id) as num_photos,
+					COUNT(DISTINCT c_f_b.id) as num_books,
+					(TRIM(to_char(DATE_PART('day', f_b.date), '00')) || '-' ||
+					 TRIM(to_char(DATE_PART('month', f_b.date), '00')) || '-' ||
+					 DATE_PART('year', f_b.date)) AS datum
+				FROM 
+					foto_boeken f_b
+				LEFT JOIN fotos f ON
+					f.boek = f_b.id
+				LEFT JOIN foto_boeken c_f_b ON
+					c_f_b.parent = f_b.id
+				WHERE 
+					" . implode(' AND ', $sql_atoms) . "
+				GROUP BY
+					f_b.id
+				ORDER BY
+					f_b.date DESC";
+
+			if ($limit !== null)
+				$query .= sprintf(' LIMIT %d', $limit);
+
+			return $this->_rows_to_iters($this->db->query($query), 'DataIterPhotobook');
 		}
 
 		function get_root_book()

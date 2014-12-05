@@ -1,0 +1,6 @@
+<h2>
+	<a href="fotoboek.php?book=<?=$iter->get_id()?>">
+		<?=markup_format_text($iter->get('titel'))?>
+	</a>
+</h2>
+<p>Photo book with <?=$iter->get('num_photos')?> photos taken on <?=$iter->get('datum')?>.</p>

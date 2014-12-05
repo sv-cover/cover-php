@@ -12,7 +12,8 @@ class SearchController extends Controller
 			get_model('DataModelMember'),
 			get_model('DataModelEditable'),
 			get_model('DataModelCommissie'),
-			get_model('DataModelAgenda')
+			get_model('DataModelAgenda'),
+			get_model('DataModelFotoboek')
 		);
 	}
 
