@@ -1,7 +1,7 @@
 <?php
-	require_once('form.php');
-	require_once('markup.php');
-	require_once('pagenavigation.php');
+	require_once 'include/form.php';
+	require_once 'include/markup.php';
+	require_once 'include/pagenavigation.php';
 
 	class GastenboekView extends View {
 		protected $__file = __FILE__;

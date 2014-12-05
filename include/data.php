@@ -22,7 +22,7 @@
 		if (function_exists("model_create_$name"))
 			$models[$name] = call_user_func("model_create_$name");
 		else {
-			require_once('models/' . $name . '.php');
+			require_once 'include/models/' . $name . '.php';
 
 			if (class_exists($name)) {
 				$models[$name] = new $name(get_db());
@@ -46,13 +46,13 @@
 		
 		if ($db == null)
 		{
-			require  'data/DBIds.php';
+			require 'include/data/DBIds.php';
 
 			$database_class = isset($dbids['easy']['class'])
 				? $dbids['easy']['class']
 				: 'DatabasePgsql';
 
-			require_once 'data/' . $database_class . '.php';
+			require_once 'include/data/' . $database_class . '.php';
 
 			/* Create database */
 			$db = new $database_class($dbids['easy']);

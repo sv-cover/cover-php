@@ -1,10 +1,11 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	include('member.php');
-	include('form.php');
+	require_once 'include/init.php';
+	require_once 'include/controllers/Controller.php';
+	require_once 'include/member.php';
+	require_once 'include/form.php';
 	
-	class ControllerNieuwlid extends Controller {
+	class ControllerNieuwlid extends Controller
+	{
 		var $model = null;
 		var $sizes = null;
 
@@ -249,4 +250,3 @@ if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {
 	$controller = new ControllerNieuwlid();
 	$controller->run();
 }
-?>

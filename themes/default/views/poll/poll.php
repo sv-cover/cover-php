@@ -1,8 +1,7 @@
 <?php
-require_once('member.php');
+require_once 'include/member.php';
 
-class PollView extends View {
+class PollView extends View
+{
 		protected $__file = __FILE__;
-
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'editable.php';
+require_once 'include/editable.php';
 
 class BesturenView extends CRUDView
 {

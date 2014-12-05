@@ -2,7 +2,7 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once('Controller.php');
+	require_once('include/controllers/Controller.php');
 	require_once('include/editable.php');
 
 	/** 
@@ -263,4 +263,3 @@
 			return add_request(get_request(), sprintf('editable_edit=%d#editable%1$d', $this->page->get('id')));
 		}
 	}
-?>

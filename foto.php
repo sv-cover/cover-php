@@ -1,8 +1,9 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
+	require_once 'include/init.php';
+	require_once 'include/controllers/Controller.php';
 	
-	class Controllerfoto extends Controller {
+	class Controllerfoto extends Controller
+	{
 		var $model = null;
 
 		function Controllerfoto() {
@@ -63,5 +64,3 @@
 	
 	$controller = new Controllerfoto();
 	$controller->run();
-?>
-

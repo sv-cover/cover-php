@@ -1,6 +1,6 @@
 <?php
-	include('include/init.php');
-	require_once('include/login.php');
+	require_once 'include/init.php';
+	require_once 'include/login.php';
 	
 	logout();
 	
@@ -8,4 +8,3 @@
 	session_destroy();
 
 	header("Location: " . $_GET['referrer']);
-?>

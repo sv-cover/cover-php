@@ -1,7 +1,7 @@
 <?php
-require_once 'form.php';
-require_once 'markup.php';
-require_once 'facebook.php';
+require_once 'include/form.php';
+require_once 'include/markup.php';
+require_once 'include/facebook.php';
 
 function empty_to_http_formatter($value) {
 	if (!$value)

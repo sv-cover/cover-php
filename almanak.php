@@ -1,8 +1,10 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	require_once('member.php');
-	class ControllerAlmanak extends Controller {
+	require_once 'include/init.php';
+	require_once 'include/member.php';
+	require_once 'include/controllers/Controller.php';
+	
+	class ControllerAlmanak extends Controller
+	{
 		var $model = null;
 
 		function ControllerAlmanak() {

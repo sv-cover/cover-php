@@ -1,7 +1,6 @@
 <?php
 	if (!defined('IN_SITE'))
 		return;
-
 	
 	function get_smileys() {
 		static $smileys = null;
@@ -28,4 +27,3 @@
 		
 		return $smileys;
 	}
-?>

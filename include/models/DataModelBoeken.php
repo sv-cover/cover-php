@@ -1,10 +1,11 @@
 <?php
-	require_once('data/DataModel.php');
+	require_once 'include/data/DataModel.php';
 
 	/**
 	  * A class implementing boeken data
 	  */
-	class DataModelBoeken extends DataModel {
+	class DataModelBoeken extends DataModel 
+	{
 		public function __construct($db)
 		{
 			parent::__construct($db, 'boeken');

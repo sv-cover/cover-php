@@ -1,5 +1,7 @@
 <?php
 
+require_once 'include/data/DataModel.php';
+
 class DataIterFace extends DataIter
 {
 	public function get_position()

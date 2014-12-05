@@ -1,7 +1,7 @@
 <?php
-	require_once('data/DataModel.php');
-	require_once('login.php');
-	require_once('models/DataIterForum.php');
+	require_once 'include/data/DataModel.php';
+	require_once 'include/login.php';
+	require_once 'include/models/DataIterForum.php';
 	
 	define('ACL_READ', 1);
 	define('ACL_WRITE', 2);
@@ -11,7 +11,8 @@
 	/**
 	  * A class implementing forum data
 	  */
-	class DataModelForum extends DataModel {
+	class DataModelForum extends DataModel
+	{
 		var $dataiter = 'DataIterForum';
 		var $threads_per_page = 15;
 		var $messages_per_page = 15;
@@ -1201,4 +1202,3 @@
 			return $this->_delete('forum_header', $iter);
 		}
 	}
-?>

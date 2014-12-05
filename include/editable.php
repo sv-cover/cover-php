@@ -1,11 +1,9 @@
 <?php
-
-	require_once('markup.php');
-	require_once('login.php');
-	require_once('member.php');
-
 	if (!defined('IN_SITE'))
 		return;
+
+	require_once 'include/markup.php';
+	require_once 'include/member.php';
 
 	function _editable_parse_deprecated(&$page) {
 		$page = str_ireplace(array(

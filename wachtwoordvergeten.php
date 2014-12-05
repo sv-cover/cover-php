@@ -1,10 +1,7 @@
 <?php
-	ini_set('display_errors', true);
-	error_reporting(E_ALL ^ E_NOTICE);
-
-	include('include/init.php');
-	include('controllers/Controller.php');
-	include_once('data/DataModel.php');
+	require_once 'include/init.php';
+	require_once 'include/controllers/Controller.php';
+	include_once 'include/data/DataModel.php';
 
 	class ControllerWachtwoordVergeten extends Controller {
 		function ControllerWachtwoordVergeten() {
@@ -48,4 +45,3 @@
 	
 	$controller = new ControllerWachtwoordVergeten();
 	$controller->run();
-?>

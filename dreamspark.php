@@ -1,8 +1,8 @@
 <?php
 require_once 'include/init.php';
-require_once 'controllers/Controller.php';
-require_once 'member.php';
-require_once 'markup.php';
+require_once 'include/member.php';
+require_once 'include/markup.php';
+require_once 'include/controllers/Controller.php';
 
 class DreamsparkController extends Controller
 {

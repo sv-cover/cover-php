@@ -1,6 +1,6 @@
 <?php
-	require_once('member.php');
-	require_once('csv.php');
+	require_once 'include/member.php';
+	require_once 'include/csv.php';
 	
 	class AlmanakView extends View {
 		protected $__file = __FILE__;
@@ -54,4 +54,3 @@
 					$status ? sprintf('<span class="status">(%s)</span>', markup_format_text($status)) : '');
 		}
 	}
-?>

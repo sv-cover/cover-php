@@ -81,7 +81,12 @@ class ControllerScherm
 		// Proper content type (hopefully)
 		header('Content-Type: text/html; charset=' . WEBSITE_ENCODING);
 
+		// Set the include path to include this directory so we can still access include and include/data etc.
+		$old_path = set_include_path('.' . PATH_SEPARATOR . dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
+
 		include $this->slides[$this->slide]['url'];
+
+		set_include_path($old_path);
 	}
 
 	protected function run_resource($resource)

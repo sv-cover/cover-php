@@ -1,8 +1,8 @@
 <?php
-	require_once 'data/DataModel.php';
 	require_once 'include/search.php';
 	require_once 'include/login.php';
-
+	require_once 'include/data/DataModel.php';
+	
 	define('MEMBER_STATUS_LID', 1);
 	define('MEMBER_STATUS_LID_ONZICHTBAAR', 4);
 	define('MEMBER_STATUS_LID_AF', 2);

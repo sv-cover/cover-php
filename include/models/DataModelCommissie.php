@@ -1,7 +1,7 @@
 <?php
-	require_once 'data/DataModel.php';
 	require_once 'include/search.php';
-
+	require_once 'include/data/DataModel.php';
+	
 	class DataIterCommissie extends DataIter implements SearchResult
 	{
 		public function get_members()
@@ -381,4 +381,3 @@
 			return $this->_row_to_iter($row);
 		}
 	}
-?>

@@ -1,11 +1,11 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	include('controllers/ControllerEditable.php');
+	require_once 'include/init.php';
+	require_once 'include/form.php';
+	require_once 'include/controllers/Controller.php';
+	require_once 'include/controllers/ControllerEditable.php';
 
-	require_once('form.php');
-
-	class ControllerBoeken extends Controller {
+	class ControllerBoeken extends Controller
+	{
 		var $model = null;
 
 		function ControllerBoeken() {

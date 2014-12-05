@@ -1,5 +1,5 @@
 <?php
-	require_once('data/DataModel.php');
+	require_once 'include/data/DataModel.php';
 
 	/**
 	  * A class implementing active member data
@@ -29,4 +29,3 @@
 			return $this->_rows_to_iters($rows);
 		}
 	}
-?>

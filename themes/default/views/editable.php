@@ -1,8 +1,8 @@
 <?php
-	require_once('include/editable.php');
-	require_once('form.php');
-	require_once('markup.php');
-	require_once('member.php');
+	require_once 'include/editable.php';
+	require_once 'include/form.php';
+	require_once 'include/markup.php';
+	require_once 'include/member.php';
 
 	function echo_editable_page($iter, $page)
 	{	

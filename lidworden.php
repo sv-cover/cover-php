@@ -1,10 +1,11 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	include('member.php');
-	include('form.php');
+	require_once 'include/init.php';
+	require_once 'include/member.php';
+	require_once 'include/form.php';
+	require_once 'include/controllers/Controller.php';
 	
-	class ControllerLidWorden extends Controller {
+	class ControllerLidWorden extends Controller
+	{
 		var $model = null;
 		var $sizes = null;
 
@@ -79,4 +80,3 @@
 	
 	$controller = new ControllerLidWorden();
 	$controller->run();
-?>

@@ -1,6 +1,7 @@
 <?php
 
-require_once 'data/DataModel.php';
+require_once 'include/data/DataModel.php';
+require_once 'include/member.php';
 
 class DataModelStickers extends DataModel
 {

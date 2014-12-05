@@ -1,7 +1,7 @@
 <?php
 
-require_once 'data/DataModel.php';
-require_once 'models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
+require_once 'include/data/DataModel.php';
+require_once 'include/models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
 
 class DataIterMailinglijst extends DataIter
 {

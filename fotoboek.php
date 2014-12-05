@@ -1,11 +1,10 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	include('controllers/ControllerCRUD.php');
-
-	require_once('member.php');
-	require_once('form.php');
-
+	require_once 'include/init.php';
+	require_once 'include/member.php';
+	require_once 'include/form.php';
+	require_once 'include/controllers/Controller.php';
+	require_once 'include/controllers/ControllerCRUD.php';
+	
 	class ControllerFotoboekReacties extends ControllerCRUD
 	{
 		protected $photo;

@@ -2,7 +2,7 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once('data.php');
+	require_once 'include/data.php';
 
 	/** @group Login
 	  * Get member data from member id stored in session

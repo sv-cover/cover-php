@@ -1,7 +1,7 @@
 <?php
-	require_once('form.php');
+	require_once 'include/form.php';
  
-	class ShowView extends View {
+	class ShowView extends View
+	{
 		protected $__file = __FILE__;
 	}
-?>

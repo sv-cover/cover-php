@@ -1,8 +1,6 @@
 <?php
 
-    require_once('Rotator.php');
-    
-	function view_footer($model, $iter, $params) {
+    function view_footer($model, $iter, $params) {
 		?>
 				</div> <!-- CONTENTS_TEXT -->
 				
@@ -14,7 +12,8 @@
 				</div>	
 				
 				<div class="aff column">
-                    <?
+                    <?php
+                    	require_once dirname(__FILE__) . '/Rotator.php';
                         $rotator = new Rotator('images/banners/');
                         $banners = $rotator -> get(7);
                         foreach ($banners as $banner)

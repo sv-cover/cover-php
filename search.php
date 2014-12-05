@@ -1,6 +1,6 @@
 <?php
 require_once 'include/init.php';
-require_once 'controllers/Controller.php';
+require_once 'include/controllers/Controller.php';
 	
 class SearchController extends Controller
 {

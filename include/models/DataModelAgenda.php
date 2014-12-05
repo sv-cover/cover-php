@@ -1,5 +1,5 @@
 <?php
-	require_once 'data/DataModel.php';
+	require_once 'include/data/DataModel.php';
 	require_once 'include/search.php';
 	
 	class DataIterAgenda extends DataIter implements SearchResult
@@ -279,4 +279,3 @@
 			return $this->_rows_to_iters($rows);
 		}
 	}
-?>

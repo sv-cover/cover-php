@@ -111,11 +111,10 @@
 		$admin = array();
 		if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 			$admin[] = '<a href="agenda.php?agenda_moderate">' . __('Agenda') . '</a>';
-			$admin[] = '<a href="actieveleden.php">' . __('Commissies') . '</a>';
+			$admin[] = '<a href="actieveleden.php">' . __('Actieve leden') . '</a>';
 			$admin[] = '<a href="forum.php?admin=forums">' . __('Forum') . '</a>';
 			$admin[] = '<a href="nieuwlid.php">' . __('Leden toevoegen') . '</a>';
 			$admin[] = '<a href="show.php?show_new">' . __('Pagina maken') . '</a>';
-			$admin[] = '<a href="banners.php">'. __('Advertenties') .'</a>';
 		}
 		
 		// if (member_in_commissie(COMMISSIE_BOEKCIE)) {

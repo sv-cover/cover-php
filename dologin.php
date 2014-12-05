@@ -1,14 +1,12 @@
 <?php
-
-	include('include/init.php');
-	include('controllers/Controller.php');
-	require_once('login.php');
-
-	class ControllerLogin extends Controller {
-		function ControllerLogin() {
-		}
-		
-		function run_impl() {
+	require_once 'include/init.php';
+	require_once 'include/login.php';
+	require_once 'include/controllers/Controller.php';
+	
+	class ControllerLogin extends Controller
+	{
+		function run_impl()
+		{
 			$referer = $_POST['referer'];
 
 			if (get_post('email') && get_post('password')) {
@@ -26,4 +24,3 @@
 
 	$controller = new ControllerLogin();
 	$controller->run();
-?>

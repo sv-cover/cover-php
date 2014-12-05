@@ -1,11 +1,11 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
+	require_once 'include/init.php';
+	require_once 'include/member.php';
+	require_once 'include/form.php';
+	require_once 'include/controllers/Controller.php';
 	
-	require_once('member.php');
-	require_once('form.php');
-
-	class ControllerForum extends Controller {
+	class ControllerForum extends Controller
+	{
 		var $model = null;
 
 		function ControllerForum() {
@@ -902,4 +902,3 @@
 	
 	$controller = new ControllerForum();
 	$controller->run();
-?>

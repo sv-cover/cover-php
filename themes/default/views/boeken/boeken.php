@@ -1,11 +1,11 @@
 <?php
-	require_once('markup.php');
-	require_once('form.php');
-	require_once('Notebook.php');
-	require_once('member.php');
-	require_once('csv.php');
+	require_once 'include/markup.php';
+	require_once 'include/form.php';
+	require_once 'include/member.php';
+	require_once 'include/csv.php';
 	
-	class BoekenView extends View {
+	class BoekenView extends View
+	{
 		protected $__file = __FILE__;
 		
 		function view_auth($model, $iter, $params = null) {
@@ -96,11 +96,9 @@
 		
 			echo '<form action="boeken.php" method="post">'
 				. input_hidden('submboekenbestel', 'yes');
-			
-			$notebook = new Notebook('boeken');
 
 			foreach ($categories as $id => $name) {
-				$contents = '<table class="boeken">
+				echo '<table class="boeken">
 					<col class="check">
 					<col class="course">
 					<col class="title">
@@ -117,7 +115,7 @@
 				$books = $model->get_from_category($id);
 			
 				foreach ($books as $book) {
-					$contents .= table_row(
+					echo table_row(
 						input_checkbox('boek_' . $book->get('id'), null),
 						htmlspecialchars($book->get('vak')),
 						htmlspecialchars($book->get('titel')),
@@ -127,13 +125,10 @@
 							: ('&euro;&nbsp;' . $book->get('prijs')));
 				}
 			
-				$contents .= '</table>';
-				$notebook->add_page($name, $contents);
+				echo '</table>';
 			}
 		
-			echo $notebook->render()
-				. input_submit('subm', __('Bestellen'))
-				. '</form>';
+			echo input_submit('subm', __('Bestellen')) . '</form>';
 		}
 	
 		function toevoegen_boeken($model, $errors, $added) {
@@ -439,4 +434,3 @@
 		}
 	
 	}
-?>

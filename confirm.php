@@ -1,7 +1,7 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	require_once('data/DataModel.php');
+	require_once 'include/init.php';
+	require_once 'include/controllers/Controller.php';
+	require_once 'include/data/DataModel.php';
 
 	class ControllerConfirm extends Controller {
 		var $model = null;
@@ -70,4 +70,3 @@
 	
 	$controller = new ControllerConfirm();
 	$controller->run();
-?>

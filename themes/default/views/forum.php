@@ -1,7 +1,6 @@
 <?php
-	require_once('markup.php');
-	require_once('pagenavigation.php');
-	require_once('poll/poll.php');
+	require_once 'include/markup.php';
+	require_once 'include/pagenavigation.php';
 
 	function view_auth($model, $iter, $params = null) {
 		echo '<h1>' . __('Forum') . '</h1>

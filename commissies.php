@@ -1,7 +1,7 @@
 <?php
-include 'include/init.php';
-include 'controllers/ControllerCRUD.php';
-include 'controllers/ControllerEditable.php';
+require_once 'include/init.php';
+require_once 'include/controllers/ControllerCRUD.php';
+require_once 'include/controllers/ControllerEditable.php';
 
 class ControllerCommissies extends ControllerCRUD
 {	

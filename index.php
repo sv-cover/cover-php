@@ -1,9 +1,10 @@
 <?php
-	include('include/init.php');
-	require_once('controllers/Controller.php');
+	require_once 'include/init.php';
+	require_once 'include/controllers/Controller.php';
 	
-	class ControllerHomepage extends Controller {
-		function ControllerHomepage() {
+	class ControllerHomepage extends Controller
+	{
+		function __construct() {
 			parent::Controller('homepage');
 		}
 		
@@ -57,4 +58,3 @@
 	
 	$controller = new ControllerHomepage();
 	$controller->run();
-?>

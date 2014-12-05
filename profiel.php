@@ -1,12 +1,13 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	require_once('include/form.php');
-	require_once('include/member.php');
-	require_once('include/login.php');
+	require_once 'include/init.php';
+	require_once 'include/form.php';
+	require_once 'include/member.php';
+	require_once 'include/login.php';
 	require_once 'include/facebook.php';
-
-	class ControllerProfiel extends Controller {
+	require_once 'include/controllers/Controller.php';
+	
+	class ControllerProfiel extends Controller
+	{
 		var $model = null;
 
 		function ControllerProfiel() {
@@ -329,4 +330,3 @@
 	
 	$controller = new ControllerProfiel();
 	$controller->run();
-?>

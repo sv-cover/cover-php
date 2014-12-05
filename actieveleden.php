@@ -1,9 +1,10 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	require_once'include/member.php';
-
-	class ControllerActieveLeden extends Controller {
+	require_once 'include/init.php';
+	require_once 'include/member.php';
+	require_once 'include/controllers/Controller.php';
+	
+	class ControllerActieveLeden extends Controller
+	{
 		var $model = null;
 
 		function ControllerActieveLeden() {
@@ -29,4 +30,3 @@
 	
 	$controller = new ControllerActieveLeden();
 	$controller->run();
-?>

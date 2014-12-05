@@ -1,14 +1,16 @@
 <?php
-	include('include/init.php');
-	include('controllers/Controller.php');
-	require_once('include/member.php');
-	require_once('include/login.php');
-	require_once('include/form.php');
+	require_once 'include/init.php';
+	require_once 'include/member.php';
+	require_once 'include/login.php';
+	require_once 'include/form.php';
 	require_once 'include/webcal.php';
 	require_once 'include/markup.php';
-
-	class ControllerAgenda extends Controller {
-		function ControllerAgenda() {
+	require_once 'include/controllers/Controller.php';
+	
+	class ControllerAgenda extends Controller
+	{
+		public function __construct()
+		{
 			$this->model = get_model('DataModelAgenda');
 		}
 		
@@ -442,4 +444,3 @@
 	
 	$controller = new ControllerAgenda();
 	$controller->run();
-?>

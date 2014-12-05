@@ -2,10 +2,10 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once 'config.php';
-	require_once 'login.php';
-	require_once 'streams.php';
-	require_once 'gettext.php';
+	require_once 'include/config.php';
+	require_once 'include/login.php';
+	require_once 'include/streams.php';
+	require_once 'include/gettext.php';
 
 	/** @group i18n
 	  * A gettext noop function. This will just return the message. It's used

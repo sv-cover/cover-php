@@ -1,6 +1,6 @@
 <?php
-	require_once('data.php');
-	require_once('login.php');
+	require_once 'include/data.php';
+	require_once 'include/login.php';
 
 	/** @group Member
 	  * Check whether the currently logged in member is a member of

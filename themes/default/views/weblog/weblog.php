@@ -1,7 +1,8 @@
-<?
-	require_once('markup.php');
+<?php
+	require_once 'include/markup.php';
  
-	class WeblogView extends View {
+	class WeblogView extends View
+	{
 		protected $__file = __FILE__;
 		
 		function _get_weblog_head($iter) {
@@ -15,4 +16,3 @@
 		}
 		
 	}
-?>

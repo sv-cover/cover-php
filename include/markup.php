@@ -2,7 +2,7 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once('smileys.php');
+	require_once 'include/smileys.php';
 
 	function str_replace_once($search, $replace, $subject)
 	{

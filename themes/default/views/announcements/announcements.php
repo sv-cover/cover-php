@@ -1,6 +1,6 @@
 <?php
-require_once 'markup.php';
-require_once 'form.php';
+require_once 'include/markup.php';
+require_once 'include/form.php';
 require_once 'include/models/DataModelAnnouncement.php';
 
 class AnnouncementsView extends CRUDView

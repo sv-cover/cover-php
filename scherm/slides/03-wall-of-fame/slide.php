@@ -1,5 +1,5 @@
 <?php
-require_once 'member.php';
+require_once 'include/member.php';
 
 $commissie_model = get_model('DataModelCommissie');
 

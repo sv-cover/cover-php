@@ -2,9 +2,9 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once('config.php');
-	require_once('data.php');
-	require_once('view.php');
+	require_once 'include/config.php';
+	require_once 'include/data.php';
+	require_once 'include/view.php';
 
 	function _dump($arg) {
 		printf('<code style="overflow-x:scroll;display:block;background:white;padding:10px;border:1px solid black;"><pre>%s</pre></code>', $arg);

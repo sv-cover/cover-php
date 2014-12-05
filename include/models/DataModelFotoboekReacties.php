@@ -1,5 +1,5 @@
 <?php
-require_once 'data/DataModel.php';
+require_once 'include/data/DataModel.php';
 
 class DataModelFotoboekReacties extends DataModel
 {

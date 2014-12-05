@@ -1,5 +1,5 @@
 <?php
-	require_once('login.php');
+	require_once 'include/login.php';
 
 	/**
 	  * A class implementing forum data
@@ -288,4 +288,3 @@
 			}
 		}
 	}
-?>
