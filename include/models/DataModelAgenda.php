@@ -244,19 +244,18 @@
 
 		public function search($keywords, $limit = null)
 		{
-			$keywords = parse_search_query($keywords);
-
-			$search_atoms = array_map(function($keyword) {
-				return sprintf("(agenda.kop ILIKE '%%%s%%' OR agenda.beschrijving ILIKE '%%%1\$s%%')",
-					$this->db->escape_string($keyword));
-			}, $keywords);
+			$ts_query = implode(' & ', parse_search_query($keywords));
 
 			$query = "
 				SELECT
 					agenda.*,
 					c.naam as commissie__naam,
 					c.page as commissie__page,
-					" . $this->_generate_select() . "
+					" . $this->_generate_select() . ",
+					ts_rank_cd(
+						setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B'),
+						to_tsquery('" . $this->db->escape_string($ts_query) . "')
+					) as search_relevance
 				FROM
 					agenda
 				LEFT JOIN commissies c ON
@@ -264,7 +263,7 @@
 				WHERE
 					agenda.id NOT IN (SELECT agendaid FROM agenda_moderate)
 					" . (!$this->include_private ? ' AND agenda.private = 0 ' : '') . "
-					AND " . implode(' AND ', $search_atoms) . "
+					AND (setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B')) @@ to_tsquery('" . $this->db->escape_string($ts_query) . "')
 				ORDER BY
 					agenda.van DESC
 				" . ($limit !== null ? " LIMIT " . intval($limit) : "");
