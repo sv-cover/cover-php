@@ -110,15 +110,15 @@
 		protected function _create($data, array &$errors)
 		{
 			$data['foto_id'] = $this->photo->get_id();
+			$data['tagged_by'] = logged_in('id');
 
 			return parent::_create($data, $errors);
 		}
 
 		protected function _update(DataIter $iter, $data, array &$errors)
 		{
-			// If lid_id is being changed, also update who changed it.
-			if (isset($data['lid_id']))
-				$data['tagged_by'] = logged_in('id');
+			// Also update who changed it.
+			$data['tagged_by'] = logged_in('id');
 
 			// Only a custom label XOR a lid_id can be assigned to a tag
 			if (isset($data['custom_label']))
