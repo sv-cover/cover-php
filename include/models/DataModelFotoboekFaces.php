@@ -29,7 +29,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 
 	public function get_photos()
 	{
-		$condition = sprintf('fotos.id IN (SELECT foto_id FROM foto_faces WHERE lid_id = %d)',
+		$condition = sprintf('fotos.id IN (SELECT foto_id FROM foto_faces WHERE lid_id = %d AND deleted = FALSE)',
 			$this->get('member_id'));
 
 		return array_reverse($this->model->find($condition), true);
