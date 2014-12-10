@@ -1633,22 +1633,22 @@ body .ui-corner-all {
 	border-radius: 2px;
 }
 
-body .ui-autocomplete .ui-menu-item .ui-state-focus {
+body .ui-menu .ui-menu-item .ui-state-focus {
 	background: #c60c30;
 	color: white;
 	border: none;
 	margin: 0;
 }
 
-body .ui-autocomplete .ui-corner-all {
+body .ui-menu .ui-corner-all {
 	border-radius: 0;
 }
 
-body .ui-autocomplete .ui-menu-item {
+body .ui-menu .ui-menu-item {
 	margin-bottom: 2px;
 }
 
-body .ui-autocomplete .ui-menu-item:last-child {
+body .ui-menu .ui-menu-item:last-child {
 	margin-bottom: 0;
 }
 

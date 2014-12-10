@@ -141,22 +141,16 @@ jQuery(function($) {
 				&& $(this).data('ui-autocomplete').menu.active)
 				e.preventDefault();
 		})
-		.autocomplete({
+		.autocompleteAlmanac({
 			source: function(request, response) {
-				$.getJSON('mailinglijsten.php', {
-					'autocomplete': true,
-					'naam': extractLast(request.term)
+				$.getJSON('almanak.php', {
+					'search': extractLast(request.term)
 				}, response);
 			},
 			search: function() {
 				// custom minLength
-				var term = extractLast(this.value);
-
-				if (term.length < 2)
+				if (extractLast(this.value).length < 2)
 					return false;
-			},
-			focus: function() {
-				return false;
 			},
 			select: function(event, ui) {
 				var terms = split(this.value);
@@ -169,14 +163,7 @@ jQuery(function($) {
 				this.value = terms.join(', ');
 				return false;
 			}
-		})
-		.data('ui-autocomplete')._renderItem = function(ul, item) {
-			return $('<li>').append(
-				$('<a>').append(
-					$('<span class="naam">').text(item.naam)
-				)
-			).appendTo(ul);
-		};
+		});
 });
 </script>
 <?php endif ?>
