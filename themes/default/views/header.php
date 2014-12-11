@@ -408,8 +408,10 @@
 				<div class="login">
 				' . create_login() . '
 				</div>';
-				
 				$logo = '<a href="."><img class="cover-logo" src="' . get_theme_data('images/cover_logo.png') . '" alt="logo"/></a>';
+				if(intval(date('m')) == 12 && intval(date('d'))>=6){
+					$logo = '<a href="."><img class="cover-logo" src="' . get_theme_data('images/cover_logo_christmas.png') . '" alt="logo" style="height:auto;margin-top:-12px"/></a>';
+				}
 		echo $logo.'
 		</div>
 		<div class="topMenu clearfix">
