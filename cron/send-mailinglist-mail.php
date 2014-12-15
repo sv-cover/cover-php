@@ -101,20 +101,20 @@ function process_message_mailinglist($message, &$lijst)
 		// Only people on the list can send mail to the list
 		case DataModelMailinglijst::TOEGANG_DEELNEMERS:
 			foreach ($aanmeldingen as $aanmelding)
-				if ($aanmelding->get('email') == $from)
+				if (strcasecmp($aanmelding->get('email'), $from) === 0)
 					break 2;
 
 			// Also test whether the owner is sending mail, he should also be accepted.
 			$commissie_model = get_model('DataModelCommissie');
 			$commissie_adres = $commissie_model->get_email($lijst->get('commissie'));
-			if ($from == $commissie_adres)
+			if (strcasecmp($from, $commissie_adres) === 0)
 				break;
 			
 			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
 
 		// Only people who sent mail from an *@svcover.nl address can send to the list
 		case DataModelMailinglijst::TOEGANG_COVER:
-			if (!preg_match('/\@svcover.nl$/', $from))
+			if (!preg_match('/\@svcover.nl$/i', $from))
 				return RETURN_NOT_ALLOWED_NOT_COVER;
 
 			break;
@@ -123,7 +123,7 @@ function process_message_mailinglist($message, &$lijst)
 		case DataModelMailinglijst::TOEGANG_EIGENAAR:
 			$commissie_model = get_model('DataModelCommissie');
 			$commissie_adres = $commissie_model->get_email($lijst->get('commissie'));
-			if ($from != $commissie_adres)
+			if (strcasecmp($from, $commissie_adres) !== 0)
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
 
 			break;
