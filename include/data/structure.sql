@@ -847,7 +847,7 @@ INSERT INTO commissies VALUES (24, 'Promotie', 'promotie', '', 'promotie', 48, 0
 INSERT INTO commissies VALUES (25, 'MeisCie', 'meiscie', '', 'meiscie', 49, 0);
 INSERT INTO commissies VALUES (1, 'WebCie', 'webcie', NULL, 'webcie', 1, 0);
 INSERT INTO commissies VALUES (20, 'Conditie', 'conditie', 'http://conditie.svcover.nl', 'conditie', 44, 0);
-INSERT INTO commissies VALUES (0, 'Bestuur', 'bestuur', NULL, 'bestuur', 0, 1);
+INSERT INTO commissies VALUES (0, 'Bestuur', 'board', NULL, 'board', 0, 1);
 INSERT INTO commissies VALUES (27, 'BHVcie', 'bhvcie', 'http://bhvcie.svcover.nl', 'bhvcie', 81, 0);
 INSERT INTO commissies VALUES (18, 'SLACKcie', 'slackcie', NULL, 'slackcie', 42, 0);
 INSERT INTO commissies VALUES (7, 'FotoCie', 'fotocie', NULL, 'fotocie', 7, 0);
