@@ -3,6 +3,7 @@
 		return;
 
 	require_once 'include/config.php';
+	require_once 'include/exception.php';
 	require_once 'include/data.php';
 	require_once 'include/view.php';
 

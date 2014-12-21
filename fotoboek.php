@@ -179,24 +179,18 @@
 			$this->run_footer();
 		}
 		
-		function _page_prepare($commissie = true) {
-			if ($commissie && !member_in_commissie(COMMISSIE_FOTOCIE)) {
-				$this->get_content('auth_common');
-				return false;
-			}
+		function _page_prepare($commissie = true)
+		{
+			if ($commissie && !member_in_commissie(COMMISSIE_FOTOCIE))
+				throw new UnauthorizedException();
 			
-			if (!$commissie && !logged_in()) {
-				$this->get_content('auth_common');
-				return false;
-			}
-			
-			return true;
+			if (!$commissie && !logged_in())
+				throw new UnauthorizedException();
 		}
 		
 		function _process_photo_description(DataIterPhoto $photo)
 		{
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 				
 			$beschrijving = get_post('beschrijving');
 			
@@ -267,8 +261,7 @@
 		}
 		
 		function _process_fotoboek_nieuw(DataIterPhotobook $parent = null) {
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 
 			$data = $this->_check_fotoboek_values($errors);
 
@@ -286,8 +279,7 @@
 		}
 		
 		function _process_fotoboek_edit(DataIterPhotobook $book) {
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 
 			$data = $this->_check_fotoboek_values($errors);
 
@@ -303,8 +295,7 @@
 		}
 		
 		function _process_fotoboek_fotos(DataIterPhotobook $book) {
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 			
 			$urls = str_replace("\r", '', explode("\n", get_post('urls')));
 			$thumbs = str_replace("\r", '', explode("\n", get_post('thumbnail_urls')));
@@ -353,8 +344,7 @@
 		
 		protected function _process_del_book(DataIterPhotobook $book)
 		{
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 			
 			$this->_del_book($book);
 
@@ -363,8 +353,7 @@
 		
 		protected function _process_fotoboek_del_fotos(DataIterPhotobook $book)
 		{
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 			
 			foreach ($_POST['photo'] as $id)
 				if ($photo = $this->model->get_iter($id))
@@ -375,8 +364,7 @@
 
 		protected function _process_update_faces(DataIterPhotobook $book)
 		{
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 
 			if (!ctype_digit((string) $book->get_id()))
 				throw new Exception('You can only recognise faces in real photo books');
@@ -411,8 +399,7 @@
 		}
 
 		protected function _view_edit_book(DataIterPhotobook $book) {
-			if (!$this->_page_prepare())
-				return;
+			$this->_page_prepare();
 
 			$this->get_content('edit_fotoboek', $book);
 		}
@@ -421,7 +408,7 @@
 		{
 			// For now require login for these originals
 			if (!logged_in())
-				return $this->get_content('auth_common');
+				throw new UnauthorizedException();
 
 			$common_path = 'fotocie.svcover.nl/fotos/';
 

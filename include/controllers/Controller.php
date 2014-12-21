@@ -123,12 +123,23 @@
 		protected function run_exception(Exception $e)
 		{
 			if ($e instanceof NotFoundException)
-				return $this->run_404($e);
+				return $this->run_404_not_found($e);
+			elseif ($e instanceof UnauthorizedException)
+				return $this->run_401_unauthorized($e);
 			else
-				return $this->run_500($e);
+				return $this->run_500_internal_server_error($e);
 		}
 
-		protected function run_404(NotFoundException $exception)
+		protected function run_401_unauthorized(UnauthorizedException $exception)
+		{
+			header('Status: 401 Unauthorized');
+			header('WWW-Authenticate: FormBased');
+			$this->run_header(array('title' => __('Geen toegang')));
+			run_view('common::auth', null, null, null);
+			$this->run_footer();
+		}
+
+		protected function run_404_not_found(NotFoundException $exception)
 		{
 			try {
 				header('Status: 404 Not Found');
@@ -140,7 +151,7 @@
 			}
 		}
 
-		protected function run_500(Exception $e)
+		protected function run_500_internal_server_error(Exception $e)
 		{
 			header('Status: 500 Interal Server Error');
 
