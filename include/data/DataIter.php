@@ -17,7 +17,7 @@
 		  * @id the id of the iter
 		  * @data the data of the iter (a hashtable)
 		  */
-		public function DataIter(DataModel $model = null, $id, $data, $namespace = '') {
+		public function __construct(DataModel $model = null, $id, $data, $namespace = '') {
 			$this->model = $model;
 			$this->data = $data;
 			$this->_id = $id;			

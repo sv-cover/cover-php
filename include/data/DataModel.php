@@ -1,10 +1,6 @@
 <?php
 	require_once 'include/data/DataIter.php';
 
-	class NotFoundException extends Exception {
-		//
-	}
-
 	class DataIterNotFoundException extends NotFoundException
 	{
 		public function __construct($id)
@@ -26,6 +22,7 @@
 		public $id;
 		public $dataiter = 'DataIter';
 		public $fields = array();
+		protected $auto_increment;
 		
 		/**
 		  * Create a new DataModel
@@ -38,6 +35,9 @@
 			$this->db = $db;
 			$this->table = $table;
 			$this->id = $id;
+
+			if ($this->auto_increment === null)
+				$this->auto_increment = $this->id == 'id';
 		}
 
 		/**
@@ -77,7 +77,7 @@
 			if (!$this->table)
 				throw new RuntimeException(get_class($this) . '::$table is not set');
 			
-			return $this->_insert($this->table, $iter, $this->id == 'id');
+			return $this->_insert($this->table, $iter, $this->auto_increment);
 		}
 		
 		/**
@@ -116,7 +116,7 @@
 			foreach ($iter->get_changed_values() as $key => $value)
 				if (!$this->fields || in_array($key, $this->fields))
 					$data[$key] = $value;
-			
+
 			return $this->db->update($table, 
 					$data, 
 					$this->_id_string($iter->get_id(), $table), 

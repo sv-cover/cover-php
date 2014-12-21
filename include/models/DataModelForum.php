@@ -889,7 +889,7 @@
 			if ($val)
 				return;
 				
-			$iter = new $this->dataiter(-1, null, array(
+			$iter = new $this->dataiter($this, null, array(
 					'thread' => intval($threadid),
 					'lid' => intval($member_data['id']),
 					'forum' => intval($thread->get('forum'))));

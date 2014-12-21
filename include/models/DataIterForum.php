@@ -10,10 +10,11 @@
 		  * @id the id of the iter
 		  * @data the data of the iter (a hashtable)
 		  */
-		function DataIterForum($model, $id, $data) {
+		public function __construct(DataModel $model, $id, $data, $namespace = '')
+		{
 			$this->model = get_model('DataModelForum'); /** The model the iter belongs to */
 			$this->db = $this->model->db;
-			parent::DataIter($this->model,$id,$data);
+			parent::__construct($this->model,$id,$data, $namespace);
 		}
 								
 		/*
