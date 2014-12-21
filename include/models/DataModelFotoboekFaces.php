@@ -37,7 +37,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		$hidden_ids = array_map(function($iter) { return $iter->get('foto_id'); }, $hidden);
 
 		// If this is not my own faces album, hide all the hidden faces as well
-		if ($this->get('member_id') != logged_in('id'))
+		if ($this->get('member_id') != logged_in('id') && count($hidden_ids) > 0)
 			$condition .= sprintf(' AND fotos.id NOT IN (%s)', implode(',', $hidden_ids));
 
 		$photos = $this->model->find($condition);
