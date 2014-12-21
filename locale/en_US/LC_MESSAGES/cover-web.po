@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-12-05 14:07+0100\n"
+"POT-Creation-Date: 2014-12-21 14:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.7.1\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -195,7 +195,12 @@ msgstr ""
 "\n"
 "The WebCie"
 
-#: ../../../fotoboek.php:197 ../../../include/models/DataModelFotoboek.php:206
+#: ../../../fotoboek.php:160
+#: ../../../themes/default/views/fotoboek/privacy.phtml:1
+msgid "Zichtbaarheid foto"
+msgstr "Visibility of photo"
+
+#: ../../../fotoboek.php:208 ../../../include/models/DataModelFotoboek.php:253
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:19
 #: ../../../themes/default/views/fotoboek/_books.phtml:26
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:36
@@ -217,7 +222,13 @@ msgstr "Guestbook"
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
-#: ../../../include/controllers/Controller.php:151
+#: ../../../include/controllers/Controller.php:137
+#: ../../../themes/default/views/common.php:3
+#: ../../../themes/default/views/nieuwlid/auth.phtml:1
+msgid "Geen toegang"
+msgstr "No access"
+
+#: ../../../include/controllers/Controller.php:162
 msgid ""
 "Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
 "de WebCie (webcie@svcover.nl)"
@@ -255,7 +266,7 @@ msgstr "The page %s has been saved."
 msgid "Deze pagina bestaat niet..."
 msgstr "This page does not exist..."
 
-#: ../../../include/functions.php:51
+#: ../../../include/functions.php:52
 #: ../../../themes/default/views/confirm.php:4
 #: ../../../themes/default/views/confirm.php:9
 #: ../../../themes/default/views/editable.php:14
@@ -263,7 +274,7 @@ msgstr "This page does not exist..."
 msgid "Fout"
 msgstr "Error"
 
-#: ../../../include/functions.php:63
+#: ../../../include/functions.php:64
 msgid ""
 "De webmaster is NIET op de hoogte gesteld. Stel de webmaster op de hoogte "
 "wanneer dit probleem zich voor blijft doen"
@@ -271,146 +282,146 @@ msgstr ""
 "The webmaster has NOT been informed. Please inform the webmaster if this "
 "problem keeps occurring"
 
-#: ../../../include/functions.php:65
+#: ../../../include/functions.php:66
 msgid "De webmaster is op de hoogte gesteld van het probleem"
 msgstr "The webmaster has been notified of the problem"
 
-#: ../../../include/functions.php:182
+#: ../../../include/functions.php:183
 msgid "Zondag"
 msgstr "Sunday"
 
-#: ../../../include/functions.php:182
+#: ../../../include/functions.php:183
 msgid "Maandag"
 msgstr "Monday"
 
-#: ../../../include/functions.php:182
+#: ../../../include/functions.php:183
 msgid "Dinsdag"
 msgstr "Tuesday"
 
-#: ../../../include/functions.php:182
+#: ../../../include/functions.php:183
 msgid "Woensdag"
 msgstr "Wednesday"
 
-#: ../../../include/functions.php:182
+#: ../../../include/functions.php:183
 msgid "Donderdag"
 msgstr "Thursday"
 
-#: ../../../include/functions.php:182
+#: ../../../include/functions.php:183
 msgid "Vrijdag"
 msgstr "Friday"
 
-#: ../../../include/functions.php:182
+#: ../../../include/functions.php:183
 msgid "Zaterdag"
 msgstr "Saturday"
 
-#: ../../../include/functions.php:197 ../../../include/functions.php:206
+#: ../../../include/functions.php:198 ../../../include/functions.php:207
 #: ../../../themes/default/views/almanak/almanak.phtml:66
 #: ../../../themes/default/views/profiel/profiel.phtml:103
 #: ../../../themes/default/views/profiel/profiel.phtml:113
 msgid "geen"
 msgstr "none"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "Januari"
 msgstr "January"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "Februari"
 msgstr "February"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "Maart"
 msgstr "March"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "April"
 msgstr "April"
 
-#: ../../../include/functions.php:197 ../../../include/functions.php:206
+#: ../../../include/functions.php:198 ../../../include/functions.php:207
 msgid "Mei"
 msgstr "May"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "Juni"
 msgstr "June"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "Juli"
 msgstr "July"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "Augustus"
 msgstr "August"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "September"
 msgstr "September"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "Oktober"
 msgstr "October"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "November"
 msgstr "November"
 
-#: ../../../include/functions.php:197
+#: ../../../include/functions.php:198
 msgid "December"
 msgstr "December"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Jan"
 msgstr "Jan"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Feb"
 msgstr "Feb"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Mrt"
 msgstr "Mar"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Apr"
 msgstr "Apr"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Jun"
 msgstr "Jun"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Jul"
 msgstr "Jul"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Aug"
 msgstr "Aug"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Sept"
 msgstr "Sept"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Okt"
 msgstr "Oct"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Nov"
 msgstr "Nov"
 
-#: ../../../include/functions.php:206
+#: ../../../include/functions.php:207
 msgid "Dec"
 msgstr "Dec"
 
-#: ../../../include/functions.php:341
+#: ../../../include/functions.php:342
 msgid "$from_dayname $from_day $from_month"
 msgstr "$from_dayname $from_day|ordinal of $from_month"
 
-#: ../../../include/functions.php:343
+#: ../../../include/functions.php:344
 msgid "$from_dayname $from_day $from_month, $from_time"
 msgstr "$from_dayname $from_day|ordinal of $from_month, $from_time"
 
-#: ../../../include/functions.php:348
+#: ../../../include/functions.php:349
 msgid ""
 "$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day "
 "$till_month $till_time"
@@ -418,28 +429,28 @@ msgstr ""
 "$from_dayname $from_day|ordinal of $from_month $from_time till $till_dayname "
 "$till_day|ordinal of $till_month $till_time"
 
-#: ../../../include/functions.php:350
+#: ../../../include/functions.php:351
 msgid "$from_dayname $from_day $from_month, $from_time tot $till_time"
 msgstr ""
 "$from_dayname $from_day|ordinal of $from_month, $from_time till $till_time"
 
-#: ../../../include/functions.php:374
+#: ../../../include/functions.php:375
 msgid "vanaf $from_time"
 msgstr "starts at $from_time"
 
-#: ../../../include/functions.php:381
+#: ../../../include/functions.php:382
 msgid "$from_day $from_month tot $till_day $till_month"
 msgstr "$from_month $from_day|ordinal till $till_month $till_day|ordinal"
 
-#: ../../../include/functions.php:383
+#: ../../../include/functions.php:384
 msgid "$from_day tot $till_day $till_month"
 msgstr "$from_day|ordinal till $till_day|ordinal of $till_month"
 
-#: ../../../include/functions.php:386
+#: ../../../include/functions.php:387
 msgid "$from_time tot $till_time"
 msgstr "$from_time till $till_time"
 
-#: ../../../include/functions.php:505
+#: ../../../include/functions.php:506
 msgid "en"
 msgstr "and"
 
@@ -454,12 +465,12 @@ msgstr "You!"
 #: ../../../include/member.php:88
 #: ../../../include/models/DataModelForum.php:657
 #: ../../../include/models/DataModelForum.php:680
-#: ../../../include/models/DataModelMember.php:602
+#: ../../../include/models/DataModelMember.php:590
 #: ../../../themes/default/views/forum.php:501
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: ../../../include/models/DataModelCommissie.php:278
+#: ../../../include/models/DataModelCommissie.php:273
 msgid "onbekend"
 msgstr "unknown"
 
@@ -486,7 +497,7 @@ msgid "Alle groepen"
 msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:671
-#: ../../../include/models/DataModelMember.php:587
+#: ../../../include/models/DataModelMember.php:575
 #: ../../../themes/default/views/boeken/boeken.php:336
 #: ../../../themes/default/views/boeken/boeken.php:357
 #: ../../../themes/default/views/boeken/boeken.php:399
@@ -516,7 +527,7 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: ../../../include/models/DataModelFotoboekFaces.php:74
+#: ../../../include/models/DataModelFotoboekFaces.php:75
 #: ../../../themes/default/views/profiel/profiel.phtml:39
 #, php-format
 msgid "Foto's van %s"
@@ -526,26 +537,26 @@ msgstr "Photos of %s"
 msgid "Favoriete foto's"
 msgstr "Liked photos"
 
-#: ../../../include/models/DataModelMember.php:590
+#: ../../../include/models/DataModelMember.php:578
 #: ../../../themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../include/models/DataModelMember.php:593
+#: ../../../include/models/DataModelMember.php:581
 #: ../../../themes/default/views/almanak/almanak.php:29
 #: ../../../themes/default/views/almanak/almanak.phtml:46
 #: ../../../themes/default/views/profiel/profiel.phtml:150
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../include/models/DataModelMember.php:596
+#: ../../../include/models/DataModelMember.php:584
 #: ../../../themes/default/views/almanak/almanak.php:34
 #: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:154
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../include/models/DataModelMember.php:599
+#: ../../../include/models/DataModelMember.php:587
 #: ../../../themes/default/views/almanak/almanak.php:39
 #: ../../../themes/default/views/almanak/almanak.phtml:48
 #: ../../../themes/default/views/profiel/profiel.phtml:158
@@ -572,7 +583,7 @@ msgstr "next"
 msgid "Volgende pagina"
 msgstr "Next page"
 
-#: ../../../include/view.php:100
+#: ../../../include/view.php:99
 #, php-format
 msgid ""
 "Dit deel van de website is alleen toegankelijk voor Cover-leden. Vul "
@@ -585,12 +596,12 @@ msgstr ""
 "password you can %s a news password. If you have any problems, please send "
 "an email to %s."
 
-#: ../../../include/view.php:100 ../../../include/view.php:108
+#: ../../../include/view.php:99 ../../../include/view.php:107
 #: ../../../themes/default/views/common.php:4
 msgid "aanvragen"
 msgstr "request"
 
-#: ../../../include/view.php:100 ../../../include/view.php:108
+#: ../../../include/view.php:99 ../../../include/view.php:107
 #: ../../../themes/default/views/common.php:4
 #: ../../../themes/default/views/confirm.php:5
 #: ../../../themes/default/views/agenda/not_found.phtml:3
@@ -598,7 +609,7 @@ msgstr "request"
 msgid "de WebCie"
 msgstr "the WebCie"
 
-#: ../../../include/view.php:108
+#: ../../../include/view.php:107
 #, php-format
 msgid ""
 "Dit deel van de website is alleen toegankelijk voor het bestuur. Vul "
@@ -759,7 +770,7 @@ msgstr ""
 "Hey, this committee is looking for new members. Are you interested?<br>Tell "
 "your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
 
-#: ../../../search.php:21 ../../../themes/default/views/forum.php:873
+#: ../../../search.php:22 ../../../themes/default/views/forum.php:873
 #: ../../../themes/default/views/almanak/almanak.phtml:53
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:8
 #: ../../../themes/default/views/gastenboek/gastenboek.phtml:13
@@ -1044,11 +1055,6 @@ msgstr ""
 msgid "Bestellingen"
 msgstr "Orders"
 
-#: ../../../themes/default/views/common.php:3
-#: ../../../themes/default/views/nieuwlid/auth.phtml:1
-msgid "Geen toegang"
-msgstr "No access"
-
 #: ../../../themes/default/views/common.php:4
 #, php-format
 msgid ""
@@ -1286,7 +1292,7 @@ msgstr "Option"
 #: ../../../themes/default/views/forum.php:1057
 #: ../../../themes/default/views/forum.php:1128
 #: ../../../themes/default/views/forum.php:1181
-#: ../../../themes/default/views/fotoboek/_photo.phtml:10
+#: ../../../themes/default/views/fotoboek/_photo.phtml:28
 #: ../../../themes/default/views/profiel/profiel.phtml:77
 #: ../../../themes/default/views/profiel/profiel.phtml:125
 #: ../../../themes/default/views/profiel/profiel.phtml:161
@@ -2023,7 +2029,6 @@ msgid "Alle agendapunten op weigeren zetten"
 msgstr "Put all calendar events to deny"
 
 #: ../../../themes/default/views/agenda/moderate.phtml:55
-#: ../../../themes/default/views/fotoboek/_photos.phtml:48
 msgid "Toepassen"
 msgstr "Apply changes"
 
@@ -2055,7 +2060,7 @@ msgid "Beginjaar"
 msgstr "Starting year"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:42
-#: ../../../themes/default/views/fotoboek/_photos.phtml:37
+#: ../../../themes/default/views/fotoboek/_photo.phtml:59
 #: ../../../themes/default/views/profiel/profiel.phtml:133
 msgid "Zichtbaarheid"
 msgstr "Visibility"
@@ -2623,7 +2628,7 @@ msgid "Markeer alle boeken als gezien"
 msgstr "Mark all books as seen"
 
 #: ../../../themes/default/views/fotoboek/_navigation.phtml:12
-#: ../../../themes/default/views/fotoboek/_photo.phtml:31
+#: ../../../themes/default/views/fotoboek/_photo.phtml:49
 msgid "Vorige"
 msgstr "Previous"
 
@@ -2640,7 +2645,7 @@ msgid "Ga naar bovenliggend boek"
 msgstr "Go to parent book"
 
 #: ../../../themes/default/views/fotoboek/_navigation.phtml:25
-#: ../../../themes/default/views/fotoboek/_photo.phtml:34
+#: ../../../themes/default/views/fotoboek/_photo.phtml:52
 msgid "Volgende"
 msgstr "Next"
 
@@ -2652,25 +2657,25 @@ msgstr "Go to next book"
 msgid "Deze foto komt uit"
 msgstr "This photo originates from"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:27
-#: ../../../themes/default/views/fotoboek/_photo.phtml:91
+#: ../../../themes/default/views/fotoboek/_photo.phtml:45
+#: ../../../themes/default/views/fotoboek/_photo.phtml:116
 msgid "Haal markering als favoriet weg"
 msgstr "Remove favorite mark"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:27
-#: ../../../themes/default/views/fotoboek/_photo.phtml:92
+#: ../../../themes/default/views/fotoboek/_photo.phtml:45
+#: ../../../themes/default/views/fotoboek/_photo.phtml:117
 msgid "Markeer als favoriet"
 msgstr "Mark as favorite"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:31
+#: ../../../themes/default/views/fotoboek/_photo.phtml:49
 msgid "Ga naar vorige foto"
 msgstr "Go to the previous photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:34
+#: ../../../themes/default/views/fotoboek/_photo.phtml:52
 msgid "Ga naar volgende foto"
 msgstr "Go to next photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:43
+#: ../../../themes/default/views/fotoboek/_photo.phtml:64
 #: ../../../themes/default/views/fotoboek/_reactie.phtml:15
 #: ../../../themes/default/views/fotoboek/foto.phtml:1
 #: ../../../themes/default/views/fotoboek/foto_backup.phtml:1
@@ -2679,32 +2684,28 @@ msgstr "Go to next photo"
 msgid "Foto"
 msgstr "Photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:56
-#: ../../../themes/default/views/fotoboek/_photo.phtml:277
+#: ../../../themes/default/views/fotoboek/_photo.phtml:79
+#: ../../../themes/default/views/fotoboek/_photo.phtml:314
 msgid "Niet getagged"
 msgstr "Not yet tagged"
 
-#: ../../../themes/default/views/fotoboek/_photos.phtml:26
+#: ../../../themes/default/views/fotoboek/_photos.phtml:41
 #, php-format
 msgid "%d lid vindt deze foto awesome"
 msgid_plural "%d leden vinden deze foto awesome"
 msgstr[0] "%d member thinks this photo is awesome"
 msgstr[1] "%d members think this photo totally rocks!"
 
-#: ../../../themes/default/views/fotoboek/_photos.phtml:29
+#: ../../../themes/default/views/fotoboek/_photos.phtml:44
+msgid "Verborgen voor anderen"
+msgstr "Hidden from index"
+
+#: ../../../themes/default/views/fotoboek/_photos.phtml:47
 #, php-format
 msgid "%d reactie"
 msgid_plural "%d reacties"
 msgstr[0] "%d comment"
 msgstr[1] "%d comments"
-
-#: ../../../themes/default/views/fotoboek/_photos.phtml:41
-msgid "Toon deze foto in mijn overzicht"
-msgstr "Show this photo in my photo book"
-
-#: ../../../themes/default/views/fotoboek/_photos.phtml:45
-msgid "Verberg deze foto in mijn overzicht"
-msgstr "Hide this photo from my photo book"
 
 #: ../../../themes/default/views/fotoboek/_random_photos.phtml:11
 msgid "Willekeurige foto's"
@@ -2770,6 +2771,18 @@ msgstr "FotoCie"
 #: ../../../themes/default/views/fotoboek/photo_not_found.phtml:2
 msgid "De opgegeven foto bestaat niet"
 msgstr "The given photo does not exist"
+
+#: ../../../themes/default/views/fotoboek/privacy.phtml:14
+msgid "Toon in het overzicht van mij"
+msgstr "Show photo in my personal photo book"
+
+#: ../../../themes/default/views/fotoboek/privacy.phtml:18
+msgid "Laat weg uit het overzicht van mij"
+msgstr "Hide from my personal photo book"
+
+#: ../../../themes/default/views/fotoboek/privacy.phtml:21
+msgid "Zichtbaarheid instellen"
+msgstr "Change visibility"
 
 #: ../../../themes/default/views/fotoboekreacties/confirm_delete.phtml:3
 #, php-format
@@ -3499,6 +3512,12 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Toon deze foto in mijn overzicht"
+#~ msgstr "Show this photo in my photo book"
+
+#~ msgid "Verberg deze foto in mijn overzicht"
+#~ msgstr "Hide this photo from my photo book"
 
 #~ msgid "Afstudeerplaatsen"
 #~ msgstr "PHD positions"
