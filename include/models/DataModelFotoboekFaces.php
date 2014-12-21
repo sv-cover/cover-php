@@ -32,7 +32,23 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		$condition = sprintf('fotos.id IN (SELECT foto_id FROM foto_faces WHERE lid_id = %d AND deleted = FALSE)',
 			$this->get('member_id'));
 
-		return array_reverse($this->model->find($condition), true);
+		$hidden = get_model('DataModelFotoboekPrivacy')->find(sprintf('lid_id=%d', $this->get('member_id')));
+
+		$hidden_ids = array_map(function($iter) { return $iter->get('foto_id'); }, $hidden);
+
+		// If this is not my own faces album, hide all the hidden faces as well
+		if ($this->get('member_id') != logged_in('id'))
+			$condition .= sprintf(' AND fotos.id NOT IN (%s)', implode(',', $hidden_ids));
+
+		$photos = $this->model->find($condition);
+
+		// If this is my own face album, mark hidden photos
+		foreach ($photos as $photo)
+			$photo->classes[] = in_array($photo->get_id(), $hidden_ids)
+				? 'privacy-hidden'
+				: 'privacy-visible';
+
+		return array_reverse($photos, true);
 	}
 }
 
@@ -86,7 +102,13 @@ class DataModelFotoboekFaces extends DataModel
 			t.voornaam as tagged_by__voornaam,
 			t.tussenvoegsel as tagged_by__tussenvoegsel,
 			t.achternaam as tagged_by__achternaam,
-			t.privacy as tagged_by__privacy
+			t.privacy as tagged_by__privacy,
+			(SELECT COUNT(1)
+				FROM foto_hidden f_h
+				WHERE
+					f_h.foto_id = foto_faces.foto_id
+					AND f_h.lid_id = foto_faces.lid_id
+			) as hidden
 			FROM {$this->table}
 			LEFT JOIN leden l ON l.id = foto_faces.lid_id
 			LEFT JOIN leden t ON t.id = foto_faces.tagged_by

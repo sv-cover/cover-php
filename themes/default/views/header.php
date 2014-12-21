@@ -402,7 +402,8 @@
 		</script>
 		
 	</head>
-	<body onLoad="page_load();" id="world">
+	<body onLoad="page_load();">
+		<div class="world">
 		<div class="header clearfix">
 				' . create_message() . '
 				<div class="login">

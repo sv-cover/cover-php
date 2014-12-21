@@ -542,10 +542,9 @@ CREATE TABLE foto_faces (
 );
 
 CREATE TABLE foto_hidden (
-    id SERIAL NOT NULL,
     foto_id integer NOT NULL REFERENCES "fotos" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     lid_id integer REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT foto_hidden_pkey PRIMARY KEY (id)
+    CONSTRAINT foto_hidden_pkey PRIMARY KEY (foto_id, lid_id)
 );
 
 --

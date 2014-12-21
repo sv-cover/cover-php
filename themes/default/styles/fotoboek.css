@@ -202,6 +202,24 @@ table.navigation td:nth-child(3) {
 	display: block;
 }
 
+.photos .privacy-preference {
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	width: 15px;
+	height: 15px;
+	z-index: 15;
+	background: green;
+}
+
+.photos .privacy-hidden .privacy-preference {
+	background: red;
+}
+
+.photos .privacy-preference > ul {
+	z-index: 20;
+}
+
 .flow-gallery {
 	margin: 0;
 	padding: 0;
@@ -260,7 +278,8 @@ table.navigation td:nth-child(3) {
 }
 
 .photos .flow-image-container .description,
-.photos .flow-image-container .comments {
+.photos .flow-image-container .comments,
+.photos .flow-image-container .privacy {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -268,17 +287,29 @@ table.navigation td:nth-child(3) {
 	padding: 5px;
 	color: white;
 	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-	z-index: 3;
-    /*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
-}
-
-.photos .flow-image-container .comments {
 	font-weight: normal;
 	opacity: 0.8;
+    z-index: 3;
+	/*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
 }
 
+.photos .flow-image-container .description {
+	font-weight: bold;
+	opacity: 1.0;
+}
+
+.photos .flow-image-container .privacy {
+	font-style: italic;
+} 
+
+.photos .flow-image-container .privacy + .comments,
+.photos .flow-image-container .privacy + .description,
 .photos .flow-image-container .comments + .description {
 	bottom: 15px;
+} 
+
+.photos .flow-image-container .privacy + .comments + .description  {
+	bottom: 30px;
 } 
 
 .photos .flow-image-container .selection-checkbox {

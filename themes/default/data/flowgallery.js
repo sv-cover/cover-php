@@ -147,7 +147,7 @@ $(document).ready(function() {
 	$('.flow-gallery').each(function() {
 		var $area = $(this);
 
-		var items = $(this).find('li').map(function() {
+		var items = $(this).children('li').map(function() {
 			var $thumb = $(this).find('img').first(),
 				tw = parseInt($thumb.attr('width')),
 				th = parseInt($thumb.attr('height'));

@@ -1,0 +1,23 @@
+<h1><?=__('Zichtbaarheid foto')?></h1>
+<div class="messageBox">
+	
+	<!--
+	<div class="photo">
+		<img src="<?=markup_format_attribute(strip_protocol($photo->get('url'))) ?>" <?=($size = $photo->get_size()) ? vsprintf('width="%d" height="%d"', $size) : '' ?> class="full-size-photo">
+	</div>
+	-->
+
+	<form class="privacy-preference-form" method="post" action="fotoboek.php?photo=<?=$photo->get_id()?>&amp;module=privacy">
+		<ul>
+			<li>
+				<input type="radio" id="privacy-visibility-visible" name="visibility" value="visible" <?=$visibility == 'visible' ? 'checked' : ''?>>
+				<label for="privacy-visibility-visible"><?=__('Toon in het overzicht van mij') ?></label>
+			</li>
+			<li>
+				<input type="radio" id="privacy-visibility-hidden" name="visibility" value="hidden" <?=$visibility == 'hidden' ? 'checked' : ''?>>
+				<label for="privacy-visibility-hidden"><?=__('Laat weg uit het overzicht van mij') ?></label>
+			</li>
+		</ul>
+		<button type="submit" class="button"><?=__('Zichtbaarheid instellen')?></button>
+	</form>
+</div>

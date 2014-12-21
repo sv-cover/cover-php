@@ -144,6 +144,44 @@
 		}
 	}
 
+	class ControllerFotoboekPrivacy extends Controller
+	{
+		protected $photo;
+
+		public function __construct(DataIterPhoto $photo)
+		{
+			$this->photo = $photo;
+
+			$this->model = get_model('DataModelFotoboekPrivacy');
+		}
+
+		protected function get_content($view, $params)
+		{
+			$this->run_header(array('title' => __('Zichtbaarheid foto')));
+			run_view($view, null, null, $params);
+			$this->run_footer();
+		}
+
+		protected function run_impl()
+		{
+			if (!logged_in())
+				throw new UnauthorizedException();
+
+			$response = array();
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+				if ($_POST['visibility'] == 'hidden')
+					$this->model->mark_hidden($this->photo, logged_in_member());
+				else
+					$this->model->mark_visible($this->photo, logged_in_member());
+			
+			$response['photo'] = $this->photo;
+			$response['visibility'] = $this->model->is_visible($this->photo, logged_in_member()) ? 'visible' : 'hidden';
+
+			$this->get_content('fotoboek::privacy', $response);
+		}
+	}
+
 	class ControllerFotoboek extends Controller {
 		var $model = null;
 
@@ -152,6 +190,8 @@
 		protected $faces_controller;
 
 		protected $likes_controller;
+
+		protected $privacy_controller;
 
 		function ControllerFotoboek() {
 			$this->model = get_model('DataModelFotoboek');
@@ -468,9 +508,11 @@
 				$book = $this->model->get_root_book();
 			}
 
+			// Likes book
 			if (logged_in() && isset($_GET['book']) && $_GET['book'] == 'liked')
 				$book = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
 
+			// Faces book
 			elseif (isset($_GET['book']) && preg_match('/^member_(\d+)$/', $_GET['book'], $match)) {
 				$member = get_model('DataModelMember')->get_iter($match[1]);
 				$book = get_model('DataModelFotoboekFaces')->get_book($member);
@@ -479,6 +521,7 @@
 			if ($photo) {
 				$this->likes_controller = new ControllerFotoboekLikes($photo);
 				$this->faces_controller = new ControllerFotoboekFaces($photo);
+				$this->privacy_controller = new ControllerFotoboekPrivacy($photo);
 			}
 			
 			if (!$photo) {
@@ -516,6 +559,8 @@
 				$this->likes_controller->run();
 			elseif (isset($_GET['module']) && $_GET['module'] == 'faces')
 				$this->faces_controller->run();
+			elseif (isset($_GET['module']) && $_GET['module'] == 'privacy')
+				$this->privacy_controller->run();
 			elseif (isset($_GET['view']) && $_GET['view'] == 'original')
 				$this->_view_original($photo);
 			else

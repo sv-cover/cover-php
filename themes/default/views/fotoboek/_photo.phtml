@@ -2,6 +2,24 @@
 $like_model = get_model('DataModelFotoboekLikes');
 $likes = count($like_model->get_for_photo($iter));
 $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
+
+$photo_of_current_user = false;
+$photo_is_visible = true;
+$faces = get_model('DataModelFotoboekFaces')->get_for_photo($iter);
+
+if (logged_in()) {
+	// Determine whether this photo would normally show up in photos of me.
+	foreach ($faces as $face) {
+		if ($face->get('lid_id') == logged_in('id')) {
+			$photo_of_current_user = true;
+			break;
+		}
+	}
+
+	$privacy_model = get_model('DataModelFotoboekPrivacy');
+	$photo_is_visible = $privacy_model->is_visible($iter, logged_in_member());
+}
+
 ?>
 <?php if (member_in_commissie(COMMISSIE_FOTOCIE)): ?>
 	<div class="foto_titel">
@@ -37,12 +55,15 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 		<input id="tagging-toggle" class="cmn-toggle cmn-toggle-round" type="checkbox">
 		<label for="tagging-toggle"></label>
 		<?php endif ?>
+		<?php if ($photo_of_current_user): ?>
+		<a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form"><?=__('Zichtbaarheid')?></a>
+		<?php endif ?>
 	</nav>
 	
 	<div id="photo" data-id="<?=$iter->get_id()?>" <?php if (get_policy('DataModelFotoboekFaces')->user_can_create()) printf('data-create-action="%s"', markup_format_attribute($faces_controller->link_to_create())) ?>>
 		<img src="<?=markup_format_attribute(strip_protocol($iter->get('url'))) ?>" alt="<?= __('Foto') ?>" <?=($size = $iter->get_size()) ? vsprintf('width="%d" height="%d"', $size) : '' ?> class="full-size-photo">
 
-		<?php foreach (get_model('DataModelFotoboekFaces')->get_for_photo($iter) as $face): ?>
+		<?php foreach ($faces as $face): ?>
 		<div id="face_<?=$face->get_id()?>" class="face <?=$face->get('lid_id') || $face->get('custom_label') ? 'tagged' : 'untagged' ?> <?php if ($face->get('lid_id') && $face->get('lid_id') == logged_in('id')) echo 'me' ?>" style="<?=vsprintf("left: %0.2F%%; top: %0.2F%%; width: %0.2F%%; height: %0.2F%%;", $face->get_position())?>"
 			<?php if (get_policy($face->model)->user_can_delete($face)) printf('data-delete-action="%s"',
 				markup_format_attribute($faces_controller->link_to_delete($face))) ?>
@@ -83,6 +104,11 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 	}
 
 	<?php if (logged_in()): ?>
+	var $photo = $('#photo'),
+		$image = $photo.find('.full-size-photo'),
+		$toggle = $('#tagging-toggle'),
+		cancelNextClick = false;
+
 	$('.like-form').submit(function(e) {
 		e.preventDefault();
 		$form = $(this);
@@ -96,11 +122,6 @@ $liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
 			$form.find('.like-count').text(response.likes);
 		});
 	});
-
-	var $photo = $('#photo'),
-		$image = $photo.find('.full-size-photo'),
-		$toggle = $('#tagging-toggle')
-		cancelNextClick = false;
 
 	function make_face_editable($face)
 	{

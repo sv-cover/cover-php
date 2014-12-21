@@ -73,7 +73,29 @@ jQuery(function($) {
 	var inline_link_handler = function(e) {
 		e.preventDefault();
 
-		var $target = $(this).closest($(this).data('placement-selector'));
+		var $target = null;
+
+		if ($(this).data('placement-selector') == 'modal') {
+			var $modal = $('<div class="modal">'),
+				$modalWindow = $('<div class="window">').appendTo($modal);
+
+			$target = $('<div>').appendTo($modalWindow);
+
+			$modal.insertBefore($('.world'));//.delay(100).addClass('')
+
+			// Close modal on submit
+			$modal.on('submit', 'form', function(e) {
+				e.preventDefault();
+				$modal.remove();
+				$.post($(this).attr('action'), $(this).serializeArray(), function(text) {
+					document.location.reload();
+				});
+			});
+		}
+		else {
+			$target = $(this).closest($(this).data('placement-selector'));
+		}
+
 		var url = this.nodeName == 'FORM'
 			? this.action
 			: this.href;
@@ -87,7 +109,6 @@ jQuery(function($) {
 
 		if ($(this).attr('method') == 'post') {
 			$tmp.load(url, $(this).serializeArray(), function(text, status, xhr) {
-				console.log(xhr);
 				$target.replaceWith($tmp);
 			});
 		}
@@ -129,3 +150,36 @@ jQuery.fn.autocompleteAlmanac = function(options)
 		};
 	});
 };
+
+jQuery(function($) {
+	$('form.privacy-preference').submit(function(e) {
+		e.preventDefault();
+
+		$.post(this.action, $(this).serializeArray(), function(response, status, xhr) {
+			$('#photo_' + response.photo_id)
+				.removeClass('privacy-visible privacy-hidden')
+				.addClass('privacy-' + response.visibility);
+		});
+	});
+
+	$('form.privacy-preference').focus(function(e) {
+		var pos = $(this).offset();
+		console.log(pos);
+
+		$(this).children('ul').show().css({
+			'position': 'fixed',
+			'top': pos.top - window.scrollY + 'px',
+			'left': pos.left - window.scrollX + 'px'
+		});
+	});
+
+	$('form.privacy-preference').blur(function(e) {
+		$(this).children('ul').hide();
+	});
+
+	$('form.privacy-preference').children('ul').hide();
+
+	$('form.privacy-preference input[type=radio]').change(function(e) {
+		$(this.form).submit();
+	});
+});
