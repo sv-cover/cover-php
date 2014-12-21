@@ -48,7 +48,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 				? 'privacy-hidden'
 				: 'privacy-visible';
 
-		return array_reverse($photos, true);
+		return array_reverse($photos);
 	}
 }
 
