@@ -10,7 +10,7 @@ $my_likes = logged_in()
 $visibility = array();
 
 if ($iter instanceof DataIterFacesPhotobook
-	&& $iter->get('member_id') == logged_in('id'))
+	&& in_array(logged_in('id'), $iter->get('member_ids')))
 {
 	$privacy_model = get_model('DataModelFotoboekPrivacy');
 	$visibility = $privacy_model->get_visibility_for_photos($photos, logged_in_member());

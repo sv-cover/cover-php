@@ -17,9 +17,11 @@ class DataIterFace extends DataIter
 
 class DataIterFacesPhotobook extends DataIterPhotobook
 {
+	private $_cached_photos = null;
+
 	public function get_id()
 	{
-		return sprintf('member_%d', $this->get('member_id'));
+		return sprintf('member_%s', implode('_', $this->get('member_ids')));
 	}
 
 	public function get_books()
@@ -29,26 +31,32 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 
 	public function get_photos()
 	{
-		$condition = sprintf('fotos.id IN (SELECT foto_id FROM foto_faces WHERE lid_id = %d AND deleted = FALSE)',
-			$this->get('member_id'));
+		if ($this->_cached_photos !== null)
+			return $this->_cached_photos;
 
-		$hidden = get_model('DataModelFotoboekPrivacy')->find(sprintf('lid_id=%d', $this->get('member_id')));
+		$conditions = array();
 
-		$hidden_ids = array_map(function($iter) { return $iter->get('foto_id'); }, $hidden);
+		foreach ($this->get('member_ids') as $member_id)
+			$conditions[] = sprintf('fotos.id IN (SELECT foto_id FROM foto_faces WHERE lid_id = %d AND deleted = FALSE)', $member_id);
+		
+		// Find which photos should not be shown for this set of members
+		$hidden = get_model('DataModelFotoboekPrivacy')->find(sprintf('lid_id IN(%s)', implode(',', $this->get('member_ids'))));
+		
+		// Also grab the ids of all the photos which should actually be hidden (e.g. are not of the logged in member)
+		$excluded_ids = array_filter(array_map(function($iter) { return logged_in('id') != $iter->get('lid_id') ? $iter->get('foto_id') : false; }, $hidden));
 
-		// If this is not my own faces album, hide all the hidden faces as well
-		if ($this->get('member_id') != logged_in('id') && count($hidden_ids) > 0)
-			$condition .= sprintf(' AND fotos.id NOT IN (%s)', implode(',', $hidden_ids));
+		// If there are any photos that should be hidden, exclude them from the query
+		if (count($excluded_ids) > 0)
+			$conditions[] = sprintf('fotos.id NOT IN (%s)', implode(',', $excluded_ids));
+		
+		$photos = $this->model->find(implode("\nAND ", $conditions));
 
-		$photos = $this->model->find($condition);
+		return $this->_cached_photos = array_reverse($photos);
+	}
 
-		// If this is my own face album, mark hidden photos
-		foreach ($photos as $photo)
-			$photo->classes[] = in_array($photo->get_id(), $hidden_ids)
-				? 'privacy-hidden'
-				: 'privacy-visible';
-
-		return array_reverse($photos);
+	public function count_photos()
+	{
+		return count($this->get_photos());
 	}
 }
 
@@ -66,20 +74,17 @@ class DataModelFotoboekFaces extends DataModel
 		return $this->find(sprintf('foto_faces.foto_id = %d', $photo->get_id()));
 	}
 
-	public function get_book(DataIter $member)
+	public function get_book(array $members)
 	{
-		$photo_count = $this->db->query_value(sprintf("SELECT COUNT(id) FROM {$this->table} WHERE lid_id = %d", $member->get_id()));
-
 		return new DataIterFacesPhotobook(
 				get_model('DataModelFotoboek'), -1, array(
-				'titel' => sprintf(__('Foto\'s van %s'), $member->get('voornaam')),
-				'has_photos' => $photo_count > 0,
-				'num_photos' => $photo_count,
+				'titel' => sprintf(__('Foto\'s van %s'),
+					implode(__(' en '), array_map(function($member) { return $member->get('voornaam'); }, $members))),
 				'num_books' => 0,
 				'read_status' => 'read',
 				'datum' => null,
 				'parent' => 0,
-				'member_id' => $member->get_id()));
+				'member_ids' => array_map(function($member) { return $member->get_id(); }, $members)));
 	}
 
 	protected function _generate_query($where)

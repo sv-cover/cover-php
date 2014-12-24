@@ -512,10 +512,14 @@
 			if (logged_in() && isset($_GET['book']) && $_GET['book'] == 'liked')
 				$book = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
 
-			// Faces book
-			elseif (isset($_GET['book']) && preg_match('/^member_(\d+)$/', $_GET['book'], $match)) {
-				$member = get_model('DataModelMember')->get_iter($match[1]);
-				$book = get_model('DataModelFotoboekFaces')->get_book($member);
+			// Faces book (hidden feature: you can add multiple ids for stalker modus)
+			elseif (isset($_GET['book']) && preg_match('/^member_(\d+(?:_\d+)*)$/', $_GET['book'], $match)) {
+				$members = array();
+
+				foreach (explode('_', $match[1]) as $member_id)
+					$members[] = get_model('DataModelMember')->get_iter($member_id);
+
+				$book = get_model('DataModelFotoboekFaces')->get_book($members);
 			}
 
 			if ($photo) {

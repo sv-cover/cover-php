@@ -136,7 +136,7 @@
 
 			if (logged_in()) {
 				$books[] = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
-				$books[] = get_model('DataModelFotoboekFaces')->get_book(logged_in_member());
+				$books[] = get_model('DataModelFotoboekFaces')->get_book(array(logged_in_member()));
 			}
 			
 			return $books;
