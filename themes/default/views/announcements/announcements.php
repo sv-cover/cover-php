@@ -7,7 +7,7 @@ class AnnouncementsView extends CRUDView
 {
 	protected $__file = __FILE__;
 
-	protected function get_committee_options()
+	protected function get_committee_options(DataIter $iter = null)
 	{
 		$model = get_model('DataModelCommissie');
 
@@ -17,6 +17,12 @@ class AnnouncementsView extends CRUDView
 
 		foreach ($committees as $committee)
 			$pairs[$committee->get_id()] = $committee->get('naam');
+
+		if ($iter
+			&& $iter->has('committee')
+			&& !isset($pairs[$iter->get('committee')])
+			&& member_in_commissie(COMMISSIE_EASY))
+			$pairs[$iter->get('committee')] = $iter->getIter('committee')->get('naam');
 
 		return $pairs;
 	}
