@@ -3,7 +3,7 @@
 	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form" data-partial-selector=".announcement" data-placement-selector=".announcement">
 		<div>
 			<?=label(__('Plaats namens commissie'), 'committee', $errors, true)?>
-			<?=select_field('committee', $this->get_committee_options(), $iter->data)?>
+			<?=select_field('committee', $this->get_committee_options($iter), $iter->data)?>
 		</div>
 
 		<div>
