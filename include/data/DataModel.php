@@ -3,9 +3,13 @@
 
 	class DataIterNotFoundException extends NotFoundException
 	{
-		public function __construct($id)
+		public function __construct($id, DataModel $source = null)
 		{
-			parent::__construct(sprintf('DataIter with id "%d" was not found', $id));
+			parent::__construct(sprintf('%s with id %d was not found',
+				$source
+					? substr(get_class($source), strlen('DataModel'))
+					: 'DataIter',
+				$id));
 		}
 	}
 
@@ -230,7 +234,7 @@
 			$data = $this->db->query_first($this->_generate_query($this->_id_string($id)));
 
 			if ($data === null)
-				throw new DataIterNotFoundException($id);
+				throw new DataIterNotFoundException($id, $this);
 
 			return $this->_row_to_iter($data);
 		}

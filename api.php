@@ -32,9 +32,6 @@ class ControllerApi extends Controller
 
 		$member = $user_model->login($email, md5($password));
 
-		if (!$member)
-			return array('result' => false, 'error' => 'User not found');
-
 		$session_model = get_model('DataModelSession');
 
 		$session = $session_model->create($member->get('id'), $application);
@@ -57,17 +54,11 @@ class ControllerApi extends Controller
 		$session_model = get_model('DataModelSession');
 
 		$session = $session_model->get_iter($session_id);
-
-		if (!$session)
-			return array('result' => false, 'error' => 'Session not found');
-
+		
 		$user_model = get_model('DataModelMember');
 
 		$member = $user_model->get_iter($session->get('member_id'));
-
-		if (!$member)
-			return array('result' => false, 'error' => 'Member not found');
-
+		
 		return array('result' => $member->data);
 	}
 
@@ -80,9 +71,6 @@ class ControllerApi extends Controller
 		$session_model = get_model('DataModelSession');
 
 		$session = $session_model->get_iter($session_id);
-
-		if (!$session)
-			return array('result' => false, 'error' => 'Session not found');
 
 		// Find in which committees the member is active
 		$member_model = get_model('DataModelMember');
@@ -147,8 +135,7 @@ class ControllerApi extends Controller
 		{
 			$committee = $committee_model->get_iter($committee_id);
 
-			if ($committee)
-				$committees[$committee->get('login')] = $committee->get('naam');
+			$committees[$committee->get('login')] = $committee->get('naam');
 		}
 
 		return array('result' => $committees);
@@ -209,6 +196,12 @@ class ControllerApi extends Controller
 
 		header('Content-Type: application/json');
 		echo json_encode($response);
+	}
+
+	public function run_exception(Exception $e)
+	{
+		header('Content-Type: application/json');
+		echo json_encode(array('error' => $e->getMessage()));
 	}
 }
 
