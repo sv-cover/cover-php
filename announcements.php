@@ -11,9 +11,11 @@ class ControllerAnnouncements extends ControllerCRUD
 		$this->model = get_model('DataModelAnnouncement');
 	}
 
-	protected function _get_title($iter)
+	protected function _get_title($iter = null)
 	{
-		return $iter instanceof DataIter ? $iter->get('subject') : __('Mededelingen');
+		return $iter instanceof DataIter
+			? $iter->get('subject')
+			: __('Mededelingen');
 	}
 	
 	protected function _validate(array $data, array &$errors)
