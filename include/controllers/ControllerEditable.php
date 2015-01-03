@@ -2,8 +2,9 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once('include/controllers/Controller.php');
-	require_once('include/editable.php');
+	require_once 'include/controllers/Controller.php';
+	require_once 'include/editable.php';
+	require_once 'include/policies/policy.php';
 
 	/** 
 	  * A class implementing the editable page controller. This class 
@@ -20,7 +21,8 @@
 		  * ControllerEditable constructor
 		  * @id the id (or title) of the editable page
 		  */
-		function ControllerEditable($id) {
+		public function __construct($id)
+		{
 			$this->model = get_model('DataModelEditable');
 			
 			if ($id instanceof DataIterEditable)
@@ -34,20 +36,13 @@
 					$this->page = new DataIterEditable($this->model, -1, array('titel' => $id));
 			}
 		}
-		
-		/**
-		  * Get the editable page content. This function does
-		  * not run the header or the footer view since the class
-		  * is meant to be embedded.
-		  * @view the editable::view to get
-		  * @iter the iter to pass on to the view
-		  * @params optional; the params to pass on to the view
-		  */
-		function get_content($view, $iter, $params = null) {
-			run_view('editable::' . $view, $this->model, $iter, $params);
+
+		protected function _get_title($iters = null)
+		{
+			return $this->page->get_title($this->_get_language());
 		}
 		
-		function _get_language() {
+		protected function _get_language() {
 			if (isset($_POST['editable_language']) && i18n_valid_language($_POST['editable_language']))
 				return $_POST['editable_language'];
 			elseif (isset($_GET['editable_language']) && i18n_valid_language($_GET['editable_language']))
@@ -56,7 +51,7 @@
 				return i18n_get_language();
 		}
 		
-		function _get_content_field() {
+		protected function _get_content_field() {
 			$language = $this->_get_language();
 
 			if ($language == 'nl')
@@ -65,9 +60,9 @@
 				return 'content_' . $language;
 		}
 
-		function _user_can_edit(DataIter $iter)
+		protected function _user_can_edit(DataIter $iter)
 		{
-			return member_in_commissie($iter->get('owner')) || member_in_commissie(COMMISSIE_BESTUUR);
+			return get_policy($this->model)->user_can_update($iter);
 		}
 		
 		/**
@@ -82,7 +77,7 @@
 		  * otherwise. This function already gets the content for
 		  * the view showing the error when it returns false
 		  */
-		function _page_prepare($iter, &$page, &$field) {
+		protected function _page_prepare($iter, &$page, &$field) {
 			if (!$this->_user_can_edit($iter)) {
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
@@ -103,11 +98,11 @@
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
 					
-					echo __('Er zit iets niet goed met de taalinstelling. Neem contact op met de WebCie');
+					echo __('Er zit iets niet goed met de taalinstelling.');
 					exit();
 				}
 				
-				$this->get_content('something_went_wrong', null, array('message' => sprintf(__('Er zit iets niet goed met de taalinstelling. Neem contact op met %s'), '<a href="mailto:webcie@ai.rug.nl">' . __('de Webcie') . '</a>')));
+				$this->get_content('error', null, array('message' => __('Er zit iets niet goed met de taalinstelling.')));
 				return false;
 			}
 
@@ -116,7 +111,7 @@
 			return true;	
 		}
 		
-		function _prepare_mail($iter, $page) {
+		protected function _prepare_mail($iter, $page) {
 			$data = $iter->data;
 			$data['member_naam'] = member_full_name();
 			$data['page'] = $page;
@@ -149,7 +144,7 @@
 		  * Saves an editable page
 		  * @iter a #DataIter of the editable page
 		  */
-		function _do_save($iter) {
+		protected function _do_save($iter) {
 			if (!$this->_page_prepare($iter, $page, $field))
 				return;
 			
@@ -177,7 +172,7 @@
 			if (isset($_GET['xmlrequest']))
 			{
 				ob_end_clean();
-				
+
 				if ($success !== null)
 					printf(__('De pagina %s is opgeslagen.'), $iter->get('titel'));
 				else
@@ -191,16 +186,19 @@
 			else
 				$_SESSION['alert'] = $this->model->db->get_last_error();
 
-			header('Location: ' . add_request(get_request(), 'editable_edit=' . $iter->get('id') . '&editable_language=' . $this->_get_language()));
-			exit();
+			$this->redirect(add_request(get_request(), 'editable_edit=' . $iter->get('id') . '&editable_language=' . $this->_get_language()));
 		}
 		
 		/**
 		  * Views the editable page in edit mode
 		  * @iter a #DataIter of the editable page
 		  */
-		function _view_edit($iter) {
-			$params = array('language' => $this->_get_language());
+		protected function _view_edit($iter)
+		{
+			$params = array(
+				'language' => $this->_get_language(),
+				'field' => $this->_get_content_field()
+			);
 
 			if (!$this->_user_can_edit($iter))
 				$this->get_content('read_only', $iter, $params);
@@ -208,7 +206,7 @@
 				$this->get_content('edit', $iter, $params);
 		}
 		
-		function _view_editable($page) {
+		protected function _view_editable($page) {
 			$language = $this->_get_language();
 			$field = $this->_get_content_field();
 
@@ -230,7 +228,8 @@
 		  * page transparently to the controller embedding the
 		  * page
 		  */
-		function run() {
+		protected function run_impl()
+		{
 			if (!$this->page) {
 				if (isset($_GET['xmlrequest'])) {
 					ob_end_clean();
@@ -240,8 +239,9 @@
 				}
 				
 				$this->get_content('editable', $this->page);
-			} elseif (isset($_POST['submeditable']) && $_POST['submeditable'] == $this->page->get('id'))
+			} elseif (isset($_POST['submeditable']) && $_POST['submeditable'] == $this->page->get('id')) {
 				$this->_do_save($this->page);
+			}
 			elseif (isset($_GET['editable_edit']) && $_GET['editable_edit'] == $this->page->get('id'))
 				$this->_view_edit($this->page);
 			else
@@ -255,7 +255,7 @@
 
 		public function user_can_update()
 		{
-			return member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie($this->page->get('owner'));
+			return get_policy($this->model)->user_can_update($this->page);
 		}
 
 		public function link_to_update()

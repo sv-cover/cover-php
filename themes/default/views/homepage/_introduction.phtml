@@ -11,5 +11,5 @@ $editable = new ControllerEditable('Startpagina');
 	<h1><?=markup_format_text($editable->get_title())?></h1>
 </div>
 <div class="messageBox">
-<?php $editable->run(); ?>
+<?= $editable->run_embedded() ?>
 </div>
