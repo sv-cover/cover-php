@@ -13,12 +13,7 @@ class DataModelAnnouncement extends DataModel
 		parent::__construct($db, 'announcements');
 	}
 
-	protected function _id_string($id)
-	{
-		return sprintf("%s.id = %d", $this->table, $id);
-	}
-
-	/* protected */ function _generate_query($conditions)
+	protected function _generate_query($conditions)
 	{
 		return "SELECT
 				{$this->table}.id,

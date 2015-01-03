@@ -975,7 +975,8 @@
 		  * permissions associated with it
 		  * @iter a #DataIter representing a forum
 		  */
-		function delete($iter) {
+		public function delete(Dataiter $iter)
+		{
 			parent::delete($iter);
 			
 			$id = intval($iter->get('id'));

@@ -196,7 +196,7 @@ class DataModelFotoboekFaces extends DataModel
 	/**
 	 * @override
 	 */
-	protected function _delete($table, $iter)
+	protected function _delete($table, DataIter $iter)
 	{
 		$this->db->update($table,
 			array('deleted' => 'TRUE'),

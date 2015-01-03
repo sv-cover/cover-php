@@ -534,22 +534,6 @@
 		}
 		
 		/**
-		  * Delete a photo. This will automatically delete any replies
-		  * for the photo
-		  * @iter a #DataIter representing a photo
-		  *
-		  * @result whether or not the delete was successful
-		  */
-		function delete(DataIterPhoto $iter) {
-			$result = parent::delete($iter);
-			
-			/* Delete all reacties */
-			$result = $result && $this->db->delete('foto_reacties', 'foto = ' . intval($iter->get_id()));
-
-			return $result;
-		}
-
-		/**
 		  * Insert a book
 		  * @iter a #DataIter representing a book
 		  *
