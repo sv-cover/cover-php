@@ -13,7 +13,7 @@
 	  * @result true if the currently logged in member is a member of
 	  * the commissie with id `id'
 	  */
-	function member_in_commissie($id, $easy = true) {
+	function member_in_commissie($id = null, $easy = true) {
 		$member_data = logged_in();
 
 		if (!$member_data)
@@ -23,7 +23,9 @@
 		if ($easy && in_array(COMMISSIE_EASY, $member_data['commissies']))
 			return true;
 		
-		return in_array($id, $member_data['commissies']);
+		return $id
+			? in_array($id, $member_data['commissies'])
+			: count($member_data['commissies']) > 0;
 	}
 
 	/** @group Member
