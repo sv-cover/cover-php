@@ -70,6 +70,10 @@
 
 	class ControllerFotoboekLikes extends Controller
 	{
+		protected $photo;
+
+		protected $model;
+
 		public function __construct(DataIterPhoto $photo)
 		{
 			$this->photo = $photo;
@@ -77,7 +81,7 @@
 			$this->model = get_model('DataModelFotoboekLikes');
 		}
 
-		public function run()
+		protected function run_impl()
 		{
 			if (logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
 				$this->model->toggle($this->photo, logged_in('id'));
@@ -155,11 +159,9 @@
 			$this->model = get_model('DataModelFotoboekPrivacy');
 		}
 
-		protected function get_content($view, $params)
+		protected function _get_title($iters = null)
 		{
-			$this->run_header(array('title' => __('Zichtbaarheid foto')));
-			run_view($view, null, null, $params);
-			$this->run_footer();
+			return __('Zichtbaarheid foto');
 		}
 
 		protected function run_impl()
@@ -178,12 +180,13 @@
 			$response['photo'] = $this->photo;
 			$response['visibility'] = $this->model->is_visible($this->photo, logged_in_member()) ? 'visible' : 'hidden';
 
-			$this->get_content('fotoboek::privacy', $response);
+			$this->get_content('fotoboek::privacy', array(), $response);
 		}
 	}
 
-	class ControllerFotoboek extends Controller {
-		var $model = null;
+	class ControllerFotoboek extends Controller
+	{
+		protected $model;
 
 		protected $policy;
 
@@ -193,30 +196,21 @@
 
 		protected $privacy_controller;
 
-		function ControllerFotoboek() {
+		public function __construct()
+		{
 			$this->model = get_model('DataModelFotoboek');
 
 			$this->policy = get_policy($this->model);
 		}
-		
-		function get_content($view, $iter = null, $params = null) {
+
+		protected function _get_title($iter = null)
+		{
 			if ($iter instanceof DataIterPhotobook)
-				$title = $iter->get('titel');
+				return $iter->get('titel');
 			elseif ($iter instanceof DataIterPhoto)
-				$title = $iter->get_book()->get('titel');
+				return $iter->get_book()->get('titel');
 			else
-				$title = __('Fotoboek');
-
-			$params = array_merge(
-				array(
-					'faces_controller' => $this->faces_controller,
-					'likes_controller' => $this->likes_controller),
-				$params ?: array()
-			);
-
-			$this->run_header(compact('title'));
-			run_view('fotoboek::' . $view, $this->model, $iter, $params);
-			$this->run_footer();
+				return __('Fotoboek');
 		}
 		
 		function _page_prepare($commissie = true)

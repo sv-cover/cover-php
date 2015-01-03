@@ -4,27 +4,19 @@
 	
 	class ControllerHomepage extends Controller
 	{
-		function __construct() {
-			parent::Controller('homepage');
+		protected function _get_title($iters = null)
+		{
+			return __('Homepage');
 		}
-		
-		function get_content() {
-			$this->run_header(Array('menu' => $this->view, 'title' => ucfirst($this->view)));
 
-			run_view($this->view, $this->model, $this->iter, $this->params);
-			
-			$this->run_footer();
-		}
-		
-		function _process_language() {
+		protected function _process_language()
+		{
 			ob_end_clean();
 
 			$language = get_post('language');
 			
-			if (!i18n_valid_language($language)) {
-				header('Location: index.php');
-				exit();
-			}
+			if (!i18n_valid_language($language))
+				$this->redirect('index.php');
 
 			$member_data = logged_in();
 			
@@ -44,15 +36,15 @@
 				? $_POST['return_to']
 				: 'index.php';
 
-			header('Location: ' . $return_path);
-			exit();
+			$this->redirect($return_path);
 		}
 		
-		function run_impl() {
+		protected function run_impl()
+		{
 			if (isset($_POST['submindexlanguage']))
 				$this->_process_language();
 			else
-				$this->get_content();
+				$this->get_content('homepage');
 		}		
 	}
 	

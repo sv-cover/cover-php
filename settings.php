@@ -10,9 +10,15 @@ class ControllerSettings extends ControllerCRUD
 		$this->model = get_model('DataModelConfiguratie');
 	}
 
-	protected function _get_title($iter)
+	protected function _get_title($iter = null)
 	{
-		return $iter instanceof DataIter ? $iter->get('key') : __('Instellingen');
+		if ($iter instanceof DataIter)
+			if ($iter->has('key'))
+				return sprintf(__("Sleutel '%s'"), $iter->get('key'));
+			else
+				return __('Nieuwe sleutel');
+		else
+			return __('Instellingen');
 	}
 
 	public function link_to_read(DataIter $item)
