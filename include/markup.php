@@ -191,7 +191,7 @@
 	}
 	
 	function _markup_parse_header(&$markup) {
-		$markup = preg_replace('/\[(\/)?h(.+?)\]\s*/ies', '"<$1h$2>"', $markup);
+		$markup = preg_replace('/\[(\/)?h(.+?)\]\s*/is', '<$1h$2>', $markup);
 	}
 
 	function _markup_parse_placeholders(&$markup, $placeholders)
