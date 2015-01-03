@@ -6,9 +6,13 @@ require_once 'include/controllers/Controller.php';
 
 class ControllerCRUD extends Controller
 {
+	protected $model;
+
 	protected $_var_view = 'view';
 
 	protected $_var_id = 'id';
+
+	protected $_default_view = 'index';
 
 	protected function _create($data, array &$errors)
 	{
@@ -47,58 +51,6 @@ class ControllerCRUD extends Controller
 	protected function _index()
 	{
 		return $this->model->get();
-	}
-
-	protected function _form_is_submitted($form)
-	{
-		return $_SERVER['REQUEST_METHOD'] == 'POST';
-			// && !empty($_POST['_' . $form . '_nonce'])
-			// && in_array($_POST['_' . $form . '_nonce'], $_SESSION[$form . '_nonce']);
-	}
-
-	protected function run_view($view, DataModel $model, $iter, array $params)
-	{
-		list($view, $method) = explode('::', $view, 2);
-
-		$view_class = sprintf('%sView', $view);
-
-		$search_paths = array(
-			'themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php',
-			'themes/default/views/' . $view . '/' . $view . '.php');
-
-		$path = find_file($search_paths);
-
-		if ($path === null)
-			throw new RuntimeException("Could not find view class '$view_class' while trying to run view $view::$method.");
-
-		include_once $path;
-
-		$instance = new $view_class($this);
-
-		call_user_func([$instance, $method], array_merge($params, compact('model', 'iter')));
-	}
-
-	protected function _get_title($iters = null)
-	{
-		return '';
-	}
-
-	protected function _get_view_name()
-	{
-		return strtolower(substr(get_class($this), strlen('Controller')));
-	}
-
-	protected function _get_default_view_params()
-	{
-		return array_merge(
-			get_object_vars($this), // stuff like 'model' and other user defined stuff
-			array('controller' => $this));
-	}
-
-	protected function _get_preferred_response()
-	{
-		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
-			array('application/json', 'text/html', '*/*'));
 	}
 
 	protected function _send_json($data)
@@ -141,25 +93,6 @@ class ControllerCRUD extends Controller
 			$links['delete'] = $this->link_to_delete($iter);
 
 		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
-	}
-
-	protected function get_content($view, $iters = null, array $params = array())
-	{
-		if (!$this->embedded)
-			$this->run_header(array('title' => $this->_get_title($iters)));
-
-		if (strpos($view, '::') === false)
-			$view = $this->_get_view_name() . '::' . $view;
-
-		$this->run_view($view, $this->model, $iters, array_merge($this->_get_default_view_params(), $params));
-
-		if (!$this->embedded)
-			$this->run_footer();
-	}
-
-	public function link(array $arguments)
-	{
-		return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
 	}
 
 	protected function link_to_iter(DataIter $iter, array $arguments = array())
@@ -315,7 +248,7 @@ class ControllerCRUD extends Controller
 		}
 	}
 	
-	/* protected */ function run_impl()
+	protected function run_impl()
 	{
 		$iter = null;
 
@@ -327,30 +260,18 @@ class ControllerCRUD extends Controller
 
 			if (!$view)
 				$view = 'read';
-
-			if (!$iter)
-				return run_view('common::not_found');
 		}
 
-		switch ($view ?: 'index')
-		{
-			case 'create':
-				return $this->run_create();
+		if (!$view)
+			$view = $this->_default_view;
 
-			case 'read':
-				return $this->run_read($iter);
-			
-			case 'update':
-				return $this->run_update($iter);
+		$method = sprintf('run_%s', $view);
 
-			case 'delete':
-				return $this->run_delete($iter);
+		$self = new ReflectionClass($this);
 
-			case 'index':
-				return $this->run_index();
-			
-			default:
-				return run_view('common::not_found');
-		}
+		if ($self->hasMethod($method) && $self->getMethod($method)->isPublic())
+			return call_user_func_array([$this, $method], $iter ? [$iter] : []);
+		else
+			throw new NotFoundException('view not found');
 	}
 }
