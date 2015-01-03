@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2014-12-21 14:37+0100\n"
+"POT-Creation-Date: 2015-01-03 15:53+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -476,7 +476,7 @@ msgstr "unknown"
 
 #: ../../../include/models/DataModelForum.php:622
 #: ../../../include/models/DataModelForum.php:669
-#: ../../../themes/default/views/announcements/announcements.php:27
+#: ../../../themes/default/views/announcements/announcements.php:33
 #: ../../../themes/default/views/forum.php:841
 #: ../../../themes/default/views/forum.php:869
 #: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:32
@@ -527,11 +527,15 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: ../../../include/models/DataModelFotoboekFaces.php:75
+#: ../../../include/models/DataModelFotoboekFaces.php:81
 #: ../../../themes/default/views/profiel/profiel.phtml:39
 #, php-format
 msgid "Foto's van %s"
 msgstr "Photos of %s"
+
+#: ../../../include/models/DataModelFotoboekFaces.php:82
+msgid " en "
+msgstr " and "
 
 #: ../../../include/models/DataModelFotoboekLikes.php:121
 msgid "Favoriete foto's"
@@ -772,8 +776,8 @@ msgstr ""
 
 #: ../../../search.php:22 ../../../themes/default/views/forum.php:873
 #: ../../../themes/default/views/almanak/almanak.phtml:53
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:8
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:13
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:16
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:21
 #: ../../../themes/default/views/search/index.phtml:1
 msgid "Zoeken"
 msgstr "Search"
@@ -817,11 +821,11 @@ msgstr "Attend"
 msgid "foto van %s"
 msgstr "Photo of %s"
 
-#: ../../../themes/default/views/announcements/announcements.php:28
+#: ../../../themes/default/views/announcements/announcements.php:34
 msgid "Alleen ingelogde leden"
 msgstr "Only logged in members"
 
-#: ../../../themes/default/views/announcements/announcements.php:29
+#: ../../../themes/default/views/announcements/announcements.php:35
 msgid "Alleen ingelogde actieve leden"
 msgstr "Only logged in active members"
 
@@ -1246,7 +1250,7 @@ msgid "Onderwerp"
 msgstr "Subject"
 
 #: ../../../themes/default/views/forum.php:175
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:38
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:46
 msgid "Bericht plaatsen"
 msgstr "Add a message"
 
@@ -1390,7 +1394,7 @@ msgstr "New forum"
 #: ../../../themes/default/views/commissies/form.phtml:45
 #: ../../../themes/default/views/fotoboek/competition.phtml:41
 #: ../../../themes/default/views/fotoboek/competition.phtml:62
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:32
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:40
 #: ../../../themes/default/views/lidworden/lidworden.phtml:29
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:43
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:74
@@ -1402,6 +1406,7 @@ msgid "Naam"
 msgstr "Name"
 
 #: ../../../themes/default/views/forum.php:789
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:12
 #: ../../../themes/default/views/fotoboek/_info.phtml:17
 msgid "Beschrijving"
 msgstr "Description"
@@ -2716,10 +2721,6 @@ msgstr "Random photos"
 msgid "geen titel"
 msgstr "no title"
 
-#: ../../../themes/default/views/fotoboek/_update_faces_button.phtml:6
-msgid "Indexeer gezichten"
-msgstr "Find faces"
-
 #: ../../../themes/default/views/fotoboek/_upload_photos_button.phtml:2
 msgid "Upload foto's als niet-fotocie lid"
 msgstr "Upload photos as a non-FotoCie member"
@@ -2822,41 +2823,41 @@ msgstr "New comment"
 msgid "Er zijn nog geen reacties"
 msgstr "There are no comments yet"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:7
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:15
 msgid "Nieuw bericht"
 msgstr "New message"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:33
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:41
 #: ../../../themes/default/views/wachtwoordvergeten/wachtwoordvergeten.phtml:7
 msgid "E-Mail"
 msgstr "E-Mail"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:34
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:42
 #: ../../../themes/default/views/profiel/profiel.phtml:108
 msgid "Homepage"
 msgstr "Homepage"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:48
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:56
 msgid "Spam"
 msgstr "Spam"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:49
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:57
 msgid "Berichten"
 msgstr "Messages"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:49
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:57
 msgid "tot en met"
 msgstr "til"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:49
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:57
 msgid "van"
 msgstr "from"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:73
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:81
 msgid "homepage"
 msgstr "homepage"
 
-#: ../../../themes/default/views/gastenboek/gastenboek.phtml:73
+#: ../../../themes/default/views/gastenboek/gastenboek.phtml:81
 msgid "Ga naar homepage"
 msgstr "Go to the homepage"
 
@@ -3512,6 +3513,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Indexeer gezichten"
+#~ msgstr "Find faces"
 
 #~ msgid "Toon deze foto in mijn overzicht"
 #~ msgstr "Show this photo in my photo book"

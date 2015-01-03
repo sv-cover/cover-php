@@ -54,38 +54,29 @@ def insert_face(foto_id, face):
 
 	return False
 
-if len(sys.argv) != 2:
-	print("Usage: %s book-id" % sys.argv[0])
-	exit(1)
 
-cur.execute("SELECT id, url FROM fotos WHERE boek = %s", (sys.argv[1],));
+if __name__ == '__main__':
+	if len(sys.argv) < 2:
+		print("Usage: %s photo-id [photo-id ...]" % sys.argv[0])
+		exit(1)
 
-for row in cur.fetchall():
-	faces = find_faces(row[1])
+	photo_ids = [int(photo_id) for photo_id in sys.argv[1:]];
 
-	print("%d:" % row[0])
+	cur.execute("SELECT id, url FROM fotos WHERE id = ANY (%s)", (photo_ids,));
 
-	for face in faces:
-		print("  x: %0.2f y: %0.2f w: %0.2f h: %0.2f" % face)
-		if insert_face(row[0], face):
-			print("  added")
-			conn.commit()
-		else:
-			print("  duplicate")
+	for row in cur.fetchall():
+		faces = find_faces(row[1])
 
+		print("%d:" % row[0])
 
-# img = cv2.imread('sachin.jpg')
-# gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+		for face in faces:
+			print("  x: %0.2f y: %0.2f w: %0.2f h: %0.2f" % face)
+			if insert_face(row[0], face):
+				print("  added")
+				conn.commit()
+			else:
+				print("  duplicate")
 
-# faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-# for (x,y,w,h) in faces:
-#     cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-#     roi_gray = gray[y:y+h, x:x+w]
-#     roi_color = img[y:y+h, x:x+w]
-#     eyes = eye_cascade.detectMultiScale(roi_gray)
-#     for (ex,ey,ew,eh) in eyes:
-#         cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+	print("Finished.")
+	exit(0)
 
-# cv2.imshow('img',img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()

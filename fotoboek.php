@@ -339,7 +339,9 @@
 			
 			$urls = str_replace("\r", '', explode("\n", get_post('urls')));
 			$thumbs = str_replace("\r", '', explode("\n", get_post('thumbnail_urls')));
-						
+
+			$new_photos = array();
+
 			if (!get_post('urls') || count($urls) != count($thumbs)) {
 				$this->get_content('fotoboek', $book, array('errors' => array('urls', 'thumbnail_urls'), 'errortype' => 'fotos'));
 				return;
@@ -360,9 +362,14 @@
 						'added_on' => 'NOW()'),
 						array('added_on'));
 				
-				$this->model->insert($iter);
+				$id = $this->model->insert($iter);
+				
+				$new_photos[] = new DataIterPhoto($this->model, $id, $iter->data);
 			}
 
+			$face_model = get_model('DataModelFotoboekFaces');
+			$face_model->refresh_faces($new_photos);
+			
 			/* Delete composite thumbnail for the book so it will
 			   get rerendered */
 			$this->redirect('fotoboek.php?book=' . $book->get('id'));
@@ -402,34 +409,6 @@
 			$this->redirect('fotoboek.php?book=' . $book->get_id());
 		}
 
-		protected function _process_update_faces(DataIterPhotobook $book)
-		{
-			$this->_page_prepare();
-
-			if (!ctype_digit((string) $book->get_id()))
-				throw new Exception('You can only recognise faces in real photo books');
-
-			header('Content-Type: text/plain');
-
-			// Disable output buffering
-			while (ob_get_level())
-				ob_end_clean();
-
-			// Open the process
-			$p = popen(get_config_value('path_to_python', 'python') . ' opt/facedetect/suggest_faces.py ' . $book->get_id() . ' 2>&1', 'r');
-
-			if (!$p)
-				throw new Exception("Could not start process");
-
-			while (($buffer = fgets($p, 4096)) !== false)
-			{
-				echo "$buffer\n";
-				ob_flush();
-			}
-		
-			fclose($p);
-		}
-		
 		protected function _process_mark_read(DataIterPhotobook $book)
 		{
 			if (logged_in())
@@ -543,8 +522,6 @@
 					$this->_process_del_book($book);
 				elseif (isset($_GET['editbook']))
 					$this->_view_edit_book($book);
-				elseif (isset($_POST['update_faces']))
-					$this->_process_update_faces($book);
 				else {
 					if (!$this->policy->user_can_read($book))
 						return $this->get_content('book_not_found');

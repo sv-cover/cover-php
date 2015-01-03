@@ -87,6 +87,34 @@ class DataModelFotoboekFaces extends DataModel
 				'member_ids' => array_map(function($member) { return $member->get_id(); }, $members)));
 	}
 
+	/**
+	 * Start a python process in the background to detect faces in the photos.
+	 *
+	 * @var DataIterPhoto[] $photos
+	 * @return int pid
+	 */
+	public function refresh_faces(array $photos)
+	{
+		$photo_ids = array();
+
+		foreach ($photos as $photo) {
+			assert('$photo instanceof DataIterPhoto');
+			$photo_ids[] = $photo->get_id();
+		}
+
+		$command = sprintf('%s opt/facedetect/suggest_faces.py %s >> %s 2>&1 & echo $!',
+			escapeshellarg(get_config_value('path_to_python', 'python')),
+			implode(' ', $photo_ids),
+			escapeshellarg(get_config_value('path_to_suggest_faces_log', '/dev/null')));
+		
+		$pid = shell_exec($command);
+
+		if (is_null($pid))
+			throw new Exception("Could not start suggest_faces process");
+
+		return intval(rtrim($pid, " "));
+	}
+
 	protected function _generate_query($where)
 	{
 		return "SELECT

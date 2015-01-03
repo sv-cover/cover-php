@@ -1,8 +1,0 @@
-<?php if (member_in_commissie(COMMISSIE_FOTOCIE)
-	&& ctype_digit((string) $iter->get_id())
-	&& $iter->count_photos() > 0): ?>
-<form method="post" action="">
-	<input type="hidden" name="update_faces" value="true">
-	<button type="submit" class="button update-faces-button"><?=__('Indexeer gezichten')?></button>
-</form>
-<?php endif ?>
