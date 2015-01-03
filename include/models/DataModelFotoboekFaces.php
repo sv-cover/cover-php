@@ -19,16 +19,40 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 {
 	private $_cached_photos = null;
 
+	/**
+	 * Add a special id to this photo book, consisting of 'member_' and the 
+	 * member ids shown in this book.
+	 * 
+	 * @override
+	 * @return string
+	 */
 	public function get_id()
 	{
 		return sprintf('member_%s', implode('_', $this->get('member_ids')));
 	}
 
+	/**
+	 * Override DataIterPhotobook::get_books because this special photo book
+	 * has no child books.
+	 *
+	 * @override
+	 * @return DataIterPhotobook[]
+	 */
 	public function get_books()
 	{
 		return array();
 	}
 
+	/**
+	 * Get all photos with the faces of the members of this photo book. Note 
+	 * that this method caches the query results in $this->_cached_photos so
+	 * changing the member_ids value after calling this method once causes
+	 * undefined behavior.
+	 *
+	 * @override
+	 * @return DataIterPhoto[] photos with all members tagged ordered from
+	 * newest to oldest.
+	 */
 	public function get_photos()
 	{
 		if ($this->_cached_photos !== null)
@@ -54,6 +78,9 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		return $this->_cached_photos = array_reverse($photos);
 	}
 
+	/**
+	 * @override
+	 */
 	public function count_photos()
 	{
 		return count($this->get_photos());
@@ -69,13 +96,28 @@ class DataModelFotoboekFaces extends DataModel
 		parent::__construct($db, 'foto_faces');
 	}
 
+	/**
+	 * Find all tags/faces for a given photo.
+	 * 
+	 * @var DataIterPhoto $photo
+	 * @return DataIterFace[] faces
+	 */
 	public function get_for_photo(DataIterPhoto $photo)
 	{
 		return $this->find(sprintf('foto_faces.foto_id = %d', $photo->get_id()));
 	}
 
+	/**
+	 * Get photo book of all photos in which each photo all $members are tagged together.
+	 *
+	 * @var DataIterMember[] $members
+	 * @return DataIterFacesPhotobook
+	 */
 	public function get_book(array $members)
 	{
+		foreach ($members as $member)
+			assert('$member instanceof DataIterMember');
+
 		return new DataIterFacesPhotobook(
 				get_model('DataModelFotoboek'), -1, array(
 				'titel' => sprintf(__('Foto\'s van %s'),
@@ -115,6 +157,9 @@ class DataModelFotoboekFaces extends DataModel
 		return intval(rtrim($pid, " "));
 	}
 
+	/**
+	 * @override
+	 */
 	protected function _generate_query($where)
 	{
 		return "SELECT
@@ -148,6 +193,9 @@ class DataModelFotoboekFaces extends DataModel
 			WHERE foto_faces.deleted = FALSE " . ($where ? ' AND ' . $where : '');
 	}
 
+	/**
+	 * @override
+	 */
 	protected function _delete($table, $iter)
 	{
 		$this->db->update($table,
