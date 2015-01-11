@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-01-03 15:53+0100\n"
+"POT-Creation-Date: 2015-01-11 12:32+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 1.7.3\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -470,7 +470,7 @@ msgstr "You!"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: ../../../include/models/DataModelCommissie.php:273
+#: ../../../include/models/DataModelCommissie.php:277
 msgid "onbekend"
 msgstr "unknown"
 
@@ -527,13 +527,13 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: ../../../include/models/DataModelFotoboekFaces.php:81
+#: ../../../include/models/DataModelFotoboekFaces.php:123
 #: ../../../themes/default/views/profiel/profiel.phtml:39
 #, php-format
 msgid "Foto's van %s"
 msgstr "Photos of %s"
 
-#: ../../../include/models/DataModelFotoboekFaces.php:82
+#: ../../../include/models/DataModelFotoboekFaces.php:124
 msgid " en "
 msgstr " and "
 
@@ -2663,12 +2663,12 @@ msgid "Deze foto komt uit"
 msgstr "This photo originates from"
 
 #: ../../../themes/default/views/fotoboek/_photo.phtml:45
-#: ../../../themes/default/views/fotoboek/_photo.phtml:116
+#: ../../../themes/default/views/fotoboek/_photo.phtml:118
 msgid "Haal markering als favoriet weg"
 msgstr "Remove favorite mark"
 
 #: ../../../themes/default/views/fotoboek/_photo.phtml:45
-#: ../../../themes/default/views/fotoboek/_photo.phtml:117
+#: ../../../themes/default/views/fotoboek/_photo.phtml:119
 msgid "Markeer als favoriet"
 msgstr "Mark as favorite"
 
@@ -2690,7 +2690,11 @@ msgid "Foto"
 msgstr "Photo"
 
 #: ../../../themes/default/views/fotoboek/_photo.phtml:79
-#: ../../../themes/default/views/fotoboek/_photo.phtml:314
+msgid "Klik om te taggen"
+msgstr "Click to tag"
+
+#: ../../../themes/default/views/fotoboek/_photo.phtml:81
+#: ../../../themes/default/views/fotoboek/_photo.phtml:316
 msgid "Niet getagged"
 msgstr "Not yet tagged"
 

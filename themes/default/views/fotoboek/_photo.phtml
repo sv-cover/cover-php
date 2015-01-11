@@ -75,6 +75,8 @@ if (logged_in()) {
 				<a href="profiel.php?lid=<?=$lid->get_id()?>" class="name"><?=member_full_name($lid, false, true)?></a>
 				<?php elseif ($face->get('custom_label')): ?>
 				<a class="name" href="#"><?=markup_format_text($face->get('custom_label'))?></a>
+				<?php elseif (get_policy($face->model)->user_can_update($face)): ?>
+				<a class="name" href="#"><?=__('Klik om te taggen')?></a>
 				<?php else: ?>
 				<a class="name" href="#"><?=__('Niet getagged')?></a>
 				<?php endif ?>
