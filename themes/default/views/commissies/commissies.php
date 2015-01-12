@@ -18,9 +18,9 @@ class CommissiesView extends CRUDView
 	private function find_image($basename)
 	{
 		$search_paths = array(
-			'images/' . $basename . '.gif', // Brainstorm
-			'images/' . $basename . '.jpg', // Small photo
-			'images/' . $basename . '.png'	// Committee logo
+			'images/committees/' . $basename . '.gif', // Brainstorm
+			'images/committees/' . $basename . '.jpg', // Small photo
+			'images/committees/logos/' . $basename . '.png'	// Committee logo
 		);
 
 		foreach ($search_paths as $path)
