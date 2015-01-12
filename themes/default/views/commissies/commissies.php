@@ -7,22 +7,23 @@ class CommissiesView extends CRUDView
 
 	public function get_commissie_thumb($commissie)
 	{
-		return $this->find_image($commissie->get('login') . 'tn');
+		return $this->find_image(array(
+			'images/committees/' . $commissie->get('login') . 'tn.gif',
+			'images/committees/' . $commissie->get('login') . 'tn.jpg',
+			'images/committees/logos/' . $commissie->get('login') . '.png'
+		));
 	}
 
 	public function get_commissie_photo($commissie)
 	{
-		return $this->find_image($commissie->get('login'));
+		return $this->find_image(array(
+			'images/committees/' . $commissie->get('login') . '.gif',
+			'images/committees/' . $commissie->get('login') . '.jpg'
+		));
 	}
 
-	private function find_image($basename)
+	private function find_image($search_paths)
 	{
-		$search_paths = array(
-			'images/committees/' . $basename . '.gif', // Brainstorm
-			'images/committees/' . $basename . '.jpg', // Small photo
-			'images/committees/logos/' . $basename . '.png'	// Committee logo
-		);
-
 		foreach ($search_paths as $path)
 			if (file_exists($path))
 				return $path;
