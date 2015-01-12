@@ -434,7 +434,7 @@
 			if (($path = strstr($photo->get('url'), $common_path)) === false)
 				throw new RuntimeException('Could not determine path');
 
-			$real_path = '/home/commissies/fotocie/fotosGroot/' . substr($path, strlen($common_path));
+			$real_path = '/home/commissies/photocee/fotosGroot/' . substr($path, strlen($common_path));
 
 			if (!file_exists($real_path))
 				throw new NotFoundException('Could not find file: ' . $real_path);
