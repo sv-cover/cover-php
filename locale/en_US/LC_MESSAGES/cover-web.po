@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-01-11 12:32+0100\n"
+"POT-Creation-Date: 2015-01-13 18:04+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.7.1\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Zichtbaarheid foto"
 msgstr "Visibility of photo"
 
-#: ../../../fotoboek.php:208 ../../../include/models/DataModelFotoboek.php:253
+#: ../../../fotoboek.php:208 ../../../include/models/DataModelFotoboek.php:258
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:19
 #: ../../../themes/default/views/fotoboek/_books.phtml:26
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:36
@@ -454,15 +454,15 @@ msgstr "$from_time till $till_time"
 msgid "en"
 msgstr "and"
 
-#: ../../../include/member.php:44 ../../../include/member.php:78
+#: ../../../include/member.php:46 ../../../include/member.php:80
 msgid "Geen naam"
 msgstr "No name"
 
-#: ../../../include/member.php:81
+#: ../../../include/member.php:83
 msgid "Jij!"
 msgstr "You!"
 
-#: ../../../include/member.php:88
+#: ../../../include/member.php:90
 #: ../../../include/models/DataModelForum.php:657
 #: ../../../include/models/DataModelForum.php:680
 #: ../../../include/models/DataModelMember.php:590
@@ -822,10 +822,14 @@ msgid "foto van %s"
 msgstr "Photo of %s"
 
 #: ../../../themes/default/views/announcements/announcements.php:34
+#: ../../../themes/default/views/fotoboek/_books.phtml:43
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:14
 msgid "Alleen ingelogde leden"
 msgstr "Only logged in members"
 
 #: ../../../themes/default/views/announcements/announcements.php:35
+#: ../../../themes/default/views/fotoboek/_books.phtml:47
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:15
 msgid "Alleen ingelogde actieve leden"
 msgstr "Only logged in active members"
 
@@ -1406,7 +1410,7 @@ msgid "Naam"
 msgstr "Name"
 
 #: ../../../themes/default/views/forum.php:789
-#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:12
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:18
 #: ../../../themes/default/views/fotoboek/_info.phtml:17
 msgid "Beschrijving"
 msgstr "Description"
@@ -2065,6 +2069,7 @@ msgid "Beginjaar"
 msgstr "Starting year"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:42
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:12
 #: ../../../themes/default/views/fotoboek/_photo.phtml:59
 #: ../../../themes/default/views/profiel/profiel.phtml:133
 msgid "Zichtbaarheid"
@@ -2572,7 +2577,17 @@ msgstr "Edit photo book"
 msgid "Fotoboek verwijderen"
 msgstr "Delete photo book"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:40
+#: ../../../themes/default/views/fotoboek/_books.phtml:39
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:13
+msgid "Publiek"
+msgstr "Public"
+
+#: ../../../themes/default/views/fotoboek/_books.phtml:51
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:16
+msgid "Alleen ingelogde leden van de PhotoCee"
+msgstr "Only logged in members of the PhotoCee"
+
+#: ../../../themes/default/views/fotoboek/_books.phtml:61
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:49
 #, php-format
 msgid "%d boek"
@@ -2580,7 +2595,7 @@ msgid_plural "%d boeken"
 msgstr[0] "%d book"
 msgstr[1] "%d books"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:43
+#: ../../../themes/default/views/fotoboek/_books.phtml:64
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:53
 #, php-format
 msgid "%d foto"
@@ -2588,7 +2603,7 @@ msgid_plural "%d foto's"
 msgstr[0] "%d photo"
 msgstr[1] "%d photos"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:68
+#: ../../../themes/default/views/fotoboek/_books.phtml:89
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:71
 msgid ""
 "Weet je zeker dat je dit fotoboek en alle fotoboeken en foto's erin wilt "
@@ -2616,11 +2631,11 @@ msgstr "Parent book"
 msgid "Datum (dd-mm-yyyy)"
 msgstr "Date (dd-mm-yyyy)"
 
-#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:13
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:19
 msgid "Fotoboek opslaan"
 msgstr "Save photo book"
 
-#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:13
+#: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:19
 msgid "Fotoboek aanmaken"
 msgstr "Create photo book"
 
