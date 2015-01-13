@@ -286,12 +286,23 @@
 			
 			return $value;
 		}
+
+		function _check_visibility($name, $value)
+		{
+			return in_array($value, array(
+				DataModelFotoboek::VISIBILITY_PUBLIC,
+				DataModelFotoboek::VISIBILITY_MEMBERS,
+				DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS,
+				DataModelFotoboek::VISIBILITY_PHOTOCEE
+			));
+		}
 		
 		function _check_fotoboek_values(&$errors) {
 			$data = check_values(array(
-					array('name' => 'titel', 'function' => array(&$this, '_check_titel')),
-					array('name' => 'date', 'function' => array(&$this, '_check_date')),
-					array('name' => 'fotograaf', 'function' => array(&$this, '_check_fotograaf'))),
+					array('name' => 'titel', 'function' => array($this, '_check_titel')),
+					array('name' => 'date', 'function' => array($this, '_check_date')),
+					array('name' => 'fotograaf', 'function' => array($this, '_check_fotograaf')),
+					array('name' => 'visibility', 'function' => array($this, '_check_visibility'))),
 					$errors);
 			
 			if (count($errors) == 0)

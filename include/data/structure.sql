@@ -454,6 +454,7 @@ CREATE TABLE foto_boeken (
     fotograaf character varying(25),
     date date,
     beschrijving text,
+    visibility integer NOT NULL DEFAULT 0,
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
