@@ -17,13 +17,13 @@ class PolicyFotoboek implements Policy
 		if ($this->get_access_level() < $book->get('visibility'))
 			return false;
 
-		// Older photo books are not visible for non-members
-		if (!logged_in() && preg_match("/^Foto's uit ([\d]{4})\/[\d]{4}$/i", $book->get('titel'), $matches))
-			return $matches[1] == date("Y") || $matches[1] === date("Y", strtotime("-1 year"));
-
 		// Member-specific albums are also forbidden terrain
 		if (!logged_in() && $book instanceof DataIterFacesPhotobook)
 			return false;
+
+		// Older photo books are not visible for non-members
+		if (!logged_in() && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
+			return intval($match[1]) >= intval(date("Y", strtotime("-2 year")));
 
 		return true;
 	}
