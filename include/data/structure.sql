@@ -485,7 +485,7 @@ CREATE SEQUENCE foto_reacties_id_seq
 
 CREATE TABLE foto_reacties (
     id integer DEFAULT nextval('foto_reacties_id_seq'::regclass) NOT NULL,
-    foto integer NOT NULL,
+    foto integer NOT NULL REFERENCES fotos (id) ON UPDATE CASCADE ON DELETE CASCADE,
     auteur integer NOT NULL,
     reactie text NOT NULL,
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
@@ -510,7 +510,7 @@ CREATE SEQUENCE fotos_id_seq
 
 CREATE TABLE fotos (
     id integer DEFAULT nextval('fotos_id_seq'::regclass) NOT NULL,
-    boek integer NOT NULL,
+    boek integer NOT NULL REFERENCES foto_boeken (id) ON DELETE CASCADE ON UPDATE CASCADE,
     url character varying(150) NOT NULL,
     width integer,
     height integer,
