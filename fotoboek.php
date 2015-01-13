@@ -294,7 +294,7 @@
 				DataModelFotoboek::VISIBILITY_MEMBERS,
 				DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS,
 				DataModelFotoboek::VISIBILITY_PHOTOCEE
-			));
+			)) ? $value : false;
 		}
 		
 		function _check_fotoboek_values(&$errors) {
