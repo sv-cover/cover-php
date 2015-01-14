@@ -350,7 +350,8 @@
 	<head>
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta http-equiv="Content-type" content="text/html; charset=' . WEBSITE_ENCODING . '">
-	<link rel="icon" type="image/png" href="images/favicon.png">';
+	<link rel="icon" type="image/png" href="images/favicon.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">';
 		
 		$title = 'Cover :: ' . __('Studievereniging Kunstmatige Intelligentie en Informatica') . ', RuG';
 
