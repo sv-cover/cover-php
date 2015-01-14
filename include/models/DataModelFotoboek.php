@@ -1,6 +1,7 @@
 <?php
 	require_once 'include/search.php';
 	require_once 'include/data/DataModel.php';
+	require_once 'include/policies/policy.php';
 
 	class DataIterPhoto extends DataIter
 	{
