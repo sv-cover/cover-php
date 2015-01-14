@@ -279,7 +279,7 @@
 					fotos f
 					ON f.boek = c.id
 				WHERE
-					c.visiblity <= %d
+					c.visibility <= %d
 					AND c.date IS NOT NULL
 				GROUP BY
 					c.id
