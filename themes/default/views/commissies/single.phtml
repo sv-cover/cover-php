@@ -16,6 +16,8 @@ if ($iter->get('vacancies'))
 <div class="committee-page messageBox">
 	<?php $this->render_partial('foto', compact('model', 'iter')) ?>
 
+	<?php $this->render_partial('contact', compact('model', 'iter')) ?>
+
 	<div class="content">
 		<?php if($editable->user_can_update()): ?>
 		<div class="controls inline">

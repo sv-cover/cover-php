@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-01-17 01:16+0100\n"
+"POT-Creation-Date: 2015-01-17 11:27+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -2268,7 +2268,7 @@ msgstr "Back to the former boards"
 
 #: ../../../themes/default/views/besturen/index.phtml:13
 #: ../../../themes/default/views/besturen/index.phtml:25
-#: ../../../themes/default/views/commissies/single.phtml:22
+#: ../../../themes/default/views/commissies/single.phtml:24
 #: ../../../themes/default/views/homepage/_introduction.phtml:8
 #: ../../../themes/default/views/show/single.phtml:5
 msgid "bewerken"
@@ -2279,7 +2279,7 @@ msgid "Bestuur bewerken"
 msgstr "Update board"
 
 #: ../../../themes/default/views/besturen/index.phtml:25
-#: ../../../themes/default/views/commissies/single.phtml:22
+#: ../../../themes/default/views/commissies/single.phtml:24
 #: ../../../themes/default/views/homepage/_introduction.phtml:8
 #: ../../../themes/default/views/show/single.phtml:5
 msgid "Pagina bewerken"
@@ -2364,6 +2364,11 @@ msgstr "Continue to the BoekCie webshop"
 #: ../../../themes/default/views/commissies/_agenda.phtml:13
 msgid "Commissieagenda"
 msgstr "Committee agenda"
+
+#: ../../../themes/default/views/commissies/_contact.phtml:3
+#, php-format
+msgid "E-mail de %s via %s"
+msgstr "E-mail the %s at %s"
 
 #: ../../../themes/default/views/commissies/_leden_gezocht.phtml:13
 #, php-format

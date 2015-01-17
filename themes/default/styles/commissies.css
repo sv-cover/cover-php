@@ -100,3 +100,8 @@ ul.commissie-index {
 	width: 60px;
 	height: 60px;
 }
+
+.committee-contact {
+	padding: 15px;
+	text-align: center;
+}
