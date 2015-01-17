@@ -5,29 +5,27 @@
 	require_once 'include/form.php';
 	require_once 'include/webcal.php';
 	require_once 'include/markup.php';
-	require_once 'include/controllers/Controller.php';
+	require_once 'include/controllers/ControllerCRUD.php';
 	
-	class ControllerAgenda extends Controller
+	class ControllerAgenda extends ControllerCRUD
 	{
 		public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
 		}
-		
-		function get_content($view = 'index', $iter = null, $params = null) {
-			if ($iter instanceof DataIter)
-				$title = $iter->get('kop');
-			elseif (isset($_GET['year']))
-				$title = sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1);
-			else
-				$title = __('Agenda');
 
-			$this->run_header(compact('title'));
-			run_view('agenda::' . $view, $this->model, $iter, $params);
-			$this->run_footer();
+		protected function _get_title($iter = null)
+		{
+			if ($iter instanceof DataIter)
+				return $iter->get('kop');
+			elseif (isset($_GET['year']))
+				return sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1);
+			else
+				return __('Agenda');
 		}
 		
-		function _check_datum($name, $value) {
+		protected function _check_datum($name, $value)
+		{
 			/* If this is the tot field and we don't use tot
 			 * then set that value to null and return true
 			 */
@@ -57,7 +55,8 @@
 			return $value;
 		}
 		
-		function _check_length($name, $value) {
+		protected function _check_length($name, $value)
+		{
 			$lengths = array('kop' => 100, 'locatie' => 100);
 
 			if (!$value)
@@ -69,7 +68,8 @@
 			return $value;
 		}
 		
-		function _check_locatie($name, $value) {
+		protected function _check_locatie($name, $value)
+		{
 			$locatie = get_post('use_locatie');
 			check_value_checkbox($name, $locatie);
 
@@ -84,7 +84,8 @@
 			return $this->_check_length('locatie', $locatie);
 		}
 
-		function _check_facebook_id($name, $value) {
+		protected function _check_facebook_id($name, $value)
+		{
 			if (trim($value) == '')
 				return null;
 
@@ -94,7 +95,8 @@
 			return false;
 		}
 
-		function _action_prepare($iter) {
+		protected function _action_prepare($iter)
+		{
 			/* Only logged in members can attempt to do this */
 			if (!logged_in()) {
 				$this->get_content('login');
@@ -112,7 +114,8 @@
 			return true;
 		}
 		
-		function _check_values($iter) {
+		protected function _check_values($iter)
+		{
 			/* Check/format all the items */
 			$errors = array();
 			$data = check_values(
