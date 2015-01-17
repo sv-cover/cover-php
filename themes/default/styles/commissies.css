@@ -105,3 +105,48 @@ ul.commissie-index {
 	padding: 15px;
 	text-align: center;
 }
+
+.committee-navigation {
+	margin-top: -20px;
+	height: 20px;
+	position: relative;
+}
+
+.committee-navigation .previous:before {
+	position: absolute;
+	left: 0;
+	top: 4px;
+	content: '';
+	width: 0; 
+	height: 0; 
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent; 
+	border-right:4px solid white; 
+}
+
+.committee-navigation .next:before {
+	position: absolute;
+	right: 0;
+	top: 4px;
+	content: '';
+	width: 0; 
+	height: 0; 
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent; 
+	border-left:4px solid white; 
+}
+
+
+.committee-navigation .previous {
+	position: absolute;
+	padding-left: 8px;
+	top: 0;
+	left: 0;
+}
+
+.committee-navigation .next {
+	position: absolute;
+	padding-right: 8px;
+	top: 0;
+	right: 0;
+}
