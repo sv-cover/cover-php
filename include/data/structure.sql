@@ -454,6 +454,7 @@ CREATE TABLE foto_boeken (
     fotograaf character varying(25),
     date date,
     beschrijving text,
+    visibility integer NOT NULL DEFAULT 0,
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
@@ -484,7 +485,7 @@ CREATE SEQUENCE foto_reacties_id_seq
 
 CREATE TABLE foto_reacties (
     id integer DEFAULT nextval('foto_reacties_id_seq'::regclass) NOT NULL,
-    foto integer NOT NULL,
+    foto integer NOT NULL REFERENCES fotos (id) ON UPDATE CASCADE ON DELETE CASCADE,
     auteur integer NOT NULL,
     reactie text NOT NULL,
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
@@ -509,7 +510,7 @@ CREATE SEQUENCE fotos_id_seq
 
 CREATE TABLE fotos (
     id integer DEFAULT nextval('fotos_id_seq'::regclass) NOT NULL,
-    boek integer NOT NULL,
+    boek integer NOT NULL REFERENCES foto_boeken (id) ON DELETE CASCADE ON UPDATE CASCADE,
     url character varying(150) NOT NULL,
     width integer,
     height integer,
@@ -545,35 +546,6 @@ CREATE TABLE foto_hidden (
     foto_id integer NOT NULL REFERENCES "fotos" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     lid_id integer REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT foto_hidden_pkey PRIMARY KEY (foto_id, lid_id)
-);
-
---
--- TOC entry 215 (class 1259 OID 24319)
--- Name: gastenboek_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE gastenboek_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 216 (class 1259 OID 24321)
--- Name: gastenboek; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE gastenboek (
-    id integer DEFAULT nextval('gastenboek_id_seq'::regclass) NOT NULL,
-    naam character varying(100) NOT NULL,
-    email character varying(100),
-    url character varying(250),
-    message text NOT NULL,
-    date timestamp with time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    ip character varying(50),
-    spam smallint,
-    lustrum smallint DEFAULT 0
 );
 
 --
@@ -1254,23 +1226,6 @@ SELECT pg_catalog.setval('foto_reacties_id_seq', 5890, true);
 --
 
 SELECT pg_catalog.setval('fotos_id_seq', 38004, true);
-
-
---
--- TOC entry 2596 (class 0 OID 24321)
--- Dependencies: 216
--- Data for Name: gastenboek; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-
-
---
--- TOC entry 2645 (class 0 OID 0)
--- Dependencies: 215
--- Name: gastenboek_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('gastenboek_id_seq', 316306, true);
 
 
 --
@@ -3020,15 +2975,6 @@ ALTER TABLE ONLY forums
 
 ALTER TABLE ONLY foto_reacties
     ADD CONSTRAINT foto_reacties_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2426 (class 2606 OID 26022)
--- Name: gastenboek_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY gastenboek
-    ADD CONSTRAINT gastenboek_pkey PRIMARY KEY (id);
 
 
 --

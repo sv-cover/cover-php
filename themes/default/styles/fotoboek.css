@@ -416,3 +416,29 @@ table.navigation td:nth-child(3) {
 	opacity: 0.5
 }
 
+.fotoBoek .visibility {
+	display: inline-block;
+	vertical-align: top;
+	overflow: hidden;
+	width: 16px;
+	height: 16px;
+	text-indent: 20px;
+	background-repeat: no-repeat;
+	background-size: 16px 16px;
+}
+
+.visibility-public {
+	background-image: url(../images/visibility-public.png);
+}
+
+.visibility-members {
+	background-image: url(../images/visibility-members.png);
+}
+
+.visibility-active-members {
+	background-image: url(../images/visibility-active-members.png);
+}
+
+.visibility-photocee {
+	background-image: url(../images/visibility-photocee.png);
+}

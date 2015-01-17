@@ -132,20 +132,24 @@
 		public function get_functies()
 		{
 			static $functies = array(
-				'voorzitter' => 5,
-				'secretaris' => 4,
-				'penningmeester' => 3,
-				'commissaris intern' => 2,
-				'commissaris extern' => 1,
-				'algemeen lid' => 0);
+				'Voorzitter' => 5,
+				'Secretaris' => 4,
+				'Penningmeester' => 3,
+				'Commissaris Intern' => 2,
+				'Commissaris Extern' => 1,
+				'Algemeen Lid' => 0);
 			
 			return $functies;
 		}
 
 		protected function _get_functie($functie)
 		{
-			$functies = $this->get_functies();
+			$functies = array_combine(
+				array_map('strtolower', array_keys($this->get_functies())),
+				array_values($this->get_functies()));
+
 			$functie = strtolower($functie);
+			
 			return isset($functies[$functie]) ? $functies[$functie] : 0;
 		}
 		

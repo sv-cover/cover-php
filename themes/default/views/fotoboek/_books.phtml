@@ -31,6 +31,27 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			if ($policy->user_can_delete($children[$n]))
 				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get_id() . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
 
+			// Only if you can actually change the visibility of folders show or hide them.
+			if ($policy->user_can_update($children[$n]))
+				switch ($children[$n]->get('visibility'))
+				{
+					case DataModelFotoboek::VISIBILITY_PUBLIC:
+						$contents .= ' <span class="visibility visibility-public" title="' . __('Publiek') . '">' . __('Publiek') . '</span>';
+						break;
+
+					case DataModelFotoboek::VISIBILITY_MEMBERS:
+						$contents .= ' <span class="visibility visibility-members" title="' . __('Alleen ingelogde leden') . '">' . __('Alleen ingelogde leden') . '</span>';
+						break;
+
+					case DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS:
+						$contents .= ' <span class="visibility visibility-active-members" title="' . __('Alleen ingelogde actieve leden') . '">' . __('Alleen ingelogde actieve leden') . '</span>';
+						break;
+
+					case DataModelFotoboek::VISIBILITY_PHOTOCEE:
+						$contents .= ' <span class="visibility visibility-photocee" title="' . __('Alleen ingelogde leden van de PhotoCee') . '">' . __('Alleen ingelogde leden van de PhotoCee') . '</span>';
+						break;
+				}
+
 			array_push($images,$contents);
 		
 			$title = $children[$n]->get('titel');

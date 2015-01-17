@@ -9,6 +9,12 @@ table_row(label(__('Bovenliggend boek'), '', null, true) . ':', $parent ? markup
 table_row(label(__('Titel'), 'titel', $errors, true) . ':', input_text('titel', $data)) .
 table_row(label(__('Datum (dd-mm-yyyy)'), 'date', $errors) . ':', input_text('date', $data, 'field', 'datum')) .
 table_row(label(__('Fotograaf'), 'fotograaf', $errors) . ':', input_text('fotograaf', $data)) .
+table_row(label(__('Zichtbaarheid'), 'visibility', $errors) . ':', select_field('visibility', array(
+		DataModelFotoboek::VISIBILITY_PUBLIC => __('Publiek'),
+		DataModelFotoboek::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
+		DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
+		DataModelFotoboek::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
+	), $data)) .
 table_row(label(__('Beschrijving'), 'beschrijving', $errors) . ':', textarea_field('beschrijving', $data, $errors)) .
 '<tr><td colspan="2" class="submit">' . input_submit('subm', $iter->get_id() > 0 ? __('Fotoboek opslaan') : __('Fotoboek aanmaken')) . '</td></tr>
 </table>';

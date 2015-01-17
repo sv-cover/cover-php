@@ -23,9 +23,9 @@
 		if ($easy && in_array(COMMISSIE_EASY, $member_data['commissies']))
 			return true;
 		
-		return $id
-			? in_array($id, $member_data['commissies'])
-			: count($member_data['commissies']) > 0;
+		return $id === null
+			? count($member_data['commissies']) > 0
+			: in_array($id, $member_data['commissies']);
 	}
 
 	/** @group Member

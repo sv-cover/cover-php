@@ -634,3 +634,23 @@
 	{
 		return preg_replace('/^https?:/', '', $url);
 	}
+
+	/**
+	 * Implementation of array_search that supports a user-defined compare function.
+	 * Returns the key or index at which $needle is found in $haystack. If needle
+	 * is not found, it returns NULL.
+	 * 
+	 * @var $needle The item searched for
+	 * @var array $haystack The array to search in (list or hashtable)
+	 * @var callable $compare_function A compare function that gets $needle and an item
+	 *      from $haystack and should return true if they are 'equal' or false otherwise.
+	 * @return mixed the key at which $needle is found. Returns NULL if $needle is not found
+	 */
+	function array_usearch($needle, array $haystack, $compare_function)
+	{
+		foreach ($haystack as $i => $item)
+			if (call_user_func($compare_function, $needle, $item))
+				return $i;
+
+		return null;
+	}

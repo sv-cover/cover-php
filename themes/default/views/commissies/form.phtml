@@ -32,7 +32,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php if($iter->get_id()) foreach ($iter->get_members() as $member): ?>
+					<?php if ($iter->has_id()) foreach ($iter->get_members() as $member): ?>
 					<tr>
 						<td><?=member_full_name($member)?></td>
 						<td><input type="text" name="members[<?=$member->get_id()?>]" value="<?=markup_format_attribute($member->get('functie'))?>" class="autocomplete-function"></td>
