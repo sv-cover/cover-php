@@ -511,15 +511,11 @@
 		public function get_distinct_years()
 		{
 			$rows = $this->db->query("SELECT DISTINCT beginjaar
-						FROM leden
-						WHERE type IN (" . implode(',', $this->visible_types) . ")
-						ORDER BY beginjaar ASC");
-			$rows = $this->_rows_to_iters($rows);
-			$years = array();
-			foreach ($rows as $row) {
-				array_push($years,$row->get('beginjaar'));
-			}
-			return $years;
+				FROM leden
+				WHERE type IN (" . implode(',', $this->visible_types) . ")
+				ORDER BY beginjaar ASC");
+			
+			return array_map(function($row) { return $row['beginjaar']; }, $rows);
 		}
 		
 
