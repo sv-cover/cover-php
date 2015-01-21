@@ -1,6 +1,7 @@
 <?php
 	require_once 'include/search.php';
 	require_once 'include/data/DataModel.php';
+	require_once 'include/models/DataModelMember.php';
 	
 	class DataIterCommissie extends DataIter implements SearchResult
 	{
@@ -183,7 +184,7 @@
 					WHERE leden.id = actieveleden.lidid AND 
 					actieveleden.commissieid = ' . $committee->get_id());
 			
-			$iters = $this->_rows_to_iters($rows);
+			$iters = $this->_rows_to_iters($rows, 'DataIterMember');
 			
 			/* Sort by function */
 			usort($iters, array(&$this, '_sort_leden'));
