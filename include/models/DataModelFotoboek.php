@@ -399,7 +399,7 @@
 				date DESC,
 				foto_boeken.id';
 
-			if (logged_in())
+			if (get_config_value('enable_photos_read_status', true) && logged_in())
 			{
 				$select = sprintf('
 					WITH RECURSIVE book_children (id, date, visibility, parents) AS (

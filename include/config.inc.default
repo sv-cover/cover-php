@@ -23,6 +23,8 @@
 		'enable_facebook' => false,
 		'enable_facebook_rsvp' => false,
 
+		'enable_photos_read_status' => true,
+
 		'elms_id' => '',
 		'elms_secret' => ''
 	);
