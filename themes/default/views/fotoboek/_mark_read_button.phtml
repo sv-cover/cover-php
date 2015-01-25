@@ -1,4 +1,8 @@
-<?php if (logged_in() && $iter->get_id() && ctype_digit($iter->get_id()) && $iter->count_books() > 0): ?>
+<?php if (logged_in() // only logged in members can track their viewed photo books
+	&& get_config_value('enable_photos_read_status', true) // and only if enabled
+	&& $iter->get_id() // and only if we actually are watching a book
+	&& ctype_digit($iter->get_id()) && $iter->count_books() > 0): // which is not artificial (faces, likes) and has photos
+?>
 <form method="post" action="">
 	<input type="hidden" name="mark_read_recursively" value="true">
 	<button type="submit" class="button mark-read-button"><?=__('Markeer alle boeken als gezien')?></button>

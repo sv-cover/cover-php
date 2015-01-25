@@ -620,6 +620,9 @@
 
 		public function mark_read($lid_id, DataIterPhotobook $book)
 		{
+			if (!get_config_value('enable_photos_read_status', true))
+				return;
+
 			try {
 				$this->db->insert('foto_boeken_visit',
 					array(
@@ -638,6 +641,9 @@
 
 		protected function mark_children_read($lid_id, DataIterPhotobook $book)
 		{
+			if (!get_config_value('enable_photos_read_status', true))
+				return;
+			
 			$query = sprintf('
 				WITH RECURSIVE book_children (id, visiblity, parents) AS (
 						SELECT id, visiblity, ARRAY[0] FROM foto_boeken WHERE parent = %2$d
