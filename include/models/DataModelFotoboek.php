@@ -473,19 +473,30 @@
 		  * @result an array of #DataIter
 		  */
 		function get_random_photos($num) {
-			$rows = $this->db->query("
+			$rows = $this->db->query(sprintf("
 					SELECT
-						fotos.*,
+						f.*,
 						DATE_PART('year', foto_boeken.date) AS jaar,
 						foto_boeken.titel
 					FROM 
-						fotos,
-						foto_boeken
-					WHERE
-						fotos.boek = foto_boeken.id
-					ORDER BY 
-						RANDOM()
-					LIMIT " . intval($num));
+						(SELECT fotos.id FROM fotos ORDER BY RANDOM() LIMIT %d) as f_ids
+					LEFT JOIN fotos f ON
+						f.id = f_ids.id
+					LEFT JOIN foto_boeken ON
+						foto_boeken.id = f.id
+					GROUP BY
+						f.id,
+						f.boek,
+						f.url,
+						f.thumburl,
+						f.beschrijving,
+						f.added_on,
+						f.width,
+						f.height,
+						f.thumbwidth,
+						f.thumbheight,
+						foto_boeken.date,
+						foto_boeken.titel", $num));
 
 			return $this->_rows_to_iters($rows, 'DataIterPhoto');		
 		}
