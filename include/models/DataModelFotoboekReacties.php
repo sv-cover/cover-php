@@ -17,24 +17,32 @@ class DataModelFotoboekReacties extends DataModel
 	{
 		$rows = $this->db->query("
 				SELECT
-					foto_reacties.*,
-					DATE_PART('dow', foto_reacties.date) AS dagnaam, 
-					DATE_PART('day', foto_reacties.date) AS datum, 
-					DATE_PART('month', foto_reacties.date) AS maand, 
-					DATE_PART('hours', foto_reacties.date) AS uur, 
-					DATE_PART('minutes', foto_reacties.date) AS minuut,
+					f_r.*,
+					DATE_PART('dow', f_r.date) AS dagnaam, 
+					DATE_PART('day', f_r.date) AS datum, 
+					DATE_PART('month', f_r.date) AS maand, 
+					DATE_PART('hours', f_r.date) AS uur, 
+					DATE_PART('minutes', f_r.date) AS minuut,
 					fotos.beschrijving,
 					fotos.boek,
 					foto_boeken.titel
 				FROM 
-					foto_reacties,
-					fotos,
-					foto_boeken
-				WHERE
-					fotos.id = foto_reacties.foto AND
-					fotos.boek = foto_boeken.id
+					(SELECT * FROM foto_reacties ORDER BY date DESC LIMIT 10) as f_r
+				LEFT JOIN fotos ON
+					fotos.id = f_r.foto
+				LEFT JOIN foto_boeken ON
+					foto_boeken.id = fotos.boek
+				GROUP BY
+					f_r.id,
+					f_r.foto,
+					f_r.auteur,
+					f_r.reactie,
+					f_r.date,
+					fotos.beschrijving,
+					fotos.boek,
+					foto_boeken.titel
 				ORDER BY
-					date DESC
+					f_r.date DESC
 				LIMIT " . intval($num));
 
 		return $this->_rows_to_iters($rows);
