@@ -175,11 +175,8 @@
 		}
 
 		/** 
-		  * Get member data from email and password combination. This
-		  * function will also add an array with commissie ids to
-		  * the member data if a member can be found with that
-		  * email and password combination. The password will
-		  * be md5'd by the function
+		  * Get limited member data (id, type, wachtwoord) from email and password combination.
+		  * 
 		  * @email the email of the member
 		  * @passwd the password of the member
 		  *
@@ -190,11 +187,11 @@
 		{
 			$row = $this->db->query_first("SELECT 
 					leden.id, 
-					leden.type
+					leden.type,
+					profielen.wachtwoord
 					FROM leden, profielen 
 					WHERE leden.id = profielen.lidid AND 
-					leden.email = '" . $this->db->escape_string($email) . "' AND 
-					profielen.wachtwoord = '" . $this->db->escape_string($passwd) . "'");
+					leden.email = '" . $this->db->escape_string($email) . "'");
 
 			$active_member_types = array(
 				MEMBER_STATUS_LID,
@@ -205,7 +202,29 @@
 			if (!$row || !in_array($row['type'], $active_member_types))
 				return false;
 
-			return $this->_row_to_iter($row);
+			// Old md5 password
+			if (preg_match('/^[a-z0-9]{32}$/', $row['wachtwoord'])) {
+				if (md5($passwd) != $row['wachtwoord'])
+					return false;
+			}
+				
+			// New PHP 5.5 password function crypt-like passwords
+			else if (!password_verify($passwd, $row['wachtwoord']))
+				return false;
+
+			$iter = $this->_row_to_iter($row);
+
+			if (password_needs_rehash($row['wachtwoord'], PASSWORD_DEFAULT))
+				$this->set_password($iter, $passwd);
+
+			return $iter;
+		}
+
+		public function set_password(DataIterMember $member, $new_password)
+		{
+			$this->db->update('profielen',
+				array('wachtwoord' => password_hash($new_password, PASSWORD_DEFAULT)),
+				sprintf('lidid = %d', $member->get_id()));
 		}
 		
 		/**

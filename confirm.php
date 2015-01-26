@@ -30,11 +30,8 @@
 				return;
 			}
 			
-        		$newpass = create_pronouncable_password();
-        		$profieliter = new DataIter($model, $member->get('id'), array());
-        		$profieliter->set('wachtwoord', md5($newpass));
-
-        		$model->update_profiel($profieliter);
+			$newpass = create_pronouncable_password();
+			$model->set_password($member, $newpass);
 
 			$subject = __('Nieuw wachtwoord');
 			$body =  sprintf(__("Het wachtwoord van het account op dit E-Mail adres van de Cover site is gewijzigd. Je kunt nu inloggen met de volgende gegevens:\n\nE-Mail:\t\t%s\nWachtwoord:\t%s\n\nMet vriendelijke groeten,\n\nDe WebCie"), $member->get('email'), $newpass);

@@ -10,7 +10,7 @@
 			$referer = $_POST['referer'];
 
 			if (get_post('email') && get_post('password')) {
-				login(get_post('email'), md5(get_post('password')), get_post('remember') == 'yes');
+				login(get_post('email'), get_post('password'), get_post('remember') == 'yes');
 				header("Location: $referer");
 				exit();
 			}
@@ -22,5 +22,5 @@
 		}
 	}
 
-	$controller = new ControllerLogin();
+	$controller = new ControllerLogin(null);
 	$controller->run();

@@ -181,7 +181,7 @@
 			// Only test the old password if we are not a member of the board
 			if (!member_in_commissie(COMMISSIE_BESTUUR)
 				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
-				if (!get_post('wachtwoord_oud') || md5(get_post('wachtwoord_oud')) != $iter->get('wachtwoord')) {
+				if (!get_post('wachtwoord_oud') || !$this->model->login($iter->get('email'), get_post('wachtwoord_oud'))) {
 					$errors[] = 'wachtwoord_oud';
 					$message[] = __('Het huidige wachtwoord is onjuist.');
 				}
@@ -201,8 +201,7 @@
 				return;
 			}
 			
-			$iter->set('wachtwoord', md5(get_post('wachtwoord_nieuw')));
-			$this->model->update_profiel($iter);
+			$this->model->set_password($iter, get_post('wachtwoord_nieuw'));
 
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#wachtwoord');
 		}

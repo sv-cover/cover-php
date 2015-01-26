@@ -652,7 +652,7 @@ CREATE SEQUENCE profielen_id_seq
 CREATE TABLE profielen (
     id integer DEFAULT nextval('profielen_id_seq'::regclass) NOT NULL,
     lidid integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    wachtwoord character(32) NOT NULL,
+    wachtwoord character varying(255),
     onderschrift character varying(200),
     avatar character varying(100),
     homepage character varying(255),

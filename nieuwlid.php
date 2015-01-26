@@ -154,28 +154,30 @@
 				return false;
 
 			// Create new member
-			$iter = new DataIter($this->model, -1, $data);
-			$iter->set('privacy', 958698063);
+			$member = new DataIterMember($this->model, $data['id'], $data);
+			$member->set('privacy', 958698063);
 			
-			$this->model->insert($iter);
-			$id = $data['id'];
-			
+			$this->model->insert($member);
+
 			// Create profile for this member
-			$passwd = create_pronouncable_password();
-			$nick = member_full_name($iter, true, false);
+			$nick = member_full_name($member, true, false);
 			
 			if (strlen($nick) > 50)
-				$nick = $iter->get('voornaam');
+				$nick = $member->get('voornaam');
 			
 			if (strlen($nick) > 50)
 				$nick = '';
 			
 			$iter = new DataIter($this->model, -1, 
-					array('lidid' => $id,
-					      'wachtwoord' => md5($passwd),
+					array('lidid' => $member->get_id(),
 					      'nick' => $nick));
 			
 			$this->model->insert_profiel($iter);
+
+			// Create a password
+			$passwd = create_pronouncable_password();
+			
+			$this->model->set_password($member, $passwd);
 			
 			// Setup e-mail
 			$data['wachtwoord'] = $passwd;
@@ -184,7 +186,7 @@
 			mail($data['email'], 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
 			mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
 			
-			return $id;
+			return $member->get_id();
 		}
 
 		protected function map_data_to_form_fields(array $data)
