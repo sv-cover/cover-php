@@ -403,10 +403,16 @@
 		protected function _process_del_book(DataIterPhotobook $book)
 		{
 			$this->_page_prepare();
-			
-			$this->_del_book($book);
 
-			$this->redirect('fotoboek.php?book=' . $book->get('parent'));
+			if (!empty($_POST['confirm_delete'])
+				&& $_POST['confirm_delete'] == $book->get('titel'))
+			{
+				$this->_del_book($book);
+
+				return $this->redirect('fotoboek.php?book=' . $book->get('parent'));
+			}
+			
+			$this->get_content('confirm_delete', $book);
 		}
 		
 		protected function _process_fotoboek_del_fotos(DataIterPhotobook $book)

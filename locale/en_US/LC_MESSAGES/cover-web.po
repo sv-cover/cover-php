@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-01-17 11:27+0100\n"
+"POT-Creation-Date: 2015-01-26 13:57+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -99,7 +99,7 @@ msgstr "Boards"
 msgid "Boeken"
 msgstr "Books"
 
-#: ../../../commissies.php:82 ../../../themes/default/views/header.php:178
+#: ../../../commissies.php:152 ../../../themes/default/views/header.php:178
 #: ../../../themes/default/views/actieveleden/index.phtml:13
 #: ../../../themes/default/views/commissies/index.phtml:5
 #: ../../../themes/default/views/profiel/profiel.phtml:170
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Zichtbaarheid foto"
 msgstr "Visibility of photo"
 
-#: ../../../fotoboek.php:208 ../../../include/models/DataModelFotoboek.php:259
+#: ../../../fotoboek.php:208 ../../../include/models/DataModelFotoboek.php:268
 #: ../../../themes/default/views/fotoboek/_beheer.phtml:19
 #: ../../../themes/default/views/fotoboek/_books.phtml:26
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:36
@@ -465,7 +465,7 @@ msgstr "You!"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: ../../../include/models/DataModelCommissie.php:277
+#: ../../../include/models/DataModelCommissie.php:278
 msgid "onbekend"
 msgstr "unknown"
 
@@ -522,13 +522,13 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: ../../../include/models/DataModelFotoboekFaces.php:123
+#: ../../../include/models/DataModelFotoboekFaces.php:129
 #: ../../../themes/default/views/profiel/profiel.phtml:39
 #, php-format
 msgid "Foto's van %s"
 msgstr "Photos of %s"
 
-#: ../../../include/models/DataModelFotoboekFaces.php:124
+#: ../../../include/models/DataModelFotoboekFaces.php:130
 msgid " en "
 msgstr " and "
 
@@ -2570,6 +2570,7 @@ msgstr "Edit photo book"
 
 #: ../../../themes/default/views/fotoboek/_books.phtml:32
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:39
+#: ../../../themes/default/views/fotoboek/confirm_delete.phtml:1
 msgid "Fotoboek verwijderen"
 msgstr "Delete photo book"
 
@@ -2599,7 +2600,6 @@ msgid_plural "%d foto's"
 msgstr[0] "%d photo"
 msgstr[1] "%d photos"
 
-#: ../../../themes/default/views/fotoboek/_books.phtml:89
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:71
 msgid ""
 "Weet je zeker dat je dit fotoboek en alle fotoboeken en foto's erin wilt "
@@ -2639,7 +2639,7 @@ msgstr "Create photo book"
 msgid "Laatste reacties"
 msgstr "Last comments"
 
-#: ../../../themes/default/views/fotoboek/_mark_read_button.phtml:4
+#: ../../../themes/default/views/fotoboek/_mark_read_button.phtml:8
 msgid "Markeer alle boeken als gezien"
 msgstr "Mark all books as seen"
 
@@ -2767,6 +2767,27 @@ msgstr "Most tagged members"
 #: ../../../themes/default/views/fotoboek/competition.phtml:63
 msgid "Aantal maal getagged"
 msgstr "Times tagged"
+
+#: ../../../themes/default/views/fotoboek/confirm_delete.phtml:4
+#, php-format
+msgid "Weet je heel zeker dat je het fotoboek <em>%s</em> wil verwijderen?"
+msgstr "Are you sure you want to delete the <em>%s</em> photo book?"
+
+#: ../../../themes/default/views/fotoboek/confirm_delete.phtml:6
+msgid ""
+"Typ om dit fotoboek te verwijderen de naam van het fotoboek over ter "
+"bevestiging"
+msgstr ""
+"As confirmation, enter the name of the photo book you are about to entirely "
+"delete"
+
+#: ../../../themes/default/views/fotoboek/confirm_delete.phtml:9
+msgid "Verwijder fotoboek"
+msgstr "Delete photo book"
+
+#: ../../../themes/default/views/fotoboek/confirm_delete.phtml:10
+msgid "Terug naar fotoboek"
+msgstr "Return to photo book"
 
 #: ../../../themes/default/views/fotoboek/fotoboek.phtml:11
 #, php-format

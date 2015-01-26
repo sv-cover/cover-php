@@ -29,7 +29,7 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 				$contents .= ' <a href="fotoboek.php?editbook&book=' . $children[$n]->get_id() . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
 
 			if ($policy->user_can_delete($children[$n]))
-				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get_id() . '" onClick="return confirm_delete();">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
+				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get_id() . '">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
 
 			// Only if you can actually change the visibility of folders show or hide them.
 			if ($policy->user_can_update($children[$n]))
@@ -84,8 +84,3 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 	?>
 <? } ?>
 </div>
-<script type="text/javascript">
-	function confirm_delete() {
-		return confirm('<?= addslashes(__("Weet je zeker dat je dit fotoboek en alle fotoboeken en foto's erin wilt verwijderen?")) ?>');
-	}
-</script>
