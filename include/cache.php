@@ -7,9 +7,9 @@ function get_cache()
 	return $cache ? $cache : $cache = new Cache(get_db());
 }
 
-function wrap_cache($object)
+function wrap_cache($object, $timeout = 600, $flags = 0)
 {
-	return new CacheDecorator(get_cache(), $object, 600);
+	return new CacheDecorator(get_cache(), $object, $timeout, $flags);
 }
 
 class Cache
