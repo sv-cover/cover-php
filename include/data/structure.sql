@@ -522,6 +522,8 @@ CREATE TABLE fotos (
     CONSTRAINT fotos_pkey PRIMARY KEY (id)
 );
 
+CREATE INDEX ON fotos (boek);
+
 CREATE TABLE foto_likes (
     foto_id integer NOT NULL REFERENCES "fotos" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     lid_id integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
@@ -617,7 +619,7 @@ CREATE SEQUENCE pollopties_id_seq
 
 CREATE TABLE pollopties (
     id integer DEFAULT nextval('pollopties_id_seq'::regclass) NOT NULL,
-    pollid integer NOT NULL,
+    pollid integer NOT NULL REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE,
     optie character varying(150) NOT NULL,
     stemmen smallint DEFAULT 0 NOT NULL
 );
@@ -628,8 +630,8 @@ CREATE TABLE pollopties (
 --
 
 CREATE TABLE pollvoters (
-    lid integer NOT NULL,
-    poll integer NOT NULL
+    lid integer NOT NULL REFERENCES leden (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    poll integer NOT NULL REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 --
@@ -650,7 +652,6 @@ CREATE SEQUENCE profielen_id_seq
 --
 
 CREATE TABLE profielen (
-    id integer DEFAULT nextval('profielen_id_seq'::regclass) NOT NULL,
     lidid integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     wachtwoord character varying(255),
     onderschrift character varying(200),
@@ -3001,7 +3002,7 @@ ALTER TABLE ONLY pollopties
 --
 
 ALTER TABLE ONLY profielen
-    ADD CONSTRAINT profielen_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT profielen_pkey PRIMARY KEY (lidid);
 
 
 --
