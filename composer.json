@@ -1,6 +1,5 @@
 {
     "require": {
-        "geokit/geokit": "0.2.*@dev",
         "facebook/php-sdk": "3.*"
     }
 }
