@@ -440,21 +440,79 @@
 			$this->get_content('edit_fotoboek', $book);
 		}
 
+		private function _find_original(DataIterPhoto $photo)
+		{
+			$common_path = 'svcover.nl/fotos/';
+
+			if (($path = strstr($photo->get('url'), $common_path)) === false)
+				return null;
+
+			$path_parts = explode('/', substr($path, strlen($common_path)));
+
+			$path_parts_copy = $path_parts;
+
+			while (count($path_parts) > 0)
+			{
+				$possible_path = '/home/commissies/photocee/fotosGroot/' . implode('/', $path_parts);
+				
+				if (file_exists($possible_path))
+					return $possible_path;
+
+				array_shift($path_parts);
+			}
+
+			// typical paths are fotosGroot/fotos20092010/YYYYMMDD_*/folder/photo.jpg
+			$book = $photo->get_book();
+
+			$parents = $this->model->get_parents($book);
+
+			array_push($parents, $book);
+
+			// Remove first two books (root and college year)
+			$root_book = array_shift($parents);
+			$path = '/home/commissies/photocee/fotosGroot/';
+
+			// College year book is named using the year of the book (duh!)
+			$year_book = array_shift($parents);
+			$year = intval(substr($book->get('datum'), strlen('00-00-')));
+			$path .= sprintf('fotos%d%d/', $year, $year + 1);
+
+			// Activity book is based named using the date of the book, but it
+			// also has a name that may not be the same as the book on the website.
+			$activity_book = array_shift($parents);
+			preg_match('/^(\d\d)-(\d\d)-(\d\d\d\d)$/', $activity_book->get('datum'), $match);
+			$path .= sprintf('%04d%02d%02d_*/', $match[3], $match[2], $match[1]);
+
+			// So after generating a path, more or less, we just glob our way through
+			foreach (glob($path) as $folder)
+			{
+				// and now just YOLO find the filename
+				$path_parts = explode('/', substr($path, strlen($common_path)));
+
+				// It might be in this folder already
+				if (file_exists($folder . end($path_parts_copy)))
+					return $folder . end($path_parts_copy);
+
+				// But it also might hide in some subfolder
+				foreach (scandir($folder) as $subfolder)
+					if (is_dir($folder . $subfolder))
+						if (file_exists($folder . $subfolder . '/' . end($path_parts_copy)))
+							return $folder . $subfolder . '/' . end($path_parts_copy);
+			}
+
+			return null;
+		}
+
 		protected function _view_original(DataIterPhoto $photo)
 		{
 			// For now require login for these originals
 			if (!logged_in())
 				throw new UnauthorizedException();
 
-			$common_path = 'fotocie.svcover.nl/fotos/';
+			$real_path = $this->_find_original($photo);
 
-			if (($path = strstr($photo->get('url'), $common_path)) === false)
-				throw new RuntimeException('Could not determine path');
-
-			$real_path = '/home/commissies/photocee/fotosGroot/' . substr($path, strlen($common_path));
-
-			if (!file_exists($real_path))
-				throw new NotFoundException('Could not find file: ' . $real_path);
+			if (!$real_path)
+				throw new NotFoundException('Could not find original file');
 
 			$fh = fopen($real_path, 'rb');
 
