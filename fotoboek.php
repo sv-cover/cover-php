@@ -480,8 +480,11 @@
 			// Activity book is based named using the date of the book, but it
 			// also has a name that may not be the same as the book on the website.
 			$activity_book = array_shift($parents);
-			preg_match('/^(\d\d)-(\d\d)-(\d\d\d\d)$/', $activity_book->get('datum'), $match);
-			$path .= sprintf('%04d%02d%02d_*/', $match[3], $match[2], $match[1]);
+			if (!preg_match('/^(?<day>\d{1,2})-(?<month>\d{1,2})-(?<year>\d\d\d\d)$/', $activity_book->get('datum'), $match)
+				&& !preg_match('/^(?<year>\d\d\d\d)-(?<month>\d{1,2})-(?<day>{1,2})$/', $activity_book->get('datum'), $match))
+				throw new Exception("Could not match activity date to common pattern");
+			
+			$path .= sprintf('%04d%02d%02d_*/', $match['year'], $match['month'], $match['day']);
 
 			// So after generating a path, more or less, we just glob our way through
 			foreach (glob($path) as $folder)
