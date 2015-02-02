@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-01-26 13:57+0100\n"
+"POT-Creation-Date: 2015-02-02 14:09+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -106,13 +106,13 @@ msgstr "Books"
 msgid "Commissies"
 msgstr "Committees"
 
-#: ../../../confirm.php:39
+#: ../../../confirm.php:36
 #: ../../../themes/default/views/profiel/profiel.phtml:185
 #: ../../../themes/default/views/profiel/profiel.phtml:199
 msgid "Nieuw wachtwoord"
 msgstr "New password"
 
-#: ../../../confirm.php:40
+#: ../../../confirm.php:37
 #, php-format
 msgid ""
 "Het wachtwoord van het account op dit E-Mail adres van de Cover site is "
@@ -460,7 +460,7 @@ msgstr "You!"
 #: ../../../include/member.php:90
 #: ../../../include/models/DataModelForum.php:657
 #: ../../../include/models/DataModelForum.php:680
-#: ../../../include/models/DataModelMember.php:590
+#: ../../../include/models/DataModelMember.php:609
 #: ../../../themes/default/views/forum.php:501
 msgid "Onbekend"
 msgstr "Unknown"
@@ -492,7 +492,7 @@ msgid "Alle groepen"
 msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:671
-#: ../../../include/models/DataModelMember.php:575
+#: ../../../include/models/DataModelMember.php:594
 #: ../../../themes/default/views/boeken/boeken.php:336
 #: ../../../themes/default/views/boeken/boeken.php:357
 #: ../../../themes/default/views/boeken/boeken.php:399
@@ -536,26 +536,26 @@ msgstr " and "
 msgid "Favoriete foto's"
 msgstr "Liked photos"
 
-#: ../../../include/models/DataModelMember.php:578
+#: ../../../include/models/DataModelMember.php:597
 #: ../../../themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../include/models/DataModelMember.php:581
+#: ../../../include/models/DataModelMember.php:600
 #: ../../../themes/default/views/almanak/almanak.php:29
 #: ../../../themes/default/views/almanak/almanak.phtml:46
 #: ../../../themes/default/views/profiel/profiel.phtml:150
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../include/models/DataModelMember.php:584
+#: ../../../include/models/DataModelMember.php:603
 #: ../../../themes/default/views/almanak/almanak.php:34
 #: ../../../themes/default/views/almanak/almanak.phtml:47
 #: ../../../themes/default/views/profiel/profiel.phtml:154
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../include/models/DataModelMember.php:587
+#: ../../../include/models/DataModelMember.php:606
 #: ../../../themes/default/views/almanak/almanak.php:39
 #: ../../../themes/default/views/almanak/almanak.phtml:48
 #: ../../../themes/default/views/profiel/profiel.phtml:158
@@ -721,33 +721,33 @@ msgstr "The new password hasn't been filled in"
 msgid "Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld."
 msgstr "The new password hasn't been filled in correctly twice"
 
-#: ../../../profiel.php:234
+#: ../../../profiel.php:233
 msgid "Jij mag deze gegevens niet aanpassen."
 msgstr "Sorry, you are not allowed to edit this data."
 
-#: ../../../profiel.php:237
+#: ../../../profiel.php:236
 msgid "De zichtbaarheid van het profiel is niet ingevuld."
 msgstr "The visibility of the profile has not been selected."
 
-#: ../../../profiel.php:240
+#: ../../../profiel.php:239
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
-#: ../../../profiel.php:263
+#: ../../../profiel.php:262
 #, php-format
 msgid "Het fotobestand is te groot. Het maximum is %s."
 msgstr "The image file is too large. The maximum file size is %s."
 
-#: ../../../profiel.php:267
+#: ../../../profiel.php:266
 #, php-format
 msgid "Het bestand is niet geupload. Foutcode %d."
 msgstr "The image hasn't been uploaded correctly. PHP reports error code %d."
 
-#: ../../../profiel.php:270
+#: ../../../profiel.php:269
 msgid "Bestand is niet een door PHP geupload bestand."
 msgstr "The image file is not a file uploaded by PHP."
 
-#: ../../../profiel.php:273
+#: ../../../profiel.php:272
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
@@ -2061,7 +2061,7 @@ msgstr "Starting year"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:42
 #: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:12
-#: ../../../themes/default/views/fotoboek/_photo.phtml:59
+#: ../../../themes/default/views/fotoboek/_photo.phtml:63
 #: ../../../themes/default/views/profiel/profiel.phtml:133
 msgid "Zichtbaarheid"
 msgstr "Visibility"
@@ -2306,6 +2306,7 @@ msgstr "Print"
 #: ../../../themes/default/views/boeken/bestellingen.phtml:30
 #: ../../../themes/default/views/boeken/bestellingen.phtml:55
 #: ../../../themes/default/views/boeken/bestellingen.phtml:93
+#: ../../../themes/default/views/fotoboek/_photo.phtml:60
 msgid "Download"
 msgstr "Download"
 
@@ -2644,7 +2645,7 @@ msgid "Markeer alle boeken als gezien"
 msgstr "Mark all books as seen"
 
 #: ../../../themes/default/views/fotoboek/_navigation.phtml:12
-#: ../../../themes/default/views/fotoboek/_photo.phtml:49
+#: ../../../themes/default/views/fotoboek/_photo.phtml:43
 msgid "Vorige"
 msgstr "Previous"
 
@@ -2661,7 +2662,7 @@ msgid "Ga naar bovenliggend boek"
 msgstr "Go to parent book"
 
 #: ../../../themes/default/views/fotoboek/_navigation.phtml:25
-#: ../../../themes/default/views/fotoboek/_photo.phtml:52
+#: ../../../themes/default/views/fotoboek/_photo.phtml:47
 msgid "Volgende"
 msgstr "Next"
 
@@ -2673,25 +2674,29 @@ msgstr "Go to next book"
 msgid "Deze foto komt uit"
 msgstr "This photo originates from"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:45
-#: ../../../themes/default/views/fotoboek/_photo.phtml:118
-msgid "Haal markering als favoriet weg"
-msgstr "Remove favorite mark"
-
-#: ../../../themes/default/views/fotoboek/_photo.phtml:45
-#: ../../../themes/default/views/fotoboek/_photo.phtml:119
-msgid "Markeer als favoriet"
-msgstr "Mark as favorite"
-
-#: ../../../themes/default/views/fotoboek/_photo.phtml:49
+#: ../../../themes/default/views/fotoboek/_photo.phtml:43
 msgid "Ga naar vorige foto"
 msgstr "Go to the previous photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:52
+#: ../../../themes/default/views/fotoboek/_photo.phtml:47
 msgid "Ga naar volgende foto"
 msgstr "Go to next photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:64
+#: ../../../themes/default/views/fotoboek/_photo.phtml:53
+#: ../../../themes/default/views/fotoboek/_photo.phtml:122
+msgid "Haal markering als favoriet weg"
+msgstr "Remove favorite mark"
+
+#: ../../../themes/default/views/fotoboek/_photo.phtml:53
+#: ../../../themes/default/views/fotoboek/_photo.phtml:123
+msgid "Markeer als favoriet"
+msgstr "Mark as favorite"
+
+#: ../../../themes/default/views/fotoboek/_photo.phtml:57
+msgid "Tag gezichten"
+msgstr "Tag faces"
+
+#: ../../../themes/default/views/fotoboek/_photo.phtml:68
 #: ../../../themes/default/views/fotoboek/_reactie.phtml:15
 #: ../../../themes/default/views/fotoboek/foto.phtml:1
 #: ../../../themes/default/views/fotoboek/foto_backup.phtml:1
@@ -2700,12 +2705,12 @@ msgstr "Go to next photo"
 msgid "Foto"
 msgstr "Photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:79
+#: ../../../themes/default/views/fotoboek/_photo.phtml:83
 msgid "Klik om te taggen"
 msgstr "Click to tag"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:81
-#: ../../../themes/default/views/fotoboek/_photo.phtml:316
+#: ../../../themes/default/views/fotoboek/_photo.phtml:85
+#: ../../../themes/default/views/fotoboek/_photo.phtml:320
 msgid "Niet getagged"
 msgstr "Not yet tagged"
 
