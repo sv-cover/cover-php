@@ -246,7 +246,6 @@
 		echo '
 		<div class="menuItem">
 			<hr class="menu_contents" />
-			<a href="javascript:do_menu_expander(\'menu_' . $name . '\', true)"><img id="expander_menu_' . $name . '" class="menuControl" src="' . get_theme_data('images/min.png') . '" alt="min"/></a>
 			<div class="menu_header">
 				' . $title . '
 				<hr />
