@@ -15,7 +15,6 @@
 		$controller = basename($_SERVER['PHP_SELF'], '.php');
 		
 		$mapping = array(
-			'gastenboek' => 'gastenboek;markup',
 			'boeken' => 'boeken;notebook;markup',
 			'studieondersteuning' => 'studieondersteuning;notebook;markup',
 			'index' => 'markup',
@@ -180,7 +179,6 @@
 					<li><a href="show.php?id=28">' . __('Zusterverenigingen') . '</a></li>
 					<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
 					<li><a href="show.php?id=30">' . __('Documenten') . '</a></li>
-					<li><a href="gastenboek.php">' . __('Gastenboek') . '</a></li>
 					<li><a href="weblog.php">' . __('Weblog') . '</a></li>
 				</ul>
 				<ul id="leden" class="expander">
@@ -349,7 +347,8 @@
 	<head>
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta http-equiv="Content-type" content="text/html; charset=' . WEBSITE_ENCODING . '">
-	<link rel="icon" type="image/png" href="images/favicon.png">';
+	<link rel="icon" type="image/png" href="images/favicon.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">';
 		
 		$title = 'Cover :: ' . __('Studievereniging Kunstmatige Intelligentie en Informatica') . ', RuG';
 
@@ -368,9 +367,6 @@
 			echo '<link rel="stylesheet" href="' . get_theme_data('styles/' . $style . '.css') . '?'.time().'" type="text/css">' . "\n";
 		
 		$controller = basename($_SERVER['PHP_SELF'], '.php');
-		
-		if ($controller == 'gastenboek')
-			echo '<link rel="alternate" type="application/rss+xml" title="RSS" href="gastenboek.php?rss">' . "\n";
 		
 		echo '
 		<script src="//code.jquery.com/jquery-1.10.2.js"></script>

@@ -11,25 +11,19 @@ class PolicyFotoboek implements Policy
 
 	public function user_can_read(DataIter $book)
 	{
-		// Members can see everything
-		if (logged_in())
-			return true;
-
-		// Chantagemap is not visible for non-members
-		if (strcasecmp($book->get('titel'), "Chantagemap") == 0)
+		// First: if the access to the photo book is of a higher level
+		// than the current user has, no way he/she can view the photo
+		// book.
+		if ($this->get_access_level() < $book->get('visibility'))
 			return false;
 
-		// Download photo's is not visible for non-members
-		if (strcasecmp($book->get('titel'), "Download grote foto's") == 0)
+		// Member-specific albums are also forbidden terrain
+		if (!logged_in() && $book instanceof DataIterFacesPhotobook)
 			return false;
 
 		// Older photo books are not visible for non-members
-		if (preg_match("/^Foto's uit ([\d]{4})\/[\d]{4}$/i", $book->get('titel'), $matches))
-			return $matches[1] == date("Y") || $matches[1] === date("Y", strtotime("-1 year"));
-
-		// Member-specific albums are also forbidden terrain
-		if ($book instanceof DataIterFacesPhotobook)
-			return false;
+		if (!logged_in() && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
+			return intval($match[1]) >= intval(date("Y", strtotime("-2 year")));
 
 		return true;
 	}
@@ -44,5 +38,20 @@ class PolicyFotoboek implements Policy
 	public function user_can_delete(DataIter $book)
 	{
 		return $this->user_can_update($book);
+	}
+
+	public function get_access_level()
+	{
+		if (member_in_commissie(COMMISSIE_FOTOCIE))
+			return DataModelFotoboek::VISIBILITY_PHOTOCEE;
+
+		if (member_in_commissie())
+			return DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS;
+
+		if (logged_in())
+			return DataModelFotoboek::VISIBILITY_MEMBERS;
+
+		else
+			return DataModelFotoboek::VISIBILITY_PUBLIC;
 	}
 }

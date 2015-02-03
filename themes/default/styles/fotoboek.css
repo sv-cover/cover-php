@@ -97,9 +97,38 @@ table.navigation td:nth-child(3) {
 }
 
 .photo-controls a,
-.photo-controls a:hover {
+.photo-controls a:hover,
+.photo-controls label {
 	display: inline-block;
-	line-height: 24px;
+	line-height: 20px;
+	font-weight: bold;
+	color: #004274;
+	cursor: pointer;
+	padding: 0 1em;
+	margin: 2px;
+}
+
+.photo-controls a:hover,
+.photo-controls label:hover {
+	text-decoration: underline;
+}
+
+.photo-controls input[type=checkbox] {
+	display: none;
+}
+
+.photo-controls input[type=checkbox] + label {
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.photo-controls input[type=checkbox]:checked + label {
+	background: #004274;
+	color: white;
+	border-radius: 2px;
 }
 
 .photo-controls form {
@@ -416,3 +445,29 @@ table.navigation td:nth-child(3) {
 	opacity: 0.5
 }
 
+.fotoBoek .visibility {
+	display: inline-block;
+	vertical-align: top;
+	overflow: hidden;
+	width: 16px;
+	height: 16px;
+	text-indent: 20px;
+	background-repeat: no-repeat;
+	background-size: 16px 16px;
+}
+
+.visibility-public {
+	background-image: url(../images/visibility-public.png);
+}
+
+.visibility-members {
+	background-image: url(../images/visibility-members.png);
+}
+
+.visibility-active-members {
+	background-image: url(../images/visibility-active-members.png);
+}
+
+.visibility-photocee {
+	background-image: url(../images/visibility-photocee.png);
+}

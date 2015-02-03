@@ -30,7 +30,10 @@ class ControllerApi extends Controller
 	{
 		$user_model = get_model('DataModelMember');
 
-		$member = $user_model->login($email, md5($password));
+		$member = $user_model->login($email, $password);
+
+		if (!$member)
+			return array('error' => 'Invalid email and password combination');
 
 		$session_model = get_model('DataModelSession');
 

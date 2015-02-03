@@ -1,0 +1,9 @@
+DELETE FROM pollopties WHERE pollid NOT IN (SELECT id FROM forum_threads);
+
+ALTER TABLE pollopties ADD FOREIGN KEY (pollid) REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELETE FROM pollvoters WHERE poll NOT IN (SELECT id FROM forum_threads) OR lid NOT IN (SELECT id FROM leden);
+
+ALTER TABLE pollvoters
+	ADD FOREIGN KEY (lid) REFERENCES leden (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD FOREIGN KEY (poll) REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,6 +1,7 @@
 <?php
 	require_once 'include/search.php';
 	require_once 'include/data/DataModel.php';
+	require_once 'include/policies/policy.php';
 
 	class DataIterPhoto extends DataIter
 	{
@@ -168,6 +169,11 @@
 	  */
 	class DataModelFotoboek extends DataModel
 	{
+		const VISIBILITY_PUBLIC = 0;
+		const VISIBILITY_MEMBERS = 1;
+		const VISIBILITY_ACTIVE_MEMBERS = 2;
+		const VISIBILITY_PHOTOCEE = 3;
+
 		public $dataiter = 'DataIterPhoto';
 
 		public function __construct($db)
@@ -262,8 +268,9 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_random_book($count = 10) {
-			$q = "
+		function get_random_book($count = 10)
+		{
+			$q = sprintf("
 				SELECT 
 					c.id
 				FROM 
@@ -272,8 +279,7 @@
 					fotos f
 					ON f.boek = c.id
 				WHERE
-					c.titel NOT ILIKE 'chantagemap%'
-					AND c.titel NOT ILIKE 'download grote foto''s%'
+					c.visibility <= %d
 					AND c.date IS NOT NULL
 				GROUP BY
 					c.id
@@ -281,7 +287,9 @@
 					COUNT(f.id) > 0
 				ORDER BY
 					c.date DESC
-				LIMIT " . intval($count);
+				LIMIT %d",
+				get_policy($this)->get_access_level(),
+				intval($count));
 
 			// Select the last $count books
 			$rows = $this->db->query($q);
@@ -309,6 +317,7 @@
 						foto_boeken
 					WHERE 
 						parent = " . $book->get('parent') . " AND
+						visibility <= " . get_policy($this)->get_access_level() . " AND
 						((date > '" . $this->db->escape_string($book->get('date')) . "' AND
 						id <> " . $book->get('id') . ") OR (
 						date = '" . $this->db->escape_string($book->get('date')) . "' AND
@@ -338,6 +347,7 @@
 						foto_boeken
 					WHERE 
 						parent = " . $book->get('parent') . " AND
+						visibility <= " . get_policy($this)->get_access_level() . " AND
 						((date < '" . $this->db->escape_string($book->get('date')) . "' AND
 						id <> " . $book->get('id') . ") OR (
 						date = '" . $this->db->escape_string($book->get('date')) . "' AND
@@ -372,7 +382,10 @@
 					child_books.parent = foto_boeken.id';
 
 			$where = sprintf('WHERE
-				foto_boeken.parent = %d', $book->get_id());
+				foto_boeken.visibility <= %d
+				AND foto_boeken.parent = %d',
+				get_policy($this)->get_access_level(),
+				$book->get_id());
 
 			$group_by = 'GROUP BY
 				foto_boeken.id, 
@@ -386,13 +399,13 @@
 				date DESC,
 				foto_boeken.id';
 
-			if (logged_in())
+			if (get_config_value('enable_photos_read_status', true) && logged_in())
 			{
 				$select = sprintf('
-					WITH RECURSIVE book_children (id, date, parents) AS (
-						SELECT id, date, ARRAY[0] FROM foto_boeken WHERE parent = %d
+					WITH RECURSIVE book_children (id, date, visibility, parents) AS (
+						SELECT id, date, visibility, ARRAY[0] FROM foto_boeken WHERE parent = %d
 					UNION ALL
-						SELECT f_b.id, f_b.date, b_c.parents || f_b.parent
+						SELECT f_b.id, f_b.date, f_b.visibility, b_c.parents || f_b.parent
 						FROM book_children b_c, foto_boeken f_b
 						WHERE b_c.id = f_b.parent
 				)
@@ -414,13 +427,16 @@
 
 				$joins .= sprintf('
 					LEFT JOIN book_children b_c ON
-						foto_boeken.id = ANY(b_c.parents)
+						b_c.visibility <= %d
+						AND foto_boeken.id = ANY(b_c.parents)
 					LEFT JOIN foto_boeken_visit f_b_v ON
 						f_b_v.boek_id = foto_boeken.id
 						AND f_b_v.lid_id = %d
 					LEFT JOIN foto_boeken_visit f_b_c_v ON
 						f_b_c_v.boek_id = b_c.id
-						AND f_b_c_v.lid_id = %1$d', logged_in('id'));
+						AND f_b_c_v.lid_id = %2$d',
+						get_policy($this)->get_access_level(),
+						logged_in('id'));
 			}
 			else
 			{
@@ -457,19 +473,30 @@
 		  * @result an array of #DataIter
 		  */
 		function get_random_photos($num) {
-			$rows = $this->db->query("
+			$rows = $this->db->query(sprintf("
 					SELECT
-						fotos.*,
+						f.*,
 						DATE_PART('year', foto_boeken.date) AS jaar,
 						foto_boeken.titel
 					FROM 
-						fotos,
-						foto_boeken
-					WHERE
-						fotos.boek = foto_boeken.id
-					ORDER BY 
-						RANDOM()
-					LIMIT " . intval($num));
+						(SELECT fotos.id FROM fotos ORDER BY RANDOM() LIMIT %d) as f_ids
+					LEFT JOIN fotos f ON
+						f.id = f_ids.id
+					LEFT JOIN foto_boeken ON
+						foto_boeken.id = f.id
+					GROUP BY
+						f.id,
+						f.boek,
+						f.url,
+						f.thumburl,
+						f.beschrijving,
+						f.added_on,
+						f.width,
+						f.height,
+						f.thumbwidth,
+						f.thumbheight,
+						foto_boeken.date,
+						foto_boeken.titel", $num));
 
 			return $this->_rows_to_iters($rows, 'DataIterPhoto');		
 		}
@@ -491,10 +518,10 @@
 		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
 		{
 			$query = sprintf('
-				WITH RECURSIVE book_children (id, parents) AS (
-						SELECT id, ARRAY[id] FROM foto_boeken WHERE id = %d
+				WITH RECURSIVE book_children (id, visibility, parents) AS (
+						SELECT id, visibility, ARRAY[id] FROM foto_boeken WHERE id = %d
 					UNION ALL
-						SELECT f_b.id,  b_c.parents || f_b.parent
+						SELECT f_b.id,  f_b.visibility, b_c.parents || f_b.parent
 						FROM book_children b_c, foto_boeken f_b
 						WHERE b_c.id = f_b.parent
 				)
@@ -504,8 +531,12 @@
 					book_children b_c
 				LEFT JOIN fotos f ON
 					f.boek = b_c.id
+				WHERE
+					b_c.visibility <= %d
 				GROUP BY
-					f.id', $book->get_id());
+					f.id',
+					get_policy($this)->get_access_level(),
+					$book->get_id());
 
 			if ($random)
 				$query .= ' ORDER BY RANDOM()';
@@ -589,6 +620,9 @@
 
 		public function mark_read($lid_id, DataIterPhotobook $book)
 		{
+			if (!get_config_value('enable_photos_read_status', true))
+				return;
+
 			try {
 				$this->db->insert('foto_boeken_visit',
 					array(
@@ -607,20 +641,28 @@
 
 		protected function mark_children_read($lid_id, DataIterPhotobook $book)
 		{
+			if (!get_config_value('enable_photos_read_status', true))
+				return;
+			
 			$query = sprintf('
-				WITH RECURSIVE book_children (id, titel, parents) AS (
-						SELECT id, titel, ARRAY[0] FROM foto_boeken WHERE parent = %2$d
+				WITH RECURSIVE book_children (id, visiblity, parents) AS (
+						SELECT id, visiblity, ARRAY[0] FROM foto_boeken WHERE parent = %2$d
 					UNION ALL
-						SELECT f_b.id, f_b.titel, b_c.parents || f_b.parent
+						SELECT f_b.id, f_b.visibility, b_c.parents || f_b.parent
 						FROM book_children b_c, foto_boeken f_b
 						WHERE b_c.id = f_b.parent
 				)
 				INSERT INTO foto_boeken_visit (lid_id, boek_id, last_visit)
 				SELECT %1$d, b_c.id, NOW() FROM book_children b_c
-				WHERE NOT EXISTS (
+				WHERE 
+					b_c.visibility <= %3$d
+					AND NOT EXISTS (
 						SELECT 1
 						FROM foto_boeken_visit
-						WHERE lid_id = %1$d AND boek_id = b_c.id)', $lid_id, $book->get_id());
+						WHERE lid_id = %1$d AND boek_id = b_c.id)',
+				$lid_id,
+				$book->get_id(),
+				get_policy($this)->get_access_level());
 
 			$this->db->query($query);
 		}

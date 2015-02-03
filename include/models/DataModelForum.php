@@ -749,7 +749,7 @@
 			$iter = $this->_get_visit_info_real($forumid, $memberid);
 			
 			if (!$iter) {
-				$iter = new $this->dataiter(-1, $this, array(
+				$iter = new $this->dataiter($this, null, array(
 						'forum' => intval($forumid),
 						'lid' => intval($memberid)));
 				$this->_insert('forum_visits', $iter);

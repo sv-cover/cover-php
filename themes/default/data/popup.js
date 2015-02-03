@@ -223,7 +223,6 @@ menu_item_sub.menu = 'popup_sub';
 
 var popup_main = new PopupMenu(new Array(
 		new MenuItem('themes/default/images/popup/home.png', 'index.php', 60, 'Home'),
-		new MenuItem('themes/default/images/popup/gastenboek.png', 'gastenboek.php', 60, 'Gastenboek'),
 		new MenuItem('themes/default/images/popup/almanak.png', 'almanak.php', 60, 'Almanak'),
 		menu_item_sub
 		));

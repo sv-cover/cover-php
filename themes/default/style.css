@@ -266,35 +266,36 @@ border-radius: 0 0 5px 5px;
 	max-width: 100%;
 }
 
-.colorAccent.bestuur {
+.colorAccent.board {
 	background-color:#b80a0a !important;
 	color: #b80a0a !important;
 }
 
-.colorAccent.actie,
-.colorAccent.almanakcie,
-.colorAccent.boekcie,
+.colorAccent.activitee,
+.colorAccent.almanaccee,
+.colorAccent.bookcee,
 .colorAccent.brainstorm,
-.colorAccent.conditie,
+.colorAccent.sportee,
 .colorAccent.eerstejaarscie,
 .colorAccent.excie,
 .colorAccent.foetsie,
-.colorAccent.fotocie,
-.colorAccent.introcie,
-.colorAccent.kascie,
+.colorAccent.photocee,
+.colorAccent.introcee,
+.colorAccent.audicee,
 .colorAccent.lancie,
 .colorAccent.lustrumcie,
-.colorAccent.mccie,
-.colorAccent.meiscie,
-.colorAccent.pcie,
-.colorAccent.prcie,
+.colorAccent.mxcee,
+.colorAccent.aphroditee,
+.colorAccent.pc,
+.colorAccent.comexa,
 .colorAccent.promotie,
-.colorAccent.slackcie,
-.colorAccent.studcie,
+.colorAccent.memory,
+.colorAccent.abcee,
 .colorAccent.sympocie,
 .colorAccent.webcie
 {
-	background-color: #2a65bd !important; color: #2a65bd !important;
+	background-color: #2a65bd !important;
+	color: #2a65bd !important;
 }
 
 .button, .button:visited
@@ -443,13 +444,6 @@ border-radius: 0 0 5px 5px;
 	padding-top: 30px;
 	margin-bottom: 15px;
 }
-
-#gastenboek_bericht table
-{
-	display: inline;
-	margin: 0 auto;
-}
-
 
 .world > .header
 {

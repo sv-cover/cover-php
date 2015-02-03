@@ -286,12 +286,23 @@
 			
 			return $value;
 		}
+
+		function _check_visibility($name, $value)
+		{
+			return in_array($value, array(
+				DataModelFotoboek::VISIBILITY_PUBLIC,
+				DataModelFotoboek::VISIBILITY_MEMBERS,
+				DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS,
+				DataModelFotoboek::VISIBILITY_PHOTOCEE
+			)) ? $value : false;
+		}
 		
 		function _check_fotoboek_values(&$errors) {
 			$data = check_values(array(
-					array('name' => 'titel', 'function' => array(&$this, '_check_titel')),
-					array('name' => 'date', 'function' => array(&$this, '_check_date')),
-					array('name' => 'fotograaf', 'function' => array(&$this, '_check_fotograaf'))),
+					array('name' => 'titel', 'function' => array($this, '_check_titel')),
+					array('name' => 'date', 'function' => array($this, '_check_date')),
+					array('name' => 'fotograaf', 'function' => array($this, '_check_fotograaf')),
+					array('name' => 'visibility', 'function' => array($this, '_check_visibility'))),
 					$errors);
 			
 			if (count($errors) == 0)
@@ -392,10 +403,16 @@
 		protected function _process_del_book(DataIterPhotobook $book)
 		{
 			$this->_page_prepare();
-			
-			$this->_del_book($book);
 
-			$this->redirect('fotoboek.php?book=' . $book->get('parent'));
+			if (!empty($_POST['confirm_delete'])
+				&& $_POST['confirm_delete'] == $book->get('titel'))
+			{
+				$this->_del_book($book);
+
+				return $this->redirect('fotoboek.php?book=' . $book->get('parent'));
+			}
+			
+			$this->get_content('confirm_delete', $book);
 		}
 		
 		protected function _process_fotoboek_del_fotos(DataIterPhotobook $book)
@@ -423,21 +440,82 @@
 			$this->get_content('edit_fotoboek', $book);
 		}
 
+		private function _find_original(DataIterPhoto $photo)
+		{
+			$common_path = 'svcover.nl/fotos/';
+
+			if (($path = strstr($photo->get('url'), $common_path)) === false)
+				return null;
+
+			$path_parts = explode('/', substr($path, strlen($common_path)));
+
+			$path_parts_copy = $path_parts;
+
+			while (count($path_parts) > 0)
+			{
+				$possible_path = '/home/commissies/photocee/fotosGroot/' . implode('/', $path_parts);
+				
+				if (file_exists($possible_path))
+					return $possible_path;
+
+				array_shift($path_parts);
+			}
+
+			// typical paths are fotosGroot/fotos20092010/YYYYMMDD_*/folder/photo.jpg
+			$book = $photo->get_book();
+
+			$parents = $this->model->get_parents($book);
+
+			array_push($parents, $book);
+
+			// Remove first two books (root and college year)
+			$root_book = array_shift($parents);
+			$path = '/home/commissies/photocee/fotosGroot/';
+
+			// College year book is named using the year of the book (duh!)
+			$year_book = array_shift($parents);
+			$year = intval(substr($book->get('datum'), strlen('00-00-')));
+			$path .= sprintf('fotos%d%d/', $year, $year + 1);
+
+			// Activity book is based named using the date of the book, but it
+			// also has a name that may not be the same as the book on the website.
+			$activity_book = array_shift($parents);
+			if (!preg_match('/^(?<day>\d{1,2})-(?<month>\d{1,2})-(?<year>\d\d\d\d)$/', $activity_book->get('datum'), $match)
+				&& !preg_match('/^(?<year>\d\d\d\d)-(?<month>\d{1,2})-(?<day>{1,2})$/', $activity_book->get('datum'), $match))
+				throw new Exception("Could not match activity date to common pattern");
+			
+			$path .= sprintf('%04d%02d%02d_*/', $match['year'], $match['month'], $match['day']);
+
+			// So after generating a path, more or less, we just glob our way through
+			foreach (glob($path) as $folder)
+			{
+				// and now just YOLO find the filename
+				$path_parts = explode('/', substr($path, strlen($common_path)));
+
+				// It might be in this folder already
+				if (file_exists($folder . end($path_parts_copy)))
+					return $folder . end($path_parts_copy);
+
+				// But it also might hide in some subfolder
+				foreach (scandir($folder) as $subfolder)
+					if (is_dir($folder . $subfolder))
+						if (file_exists($folder . $subfolder . '/' . end($path_parts_copy)))
+							return $folder . $subfolder . '/' . end($path_parts_copy);
+			}
+
+			return null;
+		}
+
 		protected function _view_original(DataIterPhoto $photo)
 		{
 			// For now require login for these originals
 			if (!logged_in())
 				throw new UnauthorizedException();
 
-			$common_path = 'fotocie.svcover.nl/fotos/';
+			$real_path = $this->_find_original($photo);
 
-			if (($path = strstr($photo->get('url'), $common_path)) === false)
-				throw new RuntimeException('Could not determine path');
-
-			$real_path = '/home/commissies/photocee/fotosGroot/' . substr($path, strlen($common_path));
-
-			if (!file_exists($real_path))
-				throw new NotFoundException('Could not find file: ' . $real_path);
+			if (!$real_path)
+				throw new NotFoundException('Could not find original file');
 
 			$fh = fopen($real_path, 'rb');
 

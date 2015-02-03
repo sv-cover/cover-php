@@ -198,19 +198,20 @@
 
 	function session_get_member_id()
 	{
+		static $session;
+
 		$session_id = session_get_session_id();
 
 		if ($session_id === null)
 			return null;
 
-		$session_model = get_model('DataModelSession');
-
-		$session = $session_model->resume($session_id);
-
-		if (!$session)
-			return null;
-
-		return $session->get('member_id');
+		if (!isset($session))
+		{
+			$session_model = get_model('DataModelSession');
+			$session = $session_model->resume($session_id);
+		}
+		
+		return $session ? $session->get('member_id') : null;
 	}
 
 	/**

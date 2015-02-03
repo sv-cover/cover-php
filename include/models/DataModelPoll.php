@@ -41,10 +41,9 @@
 
 		public function get_latest_poll()
 		{
-			$poll_model = get_model('DataModelPoll');
-			$forum_model = get_model('DataModelForum');
 			$config_model = get_model('DataModelConfiguratie');
-		
+			$forum_model = get_model('DataModelForum');
+			
 			$id = $config_model->get_value('poll_forum');
 			
 			/* Get last thread */

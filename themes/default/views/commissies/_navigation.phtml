@@ -1,0 +1,28 @@
+<?php
+$committees = $model->get(false);
+
+$committees = array_filter($committees, [get_policy($model), 'user_can_read']);
+
+$current_index = array_usearch($iter, $committees,
+	function($a, $b) { return $a->get_id() == $b->get_id(); });
+
+$prev_committee = $current_index !== null && $current_index > 0
+	? $committees[$current_index - 1]
+	: null;
+
+$next_committee = $current_index !== null && $current_index < count($committees) - 1
+	? $committees[$current_index + 1]
+	: null;
+?>
+<div class="committee-navigation">
+	<?php if ($prev_committee): ?>
+		<a href="<?=markup_format_attribute($this->controller->link_to_read($prev_committee))?>" class="previous">
+			<?=markup_format_text($prev_committee->get('naam'))?>
+		</a>
+	<?php endif ?>
+	<?php if ($next_committee): ?>
+		<a href="<?=markup_format_attribute($this->controller->link_to_read($next_committee))?>" class="next">
+			<?=markup_format_text($next_committee->get('naam'))?>
+		</a>
+	<?php endif ?>
+</div>

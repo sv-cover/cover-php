@@ -4,21 +4,12 @@
 
 	require_once 'include/markup.php';
 	require_once 'include/member.php';
-
-	function _editable_parse_deprecated(&$page) {
-		$page = str_ireplace(array(
-				'[commissie_leden]',
-				'[commissie_poll]',
-				'[commissie_email]',
-				'[commissie_foto]',
-				'[commissie_agenda]'), '', $page);
-	}
 	
 	function _editable_parse_commissie_prive(&$page, $owner) {
 		if (member_in_commissie($owner))
-			$page = preg_replace(Array('/\[prive\]/i','/\[\/prive\]/i'), '', $page);
+			$page = preg_replace(array('/\[prive\]/i','/\[\/prive\]/i'), '', $page);
 		else
-			$page = preg_replace('/\[prive\](.*?)\[\/prive\]/ism', '', $page);
+			$page = preg_replace('/\[prive\].*?\[\/prive\]/ism', '', $page);
 			
 	}
 	
@@ -43,14 +34,13 @@
 	function editable_parse($page, $owner) {
 		$placeholders = array();
 
-		_editable_parse_deprecated($page);
 		_editable_parse_commissie_header($page, $owner);
 		_editable_parse_commissie_summary($page, $owner);
 
-		$page = markup_parse($page);
-
 		_editable_parse_commissie_prive($page, $owner);
 		
+		$page = markup_parse($page);
+
 		return markup_clean($page);
 	}
 	
