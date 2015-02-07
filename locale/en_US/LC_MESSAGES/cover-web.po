@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -1664,7 +1664,7 @@ msgstr "A.I."
 
 #: ../../../themes/default/views/header.php:200
 msgid "Informatica"
-msgstr "Computer Science"
+msgstr "Computing Science"
 
 #: ../../../themes/default/views/header.php:201
 msgid "Alumni"
@@ -1739,7 +1739,7 @@ msgstr "There are still %d calendar events waiting to be approved."
 
 #: ../../../themes/default/views/header.php:354
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
-msgstr "Study Association for Artificial Intelligence and Computer Science"
+msgstr "Study Association for Artificial Intelligence and Computing Science"
 
 #: ../../../themes/default/views/lidworden/lidworden.php:15
 #: ../../../themes/default/views/lidworden/lidworden.phtml:1
