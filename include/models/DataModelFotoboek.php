@@ -479,11 +479,26 @@
 						DATE_PART('year', foto_boeken.date) AS jaar,
 						foto_boeken.titel
 					FROM 
-						(SELECT fotos.id FROM fotos ORDER BY RANDOM() LIMIT %d) as f_ids
+						(SELECT
+							fotos.id
+						FROM
+							fotos
+						WHERE
+							fotos.boek IN (
+								SELECT
+									foto_boeken.id
+								FROM
+									foto_boeken
+								WHERE
+									foto_boeken.visibility = %d
+							)
+						ORDER BY
+							RANDOM()
+						LIMIT %d) as f_ids
 					LEFT JOIN fotos f ON
 						f.id = f_ids.id
 					LEFT JOIN foto_boeken ON
-						foto_boeken.id = f.id
+						foto_boeken.id = f.boek
 					GROUP BY
 						f.id,
 						f.boek,
@@ -496,7 +511,9 @@
 						f.thumbwidth,
 						f.thumbheight,
 						foto_boeken.date,
-						foto_boeken.titel", $num));
+						foto_boeken.titel",
+						self::VISIBILITY_PUBLIC,
+						$num));
 
 			return $this->_rows_to_iters($rows, 'DataIterPhoto');		
 		}
