@@ -1,27 +1,14 @@
-<h1><?= $this->get_title() ?></h1>
-<div class="messageBox">	
-<? if (!logged_in()) { ?>
+<div class="pageHeading">
+	<?php if (get_policy($model)->user_can_create()): ?>
+		<div class="controls inline"><a href="<?=$controller->link_to_create()?>" class="open-in-dialog"><?= image('add.png', __('Toevoegen'), __('Een nieuw agendapunt maken')) ?><?= __('Nieuw agendapunt') ?></a></div>
+	<?php endif ?>
+	<h1><?= $this->get_title() ?></h1>
+</div>
+
+<div class="messageBox">
+<?php if (!logged_in()): ?>
 	<p class="italic"><?= __('Log in om eventuele afgeschermde agendapunten te bekijken.') ?></p>
-<? } else { ?>
-	<div class="bar_right">
-	
-	<? if (($aantal = $model->has_moderate()) && member_in_commissie(COMMISSIE_BESTUUR)) {
-		if ($aantal == 1)
-			$s = __('Er staat nog 1 agendapunt in de wachtrij');
-		else
-			$s = sprintf(__('Er staan nog %d agendapunten in de wachtrij'), $aantal);
-
-		?><div class="left"><a href="agenda.php?agenda_moderate"><?= $s ?></a></div>
-	<? }
-	
-	$member = logged_in();
-	$member_model = get_model('DataModelMember');
-
-	if (count($member_model->get_commissies($member['id'])) > 0) { ?>
-		<a href="agenda.php?agenda_add"><?= image('add.png', __('nieuw'), __('Nieuw agendapunt toevoegen')) ?></a>
-	<? } ?>
-	</div>
-<? } ?>
+<?php endif ?>
 
 <?php if (($prev_year = $this->get_previous_year()) !== null): ?>
 <a href="agenda.php?year=<?=$prev_year?>" class="prev-year"><?printf(__('Toon alles uit het jaar %d-%d'), $prev_year, $prev_year + 1)?></a>
@@ -45,8 +32,9 @@ $days = get_days();
 if (!count($iter)) { ?>
 	<p> <?= __('Er staan op dit moment geen activiteiten op de agenda.') ?></p>
 <? }
-foreach ($iter as $punt) {
+foreach ($iter as $punt):
 	$date = strtotime($punt->get('van'));
+
 	if ($curmaand != $punt->get('vanmaand')) { ?>
 		</table>
 		<h2>
@@ -69,9 +57,9 @@ foreach ($iter as $punt) {
 		<td><a class="agendalink" href="<?=markup_format_attribute($controller->link_to_read($punt))?>"><?= markup_format_text($punt->get('kop')) ?></a><br/>
 		<?= agenda_period_for_display($punt) ?><br/>
 
-	<? if ($punt->get('locatie')) { ?>
+	<?php if ($punt->get('locatie')): ?>
 		<?= __('Locatie') ?>: <?= markup_format_text($punt->get('locatie')) ?><br/>
-	<? }
+	<?php endif ?>
 
 	
 			<ul class="actions">
@@ -84,7 +72,7 @@ foreach ($iter as $punt) {
 			</ul>
 		</td>
 	</tr>
-<? } ?>
+<?php endforeach ?>
 
 </table>
 
