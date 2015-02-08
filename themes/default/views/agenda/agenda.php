@@ -1,7 +1,6 @@
 <?php
 	require_once 'include/login.php';
 	require_once 'include/markup.php';
-	require_once 'include/cache.php';
 	
 	class AgendaView extends View {
 		protected $__file = __FILE__;
@@ -9,8 +8,6 @@
 		protected $model;
 
 		protected $facebook;
-
-		protected $facebook_cache;
 
 		public function __construct()
 		{
@@ -29,29 +26,13 @@
 
 			if (!$item->has('facebook_id'))
 				return null;
-
 			
-			$facebook_event = wrap_cache($this->facebook, 3600, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '?fields=cover', 'GET');
-
-			if (isset($facebook_event['cover']))
-			{
-				$facebook_image = wrap_cache($this->facebook, 24 * 3600, CacheDecorator::CATCH_EXCEPTION)->api('/v2.2/' + $facebook_event['cover']['id'] . '?fields=width,height', 'GET');
-
-				if (isset($facebook_image['height'], $facebook_image['width']))
-				{
-					$real_img_h = 784 * $facebook_image['height'] / $facebook_image['width'] - 295;
-					
-					return array(
-						'src' => $facebook_event['cover']['source'],
-						'x' => $facebook_event['cover']['offset_x'] / 784 * 100,
-						'y' => $real_img_h * $facebook_event['cover']['offset_y'] / 295);
-				}
-			}
-			
-			return array(
-				'src' => get_theme_data('images/default_cover_photo.png'),
-				'x' => 0,
-				'y' => 0);
+			if ($cover_photo = $this->facebook->getCoverPhoto($item->get('facebook_id')))
+				return $cover_photo;
+			else
+				return array(
+					'src' => get_theme_data('images/default_cover_photo.png'),
+					'x' => 0, 'y' => 0);
 		}
 
 		public function get_attending($item)
@@ -62,31 +43,12 @@
 			if (!$item->has('facebook_id'))
 				return array();
 
-			$response = wrap_cache($this->facebook, 300, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '/attending?fields=name,picture', 'GET');
-
-			if (isset($response['data']))
-				return $response['data'];
-			
-			return array();
+			return $this->facebook->getAttending($item->get('facebook_id'));
 		}
 
 		public function get_rsvp_status($item)
 		{
-			if (!$this->facebook)
-				return null;
-
-			if (!$item->has('facebook_id'))
-				return null;
-
-			if (!$this->facebook->getUser())
-				return null;
-
-			$response = wrap_cache($this->facebook, 300, CacheDecorator::CATCH_EXCEPTION)->api('/' . $item->get('facebook_id') . '/invited/' . $this->facebook->getUser(), 'GET');
-
-			if (isset($response['data']) && count($response['data']))
-				return $response['data'][0];
-			
-			return null;
+			throw new Exception('Not implemented at this moment');
 		}
 
 		public function get_rsvp_status_text($rsvp_status)
