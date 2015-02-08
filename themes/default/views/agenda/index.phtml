@@ -66,19 +66,22 @@ foreach ($iter as $punt) {
 				<span class="day"><?=strftime('%d', $date)?></span>
 			</div>
 		</td>
-		<td><a class="agendalink" href="agenda.php?agenda_id=<?= $punt->get_id() ?>"><?= markup_format_text($punt->get('kop')) ?></a><br/>
+		<td><a class="agendalink" href="<?=markup_format_attribute($controller->link_to_read($punt))?>"><?= markup_format_text($punt->get('kop')) ?></a><br/>
 		<?= agenda_period_for_display($punt) ?><br/>
 
 	<? if ($punt->get('locatie')) { ?>
 		<?= __('Locatie') ?>: <?= markup_format_text($punt->get('locatie')) ?><br/>
 	<? }
 
-	if (member_in_commissie($punt->get('commissie')) || member_in_commissie(COMMISSIE_BESTUUR)){ ?>
-		<ul class="actions">
-			<li><a href="agenda.php?agenda_del&agenda_id=<?= $punt->get_id() ?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a></li>
-			<li><a href="agenda.php?agenda_edit&agenda_id=<?= $punt->get_id() ?>"><?= __('Wijzig') ?></a></li>
-		</ul>
-	<? } ?>
+	
+			<ul class="actions">
+				<?php if (get_policy($this->model)->user_can_delete($punt)): ?>
+				<li><a href="<?=markup_format_attribute($controller->link_to_delete($punt))?>" onClick="return confirm('<?= __('Weet je zeker dat je dit agendapunt wilt verwijderen?') ?>');"><?= __('Verwijder') ?></a></li>
+				<?php endif ?>
+				<?php if (get_policy($this->model)->user_can_update($punt)): ?>
+				<li><a href="<?=markup_format_attribute($controller->link_to_update($punt))?>"><?= __('Wijzig') ?></a></li>
+				<?php endif ?>
+			</ul>
 		</td>
 	</tr>
 <? } ?>

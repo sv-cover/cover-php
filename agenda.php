@@ -6,12 +6,15 @@
 	require_once 'include/webcal.php';
 	require_once 'include/markup.php';
 	require_once 'include/controllers/Controller.php';
+	require_once 'include/policies/policy.php';
 	
 	class ControllerAgenda extends Controller
 	{
 		public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
+
+			$this->policy = get_policy($this->model);
 		}
 		
 		function get_content($view = 'index', $iter = null, $params = null) {
@@ -21,6 +24,8 @@
 				$title = sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1);
 			else
 				$title = __('Agenda');
+
+			$params = array_merge(array('controller' => $this), $params ?: array());
 
 			$this->run_header(compact('title'));
 			run_view('agenda::' . $view, $this->model, $iter, $params);
@@ -230,7 +235,7 @@
 		}
 		
 		function _do_del($iter) {
-			if (!$this->_action_prepare($iter))
+			if (!$this->policy->user_can_delete($iter))
 				return;
 			
 			$this->model->delete($iter);
@@ -239,32 +244,35 @@
 		}
 
 		function _view_edit($iter) {
-			if (!logged_in())
+			if (!$iter && !$this->policy->user_can_create())
+				$this->get_content('login');
+			elseif ($iter && !$this->policy->user_can_update($iter))
 				$this->get_content('login', $iter);
 			else
 				$this->get_content('edit', $iter, array('errors' => array()));
 		}
 		
-		function _view_moderate($id) {
-			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))
-			{
-				$this->get_content('auth_bestuur');
-				return;
+		function _view_moderate($id)
+		{
+			$agenda_items = $this->model->get_moderates();
+			$allowed = false;
+
+			foreach ($agenda_items as $iter) {
+				if ($this->policy->user_can_moderate($iter)) {
+					$allowed = true;
+					break;
+				}
 			}
-			
+
+			if (!$allowed)
+				return $this->get_content('login');
+
 			$params = array('highlight' => $id);
 			
-			$iter = $this->model->get_moderates();
-			$this->get_content('moderate', $iter, $params);
+			$this->get_content('moderate', $agenda_items, $params);
 		}
 		
 		function _process_moderate() {
-			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))
-			{
-				$this->get_content('auth_bestuur');
-				return;
-			}
-			
 			$cancelled = array();
 
 			foreach ($_POST as $field => $value) {
@@ -275,6 +283,9 @@
 				$iter = $this->model->get_iter($id);
 				
 				if (!$iter)
+					continue;
+
+				if (!$this->policy->user_can_moderate($iter))
 					continue;
 
 				if ($value == 'accept') {
@@ -377,6 +388,9 @@
 
 			foreach ($punten as $punt)
 			{
+				if (!$this->policy->user_can_read($punt))
+					continue;
+
 				$event = new WebCal_Event;
 				$event->uid = $punt->get_id() . '@svcover.nl';
 				$event->start = new DateTime($punt->get('van'), $timezone);
@@ -397,26 +411,39 @@
 			exit;
 		}
 
+		public function link_to_create()
+		{
+			return 'agenda.php?agenda_add';
+		}
+
+		public function link_to_read(DataIter $iter)
+		{
+			return sprintf('agenda.php?agenda_id=%d', $iter->get_id());
+		}
+
+		public function link_to_update(DataIter $iter)
+		{
+			return sprintf('agenda.php?agenda_edit&agenda_id=%d', $iter->get_id());
+		}
+
+		public function link_to_delete(DataIter $iter)
+		{
+			return sprintf('agenda.php?agenda_del&agenda_id=%d', $iter->get_id());
+		}
+
 		public function run_index()
 		{
-			if (isset($_GET['query'])) {
-				$iter = $this->model->search($_GET['query'], null, logged_in());
-				$this->get_content('index', $iter, array('show_year' => true));
-			}
-			else
-				$this->get_content('index');
+			$this->get_content('index');
 		}
 		
 		function run_impl() {
 			$iter = null;
 
 			if (isset($_GET['agenda_id'])) {
-				$iter = $this->model->get_iter($_GET['agenda_id'], logged_in());
+				$iter = $this->model->get_iter($_GET['agenda_id']);
 				
-				if (!$iter || ($iter->get('moderate') && !member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))) {
-					$this->get_content('not_found');
-					return;
-				}
+				if (!$this->policy->user_can_read($iter))
+					return $this->get_content('login');
 			}
 
 			if (isset($_POST['rsvp_status']))

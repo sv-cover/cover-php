@@ -70,7 +70,7 @@
 				DATE_PART('minutes', agenda.tot) AS totminuut";
 		}
 		
-		public function get_iter($id, $include_prive = true)
+		public function get_iter($id)
 		{
 			$row = $this->db->query_first("SELECT *, " . 
 					$this->_generate_select() . ",
@@ -79,9 +79,8 @@
 					FROM agenda
 					LEFT JOIN agenda_moderate a_m ON
 						a_m.agendaid = agenda.id
-					WHERE id = " . intval($id) . 
-					(!$include_prive ? ' AND private = 0 ' : '')
-					. " GROUP BY agenda.id, a_m.agendaid, a_m.overrideid");
+					WHERE id = " . intval($id) . "
+					GROUP BY agenda.id, a_m.agendaid, a_m.overrideid");
 			
 			if (!$row)
 				throw new DataIterNotFoundException($id);
