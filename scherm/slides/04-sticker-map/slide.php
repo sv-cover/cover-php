@@ -24,12 +24,12 @@ function getBoundsZoomLevel(Geokit\Bounds $bounds, $map_width, $map_height)
 	$world_height = 256;
 	$zoom_max = 21;
 
-	$ne = $bounds->getEastNorth();
-	$sw = $bounds->getWestSouth();
+	$ne = $bounds->getNorthEast();
+	$sw = $bounds->getSouthWest();
 
-	$latFraction = (latRad($ne['latitude']) - latRad($sw['latitude'])) / M_PI;
+	$latFraction = (latRad($ne->getLatitude()) - latRad($sw->getLatitude())) / M_PI;
 
-	$lngDiff = $ne['longitude'] - $sw['longitude'];
+	$lngDiff = $ne->getLongitude() - $sw->getLongitude();
 	$lngFraction = (($lngDiff < 0) ? ($lngDiff + 360) : $lngDiff) / 360;
 
 	$latZoom = zoom($map_height, $world_height, $latFraction);
@@ -38,10 +38,10 @@ function getBoundsZoomLevel(Geokit\Bounds $bounds, $map_width, $map_height)
 	return min($latZoom, $lngZoom, $zoom_max);
 }
 
-$center = new Geokit\LngLat($focussed_sticker->get('lng'), $focussed_sticker->get('lat'));
+$center = new Geokit\LatLng($focussed_sticker->get('lat'), $focussed_sticker->get('lng'));
 
 $bounds = array_reduce($nearby_stickers, function($bounds, $sticker) {
-	return $bounds->extend(new Geokit\LngLat($sticker->get('lng'), $sticker->get('lat')));
+	return $bounds->extendByLatLng(new Geokit\LatLng($sticker->get('lat'), $sticker->get('lng')));
 }, new Geokit\Bounds($center, $center));
 
 $zoom = getBoundsZoomLevel($bounds, 1920, 1080);
