@@ -172,17 +172,24 @@
 		  */
 		public function get_members(DataIterCommissie $committee)
 		{
-			$rows = $this->db->query('SELECT
-					leden.id, 
-					leden.voornaam, 
-					leden.tussenvoegsel, 
-					leden.achternaam, 
-					leden.email, 
-					leden.privacy,
-					actieveleden.functie
-					FROM actieveleden, leden
-					WHERE leden.id = actieveleden.lidid AND 
-					actieveleden.commissieid = ' . $committee->get_id());
+			$rows = $this->db->query(sprintf(
+					"SELECT
+						leden.id, 
+						leden.voornaam, 
+						leden.tussenvoegsel, 
+						leden.achternaam, 
+						leden.email, 
+						leden.privacy,
+						actieveleden.id as membership_id,
+						actieveleden.functie
+					FROM
+						actieveleden
+					RIGHT JOIN leden ON
+						leden.id = actieveleden.lidid
+					WHERE
+						actieveleden.commissieid = %d
+						AND actieveleden.discharged_on IS NULL",
+						$committee->get_id()));
 			
 			$iters = $this->_rows_to_iters($rows, 'DataIterMember');
 			
@@ -207,19 +214,44 @@
 
 		public function set_members(DataIterCommissie $committee, array $members)
 		{
-			$this->db->delete('actieveleden', sprintf('commissieid = %d', $committee->get_id()));
+			$current_members = $this->get_members($committee);
 
+			$memberships_to_stop = array();
+
+			foreach ($current_members as $current_member)
+			{
+				// Current committee members that will no longer be in the
+				// committee or have changed position.
+				if (!array_key_exists($current_member->get_id(), $members)
+					|| $current_member->get('functie') != $members[$current_member->get_id()])
+					$memberships_to_stop[] = $current_member->get('membership_id');
+				// Or members that are in the committee and still have the same
+				// position. Those do not need to be altered.
+				else
+					unset($members[$current_member->get_id()]);
+			}
+
+			// Stop membership of previous members
+			$this->db->update('actieveleden',
+				array('discharged_on' => 'NOW()'),
+				sprintf('actieveleden.id IN (%s)', implode(',', $memberships_to_stop)),
+				array('discharged_on'));
+
+			// Add membership for new members
 			foreach ($members as $member_id => $position)
-				$this->db->insert('actieveleden', array(
-					'commissieid' => $committee->get_id(),
-					'lidid' => intval($member_id),
-					'functie' => $position));
+				$this->db->insert('actieveleden',
+					array(
+						'commissieid' => $committee->get_id(),
+						'lidid' => intval($member_id),
+						'functie' => $position,
+						'started_on' => 'NOW()'),
+					array('started_on'));
 		}
 
 		public function get_commissies_for_member($lid_id)
 		{
-			$rows = $this->db->query("
-				SELECT
+			$rows = $this->db->query(sprintf(
+				"SELECT
 					c.id,
 					c.naam,
 					c.page,
@@ -228,15 +260,17 @@
 					actieveleden al
 				RIGHT JOIN commissies c ON
 					al.commissieid = c.id
+					AND al.discharged_on IS NULL
 				WHERE
-					al.lidid = " . intval($lid_id) ."
+					al.lidid = %d
 				GROUP by
 					c.id,
 					c.naam,
 					c.page,
 					al.functie
 				ORDER BY
-					c.naam ASC");
+					c.naam ASC",
+					$lid_id));
 
 			return $this->_rows_to_iters($rows);
 		}
@@ -348,6 +382,7 @@
 					c.id = al.commissieid
 				WHERE
 					c.hidden <> 1
+					AND al.discharged_on IS NULL
 					AND (CASE
 						WHEN coalesce(tussenvoegsel, '') = '' THEN
 							voornaam || ' ' || achternaam
@@ -365,6 +400,7 @@
 					FROM commissies c
 					LEFT JOIN actieveleden a ON
 						a.commissieid = c.id
+						AND a.discharged_on IS NULL
 					WHERE c.hidden <> 1
 					GROUP BY c.id
 					HAVING COUNT(a.id) > 0

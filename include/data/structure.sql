@@ -427,7 +427,9 @@ CREATE TABLE actieveleden (
     id SERIAL NOT NULL,
     lidid smallint NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
     commissieid smallint NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    functie character varying(50)
+    functie character varying(50),
+    started_on DATE DEFAULT NULL,
+    discharged_on DATE DEFAULT NULL
 );
 
 --

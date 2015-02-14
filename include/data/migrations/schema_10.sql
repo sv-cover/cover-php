@@ -1,0 +1,3 @@
+ALTER TABLE actieveleden
+	ADD COLUMN started_on DATE DEFAULT NULL,
+	ADD COLUMN discharged_ON DATE DEFAULT NULL;
