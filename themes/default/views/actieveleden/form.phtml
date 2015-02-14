@@ -1,0 +1,70 @@
+<h1><?=$this->get_label($iter, __('Nieuw commissielidmaatschap maken'), __('Commissielidmaatschap corrigeren')) ?></h1>
+<div class="messageBox">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="committee-membership-form vertical-form">
+		<div>
+			<?=label(__('Lid'), 'lidid', $errors, true)?>
+			<?=input_hidden('lidid', $iter->get('lidid'))?>
+			<?=input_text('lid', array('lid' => member_full_name($iter->getIter('lid'))), 'class', 'committee-member-name')?>
+		</div>
+
+		<div>
+			<?=label(__('Functie'), 'functie', $errors, true)?>
+			<?=input_text('functie', $iter->data, 'class', 'committee-member-function')?>
+		</div>
+
+		<div>
+			<?=label(__('Commissie'), 'commissieid', $errors, true)?>
+			<?=select_field('commissieid', $this->get_committees(), $iter->data)?>
+		</div>
+
+		<div>
+			<?=label(__('Ingehamerd op'), 'started_on', $errors, true)?>
+			<?=input_date('started_on', $iter->data) ?>
+		</div>
+
+		<div>
+			<?=label(__('Uitgehamerd op'), 'discharged_on', $errors, true)?>
+			<?=input_date('discharged_on', $iter->data) ?>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Maak commissielidmaatschap aan'), __('Corrigeer commissielidmaatschap')) ?></button>
+			<?php if ($iter->has_id()): ?>
+			<a href="<?=markup_format_attribute($controller->link_to_read($iter))?>"><?=__('Terug naar geschiedenis')?></a>
+			<?php else: ?>
+			<a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Terug naar geschiedenis')?></a>
+			<?php endif ?>
+		</div>
+	</form>
+</div>
+<script>
+jQuery(function($) {
+	var $form = $('form.committee-membership-form')
+		$member = $form.find('input.committee-member-name'),
+		$fun = $form.find('input.committee-member-function');
+
+	$member.autocompleteAlmanac({
+		select: function(event, ui) {
+			$form.find('input[name=lidid]').val(ui.item.id);
+			$(this).val(ui.item.name);
+			$fun.focus();
+			return false;
+		}
+	});
+
+	$fun.autocomplete({
+			delay: 0,
+			minLength: 0,
+			source: <?=json_encode($this->get_functies())?>
+		})
+		.focus(function(e) {
+			$(this).autocomplete('search', '');
+		});
+
+	$fun.keypress(function(e) {
+		if (e.keyCode == $.ui.keyCode.ENTER) {
+			e.preventDefault();
+		}
+	});
+});
+</script>

@@ -1,0 +1,14 @@
+<h1><?=__('Commissielidmaatschap wissen') ?></h1>
+<div class="messageBox">
+	<form method="post" action="<?=markup_format_attribute($controller->link_to_delete($iter))?>" class="vertical-form">
+		<p><?=sprintf(__('Weet je heel zeker dat je wilt vergeten dat <em>%s</em> van <time>%s</time> tot <time>%s</time> in de <em>%s</em> heeft gezeten?'),
+			markup_format_text(member_full_name($iter->getIter('lid'))),
+			markup_format_text($iter->get('started_on')),
+			markup_format_text($iter->get('discharged_on')),
+			markup_format_text($iter->getIter('commissie')->get('naam')))?></p>
+		<div>
+			<button type="submit" class="button"><?=__('Verwijder commissielidmaatschap') ?></button>
+			<a href="<?=markup_format_attribute($controller->link_to_read($iter))?>"><?=__('Terug naar overzicht')?></a>
+		</div>
+	</form>
+</div>

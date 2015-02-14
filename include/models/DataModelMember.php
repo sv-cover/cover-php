@@ -233,21 +233,13 @@
 		  *
 		  * @result an array of commissie ids
 		  */
-		public function get_commissies($memberid)
+		public function get_commissies($member_id)
 		{
-			$rows = $this->db->query("SELECT commissieid
-					FROM actieveleden 
-					WHERE lidid = " . intval($memberid));
-			
-			$commissies = array();
+			$commissie_model = get_model('DataModelCommissie');
 
-			if (!$rows)
-				return $commissies;
-			
-			foreach ($rows as $row)
-				$commissies[] = $row['commissieid'];
-			
-			return $commissies;
+			return array_map(
+				function($c) { return $c->get_id(); },
+				$commissie_model->get_commissies_for_member($member_id));
 		}
 		
 		/** 

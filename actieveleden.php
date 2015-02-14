@@ -1,45 +1,34 @@
 <?php
 	require_once 'include/init.php';
 	require_once 'include/member.php';
-	require_once 'include/controllers/Controller.php';
+	require_once 'include/controllers/ControllerCRUD.php';
 	
-	class ControllerActieveLeden extends Controller
+	class ControllerActieveLeden extends ControllerCRUD
 	{
-		var $model = null;
-
-		function ControllerActieveLeden() {
+		public function __construct()
+		{
 			$this->model = get_model('DataModelActieveLeden');
 		}
-		
-		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => __('ActieveLeden')));
-			run_view($view, $this->model, $iter, $params);
-			$this->run_footer();
+
+		protected function _get_title($iters = null)
+		{
+			return __('Geschiedenis van actieve leden');
 		}
-		
-		function run_impl() {
-			if (!member_in_commissie(COMMISSIE_BESTUUR)
-				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
-				$this->get_content('auth');
-				return;
-			}
 
-			$view = isset($_GET['view']) ? $_GET['view'] : 'current';
+		public function link_to_read(DataIter $iter)
+		{
+			return $this->link_to_index() . '#membership' . $iter->get_id();
+		}
 
-			switch ($view)
-			{
-				case 'current':
-					$this->get_content('actieveleden::index');
-					break;
+		protected function _update(DataIter $iter, $data, array &$errors)
+		{
+			if (isset($data['started_on']) && empty($data['started_on']))
+				$data['started_on'] = null;
 
-				case 'history':
-					$this->get_content('actieveleden::history');
-					break;
-
-				default:
-					$this->get_content('not_found');
-					break;
-			}
+			if (isset($data['discharged_on']) && empty($data['discharged_on']))
+				$data['discharged_on'] = null;
+			
+			return parent::_update($iter, $data, $errors);
 		}
 	}
 	

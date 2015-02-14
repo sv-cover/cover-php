@@ -1,5 +1,7 @@
 <?php
 
+require_once 'include/member.php';
+
 interface Policy
 {
 	public function user_can_create();
@@ -9,6 +11,29 @@ interface Policy
 	public function user_can_update(DataIter $iter);
 
 	public function user_can_delete(DataIter $iter);
+}
+
+abstract class DefaultReadAllWriteBoardPolicy
+{
+	public function user_can_create()
+	{
+		return member_in_commissie(COMMISSIE_BESTUUR);
+	}
+
+	public function user_can_read(DataIter $iter)
+	{
+		return true;
+	}
+
+	public function user_can_update(DataIter $iter)
+	{
+		return member_in_commissie(COMMISSIE_BESTUUR);
+	}
+
+	public function user_can_delete(DataIter $iter)
+	{
+		return $this->user_can_update($iter);
+	}
 }
 
 function get_policy($model)

@@ -11,6 +11,17 @@
 	  */
 	class DataModelActieveLeden extends DataModel
 	{
+		public $fields = array(
+			'id',
+			'lidid',
+			'commissieid',
+			'functie',
+			'started_on',
+			'discharged_on'
+		);
+
+		public $dataiter = 'DataIterMembership';
+
 		public function __construct($db)
 		{
 			parent::__construct($db, 'actieveleden');
@@ -35,10 +46,12 @@
 			return $this->_rows_to_iters($rows);
 		}
 
-		public function get_membership_history()
+		protected function _generate_query($where)
 		{
-			$rows = $this->db->query(
-				"SELECT
+			if ($where)
+				$where = "WHERE {$where}";
+			
+			return "SELECT
 					m.id,
 					m.lidid,
 					m.commissieid,
@@ -65,13 +78,12 @@
 					l.id = m.lidid
 				INNER JOIN commissies c ON
 					c.id = m.commissieid
+				{$WHERE}
 				GROUP BY
 					m.id,
 					l.id,
 					c.id
 				ORDER BY
-					m.id DESC");
-
-			return $this->_rows_to_iters($rows, 'DataIterMembership');
+					m.id DESC";
 		}
 	}

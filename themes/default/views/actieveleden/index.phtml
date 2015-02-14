@@ -1,6 +1,6 @@
+<?php $policy = get_policy($model) ?>
 <div class="messageBox">
-<?php $this->render_partial('navigation', ['tab' => 'current']) ?>
-<table class="default">
+<table id="membership-history" class="default">
 	<col class="text_center">
 	<col>
 	<col class="text_center">
@@ -9,18 +9,33 @@
 	<thead>
 		<tr class="header">
 			<th><?= __('Naam') ?></th>
-			<th><?= __('Email') ?></th>
-			<th><?= __('Commissies') ?></th>
+			<th><?= __('Commissie') ?></th>
+			<th><?= __('Functie') ?></th>
+			<th><?= __('Ingehamerd op') ?></th>
+			<th><?= __('Uitgehamerd op') ?></th>
+			<th colspan="2"></th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($model->get_active_members() as $lid): ?>
-			<tr>
-				<td><a href="profiel.php?lid=<?=$lid->get('id')?>"><?= markup_format_text(member_full_name($lid)) ?></a></td>
-				<td><?= markup_format_text($lid->get('email')) ?></td>
-				<td><?= $lid->get('commissie_count') ?></td>
+	<?php foreach ($iter as $membership): ?>
+			<tr id="membership<?=$membership->get_id()?>">
+				<td><a href="profiel.php?lid=<?=$membership->getIter('lid')->get('id')?>"><?= markup_format_text(member_full_name($membership->getIter('lid'))) ?></a></td>
+				<td><a href="commissies.php?commissie=<?=rawurlencode($membership->getIter('commissie')->get('login'))?>"><?= markup_format_text($membership->getIter('commissie')->get('naam')) ?></a></td>
+				<td><?= markup_format_text($membership->get('functie')) ?></td>
+				<td><?= $membership->get('started_on') ?></td>
+				<td><?= $membership->get('discharged_on') ?></td>
+				<td>
+					<?php if ($policy->user_can_update($membership)): ?>
+					<a href="<?=$controller->link_to_update($membership)?>"><?=__('Corrigeer')?></a>
+					<?php endif ?>
+				</td>
+				<td>
+					<?php if ($policy->user_can_delete($membership)): ?>
+					<a href="<?=$controller->link_to_delete($membership)?>"><?=__('Vergeet')?></a>
+					<?php endif ?>
+				</td>
 			</tr>
-	<? endforeach ?>
+	<?php endforeach ?>
 	</tbody>
 </table>
 </div>		
