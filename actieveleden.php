@@ -13,7 +13,7 @@
 		
 		function get_content($view, $iter = null, $params = null) {
 			$this->run_header(array('title' => __('ActieveLeden')));
-			run_view('actieveleden::' . $view, $this->model, $iter, $params);
+			run_view($view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
 		
@@ -23,8 +23,23 @@
 				$this->get_content('auth');
 				return;
 			}
-			
-			$this->get_content('index');
+
+			$view = isset($_GET['view']) ? $_GET['view'] : 'current';
+
+			switch ($view)
+			{
+				case 'current':
+					$this->get_content('actieveleden::index');
+					break;
+
+				case 'history':
+					$this->get_content('actieveleden::history');
+					break;
+
+				default:
+					$this->get_content('not_found');
+					break;
+			}
 		}
 	}
 	

@@ -1,4 +1,5 @@
 <div class="messageBox">
+<?php $this->render_partial('navigation', ['tab' => 'current']) ?>
 <table class="default">
 	<col class="text_center">
 	<col>
@@ -7,7 +8,6 @@
 	<col>
 	<thead>
 		<tr class="header">
-			<th><?= __('ID') ?></th>
 			<th><?= __('Naam') ?></th>
 			<th><?= __('Email') ?></th>
 			<th><?= __('Commissies') ?></th>
@@ -16,7 +16,6 @@
 	<tbody>
 	<?php foreach ($model->get_active_members() as $lid): ?>
 			<tr>
-				<td><?= $lid->get('id') ?></td>
 				<td><a href="profiel.php?lid=<?=$lid->get('id')?>"><?= markup_format_text(member_full_name($lid)) ?></a></td>
 				<td><?= markup_format_text($lid->get('email')) ?></td>
 				<td><?= $lid->get('commissie_count') ?></td>

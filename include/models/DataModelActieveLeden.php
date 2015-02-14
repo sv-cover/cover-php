@@ -1,6 +1,11 @@
 <?php
 	require_once 'include/data/DataModel.php';
 
+	class DataIterMembership extends DataIter
+	{
+		//
+	}
+
 	/**
 	  * A class implementing active member data
 	  */
@@ -28,5 +33,45 @@
 				ORDER BY voornaam, tussenvoegsel, achternaam ASC');
 
 			return $this->_rows_to_iters($rows);
+		}
+
+		public function get_membership_history()
+		{
+			$rows = $this->db->query(
+				"SELECT
+					m.id,
+					m.lidid,
+					m.commissieid,
+					m.functie,
+					m.started_on,
+					m.discharged_on,
+					l.id lid__id,
+					l.voornaam lid__voornaam,
+					l.tussenvoegsel lid__tussenvoegsel,
+					l.achternaam lid__achternaam,
+					l.email lid__email,
+					l.privacy lid__privacy,
+					c.id commissie__id,
+					c.naam commissie__naam,
+					c.login commissie__login,
+					c.website commissie__website,
+					c.nocaps commissie__nocaps,
+					c.page commissie__page,
+					c.hidden commissie__hidden,
+					c.vacancies commissie__vacancies
+				FROM
+					{$this->table} m
+				INNER JOIN leden l ON
+					l.id = m.lidid
+				INNER JOIN commissies c ON
+					c.id = m.commissieid
+				GROUP BY
+					m.id,
+					l.id,
+					c.id
+				ORDER BY
+					m.id DESC");
+
+			return $this->_rows_to_iters($rows, 'DataIterMembership');
 		}
 	}
