@@ -96,11 +96,11 @@ class ProfielView extends View {
 			return $subscriptions;
 		}
 
-		public function get_commissies($iter)
+		public function get_committee_history($iter)
 		{
 			$model = get_model('DataModelCommissie');
 
-			return $model->get_commissies_for_member($iter->get('id'));
+			return $model->get_committee_history_for_member($iter->get('id'));
 		}
 
 }

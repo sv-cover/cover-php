@@ -1,0 +1,44 @@
+<?php
+	$current_positions = array();
+	$previous_positions = array();
+
+	foreach ($positions as $position)
+		if ($position->get('discharged_on'))
+			$previous_positions[] = $position;
+		else
+			$current_positions[] = $position;
+?>
+<div class="floatLeft almanak">
+	<h2 class="profilehead" id="commissies"><?= __('Commissies') ?></h2>
+	<?php if (count($current_positions) > 0): ?>
+	<p><?= markup_format_text(__('Lid van de volgende commissies:')) ?></p>
+	<ul>
+		<?php foreach ($current_positions as $commissie): ?>
+		<li>
+			<a href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
+			- <span class="functie"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
+		</li>
+		<?php endforeach ?>
+	</ul>
+	<?php endif ?>
+
+	<?php if (count($previous_positions) > 0): ?>
+	<p><?= markup_format_text(__('Voorheen commissielid van:')) ?></p>
+	<ul>
+		<?php foreach ($previous_positions as $commissie): ?>
+		<li>
+			<a href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
+			- <span class="functie"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
+			<?php if ($commissie->get('started_on')): ?>
+			<?= sprintf(__('van %s tot %s'),
+				'<time>' . $commissie->get('started_on') . '</time>',
+				'<time>' . $commissie->get('discharged_on') . '</time>') ?>
+			<?php else: ?>
+			<?= sprintf(__('tot %s'),
+				'<time>' . $commissie->get('discharged_on') . '</time>') ?>
+			<?php endif ?>
+		</li>
+		<?php endforeach ?>
+	</ul>
+	<?php endif ?>
+</div>

@@ -275,6 +275,31 @@
 			return $this->_rows_to_iters($rows);
 		}
 
+		public function get_committee_history_for_member($lid_id)
+		{
+			$rows = $this->db->query(sprintf(
+				"SELECT
+					c.id,
+					c.naam,
+					c.page,
+					c.login,
+					al.id as membership_id,
+					al.functie,
+					al.started_on,
+					al.discharged_on
+				FROM
+					actieveleden al
+				RIGHT JOIN commissies c ON
+					al.commissieid = c.id
+				WHERE
+					al.lidid = %d
+				ORDER BY
+					c.naam ASC",
+					$lid_id));
+
+			return $this->_rows_to_iters($rows, 'DataIterCommissie');
+		}
+
 		/**
 		  * Get the login name of a specific commissie
 		  * @id the commissie id

@@ -165,19 +165,8 @@
 		</div>
 	<?php } ?>
 
-	<?php if ($commissies = $this->get_commissies($iter)): ?>
-	<div class="floatLeft almanak">
-		<h2 class="profilehead" id="commissies"><?= __('Commissies') ?></h2>
-		<p><?= markup_format_text(__('Lid van de volgende commissies:')) ?></p>
-		<ul>
-			<?php foreach ($commissies as $commissie): ?>
-			<li>
-				<a href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
-				- <span class="functie"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
-			</li>
-			<?php endforeach ?>
-		</ul>
-	</div>
+	<?php if ($positions = $this->get_committee_history($iter)): ?>
+		<?php $this->render_partial('commissies', compact('iter', 'positions')) ?>
 	<?php endif ?>
 
 	<? if ($this->member_write_permission($iter)) { ?>
