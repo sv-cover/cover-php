@@ -27,12 +27,16 @@
 			<?=input_date('discharged_on', $iter->data) ?>
 		</div>
 
-		<div>
+		<div class="form-control">
 			<button type="submit" class="button"><?=$this->get_label($iter, __('Maak commissielidmaatschap aan'), __('Corrigeer commissielidmaatschap')) ?></button>
 			<?php if ($iter->has_id()): ?>
 			<a href="<?=markup_format_attribute($controller->link_to_read($iter))?>"><?=__('Terug naar geschiedenis')?></a>
 			<?php else: ?>
 			<a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Terug naar geschiedenis')?></a>
+			<?php endif ?>
+
+			<?php if ($iter->has_id() && get_policy($model)->user_can_delete($iter)): ?>
+			<a class="link-to-delete" href="<?=$controller->link_to_delete($iter)?>"><?=__('Vergeet commissielidmaatschap')?></a>
 			<?php endif ?>
 		</div>
 	</form>

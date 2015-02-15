@@ -1169,6 +1169,13 @@ div.beheer table {
 	text-align: left;
 }
 
+.vertical-form .form-control .link-to-delete {
+	display: inline-block;
+	vertical-align: baseline;
+	margin: 5px 0;
+	float: right;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }

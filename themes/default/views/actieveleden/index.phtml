@@ -13,7 +13,7 @@
 			<th><?= __('Functie') ?></th>
 			<th><?= __('Ingehamerd op') ?></th>
 			<th><?= __('Uitgehamerd op') ?></th>
-			<th colspan="2"></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -27,11 +27,6 @@
 				<td>
 					<?php if ($policy->user_can_update($membership)): ?>
 					<a href="<?=$controller->link_to_update($membership)?>"><?=__('Corrigeer')?></a>
-					<?php endif ?>
-				</td>
-				<td>
-					<?php if ($policy->user_can_delete($membership)): ?>
-					<a href="<?=$controller->link_to_delete($membership)?>"><?=__('Vergeet')?></a>
 					<?php endif ?>
 				</td>
 			</tr>
