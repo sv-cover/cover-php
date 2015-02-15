@@ -84,6 +84,7 @@
 					l.id,
 					c.id
 				ORDER BY
+					m.started_on DESC NULLS LAST,
 					m.id DESC";
 		}
 	}

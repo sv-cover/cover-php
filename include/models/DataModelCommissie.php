@@ -232,10 +232,11 @@
 			}
 
 			// Stop membership of previous members
-			$this->db->update('actieveleden',
-				array('discharged_on' => 'NOW()'),
-				sprintf('actieveleden.id IN (%s)', implode(',', $memberships_to_stop)),
-				array('discharged_on'));
+			if (count($memberships_to_stop) > 0)
+				$this->db->update('actieveleden',
+					array('discharged_on' => 'NOW()'),
+					sprintf('actieveleden.id IN (%s)', implode(',', $memberships_to_stop)),
+					array('discharged_on'));
 
 			// Add membership for new members
 			foreach ($members as $member_id => $position)
