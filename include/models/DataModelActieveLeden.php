@@ -52,12 +52,12 @@
 				$where = "WHERE {$where}";
 			
 			return "SELECT
-					m.id,
-					m.lidid,
-					m.commissieid,
-					m.functie,
-					m.started_on,
-					m.discharged_on,
+					{$this->table}.id,
+					{$this->table}.lidid,
+					{$this->table}.commissieid,
+					{$this->table}.functie,
+					{$this->table}.started_on,
+					{$this->table}.discharged_on,
 					l.id lid__id,
 					l.voornaam lid__voornaam,
 					l.tussenvoegsel lid__tussenvoegsel,
@@ -73,18 +73,18 @@
 					c.hidden commissie__hidden,
 					c.vacancies commissie__vacancies
 				FROM
-					{$this->table} m
+					{$this->table}
 				INNER JOIN leden l ON
-					l.id = m.lidid
+					l.id = {$this->table}.lidid
 				INNER JOIN commissies c ON
-					c.id = m.commissieid
-				{$WHERE}
+					c.id = {$this->table}.commissieid
+				{$where}
 				GROUP BY
-					m.id,
+					{$this->table}.id,
 					l.id,
 					c.id
 				ORDER BY
-					m.started_on DESC NULLS LAST,
-					m.id DESC";
+					{$this->table}.started_on DESC NULLS LAST,
+					{$this->table}.id DESC";
 		}
 	}
