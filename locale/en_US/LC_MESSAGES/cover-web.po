@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-02-08 11:49+0100\n"
+"POT-Creation-Date: 2015-02-22 21:47+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.7.3\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -623,7 +623,7 @@ msgstr ""
 
 #: ../../../lidworden.php:17
 msgid "Lid worden"
-msgstr "Become Active"
+msgstr "Sign up for Cover"
 
 #: ../../../locale/strings.php:9
 msgid "Voorzitter"
@@ -1699,7 +1699,7 @@ msgstr "Forgot your password?"
 
 #: ../../../themes/default/views/header.php:297
 msgid "lid worden"
-msgstr "Become Active"
+msgstr "Join Cover"
 
 #: ../../../themes/default/views/header.php:298
 msgid "E-mailadres"
@@ -2308,7 +2308,7 @@ msgstr "Print"
 #: ../../../themes/default/views/boeken/bestellingen.phtml:30
 #: ../../../themes/default/views/boeken/bestellingen.phtml:55
 #: ../../../themes/default/views/boeken/bestellingen.phtml:93
-#: ../../../themes/default/views/fotoboek/_photo.phtml:60
+#: ../../../themes/default/views/fotoboek/_photo.phtml:59
 msgid "Download"
 msgstr "Download"
 
@@ -3526,6 +3526,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "wachtwoord vergeten"
+#~ msgstr "Forgot your password?"
 
 #~ msgid "Nieuw agendapunt toevoegen"
 #~ msgstr "Add a new calendar event"
