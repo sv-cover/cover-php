@@ -10,10 +10,9 @@
 			if (!$language)
 				$language = i18n_get_language();
 
-			$preferred_fields = array(
-				'content_' . $language,
-				'content_en',
-				'content');
+			$preferred_fields = $language == 'en'
+				? array('content_en', 'content')
+				: array('content', 'content_en');
 
 			foreach ($preferred_fields as $field)
 				if ($this->get($field))
