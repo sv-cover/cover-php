@@ -8,7 +8,7 @@ $months = get_months();
 <div class="replyBox">
 <div class="title">
 <span class="replyDetails">
-<div class="right"><?= sprintf('%s %d %s, %02d:%02d', $days[$reactie->get('dagnaam')], $reactie->get('datum'), $months[$reactie->get('maand')], $reactie->get('uur'), $reactie->get('minuut')) ?></div><?= htmlspecialchars(member_full_name($reactie->get('auteur'))) ?>
+<div class="right"><?= sprintf('%s %d %s, %02d:%02d', $days[$reactie->get('dagnaam')], $reactie->get('datum'), $months[$reactie->get('maand')], $reactie->get('uur'), $reactie->get('minuut')) ?></div><?= htmlspecialchars(member_full_name($reactie->getIter('auteur'), false, true)) ?>
 </span>
 <? if ($subtitle) { ?>
 	<div class="subtitle">
