@@ -453,6 +453,7 @@ CREATE TABLE foto_boeken (
     titel character varying(50) NOT NULL,
     fotograaf character varying(25),
     date date,
+    last_update timestamp DEFAULT NULL,
     beschrijving text,
     visibility integer NOT NULL DEFAULT 0,
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)

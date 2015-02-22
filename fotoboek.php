@@ -378,6 +378,11 @@
 				$new_photos[] = new DataIterPhoto($this->model, $id, $iter->data);
 			}
 
+			// Update photo book last_update timestamp
+			$book->set_literal('last_update', 'NOW()');
+			$this->model->update_book($book);
+
+			// Update faces
 			$face_model = get_model('DataModelFotoboekFaces');
 			$face_model->refresh_faces($new_photos);
 			

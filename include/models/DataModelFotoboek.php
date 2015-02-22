@@ -402,41 +402,55 @@
 			if (get_config_value('enable_photos_read_status', true) && logged_in())
 			{
 				$select = sprintf('
-					WITH RECURSIVE book_children (id, date, visibility, parents) AS (
-						SELECT id, date, visibility, ARRAY[0] FROM foto_boeken WHERE parent = %d
+					WITH RECURSIVE book_children (id, date, last_update, visibility, parents) AS (
+						SELECT id, date, last_update, visibility, ARRAY[0] FROM foto_boeken WHERE parent = %d
 					UNION ALL
-						SELECT f_b.id, f_b.date, f_b.visibility, b_c.parents || f_b.parent
+						SELECT f_b.id, f_b.date, f_b.last_update, f_b.visibility, b_c.parents || f_b.parent
 						FROM book_children b_c, foto_boeken f_b
 						WHERE b_c.id = f_b.parent
 				)
 				', $book->get_id()) . $select;
 
-				$select .= sprintf(",
-					CASE
-						WHEN
-							COUNT(nullif(
-								foto_boeken.date > '%1\$d-08-23' AND -- only photo books from just before I started
-								f_b_v.last_visit IS NULL, false)) -- and which I didn't visit yet
-							+ COUNT(nullif(b_c.id IS NOT NULL AND (
-								b_c.date >= '%1\$d-08-23' AND
-								f_b_c_v.last_visit IS NULL
-							), false)) > 0 
-						THEN 'unread'
-						ELSE 'read'
-					END read_status", logged_in('beginjaar'));
+				$select .= ",
+					f_b_read_status.read_status";
 
-				$joins .= sprintf('
-					LEFT JOIN book_children b_c ON
-						b_c.visibility <= %d
-						AND foto_boeken.id = ANY(b_c.parents)
-					LEFT JOIN foto_boeken_visit f_b_v ON
-						f_b_v.boek_id = foto_boeken.id
-						AND f_b_v.lid_id = %d
-					LEFT JOIN foto_boeken_visit f_b_c_v ON
-						f_b_c_v.boek_id = b_c.id
-						AND f_b_c_v.lid_id = %2$d',
+				$joins .= sprintf("
+					LEFT JOIN (
+						SELECT
+							foto_boeken.id,
+							CASE
+								WHEN
+									COUNT(nullif(
+										foto_boeken.date > '%1\$d-08-23' AND -- only photo books from just before I started
+										(f_b_v.last_visit < foto_boeken.last_update OR f_b_v.last_visit IS NULL), false)) -- and which I didn't visit yet
+									+ COUNT(nullif(b_c.id IS NOT NULL AND (
+										b_c.date >= '%1\$d-08-23' AND
+										(f_b_c_v.last_visit < b_c.last_update OR f_b_c_v.last_visit IS NULL)
+									), false)) > 0 
+								THEN 'unread'
+								ELSE 'read'
+							END read_status
+						FROM
+							foto_boeken
+						LEFT JOIN book_children b_c ON
+							b_c.visibility <= %2\$d
+							AND foto_boeken.id = ANY(b_c.parents)
+						LEFT JOIN foto_boeken_visit f_b_v ON
+							f_b_v.boek_id = foto_boeken.id
+							AND f_b_v.lid_id = %3\$d
+						LEFT JOIN foto_boeken_visit f_b_c_v ON
+							f_b_c_v.boek_id = b_c.id
+							AND f_b_c_v.lid_id = %3\$d
+						GROUP BY
+							foto_boeken.id
+					) as f_b_read_status ON
+						f_b_read_status.id = foto_boeken.id",
+						logged_in('beginjaar'),
 						get_policy($this)->get_access_level(),
 						logged_in('id'));
+				
+				$group_by .= ",
+					f_b_read_status.read_status";
 			}
 			else
 			{
