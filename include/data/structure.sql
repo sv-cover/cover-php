@@ -459,6 +459,8 @@ CREATE TABLE foto_boeken (
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
+CREATE INDEX ON foto_boeken (parent);
+
 CREATE TABLE foto_boeken_visit (
     boek_id integer NOT NULL REFERENCES foto_boeken (id) ON UPDATE CASCADE ON DELETE CASCADE,
     lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
