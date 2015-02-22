@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-02-22 21:47+0100\n"
+"POT-Creation-Date: 2015-02-22 21:55+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -695,7 +695,7 @@ msgstr "Mailing lists"
 msgid "Nieuw lid"
 msgstr "New member"
 
-#: ../../../profiel.php:33 ../../../themes/default/views/header.php:310
+#: ../../../profiel.php:33 ../../../themes/default/views/header.php:312
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:109
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
@@ -953,7 +953,7 @@ msgid "0 = nog niet bekend"
 msgstr "0 = not known yet"
 
 #: ../../../themes/default/views/boeken/boeken.php:179
-#: ../../../themes/default/views/header.php:202
+#: ../../../themes/default/views/header.php:203
 msgid "Boeken bestellen"
 msgstr "Order books"
 
@@ -1328,7 +1328,7 @@ msgstr "Last"
 #: ../../../themes/default/views/forum.php:482
 #: ../../../themes/default/views/forum.php:910
 #: ../../../themes/default/views/forum.php:1032
-#: ../../../themes/default/views/header.php:242
+#: ../../../themes/default/views/header.php:244
 msgid "Poll"
 msgstr "Poll"
 
@@ -1655,87 +1655,95 @@ msgid "Vacatures"
 msgstr "Vacancies"
 
 #: ../../../themes/default/views/header.php:196
+msgid "Stages/afstudeerplaatsen"
+msgstr "Internships/Graduate programs"
+
+#: ../../../themes/default/views/header.php:197
 msgid "Sponsormogelijkheden"
 msgstr "Sponsorship opportunities"
 
-#: ../../../themes/default/views/header.php:199
+#: ../../../themes/default/views/header.php:200
 msgid "K.I."
 msgstr "A.I."
 
-#: ../../../themes/default/views/header.php:200
+#: ../../../themes/default/views/header.php:201
 msgid "Informatica"
 msgstr "Computing Science"
 
-#: ../../../themes/default/views/header.php:201
+#: ../../../themes/default/views/header.php:202
 msgid "Alumni"
 msgstr "Alumni"
 
-#: ../../../themes/default/views/header.php:203
+#: ../../../themes/default/views/header.php:204
 msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
-#: ../../../themes/default/views/header.php:240
+#: ../../../themes/default/views/header.php:205
+msgid "Info voor studenten"
+msgstr "Student info"
+
+#: ../../../themes/default/views/header.php:242
 msgid "Er is op dit moment geen poll"
 msgstr "There is no poll at the moment"
 
-#: ../../../themes/default/views/header.php:269
+#: ../../../themes/default/views/header.php:271
 msgid "Jarigen"
 msgstr "Birthdays"
 
-#: ../../../themes/default/views/header.php:278
+#: ../../../themes/default/views/header.php:280
 msgid "Er zijn vandaag geen jarigen"
 msgstr "It's nobody's birthday today"
 
-#: ../../../themes/default/views/header.php:280
+#: ../../../themes/default/views/header.php:282
 #, php-format
 msgid "Er is vandaag %d jarige:"
 msgid_plural "Er zijn vandaag %d jarigen:"
 msgstr[0] "There is %d birthday today:"
 msgstr[1] "There are %d birthdays today:"
 
-#: ../../../themes/default/views/header.php:297
+#: ../../../themes/default/views/header.php:299
 msgid "wachtwoord vergeten?"
 msgstr "Forgot your password?"
 
-#: ../../../themes/default/views/header.php:297
+#: ../../../themes/default/views/header.php:299
 msgid "lid worden"
 msgstr "Join Cover"
 
-#: ../../../themes/default/views/header.php:298
+#: ../../../themes/default/views/header.php:300
 msgid "E-mailadres"
 msgstr "E-Mail address"
 
-#: ../../../themes/default/views/header.php:299
+#: ../../../themes/default/views/header.php:301
 msgid "Wachtwoord"
 msgstr "Password"
 
-#: ../../../themes/default/views/header.php:300
+#: ../../../themes/default/views/header.php:302
 msgid "Blijvend"
 msgstr "Permanent"
 
-#: ../../../themes/default/views/header.php:300
+#: ../../../themes/default/views/header.php:302
 msgid "Inloggen"
 msgstr "Login"
 
-#: ../../../themes/default/views/header.php:308
+#: ../../../themes/default/views/header.php:310
 #: ../../../themes/default/views/sessions/sessions.phtml:10
 msgid "Ingelogd"
 msgstr "Logged in"
 
-#: ../../../themes/default/views/header.php:309
+#: ../../../themes/default/views/header.php:311
 msgid "Uitloggen"
 msgstr "Logout"
 
-#: ../../../themes/default/views/header.php:328
+#: ../../../themes/default/views/header.php:330
 msgid "Er staat nog 1 agendapunt in de wachtrij"
 msgstr "There is still 1 calendar event waiting to be approved."
 
-#: ../../../themes/default/views/header.php:330
+#: ../../../themes/default/views/header.php:332
 #, php-format
 msgid "Er staan nog %d agendapunten in de wachtrij"
 msgstr "There are still %d calendar events waiting to be approved."
 
-#: ../../../themes/default/views/header.php:353
+#: ../../../themes/default/views/header.php:355
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computing Science"
 

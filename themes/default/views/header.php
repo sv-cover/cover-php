@@ -193,6 +193,7 @@
 				<ul id="bedrijven" class="expander">
 					<li><a href="show.php?id=51">' . __('Bedrijfsprofielen') . '</a></li>
 					<li><a href="show.php?id=54">' . __('Vacatures') . '</a></li>
+					<li><a href="show.php?id=31">' . __('Stages/afstudeerplaatsen') . '</a></li>
 					<li><a href="show.php?id=56">' .__('Sponsormogelijkheden') .'</a></li>
 				</ul>
 				<ul id="studie" class="expander">
@@ -200,7 +201,8 @@
 					<li><a href="show.php?id=41">' . __('Informatica') . '</a></li>
 					<li><a href="show.php?id=24">' . __('Alumni') . '</a></li>
 					<li><a href="boeken.php">' . __('Boeken bestellen') . '</a></li>
-					<li><a href="http://studieondersteuning.svcover.nl/" target="_blank">' . markup_format_text(__('Tentamens & Samenvattingen')) . '</a></li>				
+					<li><a href="http://studieondersteuning.svcover.nl/" target="_blank">' . markup_format_text(__('Tentamens & Samenvattingen')) . '</a></li>
+					<li><a href="show.php?id=27">' . __('Info voor studenten') . '</a></li>
 				</ul>
 			</div>
 			';
