@@ -55,9 +55,9 @@ if (logged_in()) {
 
 		<input id="tagging-toggle" type="checkbox">
 		<label for="tagging-toggle"><?=__('Tag gezichten')?></label>
-		<?php endif ?>
 		
-		<!-- <a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;view=original"><?=__('Download')?></a> -->
+		<a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;view=original"><?=__('Download')?></a>
+		<?php endif ?>
 		
 		<?php if ($photo_of_current_user): ?>
 		<a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form"><?=__('Zichtbaarheid')?></a>
