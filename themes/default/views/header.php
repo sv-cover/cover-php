@@ -201,8 +201,8 @@
 					<li><a href="show.php?id=41">' . __('Informatica') . '</a></li>
 					<li><a href="show.php?id=24">' . __('Alumni') . '</a></li>
 					<li><a href="boeken.php">' . __('Boeken bestellen') . '</a></li>
-					<li><a href="http://studieondersteuning.svcover.nl/" target="_blank">' . markup_format_text(__('Tentamens & Samenvattingen')) . '</a></li>
 					<li><a href="show.php?id=27">' . __('Info voor studenten') . '</a></li>
+					<li><a href="http://studieondersteuning.svcover.nl/" target="_blank">' . markup_format_text(__('Tentamens & Samenvattingen')) . '</a></li>
 				</ul>
 			</div>
 			';
