@@ -530,7 +530,7 @@
 			if (preg_match('/\.(jpg|gif)$/i', $real_path, $match))
 				header('Content-Type: image/' . strtolower($match[1]));
 
-			header('Content-Disposition: attachment; filename="' . addslashes($real_path) . '"');
+			header('Content-Disposition: attachment; filename="' . addslashes(basename($real_path)) . '"');
 			header('Content-Length: ' . filesize($real_path));
 
 			fpassthru($fh);
