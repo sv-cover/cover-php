@@ -6,7 +6,9 @@
 	  */
 	class DataModelConfiguratie extends DataModel
 	{
-		function __construct($db)
+		private $_cache = array();
+
+		public function __construct($db)
 		{
 			parent::__construct($db, 'configuratie', 'key');
 		}
@@ -17,11 +19,18 @@
 		  *
 		  * @result the configuration value
 		  */
-		function get_value($key, $default = null)
+		public function get_value($key, $default = null)
 		{
-			$value = $this->db->query_value('SELECT value
+			if (isset($this->_cache[$key]))
+				$value = $this->_cache[$key];
+			else
+			{
+				$value = $this->db->query_value('SELECT value
 						FROM configuratie
 						WHERE key = \'' . $this->db->escape_string($key) . '\'');
+
+				$this->_cache[$key] = $value;
+			}
 						
 			return $value === null ? $default : $value;
 		}
@@ -31,7 +40,7 @@
 		 * Database::get_last_insert_id, which won't work on a non-numerical
 		 * non-automatic primary key used by the configuratie table.
 		 */
-		function _insert($table, $iter, $getid = false)
+		protected function _insert($table, $iter, $getid = false)
 		{
 			if (!$this->db)
 				return false;
@@ -48,7 +57,10 @@
 		  *
 		  * @result void
 		  */
-		function set_value($key, $value) {
+		public function set_value($key, $value)
+		{
+			$this->_cache[$key] = $value;
+
 			if (!is_null($this->get_value($key)))
 				$this->db->query_value('UPDATE configuratie SET value = \'' . $this->escape_string($value) . '\' WHERE key = \'' . $this->escape_string($key) . '\';');
 			else
