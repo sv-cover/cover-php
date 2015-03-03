@@ -334,32 +334,16 @@ class DataModelMailinglijst extends DataModel
 
 	public function aanmelden_gast(DataIter $lijst, $naam, $email)
 	{
-		// See if there is already a subscription for this email address
-		$abonnementen = $this->model_aanmeldingen->find("email = '" . $this->db->escape_string($email) . "' AND mailinglijst_id = " . $lijst->get('id'));
+		$data = array(
+			'abonnement_id' => sha1(uniqid('', true)),
+			'naam' => $naam,
+			'email' => $email,
+			'mailinglijst_id' => intval($lijst->get('id'))
+		);
 
-		// If so, update the name
-		if ($abonnementen)
-		{
-			$abonnement = $abonnementen[0];
+		$iter = new DataIter($this->model_aanmeldingen, -1, $data);
 
-			$abonnement->set('naam', $naam);
-
-			return $this->model_aanmeldingen->update($abonnement);
-		}
-		// Else, there is no subscription yet
-		else
-		{
-			$data = array(
-				'abonnement_id' => sha1(uniqid('', true)),
-				'naam' => $naam,
-				'email' => $email,
-				'mailinglijst_id' => intval($lijst->get('id'))
-			);
-
-			$iter = new DataIter($this->model_aanmeldingen, -1, $data);
-
-			return $this->model_aanmeldingen->insert($iter);
-		}
+		return $this->model_aanmeldingen->insert($iter);
 	}
 
 	public function afmelden(DataIter $lijst, $lid_id)
