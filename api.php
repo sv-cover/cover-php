@@ -56,7 +56,10 @@ class ControllerApi extends Controller
 		// Get the session
 		$session_model = get_model('DataModelSession');
 
-		$session = $session_model->get_iter($session_id);
+		$session = $session_model->resume($session_id);
+
+		if (!$session)
+			return array('error' => 'Invalid session id');
 		
 		$user_model = get_model('DataModelMember');
 
