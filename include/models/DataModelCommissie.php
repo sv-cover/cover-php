@@ -214,39 +214,37 @@
 
 		public function set_members(DataIterCommissie $committee, array $members)
 		{
+			$membership_model = get_model('DataModelActieveLeden');
+
+			$member_model = get_model('DataModelMember');
+
 			$current_members = $this->get_members($committee);
 
 			$memberships_to_stop = array();
 
+			$memberships_to_update = array();
+
 			foreach ($current_members as $current_member)
 			{
 				// Current committee members that will no longer be in the
-				// committee or have changed position.
-				if (!array_key_exists($current_member->get_id(), $members)
-					|| $current_member->get('functie') != $members[$current_member->get_id()])
-					$memberships_to_stop[] = $current_member->get('membership_id');
-				// Or members that are in the committee and still have the same
-				// position. Those do not need to be altered.
-				else
-					unset($members[$current_member->get_id()]);
+				// committee
+				if (!array_key_exists($current_member->get_id(), $members))
+					$membership_model->end_membership($current_member->get('membership_id'), new DateTime());
+				
+				// Or have changed position.
+				else if($current_member->get('functie') != $members[$current_member->get_id()])
+					$membership_model->update_membership($current_member->get('membership_id'), $members[$current_member->get_id()]);
+				
+				unset($members[$current_member->get_id()]);
 			}
 
-			// Stop membership of previous members
-			if (count($memberships_to_stop) > 0)
-				$this->db->update('actieveleden',
-					array('discharged_on' => 'NOW()'),
-					sprintf('actieveleden.id IN (%s)', implode(',', $memberships_to_stop)),
-					array('discharged_on'));
+			foreach ($members as $new_member_id => $position)
+			{
+				$new_member = $member_model->get_iter($new_member_id);
+				$membership_model->start_membership($committee, $new_member, $position, new DateTime());
+			}
 
-			// Add membership for new members
-			foreach ($members as $member_id => $position)
-				$this->db->insert('actieveleden',
-					array(
-						'commissieid' => $committee->get_id(),
-						'lidid' => intval($member_id),
-						'functie' => $position,
-						'started_on' => 'NOW()'),
-					array('started_on'));
+			return true;
 		}
 
 		public function get_commissies_for_member($lid_id)
