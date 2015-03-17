@@ -1718,4 +1718,5 @@ body .ui-autocomplete a.profile .starting-year {
 
 #page_51 table.markup_default td img, table.markup_noborder td img {
     width: 240px;
+	max-width: 100%;
 }
