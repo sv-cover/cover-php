@@ -1717,6 +1717,6 @@ body .ui-autocomplete a.profile .starting-year {
 /* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
 
 #page_51 table.markup_default td img, table.markup_noborder td img {
-    width: 240px;
-	max-width: 100%;
+    width: 100%;
+	max-width: 240px !important;
 }
