@@ -7,6 +7,6 @@
 	<?php endif ?>
 	<h1><?=markup_format_text($editable->get_title())?></h1>
 </div>
-<div class="messageBox">
+<div class="messageBox" id="page_<?=$editable->get_page_id() /* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */ ?>">
 <?php $editable->run(); ?>
 </div>

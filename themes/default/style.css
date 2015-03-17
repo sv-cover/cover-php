@@ -1713,3 +1713,9 @@ body .ui-autocomplete a.profile .starting-year {
 .privacy-preference-form {
 	width: 400px;
 }
+
+/* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
+
+#page_51 table.markup_default td img, table.markup_noborder td img {
+    width: 240px;
+}

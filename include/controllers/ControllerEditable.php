@@ -262,4 +262,10 @@
 		{
 			return add_request(get_request(), sprintf('editable_edit=%d#editable%1$d', $this->page->get('id')));
 		}
+
+		/* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
+		public function get_page_id()
+		{
+			return $this->page->get('id');
+		}
 	}
