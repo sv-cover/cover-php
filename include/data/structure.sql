@@ -424,7 +424,7 @@ CREATE TABLE studies (
 );
 
 CREATE TABLE actieveleden (
-    id SERIAL NOT NULL,
+    id SERIAL NOT NULL PRIMARY KEY,
     lidid smallint NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
     commissieid smallint NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
     functie character varying(50),

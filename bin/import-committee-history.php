@@ -181,12 +181,11 @@ function import_from_file($fh)
 
 			$commissie = $commissies[strtolower($match[2])];
 
-			if (!preg_match('/^(\d\d)\/(\d\d)\/(\d\d)$/', $row[$i], $match)) {
+			if (!preg_match('/^(\d\d)[^\d](\d\d)[^\d](\d\d)$/', $row[$i], $match)) {
 				echo "SKIP: $n_row:$i kan datum niet parsen\n";
 				continue;
 			}
 			else {
-				echo sprintf('20%02d-%02d-%02d', $match[3], $match[2], $match[1]), "\n";
 				$date = new DateTime(sprintf('20%02d-%02d-%02d', $match[3], $match[2], $match[1]));
 			}
 
