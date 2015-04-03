@@ -15,6 +15,23 @@ class ActieveledenView extends CRUDView
 		return $committees;
 	}
 
+	public function get_members()
+	{
+		$members = array();
+
+		foreach (get_model('DataModelActieveLeden')->get() as $membership)
+		{
+			$member = $membership->getIter('lid');
+
+			if (!isset($members[$member->get_id()]))
+				$members[$member->get_id()] = member_full_name($member);
+		}
+
+		asort($members);
+
+		return $members;
+	}
+
 	public function get_functies()
 	{
 		$model = get_model('DataModelCommissie');

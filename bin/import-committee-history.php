@@ -189,14 +189,18 @@ function import_from_file($fh)
 				$date = new DateTime(sprintf('20%02d-%02d-%02d', $match[3], $match[2], $match[1]));
 			}
 
-			commit_membership($actie, $commissie, [$commissielid], $date);
+			try {
+				commit_membership($actie, $commissie, [$commissielid], $date);
+			} catch (Exception $e) {
+				echo "SKIP: $n_row:$i {$e->getMessage()}\n";
+			}
 		}
 	}
 }
 
 function import_from_sd()
 {
-	global $commissies, $members;
+	global $commissies, $members, $argv;
 
 	echo "Connecting to MySQL\n";
 	$pdo = new PDO('mysql:host=127.0.0.1;port=33060;dbname=sd', 'sd', $argv[1]);
@@ -260,8 +264,13 @@ function import_from_sd()
 				}
 			}
 
-			if (!empty($commissieleden) && $actie && $commissie)
-				commit_membership($actie, $commissie, $commissieleden, $date);
+			if (!empty($commissieleden) && $actie && $commissie) {
+				try {
+					commit_membership($actie, $commissie, $commissieleden, $date);
+				} catch (Exception $e) {
+					echo "SKIP: {$e->getMessage()}\n";
+				}
+			}
 			
 			echo "\n" . format_coverage($line, $coverage) . "\n";
 			printf("%s %s %s %s: %s\033[0m\n",

@@ -1,36 +1,50 @@
 <?php $policy = get_policy($model) ?>
+<?php $format_duration = function($duration) {
+	if (!$duration) return '';
+	return sprintf(_ngettext('%d dag', '%d dagen', $duration->days), $duration->days);
+};
+?>
 <div class="messageBox">
-<table id="membership-history" class="default">
-	<col class="text_center">
-	<col>
-	<col class="text_center">
-	<col>
-	<col>
-	<thead>
-		<tr class="header">
-			<th><?= __('Naam') ?></th>
-			<th><?= __('Commissie') ?></th>
-			<th><?= __('Functie') ?></th>
-			<th><?= __('Ingehamerd op') ?></th>
-			<th><?= __('Uitgehamerd op') ?></th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-	<?php foreach ($iter as $membership): ?>
-			<tr id="membership<?=$membership->get_id()?>">
-				<td><a href="profiel.php?lid=<?=$membership->getIter('lid')->get('id')?>"><?= markup_format_text(member_full_name($membership->getIter('lid'))) ?></a></td>
-				<td><a href="commissies.php?commissie=<?=rawurlencode($membership->getIter('commissie')->get('login'))?>"><?= markup_format_text($membership->getIter('commissie')->get('naam')) ?></a></td>
-				<td><?= markup_format_text($membership->get('functie')) ?></td>
-				<td><?= $membership->get('started_on') ?></td>
-				<td><?= $membership->get('discharged_on') ?></td>
-				<td>
-					<?php if ($policy->user_can_update($membership)): ?>
-					<a href="<?=$controller->link_to_update($membership)?>"><?=__('Corrigeer')?></a>
-					<?php endif ?>
-				</td>
+<form method="GET">
+	<table id="membership-history" class="default">
+		<col class="text_center">
+		<col>
+		<col class="text_center">
+		<col>
+		<col>
+		<thead>
+			<tr class="header">
+				<th><?= __('Naam') ?></th>
+				<th><?= __('Commissie') ?></th>
+				<th><?= __('Functie') ?></th>
+				<th><?= __('Ingehamerd op') ?></th>
+				<th><?= __('Uitgehamerd op') ?></th>
+				<th><?= __('Duur') ?></th>
+				<th></th>
 			</tr>
-	<?php endforeach ?>
-	</tbody>
-</table>
-</div>		
+			<tr>
+				<th><?=select_field('member_id', [__('- filter lid -')] + $this->get_members(), $_GET, 'onchange', 'this.form.submit()')?></th>
+				<th><?=select_field('committee_id', [__('- filter commissie -')] + $this->get_committees(), $_GET, 'onchange', 'this.form.submit()') ?></th>
+				<th colspan="4"></th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach ($iter as $membership): ?>
+				<tr id="membership<?=$membership->get_id()?>">
+					<td><a href="profiel.php?lid=<?=$membership->getIter('lid')->get('id')?>"><?= markup_format_text(member_full_name($membership->getIter('lid'))) ?></a></td>
+					<td><a href="commissies.php?commissie=<?=rawurlencode($membership->getIter('commissie')->get('login'))?>"><?= markup_format_text($membership->getIter('commissie')->get('naam')) ?></a></td>
+					<td><?= markup_format_text($membership->get('functie')) ?></td>
+					<td><?= $membership->get('started_on') ?></td>
+					<td><?= $membership->get('discharged_on') ?></td>
+					<td><?= $format_duration($membership->get_duration()) ?></td>
+					<td>
+						<?php if ($policy->user_can_update($membership)): ?>
+						<a href="<?=$controller->link_to_update($membership)?>"><?=__('Corrigeer')?></a>
+						<?php endif ?>
+					</td>
+				</tr>
+		<?php endforeach ?>
+		</tbody>
+	</table>
+</form>
+</div>

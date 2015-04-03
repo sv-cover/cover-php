@@ -3,7 +3,31 @@
 
 	class DataIterMembership extends DataIter
 	{
-		//
+		public function get_duration()
+		{
+			if (!$this->get('started_on'))
+				return null;
+			else
+				$started_on = new DateTime($this->get('started_on'));
+
+			if ($this->get('discharged_on'))
+				$discharged_on = new DateTime($this->get('discharged_on'));
+			else
+				$discharged_on = new DateTime();
+
+			return $discharged_on->diff($started_on);
+		}
+
+		public function __toString()
+		{
+			return sprintf('<%d>[member#%d in committee#%d from %s to %s (%d days)]',
+				$this->get_id(),
+				$this->get('lidid'),
+				$this->get('commissieid'),
+				$this->get('started_on'),
+				$this->get('discharged_on'),
+				$this->get_duration() ? $this->get_duration()->days : 0);
+		}
 	}
 
 	/**
@@ -48,6 +72,9 @@
 
 		public function start_membership(DataIterCommissie $committee, DataIterMember $member, $functie = null, DateTime $timestamp = null)
 		{
+			if ($timestamp && ($prev_membership = $this->find_membership($committee, $member, $timestamp)))
+				throw new LogicException('Person is already member of the committee: ' . $prev_membership);
+
 			$data = array(
 				'commissieid' => $committee->get_id(),
 				'lidid' => $member->get_id(),
@@ -68,7 +95,7 @@
 				WHERE
 					commissieid = %d
 					AND lidid = %d
-					AND (discharged_on IS NULL OR discharged_on > '%s')",
+					AND (discharged_on IS NULL OR discharged_on >= '%s')",
 				$committee->get_id(),
 				$member->get_id(),
 				$timestamp ? $timestamp->format('Y-m-d') : null));
@@ -78,6 +105,12 @@
 
 		public function end_membership($membership_id, DateTime $timestamp)
 		{
+			$iter = $this->get_iter($membership_id);
+
+			if ($iter->get('discharged_on') && $iter->get('discharged_on') != $timestamp->format('Y-m-d'))
+				throw new LogicException(sprintf('Committee membership %s cannot be ended on %s because it has already ended on %s',
+					$iter, $timestamp->format('Y-m-d'), $iter->get('discharged_on')));
+
 			$this->db->update('actieveleden',
 				array('discharged_on' => $timestamp->format('Y-m-d')),
 				sprintf('id = %d', $membership_id));

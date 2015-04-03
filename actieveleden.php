@@ -15,6 +15,17 @@
 			return __('Geschiedenis van actieve leden');
 		}
 
+		protected function _index()
+		{
+			if (!empty($_GET['member_id']))
+				return $this->model->find(sprintf('lidid = %d', $_GET['member_id']));
+
+			if (!empty($_GET['committee_id']))
+				return $this->model->find(sprintf('commissieid = %d', $_GET['committee_id']));
+
+			return parent::_index();
+		}
+
 		public function link_to_read(DataIter $iter)
 		{
 			return $this->link_to_index() . '#membership' . $iter->get_id();
