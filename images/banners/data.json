@@ -1,7 +1,9 @@
 [
-	{"filename":"tno.jpg","url":"http:\/\/werkenbijtno.nl\/"},
+	{"filename":"tno.jpg","url":"https:\/\/www.tno.nl\/nl\/career\/"},
 	{"filename":"axonlogo.png","url":"http:\/\/www.axonline.nl\/"},
 	{"filename":"topicus.png","url":"http:\/\/www.topicus.nl\/werken"},
-	{"filename":"talentwings.png","url":"http:\/\/www.talentwings.nl\/"},
-	{"filename":"kpnconsulting.png","url":"https:\/\/www.kpnconsulting.nl/"}
+    {"filename":"talentwings.png","url":"http:\/\/www.talentwings.nl\/"},
+    {"filename":"kpnconsulting.png","url":"https:\/\/www.kpnconsulting.nl/"},
+    {"filename":"quintor.jpg","url":"http:\/\/www.quintor.nl\/"},
+	{"filename":"tapperij.png","url":"http:\/\/www.cafedetapperij.com\/"}
 ]
