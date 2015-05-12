@@ -30,9 +30,9 @@
 		
 		/**
 		  * Create a new DataModel
-		  * @db the database backend to use (#DatabasePgsql or #DatabaseMysql)
-		  * @table the table to model 
-		  * @id optional; the field name to use as unique id
+		  * @param DatabasePgsql|DatabaseMysql $db the database backend to use (#DatabasePgsql or #DatabaseMysql)
+		  * @param string|null $table the table to model 
+		  * @param string $id the field name to use as unique id
 		  */
 		public function __construct($db, $table = null, $id = 'id')
 		{
