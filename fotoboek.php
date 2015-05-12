@@ -539,6 +539,18 @@
 
 		protected function _view_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
+			$photos = $book->get_photos();
+
+			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
+
+			if ($current_index !== null && isset($photos[$current_index - 1]))
+				header(sprintf('Link: <%s>; rel=prefetch',
+					strip_protocol($photos[$current_index - 1]->get('url'))), false);
+
+			if ($current_index !== null && isset($photos[$current_index + 1]))
+				header(sprintf('Link: <%s>; rel=prefetch',
+					strip_protocol($photos[$current_index + 1]->get('url'))), false);
+
 			$reactie_controller = new ControllerFotoboekReacties($photo);
 			$reacties = $reactie_controller->run_embedded();
 
