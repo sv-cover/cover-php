@@ -11,7 +11,7 @@ class DatabasePDO
 	private $last_affected = null;
 	private $last_insert_table = null;
 
-	public $history = array();
+	public $history = null;
 
 	/**
 	  * Create new postgresql database
@@ -22,6 +22,9 @@ class DatabasePDO
 	{
 		/* Connect to database */
 		$this->_connect($dbid);
+
+		if (get_config_value('show_queries', false))
+			$this->history = array();
 	}
 	
 	/**
@@ -89,11 +92,12 @@ class DatabasePDO
 
 		$duration = microtime(true) - $start;
 
-		$this->history[] = array(
-			'query' => $query,
-			'duration' => $duration,
-			'backtrace' => debug_backtrace()
-		);
+		if ($this->history !== null)
+			$this->history[] = array(
+				'query' => $query,
+				'duration' => $duration,
+				'backtrace' => debug_backtrace()
+			);
 
 		if ($handle === false) {
 			throw new RuntimeException('Query failed: ' . $this->get_last_error());
