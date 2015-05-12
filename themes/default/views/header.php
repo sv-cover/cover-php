@@ -299,8 +299,13 @@
 		<tr><td><a href="wachtwoordvergeten.php">' . __('wachtwoord vergeten?') . '</a></td><td><a href="lidworden.php">' . __('lid worden') . '</a></td></tr>
 		<tr><td colspan="2"><label for="email">' . __('E-mailadres') . ': </label>' . input_text('email', null, 'class', 'textField', 'id', 'email', 'placeholder', __('E-mailadres')) . '</td><td></td></tr>
 		<tr><td colspan="2"><label for="password">' . __('Wachtwoord') . ': </label>' . input_password('password', 'class', 'textField', 'id', 'password', 'placeholder', __('Wachtwoord')) . '</td></tr>
-		<tr><td>' . input_checkbox('remember', null, 'yes', 'checked', 'checked') . ' ' . label(__('Blijvend'), 'remember') . '</td><td class="text_right"><input type="hidden" name="referer" value="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . '"/>' . input_submit('subm', __('Inloggen')) . '</tr></table>
-		</form>';
+		<tr><td>' . input_checkbox('remember', null, 'yes', 'checked', 'checked') . ' ' . label(__('Blijvend'), 'remember') . '</td><td class="text_right"><input type="hidden" name="referer" value="' . edit_url($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'], [], ['error']) . '"/>' . input_submit('subm', __('Inloggen')) . '</tr>';
+
+		if (isset($_GET['error']) && $_GET['error'] == 'login')
+			$contents .= '<tr><td colspan="2" class="error">' . __('Verkeerde combinatie van e-mailadres en wachtwoord') . '</td></tr>';
+
+		$contents .= '
+		</table></form>';
 		
 		return $contents;
 	}

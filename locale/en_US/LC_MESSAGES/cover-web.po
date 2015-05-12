@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-02-22 21:55+0100\n"
+"POT-Creation-Date: 2015-05-12 20:35+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -408,15 +408,15 @@ msgstr "Nov"
 msgid "Dec"
 msgstr "Dec"
 
-#: ../../../include/functions.php:342
+#: ../../../include/functions.php:386
 msgid "$from_dayname $from_day $from_month"
 msgstr "$from_dayname $from_day|ordinal of $from_month"
 
-#: ../../../include/functions.php:344
+#: ../../../include/functions.php:388
 msgid "$from_dayname $from_day $from_month, $from_time"
 msgstr "$from_dayname $from_day|ordinal of $from_month, $from_time"
 
-#: ../../../include/functions.php:349
+#: ../../../include/functions.php:393
 msgid ""
 "$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day "
 "$till_month $till_time"
@@ -424,28 +424,28 @@ msgstr ""
 "$from_dayname $from_day|ordinal of $from_month $from_time till $till_dayname "
 "$till_day|ordinal of $till_month $till_time"
 
-#: ../../../include/functions.php:351
+#: ../../../include/functions.php:395
 msgid "$from_dayname $from_day $from_month, $from_time tot $till_time"
 msgstr ""
 "$from_dayname $from_day|ordinal of $from_month, $from_time till $till_time"
 
-#: ../../../include/functions.php:375
+#: ../../../include/functions.php:419
 msgid "vanaf $from_time"
 msgstr "starts at $from_time"
 
-#: ../../../include/functions.php:382
+#: ../../../include/functions.php:426
 msgid "$from_day $from_month tot $till_day $till_month"
 msgstr "$from_month $from_day|ordinal till $till_month $till_day|ordinal"
 
-#: ../../../include/functions.php:384
+#: ../../../include/functions.php:428
 msgid "$from_day tot $till_day $till_month"
 msgstr "$from_day|ordinal till $till_day|ordinal of $till_month"
 
-#: ../../../include/functions.php:387
+#: ../../../include/functions.php:431
 msgid "$from_time tot $till_time"
 msgstr "$from_time till $till_time"
 
-#: ../../../include/functions.php:506
+#: ../../../include/functions.php:550
 msgid "en"
 msgstr "and"
 
@@ -695,7 +695,7 @@ msgstr "Mailing lists"
 msgid "Nieuw lid"
 msgstr "New member"
 
-#: ../../../profiel.php:33 ../../../themes/default/views/header.php:312
+#: ../../../profiel.php:33 ../../../themes/default/views/header.php:317
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:109
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 msgid "Profiel"
@@ -1675,12 +1675,12 @@ msgid "Alumni"
 msgstr "Alumni"
 
 #: ../../../themes/default/views/header.php:204
-msgid "Tentamens & Samenvattingen"
-msgstr "Exams & Summaries"
-
-#: ../../../themes/default/views/header.php:205
 msgid "Info voor studenten"
 msgstr "Student info"
+
+#: ../../../themes/default/views/header.php:205
+msgid "Tentamens & Samenvattingen"
+msgstr "Exams & Summaries"
 
 #: ../../../themes/default/views/header.php:242
 msgid "Er is op dit moment geen poll"
@@ -1710,10 +1710,14 @@ msgid "lid worden"
 msgstr "Join Cover"
 
 #: ../../../themes/default/views/header.php:300
+#: ../../../themes/default/views/sessions/form.phtml:6
+#: ../../../themes/default/views/sessions/form.phtml:7
 msgid "E-mailadres"
 msgstr "E-Mail address"
 
 #: ../../../themes/default/views/header.php:301
+#: ../../../themes/default/views/sessions/form.phtml:11
+#: ../../../themes/default/views/sessions/form.phtml:12
 msgid "Wachtwoord"
 msgstr "Password"
 
@@ -1722,28 +1726,33 @@ msgid "Blijvend"
 msgstr "Permanent"
 
 #: ../../../themes/default/views/header.php:302
+#: ../../../themes/default/views/sessions/form.phtml:1
 msgid "Inloggen"
 msgstr "Login"
 
-#: ../../../themes/default/views/header.php:310
+#: ../../../themes/default/views/header.php:305
+msgid "Verkeerde combinatie van e-mailadres en wachtwoord"
+msgstr "Wrong combination of e-mail address and password"
+
+#: ../../../themes/default/views/header.php:315
 #: ../../../themes/default/views/sessions/sessions.phtml:10
 msgid "Ingelogd"
 msgstr "Logged in"
 
-#: ../../../themes/default/views/header.php:311
+#: ../../../themes/default/views/header.php:316
 msgid "Uitloggen"
 msgstr "Logout"
 
-#: ../../../themes/default/views/header.php:330
+#: ../../../themes/default/views/header.php:335
 msgid "Er staat nog 1 agendapunt in de wachtrij"
 msgstr "There is still 1 calendar event waiting to be approved."
 
-#: ../../../themes/default/views/header.php:332
+#: ../../../themes/default/views/header.php:337
 #, php-format
 msgid "Er staan nog %d agendapunten in de wachtrij"
 msgstr "There are still %d calendar events waiting to be approved."
 
-#: ../../../themes/default/views/header.php:355
+#: ../../../themes/default/views/header.php:360
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computing Science"
 
@@ -3392,6 +3401,28 @@ msgstr "Search query"
 #: ../../../themes/default/views/search/index.phtml:6
 msgid "Zoek!"
 msgstr "Search"
+
+#: ../../../themes/default/views/sessions/form.phtml:17
+msgid "Blijf ingelogd"
+msgstr "Keep me logged in"
+
+#: ../../../themes/default/views/sessions/form.phtml:21
+#, php-format
+msgid "Log in en ga terug naar <em>%s</em>"
+msgstr "Log in and return to <em>%s</em>"
+
+#: ../../../themes/default/views/sessions/form.phtml:21
+msgid "Log in"
+msgstr "Log in"
+
+#: ../../../themes/default/views/sessions/form.phtml:23
+msgid "Wachtwoord vergeten?"
+msgstr "Forgot your password?"
+
+#: ../../../themes/default/views/sessions/form.phtml:26
+#, php-format
+msgid "Terug naar <em>%s</em>"
+msgstr "Back to <em>%s</em>"
 
 #: ../../../themes/default/views/sessions/sessions.phtml:1
 #, php-format

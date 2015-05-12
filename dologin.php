@@ -10,9 +10,10 @@
 			$referer = $_POST['referer'];
 
 			if (get_post('email') && get_post('password')) {
-				login(get_post('email'), get_post('password'), get_post('remember') == 'yes');
-				header("Location: $referer");
-				exit();
+				if (login(get_post('email'), get_post('password'), get_post('remember') == 'yes'))
+					$this->redirect($referer);
+				else
+					$this->redirect(add_request($referer, 'error=login'));
 			}
 			
 			if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'])
