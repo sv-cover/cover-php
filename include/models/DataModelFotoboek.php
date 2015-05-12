@@ -306,28 +306,19 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_previous_book(DataIterPhotobook $book) {
-			if (!$book->has('date'))
-				return null;
+		public function get_previous_book(DataIterPhotobook $book)
+		{
+			$parent = $book->get_parent();
 
-			$row = $this->db->query_first("
-					SELECT 
-						id
-					FROM 
-						foto_boeken
-					WHERE 
-						parent = " . $book->get('parent') . " AND
-						visibility <= " . get_policy($this)->get_access_level() . " AND
-						((date > '" . $this->db->escape_string($book->get('date')) . "' AND
-						id <> " . $book->get('id') . ") OR (
-						date = '" . $this->db->escape_string($book->get('date')) . "' AND
-						id < " . $book->get('id') . "))
-					ORDER BY 
-						date ASC, 
-						id
-					LIMIT 1");
-			
-			return $row ? $this->get_book($row['id']) : null;
+			if (!$parent) return null;
+
+			$children = $parent->get_books();
+
+			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
+
+			return $index !== null && isset($children[$index - 1])
+				? $children[$index - 1]
+				: null;
 		}
 		
 		/**
@@ -336,28 +327,19 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_next_book(DataIterPhotobook $book) {
-			if (!$book->has('date'))
-				return null;
+		function get_next_book(DataIterPhotobook $book)
+		{
+			$parent = $book->get_parent();
 
-			$row = $this->db->query_first("
-					SELECT 
-						id
-					FROM 
-						foto_boeken
-					WHERE 
-						parent = " . $book->get('parent') . " AND
-						visibility <= " . get_policy($this)->get_access_level() . " AND
-						((date < '" . $this->db->escape_string($book->get('date')) . "' AND
-						id <> " . $book->get('id') . ") OR (
-						date = '" . $this->db->escape_string($book->get('date')) . "' AND
-						id > " . $book->get('id') . "))
-					ORDER BY 
-						date DESC, 
-						id
-					LIMIT 1");
+			if (!$parent) return null;
 
-			return $row ? $this->get_book($row['id']) : null;
+			$children = $parent->get_books();
+
+			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
+
+			return $index !== null && isset($children[$index + 1])
+				? $children[$index + 1]
+				: null;
 		}
 		
 		/**
@@ -566,7 +548,7 @@
 					b_c.visibility <= %d
 				GROUP BY
 					f.id',
-					get_policy($this)->get_access_level(),
+					get_policy($this)->get_access_level(), // BAD DEPENDENCY!
 					$book->get_id());
 
 			if ($random)

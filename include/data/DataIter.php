@@ -10,6 +10,11 @@
 		var $literals = null; /** Array containing the fields that should be used literally */
 		var $db = null;
 		var $namespace = '';
+
+		static public function is_same(DataIter $a, DataIter $b)
+		{
+			return $a->get_id() == $b->get_id();
+		}
 		
 		/**
 		  * Create a new DataIter
