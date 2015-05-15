@@ -77,7 +77,8 @@ jQuery(function($) {
 
 		if ($(this).data('placement-selector') == 'modal') {
 			var $modal = $('<div class="modal">'),
-				$modalWindow = $('<div class="window">').appendTo($modal);
+				$modalWindow = $('<div class="window">').appendTo($modal),
+				$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
 
 			$target = $('<div>').appendTo($modalWindow);
 
@@ -90,6 +91,12 @@ jQuery(function($) {
 				$.post($(this).attr('action'), $(this).serializeArray(), function(text) {
 					document.location.reload();
 				});
+			});
+
+			// Close the modal on clicking the close button
+			$closeButton.on('click', function(e) {
+				e.preventDefault();
+				$modal.remove();
 			});
 		}
 		else {

@@ -1169,6 +1169,11 @@ div.beheer table {
 	text-align: left;
 }
 
+.vertical-form .option-group {
+	list-style: none;
+	line-height: 20px;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }
@@ -1695,10 +1700,22 @@ body .ui-autocomplete a.profile .starting-year {
 	min-width: 300px;
 	min-height: 50px;
 	max-width: 800px;
+	position: relative;
 }
 
 .modal > .window {
 	color: black;
+}
+
+.modal > .window > .close-button {
+	border: none;
+	background: transparent;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	right: 0;
+	top: 0;
+	cursor: pointer;
 }
 
 .modal + .world {

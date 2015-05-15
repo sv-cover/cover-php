@@ -7,17 +7,22 @@
 	</div>
 	-->
 
-	<form class="privacy-preference-form" method="post" action="fotoboek.php?photo=<?=$photo->get_id()?>&amp;module=privacy">
-		<ul>
-			<li>
-				<input type="radio" id="privacy-visibility-visible" name="visibility" value="visible" <?=$visibility == 'visible' ? 'checked' : ''?>>
-				<label for="privacy-visibility-visible"><?=__('Toon in het overzicht van mij') ?></label>
-			</li>
-			<li>
-				<input type="radio" id="privacy-visibility-hidden" name="visibility" value="hidden" <?=$visibility == 'hidden' ? 'checked' : ''?>>
-				<label for="privacy-visibility-hidden"><?=__('Laat weg uit het overzicht van mij') ?></label>
-			</li>
-		</ul>
-		<button type="submit" class="button"><?=__('Zichtbaarheid instellen')?></button>
+	<form class="privacy-preference-form vertical-form" method="post" action="fotoboek.php?photo=<?=$photo->get_id()?>&amp;module=privacy">
+		<div>
+			<label><?=__('Zichtbaarheid foto')?></label>
+			<ul class="option-group">
+				<li>
+					<input type="radio" id="privacy-visibility-visible" name="visibility" value="visible" <?=$visibility == 'visible' ? 'checked' : ''?>>
+					<label for="privacy-visibility-visible"><?=__('Toon in het overzicht van mij') ?></label>
+				</li>
+				<li>
+					<input type="radio" id="privacy-visibility-hidden" name="visibility" value="hidden" <?=$visibility == 'hidden' ? 'checked' : ''?>>
+					<label for="privacy-visibility-hidden"><?=__('Laat weg uit het overzicht van mij') ?></label>
+				</li>
+			</ul>
+		</div>
+		<div>
+			<button type="submit" class="button"><?=__('Zichtbaarheid instellen')?></button>
+		</div>
 	</form>
 </div>
