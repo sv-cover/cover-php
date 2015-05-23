@@ -246,7 +246,7 @@ class DatabasePDO
 	  *
 	  * @result true if the update was successful, false otherwise 
 	  */
-	function update($table, $values, $condition, $literals = null) {
+	function update($table, $values, $condition, $literals = []) {
 		if (!$this->resource)
 			return false;
 
@@ -268,16 +268,12 @@ class DatabasePDO
 			/* If the value is a string and it's not a
 			 * literal
 			 */
-			if (is_string($values[$keys[$i]]) && (!$literals ||
-					!in_array($keys[$i], $literals))) {
-				/* Escape the string and add quotes */
-				$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
-			} elseif ($values[$keys[$i]] === null) {
-				$k .= 'null';
-			} else {
-				/* Just add the value to the query string */
+			if ($values[$keys[$i]] === null)
+				$k .= 'NULL';
+			elseif (is_int($values[$keys[$i]]) || in_array($keys[$i], $literals))
 				$k .= $values[$keys[$i]];
-			}
+			else
+				$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
 		}
 
 		$query .= $k;
