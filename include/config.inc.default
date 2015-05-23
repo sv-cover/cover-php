@@ -26,5 +26,7 @@
 		'enable_photos_read_status' => true,
 
 		'elms_id' => '',
-		'elms_secret' => ''
+		'elms_secret' => '',
+
+		'path_to_photos' => '/home/commissies/photocee/fotosGroot/'
 	);

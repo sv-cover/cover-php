@@ -515,6 +515,7 @@ CREATE TABLE fotos (
     id integer DEFAULT nextval('fotos_id_seq'::regclass) NOT NULL,
     boek integer NOT NULL REFERENCES foto_boeken (id) ON DELETE CASCADE ON UPDATE CASCADE,
     url character varying(150) NOT NULL,
+    filepath TEXT,
     width integer,
     height integer,
     beschrijving character varying(255),
