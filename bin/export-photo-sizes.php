@@ -53,11 +53,16 @@ for ($i = 0; $i < count($photos); ++$i)
 			
 			$photo->set_all($size);
 			$photo->set('filehash', $photo->compute_hash());
-
-			$photo_model->update($photo);
-			printf("(% 2d%%) %d: %dx%d %s\n", round($i / count($photos) * 100), $photo->get_id(),
-				$size['width'], $size['height'], $photo->get_full_path());
 		}
+		else
+			$size = $photo->get_size();
+
+		if (!$photo->get('created_on') || $options['force'])
+			$photo->set('created_on', $photo->compute_created_on_timestamp());
+		
+		$photo_model->update($photo);
+		printf("(% 2d%%) %d: %dx%d %s\n", round($i / count($photos) * 100), $photo->get_id(),
+			$size['width'], $size['height'], $photo->get_full_path());
 	}
 	catch (Exception $e) {
 		printf("%d: Caught exception:\n%s\n", $photo->get_id(), $e);
