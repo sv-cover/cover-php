@@ -351,7 +351,9 @@
 
 		$query_str = http_build_query($query);
 
-		$out = substr($url, 0, $query_start);
+		$out = $query_start !== false
+			? substr($url, 0, $query_start)
+			: $url;
 
 		if ($query_str != '')
 			$out .= '?' . $query_str;
