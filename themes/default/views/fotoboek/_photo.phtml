@@ -56,7 +56,7 @@ if (logged_in()) {
 		<input id="tagging-toggle" type="checkbox">
 		<label for="tagging-toggle"><?=__('Tag gezichten')?></label>
 		
-		<a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;view=original"><?=__('Download')?></a>
+		<a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;view=download"><?=__('Download')?></a>
 		<?php endif ?>
 		
 		<?php if ($photo_of_current_user): ?>
@@ -65,7 +65,7 @@ if (logged_in()) {
 	</nav>
 	
 	<div id="photo" data-id="<?=$iter->get_id()?>" <?php if (get_policy('DataModelFotoboekFaces')->user_can_create()) printf('data-create-action="%s"', markup_format_attribute($faces_controller->link_to_create())) ?>>
-		<img src="<?=markup_format_attribute(strip_protocol($iter->get('url'))) ?>" alt="<?= __('Foto') ?>" <?=($size = $iter->get_size()) ? vsprintf('width="%d" height="%d"', $size) : '' ?> class="full-size-photo">
+		<img src="<?=markup_format_attribute($iter->get_url(1600)) ?>" alt="<?= __('Foto') ?>" class="full-size-photo" <?=vsprintf('width="%d" height="%d"', $iter->get_scaled_size(820, 820))?>>
 
 		<?php foreach ($faces as $face): ?>
 		<div id="face_<?=$face->get_id()?>" class="face <?=$face->get('lid_id') || $face->get('custom_label') ? 'tagged' : 'untagged' ?> <?php if ($face->get('lid_id') && $face->get('lid_id') == logged_in('id')) echo 'me' ?>" style="<?=vsprintf("left: %0.2F%%; top: %0.2F%%; width: %0.2F%%; height: %0.2F%%;", $face->get_position())?>"

@@ -11,7 +11,7 @@
 		static $config = null;
 		
 		if ($config == null)
-			include('config.inc');
+			include('include/config.inc');
 		
 		return $config;
 	}
@@ -25,7 +25,7 @@
 	  */
 	function get_config_value($key, $default = '') {
 		$config = get_config();
-		
+
 		if (isset($config[$key]))
 			return $config[$key];
 		else

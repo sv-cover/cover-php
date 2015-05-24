@@ -182,9 +182,8 @@
 		}
 	}
 
-	class ControllerFotoboek extends Controller {
-		var $model = null;
-
+	class ControllerFotoboek extends Controller
+	{
 		protected $policy;
 
 		protected $faces_controller;
@@ -193,13 +192,15 @@
 
 		protected $privacy_controller;
 
-		function ControllerFotoboek() {
+		public function __construct()
+		{
 			$this->model = get_model('DataModelFotoboek');
 
 			$this->policy = get_policy($this->model);
 		}
 		
-		function get_content($view, $iter = null, $params = null) {
+		protected function get_content($view, $iter = null, $params = null)
+		{
 			if ($iter instanceof DataIterPhotobook)
 				$title = $iter->get('titel');
 			elseif ($iter instanceof DataIterPhoto)
@@ -210,7 +211,8 @@
 			$params = array_merge(
 				array(
 					'faces_controller' => $this->faces_controller,
-					'likes_controller' => $this->likes_controller),
+					'likes_controller' => $this->likes_controller,
+					'privacy_controller' => $this->privacy_controller),
 				$params ?: array()
 			);
 
@@ -219,75 +221,27 @@
 			$this->run_footer();
 		}
 		
-		function _page_prepare($commissie = true)
+		/* Helper functions for _check_foto_values */
+
+		public function _check_titel($name, $value)
 		{
-			if ($commissie && !member_in_commissie(COMMISSIE_FOTOCIE))
-				throw new UnauthorizedException();
-			
-			if (!$commissie && !logged_in())
-				throw new UnauthorizedException();
+			return strlen($value) > 1 && strlen($value) < 256 ? $value : false;
 		}
-		
-		function _process_photo_description(DataIterPhoto $photo)
+
+		public function _check_date($name, $value)
 		{
-			$this->_page_prepare();
-				
-			$beschrijving = get_post('beschrijving');
-			
-			if ($beschrijving === null || strlen($beschrijving) > 255) {
-				$this->get_content('foto', $photo, array('errors' => array('beschrijving')));
-				return;
-			}
-			
-			$photo->set('beschrijving', get_post('beschrijving'));
-			$this->model->update($photo);
-			
-			$this->redirect('fotoboek.php?photo=' . $photo->get('id'));
-		}
-		
-		function _check_titel($name, $value) {
-			if (!$value)
-				return false;
-			
-			if (strlen($value) > 50)
-				return false;
-			
-			return $value;
+			return preg_match('/^(?<day>\d{1,2})[ -\/](?<month>\d{1,2})[ -\/](?<year>\d{4})$/', $value, $match)
+				|| preg_match('/^(?<year>\d{4})[ -\/](?<month>\d{1,2})[ -\/](?<day>\d{1,2})$/', $value, $match)
+				? sprintf('%04d-%02d-%02d', $match['year'], $match['month'], $match['day'])
+				: null;
 		}
 
-		function _check_date($name, $value) {
-			if (!$value)
-				return null;
-
-			$parts = explode('-', $value); // input should be day - month - year
-			
-			if (count($parts) != 3)
-				return false;
-			
-			$order = array(2, 1, 0); // year - month - day
-			$value = '';
-
-			foreach ($order as $i) {
-				if (!is_numeric($parts[$i]))
-					return false;
-				
-				if ($value != '')
-					$value .= '-';
-					
-				$value .= intval($parts[$i]);
-			}
-			
-			return $value;
+		public function _check_fotograaf($name, $value)
+		{			
+			return strlen($value) < 256 ? $value : false;
 		}
 
-		function _check_fotograaf($name, $value) {			
-			if (strlen($value) > 25)
-				return false;
-			
-			return $value;
-		}
-
-		function _check_visibility($name, $value)
+		public function _check_visibility($name, $value)
 		{
 			return in_array($value, array(
 				DataModelFotoboek::VISIBILITY_PUBLIC,
@@ -297,79 +251,145 @@
 			)) ? $value : false;
 		}
 		
-		function _check_fotoboek_values(&$errors) {
+		protected function _check_fotoboek_values(&$errors)
+		{
 			$data = check_values(array(
-					array('name' => 'titel', 'function' => array($this, '_check_titel')),
-					array('name' => 'date', 'function' => array($this, '_check_date')),
-					array('name' => 'fotograaf', 'function' => array($this, '_check_fotograaf')),
-					array('name' => 'visibility', 'function' => array($this, '_check_visibility'))),
-					$errors);
+				array('name' => 'titel', 'function' => array($this, '_check_titel')),
+				array('name' => 'date', 'function' => array($this, '_check_date')),
+				array('name' => 'fotograaf', 'function' => array($this, '_check_fotograaf')),
+				array('name' => 'visibility', 'function' => array($this, '_check_visibility'))),
+				$errors);
 			
 			if (count($errors) == 0)
-				$data['beschrijving'] = get_post('beschrijving');
+				$data['beschrijving'] = $_POST['beschrijving'];
 			
 			return $data;
 		}
+
+		/* View functions */
 		
-		function _process_fotoboek_nieuw(DataIterPhotobook $parent = null) {
-			$this->_page_prepare();
+		private function _view_create_book(DataIterPhotobook $parent)
+		{
+			if (!$this->policy->user_can_create())
+				throw new UnauthorizedException();
+
+			if (!is_numeric($parent->get_id()))
+				throw new RuntimeException('Cannot add books to generated books');
 
 			$data = $this->_check_fotoboek_values($errors);
-
-			if (count($errors) > 0) {
-				$this->get_content('fotoboek', $parent, array('errors' => $errors, 'errortype' => 'nieuw'));
-				return;
-			}
-			
-			$data['parent'] = $parent ? intval($parent->get('id')) : 0;
+			$data['parent'] = $parent->get_id();
 
 			$iter = new DataIterPhotobook($this->model, -1, $data);
-			$new_book_id = $this->model->insert_book($iter);
-			
-			$this->redirect('fotoboek.php?book=' . $new_book_id);
+				
+			if (count($errors) === 0)
+			{
+				$new_book_id = $this->model->insert_book($iter);
+				return $this->redirect('fotoboek.php?book=' . $new_book_id);
+			}
+
+			return $this->get_content('create_book', $iter, compact('parent'));
 		}
 		
-		function _process_fotoboek_edit(DataIterPhotobook $book) {
-			$this->_page_prepare();
+		private function _view_update_book(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
 
 			$data = $this->_check_fotoboek_values($errors);
 
-			if (count($errors) > 0) {
-				$this->get_content('edit_fotoboek', $book, array('errors' => $errors));
-				return;
-			}
+			if (count($errors) > 0)
+				return $this->get_content('edit_fotoboek', $book, array('errors' => $errors));
 
 			$book->set_all($data);
 			$this->model->update_book($book);
 			
 			$this->redirect('fotoboek.php?book=' . $book->get('parent'));		
 		}
-		
-		function _process_fotoboek_fotos(DataIterPhotobook $book) {
-			$this->_page_prepare();
-			
-			$urls = str_replace("\r", '', explode("\n", get_post('urls')));
-			$thumbs = str_replace("\r", '', explode("\n", get_post('thumbnail_urls')));
 
+		private function _view_create_photos(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
+			
+			return $this->get_content('create_photos', $book);
+		}
+
+		private function _view_browse_photos(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
+			
+			$folder = path_concat(config_get_value('path_to_photos'), $_GET['path']);
+
+			$iter = is_dir($folder)
+				? new RecursiveIteratorIterator(
+					new RecursiveDirectoryIterator($folder,
+						FilesystemIterator::KEY_AS_PATHNAME |
+						FilesystemIterator::CURRENT_AS_FILEINFO |
+						FilesystemIterator::SKIP_DOTS),
+					RecursiveIteratorIterator::SELF_FIRST)
+				: array();
+
+			$photos = array();
+
+			foreach ($iter as $file_path)
+			{
+				if (!preg_match('/\.(jpg|gif)$/i', $file_path))
+					continue;
+
+				$exif_data = @exif_read_data($file_path);
+
+				if ($exif_data === false)
+					$exif_data = array('FileDateTime' => filemtime($file_path));
+
+				$photos[] = array(
+					'title' => '',
+					'path' => path_subtract($file_path, config_get_value('path_to_photos')),
+					'created_on' => strftime('%Y-%m-%d %H:%M:%S',
+						isset($exif_data['DateTimeOriginal'])
+							? strtotime($data['DateTimeOriginal'])
+							: $exif_data['FileDateTime'])
+				);
+			}
+
+			return $this->_send_json($photos);
+		}
+
+		private function _view_browse_folders(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
+			
+			if (isset($_GET['path']))
+				$path = path_concat(config_get_value('path_to_photos'), $_GET['path']);
+			else
+				$path = config_get_value('path_to_photos');
+
+			$entries = array();
+
+			foreach (new FilesystemIterator($path) as $entry)
+				if (is_dir($entry))
+					$entries[] = path_subtract($entry, config_get_value('path_to_photos'));
+
+			return $this->_send_json($entries);
+		}
+		
+		private function _process_add_photos(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
+			
 			$new_photos = array();
 
-			if (!get_post('urls') || count($urls) != count($thumbs)) {
-				$this->get_content('fotoboek', $book, array('errors' => array('urls', 'thumbnail_urls'), 'errortype' => 'fotos'));
-				return;
-			}
-			
-			for ($i = 0; $i < count($urls); $i++) {
-				if ($urls[$i] == '' || $thumbs[$i] == '') {
-					$this->get_content('fotoboek', $book, array('errors' => array('urls', 'thumbnail_urls'), 'errortype' => 'fotos'));
-					return;				
-				}
-			}
-			
-			for ($i = 0; $i < count($urls); $i++) {
+			foreach ($_POST['photo'] as $photo)
+			{
+				$file_path = path_concat(config_get_value('path_to_photos'), $photo['path']);
+
 				$iter = new DataIterPhoto($this->model, -1, array(
-						'boek' => $book->get('id'),
-						'url' => $urls[$i],
-						'thumburl' => $thumbs[$i],
+						'boek' => $book->get_id(),
+						'beschrijving' => $photo['title'],
+						'filepath' => $photo['path'],
+						'created_on' => $photo['created_on'],
 						'added_on' => 'NOW()'),
 						array('added_on'));
 				
@@ -386,33 +406,18 @@
 			$face_model = get_model('DataModelFotoboekFaces');
 			$face_model->refresh_faces($new_photos);
 			
-			/* Delete composite thumbnail for the book so it will
-			   get rerendered */
 			$this->redirect('fotoboek.php?book=' . $book->get('id'));
-		}
-		
-		function _del_book(DataIterPhotobook $book)
-		{
-			$children = $this->model->get_children($book);
-			
-			if ($children) {
-				/* Delete all children */
-				foreach ($children as $child)
-					$this->_del_book($child);
-			}
-			
-			/* Remove book */
-			$this->model->delete_book($book);
 		}
 		
 		protected function _process_del_book(DataIterPhotobook $book)
 		{
-			$this->_page_prepare();
+			if (!$this->policy->user_can_delete($book))
+				throw new UnauthorizedException();
 
 			if (!empty($_POST['confirm_delete'])
 				&& $_POST['confirm_delete'] == $book->get('titel'))
 			{
-				$this->_del_book($book);
+				$this->model->delete_book($book);
 
 				return $this->redirect('fotoboek.php?book=' . $book->get('parent'));
 			}
@@ -422,7 +427,8 @@
 		
 		protected function _process_fotoboek_del_fotos(DataIterPhotobook $book)
 		{
-			$this->_page_prepare();
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
 			
 			foreach ($_POST['photo'] as $id)
 				if ($photo = $this->model->get_iter($id))
@@ -439,155 +445,96 @@
 			$this->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
 		}
 
-		protected function _view_edit_book(DataIterPhotobook $book) {
-			$this->_page_prepare();
+		protected function _view_edit_book(DataIterPhotobook $book) 
+		{
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
 
 			$this->get_content('edit_fotoboek', $book);
 		}
 
-		private function _find_original(DataIterPhoto $photo)
-		{
-			$common_path = 'svcover.nl/fotos/';
-
-			if (($path = strstr($photo->get('url'), $common_path)) === false)
-				return null;
-
-			$path_parts = explode('/', substr($path, strlen($common_path)));
-
-			$path_parts_copy = $path_parts;
-
-			while (count($path_parts) > 0)
-			{
-				$possible_path = '/home/commissies/photocee/fotosGroot/' . implode('/', $path_parts);
-				
-				if (file_exists($possible_path))
-					return $possible_path;
-
-				array_shift($path_parts);
-			}
-
-			// typical paths are fotosGroot/fotos20092010/YYYYMMDD_*/folder/photo.jpg
-			$book = $photo->get_book();
-
-			$parents = $this->model->get_parents($book);
-
-			array_push($parents, $book);
-
-			// Remove first two books (root and college year)
-			$root_book = array_shift($parents);
-			$path = '/home/commissies/photocee/fotosGroot/';
-
-			// College year book is named using the year of the book (duh!)
-			$year_book = array_shift($parents);
-			$year = intval(substr($book->get('datum'), strlen('00-00-')));
-			$path .= sprintf('fotos%d%d/', $year, $year + 1);
-
-			// Activity book is based named using the date of the book, but it
-			// also has a name that may not be the same as the book on the website.
-			$activity_book = array_shift($parents);
-			if (!preg_match('/^(?<day>\d{1,2})-(?<month>\d{1,2})-(?<year>\d\d\d\d)$/', $activity_book->get('datum'), $match)
-				&& !preg_match('/^(?<year>\d\d\d\d)-(?<month>\d{1,2})-(?<day>{1,2})$/', $activity_book->get('datum'), $match))
-				throw new Exception("Could not match activity date to common pattern");
-			
-			$path .= sprintf('%04d%02d%02d_*/', $match['year'], $match['month'], $match['day']);
-
-			// So after generating a path, more or less, we just glob our way through
-			foreach (glob($path) as $folder)
-			{
-				// and now just YOLO find the filename
-				$path_parts = explode('/', substr($path, strlen($common_path)));
-
-				// It might be in this folder already
-				if (file_exists($folder . end($path_parts_copy)))
-					return $folder . end($path_parts_copy);
-
-				// But it also might hide in some subfolder
-				foreach (scandir($folder) as $subfolder)
-					if (is_dir($folder . $subfolder))
-						if (file_exists($folder . $subfolder . '/' . end($path_parts_copy)))
-							return $folder . $subfolder . '/' . end($path_parts_copy);
-			}
-
-			return null;
-		}
-
-		protected function _view_original(DataIterPhoto $photo)
+		protected function _view_download_photo(DataIterPhoto $photo)
 		{
 			// For now require login for these originals
 			if (!logged_in())
 				throw new UnauthorizedException();
 
-			$real_path = $this->_find_original($photo);
-
-			if (!$real_path)
+			if (!$photo->file_exists())
 				throw new NotFoundException('Could not find original file');
 
-			$fh = fopen($real_path, 'rb');
-
-			if (!$fh)
-				throw new RuntimeException('Could not open file: ' . $real_path);
-
-			if (preg_match('/\.(jpg|gif)$/i', $real_path, $match))
+			if (preg_match('/\.(jpg|gif)$/i', $photo->get('filepath'), $match))
 				header('Content-Type: image/' . strtolower($match[1]));
 
-			header('Content-Disposition: attachment; filename="' . addslashes(basename($real_path)) . '"');
-			header('Content-Length: ' . filesize($real_path));
+			header('Content-Disposition: attachment; filename="' . addslashes(basename($photo->get('filepath'))) . '"');
+			header('Content-Length: ' . filesize($photo->get_full_path()));
 
+			$fh = $photo->get_resource();
 			fpassthru($fh);
 			fclose($fh);
 		}
 
-		protected function _view_photo(DataIterPhoto $photo, DataIterPhotobook $book)
+		protected function _view_scaled_photo(DataIterPhoto $photo)
+		{
+			if (!$this->policy->user_can_read($photo->get_book()))
+				throw new UnauthorizedException();
+
+			$width = isset($_GET['width']) ? min($_GET['width'], 1600) : null;
+			$height = isset($_GET['height']) ? min($_GET['height'], 1600) : null;
+
+			// First open the resource because this could throw a 404 exception with
+			// the appropriate headers.
+			$fhandle = $photo->get_resource($width, $height);
+			
+			header('Pragma: public');
+			header('Cache-Control: max-age=86400');
+			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+			header('Content-Type: image/jpeg');
+			
+			fpassthru($fhandle);
+			fclose($fhandle);
+		}
+
+		protected function _view_read_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
 			$photos = $book->get_photos();
 
 			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
 
-			if ($current_index !== null && isset($photos[$current_index - 1]))
-				header(sprintf('Link: <%s>; rel=prefetch',
-					strip_protocol($photos[$current_index - 1]->get('url'))), false);
-
-			if ($current_index !== null && isset($photos[$current_index + 1]))
-				header(sprintf('Link: <%s>; rel=prefetch',
-					strip_protocol($photos[$current_index + 1]->get('url'))), false);
-
 			$reactie_controller = new ControllerFotoboekReacties($photo);
 			$reacties = $reactie_controller->run_embedded();
 
-			$this->get_content('foto', $photo, compact('book', 'reacties'));
+			return $this->get_content('foto', $photo, compact('book', 'reacties'));
 		}
 
-		function run_impl() {
-			if (isset($_GET['view']) && $_GET['view'] == 'competition') {
-				$this->get_content('competition');
-				return;
-			}
+		protected function _view_read_book(DataIterPhotobook $book)
+		{
+			return $this->get_content('fotoboek', $book);
+		}
+
+		protected function run_impl()
+		{
+			if (isset($_GET['view']) && $_GET['view'] == 'competition')
+				return $this->get_content('competition');
+
+			$photo = null;
+			$book = null;
+
+			// Single photo page
 			if (isset($_GET['photo']) && $_GET['photo']) {
 				$photo = $this->model->get_iter($_GET['photo']);
 				$book = $photo->get_book();
-				if (!$photo) {
-					$this->get_content('photo_not_found');
-					return;
-				}
-			} else if (isset($_GET['book'])
+			}
+			// Book index page
+			else if (isset($_GET['book'])
 				&& ctype_digit($_GET['book'])
 				&& intval($_GET['book']) > 0) {
 				$book = $this->model->get_book($_GET['book']);
-				
-				if (!$book) {
-					$this->get_content('book_not_found');
-					return;
-				}
-			} else {
-				$photo = null;
-				$book = $this->model->get_root_book();
 			}
-
-			// Likes book
-			if (logged_in() && isset($_GET['book']) && $_GET['book'] == 'liked')
+			// Likes book page
+			elseif (isset($_GET['book']) && $_GET['book'] == 'liked') {
 				$book = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
-
-			// Faces book (hidden feature: you can add multiple ids for stalker modus)
+			}
+			// All photos who a certain member is (or mutiple are) tagged in page
 			elseif (isset($_GET['book']) && preg_match('/^member_(\d+(?:_\d+)*)$/', $_GET['book'], $match)) {
 				$members = array();
 
@@ -596,52 +543,81 @@
 
 				$book = get_model('DataModelFotoboekFaces')->get_book($members);
 			}
+			// And otherwise the root book index page
+			else {
+				$book = $this->model->get_root_book();
+			}
 
+			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {
 				$this->likes_controller = new ControllerFotoboekLikes($photo);
 				$this->faces_controller = new ControllerFotoboekFaces($photo);
 				$this->privacy_controller = new ControllerFotoboekPrivacy($photo);
 			}
-			
-			if (!$photo) {
-				if (isset($_POST['submfotoboeknieuw']))
-					$this->_process_fotoboek_nieuw($book);
-				elseif (isset($_POST['submfotoboekedit']))
-					$this->_process_fotoboek_edit($book);
-				elseif (isset($_POST['submfotoboekfotos']))
-					$this->_process_fotoboek_fotos($book);
-				elseif (isset($_POST['submfotoboekdelfotos']))
-					$this->_process_fotoboek_del_fotos($book);
-				elseif (isset($_POST['mark_read_recursively']))
-					$this->_process_mark_read($book);
-				elseif (isset($_GET['delbook']))
-					$this->_process_del_book($book);
-				elseif (isset($_GET['editbook']))
-					$this->_view_edit_book($book);
-				else {
-					if (!$this->policy->user_can_read($book))
-						return $this->get_content('book_not_found');
 
-					if ($book && logged_in())
-						$this->model->mark_read(logged_in('id'), $book);
+			// Choose the correct view
+			if (isset($_GET['module'])) {
+				if (!$photo)
+					throw new RuntimeException('You cannot access the photo auxiliary functions without also selecting a photo');
 
-					$this->get_content('fotoboek', $book);
+				switch ($_GET['module']) {
+					case 'likes':
+						return $this->likes_controller->run();
+					case 'faces':
+						return $this->faces_controller->run();
+					case 'privacy':
+						return $this->privacy_controller->run();
 				}
 			}
-			elseif (!$this->policy->user_can_read($book))
-				$this->get_content('book_not_found');
-			elseif (isset($_POST['submfotobeschrijving']))
-				$this->_process_photo_description($photo);
-			elseif (isset($_GET['module']) && $_GET['module'] == 'likes')
-				$this->likes_controller->run();
-			elseif (isset($_GET['module']) && $_GET['module'] == 'faces')
-				$this->faces_controller->run();
-			elseif (isset($_GET['module']) && $_GET['module'] == 'privacy')
-				$this->privacy_controller->run();
-			elseif (isset($_GET['view']) && $_GET['view'] == 'original')
-				$this->_view_original($photo);
-			else
-				$this->_view_photo($photo, $book);
+			
+			switch (isset($_GET['view']) ? $_GET['view'] : null)
+			{
+				case 'add_book':
+					return $this->_view_add_book($book);
+
+				case 'update_book':
+					return $this->_view_update_book($book);
+
+				case 'delete_book':
+					return $this->_view_delete_book($book);
+
+				case 'add_photos':
+					return $this->_view_add_photos($book);
+
+				case 'update_photo':
+					return $this->_view_update_photo($photo);
+
+				case 'delete_photo':
+					return $this->_view_delete_photo($photo);
+
+				case 'add_photos_browse_folders':
+					return $this->_view_browse_folders($book);
+
+				case 'add_photos_browse_photos':
+					return $this->_view_browse_photos($book);
+
+				case 'download':
+					return $this->_view_download_photo($photo);
+
+				case 'scaled':
+					return $this->_view_scaled_photo($photo);
+
+				default:
+					if ($photo)
+						return $this->_view_read_photo($photo, $book);
+					else
+						return $this->_view_read_book($book);
+			}
+			
+			// if (!$this->policy->user_can_read($book))
+			// 			return $this->get_content('book_not_found');
+
+			// 		if ($book && logged_in())
+			// 			$this->model->mark_read(logged_in('id'), $book);
+
+			// 		$this->get_content('fotoboek', $book);
+			// 	}
+			// }
 		}
 	}
 	

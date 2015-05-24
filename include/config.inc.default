@@ -28,5 +28,22 @@
 		'elms_id' => '',
 		'elms_secret' => '',
 
-		'path_to_photos' => '/home/commissies/photocee/fotosGroot/'
+		// Absolute path to the root folder of all photos. The paths
+		// in the database are appended to this path to form the complete
+		// absolute path of each photo. You can use something like sshfs
+		// to mount the Coverserver file system and specify the mount plus
+		// path here.
+		'path_to_photos' => '/home/commissies/photocee/fotosGroot/',
+
+		// Optionally you can configure a different url for the photos, e.g.
+		// https://www.svcover.nl/fotoboek.php?view=scaled for when you don't
+		// have access to the photos locally.
+		'url_to_scaled_photo' => 'fotoboek.php?view=scaled',
+
+		'path_to_scaled_photo' => 'tmp/photos/%d/%dx%d.jpg',
+
+		'precomputed_photo_scales' => array(
+			[1600, 1600], // Full size photo
+			[400, 400] // size used for the thumbnails below photo and in photo books
+		)
 	);

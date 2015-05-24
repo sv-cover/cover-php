@@ -9,39 +9,109 @@
 		{
 			if (!$this->get('width') || !$this->get('height'))
 			{
-				$data = @getimagesize($this->get('url'));
+				if (!$this->file_exists())
+					throw new NotFoundException("Could not find original file ({$this->get('filepath')}) of photo {$this->get_id()}");
 
-				if (!$data)
-					return null;
-
-				$this->set('width', $data[0]);
-				$this->set('height', $data[1]);
+				if ($exif_data = @$this->get_exif_data()) {
+					$this->set('width', $exif_data['COMPUTED']['Width']);
+					$this->set('height', $exif_data['COMPUTED']['Height']);
+				}
+				else if ($size = @getimagesize($this->get_full_path())) {
+					$this->set('width', $size[0]);
+					$this->set('height', $size[1]);
+				} else {
+					throw new RuntimeException("Could not determine image dimensions of photo {$this->get_id()}");
+				}
+				
 				$this->model->update($this);
 			}
 
 			return array($this->get('width'), $this->get('height'));
 		}
 
-		public function get_thumb_size()
+		public function get_scaled_size($max_width = null, $max_height = null)
 		{
-			if (!$this->get('thumbwidth') || !$this->get('thumbheight'))
-			{
-				$data = @getimagesize($this->get('thumburl'));
+			$size = $this->get_size();
 
-				if (!$data)
-					return null;
-
-				$this->set('thumbwidth', $data[0]);
-				$this->set('thumbheight', $data[1]);
-				$this->model->update($this);
+			if ($max_width) {
+				$width = $max_width;
+				$height = round($max_width * ($size[1] / $size[0]));
+			}
+			
+			if (!$max_width || ($max_height && $height > $max_height)) {
+				$height = $max_height;
+				$width = round($max_height * ($size[0] / $size[1]));
 			}
 
-			return array($this->get('thumbwidth'), $this->get('thumbheight'));
+			return array($width, $height);
 		}
 
 		public function get_book()
 		{
 			return $this->model->get_book($this->get('boek'));
+		}
+
+		public function get_full_path()
+		{
+			return path_concat(get_config_value('path_to_photos'), $this->get('filepath'));
+		}
+
+		public function get_url($width = null, $height = null)
+		{
+			$url = get_config_value('url_to_scaled_photo', 'fotoboek.php?view=scaled');
+
+			$params = array('photo' => $this->get_id());
+
+			if ($width)
+				$params['width'] = (int) $width;
+
+			if ($height)
+				$params['height'] = (int) $height;
+
+			return edit_url($url, $params);
+		}
+
+		public function file_exists()
+		{
+			return file_exists($this->get_full_path());
+		}
+
+		public function get_resource($width = null, $height = null, $skip_cache = false)
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file ({$this->get('filepath')}) of photo {$this->get_id()}.");
+			
+			// Special case of no width and height -> use original file
+			if (!$width && !$height)
+				return fopen($this->get_full_path(), 'rb');
+
+			$scaled_path = sprintf(get_config_value('path_to_scaled_photo', 'tmp/photos/%d/%dx%d.jpg'), $this->get_id(), $width, $height);
+
+			if (!file_exists($scaled_path)
+				|| filesize($scaled_path) === 0
+				|| $skip_cache)
+			{
+				if (!file_exists(dirname($scaled_path)))
+					mkdir(dirname($scaled_path), 0777, true);
+
+				list($scaled_width, $scaled_height) = $this->get_scaled_size($width, $height);
+
+				$fhandle = fopen($scaled_path, 'wb');
+				$imagick = new Imagick();
+				$imagick->readImage($this->get_full_path());
+				$imagick->scaleImage($scaled_width, $scaled_height);
+				$imagick->setImageFormat('jpg');
+				$imagick->writeImageFile($fhandle);
+				$imagick->destroy();
+				fclose($fhandle);
+			}
+
+			return fopen($scaled_path, 'rb');
+		}
+
+		public function get_exif_data()
+		{
+			return exif_read_data($this->get_full_path());
 		}
 	}
 
@@ -187,7 +257,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_book($id)
+		public function get_book($id)
 		{
 			if ($id == 0)
 				return $this->get_root_book();
@@ -213,6 +283,9 @@
 					", $id);
 			
 			$row = $this->db->query_first($q);
+
+			if ($row === null)
+				throw new DataIterNotFoundException($id, $this);
 
 			return $this->_row_to_iter($row, 'DataIterPhotobook');
 		}
@@ -249,7 +322,7 @@
 			return $this->_rows_to_iters($this->db->query($query), 'DataIterPhotobook');
 		}
 
-		function get_root_book()
+		public function get_root_book()
 		{
 			$num_books = $this->db->query_value('SELECT COUNT(id) FROM foto_boeken WHERE parent = 0');
 			
@@ -268,7 +341,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_random_book($count = 10)
+		public function get_random_book($count = 10)
 		{
 			$q = sprintf("
 				SELECT 
@@ -327,7 +400,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_next_book(DataIterPhotobook $book)
+		public function get_next_book(DataIterPhotobook $book)
 		{
 			$parent = $book->get_parent();
 
@@ -348,7 +421,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_children(DataIterPhotobook $book) {
+		public function get_children(DataIterPhotobook $book) {
 			$select = 'SELECT
 				foto_boeken.*, 
 				COUNT(DISTINCT fotos.id) AS num_photos, 
@@ -468,7 +541,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_random_photos($num) {
+		public function get_random_photos($num)
+		{
 			$rows = $this->db->query(sprintf("
 					SELECT
 						f.*,
@@ -568,7 +642,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_parents(DataIterPhotobook $book) {
+		public function get_parents(DataIterPhotobook $book)
+		{
 			$result = array();
 
 			while ($book = $book->get_parent())
@@ -584,7 +659,8 @@
 		  *
 		  * @result whether or not the delete was successful
 		  */
-		function delete(DataIterPhoto $iter) {
+		public function delete(DataIterPhoto $iter)
+		{
 			$result = parent::delete($iter);
 			
 			/* Delete all reacties */
@@ -599,24 +675,30 @@
 		  *
 		  * @result whether or not the insert was successful
 		  */
-		function insert_book(DataIterPhotobook $iter) {
+		public function insert_book(DataIterPhotobook $iter)
+		{
 			return $this->_insert('foto_boeken', $iter, true);
 		}
 
 		/**
-		  * Delete a book. This will automatically remove all the
-		  * photos in the book.
+		  * Delete a book. This will also delete all photos
+		  * and subbooks.
 		  * @iter a #DataIter representing a book
 		  *
 		  * @result whether or not the delete was successful
 		  */		
-		function delete_book(DataIterPhotobook $iter) {
-			$result = $this->_delete('foto_boeken', $iter);
+		public function delete_book(DataIterPhotobook $iter)
+		{
+			if (!is_numeric($iter->get_id()))
+				throw new InvalidArgumentException('You can only delete real books');
+
+			foreach ($iter->get_books() as $child)
+				$this->delete_book($child);
 			
-			$photos = $this->get_photos($iter);
-			
-			foreach ($photos as $photo)
+			foreach ($iter->get_photos() as $photo)
 				$this->delete($photo);
+			
+			$result = $this->_delete('foto_boeken', $iter);
 			
 			return $result;
 		}
@@ -627,7 +709,8 @@
 		  *
 		  * @result whether or not the update was successful
 		  */		
-		function update_book(DataIterPhotobook $iter) {
+		public function update_book(DataIterPhotobook $iter)
+		{
 			return $this->_update('foto_boeken', $iter);
 		}
 
@@ -687,4 +770,3 @@
 			$this->mark_children_read($lid_id, $book);
 		}
 	}
-?>
