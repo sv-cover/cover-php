@@ -198,19 +198,12 @@ class DatabasePDO
 
 			$k .= '"' . $keys[$i] . '"';
 
-			/* If the value is a string and it's not a
-			 * literal
-			 */
-			if (is_string($values[$keys[$i]]) && (!$literals ||
-					!in_array($keys[$i], $literals))) {
-				/* Escape the string and add quotes */
-				$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
-			} elseif ($values[$keys[$i]] === null) {
-				$v .= 'null';
-			} else {
-				/* Just add the value to the query string */
+			if ($values[$keys[$i]] === null)
+				$v .= 'NULL';
+			elseif ($literals && in_array($keys[$i], $literals))
 				$v .= $values[$keys[$i]];
-			}
+			else
+				$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
 		}
 
 		$query = $query . ' ' . $k . ') ' . $v . ');';
@@ -265,12 +258,9 @@ class DatabasePDO
 			/* Add <key>= */
 			$k .= '"' . $keys[$i] . '"=';
 
-			/* If the value is a string and it's not a
-			 * literal
-			 */
 			if ($values[$keys[$i]] === null)
 				$k .= 'NULL';
-			elseif (is_int($values[$keys[$i]]) || in_array($keys[$i], $literals))
+			elseif ($literals && in_array($keys[$i], $literals))
 				$k .= $values[$keys[$i]];
 			else
 				$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
