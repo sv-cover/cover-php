@@ -48,6 +48,12 @@ table.navigation td:nth-child(3) {
 	height: auto;
 }
 
+#photo .full-size-photo .high-quality {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
 .slides {
 	width: auto;
 	background: #ccc;
