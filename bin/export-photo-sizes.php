@@ -44,16 +44,22 @@ printf("Measuring %d photos...\n", count($photos));
 
 for ($i = 0; $i < count($photos); ++$i)
 {	
+	$photo = $photos[$i];
+
 	try {
-		if ($options['force']) {
-			$photos[$i]->set('width', null);
-			$photos[$i]->set('height', null);
+		if ($photo->original_has_changed() || $options['force'] || !$photo->get('width') || !$photo->get('height'))
+		{
+			$size = $photo->compute_size();
+			
+			$photo->set_all($size);
+			$photo->set('filehash', $photo->compute_hash());
+
+			$photo_model->update($photo);
+			printf("(% 2d%%) %d: %dx%d %s\n", round($i / count($photos) * 100), $photo->get_id(),
+				$size['width'], $size['height'], $photo->get_full_path());
 		}
-		
-		$size = $photos[$i]->get_size();
-		printf("%d: %dx%d %s\n", $photos[$i]->get_id(), $size[0], $size[1], $photos[$i]->get_full_path());
 	}
 	catch (Exception $e) {
-		printf("%d: Caught exception:\n%s\n", $photos[$i]->get_id(), $e);
+		printf("%d: Caught exception:\n%s\n", $photo->get_id(), $e);
 	}
 }
