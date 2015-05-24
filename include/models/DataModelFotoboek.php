@@ -101,6 +101,7 @@
 				$imagick->readImage($this->get_full_path());
 				$imagick->scaleImage($scaled_width, $scaled_height);
 				$imagick->setImageFormat('jpg');
+				$imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
 				$imagick->writeImageFile($fhandle);
 				$imagick->destroy();
 				fclose($fhandle);
