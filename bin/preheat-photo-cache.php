@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+ini_set('memory_limit', '512M');
 chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/init.php';
@@ -40,20 +41,15 @@ function get_book_photos_recursive($book_id)
 
 $photos = array_flatten(array_map($options['recursive'] ? 'get_book_photos_recursive' : 'get_book_photos', $book_ids));
 
-printf("Measuring %d photos...\n", count($photos));
-
-for ($i = 0; $i < count($photos); ++$i)
-{	
-	try {
-		if ($options['force']) {
-			$photos[$i]->set('width', null);
-			$photos[$i]->set('height', null);
-		}
-		
-		$size = $photos[$i]->get_size();
-		printf("%d: %dx%d %s\n", $photos[$i]->get_id(), $size[0], $size[1], $photos[$i]->get_full_path());
+// Just open the resource for each photo once for each scale and it should
+// generate the temp files automatically.
+foreach ($photos as $i => $photo)
+{
+	printf('(% 2d%%) %d: ', round($i / count($photos) * 100), $photo->get_id());
+	foreach (get_config_value('precomputed_photo_scales', array()) as $dimesions)
+	{
+		fclose($photo->get_resource($dimesions[0], $dimesions[1], $options['force']));
+		vprintf(' %dx%d', $dimesions);
 	}
-	catch (Exception $e) {
-		printf("%d: Caught exception:\n%s\n", $photos[$i]->get_id(), $e);
-	}
+	echo "\n";
 }
