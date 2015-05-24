@@ -101,12 +101,6 @@ class ControllerCRUD extends Controller
 			array('application/json', 'text/html', '*/*'));
 	}
 
-	protected function _send_json($data)
-	{
-		header('Content-Type: application/json');
-		echo json_encode($data, JSON_PRETTY_PRINT);
-	}
-
 	protected function _send_json_single(DataIter $iter)
 	{
 		$this->_send_json(array(

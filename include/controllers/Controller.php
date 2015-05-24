@@ -162,4 +162,10 @@
 				echo __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)');
 			}
 		}
+
+		protected function _send_json($data)
+		{
+			header('Content-Type: application/json');
+			echo json_encode($data, JSON_PRETTY_PRINT);
+		}
 	}
