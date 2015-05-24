@@ -730,3 +730,8 @@
 
 		return ltrim('/', substr($full_path, strlen($basedir)));
 	}
+
+	function crc32_file($path)
+	{ 
+		return hash_file('CRC32', $path, false);
+	}

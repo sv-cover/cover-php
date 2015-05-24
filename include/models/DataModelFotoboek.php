@@ -7,25 +7,6 @@
 	{
 		public function get_size()
 		{
-			if (!$this->get('width') || !$this->get('height'))
-			{
-				if (!$this->file_exists())
-					throw new NotFoundException("Could not find original file ({$this->get('filepath')}) of photo {$this->get_id()}");
-
-				if ($exif_data = @$this->get_exif_data()) {
-					$this->set('width', $exif_data['COMPUTED']['Width']);
-					$this->set('height', $exif_data['COMPUTED']['Height']);
-				}
-				else if ($size = @getimagesize($this->get_full_path())) {
-					$this->set('width', $size[0]);
-					$this->set('height', $size[1]);
-				} else {
-					throw new RuntimeException("Could not determine image dimensions of photo {$this->get_id()}");
-				}
-				
-				$this->model->update($this);
-			}
-
 			return array($this->get('width'), $this->get('height'));
 		}
 
@@ -44,6 +25,38 @@
 			}
 
 			return array($width, $height);
+		}
+
+		public function compute_size()
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file {$this->get('filepath')}");
+
+			if ($exif_data = @$this->get_exif_data())
+				return [
+					'width' => $exif_data['COMPUTED']['Width'],
+					'height' => $exif_data['COMPUTED']['Height']
+				];
+			else if ($size = @getimagesize($this->get_full_path()))
+				return [
+					'width' => $size[0],
+					'height' => $size[1]
+				];
+			else
+				throw new RuntimeException("Could not determine image dimensions of photo {$this->get('filepath')}");
+		}
+
+		public function compute_hash()
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file {$this->get('filepath')}");
+
+			return crc32_file($this->get_full_path());
+		}
+
+		public function original_has_changed()
+		{
+			return $this->compute_hash() == $this->get('filehash');
 		}
 
 		public function get_book()
@@ -85,7 +98,7 @@
 			if (!$width && !$height)
 				return fopen($this->get_full_path(), 'rb');
 
-			$scaled_path = sprintf(get_config_value('path_to_scaled_photo', 'tmp/photos/%d/%dx%d.jpg'), $this->get_id(), $width, $height);
+			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
 
 			if (!file_exists($scaled_path)
 				|| filesize($scaled_path) === 0
@@ -654,20 +667,42 @@
 		}
 		
 		/**
-		  * Delete a photo. This will automatically delete any replies
-		  * for the photo
-		  * @iter a #DataIter representing a photo
+		  * Delete a photo. This will automatically delete any comments on
+		  * and faces tagged in the photo due to database table constraints.
 		  *
+		  * @iter a #DataIter representing a photo;
 		  * @result whether or not the delete was successful
 		  */
 		public function delete(DataIterPhoto $iter)
 		{
 			$result = parent::delete($iter);
 			
-			/* Delete all reacties */
-			$result = $result && $this->db->delete('foto_reacties', 'foto = ' . intval($iter->get_id()));
-
+			// Remove scaled versions of the image from the scaled image cache
+			$filter = str_replace('%d', '*', get_config_value('path_to_scaled_photo'));
+			foreach (glob($filter) as $scaled_image_path)
+				unlink($scaled_image_path);
+			
 			return $result;
+		}
+
+		/**
+		 * Insert a photo into the database. Width, height and filehash are
+		 * caculated if they are not already set.
+		 *
+		 * @param DataIterPhoto $photo to insert
+		 * @return int|boolean the photo id on success, or false on failure
+		 */
+		public function insert(DataIterPhoto $iter)
+		{
+			// Determine width and height of the new image
+			if (!$iter->get('width') || !$iter->get('height'))
+				$iter->set_all($iter->compute_size());
+
+			// Determine the CRC32 file hash, used for detecting changes later on
+			if (!$iter->get('filehash'))
+				$iter->set('filehash', $iter->compute_hash());
+
+			return parent::insert($iter);
 		}
 
 		/**
@@ -683,10 +718,11 @@
 
 		/**
 		  * Delete a book. This will also delete all photos
-		  * and subbooks.
-		  * @iter a #DataIter representing a book
+		  * and subbooks and all accompanying face tags, 
+		  * comments and scaled images in the cache.
 		  *
-		  * @result whether or not the delete was successful
+		  * @param DataIterPhotobook $iter representing a book
+		  * @return boolean whether or not the delete was successful
 		  */		
 		public function delete_book(DataIterPhotobook $iter)
 		{
@@ -706,15 +742,21 @@
 
 		/**
 		  * Update a book
-		  * @iter a #DataIter representing a book
 		  *
-		  * @result whether or not the update was successful
+		  * @param DataIterPhotobook $iter representing a book
+		  * @return boolean whether or not the update was successful
 		  */		
 		public function update_book(DataIterPhotobook $iter)
 		{
 			return $this->_update('foto_boeken', $iter);
 		}
 
+		/**
+		 * Mark a photo book as read for a certain member.
+		 *
+		 * @param int $lid_id id of the DataIterMember
+		 * @param DataIterPhotobook $book book to mark as read
+		 */
 		public function mark_read($lid_id, DataIterPhotobook $book)
 		{
 			if (!get_config_value('enable_photos_read_status', true))
@@ -736,6 +778,14 @@
 			}
 		}
 
+		/**
+		 * Marks all photo books that are children of the passed in book as
+		 * read for a certain member.
+		 * 
+		 * @param int $lid_id id of the DataIterMember
+		 * @param DataIterPhotobook $book parent book of which the children
+		 * 	must be marked as read
+		 */
 		protected function mark_children_read($lid_id, DataIterPhotobook $book)
 		{
 			if (!get_config_value('enable_photos_read_status', true))
@@ -764,6 +814,12 @@
 			$this->db->query($query);
 		}
 
+		/**
+		 * Mark a photo book and all its children as read for a certain member.
+		 * 
+		 * @param int $lid_id id of the DataIterMember
+		 * @param DataIterPhotobook $book book to mark as read
+		 */
 		public function mark_read_recursively($lid_id, DataIterPhotobook $book)
 		{
 			$this->mark_read($lid_id, $book);

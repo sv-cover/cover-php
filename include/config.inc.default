@@ -44,6 +44,6 @@
 
 		'precomputed_photo_scales' => array(
 			[1600, 1600], // Full size photo
-			[400, 400] // size used for the thumbnails below photo and in photo books
+			[null, 400] // size used for the thumbnails below photo and in photo books
 		)
 	);
