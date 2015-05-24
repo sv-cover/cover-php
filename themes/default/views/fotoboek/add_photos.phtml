@@ -1,0 +1,110 @@
+<h1><?= __('Fotoboek') ?> :: <?= __("Foto's toevoegen") ?></h1>
+<div class="messageBox">
+	<?php $this->render_partial('path', array('model' => $model, 'book' => $iter, 'photo' => null)) ?>
+
+	<div id="folder-selector"></div>
+
+	<form action="fotoboek.php?book=<?= $iter->get_id() ?>&amp;view=add_photos" method="post">
+		<ul id="photo-selector"></ul>
+	</form>
+</div>
+
+<script>
+var baseurl = 'fotoboek.php?book=<?=$iter->get_id()?>';
+
+jQuery(function($) {
+	function basename(path) {
+		var match = path.match(/\/([^\/]+)$/);
+		return match ? match[1] : path;
+	}
+
+	function load_folders(path, ol) {
+		$.getJSON(baseurl + '&view=add_photos_list_folders&path=' + path).then(function(data) {
+			console.log(data);
+			$.each(data, function(index, folder) {
+				$('<li>')
+					.data('folder', folder)
+					.text(basename(folder))
+					.appendTo(ol);
+			});
+		});
+	}
+
+	var stream = null;
+
+	function handle_stream_error(e) {
+		if (e.readyState != EventSource.CLOSED) {
+			console.error(e);
+		} 
+	}
+
+	function load_photos(path, $ol) {
+		if (stream)
+			stream.close();
+
+		var index = 0;
+
+		stream = new EventSource(baseurl + '&view=add_photos_list_photos&path=' + path);
+		stream.addEventListener('error', handle_stream_error);
+
+		stream.addEventListener('end', function(e) {
+			stream.close();
+		});
+
+		stream.addEventListener('photo', function(e) {
+			var photo = JSON.parse(e.data);
+
+			var $li = $('<li>').appendTo($ol);
+				
+			$('<img>', {
+				'class': 'thumbnail',
+				'src': photo['thumbnail']
+			}).appendTo($li);
+
+			$('<span>', {'class': 'titel'}).appendTo($li)
+				.append($('<input>', {
+					'type': 'text',
+					'name': 'photo[' + index + '][titel]',
+					'value': photo['titel']
+				}));
+
+			$('<span>')
+				.addClass('filename')
+				.text(basename(photo['path']))
+				.prop('title', basename(photo['path']))
+				.appendTo($li);
+
+			$('<span>')
+				.addClass('created-on')
+				.text(photo['created_on'])
+				.appendTo($li);
+
+			$('<input>', {
+				'type': 'hidden',
+				'name': 'photo[' + index++ + '][path]',
+				'value': photo['path']
+			}).appendTo($li);
+		}, false);
+	}
+
+	load_folders('', $('<ol>').appendTo('#folder-selector'));
+
+	$('#folder-selector').on('click', 'li', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		$(this).parent('ol').find('li').removeClass('selected');
+		$(this).addClass('selected');
+
+		var ol = $(this).parent('ol').next('ol');
+		if (ol.length)
+			ol.empty();
+		else
+			ol = $('<ol>').insertAfter($(this).parent('ol'));
+
+		load_folders($(this).data('folder'), ol);
+		
+		load_photos($(this).data('folder'), $('#photo-selector').empty());
+	});
+})
+</script>

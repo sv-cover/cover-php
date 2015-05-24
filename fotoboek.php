@@ -2,6 +2,7 @@
 	require_once 'include/init.php';
 	require_once 'include/member.php';
 	require_once 'include/form.php';
+	require_once 'include/json.php';
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/controllers/ControllerCRUD.php';
 	
@@ -306,32 +307,21 @@
 			$this->redirect('fotoboek.php?book=' . $book->get('parent'));		
 		}
 
-		private function _view_create_photos(DataIterPhotobook $book)
+		private function _view_list_photos(DataIterPhotobook $book)
 		{
-			if (!$this->policy->user_can_update($book))
-				throw new UnauthorizedException();
+			// if (!$this->policy->user_can_update($book))
+			// 	throw new UnauthorizedException();
 			
-			return $this->get_content('create_photos', $book);
-		}
+			$folder = path_concat(get_config_value('path_to_photos'), $_GET['path']);
 
-		private function _view_browse_photos(DataIterPhotobook $book)
-		{
-			if (!$this->policy->user_can_update($book))
-				throw new UnauthorizedException();
+			$iter = is_dir($folder) ? new FilesystemIterator($folder) : array();
+
+			ob_end_clean();
+			ob_implicit_flush(true);
+
+			header('Content-Type: text/event-stream');
+			header('Cache-Control: no-cache');
 			
-			$folder = path_concat(config_get_value('path_to_photos'), $_GET['path']);
-
-			$iter = is_dir($folder)
-				? new RecursiveIteratorIterator(
-					new RecursiveDirectoryIterator($folder,
-						FilesystemIterator::KEY_AS_PATHNAME |
-						FilesystemIterator::CURRENT_AS_FILEINFO |
-						FilesystemIterator::SKIP_DOTS),
-					RecursiveIteratorIterator::SELF_FIRST)
-				: array();
-
-			$photos = array();
-
 			foreach ($iter as $file_path)
 			{
 				if (!preg_match('/\.(jpg|gif)$/i', $file_path))
@@ -342,74 +332,88 @@
 				if ($exif_data === false)
 					$exif_data = array('FileDateTime' => filemtime($file_path));
 
-				$photos[] = array(
+				if ($exif_thumbnail = exif_thumbnail($file_path, $th_width, $th_height, $th_image_type))
+					$thumbnail = encode_data_uri(image_type_to_mime_type($th_image_type), $exif_thumbnail);
+				else
+					$thumbnail = null;
+
+				echo "event: photo\n";
+				echo "data:", json_encode(array(
 					'title' => '',
-					'path' => path_subtract($file_path, config_get_value('path_to_photos')),
+					'path' => path_subtract($file_path, get_config_value('path_to_photos')),
 					'created_on' => strftime('%Y-%m-%d %H:%M:%S',
 						isset($exif_data['DateTimeOriginal'])
-							? strtotime($data['DateTimeOriginal'])
-							: $exif_data['FileDateTime'])
-				);
+							? strtotime($exif_data['DateTimeOriginal'])
+							: $exif_data['FileDateTime']),
+					'thumbnail' => $thumbnail,
+				)), "\n\n";
+
+				ob_flush();
 			}
 
-			return $this->_send_json($photos);
+			echo "event: end\n";
+			echo "data: \n\n";
 		}
 
-		private function _view_browse_folders(DataIterPhotobook $book)
+		private function _view_list_folders(DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 			
 			if (isset($_GET['path']))
-				$path = path_concat(config_get_value('path_to_photos'), $_GET['path']);
+				$path = path_concat(get_config_value('path_to_photos'), $_GET['path']);
 			else
-				$path = config_get_value('path_to_photos');
+				$path = get_config_value('path_to_photos');
 
 			$entries = array();
 
 			foreach (new FilesystemIterator($path) as $entry)
 				if (is_dir($entry))
-					$entries[] = path_subtract($entry, config_get_value('path_to_photos'));
+					$entries[] = path_subtract($entry, get_config_value('path_to_photos'));
 
 			return $this->_send_json($entries);
 		}
 		
-		private function _process_add_photos(DataIterPhotobook $book)
+		private function _view_add_photos(DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 			
-			$new_photos = array();
-
-			foreach ($_POST['photo'] as $photo)
+			if (isset($_POST['photo']))
 			{
-				$file_path = path_concat(config_get_value('path_to_photos'), $photo['path']);
+				$new_photos = array();
 
-				$iter = new DataIterPhoto($this->model, -1, array(
-						'boek' => $book->get_id(),
-						'beschrijving' => $photo['title'],
-						'filepath' => $photo['path'],
-						'created_on' => $photo['created_on'],
-						'added_on' => 'NOW()'),
-						array('added_on'));
+				foreach ($_POST['photo'] as $photo)
+				{
+					$file_path = path_concat(get_config_value('path_to_photos'), $photo['path']);
+
+					$iter = new DataIterPhoto($this->model, -1, array(
+							'boek' => $book->get_id(),
+							'beschrijving' => $photo['title'],
+							'filepath' => $photo['path'],
+							'added_on' => 'NOW()'),
+							array('added_on'));
+					
+					$id = $this->model->insert($iter);
+					
+					$new_photos[] = new DataIterPhoto($this->model, $id, $iter->data);
+				}
+
+				// Update photo book last_update timestamp
+				$book->set_literal('last_update', 'NOW()');
+				$this->model->update_book($book);
+
+				// Update faces
+				$face_model = get_model('DataModelFotoboekFaces');
+				$face_model->refresh_faces($new_photos);
 				
-				$id = $this->model->insert($iter);
-				
-				$new_photos[] = new DataIterPhoto($this->model, $id, $iter->data);
+				$this->redirect('fotoboek.php?book=' . $book->get('id'));
 			}
 
-			// Update photo book last_update timestamp
-			$book->set_literal('last_update', 'NOW()');
-			$this->model->update_book($book);
-
-			// Update faces
-			$face_model = get_model('DataModelFotoboekFaces');
-			$face_model->refresh_faces($new_photos);
-			
-			$this->redirect('fotoboek.php?book=' . $book->get('id'));
+			return $this->get_content('add_photos', $book);
 		}
 		
-		protected function _process_del_book(DataIterPhotobook $book)
+		protected function _view_del_book(DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_delete($book))
 				throw new UnauthorizedException();
@@ -425,7 +429,7 @@
 			$this->get_content('confirm_delete', $book);
 		}
 		
-		protected function _process_fotoboek_del_fotos(DataIterPhotobook $book)
+		protected function _view_fotoboek_del_fotos(DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
@@ -437,7 +441,7 @@
 			$this->redirect('fotoboek.php?book=' . $book->get_id());
 		}
 
-		protected function _process_mark_read(DataIterPhotobook $book)
+		protected function _view_mark_read(DataIterPhotobook $book)
 		{
 			if (logged_in())
 				$this->model->mark_read_recursively(logged_in('id'), $book);
@@ -590,11 +594,11 @@
 				case 'delete_photo':
 					return $this->_view_delete_photo($photo);
 
-				case 'add_photos_browse_folders':
-					return $this->_view_browse_folders($book);
+				case 'add_photos_list_folders':
+					return $this->_view_list_folders($book);
 
-				case 'add_photos_browse_photos':
-					return $this->_view_browse_photos($book);
+				case 'add_photos_list_photos':
+					return $this->_view_list_photos($book);
 
 				case 'download':
 					return $this->_view_download_photo($photo);

@@ -723,15 +723,20 @@
 		return $path;
 	}
 
-	function path_substract($full_path, $basedir)
+	function path_subtract($full_path, $basedir)
 	{
 		if (substr($full_path, 0, strlen($basedir)) != $basedir)
 			throw new InvalidArgumentException('Full path is not a path inside the given base directory');
 
-		return ltrim('/', substr($full_path, strlen($basedir)));
+		return ltrim(substr($full_path, strlen($basedir)), '/');
 	}
 
 	function crc32_file($path)
 	{ 
 		return hash_file('CRC32', $path, false);
+	}
+
+	function encode_data_uri($mime_type, $data)
+	{
+		return 'data:' . $mime_type . ';base64,' . base64_encode($data);
 	}
