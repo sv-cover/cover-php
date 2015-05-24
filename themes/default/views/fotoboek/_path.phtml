@@ -9,7 +9,7 @@ $generate_path = function($book) use ($model, $photo)
 	{
 		if ($i + 1 < count($parents))
 			$anchor = sprintf('#book_%s', $parents[$i + 1]->get_id());
-		elseif ($i + 1 == count($parents) && isset($photo))
+		elseif ($i + 1 == count($parents) && $photo)
 			$anchor = sprintf('#photo_%d', $photo->get_id());
 		else
 			$anchor = '';

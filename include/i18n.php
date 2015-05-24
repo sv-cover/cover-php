@@ -211,7 +211,10 @@
 	function http_get_preferred_language($get_sorted_list = false, $accepted_languages = null)
 	{
 		if (empty($accepted_languages))
-			$accepted_languages = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+			if (!empty($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
+				$accepted_languages = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+			else
+				return null;
 
 		// regex inspired from @GabrielAnderson on http://stackoverflow.com/questions/6038236/http-accept-language
 		if (!preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})*)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accepted_languages, $lang_parse))
