@@ -54,6 +54,18 @@
 			return crc32_file($this->get_full_path());
 		}
 
+		public function compute_created_on_timestamp()
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file {$this->get('filepath')}");
+
+			$exif_data = $this->get_exif_data();
+
+			return strftime('%Y-%m-%d %H:%M:%S', isset($exif_data['DateTimeOriginal'])
+				? strtotime($exif_data['DateTimeOriginal'])
+				: $exif_data['FileDateTime']);
+		}
+
 		public function original_has_changed()
 		{
 			return $this->compute_hash() == $this->get('filehash');
@@ -724,6 +736,9 @@
 			// Determine the CRC32 file hash, used for detecting changes later on
 			if (!$iter->get('filehash'))
 				$iter->set('filehash', $iter->compute_hash());
+
+			if (!$iter->get('created_on'))
+				$iter->set('created_on', $iter->compute_created_on_timestamp());
 
 			return parent::insert($iter);
 		}
