@@ -3,45 +3,8 @@
 		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_photos" class="button"><?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen')) ?> <?= __('Foto\'s toevoegen') ?></a>
 		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?=__('Foto\'s verwijderen')?></a>
 	</div>
-	<div id="fotoboek_beheer" class="beheer">
-	<form name="fbeheer" action="fotoboek.php?book=<?=$iter->get_id()?>" method="post">
-
-	<?php $this->render_partial('fotoboek_edit', array('model' => $model, 'errors' => $errors, 'iter' => new DataIterPhotobook($model, -1, array('parent' => $iter->get_id())))); ?>
-
-	</form>
-	</div>
-	<div id="fotoboek_fotos" class="beheer">
-	<form name="ffotos" action="fotoboek.php?book=<?=$iter->get_id()?>" method="post">
-	<table class="default_noborder">
-	<?= input_hidden('submfotoboekfotos', 'yes') ?>
-	<?= table_row(label(__('Fotoboek'), '', null, true) . ':', markup_format_text($iter->get('titel'))) ?>
-	<?= table_row(label(__('Foto urls'), 'urls', $errors, true) . ':', textarea_field('urls', null, $errors)) ?>
-	<?= table_row(label(__('Thumbnail urls'), 'thumbnail_urls', $errors, true) . ':', textarea_field('thumbnail_urls', null, $errors)) ?>
-	<tr><td colspan="2" class="submit"> <?= input_submit('subm', __('Foto\'s toevoegen')) ?></td></tr>
-	</table>
-	</form>
-	</div>
+	
 	<script type="text/javascript">
-		function nieuw_fotoboek() {
-			div = document.getElementById("fotoboek_beheer");
-		
-			if (div.style.display == "none" || div.style.display == "") {
-				div.style.display = "block"
-			} else {
-				div.style.display = "none";
-			}
-		}
-
-		function nieuwe_fotos() {
-			div = document.getElementById("fotoboek_fotos");
-		
-			if (div.style.display == "none" || div.style.display == "") {
-				div.style.display = "block";
-			} else {
-				div.style.display = "none";
-			}
-		}
-
 		function sprintf(format)
 		{
 			for (var i = 1; i < arguments.length; ++i)
@@ -77,22 +40,23 @@
 				if (!confirm(sprintf(<?=json_encode(__('Weet je zeker dat je %d geselecteerde foto\'s wilt verwijderen?'))?>, selection.length)))
 					return;
 
-				$.post(document.location.href, {
-					'submfotoboekdelfotos': 'yes',
-					'photo[]': selection.toArray()
-				}, function() {
-					document.location.reload();
+				var $form = $('<form>', {
+					'method': 'post',
+					'action': 'fotoboek.php?book=<?=$iter->get_id()?>&view=delete_photos'
+				}).appendTo(document.body);
+
+				$.each(selection, function(i, id) {
+					$('<input>', {
+						'type': 'hidden',
+						'name': 'photo[]',
+						'value': id
+					}).appendTo($form);
 				});
+				
+				$form.submit();
 			});
 
 			updateSelectionControls();
 		});
-		
-<? 	if (isset($errortype) && $errortype == 'nieuw') { ?>
-		nieuw_fotoboek();
-<? }	if (isset($errortype) && $errortype == 'fotos') { ?>
-		nieuwe_fotos();
- <? } ?>
-
 	</script>
 	

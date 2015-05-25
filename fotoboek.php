@@ -441,7 +441,7 @@
 			return $this->get_content('add_photos', $book);
 		}
 		
-		protected function _view_del_book(DataIterPhotobook $book)
+		protected function _view_delete_book(DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_delete($book))
 				throw new UnauthorizedException();
@@ -457,7 +457,7 @@
 			$this->get_content('confirm_delete', $book);
 		}
 		
-		protected function _view_fotoboek_del_fotos(DataIterPhotobook $book)
+		protected function _view_delete_photos(DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
@@ -466,7 +466,7 @@
 				if ($photo = $this->model->get_iter($id))
 					$this->model->delete($photo);
 			
-			$this->redirect('fotoboek.php?book=' . $book->get_id());
+			return $this->redirect('fotoboek.php?book=' . $book->get_id());
 		}
 
 		protected function _view_mark_read(DataIterPhotobook $book)
@@ -619,8 +619,8 @@
 				case 'update_photo':
 					return $this->_view_update_photo($photo);
 
-				case 'delete_photo':
-					return $this->_view_delete_photo($photo);
+				case 'delete_photos':
+					return $this->_view_delete_photos($book);
 
 				case 'add_photos_list_folders':
 					return $this->_view_list_folders($book);
