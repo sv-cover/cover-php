@@ -77,7 +77,9 @@
 				unset($this->literals[$index]);
 
 			/* Return if value hasn't really changed */
-			if ($this->data[$this->namespace . $field] == $value && $this->_id != -1)
+			if (isset($this->data[$this->namespace . $field])
+				&& $this->data[$this->namespace . $field] == $value
+				&& $this->_id != -1)
 				return;
 
 			/* Add field to changes if it's not already changed */

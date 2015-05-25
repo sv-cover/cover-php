@@ -23,12 +23,18 @@
 			$this->model = get_model('DataModelFotoboekReacties');
 		}
 
-		protected function _create($data, array &$errors)
+		protected function _get_default_view_params()
 		{
-			$data['foto'] = $this->photo->get('id');
-			$data['auteur'] = logged_in('id');
+			return array_merge(parent::_get_default_view_params(),
+				array('empty_iter' => $this->_create_iter()));
+		}
 
-			return parent::_create($data, $errors);
+		protected function _create_iter()
+		{
+			$iter = parent::_create_iter();
+			$iter->set('foto', $this->photo->get('id'));
+			$iter->set('auteur', logged_in('id'));
+			return $iter;
 		}
 
 		protected function _index()
@@ -202,7 +208,7 @@
 		
 		protected function get_content($view, $iter = null, $params = null)
 		{
-			if ($iter instanceof DataIterPhotobook)
+			if ($iter instanceof DataIterPhotobook && $iter->has('titel'))
 				$title = $iter->get('titel');
 			elseif ($iter instanceof DataIterPhoto)
 				$title = $iter->get_book()->get('titel');
@@ -274,21 +280,28 @@
 			if (!$this->policy->user_can_create())
 				throw new UnauthorizedException();
 
-			if (!is_numeric($parent->get_id()))
+			if (!ctype_digit((string) $parent->get_id()))
 				throw new RuntimeException('Cannot add books to generated books');
 
-			$data = $this->_check_fotoboek_values($errors);
-			$data['parent'] = $parent->get_id();
+			$errors = array();
 
-			$iter = new DataIterPhotobook($this->model, -1, $data);
-				
-			if (count($errors) === 0)
+			$iter = new DataIterPhotobook($this->model, -1, array('parent' => $parent->get_id()));
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$new_book_id = $this->model->insert_book($iter);
-				return $this->redirect('fotoboek.php?book=' . $new_book_id);
+				$data = $this->_check_fotoboek_values($errors);
+				$data['parent'] = $parent->get_id();
+
+				$iter = new DataIterPhotobook($this->model, -1, $data);
+					
+				if (count($errors) === 0)
+				{
+					$new_book_id = $this->model->insert_book($iter);
+					return $this->redirect('fotoboek.php?book=' . $new_book_id);
+				}
 			}
 
-			return $this->get_content('create_book', $iter, compact('parent'));
+			return $this->get_content('form_photobook', $iter, compact('parent', 'errors'));
 		}
 		
 		private function _view_update_book(DataIterPhotobook $book)
@@ -296,15 +309,37 @@
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 
-			$data = $this->_check_fotoboek_values($errors);
+			$errors = array();
 
-			if (count($errors) > 0)
-				return $this->get_content('edit_fotoboek', $book, array('errors' => $errors));
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$data = $this->_check_fotoboek_values($errors);
 
-			$book->set_all($data);
-			$this->model->update_book($book);
+				if (count($errors) == 0)
+				{
+					$book->set_all($data);
+					$this->model->update_book($book);
+
+					$this->redirect('fotoboek.php?book=' . $book->get_id());
+				}
+			}
 			
-			$this->redirect('fotoboek.php?book=' . $book->get('parent'));		
+			return $this->get_content('form_photobook', $book, array('errors' => $errors));
+		}
+
+		private function _view_update_photo(DataIterPhoto $photo)
+		{
+			if (!$this->policy->user_can_update($photo->get_book()))
+				throw new UnauthorizedException();
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$photo->set('beschrijving', $_POST['beschrijving']);
+				$this->model->update($photo);
+				$this->redirect('fotoboek.php?photo=' . $photo->get_id());
+			}
+			
+			return $this->redirect('fotoboek.php?photo=' . $photo->get_id());
 		}
 
 		private function _view_list_photos(DataIterPhotobook $book)
@@ -605,7 +640,7 @@
 			switch (isset($_GET['view']) ? $_GET['view'] : null)
 			{
 				case 'add_book':
-					return $this->_view_add_book($book);
+					return $this->_view_create_book($book);
 
 				case 'update_book':
 					return $this->_view_update_book($book);
