@@ -733,17 +733,17 @@
 		public function insert(DataIterPhoto $iter)
 		{
 			// Determine width and height of the new image
-			if (!$iter->get('width') || !$iter->get('height'))
+			if (!$iter->has('width') || !$iter->has('height'))
 				$iter->set_all($iter->compute_size());
 
 			// Determine the CRC32 file hash, used for detecting changes later on
-			if (!$iter->get('filehash'))
+			if (!$iter->has('filehash'))
 				$iter->set('filehash', $iter->compute_hash());
 
-			if (!$iter->get('created_on'))
+			if (!$iter->has('created_on'))
 				$iter->set('created_on', $iter->compute_created_on_timestamp());
 
-			if (!$iter->get('added_on'))
+			if (!$iter->has('added_on'))
 				$iter->set_literal('added_on', 'NOW()');
 
 			return parent::insert($iter);

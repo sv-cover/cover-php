@@ -1,0 +1,64 @@
+<?php
+$form_title = $iter->get_id() > 0
+	? __('Fotoboek wijzigen')
+	: __('Nieuw fotoboek maken');
+
+$form_action = $iter->get_id() > 0
+	? sprintf('fotoboek.php?book=%d&view=update_book', $iter->get_id())
+	: sprintf('fotoboek.php?book=%d&view=add_book', $parent->get_id());
+
+$form_submit_button = $iter->get_id() > 0
+	? __('Wijzig fotoboek')
+	: __('Maak fotoboek');
+
+$parent = $iter->get_parent();
+
+?>
+<h1><?=markup_format_text($form_title)?></h1>
+<div class="messageBox">
+	<form method="post" action="<?=markup_format_attribute($form_action)?>" class="vertical-form">
+		<div>
+			<?=label(__('Titel'), 'titel', $errors, true)?>
+			<?=input_text('titel', $iter->data, 'required', 'required')?>
+		</div>
+
+		<div>
+			<?=label(__('Onderdeel van'), 'parent', $errors, false)?>
+			<a href="fotoboek.php?book=<?=$parent->get_id()?>"><?=markup_format_text($parent->get('titel'))?></a>
+		</div>
+
+		<div>
+			<?=label(__('Datum (dd-mm-yyyy)'), 'date', $errors, true)?>
+			<?=input_text('date', $iter->data, 'required', 'required')?>
+		</div>
+
+		<div>
+			<?=label(__('Fotograaf'), 'fotograaf', $errors, true)?>
+			<?=input_text('fotograaf', $iter->data, 'required', 'required')?>
+		</div>
+
+		<div>
+			<?=label(__('Zichtbaar voor'), 'visibility', $errors, true)?>
+			<?=select_field('visibility', array(
+				DataModelFotoboek::VISIBILITY_PUBLIC => __('Publiek'),
+				DataModelFotoboek::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
+				DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
+				DataModelFotoboek::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
+			), $iter->data)?>
+		</div>		
+
+		<div>
+			<?=label(__('Beschrijving'), 'beschrijving', $errors, true)?>
+			<?=textarea_field('beschrijving', $iter->data, $errors, 'rows', 5)?>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=markup_format_text($form_submit_button) ?></button>
+			<?php if ($iter->get_id() > 0): ?>
+			<a href="fotoboek.php?book=<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Terug naar %s'), $iter->get('titel'))) ?></a>
+			<?php else: ?>
+			<a href="fotoboek.php?book=<?=$parent->get_id()?>"><?=markup_format_text(sprintf(__('Terug naar %s'), $parent->get('titel'))) ?></a>
+			<?php endif ?>
+		</div>
+	</form>
+</div>

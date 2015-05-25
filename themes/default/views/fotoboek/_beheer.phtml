@@ -1,7 +1,8 @@
 	<div class="controls">
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=update_book" class="button"><?= image('edit.png', __('Bewerk'), __('Bewerk fotoboek aanmaken')) ?> <?= __('Bewerk fotoboek') ?></a>
 		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_book" class="button"><?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken')) ?> <?= __('Nieuw fotoboek') ?></a>
 		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_photos" class="button"><?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen')) ?> <?= __('Foto\'s toevoegen') ?></a>
-		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?=__('Foto\'s verwijderen')?></a>
+		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?= image('delete.png', __('Verwijderen'), __('Geselecteerde foto\'s verwijderen')) ?><?=__('Geselecteerde foto\'s verwijderen')?></a>
 	</div>
 	
 	<script type="text/javascript">

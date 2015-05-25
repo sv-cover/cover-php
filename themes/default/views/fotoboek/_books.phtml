@@ -27,10 +27,10 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get_id() . '" id="book_' . $children[$n]->get_id() . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
 		
 			if ($policy->user_can_update($children[$n]))
-				$contents .= ' <a href="fotoboek.php?editbook&book=' . $children[$n]->get_id() . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
+				$contents .= ' <a href="fotoboek.php?view=update_book&book=' . $children[$n]->get_id() . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
 
 			if ($policy->user_can_delete($children[$n]))
-				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get_id() . '">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
+				$contents .= ' <a href="fotoboek.php?view=delete_book&book=' . $children[$n]->get_id() . '">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
 
 			// Only if you can actually change the visibility of folders show or hide them.
 			if ($policy->user_can_update($children[$n]) && $children[$n]->has('visibility'))
