@@ -1,4 +1,7 @@
 <?php
+if (!isset($photo))
+	$photo = null;
+
 $generate_path = function($book) use ($model, $photo)
 {
 	$parents = array_merge($model->get_parents($book), array($book));

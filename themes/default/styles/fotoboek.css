@@ -575,3 +575,39 @@ table.navigation td:nth-child(3) {
 #photo-selector li .created-on {
 	right: 0;
 }
+
+.selection-of-photos {
+	display: block;
+	text-align: center;
+	list-style: none;
+	margin: 0;
+}
+
+.selection-of-photos > li {
+	display: inline-block;
+	position: relative;
+}
+
+.selection-of-photos > li .photo-caption {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 4px;
+	background: rgba(0, 0, 0, 0.8);
+	color: white;
+	font-weight: normal;
+}
+
+.selection-of-photos > li a:hover .photo-caption {
+	text-decoration: underline;
+}
+
+.selection-of-photos > li .photo-book-year:before {
+	content: '(';
+}
+
+.selection-of-photos > li .photo-book-year:after {
+	content: ')';
+}

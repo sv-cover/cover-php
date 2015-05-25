@@ -21,6 +21,7 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 		if ($n >= count($children)) {
 			$images[] = '';
 			$titles[] = '';
+			$status[] = '';
 		} else {
 			$image = get_theme_data('images/book.png');
 			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get_id() . '" id="book_' . $children[$n]->get_id() . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
@@ -32,7 +33,7 @@ for ($i = 0; $i < count($children); $i += $books_per_row) {
 				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get_id() . '">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
 
 			// Only if you can actually change the visibility of folders show or hide them.
-			if ($policy->user_can_update($children[$n]))
+			if ($policy->user_can_update($children[$n]) && $children[$n]->has('visibility'))
 				switch ($children[$n]->get('visibility'))
 				{
 					case DataModelFotoboek::VISIBILITY_PUBLIC:

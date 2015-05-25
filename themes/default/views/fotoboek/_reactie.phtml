@@ -1,4 +1,4 @@
-<?
+<?php
 if (!isset($subtitle))
 	$subtitle = false;
 
@@ -6,19 +6,22 @@ $days = get_days();
 $months = get_months();
 ?>
 <div class="replyBox">
-<div class="title">
-<span class="replyDetails">
-<div class="right"><?= sprintf('%s %d %s, %02d:%02d', $days[$reactie->get('dagnaam')], $reactie->get('datum'), $months[$reactie->get('maand')], $reactie->get('uur'), $reactie->get('minuut')) ?></div><?= htmlspecialchars(member_full_name($reactie->getIter('auteur'), false, true)) ?>
-</span>
-<? if ($subtitle) { ?>
-	<div class="subtitle">
-	<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= htmlspecialchars(($reactie->get('beschrijving') ? $reactie->get('beschrijving') : __('geen titel'))) ?></a><br><?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('boek') ?>"><?= htmlspecialchars($reactie->get('titel')) ?></a></div>
-<? } ?>
+	<div class="title">
+		<span class="replyDetails">
+			<div class="right">
+				<?= sprintf('%s %d %s, %02d:%02d', $days[$reactie->get('dagnaam')], $reactie->get('datum'), $months[$reactie->get('maand')], $reactie->get('uur'), $reactie->get('minuut')) ?>
+			</div>
+			<?= htmlspecialchars(member_full_name($reactie->getIter('auteur'), false, true)) ?>
+		</span>
+		<?php if ($subtitle): ?>
+		<div class="subtitle">
+			<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= markup_format_text(($reactie->has('beschrijving') ? $reactie->get('beschrijving') : __('geen titel'))) ?></a><br>
+			<?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('boek') ?>"><?= markup_format_text($reactie->get('titel')) ?></a>
+		</div>
+		<?php endif ?>
+	</div>
+	<div class="bericht">
+		<?= markup_parse($reactie->get('reactie')) ?>
+	</div>
 </div>
-
-<div class="bericht">
-<?= markup_parse($reactie->get('reactie')) ?>
-</div>
-</div>
-
-<? unset($subtitle) ?>
+<?php unset($subtitle) ?>

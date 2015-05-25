@@ -595,8 +595,8 @@
 			$rows = $this->db->query(sprintf("
 					SELECT
 						f.*,
-						DATE_PART('year', foto_boeken.date) AS jaar,
-						foto_boeken.titel
+						DATE_PART('year', foto_boeken.date) AS fotoboek_jaar,
+						foto_boeken.titel as fotoboek_titel
 					FROM 
 						(SELECT
 							fotos.id
@@ -620,15 +620,6 @@
 						foto_boeken.id = f.boek
 					GROUP BY
 						f.id,
-						f.boek,
-						f.url,
-						f.thumburl,
-						f.beschrijving,
-						f.added_on,
-						f.width,
-						f.height,
-						f.thumbwidth,
-						f.thumbheight,
 						foto_boeken.date,
 						foto_boeken.titel",
 						self::VISIBILITY_PUBLIC,
