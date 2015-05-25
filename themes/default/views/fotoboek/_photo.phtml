@@ -23,8 +23,7 @@ if (logged_in()) {
 ?>
 <?php if (member_in_commissie(COMMISSIE_FOTOCIE)): ?>
 	<div class="foto_titel">
-		<form method="post" action="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$iter->get_id() ?>">
-			<?= input_hidden('submfotobeschrijving', 'yes') ?>
+		<form method="post" action="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$iter->get_id() ?>&amp;view=update_photo">
 			<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
 		</form>
 	</div>

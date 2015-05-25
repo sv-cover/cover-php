@@ -10,7 +10,7 @@ $months = get_months();
 		</span>
 		<?php if (!empty($subtitle)): ?>
 		<div class="subtitle">
-		<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text(($iter->get('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a><br><?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $iter->get('boek') ?>"><?= markup_format_text($iter->get('titel')) ?></a>
+		<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text(($iter->has('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a><br><?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $iter->get('boek') ?>"><?= markup_format_text($iter->get('titel')) ?></a>
 		</div>
 		<?php endif ?>
 	</div>

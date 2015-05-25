@@ -12,13 +12,14 @@ class ControllerCRUD extends Controller
 
 	protected function _create($data, array &$errors)
 	{
-		$iter_class = $this->model->dataiter;
-		
-		$iter = new $iter_class($this->model, -1, $data);
+		$iter = $this->_create_iter();
+
+		$iter->set_all($data);
 
 		$id = $this->model->insert($iter);
 
-		return new $iter_class($this->model, $id, $iter->data);
+		$dataiter_class = new ReflectionClass($iter);
+		return $dataiter_class->newInstance($this->model, $id, $iter->data);
 	}
 
 	protected function _read($id)
@@ -76,6 +77,12 @@ class ControllerCRUD extends Controller
 		$instance = new $view_class($this);
 
 		call_user_func([$instance, $method], array_merge($params, compact('model', 'iter')));
+	}
+
+	protected function _create_iter()
+	{
+		$dataiter_class = new ReflectionClass($this->model->dataiter);
+		return $dataiter_class->newInstance($this->model, null, array());
 	}
 
 	protected function _get_title($iters = null)
@@ -212,7 +219,7 @@ class ControllerCRUD extends Controller
 				if ($success)
 					$this->redirect($this->link_to_read($iter));
 				else
-					$this->get_content('form', new DataIter($this->model, null, array()), compact('errors'));
+					$this->get_content('form', $this->_create_iter(), compact('errors'));
 				break;	
 		}
 	}
