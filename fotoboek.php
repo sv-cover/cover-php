@@ -2,7 +2,7 @@
 	require_once 'include/init.php';
 	require_once 'include/member.php';
 	require_once 'include/form.php';
-	require_once 'include/json.php';
+	require_once 'include/http.php';
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/controllers/ControllerCRUD.php';
 	
@@ -316,11 +316,8 @@
 
 			$iter = is_dir($folder) ? new FilesystemIterator($folder) : array();
 
-			ob_end_clean();
-			ob_implicit_flush(true);
-
-			header('Content-Type: text/event-stream');
-			header('Cache-Control: no-cache');
+			$out = new HTTPEventStream();
+			$out->start();
 			
 			foreach ($iter as $file_path)
 			{
@@ -337,8 +334,7 @@
 				else
 					$thumbnail = null;
 
-				echo "event: photo\n";
-				echo "data:", json_encode(array(
+				$out->event('photo', json_encode(array(
 					'title' => '',
 					'path' => path_subtract($file_path, get_config_value('path_to_photos')),
 					'created_on' => strftime('%Y-%m-%d %H:%M:%S',
@@ -346,13 +342,10 @@
 							? strtotime($exif_data['DateTimeOriginal'])
 							: $exif_data['FileDateTime']),
 					'thumbnail' => $thumbnail,
-				)), "\n\n";
-
-				ob_flush();
+				)));
 			}
 
-			echo "event: end\n";
-			echo "data: \n\n";
+			$out->event('end');
 		}
 
 		private function _view_list_folders(DataIterPhotobook $book)
