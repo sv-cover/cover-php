@@ -490,7 +490,7 @@ table.navigation td:nth-child(3) {
 
 #folder-selector ol {
 	display: inline-block;
-	width: 200px;
+	width: 250px;
 	height: 100%;
 	overflow: hidden;
 	overflow-y: auto;
@@ -538,13 +538,29 @@ table.navigation td:nth-child(3) {
 	max-height: 56px;
 }
 
-#photo-selector li .titel {
+#photo-selector li .add-control {
 	top: 0;
 	left: 100px;
+}
+
+#photo-selector li .add-control a {
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	color: white;
+	background: green;
+	border-radius: 50%;
+}
+
+#photo-selector li .description {
+	top: 0;
+	left: 140px;
 	right: 300px;
 }
 
-#photo-selector li .titel > input {
+#photo-selector li .description > input {
 	width: 100%;
 }
 

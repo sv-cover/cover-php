@@ -740,6 +740,9 @@
 			if (!$iter->get('created_on'))
 				$iter->set('created_on', $iter->compute_created_on_timestamp());
 
+			if (!$iter->get('added_on'))
+				$iter->set_literal('added_on', 'NOW()');
+
 			return parent::insert($iter);
 		}
 

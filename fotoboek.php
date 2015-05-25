@@ -309,8 +309,10 @@
 
 		private function _view_list_photos(DataIterPhotobook $book)
 		{
-			// if (!$this->policy->user_can_update($book))
-			// 	throw new UnauthorizedException();
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
+
+			$photos_in_album = $book->get_photos();
 			
 			$folder = path_concat(get_config_value('path_to_photos'), $_GET['path']);
 
@@ -319,24 +321,40 @@
 			$out = new HTTPEventStream();
 			$out->start();
 			
-			foreach ($iter as $file_path)
+			foreach ($iter as $full_path)
 			{
-				if (!preg_match('/\.(jpg|gif)$/i', $file_path))
+				if (!preg_match('/\.(je?pg|gif)$/i', $full_path))
 					continue;
 
-				$exif_data = @exif_read_data($file_path);
+				$id = null;
+
+				$description = '';
+
+				$file_path = path_subtract($full_path, get_config_value('path_to_photos'));
+
+				// Find existing photo
+				foreach ($photos_in_album as $photo) {
+					if ($photo->get('filepath') == $file_path) {
+						$id = $photo->get_id();
+						$description = $photo->get('beschrijving');
+						break;
+					}
+				}
+
+				$exif_data = @exif_read_data($full_path);
 
 				if ($exif_data === false)
-					$exif_data = array('FileDateTime' => filemtime($file_path));
+					$exif_data = array('FileDateTime' => filemtime($full_path));
 
-				if ($exif_thumbnail = exif_thumbnail($file_path, $th_width, $th_height, $th_image_type))
+				if ($exif_thumbnail = exif_thumbnail($full_path, $th_width, $th_height, $th_image_type))
 					$thumbnail = encode_data_uri(image_type_to_mime_type($th_image_type), $exif_thumbnail);
 				else
 					$thumbnail = null;
 
 				$out->event('photo', json_encode(array(
-					'title' => '',
-					'path' => path_subtract($file_path, get_config_value('path_to_photos')),
+					'id' => $id,
+					'description' => (string) $description,
+					'path' => $file_path,
 					'created_on' => strftime('%Y-%m-%d %H:%M:%S',
 						isset($exif_data['DateTimeOriginal'])
 							? strtotime($exif_data['DateTimeOriginal'])
@@ -377,31 +395,47 @@
 			{
 				$new_photos = array();
 
+				$errors = array();
+
 				foreach ($_POST['photo'] as $photo)
 				{
-					$file_path = path_concat(get_config_value('path_to_photos'), $photo['path']);
-
-					$iter = new DataIterPhoto($this->model, -1, array(
+					if (!isset($photo['add']))
+						continue;
+				
+					try {
+						$iter = new DataIterPhoto($this->model, -1, array(
 							'boek' => $book->get_id(),
-							'beschrijving' => $photo['title'],
-							'filepath' => $photo['path'],
-							'added_on' => 'NOW()'),
-							array('added_on'));
-					
-					$id = $this->model->insert($iter);
-					
-					$new_photos[] = new DataIterPhoto($this->model, $id, $iter->data);
+							'beschrijving' => $photo['description'],
+							'filepath' => $photo['path']));
+
+						if (!$iter->file_exists())
+							throw new Exception("File not found");
+
+						$id = $this->model->insert($iter);
+						
+						$new_photos[] = new DataIterPhoto($this->model, $id, $iter->data);
+					} catch (Exception $e) {
+						$errors[] = $e->getMessage();
+					}
 				}
 
-				// Update photo book last_update timestamp
-				$book->set_literal('last_update', 'NOW()');
-				$this->model->update_book($book);
+				if (count($new_photos))
+				{
+					// Update photo book last_update timestamp
+					$book->set_literal('last_update', 'NOW()');
+					$this->model->update_book($book);
 
-				// Update faces
-				$face_model = get_model('DataModelFotoboekFaces');
-				$face_model->refresh_faces($new_photos);
+					// Update faces
+					$face_model = get_model('DataModelFotoboekFaces');
+					$face_model->refresh_faces($new_photos);
+				}
 				
-				$this->redirect('fotoboek.php?book=' . $book->get('id'));
+				if (count($errors) == 0)
+					$this->redirect('fotoboek.php?book=' . $book->get_id());
+				else {
+					$_SESSION['add_photos_errors'] = $errors;
+					$this->redirect('fotoboek.php?book=' . $book->get_id() . '&view=add_photos');
+				}
 			}
 
 			return $this->get_content('add_photos', $book);

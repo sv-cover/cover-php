@@ -2,20 +2,34 @@
 <div class="messageBox">
 	<?php $this->render_partial('path', array('model' => $model, 'book' => $iter, 'photo' => null)) ?>
 
+	<?php if (!empty($_SESSION['add_photos_errors'])): ?>
+	<div class="errors">
+	<?php while ($error = array_shift($_SESSION['add_photos_errors'])): ?>
+		<p><?=markup_format_text($error)?></p>
+	<?php endwhile ?>
+	</div>
+<?php endif ?>
+
 	<div id="folder-selector"></div>
 
 	<form action="fotoboek.php?book=<?= $iter->get_id() ?>&amp;view=add_photos" method="post">
 		<ul id="photo-selector">
 			<li>
+				<span class="add-control">
+					<input type="checkbox" name="photo[$index][add]" value="true" checked="checked">
+					<a href="fotoboek.php?photo=$id" target="_blank">&#10004;</a>
+				</span>
 				<img class="thumbnail">
-				<span class="titel">
-					<input type="text" name="photo[$i][titel]" placeholder="<?=__('Omschrijving')?>">
+				<span class="description">
+					<input type="text" name="photo[$index][description]" placeholder="<?=__('Omschrijving')?>">
 				</span>
 				<span class="filename"></span>
 				<span class="created-on"></span>
-				<input type="hidden" name="photo[$i][path]">
+				<input type="hidden" name="photo[$index][path]">
 			</li>
 		</ul>
+
+		<button type="submit" class="button"><?=__("Voeg foto's toe") ?></button>
 	</form>
 </div>
 
@@ -65,6 +79,8 @@ jQuery(function($) {
 		stream.addEventListener('photo', function(e) {
 			var photo = JSON.parse(e.data);
 
+			console.log(photo);
+
 			var $li = $photo_template.clone();
 			$li.data('sort-order', Date.parse(photo['created_on'].replace(' ', 'T')));
 
@@ -79,17 +95,32 @@ jQuery(function($) {
 			// If it hasn't been inserted by insertion sort, append it to the end.
 			if (!$li.parent().length)
 				$li.appendTo($ol);
+
+			if (photo['id'] != null) {
+				$li.find('.add-control input').remove();
+				$li.find('.add-control a')
+					.attr('href', 'fotoboek.php?photo=' + photo['id']);
+			} else {
+				$li.find('.add-control a').remove();
+				$li.find('.add-control input')
+					.attr('name', 'photo[' + index + '][add]');
+			}
 				
 			$li.find('.thumbnail')
 				.attr('src', photo['thumbnail']);
 
-			$li.find('.titel input')
-				.attr('name', 'photo[' + index + '][titel]')
-				.val(photo['titel']);
+			if (photo['id'] == null) {
+				$li.find('.description input')
+					.attr('name', 'photo[' + index + '][description]')
+					.val(photo['description']);
+			} else {
+				$li.find('.description input').remove();
+				$li.find('.description').text(photo['description']);
+			}
 			
 			$li.find('.filename')
 				.text(basename(photo['path']))
-				.attr('title', photo['path']);
+				.attr('description', photo['path']);
 
 			$li.find('.created-on')
 				.text(photo['created_on']);

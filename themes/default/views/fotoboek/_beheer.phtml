@@ -1,8 +1,6 @@
 	<div class="controls">
-		<a href="javascript:nieuw_fotoboek();"> <?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken'), 'class="button"') ?></a>
-		<a href="javascript:nieuw_fotoboek();"> <?= __('Nieuw fotoboek') ?></a>
-		<a href="javascript:nieuwe_fotos();"> <?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen'), 'class="button"') ?></a>
-		<a href="javascript:nieuwe_fotos();"> <?= __('Foto\'s toevoegen') ?></a>
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_book" class="button"><?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken')) ?> <?= __('Nieuw fotoboek') ?></a>
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_photos" class="button"><?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen')) ?> <?= __('Foto\'s toevoegen') ?></a>
 		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?=__('Foto\'s verwijderen')?></a>
 	</div>
 	<div id="fotoboek_beheer" class="beheer">
