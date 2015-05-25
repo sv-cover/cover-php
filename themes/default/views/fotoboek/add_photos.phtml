@@ -5,7 +5,17 @@
 	<div id="folder-selector"></div>
 
 	<form action="fotoboek.php?book=<?= $iter->get_id() ?>&amp;view=add_photos" method="post">
-		<ul id="photo-selector"></ul>
+		<ul id="photo-selector">
+			<li>
+				<img class="thumbnail">
+				<span class="titel">
+					<input type="text" name="photo[$i][titel]" placeholder="<?=__('Omschrijving')?>">
+				</span>
+				<span class="filename"></span>
+				<span class="created-on"></span>
+				<input type="hidden" name="photo[$i][path]">
+			</li>
+		</ul>
 	</form>
 </div>
 
@@ -20,7 +30,6 @@ jQuery(function($) {
 
 	function load_folders(path, ol) {
 		$.getJSON(baseurl + '&view=add_photos_list_folders&path=' + path).then(function(data) {
-			console.log(data);
 			$.each(data, function(index, folder) {
 				$('<li>')
 					.data('folder', folder)
@@ -38,6 +47,8 @@ jQuery(function($) {
 		} 
 	}
 
+	var $photo_template = $('#photo-selector li').detach();
+
 	function load_photos(path, $ol) {
 		if (stream)
 			stream.close();
@@ -54,36 +65,40 @@ jQuery(function($) {
 		stream.addEventListener('photo', function(e) {
 			var photo = JSON.parse(e.data);
 
-			var $li = $('<li>').appendTo($ol);
+			var $li = $photo_template.clone();
+			$li.data('sort-order', Date.parse(photo['created_on'].replace(' ', 'T')));
+
+			// Try to find a node of a photo taken after this one and insert this one before that
+			$ol.find('li').each(function(i, li) {
+				if ($(li).data('sort-order') > $li.data('sort-order')) {
+					$li.insertBefore(li);
+					return false;
+				}
+			});
+
+			// If it hasn't been inserted by insertion sort, append it to the end.
+			if (!$li.parent().length)
+				$li.appendTo($ol);
 				
-			$('<img>', {
-				'class': 'thumbnail',
-				'src': photo['thumbnail']
-			}).appendTo($li);
+			$li.find('.thumbnail')
+				.attr('src', photo['thumbnail']);
 
-			$('<span>', {'class': 'titel'}).appendTo($li)
-				.append($('<input>', {
-					'type': 'text',
-					'name': 'photo[' + index + '][titel]',
-					'value': photo['titel']
-				}));
-
-			$('<span>')
-				.addClass('filename')
+			$li.find('.titel input')
+				.attr('name', 'photo[' + index + '][titel]')
+				.val(photo['titel']);
+			
+			$li.find('.filename')
 				.text(basename(photo['path']))
-				.prop('title', basename(photo['path']))
-				.appendTo($li);
+				.attr('title', photo['path']);
 
-			$('<span>')
-				.addClass('created-on')
-				.text(photo['created_on'])
-				.appendTo($li);
+			$li.find('.created-on')
+				.text(photo['created_on']);
 
-			$('<input>', {
-				'type': 'hidden',
-				'name': 'photo[' + index++ + '][path]',
-				'value': photo['path']
-			}).appendTo($li);
+			$li.find('input[type=hidden]')
+				.attr('name', 'photo[' + index + '][path]')
+				.val(photo['path']);
+
+			index++;
 		}, false);
 	}
 

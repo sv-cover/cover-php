@@ -364,6 +364,7 @@
 				if (is_dir($entry))
 					$entries[] = path_subtract($entry, get_config_value('path_to_photos'));
 
+			sort($entries);
 			return $this->_send_json($entries);
 		}
 		
