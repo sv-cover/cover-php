@@ -5,6 +5,10 @@
 
 	class DataIterPhoto extends DataIter
 	{
+		const EXIF_ORIENTATION_180 = 3;
+		const EXIF_ORIENTATION_90_RIGHT = 6;
+		const EXIF_ORIENTATION_90_LEFT = 8;
+
 		public function get_size()
 		{
 			return array($this->get('width'), $this->get('height'));
@@ -32,11 +36,19 @@
 			if (!$this->file_exists())
 				throw new NotFoundException("Could not find original file {$this->get('filepath')}");
 
-			if ($exif_data = @$this->get_exif_data())
-				return [
+			if ($exif_data = $this->get_exif_data()) {
+				$size = [
 					'width' => $exif_data['COMPUTED']['Width'],
 					'height' => $exif_data['COMPUTED']['Height']
 				];
+
+				if (isset($exif_data['Orientation'])
+					&& ($exif_data['Orientation'] == self::EXIF_ORIENTATION_90_LEFT
+						|| $exif_data['Orientation'] == self::EXIF_ORIENTATION_90_RIGHT))
+					list($size['width'], $size['height']) = [$size['height'], $size['width']];
+
+				return $size;
+			}
 			else if ($size = @getimagesize($this->get_full_path()))
 				return [
 					'width' => $size[0],
