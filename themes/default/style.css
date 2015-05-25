@@ -1188,6 +1188,10 @@ form > table th {
 	text-align: left;
 }
 
+table.vertical th {
+	text-align: left;
+}
+
 table.full-width {
 	width: 100%;
 }
