@@ -190,7 +190,7 @@
 
 		$auto_login_ips = get_config_value('auto_login', array());
 
-		if (isset($auto_login_ips[$_SERVER['REMOTE_ADDR']]))
+		if (isset($_SERVER['REMOTE_ADDR'], $auto_login_ips[$_SERVER['REMOTE_ADDR']]))
 			return $auto_login_ips[$_SERVER['REMOTE_ADDR']];
 
 		return null;
