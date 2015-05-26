@@ -174,14 +174,13 @@ function main_slave()
 	{
 		$photo = $photo_model->get_iter($photo_id);
 
-		foreach (get_config_value('precomputed_photo_scales', array()) as $dimesions)
-			fclose($photo->get_resource($dimesions[0], $dimesions[1], $options['force']));
+		process_photo($photo);
 			
 		printf("%d\n", $photo->get_id());
 	}
 }
 
-function main()
+function main_standalone()
 {
 	global $book_ids, $options;
 	
@@ -193,8 +192,7 @@ function main()
 
 	foreach ($photos as $photo)
 	{
-		foreach (get_config_value('precomputed_photo_scales', array()) as $dimesions)
-			fclose($photo->get_resource($dimesions[0], $dimesions[1], $options['force']));
+		process_photo($photo);
 
 		++$photos_processed;
 			
@@ -204,9 +202,24 @@ function main()
 	echo str_repeat(chr(8), 3) . "Done.\n";
 }
 
+function process_photo(DataIterPhoto $photo)
+{
+	global $photo_model, $options;
+
+	$force_update = $options['force'] || $photo->original_has_changed();
+
+	if ($force_update) {
+		$photo->set_all($photo->compute_size());
+		$photo_model->update($photo);
+	}
+
+	foreach (get_config_value('precomputed_photo_scales', array()) as $dimesions)
+		fclose($photo->get_resource($dimesions[0], $dimesions[1], $force_update));
+}
+
 if ($options['slave'])
 	main_slave();
 elseif ($options['workers'] > 1)
 	main_master();
 else
-	main();
+	main_standalone();
