@@ -575,6 +575,12 @@
 
 		protected function _view_read_book(DataIterPhotobook $book)
 		{
+			if (!$this->policy->user_can_read($book))
+				throw new UnauthorizedException();
+
+			if (logged_in())
+				$this->model->mark_read(logged_in('id'), $book);
+
 			return $this->get_content('fotoboek', $book);
 		}
 
@@ -648,6 +654,9 @@
 				case 'delete_book':
 					return $this->_view_delete_book($book);
 
+				case 'mark_book_read':
+					return $this->_view_mark_read($book);
+
 				case 'add_photos':
 					return $this->_view_add_photos($book);
 
@@ -675,16 +684,6 @@
 					else
 						return $this->_view_read_book($book);
 			}
-			
-			// if (!$this->policy->user_can_read($book))
-			// 			return $this->get_content('book_not_found');
-
-			// 		if ($book && logged_in())
-			// 			$this->model->mark_read(logged_in('id'), $book);
-
-			// 		$this->get_content('fotoboek', $book);
-			// 	}
-			// }
 		}
 	}
 	
