@@ -1,5 +1,5 @@
 	<div class="controls">
-		<?php if (get_policy($model)->user_can_create()): ?>
+		<?php if (get_policy($model)->user_can_create() && ctype_digit((string) $iter->get_id())): ?>
 		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_book" class="button"><?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken')) ?> <?= __('Nieuw fotoboek') ?></a>
 		<?php endif ?>
 		<?php if (get_policy($model)->user_can_update($iter)): ?>
