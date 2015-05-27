@@ -15,7 +15,7 @@
                     <?php
                     	require_once dirname(__FILE__) . '/Rotator.php';
                         $rotator = new Rotator('images/banners/');
-                        $banners = $rotator -> get(7);
+                        $banners = $rotator -> get(15);
                         foreach ($banners as $banner)
                         {
                             echo '<a href="'.$banner['url'].'" target="_blank"><img src="images/banners/'.$banner['filename'].'"></a><br /><br />';
