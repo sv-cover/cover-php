@@ -512,6 +512,7 @@
 				foto_boeken.fotograaf';
 
 			$order_by = 'ORDER BY
+				foto_boeken.sort_index ASC NULLS FIRST,
 				date DESC,
 				foto_boeken.id';
 
@@ -651,7 +652,21 @@
 		  */
 		public function get_photos(DataIterPhotobook $book)
 		{
-			return $this->find(sprintf('boek = %d', $book->get_id()));
+			$query = "
+				SELECT
+					*
+				FROM
+					fotos
+				WHERE
+					boek = {$book->get_id()}
+				ORDER BY
+					sort_index ASC NULLS FIRST,
+					created_on ASC,
+					added_on ASC";
+
+			$rows = $this->db->query($query);
+			
+			return $this->_rows_to_iters($rows);
 		}
 
 		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)

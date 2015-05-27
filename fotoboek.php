@@ -327,6 +327,50 @@
 			return $this->get_content('form_photobook', $book, array('errors' => $errors));
 		}
 
+		private function _view_update_photo_order(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_update($book))
+				throw new UnauthorizedException();
+
+			if (!isset($_POST['order']))
+				throw new RuntimeException('Order parameter missing');
+
+			$photos = $book->get_photos();
+
+			foreach ($photos as $photo)
+			{
+				$index = array_search($photo->get_id(), $_POST['order']);
+
+				if ($index === false)
+					continue;
+
+				$photo->set('sort_index', $index);
+				$this->model->update($photo);
+			}
+		}
+
+		private function _view_update_book_order(DataIterPhotobook $parent)
+		{
+			if (!$this->policy->user_can_update($parent))
+				throw new UnauthorizedException();
+
+			if (!isset($_POST['order']))
+				throw new RuntimeException('Order parameter missing');
+
+			$books = $parent->get_books();
+
+			foreach ($books as $book)
+			{
+				$index = array_search($book->get_id(), $_POST['order']);
+
+				if ($index === false)
+					continue;
+
+				$book->set('sort_index', $index);
+				$this->model->update_book($book);
+			}
+		}
+
 		private function _view_update_photo(DataIterPhoto $photo)
 		{
 			if (!$this->policy->user_can_update($photo->get_book()))
@@ -662,6 +706,12 @@
 
 				case 'update_photo':
 					return $this->_view_update_photo($photo);
+
+				case 'update_photo_order':
+					return $this->_view_update_photo_order($book);
+
+				case 'update_book_order':
+					return $this->_view_update_book_order($book);
 
 				case 'delete_photos':
 					return $this->_view_delete_photos($book);

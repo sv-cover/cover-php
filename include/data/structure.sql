@@ -456,6 +456,7 @@ CREATE TABLE foto_boeken (
     last_update timestamp DEFAULT NULL,
     beschrijving text,
     visibility integer NOT NULL DEFAULT 0,
+    sort_index integer DEFAULT NULL,
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
@@ -521,6 +522,7 @@ CREATE TABLE fotos (
     height integer,
     created_on timestamp without time zone DEFAULT NULL,
     added_on timestamp without time zone DEFAULT NULL,
+    sort_index integer DEFAULT NULL,
     CONSTRAINT fotos_pkey PRIMARY KEY (id)
 );
 
