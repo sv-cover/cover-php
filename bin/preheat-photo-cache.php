@@ -175,7 +175,7 @@ function main_slave()
 		$photo = $photo_model->get_iter($photo_id);
 
 		process_photo($photo);
-			
+
 		printf("%d\n", $photo->get_id());
 	}
 }

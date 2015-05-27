@@ -9,7 +9,7 @@
 		var $last_affected = null;
 		var $last_insert_table = null;
 
-		public $history = array();
+		public $history = null;
 
 		/**
 		  * Create new postgresql database
@@ -86,11 +86,12 @@
 
 			$duration = microtime(true) - $start;
 
-			$this->history[] = array(
-				'query' => $query,
-				'duration' => $duration,
-				'backtrace' => debug_backtrace()
-			);
+			if ($this->history !== null)
+				$this->history[] = array(
+					'query' => $query,
+					'duration' => $duration,
+					'backtrace' => debug_backtrace()
+				);
 
 			if ($handle === false) {
 				throw new RuntimeException('Query failed: ' . $this->get_last_error());
