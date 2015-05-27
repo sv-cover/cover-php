@@ -6,6 +6,7 @@
 		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?= image('delete.png', __('Verwijderen'), __('Geselecteerde foto\'s verwijderen')) ?><?=__('Geselecteerde foto\'s verwijderen')?></a>
 	</div>
 	
+	<script src="<?=get_theme_data('data/wiggle.js')?>"></script>
 	<script type="text/javascript">
 		function sprintf(format)
 		{
@@ -97,14 +98,19 @@
 
 			var activate = function() {
 				if ($books.length) {
+					$books.children().wiggle('start');
+
 					$books.sortable({
 						cursor: 'move',
 						items: '> .photobook',
 						update: submitBookOrder
+
 					});
 				}
 
 				if ($photos.length) {
+					$photos.children().wiggle('start');
+
 					$photos.flowgallery('destroy');
 					$photos.sortable({
 						cursor: 'move',
@@ -115,10 +121,12 @@
 
 			var deactivate = function() {
 				if ($books.length) {
+					$books.children().wiggle('stop');
 					$books.sortable('destroy');
 				}
 
 				if ($photos.length) {
+					$photos.children().wiggle('stop');
 					$photos.flowgallery();
 					$photos.sortable('destroy');
 				}
