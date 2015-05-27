@@ -12,7 +12,7 @@
 
 	<div id="folder-selector"></div>
 
-	<form action="fotoboek.php?book=<?= $iter->get_id() ?>&amp;view=add_photos" method="post">
+	<form id="add-photos-form" action="fotoboek.php?book=<?= $iter->get_id() ?>&amp;view=add_photos" method="post">
 		<ul id="photo-selector">
 			<li>
 				<span class="add-control">
@@ -30,6 +30,7 @@
 		</ul>
 
 		<button type="submit" class="button"><?=__("Voeg foto's toe") ?></button>
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Terug naar %s'), $iter->get('titel')))?></a>
 	</form>
 </div>
 
@@ -151,6 +152,13 @@ jQuery(function($) {
 		load_folders($(this).data('folder'), ol);
 		
 		load_photos($(this).data('folder'), $('#photo-selector').empty());
+	});
+
+	// Disable the input fields once submitting has started
+	$('#add-photos-form').submit(function() {
+		setTimeout(function() {
+			$('#add-photos-form').find('input, button').attr('disabled', true);
+		}, 10);
 	});
 })
 </script>
