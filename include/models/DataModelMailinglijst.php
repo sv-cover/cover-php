@@ -58,14 +58,7 @@ class DataModelMailinglijst extends DataModel
 		// lijsten.
 		$rows = $this->db->query('
 			SELECT
-				l.id,
-				l.naam, 
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie,
+				l.*,
 				CASE
 					WHEN l.type = ' . self::TYPE_OPT_IN . ' THEN COUNT(a.abonnement_id) > 0
 					WHEN l.type = ' . self::TYPE_OPT_OUT . ' THEN COUNT(o.id) = 0
@@ -86,13 +79,7 @@ class DataModelMailinglijst extends DataModel
 			' . $where_clause . '
 			GROUP BY
 				l.id,
-				l.naam,
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie
+				l.naam
 			ORDER BY
 				l.naam ASC');
 
@@ -108,14 +95,7 @@ class DataModelMailinglijst extends DataModel
 		
 		$row = $this->db->query_first('
 			SELECT
-				l.id,
-				l.naam,
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie
+				l.*
 			FROM
 				mailinglijsten l
 			WHERE
@@ -280,14 +260,7 @@ class DataModelMailinglijst extends DataModel
 	{
 		$row = $this->db->query_first(sprintf("
 			SELECT
-				l.id,
-				l.naam, 
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie,
+				l.*,
 				a.abonnement_id
 			FROM
 				mailinglijsten_abonnementen a,

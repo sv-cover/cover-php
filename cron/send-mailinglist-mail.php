@@ -86,7 +86,10 @@ function process_message_mailinglist($message, &$lijst)
 		return RETURN_COULD_NOT_DETERMINE_LIST;
 
 	// Append '[Cover]' to the subject
-	$message = preg_replace('/^Subject: (?!\[Cover\])(.+?)$/im', 'Subject: [Cover] $1', $message, 1);
+	$message = preg_replace(
+		'/^Subject: (?!\[' . preg_quote($lijst->get('tag')) . '\])(.+?)$/im',
+		'Subject: [' . $lijst->get('tag') . '] $1',
+		$message, 1);
 
 	// Find everyone who is subscribed to that list
 	$aanmeldingen = $mailinglijsten_model->get_aanmeldingen($lijst);
