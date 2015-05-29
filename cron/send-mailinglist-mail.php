@@ -199,8 +199,8 @@ function send_message($message, $email)
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
 		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-		1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-		2 => array("pipe", "a")   // stderr is a file to write to
+		1 => array("file", "php://stderr", "w"),  // stdout is a pipe that the child will write to
+		2 => array("file", "php://stderr", "a")   // stderr is a file to write to
 	);
 
 	$cwd = '/';
@@ -215,14 +215,6 @@ function send_message($message, $email)
 	// Write message to the stdin of sendmail
 	fwrite($pipes[0], $message);
 	fclose($pipes[0]);
-
-	// Read the stdout
-	// echo "  out: " . stream_get_contents($pipes[1]) . "\n";
-	fclose($pipes[1]);
-
-	// Read the stderr 
-	// echo "  err: " . stream_get_contents($pipes[2]) . "\n";
-	fclose($pipes[2]);
 
 	return proc_close($sendmail);
 }
