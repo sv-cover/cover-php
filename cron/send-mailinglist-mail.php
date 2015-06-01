@@ -20,6 +20,8 @@ ini_set('display_errors', true);
 
 function parse_email_address($email)
 {
+	$email = trim($email);
+
 	// 'jelmer@ikhoefgeen.nl'
 	if (filter_var($email, FILTER_VALIDATE_EMAIL))
 		return $email;
