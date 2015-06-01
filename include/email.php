@@ -63,26 +63,40 @@ class MessagePart
 		$this->body = $body;
 	}
 
-	public function header($search_key)
+	public function headers($search_key)
 	{
 		foreach (explode('|', $search_key) as $key)
 		{
 			// Short-cut
 			if (isset($this->headers[$key]))
-				return $this->decodeHeader($this->headers[$key]);
+				return array_map([$this, 'decodeHeader'], $this->headers[$key]);
 
 			// Case-insensitive search
-			foreach ($this->headers as $header_key => $value)
+			foreach ($this->headers as $header_key => $values)
 				if (strcasecmp($key, $header_key) === 0)
-					return $this->decodeHeader($value);
+					return array_map([$this, 'decodeHeader'], $values);
 		}
 
 		return null;
 	}
 
+	public function header($search_key)
+	{
+		$headers = $this->headers($search_key);
+		return $headers === null ? null : $headers[0];
+	}
+
 	public function setHeader($key, $value)
 	{
-		$this->headers[$key] = $this->encodeHeaderIfNeeded($value);
+		$this->headers[$key] = [$this->encodeHeaderIfNeeded($value)];
+	}
+
+	public function addHeader($key, $value)
+	{
+		if (isset($this->headers[$key]))
+			$this->headers[$key][] = $this->encodeHeaderIfNeeded($value);
+		else
+			$this->setHeader($key, $value);
 	}
 
 	public function isMultipart()
@@ -226,9 +240,13 @@ class MessagePart
 	{
 		assert('is_string($this->body)');
 
-		$this->body = [new MessagePart(['Content-Type' => $this->header('Content-Type')], $this->body)];
+		if ($this->body !== null)
+			$this->body = [new MessagePart(['Content-Type' => [$this->header('Content-Type')]], $this->body)];
+		else
+			$this->body = [];
 		
-		$this->setHeader('Content-Type', 'multipart/alternative; boundary=' . $this->generateBoundary());
+		if (!$this->header('Content-Type') || $this->boundary() === null)
+			$this->setHeader('Content-Type', 'multipart/alternative; boundary=' . $this->generateBoundary());
 	}
 
 	private function generateBoundary()
@@ -302,12 +320,15 @@ class MessagePart
 		
 		$header_indent = str_repeat(" ", 8);
 
-		foreach ($this->headers as $key => $value)
-			$out .= $this->wrapLines($value, 78, 998,
-				function ($i) use ($key, $header_indent) {
-					if ($i === 0) return $key . ': ';
-					else return $header_indent;
-				}) . "\r\n";
+		foreach ($this->headers as $key => $values)
+		{
+			foreach ($values as $value)
+				$out .= $this->wrapLines($value, 78, 998,
+					function ($i) use ($key, $header_indent) {
+						if ($i === 0) return $key . ': ';
+						else return $header_indent;
+					}) . "\r\n";
+		}
 		
 		$out .= "\r\n";
 
@@ -320,112 +341,122 @@ class MessagePart
 			$boundary = $this->boundary();
 
 			if (!$boundary)
-				throw new RuntimeException('Could not parse boundary string out of the Content-Type header');
+				throw new \RuntimeException('Could not parse boundary string out of the Content-Type header');
 
 			foreach ($this->body as $part)
 			{
-				$out .= "\r\n--$boundary\r\n";
+				if (substr($out, -2, 2) != "\r\n")
+					$out .= "\r\n";
+
+				$out .= "--$boundary\r\n";
 				$out .= $part->toString();
 			}
 
-			$out .= "\r\n--$boundary--\r\n";
+			if (substr($out, -2, 2) != "\r\n")
+				$out .= "\r\n";
+
+			$out .= "--$boundary--\r\n";
 		}
 
 		return $out;
 	}
-}
 
-function parse_stream(PeakableStream $stream, $parent_boundary = null)
-{
-	$headers = parse_header($stream);
-
-	if (isset($headers['Content-Type']) && preg_match('/^multipart\/.+?;\s*boundary=([^;]+?)(;|$)/', $headers['Content-Type'], $match))
-		$body = parse_multipart_body($stream, $match[1]);
-	else
-		$body = parse_plain_body($stream, $parent_boundary);
-
-	return  new MessagePart($headers, $body);
-}
-
-function parse_text($raw_message)
-{
-	$tmp_stream = fopen('php://temp', 'r+');
-	fwrite($tmp_stream, $raw_message);
-	rewind($tmp_stream);
-
-	return parse_stream(new PeakableStream($tmp_stream));
-}
-
-function parse_header(PeakableStream $stream)
-{
-	$headers = array();
-
-	$current_header = null;
-
-	while (true)
+	static public function parse_stream(PeakableStream $stream, $parent_boundary = null)
 	{
-		$line = $stream->readline();
+		$message = new self();
 
-		// Newline? Oh god end of headers!
-		if (preg_match('/^(\r?\n|\r)$/', $line))
-			break;
-		
-		elseif (preg_match('/^([^:\s]+[^:]*): ?(.*)$/', $line, $match))
-			$headers[$current_header = $match[1]] = trim($match[2]);
+		self::parse_header($stream, $message);
 
-		elseif ($current_header !== null)
-			$headers[$current_header] .= "\n" . trim($line);
-	}
-
-	return $headers;
-}
-
-function parse_multipart_body(PeakableStream $stream, $boundary)
-{
-	$parts = array();
-
-	while (true)
-	{
-		$line = $stream->readline();
-
-		if ($line === false)
-			throw new ParseException("Unexpected end of stream");
-
-		if (trim($line) == '--' . $boundary . '--')
-			break;
-
-		elseif (trim($line) === '--' . $boundary)
-		{
-			$parts[] = parse_stream($stream, $boundary);
-		}
-
+		if ($message->header('Content-Type') && preg_match('/^multipart\/.+?;\s*boundary=([^;]+?)(;|$)/', $message->header('Content-Type'), $match))
+			self::parse_multipart_body($stream, $match[1], $message);
 		else
-			throw new RuntimeException('Could not parse ' . $stream->lineNumber());
+			self::parse_plain_body($stream, $parent_boundary, $message);
+
+		return $message;
 	}
 
-	return $parts;
-}
-
-function parse_plain_body(PeakableStream $stream, $boundary)
-{
-	$body = '';
-
-	while (true)
+	static public function parse_text($raw_message)
 	{
-		$line = $stream->peek();
+		$tmp_stream = fopen('php://temp', 'r+');
+		fwrite($tmp_stream, $raw_message);
+		rewind($tmp_stream);
 
-		// End of stream
-		if ($line === false)
-			break;
-
-		// End of this multipart section
-		if ($boundary !== null && (trim($line) == '--' . $boundary . '--' || trim($line) === '--' . $boundary))
-			break;
-		
-		$body .= $stream->readline();
+		return self::parse_stream(new PeakableStream($tmp_stream));
 	}
 
-	return $body;
+	static private function parse_header(PeakableStream $stream, MessagePart $message)
+	{
+		$header = null;
+
+		while (true)
+		{
+			$line = $stream->readline();
+
+			// Newline? Oh god end of headers!
+			if (preg_match('/^(\r?\n|\r)$/', $line))
+			{
+				if ($header !== null)
+					$message->addHeader($header[0], $header[1]);
+				
+				break;
+			}
+			
+			elseif (preg_match('/^([^:\s]+[^:]*): ?(.*)$/', $line, $match))
+			{
+				if ($header !== null)
+					$message->addHeader($header[0], $header[1]);
+
+				$header = [$match[1], trim($match[2])];
+			}
+
+			elseif ($header !== null)
+			{
+				$header[1] .= " " . trim($line);
+			}
+		}
+	}
+
+	static private function parse_multipart_body(PeakableStream $stream, $boundary, MessagePart $message)
+	{
+		$message->body = [];
+		
+		while (true)
+		{
+			$line = $stream->readline();
+
+			if ($line === false)
+				throw new \RuntimeException("Unexpected end of stream");
+
+			if (trim($line) == '--' . $boundary . '--')
+				break;
+
+			elseif (trim($line) === '--' . $boundary)
+			{
+				$message->body[] = self::parse_stream($stream, $boundary);
+			}
+
+			else
+				throw new \RuntimeException('Could not parse ' . $stream->lineNumber());
+		}
+	}
+
+	static private function parse_plain_body(PeakableStream $stream, $boundary, MessagePart $message)
+	{
+		while (true)
+		{
+			$line = $stream->peek();
+
+			// End of stream
+			if ($line === false)
+				break;
+
+			// End of this multipart section
+			if ($boundary !== null && (trim($line) == '--' . $boundary . '--' || trim($line) === '--' . $boundary))
+				break;
+			
+			$message->body .= $stream->readline();
+		}
+	}
 }
 
 function break_line($line, $max_length)
@@ -472,14 +503,11 @@ function quote_plain_text($text_body, $line_wrap = 78)
 	return $out;
 }
 
-function reply(MessagePart $message, $reply_text, $additional_headers)
+function reply(MessagePart $message, $reply_text)
 {
 	$receipient = $message->header('Sender|From');
 
 	$reply = new MessagePart();
-
-	foreach ($additional_headers as $key => $value)
-		$reply->setHeader($key, $value);
 
 	$reply->setHeader('Subject', (preg_match('/^Re: /i', $message->header('Subject')) ? '' : 'Re: ') . $message->header('Subject'));
 	$reply->setHeader('To', $receipient);
@@ -518,17 +546,7 @@ function reply(MessagePart $message, $reply_text, $additional_headers)
 
 if (realpath($_SERVER['PWD'] . '/' . $_SERVER['PHP_SELF']) == __FILE__)
 {
-	fgets(STDIN);
+	echo fgets(STDIN);
 
-	// $message = parse_stream(new PeakableStream(STDIN));
-
-	// var_dump($message);
-
-	// echo "\n\n\n";
-
-	// echo $message->toString();
-
-	echo reply(stream_get_contents(STDIN),
-		'This is the reply. Very plain and simple.',
-		['From' => 'WebCie Mail Monkey <webcie@svcover.nl>']);
+	echo MessagePart::parse_stream(new PeakableStream(STDIN))->toString();
 }
