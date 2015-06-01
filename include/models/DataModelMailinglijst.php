@@ -32,7 +32,7 @@ class DataModelMailinglijst extends DataModel
 		$this->model_opt_out = new DataModel($db, 'mailinglijsten_opt_out');
 	}
 
-	public function _row_to_iter($row)
+	public function _row_to_iter($row, $dataiter = null)
 	{
 		if ($row && isset($row['publiek']))
 			$row['publiek'] = $row['publiek'] == 't';
