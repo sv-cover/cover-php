@@ -3,6 +3,7 @@
 chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/init.php';
+require_once 'include/email.php';
 
 define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
@@ -183,15 +184,17 @@ function process_return_to_sender($message, $return_code)
 	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
 		$to = null;
 
-	$subject = preg_match('/^Subject: (.+?)$/m', $message, $match)
-		? $match[1]
-		: 'Could not deliver message';
-
 	$notice = 'Sorry, but your message' . ($to ? ' to ' . $to : '') . " could not be delivered:\n" . get_error_message($return_code);
 
 	echo "Return message to sender $from\n";
-	
-	mail($from, $subject, $notice, null, '-fwebcie@svcover.nl');
+
+	$message_part = \Cover\email\parse_text($message);
+
+	$reply = \Cover\email\reply($message_part, $notice, ['From' => 'Cover Mail Monkey <webcie@svcover.nl>']);
+
+	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message_part->header('Subject'));
+
+	return send_message($reply->toString(), $from);
 }
 
 function send_message($message, $email)
