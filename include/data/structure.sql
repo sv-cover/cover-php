@@ -451,7 +451,7 @@ CREATE TABLE foto_boeken (
     id integer DEFAULT nextval('foto_boeken_id_seq'::regclass) NOT NULL,
     parent integer DEFAULT 0 NOT NULL,
     titel character varying(255) NOT NULL,
-    fotograaf character varying(255),
+    fotograaf text,
     date date,
     last_update timestamp DEFAULT NULL,
     beschrijving text,
