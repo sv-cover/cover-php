@@ -83,7 +83,7 @@ function process_message_mailinglist($message, &$lijst)
 	// Search for the adressed mailing list
 	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
-
+	
 	// Find that mailing list
 	if (!($lijst = $mailinglijsten_model->get_lijst($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
@@ -138,6 +138,9 @@ function process_message_mailinglist($message, &$lijst)
 			return RETURN_NOT_ALLOWED_UNKNOWN_POLICY;
 	}
 
+	if (is_first_email_ever_list($from, $lijst) && list_sends_welcome_mail($lijst))
+		send_welcome_mail($lijst, $from);
+
 	foreach ($aanmeldingen as $aanmelding)
 	{
 		// Skip subscriptions without an e-mail address silently
@@ -178,6 +181,18 @@ function process_message_mailinglist($message, &$lijst)
 	return 0;
 }
 
+function is_first_email_ever_to_list($from, DataIterMailinglijst $list)
+{
+	$archive = get_model('DataModelMailinglijstArchief');
+	return $archive->contains_mail_from($from);
+}
+
+function list_sends_welcome_mail(DataIterMailinglijst $list)
+{
+	return strlen($list->get('on_first_email_subject')) > 0
+		&& strlen($list->get('on_first_email_message')) > 0;
+}
+
 function process_return_to_sender($message, $return_code)
 {
 	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
@@ -190,13 +205,29 @@ function process_return_to_sender($message, $return_code)
 
 	echo "Return message to sender $from\n";
 
-	$message_part = \Cover\email\parse_text($message);
+	$message_part = \Cover\email\MessagePart::parse_text($message);
 
-	$reply = \Cover\email\reply($message_part, $notice, ['From' => 'Cover Mail Monkey <webcie@svcover.nl>']);
+	$reply = \Cover\email\reply($message_part, $notice);
 
 	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message_part->header('Subject'));
+	$reply->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
+	$reply->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
 
 	return send_message($reply->toString(), $from);
+}
+
+function send_welcome_mail($to, DataModelMailinglijst $lijst)
+{
+	$message = new \Cover\email\MessagePart();
+
+	$message->setHeader('To', $to);
+	$message->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
+	$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
+	$message->setHeader('Subject', $lijst->get('on_first_email_subject'));
+	$message->addBody('text/plain', strip_tags($lijst->get('on_first_email_message')));
+	$message->addBody('text/html', $lijst->get('on_first_email_message'));
+
+	return send_message($message->toString(), $to);
 }
 
 function send_message($message, $email)
@@ -286,9 +317,13 @@ function main()
 		$return_code = process_message_mailinglist($message, $lijst);
 	}
 
+	// Parse the from header of the message archive
+	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
+		$from = null;
+
 	// Archive the message.
 	$archief = get_model('DataModelMailinglijstArchief');
-	$archief->archive($message, $lijst, $commissie, $return_code);
+	$archief->archive($message, $from, $lijst, $commissie, $return_code);
 
 	if ($return_code != 0)
 		process_return_to_sender($message, $return_code);

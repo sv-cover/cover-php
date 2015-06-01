@@ -59,10 +59,11 @@ class DataModelMailinglijstArchief extends DataModel
 		parent::__construct($db, 'mailinglijsten_berichten');
 	}
 
-	public function archive($bericht, $lijst, $commissie, $return_code)
+	public function archive($bericht, $sender, $lijst, $commissie, $return_code)
 	{
 		$data = array(
 			'bericht' => $bericht,
+			'sender' => $sender,
 			'mailinglijst' => $lijst ? $lijst->get('id') : null,
 			'commissie' => $commissie ? $commissie->get('id') : null,
 			'return_code' => $return_code
@@ -76,6 +77,11 @@ class DataModelMailinglijstArchief extends DataModel
 	public function get_by_lijst($lijst_id)
 	{
 		return $this->find('mailinglijst = ' . intval($lijst_id));
+	}
+
+	public function contains_mail_from($sender)
+	{
+		return $this->db->query_first(sprintf("SELECT COUNT(id) FROM {$this->table} WHERE sender = '%s'", $this->db->escape_string($sender)));
 	}
 
 	protected function _generate_query($where)
