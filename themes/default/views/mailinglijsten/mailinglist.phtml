@@ -51,7 +51,15 @@
 				<input id="publiek" type="checkbox" name="publiek" <?php if ($lijst->get('publiek')) echo 'checked' ?>>
 				<label for="publiek"><?=__('Mensen mogen zichzelf aanmelden voor deze lijst.')?></label>
 			</div>
-			
+
+			<div>
+				<label for="automessages"><?=__('Automatische e-mails') ?></label>
+				<div class="form-group">
+					<a href="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>&amp;edit_message=subscription"><?=__('Stuur bericht bij aanmelden…')?></a><br>
+					<a href="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>&amp;edit_message=first_email"><?=__('Stuur bericht bij eerste mail naar mailinglijst…')?></a>
+				</div>
+			</div>
+
 			<button class="button" type="submit"><?=__('Update lijst')?></button>
 		</form>
 	</div>

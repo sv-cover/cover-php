@@ -1,0 +1,57 @@
+<h1><?=__('Automatisch bericht wijzigen')?></h1>
+<div class="messageBox">
+	<form method="post" action="" class="vertical-form">
+		<div>
+			<?=label(__('Onderwerp'), 'subject', $errors, true)?>
+			<?=input_text('subject', ['subject' => $iter->get($subject_field)], 'required', 'required')?>
+		</div>
+
+		<div>
+			<?=label(__('Bericht'), 'message', $errors, true)?>
+
+			<div id="wysihtml-toolbar" class="button-bar" style="display: none;">
+				<span class="button-group">
+					<a data-wysihtml5-command="bold" class="button" title="Bold"><i class="fa fa-bold"></i></a>
+					<a data-wysihtml5-command="italic" class="button" title="Italic"><i class="fa fa-italic"></i></a>
+					<a data-wysihtml5-command="underline" class="button" title="Underline"><i class="fa fa-underline"></i></a>
+				</span>
+				<span class="button-group">
+					<a data-wysihtml5-command="insertOrderedList" class="button" title="Insert ordered list"><i class="fa fa-list-ol"></i></a>
+					<a data-wysihtml5-command="insertUnorderedList" class="button" title="Insert unordered list"><i class="fa fa-list-ul"></i></a>
+				</span>
+
+				<a data-wysihtml5-command="createLink" class="button"><i class="fa fa-link"></i>&nbsp;Insert link</a>
+				<div data-wysihtml5-dialog="createLink" style="display: none;">
+					<label>Link: <input data-wysihtml5-dialog-field="href" value="http://" class="text"></label>
+					<a data-wysihtml5-dialog-action="save" class="button">OK</a>
+					<a data-wysihtml5-dialog-action="cancel">Cancel</a>
+				</div>
+
+				<span class="button-menu">
+					<a href="javascript:;" class="button">Insert placeholder</a>
+					<ul>
+						<li><a data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="[NAME]">Name</a></li>
+						<li><a data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="[UNSUBSCRIBE]">Unsubscribe link</a></li>
+					</ul>
+				</span>
+			</div>
+
+			<?=textarea_field('message', ['message' => $iter->get($message_field)], $errors, 'rows', 10, 'id', 'field-message')?>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?= __('Wijzig reactie') ?></button>
+			<a href="mailinglijsten.php?lijst_id=<?=$iter->get_id()?>"><?=__('Terug naar mailinglijst')?></a>
+		</div>
+	</form>
+</div>
+<script src="<?=get_theme_data('data/wysihtml5x-toolbar.min.js')?>"></script>
+<script src="<?=get_theme_data('data/wysihtml5x-parser-rules-simple.js')?>"></script>
+<script>
+	jQuery(function($) {
+		var editor = new wysihtml5.Editor('field-message',{
+			'toolbar': 'wysihtml-toolbar',
+			'parserRules': wysihtml5ParserRules
+		});
+	});
+</script>
