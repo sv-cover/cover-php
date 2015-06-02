@@ -15,7 +15,7 @@ $months = get_months();
 		</span>
 		<?php if ($subtitle): ?>
 		<div class="subtitle">
-			<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= markup_format_text(($reactie->has('beschrijving') ? $reactie->get('beschrijving') : __('geen titel'))) ?></a><br>
+			<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= markup_format_text(strlen($reactie->get('beschrijving')) > 0 ? $reactie->get('beschrijving') : __('geen titel')) ?></a><br>
 			<?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('boek') ?>"><?= markup_format_text($reactie->get('titel')) ?></a>
 		</div>
 		<?php endif ?>
