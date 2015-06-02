@@ -46,7 +46,12 @@
 		while (preg_match('/\[url=(.*?)\](.*?)\[\/url\]/is', $markup, $match))
 		{
 			$placeholder = sprintf('#LINK%d#', $count++);
-			$placeholders[$placeholder] = '<a rel="nofollow" href="' . $match[1] . '"' . (strpos($match[1], 'http://') !== FALSE ? '>' : '>') . markup_parse($match[2], $placeholders) . '</a>';
+
+			$host = parse_url($match[1], PHP_URL_HOST);
+
+			$target = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST) ? ' target="_blank"' : '';
+
+			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $match[1] . '">' . markup_parse($match[2], $placeholders) . '</a>';
 			
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
@@ -61,7 +66,12 @@
 			$url = preg_match('~^https?://~', $match[0]) ? $match[0] : 'http://' . $match[0];
 			
 			$placeholder = sprintf('#URL%d#', $linkcount++);
-			$placeholders[$placeholder] = '<a rel="nofollow" href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
+
+			$host = parse_url($match[0], PHP_URL_HOST);
+
+			$target = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST) ? ' target="_blank"' : '';
+
+			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
 
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
