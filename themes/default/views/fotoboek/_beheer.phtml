@@ -1,49 +1,19 @@
 	<div class="controls">
-		<a href="javascript:nieuw_fotoboek();"> <?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken'), 'class="button"') ?></a>
-		<a href="javascript:nieuw_fotoboek();"> <?= __('Nieuw fotoboek') ?></a>
-		<a href="javascript:nieuwe_fotos();"> <?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen'), 'class="button"') ?></a>
-		<a href="javascript:nieuwe_fotos();"> <?= __('Foto\'s toevoegen') ?></a>
-		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?=__('Foto\'s verwijderen')?></a>
+		<?php if (get_policy($model)->user_can_create() && ctype_digit((string) $iter->get_id())): ?>
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_book" class="button"><?= image('new.png', __('Nieuw'), __('Nieuw fotoboek aanmaken')) ?> <?= __('Nieuw fotoboek') ?></a>
+		<?php endif ?>
+		<?php if (get_policy($model)->user_can_update($iter)): ?>
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=update_book" class="button"><?= image('edit.png', __('Bewerk'), __('Bewerk fotoboek')) ?> <?= __('Bewerk fotoboek') ?></a>
+		<?php endif ?>
+		<?php if (get_policy($model)->user_can_update($iter)): ?>
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=add_photos" class="button"><?= image('add.png', __('Toevoegen'), __('Foto\'s toevoegen')) ?> <?= __('Foto\'s toevoegen') ?></a>
+		<a id="order-photos-button" class="button"><?= image('change-sort-order.png', __('Herschikken'), __("Foto's herschikken")) ?><?=__("Foto's herschikken")?></a>
+		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#"><?= image('delete.png', __('Verwijderen'), __('Geselecteerde foto\'s verwijderen')) ?><?=__('Geselecteerde foto\'s verwijderen')?></a>
+		<?php endif ?>
 	</div>
-	<div id="fotoboek_beheer" class="beheer">
-	<form name="fbeheer" action="fotoboek.php?book=<?=$iter->get_id()?>" method="post">
-
-	<?php $this->render_partial('fotoboek_edit', array('model' => $model, 'errors' => $errors, 'iter' => new DataIterPhotobook($model, -1, array('parent' => $iter->get_id())))); ?>
-
-	</form>
-	</div>
-	<div id="fotoboek_fotos" class="beheer">
-	<form name="ffotos" action="fotoboek.php?book=<?=$iter->get_id()?>" method="post">
-	<table class="default_noborder">
-	<?= input_hidden('submfotoboekfotos', 'yes') ?>
-	<?= table_row(label(__('Fotoboek'), '', null, true) . ':', markup_format_text($iter->get('titel'))) ?>
-	<?= table_row(label(__('Foto urls'), 'urls', $errors, true) . ':', textarea_field('urls', null, $errors)) ?>
-	<?= table_row(label(__('Thumbnail urls'), 'thumbnail_urls', $errors, true) . ':', textarea_field('thumbnail_urls', null, $errors)) ?>
-	<tr><td colspan="2" class="submit"> <?= input_submit('subm', __('Foto\'s toevoegen')) ?></td></tr>
-	</table>
-	</form>
-	</div>
+	
+	<script src="<?=get_theme_data('data/wiggle.js')?>"></script>
 	<script type="text/javascript">
-		function nieuw_fotoboek() {
-			div = document.getElementById("fotoboek_beheer");
-		
-			if (div.style.display == "none" || div.style.display == "") {
-				div.style.display = "block"
-			} else {
-				div.style.display = "none";
-			}
-		}
-
-		function nieuwe_fotos() {
-			div = document.getElementById("fotoboek_fotos");
-		
-			if (div.style.display == "none" || div.style.display == "") {
-				div.style.display = "block";
-			} else {
-				div.style.display = "none";
-			}
-		}
-
 		function sprintf(format)
 		{
 			for (var i = 1; i < arguments.length; ++i)
@@ -52,7 +22,7 @@
 			return format;
 		}
 
-		$(function() {
+		$(document).ready(function() {
 			var checkboxes = $('.photos .thumbnail').map(function() {
 				return $('<input type="checkbox">')
 					.attr('name', 'photo[]')
@@ -79,22 +49,101 @@
 				if (!confirm(sprintf(<?=json_encode(__('Weet je zeker dat je %d geselecteerde foto\'s wilt verwijderen?'))?>, selection.length)))
 					return;
 
-				$.post(document.location.href, {
-					'submfotoboekdelfotos': 'yes',
-					'photo[]': selection.toArray()
-				}, function() {
-					document.location.reload();
+				var $form = $('<form>', {
+					'method': 'post',
+					'action': 'fotoboek.php?book=<?=$iter->get_id()?>&view=delete_photos'
+				}).appendTo(document.body);
+
+				$.each(selection, function(i, id) {
+					$('<input>', {
+						'type': 'hidden',
+						'name': 'photo[]',
+						'value': id
+					}).appendTo($form);
 				});
+				
+				$form.submit();
 			});
 
 			updateSelectionControls();
 		});
-		
-<? 	if (isset($errortype) && $errortype == 'nieuw') { ?>
-		nieuw_fotoboek();
-<? }	if (isset($errortype) && $errortype == 'fotos') { ?>
-		nieuwe_fotos();
- <? } ?>
 
+		$(document).ready(function($) {
+			var $photos = $('.photos');
+
+			var $books = $('.photobooks');
+
+			var getPhotoId = function(el_id) {
+				return el_id.match(/^photo_(\d+)$/)[1];
+			};
+
+			var getBookId = function(el_id) {
+				var match = el_id.match(/^book_(\d+)$/);
+				return match ? match[1] : null;
+			};
+
+			var isNotNull = function(val) {
+				return val !== null;
+			};
+
+			var printError = function(response) {
+				alert(<?=json_encode(__('De volgorde kon niet worden opgeslagen. De volgorde kan niet worden opgeslagen voor automatisch gegenereerde albums en albums waar je geen update-rechten voor hebt.'))?>);
+			};
+
+			var submitPhotoOrder = function() {
+				$.post('fotoboek.php?book=<?=$iter->get_id()?>&view=update_photo_order', {
+					'order': $photos.sortable('toArray').map(getPhotoId)
+				}).fail(printError);
+			};
+
+			var submitBookOrder = function() {
+				$.post('fotoboek.php?book=<?=$iter->get_id()?>&view=update_book_order', {
+					'order': $books.sortable('toArray').map(getBookId).filter(isNotNull)
+				}).fail(printError);
+			};
+
+			var activate = function() {
+				if ($books.length) {
+					$books.children().wiggle('start');
+
+					$books.sortable({
+						cursor: 'move',
+						items: '> .photobook',
+						update: submitBookOrder
+
+					});
+				}
+
+				if ($photos.length) {
+					$photos.children().wiggle('start');
+
+					$photos.flowgallery('destroy');
+					$photos.sortable({
+						cursor: 'move',
+						update: submitPhotoOrder
+					});
+				}
+			};
+
+			var deactivate = function() {
+				if ($books.length) {
+					$books.children().wiggle('stop');
+					$books.sortable('destroy');
+				}
+
+				if ($photos.length) {
+					$photos.children().wiggle('stop');
+					$photos.flowgallery();
+					$photos.sortable('destroy');
+				}
+			};
+
+			$('#order-photos-button').click(function(e) {
+				if ($photos.hasClass('ui-sortable') || $books.hasClass('ui-sortable'))
+					deactivate();
+				else
+					activate();
+			});
+		});
 	</script>
 	

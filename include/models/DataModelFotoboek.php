@@ -5,43 +5,174 @@
 
 	class DataIterPhoto extends DataIter
 	{
+		const EXIF_ORIENTATION_180 = 3;
+		const EXIF_ORIENTATION_90_RIGHT = 6;
+		const EXIF_ORIENTATION_90_LEFT = 8;
+
 		public function get_size()
 		{
-			if (!$this->get('width') || !$this->get('height'))
-			{
-				$data = @getimagesize($this->get('url'));
-
-				if (!$data)
-					return null;
-
-				$this->set('width', $data[0]);
-				$this->set('height', $data[1]);
-				$this->model->update($this);
-			}
-
 			return array($this->get('width'), $this->get('height'));
 		}
 
-		public function get_thumb_size()
+		public function get_scaled_size($max_width = null, $max_height = null)
 		{
-			if (!$this->get('thumbwidth') || !$this->get('thumbheight'))
-			{
-				$data = @getimagesize($this->get('thumburl'));
+			$size = $this->get_size();
 
-				if (!$data)
-					return null;
-
-				$this->set('thumbwidth', $data[0]);
-				$this->set('thumbheight', $data[1]);
-				$this->model->update($this);
+			if ($max_width) {
+				$width = $max_width;
+				$height = round($max_width * ($size[1] / $size[0]));
+			}
+			
+			if (!$max_width || ($max_height && $height > $max_height)) {
+				$height = $max_height;
+				$width = round($max_height * ($size[0] / $size[1]));
 			}
 
-			return array($this->get('thumbwidth'), $this->get('thumbheight'));
+			return array($width, $height);
+		}
+
+		public function compute_size()
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file {$this->get('filepath')}");
+
+			if ($exif_data = $this->get_exif_data()) {
+				$size = [
+					'width' => $exif_data['COMPUTED']['Width'],
+					'height' => $exif_data['COMPUTED']['Height']
+				];
+
+				if (isset($exif_data['Orientation'])
+					&& ($exif_data['Orientation'] == self::EXIF_ORIENTATION_90_LEFT
+						|| $exif_data['Orientation'] == self::EXIF_ORIENTATION_90_RIGHT))
+					list($size['width'], $size['height']) = [$size['height'], $size['width']];
+
+				return $size;
+			}
+			else if ($size = @getimagesize($this->get_full_path()))
+				return [
+					'width' => $size[0],
+					'height' => $size[1]
+				];
+			else
+				throw new RuntimeException("Could not determine image dimensions of photo {$this->get('filepath')}");
+		}
+
+		public function compute_hash()
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file {$this->get('filepath')}");
+
+			return crc32_file($this->get_full_path());
+		}
+
+		public function compute_created_on_timestamp()
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file {$this->get('filepath')}");
+
+			$exif_data = $this->get_exif_data();
+
+			return strftime('%Y-%m-%d %H:%M:%S', isset($exif_data['DateTimeOriginal'])
+				? strtotime($exif_data['DateTimeOriginal'])
+				: $exif_data['FileDateTime']);
+		}
+
+		public function original_has_changed()
+		{
+			return $this->compute_hash() == $this->get('filehash');
 		}
 
 		public function get_book()
 		{
 			return $this->model->get_book($this->get('boek'));
+		}
+
+		public function get_full_path()
+		{
+			return path_concat(get_config_value('path_to_photos'), $this->get('filepath'));
+		}
+
+		public function get_url($width = null, $height = null)
+		{
+			$url = get_config_value('url_to_scaled_photo', 'fotoboek.php?view=scaled');
+
+			$params = array('photo' => $this->get_id());
+
+			if ($width)
+				$params['width'] = (int) $width;
+
+			if ($height)
+				$params['height'] = (int) $height;
+
+			return edit_url($url, $params);
+		}
+
+		public function file_exists()
+		{
+			return file_exists($this->get_full_path());
+		}
+
+		public function get_resource($width = null, $height = null, $skip_cache = false)
+		{
+			if (!$this->file_exists())
+				throw new NotFoundException("Could not find original file ({$this->get('filepath')}) of photo {$this->get_id()}.");
+			
+			// Special case of no width and height -> use original file
+			if (!$width && !$height)
+				return fopen($this->get_full_path(), 'rb');
+
+			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
+
+			if (!file_exists($scaled_path)
+				|| filesize($scaled_path) === 0
+				|| $skip_cache)
+			{
+				if (!file_exists(dirname($scaled_path)))
+					mkdir(dirname($scaled_path), 0777, true);
+
+				list($scaled_width, $scaled_height) = $this->get_scaled_size($width, $height);
+
+				$fhandle = fopen($scaled_path, 'wb');
+				$imagick = new Imagick();
+				$imagick->readImage($this->get_full_path());
+
+				// Rotate the image according to the EXIF data
+				switch($imagick->getImageOrientation())
+				{
+					case imagick::ORIENTATION_BOTTOMRIGHT:
+						$imagick->rotateimage('#000', 180); // rotate 180 degrees 
+						break; 
+
+					case imagick::ORIENTATION_RIGHTTOP:
+						$imagick->rotateimage('#000', 90); // rotate 90 degrees CW 
+						break; 
+
+					case imagick::ORIENTATION_LEFTBOTTOM:
+						$imagick->rotateimage('#000', -90); // rotate 90 degrees CCW 
+						break;
+				}
+
+				// Scale the image
+				$imagick->scaleImage($scaled_width, $scaled_height);
+
+				// Strip EXIF data
+				$imagick->stripImage();
+
+				// Write the image as a progressive JPEG
+				$imagick->setImageFormat('jpg');
+				$imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+				$imagick->writeImageFile($fhandle);
+				$imagick->destroy();
+				fclose($fhandle);
+			}
+
+			return fopen($scaled_path, 'rb');
+		}
+
+		public function get_exif_data()
+		{
+			return exif_read_data($this->get_full_path());
 		}
 	}
 
@@ -187,7 +318,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_book($id)
+		public function get_book($id)
 		{
 			if ($id == 0)
 				return $this->get_root_book();
@@ -213,6 +344,9 @@
 					", $id);
 			
 			$row = $this->db->query_first($q);
+
+			if ($row === null)
+				throw new DataIterNotFoundException($id, $this);
 
 			return $this->_row_to_iter($row, 'DataIterPhotobook');
 		}
@@ -249,7 +383,7 @@
 			return $this->_rows_to_iters($this->db->query($query), 'DataIterPhotobook');
 		}
 
-		function get_root_book()
+		public function get_root_book()
 		{
 			$num_books = $this->db->query_value('SELECT COUNT(id) FROM foto_boeken WHERE parent = 0');
 			
@@ -268,7 +402,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_random_book($count = 10)
+		public function get_random_book($count = 10)
 		{
 			$q = sprintf("
 				SELECT 
@@ -327,7 +461,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		function get_next_book(DataIterPhotobook $book)
+		public function get_next_book(DataIterPhotobook $book)
 		{
 			$parent = $book->get_parent();
 
@@ -348,7 +482,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_children(DataIterPhotobook $book) {
+		public function get_children(DataIterPhotobook $book) {
 			$select = 'SELECT
 				foto_boeken.*, 
 				COUNT(DISTINCT fotos.id) AS num_photos, 
@@ -378,6 +512,7 @@
 				foto_boeken.fotograaf';
 
 			$order_by = 'ORDER BY
+				foto_boeken.sort_index ASC NULLS FIRST,
 				date DESC,
 				foto_boeken.id';
 
@@ -468,12 +603,13 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_random_photos($num) {
+		public function get_random_photos($num)
+		{
 			$rows = $this->db->query(sprintf("
 					SELECT
 						f.*,
-						DATE_PART('year', foto_boeken.date) AS jaar,
-						foto_boeken.titel
+						DATE_PART('year', foto_boeken.date) AS fotoboek_jaar,
+						foto_boeken.titel as fotoboek_titel
 					FROM 
 						(SELECT
 							fotos.id
@@ -497,15 +633,6 @@
 						foto_boeken.id = f.boek
 					GROUP BY
 						f.id,
-						f.boek,
-						f.url,
-						f.thumburl,
-						f.beschrijving,
-						f.added_on,
-						f.width,
-						f.height,
-						f.thumbwidth,
-						f.thumbheight,
 						foto_boeken.date,
 						foto_boeken.titel",
 						self::VISIBILITY_PUBLIC,
@@ -525,7 +652,21 @@
 		  */
 		public function get_photos(DataIterPhotobook $book)
 		{
-			return $this->find(sprintf('boek = %d', $book->get_id()));
+			$query = "
+				SELECT
+					*
+				FROM
+					fotos
+				WHERE
+					boek = {$book->get_id()}
+				ORDER BY
+					sort_index ASC NULLS FIRST,
+					created_on ASC,
+					added_on ASC";
+
+			$rows = $this->db->query($query);
+			
+			return $this->_rows_to_iters($rows);
 		}
 
 		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
@@ -568,7 +709,8 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		function get_parents(DataIterPhotobook $book) {
+		public function get_parents(DataIterPhotobook $book)
+		{
 			$result = array();
 
 			while ($book = $book->get_parent())
@@ -578,19 +720,48 @@
 		}
 		
 		/**
-		  * Delete a photo. This will automatically delete any replies
-		  * for the photo
-		  * @iter a #DataIter representing a photo
+		  * Delete a photo. This will automatically delete any comments on
+		  * and faces tagged in the photo due to database table constraints.
 		  *
+		  * @iter a #DataIter representing a photo;
 		  * @result whether or not the delete was successful
 		  */
-		function delete(DataIterPhoto $iter) {
+		public function delete(DataIterPhoto $iter)
+		{
 			$result = parent::delete($iter);
 			
-			/* Delete all reacties */
-			$result = $result && $this->db->delete('foto_reacties', 'foto = ' . intval($iter->get_id()));
-
+			// Remove scaled versions of the image from the scaled image cache
+			$filter = str_replace('%d', '*', get_config_value('path_to_scaled_photo'));
+			foreach (glob($filter) as $scaled_image_path)
+				unlink($scaled_image_path);
+			
 			return $result;
+		}
+
+		/**
+		 * Insert a photo into the database. Width, height and filehash are
+		 * caculated if they are not already set.
+		 *
+		 * @param DataIterPhoto $photo to insert
+		 * @return int|boolean the photo id on success, or false on failure
+		 */
+		public function insert(DataIterPhoto $iter)
+		{
+			// Determine width and height of the new image
+			if (!$iter->has('width') || !$iter->has('height'))
+				$iter->set_all($iter->compute_size());
+
+			// Determine the CRC32 file hash, used for detecting changes later on
+			if (!$iter->has('filehash'))
+				$iter->set('filehash', $iter->compute_hash());
+
+			if (!$iter->has('created_on'))
+				$iter->set('created_on', $iter->compute_created_on_timestamp());
+
+			if (!$iter->has('added_on'))
+				$iter->set_literal('added_on', 'NOW()');
+
+			return parent::insert($iter);
 		}
 
 		/**
@@ -599,38 +770,52 @@
 		  *
 		  * @result whether or not the insert was successful
 		  */
-		function insert_book(DataIterPhotobook $iter) {
+		public function insert_book(DataIterPhotobook $iter)
+		{
 			return $this->_insert('foto_boeken', $iter, true);
 		}
 
 		/**
-		  * Delete a book. This will automatically remove all the
-		  * photos in the book.
-		  * @iter a #DataIter representing a book
+		  * Delete a book. This will also delete all photos
+		  * and subbooks and all accompanying face tags, 
+		  * comments and scaled images in the cache.
 		  *
-		  * @result whether or not the delete was successful
+		  * @param DataIterPhotobook $iter representing a book
+		  * @return boolean whether or not the delete was successful
 		  */		
-		function delete_book(DataIterPhotobook $iter) {
-			$result = $this->_delete('foto_boeken', $iter);
+		public function delete_book(DataIterPhotobook $iter)
+		{
+			if (!is_numeric($iter->get_id()))
+				throw new InvalidArgumentException('You can only delete real books');
+
+			foreach ($iter->get_books() as $child)
+				$this->delete_book($child);
 			
-			$photos = $this->get_photos($iter);
-			
-			foreach ($photos as $photo)
+			foreach ($iter->get_photos() as $photo)
 				$this->delete($photo);
+			
+			$result = $this->_delete('foto_boeken', $iter);
 			
 			return $result;
 		}
 
 		/**
 		  * Update a book
-		  * @iter a #DataIter representing a book
 		  *
-		  * @result whether or not the update was successful
+		  * @param DataIterPhotobook $iter representing a book
+		  * @return boolean whether or not the update was successful
 		  */		
-		function update_book(DataIterPhotobook $iter) {
+		public function update_book(DataIterPhotobook $iter)
+		{
 			return $this->_update('foto_boeken', $iter);
 		}
 
+		/**
+		 * Mark a photo book as read for a certain member.
+		 *
+		 * @param int $lid_id id of the DataIterMember
+		 * @param DataIterPhotobook $book book to mark as read
+		 */
 		public function mark_read($lid_id, DataIterPhotobook $book)
 		{
 			if (!get_config_value('enable_photos_read_status', true))
@@ -652,6 +837,14 @@
 			}
 		}
 
+		/**
+		 * Marks all photo books that are children of the passed in book as
+		 * read for a certain member.
+		 * 
+		 * @param int $lid_id id of the DataIterMember
+		 * @param DataIterPhotobook $book parent book of which the children
+		 * 	must be marked as read
+		 */
 		protected function mark_children_read($lid_id, DataIterPhotobook $book)
 		{
 			if (!get_config_value('enable_photos_read_status', true))
@@ -680,6 +873,12 @@
 			$this->db->query($query);
 		}
 
+		/**
+		 * Mark a photo book and all its children as read for a certain member.
+		 * 
+		 * @param int $lid_id id of the DataIterMember
+		 * @param DataIterPhotobook $book book to mark as read
+		 */
 		public function mark_read_recursively($lid_id, DataIterPhotobook $book)
 		{
 			$this->mark_read($lid_id, $book);
@@ -687,4 +886,3 @@
 			$this->mark_children_read($lid_id, $book);
 		}
 	}
-?>

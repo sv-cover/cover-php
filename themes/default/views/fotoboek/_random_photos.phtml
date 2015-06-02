@@ -1,33 +1,16 @@
-<?
-if(logged_in() != false) { // Laat alleen zien als er is ingelogd
-
-$photos_per_row = 3;
-$photos = $model->get_random_photos($photos_per_row);
-
-if (!$photos || count($photos) == 0)
-	return;
-?>
-
+<?php if (logged_in()): ?>
 <div class="bar_sep"><?= __('Willekeurige foto\'s') ?></div>
-<table class="fotoboek_photos">
-
-<?
-$images = array();
-$titles = array();
-
-for ($i = 0; $i < $photos_per_row; $i ++) {
-	if ($i >= count($photos)) {
-		$images[] = '';
-		$titles[] = '';
-	} else {
-		$photo = $photos[$i];
-		$images[] = '<a id="photo_' . $photo->get('id') . '" href="fotoboek.php?photo=' . $photo->get('id') . '"><img src="' . markup_format_attribute(strip_protocol($photo->get('thumburl'))) . '"></a>';
-
-		$titles[] = '<a href="fotoboek.php?book=' . $photo->get('boek') . '#photo_' . $photo->get('id') . '">' . $photo->get('titel') . '</a>' . ($photo->get('jaar') ? ('<br>(<span class="bold">' . $photo->get('jaar') . '</span>)') : '');
-	}
-}?>
-
-<tr class="image"><td><?= implode('</td><td>', $images) ?></td></tr>
-<tr class="title"><td><?= implode('</td><td>', $titles) ?></td></tr>
-</table>
-<? } ?>
+<ul class="selection-of-photos">
+	<?php foreach ($model->get_random_photos(3) as $photo): ?>
+	<li>
+		<a id="random_photo_<?=$photo->get_id()?>" href="fotoboek.php?photo=<?=$photo->get_id()?>">
+			<img src="<?=markup_format_attribute($photo->get_url(0, 400))?>" <?=vsprintf('width="%d" height="%d"', $photo->get_scaled_size(null, 150))?>>
+			<span class="photo-caption">
+				<span class="photo-book-title"><?=markup_format_text($photo->get('fotoboek_titel'))?></span>
+				<span class="photo-book-year"><?=sprintf('%d', $photo->get('fotoboek_jaar'))?></span>
+			</span>
+		</a>
+	</li>
+	<?php endforeach ?>
+</ul>
+<?php endif ?>

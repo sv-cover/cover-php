@@ -1,6 +1,6 @@
 /* Author: Florian Maul */
 
-var FlowGallery = (function($) {
+(function($) {
 
 	/* ------------ PRIVATE functions ------------ */
 
@@ -111,43 +111,24 @@ var FlowGallery = (function($) {
 		overflow.css("height", "" + $nz(item.theight, 150) + "px");
 
 		img.css("margin-left", "" + (item.vx ? (-item.vx) : 0) + "px");
-		img.css("margin-top", "" + 0 + "px");
-	};	
-		
-	/* ------------ PUBLIC functions ------------ */
-	return {
-		
-		showImages : function(imageContainer, realItems) {
+	};
 
-			// reduce width by 1px due to layout problem in IE
-			var containerWidth = imageContainer.width() - 1;
-			
-			// Make a copy of the array
-			var items = realItems.slice();
-		
-			// calculate rows of images which each row fitting into
-			// the specified windowWidth.
-			var rows = [];
-			while(items.length > 0) {
-				rows.push(buildImageRow(containerWidth, items));
-			}  
+	var resetImageElement = function(item) {
+		item.el.removeClass('flow-image-container');
 
-			for(var r in rows) {
-				for(var i in rows[r]) {
-					var item = rows[r][i];
-					updateImageElement(item);
-				}
-			}
-		}
+		item.el.css({
+			'width': '',
+			'height': ''
+		});
 
-	}
-})(jQuery);
+		item.el.find('img:first').css({
+			'margin-left': 0
+		});
+	};
 
-$(document).ready(function() {
-	$('.flow-gallery').each(function() {
-		var $area = $(this);
-
-		var items = $(this).children('li').map(function() {
+	var indexElements = function(parent)
+	{
+		return parent.children('li').map(function() {
 			var $thumb = $(this).find('img').first(),
 				tw = parseInt($thumb.attr('width')),
 				th = parseInt($thumb.attr('height'));
@@ -163,11 +144,48 @@ $(document).ready(function() {
 				'el': $(this)
 			};
 		}).get();
+	}
 
-		FlowGallery.showImages($area, items);
-					
-		$(window).resize(function() {
-			FlowGallery.showImages($area, items);
-		});
+	$.widget('cover.flowgallery', {
+		_scheduled_update: null,
+
+		_create: function() {
+			this._items = indexElements($(this.element));
+			this._update_on_resize = $.proxy(this._repaint, this);
+			$(window).on('resize', this._update_on_resize);
+			this.update();
+		},
+
+		update: function() {
+			// reduce width by 1px due to layout problem in IE
+			var containerWidth = this.element.width() - 1;
+			
+			var items = this._items.slice();
+
+			// calculate rows of images which each row fitting into
+			// the specified windowWidth.
+			var rows = [];
+			while(items.length > 0) {
+				rows.push(buildImageRow(containerWidth, items));
+			}  
+
+			for(var r in rows) {
+				for(var i in rows[r]) {
+					var item = rows[r][i];
+					updateImageElement(item);
+				}
+			}
+		},
+
+		_destroy: function() {
+			$(window).off('resize', this._update_on_resize);
+			for (var i in this._items)
+				resetImageElement(this._items[i]);
+		},
+
+		_repaint: function() {
+			clearTimeout(this._scheduled_update);
+			this._scheduled_update = setTimeout($.proxy(this.update, this), 10);
+		}
 	});
-});
+})(jQuery);

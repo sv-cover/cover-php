@@ -351,7 +351,9 @@
 
 		$query_str = http_build_query($query);
 
-		$out = substr($url, 0, $query_start);
+		$out = $query_start !== false
+			? substr($url, 0, $query_start)
+			: $url;
 
 		if ($query_str != '')
 			$out .= '?' . $query_str;
@@ -697,4 +699,44 @@
 				return $i;
 
 		return null;
+	}
+
+	/**
+	 * Concatenates multiple path parts together with a directory separator (/) between them.
+	 *
+	 * @var string $path_component
+	 * @var string ...
+	 * @return string the concatenated path
+	 */
+	function path_concat($path_component)
+	{
+		$path = '';
+		
+		foreach (func_get_args() as $path_component)
+		{
+			if (strlen($path) === 0)
+				$path .= rtrim($path_component, '/');
+			else
+				$path .= '/' . trim($path_component, '/');
+		}
+
+		return $path;
+	}
+
+	function path_subtract($full_path, $basedir)
+	{
+		if (substr($full_path, 0, strlen($basedir)) != $basedir)
+			throw new InvalidArgumentException('Full path is not a path inside the given base directory');
+
+		return ltrim(substr($full_path, strlen($basedir)), '/');
+	}
+
+	function crc32_file($path)
+	{ 
+		return hash_file('CRC32', $path, false);
+	}
+
+	function encode_data_uri($mime_type, $data)
+	{
+		return 'data:' . $mime_type . ';base64,' . base64_encode($data);
 	}

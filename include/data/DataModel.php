@@ -121,6 +121,9 @@
 				if (!$this->fields || in_array($key, $this->fields))
 					$data[$key] = $value;
 
+			if (count($data) === 0)
+				return true;
+
 			return $this->db->update($table, 
 					$data, 
 					$this->_id_string($iter->get_id(), $table), 

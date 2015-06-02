@@ -10,77 +10,57 @@ if (!$children || count($children) == 0)
 	return;
 
 ?>
-<div class = "clearfix">
-<?
-for ($i = 0; $i < count($children); $i += $books_per_row) {
-	$images = array();
-	$titles = array();
-	$status = array();
+<div class = "clearfix photobooks">
+<?php foreach ($children as $book): ?>
+	<div id="book_<?=$book->get_id()?>" class="photobook <?=$book->get('read_status')?>">
+		<a href="fotoboek.php?book=<?=$book->get_id()?>">
+			<img src="<?=get_theme_data('images/book.png')?>" class="book_thumb">
+			<span class="photo-book-title">
+				<?=markup_format_text($book->get('titel')) ?>
+				<?php
+					$subtitle = array();
 
-	for ($n = $i; $n < $i + $books_per_row; $n++) {
-		if ($n >= count($children)) {
-			$images[] = '';
-			$titles[] = '';
-		} else {
-			$image = get_theme_data('images/book.png');
-			$contents = '<a href="fotoboek.php?book=' . $children[$n]->get_id() . '" id="book_' . $children[$n]->get_id() . '"><img src="' . $image . '" alt="' . __('Fotoboek') . '" title="' . __('Ga naar fotoboek') . '" class="book_thumb"></a><br>';
-		
-			if ($policy->user_can_update($children[$n]))
-				$contents .= ' <a href="fotoboek.php?editbook&book=' . $children[$n]->get_id() . '">' . image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken')) . '</a>';
+					if (($num = $book->count_books()) > 0)
+						$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $num), $num);
 
-			if ($policy->user_can_delete($children[$n]))
-				$contents .= ' <a href="fotoboek.php?delbook&book=' . $children[$n]->get_id() . '">' . image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen')) . '</a>';
+					if (($num = $book->count_photos()) > 0)
+						$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
+					
+					if (count($subtitle) > 0)
+						echo ($book->get('titel') ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
+				?>
+			</span>
+		</a>
+		<?php if ($policy->user_can_update($book)): ?>
+		<span class="controls">
+			<a href="fotoboek.php?view=update_book&amp;book=<?=$book->get_id()?>"><?=image('edit_small.png', __('Bewerken'), __('Fotoboek bewerken'))?></a>
+			<?php endif ?>
+			<?php if ($policy->user_can_delete($book)): ?>
+			<a href="fotoboek.php?view=delete_book&amp;book=<?=$book->get_id()?>"><?=image('delete_small.png', __('Verwijderen'), __('Fotoboek verwijderen'))?></a>
+			<?php endif ?>
+			<?php if ($policy->user_can_update($book) && $book->has('visibility')): ?>
+				<?php
+					switch ($book->get('visibility'))
+					{
+						case DataModelFotoboek::VISIBILITY_PUBLIC:
+							echo '<span class="visibility visibility-public" title="' . __('Publiek') . '">' . __('Publiek') . '</span>';
+							break;
 
-			// Only if you can actually change the visibility of folders show or hide them.
-			if ($policy->user_can_update($children[$n]))
-				switch ($children[$n]->get('visibility'))
-				{
-					case DataModelFotoboek::VISIBILITY_PUBLIC:
-						$contents .= ' <span class="visibility visibility-public" title="' . __('Publiek') . '">' . __('Publiek') . '</span>';
-						break;
+						case DataModelFotoboek::VISIBILITY_MEMBERS:
+							echo '<span class="visibility visibility-members" title="' . __('Alleen ingelogde leden') . '">' . __('Alleen ingelogde leden') . '</span>';
+							break;
 
-					case DataModelFotoboek::VISIBILITY_MEMBERS:
-						$contents .= ' <span class="visibility visibility-members" title="' . __('Alleen ingelogde leden') . '">' . __('Alleen ingelogde leden') . '</span>';
-						break;
+						case DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS:
+							echo '<span class="visibility visibility-active-members" title="' . __('Alleen ingelogde actieve leden') . '">' . __('Alleen ingelogde actieve leden') . '</span>';
+							break;
 
-					case DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS:
-						$contents .= ' <span class="visibility visibility-active-members" title="' . __('Alleen ingelogde actieve leden') . '">' . __('Alleen ingelogde actieve leden') . '</span>';
-						break;
-
-					case DataModelFotoboek::VISIBILITY_PHOTOCEE:
-						$contents .= ' <span class="visibility visibility-photocee" title="' . __('Alleen ingelogde leden van de PhotoCee') . '">' . __('Alleen ingelogde leden van de PhotoCee') . '</span>';
-						break;
-				}
-
-			array_push($images,$contents);
-		
-			$title = $children[$n]->get('titel');
-			$subtitle = array();
-
-			if (($num = $children[$n]->count_books()) > 0)
-				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $num), $num);
-
-			if (($num = $children[$n]->count_photos()) > 0)
-				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
-			
-			if (count($subtitle) > 0)
-				$title .= ($title ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
-		
-			$titles[] = $title;
-
-			$status[] = $children[$n]->get('read_status');
-		}
-	}
-	
-	//echo the images in this row
-	for ($idx = 0; $idx != $books_per_row; ++$idx)
-		echo '
-			<div class="fotoBoek ' . $status[$idx] .'">
-				'. $images[$idx] .'
-				<p class = "bookTitle">
-					'. $titles[$idx] .'
-				</p>
-			</div>';
-	?>
-<? } ?>
+						case DataModelFotoboek::VISIBILITY_PHOTOCEE:
+							echo '<span class="visibility visibility-photocee" title="' . __('Alleen ingelogde leden van de PhotoCee') . '">' . __('Alleen ingelogde leden van de PhotoCee') . '</span>';
+							break;
+					}
+				?>
+			<?php endif ?>
+		</span>
+	</div>
+<?php endforeach ?>
 </div>

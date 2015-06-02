@@ -11,10 +11,13 @@ class PolicyFotoboek implements Policy
 
 	public function user_can_read(DataIter $book)
 	{
+		if (!$book instanceof DataIterPhotobook)
+			throw new RuntimeException('$book not an instance of DataIterPhotobook');
+		
 		// First: if the access to the photo book is of a higher level
 		// than the current user has, no way he/she can view the photo
 		// book.
-		if ($this->get_access_level() < $book->get('visibility'))
+		if ($book->has('visibility') && $this->get_access_level() < $book->get('visibility'))
 			return false;
 
 		// Member-specific albums are also forbidden terrain
@@ -30,6 +33,9 @@ class PolicyFotoboek implements Policy
 
 	public function user_can_update(DataIter $book)
 	{
+		if (!$book instanceof DataIterPhotobook)
+			throw new RuntimeException('$book not an instance of DataIterPhotobook');
+		
 		return member_in_commissie(COMMISSIE_FOTOCIE)
 			&& ctype_digit((string) $book->get_id())
 			&& $book->get_id() > 0;
@@ -37,6 +43,9 @@ class PolicyFotoboek implements Policy
 
 	public function user_can_delete(DataIter $book)
 	{
+		if (!$book instanceof DataIterPhotobook)
+			throw new RuntimeException('$book not an instance of DataIterPhotobook');
+		
 		return $this->user_can_update($book);
 	}
 

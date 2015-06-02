@@ -388,10 +388,10 @@ border-radius: 0 0 5px 5px;
 	height: 42px;
 	line-height: 42px;
 }
+
 .controls a
 {
 	display:inline-block;
-	height: 100%;
 	vertical-align: middle;
 }
 
@@ -419,20 +419,43 @@ border-radius: 0 0 5px 5px;
 	border: 1px solid #ddd;
 	box-shadow: 1px 1px 3px #555;
 }*/
-.fotoBoek {
+.photobooks {
+	white-space-collapse: discard;
+}
+
+.photobook {
 	float: left;
+	position: relative;
 	padding: 15px;
 	width: 125px;
 	height: 150px;
 	text-align: center;
 }
 
-.fotoBoek.unread .bookTitle:after {
+.photobook .photo-book-title {
+	display: block;
+	height: 44px;
+	margin: 4px 0;
+	font-weight: normal;
+	color: black;
+}
+
+.photobook .controls {
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	top: 65px;
+	text-align: center;
+	display: block;
+	line-height: 16px;
+}
+
+.photobook.unread .photo-book-title:after {
 	content: '(new!)';
 	color: #c60c30;
 }
 
-.fotoboek-box .mark-read-button {
+.photobook-box .mark-read-button {
 	float: right;
 }
 
@@ -1185,6 +1208,10 @@ div.beheer table {
 form > table th {
 	border-top: 1px solid #ccc;
 	padding: 4px 0;
+	text-align: left;
+}
+
+table.vertical th {
 	text-align: left;
 }
 

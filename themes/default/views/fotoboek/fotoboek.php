@@ -1,7 +1,7 @@
 <?php
 	require_once 'include/markup.php';
 
-	class FotoboekView extends View {
+	class FotoboekView extends CRUDView {
 		protected $__file = __FILE__;
 	
 		function get_book_thumbnail($model, $book) {

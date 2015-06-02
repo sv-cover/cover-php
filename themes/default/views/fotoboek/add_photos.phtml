@@ -1,0 +1,164 @@
+<h1><?= __('Fotoboek') ?> :: <?= __("Foto's toevoegen") ?></h1>
+<div class="messageBox">
+	<?php $this->render_partial('path', array('model' => $model, 'book' => $iter, 'photo' => null)) ?>
+
+	<?php if (!empty($_SESSION['add_photos_errors'])): ?>
+	<div class="errors">
+	<?php while ($error = array_shift($_SESSION['add_photos_errors'])): ?>
+		<p><?=markup_format_text($error)?></p>
+	<?php endwhile ?>
+	</div>
+<?php endif ?>
+
+	<div id="folder-selector"></div>
+
+	<form id="add-photos-form" action="fotoboek.php?book=<?= $iter->get_id() ?>&amp;view=add_photos" method="post">
+		<ul id="photo-selector">
+			<li>
+				<span class="add-control">
+					<input type="checkbox" name="photo[$index][add]" value="true" checked="checked">
+					<a href="fotoboek.php?photo=$id" target="_blank">&#10004;</a>
+				</span>
+				<img class="thumbnail">
+				<span class="description">
+					<input type="text" name="photo[$index][description]" placeholder="<?=__('Omschrijving')?>">
+				</span>
+				<span class="filename"></span>
+				<span class="created-on"></span>
+				<input type="hidden" name="photo[$index][path]">
+			</li>
+		</ul>
+
+		<button type="submit" class="button"><?=__("Voeg foto's toe") ?></button>
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Terug naar %s'), $iter->get('titel')))?></a>
+	</form>
+</div>
+
+<script>
+var baseurl = 'fotoboek.php?book=<?=$iter->get_id()?>';
+
+jQuery(function($) {
+	function basename(path) {
+		var match = path.match(/\/([^\/]+)$/);
+		return match ? match[1] : path;
+	}
+
+	function load_folders(path, ol) {
+		$.getJSON(baseurl + '&view=add_photos_list_folders&path=' + path).then(function(data) {
+			$.each(data, function(index, folder) {
+				$('<li>')
+					.data('folder', folder)
+					.text(basename(folder))
+					.appendTo(ol);
+			});
+		});
+	}
+
+	var stream = null;
+
+	function handle_stream_error(e) {
+		if (e.readyState != EventSource.CLOSED) {
+			console.error(e);
+		} 
+	}
+
+	var $photo_template = $('#photo-selector li').detach();
+
+	function load_photos(path, $ol) {
+		if (stream)
+			stream.close();
+
+		var index = 0;
+
+		stream = new EventSource(baseurl + '&view=add_photos_list_photos&path=' + path);
+		stream.addEventListener('error', handle_stream_error);
+
+		stream.addEventListener('end', function(e) {
+			stream.close();
+		});
+
+		stream.addEventListener('photo', function(e) {
+			var photo = JSON.parse(e.data);
+
+			console.log(photo);
+
+			var $li = $photo_template.clone();
+			$li.data('sort-order', Date.parse(photo['created_on'].replace(' ', 'T')));
+
+			// Try to find a node of a photo taken after this one and insert this one before that
+			$ol.find('li').each(function(i, li) {
+				if ($(li).data('sort-order') > $li.data('sort-order')) {
+					$li.insertBefore(li);
+					return false;
+				}
+			});
+
+			// If it hasn't been inserted by insertion sort, append it to the end.
+			if (!$li.parent().length)
+				$li.appendTo($ol);
+
+			if (photo['id'] != null) {
+				$li.find('.add-control input').remove();
+				$li.find('.add-control a')
+					.attr('href', 'fotoboek.php?photo=' + photo['id']);
+			} else {
+				$li.find('.add-control a').remove();
+				$li.find('.add-control input')
+					.attr('name', 'photo[' + index + '][add]');
+			}
+				
+			$li.find('.thumbnail')
+				.attr('src', photo['thumbnail']);
+
+			if (photo['id'] == null) {
+				$li.find('.description input')
+					.attr('name', 'photo[' + index + '][description]')
+					.val(photo['description']);
+			} else {
+				$li.find('.description input').remove();
+				$li.find('.description').text(photo['description']);
+			}
+			
+			$li.find('.filename')
+				.text(basename(photo['path']))
+				.attr('description', photo['path']);
+
+			$li.find('.created-on')
+				.text(photo['created_on']);
+
+			$li.find('input[type=hidden]')
+				.attr('name', 'photo[' + index + '][path]')
+				.val(photo['path']);
+
+			index++;
+		}, false);
+	}
+
+	load_folders('', $('<ol>').appendTo('#folder-selector'));
+
+	$('#folder-selector').on('click', 'li', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		$(this).parent('ol').find('li').removeClass('selected');
+		$(this).addClass('selected');
+
+		var ol = $(this).parent('ol').next('ol');
+		if (ol.length)
+			ol.empty();
+		else
+			ol = $('<ol>').insertAfter($(this).parent('ol'));
+
+		load_folders($(this).data('folder'), ol);
+		
+		load_photos($(this).data('folder'), $('#photo-selector').empty());
+	});
+
+	// Disable the input fields once submitting has started
+	$('#add-photos-form').submit(function() {
+		setTimeout(function() {
+			$('#add-photos-form').find('input, button').attr('disabled', true);
+		}, 10);
+	});
+})
+</script>

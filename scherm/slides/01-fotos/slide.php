@@ -14,7 +14,7 @@ shuffle($fotos);
 	<ul class="flow-gallery">
 		<? foreach (array_slice($fotos, 0, 30) as $foto): ?>
 		<li class="foto">
-			<img src="<?=$foto->get('url')?>" height="<?=$foto->get('height')?>" width="<?=$foto->get('width')?>">
+			<img src="<?=markup_format_attribute($foto->get_url(null,400))?>" <?=vsprintf('width="%d" height="%d"', $foto->get_scaled_size(null,400))?>>
 			<span class="description"><?=markup_format_text($foto->get('beschrijving'))?></span>
 		</li>
 		<? endforeach ?>

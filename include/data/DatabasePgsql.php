@@ -9,7 +9,7 @@
 		var $last_affected = null;
 		var $last_insert_table = null;
 
-		public $history = array();
+		public $history = null;
 
 		/**
 		  * Create new postgresql database
@@ -86,11 +86,12 @@
 
 			$duration = microtime(true) - $start;
 
-			$this->history[] = array(
-				'query' => $query,
-				'duration' => $duration,
-				'backtrace' => debug_backtrace()
-			);
+			if ($this->history !== null)
+				$this->history[] = array(
+					'query' => $query,
+					'duration' => $duration,
+					'backtrace' => debug_backtrace()
+				);
 
 			if ($handle === false) {
 				throw new RuntimeException('Query failed: ' . $this->get_last_error());
@@ -196,19 +197,12 @@
 
 				$k .= '"' . $keys[$i] . '"';
 
-				/* If the value is a string and it's not a
-				 * literal
-				 */
-				if (is_string($values[$keys[$i]]) && (!$literals ||
-						!in_array($keys[$i], $literals))) {
-					/* Escape the string and add quotes */
-					$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
-				} elseif ($values[$keys[$i]] === null) {
-					$v .= 'null';
-				} else {
-					/* Just add the value to the query string */
+				if ($values[$keys[$i]] === null)
+					$v .= 'NULL';
+				elseif ($literals && in_array($keys[$i], $literals))
 					$v .= $values[$keys[$i]];
-				}
+				else
+					$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
 			}
 
 			$query = $query . ' ' . $k . ') ' . $v . ');';
@@ -263,19 +257,12 @@
 				/* Add <key>= */
 				$k .= '"' . $keys[$i] . '"=';
 
-				/* If the value is a string and it's not a
-				 * literal
-				 */
-				if (is_string($values[$keys[$i]]) && (!$literals ||
-						!in_array($keys[$i], $literals))) {
-					/* Escape the string and add quotes */
-					$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
-				} elseif ($values[$keys[$i]] === null) {
-					$k .= 'null';
-				} else {
-					/* Just add the value to the query string */
+				if ($values[$keys[$i]] === null)
+					$k .= 'NULL';
+				elseif ($literals && in_array($keys[$i], $literals))
 					$k .= $values[$keys[$i]];
-				}
+				else
+					$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
 			}
 
 			$query .= $k;

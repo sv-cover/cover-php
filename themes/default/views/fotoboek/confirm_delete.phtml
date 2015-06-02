@@ -1,6 +1,6 @@
 <h1><?=__('Fotoboek verwijderen') ?></h1>
 <div class="messageBox">
-	<form method="post" action="fotoboek.php?delbook&amp;book=<?=$iter->get_id()?>" class="vertical-form">
+	<form method="post" action="fotoboek.php?view=delete_book&amp;book=<?=$iter->get_id()?>" class="vertical-form">
 		<p><?=sprintf(__('Weet je heel zeker dat je het fotoboek <em>%s</em> wil verwijderen?'),
 			markup_format_text($iter->get('titel')))?></p>
 		<label for="confirm_delete"><?=__('Typ om dit fotoboek te verwijderen de naam van het fotoboek over ter bevestiging')?></label>

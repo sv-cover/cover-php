@@ -1,20 +1,14 @@
-<?
-if (!$iter)
-	return;
-?>
+<table class="default_noborder vertical">
+<?php if ($iter->has('fotograaf')): ?>
+	<tr><th><?= __('Fotograaf') ?>:</th><td><?= markup_format_text($iter->get('fotograaf')) ?></td></tr>
+<?php endif ?>
 
-<table class="default_noborder">
+<?php if ($iter->has('date')): ?>
+	<tr><th><?= __('Datum') ?>:</th><td><?= markup_format_text($iter->get('datum')) ?></td></tr>
+<?php endif ?>
 
-<? if ($iter->get('fotograaf')) { ?>
-	<tr><td class="bold"><?= __('Fotograaf') ?>:</td><td><?= htmlspecialchars($iter->get('fotograaf')) ?></td></tr>
-<? }
-
-if ($iter->get('date')) { ?>
-	<tr><td class="bold"><?= __('Datum') ?>:</td><td><?= $iter->get('datum') ?></td></tr>
-<? }
-
-if ($iter->get('beschrijving')) { ?>
-	<tr><td class="bold"><?= __('Beschrijving') ?>:</td><td><?= markup_parse($iter->get('beschrijving')) ?></td></tr>
-<? } ?>
+<?php if ($iter->has('beschrijving')): ?>
+	<tr><th><?= __('Beschrijving') ?>:</th><td><?= markup_parse($iter->get('beschrijving')) ?></td></tr>
+<?php endif ?>
 
 </table>

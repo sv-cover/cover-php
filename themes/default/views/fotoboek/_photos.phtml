@@ -36,7 +36,7 @@ if (!$photos || count($photos) == 0)
 	<?php foreach ($photos as $photo): ?>
 	<li id="photo_<?=$photo->get_id()?>" data-id="<?=$photo->get_id()?>" class="thumbnail <?=implode(' ', $classnames($photo))?>">
 		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;photo=<?=$photo->get_id()?>#a">
-			<img src="<?=markup_format_attribute(strip_protocol($photo->get('url')))?>" <?=($size = $photo->get_size()) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
+			<img src="<?=markup_format_attribute($photo->get_url(null, 400))?>" <?=($size = $photo->get_scaled_size(null, 400)) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
 			<?php if (isset($likes[$photo->get_id()])): ?>
 				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><?=$likes[$photo->get_id()]?></span>
 			<?php endif ?>
@@ -46,7 +46,7 @@ if (!$photos || count($photos) == 0)
 			<?php if ($photo->get('num_reacties') > 0): ?>
 			<span class="comments"><?=markup_format_text(sprintf(_ngettext('%d reactie', '%d reacties', $photo->get('num_reacties')), $photo->get('num_reacties')))?></span>
 			<?php endif ?>
-			<?php if (strlen($photo->get('beschrijving')) > 0): ?>
+			<?php if ($photo->has('beschrijving')): ?>
 			<span class="description"><?=markup_format_text($photo->get('beschrijving'))?></span>
 			<?php endif ?>
 		</a>
@@ -55,3 +55,4 @@ if (!$photos || count($photos) == 0)
 </ul>
 
 <script src="<?=get_theme_data('data/flowgallery.js')?>"></script>
+<script>$('.photos.flow-gallery').flowgallery();</script>

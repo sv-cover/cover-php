@@ -91,7 +91,7 @@
 
 		// Construct a member his full name
 		return $iter->get('voornaam')
-			 . ($iter->get('tussenvoegsel') ? ' ' . $iter->get('tussenvoegsel') : '')
+			 . ($iter->has('tussenvoegsel') ? ' ' . $iter->get('tussenvoegsel') : '')
 			 . ' ' . $iter->get('achternaam');
 	}
 ?>

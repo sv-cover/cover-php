@@ -450,12 +450,13 @@ CREATE SEQUENCE foto_boeken_id_seq
 CREATE TABLE foto_boeken (
     id integer DEFAULT nextval('foto_boeken_id_seq'::regclass) NOT NULL,
     parent integer DEFAULT 0 NOT NULL,
-    titel character varying(50) NOT NULL,
-    fotograaf character varying(25),
+    titel character varying(255) NOT NULL,
+    fotograaf text,
     date date,
     last_update timestamp DEFAULT NULL,
     beschrijving text,
     visibility integer NOT NULL DEFAULT 0,
+    sort_index integer DEFAULT NULL,
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
@@ -514,14 +515,14 @@ CREATE SEQUENCE fotos_id_seq
 CREATE TABLE fotos (
     id integer DEFAULT nextval('fotos_id_seq'::regclass) NOT NULL,
     boek integer NOT NULL REFERENCES foto_boeken (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    url character varying(150) NOT NULL,
+    beschrijving character varying(255),
+    filepath text,
+    filehash character (8),
     width integer,
     height integer,
-    beschrijving character varying(255),
-    thumburl character varying(150) NOT NULL,
-    thumbwidth integer,
-    thumbheight integer,
+    created_on timestamp without time zone DEFAULT NULL,
     added_on timestamp without time zone DEFAULT NULL,
+    sort_index integer DEFAULT NULL,
     CONSTRAINT fotos_pkey PRIMARY KEY (id)
 );
 
