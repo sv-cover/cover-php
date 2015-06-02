@@ -736,7 +736,9 @@
 			$result = parent::delete($iter);
 			
 			// Remove scaled versions of the image from the scaled image cache
-			$filter = str_replace('%d', '*', get_config_value('path_to_scaled_photo'));
+			$filled_in_filter = preg_replace('/%d/', $iter->get_id(), get_config_value('path_to_scaled_photo'), 1);
+
+			$filter = str_replace('%d', '*', $filled_in_filter);
 			foreach (glob($filter) as $scaled_image_path)
 				unlink($scaled_image_path);
 			
