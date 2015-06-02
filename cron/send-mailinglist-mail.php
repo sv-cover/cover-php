@@ -138,7 +138,7 @@ function process_message_mailinglist($message, &$lijst)
 			return RETURN_NOT_ALLOWED_UNKNOWN_POLICY;
 	}
 
-	if (is_first_email_ever_list($from, $lijst) && list_sends_welcome_mail($lijst))
+	if ($lijst->sends_email_on_first_email() && !$lijst->archive()->contains_email_from($from))
 		send_welcome_mail($lijst, $from);
 
 	foreach ($aanmeldingen as $aanmelding)
@@ -181,18 +181,6 @@ function process_message_mailinglist($message, &$lijst)
 	return 0;
 }
 
-function is_first_email_ever_to_list($from, DataIterMailinglijst $list)
-{
-	$archive = get_model('DataModelMailinglijstArchief');
-	return $archive->contains_mail_from($from);
-}
-
-function list_sends_welcome_mail(DataIterMailinglijst $list)
-{
-	return strlen($list->get('on_first_email_subject')) > 0
-		&& strlen($list->get('on_first_email_message')) > 0;
-}
-
 function process_return_to_sender($message, $return_code)
 {
 	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
@@ -216,7 +204,7 @@ function process_return_to_sender($message, $return_code)
 	return send_message($reply->toString(), $from);
 }
 
-function send_welcome_mail($to, DataModelMailinglijst $lijst)
+function send_welcome_mail(DataIterMailinglijst $lijst, $to)
 {
 	$message = new \Cover\email\MessagePart();
 

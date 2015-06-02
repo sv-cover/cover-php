@@ -1271,6 +1271,10 @@ div.beheer table {
 	line-height: 20px;
 }
 
+.vertical-form .button-bar {
+	margin-bottom: 0;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }

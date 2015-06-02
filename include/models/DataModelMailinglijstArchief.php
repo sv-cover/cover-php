@@ -79,9 +79,12 @@ class DataModelMailinglijstArchief extends DataModel
 		return $this->find('mailinglijst = ' . intval($lijst_id));
 	}
 
-	public function contains_mail_from($sender)
+	public function contains_email_from(DataIterMailinglijst $lijst, $sender)
 	{
-		return $this->db->query_first(sprintf("SELECT COUNT(id) FROM {$this->table} WHERE sender = '%s'", $this->db->escape_string($sender)));
+		$count = $this->db->query_value(sprintf("SELECT COUNT(id) FROM {$this->table} WHERE mailinglijst = %d AND sender = '%s' AND return_code = 0",
+			$lijst->get_id(), $this->db->escape_string($sender)));
+
+		return $count > 0;
 	}
 
 	protected function _generate_query($where)

@@ -9,6 +9,42 @@ class DataIterMailinglijst extends DataIter
 	{
 		return $this->model->is_aangemeld($this, $lid_id);
 	}
+
+	public function sends_email_on_subscribing()
+	{
+		return strlen($this->get('on_subscription_subject')) > 0
+			&& strlen($this->get('on_subscription_message')) > 0;
+	}
+
+	public function sends_email_on_first_email()
+	{
+		return strlen($this->get('on_first_email_subject')) > 0
+			&& strlen($this->get('on_first_email_message')) > 0;
+	} 
+
+	public function archive()
+	{
+		return new DataModelMailinglijstArchiefAdapator($this);
+	}
+}
+
+class DataModelMailinglijstArchiefAdapator
+{
+	protected $model;
+
+	protected $lijst;
+	
+	public function __construct(DataIterMailinglijst $lijst)
+	{
+		$this->model = get_model('DataModelMailinglijstArchief');
+
+		$this->lijst = $lijst;
+	}
+
+	public function contains_email_from($sender)
+	{
+		return $this->model->contains_email_from($this->lijst, $sender);
+	}
 }
 
 class DataModelMailinglijst extends DataModel
