@@ -654,11 +654,16 @@
 		{
 			$query = "
 				SELECT
-					*
+					fotos.*,
+					COUNT(DISTINCT foto_reacties.id) AS num_reacties
 				FROM
 					fotos
+				LEFT JOIN foto_reacties ON
+					foto_reacties.foto = fotos.id
 				WHERE
 					boek = {$book->get_id()}
+				GROUP BY
+					fotos.id
 				ORDER BY
 					sort_index ASC NULLS FIRST,
 					created_on ASC,

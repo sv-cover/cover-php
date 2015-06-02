@@ -46,7 +46,7 @@ if (!$photos || count($photos) == 0)
 			<?php if ($photo->get('num_reacties') > 0): ?>
 			<span class="comments"><?=markup_format_text(sprintf(_ngettext('%d reactie', '%d reacties', $photo->get('num_reacties')), $photo->get('num_reacties')))?></span>
 			<?php endif ?>
-			<?php if ($photo->has('beschrijving')): ?>
+			<?php if (strlen($photo->get('beschrijving')) > 0): ?>
 			<span class="description"><?=markup_format_text($photo->get('beschrijving'))?></span>
 			<?php endif ?>
 		</a>
