@@ -1,7 +1,8 @@
 <?php
-	require_once('include/login.php');
-	require_once('include/form.php');
-	require_once('include/member.php');
+	require_once 'include/login.php';
+	require_once 'include/form.php';
+	require_once 'include/member.php';
+	require_once 'include/policies/policy.php';
 	
 	
 	/** 
@@ -321,26 +322,22 @@
 		}
 	}
 	
-	function create_message() {
-		if (!member_in_commissie(COMMISSIE_BESTUUR))
-			return '';
-
+	function create_message()
+	{
 		/* Check for moderates */
 		$model = get_model('DataModelAgenda');
-		$admin = '';
-		$cap = '';
-
-		if (($aantal = $model->has_moderate())) {
-			if ($aantal == 1)
-				$cap .= __('Er staat nog 1 agendapunt in de wachtrij');
-			else
-				$cap .= sprintf(__('Er staan nog %d agendapunten in de wachtrij'), $aantal);
-			
-			$admin .= '<a href="agenda.php?agenda_moderate">' . $cap . "</a><br/>\n";
-		}
 		
-		if ($admin)
-			return '<div class="message">' . $admin . '</div>';
+		$proposed_updates = array_filter($model->get_proposed(), [get_policy($model), 'user_can_moderate']);
+
+		$aantal = count($proposed_updates);
+
+		if ($aantal > 0)
+			return '
+				<div class="message">
+					<a href="agenda.php?agenda_moderate">' . __N(
+						'Er staat nog %d agendapunt in de wachtrij',
+						'Er staan nog %d agendapunten in de wachtrij', $aantal) . '</a>
+				</div>';
 		else
 			return '';
 	}

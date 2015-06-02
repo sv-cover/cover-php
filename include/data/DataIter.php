@@ -47,9 +47,22 @@
 			return $this->_id !== null && $this->_id !== -1;
 		}
 
-		public function has($field) {
-			// return array_key_exists($this->namespace . $field, $this->data);
+		/**
+		 * Check whether there is some value set for a field.
+		 * @return boolean
+		 */
+		public function has($field)
+		{
 			return isset($this->data[$this->namespace . $field]);
+		}
+
+		/**
+		 * Check whether this iter has a field named $field.
+		 * @return boolean
+		 */
+		public function has_field($field)
+		{
+			return array_key_exists($this->namespace . $field, $this->data);
 		}
 		
 		/**
@@ -70,15 +83,15 @@
 		  * @field the data field name
 		  * @value the data value
 		  */
-		public function set($field, $value) {
-			$index = array_search($field, $this->literals);
-			
-			if ($index !== false)
+		public function set($field, $value)
+		{
+			/* Remove the literal if set at the moment */
+			if (($index = array_search($field, $this->literals)) !== false)
 				unset($this->literals[$index]);
 
 			/* Return if value hasn't really changed */
 			if (isset($this->data[$this->namespace . $field])
-				&& $this->data[$this->namespace . $field] == $value
+				&& $this->data[$this->namespace . $field] === $value
 				&& $this->_id != -1)
 				return;
 
@@ -95,7 +108,8 @@
 		  * @field the data field name
 		  * @value the data value
 		  */
-		public function set_literal($field, $value) {
+		public function set_literal($field, $value)
+		{
 			/* Return if value hasn't really changed */
 			if ($this->data[$this->namespace . $field] == $value && $this->_id != -1)
 				return;
@@ -120,6 +134,16 @@
 		public function set_all($values) {
 			foreach ($values as $field => $value)
 				$this->set($field, $value);
+		}
+
+		public function unset_field($field)
+		{
+			// Remove it from the data
+			unset($this->data[$this->namespace . $field]);
+
+			// Remove the literal if set at the moment
+			if (($index = array_search($field, $this->literals)) !== false)
+				unset($this->literals[$index]);
 		}
 		
 		/**
@@ -188,6 +212,10 @@
 		
 		public function __set($key, $value) {
 			return $this->set($key, $value);
+		}
+
+		public function __unset($key) {
+			return $this->unset_field($key);
 		}
 
 		public function jsonSerialize()

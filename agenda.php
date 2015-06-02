@@ -18,7 +18,7 @@
 		}
 		
 		function get_content($view = 'index', $iter = null, $params = null) {
-			if ($iter instanceof DataIter)
+			if ($iter instanceof DataIterAgenda)
 				$title = $iter->get('kop');
 			elseif (isset($_GET['year']))
 				$title = sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1);
@@ -99,24 +99,6 @@
 			return false;
 		}
 
-		function _action_prepare($iter) {
-			/* Only logged in members can attempt to do this */
-			if (!logged_in()) {
-				$this->get_content('login');
-				return false;
-			}
-			
-			/* Allow only the commissie of the agendapunt and bestuur to touch the agendapunt */
-			if ($iter != null
-				&& !member_in_commissie($iter->get('commissie'))
-				&& !(member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))) {
-				$this->get_content('commissie');
-				return false;
-			}
-			
-			return true;
-		}
-		
 		function _check_values($iter) {
 			/* Check/format all the items */
 			$errors = array();
@@ -165,10 +147,8 @@
 			return $changed;
 		}
 		
-		function _do_process($iter) {
-			if (!$this->_action_prepare($iter))
-				return;
-			
+		function _do_process($iter)
+		{
 			if (($data = $this->_check_values($iter)) === false)
 				return;
 
@@ -188,23 +168,38 @@
 				'member_naam' => member_full_name());
 
 			// No previous item exists, create a new one
-			if (!$iter) {
-				$iter = new DataIter($this->model, -1, $data);
-				$id = $this->model->insert($iter, true);
-				
-				$this->model->set_moderate($id, 0, true);
+			if (!$iter)
+			{
+				if (!$this->policy->user_can_create())
+					throw new UnauthorizedException();
 
-				$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
+				$iter = new DataIterAgenda($this->model, -1, $data);
 
-				mail(
-					get_config_value('email_bestuur'),
-					'Nieuw agendapunt ' . $data['kop'],
-					parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
-					"From: webcie@ai.rug.nl\r\n");
+				if ($skip_confirmation)
+				{
+					$id = $this->model->insert($iter, true);
+					$this->redirect('agenda.php?agenda_id=' . $id);
+				}
+				else
+				{
+					$id = $this->model->propose_insert($iter, true);
+					
+					$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
+
+					mail(
+						get_config_value('email_bestuur'),
+						'Nieuw agendapunt ' . $data['kop'],
+						parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
+						"From: webcie@ai.rug.nl\r\n");
+				}
 			}
 
 			// Previous exists and there is no need to let the board confirm it
-			else if ($skip_confirmation) {
+			else if ($skip_confirmation)
+			{
+				if (!$this->policy->user_can_create())
+					throw new UnauthorizedException();
+
 				foreach ($data as $field => $value)
 					$iter->set($field, $value);
 
@@ -214,19 +209,21 @@
 			}
 
 			// Previous item exists but it needs to be confirmed first.
-			else {
-				$mod = new DataIter($this->model, -1, $data);
-				$id = $this->model->insert($mod, true);
-				$override = $iter->get_id();
+			else
+			{
+				if (!$this->policy->user_can_update($iter))
+					throw new UnauthorizedException();
 
-				$this->model->set_moderate($id, $override, true);
+				$mod = new DataIterAgenda($this->model, -1, $data);
+
+				$override_id = $this->model->propose_update($mod, $iter);
 
 				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
 
 				mail(
 					get_config_value('email_bestuur'),
 					'Gewijzigd agendapunt ' . $data['kop'] . ($mod->get('kop') != $iter->get('kop') ? ' was ' . $iter->get('kop') : ''),
-					parse_email('agenda_mod.txt', array_merge($data, $placeholders, array('id' => $id))),
+					parse_email('agenda_mod.txt', array_merge($data, $placeholders, array('id' => $override_id))),
 					"From: webcie@ai.rug.nl\r\n");
 			}
 
@@ -254,60 +251,35 @@
 		
 		function _view_moderate($id)
 		{
-			$agenda_items = $this->model->get_moderates();
-			$allowed = false;
-
-			foreach ($agenda_items as $iter) {
-				if ($this->policy->user_can_moderate($iter)) {
-					$allowed = true;
-					break;
-				}
-			}
-
-			if (!$allowed)
-				return $this->get_content('login');
+			$agenda_items = array_filter($this->model->get_proposed(), [$this->policy, 'user_can_moderate']);
 
 			$params = array('highlight' => $id);
 			
 			$this->get_content('moderate', $agenda_items, $params);
 		}
 		
-		function _process_moderate() {
+		function _process_moderate()
+		{
 			$cancelled = array();
 
-			foreach ($_POST as $field => $value) {
+			foreach ($_POST as $field => $value)
+			{
 				if (!preg_match('/action_([0-9]+)/i', $field, $matches))
 					continue;
 				
 				$id = $matches[1];
+
 				$iter = $this->model->get_iter($id);
 				
-				if (!$iter)
-					continue;
-
 				if (!$this->policy->user_can_moderate($iter))
-					continue;
+					throw new UnauthorizedException();
 
 				if ($value == 'accept') {
 					/* Accept agendapunt */
-					$this->model->set_moderate($id, 0, false);
-					
-					/* Remove the agendapunt this one overrides */
-					if ($iter->get('overrideid') != 0)
-					{
-						$old_agenda_item = $this->model->get_iter($iter->get('overrideid'));
-
-						// The old agenda item may already be deleted.
-						if ($old_agenda_item)
-							$this->model->delete($old_agenda_item);
-					}
-					
-					$iter = $this->model->get_iter($id);
-					$iter->set('private', get_post('private_' . $id) ? 1 : 0);
-					$this->model->update($iter);
+					$this->model->accept_proposal($iter);
 				} elseif ($value == 'cancel') {
 					/* Remove agendapunt and inform owner of the agendapunt */
-					$this->model->delete($iter);
+					$this->model->reject_proposal($iter);
 					
 					$data = $iter->data;
 					$data['member_naam'] = member_full_name();
@@ -336,8 +308,7 @@
 			elseif (count($cancelled_un) > 0)
 				$_SESSION['alert'] = sprintf(__('De commissies %s zijn op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
 			
-			header('Location: agenda.php');
-			exit();
+			return $this->redirect('agenda.php');
 		}
 
 		function _process_rsvp_status($iter)
@@ -416,17 +387,17 @@
 			return 'agenda.php?agenda_add';
 		}
 
-		public function link_to_read(DataIter $iter)
+		public function link_to_read(DataIterAgenda $iter)
 		{
 			return sprintf('agenda.php?agenda_id=%d', $iter->get_id());
 		}
 
-		public function link_to_update(DataIter $iter)
+		public function link_to_update(DataIterAgenda $iter)
 		{
 			return sprintf('agenda.php?agenda_edit&agenda_id=%d', $iter->get_id());
 		}
 
-		public function link_to_delete(DataIter $iter)
+		public function link_to_delete(DataIterAgenda $iter)
 		{
 			return sprintf('agenda.php?agenda_del&agenda_id=%d', $iter->get_id());
 		}

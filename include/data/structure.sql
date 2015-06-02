@@ -64,17 +64,8 @@ CREATE TABLE agenda (
     private smallint DEFAULT 0,
     lustrum smallint DEFAULT 0,
     extern smallint NOT NULL DEFAULT 0,
-    facebook_id character varying(20) DEFAULT NULL
-);
-
---
--- TOC entry 174 (class 1259 OID 24140)
--- Name: agenda_moderate; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE agenda_moderate (
-    agendaid integer NOT NULL,
-    overrideid integer DEFAULT 0 NOT NULL
+    facebook_id character varying(20) DEFAULT NULL,
+    replacement_for integer DEFAULT NULL
 );
 
 --
@@ -2795,7 +2786,8 @@ CREATE TABLE mailinglijsten (
     type integer NOT NULL DEFAULT 1, -- default type is opt-in
     publiek boolean NOT NULL DEFAULT TRUE,
     toegang integer,
-    commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT
+    commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
+    tag 
 );
 
 CREATE TABLE mailinglijsten_abonnementen (

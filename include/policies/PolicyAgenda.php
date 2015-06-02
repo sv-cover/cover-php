@@ -11,8 +11,10 @@ class PolicyAgenda implements Policy
 
 	public function user_can_read(DataIter $agenda_item)
 	{
-		if ($agenda_item->get('moderate'))
-			return member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR);
+		if ($agenda_item->is_proposal())
+			return member_in_commissie(COMMISSIE_BESTUUR)
+				|| member_in_commissie(COMMISSIE_KANDIBESTUUR)
+				|| member_in_commissie($agenda_item->get('commissie'));
 
 		elseif ($agenda_item->get('private'))
 			return (bool) logged_in();
@@ -23,6 +25,9 @@ class PolicyAgenda implements Policy
 
 	public function user_can_update(DataIter $agenda_item)
 	{
+		if ($agenda_item->is_proposal())
+			return false;
+
 		if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
 			return true;
 
@@ -40,6 +45,7 @@ class PolicyAgenda implements Policy
 
 	public function user_can_moderate(DataIter $agenda_item)
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR);
+		return $agenda_item->is_proposal() &&
+			(member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR));
 	}
 }

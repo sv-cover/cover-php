@@ -13,6 +13,11 @@
 		{
 			return 'agendapunt';
 		}
+
+		public function is_proposal()
+		{
+			return $this->get('replacement_for') !== null;
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider
@@ -21,6 +26,21 @@
 
 		public $dataiter = 'DataIterAgenda';
 
+		public $fields = [
+			'id',
+			'kop',
+			'beschrijving',
+			'commissie',
+			'van',
+			'tot',
+			'locatie',
+			'private',
+			'lustrum',
+			'extern',
+			'facebook_id',
+			'replacement_for'
+		];
+
 		public function __construct($db)
 		{
 			parent::__construct($db, 'agenda');
@@ -28,8 +48,8 @@
 			$this->include_private = logged_in();
 		}
 		
-		public function get($from = null, $till = null, $confirmed_only = false) {
-
+		public function get($from = null, $till = null, $confirmed_only = false)
+		{
 			$conditions = array();
 
 			if ($from !== null)
@@ -39,53 +59,38 @@
 				$conditions[] = "agenda.tot < date '$till'";
 
 			if ($confirmed_only)
-				$conditions[] = "agenda.id NOT IN (SELECT a_m.agendaid FROM agenda_moderate a_m)";
+				$conditions[] = "agenda.replacement_for IS NULL";
 
-			$where_clause = empty($conditions) ? '' : 'WHERE ' . implode(' AND ', $conditions);
+			$where_clause = implode(' AND ', $conditions);
 
-			$rows = $this->db->query('
-					SELECT
-						agenda.*, ' . $this->_generate_select() . '
-					FROM
-						agenda
-					' . $where_clause . '
-					ORDER BY
-						van ASC');
-			
-			return $this->_rows_to_iters($rows);
+			return $this->find($where_clause);
 		}
 		
-		protected function _generate_select() {
-			return "DATE_PART('dow', agenda.van) AS vandagnaam, 
-				DATE_PART('day', agenda.van) AS vandatum, 
-				DATE_PART('year', agenda.van) AS vanjaar,
-				DATE_PART('month', agenda.van) AS vanmaand, 
-				DATE_PART('hours', agenda.van) AS vanuur, 
-				DATE_PART('minutes', agenda.van) AS vanminuut, 
-				DATE_PART('dow', agenda.tot) AS totdagnaam, 
-				DATE_PART('year', agenda.tot) AS totjaar, 
-				DATE_PART('day', agenda.tot) AS totdatum, 
-				DATE_PART('month', agenda.tot) AS totmaand, 
-				DATE_PART('hours', agenda.tot) AS totuur, 
-				DATE_PART('minutes', agenda.tot) AS totminuut";
-		}
-		
-		public function get_iter($id)
+		protected function _generate_query($where)
 		{
-			$row = $this->db->query_first("SELECT *, " . 
-					$this->_generate_select() . ",
-					a_m.agendaid as moderate,
-					a_m.overrideid as overrideid
-					FROM agenda
-					LEFT JOIN agenda_moderate a_m ON
-						a_m.agendaid = agenda.id
-					WHERE id = " . intval($id) . "
-					GROUP BY agenda.id, a_m.agendaid, a_m.overrideid");
-			
-			if (!$row)
-				throw new DataIterNotFoundException($id);
-
-			return $this->_row_to_iter($row);
+			return "
+				SELECT
+					{$this->table}.*,
+					DATE_PART('dow', {$this->table}.van) AS vandagnaam, 
+					DATE_PART('day', {$this->table}.van) AS vandatum, 
+					DATE_PART('year', {$this->table}.van) AS vanjaar,
+					DATE_PART('month', {$this->table}.van) AS vanmaand, 
+					DATE_PART('hours', {$this->table}.van) AS vanuur, 
+					DATE_PART('minutes', {$this->table}.van) AS vanminuut, 
+					DATE_PART('dow', {$this->table}.tot) AS totdagnaam, 
+					DATE_PART('year', {$this->table}.tot) AS totjaar, 
+					DATE_PART('day', {$this->table}.tot) AS totdatum, 
+					DATE_PART('month', {$this->table}.tot) AS totmaand, 
+					DATE_PART('hours', {$this->table}.tot) AS totuur, 
+					DATE_PART('minutes', {$this->table}.tot) AS totminuut,
+					commissies.naam as commissie__naam,
+					commissies.page as commissie__page
+				FROM
+					{$this->table}
+				LEFT JOIN commissies ON
+					commissies.id = agenda.commissie"
+				. ($where ? " WHERE {$where}" : "")
+				. " ORDER BY {$this->table}.van ASC";
 		}
 		
 		/**
@@ -104,119 +109,28 @@
 				return $agendapunten;
 			elseif ($include_prive && $agendapunten_prive != null)
 				return $agendapunten_prive;
-			
-			$punten = $this->db->query("SELECT
-					agenda.*,
-					c.naam as commissie__naam,
-					c.page as commissie__page,
-					" . $this->_generate_select() . "
-					FROM agenda
-					LEFT JOIN commissies c ON c.id = agenda.commissie
-					WHERE (agenda.tot > CURRENT_TIMESTAMP OR (CURRENT_TIMESTAMP < agenda.van + interval '1 day') OR 
-					(DATE_PART('hours', agenda.van) = 0 AND CURRENT_TIMESTAMP < agenda.van + interval '1 day')) AND 
-					agenda.id NOT IN (SELECT agendaid FROM agenda_moderate) " .
-					(!$include_prive ? ' AND agenda.private = 0 ' : '') . "
-					ORDER BY agenda.van ASC");
 
-			if ($include_prive) {
-				$agendapunten_prive = $this->_rows_to_iters($punten);
-				return $agendapunten_prive;
-			} else {
-				$agendapunten = $this->_rows_to_iters($punten);
-				return $agendapunten;
-			}
-		}
-		
-		protected function _update_moderate(DataIter $iter, $override)
-		{
-			return $this->db->update('agenda_moderate', 
-					array('overrideid' => intval($override)), 
-					'agendaid = ' . $iter->get_id());
-		}
-		
-		protected function _insert_moderate(DataIter $iter, $override)
-		{
-			return $this->db->insert(
-					'agenda_moderate', 
-					array('agendaid' => $iter->get_id(),
-						'overrideid' => intval($override)));
-		}
-		
-		protected function _delete_moderate(DataIter $iter)
-		{
-			return $this->db->delete('agenda_moderate',
-					'agendaid = ' . $iter->get_id());
-		}
-		
-		/**
-		  * Set/unset an agendapunt to/from the need-moderation state
-		  * @id the id of the agendapunt
-		  * @moderate whether to set or unset
-		  *
-		  * @result true if setting the need-moderation was successul
-		  */
-		public function set_moderate($id, $override, $moderate)
-		{
-			$iter = $this->get_iter($id);
-			
-			if (!$iter)
-				return false;
-			
-			/* Check if the moderate state is already what
-			 * is being requested
-			 */
-			if ($iter->get('moderate') == $moderate && $iter->get('override') == $override)
-				return true;
-			
-			/* Update the moderate state */
-			if ($iter->get('moderate') == $moderate)
-				return $this->_update_moderate($iter, $override);
-			elseif ($moderate)
-				return $this->_insert_moderate($iter, $override);
-			else
-				return $this->_delete_moderate($iter);
-		}
-		
-		public function delete(DataIter $iter)
-		{
-			/* Remove the possible moderation */
-			$this->set_moderate($iter->get_id(), 0, false);
-			
-			/* Chain up */
-			parent::delete($iter);
-		}
-		
-		/**
-		  * Returns whether there are agendapunten that need moderation
-		  *
-		  * @result false if there are no agendapunten that need 
-		  * moderation and the number of agendapunten that need
-		  * moderation otherwise
-		  */
-		public function has_moderate()
-		{
-			$rows = $this->db->query('SELECT * FROM agenda_moderate');
-			
-			if (!$rows || count($rows) == 0)
-				return false;
-			else
-				return count($rows);
-		}
-		
-		/**
-		  * Get all the agendapunten that need moderation
-		  *
-		  * @result an array of #DataIter
-		  */
-		public function get_moderates()
-		{
-			$rows = $this->db->query("SELECT agenda.*, agenda_moderate.overrideid, " .
-				$this->_generate_select() . " 
-				FROM agenda, agenda_moderate
-				WHERE agenda.id = agenda_moderate.agendaid
-				ORDER BY agenda.van ASC");
+			$conditions = "
+				(
+					(agenda.tot > CURRENT_TIMESTAMP)
+					OR (CURRENT_TIMESTAMP < agenda.van + interval '1 day')
+					OR  (
+							DATE_PART('hours', agenda.van) = 0
+							AND CURRENT_TIMESTAMP < agenda.van + interval '1 day'
+						)
+				)
+				AND 
+					agenda.replacement_for IS NULL";
 
-			return $this->_rows_to_iters($rows);
+			if (!$include_prive)
+				$conditions .= ' AND agenda.private = 0';
+
+			$punten = $this->find($conditions);
+			
+			if ($include_prive)
+				return $agendapunten_prive = $punten;
+			else
+				return $agendapunten = $punten;
 		}
 		
 		/**
@@ -235,7 +149,7 @@
 					WHERE (tot > CURRENT_TIMESTAMP OR 
 					(DATE_PART('hours', van) = 0 AND 
 					CURRENT_TIMESTAMP < van + interval '1 day')) AND 
-					id NOT IN (SELECT agendaid FROM agenda_moderate) AND 
+					agenda.replacement_for IS NULL AND 
 					commissie = " . $id . 
 					(!$include_prive ? ' AND private = 0 ' : '') . "
 					ORDER BY van ASC");
@@ -248,8 +162,21 @@
 			$query = "
 				SELECT
 					agenda.*,
-					c.naam as commissie__naam,
-					c.page as commissie__page,
+					{$this->table}.*,
+					DATE_PART('dow', {$this->table}.van) AS vandagnaam, 
+					DATE_PART('day', {$this->table}.van) AS vandatum, 
+					DATE_PART('year', {$this->table}.van) AS vanjaar,
+					DATE_PART('month', {$this->table}.van) AS vanmaand, 
+					DATE_PART('hours', {$this->table}.van) AS vanuur, 
+					DATE_PART('minutes', {$this->table}.van) AS vanminuut, 
+					DATE_PART('dow', {$this->table}.tot) AS totdagnaam, 
+					DATE_PART('year', {$this->table}.tot) AS totjaar, 
+					DATE_PART('day', {$this->table}.tot) AS totdatum, 
+					DATE_PART('month', {$this->table}.tot) AS totmaand, 
+					DATE_PART('hours', {$this->table}.tot) AS totuur, 
+					DATE_PART('minutes', {$this->table}.tot) AS totminuut,
+					commissies.naam as commissie__naam,
+					commissies.page as commissie__page
 					" . $this->_generate_select() . ",
 					ts_rank_cd(
 						setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B'),
@@ -257,10 +184,10 @@
 					) as search_relevance
 				FROM
 					agenda
-				LEFT JOIN commissies c ON
-					c.id = agenda.commissie
+				LEFT JOIN commissies ON
+					commissies.id = agenda.commissie
 				WHERE
-					agenda.id NOT IN (SELECT agendaid FROM agenda_moderate)
+					agenda.replacement_for IS NULL
 					" . (!$this->include_private ? ' AND agenda.private = 0 ' : '') . "
 					AND (setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B')) @@ to_tsquery('" . $this->db->escape_string($ts_query) . "')
 				ORDER BY
@@ -270,5 +197,74 @@
 			$rows = $this->db->query($query);
 
 			return $this->_rows_to_iters($rows);
+		}
+
+		public function delete(DataIter $iter)
+		{
+			/* Remove the possible moderation */
+			foreach ($this->get_proposed() as $proposed_update)
+				if ($proposed_update->get('replacement_for') == $iter->get_id())
+					$this->reject_update($proposed_update);
+			
+			/* Chain up */
+			parent::delete($iter);
+		}
+
+		public function propose_insert(DataIterAgenda $new_item)
+		{
+			if ($replacement->has_id())
+				throw new InvalidArgumentException('How come the proposed insert already has an id?');
+			
+			$new_item->set('replacement_for', 0);
+			return $this->insert($new_item, true);
+		}
+		
+		public function propose_update(DataIterAgenda $replacement, DataIterAgenda $current)
+		{
+			if (!$current->has_id())
+				throw new InvalidArgumentException('The item to replace has no id');
+
+			if ($replacement->has_id())
+				throw new InvalidArgumentException('How come the proposed replacement already has an id?');
+			
+			$replacement->set('replacement_for', $current->get_id());
+			return $this->insert($replacement, true);
+		}
+
+		public function accept_proposal(DataIterAgenda $proposal)
+		{
+			if (!$proposal->is_proposal())
+				throw new InvalidArgumentException('Given agenda item iter is not a proposed update');
+
+			// It is not a replacement, just a proposal for an insert
+			if ($proposal->get('replacement_for') == 0)
+			{
+				$proposal->set('replacement_for', null);
+				$proposal->update();
+			}
+			// It is an update: replace the contents of the old item (to preserve the id)
+			// and throw away the proposal afterwards.
+			else
+			{
+				$current = $this->get_iter($proposal->get('replacement_for'));
+
+				// Copy everything but the item id and its update proposal data
+				foreach (array_diff($this->fields, ['id', 'replacement_for']) as $field)
+					$current->set($field, $proposal->get($field));
+
+				$this->update($current);
+
+				$this->delete($proposal);
+			}
+		}
+
+		public function reject_proposal(DataIterAgenda $proposal)
+		{
+			$this->delete($proposal);
+		}
+
+		public function get_proposed()
+		{
+			return $this->find("{$this->table}.replacement_for IS NOT NULL");
 		}
 	}
