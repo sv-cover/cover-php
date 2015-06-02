@@ -72,8 +72,8 @@
 		  * @result the data in the field
 		  */
 		public function get($field) {
-			// if (!$this->has($field))
-			// 	throw new RuntimeException('DataIter has no property ' . $field);
+			if (!$this->has_field($field))
+				throw new RuntimeException('DataIter has no field named ' . $field);
 
 			return $this->data[$this->namespace . $field];
 		}

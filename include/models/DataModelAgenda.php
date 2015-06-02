@@ -212,7 +212,7 @@
 
 		public function propose_insert(DataIterAgenda $new_item)
 		{
-			if ($replacement->has_id())
+			if ($new_item->has_id())
 				throw new InvalidArgumentException('How come the proposed insert already has an id?');
 			
 			$new_item->set('replacement_for', 0);
