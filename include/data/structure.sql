@@ -2786,8 +2786,7 @@ CREATE TABLE mailinglijsten (
     type integer NOT NULL DEFAULT 1, -- default type is opt-in
     publiek boolean NOT NULL DEFAULT TRUE,
     toegang integer,
-    commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
-    tag 
+    commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT
 );
 
 CREATE TABLE mailinglijsten_abonnementen (
