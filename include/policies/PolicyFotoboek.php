@@ -25,7 +25,7 @@ class PolicyFotoboek implements Policy
 			return false;
 
 		// Older photo books are not visible for non-members
-		if (!logged_in() && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
+		if (!logged_in() && $book->has('date') && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
 			return intval($match[1]) >= intval(date("Y", strtotime("-2 year")));
 
 		return true;
