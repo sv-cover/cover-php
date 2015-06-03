@@ -377,8 +377,13 @@
 				$event->uid = $punt->get_id() . '@svcover.nl';
 				$event->start = new DateTime($punt->get('van'), $timezone);
 
-				if ($punt->get('van') != $punt->get('tot'))
+				if ($punt->get('van') != $punt->get('tot')) {
 					$event->end = new DateTime($punt->get('tot'), $timezone);
+				}
+				else {
+					$event->end = new DateTime($punt->get('van'), $timezone);
+					$event->end->modify('+ 2 hour');
+				}
 				
 				$event->summary = $punt->get('extern')
 					? $punt->get('kop')
