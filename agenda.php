@@ -390,7 +390,7 @@
 					: sprintf('%s: %s', $punt->get('commissie__naam'), $punt->get('kop'));
 				$event->description = markup_strip($punt->get('beschrijving'));
 				$event->location = $punt->get('locatie');
-				$event->url = sprintf('https://www.svcover.nl/agenda.php?agenda_id=%d', $punt->get_id());
+				$event->url = ROOT_DIR_URI . $this->link_to_read($punt);
 				$cal->add_event($event);
 			}
 
