@@ -17,12 +17,12 @@ class PolicyFotoboekReacties implements Policy
 	public function user_can_update(DataIter $reactie)
 	{
 		return member_in_commissie(COMMISSIE_FOTOCIE)
-			|| logged_in() && logged_in('id') == $reactie->get('author');
+			|| logged_in() && logged_in('id') == $reactie->get('auteur');
 	}
 
 	public function user_can_delete(DataIter $reactie)
 	{
 		return member_in_commissie(COMMISSIE_FOTOCIE)
-			|| logged_in() && logged_in('id') == $reactie->get('author');;
+			|| logged_in() && logged_in('id') == $reactie->get('auteur');;
 	}
 }
