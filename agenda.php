@@ -89,13 +89,24 @@
 			return $this->_check_length('locatie', $locatie);
 		}
 
-		function _check_facebook_id($name, $value) {
+		function _check_facebook_id($name, $value)
+		{
 			if (trim($value) == '')
 				return null;
 
 			if (strlen($value) <= 20  && ctype_digit($value))
 				return $value;
 
+			return false;
+		}
+
+		function _check_commissie($name, $value)
+		{
+			if (member_in_commissie($value)
+				|| member_in_commissie(COMMISSIE_BESTUUR)
+				|| member_in_commissie(COMMISSIE_KANDIBESTUUR))
+				return $value;
+			
 			return false;
 		}
 
@@ -106,7 +117,7 @@
 				array(
 					array('name' => 'kop', 'function' => array($this, '_check_length')),
 					'beschrijving',
-					array('name' => 'commissie', 'function' => 'check_value_toint'),
+					array('name' => 'commissie', 'function' => array($this, '_check_commissie')),
 					array('name' => 'van', 'function' => array($this, '_check_datum')),
 					array('name' => 'tot', 'function' => array($this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),

@@ -27,11 +27,12 @@ if ($data) {
 	$data['use_locatie'] = $data['locatie'] ? true : false;
 }
 
-if ($data && !member_in_commissie($data['commissie'], false))
-	$commissies[$data['commissie']] = $model->get_naam($data['commissie']);
-
-foreach ($member_data['commissies'] as $commissie)
-	$commissies[$commissie] = $model->get_naam($commissie);
+if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
+	foreach ($model->get() as $commissie)
+		$commissies[$commissie->get_id()] = $commissie->get('naam');
+else
+	foreach ($member_data['commissies'] as $commissie)
+		$commissies[$commissie] = $model->get_naam($commissie);
 ?>
 
 <?= table_row(label(__('Kop'), 'kop', $errors, true) . ':', '', 
