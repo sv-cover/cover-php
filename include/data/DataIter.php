@@ -188,13 +188,14 @@
 			return $changes;
 		}
 
-		public function getIter($field)
+		public function getIter($field, $type = 'DataIter')
 		{
 			$id = isset($this->data[$field . '__id'])
 				? $this->data[$field . '__id']
 				: -1;
 			
-			return new self(null, $id, $this->data, $field . '__');
+			$class = new ReflectionClass($type);
+			return $class->newInstance(null, $id, $this->data, $field . '__');
 		}
 		
 		/**

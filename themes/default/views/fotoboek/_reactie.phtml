@@ -4,19 +4,21 @@ if (!isset($subtitle))
 
 $days = get_days();
 $months = get_months();
+$foto = $reactie->getIter('foto', 'DataIterPhoto');
 ?>
 <div class="replyBox">
+	<!-- <img src="<?=$foto->get_url(null, 400)?>" <?=vsprintf('width="%d" height="%d"', $foto->get_scaled_size(200, 200))?>> -->
 	<div class="title">
 		<span class="replyDetails">
 			<div class="right">
 				<?= sprintf('%s %d %s, %02d:%02d', $days[$reactie->get('dagnaam')], $reactie->get('datum'), $months[$reactie->get('maand')], $reactie->get('uur'), $reactie->get('minuut')) ?>
 			</div>
-			<?= htmlspecialchars(member_full_name($reactie->getIter('auteur'), false, true)) ?>
+			<?= markup_format_text(member_full_name($reactie->getIter('auteur'), false, true)) ?>
 		</span>
 		<?php if ($subtitle): ?>
 		<div class="subtitle">
-			<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= markup_format_text(strlen($reactie->get('beschrijving')) > 0 ? $reactie->get('beschrijving') : __('geen titel')) ?></a><br>
-			<?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('boek') ?>"><?= markup_format_text($reactie->get('titel')) ?></a>
+			<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $reactie->get('foto') ?>"><?= markup_format_text(strlen($reactie->get('foto__beschrijving')) > 0 ? $reactie->get('foto__beschrijving') : __('geen titel')) ?></a><br>
+			<?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $reactie->get('fotoboek__id') ?>"><?= markup_format_text($reactie->get('fotoboek__titel')) ?></a>
 		</div>
 		<?php endif ?>
 	</div>

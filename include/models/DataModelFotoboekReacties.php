@@ -28,9 +28,13 @@ class DataModelFotoboekReacties extends DataModel
 					DATE_PART('month', f_r.date) AS maand, 
 					DATE_PART('hours', f_r.date) AS uur, 
 					DATE_PART('minutes', f_r.date) AS minuut,
-					fotos.beschrijving,
-					fotos.boek,
-					foto_boeken.titel
+					fotos.beschrijving AS foto__beschrijving,
+					fotos.id AS foto__id,
+					fotos.boek AS foto__boek,
+					fotos.width AS foto__width,
+					fotos.height AS foto__height,
+					foto_boeken.id AS fotoboek__id,
+					foto_boeken.titel AS fotoboek__titel
 				FROM 
 					(SELECT * FROM foto_reacties ORDER BY date DESC LIMIT 10) as f_r
 				LEFT JOIN leden l ON
@@ -50,8 +54,10 @@ class DataModelFotoboekReacties extends DataModel
 					l.tussenvoegsel,
 					l.achternaam,
 					l.privacy,
+					fotos.id,
 					fotos.beschrijving,
 					fotos.boek,
+					foto_boeken.id,
 					foto_boeken.titel
 				ORDER BY
 					f_r.date DESC
