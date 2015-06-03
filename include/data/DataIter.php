@@ -71,10 +71,14 @@
 		  *
 		  * @result the data in the field
 		  */
-		public function get($field) {
+		public function get($field)
+		{
 			if (!$this->has_field($field))
-				throw new RuntimeException('DataIter has no field named ' . $field);
-
+			{
+				trigger_error('DataIter has no field named ' . $field, E_USER_NOTICE);
+				return null;
+			}
+			
 			return $this->data[$this->namespace . $field];
 		}
 		
