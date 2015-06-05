@@ -690,7 +690,7 @@
 				$this->model->update_thread($thread);
 			}
 
-			header('Location: forum.php?thread=' . $message->thread . '&page=' . $params['page'] . '#p' . $message->id);
+			header('Location: forum.php?thread=' . $message->thread . '&page=' . (isset($params['page']) ? '&page=' . $params['page'] : '') . '#p' . $message->id);
 			exit();			
 		}
 		

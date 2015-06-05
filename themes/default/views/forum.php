@@ -432,7 +432,7 @@
 		}
 		echo '<h1><a href="forum.php">' . __('Forum') . '</a> :: ' . markup_format_text($iter->get('name')) . '</h1>';
 		$i = 0;
-		$page = $params['page'];
+		$page = isset($params['page']) ? $params['page'] : 0;
 		$threads = $model->get_threads($iter, $page, $max);
 
 		$bar = '';
