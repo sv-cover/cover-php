@@ -323,7 +323,7 @@
 			elseif (isset($_POST['submprofiel_zichtbaarheid']))
 				$this->_process_zichtbaarheid($iter);
 			else
-				$this->get_content('profiel', $iter);
+				$this->get_content('profiel', $iter, ['errors' => []]);
 		}
 	}
 	
