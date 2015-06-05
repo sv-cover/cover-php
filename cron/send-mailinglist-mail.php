@@ -90,7 +90,7 @@ function process_message_mailinglist($message, &$lijst)
 
 	// Append '[Cover]' to the subject
 	$message = preg_replace(
-		'/^Subject: (?!\[' . preg_quote($lijst->get('tag')) . '\])(.+?)$/im',
+		'/^Subject: (?!\[' . preg_quote($lijst->get('tag'), '/') . '\])(.+?)$/im',
 		'Subject: [' . $lijst->get('tag') . '] $1',
 		$message, 1);
 
