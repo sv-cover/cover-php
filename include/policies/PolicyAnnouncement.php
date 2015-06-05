@@ -1,13 +1,13 @@
 <?php
 
-require_once 'include/member.php';
+require_once 'include/auth.php';
 require_once 'include/models/DataModelAnnouncement.php';
 
 class PolicyAnnouncement implements Policy
 {
 	public function user_can_create()
 	{
-		return logged_in() && count(logged_in('commissies')) > 0;
+		return get_identity()->member_in_committee();
 	}
 
 	public function user_can_read(DataIter $announcement)
@@ -18,10 +18,10 @@ class PolicyAnnouncement implements Policy
 				return true;
 
 			case DataModelAnnouncement::VISIBILITY_MEMBERS:
-				return logged_in();
+				return get_identity()->member_is_active();
 
 			case DataModelAnnouncement::VISIBILITY_ACTIVE_MEMBERS:
-				return logged_in() && count(logged_in('commissies')) > 0;
+				return get_identity()->member_in_committee();
 
 			default:
 				return false;
@@ -30,7 +30,7 @@ class PolicyAnnouncement implements Policy
 
 	public function user_can_update(DataIter $announcement)
 	{
-		return member_in_commissie($announcement->get('committee'));
+		return get_identity()->member_in_committee($announcement->get('committee'));
 	}
 
 	public function user_can_delete(DataIter $announcement)

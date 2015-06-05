@@ -15,8 +15,13 @@
 	  */
 	function member_in_commissie($id = null)
 	{
-		trigger_error("member_in_commissie is deprecated, use get_identity()->member_in_committee()", E_USER_NOTICE);
+		trigger_error("member_in_commissie is deprecated, use get_identity()->member_in_committee() or member_in_committee()", E_USER_NOTICE);
 
+		return get_identity()->member_in_committee($id);
+	}
+
+	function member_in_committee($id = null)
+	{
 		return get_identity()->member_in_committee($id);
 	}
 
