@@ -136,7 +136,7 @@
 	function input_checkbox($name, $data, $value = 'yes') {
 		$params = _parse_rest(func_get_args(), 3);
 		$params['type'] = 'checkbox';
-		$params['value'] = $value;
+		$params['value'] = (string) $value;
 		$params['nopost'] = true;
 
 		if (isset($params['field']))
@@ -149,7 +149,11 @@
 		 * checkbox was unchecked (since then get_post($name) will be
 		 * null again (I think) and $data[$field] takes over
 		 */
-		if (get_post($name) != null || $data[$field])
+		if (substr($field, -2, 2) == '[]') {
+			if (isset($data[substr($field, 0, -2)]) && in_array($value, $data[substr($field, 0, -2)]))
+				$params['checked'] = 'checked';
+		}
+		elseif (get_post($name) != null || $data[$field])
 			$params['checked'] = 'checked';
 
 		return _input_field($name, null, $params);

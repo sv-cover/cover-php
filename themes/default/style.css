@@ -1173,6 +1173,10 @@ div.beheer table {
 	content: '';
 }
 
+.vertical-form input:disabled + label {
+	color: #bbb;
+}
+
 .vertical-form label.label_error + input,
 .vertical-form label.label_error + textarea {
 	background-color: #e5c8cc;
@@ -1195,6 +1199,15 @@ div.beheer table {
 .vertical-form .option-group {
 	list-style: none;
 	line-height: 20px;
+}
+
+.vertical-form fieldset {
+	border: 1px solid #ccc;
+	padding: 10px;
+}
+
+.vertical-form fieldset legend {
+	margin-left: 1em;
 }
 
 .mailinglists .mailinglist {

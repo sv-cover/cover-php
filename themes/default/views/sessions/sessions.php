@@ -5,6 +5,11 @@ class SessionsView extends View
 {
 	protected $__file = __FILE__;
 
+	protected function user_can_override_stuff()
+	{
+		return get_identity() instanceof ImpersonatingIdentityProvider;
+	}
+
 	protected function format_relative_time($time)
 	{
 		$diff = time() - $time;

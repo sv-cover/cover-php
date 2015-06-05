@@ -17,42 +17,67 @@ class ControllerSessions extends Controller
 		$this->run_footer();
 	}
 
-	function run_impl()
+	protected function run_view_overrides()
 	{
-		$member = logged_in();
+		if (!(get_identity() instanceof ImpersonatingIdentityProvider))
+			throw new UnauthorizedException();
 
-		if (!$member)
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
-			$this->get_content('auth_common');
-			exit;
+			if (isset($_POST['override_member']) && !empty($_POST['override_member_id']))
+			{
+				$member_model = get_model('DataModelMember');
+				$override_member = $member_model->get_iter($_POST['override_member_id']);
+				get_identity()->override_member($override_member);
+			}
+			else
+				get_identity()->reset_member();
+
+			if (isset($_POST['override_committees']))
+				get_identity()->override_committees(isset($_POST['override_committee_ids']) ? $_POST['override_committee_ids'] : []);
+			else
+				get_identity()->reset_committees();
 		}
 
-		if (isset($_GET['lidid']) && member_in_commissie($member['id'], COMMISSIE_EASY))
-		{
-			$member_model = get_model('DataModelMember');
-			$selected_member = $member_model->get_iter($_GET['lidid']);
+		return $this->redirect('sessions.php');
+	}
 
-			if ($selected_member)
-				$member = $selected_member->data;
-		}
-
+	protected function run_view_sessions()
+	{
 		if (isset($_POST['sessions']))
 		{
+			$member = get_identity()->get_member();
+
 			foreach ($_POST['sessions'] as $session_id)
 			{
 				$session = $this->model->get_iter($session_id);
 
-				if ($session && $session->get('member_id') == $member['id'])
-					$this->model->destroy($session_id);
+				if ($session && $session->get('member_id') == $member->get_id())
+					$this->model->delete($session);
 			}
-
-			header('Location: sessions.php');
-			exit;
 		}
 
-		$sessions = $this->model->getActive($member['id']);
+		return $this->redirect('sessions.php');
+	}
 
-		$this->get_content('sessions', $sessions, compact('member'));
+	function run_impl()
+	{
+		if (!get_auth()->logged_in())
+			return $this->get_content('auth_common');
+		
+		if (isset($_GET['view']) && $_GET['view'] == 'overrides')
+			return $this->run_view_overrides();
+
+		if (isset($_GET['view']) && $_GET['view'] == 'sessions')
+			return $this->run_view_sessions();
+
+		$member = get_identity()->get_member();
+
+		$session = get_auth()->get_session();
+
+		$sessions = $this->model->getActive($member->get_id());
+
+		$this->get_content('sessions', $sessions, compact('session', 'member'));
 	}
 }
 
