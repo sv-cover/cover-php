@@ -470,14 +470,15 @@ border-radius: 0 0 5px 5px;
 
 .world > .header
 {
-		color:#FFF;
-		position: relative;
-		padding: 0;
-		max-width:1200px;
-		min-width: 810px;
-		margin: 20px auto;
-		height: 82px;
+	color:#FFF;
+	position: relative;
+	padding: 0;
+	max-width:1200px;
+	min-width: 810px;
+	margin: 20px auto;
+	height: 82px;
 }
+
 .world > .header > .message
 {
 	position: absolute;
@@ -525,7 +526,15 @@ border-radius: 0 0 5px 5px;
 	padding: 2px 0;
 }
 
-.login table a { display:block; float:right; color:#f5f5f5; font-weight:bold; font-size:10px; margin:5px 0px; }
+.login table a {
+	display:block;
+	float:right;
+	color:#f5f5f5;
+	font-weight:bold;
+	font-size:10px;
+	margin:5px 0px;
+}
+
 .login a {color:#000; text-decoration:none;}
 .login .button 
 {
@@ -567,17 +576,25 @@ border-radius: 0 0 5px 5px;
 
 }
 
-.logButton
+.login .logButton,
+.login .logLink
 {
 	display:block; float:right; 
 	padding: 3px 5px; margin: 5px 0px 5px 5px;
 	border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px;
 	font-weight:bold;
 }
-.logButton:hover
+
+.login .logButton:hover
 {
 	text-decoration:none;
 	box-shadow:0px 0px 3px #fff;
+}
+
+.login .logLink {
+	color: #fff;
+	font-weight: normal;
+	text-decoration: underline;
 }
 
 .marginAuto { margin: 0 auto; }
@@ -1199,6 +1216,10 @@ div.beheer table {
 .vertical-form .option-group {
 	list-style: none;
 	line-height: 20px;
+
+	columns: 3;
+    -webkit-columns: 3;
+    -moz-columns: 3;
 }
 
 .vertical-form fieldset {

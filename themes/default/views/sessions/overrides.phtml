@@ -1,0 +1,35 @@
+<h2><?= markup_format_text(__('Website bekijken als een ander')) ?></h2>
+<div class="messageBox">
+	<form method="post" action="sessions.php?view=overrides" class="vertical-form overrides-form">
+		<fieldset>
+			<legend>
+				<?=input_checkbox('override_committees', ['override_committees' => get_identity()->get_override_committees() !== null])?>
+				<?=label(__('Overschrijf commissielidmaatschappen'), 'override_committees') ?>
+			</legend>
+			
+			<label><?=__('Commissies')?></label>
+			<ul class="option-group">
+				<?php foreach (get_model('DataModelCommissie')->get() as $committee): ?>
+				<li>
+					<?=input_checkbox('override_committee_ids[]', ['override_committee_ids' => get_identity()->get_override_committees()], $committee->get_id(), 'id', 'field-override-committee-' . $committee->get_id())?>
+					<?=label($committee->get('naam'), 'override-committee-' . $committee->get_id())?>
+				</li>
+				<?php endforeach ?>
+			</ul>
+		</fieldset>
+
+		<fieldset>
+			<legend>
+				<?=input_checkbox('override_member', ['override_member' => get_identity()->get_override_member() !== null])?>
+				<?=label(__('Overschrijf lidnummer'), 'override_member') ?>
+			</legend>
+
+			<div>
+				<?=label(__('Lidnummer'), 'override_member_id')?>
+				<?=input_text('override_member_id', ['override_member_id' => get_identity()->get_override_member() ? get_identity()->get_override_member()->get_id() : null]) ?>
+			</div>
+		</fieldset>
+
+		<button type="submit" class="button"><?=__('Stel in')?></button>
+	</form>
+</div>

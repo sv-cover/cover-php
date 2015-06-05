@@ -81,6 +81,7 @@ jQuery(function($) {
 				$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
 
 			$target = $('<div>').appendTo($modalWindow);
+			$target.text('Loading…');
 
 			$modal.insertBefore($('.world'));//.delay(100).addClass('')
 
@@ -107,22 +108,23 @@ jQuery(function($) {
 			? this.action
 			: this.href;
 
-		if ($(this).data('partial-selector'))
-			url += ' ' + $(this).data('partial-selector');
-
+		var selector = $(this).data('partial-selector') || 'body';
+		
 		$target.css({'opacity': 0.5});
 
-		$tmp = $(document.createDocumentFragment());
+		var tmp = document.createDocumentFragment();
+
+		var addPartialToTarget = function(text, status, xhr) {
+			var partial = tmp.querySelector(selector);
+			$target.replaceWith(partial);
+			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: partial}));
+		};
 
 		if ($(this).attr('method') == 'post') {
-			$tmp.load(url, $(this).serializeArray(), function(text, status, xhr) {
-				$target.replaceWith($tmp);
-			});
+			$(tmp).load(url, $(this).serializeArray(), addPartialToTarget);
 		}
 		else
-			$tmp.load(url, function(text, status, xhr) {
-				$target.replaceWith($tmp);
-			});
+			$(tmp).load(url, addPartialToTarget);
 	};
 
 	$(document)
@@ -188,5 +190,25 @@ jQuery(function($) {
 
 	$('form.privacy-preference input[type=radio]').change(function(e) {
 		$(this.form).submit();
+	});
+});
+
+$(document).on('ready partial-content-loaded', function(e) {
+	console.log(e.target);
+
+	$(e.target).find('fieldset:not(.jquery-fieldset)').each(function(i, fieldset) {
+		$(fieldset).addClass('jquery-fieldset');
+
+		var masterSwitch = $(fieldset).find('legend input[type=checkbox]');
+
+		var toggles = $(fieldset).find('input').not(masterSwitch);
+
+		var update = function() {
+			toggles.prop('disabled', !masterSwitch.is(':checked'));
+		};
+
+		update();
+
+		masterSwitch.on('change', update);
 	});
 });

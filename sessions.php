@@ -37,9 +37,11 @@ class ControllerSessions extends Controller
 				get_identity()->override_committees(isset($_POST['override_committee_ids']) ? $_POST['override_committee_ids'] : []);
 			else
 				get_identity()->reset_committees();
+
+			return $this->redirect('sessions.php?view=overrides');
 		}
 
-		return $this->redirect('sessions.php');
+		return $this->get_content('overrides');
 	}
 
 	protected function run_view_sessions()

@@ -316,6 +316,10 @@
 			$output =  __('Ingelogd') . ': <b>' . markup_format_text($data['voornaam']) . '</b><br/>
 			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . '">' . __('Uitloggen') . '</a>
 			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . __('Profiel') . '</a>';
+
+			if (get_identity() instanceof ImpersonatingIdentityProvider)
+				$output .= '<a href="sessions.php?view=overrides" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">' . __('Bekijk als…') . '</a>';
+
 			return $output;
 		} else {
 			return create_login_form();
