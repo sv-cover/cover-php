@@ -17,7 +17,7 @@
 				<?php endforeach ?>
 			</ul>
 		</fieldset>
-
+		
 		<fieldset>
 			<legend>
 				<?=input_checkbox('override_member', ['override_member' => get_identity()->get_override_member() !== null])?>
@@ -30,6 +30,8 @@
 			</div>
 		</fieldset>
 
-		<button type="submit" class="button"><?=__('Stel in')?></button>
+		<div>
+			<button type="submit" class="button"><?=__('Stel in')?></button>
+		</div>
 	</form>
 </div>

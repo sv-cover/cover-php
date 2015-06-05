@@ -1237,8 +1237,14 @@ div.beheer table {
 	clear: both;
 }
 
-.vertical-form div {
+.vertical-form > div,
+.vertical-form > fieldset {
 	margin-bottom: 10px;
+}
+
+.vertical-form > div:last-child,
+.vertical-form > fieldset:last-child {
+	margin-bottom: 0;
 }
 
 .vertical-form label {
@@ -1299,10 +1305,11 @@ div.beheer table {
 .vertical-form fieldset {
 	border: 1px solid #ccc;
 	padding: 10px;
+	border-radius: 3px;
 }
 
 .vertical-form fieldset legend {
-	margin-left: 1em;
+	margin-left: 0;
 }
 
 .vertical-form .button-bar {
