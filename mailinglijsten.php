@@ -220,6 +220,39 @@ class ControllerMailinglijsten extends Controller
 		return $this->get_content('mailinglijsten::list_message', null, compact('message', 'lijst'));
 	}
 
+	protected function run_automessage_management($list_id, $message_category)
+	{
+		$list = $this->model->get_lijst($list_id);
+
+		if (!$this->model->member_can_edit($list_id))
+			throw new UnauthorizedException();
+
+		switch ($message_category)
+		{
+			case 'subscription':
+				$subject_field = 'on_subscription_subject';
+				$message_field = 'on_subscription_message';
+				break;
+
+			case 'first_email':
+				$subject_field = 'on_first_email_subject';
+				$message_field = 'on_first_email_message';
+				break;
+
+			default:
+				throw new Exception('Unknown message category');
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			$list->set($subject_field, $_POST['subject']);
+			$list->set($message_field, $_POST['message']);
+			$list->update();
+		}
+
+		return $this->get_content('mailinglijsten::form_automessage', $list, compact('subject_field', 'message_field'));
+	}
+
 	public function run_embedded($lijst_id)
 	{
 		$lijst = $this->model->get_lijst($lijst_id);
@@ -240,7 +273,10 @@ class ControllerMailinglijsten extends Controller
 
 		// Manage the subscriptions to a list
 		elseif (!empty($_GET['lijst_id']))
-			return $this->run_subscriptions_management($_GET['lijst_id']);
+			if (isset($_GET['edit_message']))
+				return $this->run_automessage_management($_GET['lijst_id'], $_GET['edit_message']);
+			else
+				return $this->run_subscriptions_management($_GET['lijst_id']);
 
 		// Read archive
 		elseif (!empty($_GET['archive_list_id']))

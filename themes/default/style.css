@@ -308,12 +308,19 @@ border-radius: 0 0 5px 5px;
 	font: 12px sans-serif;
 	color: #000;
 }
+
+.button.active,
+.button.wysihtml5-command-active
+{
+	background: #aaa;
+}
+
 .button:hover
 {
 	background: #ddd;
 }
+
 .button:active,
-.button.active
 {
 	background: #aaa;
 }
@@ -336,6 +343,73 @@ border-radius: 0 0 5px 5px;
 	vertical-align: middle;
 	height: 24px;
 	line-height: 24px;
+}
+
+.button-bar .button,
+.button-bar .button-group {
+	vertical-align: middle;
+}
+
+.button-group {
+	display: inline-block;
+}
+
+.button-group .button {
+	float: left;
+	border-radius: 0;
+	border-width: 1px 0 1px 1px;
+}
+
+.button-group .button:first-child {
+	border-radius: 3px 0 0 3px;
+}
+
+.button-group .button:last-child {
+	border-radius: 0 3px 3px 0;
+	border-width: 1px 1px 1px 1px;
+}
+
+.button-menu {
+	position: relative;
+}
+
+.button-bar .button-menu ul {
+	left: 0;
+	right: 0;
+	top: 22px;
+	margin: 0;
+	background: #eee;
+	position: absolute;
+	display: none;
+	border: 1px solid #666;
+	border-top: 0;
+}
+
+.button-menu ul li {
+	list-style: none;
+}
+
+.button-menu ul li a {
+	display: block;
+	padding: 4px 8px;
+	border-bottom: 1px solid #ccc;
+	color: black;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.button-menu ul li a:hover {
+	background: #ddd;
+	color: black;
+	text-decoration: none;
+}
+
+.button-menu ul li:last-child a {
+	border-bottom: none;
+}
+
+.button-menu .button:focus + ul {
+	display: block;
 }
 
 .large-button {
@@ -1229,6 +1303,10 @@ div.beheer table {
 
 .vertical-form fieldset legend {
 	margin-left: 1em;
+}
+
+.vertical-form .button-bar {
+	margin-bottom: 0;
 }
 
 .mailinglists .mailinglist {

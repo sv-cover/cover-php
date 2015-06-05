@@ -51,7 +51,24 @@
 				<input id="publiek" type="checkbox" name="publiek" <?php if ($lijst->get('publiek')) echo 'checked' ?>>
 				<label for="publiek"><?=__('Mensen mogen zichzelf aanmelden voor deze lijst.')?></label>
 			</div>
-			
+
+			<div>
+				<label for="automessages"><?=__('Automatische e-mails') ?></label>
+				<div style="margin-left: 1em">
+					<?php if ($lijst->sends_email_on_subscribing()): ?>
+					<p><?=__('Deze lijst stuurt iedereen die zichzelf aanmeldt automatisch een mailtje.') ?> <a href="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>&amp;edit_message=subscription"><?=__('Wijzig bericht')?></a></p>
+					<?php elseif ($lijst->get('type') == DataModelMailinglijst::TYPE_OPT_IN): ?>
+					<p><a href="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>&amp;edit_message=subscription"><?=__('Stel bericht in dat automatisch wordt verstuurd bij aanmelding.')?></a></p>
+					<?php endif?>
+
+					<?php if ($lijst->sends_email_on_first_email()): ?>
+					<p><?=__('Deze lijst stuurt automatisch een reactie wanneer je er voor de eerste keer naar toe mailt en niet op de lijst bent ingeschreven.')?> <a href="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>&amp;edit_message=first_email"><?=__('Wijzig bericht')?></a></p>
+					<?php else: ?>
+					<p><a href="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>&amp;edit_message=first_email"><?=__('Stel een automatische eerste reactie in die wordt verstuurd wanneer iemand mailt naar de mailinglijst.')?></a></p>
+					<?php endif ?>
+				</div>
+			</div>
+
 			<button class="button" type="submit"><?=__('Update lijst')?></button>
 		</form>
 	</div>

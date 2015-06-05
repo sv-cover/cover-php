@@ -28,14 +28,15 @@
 			'fotoboek' => 'fotoboek;markup',
 			'forum' => 'forum;markup',
 			'weblog' => 'weblog;markup',
-			'nieuwlid' => 'nieuwlid'
-			);
+			'nieuwlid' => 'nieuwlid',
+			'mailinglijsten' => 'font-awesome.min'
+		);
 		
 		if (isset($mapping[$controller]))
 			return explode(';', $mapping[$controller]);
 		else
 			return array();
-	}
+	}	
 	
 	function create_agenda_menu($color) {
 		$model = get_model('DataModelAgenda');

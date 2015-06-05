@@ -3,6 +3,7 @@
 chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/init.php';
+require_once 'include/email.php';
 
 define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
@@ -19,6 +20,8 @@ ini_set('display_errors', true);
 
 function parse_email_address($email)
 {
+	$email = trim($email);
+
 	// 'jelmer@ikhoefgeen.nl'
 	if (filter_var($email, FILTER_VALIDATE_EMAIL))
 		return $email;
@@ -80,13 +83,16 @@ function process_message_mailinglist($message, &$lijst)
 	// Search for the adressed mailing list
 	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
-
+	
 	// Find that mailing list
 	if (!($lijst = $mailinglijsten_model->get_lijst($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
 
 	// Append '[Cover]' to the subject
-	$message = preg_replace('/^Subject: (?!\[Cover\])(.+?)$/im', 'Subject: [Cover] $1', $message, 1);
+	$message = preg_replace(
+		'/^Subject: (?!\[' . preg_quote($lijst->get('tag'), '/') . '\])(.+?)$/im',
+		'Subject: [' . $lijst->get('tag') . '] $1',
+		$message, 1);
 
 	// Find everyone who is subscribed to that list
 	$aanmeldingen = $mailinglijsten_model->get_aanmeldingen($lijst);
@@ -131,6 +137,9 @@ function process_message_mailinglist($message, &$lijst)
 		default:
 			return RETURN_NOT_ALLOWED_UNKNOWN_POLICY;
 	}
+
+	if ($lijst->sends_email_on_first_email() && !$lijst->archive()->contains_email_from($from))
+		send_welcome_mail($lijst, $from);
 
 	foreach ($aanmeldingen as $aanmelding)
 	{
@@ -180,15 +189,33 @@ function process_return_to_sender($message, $return_code)
 	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
 		$to = null;
 
-	$subject = preg_match('/^Subject: (.+?)$/m', $message, $match)
-		? $match[1]
-		: 'Could not deliver message';
-
 	$notice = 'Sorry, but your message' . ($to ? ' to ' . $to : '') . " could not be delivered:\n" . get_error_message($return_code);
 
 	echo "Return message to sender $from\n";
-	
-	mail($from, $subject, $notice, null, '-fwebcie@svcover.nl');
+
+	$message_part = \Cover\email\MessagePart::parse_text($message);
+
+	$reply = \Cover\email\reply($message_part, $notice);
+
+	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message_part->header('Subject'));
+	$reply->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
+	$reply->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
+
+	return send_message($reply->toString(), $from);
+}
+
+function send_welcome_mail(DataIterMailinglijst $lijst, $to)
+{
+	$message = new \Cover\email\MessagePart();
+
+	$message->setHeader('To', $to);
+	$message->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
+	$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
+	$message->setHeader('Subject', $lijst->get('on_first_email_subject'));
+	$message->addBody('text/plain', strip_tags($lijst->get('on_first_email_message')));
+	$message->addBody('text/html', $lijst->get('on_first_email_message'));
+
+	return send_message($message->toString(), $to);
 }
 
 function send_message($message, $email)
@@ -196,8 +223,8 @@ function send_message($message, $email)
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
 		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-		1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-		2 => array("pipe", "a")   // stderr is a file to write to
+		1 => array("file", "php://stderr", "w"),  // stdout is a pipe that the child will write to
+		2 => array("file", "php://stderr", "a")   // stderr is a file to write to
 	);
 
 	$cwd = '/';
@@ -212,14 +239,6 @@ function send_message($message, $email)
 	// Write message to the stdin of sendmail
 	fwrite($pipes[0], $message);
 	fclose($pipes[0]);
-
-	// Read the stdout
-	// echo "  out: " . stream_get_contents($pipes[1]) . "\n";
-	fclose($pipes[1]);
-
-	// Read the stderr 
-	// echo "  err: " . stream_get_contents($pipes[2]) . "\n";
-	fclose($pipes[2]);
 
 	return proc_close($sendmail);
 }
@@ -286,9 +305,13 @@ function main()
 		$return_code = process_message_mailinglist($message, $lijst);
 	}
 
+	// Parse the from header of the message archive
+	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
+		$from = null;
+
 	// Archive the message.
 	$archief = get_model('DataModelMailinglijstArchief');
-	$archief->archive($message, $lijst, $commissie, $return_code);
+	$archief->archive($message, $from, $lijst, $commissie, $return_code);
 
 	if ($return_code != 0)
 		process_return_to_sender($message, $return_code);

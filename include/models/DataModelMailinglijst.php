@@ -2,12 +2,49 @@
 
 require_once 'include/data/DataModel.php';
 require_once 'include/models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
+require_once 'include/email.php';
 
 class DataIterMailinglijst extends DataIter
 {
 	public function bevat_lid($lid_id)
 	{
 		return $this->model->is_aangemeld($this, $lid_id);
+	}
+
+	public function sends_email_on_subscribing()
+	{
+		return strlen($this->get('on_subscription_subject')) > 0
+			&& strlen($this->get('on_subscription_message')) > 0;
+	}
+
+	public function sends_email_on_first_email()
+	{
+		return strlen($this->get('on_first_email_subject')) > 0
+			&& strlen($this->get('on_first_email_message')) > 0;
+	} 
+
+	public function archive()
+	{
+		return new DataModelMailinglijstArchiefAdapator($this);
+	}
+}
+
+class DataModelMailinglijstArchiefAdapator
+{
+	protected $model;
+
+	protected $lijst;
+	
+	public function __construct(DataIterMailinglijst $lijst)
+	{
+		$this->model = get_model('DataModelMailinglijstArchief');
+
+		$this->lijst = $lijst;
+	}
+
+	public function contains_email_from($sender)
+	{
+		return $this->model->contains_email_from($this->lijst, $sender);
 	}
 }
 
@@ -32,7 +69,7 @@ class DataModelMailinglijst extends DataModel
 		$this->model_opt_out = new DataModel($db, 'mailinglijsten_opt_out');
 	}
 
-	public function _row_to_iter($row)
+	public function _row_to_iter($row, $dataiter = null)
 	{
 		if ($row && isset($row['publiek']))
 			$row['publiek'] = $row['publiek'] == 't';
@@ -58,14 +95,7 @@ class DataModelMailinglijst extends DataModel
 		// lijsten.
 		$rows = $this->db->query('
 			SELECT
-				l.id,
-				l.naam, 
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie,
+				l.*,
 				CASE
 					WHEN l.type = ' . self::TYPE_OPT_IN . ' THEN COUNT(a.abonnement_id) > 0
 					WHEN l.type = ' . self::TYPE_OPT_OUT . ' THEN COUNT(o.id) = 0
@@ -86,13 +116,7 @@ class DataModelMailinglijst extends DataModel
 			' . $where_clause . '
 			GROUP BY
 				l.id,
-				l.naam,
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie
+				l.naam
 			ORDER BY
 				l.naam ASC');
 
@@ -108,14 +132,7 @@ class DataModelMailinglijst extends DataModel
 		
 		$row = $this->db->query_first('
 			SELECT
-				l.id,
-				l.naam,
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie
+				l.*
 			FROM
 				mailinglijsten l
 			WHERE
@@ -280,14 +297,7 @@ class DataModelMailinglijst extends DataModel
 	{
 		$row = $this->db->query_first(sprintf("
 			SELECT
-				l.id,
-				l.naam, 
-				l.adres,
-				l.omschrijving,
-				l.publiek,
-				l.type,
-				l.toegang,
-				l.commissie,
+				l.*,
 				a.abonnement_id
 			FROM
 				mailinglijsten_abonnementen a,
@@ -304,16 +314,27 @@ class DataModelMailinglijst extends DataModel
 
 	public function aanmelden(DataIter $lijst, $lid_id)
 	{
-		if ($this->is_aangemeld($lijst, $lid_id))
+		$lid = get_model('DataModelMember')->get_iter($lid_id);
+
+		if ($this->is_aangemeld($lijst, $lid->get_id()))
 			return;
 
+		$id = $this->insert_aanmelding_lid($lijst, $lid);
+
+		$this->stuur_aanmeldingsmail($lijst, member_full_name($lid), $lid->get('email'));
+
+		return $id;
+	}
+
+	protected function insert_aanmelding_lid(DataIter $lijst, DataIterMember $lid)
+	{
 		switch ($lijst->get('type'))
 		{
 			// Opt in list: add a subscription to the table
 			case self::TYPE_OPT_IN:
 				$data = array(
 					'abonnement_id' => sha1(uniqid('', true)),
-					'lid_id' => intval($lid_id),
+					'lid_id' => $lid->get_id(),
 					'mailinglijst_id' => intval($lijst->get('id'))
 				);
 
@@ -325,7 +346,7 @@ class DataModelMailinglijst extends DataModel
 			case self::TYPE_OPT_OUT:
 				return $this->db->delete($this->model_opt_out->table,
 					sprintf('lid_id = %d AND mailinglijst_id = %d',
-						$lid_id, $lijst->get('id')));
+						$lid->get_id(), $lijst->get('id')));
 
 			default:
 				throw new RuntimeException('Subscribing to unknown list type not supported');
@@ -343,7 +364,58 @@ class DataModelMailinglijst extends DataModel
 
 		$iter = new DataIter($this->model_aanmeldingen, -1, $data);
 
-		return $this->model_aanmeldingen->insert($iter);
+		$id = $this->model_aanmeldingen->insert($iter);
+
+		$this->stuur_aanmeldingsmail($lijst, $naam, $email);
+
+		return $id;
+	}
+
+	protected function stuur_aanmeldingsmail(DataIter $lijst, $naam, $email)
+	{
+		if (!$lijst->sends_email_on_subscribing())
+			return;
+
+		$text = $lijst->get('on_subscription_message');
+
+		$variables = array(
+			'[NAAM]' => htmlspecialchars($naam, ENT_COMPAT, WEBSITE_ENCODING),
+			'[NAME]' => htmlspecialchars($naam, ENT_COMPAT, WEBSITE_ENCODING),
+			'[MAILINGLIST]' => htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING)
+		);
+
+		// If you are allowed to unsubscribe, parse the placeholder correctly (different for opt-in and opt-out lists)
+		/*
+		if ($lijst->get('publiek'))
+		{
+			$url = $lijst->get('type')== DataModelMailinglijst::TYPE_OPT_IN
+				? ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', $aanmelding->get('abonnement_id'))
+				: ROOT_DIR_URI . sprintf('mailinglijsten.php?lijst_id=%d', $lijst->get('id'));
+
+			$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING);
+
+			$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
+				htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING),
+				htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING));
+		}
+		*/
+
+		$subject = $lijst->get('on_first_email_subject');
+
+		$personalized_message = str_replace(array_keys($variables), array_values($variables), $text);
+
+		$message = new \Cover\email\MessagePart();
+
+		$message->setHeader('To', sprintf('%s <%s>', $naam, $email));
+		$message->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
+		$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
+		$message->setHeader('Subject', $subject);
+		$message->addBody('text/plain', strip_tags($personalized_message));
+		$message->addBody('text/html', $personalized_message);
+
+		list($message_headers, $message_body) = preg_split("/\r?\n\r?\n/", $message->toString(), 2);
+
+		return mail('', $subject, $message_body, $message_headers);
 	}
 
 	public function afmelden(DataIter $lijst, $lid_id)
