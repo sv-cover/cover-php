@@ -176,8 +176,7 @@
 					DATE_PART('hours', {$this->table}.tot) AS totuur, 
 					DATE_PART('minutes', {$this->table}.tot) AS totminuut,
 					commissies.naam as commissie__naam,
-					commissies.page as commissie__page
-					" . $this->_generate_select() . ",
+					commissies.page as commissie__page,
 					ts_rank_cd(
 						setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B'),
 						to_tsquery('" . $this->db->escape_string($ts_query) . "')
