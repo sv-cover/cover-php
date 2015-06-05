@@ -263,8 +263,8 @@ class MessagePart
 
 	private function boundary()
 	{
-		if (preg_match('/^multipart\/.+?;\s*boundary=([^;]+?)(;|$)/', $this->header('Content-Type'), $match))
-			return $match[1];
+		if (preg_match('/^multipart\/.+?;\s*boundary=("?)([^;]+?)(\1)(;|$)/', $this->header('Content-Type'), $match))
+			return $match[2];
 
 		return null;
 	}
@@ -352,10 +352,7 @@ class MessagePart
 				$out .= $part->toString();
 			}
 
-			if (substr($out, -2, 2) != "\r\n")
-				$out .= "\r\n";
-
-			$out .= "--$boundary--\r\n";
+			$out .= "\r\n--$boundary--\r\n";
 		}
 
 		return $out;
@@ -367,8 +364,8 @@ class MessagePart
 
 		self::parse_header($stream, $message);
 
-		if ($message->header('Content-Type') && preg_match('/^multipart\/.+?;\s*boundary=([^;]+?)(;|$)/', $message->header('Content-Type'), $match))
-			self::parse_multipart_body($stream, $match[1], $message);
+		if ($message->header('Content-Type') && preg_match('/^multipart\/.+?;\s*boundary=("?)([^;]+?)(\1)(;|$)/', $message->header('Content-Type'), $match))
+			self::parse_multipart_body($stream, $match[2], $message);
 		else
 			self::parse_plain_body($stream, $parent_boundary, $message);
 
@@ -419,7 +416,7 @@ class MessagePart
 	static private function parse_multipart_body(PeakableStream $stream, $boundary, MessagePart $message)
 	{
 		$message->body = [];
-		
+
 		while (true)
 		{
 			$line = $stream->readline();
@@ -427,7 +424,10 @@ class MessagePart
 			if ($line === false)
 				throw new \RuntimeException("Unexpected end of stream");
 
-			if (trim($line) == '--' . $boundary . '--')
+			if (trim($line) === '')
+				continue;
+
+			if (trim($line) === '--' . $boundary . '--')
 				break;
 
 			elseif (trim($line) === '--' . $boundary)
@@ -545,8 +545,4 @@ function reply(MessagePart $message, $reply_text)
 }
 
 if (realpath($_SERVER['PWD'] . '/' . $_SERVER['PHP_SELF']) == __FILE__)
-{
-	echo fgets(STDIN);
-
-	echo MessagePart::parse_stream(new PeakableStream(STDIN))->toString();
-}
+	var_dump(MessagePart::parse_stream(new PeakableStream(STDIN))->toString());
