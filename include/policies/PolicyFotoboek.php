@@ -6,7 +6,7 @@ class PolicyFotoboek implements Policy
 {
 	public function user_can_create()
 	{
-		return member_in_commissie(COMMISSIE_FOTOCIE);
+		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE);
 	}
 
 	public function user_can_read(DataIter $book)
@@ -21,11 +21,11 @@ class PolicyFotoboek implements Policy
 			return false;
 
 		// Member-specific albums are also forbidden terrain
-		if (!logged_in() && $book instanceof DataIterFacesPhotobook)
+		if (!get_identity()->member_is_active() && $book instanceof DataIterFacesPhotobook)
 			return false;
 
 		// Older photo books are not visible for non-members
-		if (!logged_in() && $book->has('date') && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
+		if (!get_identity()->member_is_active() && $book->has('date') && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
 			return intval($match[1]) >= intval(date("Y", strtotime("-2 year")));
 
 		return true;
@@ -36,7 +36,7 @@ class PolicyFotoboek implements Policy
 		if (!$book instanceof DataIterPhotobook)
 			throw new RuntimeException('$book not an instance of DataIterPhotobook');
 		
-		return member_in_commissie(COMMISSIE_FOTOCIE)
+		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE)
 			&& ctype_digit((string) $book->get_id())
 			&& $book->get_id() > 0;
 	}
@@ -51,13 +51,13 @@ class PolicyFotoboek implements Policy
 
 	public function get_access_level()
 	{
-		if (member_in_commissie(COMMISSIE_FOTOCIE))
+		if (get_identity()->member_in_committee(COMMISSIE_FOTOCIE))
 			return DataModelFotoboek::VISIBILITY_PHOTOCEE;
 
-		if (member_in_commissie())
+		if (get_identity()->member_in_committee())
 			return DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS;
 
-		if (logged_in())
+		if (get_identity()->member_is_active())
 			return DataModelFotoboek::VISIBILITY_MEMBERS;
 
 		else

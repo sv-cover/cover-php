@@ -31,7 +31,7 @@ if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KAND
 	foreach ($model->get() as $commissie)
 		$commissies[$commissie->get_id()] = $commissie->get('naam');
 else
-	foreach ($member_data['commissies'] as $commissie)
+	foreach ($member_data['committees'] as $commissie)
 		$commissies[$commissie] = $model->get_naam($commissie);
 ?>
 

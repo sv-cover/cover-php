@@ -1,6 +1,6 @@
 <?php
 	require_once 'include/data.php';
-	require_once 'include/login.php';
+	require_once 'include/auth.php';
 
 	/** @group Member
 	  * Check whether the currently logged in member is a member of
@@ -13,19 +13,11 @@
 	  * @result true if the currently logged in member is a member of
 	  * the commissie with id `id'
 	  */
-	function member_in_commissie($id = null, $easy = true) {
-		$member_data = logged_in();
+	function member_in_commissie($id = null)
+	{
+		trigger_error("member_in_commissie is deprecated, use get_identity()->member_in_committee()", E_USER_NOTICE);
 
-		if (!$member_data)
-			return false;
-		
-		/* Easy members always return true */
-		if ($easy && in_array(COMMISSIE_EASY, $member_data['commissies']))
-			return true;
-		
-		return $id === null
-			? count($member_data['commissies']) > 0
-			: in_array($id, $member_data['commissies']);
+		return get_identity()->member_in_committee($id);
 	}
 
 	/** @group Member
@@ -34,19 +26,19 @@
 	  * of the currently logged in one
 	  * @result the currently logged in members nick name
 	  */	
-	function member_nick_name($iter = null) {
-		if ($iter) {
-			if (is_numeric($iter)) {
-				$model = get_model('DataModelMember');
-				$iter = $model->get_iter($iter);
-			}
-			
-			$member_data = $iter->data;
-		} elseif (!($member_data = logged_in())) {
-			return __('Geen naam');
+	function member_nick_name($iter = null)
+	{
+		if ($iter && is_numeric($iter))
+		{
+			$model = get_model('DataModelMember');
+			$iter = $model->get_iter($iter);
 		}
-
-		return $member_data['nick'];
+		else if ($iter === null)
+			$iter = get_identity()->get_member();
+		
+		return $iter && $iter->has('nick')
+			? $iter->get('nick')
+			: __('Geen naam');
 	}
 	
 	/** @group Member
@@ -59,19 +51,18 @@
 	{
 		$model = get_model('DataModelMember');
 
+		$identity = get_identity();
+
 		if ($iter) {
 			// If the iter is just a member id, fetch that member is data.
 			if (is_numeric($iter))
 				$iter = $model->get_iter($iter);
 
-			$is_self = logged_in('id') == $iter->get('id');
+			$is_self = $identity->get('id') == $iter->get('id');
 		}
 		// No argument provided, get the full name of the currently logged in member.
 		else {
-			$iter = ($data = logged_in())
-				? new DataIter($model, $data['id'], $data)
-				: null;
-
+			$iter = $identity->get_member();
 			$is_self = true;
 		}
 
@@ -84,9 +75,10 @@
 
 		// Or when the privacy settings prevent their name from being displayed
 		if (!$override_privacy
-			&& $model->is_private($iter, 'naam')
 			&& !$is_self
-			&& !member_in_commissie(COMMISSIE_BESTUUR))
+			&& !$identity->member_in_committee(COMMISSIE_BESTUUR)
+			&& !$identity->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			&& $model->is_private($iter, 'naam'))
 			return __('Onbekend');
 
 		// Construct a member his full name
@@ -94,4 +86,3 @@
 			 . ($iter->has('tussenvoegsel') ? ' ' . $iter->get('tussenvoegsel') : '')
 			 . ' ' . $iter->get('achternaam');
 	}
-?>

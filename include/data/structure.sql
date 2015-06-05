@@ -680,7 +680,9 @@ CREATE TABLE sessions (
     ip_address inet,
     last_active_on timestamp with time zone,
     timeout interval,
-    application text
+    application text,
+    override_member_id integer DEFAULT NULL,
+    override_committees varchar(255) DEFAULT NULL
 );
 
 --

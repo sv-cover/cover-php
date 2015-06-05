@@ -6,7 +6,7 @@ class PolicyAgenda implements Policy
 {
 	public function user_can_create()
 	{
-		return member_in_commissie();
+		return get_auth()->member_in_committee();
 	}
 
 	public function user_can_read(DataIter $agenda_item)

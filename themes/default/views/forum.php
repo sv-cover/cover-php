@@ -418,7 +418,7 @@
 
 		$commissie_model = get_model('DataModelCommissie');
 
-		foreach ($member_data['commissies'] as $commissie) {
+		foreach ($member_data['committees'] as $commissie) {
 			if ($model->check_acl_commissie($forumid, $acl, $commissie))
 				$authors[$commissie] = $commissie_model->get_naam($commissie);
 		}

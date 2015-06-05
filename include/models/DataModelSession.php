@@ -2,11 +2,18 @@
 
 require_once 'include/data/DataModel.php';
 
+class DataIterSession extends DataIter
+{
+	//
+}
+
 /**
   * A class implementing news data
   */
 class DataModelSession extends DataModel
 {
+	public $dataiter = 'DataIterSession';
+
 	public function __construct($db)
 	{
 		parent::__construct($db, 'sessions', 'session_id');
@@ -33,7 +40,7 @@ class DataModelSession extends DataModel
 
 			$this->db->update($this->table, $update, $id_string, array('last_active_on'));
 
-			return new $this->dataiter($this, $data[$this->id], $data);
+			return $this->_row_to_iter($data);
 		}
 		else
 			return $data;
@@ -53,7 +60,7 @@ class DataModelSession extends DataModel
 			'timeout' => $timeout
 		);
 
-		$iter = new DataIter($this, -1, $data);
+		$iter = new DataIterSession($this, $session_id, $data);
 
 		$this->insert($iter);
 
@@ -69,11 +76,25 @@ class DataModelSession extends DataModel
 		return $this->_rows_to_iters($result);
 	}
 
-	public function destroy($session_id)
+	/**
+	 * Returns a calendar session with a bit longer time to live. When exporting
+	 * links with a session id for external services (like Google Calendar) you
+	 * should use this function. This way when the user logs off he/she does not
+	 * destroy the session used by that external service.
+	 *
+	 * @param int $member_id
+	 * @param string $application the application identifier/name
+	 * @return DataIterSession the session
+	 */
+	public function getForApplication($member_id, $application)
 	{
-		$this->db->delete($this->table,
-			sprintf("session_id = '%s'", $this->db->escape_string($session_id)));
+		$sessions = $this->getActive($member_id);
 
-		return $this->db->get_affected_rows() == 1;
+		foreach ($sessions as $session)
+			if ($session->get('application') == $application)
+				return $session;
+
+		// None found, let's create one
+		return $this->create($member_id, $application, '1 MONTH');
 	}
 }

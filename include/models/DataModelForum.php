@@ -115,7 +115,7 @@
 		  */
 		function _check_acl_commissies($forumid, $acl, $memberid, $member_info = null) {
 			if ($member_info)
-				$commissies = $member_info['commissies'];
+				$commissies = $member_info['committees'];
 			else {
 				$member_model = get_model('DataModelMember');
 				$commissies = $member_model->get_commissies($memberid);

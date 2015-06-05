@@ -84,7 +84,11 @@
 			if ($row === null)
 				throw new DataIterNotFoundException($id);
 			
-			return $this->_row_to_iter($row);
+			$iter = $this->_row_to_iter($row);
+
+			$iter->data['committees'] = $this->get_commissies($id);
+
+			return $iter;
 		}
 		
 		public function get_jarigen()

@@ -681,6 +681,28 @@
 		return preg_replace('/^https?:/', '', $url);
 	}
 
+	function set_domain_cookie($name, $value, $cookie_time = 0)
+	{
+		// Determine the host name for the cookie (try to be as broad as possible so sd.svcover.nl can profit from it)
+		if (preg_match('/([^.]+)\.(?:[a-z\.]{2,6})$/i', $_SERVER['HTTP_HOST'], $match))
+			$domain = $match[0];
+		else if ($_SERVER['HTTP_HOST'] != 'localhost')
+			$domain = $_SERVER['HTTP_HOST'];
+		else
+			$domain = null;
+
+		// If the value is empty, expire the cookie
+		if ($value === null)
+			$cookie_time = 1;
+
+		setcookie($name, $value, $cookie_time, '/', $domain);
+
+		if ($cookie_time === 0 || $cookie_time > time())
+			$_COOKIE[$name] = $value;
+		else
+			unset($_COOKIE[$name]);
+	}
+
 	/**
 	 * Implementation of array_search that supports a user-defined compare function.
 	 * Returns the key or index at which $needle is found in $haystack. If needle

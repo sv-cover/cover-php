@@ -132,10 +132,8 @@
 	function i18n_get_locale() {
 		/* TODO: make this member configurable. 
 		   Default to global locale for now */
-		$member_data = logged_in();
-		
-		if ($member_data)
-			$language = $member_data['taal'];
+		if (get_auth()->logged_in())
+			$language = get_identity()->get('taal');
 		elseif (isset($_SESSION['taal']))
 			$language = $_SESSION['taal'];
 		else
