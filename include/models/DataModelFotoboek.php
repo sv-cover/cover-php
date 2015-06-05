@@ -137,32 +137,47 @@
 				$imagick = new Imagick();
 				$imagick->readImage($this->get_full_path());
 
-				// Rotate the image according to the EXIF data
-				switch($imagick->getImageOrientation())
+				if ($imagick->getImageFormat() == 'GIF')
 				{
-					case imagick::ORIENTATION_BOTTOMRIGHT:
-						$imagick->rotateimage('#000', 180); // rotate 180 degrees 
-						break; 
+					$gifmagick = $imagick->coalesceImages();
 
-					case imagick::ORIENTATION_RIGHTTOP:
-						$imagick->rotateimage('#000', 90); // rotate 90 degrees CW 
-						break; 
+					do {
+						$gifmagick->resizeImage($scaled_width, $scaled_height, Imagick::FILTER_BOX, 1);
+					} while ($gifmagick->nextImage());
 
-					case imagick::ORIENTATION_LEFTBOTTOM:
-						$imagick->rotateimage('#000', -90); // rotate 90 degrees CCW 
-						break;
+					$imagick = $gifmagick->deconstructImages();
+					$imagick->writeImagesFile($fhandle);
+				}
+				else
+				{
+					// Rotate the image according to the EXIF data
+					switch($imagick->getImageOrientation())
+					{
+						case imagick::ORIENTATION_BOTTOMRIGHT:
+							$imagick->rotateimage('#000', 180); // rotate 180 degrees 
+							break; 
+
+						case imagick::ORIENTATION_RIGHTTOP:
+							$imagick->rotateimage('#000', 90); // rotate 90 degrees CW 
+							break; 
+
+						case imagick::ORIENTATION_LEFTBOTTOM:
+							$imagick->rotateimage('#000', -90); // rotate 90 degrees CCW 
+							break;
+					}
+
+					// Scale the image
+					$imagick->scaleImage($scaled_width, $scaled_height);
+
+					// Strip EXIF data
+					$imagick->stripImage();
+
+					// Write the image as a progressive JPEG
+					$imagick->setImageFormat('jpg');
+					$imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+					$imagick->writeImageFile($fhandle);
 				}
 
-				// Scale the image
-				$imagick->scaleImage($scaled_width, $scaled_height);
-
-				// Strip EXIF data
-				$imagick->stripImage();
-
-				// Write the image as a progressive JPEG
-				$imagick->setImageFormat('jpg');
-				$imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
-				$imagick->writeImageFile($fhandle);
 				$imagick->destroy();
 				fclose($fhandle);
 			}
