@@ -1859,6 +1859,7 @@ body .ui-autocomplete a.profile .starting-year {
 	position: absolute;
 	width: 20px;
 	height: 20px;
+	font-size: 14px;
 	right: 0;
 	top: 0;
 	cursor: pointer;
