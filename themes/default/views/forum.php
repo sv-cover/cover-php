@@ -29,11 +29,9 @@
 		/*
 		<h2>' . $iter->get('subject') . '</h2>
 		*/
-		$page = $params['page'];
 		
-		if (!$page)
-			$page = 0;
-
+		$page = isset($params['page']) ? $params['page'] : 0;
+		
 		$messages = $iter->get_messages($page, $max);
 
 		$bar = '';

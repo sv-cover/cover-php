@@ -78,7 +78,7 @@ foreach ($iter as $punt):
 
 <p><?=__('De Coveragenda is ook beschikbaar in verschillende standaarden:')?> 
 <?php if (get_auth()->logged_in()): ?>
-<a href="agenda.php?format=webcal&amp;session_id=<?=get_model('DataModelSession')->getForApplication(get_auth()->get('id'), 'calendar')?>">iCal (website)</a>, 
+<a href="agenda.php?format=webcal&amp;session_id=<?=get_model('DataModelSession')->getForApplication(get_identity()->get('id'), 'calendar')->get('session_id')?>">iCal (website)</a>, 
 <?php endif ?>
 <a href="http://www.google.com/calendar/feeds/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic">XML (gcal)</a>,
 <a href="http://www.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics">iCal (gcal)</a></p>
