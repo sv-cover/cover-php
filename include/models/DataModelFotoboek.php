@@ -28,7 +28,7 @@
 				$width = round($max_height * ($size[0] / $size[1]));
 			}
 
-			return array($width, $height);
+			return array($width, $height, $width / $size[0]);
 		}
 
 		public function compute_size()
@@ -124,19 +124,25 @@
 
 			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
 
-			if (!file_exists($scaled_path)
+			list($scaled_width, $scaled_height, $scale) = $this->get_scaled_size($width, $height);
+
+			// If we are upscaling, just use the original image
+			if ($scale > 1.0)
+				$scaled_path = $this->get_full_path();
+
+			// If we are using a scaled image but it doesn't exist, create it :D
+			elseif (!file_exists($scaled_path)
 				|| filesize($scaled_path) === 0
 				|| $skip_cache)
 			{
 				if (!file_exists(dirname($scaled_path)))
 					mkdir(dirname($scaled_path), 0777, true);
-
-				list($scaled_width, $scaled_height) = $this->get_scaled_size($width, $height);
-
+				
 				$fhandle = fopen($scaled_path, 'wb');
 				$imagick = new Imagick();
 				$imagick->readImage($this->get_full_path());
 
+				// Is it a GIF image? Scale each frame individually 
 				if ($imagick->getImageFormat() == 'GIF')
 				{
 					$gifmagick = $imagick->coalesceImages();
@@ -181,7 +187,7 @@
 				$imagick->destroy();
 				fclose($fhandle);
 			}
-
+			
 			return fopen($scaled_path, 'rb');
 		}
 
