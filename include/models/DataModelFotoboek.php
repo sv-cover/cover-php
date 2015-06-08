@@ -714,9 +714,11 @@
 				WHERE
 					b_c.visibility <= %d
 				GROUP BY
-					f.id',
-					get_policy($this)->get_access_level(), // BAD DEPENDENCY!
-					$book->get_id());
+					f.id
+				HAVING
+					COUNT(f.id) > 0',
+					$book->get_id(),
+					get_policy($this)->get_access_level()); // BAD DEPENDENCY!
 
 			if ($random)
 				$query .= ' ORDER BY RANDOM()';

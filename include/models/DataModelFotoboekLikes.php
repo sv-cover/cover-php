@@ -94,7 +94,7 @@ class DataModelFotoboekLikes extends DataModel
 		if (count($photos) === 0)
 			return array();
 
-		$ids = array_map(function($photo) {
+		$ids = array_map(function(DataIterPhoto $photo) {
 			return $photo->get_id();
 		}, $photos);
 
@@ -110,7 +110,13 @@ class DataModelFotoboekLikes extends DataModel
 				foto_id',
 			$this->table, implode(',', $ids)));
 
-		return $this->_rows_to_table($stmt, 'foto_id', 'likes');
+		$table = $this->_rows_to_table($stmt, 'foto_id', 'likes');
+
+		foreach ($photos as $photo)
+			if (!isset($table[$photo->get_id()]))
+				$table[$photo->get_id()] = 0;
+
+		return $table;
 	}
 
 	public function get_book(DataIter $member)
