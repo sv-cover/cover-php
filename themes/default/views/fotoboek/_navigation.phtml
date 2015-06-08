@@ -9,20 +9,26 @@ $policy = get_policy($model);
 		<tr>
 			<td>
 			<?php if (($prev = $iter->get_previous_book()) && $policy->user_can_read($prev)): ?>
-				<a href="fotoboek.php?book=<?= $prev->get_id() ?>"><?= image('previous.png', __('Vorige'), __('Ga naar vorig boek')) ?></a>
-				<a href="fotoboek.php?book=<?= $prev->get_id() ?>"><?= htmlspecialchars($prev->get('titel')) ?></a>
+				<a href="fotoboek.php?book=<?=$prev->get_id()?>">
+					<i class="fa fa-arrow-circle-o-left"></i>
+					<?=markup_format_text($prev->get('titel')) ?>
+				</a>
 			<?php endif ?>
 			</td>
 			<td>
 			<?php if (($parent = $iter->get_parent()) && $policy->user_can_read($parent)): ?>
-				<a href="fotoboek.php?book=<?=$parent->get_id()?>"><?=image('up.png', __('Bovenliggende'), __('Ga naar bovenliggend boek')) ?></a>
-				<a href="fotoboek.php?book=<?=$parent->get_id()?>"><?=markup_format_text($parent->get('titel')) ?></a>
+				<a href="fotoboek.php?book=<?=$parent->get_id()?>">
+					<i class="fa fa-arrow-circle-o-up"></i>
+					<?=markup_format_text($parent->get('titel')) ?>
+				</a>
 			<?php endif ?>
 			</td>
 			<td>
 			<?php if (($next = $iter->get_next_book()) && $policy->user_can_read($next)): ?>
-				<a href="fotoboek.php?book=<?= $next->get_id() ?>"><?= htmlspecialchars($next->get('titel')) ?></a>
-				<a href="fotoboek.php?book=<?= $next->get_id() ?>"><?= image('next.png', __('Volgende'), __('Ga naar volgend boek')) ?></a>
+				<a href="fotoboek.php?book=<?=$next->get_id() ?>">
+					<?=markup_format_text($next->get('titel')) ?>
+					<i class="fa fa-arrow-circle-o-right"></i>
+				</a>
 			<?php endif ?>
 			</td>
 		</tr>

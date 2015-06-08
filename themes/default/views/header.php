@@ -28,8 +28,7 @@
 			'fotoboek' => 'fotoboek;markup',
 			'forum' => 'forum;markup',
 			'weblog' => 'weblog;markup',
-			'nieuwlid' => 'nieuwlid',
-			'mailinglijsten' => 'font-awesome.min'
+			'nieuwlid' => 'nieuwlid'
 		);
 		
 		if (isset($mapping[$controller]))
@@ -367,6 +366,7 @@
 		echo '<title>' . markup_format_text($title) . '</title>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="' . get_theme_data('style.css') . '" type="text/css">
+		<link rel="stylesheet" href="' . get_theme_data('styles/font-awesome.min.css') . '" type="text/css">
 		<!--[if lte IE 7]>
 			<link rel="stylesheet" href="'. get_theme_data('styleIE.css') .'" type = "text/css" />
 		<![endif]-->';

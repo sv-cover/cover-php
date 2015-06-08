@@ -1726,10 +1726,14 @@ form.inline-form {
 	line-height: 20px;
 }
 
-.create-link {
+.create-link:before {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	content: "\f067";
 	display: inline-block;
-	background: transparent url(images/add.png) left center / 20px no-repeat;
-	text-indent: 20px;
+	padding-right: 3px;
 }
 
 .cmn-toggle {

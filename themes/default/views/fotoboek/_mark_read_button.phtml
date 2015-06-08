@@ -4,6 +4,9 @@
 	&& ctype_digit($iter->get_id()) && $iter->count_books() > 0): // which is not artificial (faces, likes) and has photos
 ?>
 <form method="post" action="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=mark_book_read">
-	<button type="submit" class="button mark-read-button"><?=__('Markeer alle boeken als gezien')?></button>
+	<button type="submit" class="button mark-read-button">
+		<i class="fa fa-check"></i>
+		<?=__('Markeer alle boeken als gezien')?>
+	</button>
 </form>
 <?php endif ?>

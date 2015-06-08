@@ -460,7 +460,7 @@ table.navigation td:nth-child(3) {
 
 .photobook .visibility {
 	display: inline-block;
-	vertical-align: top;
+	vertical-align: bottom;
 	overflow: hidden;
 	width: 16px;
 	height: 16px;

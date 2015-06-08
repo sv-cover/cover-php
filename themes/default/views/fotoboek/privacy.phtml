@@ -13,11 +13,17 @@
 			<ul class="option-group">
 				<li>
 					<input type="radio" id="privacy-visibility-visible" name="visibility" value="visible" <?=$visibility == 'visible' ? 'checked' : ''?>>
-					<label for="privacy-visibility-visible"><?=__('Toon in het overzicht van mij') ?></label>
+					<label for="privacy-visibility-visible">
+						<i class="fa fa-eye"></i>
+						<?=__('Toon in het overzicht van mij') ?>
+					</label>
 				</li>
 				<li>
 					<input type="radio" id="privacy-visibility-hidden" name="visibility" value="hidden" <?=$visibility == 'hidden' ? 'checked' : ''?>>
-					<label for="privacy-visibility-hidden"><?=__('Laat weg uit het overzicht van mij') ?></label>
+					<label for="privacy-visibility-hidden">
+						<i class="fa fa-eye-slash"></i>
+						<?=__('Laat weg uit het overzicht van mij') ?>
+					</label>
 				</li>
 			</ul>
 		</div>
