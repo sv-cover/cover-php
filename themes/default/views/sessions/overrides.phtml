@@ -8,7 +8,7 @@
 			</legend>
 			
 			<label><?=__('Commissies')?></label>
-			<ul class="option-group">
+			<ul class="option-group columns">
 				<?php foreach (get_model('DataModelCommissie')->get() as $committee): ?>
 				<li>
 					<?=input_checkbox('override_committee_ids[]', ['override_committee_ids' => get_identity()->get_override_committees()], $committee->get_id(), 'id', 'field-override-committee-' . $committee->get_id())?>

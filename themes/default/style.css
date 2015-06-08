@@ -29,13 +29,20 @@ a:hover
 {
 	text-decoration: none;
 }
-.messageBox a, .messageBox a:visited, .buttons a, .buttons a:visited { 
-color: #004274;
-text-decoration: none; 
+.messageBox a,
+.messageBox a:visited,
+.buttons a,
+.buttons a:visited,
+.modal .window a,
+.modal .window a:visited { 
+	color: #004274;
+	text-decoration: none; 
 } 
-.messageBox a:hover, .buttons a:hover {  
-color: #004274;
-text-decoration: underline; 
+.messageBox a:hover,
+.buttons a:hover,
+.modal .window a:hover {  
+	color: #004274;
+	text-decoration: underline; 
 }
 
 h1, h2, h3 ,h4
@@ -521,7 +528,12 @@ border-radius: 0 0 5px 5px;
 	top: 65px;
 	text-align: center;
 	display: block;
+	font-size: 16px;
 	line-height: 16px;
+}
+
+.photobook .controls a {
+	color: #000;
 }
 
 .photobook.unread .photo-book-title:after {
@@ -1296,7 +1308,9 @@ div.beheer table {
 .vertical-form .option-group {
 	list-style: none;
 	line-height: 20px;
+}
 
+.vertical-form .option-group.columns {
 	columns: 3;
     -webkit-columns: 3;
     -moz-columns: 3;
