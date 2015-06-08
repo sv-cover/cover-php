@@ -95,8 +95,7 @@ class DatabasePDO
 		if ($this->history !== null)
 			$this->history[] = array(
 				'query' => $query,
-				'duration' => $duration,
-				'backtrace' => debug_backtrace()
+				'duration' => $duration
 			);
 
 		if ($handle === false) {
