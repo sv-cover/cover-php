@@ -279,6 +279,27 @@
 		{
 			return 'fotoboek';
 		}
+
+		public function get_key_photo()
+		{
+			$photos = $this->model->get_photos_recursive($this);
+
+			if (!count($photos))
+				return null;
+
+			$likes_model = get_model("DataModelFotoboekLikes");
+			$likes = $likes_model->count_for_photos($photos);
+
+			$best_rating = max($likes);
+
+			$selected_photos = array();
+
+			foreach ($photos as $photo)
+				if ($likes[$photo->get_id()] == $best_rating)
+					$selected_photos[] = $photo;
+
+			return $selected_photos[mt_rand(0, count($selected_photos) - 1)];
+		}
 	}
 
 	class DataIterRootPhotobook extends DataIterPhotobook
