@@ -200,6 +200,26 @@
 				return $this->_row_to_iter($row, $dataiter);
 			}, $rows);
 		}
+
+		protected function _rows_to_table($rows, $key_field, $value_field)
+		{
+			
+
+			if (is_array($value_field))
+				$create_value = function($row) use ($value_field) {
+					return array_map(function($field) use ($row) {
+						return $row[$field];
+					}, $value_field);
+				};
+			else
+				$create_value = function($row) use ($value_field) {
+					return $row[$value_field]; 
+				};
+
+			return array_combine(
+				array_map(function($row) use ($key_field) { return $row[$key_field]; }, $rows),
+				array_map($create_value, $rows));
+		}
 		
 		/**
 		  * Get all rows in the model
