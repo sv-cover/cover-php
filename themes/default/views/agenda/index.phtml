@@ -1,6 +1,6 @@
 <div class="pageHeading">
 	<?php if (get_policy($model)->user_can_create()): ?>
-		<div class="controls inline"><a href="<?=$controller->link_to_create()?>" class="open-in-dialog"><?= image('add.png', __('Toevoegen'), __('Een nieuw agendapunt maken')) ?><?= __('Nieuw agendapunt') ?></a></div>
+		<div class="controls inline"><a href="<?=$controller->link_to_create()?>" class="create-link"><?= __('Nieuw agendapunt') ?></a></div>
 	<?php endif ?>
 	<h1><?= $this->get_title() ?></h1>
 </div>
@@ -11,11 +11,17 @@
 <?php endif ?>
 
 <?php if (($prev_year = $this->get_previous_year()) !== null): ?>
-<a href="agenda.php?year=<?=$prev_year?>" class="prev-year"><?printf(__('Toon alles uit het jaar %d-%d'), $prev_year, $prev_year + 1)?></a>
+<a href="agenda.php?year=<?=$prev_year?>" class="prev-year">
+	<i class="fa fa-arrow-circle-o-left"></i>
+	<?printf(__('Toon alles uit het jaar %d-%d'), $prev_year, $prev_year + 1)?>
+</a>
 <?php endif ?>
 
 <?php if (($next_year = $this->get_next_year()) !== null): ?>
-<a href="agenda.php?year=<?=$next_year?>" class="next-year"><?printf(__('Toon alles uit het jaar %d-%d'), $next_year, $next_year + 1)?></a>
+<a href="agenda.php?year=<?=$next_year?>" class="next-year">
+	<?printf(__('Toon alles uit het jaar %d-%d'), $next_year, $next_year + 1)?>
+	<i class="fa fa-arrow-circle-o-right"></i>
+</a>
 <?php endif ?>
 
 
