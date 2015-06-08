@@ -7,7 +7,7 @@
 	<tr><th><?= __('Datum') ?>:</th><td><?= markup_format_text($iter->get('datum')) ?></td></tr>
 <?php endif ?>
 
-<?php if ($iter->has('beschrijving')): ?>
+<?php if ($iter->has('beschrijving') && strlen($iter->get('beschrijving')) > 0): ?>
 	<tr><th><?= __('Beschrijving') ?>:</th><td><?= markup_parse($iter->get('beschrijving')) ?></td></tr>
 <?php endif ?>
 
