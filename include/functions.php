@@ -480,11 +480,16 @@
 		return $s;
 	}
 	
-	function get_theme_data($path) {
-		if (!file_exists('themes/' . get_theme() . '/' . $path) || get_theme() == 'default')
-			return 'themes/default/' . $path;
+	function get_theme_data($file, $include_filemtime = true) {
+		if (!file_exists('themes/' . get_theme() . '/' . $file) || get_theme() == 'default')
+			$path = 'themes/default/' . $file;
 		else
-			return 'themes/' . get_theme() . '/' . $path;
+			$path = 'themes/' . get_theme() . '/' . $file;
+
+		if ($include_filemtime && file_exists($path))
+			$path .= '?' . filemtime($path);
+
+		return $path;
 	}
 	
 	/** @group Functions

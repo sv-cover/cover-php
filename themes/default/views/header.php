@@ -366,14 +366,14 @@
 		
 		echo '<title>' . markup_format_text($title) . '</title>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-		<link rel="stylesheet" href="' . get_theme_data('style.css') . '?'.time().'" type="text/css">
+		<link rel="stylesheet" href="' . get_theme_data('style.css') . '" type="text/css">
 		<!--[if lte IE 7]>
 			<link rel="stylesheet" href="'. get_theme_data('styleIE.css') .'" type = "text/css" />
 		<![endif]-->';
 		$styles = get_styles();
 		
 		foreach ($styles as $style)
-			echo '<link rel="stylesheet" href="' . get_theme_data('styles/' . $style . '.css') . '?'.time().'" type="text/css">' . "\n";
+			echo '<link rel="stylesheet" href="' . get_theme_data('styles/' . $style . '.css')  . '" type="text/css">' . "\n";
 		
 		$controller = basename($_SERVER['PHP_SELF'], '.php');
 		
