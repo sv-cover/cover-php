@@ -32,6 +32,15 @@
 			$this->changes = array();
 			$this->literals = array();
 		}
+
+		public function __debugInfo()
+		{
+			return [
+				'_id' => $this->_id,
+				'namespace' => $this->namespace,
+				'data' => $this->data
+			];
+		}
 		
 		/**
 		  * Get the id of the iter
