@@ -9,6 +9,10 @@
 		const EXIF_ORIENTATION_90_RIGHT = 6;
 		const EXIF_ORIENTATION_90_LEFT = 8;
 
+		const LANDSCAPE = 'landscape';
+		const PORTRAIT = 'portrait';
+		const SQUARE = 'square';
+
 		public function get_size()
 		{
 			return array($this->get('width'), $this->get('height'));
@@ -29,6 +33,18 @@
 			}
 
 			return array($width, $height, $width / $size[0]);
+		}
+
+		public function get_orientation()
+		{
+			list($width, $height) = $this->get_size();
+
+			if ($width == $height)
+				return self::SQUARE;
+			if ($width > $height)
+				return self::LANDSCAPE;
+			else
+				return self::PORTRAIT;
 		}
 
 		public function compute_size()
@@ -280,7 +296,7 @@
 			return 'fotoboek';
 		}
 
-		public function get_key_photo()
+		public function get_key_photos($limit)
 		{
 			$photos = $this->model->get_photos_recursive($this);
 
@@ -290,15 +306,11 @@
 			$likes_model = get_model("DataModelFotoboekLikes");
 			$likes = $likes_model->count_for_photos($photos);
 
-			$best_rating = max($likes);
+			usort($photos, function(DataIterPhoto $left, DataIterPhoto $right) use ($likes) {
+				return $likes[$right->get_id()] - $likes[$left->get_id()];
+			});
 
-			$selected_photos = array();
-
-			foreach ($photos as $photo)
-				if ($likes[$photo->get_id()] == $best_rating)
-					$selected_photos[] = $photo;
-
-			return $selected_photos[mt_rand(0, count($selected_photos) - 1)];
+			return array_slice($photos, 0, $limit);
 		}
 	}
 

@@ -762,3 +762,9 @@
 	{
 		return 'data:' . $mime_type . ';base64,' . base64_encode($data);
 	}
+
+	function array_sample(array $input, $sample_size)
+	{
+		shuffle($input);
+		return array_slice($input, 0, $sample_size);
+	}
