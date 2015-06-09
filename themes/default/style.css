@@ -1726,7 +1726,8 @@ form.inline-form {
 	line-height: 20px;
 }
 
-.create-link:before {
+.create-link:before,
+.edit-link:before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit;
 	text-rendering: auto;
@@ -1734,6 +1735,10 @@ form.inline-form {
 	content: "\f067";
 	display: inline-block;
 	padding-right: 3px;
+}
+
+.edit-link:before {
+	content: "\f044";
 }
 
 .cmn-toggle {

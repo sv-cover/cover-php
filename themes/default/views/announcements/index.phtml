@@ -7,7 +7,7 @@ foreach ($iter as $item)
 
 <div class="newsHeading">
 	<?php if (get_policy($model)->user_can_create()): ?>
-		<div class="controls inline"><a href="announcements.php?view=create" class="open-in-dialog"><?= image('new.png', __('Toevoegen'), __('Een nieuwe mededeling toevoegen')) ?><?= __('Nieuwe mededeling') ?></a></div>
+		<div class="controls inline"><a href="announcements.php?view=create" class="create-link"><?= __('Nieuwe mededeling') ?></a></div>
 	<?php endif ?>
 	<h1><?= __('Mededelingen') ?></h1>
 	<?php if ($hidden_counter > 0): ?>

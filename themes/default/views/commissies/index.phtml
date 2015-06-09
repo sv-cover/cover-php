@@ -1,6 +1,6 @@
 <div class="pageHeading">
 	<?php if (get_policy($model)->user_can_create()): ?>
-		<div class="controls inline"><a href="<?=$controller->link_to_create()?>" class="open-in-dialog"><?= image('new.png', __('Toevoegen'), __('Een nieuwe commissie maken')) ?><?= __('Nieuwe commissie') ?></a></div>
+		<div class="controls inline"><a href="<?=$controller->link_to_create()?>" class="create-link"><?= __('Nieuwe commissie') ?></a></div>
 	<?php endif ?>
 	<h1><?= __('Commissies') ?></h1>
 </div>

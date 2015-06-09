@@ -4,7 +4,7 @@ $editable = new ControllerEditable($iter->get('page'));
 <div class="pageheading">
 	<?php if (get_policy($model)->user_can_update($iter)): ?>
 	<div class="controls inline">
-		<a href="<?=markup_format_attribute($controller->link_to_update($iter))?>"><?=__('Commissie wijzigen')?></a>
+		<a href="<?=markup_format_attribute($controller->link_to_update($iter))?>" class="edit-link"><?=__('Wijzig commissie')?></a>
 	</div>
 	<?php endif ?>
 	<h1><?= markup_format_text($iter->get('naam')) ?></h1>
@@ -21,7 +21,7 @@ if ($iter->get('vacancies'))
 	<div class="content">
 		<?php if($editable->user_can_update()): ?>
 		<div class="controls inline">
-			<a href="<?=markup_format_attribute($editable->link_to_update()) ?>"><?= image('edit.png', __('bewerken'), __('Pagina bewerken'))?></a>
+			<a href="<?=markup_format_attribute($editable->link_to_update()) ?>" class="edit-link"><?= __('Bewerk commissiepagina')?></a>
 		</div>
 		<?php endif ?>
 		

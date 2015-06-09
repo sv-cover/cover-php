@@ -1,4 +1,9 @@
-<h1><?=__('Mailinglijsten')?> :: <?=markup_format_text($lijst->get('naam'))?></h1>
+<div class="pageHeading">
+	<?php if ($model->member_can_edit($lijst->get('id'))): ?>
+		<div class="controls inline"><a href="##mailinglist-settings" class="edit-link"><?= __('Bewerk mailinglijsteigenschappen') ?></a></div>
+	<?php endif ?>
+	<h1><?=__('Mailinglijsten')?> / <?=markup_format_text($lijst->get('naam'))?></h1>
+</div>
 <div class="messageBox">
 	<div class="section mailinglist-header">
 		<p>
@@ -150,7 +155,7 @@ jQuery(function($) {
 		$('<a>')
 			.addClass('button')
 			.attr({'href': '#mailinglist-settings'})
-			.text(<?=json_encode(__('Bewerk lijst'))?>));
+			.text(<?=json_encode(__('Bewerk mailinglijsteigenschappen'))?>));
 	
 	$('#lid_id')
 		.bind('keydown', function(e) {

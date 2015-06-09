@@ -1,11 +1,11 @@
-<h1><?= __('Mailinglijsten') ?></h1>
+<div class="pageHeading">
+	<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+		<div class="controls inline"><a href="#new-list" class="create-link"><?= __('Nieuwe mailinglijst') ?></a></div>
+	<?php endif ?>
+	<h1><?= __('Mailinglijsten') ?></h1>
+</div>
 <div class="messageBox mailinglists">
 <?php if (member_in_commissie(COMMISSIE_EASY)): ?>
-	<a href="#new-list" class="button floatRight">
-		<img src="themes/default/images/add.png">
-		<?=__('Nieuwe mailinglijst')?>
-	</a>
-
 	<div id="new-list" class="section hide-by-default">
 		<form method="post" class="vertical-form" action="mailinglijsten.php?lijst_id=">
 			<div>
