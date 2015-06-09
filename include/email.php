@@ -544,5 +544,5 @@ function reply(MessagePart $message, $reply_text)
 	return $reply;
 }
 
-if (realpath($_SERVER['PWD'] . '/' . $_SERVER['PHP_SELF']) == __FILE__)
+if (isset($_SERVER['PWD']) && realpath($_SERVER['PWD'] . '/' . $_SERVER['PHP_SELF']) == __FILE__)
 	var_dump(MessagePart::parse_stream(new PeakableStream(STDIN))->toString());
