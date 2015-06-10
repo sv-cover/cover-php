@@ -14,7 +14,7 @@ $next_committee = $current_index !== null && $current_index < count($committees)
 	? $committees[$current_index + 1]
 	: null;
 ?>
-<div class="committee-navigation">
+<div class="committee-navigation navigation">
 	<?php if ($prev_committee): ?>
 		<a href="<?=markup_format_attribute($this->controller->link_to_read($prev_committee))?>" class="previous">
 			<?=markup_format_text($prev_committee->get('naam'))?>

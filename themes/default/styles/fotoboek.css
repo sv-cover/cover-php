@@ -146,16 +146,6 @@ table.navigation td:nth-child(3) {
 	display: inline;
 }
 
-.photo-controls .prev-button {
-	position: absolute;
-	left: 0;
-}
-
-.photo-controls .next-button {
-	position: absolute;
-	right: 0;
-}
-
 .like-button {
 	display: inline-block;
 	width: 20px;

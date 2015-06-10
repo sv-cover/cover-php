@@ -1901,6 +1901,63 @@ body .ui-autocomplete a.profile .starting-year {
 	width: 400px;
 }
 
+
+.navigation {
+	height: 20px;
+	line-height: 20px;
+	position: relative;
+	text-align: center;
+}
+
+.navigation .previous:before,
+.navigation .next:before,
+.navigation .up:before {
+	position: absolute;
+	top: 0;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	line-height: 20px;
+}
+
+.navigation .previous:before {
+	left: 0;
+	content: '\f053';
+}
+
+.navigation .next:before {
+	right: 0;
+	content: '\f054';
+}
+
+.navigation .up:before {
+	top: -16px;
+	left: 0;
+	right: 0;
+	content: '\f077';
+}
+
+.navigation .previous {
+	position: absolute;
+	padding-left: 12px;
+	top: 0;
+	left: 0;
+}
+
+.navigation .next {
+	position: absolute;
+	padding-right: 12px;
+	top: 0;
+	right: 0;
+}
+
+.navigation .up {
+	position: relative;
+
+}
+
+
 /* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
 
 #page_51 table.markup_default td img, table.markup_noborder td img {

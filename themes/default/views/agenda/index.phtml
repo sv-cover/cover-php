@@ -10,20 +10,23 @@
 	<p class="italic"><?= __('Log in om eventuele afgeschermde agendapunten te bekijken.') ?></p>
 <?php endif ?>
 
-<?php if (($prev_year = $this->get_previous_year()) !== null): ?>
-<a href="agenda.php?year=<?=$prev_year?>" class="prev-year">
-	<i class="fa fa-arrow-circle-o-left"></i>
-	<?printf(__('Toon alles uit het jaar %d-%d'), $prev_year, $prev_year + 1)?>
-</a>
-<?php endif ?>
+<div class="navigation">
+	<?php if (($prev_year = $this->get_previous_year()) !== null): ?>
+	<a href="agenda.php?year=<?=$prev_year?>" class="previous">
+		<?printf(__('Toon alles uit het jaar %d-%d'), $prev_year, $prev_year + 1)?>
+	</a>
+	<?php endif ?>
 
-<?php if (($next_year = $this->get_next_year()) !== null): ?>
-<a href="agenda.php?year=<?=$next_year?>" class="next-year">
-	<?printf(__('Toon alles uit het jaar %d-%d'), $next_year, $next_year + 1)?>
-	<i class="fa fa-arrow-circle-o-right"></i>
-</a>
-<?php endif ?>
-
+	<?php if (($next_year = $this->get_next_year()) !== null): ?>
+	<a href="agenda.php?year=<?=$next_year?>" class="next">
+		<?printf(__('Toon alles uit het jaar %d-%d'), $next_year, $next_year + 1)?>
+	</a>
+	<?php elseif (isset($_GET['year'])): ?>
+	<a href="agenda.php" class="next">
+		<?=__('Toon actuele agenda')?>
+	</a>	
+	<?php endif ?>
+</div>
 
 <table class="agenda" style="background-color: #000;">
 
