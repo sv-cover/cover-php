@@ -156,6 +156,7 @@ if (logged_in()) {
 
 		$face.resizable({
 			containment: $photo,
+			aspectRatio: 1,
 			stop: function(event, ui) {
 				var data = [
 					{name: 'w', value: ui.size.width / $image.width()},
