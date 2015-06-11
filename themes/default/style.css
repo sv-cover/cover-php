@@ -1919,6 +1919,7 @@ body .ui-autocomplete a.profile .starting-year {
 	text-rendering: auto;
 	-webkit-font-smoothing: antialiased;
 	line-height: 20px;
+	transition: left 200ms, right 200ms, top 200ms;
 }
 
 .navigation .previous:before {
@@ -1926,9 +1927,16 @@ body .ui-autocomplete a.profile .starting-year {
 	content: '\f053';
 }
 
+.navigation .previous:hover:before {
+	left: -1px;
+}
 .navigation .next:before {
 	right: 0;
 	content: '\f054';
+}
+
+.navigation .next:hover:before {
+	right: -1px;
 }
 
 .navigation .up:before {
@@ -1936,6 +1944,10 @@ body .ui-autocomplete a.profile .starting-year {
 	left: 0;
 	right: 0;
 	content: '\f077';
+}
+
+.navigation .up:hover:before {
+	top: -17px;
 }
 
 .navigation .previous {
