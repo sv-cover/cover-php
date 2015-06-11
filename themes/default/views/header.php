@@ -64,7 +64,7 @@
 			
 			$contents .= "</ul>\n";
 		} else {
-			$contents .= '<p><span class="smaller">' . __('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
+			$contents = '<p><span class="smaller">' . __('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
 		}
 		
 		$contents .= '<p><span class="smaller"><a href="agenda.php"><b>' . __('Volledige agenda') . '</b></a></span></p>';
