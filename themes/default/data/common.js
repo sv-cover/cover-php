@@ -173,7 +173,6 @@ jQuery(function($) {
 
 	$('form.privacy-preference').focus(function(e) {
 		var pos = $(this).offset();
-		console.log(pos);
 
 		$(this).children('ul').show().css({
 			'position': 'fixed',
@@ -194,8 +193,6 @@ jQuery(function($) {
 });
 
 $(document).on('ready partial-content-loaded', function(e) {
-	console.log(e.target);
-
 	$(e.target).find('fieldset:not(.jquery-fieldset)').each(function(i, fieldset) {
 		$(fieldset).addClass('jquery-fieldset');
 
