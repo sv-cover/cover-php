@@ -195,7 +195,7 @@ if (logged_in()) {
 			$face.find('.tag-search').show().focus();
 		});
 
-		$('<input type="text" class="tag-search">')
+		$('<input type="text" class="tag-search" spellcheck="false">')
 			.on('keydown', function(e) {
 				switch (e.keyCode) {
 					case $.ui.keyCode.TAB:
