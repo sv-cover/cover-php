@@ -1535,6 +1535,10 @@ form textarea {
 	right: 0;
 	padding: 0 15px;
 	text-indent: 32px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	padding-right: 150px;
 }
 
 .event-header .rsvp-status-button {
