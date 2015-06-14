@@ -26,7 +26,7 @@
 
 			<div>
 				<?=label(__('Lidnummer'), 'override_member_id')?>
-				<?=input_text('override_member_id', ['override_member_id' => get_identity()->get_override_member() ? get_identity()->get_override_member()->get_id() : null]) ?>
+				<?=input_text('override_member_id', ['override_member_id' => get_identity()->get_override_member() ? get_identity()->get_override_member()->get_id() : null], 'data-autocomplete', 'member_id') ?>
 			</div>
 		</fieldset>
 

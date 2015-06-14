@@ -208,4 +208,14 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 		masterSwitch.on('change', update);
 	});
+
+	$(e.target).find('input[data-autocomplete=member_id]').each(function(i, field) {
+		console.log('ding!', field);
+		$(field).autocompleteAlmanac({
+			select: function(event, ui) {
+				$(this).val(ui.item.id);
+				return false;
+			}
+		});
+	});
 });
