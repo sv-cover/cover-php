@@ -1,27 +1,39 @@
-<h1><?= __('Lidmaatschapsformulier') ?></h1>
-<div class="messageBox">
-<? $e = $errors;
+<?php
+$e = isset($errors) ? $errors : null;
 
 $days = range(0, 31);
 unset($days[0]);
 
 $months = get_months();
-unset($months[0]); ?>
+unset($months[0]);
 
-<p><?=__('De ondergetekende meldt zich hierbij aan als lid van Cover, de studievereniging voor Kunstmatige Intelligentie en Informatica.')?></p>
-<p><?=__('De ondergetekende verklaart hierbij gedurende zijn/haar lidmaatschap akkoord te gaan met de volgende eisen.')?></p>
-<p><?=__('De ondergetekende verplicht zich zijn/haar gegevens correct in te vullen en wijzigingen door te geven.')?></p>
-<p><?=__('Tevens machtigt de ondergetekende Cover jaarlijks de contributie van zijn of haar bankrekening af te schrijven. Indien gewenst zullen boekenverkopen en overige activiteiten via automatische incasso\'s geschieden.')?></p>
-<p><?=__('Bij een onterechte overschrijving heeft de ondergetekende 30 dagen de tijd om deze overschrijving ongedaan te maken.')?></p>
+require_once 'include/controllers/ControllerEditable.php';
 
-<? if ($message) {?>
-<div class="message"><?= $message ?></div>
-<? } 
-if ($e) {?>
-<div class="error-section">
-	<p><?= __('Niet alle velden zijn goed ingevuld') ?></p>
-</div>
-<? } ?>
+$voorwaarden = new ControllerEditable('Voorwaarden aanmelden');
+
+$opmerkingen = new ControllerEditable('Opmerkingen aanmelden');
+
+?>
+<h1><?= __('Lidmaatschapsformulier') ?></h1>
+<div class="messageBox">
+	<?php if ($voorwaarden->user_can_update()): ?>
+	<div class="controls inline">
+		<a href="<?=markup_format_attribute($voorwaarden->link_to_update()) ?>" class="edit-link"><?=__('Bewerk voorwaarden')?></a>
+	</div>
+	<?php endif ?>
+	<h2><?= __('Voorwaarden') ?></h2>
+	<?php $voorwaarden->run(); ?>
+
+	<?php if (!empty($message)): ?>
+	<div class="message"><?= $message ?></div>
+	<?php endif ?>
+
+	<?php if ($e): ?>
+	<div class="error-section">
+		<p><?= __('Niet alle velden zijn goed ingevuld') ?></p>
+	</div>
+	<?php endif ?>
+
 <form method="post" action="lidworden.php" class="new-member-form"><?= input_hidden('submlidworden', 'yes') ?>
 <table>
 
@@ -97,12 +109,11 @@ if ($e) {?>
 </table>
 </form>
 
-<h2><?= __('Opmerkingen') ?></h2>
-<ul>
-	<li><?=__('Contributie wordt zolang je lid bent van Cover jaarlijks van je bankrekening afgeschreven.')?></li>
-	<li><?=__('Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt.')?></li>
-	<li><?=__('Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de secretaris.')?></li>
-	<li><?=__('Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, schriftelijk melden bij de secretaris of in je profiel op de Cover website aanpassen.')?></li>
-	<li><?=__('De contributie bedraagt &euro; 10,- per jaar.')?></li>
-</ul>
+	<?php if ($opmerkingen->user_can_update()): ?>
+	<div class="controls inline">
+		<a href="<?=markup_format_attribute($opmerkingen->link_to_update()) ?>" class="edit-link right"><?=__('Bewerk opmerkingen')?></a>
+	</div>
+	<?php endif ?>
+	<h2><?= __('Opmerkingen') ?></h2>
+	<?php $opmerkingen->run(); ?>
 </div>
