@@ -11,16 +11,16 @@
 
 			<div id="wysihtml-toolbar" class="button-bar" style="display: none;">
 				<span class="button-group">
-					<a data-wysihtml5-command="bold" class="button" title="Bold"><i class="fa fa-bold"></i></a>
-					<a data-wysihtml5-command="italic" class="button" title="Italic"><i class="fa fa-italic"></i></a>
-					<a data-wysihtml5-command="underline" class="button" title="Underline"><i class="fa fa-underline"></i></a>
+					<a data-wysihtml5-command="bold" class="button" title="Bold" tabindex="-1"><i class="fa fa-bold"></i></a>
+					<a data-wysihtml5-command="italic" class="button" title="Italic" tabindex="-1"><i class="fa fa-italic"></i></a>
+					<a data-wysihtml5-command="underline" class="button" title="Underline" tabindex="-1"><i class="fa fa-underline"></i></a>
 				</span>
 				<span class="button-group">
-					<a data-wysihtml5-command="insertOrderedList" class="button" title="Insert ordered list"><i class="fa fa-list-ol"></i></a>
-					<a data-wysihtml5-command="insertUnorderedList" class="button" title="Insert unordered list"><i class="fa fa-list-ul"></i></a>
+					<a data-wysihtml5-command="insertOrderedList" class="button" title="Insert ordered list" tabindex="-1"><i class="fa fa-list-ol"></i></a>
+					<a data-wysihtml5-command="insertUnorderedList" class="button" title="Insert unordered list" tabindex="-1"><i class="fa fa-list-ul"></i></a>
 				</span>
 
-				<a data-wysihtml5-command="createLink" class="button"><i class="fa fa-link"></i>&nbsp;Insert link</a>
+				<a data-wysihtml5-command="createLink" class="button" tabindex="-1"><i class="fa fa-link"></i>&nbsp;Insert link</a>
 				<div data-wysihtml5-dialog="createLink" style="display: none;">
 					<label>Link: <input data-wysihtml5-dialog-field="href" value="http://" class="text"></label>
 					<a data-wysihtml5-dialog-action="save" class="button">OK</a>
@@ -28,10 +28,10 @@
 				</div>
 
 				<span class="button-menu">
-					<a href="javascript:;" class="button">Insert placeholder</a>
+					<a href="javascript:;" class="button" tabindex="-1">Insert placeholder</a>
 					<ul>
-						<li><a data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="[NAME]">Name</a></li>
-						<li><a data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="[UNSUBSCRIBE]">Unsubscribe link</a></li>
+						<li><a data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="[NAME]" tabindex="-1">Name</a></li>
+						<li><a data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="[UNSUBSCRIBE]" tabindex="-1">Unsubscribe link</a></li>
 					</ul>
 				</span>
 			</div>
