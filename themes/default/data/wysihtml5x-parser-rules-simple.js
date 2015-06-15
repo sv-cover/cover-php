@@ -19,6 +19,7 @@ var wysihtml5ParserRules = {
     ul:     {},
     ol:     {},
     li:     {},
+    u:      {},
     a:      {
       set_attributes: {
         target: "_blank",
