@@ -87,7 +87,7 @@ $opmerkingen = new ControllerEditable('Opmerkingen aanmelden');
 
 	<?=$this->render_text_row(__('IBAN'), 'rekening', $e, true, 'size', 24) ?>
 
-	<?= table_row(label('Machtiging', 'machtiging', $e, true), '<label>' . input_checkbox('machtiging', null) . ' ' . __('Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch van mijn rekening af te schrijven (verplicht)') . '</label>') ?>
+	<?= table_row(label('Machtiging', 'machtiging', $e, true), '<label>' . input_checkbox('machtiging', null) . ' ' . __('Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn rekening af te schrijven (verplicht)') . '</label>') ?>
 
 	<tr>
 		<th colspan="2"><?=__('Mailing')?></th>

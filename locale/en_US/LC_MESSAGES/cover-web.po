@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-06-14 19:28+0100\n"
+"POT-Creation-Date: 2015-06-15 14:44+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1762,51 +1762,19 @@ msgstr[1] "There are %d agenda items waiting for your confirmation"
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computing Science"
 
-#: ../../../themes/default/views/lidworden/lidworden.php:15
+#: ../../../themes/default/views/lidworden/lidworden.php:19
 #: ../../../themes/default/views/lidworden/lidworden.phtml:17
 msgid "Lidmaatschapsformulier"
 msgstr "Membership application form"
 
-#: ../../../themes/default/views/lidworden/lidworden.php:16
+#: ../../../themes/default/views/lidworden/lidworden.php:20
 msgid "Je lidmaatschapsaanvraag is verstuurd."
 msgstr "Your membership application has been submitted."
 
-#: ../../../themes/default/views/lidworden/lidworden.php:17
+#: ../../../themes/default/views/lidworden/lidworden.php:21
 #: ../../../themes/default/views/lidworden/lidworden.phtml:117
 msgid "Opmerkingen"
 msgstr "Notes"
-
-#: ../../../themes/default/views/lidworden/lidworden.php:19
-msgid ""
-"Contributie wordt zolang je lid bent van Cover jaarlijks van je bankrekening "
-"afgeschreven."
-msgstr ""
-"Membership fee will be charged annually from your bank account for as long "
-"as you are a member of Cover."
-
-#: ../../../themes/default/views/lidworden/lidworden.php:20
-msgid "Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt."
-msgstr "You are a member until you graduate or cancel your membership."
-
-#: ../../../themes/default/views/lidworden/lidworden.php:21
-msgid ""
-"Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de "
-"secretaris."
-msgstr "Termination of membership shall be done in writing to the secretary."
-
-#: ../../../themes/default/views/lidworden/lidworden.php:22
-msgid ""
-"Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, "
-"schriftelijk melden bij de secretaris of in je profiel op de Cover website "
-"aanpassen."
-msgstr ""
-"You can update your personal details by sending an email to board@svcover."
-"nl, by writing to the secretary or by updating your profile on the Cover "
-"website."
-
-#: ../../../themes/default/views/lidworden/lidworden.php:23
-msgid "De contributie bedraagt &euro; 10,- per jaar"
-msgstr "The membership fee is &euro; 10,- per year."
 
 #: ../../../themes/default/views/mailinglijsten/mailinglijsten.php:24
 msgid "Opt-in"
@@ -3006,11 +2974,11 @@ msgstr "IBAN"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:90
 msgid ""
-"Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) automatisch "
-"van mijn rekening af te schrijven (verplicht)"
+"Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn "
+"rekening af te schrijven (verplicht)"
 msgstr ""
-"I hereby authorise Cover to automatically deduct the membership fee (10 "
-"euros) from my bank account one time per year. (mandatory)"
+"I hereby authorize Cover to automatically deduct the membership fee from my "
+"bank account one time per year. (mandatory)"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:93
 msgid "Mailing"
@@ -3617,6 +3585,41 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid ""
+#~ "Contributie wordt zolang je lid bent van Cover jaarlijks van je "
+#~ "bankrekening afgeschreven."
+#~ msgstr ""
+#~ "Membership fee will be charged annually from your bank account for as "
+#~ "long as you are a member of Cover."
+
+#~ msgid "Je bent lid af wanneer je afstudeert of je lidmaatschap opzegt."
+#~ msgstr "You are a member until you graduate or cancel your membership."
+
+#~ msgid ""
+#~ "Opzegging van het lidmaatschap moet schriftelijk gedaan worden bij de "
+#~ "secretaris."
+#~ msgstr ""
+#~ "Termination of membership shall be done in writing to the secretary."
+
+#~ msgid ""
+#~ "Een wijziging in je gegevens kun je mailen naar bestuur@svcover.nl, "
+#~ "schriftelijk melden bij de secretaris of in je profiel op de Cover "
+#~ "website aanpassen."
+#~ msgstr ""
+#~ "You can update your personal details by sending an email to board@svcover."
+#~ "nl, by writing to the secretary or by updating your profile on the Cover "
+#~ "website."
+
+#~ msgid "De contributie bedraagt &euro; 10,- per jaar"
+#~ msgstr "The membership fee is &euro; 10,- per year."
+
+#~ msgid ""
+#~ "Ik machtig hierbij Cover om 1x per jaar de contributie (10 euro) "
+#~ "automatisch van mijn rekening af te schrijven (verplicht)"
+#~ msgstr ""
+#~ "I hereby authorise Cover to automatically deduct the membership fee (10 "
+#~ "euros) from my bank account one time per year. (mandatory)"
 
 #~ msgid ""
 #~ "De ondergetekende meldt zich hierbij aan als lid van Cover, de "
