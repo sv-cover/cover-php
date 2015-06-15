@@ -224,6 +224,8 @@ class ControllerMailinglijsten extends Controller
 	{
 		$list = $this->model->get_lijst($list_id);
 
+		$errors = [];
+
 		if (!$this->model->member_can_edit($list_id))
 			throw new UnauthorizedException();
 
@@ -250,7 +252,7 @@ class ControllerMailinglijsten extends Controller
 			$list->update();
 		}
 
-		return $this->get_content('mailinglijsten::form_automessage', $list, compact('subject_field', 'message_field'));
+		return $this->get_content('mailinglijsten::form_automessage', $list, compact('subject_field', 'message_field', 'errors'));
 	}
 
 	public function run_embedded($lijst_id)
