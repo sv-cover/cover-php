@@ -211,7 +211,7 @@ function send_welcome_mail(DataIterMailinglijst $lijst, $to)
 	$message = new \Cover\email\MessagePart();
 
 	$message->setHeader('To', $to);
-	$message->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
+	$message->setHeader('From', sprintf('%s <%s>', $lijst->get('naam'), $lijst->get('adres')));
 	$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
 	$message->setHeader('Subject', $lijst->get('on_first_email_subject'));
 	$message->addBody('text/plain', strip_tags($lijst->get('on_first_email_message')));
