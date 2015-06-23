@@ -35,17 +35,14 @@ function parse_email_address($email)
 		return false;
 }
 
-function process_message_committee($message, &$committee)
+function parse_email_addresses($emails)
+{
+	return array_filter(array_map('parse_email_address', explode(',', $emails)));
+}
+
+function process_message_committee($message, $message_headers, $to, &$committee)
 {
 	$commissie_model = get_model('DataModelCommissie');
-
-	// Search who send it
-	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
-		return RETURN_COULD_NOT_DETERMINE_SENDER;
-
-	// Search for the adressed committee
-	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
-		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
 	// Find that committee
 	if (!($committee = $commissie_model->get_from_email($to)))
@@ -72,18 +69,10 @@ function process_message_committee($message, &$committee)
 	return 0;
 }
 
-function process_message_mailinglist($message, &$lijst)
+function process_message_mailinglist($message, $message_header, $to, $from, &$lijst)
 {
 	$mailinglijsten_model = get_model('DataModelMailinglijst');
 
-	// Search who send it
-	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
-		return RETURN_COULD_NOT_DETERMINE_SENDER;
-
-	// Search for the adressed mailing list
-	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
-		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
-	
 	// Find that mailing list
 	if (!($lijst = $mailinglijsten_model->get_lijst($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
@@ -183,15 +172,9 @@ function process_message_mailinglist($message, &$lijst)
 	return 0;
 }
 
-function process_return_to_sender($message, $return_code)
+function process_return_to_sender($message, $message_header, $from, $destination, $return_code)
 {
-	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
-		return RETURN_COULD_NOT_DETERMINE_SENDER;
-
-	if (!preg_match('/^Envelope-to: (.+?)$/m', $message, $match) || !$to = parse_email_address($match[1]))
-		$to = null;
-
-	$notice = 'Sorry, but your message' . ($to ? ' to ' . $to : '') . " could not be delivered:\n" . get_error_message($return_code);
+	$notice = 'Sorry, but your message' . ($destination ? ' to ' . $destination : '') . " could not be delivered:\n" . get_error_message($return_code);
 
 	echo "Return message to sender $from\n";
 
@@ -222,6 +205,9 @@ function send_welcome_mail(DataIterMailinglijst $lijst, $to)
 
 function send_message($message, $email)
 {
+	echo "SENDING MESSAGE TO $email!\n";
+	return;
+
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
 		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
@@ -278,6 +264,17 @@ function get_error_message($return_value)
 	}
 }
 
+function read_message_headers($stream)
+{
+	$message_header = new \cover\email\MessagePart();
+
+	\cover\email\MessagePart::parse_header(
+		new \cover\email\PeakableStream(STDIN),
+		$message_header);
+
+	return $message_header;
+}
+
 function verbose($return_value)
 {
 	if ($return_value !== 0)
@@ -289,34 +286,48 @@ function verbose($return_value)
 function main()
 {
 	// Read the complete email from the stdin.
-	$message = file_get_contents('php://stdin');
-
+	$message = stream_get_contents(STDIN);
+	
 	$lijst = null;
 	$comissie = null;
 
 	if ($message === false || trim($message) == '')
 		return RETURN_FAILURE_MESSAGE_EMPTY;
 
-	// First try sending the message to a committee
-	$return_code = process_message_committee($message, $commissie);
+	// Rewind the STDIN but skip the first line
+	rewind(STDIN);
+	fgets(STDIN);
 
-	// If that didn't work, try sending it to a mailing list
-	if ($return_code == RETURN_COULD_NOT_DETERMINE_COMMITTEE)
+	// Next, read the header of the mail again, but now using the message parser that
+	// correctly handles headers with newlines (which are hell with regexps).
+	$message_header = read_message_headers(STDIN);
+
+	// Test at least the sender already
+	if (!$message_header->header('From') || !$from = parse_email_address($message_header->header('From')))
+		return RETURN_COULD_NOT_DETERMINE_SENDER;
+
+	if (!$message_header->header('Envelope-To') || !$destinations = parse_email_addresses($message_header->header('Envelope-To')))
+		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
+
+	foreach ($destinations as $destination)
 	{
-		// Process the message: parse it and send it to the list.
-		$return_code = process_message_mailinglist($message, $lijst);
+		// First try sending the message to a committee
+		$return_code = process_message_committee($message, $message_header, $destination, $commissie);
+
+		// If that didn't work, try sending it to a mailing list
+		if ($return_code == RETURN_COULD_NOT_DETERMINE_COMMITTEE)
+		{
+			// Process the message: parse it and send it to the list.
+			$return_code = process_message_mailinglist($message, $message_header, $destination, $from, $lijst);
+		}
+
+		// Archive the message.
+		$archief = get_model('DataModelMailinglijstArchief');
+		$archief->archive($message, $from, $lijst, $commissie, $return_code);
+
+		if ($return_code != 0)
+			process_return_to_sender($message, $message_header, $from, $destination, $return_code);
 	}
-
-	// Parse the from header of the message archive
-	if (!preg_match('/^From: (.+?)$/m', $message, $match) || !$from = parse_email_address($match[1]))
-		$from = null;
-
-	// Archive the message.
-	$archief = get_model('DataModelMailinglijstArchief');
-	$archief->archive($message, $from, $lijst, $commissie, $return_code);
-
-	if ($return_code != 0)
-		process_return_to_sender($message, $return_code);
 
 	// Return the result of the processing step.
 	return $return_code;
