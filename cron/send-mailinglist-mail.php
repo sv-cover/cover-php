@@ -205,9 +205,6 @@ function send_welcome_mail(DataIterMailinglijst $lijst, $to)
 
 function send_message($message, $email)
 {
-	echo "SENDING MESSAGE TO $email!\n";
-	return;
-
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
 		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
