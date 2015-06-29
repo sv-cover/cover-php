@@ -282,8 +282,12 @@ function verbose($return_value)
 
 function main()
 {
+	// Copy STDIN to buffer stream because th
+	$buffer_stream = fopen('php://temp', 'r+');
+	stream_copy_to_stream(STDIN, $buffer_stream);
+
 	// Read the complete email from the stdin.
-	$message = stream_get_contents(STDIN);
+	$message = stream_get_contents($buffer_stream);
 	
 	$lijst = null;
 	$comissie = null;
@@ -292,12 +296,14 @@ function main()
 		return RETURN_FAILURE_MESSAGE_EMPTY;
 
 	// Rewind the STDIN but skip the first line
-	rewind(STDIN);
-	fgets(STDIN);
+	rewind($buffer_stream);
+	fgets($buffer_stream); // Skip the first line
 
 	// Next, read the header of the mail again, but now using the message parser that
 	// correctly handles headers with newlines (which are hell with regexps).
-	$message_header = read_message_headers(STDIN);
+	$message_header = read_message_headers($buffer_stream);
+
+	fclose($buffer_stream);
 
 	// Test at least the sender already
 	if (!$message_header->header('From') || !$from = parse_email_address($message_header->header('From')))
