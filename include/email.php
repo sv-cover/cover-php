@@ -381,7 +381,7 @@ class MessagePart
 		return self::parse_stream(new PeakableStream($tmp_stream));
 	}
 
-	static private function parse_header(PeakableStream $stream, MessagePart $message)
+	static public function parse_header(PeakableStream $stream, MessagePart $message)
 	{
 		$header = null;
 
