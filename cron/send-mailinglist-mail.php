@@ -266,7 +266,7 @@ function read_message_headers($stream)
 	$message_header = new \cover\email\MessagePart();
 
 	\cover\email\MessagePart::parse_header(
-		new \cover\email\PeakableStream(STDIN),
+		new \cover\email\PeakableStream($stream),
 		$message_header);
 
 	return $message_header;
@@ -275,7 +275,7 @@ function read_message_headers($stream)
 function verbose($return_value)
 {
 	if ($return_value !== 0)
-		echo get_error_message($return_value);
+		fwrite(STDERR, get_error_message($return_value) . "\n");
 
 	return $return_value;
 }
@@ -287,6 +287,7 @@ function main()
 	stream_copy_to_stream(STDIN, $buffer_stream);
 
 	// Read the complete email from the stdin.
+	rewind($buffer_stream);
 	$message = stream_get_contents($buffer_stream);
 	
 	$lijst = null;
