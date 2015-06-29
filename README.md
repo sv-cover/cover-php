@@ -4,16 +4,16 @@ This is the source code of the Cover website.
 It is mostly undocumented and some parts are not very well written.
 
 ## License
-Note that all the code in this repository is property of Cover. You are allowed to learn from it, play with it and contribute fixes and features to it. You are not allowed to use (parts of) the code or resources (e.g. documents, images) for other projects unrelated to Cover. Unless of course you contributed those parts to this project yourself of course.
+Note that all the code in this repository is property of Cover. You are allowed to learn from it, play with it and contribute fixes and features to it. You are not allowed to use (parts of) the code or resources (e.g. documents, images) for other projects unrelated to Cover. Unless of course you contributed those parts to this project yourself in the first place.
 
 ## Security
-Please, if you find a bug or security issue, please report it by making an issue on the Bitbucket repository or by notifying the WebCie at webcie@svcover.nl.
+Please, if you find a bug or security issue, please report it by making an issue on the Bitbucket repository or by notifying the AC/DCee at webcie@rug.nl
 
 ## Contribute
 If you want to contribute code please fork this repository, create a new branch in which you implement your fix or feature, make sure it merges with the most up to date code in our master branch. (i.e. Just `git rebase master` when your master branch is in sync.) When the code is ready to be set live create a pull request and the WebCie will test and review your contribution.
 
 ## Running locally
-To run the Cover site you need a webserver with PHP (at least 5.2 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database (8.2 and 9.3 both seem to work so I guess it doesn't really matter which version.)
+To run the Cover site you need a webserver with PHP (at least 5.3 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database. (8.2 and 9.3 both seem to work so I guess it doesn't really matter which version.)
 
 To get all the dependencies, run composer in the root directory of your repository. There should be a file named `composer.json` in there:
 
@@ -35,7 +35,7 @@ cat include/data/structure.sql | psql webcie
 ```
 
 ### Copy the database of the live site
-This is only applicable for members of the WebCie. You can easily clone the live database using the following command. Make sure you don't have to enter your password by setting up public key authentication first.
+This is only applicable for members of the AC/DCee. You can easily clone the live database using the following command. Make sure you don't have to enter your password by setting up public key authentication first.
 
 ```bash
 createdb --encoding=UTF8 --template=template0 webcie 
