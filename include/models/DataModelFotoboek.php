@@ -540,8 +540,12 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function get_children(DataIterPhotobook $book, $metadata = self::READ_STATUS | self::NUM_BOOKS | self::NUM_PHOTOS)
+		public function get_children(DataIterPhotobook $book, $metadata = null)
 		{
+			// TODO When we use PHP 5.6 this can be put as default parameter. For now, PHP does not support 'evaluated' expressions there.
+			if ($metadata === null)
+				$metadata = self::READ_STATUS | self::NUM_BOOKS | self::NUM_PHOTOS;
+
 			// TODO not query the book and photo counts if their flags are not passed to $metadata.
 			
 			$select = 'SELECT
