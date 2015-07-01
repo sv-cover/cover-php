@@ -610,7 +610,7 @@
 			// Make a list of all the books to be added to the zip
 			// but filter out the books I can't read.
 			for ($i = 0; $i < count($books); ++$i)
-				foreach ($books[$i]->get_children(0) as $child)
+				foreach ($books[$i]->get_books(0) as $child)
 					if ($this->policy->user_can_read($child))
 						$books[] = $child;
 			
