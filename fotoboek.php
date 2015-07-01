@@ -592,7 +592,7 @@
 			if (!$this->policy->user_can_read($root_book))
 				throw new UnauthorizedException();
 
-			if ($root_book->get_id() == 0)
+			if ($root_book instanceof DataIterRootPhotobook)
 				throw new InvalidArgumentException("Let's not try to download ALL of Cover's photos at once.");
 
 			// Disable all output buffering
