@@ -610,7 +610,7 @@
 			// Make a list of all the books to be added to the zip
 			// but filter out the books I can't read.
 			for ($i = 0; $i < count($books); ++$i)
-				foreach ($this->model->get_children($books[$i], 0) as $child)
+				foreach ($books[$i]->get_children(0) as $child)
 					if ($this->policy->user_can_read($child))
 						$books[] = $child;
 			
@@ -632,7 +632,9 @@
 				// Create a path back to the root book to find a good file name
 				$book_ancestors = [$book];
 
-				while (end($book_ancestors)->get_id() != $root_book->get_id())
+				while (end($book_ancestors)->get_id() != $root_book->get_id()
+					&& end($book_ancestors)->has('parent')
+					&& isset($books[end($book_ancestors)->get('parent')]))
 					$book_ancestors[] = $books[end($book_ancestors)->get('parent')];
 				
 				$book_path = implode('/',
@@ -641,7 +643,7 @@
 							curry_call_method('get', 'titel'),
 							array_reverse($book_ancestors))));
 
-				foreach ($this->model->get_photos($book) as $photo)
+				foreach ($book->get_photos() as $photo)
 				{
 					// Skip originals we cannot find in this output. Very bad indeed, but not
 					// something that should block downloading of the others.

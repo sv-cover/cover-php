@@ -215,9 +215,9 @@
 
 	class DataIterPhotobook extends DataIter implements SearchResult
 	{
-		public function get_books()
+		public function get_books($metadata = null)
 		{
-			return $this->model->get_children($this);
+			return $this->model->get_children($this, $metadata);
 		}
 
 		public function get_photos()
@@ -316,9 +316,9 @@
 
 	class DataIterRootPhotobook extends DataIterPhotobook
 	{
-		public function get_books()
+		public function get_books($metadata = null)
 		{
-			$books = parent::get_books();
+			$books = parent::get_books($metadata);
 
 			if (logged_in()) {
 				$books[] = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
