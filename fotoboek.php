@@ -592,6 +592,9 @@
 			if (!$this->policy->user_can_read($root_book))
 				throw new UnauthorizedException();
 
+			if ($root_book->get_id() == 0)
+				throw new InvalidArgumentException("Let's not try to download ALL of Cover's photos at once.");
+
 			// Disable all output buffering
 			while (ob_get_level() > 0)
 				ob_end_clean();
