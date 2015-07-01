@@ -72,8 +72,10 @@ if (logged_in()) {
 	
 	<div id="photo" data-id="<?=$iter->get_id()?>" <?php if (get_policy('DataModelFotoboekFaces')->user_can_create()) printf('data-create-action="%s"', markup_format_attribute($faces_controller->link_to_create())) ?>>
 		<figure class="full-size-photo">
-			<img src="<?=markup_format_attribute($iter->get_url(null, 400)) ?>" <?=vsprintf('width="%d" height="%d"', $iter->get_scaled_size(820, 820))?> class="low-quality">
-			<img src="<?=markup_format_attribute($iter->get_url(1600, 1600)) ?>" <?=vsprintf('width="%d" height="%d"', $iter->get_scaled_size(820, 820))?> class="high-quality">
+			<img
+				src="<?=markup_format_attribute($iter->get_url(1600, 1600)) ?>"
+				data-preview="<?=markup_format_attribute($iter->get_url(null, 400)) ?>"
+				<?=vsprintf('width="%d" height="%d"', $iter->get_scaled_size(820, 820))?>>
 		</figure>
 
 		<?php foreach ($faces as $face): ?>
@@ -117,6 +119,24 @@ if (logged_in()) {
 		else if (event.keyCode == 38)
 			window.location.href = $("#path a:last-child").attr("href");
 	}
+
+	$(document).ready(function() {
+		$('img[data-preview]').each(function() {
+			var image = $(this);
+
+			var original = new Image();
+			original.onload = function() {
+				image.prop('src', original.src);
+				image.removeClass('loading');
+			};
+
+			original.src = image.prop('src');
+
+			// Show preload image
+			image.prop('src', image.data('preview'));
+			image.addClass('loading');
+		});
+	});
 
 	<?php if (logged_in()): ?>
 	var $photo = $('#photo'),
@@ -355,6 +375,22 @@ if (logged_in()) {
 		
 		$face.click();
 	});
+
+	// Zooming and panning
+	var pan = function(dx, dy) {
+
+	};
+
+	var zoom = function(scale) {
+
+	};
+
+	$photo.on('dblclick', function(e) {
+		if (!$photo.hasClass('tagging-enabled'))
+			return;
+
+		if ()
+	})
 
 	<?php endif ?>
 </script>

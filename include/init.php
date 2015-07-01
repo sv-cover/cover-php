@@ -7,7 +7,17 @@
 	ini_set('display_errors', true);
 	ini_set('magic_quotes_gpc', 0);
 	
-	if (version_compare(PHP_VERSION, '5.4.0') < 0)
+	if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'www.svcover.dev')
+	{
+		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE);
+
+		set_error_handler(function($number, $message, $file, $line, $vars) {
+			echo '<pre style="background:white;padding: 1em; margin: 1em;color:#c60c30;">';
+			debug_print_backtrace();
+			echo '</pre>';
+		},	error_reporting());
+	}
+	elseif (version_compare(PHP_VERSION, '5.4.0') < 0)
 		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE);
 	else
 		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE ^ E_DEPRECATED ^ E_STRICT);

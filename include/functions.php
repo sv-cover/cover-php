@@ -773,3 +773,13 @@
 		shuffle($input);
 		return array_slice($input, 0, $sample_size);
 	}
+
+	function curry_call_method($method)
+	{
+		$arguments = func_get_args();
+		array_shift($arguments);
+
+		return function($object) use ($method, $arguments) {
+			return call_user_func_array([$object, $method], $arguments);
+		};
+	}

@@ -158,6 +158,29 @@ class DataModelFotoboekFaces extends DataModel
 		return intval(rtrim($pid, " "));
 	}
 
+	public function get_center_of_interest(array $photos)
+	{
+		if (count($photos) === 0)
+			return [];
+
+		$photo_ids = array_map(curry_call_method('get_id'), $photos);
+
+		$query = $this->db->query(sprintf("
+			SELECT
+				foto_id,
+				SUM(x * w * h) / SUM(w * h) as x,
+				SUM(y * w * h) / SUM(w * h) as y
+			FROM
+				foto_faces
+			WHERE
+				foto_id IN (%s)
+				AND deleted = False
+			GROUP BY
+				foto_id", implode(',', $photo_ids)));
+
+		return $this->_rows_to_table($query, 'foto_id', ['x', 'y']);
+	}
+
 	/**
 	 * @override
 	 */
