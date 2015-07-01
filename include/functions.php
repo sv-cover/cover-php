@@ -758,6 +758,12 @@
 		return ltrim(substr($full_path, strlen($basedir)), '/');
 	}
 
+	function sanitize_filename($string)
+	{
+		// Source: http://stackoverflow.com/a/2727693
+		return preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), $string);
+	}
+
 	function crc32_file($path)
 	{ 
 		return hash_file('CRC32', $path, false);

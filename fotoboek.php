@@ -584,6 +584,89 @@
 			fclose($fh);
 		}
 
+		protected function _view_download_book(DataIterPhotobook $root_book)
+		{
+			if (!logged_in())
+				throw new UnauthorizedException();
+
+			if (!$this->policy->user_can_read($root_book))
+				throw new UnauthorizedException();
+
+			// Disable all output buffering
+			while (ob_get_level() > 0)
+				ob_end_clean();
+
+			// Make sure we stop when the user is no longer listening
+			ignore_user_abort(false);
+
+			$books = array($root_book);
+
+			// Make a list of all the books to be added to the zip
+			// but filter out the books I can't read.
+			for ($i = 0; $i < count($books); ++$i)
+				foreach ($this->model->get_children($books[$i], 0) as $child)
+					if ($this->policy->user_can_read($child))
+						$books[] = $child;
+			
+			// Turn that list into a hashtable linking book id to book instance.
+			$books = array_combine(
+				array_map(curry_call_method('get_id'), $books),
+				$books);
+
+			// Set up the output zip stream and just handle all files as large files
+			// (meaning no compression, streaming stead of reading into memory.)
+			$zip = new ZipStream\ZipStream(sanitize_filename($root_book->get('titel')) . '.zip', [
+				ZipStream\ZipStream::OPTION_LARGE_FILE_SIZE => 1,
+				ZipStream\ZipStream::OPTION_LARGE_FILE_METHOD => 'store',
+				ZipStream\ZipStream::OPTION_OUTPUT_STREAM => fopen('php://output', 'wb')]);
+
+			// Now for each book find all photos and add them to the zip stream
+			foreach ($books as $book)
+			{
+				// Create a path back to the root book to find a good file name
+				$book_ancestors = [$book];
+
+				while (end($book_ancestors)->get_id() != $root_book->get_id())
+					$book_ancestors[] = $books[end($book_ancestors)->get('parent')];
+				
+				$book_path = implode('/',
+					array_map('sanitize_filename',
+						array_map(
+							curry_call_method('get', 'titel'),
+							array_reverse($book_ancestors))));
+
+				foreach ($this->model->get_photos($book) as $photo)
+				{
+					// Skip originals we cannot find in this output. Very bad indeed, but not
+					// something that should block downloading of the others.
+					if (!$photo->file_exists())
+						continue;
+
+					// Let's just assume that the filename the photo already has is sane and safe
+					$photo_path = $book_path . '/' . basename($photo->get('filepath'));
+
+					// Add meta data to the zip file if available
+					$metadata = array();
+
+					if ($photo->has('created_on'))
+						$metadata['time'] = strtotime($photo->get('created_on'));
+					else
+						$metadata['time'] = filectime($photo->get_full_path());
+					
+					if ($photo->has('beschrijving'))
+						$metadata['comment'] = $photo->get('beschrijving');
+
+					// And finally add the photo to the actual stream
+					$zip->addFileFromPath(
+						$photo_path,
+						$photo->get_full_path(),
+						$metadata);
+				}
+			}
+
+			$zip->finish();
+		}
+
 		protected function _view_scaled_photo(DataIterPhoto $photo)
 		{
 			if (!$this->policy->user_can_read($photo->get_book()))
@@ -728,6 +811,9 @@
 
 				case 'download':
 					return $this->_view_download_photo($photo);
+
+				case 'download_book':
+					return $this->_view_download_book($book);
 
 				case 'scaled':
 					return $this->_view_scaled_photo($photo);

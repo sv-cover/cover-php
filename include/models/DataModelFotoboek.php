@@ -359,6 +359,10 @@
 		const VISIBILITY_ACTIVE_MEMBERS = 2;
 		const VISIBILITY_PHOTOCEE = 3;
 
+		const READ_STATUS = 1;
+		const NUM_BOOKS = 2;
+		const NUM_PHOTOS = 4;
+
 		public $dataiter = 'DataIterPhoto';
 
 		public function __construct($db)
@@ -536,7 +540,10 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function get_children(DataIterPhotobook $book) {
+		public function get_children(DataIterPhotobook $book, $metadata = self::READ_STATUS | self::NUM_BOOKS | self::NUM_PHOTOS)
+		{
+			// TODO not query the book and photo counts if their flags are not passed to $metadata.
+			
 			$select = 'SELECT
 				foto_boeken.*, 
 				COUNT(DISTINCT fotos.id) AS num_photos, 
@@ -570,7 +577,7 @@
 				date DESC,
 				foto_boeken.id';
 
-			if (get_config_value('enable_photos_read_status', true) && logged_in())
+			if (get_config_value('enable_photos_read_status', true) && logged_in() && $metadata & self::READ_STATUS)
 			{
 				$select = sprintf('
 					WITH RECURSIVE book_children (id, date, last_update, visibility, parents) AS (

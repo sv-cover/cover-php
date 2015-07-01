@@ -1,6 +1,7 @@
 {
     "require": {
         "facebook/php-sdk-v4" : "4.0.*",
-        "geokit/geokit": "~0.1"
+        "geokit/geokit": "~0.1",
+        "maennchen/zipstream-php": "0.3.*"
     }
 }
