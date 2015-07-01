@@ -637,6 +637,7 @@
 					&& isset($books[end($book_ancestors)->get('parent')]))
 					$book_ancestors[] = $books[end($book_ancestors)->get('parent')];
 				
+				// TODO: add book date in front of filename for sort order
 				$book_path = implode('/',
 					array_map('sanitize_filename',
 						array_map(
