@@ -596,6 +596,9 @@
 			while (ob_get_level() > 0)
 				ob_end_clean();
 
+			// Disable PHP's time limit
+			set_time_limit(0);
+
 			// Make sure we stop when the user is no longer listening
 			ignore_user_abort(false);
 
