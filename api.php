@@ -73,12 +73,12 @@ class ControllerApi extends Controller
 		$session = $session_model->resume($session_id);
 
 		if (!$session)
-			return array('error' => 'Invalid session id');
+			throw new RuntimeException('Invalid session id');
 		
 		$user_model = get_model('DataModelMember');
 
 		$member = $user_model->get_iter($session->get('member_id'));
-		
+
 		return array('result' => $member->data);
 	}
 
@@ -123,9 +123,6 @@ class ControllerApi extends Controller
 		$user_model = get_model('DataModelMember');
 
 		$member = $user_model->get_iter($member_id);
-
-		if (!$member)
-			return array('result' => false, 'error' => 'Member not found');
 
 		// Hide all private fields for this user. is_private() uses
 		// logged_in() which uses the session_id get variable. So sessions
@@ -210,7 +207,7 @@ class ControllerApi extends Controller
 				break;
 
 			default:
-				$response = array('error' => 'unknown method "' . $method . '"');
+				throw new InvalidArgumentException('unknown method "' . $method . '"');
 				break;
 		}
 
