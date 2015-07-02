@@ -17,38 +17,52 @@ class ControllerApi extends Controller
 		$activities = array();
 
 		foreach ($agenda->get_agendapunten(logged_in()) as $activity)
-			$activities[] = array(
-				'id' => $activity->get_id(),
-				'vandatum' => $activity->get('vandatum'),
-				'vanmaand' => $activity->get('vanmaand'),
-				'kop' => $activity->get('kop'));
+			$activities[] = $activity->data;
 
 		return $activities;
+	}
+
+	public function api_agendapunt()
+	{
+		$agenda = get_model('DataModelAgenda');
+
+		if (empty($_GET['id']))
+			throw new InvaliArgumentException('Missing id parameter');
+
+		$agendapunt = $agenda->get_iter($_GET['id']);
+
+		if (!get_policy('DataModelAgenda')->user_can_read($agendapunt))
+			throw new UnauthorizedException('You are not authorized to read this event');
+
+		return ['result' => $agendapunt->data];
 	}
 
 	public function api_session_create($email, $password, $application)
 	{
 		$user_model = get_model('DataModelMember');
 
-		$member = $user_model->login($email, $password);
+		if (!get_auth()->login($email, $password))
+			throw new RuntimeException('Invalid username or password');
 
-		if (!$member)
-			return array('error' => 'Invalid email and password combination');
+		$member = get_identity()->get_member();
 
 		$session_model = get_model('DataModelSession');
 
-		$session = $session_model->create($member->get('id'), $application);
+		$session = $session_model->create($member->get_id(), $application);
 
-		$member_data = $user_model->get_iter($member->get('id'));
-
-		return array('result' => array('session_id' => $session->get('session_id'), 'details' => $member_data->data));
+		return ['result' => [
+			'session_id' => $session->get('session_id'),
+			'details' => $member->data
+		]];
 	}
 
 	public function api_session_destroy($session_id)
 	{
 		$session_model = get_model('DataModelSession');
 
-		return $session_model->destroy($session_id);
+		$session = $session_model->resume($session_id);
+
+		return $session_model->delete($session);
 	}
 
 	public function api_session_get_member($session_id)
