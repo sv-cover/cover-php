@@ -84,6 +84,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
 
 		if (isset($params['POST'])) {
 			$post_data = http_build_query($params['POST']);
+			$env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
 			$env['CONTENT_LENGTH'] = strlen($post_data);
 			$env['REQUEST_METHOD'] = 'POST';
 		}
@@ -98,7 +99,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
 			2 => ['file', 'php://stderr', 'a']
 		];
 
-		$proc = proc_open('php-cgi api.php', $descriptors, $pipes, getcwd(), $env);
+		$proc = proc_open('php-cgi -d always_populate_raw_post_data=-1 api.php', $descriptors, $pipes, getcwd(), $env);
 
 		if (!is_resource($proc))
 			throw new RuntimeException('Could not start CGI process');
@@ -114,12 +115,14 @@ class ApiTest extends PHPUnit_Framework_TestCase
 		fclose($pipes[1]);
 
 		list($headers, $data) = explode("\r\n\r\n", $response, 2);
+
+		// echo "\n>>>\n$data\n<<<\n";
 		
 		$exit_code = proc_close($proc);
 
 		$json = json_decode($data, true);
 
-		$this->assertInternalType('array', $json);
+		$this->assertNotNull($json);
 
 		return $json;
 	}
