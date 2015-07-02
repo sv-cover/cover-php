@@ -1,8 +1,62 @@
 <?php
 
+require_once 'include/init.php';
+
+
 class ApiTest extends PHPUnit_Framework_TestCase
 {
 	public function testApiAgendaNotLoggedIn()
+	static protected $member_id;
+
+	static protected $member_email;
+
+	static protected $member_password;
+
+	public static function setUpBeforeClass()
+	{
+		// Set up account
+		$model = get_model('DataModelMember');
+
+		self::$member_id = 10000000 + time() % 1000000;
+
+		self::$member_email = sprintf('user%d@example.com', self::$member_id);
+
+		self::$member_password = implode('', array_map(function($n) {
+			return chr(mt_rand(ord('a'), ord('z')));
+		}, range(1, 20)));
+
+		$member = new DataIterMember($model, self::$member_id, [
+			'id' => self::$member_id,
+			'voornaam' => 'Unit',
+			'achternaam' => 'Test',
+			'adres' => 'foo',
+			'postcode' => '1111AA',
+			'woonplaats' => 'foo',
+			'email' => self::$member_email,
+			'geboortedatum' => '1988-01-01',
+			'geslacht' => 'm',
+			'privacy' => 958698063,
+			'type' => MEMBER_STATUS_LID
+		]);
+
+		$model->insert($member);
+
+		$profiel = new DataIter($model, self::$member_id, ['lidid' => self::$member_id, 'nick' => 'unittest']);
+
+		$model->insert_profiel($profiel);
+
+		$model->set_password($member, self::$member_password);
+	}
+
+	public static function tearDownAfterClass()
+	{
+		// Delete account
+		$model = get_model('DataModelMember');
+
+		$member = $model->get_iter(self::$member_id);
+
+		$model->delete($member);
+	}
 	{
 		$response = $this->simulateRequest(['GET' => ['method' => 'agenda']]);
 
