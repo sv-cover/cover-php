@@ -57,20 +57,6 @@ class ApiTest extends PHPUnit_Framework_TestCase
 		$model->delete($member);
 	}
 
-	public function testAgendaNotLoggedIn()
-	{
-		$response = $this->simulateRequest(['GET' => ['method' => 'agenda']]);
-
-		foreach ($response as $agendapunt)
-		{
-			// These are the properties Newsletter.svcover.nl expects
-			$this->assertArrayHasKey('id', $agendapunt);
-			$this->assertArrayHasKey('kop', $agendapunt);
-			$this->assertArrayHasKey('vandatum', $agendapunt);
-			$this->assertArrayHasKey('vanmaand', $agendapunt);
-		}
-	}
-
 	public function testSessionCreate()
 	{
 		$response = $this->simulateRequest([
@@ -148,6 +134,60 @@ class ApiTest extends PHPUnit_Framework_TestCase
 		]);
 
 		$this->assertArraySubset(['error' => 'Invalid session id'], $response);
+	}
+
+	public function testAgendaNotLoggedIn()
+	{
+		$response = $this->simulateRequest(['GET' => ['method' => 'agenda']]);
+
+		foreach ($response as $agendapunt)
+		{
+			// These are the properties Newsletter.svcover.nl expects
+			$this->assertArrayHasKey('id', $agendapunt);
+			$this->assertArrayHasKey('kop', $agendapunt);
+			$this->assertArrayHasKey('vandatum', $agendapunt);
+			$this->assertArrayHasKey('vanmaand', $agendapunt);
+		}
+	}
+
+	public function testAgendapuntPublic()
+	{
+		$response = $this->simulateRequest([
+			'GET' => [
+				'method' => 'get_agendapunt',
+				'id' => '2260'
+			]
+		]);
+
+		$this->assertArraySubset(['result' => ['id' => 2260]], $response);
+	}
+
+	public function testAgendapuntPrivate()
+	{
+		$response = $this->simulateRequest([
+			'GET' => [
+				'method' => 'get_agendapunt',
+				'id' => '2261'
+			]
+		]);
+
+		$this->assertArraySubset(['error' => 'You are not authorized to read this event'], $response);
+	}
+
+	/**
+	 * @depends testSessionCreate
+	 */
+	public function testAgendapuntPrivateLoggedIn($session_id)
+	{
+		$response = $this->simulateRequest([
+			'GET' => [
+				'method' => 'get_agendapunt',
+				'session_id' => $session_id,
+				'id' => '2261'
+			]
+		]);
+
+		$this->assertArraySubset(['result' => ['id' => 2261]], $response);
 	}
 
 	private function simulateRequest($params)

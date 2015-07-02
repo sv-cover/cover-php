@@ -1,6 +1,7 @@
 <?php
 
 require_once 'include/init.php';
+require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
 
 class ControllerApi extends Controller
@@ -22,7 +23,7 @@ class ControllerApi extends Controller
 		return $activities;
 	}
 
-	public function api_agendapunt()
+	public function api_get_agendapunt()
 	{
 		$agenda = get_model('DataModelAgenda');
 
@@ -172,7 +173,7 @@ class ControllerApi extends Controller
 				break;
 
 			case 'get_agendapunt':
-				$response->api_get_agendapunt();
+				$response = $this->api_get_agendapunt();
 				break;
 
 			// POST api.php?method=session_create
