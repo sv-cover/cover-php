@@ -5,7 +5,6 @@ require_once 'include/init.php';
 
 class ApiTest extends PHPUnit_Framework_TestCase
 {
-	public function testApiAgendaNotLoggedIn()
 	static protected $member_id;
 
 	static protected $member_email;
@@ -57,6 +56,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
 
 		$model->delete($member);
 	}
+
+	public function testAgendaNotLoggedIn()
 	{
 		$response = $this->simulateRequest(['GET' => ['method' => 'agenda']]);
 
@@ -68,6 +69,85 @@ class ApiTest extends PHPUnit_Framework_TestCase
 			$this->assertArrayHasKey('vandatum', $agendapunt);
 			$this->assertArrayHasKey('vanmaand', $agendapunt);
 		}
+	}
+
+	public function testSessionCreate()
+	{
+		$response = $this->simulateRequest([
+			'GET' => ['method' => 'session_create'],
+			'POST' => [
+				'email' => self::$member_email,
+				'password' => self::$member_password,
+				'application' => 'unittest'
+			]
+		]);
+
+		$this->assertArrayHasKey('result', $response);
+
+		$this->assertArrayHasKey('session_id', $response['result']);
+		$this->assertArrayHasKey('details', $response['result']);
+
+		$this->assertEquals($response['result']['details']['id'], self::$member_id);
+
+		return $response['result']['session_id'];
+	}
+
+	public function testSessionCreateLoginFailure()
+	{
+		$response = $this->simulateRequest([
+			'GET' => ['method' => 'session_create'],
+			'POST' => [
+				'email' => self::$member_email,
+				'password' => self::$member_password . 'x', // send invalid password
+				'application' => 'unittest'
+			]
+		]);
+
+		$this->assertArrayHasKey('error', $response);
+		$this->assertEquals('Invalid username or password', $response['error']);
+	}
+
+	/**
+	 * @depends testSessionCreate
+	 */
+	public function testSessionDestroy()
+	{
+		// Create a specific session for this one
+		$session_id = $this->testSessionCreate();
+
+		$response = $this->simulateRequest([
+			'GET' => ['method' => 'session_destroy'],
+			'POST' => ['session_id' => $session_id]
+		]);
+
+		$this->assertEquals(true, $response);
+	}
+
+	/**
+	 * @depends testSessionCreate
+	 */
+	public function testSessionGetMember($session_id)
+	{
+		$response = $this->simulateRequest([
+			'GET' => [
+				'method' => 'session_get_member',
+				'session_id' => $session_id
+			]
+		]);
+
+		$this->assertArraySubset(['result' => ['id' => self::$member_id]], $response);
+	}
+
+	public function testSessionGetMemberNoSession()
+	{
+		$response = $this->simulateRequest([
+			'GET' => [
+				'method' => 'session_get_member',
+				'session_id' => 'invalid'
+			]
+		]);
+
+		$this->assertArraySubset(['error' => 'Invalid session id'], $response);
 	}
 
 	private function simulateRequest($params)
