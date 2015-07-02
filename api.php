@@ -171,6 +171,10 @@ class ControllerApi extends Controller
 				$response = $this->api_agenda();
 				break;
 
+			case 'get_agendapunt':
+				$response->api_get_agendapunt();
+				break;
+
 			// POST api.php?method=session_create
 			case 'session_create':
 				$response = $this->api_session_create($_POST['email'], $_POST['password'],
