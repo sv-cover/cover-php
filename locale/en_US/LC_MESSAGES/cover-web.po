@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 1.8.2\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -561,7 +561,7 @@ msgstr "Honorary Member"
 #: ../../../themes/default/views/almanak/almanak.phtml:48
 #: ../../../themes/default/views/profiel/profiel.phtml:158
 msgid "Donateur"
-msgstr "Donator"
+msgstr "Donor"
 
 #: ../../../include/pagenavigation.php:3
 msgid "Ga naar pagina"
@@ -1623,7 +1623,7 @@ msgstr "Sister unions"
 
 #: ../../../themes/default/views/header.php:181
 msgid "Lid/donateur worden"
-msgstr "Become a Member/donator"
+msgstr "Become a member/donor"
 
 #: ../../../themes/default/views/header.php:182
 msgid "Documenten"
