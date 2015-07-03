@@ -48,7 +48,6 @@
 		{
 			return 'leden.*, 
 				profielen.lidid,
-				profielen.wachtwoord,
 				profielen.onderschrift,
 				profielen.avatar,
 				profielen.homepage,
