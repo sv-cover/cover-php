@@ -121,7 +121,11 @@ class ApiTest extends PHPUnit_Framework_TestCase
 			]
 		]);
 
+		// Expect the returned user to be the test user we made for this test case
 		$this->assertArraySubset(['result' => ['id' => self::$member_id]], $response);
+
+		// Expect all the data to be there, but the password hash to be absent
+		$this->assertArrayNotHasKey('wachtwoord', $response['result']);
 	}
 
 	public function testSessionGetMemberNoSession()
