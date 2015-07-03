@@ -172,24 +172,28 @@
 		  */
 		public function get_members(DataIterCommissie $committee)
 		{
-			$rows = $this->db->query('SELECT
-					leden.id, 
-					leden.voornaam, 
-					leden.tussenvoegsel, 
-					leden.achternaam, 
-					leden.email, 
-					leden.privacy,
-					actieveleden.functie
-					FROM actieveleden, leden
-					WHERE leden.id = actieveleden.lidid AND 
-					actieveleden.commissieid = ' . $committee->get_id());
-			
-			$iters = $this->_rows_to_iters($rows, 'DataIterMember');
-			
-			/* Sort by function */
-			usort($iters, array(&$this, '_sort_leden'));
+			$member_model = get_model('DataModelMember');
 
-			return $iters;
+			$rows = $this->db->query('SELECT lidid, functie FROM actieveleden WHERE commissieid = ' . $committee->get_id());
+
+			if (count($rows) === 0)
+				return array();
+
+			$ids = array_map(function($row) { return $row['lidid']; }, $rows);
+
+			$members = $member_model->find('leden.id IN (' . implode(', ', $ids) . ')');
+
+			$positions = array_combine($ids, array_map(function($row) { return $row['functie']; }, $rows));
+			
+			// Attach the committee positions to all its members
+			// Not using 'set' here because that would mess up the DataIter::get_changes()
+			foreach ($members as $member)
+				$member->data['functie'] = $positions[$member->get_id()];
+
+			/* Sort by function */
+			usort($members, array(&$this, '_sort_leden'));
+
+			return $members;
 		}
 
 		public function get_lid_for_functie($commissie_id, $functie)
