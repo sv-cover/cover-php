@@ -48,7 +48,7 @@ class DataModelSession extends DataModel
 
 	public function create($member_id, $application, $timeout = '7 DAY')
 	{
-		$session_id = sha1(uniqid('session', true));
+		$session_id = bin2hex(openssl_random_pseudo_bytes(20));
 
 		$data = array(
 			'session_id' => $session_id,
