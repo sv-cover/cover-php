@@ -40,7 +40,8 @@
 		<?php if (date('md') == '0401'): ?>
 		<script src="<?=get_theme_data('data/professionalism.js')?>"></script>
 		<?php endif ?>
-
+	
+		<?php /* Print queries and their times in the comment section when enabled */ ?>
 		<?php if (get_config_value('show_queries', false)): ?>
 		<!--
 		<?php foreach (get_db()->history as $query)

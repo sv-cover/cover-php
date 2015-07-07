@@ -385,28 +385,8 @@
 		<script type="text/javascript" src="' . get_theme_data('data/popup.js') . '"></script>
 		<script type="text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
 		<script type="text/javascript" src="data/connection.js"></script>
-
-		<script type="text/javascript">
-			function page_load() {
-				function trace( msg ){
- 				 if( typeof( jsTrace ) != \'undefined\' ){
-   					 jsTrace.send( msg );
- 				 }
-				}
-				
-			';
-			
-			if (isset($_SESSION['alert'])) {
-				echo 'alert(' . json_encode((string) $_SESSION['alert']) . ');';
-				unset($_SESSION['alert']);
-			}
-
-			echo '
-			}
-		</script>
-		
 	</head>
-	<body onLoad="page_load();">
+	<body>
 		<div class="world">
 		<div class="header clearfix">
 				' . create_message() . '
