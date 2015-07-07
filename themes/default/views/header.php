@@ -345,6 +345,36 @@
 		else
 			return '';
 	}
+
+	function view_promotional_header()
+	{
+		if (logged_in())
+			return '';
+
+		return '
+			<div class="promotional-header">
+				<div class="background background-0 current"></div>
+				<div class="background background-1"></div>
+				<div class="background background-3"></div>
+				<div class="background background-4"></div>
+				<div class="background background-5"></div>
+
+				<h1>' . __('Word Coverlid') . '</h1>
+				<p>' . __('Voor boeken, activiteiten en gezelligheid.') . '</p>
+				<a href="lidworden.php" class="button">' . __('Meld je aan!') . '</a>
+			</div>
+			<script>
+				var slides = jQuery(".promotional-header .background"),
+					currentSlide = 0;
+
+				setInterval(function() {
+					currentSlide = (currentSlide + 1) % slides.length;
+					slides.removeClass("current");
+					slides.eq(currentSlide).addClass("current");
+				}, 3500);
+			</script>
+		';
+	}
 			
 	function view_header($model, $iter, $params) {
 		header('Content-type: text/html; charset=UTF-8');
@@ -402,6 +432,7 @@
 		<div class="topMenu clearfix">
 			'. createTopMenu() . '
 		</div>
+		' . view_promotional_header() . '
 		<div class="container clearfix">
 			<div class="center column" id="contents">';
 	}

@@ -1973,6 +1973,87 @@ body .ui-autocomplete a.profile .starting-year {
 
 }
 
+.promotional-header {
+	position: relative;
+	box-sizing: border-box;
+	min-width: 850px;
+	max-width: 1200px;
+	/*margin: -25px auto 15px auto;*/
+	margin: 0 auto 15px auto;
+	padding: 60px 5%;
+	border-radius: 5px;
+	font-size: 2em;
+	overflow: hidden;
+
+	/* Trick to stop Safari from flickering */
+	-webkit-transform:translate3d(0,0,0);
+}
+
+.promotional-header h1,
+.promotional-header p,
+.promotional-header a {
+	z-index: 1;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.promotional-header .button {
+	background: transparent;
+	color: white;
+	font-size: 1em;
+	border: 2px solid white;
+	padding: 20px 40px;
+
+	border-radius: 8px;
+	box-shadow: 0 1px rgba(0,0,0,0.5);
+
+	position: absolute;
+	right: 5%;
+	bottom: 40px;
+}
+
+.promotional-header .button:hover {
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.promotional-header .button:active {
+	background: rgba(255, 255, 255, 0.6);
+}
+
+.promotional-header .background {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	opacity: 0.001;
+	transition: opacity 1000ms ease-in-out;
+	background-size: cover;
+}
+
+.promotional-header .background.current {
+	opacity: 0.9;
+}
+
+.promotional-header .background-0 {
+	background-image: url(images/promotional-header/llama-0.jpg)
+}
+
+.promotional-header .background-1 {
+	background-image: url(images/promotional-header/llama-1.jpg)
+}
+
+.promotional-header .background-3 {
+	background-image: url(images/promotional-header/borrel.jpg);
+}
+
+.promotional-header .background-4 {
+	background-image: url(images/promotional-header/introkamp.jpg);
+}
+
+.promotional-header .background-5 {
+	background-image: url(images/promotional-header/lanparty.jpg);
+}
 
 /* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
 

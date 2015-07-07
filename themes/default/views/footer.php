@@ -25,7 +25,8 @@
 		</div> <!-- CONTAINER -->
 
 		</div> <!-- .world -->
-	
+		
+		<?php /* Google Analytics */ ?>
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -35,8 +36,17 @@
 		  ga('create', 'UA-12500955-1', 'auto');
 		  ga('require', 'displayfeatures');
 		  ga('send', 'pageview');
-
 		</script>
+
+		<?php /* Popup messages such as "your agenda item has been submitted" */ ?>
+		<?php if (isset($_SESSION['alert'])): ?>
+		<script>
+			alert(<?= json_encode((string) $_SESSION['alert']) ?>);
+			<?php unset($_SESSION['alert']) ?>
+		</script>
+		<?php endif ?>
+	
+		<?php /* Some people have to take the first of April way too serious */ ?>
 		<?php if (date('md') == '0401'): ?>
 		<script src="<?=get_theme_data('data/professionalism.js')?>"></script>
 		<?php endif ?>
