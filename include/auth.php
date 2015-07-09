@@ -230,7 +230,7 @@ class SessionProvider
 		return $this->logged_in = (bool) $this->session;
 	}
 
-	public function login($email, $password, $remember = false)
+	public function login($email, $password, $remember, $application)
 	{
 		$member = get_model('DataModelMember')->login($email, $password);
 
@@ -241,7 +241,7 @@ class SessionProvider
 
 		$this->session = $this->session_model->create(
 			$member->get_id(),
-			$_SERVER['HTTP_USER_AGENT'],
+			$application,
 			$session_timeout);
 
 		// Set the cookie. Doesn't really matter it is set for such a long time,

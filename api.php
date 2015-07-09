@@ -17,6 +17,8 @@ class ControllerApi extends Controller
 
 		$activities = array();
 
+		// TODO logged_in() incidentally works because the session is read from $_GET[session_id] by
+		// the session provider. But the current session should be set more explicit.
 		foreach ($agenda->get_agendapunten(logged_in()) as $activity)
 			$activities[] = $activity->data;
 
@@ -32,6 +34,8 @@ class ControllerApi extends Controller
 
 		$agendapunt = $agenda->get_iter($_GET['id']);
 
+		// TODO this incidentally works because the session is read from $_GET[session_id] by
+		// the session provider. But the current session should be set more explicit.
 		if (!get_policy('DataModelAgenda')->user_can_read($agendapunt))
 			throw new UnauthorizedException('You are not authorized to read this event');
 
@@ -42,10 +46,8 @@ class ControllerApi extends Controller
 	{
 		$user_model = get_model('DataModelMember');
 
-		if (!get_auth()->login($email, $password))
+		if (!$member = $user_model->login($email, $password))
 			throw new RuntimeException('Invalid username or password');
-
-		$member = get_identity()->get_member();
 
 		$session_model = get_model('DataModelSession');
 

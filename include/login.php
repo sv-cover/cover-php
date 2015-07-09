@@ -9,7 +9,7 @@
 	{
 		trigger_error('login() deprecated. Use get_auth()->login()', E_USER_NOTICE);
 
-		if (!get_auth()->login($email, $pass, $remember))
+		if (!get_auth()->login($email, $pass, $remember, $_SERVER['HTTP_USER_AGENT']))
 			return false;
 
 		return get_identity()->get_member()->data;
