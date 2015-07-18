@@ -105,14 +105,14 @@
 		  */
 		public function get_photo(DataIter $iter)
 		{
-			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
+			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $iter->get_id() . ' ORDER BY id DESC LIMIT 1');
 			
 			return $photo ? $this->db->read_blob($photo['foto']) : null;
 		}
 
 		public function get_photo_mtime(DataIter $iter)
 		{
-			$row = $this->db->query_first('SELECT EXTRACT(EPOCH FROM foto_mtime) as mtime FROM lid_fotos WHERE lid_id = ' . $this->get_photo_id($iter) . ' ORDER BY id DESC LIMIT 1');
+			$row = $this->db->query_first('SELECT EXTRACT(EPOCH FROM foto_mtime) as mtime FROM lid_fotos WHERE lid_id = ' . $iter->get_id() . ' ORDER BY id DESC LIMIT 1');
 
 			return (int) $row['mtime'] - 7200; // timezone difference?
  		}
@@ -120,32 +120,17 @@
 		public function set_photo(DataIter $iter, $fh)
 		{
 			$this->db->query(sprintf("INSERT INTO lid_fotos (lid_id, foto, foto_mtime) VALUES (%d, '%s', NOW())",
-				$iter->get('id'), $this->db->write_blob($fh)));
+				$iter->get_id(), $this->db->write_blob($fh)));
 		}
 
-		/** 
-		  * Returns the id of the photo. For members without a picture, 
-		  * returns -1. For members with private pictures, returns -2.
-		  * @iter a #DataIter
-		  *
-		  * @result the id of the photo of the member
-		  */
-		public function get_photo_id(DataIter $iter) {
-			if (!$this->has_picture($iter)) 
-				return -1;
-			if ($this->is_private($iter,"foto",true))
-				return -2;
-			return $iter->get_id();
-		}
-		
-		
 		/**
 		  * Returns true if the member has a picture
 		  * @iter a #DataIter
 		  *
 		  * @result true if member has a picture
 		  */
-		public function has_picture(DataIter $iter) {
+		public function has_picture(DataIter $iter)
+		{
 			if ($this->db->query_first('SELECT id from lid_fotos WHERE lid_id = ' . $iter->get_id()))
 				return true;
 

@@ -1,12 +1,9 @@
 <?php
 
-// Skip cache if the photo is hidden or anything
-$skip_cache = $model->get_photo_id($iter) <= 0;
-
 // If we skip the cache, write the thumnail directly to the output
-$cache_file = $skip_cache ? null : 'tmp/almanac/' . $iter->get('id') . '.jpg';
+$cache_file = 'tmp/almanac/' . $iter->get('id') . '.jpg';
 
-$use_cache = !$skip_cache && file_exists($cache_file) && $model->get_photo_mtime($iter) < filemtime($cache_file);
+$use_cache = file_exists($cache_file) && $model->get_photo_mtime($iter) < filemtime($cache_file);
 
 header('Pragma: public');
 header('Cache-Control: max-age=86400');

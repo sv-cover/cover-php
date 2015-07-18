@@ -14,8 +14,8 @@
 
 	<div class="floatLeft textCenter almanak">
 		<h2 id="almanak" class="profileHead"><?= __('Almanakgegevens') ?></h2>
-			<? $photo_link = "foto.php?lid_id=" . $model->get_photo_id($iter);
-			$photo_thumb_link = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
+			<? $photo_link = "foto.php?lid_id=" . $iter->get_id();
+			$photo_thumb_link = "foto.php?get_thumb&lid_id=" . $iter->get_id();
 
 			if (!empty($_GET['force_reload_photo']))
 				$photo_thumb_link .= '&_timestamp=' . time();

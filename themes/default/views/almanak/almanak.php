@@ -6,7 +6,7 @@
 		protected $__file = __FILE__;
 
 		function almanak_info($model, $iter) {
-			$photo = "foto.php?get_thumb&lid_id=" . $model->get_photo_id($iter);
+			$photo = "foto.php?get_thumb&lid_id=" . $iter->get_id();
 
 			$name = member_full_name($iter, false, true);
 			
