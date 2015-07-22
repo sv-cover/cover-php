@@ -284,10 +284,10 @@
 		<h2 id="facebook"><?= __('Facebook')?></h2>
 		<div class="messageBox">
 			<?php
-				if ($this->facebook->getUser())
+				if (get_facebook()->getUser())
 				{
 					try {
-						$me = $this->facebook->api('/me', 'GET');
+						$me = get_facebook()->api('/me', 'GET');
 						echo markup_format_text(sprintf(__('Je bent ingelogd als %s.'), $me['name']));
 						$facebook_button = 'logout';
 					} catch (FacebookException $e) {
@@ -302,7 +302,7 @@
 			?>
 
 			<?php if ($facebook_button == 'login'): ?>
-				<a class="button connect-facebook-button" href="<?=$this->facebook->getCoverLoginUrl()?>"><?= __('Koppel Facebook') ?></a>
+				<a class="button connect-facebook-button" href="<?=get_facebook()->getCoverLoginUrl()?>"><?= __('Koppel Facebook') ?></a>
 			<?php elseif ($facebook_button == 'logout'): ?>
 				<form method="post" action="" class="inline-form">
 					<input type="hidden" name="facebook_action" value="unlink">
