@@ -99,6 +99,7 @@ ul.commissie-index {
 	margin: -4px 10px -4px -4px;
 	width: 60px;
 	height: 60px;
+	border-radius: 50%;
 }
 
 .committee-contact {

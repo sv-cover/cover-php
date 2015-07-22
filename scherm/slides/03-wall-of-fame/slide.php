@@ -24,8 +24,9 @@ function _full_name($lid) {
 <div style="text-align: center; width:100%;height:100%">
 	<h2 style="font-size: 80px; margin: 80px 0;"><?=markup_format_text($commissie->get('naam'))?></h2>
 	<?php foreach ($leden as $lid): ?>
-	<div style="display: inline-block; padding: 50px">
-		<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;get_thumb=circle&amp;width=200" width="200" height="200">
+	<div style="display: inline-block; padding: 50px; position: relative">
+		<div style="position:absolute;width:198px;height:198;px;border-radius:50%;border:1px solid rgba(0,0,0,0.1)"></div>
+		<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;format=square&amp;width=200" width="200" height="200" style="border-radius:50%">
 		<span style="display: block; font-size: 20px;"><?=markup_format_text(_full_name($lid))?></span>
 		<span style="display: block; font-size: 14px;"><?=markup_format_text($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '')?></span>
 	</div>

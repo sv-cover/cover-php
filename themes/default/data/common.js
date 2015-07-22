@@ -152,7 +152,7 @@ jQuery.fn.autocompleteAlmanac = function(options)
 		$(this).data('ui-autocomplete')._renderItem = function(ul, item) {
 			return $('<li>').append(
 				$('<a class="profile">')
-					.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&get_thumb=thumb'))
+					.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&format=square&width=60'))
 					.append($('<span class="name">').text(item.name))
 					.append($('<span class="starting-year">').text(item.starting_year))
 			).appendTo(ul);
