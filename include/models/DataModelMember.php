@@ -467,10 +467,21 @@
 
 			if ($limit !== null)
 				$query .= sprintf(' LIMIT %d', $limit);
-					
-			$rows = $this->db->query($query);	
+			
+			$rows = $this->db->query($query);
 
-			return $this->_rows_to_iters($rows);			
+			$members = $this->_rows_to_iters($rows);
+
+			// Filter out people who don't show their name
+			// Except when you are the board! The board can do anything!
+			// All hail the Board!
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+				&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
+				$members = array_filter($members, function($member) {
+					return !$this->is_private($member, 'naam') || $member->get_id() == get_identity()->get('id');
+				});
+			
+			return $members;
 		}
 
 		public function search($query, $limit = null)
