@@ -7,9 +7,13 @@
 	{
 		var $model = null;
 
-		function ControllerAlmanak() {
+		public function __construct() 
+		{
 			$this->model = get_model('DataModelMember');
 
+			// If current visitor is the board, show all members in the
+			// database, including those that are no longer a member
+			// and any users that are "deleted" by making them hidden.
 			if (member_in_commissie(COMMISSIE_BESTUUR))
 				$this->model->visible_types = array(
 					MEMBER_STATUS_LID,
@@ -20,23 +24,21 @@
 				);
 		}
 		
-		function get_content($view, $iter = null, $params = null) {
+		protected function get_content($view, $iter = null, $params = null)
+		{
 			$this->run_header(array('title' => __('Almanak')));
 			run_view('almanak::' . $view, $this->model, $iter, $params);
 			$this->run_footer();
 		}
 		
-		function _process_search_legacy() {
-			$iters = $this->model->get_from_search_first_last($_GET['search_first'], $_GET['search_last']);
-			$this->get_content('almanak', $iters);				
-		}
-
-		function _process_search($query) {
 			$iters = $this->model->search_name($query, 15);
+		protected function _process_search($query)
+		{
 
 			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
 				array('application/json', 'text/html', '*/*'));
 
+			// The JSON is mostly used by the text inputs that autosuggest names
 			if ($preferred == 'application/json')
 				echo json_encode(array_map(function($lid) {
 					return array(
@@ -52,22 +54,13 @@
 		  * Searches the online almanak for a given year
 		  *
 		  */
-		function _process_year() {
+		protected function _process_year()
+		{
 			$iters = $this->model->get_from_search_year($_GET['search_year']);
 			$this->get_content('almanak', $iters);				
 		}
 		
-		function _process_first() {
-			$iters = $this->model->get_from_first_character($_GET['first']);
-			$this->get_content('almanak', $iters);		
-		}
-		
-		function _process_last() {
-			$iters = $this->model->get_from_last_character($_GET['last']);
-			$this->get_content('almanak', $iters);
-		}
-
-		function _process_status() {
+		protected function _process_status() {
 			if (!member_in_commissie(COMMISSIE_BESTUUR))
 				return $this->get_content('auth');
 			
@@ -75,7 +68,8 @@
 			$this->get_content('almanak', $iters);
 		}
 		
-		function _process_csv() {
+		protected function _process_csv()
+		{
 			if (member_in_commissie(COMMISSIE_ALMANAKCIE)) {
 				$iters = $this->model->get_from_search_first_last(null, null);
 
@@ -110,17 +104,11 @@
 			}
 		}
 		
-		function run_impl() {
-			if (isset($_GET['search_first']) || isset($_GET['search_last']))
-				$this->_process_search_legacy();
-			elseif (isset($_GET['search']))
+		protected function run_impl() {
+			if (isset($_GET['search']))
 				$this->_process_search($_GET['search']);
 			elseif (isset($_GET['search_year']))
 				$this->_process_year();
-			elseif (isset($_GET['first']))
-				$this->_process_first();
-			elseif (isset($_GET['last']))
-				$this->_process_last();
 			elseif (isset($_GET['status']))
 				$this->_process_status();
 			elseif (isset($_GET['csv']))

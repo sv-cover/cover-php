@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-07-07 18:16+0100\n"
+"POT-Creation-Date: 2015-07-24 23:46+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -83,7 +83,7 @@ msgstr ""
 msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
-#: ../../../almanak.php:24 ../../../themes/default/views/header.php:186
+#: ../../../almanak.php:29 ../../../themes/default/views/header.php:186
 #: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:65
 #: ../../../themes/default/views/almanak/almanak.phtml:1
 msgid "Almanak"
@@ -317,7 +317,6 @@ msgid "Zaterdag"
 msgstr "Saturday"
 
 #: ../../../include/functions.php:198 ../../../include/functions.php:207
-#: ../../../themes/default/views/almanak/almanak.phtml:66
 #: ../../../themes/default/views/profiel/profiel.phtml:103
 #: ../../../themes/default/views/profiel/profiel.phtml:113
 msgid "geen"
@@ -467,7 +466,7 @@ msgstr "You!"
 #: ../../../include/member.php:87
 #: ../../../include/models/DataModelForum.php:657
 #: ../../../include/models/DataModelForum.php:680
-#: ../../../include/models/DataModelMember.php:596
+#: ../../../include/models/DataModelMember.php:592
 #: ../../../themes/default/views/forum.php:499
 msgid "Onbekend"
 msgstr "Unknown"
@@ -499,13 +498,13 @@ msgid "Alle groepen"
 msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:671
-#: ../../../include/models/DataModelMember.php:581
+#: ../../../include/models/DataModelMember.php:577
 #: ../../../themes/default/views/boeken/boeken.php:336
 #: ../../../themes/default/views/boeken/boeken.php:357
 #: ../../../themes/default/views/boeken/boeken.php:399
 #: ../../../themes/default/views/boeken/boeken.php:423
 #: ../../../themes/default/views/forum.php:839
-#: ../../../themes/default/views/almanak/almanak.phtml:44
+#: ../../../themes/default/views/almanak/almanak.phtml:23
 #: ../../../themes/default/views/boeken/bestellingen.phtml:7
 #: ../../../themes/default/views/boeken/bestellingen.phtml:61
 #: ../../../themes/default/views/commissies/form.phtml:29
@@ -543,28 +542,28 @@ msgstr " and "
 msgid "Favoriete foto's"
 msgstr "Liked photos"
 
-#: ../../../include/models/DataModelMember.php:584
+#: ../../../include/models/DataModelMember.php:580
 #: ../../../themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../include/models/DataModelMember.php:587
+#: ../../../include/models/DataModelMember.php:583
 #: ../../../themes/default/views/almanak/almanak.php:29
-#: ../../../themes/default/views/almanak/almanak.phtml:46
+#: ../../../themes/default/views/almanak/almanak.phtml:25
 #: ../../../themes/default/views/profiel/profiel.phtml:150
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../include/models/DataModelMember.php:590
+#: ../../../include/models/DataModelMember.php:586
 #: ../../../themes/default/views/almanak/almanak.php:34
-#: ../../../themes/default/views/almanak/almanak.phtml:47
+#: ../../../themes/default/views/almanak/almanak.phtml:26
 #: ../../../themes/default/views/profiel/profiel.phtml:154
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../include/models/DataModelMember.php:593
+#: ../../../include/models/DataModelMember.php:589
 #: ../../../themes/default/views/almanak/almanak.php:39
-#: ../../../themes/default/views/almanak/almanak.phtml:48
+#: ../../../themes/default/views/almanak/almanak.phtml:27
 #: ../../../themes/default/views/profiel/profiel.phtml:158
 msgid "Donateur"
 msgstr "Donor"
@@ -761,7 +760,7 @@ msgstr "The image file is not a file uploaded by PHP."
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
-#: ../../../scherm/slides/03-wall-of-fame/slide.php:37
+#: ../../../scherm/slides/03-wall-of-fame/slide.php:38
 #, php-format
 msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden.<br>Heb jij interesse? Zeg "
@@ -770,7 +769,7 @@ msgstr ""
 "Hey, this committee is looking for new members. Are you interested?<br>Tell "
 "your Commissioner of Internal Affairs, %s by e-mailing to intern@svcover.nl."
 
-#: ../../../scherm/slides/03-wall-of-fame/slide.php:39
+#: ../../../scherm/slides/03-wall-of-fame/slide.php:40
 #: ../../../themes/default/views/commissies/_leden_gezocht.phtml:20
 msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het "
@@ -780,7 +779,7 @@ msgstr ""
 "your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
 
 #: ../../../search.php:22 ../../../themes/default/views/forum.php:871
-#: ../../../themes/default/views/almanak/almanak.phtml:53
+#: ../../../themes/default/views/almanak/almanak.phtml:9
 #: ../../../themes/default/views/search/index.phtml:1
 msgid "Zoeken"
 msgstr "Search"
@@ -1399,6 +1398,7 @@ msgstr "New forum"
 #: ../../../themes/default/views/forum.php:1103
 #: ../../../themes/default/views/forum.php:1137
 #: ../../../themes/default/views/actieveleden/index.phtml:11
+#: ../../../themes/default/views/almanak/almanak.phtml:6
 #: ../../../themes/default/views/commissies/form.phtml:45
 #: ../../../themes/default/views/fotoboek/competition.phtml:41
 #: ../../../themes/default/views/fotoboek/competition.phtml:62
@@ -1824,19 +1824,19 @@ msgid_plural "Er staan nog %d agendapunten in de wachtrij"
 msgstr[0] "There is %d agenda item waiting for your confirmation"
 msgstr[1] "There are %d agenda items waiting for your confirmation"
 
-#: ../../../themes/default/views/header.php:356
+#: ../../../themes/default/views/header.php:362
 msgid "Word Coverlid"
 msgstr "Become a member"
 
-#: ../../../themes/default/views/header.php:357
+#: ../../../themes/default/views/header.php:363
 msgid "Voor boeken, activiteiten en gezelligheid."
 msgstr "For books, activities and fun."
 
-#: ../../../themes/default/views/header.php:358
+#: ../../../themes/default/views/header.php:364
 msgid "Meld je aan!"
 msgstr "Join now!"
 
-#: ../../../themes/default/views/header.php:375
+#: ../../../themes/default/views/header.php:391
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computing Science"
 
@@ -1874,7 +1874,7 @@ msgstr "Only *@svcover.nl addresses"
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
-#: ../../../themes/default/views/profiel/profiel.php:69
+#: ../../../themes/default/views/profiel/profiel.php:65
 msgid "opzoeken"
 msgstr "lookup"
 
@@ -2118,54 +2118,41 @@ msgstr ""
 "This calendar event cannot be found. Contact the %s if this happens more "
 "often."
 
-#: ../../../themes/default/views/almanak/almanak.phtml:17
-#: ../../../themes/default/views/lidworden/lidworden.phtml:44
-#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:26
-msgid "Voornaam"
-msgstr "First name"
-
-#: ../../../themes/default/views/almanak/almanak.phtml:25
-#: ../../../themes/default/views/lidworden/lidworden.phtml:46
-#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:31
-msgid "Achternaam"
-msgstr "Last name"
-
-#: ../../../themes/default/views/almanak/almanak.phtml:34
+#: ../../../themes/default/views/almanak/almanak.phtml:13
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:67
 #: ../../../themes/default/views/profiel/profiel.phtml:65
 msgid "Beginjaar"
 msgstr "Starting year"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:42
+#: ../../../themes/default/views/almanak/almanak.phtml:21
 #: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:12
 #: ../../../themes/default/views/fotoboek/_photo.phtml:68
 #: ../../../themes/default/views/profiel/profiel.phtml:133
 msgid "Zichtbaarheid"
 msgstr "Visibility"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:45
+#: ../../../themes/default/views/almanak/almanak.phtml:24
 #: ../../../themes/default/views/profiel/profiel.phtml:146
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:59
+#: ../../../themes/default/views/almanak/almanak.phtml:35
 msgid "Maak hierboven een selectie om de almanak te bekijken."
 msgstr "Make a selection above to view the almanac"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:61
+#: ../../../themes/default/views/almanak/almanak.phtml:37
 msgid "Download CSV-bestand met almanakgegevens"
 msgstr "Download CSV file with almanac data"
 
-#: ../../../themes/default/views/almanak/almanak.phtml:66
-#: ../../../themes/default/views/almanak/almanak.phtml:70
+#: ../../../themes/default/views/almanak/almanak.phtml:41
 #, php-format
-msgid "Er zijn %s leden gevonden die voldoen aan de zoekterm(en)."
-msgstr "There are %s members that coincide with your searching criteria."
-
-#: ../../../themes/default/views/almanak/almanak.phtml:68
-#, php-format
-msgid "Er is %s lid gevonden die voldoet aan de zoekterm(en)."
-msgstr "There is %s member that coincide with your searching criteria."
+msgid "Er is <em>%d</em> lid gevonden die voldoet aan de zoekterm(en)."
+msgid_plural ""
+"Er zijn <em>%d</em> leden gevonden die voldoen aan de zoekterm(en)."
+msgstr[0] ""
+"There is <em>%d</em> member that coincide with your searching criteria."
+msgstr[1] ""
+"There are <em>%d</em> members that coincide with your searching criteria."
 
 #: ../../../themes/default/views/almanak/auth.phtml:2
 msgid ""
@@ -2960,10 +2947,20 @@ msgstr "Modify conditions"
 msgid "Voorwaarden"
 msgstr "Conditions"
 
+#: ../../../themes/default/views/lidworden/lidworden.phtml:44
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:26
+msgid "Voornaam"
+msgstr "First name"
+
 #: ../../../themes/default/views/lidworden/lidworden.phtml:45
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:28
 msgid "Tussenvoegsel"
 msgstr "Infix"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:46
+#: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:31
+msgid "Achternaam"
+msgstr "Last name"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:48
 #: ../../../themes/default/views/nieuwlid/nieuwlid.phtml:38
@@ -3669,6 +3666,12 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Er zijn %s leden gevonden die voldoen aan de zoekterm(en)."
+#~ msgstr "There are %s members that coincide with your searching criteria."
+
+#~ msgid "Er is %s lid gevonden die voldoet aan de zoekterm(en)."
+#~ msgstr "There is %s member that coincide with your searching criteria."
 
 #~ msgid ""
 #~ "Contributie wordt zolang je lid bent van Cover jaarlijks van je "
