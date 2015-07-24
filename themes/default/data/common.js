@@ -138,7 +138,8 @@ jQuery.fn.autocompleteAlmanac = function(options)
 		minLength: 3,
         source: function(request, response) {
 			$.getJSON('almanak.php', {
-				'search': request.term
+				'search': request.term,
+				'limit': 15
 			}, response);
 		},
 		focus: function() {

@@ -31,9 +31,10 @@
 			$this->run_footer();
 		}
 		
-			$iters = $this->model->search_name($query, 15);
 		protected function _process_search($query)
 		{
+			$iters = $this->model->search_name($query,
+				isset($_GET['limit']) ? $_GET['limit'] : null);
 
 			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
 				array('application/json', 'text/html', '*/*'));
