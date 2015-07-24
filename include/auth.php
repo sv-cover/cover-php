@@ -110,16 +110,6 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		return $member;
 	}
 
-	public function get($key, $default_value = null)
-	{
-		if (!$this->session_provider->logged_in())
-			return $default_value;
-		elseif ($this->get_member()->has($key))
-			return $this->get_member()->get($key);
-		else
-			return $default_value;
-	}
-
 	public function member_in_committee($committee = null)
 	{
 		if ($this->get_override_committees() === null)
