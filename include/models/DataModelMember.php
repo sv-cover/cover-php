@@ -351,6 +351,13 @@
 		/**
 		  * Get members by searching in their first and last names.
 		  * Only a part of the name needs to be matched.
+		  * 
+		  *	TODO This method is only used by the YearbookCee export
+		  * currently because it allows us to return all but only
+		  * relevant members easily. Should be rewritten to use
+		  * DataIter::find() or ::get() because the search functionality
+		  * isn't used at all.
+		  * 
 		  * @first a part of the first name to search for
 		  * @last a part of the last name to search for
 		  *
@@ -524,41 +531,6 @@
 			return $years;
 		}
 		
-
-		/**
-		  * Get members by the first character of their last name
-		  * @char the first character of the last name
-		  *
-		  * @result an array of #DataIter
-		  */
-		public function get_from_last_character($char)
-		{
-			$rows = $this->db->query("SELECT *
-					FROM leden
-					WHERE type IN (" . implode(',', $this->visible_types) . ")
-					AND achternaam ILIKE '" . $this->db->escape_string($char) . "%'
-					ORDER BY achternaam");
-			
-			return $this->_rows_to_iters($rows);		
-		}
-
-		/**
-		  * Get members by the first character of their first name
-		  * @char the first character of the first name
-		  *
-		  * @result an array of #DataIter
-		  */
-		public function get_from_first_character($char)
-		{
-			$rows = $this->db->query("SELECT *
-					FROM leden
-					WHERE type IN (" . implode(',', $this->visible_types) . ")
-					AND voornaam ILIKE '" . $this->db->escape_string($char) . "%' 
-					ORDER BY voornaam");
-			
-			return $this->_rows_to_iters($rows);
-		}
-
 		public function get_from_status($status)
 		{
 			$rows = $this->db->query("SELECT *
