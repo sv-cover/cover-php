@@ -42,6 +42,8 @@
 
 		'path_to_scaled_photo' => 'tmp/photos/%d/%dx%d.jpg',
 
+		'path_to_scaled_profile_picture' => 'tmp/profiles/%d/%dx%d-%s.%s',
+
 		'precomputed_photo_scales' => array(
 			[1600, 1600], // Full size photo
 			[null, 400] // size used for the thumbnails below photo and in photo books

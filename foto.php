@@ -7,15 +7,95 @@
 		const FORMAT_PORTRAIT = 'portrait';
 		const FORMAT_SQUARE = 'square';
 
+		const TYPE_THUMBNAIL = 'thumbnail';
+		const TYPE_PLACEHOLDER = 'placeholder';
+
 		public function __construct()
 		{
 			$this->model = get_model('DataModelMember');
 		}
 
-		protected function _generate_thumbnail($photo, $format, $width)
+		protected function _format_cache_file_path(DataIterMember $member, $width, $height, $type)
+		{
+			$file_path_format = get_config_value('path_to_scaled_profile_picture', null);
+
+			if ($file_path_format === null)
+				return null;
+
+			$extension = $type == self::TYPE_PLACEHOLDER ? 'png' : 'jpg';
+
+			return sprintf($file_path_format, $member->get_id(), $width, $height, $type, $extension);
+		}
+
+		protected function _open_cache_stream(DataIterMember $member, $width, $height, $type, $mode)
+		{
+			$file_path = $this->_format_cache_file_path($member, $width, $height, $type);
+
+			if ($file_path === null)
+				return null;
+
+			if (!file_exists($file_path))
+			{
+				// If we were trying to read, stop trying, it won't work, the file does not exist
+				if ($mode{0} == 'r')
+					return null;
+
+				// However, if we were trying to write, make sure the directory exists and make it otherwise.
+				if ($mode{0} == 'w' && !file_exists(dirname($file_path)))
+					mkdir(dirname($file_path), 0777, true);
+			}
+
+			return fopen($file_path, $mode);
+		}
+
+		protected function _serve_stream($fout, $type = null, $length = null)
+		{
+			// Send proper headers: cache control & mime type
+			header('Pragma: public');
+			header('Cache-Control: max-age=86400');
+			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+
+			if ($length !== null)
+				header(sprintf('Content-Length: %d', $length));
+
+			if ($type !== null)
+				header(sprintf('Content-Type: %s', $type));
+			
+			fpassthru($fout);
+		}
+
+		protected function _view_cached(DataIterMember $member, $width, $height, $type)
+		{
+			$file_path = $this->_format_cache_file_path($member, $width, $height, $type);
+
+			// If we can't open it, we can't serve it.
+			if (!($fh = $this->_open_cache_stream($member, $width, $height, $type, 'rb')))
+				return false;
+
+			// If it is outdated, close it again and tell our caller that we can't serve it.
+			if ($this->model->get_photo_mtime($member) > filemtime($file_path))
+			{
+				fclose($fh);
+				return false;
+			}
+
+			// Send an extra header with the mtime to make debugging the cache easier
+			header('X-Cache: ' . date('r', filemtime($file_path)));
+
+			// Serve the actual stream including the appropriate headers
+			$this->_serve_stream($fh,
+				$type == self::TYPE_PLACEHOLDER ? 'image/png' : 'image/jpeg',
+				filesize($file_path));
+			fclose($fh);
+
+			// Let them know we succeeded, no need to generate a new image.
+			return true;
+		}
+
+		protected function _generate_thumbnail(DataIterMember $member, $format, $width)
 		{
 			$imagick = new Imagick();
-			$imagick->readImageBlob($photo);
+			$imagick->readImageBlob($this->model->get_photo($member));
 			
 			if ($format == self::FORMAT_SQUARE)
 			{
@@ -29,21 +109,24 @@
 			}
 
 			$imagick->scaleImage($width, 0);
-			
-			// Send proper headers: cache control & mime type
-			header('Pragma: public');
-			header('Cache-Control: max-age=86400');
-			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-			header('Content-Type: image/jpeg');
+
+			// Oh shit cache not writable? Fall back to a temp stream.
+			$fout = $this->_open_cache_stream($member, $width, 0, self::TYPE_THUMBNAIL, 'wb') or $fout = fopen('php://temp', 'wb');
 
 			// Write image to php output buffer
-			$out = fopen('php://output', 'w');
 			$imagick->setImageFormat('jpeg');
-			$imagick->writeImageFile($out);
+			$imagick->writeImageFile($fout);
+			$imagick->destroy();
+
+			$file_size = ftell($fout);
+			rewind($fout);
+
+			$this->_view_stream($fout, 'image/jpeg', $file_size);
 
 			// And clean up.
-			fclose($out);
-			$imagick->destroy();
+			fclose($fout);
+
+			return true;
 		}
 
 		protected function _generate_placeholder(DataIterMember $member, $format, $width)
@@ -98,20 +181,22 @@
 				0, // angle
 				$text);
 
-			// Send proper headers: cache control & mime type
-			header('Pragma: public');
-			header('Cache-Control: max-age=86400');
-			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-			header('Content-Type: image/png');
+			// Oh shit cache not writable? Fall back to a temp stream.
+			$fout = $this->_open_cache_stream($member, $width, $height, self::TYPE_PLACEHOLDER, 'wb') or $fout = fopen('php://temp', 'wb');
 
-			// Write image to php output buffer
-			$out = fopen('php://output', 'w');
 			$imagick->setImageFormat('png');
-			$imagick->writeImageFile($out);
+			$imagick->writeImageFile($fout);
+			$imagick->destroy();
+
+			$file_size = ftell($fout);
+			rewind($fout);
+
+			$this->_view_stream($fout, 'image/png', $file_size);
 
 			// And clean up.
 			fclose($out);
-			$imagick->destroy();
+
+			return true;
 		}
 
 		protected function _view_thumbnail(DataIterMember $member, $format)
@@ -124,10 +209,14 @@
 				? min($_GET['width'], 600)
 				: 600;
 
+			$height = $format == self::FORMAT_SQUARE ? $width : 0;
+
 			if ($this->model->is_private($member, 'foto') || !$this->model->has_picture($member))
-				return $this->_generate_placeholder($member, $format, $width);
+				return $this->_view_cached($member, $width, $height, self::TYPE_PLACEHOLDER)
+					or $this->_generate_placeholder($member, $format, $width);
 			else
-				return $this->_generate_thumbnail($this->model->get_photo($member), $format, $width);
+				return $this->_view_cached($member, $width, $height, self::TYPE_THUMBNAIL)
+					or $this->_generate_thumbnail($member, $format, $width);
 		}
 
 		protected function _view_photo(DataIterMember $member)
