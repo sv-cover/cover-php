@@ -194,7 +194,7 @@
 			$this->_serve_stream($fout, 'image/png', $file_size);
 
 			// And clean up.
-			fclose($out);
+			fclose($fout);
 
 			return true;
 		}
