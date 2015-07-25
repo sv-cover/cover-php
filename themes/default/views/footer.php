@@ -5,14 +5,21 @@
 				</div> <!-- CONTENTS_TEXT -->
 				
 				<div class="menu column">
-				<? //echo create_agenda_lustrum('green'); ?>
-				<? echo create_agenda_menu('green'); ?>
-				<? echo create_poll_menu('blue'); ?>
-			
+					<? //echo create_agenda_lustrum('green'); ?>
+					<?= create_agenda_menu('green'); ?>
+					<?= create_poll_menu('blue'); ?>
+					<div class="menuItem search">
+						<form action="search.php" method="get">
+							<label for="menu-search-query">
+								<i class="fa fa-search"></i>
+							</label>
+							<input type="search" id="menu-search-query" name="query" placeholder="<?=__('Typ hier om te zoeken…')?>">
+						</form>
+					</div>
 				</div>	
 				
 				<div class="aff column">
-                    <?php
+					<?php
                     	require_once dirname(__FILE__) . '/Rotator.php';
                         $rotator = new Rotator('images/banners/');
                         $banners = $rotator -> get(15);

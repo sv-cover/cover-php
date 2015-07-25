@@ -739,6 +739,41 @@ border-radius: 0 0 5px 5px;
 	background-color: #C60C30;
 	color: #C60C30;
 }
+
+.menuItem.search {
+	position: relative;
+	padding-bottom: 0;
+	box-shadow: none;
+	background: transparent;
+}
+
+.menuItem.search > * {
+	padding: 0;
+}
+
+.menuItem.search label {
+	position: absolute;
+	top: 4px;
+	left: 6px;
+	color: white;
+}
+
+.menuItem.search input[type=search] {
+	background: transparent;
+	color: white;
+	font: inherit;
+	padding: 4px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	text-indent: 12px;
+	width: 100%;
+}
+
+.menuItem.search input[type=search]:focus {
+	border-color: white;
+	outline: none;
+}
+
 .messageBox {
 	position: relative;
 	color:#000000;
