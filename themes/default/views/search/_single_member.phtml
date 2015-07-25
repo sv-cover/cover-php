@@ -1,18 +1,22 @@
-<h2>
-	<a href="profiel.php?lid=<?=$iter->get_id()?>">
-		<?=member_full_name($iter, false, false) ?>
-	</a>
-</h2>
+<div class="search-result-member">
+	<h2>
+		<a href="profiel.php?lid=<?=$iter->get_id()?>">
+			<?=member_full_name($iter, false, false) ?>
+		</a>
+	</h2>
+	
+	<div class="profile-widget">
+		<img src="foto.php?lid_id=<?=$iter->get_id()?>&amp;format=square&amp;width=200" width="100" height="100">
+	</div>
 
-<img src="foto.php?lid_id=<?=$iter->get_id()?>&amp;format=square&amp;width=200" width="100" height="100">
+	<?php
+	$rows = array();
 
-<?php
-$rows = array();
+	foreach (array('adres', 'email', 'telefoonnummer') as $field)
+		if (!$iter->is_private($field))
+			$rows[] = sprintf('<dt>%s</dt><dd>%s</dd>',
+				__($field), markup_format_text($iter->get($field)));
 
-foreach (array('adres', 'email', 'telefoonnummer') as $field)
-	if (!$iter->is_private($field))
-		$rows[] = sprintf('<tr><th>%s</th><td>%s</td></tr>',
-			__($field), markup_format_text($iter->get($field)));
-
-printf('<table class="member">%s</table>', implode("\r\n", $rows));
-?>
+	printf('<dl class="member">%s</dl>', implode("\r\n", $rows));
+	?>
+</div>

@@ -1881,12 +1881,6 @@ body .ui-autocomplete a.profile .starting-year {
 	color: #ccc;
 }
 
-.search-results > li {
-	list-style: none;
-	padding: 1em 0;
-	border-bottom: 1px solid #ccc;
-}
-
 .modal {
 	position: fixed;
 	top: 0;
@@ -2116,16 +2110,16 @@ body .ui-autocomplete a.profile .starting-year {
 	top: 0;
 }
 
-.search-results .search-widget {
+.search .search-widget {
 	display: flex;
 	align-items: flex-start;
 }
 
-.search-results .search-widget label {
+.search .search-widget label {
 	display: none;
 }
 
-.search-results .search-widget input[type=search] {
+.search .search-widget input[type=search] {
 	border: 1px solid #333;
 	flex: 1 1 auto;
 	margin: 0;
@@ -2137,10 +2131,35 @@ body .ui-autocomplete a.profile .starting-year {
 	background: white;
 }
 
+.search-results > li {
+	display: block;
+	list-style: none;
+	padding: 1em 0;
+	border-bottom: 1px solid #ccc;
+}
+
 .search-results .search-widget button {
 	flex: 0 1 auto;
 	height: 32px;
 	margin: 0 0 0 6px;
+}
+
+.search-result-member .profile-widget {
+	margin-right: 10px;
+}
+
+.search-result-member dl {
+	vertical-align: top;
+	display: inline-block;
+}
+
+.search-result-member dl dt {
+	font-weight: bold;
+	clear:left;
+}
+
+.search-result-member dl dd {
+	margin-bottom: 4px;
 }
 
 /* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
