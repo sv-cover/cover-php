@@ -759,6 +759,7 @@ border-radius: 0 0 5px 5px;
 }
 
 .menuItem.search input[type=search] {
+	-webkit-appearance: textfield;
 	background: transparent;
 	color: white;
 	font: inherit;
@@ -2120,6 +2121,7 @@ body .ui-autocomplete a.profile .starting-year {
 }
 
 .search .search-widget input[type=search] {
+	-webkit-appearance: textfield;
 	border: 1px solid #333;
 	flex: 1 1 auto;
 	margin: 0;
