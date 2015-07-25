@@ -760,13 +760,14 @@ border-radius: 0 0 5px 5px;
 
 .menuItem.search input[type=search] {
 	-webkit-appearance: textfield;
+	box-sizing: border-box;
 	background: transparent;
 	color: white;
 	font: inherit;
-	padding: 4px;
+	padding: 4px 4px 4px 18px;
+	margin: 0;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	text-indent: 12px;
 	width: 100%;
 }
 
@@ -2122,6 +2123,7 @@ body .ui-autocomplete a.profile .starting-year {
 
 .search .search-widget input[type=search] {
 	-webkit-appearance: textfield;
+	box-sizing: border-box;
 	border: 1px solid #333;
 	flex: 1 1 auto;
 	margin: 0;
