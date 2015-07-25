@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-07-24 23:46+0100\n"
+"POT-Creation-Date: 2015-07-25 15:11+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.8.3\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -466,7 +466,7 @@ msgstr "You!"
 #: ../../../include/member.php:87
 #: ../../../include/models/DataModelForum.php:657
 #: ../../../include/models/DataModelForum.php:680
-#: ../../../include/models/DataModelMember.php:592
+#: ../../../include/models/DataModelMember.php:564
 #: ../../../themes/default/views/forum.php:499
 msgid "Onbekend"
 msgstr "Unknown"
@@ -498,7 +498,7 @@ msgid "Alle groepen"
 msgstr "Groups"
 
 #: ../../../include/models/DataModelForum.php:671
-#: ../../../include/models/DataModelMember.php:577
+#: ../../../include/models/DataModelMember.php:549
 #: ../../../themes/default/views/boeken/boeken.php:336
 #: ../../../themes/default/views/boeken/boeken.php:357
 #: ../../../themes/default/views/boeken/boeken.php:399
@@ -542,26 +542,26 @@ msgstr " and "
 msgid "Favoriete foto's"
 msgstr "Liked photos"
 
-#: ../../../include/models/DataModelMember.php:580
+#: ../../../include/models/DataModelMember.php:552
 #: ../../../themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: ../../../include/models/DataModelMember.php:583
+#: ../../../include/models/DataModelMember.php:555
 #: ../../../themes/default/views/almanak/almanak.php:29
 #: ../../../themes/default/views/almanak/almanak.phtml:25
 #: ../../../themes/default/views/profiel/profiel.phtml:150
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: ../../../include/models/DataModelMember.php:586
+#: ../../../include/models/DataModelMember.php:558
 #: ../../../themes/default/views/almanak/almanak.php:34
 #: ../../../themes/default/views/almanak/almanak.phtml:26
 #: ../../../themes/default/views/profiel/profiel.phtml:154
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: ../../../include/models/DataModelMember.php:589
+#: ../../../include/models/DataModelMember.php:561
 #: ../../../themes/default/views/almanak/almanak.php:39
 #: ../../../themes/default/views/almanak/almanak.phtml:27
 #: ../../../themes/default/views/profiel/profiel.phtml:158
@@ -1178,6 +1178,11 @@ msgstr "Close preview"
 #: ../../../themes/default/views/forum.php:244
 msgid "voorbeeld sluiten"
 msgstr "close preview"
+
+#: ../../../themes/default/views/footer.php:16
+#: ../../../themes/default/views/search/index.phtml:5
+msgid "Typ hier om te zoeken…"
+msgstr "Type here to search…"
 
 #: ../../../themes/default/views/forum.php:7
 #: ../../../themes/default/views/forum.php:452
@@ -2164,43 +2169,43 @@ msgstr ""
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "id"
-msgstr "id"
+msgstr "ID"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "voornaam"
-msgstr "first name"
+msgstr "First name"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "tussenvoegsel"
-msgstr "infix"
+msgstr "Infix"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "achternaam"
-msgstr "last name"
+msgstr "Last name"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "adres"
-msgstr "adress"
+msgstr "Address"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "postcode"
-msgstr "zipcode"
+msgstr "Zipcode"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "woonplaats"
-msgstr "place of residence"
+msgstr "Place of residence"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "email"
-msgstr "email"
+msgstr "Email"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "geboortedatum"
-msgstr "birth date"
+msgstr "Birth date"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "geslacht"
-msgstr "gender"
+msgstr "Gender"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "telefoonnummer"
@@ -2212,7 +2217,7 @@ msgstr "Study"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "beginjaar"
-msgstr "starting year"
+msgstr "Starting year"
 
 #: ../../../themes/default/views/almanak/csv.phtml:2
 msgid "status"
@@ -3473,7 +3478,7 @@ msgid "Zoekopdracht"
 msgstr "Search query"
 
 #: ../../../themes/default/views/search/index.phtml:6
-msgid "Zoek!"
+msgid "Zoek"
 msgstr "Search"
 
 #: ../../../themes/default/views/sessions/form.phtml:17
@@ -3666,6 +3671,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Zoek!"
+#~ msgstr "Search"
 
 #~ msgid "Er zijn %s leden gevonden die voldoen aan de zoekterm(en)."
 #~ msgstr "There are %s members that coincide with your searching criteria."
