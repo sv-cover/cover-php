@@ -6,6 +6,8 @@
 		<button type="submit" class="button"><?=__('Zoek')?></button>
 	</form>
 
+	<?php if ($iter !== null): ?>
+	<p class="search-result-statistics"><?=__N('Er is %d zoekresultaat', 'Er zijn %d zoekresultaten', count($iter))?></p>
 	<ul class="search-results">
 		<?php foreach ($iter as $result): ?>
 		<li data-search-relevance="<?=sprintf('%0.2F', $result->get_search_relevance())?>">
@@ -13,5 +15,5 @@
 		</li>
 		<?php endforeach ?>
 	</ul>
-
+	<?php endif ?>
 </div>
