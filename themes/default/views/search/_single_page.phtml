@@ -3,4 +3,7 @@
 		<?=markup_format_text($iter->get_title())?>
 	</a>
 </h2>
-<p>Excerpt of page</p>
+<p><?= nl2br(text_excerpt(
+	markup_format_text(markup_strip($iter->get_content())),
+	parse_search_query($query),
+	50)) ?></p>
