@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-07-25 15:11+0200\n"
+"POT-Creation-Date: 2015-07-25 21:11+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -518,6 +518,7 @@ msgstr "Member"
 #: ../../../themes/default/views/agenda/moderate.phtml:19
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:43
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:26
+#: ../../../themes/default/views/search/_single_committee.phtml:9
 #: ../../../themes/default/views/show/edit.phtml:21
 msgid "Commissie"
 msgstr "Committee"
@@ -778,7 +779,7 @@ msgstr ""
 "Hey, this committee is looking for new members. Are you interested?<br>Tell "
 "your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
 
-#: ../../../search.php:22 ../../../themes/default/views/forum.php:871
+#: ../../../search.php:23 ../../../themes/default/views/forum.php:871
 #: ../../../themes/default/views/almanak/almanak.phtml:9
 #: ../../../themes/default/views/search/index.phtml:1
 msgid "Zoeken"
@@ -2617,6 +2618,7 @@ msgstr ""
 
 #: ../../../themes/default/views/fotoboek/_books.phtml:24
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:49
+#: ../../../themes/default/views/search/_single_fotoboek.phtml:9
 #, php-format
 msgid "%d boek"
 msgid_plural "%d boeken"
@@ -2625,6 +2627,7 @@ msgstr[1] "%d books"
 
 #: ../../../themes/default/views/fotoboek/_books.phtml:27
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:53
+#: ../../../themes/default/views/search/_single_fotoboek.phtml:10
 #, php-format
 msgid "%d foto"
 msgid_plural "%d foto's"
@@ -3473,6 +3476,31 @@ msgstr ""
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
 
+#: ../../../themes/default/views/search/_single_agendapunt.phtml:11
+#, php-format
+msgid "Agendapunt uit %d"
+msgstr "Agenda item from %d"
+
+#: ../../../themes/default/views/search/_single_announcement.phtml:3
+#, php-format
+msgid "Mededeling van %s uit %d"
+msgstr "Announcement made by %s in %d"
+
+#: ../../../themes/default/views/search/_single_committee.phtml:4
+#, php-format
+msgid "%s is een lid in deze commissie"
+msgstr "%s is a member of this committee"
+
+#: ../../../themes/default/views/search/_single_fotoboek.phtml:3
+#, php-format
+msgid "Fotoboek in %s"
+msgstr "Photo album in %s"
+
+#: ../../../themes/default/views/search/_single_fotoboek.phtml:8
+#, php-format
+msgid "Fotoboek met %s en %s gemaakt op %s."
+msgstr "Photo album with %s and %s made on %s."
+
 #: ../../../themes/default/views/search/index.phtml:4
 msgid "Zoekopdracht"
 msgstr "Search query"
@@ -3480,6 +3508,13 @@ msgstr "Search query"
 #: ../../../themes/default/views/search/index.phtml:6
 msgid "Zoek"
 msgstr "Search"
+
+#: ../../../themes/default/views/search/index.phtml:10
+#, php-format
+msgid "Er is %d zoekresultaat"
+msgid_plural "Er zijn %d zoekresultaten"
+msgstr[0] "There is %d search result"
+msgstr[1] "There are %d search results"
 
 #: ../../../themes/default/views/sessions/form.phtml:17
 msgid "Blijf ingelogd"
