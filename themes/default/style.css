@@ -2131,17 +2131,17 @@ body .ui-autocomplete a.profile .starting-year {
 	background: white;
 }
 
+.search .search-widget button {
+	flex: 0 1 auto;
+	height: 32px;
+	margin: 0 0 0 6px;
+}
+
 .search-results > li {
 	display: block;
 	list-style: none;
 	padding: 1em 0;
 	border-bottom: 1px solid #ccc;
-}
-
-.search-results .search-widget button {
-	flex: 0 1 auto;
-	height: 32px;
-	margin: 0 0 0 6px;
 }
 
 .search-result-member .profile-widget {
