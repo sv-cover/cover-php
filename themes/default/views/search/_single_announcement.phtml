@@ -1,0 +1,12 @@
+<h2>
+	<a href="show.php?id=<?=$iter->get_id()?>"><?=markup_format_text($iter->get('subject'))?></a>
+	<small><?=sprintf(__('Mededeling van %s uit %d'),
+		sprintf('<a href="commissies.php?commissie=%s">%s</a>',
+			urlencode($iter->getIter('committee')->get('login')),
+			markup_format_text($iter->getIter('committee')->get('naam'))),
+		strftime('%Y', strtotime($iter->get('created_on'))))?></small>
+</h2>
+<p><?= nl2br(text_excerpt(
+	markup_format_text(markup_strip($iter->get('message'))),
+	parse_search_query($query),
+	50)) ?></p>

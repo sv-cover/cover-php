@@ -1,12 +1,27 @@
 <?php
-
+require_once 'include/search.php';
 require_once 'include/data/DataModel.php';
 
-class DataModelAnnouncement extends DataModel
+class DataIterAnnouncement extends DataIter implements SearchResult
+{
+	public function get_search_relevance()
+	{
+		return 0.5;
+	}
+	
+	public function get_search_type()
+	{
+		return 'announcement';
+	}
+}
+
+class DataModelAnnouncement extends DataModel implements SearchProvider
 {
 	const VISIBILITY_PUBLIC = 0;
 	const VISIBILITY_MEMBERS = 1;
 	const VISIBILITY_ACTIVE_MEMBERS = 2;
+
+	public $dataiter = 'DataIterAnnouncement';
 
 	public function __construct($db)
 	{
@@ -46,5 +61,25 @@ class DataModelAnnouncement extends DataModel
 		$rows = $this->db->query($query);
 		
 		return $this->_rows_to_iters($rows);
+	}
+
+	public function search($query, $limit = null)
+	{
+		$query = $this->db->escape_string($query);
+
+		$query = $this->_generate_query("subject ILIKE '%{$query}%' OR message ILIKE '%{$query}%'");
+
+		if ($limit !== null)
+			$query = sprintf('%s LIMIT %d', $query, $limit);
+
+		$rows = $this->db->query($query);
+
+		$iters = $this->_rows_to_iters($rows);
+
+		$policy = get_policy($this);
+
+		return array_filter($iters, function($iter) use ($policy) {
+			return $policy->user_can_read($iter);
+		});
 	}
 }
