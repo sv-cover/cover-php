@@ -2148,6 +2148,28 @@ body .ui-autocomplete a.profile .starting-year {
 	border-bottom: 1px solid #ccc;
 }
 
+.search-results h2 {
+	position: relative;
+}
+
+.search-results h2 small {
+	color: #333;
+	font-weight: normal;
+	font-size: 12px;
+	/*position: absolute;
+	right: 0;
+	bottom: 0;*/
+	line-height: 22px;
+}
+
+.search-results h2 small:before {
+	content: '(';
+}
+
+.search-results h2 small:after {
+	content: ')';
+}
+
 .search-result-member .profile-widget {
 	margin-right: 10px;
 }
@@ -2167,7 +2189,7 @@ body .ui-autocomplete a.profile .starting-year {
 }
 
 .search-results li .keyword {
-	font-style: italic;
+	font-weight: bold; 
 }
 
 .search-results li .glue {

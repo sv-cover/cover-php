@@ -2,5 +2,11 @@
 	<a href="commissies.php?commissie=<?=$iter->get('login')?>">
 		<?=markup_format_text($iter->get('naam'))?>
 	</a>
+	<?php if ($iter->get('search_match_reason') == 'committee_member_match'): ?>
+		<small class="match-reason"><?=markup_format_text(sprintf(__('%s is een lid in deze commissie'),
+member_full_name($iter->get('search_match_committee_member_id'))))?></small>
+	<?php else: ?>
+		<small><?=__('Commissie') ?></small>
+	<?php endif ?>
 </h2>
 <p><?=markup_format_text($iter->get_summary())?></p>

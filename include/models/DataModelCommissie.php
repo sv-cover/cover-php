@@ -335,7 +335,9 @@
 			$query = sprintf("
 				SELECT
 					c.*,
-					1 as search_relevance
+					1 as search_relevance,
+					'committee_name_match' as search_match_reason,
+					NULL as search_match_committee_member_id
 				FROM
 					commissies c
 				WHERE
@@ -343,7 +345,9 @@
 				UNION
 				SELECT
 					c.*,
-					-1 as search_relevance
+					-1 as search_relevance,
+					'committee_member_match' as search_match_reason,
+					l.id as search_match_committee_member_id
 				FROM
 					actieveleden al
 				INNER JOIN leden l ON
