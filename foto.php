@@ -121,7 +121,7 @@
 			$file_size = ftell($fout);
 			rewind($fout);
 
-			$this->_view_stream($fout, 'image/jpeg', $file_size);
+			$this->_serve_stream($fout, 'image/jpeg', $file_size);
 
 			// And clean up.
 			fclose($fout);
@@ -191,7 +191,7 @@
 			$file_size = ftell($fout);
 			rewind($fout);
 
-			$this->_view_stream($fout, 'image/png', $file_size);
+			$this->_serve_stream($fout, 'image/png', $file_size);
 
 			// And clean up.
 			fclose($out);
