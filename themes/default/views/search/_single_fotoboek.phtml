@@ -1,7 +1,11 @@
 <h2>
-	<a href="fotoboek.php?book=<?=$iter->get_id()?>">
-		<?=markup_format_text($iter->get('titel'))?>
-	</a>
-	<small><?=markup_format_text($iter->get_parent()->get('titel'))?></small>
+	<a href="fotoboek.php?book=<?=$iter->get_id()?>"><?=markup_format_text($iter->get('titel'))?></a>
+	<small><?=sprintf(__('Fotoboek in %s'),
+		sprintf('<a href="fotoboek.php?book=%d">%s</a>',
+			$iter->get_parent()->get_id(),
+			markup_format_text($iter->get_parent()->get('titel'))))?></small>
 </h2>
-<p>Photo book with <?=$iter->get('num_photos')?> photos taken on <?=$iter->get('datum')?>.</p>
+<p><?=sprintf(__('Fotoboek met %s en %s gemaakt op %s.'),
+	__N('%d boek', '%d boeken', $iter->count_books()),
+	__N('%d foto', '%d foto\'s', $iter->count_photos()),
+	$iter->get('datum')) ?></p>
