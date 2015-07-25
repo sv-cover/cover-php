@@ -40,13 +40,13 @@ class SearchController extends Controller
 	
 	function run_impl()
 	{
-		if (isset($_GET['query'])) {
+		if (!empty($_GET['query'])) {
 			$query = $_GET['query'];
 			$iters = $this->_run_query($query);
 		}
 		else {
 			$query = '';
-			$iters = array();
+			$iters = null;
 		}
 
 		$this->get_content('index', $iters, compact('query'));
