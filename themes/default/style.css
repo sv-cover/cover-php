@@ -2116,6 +2116,33 @@ body .ui-autocomplete a.profile .starting-year {
 	top: 0;
 }
 
+.search-results .search-widget {
+	display: flex;
+	align-items: flex-start;
+}
+
+.search-results .search-widget label {
+	display: none;
+}
+
+.search-results .search-widget input[type=search] {
+	border: 1px solid #333;
+	flex: 1 1 auto;
+	margin: 0;
+	padding: 0 5px;
+	font: inherit;
+	font-size: 14px;
+	height: 32px;
+	border-radius: 4px;
+	background: white;
+}
+
+.search-results .search-widget button {
+	flex: 0 1 auto;
+	height: 32px;
+	margin: 0 0 0 6px;
+}
+
 /* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
 
 #page_51 table.markup_default td img, table.markup_noborder td img {

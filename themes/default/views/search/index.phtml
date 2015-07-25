@@ -1,9 +1,9 @@
 <h1><?=__('Zoeken')?></h1>
-<div class="messageBox">
-	<form method="get" action="search.php">
+<div class="messageBox search-results">
+	<form method="get" action="search.php" class="search-widget">
 		<label for="field-query"><?=__('Zoekopdracht')?></label>
-		<input type="search" name="query" id="field-query" value="<?=markup_format_attribute($query)?>">
-		<button type="submit"><?=__('Zoek!')?></button>
+		<input type="search" name="query" id="field-query" value="<?=markup_format_attribute($query)?>" placeholder="<?=__('Typ hier om te zoeken…')?>">
+		<button type="submit" class="button"><?=__('Zoek')?></button>
 	</form>
 
 	<ul class="search-results">
