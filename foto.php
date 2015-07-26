@@ -55,7 +55,7 @@
 			header('Cache-Control: max-age=86400');
 			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 
-			if ($length !== null)
+			if ($length > 0)
 				header(sprintf('Content-Length: %d', $length));
 
 			if ($type !== null)
@@ -96,11 +96,13 @@
 		{
 			$imagick = new Imagick();
 			$imagick->readImageBlob($this->model->get_photo($member));
+			$height = 0;
 			
 			if ($format == self::FORMAT_SQUARE)
 			{
 				$y = 0.05 * $imagick->getImageHeight(); // TODO Find the face :O
 				$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
+				$height = $size;
 
 				if ($y + $size > $imagick->getImageHeight())
 					$y = 0;
@@ -111,13 +113,14 @@
 			$imagick->scaleImage($width, 0);
 
 			// Oh shit cache not writable? Fall back to a temp stream.
-			$fout = $this->_open_cache_stream($member, $width, 0, self::TYPE_THUMBNAIL, 'wb') or $fout = fopen('php://temp', 'wb');
+			$fout = $this->_open_cache_stream($member, $width, $height, self::TYPE_THUMBNAIL, 'w+') or $fout = fopen('php://temp', 'w+');
 
 			// Write image to php output buffer
 			$imagick->setImageFormat('jpeg');
 			$imagick->writeImageFile($fout);
 			$imagick->destroy();
 
+			fseek($fout, 0, SEEK_END);
 			$file_size = ftell($fout);
 			rewind($fout);
 
@@ -182,12 +185,13 @@
 				$text);
 
 			// Oh shit cache not writable? Fall back to a temp stream.
-			$fout = $this->_open_cache_stream($member, $width, $height, self::TYPE_PLACEHOLDER, 'wb') or $fout = fopen('php://temp', 'wb');
+			$fout = $this->_open_cache_stream($member, $width, $height, self::TYPE_PLACEHOLDER, 'w+') or $fout = fopen('php://temp', 'w+');
 
 			$imagick->setImageFormat('png');
 			$imagick->writeImageFile($fout);
 			$imagick->destroy();
 
+			fseek($fout, 0, SEEK_END);
 			$file_size = ftell($fout);
 			rewind($fout);
 
