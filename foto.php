@@ -102,7 +102,7 @@
 			{
 				$y = 0.05 * $imagick->getImageHeight(); // TODO Find the face :O
 				$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
-				$height = $size;
+				$height = $width; // because square
 
 				if ($y + $size > $imagick->getImageHeight())
 					$y = 0;
