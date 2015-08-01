@@ -71,6 +71,10 @@ jQuery(function($) {
 // Inline links (use data-placement-selector and data-partial-selector attributes)
 jQuery(function($) {
 	var inline_link_handler = function(e) {
+		// Do not disturb any effect of modifier keys
+		if (e.ctrlKey || e.shiftKey || e.metaKey)
+			return;
+
 		e.preventDefault();
 
 		var $target = null;
