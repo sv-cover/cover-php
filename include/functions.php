@@ -470,10 +470,8 @@
 		$s = '';
 		
 		foreach ($contents as $line) {
-			// FIXME: use format_string here which is much, much safer than evaluating regular expressions.
-			$line = preg_replace('/([A-Z]+_[A-Z_]+)/e', 'constant(\'\1\')', $line);
-			$line = preg_replace('/\$([a-z][a-z0-9_]*)/ei', '$data[\'\1\']', $line);
-			
+			$line = preg_replace_callback('/[A-Z]+_[A-Z_]+/', 'constant', $line);
+			$line = format_string($line, $data);
 			$s .= $line;
 		}
 		
