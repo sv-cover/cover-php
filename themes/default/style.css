@@ -1892,6 +1892,7 @@ body .ui-autocomplete a.profile .starting-year {
 	z-index: 100;
 	text-align: center;
 	background: rgba(0, 0, 0, 0.4);
+	overflow: auto;
 }
 
 .modal > .window {

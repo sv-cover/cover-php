@@ -22,7 +22,7 @@
 
 			if ($model->has_picture($iter) && !$model->is_private($iter,"foto",true)) {
 				// Make the picture a link ?>
-				<a class="profielFoto" href="<?= markup_format_attribute($photo_link) ?>"><img width="100" height="150" src="<?= markup_format_attribute($photo_thumb_link) ?>" class="profielFoto" alt= "<?= __('lidfoto') ?>"/></a>
+				<a class="profielFoto" href="<?= markup_format_attribute($photo_link) ?>" data-image-popup="modal"><img width="100" height="150" src="<?= markup_format_attribute($photo_thumb_link) ?>" class="profielFoto" alt= "<?= __('lidfoto') ?>"/></a>
 			<? } else { ?>
 				<img width="100" height="150" class="profielFoto" src="<?= markup_format_attribute($photo_thumb_link) ?>" />
 			<? } ?>

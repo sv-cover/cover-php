@@ -136,6 +136,33 @@ jQuery(function($) {
 		.on('submit', 'form[data-placement-selector]', inline_link_handler);
 });
 
+jQuery(function($) {
+	$(document).on('click', 'a[data-image-popup]', function(e) {
+		if ($(this).data('image-popup') !== 'modal')
+			return;
+
+		// Do not disturb any effect of modifier keys
+		if (e.ctrlKey || e.shiftKey || e.metaKey)
+			return;
+
+		e.preventDefault();
+
+		var $modal = $('<div class="modal">').prop('title', 'Click anywhere to close'),
+			$modalWindow = $('<div class="window">').appendTo($modal),
+			$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow),
+			$image = $('<img>').css('max-width', '100%').appendTo($modalWindow);
+
+		$modal.insertBefore($('.world'));
+
+		$modal.on('click', function(e) {
+			e.preventDefault();
+			$modal.remove();
+		});
+
+		$image.prop('src', $(this).prop('href'));
+	});
+});
+
 jQuery.fn.autocompleteAlmanac = function(options)
 {
 	var defaults = {
