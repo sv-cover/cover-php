@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-07-25 21:11+0200\n"
+"POT-Creation-Date: 2015-08-02 00:53+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1856,7 +1856,7 @@ msgid "Je lidmaatschapsaanvraag is verstuurd."
 msgstr "Your membership application has been submitted."
 
 #: ../../../themes/default/views/lidworden/lidworden.php:21
-#: ../../../themes/default/views/lidworden/lidworden.phtml:117
+#: ../../../themes/default/views/lidworden/lidworden.phtml:128
 msgid "Opmerkingen"
 msgstr "Notes"
 
@@ -3062,6 +3062,21 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #: ../../../themes/default/views/lidworden/lidworden.phtml:90
+msgid "BIC"
+msgstr "BIC"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:90
+msgid "Alleen nodig indien buitenlandse bank"
+msgstr "Only if non-Dutch bank account"
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:93
+msgid ""
+"Een BIC nummer is alleen noodzakelijk bij een niet-Nederlands banknummer."
+msgstr ""
+"A BIC code is only really necessary if you are using a non-Dutch bank "
+"account."
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:96
 msgid ""
 "Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn "
 "rekening af te schrijven (verplicht)"
@@ -3069,11 +3084,11 @@ msgstr ""
 "I hereby authorize Cover to automatically deduct the membership fee from my "
 "bank account one time per year. (mandatory)"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:93
+#: ../../../themes/default/views/lidworden/lidworden.phtml:99
 msgid "Mailing"
 msgstr "Mailing list"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:96
+#: ../../../themes/default/views/lidworden/lidworden.phtml:102
 msgid ""
 "Ik wil graag e-mails over activiteiten van Cover ontvangen. (Dit wil je. "
 "Daarnaast, uitschrijven kan gemakkelijk via de website.)"
@@ -3081,15 +3096,19 @@ msgstr ""
 "I would like to receive e-mails about activities organized by Cover. "
 "(Strongly recommended, and easy to turn off afterwards through the website.)"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:102
+#: ../../../themes/default/views/lidworden/lidworden.phtml:108
 msgid "Wat is de kleur van gras? (ik ben geen bot)"
 msgstr "What is the colour of grass? (I am not a robot)"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:107
+#: ../../../themes/default/views/lidworden/lidworden.phtml:112
+msgid "Als je het niet zeker weet, vul dan 'groen' in."
+msgstr "If you are unsure, just enter ‘green’."
+
+#: ../../../themes/default/views/lidworden/lidworden.phtml:118
 msgid "Aanvraag versturen"
 msgstr "Submit application"
 
-#: ../../../themes/default/views/lidworden/lidworden.phtml:114
+#: ../../../themes/default/views/lidworden/lidworden.phtml:125
 msgid "Bewerk opmerkingen"
 msgstr "Modify notes"
 

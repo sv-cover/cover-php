@@ -51,6 +51,9 @@
 				return;
 			}
 			
+			// These fields are named here because they are not required to be filled in, and thus
+			// would cause an error when asked for through check_values.
+			$data['bic'] = $_POST['bic'];
 			$data['tussenvoegsel'] = $_POST['tussenvoegsel'];
 			$data['telefoonnummer'] = $_POST['telefoonnummer'];
 			$data['geboortedatum'] = $_POST['day'] . '-' . $_POST['month'] . '-' . $_POST['year'];

@@ -85,7 +85,13 @@ $opmerkingen = new ControllerEditable('Opmerkingen aanmelden');
 		<th colspan="2"><?=__('Betaling')?></th>
 	</tr>
 
-	<?=$this->render_text_row(__('IBAN'), 'rekening', $e, true, 'size', 24) ?>
+	<?=$this->render_text_row(__('IBAN'), 'rekening', $e, true, 'size', 30) ?>
+
+	<?=$this->render_text_row(__('BIC'), 'bic', $e, true, 'size', 30, 'placeholder', __('Alleen nodig indien buitenlandse bank')) ?>
+	<tr>
+		<td></td>
+		<td><?=__('Een BIC nummer is alleen noodzakelijk bij een niet-Nederlands banknummer.')?></td>
+	</tr>
 
 	<?= table_row(label('Machtiging', 'machtiging', $e, true), '<label>' . input_checkbox('machtiging', null) . ' ' . __('Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn rekening af te schrijven (verplicht)') . '</label>') ?>
 
@@ -100,6 +106,11 @@ $opmerkingen = new ControllerEditable('Opmerkingen aanmelden');
 	</tr>
 
 	<?=$this->render_text_row(__('Wat is de kleur van gras? (ik ben geen bot)'), 'spam', $e, true) ?>
+
+	<tr>
+		<td></td>
+		<td><?=__("Als je het niet zeker weet, vul dan 'groen' in.")?></td>
+	</tr>
 
 	<tr>
 		<td class="submit" colspan="2"><br>

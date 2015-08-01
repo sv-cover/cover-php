@@ -18,6 +18,7 @@ Geboortedatum: $geboortedatum
 Studentnummer: $studentnummer
 Studierichting: $studierichting $fase
 IBAN: $rekening
+BIC: $bic
 Machtiging: $machtiging
 
 Mailing: $mailing
