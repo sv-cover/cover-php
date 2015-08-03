@@ -4,6 +4,10 @@ require_once 'include/init.php';
 require_once 'include/member.php';
 require_once 'include/controllers/ControllerCRUD.php';
 
+/**
+ * Class ControllerAnnouncements
+ * @property DataModelAnnouncement $model;
+ */
 class ControllerAnnouncements extends ControllerCRUD
 {
 	public function __construct()

@@ -62,7 +62,11 @@
 		<?php if (get_config_value('show_queries', false)): ?>
 		<!--
 		<?php foreach (get_db()->history as $query)
-			printf("%f: %s\n\n", $query['duration'], $query['query']); ?>
+			printf("%f: %s\n\n", $query['duration'], $query['query']);
+
+			printf("Driver: %s\n", get_class(get_db()));
+			printf("Total time: %fs", array_sum(array_map(function($query) { return $query['duration']; }, get_db()->history)));
+		?>
 		-->
 		<?php endif ?>
 	</body>

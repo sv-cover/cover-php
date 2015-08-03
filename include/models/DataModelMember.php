@@ -184,6 +184,7 @@
 			else if (!password_verify($passwd, $row['wachtwoord']))
 				return false;
 
+			/** @var DataModelMember $iter */
 			$iter = $this->_row_to_iter($row);
 
 			if (password_needs_rehash($row['wachtwoord'], PASSWORD_DEFAULT))

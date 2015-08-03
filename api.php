@@ -13,6 +13,7 @@ class ControllerApi extends Controller
 
 	public function api_agenda()
 	{
+		/** @var DataModelAgenda $agenda */
 		$agenda = get_model('DataModelAgenda');
 
 		$activities = array();
@@ -27,10 +28,11 @@ class ControllerApi extends Controller
 
 	public function api_get_agendapunt()
 	{
+		/** @var DataModelAgenda $agenda */
 		$agenda = get_model('DataModelAgenda');
 
 		if (empty($_GET['id']))
-			throw new InvaliArgumentException('Missing id parameter');
+			throw new \InvalidArgumentException('Missing id parameter');
 
 		$agendapunt = $agenda->get_iter($_GET['id']);
 
@@ -44,11 +46,13 @@ class ControllerApi extends Controller
 
 	public function api_session_create($email, $password, $application)
 	{
+		/** @var DataModelMember $user_model */
 		$user_model = get_model('DataModelMember');
 
-		if (!$member = $user_model->login($email, $password))
+		if (!($member = $user_model->login($email, $password)))
 			throw new RuntimeException('Invalid username or password');
 
+		/** @var DataModelSession $session_model */
 		$session_model = get_model('DataModelSession');
 
 		$session = $session_model->create($member->get_id(), $application);
@@ -61,6 +65,7 @@ class ControllerApi extends Controller
 
 	public function api_session_destroy($session_id)
 	{
+		/** @var DataModelSession $session_model */
 		$session_model = get_model('DataModelSession');
 
 		$session = $session_model->resume($session_id);
@@ -70,14 +75,15 @@ class ControllerApi extends Controller
 
 	public function api_session_get_member($session_id)
 	{
-		// Get the session
+		/** @var DataModelSession $session_model */
 		$session_model = get_model('DataModelSession');
 
 		$session = $session_model->resume($session_id);
 
 		if (!$session)
 			throw new RuntimeException('Invalid session id');
-		
+
+		/** @var DataModelMember $user_model */
 		$user_model = get_model('DataModelMember');
 
 		$member = $user_model->get_iter($session->get('member_id'));
@@ -91,11 +97,13 @@ class ControllerApi extends Controller
 			$comittees = array($committees);
 
 		// Get the session
+		/** @var DataModelSession $session_model */
 		$session_model = get_model('DataModelSession');
 
 		$session = $session_model->get_iter($session_id);
 
 		// Find in which committees the member is active
+		/** @var DataModelMember $member_model */
 		$member_model = get_model('DataModelMember');
 
 		$member_committees = $member_model->get_commissies($session->get('member_id'));
@@ -103,6 +111,7 @@ class ControllerApi extends Controller
 		if (empty($member_committees))
 			return array('result' => false, 'error' => 'No committees found for this member');
 
+		/** @var DataModelCommissie $committee_model */
 		$committee_model = get_model('DataModelCommissie');
 
 		foreach ($committees as $committee_name)
@@ -123,6 +132,7 @@ class ControllerApi extends Controller
 
 	public function api_get_member($member_id)
 	{
+		/** @var DataModelMember $user_model */
 		$user_model = get_model('DataModelMember');
 
 		$member = $user_model->get_iter($member_id);
@@ -143,10 +153,12 @@ class ControllerApi extends Controller
 	public function api_get_committees($member_id)
 	{
 		// Find in which committees the member is active
+		/** @var DataModelMember $member_model */
 		$member_model = get_model('DataModelMember');
 
 		$member_committees = $member_model->get_commissies($member_id);
 
+		/** @var DataModelCommissie $committee_model */
 		$committee_model = get_model('DataModelCommissie');
 
 		$committees = array();
