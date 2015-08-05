@@ -8,10 +8,10 @@
 	
 	class ControllerProfiel extends Controller
 	{
-		var $model = null;
-
-		function ControllerProfiel() {
+		public function __construct()
+		{
 			$this->model = get_model('DataModelMember');
+
 			$this->sizes = array(
 				'voornaam' => 255,
 				'tussenvoegsel' => 255,
@@ -27,7 +27,8 @@
 				'nick' => 50);
 		}
 		
-		function get_content($view, $iter = null, $params = null) {
+		protected function get_content($view, $iter = null, $params = null)
+		{
 			$title = $iter
 				? member_full_name($iter, false, true)
 				: __('Profiel');
@@ -62,24 +63,25 @@
 			return in_array($value, array('nl', 'en')) ? $value : false;
 		}
 
-		function _process_almanak($iter) {
+		protected function _process_almanak(DataIterMember $iter)
+		{
 			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				$check = array(
-					array('name' => 'voornaam', 'function' => array(&$this, '_check_size')),
-					array('name' => 'tussenvoegsel', 'function' => array(&$this, '_check_size')),
-					array('name' => 'achternaam', 'function' => array(&$this, '_check_size')),
-					array('name' => 'geboortedatum', 'function' => array(&$this, '_check_geboortedatum')),
+					array('name' => 'voornaam', 'function' => array($this, '_check_size')),
+					array('name' => 'tussenvoegsel', 'function' => array($this, '_check_size')),
+					array('name' => 'achternaam', 'function' => array($this, '_check_size')),
+					array('name' => 'geboortedatum', 'function' => array($this, '_check_geboortedatum')),
 					array('name' => 'beginjaar', 'function' => 'check_value_toint'));
 			} else {
 				$check = array();
 			}
 			
 			$check = array_merge($check, array(
-				array('name' => 'postcode', 'function' => array(&$this, '_check_size')),
-				array('name' => 'telefoonnummer', 'function' => array(&$this, '_check_size')),
-				array('name' => 'adres', 'function' => array(&$this, '_check_size')),
-				array('name' => 'email', 'function' => array(&$this, '_check_size')),
-				array('name' => 'woonplaats', 'function' => array(&$this, '_check_size')))
+				array('name' => 'postcode', 'function' => array($this, '_check_size')),
+				array('name' => 'telefoonnummer', 'function' => array($this, '_check_size')),
+				array('name' => 'adres', 'function' => array($this, '_check_size')),
+				array('name' => 'email', 'function' => array($this, '_check_size')),
+				array('name' => 'woonplaats', 'function' => array($this, '_check_size')))
 			);
 			
 			$data = check_values($check, $errors);
@@ -90,23 +92,8 @@
 				return;
 			}
 			
-			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
-				$fields = array(
-					'voornaam',
-					'tussenvoegsel',
-					'achternaam',
-					'geboortedatum',
-					'beginjaar');
-			} else {
-				$fields = array();
-			}
-
-			$fields = array_merge($fields, array(
-					'adres', 
-					'postcode', 
-					'woonplaats',
-					'telefoonnummer',
-					'email'));
+			// Get all field names that need to be set on the iterator
+			$fields = array_map(function($check) { return $check['name']; }, $check);
 			
 			$oud = $iter->data;
 			
@@ -119,28 +106,26 @@
 			
 			$this->model->update($iter);
 			
-			if ($iter->has_changes()
-				&& !member_in_commissie(COMMISSIE_BESTUUR, false)
-				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR, false)) {
-				/* Inform bestuur that the members information
-				 * has been changed
-				 */
+			if ($iter->has_changes())
+			{
+				// Inform the board that member info has been changed.
 				$subject = "Lidgegevens gewijzigd";
-				$body = 'De gegevens van ' . member_full_name($iter) . " zijn gewijzigd: \n\n";
+				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter)) . "\n\n";
 				
 				$changes = $iter->get_changed_values();
 				
 				foreach ($changes as $field => $value)
-					$body .= $field . ":\t" . ($value ? $value : "<verwijderd>") . " (was: " . $oud[$field] . ")\n";
+					$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);
 					
 				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\n");
-				mail('secretaris@svcover.nl', $subject, 'De gegevens van ' . member_full_name($iter) . " zijn gewijzigd: \n\n De wijzigingen zijn te vinden op administratie@svcover.nl", "From: webcie@ai.rug.nl\r\n");
+				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter)), "From: webcie@ai.rug.nl\r\n");
 			}
 
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#almanak');
 		}
 		
-		function _process_webgegevens($iter) {
+		protected function _process_webgegevens(DataIterMember $iter)
+		{
 			$check = array(
 				array('name' => 'nick', 'function' => array(&$this, '_check_size')),
 				array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
@@ -157,12 +142,7 @@
 				return;
 			}
 
-			$fields = array(
-					'nick', 
-					'onderschrift', 
-					'avatar',
-					'homepage', 
-					'taal');
+			$fields = array_map(function($check) { return $check['name']; }, $check);
 
 			foreach ($fields as $field)
 				if (isset($data[$field]))
@@ -174,13 +154,13 @@
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#webgegevens');	
 		}
 		
-		function _process_wachtwoord($iter) {
+		protected function _process_wachtwoord(DataIterMember $iter)
+		{
 			$errors = array();
 			$message = array();
 
 			// Only test the old password if we are not a member of the board
-			if (!member_in_commissie(COMMISSIE_BESTUUR)
-				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
+			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 				if (!get_post('wachtwoord_oud') || !$this->model->login($iter->get('email'), get_post('wachtwoord_oud'))) {
 					$errors[] = 'wachtwoord_oud';
 					$message[] = __('Het huidige wachtwoord is onjuist.');
@@ -206,7 +186,8 @@
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#wachtwoord');
 		}
 		
-		function _process_privacy($iter) {
+		protected function _process_privacy(DataIterMember $iter)
+		{
 			/* Built privacy mask */
 			$fields = $this->model->get_privacy();
 			$mask = 0;
@@ -223,7 +204,8 @@
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#privacy');
 		}
 
-		function _process_zichtbaarheid($iter) {
+		protected function _process_zichtbaarheid(DataIterMember $iter)
+		{
 			$errors = array();
 			$message = array();
 
@@ -251,7 +233,7 @@
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#zichtbaarheid');
 		}
 
-		protected function _process_photo($iter)
+		protected function _process_photo(DataIterMember $iter)
 		{
 			$error = null;
 
@@ -281,7 +263,7 @@
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '&force_reload_photo=true#almanak');
 		}
 
-		protected function _process_facebook_link($iter, $action)
+		protected function _process_facebook_link(DataIterMember $iter, $action)
 		{
 			if ($action == 'unlink')
 				get_facebook()->destroySession();
@@ -289,7 +271,8 @@
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#fadebook');
 		}
 		
-		function run_impl() {
+		protected function run_impl()
+		{
 			$lid = null;
 
 			if (!isset($_GET['lid'])) {
