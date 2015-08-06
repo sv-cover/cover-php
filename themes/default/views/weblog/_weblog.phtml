@@ -3,7 +3,7 @@ $author_info = $model->get_author_info($iter);
 $message = $iter->get_first_message();
 ?>
 <div class="weblog-post">
-	<div class="weblog-post-details">
+	<div class="weblog-post-details profile-widget">
 		<a class="author" href="<?=markup_format_attribute(get_author_link($iter))?>">
 			<img class="weblog_head" width="100" height="100" src="<?=markup_format_attribute($this->_get_weblog_head($iter))?>">
 			<span class="name"><?=markup_format_text($author_info['name'])?></span>
