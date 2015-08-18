@@ -67,36 +67,26 @@
 					WHERE titel = '" . $this->db->escape_string($title) . "'"));
 		}
 
-		public function get_content($id, &$page = null)
+		public function get_content($id)
 		{
-			$page = $this->get_iter($id);
-
-			$lang_spec_prop = 'content_' . i18n_get_language();
-
-			return !empty($page->data[$lang_spec_prop])
-				? $page->get($lang_spec_prop)
-				: $page->get('content');
+			return $this->get_iter($id)->get_content();
 		}
 
 		public function get_title($id)
 		{
-			$content = $this->get_content($id, $page);
-
-			return preg_match('/\[h1\](.*?)\[\/h1\]/i', $content, $match)
-				? $match[1]
-				: null;
+			return $this->get_iter($id)->get_title();
 		}
 
 		public function get_summary($id)
 		{
-			$content = $this->get_content($id, $page);
+			$page = $this->get_iter($id);
 
-			return editable_get_summary($content, $page->get('owner'));
+			return editable_get_summary($page->get_content(), $page->get('owner'));
 		}
 
 		public function search($query, $limit = null)
 		{
-			$keywords = parse_search_query($query);
+			$keywords = parse_search_query_for_text($query);
 
 			$text_query = implode(' & ', $keywords);
 
@@ -117,6 +107,18 @@
 
 			$rows = $this->db->query($query);
 
-			return $this->_rows_to_iters($rows);
+			$iters = $this->_rows_to_iters($rows);
+
+			$pattern = sprintf('/(%s)/i', implode('|', array_map(function($p) { return preg_quote($p, '/'); }, $keywords)));
+
+			// Enhance search relevance score when the keywords appear in the title of a page :D
+			foreach ($iters as $iter)
+			{
+				$keywords_in_title = preg_match_all($pattern, $iter->get_title(), $matches);
+				$iter->set('search_relevance', $iter->get('search_relevance') + $keywords_in_title);
+			}
+
+			return $iters;
+
 		}
 	}

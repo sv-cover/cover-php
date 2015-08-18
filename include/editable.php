@@ -43,7 +43,7 @@
 
 		return markup_clean($page);
 	}
-	
+
 	/** @group Editable
 	  * Get the summary of the editable
 	  * @content the editable page content

@@ -75,11 +75,20 @@ function find_word_bound($text, $cursor)
 
 function parse_search_query($query)
 {
-	$parts = preg_split('/\s+/', $query);
+	return preg_split('/\s+/', $query);
+}
 
+function parse_search_query_for_text($query)
+{
+	$parts = parse_search_query($query);
+	
 	$parts = array_filter($parts, function($part) {
 		return !in_array(strtolower($part), array('and', 'or'));
 	});
+
+	$parts = array_map(function($part) {
+		return Porter::stem($part);
+	}, $parts);
 
 	return $parts;
 }
