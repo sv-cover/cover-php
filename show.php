@@ -125,6 +125,10 @@
 				$this->redirect('commissies.php?id=' . $committee->get('login'), true);
 			elseif ($board = $this->_is_embedded_page($_GET['id'], 'DataModelBesturen'))
 				$this->redirect('besturen.php#' .  rawurlencode($board->get('login')), true);
+			elseif ($_GET['id'] == 26) // TODO this is a dirty hackish way :(
+				$this->redirect('boeken.php');
+			elseif ($_GET['id'] == 21)
+				$this->redirect('index.php');
 			else
 				$this->get_page_content($_GET['id']);
 		}
