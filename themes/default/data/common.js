@@ -250,3 +250,16 @@ $(document).on('ready partial-content-loaded', function(e) {
 		});
 	});
 });
+
+// Let's track clicks :D
+$(document).on('ready', function(e) {
+	// BookCee webshop
+	$(e.target).find('.boekcie-webshop-call-to-action a').click(function(e) {
+		ga('send', 'event', 'button', 'click', 'buy-books-button');
+	});
+
+	// Banners at the right side of the page
+	$(e.target).find('.aff.column a').click(function(e) {
+		ga('send', 'event', 'button', 'click', 'banner', $(this).attr('href'));
+	});
+});
