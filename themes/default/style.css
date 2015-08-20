@@ -1283,7 +1283,7 @@ div.beheer table {
 }
 
 .vertical-form {
-	clear: both;
+	/*clear: both;*/
 }
 
 .vertical-form > div,

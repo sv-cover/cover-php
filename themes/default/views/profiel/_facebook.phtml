@@ -1,0 +1,28 @@
+<?php
+$facebook_button = 'login';
+
+if (get_facebook()->getUser())
+{
+	try {
+		$me = get_facebook()->api('/me', 'GET');
+		echo markup_format_text(sprintf(__('Je bent ingelogd als %s.'), $me['name']));
+		$facebook_button = 'logout';
+	} catch (FacebookException $e) {
+		echo __('Je bent niet langer gekoppeld aan Facebook.');
+		$facebook_button = 'login';
+	}
+}
+else
+{
+	echo __('Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan.');
+}
+?>
+<h2 id="facebook"><?= __('Facebook')?></h2>
+<?php if ($facebook_button == 'login'): ?>
+	<a class="button connect-facebook-button" href="<?=get_facebook()->getCoverLoginUrl()?>"><?= __('Koppel Facebook') ?></a>
+<?php elseif ($facebook_button == 'logout'): ?>
+	<form method="post" action="" class="inline-form">
+		<input type="hidden" name="facebook_action" value="unlink">
+		<button type="submit" class="button connect-facebook-button"><?= __('Ontkoppel Facebook') ?></button>
+	</form>
+<?php endif ?>

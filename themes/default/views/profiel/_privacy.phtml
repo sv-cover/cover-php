@@ -1,0 +1,37 @@
+<h2 class="profilehead" id="privacy"><?= __('Privacy instellingen') ?></h2>
+<p><?= __('Je privacy instellingen geven aan wie welke informatie mag zien.') ?></p>
+<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#privacy" method="post">
+	<?= input_hidden('submprofiel_privacy', 'yes') ?>
+	<table class="privacy">
+		<tr class="header">
+			<td class="corner"></td>
+			<td><?= __('Niemand') ?></td>
+			<td><?= __('Leden') ?></td>
+			<td><?= __('Iedereen') ?></td>
+		</tr>
+
+		<?php
+		/* Get privacy fields */
+		$fields = $model->get_privacy();
+		$privacy = $iter->get('privacy');
+
+		foreach ($fields as $field => $nr):
+			/* Get the 3bit value */
+			$value = (($privacy >> ($nr * 3)) & 7);
+			$data = array('privacy_' . $nr => $value);
+
+			/* Create privacy row */
+		?>
+		<tr>
+			<td class="bold"><?= field_for_display($field) ?></td>
+			<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '0') ?></td>
+			<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '1') ?></td>
+			<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '7') ?></td>
+		</tr>
+		<?php endforeach ?>
+
+		<tr>
+			<td colspan="4" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
+		</tr>
+	</table>
+</form>

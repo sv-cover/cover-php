@@ -1,8 +1,44 @@
+<?php
+$personal_fields = [
+	[
+		'label' => __('Geboortedatum'),
+		'name' => 'geboortedatum',
+		'data' => [
+			'geboortedatum' => format_date($iter->get('geboortedatum'))
+		],
+		'read_only' => true
+	],
+	[
+		'label' => __('Beginjaar'),
+		'name' => 'beginjaar',
+		'read_only' => true
+	],
+	[
+		'label' => __('Adres'),
+		'name' => 'adres'
+	],
+	[
+		'label' => __('Postcode'),
+		'name' => 'postcode'
+	],
+	[
+		'label' => __('Woonplaats'),
+		'name' => 'woonplaats'
+	],
+	[
+		'label' => __('Telefoonnummer'),
+		'name' => 'telefoonnummer'
+	],
+	[
+		'label' => __('E-Mail adres'),
+		'name' => 'email'
+	]
+];
+?>
 <h1><?= sprintf(__('Profiel van %s'), markup_format_text(member_full_name($iter, false, false))) ?></h1>
 <div class="messageBox clearfix">
 
-
-<?php if (isset($errors) && count($errors) > 0): ?>
+	<?php if (isset($errors) && count($errors) > 0): ?>
 	<div class="textCenter error-section">
 		<p><span class="error"><?= __('Niet alle velden zijn goed ingevuld') ?></span></p>
 		
@@ -10,161 +46,64 @@
 		<p><?= str_replace("\n", "<br>\n", $error_message) ?></p>
 		<?php endif ?>
 	</div>
-<?php endif ?>
+	<?php endif ?>
 
-	<div class="floatLeft textCenter almanak">
-		<h2 id="almanak" class="profileHead"><?= __('Almanakgegevens') ?></h2>
-			<? $photo_link = "foto.php?lid_id=" . $iter->get_id();
-			$photo_thumb_link = "foto.php?format=portrait&width=200&lid_id=" . $iter->get_id();
+	<div class="tab-container">
+		<div class="tab-sidebar">
+			<?php $this->render_partial('profile_widget', compact('iter')) ?>
+			<ul class="nav-tabs vertical">
+				<li><a href="#personal"><?=__('Almanakgegevens')?></a></li>
+				<li><a href="#profile"><?=__('Website')?></a></li>
+				<li><a href="#privacy"><?=__('Privacy')?></a></li>
+				<li><a href="#mailinglists"><?=__('Mailinglijsten')?></a></li>
+				<li><a href="#sessions"><?=__('Sessies')?></a></li>
+				<li><a href="#facebook"><?=__('Facebook')?></a></li>
+			</ul>
+		</div>
 
-			if (!empty($_GET['force_reload_photo']))
-				$photo_thumb_link .= '&_timestamp=' . time();
+		<div class="tab-content">
+			<div id="personal" class="tab-pane">
+				<?php $this->render_partial('personal', compact('iter', 'errors', 'personal_fields')) ?>
 
-			if ($model->has_picture($iter) && !$model->is_private($iter,"foto",true)) {
-				// Make the picture a link ?>
-				<a class="profielFoto" href="<?= markup_format_attribute($photo_link) ?>" data-image-popup="modal"><img width="100" height="150" src="<?= markup_format_attribute($photo_thumb_link) ?>" class="profielFoto" alt= "<?= __('lidfoto') ?>"/></a>
-			<? } else { ?>
-				<img width="100" height="150" class="profielFoto" src="<?= markup_format_attribute($photo_thumb_link) ?>" />
-			<? } ?>
-			<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
-			<form id="upload-photo" action="profiel.php?lid=<?=$iter->get('lidid')?>" method="post" enctype="multipart/form-data">
-				<div class="file-upload-button button">
-					<span><?=__('Kies foto') ?>&hellip;</span>
-					<input type="file" name="photo" accept="image/jpeg" title="<?=__('Alleen JPEG-plaatjes mogen.')?>" onchange="if (this.value) this.form.submit()">
-				</div>
-			</form>
-			<?php elseif ($this->is_current_member($iter)): ?>
-				<p class="hint"><?=__('Niet tevreden met je foto? Stuur een nieuwe naar webcie@ai.rug.nl. Het liefst met een verhouding van 3:2, bijvoorbeeld 500&times;750.')?></p>
+				<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
+					<?php $this->render_partial('visibility', compact('iter')); ?>
+				<?php endif ?>
+			</div>
+
+			<div id="profile" class="tab-pane">
+				<?php $this->render_partial('profile', compact('model', 'iter', 'errors')) ?>
+				<?php if ($this->member_write_permission($iter)): ?>
+					<?php $this->render_partial('password', compact('iter', 'errors')) ?>
+				<?php endif ?>
+			</div>
+			
+			<?php if ($this->member_write_permission($iter)): ?>
+			<div id="privacy" class="tab-pane">
+				<?php $this->render_partial('privacy', compact('model', 'iter')) ?>
+
+				<a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a>
+			</div>
 			<?php endif ?>
-			<p class="hint"><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a></p>
-			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>" method="post">
-				<?= input_hidden('submprofiel_almanak', 'yes') ?>
-				<?= input_hidden('id', $iter->get('lidid')) ?>
-				<table class="profiel">
-					<tr>
-						<td width="150"></td>
-						<td></td>
-					</tr>
-					<?
-					if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) { ?>
-						<tr><td><?=
-								//FIXME: Omdat 'naam' geen echt veld is, worden velden met errors hier (bijv. voornaam die te lang is) niet aangegeven -- PdB
-						 label(__('Naam'), 'naam', $errors) ?>:</td><td>
-							 <?= input_text('voornaam', $iter->data, 'class', 'naam') ?>
-							 <?= input_text('tussenvoegsel', $iter->data, 'class', 'naam') ?>
-							 <?= input_text('achternaam', $iter->data, 'class', 'naam') ?></td></tr>
+			
+			<?php if ($this->is_current_member($iter) || member_in_commissie(COMMISSIE_EASY)): ?>
+			<div id="mailinglists" class="tab-pane">
+				<?php $this->render_partial('mailinglists', compact('iter')) ?>
+			</div>
+	
+			<div id="sessions" class="tab-pane">
+				<?php $this->render_partial('sessions', compact('iter')) ?>
+			</div>
+			<?php endif ?>
 
-					<?
-						$fields = array();			
-					} else { 
-						$fields = array(array('label' => __('Naam'), 'name' => 'naam', 'data' => array('naam' => member_full_name($iter, false, false)), 'read_only' => true));
-					} 
-
-					$fields = array_merge($fields, array(
-						array('label' => __('Geboortedatum'), 'name' => 'geboortedatum', 'data' => array('geboortedatum' => format_date($iter->get('geboortedatum'))), 'read_only' => true),
-						array('label' => __('Beginjaar'), 'name' => 'beginjaar', 'read_only' => true),
-						array('label' => __('Adres'), 'name' => 'adres'),
-						array('label' => __('Postcode'), 'name' => 'postcode'),
-						array('label' => __('Woonplaats'), 'name' => 'woonplaats'),
-						array('label' => __('Telefoonnummer'), 'name' => 'telefoonnummer'),
-						array('label' => __('E-Mail adres'), 'name' => 'email')));
-
-					foreach ($fields as $field) {?>
-						<?= $this->privacy_parse($model, $iter, $field['label'], $field['name'], (isset($field['data']) ? $field['data'] : $iter->data), $errors, isset($field['read_only']) ? $field['read_only'] : false) ?>
-					<? } ?>
-
-					<? if ($this->member_write_permission($iter)) {?>
-						<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
-					<? } ?>
-				</table>
-			</form>
+			<?php if($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
+			<div id="facebook" class="tab-pane">
+				<?php $this->render_partial('facebook', compact('iter')) ?>
+			</div>
+			<?php endif ?>
+		</div>
 	</div>
 	
-	<div class="floatLeft almanak">
-			<h2 id="webgegevens" class="profilehead"><?= __('Webgegevens') ?></h2>
-			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#webgegevens" method="post">
-				<?= input_hidden('submprofiel_webgegevens', 'yes') ?>
-				<?= input_hidden('id', $iter->get('lidid')) ?>
-
-				<table class="profiel">
-					<tr>
-						<td width="150"></td>
-						<td></td>
-					</tr>
-					<?= $this->privacy_parse($model, $iter, __('Bijnaam'), 'nick', $iter->data, $errors) ?>
-					<?= $this->privacy_parse($model, $iter, __('Onderschrift'), 'onderschrift', $iter->data, $errors) ?>
-
-					<? /* Avatar */ ?>
-					<tr><td><?= label(__('Avatar'), 'avatar', $errors) ?>:</td>
-
-					<? if ($this->is_current_member($iter)) {?>
-						<td><?= input_text('avatar', $iter->data, 'formatter',  'empty_to_http_formatter') ?></td>
-					<?} else {?>
-						<td><?= ($iter->get('avatar') ? ('<img src="' . markup_format_attribute($iter->get('avatar')) . '" alt="' . __('avatar') . '" class="avatar">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
-					<? } ?>
-					</tr>
-
-					<? /* Homepage */ ?>
-					<tr><td><?= label(__('Homepage'), 'homepage', $errors) ?>:</td>
-
-					<? if ($this->is_current_member($iter)) {?>
-						<td><?= input_text('homepage', $iter->data, 'formatter', 'empty_to_http_formatter') ?></td>		
-					<?} else {?>
-						<td><?= ($iter->get('homepage') ? ('<a href="' . markup_format_attribute($iter->get('homepage')) . '">' . markup_format_text($iter->get('homepage')) . '</a>') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
-					<? } ?>
-					</tr>
-
-					<? if ($this->member_write_permission($iter)) {?>
-						<tr>
-							<td><?= label(__('Taal'), 'taal', $errors) ?></td>
-							<td><?= select_field('taal', i18n_get_languages(), $iter->data) ?></td>
-						</tr>
-					<? } ?>
-
-					<? if ($this->member_write_permission($iter)) {?>
-						<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
-					<? } ?>
-				</table>
-			</form>
-	</div>
-
-	<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) { ?>
-		<div class="floatLeft almanak">
-			<h2 class="profilehead" id="zichtbaarheid"><?= __('Zichtbaarheid') ?></h2>
-			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#zichtbaarheid" method="post">
-
-				<?= input_hidden('submprofiel_zichtbaarheid', 'yes') ?>
-				<?= input_hidden('id', $iter->get('lidid')) ?>
-
-				<table class="profiel">
-					<tr>
-						<td width="120"><span class="label">Type:</span></td>
-						<td width="150"><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_ERELID) . '&nbsp;' . __('Erelid') ?></label></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Donateur') ?></label></td>
-					</tr>
-					<tr>
-						<td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	<?php } ?>
-
+	<!-- To be moved to a read-only version of a persons profile? -->
 	<?php if ($commissies = $this->get_commissies($iter)): ?>
 	<div class="floatLeft almanak">
 		<h2 class="profilehead" id="commissies"><?= __('Commissies') ?></h2>
@@ -179,137 +118,27 @@
 		</ul>
 	</div>
 	<?php endif ?>
-
-	<? if ($this->member_write_permission($iter)) { ?>
-		<div class="floatLeft almanak">
-			<h2 class="profilehead" id="wachtwoord"><?= __('Nieuw wachtwoord') ?></h2>
-				<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#wachtwoord" method="post">
-	
-					<?= input_hidden('submprofiel_wachtwoord', 'yes') ?>
-					<?= input_hidden('id', $iter->get('lidid')) ?>
-	
-					<table class="profiel">
-						<tr>
-							<td width="150"></td>
-							<td></td>
-						</tr>
-						<?php if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
-						<?= table_row(label(__('Oud wachtwoord'), 'wachtwoord_oud', $errors) . ':', input_password('wachtwoord_oud')) ?>
-						<?php endif ?>
-						<?= table_row(label(__('Nieuw wachtwoord'), 'wachtwoord_nieuw', $errors) . ':', input_password('wachtwoord_nieuw')) ?>
-						<?= table_row(label(__('Opnieuw'), 'wachtwoord_opnieuw', $errors) . ':', input_password('wachtwoord_opnieuw')) ?>
-	
-						<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
-					</table>
-				</form>
-		</div>
-
-		<div class="almanak clearBoth">
-			<h2 class="profilehead" id="privacy"><?= __('Privacy instellingen') ?></h2>
-			<p><?= __('Je privacy instellingen geven aan wie welke informatie mag zien.') ?></p>
-			<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#privacy" method="post">
-				<?= input_hidden('submprofiel_privacy', 'yes') ?>
-				<?= input_hidden('id', $iter->get('lidid')) ?>
-		
-				<table class="privacy">
-					<tr class="header">
-						<td class="corner"></td>
-						<td><?= __('Niemand') ?></td>
-						<td><?= __('Leden') ?></td>
-						<td><?= __('Iedereen') ?></td>
-					</tr>
-		
-					<? /* Get privacy fields */
-					$fields = $model->get_privacy();
-					$privacy = $iter->get('privacy');
-		
-					foreach ($fields as $field => $nr) {
-						/* Get the 3bit value */
-						$value = (($privacy >> ($nr * 3)) & 7);
-						$data = array('privacy_' . $nr => $value);
-		
-						/* Create privacy row */ ?>
-					<tr>
-						<td class="bold"><?= field_for_display($field) ?></td>
-						<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '0') ?></td>
-						<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '1') ?></td>
-						<td class="text_center"><?= input_radio('privacy_' . $nr, $data, '7') ?></td>
-					</tr>
-							<? } ?>
-		
-					<tr>
-						<td colspan="4" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	<? } ?>
 </div>
 
-<?php if ($iter->get('type') != MEMBER_STATUS_LID_AF): ?>
-	<?php if ($this->is_current_member($iter) || member_in_commissie(COMMISSIE_EASY)): ?>
-	<h2><?= __('Mailinglijsten')?></h2>
-	<div class="messageBox">
-		<?php $subscriptions = $this->get_active_subscriptions($iter->get('lidid')) ?>
-		<?php if($this->is_current_member($iter)): ?>
-			<p><?= __N('Je bent aangemeld voor %d mailinglijst.', 'Je bent aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
-		<?php else: ?>
-			<p><?= __N('Deze persoon is aangemeld voor %d mailinglijst.', 'Deze persoon is aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
-		<?php endif ?>
-		<ul>
-			<?php foreach ($subscriptions as $subscription): ?>
-			<li><a href="mailinglijsten.php?lijst_id=<?=$subscription->get('id')?>"><?=markup_format_text($subscription->get('naam'))?></a></li>
-			<?php endforeach ?>
-		</ul>
-		<?php if($this->is_current_member($iter)): ?>
-		<p><a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
-		<?php endif ?>
-	</div>
-	<?php endif ?>
+<script>
+jQuery(function($) {
+	// Hide all tabs
+	$('.tab-pane').hide();
 
-	<?php if($this->is_current_member($iter)): ?>
-		<h2><?= __('Sessies')?></h2>
-		<div class="messageBox">
-			<p><?= __N('Je bent ingelogd met %d browser.', 'Je bent ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php"><?= __('Beheer je sessies.') ?></a></p>
-		</div>
-	<?php elseif (member_in_commissie(COMMISSIE_EASY)): ?>
-		<h2><?= __('Sessies')?></h2>
-		<div class="messageBox">
-			<p><?= __N('Deze persoon is ingelogd met %d browser.', 'Deze persoon is ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar sessies.') ?></a></p>
-		</div>
-	<?php endif ?>
+	$('.nav-tabs').on('click', 'a[href^=#]', function(e) {
+		e.preventDefault();
+		
+		// Hide all other tabs
+		$('.tab-pane').hide();
 
-	<?php if($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
-		<?php $facebook_button = 'login' ?>
-		<h2 id="facebook"><?= __('Facebook')?></h2>
-		<div class="messageBox">
-			<?php
-				if (get_facebook()->getUser())
-				{
-					try {
-						$me = get_facebook()->api('/me', 'GET');
-						echo markup_format_text(sprintf(__('Je bent ingelogd als %s.'), $me['name']));
-						$facebook_button = 'logout';
-					} catch (FacebookException $e) {
-						echo __('Je bent niet langer gekoppeld aan Facebook.');
-						$facebook_button = 'login';
-					}
-				}
-				else
-				{
-					echo __('Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan.');
-				}
-			?>
+		// Show this tab
+		$($(this).attr('href')).show();
 
-			<?php if ($facebook_button == 'login'): ?>
-				<a class="button connect-facebook-button" href="<?=get_facebook()->getCoverLoginUrl()?>"><?= __('Koppel Facebook') ?></a>
-			<?php elseif ($facebook_button == 'logout'): ?>
-				<form method="post" action="" class="inline-form">
-					<input type="hidden" name="facebook_action" value="unlink">
-					<button type="submit" class="button connect-facebook-button"><?= __('Ontkoppel Facebook') ?></button>
-				</form>
-			<?php endif ?>
-			
-		</div>
-	<?php endif ?>
-<?php endif ?>
+		// Mark all other tabs as inactive
+		$('.nav-tabs li').removeClass('active');
+
+		// Except for this one
+		$(this).closest('li').addClass('active');
+	});
+})
+</script>

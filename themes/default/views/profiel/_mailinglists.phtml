@@ -1,0 +1,15 @@
+<h2><?= __('Mailinglijsten')?></h2>
+<?php $subscriptions = $this->get_active_subscriptions($iter->get('lidid')) ?>
+<?php if($this->is_current_member($iter)): ?>
+	<p><?= __N('Je bent aangemeld voor %d mailinglijst.', 'Je bent aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
+<?php else: ?>
+	<p><?= __N('Deze persoon is aangemeld voor %d mailinglijst.', 'Deze persoon is aangemeld voor %d mailinglijsten.', count($subscriptions)) ?></p>
+<?php endif ?>
+<ul>
+	<?php foreach ($subscriptions as $subscription): ?>
+	<li><a href="mailinglijsten.php?lijst_id=<?=$subscription->get('id')?>"><?=markup_format_text($subscription->get('naam'))?></a></li>
+	<?php endforeach ?>
+</ul>
+<?php if($this->is_current_member($iter)): ?>
+<p><a href="mailinglijsten.php"><?= __('Beheer je abonnementen.') ?></a></p>
+<?php endif ?>

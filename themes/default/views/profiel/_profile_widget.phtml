@@ -1,0 +1,14 @@
+<div class="commissie-member profile-widget round">
+	<a href="foto.php?lid_id=<?=$iter->get_id()?>" data-image-popup="modal">
+		<img src="foto.php?lid_id=<?=$iter->get('id')?>&amp;format=square&amp;width=200" width="100">
+	</a>
+	<span class="name"><?=markup_format_text(member_full_name($iter, false, false)) ?></span>
+	<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR) || $this->is_current_member($iter)): ?>
+	<form id="upload-photo" action="" method="post" enctype="multipart/form-data">
+		<div class="file-upload-button button">
+			<span><?=__('Kies nieuwe foto') ?>&hellip;</span>
+			<input type="file" name="photo" accept="image/jpeg" title="<?=__('Alleen JPEG-plaatjes mogen.')?>" onchange="if (this.value) this.form.submit()">
+		</div>
+	</form>
+	<?php endif ?>
+</div>

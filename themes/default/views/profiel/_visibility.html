@@ -1,0 +1,32 @@
+<h2 id="zichtbaarheid"><?= __('Zichtbaarheid') ?></h2>
+<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#zichtbaarheid" method="post">
+
+	<?= input_hidden('submprofiel_zichtbaarheid', 'yes') ?>
+	<?= input_hidden('id', $iter->get('lidid')) ?>
+
+	<table class="profiel">
+		<tr>
+			<td width="120"><span class="label">Type:</span></td>
+			<td width="150"><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_ERELID) . '&nbsp;' . __('Erelid') ?></label></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Donateur') ?></label></td>
+		</tr>
+		<tr>
+			<td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
+		</tr>
+	</table>
+</form>
