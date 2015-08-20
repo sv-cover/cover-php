@@ -2,7 +2,7 @@
 	/**
 	  * This class provides access to a data row in a #DataModel
 	  */
-	class DataIter implements JsonSerializable {
+	class DataIter implements JsonSerializable, ArrayAccess {
 		var $model = null; /** The model the iter belongs to */
 		var $data = null; /** The data of the iter */
 		var $_id = 0; /** The id of the iter */
@@ -220,15 +220,42 @@
 			return $this->literals;
 		}
 		
-		public function __get($get) {
+		public function __get($get)
+		{
+			trigger_error('Propery access is deprecated. Use Array access or DataIter::get', E_USER_NOTICE);
 			return $this->get($get);
 		}
 		
-		public function __set($key, $value) {
+		public function __set($key, $value)
+		{
+			trigger_error('Propery access is deprecated. Use Array access or DataIter::set', E_USER_NOTICE);
 			return $this->set($key, $value);
 		}
 
-		public function __unset($key) {
+		public function __unset($key)
+		{
+			trigger_error('Propery access is deprecated. Use Array access or DataIter::unset_field', E_USER_NOTICE);
+			return $this->unset_field($key);
+		}
+
+		/* ArrayAccess */
+		public function offsetGet($offset)
+		{
+			return $this->get($offset);
+		}
+
+		public function offsetSet($offset, $value)
+		{
+			return $this->set($offset, $value);
+		}
+
+		public function offsetExists($offset)
+		{
+			return $this->has_field($offset);
+		}
+
+		public function offsetUnset($offset)
+		{
 			return $this->unset_field($key);
 		}
 

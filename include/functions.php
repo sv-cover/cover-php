@@ -273,8 +273,11 @@
 	 * @return string a formatted string in which all the variables are replaced
 	 * as far as they can be found in $params.
 	 */
-	function format_string($format, array $params)
+	function format_string($format, $params)
 	{
+		if (!(is_array($params) || $params instanceof ArrayAccess))
+			throw new \InvalidArgumentException('$params has to behave like an array');
+
 		$callback =  function($match) use ($params) {
 			// If this key does not exist, just return the matched pattern
 			if (!isset($params[$match[1]]))
@@ -292,6 +295,11 @@
 		};
 
 		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z]+))?\b/i', $callback, $format);
+	}
+
+	function optional($value)
+	{
+		return strlen($value) > 0 ? ' ' . $value : '';
 	}
 	
 	/** @group Functions

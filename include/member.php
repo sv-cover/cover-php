@@ -54,6 +54,16 @@
 	  */
 	function member_full_name($iter = null, $override_privacy = true, $be_kind = false)
 	{
+		return member_format_name('$voornaam$tussenvoegsel|optional $achternaam', $iter, $override_privacy, $be_kind);
+	}
+
+	function member_first_name($iter = null, $override_privacy = true, $be_kind = false)
+	{
+		return member_format_name('$voornaam', $iter, $override_privacy, $be_kind);
+	}
+
+	function member_format_name($format, $iter = null, $override_privacy = true, $be_kind = false)
+	{
 		$model = get_model('DataModelMember');
 
 		$identity = get_identity();
@@ -86,8 +96,5 @@
 			&& $model->is_private($iter, 'naam'))
 			return __('Onbekend');
 
-		// Construct a member his full name
-		return $iter->get('voornaam')
-			 . ($iter->has('tussenvoegsel') ? ' ' . $iter->get('tussenvoegsel') : '')
-			 . ' ' . $iter->get('achternaam');
+		return format_string($format, $iter);
 	}
