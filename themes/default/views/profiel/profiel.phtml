@@ -52,16 +52,26 @@ $personal_fields = [
 		<div class="tab-sidebar">
 			<?php $this->render_partial('profile_widget', compact('iter')) ?>
 			<ul class="nav-tabs vertical">
+				<li class="active"><a href="#public"><?=markup_format_text(member_full_name($iter, false, false)) ?></a>
+				<?php if ($this->member_write_permission($iter)): ?>
 				<li><a href="#personal"><?=__('Almanakgegevens')?></a></li>
 				<li><a href="#profile"><?=__('Website')?></a></li>
 				<li><a href="#privacy"><?=__('Privacy')?></a></li>
 				<li><a href="#mailinglists"><?=__('Mailinglijsten')?></a></li>
 				<li><a href="#sessions"><?=__('Sessies')?></a></li>
+				<?php if ($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
 				<li><a href="#facebook"><?=__('Facebook')?></a></li>
+				<?php endif ?>
+				<?php endif ?>
 			</ul>
 		</div>
 
 		<div class="tab-content">
+			<div id="public" class="tab-pane active">
+				<?php $this->render_partial('public', compact('model', 'iter', 'personal_fields')) ?>
+			</div>
+			
+			<?php if ($this->member_write_permission($iter)): ?>
 			<div id="personal" class="tab-pane">
 				<?php $this->render_partial('personal', compact('iter', 'errors', 'personal_fields')) ?>
 
@@ -69,7 +79,7 @@ $personal_fields = [
 					<?php $this->render_partial('visibility', compact('iter')); ?>
 				<?php endif ?>
 			</div>
-
+			
 			<div id="profile" class="tab-pane">
 				<?php $this->render_partial('profile', compact('model', 'iter', 'errors')) ?>
 				<?php if ($this->member_write_permission($iter)): ?>
@@ -77,7 +87,6 @@ $personal_fields = [
 				<?php endif ?>
 			</div>
 			
-			<?php if ($this->member_write_permission($iter)): ?>
 			<div id="privacy" class="tab-pane">
 				<?php $this->render_partial('privacy', compact('model', 'iter')) ?>
 
@@ -95,35 +104,19 @@ $personal_fields = [
 			</div>
 			<?php endif ?>
 
-			<?php if($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
+			<?php if ($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
 			<div id="facebook" class="tab-pane">
 				<?php $this->render_partial('facebook', compact('iter')) ?>
 			</div>
 			<?php endif ?>
 		</div>
 	</div>
-	
-	<!-- To be moved to a read-only version of a persons profile? -->
-	<?php if ($commissies = $this->get_commissies($iter)): ?>
-	<div class="floatLeft almanak">
-		<h2 class="profilehead" id="commissies"><?= __('Commissies') ?></h2>
-		<p><?= markup_format_text(__('Lid van de volgende commissies:')) ?></p>
-		<ul>
-			<?php foreach ($commissies as $commissie): ?>
-			<li>
-				<a href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
-				- <span class="functie"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
-			</li>
-			<?php endforeach ?>
-		</ul>
-	</div>
-	<?php endif ?>
 </div>
 
 <script>
 jQuery(function($) {
 	// Hide all tabs
-	$('.tab-pane').hide();
+	$('.tab-pane:not(.active)').hide();
 
 	$('.nav-tabs').on('click', 'a[href^=#]', function(e) {
 		e.preventDefault();

@@ -1,0 +1,30 @@
+<section class="personal-section">
+	<h2><?= __('Persoonlijk') ?></h2>
+	<div>
+		<?=label(__('Naam'), 'naam') ?>
+		<span class="read-only"><?=member_full_name($iter, false, false) ?></span>
+	</div>
+	
+	<?php foreach ($personal_fields as $field): ?>
+		<?php if ($model->is_private($iter, $field['name'])) continue; ?>
+		<div>
+			<?=label($field['label'], $field['name'])?>
+			<span class="read-only"><?=markup_format_text($iter->data[$field['name']])?></span>
+		</div>
+	<?php endforeach ?>
+</section>
+
+<?php if ($commissies = $this->get_commissies($iter)): ?>
+<section class="committee-section">
+	<h2 id="commissies"><?= __('Commissies') ?></h2>
+	<p><?= markup_format_text(sprintf(__('%s is lid van de volgende commissies:'), member_first_name($iter, false, false))) ?></p>
+	<ul>
+		<?php foreach ($commissies as $commissie): ?>
+		<li>
+			<a href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
+			- <span class="functie"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
+		</li>
+		<?php endforeach ?>
+	</ul>
+</section>
+<?php endif ?>

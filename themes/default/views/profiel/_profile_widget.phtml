@@ -2,7 +2,6 @@
 	<a href="foto.php?lid_id=<?=$iter->get_id()?>" data-image-popup="modal">
 		<img src="foto.php?lid_id=<?=$iter->get('id')?>&amp;format=square&amp;width=200" width="100">
 	</a>
-	<span class="name"><?=markup_format_text(member_full_name($iter, false, false)) ?></span>
 	<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR) || $this->is_current_member($iter)): ?>
 	<form id="upload-photo" action="" method="post" enctype="multipart/form-data">
 		<div class="file-upload-button button">
