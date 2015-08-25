@@ -5,10 +5,11 @@
 	
 	define('MEMBER_STATUS_LID', 1);
 	define('MEMBER_STATUS_LID_ONZICHTBAAR', 4);
+	define('MEMBER_STATUS_UNCONFIRMED', 4);
 	define('MEMBER_STATUS_LID_AF', 2);
 	define('MEMBER_STATUS_ERELID', 3);
 	define('MEMBER_STATUS_DONATEUR', 5);
-
+	
 	class DataIterMember extends DataIter implements SearchResult
 	{
 		public function is_private($field)

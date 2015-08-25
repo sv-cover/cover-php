@@ -2850,6 +2850,12 @@ CREATE TABLE announcements (
     CONSTRAINT announcements_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE registrations (
+    confirmation_code VARCHAR(255) NOT NULL PRIMARY KEY,
+    data TEXT NOT NULL,
+    registerd_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+);
+
 --
 -- TOC entry 2390 (class 2606 OID 25986)
 -- Name: actieveleden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 

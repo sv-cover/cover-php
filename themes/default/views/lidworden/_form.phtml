@@ -1,0 +1,100 @@
+<?php
+$days = range(0, 31);
+unset($days[0]);
+
+$months = get_months();
+unset($months[0]);
+
+// Not really current, more an estimate of when people start registering for their coming year.
+$academic_year = time() < mktime(0, 0, 0, 7, 1, date('Y')) ? date('Y') - 1 : date('Y');
+?>
+<form method="post" action="lidworden.php" class="new-member-form">
+<?= input_hidden('submlidworden', 'yes') ?>
+<table>
+
+	<tr>
+		<th colspan="2"><?=__('Naam')?></th>
+	</tr>
+
+	<?=$this->render_text_row(__('Voornaam'), 'first_name', $e, true) ?>
+	<?=$this->render_text_row(__('Tussenvoegsel'), 'family_name_preposition', $e, false, 'class', 'small') ?>
+	<?=$this->render_text_row(__('Achternaam'), 'family_name', $e, true) ?>
+
+	<?= table_row(label(__('Gender'), 'gender', $e, true),
+		select_field('gender', array(
+			'm' => __('Man'),
+			'f' => __('Vrouw'),
+			'o' => __('Anders')
+		), null))  ?>
+
+	<tr>
+		<th colspan="2"><?=__('Adres')?></th>
+	</tr>
+
+	<?=$this->render_text_row(__('Straatnaam + Huisnummer'), 'street_name', $e, true) ?>
+	<?=$this->render_text_row(__('Postcode'), 'postal_code', $e, true, 'class', 'small') ?>
+	<?=$this->render_text_row(__('Woonplaats'), 'place', $e, true) ?>
+
+	<tr>
+		<th colspan="2"><?=__('Contact')?></th>
+	</tr>
+
+	<?=$this->render_text_row(__('Telefoonnummer'), 'phone_number', $e, false) ?>
+	<?=$this->render_text_row(__('E-Mail adres'), 'email_address', $e, true) ?>
+
+	<?= table_row(label(__('Geboortedatum'), 'birth_date', $e, true), 
+		  select_field('birth_date_day', $days, null) . ' ' .
+		  select_field('birth_date_month', $months, null) . ' ' .
+		  input_text('birth_date_year', null, 'maxlength', 4, 'size', 3,
+			     'class', 'small', 'placeholder', 1990)) ?>
+
+	<tr>
+		<th colspan="2"><?=__('Studie')?></th>
+	</tr>
+
+	<?=$this->render_text_row(__('Studentnummer'), 'membership_student_number', $e, true, 'placeholder', 's') ?>
+	<?=$this->render_text_row(__('Studierichting'), 'membership_study_name', $e, true) ?>
+	<?= table_row(label(__('Fase'), 'membership_study_phase', $e, true), select_field('membership_study_phase', array('b' => __('Bachelor'), 'm' => __('Master'), 'o' => __('Anders')), null))  ?>
+
+	<?= table_row(
+			label(__('Beginjaar'), 'membership_year_of_enrollment', $e, true),
+			input_text('membership_year_of_enrollment', ['membership_year_of_enrollment' => $academic_year])) ?>
+
+	<tr>
+		<th colspan="2"><?=__('Betaling')?></th>
+	</tr>
+
+	<?=$this->render_text_row(__('IBAN'), 'iban', $e, true, 'size', 30) ?>
+
+	<?=$this->render_text_row(__('BIC'), 'bic', $e, true, 'size', 30, 'placeholder', __('Alleen nodig indien buitenlandse bank')) ?>
+	<tr>
+		<td></td>
+		<td><?=__('Een BIC nummer is alleen noodzakelijk bij een niet-Nederlands banknummer.')?></td>
+	</tr>
+
+	<?= table_row(label('Machtiging', 'authorization', $e, true), '<label>' . input_checkbox('authorization', null) . ' ' . __('Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn rekening af te schrijven (verplicht)') . '</label>') ?>
+
+	<tr>
+		<th colspan="2"><?=__('Mailing')?></th>
+	</tr>
+
+	<?= table_row(label('Mailing', 'mailing', $e, false), '<label>' . input_checkbox('mailing', null) . ' ' . __('Ik wil graag e-mails over activiteiten van Cover ontvangen. (Dit wil je. Daarnaast, uitschrijven kan gemakkelijk via de website.)') . '</label>') ?>
+
+	<tr>
+		<th colspan="2"></th>
+	</tr>
+
+	<?=$this->render_text_row(__('Wat is de kleur van gras? (ik ben geen bot)'), 'spam', $e, true) ?>
+
+	<tr>
+		<td></td>
+		<td><?=__("Als je het niet zeker weet, vul dan 'groen' in.")?></td>
+	</tr>
+
+	<tr>
+		<td class="submit" colspan="2"><br>
+		<br>
+		<?= input_submit('subm', __('Aanvraag versturen')) ?></td>
+	</tr>
+</table>
+</form>
