@@ -20,7 +20,7 @@ Study: $membership_study_name $membership_study_phase
 Year of enrollment: $membership_year_of_enrollment
 IBAN: $iban
 BIC: $bic
-Authorization: $authorizaion
+Authorization: $authorization
 
 Mailing: $mailing
 

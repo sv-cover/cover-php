@@ -96,7 +96,9 @@
 				'data' => json_encode($data),
 			]);
 
-			$mail = parse_email('lidworden_confirmation_' . strtolower(i18n_get_locale()) . '.txt', array_merge($data, compact('confirmation_code')));
+			$mail = parse_email(
+				'lidworden_confirmation_' . strtolower(i18n_get_language()) . '.txt',
+				array_merge($data, compact('confirmation_code')));
 
 			mail($data['email_address'], __('Lidmaatschapsaanvraag bevestigen'), $mail, 'From: Cover <board@svcover.nl>');
 			
@@ -118,6 +120,8 @@
 			$mail = parse_email('lidworden.txt', $data);
 
 			mail('administratie@svcover.nl', 'Lidaanvraag', $mail, 'From: Cover <board@svcover.nl>');
+
+			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 
 			try {
 				$secretary = new SecretaryApi(
