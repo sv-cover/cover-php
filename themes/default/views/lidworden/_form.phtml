@@ -45,7 +45,7 @@ $academic_year = time() < mktime(0, 0, 0, 7, 1, date('Y')) ? date('Y') - 1 : dat
 	<?= table_row(label(__('Geboortedatum'), 'birth_date', $e, true), 
 		  select_field('birth_date_day', $days, null) . ' ' .
 		  select_field('birth_date_month', $months, null) . ' ' .
-		  input_text('birth_date_year', null, 'maxlength', 4, 'size', 3,
+		  input_text('birth_date_year', null, 'maxlength', 4, 'size', 4,
 			     'class', 'small', 'placeholder', 1990)) ?>
 
 	<tr>
