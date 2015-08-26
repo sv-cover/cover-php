@@ -115,19 +115,21 @@
 
 			$data = json_decode($row['data'], true);
 
-			$secretary = new SecretaryApi(
-				get_config_value('secretary_root'),
-				get_config_value('secretary_user'),
-				get_config_value('secretary_password'));
-
-			$response = $secretary->createPerson($data);
-
 			$mail = parse_email('lidworden.txt', $data);
 
 			mail('administratie@svcover.nl', 'Lidaanvraag', $mail, 'From: Cover <board@svcover.nl>');
 
-			if ($response && $response->success)
-			{
+			try {
+				$secretary = new SecretaryApi(
+					get_config_value('secretary_root'),
+					get_config_value('secretary_user'),
+					get_config_value('secretary_password'));
+
+				$response = $secretary->createPerson($data);
+
+				if (!$response->success)
+					throw new RuntimeException('Secretary failed with error: ' . $response->errors);
+			
 				mail('secretaris@svcover.nl',
 					'Lidaanvraag',
 					"Er is een nieuwe lidaanvraag ingediend.\n"
@@ -137,21 +139,23 @@
 
 				$this->_create_member(array_merge($data, ['id' => $response->person_id]));
 			}
-			else
+			catch (Exception $e)
 			{
 				mail('secretaris@svcover.nl',
 					'Lidaanvraag',
 					"Er is een nieuwe lidaanvraag ingediend.\n"
 					. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
-					. "De gegevens zijn voor de zekerheid ook te vinden op administratie@svcover.nl.",
+					. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
 					'From: Cover <board@svcover.nl>');
 
 				mail('webcie@svcover.nl',
 					'Fout tijdens lidaanvraag',
-					'Er ging iets fout tijdens een lidaanvraag. Zie de error log van www voor ' . date('Y-m-d H:i:s'));
+					'Er ging iets fout tijdens een lidaanvraag.'
+					.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
+					. $e->getMessage() . "\n"
+					. $e->getTraceAsString());
 			}
 
-			// Setup e-mail
 			$this->get_content('confirmed');
 		}
 
