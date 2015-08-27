@@ -1,0 +1,10 @@
+<h1><?= __('Lidmaatschapsformulier') ?></h1>
+<div class="messageBox">
+	<p><?=__('Je lidmaatschapsaanvraag is verstuurd. Als het goed is heb je inmiddels een mailtje met een bevestigingscode.')?></p>
+
+	<h2><?=__('Opmerkingen')?></h2>
+	<?php
+		$opmerkingen = new ControllerEditable('Opmerkingen aanmelden');
+		$opmerkingen->run();
+	?>
+</div>

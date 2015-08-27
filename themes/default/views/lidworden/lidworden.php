@@ -13,14 +13,4 @@ class LidwordenView extends View
 		return table_row(label($caption, $field, $errors, $required),
 		 	call_user_func_array('input_text', $args)) . "\n";
 	}
-
-	public function view_verzonden($model, $iter, $params = null)
-	{
-		echo '<h1>' . __('Lidmaatschapsformulier') . '</h1>
-		<p>' . __('Je lidmaatschapsaanvraag is verstuurd.') . '</p>
-		<h2>' . __('Opmerkingen') . '</h2>';
-
-		$opmerkingen = new ControllerEditable('Opmerkingen aanmelden');
-		$opmerkingen->run();
-	}
 }
