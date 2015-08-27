@@ -208,6 +208,14 @@
 
 			mail($data['email_address'], 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
 			mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
+
+			// Set up on mailing list
+			if (!empty($data['mailing']))
+			{
+				$mailing_model = get_model('DataModelMailinglijst');
+				$mailinglist = $mailing_model->get_lijst('directmailing@svcover.nl');
+				$mailing_model->aanmelden($mailinglist, $member->get_id());
+			}
 		}
 		
 		function run_impl() {
