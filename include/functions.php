@@ -273,8 +273,11 @@
 	 * @return string a formatted string in which all the variables are replaced
 	 * as far as they can be found in $params.
 	 */
-	function format_string($format, array $params)
+	function format_string($format, $params)
 	{
+		if (!(is_array($params) || $params instanceof ArrayAccess))
+			throw new \InvalidArgumentException('$params has to behave like an array');
+
 		$callback =  function($match) use ($params) {
 			// If this key does not exist, just return the matched pattern
 			if (!isset($params[$match[1]]))
@@ -292,6 +295,11 @@
 		};
 
 		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z]+))?\b/i', $callback, $format);
+	}
+
+	function optional($value)
+	{
+		return strlen($value) > 0 ? ' ' . $value : '';
 	}
 	
 	/** @group Functions
@@ -452,30 +460,18 @@
 	  * @result A string with substituted data and constants or false
 	  * if the specified email file could not be found
 	  */
-	function parse_email($email, $data) {
+	function parse_email($email, $data)
+	{
 		if (file_exists('themes/' . get_theme() . '/email/' . $email))
-			$contents = file('themes/' . get_theme() . '/email/' . $email);
-		elseif (get_theme() != 'default') /* Fallback on default theme */
-			if (file_exists('themes/default/email/' . $email))
-				$contents = file('themes/default/email/' . $email);
-			else {
-				report_error(N__("Email"), N__("De email `%s` kan niet gevonden worden (thema: %s)"), $email, get_theme());
-				return false;
-			}
-		else {
-			report_error(N__("Email"), N__("De email `%s` kan niet gevonden worden (thema: %s)"), $email, get_theme());
-			return false;
-		}
+			$contents = file_get_contents('themes/' . get_theme() . '/email/' . $email);
+		elseif (get_theme() != 'default' && file_exists('themes/default/email/' . $email))
+			$contents = file_get_contents('themes/default/email/' . $email);
+		else
+			throw new RuntimeException("Could not find email template '$email'");
 
-		$s = '';
+		$contents = preg_replace_callback('/[A-Z]+_[A-Z_]+/', 'constant', $contents);
 		
-		foreach ($contents as $line) {
-			$line = preg_replace_callback('/[A-Z]+_[A-Z_]+/', 'constant', $line);
-			$line = format_string($line, $data);
-			$s .= $line;
-		}
-		
-		return $s;
+		return format_string($contents, $data);
 	}
 	
 	function get_theme_data($file, $include_filemtime = true) {

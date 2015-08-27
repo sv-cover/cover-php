@@ -8,7 +8,8 @@
 	define('MEMBER_STATUS_LID_AF', 2);
 	define('MEMBER_STATUS_ERELID', 3);
 	define('MEMBER_STATUS_DONATEUR', 5);
-
+	define('MEMBER_STATUS_UNCONFIRMED', 6);
+	
 	class DataIterMember extends DataIter implements SearchResult
 	{
 		public function is_private($field)
@@ -169,7 +170,8 @@
 				MEMBER_STATUS_LID,
 				MEMBER_STATUS_LID_ONZICHTBAAR,
 				MEMBER_STATUS_ERELID,
-				MEMBER_STATUS_DONATEUR);
+				MEMBER_STATUS_DONATEUR,
+				MEMBER_STATUS_UNCONFIRMED);
 
 			if (!$row || !in_array($row['type'], $active_member_types))
 				return false;
