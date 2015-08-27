@@ -173,6 +173,56 @@ class ControllerApi extends Controller
 		return array('result' => $committees);
 	}
 
+	public function api_secretary_update_member($member_id)
+	{
+		$model = get_model('DataModelMember');
+
+		$member = $model->get_iter($member_id);
+
+		$raw_post_data = file_get_contents('php://input');
+		$post_hash = sha1($raw_post_data . get_config_value('secretary_shared_secret'));
+
+		if ($post_hash != $_GET['checksum'])
+			throw new InvalidArgumentException('Checksum does not match');
+
+		$mapping = [
+			'voornaam' => 'first_name',
+			'tussenvoegsel' => 'family_name_preposition',
+			'achternaam' => 'family_name',
+			'adres' => 'street_name',
+			'postcode' => 'postal_code',
+			'woonplaats' => 'place',
+			'email' => 'email_address',
+			'telefoonnummer' => 'phone_number',
+			'beginjaar' => 'membership_year_of_enrollment',
+			'geboortedatum' => 'birth_date',
+			'geslacht' => 'gender'
+		];
+
+		$reverse_mapping = array_flip($mapping);
+
+		foreach ($_POST as $remote_field => $value)
+		{
+			if (!isset($reverse_mapping[$remote_field]))
+				continue;
+
+			$field = $reverse_mapping[$remote_field];
+			$member[$field] = $value;
+		}
+
+		if (!empty($_POST['donorship_ended_on']))
+			$member['type'] = MEMBER_STATUS_LID_AF;
+		elseif (!empty($_POST['donorship_date_of_authorization']))
+			$member['type'] = MEMBER_STATUS_DONATEUR;
+
+		if (!empty($_POST['membership_ended_on']))
+			$member['type'] = MEMBER_STATUS_LID_AF;
+		elseif (!empty($_POST['membership_started_on']))
+			$member['type'] = MEMBER_STATUS_LID;
+
+		$member->update();
+	}
+
 	public function run_impl()
 	{
 		$method = isset($_GET['method'])
@@ -223,6 +273,11 @@ class ControllerApi extends Controller
 			// GET api.php?method=get_committees&member_id=709
 			case 'get_committees':
 				$response = $this->api_get_committees($_GET['member_id']);
+				break;
+
+			// POST api.php?method=secretary_update_member&member_id=709
+			case 'secretary_update_member':
+				$response = $this->api_secretary_update_member($_GET['member_id']);
 				break;
 
 			default:
