@@ -185,6 +185,9 @@ class ControllerApi extends Controller
 		if ($post_hash != $_GET['checksum'])
 			throw new InvalidArgumentException('Checksum does not match');
 
+		if ($member_id != $_POST['id'])
+			throw new InvalidArgumentException('Person ids do not match up');
+
 		$mapping = [
 			'voornaam' => 'first_name',
 			'tussenvoegsel' => 'family_name_preposition',
@@ -220,7 +223,25 @@ class ControllerApi extends Controller
 		elseif (!empty($_POST['membership_started_on']))
 			$member['type'] = MEMBER_STATUS_LID;
 
-		$member->update();
+		return ['success' => $member->update()];
+	}
+
+	public function api_secretary_delete_member($member_id)
+	{
+		$model = get_model('DataModelMember');
+
+		$member = $model->get_iter($member_id);
+
+		$raw_post_data = file_get_contents('php://input');
+		$post_hash = sha1($raw_post_data . get_config_value('secretary_shared_secret'));
+
+		if ($post_hash != $_GET['checksum'])
+			throw new InvalidArgumentException('Checksum does not match');
+
+		if ($member_id != $_POST['id'])
+			throw new InvalidArgumentException('Person ids do not match up');
+
+		return ['success' => $model->delete($member)];
 	}
 
 	public function run_impl()
@@ -276,8 +297,15 @@ class ControllerApi extends Controller
 				break;
 
 			// POST api.php?method=secretary_update_member&member_id=709
+			// Note that $_POST['id'] must also match $_GET['member_id']
 			case 'secretary_update_member':
 				$response = $this->api_secretary_update_member($_GET['member_id']);
+				break;
+
+			// POST api.php?method=secretary_delete_member&member_id=709
+			// Note that $_POST['id'] must also match $_GET['member_id']
+			case 'secretary_delete_member':
+				$response = $this->api_secretary_delete_member($_GET['member_id']);
 				break;
 
 			default:
