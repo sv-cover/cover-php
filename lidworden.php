@@ -204,7 +204,9 @@
 			
 			// Setup e-mail
 			$data['wachtwoord'] = $passwd;
-			$mail = parse_email('nieuwlid.txt', array_merge($member->data, ['wachtwoord' => $data['wachtwoord']]));
+			$mail = parse_email(
+				'nieuwlid_' . strtolower(i18n_get_language()) . '.txt',
+				array_merge($member->data, ['wachtwoord' => $data['wachtwoord']]));
 
 			mail($data['email_address'], 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
 			mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');

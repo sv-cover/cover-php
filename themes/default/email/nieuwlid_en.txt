@@ -1,0 +1,36 @@
+Dear $voornaam,
+
+Welcome to Cover, the study association for Artificial Intelligence and Computing Science at the Univeristy of Groningen. We hope to contribute to your study and student life in the coming years.
+
+As a member of Cover, you can enjoy the many activities Cover organizes for its members. These activities range from study support sessions to our monthly drinks. Cover also organizes a manifold of academic activities, such as symposia and talks relevant to the fields of Artificial Intelligence and Computing Science. In addition to the monthly drinks, Cover also has a broad selection of other activities meant for recreation, such as movie and game nights. For a full summary of our activities, you can look at our website, https://www.svcover.nl.
+
+* Are you a first year student? Don’t forget to sign up for our introductory camp! For more information check http://introcee.nl
+
+* To get you acquinted with Cover we organize a Bit of Introductory Time (BIT). Sign up and together with your byte (group) and parity-bits (leaders) you can visit all our awesome activities! Everything you need to know, as well as the sign up form you can find at https://bit.svcover.nl.
+
+Because you have signed up for Cover, you have automatically received an account and a profile on our website. There is multitude of things you can do with this, including editing your contact details online. 
+Your log in details can be found at the end of this mail.
+We would like to advise you to change your password and (if you feel it is necessary) change your privacy settings. Furthermore you can order books, visit the forum and see all our pictures.
+
+In addition to the website, Cover also has its own room in the Bernoulliborg (V 5161.0041a). The comfortable meeting spot is great for taking a break, gaming or just having fun with fellow students.  You can also buy drinks and food at the Cover room, for a cheap price (the system is non-profit based). To get something you will need an account in KAST, our credit system. For you convenience we have already created an account with five consumptions worth of credits!
+
+Furthermore, being a member offers the following perks:
+- You can download Windows 8 and other products from the DreamSpark package for free, by clicking on the DreamSpark in the members menu once you are logged in.
+- Any purchases that you make at Shirt a la Minute will have a 15% discount.
+
+You can enhance your experience with Cover by offering help to the many committees Cover has. By lending a hand to the various committees, you can broaden your horizon. Check https://www.svcover.nl/commissies.php to find out what kind of committees there are. To learn more about these opportunities, you can mail our Commissioner of Internal Affairs at intern@svcover.nl .
+
+If you have any further questions, you can send us an email at board@svcover.nl, or you can simply find a board member in our room in the Bernoulliborg.
+
+
+
+Kind regards,
+
+
+The board of study association Cover
+
+-----------------------------
+
+Your login details:
+email:      $email
+password:   $wachtwoord
