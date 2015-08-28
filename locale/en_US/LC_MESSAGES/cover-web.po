@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-08-28 01:48+0100\n"
+"POT-Creation-Date: 2015-08-28 01:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -2421,8 +2421,8 @@ msgid "Annuleren"
 msgstr "Cancel"
 
 #: ../../../themes/default/views/boeken/go_to_webshop.phtml:2
-msgid "Ga verder naar de BoekCie webshop"
-msgstr "Continue to the BoekCie webshop"
+msgid "Ga verder naar de BookCee webshop"
+msgstr "Continue to the BookCee webshop"
 
 #: ../../../themes/default/views/commissies/_agenda.phtml:13
 msgid "Commissieagenda"
@@ -3757,6 +3757,9 @@ msgstr "Send"
 #: ../../../themes/default/views/weblog/weblog.phtml:5
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid "Ga verder naar de BoekCie webshop"
+#~ msgstr "Continue to the BoekCie webshop"
 
 #~ msgid "Je lidmaatschapsaanvraag is verstuurd."
 #~ msgstr "Your membership application has been submitted."

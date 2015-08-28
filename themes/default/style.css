@@ -423,15 +423,15 @@ border-radius: 0 0 5px 5px;
 	font-size: 22px;
 }
 
-.boekcie-webshop-call-to-action {
+.bookcee-webshop-call-to-action {
 	text-align: center;
 }
 
-.boekcie-webshop-call-to-action .large-button {
+.bookcee-webshop-call-to-action .large-button {
 	/*padding-right: 30px;*/
 }
 
-.boekcie-webshop-call-to-action .large-button:after {
+.bookcee-webshop-call-to-action .large-button:after {
 	padding-left: 4px;
 	content:'\25b8';
 	color: #333;
