@@ -55,7 +55,7 @@
 				'membership_study_phase' => [function($x) { return in_array($x, ['b', 'm']); }],
 				'membership_student_number' => [
 					function($x) { return strlen($x) == 0 || ctype_digit($x); },
-					function($x) { return ltrim($x, 's'); }],
+					function($x) { return ltrim($x, 'sS'); }],
 				'membership_year_of_enrollment' => [function($x) { return $x > 1900 && $x < 2100; }],
 				'authorization' => [function($x) { return $x == 'yes'; }],
 				'mailing' => [],
