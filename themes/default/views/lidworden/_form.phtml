@@ -54,7 +54,7 @@ $academic_year = time() < mktime(0, 0, 0, 7, 1, date('Y')) ? date('Y') - 1 : dat
 
 	<?=$this->render_text_row(__('Studentnummer'), 'membership_student_number', $e, true, 'placeholder', 's') ?>
 	<?=$this->render_text_row(__('Studierichting'), 'membership_study_name', $e, true) ?>
-	<?= table_row(label(__('Fase'), 'membership_study_phase', $e, true), select_field('membership_study_phase', array('b' => __('Bachelor'), 'm' => __('Master'), 'o' => __('Anders')), null))  ?>
+	<?= table_row(label(__('Fase'), 'membership_study_phase', $e, true), select_field('membership_study_phase', array('b' => __('Bachelor'), 'm' => __('Master')), null))  ?>
 
 	<?= table_row(
 			label(__('Beginjaar'), 'membership_year_of_enrollment', $e, true),
