@@ -49,7 +49,7 @@
 				}],
 				'birth_date' => [function($x) { return preg_match('/^\d{4}\-[01]\d\-[0123]\d$/', $x); }],
 				'gender' => [function($x) { return in_array($x, ['b', 'm', 'o']); }],
-				'iban' => [function($x) { return preg_match('/^[A-Z]{2}\d{2}[A-Z]{4}\d+$/', $x); }],
+				'iban' => [function($x) { return preg_match('/^[A-Z]{2}\d{2}[A-Z]{4}\d+$/', $x); }, 'strtoupper'],
 				'bic' => [],
 				'membership_study_name' => [],
 				'membership_study_phase' => [function($x) { return in_array($x, ['b', 'm']); }],
