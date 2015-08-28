@@ -26,7 +26,7 @@ class SecretaryAPI
 
 	public function updatePerson($person_id, $data)
 	{
-		// todo
+		return $this->postJSONWithToken(sprintf('persons/%d.json', $person_id), $data);
 	}
 
 	protected function isValidToken($user_token_pair)
@@ -93,7 +93,7 @@ class SecretaryAPI
 			throw new RuntimeException('Could not get HTTP STATUS response header');
 
 		if ($match[1] != '200')
-			throw new RuntimeException('Received HTTP status '. $match[1]);
+			throw new RuntimeException('Received HTTP status '. $match[1] . ': ' . $response);
 
 		if (!$response)
 			throw new RuntimeException('Could not do post request to ' . $url);

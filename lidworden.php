@@ -121,8 +121,6 @@
 
 			mail('administratie@svcover.nl', 'Lidaanvraag', $mail, 'From: Cover <board@svcover.nl>');
 
-			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
-
 			try {
 				$secretary = new SecretaryApi(
 					get_config_value('secretary_root'),
@@ -159,6 +157,8 @@
 					. $e->getMessage() . "\n"
 					. $e->getTraceAsString());
 			}
+
+			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 
 			$this->get_content('confirmed');
 		}
