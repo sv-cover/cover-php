@@ -47,10 +47,21 @@
 					// Check whether the email address is not already in use
 					return !$this->model->get_from_email($x);
 				}],
-				'birth_date' => [function($x) { return preg_match('/^\d{4}\-[01]\d\-[0123]\d$/', $x); }],
+				'birth_date' => [function($x) {
+					return preg_match('/^(\d{4})\-([01]\d)\-([0123]\d)$/', $x, $match)
+						&& checkdate($match[2], $match[3], $match[1]);
+					}],
 				'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
-				'iban' => [function($x) { return preg_match('/^[A-Z]{2}\d{2}[A-Z]{4}\d+$/', $x); }, 'strtoupper'],
-				'bic' => [],
+				'iban' => [function($x) {
+					// If it looks like IBAN, validate it as IBAN
+					return preg_match('/^[A-Z]{2}\d{2}[A-Z]{4}\d+$/', $x)
+						? \IsoCodes\Iban::validate($x)
+						: true;
+					}, 'strtoupper'],
+				'bic' => [
+					function($x) { return strlen($x) === 0 || \IsoCodes\SwiftBic::validate($x);},
+					function($x) { return trim($x, ' '); }
+				],
 				'membership_study_name' => [],
 				'membership_study_phase' => [function($x) { return in_array($x, ['b', 'm']); }],
 				'membership_student_number' => [
