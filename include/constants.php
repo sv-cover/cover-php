@@ -35,6 +35,9 @@
 	define('MEMBER_STATUS_DONATEUR', 5);
 	define('MEMBER_STATUS_UNCONFIRMED', 6);
 	
+	define('MEMBER_STATUS_MIN', 1);
+	define('MEMBER_STATUS_MAX', 6);
+	
 	define('WEBSITE_ENCODING', 'UTF-8');
 
 	if (isset($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], array('129.125.139.247', '129.125.139.237', '129.125.139.236', '129.125.139.248', '129.125.130.218')))

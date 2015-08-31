@@ -216,7 +216,7 @@
 			} elseif (!get_post('type')) {
 				$errors[] = 'type';
 				$message[] = __('De zichtbaarheid van het profiel is niet ingevuld.');
-			} elseif (get_post('type') < MEMBER_STATUS_LID || get_post('type') > MEMBER_STATUS_DONATEUR) {
+			} elseif (get_post('type') < MEMBER_STATUS_MIN || get_post('type') > MEMBER_STATUS_MAX) {
 				$errors[] = 'type';
 				$message[] = __('Er is een ongeldige waarde voor zichtbaarheid ingevuld.');
 			}
