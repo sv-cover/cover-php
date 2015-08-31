@@ -28,6 +28,13 @@
 	define('AUTH_LEVEL_BESTUUR', 2);
 	define('AUTH_LEVEL_WEBCIE', 3);
 
+	define('MEMBER_STATUS_LID', 1);
+	define('MEMBER_STATUS_LID_ONZICHTBAAR', 4);
+	define('MEMBER_STATUS_LID_AF', 2);
+	define('MEMBER_STATUS_ERELID', 3);
+	define('MEMBER_STATUS_DONATEUR', 5);
+	define('MEMBER_STATUS_UNCONFIRMED', 6);
+	
 	define('WEBSITE_ENCODING', 'UTF-8');
 
 	if (isset($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], array('129.125.139.247', '129.125.139.237', '129.125.139.236', '129.125.139.248', '129.125.130.218')))
@@ -35,5 +42,4 @@
 	elseif (isset($_SERVER['REMOTE_ADDR']) && preg_match('/^129.125/', $_SERVER['REMOTE_ADDR']))
 		define('NETWORK', NETWORK_RUG);
 	else
-		define('NETWORK', NETWORK_OTHER);	
-?>
+		define('NETWORK', NETWORK_OTHER);
