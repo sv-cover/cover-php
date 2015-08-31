@@ -19,6 +19,11 @@
 		{
 			return 'member';
 		}
+
+		public function get_absolute_url()
+		{
+			return sprintf('profiel.php?lid=%d', $this->get_id());
+		}
 	}
 
 	class DataModelMember extends DataModel implements SearchProvider

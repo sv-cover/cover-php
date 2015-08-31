@@ -14,6 +14,11 @@
 			return 'agendapunt';
 		}
 
+		public function get_absolute_url()
+		{
+			return sprintf('agenda.php?agenda_id=%d', $this->get_id());
+		}
+
 		public function is_proposal()
 		{
 			return $this->get('replacement_for') !== null;

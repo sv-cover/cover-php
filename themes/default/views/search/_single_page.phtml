@@ -1,5 +1,5 @@
 <h2>
-	<a href="show.php?id=<?=$iter->get_id()?>">
+	<a href="<?=markup_format_attribute($iter->get_absolute_url())?>">
 		<?=markup_format_text($iter->get_title())?>
 	</a>
 </h2>

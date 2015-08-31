@@ -296,6 +296,11 @@
 			return 'fotoboek';
 		}
 
+		public function get_absolute_url()
+		{
+			return sprintf('fotoboek.php?book=%s', urlencode($this->get_id()));
+		}
+
 		public function get_key_photos($limit)
 		{
 			$photos = $this->model->get_photos_recursive($this);

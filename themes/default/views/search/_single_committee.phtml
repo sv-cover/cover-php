@@ -1,5 +1,5 @@
 <h2>
-	<a href="commissies.php?commissie=<?=$iter->get('login')?>"><?=markup_format_text($iter->get('naam'))?></a>
+	<a href="<?=markup_format_attribute($iter->get_absolute_url())?>"><?=markup_format_text($iter->get('naam'))?></a>
 	<?php if ($iter->get('search_match_reason') == 'committee_member_match'): ?>
 		<small class="match-reason"><?=sprintf(__('%s is een lid in deze commissie'),
 			sprintf('<a href="profiel.php?lid=%d">%s</a>',

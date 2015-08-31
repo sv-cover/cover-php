@@ -1,5 +1,5 @@
 <h2>
-	<a href="fotoboek.php?book=<?=$iter->get_id()?>"><?=markup_format_text($iter->get('titel'))?></a>
+	<a href="<?=markup_format_attribute($iter->get_absolute_url())?>"><?=markup_format_text($iter->get('titel'))?></a>
 	<small><?=sprintf(__('Fotoboek in %s'),
 		sprintf('<a href="fotoboek.php?book=%d">%s</a>',
 			$iter->get_parent()->get_id(),

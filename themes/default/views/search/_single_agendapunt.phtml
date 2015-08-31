@@ -6,7 +6,7 @@
 		<span class="day"><?=strftime('%d', $date)?></span>
 	</div>
 
-	<a href="agenda.php?agenda_id=<?=$iter->get_id()?>"><?=markup_format_text($iter->get('kop')) ?></a>
+	<a href="<?=markup_format_attribute($iter->get_absolute_url())?>"><?=markup_format_text($iter->get('kop')) ?></a>
 
 	<small><?=sprintf(__('Agendapunt uit %d'), strftime('%Y', $date))?></small>
 </h2>

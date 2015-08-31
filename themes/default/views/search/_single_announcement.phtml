@@ -1,5 +1,5 @@
 <h2>
-	<a href="announcements.php?view=read&amp;id=<?=$iter->get_id()?>"><?=markup_format_text($iter->get('subject'))?></a>
+	<a href="<?=markup_format_attribute($iter->get_absolute_url())?>"><?=markup_format_text($iter->get('subject'))?></a>
 	<small><?=sprintf(__('Mededeling van %s uit %d'),
 		sprintf('<a href="commissies.php?commissie=%s">%s</a>',
 			urlencode($iter->getIter('committee')->get('login')),

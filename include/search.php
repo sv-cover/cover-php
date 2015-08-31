@@ -10,6 +10,8 @@ interface SearchResult
 	public function get_search_relevance();
 	
 	public function get_search_type();
+
+	public function get_absolute_url();
 }
 
 function text_excerpt($text, $keywords, $radius = 30,

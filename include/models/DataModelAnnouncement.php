@@ -13,6 +13,11 @@ class DataIterAnnouncement extends DataIter implements SearchResult
 	{
 		return 'announcement';
 	}
+
+	public function get_absolute_url()
+	{
+		return sprintf('announcements.php?view=read&id=%d', $this->get_id());
+	}
 }
 
 class DataModelAnnouncement extends DataModel implements SearchProvider
