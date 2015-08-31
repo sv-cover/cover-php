@@ -291,7 +291,7 @@ class ControllerApi extends Controller
 
 		$member['type'] = $this->_get_member_type_from_secretary_info($_POST);
 
-		return ['success' => $member->update()];
+		return ['success' => true];
 	}
 
 	public function api_secretary_delete_member($member_id)
