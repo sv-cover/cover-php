@@ -33,7 +33,13 @@
 
 			$fields = array(
 				'first_name' => [$non_empty],
-				'family_name_preposition' => [],
+				'family_name_preposition' => [function($x) {
+					foreach (preg_split('/\s+/', strtolower($x)) as $part)
+						if (!in_array(trim($part), ['van', 'von', 'de', 'der', 'den', "d'", 'het', "'t", 'ten', 'af', 'aan', 'bij', 'het',
+							'onder', 'boven', 'in', 'op', 'over', "'s", 'te', 'ten', 'ter', 'tot', 'uit', 'uijt', 'vanden', 'ver', 'voor']))
+							return false;
+					return true;
+				}, 'trim'],
 				'family_name' => [$non_empty],
 				'street_name' => [function($x) { return preg_match('/\d+/', $x); }],
 				'postal_code' => [function($x) { return preg_match('/^\d{4}\s*[a-z]{2}$/i', $x); }],

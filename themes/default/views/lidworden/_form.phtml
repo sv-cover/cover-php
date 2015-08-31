@@ -16,9 +16,9 @@ $academic_year = time() < mktime(0, 0, 0, 7, 1, date('Y')) ? date('Y') - 1 : dat
 		<th colspan="2"><?=__('Naam')?></th>
 	</tr>
 
-	<?=$this->render_text_row(__('Voornaam'), 'first_name', $e, true) ?>
-	<?=$this->render_text_row(__('Tussenvoegsel'), 'family_name_preposition', $e, false, 'class', 'small') ?>
-	<?=$this->render_text_row(__('Achternaam'), 'family_name', $e, true) ?>
+	<?=$this->render_text_row(__('Voornaam'), 'first_name', $e, true, 'placeholder', __('Voornaam')) ?>
+	<?=$this->render_text_row(__('Tussenvoegsel'), 'family_name_preposition', $e, false, 'class', 'small', 'placeholder', __('van')) ?>
+	<?=$this->render_text_row(__('Achternaam'), 'family_name', $e, true, 'placeholder', __('Achternaam')) ?>
 
 	<?= table_row(label(__('Gender'), 'gender', $e, true),
 		select_field('gender', array(
