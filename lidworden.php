@@ -34,14 +34,13 @@
 			$fields = array(
 				'first_name' => [$non_empty],
 				'family_name_preposition' => [function($x) {
-					// Disabled on request of Jordi
-					return true;
-					
+					/*
 					if (strlen($x) > 0)
 						foreach (explode('/\s+/', strtolower($x), PREG_SPLIT_NO_EMPTY) as $part)
 							if (!in_array(trim($part), ['van', 'von', 'de', 'der', 'den', "d'", 'het', "'t", 'ten', 'af', 'aan', 'bij', 'het',
 								'onder', 'boven', 'in', 'op', 'over', "'s", 'te', 'ten', 'ter', 'tot', 'uit', 'uijt', 'vanden', 'ver', 'voor']))
 								return false;
+					*/
 					return true;
 				}, 'trim'],
 				'family_name' => [$non_empty],
@@ -62,15 +61,19 @@
 						&& checkdate($match[2], $match[3], $match[1]);
 					}],
 				'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
-				'iban' => [function($x) {
-					// Disabled on request of Jordi
-					return true;
-
-					// If it looks like IBAN, validate it as IBAN
-					return preg_match('/^[A-Z]{2}\d{2}[A-Z]{4}\d+$/', $x)
-						? \IsoCodes\Iban::validate($x)
-						: true;
-					}, 'strtoupper'],
+				'iban' => [
+					function($x) {
+						// If it looks like IBAN, validate it as IBAN. This allows us to still pass in info like "I don't have any yet"
+						$stripped = preg_replace('/\s+|\./', '', strtoupper($x));
+						return preg_match('/^[A-Z]{2}\d{2,}/', $stripped)
+							? \IsoCodes\Iban::validate($stripped)
+							: true;
+					},
+					function($x) {
+						$stripped = preg_replace('/\s+|\./', '', strtoupper($x));
+						return \IsoCodes\Iban::validate($stripped) ? $stripped : $x;
+					}
+				],
 				'bic' => [
 					function($x) { return strlen($x) === 0 || \IsoCodes\SwiftBic::validate($x);},
 					function($x) { return trim($x, ' '); }
