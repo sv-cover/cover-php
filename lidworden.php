@@ -146,7 +146,10 @@
 
 			$mail = parse_email('lidworden.txt', $data);
 
-			mail('administratie@svcover.nl', 'Lidaanvraag', $mail, 'From: Cover <board@svcover.nl>');
+			$name = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
+
+			mail('administratie@svcover.nl', 'Lidaanvraag ' . $name, $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 			try {
 				$secretary = new SecretaryApi(
@@ -164,25 +167,26 @@
 					"Er is een nieuwe lidaanvraag ingediend.\n"
 					. "Je kan de aanvraag bevestigen op " . $response->url . "\n"
 					. "De gegevens zijn voor de zekerheid ook te vinden op administratie@svcover.nl.",
-					'From: Cover <board@svcover.nl>');
+					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 				$this->_create_member(array_merge($data, ['id' => $response->person_id]));
 			}
 			catch (Exception $e)
 			{
 				mail('secretaris@svcover.nl',
-					'Lidaanvraag',
+					'Lidaanvraag (niet verwerkt in Secretary)',
 					"Er is een nieuwe lidaanvraag ingediend.\n"
 					. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
 					. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
-					'From: Cover <board@svcover.nl>');
+					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 				mail('webcie@svcover.nl',
 					'Fout tijdens lidaanvraag',
 					'Er ging iets fout tijdens een lidaanvraag.'
 					.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
 					. $e->getMessage() . "\n"
-					. $e->getTraceAsString());
+					. $e->getTraceAsString(),
+					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 			}
 
 			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
@@ -235,8 +239,10 @@
 				'nieuwlid_' . strtolower(i18n_get_language()) . '.txt',
 				array_merge($member->data, ['wachtwoord' => $data['wachtwoord']]));
 
-			mail($data['email_address'], 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
-			mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
+			mail($data['email_address'], 'Website Cover', $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+			mail('administratie@svcover.nl', 'Website Cover', $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 			// Set up on mailing list
 			if (!empty($data['mailing']))
