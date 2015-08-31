@@ -256,6 +256,8 @@ class ControllerApi extends Controller
 
 		mail($data['email_address'], 'Website Cover', $mail,
 			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+
+		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
 
 	public function api_secretary_read_member($member_id)
