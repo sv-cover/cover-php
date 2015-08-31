@@ -2795,7 +2795,7 @@ CREATE TABLE mailinglijsten (
 CREATE TABLE mailinglijsten_abonnementen (
     abonnement_id CHAR(40) NOT NULL PRIMARY KEY,
     mailinglijst_id integer NOT NULL REFERENCES mailinglijsten (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    lid_id integer DEFAULT NULL REFERENCES leden (id),
+    lid_id integer DEFAULT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
     naam VARCHAR(255) DEFAULT NULL,
     email VARCHAR(255) DEFAULT NULL,
     ingeschreven_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
@@ -2854,6 +2854,12 @@ CREATE TABLE registrations (
     confirmation_code VARCHAR(255) NOT NULL PRIMARY KEY,
     data TEXT NOT NULL,
     registerd_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+);
+
+CREATE TABLE applications (
+    key VARCHAR(255) NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    secret TEXT NOT NULL
 );
 
 --

@@ -182,7 +182,7 @@
 			// Setup e-mail
 			$data['wachtwoord'] = $passwd;
 			$mail = implode("\n\n", [
-				'(For English version see below)'
+				'(For English version see below)',
 				parse_email('nieuwlid_nl.txt', $data),
 				'------------------',
 				parse_email('nieuwlid_en.txt', $data)]);

@@ -85,7 +85,7 @@
 					function($x) { return ltrim($x, 'sS'); }],
 				'membership_year_of_enrollment' => [function($x) { return $x > 1900 && $x < 2100; }],
 				'authorization' => [function($x) { return $x == 'yes'; }],
-				'mailing' => [],
+				'option_mailing' => [],
 				'spam' => [function($x) { return in_array(strtolower($_POST['spam']), array('groen', 'green', 'coverrood', 'cover red')); }]
 			);
 
@@ -127,9 +127,10 @@
 				'lidworden_confirmation_' . strtolower(i18n_get_language()) . '.txt',
 				array_merge($data, compact('confirmation_code')));
 
-			mail($data['email_address'], __('Lidmaatschapsaanvraag bevestigen'), $mail, 'From: Cover <board@svcover.nl>');
+			mail($data['email_address'], __('Lidmaatschapsaanvraag bevestigen'), $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 			
-			header('Location: lidworden.php?verzonden=true');
+			return $this->redirect('lidworden.php?verzonden=true');
 		}
 
 		function _process_confirm($confirmation_code)
@@ -140,7 +141,7 @@
 				$db->escape_string($confirmation_code)));
 
 			if (!$row)
-				die(__('Kon aanmelding niet meer vinden. Je kan je proberen opnieuw aan te melden, of het bestuur (board@svcover.nl) even mailen.'));
+				die(__('We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan te melden, of het bestuur (board@svcover.nl) even mailen.'));
 
 			$data = json_decode($row['data'], true);
 
@@ -152,22 +153,19 @@
 				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 			try {
-				get_secretary()->createPerson($data);
+				$response = get_secretary()->createPerson($data);
 
-				if (!$response->success)
-					throw new RuntimeException('Secretary failed with error: ' . $response->errors);
-			
 				mail('secretaris@svcover.nl',
 					'Lidaanvraag',
 					"Er is een nieuwe lidaanvraag ingediend.\n"
 					. "Je kan de aanvraag bevestigen op " . $response->url . "\n"
 					. "De gegevens zijn voor de zekerheid ook te vinden op administratie@svcover.nl.",
 					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-
-				$this->_create_member(array_merge($data, ['id' => $response->person_id]));
 			}
 			catch (Exception $e)
 			{
+				throw $e;
+				
 				mail('secretaris@svcover.nl',
 					'Lidaanvraag (niet verwerkt in Secretary)',
 					"Er is een nieuwe lidaanvraag ingediend.\n"
@@ -186,66 +184,7 @@
 
 			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 
-			$this->get_content('confirmed');
-		}
-
-		protected function _create_member($data)
-		{
-			$member = new DataIterMember($this->model, $data['id'], [
-				'id' => $data['id'],
-				'voornaam' => $data['first_name'],
-				'tussenvoegsel' => $data['family_name_preposition'],
-				'achternaam' => $data['family_name'],
-				'adres' => $data['street_name'],
-				'postcode' => $data['postal_code'],
-				'woonplaats' => $data['place'],
-				'email' => $data['email_address'],
-				'telefoonnummer' => $data['phone_number'],
-				'beginjaar' => $data['membership_year_of_enrollment'],
-				'geboortedatum' => $data['birth_date'],
-				'geslacht' => $data['gender'],
-				'type' => MEMBER_STATUS_UNCONFIRMED
-			]);
-			$member->set('privacy', 958698063);
-
-			$this->model->insert($member);
-
-			// Create profile for this member
-			$nick = member_full_name($member, true, false);
-			
-			if (strlen($nick) > 50)
-				$nick = $member->get('voornaam');
-			
-			if (strlen($nick) > 50)
-				$nick = '';
-			
-			$iter = new DataIterMember($this->model, -1, array('lidid' => $member->get_id(), 'nick' => $nick));
-			
-			$this->model->insert_profiel($iter);
-
-			// Create a password
-			$passwd = create_pronouncable_password();
-			
-			$this->model->set_password($member, $passwd);
-			
-			// Setup e-mail
-			$data['wachtwoord'] = $passwd;
-			$mail = parse_email(
-				'nieuwlid_' . strtolower(i18n_get_language()) . '.txt',
-				array_merge($member->data, ['wachtwoord' => $data['wachtwoord']]));
-
-			mail($data['email_address'], 'Website Cover', $mail,
-				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-			mail('administratie@svcover.nl', 'Website Cover', $mail,
-				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-
-			// Set up on mailing list
-			if (!empty($data['mailing']))
-			{
-				$mailing_model = get_model('DataModelMailinglijst');
-				$mailinglist = $mailing_model->get_lijst('directmailing@svcover.nl');
-				$mailing_model->aanmelden($mailinglist, $member->get_id());
-			}
+			return $this->redirect('lidworden.php?confirmed=true');
 		}
 		
 		function run_impl() {
@@ -255,6 +194,8 @@
 				$this->_process_confirm($_GET['confirmation_code']);
 			else if (isset($_GET['verzonden']))
 				$this->get_content('verzonden');
+			else if (isset($_GET['confirmed']))
+				$this->get_content('confirmed');
 			else {
 				$this->get_content('lidworden');
 			}

@@ -22,7 +22,7 @@ IBAN: $iban
 BIC: $bic
 Authorization: $authorization
 
-Mailing: $mailing
+Mailing: $option_mailing
 
 Cheers,
 

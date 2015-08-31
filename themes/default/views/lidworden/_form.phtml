@@ -78,7 +78,7 @@ $academic_year = time() < mktime(0, 0, 0, 7, 1, date('Y')) ? date('Y') - 1 : dat
 		<th colspan="2"><?=__('Mailing')?></th>
 	</tr>
 
-	<?= table_row(label('Mailing', 'mailing', $e, false), '<label>' . input_checkbox('mailing', null) . ' ' . __('Ik wil graag e-mails over activiteiten van Cover ontvangen. (Dit wil je. Daarnaast, uitschrijven kan gemakkelijk via de website.)') . '</label>') ?>
+	<?= table_row(label('Mailing', 'option_mailing', $e, false), '<label>' . input_checkbox('option_mailing', null) . ' ' . __('Ik wil graag e-mails over activiteiten van Cover ontvangen. (Dit wil je. Daarnaast, uitschrijven kan gemakkelijk via de website.)') . '</label>') ?>
 
 	<tr>
 		<th colspan="2"></th>
