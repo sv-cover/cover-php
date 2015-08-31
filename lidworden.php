@@ -34,10 +34,14 @@
 			$fields = array(
 				'first_name' => [$non_empty],
 				'family_name_preposition' => [function($x) {
-					foreach (preg_split('/\s+/', strtolower($x)) as $part)
-						if (!in_array(trim($part), ['van', 'von', 'de', 'der', 'den', "d'", 'het', "'t", 'ten', 'af', 'aan', 'bij', 'het',
-							'onder', 'boven', 'in', 'op', 'over', "'s", 'te', 'ten', 'ter', 'tot', 'uit', 'uijt', 'vanden', 'ver', 'voor']))
-							return false;
+					// Disabled on request of Jordi
+					return true;
+					
+					if (strlen($x) > 0)
+						foreach (explode('/\s+/', strtolower($x), PREG_SPLIT_NO_EMPTY) as $part)
+							if (!in_array(trim($part), ['van', 'von', 'de', 'der', 'den', "d'", 'het', "'t", 'ten', 'af', 'aan', 'bij', 'het',
+								'onder', 'boven', 'in', 'op', 'over', "'s", 'te', 'ten', 'ter', 'tot', 'uit', 'uijt', 'vanden', 'ver', 'voor']))
+								return false;
 					return true;
 				}, 'trim'],
 				'family_name' => [$non_empty],
@@ -59,6 +63,9 @@
 					}],
 				'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
 				'iban' => [function($x) {
+					// Disabled on request of Jordi
+					return true;
+
 					// If it looks like IBAN, validate it as IBAN
 					return preg_match('/^[A-Z]{2}\d{2}[A-Z]{4}\d+$/', $x)
 						? \IsoCodes\Iban::validate($x)
