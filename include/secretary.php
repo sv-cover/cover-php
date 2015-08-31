@@ -6,6 +6,21 @@ class SecretaryAPI
 
 	private $token;
 
+	private $mapping = [
+		'id' => 'id',
+		'voornaam' => 'first_name',
+		'tussenvoegsel' => 'family_name_preposition',
+		'achternaam' => 'family_name',
+		'adres' => 'street_name',
+		'postcode' => 'postal_code',
+		'woonplaats' => 'place',
+		'email' => 'email_address',
+		'telefoonnummer' => 'phone_number',
+		'beginjaar' => 'membership_year_of_enrollment',
+		'geboortedatum' => 'birth_date',
+		'geslacht' => 'gender'
+	];
+
 	public function __construct($root, $user, $password)
 	{
 		$this->root = $root;
@@ -27,6 +42,22 @@ class SecretaryAPI
 	public function updatePerson($person_id, $data)
 	{
 		return $this->postJSONWithToken(sprintf('persons/%d.json', $person_id), $data);
+	}
+
+	public function updatePersonFromIterChanges(DataIterMember $iter)
+	{
+		if (!$iter->has_id())
+			throw new InvalidArgumentException('You can only submit updates for iters that have an id');
+
+		if (!$iter->has_changes())
+			return null;
+
+		$data = [];
+		
+		foreach ($iter->get_changed_values() as $field => $value)
+			$data[$this->mapping[$field]] = $value;
+
+		return $this->updatePerson($iter->get_id(), $data);
 	}
 
 	protected function isValidToken($user_token_pair)
@@ -105,4 +136,17 @@ class SecretaryAPI
 
 		return $data;
 	}
+}
+
+function get_secretary()
+{
+	static $secretary;
+
+	if (!$secretary)
+		$secretary = new SecretaryApi(
+			get_config_value('secretary_root'),
+			get_config_value('secretary_user'),
+			get_config_value('secretary_password'));
+
+	return $secretary;
 }

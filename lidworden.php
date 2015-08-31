@@ -152,12 +152,7 @@
 				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 			try {
-				$secretary = new SecretaryApi(
-					get_config_value('secretary_root'),
-					get_config_value('secretary_user'),
-					get_config_value('secretary_password'));
-
-				$response = $secretary->createPerson($data);
+				get_secretary()->createPerson($data);
 
 				if (!$response->success)
 					throw new RuntimeException('Secretary failed with error: ' . $response->errors);
