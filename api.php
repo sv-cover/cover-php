@@ -266,7 +266,10 @@ class ControllerApi extends Controller
 
 		$member = $model->get_iter($member_id);
 
-		return ['success' => true, 'data' => $member->data];
+		$data = $member->data;
+		$data['type_string'] = $model->get_status($member);
+
+		return ['success' => true, 'data' => $data];
 	}
 
 	public function api_secretary_update_member($member_id)

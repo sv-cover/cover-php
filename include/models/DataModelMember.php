@@ -561,6 +561,9 @@
 				case MEMBER_STATUS_DONATEUR:
 					return __('Donateur');
 
+				case MEMBER_STATUS_UNCONFIRMED:
+					return __('Geen status');
+
 				default:
 					return __('Onbekend');
 			}
