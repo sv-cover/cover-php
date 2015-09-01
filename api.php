@@ -254,7 +254,10 @@ class ControllerApi extends Controller
 				'------------------',
 				parse_email('nieuwlid_en.txt', $data)]);
 
-		mail($data['email_address'], 'Website Cover', $mail,
+		mail($data['email'], 'Website Cover', $mail,
+			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+
+		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, true, false) . ')', $mail,
 			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
