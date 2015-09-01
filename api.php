@@ -297,7 +297,9 @@ class ControllerApi extends Controller
 
 		$member['type'] = $this->_get_member_type_from_secretary_info($_POST);
 
-		return ['success' => true];
+		$model->update($member);
+
+		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
 
 	public function api_secretary_delete_member($member_id)
