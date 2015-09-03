@@ -13,7 +13,8 @@
 
 <div class="photo-page-header">
 <?php 
-	$this->render_partial('upload_photos_button');
+	//$this->render_partial('upload_photos_button');
+	$this->render_partial('download_photos_button', compact('model', 'iter'));
 	$this->render_partial('mark_read_button', compact('model', 'iter'));
 	$this->render_partial('path', array('model' => $model, 'book' => $iter));
 ?>

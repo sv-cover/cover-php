@@ -182,9 +182,10 @@ table.navigation td:nth-child(3) {
 	clear: both;
 }
 
+.button.download-photos-button,
 .button.upload-photos-button,
 .button.mark-read-button {
-	margin-top: -2px;
+	margin: -2px 0 0 2px;
 	float: right;
 }
 

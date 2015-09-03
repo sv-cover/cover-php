@@ -676,6 +676,31 @@
 			$zip->finish();
 		}
 
+		protected function _view_confirm_download_book(DataIterPhotobook $root_book)
+		{
+			$books = array($root_book);
+
+			// Make a list of all the books to be added to the zip
+			// but filter out the books I can't read.
+			for ($i = 0; $i < count($books); ++$i)
+				foreach ($books[$i]->get_books(0) as $child)
+					if ($this->policy->user_can_read($child))
+						$books[] = $child;
+
+			$total_photos = 0;
+			$total_file_size = 0;
+
+			foreach ($books as $book)
+				foreach ($book->get_photos() as $photo)
+					if ($photo->file_exists())
+					{
+						$total_photos += 1;
+						$total_file_size += $photo->get_file_size();
+					}
+
+			return $this->get_content('confirm_download_book', $root_book, compact('total_photos', 'total_file_size'));
+		}
+
 		protected function _view_scaled_photo(DataIterPhoto $photo)
 		{
 			if (!$this->policy->user_can_read($photo->get_book()))
@@ -823,6 +848,9 @@
 
 				case 'download_book':
 					return $this->_view_download_book($book);
+
+				case 'confirm_download_book':
+					return $this->_view_confirm_download_book($book);
 
 				case 'scaled':
 					return $this->_view_scaled_photo($photo);
