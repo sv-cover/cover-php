@@ -567,7 +567,7 @@
 		protected function _view_download_photo(DataIterPhoto $photo)
 		{
 			// For now require login for these originals
-			if (!logged_in())
+			if (!get_identity()->member_is_active())
 				throw new UnauthorizedException();
 
 			if (!$photo->file_exists())
@@ -586,7 +586,7 @@
 
 		protected function _view_download_book(DataIterPhotobook $root_book)
 		{
-			if (!logged_in())
+			if (!get_identity()->member_is_active())
 				throw new UnauthorizedException();
 
 			if (!$this->policy->user_can_read($root_book))
