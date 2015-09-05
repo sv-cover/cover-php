@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b6f2ead2455b0c05f299343b07d86b5f",
+    "hash": "32d50f41adbf20b18d89d784f2e311d2",
     "packages": [
         {
             "name": "camspiers/porter-stemmer",
@@ -227,6 +227,86 @@
                 "zip"
             ],
             "time": "2015-01-15 19:43:13"
+        },
+        {
+            "name": "ronanguilloux/isocodes",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ronanguilloux/IsoCodes.git",
+                "reference": "08aabd230ea963cba3aa5338319b1bffacbc0285"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ronanguilloux/IsoCodes/zipball/08aabd230ea963cba3aa5338319b1bffacbc0285",
+                "reference": "08aabd230ea963cba3aa5338319b1bffacbc0285",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "@stable",
+                "pdepend/pdepend": "2.0.*",
+                "phploc/phploc": "*",
+                "phpmd/phpmd": "@stable",
+                "phpunit/phpunit": "~4.7",
+                "satooshi/php-coveralls": "dev-master",
+                "sebastian/phpcpd": "*",
+                "squizlabs/php_codesniffer": "2.0.x-dev"
+            },
+            "suggest": {
+                "gourmet/validation": "For CakePHP 3 integration",
+                "sllh/iso-codes-validator": "For Symfony or Silex integration with ease"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "IsoCodes": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Ronan Guilloux",
+                    "email": "ronan.guilloux@gmail.com",
+                    "homepage": "http://github.com/ronanguilloux",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP library, validating various ISO codes, such as IBAN, SWIFT/BIC, BBAN, RIB, Credit Card number, INSEE, VAT, NSS, Siren, Siret, Ssn, NINO, Zipcode (US, Canada, France...), ISBN & EAN13, Spanish CIF & NIF",
+            "homepage": "https://github.com/ronanguilloux/IsoCodes",
+            "keywords": [
+                "BBAN",
+                "BIC",
+                "CIF",
+                "Credit Card number",
+                "EAN13",
+                "IBAN",
+                "INSEE",
+                "ISBN",
+                "ISO codes",
+                "NIF",
+                "NINO",
+                "NSS",
+                "RIB",
+                "Siren",
+                "Siret",
+                "Ssn",
+                "swift",
+                "vat",
+                "zipcode"
+            ],
+            "time": "2015-06-22 19:37:41"
         }
     ],
     "packages-dev": [

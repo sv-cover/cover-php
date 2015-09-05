@@ -47,5 +47,14 @@
 		'precomputed_photo_scales' => array(
 			[1600, 1600], // Full size photo
 			[null, 400] // size used for the thumbnails below photo and in photo books
-		)
+		),
+
+		// For the Website calling the API of Secretary to propose new members
+		'secretary_root' => 'http://localhost:8000/api/',
+		'secretary_user' => 'website',
+		'secretary_password' => 'wachtwoord',
+
+		// The shared secret that is used in the checksum when Secretary wants to
+		// update the info of a member.
+		'secretary_shared_secret' => 'p5mWhn1Ojmsi51w9QcNC'
 	);

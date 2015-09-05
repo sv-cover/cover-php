@@ -4,6 +4,7 @@
 	require_once 'include/member.php';
 	require_once 'include/login.php';
 	require_once 'include/facebook.php';
+	require_once 'include/secretary.php';
 	require_once 'include/controllers/Controller.php';
 	
 	class ControllerProfiel extends Controller
@@ -104,10 +105,10 @@
 					$iter->set($field, get_post($field));
 			}
 			
-			$this->model->update($iter);
-			
 			if ($iter->has_changes())
 			{
+				$this->model->update($iter);
+			
 				// Inform the board that member info has been changed.
 				$subject = "Lidgegevens gewijzigd";
 				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter)) . "\n\n";
@@ -117,8 +118,10 @@
 				foreach ($changes as $field => $value)
 					$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);
 					
-				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\n");
-				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter)), "From: webcie@ai.rug.nl\r\n");
+				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+
+				get_secretary()->updatePersonFromIterChanges($iter);
 			}
 
 			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#almanak');
@@ -216,7 +219,7 @@
 			} elseif (!get_post('type')) {
 				$errors[] = 'type';
 				$message[] = __('De zichtbaarheid van het profiel is niet ingevuld.');
-			} elseif (get_post('type') < MEMBER_STATUS_LID || get_post('type') > MEMBER_STATUS_DONATEUR) {
+			} elseif (get_post('type') < MEMBER_STATUS_MIN || get_post('type') > MEMBER_STATUS_MAX) {
 				$errors[] = 'type';
 				$message[] = __('Er is een ongeldige waarde voor zichtbaarheid ingevuld.');
 			}

@@ -62,8 +62,8 @@
 			$this->_cache[$key] = $value;
 
 			if (!is_null($this->get_value($key)))
-				$this->db->query_value('UPDATE configuratie SET value = \'' . $this->escape_string($value) . '\' WHERE key = \'' . $this->escape_string($key) . '\';');
+				$this->db->query_value('UPDATE configuratie SET value = \'' . $this->db->escape_string($value) . '\' WHERE key = \'' . $this->db->escape_string($key) . '\';');
 			else
-				$this->db->query_value('INSERT INTO configuratie (key, value) VALUES(\'' . $this->escape_string($key) . '\', \'' . $this->escape_string($value) . '\')');
+				$this->db->query_value('INSERT INTO configuratie (key, value) VALUES(\'' . $this->db->escape_string($key) . '\', \'' . $this->db->escape_string($value) . '\')');
 		}
 	}

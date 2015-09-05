@@ -326,7 +326,7 @@
 		}
 	}
 	
-	function create_message()
+	function create_message_agenda_item_moderations()
 	{
 		/* Check for moderates */
 		$model = get_model('DataModelAgenda');
@@ -344,6 +344,22 @@
 				</div>';
 		else
 			return '';
+	}
+
+	function create_message_account_status()
+	{
+		if (get_identity()->get('type', -1) == MEMBER_STATUS_UNCONFIRMED)
+			return sprintf('<div class="message">%s</div>', __('Je lidmaatschap is nog niet goedgekeurd door de secretaris. Tot dan is de toegang tot sommige delen van de website, zoals de oude foto\'s en lidgegevens, beperkt.'));
+		else
+			return '';
+	}
+
+	function create_message()
+	{
+		return implode("\n", array_filter([
+			create_message_account_status(),
+			create_message_agenda_item_moderations()
+		]));
 	}
 
 	function view_promotional_header()

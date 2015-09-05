@@ -39,6 +39,11 @@
 		{
 			return 'page';
 		}
+
+		public function get_absolute_url()
+		{
+			return sprintf('show.php?id=%d', $this->get_id());
+		}
 	}
 
 	/**

@@ -71,7 +71,17 @@ class MemberIdentityProvider implements IdentityProvider
 			return null;
 
 		if (!$this->member)
-			$this->member = $this->member_model->get_iter($this->session_provider->get_session()->get('member_id'));
+			try {
+				$this->member = $this->member_model->get_iter($this->session_provider->get_session()->get('member_id'));
+			}
+			catch (DataIterNotFoundException $e) {
+				// We are logged in as someone who doesn't exist. Let's logout and prevent any further undefined behavior
+				$this->session_provider->logout();
+				$this->member = null;
+
+				// But also rethrow the exception
+				throw $e;
+			}
 
 		return $this->member;
 	}

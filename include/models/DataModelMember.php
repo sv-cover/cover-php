@@ -3,12 +3,6 @@
 	require_once 'include/login.php';
 	require_once 'include/data/DataModel.php';
 	
-	define('MEMBER_STATUS_LID', 1);
-	define('MEMBER_STATUS_LID_ONZICHTBAAR', 4);
-	define('MEMBER_STATUS_LID_AF', 2);
-	define('MEMBER_STATUS_ERELID', 3);
-	define('MEMBER_STATUS_DONATEUR', 5);
-
 	class DataIterMember extends DataIter implements SearchResult
 	{
 		public function is_private($field)
@@ -24,6 +18,11 @@
 		public function get_search_type()
 		{
 			return 'member';
+		}
+
+		public function get_absolute_url()
+		{
+			return sprintf('profiel.php?lid=%d', $this->get_id());
 		}
 	}
 
@@ -169,7 +168,8 @@
 				MEMBER_STATUS_LID,
 				MEMBER_STATUS_LID_ONZICHTBAAR,
 				MEMBER_STATUS_ERELID,
-				MEMBER_STATUS_DONATEUR);
+				MEMBER_STATUS_DONATEUR,
+				MEMBER_STATUS_UNCONFIRMED);
 
 			if (!$row || !in_array($row['type'], $active_member_types))
 				return false;
@@ -560,6 +560,9 @@
 
 				case MEMBER_STATUS_DONATEUR:
 					return __('Donateur');
+
+				case MEMBER_STATUS_UNCONFIRMED:
+					return __('Geen status');
 
 				default:
 					return __('Onbekend');

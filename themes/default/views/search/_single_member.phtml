@@ -1,6 +1,6 @@
 <div class="search-result-member">
 	<h2>
-		<a href="profiel.php?lid=<?=$iter->get_id()?>">
+		<a href="<?=markup_format_attribute($iter->get_absolute_url())?>">
 			<?=member_full_name($iter, false, false) ?>
 		</a>
 	</h2>

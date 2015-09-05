@@ -32,6 +32,11 @@
 		{
 			return 'committee';
 		}
+
+		public function get_absolute_url()
+		{
+			return sprintf('commissies.php?commissie=%s', urlencode($this->get('login')));
+		}
 	}
 
 	/**

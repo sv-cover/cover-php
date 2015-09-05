@@ -44,6 +44,9 @@ class SearchController extends Controller
 		if (!empty($_GET['query'])) {
 			$query = $_GET['query'];
 			$iters = $this->_run_query($query);
+
+			if (isset($_GET['im_feeling']) && $_GET['im_feeling'] == 'lucky' && count($iters) > 0)
+				return $this->redirect($iters[0]->get_absolute_url());
 		}
 		else {
 			$query = '';

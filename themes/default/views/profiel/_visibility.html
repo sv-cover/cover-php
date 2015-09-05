@@ -26,6 +26,10 @@
 			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Donateur') ?></label></td>
 		</tr>
 		<tr>
+			<td></td>
+			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_UNCONFIRMED) . '&nbsp;' . __('Nog niet verwerkt') ?></label></td>
+		</tr>
+		<tr>
 			<td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
 		</tr>
 	</table>

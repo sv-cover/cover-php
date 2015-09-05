@@ -211,6 +211,11 @@
 		{
 			return exif_read_data($this->get_full_path());
 		}
+
+		public function get_file_size()
+		{
+			return filesize($this->get_full_path());
+		}
 	}
 
 	class DataIterPhotobook extends DataIter implements SearchResult
@@ -294,6 +299,11 @@
 		public function get_search_type()
 		{
 			return 'fotoboek';
+		}
+
+		public function get_absolute_url()
+		{
+			return sprintf('fotoboek.php?book=%s', urlencode($this->get_id()));
 		}
 
 		public function get_key_photos($limit)

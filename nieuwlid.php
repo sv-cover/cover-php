@@ -181,7 +181,11 @@
 			
 			// Setup e-mail
 			$data['wachtwoord'] = $passwd;
-			$mail = parse_email('nieuwlid.txt', $data);
+			$mail = implode("\n\n", [
+				'(For English version see below)',
+				parse_email('nieuwlid_nl.txt', $data),
+				'------------------',
+				parse_email('nieuwlid_en.txt', $data)]);
 
 			mail($data['email'], 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');
 			mail('administratie@svcover.nl', 'Website Cover', $mail, 'From: Cover <board@svcover.nl>');

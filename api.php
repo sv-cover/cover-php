@@ -1,11 +1,26 @@
 <?php
 
 require_once 'include/init.php';
+require_once 'include/member.php';
 require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
 
 class ControllerApi extends Controller
 {
+	static protected $secretary_mapping = [
+		'voornaam' => 'first_name',
+		'tussenvoegsel' => 'family_name_preposition',
+		'achternaam' => 'family_name',
+		'adres' => 'street_name',
+		'postcode' => 'postal_code',
+		'woonplaats' => 'place',
+		'email' => 'email_address',
+		'telefoonnummer' => 'phone_number',
+		'beginjaar' => 'membership_year_of_enrollment',
+		'geboortedatum' => 'birth_date',
+		'geslacht' => 'gender'
+	];
+		
 	public function __construct()
 	{
 		// Do nothing.
@@ -173,11 +188,173 @@ class ControllerApi extends Controller
 		return array('result' => $committees);
 	}
 
+	private function _get_member_type_from_secretary_info($data)
+	{
+		$type = MEMBER_STATUS_UNCONFIRMED;
+
+		if (!empty($data['donorship_ended_on']))
+			$type = MEMBER_STATUS_LID_AF;
+		elseif (!empty($data['donorship_date_of_authorization']))
+			$type = MEMBER_STATUS_DONATEUR;
+
+		if (!empty($data['membership_ended_on']))
+			$type = MEMBER_STATUS_LID_AF;
+		elseif (!empty($data['membership_started_on']))
+			$type = MEMBER_STATUS_LID;
+
+		return $type;
+	}
+
+	public function api_secretary_create_member()
+	{
+		$model = get_model('DataModelMember');
+
+		if (!isset($_POST['id']))
+			throw new InvalidArgumentException('Missing id field in POST');
+
+		$data = [
+			'id' => $_POST['id'],
+			'type' => $this->_get_member_type_from_secretary_info($_POST)
+		];
+
+		foreach (self::$secretary_mapping as $field => $secretary_field)
+		{
+			if (isset($_POST[$secretary_field]))
+				$data[$field] = $_POST[$secretary_field];
+		}
+		
+		$member = new DataIterMember($model, $data['id'], $data);
+		$member->set('privacy', 958698063);
+
+		$model->insert($member);
+
+		// Create profile for this member
+		$nick = member_full_name($member, true, false);
+		
+		if (strlen($nick) > 50)
+			$nick = $member->get('voornaam');
+		
+		if (strlen($nick) > 50)
+			$nick = '';
+		
+		$iter = new DataIterMember($model, -1, array('lidid' => $member->get_id(), 'nick' => $nick));
+		
+		$model->insert_profiel($iter);
+
+		// Create a password
+		$passwd = create_pronouncable_password();
+		
+		$model->set_password($member, $passwd);
+		
+		// Setup e-mail
+		$data['wachtwoord'] = $passwd;
+		$mail = implode("\n\n", [
+				'(For English version see below)',
+				parse_email('nieuwlid_nl.txt', $data),
+				'------------------',
+				parse_email('nieuwlid_en.txt', $data)]);
+
+		mail($data['email'], 'Website Cover', $mail,
+			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+
+		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, true, false) . ')', $mail,
+			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+
+		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+	}
+
+	public function api_secretary_read_member($member_id)
+	{
+		$model = get_model('DataModelMember');
+
+		$member = $model->get_iter($member_id);
+
+		$data = $member->data;
+		$data['type_string'] = $model->get_status($member);
+
+		return ['success' => true, 'data' => $data];
+	}
+
+	public function api_secretary_update_member($member_id)
+	{
+		if ($member_id != $_POST['id'])
+			throw new InvalidArgumentException('Person ids in GET and POST do not match up');
+
+		$model = get_model('DataModelMember');
+
+		$member = $model->get_iter($member_id);
+
+		$reverse_mapping = array_flip(self::$secretary_mapping);
+
+		foreach ($_POST as $remote_field => $value)
+		{
+			if (!isset($reverse_mapping[$remote_field]))
+				continue;
+
+			$field = $reverse_mapping[$remote_field];
+			$member[$field] = $value;
+		}
+
+		$member['type'] = $this->_get_member_type_from_secretary_info($_POST);
+
+		$model->update($member);
+
+		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+	}
+
+	public function api_secretary_delete_member($member_id)
+	{
+		if ($member_id != $_POST['id'])
+			throw new InvalidArgumentException('Person ids in GET and POST do not match up');
+
+		$model = get_model('DataModelMember');
+
+		$member = $model->get_iter($member_id);
+
+		return ['success' => $model->delete($member)];
+	}
+
+	public function api_secretary_subscribe_member_to_mailinglist($member_id, $mailinglist)
+	{
+		$member_model = get_model('DataModelMember');
+		$member = $member_model->get_iter($member_id);
+
+		$mailing_model = get_model('DataModelMailinglijst');
+		$mailinglist = $mailing_model->get_lijst($mailinglist);
+		$id = $mailing_model->aanmelden($mailinglist, $member->get_id());
+
+		return ['success' => !!$id];
+	}
+
+	private function assert_auth_api_application()
+	{
+		$model = get_model('DataModelApplication');
+		
+		if (empty($_SERVER['HTTP_X_APP']))
+			throw new Exception('App name is missing');
+
+		$app = $model->find_one(sprintf("key = '%s'", get_db()->escape_string($_SERVER['HTTP_X_APP'])));
+
+		if (!$app)
+			throw new Exception('No app with that name available');
+
+		$raw_post_data = file_get_contents('php://input');
+		$post_hash = sha1($raw_post_data . $app['secret']);
+
+		if (empty($_SERVER['HTTP_X_HASH']) || $post_hash != $_SERVER['HTTP_X_HASH'])
+			throw new Exception('Checksum does not match');
+
+		return true;
+	}
+
 	public function run_impl()
 	{
 		$method = isset($_GET['method'])
 			? $_GET['method']
 			: 'main';
+
+		if (preg_match('/^secretary_/i', $method))
+			$this->assert_auth_api_application();
 
 		switch ($method)
 		{
@@ -225,8 +402,37 @@ class ControllerApi extends Controller
 				$response = $this->api_get_committees($_GET['member_id']);
 				break;
 
+			// POST api.php?method=secretary_read_member
+			// Submit POST member_id=709
+			case 'secretary_read_member':
+				$response = $this->api_secretary_read_member($_POST['member_id']);
+				break;
+
+			// POST api.php?method=secretary_create_member
+			case 'secretary_create_member':
+				$response = $this->api_secretary_create_member();
+				break;
+
+			// POST api.php?method=secretary_update_member&member_id=709
+			// Note that $_POST['id'] must also match $_GET['member_id']
+			case 'secretary_update_member':
+				$response = $this->api_secretary_update_member($_GET['member_id']);
+				break;
+
+			// POST api.php?method=secretary_delete_member&member_id=709
+			// Note that $_POST['id'] must also match $_GET['member_id']
+			case 'secretary_delete_member':
+				$response = $this->api_secretary_delete_member($_GET['member_id']);
+				break;
+
+			// POST api.php?method=secretary_subscribe_member_to_mailinglist
+			// Do post member_id and mailinglist, which may be an email address or an id
+			case 'secretary_subscribe_member_to_mailinglist':
+				$response = $this->api_secretary_subscribe_member_to_mailinglist($_POST['member_id'], $_POST['mailinglist']);
+				break;
+
 			default:
-				throw new InvalidArgumentException('unknown method "' . $method . '"');
+				throw new InvalidArgumentException("Unknown method \"$method\".");
 				break;
 		}
 
