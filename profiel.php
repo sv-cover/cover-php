@@ -6,6 +6,48 @@
 	require_once 'include/facebook.php';
 	require_once 'include/secretary.php';
 	require_once 'include/controllers/Controller.php';
+
+	class ControllerProfielSessions extends Controller
+	{
+		private $member;
+
+		public function __construct(DataIterMember $member)
+		{
+			$this->member = $member;
+
+			$this->model = get_model('DataModelSession');
+		}
+
+		protected function run_view_sessions()
+		{
+			if (isset($_POST['sessions']))
+			{
+				foreach ($_POST['sessions'] as $session_id)
+				{
+					$session = $this->model->get_iter($session_id);
+
+					if ($session && $session->get('member_id') == $this->member->get_id())
+						$this->model->delete($session);
+				}
+			}
+
+			return $this->redirect(sprintf('profiel.php?lid=%d&module=sessions', $this->member->get_id()));
+		}
+
+		protected function run_impl()
+		{
+			if (isset($_GET['view']) && $_GET['view'] == 'sessions')
+				return $this->run_view_sessions();
+
+			$member = $this->member;
+
+			$session = get_auth()->get_session();
+
+			$sessions = $this->model->getActive($this->member->get_id());
+
+			$this->get_content('profiel::sessions', $sessions, compact('session', 'member'));
+		}
+	}
 	
 	class ControllerProfiel extends Controller
 	{
@@ -293,6 +335,15 @@
 				&& !member_in_commissie(COMMISSIE_BESTUUR)
 				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 				return $this->get_content('not_found');
+
+			if (isset($_GET['module'])) {
+				switch ($_GET['module'])
+				{
+					case 'sessions':
+						$controller = new ControllerProfielSessions($iter);
+						return $controller->run();
+				}
+			}
 
 			if (isset($_POST['submprofiel_almanak']))
 				$this->_process_almanak($iter);

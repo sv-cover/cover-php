@@ -51,9 +51,10 @@
 		  * then the view specified in the constructor and finally
 		  * the footer
 		  */
-		protected function get_content() {
-			$this->run_header(Array('title' => ucfirst($this->view)));
-			run_view($this->view, $this->model, $this->iter, $this->params);
+		protected function get_content($view, $iters = null, array $params = array())
+		{
+			$this->run_header(array('title' => ucfirst($this->view)));
+			run_view($view, $this->model, $iters, $params);
 			$this->run_footer();
 		}
 	
