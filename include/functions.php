@@ -790,3 +790,8 @@
 			return call_user_func_array([$object, $method], $arguments);
 		};
 	}
+
+	function ends_with($haystack, $neelde)
+	{
+		return substr_compare($haystack, $needle, -strlen($needle));
+	}
