@@ -3,14 +3,12 @@ require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
 require_once 'include/controllers/ControllerEditable.php';
 
-class ControllerCommissies extends ControllerCRUD
+class ControllerWorkingGroups extends ControllerCRUD
 {	
-	protected $_var_id = 'commissie';
-
 	public function __construct()
 	{
 		$this->model = get_model('DataModelCommissie');
-		$this->model->type = DataModelCommissie::TYPE_COMMITTEE;
+		$this->model->type = DataModelCommissie::TYPE_WORKING_GROUP;
 	}
 
 	protected function _index()
@@ -21,7 +19,7 @@ class ControllerCommissies extends ControllerCRUD
 	protected function _create(array $data, array &$errors)
 	{
 		$iter = parent::_create($data, $errors);
-
+		
 		if (!empty($data['members']))
 			$this->model->set_members($iter, $data['members']);
 
@@ -80,19 +78,10 @@ class ControllerCommissies extends ControllerCRUD
 
 	protected function _get_title($iter)
 	{
-		return $iter instanceof DataIter ? $iter->get('naam') : __('Commissies');
-	}
-
-	/* protected */ function run_impl()
-	{
-		// Support for old urls
-		if (isset($_GET['id']) && !isset($_GET['commissie']))
-			$_GET['commissie'] = $_GET['id'];
-
-		return parent::run_impl();
+		return $iter instanceof DataIter ? $iter->get('naam') : __('Werkgroepen');
 	}
 }
 
-$controller = new ControllerCommissies();
+$controller = new ControllerWorkingGroups();
 $controller->run();
 

@@ -133,9 +133,9 @@ CREATE TABLE cache (
     expires integer NOT NULL
 );
 
-
 CREATE TABLE commissies (
     id SERIAL NOT NULL PRIMARY KEY,
+    type integer NOT NULL DEFAULT 1,
     naam character varying(25) NOT NULL,
     login character varying(50),
     website character varying(100),
