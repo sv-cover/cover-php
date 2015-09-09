@@ -34,7 +34,7 @@
 				<tbody>
 					<?php if ($iter->has_id()) foreach ($iter->get_members() as $member): ?>
 					<tr>
-						<td><?=member_full_name($member)?></td>
+						<td><?=member_full_name($member)?><input type="hidden" name="members[<?=$member->get_id()?>]" value="<?=markup_format_attribute($member->get('functie'))?>"></td>
 						<td><button type="button" class="button remove-button" title="<?=markup_format_attribute(__('Verwijder lid uit werkgroep'))?>">&times;</button></td>
 					</tr>
 					<?php endforeach ?>
