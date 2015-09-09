@@ -4,20 +4,21 @@
 	<?php endif ?>
 	<h1><?= __('Werkgroepen') ?></h1>
 </div>
-<div class="messageBox">
-	<ul class="commissie-index">
-	<?php foreach ($iter as $commissie): ?>
-		<li class="commissie">
-			<a href="<?=$controller->link_to_read($commissie)?>" class="link">
-				<?php if ($imgpath = $this->get_commissie_thumb($commissie)): ?>
-					<img src="<?=markup_format_attribute($imgpath, ENT_QUOTES)?>" class="thumbnail">
-				<?php endif ?>
-				<span class="overlay">
-					<span class="name"><?= markup_format_text($commissie->get('naam')) ?></span>
-					<span class="summary"><?= $this->get_summary($commissie) ?></span>
-				</span>
-			</a>
-		</li>
+<div class="messageBox working-groups">
+	<?php foreach ($iter as $workinggroup): ?>
+	<section class="working-group">
+		<h3><a href="<?=$controller->link_to_read($workinggroup)?>" class="link"><?=markup_format_text($workinggroup['naam'])?></a></h3>
+		<p><?= $this->get_summary($workinggroup) ?></p>
+		<ul>
+		<?php foreach ($workinggroup->get_members() as $member): ?>
+			<li>
+				<a href="profiel.php?lid=<?=$member->get_id()?>">
+					<img src="foto.php?lid_id=<?=$member->get_id()?>&amp;format=square&amp;width=60">
+					<?=member_full_name($member)?>
+				</a>
+			</li>
+		<?php endforeach ?>
+		</ul>
+	</section>
 	<?php endforeach ?>
-	</ul>
 </div>
