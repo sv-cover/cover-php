@@ -19,7 +19,7 @@ class ControllerBesturen extends ControllerCRUD
 			return __('Besturen');
 	}
 
-	protected function _validate(DataIter $iter, $data, array &$errors)
+	protected function _validate(DataIter $iter = null, $data, array &$errors)
 	{
 		if ($iter === null && !isset($data['naam']))
 			$errors[] = 'naam';
