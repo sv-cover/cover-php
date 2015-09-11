@@ -1,6 +1,6 @@
 <h1><?=$this->get_label($iter, __('Nieuwe oud-bestuur toevoegen'), __('Bestuur wijzigen')) ?></h1>
-<div class="messageBox announcement">
-	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form" data-partial-selector=".announcement" data-placement-selector=".announcement">
+<div class="messageBox">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form">
 		<div>
 			<?=label(__('Bestuursnaam'), 'naam', $errors, true)?>
 			<?=input_text('naam', $iter->data, 'required', 'required', 'placeholder', 'Board XXII')?>
