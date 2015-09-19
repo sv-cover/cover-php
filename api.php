@@ -196,8 +196,7 @@ class ControllerApi extends Controller
 			$type = MEMBER_STATUS_LID_AF;
 		elseif (!empty($data['donorship_date_of_authorization']))
 			$type = MEMBER_STATUS_DONATEUR;
-
-		if (!empty($data['membership_ended_on']))
+		elseif (!empty($data['membership_ended_on']))
 			$type = MEMBER_STATUS_LID_AF;
 		elseif (!empty($data['membership_started_on']))
 			$type = MEMBER_STATUS_LID;
