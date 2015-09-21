@@ -394,11 +394,16 @@
 
 		public function get_random()
 		{
+			$conditions = "c.hidden <> 1";
+
+			if ($this->type !== null)
+				$conditions .= sprintf(" AND type = %d", $this->type);
+
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c
 					LEFT JOIN actieveleden a ON
 						a.commissieid = c.id
-					WHERE c.hidden <> 1
+					WHERE $conditions
 					GROUP BY c.id
 					HAVING COUNT(a.id) > 0
 					ORDER BY RANDOM()
