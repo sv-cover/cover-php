@@ -17,7 +17,7 @@ class DataModelMessage extends DataModel
 
 	public function get_latest($count = 5)
 	{
-		$query = $this->_generate_query('') . ' LIMIT ' . intval($count);
+		$query = $this->_generate_query('') . ' ORDER BY id DESC LIMIT ' . intval($count);
 
 		$rows = $this->db->query($query);
 		
