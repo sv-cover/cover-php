@@ -2,6 +2,7 @@
 require_once 'include/member.php';
 
 $commissie_model = get_model('DataModelCommissie');
+$commissie_model->type = DataModelCommissie::TYPE_COMMITTEE;
 
 // for debugging purposes
 if (isset($_GET['commissie'])) {
