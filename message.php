@@ -19,7 +19,7 @@ class MessageController extends Controller
 	function run_impl()
 	{
 		if (!logged_in())
-			throw new Exception("Log in first");
+			die("Log in first");
 
 		$placed = false;
 
