@@ -685,6 +685,12 @@ CREATE TABLE sessions (
     override_committees varchar(255) DEFAULT NULL
 );
 
+CREATE TABLE messages (
+    id serial NOT NULL PRIMARY KEY,
+    member_id integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    message TEXT NOT NULL
+);
+
 --
 -- TOC entry 2551 (class 0 OID 24125)
 -- Dependencies: 171
