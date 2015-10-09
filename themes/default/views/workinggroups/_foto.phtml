@@ -1,0 +1,9 @@
+<?php if ($photo = $this->get_commissie_photo($iter)): ?>
+	<?php
+		list($width, $height) = getimagesize($photo);
+		$orientation = $height > $width ? 'vertical' : 'horizontal';
+	?>
+	<div class="commissie_foto <?=$orientation?>">
+		<img src="<?=markup_format_attribute($photo)?>">
+	</div>
+<?php endif ?>

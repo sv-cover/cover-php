@@ -2194,3 +2194,78 @@ body .ui-autocomplete a.profile .starting-year {
 #page_51 table.markup_default td img, table.markup_noborder td img {
 	max-width: 240px !important;
 }
+
+.working-groups {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+	align-items: flex-start;
+	align-content: flex-start;
+}
+
+.working-groups > .working-group {
+	width: 320px;
+	margin: 10px auto;
+}
+
+.working-group {
+	padding: 0 20px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	overflow: hidden;
+	
+}
+
+.working-group > h3 {
+	border-bottom: 1px solid #c60c30;
+	margin: 0 -20px;
+	padding: 0 20px;
+	line-height: 40px;
+}
+
+.working-group > p {
+	margin: 20px 0;
+}
+
+.working-group > ul {
+	list-style: none;
+	margin: 0 -20px;
+}
+
+.working-group > ul > li {
+	padding: 0 20px;
+	line-height: 40px;
+	border-top: 1px solid #ccc;
+}
+
+.working-group > ul > li > a {
+	line-height: inherit;
+	display: inline-block;
+	width: 100%;
+	margin: 0 -20px;
+	padding: 0 20px;
+}
+
+.working-group > ul > li > a > img {
+	width: 32px;
+	height: 32px;
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+/*
+.working-group {
+	position: relative;
+	padding-right: 300px;
+	margin-bottom: 40px;
+}
+
+.working-group > ul {
+	position: absolute;
+	top: 15px;
+	right: 0;
+	width: 280px;
+}
+*/

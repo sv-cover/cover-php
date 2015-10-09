@@ -24,6 +24,7 @@
 			'almanak' => 'almanak',
 			'profiel' => 'profiel;markup',
 			'commissies' => 'commissies;markup',
+			'workinggroups' => 'commissies;markup',
 			'agenda' => 'agenda;markup',
 			'fotoboek' => 'fotoboek;markup',
 			'forum' => 'forum;markup',
@@ -177,6 +178,7 @@
 					<li><a href="commissies.php?commissie=board">' . __('Bestuur') . '</a></li>
 					<li><a href="besturen.php">' . __('Vorige besturen') . '</a></li>
 					<li><a href="commissies.php">' . __('Commissies') . '</a></li>
+					<li><a href="workinggroups.php">' . __('Werkgroepen') . '</a></li>
 					<li><a href="show.php?id=28">' . __('Zusterverenigingen') . '</a></li>
 					<li><a href="show.php?id=18">' . __('Lid/donateur worden') . '</a></li>
 					<li><a href="show.php?id=30">' . __('Documenten') . '</a></li>

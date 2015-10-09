@@ -19,7 +19,7 @@ class ControllerBesturen extends ControllerCRUD
 			return __('Besturen');
 	}
 
-	protected function _validate(DataIter $iter, $data, array &$errors)
+	protected function _validate(DataIter $iter = null, $data, array &$errors)
 	{
 		if ($iter === null && !isset($data['naam']))
 			$errors[] = 'naam';
@@ -89,6 +89,11 @@ class ControllerBesturen extends ControllerCRUD
 	public function _compare_bestuur($left, $right)
 	{
 		return -1 * strnatcmp($left->get('login'), $right->get('login'));
+	}
+
+	public function link_to_read(DataIter $iter)
+	{
+		return sprintf('besturen.php#%s', urlencode($iter['login']));
 	}
 }
 

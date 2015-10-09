@@ -133,9 +133,9 @@ CREATE TABLE cache (
     expires integer NOT NULL
 );
 
-
 CREATE TABLE commissies (
     id SERIAL NOT NULL PRIMARY KEY,
+    type integer NOT NULL DEFAULT 1,
     naam character varying(25) NOT NULL,
     login character varying(50),
     website character varying(100),
@@ -683,6 +683,12 @@ CREATE TABLE sessions (
     application text,
     override_member_id integer DEFAULT NULL,
     override_committees varchar(255) DEFAULT NULL
+);
+
+CREATE TABLE messages (
+    id serial NOT NULL PRIMARY KEY,
+    member_id integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    message TEXT NOT NULL
 );
 
 --

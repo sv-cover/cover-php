@@ -81,7 +81,7 @@ function process_message_mailinglist($message, $message_header, $to, $from, &$li
 	// but do so only if it is set.
 	if (!empty($lijst->get('tag')))
 		$message = preg_replace(
-			'/^Subject: (?!\[' . preg_quote($lijst->get('tag'), '/') . '\])(.+?)$/im',
+			'/^Subject: (?!(?:Re:\s*)?\[' . preg_quote($lijst->get('tag'), '/') . '\])(.+?)$/im',
 			'Subject: [' . $lijst->get('tag') . '] $1',
 			$message, 1);
 

@@ -271,9 +271,63 @@
 
 			return $this->_row_to_iter($data);
 		}
+
+		protected function _generate_conditions_from_array($conditions)
+		{
+			$atoms = [];
+
+			foreach ($conditions as $key => $value)
+			{
+				if (preg_match('/^(.+?)__(eq|ne|gt|lt|contains|isnull)$/', $key, $match)) {
+					$field = $match[1];
+					$operator = $match[2];
+				} else {
+					$field = $key;
+					$operator = 'eq';
+				}
+
+				switch ($operator)
+				{
+					case 'lt':
+						$format = "%s < '%s'";
+						break;
+
+					case 'gt':
+						$format = "%s > '%s'";
+						break;
+
+					case 'contains':
+						$format = "%s LIKE '%%%s%%'";
+						break;
+
+					case 'isnull':
+						$format = $value ? '%s IS NULL' : '%s IS NOT NULL';
+						unset($value);
+						break;
+
+					case 'ne':
+						$format = "%s <> '%s'";
+						break;
+
+					default:
+					case 'eq':
+						$format = '%s = %s';
+						break;
+				}
+
+				$atoms[] = isset($value)
+					? sprintf($format, $field, $this->db->escape_string($value))
+					: sprintf($format, $field);
+			}
+
+			return implode(' AND ', $atoms);
+		}
 		
 		protected function _generate_query($where)
 		{
+			if (is_array($where))
+				$where = $this->_generate_conditions_from_array($where);
+
 			return "SELECT * FROM {$this->table}" . ($where ? " WHERE {$where}" : "");
 		}
 	}

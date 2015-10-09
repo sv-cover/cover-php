@@ -294,7 +294,7 @@
 			return $value;
 		};
 
-		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z]+))?\b/i', $callback, $format);
+		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z_]+))?\b/i', $callback, $format);
 	}
 
 	function optional($value)
@@ -473,6 +473,52 @@
 		
 		return format_string($contents, $data);
 	}
+
+	function parse_email_object($file, array $variables = array())
+	{
+		$path = get_theme_data('email/' . $file, false);
+
+		if (!file_exists($path))
+			throw new InvalidArgumentException("Cannot find file '{$file}' in any theme data");
+
+		$file_body = file_get_contents($path);
+
+		if (!$file_body)
+			throw new InvalidArgumentException("File '{$path}' is unreadable or empty");
+
+		$subject = null;
+
+		$headers = array();
+
+		$body = '';
+
+		$parsing_headers = true;
+
+		foreach (preg_split("/\r?\n/", $file_body) as $line) {
+			if (preg_match("/^([a-z0-9_-]+):\s+(.+?)$/i", $line, $match)) {
+				// Remove newlines from header values because they mess up other headers
+				// (Better would be to indent them with spaces, but that is probably never really needed.)
+				$header_value = preg_replace('/(\r?\n)+/', ' ', format_string($match[2], $variables));
+				
+				if (strcasecmp($match[1], 'Subject') === 0)
+					$subject = $header_value;
+				else
+					$headers[] = sprintf("%s: %s", $match[1], $header_value);
+			}
+			else
+				$parsing_headers = false;
+
+			if (!$parsing_headers)
+				$body .= format_string($line, $variables) . "\r\n";
+		}
+
+		return (object) [
+			'subject' => $subject,
+			'headers' => implode("\r\n", $headers),
+			'body' => ltrim($body)
+		];
+	}
+
 	
 	function get_theme_data($file, $include_filemtime = true) {
 		if (!file_exists('themes/' . get_theme() . '/' . $file) || get_theme() == 'default')
@@ -789,4 +835,9 @@
 		return function($object) use ($method, $arguments) {
 			return call_user_func_array([$object, $method], $arguments);
 		};
+	}
+
+	function ends_with($haystack, $neelde)
+	{
+		return substr_compare($haystack, $needle, -strlen($needle));
 	}

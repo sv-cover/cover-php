@@ -44,10 +44,16 @@
 	  */
 	class DataModelCommissie extends DataModel implements SearchProvider
 	{
+		const TYPE_COMMITTEE = 1;
+		const TYPE_WORKING_GROUP = 2;
+
+		public $type = null;
+		
 		public $dataiter = 'DataIterCommissie';
 
 		public $fields = array(
 			'id',
+			'type',
 			'naam',
 			'login',
 			'website',
@@ -75,13 +81,27 @@
 		  */
 		public function get($include_hidden = true)
 		{
-			return $this->find(!$include_hidden ? 'hidden <> 1' : '');
+			$conditions = [];
+
+			if (!$include_hidden)
+				$conditions['hidden__ne'] = 1;
+
+			if ($this->type !== null)
+				$conditions['type'] = $this->type;
+
+			return $this->find($conditions);
 		}
 
 		public function insert(DataIter $iter)
 		{
 			if ($iter->has('vacancies') && !$iter->get('vacancies'))
 				$iter->set_literal('vacancies', 'NULL');
+
+			if (empty($iter['login']))
+				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
+
+			if ($this->type !== null)
+				$iter['type'] = $this->type;
 
 			$iter->set('nocaps', strtolower($iter->get('naam')));
 			
@@ -374,11 +394,16 @@
 
 		public function get_random()
 		{
+			$conditions = "c.hidden <> 1";
+
+			if ($this->type !== null)
+				$conditions .= sprintf(" AND type = %d", $this->type);
+
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c
 					LEFT JOIN actieveleden a ON
 						a.commissieid = c.id
-					WHERE c.hidden <> 1
+					WHERE $conditions
 					GROUP BY c.id
 					HAVING COUNT(a.id) > 0
 					ORDER BY RANDOM()

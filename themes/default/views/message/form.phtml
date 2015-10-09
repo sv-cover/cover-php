@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Post a message</title>
+		<meta http-equiv="Content-type" content="text/html; charset=<?=WEBSITE_ENCODING?>">
+		<style>
+			body {
+				font-family: sans-serif;
+			}
+
+			input[type=text], button {
+				font-size: 22px;
+				padding: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<?php if ($placed): ?><p>Posted.</p><?php endif ?>
+		<form method="post">
+			<input type="text" name="message" placeholder="Type a message…" size="40" autofocus>
+			<button type="submit">Post!</button>
+		</form>	
+	</body>
+</html>

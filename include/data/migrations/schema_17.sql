@@ -1,0 +1,1 @@
+ALTER TABLE commissies ADD COLUMN type integer NOT NULL DEFAULT 1;

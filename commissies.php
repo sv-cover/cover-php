@@ -10,6 +10,7 @@ class ControllerCommissies extends ControllerCRUD
 	public function __construct()
 	{
 		$this->model = get_model('DataModelCommissie');
+		$this->model->type = DataModelCommissie::TYPE_COMMITTEE;
 	}
 
 	protected function _index()
