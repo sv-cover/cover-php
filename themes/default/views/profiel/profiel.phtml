@@ -121,22 +121,39 @@ $personal_fields = [
 <script>
 jQuery(function($) {
 	// Hide all tabs
-	$('.tab-pane:not(.active)').hide();
+	function switchToTab(hash) {
+		var $tab = $(hash);
 
-	$('.nav-tabs').on('click', 'a[href^=#]', function(e) {
-		e.preventDefault();
-		
+		// Do nothing if we can't find the tab
+		if (!$tab.length)
+			return;
+
 		// Hide all other tabs
 		$('.tab-pane').hide();
 
 		// Show this tab
-		$($(this).attr('href')).show();
+		$tab.show();
 
 		// Mark all other tabs as inactive
 		$('.nav-tabs li').removeClass('active');
 
 		// Except for this one
-		$(this).closest('li').addClass('active');
+		$('.nav-tabs').find('a[href=#' + $tab.attr('id') + ']').closest('li').addClass('active');
+	};
+
+	$('.tab-pane:not(.active)').hide();
+
+	$('.nav-tabs').on('click', 'a[href^=#]', function(e) {
+		e.preventDefault();
+		window.location.hash = e.target.hash;
+		switchToTab(e.target.hash);
+	});
+
+	if (window.location.hash)
+		switchToTab(window.location.hash);
+
+	$(window).on('hashchange', function() {
+		switchToTab(window.location.hash);
 	});
 })
 </script>
