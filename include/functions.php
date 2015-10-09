@@ -509,7 +509,7 @@
 				$parsing_headers = false;
 
 			if (!$parsing_headers)
-				$body .= "$line\r\n";
+				$body .= format_string($line, $variables) . "\r\n";
 		}
 
 		return (object) [
