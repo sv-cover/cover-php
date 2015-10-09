@@ -32,11 +32,17 @@
 				$model = new DataModel(get_db(), 'confirm', null);
 				$model->insert(new DataIter($model, -1, $values));
 				
-				$subject = __('Aanvraag nieuw wachtwoord');
-				$body = "Iemand heeft een nieuw wachtwoord aangevraagd voor het account van dit e-mailadres op de Cover website. Om dit te bevestigen open je het volgende adres in je browser:\n\nhttp://www.svcover.nl/confirm.php?key=$confkey\n\nWeet je hier niks vanaf dat kan je dit mailtje negeren.\n\nMet vriendelijke groeten,\n\nDe WebCie";
+				$language_code = strtolower(i18n_get_language());
+				$variables = array(
+					'naam' => $iter['voornaam'],
+					'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($confkey)
+				);
 				
-				mail(get_post('email'), $subject, $body, "From: webcie@ai.rug.nl\r\n");
-				$this->get_content('success', array('email' => get_post('email')));
+				$mail = parse_email_object("password_reset_{$language_code}.txt", $variables);
+
+				mail($iter['email'], $mail->subject, $mail->body, $mail->headers);
+
+				$this->get_content('success', array('email' => $iter['email']));
 			} else {
 				$this->get_content();
 			}			
