@@ -294,7 +294,7 @@
 			return $value;
 		};
 
-		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z]+))?\b/i', $callback, $format);
+		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z_]+))?\b/i', $callback, $format);
 	}
 
 	function optional($value)
