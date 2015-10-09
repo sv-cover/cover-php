@@ -5,6 +5,11 @@
 	
 	class DataIterMember extends DataIter implements SearchResult
 	{
+		public function get_naam()
+		{
+			return member_full_name($this);
+		}
+
 		public function is_private($field)
 		{
 			return $this->model->is_private($this, $field);
@@ -28,6 +33,10 @@
 
 	class DataModelMember extends DataModel implements SearchProvider
 	{
+		const VISIBLE_TO_NONE = 0;
+		const VISIBLE_TO_MEMBERS = 1;
+		const VISIBLE_TO_EVERYONE = 7;
+
 		public $visible_types = array(
 			MEMBER_STATUS_LID,
 			MEMBER_STATUS_ERELID,
@@ -301,11 +310,11 @@
 			if ($cur && $self && $cur['id'] == $iter->get_id()) {
 				return false;
 			}
-			if ($value == 0) /* Visible to none */
+			if ($value == self::VISIBLE_TO_NONE) /* Visible to none */
 				return true;
-			elseif ($value == 7) /* Visible to all */
+			elseif ($value == VISIBLE_TO_EVERYONE) /* Visible to all */
 				return false;
-			elseif (($value & 1) && !logged_in_as_active_member()) /* Visible to members */
+			elseif (($value & VISIBLE_TO_MEMBERS) && !logged_in_as_active_member()) /* Visible to members */
 				return true;
 			else
 				return false;
@@ -331,7 +340,7 @@
 			
 			if ($privacy == null)
 				$privacy = $this->get_privacy();
-	
+
 			if (!array_key_exists($field, $privacy))
 				return false;
 			
@@ -346,7 +355,7 @@
 		public function privacy_public_for_field(DataIter $iter, $field)
 		{
 			$value = $this->get_privacy_for_field($iter,$field);
-			return ($value == 7);
+			return ($value & self::VISIBLE_TO_EVERYONE);
 		}
 		
 		/**

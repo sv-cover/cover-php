@@ -73,6 +73,11 @@
 		{
 			return array_key_exists($this->namespace . $field, $this->data);
 		}
+
+		public function has_getter($field)
+		{
+			return method_exists($this, 'get_' . $field);
+		}
 		
 		/**
 		  * Get iter data
@@ -82,13 +87,14 @@
 		  */
 		public function get($field)
 		{
-			if (!$this->has_field($field))
-			{
-				trigger_error('DataIter has no field named ' . $field, E_USER_NOTICE);
-				return null;
-			}
+			if ($this->has_getter($field))
+				return call_user_func(array($this, 'get_' . $field));
+
+			if ($this->has_field($field))
+				return $this->data[$this->namespace . $field];
 			
-			return $this->data[$this->namespace . $field];
+			trigger_error('DataIter has no field named ' . $field, E_USER_NOTICE);
+			return null;
 		}
 		
 		/**

@@ -1,16 +1,27 @@
 <section class="personal-section">
 	<h2><?= __('Persoonlijk') ?></h2>
-	<div>
-		<?=label(__('Naam'), 'naam') ?>
-		<span class="read-only"><?=member_full_name($iter, false, false) ?></span>
-	</div>
-	
 	<?php foreach ($personal_fields as $field): ?>
-		<?php if ($model->is_private($iter, $field['name'])) continue; ?>
-		<div>
-			<?=label($field['label'], $field['name'])?>
-			<span class="read-only"><?=markup_format_text($iter->data[$field['name']])?></span>
-		</div>
+		<?php $field_visibility = $model->get_privacy_for_field($iter, $field['name']) ?>
+		<?php if ($field_visibility == DataModelMember::VISIBLE_TO_EVERYONE): ?>
+			<div class="data-public">
+				<?=label($field['label'], $field['name'])?>
+				<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
+			</div>
+		<?php elseif ($field_visibility == DataModelMember::VISIBLE_TO_MEMBERS): ?>
+			<?php if (get_identity()->member_is_active() || get_identity()->member_in_committee(COMMISSIE_BESTUUR)): ?>
+				<div class="data-members-only">
+					<?=label($field['label'], $field['name'])?>
+					<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
+					<i class="fa fa-lock" title="<?=__('Alleen zichtbaar voor ingelogde leden')?>"></i>
+				</div>
+			<?php endif ?>
+		<?php elseif (get_identity()->member_in_committee(COMMISSIE_BESTUUR)): ?>
+			<div class="data-private">
+				<?=label($field['label'], $field['name'])?>
+				<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
+				<i class="fa fa-eye-slash" title="<?=__('Privé')?>"></i>
+			</div>
+		<?php endif ?>
 	<?php endforeach ?>
 </section>
 

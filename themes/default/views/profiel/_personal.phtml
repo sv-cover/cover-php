@@ -1,21 +1,15 @@
 <h2><?= __('Almanakgegevens') ?></h2>
 <form action="profiel.php?lid=<?= $iter->get('lidid') ?>#almanak" method="post" class="vertical-form">
 	<?= input_hidden('submprofiel_almanak', 'yes') ?>
-	
-	<div>
-		<?=label(__('Naam'), 'naam', $errors) ?>
-		<span class="read-only"><?=member_full_name($iter, false, false) ?></span>
-	</div>
-	
 	<?php foreach ($personal_fields as $field): ?>
 		<?php if (!$this->member_write_permission($iter) && $model->is_private($iter, $field['name'])) continue; ?>
 		<div>
 			<?=label($field['label'], $field['name'], $errors)?>
 			<?php if (($this->member_write_permission($iter) && empty($field['read_only']))
 				|| member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
-			<?=input_text($field['name'], $iter->data)?>
+			<?=input_text($field['name'], $iter)?>
 			<?php else: ?>
-			<span class="read-only"><?=markup_format_text($iter->data[$field['name']])?></span>
+			<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
 			<?php endif ?>
 		</div>
 	<?php endforeach ?>
