@@ -1282,10 +1282,6 @@ div.beheer table {
 	font-weight: normal;
 }
 
-.vertical-form {
-	/*clear: both;*/
-}
-
 .vertical-form > div,
 .vertical-form > fieldset {
 	margin-bottom: 10px;
@@ -2296,4 +2292,54 @@ body .ui-autocomplete a.profile .starting-year {
 	position: absolute;
 	top: 5px;
 	right: 14px;
+}
+
+.tab-pane .aligned-list-section {
+	margin-left: 140px;
+}
+
+.aligned-list-section .vertical-form > div {
+	position: relative;
+	line-height: 24px;
+}
+
+.aligned-list-section .vertical-form label {
+	display: block;
+	width: 130px;
+	position: absolute;
+	left: -140px;
+	text-align: right;
+	color: #999;
+}
+
+.aligned-list-section .vertical-form label:after {
+	content: '';
+}
+
+dl.profile,
+ul.committee-list {
+	margin-left: -140px;
+	display: inline-block;
+	position: relative;
+	list-style: none;
+	line-height: 24px;
+}
+
+dl.profile > dd,
+ul.committee-list > li {
+	margin-left: 140px;
+}
+
+dl.profile > dd .fa,
+ul.committee-list > li .fa {
+	color: #999;
+}
+
+dl.profile > dt,
+ul.committee-list > li .position {
+	position: absolute;
+	left: 0;
+	width: 130px;
+	color: #999;
+	text-align: right;
 }

@@ -1,43 +1,32 @@
-<h2><?= __('Webgegevens') ?></h2>
-<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#profile" method="post">
-	<?= input_hidden('submprofiel_webgegevens', 'yes') ?>
-	<table class="profiel">
-		<tr>
-			<td width="150"></td>
-			<td></td>
-		</tr>
-		<?= $this->privacy_parse($model, $iter, __('Bijnaam'), 'nick', $iter->data, $errors) ?>
-		<?= $this->privacy_parse($model, $iter, __('Onderschrift'), 'onderschrift', $iter->data, $errors) ?>
+<section class="aligned-list-section">
+	<h2><?= __('Webgegevens') ?></h2>
+	<form action="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=profile" method="post" class="vertical-form">
+		<?= input_hidden('submprofiel_webgegevens', 'yes') ?>
+		<div>
+			<?=label(__('Bijnaam'), 'nick', $errors)?>
+			<?=input_text('nick', $iter)?>
+		</div>
 
-		<? /* Avatar */ ?>
-		<tr><td><?= label(__('Avatar'), 'avatar', $errors) ?>:</td>
+		<div>
+			<?=label(__('Onderschrift'), 'onderschrift', $errors)?>
+			<?=input_text('onderschrift', $iter)?>
+		</div>
 
-		<? if ($this->is_current_member($iter)) {?>
-			<td><?= input_text('avatar', $iter->data, 'formatter',  'empty_to_http_formatter') ?></td>
-		<?} else {?>
-			<td><?= ($iter->get('avatar') ? ('<img src="' . markup_format_attribute($iter->get('avatar')) . '" alt="' . __('avatar') . '" class="avatar">') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
-		<? } ?>
-		</tr>
+		<div>
+			<?=label(__('Avatar'), 'avatar', $errors) ?>
+			<?=input_text('avatar', $iter, 'formatter',  'empty_to_http_formatter') ?>
+		</div>
 
-		<? /* Homepage */ ?>
-		<tr><td><?= label(__('Homepage'), 'homepage', $errors) ?>:</td>
+		<div>
+			<?=label(__('Website'), 'homepage', $errors) ?>
+			<?=input_text('homepage', $iter, 'formatter', 'empty_to_http_formatter') ?>
+		</div>
 
-		<? if ($this->is_current_member($iter)) {?>
-			<td><?= input_text('homepage', $iter->data, 'formatter', 'empty_to_http_formatter') ?></td>		
-		<?} else {?>
-			<td><?= ($iter->get('homepage') ? ('<a href="' . markup_format_attribute($iter->get('homepage')) . '">' . markup_format_text($iter->get('homepage')) . '</a>') : ('<span class="italic">' . __('geen') . '</span>')) ?></td>
-		<? } ?>
-		</tr>
-
-		<? if ($this->member_write_permission($iter)) {?>
-			<tr>
-				<td><?= label(__('Taal'), 'taal', $errors) ?></td>
-				<td><?= select_field('taal', i18n_get_languages(), $iter->data) ?></td>
-			</tr>
-		<? } ?>
-
-		<? if ($this->member_write_permission($iter)) {?>
-			<tr><td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td></tr>
-		<? } ?>
-	</table>
-</form>
+		<div>
+			<?=label(__('Taal'), 'taal', $errors) ?></td>
+			<?=select_field('taal', i18n_get_languages(), $iter) ?>
+		</div>
+		
+		<button type="submit" class="button"><?=__('Opslaan')?></button>
+	</form>
+</section>

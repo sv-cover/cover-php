@@ -1,18 +1,20 @@
-<h2><?= __('Almanakgegevens') ?></h2>
-<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#almanak" method="post" class="vertical-form">
-	<?= input_hidden('submprofiel_almanak', 'yes') ?>
-	<?php foreach ($personal_fields as $field): ?>
-		<?php if (!$this->member_write_permission($iter) && $model->is_private($iter, $field['name'])) continue; ?>
-		<div>
-			<?=label($field['label'], $field['name'], $errors)?>
-			<?php if (($this->member_write_permission($iter) && empty($field['read_only']))
-				|| member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
-			<?=input_text($field['name'], $iter)?>
-			<?php else: ?>
-			<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
-			<?php endif ?>
-		</div>
-	<?php endforeach ?>
+<section class="aligned-list-section">
+	<h2><?= __('Almanakgegevens') ?></h2>
+	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#almanak" method="post" class="vertical-form">
+		<?= input_hidden('submprofiel_almanak', 'yes') ?>
+		<?php foreach ($personal_fields as $field): ?>
+			<?php if (!$this->member_write_permission($iter) && $model->is_private($iter, $field['name'])) continue; ?>
+			<div>
+				<?=label($field['label'], $field['name'], $errors)?>
+				<?php if (($this->member_write_permission($iter) && empty($field['read_only']))
+					|| member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
+				<?=input_text($field['name'], $iter)?>
+				<?php else: ?>
+				<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
+				<?php endif ?>
+			</div>
+		<?php endforeach ?>
 
-	<button type="submit" class="button"><?=__('Opslaan')?></button>
-</form>
+		<button type="submit" class="button"><?=__('Opslaan')?></button>
+	</form>
+</section>

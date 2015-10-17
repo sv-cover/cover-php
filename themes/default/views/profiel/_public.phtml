@@ -1,4 +1,4 @@
-<section class="personal-section">
+<section class="aligned-list-section personal-section">
 	<h2><?= __('Persoonlijk') ?></h2>
 	<dl class="profile">
 	<?php foreach ($personal_fields as $field): ?>
@@ -26,7 +26,7 @@
 </section>
 
 <?php if ($commissies = $this->get_commissies($iter)): ?>
-<section class="committee-section">
+<section class="aligned-list-section committee-section">
 	<h2 id="commissies"><?= __('Commissies') ?></h2>
 	<p><?= markup_format_text(sprintf(__('%s is lid van de volgende commissies:'), member_first_name($iter, false, false))) ?></p>
 	<ul class="committee-list">
