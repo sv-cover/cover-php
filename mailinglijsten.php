@@ -226,7 +226,7 @@ class ControllerMailinglijsten extends Controller
 
 		$errors = [];
 
-		if (!$this->model->member_can_edit($list_id))
+		if (!$this->model->member_can_edit($list))
 			throw new UnauthorizedException();
 
 		switch ($message_category)

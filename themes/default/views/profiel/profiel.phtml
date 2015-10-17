@@ -39,6 +39,63 @@ $personal_fields = [
 		'name' => 'email'
 	]
 ];
+
+$tabs = [
+	'public' => [
+		'visible' => true,
+		'label' => member_full_name($iter, false, false),
+		'body' => function () use ($model, $iter, $personal_fields) {
+			$this->render_partial('public', compact('model', 'iter', 'personal_fields'));
+		}
+	],
+	'personal' => [
+		'visible' => $this->member_write_permission($iter),
+		'label' => __('Almanakgegevens'),
+		'body' => function () use ($iter, $errors, $personal_fields) {
+			$this->render_partial('personal', compact('iter', 'errors', 'personal_fields'));
+
+			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
+				$this->render_partial('visibility', compact('iter'));
+		}
+	],
+	'profile' => [
+		'visible' => $this->member_write_permission($iter),
+		'label' => __('Website'),
+		'body' => function () use ($model, $iter, $errors) {
+			$this->render_partial('profile', compact('model', 'iter', 'errors'));
+			$this->render_partial('password', compact('iter', 'errors'));
+		}
+	],
+	'privacy' => [
+		'visible' => $this->member_write_permission($iter),
+		'label' => __('Privacy'),
+		'body' => function () use ($model, $iter) {
+			$this->render_partial('privacy', compact('model', 'iter'));
+		}
+	],
+	'mailinglists' => [
+		'visible' => $this->member_write_permission($iter) || member_in_commissie(COMMISSIE_EASY),
+		'label' => __('Mailinglijsten'),
+		'body' => function () use ($iter) {
+			$this->render_partial('mailinglists', compact('iter'));
+		}
+	],
+	'sessions' => [
+		'visible' => $this->member_write_permission($iter),
+		'label' => __('Sessies'),
+		'body' => function () use ($iter) {
+			$this->render_partial('sessions', compact('iter'));
+		}
+	],
+	'facebook' => [
+		'visible' => $this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false),
+		'label' => __('Facebook'),
+		'body' => function () use ($iter) {
+			$this->render_partial('facebook', compact('iter'));
+		}
+	]
+];
+
 ?>
 <h1><?= sprintf(__('Profiel van %s'), markup_format_text(member_full_name($iter, false, false))) ?></h1>
 <div class="messageBox clearfix">
@@ -57,63 +114,24 @@ $personal_fields = [
 		<div class="tab-sidebar">
 			<?php $this->render_partial('profile_widget', compact('iter')) ?>
 			<ul class="nav-tabs vertical">
-				<li class="active"><a href="#public"><?=markup_format_text(member_full_name($iter, false, false)) ?></a>
-				<?php if ($this->member_write_permission($iter)): ?>
-				<li><a href="#personal"><?=__('Almanakgegevens')?></a></li>
-				<li><a href="#profile"><?=__('Website')?></a></li>
-				<li><a href="#privacy"><?=__('Privacy')?></a></li>
-				<li><a href="#mailinglists"><?=__('Mailinglijsten')?></a></li>
-				<li><a href="#sessions"><?=__('Sessies')?></a></li>
-				<?php if ($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
-				<li><a href="#facebook"><?=__('Facebook')?></a></li>
-				<?php endif ?>
-				<?php endif ?>
+				<?php foreach ($tabs as $tab_name => $tab): ?>
+					<?php if ($tab['visible']): ?>
+						<li class="<?=$tab_name == $active_tab ? 'active' : ''?>">
+							<a href="#<?=$tab_name?>"><?=markup_format_text($tab['label'])?></a>
+						</li>
+					<?php endif ?>
+				<?php endforeach ?>
 			</ul>
 		</div>
 
 		<div class="tab-content">
-			<div id="public" class="tab-pane active">
-				<?php $this->render_partial('public', compact('model', 'iter', 'personal_fields')) ?>
-			</div>
-			
-			<?php if ($this->member_write_permission($iter)): ?>
-			<div id="personal" class="tab-pane">
-				<?php $this->render_partial('personal', compact('iter', 'errors', 'personal_fields')) ?>
-
-				<?php if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
-					<?php $this->render_partial('visibility', compact('iter')); ?>
+			<?php foreach ($tabs as $tab_name => $tab): ?>
+				<?php if ($tab['visible']): ?>
+					<div id="<?=$tab_name?>" class="tab-pane <?=$tab_name == $active_tab ? 'active' : ''?>">
+						<?=$tab['body']()?>
+					</div>
 				<?php endif ?>
-			</div>
-			
-			<div id="profile" class="tab-pane">
-				<?php $this->render_partial('profile', compact('model', 'iter', 'errors')) ?>
-				<?php if ($this->member_write_permission($iter)): ?>
-					<?php $this->render_partial('password', compact('iter', 'errors')) ?>
-				<?php endif ?>
-			</div>
-			
-			<div id="privacy" class="tab-pane">
-				<?php $this->render_partial('privacy', compact('model', 'iter')) ?>
-
-				<a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a>
-			</div>
-			<?php endif ?>
-			
-			<?php if ($this->is_current_member($iter) || member_in_commissie(COMMISSIE_EASY)): ?>
-			<div id="mailinglists" class="tab-pane">
-				<?php $this->render_partial('mailinglists', compact('iter')) ?>
-			</div>
-	
-			<div id="sessions" class="tab-pane">
-				<?php $this->render_partial('sessions', compact('iter')) ?>
-			</div>
-			<?php endif ?>
-
-			<?php if ($this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false)): ?>
-			<div id="facebook" class="tab-pane">
-				<?php $this->render_partial('facebook', compact('iter')) ?>
-			</div>
-			<?php endif ?>
+			<?php endforeach ?>
 		</div>
 	</div>
 </div>

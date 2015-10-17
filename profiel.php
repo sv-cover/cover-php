@@ -146,7 +146,7 @@
 				else if (!isset($data[$field]) && get_post($field) !== null)
 					$iter->set($field, get_post($field));
 			}
-			
+
 			if ($iter->has_changes())
 			{
 				$this->model->update($iter);
@@ -345,6 +345,8 @@
 				}
 			}
 
+			$tab = isset($_GET['tab']) ? $_GET['tab'] : 'public';
+
 			if (isset($_POST['submprofiel_almanak']))
 				$this->_process_almanak($iter);
 			elseif (isset($_POST['facebook_action']))
@@ -360,7 +362,7 @@
 			elseif (isset($_POST['submprofiel_zichtbaarheid']))
 				$this->_process_zichtbaarheid($iter);
 			else
-				$this->get_content('profiel', $iter, ['errors' => []]);
+				$this->get_content('profiel', $iter, ['errors' => [], 'active_tab' => $tab]);
 		}
 	}
 	

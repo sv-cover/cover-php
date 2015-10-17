@@ -312,9 +312,9 @@
 			}
 			if ($value == self::VISIBLE_TO_NONE) /* Visible to none */
 				return true;
-			elseif ($value == VISIBLE_TO_EVERYONE) /* Visible to all */
+			elseif ($value == self::VISIBLE_TO_EVERYONE) /* Visible to all */
 				return false;
-			elseif (($value & VISIBLE_TO_MEMBERS) && !logged_in_as_active_member()) /* Visible to members */
+			elseif (($value & self::VISIBLE_TO_MEMBERS) && !logged_in_as_active_member()) /* Visible to members */
 				return true;
 			else
 				return false;

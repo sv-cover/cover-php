@@ -1,5 +1,5 @@
 <div class="pageHeading">
-	<?php if ($model->member_can_edit($lijst->get('id'))): ?>
+	<?php if ($model->member_can_edit($lijst)): ?>
 		<div class="controls inline"><a href="##mailinglist-settings" class="edit-link"><?= __('Bewerk mailinglijsteigenschappen') ?></a></div>
 	<?php endif ?>
 	<h1><?=__('Mailinglijsten')?> / <?=markup_format_text($lijst->get('naam'))?></h1>
@@ -12,7 +12,7 @@
 		</p>
 	</div>
 
-	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+	<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>">
 	<?php if (!logged_in()): ?>
 		<p><?=__('Log in om je aan te kunnen melden voor deze mailinglijst.')?></p>
 	<?php elseif ($model->is_aangemeld($lijst, logged_in('id'))): ?>
@@ -29,11 +29,11 @@
 	</form>
 </div>
 
-<?php if ($model->member_can_edit($lijst->get('id'))): ?>
+<?php if ($model->member_can_edit($lijst)): ?>
 <div id="mailinglist-settings" class="messageBox hide-by-default">
 	<h2><?=__('Eigenschappen')?></h2>
 	<div class="section">
-		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>">
 			<div class="inline-block">
 				<label for="toegang"><?=__('Wie mag mailen naar deze mailinglist')?></label>
 				<?=select_field('toegang', $this->get_all_toegang_options(), $lijst->data, 'id', 'toegang')?>
@@ -82,7 +82,7 @@
 <div class="messageBox">
 	<h2><?=__('Aanmeldingen')?></h2>
 	<div class="section">
-		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>">
 			<label for="lid_id"><?=__('Lidnummer(s)')?>:</label>
 			<input type="text" id="lid_id" name="subscribe">
 			<button type="submit" class="button"><?=__('Meld aan')?></button>
@@ -91,7 +91,7 @@
 	</div>
 
 	<div id="mailinglist-add-gast" class="section hide-by-default">
-		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<form class="vertical-form" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>">
 			<div>
 				<label for="gast-naam"><?=__('Naam')?></label>
 				<input type="text" id="gast-naam" name="naam">
@@ -107,7 +107,7 @@
 	</div>
 
 	<div class="section">
-		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<form method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get_id()?>">
 		<table class="full-width">
 			<thead>
 				<tr>

@@ -467,19 +467,13 @@ class DataModelMailinglijst extends DataModel
 		return false;
 	} 
 
-	public function member_can_edit($lijst)
+	public function member_can_edit(DataIterMailinglijst $lijst)
 	{
-		if (is_numeric($lijst))
-			$lijst = $this->get_iter($lijst);
-
-		if (!$lijst)
-			return false;
-
 		return member_in_commissie(COMMISSIE_BESTUUR)
 			|| member_in_commissie($lijst->get('commissie'));
 	}
 
-	public function member_can_subscribe($lijst)
+	public function member_can_subscribe(DataIterMailinglijst $lijst)
 	{
 		if (member_in_commissie(COMMISSIE_BESTUUR))
 			return true;
@@ -495,7 +489,7 @@ class DataModelMailinglijst extends DataModel
 		return true;
 	}
 
-	public function member_can_unsubscribe($lijst)
+	public function member_can_unsubscribe(DataIterMailinglijst $lijst)
 	{
 		if (member_in_commissie(COMMISSIE_BESTUUR))
 			return true;
