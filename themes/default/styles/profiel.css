@@ -39,6 +39,26 @@ ul.nav-tabs.vertical > li:not(:first-child) {
 	border-top: 1px solid #ccc;
 } 
 
+ul.nav-tabs > li.fa-icon > a:after {
+	padding-left: 4px;
+	color: #999;
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+}
+
+ul.nav-tabs > li.icon-system > a:after {
+	content: "\f013";
+}
+
+ul.nav-tabs > li.icon-public > a:after {
+	content: "\f0ac";
+}
+
 .tab-content {
 	display: block;
 	margin-left: 200px;

@@ -2,7 +2,7 @@
 	<h2 id="privacy"><?= __('Privacy instellingen') ?></h2>
 	<p><?= __('Je privacy instellingen geven aan wie welke informatie mag zien.') ?></p>
 
-	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#privacy" method="post">
+	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>&amp;tab=privacy" method="post">
 		<?= input_hidden('submprofiel_privacy', 'yes') ?>
 		<table class="privacy">
 			<thead>

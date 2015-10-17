@@ -1363,6 +1363,11 @@ div.beheer table {
 	margin-bottom: 0;
 }
 
+.vertical-form .radio label {
+	position: static;
+	display: block;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }
@@ -2087,17 +2092,27 @@ body .ui-autocomplete a.profile .starting-year {
 .profile-widget {
 	display: inline-block;
 	position: relative;
-	width: 100px;
+	width: 150px;
 	text-align: center;
+}
+
+.profile-widget h3:before {
+	content: "\201C";
+	color: #999;
+}
+
+.profile-widget h3:after {
+	content: "\201D";
+	color: #999;
 }
 
 .profile-widget > img,
 .profile-widget > a > img {
 	display: block;
 	margin: 0 auto;
-	width: 100px;
-	height: 100px;
-	border-radius: 50px;
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
 	/*border: 1px solid rgba(0, 0, 0, 0.1);*/
 }
 
@@ -2298,22 +2313,32 @@ body .ui-autocomplete a.profile .starting-year {
 	margin-left: 140px;
 }
 
+.tab-pane .aligned-list-section .hint {
+	font-style: italic;
+}
+
 .aligned-list-section .vertical-form > div {
 	position: relative;
 	line-height: 24px;
 }
 
-.aligned-list-section .vertical-form label {
+.aligned-list-section .vertical-form > div label {
 	display: block;
 	width: 130px;
 	position: absolute;
 	left: -140px;
 	text-align: right;
-	color: #999;
+	color: #000;
 }
 
-.aligned-list-section .vertical-form label:after {
+.aligned-list-section .vertical-form > div label:after {
 	content: '';
+}
+
+.aligned-list-section .vertical-form > div div.radio label {
+	position: static;
+	text-align: left;
+	width: auto;
 }
 
 dl.profile,

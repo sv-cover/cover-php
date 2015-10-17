@@ -1,5 +1,12 @@
 <section class="aligned-list-section personal-section">
 	<h2><?= __('Persoonlijk') ?></h2>
+
+	<?php if ($this->is_current_member($iter)): ?>
+	<p class="hint"><?=sprintf(
+		__('Verander wie deze gegevens kunnen zien in het <a href="%s">privacy tabblad</a>.'),
+		'profiel.php?lid=' . $iter->get_id() . '&amp;tab=privacy') ?></p>
+	<?php endif ?>
+	
 	<dl class="profile">
 	<?php foreach ($personal_fields as $field): ?>
 		<?php $field_visibility = $model->get_privacy_for_field($iter, $field['name']) ?>
@@ -23,6 +30,8 @@
 		<?php endif ?>
 	<?php endforeach ?>
 	</dl>
+
+	<p><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a></p>
 </section>
 
 <?php if ($commissies = $this->get_commissies($iter)): ?>
@@ -39,5 +48,3 @@
 	</ul>
 </section>
 <?php endif ?>
-
-<a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a>

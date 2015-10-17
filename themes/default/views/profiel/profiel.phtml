@@ -44,6 +44,7 @@ $tabs = [
 	'public' => [
 		'visible' => true,
 		'label' => member_full_name($iter, false, false),
+		'class' => 'fa-icon icon-public',
 		'body' => function () use ($model, $iter, $personal_fields) {
 			$this->render_partial('public', compact('model', 'iter', 'personal_fields'));
 		}
@@ -53,9 +54,6 @@ $tabs = [
 		'label' => __('Almanakgegevens'),
 		'body' => function () use ($iter, $errors, $personal_fields) {
 			$this->render_partial('personal', compact('iter', 'errors', 'personal_fields'));
-
-			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
-				$this->render_partial('visibility', compact('iter'));
 		}
 	],
 	'profile' => [
@@ -93,6 +91,14 @@ $tabs = [
 		'body' => function () use ($iter) {
 			$this->render_partial('facebook', compact('iter'));
 		}
+	],
+	'system' => [
+		'visible' => member_in_commissie(COMMISSIE_EASY),
+		'label' => __('Systeem'),
+		'class' => 'fa-icon icon-system',
+		'body' => function() use ($iter) {
+			$this->render_partial('visibility', compact('iter'));
+		}
 	]
 ];
 
@@ -116,7 +122,7 @@ $tabs = [
 			<ul class="nav-tabs vertical">
 				<?php foreach ($tabs as $tab_name => $tab): ?>
 					<?php if ($tab['visible']): ?>
-						<li class="<?=$tab_name == $active_tab ? 'active' : ''?>">
+						<li class="<?=$tab_name == $active_tab ? 'active' : ''?> <?=isset($tab['class']) ? $tab['class'] : ''?>">
 							<a href="#<?=$tab_name?>"><?=markup_format_text($tab['label'])?></a>
 						</li>
 					<?php endif ?>

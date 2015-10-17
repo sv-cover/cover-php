@@ -1,36 +1,22 @@
-<h2 id="zichtbaarheid"><?= __('Zichtbaarheid') ?></h2>
-<form action="profiel.php?lid=<?= $iter->get('lidid') ?>#zichtbaarheid" method="post">
+<section class="aligned-list-section">
+	<h2><?= __('Zichtbaarheid') ?></h2>
+	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>&amp;tab=personal" method="post" class="vertical-form">
 
-	<?= input_hidden('submprofiel_zichtbaarheid', 'yes') ?>
-	<?= input_hidden('id', $iter->get('lidid')) ?>
+		<div>
+			<label for="field-visibility">Status:</label>
+			<div id="field-visibility" class="radio">
+				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
+				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
+				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
+				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_ERELID) . '&nbsp;' . __('Erelid') ?></label></td>
+				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Donateur') ?></label></td>
+				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_UNCONFIRMED) . '&nbsp;' . __('Nog niet verwerkt') ?></label></td>
+			</div>
+		</div>
 
-	<table class="profiel">
-		<tr>
-			<td width="120"><span class="label">Type:</span></td>
-			<td width="150"><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_ERELID) . '&nbsp;' . __('Erelid') ?></label></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Donateur') ?></label></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><label><?=input_radio('type', $iter->data, MEMBER_STATUS_UNCONFIRMED) . '&nbsp;' . __('Nog niet verwerkt') ?></label></td>
-		</tr>
-		<tr>
-			<td colspan="2" class="submit"><?= input_submit('subm', __('Opslaan')) ?></td>
-		</tr>
-	</table>
-</form>
+		<button type="submit" class="button"><?=__('Wijzig status')?></button>
+
+		<?= input_hidden('submprofiel_zichtbaarheid', 'yes') ?>
+		<?= input_hidden('id', $iter->get('lidid')) ?>
+	</form>
+</section>
