@@ -169,6 +169,8 @@ jQuery(function($) {
 
 	if (window.location.hash)
 		switchToTab(window.location.hash);
+	else
+		switchToTab('#public');
 
 	$(window).on('hashchange', function() {
 		switchToTab(window.location.hash);

@@ -1,1 +1,32 @@
-<p><?= __N('Deze persoon is ingelogd met %d browser.', 'Deze persoon is ingelogd met %d browsers.', $this->get_active_session_count($iter->get('lidid'))) ?> <a href="sessions.php?lidid=<?=$iter->get('lidid') ?>"><?= __('Beheer zijn/haar sessies.') ?></a></p>
+<?php
+$model = get_model('DataModelSession');
+$sessions = $model->getActive($iter->get_id());
+$session_view = get_new_view('sessions');
+?>
+<h2><?=__('Sessies')?></h2>
+<form method="post" action="sessions.php?view=sessions">
+	<input type="hidden" name="referer" value="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=sessions">
+	<table class="sessions-table">
+		<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<th><?= __('IP-adres') ?></th>
+				<th><?= __('Applicatie') ?></th>
+				<th><?= __('Ingelogd') ?></th>
+				<th><?= __('Laatst actief') ?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($sessions as $session): ?>
+			<tr>
+				<td><input type="checkbox" name="sessions[]" value="<?=$session->get_id()?>"></td>
+				<td><?=$session->get('ip_address')?></td>
+				<td><?=$session_view->format_application($session->get('application'))?></td>
+				<td><?=$session_view->format_time($session->get('created_on'))?></td>
+				<td><?=$session_view->format_time($session->get('last_active_on'))?></td>
+			</tr>
+			<?php endforeach ?>
+		</tbody>
+	</table>
+	<input type="submit" class="button" name="destroy" value="<?= __('Sluit geselecteerde sessies') ?>">
+</form>

@@ -59,7 +59,7 @@ class ControllerSessions extends Controller
 			}
 		}
 
-		return $this->redirect('sessions.php');
+		return $this->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
 	}
 
 	function run_impl()
