@@ -44,3 +44,7 @@ ul.nav-tabs.vertical > li:not(:first-child) {
 	margin-left: 200px;
 	padding: 10px;
 }
+
+.tab-content section {
+	margin-bottom: 10px;
+}

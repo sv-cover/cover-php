@@ -1,39 +1,39 @@
 <section class="personal-section">
 	<h2><?= __('Persoonlijk') ?></h2>
+	<dl class="profile">
 	<?php foreach ($personal_fields as $field): ?>
 		<?php $field_visibility = $model->get_privacy_for_field($iter, $field['name']) ?>
 		<?php if ($field_visibility == DataModelMember::VISIBLE_TO_EVERYONE): ?>
-			<div class="data-public">
-				<?=label($field['label'], $field['name'])?>
-				<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
-			</div>
+			<dt><?=label($field['label'], $field['name'])?></dt>
+			<dd class="data-public"><?=markup_format_text($iter[$field['name']])?></dd>
 		<?php elseif ($field_visibility == DataModelMember::VISIBLE_TO_MEMBERS): ?>
 			<?php if (get_identity()->member_is_active() || get_identity()->member_in_committee(COMMISSIE_BESTUUR)): ?>
-				<div class="data-members-only">
-					<?=label($field['label'], $field['name'])?>
-					<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
+				<dt><?=label($field['label'], $field['name'])?></dt>
+				<dd class="data-members-only">
+					<?=markup_format_text($iter[$field['name']])?>
 					<i class="fa fa-lock" title="<?=__('Alleen zichtbaar voor ingelogde leden')?>"></i>
-				</div>
+				</dd>
 			<?php endif ?>
 		<?php elseif (get_identity()->member_in_committee(COMMISSIE_BESTUUR)): ?>
-			<div class="data-private">
-				<?=label($field['label'], $field['name'])?>
-				<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
+			<dt><?=label($field['label'], $field['name'])?></dt>
+			<dd class="data-private">
+				<?=markup_format_text($iter[$field['name']])?>
 				<i class="fa fa-eye-slash" title="<?=__('Privé')?>"></i>
-			</div>
+			</dd>
 		<?php endif ?>
 	<?php endforeach ?>
+	</dl>
 </section>
 
 <?php if ($commissies = $this->get_commissies($iter)): ?>
 <section class="committee-section">
 	<h2 id="commissies"><?= __('Commissies') ?></h2>
 	<p><?= markup_format_text(sprintf(__('%s is lid van de volgende commissies:'), member_first_name($iter, false, false))) ?></p>
-	<ul>
+	<ul class="committee-list">
 		<?php foreach ($commissies as $commissie): ?>
 		<li>
-			<a href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
-			- <span class="functie"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
+			<a class="committee" href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
+			<span class="position"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
 		</li>
 		<?php endforeach ?>
 	</ul>
