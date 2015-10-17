@@ -43,7 +43,10 @@
 			'lustrum',
 			'extern',
 			'facebook_id',
-			'replacement_for'
+			'replacement_for',
+			'price', 
+			'signups_start',
+			'signups_end'
 		];
 
 		public function __construct($db)

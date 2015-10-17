@@ -1,8 +1,13 @@
 <h1><?= ($iter != null ? __('Wijzig agendapunt') : __('Agendapunt toevoegen')) ?></h1>
 <div class="messageBox">
+
+<? if (isset($iter)) {
+	print_r($iter);
+} ?>
 <? if (isset($errors)) { ?>
 	<p><span class="error"><?= __('Niet alle velden zijn goed ingevuld') ?></span></p>
-<? } ?>
+<? 
+} ?>
 <form name="agenda_form" action="<?= get_request() ?>" method="post">
 <table class="agenda_edit">
 <col width="100px"><col width="20px"><col>
@@ -61,7 +66,27 @@ else
 		'<div id="agenda_locatie">' .
 		input_text('locatie', $data, 'maxlength', '100') .
 		'</div>') ?>
+		
+<?= table_row(label(__('Prijs'), 'price', $errors, true) . ':', '', 
+		input_text('price', $data, 'maxlength', '6')) ?>
+		
+<?= table_row(label(__('Begin inschrijvingen'), 'signups_start', $errors, true) . ':', '', 
+		input_text('signups_startdatum', $data, 'class', 'day') . ' - ' .
+		input_text('signups_startmaand', $data, 'class', 'month') . ' - ' .
+		input_text('signups_startjaar', $data, 'class', 'year') . ' ' .
+		input_text('signups_startuur', $data, 'class', 'time') . ' ' .
+		input_text('signups_startminuut', $data, 'class', 'time', 'value', '00')) ?>
 
+<?= table_row(label(__('Deadline inschrijvingen'), 'signups_end', $errors, false) . ':',
+		input_checkbox('use_totaan', $data, 'yes', 'id', 'agenda_use_totaan', 'onClick', 'set_visibility(this, \'deadline\')'),
+		'<div id="deadline">' . 
+		input_text('signups_enddatum', $data, 'class', 'day') . ' - ' .
+		input_text('signups_endmaand', $data, 'class', 'month') . ' - ' .
+		input_text('signups_endjaar', $data, 'class', 'year') . ' ' .
+		input_text('signups_enduur', $data, 'class', 'time') . ' ' .
+		input_text('signups_endminuut', $data, 'class', 'time') . 
+		'</div>') ?>
+		
 <?= table_row(label(__('Facebook Event'), 'facebook_id', $errors, false) . ':', '',
 		input_text('facebook_id', $data, 'size', '20')) ?>
 
@@ -92,6 +117,7 @@ else
 
 <script type="text/javascript">
 	check_checkbox("agenda_use_tot", "agenda_tot");
+	check_checkbox("agenda_use_totaan", "deadline");
 	check_checkbox("agenda_use_locatie", "agenda_locatie");
 	
 	function check_checkbox(box, div) {
@@ -126,9 +152,13 @@ else
 	var now = new Date();
 	af = document.agenda_form;
 	af.vandatum.value = now.getDate();
+	af.signups_startdatum.value = now.getDate();
 	af.vanmaand.value = now.getMonth() + 1;
+	af.signups_startmaand.value = now.getMonth() + 1;
 	af.vanjaar.value = (now.getYear() < 1900 ? now.getYear() + 1900 : now.getYear());
+	af.signups_startjaar.value = (now.getYear() < 1900 ? now.getYear() + 1900 : now.getYear());
 	af.vanuur.value = now.getHours() + 1;
+	af.signups_startuur.value = now.getHours() + 1;
 <? } ?>
 </script>
 </div>

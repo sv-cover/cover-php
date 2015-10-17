@@ -36,7 +36,7 @@
 			/* If this is the tot field and we don't use tot
 			 * then set that value to null and return true
 			 */
-			if ($name == 'tot' && !get_post('use_tot'))
+			if (($name == 'tot' && !get_post('use_tot')) || ($name == 'signups_end' && !get_post('signups_end')))
 				return null;
 			
 			$fields = array('jaar', 'maand', 'datum');
@@ -63,7 +63,7 @@
 		}
 		
 		function _check_length($name, $value) {
-			$lengths = array('kop' => 100, 'locatie' => 100);
+			$lengths = array('kop' => 100, 'locatie' => 100, 'price' => 8);
 
 			if (!$value)
 				return false;
@@ -121,6 +121,9 @@
 					array('name' => 'van', 'function' => array($this, '_check_datum')),
 					array('name' => 'tot', 'function' => array($this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
+					array('name' => 'price', 'function' => array($this, '_check_length')),
+					array('name' => 'signups_start', 'function' => array($this, '_check_datum')),
+					array('name' => 'signups_end', 'function' => array($this, '_check_datum')),
 					array('name' => 'private', 'function' => 'check_value_checkbox'),
 					array('name' => 'extern', 'function' => 'check_value_checkbox'),
 					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
@@ -134,19 +137,21 @@
 			if ($data['tot'] === null)
 				$data['tot'] = $data['van'];
 
+			if ($data['signups_end'] === null)
+				$data['signups_end'] = $data['van'];
+			
 			return $data;
 		}
 
 		function _changed_values($iter, $data)
 		{
 			$changed = array();
-
 			foreach ($data as $field => $value)
 			{
 				$current = $iter->get($field);
 
 				// Unfortunately, we need to 'normalize' the time fields for this to work
-				if ($field == 'van' || $field == 'tot') {
+				if ($field == 'van' || $field == 'tot' || $field == 'signups_start' || $field == 'signups_end') {
 					$current = strtotime($iter->get($field));
 					$value = strtotime($value);
 				}
