@@ -100,31 +100,6 @@ CREATE TABLE besturen (
     page integer
 );
 
---
--- TOC entry 184 (class 1259 OID 24184)
--- Name: boeken; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE boeken (
-    id integer NOT NULL,
-    categorie smallint NOT NULL,
-    vak character varying(100) NOT NULL,
-    titel character varying(250) NOT NULL,
-    prijs numeric(5,2) NOT NULL,
-    status smallint DEFAULT 1 NOT NULL,
-    auteur character varying(100)
-);
-
---
--- TOC entry 185 (class 1259 OID 24188)
--- Name: boeken_categorie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE boeken_categorie (
-    id integer NOT NULL,
-    categorie text NOT NULL
-);
-
 
 CREATE TABLE cache (
     key character(40) NOT NULL PRIMARY KEY,
