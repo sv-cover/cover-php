@@ -48,3 +48,45 @@ ul.nav-tabs.vertical > li:not(:first-child) {
 .tab-content section {
 	margin-bottom: 10px;
 }
+
+.aligned-list-section .privacy {
+	border-spacing: 0;
+    border-collapse: collapse;
+	margin-left: -140px;
+	width: 100%;
+}
+
+.aligned-list-section .privacy th {
+	border: none;
+}
+
+.aligned-list-section .privacy td {
+	text-align: center;
+}
+
+.aligned-list-section .privacy > thead > tr > th {
+	text-align: center;
+	border-bottom: 1px solid #ccc;
+}
+
+.aligned-list-section .privacy th,
+.aligned-list-section .privacy td {
+	border-right: 1px solid #ccc;
+}
+
+.aligned-list-section .privacy > tbody > tr > th {
+	width: 130px;
+	font-weight: normal;
+	color: #000;
+	text-align: right;
+	padding-right: 10px;
+	line-height: 18px;
+}
+
+.aligned-list-section .privacy > tbody > tr:hover > * {
+	background: #eee;
+}
+
+.aligned-list-section .privacy td input[type=radio] {
+	cursor: pointer;
+}
