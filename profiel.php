@@ -6,48 +6,6 @@
 	require_once 'include/facebook.php';
 	require_once 'include/secretary.php';
 	require_once 'include/controllers/Controller.php';
-
-	class ControllerProfielSessions extends Controller
-	{
-		private $member;
-
-		public function __construct(DataIterMember $member)
-		{
-			$this->member = $member;
-
-			$this->model = get_model('DataModelSession');
-		}
-
-		protected function run_view_sessions()
-		{
-			if (isset($_POST['sessions']))
-			{
-				foreach ($_POST['sessions'] as $session_id)
-				{
-					$session = $this->model->get_iter($session_id);
-
-					if ($session && $session->get('member_id') == $this->member->get_id())
-						$this->model->delete($session);
-				}
-			}
-
-			return $this->redirect(sprintf('profiel.php?lid=%d&module=sessions', $this->member->get_id()));
-		}
-
-		protected function run_impl()
-		{
-			if (isset($_GET['view']) && $_GET['view'] == 'sessions')
-				return $this->run_view_sessions();
-
-			$member = $this->member;
-
-			$session = get_auth()->get_session();
-
-			$sessions = $this->model->getActive($this->member->get_id());
-
-			$this->get_content('profiel::sessions', $sessions, compact('session', 'member'));
-		}
-	}
 	
 	class ControllerProfiel extends Controller
 	{
@@ -163,10 +121,14 @@
 				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
 				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
 
-				get_secretary()->updatePersonFromIterChanges($iter);
+				try {
+					get_secretary()->updatePersonFromIterChanges($iter);
+				} catch (RuntimeException $e) {
+					error_log($e);
+				}
 			}
 
-			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#almanak');
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=personal');
 		}
 		
 		protected function _process_webgegevens(DataIterMember $iter)
@@ -196,7 +158,8 @@
 					$iter->set($field, get_post($field));
 			
 			$this->model->update_profiel($iter);
-			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#webgegevens');	
+			
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=profile');	
 		}
 		
 		protected function _process_wachtwoord(DataIterMember $iter)
@@ -228,7 +191,7 @@
 			
 			$this->model->set_password($iter, get_post('wachtwoord_nieuw'));
 
-			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#wachtwoord');
+			$this->redirect('Location: profiel.php?lid=' . $iter->get_id() . '&tab=profile');
 		}
 		
 		protected function _process_privacy(DataIterMember $iter)
@@ -246,7 +209,7 @@
 			$iter->set('privacy', $mask);
 			$this->model->update($iter);
 			
-			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#privacy');
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=privacy');
 		}
 
 		protected function _process_zichtbaarheid(DataIterMember $iter)
@@ -275,7 +238,7 @@
 			$iter->set('type', intval(get_post('type')));
 			$this->model->update($iter);
 
-			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#zichtbaarheid');
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=system');
 		}
 
 		protected function _process_photo(DataIterMember $iter)
@@ -305,7 +268,7 @@
 
 			fclose($fh);
 
-			header('Location: profiel.php?lid=' . $iter->get('lidid') . '&force_reload_photo=true#almanak');
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=privacy&force_reload_photo=true');
 		}
 
 		protected function _process_facebook_link(DataIterMember $iter, $action)
@@ -313,7 +276,7 @@
 			if ($action == 'unlink')
 				get_facebook()->destroySession();
 
-			header('Location: profiel.php?lid=' . $iter->get('lidid') . '#fadebook');
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=facebook');
 		}
 		
 		protected function run_impl()
@@ -335,15 +298,6 @@
 				&& !member_in_commissie(COMMISSIE_BESTUUR)
 				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 				return $this->get_content('not_found');
-
-			if (isset($_GET['module'])) {
-				switch ($_GET['module'])
-				{
-					case 'sessions':
-						$controller = new ControllerProfielSessions($iter);
-						return $controller->run();
-				}
-			}
 
 			$tab = isset($_GET['tab']) ? $_GET['tab'] : 'public';
 
