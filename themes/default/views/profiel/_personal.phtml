@@ -1,6 +1,6 @@
 <section class="aligned-list-section">
 	<h2><?= __('Almanakgegevens') ?></h2>
-	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>&amp;tab=almanak" method="post" class="vertical-form">
+	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>&amp;tab=personal" method="post" class="vertical-form">
 		<?= input_hidden('submprofiel_almanak', 'yes') ?>
 		<?php foreach ($personal_fields as $field): ?>
 			<?php if (!$this->member_write_permission($iter) && $model->is_private($iter, $field['name'])) continue; ?>
