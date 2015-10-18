@@ -43,7 +43,7 @@ $personal_fields = [
 $tabs = [
 	'public' => [
 		'visible' => true,
-		'label' => member_full_name($iter, false, false),
+		'label' => member_full_name($iter, false, true),
 		'class' => 'fa-icon icon-public',
 		'body' => function () use ($model, $iter, $personal_fields) {
 			$this->render_partial('public', compact('model', 'iter', 'personal_fields'));
@@ -51,14 +51,14 @@ $tabs = [
 	],
 	'personal' => [
 		'visible' => $this->member_write_permission($iter),
-		'label' => __('Almanakgegevens'),
+		'label' => __('Lidgegevens'),
 		'body' => function () use ($iter, $errors, $personal_fields) {
 			$this->render_partial('personal', compact('iter', 'errors', 'personal_fields'));
 		}
 	],
 	'profile' => [
 		'visible' => $this->member_write_permission($iter),
-		'label' => __('Website'),
+		'label' => __('Profiel'),
 		'body' => function () use ($model, $iter, $errors) {
 			$this->render_partial('profile', compact('model', 'iter', 'errors'));
 			$this->render_partial('password', compact('iter', 'errors'));
@@ -176,7 +176,7 @@ jQuery(function($) {
 	if (window.location.hash)
 		switchToTab(window.location.hash);
 	else
-		switchToTab('#public');
+		switchToTab('#<?=$active_tab?>');
 
 	$(window).on('hashchange', function() {
 		switchToTab(window.location.hash);
