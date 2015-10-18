@@ -15,4 +15,8 @@
 	<?php if ($iter->has('nick')): ?>
 	<h3 class="nickname"><?=markup_format_text($iter['nick'])?></h3>
 	<?php endif ?>
+
+	<?php if ($iter->has('homepage')):?>
+	<a href="<?=markup_format_attribute($iter['homepage'])?>" target="_blank"><?=markup_format_text(parse_url($iter['homepage'], PHP_URL_HOST))?></a>
+	<?php endif?>
 </div>
