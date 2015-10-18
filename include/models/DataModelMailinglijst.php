@@ -458,10 +458,10 @@ class DataModelMailinglijst extends DataModel
 		if (!logged_in())
 			return false;
 
-		if ($lijst->bevat_lid(logged_in('id')))
+		if ($lijst->bevat_lid(get_identity()->get_id()))
 			return true;
 
-		if (member_in_commissie($lijst->get('commissie')))
+		if (get_identity()->member_in_committee($lijst->get('commissie')))
 			return true;
 
 		return false;
@@ -469,13 +469,13 @@ class DataModelMailinglijst extends DataModel
 
 	public function member_can_edit(DataIterMailinglijst $lijst)
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR)
-			|| member_in_commissie($lijst->get('commissie'));
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee($lijst->get('commissie'));
 	}
 
 	public function member_can_subscribe(DataIterMailinglijst $lijst)
 	{
-		if (member_in_commissie(COMMISSIE_BESTUUR))
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
 			return true;
 
 		// You cannot subscribe yourself to a non-public list
@@ -483,7 +483,7 @@ class DataModelMailinglijst extends DataModel
 			return false;
 
 		// You cannot 'subscribe' (opt back in) to an opt-out list if you are not a member
-		if ($lijst->get('type') == self::TYPE_OPT_OUT && logged_in('status') != MEMBER_STATUS_LID)
+		if ($lijst->get('type') == self::TYPE_OPT_OUT && get_identity()->get('type') != MEMBER_STATUS_LID)
 			return false;
 
 		return true;
@@ -491,7 +491,7 @@ class DataModelMailinglijst extends DataModel
 
 	public function member_can_unsubscribe(DataIterMailinglijst $lijst)
 	{
-		if (member_in_commissie(COMMISSIE_BESTUUR))
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
 			return true;
 
 		// You cannot unsubscribe from non-public lists
