@@ -114,10 +114,21 @@
 	function input_date($name, $data) {
 		$params = _parse_rest(func_get_args(), 2);
 		$params['type'] = 'date';
-		$params['placeholder'] = sprintf('E.g. %d-12-31', date('Y'));
+		$params['placeholder'] = sprintf('E.g. %s', date('d-m-Y'));
 
 		if (!isset($params['class']))
 			$params['class'] = 'date';
+		
+		return _input_field($name, $data, $params);
+	}
+	
+	function input_time($name, $data) {
+		$params = _parse_rest(func_get_args(), 2);
+		$params['type'] = 'time';
+		$params['placeholder'] = sprintf('E.g. %d:00', date('H')+1);
+
+		if (!isset($params['class']))
+			$params['class'] = 'text';
 		
 		return _input_field($name, $data, $params);
 	}

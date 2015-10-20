@@ -6,8 +6,9 @@ table.agenda_edit {
 	width: 99%;
 }
 
-table.agenda_edit select {
-	width: 200px;
+table.agenda_edit select, input[type=text] {
+	width: 229px;
+	height: 27px;
 }
 
 table.agenda_edit input.day, table.agenda_edit input.month, table.agenda_edit input.time {
@@ -23,4 +24,14 @@ table.agenda_edit input.year {
 
 .next-year {
 	float: right;
+}
+
+input[type=date].agenda_date, input[type=text].agenda_date { 
+	width: 150px;
+	height: 27px;
+}
+
+input[type=text].agenda_time, input[type=time].agenda_time { 
+	width: 71px;
+	height: 27px;
 }
