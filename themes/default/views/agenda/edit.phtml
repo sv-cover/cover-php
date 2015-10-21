@@ -1,12 +1,14 @@
 <h1><?= ($iter != null ? __('Wijzig agendapunt') : __('Agendapunt toevoegen')) ?></h1>
 <div class="messageBox">
-<? if (!empty($errors)) { ?>
+<? if (!empty($errors)) { 
+	print_r($errors); ?>
 	<p><span class="error"><?= __('Niet alle velden zijn goed ingevuld') ?></span></p>
 <? 
 } ?>
 <form name="agenda_form" action="<?= get_request() ?>" method="post">
+<h3><?= __('Algemene informatie'); ?></h3>
 <table class="agenda_edit">
-<col width="100px"><col width="20px"><col>
+<col width="180px"><col width="20px"><col>
 <?= input_hidden('submagenda', 'yes'); ?>
 
 <? 
@@ -24,8 +26,6 @@ if ($data) {
 			break;
 		}
 	}
-	
-	$data['use_locatie'] = $data['locatie'] ? true : false;
 }
 
 if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
@@ -42,60 +42,92 @@ else
 <?= table_row(label(__('Commissie'), 'commissie', $errors, true) . ':', '',
 		select_field('commissie', $commissies, $data)) ?>
 
-<?= table_row(label(__('Begintijd'), 'signups_start', $errors, true) . ':', '', 
+<?= table_row(label(__('Begintijd'), 'van', $errors, true) . ':', '', 
 		input_date('vandatum', $data, 'class', 'agenda_date', 'placeholder', 'dd-mm-yyyy') . ' ' .
 		input_time('vantijd', $data, 'class', 'agenda_time', 'placeholder', '--:--'))?>
-<?= table_row(label(__('Eindtijd'), 'tot', $errors, false) . ':',
-		input_checkbox('use_tot', $data, 'yes', 'id', 'agenda_use_tot', 'onClick', 'set_visibility(this, \'agenda_tot\')'),
-		'<div id="agenda_tot">' . 
+<?= table_row(label(__('Eindtijd'), 'tot', $errors, false) . ' ('.__(optioneel).') :', '', 
 		input_date('totdatum', $data, 'class', 'agenda_date', 'placeholder', 'dd-mm-yyyy') . ' ' .
 		input_time('tottijd', $data, 'class', 'agenda_time', 'placeholder', '--:--') . 
 		'</div>') ?>
 
 <?= table_row(label(__('Locatie'), 'locatie', $errors, false) . ':', '', 
 		input_text('locatie', $data, 'maxlength', '100')) ?>
-		
+
+		<tr>
+			<td style="vertical-align: top;">
+				<?= __('Beschrijving') . ':'; ?>
+			</td>
+			<td>
+				<!-- empty td for styling purpose -->
+			</td>
+			<td>
+				<?= textarea_field('beschrijving', $data, $errors, 'formatter', 'markup_format_text', 'cols', 50, 'rows', 7) ?>
+			</td>
+		</tr>
+		<tr>
+			<td class="just_a_bit_lower">
+				<?= label(__('Alleen zichtbaar voor leden'), 'private', $errors, false) ?>
+			</td>
+			<td class="just_a_bit_lower">
+				<!-- empty td for styling purpose -->
+			</td>
+			<td class="just_a_bit_lower">
+				<?= input_checkbox('private', $data) ?>
+			</td>
+		</tr>
+		<tr>
+			<td class="just_a_bit_lower">
+				<?= label(__('Introducées toegestaan'), 'guests_allowed', $errors, false) ?>
+			</td>
+			<td class="just_a_bit_lower">
+				<!-- empty td for styling purpose -->
+			</td>
+			<td class="just_a_bit_lower">
+				<?= input_checkbox('guests_allowed', $data) ?>
+			</td>
+		</tr>
+		<tr>
+			<td class="just_a_bit_lower">
+				<?= label(__('Externe activiteit'), 'extern', $errors, false) ?>
+			</td>
+			<td class="just_a_bit_lower">
+				<!-- empty td for styling purpose -->
+			</td>
+			<td class="just_a_bit_lower">
+				<?= input_checkbox('extern', $data) ?>
+			</td>
+		</tr>
+</table>
+<br />
+<h3 id="signupinfo"><?= __('Inschrijfinformatie'); ?></h3>
+<table class="agenda_edit" id="signuptable">
+<col width="180px"><col width="20px"><col>
 <?= table_row(label(__('Prijs'), 'price', $errors, true) . ':', '', 
 		input_text('price', $data, 'maxlength', '8', 'value', '€ ')) ?>
+		
+<?= table_row(label(__('Capaciteit'), 'participants_limit', $errors, true) . ':', '', 
+		input_text('participants_limit', $data, 'maxlength', '8')) ?>
 		
 
 <?= table_row(label(__('Begin inschrijvingen'), 'signups_start', $errors, true) . ':', '', 
 		input_date('signups_startdatum', $data, 'class', 'agenda_date', 'placeholder', 'dd-mm-yyyy') . ' ' .
 		input_time('signups_starttijd', $data, 'class', 'agenda_time', 'placeholder', '--:--'))?>
 		
-<?= table_row(label(__('Deadline inschrijvingen'), 'signups_end', $errors, false) . ':',
-		input_checkbox('use_totaan', $data, 'yes', 'id', 'agenda_use_totaan', 'onClick', 'set_visibility(this, \'deadline\')'),
-		'<div id="deadline">' . 
-		input_date('signups_enddate', $data, 'class', 'agenda_date', 'placeholder', 'dd-mm-yyyy') . ' ' .
-		input_time('signups_endtime', $data, 'class', 'agenda_time', 'placeholder', '--:--') . 
+<?= table_row(label(__('Deadline inschrijvingen'), 'signups_end', $errors, false) . ':', '',
+		input_date('signups_enddatum', $data, 'class', 'agenda_date', 'placeholder', 'dd-mm-yyyy') . ' ' .
+		input_time('signups_endtijd', $data, 'class', 'agenda_time', 'placeholder', '--:--') . 
 		'</div>') ?>
-		
+</table>
+<br />
+<h3 id="socialmedia"><?= __('Social media'); ?></h3>
+<table class="agenda_edit" id="socialmediatable">
+<col width="180px"><col width="20px"><col>
 <?= table_row(label(__('Facebook Event'), 'facebook_id', $errors, false) . ':', '',
 		input_text('facebook_id', $data, 'size', '20')) ?>
-
-		<tr>
-			<td colspan="3">
-				<?= textarea_field('beschrijving', $data, $errors, 'formatter', 'markup_format_text', 'cols', 50, 'rows', 7) ?>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3">
-				<?= input_checkbox('private', $data) ?>
-				<?= label(__('Alleen zichtbaar voor leden'), 'private', $errors, false) ?>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3">
-				<?= input_checkbox('guests_allowed', $data) ?>
-				<?= label(__('Introducées toegestaan'), 'guests_allowed', $errors, false) ?>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3">
-				<?= input_checkbox('extern', $data) ?>
-				<?= label(__('Externe activiteit'), 'extern', $errors, false) ?>
-			</td>
-		</tr>
+</table>
+<br />
+<table class="agenda_edit">
+<col width="180px"><col width="20px"><col>
 		<tr>
 			<td class="submit" colspan="3">
 				<?= input_submit('subm', ($iter != null ? __('Wijzigen') : __('Toevoegen'))) ?>
@@ -105,29 +137,6 @@ else
 </form>
 
 <script type="text/javascript">
-	check_checkbox("agenda_use_tot", "agenda_tot");
-	check_checkbox("agenda_use_totaan", "deadline");
-	check_checkbox("agenda_use_locatie", "agenda_locatie");
-	
-	function check_checkbox(box, div) {
-		box = document.getElementById(box);
-		div = document.getElementById(div);
-		
-		if (box.getAttribute("checked") == "checked")
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-		
-	}
-
-	function set_visibility(elem, div) {
-		div = document.getElementById(div);
-
-		if (elem.checked)
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-	}
 
 	jQuery('input[name=facebook_id]').change(function(e) {
 		var expr = /^https:\/\/www\.facebook\.com\/events\/(\d+)\//;
@@ -136,18 +145,12 @@ else
 		if (match)
 			$(this).val(match[1]);
 	});
-
-<? if ($iter == null) { ?>
-	var now = new Date();
-	/* af = document.agenda_form;
-	af.vandatum.value = now.getDate();
-	af.signups_startdatum.value = now.getDate();
-	af.vanmaand.value = now.getMonth() + 1;
-	af.signups_startmaand.value = now.getMonth() + 1;
-	af.vanjaar.value = (now.getYear() < 1900 ? now.getYear() + 1900 : now.getYear());
-	af.signups_startjaar.value = (now.getYear() < 1900 ? now.getYear() + 1900 : now.getYear());
-	af.vanuur.value = now.getHours() + 1;
-	af.signups_startuur.value = now.getHours() + 1; */
-<? } ?>
+	/*
+	$( "#signupinfo" ).click(function() {
+	  $( "#signuptable" ).toggle( );
+	});
+	$( "#socialmedia" ).click(function() {
+	  $( "#socialmediatable" ).toggle( );
+	}); */
 </script>
 </div>

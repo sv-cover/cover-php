@@ -1391,6 +1391,7 @@ table.full-width {
 
 form input[type=text],
 form input[type=date],
+form input[type=time],
 form input[type=email],
 form input[type=password],
 form textarea {

@@ -6,6 +6,15 @@ table.agenda_edit {
 	width: 99%;
 }
 
+table.agenda_edit td {
+	height: 33px;
+}
+
+
+table.agenda_edit td.just_a_bit_lower {
+	height: 25px;
+}
+
 table.agenda_edit select, input[type=text] {
 	width: 229px;
 	height: 27px;
@@ -27,11 +36,20 @@ table.agenda_edit input.year {
 }
 
 input[type=date].agenda_date, input[type=text].agenda_date { 
-	width: 150px;
-	height: 27px;
+	width: 140px;
+	height: 27px; 
 }
 
 input[type=text].agenda_time, input[type=time].agenda_time { 
-	width: 71px;
+	width: 85px;
 	height: 27px;
+}
+
+#signuptable, #socialmediatable { 
+	/* display: none; */
+}
+
+input[type=checkbox] {
+	width: 16px;
+	height: 16px;
 }

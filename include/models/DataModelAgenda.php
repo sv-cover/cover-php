@@ -40,13 +40,14 @@
 			'tot',
 			'locatie',
 			'private',
-			'lustrum',
 			'extern',
 			'facebook_id',
 			'replacement_for',
 			'price', 
+			'participants_limit',
 			'signups_start',
-			'signups_end'
+			'signups_end',
+			'guests_allowed'
 		];
 
 		public function __construct($db)

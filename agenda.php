@@ -39,31 +39,30 @@
 			if (($name == 'tot' && !get_post('use_tot')) || ($name == 'signups_end' && !get_post('signups_end')))
 				return null;
 			
-			$fields = array('jaar', 'maand', 'datum');
+			$fields = array(
+						'datum' => '/\d{4}(\.|-)\d{2}(\.|-)\d{2}/', 
+						'tijd' => '/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/'
+					);
 			
-			/* Check for valid numbers */
+			/* Check for valid dates */
 			$value = '';
 			
-			for ($i = 0; $i < count($fields); $i++) {
-				$field = $fields[$i];
-
-				if (!is_numeric(get_post($name . $field)))
-					return false;
+			foreach($fields as $field => $regex){
 				
-				if ($value != '')
-					$value .= '-';
-
-				$value .= get_post($name . $field);
+				if (!preg_match($regex, get_post($name . $field))){
+					return false;
+				}
+				
+				$value .= get_post($name . $field) . ' ';
+				
 			}
 			
-			$value .= ' ' . (is_numeric(get_post($name . 'uur')) ? intval(get_post($name . 'uur')) : '00');
-			$value .= ':' . (is_numeric(get_post($name . 'minuut')) ? intval(get_post($name . 'minuut')) : '00');
 			
-			return $value;
+			return trim($value);
 		}
 		
 		function _check_length($name, $value) {
-			$lengths = array('kop' => 100, 'locatie' => 100, 'price' => 8);
+			$lengths = array('kop' => 100, 'locatie' => 100, 'price' => 8, 'participants_limit' => 4);
 
 			if (!$value)
 				return false;
@@ -74,12 +73,17 @@
 			return $value;
 		}
 		
+		function _check_money($name, $value) {
+			
+			//fix the dots / commas thingy. Or dont even bother when they f*cked up
+			
+			if (substr_count($value, '.') + substr_count($value, ',') < 2){
+				return str_replace('.', ',', $value);
+			}
+			return false;
+		}
+		
 		function _check_locatie($name, $value) {
-			$locatie = get_post('use_locatie');
-			check_value_checkbox($name, $locatie);
-
-			if (!$locatie)
-				return null;
 			
 			$locatie = get_post('locatie');
 
@@ -116,16 +120,18 @@
 			$data = check_values(
 				array(
 					array('name' => 'kop', 'function' => array($this, '_check_length')),
-					'beschrijving',
 					array('name' => 'commissie', 'function' => array($this, '_check_commissie')),
 					array('name' => 'van', 'function' => array($this, '_check_datum')),
 					array('name' => 'tot', 'function' => array($this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
-					array('name' => 'price', 'function' => array($this, '_check_length')),
+					'beschrijving',
+					array('name' => 'private', 'function' => 'check_value_checkbox'),
+					array('name' => 'guests_allowed', 'function' => 'check_value_checkbox'),
+					array('name' => 'extern', 'function' => 'check_value_checkbox'),
+					array('name' => 'price', 'function' => array($this, '_check_money')),
+					array('name' => 'participants_limit', 'function' => array($this, '_check_length')),
 					array('name' => 'signups_start', 'function' => array($this, '_check_datum')),
 					array('name' => 'signups_end', 'function' => array($this, '_check_datum')),
-					array('name' => 'private', 'function' => 'check_value_checkbox'),
-					array('name' => 'extern', 'function' => 'check_value_checkbox'),
 					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
 				$errors);
 
