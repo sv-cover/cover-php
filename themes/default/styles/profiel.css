@@ -22,6 +22,12 @@
 	margin-bottom: 10px;
 }
 
+.tab-sidebar .profile-widget > img,
+.tab-sidebar .profile-widget > a > img {
+	width: 150px;
+	height: 150px;
+}
+
 ul.nav-tabs {
 	list-style: none;
 	margin: 0;

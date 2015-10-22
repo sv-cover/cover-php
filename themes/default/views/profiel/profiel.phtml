@@ -120,7 +120,7 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 
 	<div class="tab-container">
 		<div class="tab-sidebar">
-			<?php $this->render_partial('profile_widget', compact('iter')) ?>
+			<?php $this->render_partial('profile_widget', compact('model', 'iter')) ?>
 			<ul class="nav-tabs vertical">
 				<?php foreach ($tabs as $tab_name => $tab): ?>
 					<?php if ($tab['visible']): ?>
