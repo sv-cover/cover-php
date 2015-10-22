@@ -374,11 +374,36 @@
 	
 	/** @group Functions
 	  */
-	function agenda_time_for_display($iter, $field) {
-		if ($iter->get($field . 'uur') == 0 && $iter->get($field . 'minuut') == 0)
-			return '';
-		else
-			return sprintf('%02d:%02d', $iter->get($field . 'uur'), $iter->get($field . 'minuut'));
+	function agenda_time_for_display($time) {
+		
+		$time_regex = "/^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/";
+		
+		preg_match($time_regex, $time, $results);
+		
+		return sprintf('%s:%s', $results[1], $results[2]);
+		
+	}
+	
+
+	function agenda_dateformat_for_display($part, $date) {
+		
+		$date_regex = "/(\d{4})(\.|-)(\d{2})(\.|-)(\d{2})/";
+		
+		preg_match($date_regex, $date, $results);
+		
+		
+		if ($part == 'day'){
+			return $results[5];
+		} elseif ($part == 'month'){
+			if ($results[3] < 10){
+				return substr($results[3], 1);
+			} else {
+				return $results[3];
+			}
+		} else {
+			return $results[1];
+		}
+		
 	}
 
 	/** @group Functions
@@ -389,10 +414,18 @@
 	  */
 	function agenda_period_for_display($iter) {
 		// If there is no till date, leave it out
+		
+		$startdate = $iter->get('vandatum');
+		$starttime = $iter->get('vantijd');
+		
+		$enddate = $iter->get('totdatum');
+		$endtime = $iter->get('tottijd');
+		
+		
 		if (!$iter->get('tot') || $iter->get('tot') == $iter->get('van')) {
 			
 			// There is no time specified
-			if ($iter->get('vanuur') + 0 == 0)
+			if ($starttime + 0 == 0)
 				$format = __('$from_dayname $from_day $from_month');
 			else
 				$format = __('$from_dayname $from_day $from_month, $from_time');
@@ -410,29 +443,35 @@
 		
 		return format_string($format, array(
 			'from_dayname' => $days[$iter->get('vandagnaam')],
-			'from_day' => $iter->get('vandatum'),
-			'from_month' => $months[$iter->get('vanmaand')],
-			'from_time' => agenda_time_for_display($iter, 'van'),
+			'from_day' => agenda_dateformat_for_display('day', $startdate),
+			'from_month' => $months[agenda_dateformat_for_display('month', $startdate)],
+			'from_time' => agenda_time_for_display($starttime),
 			'till_dayname' => $days[$iter->get('totdagnaam')],
-			'till_day' => $iter->get('totdatum'),
-			'till_month' => $months[$iter->get('totmaand')],
-			'till_time' => agenda_time_for_display($iter, 'tot')
+			'till_day' => agenda_dateformat_for_display('day', $enddate),
+			'till_month' => $months[agenda_dateformat_for_display('month', $enddate)],
+			'till_time' => agenda_time_for_display($endtime)
 		));
 	}
 
 	function agenda_short_period_for_display($iter)
 	{	
 		$months = get_short_months();
+		
+		$startdate = $iter->get('vandatum');
+		$starttime = $iter->get('vantijd');
+		
+		$enddate = $iter->get('totdatum');
+		$endtime = $iter->get('tottijd');
 
 		// Same time? Only display start time.
 		if ($iter->get('van') == $iter->get('tot'))
 			$format = __('vanaf $from_time');
 
 		// Not the same end date? Show the day range instead of the times
-		elseif ($iter->get('vandatum') != $iter->get('totdatum') - ($iter->get('totuur') < 10 ? 1 : 0))
+		elseif (agenda_dateformat_for_display('day', $startdate) != agenda_dateformat_for_display('day', $enddate) - ($endtime < 10 ? 1 : 0))
 		{
 			// Not the same month? Add month name as well
-			if ($iter->get('vanmaand') != $iter->get('totmaand'))
+			if (agenda_dateformat_for_display('month', $startdate) != agenda_dateformat_for_display('month', $enddate))
 				$format = __('$from_day $from_month tot $till_day $till_month');
 			else
 				$format = __('$from_day tot $till_day $till_month');
@@ -440,13 +479,16 @@
 		else
 			$format = __('$from_time tot $till_time');
 
+		
+		
+		
 		return format_string($format, array(
-			'from_day' => $iter->get('vandatum'),
-			'from_month' => $months[$iter->get('vanmaand')],
-			'from_time' => agenda_time_for_display($iter, 'van'),
-			'till_day' => $iter->get('totdatum'),
-			'till_month' => $months[$iter->get('totmaand')],
-			'till_time' => agenda_time_for_display($iter, 'tot')
+			'from_day' => agenda_dateformat_for_display('day', $startdate),
+			'from_month' => $months[agenda_dateformat_for_display('month', $startdate)],
+			'from_time' => agenda_time_for_display($starttime),
+			'till_day' => agenda_dateformat_for_display('day', $enddate),
+			'till_month' => $months[agenda_dateformat_for_display('month', $enddate)],
+			'till_time' => agenda_time_for_display($endtime)
 		));
 	}
 	
