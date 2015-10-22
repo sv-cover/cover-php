@@ -17,7 +17,7 @@ class ProfielView extends View
 
 	function is_current_member($iter)
 	{
-		return get_identity()->get('id') == $iter['lidid'];
+		return get_identity()->get('id') == $iter->get_id();
 	}
 
 	function member_write_permission($iter)
