@@ -474,6 +474,27 @@
 		return format_string($contents, $data);
 	}
 
+	class SimpleEmail
+	{
+		public $subject;
+
+		public $headers;
+
+		public $body;
+
+		public function __construct($subject, $body, $headers)
+		{
+			$this->subject = $subject;
+			$this->body = $body;
+			$this->headers = $headers;
+		}
+
+		public function send($recipient)
+		{
+			return mail($recipient, $this->subject, $this->body, $this->headers);
+		}
+	}
+
 	function parse_email_object($file, array $variables = array())
 	{
 		$path = get_theme_data('email/' . $file, false);
@@ -512,11 +533,7 @@
 				$body .= format_string($line, $variables) . "\r\n";
 		}
 
-		return (object) [
-			'subject' => $subject,
-			'headers' => implode("\r\n", $headers),
-			'body' => ltrim($body)
-		];
+		return new SimpleEmail($subject, ltrim($body), implode("\r\n", $headers));
 	}
 
 	

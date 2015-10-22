@@ -41,8 +41,8 @@
 	<ul class="committee-list">
 		<?php foreach ($commissies as $commissie): ?>
 		<li>
-			<a class="committee" href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
 			<span class="position"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
+			<a class="committee" href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
 		</li>
 		<?php endforeach ?>
 	</ul>

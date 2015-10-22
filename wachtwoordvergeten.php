@@ -38,9 +38,7 @@
 					'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($confkey)
 				);
 				
-				$mail = parse_email_object("password_reset_{$language_code}.txt", $variables);
-
-				mail($iter['email'], $mail->subject, $mail->body, $mail->headers);
+				parse_email_object("password_reset_{$language_code}.txt", $variables)->send($iter['email']);
 
 				$this->get_content('success', array('email' => $iter['email']));
 			} else {

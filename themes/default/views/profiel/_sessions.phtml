@@ -5,8 +5,10 @@ $session_view = get_new_view('sessions');
 ?>
 <section>
 	<h2><?=__('Sessies')?></h2>
+	<?php if ($this->is_current_member($iter)): ?>
 	<p><?=__('Hieronder staan alle sessies die voor jouw account nog open staan.')?></p>
-	<form method="post" action="sessions.php?view=sessions">
+	<?php endif ?>
+	<form method="post" action="sessions.php?view=sessions&amp;member_id=<?=$iter->get_id()?>">
 		<input type="hidden" name="referer" value="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=sessions">
 		<table class="sessions-table">
 			<thead>

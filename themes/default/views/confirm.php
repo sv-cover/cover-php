@@ -15,4 +15,7 @@
 			<p>' . sprintf(__('Je wachtwoord is veranderd. Er is een mailtje naar %s gestuurd met je nieuwe inlog-gegevens.'), $params['email']) . '</p>';
 	}
 
-?>
+	function view_email_success($model, $iter, $params = null) {
+		echo '<h1>' . __('E-mailadres veranderd') . '</h1>
+			<p>' . sprintf(__('Je e-mailadres is nu veranderd naar %s.'), markup_format_text($params['member']['email'])) . '</p>';
+	}

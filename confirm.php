@@ -10,13 +10,13 @@
 			$this->model = new DataModel(get_db(), 'confirm', 'key');
 		}
 
-		function get_content($view) {
+		function get_content($view, array $params = null) {
 			$this->run_header(array('title' => 'Confirm'));
-			run_view('confirm::' . $view);
+			run_view('confirm::' . $view, null, null, $params);
 			$this->run_footer();
 		}
 		
-		function confirm_wachtwoord($iter) {
+		function confirm_wachtwoord(DataIter $iter) {
 			$id = intval($iter->get('value'));
 			
 			$model = get_model('DataModelMember');
@@ -39,6 +39,19 @@
 			mail($member->get('email'), $subject, $body, "From: webcie@ai.rug.nl\r\n");
 			$this->get_content('wachtwoord_success', array('email' => $member->get('email')));
 			$this->model->delete($iter);
+		}
+
+		function confirm_email(DataIter $iter) {
+			$payload = json_decode($iter->get('value'), true);
+
+			$model = get_model('DataModelMember');
+			$member = $model->get_iter($payload['lidid']);
+			$member['email'] = $payload['email'];
+			$model->update($member);
+
+			$this->model->delete($iter);
+
+			$this->get_content('email_success', ['member' => $member]);
 		}
 		
 		function run_impl() {

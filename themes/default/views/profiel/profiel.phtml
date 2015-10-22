@@ -52,8 +52,8 @@ $tabs = [
 	'personal' => [
 		'visible' => $this->member_write_permission($iter),
 		'label' => __('Lidgegevens'),
-		'body' => function () use ($iter, $errors, $personal_fields) {
-			$this->render_partial('personal', compact('iter', 'errors', 'personal_fields'));
+		'body' => function () use ($model, $iter, $errors, $personal_fields) {
+			$this->render_partial('personal', compact('model', 'iter', 'errors', 'personal_fields'));
 		}
 	],
 	'profile' => [
@@ -79,7 +79,7 @@ $tabs = [
 		}
 	],
 	'sessions' => [
-		'visible' => $this->member_write_permission($iter),
+		'visible' => $this->is_current_member($iter->get('lidid')),
 		'label' => __('Sessies'),
 		'body' => function () use ($iter) {
 			$this->render_partial('sessions', compact('iter'));
@@ -101,6 +101,8 @@ $tabs = [
 		}
 	]
 ];
+
+$active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == true ? $tab : 'public';
 
 ?>
 <h1><?= sprintf(__('Profiel van %s'), markup_format_text(member_full_name($iter, false, false))) ?></h1>

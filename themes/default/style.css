@@ -2384,6 +2384,7 @@ ul.committee-list > li .position {
 	border-radius: 12px;
 	transition: background 0.4s;
 	text-indent: 48px;
+	overflow: hidden;
 }
 
 .toggle-action-button .button:before,

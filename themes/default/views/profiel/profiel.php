@@ -17,32 +17,22 @@ class ProfielView extends View
 
 	function is_current_member($iter)
 	{
-		static $is_current = null;
-
-		if ($is_current !== null)
-			return $is_current;
-
-		return $is_current = logged_in('id') == $iter->get('lidid');
+		return get_identity()->get('id') == $iter['lidid'];
 	}
 
-	function member_write_permission($iter) {
-		static $perms = null;
-
-		if ($perms !== null)
-			return $perms;
-
-		$perms = $this->is_current_member($iter)
-			|| member_in_commissie(COMMISSIE_BESTUUR)
-			|| member_in_commissie(COMMISSIE_KANDIBESTUUR);
-
-		return $perms;
+	function member_write_permission($iter)
+	{
+		return $this->is_current_member($iter)
+			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
 	public function get_commissies($iter)
 	{
 		$model = get_model('DataModelCommissie');
 
-		return $model->get_commissies_for_member($iter->get('id'));
+		return $model->get_commissies_for_member($iter->get_id());
 	}
 
 	protected function user_can_override_stuff()

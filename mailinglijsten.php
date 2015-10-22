@@ -76,6 +76,10 @@ class ControllerMailinglijsten extends Controller
 	{
 		$lijst = $this->model->get_lijst($lijst_id);
 
+		$return_url = isset($_POST['referer'])
+			? $_POST['referer']
+			: 'mailinglijsten.php?lijst_id=' . $lijst->get('id');
+
 		if (isset($_POST['action']))
 		{
 			switch ($_POST['action'])
@@ -91,14 +95,11 @@ class ControllerMailinglijsten extends Controller
 					break;
 			}
 			
-			$this->redirect(!empty($_POST['referer'])
-				? $_POST['referer']
-				: 'mailinglijsten.php?lijst_id=' . $lijst->get('id'));
-			return;
+			return $this->redirect($return_url);
 		}
 
 		// Someone ordered someone execu.. unsubcribed? Bye bye.
-		if (!empty($_POST['unsubscribe']) && $this->model->member_can_edit($_GET['lijst_id']))
+		if (!empty($_POST['unsubscribe']) && $this->model->member_can_edit($lijst))
 		{
 			foreach ($_POST['unsubscribe'] as $lid_id)
 				if (!ctype_digit($lid_id))
@@ -106,30 +107,32 @@ class ControllerMailinglijsten extends Controller
 				else
 					$this->model->afmelden($lijst, $lid_id);
 
-			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
-			return;
+			return $this->redirect($return_url);
 		}
 
-		if (!empty($_POST['subscribe']) && $this->model->member_can_edit($_GET['lijst_id']))
+		if (!empty($_POST['subscribe']) && $this->model->member_can_edit($lijst))
 		{
-			foreach (preg_split('/[\s,]+/', $_POST['subscribe']) as $lid_id)
+			// If the subscribe data isn't yet an array, split it on comma's.
+			$subscribe_ids = is_array($_POST['subscribe'])
+				? $_POST['subscribe']
+				: preg_split('/[\s,]+/', $_POST['subscribe']);
+
+			foreach ($subscribe_ids as $lid_id)
 				if (!empty($lid_id))
 					$this->model->aanmelden($lijst, $lid_id);
 
-			header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $lijst->get('id')));
-			return;
+			return $this->redirect($return_url);
 		}
 
-		if (!empty($_POST['naam']) && !empty($_POST['email']) && $this->model->member_can_edit($_GET['lijst_id']))
+		if (!empty($_POST['naam']) && !empty($_POST['email']) && $this->model->member_can_edit($lijst))
 		{
 			$this->model->aanmelden_gast($lijst, $_POST['naam'], $_POST['email']);
 
-			header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $lijst->get('id')));
-			return;
+			return $this->redirect($return_url);
 		}
 
 		// If data to update the metadata of the list is passed on, well, make use of it.
-		if (isset($_POST['naam'], $_POST['omschrijving']) && $this->model->member_can_edit($_GET['lijst_id']))
+		if (isset($_POST['naam'], $_POST['omschrijving']) && $this->model->member_can_edit($lijst))
 		{
 			$lijst->set('naam', $_POST['naam']);
 			$lijst->set('omschrijving', $_POST['omschrijving']);
@@ -142,8 +145,7 @@ class ControllerMailinglijsten extends Controller
 
 			$lijst->update();
 
-			header('Location: mailinglijsten.php?lijst_id=' . $lijst->get('id'));
-			return;
+			return $this->redirect($return_url);
 		}
 
 		$aangemeld = $this->model->is_aangemeld($lijst, logged_in('id'));

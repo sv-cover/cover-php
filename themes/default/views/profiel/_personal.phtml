@@ -1,14 +1,15 @@
 <section class="aligned-list-section">
 	<h2><?= __('Almanakgegevens') ?></h2>
+	<?php if ($this->is_current_member($iter)): ?>
 	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>&amp;tab=personal" method="post" class="vertical-form">
 		<?= input_hidden('submprofiel_almanak', 'yes') ?>
 		<?php foreach ($personal_fields as $field): ?>
-			<?php if (!$this->member_write_permission($iter) && $model->is_private($iter, $field['name'])) continue; ?>
+			<?php if (!$this->is_current_member($iter) && $model->is_private($iter, $field['name'])) continue; ?>
 			<div>
 				<?=label($field['label'], $field['name'], $errors)?>
-				<?php if (($this->member_write_permission($iter) && empty($field['read_only']))
-					|| member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)): ?>
+				<?php if ($this->is_current_member($iter) && empty($field['read_only'])): ?>
 				<?=input_text($field['name'], $iter)?>
+				<?php $form_enabled = true ?>
 				<?php else: ?>
 				<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
 				<?php endif ?>
@@ -17,4 +18,9 @@
 
 		<button type="submit" class="button"><?=__('Opslaan')?></button>
 	</form>
+	<?php else: ?>
+	<p><?=sprintf(__('Je kan %s\'s persoonsgegevens aanpassen <a href="%s">in de ledenadmin</a>.'),
+		markup_format_text(member_full_name($iter)),
+		sprintf('https://secretary.svcover.nl/administration/%d/', $iter->get_id()))?></p>
+	<?php endif ?>
 </section>

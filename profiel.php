@@ -26,6 +26,15 @@
 				'avatar' => 100,
 				'homepage' => 255,
 				'nick' => 50);
+
+			$this->required = array(
+				'voornaam',
+				'achternaam',
+				'adres',
+				'postcode',
+				'woonplaats',
+				'email'
+			);
 		}
 		
 		protected function get_content($view, $iter = null, $params = null)
@@ -43,10 +52,13 @@
 			if ($value === null || !isset($this->sizes[$name]))
 				return $value;
 
+			if (strlen(trim($value)) === 0 && in_array($name, $this->required))
+				return false;
+
 			if (strlen(trim($value)) > $this->sizes[$name])
 				return false;
-			else
-				return trim($value);
+			
+			return trim($value);
 		}
 
 		function _check_geboortedatum($name, $value) {
@@ -89,13 +101,20 @@
 
 			if (count($errors) > 0) {
 				$error = __('De volgende velden zijn onjuist ingevuld: ') . implode(', ', array_map('field_for_display', $errors));
-				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
+				$this->get_content('profiel', $iter, [
+					'tab' => 'personal',
+					'errors' => $errors,
+					'error_message' => $error
+				]);
 				return;
 			}
 			
 			// Get all field names that need to be set on the iterator
 			$fields = array_map(function($check) { return $check['name']; }, $check);
 			
+			// Remove the e-mail field, that is a special case
+			$fields = array_filter($fields, function($field) { return $field != 'email'; });
+
 			$oud = $iter->data;
 			
 			foreach ($fields as $field) {
@@ -128,7 +147,30 @@
 				}
 			}
 
-			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=personal');
+			// If the email address has changed, add a confirmation.
+			if (isset($data['email']) && $data['email'] !== null
+				&& $data['email'] != $iter['email'])
+			{
+				$model = new DataModel(get_db(), 'confirm', 'key');
+				$key = randstr(32);
+				$payload = ['lidid' => $iter->get_id(), 'email' => $data['email']];
+				$confirm_iter = new DataIter($model, null, ['key' => $key, 'type' => 'email', 'value' => json_encode($payload)]);
+				$model->insert($confirm_iter);
+
+				$language_code = strtolower(i18n_get_language());
+
+				$variables = [
+					'naam' => member_full_name($iter),
+					'email' => $data['email'],
+					'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($key)
+				];
+
+				// Send the confirmation to the new email address
+				parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($data['email']);
+				$_SESSION['alert'] = __('Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd.');
+			}
+
+			return $this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=personal');
 		}
 		
 		protected function _process_webgegevens(DataIterMember $iter)
@@ -145,7 +187,7 @@
 		
 			if (count($errors) > 0) {
 				$error = __('De volgende velden zijn te lang: ') . implode(', ', array_map('field_for_display', $errors));
-				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
+				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error, 'tab' => 'profile'));
 				return;
 			}
 
@@ -185,7 +227,7 @@
 			
 			if (count($errors) > 0) {
 				$error = implode("\n", $message);
-				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
+				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error, 'tab' => 'profile'));
 				return;
 			}
 			
@@ -231,7 +273,7 @@
 
 			if (count($errors) > 0) {
 				$error = implode("\n", $message);
-				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error));
+				$this->get_content('profiel', $iter, array('errors' => $errors, 'error_message' => $error, 'tab' => 'system'));
 				return;
 			}
 
@@ -262,7 +304,7 @@
 				$error = __('Het geuploadde bestand kon niet worden gelezen.');
 
 			if ($error)
-				return $this->get_content('profiel', $iter, array('errors' => array('photo'), 'error_message' => $error));
+				return $this->get_content('profiel', $iter, array('errors' => array('photo'), 'error_message' => $error, 'tab' => 'public'));
 
 			$this->model->set_photo($iter, $fh);
 
@@ -316,7 +358,7 @@
 			elseif (isset($_POST['submprofiel_zichtbaarheid']))
 				$this->_process_zichtbaarheid($iter);
 			else
-				$this->get_content('profiel', $iter, ['errors' => [], 'active_tab' => $tab]);
+				$this->get_content('profiel', $iter, ['errors' => [], 'tab' => $tab]);
 		}
 	}
 	

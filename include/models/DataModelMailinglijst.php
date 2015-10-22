@@ -458,7 +458,7 @@ class DataModelMailinglijst extends DataModel
 		if (!logged_in())
 			return false;
 
-		if ($lijst->bevat_lid(get_identity()->get_id()))
+		if ($lijst->bevat_lid(get_identity()->get('id')))
 			return true;
 
 		if (get_identity()->member_in_committee($lijst->get('commissie')))
@@ -470,12 +470,14 @@ class DataModelMailinglijst extends DataModel
 	public function member_can_edit(DataIterMailinglijst $lijst)
 	{
 		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY)
 			|| get_identity()->member_in_committee($lijst->get('commissie'));
 	}
 
 	public function member_can_subscribe(DataIterMailinglijst $lijst)
 	{
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+		if ($this->member_can_edit($lijst))
 			return true;
 
 		// You cannot subscribe yourself to a non-public list
@@ -491,14 +493,14 @@ class DataModelMailinglijst extends DataModel
 
 	public function member_can_unsubscribe(DataIterMailinglijst $lijst)
 	{
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+		if ($this->member_can_edit($lijst))
 			return true;
 
 		// You cannot unsubscribe from non-public lists
 		if (!$lijst->get('publiek'))
 			return false;
 
-		// Any other list if perfectly fine.
+		// Any other list is perfectly fine.
 		return true;
 	}
 }

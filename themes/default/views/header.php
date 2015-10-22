@@ -305,7 +305,7 @@
 		<tr><td>' . input_checkbox('remember', null, 'yes', 'checked', 'checked') . ' ' . label(__('Blijvend'), 'remember') . '</td><td class="text_right"><input type="hidden" name="referer" value="' . edit_url($_SERVER['PHP_SELF'] . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : ''), [], ['error']) . '"/>' . input_submit('subm', __('Inloggen')) . '</tr>';
 
 		if (isset($_GET['error']) && $_GET['error'] == 'login')
-			$contents .= '<tr><td colspan="2" class="error">' . __('Verkeerde combinatie van e-mailadres en wachtwoord') . '</td></tr>';
+			$contents .= '<tr><td colspan="2" class="error">' . __('Verkeerde combinatie van e-mailadres en wachtwoord') . '. <a href="wachtwoordvergeten.php">' . __('wachtwoord vergeten?') . '</a></td></tr>';
 
 		$contents .= '
 		</table></form>';

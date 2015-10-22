@@ -14,12 +14,20 @@ $mailinglijsten = $model->get_lijsten($iter->get_id());
 		<?php if (($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst))
 			|| (!$lijst->get('subscribed') && $model->member_can_subscribe($lijst))): ?>
 		<form class="list-group-item-action toggle-action-button <?php if ($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst)) echo 'toggle-state-active' ?>" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
-			<input type="hidden" name="referer" value="profiel.php?lid=709&amp;tab=mailinglists">
+			<input type="hidden" name="referer" value="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=mailinglists">
 			<?php if ($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst)): ?>
-				<input type="hidden" name="action" value="unsubscribe">
+				<?php if ($model->member_can_edit($lijst)): ?>
+					<input type="hidden" name="unsubscribe[]" value="<?=$iter->get_id()?>">
+				<?php else: ?>
+					<input type="hidden" name="action" value="unsubscribe">
+				<?php endif ?>
 				<button type="submit" class="button"><?=__('Uitschrijven')?></button>
 			<?php else: ?>
-				<input type="hidden" name="action" value="subscribe">
+				<?php if ($model->member_can_edit($lijst)): ?>
+					<input type="hidden" name="subscribe[]" value="<?=$iter->get_id()?>">
+				<?php else: ?>
+					<input type="hidden" name="action" value="subscribe">
+				<?php endif ?>
 				<button type="submit" class="button"><?=__('Aanmelden')?></button>
 			<?php endif ?>
 		</form>
