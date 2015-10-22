@@ -1,5 +1,5 @@
 .tab-container {
-	display: block;
+	display: table;
 	position: relative;
 	width: 100%;
 }
@@ -11,8 +11,9 @@
 }
 
 .tab-sidebar {
+	display: table-cell;
+	vertical-align: top;
 	width: 200px;
-	float: left;
 	border-right: 1px solid #ccc;
 }
 
@@ -61,7 +62,8 @@ ul.nav-tabs > li.icon-public > a:after {
 }
 
 .tab-content {
-	display: block;
+	display: table-cell;
+	vertical-align: top;
 	margin-left: 200px;
 	padding: 10px;
 }

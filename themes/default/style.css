@@ -2367,6 +2367,9 @@ ul.committee-list > li .position {
 	width: 130px;
 	color: #999;
 	text-align: right;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .toggle-action-button .button {
