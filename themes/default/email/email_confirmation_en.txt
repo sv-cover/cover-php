@@ -1,0 +1,30 @@
+Subject: [Cover] Confirm your email address
+From: webcie@ai.rug.nl
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+<body>
+<p>Hey $naam,</p>
+
+<p>You've changed your email address on the Cover website to $email|markup_format_text.</p>
+
+<p>Is this correct? Since you've received this email we suppose it is. However, please do confirm it by visiting this page:<br>
+<a href="$link|markup_format_attribute">$link|markup_format_text</a></p>
+
+<p>Kind regards,</p>
+
+<p>The AC/DCee</p>
+
+<div itemscope itemtype="http://schema.org/EmailMessage">
+  <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ConfirmAction">
+    <meta itemprop="name" content="Approve E-mail">
+    <div itemprop="handler" itemscope itemtype="http://schema.org/HttpActionHandler">
+      <link itemprop="url" href="$link|markup_format_text">
+    </div>
+  </div>
+  <meta itemprop="description" content="Approve your e-mail address">
+</div>
+
+</body>
+</html>
