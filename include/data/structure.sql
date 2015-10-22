@@ -62,7 +62,6 @@ CREATE TABLE agenda (
     tot timestamp with time zone,
     locatie character varying(100),
     private smallint DEFAULT 0,
-    lustrum smallint DEFAULT 0,
     extern smallint NOT NULL DEFAULT 0,
     facebook_id character varying(20) DEFAULT NULL,
     replacement_for integer DEFAULT NULL
@@ -99,31 +98,6 @@ CREATE TABLE besturen (
     id smallint NOT NULL PRIMARY KEY,
     theme character varying(100),
     page integer
-);
-
---
--- TOC entry 184 (class 1259 OID 24184)
--- Name: boeken; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE boeken (
-    id integer NOT NULL,
-    categorie smallint NOT NULL,
-    vak character varying(100) NOT NULL,
-    titel character varying(250) NOT NULL,
-    prijs numeric(5,2) NOT NULL,
-    status smallint DEFAULT 1 NOT NULL,
-    auteur character varying(100)
-);
-
---
--- TOC entry 185 (class 1259 OID 24188)
--- Name: boeken_categorie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE boeken_categorie (
-    id integer NOT NULL,
-    categorie text NOT NULL
 );
 
 
