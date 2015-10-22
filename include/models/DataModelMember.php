@@ -105,12 +105,11 @@
 			return $this->_rows_to_iters($rows);
 		}
 
-		/**
-		  * Returns the photo of member with given id as a string.
-		  * @iter a #DataIter
-		  *
-		  * @result the raw picture data
-		  */
+		public function has_photo(DataIterMember $iter)
+		{
+			return (bool) $this->db->query_first('SELECT id from lid_fotos WHERE lid_id = ' . $iter->get_id());
+		}
+		
 		public function get_photo(DataIter $iter)
 		{
 			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $iter->get_id() . ' ORDER BY id DESC LIMIT 1');
@@ -139,10 +138,7 @@
 		  */
 		public function has_picture(DataIter $iter)
 		{
-			if ($this->db->query_first('SELECT id from lid_fotos WHERE lid_id = ' . $iter->get_id()))
-				return true;
-
-			return false;
+			return $this->has_photo($iter);
 		}
 
 		public function get()
