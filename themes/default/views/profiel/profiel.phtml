@@ -79,14 +79,14 @@ $tabs = [
 		}
 	],
 	'sessions' => [
-		'visible' => $this->is_current_member($iter->get('lidid')),
+		'visible' => $this->is_current_member($iter),
 		'label' => __('Sessies'),
 		'body' => function () use ($iter) {
 			$this->render_partial('sessions', compact('iter'));
 		}
 	],
 	'facebook' => [
-		'visible' => $this->is_current_member($iter->get('lidid')) && get_config_value('enable_facebook_rsvp', false),
+		'visible' => $this->is_current_member($iter) && get_config_value('enable_facebook_rsvp', false),
 		'label' => __('Facebook'),
 		'body' => function () use ($iter) {
 			$this->render_partial('facebook', compact('iter'));
@@ -125,7 +125,7 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 				<?php foreach ($tabs as $tab_name => $tab): ?>
 					<?php if ($tab['visible']): ?>
 						<li class="<?=$tab_name == $active_tab ? 'active' : ''?> <?=isset($tab['class']) ? $tab['class'] : ''?>">
-							<a href="#<?=$tab_name?>"><?=markup_format_text($tab['label'])?></a>
+							<a href="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=<?=$tab_name?>"><?=markup_format_text($tab['label'])?></a>
 						</li>
 					<?php endif ?>
 				<?php endforeach ?>
@@ -133,55 +133,9 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 		</div>
 
 		<div class="tab-content">
-			<?php foreach ($tabs as $tab_name => $tab): ?>
-				<?php if ($tab['visible']): ?>
-					<div id="<?=$tab_name?>" class="tab-pane <?=$tab_name == $active_tab ? 'active' : ''?>">
-						<?=$tab['body']()?>
-					</div>
-				<?php endif ?>
-			<?php endforeach ?>
+			<div id="<?=$active_tab?>" class="tab-pane active">
+				<?=$tabs[$active_tab]['body']()?>
+			</div>
 		</div>
 	</div>
 </div>
-
-<script>
-jQuery(function($) {
-	// Hide all tabs
-	function switchToTab(hash) {
-		var $tab = $(hash);
-
-		// Do nothing if we can't find the tab
-		if (!$tab.length)
-			return;
-
-		// Hide all other tabs
-		$('.tab-pane').hide();
-
-		// Show this tab
-		$tab.show();
-
-		// Mark all other tabs as inactive
-		$('.nav-tabs li').removeClass('active');
-
-		// Except for this one
-		$('.nav-tabs').find('a[href=#' + $tab.attr('id') + ']').closest('li').addClass('active');
-	};
-
-	$('.tab-pane:not(.active)').hide();
-
-	$('.nav-tabs').on('click', 'a[href^=#]', function(e) {
-		e.preventDefault();
-		window.location.hash = e.target.hash;
-		switchToTab(e.target.hash);
-	});
-
-	if (window.location.hash)
-		switchToTab(window.location.hash);
-	else
-		switchToTab('#<?=$active_tab?>');
-
-	$(window).on('hashchange', function() {
-		switchToTab(window.location.hash);
-	});
-})
-</script>

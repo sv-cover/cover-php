@@ -15,12 +15,12 @@ class ProfielView extends View
 {
 	protected $__file = __FILE__;
 
-	function is_current_member($iter)
+	function is_current_member(DataIterMember $iter)
 	{
 		return get_identity()->get('id') == $iter->get_id();
 	}
 
-	function member_write_permission($iter)
+	function member_write_permission(DataIterMember $iter)
 	{
 		return $this->is_current_member($iter)
 			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
@@ -28,7 +28,7 @@ class ProfielView extends View
 			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
-	public function get_commissies($iter)
+	public function get_commissies(DataIterMember $iter)
 	{
 		$model = get_model('DataModelCommissie');
 
