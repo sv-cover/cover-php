@@ -87,12 +87,12 @@
 		  */
 		public function get($field)
 		{
-			if ($this->has_getter($field))
-				return call_user_func(array($this, 'get_' . $field));
-
 			if ($this->has_field($field))
 				return $this->data[$this->namespace . $field];
 			
+			if ($this->has_getter($field))
+				return call_user_func(array($this, 'get_' . $field));
+
 			trigger_error('DataIter has no field named ' . $field, E_USER_NOTICE);
 			return null;
 		}
