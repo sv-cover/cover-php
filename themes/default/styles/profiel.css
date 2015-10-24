@@ -75,7 +75,15 @@ ul.nav-tabs > li.icon-public > a:after {
 }
 
 .tab-content section {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+.tab-content > .tab-pane {
+	display: none;
+}
+
+.tab-content > .tab-pane.active {
+	display: block;
 }
 
 .aligned-list-section .privacy {
@@ -118,4 +126,16 @@ ul.nav-tabs > li.icon-public > a:after {
 
 .aligned-list-section .privacy td input[type=radio] {
 	cursor: pointer;
+}
+
+.tab-content .loading-indicator {
+	display: block;
+	text-align: center;
+	font-size: 24px;
+	color: #999;
+	position: absolute;
+	top: 50%;
+	left: 200px;
+	right: 0;
+	margin-top: -12px;
 }

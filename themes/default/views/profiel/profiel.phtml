@@ -119,14 +119,14 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 	</div>
 	<?php endif ?>
 
-	<div class="tab-container">
+	<div id="profile-tab-container" class="tab-container">
 		<div class="tab-sidebar">
 			<?php $this->render_partial('profile_widget', compact('model', 'iter')) ?>
 			<ul class="nav-tabs vertical">
 				<?php foreach ($tabs as $tab_name => $tab): ?>
 					<?php if ($tab['visible']): ?>
 						<li class="<?=$tab_name == $active_tab ? 'active' : ''?> <?=isset($tab['class']) ? $tab['class'] : ''?>">
-							<a href="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=<?=$tab_name?>"><?=markup_format_text($tab['label'])?></a>
+							<a href="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=<?=$tab_name?>#<?=$tab_name?>-tab"><?=markup_format_text($tab['label'])?></a>
 						</li>
 					<?php endif ?>
 				<?php endforeach ?>
@@ -134,9 +134,37 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 		</div>
 
 		<div class="tab-content">
-			<div id="<?=$active_tab?>" class="tab-pane active">
+			<div id="<?=$active_tab?>-tab" class="tab-pane active">
 				<?=$tabs[$active_tab]['body']()?>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	$(function() {
+		$('#profile-tab-container > .tab-sidebar .nav-tabs li a').on('click', function(e) {
+			e.preventDefault();
+			$(this).closest('.nav-tabs').find('li').removeClass('active');
+			$('#profile-tab-container > .tab-content > .tab-pane').removeClass('active');
+
+			$(this).closest('li').addClass('active');
+
+			var tabName = $(this).attr('href').match(/tab=([a-z]+)/)[1] + '-tab';
+
+			var tab = $('#profile-tab-container > .tab-content #' + tabName);
+			if (tab.length) {
+				tab.addClass('active');
+			} else {
+				tab = $('<div>').prop('id', tabName).addClass('tab-pane active')
+				tab.html('<div class="loading-indicator"><i class="fa fa-spinner fa-pulse"></i></div>');
+				tab.load($(this).attr('href') + ' #profile-tab-container > .tab-content > .tab-pane#' + tabName, function() {
+					$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
+				});
+				$('#profile-tab-container > .tab-content').append(tab);
+			}
+
+			window.history.pushState({'tabName' : tabName}, $(this).text(), $(this).attr('href'));
+		});
+	});
+</script>
