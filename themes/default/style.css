@@ -2379,7 +2379,7 @@ ul.committee-list > li .position {
 	padding: 2px;
  	width: 48px;
 	height: 24px;
-	background: #ccc;
+	background: #999;
 	border: none;
 	border-radius: 12px;
 	transition: background 0.4s;
@@ -2407,16 +2407,16 @@ ul.committee-list > li .position {
   left: 4px;
   bottom: 4px;
   width: 16px;
-  background-color: #ccc;
+  background-color: #999;
   border-radius: 50%;
   transition: margin 0.4s, background 0.4s;
 }
 
 .toggle-action-button.toggle-state-active .button {
-	background-color: #8ce196;
+	background-color: #43B80B;
 }
 
 .toggle-action-button.toggle-state-active .button:after {
-	background-color: #8ce196;
+	background-color: #43B80B;
 	margin-left: 24px;
 }
