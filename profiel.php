@@ -324,8 +324,14 @@
 			$mail->addHeader('To', 'acdcee@svcover.nl');
 			$mail->addHeader('Subject', 'New yearbook photo for ' . $iter['naam']);
 			$mail->addHeader('Reply-To', sprintf('%s <%s>', $iter['naam'], $iter['email']));
-			$mail->addBody('text/plain; charset=UTF-8', "{$iter['naam']} would like to use the attached photo as their new profile picture.");
-			$mail->addBody($mime, file_get_contents($_FILES['photo']['tmp_name']));
+			$mail->addBody(
+				'text/plain; charset=UTF-8',
+				"{$iter['naam']} would like to use the attached photo as their new profile picture.",
+				\cover\email\MessagePart::TRANSFER_ENCODING_QUOTED_PRINTABLE);
+			$mail->addBody(
+				$mime,
+				file_get_contents($_FILES['photo']['tmp_name']),
+				\cover\email\MessagePart::TRANSFER_ENCODING_BASE64);
 			\cover\email\send($mail);
 
 			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');

@@ -99,6 +99,11 @@ class MessagePart
 			$this->setHeader($key, $value);
 	}
 
+	public function removeHeader($key)
+	{
+		unset($this->headers[$key]);
+	}
+
 	public function isMultipart()
 	{
 		return is_array($this->body);
@@ -556,9 +561,13 @@ function reply(MessagePart $message, $reply_text)
 
 function send(MessagePart $message)
 {
-	return mail(
-		$message->header('To'),
-		$message->header('Subject'),
+	$to = $message->header('To');
+	$message->removeHeader('To');
+
+	$subject = $message->header('Subject');
+	$message->removeHeader('Subject');
+	
+	return mail($to, $subject,
 		$message->bodyAsString(),
 		$message->headerAsString());
 }
