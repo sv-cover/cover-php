@@ -212,9 +212,10 @@
 			$language = $this->_get_language();
 			$field = $this->_get_content_field();
 
-			if ($language != 'nl' && !$page->get($field)) {
-				$language = 'nl';
-				$field = 'content';
+			// fall back to the other language if this language's content is empty
+			if (!$page->get($field)) {
+				$language = $language == 'nl' ? 'en' : 'nl';
+				$field = $language == 'nl' ? 'content' : 'content_en';
 			}
 
 			$content = editable_parse($page->get($field), $page->get('owner'));
