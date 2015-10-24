@@ -2420,3 +2420,11 @@ ul.committee-list > li .position {
 	background-color: #43B80B;
 	margin-left: 24px;
 }
+
+.toggle-action-button:hover .button:after {
+	margin-left: 4px;
+}
+
+.toggle-action-button.toggle-state-active:hover .button:after {
+	margin-left: 20px;
+}
