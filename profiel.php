@@ -15,22 +15,16 @@
 			$this->model = get_model('DataModelMember');
 
 			$this->sizes = array(
-				'voornaam' => 255,
-				'tussenvoegsel' => 255,
-				'achternaam' => 255,
 				'adres' => 255,
 				'postcode' => 7,
 				'woonplaats' => 255,
 				'email' => 255,
 				'telefoonnummer' => 20,
-				'onderschrift' => 200,
 				'avatar' => 100,
 				'homepage' => 255,
 				'nick' => 50);
 
 			$this->required = array(
-				'voornaam',
-				'achternaam',
 				'adres',
 				'postcode',
 				'woonplaats',
@@ -79,23 +73,12 @@
 
 		protected function _process_almanak(DataIterMember $iter)
 		{
-			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
-				$check = array(
-					array('name' => 'voornaam', 'function' => array($this, '_check_size')),
-					array('name' => 'tussenvoegsel', 'function' => array($this, '_check_size')),
-					array('name' => 'achternaam', 'function' => array($this, '_check_size')),
-					array('name' => 'geboortedatum', 'function' => array($this, '_check_geboortedatum')),
-					array('name' => 'beginjaar', 'function' => 'check_value_toint'));
-			} else {
-				$check = array();
-			}
-			
-			$check = array_merge($check, array(
+			$check = array(
 				array('name' => 'postcode', 'function' => array($this, '_check_size')),
 				array('name' => 'telefoonnummer', 'function' => array($this, '_check_size')),
 				array('name' => 'adres', 'function' => array($this, '_check_size')),
 				array('name' => 'email', 'function' => array($this, '_check_size')),
-				array('name' => 'woonplaats', 'function' => array($this, '_check_size')))
+				array('name' => 'woonplaats', 'function' => array($this, '_check_size'))
 			);
 			
 			$data = check_values($check, $errors);
@@ -177,7 +160,6 @@
 		{
 			$check = array(
 				array('name' => 'nick', 'function' => array(&$this, '_check_size')),
-				array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
 				array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
 				array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
 				array('name' => 'taal', 'function' => array($this, '_check_language'))
