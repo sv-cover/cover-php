@@ -1,5 +1,6 @@
 <section class="aligned-list-section">
 	<h2><?= __('Webgegevens') ?></h2>
+	<p><?=__('Je webgegevens worden gebruikt om je er een beetje (on)herkenbaar te maken op het forum.')?></p>
 	<form action="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=profile" method="post" class="vertical-form">
 		<?= input_hidden('submprofiel_webgegevens', 'yes') ?>
 		<div>
@@ -14,12 +15,12 @@
 
 		<div>
 			<?=label(__('Avatar'), 'avatar', $errors) ?>
-			<?=input_text('avatar', $iter, 'formatter',  'empty_to_http_formatter') ?>
+			<?=input_text('avatar', $iter, 'formatter',  'empty_to_http_formatter', 'placeholder', 'http://') ?>
 		</div>
 
 		<div>
 			<?=label(__('Website'), 'homepage', $errors) ?>
-			<?=input_text('homepage', $iter, 'formatter', 'empty_to_http_formatter') ?>
+			<?=input_text('homepage', $iter, 'formatter', 'empty_to_http_formatter', 'placeholder', 'http://') ?>
 		</div>
 
 		<div>
