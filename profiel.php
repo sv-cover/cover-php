@@ -6,6 +6,7 @@
 	require_once 'include/facebook.php';
 	require_once 'include/secretary.php';
 	require_once 'include/controllers/Controller.php';
+	require_once 'include/email.php';
 	
 	class ControllerProfiel extends Controller
 	{
@@ -101,12 +102,11 @@
 
 			if (count($errors) > 0) {
 				$error = __('De volgende velden zijn onjuist ingevuld: ') . implode(', ', array_map('field_for_display', $errors));
-				$this->get_content('profiel', $iter, [
+				return $this->get_content('profiel', $iter, [
 					'tab' => 'personal',
 					'errors' => $errors,
 					'error_message' => $error
 				]);
-				return;
 			}
 			
 			// Get all field names that need to be set on the iterator
@@ -290,7 +290,7 @@
 			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))
 				return $this->get_content('common::auth');
 
-			else if ($_FILES['photo']['errpr'] == UPLOAD_ERR_INI_SIZE)
+			else if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
 				$error = sprintf(__('Het fotobestand is te groot. Het maximum is %s.'),
 					ini_get('upload_max_filesize') . ' bytes');
 
@@ -304,13 +304,51 @@
 				$error = __('Het geuploadde bestand kon niet worden gelezen.');
 
 			if ($error)
-				return $this->get_content('profiel', $iter, array('errors' => array('photo'), 'error_message' => $error, 'tab' => 'public'));
+				return $this->get_content('profiel', $iter, array('errors' => array('photo'), 'error_message' => $error, 'tab' => 'profile'));
 
 			$this->model->set_photo($iter, $fh);
 
 			fclose($fh);
 
-			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=privacy&force_reload_photo=true');
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=profile&force_reload_photo=true');
+		}
+
+		protected function _process_photo_suggestion(DataIterMember $iter)
+		{
+			$error = null;
+
+			if ($iter->get_id() != get_identity()->get('id'))
+				return $this->get_content('common::auth');
+
+			else if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
+				$error = sprintf(__('Het fotobestand is te groot. Het maximum is %s.'),
+					ini_get('upload_max_filesize') . ' bytes');
+
+			elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
+				$error = sprintf(__('Het bestand is niet geupload. Foutcode %d.'), $_FILES['photo']['error']);
+
+			elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
+				$error = __('Bestand is niet een door PHP geupload bestand.');
+			
+			elseif (!($image_meta = getimagesize($_FILES['photo']['tmp_name'])))
+				$error = __('Het geuploadde bestand kon niet worden gelezen.');
+
+			if ($error)
+				$this->get_content('profiel', $iter, ['errors' => array('photo'), 'error_message' => $error, 'tab' => 'profile']);
+
+			$mime = image_type_to_mime_type($image_meta[2]);
+
+			$mail = new \cover\email\MessagePart();
+			$mail->addHeader('To', 'acdcee@svcover.nl');
+			$mail->addHeader('Subject', 'New yearbook photo for ' . $iter['naam']);
+			$mail->addHeader('Reply-To', sprintf('%s <%s>', $iter['naam'], $iter['email']));
+			$mail->addBody('text/plain; charset=UTF-8', "{$iter['naam']} would like to use the attached photo as their new profile picture.");
+			$mail->addBody($mime, file_get_contents($_FILES['photo']['tmp_name']));
+			\cover\email\send($mail);
+
+			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');
+
+			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=profile');
 		}
 
 		protected function _process_facebook_link(DataIterMember $iter, $action)
@@ -347,6 +385,8 @@
 				$this->_process_almanak($iter);
 			elseif (isset($_POST['facebook_action']))
 				$this->_process_facebook_link($iter, $_POST['facebook_action']);
+			elseif (isset($_POST['submprofiel_foto']))
+				$this->_process_photo_suggestion($iter);
 			elseif (isset($_FILES['photo']))
 				$this->_process_photo($iter);
 			elseif (isset($_POST['submprofiel_webgegevens']))

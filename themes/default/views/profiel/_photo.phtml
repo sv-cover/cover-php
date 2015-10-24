@@ -1,0 +1,13 @@
+<section class="aligned-list-section">
+	<h2><?= __('Foto') ?></h2>
+	<p><?=__('Je foto wordt ook gebruikt op deze website, maar ook in de jaarlijkse almanak. Wil je een recentere foto hier hebben? Stuur de beste versie die je hebt in! Ze worden met de hand verwerkt, dus het kan even duren voordat hij aangepast is.')?></p>
+	<form action="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=profile" method="post" enctype="multipart/form-data" class="vertical-form">
+		<?= input_hidden('submprofiel_foto', 'yes') ?>
+		<div>
+			<?=label(__('Foto'), 'photo', $errors) ?></td>
+			<input type="file" name="photo" id="field-photo">
+		</div>
+		
+		<button type="submit" class="button"><?=__('Zend in')?></button>
+	</form>
+</section>

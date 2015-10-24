@@ -314,30 +314,35 @@ class MessagePart
 		return implode("\r\n", $lines);
 	}
 
-	public function toString()
+	public function headerAsString()
 	{
 		$out = '';
-		
+
 		$header_indent = str_repeat(" ", 8);
 
 		foreach ($this->headers as $key => $values)
 		{
 			foreach ($values as $value)
 				$out .= $this->wrapLines($value, 78, 998,
-					function ($i) use ($key, $header_indent) {
-						if ($i === 0) return $key . ': ';
-						else return $header_indent;
-					}) . "\r\n";
+						function ($i) use ($key, $header_indent) {
+							if ($i === 0) return $key . ': ';
+							else return $header_indent;
+						}) . "\r\n";
 		}
-		
-		$out .= "\r\n";
 
+		return $out;
+	}
+
+	public function bodyAsString()
+	{
 		if (!$this->isMultipart())
 		{
-			$out .= $this->wrapLines($this->body, 78, 998);
+			$out = $this->wrapLines($this->body, 78, 998);
 		}
 		else
 		{
+			$out = '';
+
 			$boundary = $this->boundary();
 
 			if (!$boundary)
@@ -356,6 +361,11 @@ class MessagePart
 		}
 
 		return $out;
+	}
+
+	public function toString()
+	{
+		return $this->headerAsString() . "\r\n" . $this->bodyAsString();
 	}
 
 	static public function parse_stream(PeakableStream $stream, $parent_boundary = null)
@@ -542,6 +552,15 @@ function reply(MessagePart $message, $reply_text)
 	}
 
 	return $reply;
+}
+
+function send(MessagePart $message)
+{
+	return mail(
+		$message->header('To'),
+		$message->header('Subject'),
+		$message->bodyAsString(),
+		$message->headerAsString());
 }
 
 if (isset($_SERVER['PWD']) && realpath($_SERVER['PWD'] . '/' . $_SERVER['PHP_SELF']) == __FILE__)
