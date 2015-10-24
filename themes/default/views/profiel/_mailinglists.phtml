@@ -2,6 +2,7 @@
 $model = get_model('DataModelMailinglijst');
 $mailinglijsten = $model->get_lijsten($iter->get_id());
 ?>
+<section id="mailinglijsten-section">
 <h2><?= __('Mailinglijsten')?></h2>
 <div class="list-group">
 <?php foreach ($mailinglijsten as $lijst): ?>
@@ -13,7 +14,7 @@ $mailinglijsten = $model->get_lijsten($iter->get_id());
 		
 		<?php if (($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst))
 			|| (!$lijst->get('subscribed') && $model->member_can_subscribe($lijst))): ?>
-		<form class="list-group-item-action toggle-action-button <?php if ($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst)) echo 'toggle-state-active' ?>" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
+		<form id="mailinglijst-<?=$lijst->get_id()?>-toggle" class="list-group-item-action toggle-action-button <?php if ($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst)) echo 'toggle-state-active' ?>" method="post" action="mailinglijsten.php?lijst_id=<?=$lijst->get('id')?>">
 			<input type="hidden" name="referer" value="profiel.php?lid=<?=$iter->get_id()?>&amp;tab=mailinglists">
 			<?php if ($lijst->get('subscribed') && $model->member_can_unsubscribe($lijst)): ?>
 				<?php if ($model->member_can_edit($lijst)): ?>
@@ -39,3 +40,4 @@ $mailinglijsten = $model->get_lijsten($iter->get_id());
 	</div>
 <?php endforeach ?>
 </div>
+</section>

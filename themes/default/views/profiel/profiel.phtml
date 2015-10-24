@@ -167,4 +167,20 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 			window.history.pushState({'tabName' : tabName}, $(this).text(), $(this).attr('href'));
 		});
 	});
+
+	$(document).on('ready partial-content-loaded', function(loaded) {
+		$(loaded.target).find('form.toggle-action-button').on('submit', function(e) {
+			e.preventDefault();
+			var $form = $(this);
+			var id = $form.prop('id');
+
+			var tmp = document.createDocumentFragment();
+			$(tmp).load($form.prop('action'), $form.serializeArray(), function() {
+				var btn = tmp.querySelector('#' + id);
+				$form.get(0).className = btn.className;
+				$form.find('input[type=hidden]').remove();
+				$form.append(btn.querySelectorAll('input[type=hidden]'));
+			});
+		});
+	});
 </script>
