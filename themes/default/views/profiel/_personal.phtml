@@ -11,7 +11,13 @@
 				<?=input_text($field['name'], $iter)?>
 				<?php $form_enabled = true ?>
 				<?php else: ?>
-				<span class="read-only"><?=markup_format_text($iter[$field['name']])?></span>
+				<span class="read-only">
+					<?php if ($field['name'] == 'geboortedatum' && $date = strtotime($iter[$field['name']])): ?>
+						<?=date('d-m-Y', $date)?>
+					<?php else: ?>
+						<?=markup_format_text($iter[$field['name']])?>
+					<?php endif ?>
+				</span>
 				<?php endif ?>
 			</div>
 		<?php endforeach ?>
