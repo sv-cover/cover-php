@@ -269,7 +269,7 @@
 		{
 			$error = null;
 
-			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR))
+			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR) && !member_in_commissie(COMMISSIE_EASY))
 				return $this->get_content('common::auth');
 
 			else if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
