@@ -75,26 +75,6 @@
 		return create_menu($color, 'agenda', __('Agenda'), $contents);
 	}
 	
-	function create_agenda_lustrum($color) {
-		$model = get_model('DataModelLustrum');
-		$iters = $model->get_agendapunten(logged_in());
-		
-		if (count($iters) != 0) {
-			$contents = "<ul class=\"agenda\">\n";
-			
-			for ($i = 0; $i < min(16, count($iters)); $i++) { 
-				$iter = $iters[$i];
-				$contents .= '<li class="clearfix"><span class="date">' . sprintf('%02d-%02d', $iter->get('vandatum'), $iter->get('vanmaand')) . '</span><a href="agenda.php?agenda_id=' . $iter->get_id() . '">' . $iter->get('kop') . '</a></li>';
-			}
-			
-			$contents .= "</ul>\n";
-		} else {
-			$contents .= '<p><span class="smaller">' . __('Er staan op dit moment geen activiteiten op de agenda.') . "</span></p>\n";
-		}
-		$contents = "<img src=\"images/lustrumlogo2.png\" alt=\"lustrum\">".$contents;
-		return create_menu($color, 'lustrum', __('Lust, Rum & Rock \'n Roll'), $contents);
-	}
-	
 	function createTopMenu() {
 		$content = '
 			<div class="headNav">
@@ -102,26 +82,22 @@
 					<li><a href="index.php">' . __('Home') . '</a></li>';
 		if (member_in_commissie(COMMISSIE_BESTUUR) ||
 			member_in_commissie(COMMISSIE_KANDIBESTUUR) ||
-			// member_in_commissie(COMMISSIE_BOEKCIE) ||
 			member_in_commissie(COMMISSIE_EASY))
 			$content .= '
 					<li class = "dropDown"><a drop="beheer" href="" onclick="return false;">'.__('Beheer') .'</a></li>';
 		
 		
-				//fill up the admin menu
+		//fill up the admin menu
 		$admin = array();
+		$admin[] = '<a href="show.php?show_new">' . __('Pagina maken') . '</a>';
+
 		if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 			$admin[] = '<a href="agenda.php?agenda_moderate">' . __('Agenda') . '</a>';
 			$admin[] = '<a href="actieveleden.php">' . __('Actieve leden') . '</a>';
 			$admin[] = '<a href="forum.php?admin=forums">' . __('Forum') . '</a>';
 			$admin[] = '<a href="nieuwlid.php">' . __('Leden toevoegen') . '</a>';
-			$admin[] = '<a href="show.php?show_new">' . __('Pagina maken') . '</a>';
 		}
 		
-		// if (member_in_commissie(COMMISSIE_BOEKCIE)) {
-		// 	$admin[] = '<a href="boeken.php?bestellingen">' . __('Bestelde boeken') . '</a>';
-		// }
-
 		if (member_in_commissie(COMMISSIE_EASY)) {
 			$admin[] = '<a href="settings.php">' . __('Instellingen') . '</a>';
 		}
