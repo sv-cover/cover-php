@@ -1,8 +1,14 @@
 <h1><?=__('Inloggen') ?></h1>
 <div class="messageBox">
 
-
 	<form id="login-form" method="post" action="sessions.php?view=login" class="vertical-form">
+		<img src="<?=get_theme_data('images/cover_logo_black.png')?>" class="cover-logo" alt="Cover">
+
+		<ul class="nav-tabs">
+			<li class="active"><a href="sessions.php?view=login"><?=__('Inloggen')?></a></li>
+			<li><a href="lidworden.php#contents"><?=__('Lid worden')?></a></li>
+		</ul>
+
 		<?php if ($error_message): ?>
 		<div class="error-section">
 			<p><?=markup_format_text($error_message)?></p>
@@ -25,8 +31,8 @@
 			<?=label(__('Blijf ingelogd'), 'remember', $errors)?>
 		</div>
 
-		<div>
-			<button type="submit" class="button"><?= __('Log in') ?></button>
+		<div class="controls">
+			<button type="submit" class="button primary"><?= __('Log in') ?></button>
 			<a href="wachtwoordvergeten.php"><?=__('Wachtwoord vergeten?')?></a>
 		</div>
 	</form>

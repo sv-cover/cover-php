@@ -1368,6 +1368,13 @@ div.beheer table {
 	display: block;
 }
 
+.vertical-form .controls .button.primary {
+	float: right;
+	line-height: 42px;
+	margin: 0 0 0 10px;
+	padding: 0 30px;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }
@@ -2427,4 +2434,59 @@ ul.committee-list > li .position {
 
 .toggle-action-button.toggle-state-active:hover .button:after {
 	margin-left: 20px;
+}
+
+#login-form {
+
+}
+
+#login-form .vertical-form > div {
+	margin-bottom: 15px;
+}
+
+#login-form  input[type] {
+	font-size: 22px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+}
+
+#login-form .nav-tabs {
+	display: block;
+	border-bottom: 1px solid #ccc;
+	margin: 20px 0;
+	padding: 0 10px;
+	text-align: center;
+}
+
+#login-form .nav-tabs li {
+	display: inline;
+}
+
+#login-form .nav-tabs li a {
+	display: inline-block;
+	border: 1px solid #ccc;
+	background: #f5f5f5;
+	margin-bottom: -1px;
+	padding: 0 10px;
+	line-height: 38px;
+	width: 35%;
+}
+
+#login-form .cover-logo {
+	display: block;
+	margin: 0 auto;
+	transform: translateX(-14px);
+}
+
+#login-form .nav-tabs li.active a {
+	border-bottom-color: #f5f5f5;
+}
+
+.window #login-form .nav-tabs li a {
+	background: #fff;
+}
+
+.window #login-form .nav-tabs li.active a {
+	border-bottom-color: #fff;
 }
