@@ -1,6 +1,8 @@
 <h2><?= markup_format_text(__('Website bekijken als een ander')) ?></h2>
 <div class="messageBox">
 	<form method="post" action="sessions.php?view=overrides" class="vertical-form overrides-form">
+		<?php if (isset($_GET['referrer'])) echo input_hidden('referrer', $_GET['referrer']) ?>
+
 		<fieldset>
 			<legend>
 				<?=input_checkbox('override_committees', ['override_committees' => get_identity()->get_override_committees() !== null])?>

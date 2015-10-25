@@ -151,14 +151,11 @@
 		}
 
 		/**
-		  * Get limited member data (id, type, wachtwoord) from email and password combination.
-		  *
-		  * @email the email of the member
-		  * @passwd the password of the member
-		  *
-		  * @result an associative array with the member data or
-		  * false if no member could be found
-		  */
+		 * Get limited member data (id, type, wachtwoord) from email and password combination.
+		 * @param $email string email address of the user
+		 * @param $passwd string password of the user
+		 * @return bool|DataIterMember
+		 */
 		public function login($email, $passwd)
 		{
 			$row = $this->db->query_first("SELECT

@@ -1,0 +1,33 @@
+<h1><?=__('Inloggen') ?></h1>
+<div class="messageBox">
+
+
+	<form id="login-form" method="post" action="sessions.php?view=login" class="vertical-form">
+		<?php if ($error_message): ?>
+		<div class="error-section">
+			<p><?=markup_format_text($error_message)?></p>
+		</div>
+		<?php endif ?>
+
+		<?= input_hidden('referrer', $referrer) ?>
+		<div>
+			<?=label(__('E-mailadres'), 'email', $errors, true)?>
+			<?=input_text('email', null, 'placeholder', __('E-mailadres'), 'autofocus', 'true') ?>
+		</div>
+
+		<div>
+			<?=label(__('Wachtwoord'), 'password', $errors, true)?>
+			<?=input_password('password', 'placeholder', __('Wachtwoord')) ?>
+		</div>	
+
+		<div>
+			<?=input_checkbox('remember', array('remember' => 'yes'), 'yes')?>
+			<?=label(__('Blijf ingelogd'), 'remember', $errors)?>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?= __('Log in') ?></button>
+			<a href="wachtwoordvergeten.php"><?=__('Wachtwoord vergeten?')?></a>
+		</div>
+	</form>
+</div>

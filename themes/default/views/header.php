@@ -40,7 +40,7 @@
 	
 	function create_agenda_menu($color) {
 		$model = get_model('DataModelAgenda');
-		$iters = $model->get_agendapunten(logged_in());
+		$iters = $model->get_agendapunten(get_identity()->member_is_active());
 		
 		if (count($iters) != 0) {
 			$contents = "<ul class=\"agenda\">\n";
@@ -295,36 +295,20 @@
 	}
 
 
-	function create_login_form() {
-		$contents = '
-		<form action="dologin.php" method="post">
-		<table>
-		<tr><td><a href="wachtwoordvergeten.php">' . __('wachtwoord vergeten?') . '</a></td><td><a href="lidworden.php?utm_source=svcover.nl&utm_medium=login-form&utm_campaign=member%20registration">' . __('lid worden') . '</a></td></tr>
-		<tr><td colspan="2"><label for="email">' . __('E-mailadres') . ': </label>' . input_text('email', null, 'class', 'textField', 'id', 'email', 'placeholder', __('E-mailadres')) . '</td><td></td></tr>
-		<tr><td colspan="2"><label for="password">' . __('Wachtwoord') . ': </label>' . input_password('password', 'class', 'textField', 'id', 'password', 'placeholder', __('Wachtwoord')) . '</td></tr>
-		<tr><td>' . input_checkbox('remember', null, 'yes', 'checked', 'checked') . ' ' . label(__('Blijvend'), 'remember') . '</td><td class="text_right"><input type="hidden" name="referer" value="' . edit_url($_SERVER['PHP_SELF'] . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : ''), [], ['error']) . '"/>' . input_submit('subm', __('Inloggen')) . '</tr>';
-
-		if (isset($_GET['error']) && $_GET['error'] == 'login')
-			$contents .= '<tr><td colspan="2" class="error">' . __('Verkeerde combinatie van e-mailadres en wachtwoord') . '. <a href="wachtwoordvergeten.php">' . __('wachtwoord vergeten?') . '</a></td></tr>';
-
-		$contents .= '
-		</table></form>';
-		
-		return $contents;
-	}
-	
 	function create_login() {
-		if (($data = logged_in())) {
-			$output =  __('Ingelogd') . ': <b>' . markup_format_text($data['voornaam']) . '</b><br/>
-			<a class="logButton" href="dologout.php?referrer=' . urlencode($_SERVER['PHP_SELF'] . '?' . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')) . '">' . __('Uitloggen') . '</a>
-			<a class="logButton" href="profiel.php?lid=' . $data['id'] . '">' . __('Profiel') . '</a>';
+		$referrer =  $_SERVER['PHP_SELF'] . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
+
+		if (get_auth()->logged_in()) {
+			$output =  __('Ingelogd') . ': <b>' . markup_format_text(get_identity()->get('voornaam')) . '</b><br/>
+			<a class="logButton" href="sessions.php?view=logout&amp;referrer=' . urlencode($referrer) . '">' . __('Uitloggen') . '</a>
+			<a class="logButton" href="profiel.php?lid=' . get_identity()->get('id') . '">' . __('Profiel') . '</a>';
 
 			if (get_identity() instanceof ImpersonatingIdentityProvider)
-				$output .= '<a href="sessions.php?view=overrides" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">' . __('Bekijk als…') . '</a>';
+				$output .= '<a href="sessions.php?view=overrides&amp;referrer=' . urlencode($referrer) . '" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">' . __('Bekijk als…') . '</a>';
 
 			return $output;
 		} else {
-			return create_login_form();
+			return sprintf('<a href="sessions.php?view=login&amp;referrer=%s" data-placement-selector="modal" data-partial-selector="#login-form" class="button">%s</a>', urlencode($referrer), __('Log in'));
 		}
 	}
 	

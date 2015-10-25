@@ -38,7 +38,9 @@ class ControllerSessions extends Controller
 			else
 				get_identity()->reset_committees();
 
-			return $this->redirect('sessions.php?view=overrides');
+			return isset($_POST['referrer'])
+				? $this->redirect($_POST['referrer'])
+				: $this->redirect('sessions.php?view=overrides');
 		}
 
 		return $this->get_content('overrides');
@@ -46,6 +48,9 @@ class ControllerSessions extends Controller
 
 	protected function run_view_sessions()
 	{
+		if (!get_auth()->logged_in())
+			throw new UnauthorizedException('You need to login to manage your sessions');
+
 		if (isset($_POST['sessions']))
 		{
 			$member = get_identity()->get_member();
@@ -57,21 +62,9 @@ class ControllerSessions extends Controller
 				if ($session && $session->get('member_id') == $member->get_id())
 					$this->model->delete($session);
 			}
+
+			return $this->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
 		}
-
-		return $this->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
-	}
-
-	function run_impl()
-	{
-		if (!get_auth()->logged_in())
-			return $this->get_content('auth_common');
-		
-		if (isset($_GET['view']) && $_GET['view'] == 'overrides')
-			return $this->run_view_overrides();
-
-		if (isset($_GET['view']) && $_GET['view'] == 'sessions')
-			return $this->run_view_sessions();
 
 		$member = get_identity()->get_member();
 
@@ -79,7 +72,68 @@ class ControllerSessions extends Controller
 
 		$sessions = $this->model->getActive($member->get_id());
 
-		$this->get_content('sessions', $sessions, compact('session', 'member'));
+		return $this->get_content('sessions', $sessions, compact('session', 'member'));
+	}
+
+	protected function run_view_login()
+	{
+		$errors = array();
+
+		$error_message = null;
+
+		if (isset($_POST['referrer']))
+			$referrer = $_POST['referrer'];
+		elseif (isset($_GET['referrer']))
+			$referrer = $_GET['referrer'];
+		else
+			$referrer = 'profiel.php';
+
+		if (!empty($_POST['email']) && !empty($_POST['password']))
+		{
+			if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
+			{
+				return $this->redirect($referrer);
+			}
+			else {
+				$errors = ['email', 'password'];
+				$error_message = __('Verkeerde combinatie van e-mailadres en wachtwoord');
+			}
+		}
+
+		return $this->get_content('login', null, compact('errors', 'error_message', 'referrer'));
+	}
+
+	protected function run_view_logout()
+	{
+		if (get_auth()->logged_in())
+			get_auth()->logout();
+
+		if (isset($_GET['referrer']))
+			return $this->redirect($_GET['referrer']);
+		else
+			return $this->get_content('logout');
+	}
+
+	function run_impl()
+	{
+		switch (isset($_GET['view']) ? $_GET['view'] : null) {
+			case 'sessions':
+				return $this->run_view_sessions();
+
+			case 'overrides':
+				return $this->run_view_overrides();
+
+			case 'login':
+				return $this->run_view_login();
+
+			case 'logout':
+				return $this->run_view_logout();
+
+			default:
+				return get_auth()->logged_in()
+					? $this->run_view_sessions()
+					: $this->run_view_login();
+		}
 	}
 }
 

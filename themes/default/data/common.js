@@ -89,15 +89,6 @@ jQuery(function($) {
 
 			$modal.insertBefore($('.world'));//.delay(100).addClass('')
 
-			// Close modal on submit
-			$modal.on('submit', 'form', function(e) {
-				e.preventDefault();
-				$modal.remove();
-				$.post($(this).attr('action'), $(this).serializeArray(), function(text) {
-					document.location.reload();
-				});
-			});
-
 			// Close the modal on clicking the close button
 			$closeButton.on('click', function(e) {
 				e.preventDefault();

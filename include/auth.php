@@ -197,10 +197,19 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 
 class SessionProvider
 {
+	/**
+	 * @var DataModelSession
+	 */
 	protected $session_model;
 
+	/**
+	 * @var DataIterSession
+	 */
 	private $session;
 
+	/**
+	 * @var bool
+	 */
 	private $logged_in;
 
 	public function __construct()
@@ -265,6 +274,8 @@ class SessionProvider
 		$this->logged_in = false;
 
 		$this->session = null;
+
+		return true;
 	}
 
 	public function logged_in()
