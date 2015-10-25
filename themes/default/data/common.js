@@ -94,6 +94,14 @@ jQuery(function($) {
 				e.preventDefault();
 				$modal.remove();
 			});
+
+			// Close the model on pressing the escape key while inside
+			$modal.on('keydown', function(e) {
+				if (e.keyCode == 27) {
+					e.preventDefault();
+					$modal.remove();
+				}
+			});
 		}
 		else {
 			$target = $(this).closest($(this).data('placement-selector'));
