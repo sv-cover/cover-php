@@ -348,11 +348,12 @@ class gettext_reader {
    * @access private
    * @param n count
    * @return int array index of the right plural form
+   * @TODO make this method safe without using eval
    */
   function select_string($n) {
     $string = $this->get_plural_forms();
     $string = str_replace('nplurals',"\$total",$string);
-    $string = str_replace("n",$n,$string);
+    $string = str_replace("n",intval($n),$string);
     $string = str_replace('plural',"\$plural",$string);
 
     $total = 0;
