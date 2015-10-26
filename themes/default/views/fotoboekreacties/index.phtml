@@ -2,6 +2,10 @@
 	<h2><?= __('Reacties') ?></h2>
 	<?php if (get_policy($model)->user_can_create()): ?>
 	<a href="<?=markup_format_attribute($controller->link_to_create())?>" class="create-link" title="<?=markup_format_attribute(__('Een nieuwe reactie toevoegen'))?>" onclick="nieuwe_reactie(); return false"><?= __('Nieuwe reactie') ?></a>
+	<?php else: ?>
+		<p><?=preg_replace_callback('/\{\{(.+?)\}\}/',
+			function($match) { return login_link(markup_format_text($match[1])); },
+			markup_format_text(__('{{Log in}} om te kunnen reageren.'))) ?></p>
 	<?php endif ?>
 </div>
 

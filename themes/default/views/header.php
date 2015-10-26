@@ -284,7 +284,7 @@
 
 			return $output;
 		} else {
-			return sprintf('<a href="sessions.php?view=login&amp;referrer=%s" data-placement-selector="modal" data-partial-selector="#login-form" class="button">%s</a>', urlencode($referrer), __('Log in'));
+			return login_link(__('Log in'), ['class' => 'logButton']);
 		}
 	}
 	

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-10-27 00:18+0100\n"
+"POT-Creation-Date: 2015-10-27 00:35+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -721,9 +721,7 @@ msgstr "Mailing lists"
 msgid "Nieuw lid"
 msgstr "New member"
 
-#: ../../../profiel.php:39
-#: ../../../profiel.sync-conflict-20151025-161443.php:44
-#: ../../../themes/default/views/header.php:280
+#: ../../../profiel.php:39 ../../../themes/default/views/header.php:280
 #: ../../../tmp/templates/themes_default_views_layout_login.blade.php:5
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:131
 #: ../../../themes/default/views/profiel/not_found.phtml:1
@@ -732,73 +730,56 @@ msgid "Profiel"
 msgstr "Profile"
 
 #: ../../../profiel.php:87
-#: ../../../profiel.sync-conflict-20151025-161443.php:103
 msgid "De volgende velden zijn onjuist ingevuld: "
 msgstr "The following fields are not correctly filled in: "
 
 #: ../../../profiel.php:153
-#: ../../../profiel.sync-conflict-20151025-161443.php:170
 msgid "Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd."
 msgstr "We’ve sent a confirmation mail to your new email address."
 
 #: ../../../profiel.php:171
-#: ../../../profiel.sync-conflict-20151025-161443.php:189
 msgid "De volgende velden zijn te lang: "
 msgstr "The following fields are to long: "
 
 #: ../../../profiel.php:198
-#: ../../../profiel.sync-conflict-20151025-161443.php:216
 msgid "Het huidige wachtwoord is onjuist."
 msgstr "The current password is incorrect"
 
 #: ../../../profiel.php:204
-#: ../../../profiel.sync-conflict-20151025-161443.php:222
 msgid "Het nieuwe wachtwoord is niet ingevuld."
 msgstr "The new password hasn't been filled in"
 
 #: ../../../profiel.php:207
-#: ../../../profiel.sync-conflict-20151025-161443.php:225
 msgid "Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld."
 msgstr "The new password hasn't been filled in correctly twice"
 
 #: ../../../profiel.php:247
-#: ../../../profiel.sync-conflict-20151025-161443.php:265
 msgid "Jij mag deze gegevens niet aanpassen."
 msgstr "Sorry, you are not allowed to modify this data."
 
 #: ../../../profiel.php:250
-#: ../../../profiel.sync-conflict-20151025-161443.php:268
 msgid "De zichtbaarheid van het profiel is niet ingevuld."
 msgstr "The visibility of the profile has not been selected."
 
 #: ../../../profiel.php:253
-#: ../../../profiel.sync-conflict-20151025-161443.php:271
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
 #: ../../../profiel.php:276 ../../../profiel.php:306
-#: ../../../profiel.sync-conflict-20151025-161443.php:294
-#: ../../../profiel.sync-conflict-20151025-161443.php:322
 #, php-format
 msgid "Het fotobestand is te groot. Het maximum is %s."
 msgstr "The image file is too large. The maximum file size is %s."
 
 #: ../../../profiel.php:280 ../../../profiel.php:310
-#: ../../../profiel.sync-conflict-20151025-161443.php:298
-#: ../../../profiel.sync-conflict-20151025-161443.php:326
 #, php-format
 msgid "Het bestand is niet geupload. Foutcode %d."
 msgstr "The image hasn't been uploaded correctly. PHP reports error code %d."
 
 #: ../../../profiel.php:283 ../../../profiel.php:313
-#: ../../../profiel.sync-conflict-20151025-161443.php:301
-#: ../../../profiel.sync-conflict-20151025-161443.php:329
 msgid "Bestand is niet een door PHP geupload bestand."
 msgstr "The image file is not a file uploaded by PHP."
 
 #: ../../../profiel.php:286 ../../../profiel.php:316
-#: ../../../profiel.sync-conflict-20151025-161443.php:304
-#: ../../../profiel.sync-conflict-20151025-161443.php:332
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
@@ -3024,7 +3005,11 @@ msgstr "Add a new comment"
 msgid "Nieuwe reactie"
 msgstr "New comment"
 
-#: ../../../themes/default/views/fotoboekreacties/index.phtml:36
+#: ../../../themes/default/views/fotoboekreacties/index.phtml:8
+msgid "{{Log in}} om te kunnen reageren."
+msgstr "{{Log in}} to be able to respond."
+
+#: ../../../themes/default/views/fotoboekreacties/index.phtml:40
 msgid "Er zijn nog geen reacties"
 msgstr "There are no comments yet"
 
