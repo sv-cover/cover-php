@@ -15,7 +15,12 @@ $total_calc = max(1, $total); ?>
 
 <tr><td colspan="2"><?= __('Aantal stemmen') ?>:<?= $total ?></td></tr>
 
-<?php if (isset($enable_new) && $enable_new): ?>
+
+<?php if (!get_auth()->logged_in()): ?>
+	<tr><td colspan="2"><?=preg_replace_callback('/\{\{(.+?)\}\}/',
+			function($match) { return login_link(markup_format_text($match[1])); },
+			markup_format_text(__('{{Log in}} om te stemmen.'))) ?></tr>
+<?php elseif (isset($enable_new) && $enable_new): ?>
 	<tr><td colspan="2"><a class="button" href="forum.php?forum=<?=$iter->get('forum')?>&amp;addpoll=true"><?=__('Nieuwe poll') ?></a></td></tr>
 <?php endif ?>
 </table>

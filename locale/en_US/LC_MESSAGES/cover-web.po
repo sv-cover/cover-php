@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2015-10-27 00:35+0100\n"
+"POT-Creation-Date: 2015-10-27 00:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1367,7 +1367,7 @@ msgstr "Add a new poll"
 
 #: ../../../themes/default/views/forum.php:450
 #: ../../../themes/default/views/poll/_vote_form.phtml:15
-#: ../../../themes/default/views/poll/_vote_results.phtml:19
+#: ../../../themes/default/views/poll/_vote_results.phtml:24
 msgid "Nieuwe poll"
 msgstr "New poll"
 
@@ -3448,6 +3448,10 @@ msgstr "Vote"
 #: ../../../themes/default/views/poll/_vote_results.phtml:16
 msgid "Aantal stemmen"
 msgstr "Number of votes"
+
+#: ../../../themes/default/views/poll/_vote_results.phtml:22
+msgid "{{Log in}} om te stemmen."
+msgstr "{{Log in}} to vote."
 
 #: ../../../themes/default/views/profiel/_facebook.phtml:8
 #, php-format
