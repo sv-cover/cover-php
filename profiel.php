@@ -241,8 +241,7 @@
 			$errors = array();
 			$message = array();
 
-			if (!member_in_commissie(COMMISSIE_BESTUUR)
-				&& !member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
+			if (!get_identity()->member_in_committee(COMMISSIE_EASY)) {
 				$errors[] = 'type';
 				$message[] = __('Jij mag deze gegevens niet aanpassen.');
 			} elseif (!get_post('type')) {
@@ -269,7 +268,7 @@
 		{
 			$error = null;
 
-			if (!member_in_commissie(COMMISSIE_BESTUUR) && !member_in_commissie(COMMISSIE_KANDIBESTUUR) && !member_in_commissie(COMMISSIE_EASY))
+			if (!get_identity()->member_in_committee(COMMISSIE_EASY))
 				return $this->get_content('common::auth');
 
 			else if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
