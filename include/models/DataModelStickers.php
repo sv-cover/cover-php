@@ -21,6 +21,8 @@ class DataModelStickers extends DataModel
 
 	public function addSticker($label, $omschrijving, $lat, $lng)
 	{
+		die("Niet gebruiken.");
+
 		$toegevoegd_op = date('Y-m-d');
 
 		$toegevoegd_door = logged_in('id');
@@ -139,11 +141,5 @@ class DataModelStickers extends DataModel
 		$row = $this->db->query_first($this->_generate_query('') . " ORDER BY RANDOM() DESC LIMIT 1");
 
 		return $this->_row_to_iter($row);
-	}
-
-	public function memberCanEditSticker($sticker)
-	{
-		return member_in_commissie(COMMISSIE_BESTUUR)
-			|| ($sticker->get('toegevoegd_door') != null && $sticker->get('toegevoegd_door') == logged_in('id'));
 	}
 }

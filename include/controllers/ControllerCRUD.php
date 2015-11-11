@@ -57,10 +57,8 @@ class ControllerCRUD extends Controller
 			// && in_array($_POST['_' . $form . '_nonce'], $_SESSION[$form . '_nonce']);
 	}
 
-	protected function run_view($view, DataModel $model, $iter, array $params)
+	protected function _create_view($view)
 	{
-		list($view, $method) = explode('::', $view, 2);
-
 		$view_class = sprintf('%sView', $view);
 
 		$search_paths = array(
@@ -70,13 +68,16 @@ class ControllerCRUD extends Controller
 		$path = find_file($search_paths);
 
 		if ($path === null)
-			throw new RuntimeException("Could not find view class '$view_class' while trying to run view $view::$method.");
+			throw new RuntimeException("Could not find view class '$view_class'");
 
 		include_once $path;
 
-		$instance = new $view_class($this);
+		return new $view_class($this);
+	}
 
-		call_user_func([$instance, $method], array_merge($params, compact('model', 'iter')));
+	protected function run_view($view, DataModel $model, $iter, array $params)
+	{
+		throw new RuntimeException("ControllerCRUD::run_view() is not implemented anymore");
 	}
 
 	protected function _create_iter()
@@ -144,15 +145,29 @@ class ControllerCRUD extends Controller
 		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
 	}
 
-	protected function get_content($view, $iters = null, array $params = array())
+	protected function get_content($view, $iter = null, array $params = array())
 	{
+		if (strpos($view, '::') === false) {
+			$view_method = $view;
+			$view_instance = $this->_create_view($this->_get_view_name());
+		}
+		else {
+			list($view_class, $view_method) = explode('::', $view, 2);
+			$view_instance = $this->_create_view($view_class);
+		}
+
 		if (!$this->embedded)
-			$this->run_header(array('title' => $this->_get_title($iters)));
+			$this->run_header([
+				'controller' => $this,
+				'view' => $view_instance,
+				'title' => $this->_get_title($iter),
+			]);
 
-		if (strpos($view, '::') === false)
-			$view = $this->_get_view_name() . '::' . $view;
-
-		$this->run_view($view, $this->model, $iters, array_merge($this->_get_default_view_params(), $params));
+		call_user_func([$view_instance, $view_method],
+			array_merge(
+				$this->_get_default_view_params(),
+				compact('model', 'iter'),
+				$params));
 
 		if (!$this->embedded)
 			$this->run_footer();
@@ -333,25 +348,10 @@ class ControllerCRUD extends Controller
 				return run_view('common::not_found');
 		}
 
-		switch ($view ?: 'index')
-		{
-			case 'create':
-				return $this->run_create();
+		if (!$view) $view = 'index';
 
-			case 'read':
-				return $this->run_read($iter);
-			
-			case 'update':
-				return $this->run_update($iter);
-
-			case 'delete':
-				return $this->run_delete($iter);
-
-			case 'index':
-				return $this->run_index();
-			
-			default:
-				return run_view('common::not_found');
-		}
+		return method_exists($this, 'run_' . $view)
+			? call_user_func_array([$this, 'run_' . $view], [$iter])
+			: run_view('common::not_found');
 	}
 }

@@ -17,6 +17,11 @@ class View
 	function get_name() {
 		return str_replace("view", "", strtolower(get_class($this)));
 	}
+
+	public function get_scripts()
+	{
+		return [];
+	}
 	
 	/**
 	 * Renders the file with the name of _$name.phtml in the directory of 

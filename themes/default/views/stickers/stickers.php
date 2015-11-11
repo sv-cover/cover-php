@@ -1,12 +1,23 @@
 <?php
 	
-class StickersView extends View
+class StickersView extends CRUDView
 {
 	protected $__file = __FILE__;
 
-	public function __construct()
+	protected $model;
+
+	public function __construct(ControllerCRUD $controller)
 	{
+		parent::__construct($controller);
+
 		$this->model = get_model('DataModelStickers');
+	}
+
+	public function get_scripts()
+	{
+		return array_merge(parent::get_scripts(), [
+			get_theme_data('data/stickers.js')
+		]);
 	}
 
 	public function getLocation()
@@ -24,6 +35,8 @@ class StickersView extends View
 	{
 		$stickers = array();
 
+		$policy = get_policy($this->model);
+
 		foreach ($iters as $iter)
 		{
 			$sticker = array(
@@ -32,13 +45,13 @@ class StickersView extends View
 				'omschrijving' => $iter->get('omschrijving'),
 				'lat' => $iter->get('lat'),
 				'lng' => $iter->get('lng'),
-				'foto' => $iter->get('foto') ? 'stickers.php?photo=' . $iter->get('id') : null,
+				'foto' => $iter->get('foto') ? $this->controller->link_to_photo($iter) : null,
 				'toegevoegd_op' => $iter->get('toegevoegd_op'),
 				'toegevoegd_door_id' => $iter->get('toegevoegd_door'),
 				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
 					? member_full_name($iter->getIter('toegevoegd_door'), false, true)
 					: null,
-				'editable' => $this->model->memberCanEditSticker($iter)
+				'editable' => $policy->user_can_update($iter)
 			);
 
 			$stickers[] = $sticker;

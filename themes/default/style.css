@@ -1469,13 +1469,14 @@ form textarea {
 	vertical-align: bottom;
 }
 
-#add-sticker-dialog form {
+form.add-sticker-form {
 	position: relative;
 	height: 100%;
+	width: 450px;
 	min-height: 450px;
 }
 
-#sticker-location {
+form .sticker-location-picker {
 	position: absolute;
 	top: 142px;
 	bottom: 42px;
@@ -1484,12 +1485,12 @@ form textarea {
 	border-radius: 4px;
 }
 
-#sticker-location-map {
+form .sticker-location-map {
 	width: 100%;
 	height: 100%;
 }
 
-#add-sticker-dialog button {
+form.add-sticker-form button {
 	position: absolute;
 	bottom: 8px;
 }

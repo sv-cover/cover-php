@@ -383,8 +383,6 @@
 		foreach ($styles as $style)
 			echo '<link rel="stylesheet" href="' . get_theme_data('styles/' . $style . '.css')  . '" type="text/css">' . "\n";
 		
-		$controller = basename($_SERVER['PHP_SELF'], '.php');
-		
 		echo '
 		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -392,7 +390,14 @@
 		<script type="text/javascript" src="' . get_theme_data('data/common.js') . '"></script>
 		<script type="text/javascript" src="' . get_theme_data('data/popup.js') . '"></script>
 		<script type="text/javascript" src = "' . get_theme_data('data/dropdown.js') . '"></script>
-		<script type="text/javascript" src="data/connection.js"></script>
+		<script type="text/javascript" src="data/connection.js"></script>';
+
+		// Embed scripts as specified by the view
+		if (isset($params['view']) && $params['view'] instanceof View)
+			foreach ($params['view']->get_scripts() as $script)
+				printf('<script src="%s"></script>', markup_format_attribute($script));
+
+		echo '
 	</head>
 	<body>
 		<div class="world">

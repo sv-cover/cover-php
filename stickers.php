@@ -1,50 +1,32 @@
 <?php
 
-require_once 'include/init.php';
-require_once 'include/member.php';
-require_once 'include/controllers/Controller.php';
+require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerStickers extends Controller
+class ControllerStickers extends ControllerCRUD
 {
-	public function ControllerStickers()
+	public function __construct()
 	{
 		$this->model = get_model('DataModelStickers');
 	}
 
-	public function get_content($view, $iter = null, $params = null)
+	public function link_to_add_photo(DataIter $iter)
 	{
-		$this->run_header(array('title' => __('Stickers')));
-		run_view('stickers::' . $view, $this->model, $iter, $params);
-		$this->run_footer();
+		return $this->link_to_iter($iter, [$this->_var_view => 'add_photo']);
 	}
 
-	public function run()
+	public function link_to_photo(DataIter $iter)
 	{
-		if (isset($_POST['action']) && $_POST['action'] == 'add_sticker')
-			$this->_add_sticker($_POST);
-
-		elseif (isset($_POST['action']) && $_POST['action'] == 'add_photo')
-			$this->_add_photo($_POST);
-
-		else if (isset($_POST['action']) && $_POST['action'] == 'remove_sticker')
-			$this->_remove_sticker($_POST);
-
-		else if (isset($_GET['photo']))
-			$this->run_photo($_GET['photo'], !empty($_GET['thumbnail']));
-
-		$this->run_map();
+		return $this->link_to_iter($iter, [$this->_var_view => 'photo']);
 	}
 
-	public function run_map()
+	public function run_read(DataIter $iter)
 	{
-		$stickers = $this->model->get();
-
-		$this->get_content('map', $stickers);
+		return $this->redirect('stickers.php?sticker=' . $iter->get_id());
 	}
 
-	public function run_photo($id, $thumbnail = false)
+	public function run_photo(DataIter $iter)
 	{
-		$iter = $this->model->get_iter($id);
+		$thumbnail = !empty($_GET['thumbnail']);
 
 		if (!$iter)
 		{
@@ -71,50 +53,20 @@ class ControllerStickers extends Controller
 		exit;
 	}
 
-	protected function _add_sticker(array $data)
+	protected function run_add_photo(DataIter $sticker)
 	{
-		if (!logged_in())
-			return;
+		if ($sticker && get_policy($this->model)->user_can_update($sticker))
+			$this->model->setPhoto($sticker, fopen($_FILES['photo']['tmp_name'], 'rb'));
 
-		if (empty($data['label']) || empty($data['lat']) || empty($data['lng']))
-			return;
-
-		$id = $this->model->addSticker($data['label'], $data['omschrijving'], $data['lat'], $data['lng']);
-
-		header('Location: stickers.php?sticker=' . $id);
-		exit;
-	}
-
-	protected function _remove_sticker(array $data)
-	{
-		$iter = $this->model->get_iter($data['id']);
-
-		if ($iter && $this->model->memberCanEditSticker($iter))
-		{
-			$this->model->delete($iter);
-			$this->_delete_thumbnail($iter);
-		}
-
-		header('Location: stickers.php');
-		exit;
-	}
-
-	protected function _add_photo(array $data)
-	{
-		$iter = $this->model->get_iter($data['id']);
-
-		if ($iter && $this->model->memberCanEditSticker($iter))
-			$this->model->setPhoto($iter, fopen($_FILES['photo']['tmp_name'], 'rb'));
-
-		header('Location: stickers.php?sticker=' . $iter->get('id'));
+		header('Location: stickers.php?sticker=' . $sticker->get_id());
 		exit;
 	}
 
 	protected function _generate_thumbnail($sticker)
 	{
-		$cache_file = 'tmp/stickers/' . $sticker->get('id') . '.jpg';
+		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
 
-		$use_cache = file_exists($cache_file) && filemtime($cache_file) > $sticker->get('foto_mtime');
+		$use_cache = file_exists($cache_file) && filemtime($cache_file) > $sticker['foto_mtime'];
 
 		// Is the cache file up to date? Then we are done
 		if (!$use_cache)
@@ -138,7 +90,7 @@ class ControllerStickers extends Controller
 
 	protected function _delete_thumbnail($sticker)
 	{
-		$cache_file = 'tmp/stickers/' . $sticker->get('id') . '.jpg';
+		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
 
 		if (file_exists($cache_file))
 			unlink($cache_file);

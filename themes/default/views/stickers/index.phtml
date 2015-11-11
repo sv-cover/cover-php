@@ -1,7 +1,7 @@
 <div class="pageheading">
-	<?php if (logged_in()): ?>
+	<?php if (get_policy($model)->user_can_create()): ?>
 	<div class="controls inline">
-		<a href="#add-sticker-dialog" id="add-sticker-button" class="create-link">
+		<a href="<?=markup_format_attribute($controller->link_to_create())?>" id="add-sticker-button" class="create-link" data-placement-selector="modal" data-partial-selector=".add-sticker-form">
 			<?=__('Nieuwe sticker')?>
 		</a>
 	</div>
@@ -19,14 +19,10 @@
 		<p class="sticker-description"></p>
 		<div class="controls">
 			<form method="post" action="" class="remove-sticker-form">
-				<input type="hidden" name="action" value="remove_sticker">
-				<input type="hidden" name="id">
 				<button type="submit" class="button"><?=__('Verwijder sticker')?></button>
 			</form>
 
 			<form method="post" action="" enctype="multipart/form-data" class="add-photo-form">
-				<input type="hidden" name="action" value="add_photo">
-				<input type="hidden" name="id">
 				<div class="file-upload-button button">
 					<span><?=__('Kies foto') ?>&hellip;</span>
 					<input type="file" name="photo" accept="image/jpeg" title="<?=__('Voeg een foto toe bij deze sticker. Alleen JPEG-plaatjes mogen.')?>">
@@ -36,37 +32,6 @@
 	</div>
 </div>
 
-<?php if (logged_in()): ?>
-<div id="add-sticker-dialog" title="<?=__('Sticker toevoegen')?>">
-	<form method="post" action="" class="vertical-form">
-		<input type="hidden" name="action" value="add_sticker">
-		<input type="hidden" id="sticker-lat" name="lat">
-		<input type="hidden" id="sticker-lng" name="lng">
-		
-		<div>
-			<label for="sticker-label"><?=__('Label')?></label>
-			<input type="text" name="label" id="sticker-label">
-		</div>
-
-		<div>
-			<label for="sticker-description"><?=__('Boodschap')?></label>
-			<textarea name="omschrijving" id="sticker-description"></textarea>
-		</div>
-
-		<div>
-			<label for="sticker-location"><?=__('Locatie')?> <small><?=__('Sleep of klik met de rechter muisknop om de marker te plaatsen')?></small></label>
-			<div id="sticker-location">
-				<div id="sticker-location-map"></div>
-			</div>
-		</div>
-
-		<div>
-			<button type="submit" class="button"><?=__('Zet sticker op kaart')?></button>
-		</div>
-	</form>
-</div>
-<?php endif ?>
-
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&amp;sensor=false"></script>
 <script type="text/javascript">
 	var stickers = <?=$this->encodeStickers($iter)?>;
@@ -74,6 +39,10 @@
 	var highlightedStickerId = /sticker=(\d+)/.test(document.location.href)
 		? document.location.href.match(/sticker=(\d+)/)[1]
 		: null;
+
+	var removeLink = <?=json_encode($controller->link_to_delete(new DataIter($model, 'XXX', [])))?>;
+
+	var addPhotoLink = <?=json_encode($controller->link_to_add_photo(new DataIter($model, 'XXX', [])))?>;
 
 	// Initialize the sticker map
 	$(function() {
@@ -124,6 +93,8 @@
 				description.find('.controls').toggle(sticker.editable);
 				description.find('.sticker-photo').toggle(sticker.foto != null);
 				description.find('.sticker-user').toggle(sticker.toegevoegd_door_naam != null);
+				description.find('.remove-sticker-form').prop('action', removeLink.replace(/XXX/, sticker.id));
+				description.find('.add-photo-form').prop('action', addPhotoLink.replace(/XXX/, sticker.id));
 
 				// If it is known who added this sticker, show the 'by-line'
 				if (sticker.toegevoegd_door_naam)
@@ -162,74 +133,5 @@
 			// Also, when clicking a marker, fill the info window and open it.
 			google.maps.event.addListener(marker, 'click', showInfoWindow);
 		});
-	});
-
-	// Initialize the sticker location picker
-	var initStickerLocationPicker = function() {
-		var canvas = $('#sticker-location-map');
-
-		if (canvas.data('picker'))
-			return canvas.data('picker');
-
-		var mapOptions = {
-			center: new google.maps.LatLng(53.20, 6.56),
-			zoom: 11,
-			streetViewControl: false,
-			mapTypeControl: true
-		};
-
-		// The small map
-		var map = new google.maps.Map(canvas.get(0), mapOptions);
-
-		// The draggable marker
-		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(53.20, 6.56),
-			draggable: true,
-			map: map
-		});
-
-		var updatePositionFields = function() {
-			$('#sticker-lat').val(marker.getPosition().lat());
-			$('#sticker-lng').val(marker.getPosition().lng());
-		};
-
-		// When right-clicking somewhere on the map, place the marker at that point
-		google.maps.event.addListener(map, 'rightclick', function(e) {
-			marker.setPosition(e.latLng);
-		});
-
-		// Update the hidden input fields when the marker changes position
-		google.maps.event.addListener(marker, 'position_changed', updatePositionFields);
-
-		// Make the map easily available through the dom element
-		var picker = {map: map, marker: marker};
-		canvas.data('picker', picker);
-
-		return picker;
-	};
-
-	$('#add-sticker-dialog').dialog({
-		modal: true,
-		autoOpen: false,
-		width: 600,
-		heigt: 500,
-		minWidth: 600,
-		minHeight: 500,
-		open: function() {	
-			// Center the picker at the same location as the map
-			var picker = initStickerLocationPicker();
-
-			picker.map.setCenter($('#sticker-map').data('google-map').getCenter());
-			picker.map.setZoom($('#sticker-map').data('google-map').getZoom());
-			picker.marker.setPosition($('#sticker-map').data('google-map').getCenter());
-		},
-		resize: function() {
-			google.maps.event.trigger(initStickerLocationPicker(), 'resize');
-		}
-	});
-
-	$('#add-sticker-button').click(function(e) {
-		e.preventDefault();
-		$('#add-sticker-dialog').dialog('open');
 	});
 </script>

@@ -1,0 +1,28 @@
+<h1><?=$this->get_label($iter, __('Nieuwe sticker toevoegen'), __('Sticker wijzigen')) ?></h1>
+<div class="messageBox">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="add-sticker-form vertical-form">
+		<input type="hidden" name="lat">
+		<input type="hidden" name="lng">
+
+		<div>
+			<?=label(__('Label'), 'label', $errors, true) ?>
+			<?=input_text('label', $iter, 'required', 'required', 'placeholder', __('Bijv. op de lantaarnpaal'))?>
+		</div>
+
+		<div>
+			<?=label(__('Boodschap'), 'description', $errors, true) ?>
+			<textarea name="omschrijving" id="field-description"><?=markup_format_text(isset($_POST['omschrijving']) ? $_POST['omschrijving'] : $iter['omschrijving'])?></textarea>
+		</div>
+
+		<div>
+			<label for="sticker-location"><?=__('Locatie')?> <small><?=__('Sleep of klik met de rechter muisknop om de marker te plaatsen')?></small></label>
+			<div class="sticker-location-picker">
+				<div class="sticker-location-map"></div>
+			</div>
+		</div>
+
+		<div>
+			<button type="submit" class="button"><?=__('Zet sticker op kaart')?></button>
+		</div>
+	</form>
+</div>
