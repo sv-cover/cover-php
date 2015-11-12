@@ -208,7 +208,7 @@
 			/* Remove the possible moderation */
 			foreach ($this->get_proposed() as $proposed_update)
 				if ($proposed_update->get('replacement_for') == $iter->get_id())
-					$this->reject_update($proposed_update);
+					$this->reject_proposal($proposed_update);
 			
 			/* Chain up */
 			parent::delete($iter);
