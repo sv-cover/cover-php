@@ -16,7 +16,7 @@
 	</form>
 	<?php endif ?>
 
-	<?php if ($iter->has('nick')): ?>
+	<?php if ($iter->has('nick') && !$model->is_private($iter, 'naam')): ?>
 	<h3 class="nickname"><?=markup_format_text($iter['nick'])?></h3>
 	<?php endif ?>
 
