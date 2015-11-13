@@ -728,6 +728,9 @@
 
 		protected function _view_read_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
+			if (!$this->policy->user_can_read($book))
+				throw new UnauthorizedException();
+
 			$photos = $book->get_photos();
 
 			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
