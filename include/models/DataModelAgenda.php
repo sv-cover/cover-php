@@ -40,7 +40,6 @@
 			'tot',
 			'locatie',
 			'private',
-			'lustrum',
 			'extern',
 			'facebook_id',
 			'replacement_for'
