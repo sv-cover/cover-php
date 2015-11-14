@@ -11,31 +11,29 @@ try {
 	$status = $kast_api->getStatus($iter->get_id());
 	$history = $kast_api->getHistory($iter->get_id());
 ?>
-<section>
+<section class="aligned-list-section">
 	<h2><?=__('KAST')?></h2>
-	<p>Credit balance: <em><?=$status->credits?></em></p>
+	<h4>Credit balance</h4>
+	<em><?=$status->credits?> credits</em>
 </section>
-<section>
+
+<section class="aligned-list-section">
 	<p>Your last ten purchases are listed here.</p>
 	<table class="full-width-table">
 		<thead>
 			<tr>
 				<th>Product</th>
-				<th>Status</th>
-				<th>Price</th>
-				<th>Date of purchase</th>
+				<th class="numeric">Price</th>
+				<th class="timestamp">Date of purchase</th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($history as $purchase): ?>
-			<tr>
+			<?php foreach ($history as $i => $purchase): ?>
+			<tr class="<?php if ($purchase->admin || $i % 3 == 0) echo 'purchase-admin' ?><?php if (!$purchase->valid || $i % 3 == 1) echo 'purchase-reverted' ?>"
+				title="<?php if ($purchase->admin || $i % 3 == 0) echo 'Admin intervention' ?><?php if (!$purchase->valid || $i % 3 == 1) echo 'Undone' ?>">
 				<td><?=markup_format_text($purchase->product_description)?></td>
-				<td>
-					<?php if ($purchase->admin) echo 'Admin' ?>
-					<?php if (!$purchase->valid) echo 'Reverted' ?>
-				</td>
-				<td><?=sprintf('%d', $purchase->price)?></td>
-				<td><?=$format_date($purchase->date)?></td>
+				<td class="numeric"><?=sprintf('%d', $purchase->price)?></td>
+				<td class="timestamp"><?=$format_date($purchase->date)?></td>
 			</tr>
 			<?php endforeach ?>
 		</tbody>

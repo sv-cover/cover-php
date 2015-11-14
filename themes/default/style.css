@@ -419,7 +419,7 @@ border-radius: 0 0 5px 5px;
 	display: block;
 }
 
-.large-button {
+.large-button, .large-text {
 	font-size: 22px;
 }
 
@@ -1087,10 +1087,32 @@ div.beheer table {
 
 .full-width-table {
 	width: 100%;
+	border-collapse: collapse;
 }
 
 .full-width-table th {
 	text-align: left;
+}
+
+.full-width-table td {
+	border-bottom: 1px solid #ccc;
+	line-height: 2.4em;
+}
+
+.purchase-admin td {
+	font-style: italic;
+}
+
+.purchase-reverted td {
+	text-decoration: line-through;
+}
+
+td.numeric {
+	text-align: right;
+}
+
+td.timestamp {
+	text-align: right;
 }
 
 #language-switch {
@@ -1381,20 +1403,6 @@ div.beheer table {
 
 .mailinglists .list-name {
 	display: inline-block; 
-}
-
-form > table th {
-	border-top: 1px solid #ccc;
-	padding: 4px 0;
-	text-align: left;
-}
-
-table.vertical th {
-	text-align: left;
-}
-
-table.full-width {
-	width: 100%;
 }
 
 form input[type=text],
@@ -2319,10 +2327,21 @@ body .ui-autocomplete a.profile .starting-year {
 
 .tab-pane .aligned-list-section {
 	margin-left: 140px;
+	position: relative;
 }
 
 .tab-pane .aligned-list-section .hint {
 	font-style: italic;
+}
+
+.tab-pane .aligned-list-section h4 {
+	display: block;
+	width: 130px;
+	position: absolute;
+	left: -140px;
+	text-align: right;
+	color: #000;
+	font-weight: normal;
 }
 
 .aligned-list-section .vertical-form > div {
