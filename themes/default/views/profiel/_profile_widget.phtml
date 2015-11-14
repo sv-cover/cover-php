@@ -1,5 +1,5 @@
 <div class="commissie-member profile-widget round">
-	<?php if ($model->has_photo($iter)): ?>
+	<?php if ($model->has_photo($iter) && !$model->is_private($iter, 'foto')): ?>
 	<a href="foto.php?lid_id=<?=$iter->get_id()?>" data-image-popup="modal" title="<?=markup_format_attribute(__('Klik om de foto te vergroten'))?>">
 		<img src="foto.php?lid_id=<?=$iter->get('id')?>&amp;format=square&amp;width=200" width="150">
 	</a>
