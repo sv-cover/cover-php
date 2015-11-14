@@ -29,8 +29,8 @@ try {
 		</thead>
 		<tbody>
 			<?php foreach ($history as $i => $purchase): ?>
-			<tr class="<?php if ($purchase->admin || $i % 3 == 0) echo 'purchase-admin' ?><?php if (!$purchase->valid || $i % 3 == 1) echo 'purchase-reverted' ?>"
-				title="<?php if ($purchase->admin || $i % 3 == 0) echo 'Admin intervention' ?><?php if (!$purchase->valid || $i % 3 == 1) echo 'Undone' ?>">
+			<tr class="<?php if ($purchase->admin) echo 'purchase-admin' ?><?php if (!$purchase->valid) echo 'purchase-reverted' ?>"
+				title="<?php if ($purchase->admin) echo 'Admin intervention' ?><?php if (!$purchase->valid) echo 'Undone' ?>">
 				<td><?=markup_format_text($purchase->product_description)?></td>
 				<td class="numeric"><?=sprintf('%d', $purchase->price)?></td>
 				<td class="timestamp"><?=$format_date($purchase->date)?></td>
