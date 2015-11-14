@@ -1,0 +1,48 @@
+<?php
+require_once 'include/kast.php';
+
+$format_date = function($datestring) {
+	$timestamp = strtotime($datestring);
+	return date('l, d-m-Y H:i:s', $timestamp);
+};
+
+try {
+	$kast_api = get_kast();
+	$status = $kast_api->getStatus($iter->get_id());
+	$history = $kast_api->getHistory($iter->get_id());
+?>
+<section>
+	<h2><?=__('KAST')?></h2>
+	<p>Credit balance: <em><?=$status->credits?></em></p>
+</section>
+<section>
+	<p>Your last ten purchases are listed here.</p>
+	<table class="full-width-table">
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Status</th>
+				<th>Price</th>
+				<th>Date of purchase</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($history as $purchase): ?>
+			<tr>
+				<td><?=markup_format_text($purchase->product_description)?></td>
+				<td>
+					<?php if ($purchase->admin) echo 'Admin' ?>
+					<?php if (!$purchase->valid) echo 'Reverted' ?>
+				</td>
+				<td><?=sprintf('%d', $purchase->price)?></td>
+				<td><?=$format_date($purchase->date)?></td>
+			</tr>
+			<?php endforeach ?>
+		</tbody>
+	</table>
+</section>
+<?php } catch (Exception $e) { ?>
+<section>
+	<p>Sorry, but your current KAST status could not be retrieved right now.</p>
+</section>
+<?php } ?>

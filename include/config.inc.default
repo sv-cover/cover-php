@@ -56,5 +56,10 @@
 
 		// The shared secret that is used in the checksum when Secretary wants to
 		// update the info of a member.
-		'secretary_shared_secret' => 'p5mWhn1Ojmsi51w9QcNC'
+		'secretary_shared_secret' => 'p5mWhn1Ojmsi51w9QcNC',
+
+		// For the website calling the KAST API to read the current credit balance
+		'kast_root' => 'https://kast.svcover.nl/api',
+		'kast_app' => '',
+		'kast_secret' => ''
 	);

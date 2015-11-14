@@ -93,6 +93,13 @@ $tabs = [
 			$this->render_partial('facebook', compact('iter'));
 		}
 	],
+	'kast' => [
+		'visible' => $this->is_current_member($iter),
+		'label' => __('KAST'),
+		'body' => function () use ($iter) {
+			$this->render_partial('kast', compact('iter'));
+		}
+	],
 	'system' => [
 		'visible' => member_in_commissie(COMMISSIE_EASY),
 		'label' => __('Systeem'),
