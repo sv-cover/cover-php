@@ -163,7 +163,7 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 			if (tab.length) {
 				tab.addClass('active');
 			} else {
-				tab = $('<div>').prop('id', tabName).addClass('tab-pane active')
+				tab = $('<div>').attr('id', tabName).addClass('tab-pane active')
 				tab.html('<div class="loading-indicator"><i class="fa fa-spinner fa-pulse"></i></div>');
 				tab.load($(this).attr('href') + ' #profile-tab-container > .tab-content > .tab-pane#' + tabName, function() {
 					$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
@@ -179,10 +179,10 @@ $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == tru
 		$(loaded.target).find('form.toggle-action-button').on('submit', function(e) {
 			e.preventDefault();
 			var $form = $(this);
-			var id = $form.prop('id');
+			var id = $form.attr('id');
 
 			var tmp = document.createDocumentFragment();
-			$(tmp).load($form.prop('action'), $form.serializeArray(), function() {
+			$(tmp).load($form.attr('action'), $form.serializeArray(), function() {
 				var btn = tmp.querySelector('#' + id);
 				$form.get(0).className = btn.className;
 				$form.find('input[type=hidden]').remove();
