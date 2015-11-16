@@ -114,10 +114,9 @@
 		}
 		
 		
-		if ($view = get_new_view($name)) {
-			// We need to send the model and iter with the function. However, the new views only take
-			// a hash a parameter. Thus, we add the model and iter to the params if possible.
-			// Otherwise, throw an error.
+		try {
+			$view = get_new_view($name);
+			
 			if (is_null($params))
 				return $view->$function(array("model" => $model, "iter" => $iter));
 				
@@ -125,17 +124,17 @@
 				return $view->$function(array_merge($params, array("model" => $model, "iter" => $iter)));
 
 			return report_error(N__("View"), N__("De meegeleverde $params aan functie %s is geen array, maar een: %s"), $name, $params);				
-		}
-		
-		if (!_load_view("../themes/" . get_theme() . "/views/$name.php"))
-			if (!_load_view("../themes/default/views/$name.php"))
-				return report_error(N__("View"), N__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme());
+		} catch(Exception $e) {
+			if (!_load_view("../themes/" . get_theme() . "/views/$name.php"))
+				if (!_load_view("../themes/default/views/$name.php"))
+					return report_error(N__("View"), N__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme());
 
-		/* Locate the function */
-		if (function_exists("view_$function"))
-			return call_user_func("view_$function", $model, $iter, $params);
-		else
-			return report_error(N__("View"), N__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme());
+			/* Locate the function */
+			if (function_exists("view_$function"))
+				return call_user_func("view_$function", $model, $iter, $params);
+			else
+				return report_error(N__("View"), N__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme());
+		}
 	}
 	
 	/**
@@ -149,27 +148,9 @@
 	 **/
 	function get_new_view($view) 
 	{
-		$view_directory = dirname(__FILE__) . '/../themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php';
-		$view_default_directory = dirname(__FILE__) . '/../themes/default/views/' . $view . '/' . $view . '.php';
-		
-		if (!file_exists($view_directory))
-		{
-			if (!file_exists($view_default_directory))
-				return false;
-			else
-				$file = $view_default_directory;
-		}
-		else
-			$file = $view_directory;
-				
-		require_once($file);
-		$view_name = $view . 'View';
-		if (class_exists($view_name))
-			return new $view_name;
-				
-		return false;
-
+		return View::byName($view, null);
 	}
+
 	/** @group Functions
 	  * Convenient function to get an array of day names
 	  *
@@ -619,6 +600,35 @@
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
 		$factor = floor((strlen($bytes) - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $size[$factor];
+	}
+
+	function format_date_relative($time)
+	{
+		$diff = time() - $time;
+
+		if ($diff == 0)
+			return __('nu');
+
+		else if ($diff > 0)
+		{
+			$day_diff = floor($diff / 86400);
+			
+			if ($day_diff == 0)
+			{
+				if ($diff < 60) return __('net');
+				if ($diff < 120) return __('1 minuut geleden');
+				if ($diff < 3600) return sprintf(__('%d minuten geleden'), floor($diff / 60));
+				if ($diff < 7200) return __('1 uur geleden');
+				if ($diff < 86400) return sprintf(__('%d uren geleden'), floor($diff / 3600));
+			}
+			if ($day_diff == 1) return __('Gisteren');
+			if ($day_diff < 7) return sprintf(__('%d dagen geleden'), $day_diff);
+			// if ($day_diff < 31) return sprintf(__('%d weken geleden'), floor($day_diff / 7));
+			// if ($day_diff < 60) return __('afgelopen maand');
+			return date('j-n-Y H:i:s', $time);
+		}
+		else
+			return date('j-n-Y', $time);
 	}
 	
 	/** @group Functions

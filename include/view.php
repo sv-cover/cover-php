@@ -7,6 +7,29 @@
   */
 class View
 { 	
+	static public function byName($view, Controller $controller = null)
+	{
+		$possible_paths = [
+			'themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php',
+			'themes/default/views/' . $view . '/' . $view . '.php'
+		];
+
+		$file = find_file($possible_paths);
+
+		if ($file === null)
+			throw new InvalidArgumentException("Cannot find view $view");
+				
+		require_once($file);
+
+		$view_name = $view . 'View';
+
+		if (!class_exists($view_name))
+			throw new RuntimeException("Expected the class $view_name in $file");
+
+		$refl = new ReflectionClass($view_name);
+		return $refl->newInstance($controller);
+	}
+
 	protected $controller;
 
 	public function __construct(Controller $controller = null)
@@ -16,6 +39,11 @@ class View
 
 	function get_name() {
 		return str_replace("view", "", strtolower(get_class($this)));
+	}
+
+	public function get_view($name)
+	{
+		return self::byName($name, $this->controller);
 	}
 
 	public function get_scripts()

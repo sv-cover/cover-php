@@ -1,7 +1,7 @@
 <?php
 $model = get_model('DataModelSession');
 $sessions = $model->getActive($iter->get_id());
-$session_view = get_new_view('sessions');
+$session_view = $this->get_view('sessions');
 ?>
 <section>
 	<h2><?=__('Sessies')?></h2>
@@ -24,10 +24,10 @@ $session_view = get_new_view('sessions');
 				<?php foreach ($sessions as $session): ?>
 				<tr>
 					<td><input type="checkbox" name="sessions[]" value="<?=$session->get_id()?>"></td>
-					<td><?=$session->get('ip_address')?></td>
-					<td><?=$session_view->format_application($session->get('application'))?></td>
-					<td><?=$session_view->format_time($session->get('created_on'))?></td>
-					<td><?=$session_view->format_time($session->get('last_active_on'))?></td>
+					<td><?=$session['ip_address']?></td>
+					<td><?=$session_view->format_application($session['application'])?></td>
+					<td><?=$session_view->format_time($session['created_on'])?></td>
+					<td><?=$session_view->format_time($session['last_active_on'])?></td>
 				</tr>
 				<?php endforeach ?>
 			</tbody>

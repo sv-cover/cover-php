@@ -3,7 +3,7 @@ require_once 'include/kast.php';
 
 $format_date = function($datestring) {
 	$timestamp = strtotime($datestring);
-	return date('l, d-m-Y H:i:s', $timestamp);
+	return format_date_relative($timestamp);
 };
 
 try {

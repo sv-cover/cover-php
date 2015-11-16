@@ -1107,10 +1107,12 @@ div.beheer table {
 	text-decoration: line-through;
 }
 
+th.numeric,
 td.numeric {
 	text-align: right;
 }
 
+th.timestamp,
 td.timestamp {
 	text-align: right;
 }

@@ -12,31 +12,7 @@ class SessionsView extends View
 
 	protected function format_relative_time($time)
 	{
-		$diff = time() - $time;
-
-		if ($diff == 0)
-			return __('nu');
-
-		else if ($diff > 0)
-		{
-			$day_diff = floor($diff / 86400);
-			
-			if ($day_diff == 0)
-			{
-				if ($diff < 60) return __('net');
-				if ($diff < 120) return __('1 minuut geleden');
-				if ($diff < 3600) return sprintf(__('%d minuten geleden'), floor($diff / 60));
-				if ($diff < 7200) return __('1 uur geleden');
-				if ($diff < 86400) return sprintf(__('%d uren geleden'), floor($diff / 3600));
-			}
-			if ($day_diff == 1) return __('Gisteren');
-			if ($day_diff < 7) return sprintf(__('%d dagen geleden'), $day_diff);
-			// if ($day_diff < 31) return sprintf(__('%d weken geleden'), floor($day_diff / 7));
-			// if ($day_diff < 60) return __('afgelopen maand');
-			return date('d-m-Y H:i:s', $time);
-		}
-		else
-			return date('d-m-Y', $time);
+		return format_date_relative($time);
 	}
 
 	protected function format_time($timestring)

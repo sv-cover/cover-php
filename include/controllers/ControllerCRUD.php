@@ -59,20 +59,7 @@ class ControllerCRUD extends Controller
 
 	protected function _create_view($view)
 	{
-		$view_class = sprintf('%sView', $view);
-
-		$search_paths = array(
-			'themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php',
-			'themes/default/views/' . $view . '/' . $view . '.php');
-
-		$path = find_file($search_paths);
-
-		if ($path === null)
-			throw new RuntimeException("Could not find view class '$view_class'");
-
-		include_once $path;
-
-		return new $view_class($this);
+		return View::byName($view, $this);
 	}
 
 	protected function run_view($view, DataModel $model, $iter, array $params)
