@@ -254,6 +254,10 @@
 		$model = get_model('DataModelMember');
 		
 		$jarigen = $model->get_jarigen();
+
+		$jarigen = array_filter($jarigen, function($member) use ($model) {
+			return !$member->is_private('naam') && !$member->is_private('geboortedatum');
+		});
 		
 		if (!$jarigen || count($jarigen) == 0)
 			$contents .=  __('Er zijn vandaag geen jarigen');
