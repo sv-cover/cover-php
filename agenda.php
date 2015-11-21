@@ -165,10 +165,6 @@
 
 			$skip_confirmation = false;
 
-			// The board can add agenda items without confirming it (because that is a bit double)
-			if ($data['commissie'] == COMMISSIE_BESTUUR && member_in_commissie(COMMISSIE_BESTUUR, false))
-				$skip_confirmation = true;
-
 			// If you update the facebook-id, description or location, no need to reconfirm.
 			if ($iter && !array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'locatie')))
 				$skip_confirmation = true;
