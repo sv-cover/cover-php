@@ -2,7 +2,7 @@
 
 $agenda = get_model('DataModelAgenda');
 
-$punten = $agenda->get_agendapunten(true);
+$punten = array_filter($agenda->get_agendapunten(), [get_policy($agenda), 'user_can_read']);
 
 // Only 10 items fit on the screen at the same time.
 $punten = array_slice($punten, 0, 10);

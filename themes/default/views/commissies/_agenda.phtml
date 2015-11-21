@@ -2,11 +2,9 @@
 $activiteiten = array();
 $model = get_model('DataModelAgenda');
 
-foreach ($model->get_agendapunten(logged_in()) as $punt)
-{
-	if ($punt->get('commissie') == $iter->get('id'))
+foreach ($model->get_agendapunten() as $punt)
+	if ($punt->get('commissie') == $iter->get('id') && get_policy($model)->user_can_read($punt))
 		$activiteiten[] = $punt;
-}
 
 if (count($activiteiten)): ?>
 <a name="activiteiten"></a>

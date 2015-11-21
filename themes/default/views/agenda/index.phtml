@@ -34,6 +34,9 @@
 if (!isset($iter))
 	$iter = $this->get_paged_agendapunten();
 
+// Only show agenda items in the list that the user can read.
+$iter = array_filter($iter, [get_policy($model), 'user_can_read']);
+
 $curmaand = -1;
 $months = get_months();
 $days = get_days();
@@ -63,7 +66,10 @@ foreach ($iter as $punt):
 				<span class="day"><?=strftime('%d', $date)?></span>
 			</div>
 		</td>
-		<td><a class="agendalink" href="<?=markup_format_attribute($controller->link_to_read($punt))?>"><?= markup_format_text($punt->get('kop')) ?></a><br/>
+		<td>
+			<a class="agendalink" href="<?=markup_format_attribute($controller->link_to_read($punt))?>"><?= markup_format_text($punt->get('kop')) ?></a>
+			<?php if ($punt->is_proposal()) printf('<span class="label-pending">%s</span>', __('Nog niet gepubliceerd')) ?>
+			<br/>
 		<?= agenda_period_for_display($punt) ?><br/>
 
 	<?php if ($punt->get('locatie')): ?>

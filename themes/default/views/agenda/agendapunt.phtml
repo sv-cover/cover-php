@@ -6,8 +6,27 @@ try {
 	$commissie = null;
 }
 
+$policy = get_policy($model);
+
 $date = strtotime($iter->get('van'));
 ?>
+
+<?php if ($iter->is_proposal()): ?>
+	<div class="warning-section">
+		<?php if ($iter['replacement_for'] == 0): ?>
+			<p><?=__('Dit agendapunt is nog niet gepubliceerd. Het moet nog worden goedgekeurd door Bestuur.')?></p>
+		<?php else: ?>
+			<p><?=__('Deze versie van dit agendapunt is nog niet gepubliceerd.')?></p>
+		<?php endif ?>
+	</div>
+<?php endif ?>
+
+<?php if (count($proposals = $iter->get_proposals()) > 0 && $policy->user_can_read($proposals[0])): ?>
+	<div class="warning-section">
+		<p><?=sprintf(__('Er is <a href="%s">een wijziging op dit agendapunt</a> dat nog niet gepubliceerd is.'), $proposals[0]->get_absolute_url()) ?></p>
+	</div>
+<?php endif ?>
+
 <div class="event-header">
 	<!-- Facebook Cover photo (or fallback photo) -->
 	<?php if ($cover_photo = $this->get_cover_photo($iter)): ?>

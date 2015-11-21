@@ -40,7 +40,8 @@
 	
 	function create_agenda_menu($color) {
 		$model = get_model('DataModelAgenda');
-		$iters = $model->get_agendapunten(get_identity()->member_is_active());
+		
+		$iters = array_filter($model->get_agendapunten(), [get_policy($model), 'user_can_read']);
 		
 		if (count($iters) != 0) {
 			$contents = "<ul class=\"agenda\">\n";
@@ -59,6 +60,7 @@
 						</div>
 						<span class="title">' . $iter->get('kop') . '</span>
 						<span class="details">' . $details . '</span>
+						' . ($iter->is_proposal() ? '<span class="label-pending">' . __('Nog niet gepubliceerd') . '</span>' : '') . '
 					</a>
 				</li>';
 			}

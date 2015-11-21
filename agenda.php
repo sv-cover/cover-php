@@ -360,8 +360,8 @@
 			$cal = new WebCal_Calendar('Cover');
 			$cal->description = __('Alle activiteiten van studievereniging Cover');
 
-			$punten = $this->model->get_agendapunten(logged_in());
-
+			$punten = array_filter($this->model->get_agendapunten(), [get_policy($this->model), 'user_can_read']);
+			
 			$timezone = new DateTimeZone('Europe/Amsterdam');
 
 			foreach ($punten as $punt)

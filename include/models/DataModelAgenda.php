@@ -23,6 +23,11 @@
 		{
 			return $this->get('replacement_for') !== null;
 		}
+
+		public function get_proposals()
+		{
+			return $this->model->get_proposed($this);
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider
@@ -104,16 +109,8 @@
 		  * @result an array of #DataIter with the currently
 		  * relevant agendapunten
 		  */
-		public function get_agendapunten($include_prive = false)
+		public function get_agendapunten()
 		{
-			static $agendapunten = null;
-			static $agendapunten_prive = null;
-			
-			if (!$include_prive && $agendapunten != null)
-				return $agendapunten;
-			elseif ($include_prive && $agendapunten_prive != null)
-				return $agendapunten_prive;
-
 			$conditions = "
 				(
 					(agenda.tot > CURRENT_TIMESTAMP)
@@ -122,19 +119,9 @@
 							DATE_PART('hours', agenda.van) = 0
 							AND CURRENT_TIMESTAMP < agenda.van + interval '1 day'
 						)
-				)
-				AND 
-					agenda.replacement_for IS NULL";
+				)";
 
-			if (!$include_prive)
-				$conditions .= ' AND agenda.private = 0';
-
-			$punten = $this->find($conditions);
-			
-			if ($include_prive)
-				return $agendapunten_prive = $punten;
-			else
-				return $agendapunten = $punten;
+			return $this->find($conditions);
 		}
 		
 		/**
@@ -266,8 +253,11 @@
 			$this->delete($proposal);
 		}
 
-		public function get_proposed()
+		public function get_proposed(DataIterAgenda $replacements_for = null)
 		{
-			return $this->find("{$this->table}.replacement_for IS NOT NULL");
+			return $replacements_for === null
+				? $this->find("{$this->table}.replacement_for IS NOT NULL")
+				: $this->find(sprintf("{$this->table}.replacement_for = %d", $replacements_for['id']));
+
 		}
 	}

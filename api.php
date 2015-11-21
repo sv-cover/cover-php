@@ -35,8 +35,9 @@ class ControllerApi extends Controller
 
 		// TODO logged_in() incidentally works because the session is read from $_GET[session_id] by
 		// the session provider. But the current session should be set more explicit.
-		foreach ($agenda->get_agendapunten(logged_in()) as $activity)
-			$activities[] = $activity->data;
+		foreach ($agenda->get_agendapunten() as $activity)
+			if (get_policy($agenda)->user_can_read($activity))
+				$activities[] = $activity->data;
 
 		return $activities;
 	}

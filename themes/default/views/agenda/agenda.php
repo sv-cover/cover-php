@@ -114,21 +114,13 @@
 			$selected_year = $this->get_selected_year();
 
 			if ($selected_year === null)
-				return $this->model->get_agendapunten(logged_in());
+				return $this->model->get_agendapunten();
 			
 			$from = sprintf('%d-09-01', $selected_year);
 			$till = sprintf('%d-08-31', $selected_year + 1);
 
 			$punten = $this->model->get($from, $till, true);
 
-			if (!logged_in())
-				$punten = array_filter($punten, array($this, '_filter_is_public'));
-
 			return $punten;
-		}
-
-		public function _filter_is_public($punt)
-		{
-			return !$punt->get('private');
 		}
 	}
