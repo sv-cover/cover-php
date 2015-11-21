@@ -164,7 +164,7 @@
 					profielen.wachtwoord
 					FROM leden, profielen
 					WHERE leden.id = profielen.lidid AND
-					leden.email = '" . $this->db->escape_string($email) . "'");
+					lower(leden.email) = lower('" . $this->db->escape_string($email) . "')");
 
 			$active_member_types = array(
 				MEMBER_STATUS_LID,
