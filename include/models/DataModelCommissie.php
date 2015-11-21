@@ -249,9 +249,7 @@
 		{
 			$rows = $this->db->query("
 				SELECT
-					c.id,
-					c.naam,
-					c.page,
+					c.*,
 					al.functie
 				FROM
 					actieveleden al
@@ -261,8 +259,6 @@
 					al.lidid = " . intval($lid_id) ."
 				GROUP by
 					c.id,
-					c.naam,
-					c.page,
 					al.functie
 				ORDER BY
 					c.naam ASC");

@@ -12,19 +12,19 @@
 		<?php $field_visibility = $model->get_privacy_for_field($iter, $field['name']) ?>
 		<?php if ($field_visibility == DataModelMember::VISIBLE_TO_EVERYONE): ?>
 			<dt><?=label($field['label'], $field['name'])?></dt>
-			<dd class="data-public"><?=markup_format_text($iter[$field['name']])?></dd>
+			<dd class="data-public"><?=$this->format_member_data($iter, $field['name'])?></dd>
 		<?php elseif ($field_visibility == DataModelMember::VISIBLE_TO_MEMBERS): ?>
 			<?php if (get_identity()->member_is_active() || get_identity()->member_in_committee(COMMISSIE_BESTUUR)): ?>
 				<dt><?=label($field['label'], $field['name'])?></dt>
 				<dd class="data-members-only">
-					<?=markup_format_text($iter[$field['name']])?>
+					<?=$this->format_member_data($iter, $field['name'])?>
 					<i class="fa fa-lock" title="<?=__('Alleen zichtbaar voor ingelogde leden')?>"></i>
 				</dd>
 			<?php endif ?>
 		<?php elseif (get_identity()->member_in_committee(COMMISSIE_BESTUUR)): ?>
 			<dt><?=label($field['label'], $field['name'])?></dt>
 			<dd class="data-private">
-				<?=markup_format_text($iter[$field['name']])?>
+				<?=$this->format_member_data($iter, $field['name'])?>
 				<i class="fa fa-eye-slash" title="<?=__('Privé')?>"></i>
 			</dd>
 		<?php endif ?>
@@ -42,7 +42,7 @@
 		<?php foreach ($commissies as $commissie): ?>
 		<li>
 			<span class="position"><?=markup_format_text(__translate_parts($commissie->get('functie'), ',/')) ?></span>
-			<a class="committee" href="show.php?id=<?=$commissie->get('page')?>"><?=markup_format_text($commissie->get('naam'))?></a>
+			<a class="committee" href="<?=markup_format_attribute($commissie->get_absolute_url())?>"><?=markup_format_text($commissie->get('naam'))?></a>
 		</li>
 		<?php endforeach ?>
 	</ul>

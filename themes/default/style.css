@@ -2405,6 +2405,12 @@ ul.committee-list > li {
 	margin-left: 140px;
 }
 
+dl.profile > dd > a,
+ul.committee-list > li > a {
+	font-weight: normal;
+	text-decoration: underline;
+}
+
 dl.profile > dd .fa,
 ul.committee-list > li .fa {
 	color: #999;

@@ -39,4 +39,22 @@ class ProfielView extends View
 	{
 		return get_identity() instanceof ImpersonatingIdentityProvider;
 	}
+
+	protected function format_member_data(DataIterMember $iter, $field)
+	{
+		switch ($field) {
+			case 'beginjaar':
+				return sprintf('<a href="almanak.php?search_year=%d">%1$d</a>', $iter['beginjaar']);
+			case 'adres':
+				return sprintf('<a href="%s" target="_blank">%s</a>',
+					'https://www.google.nl/maps/search/' . urlencode($iter['adres'] . ' ' . $iter['woonplaats']) . '/',
+					markup_format_text($iter['adres']));
+			case 'email':
+				return sprintf('<a href="mailto:%s">%s</a>',
+					urlencode($iter['email']),
+					markup_format_text($iter['email']));
+			default:
+				return markup_format_text($iter[$field]);
+		}
+	}
 }
