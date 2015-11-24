@@ -1,6 +1,7 @@
 <?php
 
 require_once 'include/init.php';
+require_once 'include/policies/policy.php';
 require_once 'include/markup.php';
 
 class ControllerScherm
