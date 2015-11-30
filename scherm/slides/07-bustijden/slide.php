@@ -39,12 +39,7 @@ function fetchJourney($journeycode){
 	return getJSON(apiURL.'/journey/'.$journeycode.'');
 }
 function sortArraysByField(&$array, $field){
-	function compareField($field){
-		$code = "return strnatcmp(\$a['$field'], \$b['$field']);";
-		return create_function('$a,$b', $code);
-	}
-	$compare = compareField($field);
-	usort($array,$compare);
+	usort($array, function($a, $b) use ($field) { return strnatcmp($a[$field], $b[$field]); });
 }
 
 function processTime(&$dateTime){
@@ -226,24 +221,25 @@ function qbuzz_color($line_number){
 
 function outputGeneralMessage($data){
 	$cDate = date('o-m-d H:i:sP');
+	$output = '';
 	foreach($data as $stop){
 		if(gettype($stop) == 'array'){
 			foreach($stop['GeneralMessages'] as $message){
-				processTime($message[MessageStartTime]);
-				if($cDate > $message[MessageStartTime]){
-				processTime($message[MessageEndTime]);
-				echo '
-				<div class="alert alert-danger" role="alert">
-				<strong>Bericht van '.getDataOwner($message[DataOwnerCode], false).' voor '.$message[TimingPointCode].':</strong><br>
-				<strong>Content:</strong> '.$message[MessageContent].'<br>
-				<strong>Reden:</strong> '.$message[ReasonContent].'<br>
-				<strong>Gevolg:</strong> '.$message[EffectContent].'<br>
-				<strong>Advies:</strong> '.$message[AdviceContent].'
-				<br>
-				<strong>Berichttype:</strong> '.$message[MessageType].' '.$message[MessageDurationType].'<br>
-				<strong>Start:</strong> '.getMessageTime($message[MessageStartTime]).'<br>
-				<strong>Eind:</strong> '.getMessageTime($message[MessageEndTime]).'				</div>';
-			}
+				processTime($message['MessageStartTime']);
+				if($cDate > $message['MessageStartTime']){
+					processTime($message['MessageEndTime']);
+					$output .= '
+					<div class="alert alert-danger" role="alert">
+					<strong>Bericht van '.$message['DataOwnerCode'].' voor '.$message['TimingPointCode'].':</strong><br>
+					<strong>Content:</strong> '.$message['MessageContent'].'<br>
+					<strong>Reden:</strong> '.$message['ReasonContent'].'<br>
+					<strong>Gevolg:</strong> '.$message['EffectContent'].'<br>
+					<strong>Advies:</strong> '.$message['AdviceContent'].'
+					<br>
+					<strong>Berichttype:</strong> '.$message['MessageType'].' '.$message['MessageDurationType'].'<br>
+					<strong>Start:</strong> '.getMessageTime($message['MessageStartTime']).'<br>
+					<strong>Eind:</strong> '.getMessageTime($message['MessageEndTime']).'				</div>';
+				}
 			}
 		}
 	}
@@ -276,7 +272,7 @@ function outputDepartures($departures){
 				<tr>
 					<td class="small">'.qbuzz_color($departure['LinePublicNumber']).'</td>
 					<td class="destination">'.$departure['DestinationName50'].'</td>
-					<td class="small destination">'.date_format(date_create($departure['TargetDepartureTime']), 'H:i').' '.getDelayOnly($delay[delay],$delay[status]).'</td>
+					<td class="small destination">'.date_format(date_create($departure['TargetDepartureTime']), 'H:i').' '.getDelayOnly($delay['delay'],$delay['status']).'</td>
 				</tr>
 				<tr>
 					<td><br /><br /></td>
@@ -340,7 +336,7 @@ td.small {
 
 	$data = fetchTimingPoint('10004130,10004140');
 	$departures = getDepartures($data);
-	echo outputGeneralMessage($data);
+	//echo outputGeneralMessage($data);
 	echo outputDepartures($departures);
 ?>
 
