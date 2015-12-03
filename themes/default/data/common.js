@@ -262,3 +262,259 @@ $(document).on('ready', function(e) {
 		ga('send', 'event', 'button', 'click', 'banner', $(this).attr('href'));
 	});
 });
+
+// Show previews for images when available
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('img[data-preview]').each(function() {
+		var image = $(this);
+
+		var original = new Image();
+		original.onload = function() {
+			image.prop('src', original.src);
+			image.removeClass('loading');
+		};
+
+		original.src = image.prop('src');
+
+		// Show preload image
+		image.prop('src', image.data('preview'));
+		image.addClass('loading');
+	});
+});
+
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('#foto').each(function() {
+		var $photo = $(this).find('#photo'),
+			$image = $photo.find('.full-size-photo'),
+			$toggle = $(this).find('#tagging-toggle'),
+			cancelNextClick = false;
+
+		$(this).find('.like-form').submit(function(e) {
+			e.preventDefault();
+			$form = $(this);
+			$.post($form.attr('action'), $form.serializeArray(), function(response) {
+				$form.closest('.photo').toggleClass('liked', response.liked);
+				$form.find('.like-button').attr('title', $form.find('.like-button').data('title')[response.liked ? 0 : 1]);
+				$form.find('.like-count').text(response.likes);
+			});
+		});
+
+		function make_face_editable($face)
+		{
+			var accept = function(lid_id, name) {
+				$face.removeClass('untagged');
+
+				$face.find('.tag-label .name')
+					.text(name)
+					.attr('href', lid_id !== null ? 'profiel.php?lid=' + lid_id : '#');
+
+				var data = lid_id !== null
+					? [{name: 'lid_id', value: lid_id}]
+					: [{name: 'custom_label', value: name}];
+
+				$.post($face.data('update-action'), data, function() {}, 'json');
+			};
+
+			$face.resizable({
+				containment: $photo,
+				aspectRatio: 1,
+				stop: function(event, ui) {
+					var data = [
+						{name: 'w', value: ui.size.width / $image.width()},
+						{name: 'h', value: ui.size.height / $image.height()}
+					];
+
+					$.post($face.data('update-action'), data, function() {}, 'json');
+				}
+			});
+			
+			$face.draggable({
+				containment: $photo,
+				stop: function(event, ui) {
+					var data = [
+						{name: 'x', value: ui.position.left / $image.width()},
+						{name: 'y', value: ui.position.top / $image.height()}
+					];
+					
+					$.post($face.data('update-action'), data, function() {}, 'json');
+				}
+			});
+
+			$('<button class="delete-button">&times;</button>')
+				.click(function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					$.post($face.data('delete-action'), [], function() {}, 'json');
+					$face.remove();
+				})
+				.appendTo($face);
+
+			$face.click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$face.find('.name').hide();
+				$face.find('.tag-search').show().focus();
+			});
+
+			$('<input type="text" class="tag-search" spellcheck="false">')
+				.on('keydown', function(e) {
+					switch (e.keyCode) {
+						case $.ui.keyCode.TAB:
+							if ($(this).data('ui-autocomplete').menu.active)
+								e.preventDefault();
+							break;
+
+						case $.ui.keyCode.ENTER:
+							if ($(this).data('ui-autocomplete').menu.active)
+								break;
+							accept(null, $(this).val());
+							// fall-through intentional
+						
+						case $.ui.keyCode.ESCAPE:
+							$(this).blur();
+							e.preventDefault();
+							cancelNextClick = false;
+							break;
+					}
+				})
+				.on('blur', function(e) {
+					$(this).val('').hide();
+					$face.find('.name').show();
+					cancelNextClick = true;
+				})
+				.autocomplete({
+					source: function(request, response) {
+						$.getJSON('almanak.php', {
+							'search': request.term
+						}, response);
+					},
+					search: function() {
+						if (this.value.length < 2)
+							return false;
+					},
+					focus: function() {
+						return false;
+					},
+					select: function(event, ui) {
+						accept(ui.item.id, ui.item.name);
+						$(this).blur();
+						cancelNextClick = false;
+						return false;
+					}
+				})
+				.each(function() {
+					$(this).data('ui-autocomplete')._renderItem = function(ul, item) {
+						return $('<li>').append(
+							$('<a class="profile">')
+								.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&get_thumb=thumb'))
+								.append($('<span class="name">').text(item.name))
+								.append($('<span class="starting-year">').text(item.starting_year))
+						).appendTo(ul);
+					};
+				})
+				.hide()
+				.appendTo($face);
+
+			return $face;
+		}
+
+		function start_tagging()
+		{
+			$photo.addClass('tagging-enabled');
+
+			$toggle.addClass('active');
+
+			$photo.find('.face').each(function() {
+				make_face_editable($(this));
+			});
+		}
+
+		function stop_tagging()
+		{
+			$photo.removeClass('tagging-enabled');
+
+			$toggle.removeClass('active');
+
+			$photo.find('.face')
+				.resizable('destroy')
+				.draggable('destroy')
+				.off('click focus')
+				.find('.delete-button').remove().end()
+				.find('.tag-search').remove().end()
+				.end();
+		}
+
+		$toggle.change(function() {
+			if (this.checked)
+				start_tagging();
+			else
+				stop_tagging();
+		});
+
+		$photo.click(function(e) {
+			if (!$photo.hasClass('tagging-enabled'))
+				return;
+
+			if (cancelNextClick) {
+				cancelNextClick = false;
+				return;
+			}
+
+			if (e.offsetX === undefined)
+				e.offsetX = e.pageX - $photo.offset().left;
+
+			if (e.offsetY === undefined)
+				e.offsetY = e.pageY - $photo.offset().top;
+			
+			var pos = {
+				top: Math.max(e.offsetY - 50, 0),
+				left: Math.max(e.offsetX - 50, 0)
+			};
+
+			var data = [
+				{name: 'x', value: pos.left / $photo.width()},
+				{name: 'y', value: pos.top / $photo.height()},
+				{name: 'w', value: 100 / $photo.width()},
+				{name: 'h', value: 100 / $photo.height()}
+			];
+
+			$face = $('<div class="face untagged">')
+				.css({
+					position: 'absolute',
+					top: pos.top,
+					left: pos.left,
+					width: 100,
+					height: 100
+				})
+				.appendTo($photo);
+
+			$face.append('<div class="tag-label"><a class="name">Not tagged</a></div>');
+
+			$.post($photo.data('create-action'), data, function(resp) {
+				if (resp.errors) {
+					alert("Errors:\n" + resp.errors.join("\n"));
+					return;
+				}
+
+				$face.attr('id', 'face_' + resp.iter.__id);
+				$face.data('update-action', resp.iter.__links.update);
+				$face.data('delete-action', resp.iter.__links.delete);
+				make_face_editable($face);
+			}, 'json');
+		});
+
+		$photo.on('click', '.face.untagged .tag-label', function(e) {
+			if ($photo.hasClass('tagging-enabled'))
+				return;
+
+			e.preventDefault();
+			e.stopPropagation();
+
+			var $face = $(this).closest('.face');
+			
+			$toggle.prop('checked', true).change();
+			
+			$face.click();
+		});
+	});
+});

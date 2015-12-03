@@ -35,7 +35,7 @@ if (!$photos || count($photos) == 0)
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	<?php foreach ($photos as $photo): ?>
 	<li id="photo_<?=$photo->get_id()?>" data-id="<?=$photo->get_id()?>" class="thumbnail <?=implode(' ', $classnames($photo))?>">
-		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;photo=<?=$photo->get_id()?>#a">
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;photo=<?=$photo->get_id()?>">
 			<img src="<?=markup_format_attribute($photo->get_url(null, 400))?>" <?=($size = $photo->get_scaled_size(null, 400)) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
 			<?php if (isset($likes[$photo->get_id()])): ?>
 				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><?=$likes[$photo->get_id()]?></span>
@@ -56,3 +56,84 @@ if (!$photos || count($photos) == 0)
 
 <script src="<?=get_theme_data('data/flowgallery.js')?>"></script>
 <script>$('.photos.flow-gallery').flowgallery();</script>
+<script>
+$('.photos').on('click', '.thumbnail > a', function(e) {
+	if (e.ctrlKey || e.shiftKey || e.metaKey)
+		return;
+
+	e.preventDefault();
+
+	var $modal = $('<div class="modal" tabindex="-1">'),
+	$modalWindow = $('<div class="window">').appendTo($modal),
+	$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
+
+	$target = $('<div>').appendTo($modalWindow);
+	
+
+	$modal.insertBefore($('.world'));//.delay(100).addClass('')
+
+	// Close the modal on clicking the close button
+	$closeButton.on('click', function(e) {
+		e.preventDefault();
+		$modal.remove();
+	});
+
+	// Close the model on pressing the escape key while inside
+	$modal.on('keydown.nav', function(e) {
+		// Don't prevent normal keyboard usage
+		if (['TEXTAREA', 'INPUT'].indexOf(event.target.nodeName) !== -1)
+			return;
+
+		switch (e.keyCode) {
+			case 27:
+				if ($modal.parent()) {
+					e.preventDefault();
+					$modal.remove();
+				}
+				break;
+
+			case 37:
+				if ($modal.find('.navigation .previous').click())
+					e.preventDefault();
+				break;
+
+			case 39:
+				if ($modal.find('.navigation .next').click())
+					e.preventDefault();
+				break;
+		}
+	});
+
+	$modal.focus();
+
+	var loadFotoLink = function(link) {
+		$target.text('Loading…');
+
+		$target.load(link + ' #a', function() { 
+			// First of all, fire the partially loaded thingy
+			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: this}));
+
+			// Remove the message box style, we don't use it
+			$(this).find('#a').removeClass('messageBox');
+
+			// Remove the title bar, for now
+			$(this).find('.photo-page-header').remove();
+
+			// Remove the slides, we don't use them here.
+			$(this).find('.slides').remove();
+
+			// Hook into the 'next' link
+			$(this).find('.navigation .next, .navigation .previous').click(function(e) {
+				if (e.ctrlKey || e.shiftKey || e.metaKey)
+					return;
+
+				e.preventDefault();
+
+				loadFotoLink($(this).attr('href'));
+			});
+		});
+	};
+
+	loadFotoLink($(this).attr('href'));
+});
+</script>
