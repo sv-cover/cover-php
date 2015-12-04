@@ -396,15 +396,22 @@
 
 				$imagick->setImageFormat('jpeg');
 
-				$tmp_file = tempnam(sys_get_temp_dir(), sprintf('photo%d', $member['id']));
-				$fout = fopen($tmp_file, 'wb+');
-				$imagick->writeImageFile($fout);
-				fclose($fout);
+				$fout = fopen('php://memory', 'wb+');
+				stream_filter_append($fout, 'convert.base64-encode', STREAM_FILTER_WRITE);
 
+				$imagick->writeImageFile($fout);
 				$imagick->destroy();
 
-				$card->addPhoto($tmp_file);
-				// $card->addMedia('PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout), 'photo');
+				rewind($fout);
+
+				// Use reflection to get to the private addMedia method. Only addPhoto is public, but that
+				// doesn't accept a stream and I'm not in the mood to write a temporary file to disk.
+				$vCardClass = new ReflectionClass($card);
+				$vCard_addMedia = $vCardClass->getMethod('addMedia');
+				$vCard_addMedia->setAccessible(true);
+				$vCard_addMedia->invoke($card, 'PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout), false, 'photo');
+
+				fclose($fout);
 			}
 			
 			$card->download();
