@@ -350,8 +350,12 @@
 
 		public function run_export_vcard(DataIterMember $member)
 		{
+			if (!get_identity()->member_is_active())
+				throw new UnauthorizedException();
+			
 			$card = new VCard();
 
+			// Macro for checking whether a field is not private.
 			$is_visible = function($field) use ($member) {
 				return in_array($this->model->get_privacy_for_field($member, $field),
 					[DataModelMember::VISIBLE_TO_EVERYONE, DataModelMember::VISIBLE_TO_MEMBERS]);
@@ -366,19 +370,22 @@
 			if ($is_visible('telefoonnummer'))
 				$card->addPhoneNumber($member['telefoonnummer'], 'PREF;HOME');
 			
-			$card->addAddress(null, null,
-				$is_visible('adres') ? $member['adres'] : null,
-				$is_visible('woonplaats') ? $member['woonplaats'] : null,
-				null,
-				$is_visible('postcode') ? $member['postcode'] : null,
-				null);
+			if ($is_visible('adres') || $is_visible('postcode') || $is_visible('woonplaats'))
+				$card->addAddress(null, null,
+					$is_visible('adres') ? $member['adres'] : null,
+					$is_visible('woonplaats') ? $member['woonplaats'] : null,
+					null,
+					$is_visible('postcode') ? $member['postcode'] : null,
+					null);
 
 			if ($is_visible('geboortedatum'))
 				$card->addBirthday($member['geboortedatum']);
 
-			if (!empty($member['homepage']))
+			// For some weird reason is 'http://' the default value for members their homepage.
+			if (!empty($member['homepage']) && $member['homepage'] != 'http://')
 				$card->addURL($member['homepage']);
 
+			// Only add a thumbnail of the photo if the member has one, and it isn't hidden.
 			if ($is_visible('foto') && $this->model->has_picture($member)) {
 				$fout = null;
 
