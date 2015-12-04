@@ -1,5 +1,8 @@
 <section class="aligned-list-section personal-section">
 	<h2><?= __('Persoonlijk') ?></h2>
+	<?php if (get_identity()->member_is_active()): ?>
+	<a href="profiel.php?lid=<?=$iter->get_id()?>&amp;export=vcard" class="vcard-link" title="Download vCard"><i class="fa fa-download"></i></a>
+	<?php endif ?>
 
 	<?php if ($this->is_current_member($iter)): ?>
 	<p class="hint"><?=sprintf(
