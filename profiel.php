@@ -379,6 +379,34 @@
 			if (!empty($member['homepage']))
 				$card->addURL($member['homepage']);
 
+			if ($is_visible('foto') && $this->model->has_picture($member)) {
+				$fout = null;
+
+				$imagick = new Imagick();
+				$imagick->readImageBlob($this->model->get_photo($member));
+				
+				$y = 0.05 * $imagick->getImageHeight();
+				$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
+				
+				if ($y + $size > $imagick->getImageHeight())
+					$y = 0;
+
+				$imagick->cropImage($size, $size, 0, $y);
+				$imagick->scaleImage(128, 0);
+
+				$imagick->setImageFormat('jpeg');
+
+				$tmp_file = tempnam(sys_get_temp_dir(), sprintf('photo%d', $member['id']));
+				$fout = fopen($tmp_file, 'wb+');
+				$imagick->writeImageFile($fout);
+				fclose($fout);
+
+				$imagick->destroy();
+
+				$card->addPhoto($tmp_file);
+				// $card->addMedia('PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout), 'photo');
+			}
+			
 			$card->download();
 		}
 		
