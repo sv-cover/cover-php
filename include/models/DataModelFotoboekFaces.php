@@ -1,6 +1,7 @@
 <?php
 
 require_once 'include/data/DataModel.php';
+require_once 'include/models/DataModelFotoboek.php';
 
 class DataIterFace extends DataIter
 {
