@@ -351,12 +351,34 @@
 		public function run_export_vcard(DataIterMember $member)
 		{
 			$card = new VCard();
-			$card->addName($member['achternaam'], $member['voornaam'], $member['tussenvoegsel']);
-			$card->addEmail($member['email']);
-			$card->addPhoneNumber($member['telefoonnummer'], 'PREF;HOME');
-			$card->addAddress(null, null, $member['adres'], $member['woonplaats'], null, $member['postcode'], null);
-			$card->addURL('https://www.svcover.nl/profiel.php?lid=' . $member['id']);
-			$card->addPhoto('https://www.svcover.nl/foto.php?lid_id=' . $member['id'] . '&format=square&width=200');
+
+			$is_visible = function($field) use ($member) {
+				return in_array($this->model->get_privacy_for_field($member, $field),
+					[DataModelMember::VISIBLE_TO_EVERYONE, DataModelMember::VISIBLE_TO_MEMBERS]);
+			};
+			
+			if ($is_visible('naam'))
+				$card->addName($member['achternaam'], $member['voornaam'], $member['tussenvoegsel']);
+
+			if ($is_visible('email'))
+				$card->addEmail($member['email']);
+
+			if ($is_visible('telefoonnummer'))
+				$card->addPhoneNumber($member['telefoonnummer'], 'PREF;HOME');
+			
+			$card->addAddress(null, null,
+				$is_visible('adres') ? $member['adres'] : null,
+				$is_visible('woonplaats') ? $member['woonplaats'] : null,
+				null,
+				$is_visible('postcode') ? $member['postcode'] : null,
+				null);
+
+			if ($is_visible('geboortedatum'))
+				$card->addBirthday($member['geboortedatum']);
+
+			if (!empty($member['homepage']))
+				$card->addURL($member['homepage']);
+
 			$card->download();
 		}
 		
