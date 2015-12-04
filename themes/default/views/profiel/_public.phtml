@@ -29,6 +29,8 @@
 			</dd>
 		<?php endif ?>
 	<?php endforeach ?>
+		<dt><?=label(__('Status'))?></dt>
+		<dd class="data-public"><?=$this->member_type_to_string($iter['type'])?></dd>
 	</dl>
 
 	<?php
