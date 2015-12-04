@@ -7,6 +7,8 @@
 	require_once 'include/secretary.php';
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/email.php';
+
+	use JeroenDesloovere\VCard\VCard;
 	
 	class ControllerProfiel extends Controller
 	{
@@ -345,6 +347,18 @@
 
 			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=facebook');
 		}
+
+		public function run_export_vcard(DataIterMember $member)
+		{
+			$card = new VCard();
+			$card->addName($member['achternaam'], $member['voornaam'], $member['tussenvoegsel']);
+			$card->addEmail($member['email']);
+			$card->addPhoneNumber($member['telefoonnummer'], 'PREF;HOME');
+			$card->addAddress(null, null, $member['adres'], $member['woonplaats'], null, $member['postcode'], null);
+			$card->addURL('https://www.svcover.nl/profiel.php?lid=' . $member['id']);
+			$card->addPhoto('https://www.svcover.nl/foto.php?lid_id=' . $member['id'] . '&format=square&width=200');
+			$card->download();
+		}
 		
 		protected function run_impl()
 		{
@@ -384,6 +398,8 @@
 				$this->_process_privacy($iter);
 			elseif (isset($_POST['submprofiel_zichtbaarheid']))
 				$this->_process_zichtbaarheid($iter);
+			elseif (isset($_GET['export']) && $_GET['export'] == 'vcard')
+				$this->run_export_vcard($iter);
 			else
 				$this->get_content('profiel', $iter, ['errors' => [], 'tab' => $tab]);
 		}
