@@ -106,34 +106,53 @@ $('.photos').on('click', '.thumbnail > a', function(e) {
 
 	$modal.focus();
 
-	var loadFotoLink = function(link) {
-		$target.text('Loading…');
+	var cache = {};
 
-		$target.load(link + ' #a', function() { 
+	var prefetchPhotoLink = function(link, callback) {
+		if (!cache[link]) {
+			cache[link] = $('<div>').load(link + ' #a', callback);
+		} else {
+			if (callback)
+				callback.apply(cache[link]);
+		}
+	};
+
+	var loadPhotoLink = function(link) {
+		$target.replaceWith($('<div>').text('Loading…'));
+
+		prefetchPhotoLink(link, function() {
+			$target.replaceWith(this);
+			$target = $(this);
+
 			// First of all, fire the partially loaded thingy
-			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: this}));
+			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $target}));
 
 			// Remove the message box style, we don't use it
-			$(this).find('#a').removeClass('messageBox');
+			$target.find('#a').removeClass('messageBox');
 
 			// Remove the title bar, for now
-			$(this).find('.photo-page-header').remove();
+			$target.find('.photo-page-header').remove();
 
 			// Remove the slides, we don't use them here.
-			$(this).find('.slides').remove();
+			$target.find('.slides').remove();
 
-			// Hook into the 'next' link
-			$(this).find('.navigation .next, .navigation .previous').click(function(e) {
+			// Hook into the 'next' and 'prev' links
+			$target.find('.navigation .next, .navigation .previous').click(function(e) {
 				if (e.ctrlKey || e.shiftKey || e.metaKey)
 					return;
 
 				e.preventDefault();
 
-				loadFotoLink($(this).attr('href'));
+				loadPhotoLink($(this).attr('href'));
+			});
+
+			// Prefetch the next photo
+			$target.find('.navigation .next').each(function() {
+				prefetchPhotoLink($(this).prop('href'));
 			});
 		});
 	};
 
-	loadFotoLink($(this).attr('href'));
+	loadPhotoLink($(this).attr('href'));
 });
 </script>
