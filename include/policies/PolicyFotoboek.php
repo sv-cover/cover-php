@@ -20,9 +20,9 @@ class PolicyFotoboek implements Policy
 		if ($book->has('visibility') && $this->get_access_level() < $book->get('visibility'))
 			return false;
 
-		// Member-specific albums are also forbidden terrain
+		// Member-specific albums are also forbidden terrain unless they are about you
 		if (!get_identity()->member_is_active() && $book instanceof DataIterFacesPhotobook)
-			return false;
+			return $book['member_ids'] == [get_identity()->get('id')];
 
 		// Older photo books are not visible for non-members
 		if (!get_identity()->member_is_active() && $book->has('date') && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
