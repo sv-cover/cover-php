@@ -39,7 +39,7 @@
 	<?php
 		$facebook_of_iter = get_model('DataModelFotoboekFaces')->get_book([$iter]);
 		if (get_policy('DataModelFotoboek')->user_can_read($facebook_of_iter)): ?>
-		<p><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a></p>
+		<p><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter))) ?></a></p>
 	<?php endif ?>
 </section>
 

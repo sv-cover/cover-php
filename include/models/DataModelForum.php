@@ -561,7 +561,7 @@
 					$name = member_nick_name($member);
 
 					if ($name == '')
-						$name = member_full_name($member, false, true);
+						$name = member_full_name($member, BE_PERSONAL);
 					
 					$authors[$type][$id][$field] = array(
 						'name' => $name,
@@ -628,7 +628,7 @@
 					$member_data = $member_model->get_iter($acl->get('uid'));
 					
 					if ($member_data)
-						return member_full_name($member_data);
+						return member_full_name($member_data, IGNORE_PRIVACY);
 				break;
 				case 2:
 					if ($acl->get('uid') == -1)

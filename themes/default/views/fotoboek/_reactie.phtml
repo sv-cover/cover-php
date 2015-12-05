@@ -13,7 +13,7 @@ $foto = $reactie->getIter('foto', 'DataIterPhoto');
 			<div class="right">
 				<?= sprintf('%s %d %s, %02d:%02d', $days[$reactie->get('dagnaam')], $reactie->get('datum'), $months[$reactie->get('maand')], $reactie->get('uur'), $reactie->get('minuut')) ?>
 			</div>
-			<?= markup_format_text(member_full_name($reactie->getIter('auteur'), false, true)) ?>
+			<?= markup_format_text(member_full_name($reactie->getIter('auteur'), BE_PERSONAL)) ?>
 		</span>
 		<?php if ($subtitle): ?>
 		<div class="subtitle">

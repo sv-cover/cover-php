@@ -43,7 +43,7 @@ $personal_fields = [
 $tabs = [
 	'public' => [
 		'visible' => true,
-		'label' => member_full_name($iter, false, true),
+		'label' => member_full_name($iter, BE_PERSONAL),
 		'class' => 'fa-icon icon-public',
 		'body' => function () use ($model, $iter, $personal_fields) {
 			$this->render_partial('public', compact('model', 'iter', 'personal_fields'));
@@ -113,7 +113,7 @@ $tabs = [
 $active_tab = isset($tab) && isset($tabs[$tab]) && $tabs[$tab]['visible'] == true ? $tab : 'public';
 
 ?>
-<h1><?= sprintf(__('Profiel van %s'), markup_format_text(member_full_name($iter, false, false))) ?></h1>
+<h1><?= sprintf(__('Profiel van %s'), markup_format_text(member_full_name($iter))) ?></h1>
 <div class="messageBox clearfix">
 
 	<?php if (isset($errors) && count($errors) > 0): ?>

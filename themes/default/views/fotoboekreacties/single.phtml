@@ -6,7 +6,7 @@ $months = get_months();
 	<div class="title">
 		<span class="replyDetails">
 			<div class="right"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter->get('dagnaam')], $iter->get('datum'), $months[$iter->get('maand')], $iter->get('uur'), $iter->get('minuut')) ?></div>
-			<?= markup_format_text(member_full_name($iter->get('auteur'))) ?>
+			<?= markup_format_text(member_full_name($iter->get('auteur'), BE_PERSONAL)) ?>
 		</span>
 		<?php if (!empty($subtitle)): ?>
 		<div class="subtitle">

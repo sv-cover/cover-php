@@ -321,7 +321,7 @@ class DataModelMailinglijst extends DataModel
 
 		$id = $this->insert_aanmelding_lid($lijst, $lid);
 
-		$this->stuur_aanmeldingsmail($lijst, member_full_name($lid), $lid->get('email'));
+		$this->stuur_aanmeldingsmail($lijst, member_full_name($lid, IGNORE_PRIVACY), $lid->get('email'));
 
 		return $id;
 	}

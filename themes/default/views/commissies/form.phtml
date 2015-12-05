@@ -34,7 +34,7 @@
 				<tbody>
 					<?php if ($iter->has_id()) foreach ($iter->get_members() as $member): ?>
 					<tr>
-						<td><?=member_full_name($member)?></td>
+						<td><?=markup_format_text(member_full_name($member, IGNORE_PRIVACY))?></td>
 						<td><input type="text" name="members[<?=$member->get_id()?>]" value="<?=markup_format_attribute($member->get('functie'))?>" class="autocomplete-function"></td>
 						<td><button type="button" class="button remove-button" title="<?=markup_format_attribute(__('Verwijder lid uit commissie'))?>">&times;</button></td>
 					</tr>
