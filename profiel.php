@@ -7,6 +7,8 @@
 	require_once 'include/secretary.php';
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/email.php';
+
+	use JeroenDesloovere\VCard\VCard;
 	
 	class ControllerProfiel extends Controller
 	{
@@ -345,6 +347,82 @@
 
 			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=facebook');
 		}
+
+		public function run_export_vcard(DataIterMember $member)
+		{
+			if (!get_identity()->member_is_active())
+				throw new UnauthorizedException();
+			
+			$card = new VCard();
+
+			// Macro for checking whether a field is not private.
+			$is_visible = function($field) use ($member) {
+				return in_array($this->model->get_privacy_for_field($member, $field),
+					[DataModelMember::VISIBLE_TO_EVERYONE, DataModelMember::VISIBLE_TO_MEMBERS]);
+			};
+			
+			if ($is_visible('naam'))
+				$card->addName($member['achternaam'], $member['voornaam'], $member['tussenvoegsel']);
+
+			if ($is_visible('email'))
+				$card->addEmail($member['email']);
+
+			if ($is_visible('telefoonnummer'))
+				$card->addPhoneNumber($member['telefoonnummer'], 'PREF;HOME');
+			
+			if ($is_visible('adres') || $is_visible('postcode') || $is_visible('woonplaats'))
+				$card->addAddress(null, null,
+					$is_visible('adres') ? $member['adres'] : null,
+					$is_visible('woonplaats') ? $member['woonplaats'] : null,
+					null,
+					$is_visible('postcode') ? $member['postcode'] : null,
+					null);
+
+			if ($is_visible('geboortedatum'))
+				$card->addBirthday($member['geboortedatum']);
+
+			// For some weird reason is 'http://' the default value for members their homepage.
+			if (!empty($member['homepage']) && $member['homepage'] != 'http://')
+				$card->addURL($member['homepage']);
+
+			// Only add a thumbnail of the photo if the member has one, and it isn't hidden.
+			if ($is_visible('foto') && $this->model->has_picture($member)) {
+				$fout = null;
+
+				$imagick = new Imagick();
+				$imagick->readImageBlob($this->model->get_photo($member));
+				
+				$y = 0.05 * $imagick->getImageHeight();
+				$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
+				
+				if ($y + $size > $imagick->getImageHeight())
+					$y = 0;
+
+				$imagick->cropImage($size, $size, 0, $y);
+				$imagick->scaleImage(128, 0);
+
+				$imagick->setImageFormat('jpeg');
+
+				$fout = fopen('php://memory', 'wb+');
+				stream_filter_append($fout, 'convert.base64-encode', STREAM_FILTER_WRITE);
+
+				$imagick->writeImageFile($fout);
+				$imagick->destroy();
+
+				rewind($fout);
+
+				// Use reflection to get to the private addMedia method. Only addPhoto is public, but that
+				// doesn't accept a stream and I'm not in the mood to write a temporary file to disk.
+				$vCardClass = new ReflectionClass($card);
+				$vCard_addMedia = $vCardClass->getMethod('addMedia');
+				$vCard_addMedia->setAccessible(true);
+				$vCard_addMedia->invoke($card, 'PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout), false, 'photo');
+
+				fclose($fout);
+			}
+			
+			$card->download();
+		}
 		
 		protected function run_impl()
 		{
@@ -384,6 +462,8 @@
 				$this->_process_privacy($iter);
 			elseif (isset($_POST['submprofiel_zichtbaarheid']))
 				$this->_process_zichtbaarheid($iter);
+			elseif (isset($_GET['export']) && $_GET['export'] == 'vcard')
+				$this->run_export_vcard($iter);
 			else
 				$this->get_content('profiel', $iter, ['errors' => [], 'tab' => $tab]);
 		}
