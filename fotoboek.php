@@ -763,10 +763,10 @@
 			// Single photo page
 			if (isset($_GET['photo']) && $_GET['photo']) {
 				$photo = $this->model->get_iter($_GET['photo']);
-				$book = $photo->get_book();
 			}
+
 			// Book index page
-			else if (isset($_GET['book'])
+			if (isset($_GET['book'])
 				&& ctype_digit($_GET['book'])
 				&& intval($_GET['book']) > 0) {
 				$book = $this->model->get_book($_GET['book']);
@@ -784,10 +784,18 @@
 
 				$book = get_model('DataModelFotoboekFaces')->get_book($members);
 			}
+			// If there is a photo, then use the book of that one
+			elseif ($photo) {
+				$book = $photo->get_book();
+			}
 			// And otherwise the root book index page
 			else {
 				$book = $this->model->get_root_book();
 			}
+
+			// If we have both, we assert that the photo is in the book, right?
+			if ($photo && $book && !$book->has_photo($photo))
+				throw new NotFoundException('This photo book does not contain this photo');
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {
