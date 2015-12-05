@@ -50,7 +50,7 @@
 
 			$database_class = isset($dbids['easy']['class'])
 				? $dbids['easy']['class']
-				: 'DatabasePgsql';
+				: 'DatabasePDO';
 
 			require_once 'include/data/' . $database_class . '.php';
 
