@@ -82,9 +82,6 @@ class DatabasePDO
 	  */
 	function query($query, $indices = false)
 	{
-		if (!$this->resource)
-			return;
-
 		$start = microtime(true);
 
 		/* Query the database */
@@ -98,28 +95,16 @@ class DatabasePDO
 				'duration' => $duration
 			);
 
-		if ($handle === false) {
+		if ($handle === false)
 			throw new RuntimeException('Query failed: ' . $this->get_last_error());
-			/* An error occurred */
-			return null;
-		} else if ($handle !== true) {
-			$this->last_result = array();
-
-			/* Fetch all the rows */
-			$this->last_result = $handle->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
-
-			$this->last_affected = $handle->rowCount();
-
-			/* Free the query handle */
-			unset($handle);
 			
-			/* Return the results */
-			return $this->last_result;
-		}
-		
-		$this->last_affected = 0;
+		/* Fetch all the rows */
+		$this->last_result = $handle->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
 
-		return true;
+		$this->last_affected = $handle->rowCount();
+
+		/* Return the results */
+		return $this->last_result;
 	}
 	
 	/**
@@ -272,7 +257,9 @@ class DatabasePDO
 			$query .= ' WHERE ' . $condition;
 
 		/* Execute query */
-		return $this->query($query);
+		$this->query($query);
+
+		return $this->last_affected;
 	}
 
 	/**

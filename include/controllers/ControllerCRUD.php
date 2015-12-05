@@ -35,9 +35,7 @@ class ControllerCRUD extends Controller
 			elseif (is_null($value))
 				$iter->set($key, null);
 
-		$result = $this->model->update($iter);
-
-		return $result === array() || $result === true;
+		return $this->model->update($iter) > 0;
 	}
 
 	protected function _delete(DataIter $iter, array &$errors)
