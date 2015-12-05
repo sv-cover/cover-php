@@ -399,7 +399,7 @@
 					$y = 0;
 
 				$imagick->cropImage($size, $size, 0, $y);
-				$imagick->scaleImage(128, 0);
+				$imagick->scaleImage(96, 0);
 
 				$imagick->setImageFormat('jpeg');
 
