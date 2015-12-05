@@ -37,7 +37,7 @@
 		protected function get_content($view, $iter = null, $params = null)
 		{
 			$title = $iter
-				? member_full_name($iter, false, true)
+				? member_full_name($iter, BE_PERSONAL)
 				: __('Profiel');
 
 			$this->run_header(compact('title'));
@@ -115,7 +115,7 @@
 			
 				// Inform the board that member info has been changed.
 				$subject = "Lidgegevens gewijzigd";
-				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter)) . "\n\n";
+				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
 				
 				$changes = $iter->get_changed_values();
 				
@@ -123,7 +123,7 @@
 					$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);
 					
 				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
 
 				try {
 					get_secretary()->updatePersonFromIterChanges($iter);
@@ -145,7 +145,7 @@
 				$language_code = strtolower(i18n_get_language());
 
 				$variables = [
-					'naam' => member_full_name($iter),
+					'naam' => member_first_name($iter, IGNORE_PRIVACY),
 					'email' => $data['email'],
 					'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($key)
 				];

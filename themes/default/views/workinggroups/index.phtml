@@ -14,7 +14,7 @@
 			<li>
 				<a href="profiel.php?lid=<?=$member->get_id()?>">
 					<img src="foto.php?lid_id=<?=$member->get_id()?>&amp;format=square&amp;width=60">
-					<?=member_full_name($member)?>
+					<?=markup_format_text(member_full_name($member, BE_PERSONAL))?>
 				</a>
 			</li>
 		<?php endforeach ?>

@@ -229,7 +229,7 @@ class ControllerApi extends Controller
 		$model->insert($member);
 
 		// Create profile for this member
-		$nick = member_full_name($member, true, false);
+		$nick = member_full_name($member, IGNORE_PRIVACY);
 		
 		if (strlen($nick) > 50)
 			$nick = $member->get('voornaam');
@@ -257,7 +257,7 @@ class ControllerApi extends Controller
 		mail($data['email'], 'Website Cover', $mail,
 			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
-		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, true, false) . ')', $mail,
+		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
 			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];

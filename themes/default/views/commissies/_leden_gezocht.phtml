@@ -10,11 +10,11 @@ $far_future = strtotime($iter->get('vacancies')) > strtotime('+1 year');
 	<?php if ($commissioner): ?>
 		<a href="profiel.php?lid=<?=$commissioner->get('id')?>"><img src="foto.php?lid_id=<?=$commissioner->get('id')?>&amp;format=square&amp;width=100" class="profile-picture"></a>
 		<?php if ($far_future): ?>
-		<p><?=markup_parse(sprintf(__("Hey! Deze commissie zoekt nieuwe commissieleden.\nHeb jij interesse? Zeg het de Commissaris Intern, %s (intern@svcover.nl)"), markup_format_text(member_full_name($commissioner)))) ?></p>
+		<p><?=markup_parse(sprintf(__("Hey! Deze commissie zoekt nieuwe commissieleden.\nHeb jij interesse? Zeg het de Commissaris Intern, %s (intern@svcover.nl)"), markup_format_text($commissioner['voornaam']))) ?></p>
 		<?php else: ?>
 		<p><?=markup_parse(sprintf(__("Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse?\nZeg het [b]voor %s[/b] tegen de Commissaris Intern, %s (intern@svcover.nl)"),
 			strftime('%A %e %B', strtotime($iter->get('vacancies'))),
-			markup_format_text(member_full_name($commissioner)))) ?></p>
+			markup_format_text($commissioner['voornaam']))) ?></p>
 		<?php endif ?>
 	<?php else: ?>
 	<p><?=markup_parse(__("Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het de Intern via intern@svcover.nl.")) ?></p>

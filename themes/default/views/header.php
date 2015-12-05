@@ -270,7 +270,7 @@
 		
 		foreach ($jarigen as $jarige) {
 			$contents .= sprintf('<a href="profiel.php?lid=%d">%s</a> (%d)<br>',
-				$jarige->get_id(), markup_format_text(member_full_name($jarige)), $jarige['leeftijd']);
+				$jarige->get_id(), markup_format_text(member_full_name($jarige, BE_PERSONAL)), $jarige['leeftijd']);
 		}
 
 		return $contents . '</div>';

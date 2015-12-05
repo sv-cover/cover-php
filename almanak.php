@@ -37,6 +37,13 @@
 			$iters = $this->model->search_name($query,
 				isset($_GET['limit']) ? $_GET['limit'] : null);
 
+			// Filter out everyone that doesn't want to be found by their name
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+				&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
+				$iters = array_filter($iters, function($iter) {
+					return !$iter->is_private('naam');
+				});
+
 			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
 				array('application/json', 'text/html', '*/*'));
 

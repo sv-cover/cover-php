@@ -122,7 +122,7 @@
 				<tr>
 					<td><input type="checkbox" id="<?=$this->uid($aanmelding)?>" name="unsubscribe[]" value="<?=$aanmelding->has('abonnement_id') ? $aanmelding->get('abonnement_id') : $aanmelding->get('lid_id') ?>"></td>
 					<?php if ($aanmelding->get('lid_id')): ?>
-					<td><label for="<?=$this->uid($aanmelding)?>"><?=markup_format_text(member_full_name($aanmelding->getIter('lid')))?></label></td>
+					<td><label for="<?=$this->uid($aanmelding)?>"><?=markup_format_text(member_full_name($aanmelding->getIter('lid'), IGNORE_PRIVACY))?></label></td>
 					<?php else: ?>
 					<td><label for="<?=$this->uid($aanmelding)?>"><?=markup_format_text($aanmelding->get('naam'))?></label></td>
 					<?php endif ?>
