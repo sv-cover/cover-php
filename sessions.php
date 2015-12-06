@@ -116,7 +116,7 @@ class ControllerSessions extends Controller
 			get_auth()->logout();
 
 		if (isset($_GET['referrer']))
-			return $this->redirect($_GET['referrer']);
+			return $this->redirect($_GET['referrer'], false, ALLOW_SUBDOMAINS);
 		else
 			return $this->get_content('logout');
 	}
