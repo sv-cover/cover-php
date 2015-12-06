@@ -5,6 +5,8 @@
 	require_once 'include/functions.php';
 	require_once 'include/markup.php';
 
+	const ALLOW_SUBDOMAINS = 1;
+
 	/** 
 	  * A class implementing the simplest controller. This class provides
 	  * viewing a simple static page by running the header view, then
@@ -98,14 +100,22 @@
 			$this->get_content();
 		}
 
-		protected function redirect($url, $permanent = false)
+		protected function redirect($url, $permanent = false, $flags = 0)
 		{
 			// parse and selectively rebuild the url to prevent
 			// weird tricks where a custom form redirects you to
 			// outside the Cover website.
 			$parts = parse_url($url);
 
-			$url = $parts['path'];
+			$url = '';
+
+			if (($flags & ALLOW_SUBDOMAINS)
+				&& isset($parts['host'])
+				&& is_same_domain($parts['host'], $_SERVER['HTTP_HOST'])) {
+				$url = '//' . $parts['host'];
+			}
+
+			$url .= $parts['path'];
 
 			if (isset($parts['query']))
 				$url .= '?' . $parts['query'];

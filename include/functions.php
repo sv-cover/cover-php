@@ -868,3 +868,17 @@
 	{
 		return substr_compare($haystack, $needle, -strlen($needle));
 	}
+
+	function is_same_domain($subdomain, $domain, $levels = 2)
+	{
+		$sub = explode('.', $subdomain);
+		$top = explode('.', $domain);
+
+		$levels = min($levels, count($sub), count($top));
+
+		while ($levels-- > 0)
+			if (array_pop($sub) != array_pop($top))
+				return false;
+
+		return true;
+	}

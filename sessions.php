@@ -88,11 +88,18 @@ class ControllerSessions extends Controller
 		else
 			$referrer = 'profiel.php';
 
+		$referrer_host = parse_url($referrer, PHP_URL_HOST);
+
+		if ($referrer_host && !is_same_domain($referrer_host, $_SERVER['HTTP_HOST'], 3))
+			$external_domain = parse_url($referrer, PHP_URL_HOST);
+		else
+			$external_domain = null;
+
 		if (!empty($_POST['email']) && !empty($_POST['password']))
 		{
 			if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
 			{
-				return $this->redirect($referrer);
+				return $this->redirect($referrer, false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
 			}
 			else {
 				$errors = ['email', 'password'];
@@ -100,7 +107,7 @@ class ControllerSessions extends Controller
 			}
 		}
 
-		return $this->get_content('login', null, compact('errors', 'error_message', 'referrer'));
+		return $this->get_content('login', null, compact('errors', 'error_message', 'referrer', 'external_domain'));
 	}
 
 	protected function run_view_logout()
