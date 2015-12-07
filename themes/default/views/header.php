@@ -46,8 +46,7 @@
 		if (count($iters) != 0) {
 			$contents = "<ul class=\"agenda\">\n";
 			
-			for ($i = 0; $i < min(10, count($iters)); $i++) {
-				$iter = $iters[$i];
+			foreach (array_slice($iters, 0, 10) as $iter) {
 				$date = strtotime($iter->get('van'));
 				$details = $iter->get('extern')
 					? __('Externe activiteit')
