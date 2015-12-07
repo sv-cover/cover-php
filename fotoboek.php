@@ -14,6 +14,8 @@
 
 		protected $_var_id = 'comment_id';
 
+		protected $likes;
+
 		public function __construct(DataIterPhoto $photo)
 		{
 			$this->_var_view = 'comment_view';
@@ -72,6 +74,23 @@
 		public function link_to_delete(DataIter $iter)
 		{
 			return parent::link_to_delete($iter) . '#confirm-delete-comment-form';
+		}
+
+		public function run_likes(DataIter $iter)
+		{
+			if (isset($_POST['action']))
+			{
+				switch ($_POST['action']) {
+					case 'like':
+						$iter->like(get_identity()->get_member());
+						break;
+					case 'unlike':
+						$iter->unlike(get_identity()->get_member());
+						break;
+				}
+			}
+
+			return $this->run_read($iter);
 		}
 	}
 

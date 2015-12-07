@@ -2,24 +2,65 @@
 $days = get_days();
 $months = get_months();
 ?>
-<div class="replyBox" id="comment<?=$iter->get_id()?>">
+<div class="replyBox comment" id="comment<?=$iter->get_id()?>">
 	<div class="title">
 		<span class="replyDetails">
-			<div class="right"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter->get('dagnaam')], $iter->get('datum'), $months[$iter->get('maand')], $iter->get('uur'), $iter->get('minuut')) ?></div>
+			<div class="right">
+				<span class="number-of-likes"><i class="fa fa-thumbs-o-up"></i> <?=__N('%d like', '%d likes', $iter['likes'])?></span>
+				
+				<?php if ($iter->has('fotoboek__id')): ?>
+				<span class="subtitle"><a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text($iter->getIter('fotoboek')->get('titel')) ?> / <?= markup_format_text(($iter->has('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a></span>
+				<?php endif ?>
+
+				<span class="timestamp"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter->get('dagnaam')], $iter->get('datum'), $months[$iter->get('maand')], $iter->get('uur'), $iter->get('minuut')) ?></span>
+			</div>
 			<?= markup_format_text(member_full_name($iter->get('auteur'), BE_PERSONAL)) ?>
 		</span>
-		<?php if (!empty($subtitle)): ?>
-		<div class="subtitle">
-		<?= __('Foto') ?>: <a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text(($iter->has('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a><br><?= __('Boek') ?>: <a href="fotoboek.php?book=<?= $iter->get('boek') ?>"><?= markup_format_text($iter->get('titel')) ?></a>
-		</div>
-		<?php endif ?>
 	</div>
 
+	<?php if ($iter->has('fotoboek__id')): ?>
+	<a href="fotoboek.php?photo=<?= $iter->get('foto') ?>" class="thumbnail">
+		<img src="<?=markup_format_attribute($iter->getIter('foto', 'DataIterPhoto')->get_url(null, 400))?>" height="100">
+	</a>
+	<?php endif ?>
+	
 	<div class="bericht">
 		<?= markup_parse($iter->get('reactie')) ?>
 	</div>
 
+	<div class="likes">
+		<?php if ($iter['likes'] > 0): ?>
+		<?= sprintf(_ngettext('%s vindt dit leuk', '%s vinden dit leuk', $iter['likes']), 
+			implode_human(array_map(function($member) {
+				return sprintf('<a href="profiel.php?lid=%d">%s</a>',
+					$member['id'], markup_format_text(member_first_name($member)));
+					}, $iter['liked_by']))) ?>
+		<?php endif ?>
+	</div>
+
 	<ul class="actions">
+		<?php if (get_auth()->logged_in()): ?>
+			<?php if ($iter->is_liked_by(get_identity()->get_member())): ?>
+				<li>
+					<form method="post"
+						action="fotoboek.php?photo=<?=$iter['foto']?>&amp;comment_view=likes&amp;comment_id=<?=$iter->get_id()?>"
+						data-partial-selector="#comment<?=$iter['id']?>"
+						data-placement-selector="#comment<?=$iter['id']?>">
+						<input type="hidden" name="action" value="unlike">
+						<button type="submit" class="link"><i class="fa fa-thumbs-o-up"></i> Unlike</button>
+					</form>
+				</li>
+			<?php else: ?>
+				<li>
+					<form method="post" action="fotoboek.php?photo=<?=$iter['foto']?>&amp;comment_view=likes&amp;comment_id=<?=$iter->get_id()?>"
+						data-partial-selector="#comment<?=$iter['id']?>"
+						data-placement-selector="#comment<?=$iter['id']?>">
+						<input type="hidden" name="action" value="like">
+						<button type="submit" class="link"><i class="fa fa-thumbs-o-up"></i> Like</button>
+					</form>
+				</li>
+			<?php endif ?>
+		<?php endif ?>
 		<?php if (get_policy($model)->user_can_update($iter)): ?>
 		<li><a href="<?=markup_format_attribute($controller->link_to_update($iter))?>"
 			data-partial-selector=".replyBox"

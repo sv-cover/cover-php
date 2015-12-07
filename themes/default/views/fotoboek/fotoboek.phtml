@@ -27,7 +27,7 @@ $this->render_partial('contents', compact('model', 'iter'));
 
 <?php
 if ($iter->get_id() === 0)
-	$this->render_partial('last_reacties', compact('model'));
+	$this->render_partial('last_reacties');
 
 if (!$iter->count_photos())
 	$this->render_partial('random_photos', compact('model', 'iter'));
