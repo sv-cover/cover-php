@@ -319,21 +319,12 @@
 			if ($error)
 				$this->get_content('profiel', $iter, ['errors' => array('photo'), 'error_message' => $error, 'tab' => 'profile']);
 
-			$mime = image_type_to_mime_type($image_meta[2]);
-
-			$mail = new \cover\email\MessagePart();
-			$mail->addHeader('To', 'acdcee@svcover.nl');
-			$mail->addHeader('Subject', 'New yearbook photo for ' . $iter['naam']);
-			$mail->addHeader('Reply-To', sprintf('%s <%s>', $iter['naam'], $iter['email']));
-			$mail->addBody(
-				'text/plain; charset=UTF-8',
+			send_mail_with_attachment(
+				'acdcee@svcover.nl',
+				'New yearbook photo for ' . $iter['naam'],
 				"{$iter['naam']} would like to use the attached photo as their new profile picture.",
-				\cover\email\MessagePart::TRANSFER_ENCODING_QUOTED_PRINTABLE);
-			$mail->addBody(
-				$mime,
-				file_get_contents($_FILES['photo']['tmp_name']),
-				\cover\email\MessagePart::TRANSFER_ENCODING_BASE64);
-			\cover\email\send($mail);
+				[sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email'])],
+				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
 			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');
 
