@@ -18,29 +18,156 @@ define('RETURN_FAILURE_MESSAGE_EMPTY', 502);
 error_reporting(E_ALL);
 ini_set('display_errors', true);
 
-function parse_email_address($email)
+class EnvelopeTo extends \Zend\Mail\Header\AbstractAddressList
 {
-	$email = trim($email);
-
-	// 'jelmer@ikhoefgeen.nl'
-	if (filter_var($email, FILTER_VALIDATE_EMAIL))
-		return $email;
-
-	// Jelmer van der Linde <jelmer@ikhoefgeen.nl>
-	else if (preg_match('/<(.+?)>$/', trim($email), $match)
-		&& filter_var($match[1], FILTER_VALIDATE_EMAIL))
-		return $match[1];
-
-	else
-		return false;
+    protected $fieldName = 'Envelope-To';
+    protected static $type = 'envelope-to';
 }
 
-function parse_email_addresses($emails)
+class Link
 {
-	return array_filter(array_map('parse_email_address', explode(',', $emails)));
+	public $url;
+
+	public $label;
+
+	public function __construct($url, $label)
+	{
+		$this->url = $url;
+
+		$this->label = $label;
+	}
+
+	public function toText($charset)
+	{
+		return sprintf("%s (%s)", convert_utf8_to_encoding($this->label, $charset), $this->url);
+	}
+
+	public function toHTML($charset)
+	{
+		return sprintf('<a href="%s">%s</a>',
+			htmlentities($this->url, ENT_QUOTES, $charset),
+			htmlentities(convert_utf8_to_encoding($this->label, $charset), ENT_COMPAT, $charset));
+	}
 }
 
-function process_message_committee($message, $message_headers, $to, &$committee)
+function convert_utf8_to_encoding($text, $charset)
+{
+	return $text; // TODO
+}
+
+function parse_message($raw_message)
+{
+	$message = \Zend\Mail\Message::fromString(substr($raw_message, strpos($raw_message, "\n") + 1));
+
+	if (preg_match('/^multipart\/alternative;\s*boundary=(["\']?)(.+?)\1$/',
+		$message->getHeaders()->get('contenttype')->getFieldValue(), $match))
+	{
+		$boundary = $match[2];
+
+		$mime_message = \Zend\Mime\Message::createFromMessage($message->getBody(), $boundary);
+
+		$message->setBody($mime_message);
+	}
+
+	return $message;
+}
+
+function personalize_message(\Zend\Mail\Message $message, array $variables)
+{
+	if ($message->getBody() instanceof \Zend\Mime\Message)
+	{
+		$body = clone $message->getBody();
+
+		$mime_message_parts = $body->getParts();
+
+		foreach ($mime_message_parts as $position => $part)
+		{
+			// only replace in text content
+			if (!preg_match('/^text\/(.+)(?:;\s+charset=(["\']?)(.+?)\2)$/', $part->type, $match))
+				continue;
+
+			$type = $match[1];
+
+			$charset = $match[3];
+
+			// Replace all the stuff
+			$content = str_replace_in_mime_content($part->getRawContent(), $type, $charset, $variables);
+
+			// Create a new message part that will contain the new personalized content
+			$replacement_part = new \Zend\Mime\Part($content);
+
+			// Copy all the properties from the old message part to the replacement part
+			$part_properties = [
+				'boundary',
+				'charset',
+				'description',
+				'disposition',
+				'encoding',
+				'filename',
+				'id',
+				'language',
+				'location',
+				'type'];
+
+			foreach ($part_properties as $property)
+				$replacement_part->{$property} = $part->{$property};
+
+			// And finally, replace it in the MIME message
+			$mime_message_parts[$position] = $replacement_part;
+		}
+
+		$body->setParts($mime_message_parts);
+	}
+	else // we don't have a multipart message
+	{
+		$type = preg_match('/^text\/(.+?)/', $message->getHeaders()->get('contenttype')->getFieldValue(), $match)
+			? $match[1]
+			: 'non-text';
+		
+		$charset = $message->getEncoding();
+
+		$body = $type != 'non-text'
+			? str_replace_in_mime_content($message->getBody(), $type, $charset, $variables)
+			: $message->getBody();
+	}
+
+	$personalized_message = clone $message;
+	$personalized_message->setBody($body);
+	return $personalized_message;
+}
+
+function str_replace_in_mime_content($raw_content, $type, $charset, array $variables)
+{
+	return str_replace(
+		array_keys($variables),
+		array_map(
+			function($value) use ($type, $charset) {
+				switch ($type) {
+					// If it is HTML, escape it properly
+					case 'html':
+						if ($value instanceof Link)
+							return $value->toHTML($charset);
+						else
+							return htmlentities(
+								convert_utf8_to_encoding($value, $charset), 
+								ENT_COMPAT, $charset);
+						break;
+					// Otherwise assume no escaping is required
+					default:
+						if ($value instanceof Link)
+							return $value->toText($charset);
+						else
+							return convert_utf8_to_encoding($value, $charset);
+						break;
+				}
+			},
+			array_values($variables)
+		),
+		$raw_content
+	);
+}
+
+function process_message_committee(\Zend\Mail\Message $message, $to, &$committee)
 {
 	$commissie_model = get_model('DataModelCommissie');
 
@@ -61,15 +188,15 @@ function process_message_committee($message, $message_headers, $to, &$committee)
 			'[COMMITTEE]' => $committee->get('naam')
 		);
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+		$personalized_message = personalize_message($message, $variables);
 
-		echo send_message($personalized_message, $member->get('email')), "\n";
+		echo send_message($personalized_message->toString(), $member->get('email')), "\n";
 	}
 
 	return 0;
 }
 
-function process_message_mailinglist($message, $message_header, $to, $from, &$lijst)
+function process_message_mailinglist(\Zend\Mail\Message $message, $to, $from, &$lijst)
 {
 	$mailinglijsten_model = get_model('DataModelMailinglijst');
 
@@ -80,10 +207,10 @@ function process_message_mailinglist($message, $message_header, $to, $from, &$li
 	// Append '[Cover]' or whatever tag is defined for this list to the subject
 	// but do so only if it is set.
 	if (!empty($lijst->get('tag')))
-		$message = preg_replace(
+		$message->setSubject(preg_replace(
 			'/^Subject: (?!(?:Re:\s*)?\[' . preg_quote($lijst->get('tag'), '/') . '\])(.+?)$/im',
 			'Subject: [' . $lijst->get('tag') . '] $1',
-			$message, 1);
+			$message->getSubject()));
 
 	// Find everyone who is subscribed to that list
 	$aanmeldingen = $mailinglijsten_model->get_aanmeldingen($lijst);
@@ -140,11 +267,11 @@ function process_message_mailinglist($message, $message_header, $to, $from, &$li
 
 		echo "Sending mail to " . $aanmelding->get('naam') . " <" . $aanmelding->get('email') . ">: ";
 
-		// Personize the message for the receiver
+		// Personalize the message for the receiver
 		$variables = array(
-			'[NAAM]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
-			'[NAME]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
-			'[MAILINGLIST]' => htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING)
+			'[NAAM]' => $aanmelding->get('naam'),
+			'[NAME]' => $aanmelding->get('naam'),
+			'[MAILINGLIST]' => $lijst->get('naam')
 		);
 
 		if ($aanmelding->has('lid_id'))
@@ -157,28 +284,27 @@ function process_message_mailinglist($message, $message_header, $to, $from, &$li
 				? ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', $aanmelding->get('abonnement_id'))
 				: ROOT_DIR_URI . sprintf('mailinglijsten.php?lijst_id=%d', $lijst->get('id'));
 
-			$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING);
+			$variables['[UNSUBSCRIBE_URL]'] = $url;
 
-			$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
-				htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING),
-				htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING));
+			$variables['[UNSUBSCRIBE_LINK]'] = new Link($url, sprintf('Click here to unsubscribe from the %s mailinglist.', $lijst->get('naam')));
 		}
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+		$personalized_message = personalize_message($message, $variables);
 
-		echo send_message($personalized_message, $aanmelding->get('email')), "\n";
+		echo send_message($personalized_message->toString(), $aanmelding->get('email')), "\n";
 	}
 
 	return 0;
 }
 
-function process_return_to_sender($message, $message_header, $from, $destination, $return_code)
+function process_return_to_sender(\Zend\Mail\Message $message, $from, $destination, $return_code)
 {
 	$notice = 'Sorry, but your message' . ($destination ? ' to ' . $destination : '') . " could not be delivered:\n" . get_error_message($return_code);
 
 	echo "Return message to sender $from\n";
 
-	$message_part = \Cover\email\MessagePart::parse_text($message);
+	// Todo: implement this using \Zend\Mail\Message
+	$message_part = \Cover\email\MessagePart::parse_text($message->toString());
 
 	$reply = \Cover\email\reply($message_part, $notice);
 
@@ -217,9 +343,11 @@ function send_message($message, $email)
 	$env = array();
 
 	// Start sendmail with the target email address as argument
-	$sendmail = proc_open(
-		getenv('SENDMAIL') . ' -oi ' . escapeshellarg($email),
-		$descriptors, $pipes, $cwd, $env);
+	// $sendmail = proc_open(
+	// 	getenv('SENDMAIL') . ' -oi ' . escapeshellarg($email),
+	// 	$descriptors, $pipes, $cwd, $env);
+
+	$sendmail = proc_open('cat -- ', $descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
 	fwrite($pipes[0], $message);
@@ -261,17 +389,6 @@ function get_error_message($return_value)
 	}
 }
 
-function read_message_headers($stream)
-{
-	$message_header = new \cover\email\MessagePart();
-
-	\cover\email\MessagePart::parse_header(
-		new \cover\email\PeakableStream($stream),
-		$message_header);
-
-	return $message_header;
-}
-
 function verbose($return_value)
 {
 	if ($return_value !== 0)
@@ -282,55 +399,48 @@ function verbose($return_value)
 
 function main()
 {
-	// Copy STDIN to buffer stream because th
-	$buffer_stream = fopen('php://temp', 'r+');
-	stream_copy_to_stream(STDIN, $buffer_stream);
+	$raw_message = stream_get_contents(STDIN);
 
-	// Read the complete email from the stdin.
-	rewind($buffer_stream);
-	$message = stream_get_contents($buffer_stream);
+	if ($raw_message === false || trim($raw_message) == '')
+		return RETURN_FAILURE_MESSAGE_EMPTY;
+
+	// Skip the first line because that envelope-to thingy is not part of the actual email
+	$message = parse_message($raw_message);
 	
 	$lijst = null;
 	$comissie = null;
 
-	if ($message === false || trim($message) == '')
-		return RETURN_FAILURE_MESSAGE_EMPTY;
-
-	// Rewind the STDIN but skip the first line
-	rewind($buffer_stream);
-	fgets($buffer_stream); // Skip the first line
-
-	// Next, read the header of the mail again, but now using the message parser that
-	// correctly handles headers with newlines (which are hell with regexps).
-	$message_header = read_message_headers($buffer_stream);
-
-	fclose($buffer_stream);
-
-	// Test at least the sender already
-	if (!$message_header->header('From') || !$from = parse_email_address($message_header->header('From')))
+	if (!$message->getHeaders()->get('From')->getAddressList()->count())
 		return RETURN_COULD_NOT_DETERMINE_SENDER;
 
-	if (!$message_header->header('Envelope-To') || !$destinations = parse_email_addresses($message_header->header('Envelope-To')))
+	$from = $message->getHeaders()->get('From')->getAddressList()->current();
+
+	if (!$message->getHeaders()->has('Envelope-To'))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
-	foreach ($destinations as $destination)
+	$envelope_to = EnvelopeTo::fromString($message->getHeaders()->get('Envelope-To')->toString());
+	
+	if ($envelope_to->getAddressList()->count() === 0)
+		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
+
+	foreach ($envelope_to->getAddressList() as $destination)
 	{
 		// First try sending the message to a committee
-		$return_code = process_message_committee($message, $message_header, $destination, $commissie);
+		$return_code = process_message_committee($message, $destination->getEmail(), $commissie);
 
 		// If that didn't work, try sending it to a mailing list
 		if ($return_code == RETURN_COULD_NOT_DETERMINE_COMMITTEE)
 		{
 			// Process the message: parse it and send it to the list.
-			$return_code = process_message_mailinglist($message, $message_header, $destination, $from, $lijst);
+			$return_code = process_message_mailinglist($message, $destination->getEmail(), $from->getEmail(), $lijst);
 		}
 
 		// Archive the message.
 		$archief = get_model('DataModelMailinglijstArchief');
-		$archief->archive($message, $from, $lijst, $commissie, $return_code);
+		$archief->archive($raw_message, $from->getEmail(), $lijst, $commissie, $return_code);
 
 		if ($return_code != 0)
-			process_return_to_sender($message, $message_header, $from, $destination, $return_code);
+			process_return_to_sender($message, $from->getEmail(), $destination->getEmail(), $return_code);
 	}
 
 	// Return the result of the processing step.
