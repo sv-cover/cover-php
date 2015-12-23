@@ -57,87 +57,76 @@ if (!$photos || count($photos) == 0)
 <script src="<?=get_theme_data('data/flowgallery.js')?>"></script>
 <script>$('.photos.flow-gallery').flowgallery();</script>
 <script>
-$('.photos').on('click', '.thumbnail > a', function(e) {
-	if (e.ctrlKey || e.shiftKey || e.metaKey)
-		return;
+var $modal, $target;
 
-	e.preventDefault();
+var cache = {};
 
-	var $modal = $('<div class="modal" tabindex="-1">'),
-	$modalWindow = $('<div class="window">').appendTo($modal),
-	$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
+var getModal = function() {
+	if (!$modal) {
+		$modal = $('<div class="modal" tabindex="-1">'),
+		$modalWindow = $('<div class="window">').appendTo($modal),
+		$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
 
-	$target = $('<div>').appendTo($modalWindow);
-	
+		$target = $('<div>').appendTo($modalWindow);
 
-	$modal.insertBefore($('.world'));//.delay(100).addClass('')
+		$modal.insertBefore($('.world'));//.delay(100).addClass('')
 
-	// Close the modal on clicking the close button
-	$closeButton.on('click', function(e) {
-		e.preventDefault();
-		$modal.remove();
-	});
+		// Close the modal on clicking the close button
+		$closeButton.on('click', function(e) {
+			e.preventDefault();
+			$modal.remove();
+			$modal = $target = null;
+		});
 
-	// Close the model on pressing the escape key while inside
-	$modal.on('keydown.nav', function(e) {
-		// Don't prevent normal keyboard usage
-		if (['TEXTAREA', 'INPUT'].indexOf(event.target.nodeName) !== -1)
-			return;
+		// Close the model on pressing the escape key while inside
+		$modal.on('keydown.nav', function(e) {
+			// Don't prevent normal keyboard usage
+			if (['TEXTAREA', 'INPUT'].indexOf(event.target.nodeName) !== -1)
+				return;
 
-		switch (e.keyCode) {
-			case 27:
-				if ($modal.parent()) {
-					e.preventDefault();
-					$modal.remove();
-				}
-				break;
+			switch (e.keyCode) {
+				case 27:
+					if ($modal.parent()) {
+						e.preventDefault();
+						$modal.remove();
+					}
+					break;
 
-			case 37:
-				if ($modal.find('.navigation .previous').click())
-					e.preventDefault();
-				break;
+				case 37:
+					if ($modal.find('.navigation .previous').click())
+						e.preventDefault();
+					break;
 
-			case 39:
-				if ($modal.find('.navigation .next').click())
-					e.preventDefault();
-				break;
-		}
-	});
+				case 39:
+					if ($modal.find('.navigation .next').click())
+						e.preventDefault();
+					break;
+			}
+		});
 
-	$modal.focus();
+		$modal.focus();
+	}
 
-	var cache = {};
+	return $modal;
+}
 
-	var prefetchPhotoLink = function(link, callback) {
-		if (!cache[link]) {
-			cache[link] = $('<div>').load(link + ' #a', callback);
-		} else {
-			if (callback)
-				callback.apply(cache[link]);
-		}
-	};
-
-	var loadPhotoLink = function(link) {
-		$target.replaceWith($('<div>').text('Loading…'));
-
-		prefetchPhotoLink(link, function() {
-			$target.replaceWith(this);
-			$target = $(this);
-
+var prefetchPhotoLink = function(link, callback) {
+	if (!cache[link]) {
+		cache[link] = $('<div>').load(link + ' #a', function() {
 			// First of all, fire the partially loaded thingy
-			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $target}));
+			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
 
 			// Remove the message box style, we don't use it
-			$target.find('#a').removeClass('messageBox');
+			$(this).find('#a').removeClass('messageBox');
 
 			// Remove the title bar, for now
-			$target.find('.photo-page-header').remove();
+			$(this).find('.photo-page-header').remove();
 
 			// Remove the slides, we don't use them here.
-			$target.find('.slides').remove();
+			$(this).find('.slides').remove();
 
 			// Hook into the 'next' and 'prev' links
-			$target.find('.navigation .next, .navigation .previous').click(function(e) {
+			$(this).find('.navigation .next, .navigation .previous').click(function(e) {
 				if (e.ctrlKey || e.shiftKey || e.metaKey)
 					return;
 
@@ -146,12 +135,38 @@ $('.photos').on('click', '.thumbnail > a', function(e) {
 				loadPhotoLink($(this).attr('href'));
 			});
 
-			// Prefetch the next photo
-			$target.find('.navigation .next').each(function() {
-				prefetchPhotoLink($(this).prop('href'));
-			});
+			if (callback)
+				callback.apply($(this));
 		});
-	};
+	} else {
+		if (callback)
+			callback.apply(cache[link]);
+	}
+};
+
+var loadPhotoLink = function(link) {
+	var $loading = $('<div>').addClass('loading-text').text('Loading…');
+	$target.replaceWith($loading);
+	$target = $loading;
+
+	prefetchPhotoLink(link, function() {
+		$target.replaceWith(this);
+		$target = $(this);
+
+		// Prefetch the next photo
+		$target.find('.navigation .next').each(function() {
+			prefetchPhotoLink($(this).attr('href'));
+		});
+	});
+};
+
+$('.photos').on('click', '.thumbnail > a', function(e) {
+	if (e.ctrlKey || e.shiftKey || e.metaKey)
+		return;
+
+	e.preventDefault();
+
+	getModal();
 
 	loadPhotoLink($(this).attr('href'));
 });
