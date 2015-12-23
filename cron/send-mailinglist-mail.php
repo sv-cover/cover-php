@@ -343,11 +343,11 @@ function send_message($message, $email)
 	$env = array();
 
 	// Start sendmail with the target email address as argument
-	// $sendmail = proc_open(
-	// 	getenv('SENDMAIL') . ' -oi ' . escapeshellarg($email),
-	// 	$descriptors, $pipes, $cwd, $env);
+	$sendmail = proc_open(
+		getenv('SENDMAIL') . ' -oi ' . escapeshellarg($email),
+		$descriptors, $pipes, $cwd, $env);
 
-	$sendmail = proc_open('cat -- ', $descriptors, $pipes, $cwd, $env);
+	// $sendmail = proc_open('cat -- ', $descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
 	fwrite($pipes[0], $message);
