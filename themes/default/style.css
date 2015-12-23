@@ -2574,14 +2574,6 @@ ul.committee-list > li .position {
 	margin-bottom: -24px;
 }
 
-.comment .likes {
-	font-style: italic;
-}
-
-.comment .likes a {
-	font-weight: normal;
-}
-
 button .fa {
 	/*display: inline-block;*/
 	margin-right: 4px;

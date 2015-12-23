@@ -6,7 +6,19 @@ $months = get_months();
 	<div class="title">
 		<span class="replyDetails">
 			<div class="right">
-				<span class="number-of-likes"><i class="fa fa-thumbs-o-up"></i> <?=__N('%d like', '%d likes', $iter['likes'])?></span>
+				<span class="number-of-likes" <?=
+					$iter['likes'] == 0
+						? ''
+						: sprintf(' title="%s"', 
+							markup_format_attribute(
+								sprintf(
+									_ngettext('%s vindt dit leuk', '%s vinden dit leuk', $iter['likes']), 
+									implode_human(
+										array_map('member_first_name', $iter['liked_by'])
+									)
+								)
+							)
+						); ?>><i class="fa fa-thumbs-o-up"></i> <?=__N('%d like', '%d likes', $iter['likes'])?></span>
 				
 				<?php if ($iter->has('fotoboek__id')): ?>
 				<span class="subtitle"><a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text($iter->getIter('fotoboek')->get('titel')) ?> / <?= markup_format_text(($iter->has('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a></span>
@@ -26,16 +38,6 @@ $months = get_months();
 	
 	<div class="bericht">
 		<?= markup_parse($iter->get('reactie')) ?>
-	</div>
-
-	<div class="likes">
-		<?php if ($iter['likes'] > 0): ?>
-		<?= sprintf(_ngettext('%s vindt dit leuk', '%s vinden dit leuk', $iter['likes']), 
-			implode_human(array_map(function($member) {
-				return sprintf('<a href="profiel.php?lid=%d">%s</a>',
-					$member['id'], markup_format_text(member_first_name($member)));
-					}, $iter['liked_by']))) ?>
-		<?php endif ?>
 	</div>
 
 	<ul class="actions">
