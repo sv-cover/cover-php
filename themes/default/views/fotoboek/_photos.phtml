@@ -64,7 +64,7 @@ var cache = {};
 var getModal = function() {
 	if (!$modal) {
 		$modal = $('<div class="modal" tabindex="-1">'),
-		$modalWindow = $('<div class="window">').appendTo($modal),
+		$modalWindow = $('<div class="window photo-window">').appendTo($modal),
 		$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
 
 		$target = $('<div>').appendTo($modalWindow);

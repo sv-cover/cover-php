@@ -74,7 +74,7 @@ if (logged_in()) {
 	</nav>
 	
 	<div id="photo" data-id="<?=$iter->get_id()?>" <?php if (get_policy('DataModelFotoboekFaces')->user_can_create()) printf('data-create-action="%s"', markup_format_attribute($faces_controller->link_to_create())) ?>>
-		<figure class="full-size-photo">
+		<figure class="full-size-photo <?=$iter['orientation']?>">
 			<img
 				src="<?=markup_format_attribute($iter->get_url(1600, 1600)) ?>"
 				data-preview="<?=markup_format_attribute($iter->get_url(null, 400)) ?>"

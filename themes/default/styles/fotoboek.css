@@ -59,6 +59,16 @@ table.navigation td:nth-child(3) {
 	left: 0;
 }
 
+.modal > .photo-window #photo .full-size-photo.landscape > img {
+	width: auto;
+	height: 90vh;
+}
+
+.modal > .photo-window #photo .full-size-photo.portrait > img {
+	height: 90vh;
+	width: auto;
+}
+
 .slides {
 	width: auto;
 	background: #ccc;
@@ -609,3 +619,9 @@ table.navigation td:nth-child(3) {
 .selection-of-photos > li .photo-book-year:after {
 	content: ')';
 }
+
+.modal > .photo-window {
+	max-width: none;
+	margin: 20px;
+}
+
