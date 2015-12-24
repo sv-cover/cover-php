@@ -71,11 +71,15 @@ var getModal = function() {
 
 		$modal.insertBefore($('.world'));//.delay(100).addClass('')
 
+		var closeModal = function() {
+			$modal.remove();
+			$modal = $target = null;
+		};
+
 		// Close the modal on clicking the close button
 		$closeButton.on('click', function(e) {
 			e.preventDefault();
-			$modal.remove();
-			$modal = $target = null;
+			closeModal();
 		});
 
 		// Close the model on pressing the escape key while inside
@@ -84,11 +88,13 @@ var getModal = function() {
 			if (['TEXTAREA', 'INPUT'].indexOf(event.target.nodeName) !== -1)
 				return;
 
+			console.log(e.keyCode);
+
 			switch (e.keyCode) {
 				case 27:
 					if ($modal.parent()) {
 						e.preventDefault();
-						$modal.remove();
+						closeModal();
 					}
 					break;
 
@@ -145,12 +151,12 @@ var prefetchPhotoLink = function(link, callback) {
 };
 
 var loadPhotoLink = function(link) {
-	var $loading = $('<div>').addClass('loading-text').text('Loading…');
-	$target.replaceWith($loading);
-	$target = $loading;
+	$target.detach();
+
+	var $loading = $('<div>').addClass('loading-text').text('Loading…').appendTo($modal.find('.window'));
 
 	prefetchPhotoLink(link, function() {
-		$target.replaceWith(this);
+		$loading.replaceWith(this);
 		$target = $(this);
 
 		// Prefetch the next photo
