@@ -323,7 +323,7 @@
 				'acdcee@svcover.nl',
 				'New yearbook photo for ' . $iter['naam'],
 				"{$iter['naam']} would like to use the attached photo as their new profile picture.",
-				[sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email'])],
+				sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email']),
 				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
 			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');

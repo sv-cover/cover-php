@@ -890,8 +890,8 @@
 	 */
 	function send_mail_with_attachment($to, $subject, $message, $additional_headers, array $attachments)
 	{
-		$fout = popen('sendmail ' . escapeshellarg($to), 'w');
-
+		$fout = popen('sendmail -t -oi', 'w');
+		
 		if (!$fout)
 			throw new Exception("Could not open sendmail");
 
@@ -901,10 +901,11 @@
 		fwrite($fout,
 			"MIME-Version: 1.0\r\n"
 			. ($additional_headers ? (trim($additional_headers, "\r\n") . "\r\n") : "")
+			. "To: $to\r\n"
 			. "Subject: $subject\r\n"
 			. "Content-Type: multipart/mixed; boundary=\"$boundary\"\r\n"
 			. "\r\n"
-			. "This is a mime-encoded message"
+		. "This is a mime-encoded message"
 			. "\r\n\r\n");
 
 		// Message content
@@ -912,7 +913,8 @@
 			. "Content-Type: text/plain; charset=\"UTF-8\"\r\n"
 			. "Content-Transfer-Encoding: quoted-printable\r\n\r\n");
 
-		$filter = stream_filter_append($fout, 'convert.quoted-printable-encode');
+		$filter = stream_filter_append($fout, 'convert.quoted-printable-encode',
+			STREAM_FILTER_WRITE, ["line-length" => 80, "line-break-chars" => "\r\n"]);
 
 		if (is_resource($message))
 			stream_copy_to_stream($message, $fout);
@@ -932,9 +934,8 @@
 				. "Content-Transfer-Encoding: base64\r\n"
 				. "Content-Disposition: attachment\r\n\r\n");
 
-			$filter = stream_filter_append($fout, 'convert.base64-encode', STREAM_FILTER_WRITE, [
-				"line-length" => 80,
-				"line-break-chars" => "\r\n"]);
+			$filter = stream_filter_append($fout, 'convert.base64-encode',
+				STREAM_FILTER_WRITE, ["line-length" => 80, "line-break-chars" => "\r\n"]);
 
 			stream_copy_to_stream($file_handle, $fout);
 
