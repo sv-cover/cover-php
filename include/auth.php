@@ -11,6 +11,12 @@ interface IdentityProvider
 	public function get($key, $default_value = null);
 }
 
+interface SessionProvider
+{
+	public function logged_in();
+	public function get_session();
+}
+
 class GuestIdentityProvider implements IdentityProvider
 {
 	public function member_is_active()
@@ -195,7 +201,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 	}
 }
 
-class SessionProvider
+class CookieSessionProvider implements SessionProvider
 {
 	/**
 	 * @var DataModelSession
@@ -292,12 +298,48 @@ class SessionProvider
 	}
 }
 
+class ConstantSessionProvider implements SessionProvider
+{
+	/**
+	 * @var DataIterSession
+	 */
+	private $session;
+
+	public function __construct(DataIterSession $session = null)
+	{
+		$this->session = $session;
+	}
+
+	public function logged_in()
+	{
+		return $this->session !== null;
+	}
+
+	public function get_session()
+	{
+		return $this->session;
+	}
+}
+
+function get_identity_provider(SessionProvider $authenticator)
+{
+	if (!$authenticator->logged_in())
+		$identity = new GuestIdentityProvider();
+	else
+		$identity = new MemberIdentityProvider($authenticator);
+
+	if ($identity->member_in_committee(COMMISSIE_EASY))
+		$identity = new ImpersonatingIdentityProvider($authenticator);
+
+	return $identity;
+}
+
 function get_auth()
 {
 	static $authenticator;
 
 	if ($authenticator === null)
-		$authenticator = new SessionProvider();
+		$authenticator = new CookieSessionProvider();
 
 	return $authenticator;
 }
@@ -307,17 +349,7 @@ function get_identity()
 	static $identity;
 
 	if ($identity === null)
-	{
-		$authenticator = get_auth();
-
-		if (!$authenticator->logged_in())
-			$identity = new GuestIdentityProvider();
-		else
-			$identity = new MemberIdentityProvider($authenticator);
-
-		if ($identity->member_in_committee(COMMISSIE_EASY))
-			$identity = new ImpersonatingIdentityProvider($authenticator);
-	}
+		$identity = get_identity_provider(get_auth());
 
 	return $identity;
 }

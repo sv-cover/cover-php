@@ -49,7 +49,7 @@ class StickersView extends CRUDView
 				'toegevoegd_op' => $iter->get('toegevoegd_op'),
 				'toegevoegd_door_id' => $iter->get('toegevoegd_door'),
 				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
-					? member_full_name($iter->getIter('toegevoegd_door'), false, true)
+					? member_full_name($iter->getIter('toegevoegd_door'), BE_PERSONAL)
 					: null,
 				'editable' => $policy->user_can_update($iter)
 			);

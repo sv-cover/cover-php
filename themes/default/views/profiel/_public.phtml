@@ -1,5 +1,8 @@
 <section class="aligned-list-section personal-section">
 	<h2><?= __('Persoonlijk') ?></h2>
+	<?php if (get_identity()->member_is_active()): ?>
+	<a href="profiel.php?lid=<?=$iter->get_id()?>&amp;export=vcard" class="vcard-link" title="Download vCard"><i class="fa fa-download"></i></a>
+	<?php endif ?>
 
 	<?php if ($this->is_current_member($iter)): ?>
 	<p class="hint"><?=sprintf(
@@ -29,9 +32,15 @@
 			</dd>
 		<?php endif ?>
 	<?php endforeach ?>
+		<dt><?=label(__('Status'))?></dt>
+		<dd class="data-public"><?=$this->member_type_to_string($iter['type'])?></dd>
 	</dl>
 
-	<p><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter, false, false))) ?></a></p>
+	<?php
+		$facebook_of_iter = get_model('DataModelFotoboekFaces')->get_book([$iter]);
+		if (get_policy('DataModelFotoboek')->user_can_read($facebook_of_iter)): ?>
+		<p><a href="fotoboek.php?book=member_<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Foto\'s van %s'), member_full_name($iter))) ?></a></p>
+	<?php endif ?>
 </section>
 
 <?php if ($commissies = $this->get_commissies($iter)): ?>

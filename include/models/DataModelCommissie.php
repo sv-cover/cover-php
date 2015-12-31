@@ -353,6 +353,12 @@
 
 		public function search($query, $limit = null)
 		{
+			$privacy_fields = get_model('DataModelMember')->get_privacy();
+			$privacy_bit = $privacy_fields['naam'];
+			$current_privacy_setting = get_auth()->logged_in()
+				? DataModelMember::VISIBLE_TO_MEMBERS
+				: DataModelMember::VISIBLE_TO_EVERYONE;
+
 			$query = sprintf("
 				SELECT
 					c.*,
@@ -377,6 +383,7 @@
 					c.id = al.commissieid
 				WHERE
 					c.hidden <> 1
+					AND (((l.privacy >> ($privacy_bit * 3)) & 7) & $current_privacy_setting) <> 0
 					AND (CASE
 						WHEN coalesce(tussenvoegsel, '') = '' THEN
 							voornaam || ' ' || achternaam

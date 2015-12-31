@@ -2,37 +2,33 @@
 	if (!defined('IN_SITE'))
 		return;
 
+	function create_model($name)
+	{
+		require_once 'include/models/' . $name . '.php';
+
+		if (!class_exists($name))
+			throw new InvalidArgumentException(sprintf(__("Kan het model %s niet vinden"), $name));
+
+		$refl = new ReflectionClass($name);
+		return $refl->newInstance(get_db());
+	}
+
 	/** @group Data
 	  * Get a model. This function will create data models for you if 
 	  * necessary. Mind that this function will only create one instance
-	  * of a model and return that every time.
-	  * @name the name of the model (this can be either the name of a class, 
-	  * in which case the a new object of that class is created, or a function
-	  * name which is expanded to model_create_[name]
+	  * of a model and return that every time, unless specified otherwise.
+	  * @param $name the name of the model
 	  *
 	  * @result a #DataModel object (either created or the one that was 
 	  * created before), or false if the model could not be created
 	  */
-	function get_model($name) {
-		static $models = Array();
+	function get_model($name)
+	{
+		static $models = array();
 		
-		if (isset($models[$name]))
-			return $models[$name];
-		
-		if (function_exists("model_create_$name"))
-			$models[$name] = call_user_func("model_create_$name");
-		else {
-			require_once 'include/models/' . $name . '.php';
-
-			if (class_exists($name)) {
-				$models[$name] = new $name(get_db());
-			} else {
-				report_error('Data', N__("Kan het model %s niet vinden"), $name);
-				$models[$name] = false;
-			}
-		}
-		
-		return $models[$name];		
+		return isset($models[$name])
+			? $models[$name]
+			: $models[$name] = create_model($name);
 	}
 	
 	/** @group Data
@@ -50,7 +46,7 @@
 
 			$database_class = isset($dbids['easy']['class'])
 				? $dbids['easy']['class']
-				: 'DatabasePgsql';
+				: 'DatabasePDO';
 
 			require_once 'include/data/' . $database_class . '.php';
 

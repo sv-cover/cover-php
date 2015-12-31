@@ -6,7 +6,7 @@
 		<li>
 			<a href="profiel.php?lid=<?=$lid->get('id')?>" class="commissie-member profile-widget round">
 				<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;format=square&amp;width=200" width="100">
-				<span class="name"><?=markup_format_text(member_full_name($lid, false, true)) ?></span>
+				<span class="name"><?=markup_format_text(member_full_name($lid, BE_PERSONAL)) ?></span>
 				<span class="function"><?=markup_format_text($lid->get('functie') ? __translate_parts($lid->get('functie'), ',/') : '') ?></span>
 			</a>
 		</li>

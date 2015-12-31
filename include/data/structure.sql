@@ -460,6 +460,12 @@ CREATE TABLE foto_reacties (
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
+CREATE TABLE foto_reacties_likes (
+    id SERIAL NOT NULL,
+    reactie_id integer NOT NULL REFERENCES foto_reacties (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 --
 -- TOC entry 213 (class 1259 OID 24310)
 -- Name: fotos_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie

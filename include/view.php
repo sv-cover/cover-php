@@ -5,6 +5,10 @@
   * will allow a call to function_name().
   *
   */
+class ViewNotFoundException extends RuntimeException {
+	//
+}
+
 class View
 { 	
 	static public function byName($view, Controller $controller = null)
@@ -17,7 +21,7 @@ class View
 		$file = find_file($possible_paths);
 
 		if ($file === null)
-			throw new InvalidArgumentException("Cannot find view $view");
+			throw new ViewNotFoundException("Cannot find view $view");
 				
 		require_once($file);
 

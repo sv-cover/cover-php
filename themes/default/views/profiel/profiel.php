@@ -57,4 +57,18 @@ class ProfielView extends View
 				return markup_format_text($iter[$field]);
 		}
 	}
+
+	protected function member_type_to_string($type)
+	{
+		$mapping = [
+			MEMBER_STATUS_LID => __('Lid'),
+			MEMBER_STATUS_LID_ONZICHTBAAR => __('Lid (verborgen)'),
+			MEMBER_STATUS_LID_AF => __('Lid af'),
+			MEMBER_STATUS_ERELID => __('Erelid'),
+			MEMBER_STATUS_DONATEUR => __('Donateur'),
+			MEMBER_STATUS_UNCONFIRMED => __('Nog niet verwerkt')
+		];
+
+		return $mapping[$type];
+	}
 }

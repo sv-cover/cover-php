@@ -80,8 +80,8 @@
 	function _load_view($file) {
 		if (!file_exists(dirname(__FILE__) . '/' . $file))
 			return false;
-		else
-			require_once(dirname(__FILE__) . '/' . $file);
+		
+		require_once(dirname(__FILE__) . '/' . $file);
 		
 		return true;
 	}
@@ -115,7 +115,7 @@
 		
 		
 		try {
-			$view = get_new_view($name);
+			$view = View::byName($name);
 			
 			if (is_null($params))
 				return $view->$function(array("model" => $model, "iter" => $iter));
@@ -123,17 +123,17 @@
 			if (is_array($params))
 				return $view->$function(array_merge($params, array("model" => $model, "iter" => $iter)));
 
-			return report_error(N__("View"), N__("De meegeleverde $params aan functie %s is geen array, maar een: %s"), $name, $params);				
-		} catch(Exception $e) {
+			throw new InvalidArgumentException(sprintf(__("De meegeleverde $params aan functie %s is geen array, maar een: %s"), $name, $params));
+		} catch(ViewNotFoundException $e) {
 			if (!_load_view("../themes/" . get_theme() . "/views/$name.php"))
 				if (!_load_view("../themes/default/views/$name.php"))
-					return report_error(N__("View"), N__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme());
+					throw new ViewNotFoundException(sprintf(__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme()));
 
 			/* Locate the function */
 			if (function_exists("view_$function"))
 				return call_user_func("view_$function", $model, $iter, $params);
 			else
-				return report_error(N__("View"), N__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme());
+				throw new ViewNotFoundException(sprintf(__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme()));
 		}
 	}
 	
@@ -867,4 +867,84 @@
 	function ends_with($haystack, $neelde)
 	{
 		return substr_compare($haystack, $needle, -strlen($needle));
+	}
+
+	function is_same_domain($subdomain, $domain, $levels = 2)
+	{
+		$sub = explode('.', $subdomain);
+		$top = explode('.', $domain);
+
+		$levels = min($levels, count($sub), count($top));
+
+		while ($levels-- > 0)
+			if (array_pop($sub) != array_pop($top))
+				return false;
+
+		return true;
+	}
+
+
+	/**
+	 * Really really simple mail function for attachments that barely uses any memory
+	 * because it streams like everything!
+	 */
+	function send_mail_with_attachment($to, $subject, $message, $additional_headers, array $attachments)
+	{
+		$fout = popen('sendmail -t -oi', 'w');
+		
+		if (!$fout)
+			throw new Exception("Could not open sendmail");
+
+		$boundary = md5(microtime());
+
+		// Headers and dummy message
+		fwrite($fout,
+			"MIME-Version: 1.0\r\n"
+			. ($additional_headers ? (trim($additional_headers, "\r\n") . "\r\n") : "")
+			. "To: $to\r\n"
+			. "Subject: $subject\r\n"
+			. "Content-Type: multipart/mixed; boundary=\"$boundary\"\r\n"
+			. "\r\n"
+		. "This is a mime-encoded message"
+			. "\r\n\r\n");
+
+		// Message content
+		fwrite($fout, "--$boundary\r\n"
+			. "Content-Type: text/plain; charset=\"UTF-8\"\r\n"
+			. "Content-Transfer-Encoding: quoted-printable\r\n\r\n");
+
+		$filter = stream_filter_append($fout, 'convert.quoted-printable-encode',
+			STREAM_FILTER_WRITE, ["line-length" => 80, "line-break-chars" => "\r\n"]);
+
+		if (is_resource($message))
+			stream_copy_to_stream($message, $fout);
+		else
+			fwrite($fout, $message);
+
+		stream_filter_remove($filter);
+
+		fwrite($fout, "\r\n");
+
+		foreach ($attachments as $file_name => $file)
+		{
+			$file_handle = is_resource($file) ? $file : fopen($file, 'rb');
+			// Attachment
+			fwrite($fout, "\r\n--$boundary\r\n"
+				. "Content-Type: application/octet-stream; name=\"" . addslashes($file_name) . "\"\r\n"
+				. "Content-Transfer-Encoding: base64\r\n"
+				. "Content-Disposition: attachment\r\n\r\n");
+
+			$filter = stream_filter_append($fout, 'convert.base64-encode',
+				STREAM_FILTER_WRITE, ["line-length" => 80, "line-break-chars" => "\r\n"]);
+
+			stream_copy_to_stream($file_handle, $fout);
+
+			stream_filter_remove($filter);
+
+			fclose($file_handle);
+		}
+
+		fwrite($fout, "\r\n--$boundary--\r\n");
+
+		fclose($fout);
 	}

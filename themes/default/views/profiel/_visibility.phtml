@@ -1,16 +1,23 @@
+<?php
+$types = [
+	MEMBER_STATUS_LID,
+	MEMBER_STATUS_LID_ONZICHTBAAR,
+	MEMBER_STATUS_LID_AF,
+	MEMBER_STATUS_ERELID,
+	MEMBER_STATUS_DONATEUR,
+	MEMBER_STATUS_UNCONFIRMED
+];
+?>
 <section class="aligned-list-section">
 	<h2><?= __('Zichtbaarheid') ?></h2>
 	<form action="profiel.php?lid=<?= $iter->get('lidid') ?>&amp;tab=personal" method="post" class="vertical-form">
 
 		<div>
-			<label for="field-visibility">Status:</label>
-			<div id="field-visibility" class="radio">
-				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID) . '&nbsp;' . __('Lid') ?></label></td>
-				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_ONZICHTBAAR) . '&nbsp;' . __('Lid (verborgen)') ?></label></td>
-				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_LID_AF) . '&nbsp;' . __('Lid af') ?></label></td>
-				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_ERELID) . '&nbsp;' . __('Erelid') ?></label></td>
-				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_DONATEUR) . '&nbsp;' . __('Donateur') ?></label></td>
-				<label><?=input_radio('type', $iter->data, MEMBER_STATUS_UNCONFIRMED) . '&nbsp;' . __('Nog niet verwerkt') ?></label></td>
+			<label for="field-status">Status:</label>
+			<div id="field-status" class="radio">
+				<?php foreach ($types as $type): ?>
+				<label><?=input_radio('type', $iter->data, $type) . ' ' . $this->member_type_to_string($type) ?></label></td>
+				<?php endforeach ?>
 			</div>
 		</div>
 

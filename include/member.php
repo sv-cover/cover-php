@@ -52,17 +52,21 @@
 	  * of the currently logged in one
 	  * @result the currently logged in members full name
 	  */
-	function member_full_name($iter = null, $override_privacy = true, $be_kind = false)
+
+	const IGNORE_PRIVACY = 1;
+	const BE_PERSONAL = 2;
+
+	function member_full_name($iter = null, $flags = 0)
 	{
-		return member_format_name('$voornaam$tussenvoegsel|optional $achternaam', $iter, $override_privacy, $be_kind);
+		return member_format_name('$voornaam$tussenvoegsel|optional $achternaam', $iter, $flags);
 	}
 
-	function member_first_name($iter = null, $override_privacy = true, $be_kind = false)
+	function member_first_name($iter = null, $flags = 0)
 	{
-		return member_format_name('$voornaam', $iter, $override_privacy, $be_kind);
+		return member_format_name('$voornaam', $iter, $flags);
 	}
 
-	function member_format_name($format, $iter = null, $override_privacy = true, $be_kind = false)
+	function member_format_name($format, $iter = null, $flags = 0)
 	{
 		$model = get_model('DataModelMember');
 
@@ -85,11 +89,11 @@
 		if (!$iter)
 			return __('Geen naam');
 
-		if ($be_kind && $is_self)
+		if (($flags & BE_PERSONAL) && $is_self)
 			return __('Jij!');
 
 		// Or when the privacy settings prevent their name from being displayed
-		if (!$override_privacy
+		if (!($flags & IGNORE_PRIVACY)
 			&& !$is_self
 			&& !$identity->member_in_committee(COMMISSIE_BESTUUR)
 			&& !$identity->member_in_committee(COMMISSIE_KANDIBESTUUR)

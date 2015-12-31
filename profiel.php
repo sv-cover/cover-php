@@ -7,6 +7,8 @@
 	require_once 'include/secretary.php';
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/email.php';
+
+	use JeroenDesloovere\VCard\VCard;
 	
 	class ControllerProfiel extends Controller
 	{
@@ -35,7 +37,7 @@
 		protected function get_content($view, $iter = null, $params = null)
 		{
 			$title = $iter
-				? member_full_name($iter, false, true)
+				? member_full_name($iter, BE_PERSONAL)
 				: __('Profiel');
 
 			$this->run_header(compact('title'));
@@ -113,7 +115,7 @@
 			
 				// Inform the board that member info has been changed.
 				$subject = "Lidgegevens gewijzigd";
-				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter)) . "\n\n";
+				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
 				
 				$changes = $iter->get_changed_values();
 				
@@ -121,7 +123,7 @@
 					$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);
 					
 				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
 
 				try {
 					get_secretary()->updatePersonFromIterChanges($iter);
@@ -143,7 +145,7 @@
 				$language_code = strtolower(i18n_get_language());
 
 				$variables = [
-					'naam' => member_full_name($iter),
+					'naam' => member_first_name($iter, IGNORE_PRIVACY),
 					'email' => $data['email'],
 					'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($key)
 				];
@@ -317,21 +319,12 @@
 			if ($error)
 				$this->get_content('profiel', $iter, ['errors' => array('photo'), 'error_message' => $error, 'tab' => 'profile']);
 
-			$mime = image_type_to_mime_type($image_meta[2]);
-
-			$mail = new \cover\email\MessagePart();
-			$mail->addHeader('To', 'acdcee@svcover.nl');
-			$mail->addHeader('Subject', 'New yearbook photo for ' . $iter['naam']);
-			$mail->addHeader('Reply-To', sprintf('%s <%s>', $iter['naam'], $iter['email']));
-			$mail->addBody(
-				'text/plain; charset=UTF-8',
+			send_mail_with_attachment(
+				'acdcee@svcover.nl',
+				'New yearbook photo for ' . $iter['naam'],
 				"{$iter['naam']} would like to use the attached photo as their new profile picture.",
-				\cover\email\MessagePart::TRANSFER_ENCODING_QUOTED_PRINTABLE);
-			$mail->addBody(
-				$mime,
-				file_get_contents($_FILES['photo']['tmp_name']),
-				\cover\email\MessagePart::TRANSFER_ENCODING_BASE64);
-			\cover\email\send($mail);
+				sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email']),
+				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
 			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');
 
@@ -344,6 +337,82 @@
 				get_facebook()->destroySession();
 
 			$this->redirect('profiel.php?lid=' . $iter->get_id() . '&tab=facebook');
+		}
+
+		public function run_export_vcard(DataIterMember $member)
+		{
+			if (!get_identity()->member_is_active())
+				throw new UnauthorizedException();
+			
+			$card = new VCard();
+
+			// Macro for checking whether a field is not private.
+			$is_visible = function($field) use ($member) {
+				return in_array($this->model->get_privacy_for_field($member, $field),
+					[DataModelMember::VISIBLE_TO_EVERYONE, DataModelMember::VISIBLE_TO_MEMBERS]);
+			};
+			
+			if ($is_visible('naam'))
+				$card->addName($member['achternaam'], $member['voornaam'], $member['tussenvoegsel']);
+
+			if ($is_visible('email'))
+				$card->addEmail($member['email']);
+
+			if ($is_visible('telefoonnummer'))
+				$card->addPhoneNumber($member['telefoonnummer'], 'PREF;HOME');
+			
+			if ($is_visible('adres') || $is_visible('postcode') || $is_visible('woonplaats'))
+				$card->addAddress(null, null,
+					$is_visible('adres') ? $member['adres'] : null,
+					$is_visible('woonplaats') ? $member['woonplaats'] : null,
+					null,
+					$is_visible('postcode') ? $member['postcode'] : null,
+					null);
+
+			if ($is_visible('geboortedatum'))
+				$card->addBirthday($member['geboortedatum']);
+
+			// For some weird reason is 'http://' the default value for members their homepage.
+			if (!empty($member['homepage']) && $member['homepage'] != 'http://')
+				$card->addURL($member['homepage']);
+
+			// Only add a thumbnail of the photo if the member has one, and it isn't hidden.
+			if ($is_visible('foto') && $this->model->has_picture($member)) {
+				$fout = null;
+
+				$imagick = new Imagick();
+				$imagick->readImageBlob($this->model->get_photo($member));
+				
+				$y = 0.05 * $imagick->getImageHeight();
+				$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
+				
+				if ($y + $size > $imagick->getImageHeight())
+					$y = 0;
+
+				$imagick->cropImage($size, $size, 0, $y);
+				$imagick->scaleImage(96, 0);
+
+				$imagick->setImageFormat('jpeg');
+
+				$fout = fopen('php://memory', 'wb+');
+				stream_filter_append($fout, 'convert.base64-encode', STREAM_FILTER_WRITE);
+
+				$imagick->writeImageFile($fout);
+				$imagick->destroy();
+
+				rewind($fout);
+
+				// Use reflection to get to the private addMedia method. Only addPhoto is public, but that
+				// doesn't accept a stream and I'm not in the mood to write a temporary file to disk.
+				$vCardClass = new ReflectionClass($card);
+				$vCard_addMedia = $vCardClass->getMethod('addMedia');
+				$vCard_addMedia->setAccessible(true);
+				$vCard_addMedia->invoke($card, 'PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout), false, 'photo');
+
+				fclose($fout);
+			}
+			
+			$card->download();
 		}
 		
 		protected function run_impl()
@@ -384,6 +453,8 @@
 				$this->_process_privacy($iter);
 			elseif (isset($_POST['submprofiel_zichtbaarheid']))
 				$this->_process_zichtbaarheid($iter);
+			elseif (isset($_GET['export']) && $_GET['export'] == 'vcard')
+				$this->run_export_vcard($iter);
 			else
 				$this->get_content('profiel', $iter, ['errors' => [], 'tab' => $tab]);
 		}

@@ -99,12 +99,11 @@ class ControllerApi extends Controller
 		if (!$session)
 			throw new RuntimeException('Invalid session id');
 
-		/** @var DataModelMember $user_model */
-		$user_model = get_model('DataModelMember');
+		$auth = new ConstantSessionProvider($session);
 
-		$member = $user_model->get_iter($session->get('member_id'));
+		$ident = get_identity_provider($auth);
 
-		return array('result' => $member->data);
+		return array('result' => $ident->get_member()->data);
 	}
 
 	public function api_session_test_committee($session_id, $committees)
@@ -118,14 +117,9 @@ class ControllerApi extends Controller
 
 		$session = $session_model->get_iter($session_id);
 
-		// Find in which committees the member is active
-		/** @var DataModelMember $member_model */
-		$member_model = get_model('DataModelMember');
+		$auth = new ConstantSessionProvider($session);
 
-		$member_committees = $member_model->get_commissies($session->get('member_id'));
-
-		if (empty($member_committees))
-			return array('result' => false, 'error' => 'No committees found for this member');
+		$ident = get_identity_provider($auth);
 
 		/** @var DataModelCommissie $committee_model */
 		$committee_model = get_model('DataModelCommissie');
@@ -139,7 +133,7 @@ class ControllerApi extends Controller
 				return array('result' => false, 'error' => 'Committee "' . $committee_name . '" not found');
 
 			// And finally, test whether the searched for committee and the member is committees intersect
-			if (in_array($committee->get('id'), $member_committees))
+			if ($ident->member_in_committee($committee->get_id()))
 				return array('result' => true, 'committee' => $committee->get('naam'));
 		}
 
@@ -229,7 +223,7 @@ class ControllerApi extends Controller
 		$model->insert($member);
 
 		// Create profile for this member
-		$nick = member_full_name($member, true, false);
+		$nick = member_full_name($member, IGNORE_PRIVACY);
 		
 		if (strlen($nick) > 50)
 			$nick = $member->get('voornaam');
@@ -257,7 +251,7 @@ class ControllerApi extends Controller
 		mail($data['email'], 'Website Cover', $mail,
 			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
-		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, true, false) . ')', $mail,
+		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
 			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
 		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];

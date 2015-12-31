@@ -160,7 +160,7 @@
 			$this->model->insert($member);
 
 			// Create profile for this member
-			$nick = member_full_name($member, true, false);
+			$nick = member_full_name($member, IGNORE_PRIVACY);
 			
 			if (strlen($nick) > 50)
 				$nick = $member->get('voornaam');

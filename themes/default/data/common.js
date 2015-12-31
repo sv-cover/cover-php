@@ -108,7 +108,7 @@ jQuery(function($) {
 		}
 
 		var url = this.nodeName == 'FORM'
-			? this.action
+			? $(this).attr('action')
 			: this.href;
 
 		var selector = $(this).data('partial-selector') || 'body';
@@ -122,6 +122,8 @@ jQuery(function($) {
 			$target.replaceWith(partial);
 			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: partial}));
 		};
+
+		console.log(url);
 
 		if ($(this).attr('method') == 'post') {
 			$(tmp).load(url, $(this).serializeArray(), addPartialToTarget);
