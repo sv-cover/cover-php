@@ -9,7 +9,7 @@
 
 		public function __construct() 
 		{
-			$this->model = get_model('DataModelMember');
+			$this->model = create_model('DataModelMember');
 
 			// If current visitor is the board, show all members in the
 			// database, including those that are no longer a member
