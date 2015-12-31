@@ -21,15 +21,8 @@ if (logged_in()) {
 }
 
 ?>
-<?php if (member_in_commissie(COMMISSIE_FOTOCIE)): ?>
-	<div class="foto_titel">
-		<form method="post" action="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$iter->get_id() ?>&amp;view=update_photo">
-			<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
-		</form>
-	</div>
-<?php elseif ($iter->get('beschrijving')): ?>
-	<div class="foto_titel"><?=markup_format_text($iter->get('beschrijving')) ?></div>
-<?php endif ?>
+
+<h2 class="photo-title" <?php if (member_in_commissie(COMMISSIE_FOTOCIE)) printf('data-update-link="fotoboek.php?book=%s&amp;photo=%d&amp;view=update_photo"', $book->get_id(), $iter->get_id()) ?>><?=markup_format_text($iter->get('beschrijving')) ?></h2>
 
 <div id="foto" class="fotoboek_foto">
 <?php

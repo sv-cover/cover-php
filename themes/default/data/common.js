@@ -302,6 +302,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 	});
 });
 
+/* Face tagging in photos */
 $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('#foto').each(function() {
 		var $photo = $(this).find('#photo'),
@@ -552,4 +553,24 @@ $(document).on('ready partial-content-loaded', function(e) {
 			$face.click();
 		});
 	});
+});
+
+/* Allow editing of photo titles */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.photo-title[data-update-link]')
+		.addClass('editable')
+		.click(function(e) {
+			e.preventDefault();
+			var $titleNode = $(this);
+			var newTitle = prompt('New title:', $titleNode.text());
+			if (newTitle !== null) {
+				$.post(
+					$titleNode.data('update-link'),
+					{'beschrijving': newTitle},
+					function() {
+						$titleNode.text(newTitle);
+					}
+				);
+			}
+		});
 });

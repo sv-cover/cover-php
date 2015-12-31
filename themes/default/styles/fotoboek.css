@@ -363,6 +363,16 @@ table.navigation td:nth-child(3) {
 	right: auto;
 }
 
+.photo-title.editable:hover {
+	background: rgb(255,255,125);
+	cursor: pointer;
+}
+
+.photo-title.editable:empty:after {
+	content: 'Click to add title';
+	font-style: italic;
+}
+
 .photo-edit-control {
 	/*display: none;*/
 }
