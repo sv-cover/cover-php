@@ -100,23 +100,28 @@ var getModal = function() {
 					break;
 
 				case 37: // left arrow
-					if ($modal.find('.navigation .previous').click())
-						e.preventDefault();
+					$modal.find('.navigation .previous').click();
+					e.preventDefault();
 					break;
 
 				case 39: // right arrow
-					if ($modal.find('.navigation .next').click())
-						e.preventDefault();
+					$modal.find('.navigation .next').click();
+					e.preventDefault();
+					break;
+
+				case 67: // 'c'
+					$modal.find('.add-comment-link').click();
+					e.preventDefault();
 					break;
 
 				case 76: // 'l'
-					if ($modal.find('.like-button').click())
-						e.preventDefault();
+					$modal.find('.like-button').click();
+					e.preventDefault();
 					break;
 
 				case 84: // 't'
-					if ($modal.find('#tagging-toggle').click())
-						e.preventDefault();
+					$modal.find('#tagging-toggle').click();
+					e.preventDefault();
 					break;
 			}
 		});
