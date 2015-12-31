@@ -92,20 +92,30 @@ var getModal = function() {
 				return;
 
 			switch (e.keyCode) {
-				case 27:
+				case 27: // escape
 					if ($modal.parent()) {
 						e.preventDefault();
 						closeModal();
 					}
 					break;
 
-				case 37:
+				case 37: // left arrow
 					if ($modal.find('.navigation .previous').click())
 						e.preventDefault();
 					break;
 
-				case 39:
+				case 39: // right arrow
 					if ($modal.find('.navigation .next').click())
+						e.preventDefault();
+					break;
+
+				case 76: // 'l'
+					if ($modal.find('.like-button').click())
+						e.preventDefault();
+					break;
+
+				case 84: // 't'
+					if ($modal.find('#tagging-toggle').click())
 						e.preventDefault();
 					break;
 			}
