@@ -172,7 +172,7 @@
 			// Placeholders for e-mail
 			$placeholders = array(
 				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
-				'member_naam' => member_full_name());
+				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
 
 			// No previous item exists, create a new one
 			if (!$iter)
@@ -289,7 +289,7 @@
 					$this->model->reject_proposal($iter);
 					
 					$data = $iter->data;
-					$data['member_naam'] = member_full_name();
+					$data['member_naam'] = member_full_name(null, IGNORE_PRIVACY);
 					$data['reden'] = get_post('comment_' . $id);
 
 					$subject = 'Agendapunt ' . $iter->get('kop') . ' geweigerd';

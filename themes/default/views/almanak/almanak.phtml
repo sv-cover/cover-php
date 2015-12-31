@@ -34,7 +34,11 @@
 	<?php if ($iter === null): ?>
 		<p><?= __('Maak hierboven een selectie om de almanak te bekijken.') ?></p>
 		<?php if (member_in_commissie(COMMISSIE_ALMANAKCIE)): ?>
-			<a href="?csv"><?= __('Download CSV-bestand met almanakgegevens') ?></a>
+		<p>
+			<?= __('Download almanakgegevens:') ?>
+			<a href="almanak.php?export=csv"><?=__('CSV met persoonsgegevens')?></a>
+			<a href="almanak.php?export=photos"><?=__('ZIP met foto\'s')?></a>
+		</p>
 		<?php endif ?>
 	<?php else: ?>
 	

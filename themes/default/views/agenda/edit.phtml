@@ -43,7 +43,7 @@ else
 		input_text('vandatum', $data, 'class', 'day') . ' - ' .
 		input_text('vanmaand', $data, 'class', 'month') . ' - ' .
 		input_text('vanjaar', $data, 'class', 'year') . ' ' .
-		input_text('vanuur', $data, 'class', 'time') . ' ' .
+		input_text('vanuur', $data, 'class', 'time') . ':' .
 		input_text('vanminuut', $data, 'class', 'time', 'value', '00')) ?>
 
 <?= table_row(label(__('Eindtijd'), 'tot', $errors, false) . ':',
@@ -52,7 +52,7 @@ else
 		input_text('totdatum', $data, 'class', 'day') . ' - ' .
 		input_text('totmaand', $data, 'class', 'month') . ' - ' .
 		input_text('totjaar', $data, 'class', 'year') . ' ' .
-		input_text('totuur', $data, 'class', 'time') . ' ' .
+		input_text('totuur', $data, 'class', 'time') . ':' .
 		input_text('totminuut', $data, 'class', 'time') . 
 		'</div>') ?>
 

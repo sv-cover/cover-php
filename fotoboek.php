@@ -14,6 +14,8 @@
 
 		protected $_var_id = 'comment_id';
 
+		protected $likes;
+
 		public function __construct(DataIterPhoto $photo)
 		{
 			$this->_var_view = 'comment_view';
@@ -72,6 +74,23 @@
 		public function link_to_delete(DataIter $iter)
 		{
 			return parent::link_to_delete($iter) . '#confirm-delete-comment-form';
+		}
+
+		public function run_likes(DataIter $iter)
+		{
+			if (isset($_POST['action']))
+			{
+				switch ($_POST['action']) {
+					case 'like':
+						$iter->like(get_identity()->get_member());
+						break;
+					case 'unlike':
+						$iter->unlike(get_identity()->get_member());
+						break;
+				}
+			}
+
+			return $this->run_read($iter);
 		}
 	}
 
@@ -763,10 +782,10 @@
 			// Single photo page
 			if (isset($_GET['photo']) && $_GET['photo']) {
 				$photo = $this->model->get_iter($_GET['photo']);
-				$book = $photo->get_book();
 			}
+
 			// Book index page
-			else if (isset($_GET['book'])
+			if (isset($_GET['book'])
 				&& ctype_digit($_GET['book'])
 				&& intval($_GET['book']) > 0) {
 				$book = $this->model->get_book($_GET['book']);
@@ -784,10 +803,18 @@
 
 				$book = get_model('DataModelFotoboekFaces')->get_book($members);
 			}
+			// If there is a photo, then use the book of that one
+			elseif ($photo) {
+				$book = $photo->get_book();
+			}
 			// And otherwise the root book index page
 			else {
 				$book = $this->model->get_root_book();
 			}
+
+			// If we have both, we assert that the photo is in the book, right?
+			if ($photo && $book && !$book->has_photo($photo))
+				throw new NotFoundException('This photo book does not contain this photo');
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {

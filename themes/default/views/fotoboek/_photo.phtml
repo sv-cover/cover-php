@@ -87,7 +87,7 @@ if (logged_in()) {
 			<!-- name label (and hidden update form) -->
 			<div class="tag-label">
 				<?php if ($face->has('lid_id')): $lid = $face->getIter('lid'); ?>
-				<a href="profiel.php?lid=<?=$lid->get_id()?>" class="name"><?=member_full_name($lid, false, true)?></a>
+				<a href="profiel.php?lid=<?=$lid->get_id()?>" class="name"><?=markup_format_text(member_full_name($lid, BE_PERSONAL))?></a>
 				<?php elseif ($face->has('custom_label')): ?>
 				<a class="name" href="#"><?=markup_format_text($face->get('custom_label'))?></a>
 				<?php elseif (get_policy($face->model)->user_can_update($face)): ?>
@@ -265,7 +265,7 @@ if (logged_in()) {
 				$(this).data('ui-autocomplete')._renderItem = function(ul, item) {
 					return $('<li>').append(
 						$('<a class="profile">')
-							.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&get_thumb=thumb'))
+							.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&format=square&width=60'))
 							.append($('<span class="name">').text(item.name))
 							.append($('<span class="starting-year">').text(item.starting_year))
 					).appendTo(ul);

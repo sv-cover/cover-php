@@ -32,7 +32,12 @@
 		</div>
 
 		<div class="controls">
-			<button type="submit" class="button primary"><?= __('Log in') ?></button>
+			<button type="submit" class="button primary">
+				<?= __('Log in') ?>
+				<?php if ($external_domain): ?>
+					<small><?= sprintf(__('en ga door naar %s'), $external_domain) ?></small>
+				<?php endif ?>
+			</button>
 			<a href="wachtwoordvergeten.php"><?=__('Wachtwoord vergeten?')?></a>
 		</div>
 	</form>

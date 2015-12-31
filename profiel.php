@@ -37,7 +37,7 @@
 		protected function get_content($view, $iter = null, $params = null)
 		{
 			$title = $iter
-				? member_full_name($iter, false, true)
+				? member_full_name($iter, BE_PERSONAL)
 				: __('Profiel');
 
 			$this->run_header(compact('title'));
@@ -115,7 +115,7 @@
 			
 				// Inform the board that member info has been changed.
 				$subject = "Lidgegevens gewijzigd";
-				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter)) . "\n\n";
+				$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
 				
 				$changes = $iter->get_changed_values();
 				
@@ -123,7 +123,7 @@
 					$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);
 					
 				mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+				mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
 
 				try {
 					get_secretary()->updatePersonFromIterChanges($iter);
@@ -145,7 +145,7 @@
 				$language_code = strtolower(i18n_get_language());
 
 				$variables = [
-					'naam' => member_full_name($iter),
+					'naam' => member_first_name($iter, IGNORE_PRIVACY),
 					'email' => $data['email'],
 					'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($key)
 				];
@@ -319,21 +319,12 @@
 			if ($error)
 				$this->get_content('profiel', $iter, ['errors' => array('photo'), 'error_message' => $error, 'tab' => 'profile']);
 
-			$mime = image_type_to_mime_type($image_meta[2]);
-
-			$mail = new \cover\email\MessagePart();
-			$mail->addHeader('To', 'acdcee@svcover.nl');
-			$mail->addHeader('Subject', 'New yearbook photo for ' . $iter['naam']);
-			$mail->addHeader('Reply-To', sprintf('%s <%s>', $iter['naam'], $iter['email']));
-			$mail->addBody(
-				'text/plain; charset=UTF-8',
+			send_mail_with_attachment(
+				'acdcee@svcover.nl',
+				'New yearbook photo for ' . $iter['naam'],
 				"{$iter['naam']} would like to use the attached photo as their new profile picture.",
-				\cover\email\MessagePart::TRANSFER_ENCODING_QUOTED_PRINTABLE);
-			$mail->addBody(
-				$mime,
-				file_get_contents($_FILES['photo']['tmp_name']),
-				\cover\email\MessagePart::TRANSFER_ENCODING_BASE64);
-			\cover\email\send($mail);
+				sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email']),
+				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
 			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');
 
@@ -399,7 +390,7 @@
 					$y = 0;
 
 				$imagick->cropImage($size, $size, 0, $y);
-				$imagick->scaleImage(128, 0);
+				$imagick->scaleImage(96, 0);
 
 				$imagick->setImageFormat('jpeg');
 

@@ -8,7 +8,7 @@
 		function almanak_info($model, $iter) {
 			$photo = "foto.php?format=portrait&width=200&lid_id=" . $iter->get_id();
 
-			$name = member_full_name($iter, false, true);
+			$name = member_full_name($iter, BE_PERSONAL);
 			
 			$classes = array();
 			$status = '';

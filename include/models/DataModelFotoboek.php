@@ -230,6 +230,17 @@
 			return $this->model->get_photos($this);
 		}
 
+		public function has_photo(DataIterPhoto $needle)
+		{
+			$photos = $this->get_photos();
+
+			foreach ($photos as $photo)
+				if ($photo->get_id() == $needle->get_id())
+					return true;
+
+			return false;
+		}
+
 		public function count_books()
 		{
 			return $this->get('num_books');
