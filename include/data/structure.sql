@@ -68,16 +68,6 @@ CREATE TABLE agenda (
 );
 
 --
--- TOC entry 181 (class 1259 OID 24172)
--- Name: bestellingen; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE bestellingen (
-    boekid integer NOT NULL,
-    lidid integer NOT NULL
-);
-
---
 -- TOC entry 182 (class 1259 OID 24175)
 -- Name: besturen_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
