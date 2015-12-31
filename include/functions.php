@@ -80,8 +80,8 @@
 	function _load_view($file) {
 		if (!file_exists(dirname(__FILE__) . '/' . $file))
 			return false;
-		else
-			require_once(dirname(__FILE__) . '/' . $file);
+		
+		require_once(dirname(__FILE__) . '/' . $file);
 		
 		return true;
 	}
@@ -115,7 +115,7 @@
 		
 		
 		try {
-			$view = get_new_view($name);
+			$view = View::byName($name);
 			
 			if (is_null($params))
 				return $view->$function(array("model" => $model, "iter" => $iter));
@@ -123,17 +123,17 @@
 			if (is_array($params))
 				return $view->$function(array_merge($params, array("model" => $model, "iter" => $iter)));
 
-			return report_error(N__("View"), N__("De meegeleverde $params aan functie %s is geen array, maar een: %s"), $name, $params);				
-		} catch(Exception $e) {
+			throw new InvalidArgumentException(sprintf(__("De meegeleverde $params aan functie %s is geen array, maar een: %s"), $name, $params));
+		} catch(ViewNotFoundException $e) {
 			if (!_load_view("../themes/" . get_theme() . "/views/$name.php"))
 				if (!_load_view("../themes/default/views/$name.php"))
-					return report_error(N__("View"), N__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme());
+					throw new ViewNotFoundException(sprintf(__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme()));
 
 			/* Locate the function */
 			if (function_exists("view_$function"))
 				return call_user_func("view_$function", $model, $iter, $params);
 			else
-				return report_error(N__("View"), N__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme());
+				throw new ViewNotFoundException(sprintf(__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme()));
 		}
 	}
 	
