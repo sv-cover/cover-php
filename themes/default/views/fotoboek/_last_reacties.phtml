@@ -1,15 +1,11 @@
-<?
-if(logged_in() != false) { // laat alleen de reacties zien als er is ingelogd
-	$reactie_model = get_model('DataModelFotoboekReacties');
-	$reacties = $reactie_model->get_latest(10);
+<?php if (get_auth()->logged_in()):
+	$model = get_model('DataModelFotoboekReacties');
 ?>
 <div class="bar_sep"><?= __('Laatste reacties') ?></div>
-
-<?
-	foreach ($reacties as $reactie) {
-		$subtitle = true;
-		// TODO let this be rendered by the FotoboekReactieController
-		$this->render_partial('reactie', compact('reactie', 'subtitle'));
+<?php
+	foreach ($model->get_latest(10) as $iter) {
+		$controller = new ControllerFotoboekReacties($iter->getIter('foto', 'DataIterPhoto'));
+		View::byName('fotoboekreacties', $controller)->single(compact('model', 'iter'));
 	}
-}
 ?>
+<?php endif ?>

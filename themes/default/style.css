@@ -20,29 +20,45 @@ body {
 	color: #FFFFFF;
 }
 
-a, a:visited {
+a,
+a:visited,
+button.link {
 	color: #F5F5F5;
+	background: transparent;
+	border: none;
+	font: inherit;
 	font-weight:bold;
+	cursor: pointer;
 	text-decoration:underline;
 }
-a:hover
+
+a:hover,
+button.link:hover
 {
 	text-decoration: none;
 }
+
 .messageBox a,
 .messageBox a:visited,
+.messageBox button.link,
 .buttons a,
 .buttons a:visited,
+.buttons button.link,
 .modal .window a,
-.modal .window a:visited { 
+.modal .window a:visited,
+.modal .window button.link { 
 	color: #004274;
 	text-decoration: none; 
-} 
+}
+
 .messageBox a:hover,
+.messageBox button.link:hover,
 .buttons a:hover,
-.modal .window a:hover {  
+.buttons button.link:hover,
+.modal .window a:hover,
+.modal .window button.link:hover {  
 	color: #004274;
-	text-decoration: underline; 
+	text-decoration: underline;
 }
 
 h1, h2, h3 ,h4
@@ -918,28 +934,22 @@ border-radius: 0 0 5px 5px;
 	margin:0;
 }
 
+.replyBox .right > *:after {
+	display: inline-block;
+	vertical-align: middle;
+	width: 4px;
+	height: 18px;
+	content: '';
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.replyBox .right > *:last-child:after {
+	display: none;
+	/*margin-right: -8px;*/
+}
+
 .replyBox .title { font-weight:bold; }
 .replyBox .subtitle { font-weight: normal; font-size:10px; padding: 0px 0px 5px 0px; }
-
-.replyBox .bericht { padding: 5px 0px 5px 0px; margin-top: 2px; }
-.replyBox .bericht:before, .replyBox .bericht:after {
-font-family:"Times New Roman";
-color: #C60C30;
-font-size: 200%;
-width: 10px;
-}
-.replyBox .bericht:before {
-content: '\201C';
-height: 0;
-margin-right: 0px;
-}
-.replyBox .bericht:after {
-content: '\201D';
-height: 50px;
-margin-top: -5px;
-margin-left: 5px;
-}
-
 
 span.right { text-align:right; }
 .right { text-align:right; margin: 3px 0; }
@@ -2538,4 +2548,34 @@ ul.committee-list > li .position {
 
 .window #login-form .nav-tabs li.active a {
 	border-bottom-color: #fff;
+}
+
+.comment {
+	position: relative;
+	padding-bottom: 32px;
+	/*margin-bottom: 28px;*/
+}
+
+.comment:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.comment .actions {
+	position: absolute;
+	bottom: 0;
+	height: 24px;
+}
+
+.comment .thumbnail img {
+	float: right;
+	border: 1px solid #ccc;
+	margin-bottom: -24px;
+}
+
+button .fa {
+	/*display: inline-block;*/
+	margin-right: 4px;
+	float: left;
 }
