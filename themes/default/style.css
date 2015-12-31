@@ -855,19 +855,20 @@ border-radius: 0 0 5px 5px;
 	padding-bottom: 0;
 }
 
-.messageBox .actions {
+.actions,
+.messageBox .actions { /* Override default .messageBox ul styling */
 	list-style: none;
 	display: inline-block;
 	margin: 1em 0 0 0;
 }
 
-.messageBox .actions li {
+.actions li {
 	margin: 0 1em 0 0;
 	padding: 0;
 	display: inline-block;
 }
 
-.messageBox .actions li a {
+.actions li a {
 	/*font-weight: normal;*/
 }
 
