@@ -193,6 +193,24 @@ jQuery.fn.autocompleteAlmanac = function(options)
 	});
 };
 
+/* Extend jQuery's detach() function to trigger events */
+(function() {
+	var _detach = jQuery.fn.detach;
+
+	jQuery.fn.detach = function(selector) {
+		var elements = $(this);
+		
+		if (selector)
+			elements = elements.filter(selector);
+
+		elements.each(function() {
+			$(this).trigger(jQuery.Event('detach', {target: this}));
+		});
+
+		return _detach.call(this, selector);
+	};
+})();
+
 jQuery(function($) {
 	$('form.privacy-preference').submit(function(e) {
 		e.preventDefault();
@@ -408,7 +426,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 					$(this).data('ui-autocomplete')._renderItem = function(ul, item) {
 						return $('<li>').append(
 							$('<a class="profile">')
-								.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&get_thumb=thumb'))
+								.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&format=square&width=60'))
 								.append($('<span class="name">').text(item.name))
 								.append($('<span class="starting-year">').text(item.starting_year))
 						).appendTo(ul);
@@ -446,11 +464,26 @@ $(document).on('ready partial-content-loaded', function(e) {
 				.end();
 		}
 
+		function tagging_enabled() {
+			return $photo.hasClass('tagging-enabled');
+		}
+
 		$toggle.change(function() {
 			if (this.checked)
 				start_tagging();
 			else
 				stop_tagging();
+		});
+
+		// Disable the face tagging when the photo is no longer visible
+		// (i.e. when the popup moves to the next/prev photo)
+		$(document).on('detach', function(e) {
+			if ($.contains(e.target, $photo.get(0))) {
+				if (tagging_enabled()) {
+					$toggle.prop('checked', false);
+					stop_tagging();
+				}
+			}
 		});
 
 		$photo.click(function(e) {
