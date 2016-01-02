@@ -401,6 +401,7 @@ table.navigation td:nth-child(3) {
 
 .tagging-enabled .face .tag-label .name[href='#']:hover {
 	cursor: pointer;
+	color: white;
 }
 
 #photo.tagging-enabled {
@@ -448,19 +449,19 @@ table.navigation td:nth-child(3) {
 	z-index: 2;
 }
 
-.face .tag-label .name {
+.face .tag-label a.name {
 	display: inline-block;
 	white-space: nowrap;
 	color: white;
 	font-weight: normal;
 }
 
-.face .tag-label .name[href='#'] {
+.face .tag-label a.name[href='#'] {
 	text-decoration: none;
 	cursor: default;
 }
 
-.face.untagged .tag-label .name {
+.face.untagged .tag-label a.name {
 	font-style: italic;
 	cursor: pointer;
 }
