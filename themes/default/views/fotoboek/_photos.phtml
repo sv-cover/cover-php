@@ -85,6 +85,14 @@ var getModal = function() {
 			closeModal();
 		});
 
+		// If the modal itself (the backdrop, that is) then close it
+		$modal.on('click', function(e) {
+			if (e.target == $modal.get(0)) {
+				e.preventDefault();
+				closeModal();
+			}
+		});
+
 		// Close the model on pressing the escape key while inside
 		$modal.on('keydown.nav', function(e) {
 			// Don't prevent normal keyboard usage
