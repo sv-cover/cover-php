@@ -154,7 +154,6 @@ var prefetchPhotoLink = function(link, callback) {
 
 				e.preventDefault();
 
-				history.pushState({photo: $(this).attr('href')}, '', $(this).attr('href'));
 				loadPhotoLink($(this).attr('href'));
 			});
 
@@ -191,17 +190,6 @@ $('.photos').on('click', '.thumbnail > a', function(e) {
 
 	getModal();
 
-	history.pushState({photo: $(this).attr('href')}, '', $(this).attr('href'));
 	loadPhotoLink($(this).attr('href'));
-});
-
-$(window).on('popstate', function(e) {
-	if (e.originalEvent.state == null) {
-		if ($modal) {
-			closeModal();
-		}
-	} else if (e.originalEvent.state.photo) {
-		loadPhotoLink(e.originalEvent.state.photo);
-	}
 });
 </script>
