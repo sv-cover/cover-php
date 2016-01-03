@@ -208,16 +208,61 @@ class ControllerMailinglijsten extends Controller
 		return $this->get_content('mailinglijsten::list_archive', null, compact('lijst', 'messages'));
 	}
 
+	static private function parse_multipart_header($header)
+	{
+		// if (!preg_match_all('/^multipart\/(?<type>.+?)(;\s*(?<field>\w+)=(["\']?)(?<value>.+?)\4)*$/', $header, $match, PREG_SET_ORDER))
+		
+		$parts = explode(';', $header);
+		$data = [];
+
+		for ($i = 1; $i < count($parts); ++$i)
+		{
+			if (preg_match('/^\s*(\w+)=(["\']?)(.+?)\2\s*$/', $parts[$i], $match))
+				$data[$match[1]] = $match[3];
+		}
+
+		return $data;
+	}
+
+	static private function parse_multipart_body($body, $type)
+	{
+		$match = self::parse_multipart_header($type);
+
+		if (!$match || !isset($match['boundary']))
+			return null;
+
+		$mime_message = \Zend\Mime\Message::createFromMessage($body, $match['boundary']);
+
+		$parsed_parts = array();
+
+		foreach ($mime_message->getParts() as $part) {
+			if ($part_body = self::parse_multipart_body($part->getRawContent(), $part->type))
+				$parsed_parts[] = $part_body;
+			else
+				$parsed_parts[] = $part;
+		}
+
+		$mime_message->setParts($parsed_parts);
+
+		return $mime_message;
+	}
+
+
 	protected function show_list_message($message_id)
 	{
 		$model = get_model('DataModelMailinglijstArchief');
 
-		$message = $model->get_iter($message_id);
+		$list_message = $model->get_iter($message_id);
 
-		$lijst = $this->model->get_iter($message->get('mailinglijst'));
+		$lijst = $this->model->get_iter($list_message->get('mailinglijst'));
 
 		if (!$this->model->member_can_access_archive($lijst))
 			return $this->get_content('common::auth');
+
+		$message = \Zend\Mail\Message::fromString(substr($list_message['bericht'], strpos($list_message['bericht'], "\n") + 1));
+
+		if ($body = self::parse_multipart_body($message->getBody(), $message->getHeaders()->get('contenttype')->getFieldValue()))
+			$message->setBody($body);
 
 		return $this->get_content('mailinglijsten::list_message', null, compact('message', 'lijst'));
 	}

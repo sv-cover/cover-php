@@ -1,10 +1,47 @@
+<?php
+ini_set('xdebug.var_display_max_depth', 10);
+
+function render_body($body, $type)
+{
+	if ($body instanceof \Zend\Mime\Message) {
+		foreach ($body->getParts() as $part) {
+			if ($part instanceof \Zend\Mime\Message)
+				render_body($part, $part->getMime());
+			else if ($part instanceof \Zend\Mime\Part)
+				render_part($part->getRawContent(), $part->type);
+			else
+				throw new InvalidArgumentException('Did not see that one coming');
+		}
+	}
+	else
+		render_part($body, $type);
+}
+
+function render_part($content, $type)
+{
+	echo "<strong>$type</strong>";
+
+	echo '<div class="section">';
+	if (!preg_match('/^(\w+)\/(\w+)/', $type, $match))
+		$match = [null, null];
+	
+	if ($match[1] == 'image') {
+		printf('<img src="data:%s/%s;base64,%s">', $match[1], $match[2], base64_encode($content));
+	}
+	else if ($match[1] == 'text') {
+		echo '<pre style="white-space: pre-wrap; word-wrap: break-word; padding: 4px; border: 1px solid black">' . markup_format_text($content) . '</pre>';
+	}
+	else {
+		echo '[Something raw: ' . $type . ']';
+	}
+	echo '</div>';
+}
+
+?>
 <div class="messageBox">
 	<h2><?=sprintf(__('Bericht uit Archief van %s'), '<a href="mailinglijsten.php?archive_list_id=' . $lijst->get_id() . '">' . markup_format_text($lijst->get('naam')) . '</a>')?></h2>
-	<div class="section">
-		<pre style="white-space: pre-wrap; 
-white-space: -moz-pre-wrap; 
-white-space: -pre-wrap; 
-white-space: -o-pre-wrap; 
-word-wrap: break-word;"><?=markup_format_text($message->get('bericht'))?></pre>
-	</div>
+	
+	<?php var_dump($message); ?>
+	
+	<?php render_body($message->getBody(), $message->getHeaders()->get('content-type')->getType()) ?>
 </div>
