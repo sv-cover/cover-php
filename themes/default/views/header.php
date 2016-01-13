@@ -248,10 +248,6 @@
 	}
 	
 	function create_jarigen() {
-		$contents = '<p class="bold">' . __('Jarigen') . '</p>
-		<hr>
-		<div class="smaller">';
-
 		$model = get_model('DataModelMember');
 		
 		$jarigen = $model->get_jarigen();
@@ -259,20 +255,27 @@
 		$jarigen = array_filter($jarigen, function($member) use ($model) {
 			return !$member->is_private('naam') && !$member->is_private('geboortedatum');
 		});
-		
-		if (!$jarigen || count($jarigen) == 0)
-			$contents .=  __('Er zijn vandaag geen jarigen');
-		else 
-			$contents .= sprintf(_ngettext('Er is vandaag %d jarige:', 'Er zijn vandaag %d jarigen:', count($jarigen)), count($jarigen));
-		
-		$contents .= '<br>';
-		
-		foreach ($jarigen as $jarige) {
-			$contents .= sprintf('<a href="profiel.php?lid=%d">%s</a> (%d)<br>',
-				$jarige->get_id(), markup_format_text(member_full_name($jarige, BE_PERSONAL)), $jarige['leeftijd']);
-		}
 
-		return $contents . '</div>';
+		$lines = array_map(function($jarige) {
+			return sprintf('<a href="profiel.php?lid=%d">%s</a> (%d)', $jarige->get_id(),
+				markup_format_text(member_full_name($jarige, BE_PERSONAL)), $jarige['leeftijd']);
+		}, $jarigen);
+
+		// Cover Dies Natalis
+		if (date('m-d') == '09-20')
+			array_unshift($lines, sprintf('<span style="font-weight: bold; color: #c60c30;">Cover!</span> (%d)', date('Y') - 1993));
+		
+		$header = count($lines) > 0
+			? sprintf(_ngettext('Er is vandaag %d jarige:', 'Er zijn vandaag %d jarigen:',
+				count($lines)), count($lines))
+			: __('Er zijn vandaag geen jarigen');
+	
+		return '<p class="bold">' . __('Jarigen') . '</p>
+			<hr>
+			<div class="smaller">'
+				. $header . "<br>\n"
+				. implode("<br>\n", $lines)
+				. '</div>';
 	}
 
 
