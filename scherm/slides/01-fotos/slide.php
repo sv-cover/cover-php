@@ -10,7 +10,7 @@ shuffle($fotos);
 
 ?>
 <div class="collage">
-	<h1><?=$boek->get('titel')?></h1>
+	<h1 class="text-outline-thick-white"><?=$boek->get('titel')?></h1>
 	<ul class="flow-gallery">
 		<? foreach (array_slice($fotos, 0, 30) as $foto): ?>
 		<li class="foto">
