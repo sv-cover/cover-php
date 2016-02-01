@@ -59,6 +59,6 @@ $detail_map_url = sprintf('http://maps.googleapis.com/maps/api/staticmap?center=
 );
 
 ?>
-<h1 class="header">Cover Sticker map <small>Add yours at svcover.nl/stickers.php</small></h1>
+<h1 class="header text-outline-thick-white">Cover Sticker map <small>Add yours at svcover.nl/stickers.php</small></h1>
 <img src="<?=$detail_map_url?>" width="100%">
-<h1 style="position: absolute; top: 50%; font: 36px/36px sans-serif; left: 0; right: 0; text-align:center;"><?=$focussed_sticker->get('label')?></h1>
+<h1 class="text-outline-thick-white" style="position: absolute; top: 50%; font: 36px/36px sans-serif; left: 0; right: 0; text-align:center;"><?=$focussed_sticker->get('label')?></h1>
