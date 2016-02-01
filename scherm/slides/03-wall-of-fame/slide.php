@@ -37,7 +37,7 @@ $commissie_foto = _find_image(array(
 <div style="text-align: center; width:100%;height:100%; position:relative; overflow:hidden;">
 	<?php if($commissie_foto): ?>
 		<!-- Committee photo -->
-		<div style="position:absolute; top:-30px; right:-30px; bottom:-30px; left:-30px; background:url('<?= $commissie_foto ?>') center/cover no-repeat; filter:blur(20px); -webkit-filter:blur(20px);"></div>
+		<div style="position:absolute; top:-30px; right:-30px; bottom:-30px; left:-30px; background: black;"></div>
 		<div style="position:absolute; top:0; right:0; bottom:0; left:0; background:url('<?= $commissie_foto ?>') center/contain no-repeat; filter:drop-shadow(0 0 100px black); -webkit-filter:drop-shadow(0 0 100px black);">
 			<h1 class="text-outline-thick-white" style="font-size: 80px;"><?=markup_format_text($commissie->get('naam'))?></h1>
 			<table style="position:absolute; bottom:20px; left:20px; width:auto; color:white; text-align:left; text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);">
