@@ -123,7 +123,7 @@ jQuery(function($) {
 			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: partial}));
 		};
 
-		console.log(url);
+		//console.log(url);
 
 		if ($(this).attr('method') == 'post') {
 			$(tmp).load(url, $(this).serializeArray(), addPartialToTarget);
