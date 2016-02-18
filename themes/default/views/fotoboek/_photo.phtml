@@ -29,7 +29,7 @@ if (logged_in()) {
 	$prev = $book->get_previous_photo($iter, 1);
 	$next = $book->get_next_photo($iter, 1);
 ?>
-<div class="photo <?=$liked ? 'liked' : ''?>">
+<div class="photo <?=$liked ? 'liked' : ''?> <?=$iter['orientation']?>">
 	<nav class="photo-controls navigation">
 		<?php if (count($prev) > 0): ?>
 		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?= $prev[0]->get_id() ?>" class="prev-button previous" title="<?= markup_format_attribute(__('Ga naar vorige foto')) ?>">

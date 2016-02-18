@@ -60,13 +60,13 @@ table.navigation td:nth-child(3) {
 }
 
 .modal > .photo-window #photo .full-size-photo.landscape > img {
-	width: 90vh;
-	height: auto;
+	width: auto;
+	max-height: calc(100vh - 90px);
 }
 
 .modal > .photo-window #photo .full-size-photo.portrait > img {
-	height: 90vh;
 	width: auto;
+	max-height: calc(100vh - 90px);
 }
 
 .slides {
@@ -636,3 +636,54 @@ table.navigation td:nth-child(3) {
 	margin: 20px;
 }
 
+.modal > .photo-window > div {
+	margin-right: 280px;
+}
+
+.modal > .photo-window .photo-title {
+	position: absolute;
+    bottom: 14px;
+    left: 20px;
+    right: 300px;
+    color: white;
+    /*text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);*/
+    background: rgba(0, 0, 0, 0.8);
+    padding: 4px 8px;
+    z-index: 10;
+}
+
+.modal > .photo-window .photo-title:empty {
+	display: none;
+}
+
+/*
+.modal > .photo-window .photo-controls {
+	position: absolute;
+	top: 4px;
+	left: 20px;
+	right: 300px;
+}
+*/
+
+/*
+.modal > .photo-window .photo-controls .next-button,
+.modal > .photo-window .photo-controls .prev-button {
+	display: none;
+}
+*/
+
+.modal > .photo-window .photo-comments {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 260px;
+	padding: 24px 10px 10px 10px;
+	border-left: 1px solid #eee;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.modal > .photo-window .photo-comments h2 {
+	font-size: inherit;
+}
