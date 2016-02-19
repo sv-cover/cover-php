@@ -390,6 +390,7 @@ table.navigation td:nth-child(3) {
 }
 
 .face:hover,
+.face.highlight,
 .tagging-enabled .face {
 	opacity: 1.0;
 }
@@ -672,7 +673,7 @@ table.navigation td:nth-child(3) {
 }
 */
 
-.modal > .photo-window .photo-comments {
+.modal > .photo-window .photo-meta {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -684,6 +685,12 @@ table.navigation td:nth-child(3) {
 	overflow-y: auto;
 }
 
-.modal > .photo-window .photo-comments h2 {
+.modal > .photo-window .photo-meta .photo-faces {
+	margin-top: 0;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #eee;
+}
+
+.modal > .photo-window .photo-meta h2 {
 	font-size: inherit;
 }

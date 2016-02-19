@@ -10,7 +10,9 @@
 
 <?php $this->render_partial('slides', compact('model', 'iter', 'book')) ?>
 
-<div class="photo-comments">
+<div class="photo-meta">
+	<?php $this->render_partial('photo_faces', compact('model', 'iter', 'faces_controller')) ?>
+
 	<?php echo $reacties ?>
 </div>
 

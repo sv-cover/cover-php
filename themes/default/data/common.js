@@ -574,3 +574,12 @@ $(document).on('ready partial-content-loaded', function(e) {
 			}
 		});
 });
+
+/* When hovering over references to faces in photos, highlight the face */
+$(document).on('mouseover', '[data-face-id]', function(e) {
+	$('#face_' + $(this).data('face-id')).addClass('highlight');
+});
+
+$(document).on('mouseout', '[data-face-id]', function(e) {
+	$('#face_' + $(this).data('face-id')).removeClass('highlight');
+});
