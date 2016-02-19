@@ -584,15 +584,16 @@
 	  *
 	  * @result a string in the format item1, item2 and item3
 	  */
-	function implode_human($list) {
+	function implode_human($list)
+	{
 		$len = count($list);
 		
-		if ($len == 0)
+		if ($len === 0)
 			return '';
-		elseif ($len == 1)
-			return $list[0];
+		elseif ($len === 1)
+			return reset($list);
 		else
-			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('en') . ' ' . $list[$len - 1];
+			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('en') . ' ' . end($list);
 	}
 
 	function human_filesize($bytes, $decimals = 2)
