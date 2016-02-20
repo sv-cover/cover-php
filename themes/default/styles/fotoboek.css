@@ -635,7 +635,6 @@ table.navigation td:nth-child(3) {
 .modal > .photo-window {
 	max-width: none;
 	margin: 20px;
-	top: 20px;
 }
 
 .modal > .photo-window > div {
@@ -661,10 +660,19 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window .photo-controls {
 	position: fixed;
-	top: 0;
+	bottom: 0;
 	left: 0;
 	right: 0;
-	background: rgba(198, 12, 48, 0.8);
+	background: rgba(0, 0, 0, 0.8);
+	height: 32px;
+	line-height: 32px;
+}
+
+.modal > .photo-window .photo-controls .next-button,
+.modal > .photo-window .photo-controls .prev-button,
+.modal > .photo-window .photo-controls .next-button:before,
+.modal > .photo-window .photo-controls .prev-button:before {
+	line-height: 32px;
 }
 
 .modal > .photo-window .photo-controls a,
