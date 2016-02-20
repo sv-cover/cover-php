@@ -644,12 +644,11 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window .photo-title {
 	position: absolute;
-    bottom: 14px;
+    top: 20px;
     left: 20px;
     right: 300px;
     color: white;
-    /*text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);*/
-    background: rgba(0, 0, 0, 0.8);
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
     padding: 4px 8px;
     z-index: 10;
 }
