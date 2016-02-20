@@ -635,6 +635,7 @@ table.navigation td:nth-child(3) {
 .modal > .photo-window {
 	max-width: none;
 	margin: 20px;
+	top: 30px;
 }
 
 .modal > .photo-window > div {
@@ -660,7 +661,7 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window .photo-controls {
 	position: fixed;
-	bottom: 0;
+	top: 0;
 	left: 0;
 	right: 0;
 	background: rgba(0, 0, 0, 0.8);
