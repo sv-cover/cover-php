@@ -635,6 +635,7 @@ table.navigation td:nth-child(3) {
 .modal > .photo-window {
 	max-width: none;
 	margin: 20px;
+	top: 20px;
 }
 
 .modal > .photo-window > div {
@@ -657,14 +658,27 @@ table.navigation td:nth-child(3) {
 	display: none;
 }
 
-/*
+
 .modal > .photo-window .photo-controls {
-	position: absolute;
-	top: 4px;
-	left: 20px;
-	right: 300px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: rgba(198, 12, 48, 0.8);
 }
-*/
+
+.modal > .photo-window .photo-controls a,
+.modal > .photo-window .photo-controls label,
+.modal > .photo-window .photo-controls .like-button {
+    color: white;
+    font-weight: normal;
+}
+
+.modal > .photo-window .photo-controls .like-button {
+	background-image: url(../images/heart-white.svg);
+}
+
+
 
 /*
 .modal > .photo-window .photo-controls .next-button,
