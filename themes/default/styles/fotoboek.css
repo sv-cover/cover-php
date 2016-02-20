@@ -61,12 +61,12 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window #photo .full-size-photo.landscape > img {
 	width: auto;
-	max-height: calc(100vh - 90px);
+	max-height: calc(100vh - 120px);
 }
 
 .modal > .photo-window #photo .full-size-photo.portrait > img {
 	width: auto;
-	max-height: calc(100vh - 90px);
+	max-height: calc(100vh - 120px);
 }
 
 .slides {
