@@ -65,7 +65,7 @@ $commissie_foto = _find_image(array(
 
  	<?php if ($commissie->get('vacancies')): ?>
 		<!-- New committee members banner -->
-		<div style="position: absolute; top: 100px; left: -175px; width: 500px; padding: 20px 100px; border-radius: 10px; background:#c60c30; box-shadow: 0 0 0 4px white, 0 0 0 8px #c60c30; font-size: 50px; line-height: 1em; text-align: center; color: white; transform: rotate(-45deg);">
+		<div style="position: absolute; top: 100px; left: -175px; width: 500px; padding: 20px 100px; border-radius: 10px; background:#c60c30; box-shadow: 0 0 0 4px white, 0 0 0 8px #c60c30; font-size: 50px; line-height: 1em; text-align: center; color: white; transform: rotate(-45deg); -webkit-transform: rotate(-45deg);">
 			<?=__('Commissieleden gezocht!') ?>
 		</div>
 	<?php endif ?> 
