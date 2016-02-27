@@ -6,22 +6,18 @@
 			<?=input_text('naam', $iter->data, 'required', 'required')?>
 		</div>
 
-		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
 		<div>
 			<?=label(__('Interne naam'), 'login', $errors, true)?>
 			<?=input_text('login', $iter->data, 'required', 'required')?>
 			<p><?=__('Je wil de interne naam alleen veranderen als je een verdomd goede reden hebt. Veel interne zaken (o.a. de commissiefoto en het e-mailadres) worden via deze naam aan de commissie gekoppeld.')?></p>
 		</div>
-		<?php endif ?>
-
-		<?php if (member_in_commissie(COMMISSIE_EASY)): ?>
+		
 		<div>
 			<?=input_checkbox('hidden', $iter->data, 1)?>
 			<?=label(__('Deze commissie is verborgen'), 'hidden', $errors)?>
 			<p><?=__('Verborgen commissies worden niet getoond in het overzicht of op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de website.')?></p>
 		</div>
-		<?php endif ?>
-
+		
 		<div class="committee-members">
 			<table>
 				<thead>
@@ -62,6 +58,9 @@
 			<a href="<?=markup_format_attribute($controller->link_to_read($iter))?>"><?=__('Terug naar commissie')?></a>
 			<?php else: ?>
 			<a href="<?=markup_format_attribute($controller->link_to_index())?>"><?=__('Terug naar alle commissies')?></a>
+			<?php endif ?>
+			<?php if ($iter->has_id() && get_policy($model)->user_can_delete($iter)): ?>
+			<a href="<?=markup_format_attribute($controller->link_to_delete($iter))?>" class="delete-link"><?=__('Verwijder commissie')?></a>
 			<?php endif ?>
 		</div>
 	</form>

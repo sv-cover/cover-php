@@ -1430,6 +1430,14 @@ td.timestamp {
 	padding: 0 30px;
 }
 
+.vertical-form .delete-link,
+.vertical-form .delete-link:hover {
+	float: right;
+	color: red;
+	line-height: 24px;
+	margin: 5px 0;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }
