@@ -1431,7 +1431,8 @@ td.timestamp {
 }
 
 .vertical-form .delete-link,
-.vertical-form .delete-link:hover {
+.vertical-form .delete-link:hover,
+.vertical-form .delete-link:visited {
 	float: right;
 	color: red;
 	line-height: 24px;
