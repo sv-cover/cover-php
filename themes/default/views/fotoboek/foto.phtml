@@ -1,19 +1,25 @@
 <h1><?= __('Fotoboek') . ' :: ' . __('Foto') ?></h1>
 
-<div class="messageBox" id="a">
+<div class="messageBox" id="foto">
 
-<div class="photo-page-header">
-	<?php $this->render_partial('path', array('book' => $book, 'photo' => $iter, 'model' => $model)) ?>
-</div>
+	<div class="photo-page-header">
+		<?php $this->render_partial('path', array('book' => $book, 'photo' => $iter, 'model' => $model)) ?>
+	</div>
 
-<?php $this->render_partial('photo', compact('model', 'iter', 'book', 'faces_controller', 'likes_controller')) ?>
+	<?php $this->render_partial('photo', compact('model', 'iter', 'book', 'faces_controller', 'likes_controller')) ?>
 
-<?php $this->render_partial('slides', compact('model', 'iter', 'book')) ?>
+	<?php $this->render_partial('slides', compact('model', 'iter', 'book')) ?>
 
-<div class="photo-meta">
-	<?php $this->render_partial('photo_faces', compact('model', 'iter', 'faces_controller')) ?>
+	<div class="photo-meta">
+		<?php $this->render_partial('photo_faces', compact('model', 'iter', 'faces_controller')) ?>
 
-	<?php echo $reacties ?>
-</div>
+		<?php $this->photo_controls(compact('model', 'iter', 'book', 'likes_controller')) ?>
+
+		<?php $this->photo_comments([
+			'controller' => $comments_controller,
+			'model' => $comments_controller->model(),
+			'iter' => $iter['comments']
+		]) ?>
+	</div>
 
 </div>

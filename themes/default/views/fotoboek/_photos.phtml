@@ -38,7 +38,7 @@ if (!$photos || count($photos) == 0)
 		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;photo=<?=$photo->get_id()?>">
 			<img src="<?=markup_format_attribute($photo->get_url(null, 400))?>" <?=($size = $photo->get_scaled_size(null, 400)) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
 			<?php if (isset($likes[$photo->get_id()])): ?>
-				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><?=$likes[$photo->get_id()]?></span>
+				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><span class="like-count"><?=$likes[$photo->get_id()]?></span></span>
 			<?php endif ?>
 			<?php if (isset($visibility[$photo->get_id()]) && !$visibility[$photo->get_id()]): ?>
 			<span class="privacy"><?=__('Verborgen voor anderen')?></span>
@@ -142,15 +142,12 @@ var getModal = function() {
 
 var prefetchPhotoLink = function(link, callback) {
 	if (!cache[link]) {
-		cache[link] = $('<div>').load(link + ' #a', function() {
+		cache[link] = $('<div>').load(link + ' #foto', function() {
 			// First of all, fire the partially loaded thingy
 			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
 
 			// Remove the message box style, we don't use it
-			$(this).find('#a').removeClass('messageBox');
-
-			// Remove the title bar, for now
-			$(this).find('.photo-page-header').remove();
+			$(this).find('#foto').removeClass('messageBox');
 
 			// Remove the slides, we don't use them here.
 			$(this).find('.slides').remove();

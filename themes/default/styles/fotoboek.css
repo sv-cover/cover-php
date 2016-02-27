@@ -110,13 +110,6 @@ table.navigation td:nth-child(3) {
 	padding: 20px 0;
 }
 
-.photo-controls {
-	position: relative;
-	height: 24px;
-	padding: 0 5px;
-	text-align: center;
-}
-
 .photo-controls a,
 .photo-controls a:hover,
 .photo-controls label {
@@ -132,24 +125,6 @@ table.navigation td:nth-child(3) {
 .photo-controls a:hover,
 .photo-controls label:hover {
 	text-decoration: underline;
-}
-
-.photo-controls input[type=checkbox] {
-	display: none;
-}
-
-.photo-controls input[type=checkbox] + label {
-	-webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.photo-controls input[type=checkbox]:checked + label {
-	background: #004274;
-	color: white;
-	border-radius: 2px;
 }
 
 .photo-controls form {
@@ -180,6 +155,55 @@ table.navigation td:nth-child(3) {
 .liked .like-button {
 	color: white;
 	background-image: url(../images/heart-filled.svg);
+}
+
+.photo-controls .photo-download-link:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+	content: "\f019";
+	margin-right: 0.5ch;
+}
+
+.toggle input[type=checkbox] {
+	display: none;
+}
+
+.toggle input[type=checkbox] + label {
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #004274;
+    cursor: pointer;
+    padding: 2px 5px;
+}
+
+.toggle:hover input[type=checkbox] + label {
+	text-decoration: underline;
+}
+
+.toggle input[type=checkbox]:checked + label {
+	background: #004274;
+	color: white;
+	border-radius: 2px;
+}
+
+.tag-faces-toggle label:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+	content: "\f02b";
+	margin-right: 0.5ch;
 }
 
 .photo-page-header {
@@ -658,7 +682,7 @@ table.navigation td:nth-child(3) {
 }
 
 
-.modal > .photo-window .photo-controls {
+.modal > .photo-window .photo-navigation {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -668,25 +692,18 @@ table.navigation td:nth-child(3) {
 	line-height: 32px;
 }
 
-.modal > .photo-window .photo-controls .next-button,
-.modal > .photo-window .photo-controls .prev-button,
-.modal > .photo-window .photo-controls .next-button:before,
-.modal > .photo-window .photo-controls .prev-button:before {
+.modal > .photo-window .photo-navigation .next-button,
+.modal > .photo-window .photo-navigation .prev-button,
+.modal > .photo-window .photo-navigation .next-button:before,
+.modal > .photo-window .photo-navigation .prev-button:before {
 	line-height: 32px;
+	z-index: 20;
 }
 
-.modal > .photo-window .photo-controls a,
-.modal > .photo-window .photo-controls label,
-.modal > .photo-window .photo-controls .like-button {
-    color: white;
+.modal > .photo-window .photo-navigation a {
+	color: white;
     font-weight: normal;
 }
-
-.modal > .photo-window .photo-controls .like-button {
-	background-image: url(../images/heart-white.svg);
-}
-
-
 
 /*
 .modal > .photo-window .photo-controls .next-button,
@@ -713,6 +730,33 @@ table.navigation td:nth-child(3) {
 	border-bottom: 1px solid #eee;
 }
 
+.modal > .photo-window .photo-meta .photo-controls {
+	padding-bottom: 4px;
+	border-bottom: 1px solid #eee;
+}
+
 .modal > .photo-window .photo-meta h2 {
 	font-size: inherit;
+}
+
+.modal > .photo-window .photo-page-header {
+    position: fixed;
+    top: 0;
+    left: 100px;
+    right: 100px;
+    text-align: center;
+    z-index: 10;
+    color: white;
+}
+
+.modal > .photo-window .fotoboek_path {
+    font-size: inherit;
+    font-weight: normal;
+    border: none;
+}
+
+.modal > .photo-window .fotoboek_path a,
+.modal > .photo-window .fotoboek_path a:visited {
+    color: inherit;
+    font-weight: inherit;
 }

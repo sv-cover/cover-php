@@ -18,23 +18,13 @@ $months = get_months();
 									)
 								)
 							)
-						); ?>><i class="fa fa-thumbs-o-up"></i> <?=__N('%d like', '%d likes', $iter['likes'])?></span>
+						); ?>><?=__N('%d like', '%d likes', $iter['likes'])?></span>
 				
-				<?php if ($iter->has('fotoboek__id')): ?>
-				<span class="subtitle"><a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text($iter->getIter('fotoboek')->get('titel')) ?> / <?= markup_format_text(($iter->has('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a></span>
-				<?php endif ?>
-
 				<span class="timestamp"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter->get('dagnaam')], $iter->get('datum'), $months[$iter->get('maand')], $iter->get('uur'), $iter->get('minuut')) ?></span>
 			</div>
 			<?= markup_format_text(member_full_name($iter->get('auteur'), BE_PERSONAL)) ?>
 		</span>
 	</div>
-
-	<?php if ($iter->has('fotoboek__id')): ?>
-	<a href="fotoboek.php?photo=<?= $iter->get('foto') ?>" class="thumbnail">
-		<img src="<?=markup_format_attribute($iter->getIter('foto', 'DataIterPhoto')->get_url(null, 400))?>" height="100">
-	</a>
-	<?php endif ?>
 	
 	<div class="bericht">
 		<?= markup_parse($iter->get('reactie')) ?>
@@ -45,20 +35,21 @@ $months = get_months();
 			<?php if ($iter->is_liked_by(get_identity()->get_member())): ?>
 				<li>
 					<form method="post"
-						action="fotoboek.php?photo=<?=$iter['foto']?>&amp;comment_view=likes&amp;comment_id=<?=$iter->get_id()?>"
+						action="<?=markup_format_attribute($controller->link_to_like($iter))?>"
 						data-partial-selector="#comment<?=$iter['id']?>"
 						data-placement-selector="#comment<?=$iter['id']?>">
 						<input type="hidden" name="action" value="unlike">
-						<button type="submit" class="link"><i class="fa fa-thumbs-o-up"></i> Unlike</button>
+						<button type="submit" class="link comment-like-button">Unlike</button>
 					</form>
 				</li>
 			<?php else: ?>
 				<li>
-					<form method="post" action="fotoboek.php?photo=<?=$iter['foto']?>&amp;comment_view=likes&amp;comment_id=<?=$iter->get_id()?>"
+					<form method="post"
+						action="<?=markup_format_attribute($controller->link_to_like($iter))?>"
 						data-partial-selector="#comment<?=$iter['id']?>"
 						data-placement-selector="#comment<?=$iter['id']?>">
 						<input type="hidden" name="action" value="like">
-						<button type="submit" class="link"><i class="fa fa-thumbs-o-up"></i> Like</button>
+						<button type="submit" class="link comment-like-button">Like</button>
 					</form>
 				</li>
 			<?php endif ?>

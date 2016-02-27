@@ -1401,8 +1401,8 @@ td.timestamp {
 
 .vertical-form .option-group.columns {
 	columns: 3;
-    -webkit-columns: 3;
-    -moz-columns: 3;
+	-webkit-columns: 3;
+	-moz-columns: 3;
 }
 
 .vertical-form fieldset {
@@ -2453,7 +2453,7 @@ ul.committee-list > li .position {
 	position: relative;
 	cursor: pointer;
 	padding: 2px;
- 	width: 48px;
+	width: 48px;
 	height: 24px;
 	background: #999;
 	border: none;
@@ -2578,10 +2578,23 @@ ul.committee-list > li .position {
 	height: 24px;
 }
 
-.comment .thumbnail img {
+.comment + .thumbnail img {
 	float: right;
 	border: 1px solid #ccc;
 	margin-bottom: -24px;
+}
+
+.comment .number-of-likes:before,
+.comment .comment-like-button:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+	content: "\f087";
+	margin-right: 0.5ch;
 }
 
 button .fa {

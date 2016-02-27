@@ -322,6 +322,45 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 		function make_face_editable($face)
 		{
+			var human_implode = function(elements, glue) {
+				if (elements.length < 2)
+					return elements.join('');
+
+				var last = elements[elements.length - 1];
+
+				return elements.slice(0, elements.length - 2).join(', ') + ' ' + glue + ' ' + last;
+			};
+
+			var update_names_list = function() {
+				$('.photo-meta .photo-faces').each(function() {
+					var $area = $(this)
+					var $toggle = $area.find('.tag-faces-toggle').detach();
+					var format = $area.data('template-format');
+					var faces = [], unknown = 0;
+
+					$photo.find('.face .tag-label .name').each(function() {
+						if ($(this).attr('href') == '#' || !$(this).attr('href'))
+							++unknown;
+						else {
+							var $face = $(this).clone();
+							$face.removeAttr('style');
+							if ($face.closest('.face').prop('id')) // todo: fix this
+								$face.attr('data-face-id', $face.closest('.face').prop('id').replace(/^face_/, ''));
+							faces.push($face.prop('outerHTML'));
+						}
+					});
+
+					if (unknown > 0)
+						faces.push(format[unknown === 1 ? 'unknown_sg' : 'unknown_pl'].replace('%d', unknown));
+
+					// Replace the HTML with the new names
+					$area.html(format.intro.replace('%s', human_implode(faces, format.and)));
+
+					// and append the toggle again.
+					$area.append($toggle);
+				});
+			};
+
 			var accept = function(lid_id, name) {
 				$face.removeClass('untagged');
 
@@ -334,6 +373,9 @@ $(document).on('ready partial-content-loaded', function(e) {
 					: [{name: 'custom_label', value: name}];
 
 				$.post($face.data('update-action'), data, function() {}, 'json');
+
+				// Update names list in the popup
+				update_names_list();
 			};
 
 			$face.resizable({
@@ -367,12 +409,14 @@ $(document).on('ready partial-content-loaded', function(e) {
 					e.stopPropagation();
 					$.post($face.data('delete-action'), [], function() {}, 'json');
 					$face.remove();
+					update_names_list();
 				})
 				.appendTo($face);
 
 			$face.click(function(e) {
 				e.preventDefault();
 				e.stopPropagation();
+				update_names_list();
 				$face.find('.name').hide();
 				$face.find('.tag-search').show().focus();
 			});

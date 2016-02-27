@@ -949,3 +949,22 @@
 
 		fclose($fout);
 	}
+
+	function array_one(array $elements, $test)
+	{
+		foreach ($elements as $index => $element)
+			if (call_user_func($test, $element, $index))
+				return true;
+
+		return false;
+	}
+
+	function array_all(array $elements, $test)
+	{
+		foreach ($elements as $index => $element)
+			if (!call_user_func($test, $element, $index))
+				return false;
+
+		return true;
+	}
+	

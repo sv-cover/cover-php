@@ -1,11 +1,22 @@
-<?php if (get_auth()->logged_in()):
-	$model = get_model('DataModelFotoboekReacties');
-?>
-<div class="bar_sep"><?= __('Laatste reacties') ?></div>
-<?php
-	foreach ($model->get_latest(10) as $iter) {
-		$controller = new ControllerFotoboekReacties($iter->getIter('foto', 'DataIterPhoto'));
-		View::byName('fotoboekreacties', $controller)->single(compact('model', 'iter'));
-	}
-?>
+<?php if (get_auth()->logged_in()): ?>
+	<?php $model = get_model('DataModelFotoboekReacties') ?>
+	<div class="bar_sep"><?= __('Laatste reacties') ?></div>
+	<?php foreach ($model->get_latest(10) as $iter): ?>
+		<div class="recent-comment">
+			<?php
+				$controller = new ControllerFotoboekComments($iter->getIter('foto', 'DataIterPhoto'));
+				View::byName('fotoboekreacties', $controller)->single(compact('model', 'iter'));
+			?>
+
+			<?php if ($iter->has('fotoboek__id')): ?>
+			<a href="fotoboek.php?photo=<?= $iter->get('foto') ?>" class="thumbnail">
+				<img src="<?=markup_format_attribute($iter->getIter('foto', 'DataIterPhoto')->get_url(null, 400))?>"
+					height="100"
+					title="<?= markup_format_attribute(sprintf('%s / %s',
+						$iter->getIter('fotoboek')->get('titel'),
+						$iter->has('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?>">
+			</a>
+			<?php endif ?>
+		</div>
+	<?php endforeach ?>
 <?php endif ?>

@@ -31,6 +31,11 @@
 			$this->model = $model;
 			$this->iter = $iter;
 		}
+
+		public function model()
+		{
+			return $this->model;
+		}
 		
 		/** 
 		  * Convenient function which runs the header view

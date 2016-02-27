@@ -26,7 +26,7 @@ $this->render_partial('contents', compact('model', 'iter'));
 ?>
 
 <?php
-if ($iter->get_id() === 0)
+if ($iter instanceof DataIterRootPhotobook)
 	$this->render_partial('last_reacties');
 
 if (!$iter->count_photos())
