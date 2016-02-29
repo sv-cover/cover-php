@@ -659,7 +659,7 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window {
 	max-width: none;
-	margin: 20px;
+	margin: 20px 60px;
 	top: 30px;
 }
 
@@ -699,7 +699,6 @@ table.navigation td:nth-child(3) {
 	top: 32px;
 	width: 50px;
 	bottom: 0;
-	margin-top: -25vh;
 	overflow: hidden;
 	text-indent: 64px;
 }
@@ -709,7 +708,7 @@ table.navigation td:nth-child(3) {
 	position: absolute;
 	top: 50%;
 	height: 50vh;
-	margin-top: calc(-25vh + 32px);
+	margin-top: -25vh;
 	width: 100%;
 	text-align: center;
 	line-height: 50vh;
