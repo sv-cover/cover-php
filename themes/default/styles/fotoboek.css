@@ -182,6 +182,7 @@ table.navigation td:nth-child(3) {
     color: #004274;
     cursor: pointer;
     padding: 2px 5px;
+    display: inline-block;
 }
 
 .toggle:hover input[type=checkbox] + label {
@@ -693,11 +694,28 @@ table.navigation td:nth-child(3) {
 }
 
 .modal > .photo-window .photo-navigation .next-button,
-.modal > .photo-window .photo-navigation .prev-button,
+.modal > .photo-window .photo-navigation .prev-button {
+	position: fixed;
+	top: 32px;
+	width: 50px;
+	bottom: 0;
+	margin-top: -25vh;
+	overflow: hidden;
+	text-indent: 64px;
+}
+
 .modal > .photo-window .photo-navigation .next-button:before,
 .modal > .photo-window .photo-navigation .prev-button:before {
-	line-height: 32px;
+	position: absolute;
+	top: 50%;
+	height: 50vh;
+	margin-top: calc(-25vh + 32px);
+	width: 100%;
+	text-align: center;
+	line-height: 50vh;
+	font-size: 20px;
 	z-index: 20;
+	text-indent: 0;
 }
 
 .modal > .photo-window .photo-navigation a {
