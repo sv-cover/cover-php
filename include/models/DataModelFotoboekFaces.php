@@ -79,6 +79,12 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		return $this->_cached_photos = array_reverse($photos);
 	}
 
+	public function get_read_status()
+	{
+		// FIXME: Implement this and proper tracking of the last visit moment.
+		return DataModelFotoboek::READ_STATUS_READ;
+	}
+
 	/**
 	 * @override
 	 */
@@ -124,7 +130,6 @@ class DataModelFotoboekFaces extends DataModel
 				'titel' => sprintf(__('Foto\'s van %s'),
 					implode(__(' en '), array_map(function($member) { return member_first_name($member); }, $members))),
 				'num_books' => 0,
-				'read_status' => 'read',
 				'datum' => null,
 				'parent' => 0,
 				'member_ids' => array_map(function($member) { return $member->get_id(); }, $members)));

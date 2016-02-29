@@ -384,6 +384,9 @@
 		const NUM_BOOKS = 2;
 		const NUM_PHOTOS = 4;
 
+		const READ_STATUS_READ = 'read';
+		const READ_STATUS_UNREAD = 'unread';
+
 		public $dataiter = 'DataIterPhoto';
 
 		public function __construct($db)
@@ -630,8 +633,8 @@
 										b_c.date >= '%1\$d-08-23' AND
 										(f_b_c_v.last_visit < b_c.last_update OR f_b_c_v.last_visit IS NULL)
 									), false)) > 0 
-								THEN 'unread'
-								ELSE 'read'
+								THEN '" . self::READ_STATUS_UNREAD . "'
+								ELSE '" . self::READ_STATUS_READ . "'
 							END read_status
 						FROM
 							foto_boeken
@@ -658,7 +661,7 @@
 			else
 			{
 				$select .= ',
-					\'read\' as read_status';
+					\'' . self::READ_STATUS_READ . '\' as read_status';
 			}
 
 			$rows = $this->db->query("$select $from $joins $where $group_by $order_by");
@@ -914,6 +917,9 @@
 		public function mark_read($lid_id, DataIterPhotobook $book)
 		{
 			if (!get_config_value('enable_photos_read_status', true))
+				return;
+
+			if (!ctype_digit((string) $book->get_id()))
 				return;
 
 			try {
