@@ -660,7 +660,7 @@ table.navigation td:nth-child(3) {
 .modal > .photo-window {
 	max-width: none;
 	margin: 20px 60px;
-	top: 30px;
+	top: 20px;
 }
 
 .modal > .photo-window > div {
@@ -684,13 +684,7 @@ table.navigation td:nth-child(3) {
 
 
 .modal > .photo-window .photo-navigation {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	background: rgba(0, 0, 0, 0.8);
-	height: 32px;
-	line-height: 32px;
+	display: inline;
 }
 
 .modal > .photo-window .photo-navigation .next-button,
@@ -745,6 +739,10 @@ table.navigation td:nth-child(3) {
 	margin-top: 0;
 	padding-bottom: 6px;
 	border-bottom: 1px solid #eee;
+}
+
+.modal > .photo-window .photo-meta .photo-faces a {
+	font-weight: normal;
 }
 
 .modal > .photo-window .photo-meta .photo-controls {
