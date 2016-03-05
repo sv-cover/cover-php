@@ -657,6 +657,103 @@ table.navigation td:nth-child(3) {
 	content: ')';
 }
 
+.comment {
+	display: block;
+	position: relative;
+	min-height: 50px;
+	margin-left: 50px;
+	padding: 5px 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.comment .comment-author {
+	
+}
+
+.comment .comment-author img,
+.comment .comment-author:after {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	top: 10px;
+	left: -50px;
+	border-radius: 50%;
+}
+
+.comment .comment-author:after {
+	content: '';
+	box-sizing: border-box;
+	border: 1px solid rgba(32, 32, 32, 0.25);
+}
+
+.comment .comment-meta {
+	float: right;
+	text-align: right;
+}
+
+.comment .comment-meta .number-of-likes:before,
+.comment .comment-meta .comment-like-button:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+	content: "\f087";
+	margin-right: 0.5ch;
+}
+
+.comment .comment-message {
+	word-break: break-word;
+}
+
+.comment .comment-message a {
+	word-break: break-all;
+}
+
+.comment-form {
+	margin-left: 60px;	
+}
+
+
+.recent-comment {
+	position: relative;
+	margin-bottom: 16px;
+}
+
+.recent-comment .comment {
+	margin-left: 170px;
+	margin-bottom: 4px;
+	background: white;
+	border-radius: 4px;
+	border: none;
+}
+
+.recent-comment .comment-author img,
+.recent-comment .comment-author:after {
+	top: 0;
+	left: -60px;
+}
+
+.recent-comment .comment:before {
+	border: 7px solid;
+	content: '';
+	display: block;
+	z-index: 5;
+	border-color: transparent #fff transparent transparent;
+	position: absolute;
+	top: 17.5px;
+	right: 100%;
+}
+
+.recent-comment .thumbnail img {
+	float: left;
+	border: 1px solid #ccc;
+	max-width: 100px;
+	max-height: 65px;
+}
+
 .modal > .photo-window {
 	max-width: none;
 	margin: 20px 60px;
@@ -752,6 +849,23 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window .photo-meta h2 {
 	font-size: inherit;
+}
+
+.modal > .photo-window .photo-meta .comment .comment-meta {
+	float: none;
+	text-align: left;
+	font-size: 0.75em;
+}
+
+.modal > .photo-window .photo-meta .comment-form {
+	margin-top: 10px;
+	margin-left: 0;
+}
+
+.modal > .photo-window .photo-meta .comment-form textarea {
+	border: 1px solid #eee;
+	font-size: inherit;
+	resize: vertical;
 }
 
 .modal > .photo-window .photo-page-header {

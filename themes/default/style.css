@@ -2560,43 +2560,6 @@ ul.committee-list > li .position {
 	border-bottom-color: #fff;
 }
 
-.comment {
-	position: relative;
-	padding-bottom: 32px;
-	/*margin-bottom: 28px;*/
-}
-
-.comment:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-
-.comment .actions {
-	position: absolute;
-	bottom: 0;
-	height: 24px;
-}
-
-.comment + .thumbnail img {
-	float: right;
-	border: 1px solid #ccc;
-	margin-bottom: -24px;
-}
-
-.comment .number-of-likes:before,
-.comment .comment-like-button:before {
-	display: inline-block;
-	font: normal normal normal 14px/1 FontAwesome;
-	font-size: inherit;
-	text-rendering: auto;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	transform: translate(0, 0);
-	content: "\f087";
-	margin-right: 0.5ch;
-}
-
 button .fa {
 	/*display: inline-block;*/
 	margin-right: 4px;

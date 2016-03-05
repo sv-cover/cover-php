@@ -2,31 +2,31 @@
 $days = get_days();
 $months = get_months();
 ?>
-<div class="replyBox comment" id="comment<?=$iter->get_id()?>">
-	<div class="title">
-		<span class="replyDetails">
-			<div class="right">
-				<span class="number-of-likes" <?=
-					$iter['likes'] == 0
-						? ''
-						: sprintf(' title="%s"', 
-							markup_format_attribute(
-								sprintf(
-									_ngettext('%s vindt dit leuk', '%s vinden dit leuk', $iter['likes']), 
-									implode_human(
-										array_map('member_first_name', $iter['liked_by'])
-									)
-								)
+<div class="comment" id="comment<?=$iter->get_id()?>">
+	<div class="comment-meta">
+		<span class="number-of-likes" <?=
+			$iter['likes'] == 0
+				? ''
+				: sprintf(' title="%s"', 
+					markup_format_attribute(
+						sprintf(
+							_ngettext('%s vindt dit leuk', '%s vinden dit leuk', $iter['likes']), 
+							implode_human(
+								array_map('member_first_name', $iter['liked_by'])
 							)
-						); ?>><?=__N('%d like', '%d likes', $iter['likes'])?></span>
-				
-				<span class="timestamp"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter->get('dagnaam')], $iter->get('datum'), $months[$iter->get('maand')], $iter->get('uur'), $iter->get('minuut')) ?></span>
-			</div>
-			<?= markup_format_text(member_full_name($iter->get('auteur'), BE_PERSONAL)) ?>
-		</span>
+						)
+					)
+				); ?>><?=__N('%d like', '%d likes', $iter['likes'])?></span>
+		
+		<span class="timestamp"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter['dagnaam']], $iter['datum'], $months[$iter['maand']], $iter['uur'], $iter['minuut']) ?></span>
 	</div>
-	
-	<div class="bericht">
+
+	<a href="profiel.php?lid=<?=$iter['auteur']?>" class="comment-author">
+		<img src="foto.php?lid_id=<?=$iter['auteur']?>&amp;format=square&amp;width=200" width="150">
+		<span class="name"><?= markup_format_text(member_full_name($iter['auteur'], BE_PERSONAL)) ?></span>
+	</a>
+		
+	<div class="comment-message">
 		<?= markup_parse($iter->get('reactie')) ?>
 	</div>
 
