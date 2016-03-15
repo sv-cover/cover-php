@@ -18,4 +18,7 @@ __('Ouderejaars lid');
 __('Commissaris Zorgtoeslag');
 __('Commissaris Kusje');
 __('Commissaris Verbanddoos');
+__('Huisarts');
+__('Huisarts-assistent');
+__('Commissaris Heethoofd');
 __('Promohomo');
