@@ -739,7 +739,7 @@ msgstr "Commissioner Bandage box"
 
 #: ../../../locale/strings.php:21
 msgid "Huisarts"
-msgstr "General Practioner"
+msgstr "General Practitioner"
 
 #: ../../../locale/strings.php:22
 msgid "Huisarts-assistent"
