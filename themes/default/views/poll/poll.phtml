@@ -1,9 +1,9 @@
-<? 
+<?php
 $voted = $model->voted($iter);
 $votes = $model->get_votes($iter->get('id'));
 
-if ($voted) { ?>
-	<? $this->render_partial('vote_results', compact('model', 'iter', 'votes', 'enable_new')) ?>
-<? } else { ?>
-	<? $this->render_partial('vote_form', compact('model', 'iter', 'votes', 'enable_new')) ?>
-<? } ?>
+if ($voted): ?>
+	<?php $this->render_partial('vote_results', compact('model', 'iter', 'votes', 'enable_new')) ?>
+<?php else: ?>
+	<?php $this->render_partial('vote_form', compact('model', 'iter', 'votes', 'enable_new')) ?>
+<?php endif ?>
