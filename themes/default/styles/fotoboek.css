@@ -876,7 +876,7 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window .photo-page-header {
     position: fixed;
-    top: 0;
+    top: 14px;
     left: 100px;
     right: 100px;
     text-align: center;
@@ -887,6 +887,7 @@ table.navigation td:nth-child(3) {
 .modal > .photo-window .fotoboek_path {
     font-size: inherit;
     font-weight: normal;
+    line-height: 1em;
     border: none;
 }
 
