@@ -96,7 +96,7 @@ var getModal = function() {
 		// Close the model on pressing the escape key while inside
 		$modal.on('keydown.nav', function(e) {
 			// Don't prevent normal keyboard usage
-			if (['TEXTAREA', 'INPUT'].indexOf(event.target.nodeName) !== -1)
+			if (['TEXTAREA', 'INPUT'].indexOf(e.target.nodeName) !== -1)
 				return;
 
 			switch (e.keyCode) {
