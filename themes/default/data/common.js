@@ -315,7 +315,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 			e.preventDefault();
 			$form = $(this);
 			$.post($form.attr('action'), $form.serializeArray(), function(response) {
-				$form.closest('.photo').toggleClass('liked', response.liked);
+				$form.closest('#foto').toggleClass('liked', response.liked);
 				$form.find('.like-button').attr('title', $form.find('.like-button').data('title')[response.liked ? 0 : 1]);
 				$form.find('.like-count').text(response.likes);
 			});

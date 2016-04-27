@@ -1,6 +1,14 @@
+<?php
+$photo_classes = array('messageBox');
+
+$like_model = get_model('DataModelFotoboekLikes');
+if ($like_model->is_liked($iter, get_identity()->get_member()->get_id()))
+	$photo_classes[] = 'liked';
+
+?>
 <h1><?= __('Fotoboek') . ' :: ' . __('Foto') ?></h1>
 
-<div class="messageBox" id="foto">
+<div id="foto" class="<?=implode(' ', $photo_classes)?>">
 
 	<div class="photo-page-header">
 		<?php $this->render_partial('path', array('book' => $book, 'photo' => $iter, 'model' => $model)) ?>
