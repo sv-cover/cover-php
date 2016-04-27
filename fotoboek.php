@@ -6,35 +6,30 @@
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/controllers/ControllerCRUD.php';
 	
-	class ControllerFotoboekReacties extends ControllerCRUD
+	class ControllerFotoboekComments extends ControllerCRUD
 	{
-		protected $photo;
-
 		protected $_var_view = 'comment_view';
 
 		protected $_var_id = 'comment_id';
 
-		protected $likes;
+		protected $photo;
 
 		public function __construct(DataIterPhoto $photo)
 		{
-			$this->_var_view = 'comment_view';
-
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelFotoboekReacties');
 		}
 
-		protected function _get_default_view_params()
+		protected function _get_view_name()
 		{
-			return array_merge(parent::_get_default_view_params(),
-				array('empty_iter' => $this->_create_iter()));
+			return 'fotoboekreacties';
 		}
 
 		protected function _create_iter()
 		{
 			$iter = parent::_create_iter();
-			$iter->set('foto', $this->photo->get('id'));
+			$iter->set('foto', $this->photo->get_id());
 			$iter->set('auteur', logged_in('id'));
 			return $iter;
 		}
@@ -46,14 +41,16 @@
 
 		public function link(array $arguments)
 		{
-			$arguments['photo'] = $this->photo->get('id');
+			$arguments['photo'] = $this->photo->get_id();
+
+			$arguments['module'] = 'comments';
 
 			return parent::link($arguments);
 		}
 
 		public function link_to_index()
 		{
-			return $this->link(array());
+			return parent::link(['photo' => $this->photo->get_id()]);
 		}
 
 		public function link_to_read(DataIter $iter)
@@ -61,19 +58,9 @@
 			return sprintf('%s#comment%d', $this->link_to_index(), $iter->get_id());
 		}
 
-		public function link_to_create()
+		public function link_to_like(DataIter $iter)
 		{
-			return parent::link_to_create() . '#comment-form';
-		}
-
-		public function link_to_update(DataIter $iter)
-		{
-			return parent::link_to_update($iter) . '#comment-form';
-		}
-
-		public function link_to_delete(DataIter $iter)
-		{
-			return parent::link_to_delete($iter) . '#confirm-delete-comment-form';
+			return $this->link([$this->_var_view => 'likes', $this->_var_id => $iter->get_id()]);
 		}
 
 		public function run_likes(DataIter $iter)
@@ -218,6 +205,8 @@
 
 		protected $privacy_controller;
 
+		protected $comments_controller;
+
 		public function __construct()
 		{
 			$this->model = get_model('DataModelFotoboek');
@@ -238,6 +227,7 @@
 				array(
 					'faces_controller' => $this->faces_controller,
 					'likes_controller' => $this->likes_controller,
+					'comments_controller' => $this->comments_controller,
 					'privacy_controller' => $this->privacy_controller),
 				$params ?: array()
 			);
@@ -754,10 +744,7 @@
 
 			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
 
-			$reactie_controller = new ControllerFotoboekReacties($photo);
-			$reacties = $reactie_controller->run_embedded();
-
-			return $this->get_content('foto', $photo, compact('book', 'reacties'));
+			return $this->get_content('foto', $photo, compact('book'));
 		}
 
 		protected function _view_read_book(DataIterPhotobook $book)
@@ -818,6 +805,7 @@
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {
+				$this->comments_controller = new ControllerFotoboekComments($photo);
 				$this->likes_controller = new ControllerFotoboekLikes($photo);
 				$this->faces_controller = new ControllerFotoboekFaces($photo);
 				$this->privacy_controller = new ControllerFotoboekPrivacy($photo);
@@ -829,6 +817,8 @@
 					throw new RuntimeException('You cannot access the photo auxiliary functions without also selecting a photo');
 
 				switch ($_GET['module']) {
+					case 'comments':
+						return $this->comments_controller->run();
 					case 'likes':
 						return $this->likes_controller->run();
 					case 'faces':

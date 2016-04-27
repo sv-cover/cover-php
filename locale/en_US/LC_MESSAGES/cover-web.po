@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-03-15 20:02+0100\n"
+"POT-Creation-Date: 2016-04-27 18:11+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -28,6 +28,8 @@ msgstr "Calendar %d-%d"
 #: ../../../agenda.php:26 ../../../themes/default/views/agenda/agenda.php:80
 #: ../../../themes/default/views/header.php:76
 #: ../../../themes/default/views/header.php:96
+#: ../../../tmp/templates/themes_default_views_layout_agenda.blade.php:5
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:38
 #: ../../../themes/default/views/agenda/commissie.phtml:2
 #: ../../../themes/default/views/agenda/login.phtml:2
 #: ../../../themes/default/views/agenda/moderate.phtml:1
@@ -82,6 +84,7 @@ msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
 #: ../../../almanak.php:30 ../../../themes/default/views/header.php:165
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:65
 #: ../../../themes/default/views/almanak/almanak.phtml:1
 msgid "Almanak"
 msgstr "Almanac"
@@ -100,6 +103,7 @@ msgid "Boeken"
 msgstr "Books"
 
 #: ../../../commissies.php:83 ../../../themes/default/views/header.php:157
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:55
 #: ../../../themes/default/views/actieveleden/index.phtml:13
 #: ../../../themes/default/views/commissies/index.phtml:5
 #: ../../../themes/default/views/profiel/_public.phtml:48
@@ -171,6 +175,8 @@ msgstr "Log in to Dreamspark"
 #: ../../../themes/default/views/forum.php:1242
 #: ../../../themes/default/views/header.php:98
 #: ../../../themes/default/views/header.php:110
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:13
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:40
 msgid "Forum"
 msgstr "Forum"
 
@@ -196,35 +202,35 @@ msgstr ""
 "\n"
 "The WebCie"
 
-#: ../../../fotoboek.php:186
+#: ../../../fotoboek.php:173
 #: ../../../themes/default/views/fotoboek/privacy.phtml:1
 #: ../../../themes/default/views/fotoboek/privacy.phtml:12
 msgid "Zichtbaarheid foto"
 msgstr "Visibility of photo"
 
-#: ../../../fotoboek.php:235 ../../../include/models/DataModelFotoboek.php:475
+#: ../../../fotoboek.php:224 ../../../include/models/DataModelFotoboek.php:485
 #: ../../../themes/default/views/fotoboek/_books_backup.phtml:36
 #: ../../../themes/default/views/fotoboek/add_photos.phtml:1
 #: ../../../themes/default/views/fotoboek/book_not_found.phtml:1
 #: ../../../themes/default/views/fotoboek/edit_fotoboek.phtml:1
-#: ../../../themes/default/views/fotoboek/foto.phtml:1
+#: ../../../themes/default/views/fotoboek/foto.phtml:9
 #: ../../../themes/default/views/fotoboek/foto_backup.phtml:1
 #: ../../../themes/default/views/fotoboek/fotoboek.phtml:1
 #: ../../../themes/default/views/fotoboek/photo_not_found.phtml:1
 msgid "Fotoboek"
 msgstr "Photo album"
 
-#: ../../../include/controllers/Controller.php:130
+#: ../../../include/controllers/Controller.php:135
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
-#: ../../../include/controllers/Controller.php:148
+#: ../../../include/controllers/Controller.php:153
 #: ../../../themes/default/views/common.php:3
 #: ../../../themes/default/views/nieuwlid/auth.phtml:1
 msgid "Geen toegang"
 msgstr "No access"
 
-#: ../../../include/controllers/Controller.php:173
+#: ../../../include/controllers/Controller.php:178
 msgid ""
 "Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
 "de WebCie (webcie@svcover.nl)"
@@ -458,41 +464,42 @@ msgstr "$from_day|ordinal till $till_day|ordinal of $till_month"
 msgid "$from_time tot $till_time"
 msgstr "$from_time till $till_time"
 
-#: ../../../include/functions.php:595
+#: ../../../include/functions.php:596
+#: ../../../themes/default/views/fotoboek/_photo_faces.phtml:37
 msgid "en"
 msgstr "and"
 
-#: ../../../include/functions.php:610
+#: ../../../include/functions.php:611
 msgid "nu"
 msgstr "now"
 
-#: ../../../include/functions.php:618
+#: ../../../include/functions.php:619
 msgid "net"
 msgstr "just"
 
-#: ../../../include/functions.php:619
+#: ../../../include/functions.php:620
 msgid "1 minuut geleden"
 msgstr "1 minute ago"
 
-#: ../../../include/functions.php:620
+#: ../../../include/functions.php:621
 #, php-format
 msgid "%d minuten geleden"
 msgstr "%d minutes ago"
 
-#: ../../../include/functions.php:621
+#: ../../../include/functions.php:622
 msgid "1 uur geleden"
 msgstr "1 hour ago"
 
-#: ../../../include/functions.php:622
+#: ../../../include/functions.php:623
 #, php-format
 msgid "%d uren geleden"
 msgstr "%d hours ago"
 
-#: ../../../include/functions.php:624
+#: ../../../include/functions.php:625
 msgid "Gisteren"
 msgstr "Yesterday"
 
-#: ../../../include/functions.php:625
+#: ../../../include/functions.php:626
 #, php-format
 msgid "%d dagen geleden"
 msgstr "%d days ago"
@@ -759,6 +766,7 @@ msgid "Mailinglijst"
 msgstr "Mailing list"
 
 #: ../../../mailinglijsten.php:28 ../../../themes/default/views/header.php:166
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:66
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:5
 #: ../../../themes/default/views/mailinglijsten/mailinglists.phtml:5
 #: ../../../themes/default/views/profiel/_mailinglists.phtml:6
@@ -771,6 +779,7 @@ msgid "Nieuw lid"
 msgstr "New member"
 
 #: ../../../profiel.php:41 ../../../themes/default/views/header.php:288
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:5
 #: ../../../themes/default/views/mailinglijsten/mailinglist.phtml:131
 #: ../../../themes/default/views/profiel/not_found.phtml:1
 #: ../../../themes/default/views/profiel/profiel.phtml:61
@@ -848,10 +857,12 @@ msgid "Zoeken"
 msgstr "Search"
 
 #: ../../../sessions.php:106
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:44
 msgid "Verkeerde combinatie van e-mailadres en wachtwoord"
 msgstr "Wrong combination of e-mail address and password"
 
 #: ../../../settings.php:15 ../../../themes/default/views/header.php:103
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:46
 #: ../../../themes/default/views/settings/index.phtml:1
 msgid "Instellingen"
 msgstr "Settings"
@@ -1162,7 +1173,6 @@ msgstr "Option"
 #: ../../../themes/default/views/forum.php:1055
 #: ../../../themes/default/views/forum.php:1126
 #: ../../../themes/default/views/forum.php:1179
-#: ../../../themes/default/views/fotoboek/_photo.phtml:27
 #: ../../../themes/default/views/profiel/_personal.phtml:25
 #: ../../../themes/default/views/profiel/_privacy.phtml:39
 #: ../../../themes/default/views/profiel/_profile.phtml:31
@@ -1179,12 +1189,11 @@ msgstr "Add a new poll"
 
 #: ../../../themes/default/views/forum.php:450
 #: ../../../themes/default/views/poll/_vote_form.phtml:15
-#: ../../../themes/default/views/poll/_vote_results.phtml:24
+#: ../../../themes/default/views/poll/_vote_results.phtml:23
 msgid "Nieuwe poll"
 msgstr "New poll"
 
 #: ../../../themes/default/views/forum.php:472
-#: ../../../themes/default/views/fotoboekreacties/index.phtml:2
 #: ../../../themes/default/views/weblog/_weblog.phtml:19
 msgid "Reacties"
 msgstr "Comments"
@@ -1197,6 +1206,7 @@ msgstr "Last"
 #: ../../../themes/default/views/forum.php:908
 #: ../../../themes/default/views/forum.php:1030
 #: ../../../themes/default/views/header.php:224
+#: ../../../tmp/templates/themes_default_views_layout_poll.blade.php:6
 msgid "Poll"
 msgstr "Poll"
 
@@ -1370,6 +1380,7 @@ msgstr "Remove selected groups"
 
 #: ../../../themes/default/views/forum.php:1104
 #: ../../../themes/default/views/header.php:108
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:11
 #: ../../../themes/default/views/commissies/_leden.phtml:3
 #: ../../../themes/default/views/profiel/_privacy.phtml:12
 #: ../../../themes/default/views/workinggroups/_leden.phtml:3
@@ -1390,6 +1401,7 @@ msgstr "Add group"
 
 #: ../../../themes/default/views/forum.php:1149
 #: ../../../themes/default/views/header.php:99
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:41
 msgid "Leden toevoegen"
 msgstr "Add a member"
 
@@ -1402,8 +1414,9 @@ msgid "Polls"
 msgstr "Polls"
 
 #: ../../../themes/default/views/forum.php:1161
-#: ../../../themes/default/views/header.php:162 ../../../weblog.php:14
-#: ../../../themes/default/views/weblog/weblog.phtml:1
+#: ../../../themes/default/views/header.php:162
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:59
+#: ../../../weblog.php:14 ../../../themes/default/views/weblog/weblog.phtml:1
 msgid "Weblog"
 msgstr "Weblog"
 
@@ -1433,6 +1446,7 @@ msgid "Bericht verwijderen"
 msgstr "Remove message"
 
 #: ../../../themes/default/views/header.php:52
+#: ../../../tmp/templates/themes_default_views_layout_agenda.blade.php:21
 #: ../../../themes/default/views/agenda/edit.phtml:82
 msgid "Externe activiteit"
 msgstr "External activity"
@@ -1443,63 +1457,77 @@ msgid "Nog niet gepubliceerd"
 msgstr "Not yet published"
 
 #: ../../../themes/default/views/header.php:69
+#: ../../../tmp/templates/themes_default_views_layout_agenda.blade.php:29
 #: ../../../themes/default/views/agenda/index.phtml:45
 msgid "Er staan op dit moment geen activiteiten op de agenda."
 msgstr "There are no activities on the calendar at the moment. "
 
 #: ../../../themes/default/views/header.php:72
+#: ../../../tmp/templates/themes_default_views_layout_agenda.blade.php:33
 #: ../../../themes/default/views/agenda/agendapunt.phtml:113
 msgid "Volledige agenda"
 msgstr "Complete calendar"
 
 #: ../../../themes/default/views/header.php:83
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:4
 msgid "Home"
 msgstr "Home"
 
 #: ../../../themes/default/views/header.php:88
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:7
 msgid "Beheer"
 msgstr "Admin"
 
 #: ../../../themes/default/views/header.php:93
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:42
 #: ../../../themes/default/views/show/edit.phtml:25
 msgid "Pagina maken"
 msgstr "Make a page"
 
 #: ../../../themes/default/views/header.php:97
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:39
 msgid "Actieve leden"
 msgstr "Active Members"
 
 #: ../../../themes/default/views/header.php:107
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:10
 msgid "Vereniging"
 msgstr "Association"
 
 #: ../../../themes/default/views/header.php:109
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:12
 msgid "Bedrijven"
 msgstr "Companies"
 
 #: ../../../themes/default/views/header.php:111
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:14
 msgid "Foto's"
 msgstr "Photos"
 
 #: ../../../themes/default/views/header.php:112
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:15
 #: ../../../themes/default/views/lidworden/_form.phtml:52
 msgid "Studie"
 msgstr "Study"
 
 #: ../../../themes/default/views/header.php:113
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:16
 #: ../../../themes/default/views/lidworden/_form.phtml:39
 msgid "Contact"
 msgstr "Contact"
 
 #: ../../../themes/default/views/header.php:133
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:30
 msgid "Verander taal"
 msgstr "Change Language"
 
 #: ../../../themes/default/views/header.php:155
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:53
 msgid "Bestuur"
 msgstr "Governing Board"
 
 #: ../../../themes/default/views/header.php:156
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:54
 msgid "Vorige besturen"
 msgstr "Former Boards"
 
@@ -1509,83 +1537,104 @@ msgid "Werkgroepen"
 msgstr "Working groups"
 
 #: ../../../themes/default/views/header.php:159
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:56
 msgid "Zusterverenigingen"
 msgstr "Sister unions"
 
 #: ../../../themes/default/views/header.php:160
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:57
 msgid "Lid/donateur worden"
 msgstr "Become a member/donor"
 
 #: ../../../themes/default/views/header.php:161
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:58
 msgid "Documenten"
 msgstr "Documents"
 
 #: ../../../themes/default/views/header.php:167
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:67
 msgid "Wiki"
 msgstr "Wiki"
 
 #: ../../../themes/default/views/header.php:168
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:68
 msgid "Standaardocumenten"
 msgstr "Documents & Templates"
 
 #: ../../../themes/default/views/header.php:169
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:69
 #: ../../../themes/default/views/stickers/index.phtml:9
 msgid "Stickerkaart"
 msgstr "Sticker map"
 
 #: ../../../themes/default/views/header.php:170
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:70
 msgid "Merchandise"
 msgstr "Merchandise"
 
 #: ../../../themes/default/views/header.php:171
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:71
 msgid "Dreamspark"
 msgstr "Dreamspark"
 
 #: ../../../themes/default/views/header.php:174
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:77
 msgid "Bedrijfsprofielen"
 msgstr "Company profiles"
 
 #: ../../../themes/default/views/header.php:175
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:78
 msgid "Vacatures"
 msgstr "Vacancies"
 
 #: ../../../themes/default/views/header.php:176
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:79
 msgid "Stages/afstudeerplaatsen"
 msgstr "Internships/Graduate programs"
 
 #: ../../../themes/default/views/header.php:177
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:80
 msgid "Sponsormogelijkheden"
 msgstr "Sponsorship opportunities"
 
 #: ../../../themes/default/views/header.php:180
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:86
 msgid "K.I."
 msgstr "A.I."
 
 #: ../../../themes/default/views/header.php:181
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:87
 msgid "Informatica"
 msgstr "Computing Science"
 
 #: ../../../themes/default/views/header.php:182
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:88
 msgid "Alumni"
 msgstr "Alumni"
 
 #: ../../../themes/default/views/header.php:183
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:89
 msgid "Boeken bestellen"
 msgstr "Order books"
 
 #: ../../../themes/default/views/header.php:184
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:90
 msgid "Info voor studenten"
 msgstr "Student info"
 
 #: ../../../themes/default/views/header.php:185
+#: ../../../tmp/templates/themes_default_views_layout_topmenu.blade.php:91
 msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
 #: ../../../themes/default/views/header.php:222
+#: ../../../tmp/templates/themes_default_views_layout_poll.blade.php:14
 msgid "Er is op dit moment geen poll"
 msgstr "There is no poll at the moment"
 
 #: ../../../themes/default/views/header.php:269
+#: ../../../tmp/templates/themes_default_views_layout_birthdays.blade.php:6
+#: ../../../tmp/templates/themes_default_views_layout_jarigen.blade.php:6
 #, php-format
 msgid "Er is vandaag %d jarige:"
 msgid_plural "Er zijn vandaag %d jarigen:"
@@ -1593,14 +1642,19 @@ msgstr[0] "There is %d birthday today:"
 msgstr[1] "There are %d birthdays today:"
 
 #: ../../../themes/default/views/header.php:271
+#: ../../../tmp/templates/themes_default_views_layout_birthdays.blade.php:8
+#: ../../../tmp/templates/themes_default_views_layout_jarigen.blade.php:8
 msgid "Er zijn vandaag geen jarigen"
 msgstr "It's nobody's birthday today"
 
 #: ../../../themes/default/views/header.php:273
+#: ../../../tmp/templates/themes_default_views_layout_birthdays.blade.php:2
+#: ../../../tmp/templates/themes_default_views_layout_jarigen.blade.php:2
 msgid "Jarigen"
 msgstr "Birthdays"
 
 #: ../../../themes/default/views/header.php:286
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:3
 #: ../../../themes/default/views/profiel/_sessions.phtml:19
 #: ../../../themes/default/views/profiel/sessions.phtml:10
 #: ../../../themes/default/views/sessions/sessions.phtml:10
@@ -1608,11 +1662,13 @@ msgid "Ingelogd"
 msgstr "Logged in"
 
 #: ../../../themes/default/views/header.php:287
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:4
 #: ../../../themes/default/views/sessions/logout.phtml:1
 msgid "Uitloggen"
 msgstr "Logout"
 
 #: ../../../themes/default/views/header.php:291
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:8
 msgid "Bekijk als…"
 msgstr "Impersonate…"
 
@@ -1622,6 +1678,7 @@ msgid "Log in"
 msgstr "Log in"
 
 #: ../../../themes/default/views/header.php:312
+#: ../../../tmp/templates/themes_default_views_layout_message.blade.php:11
 #, php-format
 msgid "Er staat nog %d agendapunt in de wachtrij"
 msgid_plural "Er staan nog %d agendapunten in de wachtrij"
@@ -1682,6 +1739,47 @@ msgstr "Member (hidden)"
 #: ../../../themes/default/views/profiel/profiel.php:69
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
+
+#: ../../../tmp/templates/themes_default_views_homepage_introduction.blade.php:8
+#: ../../../themes/default/views/homepage/_introduction.phtml:8
+msgid "Bewerk introductie"
+msgstr "Modify introduction"
+
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:3
+msgid "[Onbekend]"
+msgstr "[Unknown]"
+
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:14
+msgid "wachtwoord vergeten?"
+msgstr "Forgot your password?"
+
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:15
+msgid "lid worden"
+msgstr "Join Cover"
+
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:19
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:20
+#: ../../../themes/default/views/sessions/login.phtml:20
+#: ../../../themes/default/views/sessions/login.phtml:21
+msgid "E-mailadres"
+msgstr "E-Mail address"
+
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:26
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:27
+#: ../../../themes/default/views/sessions/login.phtml:25
+#: ../../../themes/default/views/sessions/login.phtml:26
+msgid "Wachtwoord"
+msgstr "Password"
+
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:35
+msgid "Blijvend"
+msgstr "Permanent"
+
+#: ../../../tmp/templates/themes_default_views_layout_login.blade.php:39
+#: ../../../themes/default/views/sessions/login.phtml:1
+#: ../../../themes/default/views/sessions/login.phtml:8
+msgid "Inloggen"
+msgstr "Log in"
 
 #: ../../../wachtwoordvergeten.php:11
 #: ../../../themes/default/views/wachtwoordvergeten/noaccount.phtml:2
@@ -1771,7 +1869,7 @@ msgstr "Are you sure you want to delete this calendar event"
 #: ../../../themes/default/views/agenda/index.phtml:82
 #: ../../../themes/default/views/announcements/index.phtml:51
 #: ../../../themes/default/views/announcements/single.phtml:27
-#: ../../../themes/default/views/fotoboekreacties/single.phtml:74
+#: ../../../themes/default/views/fotoboekreacties/single.phtml:65
 #: ../../../themes/default/views/settings/index.phtml:21
 msgid "Verwijder"
 msgstr "Delete"
@@ -1780,7 +1878,7 @@ msgstr "Delete"
 #: ../../../themes/default/views/agenda/index.phtml:85
 #: ../../../themes/default/views/announcements/index.phtml:48
 #: ../../../themes/default/views/announcements/single.phtml:24
-#: ../../../themes/default/views/fotoboekreacties/single.phtml:69
+#: ../../../themes/default/views/fotoboekreacties/single.phtml:60
 #: ../../../themes/default/views/settings/index.phtml:18
 msgid "Wijzig"
 msgstr "Modify"
@@ -1905,7 +2003,7 @@ msgstr "Starting year"
 
 #: ../../../themes/default/views/almanak/almanak.phtml:21
 #: ../../../themes/default/views/fotoboek/_fotoboek_edit.phtml:12
-#: ../../../themes/default/views/fotoboek/_photo.phtml:68
+#: ../../../themes/default/views/fotoboek/photo_controls.phtml:21
 #: ../../../themes/default/views/profiel/_visibility.phtml:12
 msgid "Zichtbaarheid"
 msgstr "Visibility"
@@ -2428,9 +2526,13 @@ msgstr "Save photo album"
 msgid "Fotoboek aanmaken"
 msgstr "Create photo album"
 
-#: ../../../themes/default/views/fotoboek/_last_reacties.phtml:4
+#: ../../../themes/default/views/fotoboek/_last_reacties.phtml:12
 msgid "Laatste reacties"
 msgstr "Last comments"
+
+#: ../../../themes/default/views/fotoboek/_last_reacties.phtml:20
+msgid "geen titel"
+msgstr "no title"
 
 #: ../../../themes/default/views/fotoboek/_mark_read_button.phtml:9
 msgid "Markeer alle boeken als gezien"
@@ -2440,48 +2542,52 @@ msgstr "Mark all albums as seen"
 msgid "Deze foto komt uit"
 msgstr "This photo originates from"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:42
+#: ../../../themes/default/views/fotoboek/_photo.phtml:11
 msgid "Ga naar vorige foto"
 msgstr "Go to the previous photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:43
+#: ../../../themes/default/views/fotoboek/_photo.phtml:12
 msgid "Vorige"
 msgstr "Previous"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:48
+#: ../../../themes/default/views/fotoboek/_photo.phtml:17
 msgid "Ga naar volgende foto"
 msgstr "Go to next photo"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:49
+#: ../../../themes/default/views/fotoboek/_photo.phtml:18
 msgid "Volgende"
 msgstr "Next"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:56
-#: ../../../themes/default/views/fotoboek/_photo.phtml:151
-msgid "Haal markering als favoriet weg"
-msgstr "Remove favorite mark"
-
-#: ../../../themes/default/views/fotoboek/_photo.phtml:56
-#: ../../../themes/default/views/fotoboek/_photo.phtml:152
-msgid "Markeer als favoriet"
-msgstr "Mark as favorite"
-
-#: ../../../themes/default/views/fotoboek/_photo.phtml:60
-msgid "Tag gezichten"
-msgstr "Tag faces"
-
-#: ../../../themes/default/views/fotoboek/_photo.phtml:62
-msgid "Download"
-msgstr "Download"
-
-#: ../../../themes/default/views/fotoboek/_photo.phtml:94
+#: ../../../themes/default/views/fotoboek/_photo.phtml:44
 msgid "Klik om te taggen"
 msgstr "Click to tag"
 
-#: ../../../themes/default/views/fotoboek/_photo.phtml:96
-#: ../../../themes/default/views/fotoboek/_photo.phtml:350
+#: ../../../themes/default/views/fotoboek/_photo.phtml:46
 msgid "Niet getagged"
 msgstr "Not yet tagged"
+
+#: ../../../themes/default/views/fotoboek/_photo_faces.phtml:25
+#: ../../../themes/default/views/fotoboek/_photo_faces.phtml:35
+#, php-format
+msgid "%d onbekend gezicht"
+msgid_plural "%d onbekende gezichten"
+msgstr[0] "%d unknown face"
+msgstr[1] "%d unknown faces"
+
+#: ../../../themes/default/views/fotoboek/_photo_faces.phtml:34
+#: ../../../themes/default/views/fotoboek/_photo_faces.phtml:39
+#, php-format
+msgid "Een foto met %s."
+msgstr "A photo with %s."
+
+#: ../../../themes/default/views/fotoboek/_photo_faces.phtml:36
+#, php-format
+msgid "%d onbekende gezichten"
+msgstr "%d unknown faces"
+
+#: ../../../themes/default/views/fotoboek/_photo_faces.phtml:40
+msgid "Tag gezichten"
+msgstr "Tag faces"
 
 #: ../../../themes/default/views/fotoboek/_photos.phtml:41
 #, php-format
@@ -2621,7 +2727,7 @@ msgstr "Add photo album"
 msgid "Onderdeel van"
 msgstr "Part of"
 
-#: ../../../themes/default/views/fotoboek/foto.phtml:1
+#: ../../../themes/default/views/fotoboek/foto.phtml:9
 #: ../../../themes/default/views/fotoboek/foto_backup.phtml:1
 #: ../../../themes/default/views/fotoboek/photo_not_found.phtml:1
 #: ../../../themes/default/views/profiel/_photo.phtml:2
@@ -2642,6 +2748,24 @@ msgstr ""
 #: ../../../themes/default/views/fotoboek/fotoboek.phtml:11
 msgid "PhotoCee"
 msgstr "PhotoCee"
+
+#: ../../../themes/default/views/fotoboek/photo_comments.phtml:4
+msgid "Er zijn nog geen reacties"
+msgstr "There are no comments yet"
+
+#: ../../../themes/default/views/fotoboek/photo_controls.phtml:11
+#: ../../../themes/default/views/fotoboek/photo_controls.phtml:12
+msgid "Haal markering als favoriet weg"
+msgstr "Remove favorite mark"
+
+#: ../../../themes/default/views/fotoboek/photo_controls.phtml:11
+#: ../../../themes/default/views/fotoboek/photo_controls.phtml:12
+msgid "Markeer als favoriet"
+msgstr "Mark as favorite"
+
+#: ../../../themes/default/views/fotoboek/photo_controls.phtml:16
+msgid "Download"
+msgstr "Download"
 
 #: ../../../themes/default/views/fotoboek/photo_not_found.phtml:2
 msgid "De opgegeven foto bestaat niet"
@@ -2669,59 +2793,35 @@ msgid "Verwijder reactie"
 msgstr "Remove comment"
 
 #: ../../../themes/default/views/fotoboekreacties/confirm_delete.phtml:9
-#: ../../../themes/default/views/fotoboekreacties/form.phtml:15
+#: ../../../themes/default/views/fotoboekreacties/form.phtml:13
 msgid "Terug naar foto"
 msgstr "Return to photo"
 
-#: ../../../themes/default/views/fotoboekreacties/form.phtml:6
+#: ../../../themes/default/views/fotoboekreacties/form.phtml:4
 msgid "Typ hier je reactie…"
 msgstr "Type your comment here…"
 
-#: ../../../themes/default/views/fotoboekreacties/form.phtml:11
+#: ../../../themes/default/views/fotoboekreacties/form.phtml:9
 msgid "Plaats reactie"
 msgstr "Post comment"
 
-#: ../../../themes/default/views/fotoboekreacties/form.phtml:11
+#: ../../../themes/default/views/fotoboekreacties/form.phtml:9
 msgid "Wijzig reactie"
 msgstr "Modify comment"
 
-#: ../../../themes/default/views/fotoboekreacties/index.phtml:4
-msgid "Een nieuwe reactie toevoegen"
-msgstr "Add a new comment"
-
-#: ../../../themes/default/views/fotoboekreacties/index.phtml:4
-msgid "Nieuwe reactie"
-msgstr "New comment"
-
-#: ../../../themes/default/views/fotoboekreacties/index.phtml:8
-msgid "{{Log in}} om te kunnen reageren."
-msgstr "{{Log in}} to be able to respond."
-
-#: ../../../themes/default/views/fotoboekreacties/index.phtml:40
-msgid "Er zijn nog geen reacties"
-msgstr "There are no comments yet"
-
-#: ../../../themes/default/views/fotoboekreacties/single.phtml:15
+#: ../../../themes/default/views/fotoboekreacties/single.phtml:13
 #, php-format
 msgid "%s vindt dit leuk"
 msgid_plural "%s vinden dit leuk"
 msgstr[0] "%s likes this"
 msgstr[1] "%s like this"
 
-#: ../../../themes/default/views/fotoboekreacties/single.phtml:21
+#: ../../../themes/default/views/fotoboekreacties/single.phtml:19
 #, php-format
 msgid "%d like"
 msgid_plural "%d likes"
 msgstr[0] "%d like"
 msgstr[1] "%d likes"
-
-#: ../../../themes/default/views/fotoboekreacties/single.phtml:24
-msgid "geen titel"
-msgstr "no title"
-
-#: ../../../themes/default/views/homepage/_introduction.phtml:8
-msgid "Bewerk introductie"
-msgstr "Modify introduction"
 
 #: ../../../themes/default/views/jarigen/jarigen.phtml:12
 msgid "Vandaag geen jarige leden."
@@ -3156,11 +3256,11 @@ msgstr "Import member database"
 msgid "Stem"
 msgstr "Vote"
 
-#: ../../../themes/default/views/poll/_vote_results.phtml:16
+#: ../../../themes/default/views/poll/_vote_results.phtml:15
 msgid "Aantal stemmen"
 msgstr "Number of votes"
 
-#: ../../../themes/default/views/poll/_vote_results.phtml:22
+#: ../../../themes/default/views/poll/_vote_results.phtml:21
 msgid "{{Log in}} om te stemmen."
 msgstr "{{Log in}} to vote."
 
@@ -3411,21 +3511,6 @@ msgid "Er is %d zoekresultaat"
 msgid_plural "Er zijn %d zoekresultaten"
 msgstr[0] "There is %d search result"
 msgstr[1] "There are %d search results"
-
-#: ../../../themes/default/views/sessions/login.phtml:1
-#: ../../../themes/default/views/sessions/login.phtml:8
-msgid "Inloggen"
-msgstr "Login"
-
-#: ../../../themes/default/views/sessions/login.phtml:20
-#: ../../../themes/default/views/sessions/login.phtml:21
-msgid "E-mailadres"
-msgstr "E-Mail address"
-
-#: ../../../themes/default/views/sessions/login.phtml:25
-#: ../../../themes/default/views/sessions/login.phtml:26
-msgid "Wachtwoord"
-msgstr "Password"
 
 #: ../../../themes/default/views/sessions/login.phtml:31
 msgid "Blijf ingelogd"
@@ -3849,18 +3934,6 @@ msgstr "Modify working group page"
 
 #~ msgid "Stickers"
 #~ msgstr "Stickers"
-
-#~ msgid "[Onbekend]"
-#~ msgstr "[Unknown]"
-
-#~ msgid "wachtwoord vergeten?"
-#~ msgstr "Forgot your password?"
-
-#~ msgid "lid worden"
-#~ msgstr "Join Cover"
-
-#~ msgid "Blijvend"
-#~ msgstr "Permanent"
 
 #~ msgid ""
 #~ "Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden "

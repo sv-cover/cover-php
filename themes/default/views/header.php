@@ -392,7 +392,7 @@
 			echo '<link rel="stylesheet" href="' . get_theme_data('styles/' . $style . '.css')  . '" type="text/css">' . "\n";
 		
 		echo '
-		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="' . get_theme_data('data/jquery-2.2.0.min.js') . '"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 		<script type="text/javascript" src="' . get_theme_data('data/expander.js') . '"></script>
 		<script type="text/javascript" src="' . get_theme_data('data/common.js') . '"></script>

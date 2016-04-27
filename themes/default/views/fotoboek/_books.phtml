@@ -27,7 +27,7 @@ if (!$children || count($children) == 0)
 						$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
 					
 					if (count($subtitle) > 0)
-						echo ($book->get('titel') ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
+						echo ($book->has('titel') ? '<br>' : '') . '(<span class="fotoboek_highlight">' . markup_format_text(implode_human($subtitle)) . '</span>)';
 				?>
 			</span>
 		</a>

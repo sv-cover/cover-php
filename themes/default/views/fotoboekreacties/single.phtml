@@ -2,41 +2,31 @@
 $days = get_days();
 $months = get_months();
 ?>
-<div class="replyBox comment" id="comment<?=$iter->get_id()?>">
-	<div class="title">
-		<span class="replyDetails">
-			<div class="right">
-				<span class="number-of-likes" <?=
-					$iter['likes'] == 0
-						? ''
-						: sprintf(' title="%s"', 
-							markup_format_attribute(
-								sprintf(
-									_ngettext('%s vindt dit leuk', '%s vinden dit leuk', $iter['likes']), 
-									implode_human(
-										array_map('member_first_name', $iter['liked_by'])
-									)
-								)
+<div class="comment" id="comment<?=$iter->get_id()?>">
+	<div class="comment-meta">
+		<span class="number-of-likes" <?=
+			$iter['likes'] == 0
+				? ''
+				: sprintf(' title="%s"', 
+					markup_format_attribute(
+						sprintf(
+							_ngettext('%s vindt dit leuk', '%s vinden dit leuk', $iter['likes']), 
+							implode_human(
+								array_map('member_first_name', $iter['liked_by'])
 							)
-						); ?>><i class="fa fa-thumbs-o-up"></i> <?=__N('%d like', '%d likes', $iter['likes'])?></span>
-				
-				<?php if ($iter->has('fotoboek__id')): ?>
-				<span class="subtitle"><a href="fotoboek.php?photo=<?= $iter->get('foto') ?>"><?= markup_format_text($iter->getIter('fotoboek')->get('titel')) ?> / <?= markup_format_text(($iter->has('beschrijving') ? $iter->get('beschrijving') : __('geen titel'))) ?></a></span>
-				<?php endif ?>
-
-				<span class="timestamp"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter->get('dagnaam')], $iter->get('datum'), $months[$iter->get('maand')], $iter->get('uur'), $iter->get('minuut')) ?></span>
-			</div>
-			<?= markup_format_text(member_full_name($iter->get('auteur'), BE_PERSONAL)) ?>
-		</span>
+						)
+					)
+				); ?>><?=__N('%d like', '%d likes', $iter['likes'])?></span>
+		
+		<span class="timestamp"><?= sprintf('%s %d %s, %02d:%02d', $days[$iter['dagnaam']], $iter['datum'], $months[$iter['maand']], $iter['uur'], $iter['minuut']) ?></span>
 	</div>
 
-	<?php if ($iter->has('fotoboek__id')): ?>
-	<a href="fotoboek.php?photo=<?= $iter->get('foto') ?>" class="thumbnail">
-		<img src="<?=markup_format_attribute($iter->getIter('foto', 'DataIterPhoto')->get_url(null, 400))?>" height="100">
+	<a href="profiel.php?lid=<?=$iter['auteur']?>" class="comment-author">
+		<img src="foto.php?lid_id=<?=$iter['auteur']?>&amp;format=square&amp;width=200" width="150">
+		<span class="name"><?= markup_format_text(member_full_name($iter['auteur'], BE_PERSONAL)) ?></span>
 	</a>
-	<?php endif ?>
-	
-	<div class="bericht">
+		
+	<div class="comment-message">
 		<?= markup_parse($iter->get('reactie')) ?>
 	</div>
 
@@ -45,33 +35,34 @@ $months = get_months();
 			<?php if ($iter->is_liked_by(get_identity()->get_member())): ?>
 				<li>
 					<form method="post"
-						action="fotoboek.php?photo=<?=$iter['foto']?>&amp;comment_view=likes&amp;comment_id=<?=$iter->get_id()?>"
+						action="<?=markup_format_attribute($controller->link_to_like($iter))?>"
 						data-partial-selector="#comment<?=$iter['id']?>"
 						data-placement-selector="#comment<?=$iter['id']?>">
 						<input type="hidden" name="action" value="unlike">
-						<button type="submit" class="link"><i class="fa fa-thumbs-o-up"></i> Unlike</button>
+						<button type="submit" class="link comment-like-button">Unlike</button>
 					</form>
 				</li>
 			<?php else: ?>
 				<li>
-					<form method="post" action="fotoboek.php?photo=<?=$iter['foto']?>&amp;comment_view=likes&amp;comment_id=<?=$iter->get_id()?>"
+					<form method="post"
+						action="<?=markup_format_attribute($controller->link_to_like($iter))?>"
 						data-partial-selector="#comment<?=$iter['id']?>"
 						data-placement-selector="#comment<?=$iter['id']?>">
 						<input type="hidden" name="action" value="like">
-						<button type="submit" class="link"><i class="fa fa-thumbs-o-up"></i> Like</button>
+						<button type="submit" class="link comment-like-button">Like</button>
 					</form>
 				</li>
 			<?php endif ?>
 		<?php endif ?>
 		<?php if (get_policy($model)->user_can_update($iter)): ?>
 		<li><a href="<?=markup_format_attribute($controller->link_to_update($iter))?>"
-			data-partial-selector=".replyBox"
-			data-placement-selector=".replyBox"><?=__('Wijzig')?></a></li>
+			data-partial-selector="#comment-form"
+			data-placement-selector="#comment<?=$iter['id']?>"><?=__('Wijzig')?></a></li>
 		<?php endif ?>
 		<?php if (get_policy($model)->user_can_delete($iter)): ?>
 		<li><a href="<?=markup_format_attribute($controller->link_to_delete($iter))?>"
 			data-partial-selector=".replyBox"
-			data-placement-selector=".replyBox"><?=__('Verwijder')?></a></li>
+			data-placement-selector="modal"><?=__('Verwijder')?></a></li>
 		<?php endif ?>
 	</ul>
 </div>

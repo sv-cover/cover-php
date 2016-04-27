@@ -1,84 +1,34 @@
-<?php
-$like_model = get_model('DataModelFotoboekLikes');
-$likes = count($like_model->get_for_photo($iter));
-$liked = logged_in() && $like_model->is_liked($iter, logged_in('id'));
+<h2 class="photo-title" <?php if (get_policy($book->model)->user_can_update($book)) printf('data-update-link="fotoboek.php?book=%s&amp;photo=%d&amp;view=update_photo"', $book->get_id(), $iter->get_id()) ?>><?=markup_format_text($iter->get('beschrijving')) ?></h2>
 
-$photo_of_current_user = false;
-$photo_is_visible = true;
-$faces = get_model('DataModelFotoboekFaces')->get_for_photo($iter);
-
-if (logged_in()) {
-	// Determine whether this photo would normally show up in photos of me.
-	foreach ($faces as $face) {
-		if ($face->has('lid_id') && $face->get('lid_id') == logged_in('id')) {
-			$photo_of_current_user = true;
-			break;
-		}
-	}
-
-	$privacy_model = get_model('DataModelFotoboekPrivacy');
-	$photo_is_visible = $privacy_model->is_visible($iter, logged_in_member());
-}
-
-?>
-<?php if (member_in_commissie(COMMISSIE_FOTOCIE)): ?>
-	<div class="foto_titel">
-		<form method="post" action="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$iter->get_id() ?>&amp;view=update_photo">
-			<?= input_text('beschrijving', $iter->data) . ' ' . input_submit('subm', __('Opslaan')) ?>
-		</form>
-	</div>
-<?php elseif ($iter->get('beschrijving')): ?>
-	<div class="foto_titel"><?=markup_format_text($iter->get('beschrijving')) ?></div>
-<?php endif ?>
-
-<div id="foto" class="fotoboek_foto">
+<div class="fotoboek_foto">
 <?php
 	$prev = $book->get_previous_photo($iter, 1);
 	$next = $book->get_next_photo($iter, 1);
 ?>
-<div class="photo <?=$liked ? 'liked' : ''?>">
-	<nav class="photo-controls navigation">
+<div class="photo <?=$iter['orientation']?>">
+	<nav class="photo-navigation navigation">
 		<?php if (count($prev) > 0): ?>
-		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?= $prev[0]->get_id() ?>#a" class="prev-button previous" title="<?= markup_format_attribute(__('Ga naar vorige foto')) ?>">
+		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?= $prev[0]->get_id() ?>" class="prev-button previous" title="<?= markup_format_attribute(__('Ga naar vorige foto')) ?>">
 			<?=__('Vorige')?>
 		</a>
 		<?php endif ?>
 
 		<?php if (count($next) > 0): ?>
-		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?= $next[0]->get_id() ?>#a" class="next-button next" title="<?= markup_format_attribute(__('Ga naar volgende foto')) ?>">
+		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?= $next[0]->get_id() ?>" class="next-button next" title="<?= markup_format_attribute(__('Ga naar volgende foto')) ?>">
 			<?=__('Volgende')?>
-		</a>
-		<?php endif ?>
-		
-		<?php if (logged_in()): ?>
-		<form class="like-form" method="post" action="fotoboek.php?photo=<?=$iter->get_id()?>&amp;module=likes">
-			<input type="hidden" name="action" value="toggle">
-			<button type="submit" class="like-button like-count" title="<?=markup_format_attribute($liked ? __('Haal markering als favoriet weg') : __('Markeer als favoriet')) ?>"><?=$likes?></button>
-		</form>
-
-		<input id="tagging-toggle" type="checkbox">
-		<label for="tagging-toggle"><i class="fa fa-tag"></i> <?=__('Tag gezichten')?></label>
-		
-		<a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;view=download"><i class="fa fa-download"></i> <?=__('Download')?></a>
-		<?php endif ?>
-		
-		<?php if ($photo_of_current_user): ?>
-		<a href="fotoboek.php?photo=<?=$iter->get_id()?>&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form">
-			<i class="fa fa-eye-slash"></i>
-			<?=__('Zichtbaarheid')?>
 		</a>
 		<?php endif ?>
 	</nav>
 	
 	<div id="photo" data-id="<?=$iter->get_id()?>" <?php if (get_policy('DataModelFotoboekFaces')->user_can_create()) printf('data-create-action="%s"', markup_format_attribute($faces_controller->link_to_create())) ?>>
-		<figure class="full-size-photo">
+		<figure class="full-size-photo <?=$iter['orientation']?>">
 			<img
 				src="<?=markup_format_attribute($iter->get_url(1600, 1600)) ?>"
 				data-preview="<?=markup_format_attribute($iter->get_url(null, 400)) ?>"
 				<?=vsprintf('width="%d" height="%d"', $iter->get_scaled_size(820, 820))?>>
 		</figure>
 
-		<?php foreach ($faces as $face): ?>
+		<?php foreach (array_filter($iter['faces'], [get_policy('DataModelFotoboekFaces'), 'user_can_read']) as $face): ?>
 		<div id="face_<?=$face->get_id()?>" class="face <?=$face->has('lid_id') || $face->has('custom_label') ? 'tagged' : 'untagged' ?> <?php if ($face->has('lid_id') && $face->get('lid_id') == logged_in('id')) echo 'me' ?>" style="<?=vsprintf("left: %0.2F%%; top: %0.2F%%; width: %0.2F%%; height: %0.2F%%;", $face->get_position())?>"
 			<?php if (get_policy($face->model)->user_can_delete($face)) printf('data-delete-action="%s"',
 				markup_format_attribute($faces_controller->link_to_delete($face))) ?>
@@ -119,262 +69,4 @@ if (logged_in()) {
 		else if (event.keyCode == 38)
 			window.location.href = $("#path a:last-child").attr("href");
 	}
-
-	$(document).ready(function() {
-		$('img[data-preview]').each(function() {
-			var image = $(this);
-
-			var original = new Image();
-			original.onload = function() {
-				image.prop('src', original.src);
-				image.removeClass('loading');
-			};
-
-			original.src = image.prop('src');
-
-			// Show preload image
-			image.prop('src', image.data('preview'));
-			image.addClass('loading');
-		});
-	});
-
-	<?php if (logged_in()): ?>
-	var $photo = $('#photo'),
-		$image = $photo.find('.full-size-photo'),
-		$toggle = $('#tagging-toggle'),
-		cancelNextClick = false;
-
-	$('.like-form').submit(function(e) {
-		e.preventDefault();
-		$form = $(this);
-		var labels = [
-			<?=json_encode(__('Haal markering als favoriet weg'))?>,
-			<?=json_encode(__('Markeer als favoriet'))?>
-		];
-		$.post($form.attr('action'), $form.serializeArray(), function(response) {
-			$form.closest('.photo').toggleClass('liked', response.liked);
-			$form.find('.like-button').attr('title', labels[response.liked ? 0 : 1]);
-			$form.find('.like-count').text(response.likes);
-		});
-	});
-
-	function make_face_editable($face)
-	{
-		var accept = function(lid_id, name) {
-			$face.removeClass('untagged');
-
-			$face.find('.tag-label .name')
-				.text(name)
-				.attr('href', lid_id !== null ? 'profiel.php?lid=' + lid_id : '#');
-
-			var data = lid_id !== null
-				? [{name: 'lid_id', value: lid_id}]
-				: [{name: 'custom_label', value: name}];
-
-			$.post($face.data('update-action'), data, function() {}, 'json');
-		};
-
-		$face.resizable({
-			containment: $photo,
-			aspectRatio: 1,
-			stop: function(event, ui) {
-				var data = [
-					{name: 'w', value: ui.size.width / $image.width()},
-					{name: 'h', value: ui.size.height / $image.height()}
-				];
-
-				$.post($face.data('update-action'), data, function() {}, 'json');
-			}
-		});
-		
-		$face.draggable({
-			containment: $photo,
-			stop: function(event, ui) {
-				var data = [
-					{name: 'x', value: ui.position.left / $image.width()},
-					{name: 'y', value: ui.position.top / $image.height()}
-				];
-				
-				$.post($face.data('update-action'), data, function() {}, 'json');
-			}
-		});
-
-		$('<button class="delete-button">&times;</button>')
-			.click(function(e) {
-				e.preventDefault();
-				e.stopPropagation();
-				$.post($face.data('delete-action'), [], function() {}, 'json');
-				$face.remove();
-			})
-			.appendTo($face);
-
-		$face.click(function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			$face.find('.name').hide();
-			$face.find('.tag-search').show().focus();
-		});
-
-		$('<input type="text" class="tag-search" spellcheck="false">')
-			.on('keydown', function(e) {
-				switch (e.keyCode) {
-					case $.ui.keyCode.TAB:
-						if ($(this).data('ui-autocomplete').menu.active)
-							e.preventDefault();
-						break;
-
-					case $.ui.keyCode.ENTER:
-						if ($(this).data('ui-autocomplete').menu.active)
-							break;
-						accept(null, $(this).val());
-						// fall-through intentional
-					
-					case $.ui.keyCode.ESCAPE:
-						$(this).blur();
-						e.preventDefault();
-						cancelNextClick = false;
-						break;
-				}
-			})
-			.on('blur', function(e) {
-				$(this).val('').hide();
-				$face.find('.name').show();
-				cancelNextClick = true;
-			})
-			.autocomplete({
-				source: function(request, response) {
-					$.getJSON('almanak.php', {
-						'search': request.term
-					}, response);
-				},
-				search: function() {
-					if (this.value.length < 2)
-						return false;
-				},
-				focus: function() {
-					return false;
-				},
-				select: function(event, ui) {
-					accept(ui.item.id, ui.item.name);
-					$(this).blur();
-					cancelNextClick = false;
-					return false;
-				}
-			})
-			.each(function() {
-				$(this).data('ui-autocomplete')._renderItem = function(ul, item) {
-					return $('<li>').append(
-						$('<a class="profile">')
-							.append($('<img class="picture">').attr('src', 'foto.php?lid_id=' + item.id + '&format=square&width=60'))
-							.append($('<span class="name">').text(item.name))
-							.append($('<span class="starting-year">').text(item.starting_year))
-					).appendTo(ul);
-				};
-			})
-			.hide()
-			.appendTo($face);
-
-		return $face;
-	}
-
-	function start_tagging()
-	{
-		$photo.addClass('tagging-enabled');
-
-		$toggle.addClass('active');
-
-		$photo.find('.face').each(function() {
-			make_face_editable($(this));
-		});
-	}
-
-	function stop_tagging()
-	{
-		$photo.removeClass('tagging-enabled');
-
-		$toggle.removeClass('active');
-
-		$photo.find('.face')
-			.resizable('destroy')
-			.draggable('destroy')
-			.off('click focus')
-			.find('.delete-button').remove().end()
-			.find('.tag-search').remove().end()
-			.end();
-	}
-
-	$toggle.change(function() {
-		if (this.checked)
-			start_tagging();
-		else
-			stop_tagging();
-	});
-
-	$photo.click(function(e) {
-		if (!$photo.hasClass('tagging-enabled'))
-			return;
-
-		if (cancelNextClick) {
-			cancelNextClick = false;
-			return;
-		}
-
-		if (e.offsetX === undefined)
-			e.offsetX = e.pageX - $photo.offset().left;
-
-		if (e.offsetY === undefined)
-			e.offsetY = e.pageY - $photo.offset().top;
-		
-		var pos = {
-			top: Math.max(e.offsetY - 50, 0),
-			left: Math.max(e.offsetX - 50, 0)
-		};
-
-		var data = [
-			{name: 'x', value: pos.left / $photo.width()},
-			{name: 'y', value: pos.top / $photo.height()},
-			{name: 'w', value: 100 / $photo.width()},
-			{name: 'h', value: 100 / $photo.height()}
-		];
-
-		$face = $('<div class="face untagged">')
-			.css({
-				position: 'absolute',
-				top: pos.top,
-				left: pos.left,
-				width: 100,
-				height: 100
-			})
-			.appendTo($photo);
-
-		$face.append('<div class="tag-label"><a class="name"><?=__('Niet getagged')?></a></div>');
-
-		$.post($photo.data('create-action'), data, function(resp) {
-			if (resp.errors) {
-				alert("Errors:\n" + resp.errors.join("\n"));
-				return;
-			}
-
-			$face.attr('id', 'face_' + resp.iter.__id);
-			$face.data('update-action', resp.iter.__links.update);
-			$face.data('delete-action', resp.iter.__links.delete);
-			make_face_editable($face);
-		}, 'json');
-	});
-
-	$photo.on('click', '.face.untagged .tag-label', function(e) {
-		if ($photo.hasClass('tagging-enabled'))
-			return;
-
-		e.preventDefault();
-		e.stopPropagation();
-
-		var $face = $(this).closest('.face');
-		
-		$toggle.prop('checked', true).change();
-		
-		$face.click();
-	});
-
-	<?php endif ?>
 </script>

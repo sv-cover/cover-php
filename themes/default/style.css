@@ -855,19 +855,20 @@ border-radius: 0 0 5px 5px;
 	padding-bottom: 0;
 }
 
-.messageBox .actions {
+.actions,
+.messageBox .actions { /* Override default .messageBox ul styling */
 	list-style: none;
 	display: inline-block;
 	margin: 1em 0 0 0;
 }
 
-.messageBox .actions li {
+.actions li {
 	margin: 0 1em 0 0;
 	padding: 0;
 	display: inline-block;
 }
 
-.messageBox .actions li a {
+.actions li a {
 	/*font-weight: normal;*/
 }
 
@@ -1400,8 +1401,8 @@ td.timestamp {
 
 .vertical-form .option-group.columns {
 	columns: 3;
-    -webkit-columns: 3;
-    -moz-columns: 3;
+	-webkit-columns: 3;
+	-moz-columns: 3;
 }
 
 .vertical-form fieldset {
@@ -1978,10 +1979,19 @@ body .ui-autocomplete a.profile .starting-year {
 	position: absolute;
 	width: 20px;
 	height: 20px;
-	font-size: 14px;
+	font-size: 20px;
+	line-height: 20px;
 	right: 0;
 	top: 0;
 	cursor: pointer;
+	z-index: 100;
+}
+
+.modal > .window > .close-button:hover {
+	/*text-shadow: 0 0 3px rgba(64, 64, 255, 0.6);*/
+	background: #c60c30;
+	color: #fff;
+	border-radius: 0 4px 0 0;
 }
 
 .modal + .world {
@@ -2452,7 +2462,7 @@ ul.committee-list > li .position {
 	position: relative;
 	cursor: pointer;
 	padding: 2px;
- 	width: 48px;
+	width: 48px;
 	height: 24px;
 	background: #999;
 	border: none;
@@ -2557,30 +2567,6 @@ ul.committee-list > li .position {
 
 .window #login-form .nav-tabs li.active a {
 	border-bottom-color: #fff;
-}
-
-.comment {
-	position: relative;
-	padding-bottom: 32px;
-	/*margin-bottom: 28px;*/
-}
-
-.comment:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-
-.comment .actions {
-	position: absolute;
-	bottom: 0;
-	height: 24px;
-}
-
-.comment .thumbnail img {
-	float: right;
-	border: 1px solid #ccc;
-	margin-bottom: -24px;
 }
 
 button .fa {

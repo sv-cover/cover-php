@@ -27,7 +27,7 @@ table.navigation td:nth-child(3) {
 	font-size: 16px;
 	line-height: 32px;
 	font-weight: bold;
-	border-bottom: 1px solid #aaa;
+	border-bottom: 1px solid #ccc;
 }
 
 .fotoboek_path.original_path {
@@ -59,12 +59,22 @@ table.navigation td:nth-child(3) {
 	left: 0;
 }
 
+.modal > .photo-window #photo .full-size-photo.landscape > img {
+	width: auto;
+	max-height: calc(100vh - 120px);
+}
+
+.modal > .photo-window #photo .full-size-photo.portrait > img {
+	width: auto;
+	max-height: calc(100vh - 120px);
+}
+
 .slides {
 	width: auto;
 	background: #ccc;
 	padding: 15px 15px;
 	margin: 15px -15px;
-	border: 1px solid #aaa;
+	border: 1px solid #ccc;
 	border-left: 0;
 	border-right: 0;
 	list-style: none;
@@ -95,16 +105,9 @@ table.navigation td:nth-child(3) {
 }
 
 .slides .slide.current {
-	background: #aaa;
+	background: #ccc;
 	margin: -15px 0;
 	padding: 20px 0;
-}
-
-.photo-controls {
-	position: relative;
-	height: 24px;
-	padding: 0 5px;
-	text-align: center;
 }
 
 .photo-controls a,
@@ -122,24 +125,6 @@ table.navigation td:nth-child(3) {
 .photo-controls a:hover,
 .photo-controls label:hover {
 	text-decoration: underline;
-}
-
-.photo-controls input[type=checkbox] {
-	display: none;
-}
-
-.photo-controls input[type=checkbox] + label {
-	-webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.photo-controls input[type=checkbox]:checked + label {
-	background: #004274;
-	color: white;
-	border-radius: 2px;
 }
 
 .photo-controls form {
@@ -170,6 +155,56 @@ table.navigation td:nth-child(3) {
 .liked .like-button {
 	color: white;
 	background-image: url(../images/heart-filled.svg);
+}
+
+.photo-controls .photo-download-link:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+	content: "\f019";
+	margin-right: 0.5ch;
+}
+
+.toggle input[type=checkbox] {
+	display: none;
+}
+
+.toggle input[type=checkbox] + label {
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #004274;
+    cursor: pointer;
+    padding: 2px 5px;
+    display: inline-block;
+}
+
+.toggle:hover input[type=checkbox] + label {
+	text-decoration: underline;
+}
+
+.toggle input[type=checkbox]:checked + label {
+	background: #004274;
+	color: white;
+	border-radius: 2px;
+}
+
+.tag-faces-toggle label:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+	content: "\f02b";
+	margin-right: 0.5ch;
 }
 
 .photo-page-header {
@@ -353,6 +388,16 @@ table.navigation td:nth-child(3) {
 	right: auto;
 }
 
+.photo-title.editable:hover {
+	background: rgb(255,255,125);
+	cursor: pointer;
+}
+
+.photo-title.editable:empty:after {
+	content: 'Click to add title';
+	font-style: italic;
+}
+
 .photo-edit-control {
 	/*display: none;*/
 }
@@ -370,6 +415,7 @@ table.navigation td:nth-child(3) {
 }
 
 .face:hover,
+.face.highlight,
 .tagging-enabled .face {
 	opacity: 1.0;
 }
@@ -381,6 +427,7 @@ table.navigation td:nth-child(3) {
 
 .tagging-enabled .face .tag-label .name[href='#']:hover {
 	cursor: pointer;
+	color: white;
 }
 
 #photo.tagging-enabled {
@@ -428,19 +475,19 @@ table.navigation td:nth-child(3) {
 	z-index: 2;
 }
 
-.face .tag-label .name {
+.face .tag-label a.name {
 	display: inline-block;
 	white-space: nowrap;
 	color: white;
 	font-weight: normal;
 }
 
-.face .tag-label .name[href='#'] {
+.face .tag-label a.name[href='#'] {
 	text-decoration: none;
 	cursor: default;
 }
 
-.face.untagged .tag-label .name {
+.face.untagged .tag-label a.name {
 	font-style: italic;
 	cursor: pointer;
 }
@@ -608,4 +655,247 @@ table.navigation td:nth-child(3) {
 
 .selection-of-photos > li .photo-book-year:after {
 	content: ')';
+}
+
+.comment {
+	display: block;
+	position: relative;
+	min-height: 50px;
+	margin-left: 50px;
+	padding: 5px 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.comment .comment-author {
+	
+}
+
+.comment .comment-author img,
+.comment .comment-author:after {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	top: 10px;
+	left: -50px;
+	border-radius: 50%;
+}
+
+.comment .comment-author:after {
+	content: '';
+	box-sizing: border-box;
+	border: 1px solid rgba(32, 32, 32, 0.25);
+}
+
+.comment .comment-meta {
+	float: right;
+	text-align: right;
+	font-size: 0.75em;
+}
+
+.comment .comment-meta .number-of-likes:before,
+.comment .comment-meta .comment-like-button:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transform: translate(0, 0);
+	content: "\f087";
+	margin-right: 0.5ch;
+}
+
+.comment .comment-message {
+	word-break: break-word;
+}
+
+.comment .comment-message a {
+	word-break: break-all;
+}
+
+.comment-form {
+	margin-left: 60px;	
+}
+
+
+.recent-comment {
+	position: relative;
+	border-top: 1px solid #ccc;
+	padding-top: 16px;
+	margin-bottom: 16px;
+}
+
+.recent-comment .comment {
+	margin-left: 170px;
+	margin-bottom: 4px;
+	background: white;
+	border-radius: 4px;
+	border: none;
+}
+
+.recent-comment .comment-author img,
+.recent-comment .comment-author:after {
+	top: 0;
+	left: -60px;
+}
+
+.recent-comment .comment:before {
+	border: 7px solid;
+	content: '';
+	display: block;
+	z-index: 5;
+	border-color: transparent #fff transparent transparent;
+	position: absolute;
+	top: 17.5px;
+	right: 100%;
+}
+
+.recent-comment .thumbnail img {
+	float: left;
+	border: 1px solid #ccc;
+	max-width: 100px;
+	max-height: 65px;
+}
+
+.modal > .photo-window {
+	max-width: none;
+	margin: 20px 60px;
+	top: 20px;
+}
+
+.modal > .photo-window .photo-title {
+	position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    color: white;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    z-index: 10;
+}
+
+.modal > .photo-window .photo-title:empty {
+	display: none;
+}
+
+
+.modal > .photo-window .photo-navigation {
+	display: inline;
+}
+
+.modal > .photo-window .photo-navigation .next-button,
+.modal > .photo-window .photo-navigation .prev-button {
+	position: fixed;
+	top: 32px;
+	width: 50px;
+	bottom: 0;
+	overflow: hidden;
+	text-indent: 64px;
+}
+
+.modal > .photo-window .photo-navigation .next-button:before,
+.modal > .photo-window .photo-navigation .prev-button:before {
+	position: absolute;
+	top: 50%;
+	height: 50vh;
+	margin-top: -25vh;
+	width: 100%;
+	text-align: center;
+	line-height: 50vh;
+	font-size: 20px;
+	z-index: 20;
+	text-indent: 0;
+}
+
+.modal > .photo-window .photo-navigation a {
+	color: white;
+    font-weight: normal;
+}
+
+/*
+.modal > .photo-window .photo-controls .next-button,
+.modal > .photo-window .photo-controls .prev-button {
+	display: none;
+}
+*/
+
+@media(min-width: 1100px) {
+	.modal > .photo-window > div {
+		margin-right: 280px;
+	}
+
+	.modal > .photo-window .photo-title {
+		right: 300px;
+	}
+
+	.modal > .photo-window .photo-meta {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 260px;
+		padding: 24px 10px 10px 10px;
+		border-left: 1px solid #ccc;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+}
+
+.modal > .photo-window .photo-meta .photo-faces {
+	margin-top: 0;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #ccc;
+}
+
+.modal > .photo-window .photo-meta .photo-faces a {
+	font-weight: normal;
+}
+
+.modal > .photo-window .photo-meta .photo-controls {
+	padding-bottom: 4px;
+	border-bottom: 1px solid #ccc;
+}
+
+.modal > .photo-window .photo-meta h2 {
+	font-size: inherit;
+}
+
+.modal > .photo-window .photo-meta .comment .comment-meta {
+	float: none;
+	text-align: left;
+	font-size: 0.75em;
+}
+
+.modal > .photo-window .photo-meta .comment-form {
+	margin-top: 10px;
+	margin-left: 0;
+}
+
+.modal > .photo-window .photo-meta .comment-form textarea {
+	border: 1px solid #ccc;
+	font: inherit;
+	resize: vertical;
+}
+
+.modal > .photo-window .photo-page-header {
+    position: fixed;
+    top: 14px;
+    left: 100px;
+    right: 100px;
+    text-align: center;
+    z-index: 10;
+    color: white;
+}
+
+.modal > .photo-window .fotoboek_path {
+    font-size: inherit;
+    font-weight: normal;
+    line-height: 1em;
+    border: none;
+}
+
+.modal > .photo-window .fotoboek_path a,
+.modal > .photo-window .fotoboek_path a:visited {
+    color: inherit;
+    font-weight: inherit;
 }

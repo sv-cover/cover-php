@@ -1,19 +1,16 @@
-<div class="replyBox">
-	<form id="comment-form" name="freactie" action="<?=markup_format_attribute($this->get_form_action($iter))?>" method="post">
-		<div>
-			<p><strong><?= markup_format_text(member_full_name($iter->auteur)) ?>:</strong></p>
-			<?= textarea_field('reactie', $iter->data, $errors,
-					'placeholder', __('Typ hier je reactie…'),
-					'rows', '3') ?>
-		</div>
-		
-		<div>
-			<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats reactie'), __('Wijzig reactie')) ?></button>
-			<?php if ($iter->get_id() > 0): ?>
-			<a href="<?=markup_format_text($controller->link_to_read($iter))?>"
-				data-partial-selector="#comment<?=$iter->get_id()?>"
-				data-placement-selector=".replyBox"><?=__('Terug naar foto')?></a>
-			<?php endif ?>
-		</div>
-	</form>
-</div>
+<form class="comment-form" id="comment-form" name="freactie" action="<?=markup_format_attribute($iter->has_id() ? $controller->link_to_update($iter) : $controller->link_to_create())?>" method="post" data-partial-selector=".photo-comments" data-placement-selector=".photo-comments">
+	<div>
+		<?= textarea_field('reactie', $iter, $errors,
+				'placeholder', __('Typ hier je reactie…'),
+				'rows', '3') ?>
+	</div>
+	
+	<div>
+		<button type="submit" class="button"><?=$this->get_label($iter, __('Plaats reactie'), __('Wijzig reactie')) ?></button>
+		<?php if ($iter->get_id() > 0): ?>
+		<a href="<?=markup_format_text($controller->link_to_read($iter))?>"
+			data-partial-selector="#comment<?=$iter->get_id()?>"
+			data-placement-selector=".replyBox"><?=__('Terug naar foto')?></a>
+		<?php endif ?>
+	</div>
+</form>

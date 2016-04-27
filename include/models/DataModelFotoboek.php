@@ -47,6 +47,16 @@
 				return self::PORTRAIT;
 		}
 
+		public function get_faces()
+		{
+			return get_model('DataModelFotoboekFaces')->get_for_photo($this);
+		}
+
+		public function get_comments()
+		{
+			return get_model('DataModelFotoboekReacties')->get_for_photo($this);
+		}
+
 		public function compute_size()
 		{
 			if (!$this->file_exists())

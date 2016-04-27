@@ -17,7 +17,7 @@
 <?php foreach ($slides as $i => $slide): ?>
 	<?php if ($slide): ?>
 	<li class="slide <?=image_aspect($slide->get_size())?> <?=$i == 2 ? 'current' : ''?>">
-		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$slide->get_id()?>#a">
+		<a href="fotoboek.php?book=<?=$book->get_id()?>&amp;photo=<?=$slide->get_id()?>#foto">
 			<img src="<?=markup_format_attribute($slide->get_url(null, 400))?>" <?=vsprintf('width="%d" height="%d"', $slide->get_scaled_size(225, 225))?>>
 		</a>
 	</li>

@@ -35,10 +35,10 @@ if (!$photos || count($photos) == 0)
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	<?php foreach ($photos as $photo): ?>
 	<li id="photo_<?=$photo->get_id()?>" data-id="<?=$photo->get_id()?>" class="thumbnail <?=implode(' ', $classnames($photo))?>">
-		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;photo=<?=$photo->get_id()?>#a">
+		<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;photo=<?=$photo->get_id()?>">
 			<img src="<?=markup_format_attribute($photo->get_url(null, 400))?>" <?=($size = $photo->get_scaled_size(null, 400)) ? vsprintf('width="%d" height="%d"', $size) : ''?>>
 			<?php if (isset($likes[$photo->get_id()])): ?>
-				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><?=$likes[$photo->get_id()]?></span>
+				<span class="like-button" title="<?=markup_format_attribute(sprintf(_ngettext('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', $likes[$photo->get_id()]), $likes[$photo->get_id()]))?>"><span class="like-count"><?=$likes[$photo->get_id()]?></span></span>
 			<?php endif ?>
 			<?php if (isset($visibility[$photo->get_id()]) && !$visibility[$photo->get_id()]): ?>
 			<span class="privacy"><?=__('Verborgen voor anderen')?></span>
@@ -56,3 +56,145 @@ if (!$photos || count($photos) == 0)
 
 <script src="<?=get_theme_data('data/flowgallery.js')?>"></script>
 <script>$('.photos.flow-gallery').flowgallery();</script>
+<script>
+var $modal, $target;
+
+var cache = {};
+
+var closeModal = function() {
+	// Detach the $target separately because these nodes (the photos)
+	// should stay loaded and keep their events attached.
+	$target.detach(); 
+	$modal.remove();
+	$modal = $target = null;
+};
+
+var getModal = function() {
+	if (!$modal) {
+		$modal = $('<div class="modal" tabindex="-1">'),
+		$modalWindow = $('<div class="window photo-window">').appendTo($modal),
+		$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
+
+		$target = $('<div>').appendTo($modalWindow);
+
+		$modal.insertBefore($('.world'));//.delay(100).addClass('')
+
+		// Close the modal on clicking the close button
+		$closeButton.on('click', function(e) {
+			e.preventDefault();
+			closeModal();
+		});
+
+		// If the modal itself (the backdrop, that is) then close it
+		$modal.on('click', function(e) {
+			if (e.target == $modal.get(0)) {
+				e.preventDefault();
+				closeModal();
+			}
+		});
+
+		// Close the model on pressing the escape key while inside
+		$modal.on('keydown.nav', function(e) {
+			// Don't prevent normal keyboard usage
+			if (['TEXTAREA', 'INPUT'].indexOf(e.target.nodeName) !== -1)
+				return;
+
+			switch (e.keyCode) {
+				case 27: // escape
+					if ($modal.parent()) {
+						e.preventDefault();
+						closeModal();
+					}
+					break;
+
+				case 37: // left arrow
+					$modal.find('.navigation .previous').click();
+					e.preventDefault();
+					break;
+
+				case 39: // right arrow
+					$modal.find('.navigation .next').click();
+					e.preventDefault();
+					break;
+
+				case 67: // 'c'
+					$modal.find('.add-comment-link').click();
+					e.preventDefault();
+					break;
+
+				case 76: // 'l'
+					$modal.find('.like-button').click();
+					e.preventDefault();
+					break;
+
+				case 84: // 't'
+					$modal.find('#tagging-toggle').click();
+					e.preventDefault();
+					break;
+			}
+		});
+
+		$modal.focus();
+	}
+
+	return $modal;
+}
+
+var prefetchPhotoLink = function(link, callback) {
+	if (!cache[link]) {
+		cache[link] = $('<div>').load(link + ' #foto', function() {
+			// First of all, fire the partially loaded thingy
+			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
+
+			// Remove the message box style, we don't use it
+			$(this).find('#foto').removeClass('messageBox');
+
+			// Remove the slides, we don't use them here.
+			$(this).find('.slides').remove();
+
+			// Hook into the 'next' and 'prev' links
+			$(this).find('.navigation .next, .navigation .previous').click(function(e) {
+				if (e.ctrlKey || e.shiftKey || e.metaKey)
+					return;
+
+				e.preventDefault();
+
+				loadPhotoLink($(this).attr('href'));
+			});
+
+			if (callback)
+				callback.apply($(this));
+		});
+	} else {
+		if (callback)
+			callback.apply(cache[link]);
+	}
+};
+
+var loadPhotoLink = function(link) {
+	$target.detach();
+
+	var $loading = $('<div>').addClass('loading-text').text('Loading…').appendTo($modal.find('.window'));
+
+	prefetchPhotoLink(link, function() {
+		$loading.replaceWith(this);
+		$target = $(this);
+
+		// Prefetch the next photo
+		$target.find('.navigation .next').each(function() {
+			prefetchPhotoLink($(this).attr('href'));
+		});
+	});
+};
+
+$('.photos').on('click', '.thumbnail > a', function(e) {
+	if (e.ctrlKey || e.shiftKey || e.metaKey)
+		return;
+
+	e.preventDefault();
+
+	getModal();
+
+	loadPhotoLink($(this).attr('href'));
+});
+</script>
