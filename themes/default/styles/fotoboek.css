@@ -760,15 +760,11 @@ table.navigation td:nth-child(3) {
 	top: 20px;
 }
 
-.modal > .photo-window > div {
-	margin-right: 280px;
-}
-
 .modal > .photo-window .photo-title {
 	position: absolute;
     top: 20px;
     left: 20px;
-    right: 300px;
+    right: 20px;
     color: white;
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
     padding: 4px 8px;
@@ -820,16 +816,26 @@ table.navigation td:nth-child(3) {
 }
 */
 
-.modal > .photo-window .photo-meta {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	width: 260px;
-	padding: 24px 10px 10px 10px;
-	border-left: 1px solid #eee;
-	overflow-x: hidden;
-	overflow-y: auto;
+@media(min-width: 900px) {
+	.modal > .photo-window > div {
+		margin-right: 280px;
+	}
+
+	.modal > .photo-window .photo-title {
+		right: 300px;
+	}
+
+	.modal > .photo-window .photo-meta {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 260px;
+		padding: 24px 10px 10px 10px;
+		border-left: 1px solid #eee;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
 }
 
 .modal > .photo-window .photo-meta .photo-faces {
