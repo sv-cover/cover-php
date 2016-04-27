@@ -64,6 +64,7 @@ var cache = {};
 var closeModal = function() {
 	// Detach the $target separately because these nodes (the photos)
 	// should stay loaded and keep their events attached.
+	$(document.body).removeClass('modal-open');
 	$target.detach(); 
 	$modal.remove();
 	$modal = $target = null;
@@ -77,7 +78,7 @@ var getModal = function() {
 
 		$target = $('<div>').appendTo($modalWindow);
 
-		$modal.insertBefore($('.world'));//.delay(100).addClass('')
+		$(document.body).addClass('modal-open').append($modal);
 
 		// Close the modal on clicking the close button
 		$closeButton.on('click', function(e) {

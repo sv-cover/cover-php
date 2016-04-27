@@ -1994,12 +1994,16 @@ body .ui-autocomplete a.profile .starting-year {
 	border-radius: 0 4px 0 0;
 }
 
+body.modal-open > .world,
 .modal + .world {
 	-webkit-filter: blur(8px);
 	-moz-filter: blur(8px);
 	-o-filter: blur(8px);
 	-ms-filter: blur(8px);
 	filter: blur(8px);
+}
+
+body.modal-open {
 	overflow: hidden;
 }
 

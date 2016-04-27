@@ -87,6 +87,11 @@ jQuery(function($) {
 			$target = $('<div>').appendTo($modalWindow);
 			$target.text('Loading…');
 
+			// TODO: append at the bottom of body, which is way quicker.
+			// Currently the photo viewer does it that way, but you'll
+			// also need to add a modal-open class to body, and you'll
+			// need to keep track of how many popups are stacked before
+			// removing that class again.
 			$modal.insertBefore($('.world'));//.delay(100).addClass('')
 
 			// Close the modal on clicking the close button
