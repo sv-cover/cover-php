@@ -140,9 +140,11 @@ var getModal = function() {
 	return $modal;
 }
 
-var prefetchPhotoLink = function(link, callback) {
+var prefetchPhotoLink = function(link) {
 	if (!cache[link]) {
-		cache[link] = $('<div>').load(link + ' #foto', function() {
+		cache[link] = $.Deferred();
+
+		var el = $('<div>').load(link + ' #foto', function() {
 			// First of all, fire the partially loaded thingy
 			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
 
@@ -162,13 +164,11 @@ var prefetchPhotoLink = function(link, callback) {
 				loadPhotoLink($(this).attr('href'));
 			});
 
-			if (callback)
-				callback.apply($(this));
+			cache[link].resolve($(this));
 		});
-	} else {
-		if (callback)
-			callback.apply(cache[link]);
 	}
+
+	return cache[link];
 };
 
 var loadPhotoLink = function(link) {
@@ -176,16 +176,32 @@ var loadPhotoLink = function(link) {
 
 	var $loading = $('<div>').addClass('loading-text').text('Loading…').appendTo($modal.find('.window'));
 
-	prefetchPhotoLink(link, function() {
-		$loading.replaceWith(this);
-		$target = $(this);
+	prefetchPhotoLink(link).then(function($el) {
+		$loading.replaceWith($el);
+		$target = $el;
 
 		// Prefetch the next photo
-		$target.find('.navigation .next').each(function() {
+		$el.find('.navigation .next').each(function() {
 			prefetchPhotoLink($(this).attr('href'));
 		});
 	});
 };
+
+$('.photos').on('mouseover mouseout touchstart', '.thumbnail > a', function(e) {
+	switch (e.type) {
+		case 'mouseover':
+		case 'touchstart':
+			var preload = (function() {
+				prefetchPhotoLink($(this).attr('href'));
+			}).bind(this);
+			$(this).data('timeout', setTimeout(preload, 200));
+			break;
+		case 'mouseout':
+			var timeout = $(this).data('timeout');
+			if (timeout) clearTimeout(timeout);
+			break;
+	}
+});
 
 $('.photos').on('click', '.thumbnail > a', function(e) {
 	if (e.ctrlKey || e.shiftKey || e.metaKey)
