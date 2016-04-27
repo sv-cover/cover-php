@@ -598,22 +598,110 @@ $(document).on('ready partial-content-loaded', function(e) {
 	});
 });
 
+jQuery.fn.inlineEdit = function(options) {
+	$(this).each(function() {
+		var $el = $(this);
+		var $textfield = $('<input>').attr({'type': 'text'}).css({'font': 'inherit', 'margin': 0, 'padding': 0, 'border': 'none'});
+		var value = $el.text();
+
+		var visible = false;
+
+		var show = function() {
+			$el.empty();
+			
+			$textfield.val(value);
+			$textfield.prop('disabled', false);
+			$el.append($textfield);
+
+			$textfield.focus();
+			visible = true;
+
+			return $.Deferred().resolve(value);
+		}
+
+		var hide = function(val) {
+			visible = false;
+			$textfield.detach();
+			return $.Deferred().resolve(val !== undefined ? val : value);
+		}
+
+		var block = function() {
+			$textfield.prop('disabled', true);
+			return $.Deferred().resolve($textfield.val());
+		}
+
+		var save = function(val) {
+			return options.save.call($el, val).then(function(val) { return value = val; });
+		}
+
+		var render = function(val) {
+			var content = options.render.call($el, val);
+			$el.empty();
+			$el[typeof content == 'string' || content instanceof String ? 'text' : 'append'](content);
+		}
+
+		var accept = function() {
+			return block().then(save).then(hide).then(render);
+		}
+
+		var cancel = function() {
+			return hide().then(render);
+		}
+
+		render(value);
+
+		$el.on('click', function(e) {
+			if (!visible) {
+				e.preventDefault();
+				show();
+			}
+		});
+
+		$textfield.on('blur', function(e) {
+			if (visible) {
+				value != $textfield.val() ? accept() : cancel();
+			}
+		});
+
+		$textfield.on('keydown', function(e) {
+			if (visible) {
+				switch (e.keyCode) {
+					case 13: // enter
+						e.preventDefault();
+						accept();
+						break;
+					case 27: // escape
+						e.preventDefault();
+						cancel();
+						break;
+				}
+			}
+		});
+	})
+}
+
 /* Allow editing of photo titles */
 $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('.photo-title[data-update-link]')
 		.addClass('editable')
-		.click(function(e) {
-			e.preventDefault();
-			var $titleNode = $(this);
-			var newTitle = prompt('New title:', $titleNode.text());
-			if (newTitle !== null) {
-				$.post(
-					$titleNode.data('update-link'),
-					{'beschrijving': newTitle},
-					function() {
-						$titleNode.text(newTitle);
-					}
-				);
+		.inlineEdit({
+			save: function(newTitle) {
+				var $el = $(this);
+				return $.post($(this).data('update-link'), {'beschrijving': newTitle})
+					.success(function() {
+						// Update the thumbnail as well
+						var photo_id = $el.closest('#foto').data('photo-id');
+						var $thumb = $('#photo_' + photo_id + ' > a');
+						var $description = $thumb.children('.description');
+						if ($description.length == 0)
+							$description = $('<span>').addClass('description').appendTo($thumb);
+						console.log($el, photo_id, $description);
+						$description.text(newTitle);
+					})
+					.then(function() { return newTitle; });
+			},
+			render: function(title) {
+				return title != '' ? title : $('<em>').text('Click to add a title');
 			}
 		});
 });

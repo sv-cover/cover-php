@@ -8,7 +8,7 @@ if (get_auth()->logged_in() && $like_model->is_liked($iter, get_identity()->get_
 ?>
 <h1><?= __('Fotoboek') . ' :: ' . __('Foto') ?></h1>
 
-<div id="foto" class="<?=implode(' ', $photo_classes)?>">
+<div id="foto" data-photo-id="<?=$iter->get_id()?>" class="<?=implode(' ', $photo_classes)?>">
 
 	<div class="photo-page-header">
 		<?php $this->render_partial('path', array('book' => $book, 'photo' => $iter, 'model' => $model)) ?>
