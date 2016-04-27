@@ -864,7 +864,7 @@ table.navigation td:nth-child(3) {
 
 .modal > .photo-window .photo-meta .comment-form textarea {
 	border: 1px solid #eee;
-	font-size: inherit;
+	font: inherit;
 	resize: vertical;
 }
 

@@ -1,4 +1,4 @@
-<form class="comment-form" id="comment-form" name="freactie" action="<?=markup_format_attribute($iter->has_id() ? $controller->link_to_update($iter) : $controller->link_to_create())?>" method="post">
+<form class="comment-form" id="comment-form" name="freactie" action="<?=markup_format_attribute($iter->has_id() ? $controller->link_to_update($iter) : $controller->link_to_create())?>" method="post" data-partial-selector=".photo-comments" data-placement-selector=".photo-comments">
 	<div>
 		<?= textarea_field('reactie', $iter, $errors,
 				'placeholder', __('Typ hier je reactie…'),
