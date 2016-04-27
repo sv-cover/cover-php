@@ -2,7 +2,7 @@
 $photo_classes = array('messageBox');
 
 $like_model = get_model('DataModelFotoboekLikes');
-if ($like_model->is_liked($iter, get_identity()->get_member()->get_id()))
+if (get_auth()->logged_in() && $like_model->is_liked($iter, get_identity()->get_member()->get_id()))
 	$photo_classes[] = 'liked';
 
 ?>
