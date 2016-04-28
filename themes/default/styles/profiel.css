@@ -28,7 +28,7 @@
 	height: 125px;
 }
 
-.tab-sidebar .profile-widget > a:after {
+.tab-sidebar .profile-widget > a[data-image-popup]:after {
 	content: '';
 	border: 1px solid rgba(32, 32, 32, 0.25);;
 	position: absolute;
