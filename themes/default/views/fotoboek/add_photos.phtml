@@ -44,7 +44,7 @@ jQuery(function($) {
 	}
 
 	function load_folders(path, ol) {
-		$.getJSON(baseurl + '&view=add_photos_list_folders&path=' + path).then(function(data) {
+		$.getJSON(baseurl + '&view=add_photos_list_folders&path=' + encodeURIComponent(path)).then(function(data) {
 			$.each(data, function(index, folder) {
 				$('<li>')
 					.data('folder', folder)
@@ -70,7 +70,7 @@ jQuery(function($) {
 
 		var index = 0;
 
-		stream = new EventSource(baseurl + '&view=add_photos_list_photos&path=' + path);
+		stream = new EventSource(baseurl + '&view=add_photos_list_photos&path=' + encodeURIComponent(path));
 		stream.addEventListener('error', handle_stream_error);
 
 		stream.addEventListener('end', function(e) {
