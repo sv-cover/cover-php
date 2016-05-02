@@ -14,6 +14,7 @@ define('RETURN_NOT_ALLOWED_NOT_COVER', 402);
 define('RETURN_NOT_ALLOWED_NOT_OWNER', 403);
 define('RETURN_NOT_ALLOWED_UNKNOWN_POLICY', 404);
 define('RETURN_FAILURE_MESSAGE_EMPTY', 502);
+define('RETURN_MARKED_AS_SPAM', 503);
 
 error_reporting(E_ALL);
 ini_set('display_errors', true);
@@ -256,6 +257,9 @@ function get_error_message($return_value)
 		case RETURN_FAILURE_MESSAGE_EMPTY:
 			return "Error: Message empty.";
 
+		case RETURN_MARKED_AS_SPAM:
+			return "The message was marked as 'spammy' by the spamfilter.";
+
 		default:
 			return "(code $return_value)";
 	}
@@ -312,6 +316,9 @@ function main()
 
 	if (!$message_header->header('Envelope-To') || !$destinations = parse_email_addresses($message_header->header('Envelope-To')))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
+
+	if ($message_header->header('X-Spam-Flag') == 'YES')
+		return RETURN_MARKED_AS_SPAM;
 
 	foreach ($destinations as $destination)
 	{
