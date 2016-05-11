@@ -33,6 +33,7 @@ class SessionsView extends View
 			'Android' => 'Android',
 			'Google Chrome' => 'Chrome',
 			'Safari' => 'Safari',
+			'Microsoft Edge' => 'Edge',
 			'iCal agenda feed' => 'calendar');
 
 		foreach ($known_browsers as $name => $hint)
