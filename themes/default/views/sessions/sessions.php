@@ -28,19 +28,20 @@ class SessionsView extends View
 	{
 		$known_browsers = array(
 			'Firefox' => 'Firefox',
+			'Microsoft Edge' => 'Edge',
 			'Internet Explorer' => 'MSIE',
+			'IE Mobile' => 'IEMobile',
 			'iPad' => 'iPad',
 			'Android' => 'Android',
 			'Google Chrome' => 'Chrome',
 			'Safari' => 'Safari',
-			'Microsoft Edge' => 'Edge',
 			'iCal agenda feed' => 'calendar');
 
 		foreach ($known_browsers as $name => $hint)
 			if (stripos($application, $hint) !== false)
 				return $name;
 
-		return $application;
+		return ucwords($application);
 	}
 
 	protected function format_application($application)
