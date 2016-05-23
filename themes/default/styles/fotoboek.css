@@ -787,10 +787,10 @@ table.navigation td:nth-child(3) {
 .modal > .photo-window .photo-navigation .prev-button {
 	position: fixed;
 	top: 32px;
-	width: 50px;
+	width: 300px;
 	bottom: 0;
 	overflow: hidden;
-	text-indent: 64px;
+	text-indent: 364px;
 }
 
 .modal > .photo-window .photo-navigation .next-button:before,
@@ -799,7 +799,7 @@ table.navigation td:nth-child(3) {
 	top: 50%;
 	height: 50vh;
 	margin-top: -25vh;
-	width: 100%;
+	width: 50px;
 	text-align: center;
 	line-height: 50vh;
 	font-size: 20px;
