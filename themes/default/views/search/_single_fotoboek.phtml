@@ -5,7 +5,18 @@
 			$iter->get_parent()->get_id(),
 			markup_format_text($iter->get_parent()->get('titel'))))?></small>
 </h2>
-<p><?=sprintf(__('Fotoboek met %s en %s gemaakt op %s.'),
-	__N('%d boek', '%d boeken', $iter->count_books()),
-	__N('%d foto', '%d foto\'s', $iter->count_photos()),
-	$iter->get('datum')) ?></p>
+<p><?php
+	$n_books = $iter->count_books();
+	$n_photos = $iter->count_photos();
+
+	$parts = [];
+
+	if ($n_books > 0)
+		$parts[] = __N('%d boek', '%d boeken', $n_books);
+
+	if ($n_photos > 0)
+		$parts[] = __N('%d foto', '%d foto\'s', $n_photos);
+
+	echo markup_format_text(sprintf(__('Fotoboek met %s gemaakt op %s.'),
+		implode_human($parts), $iter->get('datum')));
+?></p>
