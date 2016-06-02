@@ -20,7 +20,7 @@
 						$comment_group[0]->has('beschrijving') ? $comment_group[0]->get('beschrijving') : __('geen titel'))) ?>">
 			</a>
 			<?php $controller = new ControllerFotoboekComments($comment_group[0]->getIter('foto', 'DataIterPhoto')); ?>
-			<?php foreach ($comment_group as $iter): ?>
+			<?php foreach (array_reverse($comment_group) as $iter): ?>
 				<?php View::byName('fotoboekreacties', $controller)->single(compact('model', 'iter')) ?>
 			<?php endforeach ?>
 		</div>
