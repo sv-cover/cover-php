@@ -1,8 +1,33 @@
+<?php
+	switch ($iter->get('type'))
+	{
+		case MEMBER_STATUS_LID:
+			$status = __('Lid');
+			break;
+
+		case MEMBER_STATUS_LID_AF:
+			$status = __('Lid af');
+			break;
+
+		case MEMBER_STATUS_ERELID:
+			$status = __('Erelid');
+			break;
+
+		case MEMBER_STATUS_DONATEUR:
+			$status = __('Donateur');
+			break;
+
+		default:
+			$status = null;
+			break;
+	}
+?>
 <div class="search-result-member">
 	<h2>
 		<a href="<?=markup_format_attribute($iter->get_absolute_url())?>">
 			<?=markup_format_text(member_full_name($iter)) ?>
 		</a>
+		<?php if ($status !== null) printf('<small>%s</small>', markup_format_text($status)) ?>
 	</h2>
 	
 	<div class="profile-widget">
