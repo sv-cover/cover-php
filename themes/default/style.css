@@ -2237,6 +2237,10 @@ a.profile-widget:after {
 	border-bottom: 1px solid #ccc;
 }
 
+.search-results > li.focussed {
+	background: rgb(255,255,224);
+}
+
 .search-results h2 {
 	position: relative;
 }
