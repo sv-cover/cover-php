@@ -1,4 +1,8 @@
 <?php
+// © Nick Ubels & Alex-Jan Sigtermans
+// Used by Study Assosication Cover with permission
+// http://nickubels.nl
+
 // Set PHP variables
 date_default_timezone_set('Europe/Amsterdam');
 
@@ -133,61 +137,7 @@ function getDepartures($data,$sort=true){
 	return $departures;
 }
 
-## Making the targettime readable
-function getTargetDeparture($target){
-	$target = new DateTime($target);
-	$target = date_format($target, 'H:i:s');
-	return $target;
-}
-## Making the expected time readable
-function getExpectedDeparture($expected){
-	$expected = new DateTime($expected);
-	$expected = date_format($expected, 'H:i:s');
-	return $expected;
-}
-function getMessageTime($timestamp){
-	$timestamp = new DateTime($timestamp);
-	$timestamp = date_format($timestamp, 'd-M H:i:s');
-	return $timestamp;
-}
-function getStatus($status){
-	if($status == 'PLANNED'){
-		$label = '<div class="label label-info">Gepland</div>';
-	}
-	if($status == 'DRIVING'){
-		$label = '<div class="label label-success">Onderweg</div>';
-	}
-	if($status == 'ARRIVED'){
-		$label = '<div class="label label-warning">Bij halte</div>';
-	}
-	if($status == 'PASSED'){
-		$label = '<div class="label label-primary">Vertrokken</div>';
-	}
-	if($status == 'UNKNOWN'){
-		$label = '<div class="label label-default">Onbekend</div>';
-	}
-	if($status == 'CANCEL'){
-		$label = '<div class="label label-danger">Valt uit</div>';
-	}
-	return $label;
-}
-function tripstopCounter($data, $value) {
-	$counter = "0";
-	foreach($data as $array) {
-		if($array[TripStopStatus] == $value) {
-			$counter++;
-		}
-	}
-	return $counter;
-}
-function townArray($array){
-	$tpn = $array[TimingPointName];
-	$tpt = $array[TimingPointTown];
-	if(!stristr($tpn,$tpt)){
-		$array[TimingPointName] = ''.$tpt.', '.$tpn.'';
-	}
-	return $array;
-}
+
 function getDelayOnly($delay,$status){
 	if($status == 0){
 
@@ -215,38 +165,9 @@ function getMinutesLabel($status, $minutes, $atstop){
 	return $status;
 }
 
-function qbuzz_color($line_number){
-	return '<span class="lijn'.$line_number.'">'.$line_number.'</span>';
+function qbuzz_color($linePlanningNumber,$linePublicNumber){
+	return '<span class="'.$linePlanningNumber.'">'.$linePublicNumber.'</span>';
 }
-
-function outputGeneralMessage($data){
-	$cDate = date('o-m-d H:i:sP');
-	$output = '';
-	foreach($data as $stop){
-		if(gettype($stop) == 'array'){
-			foreach($stop['GeneralMessages'] as $message){
-				processTime($message['MessageStartTime']);
-				if($cDate > $message['MessageStartTime']){
-					processTime($message['MessageEndTime']);
-					$output .= '
-					<div class="alert alert-danger" role="alert">
-					<strong>Bericht van '.$message['DataOwnerCode'].' voor '.$message['TimingPointCode'].':</strong><br>
-					<strong>Content:</strong> '.$message['MessageContent'].'<br>
-					<strong>Reden:</strong> '.$message['ReasonContent'].'<br>
-					<strong>Gevolg:</strong> '.$message['EffectContent'].'<br>
-					<strong>Advies:</strong> '.$message['AdviceContent'].'
-					<br>
-					<strong>Berichttype:</strong> '.$message['MessageType'].' '.$message['MessageDurationType'].'<br>
-					<strong>Start:</strong> '.getMessageTime($message['MessageStartTime']).'<br>
-					<strong>Eind:</strong> '.getMessageTime($message['MessageEndTime']).'				</div>';
-				}
-			}
-		}
-	}
-
-	return $output;
-}
-
 
 function outputDepartures($departures){
 	global $auth;
@@ -267,12 +188,30 @@ function outputDepartures($departures){
 		$departure = $departures[$i];
 		$delay = calcDelay($departure['ExpectedDepartureTime'],$departure['TargetDepartureTime']);
 		$minutes = calcMinutes($departure['ExpectedDepartureTime']);
-		if($departure["IsTimingStop"]){ $timingstop = "Ja"; } else{ $timingstop = "Nee"; }
+		if($departure['LinePlanningNumber'] == NULL){
+			continue;
+		}
 		$output .= '
 				<tr>
-					<td class="small">'.qbuzz_color($departure['LinePublicNumber']).'</td>
-					<td class="destination">'.$departure['DestinationName50'].'</td>
-					<td class="small destination">'.date_format(date_create($departure['TargetDepartureTime']), 'H:i').' '.getDelayOnly($delay['delay'],$delay['status']).'</td>
+					<td class="small">'.qbuzz_color($departure['LinePlanningNumber'],$departure['LinePublicNumber']).'</td>
+					';
+					if($departure['TripStopStatus'] == "CANCELLED"){
+						$output .= '
+						<td class="destination cancelled">'.$departure['DestinationName50'].'</td>
+						<td class="small destination">'.date_format(date_create($departure['TargetDepartureTime']), 'H:i').' cancelled</td>';
+					} else {
+						$output .= '<td class="destination">'.$departure['DestinationName50'].'</td>';
+						if($departure['TripStopStatus'] == "UNKNOWN"){
+						$output .= '<td class="small destination">'.date_format(date_create($departure['TargetDepartureTime']), 'H:i').'</td>';
+						} else { // for PLANNED and DRIVING statusses
+							if($minutes == 0){ // bus icon for due buses
+								$output .= '<td class="small destination"><img src="icon.png"></td>';
+							} else{
+								$output .= '<td class="small destination">'.$minutes.' min</td>';
+							}
+						}
+					}
+					$output .='
 				</tr>
 				<tr>
 					<td><br /><br /></td>
@@ -306,22 +245,25 @@ td.small {
 .destination {
 	text-align: left;
 }
-.lijn9 {
+.cancelled{
+	text-decoration: line-through;
+}
+.g509 {
 	color: #F289B7;
 	font-weight: bold;
 }
 
-.lijn11 {
+.g501 {
 	color: #71BF44;
 	font-weight: bold;
 }
 
-.lijn15 {
+.g556 {
 	color: #F37121;
 	font-weight: bold;
 }
 
-.lijn17 {
+.g517 {
 	color: #F6911E;
 	font-weight: bold;
 }
