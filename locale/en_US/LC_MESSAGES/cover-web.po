@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-06-02 15:13+0200\n"
+"POT-Creation-Date: 2016-06-08 17:23+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -95,7 +95,7 @@ msgstr "Announcements"
 msgid "Besturen"
 msgstr "Boards"
 
-#: boeken.php:16
+#: boeken.php:19
 msgid "Boeken"
 msgstr "Books"
 
@@ -1510,6 +1510,7 @@ msgid "Alumni"
 msgstr "Alumni"
 
 #: themes/default/views/header.php:183
+#: themes/default/views/boeken/login.phtml:1
 msgid "Boeken bestellen"
 msgstr "Order books"
 
@@ -1557,6 +1558,7 @@ msgid "Bekijk als…"
 msgstr "Impersonate…"
 
 #: themes/default/views/header.php:295
+#: themes/default/views/boeken/login.phtml:7
 #: themes/default/views/sessions/login.phtml:36
 msgid "Log in"
 msgstr "Log in"
@@ -2071,6 +2073,14 @@ msgstr "Add a new board..."
 msgid "Ga verder naar de BookCee webshop"
 msgstr "Continue to the BookCee webshop"
 
+#: themes/default/views/boeken/login.phtml:5
+msgid "Word lid van Cover"
+msgstr "Become a member"
+
+#: themes/default/views/boeken/login.phtml:6
+msgid "of"
+msgstr "or"
+
 #: themes/default/views/commissies/_agenda.phtml:11
 msgid "Commissieagenda"
 msgstr "Committee agenda"
@@ -2443,6 +2453,7 @@ msgid "Verborgen voor anderen"
 msgstr "Hidden from index"
 
 #: themes/default/views/fotoboek/_photos.phtml:47
+#: themes/default/views/search/_single_fotoboek.phtml:31
 #, php-format
 msgid "%d reactie"
 msgid_plural "%d reacties"
@@ -3620,6 +3631,9 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
+
+#~ msgid "Word lid"
+#~ msgstr "Become a member"
 
 #~ msgid "[Onbekend]"
 #~ msgstr "[Unknown]"

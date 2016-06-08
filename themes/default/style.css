@@ -2773,8 +2773,19 @@ button .fa {
 
 .call-to-action-or-block .button {
 	font-size: 2em;
-	width: 160px;
+	padding: 10px 20px;
+	width: 130px;
+	display: inline-block;
+	vertical-align: middle;
 	text-align: center;
+}
+
+.call-to-action-or-block .button.login {
+	line-height: 60px;
+}
+
+.call-to-action-or-block .button.register {
+	line-height: 30px;
 }
 
 .call-to-action-or-block .separator {
