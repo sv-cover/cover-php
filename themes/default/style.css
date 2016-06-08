@@ -2765,3 +2765,23 @@ button .fa {
 	bottom: auto;
 	right: auto;
 }
+
+.call-to-action-or-block {
+	max-width: 400px;
+	margin: 20px auto;
+}
+
+.call-to-action-or-block .button {
+	font-size: 2em;
+	width: 160px;
+	text-align: center;
+}
+
+.call-to-action-or-block .separator {
+	display: inline-block;
+	width: 30px;
+	border: none;
+	font-size: 1.5em;
+	text-align: center;
+	color: #666;
+}

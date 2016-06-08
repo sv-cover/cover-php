@@ -11,20 +11,21 @@ class ControllerBoeken extends Controller
 		// Overriding the default constructor because that one doesn't make sense
 	}
 
-	protected function get_content($view, $iter = null, $params = null)
-	{
-		$this->run_header(array('title' => __('Boeken')));
-		run_view('show::single', null, 'Boeken bestellen');
-		run_view('boeken::' . $view, null, $iter, $params);
-		$this->run_footer();
-	}
-
 	function run_impl()
 	{
 		$config = get_model('DataModelConfiguratie');
 		$webshop_link = $config->get_value('boekcie_webshop_link', '#');
 
-		$this->get_content('go_to_webshop', null, compact('webshop_link'));
+		$this->run_header(array('title' => __('Boeken')));
+
+		if (get_identity()->member_is_active()) {
+			run_view('show::single', null, 'Boeken bestellen');
+			run_view('boeken::go_to_webshop', null, null, compact('webshop_link'));
+		} else {
+			run_view('boeken::login', null, null, array());
+		}
+		
+		$this->run_footer();
 	}
 }
 
