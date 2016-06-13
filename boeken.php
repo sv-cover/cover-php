@@ -18,7 +18,7 @@ class ControllerBoeken extends Controller
 
 		$this->run_header(array('title' => __('Boeken')));
 
-		if (get_identity()->member_is_active()) {
+		if (get_auth()->logged_in()) {
 			run_view('show::single', null, 'Boeken bestellen');
 			run_view('boeken::go_to_webshop', null, null, compact('webshop_link'));
 		} else {
