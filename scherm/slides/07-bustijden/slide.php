@@ -9,7 +9,6 @@ date_default_timezone_set('Europe/Amsterdam');
 ## Defining API URL
 define('apiURL', 'http://v0.ovapi.nl/');
 
-	
 ## Grabbing page from API
 function grabPage($path){
 	$ch = curl_init();
@@ -169,7 +168,7 @@ function qbuzz_color($linePlanningNumber,$linePublicNumber){
 	return '<span class="'.$linePlanningNumber.'">'.$linePublicNumber.'</span>';
 }
 
-function outputDepartures($departures){
+function outputDepartures($departures, $bus_icon){
 	global $auth;
 	$max = 5;
 	$output = '
@@ -205,7 +204,7 @@ function outputDepartures($departures){
 						$output .= '<td class="small destination">'.date_format(date_create($departure['TargetDepartureTime']), 'H:i').'</td>';
 						} else { // for PLANNED and DRIVING statusses
 							if($minutes == 0){ // bus icon for due buses
-								$output .= '<td class="small destination"><img src="icon.png"></td>';
+								$output .= '<td class="small destination"><img src="'.$bus_icon.'"></td>';
 							} else{
 								$output .= '<td class="small destination">'.$minutes.' min</td>';
 							}
@@ -258,7 +257,7 @@ td.small {
 	font-weight: bold;
 }
 
-.g556 {
+.g565 {
 	color: #F37121;
 	font-weight: bold;
 }
@@ -279,7 +278,7 @@ td.small {
 	$data = fetchTimingPoint('10004130,10004140');
 	$departures = getDepartures($data);
 	//echo outputGeneralMessage($data);
-	echo outputDepartures($departures);
+	echo outputDepartures($departures, $this->link_resource('icon.png'));
 ?>
 
 </div>
