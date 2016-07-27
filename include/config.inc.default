@@ -64,7 +64,7 @@
 		'kast_secret' => '',
 
 		// For the website calling Incassomatic to fetch the current balance and contract status.
-		'incassomatic_root' => 'http://incasso.svcover/dev/api/',
+		'incassomatic_root' => 'https://incasso.svcover.nl/api/',
 		'incassomatic_app' => '',
 		'incassomatic_secret' => ''
 	);
