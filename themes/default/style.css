@@ -1149,6 +1149,13 @@ td.timestamp {
 	text-align: right;
 }
 
+table.incassomatic thead::before
+{
+    content: '';
+    display: table-row;
+    height: 20px;
+}
+
 #language-switch {
 	position: absolute;
 	right: 4px;

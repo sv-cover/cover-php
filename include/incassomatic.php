@@ -21,8 +21,7 @@ class API
 	public function getIncassos(\DataIterMember $member, $limit = null)
 	{
 		$data = [
-			'cover_id' => $member->get_id(),
-			'email' => $member['email']
+			'cover_id' => $member->get_id()
 		];
 
 		if ($limit !== null)

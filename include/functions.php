@@ -967,4 +967,19 @@
 
 		return true;
 	}
+
+	function array_group_by($array, $key_accessor)
+	{
+		$groups = array();
+
+		foreach ($array as $element) {
+			$key = call_user_func($key_accessor, $element);
+			if (isset($groups[$key]))
+				$groups[$key][] = $element;
+			else
+				$groups[$key] = [$element];
+		}
+
+		return $groups;
+	}
 	

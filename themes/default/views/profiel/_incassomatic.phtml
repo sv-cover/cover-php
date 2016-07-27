@@ -16,47 +16,75 @@ try {
 
 	// Only show valid contracts
 	$contract = current(array_filter($contracts, function($contract) { return $contract->is_geldig; }));
-
-	$incassos = $incasso_api->getIncassos($iter, 15);
 ?>
+
+<?php if (!$contract): ?>
 <section>
 	<h2><?=__('Incass-o-matic')?></h2>
-	<h4><?=__('Contract')?></h4>
-	<?php if ($contract): ?>
-	<em><?=sprintf(__('Getekend en actief sinds %s.'), date_create($contract->start_datum)->format('j-n-Y'))?></em>
-	<?php else: ?>
 	<em><?=__('Je hebt nog geen contract. Vraag je penningmeester om er een te maken!')?></em>
-	<?php endif?>
+</section>
+<?php else: ?>
+<section class="aligned-list-section">
+	<h2><?=__('Incass-o-matic')?></h2>
+	<h4><?=__('Contract')?></h4>
+	<em><?=sprintf(__('Getekend en actief sinds %s.'), date_create($contract->start_datum)->format('j-n-Y'))?></em>
 </section>
 
-<section>
+<?php
+$incassos = $incasso_api->getIncassos($iter, 15);
+
+$incassos_per_batch = array_group_by($incassos, function($incasso) { return $incasso->batch_id; });
+
+?>
+<section class="aligned-list-section">
 	<p><?=__("Je laatste vijftien incasso's.")?></p>
-	<table class="full-width-table">
+	<table class="full-width-table incassomatic">
+	<?php if (isset($incassos_per_batch[null])): ?>
 		<thead>
 			<tr>
-				<th><?=__('Status')?></th>
+				<th colspan="3"><h4><?=__('Nog te incasseren')?></h4></th>
+			</tr>
+			<tr>
 				<th><?=__('Omschrijving')?></th>
 				<th class="numeric"><?=__('Prijs')?></th>
 				<th class="timestamp"><?=__('Datum')?></th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($incassos as $i => $incasso): ?>
-			<tr class="<?php if (!$incasso->batch_id) echo 'pending' ?>"
-				title="<?php if (!$incasso->batch_id) echo __('Deze opdracht is nog niet naar de bank verstuurd.') ?>">
-				<td><?php
-						if ($incasso->batch_id) echo __('Afgeschreven');
-						elseif ($incasso->goedgekeurd) echo __('Getekend');
-						else echo __('Nog niet getekend');
-					?></td>
+			<?php foreach ($incassos_per_batch[null] as $incasso): ?>
+			<tr>
 				<td><?=markup_format_text($incasso->omschrijving)?></td>
 				<td class="numeric">&euro;&nbsp;<?=sprintf('%0.2f', $incasso->bedrag / 100)?></td>
-				<td class="timestamp"><time title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
+				<td class="timestamp"><time datetime="<?=date_create($contract->start_datum)->format(DateTime::ISO8601)?>" title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
 			</tr>
 			<?php endforeach ?>
 		</tbody>
+	<?php endif ?>
+	<?php foreach ($incassos_per_batch as $batch_id => $incassos): ?>
+	<?php if ($batch_id == null) continue; ?>
+		<thead>
+			<tr>
+				<th><h4><?=sprintf(__('Incassobatch %d'), $batch_id)?></h4></th>
+			</tr>
+			<tr>
+				<th><?=__('Omschrijving')?></th>
+				<th class="numeric"><?=__('Prijs')?></th>
+				<th class="timestamp"><?=__('Datum')?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($incassos as $incasso): ?>
+			<tr>
+				<td><?=markup_format_text($incasso->omschrijving)?></td>
+				<td class="numeric">&euro;&nbsp;<?=sprintf('%0.2f', $incasso->bedrag / 100)?></td>
+				<td class="timestamp"><time datetime="<?=date_create($contract->start_datum)->format(DateTime::ISO8601)?>" title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
+			</tr>
+			<?php endforeach ?>
+		</tbody>
+	<?php endforeach ?>
 	</table>
 </section>
+<?php endif ?>
 <?php } catch (Exception $e) { ?>
 <section>
 	<?php echo '<pre>', $e, '</pre>'; ?>
