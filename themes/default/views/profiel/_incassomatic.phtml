@@ -20,7 +20,7 @@ try {
 	$incassos = $incasso_api->getIncassos($iter, 15);
 ?>
 <section>
-	<h2><?=__('Incassomatic')?></h2>
+	<h2><?=__('Incass-o-matic')?></h2>
 	<h4><?=__('Contract')?></h4>
 	<?php if ($contract): ?>
 	<em><?=sprintf(__('Getekend en actief sinds %s.'), date_create($contract->start_datum)->format('j-n-Y'))?></em>
@@ -60,6 +60,6 @@ try {
 <?php } catch (Exception $e) { ?>
 <section>
 	<?php echo '<pre>', $e, '</pre>'; ?>
-	<p><?=__('Sorry, Incassomatic is niet bereikbaar op het moment.')?></p>
+	<p><?=__('Sorry, Incass-o-matic is niet bereikbaar op het moment.')?></p>
 </section>
 <?php } ?>

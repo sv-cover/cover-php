@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-07-27 15:54+0200\n"
+"POT-Creation-Date: 2016-07-27 22:05+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -3149,8 +3149,8 @@ msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
 
 #: themes/default/views/profiel/_incassomatic.phtml:23
-msgid "Incassomatic"
-msgstr "Incassomatic"
+msgid "Incass-o-matic"
+msgstr "Incass-o-matic"
 
 #: themes/default/views/profiel/_incassomatic.phtml:24
 msgid "Contract"
@@ -3191,9 +3191,9 @@ msgstr "Sigend"
 msgid "Nog niet getekend"
 msgstr "Not yet signed"
 
-#: themes/default/views/profiel/_incassomatic.phtml:62
-msgid "Sorry, Incassomatic is niet bereikbaar op het moment."
-msgstr "Sorry, Incassomatic cannot be reached at this moment."
+#: themes/default/views/profiel/_incassomatic.phtml:63
+msgid "Sorry, Incass-o-matic is niet bereikbaar op het moment."
+msgstr "Sorry, Incass-o-matic cannot be reached at this moment."
 
 #: themes/default/views/profiel/_kast.phtml:15
 #: themes/default/views/profiel/profiel.phtml:98
@@ -3685,6 +3685,12 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
+
+#~ msgid "Incassomatic"
+#~ msgstr "Incassomatic"
+
+#~ msgid "Sorry, Incassomatic is niet bereikbaar op het moment."
+#~ msgstr "Sorry, Incassomatic cannot be reached at this moment."
 
 #~ msgid "Word lid"
 #~ msgstr "Become a member"
