@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-06-08 17:23+0200\n"
+"POT-Creation-Date: 2016-07-27 15:54+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1111,6 +1111,7 @@ msgstr "Subject/question"
 #: themes/default/views/fotoboek/add_photos.phtml:24
 #: themes/default/views/mailinglijsten/mailinglist.phtml:52
 #: themes/default/views/mailinglijsten/mailinglists.phtml:35
+#: themes/default/views/profiel/_incassomatic.phtml:38
 msgid "Omschrijving"
 msgstr "Description"
 
@@ -1363,6 +1364,7 @@ msgstr "Modify message"
 #: themes/default/views/agenda/moderate.phtml:18
 #: themes/default/views/fotoboek/_info.phtml:7
 #: themes/default/views/mailinglijsten/list_archive.phtml:9
+#: themes/default/views/profiel/_incassomatic.phtml:40
 msgid "Datum"
 msgstr "Date"
 
@@ -1742,7 +1744,7 @@ msgstr "Add a calendar event"
 #: themes/default/views/agenda/edit.phtml:4
 #: themes/default/views/lidworden/lidworden.phtml:27
 #: themes/default/views/nieuwlid/nieuwlid.phtml:17
-#: themes/default/views/profiel/profiel.phtml:121
+#: themes/default/views/profiel/profiel.phtml:128
 #: themes/default/views/show/edit.phtml:12
 msgid "Niet alle velden zijn goed ingevuld"
 msgstr "You haven't filled in all the fields correctly"
@@ -2936,6 +2938,7 @@ msgid "Afzender"
 msgstr "Sender"
 
 #: themes/default/views/mailinglijsten/list_archive.phtml:10
+#: themes/default/views/profiel/_incassomatic.phtml:37
 #: themes/default/views/profiel/_public.phtml:35
 msgid "Status"
 msgstr "Status"
@@ -3145,6 +3148,53 @@ msgstr "Facebook"
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
 
+#: themes/default/views/profiel/_incassomatic.phtml:23
+msgid "Incassomatic"
+msgstr "Incassomatic"
+
+#: themes/default/views/profiel/_incassomatic.phtml:24
+msgid "Contract"
+msgstr "Contract"
+
+#: themes/default/views/profiel/_incassomatic.phtml:26
+#, php-format
+msgid "Getekend en actief sinds %s."
+msgstr "Signed and active since %s."
+
+#: themes/default/views/profiel/_incassomatic.phtml:28
+msgid "Je hebt nog geen contract. Vraag je penningmeester om er een te maken!"
+msgstr ""
+"You do not yet have a continuous direct debit contract. Ask you treasurer "
+"for one!"
+
+#: themes/default/views/profiel/_incassomatic.phtml:33
+msgid "Je laatste vijftien incasso's."
+msgstr "Your fifteen most recent direct debits."
+
+#: themes/default/views/profiel/_incassomatic.phtml:39
+msgid "Prijs"
+msgstr "Price"
+
+#: themes/default/views/profiel/_incassomatic.phtml:46
+msgid "Deze opdracht is nog niet naar de bank verstuurd."
+msgstr "This direct debit has not yet been send to the bank."
+
+#: themes/default/views/profiel/_incassomatic.phtml:48
+msgid "Afgeschreven"
+msgstr "Debited"
+
+#: themes/default/views/profiel/_incassomatic.phtml:49
+msgid "Getekend"
+msgstr "Sigend"
+
+#: themes/default/views/profiel/_incassomatic.phtml:50
+msgid "Nog niet getekend"
+msgstr "Not yet signed"
+
+#: themes/default/views/profiel/_incassomatic.phtml:62
+msgid "Sorry, Incassomatic is niet bereikbaar op het moment."
+msgstr "Sorry, Incassomatic cannot be reached at this moment."
+
 #: themes/default/views/profiel/_kast.phtml:15
 #: themes/default/views/profiel/profiel.phtml:98
 msgid "KAST"
@@ -3315,10 +3365,14 @@ msgid "Privacy"
 msgstr "Privacy"
 
 #: themes/default/views/profiel/profiel.phtml:105
+msgid "Incasso's"
+msgstr "Direct debits"
+
+#: themes/default/views/profiel/profiel.phtml:112
 msgid "Systeem"
 msgstr "System"
 
-#: themes/default/views/profiel/profiel.phtml:116
+#: themes/default/views/profiel/profiel.phtml:123
 #, php-format
 msgid "Profiel van %s"
 msgstr "Profile of %s"
@@ -3666,9 +3720,6 @@ msgstr "Modify working group page"
 
 #~ msgid "Vak"
 #~ msgstr "Course"
-
-#~ msgid "Prijs"
-#~ msgstr "Price"
 
 #~ msgid "Totaal bedrag: &euro;&nbsp;"
 #~ msgstr "Total amount: &euro;&nbsp;"

@@ -81,7 +81,7 @@ class KastAPI
 
 		$data = json_decode($response);
 
-		if (!$data)
+		if ($data === null)
 			throw new RuntimeException('Could not decode response as JSON');
 
 		return $data;

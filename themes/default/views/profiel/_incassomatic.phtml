@@ -1,0 +1,65 @@
+<?php
+require_once 'include/incassomatic.php';
+
+$format_date = function($datestring) {
+	$timestamp = strtotime($datestring);
+	return format_date_relative($timestamp);
+};
+
+$format_date_full = function($datestring) {
+	return date_create($datestring)->format('j-n-Y H:i:s');
+};
+
+try {
+	$incasso_api = \incassomatic\shared_instance();
+	$contracts = $incasso_api->getContracts($iter);
+
+	// Only show valid contracts
+	$contract = current(array_filter($contracts, function($contract) { return $contract->is_geldig; }));
+
+	$incassos = $incasso_api->getIncassos($iter, 15);
+?>
+<section>
+	<h2><?=__('Incassomatic')?></h2>
+	<h4><?=__('Contract')?></h4>
+	<?php if ($contract): ?>
+	<em><?=sprintf(__('Getekend en actief sinds %s.'), date_create($contract->start_datum)->format('j-n-Y'))?></em>
+	<?php else: ?>
+	<em><?=__('Je hebt nog geen contract. Vraag je penningmeester om er een te maken!')?></em>
+	<?php endif?>
+</section>
+
+<section>
+	<p><?=__("Je laatste vijftien incasso's.")?></p>
+	<table class="full-width-table">
+		<thead>
+			<tr>
+				<th><?=__('Status')?></th>
+				<th><?=__('Omschrijving')?></th>
+				<th class="numeric"><?=__('Prijs')?></th>
+				<th class="timestamp"><?=__('Datum')?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($incassos as $i => $incasso): ?>
+			<tr class="<?php if (!$incasso->batch_id) echo 'pending' ?>"
+				title="<?php if (!$incasso->batch_id) echo __('Deze opdracht is nog niet naar de bank verstuurd.') ?>">
+				<td><?php
+						if ($incasso->batch_id) echo __('Afgeschreven');
+						elseif ($incasso->goedgekeurd) echo __('Getekend');
+						else echo __('Nog niet getekend');
+					?></td>
+				<td><?=markup_format_text($incasso->omschrijving)?></td>
+				<td class="numeric">&euro;&nbsp;<?=sprintf('%0.2f', $incasso->bedrag / 100)?></td>
+				<td class="timestamp"><time title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
+			</tr>
+			<?php endforeach ?>
+		</tbody>
+	</table>
+</section>
+<?php } catch (Exception $e) { ?>
+<section>
+	<?php echo '<pre>', $e, '</pre>'; ?>
+	<p><?=__('Sorry, Incassomatic is niet bereikbaar op het moment.')?></p>
+</section>
+<?php } ?>

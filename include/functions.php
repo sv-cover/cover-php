@@ -626,7 +626,7 @@
 			if ($day_diff < 7) return sprintf(__('%d dagen geleden'), $day_diff);
 			// if ($day_diff < 31) return sprintf(__('%d weken geleden'), floor($day_diff / 7));
 			// if ($day_diff < 60) return __('afgelopen maand');
-			return date('j-n-Y H:i:s', $time);
+			return date('j-n-Y', $time);
 		}
 		else
 			return date('j-n-Y', $time);
