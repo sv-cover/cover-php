@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-07-27 22:05+0200\n"
+"POT-Creation-Date: 2016-07-29 14:59+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1111,7 +1111,8 @@ msgstr "Subject/question"
 #: themes/default/views/fotoboek/add_photos.phtml:24
 #: themes/default/views/mailinglijsten/mailinglist.phtml:52
 #: themes/default/views/mailinglijsten/mailinglists.phtml:35
-#: themes/default/views/profiel/_incassomatic.phtml:38
+#: themes/default/views/profiel/_incassomatic.phtml:63
+#: themes/default/views/profiel/_incassomatic.phtml:85
 msgid "Omschrijving"
 msgstr "Description"
 
@@ -1364,7 +1365,8 @@ msgstr "Modify message"
 #: themes/default/views/agenda/moderate.phtml:18
 #: themes/default/views/fotoboek/_info.phtml:7
 #: themes/default/views/mailinglijsten/list_archive.phtml:9
-#: themes/default/views/profiel/_incassomatic.phtml:40
+#: themes/default/views/profiel/_incassomatic.phtml:65
+#: themes/default/views/profiel/_incassomatic.phtml:87
 msgid "Datum"
 msgstr "Date"
 
@@ -2938,7 +2940,6 @@ msgid "Afzender"
 msgstr "Sender"
 
 #: themes/default/views/mailinglijsten/list_archive.phtml:10
-#: themes/default/views/profiel/_incassomatic.phtml:37
 #: themes/default/views/profiel/_public.phtml:35
 msgid "Status"
 msgstr "Status"
@@ -3148,50 +3149,76 @@ msgstr "Facebook"
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
 
-#: themes/default/views/profiel/_incassomatic.phtml:23
+#: themes/default/views/profiel/_incassomatic.phtml:27
+#: themes/default/views/profiel/_incassomatic.phtml:43
 msgid "Incass-o-matic"
 msgstr "Incass-o-matic"
 
-#: themes/default/views/profiel/_incassomatic.phtml:24
+#: themes/default/views/profiel/_incassomatic.phtml:28
+msgid "Je hebt nog geen doorlopend incassocontract."
+msgstr "You do not yet have a continuous direct debit contract."
+
+#: themes/default/views/profiel/_incassomatic.phtml:29
+msgid ""
+"Met een doorlopend incassocontract hoef je niet meer zelf incasso's te "
+"printen en te ondertekenen. Dus nooit meer naar de printer lopen nadat je in "
+"KAST kruisjes hebt gekocht!"
+msgstr ""
+"With a continuous direct debit contract, you no longer have to print and "
+"sign direct debit forms. No more going to the printer after buying new "
+"credits in KAST!"
+
+#: themes/default/views/profiel/_incassomatic.phtml:32
+#, php-format
+msgid ""
+"Download het contract, onderteken het, en lever het in bij de "
+"penningmeester, %s, of laat het achter in het postvakje in de Coverkamer."
+msgstr ""
+"Download the contract, sign it, and hand it to the treasurer, %s, or deliver "
+"it to the pigeonhole in the Cover room."
+
+#: themes/default/views/profiel/_incassomatic.phtml:35
+msgid "Download contract"
+msgstr "Download contract"
+
+#: themes/default/views/profiel/_incassomatic.phtml:38
+msgid ""
+"Zodra het contract verwerkt is kan je hier op ieder moment de incasso's hier "
+"inzien, zowel de incasso's die net zijn aangemaakt als de incasso's die al "
+"zijn afgeschreven."
+msgstr ""
+"As soon as your contract has been processed, you can view your direct debits "
+"here every moment of the day. Both freshly created direct debit transactions "
+"as well as already debited ones will be displayed here."
+
+#: themes/default/views/profiel/_incassomatic.phtml:44
 msgid "Contract"
 msgstr "Contract"
 
-#: themes/default/views/profiel/_incassomatic.phtml:26
+#: themes/default/views/profiel/_incassomatic.phtml:45
 #, php-format
 msgid "Getekend en actief sinds %s."
 msgstr "Signed and active since %s."
 
-#: themes/default/views/profiel/_incassomatic.phtml:28
-msgid "Je hebt nog geen contract. Vraag je penningmeester om er een te maken!"
-msgstr ""
-"You do not yet have a continuous direct debit contract. Ask you treasurer "
-"for one!"
-
-#: themes/default/views/profiel/_incassomatic.phtml:33
+#: themes/default/views/profiel/_incassomatic.phtml:55
 msgid "Je laatste vijftien incasso's."
 msgstr "Your fifteen most recent direct debits."
 
-#: themes/default/views/profiel/_incassomatic.phtml:39
+#: themes/default/views/profiel/_incassomatic.phtml:60
+msgid "Nog te incasseren"
+msgstr "To be debited"
+
+#: themes/default/views/profiel/_incassomatic.phtml:64
+#: themes/default/views/profiel/_incassomatic.phtml:86
 msgid "Prijs"
 msgstr "Price"
 
-#: themes/default/views/profiel/_incassomatic.phtml:46
-msgid "Deze opdracht is nog niet naar de bank verstuurd."
-msgstr "This direct debit has not yet been send to the bank."
+#: themes/default/views/profiel/_incassomatic.phtml:82
+#, php-format
+msgid "Incassobatch %d"
+msgstr "Debit batch %d"
 
-#: themes/default/views/profiel/_incassomatic.phtml:48
-msgid "Afgeschreven"
-msgstr "Debited"
-
-#: themes/default/views/profiel/_incassomatic.phtml:49
-msgid "Getekend"
-msgstr "Sigend"
-
-#: themes/default/views/profiel/_incassomatic.phtml:50
-msgid "Nog niet getekend"
-msgstr "Not yet signed"
-
-#: themes/default/views/profiel/_incassomatic.phtml:63
+#: themes/default/views/profiel/_incassomatic.phtml:106
 msgid "Sorry, Incass-o-matic is niet bereikbaar op het moment."
 msgstr "Sorry, Incass-o-matic cannot be reached at this moment."
 
@@ -3685,6 +3712,24 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
+
+#~ msgid ""
+#~ "Je hebt nog geen contract. Vraag je penningmeester om er een te maken!"
+#~ msgstr ""
+#~ "You do not yet have a continuous direct debit contract. Ask you treasurer "
+#~ "for one!"
+
+#~ msgid "Deze opdracht is nog niet naar de bank verstuurd."
+#~ msgstr "This direct debit has not yet been send to the bank."
+
+#~ msgid "Afgeschreven"
+#~ msgstr "Debited"
+
+#~ msgid "Getekend"
+#~ msgstr "Sigend"
+
+#~ msgid "Nog niet getekend"
+#~ msgstr "Not yet signed"
 
 #~ msgid "Incassomatic"
 #~ msgstr "Incassomatic"
