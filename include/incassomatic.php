@@ -35,10 +35,13 @@ class API
 		return $this->_get($this->api_root . 'contracten/', ['cover_id' => $member->get_id()]);
 	}
 
-	protected function _get($url, array $data)
+	public function getContractTemplatePDF(\DataIterMember $member)
 	{
-		global $http_response_header;
+		return $this->_stream(sprintf('%scontracten/templates/%d', $this->api_root, $member['id']));
+	}
 
+	protected function _getRequest($url, array $data)
+	{
 		$query = http_build_query($data);
 
 		$headers = array(
@@ -63,7 +66,17 @@ class API
 
 		$context  = \stream_context_create($options);
 
-		$response = \file_get_contents($url . '?' . $query, false, $context);
+		return (object) [
+			'url' => $url . ($query != '' ? ('?' . $query) : ''),
+			'context' => $context
+		];
+	}
+
+	protected function _get($url, array $data = array())
+	{
+		$request = $this->_getRequest($url, $data);
+
+		$response = \file_get_contents($request->url, false, $request->context);
 
 		if (!preg_match('/^HTTP\/1\.\d\s(\d+)\s/', $http_response_header[0], $match))
 			throw new \RuntimeException('Could not get HTTP STATUS response header');
@@ -80,6 +93,12 @@ class API
 			throw new \RuntimeException('Could not decode response as JSON: ' . $response);
 
 		return $data;
+	}
+
+	protected function _stream($url, array $data = array())
+	{
+		$request = $this->_getRequest($url, $data);
+		return fopen($request->url, 'rb', false, $request->context);
 	}
 }
 

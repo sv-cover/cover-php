@@ -2419,6 +2419,12 @@ a.profile-widget:after {
 	font-style: italic;
 }
 
+.tab-pane .aligned-list-section .center {
+	margin-left: -140px;
+	width: auto;
+	text-align: center;
+}
+
 .tab-pane .aligned-list-section h4 {
 	display: block;
 	width: 130px;

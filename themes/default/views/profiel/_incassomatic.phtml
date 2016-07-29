@@ -10,6 +10,10 @@ $format_date_full = function($datestring) {
 	return date_create($datestring)->format('j-n-Y H:i:s');
 };
 
+$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'penningmeester');
+$treasurer_link = sprintf('<a href="profiel.php?lid=%d">%s</a>',
+	$treasurer['id'], markup_format_text(member_full_name($treasurer)));
+
 try {
 	$incasso_api = \incassomatic\shared_instance();
 	$contracts = $incasso_api->getContracts($iter);
@@ -19,10 +23,21 @@ try {
 ?>
 
 <?php if (!$contract): ?>
-<section>
+<section class="aligned-list-section">
 	<h2><?=__('Incass-o-matic')?></h2>
-	<em><?=__('Je hebt nog geen contract. Vraag je penningmeester om er een te maken!')?></em>
+	<em><?=__('Je hebt nog geen doorlopend incassocontract.')?></em>
+	<p><?=__("Met een doorlopend incassocontract hoef je niet meer zelf incasso's te printen en te ondertekenen. Dus nooit meer naar de printer lopen nadat je in KAST kruisjes hebt gekocht!")?></p>
 </section>
+<section class="aligned-list-section">
+	<p><?=sprintf(__("Download het contract, onderteken het, en lever het in bij de penningmeester, %s, of laat het achter in het postvakje in de Coverkamer."), $treasurer_link) ?></p>
+
+	<div class="center">
+		<a href="profiel.php?export=incasso-contract" class="button large-button" target="_blank"><?=__('Download contract') ?></a>
+	</div>
+
+	<p><?=__("Zodra het contract verwerkt is kan je hier op ieder moment de incasso's hier inzien, zowel de incasso's die net zijn aangemaakt als de incasso's die al zijn afgeschreven.") ?></p>
+</section>
+
 <?php else: ?>
 <section class="aligned-list-section">
 	<h2><?=__('Incass-o-matic')?></h2>
