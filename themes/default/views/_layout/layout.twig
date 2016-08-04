@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=9">
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<link rel="icon" type="image/png" href="images/favicon.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">		
+		<title>{% block title %}Cover :: {{ __('Studievereniging Kunstmatige Intelligentie en Informatica, RUG') }}{% endblock %}</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="{{ link_static('style.css') }}" type="text/css">
+		<link rel="stylesheet" href="{{ link_static('styles/font-awesome.min.css') }}" type="text/css">
+		<!--[if lte IE 7]>
+			<link rel="stylesheet" href="{{ link_static('styleIE.css')  }}" type = "text/css">
+		<![endif]-->
+		{% block stylesheets %}
+		<link rel="stylesheet" href="{{ link_static('styles/style.css') }}" type="text/css">
+		{% endblock %}
+		
+		{% block scripts %}
+		<script src="{{ link_static('data/jquery-2.2.0.min.js') }}"></script>
+		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script type="text/javascript" src="{{ link_static('data/common.js') }}"></script>
+		<script type="text/javascript" src="{{ link_static('data/dropdown.js') }}"></script>
+		<script type="text/javascript" src="{{ link_static('data/connection.js') }}"></script>
+		{% endblock %}
+	</head>
+	<body>
+		<div class="world">
+			<div class="header clearfix">
+				{% block message %}{% endblock %}
+				<div class="login">
+					{{ include('@layout/widgets/login.twig') }}
+				</div>
+				{% if date() > date('12/26') %}
+					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo_christmas.png') }}" alt="logo" style="height:auto;margin-top:-12px"></a>
+				{% else %}
+					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="logo"></a>
+					{% endif %}
+			</div>
+			<div class="topMenu clearfix">
+				{% block menu %}
+					{{ include('@layout/widgets/menu.twig') }}
+				{% endblock %}
+			</div>
+
+			{{ include('@layout/widgets/promotional-header.twig') }}
+
+			<div class="container clearfix">
+				<div class="center column" id="contents">
+					{% block content %}{% endblock %}
+				</div> <!-- CONTENTS_TEXT -->
+					
+				<div class="menu column">
+					{{ include('@layout/widgets/agenda.twig') }}
+					
+					{{ include('@layout/widgets/poll.twig') }}
+
+					{{ include('@layout/widgets/search.twig') }}
+				</div>	
+				
+				<div class="aff column">
+					{{ include('@layout/widgets/banners.twig') }}
+				</div>
+			</div> <!-- CONTAINER -->
+
+		</div> <!-- .world -->
+		
+		<!-- Google Analytics -->
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-12500955-1', 'auto');
+		  ga('require', 'displayfeatures');
+		  ga('send', 'pageview');
+		</script>
+
+		{% if get_config_value('show_queries', false) %}
+		{#
+		{% for query in global.db.history %}
+			printf("%f: %s\n\n", $query['duration'], $query['query']);
+
+			printf("Driver: %s\n", get_class(get_db()));
+			printf("Total time: %fs", array_sum(array_map(function($query) { return $query['duration']; }, get_db()->history)));
+		{% endforeach %}
+		#}
+		{% endif %}
+	</body>
+</html>

@@ -5,7 +5,7 @@ class CommissiesView extends CRUDView
 {
 	protected $__file = __FILE__;
 
-	public function get_commissie_thumb($commissie)
+	public function get_commissie_thumb(DataIterCommissie $commissie)
 	{
 		return $this->find_image(array(
 			'images/committees/' . $commissie->get('login') . 'tn.gif',
@@ -14,12 +14,23 @@ class CommissiesView extends CRUDView
 		));
 	}
 
-	public function get_commissie_photo($commissie)
+	public function get_commissie_photo(DataIterCommissie $commissie)
 	{
-		return $this->find_image(array(
+		$path = $this->find_image(array(
 			'images/committees/' . $commissie->get('login') . '.gif',
 			'images/committees/' . $commissie->get('login') . '.jpg'
 		));
+
+		if (!$path)
+			return null;
+
+		list($width, $height) = getimagesize($path);
+		$orientation = $height > $width ? 'vertical' : 'horizontal';
+
+		return [
+			'orientation' => $orientation,
+			'url' => $path
+		];
 	}
 
 	private function find_image($search_paths)
@@ -31,7 +42,7 @@ class CommissiesView extends CRUDView
 		return null;
 	}
 
-	public function get_summary($commissie)
+	public function get_summary(DataIterCommissie $commissie)
 	{
 		/* Get the first editable page */
 		$editable_model = get_model('DataModelEditable');
@@ -49,5 +60,41 @@ class CommissiesView extends CRUDView
 		$content = $page->get($property);
 		
 		return editable_get_summary($content, $page->get('owner'));
+	}
+
+	public function get_activities(DataIterCommissie $iter)
+	{
+		$model = get_model('DataModelAgenda');
+		$activiteiten = array();
+
+		foreach ($model->get_agendapunten() as $punt)
+			if ($punt->get('commissie') == $iter->get('id') && get_policy($model)->user_can_read($punt))
+				$activiteiten[] = $punt;
+
+		return $activiteiten;
+	}
+
+	public function get_navigation(DataIterCommissie $iter)
+	{
+		$model = $this->controller->model();
+
+		$committees = $model->get(false);
+
+		$committees = array_filter($committees, [get_policy($model), 'user_can_read']);
+
+		$current_index = array_usearch($iter, $committees,
+			function($a, $b) { return $a->get_id() == $b->get_id(); });
+
+		$nav = new stdClass();
+
+		$nav->previous = $current_index !== null && $current_index > 0
+			? $committees[$current_index - 1]
+			: null;
+
+		$nav->next = $current_index !== null && $current_index < count($committees) - 1
+			? $committees[$current_index + 1]
+			: null;
+
+		return $nav;
 	}
 }

@@ -25,7 +25,7 @@
 	function get_model($name)
 	{
 		static $models = array();
-		
+
 		return isset($models[$name])
 			? $models[$name]
 			: $models[$name] = create_model($name);

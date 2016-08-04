@@ -15,7 +15,7 @@
 				: array('content', 'content_en');
 
 			foreach ($preferred_fields as $field)
-				if ($this->get($field))
+				if ($this->has_field($field) && $this->get($field) != '')
 					return $this->get($field);
 
 			return null;

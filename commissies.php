@@ -2,6 +2,7 @@
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
 require_once 'include/controllers/ControllerEditable.php';
+require_once 'themes/default/views/commissies/commissies.php';
 
 class ControllerCommissies extends ControllerCRUD
 {	
@@ -11,6 +12,8 @@ class ControllerCommissies extends ControllerCRUD
 	{
 		$this->model = get_model('DataModelCommissie');
 		$this->model->type = DataModelCommissie::TYPE_COMMITTEE;
+
+		$this->view = View::byName('commissies', $this);
 	}
 
 	protected function _index()

@@ -1,0 +1,11 @@
+{% if global.auth.logged_in %}
+	{{ __('Ingelogd') }}: <b>{{ global.identity.voornaam }}</b><br/>
+	<a class="logButton" href="{{ link('sessions.logout') }}">{{ __('Uitloggen') }}</a>
+	<a class="logButton" href="{{ link('profiel', global.identity.id) }}">{{ __('Profiel') }}</a>
+
+	{% if global.identity.can_impersonate %}
+		<a href="{{ link('sessions.override') }}" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">{{ __('Bekijk als…') }}</a>
+	{% endif %}
+{% else %}
+	<a class="logButton" href="{{ link('sessions.login') }}">Log in</a>
+{% endif %}

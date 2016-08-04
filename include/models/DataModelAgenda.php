@@ -28,6 +28,11 @@
 		{
 			return $this->model->get_proposed($this);
 		}
+
+		public function get_formatted_period()
+		{
+			return agenda_period_for_display($this);
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider

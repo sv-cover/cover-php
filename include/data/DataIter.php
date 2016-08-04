@@ -41,6 +41,11 @@
 				'data' => $this->data
 			];
 		}
+
+		public function model()
+		{
+			return $this->model;
+		}
 		
 		/**
 		  * Get the id of the iter

@@ -1,0 +1,27 @@
+<div class="pageHeading">
+	{% if user_can_create model %}
+		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuwe commissie') }}</a></div>
+	{% endif %}
+	<h1>{{ __('Commissies') }}</h1>
+</div>
+<div class="messageBox">
+	<ul class="commissie-index">
+	{% for committee in iters %}
+		<li class="commissie">
+			{% if committee.vacancies %}
+			<span class="vacancy-badge">{{ __('Commissieleden gezocht!') }}</span>
+			{% endif %}
+			<a href="{{ controller.link_to_read(committee) }}" class="link">
+				{% set imgpath = view.get_commissie_thumb(committee) %}
+				{% if imgpath %}
+					<img src="{{ imgpath }}" class="thumbnail">
+				{% endif %}
+				<span class="overlay">
+					<span class="name">{{ committee.naam }}</span>
+					<span class="summary">{{ view.get_summary(committee) }} </span>
+				</span>
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
+</div>

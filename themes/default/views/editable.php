@@ -1,36 +1,30 @@
 <?php
-	require_once 'include/editable.php';
-	require_once 'include/form.php';
-	require_once 'include/markup.php';
-	require_once 'include/member.php';
+require_once 'include/editable.php';
+require_once 'include/form.php';
+require_once 'include/markup.php';
+require_once 'include/member.php';
 
-	function echo_editable_page($iter, $page)
-	{	
+class EditableView extends View
+{
+	public function render_editable(DataIterEditable $iter, $params = null)
+	{
+		if (!$iter)
+			return '<span class="error">' . __('Deze pagina bestaat niet') . '</span>';
+
 		// Remove unnecessary breaks from the beginning of the page.
-		echo preg_replace('/^(\<br\/?\>\s*)+/i', '', $page);
-	}
-	
-	function view_something_went_wrong($model, $iter, $params = null) {
-		echo '<h1>' . __('Fout') . '</h1>
-		<div class="error_message">' . $params['message'] . '</div>';
+		return preg_replace('/^(\<br\/?\>\s*)+/i', '', $params['page']);
 	}
 
-	function view_editable($model, $iter, $params = null) {
-		if (!$iter) {
-			echo '<span class="error">' . __('Deze pagina bestaat niet') . '</span>';
-			return;
-		}
-
-		echo_editable_page($iter, $params['page']);
-	}
-
-	function view_read_only($model, $iter, $params = null) {
-		echo '<h1>' . $iter->get('titel') . '</h1>
+	public function render_read_only(DataIterEditable $iter, $params = null)
+	{
+		return '<h1>' . $iter->get('titel') . '</h1>
 		<p><span class="error">' . __('Deze pagina kan niet door jou worden bewerkt.') . '</span></p>';
-	}	
+	}
 
-	function view_edit($model, $iter, $params = null) {
+	public function render_edit(DataIterEditable $iter, $params = null) {
 		$self = get_request('editable_edit');
+
+		ob_start();
 
 		echo '
 		<div class="contenteditable" id="editable' . $iter->get('id') . '">
@@ -149,4 +143,7 @@
 			}
 		</script>
 		</div>';
+
+		return ob_get_clean();
 	}
+}

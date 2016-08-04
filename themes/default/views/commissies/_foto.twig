@@ -1,0 +1,6 @@
+{% set photo = view.get_commissie_photo(iter) %}
+{% if photo %}
+	<div class="commissie_foto {{ photo.orientation }}">
+		<img src="{{ photo.url }}">
+	</div>
+{% endif %}

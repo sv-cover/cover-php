@@ -60,102 +60,10 @@ class ControllerCRUD extends Controller
 		return View::byName($view, $this);
 	}
 
-	protected function run_view($view, DataModel $model, $iter, array $params)
-	{
-		throw new RuntimeException("ControllerCRUD::run_view() is not implemented anymore");
-	}
-
 	protected function _create_iter()
 	{
 		$dataiter_class = new ReflectionClass($this->model->dataiter);
 		return $dataiter_class->newInstance($this->model, null, array());
-	}
-
-	protected function _get_title($iters = null)
-	{
-		return '';
-	}
-
-	protected function _get_view_name()
-	{
-		return strtolower(substr(get_class($this), strlen('Controller')));
-	}
-
-	protected function _get_default_view_params()
-	{
-		return array_merge(
-			get_object_vars($this), // stuff like 'model' and other user defined stuff
-			array('controller' => $this));
-	}
-
-	protected function _get_preferred_response()
-	{
-		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
-			array('application/json', 'text/html', '*/*'));
-	}
-
-	protected function _send_json_single(DataIter $iter)
-	{
-		$this->_send_json(array(
-			'iter' => $this->_json_augment_iter($iter)
-		));
-	}
-
-	protected function _send_json_index(array $iters)
-	{
-		$links = array();
-
-		if (get_policy($this->model)->user_can_create())
-			$links['create'] = $this->link_to_create();
-
-		$this->_send_json(array(
-			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
-			'_links' => $links
-		));
-	}
-
-	protected function _json_augment_iter(DataIter $iter)
-	{
-		$links = array();
-
-		if (get_policy($this->model)->user_can_read($iter))
-			$links['read'] = $this->link_to_read($iter);
-
-		if (get_policy($this->model)->user_can_update($iter))
-			$links['update'] = $this->link_to_update($iter);
-
-		if (get_policy($this->model)->user_can_delete($iter))
-			$links['delete'] = $this->link_to_delete($iter);
-
-		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
-	}
-
-	protected function get_content($view, $iter = null, array $params = array())
-	{
-		if (strpos($view, '::') === false) {
-			$view_method = $view;
-			$view_instance = $this->_create_view($this->_get_view_name());
-		}
-		else {
-			list($view_class, $view_method) = explode('::', $view, 2);
-			$view_instance = $this->_create_view($view_class);
-		}
-
-		if (!$this->embedded)
-			$this->run_header([
-				'controller' => $this,
-				'view' => $view_instance,
-				'title' => $this->_get_title($iter),
-			]);
-
-		call_user_func([$view_instance, $view_method],
-			array_merge(
-				$this->_get_default_view_params(),
-				compact('model', 'iter'),
-				$params));
-
-		if (!$this->embedded)
-			$this->run_footer();
 	}
 
 	public function link(array $arguments)
@@ -206,22 +114,7 @@ class ControllerCRUD extends Controller
 			if ($iter = $this->_create($_POST, $errors))
 				$success = true;
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					$this->_send_json_single($iter);
-				else
-					$this->_send_json(compact('errors'));
-				break;
-
-			default:
-				if ($success)
-					$this->redirect($this->link_to_read($iter));
-				else
-					$this->get_content('form', $this->_create_iter(), compact('errors'));
-				break;	
-		}
+		return $this->view()->render_create($iter, $success, $errors);
 	}
 
 	public function run_read(DataIter $iter)
@@ -229,16 +122,7 @@ class ControllerCRUD extends Controller
 		if (!get_policy($this->model)->user_can_read($iter))
 			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				$this->_send_json_single($iter);
-				break;
-
-			default:
-				return $this->get_content('single', $iter);
-				break;
-		}
+		return $this->view()->render_read($iter);
 	}
 
 	public function run_update(DataIter $iter)
@@ -254,22 +138,7 @@ class ControllerCRUD extends Controller
 			if ($this->_update($iter, $_POST, $errors))
 				$success = true;
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					$this->_send_json_single($iter);
-				else
-					$this->_send_json(compact('errors'));
-				break;
-
-			default:
-				if ($success)
-					$this->redirect($this->link_to_read($iter));
-				else
-					$this->get_content('form', $iter, compact('errors'));
-				break;	
-		}
+		return $this->view()->render_update($iter, $success, $errors);
 	}
 
 	public function run_delete(DataIter $iter)
@@ -285,38 +154,17 @@ class ControllerCRUD extends Controller
 			if ($this->_delete($iter, $errors))
 				$success = true;
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				$this->_send_json(compact('errors'));
-				break;
-
-			default:
-				if ($success)
-					$this->redirect($this->link_to_index());
-				else
-					$this->get_content('confirm_delete', $iter, compact('errors'));
-				break;	
-		}
+		return $this->view()->render_delete($iter, $success, $errors);
 	}
 
 	public function run_index()
 	{
 		$iters = array_filter($this->_index(), array(get_policy($this->model), 'user_can_read'));
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				$this->_send_json_index($iters);
-				break;
-
-			default:
-				$this->get_content('index', $iters);
-				break;
-		}
+		return $this->view()->render_index($iters);
 	}
 	
-	/* protected */ function run_impl()
+	protected function run_impl()
 	{
 		$iter = null;
 
@@ -330,13 +178,15 @@ class ControllerCRUD extends Controller
 				$view = 'read';
 
 			if (!$iter)
-				return run_view('common::not_found');
+				throw new NotFoundException('ControllerCRUD::_read could not find the model instance.');
 		}
 
-		if (!$view) $view = 'index';
+		if (!$view)
+			$view = 'index';
 
-		return method_exists($this, 'run_' . $view)
-			? call_user_func_array([$this, 'run_' . $view], [$iter])
-			: run_view('common::not_found');
+		if (!method_exists($this, 'run_' . $view))
+			throw new NotFoundException('View not implemented by this ControllerCRUD');
+			
+		return call_user_func_array([$this, 'run_' . $view], [$iter]);
 	}
 }
