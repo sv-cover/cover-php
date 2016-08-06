@@ -245,7 +245,7 @@ class CRUDView extends View
 
 			default:
 				if ($success)
-					return $this->redirect($this->link_to_read($iter));
+					return $this->redirect($this->controller->link_to_read($iter));
 				else
 					return $this->render('form.twig', compact('iter', 'errors'));
 		}
@@ -275,7 +275,7 @@ class CRUDView extends View
 
 			default:
 				if ($success)
-					return $this->redirect($this->link_to_read($iter));
+					return $this->redirect($this->controller->link_to_read($iter));
 				else
 					return $this->render('form.twig', compact('iter', 'errors'));
 		}
@@ -305,7 +305,7 @@ class CRUDView extends View
 		$links = array();
 
 		if (get_policy($this->controller->mode())->user_can_create())
-			$links['create'] = $this->link_to_create();
+			$links['create'] = $this->controller->link_to_create();
 
 		return $this->_send_json(array(
 			'iters' => array_map(array($this, '_json_augment_iter'), $iters),

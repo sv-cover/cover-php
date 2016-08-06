@@ -1363,6 +1363,10 @@ td.timestamp {
 	width: 100%;
 }
 
+.vertical-form input[size] {
+	width: auto;
+}
+
 .vertical-form input + label {
 	display: inline-block;
 }

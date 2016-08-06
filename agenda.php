@@ -5,34 +5,23 @@
 	require_once 'include/form.php';
 	require_once 'include/webcal.php';
 	require_once 'include/markup.php';
-	require_once 'include/controllers/Controller.php';
-	require_once 'include/policies/policy.php';
+	require_once 'include/controllers/ControllerCRUD.php';
 	
-	class ControllerAgenda extends Controller
+	class ControllerAgenda extends ControllerCRUD
 	{
+		protected $_var_id = 'agenda_id';
+		
 		public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
 
 			$this->policy = get_policy($this->model);
+
+			$this->view = View::byName('agenda', $this);
 		}
 		
-		function get_content($view = 'index', $iter = null, $params = null) {
-			if ($iter instanceof DataIterAgenda)
-				$title = $iter->get('kop');
-			elseif (isset($_GET['year']))
-				$title = sprintf(__('Agenda %d-%d'), $_GET['year'], $_GET['year'] + 1);
-			else
-				$title = __('Agenda');
-
-			$params = array_merge(array('controller' => $this), $params ?: array());
-
-			$this->run_header(compact('title'));
-			run_view('agenda::' . $view, $this->model, $iter, $params);
-			$this->run_footer();
-		}
-		
-		function _check_datum($name, $value) {
+		public function _check_datum($name, $value)
+		{
 			/* If this is the tot field and we don't use tot
 			 * then set that value to null and return true
 			 */
@@ -62,7 +51,8 @@
 			return $value;
 		}
 		
-		function _check_length($name, $value) {
+		public function _check_length($name, $value)
+		{
 			$lengths = array('kop' => 100, 'locatie' => 100);
 
 			if (!$value)
@@ -74,7 +64,8 @@
 			return $value;
 		}
 		
-		function _check_locatie($name, $value) {
+		public function _check_locatie($name, $value)
+		{
 			$locatie = get_post('use_locatie');
 			check_value_checkbox($name, $locatie);
 
@@ -89,7 +80,7 @@
 			return $this->_check_length('locatie', $locatie);
 		}
 
-		function _check_facebook_id($name, $value)
+		public function _check_facebook_id($name, $value)
 		{
 			if (trim($value) == '')
 				return null;
@@ -100,7 +91,7 @@
 			return false;
 		}
 
-		function _check_commissie($name, $value)
+		public function _check_commissie($name, $value)
 		{
 			if (member_in_commissie($value)
 				|| member_in_commissie(COMMISSIE_BESTUUR)
@@ -110,9 +101,9 @@
 			return false;
 		}
 
-		function _check_values($iter) {
+		protected function _check_values($iter, &$errors)
+		{
 			/* Check/format all the items */
-			$errors = array();
 			$data = check_values(
 				array(
 					array('name' => 'kop', 'function' => array($this, '_check_length')),
@@ -126,10 +117,8 @@
 					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
 				$errors);
 
-			if (count($errors) != 0) {
-				$this->get_content('edit', $iter, array('errors' => $errors));
+			if (count($errors) > 0)
 				return false;
-			}
 
 			if ($data['tot'] === null)
 				$data['tot'] = $data['van'];
@@ -137,7 +126,7 @@
 			return $data;
 		}
 
-		function _changed_values($iter, $data)
+		protected function _changed_values($iter, $data)
 		{
 			$changed = array();
 
@@ -158,15 +147,40 @@
 			return $changed;
 		}
 		
-		function _do_process($iter)
+		protected function _create(DataIter $iter, $data, array &$errors)
 		{
-			if (($data = $this->_check_values($iter)) === false)
-				return;
+			if (($data = $this->_check_values($iter, $errors)) === false)
+				return false;
+
+			// Placeholders for e-mail
+			$placeholders = array(
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
+				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
+
+			$iter->data = $data;
+
+			$id = $this->model->propose_insert($iter, true);
+				
+			$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
+
+			mail(
+				get_config_value('defer_email_to', get_config_value('email_bestuur')),
+				'Nieuw agendapunt ' . $data['kop'],
+				parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
+				"From: webcie@ai.rug.nl\r\n");
+
+			return true;
+		}
+
+		protected function _update(DataIter $iter, $data, array &$errors)
+		{
+			if (($data = $this->_check_values($iter, $errors)) === false)
+				return false;
 
 			$skip_confirmation = false;
 
 			// If you update the facebook-id, description or location, no need to reconfirm.
-			if ($iter && !array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'locatie')))
+			if (!array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'locatie')))
 				$skip_confirmation = true;
 
 			// Placeholders for e-mail
@@ -174,39 +188,9 @@
 				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
 				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
 
-			// No previous item exists, create a new one
-			if (!$iter)
-			{
-				if (!$this->policy->user_can_create())
-					throw new UnauthorizedException();
-
-				$iter = new DataIterAgenda($this->model, -1, $data);
-
-				if ($skip_confirmation)
-				{
-					$id = $this->model->insert($iter, true);
-					$this->redirect('agenda.php?agenda_id=' . $id);
-				}
-				else
-				{
-					$id = $this->model->propose_insert($iter, true);
-					
-					$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
-
-					mail(
-						get_config_value('defer_email_to', get_config_value('email_bestuur')),
-						'Nieuw agendapunt ' . $data['kop'],
-						parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
-						"From: webcie@ai.rug.nl\r\n");
-				}
-			}
-
 			// Previous exists and there is no need to let the board confirm it
-			else if ($skip_confirmation)
+			if ($skip_confirmation)
 			{
-				if (!$this->policy->user_can_create())
-					throw new UnauthorizedException();
-
 				foreach ($data as $field => $value)
 					$iter->set($field, $value);
 
@@ -218,9 +202,6 @@
 			// Previous item exists but it needs to be confirmed first.
 			else
 			{
-				if (!$this->policy->user_can_update($iter))
-					throw new UnauthorizedException();
-
 				$mod = new DataIterAgenda($this->model, -1, $data);
 
 				$override_id = $this->model->propose_update($mod, $iter);
@@ -234,38 +215,36 @@
 					"From: webcie@ai.rug.nl\r\n");
 			}
 
-			header('Location: ' . get_request('agenda_add', 'agenda_edit'));
-			exit;
-		}
-		
-		function _do_del($iter) {
-			if (!$this->policy->user_can_delete($iter))
-				return;
-			
-			$this->model->delete($iter);
-			header('Location: ' . get_request('agenda_del', 'agenda_id'));
-			exit();	
+			return true;
 		}
 
-		function _view_edit($iter) {
-			if (!$iter && !$this->policy->user_can_create())
-				$this->get_content('login');
-			elseif ($iter && !$this->policy->user_can_update($iter))
-				$this->get_content('login', $iter);
-			else
-				$this->get_content('edit', $iter, array('errors' => array()));
+		protected function _index()
+		{
+			$selected_year = isset($_GET['year']) ? intval($_GET['year']) : null;
+
+			if ($selected_year === null)
+				return $this->model->get_agendapunten();
+			
+			$from = sprintf('%d-09-01', $selected_year);
+			$till = sprintf('%d-08-31', $selected_year + 1);
+
+			$punten = $this->model->get($from, $till, true);
+
+			return $punten;
 		}
 		
-		function _view_moderate($id)
+		public function run_moderate($id)
 		{
+			if ($this->_form_is_submitted('moderate'))
+				if ($this->_moderate())
+					return $this->view->redirect('agenda.php');
+
 			$agenda_items = array_filter($this->model->get_proposed(), [$this->policy, 'user_can_moderate']);
 
-			$params = array('highlight' => $id);
-			
-			$this->get_content('moderate', $agenda_items, $params);
+			$this->view->render_moderate($agenda_items, ['highlight' => $id]);
 		}
 		
-		function _process_moderate()
+		protected function _moderate()
 		{
 			$cancelled = array();
 
@@ -315,10 +294,10 @@
 			elseif (count($cancelled_un) > 0)
 				$_SESSION['alert'] = sprintf(__('De commissies %s zijn op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
 			
-			return $this->redirect('agenda.php');
+			return true;
 		}
 
-		function _process_rsvp_status($iter)
+		public function run_rsvp_status($iter)
 		{
 			// If the id's for agenda items had been consistend, we could have stored attendance locally.
 			// Now, that would be a giant hack. Therefore, I defer that to some other moment in time.
@@ -333,29 +312,24 @@
 			$facebook = get_facebook();
 
 			if (!$facebook->getUser())
-				return;
+				throw new Exception('Could not get facebook user. Please try to reconnect your Facebook account.');
 
-			try {
-				switch ($_POST['rsvp_status'])
-				{
-					case 'attending':
-					case 'maybe':
-					case 'declined':
-						$result = $facebook->api(sprintf('/%d/%s' , $iter->get('facebook_id'), $_POST['rsvp_status']), 'POST');
-						break;
+			switch ($_POST['rsvp_status'])
+			{
+				case 'attending':
+				case 'maybe':
+				case 'declined':
+					$result = $facebook->api(sprintf('/%d/%s' , $iter->get('facebook_id'), $_POST['rsvp_status']), 'POST');
+					break;
 
-					default:
-						throw new Exception('Unknown rsvp status');
-				}
-
-				header('Location: agenda.php?agenda_id=' . $iter->get('id'));
+				default:
+					throw new Exception('Unknown rsvp status');
 			}
-			catch (Exception $e) {
-				die($e->getMessage());
-			}
+
+			return $this->view->redirect('agenda.php?id=' . $iter->get('id'));
 		}
 
-		function get_webcal()
+		public function run_webcal()
 		{
 			$cal = new WebCal_Calendar('Cover');
 			$cal->description = __('Alle activiteiten van studievereniging Cover');
@@ -391,64 +365,7 @@
 			}
 
 			$cal->publish('cover.ics');
-			exit;
-		}
-
-		public function link_to_create()
-		{
-			return 'agenda.php?agenda_add';
-		}
-
-		public function link_to_read(DataIterAgenda $iter)
-		{
-			return sprintf('agenda.php?agenda_id=%d', $iter->get_id());
-		}
-
-		public function link_to_update(DataIterAgenda $iter)
-		{
-			return sprintf('agenda.php?agenda_edit&agenda_id=%d', $iter->get_id());
-		}
-
-		public function link_to_delete(DataIterAgenda $iter)
-		{
-			return sprintf('agenda.php?agenda_del&agenda_id=%d', $iter->get_id());
-		}
-
-		public function run_index()
-		{
-			$this->get_content('index');
-		}
-		
-		function run_impl() {
-			$iter = null;
-
-			if (isset($_GET['agenda_id'])) {
-				$iter = $this->model->get_iter($_GET['agenda_id']);
-				
-				if (!$this->policy->user_can_read($iter))
-					return $this->get_content('login');
-			}
-
-			if (isset($_POST['rsvp_status']))
-				$this->_process_rsvp_status($iter);
-			elseif (isset($_POST['submagenda']))
-				$this->_do_process($iter);
-			elseif (isset($_POST['submagenda_moderate']))
-				$this->_process_moderate();
-			elseif (isset($_GET['agenda_moderate']))
-				$this->_view_moderate($_GET['agenda_moderate']);
-			elseif (isset($_GET['agenda_add']))
-				$this->_view_edit(null);
-			elseif (isset($_GET['agenda_del']))
-				$this->_do_del($iter);
-			elseif (isset($_GET['agenda_edit']))
-				$this->_view_edit($iter);
-			elseif ($iter)
-				$this->get_content('agendapunt', $iter);
-			elseif (isset($_GET['format']) && $_GET['format'] == 'webcal')
-				$this->get_webcal();
-			else
-				$this->run_index();
+			return null;
 		}
 	}
 	

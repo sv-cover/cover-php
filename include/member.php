@@ -81,7 +81,7 @@
 		}
 		// No argument provided, get the full name of the currently logged in member.
 		else {
-			$iter = $identity->get_member();
+			$iter = $identity->member();
 			$is_self = true;
 		}
 

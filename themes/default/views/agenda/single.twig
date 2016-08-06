@@ -1,0 +1,115 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+{% if iter.is_proposal %}
+	<div class="warning-section">
+		{% if iter.replacement_for == 0 %}
+			<p>{{ __('Dit agendapunt is nog niet gepubliceerd. Het moet nog worden goedgekeurd door Bestuur.') }}</p>
+		{% else %}
+			<p>{{ __('Deze versie van dit agendapunt is nog niet gepubliceerd.') }}</p>
+		{% endif %}
+	</div>
+{% endif %}
+
+{% if mutation %}
+	<div class="warning-section">
+		<p>{{ __('Er is <a href="%s">een wijziging op dit agendapunt</a> dat nog niet gepubliceerd is.')|format(mutation.get_absolute_url()|e('html'))|raw }}</p>
+	</div>
+{% endif %}
+
+<div class="event-header">
+	<!-- Facebook Cover photo (or fallback photo) -->
+	{% set cover_photo = view.cover_photo(iter) %}
+	{% if cover_photo %}
+	<div class="event-cover-photo">
+		<!-- On Facebook this image is shown in an 784x295 area -->
+		<div style="{{ 'left: -%0.2F%%; top: -%0.2F%%'|format(cover_photo.x, cover_photo.y) }}">
+			<img src="{{ cover_photo.src }}" style="position: absolute; left: 0; right:0; top:0">
+		</div>
+	</div>
+	{% endif %}
+
+	<!-- Calendar icon -->
+	<div class="calendar-icon">
+		<span class="month">{{ iter.van|date('M') }}</span>
+		<span class="day">{{ iter.van|date('d') }}</span>
+	</div>
+	
+	<!-- Event name -->
+	<h1>{{ iter.kop }}</h1>
+
+	<!-- Facebook attendees -->
+	{% set attendees = view.attendees(iter) %}
+	{% if attendees %}
+	<ul class="event-attendees">
+	{% for attendee in attendees %}
+		<li>
+			<a href="https://facebook.com/{{ attendee.id }}" target="_new">
+				<img src="https://graph.facebook.com/{{ attendee.id }}/picture/?width=100&amp;height=100">
+				<span class="name">{{ attendee.name }}</span>
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+
+	<!-- Facebook RSVP status -->
+	{% if get_config_value('enable_facebook_rsvp', false) %}
+		{% set rsvp_status = view.rsvp_status(iter) %}
+		{% if rsvp_status %}
+		<div class="rsvp-status-button dropdown-button">
+			<span class="current button" tabindex="0">{{ view.rsvp_status_text(rsvp_status) }}</span>
+			<form method="post">
+				<input type="hidden" name="agenda_id" value="{{ iter.id }}">
+				<ul class="dropdown-menu">
+					<li><button type="submit" name="rsvp_status" value="attending">{{ __('Aanwezig') }}</button></li>
+					<li><button type="submit" name="rsvp_status" value="maybe">{{ __('Misschien') }}</button></li>
+					<li><button type="submit" name="rsvp_status" value="declined">{{ __('Gaat niet') }}</button></li>
+				</ul>
+			</form>
+		</div>
+		{% elseif iter.facebook_id %}
+		<div class="rsvp-status-button">
+			<a href="{{ view.facebook.coverLoginURL }}" class="button">{{ __('Koppel Facebook') }}</a>
+		</div>
+		{% endif %}
+	{% elseif get_config_value('enable_facebook', false) and iter.facebook_id %}
+	<div class="rsvp-status-button">
+		<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" class="button">{{ __('Toon op Facebook') }}</a>
+	</div>
+	{% endif %}
+</div>
+
+<!-- Actual event -->
+<div class="messageBox">
+<p>{{  __('Datum & Tijd') }}: {{  iter|period }}<br>
+{% if iter.locatie %}
+	{{  __('Locatie') }}: {{ iter.locatie }}<br>
+{% endif %}
+</p>
+
+<!-- If the event is organised externally, add a clear notice to it -->
+{% if iter.extern %}
+	<p>{{  __('Deze activiteit wordt niet georganiseerd door Cover zelf.') }}</p>
+{% endif %}
+
+<!-- Formatted description of the event -->
+<p>{{ iter.beschrijving|parse_markup }}</p>
+
+<!-- Some meta-data -->
+{% if committee %}
+<p><span class="smaller">{{  __('Geplaatst door') }}: <a href="commissies.php?commissie={{ committee.login }}">{{ committee.naam }}</a></span></p>
+{% endif %}
+
+<!-- Actions applicable to the event -->
+<ul class="actions">
+	<li><a href="agenda.php">{{  __('Volledige agenda') }}</a></li>
+	{% if user_can_delete iter %}
+	<li><a href="{{ controller.link_to_delete(iter) }}" onClick="return confirm('{{  __('Weet je zeker dat je dit agendapunt wilt verwijderen?') }}');">{{  __('Verwijder') }}</a></li>
+	{% endif %}
+	{% if user_can_update iter %}
+	<li><a href="{{ controller.link_to_update(iter) }}">{{  __('Wijzig') }}</a></li>
+	{% endif %}
+</ul>
+</div>
+{% endblock %}

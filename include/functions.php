@@ -450,7 +450,7 @@
 		else
 			throw new RuntimeException("Could not find email template '$email'");
 
-		$contents = preg_replace_callback('/[A-Z]+_[A-Z_]+/', 'constant', $contents);
+		$contents = preg_replace_callback('/[A-Z]+_[A-Z_]+/', function($match) { return constant($match[0]); }, $contents);
 		
 		return format_string($contents, $data);
 	}

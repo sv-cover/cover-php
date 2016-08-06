@@ -33,6 +33,20 @@
 		{
 			return agenda_period_for_display($this);
 		}
+
+		public function get_use_tot()
+		{
+			foreach (array('datum', 'maand', 'jaar', 'uur', 'minuut') as $check)
+				if ($this['van' . $check] != $this['tot' . $check])
+					return true;
+			
+			return false;
+		}
+
+		public function get_use_locatie()
+		{
+			return $this['locatie'];
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider
