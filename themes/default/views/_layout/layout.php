@@ -141,4 +141,32 @@ class LayoutViewHelper
 
 		return $menus;
 	}
+
+	public function agenda()
+	{
+		$model = get_model('DataModelAgenda');
+
+		return array_filter($model->get_agendapunten(), [get_policy($model), 'user_can_read']);
+	}
+
+	public function jarigen()
+	{
+		$model = get_model('DataModelMember');
+		
+		$jarigen = $model->get_jarigen();
+
+		return array_filter($jarigen, function($member) use ($model) {
+			return !$member->is_private('naam') && !$member->is_private('geboortedatum');
+		});
+	}
+
+	public function is_cover_jarig()
+	{
+		return date('m-d') == '09-20';
+	}
+
+	public function cover_leeftijd()
+	{
+		return date('Y') - 1993;
+	}
 }
