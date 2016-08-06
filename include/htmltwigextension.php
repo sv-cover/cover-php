@@ -24,6 +24,16 @@ class HTMLTwigExtension extends Twig_Extension
 		];
 	}
 
+	public function getFilters()
+	{
+		return [
+			new Twig_SimpleFilter('parse_markup', 'markup_parse', ['is_safe' => ['html']]),
+			new Twig_SimpleFilter('filter', function($array, $callback) {
+				return array_map($callback, $array);
+			})
+		];
+	}
+
 	static protected function input_field($name, $data, $params)
 	{
 		if (isset($params['field'])) {
@@ -196,7 +206,7 @@ class HTMLTwigExtension extends Twig_Extension
 		$result = '<select name="' . $name . '"';
 		
 		foreach ($params as $attribute => $value)
-			$result .= ' ' . str_replce('_', '-', $attribute) . '="' . markup_format_attribute($value) . '"';
+			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($value) . '"';
 		
 		return $result . ">\n" . $options . "</select>";
 	}
@@ -234,10 +244,12 @@ class HTMLTwigExtension extends Twig_Extension
 				$params['class'] = 'error';
 		}
 
+		unset($params['errors']);
+
 		$result = '<textarea name="' . markup_format_attribute($name) . '"';
 		
 		foreach ($params as $attribute => $val)
-			$result .= ' ' . str_replce('_', '-', $attribute) . '="' . markup_format_attribute($val) . '"';
+			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($val) . '"';
 		
 		return $result . ">\n" . $value . "</textarea>";
 	}

@@ -1,4 +1,4 @@
-{% for banner in models.Banner.get(15) %}
+{% for banner in global.models.Banner.get(15) %}
 	<a href="{{ banner.url }}" target="_blank">
 		<img src="images/banners/{{ banner.filename }}">
 	</a>

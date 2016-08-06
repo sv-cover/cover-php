@@ -4,22 +4,19 @@
 	
 	class ControllerHomepage extends Controller
 	{
-		function __construct() {
-			parent::Controller('homepage');
+		public function __construct()
+		{
+			$this->view = View::byName('homepage', $this);
 		}
-		
-		function get_content() {
-			$this->run_header(Array('menu' => $this->view, 'title' => ucfirst($this->view)));
-
-			run_view($this->view, $this->model, $this->iter, $this->params);
 			
-			$this->run_footer();
-		}
-		
-		function _process_language() {
-			ob_end_clean();
+		protected function _process_language()
+		{
+			while (ob_get_level() > 0 && ob_end_clean());
 
-			$language = get_post('language');
+			if (!isset($_POST['language']))
+				throw new Exception('Language parameter missing');
+
+			$language = $_POST('language');
 			
 			if (!i18n_valid_language($language)) {
 				header('Location: index.php');
@@ -44,15 +41,15 @@
 				? $_POST['return_to']
 				: 'index.php';
 
-			header('Location: ' . $return_path);
-			exit();
+			return $this->view->redirect($return_path);
 		}
 		
-		function run_impl() {
+		protected function run_impl()
+		{
 			if (isset($_POST['submindexlanguage']))
-				$this->_process_language();
+				return $this->_process_language();
 			else
-				$this->get_content();
+				return $this->view->render_homepage();
 		}		
 	}
 	

@@ -1,5 +1,25 @@
-{% extends 'layout.twig' %}
+{% extends '@layout/layout.twig' %}
+
 {% block content %}
-	{{ editable('Startpagina') }}
-	{{ include('announcements/index.twig') }}
+
+{% set editable = global.models.Editable.controller('Startpagina') %}
+<div class="pageheading">
+	{% if editable.user_can_update %}
+	<div class="controls inline">
+		<a href="{{ editable.link_to_update() }}" class="edit-link">{{ __('Bewerk introductie') }}</a>
+	</div>
+	{% endif %}
+	<h1>{{ editable.title }}</h1>
+</div>
+<div class="messageBox">
+{{ editable.run()|raw }}
+</div>
+
+{{ include('@theme/announcements/announcements.twig', {
+	'controller': global.controllers.announcements,
+	'model': global.models.Announcement,
+	'policy': global.policies.Announcement,
+	'iters': global.models.Announcement.get_latest()
+}) }}
+
 {% endblock %}

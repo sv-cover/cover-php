@@ -12,11 +12,18 @@ class ViewNotFoundException extends RuntimeException {
 	//
 }
 
-class TwigModelHelper
+class TwigAccessor
 {
-	public function __call($model, array $args)
+	private $callback;
+
+	public function __construct($callback)
 	{
-		return get_model('DataModel' . $model);
+		$this->callback = $callback;
+	}
+
+	public function __call($argument, array $args)
+	{
+		return call_user_func($this->callback, $argument);
 	}
 }
 
@@ -54,8 +61,13 @@ class View
 	{
 		$this->controller = $controller;
 
+		// First look in our own view directory
 		$loader = new Twig_Loader_Filesystem($path);
 
+		// Then, look in the top level theme views directory
+		$loader->addPath('themes/' . get_theme() . '/views', 'theme');
+
+		// And add a shortcut to the layout directory through @layout
 		$loader->addPath('themes/' . get_theme() . '/views/_layout', 'layout');
 
 		$this->twig = new Twig_Environment($loader, array(
@@ -92,17 +104,27 @@ class View
 			'view' => $this,
 			'controller' => $this->controller,
 			'model' => $this->controller->model(),
-			'policy' => get_policy($this->controller->model()),
-			'models' => new TwigModelHelper(),
+			'policy' => $this->controller->model() ? get_policy($this->controller->model()) : null,
 			'global' => [
 				'auth' => get_auth(),
 				'identity' => get_identity(),
 				'db' => get_db(),
 				'server' => $_SERVER,
+				'GET' => $_GET,
+				'POST' => $_POST,
 				'i18n' => [
 					'language' => i18n_get_language(),
 					'languages' => i18n_get_languages()
-				]
+				],
+				'models' => new TwigAccessor(function($model) {
+					return get_model('DataModel' . $model);
+				}),
+				'controllers' => new TwigAccessor(function($controller) {
+					return null;
+				}),
+				'policies' => new TwigAccessor(function($model) {
+					return get_policy('DataModel' . $model);
+				})
 			]
 		];
 	}

@@ -219,7 +219,7 @@
 				return $this->_view_editable($this->page);
 		}
 
-		public function get_title()
+		public function title()
 		{
 			return $this->page->get_title($this->_get_language());
 		}
@@ -235,7 +235,7 @@
 		}
 
 		/* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
-		public function get_page_id()
+		public function page_id()
 		{
 			return $this->page->get('id');
 		}

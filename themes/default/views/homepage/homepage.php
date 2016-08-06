@@ -1,6 +1,9 @@
 <?php
-	require_once 'include/form.php';
- 
-	class HomepageView extends View {
-		protected $__file = __FILE__;
+
+class HomepageView extends View
+{
+	public function render_homepage()
+	{
+		return $this->twig->render('homepage.twig');
 	}
+}

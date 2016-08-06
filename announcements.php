@@ -13,13 +13,10 @@ class ControllerAnnouncements extends ControllerCRUD
 	public function __construct()
 	{
 		$this->model = get_model('DataModelAnnouncement');
+
+		$this->view = View::byName('announcements', $this);
 	}
 
-	protected function _get_title($iter)
-	{
-		return $iter instanceof DataIter ? $iter->get('subject') : __('Mededelingen');
-	}
-	
 	protected function _validate(array $data, array &$errors)
 	{
 		if (!member_in_commissie($data['committee']))
@@ -65,14 +62,7 @@ class ControllerAnnouncements extends ControllerCRUD
 
 		return parent::_update($announcement, $data, $errors);
 	}
-
-	public function run_embedded()
-	{
-		run_view('announcements::index', $this->model, $this->model->get_latest(), array());
-	}
 }
 
-if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {
-	$controller = new ControllerAnnouncements();
-	$controller->run();
-}
+$controller = new ControllerAnnouncements();
+$controller->run();

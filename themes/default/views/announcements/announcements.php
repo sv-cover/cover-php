@@ -5,9 +5,7 @@ require_once 'include/models/DataModelAnnouncement.php';
 
 class AnnouncementsView extends CRUDView
 {
-	protected $__file = __FILE__;
-
-	protected function get_committee_options(DataIter $iter = null)
+	public function get_committee_options(DataIter $iter = null)
 	{
 		$model = get_model('DataModelCommissie');
 
@@ -25,7 +23,7 @@ class AnnouncementsView extends CRUDView
 		return $pairs;
 	}
 
-	protected function get_visibility_options()
+	public function get_visibility_options()
 	{
 		return array(
 			DataModelAnnouncement::VISIBILITY_PUBLIC => __('Iedereen'),

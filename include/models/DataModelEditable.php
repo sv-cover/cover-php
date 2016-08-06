@@ -124,6 +124,10 @@
 			}
 
 			return $iters;
+		}
 
+		public function controller($id)
+		{
+			return new ControllerEditable($id);
 		}
 	}
