@@ -32,7 +32,7 @@ $months = get_months();
 
 	<ul class="actions">
 		<?php if (get_auth()->logged_in()): ?>
-			<?php if ($iter->is_liked_by(get_identity()->get_member())): ?>
+			<?php if ($iter->is_liked_by(get_identity()->member())): ?>
 				<li>
 					<form method="post"
 						action="<?=markup_format_attribute($controller->link_to_like($iter))?>"

@@ -28,7 +28,12 @@ function get_policy($model)
 
 	$policy_class = 'Policy' . $model_name;
 
-	require_once 'include/policies/' . $policy_class . '.php';
+	$policy_file = stream_resolve_include_path('include/policies/' . $policy_class . '.php');
+
+	if ($policy_file === false)
+		return $policies[$model_name] = null;
+
+	require_once $policy_file;
 
 	return $policies[$model_name] = new $policy_class();
 }

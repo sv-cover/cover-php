@@ -7,7 +7,8 @@ interface IdentityProvider
 {
 	public function member_is_active();
 	public function member_in_committee($committee = null);
-	public function get_member();
+	public function can_impersonate();
+	public function member();
 	public function get($key, $default_value = null);
 }
 
@@ -29,7 +30,7 @@ class GuestIdentityProvider implements IdentityProvider
 		return false;
 	}
 
-	public function get_member()
+	public function member()
 	{
 		return null;
 	}
@@ -37,6 +38,11 @@ class GuestIdentityProvider implements IdentityProvider
 	public function get($key, $default_value = null)
 	{
 		return $default_value;
+	}
+
+	public function can_impersonate()
+	{
+		return false;
 	}
 }
 
@@ -58,7 +64,7 @@ class MemberIdentityProvider implements IdentityProvider
 	public function member_is_active()
 	{
 		return $this->session_provider->logged_in()
-			&& in_array($this->get_member()->get('type'), [
+			&& in_array($this->member()->get('type'), [
 				MEMBER_STATUS_LID,
 				MEMBER_STATUS_LID_ONZICHTBAAR
 			]);
@@ -67,11 +73,11 @@ class MemberIdentityProvider implements IdentityProvider
 	public function member_in_committee($committee = null)
 	{
 		return $this->session_provider->logged_in() && ($committee !== null
-			? in_array($committee, $this->get_member()->get('committees'))
-			: count($this->get_member()->get('committees')));
+			? in_array($committee, $this->member()->get('committees'))
+			: count($this->member()->get('committees')));
 	}
 
-	public function get_member()
+	public function member()
 	{
 		if (!$this->session_provider->logged_in())
 			return null;
@@ -96,10 +102,15 @@ class MemberIdentityProvider implements IdentityProvider
 	{
 		if (!$this->session_provider->logged_in())
 			return $default_value;
-		elseif ($this->get_member()->has($key))
-			return $this->get_member()->get($key);
+		elseif ($this->member()->has($key))
+			return $this->member()->get($key);
 		else
 			return $default_value;
+	}
+
+	public function can_impersonate()
+	{
+		return false;
 	}
 }
 
@@ -109,7 +120,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 
 	protected $override_committees;
 
-	public function get_member()
+	public function member()
 	{
 		if (!$this->session_provider->logged_in())
 			return null;
@@ -117,7 +128,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		if ($this->session_provider->get_session()->has('override_member_id'))
 			$member = $this->get_override_member();
 		else
-			$member = parent::get_member();
+			$member = parent::member();
 
 		if ($this->override_committees !== null)
 			$member = new DataIterMember($member->model, $member->get_id(),
@@ -198,6 +209,11 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		$session = $this->session_provider->get_session();
 		$session->set('override_committees', null);
 		$session->update();
+	}
+
+	public function can_impersonate()
+	{
+		return true;
 	}
 }
 

@@ -39,7 +39,7 @@
 			$iter = $model->get_iter($iter);
 		}
 		else if ($iter === null)
-			$iter = get_identity()->get_member();
+			$iter = get_identity()->member();
 		
 		return $iter && $iter->has('nick')
 			? $iter->get('nick')

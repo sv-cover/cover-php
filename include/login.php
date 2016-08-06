@@ -12,7 +12,7 @@
 		if (!get_auth()->login($email, $pass, $remember, $_SERVER['HTTP_USER_AGENT']))
 			return false;
 
-		return get_identity()->get_member()->data;
+		return get_identity()->member()->data;
 	}
 	
 	/** @group Login
@@ -47,16 +47,16 @@
 				return false;
 
 			return $property === null
-				? get_identity()->get_member()->data
+				? get_identity()->member()->data
 				: get_identity()->get($property);
 		}
 	}
 
 	function logged_in_member()
 	{
-		trigger_error('logged_in_member() deprecated. Use get_identity()->get_member()', E_USER_NOTICE);
+		trigger_error('logged_in_member() deprecated. Use get_identity()->member()', E_USER_NOTICE);
 
-		return get_identity()->get_member();
+		return get_identity()->member();
 	}
 
 	function logged_in_as_active_member()

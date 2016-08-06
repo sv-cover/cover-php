@@ -69,10 +69,10 @@
 			{
 				switch ($_POST['action']) {
 					case 'like':
-						$iter->like(get_identity()->get_member());
+						$iter->like(get_identity()->member());
 						break;
 					case 'unlike':
-						$iter->unlike(get_identity()->get_member());
+						$iter->unlike(get_identity()->member());
 						break;
 				}
 			}

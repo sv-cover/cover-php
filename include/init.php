@@ -37,6 +37,7 @@
 	require_once 'include/functions.php';
 	require_once 'include/i18n.php';
 	require_once 'include/constants.php';
+	require_once 'include/policies/policy.php';
 
 	date_default_timezone_set('Europe/Amsterdam');
 
