@@ -207,7 +207,7 @@ class CRUDView extends View
 				if ($success)
 					return $this->redirect($this->controller->link_to_index());
 				else
-					return $this->render('confirm_delete', compact('iter', 'errors'));
+					return $this->render('confirm_delete.twig', compact('iter', 'errors'));
 		}
 	}
 
@@ -255,7 +255,7 @@ class CRUDView extends View
 				if ($success)
 					return $this->redirect($this->link_to_read($iter));
 				else
-					return $this->render('form.twig'. compact('iter', 'errors'));
+					return $this->render('form.twig', compact('iter', 'errors'));
 		}
 	}
 

@@ -17,6 +17,9 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('personal_full_name', function($member) {
 				return member_full_name($member, BE_PERSONAL);
 			}),
+			new Twig_SimpleFilter('full_name_ignore_privacy', function($member) {
+				return member_full_name($member, IGNORE_PRIVACY);
+			}),
 			new Twig_SimpleFilter('period_short', 'agenda_short_period_for_display'),
 			new Twig_SimpleFilter('period', 'agenda_period_for_display')
 		];

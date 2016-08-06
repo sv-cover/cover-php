@@ -10,10 +10,8 @@ class ControllerCRUD extends Controller
 
 	protected $_var_id = 'id';
 
-	protected function _create($data, array &$errors)
+	protected function _create(DataIter $iter, $data, array &$errors)
 	{
-		$iter = $this->_create_iter();
-
 		$iter->set_all($data);
 
 		$id = $this->model->insert($iter);
@@ -110,8 +108,10 @@ class ControllerCRUD extends Controller
 
 		$errors = array();
 
+		$iter = $this->_create_iter();
+
 		if ($this->_form_is_submitted('create'))
-			if ($iter = $this->_create($_POST, $errors))
+			if ($iter = $this->_create($iter, $_POST, $errors))
 				$success = true;
 
 		return $this->view()->render_create($iter, $success, $errors);

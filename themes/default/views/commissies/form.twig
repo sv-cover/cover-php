@@ -1,0 +1,135 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id() ? __('Commissie wijzigen') : __('Nieuwe commissie maken')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ iter.has_id() ? __('Commissie wijzigen') : __('Nieuwe commissie maken') }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
+		<div>
+			{{ html_label(__('Commissienaam'), 'naam', errors=errors, required=true) }}
+			{{ html_input_text('naam', iter.data, required=true) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Interne naam'), 'login', errors=errors, required=true) }}
+			{{ html_input_text('login', iter.data, required=true) }}
+			<p>{{ __('Je wil de interne naam alleen veranderen als je een verdomd goede reden hebt. Veel interne zaken (o.a. de commissiefoto en het e-mailadres) worden via deze naam aan de commissie gekoppeld.') }}</p>
+		</div>
+		
+		<div>
+			{{ html_input_checkbox('hidden', iter.data, value=1) }}
+			{{ html_label(__('Deze commissie is verborgen'), 'hidden', errors=errors) }}
+			<p>{{ __('Verborgen commissies worden niet getoond in het overzicht of op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de website.') }}</p>
+		</div>
+		
+		<div class="committee-members">
+			<table>
+				<thead>
+					<tr>
+						<th>{{ __('Lid') }}</th>
+						<th>{{ __('Functie') }}</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if iter.has_id() %}
+						{% for member in iter.get_members() %}
+							<tr>
+								<td>{{ member|full_name_ignore_privacy }}</td>
+								<td><input type="text" name="members[member.id]" value="{{ member.functie }}" class="autocomplete-function"></td>
+								<td><button type="button" class="button remove-button" title="{{ __('Verwijder lid uit commissie') }}">&times;</button></td>
+							</tr>
+						{% endfor %}
+					{% endif %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td><input type="text" class="committee-member-name" placeholder="{{ __('Naam') }}"></td>
+						<td><input type="text" class="committee-member-function autocomplete-function" placeholder="{{ __('Functie') }}"></td>
+						<td><button type="button" class="button add-button">{{ __('Toevoegen') }}</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+
+		<div>
+			{{ html_label(__('Deze commissie zoekt nieuwe leden tot'), 'vacancies', errors=errors) }}
+			{{ html_input_date('vacancies', iter.data) }}
+			<p>{{ __('Commissies die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm. De datum is de deadline. Geef een datum meer dan een jaar in de toekomst om geen specifieke te tonen. Laat het veld leeg als de commissie geen nieuwe leden zoekt.') }}</p>
+		</div>
+
+		<div>
+			<button type="submit" class="button">{{ iter.has_id() ? __('Wijzig commissie') : __('Maak commissie aan') }}</button>
+			{% if iter.has_id() %}
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar commissie') }}</a>
+			{% else %}
+			<a href="{{ controller.link_to_index() }}">{{ __('Terug naar alle commissies') }}</a>
+			{% endif %}
+			{% if user_can_delete iter %}
+			<a href="{{ controller.link_to_delete(iter) }}" class="delete-link">{{ __('Verwijder commissie') }}</a>
+			{% endif %}
+		</div>
+	</form>
+</div>
+<script>
+jQuery(function($) {
+	var $form = $('form .committee-members')
+		$member = $form.find('input.committee-member-name'),
+		$fun = $form.find('input.committee-member-function')
+		$add = $form.find('button.add-button');
+
+	$member.autocompleteAlmanac({
+		select: function(event, ui) {
+			$(this).data('member-id', ui.item.id).val(ui.item.name);
+			$fun.focus();
+			return false;
+		}
+	});
+
+	$form.find('.autocomplete-function').autocomplete({
+			delay: 0,
+			minLength: 0,
+			source: <?=json_encode(array_values(array_flip($model->get_functies())))?>
+		})
+		.focus(function(e) {
+			$(this).autocomplete('search', '');
+		});
+
+	$add.click(function(e) {
+		if (!$member.data('member-id'))
+			return;
+
+		var $row = $('<tr>');
+
+		$('<td>').text($member.val()).appendTo($row);
+
+		$('<input type="text">')
+			.attr('name', 'members[' + $member.data('member-id') + ']')
+			.val($fun.val())
+			.appendTo($('<td>').appendTo($row));
+
+		$('<button type="button">')
+			.addClass('remove-button button')
+			.html('&times;')
+			.appendTo($('<td>').appendTo($row));
+
+		$form.find('table tbody').append($row);
+
+		$fun.val('');
+		$member.data('member-id', '').val('').focus();
+	});
+
+	$fun.keypress(function(e) {
+		if (e.keyCode == $.ui.keyCode.ENTER) {
+			e.preventDefault();
+			$add.click();
+		}
+	});
+
+	$form.on('click', '.remove-button', function(e) {
+		$(this).closest('tr').remove();
+	});
+});
+</script>
+{% endblock %}
