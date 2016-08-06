@@ -2,6 +2,12 @@
 
 class RouterTwigExtension extends Twig_Extension
 {
+	static public $routes = [
+		'sessions' => [
+			'login' => 'sessions.php?view=login&referer=$referer|rawurlencode'
+		]
+	];
+
 	public function getName()
 	{
 		return 'router';
@@ -16,6 +22,11 @@ class RouterTwigExtension extends Twig_Extension
 
 	static public function link_to($name, array $arguments = array())
 	{
-		return '#' . $name;
+		$route = self::$routes;
+
+		foreach (explode('.', $name) as $path)
+			$route = $route[$path];
+
+		return format_string($route, $arguments);
 	}
 }
