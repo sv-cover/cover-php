@@ -1,3 +1,10 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+	{{ __('Commissies') }} :: {{ parent() }}
+{% endblock %}
+
+{% block content %}
 <div class="pageHeading">
 	{% if user_can_create model %}
 		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuwe commissie') }}</a></div>
@@ -25,3 +32,4 @@
 	{% endfor %}
 	</ul>
 </div>
+{% endblock %}

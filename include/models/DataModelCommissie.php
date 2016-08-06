@@ -37,6 +37,11 @@
 		{
 			return sprintf('commissies.php?commissie=%s', urlencode($this->get('login')));
 		}
+
+		public function has_vacancy_deadline()
+		{
+			return strtotime($this->get('vacancies')) < strtotime('+1 year');
+		}
 	}
 
 	/**

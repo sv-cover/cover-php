@@ -6,22 +6,16 @@
 		<link rel="icon" type="image/png" href="images/favicon.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">		
 		<title>{% block title %}Cover :: {{ __('Studievereniging Kunstmatige Intelligentie en Informatica, RUG') }}{% endblock %}</title>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-		<link rel="stylesheet" href="{{ link_static('style.css') }}" type="text/css">
-		<link rel="stylesheet" href="{{ link_static('styles/font-awesome.min.css') }}" type="text/css">
-		<!--[if lte IE 7]>
-			<link rel="stylesheet" href="{{ link_static('styleIE.css')  }}" type = "text/css">
-		<![endif]-->
-		{% block stylesheets %}
-		<link rel="stylesheet" href="{{ link_static('styles/style.css') }}" type="text/css">
-		{% endblock %}
+		
+		{% for stylesheet in view.stylesheets %}
+		<link rel="stylesheet" href="{{ stylesheet|e('html') }}" type="text/css">
+		{% endfor %}
 		
 		{% block scripts %}
 		<script src="{{ link_static('data/jquery-2.2.0.min.js') }}"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 		<script type="text/javascript" src="{{ link_static('data/common.js') }}"></script>
 		<script type="text/javascript" src="{{ link_static('data/dropdown.js') }}"></script>
-		<script type="text/javascript" src="{{ link_static('data/connection.js') }}"></script>
 		{% endblock %}
 	</head>
 	<body>

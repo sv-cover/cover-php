@@ -5,6 +5,13 @@ class CommissiesView extends CRUDView
 {
 	protected $__file = __FILE__;
 
+	public function stylesheets()
+	{
+		return array_merge(
+			parent::stylesheets(),
+			[get_theme_data('styles/commissies.css')]);
+	}
+
 	public function get_commissie_thumb(DataIterCommissie $commissie)
 	{
 		return $this->find_image(array(
@@ -96,5 +103,11 @@ class CommissiesView extends CRUDView
 			: null;
 
 		return $nav;
+	}
+
+	public function commissioner_of_internal_affairs()
+	{
+		$model = get_model('DataModelCommissie');
+		return $model->get_lid_for_functie(COMMISSIE_BESTUUR, 'commissaris intern');
 	}
 }

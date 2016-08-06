@@ -40,6 +40,8 @@ class View
 
 	protected $controller;
 
+	protected $layout;
+
 	public function __construct(Controller $controller, $path)
 	{
 		$this->controller = $controller;
@@ -47,11 +49,11 @@ class View
 		$loader = new Twig_Loader_Filesystem($path);
 
 		$loader->addPath('themes/' . get_theme() . '/views/_layout', 'layout');
-		
+
 		$this->twig = new Twig_Environment($loader, array(
 			'debug' => true,
 			'strict_variables' => true,
-		    'cache' => get_config_value('twig_cache', '/tmp/twig'),
+		    'cache' => get_config_value('twig_cache', 'tmp/twig'),
 		));
 
 		require_once 'include/policytwigextension.php';
@@ -65,6 +67,9 @@ class View
 
 		require_once 'include/routertwigextension.php';
 		$this->twig->addExtension(new RouterTwigExtension());
+
+		require_once 'themes/' . get_theme() . '/views/_layout/layout.php';
+		$this->layout = new LayoutViewHelper();
 
 		foreach ($this->_globals() as $key => $var)
 			$this->twig->addGlobal($key, $var);
@@ -80,9 +85,28 @@ class View
 			'global' => [
 				'auth' => get_auth(),
 				'identity' => get_identity(),
-				'db' => get_db()
+				'db' => get_db(),
+				'server' => $_SERVER,
+				'i18n' => [
+					'language' => i18n_get_language(),
+					'languages' => i18n_get_languages()
+				]
 			]
 		];
+	}
+
+	public function stylesheets()
+	{
+		return [
+			get_theme_data('style.css'),
+			get_theme_data('styles/font-awesome.min.css'),
+			'//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css'
+		];
+	}
+
+	public function layout()
+	{
+		return $this->layout;
 	}
 
 	public function redirect($url, $permanent = false, $flags = 0)
