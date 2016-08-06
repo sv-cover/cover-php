@@ -6,15 +6,11 @@ require_once 'include/controllers/Controller.php';
 
 class ControllerSessions extends Controller
 {
-	public function ControllerSessions()
+	public function __construct()
 	{
 		$this->model = get_model('DataModelSession');
-	}
 
-	function get_content($view, $iter = null, $params = null) {
-		$this->run_header();
-		run_view('sessions::' . $view, $this->model, $iter, $params);
-		$this->run_footer();
+		$this->view = View::byName('sessions', $this);
 	}
 
 	protected function run_view_overrides()
@@ -39,11 +35,11 @@ class ControllerSessions extends Controller
 				get_identity()->reset_committees();
 
 			return isset($_POST['referrer'])
-				? $this->redirect($_POST['referrer'])
-				: $this->redirect('sessions.php?view=overrides');
+				? $this->view->redirect($_POST['referrer'])
+				: $this->view->redirect('sessions.php?view=overrides');
 		}
 
-		return $this->get_content('overrides');
+		return $this->view->render_overrides();
 	}
 
 	protected function run_view_sessions()
@@ -53,7 +49,7 @@ class ControllerSessions extends Controller
 
 		if (isset($_POST['sessions']))
 		{
-			$member = get_identity()->get_member();
+			$member = get_identity()->member();
 
 			foreach ($_POST['sessions'] as $session_id)
 			{
@@ -63,16 +59,16 @@ class ControllerSessions extends Controller
 					$this->model->delete($session);
 			}
 
-			return $this->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
+			return $this->view->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
 		}
 
-		$member = get_identity()->get_member();
+		$member = get_identity()->member();
 
 		$session = get_auth()->get_session();
 
 		$sessions = $this->model->getActive($member->get_id());
 
-		return $this->get_content('sessions', $sessions, compact('session', 'member'));
+		return $this->view->render_sessions($sessions, $member, $session);
 	}
 
 	protected function run_view_login()
@@ -99,7 +95,7 @@ class ControllerSessions extends Controller
 		{
 			if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
 			{
-				return $this->redirect($referrer, false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
+				return $this->view->redirect($referrer, false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
 			}
 			else {
 				$errors = ['email', 'password'];
@@ -107,7 +103,7 @@ class ControllerSessions extends Controller
 			}
 		}
 
-		return $this->get_content('login', null, compact('errors', 'error_message', 'referrer', 'external_domain'));
+		return $this->view->render_login(compact('errors', 'error_message', 'referrer', 'external_domain'));
 	}
 
 	protected function run_view_logout()
@@ -116,9 +112,9 @@ class ControllerSessions extends Controller
 			get_auth()->logout();
 
 		if (isset($_GET['referrer']))
-			return $this->redirect($_GET['referrer'], false, ALLOW_SUBDOMAINS);
+			return $this->view->redirect($_GET['referrer'], false, ALLOW_SUBDOMAINS);
 		else
-			return $this->get_content('logout');
+			return $this->view->render_logout();
 	}
 
 	function run_impl()

@@ -4,8 +4,12 @@ class RouterTwigExtension extends Twig_Extension
 {
 	static public $routes = [
 		'sessions' => [
-			'login' => 'sessions.php?view=login&referer=$referer|rawurlencode'
-		]
+			'login' => 'sessions.php?view=login',
+			'logout' => 'sessions.php?view=logout',
+			'sessions' => 'sessions.php?view=sessions',
+			'overrides'=> 'sessions.php?view=overrides'
+		],
+		'profiel' => 'profiel.php'
 	];
 
 	public function getName()
@@ -24,9 +28,17 @@ class RouterTwigExtension extends Twig_Extension
 	{
 		$route = self::$routes;
 
-		foreach (explode('.', $name) as $path)
+		foreach (explode('.', $name) as $path) {
+			if (!isset($route[$path]))
+				throw new InvalidArgumentException("Route '$name' not found");
+		
 			$route = $route[$path];
+		}
 
-		return format_string($route, $arguments);
+		$url = format_string($route, $arguments);
+
+		$url = edit_url($url, $arguments);
+
+		return $url;
 	}
 }

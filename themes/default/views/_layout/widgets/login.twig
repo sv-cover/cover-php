@@ -1,10 +1,10 @@
 {% if global.auth.logged_in %}
-	{{ __('Ingelogd') }}: <b>{{ global.identity.voornaam }}</b><br/>
-	<a class="logButton" href="{{ link('sessions.logout') }}">{{ __('Uitloggen') }}</a>
-	<a class="logButton" href="{{ link('profiel', global.identity.id) }}">{{ __('Profiel') }}</a>
+	{{ __('Ingelogd') }}: <b>{{ global.identity.member.voornaam }}</b><br/>
+	<a class="logButton" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">{{ __('Uitloggen') }}</a>
+	<a class="logButton" href="{{ link('profiel', id=global.identity.member.id) }}">{{ __('Profiel') }}</a>
 
 	{% if global.identity.can_impersonate %}
-		<a href="{{ link('sessions.override') }}" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">{{ __('Bekijk als…') }}</a>
+		<a href="{{ link('sessions.overrides') }}" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">{{ __('Bekijk als…') }}</a>
 	{% endif %}
 {% else %}
 	<a class="logButton" href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}">Log in</a>

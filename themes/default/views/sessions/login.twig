@@ -1,0 +1,51 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+{{ __('Inloggen') }} :: {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<h1>{{ __('Inloggen') }}</h1>
+<div class="messageBox">
+	<form id="login-form" method="post" action="{{ link('sessions.login') }}" class="vertical-form">
+		<img src="{{ link_static('images/cover_logo_black.png') }}" class="cover-logo" alt="Cover">
+
+		<ul class="nav-tabs">
+			<li class="active"><a href="{{ link('sessions.login') }}">{{ __('Inloggen') }}</a></li>
+			<li><a href="lidworden.php#contents">{{ __('Lid worden') }}</a></li>
+		</ul>
+
+		{% if error_message %}
+		<div class="error-section">
+			<p>{{ error_message }}</p>
+		</div>
+		{% endif %}
+
+		{{ html_input_hidden('referrer', referrer) }}
+		<div>
+			{{ html_label(__('E-mailadres'), 'email', errors=errors, required=true) }} 
+			{{ html_input_text('email', null, placeholder=__('E-mailadres'), autofocus=true) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Wachtwoord'), 'password', errors=errors, required=true) }}
+			{{ html_input_password('password', placeholder=__('Wachtwoord')) }}
+		</div>
+
+		<div>
+			{{ html_input_checkbox('remember', {'remember': 'yes'}, value='yes') }}
+			{{ html_label(__('Blijf ingelogd'), 'remember', errors=errors) }}
+		</div>
+
+		<div class="controls">
+			<button type="submit" class="button primary">
+				{{ __('Log in') }}
+				{% if external_domain %}
+					<small>{{ __('en ga door naar %s')|format(external_domain) }}</small>
+				{% endif %}
+			</button>
+			<a href="wachtwoordvergeten.php">{{ __('Wachtwoord vergeten?') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}
