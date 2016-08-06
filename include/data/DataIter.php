@@ -11,6 +11,16 @@
 		var $db = null;
 		var $namespace = '';
 
+		/**
+		 * Clones a DataIter. Useful for transforming one iter to another.
+		 */
+		static public function from_iter(DataIter $iter)
+		{
+			$class_name = get_called_class();
+			$instance = new $class_name($iter->model, $iter->get_id(), $iter->data, $iter->namespace);
+			return $instance;
+		}
+
 		static public function is_same(DataIter $a, DataIter $b)
 		{
 			return $a->get_id() == $b->get_id();

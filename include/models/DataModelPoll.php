@@ -1,6 +1,30 @@
 <?php
 	require_once 'include/data/DataModel.php';
 
+	class DataIterPollOption extends DataIter
+	{
+		public $thread;
+
+		public function percentage()
+		{
+			return 100 * $this['stemmen'] / max($this->thread->total_votes, 1);
+		}
+	}
+
+	class DataIterPoll extends DataIter
+	{
+		public $poll_model;
+
+		public $options = array();
+
+		public $total_votes = null;
+
+		public function member_has_voted(DataIterMember $member = null)
+		{
+			return $this->poll_model->member_has_voted($this, $member);
+		}
+	}
+
 	/**
 	  * A class implementing poll data
 	  */
@@ -53,7 +77,23 @@
 				
 			if (!$forum) return null;
 			
-			return $forum->get_newest_thread();
+			$thread = $forum->get_newest_thread();
+
+			if (!$thread)
+				return null;
+
+			$thread = DataIterPoll::from_iter($thread);
+			
+			$thread->poll_model = $this;
+
+			$thread->options = $this->get_votes($thread['id']);
+
+			foreach ($thread->options as $option)
+				$option->thread = $thread;
+
+			$thread->total_votes = array_reduce($thread->options, function($carry, $vote) { return $carry + $vote['stemmen']; }, 0);
+
+			return $thread;
 		}
 
 		public function get_votes($id)
@@ -63,7 +103,7 @@
 					WHERE pollid = ' . intval($id) . '
 					ORDER BY id ASC');
 			
-			return $this->_rows_to_iters($rows);
+			return $this->_rows_to_iters($rows, 'DataIterPollOption');
 		}
 		
 		public function vote($id)
@@ -127,6 +167,37 @@
 					WHERE 
 						lid = ' . intval($member_data['id']) . ' AND 
 						poll = ' . $iter->get('id'));
+			
+			return $row !== null;
+		}
+
+		public function member_has_voted(DataIter $poll, DataIterMember $member = null)
+		{
+			$config_model = get_model('DataModelConfiguratie');
+			$id = $config_model->get_value('poll_forum');
+			
+			// If this poll is in the Polls forum on the forum, it is
+			// closed as soon as there is a newer poll.
+			if ($poll->get('forum') == $id) {
+				try {
+					$thread = $this->get_latest_poll();
+						
+					if ($thread->get('id') != $poll->get('id'))
+						return true;
+				} catch (DataIterNotFoundException $e) {
+					// Oh shit the configuration is fucked up and we cannot find
+					// the polls forum. Well, never mind, not that important.
+				}
+			}
+			
+			$row = $this->db->query_first('
+					SELECT 
+						* 
+					FROM 
+						pollvoters
+					WHERE 
+						lid = ' . intval($member['id']) . ' AND 
+						poll = ' . $poll['id']);
 			
 			return $row !== null;
 		}

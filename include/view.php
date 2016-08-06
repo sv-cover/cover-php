@@ -12,6 +12,14 @@ class ViewNotFoundException extends RuntimeException {
 	//
 }
 
+class TwigModelHelper
+{
+	public function __call($model, array $args)
+	{
+		return get_model('DataModel' . $model);
+	}
+}
+
 class View
 { 	
 	static public function byName($view, Controller $controller = null)
@@ -85,6 +93,7 @@ class View
 			'controller' => $this->controller,
 			'model' => $this->controller->model(),
 			'policy' => get_policy($this->controller->model()),
+			'models' => new TwigModelHelper(),
 			'global' => [
 				'auth' => get_auth(),
 				'identity' => get_identity(),

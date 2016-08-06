@@ -1,1 +1,66 @@
-poll.twig
+{% extends '@layout/widgets/menuitem.twig' %}
+
+{% block title __('Poll') %}
+
+{% block name 'poll' %}
+
+{% block content %}
+
+{% set poll = models.Poll.get_latest_poll() %}
+
+{% if poll %}
+	<p><a href="forum.php?thread={{poll.id}}">{{ poll.subject }}</a></p>
+	{% if not global.auth.logged_in or poll.member_has_voted(global.identity.member) %}
+		<table class="votes">
+			{% for option in poll.options %}
+				<tr>
+					<td class="pollVote" width="98%">
+						{{ option.optie }}<br>
+						<div class="vote"><img height="10px" src="images/leeg.gif" width="{{ '%0.1f'|format(option.percentage) }}%"><img src="{{ link_static('images/pgsend.png') }}" class="end"></div>
+					</td>
+					<td class="percentage">{{ '%0.1f'|format(option.percentage) }}%</td>
+				</tr>
+			{% endfor %}
+			<tr>
+				<td colspan="2">
+					{{ __('Aantal stemmen') }}: {{ poll.total_votes }}
+				</td>
+			</tr>
+
+			{% if not global.auth.logged_in %}
+				<tr>
+					<td colspan="2"><a href="{{ link('sessions.login') }}">{{ __('Log in om te stemmen') }}</a></td>
+				</tr>
+			{% elseif models.Poll.can_create_new_poll %}
+				<tr>
+					<td colspan="2">
+						<a class="button" href="forum.php?forum={{ poll.forum }}&amp;addpoll=true">{{ __('Nieuwe poll ') }}</a>
+					</td>
+			{% endif %}
+		</table>
+	{% else %}
+		<form method="post" action="forum.php?thread={{ poll.id }}">
+			{{ html_input_hidden('submforumpollvote', poll.id) }}
+
+			<table class="poll">
+				{% for option in poll.options %}
+				<tr>
+					<td class="pollvoteRadio">{{ html_input_radio('optie', null, option.id, id='poll_option_' ~ option.id) }}</td>
+					<td><label for="poll_option_{{ option.id }}">{{ option.optie }}</label></td>
+				</tr>
+				{% endfor %}
+			</table>
+
+			<div class="poll_vote">
+				{{ html_input_submit('subm', __('Stem')) }}
+				{% if models.Poll.can_create_new_poll %}
+					<a class="button" href="forum.php?forum={{ poll.forum }}&amp;addpoll=true">{{ __('Nieuwe poll ') }}</a>
+				{% endif %}
+			</div>
+		</form>
+	{% endif %}
+{% else %}
+	<p>{{ __('Er is op dit moment geen poll') }}</p>
+{% endif %}
+
+{% endblock %}
