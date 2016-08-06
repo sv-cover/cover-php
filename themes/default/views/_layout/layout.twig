@@ -37,7 +37,9 @@
 				{% endblock %}
 			</div>
 
+			{% if not global.auth.logged_in %}
 			{{ include('@layout/widgets/promotional-header.twig') }}
+			{% endif %}
 
 			<div class="container clearfix">
 				<div class="center column" id="contents">
