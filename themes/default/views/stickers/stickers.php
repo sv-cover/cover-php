@@ -6,25 +6,66 @@ class StickersView extends CRUDView
 
 	protected $model;
 
-	public function __construct(ControllerCRUD $controller)
+	public function render_photo(DataIter $iter)
 	{
-		parent::__construct($controller);
+		header('Pragma: public');
+		header('Cache-Control: max-age=86400');
+		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+		header('Content-Type: image/jpeg');
 
-		$this->model = get_model('DataModelStickers');
+		return $this->controller->model()->getPhoto($iter);
 	}
 
-	public function get_scripts()
+	public function render_photo_thumbnail(DataIter $iter)
 	{
-		return array_merge(parent::get_scripts(), [
-			get_theme_data('data/stickers.js')
-		]);
+		header('Pragma: public');
+		header('Cache-Control: max-age=86400');
+		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+		header('Content-Type: image/jpeg');
+
+		$thumb_file = $this->generate_thumbnail($iter);
+		readfile($thumb_file);
 	}
 
-	public function getLocation()
+	public function generate_thumbnail(DataIter $sticker)
+	{
+		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
+
+		$use_cache = file_exists($cache_file) && filemtime($cache_file) > $sticker['foto_mtime'];
+
+		// Is the cache file up to date? Then we are done
+		if (!$use_cache)
+		{		
+			$large = imagecreatefromstring($this->controller->model()->getPhoto($sticker));
+			$width = 600;
+			$height = $width * imagesy($large) / imagesx($large);
+			$thumb = imagecreatetruecolor($width, $height);
+			imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $height, imagesx($large), imagesy($large));
+
+			if (!file_exists(dirname($cache_file)))
+				mkdir(dirname($cache_file), 0777, true);
+
+			imagejpeg($thumb, $cache_file);
+		}
+
+		header('X-Source: ' . ($use_cache ? 'cache' : 'database'));
+
+		return $cache_file;
+	}
+
+	public function delete_thumbnail(DataIter $sticker)
+	{
+		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
+
+		if (file_exists($cache_file))
+			unlink($cache_file);
+	}
+
+	public function location()
 	{
 		if (isset($_GET['sticker']))
 		{
-			$sticker = $this->model->get_iter($_GET['sticker']);
+			$sticker = $this->controller->model()->get_iter($_GET['sticker']);
 			return sprintf('%f, %f', $sticker->get('lat'), $sticker->get('lng'));
 		}
 		else
@@ -35,7 +76,7 @@ class StickersView extends CRUDView
 	{
 		$stickers = array();
 
-		$policy = get_policy($this->model);
+		$policy = get_policy($this->controller->model());
 
 		foreach ($iters as $iter)
 		{

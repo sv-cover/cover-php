@@ -7,6 +7,8 @@ class ControllerStickers extends ControllerCRUD
 	public function __construct()
 	{
 		$this->model = get_model('DataModelStickers');
+
+		$this->view = View::byName('stickers', $this);
 	}
 
 	public function link_to_add_photo(DataIter $iter)
@@ -28,74 +30,27 @@ class ControllerStickers extends ControllerCRUD
 	{
 		$thumbnail = !empty($_GET['thumbnail']);
 
-		if (!$iter)
-		{
-			header('Status: 404 Not Found');
-			echo 'Sticker not found';
-			exit;
-		}
-
-		header('Pragma: public');
-		header('Cache-Control: max-age=86400');
-		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-		header('Content-Type: image/jpeg');
-
 		if ($thumbnail)
-		{
-			$thumb_file = $this->_generate_thumbnail($iter);
-			readfile($thumb_file);
-		}
+			return $this->view->render_photo_thumbnail($iter);
 		else
-		{
-			echo $this->model->getPhoto($iter);
-		}
-
-		exit;
+			return $this->view->render_photo($iter);
 	}
 
 	protected function run_add_photo(DataIter $sticker)
 	{
 		if ($sticker && get_policy($this->model)->user_can_update($sticker))
+		{
+			// Set the new photo
 			$this->model->setPhoto($sticker, fopen($_FILES['photo']['tmp_name'], 'rb'));
 
-		header('Location: stickers.php?sticker=' . $sticker->get_id());
-		exit;
-	}
-
-	protected function _generate_thumbnail($sticker)
-	{
-		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
-
-		$use_cache = file_exists($cache_file) && filemtime($cache_file) > $sticker['foto_mtime'];
-
-		// Is the cache file up to date? Then we are done
-		if (!$use_cache)
-		{		
-			$large = imagecreatefromstring($this->model->getPhoto($sticker));
-			$width = 600;
-			$height = $width * imagesy($large) / imagesx($large);
-			$thumb = imagecreatetruecolor($width, $height);
-			imagecopyresampled($thumb, $large, 0, 0, 0, 0, $width, $height, imagesx($large), imagesy($large));
-
-			if (!file_exists(dirname($cache_file)))
-				mkdir(dirname($cache_file), 0777, true);
-
-			imagejpeg($thumb, $cache_file);
+			// Delete the old one from the cache
+			$this->view->delete_thumbnail($sticker);
 		}
 
-		header('X-Source: ' . ($use_cache ? 'cache' : 'database'));
-
-		return $cache_file;
+		return $this->view->redirect('stickers.php?sticker=' . $sticker->get_id());
 	}
-
-	protected function _delete_thumbnail($sticker)
-	{
-		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
-
-		if (file_exists($cache_file))
-			unlink($cache_file);
-	}
+	
 }
 
-$controller = new ControllerStickers;
+$controller = new ControllerStickers();
 $controller->run();

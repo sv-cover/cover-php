@@ -24,6 +24,7 @@ class ControllerCRUD extends Controller
 
 		$id = $this->model->insert($iter);
 
+		// Todo: shouldnt this use DataModel::create_iter(row)?
 		$dataiter_class = new ReflectionClass($iter);
 		return $dataiter_class->newInstance($this->model, $id, $iter->data);
 	}
@@ -71,8 +72,7 @@ class ControllerCRUD extends Controller
 
 	protected function _create_iter()
 	{
-		$dataiter_class = new ReflectionClass($this->model->dataiter);
-		return $dataiter_class->newInstance($this->model, null, array());
+		return $this->model->create_iter();
 	}
 
 	public function link(array $arguments)

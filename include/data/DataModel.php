@@ -44,6 +44,14 @@
 				$this->auto_increment = $this->id == 'id';
 		}
 
+		public function create_iter($row = array(), $dataiter = null)
+		{
+			if (!$dataiter)
+				$dataiter = $this->dataiter;
+
+			return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
+		}
+
 		/**
 		  * Insert a new row (syncs with the database backend). This
 		  * is a convenient function to be used by descendents of
@@ -179,11 +187,8 @@
 		  */
 		/*protected*/ public function _row_to_iter($row, $dataiter = null)
 		{
-			if (!$dataiter)
-				$dataiter = $this->dataiter;
-
 			if ($row)
-				return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
+				return $this->create_iter($row, $dataiter);
 			else
 				return $row;
 		}
