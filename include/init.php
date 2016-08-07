@@ -24,9 +24,12 @@
 		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE);
 
 		set_error_handler(function($number, $message, $file, $line, $vars) {
+			while (ob_get_level() > 0 && ob_end_clean());
+			echo '<strong>' . htmlspecialchars($message) . '</strong>';
 			echo '<pre style="background:white;padding: 1em; margin: 1em;color:#c60c30;">';
-			debug_print_backtrace();
+			debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 25);
 			echo '</pre>';
+			exit;
 		},	error_reporting());
 	}
 	elseif (version_compare(PHP_VERSION, '5.4.0') < 0)
