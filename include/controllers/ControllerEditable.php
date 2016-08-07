@@ -89,7 +89,8 @@
 			return true;
 		}
 		
-		protected function _prepare_mail($iter, $page) {
+		protected function _prepare_mail($iter, $page)
+		{
 			$data = $iter->data;
 			$data['member_naam'] = member_full_name(null, IGNORE_PRIVACY);
 			$data['page'] = $page;
@@ -122,7 +123,8 @@
 		  * Saves an editable page
 		  * @iter a #DataIter of the editable page
 		  */
-		protected function _do_save($iter) {
+		protected function _do_save($iter)
+		{
 			if (!$this->_page_prepare($iter, $page, $field))
 				return;
 			
@@ -138,7 +140,7 @@
 			{
 				$data = $this->_prepare_mail($iter, get_post($field));
 				
-				if ($data['email']) {
+				if (isset($data['email'])) {
 					$body = parse_email('editable_edit.txt', $data);
 					$subject = 'Pagina ' . $data['titel'] . ' gewijzigd';
 
@@ -149,12 +151,12 @@
 
 			if (isset($_GET['xmlrequest']))
 			{
-				ob_end_clean();
+				while (ob_get_level() > 0 && ob_end_clean());
 				
 				if ($success !== null)
-					return sprintf(__('De pagina %s is opgeslagen.'), $iter->get('titel'));
+					printf(__('De pagina %s is opgeslagen.'), $iter->get('titel'));
 				else
-					return $this->model->db->get_last_error();
+					echo $this->model->db->get_last_error();
 
 				exit();
 			}
@@ -164,24 +166,25 @@
 			else
 				$_SESSION['alert'] = $this->model->db->get_last_error();
 
-			header('Location: ' . add_request(get_request(), 'editable_edit=' . $iter->get('id') . '&editable_language=' . $this->_get_language()));
-			exit();
+			return $this->view->redirect(add_request(get_request(), 'editable_edit=' . $iter->get('id') . '&editable_language=' . $this->_get_language()));
 		}
 		
 		/**
 		  * Views the editable page in edit mode
 		  * @iter a #DataIter of the editable page
 		  */
-		protected function _view_edit($iter) {
-			$params = array('language' => $this->_get_language());
+		protected function _view_edit(DataIterEditable $iter)
+		{
+			$language = $this->_get_language();
 
-			if (!$this->_user_can_edit($iter))
-				return $this->view->render_read_only($iter, $params);
-			else
-				return $this->view->render_edit($iter, $params);
+			if (!$this->policy->user_can_update($iter))
+				throw new UnauthorizedException('You cannot update this content area');
+			
+			return $this->view->render_edit($iter, $language);
 		}
 		
-		protected function _view_editable($page) {
+		protected function _view_editable(DataIterEditable $page)
+		{
 			$language = $this->_get_language();
 			$field = $this->_get_content_field();
 
