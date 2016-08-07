@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-{% set editable = create_editable(iter.page) %}
+{% set editable = global.models.Editable.get_iter(iter.page) %}
 <div class="pageheading">
 	{% if user_can_update iter %}
 	<div class="controls inline">
@@ -23,13 +23,13 @@
 	{{ include('_contact.twig') }}
 
 	<div class="content">
-		{% if editable.user_can_update() %}
+		{% if user_can_update editable %}
 		<div class="controls inline">
-			<a href="{{ editable.link_to_update() }}" class="edit-link">{{ __('Bewerk commissiepagina') }}</a>
+			<a href="{{ link('editable.update', editable=editable) }}" class="edit-link">{{ __('Bewerk commissiepagina') }}</a>
 		</div>
 		{% endif %}
 		
-		{{ editable.run()|raw }}
+		{{ editable.get_content|parse_editable }}
 
 		{{ include('_leden.twig') }}
 

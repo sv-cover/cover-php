@@ -259,23 +259,36 @@
 		if (!(is_array($params) || $params instanceof ArrayAccess))
 			throw new \InvalidArgumentException('$params has to behave like an array');
 
-		$callback =  function($match) use ($params) {
-			// If this key does not exist, just return the matched pattern
-			if (!isset($params[$match[1]]))
-				return $match[0];
+		// Right now, we haven't used any of the parameters *yet*
+		$unused_params = $params;
 
-			// Find the value for this key
-			$value = $params[$match[1]];
+		$callback =  function($match) use ($params, $unused_params) {
+			$path = explode('[', $match[1]);
+
+			// remove ] from all 1..n components
+			for ($i = 1; $i < count($path); ++$i)
+				$path[$i] = substr($path[$i], 0, -1);
+
+			// Step 0
+			$value = $params;
+
+			foreach ($path as $step) {
+				if (isset($value[$step])) {
+					$value = $value[$step];
+				} else {
+					$value = null;
+					break;
+				}
+			}
 
 			// If there is a modifier, apply it
-			if (isset($match[2])) {
+			if (isset($match[2]))
 				$value = call_user_func($match[2], $value);
-			}
 
 			return $value;
 		};
 
-		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z_]+))?\b/i', $callback, $format);
+		return preg_replace_callback('/\$([a-z][a-z0-9_]*(?:\[[a-z0-9_]+\])*)(?:\|([a-z_]+))?/i', $callback, $format);
 	}
 
 	function optional($value)

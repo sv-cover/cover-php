@@ -58,15 +58,7 @@ class CommissiesView extends CRUDView
 		if (!$page)
 			return '';
 
-		$language = i18n_get_language();
-
-		$property = isset($page->data['content_' . $language])
-			? 'content_' . $language
-			: 'content';
-
-		$content = $page->get($property);
-		
-		return editable_get_summary($content, $page->get('owner'));
+		return $page->get_summary();
 	}
 
 	public function get_activities(DataIterCommissie $iter)

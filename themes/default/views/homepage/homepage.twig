@@ -2,17 +2,17 @@
 
 {% block content %}
 
-{% set editable = global.models.Editable.controller('Startpagina') %}
+{% set editable = global.models.Editable.get_iter_from_title('Startpagina') %}
 <div class="pageheading">
-	{% if editable.user_can_update %}
+	{% if user_can_update editable %}
 	<div class="controls inline">
-		<a href="{{ editable.link_to_update() }}" class="edit-link">{{ __('Bewerk introductie') }}</a>
+		<a href="{{ link('editable.update', editable=editable) }}" class="edit-link">{{ __('Bewerk introductie') }}</a>
 	</div>
 	{% endif %}
-	<h1>{{ editable.title }}</h1>
+	<h1>{{ editable.get_title }}</h1>
 </div>
 <div class="messageBox">
-{{ editable.run()|raw }}
+{{ editable.get_content|parse_editable }}
 </div>
 
 {{ include('@theme/announcements/announcements.twig', {

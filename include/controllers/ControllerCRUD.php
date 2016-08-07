@@ -10,8 +10,16 @@ class ControllerCRUD extends Controller
 
 	protected $_var_id = 'id';
 
+	protected function _validate(DataIter $iter, &$data, array &$errors)
+	{
+		return true;
+	}
+
 	protected function _create(DataIter $iter, $data, array &$errors)
 	{
+		if (!$this->_validate($iter, $data, $errors))
+			return false;
+
 		$iter->set_all($data);
 
 		$id = $this->model->insert($iter);
@@ -27,6 +35,9 @@ class ControllerCRUD extends Controller
 
 	protected function _update(DataIter $iter, $data, array &$errors)
 	{
+		if (!$this->_validate($iter, $data, $errors))
+			return false;
+		
 		foreach ($data as $key => $value)
 			if (is_scalar($value))
 				$iter->set($key, trim($value));

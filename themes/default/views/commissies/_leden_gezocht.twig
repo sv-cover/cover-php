@@ -5,7 +5,7 @@
 		{% if iter.has_vacancy_deadline %}
 		<p>{{ __("Hey! Deze commissie zoekt nieuwe commissieleden.\nHeb jij interesse? Zeg het de Commissaris Intern, %s (intern@svcover.nl)")|format(commissioner.voornaam) }}</p>
 		{% else %}
-		<p>{{ __("Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse?\nZeg het <strong>voor %s</strong> tegen de Commissaris Intern, %s (intern@svcover.nl)")|format(iter.vacancies|date('%A %e %B'),commissioner.voornaam|e('html'))|raw }}
+		<p>{{ __("Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse?\nZeg het <strong>voor %s</strong> tegen de Commissaris Intern, %s (intern@svcover.nl)")|format(iter.vacancies|date('l j F'),commissioner.voornaam|e('html'))|raw }}
 		{% endif %}
 	{% else %}
 	<p>{{ __("Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het de Intern via intern@svcover.nl.") }}</p>

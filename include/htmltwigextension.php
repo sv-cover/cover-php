@@ -1,5 +1,6 @@
 <?php
 require_once 'include/form.php';
+require_once 'include/editable.php';
 
 class HTMLTwigExtension extends Twig_Extension
 {
@@ -28,6 +29,11 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		return [
 			new Twig_SimpleFilter('parse_markup', 'markup_parse', ['is_safe' => ['html']]),
+			new Twig_SimpleFilter('parse_editable', function($iter) {
+				return editable_parse($iter instanceof DataIterEditable
+					? $iter->get_content()
+					: $iter);
+			}, ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('filter', function($array, $callback) {
 				return array_map($callback, $array);
 			})

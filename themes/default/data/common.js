@@ -738,3 +738,35 @@ $(document).on('ready partial-content-loaded', function(e) {
 		switchMode('edit'); // default to edit mode
 	});
 });
+
+// Tab panes
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.tab-pane').each(function() {
+		var $tabs = $(this).find('.nav-tabs li');
+		var $panels = $(this).find('.tab-panel');
+
+		var switchTab = function(tabId) {
+			$tabs.each(function() {
+				$(this).toggleClass('active', $(this).find('a').attr('href') == '#' + tabId);
+			});
+			$panels.each(function() {{
+				$(this).toggle($(this).prop('id') == tabId);
+			}});
+		}
+
+		$tabs.find('a').click(function(e){
+			switchTab($(this).attr('href').substr(1));
+			e.preventDefault();
+		});
+
+		// Find the first active tab
+		var $activeTab = $tabs.filter('.active').first();
+
+		// If none is explicitly active, go to the first tab in general
+		if ($activeTab.length == 0)
+			$activeTab = $tabs.first();
+
+		// Mark that tab as the active tab (and hide all the others)
+		switchTab($activeTab.find('a').attr('href').substr(1));
+	});
+});

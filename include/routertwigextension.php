@@ -9,7 +9,10 @@ class RouterTwigExtension extends Twig_Extension
 			'sessions' => 'sessions.php?view=sessions',
 			'overrides'=> 'sessions.php?view=overrides'
 		],
-		'profiel' => 'profiel.php'
+		'profiel' => 'profiel.php',
+		'editable' => [
+			'update' => 'show.php?view=update&id=$editable[id]'
+		]
 	];
 
 	public function getName()
@@ -36,9 +39,7 @@ class RouterTwigExtension extends Twig_Extension
 		}
 
 		$url = format_string($route, $arguments);
-
-		$url = edit_url($url, $arguments);
-
+		
 		return $url;
 	}
 }

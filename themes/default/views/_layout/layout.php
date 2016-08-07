@@ -11,9 +11,9 @@ class LayoutViewHelper
 			'url' => 'index.php'
 		];
 
-		if (member_in_commissie(COMMISSIE_BESTUUR) ||
-			member_in_commissie(COMMISSIE_KANDIBESTUUR) ||
-			member_in_commissie(COMMISSIE_EASY)) {
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$menus['admin'] = ['label' => __('Beheer'), 'submenu' => []];
 		
 			$menus['admin']['submenu'][] = [
@@ -21,7 +21,8 @@ class LayoutViewHelper
 				'label' => __('Pagina maken')
 			];
 
-			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
+			if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
+				get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 				$menus['admin']['submenu'][] = [
 					'url' => 'agenda.php?agenda_moderate',
 					'label' => __('Agenda')
@@ -43,7 +44,7 @@ class LayoutViewHelper
 				];
 			}
 			
-			if (member_in_commissie(COMMISSIE_EASY)) {
+			if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
 				$menus['admin']['submenu'][] = [
 					'url' => 'settings.php',
 					'label' => __('Instellingen')

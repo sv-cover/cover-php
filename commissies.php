@@ -1,7 +1,6 @@
 <?php
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
-require_once 'include/controllers/ControllerEditable.php';
 require_once 'themes/default/views/commissies/commissies.php';
 
 class ControllerCommissies extends ControllerCRUD
@@ -58,34 +57,7 @@ class ControllerCommissies extends ControllerCRUD
 	{
 		return $this->link_to_iter($iter, array());
 	}
-
-	/*
-	public function link(array $arguments)
-	{
-		$link = '/committees';
-
-		if (isset($arguments['view'])) {
-			$link .= '/' . $arguments['view'];
-			unset($arguments['view']);
-		}
-
-		if (isset($arguments['id'])) {
-			$link .= '/' . $arguments['id'];
-			unset($arguments['id']);
-		}
-
-		if (!empty($arguments))
-			$link .= '?' . http_build_query($arguments);
-
-		return $link;
-	}
-	*/
-
-	protected function _get_title($iter)
-	{
-		return $iter instanceof DataIter ? $iter->get('naam') : __('Commissies');
-	}
-
+	
 	/* protected */ function run_impl()
 	{
 		// Support for old urls

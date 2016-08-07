@@ -25,7 +25,7 @@
 				{% endif %}
 				<span class="overlay">
 					<span class="name">{{ committee.naam }}</span>
-					<span class="summary">{{ view.get_summary(committee) }} </span>
+					<span class="summary">{{ view.get_summary(committee)|parse_markup }} </span>
 				</span>
 			</a>
 		</li>

@@ -82,9 +82,6 @@ class View
 		require_once 'include/i18ntwigextension.php';
 		$this->twig->addExtension(new I18NTwigExtension());
 
-		require_once 'include/editabletwigextension.php';
-		$this->twig->addExtension(new EditableTwigExtension());
-
 		require_once 'include/routertwigextension.php';
 		$this->twig->addExtension(new RouterTwigExtension());
 

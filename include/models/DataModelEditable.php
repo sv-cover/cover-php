@@ -1,7 +1,6 @@
 <?php
 	require_once 'include/data/DataModel.php';
 	require_once 'include/search.php';
-	require_once 'include/editable.php';
 
 	class DataIterEditable extends DataIter implements SearchResult
 	{
@@ -28,6 +27,13 @@
 			return preg_match('/\[h1\](.+?)\[\/h1\]\s*/ism', $content, $match)
 				? $match[1]
 				: $this->get('titel');
+		}
+
+		public function get_summary($language = null)
+		{
+			$content = $this->get_content($language);
+
+			return preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches) ? $matches[1] : null;
 		}
 
 		public function get_search_relevance()
@@ -84,9 +90,7 @@
 
 		public function get_summary($id)
 		{
-			$page = $this->get_iter($id);
-
-			return editable_get_summary($page->get_content(), $page->get('owner'));
+			return $this->get_iter($id)->get_summary();
 		}
 
 		public function search($query, $limit = null)
@@ -124,10 +128,5 @@
 			}
 
 			return $iters;
-		}
-
-		public function controller($id)
-		{
-			return new ControllerEditable($id);
 		}
 	}

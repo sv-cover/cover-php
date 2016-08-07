@@ -16,7 +16,7 @@
 			if (!isset($_POST['language']))
 				throw new Exception('Language parameter missing');
 
-			$language = $_POST('language');
+			$language = $_POST['language'];
 			
 			if (!i18n_valid_language($language)) {
 				header('Location: index.php');
