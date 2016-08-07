@@ -1,4 +1,5 @@
 <?php
+require_once 'include/member.php'; // for member_full_name
 
 class I18NTwigExtension extends Twig_Extension
 {
