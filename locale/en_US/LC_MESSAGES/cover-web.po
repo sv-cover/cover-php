@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-08-07 12:02+0200\n"
+"POT-Creation-Date: 2016-08-07 12:38+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1106,6 +1106,8 @@ msgstr "Subject/question"
 #: themes/default/views/fotoboek/add_photos.phtml:24
 #: themes/default/views/mailinglijsten/mailinglist.phtml:52
 #: themes/default/views/mailinglijsten/mailinglists.phtml:35
+#: themes/default/views/profiel/_incassomatic.phtml:67
+#: themes/default/views/profiel/_incassomatic.phtml:89
 msgid "Omschrijving"
 msgstr "Description"
 
@@ -1358,6 +1360,8 @@ msgstr "Modify message"
 #: themes/default/views/agenda/moderate.phtml:18
 #: themes/default/views/fotoboek/_info.phtml:7
 #: themes/default/views/mailinglijsten/list_archive.phtml:9
+#: themes/default/views/profiel/_incassomatic.phtml:69
+#: themes/default/views/profiel/_incassomatic.phtml:91
 msgid "Datum"
 msgstr "Date"
 
@@ -1737,7 +1741,7 @@ msgstr "Add a calendar event"
 #: themes/default/views/agenda/edit.phtml:4
 #: themes/default/views/lidworden/lidworden.phtml:27
 #: themes/default/views/nieuwlid/nieuwlid.phtml:17
-#: themes/default/views/profiel/profiel.phtml:121
+#: themes/default/views/profiel/profiel.phtml:128
 #: themes/default/views/show/edit.phtml:12
 msgid "Niet alle velden zijn goed ingevuld"
 msgstr "You haven't filled in all the fields correctly"
@@ -3144,6 +3148,71 @@ msgstr "Facebook"
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
 
+#: themes/default/views/profiel/_incassomatic.phtml:31
+#: themes/default/views/profiel/_incassomatic.phtml:47
+msgid "Incass-o-matic"
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:32
+msgid "Je hebt nog geen doorlopend incassocontract."
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:33
+msgid ""
+"Met een doorlopend incassocontract hoef je niet meer zelf incasso's te "
+"printen en te ondertekenen. Dus nooit meer naar de printer lopen nadat je in "
+"KAST kruisjes hebt gekocht!"
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:36
+#, php-format
+msgid ""
+"Download het contract, onderteken het, en lever het in bij de "
+"penningmeester, %s, of laat het achter in het postvakje in de Coverkamer."
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:39
+msgid "Download contract"
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:42
+msgid ""
+"Zodra het contract verwerkt is kan je hier op ieder moment de incasso's hier "
+"inzien, zowel de incasso's die net zijn aangemaakt als de incasso's die al "
+"zijn afgeschreven."
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:48
+msgid "Contract"
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:49
+#, php-format
+msgid "Getekend en actief sinds %s."
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:59
+msgid "Je laatste vijftien incasso's."
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:64
+msgid "Nog te incasseren"
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:68
+#: themes/default/views/profiel/_incassomatic.phtml:90
+msgid "Prijs"
+msgstr "Price"
+
+#: themes/default/views/profiel/_incassomatic.phtml:86
+#, php-format
+msgid "Incassobatch %d"
+msgstr ""
+
+#: themes/default/views/profiel/_incassomatic.phtml:110
+msgid "Sorry, Incass-o-matic is niet bereikbaar op het moment."
+msgstr ""
+
 #: themes/default/views/profiel/_kast.phtml:15
 #: themes/default/views/profiel/profiel.phtml:98
 msgid "KAST"
@@ -3314,10 +3383,14 @@ msgid "Privacy"
 msgstr "Privacy"
 
 #: themes/default/views/profiel/profiel.phtml:105
+msgid "Incasso's"
+msgstr ""
+
+#: themes/default/views/profiel/profiel.phtml:112
 msgid "Systeem"
 msgstr "System"
 
-#: themes/default/views/profiel/profiel.phtml:116
+#: themes/default/views/profiel/profiel.phtml:123
 #, php-format
 msgid "Profiel van %s"
 msgstr "Profile of %s"
@@ -3665,9 +3738,6 @@ msgstr "Modify working group page"
 
 #~ msgid "Vak"
 #~ msgstr "Course"
-
-#~ msgid "Prijs"
-#~ msgstr "Price"
 
 #~ msgid "Totaal bedrag: &euro;&nbsp;"
 #~ msgstr "Total amount: &euro;&nbsp;"

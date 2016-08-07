@@ -100,6 +100,13 @@ $tabs = [
 			$this->render_partial('kast', compact('iter'));
 		}
 	],
+	'incassomatic' => [
+		'visible' => $this->is_current_member($iter),
+		'label' => __('Incasso\'s'),
+		'body' => function () use ($iter) {
+			$this->render_partial('incassomatic', compact('iter'));
+		}
+	],
 	'system' => [
 		'visible' => member_in_commissie(COMMISSIE_EASY),
 		'label' => __('Systeem'),
