@@ -11,10 +11,6 @@
 		
 		/* Bestuur */
 		'email_bestuur' => 'bestuur@svcover.nl',
-		
-		/* Scherm */
-		'path_to_bestuur_slides' => dirname(__FILE__) . '/../test/bestuur-slides',
-		'path_to_promotie_slides' => dirname(__FILE__) . '/../test/promotie-slides',
 
 		'default_language' => 'en',
 
