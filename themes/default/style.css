@@ -1149,6 +1149,13 @@ td.timestamp {
 	text-align: right;
 }
 
+table.incassomatic thead::before
+{
+    content: '';
+    display: table-row;
+    height: 20px;
+}
+
 #language-switch {
 	position: absolute;
 	right: 4px;
@@ -2410,6 +2417,12 @@ a.profile-widget:after {
 
 .tab-pane .aligned-list-section .hint {
 	font-style: italic;
+}
+
+.tab-pane .aligned-list-section .center {
+	margin-left: -140px;
+	width: auto;
+	text-align: center;
 }
 
 .tab-pane .aligned-list-section h4 {

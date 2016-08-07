@@ -414,6 +414,22 @@
 			
 			$card->download();
 		}
+
+		public function run_export_incassocontract(DataIterMember $member)
+		{
+			require_once 'include/incassomatic.php';
+
+			if (get_identity()->get('id') != $member['id'])
+				throw new UnauthorizedException();
+
+			$incasso_api = \incassomatic\shared_instance();
+
+			$fh = $incasso_api->getContractTemplatePDF($member);
+
+			header('Content-Type: application/pdf');
+			fpassthru($fh);
+			fclose($fh);
+		}
 		
 		protected function run_impl()
 		{
@@ -455,6 +471,8 @@
 				$this->_process_zichtbaarheid($iter);
 			elseif (isset($_GET['export']) && $_GET['export'] == 'vcard')
 				$this->run_export_vcard($iter);
+			elseif (isset($_GET['export']) && $_GET['export'] == 'incasso-contract')
+				$this->run_export_incassocontract($iter);
 			else
 				$this->get_content('profiel', $iter, ['errors' => [], 'tab' => $tab]);
 		}
