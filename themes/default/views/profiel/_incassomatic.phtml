@@ -10,6 +10,10 @@ $format_date_full = function($datestring) {
 	return date_create($datestring)->format('j-n-Y H:i:s');
 };
 
+$format_date_iso = function($datestring) {
+	return date_create($datestring)->format(DateTime::ISO8601);
+};
+
 $treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'penningmeester');
 $treasurer_link = sprintf('<a href="profiel.php?lid=%d">%s</a>',
 	$treasurer['id'], markup_format_text(member_full_name($treasurer)));
@@ -70,7 +74,7 @@ $incassos_per_batch = array_group_by($incassos, function($incasso) { return $inc
 			<tr>
 				<td><?=markup_format_text($incasso->omschrijving)?></td>
 				<td class="numeric">&euro;&nbsp;<?=sprintf('%0.2f', $incasso->bedrag / 100)?></td>
-				<td class="timestamp"><time datetime="<?=date_create($contract->start_datum)->format(DateTime::ISO8601)?>" title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
+				<td class="timestamp"><time datetime="<?=$format_date_iso($incasso->aangemaakt)?>" title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
 			</tr>
 			<?php endforeach ?>
 		</tbody>
@@ -92,7 +96,7 @@ $incassos_per_batch = array_group_by($incassos, function($incasso) { return $inc
 			<tr>
 				<td><?=markup_format_text($incasso->omschrijving)?></td>
 				<td class="numeric">&euro;&nbsp;<?=sprintf('%0.2f', $incasso->bedrag / 100)?></td>
-				<td class="timestamp"><time datetime="<?=date_create($contract->start_datum)->format(DateTime::ISO8601)?>" title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
+				<td class="timestamp"><time datetime="<?=$format_date_iso($incasso->aangemaakt)?>" title="<?=$format_date_full($incasso->aangemaakt)?>"><?=$format_date($incasso->aangemaakt)?></time></td>
 			</tr>
 			<?php endforeach ?>
 		</tbody>
