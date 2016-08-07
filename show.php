@@ -113,6 +113,11 @@ class ControllerShow extends ControllerCRUD
 		return editable_parse($page, null);
 	}
 
+	public function run_index()
+	{
+		return $this->view->redirect('index.php'); // we don't have no index/sitemap (yet)
+	}
+
 	public function run_read(DataIter $iter)
 	{
 		if ($committee = $this->_is_embedded_page($iter['id'], 'DataModelCommissie'))
