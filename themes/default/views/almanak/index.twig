@@ -1,0 +1,70 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Almanak') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Almanak') }}</h1>
+<div class="messageBox">	
+	<form name="almanak" action="almanak.php" method="GET">
+		<table class="almanak_navigation">
+			<tr>
+				<td class="title">{{ __('Naam') }}:</td>
+				<td>
+					{{ html_input_text('search', params, size=40) }}
+					{{ html_input_submit('', __('Zoek')) }}
+				</td>
+			</tr>
+			{% if global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
+			<tr>
+				<td class="title">{{ __('Zichtbaarheid') }}:</td>
+				<td colspan="2">
+					<ul class="nav-tabs">
+						<li><a href="?status={{ constant('MEMBER_STATUS_LID') }}">{{ __('Lid') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_LID_ONZICHTBAAR') }}">{{ __('Lid (verborgen)') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_LID_AF') }}">{{ __('Lid af') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_ERELID') }}">{{ __('Erelid') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_DONATEUR') }}">{{ __('Donateur') }}</a></li>
+					</ul>
+				</td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td class="alphabet" colspan="3">
+					<ol class="nav-tabs">
+					{% for jaar in model.get_distinct_years if jaar != '' %}
+						<li class="{% if params.year == jaar %}active{% endif %}"><a href="?search_year={{ jaar }}">{{ jaar }}</a></li>
+					{% endfor %}
+					</ol>
+				</td>
+			</tr>
+		</table>
+	</form>
+	</div>
+	{% if iters is null %}
+		<p>{{ __('Maak hierboven een selectie om de almanak te bekijken.') }}</p>
+		{% if global.identity.member_in_committee(constant('COMMISSIE_ALMANAKCIE')) %}
+		<p>
+			{{ __('Download almanakgegevens:') }}
+			<a href="almanak.php?export=csv">{{ __('CSV met persoonsgegevens') }}</a>
+			<a href="almanak.php?export=photos">{{ __('ZIP met foto\'s') }}</a>
+		</p>
+		{% endif %}
+	{% else %}
+		<h3>{{ __N('Er is <em>%d</em> lid gevonden die voldoet aan de zoekterm(en).', 'Er zijn <em>%d</em> leden gevonden die voldoen aan de zoekterm(en).', iters|length)|raw }}</h3>
+		<div class="messageBox">
+			<ol class="almanac">
+				{% for iter in iters %}
+				<li>
+					<a href="{{ link('profiel.read', member=iter) }}" class="profile-widget round {{ view.classname(iter) }}">
+						<img width="100" height="100" src="{{ link('foto.square', member=iter, width=200) }}" alt="{{ __('foto van %s')|format(iter|full_name) }}">
+						<span class="name">{{ iter|personal_full_name }}</span>
+						{% if view.status_label(iter) %}
+							<span class="status">{{ view.status_label(iter) }}</span>
+						{% endif %}
+					</a>
+				</li>
+				{% endfor %}
+			</ol>
+		</div>
+	{% endif %}
+{% endblock %}

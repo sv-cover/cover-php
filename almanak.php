@@ -5,11 +5,11 @@
 	
 	class ControllerAlmanak extends Controller
 	{
-		var $model = null;
-
 		public function __construct() 
 		{
 			$this->model = create_model('DataModelMember');
+
+			$this->view = View::byName('almanak', $this);
 
 			// If current visitor is the board, show all members in the
 			// database, including those that are no longer a member
@@ -25,16 +25,9 @@
 				);
 		}
 		
-		protected function get_content($view, $iter = null, $params = null)
+		public function run_index_search($search)
 		{
-			$this->run_header(array('title' => __('Almanak')));
-			run_view('almanak::' . $view, $this->model, $iter, $params);
-			$this->run_footer();
-		}
-		
-		protected function _process_search($query)
-		{
-			$iters = $this->model->search_name($query,
+			$iters = $this->model->search_name($search,
 				isset($_GET['limit']) ? $_GET['limit'] : null);
 
 			// Filter out everyone that doesn't want to be found by their name
@@ -44,40 +37,35 @@
 					return !$iter->is_private('naam');
 				});
 
-			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
-				array('application/json', 'text/html', '*/*'));
-
-			// The JSON is mostly used by the text inputs that autosuggest names
-			if ($preferred == 'application/json')
-				echo json_encode(array_map(function($lid) {
-					return array(
-						'id' => $lid->get_id(),
-						'starting_year' => $lid->get('beginjaar'),
-						'name' => member_full_name($lid));
-				}, $iters));
-			else
-				$this->get_content('almanak', $iters);
+			return $this->view->render_index($iters, compact('search'));
 		}
 		
 		/** 
 		  * Searches the online almanak for a given year
 		  *
 		  */
-		protected function _process_year()
+		public function run_index_year()
 		{
-			$iters = $this->model->get_from_search_year($_GET['search_year']);
-			$this->get_content('almanak', $iters);				
+			$year = (int) $_GET['search_year'];
+
+			$iters = $this->model->get_from_search_year($year);
+
+			return $this->view->render_index($iters, compact('year'));
 		}
 		
-		protected function _process_status() {
+		public function run_index_status()
+		{
 			if (!member_in_commissie(COMMISSIE_BESTUUR))
-				return $this->get_content('auth');
+				throw new UnauthorizedException();
+
+			$status = $_GET['status'];
 			
-			$iters = $this->model->get_from_status($_GET['status']);
-			$this->get_content('almanak', $iters);
+			$iters = $this->model->get_from_status($status);
+
+			return $this->view->render_index($iters, compact('status'));
 		}
 		
-		protected function _process_export_csv()
+		public function run_export_csv()
 		{
 			if (!get_identity()->member_in_committee(COMMISSIE_ALMANAKCIE))
 				throw new UnauthorizedException('Only members of the YearbookCee committee are allowed to download these dumps.');
@@ -108,17 +96,16 @@
 				$iter->data['studie'] = implode(', ', $iter->get('studie'));
 			}
 
-			run_view('almanak::csv', $this->model, $iters, null);
+			return $this->view->render_csv($iters);
 		}
 
-		protected function _process_export_photos()
+		public function run_export_photos()
 		{
 			if (!get_identity()->member_in_committee(COMMISSIE_ALMANAKCIE))
 				throw new UnauthorizedException('Only members of the YearbookCee committee are allowed to download these dumps.');
 
 			// Flush all of the current output and turn of the buffer
-			while (ob_get_level() > 0)
-				ob_end_clean();
+			while (ob_get_level() > 0 && ob_end_clean());
 
 			// Disable PHP's time limit
 			set_time_limit(0);
@@ -163,22 +150,22 @@
 			$zip->finish();
 		}
 		
-		protected function run_impl() {
+		protected function run_impl()
+		{
 			if (isset($_GET['search']))
-				$this->_process_search($_GET['search']);
+				return $this->run_index_search($_GET['search']);
 			elseif (isset($_GET['search_year']))
-				$this->_process_year();
+				return $this->run_index_year();
 			elseif (isset($_GET['status']))
-				$this->_process_status();
+				return $this->run_index_status();
 			elseif (isset($_GET['export']) && $_GET['export'] == 'csv')
-				$this->_process_export_csv();
+				return $this->run_export_csv();
 			elseif (isset($_GET['export']) && $_GET['export'] == 'photos')
-				$this->_process_export_photos();
+				return $this->run_export_photos();
 			else
-				$this->get_content('almanak');
+				return $this->view->render_index();
 		}
 	}
 	
 	$controller = new ControllerAlmanak();
 	$controller->run();
-?>

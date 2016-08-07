@@ -9,9 +9,15 @@ class RouterTwigExtension extends Twig_Extension
 			'sessions' => 'sessions.php?view=sessions',
 			'overrides'=> 'sessions.php?view=overrides'
 		],
-		'profiel' => 'profiel.php',
+		'profiel' => [
+			'read' => 'profiel.php?lid_id=$member[id]'
+		],
 		'editable' => [
 			'update' => 'show.php?view=update&id=$editable[id]'
+		],
+		'foto' => [
+			'portrait' => 'foto.php?format=portrait&width=$width&lid_id=$member[id]',
+			'square' => 'foto.php?format=square&width=$width&lid_id=$member[id]'
 		]
 	];
 

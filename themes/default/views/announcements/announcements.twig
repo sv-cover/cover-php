@@ -7,10 +7,10 @@
 	
 	<h1>{{ __('Mededelingen') }}</h1>
 	{% if hidden_announcements_cnt > 0 %}
-	<p>{{ _ngettext(
+	<p>{{ _N(
 		'Er is %d mededeling alleen beschikbaar voor leden. Log in om deze te lezen.',
 		'Er zijn %d mededelingen alleen beschikbaar voor leden. Log in om ze te lezen.',
-		hidden_announcements_cnt)|format(hidden_announcements_cnt) }}</p>
+		hidden_announcements_cnt) }}</p>
 	{% endif %}
 </div>
 

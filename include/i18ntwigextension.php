@@ -29,7 +29,7 @@ class I18NTwigExtension extends Twig_Extension
 	{
 		return [
 			new Twig_SimpleFunction('__', '__'),
-			new Twig_SimpleFunction('_ngettext', '_ngettext'),
+			new Twig_SimpleFunction('__N', '__N'),
 			new Twig_SimpleFunction('link_static', 'get_theme_data'),
 			new Twig_SimpleFunction('get_config_value', 'get_config_value')
 		];
