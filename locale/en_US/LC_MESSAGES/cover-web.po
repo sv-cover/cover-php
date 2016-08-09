@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-08-07 10:53+0200\n"
+"POT-Creation-Date: 2016-08-07 12:38+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -16,7 +16,6 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: vendor\n"
-"X-Poedit-SearchPathExcluded-1: tmp\n"
 
 #: actieveleden.php:15
 msgid "ActieveLeden"
@@ -818,11 +817,6 @@ msgstr "The uploaded file could not be read."
 msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
-
-#: scherm/slides/03-wall-of-fame/slide.php:69
-#: themes/default/views/commissies/index.phtml:12
-msgid "Commissieleden gezocht!"
-msgstr "Looking for new members!"
 
 #: search.php:23 themes/default/views/forum.php:871
 #: themes/default/views/almanak/almanak.phtml:9
@@ -2227,6 +2221,10 @@ msgstr "Back to all committees"
 msgid "Nieuwe commissie"
 msgstr "New committee"
 
+#: themes/default/views/commissies/index.phtml:12
+msgid "Commissieleden gezocht!"
+msgstr "Looking for new members!"
+
 #: themes/default/views/commissies/single.phtml:24
 msgid "Bewerk commissiepagina"
 msgstr "Modify committee page"
@@ -3153,11 +3151,11 @@ msgstr "Disconnect Facebook"
 #: themes/default/views/profiel/_incassomatic.phtml:31
 #: themes/default/views/profiel/_incassomatic.phtml:47
 msgid "Incass-o-matic"
-msgstr "Incass-o-matic"
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:32
 msgid "Je hebt nog geen doorlopend incassocontract."
-msgstr "You do not yet have a continuous direct debit contract."
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:33
 msgid ""
@@ -3165,9 +3163,6 @@ msgid ""
 "printen en te ondertekenen. Dus nooit meer naar de printer lopen nadat je in "
 "KAST kruisjes hebt gekocht!"
 msgstr ""
-"With a continuous direct debit contract, you no longer have to print and "
-"sign direct debit forms. No more going to the printer after buying new "
-"credits in KAST!"
 
 #: themes/default/views/profiel/_incassomatic.phtml:36
 #, php-format
@@ -3175,12 +3170,10 @@ msgid ""
 "Download het contract, onderteken het, en lever het in bij de "
 "penningmeester, %s, of laat het achter in het postvakje in de Coverkamer."
 msgstr ""
-"Download the contract, sign it, and hand it to the treasurer, %s, or deliver "
-"it to the mailbox in the Cover room."
 
 #: themes/default/views/profiel/_incassomatic.phtml:39
 msgid "Download contract"
-msgstr "Download contract"
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:42
 msgid ""
@@ -3188,26 +3181,23 @@ msgid ""
 "inzien, zowel de incasso's die net zijn aangemaakt als de incasso's die al "
 "zijn afgeschreven."
 msgstr ""
-"As soon as your contract has been processed, you can view your direct debits "
-"here every moment of the day. Both freshly created direct debit transactions "
-"as well as already debited ones will be displayed here."
 
 #: themes/default/views/profiel/_incassomatic.phtml:48
 msgid "Contract"
-msgstr "Contract"
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:49
 #, php-format
 msgid "Getekend en actief sinds %s."
-msgstr "Signed and active since %s."
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:59
 msgid "Je laatste vijftien incasso's."
-msgstr "Your fifteen most recent direct debits."
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:64
 msgid "Nog te incasseren"
-msgstr "To be debited"
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:68
 #: themes/default/views/profiel/_incassomatic.phtml:90
@@ -3217,11 +3207,11 @@ msgstr "Price"
 #: themes/default/views/profiel/_incassomatic.phtml:86
 #, php-format
 msgid "Incassobatch %d"
-msgstr "Debit batch %d"
+msgstr ""
 
 #: themes/default/views/profiel/_incassomatic.phtml:110
 msgid "Sorry, Incass-o-matic is niet bereikbaar op het moment."
-msgstr "Sorry, Incass-o-matic cannot be reached at this moment."
+msgstr ""
 
 #: themes/default/views/profiel/_kast.phtml:15
 #: themes/default/views/profiel/profiel.phtml:98
@@ -3394,7 +3384,7 @@ msgstr "Privacy"
 
 #: themes/default/views/profiel/profiel.phtml:105
 msgid "Incasso's"
-msgstr "Direct debits"
+msgstr ""
 
 #: themes/default/views/profiel/profiel.phtml:112
 msgid "Systeem"
@@ -3713,30 +3703,6 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
-
-#~ msgid ""
-#~ "Je hebt nog geen contract. Vraag je penningmeester om er een te maken!"
-#~ msgstr ""
-#~ "You do not yet have a continuous direct debit contract. Ask you treasurer "
-#~ "for one!"
-
-#~ msgid "Deze opdracht is nog niet naar de bank verstuurd."
-#~ msgstr "This direct debit has not yet been send to the bank."
-
-#~ msgid "Afgeschreven"
-#~ msgstr "Debited"
-
-#~ msgid "Getekend"
-#~ msgstr "Sigend"
-
-#~ msgid "Nog niet getekend"
-#~ msgstr "Not yet signed"
-
-#~ msgid "Incassomatic"
-#~ msgstr "Incassomatic"
-
-#~ msgid "Sorry, Incassomatic is niet bereikbaar op het moment."
-#~ msgstr "Sorry, Incassomatic cannot be reached at this moment."
 
 #~ msgid "Word lid"
 #~ msgstr "Become a member"
