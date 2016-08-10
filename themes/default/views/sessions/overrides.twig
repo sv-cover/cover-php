@@ -8,10 +8,8 @@
 <h2>{{ __('Website bekijken als een ander') }}</h2>
 <div class="messageBox">
 	<form method="post" action="{{ link('sessions.overrides') }} " class="vertical-form overrides-form">
-		{% if global.GET.referrer is defined %}
-			{{ html_input_hidden('referrer', global.GET.referrer) }}
-		{% endif %}
-
+		{{ html_input_hidden('referrer', referrer) }}
+		
 		<fieldset>
 			<legend>
 				{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() != null}) }}
@@ -22,7 +20,7 @@
 			<ul class="option-group columns">
 				{% for committee in committees %}
 				<li>
-					{{ html_input_checkbox('override_committee_ids[]', {'override_committee_ids': global.identity.get_override_committees()}, committee.id, id='field-override-committee-' ~ committee.id) }}
+					{{ html_input_checkbox('override_committee_ids[]', {override_committee_ids: global.identity.get_override_committees()}, value=committee.id, id='field-override-committee-' ~ committee.id) }}
 					{{ html_label(committee.naam, 'override-committee-' ~ committee.id) }}
 				</li>
 				{% endfor %}

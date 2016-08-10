@@ -2,24 +2,36 @@
 
 class RouterTwigExtension extends Twig_Extension
 {
-	static public $routes = [
-		'sessions' => [
-			'login' => 'sessions.php?view=login',
-			'logout' => 'sessions.php?view=logout',
-			'sessions' => 'sessions.php?view=sessions',
-			'overrides'=> 'sessions.php?view=overrides'
-		],
-		'profiel' => [
-			'read' => 'profiel.php?lid_id=$member[id]'
-		],
-		'editable' => [
-			'update' => 'show.php?view=update&id=$editable[id]'
-		],
-		'foto' => [
-			'portrait' => 'foto.php?format=portrait&width=$width&lid_id=$member[id]',
-			'square' => 'foto.php?format=square&width=$width&lid_id=$member[id]'
-		]
-	];
+	public $routes;
+
+	public function __construct()
+	{
+		$this->routes = [
+			'sessions' => [
+				'login' => function($args) {
+					return edit_url('sessions.php?view=login',
+						['referrer' => isset($args['referrer'])
+							? $args['referrer']
+							: $_SERVER['REQUEST_URI']]);
+				},
+				'logout' => 'sessions.php?view=logout',
+				'sessions' => 'sessions.php?view=sessions',
+				'overrides'=> function($args) {
+					return edit_url('sessions.php?view=overrides', $args);
+				}
+			],
+			'profiel' => [
+				'read' => 'profiel.php?lid_id=$member[id]'
+			],
+			'editable' => [
+				'update' => 'show.php?view=update&id=$editable[id]'
+			],
+			'foto' => [
+				'portrait' => 'foto.php?format=portrait&width=$width&lid_id=$member[id]',
+				'square' => 'foto.php?format=square&width=$width&lid_id=$member[id]'
+			]
+		];
+	}
 
 	public function getName()
 	{
@@ -33,9 +45,9 @@ class RouterTwigExtension extends Twig_Extension
 		];
 	}
 
-	static public function link_to($name, array $arguments = array())
+	public function link_to($name, array $arguments = array())
 	{
-		$route = self::$routes;
+		$route = $this->routes;
 
 		foreach (explode('.', $name) as $path) {
 			if (!isset($route[$path]))
@@ -44,7 +56,10 @@ class RouterTwigExtension extends Twig_Extension
 			$route = $route[$path];
 		}
 
-		$url = format_string($route, $arguments);
+		if (is_callable($route))
+			$url = call_user_func($route, $arguments);
+		else
+			$url = format_string($route, $arguments);
 		
 		return $url;
 	}

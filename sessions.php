@@ -18,6 +18,13 @@ class ControllerSessions extends Controller
 		if (!(get_identity() instanceof ImpersonatingIdentityProvider))
 			throw new UnauthorizedException();
 
+		if (isset($_POST['referrer']))
+			$referrer = $_POST['referrer'];
+		elseif (isset($_GET['referrer']))
+			$referrer = $_GET['referrer'];
+		else
+			$referrer = 'index.php';
+
 		if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
 			if (isset($_POST['override_member']) && !empty($_POST['override_member_id']))
@@ -39,7 +46,7 @@ class ControllerSessions extends Controller
 				: $this->view->redirect('sessions.php?view=overrides');
 		}
 
-		return $this->view->render_overrides();
+		return $this->view->render_overrides($referrer);
 	}
 
 	protected function run_view_sessions()
@@ -103,7 +110,7 @@ class ControllerSessions extends Controller
 			}
 		}
 
-		return $this->view->render_login(compact('errors', 'error_message', 'referrer', 'external_domain'));
+		return $this->view->render_login($errors, $error_message, $referrer, $external_domain);
 	}
 
 	protected function run_view_logout()

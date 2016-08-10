@@ -3,11 +3,11 @@ require_once 'include/markup.php';
 
 class SessionsView extends View
 {
-	public function render_overrides()
+	public function render_overrides($referrer = null)
 	{
 		$committees = get_model('DataModelCommissie')->get();
 
-		return $this->twig->render('overrides.twig', compact('committees'));
+		return $this->twig->render('overrides.twig', compact('committees', 'referrer'));
 	}
 
 	public function render_sessions($sessions, $member, $session = null)
