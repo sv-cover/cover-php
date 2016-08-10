@@ -1,0 +1,11 @@
+<div class="pageheading">
+	{% if user_can_update editable %}
+	<div class="controls inline">
+		<a href="{{ link('editable.update', editable=editable) }}" class="edit-link">{{ __('Bewerk pagina') }}</a>
+	</div>
+	{% endif %}
+	<h1>{{ editable.get_title }}</h1>
+</div>
+<div class="messageBox" id="page_{{ editable.id }}">
+	{{ editable|parse_editable }}
+</div>

@@ -2,13 +2,14 @@
 
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
-require_once 'include/controllers/ControllerEditable.php';
 
 class ControllerBesturen extends ControllerCRUD
 {
 	public function __construct()
 	{
 		$this->model = get_model('DataModelBesturen');
+
+		$this->view = View::byName('besturen', $this);
 	}
 
 	protected function _get_title($iters = null)
@@ -19,14 +20,14 @@ class ControllerBesturen extends ControllerCRUD
 			return __('Besturen');
 	}
 
-	protected function _validate(DataIter $iter = null, $data, array &$errors)
+	protected function _validate(DataIter $iter, $data, array &$errors)
 	{
-		if ($iter === null && !isset($data['naam']))
+		if (!$iter->has_id() && !isset($data['naam']))
 			$errors[] = 'naam';
 		elseif (isset($data['naam']) && strlen(trim($data['naam'])) === 0)
 			$errors[] = 'naam';
 
-		if ($iter === null && !isset($data['login']))
+		if (!$iter->has_id() && !isset($data['login']))
 			$errors[] = 'login';
 		elseif (isset($data['login']) && !preg_match('/^[a-z0-9]+$/i', $data['login']))
 			$errors[] = 'login';
@@ -34,9 +35,9 @@ class ControllerBesturen extends ControllerCRUD
 		return count($errors) === 0;
 	}
 
-	protected function _create($data, array &$errors)
+	protected function _create(DataIter $iter, $data, array &$errors)
 	{
-		if (!$this->_validate(null, $data, $errors))
+		if (!$this->_validate($iter, $data, $errors))
 			return false;
 
 		$editable_model = get_model('DataModelEditable');
@@ -45,9 +46,9 @@ class ControllerBesturen extends ControllerCRUD
 			'owner' => COMMISSIE_BESTUUR,
 			'titel' => $data['naam']);
 
-		$iter = new DataIter($editable_model, -1, $page_data);
+		$page = $editable_model->create_iter($page_data);
 
-		$page_id = $editable_model->insert($iter, true);
+		$page_id = $editable_model->insert($page, true);
 
 		$bestuur_data = array(
 			'naam' => $data['naam'],
@@ -55,7 +56,7 @@ class ControllerBesturen extends ControllerCRUD
 			'nocaps' => strtolower($data['naam']),
 			'page' => $page_id);
 
-		return parent::_create($bestuur_data, $errors);
+		return parent::_create($iter, $bestuur_data, $errors);
 	}
 
 	protected function _update(DataIter $bestuur, $data, array &$errors)

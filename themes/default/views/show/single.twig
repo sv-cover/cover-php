@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title iter.titel ~ ' :: ' ~ parent() %}
+{% block title iter.get_title ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="pageheading">
@@ -9,7 +9,7 @@
 		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Bewerk pagina') }}</a>
 	</div>
 	{% endif %}
-	<h1>{{ iter.titel }}</h1>
+	<h1>{{ iter.get_title }}</h1>
 </div>
 <div class="messageBox" id="page_{{ iter.id }}">
 	{{ iter|parse_editable }}
