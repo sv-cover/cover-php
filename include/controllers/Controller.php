@@ -66,12 +66,12 @@
 
 		protected function run_401_unauthorized(UnauthorizedException $exception)
 		{
-			$this->view()->render_401_unauthorized($exception);
+			return $this->view()->render_401_unauthorized($exception);
 		}
 
 		protected function run_404_not_found(NotFoundException $exception)
 		{
-			$this->view()->render_404_not_found($exception);
+			return $this->view()->render_404_not_found($exception);
 		}
 
 		protected function run_500_internal_server_error(Exception $e)
@@ -79,10 +79,9 @@
 			header('Status: 500 Interal Server Error');
 
 			if (get_config_value('show_exceptions'))
-				echo '<pre>' . $e . '</pre>';
+				return '<pre>' . $e . '</pre>';
 			else {
-				ob_clean();
-				echo __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)');
+				return __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)');
 			}
 		}
 

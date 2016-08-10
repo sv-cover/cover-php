@@ -1,0 +1,30 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Werkgroepen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageHeading">
+	{% if user_can_create model %}
+		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuwe werkgroep') }}</a></div>
+	{% endif %}
+	<h1>{{ __('Werkgroepen') }}</h1>
+</div>
+<div class="messageBox working-groups">
+	{% for working_group in iters %}
+	<section class="working-group">
+		<h3><a href="{{ controller.link_to_read(working_group) }}" class="link">{{ working_group.naam }}</a></h3>
+		<p>{{ view.get_summary(working_group) }}</p>
+		<ul>
+		{% for member in working_group.get_members %}
+			<li>
+				<a href="{{ link('profiel.read', member=member) }}">
+					<img src="{{ link('foto.square', width=60, member=member) }}">
+					{{ member|personal_full_name }}
+				</a>
+			</li>
+		{% endfor %}
+		</ul>
+	</section>
+	{% endfor %}
+</div>
+{% endblock %}

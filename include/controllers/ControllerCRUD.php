@@ -196,8 +196,8 @@ class ControllerCRUD extends Controller
 			$view = 'index';
 
 		if (!method_exists($this, 'run_' . $view))
-			throw new NotFoundException('View not implemented by this ControllerCRUD');
-			
+			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+
 		return call_user_func_array([$this, 'run_' . $view], [$iter]);
 	}
 }

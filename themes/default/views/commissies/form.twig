@@ -1,26 +1,31 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id() ? __('Commissie wijzigen') : __('Nieuwe commissie maken')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id() ? __('Commissie/werkgroep wijzigen') : __('Nieuwe commissie/werkgroep maken')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id() ? __('Commissie wijzigen') : __('Nieuwe commissie maken') }}</h1>
+<h1>{{ iter.has_id() ? __('Commissie/werkgroep wijzigen') : __('Nieuwe commissie/werkgroep maken') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
 		<div>
-			{{ html_label(__('Commissienaam'), 'naam', errors=errors, required=true) }}
+			{{ html_label(__('Type'), 'type', errors=errors, required=true) }}
+			{{ html_select_field('type', view.available_committee_types, iter) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Naam'), 'naam', errors=errors, required=true) }}
 			{{ html_input_text('naam', iter.data, required=true) }}
 		</div>
 
 		<div>
 			{{ html_label(__('Interne naam'), 'login', errors=errors, required=true) }}
 			{{ html_input_text('login', iter.data, required=true) }}
-			<p>{{ __('Je wil de interne naam alleen veranderen als je een verdomd goede reden hebt. Veel interne zaken (o.a. de commissiefoto en het e-mailadres) worden via deze naam aan de commissie gekoppeld.') }}</p>
+			<p>{{ __('Je wil de interne naam alleen veranderen als je een verdomd goede reden hebt. Veel interne zaken (o.a. de commissiefoto en het e-mailadres) worden via deze naam gekoppeld.') }}</p>
 		</div>
 		
 		<div>
 			{{ html_input_checkbox('hidden', iter.data, value=1) }}
-			{{ html_label(__('Deze commissie is verborgen'), 'hidden', errors=errors) }}
-			<p>{{ __('Verborgen commissies worden niet getoond in het overzicht of op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de website.') }}</p>
+			{{ html_label(__('Deze commissie/werkgroep is verborgen'), 'hidden', errors=errors) }}
+			<p>{{ __('Verborgen commissies en werkgroepen worden niet getoond in het overzicht of op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de website.') }}</p>
 		</div>
 		
 		<div class="committee-members">
@@ -54,20 +59,20 @@
 		</div>
 
 		<div>
-			{{ html_label(__('Deze commissie zoekt nieuwe leden tot'), 'vacancies', errors=errors) }}
+			{{ html_label(__('Deze commissie/werkgroep zoekt nieuwe leden tot'), 'vacancies', errors=errors) }}
 			{{ html_input_date('vacancies', iter.data) }}
-			<p>{{ __('Commissies die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm. De datum is de deadline. Geef een datum meer dan een jaar in de toekomst om geen specifieke te tonen. Laat het veld leeg als de commissie geen nieuwe leden zoekt.') }}</p>
+			<p>{{ __('Commissies en werkgroepen die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm. De datum is de deadline. Geef een datum meer dan een jaar in de toekomst om geen specifieke te tonen. Laat het veld leeg als de commissie geen nieuwe leden zoekt.') }}</p>
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ iter.has_id() ? __('Wijzig commissie') : __('Maak commissie aan') }}</button>
+			<button type="submit" class="button">{{ iter.has_id() ? __('Wijzig commissie/werkgroep') : __('Maak commissie/werkgroep aan') }}</button>
 			{% if iter.has_id() %}
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar commissie') }}</a>
+			<a href="{{ controller.link_to_read(iter) }}">{{ iter.type == constant('DataModelCommissie::TYPE_COMMITTEE') ? __('Terug naar commissie') : __('Terug naar werkgroep') }}</a>
 			{% else %}
 			<a href="{{ controller.link_to_index() }}">{{ __('Terug naar alle commissies') }}</a>
 			{% endif %}
 			{% if user_can_delete iter %}
-			<a href="{{ controller.link_to_delete(iter) }}" class="delete-link">{{ __('Verwijder commissie') }}</a>
+			<a href="{{ controller.link_to_delete(iter) }}" class="delete-link">{{ iter.type == constant('DataModelCommissie::TYPE_COMMITTEE') ? __('Verwijder commissie') : __('Verwijder werkgroep') }}</a>
 			{% endif %}
 		</div>
 	</form>

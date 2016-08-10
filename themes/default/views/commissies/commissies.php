@@ -102,4 +102,17 @@ class CommissiesView extends CRUDView
 		$model = get_model('DataModelCommissie');
 		return $model->get_lid_for_functie(COMMISSIE_BESTUUR, 'commissaris intern');
 	}
+
+	public function render_working_groups($iters)
+	{
+		return $this->twig->render('working_groups.twig', compact('iters'));
+	}
+
+	public function available_committee_types()
+	{
+		return [
+			DataModelCommissie::TYPE_COMMITTEE => __('Commissie'),
+			DataModelCommissie::TYPE_WORKING_GROUP => __('Werkgroep')
+		];
+	}
 }
