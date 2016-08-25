@@ -18,8 +18,8 @@
 
 		<div class="tab-pane">
 			<ul class="nav-tabs">
-				<li{% if global.i18n.language == 'nl' %} class="active"{% endif %}><a href="#content-nl">{{ __('Nederlands') }}</a></li>
-				<li{% if global.i18n.language == 'en' %} class="active"{% endif %}><a href="#content-en">{{ __('Engels') }}</a></li>
+				<li{% if view.preferred_tab(iter) == 'nl' %} class="active"{% endif %}><a href="#content-nl">{{ __('Nederlands') }}</a></li>
+				<li{% if view.preferred_tab(iter) == 'en' %} class="active"{% endif %}><a href="#content-en">{{ __('Engels') }}</a></li>
 			</ul>
 			<div class="tab-panel" id="content-nl">
 				{{ html_textarea_field('content', iter, rows=15) }}
