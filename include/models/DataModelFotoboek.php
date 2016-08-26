@@ -230,6 +230,8 @@
 
 	class DataIterPhotobook extends DataIter implements SearchResult
 	{
+		private $_photos = null; // cache the results of DataModelFotoboek::get_photos for this book.
+
 		public function get_books($metadata = null)
 		{
 			return $this->model->get_children($this, $metadata);
@@ -237,7 +239,10 @@
 
 		public function get_photos()
 		{
-			return $this->model->get_photos($this);
+			if ($this->_photos === null)
+				$this->_photos = $this->model->get_photos($this);
+
+			return $this->_photos;
 		}
 
 		public function has_photo(DataIterPhoto $needle)
@@ -289,6 +294,19 @@
 			return array_reverse(array_slice($photos,
 				max($index - max($num, 0), 0),
 				min(max($num, 0), $index)));
+		}
+
+		public function get_neighbours(DataIterPhoto $current)
+		{
+			$neighbours = new stdClass();
+
+			$prev = $this->get_previous_photo($current);
+			$neighbours->previous = count($prev) > 0 ? $prev[0] : null;
+
+			$next = $this->get_next_photo($current);
+			$neighbours->next = count($next) > 0 ? $next[0] : null;
+
+			return $neighbours;
 		}
 
 		public function get_parent()

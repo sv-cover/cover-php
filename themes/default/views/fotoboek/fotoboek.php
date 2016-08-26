@@ -3,6 +3,10 @@
 
 	class FotoboekView extends CRUDView
 	{
+		/**
+		 * Configuration
+		 */
+
 		public function stylesheets()
 		{
 			return array_merge(parent::stylesheets(), [
@@ -10,19 +14,34 @@
 			]);
 		}
 
-		public function book_thumbnail(DataIterPhotobook $book)
-		{
-			return 'fotoboek.php?book_thumb=' . $book->get('id');
-		}
+		/**
+		 * Render methods, called from the controller
+		 */
 
 		public function render_privacy(DataIterPhoto $photo, $visibility)
 		{
 			return $this->render('privacy.twig', compact('photo', 'visibility'));
 		}
 
-		public function render_fotoboek(DataIterPhotobook $book)
+		public function render_photobook(DataIterPhotobook $book)
 		{
 			return $this->render('fotoboek.twig', compact('book'));
+		}
+
+		public function render_photo(DataIterPhotobook $book, DataIterPhoto $photo)
+		{
+			$is_liked = get_auth()->logged_in() && get_model('DataModelFotoboekLikes')->is_liked($photo, get_identity()->member()->id);
+
+			return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
+		}
+
+		/**
+		 * Helper functions, called from the templates
+		 */
+
+		public function book_thumbnail(DataIterPhotobook $book)
+		{
+			return 'fotoboek.php?book_thumb=' . $book->get('id');
 		}
 
 		public function path(DataIterPhotobook $book, DataIterPhoto $photo = null)
@@ -76,5 +95,22 @@
 				return sprintf('<small class="fotoboek_highlight">(%s)</small>', markup_format_text(implode_human($subtitle)));
 			else
 				return '';
+		}
+
+		public function slides(DataIterPhotobook $book, DataIterPhoto $photo, $count)
+		{
+			$prev = $book->get_previous_photo($photo, $count);
+			$next = $book->get_next_photo($photo, $count);
+
+			while (count($prev) < $count)
+				array_push($prev, '');
+
+			while (count($next) < $count)
+				array_push($next, '');
+
+			return array_merge(
+				array_values(array_reverse($prev)),
+				array($photo),
+				array_values($next));
 		}
 	}

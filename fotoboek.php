@@ -738,7 +738,7 @@
 
 			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
 
-			return $this->view->render_foto($photo, compact('book'));
+			return $this->view->render_photo($book, $photo);
 		}
 
 		protected function _view_read_book(DataIterPhotobook $book)
@@ -749,7 +749,7 @@
 			if (logged_in())
 				$this->model->mark_read(logged_in('id'), $book);
 
-			return $this->view->render_fotoboek($book);
+			return $this->view->render_photobook($book);
 		}
 
 		protected function run_impl()
