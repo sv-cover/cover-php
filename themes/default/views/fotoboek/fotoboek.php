@@ -3,6 +3,13 @@
 
 	class FotoboekView extends CRUDView
 	{
+		public function stylesheets()
+		{
+			return array_merge(parent::stylesheets(), [
+				get_theme_data('styles/fotoboek.css')
+			]);
+		}
+
 		public function book_thumbnail(DataIterPhotobook $book)
 		{
 			return 'fotoboek.php?book_thumb=' . $book->get('id');
@@ -66,7 +73,7 @@
 				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
 			
 			if (count($subtitle) > 0)
-				return sprintf('(<small class="fotoboek_highlight">%s</small>)', markup_format_text(implode_human($subtitle)));
+				return sprintf('<small class="fotoboek_highlight">(%s)</small>', markup_format_text(implode_human($subtitle)));
 			else
 				return '';
 		}

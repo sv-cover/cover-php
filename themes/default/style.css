@@ -547,6 +547,10 @@ border-radius: 0 0 5px 5px;
 	color: black;
 }
 
+.photobook .photo-book-title small {
+	display: block;
+}
+
 .photobook .controls {
 	position: absolute;
 	left: 10px;
