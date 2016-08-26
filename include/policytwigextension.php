@@ -90,4 +90,25 @@ class PolicyTwigExtension extends Twig_Extension
             [] // binary
 	   ];
     }
+
+    public function getFilters()
+    {
+        return [
+            new Twig_SimpleFilter('user_can_read', function($iters) {
+                return array_filter($iters, function($iter) {
+                    return get_policy($iter->model())->user_can_read($iter);
+                });
+            }),
+            new Twig_SimpleFilter('user_can_update', function($iters) {
+                return array_filter($iters, function($iter) {
+                    return get_policy($iter->model())->user_can_update($iter);
+                });
+            }),
+            new Twig_SimpleFilter('user_can_delete', function($iters) {
+                return array_filter($iters, function($iter) {
+                    return get_policy($iter->model())->user_can_delete($iter);
+                });
+            })
+        ];
+    }
 } 

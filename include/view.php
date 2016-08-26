@@ -57,8 +57,12 @@ class View
 
 	protected $layout;
 
-	public function __construct(Controller $controller, $path)
+	public function __construct(Controller $controller, $path = null)
 	{
+		// Default $path to @theme so View::render() is at least somewhat useful.
+		if (!$path)
+			$path = 'themes/' . get_theme() . '/views';
+
 		$this->controller = $controller;
 
 		// First look in our own view directory
@@ -188,6 +192,12 @@ class View
 		return $template->render($data);
 	}
 
+	public function render_json(array $data)
+	{
+		header('Content-Type: application/json');
+		return json_encode($data);
+	}
+
 	protected function _get_preferred_response()
 	{
 		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
@@ -207,12 +217,6 @@ class CRUDView extends View
 	public function get_label(DataIter $iter = null, $create_label, $update_label)
 	{
 		return $iter && $iter->has_id() ? $update_label : $create_label;
-	}
-
-	public function render_json(array $data)
-	{
-		header('Content-Type: application/json');
-		return json_encode($data);
 	}
 
 	public function render_delete(DataIter $iter, $success, $errors)

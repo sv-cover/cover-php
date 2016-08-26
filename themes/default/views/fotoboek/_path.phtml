@@ -1,36 +1,8 @@
-<?php
-if (!isset($photo))
-	$photo = null;
+<div id="path" class="fotoboek_path">{{ view.path(book)|join(' / ')|raw }}</div>
 
-$generate_path = function($book) use ($model, $photo)
-{
-	$parents = array_merge($model->get_parents($book), array($book));
-
-	$path = array();
-
-	for ($i = 0; $i < count($parents); ++$i)
-	{
-		if ($i + 1 < count($parents))
-			$anchor = sprintf('#book_%s', $parents[$i + 1]->get_id());
-		elseif ($i + 1 == count($parents) && $photo)
-			$anchor = sprintf('#photo_%d', $photo->get_id());
-		else
-			$anchor = '';
-
-		$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
-			urlencode($parents[$i]->get_id()),
-			$anchor,
-			markup_format_text($parents[$i]->get('titel')));
-	}
-
-	return $path;
-}
-?>
-<div id="path" class="fotoboek_path"><?=  implode(' / ', $generate_path($book)) ?></div>
-
-<?php if (isset($photo) && ($photo_book = $photo->get_book()) && $photo_book->get_id() != $book->get_id()): ?>
+{% if photo is defined and photo.book.id != book.id %}
 <div class="fotoboek_path original_path">
-	<?=__('Deze foto komt uit')?>
-	<?=  implode(' / ', $generate_path($photo_book)) ?>
+	{{ __('Deze foto komt uit') }}
+	{{ view.path(photo.book)|join(' / ')|raw }}
 </div>	
-<?php endif ?>
+{% endif %}

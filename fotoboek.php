@@ -19,18 +19,15 @@
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelFotoboekReacties');
-		}
 
-		protected function _get_view_name()
-		{
-			return 'fotoboekreacties';
+			$this->view = View::byName('fotoboekreacties', $this);
 		}
 
 		protected function _create_iter()
 		{
 			$iter = parent::_create_iter();
 			$iter->set('foto', $this->photo->get_id());
-			$iter->set('auteur', logged_in('id'));
+			$iter->set('auteur', get_identity()->get('id'));
 			return $iter;
 		}
 
@@ -88,6 +85,8 @@
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelFotoboekLikes');
+
+			$this->view = new View($this);
 		}
 
 		public function run()
@@ -96,14 +95,13 @@
 				$this->model->toggle($this->photo, logged_in('id'));
 
 			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-				header('Content-Type: application/json');
-				echo json_encode(array(
+				return $this->view->render_json([
 					'liked' => logged_in() && $this->model->is_liked($this->photo, logged_in('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))
-				));
+				]);
 			}
 			else
-				$this->redirect('fotoboek.php?photo=' . $this->photo->get_id());
+				return $this->view->redirect('fotoboek.php?photo=' . $this->photo->get_id());
 		}
 	}
 
@@ -118,6 +116,8 @@
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelFotoboekFaces');
+
+			$this->view = new CRUDView($this);
 		}
 
 		protected function _create($data, array &$errors)
@@ -166,32 +166,26 @@
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelFotoboekPrivacy');
-		}
 
-		protected function get_content($view, $params)
-		{
-			$this->run_header(array('title' => __('Zichtbaarheid foto')));
-			run_view($view, null, null, $params);
-			$this->run_footer();
+			$this->view = View::byName('fotoboek', $this);
 		}
 
 		protected function run_impl()
 		{
-			if (!logged_in())
+			if (!get_auth()->logged_in())
 				throw new UnauthorizedException();
+
+			$member = get_identity()->member();
 
 			$response = array();
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				if ($_POST['visibility'] == 'hidden')
-					$this->model->mark_hidden($this->photo, logged_in_member());
+					$this->model->mark_hidden($this->photo, $member);
 				else
-					$this->model->mark_visible($this->photo, logged_in_member());
+					$this->model->mark_visible($this->photo, $member);
 			
-			$response['photo'] = $this->photo;
-			$response['visibility'] = $this->model->is_visible($this->photo, logged_in_member()) ? 'visible' : 'hidden';
-
-			$this->get_content('fotoboek::privacy', $response);
+			return $this->view->render_privacy($this->photo, $this->model->is_visible($this->photo, $member) ? 'visible' : 'hidden');
 		}
 	}
 
@@ -199,42 +193,43 @@
 	{
 		protected $policy;
 
-		protected $faces_controller;
+		public $faces_controller;
 
-		protected $likes_controller;
+		public $likes_controller;
 
-		protected $privacy_controller;
+		public $privacy_controller;
 
-		protected $comments_controller;
+		public $comments_controller;
 
 		public function __construct()
 		{
 			$this->model = get_model('DataModelFotoboek');
 
 			$this->policy = get_policy($this->model);
+
+			$this->view = View::byName('fotoboek', $this);
 		}
-		
-		protected function get_content($view, $iter = null, $params = null)
+
+		public function user_can_download_book(DataIterPhotobook $book)
 		{
-			if ($iter instanceof DataIterPhotobook && $iter->has('titel'))
-				$title = $iter->get('titel');
-			elseif ($iter instanceof DataIterPhoto)
-				$title = $iter->get_book()->get('titel');
-			else
-				$title = __('Fotoboek');
+			return get_identity()->member_is_active()
+				&& !($book instanceof DataIterRootPhotobook)
+				&& $this->policy->user_can_read($book);
+		}
 
-			$params = array_merge(
-				array(
-					'faces_controller' => $this->faces_controller,
-					'likes_controller' => $this->likes_controller,
-					'comments_controller' => $this->comments_controller,
-					'privacy_controller' => $this->privacy_controller),
-				$params ?: array()
-			);
+		public function user_can_mark_as_read(DataIterPhotobook $book)
+		{
+			return // only logged in members can track their viewed photo books
+				get_auth()->logged_in() 
+				
+				// and only if enabled
+				&& get_config_value('enable_photos_read_status', true) 
 
-			$this->run_header(compact('title'));
-			run_view('fotoboek::' . $view, $this->model, $iter, $params);
-			$this->run_footer();
+				// and only if we actually are watching a book
+				&& $book->get_id() 
+				
+				// which is not artificial (faces, likes) and has photos
+				&& ctype_digit($book->get_id()) && $book->count_books() > 0;
 		}
 		
 		/* Helper functions for _check_foto_values */
@@ -306,11 +301,11 @@
 				if (count($errors) === 0)
 				{
 					$new_book_id = $this->model->insert_book($iter);
-					return $this->redirect('fotoboek.php?book=' . $new_book_id);
+					return $this->view->redirect('fotoboek.php?book=' . $new_book_id);
 				}
 			}
 
-			return $this->get_content('form_photobook', $iter, compact('parent', 'errors'));
+			return $this->view->render_form_photobook($iter, compact('parent', 'errors'));
 		}
 		
 		private function _view_update_book(DataIterPhotobook $book)
@@ -329,11 +324,11 @@
 					$book->set_all($data);
 					$this->model->update_book($book);
 
-					$this->redirect('fotoboek.php?book=' . $book->get_id());
+					return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
 				}
 			}
 			
-			return $this->get_content('form_photobook', $book, array('errors' => $errors));
+			return $this->view->render_form_photobook($book, compact('errors'));
 		}
 
 		private function _view_update_photo_order(DataIterPhotobook $book)
@@ -392,7 +387,7 @@
 				$this->redirect('fotoboek.php?photo=' . $photo->get_id());
 			}
 			
-			return $this->redirect('fotoboek.php?photo=' . $photo->get_id());
+			return $this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
 		}
 
 		private function _view_list_photos(DataIterPhotobook $book)
@@ -406,6 +401,7 @@
 
 			$iter = is_dir($folder) ? new FilesystemIterator($folder) : array();
 
+			// Here $out is actually producing the output to the browser. The $view is entirely ignored here.
 			$out = new HTTPEventStream();
 			$out->start();
 			
@@ -471,7 +467,7 @@
 					$entries[] = path_subtract($entry, get_config_value('path_to_photos'));
 
 			sort($entries);
-			return $this->_send_json($entries);
+			return $this->view->render_json($entries);
 		}
 		
 		private function _view_add_photos(DataIterPhotobook $book)
@@ -519,14 +515,14 @@
 				}
 				
 				if (count($errors) == 0)
-					$this->redirect('fotoboek.php?book=' . $book->get_id());
+					$this->view->redirect('fotoboek.php?book=' . $book->get_id());
 				else {
 					$_SESSION['add_photos_errors'] = $errors;
-					$this->redirect('fotoboek.php?book=' . $book->get_id() . '&view=add_photos');
+					$this->view->redirect('fotoboek.php?book=' . $book->get_id() . '&view=add_photos');
 				}
 			}
 
-			return $this->get_content('add_photos', $book);
+			return $this->render_add_photos($book);
 		}
 		
 		protected function _view_delete_book(DataIterPhotobook $book)
@@ -539,10 +535,10 @@
 			{
 				$this->model->delete_book($book);
 
-				return $this->redirect('fotoboek.php?book=' . $book->get('parent'));
+				return $this->view->redirect('fotoboek.php?book=' . $book->get('parent'));
 			}
 			
-			$this->get_content('confirm_delete', $book);
+			return $this->view->render_delete($book);
 		}
 		
 		protected function _view_delete_photos(DataIterPhotobook $book)
@@ -554,7 +550,7 @@
 				if ($photo = $this->model->get_iter($id))
 					$this->model->delete($photo);
 			
-			return $this->redirect('fotoboek.php?book=' . $book->get_id());
+			return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
 		}
 
 		protected function _view_mark_read(DataIterPhotobook $book)
@@ -562,7 +558,7 @@
 			if (logged_in())
 				$this->model->mark_read_recursively(logged_in('id'), $book);
 
-			$this->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
+			return $this->view->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
 		}
 
 		protected function _view_edit_book(DataIterPhotobook $book) 
@@ -570,11 +566,13 @@
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 
-			$this->get_content('edit_fotoboek', $book);
+			return $this->view_render_edit_fotoboek($book);
 		}
 
 		protected function _view_download_photo(DataIterPhoto $photo)
 		{
+			// Note again that this function ignores the view completely and produces output on its own.
+
 			// For now require login for these originals
 			if (!get_identity()->member_is_active())
 				throw new UnauthorizedException();
@@ -595,14 +593,10 @@
 
 		protected function _view_download_book(DataIterPhotobook $root_book)
 		{
-			if (!get_identity()->member_is_active())
-				throw new UnauthorizedException();
+			// This function does not use the $view but produces its own output via ZipStream.
 
-			if (!$this->policy->user_can_read($root_book))
+			if (!$this->user_can_download_book($root_book))
 				throw new UnauthorizedException();
-
-			if ($root_book instanceof DataIterRootPhotobook)
-				throw new InvalidArgumentException("Let's not try to download ALL of Cover's photos at once.");
 
 			// Disable all output buffering
 			while (ob_get_level() > 0)
@@ -707,7 +701,7 @@
 						$total_file_size += $photo->get_file_size();
 					}
 
-			return $this->get_content('confirm_download_book', $root_book, compact('total_photos', 'total_file_size'));
+			return $this->view->confirm_download_book($root_book, compact('total_photos', 'total_file_size'));
 		}
 
 		protected function _view_scaled_photo(DataIterPhoto $photo)
@@ -744,7 +738,7 @@
 
 			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
 
-			return $this->get_content('foto', $photo, compact('book'));
+			return $this->view->render_foto($photo, compact('book'));
 		}
 
 		protected function _view_read_book(DataIterPhotobook $book)
@@ -755,13 +749,13 @@
 			if (logged_in())
 				$this->model->mark_read(logged_in('id'), $book);
 
-			return $this->get_content('fotoboek', $book);
+			return $this->view->render_fotoboek($book);
 		}
 
 		protected function run_impl()
 		{
 			if (isset($_GET['view']) && $_GET['view'] == 'competition')
-				return $this->get_content('competition');
+				return $this->view->render_competition();
 
 			$photo = null;
 			$book = null;
@@ -779,7 +773,7 @@
 			}
 			// Likes book page
 			elseif (isset($_GET['book']) && $_GET['book'] == 'liked') {
-				$book = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
+				$book = get_model('DataModelFotoboekLikes')->get_book(get_identity()->member());
 			}
 			// All photos who a certain member is (or mutiple are) tagged in page
 			elseif (isset($_GET['book']) && preg_match('/^member_(\d+(?:_\d+)*)$/', $_GET['book'], $match)) {
@@ -886,4 +880,3 @@
 	
 	$controller = new ControllerFotoboek();
 	$controller->run();
-?>

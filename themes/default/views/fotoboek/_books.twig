@@ -1,0 +1,38 @@
+{% if books|length > 0 %}
+<div class = "clearfix photobooks">
+{% for book in books %}
+	<div id="book_{{ book.id }}" class="photobook {{ book.read_status }}">
+		<a href="fotoboek.php?book={{ book.id }}">
+			<img src="{{ link_static('images/book.png') }}" class="book_thumb">
+			<span class="photo-book-title">
+				{{ book.titel }}
+				{{ view.summary(book)|raw }}
+			</span>
+		</a>
+		{% if user_can_update book %}
+		<span class="controls">
+			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" title="{{ __('Fotoboek bewerken') }}">
+				<i class="fa fa-pencil-square-o"></i>
+			</a>
+			{% endif %}
+			{% if user_can_delete book %}
+			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" title="{{ __('Fotoboek verwijderen') }}" data-placement-selector="modal" data-partial-selector=".delete-photobook-form">
+				<i class="fa fa-trash-o"></i>
+			</a>
+			{% endif %}
+			{% if user_can_update book and book.has('visibility') %}
+				{% if book.visibility == constant('DataModelFotoboek::VISIBILITY_PUBLIC') %}
+				<span class="visibility visibility-public" title="{{ __('Publiek') }}">{{ __('Publiek') }}</span>
+				{% elseif book.visibility == constant('DataModelFotoboek::VISIBILITY_MEMBERS') %}
+				<span class="visibility visibility-members" title="{{ __('Alleen ingelogde leden') }}">{{ __('Alleen ingelogde leden') }}</span>
+				{% elseif book.visibility == constant('DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS') %}
+				<span class="visibility visibility-active-members" title="{{ __('Alleen ingelogde actieve leden') }}">{{ __('Alleen ingelogde actieve leden') }}</span>
+				{% elseif book.visibility == constant('DataModelFotoboek::VISIBILITY_PHOTOCEE') %}
+				<span class="visibility visibility-photocee" title="{{ __('Alleen ingelogde leden van de PhotoCee') }}">{{ __('Alleen ingelogde leden van de PhotoCee') }}</span>
+				{% endif %}
+			{% endif %}
+		</span>
+	</div>
+{% endfor %}
+</div>
+{% endif %}

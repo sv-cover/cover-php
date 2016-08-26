@@ -102,13 +102,16 @@
 		  */
 		public function get($field)
 		{
+			if ($field == 'id')
+				return $this->get_id();
+
 			if ($this->has_field($field))
 				return $this->data[$this->namespace . $field];
 			
 			if ($this->has_getter($field))
 				return call_user_func(array($this, 'get_' . $field));
 
-			trigger_error('DataIter has no field named ' . $field, E_USER_NOTICE);
+			trigger_error('DataIter has no field named ' . $field, E_USER_WARNING);
 			return null;
 		}
 		
@@ -257,6 +260,11 @@
 		{
 			trigger_error('Propery access is deprecated. Use Array access or DataIter::unset_field', E_USER_NOTICE);
 			return $this->unset_field($key);
+		}
+
+		public function __isset($key)
+		{
+			return $this->has_field($key) || $this->has_getter($key);
 		}
 
 		/* ArrayAccess */

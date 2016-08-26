@@ -22,7 +22,8 @@ class I18NTwigExtension extends Twig_Extension
 				return member_full_name($member, IGNORE_PRIVACY);
 			}),
 			new Twig_SimpleFilter('period_short', 'agenda_short_period_for_display'),
-			new Twig_SimpleFilter('period', 'agenda_period_for_display')
+			new Twig_SimpleFilter('period', 'agenda_period_for_display'),
+			new Twig_SimpleFilter('array_filter', 'array_filter')
 		];
 	}
 
@@ -33,6 +34,16 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('__N', '__N'),
 			new Twig_SimpleFunction('link_static', 'get_theme_data'),
 			new Twig_SimpleFunction('get_config_value', 'get_config_value')
+		];
+	}
+
+	public function getTests()
+	{
+		return [
+			new Twig_SimpleTest('numeric', 'is_numeric'),
+			new Twig_SimpleTest('instance_of', function($var, $classname) {
+				return $var instanceof $classname; 
+			})
 		];
 	}
 }
