@@ -25,11 +25,19 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('period', 'agenda_period_for_display'),
 			new Twig_SimpleFilter('array_filter', 'array_filter'),
 			new Twig_SimpleFilter('vformat', 'vsprintf'),
+			new Twig_SimpleFilter('map', function($iterable, $callback) {
+				return array_map($callback, $iterable);
+			}),
 			new Twig_SimpleFilter('map_macro', function($context, $iterable, $callback) {
 				list($macro_context, $macro_name) = explode('.', $callback);
 				return array_map([$context[$macro_context], 'get' . $macro_name], $iterable);
 			}, ['needs_context' => true]),
-			new Twig_SimpleFilter('human_join', 'implode_human')
+			new Twig_SimpleFilter('human_join', 'implode_human'),
+			new Twig_SimpleFilter('pluck', function($iters, $property) {
+				return array_map(function($iter) use ($property) {
+					return $iter->has($property) ? $iter->get($property) : null;
+				}, $iters);
+			})
 		];
 	}
 
@@ -37,7 +45,10 @@ class I18NTwigExtension extends Twig_Extension
 	{
 		return [
 			new Twig_SimpleFunction('__', '__'),
-			new Twig_SimpleFunction('__N', '__N'),
+			new Twig_SimpleFunction('__N', function($singular, $plural, $value, $count = null) {
+				if ($count === null) $count = $value;
+				return sprintf(_ngettext($singular, $plural, $count), $value);
+			}, ['variadic' => true]),
 			new Twig_SimpleFunction('link_static', 'get_theme_data'),
 			new Twig_SimpleFunction('get_config_value', 'get_config_value')
 		];

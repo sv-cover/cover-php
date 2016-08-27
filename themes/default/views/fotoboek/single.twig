@@ -129,13 +129,26 @@
 			</p>
 		{% endif %}
 
-		<?php $this->photo_controls(compact('model', 'iter', 'book', 'likes_controller')) ?>
+		{% if global.auth.logged_in %}
+		<div class="photo-controls">
+			{% set liked = global.identity.member.id in photo.likes|pluck('lid_id') %}
+			<form class="like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
+				<input type="hidden" name="action" value="toggle">
+				<button type="submit" class="like-button"
+					title="{{ liked ? __('Haal markering als favoriet weg') : __('Markeer als favoriet') }}"
+					data-title="{{ [__('Haal markering als favoriet weg'), __('Markeer als favoriet')]|json_encode|e('html_attr') }}"
+					><span class="like-count">{{ photo.likes|length }}</span></button>
+			</form>
+			
+			<a href="fotoboek.php?photo={{ photo.id }}&amp;view=download" class="photo-download-link">{{ __('Download') }}</a>
+			
+			{% if global.identity.member.id in photo.faces|pluck('lid_id') %}
+			<a href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form" class="photo-privacy-link">{{ __('Zichtbaarheid') }}</a>
+			{% endif %}
+		</div>
+		{% endif %}
 
-		<?php $this->photo_comments([
-			'controller' => $comments_controller,
-			'model' => $comments_controller->model(),
-			'iter' => $iter['comments']
-		]) ?>
+		{{ include('@theme/fotoboekreacties/index.twig', {comments: photo.comments, controller: controller.comments_controller}) }}
 	</div>
 
 </div>

@@ -1,0 +1,16 @@
+<div class="photo-comments">
+	{% if comments|length == 0 %}
+		<p>{{ __('Er zijn nog geen reacties') }}</p>
+	{% else %}
+		{% for comment in comments %}
+			{{ include('@theme/fotoboekreacties/single.twig', {iter: comment}) }}
+		{% endfor %}
+	{% endif %}
+
+	{% if user_can_create global.models.FotoboekReacties %}
+		{{ include('@theme/fotoboekreacties/form.twig', {
+			iter: global.models.FotoboekReacties.create_iter({auteur: global.identity.member.id}),
+			errors: []
+		}) }}
+	{% endif %}
+</div>

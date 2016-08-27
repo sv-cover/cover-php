@@ -57,6 +57,11 @@
 			return get_model('DataModelFotoboekReacties')->get_for_photo($this);
 		}
 
+		public function get_likes()
+		{
+			return get_model('DataModelFotoboekLikes')->get_for_photo($this);
+		}
+
 		public function compute_size()
 		{
 			if (!$this->file_exists())
