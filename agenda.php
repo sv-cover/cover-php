@@ -235,7 +235,7 @@
 			return $punten;
 		}
 		
-		public function run_moderate($id)
+		public function run_moderate(DataIterAgenda $item = null)
 		{
 			if ($this->_form_is_submitted('moderate'))
 				if ($this->_moderate())
@@ -243,7 +243,7 @@
 
 			$agenda_items = array_filter($this->model->get_proposed(), [$this->policy, 'user_can_moderate']);
 
-			return $this->view->render_moderate($agenda_items, $id);
+			return $this->view->render_moderate($agenda_items, $item ? $item['id'] : null);
 		}
 		
 		protected function _moderate()
