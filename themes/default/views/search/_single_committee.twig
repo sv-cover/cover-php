@@ -1,0 +1,11 @@
+<h2>
+	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.naam }}</a>
+	{% if result.search_match_reason == 'committee_member_match' %}
+		<small class="match-reason">{{ __('%s is een lid in deze commissie')|format(
+			'<a href="profiel.php?lid=%d">%s</a>'|format(result.search_match_committee_member_id,
+				result.search_match_committee_member_id|full_name|e('html')))|raw }}</small>
+	{% else %}
+		<small>{{ __('Commissie') }}</small>
+	{% endif %}
+</h2>
+<p>{{ result.summary }}</p>

@@ -29,14 +29,13 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		return [
 			new Twig_SimpleFilter('parse_markup', 'markup_parse', ['is_safe' => ['html']]),
+			new Twig_SimpleFilter('strip_markup', 'markup_strip'),
 			new Twig_SimpleFilter('parse_editable', function($iter) {
 				return editable_parse($iter instanceof DataIterEditable
 					? $iter->get_content()
 					: $iter);
 			}, ['is_safe' => ['html']]),
-			new Twig_SimpleFilter('filter', function($array, $callback) {
-				return array_map($callback, $array);
-			})
+			new Twig_SimpleFilter('excerpt', 'text_excerpt')
 		];
 	}
 

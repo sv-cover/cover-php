@@ -16,16 +16,11 @@ class SearchController extends Controller
 			get_model('DataModelFotoboek'),
 			get_model('DataModelAnnouncement')
 		);
+
+		$this->view = View::byName('search', $this);
 	}
 
-	protected function get_content($view, $iters = null, $params = null)
-	{
-		$this->run_header(array('title' => __('Zoeken')));
-		run_view('search::' . $view, $this->model, $iters, $params);
-		$this->run_footer();
-	}
-
-	protected function _run_query($query)
+	protected function _query($query)
 	{
 		$results = array();
 
@@ -39,21 +34,21 @@ class SearchController extends Controller
 		return $results;
 	}
 	
-	function run_impl()
+	protected function run_impl()
 	{
 		if (!empty($_GET['query'])) {
 			$query = $_GET['query'];
-			$iters = $this->_run_query($query);
+			$iters = $this->_query($query);
 
 			if (isset($_GET['im_feeling']) && $_GET['im_feeling'] == 'lucky' && count($iters) > 0)
-				return $this->redirect($iters[0]->get_absolute_url());
+				return $this->view->redirect($iters[0]->get_absolute_url());
 		}
 		else {
 			$query = '';
 			$iters = null;
 		}
 
-		$this->get_content('index', $iters, compact('query'));
+		return $this->view->render_index($query, $iters);
 	}
 }
 
