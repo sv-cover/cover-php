@@ -62,13 +62,19 @@
 		  *
 		  * @result the id of the iter
 		  */
-		public function get_id() {
+		public function get_id()
+		{
 			return $this->_id;
 		}
 
 		public function has_id()
 		{
 			return $this->_id !== null && $this->_id !== -1;
+		}
+
+		public function set_id($id)
+		{
+			$this->_id = $id;
 		}
 
 		/**

@@ -24,9 +24,9 @@ class ControllerCRUD extends Controller
 
 		$id = $this->model->insert($iter);
 
-		// Todo: shouldnt this use DataModel::create_iter(row)?
-		$dataiter_class = new ReflectionClass($iter);
-		return $dataiter_class->newInstance($this->model, $id, $iter->data);
+		$iter->set_id($id);
+
+		return true;
 	}
 
 	protected function _read($id)
@@ -122,7 +122,7 @@ class ControllerCRUD extends Controller
 		$iter = $this->_create_iter();
 
 		if ($this->_form_is_submitted('create'))
-			if ($iter = $this->_create($iter, $_POST, $errors))
+			if ($this->_create($iter, $_POST, $errors))
 				$success = true;
 
 		return $this->view()->render_create($iter, $success, $errors);

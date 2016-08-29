@@ -170,4 +170,25 @@ class LayoutViewHelper
 	{
 		return date('Y') - 1993;
 	}
+
+	public function agenda_items_to_moderate()
+	{
+		/* Check for moderates */
+		$model = get_model('DataModelAgenda');
+		return array_filter($model->get_proposed(), [get_policy($model), 'user_can_moderate']);
+	}
+
+	public function has_alert()
+	{
+		return isset($_SESSION['alert']) && $_SESSION['alert'] != '';
+	}
+
+	public function pop_alert()
+	{
+		$alert = $_SESSION['alert'];
+
+		unset($_SESSION['alert']);
+
+		return $alert;
+	}
 }

@@ -47,6 +47,11 @@
 		{
 			return $this['locatie'];
 		}
+
+		public function get_committee()
+		{
+			return get_model('DataModelCommissie')->get_iter($this->data['commissie']);
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider

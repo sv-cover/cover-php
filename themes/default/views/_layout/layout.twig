@@ -21,7 +21,19 @@
 	<body>
 		<div class="world">
 			<div class="header clearfix">
-				{% block message %}{% endblock %}
+				{% if global.auth.logged_in() %}
+					{% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
+					{% if agenda_items_to_moderate|length > 0 %}
+						<div class="message">
+							<a href="agenda.php?view=moderate">{{ __N(
+								'Er staat nog %d agendapunt in de wachtrij',
+								'Er staan nog %d agendapunten in de wachtrij', agenda_items_to_moderate|length) }}</a>
+						</div>
+					{% endif %}
+					{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+						<div class="message">{{ __('Je lidmaatschap is nog niet goedgekeurd door de secretaris. Tot dan is de toegang tot sommige delen van de website, zoals de oude foto\'s en lidgegevens, beperkt.') }}</div>
+					{% endif %}
+				{% endif %}
 				<div class="login">
 					{{ include('@layout/widgets/login.twig') }}
 				</div>
@@ -60,6 +72,10 @@
 			</div> <!-- CONTAINER -->
 
 		</div> <!-- .world -->
+
+		{% if view.layout.has_alert %}
+			<script>alert({{ view.layout.pop_alert|json_encode }})</script>
+		{% endif %}
 		
 		<!-- Google Analytics -->
 		<script>

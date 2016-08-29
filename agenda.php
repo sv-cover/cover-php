@@ -160,6 +160,8 @@
 			$iter->data = $data;
 
 			$id = $this->model->propose_insert($iter, true);
+
+			$iter->set_id($id);
 				
 			$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
 
@@ -241,7 +243,7 @@
 
 			$agenda_items = array_filter($this->model->get_proposed(), [$this->policy, 'user_can_moderate']);
 
-			$this->view->render_moderate($agenda_items, ['highlight' => $id]);
+			return $this->view->render_moderate($agenda_items, $id);
 		}
 		
 		protected function _moderate()
@@ -262,6 +264,11 @@
 
 				if ($value == 'accept') {
 					/* Accept agendapunt */
+
+					// If it is marked private, set that perference first.
+					$iter['private'] = isset($_POST['private_' . $iter['id']]) ? 1 : 0;
+					$iter->update();
+					
 					$this->model->accept_proposal($iter);
 				} elseif ($value == 'cancel') {
 					/* Remove agendapunt and inform owner of the agendapunt */

@@ -17,7 +17,7 @@ class ShowView extends CRUDView
 			foreach ($model->get() as $commissie)
 				$commissies[$commissie->get_id()] = $commissie->get('naam');
 		else
-			foreach (get_identity()->get_member()->get('committees') as $commissie)
+			foreach (get_identity()->member()->get('committees') as $commissie)
 				$commissies[$commissie] = $model->get_naam($commissie);
 
 		return $commissies;

@@ -133,8 +133,17 @@ class HTMLTwigExtension extends Twig_Extension
 			if (isset($data[substr($field, 0, -2)]) && in_array($value, $data[substr($field, 0, -2)]))
 				$params['checked'] = 'checked';
 		}
-		elseif (isset($_POST[$name]) && $_POST[$name] == $value || isset($data[$field]) && $data[$field] == $value)
+		elseif (isset($_POST[$name]) && $_POST[$name] == $value) 
 			$params['checked'] = 'checked';
+		elseif (isset($data[$field])) {
+			if ($value == 'on' || $value == 'yes') {// Boolean mode
+				if ((bool) $data[$field])
+					$params['checked'] = 'checked';
+			} else {
+				if ($data[$field] === $value)
+					$params['checked'] = 'checked';
+			}
+		}
 
 		return self::input_field($name, null, $params);
 	}
