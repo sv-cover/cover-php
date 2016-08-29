@@ -11,7 +11,7 @@
 		<p>{{ __('Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden.') }}</p>
 		<form name="agenda_moderate" action="" method="post">
 			{{ html_input_hidden('submagenda_moderate', 'yes') }}
-			<table class="moderate" id="table_moderate">
+			<table class="full-width-table" id="table_moderate">
 				<thead>
 					<tr class="header">
 						<th class="text_center">
@@ -29,12 +29,12 @@
 				<tbody>
 					{% for item in iters %}
 						<tr id="punt{{ item.id }}" class="{% if item.id == highlighted_id %}highlight{% endif %}">
-							<td>{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id)) }}</td>
-							<td>{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id)) }}</td>
+							<td>{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accepteer agendapunt')) }}</td>
+							<td>{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Weiger agendapunt')) }}</td>
 							<td><a href="agenda.php?agenda_id={{ item.id|e('url') }}">{{ item.kop }}</a></td>
 							<td>{{ item|period }}</td>
 							<td>{{ item.committee.naam }}</td>
-							<td>{{ html_input_checkbox('private_' ~ item.id, item, 'yes', field='private') }}</td>
+							<td>{{ html_input_checkbox('private_' ~ item.id, item, 'yes', field='private', title=__('Alleen zichtbaar voor leden')) }}</td>
 						</tr>
 	
 						<tr id="comment_{{ item.id }}">

@@ -7,7 +7,7 @@ Locatie: $locatie
 
 $beschrijving
 
-Je kunt op de pagina ROOT_DIR_URIagenda.php?view=moderate&agenda_id=$id#punt$id dit agendapunt goedkeuren (of weigeren).
+Je kunt op de pagina ROOT_DIR_URIagenda.php?view=moderate&agenda_id=$id dit agendapunt goedkeuren (of weigeren).
 
 Met vriendelijke groeten,
 

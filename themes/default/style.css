@@ -1131,8 +1131,16 @@ div.beheer table {
 }
 
 .full-width-table td {
-	border-bottom: 1px solid #ccc;
 	line-height: 2.4em;
+}
+
+.full-width-table tbody td {
+	border-bottom: 1px solid #ccc;
+}
+
+.full-width-table tr.highlight td,
+.full-width-table tr.highlight th {
+	background-color: #FFD700;
 }
 
 .purchase-admin td {

@@ -105,7 +105,7 @@
 <ul class="actions">
 	<li><a href="agenda.php">{{  __('Volledige agenda') }}</a></li>
 	{% if user_can_delete iter %}
-	<li><a href="{{ controller.link_to_delete(iter) }}" onClick="return confirm('{{  __('Weet je zeker dat je dit agendapunt wilt verwijderen?') }}');">{{  __('Verwijder') }}</a></li>
+	<li><a href="{{ controller.link_to_delete(iter) }}">{{  __('Verwijder') }}</a></li>
 	{% endif %}
 	{% if user_can_update iter %}
 	<li><a href="{{ controller.link_to_update(iter) }}">{{  __('Wijzig') }}</a></li>

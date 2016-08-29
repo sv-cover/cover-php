@@ -374,6 +374,17 @@
 			$cal->publish('cover.ics');
 			return null;
 		}
+
+		protected function run_impl()
+		{
+			// Compatibility
+			if (isset($_GET['format']) && $_GET['format'] == 'webcal') {
+				$_GET['view'] = 'webcal';
+				unset($_GET['format']);
+			}
+
+			return parent::run_impl();
+		}
 	}
 	
 	$controller = new ControllerAgenda();
