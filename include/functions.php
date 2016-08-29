@@ -639,7 +639,7 @@
 			if ($day_diff < 7) return sprintf(__('%d dagen geleden'), $day_diff);
 			// if ($day_diff < 31) return sprintf(__('%d weken geleden'), floor($day_diff / 7));
 			// if ($day_diff < 60) return __('afgelopen maand');
-			return date('j-n-Y H:i:s', $time);
+			return date('j-n-Y', $time);
 		}
 		else
 			return date('j-n-Y', $time);
@@ -979,5 +979,20 @@
 				return false;
 
 		return true;
+	}
+
+	function array_group_by($array, $key_accessor)
+	{
+		$groups = array();
+
+		foreach ($array as $element) {
+			$key = call_user_func($key_accessor, $element);
+			if (isset($groups[$key]))
+				$groups[$key][] = $element;
+			else
+				$groups[$key] = [$element];
+		}
+
+		return $groups;
 	}
 	

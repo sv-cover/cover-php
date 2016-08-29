@@ -11,6 +11,14 @@ class ControllerStickers extends ControllerCRUD
 		$this->view = View::byName('stickers', $this);
 	}
 
+	protected function _create($data, &$errors)
+	{
+		$data['toegevoegd_op'] = date('Y-m-d');
+		$data['toegevoegd_door'] = get_identity()->get('id');
+
+		return parent::_create($data, $errors);
+	}
+
 	public function link_to_add_photo(DataIter $iter)
 	{
 		return $this->link_to_iter($iter, [$this->_var_view => 'add_photo']);

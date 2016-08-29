@@ -1,11 +1,9 @@
 {
     "require": {
         "facebook/php-sdk-v4" : "4.0.*",
-        "geokit/geokit": "~0.1",
         "maennchen/zipstream-php": "0.3.*",
         "camspiers/porter-stemmer": "~1.0",
         "ronanguilloux/isocodes": "~1.2",
-        "ccampbell/chromephp": "^4.1",
         "99designs/http-signatures": "~2.0",
         "jeroendesloovere/vcard": "~1.2",
         "twig/twig": "^1.24"
