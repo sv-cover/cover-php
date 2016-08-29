@@ -271,7 +271,7 @@
 			return $this->get('num_photos');
 		}
 
-		public function get_next_photo(DataIterPhoto $current, $num = -1)
+		public function get_next_photo(DataIterPhoto $current, $num = 1)
 		{
 			$photos = $this->get_photos();
 
@@ -285,7 +285,7 @@
 			return array_slice($photos, $index + 1, min(max($num, 0), count($photos) - $index));
 		}
 
-		public function get_previous_photo(DataIterPhoto $current, $num = -1)
+		public function get_previous_photo(DataIterPhoto $current, $num = 1)
 		{
 			$photos = $this->get_photos();
 
