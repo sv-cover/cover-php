@@ -1,0 +1,16 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Sleutel verwijderen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Sleutel verwijderen') }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ controller.link_to_delete(iter)|e('html_attr') }}" class="vertical-form">
+		<p>{{ __('Weet je heel zeker dat je de sleutel <em>%s</em> wil verwijderen?')|format(iter.key|e('html'))|raw }}</p>
+		<div>
+			<button type="submit" class="button">{{ __('Verwijder sleutel') }}</button>
+			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Terug naar instellingen') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}
