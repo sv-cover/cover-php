@@ -289,12 +289,12 @@
 
 			$errors = array();
 
-			$iter = new DataIterPhotobook($this->model, -1, array('parent' => $parent->get_id()));
+			$iter = new DataIterPhotobook($this->model, -1, array('parent_id' => $parent->get_id()));
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$data = $this->_check_fotoboek_values($errors);
-				$data['parent'] = $parent->get_id();
+				$data['parent_id'] = $parent->get_id();
 
 				$iter = new DataIterPhotobook($this->model, -1, $data);
 					
@@ -535,7 +535,7 @@
 			{
 				$this->model->delete_book($book);
 
-				return $this->view->redirect('fotoboek.php?book=' . $book->get('parent'));
+				return $this->view->redirect('fotoboek.php?book=' . $book->get('parent_id'));
 			}
 			
 			return $this->view->render_delete($book);
@@ -636,9 +636,9 @@
 				$book_ancestors = [$book];
 
 				while (end($book_ancestors)->get_id() != $root_book->get_id()
-					&& end($book_ancestors)->has('parent')
-					&& isset($books[end($book_ancestors)->get('parent')]))
-					$book_ancestors[] = $books[end($book_ancestors)->get('parent')];
+					&& end($book_ancestors)->has('parent_id')
+					&& isset($books[end($book_ancestors)->get('parent_id')]))
+					$book_ancestors[] = $books[end($book_ancestors)->get('parent_id')];
 				
 				// TODO: add book date in front of filename for sort order
 				$book_path = implode('/',

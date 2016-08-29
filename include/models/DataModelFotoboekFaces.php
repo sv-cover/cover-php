@@ -131,7 +131,7 @@ class DataModelFotoboekFaces extends DataModel
 					implode(__(' en '), array_map(function($member) { return member_first_name($member); }, $members))),
 				'num_books' => 0,
 				'datum' => null,
-				'parent' => 0,
+				'parent_id' => 0,
 				'member_ids' => array_map(function($member) { return $member->get_id(); }, $members)));
 	}
 

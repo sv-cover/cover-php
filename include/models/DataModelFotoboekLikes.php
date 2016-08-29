@@ -130,7 +130,7 @@ class DataModelFotoboekLikes extends DataModel
 			'num_books' => 0,
 			'read_status' => 'read',
 			'datum' => null,
-			'parent' => 0,
+			'parent_id' => 0,
 			'photo_ids' => $favorites));
 	}
 }

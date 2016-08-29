@@ -316,7 +316,7 @@
 
 		public function get_parent()
 		{
-			return $this->model->get_book($this->get('parent'));
+			return $this->model->get_book($this->get('parent_id'));
 		}
 
 		public function get_next_book()
@@ -451,7 +451,7 @@
 					LEFT JOIN fotos f ON
 						f.boek = f_b.id
 					LEFT JOIN foto_boeken c_f_b ON
-						c_f_b.parent = f_b.id
+						c_f_b.parent_id = f_b.id
 					WHERE 
 						f_b.id = %d
 					GROUP BY
@@ -484,7 +484,7 @@
 				LEFT JOIN fotos f ON
 					f.boek = f_b.id
 				LEFT JOIN foto_boeken c_f_b ON
-					c_f_b.parent = f_b.id
+					c_f_b.parent_id = f_b.id
 				WHERE 
 					" . implode(' AND ', $sql_atoms) . "
 				GROUP BY
@@ -500,7 +500,7 @@
 
 		public function get_root_book()
 		{
-			$num_books = $this->db->query_value('SELECT COUNT(id) FROM foto_boeken WHERE parent = 0');
+			$num_books = $this->db->query_value('SELECT COUNT(id) FROM foto_boeken WHERE parent_id = 0');
 			
 			$num_photos = $this->db->query_value('SELECT COUNT(id) FROM fotos WHERE boek = 0');
 
@@ -617,17 +617,17 @@
 				LEFT JOIN fotos ON
 					foto_boeken.id = fotos.boek
 				LEFT JOIN foto_boeken child_books ON
-					child_books.parent = foto_boeken.id';
+					child_books.parent_id = foto_boeken.id';
 
 			$where = sprintf('WHERE
 				foto_boeken.visibility <= %d
-				AND foto_boeken.parent = %d',
+				AND foto_boeken.parent_id = %d',
 				get_policy($this)->get_access_level(),
 				$book->get_id());
 
 			$group_by = 'GROUP BY
 				foto_boeken.id, 
-				foto_boeken.parent, 
+				foto_boeken.parent_id, 
 				foto_boeken.beschrijving, 
 				foto_boeken.date, 
 				foto_boeken.titel, 
@@ -642,11 +642,11 @@
 			{
 				$select = sprintf('
 					WITH RECURSIVE book_children (id, date, last_update, visibility, parents) AS (
-						SELECT id, date, last_update, visibility, ARRAY[0] FROM foto_boeken WHERE parent = %d
+						SELECT id, date, last_update, visibility, ARRAY[0] FROM foto_boeken WHERE parent_id = %d
 					UNION ALL
-						SELECT f_b.id, f_b.date, f_b.last_update, f_b.visibility, b_c.parents || f_b.parent
+						SELECT f_b.id, f_b.date, f_b.last_update, f_b.visibility, b_c.parents || f_b.parent_id
 						FROM book_children b_c, foto_boeken f_b
-						WHERE b_c.id = f_b.parent
+						WHERE b_c.id = f_b.parent_id
 				)
 				', $book->get_id()) . $select;
 
@@ -802,9 +802,9 @@
 				WITH RECURSIVE book_children (id, visibility, parents) AS (
 						SELECT id, visibility, ARRAY[id] FROM foto_boeken WHERE id = %d
 					UNION ALL
-						SELECT f_b.id,  f_b.visibility, b_c.parents || f_b.parent
+						SELECT f_b.id,  f_b.visibility, b_c.parents || f_b.parent_id
 						FROM book_children b_c, foto_boeken f_b
-						WHERE b_c.id = f_b.parent
+						WHERE b_c.id = f_b.parent_id
 				)
 				SELECT
 					f.*
@@ -988,9 +988,9 @@
 				WITH RECURSIVE book_children (id, visibility, parents) AS (
 						SELECT id, visibility, ARRAY[0] FROM foto_boeken WHERE parent = %2$d
 					UNION ALL
-						SELECT f_b.id, f_b.visibility, b_c.parents || f_b.parent
+						SELECT f_b.id, f_b.visibility, b_c.parents || f_b.parent_id
 						FROM book_children b_c, foto_boeken f_b
-						WHERE b_c.id = f_b.parent
+						WHERE b_c.id = f_b.parent_id
 				)
 				INSERT INTO foto_boeken_visit (lid_id, boek_id, last_visit)
 				SELECT %1$d, b_c.id, NOW() FROM book_children b_c
