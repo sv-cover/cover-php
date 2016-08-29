@@ -221,7 +221,7 @@
 					$this->reject_proposal($proposed_update);
 			
 			/* Chain up */
-			parent::delete($iter);
+			return parent::delete($iter);
 		}
 
 		public function propose_insert(DataIterAgenda $new_item)
