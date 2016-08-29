@@ -1,0 +1,14 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<h1>{{ __('Reactie verwijderen') }}</h1>
+<div class="messageBox">
+	<form id="confirm-delete-comment-form" method="post" action="{{ controller.link_to_delete(iter)|e('html_attr') }}" class="vertical-form">
+		<p>{{ __('Weet je heel zeker dat je de reactie van <em>%s</em> wilt verwijderen?')|format(iter.auteur|personal_full_name|e('html'))|raw }}</p>
+		<div>
+			<button type="submit" class="button">{{ __('Verwijder reactie') }}</button>
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar foto') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

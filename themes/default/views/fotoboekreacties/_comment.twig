@@ -1,0 +1,54 @@
+<div class="comment" id="comment{{ iter.id }}">
+	<div class="comment-meta">
+		<span class="number-of-likes" title="{{ iter.likes > 0 ? __N('%s vindt dit leuk', '%s vinden dit leuk', iter.liked_by|map('member_first_name')|human_join, count=iter.likes)|e('html_attr') : '' }}">
+			{{- __N('%d like', '%d likes', iter.likes) -}}
+		</span>
+		
+		<span class="timestamp">{{ iter.date|date('l j F, H:i') }}</span>
+	</div>
+
+	<a href="profiel.php?lid={{ iter.auteur }}" class="comment-author">
+		<img src="foto.php?lid_id={{ iter.auteur }}&amp;format=square&amp;width=200" width="150">
+		<span class="name">{{ iter.auteur|personal_full_name }}</span>
+	</a>
+		
+	<div class="comment-message">
+		{{ iter.reactie|parse_markup }}
+	</div>
+
+	<ul class="actions">
+		{% if global.auth.logged_in %}
+			{% if iter.is_liked_by(global.identity.member) %}
+				<li>
+					<form method="post"
+						action="{{ controller.link_to_like(iter) }}"
+						data-partial-selector="#comment{{ iter.id }}"
+						data-placement-selector="#comment{{ iter.id }}">
+						<input type="hidden" name="action" value="unlike">
+						<button type="submit" class="link comment-like-button">Unlike</button>
+					</form>
+				</li>
+			{% else %}
+				<li>
+					<form method="post"
+						action="{{ controller.link_to_like(iter) }}"
+						data-partial-selector="#comment{{ iter.id }}"
+						data-placement-selector="#comment{{ iter.id }}">
+						<input type="hidden" name="action" value="like">
+						<button type="submit" class="link comment-like-button">Like</button>
+					</form>
+				</li>
+			{% endif %}
+		{% endif %}
+		{% if user_can_update iter %}
+		<li><a href="{{ controller.link_to_update(iter) }}"
+			data-partial-selector="#comment-form"
+			data-placement-selector="#comment{{ iter.id }}">{{ __('Wijzig') }}</a></li>
+		{% endif %}
+		{% if user_can_delete iter %}
+		<li><a href="{{ controller.link_to_delete(iter) }}"
+			data-partial-selector="#confirm-delete-comment-form"
+			data-placement-selector="modal">{{ __('Verwijder') }}</a></li>
+		{% endif %}
+	</ul>
+</div>

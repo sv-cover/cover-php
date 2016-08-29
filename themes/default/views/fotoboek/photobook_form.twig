@@ -1,0 +1,55 @@
+{% extends '@layout/layout.twig' %}
+
+{% set form_title = book.id > 0 ? __('Fotoboek wijzigen') : __('Nieuw fotoboek maken') %}
+
+{% set form_action = book.id > 0 ? 'fotoboek.php?book=%d&view=update_book'|format(book.id) : 'fotoboek.php?book=%d&view=add_book'|format(book.parent.id) %}
+
+{% set form_submit_button = book.id > 0 ? __('Wijzig fotoboek') : __('Maak fotoboek') %}
+
+{% block title form_title ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ form_title }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ form_action|e('html_attr') }}" class="vertical-form">
+		<div>
+			{{ html_label(__('Titel'), 'titel', errors=errors, required=true) }}
+			{{ html_input_text('titel', book, required='required') }}
+		</div>
+
+		<div>
+			{{ html_label(__('Onderdeel van'), 'parent', errors=errors, required=false) }}
+			<a href="fotoboek.php?book={{ book.parent.id }}">{{ book.parent.titel }}</a>
+		</div>
+
+		<div>
+			{{ html_label(__('Datum (dd-mm-yyyy)'), 'date', errors=errors, required=true) }}
+			{{ html_input_text('date', book, required='required') }}
+		</div>
+
+		<div>
+			{{ html_label(__('Fotograaf'), 'fotograaf', errors=errors, required=true) }}
+			{{ html_input_text('fotograaf', book, required='required') }}
+		</div>
+
+		<div>
+			{{ html_label(__('Zichtbaar voor'), 'visibility', errors=errors, required=true) }}
+			{{ html_select_field('visibility', view.visibility_options, book) }}
+		</div>		
+
+		<div>
+			{{ html_label(__('Beschrijving'), 'beschrijving', errors=errors, required=true) }}
+			{{ html_textarea_field('beschrijving', book, errors=errors, rows=5) }}
+		</div>
+
+		<div>
+			<button type="submit" class="button">{{ form_submit_button }}</button>
+			{% if book.id > 0 %}
+			<a href="fotoboek.php?book={{ book.id }}">{{ __('Terug naar %s')|format(book.titel) }}</a>
+			{% else %}
+			<a href="fotoboek.php?book={{ book.parent.id }}">{{ __('Terug naar %s')|format(book.parent.titel) }}</a>
+			{% endif %}
+		</div>
+	</form>
+</div>
+{% endblock %}

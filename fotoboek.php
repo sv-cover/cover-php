@@ -305,7 +305,7 @@
 				}
 			}
 
-			return $this->view->render_form_photobook($iter, compact('parent', 'errors'));
+			return $this->view->render_create_photobook($iter, null, $errors);
 		}
 		
 		private function _view_update_book(DataIterPhotobook $book)
@@ -315,9 +315,13 @@
 
 			$errors = array();
 
+			$success = null;
+
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$data = $this->_check_fotoboek_values($errors);
+
+				$success = false;
 
 				if (count($errors) == 0)
 				{
@@ -328,7 +332,7 @@
 				}
 			}
 			
-			return $this->view->render_form_photobook($book, compact('errors'));
+			return $this->view->render_update_photobook($book, $success, $errors);
 		}
 
 		private function _view_update_photo_order(DataIterPhotobook $book)
@@ -475,11 +479,13 @@
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 			
+			$errors = array();
+
+			$success = null;
+
 			if (isset($_POST['photo']))
 			{
 				$new_photos = array();
-
-				$errors = array();
 
 				foreach ($_POST['photo'] as $photo)
 				{
@@ -515,14 +521,12 @@
 				}
 				
 				if (count($errors) == 0)
-					$this->view->redirect('fotoboek.php?book=' . $book->get_id());
-				else {
-					$_SESSION['add_photos_errors'] = $errors;
-					$this->view->redirect('fotoboek.php?book=' . $book->get_id() . '&view=add_photos');
-				}
+					return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
+				else
+					$success = false;
 			}
 
-			return $this->render_add_photos($book);
+			return $this->view->render_add_photos($book, $success, $errors);
 		}
 		
 		protected function _view_delete_book(DataIterPhotobook $book)
@@ -530,15 +534,19 @@
 			if (!$this->policy->user_can_delete($book))
 				throw new UnauthorizedException();
 
-			if (!empty($_POST['confirm_delete'])
-				&& $_POST['confirm_delete'] == $book->get('titel'))
-			{
-				$this->model->delete_book($book);
+			$errors = array();
 
-				return $this->view->redirect('fotoboek.php?book=' . $book->get('parent_id'));
+			if (!empty($_POST['confirm_delete']))
+			{
+				if ($_POST['confirm_delete'] == $book->get('titel')) {
+					$this->model->delete_book($book);
+					return $this->view->redirect('fotoboek.php?book=' . $book->get('parent_id'));
+				}
+
+				$errors[] = 'confirm_delete';
 			}
 			
-			return $this->view->render_delete($book);
+			return $this->view->render_delete($book, false, $errors);
 		}
 		
 		protected function _view_delete_photos(DataIterPhotobook $book)
@@ -559,14 +567,6 @@
 				$this->model->mark_read_recursively(logged_in('id'), $book);
 
 			return $this->view->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
-		}
-
-		protected function _view_edit_book(DataIterPhotobook $book) 
-		{
-			if (!$this->policy->user_can_update($book))
-				throw new UnauthorizedException();
-
-			return $this->view_render_edit_fotoboek($book);
 		}
 
 		protected function _view_download_photo(DataIterPhoto $photo)
@@ -701,7 +701,7 @@
 						$total_file_size += $photo->get_file_size();
 					}
 
-			return $this->view->confirm_download_book($root_book, compact('total_photos', 'total_file_size'));
+			return $this->view->render_download_photobook($root_book, $total_photos, $total_file_size);
 		}
 
 		protected function _view_scaled_photo(DataIterPhoto $photo)

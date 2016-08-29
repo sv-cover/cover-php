@@ -1,8 +1,0 @@
-<div id="path" class="fotoboek_path">{{ view.path(book)|join(' / ')|raw }}</div>
-
-{% if photo is defined and photo.book.id != book.id %}
-<div class="fotoboek_path original_path">
-	{{ __('Deze foto komt uit') }}
-	{{ view.path(photo.book)|join(' / ')|raw }}
-</div>	
-{% endif %}

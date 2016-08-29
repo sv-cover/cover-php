@@ -1,17 +1,7 @@
-<form class="comment-form" id="comment-form" name="freactie" action="{{ iter.has_id ? controller.link_to_update(iter) : controller.link_to_create }}" method="post" data-partial-selector=".photo-comments" data-placement-selector=".photo-comments">
-	<div>
-		{{ html_textarea_field('reactie', iter.data,
-			errors=errors,
-			placeholder=__('Typ hier je reactie…'),
-			rows=3) }}
-	</div>
-	
-	<div>
-		<button type="submit" class="button">{{ iter.has_id ? __('Wijzig reactie') : __('Plaats reactie') }}</button>
-		{% if iter.has_id %}
-		<a href="{{ controller.link_to_read(iter) }}"
-			data-partial-selector="#comment{{ iter.id }}"
-			data-placement-selector=".replyBox">{{ __('Terug naar foto') }}</a>
-		{% endif %}
-	</div>
-</form>
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<div class="messageBox">
+	{{ include('_form.twig') }}
+</div>
+{% endblock %}

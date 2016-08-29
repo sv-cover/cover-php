@@ -1,0 +1,53 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Fotoboek statistieken') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Fotoboek statistieken') }}</h1>
+<div class = "messageBox">
+	<table class="full-width-table">
+		<tr>
+			<td style="vertical-align: top; padding: 1em">
+				<h2>{{ __('Meest taggende leden') }}</h2>
+				<table class="full-width-table">
+					<thead>
+						<tr>
+							<th style="text-align: left">{{ __('Naam') }}</th>
+							<th style="text-align: right">{{ __('Aantal') }}</th>
+							<th style="text-align: right">{{ __('Favoriet') }}</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for row in taggers %}
+						<tr>
+							<td><a href="profiel.php?lid={{ row.id|e('url') }}">{{ row.voornaam }}</a></td>
+							<td style="text-align: right">{{ row.tags }}</td>
+							<td style="text-align: right">{{ row.favorite }}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</td>
+			<td style="vertical-align: top; padding: 1em;">
+				<h2>{{ __('Meest getagde leden') }}</h2>
+				<table class="full-width-table">
+					<thead>
+						<tr>
+							<th style="text-align: left">{{ __('Naam') }}</th>
+							<th style="text-align: right">{{ __('Aantal maal getagged') }}</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for row in tagged %}
+						<tr>
+							<td><a href="profiel.php?lid={{ row.id|e('url') }}">{{ row.voornaam }}</a></td>
+							<td style="text-align: right">{{ row.tags }}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+{% endblock %}

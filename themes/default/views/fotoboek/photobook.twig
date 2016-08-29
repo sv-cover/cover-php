@@ -251,13 +251,13 @@
 	{% endif %}
 
 	{# show the top n comments on the front page (same one as with the info) #}
-	{% if book.id is not defined %}
-		{# {% include('latest_comments.twig') %} #}
+	{% if book.id == 0 and global.auth.logged_in() %}
+		{{ include('_recent_comments.twig', {comments:view.recent_comments(10)}) }}
 	{% endif %}
 
 	{# and if there are no photos on this page, show a few random photos for discovery in the bottom. They are not confused with the photos of a book. #}
-	{% if book.count_photos == 0 %}
-		{# {% include('random_photos.twig') %} #}
+	{% if book.count_photos == 0 and global.auth.logged_in() %}
+		{% include('_random_photos.twig') %}
 	{% endif %}
 </div>
 {% endblock %}

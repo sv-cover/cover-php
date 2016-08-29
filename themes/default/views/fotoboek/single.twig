@@ -131,7 +131,7 @@
 
 		{% if global.auth.logged_in %}
 		<div class="photo-controls">
-			{% set liked = global.identity.member.id in photo.likes|pluck('lid_id') %}
+			{% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
 			<form class="like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
 				<input type="hidden" name="action" value="toggle">
 				<button type="submit" class="like-button"
@@ -142,7 +142,7 @@
 			
 			<a href="fotoboek.php?photo={{ photo.id }}&amp;view=download" class="photo-download-link">{{ __('Download') }}</a>
 			
-			{% if global.identity.member.id in photo.faces|pluck('lid_id') %}
+			{% if global.identity.member.id in photo.faces|select('lid_id') %}
 			<a href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form" class="photo-privacy-link">{{ __('Zichtbaarheid') }}</a>
 			{% endif %}
 		</div>

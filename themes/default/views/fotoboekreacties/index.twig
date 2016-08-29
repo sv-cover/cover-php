@@ -3,12 +3,12 @@
 		<p>{{ __('Er zijn nog geen reacties') }}</p>
 	{% else %}
 		{% for comment in comments %}
-			{{ include('@theme/fotoboekreacties/single.twig', {iter: comment}) }}
+			{{ include('@theme/fotoboekreacties/_comment.twig', {iter: comment}) }}
 		{% endfor %}
 	{% endif %}
 
 	{% if user_can_create global.models.FotoboekReacties %}
-		{{ include('@theme/fotoboekreacties/form.twig', {
+		{{ include('@theme/fotoboekreacties/_form.twig', {
 			iter: global.models.FotoboekReacties.create_iter({auteur: global.identity.member.id}),
 			errors: []
 		}) }}

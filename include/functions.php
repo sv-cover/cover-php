@@ -609,7 +609,7 @@
 			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('en') . ' ' . end($list);
 	}
 
-	function human_filesize($bytes, $decimals = 2)
+	function human_file_size($bytes, $decimals = 2)
 	{
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
 		$factor = floor((strlen($bytes) - 1) / 3);

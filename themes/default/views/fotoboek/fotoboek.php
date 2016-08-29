@@ -25,7 +25,22 @@
 
 		public function render_photobook(DataIterPhotobook $book)
 		{
-			return $this->render('fotoboek.twig', compact('book'));
+			return $this->render('photobook.twig', compact('book'));
+		}
+
+		public function render_create_photobook(DataIterPhotobook $book, $success, array $errors)
+		{
+			return $this->render('photobook_form.twig', compact('book', 'errors'));
+		}
+
+		public function render_update_photobook(DataIterPhotobook $book, $success, array $errors)
+		{
+			return $this->render('photobook_form.twig', compact('book', 'errors'));
+		}
+
+		public function render_download_photobook(DataIterPhotobook $book, $total_photos, $total_file_size)
+		{
+			return $this->render('photobook_confirm_download.twig', compact('book', 'total_photos', 'total_file_size'));
 		}
 
 		public function render_photo(DataIterPhotobook $book, DataIterPhoto $photo)
@@ -35,9 +50,76 @@
 			return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
 		}
 
+		public function render_add_photos(DataIterPhotobook $book, $success, array $errors)
+		{
+			return $this->render('add_photos.twig', compact('book', 'success', 'errors'));
+		}
+
+		public function render_competition()
+		{
+			$taggers = get_db()->query('
+				SELECT
+					l.id,
+					l.voornaam,
+					COUNT(f_f.id) tags,
+					(SELECT
+						fav_l.voornaam
+					FROM
+						foto_faces fav_faces
+					LEFT JOIN leden fav_l ON
+						fav_l.id = fav_faces.lid_id
+					WHERE
+						fav_faces.tagged_by = l.id
+					GROUP BY
+						fav_l.id
+					ORDER BY
+						COUNT(fav_l.id) DESC
+					LIMIT 1) favorite
+				FROM
+					foto_faces f_f
+				LEFT JOIN leden l ON
+					l.id = f_f.tagged_by
+				WHERE
+					f_f.lid_id IS NOT NULL
+				GROUP BY
+					l.id
+				ORDER BY
+					tags DESC');
+
+			$tagged = get_db()->query('
+				SELECT
+					l.id,
+					l.voornaam,
+					COUNT(f_f.id) tags
+				FROM
+					foto_faces f_f
+				LEFT JOIN leden l ON
+					l.id = f_f.lid_id
+				WHERE
+					f_f.lid_id IS NOT NULL
+				GROUP BY
+					l.id
+				HAVING
+					COUNT(f_f.id) > 50
+				ORDER BY
+					tags DESC');
+
+			return $this->render('competition.twig', compact('taggers', 'tagged'));
+		}
+
 		/**
 		 * Helper functions, called from the templates
 		 */
+
+		public function visibility_options()
+		{
+			return array(
+				DataModelFotoboek::VISIBILITY_PUBLIC => __('Publiek'),
+				DataModelFotoboek::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
+				DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
+				DataModelFotoboek::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
+			);
+		}
 
 		public function book_thumbnail(DataIterPhotobook $book)
 		{
@@ -112,5 +194,22 @@
 				array_values(array_reverse($prev)),
 				array($photo),
 				array_values($next));
+		}
+
+		public function comment_controller_for_photo(DataIterPhoto $photo)
+		{
+			return new ControllerFotoboekComments($photo);
+		}
+
+		public function recent_comments($count)
+		{
+			$model = get_model('DataModelFotoboekReacties');
+			return $model->get_latest($count);
+		}
+
+		public function random_photos($count)
+		{
+			$model = get_model('DataModelFotoboek');
+			return $model->get_random_photos($count);
 		}
 	}

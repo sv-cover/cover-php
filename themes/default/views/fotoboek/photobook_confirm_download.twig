@@ -1,0 +1,18 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Fotoboek downloaden') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Fotoboek downloaden') }}</h1>
+<div class="messageBox">
+	<form method="get" action="fotoboek.php">
+		<input type="hidden" name="book" value="{{ book.id }}">
+		<p>{{ __('Weet je heel zeker dat je het fotoboek <a href="%s">%s</a> en alle sub-boeken wil downloaden?')|format('fotoboek.php?book=' ~ book.id|e('url'), book.titel|e)|raw }}</p>
+		<p>{{ __('Let op dat je dan %d originele foto\'s download. Dat is in totaal <strong>%s</strong> aan fotos!')|format(total_photos, total_file_size|human_file_size)|raw }}</p>
+
+		<button type="submit" class="button" name="view" value="download_book">{{ __('Download %s als ZIP (%s)')|format(book.titel, total_file_size|human_file_size) }}</button>
+
+		<a href="fotoboek.php?book={{ book.id }}">{{ __('Terug naar %s')|format(book.titel) }}</a>
+	</form> 
+</div>
+{% endblock %}

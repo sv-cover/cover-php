@@ -33,10 +33,22 @@ class I18NTwigExtension extends Twig_Extension
 				return array_map([$context[$macro_context], 'get' . $macro_name], $iterable);
 			}, ['needs_context' => true]),
 			new Twig_SimpleFilter('human_join', 'implode_human'),
-			new Twig_SimpleFilter('pluck', function($iters, $property) {
+			new Twig_SimpleFilter('human_file_size', 'human_file_size'),
+			new Twig_SimpleFilter('select', function($iters, $property) {
 				return array_map(function($iter) use ($property) {
 					return $iter->has($property) ? $iter->get($property) : null;
 				}, $iters);
+			}),
+			new Twig_SimpleFilter('group_by', function($iters, $property) {
+				$groups = [];
+
+				foreach ($iters as $iter)
+					if (!isset($groups[$iter[$property]]))
+						$groups[$iter[$property]] = [$iter];
+					else
+						$groups[$iter[$property]][] = $iter;
+
+				return $groups;
 			})
 		];
 	}

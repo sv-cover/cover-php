@@ -1,18 +1,23 @@
-<h1><?= __('Fotoboek') ?> :: <?= __("Foto's toevoegen") ?></h1>
-<div class="messageBox">
-	<?php $this->render_partial('path', array('model' => $model, 'book' => $iter, 'photo' => null)) ?>
+{% extends '@layout/layout.twig' %}
 
-	<?php if (!empty($_SESSION['add_photos_errors'])): ?>
-	<div class="errors">
-	<?php while ($error = array_shift($_SESSION['add_photos_errors'])): ?>
-		<p><?=markup_format_text($error)?></p>
-	<?php endwhile ?>
-	</div>
-<?php endif ?>
+{% block title __("Foto's toevoegen") ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Fotoboek') }} :: {{ __("Foto's toevoegen") }}</h1>
+<div class="messageBox">
+	{{ include('_path.twig') }}
+
+	{% if errors|length > 0 %}
+		<div class="errors">
+			{% for error in errors %}
+				<p>{{ error }}</p>
+			{% endfor %}
+		</div>
+	{% endif %}
 
 	<div id="folder-selector"></div>
 
-	<form id="add-photos-form" action="fotoboek.php?book=<?= $iter->get_id() ?>&amp;view=add_photos" method="post">
+	<form id="add-photos-form" action="fotoboek.php?book={{ book.id|e('url') }}&amp;view=add_photos" method="post">
 		<ul id="photo-selector">
 			<li>
 				<span class="add-control">
@@ -29,13 +34,13 @@
 			</li>
 		</ul>
 
-		<button type="submit" class="button"><?=__("Voeg foto's toe") ?></button>
-		<a href="fotoboek.php?book=<?=$iter->get_id()?>"><?=markup_format_text(sprintf(__('Terug naar %s'), $iter->get('titel')))?></a>
+		<button type="submit" class="button">{{ __("Voeg foto's toe") }}</button>
+		<a href="fotoboek.php?book={{ book.id|e('url') }}">{{ __('Terug naar %s')|format(book.titel) }}</a>
 	</form>
 </div>
 
 <script>
-var baseurl = 'fotoboek.php?book=<?=$iter->get_id()?>';
+var baseurl = 'fotoboek.php?book={{ book.id|e('url') }}';
 
 jQuery(function($) {
 	function basename(path) {
@@ -162,3 +167,4 @@ jQuery(function($) {
 	});
 })
 </script>
+{% endblock %}
