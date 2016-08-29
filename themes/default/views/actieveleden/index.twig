@@ -4,18 +4,14 @@
 
 {% block content %}
 <div class="messageBox">
-<table class="default">
-	<col class="text_center">
-	<col>
-	<col class="text_center">
-	<col>
-	<col>
+	<p>In alle commisses en werkgroepen samen zitten op dit moment <strong>{{ iters|length }}</strong> actieve Coverleden.</p>
+<table class="full-width-table">
 	<thead>
 		<tr class="header">
 			<th>{{ __('ID') }}</th>
 			<th>{{ __('Naam') }}</th>
 			<th>{{ __('Email') }}</th>
-			<th>{{ __('Commissies') }}</th>
+			<th style="text-align: right">{{ __('Commissies/Werkgroepen') }}</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -24,7 +20,7 @@
 				<td>{{ iter.id }}</td>
 				<td><a href="{{ link('profiel.read', member=iter) }}">{{ iter|full_name_ignore_privacy }}</a></td>
 				<td>{{ iter.email }}</td>
-				<td>{{ iter.commissie_count }}</td>
+				<td style="text-align: right">{{ iter.commissie_count }}</td>
 			</tr>
 		{% endfor %}
 	</tbody>
