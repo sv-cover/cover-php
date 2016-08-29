@@ -3,8 +3,9 @@
 {% block title __('Actieve leden') ~ ' :: ' ~ parent() %}
 
 {% block content %}
+<h1>{{ __('Actieve leden') }}</h1>
 <div class="messageBox">
-	<p>In alle commisses en werkgroepen samen zitten op dit moment <strong>{{ iters|length }}</strong> actieve Coverleden.</p>
+	<p>{{ __('In alle commisses en werkgroepen samen zitten op dit moment <strong>%d</strong> actieve Coverleden.')|format(iters|length)|raw }}</p>
 <table class="full-width-table">
 	<thead>
 		<tr class="header">
