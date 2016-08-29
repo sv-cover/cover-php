@@ -58,15 +58,17 @@ class ControllerShow extends ControllerCRUD
 				]);
 				
 				$mail_data = $this->_prepare_mail($iter, $diff);
+
+				$mail_data['taal'] = $field == 'content' ? 'nl' : 'en';
 				
 				if (!empty($mail_data['email']))
 				{
-					$body = parse_email('editable_edit.txt', $data);
+					$body = parse_email('editable_edit.txt', $mail_data);
 					$subject = sprintf('Page %s has been updated on the Cover website', $mail_data['titel']);
 
 					foreach ($mail_data['email'] as $email)
-						mail($email, $subject, $body, "From: acdcee@svcover.nl\r\n");
-				}	
+						@mail($email, $subject, $body, "From: acdcee@svcover.nl\r\n");
+				}
 			}
 		}
 

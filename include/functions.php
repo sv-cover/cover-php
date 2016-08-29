@@ -259,10 +259,7 @@
 		if (!(is_array($params) || $params instanceof ArrayAccess))
 			throw new \InvalidArgumentException('$params has to behave like an array');
 
-		// Right now, we haven't used any of the parameters *yet*
-		$unused_params = $params;
-
-		$callback =  function($match) use ($params, $unused_params) {
+		$callback =  function($match) use ($params) {
 			$path = explode('[', $match[1]);
 
 			// remove ] from all 1..n components
