@@ -139,7 +139,7 @@ jQuery.fn.autocompleteAlmanac = function(options)
 {
 	var defaults = {
 		minLength: 3,
-        source: function(request, response) {
+		source: function(request, response) {
 			$.getJSON('almanak.php', {
 				'search': request.term,
 				'limit': 15
@@ -218,17 +218,19 @@ $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('fieldset:not(.jquery-fieldset)').each(function(i, fieldset) {
 		$(fieldset).addClass('jquery-fieldset');
 
-		var masterSwitch = $(fieldset).find('legend input[type=checkbox]');
+		var masterSwitch = $(fieldset).find('legend>input[type=checkbox]');
 
-		var toggles = $(fieldset).find('input').not(masterSwitch);
+		if (masterSwitch.length) {
+			var toggles = $(fieldset).find('input').not(masterSwitch);
 
-		var update = function() {
-			toggles.prop('disabled', !masterSwitch.is(':checked'));
-		};
+			var update = function() {
+				toggles.prop('disabled', !masterSwitch.is(':checked'));
+			};
 
-		update();
+			update();
 
-		masterSwitch.on('change', update);
+			masterSwitch.on('change', update);
+		}
 	});
 
 	$(e.target).find('input[data-autocomplete=member_id]').each(function(i, field) {
@@ -768,5 +770,20 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 		// Mark that tab as the active tab (and hide all the others)
 		switchTab($activeTab.find('a').attr('href').substr(1));
+	});
+});
+
+// Datalist like behaviour for form.
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('input[data-suggestions]').each(function () {
+		var suggestions = $(this).data('suggestions');
+		$(this).autocomplete({
+			source: suggestions,
+			delay: 0,
+			minLength: 0
+		});
+		$(this).on('focus', function() {
+			$(this).autocomplete('search', '');
+		});
 	});
 });

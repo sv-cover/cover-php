@@ -1,35 +1,22 @@
 <?php
 	require_once 'include/init.php';
-	require_once 'include/member.php';
-	require_once 'include/form.php';
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/secretary.php';
 	
 	class ControllerLidWorden extends Controller
 	{
-		var $model = null;
-		var $sizes = null;
-
-		function ControllerLidWorden() {
+		public function __construct()
+		{
 			$this->model = get_model('DataModelMember');
+
+			$this->view = View::byName('lidworden', $this);
 		}
 		
-		function get_content($view, $iter = null, $params = null) {
-			$this->run_header(array('title' => __('Lid worden')));
-			run_view('lidworden::' . $view, $this->model, $iter, $params);
-			$this->run_footer();
-		}
-
-		function _process_lidworden()
+		protected function _process_lidworden()
 		{
 			$non_empty = function($x) {
 				return strlen($x) > 0;
 			};
-
-			$_POST['birth_date'] = sprintf('%04d-%02d-%02d',
-				$_POST['birth_date_year'],
-				$_POST['birth_date_month'],
-				$_POST['birth_date_day']);
 
 			$fields = array(
 				'first_name' => [$non_empty],
@@ -103,8 +90,11 @@
 						$errors[] = $field;
 			}
 			
+			if (count(array_intersect(['first_name', 'family_name', 'family_name_preposition'], $errors)) > 0)
+				$errors[] = 'name';
+
 			if (count($errors) > 0)
-				return $this->get_content('lidworden', null, array('errors' => $errors));
+				return $this->view->render_form($errors);
 			
 			$letters = array_merge(range('a', 'z'), range(0, 9));
 
@@ -130,10 +120,10 @@
 			mail($data['email_address'], __('Lidmaatschapsaanvraag bevestigen'), $mail,
 				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 			
-			return $this->redirect('lidworden.php?verzonden=true');
+			return $this->view->redirect('lidworden.php?verzonden=true');
 		}
 
-		function _process_confirm($confirmation_code)
+		protected function _process_confirm($confirmation_code)
 		{
 			$db = get_db();
 
@@ -184,20 +174,21 @@
 
 			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 
-			return $this->redirect('lidworden.php?confirmed=true');
+			return $this->view->redirect('lidworden.php?confirmed=true');
 		}
 		
-		function run_impl() {
+		protected function run_impl()
+		{
 			if (isset($_POST['submlidworden']))
-				$this->_process_lidworden();
+				return $this->_process_lidworden();
 			elseif (isset($_GET['confirmation_code']))
-				$this->_process_confirm($_GET['confirmation_code']);
+				return $this->_process_confirm($_GET['confirmation_code']);
 			else if (isset($_GET['verzonden']))
-				$this->get_content('verzonden');
+				return $this->view->render_submitted();
 			else if (isset($_GET['confirmed']))
-				$this->get_content('confirmed');
+				return $this->view->render_confirmed();
 			else {
-				$this->get_content('lidworden');
+				return $this->view->render_form();
 			}
 		}
 	}

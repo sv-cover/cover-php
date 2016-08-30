@@ -1,0 +1,178 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Lidmaatschapsformulier') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Lidmaatschapsformulier') }}</h1>
+<div class="messageBox">
+	<h2>{{ __('Word lid van Cover!') }}</h2>
+
+	{% if errors|length > 0 %}
+	<section class="error-section">
+		<p>{{ __('Niet alle velden zijn goed ingevuld.') }}</p>
+	</section>
+	{% endif %}
+
+	<form method="post" action="lidworden.php" class="new-member-form vertical-form">
+		{{ html_input_hidden('submlidworden', 'yes') }}
+		
+		<fieldset>
+			<legend>{{ __('Naam') }}</legend>
+			<div class="field-group">
+				<div class="large-field">
+					{{ html_label(__('Voornaam'), 'first_name', errors=errors, required=true) }}
+					{{ html_input_text('first_name', null, errors=errors, required=true, placeholder=__('Bijv. Jan')) }}
+				</div>
+				<div>
+					{{ html_label(__('Tussenvoegsel'), 'family_name_preposition', errors=errors) }}
+					{{ html_input_text('family_name_preposition', null, errors=errors, class='small', placeholder=__('Bijv. van')) }}
+				</div>
+				<div class="large-field">
+					{{ html_label(__('Achternaam'), 'family_name', errors=errors, required=true) }}
+					{{ html_input_text('family_name', null, errors=errors, required=true, placeholder=__('Bijv. Jansen')) }}
+				</div>
+			</div>
+
+			<div>
+				{{ html_label(__('Geboortedatum'), 'birth_date', errors=errors, required=true) }}
+				{{ html_input_date('birth_date', null, errors=errors, required=true, placeholder=__('Bijv. 1993-9-20')) }}
+				<!-- todo: vertalen als date of birth -->
+			</div>
+
+			<div>
+				{{ html_label(__('Gender'), 'gender', errors=errors, required=true) }}
+				{{ html_select_field('gender', {o: __('Niet gespecificeerd'), m: __('Man'), f: __('Vrouw')}, null, errors=errors, required=true, default='o') }}
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Adres') }}</legend>
+
+			<div>
+				{{ html_label(__('Straatnaam + Huisnummer'), 'street_name', errors=errors, required=true) }}
+				{{ html_input_text('street_name', null, errors=errors, required=true, placeholder=__('Bijv. Nijenborgh 9')) }}
+			</div>
+			<div class="field-group">
+				<div>
+					{{ html_label(__('Postcode'), 'postal_code', errors=errors, required=true) }}
+					{{ html_input_text('postal_code', null, errors=errors, required=true, placeholder=__('Bijv. 9747 AG')) }}
+				</div>
+				<div class="large-field">
+					{{ html_label(__('Woonplaats'), 'place', errors=errors, required=true) }}
+					{{ html_input_text('place', null, errors=errors, required=true, placeholder=__('Bijv. Groningen')) }}
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Contact') }}</legend>
+
+			<div>
+				{{ html_label(__('Telefoonnummer'), 'phone_number', errors=errors) }}
+				{{ html_input_text('phone_number', null, errors=errors, type='tel') }}
+			</div>
+
+			<div>
+				{{ html_label(__('E-Mail adres'), 'email_address', errors=errors, required=true) }}
+				{{ html_input_text('email_address', null, errors=errors, required=true, type='email') }}
+				<small>{{ __('Je ontvangt een bevestigingsmail met een link. Je aanmelding wordt pas verwerkt wanneer je op de link klikt.') }}</small>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Studie') }}</legend>
+			
+			<div>
+				{{ html_label(__('Studentnummer'), 'membership_student_number', errors=errors, required=true) }}
+				{{ html_input_text('membership_student_number', null, errors=errors, required=true, placeholder=__('Bijv. s123456')) }}
+			</div>
+
+			<div class="field-group">
+				<div>
+					{{ html_label(__('Studierichting'), 'membership_study_name', errors=errors, required=true) }}
+					{{ html_input_text('membership_study_name', null, errors=errors, required=true, list='studies', data_suggestions=['Artificial Intelligence', 'Computing Science']|json_encode, placeholder=__('Kies uit de lijst of typ een andere studie')) }}
+					
+				</div>
+
+				<div>
+					{{ html_label(__('Fase'), 'membership_study_phase', errors=errors, required=true) }}
+					{{ html_select_field('membership_study_phase', {b: __('Bachelor'), m: __('Master')}, null, errors=errors, required=true) }}
+				</div>
+			</div>
+
+			<div>
+				{{ html_label(__('Beginjaar'), 'membership_year_of_enrollment', errors=errors, required=true) }}
+				{{ html_input_text('membership_year_of_enrollment', {'membership_year_of_enrollment': academic_year}, errors=errors, required=true) }}
+				<small>{{ __('In welk jaar ben je begonnen of ga je beginnen met de hierboven ingevulde studie.') }}</small>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Betaling') }}</legend>
+			
+			<div>
+				{{ html_label(__('IBAN'), 'iban', errors=errors, required=true) }}
+				{{ html_input_text('iban', null, errors=errors, required=true) }}
+			</div>
+
+			<div>
+				{{ html_label(__('BIC'), 'bic', errors=errors, required=true) }}
+				{{ html_input_text('bic', null, errors=errors, required=true) }}
+				<small class="hint">{{ __("Alleen nodig wanneer IBAN [i]niet[/i] met 'NL' begint")|parse_markup }}</small>
+			</div>
+
+			<div>
+				{{ html_input_checkbox('authorization', null) }}
+				{{ html_label(__('Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn rekening af te schrijven (verplicht)'), 'authorization', errors=errors, required=true) }}
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Mailing') }}</legend>
+			
+			<p>{{ __('Cover stuurt af en toe een mailtje over aankomende activiteiten. Als je de mail niet meer wil ontvangen, kan je je heel gemakkelijk uitschrijven via de website.')}}
+
+			<div>
+				{{ html_input_checkbox('option_mailing', null) }}
+				{{ html_label(__('Ik wil graag e-mails over activiteiten van Cover ontvangen.'), 'option_mailing', errors=errors) }}
+				<small>{{ __('Afmelden kan op ieder moment via deze website.') }}</small>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Voorwaarden') }}</legend>
+			{% if user_can_update voorwaarden %}
+				<div class="controls inline">
+					<a href="{{ voorwaarden.link_to_update|e('html_attr') }}" class="edit-link">{{ __('Bewerk voorwaarden') }}</a>
+				</div>
+			{% endif %}
+		
+			{{ voorwaarden|parse_editable }}
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Intelligentietest') }}</legend>
+
+			<div>
+				{{ html_label(__('Wat is de kleur van gras? (ik ben geen spam-bot)'), 'spam', errors=errors, required=true) }}
+				{{ html_input_text('spam', null, errors=errors, required=true) }}
+				<small class="hint">{{ __("Als je het niet zeker weet, vul dan 'groen' in.") }}</small>
+			</div>
+		</fieldset>
+
+		<button type="submit" name="subm" value="yes" class="button large-button">{{ __('Word lid') }}</button>
+	</form>
+
+
+
+	<section>
+		{% if user_can_update opmerkingen %}
+			<div class="controls inline">
+				<a href="{{ opmerkingen.link_to_update|e('html_attr') }}" class="edit-link right">{{ __('Bewerk opmerkingen') }}</a>
+			</div>
+		{% endif %}
+		<h2>{{ __('Opmerkingen') }}</h2>
+		{{ opmerkingen|parse_editable }}
+	</section>
+</div>
+{% endblock %}

@@ -1036,7 +1036,7 @@ font-size: 10px;
 	color: black;
 }
 
-.label_error:before {
+label.label_error:before {
 	content: '!';
 	text-align: center;
 	display: inline-block;
@@ -1358,7 +1358,8 @@ table.incassomatic thead::before
 }
 
 .vertical-form > div,
-.vertical-form > fieldset {
+.vertical-form > fieldset,
+.vertical-form > fieldset > div {
 	margin-bottom: 10px;
 }
 
@@ -1375,10 +1376,17 @@ table.incassomatic thead::before
 	content: ':';
 }
 
+.vertical-form label .required-badge {
+	color: #c00;
+	cursor: help;
+}
+
 .vertical-form input[type=text],
 .vertical-form input[type=email],
 .vertical-form input[type=password],
-.vertical-form textarea {
+.vertical-form input[type=tel],
+.vertical-form textarea,
+.vertical-form {
 	width: 100%;
 }
 
@@ -1396,6 +1404,11 @@ table.incassomatic thead::before
 
 .vertical-form input:disabled + label {
 	color: #bbb;
+}
+
+.vertical-form input + label + small {
+	display: block;
+	margin-left: 18px;
 }
 
 .vertical-form label.label_error + input,
@@ -1471,10 +1484,7 @@ table.incassomatic thead::before
 	display: inline-block; 
 }
 
-form input[type=text],
-form input[type=date],
-form input[type=email],
-form input[type=password],
+form input[type],
 form textarea {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -1497,6 +1507,27 @@ form textarea {
 	padding: 0;
 	cursor: pointer;
 	opacity: 0;
+}
+
+.vertical-form .field-group {
+	display: flex;
+}
+
+.vertical-form .field-group > div {
+	flex-grow: 1;
+	padding: 0 1em;
+}
+
+.vertical-form .field-group > div.large-field {
+	flex-grow: 3;
+}
+
+.vertical-form .field-group > div:first-of-type {
+	padding-left: 0;
+}
+
+.vertical-form .field-group > div:last-of-type {
+	padding-right: 0;
 }
 
 .ui-widget-overlay {

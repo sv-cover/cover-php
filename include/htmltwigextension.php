@@ -80,7 +80,8 @@ class HTMLTwigExtension extends Twig_Extension
 
 	static public function input_text($name, $data, array $params = array())
 	{
-		$params['type'] = 'text';
+		if (!isset($params['type']))
+			$params['type'] = 'text';
 
 		if (!isset($params['class']))
 			$params['class'] = 'text';
@@ -101,9 +102,8 @@ class HTMLTwigExtension extends Twig_Extension
 
 	static public function input_date($name, $data, array $params = array())
 	{
-		$params = _parse_rest(func_get_args(), 2);
 		$params['type'] = 'date';
-		$params['placeholder'] = sprintf(__('E.g. %d-12-31'), date('Y'));
+		$params['placeholder'] = sprintf(__('Bijv. %d-9-20'), date('Y'));
 
 		if (!isset($params['class']))
 			$params['class'] = 'date';
@@ -198,7 +198,8 @@ class HTMLTwigExtension extends Twig_Extension
 		} else {
 			$field = $name;
 		}
-	
+		
+		// Which value is selected
 		if (!isset($params['nopost']) && get_post($name) !== null)
 			$default = get_post($name);
 		elseif (isset($data[$field]))
@@ -207,18 +208,27 @@ class HTMLTwigExtension extends Twig_Extension
 			$default = $params['default'];
 		else
 			$default = null;
-		
 		unset($params['default']);
-		$options = '';
 
+		// Do we need to add the error class?
+		if (isset($params['errors']))
+			if (in_array($field, $params['errors']))
+				if (isset($params['class']))
+					$params['class'] .= ' error';
+				else
+					$params['class'] = 'error';
+		unset($params['errors']);
+
+		// Is the id overriden?
 		if (!isset($params['id']))
 			$params['id'] = 'field-' . $name;
 
+		$options = '';
 		foreach ($values as $val => $title)
 			$options .= '<option value="' . markup_format_attribute($val) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . markup_format_text($title) . "</option>\n";
 		
 		$result = '<select name="' . $name . '"';
-		
+
 		foreach ($params as $attribute => $value)
 			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($value) . '"';
 		
@@ -272,14 +282,17 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		$name = markup_format_text($name);
 		$classes = isset($params['class']) ? explode(' ', $params['class']) : ['label'];
+		$extra_content = '';
 				
 		if (isset($params['errors']) && in_array($field, $params['errors']))
 			$classes[] = 'label_error';
 
-		if (isset($params['required']) && $params['required'])
+		if (isset($params['required']) && $params['required']) {
 			$classes[] = 'label_required';
+			$extra_content = sprintf('<span class="required-badge" title="%s">*</span>', __('Verplicht'));
+		}
 		
-		return sprintf('<label for="field-%s" class="%s">%s</label>',
-			$field, implode(' ', $classes), $name);
+		return sprintf('<label for="field-%s" class="%s">%s%s</label>',
+			$field, implode(' ', $classes), $name, $extra_content);
 	}
 }
