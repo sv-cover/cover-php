@@ -9,6 +9,7 @@ define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
 define('RETURN_COULD_NOT_DETERMINE_LIST', 103);
 define('RETURN_COULD_NOT_DETERMINE_COMMITTEE', 104);
+define('RETURN_COULD_NOT_PARSE_MESSAGE_HEADER', 105);
 
 define('RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST', 201);
 
@@ -300,6 +301,9 @@ function get_error_message($return_value)
 {
 	switch ($return_value)
 	{
+		case RETURN_COULD_NOT_PARSE_MESSAGE_HEADER:
+			return "Error: Could not parse the message header.";
+
 		case RETURN_COULD_NOT_DETERMINE_SENDER:
 			return "Error: Could not determine sender.";
 
@@ -339,9 +343,12 @@ function read_message_headers($stream)
 {
 	$message_header = new \cover\email\MessagePart();
 
-	\cover\email\MessagePart::parse_header(
+	$success = \cover\email\MessagePart::parse_header(
 		new \cover\email\PeakableStream($stream),
 		$message_header);
+
+	if (!$success)
+		return false;
 
 	return $message_header;
 }
@@ -377,6 +384,9 @@ function main()
 	// Next, read the header of the mail again, but now using the message parser that
 	// correctly handles headers with newlines (which are hell with regexps).
 	$message_header = read_message_headers($buffer_stream);
+
+	if ($message_header === false)
+		return RETURN_COULD_NOT_PARSE_MESSAGE_HEADER;
 
 	fclose($buffer_stream);
 
