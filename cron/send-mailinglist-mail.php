@@ -9,10 +9,14 @@ define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
 define('RETURN_COULD_NOT_DETERMINE_LIST', 103);
 define('RETURN_COULD_NOT_DETERMINE_COMMITTEE', 104);
+
+define('RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST', 201);
+
 define('RETURN_NOT_ALLOWED_NOT_SUBSCRIBED', 401);
 define('RETURN_NOT_ALLOWED_NOT_COVER', 402);
 define('RETURN_NOT_ALLOWED_NOT_OWNER', 403);
 define('RETURN_NOT_ALLOWED_UNKNOWN_POLICY', 404);
+
 define('RETURN_FAILURE_MESSAGE_EMPTY', 502);
 define('RETURN_MARKED_AS_SPAM', 503);
 
@@ -41,7 +45,70 @@ function parse_email_addresses($emails)
 	return array_filter(array_map('parse_email_address', explode(',', $emails)));
 }
 
-function process_message_committee($message, $message_headers, $to, &$committee)
+/**
+ * Sends mail to committees@svcover.nl and workinggroups@svcover.nl to all
+ * committees or all working groups. [COMMISSIE] and [COMMITTEE] in the
+ * plain message will be replaced with the name of the committee. 
+ * 
+ * @param $message the raw message body
+ * @param $message_headers the message headers, parsed> Not actually used.
+ * @param $to destination address, ideally committees@svcover.nl
+ *            or workinggroups@svcover.nl.
+ * @param $from the email address of the sender. Must end in @svcover.nl or
+ *              the function will return RETURN_NOT_ALLOWED_NOT_COVER.
+ * 
+ * @return RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST if the mail is not
+ * addressed to one of those email addresses.
+ * @return RETURN_NOT_ALLOWED_NOT_COVER if the mail was not sent from an
+ * address ending in @svcover.nl.
+ */
+function process_message_to_all_committees($message, $message_headers, $to, $from)
+{
+	$committee_model = get_model('DataModelCommissie');
+
+	// Strip svcover.nl domain from $to, if it is there.
+	if (preg_match('/@svcover\.nl$/i', $to))
+		$to = substr($to, 0, -strlen('@svcover.nl'));
+
+	$to = strtolower($to); // case insensitive please
+
+	$destinations = [
+		'committees' => DataModelCommissie::TYPE_COMMITTEE,
+		'workingroups' => DataModelCommissie::TYPE_WORKING_GROUP
+	];
+
+	// Validate whether it is actually addressed to the committee (or working group) mailing list
+	if (!array_key_exists($to, $destinations))
+		return RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST;
+
+	// Only @svcover.nl addresses can send to these mailing lists
+	if (!preg_match('/@svcover\.nl$/i', $from))
+		return RETURN_NOT_ALLOWED_NOT_COVER;
+
+	$committee_model->type = $destinations[$to];
+
+	$committees = $committee_model->get(false); // Get all committees of that type, not including hidden committees (such as board)
+
+	foreach ($committees as $committee)
+	{
+		$email = $committee->get('login') . '@svcover.nl';
+
+		echo "Sending mail to " . $committee->get('naam') . " <" . $email . ">: ";
+		
+		$variables = array(
+			'[COMMISSIE]' => $committee->get('naam'),
+			'[COMMITTEE]' => $committee->get('naam')
+		);
+
+		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+
+		echo send_message($personalized_message, $email), "\n";
+	}
+
+	return 0;
+}
+
+function process_message_to_committee($message, $message_headers, $to, &$committee)
 {
 	$commissie_model = get_model('DataModelCommissie');
 
@@ -70,7 +137,7 @@ function process_message_committee($message, $message_headers, $to, &$committee)
 	return 0;
 }
 
-function process_message_mailinglist($message, $message_header, $to, $from, &$lijst)
+function process_message_to_mailinglist($message, $message_header, $to, $from, &$lijst)
 {
 	$mailinglijsten_model = get_model('DataModelMailinglijst');
 
@@ -260,6 +327,9 @@ function get_error_message($return_value)
 		case RETURN_MARKED_AS_SPAM:
 			return "The message was marked as 'spammy' by the spamfilter.";
 
+		case RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST:
+			return "The message is not addressed to the committee mailing list.";
+
 		default:
 			return "(code $return_value)";
 	}
@@ -322,21 +392,29 @@ function main()
 
 	foreach ($destinations as $destination)
 	{
-		// First try sending the message to a committee
-		$return_code = process_message_committee($message, $message_header, $destination, $commissie);
+		$commissie = null;
 
-		// If that didn't work, try sending it to a mailing list
-		if ($return_code == RETURN_COULD_NOT_DETERMINE_COMMITTEE)
+		// First try if this message is addressed to committees@svcover.nl
+		$return_code = process_message_to_all_committees($message, $message_header, $destination, $from);
+
+		if ($return_code === RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST)
 		{
-			// Process the message: parse it and send it to the list.
-			$return_code = process_message_mailinglist($message, $message_header, $destination, $from, $lijst);
+			// Then try sending the message to a committee
+			$return_code = process_message_to_committee($message, $message_header, $destination, $commissie);
+
+			// If that didn't work, try sending it to a mailing list
+			if ($return_code === RETURN_COULD_NOT_DETERMINE_COMMITTEE)
+			{
+				// Process the message: parse it and send it to the list.
+				$return_code = process_message_to_mailinglist($message, $message_header, $destination, $from, $lijst);
+			}
 		}
 
 		// Archive the message.
 		$archief = get_model('DataModelMailinglijstArchief');
 		$archief->archive($message, $from, $lijst, $commissie, $return_code);
 
-		if ($return_code != 0)
+		if ($return_code !== 0)
 			process_return_to_sender($message, $message_header, $from, $destination, $return_code);
 	}
 
