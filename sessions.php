@@ -89,7 +89,7 @@ class ControllerSessions extends Controller
 		elseif (isset($_GET['referrer']))
 			$referrer = $_GET['referrer'];
 		else
-			$referrer = 'profiel.php';
+			$referrer = null;
 
 		$referrer_host = parse_url($referrer, PHP_URL_HOST);
 
@@ -98,11 +98,15 @@ class ControllerSessions extends Controller
 		else
 			$external_domain = null;
 
+		// Prevent returning to the logout link
+		if ($external_domain === null && $referrer == '/sessions.php?view=logout')
+			$referrer = null;
+
 		if (!empty($_POST['email']) && !empty($_POST['password']))
 		{
 			if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
 			{
-				return $this->view->redirect($referrer, false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
+				return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
 			}
 			else {
 				$errors = ['email', 'password'];
