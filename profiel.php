@@ -486,10 +486,10 @@ class ControllerProfiel extends Controller
 
 	protected function run_impl()
 	{
-		if (!isset($_GET['id']))
+		if (!isset($_GET['lid']))
 			return $this->run_index();
 		
-		$iter = $this->model->get_iter($_GET['id']);
+		$iter = $this->model->get_iter($_GET['lid']);
 		
 		$view = isset($_GET['view']) ? $_GET['view'] : 'public';
 		
