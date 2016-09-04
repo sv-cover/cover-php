@@ -42,6 +42,11 @@
 		{
 			return strtotime($this->get('vacancies')) < strtotime('+1 year');
 		}
+
+		public function get_email()
+		{
+			return strstr($this['login'], '@') ? $this['login'] : $this['login'] . '@svcover.nl';
+		}
 	}
 
 	/**
@@ -302,12 +307,7 @@
 		  */
 		public function get_email($id)
 		{
-			$value = $this->get_login($id);
-					
-			if (!$value)
-				$value = __('onbekend');
-			
-			return strstr($value, '@') ? $value : $value . '@svcover.nl';
+			return $this->get_iter($id)->get('email');
 		}
 		
 		/**

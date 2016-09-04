@@ -659,37 +659,6 @@
 	}
 	
 	/** @group Functions
-	  * Get forum post author url
-	  * @message the forum message iter
-	  * @last optional; whether or not get the last author
-	  * 
-	  * @result the url
-	  */
-	function get_author_link($message, $last = false) {
-		if ($last && $message->get('last_author_type'))
-			$field = 'last_author';
-		else
-			$field = 'author';
-
-		$type = intval($message->get($field . '_type'));
-		
-		switch ($type) {
-			case 1: /* Person */
-				return 'profiel.php?lid=' . $message->get($field);
-			break;
-			case 2: /* Commissie */
-				$commissie_model = get_model('DataModelCommissie');
-				$page = $commissie_model->get_page($message->get($field));
-				
-				if ($page !== null)
-					return 'show.php?id=' . $page;
-			break;
-		}
-		
-		return '';
-	}
-	
-	/** @group Functions
 	  * Get the first n words
 	  * @s a string
 	  * @num the number of words

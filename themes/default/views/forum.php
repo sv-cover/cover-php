@@ -2,26 +2,6 @@
 	require_once 'include/markup.php';
 	require_once 'include/pagenavigation.php';
 
-	function view_auth($model, $iter, $params = null) {
-		echo '<h1>' . __('Forum') . '</h1>
-		<div class="error_message">' . __('Je kunt niet schrijven in dit forum') . '</div>';
-	}
-	
-	function view_not_editable($model, $iter, $params = null) {
-		echo '<h1>' . __('Forum') . '</h1>
-		<div class="error_message">' . __('Je hebt geen permissie om dit bericht te wijzigen') . '</div>';
-	}
-	
-	function view_thread_not_found($model, $iter, $params = null) {
-		echo '<h1>' . __('Forum') . '</h1>
-		<div class="error_message">' . __('Dat bericht bestaat niet') . '</div>';
-	}
-
-	function view_message_not_found($model, $iter, $params = null) {
-		echo '<h1>' . __('Forum') . '</h1>
-		<div class="error_message">' . __('Dat bericht bestaat niet') . '</div>';
-	}
-	
 	function view_thread($model, $iter, $params = null) {
 		$forum = $model->get_iter($iter->get('forum'), -1);
 
@@ -526,51 +506,7 @@
 	}
 
 	function view_fora($model, $iters, $params = null) {
-		echo '<h1>' . __('Forum') . '</h1>
-		<div class="topbar"></div><table class="forum">
-		<col class="icon">
-		<col class="forum">
-		<col class="threadcount">
-		<col class="messagecount">
-		<col class="last">';
-		$i=0;
-		$headers = $model->get_headers();
-
-		foreach ($iters as $iter) {
-			$lastheader = null;
-
-			while (count($headers) > 0 && $iter->get('position') > $headers[0]->get('position')) {
-				$lastheader = $headers[0];
-				array_shift($headers);
-			}
-			
-			if ($lastheader) {
-				echo '<tr class="forum_header"><td colspan="5">' . markup_format_text($lastheader->get('name')) . '</td></tr>';
-				$i=0;
-			}
-			if (!($iter->get('id') == 7 && !logged_in())){
-			$num_threads = $iter->get_num_threads();
-			$num_messages = $iter->get_num_forum_messages();
-
-			echo '<tr class="r' . $i . '"><td class="icon">' . image($model->forum_unread($iter->get('id')) ? 'thread_new.png' : 'thread.png', '', '') . '</td>
-			<td class="forum"><span class="bold"><a href="forum.php?forum=' . $iter->get('id') . '">' . markup_format_text($iter->get('name')) . '</a></span><div class="smaller">' . markup_parse($iter->get('description')) . '</div></td>
-			<td class="text_center">' . $num_threads . '</td>
-			<td class="text_center">' . $num_messages . '</td>
-			<td class="last">';
-			$i = ($i ? 0 : 1);
-			$last = $iter->get_last_thread();
-			
-			if ($last) {
-				$pages = $last->get_num_thread_pages();
-				$lastid = $last->get('last_id');
-				echo $last->get('datum') . '<br><a id="last-thread" href="forum.php?thread=' . $last->get('id') . '&page=' . ($pages - 1) . '#p' . $lastid . '">' . markup_format_text($last->get('subject')) . '</a>';
-			}
-			
-			echo '</td></tr>';
-			}
-		}
-
-		echo '</table><div class="bar"></div>';
+		
 	}
 	
 	/* Admin stuff */
