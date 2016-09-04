@@ -10,7 +10,7 @@ class ControllerBoeken extends Controller
 		$this->view = View::byName('boeken', $this);
 	}
 
-	function run_impl()
+	protected function run_impl()
 	{
 		$config = get_model('DataModelConfiguratie');
 		$webshop_link = $config->get_value('boekcie_webshop_link', '#');
