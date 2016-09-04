@@ -282,6 +282,52 @@
 
 			return $this->model->_rows_to_iters($rows, 'DataIterForumMessage');
 		}
+
+		/**
+		  * Returns whether a thread contains unread messages for the
+		  * current user
+		  *
+		  * @result true if the thread as unread messages, false 
+		  * otherwise
+		  */
+		public function has_unread_messages()
+		{
+			$member_id = get_identity()->get('id', null);
+			
+			if ($member_id === null)
+				return;
+
+			/* Get visit info */
+			$visit = $this->model->get_visit_info($this['forum'], $member_id);
+			
+			/* Check if the thread is unread by last visit */
+			$num_visit_unread = $this->db->query_value('
+					SELECT
+						COUNT(DISTINCT forum_threads.id)
+					FROM
+						forum_threads
+					LEFT JOIN forum_messages ON 
+						(forum_threads.id = forum_messages.thread)
+					WHERE
+						forum_threads.id = ' . $this['id'] . ' AND 
+						forum_messages.date > TIMESTAMP \'' . $visit->get('lastvisit') . '\'');
+			
+			/* Thread isn't older then last visit, return false */
+			if (!$num_visit_unread)
+				return false;
+			
+			/* Check if the thread has been read by session */
+			$read = $this->db->query_value('
+					SELECT
+						1
+					FROM
+						forum_sessionreads
+					WHERE
+						thread = ' . intval($this['id']) . ' AND
+						lid = ' . intval($member_id));
+			
+			return !$read;
+		}
 	}
 
 	class DataIterForumHeader extends DataIter {
@@ -909,7 +955,7 @@
 		  *
 		  * @result an associative array containing author information
 		  */
-		public function get_author_info(DataIterForumMessage $message)
+		public function get_author_info(DataIter $message)
 		{
 			$info = $this->_get_author_info_real($message, 'author');
 			$info_last = $this->_get_author_info_real($message, 'last_author');
@@ -1062,7 +1108,7 @@
 		  *
 		  * @result a #DataIter
 		  */
-		private function _get_visit_info($forumid, $memberid)
+		public function get_visit_info($forumid, $memberid)
 		{
 			$iter = $this->_get_visit_info_real($forumid, $memberid);
 			
@@ -1097,7 +1143,7 @@
 				return;
 			
 			/* Get visit info */
-			$visit = $this->_get_visit_info($forum['id'], $member_data['id']);
+			$visit = $this->get_visit_info($forum['id'], $member_data['id']);
 			
 			/* Check the number of unread threads in the forum by last visit */
 			$num_visit_unread = $this->db->query_value('
@@ -1126,58 +1172,6 @@
 						forum = ' . intval($forum['id']));
 
 			return $num_visit_unread > $num_session_read;
-		}
-		
-		/**
-		  * Returns whether a thread contains unread messages for the
-		  * current user
-		  * @threadid the id of the thread to check unread messages for
-		  *
-		  * @result true if the thread as unread messages, false 
-		  * otherwise
-		  */
-		public function thread_unread($threadid)
-		{
-			$member_id = get_identity()->get('id', null);
-			
-			if ($member_id === null)
-				return;
-
-			$thread = $this->get_thread($threadid);
-			
-			if (!$thread)
-				return;
-
-			/* Get visit info */
-			$visit = $this->_get_visit_info($thread->get('forum'), $member_id);
-			
-			/* Check if the thread is unread by last visit */
-			$num_visit_unread = $this->db->query_value('
-					SELECT
-						COUNT(DISTINCT forum_threads.id)
-					FROM
-						forum_threads
-					LEFT JOIN forum_messages ON 
-						(forum_threads.id = forum_messages.thread)
-					WHERE
-						forum_threads.id = ' . $threadid . ' AND 
-						forum_messages.date > TIMESTAMP \'' . $visit->get('lastvisit') . '\'');
-			
-			/* Thread isn't older then last visit, return false */
-			if (!$num_visit_unread)
-				return false;
-			
-			/* Check if the thread has been read by session */
-			$read = $this->db->query_value('
-					SELECT
-						1
-					FROM
-						forum_sessionreads
-					WHERE
-						thread = ' . intval($threadid) . ' AND
-						lid = ' . intval($member_id));
-			
-			return !$read;
 		}
 		
 		/**
@@ -1269,7 +1263,7 @@
 			if ($member_id === null)
 				return;
 
-			$visit = $this->_get_visit_info($forum_id, $member_id);
+			$visit = $this->get_visit_info($forum_id, $member_id);
 			$this->update_last_visit($forum_id);
 			
 			$visit->set_literal('sessiondate', 'CURRENT_TIMESTAMP');
