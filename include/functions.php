@@ -904,8 +904,8 @@
 	 */
 	function send_mail_with_attachment($to, $subject, $message, $additional_headers, array $attachments)
 	{
-		$fout = popen('sendmail -t -oi', 'w');
-		
+		$fout = popen(ini_get('sendmail_path') . ' -oi', 'w');
+
 		if (!$fout)
 			throw new Exception("Could not open sendmail");
 
