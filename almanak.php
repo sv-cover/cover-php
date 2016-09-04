@@ -14,7 +14,7 @@
 			// If current visitor is the board, show all members in the
 			// database, including those that are no longer a member
 			// and any users that are "deleted" by making them hidden.
-			if (member_in_commissie(COMMISSIE_BESTUUR))
+			if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
 				$this->model->visible_types = array(
 					MEMBER_STATUS_LID,
 					MEMBER_STATUS_LID_ONZICHTBAAR,
@@ -55,8 +55,8 @@
 		
 		public function run_index_status()
 		{
-			if (!member_in_commissie(COMMISSIE_BESTUUR))
-				throw new UnauthorizedException();
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+				throw new UnauthorizedException('Only the Board of Cover is allowed to search by status');
 
 			$status = $_GET['status'];
 			
