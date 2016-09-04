@@ -21,6 +21,11 @@ class LayoutViewHelper
 				'label' => __('Pagina maken')
 			];
 
+			$menus['admin']['submenu'][] = [
+				'url' => 'mailinglijsten.php',
+				'label' => __('Mailinglijsten')
+			];	
+
 			if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
 				get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 				$menus['admin']['submenu'][] = [
@@ -94,7 +99,6 @@ class LayoutViewHelper
 			'label' => __('Leden'),
 			'submenu' => [
 				['url' => 'almanak.php', 'label' => __('Almanak')],
-				['url' => 'mailinglijsten.php', 'label' => __('Mailinglijsten')],
 				['url' => 'https://wiki.svcover.nl/', 'target' => '_blank', 'label' => __('Wiki')],
 				['url' => 'https://sd.svcover.nl/', 'target' => '_blank', 'label' => __('Standaardocumenten')],
 				['url' => 'stickers.php', 'label' => __('Stickerkaart')],
