@@ -131,7 +131,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 			$member = parent::member();
 
 		if ($this->override_committees !== null)
-			$member = new DataIterMember($member->model, $member->get_id(),
+			$member = new DataIterMember($member->model(), $member->get_id(),
 				array_merge($member->data, ['committees' => $this->override_committees]));
 
 		return $member;

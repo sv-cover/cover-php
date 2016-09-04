@@ -356,7 +356,8 @@ class ControllerProfiel extends Controller
 	
 	public function run_privacy(DataIterMember $iter)
 	{
-		if (!$this->policy->user_can_update($iter))
+		if (!$this->policy->user_can_update($iter)
+			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new UnauthorizedException();
 
 		if ($this->_form_is_submitted('privacy' . $iter['id']))
@@ -435,7 +436,7 @@ class ControllerProfiel extends Controller
 	public function run_public(DataIterMember $member)
 	{
 		if (!$this->policy->user_can_read($member))
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('You are not allowed to access this member');
 
 		return $this->view->render_public_tab($member);
 	}

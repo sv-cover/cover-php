@@ -105,7 +105,7 @@ class View
 			'view' => $this,
 			'controller' => $this->controller,
 			'model' => $this->controller ? $this->controller->model() : null,
-			'policy' => $this->controller && $this->controller->model() ? get_policy($this->controller->model()) : null,
+			'policy' => ($this->controller && $this->controller->model()) ? get_policy($this->controller->model()) : null,
 			'global' => [
 				'auth' => get_auth(),
 				'identity' => get_identity(),
@@ -177,12 +177,12 @@ class View
 	public function render_401_unauthorized(UnauthorizedException $e) {
 		header('Status: 401 Unauthorized');
 		header('WWW-Authenticate: FormBased');
-		return $e->getMessage();
+		return '<h1>Unauthorized</h1><pre>' . $e->getMessage() . '</pre>';
 	}
 
 	public function render_404_not_found(NotFoundException $e) {
 		header('Status: 404 Not Found');
-		return $e->getMessage();
+		return '<h1>Not Found</h1><pre>' . $e->getMessage() . '</pre>';
 	}
 
 	public function render($template_file, array $data = array())

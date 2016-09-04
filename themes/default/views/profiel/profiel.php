@@ -33,7 +33,7 @@ class ProfielView extends View
 				// }
 			],
 			'personal' => [
-				'visible' => $this->member_write_permission($iter),
+				'visible' => $this->is_current_member($iter),
 				'label' => __('Lidgegevens')
 				// 'body' => function () use ($model, $iter, $errors, $personal_fields) {
 				// 	$this->render_partial('personal', compact('model', 'iter', 'errors', 'personal_fields'));
