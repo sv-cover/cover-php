@@ -62,4 +62,18 @@
 		<button type="submit" class="button">{{ __('Wijzig wachtwoord') }}</button>
 	</form>
 </section>
+
+<section class="aligned-list-section">
+	<h2>{{ __('Foto') }}</h2>
+	<p>{{ __('Je foto wordt ook gebruikt op deze website, maar ook in de jaarlijkse almanak. Wil je een recentere foto hier hebben? Stuur de beste versie die je hebt in! Ze worden met de hand verwerkt, dus het kan even duren voordat hij aangepast is.') }}</p>
+	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=photo" method="post" enctype="multipart/form-data">
+		{{ html_nonce('photo' ~ iter.id) }}
+		<div>
+			<div class="file-upload-button button">
+				<span>{{ __('Kies nieuwe foto') }}&hellip;</span>
+				<input type="file" name="photo" accept="image/jpeg" title="{{ __('Alleen JPEG-plaatjes mogen.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
+			</div>
+		</div>
+	</form>
+</section>
 {% endblock %}
