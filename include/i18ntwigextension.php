@@ -21,8 +21,10 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('full_name_ignore_privacy', function($member) {
 				return member_full_name($member, IGNORE_PRIVACY);
 			}),
+			new Twig_SimpleFilter('first_name', 'member_first_name'),
 			new Twig_SimpleFilter('period_short', 'agenda_short_period_for_display'),
 			new Twig_SimpleFilter('period', 'agenda_period_for_display'),
+			new Twig_SimpleFilter('date_relative', 'format_date_relative'),
 			new Twig_SimpleFilter('array_filter', 'array_filter'),
 			new Twig_SimpleFilter('vformat', 'vsprintf'),
 			new Twig_SimpleFilter('map', function($iterable, $callback) {
@@ -61,6 +63,7 @@ class I18NTwigExtension extends Twig_Extension
 				if ($count === null) $count = $value;
 				return sprintf(_ngettext($singular, $plural, $count), $value);
 			}, ['variadic' => true]),
+			new Twig_SimpleFunction('__translate_parts', '__translate_parts'),
 			new Twig_SimpleFunction('link_static', 'get_theme_data'),
 			new Twig_SimpleFunction('get_config_value', 'get_config_value'),
 			new Twig_SimpleFunction('get_author_link', 'get_author_link') // used by the forum & weblog

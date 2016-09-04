@@ -45,6 +45,12 @@
 			[null, 400] // size used for the thumbnails below photo and in photo books
 		),
 
+		// Used for forms & XSS prevention. Generate with `openssl rand -base64 64`.
+		'nonce_salt' => null, 
+
+		// Lifetime in seconds.
+		'nonce_lifetime' => 3600 * 12, 
+
 		// For the Website calling the API of Secretary to propose new members
 		'secretary_root' => 'http://localhost:8000/api/',
 		'secretary_user' => 'website',

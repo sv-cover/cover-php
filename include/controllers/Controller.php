@@ -85,6 +85,13 @@
 			}
 		}
 
+		protected function _form_is_submitted($form)
+		{
+			return $_SERVER['REQUEST_METHOD'] == 'POST';
+				// && !empty($_POST['_' . $form . '_nonce'])
+				// && in_array($_POST['_' . $form . '_nonce'], $_SESSION[$form . '_nonce']);
+		}
+
 		final protected function get_content()
 		{
 			throw new LogicException("Controller::get_content is no longer accepted");

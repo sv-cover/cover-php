@@ -57,7 +57,7 @@ class View
 
 	protected $layout;
 
-	public function __construct(Controller $controller, $path = null)
+	public function __construct(Controller $controller = null, $path = null)
 	{
 		// Default $path to @theme so View::render() is at least somewhat useful.
 		if (!$path)
@@ -104,8 +104,8 @@ class View
 		return [
 			'view' => $this,
 			'controller' => $this->controller,
-			'model' => $this->controller->model(),
-			'policy' => $this->controller->model() ? get_policy($this->controller->model()) : null,
+			'model' => $this->controller ? $this->controller->model() : null,
+			'policy' => $this->controller && $this->controller->model() ? get_policy($this->controller->model()) : null,
 			'global' => [
 				'auth' => get_auth(),
 				'identity' => get_identity(),

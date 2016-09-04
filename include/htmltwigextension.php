@@ -21,7 +21,8 @@ class HTMLTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('html_input_submit', [__CLASS__, 'input_submit'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_select_field', [__CLASS__, 'select_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_textarea_field', [__CLASS__, 'textarea_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
-			new Twig_SimpleFunction('html_label', [__CLASS__, 'label'], ['is_variadic' => true, 'is_safe' => ['html']])
+			new Twig_SimpleFunction('html_label', [__CLASS__, 'label'], ['is_variadic' => true, 'is_safe' => ['html']]),
+			new Twig_SimpleFunction('html_nonce', [__CLASS__, 'nonce'], ['is_safe' => ['html']])
 		];
 	}
 
@@ -294,5 +295,10 @@ class HTMLTwigExtension extends Twig_Extension
 		
 		return sprintf('<label for="field-%s" class="%s">%s%s</label>',
 			$field, implode(' ', $classes), $name, $extra_content);
+	}
+
+	static public function nonce($action)
+	{
+		return self::input_hidden('_nonce', nonce_generate($action));
 	}
 }

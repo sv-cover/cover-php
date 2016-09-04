@@ -1,0 +1,22 @@
+{% extends 'tab.twig' %}
+
+{% set active_tab = 'system' %}
+
+{% block tab_content %}
+<section class="aligned-list-section">
+	<h2>{{ __('Zichtbaarheid') }}</h2>
+	<form action="profiel.php?lid={{ iter.id }}&amp;view=system" method="post" class="vertical-form">
+		{{ html_nonce('system' ~ iter.id ) }}
+		<div>
+			{{ html_label(__('Lidmaadschapsstatus'), 'status', errors=errors) }}
+			<div id="field-status" class="radio">
+				{% for type in types %}
+				<label>{{ html_input_radio('type', iter, type) }} {{ view.member_type_to_string(type) }}</label>
+				{% endfor %}
+			</div>
+		</div>
+
+		<button type="submit" class="button">{{ __('Wijzig status') }}</button>
+	</form>
+</section>
+{% endblock %}

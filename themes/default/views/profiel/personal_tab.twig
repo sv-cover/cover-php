@@ -1,0 +1,30 @@
+{% extends 'tab.twig' %}
+
+{% set active_tab = 'personal' %}
+
+{% block tab_content %}
+<section class="aligned-list-section">
+	<h2>{{ __('Almanakgegevens') }}</h2>
+	<form action="profiel.php?lid={{ iter.id }}&amp;view=personal" method="post" class="vertical-form">
+		{{ html_nonce('personal' ~ iter.id) }}
+		{% for field in view.personal_fields %}
+			<div>
+				{{ html_label(field.label, field.name, errors=errors) }}
+				{% if field.read_only is not defined %}
+				{{ html_input_text(field.name, iter, errors=errors) }}
+				{% else %}
+				<span class="read-only">
+					{% if field.name == 'geboortedatum' %}
+						{{ iter[field.name]|date('d-m-Y') }}
+					{% else %}
+						{{ iter[field.name] }}
+					{% endif %}
+				</span>
+				{% endif %}
+			</div>
+		{% endfor %}
+
+		<button type="submit" class="button">{{ __('Opslaan') }}</button>
+	</form>
+</section>
+{% endblock %}

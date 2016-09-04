@@ -29,6 +29,21 @@
 		{
 			return sprintf('profiel.php?lid=%d', $this->get_id());
 		}
+
+		public function has_photo()
+		{
+			return $this->model->has_photo($this);
+		}
+
+		public function get_photo()
+		{
+			return $this->model->get_photo($this);
+		}
+
+		public function get_photo_mtime()
+		{
+			return $this->model->get_photo_mtime($this);
+		}
 	}
 
 	class DataModelMember extends DataModel implements SearchProvider

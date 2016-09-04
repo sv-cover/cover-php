@@ -369,3 +369,33 @@ function get_identity()
 
 	return $identity;
 }
+
+function nonce_tick()
+{
+	$nonce_life = get_config_value('nonce_lifetime', 12 * 3600); // 12 hours
+	return ceil(time() / ($nonce_life / 2));
+}
+
+function nonce_generate($action)
+{
+	$session = get_auth()->get_session();
+
+	$fields = [
+		nonce_tick(),
+		$action,
+		get_identity()->get('id'),
+		$session ? $session->get('id') : ''
+	];
+
+	$salt = get_config_value('nonce_salt', null);
+
+	if ($salt === null)
+		throw new RuntimeException('No nonce_salt configured in config.inc');
+
+	return hash_hmac('sha1', implode(';', $fields), $salt);
+}
+
+function nonce_verify($nonce, $action)
+{
+	return hash_equals($nonce, nonce_generate($action));
+}

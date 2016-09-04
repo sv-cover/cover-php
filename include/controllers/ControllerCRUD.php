@@ -58,13 +58,6 @@ class ControllerCRUD extends Controller
 		return $this->model->get();
 	}
 
-	protected function _form_is_submitted($form)
-	{
-		return $_SERVER['REQUEST_METHOD'] == 'POST';
-			// && !empty($_POST['_' . $form . '_nonce'])
-			// && in_array($_POST['_' . $form . '_nonce'], $_SESSION[$form . '_nonce']);
-	}
-
 	protected function _create_view($view)
 	{
 		return View::byName($view, $this);

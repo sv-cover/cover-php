@@ -2,14 +2,21 @@
 	/**
 	  * This class provides access to a data row in a #DataModel
 	  */
-	class DataIter implements JsonSerializable, ArrayAccess {
-		var $model = null; /** The model the iter belongs to */
-		var $data = null; /** The data of the iter */
-		var $_id = 0; /** The id of the iter */
-		var $changes = null; /** Array containing the fields that have changed */
-		var $literals = null; /** Array containing the fields that should be used literally */
-		var $db = null;
-		var $namespace = '';
+	class DataIter implements JsonSerializable, ArrayAccess
+	{
+		protected $model = null; /** The model the iter belongs to */
+		
+		public $data = null; /** The data of the iter */
+		
+		private $_id = 0; /** The id of the iter */
+		
+		private $changes = null; /** Array containing the fields that have changed */
+		
+		private $literals = null; /** Array containing the fields that should be used literally */
+		
+		protected $db = null;
+
+		private $namespace = '';
 
 		/**
 		 * Clones a DataIter. Useful for transforming one iter to another.
@@ -286,7 +293,7 @@
 
 		public function offsetExists($offset)
 		{
-			return $this->has_field($offset);
+			return $this->has_field($offset) || $this->has_getter($offset);
 		}
 
 		public function offsetUnset($offset)

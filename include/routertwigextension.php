@@ -21,7 +21,7 @@ class RouterTwigExtension extends Twig_Extension
 				}
 			],
 			'profiel' => [
-				'read' => 'profiel.php?lid_id=$member[id]'
+				'read' => 'profiel.php?lid=$member[id]'
 			],
 			'editable' => [
 				'update' => 'show.php?view=update&id=$editable[id]'

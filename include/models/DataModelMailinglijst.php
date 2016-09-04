@@ -469,14 +469,15 @@ class DataModelMailinglijst extends DataModel
 
 	public function member_can_edit(DataIterMailinglijst $lijst)
 	{
-		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_EASY)
-			|| get_identity()->member_in_committee($lijst->get('commissie'));
+		trigger_error('DataModelMailinglijst::member_can_edit is deprecated in favor of using the policy', E_USER_WARNING);
+
+		return get_policy($this)->user_can_update($lijst);
 	}
 
 	public function member_can_subscribe(DataIterMailinglijst $lijst)
 	{
+		trigger_error('DataModelMailinglijst::member_can_subscribe is deprecated in favor of using the policy', E_USER_WARNING);
+
 		if ($this->member_can_edit($lijst))
 			return true;
 
@@ -493,6 +494,8 @@ class DataModelMailinglijst extends DataModel
 
 	public function member_can_unsubscribe(DataIterMailinglijst $lijst)
 	{
+		trigger_error('DataModelMailinglijst::member_can_unsubscribe is deprecated in favor of using the policy', E_USER_WARNING);
+
 		if ($this->member_can_edit($lijst))
 			return true;
 

@@ -615,6 +615,9 @@
 
 	function format_date_relative($time)
 	{
+		if (!is_int($time) && !ctype_digit($time))
+			$time = strtotime($time);
+		
 		$diff = time() - $time;
 
 		if ($diff == 0)
