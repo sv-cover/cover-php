@@ -74,7 +74,7 @@
 		</div> <!-- .world -->
 
 		{% if view.layout.has_alert %}
-			<script>alert({{ view.layout.pop_alert|json_encode }})</script>
+			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>
 		{% endif %}
 		
 		<!-- Google Analytics -->
