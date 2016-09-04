@@ -18,7 +18,7 @@
 			<tr>
 				<td class="title">{{ __('Zichtbaarheid') }}:</td>
 				<td colspan="2">
-					<ul class="nav-tabs">
+					<ul class="nav-tabs horizontal">
 						<li><a href="?status={{ constant('MEMBER_STATUS_LID') }}">{{ __('Lid') }}</a></li>
 						<li><a href="?status={{ constant('MEMBER_STATUS_LID_ONZICHTBAAR') }}">{{ __('Lid (verborgen)') }}</a></li>
 						<li><a href="?status={{ constant('MEMBER_STATUS_LID_AF') }}">{{ __('Lid af') }}</a></li>
@@ -30,7 +30,7 @@
 			{% endif %}
 			<tr>
 				<td class="alphabet" colspan="3">
-					<ol class="nav-tabs">
+					<ol class="nav-tabs horizontal">
 					{% for jaar in model.get_distinct_years if jaar != '' %}
 						<li class="{% if params.year == jaar %}active{% endif %}"><a href="?search_year={{ jaar }}">{{ jaar }}</a></li>
 					{% endfor %}
