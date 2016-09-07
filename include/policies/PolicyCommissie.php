@@ -6,7 +6,8 @@ class PolicyCommissie implements Policy
 {
 	public function user_can_create()
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
 	}
 
 	public function user_can_read(DataIter $committee)
@@ -16,11 +17,13 @@ class PolicyCommissie implements Policy
 
 	public function user_can_update(DataIter $committee)
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
 	}
 
 	public function user_can_delete(DataIter $committee)
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
 	}
 }
