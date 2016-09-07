@@ -445,20 +445,20 @@
 		  * in a certain forum by permissions of a commissie he's in
 		  * @forumid the forum to check the permissions for
 		  * @acl the permission bitmask to check for
-		  * @memberid the member to check the permissions for
+		  * @member_id the member to check the permissions for
 		  * @member_info optional; the member info of the member (only
 		  * there for performance)
 		  *
 		  * @result true if member has the correct permissions by
 		  * the commissies he's in, false otherwise
 		  */
-		protected function _check_acl_commissies($forumid, $acl, $memberid, $member_info = null)
+		protected function _check_acl_commissies($forumid, $acl, $member_id, $member_info = null)
 		{
 			if ($member_info)
 				$commissies = $member_info['committees'];
 			else {
 				$member_model = get_model('DataModelMember');
-				$commissies = $member_model->get_commissies($memberid);
+				$commissies = $member_model->get_commissies($member_id);
 			}
 			
 			foreach ($commissies as $commissie) {
@@ -474,12 +474,12 @@
 		  * in a certain forum by permissions of a group he's in
 		  * @forumid the forum to check the permissions for
 		  * @acl the permission bitmask to check for 
-		  * @memberid the member to check the permissions for
+		  * @member_id the member to check the permissions for
 		  *
 		  * @result true if member has the correct permissions by
 		  * the groups he's in, false otherwise
 		  */		
-		protected function _check_acl_group($forumid, $acl, $memberid)
+		protected function _check_acl_group($forumid, $acl, $member_id)
 		{
 			$num = $this->db->query_value('
 					SELECT 
@@ -494,7 +494,7 @@
 						forum_acl.uid = forum_group_member.guid AND
 						(forum_group_member.type = -1 OR (
 						(forum_group_member.type = 1 AND
-						forum_group_member.uid = ' . intval($memberid) . ')))');
+						forum_group_member.uid = ' . intval($member_id) . ')))');
 			
 			return $num > 0;
 		}
@@ -516,21 +516,21 @@
 		  * @forumid the forum to check the permissions for
 		  * @acl the permission bitmask to check for (a value of -1
 		  * always succeeds)
-		  * @memberid optional; the member to check the permissions for 
+		  * @member_id optional; the member to check the permissions for 
 		  * (or -1 to check for the currently logged in member, which
 		  * is also the default)
 		  *
 		  * @result true if member has the correct permissions, false 
 		  * otherwise
 		  */
-		public function check_acl_member($forumid, $acl, $memberid = -1)
+		public function check_acl_member($forumid, $acl, $member_id = -1)
 		{
 			if ($acl == -1)
 				return true;
 
 			$member_info = null;
 
-			if ($memberid == -1) {
+			if ($member_id == -1) {
 				if (get_auth()->logged_in())
 					$member_id = get_identity()->get('id');
 				elseif ($acl & (self::ACL_WRITE | self::ACL_REPLY | self::ACL_POLL))
@@ -574,34 +574,34 @@
 		  * @forumid the forum to check the permissions for
 		  * @acl the permission bitmask to check for (a value of -1
 		  * always succeeds)
-		  * @memberid optional; the member to check the permissions for 
+		  * @member_id optional; the member to check the permissions for 
 		  * (or -1 to check for the currently logged in member, which
 		  * is also the default)
 		  *
 		  * @result true if member has the correct permissions, false
 		  * otherwise
 		  */
-		public function check_acl($forumid, $acl, $memberid = -1)
+		public function check_acl($forumid, $acl, $member_id = -1)
 		{
-			if ($this->check_acl_member($forumid, $acl, $memberid))
+			if ($this->check_acl_member($forumid, $acl, $member_id))
 				return true;
 
-			if ($memberid == -1 && !get_auth()->logged_in() && ($acl & (self::ACL_WRITE | self::ACL_REPLY | self::ACL_POLL)))
+			if ($member_id == -1 && !get_auth()->logged_in() && ($acl & (self::ACL_WRITE | self::ACL_REPLY | self::ACL_POLL)))
 				return false;
 
-			if ($memberid == -1) {
+			if ($member_id == -1) {
 				$member_data = logged_in();
-				$memberid = $member_data['id'];
+				$member_id = $member_data['id'];
 			} else {
 				$member_data = null;
 			}
 			
 			/* Check commissie perms */
-			if ($this->_check_acl_commissies($forumid, $acl, $memberid, $member_data))
+			if ($this->_check_acl_commissies($forumid, $acl, $member_id, $member_data))
 				return true;
 			
 			/* Check forum group perms */
-			if ($this->_check_acl_group($forumid, $acl, $memberid, $member_data))
+			if ($this->_check_acl_group($forumid, $acl, $member_id, $member_data))
 				return true;			
 			
 			return false;
@@ -1056,11 +1056,11 @@
 		/**
 		  * Get visit info
 		  * @forumid the id of the forum to get visit info for
-		  * @memberid the id of the member to get visit info for
+		  * @member_id the id of the member to get visit info for
 		  *
 		  * @result a #DataIter or null if no visit info could be found
 		  */
-		private function _get_visit_info_real($forumid, $memberid)
+		private function _get_visit_info_real($forumid, $member_id)
 		{
 			$row = $this->db->query_first('
 					SELECT
@@ -1069,7 +1069,7 @@
 						forum_visits
 					WHERE
 						forum = ' . intval($forumid) . ' AND
-						lid = ' . intval($memberid) . '
+						lid = ' . intval($member_id) . '
 					LIMIT
 						1');
 			
@@ -1104,20 +1104,20 @@
 		  * Get visit info. Creates a visit info entry if none exists
 		  * yet
 		  * @forumid the id of the forum to get visit info for
-		  * @memberid the id of the member to get visit info for
+		  * @member_id the id of the member to get visit info for
 		  *
 		  * @result a #DataIter
 		  */
-		public function get_visit_info($forumid, $memberid)
+		public function get_visit_info($forumid, $member_id)
 		{
-			$iter = $this->_get_visit_info_real($forumid, $memberid);
+			$iter = $this->_get_visit_info_real($forumid, $member_id);
 			
 			if (!$iter) {
 				$iter = new $this->dataiter($this, null, array(
 						'forum' => intval($forumid),
-						'lid' => intval($memberid)));
+						'lid' => intval($member_id)));
 				$this->_insert('forum_visits', $iter);
-				$iter = $this->_get_visit_info_real($forumid, $memberid);
+				$iter = $this->_get_visit_info_real($forumid, $member_id);
 			}
 
 			return $iter;
