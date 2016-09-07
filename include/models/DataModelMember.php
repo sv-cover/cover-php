@@ -92,6 +92,7 @@
 
 			$iter = $this->_row_to_iter($row);
 
+			// TODO: Rewrite this behaviour to return actual committee dataiters instead of id's.
 			$iter->data['committees'] = $this->get_commissies($id);
 
 			return $iter;
