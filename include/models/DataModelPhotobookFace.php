@@ -1,9 +1,9 @@
 <?php
 
 require_once 'include/data/DataModel.php';
-require_once 'include/models/DataModelFotoboek.php';
+require_once 'include/models/DataModelPhotobook.php';
 
-class DataIterFace extends DataIter
+class DataIterPhotobookFace extends DataIter
 {
 	public function get_position()
 	{
@@ -65,7 +65,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 			$conditions[] = sprintf('fotos.id IN (SELECT foto_id FROM foto_faces WHERE lid_id = %d AND deleted = FALSE)', $member_id);
 		
 		// Find which photos should not be shown for this set of members
-		$hidden = get_model('DataModelFotoboekPrivacy')->find(sprintf('lid_id IN(%s)', implode(',', $this->get('member_ids'))));
+		$hidden = get_model('DataModelPhotobookPrivacy')->find(sprintf('lid_id IN(%s)', implode(',', $this->get('member_ids'))));
 		
 		// Also grab the ids of all the photos which should actually be hidden (e.g. are not of the logged in member)
 		$excluded_ids = array_filter(array_map(function($iter) { return logged_in('id') != $iter->get('lid_id') ? $iter->get('foto_id') : false; }, $hidden));
@@ -82,7 +82,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 	public function get_read_status()
 	{
 		// FIXME: Implement this and proper tracking of the last visit moment.
-		return DataModelFotoboek::READ_STATUS_READ;
+		return DataModelPhotobook::READ_STATUS_READ;
 	}
 
 	/**
@@ -94,9 +94,9 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 	}
 }
 
-class DataModelFotoboekFaces extends DataModel
+class DataModelPhotobookFace extends DataModel
 {
-	public $dataiter = 'DataIterFace';
+	public $dataiter = 'DataIterPhotobookFace';
 
 	public function __construct($db)
 	{
@@ -107,7 +107,7 @@ class DataModelFotoboekFaces extends DataModel
 	 * Find all tags/faces for a given photo.
 	 * 
 	 * @var DataIterPhoto $photo
-	 * @return DataIterFace[] faces
+	 * @return DataIterPhotobookFace[] faces
 	 */
 	public function get_for_photo(DataIterPhoto $photo)
 	{
@@ -126,7 +126,7 @@ class DataModelFotoboekFaces extends DataModel
 			assert('$member instanceof DataIterMember');
 
 		return new DataIterFacesPhotobook(
-				get_model('DataModelFotoboek'), -1, array(
+				get_model('DataModelPhotobook'), -1, array(
 				'titel' => sprintf(__('Foto\'s van %s'),
 					implode(__(' en '), array_map(function($member) { return member_first_name($member); }, $members))),
 				'num_books' => 0,

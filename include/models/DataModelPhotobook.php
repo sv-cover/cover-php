@@ -49,17 +49,17 @@
 
 		public function get_faces()
 		{
-			return get_model('DataModelFotoboekFaces')->get_for_photo($this);
+			return get_model('DataModelPhotobookFace')->get_for_photo($this);
 		}
 
 		public function get_comments()
 		{
-			return get_model('DataModelFotoboekReacties')->get_for_photo($this);
+			return get_model('DataModelPhotobookReactie')->get_for_photo($this);
 		}
 
 		public function get_likes()
 		{
-			return get_model('DataModelFotoboekLikes')->get_for_photo($this);
+			return get_model('DataModelPhotobookLike')->get_for_photo($this);
 		}
 
 		public function compute_size()
@@ -235,7 +235,7 @@
 
 	class DataIterPhotobook extends DataIter implements SearchResult
 	{
-		private $_photos = null; // cache the results of DataModelFotoboek::get_photos for this book.
+		private $_photos = null; // cache the results of DataModelPhotobook::get_photos for this book.
 
 		public function get_books($metadata = null)
 		{
@@ -357,7 +357,7 @@
 			if (!count($photos))
 				return null;
 
-			$likes_model = get_model("DataModelFotoboekLikes");
+			$likes_model = get_model("DataModelPhotobookLike");
 			$likes = $likes_model->count_for_photos($photos);
 
 			usort($photos, function(DataIterPhoto $left, DataIterPhoto $right) use ($likes) {
@@ -375,8 +375,8 @@
 			$books = parent::get_books($metadata);
 
 			if (logged_in()) {
-				$books[] = get_model('DataModelFotoboekLikes')->get_book(logged_in_member());
-				$books[] = get_model('DataModelFotoboekFaces')->get_book(array(logged_in_member()));
+				$books[] = get_model('DataModelPhotobookLike')->get_book(logged_in_member());
+				$books[] = get_model('DataModelPhotobookFace')->get_book(array(logged_in_member()));
 			}
 			
 			return $books;
@@ -406,7 +406,7 @@
 	/**
 	  * A class implementing photo data
 	  */
-	class DataModelFotoboek extends DataModel
+	class DataModelPhotobook extends DataModel
 	{
 		const VISIBILITY_PUBLIC = 0;
 		const VISIBILITY_MEMBERS = 1;
@@ -425,6 +425,11 @@
 		public function __construct($db)
 		{
 			parent::__construct($db, 'fotos');
+		}
+
+		public function new_photobook($row = array())
+		{
+			return parent::new_iter($row, 'DataIterPhotobook');
 		}
 		
 		/**

@@ -2,7 +2,7 @@
 
 require_once 'include/data/DataModel.php';
 
-class DataModelFotoboekPrivacy extends DataModel
+class DataModelPhotobookPrivacy extends DataModel
 {
 	protected $auto_increment = false;
 

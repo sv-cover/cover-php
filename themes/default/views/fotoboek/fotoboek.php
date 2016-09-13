@@ -45,7 +45,7 @@
 
 		public function render_photo(DataIterPhotobook $book, DataIterPhoto $photo)
 		{
-			$is_liked = get_auth()->logged_in() && get_model('DataModelFotoboekLikes')->is_liked($photo, get_identity()->member()->id);
+			$is_liked = get_auth()->logged_in() && get_model('DataModelPhotobookLike')->is_liked($photo, get_identity()->member()->id);
 
 			return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
 		}
@@ -114,10 +114,10 @@
 		public function visibility_options()
 		{
 			return array(
-				DataModelFotoboek::VISIBILITY_PUBLIC => __('Publiek'),
-				DataModelFotoboek::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
-				DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
-				DataModelFotoboek::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
+				DataModelPhotobook::VISIBILITY_PUBLIC => __('Publiek'),
+				DataModelPhotobook::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
+				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
+				DataModelPhotobook::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
 			);
 		}
 
@@ -203,13 +203,13 @@
 
 		public function recent_comments($count)
 		{
-			$model = get_model('DataModelFotoboekReacties');
+			$model = get_model('DataModelPhotobookReactie');
 			return $model->get_latest($count);
 		}
 
 		public function random_photos($count)
 		{
-			$model = get_model('DataModelFotoboek');
+			$model = get_model('DataModelPhotobook');
 			return $model->get_random_photos($count);
 		}
 	}

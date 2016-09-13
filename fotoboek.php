@@ -18,14 +18,14 @@
 		{
 			$this->photo = $photo;
 
-			$this->model = get_model('DataModelFotoboekReacties');
+			$this->model = get_model('DataModelPhotobookReactie');
 
 			$this->view = View::byName('fotoboekreacties', $this);
 		}
 
-		protected function _create_iter()
+		public function new_iter()
 		{
-			$iter = parent::_create_iter();
+			$iter = parent::new_iter();
 			$iter->set('foto', $this->photo->get_id());
 			$iter->set('auteur', get_identity()->get('id'));
 			return $iter;
@@ -84,7 +84,7 @@
 		{
 			$this->photo = $photo;
 
-			$this->model = get_model('DataModelFotoboekLikes');
+			$this->model = get_model('DataModelPhotobookLike');
 
 			$this->view = new View($this);
 		}
@@ -115,7 +115,7 @@
 		{
 			$this->photo = $photo;
 
-			$this->model = get_model('DataModelFotoboekFaces');
+			$this->model = get_model('DataModelPhotobookFace');
 
 			$this->view = new CRUDView($this);
 		}
@@ -165,7 +165,7 @@
 		{
 			$this->photo = $photo;
 
-			$this->model = get_model('DataModelFotoboekPrivacy');
+			$this->model = get_model('DataModelPhotobookPrivacy');
 
 			$this->view = View::byName('fotoboek', $this);
 		}
@@ -203,7 +203,7 @@
 
 		public function __construct()
 		{
-			$this->model = get_model('DataModelFotoboek');
+			$this->model = get_model('DataModelPhotobook');
 
 			$this->policy = get_policy($this->model);
 
@@ -255,10 +255,10 @@
 		public function _check_visibility($name, $value)
 		{
 			return in_array($value, array(
-				DataModelFotoboek::VISIBILITY_PUBLIC,
-				DataModelFotoboek::VISIBILITY_MEMBERS,
-				DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS,
-				DataModelFotoboek::VISIBILITY_PHOTOCEE
+				DataModelPhotobook::VISIBILITY_PUBLIC,
+				DataModelPhotobook::VISIBILITY_MEMBERS,
+				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS,
+				DataModelPhotobook::VISIBILITY_PHOTOCEE
 			)) ? $value : false;
 		}
 		
@@ -516,7 +516,7 @@
 					$this->model->update_book($book);
 
 					// Update faces
-					$face_model = get_model('DataModelFotoboekFaces');
+					$face_model = get_model('DataModelPhotobookFace');
 					$face_model->refresh_faces($new_photos);
 				}
 				
@@ -773,7 +773,7 @@
 			}
 			// Likes book page
 			elseif (isset($_GET['book']) && $_GET['book'] == 'liked') {
-				$book = get_model('DataModelFotoboekLikes')->get_book(get_identity()->member());
+				$book = get_model('DataModelPhotobookLike')->get_book(get_identity()->member());
 			}
 			// All photos who a certain member is (or mutiple are) tagged in page
 			elseif (isset($_GET['book']) && preg_match('/^member_(\d+(?:_\d+)*)$/', $_GET['book'], $match)) {
@@ -782,7 +782,7 @@
 				foreach (explode('_', $match[1]) as $member_id)
 					$members[] = get_model('DataModelMember')->get_iter($member_id);
 
-				$book = get_model('DataModelFotoboekFaces')->get_book($members);
+				$book = get_model('DataModelPhotobookFace')->get_book($members);
 			}
 			// If there is a photo, then use the book of that one
 			elseif ($photo) {

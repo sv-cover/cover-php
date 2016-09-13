@@ -2,9 +2,9 @@
 
 require_once 'include/member.php';
 
-class PolicyFotoboek implements Policy
+class PolicyPhotobook implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $book)
 	{
 		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE);
 	}
@@ -37,7 +37,7 @@ class PolicyFotoboek implements Policy
 			throw new RuntimeException('$book not an instance of DataIterPhotobook');
 		
 		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE)
-			&& ctype_digit((string) $book->get_id())
+			&& ctype_digit((string) $book->get_id()) // test whether this isn't a special book, such as the Favorites or Faces albums which are generated
 			&& $book->get_id() > 0;
 	}
 
@@ -52,15 +52,15 @@ class PolicyFotoboek implements Policy
 	public function get_access_level()
 	{
 		if (get_identity()->member_in_committee(COMMISSIE_FOTOCIE))
-			return DataModelFotoboek::VISIBILITY_PHOTOCEE;
+			return DataModelPhotobook::VISIBILITY_PHOTOCEE;
 
 		if (get_identity()->member_in_committee())
-			return DataModelFotoboek::VISIBILITY_ACTIVE_MEMBERS;
+			return DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS;
 
 		if (get_identity()->member_is_active())
-			return DataModelFotoboek::VISIBILITY_MEMBERS;
+			return DataModelPhotobook::VISIBILITY_MEMBERS;
 
 		else
-			return DataModelFotoboek::VISIBILITY_PUBLIC;
+			return DataModelPhotobook::VISIBILITY_PUBLIC;
 	}
 }

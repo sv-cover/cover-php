@@ -30,7 +30,7 @@
 			{% endif %}
 		</nav>
 		
-		<div id="photo" data-id="{{ photo.id }}" {%- if user_can_create global.models.FotoboekFaces %} data-create-action="{{ controller.faces_controller.link_to_create }}"{% endif %}>
+		<div id="photo" data-id="{{ photo.id }}" {%- if user_can_create controller.faces_controller.new_iter %} data-create-action="{{ controller.faces_controller.link_to_create }}"{% endif %}>
 			<figure class="full-size-photo {{ photo.orientation }}">
 				<img
 					src="{{ photo.get_url(1600, 1600) }}"
@@ -113,7 +113,7 @@
 
 		{% import _self as photo_macros %}
 
-		{% if photo.faces|user_can_read|length > 0 or user_can_create global.models.FotoboekFaces %}
+		{% if photo.faces|user_can_read|length > 0 or user_can_create controller.faces_controller.new_iter %}
 			<p class="photo-faces" data-template-format="{{ {
 				intro: __('Een foto met %s.'),
 				unknown_sg: __('%d onbekend gezicht'),
@@ -123,7 +123,7 @@
 				{% if photo.faces|user_can_read|length > 0 %}
 					{{ __('Een foto met %s.')|format(photo.faces|user_can_read|map_macro('photo_macros.format_face_label')|human_join(','))|raw }}
 				{% endif %}
-				{% if user_can_create global.models.FotoboekFaces %}
+				{% if user_can_create controller.faces_controller.new_iter %}
 					<span class="toggle tag-faces-toggle"><input id="tagging-toggle" type="checkbox"><label for="tagging-toggle">{{ __('Tag gezichten') }}</label></span>
 				{% endif %}
 			</p>

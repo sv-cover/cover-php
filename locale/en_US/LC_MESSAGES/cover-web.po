@@ -194,7 +194,7 @@ msgstr ""
 msgid "Zichtbaarheid foto"
 msgstr "Visibility of photo"
 
-#: fotoboek.php:224 include/models/DataModelFotoboek.php:485
+#: fotoboek.php:224 include/models/DataModelPhotobook.php:485
 #: themes/default/views/fotoboek/_books_backup.phtml:36
 #: themes/default/views/fotoboek/add_photos.phtml:1
 #: themes/default/views/fotoboek/book_not_found.phtml:1
@@ -550,17 +550,17 @@ msgstr "Committee"
 msgid "Groep"
 msgstr "Group"
 
-#: include/models/DataModelFotoboekFaces.php:130
+#: include/models/DataModelPhotobookFace.php:130
 #: themes/default/views/profiel/_public.phtml:42
 #, php-format
 msgid "Foto's van %s"
 msgstr "Photos of %s"
 
-#: include/models/DataModelFotoboekFaces.php:131
+#: include/models/DataModelPhotobookFace.php:131
 msgid " en "
 msgstr " and "
 
-#: include/models/DataModelFotoboekLikes.php:127
+#: include/models/DataModelPhotobookLike.php:127
 msgid "Favoriete foto's"
 msgstr "Liked photos"
 

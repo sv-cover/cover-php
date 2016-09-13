@@ -209,7 +209,7 @@ function find_path($model, DataIterPhoto $photo, array &$tried = array())
 	return null;
 }
 
-$photo_model = get_model('DataModelFotoboek');
+$photo_model = get_model('DataModelPhotobook');
 
 $photos = $photo_model->find('filepath IS NULL');
 

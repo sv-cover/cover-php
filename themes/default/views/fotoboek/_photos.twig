@@ -1,9 +1,9 @@
-{% set likes = global.models.FotoboekLikes.count_for_photos(photos) %}
-{% set my_likes = global.auth.logged_in() ? global.models.FotoboekLikes.get_for_lid(global.identity.member) : [] %}
+{% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
+{% set my_likes = global.auth.logged_in() ? global.models.PhotobookLike.get_for_lid(global.identity.member) : [] %}
 
 {% set visibility = [] %}
 {% if book is instance_of('DataIterFacesPhotobook') %}
-	{% set visibility = global.models.FotoboekPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
+	{% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
 {% endif %}
 
 {% macro classnames(photo) %}

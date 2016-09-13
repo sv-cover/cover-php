@@ -5,7 +5,7 @@ chdir(dirname(__FILE__) . '/..');
 require_once 'include/init.php';
 require_once 'include/terminal.php';
 
-$photo_model = get_model('DataModelFotoboek');
+$photo_model = get_model('DataModelPhotobook');
 
 $options = array('force' => false, 'recursive' => false);
 

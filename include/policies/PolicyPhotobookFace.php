@@ -2,9 +2,9 @@
 
 require_once 'include/member.php';
 
-class PolicyFotoboekFaces implements Policy
+class PolicyPhotobookFace implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $face)
 	{
 		return get_auth()->logged_in();
 	}

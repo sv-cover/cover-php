@@ -1,7 +1,7 @@
 <?php
 require_once 'include/data/DataModel.php';
 
-class DataIterReactie extends DataIter
+class DataIterPhotobookReactie extends DataIter
 {
 	public function get_liked_by()
 	{
@@ -45,9 +45,9 @@ class DataIterReactie extends DataIter
 	}
 } 
 
-class DataModelFotoboekReacties extends DataModel
+class DataModelPhotobookReactie extends DataModel
 {
-	public $dataiter = 'DataIterReactie';
+	public $dataiter = 'DataIterPhotobookReactie';
 
 	public function __construct($db)
 	{

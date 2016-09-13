@@ -1,6 +1,6 @@
 <?php
 require_once 'include/data/DataModel.php';
-require_once 'include/models/DataModelFotoboek.php';
+require_once 'include/models/DataModelPhotobook.php';
 
 class DataIterLikedPhotobook extends DataIterPhotobook
 {
@@ -20,7 +20,7 @@ class DataIterLikedPhotobook extends DataIterPhotobook
 	}
 }
 
-class DataModelFotoboekLikes extends DataModel
+class DataModelPhotobookLike extends DataModel
 {
 	public function __construct($db)
 	{
@@ -123,7 +123,7 @@ class DataModelFotoboekLikes extends DataModel
 	{
 		$favorites = array_keys($this->get_for_lid($member));
 
-		return new DataIterLikedPhotobook(get_model('DataModelFotoboek'), -1, array(
+		return new DataIterLikedPhotobook(get_model('DataModelPhotobook'), -1, array(
 			'titel' => __('Favoriete foto\'s'),
 			'has_photos' => count($favorites) > 0,
 			'num_photos' => count($favorites),

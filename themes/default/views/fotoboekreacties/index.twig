@@ -6,10 +6,11 @@
 			{{ include('@theme/fotoboekreacties/_comment.twig', {iter: comment}) }}
 		{% endfor %}
 	{% endif %}
-
-	{% if user_can_create global.models.FotoboekReacties %}
+	
+	{% set new_reactie = controller.new_iter({auteur: global.identity.get('id', null) }) %}
+	{% if user_can_create new_reactie %}
 		{{ include('@theme/fotoboekreacties/_form.twig', {
-			iter: global.models.FotoboekReacties.create_iter({auteur: global.identity.member.id}),
+			iter: new_reactie,
 			errors: []
 		}) }}
 	{% endif %}
