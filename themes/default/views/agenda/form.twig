@@ -11,7 +11,11 @@
 {% endif %}
 
 <form class="vertical-form" name="agenda_form" action="{{ view.get_form_action(iter) }}" method="post">
-	{{ html_input_hidden('submagenda', 'yes') }}
+	{% if iter.has_id %}
+		{{ html_nonce('update', iter) }}
+	{% else %}
+		{{ html_nonce('create') }}
+	{% endif %}
 	
 	<div>
 		{{ html_label(__('Kop'), 'kop', errors=errors, required=true) }}

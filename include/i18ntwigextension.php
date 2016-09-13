@@ -36,11 +36,9 @@ class I18NTwigExtension extends Twig_Extension
 			}, ['needs_context' => true]),
 			new Twig_SimpleFilter('human_join', 'implode_human'),
 			new Twig_SimpleFilter('human_file_size', 'human_file_size'),
-			new Twig_SimpleFilter('select', function($iters, $property) {
-				return array_map(function($iter) use ($property) {
-					return $iter->has($property) ? $iter->get($property) : null;
-				}, $iters);
-			}),
+			new Twig_SimpleFilter('flip', 'array_flip'),
+			new Twig_SimpleFilter('values', 'array_values'),
+			new Twig_SimpleFilter('select', 'array_select'),
 			new Twig_SimpleFilter('group_by', function($iters, $property) {
 				$groups = [];
 

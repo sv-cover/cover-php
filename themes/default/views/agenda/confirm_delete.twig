@@ -3,9 +3,10 @@
 {% block title __('Agendapunt verwijderen') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1><?=__('Agendapunt verwijderen') ?></h1>
+<h1>{{ __('Agendapunt verwijderen') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ controller.link_to_delete(iter) }}" class="vertical-form">
+		{{ html_nonce('delete', iter) }}
 		<p>{{ __('Weet je heel zeker dat je het agendapunt <em>%s</em> wil verwijderen?')|format(iter.kop|e('html'))|raw }}</p>
 		<div>
 			<button type="submit" class="button">{{ __('Verwijder agendapunt')  }}</button>

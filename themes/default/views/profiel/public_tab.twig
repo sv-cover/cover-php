@@ -12,7 +12,7 @@
 	
 	{% if is_current_user %}
 	<p class="hint">
-		{{ __('Verander wie deze gegevens kunnen zien in het <a href="%s">privacy tabblad</a>.')|format('profiel.php?id=' ~ iter.id ~ '&amp;view=privacy')|raw }}</p>
+		{{ __('Verander wie deze gegevens kunnen zien in het <a href="%s">privacy tabblad</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}</p>
 	{% endif %}
 	
 	<dl class="profile">

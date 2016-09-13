@@ -22,7 +22,7 @@ class HTMLTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('html_select_field', [__CLASS__, 'select_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_textarea_field', [__CLASS__, 'textarea_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_label', [__CLASS__, 'label'], ['is_variadic' => true, 'is_safe' => ['html']]),
-			new Twig_SimpleFunction('html_nonce', [__CLASS__, 'nonce'], ['is_safe' => ['html']])
+			new Twig_SimpleFunction('html_nonce', [__CLASS__, 'nonce'], ['is_variadic' => true, 'is_safe' => ['html']])
 		];
 	}
 
@@ -31,11 +31,6 @@ class HTMLTwigExtension extends Twig_Extension
 		return [
 			new Twig_SimpleFilter('parse_markup', 'markup_parse', ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('strip_markup', 'markup_strip'),
-			new Twig_SimpleFilter('parse_editable', function($iter) {
-				return editable_parse($iter instanceof DataIterEditable
-					? $iter->get_content()
-					: $iter);
-			}, ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('excerpt', 'text_excerpt')
 		];
 	}
@@ -74,7 +69,8 @@ class HTMLTwigExtension extends Twig_Extension
 		$result = '<input';
 
 		foreach ($attributes as $attribute => $value)
-			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($value) . '"';
+			if ($value !== null)
+				$result .= sprintf(' %s="%s"', str_replace('_', '-', $attribute), markup_format_attribute($value));
 		
 		return $result . '>';
 	}
@@ -174,6 +170,7 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		$params['type'] = 'hidden';
 		$params['nopost'] = true;
+		$params['id'] = null; // Prevent an id from being set
 
 		return self::input_field($name, array($name => $value), $params);
 	}
@@ -297,8 +294,10 @@ class HTMLTwigExtension extends Twig_Extension
 			$field, implode(' ', $classes), $name, $extra_content);
 	}
 
-	static public function nonce($action)
+	static public function nonce($action, array $arguments = array())
 	{
-		return self::input_hidden('_nonce', nonce_generate($action));
+		$action_name = nonce_action_name($action, $arguments);
+
+		return self::input_hidden('_nonce', nonce_generate($action_name));
 	}
 }

@@ -12,13 +12,6 @@
 	{
 		$placeholders = array();
 
-		/* Just remove because the header isn't used in general view */
-		$page = preg_replace('/\[h1\](.+?)\[\/h1\]\s*/ism', '', $page);
-
-		/* Just remove because the summary isn't used in general view */
-		$page = preg_replace('/\[samenvatting\](.+?)\[\/samenvatting\]\s*/ism', '', $page);
-
-		$page = preg_replace('/\[prive\].*?\[\/prive\]/ism', '', $page);
 		
 		$page = markup_parse($page);
 

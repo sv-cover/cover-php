@@ -7,6 +7,13 @@
 	{
 		public function get_naam()
 		{
+			trigger_error('Use DataIterMember::full_name instead of DataIterMember::naam', E_USER_NOTICE);
+			
+			return member_full_name($this);
+		}
+
+		public function get_full_Name()
+		{
 			return member_full_name($this);
 		}
 

@@ -12,19 +12,42 @@ class ControllerForum extends Controller
 
 		$this->view = View::byName('forum', $this);
 	}
-	
-	private function _assert_access($forumid, $authorid, $acl)
+
+	/**
+	 * Todo: move this to Controller::_forum_is_submitted
+	 * as soon as all controllers are compatible.
+	 */
+	protected function _form_is_submitted($form)
+	{
+		return $_SERVER['REQUEST_METHOD'] == 'POST'
+			&& !empty($_POST['_nonce'])
+			&& nonce_verify($_POST['_nonce'], $form);
+	}
+
+	private function _assert_access(DataIterForum $forum, $authorid, $acl)
 	{
 		$authorid = intval($authorid);
 		
-		if (!$this->model->check_acl($forumid, $acl))
+		if (!$this->model->check_acl($forum, $acl))
 			throw new UnauthorizedException('You do not have the right permissions for this action.');
 
-		if ($authorid != -1 && !$this->model->check_acl_commissie($forumid, $acl, $authorid))
+		if ($authorid != -1 && !$this->model->check_acl_commissie($forum, $acl, $authorid))
 			throw new UnauthorizedException('You do not have the right permissions for this action.');
 
 		if ($authorid > 0 && !get_identity()->member_in_committee($authorid))
 			throw new UnauthorizedException('You do not have the right permissions for this action.');
+	}
+
+	private function _is_admin()
+	{
+		return !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			&& !get_identity()->member_in_committee(COMMISSIE_EASY);
+	}
+	
+	private function _assert_admin()
+	{
+		if (!$this->_is_admin())
+			throw new UnauthorizedException('You need to be a member of the board or the AC/DCee for this action.');
 	}
 	
 	public function _check_message_subject($name, $value)
@@ -37,59 +60,84 @@ class ControllerForum extends Controller
 		
 		return $value;
 	}
-	
-	public function _check_message_values(&$errors)
-	{
-		return check_values(array('message'), $errors);
-	}
-	
-	private function _set_author_data(&$data)
-	{
-		$author = intval(get_post('author'));
 
-		if ($author >= 0) {
-			/* Commissie */
-			$data['author'] = $author;
-			$data['author_type'] = 2;
-		} else {
-			/* Member */
-			$member_data = logged_in();
-			$data['author'] = intval($member_data['id']);
-			$data['author_type'] = 1;
+	public function _check_unified_author($name, $value)
+	{
+		list($author_type, $author_id) = explode('_', $value, 2);
+
+		switch ($author_type)
+		{
+			case DataModelForum::TYPE_PERSON:
+				return $this->_is_admin() || get_identity()->member()->get('id') == $author_id ? $value : false;
+
+			case DataModelForum::TYPE_COMMITTEE:
+				return $this->_is_admin() || get_identity()->member_in_committee($author_id);
+
+			case DataModelForum::TYPE_GROUP:
+				try {
+					get_model('DataModelForum')->get_group($author_id);
+				} catch (DataIterNotFoundException $e) {
+					return false;
+				}
+				break;
+
+			default:
+				return false;
 		}
 	}
 	
-	private function _process_new_thread($params)
+	private function _create_thread(DataIterForum $forum, $params)
 	{
-		$forum = $this->model->get_iter(get_post('parent_id'));
+		$thread_data = check_values(array(
+			array(
+				'name' => 'subject',
+				'function' => array($this, '_check_message_subject')
+			),
+			array(
+				'name' => 'unified_author',
+				'function' => array($this, '_check_unified_author')
+			)
+		), $errors);
+
+		$message_data = check_values(array(
+			'message',
+			array(
+				'name' => 'unified_author',
+				'function' => array($this, '_check_unified_author')
+			)
+		), $errors);
+
+		$thread = new DataIterForumThread($this->model, -1, $thread_data);
 		
-		$this->_assert_access($forum->get('id'), get_post('author'), DataModelForum::ACL_WRITE);
+		$message = new DataIterForumMessage($this->model, -1, $mdata);
 		
-		$mdata = $this->_check_message_values($merrors);
-		$tdata = check_values(array(
-				array('name' => 'subject', 'function' => array(&$this, '_check_message_subject'))), $terrors);
-		
-		$errors = $merrors + $terrors;
-		
-		if (count($errors) > 0) {
-			$params['errors'] = $errors;
-			$this->get_content('forum', $forum, $params);
-			return;
-		}
+		if (count($errors) > 0)
+			return $this->view->render_thread_form($forum, $thread, $message, $errors);
 		
 		// Create new thread with given subject
-		$tdata['forum'] = intval($forum->get('id'));
-		$this->_set_author_data($tdata);
-		$iter = new DataIterForumThread($this->model, -1, $tdata);
-		$tid = $this->model->insert_thread($iter);
+		$thread['forum'] = $forum['id'];
+		$this->model->insert_thread($thread);
 		
 		// Create first message in the thread
-		$this->_set_author_data($mdata);
-		$mdata['thread'] = intval($tid);	
-		$iter = new DataIterForumMessage($this->model, -1, $mdata);
-		$this->model->insert_message($iter);
+		$message['thread'] = $thread['id'];
+		$this->model->insert_message($message);
 
-		return $this->view->redirect('forum.php?thread=' . $tid);
+		// run_message_single redirects to the correct message in a thread
+		return $this->run_message_single($message, $params);
+	}
+
+	public function run_forum_create(DataIterForum $forum, $params)
+	{
+		$this->_assert_access($forum, get_post('author'), DataModelForum::ACL_WRITE);
+		
+		if ($this->_forum_is_submitted('create_thread_' . $forum['id']))
+			return $this->_create_thread($forum, $params);
+
+		$empty_thread = new DataIterForumThread($this->model, null, []);
+
+		$empty_message = new DataIterForumMessage($this->model, null, []);
+
+		return $this->view->render_thread_form($forum, $empty_thread, $empty_message, array());
 	}
 	
 	private function _process_forum_poll_vote(DataIterForumThread $thread)
@@ -191,13 +239,6 @@ class ControllerForum extends Controller
 		$page = $thread->get_num_thread_pages() - 1;
 
 		return $this->view->redirect('forum.php?thread=' . $thread->get('id') . '&page=' . $page);
-	}
-	
-	private function _assert_admin()
-	{
-		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
-			throw new UnauthorizedException('You need to be a member of the board or the AC/DCee for this action.');
 	}
 	
 	private function _assert_may_edit_message(DataIterForumMessage $message)
@@ -632,40 +673,88 @@ class ControllerForum extends Controller
 			}
 		}
 	}
-	
-	private function _view_forum(DataIterForum $forum, $params)
+
+	public function run_forum_index(DataIterForum $forum)
 	{
 		$this->model->set_forum_session_read($forum->get('id'));
-		return $this->view->render_forum($forum, $params);
+		return $this->view->render_forum($forum);
 	}
 	
-	private function _view_thread(DataIterForumThread $thread, $params)
+	public function run_thread_index(DataIterForumThread $thread)
 	{
 		/* Mark the thread as read */
 		$this->model->set_forum_session_read($thread->get('forum'));
 		$this->model->mark_read($thread);
-		return $this->view->render_thread($thread, $params);
+		return $this->view->render_thread($thread);
+	}
+
+	public function run_thread_create(DataIterForum $forum)
+	{
+		$thread = $forum->new_thread();
+
+		$errors = array();
+
+		if ($this->_form_is_submitted('create_thread', $forum))
+			if ($this->_create_thread($thread, $_POST, $errors))
+				return $this->view->redirect('forum.php?thread=' . $thread['id']);
+
+		return $this->view->render_thread_form($thread, $errors);
+	}
+
+	public function run_thread_reply(DataIterForumThread $thread)
+	{
+		$message = $thread->new_message();
+
+		if (isset($_GET['quote_message'])) {
+			try {
+				$quoted_message = $this->model->get_message($_GET['quote_message']);
+				$quoted_author = $this->model->get_author_info($quoted_message);
+				$message['message'] = sprintf("[quote=%s]%s[/quote]\n\n", $quoted_author['name'], $quoted_message['message']);
+			} catch (DataIterNotFoundException $e) {
+				// Yeah, it's not really an issue if we can't find the message we wanted to quote.
+				// get_author_info wont fail anyway because that does'nt throw when the author cannot be found, it will just return __('Onbekend').
+			}
+		}
+
+		$errors = [];
+
+		if ($this->_form_is_submitted('reply', $thread))
+			if ($this->_create_message($message, $_POST, $errors))
+				return $this->run_message_single($message);
+
+		return $this->view->render_message_form($message, $errors);
 	}
 	
-	private function _view_mod_message($messageid, $params)
+	public function run_message_update(DataIterForumMessage $message)
 	{
-		$message = $this->model->get_message($messageid);
-		
-		if (!$message->editable())
+		if (!get_policy($message)->user_can_update($message))
 			throw new UnauthorizedException('You are not allowed to modify this message');
 
-		return $this->view->render_mod_message($message, $params);
+		$errors = [];
+
+		if ($this->_form_is_submitted('update_message', $message))
+			if ($this->_update_message($message, $_POST, $errors))
+				return $this->run_message_single($message);
+
+		return $this->view->render_message_form($message, $errors);
+	}
+
+	public function run_message_single(DataIterForumMessage $message)
+	{
+		return $this->view->redirect('forum.php?thread=%d&page=%d#p%d', $message['thread'], $message['thread_page'], $message['id']);
 	}
 	
-	private function _view_index()
+	public function run_index()
 	{
 		/* Set last visit for all fora to current time */
 		$this->model->update_last_visit();
-		
-		return $this->view->render_index($this->model->get());
+
+		$forums = $this->model->get();
+
+		return $this->view->render_index($forums);
 	}
 	
-	private function _view_preview()
+	public function run_preview()
 	{
 		return $this->view->render_preview(get_post('message'));
 	}
@@ -694,72 +783,41 @@ class ControllerForum extends Controller
 		$thread = null;
 		$params = array();
 
+		$view = isset($_GET['view']) ? $_GET['view'] : null;
+
 		$admin = get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			  || get_identity()->member_in_committee(COMMISSIE_EASY);
 		
-		if (isset($_GET['forum']))
-			$forum = $this->model->get_iter($_GET['forum'], $admin ? -1 : DataModelForum::ACL_READ);
-		elseif (isset($_GET['thread']))
+		if (isset($_GET['message'])) {
+			$message = $this->model->get_message($messageid);
+		
+			if ($view == 'update')
+				return $this->run_message_update($message);
+			else
+				return $this->run_message_single($message);
+		}
+		elseif (isset($_GET['thread'])) {
 			$thread = $this->model->get_thread($_GET['thread']);
 
-		if (isset($_GET['page']))
-			$params['page'] = intval($_GET['page']);
-		elseif (isset($_POST['page']))
-			$params['page'] = intval($_POST['page']);
-		
-		if (isset($_GET['startadd']))
-			$params['startadd'] = true;
-		
-		if (isset($_GET['preview']))
-			return $this->_view_preview();
-		elseif (isset($_POST['submforumnewthread']))
-			return $this->_process_new_thread($params);
-		elseif (isset($_POST['submforumnewmessage']))
-			return $this->_process_new_message($params);
-		elseif (isset($_POST['submforumorder']))
-			return $this->_process_forum_order();
-		elseif (isset($_POST['submforumforums']))
-			return $this->_process_forum_forums();
-		elseif (isset($_POST['submforumnieuw']))
-			return $this->_process_forum_nieuw();
-		elseif (isset($_POST['submforumrights']))
-			return $this->_process_forum_rights($forum);
-		elseif (isset($_POST['submforumrightsnieuw']))
-			return $this->_process_forum_rights_nieuw($forum);
-		elseif (isset($_POST['submforumgroups']))
-			return $this->_process_forum_groups();
-		elseif (isset($_POST['submforumgroupsnieuw']))
-			return $this->_process_forum_groups_nieuw();
-		elseif (isset($_POST['submforumgroupsmembers']))
-			return $this->_process_forum_groups_members();
-		elseif (isset($_POST['submforumspecial']))
-			return $this->_process_forum_special();
-		elseif (isset($_POST['submforummodmessage']))
-			return $this->_process_forum_mod_message($_POST['message_id'], $params);
-		elseif (isset($_POST['submforumdelmessage']))
-			return $this->_process_forum_del_message($_POST['message_id'], $params);
-		elseif (isset($_POST['submforummovethread']))
-			return $this->_process_forum_move_thread($_POST['thread_id'], $_POST['forum_id'], $params);
-		elseif (isset($_GET['delmessage']))
-			return $this->_view_forum_del_message($_GET['delmessage'], $params);
-		elseif (isset($_GET['admin']) && isset($_GET['delmember']))
-			return $this->_process_forum_groups_del_member($_GET['delmember']);
-		elseif (isset($_GET['modmessage']))
-			return $this->_view_mod_message($_GET['modmessage'], $params);
-		elseif (isset($_GET['admin']))
-			return $this->_view_admin($_GET['admin'], $forum);
-		elseif (isset($_POST['submforumpollnieuw']))
-			return $this->_process_forum_poll_nieuw($forum);
-		elseif (isset($_POST['submforumpollvote']) && $thread)
-			return $this->_process_forum_poll_vote($thread);
-		elseif (isset($_GET['addpoll']) && $forum)
-			$this->get_content('add_poll', $forum, $params);
-		elseif ($forum)
-			return $this->_view_forum($forum, $params);
-		elseif ($thread)
-			return $this->_view_thread($thread, $params);
+			if ($view == 'reply')
+				return $this->run_thread_reply($thread);
+			else
+				return $this->run_thread_index($thread);
+		}
+		elseif (isset($_GET['forum'])) {
+			$forum = $this->model->get_iter($_GET['forum'], $admin ? -1 : DataModelForum::ACL_READ);
+
+			if ($view == 'create')
+				return $this->run_thread_create($forum);
+			elseif ($view == 'create_poll')
+				return $this->run_poll_create($forum);
+			else
+				return $this->run_forum_index($forum);
+		}
+		elseif ($view == 'preview')
+			return $this->run_preview();
 		else
-			return $this->_view_index();
+			return $this->run_index();
 	}
 }
 

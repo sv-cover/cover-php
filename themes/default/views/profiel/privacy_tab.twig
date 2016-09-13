@@ -8,7 +8,7 @@
 	<p>{{ __('Je privacy instellingen geven aan wie welke informatie mag zien.') }}</p>
 
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="post">
-		{{ html_nonce('privacy' ~ iter.id) }}
+		{{ html_nonce('privacy', iter) }}
 		<table class="privacy">
 			<thead>
 				<tr>

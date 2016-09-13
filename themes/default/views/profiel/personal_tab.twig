@@ -6,7 +6,7 @@
 <section class="aligned-list-section">
 	<h2>{{ __('Almanakgegevens') }}</h2>
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=personal" method="post" class="vertical-form">
-		{{ html_nonce('personal' ~ iter.id) }}
+		{{ html_nonce('personal', iter) }}
 		{% for field in view.personal_fields %}
 			<div>
 				{{ html_label(field.label, field.name, errors=errors) }}

@@ -7,7 +7,7 @@
 	<h2>{{ __('Webgegevens') }}</h2>
 	<p>{{ __('Je webgegevens worden gebruikt om je er een beetje (on)herkenbaar te maken op het forum.') }}</p>
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=profile" method="post" class="vertical-form">
-		{{ html_nonce('profile' ~ iter.id) }}
+		{{ html_nonce('profile', iter) }}
 		<div>
 			{{ html_label(__('Bijnaam'), 'nick', errors=errors) }}
 			{{ html_input_text('nick', iter) }}
@@ -40,7 +40,7 @@
 <section class="aligned-list-section">
 	<h2 id="wachtwoord">{{ __('Nieuw wachtwoord') }}</h2>
 	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=profile" method="post" class="vertical-form">
-		{{ html_nonce('password' ~ iter.id) }}
+		{{ html_nonce('password', iter) }}
 
 		{% if current_password_required %}
 			<div>
@@ -67,7 +67,7 @@
 	<h2>{{ __('Foto') }}</h2>
 	<p>{{ __('Je foto wordt ook gebruikt op deze website, maar ook in de jaarlijkse almanak. Wil je een recentere foto hier hebben? Stuur de beste versie die je hebt in! Ze worden met de hand verwerkt, dus het kan even duren voordat hij aangepast is.') }}</p>
 	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=photo" method="post" enctype="multipart/form-data">
-		{{ html_nonce('photo' ~ iter.id) }}
+		{{ html_nonce('photo', iter) }}
 		<div>
 			<div class="file-upload-button button">
 				<span>{{ __('Kies nieuwe foto') }}&hellip;</span>

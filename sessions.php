@@ -25,7 +25,7 @@ class ControllerSessions extends Controller
 		else
 			$referrer = 'index.php';
 
-		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		if ($this->_form_is_submitted('session_overrides'))
 		{
 			if (isset($_POST['override_member']) && !empty($_POST['override_member_id']))
 			{
@@ -54,7 +54,7 @@ class ControllerSessions extends Controller
 		if (!get_auth()->logged_in())
 			throw new UnauthorizedException('You need to login to manage your sessions');
 
-		if (isset($_POST['sessions']))
+		if ($this->_form_is_submitted('delete_sessions'))
 		{
 			$member = get_identity()->member();
 
@@ -69,13 +69,7 @@ class ControllerSessions extends Controller
 			return $this->view->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
 		}
 
-		$member = get_identity()->member();
-
-		$session = get_auth()->get_session();
-
-		$sessions = $this->model->getActive($member->get_id());
-
-		return $this->view->render_sessions($sessions, $member, $session);
+		return $this->view->redirect('profiel.php?lid=' . get_identity()->get('id') . '&view=sessions');
 	}
 
 	protected function run_view_login()

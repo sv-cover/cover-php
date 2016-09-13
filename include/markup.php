@@ -171,6 +171,7 @@
 	}
 
 	function _markup_parse_simple(&$markup) {
+		// TODO: Replace this beast with something that has a stack!
 		$tags = Array('[i]', '[/i]', '[b]', '[/b]', '[u]', '[/u]', '[s]', '[/s]', '[ol]', '[/ol]', '[ul]', '[/ul]', '[li]', '[/li]', '[center]', '[/center]', '[hl]', '[/hl]', '[small]', '[/small]');
 		$replace = Array('<i>', '</i>', '<b>', '</b>', '<u>', '</u>', '<s>', '</s>', '<ol>', '</ol>', '<ul>', '</ul>', '<li>', '</li>', '<div class="text_center">', '</div>', '<span class="highlight">', '</span>', '<small>', '</small>');
 		
@@ -285,6 +286,14 @@
 			$placeholders = array();
 		
 		$markup .= "\n";
+
+		/* Just remove because the header isn't used in general view */
+		$markup = preg_replace('/\[h1\](.+?)\[\/h1\]\s*/ism', '', $markup);
+
+		/* Just remove because the summary isn't used in general view */
+		$markup = preg_replace('/\[samenvatting\](.+?)\[\/samenvatting\]\s*/ism', '', $markup);
+
+		$markup = preg_replace('/\[prive\].*?\[\/prive\]/ism', '', $markup);
 
 		/* Filter code tags */
 		_markup_parse_code($markup, $placeholders);

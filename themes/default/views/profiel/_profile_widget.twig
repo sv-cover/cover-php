@@ -8,7 +8,8 @@
 	{% endif %}
 
 	{% if global.identity.member_in_committee(constant('COMMISSIE_EASY')) %}
-	<form id="upload-photo" action="profiel.php?id={{iter.id}}&amp;view=photo" method="post" enctype="multipart/form-data">
+	<form id="upload-photo" action="profiel.php?lid={{iter.id}}&amp;view=photo" method="post" enctype="multipart/form-data">
+		{{ html_nonce('photo', iter) }}
 		<div class="file-upload-button button">
 			<span>{{ __('Kies nieuwe foto') }}&hellip;</span>
 			<input type="file" name="photo" accept="image/jpeg" title="{{ __('Alleen JPEG-plaatjes mogen.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">

@@ -12,6 +12,6 @@
 	<h1>{{ iter.get_title }}</h1>
 </div>
 <div class="messageBox" id="page_{{ iter.id }}">
-	{{ iter|parse_editable }}
+	{{ iter.locale_content|parse_markup }}
 </div>
 {% endblock %}

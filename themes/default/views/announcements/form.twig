@@ -6,6 +6,12 @@
 <h1>{{ iter.has_id ? __('Mededeling wijzigen') : __('Nieuwe mededeling plaatsen') }}</h1>
 <div class="messageBox announcement">
 	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form" data-partial-selector=".announcement" data-placement-selector=".announcement">
+		{% if iter.has_id %}
+			{{ html_nonce('update', iter) }}
+		{% else %}
+			{{ html_nonce('create', iter) }}
+		{% endif %}
+		
 		<div>
 			{{ html_label(__('Plaats namens commissie'), 'committee', errors=errors, required=true) }}
 			{{ html_select_field('committee', view.get_committee_options(iter), iter.data) }}

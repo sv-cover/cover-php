@@ -964,4 +964,11 @@
 
 		return $groups;
 	}
+
+	function array_select($array, $property, $default_value = null)
+	{
+		return array_map(function($iter) use ($property, $default_value) {
+			return $iter->has($property) ? $iter->get($property) : $default_value;
+		}, $iters);
+	}
 	

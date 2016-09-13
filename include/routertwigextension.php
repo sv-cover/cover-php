@@ -14,7 +14,9 @@ class RouterTwigExtension extends Twig_Extension
 							? $args['referrer']
 							: $_SERVER['REQUEST_URI']]);
 				},
-				'logout' => 'sessions.php?view=logout',
+				'logout' => function($args) {
+					return edit_url('sessions.php?view=logout', $args);
+				},
 				'sessions' => 'sessions.php?view=sessions',
 				'overrides'=> function($args) {
 					return edit_url('sessions.php?view=overrides', $args);

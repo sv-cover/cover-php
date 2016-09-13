@@ -334,7 +334,7 @@ class ControllerProfiel extends Controller
 		if (!$this->policy->user_can_update($iter))
 			throw new UnauthorizedException();
 
-		if ($this->_form_is_submitted('personal' . $iter['id']))
+		if ($this->_form_is_submitted('personal', $iter))
 			return $this->_update_personal($iter);
 
 		return $this->view->render_personal_tab($iter);
@@ -345,10 +345,10 @@ class ControllerProfiel extends Controller
 		if (!$this->policy->user_can_read($iter))
 			throw new UnauthorizedException();
 
-		if ($this->_form_is_submitted('profile' . $iter['id']))
+		if ($this->_form_is_submitted('profile', $iter))
 			return $this->_update_profile($iter);
 
-		elseif ($this->_form_is_submitted('password' . $iter['id']))
+		elseif ($this->_form_is_submitted('password', $iter))
 			return $this->_update_password($iter);
 
 		return $this->view->render_profile_tab($iter);
@@ -360,7 +360,7 @@ class ControllerProfiel extends Controller
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new UnauthorizedException();
 
-		if ($this->_form_is_submitted('privacy' . $iter['id']))
+		if ($this->_form_is_submitted('privacy', $iter))
 			return $this->_update_privacy($iter);
 
 		return $this->view->render_privacy_tab($iter);
@@ -371,7 +371,7 @@ class ControllerProfiel extends Controller
 		if (!get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new UnauthorizedException();
 
-		if ($this->_form_is_submitted('system' . $iter['id']))
+		if ($this->_form_is_submitted('system', $iter))
 			return $this->_update_system($iter);
 
 		return $this->view->render_system_tab($iter);
@@ -384,7 +384,7 @@ class ControllerProfiel extends Controller
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new UnauthorizedException();
 
-		if ($this->_form_is_submitted('photo' . $iter['id']))
+		if ($this->_form_is_submitted('photo', $iter))
 			return $this->_update_photo($iter);
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
@@ -395,7 +395,7 @@ class ControllerProfiel extends Controller
 		if ($iter->get('id') != get_identity()->get('id'))
 			throw new UnauthorizedException();
 
-		if ($this->_form_is_submitted('facebook' . $iter['id']))
+		if ($this->_form_is_submitted('facebook', $iter))
 		{
 			if (get_post('facebook_action') == 'unlink')
 				get_facebook()->destroySession();
@@ -443,7 +443,7 @@ class ControllerProfiel extends Controller
 
 	public function run_mailing_lists(DataIterMember $member)
 	{
-		if ($this->_form_is_submitted('mailing_list' . $member['id']))
+		if ($this->_form_is_submitted('mailing_list', $member))
 			return $this->_update_mailing_lists($member);
 
 		return $this->view->render_mailing_lists_tab($member);
@@ -476,13 +476,6 @@ class ControllerProfiel extends Controller
 	public function run_index()
 	{
 		return $this->view->redirect('almanak.php');
-	}
-
-	protected function _form_is_submitted($form)
-	{
-		return $_SERVER['REQUEST_METHOD'] == 'POST'
-			&& !empty($_POST['_nonce'])
-			&& nonce_verify($_POST['_nonce'], $form);
 	}
 
 	protected function run_impl()

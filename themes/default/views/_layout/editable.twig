@@ -7,5 +7,5 @@
 	<h1>{{ editable.get_title }}</h1>
 </div>
 <div class="messageBox" id="page_{{ editable.id }}">
-	{{ editable|parse_editable }}
+	{{ editable.locale_content|parse_markup }}
 </div>

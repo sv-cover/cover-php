@@ -10,7 +10,7 @@
 	{% else %}
 		<p>{{ __('Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden.') }}</p>
 		<form name="agenda_moderate" action="" method="post">
-			{{ html_input_hidden('submagenda_moderate', 'yes') }}
+			{{ html_nonce('moderate') }}
 			<table class="full-width-table" id="table_moderate">
 				<thead>
 					<tr class="header">

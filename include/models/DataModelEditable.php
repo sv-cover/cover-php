@@ -4,7 +4,7 @@
 
 	class DataIterEditable extends DataIter implements SearchResult
 	{
-		public function get_content($language = null)
+		public function get_locale_content($language = null)
 		{
 			if (!$language)
 				$language = i18n_get_language();
@@ -22,7 +22,7 @@
 
 		public function get_title($language = null)
 		{
-			$content = $this->get_content($language);
+			$content = $this->get_locale_content($language);
 
 			return preg_match('/\[h1\](.+?)\[\/h1\]\s*/ism', $content, $match)
 				? $match[1]
@@ -31,7 +31,7 @@
 
 		public function get_summary($language = null)
 		{
-			$content = $this->get_content($language);
+			$content = $this->get_locale_content($language);
 
 			return preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches) ? $matches[1] : null;
 		}
@@ -59,6 +59,15 @@
 	{
 		public $dataiter = 'DataIterEditable';
 
+		public $fields = [
+			// 'id', // disabled because we should never be able to manually set it.
+			'owner',
+			'titel',
+			'content',
+			'content_en',
+			'content_de'
+		];
+
 		public function __construct($db)
 		{
 			parent::__construct($db, 'pages');
@@ -73,14 +82,12 @@
 		  */
 		public function get_iter_from_title($title)
 		{
-			return $this->_row_to_iter($this->db->query_first("SELECT * 
-					FROM pages
-					WHERE titel = '" . $this->db->escape_string($title) . "'"));
+			return $this->find_one(['titel' => $title]);
 		}
 
 		public function get_content($id)
 		{
-			return $this->get_iter($id)->get_content();
+			return $this->get_iter($id)->get_locale_content();
 		}
 
 		public function get_title($id)

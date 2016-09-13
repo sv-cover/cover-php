@@ -8,6 +8,7 @@
 <h2>{{ __('Website bekijken als een ander') }}</h2>
 <div class="messageBox">
 	<form method="post" action="{{ link('sessions.overrides') }} " class="vertical-form overrides-form">
+		{{ html_nonce('session_overrides') }}
 		{{ html_input_hidden('referrer', referrer) }}
 		
 		<fieldset>

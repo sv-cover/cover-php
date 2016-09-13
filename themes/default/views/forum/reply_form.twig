@@ -1,0 +1,40 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<h1><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a> / <a href="forum.php?thread={{ thread.id }}">{{ thread.subject }}</a></h1>
+<div class="messageBox">
+	<form action="" method="post" class="vertical-form">
+		{% if iter.has_id %}
+			{{ html_nonce('update_message', iter) }}
+		{% else %}
+			{{ html_nonce('reply', thread) }}
+		{% endif %}
+		<div>
+			{{ html_label(__('Auteur'), 'unified_author', errors=errors, required=true) }}
+			{{ html_select_field('unified_author', unified_authors, iter, errors=errors, required=true) }}
+		</div>
+
+		<div>
+			<div class="tab-pane">
+				<ul class="nav-tabs">
+					<li class="active"><a href="#forum-message">{{ __('Bericht') }}</a></li>
+					<li><a href="#forum-message-preview">{{ __('Voorbeeld') }}</a></li>
+				</ul>
+				<div class="tab-panel" id="forum-message">
+					{{ html_textarea_field('message', iter, rows=15, autofocus='end') }}
+				</div>
+				<div class="tab-panel" id="forum-message-preview">
+					<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<button type="submit" class="button">{{ iter.has_id ? __('Wijzig bericht') : __('Plaats bericht') }}</button>
+			{% if iter.has_id %}
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Bekijk thread') }}</a>
+			{% endif %}
+		</div>
+	</form>
+</div>
+{% endblock %}

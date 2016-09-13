@@ -7,7 +7,8 @@
 	<h2>{{ __('Sessies') }}</h2>
 	<p>{{ __('Hieronder staan alle sessies die voor jouw account nog open staan.') }}</p>
 	<form method="post" action="sessions.php?view=sessions&amp;member_id={{ iter.id|e('url') }}">
-		<input type="hidden" name="referer" value="profiel.php?lid={{ iter.id|e('url') }}&amp;view=sessions">
+		{{ html_nonce('delete_sessions') }}
+		{{ html_input_hidden('referer', 'profiel.php?lid=%d&view=sessions'|format(iter.id|e('url'))) }}
 		<table class="full-width-table">
 			<thead>
 				<tr>

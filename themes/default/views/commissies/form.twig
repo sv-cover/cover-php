@@ -6,6 +6,12 @@
 <h1>{{ iter.has_id() ? __('Commissie/werkgroep wijzigen') : __('Nieuwe commissie/werkgroep maken') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
+		{% if iter.has_id %}
+			{{ html_nonce('update', iter) }}
+		{% else %}
+			{{ html_nonce('create') }}
+		{% endif %}
+
 		<div>
 			{{ html_label(__('Type'), 'type', errors=errors, required=true) }}
 			{{ html_select_field('type', view.available_committee_types, iter) }}
@@ -39,10 +45,10 @@
 				</thead>
 				<tbody>
 					{% if iter.has_id() %}
-						{% for member in iter.get_members() %}
+						{% for member in iter.members %}
 							<tr>
 								<td>{{ member|full_name_ignore_privacy }}</td>
-								<td><input type="text" name="members[member.id]" value="{{ member.functie }}" class="autocomplete-function"></td>
+								<td><input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="autocomplete-function"></td>
 								<td><button type="button" class="button remove-button" title="{{ __('Verwijder lid uit commissie') }}">&times;</button></td>
 							</tr>
 						{% endfor %}
@@ -66,12 +72,12 @@
 
 		<div>
 			<button type="submit" class="button">{{ iter.has_id() ? __('Wijzig commissie/werkgroep') : __('Maak commissie/werkgroep aan') }}</button>
-			{% if iter.has_id() %}
+			{% if iter.has_id %}
 			<a href="{{ controller.link_to_read(iter) }}">{{ iter.type == constant('DataModelCommissie::TYPE_COMMITTEE') ? __('Terug naar commissie') : __('Terug naar werkgroep') }}</a>
 			{% else %}
 			<a href="{{ controller.link_to_index() }}">{{ __('Terug naar alle commissies') }}</a>
 			{% endif %}
-			{% if user_can_delete iter %}
+			{% if iter.has_id and user_can_delete iter %}
 			<a href="{{ controller.link_to_delete(iter) }}" class="delete-link">{{ iter.type == constant('DataModelCommissie::TYPE_COMMITTEE') ? __('Verwijder commissie') : __('Verwijder werkgroep') }}</a>
 			{% endif %}
 		</div>
@@ -95,7 +101,7 @@ jQuery(function($) {
 	$form.find('.autocomplete-function').autocomplete({
 			delay: 0,
 			minLength: 0,
-			source: <?=json_encode(array_values(array_flip($model->get_functies())))?>
+			source: {{ model.get_functies|flip|values|json_encode|raw }}
 		})
 		.focus(function(e) {
 			$(this).autocomplete('search', '');

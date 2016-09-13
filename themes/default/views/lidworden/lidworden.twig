@@ -147,7 +147,7 @@
 				</div>
 			{% endif %}
 		
-			{{ voorwaarden|parse_editable }}
+			{{ voorwaarden.locale_content|parse_markup }}
 		</fieldset>
 
 		<fieldset>
@@ -172,7 +172,7 @@
 			</div>
 		{% endif %}
 		<h2>{{ __('Opmerkingen') }}</h2>
-		{{ opmerkingen|parse_editable }}
+		{{ opmerkingen.locale_content|parse_markup }}
 	</section>
 </div>
 {% endblock %}

@@ -61,8 +61,9 @@ class DreamsparkController extends Controller
 		if (!get_auth()->logged_in())
 			return $this->view->redirect('sessions.php?view=login&referrer=dreamspark.php');
 
-		if (isset($_POST['accept_terms']) && $_POST['accept_terms'] == 'true')
-			return $this->redirect_to_dreamspark();
+		if ($this->_form_is_submitted('accept_dreamspark_terms'))
+			if (isset($_POST['accept_terms']) && $_POST['accept_terms'] == 'true')
+				return $this->redirect_to_dreamspark();
 
 		return $this->view->render_accept();
 	}

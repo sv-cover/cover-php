@@ -6,7 +6,7 @@
 <section class="aligned-list-section">
 	<h2>{{ __('Zichtbaarheid') }}</h2>
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=system" method="post" class="vertical-form">
-		{{ html_nonce('system' ~ iter.id ) }}
+		{{ html_nonce('system', iter) }}
 		<div>
 			{{ html_label(__('Lidmaadschapsstatus'), 'status', errors=errors) }}
 			<div id="field-status" class="radio">

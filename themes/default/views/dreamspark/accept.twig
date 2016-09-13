@@ -6,6 +6,8 @@
 <h1>{{ __('Inloggen op Dreamspark') }}</h1>
 <div class="messageBox">
 	<form method="post" action="" class="vertical-form" target="_blank">
+		{{ html_nonce('accept_dreamspark_terms') }}
+		
 		<p>{{ __('Als je doorgaat worden je naam en e-mailadres doorgegeven aan de Dreamspark webstore.') }}</p>
 		
 		{% if global.identity.member_in_committee(constant('COMMISSIE_EASY')) %}

@@ -10,11 +10,6 @@ class SessionsView extends View
 		return $this->twig->render('overrides.twig', compact('committees', 'referrer'));
 	}
 
-	public function render_sessions($sessions, $member, $session = null)
-	{
-		return $this->twig->render('sessions.twig', compact('sessions', 'member', 'session'));
-	}
-
 	public function render_login($errors, $error_message = null, $referrer = null, $external_domain = null)
 	{
 		return $this->twig->render('login.twig', compact('errors', 'error_message', 'referrer', 'external_domain'));

@@ -6,6 +6,12 @@
 <h1>{{ iter.has_id ? __('Pagina wijzigen') : __('Nieuwe pagina maken') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
+		{% if iter.has_id %}
+			{{ html_nonce('update', iter) }}
+		{% else %}
+			{{ html_nonce('create') }}
+		{% endif %}
+		
 		<div>
 			{{ html_label(__('Titel'), 'titel', errors=errors, required=true) }}
 			{{ html_input_text('titel', iter) }}

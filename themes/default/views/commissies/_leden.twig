@@ -1,14 +1,14 @@
-{% set leden = iter.get_members() %}
-{% if leden %}
+{% set members = iter.members %}
+{% if members|length > 0 %}
 <div class="commissie-members">
 	<h3 class="alignCenter">{{ __('Leden') }}</h3>
 	<ul>
-	{% for lid in leden %}
+	{% for member in members %}
 		<li>
-			<a href="profiel.php?lid={{ lid.id }}" class="commissie-member profile-widget round">
-				<img src="foto.php?lid_id={{ lid.id }}&amp;format=square&amp;width=200" width="100">
-				<span class="name">{{ lid|full_name }}</span>
-				<span class="function">{{ lid.functie|translate_parts(',/') }}</span>
+			<a href="profiel.php?lid={{ member.id }}" class="commissie-member profile-widget round">
+				<img src="foto.php?lid_id={{ member.id }}&amp;format=square&amp;width=200" width="100">
+				<span class="name">{{ member|full_name }}</span>
+				<span class="function">{{ member.functie|translate_parts(',/') }}</span>
 			</a>
 		</li>
 	{% endfor %}

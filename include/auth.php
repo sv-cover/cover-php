@@ -399,3 +399,17 @@ function nonce_verify($nonce, $action)
 {
 	return hash_equals($nonce, nonce_generate($action));
 }
+
+function nonce_action_name($action, array $arguments)
+{
+	$arg_strings = array();
+
+	foreach ($arguments as $arg) {
+		if ($arg instanceof DataIter)
+			$arg = sprintf('%s#%s', get_class($arg), $arg->get('id'));
+
+		$arg_strings[] = strval($arg);
+	}
+
+	$action_name = implode('_', array_merge([$action], $arg_strings));
+}
