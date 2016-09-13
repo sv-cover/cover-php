@@ -15,6 +15,7 @@ class HTMLTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('html_input_text', [__CLASS__, 'input_text'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_password', [__CLASS__, 'input_password'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_date', [__CLASS__, 'input_date'], ['is_variadic' => true, 'is_safe' => ['html']]),
+			new Twig_SimpleFunction('html_input_datetime', [__CLASS__, 'input_datetime'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_checkbox', [__CLASS__, 'input_checkbox'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_radio', [__CLASS__, 'input_radio'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_hidden', [__CLASS__, 'input_hidden'], ['is_variadic' => true, 'is_safe' => ['html']]),
@@ -104,6 +105,20 @@ class HTMLTwigExtension extends Twig_Extension
 
 		if (!isset($params['class']))
 			$params['class'] = 'date';
+		
+		return self::input_field($name, $data, $params);
+	}
+
+	static public function input_datetime($name, $data, array $params = array())
+	{
+		$params['type'] = 'datetime-local';
+		$params['placeholder'] = sprintf(__('Bijv. %d-9-20 11:00'), date('Y'));
+		$params['formatter'] = function($datetime) {
+			return trim($datetime) != '' ? date('Y-m-d H:i', strtotime($datetime)) : '';
+		};
+
+		if (!isset($params['class']))
+			$params['class'] = 'datetime';
 		
 		return self::input_field($name, $data, $params);
 	}

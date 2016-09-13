@@ -36,11 +36,7 @@
 
 		public function get_use_tot()
 		{
-			foreach (array('datum', 'maand', 'jaar', 'uur', 'minuut') as $check)
-				if ($this['van' . $check] != $this['tot' . $check])
-					return true;
-			
-			return false;
+			return $this['van'] != $this['tot'];
 		}
 
 		public function get_use_locatie()
@@ -104,18 +100,6 @@
 			return "
 				SELECT
 					{$this->table}.*,
-					DATE_PART('dow', {$this->table}.van) AS vandagnaam, 
-					DATE_PART('day', {$this->table}.van) AS vandatum, 
-					DATE_PART('year', {$this->table}.van) AS vanjaar,
-					DATE_PART('month', {$this->table}.van) AS vanmaand, 
-					DATE_PART('hours', {$this->table}.van) AS vanuur, 
-					DATE_PART('minutes', {$this->table}.van) AS vanminuut, 
-					DATE_PART('dow', {$this->table}.tot) AS totdagnaam, 
-					DATE_PART('year', {$this->table}.tot) AS totjaar, 
-					DATE_PART('day', {$this->table}.tot) AS totdatum, 
-					DATE_PART('month', {$this->table}.tot) AS totmaand, 
-					DATE_PART('hours', {$this->table}.tot) AS totuur, 
-					DATE_PART('minutes', {$this->table}.tot) AS totminuut,
 					commissies.naam as commissie__naam,
 					commissies.page as commissie__page
 				FROM
@@ -176,20 +160,7 @@
 
 			$query = "
 				SELECT
-					agenda.*,
 					{$this->table}.*,
-					DATE_PART('dow', {$this->table}.van) AS vandagnaam, 
-					DATE_PART('day', {$this->table}.van) AS vandatum, 
-					DATE_PART('year', {$this->table}.van) AS vanjaar,
-					DATE_PART('month', {$this->table}.van) AS vanmaand, 
-					DATE_PART('hours', {$this->table}.van) AS vanuur, 
-					DATE_PART('minutes', {$this->table}.van) AS vanminuut, 
-					DATE_PART('dow', {$this->table}.tot) AS totdagnaam, 
-					DATE_PART('year', {$this->table}.tot) AS totjaar, 
-					DATE_PART('day', {$this->table}.tot) AS totdatum, 
-					DATE_PART('month', {$this->table}.tot) AS totmaand, 
-					DATE_PART('hours', {$this->table}.tot) AS totuur, 
-					DATE_PART('minutes', {$this->table}.tot) AS totminuut,
 					commissies.naam as commissie__naam,
 					commissies.page as commissie__page,
 					ts_rank_cd(

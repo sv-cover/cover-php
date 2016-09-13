@@ -9,7 +9,7 @@ class DataIterLikedPhotobook extends DataIterPhotobook
 		return 'liked';
 	}
 
-	public function get_books()
+	public function get_books($metadata = null)
 	{
 		return array();
 	}

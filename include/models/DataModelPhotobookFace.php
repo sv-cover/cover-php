@@ -39,7 +39,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 	 * @override
 	 * @return DataIterPhotobook[]
 	 */
-	public function get_books()
+	public function get_books($metadata = null)
 	{
 		return array();
 	}
@@ -226,7 +226,7 @@ class DataModelPhotobookFace extends DataModel
 	/**
 	 * @override
 	 */
-	protected function _delete($table, $iter)
+	protected function _delete($table, DataIter $iter)
 	{
 		$this->db->update($table,
 			array('deleted' => 'TRUE'),

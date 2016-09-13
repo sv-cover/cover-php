@@ -29,22 +29,14 @@
 
 	<div>
 		{{ html_label(__('Begintijd'), 'van', errors=errors, required=true) }}
-		{{ html_input_text('vandatum', iter, class='day', size=2) }} - 
-		{{ html_input_text('vanmaand', iter, class='month', size=2) }} - 
-		{{ html_input_text('vanjaar', iter, class='year', size=4) }}
-		{{ html_input_text('vanuur', iter, class='time', size=2) }}:
-		{{ html_input_text('vanminuut', iter, class='time', value='00', size=2) }}
+		{{ html_input_datetime('van', iter, errors=errors) }}
 	</div>
 
 	<div>
 		{{ html_label(__('Eindtijd'), 'tot', errors=errors) }}
 		{{ html_input_checkbox('use_tot', iter, 'yes', id='agenda_use_tot', onclick='set_visibility(this, \'agenda_tot\')', class='field-toggle') }}
 		<div id="agenda_tot">
-			{{ html_input_text('totdatum', iter, class='day', size=2) }} - 
-			{{ html_input_text('totmaand', iter, class='month', size=2) }} - 
-			{{ html_input_text('totjaar', iter, class='year', size=4) }}
-			{{ html_input_text('totuur', iter, class='time', size=2) }}:
-			{{ html_input_text('totminuut', iter, class='time', value='00', size=2) }}
+			{{ html_input_text('tot', iter, errors=errors) }}
 		</div>
 	</div>
 

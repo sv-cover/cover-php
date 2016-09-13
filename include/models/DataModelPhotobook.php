@@ -860,7 +860,7 @@
 		  * @iter a #DataIter representing a photo;
 		  * @result whether or not the delete was successful
 		  */
-		public function delete(DataIterPhoto $iter)
+		public function delete(DataIter $iter)
 		{
 			$result = parent::delete($iter);
 			
@@ -881,7 +881,7 @@
 		 * @param DataIterPhoto $photo to insert
 		 * @return int|boolean the photo id on success, or false on failure
 		 */
-		public function insert(DataIterPhoto $iter)
+		public function insert(DataIter $iter)
 		{
 			// Determine width and height of the new image
 			if (!$iter->has('width') || !$iter->has('height'))
