@@ -40,14 +40,14 @@
 		 * Database::get_last_insert_id, which won't work on a non-numerical
 		 * non-automatic primary key used by the configuratie table.
 		 */
-		protected function _insert($table, $iter, $getid = false)
+		protected function _insert($table, DataIter $iter, $get_id = false)
 		{
 			if (!$this->db)
 				return false;
 			
 			$this->db->insert($table, $iter->data, $iter->get_literals());
 			
-			return $getid ? $key : -1;
+			return $get_id ? $key : -1;
 		}
 		
 		/**

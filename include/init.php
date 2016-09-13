@@ -21,7 +21,7 @@
 	
 	if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'www.svcover.dev')
 	{
-		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE);
+		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE ^ E_DEPRECATED);
 
 		set_error_handler(function($number, $message, $file, $line, $vars) {
 			// while (ob_get_level() > 0 && ob_end_clean());

@@ -1321,7 +1321,7 @@
 		  * permissions associated with it
 		  * @iter a #DataIter representing a forum
 		  */
-		public function delete(DataIterForum $iter)
+		public function delete(DataIter $iter)
 		{
 			parent::delete($iter);
 			

@@ -33,9 +33,9 @@ class DataModelAnnouncement extends DataModel implements SearchProvider
 		parent::__construct($db, 'announcements');
 	}
 
-	protected function _id_string($id)
+	protected function _id_string($id, $table = null)
 	{
-		return sprintf("%s.id = %d", $this->table, $id);
+		return sprintf("%s.id = %d", $table, $id);
 	}
 
 	/* protected */ function _generate_query($conditions)
