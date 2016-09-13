@@ -46,7 +46,7 @@
 		{{ include('@layout/editable.twig', {'editable': foundation}) }}
 	</div>
 
-	{% if user_can_create model %}
+	{% if user_can_create controller.new_iter %}
 		<div class="timeline-footer">
 			<a href="{{ controller.link_to_create() }}" class="add-new-bestuur button">{{ __('Nieuw bestuur toevoegen...') }}</a>
 		</div>

@@ -5,7 +5,7 @@ require_once 'include/models/DataModelAnnouncement.php';
 
 class PolicyAnnouncement implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $announcement)
 	{
 		return get_identity()->member_in_committee();
 	}
@@ -30,7 +30,8 @@ class PolicyAnnouncement implements Policy
 
 	public function user_can_update(DataIter $announcement)
 	{
-		return get_identity()->member_in_committee($announcement->get('committee'));
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee($announcement->get('committee'));
 	}
 
 	public function user_can_delete(DataIter $announcement)

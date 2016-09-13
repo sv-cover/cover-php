@@ -787,3 +787,12 @@ $(document).on('ready partial-content-loaded', function(e) {
 		});
 	});
 });
+
+// When autofocus=end, put the cursor at the end of the text
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find("*[autofocus='end']").each(function() {
+		var len = $(this).val().length;
+		$(this).get(0).setSelectionRange(len, len);
+		// No need to focus first, the autofocus attribute should have taken care of that already
+	})
+});

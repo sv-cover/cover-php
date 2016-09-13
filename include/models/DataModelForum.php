@@ -1,9 +1,33 @@
 <?php
 	require_once 'include/data/DataModel.php';
-	require_once 'include/login.php';
+	require_once 'include/models/DataModelPoll.php';
 
 	class DataIterForum extends DataIter
 	{
+		public function new_thread()
+		{
+			return new DataIterForumThread($this->model, null, [
+				'forum' => $this['id'],
+				'author' => null,
+				'subject' => null,
+				'date' => null,
+				'author_type' => null,
+				'poll' => 0
+			]);
+		}
+
+		public function new_poll()
+		{
+			return new DataIterPoll($this->model, null, [
+				'forum' => $this['id'],
+				'author' => null,
+				'subject' => null,
+				'date' => null,
+				'author_type' => null,
+				'poll' => 1
+			]);
+		}
+
 		/**
 		  * Get the number of threads in a forum
 		  * @iter a #DataIter representing a forum
@@ -147,6 +171,49 @@
 
 	class DataIterForumMessage extends DataIter
 	{
+		public function get_unified_author()
+		{
+			return $this['author_type'] . '_' . $this['author'];
+		}
+
+		public function set_unified_author($author)
+		{
+			list($author_type, $author_id) = explode('_', $author, 2);
+
+			switch ($author_type)
+			{
+				case DataModelForum::TYPE_PERSON:
+					try {
+						get_model('DataModelMember')->get_iter($author_id);
+					} catch (DataIterNotFoundException $e) {
+						throw new InvalidArugmentException("No member with id '$author_id' found.", 0, $e);
+					}
+					break;
+
+				case DataModelForum::TYPE_COMMITTEE:
+					try {
+						get_model('DataModelCommissie')->get_iter($author_id);
+					} catch (DataIterNotFoundException $e) {
+						throw new InvalidArugmentException("No committee with id '$author_id' found.", 0, $e);
+					}
+					break;
+
+				case DataModelForum::TYPE_GROUP:
+					try {
+						get_model('DataModelForum')->get_group($author_id);
+					} catch (DataIterNotFoundException $e) {
+						throw new InvalidArugmentException("No group with id '$author_id' found.", 0, $e);
+					}
+					break;
+
+				default:
+					throw new InvalidArugmentException("Invalid author type");
+			}
+
+			$this->set('author', $author_id);
+			$this->set('author_type', $author_type);
+		}
+
 		/**
 		  * Return whether this message is the first message in the thread
 		  *
@@ -159,32 +226,28 @@
 			return $first['id'] == $this['id'];
 		}
 
-		/** 
-		  * Check whether the currently logged in user can edit this
-		  * message
-		  *
-		  * @result true if the message can be edited by the currently
-		  * logged in user, false otherwise
-		  */
-		public function editable() {
-			$info = logged_in();
-			
-			if (!$info)
-				return false;
-			
-			if (member_in_commissie(COMMISSIE_BESTUUR))
-				return true;
-			
-			$type = intval($this->author_type);
-			
-			switch ($type) {
-				case DataModelForum::TYPE_PERSON: /* Person */
-					return ($this->author == $info['id']);
-				break;
-				case DataModelForum::TYPE_COMMITTEE: /* Commissie */
-					return member_in_commissie($this->author);
-				break;
-			}
+		/**
+		 * Returns on which page in a thread this message will appear.
+		 */
+		public function get_thread_page()
+		{
+			$position = $this->db->query_value(sprintf('
+				WITH thread_messages AS (
+					SELECT
+						f_m.id,
+						ROW_NUMBER() OVER (ORDER BY f_m.date ASC) as position
+					FROM
+						forum_messages f_m
+					WHERE f_m.thread = %d
+				) 
+				SELECT
+					position
+				FROM
+					thread_messages
+				WHERE
+					id = %d', $this['thread'], $this['id']));
+
+			return floor($position / $this->model->messages_per_page);
 		}
 	}
 
@@ -198,6 +261,17 @@
 
 	class DataIterForumThread extends DataIter
 	{
+		public function new_message()
+		{
+			return new DataIterForumMessage($this->model, null, [
+				'thread' => $this['id'],
+				'author' => null,
+				'message' => null,
+				'date' => null,
+				'author_type' => null
+			]);
+		}
+
 		/**
 		  * Get the number of replies in a thread
 		  * @iter a #DataIter representing a thread
@@ -340,7 +414,7 @@
 	class DataModelForum extends DataModel
 	{
 		// Author types
-		const TYPE_ANONYMOUS = -1;
+		const TYPE_EVERYONE = -1;
 		const TYPE_PERSON = 1;
 		const TYPE_COMMITTEE = 2;
 		const TYPE_GROUP = 3;
@@ -393,6 +467,9 @@
 						forum_acl
 					WHERE
 						id = ' . intval($id));
+
+			if (!$row)
+				throw new DataIterNotFoundException('Could not found ACL rule.');
 			
 			return $this->_row_to_iter($row, 'DataIterForumPermission');
 		}
@@ -407,7 +484,7 @@
 		  * @result true if the commissie has the correct permissions,
 		  * false otherwise
 		  */
-		function check_acl_commissie($forum_id, $acl, $committee_id)
+		public function check_acl_commissie(DataIterForum $forum, $acl, $committee_id)
 		{
 			/* Check for general commissie perms */
 			$num = $this->db->query_value('
@@ -416,7 +493,7 @@
 					FROM
 						forum_acl
 					WHERE
-						forumid = ' . intval($forum_id) . ' AND
+						forumid = ' . intval($forum['id']) . ' AND
 						(permissions & ' . intval($acl) . ') <> 0 AND
 						(uid = ' . intval($committee_id) . ' OR uid = -1) AND
 						type = 2');
@@ -452,17 +529,10 @@
 		  * @result true if member has the correct permissions by
 		  * the commissies he's in, false otherwise
 		  */
-		protected function _check_acl_commissies($forumid, $acl, $member_id, $member_info = null)
+		protected function check_acl_commissies(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
-			if ($member_info)
-				$commissies = $member_info['committees'];
-			else {
-				$member_model = get_model('DataModelMember');
-				$commissies = $member_model->get_commissies($member_id);
-			}
-			
-			foreach ($commissies as $commissie) {
-				if ($this->check_acl_commissie($forumid, $acl, $commissie))
+			foreach ($identity->get('committees') as $committee) {
+				if ($this->check_acl_commissie($forum, $acl, $committee))
 					return true;
 			}
 			
@@ -479,7 +549,7 @@
 		  * @result true if member has the correct permissions by
 		  * the groups he's in, false otherwise
 		  */		
-		protected function _check_acl_group($forumid, $acl, $member_id)
+		protected function check_acl_group(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
 			$num = $this->db->query_value('
 					SELECT 
@@ -488,13 +558,13 @@
 						forum_acl,
 						forum_group_member
 					WHERE
-						forum_acl.forumid = ' . intval($forumid) . ' AND
+						forum_acl.forumid = ' . intval($forum['id']) . ' AND
 						(forum_acl.permissions & ' . intval($acl) . ') <> 0 AND 
 						forum_acl.type = 3 AND
 						forum_acl.uid = forum_group_member.guid AND
 						(forum_group_member.type = -1 OR (
 						(forum_group_member.type = 1 AND
-						forum_group_member.uid = ' . intval($member_id) . ')))');
+						forum_group_member.uid = ' . intval($identity->get('id')) . ')))');
 			
 			return $num > 0;
 		}
@@ -514,43 +584,28 @@
 		  * Check if a certain member has permissions to do something
 		  * in a certain forum by member permissions
 		  * @forumid the forum to check the permissions for
-		  * @acl the permission bitmask to check for (a value of -1
-		  * always succeeds)
-		  * @member_id optional; the member to check the permissions for 
-		  * (or -1 to check for the currently logged in member, which
-		  * is also the default)
+		  * @acl the permission bitmask to check for 
+		  * @member the member to check the permissions for 
 		  *
 		  * @result true if member has the correct permissions, false 
 		  * otherwise
 		  */
-		public function check_acl_member($forumid, $acl, $member_id = -1)
+		protected function check_acl_member(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
-			if ($acl == -1)
-				return true;
-
-			$member_info = null;
-
-			if ($member_id == -1) {
-				if (get_auth()->logged_in())
-					$member_id = get_identity()->get('id');
-				elseif ($acl & (self::ACL_WRITE | self::ACL_REPLY | self::ACL_POLL))
-					return false;
-			}
-
+			// Fetch the forum specific ACL policies
 			$num = $this->db->query_first('
 					SELECT
 						id
 					FROM
 						forum_acl
 					WHERE
-						forum_acl.forumid = ' . intval($forumid) . '
+						forum_acl.forumid = ' . intval($forum['id']) . '
 					LIMIT
 						1');
 			
-			if (!$num) {
-				/* Return the default ACL (which is read only) */
-				return $acl & ($this->get_default_acl());
-			}
+			// No specific policies? Then use the default
+			if (!$num)
+				return $acl & $this->get_default_acl();
 			
 			/* Check permissions for everyone (type == -1) and member (type == 1 AND uid = member) */
 			$num = $this->db->query_value('
@@ -559,10 +614,10 @@
 					FROM 
 						forum_acl
 					WHERE
-						forumid = ' . intval($forumid) . ' AND
+						forumid = ' . intval($forum['id']) . ' AND
 						(permissions & ' . intval($acl) . ') <> 0 AND 
 						(type = -1 OR
-						(uid = ' . intval($member_id) . ' AND type = 1))');
+						(uid = ' . intval($identity->get('id')) . ' AND type = 1))');
 			
 			/* Permission granted */
 			return $num > 0;
@@ -574,37 +629,18 @@
 		  * @forumid the forum to check the permissions for
 		  * @acl the permission bitmask to check for (a value of -1
 		  * always succeeds)
-		  * @member_id optional; the member to check the permissions for 
-		  * (or -1 to check for the currently logged in member, which
-		  * is also the default)
 		  *
 		  * @result true if member has the correct permissions, false
 		  * otherwise
 		  */
-		public function check_acl($forumid, $acl, $member_id = -1)
+		public function check_acl(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
-			if ($this->check_acl_member($forumid, $acl, $member_id))
-				return true;
+			if ($identity->member() === null)
+				return $acl & $this->get_default_acl();
 
-			if ($member_id == -1 && !get_auth()->logged_in() && ($acl & (self::ACL_WRITE | self::ACL_REPLY | self::ACL_POLL)))
-				return false;
-
-			if ($member_id == -1) {
-				$member_data = logged_in();
-				$member_id = $member_data['id'];
-			} else {
-				$member_data = null;
-			}
-			
-			/* Check commissie perms */
-			if ($this->_check_acl_commissies($forumid, $acl, $member_id, $member_data))
-				return true;
-			
-			/* Check forum group perms */
-			if ($this->_check_acl_group($forumid, $acl, $member_id, $member_data))
-				return true;			
-			
-			return false;
+			return $this->check_acl_member($forum, $acl, $identity)
+				|| $this->check_acl_commissies($forum, $acl, $identity)
+				|| $this->check_acl_group($forum, $acl, $identity);
 		}
 		
 		/**
@@ -634,7 +670,7 @@
 		  * @result a #DataIter if the forum could be found and
 		  * if permissions were met, false otherwise
 		  */
-		public function get_iter($forumid, $acl = -1)
+		public function get_iter($forumid)
 		{
 			$row = $this->db->query_first('
 					SELECT
@@ -644,9 +680,6 @@
 					WHERE
 						id = ' . intval($forumid));
 			
-			if (!$row || !$this->check_acl($forumid, intval($acl)))
-				throw new DataIterNotFoundException('Forum not found or not accessible');
-
 			return $this->_row_to_iter($row, 'DataIterForum');
 		}
 		
@@ -658,7 +691,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function get($readable = true)
+		public function get()
 		{
 			$rows = $this->db->query('
 					SELECT
@@ -669,20 +702,6 @@
 						position,
 						name');
 			
-			if (!$rows)
-				return [];
-
-			if ($readable) {
-				$items = $rows;
-				$rows = array();
-
-				foreach ($items as $row) {
-					/* Check forum readability */
-					if ($this->check_acl($row['id'], self::ACL_READ))
-						$rows[] = $row;
-				}
-			}
-
 			return $this->_rows_to_iters($rows, 'DataIterForum');
 		}
 		
@@ -702,6 +721,9 @@
 					WHERE
 						id = ' . intval($id) . '
 					LIMIT 1');
+
+			if (!$row)
+				throw new DataIterNotFoundException('Forum group not found');
 
 			return $this->_row_to_iter($row, 'DataIterForumGroup');		
 		}
@@ -784,8 +806,8 @@
 					WHERE
 						id = ' . intval($id));
 
-			if ($row && !$this->check_acl($row['forum'], self::ACL_READ))
-				throw new DataIterNotFoundException('Forum thread could not be found or you have no permission to read it.');
+			if (!$row)
+				throw new DataIterNotFoundException('Forum thread could not be found.');
 
 			return $this->_row_to_iter($row, 'DataIterForumThread');
 		}
@@ -805,9 +827,6 @@
 		  */
 		public function get_threads($forum, &$page, &$max)
 		{
-			if (!$this->check_acl($forum->get('id'), self::ACL_READ))
-				return null;
-
 			$max = max($forum->get_num_forum_pages() - 1, 0);
 			$page = min($max, max(0, intval($page)));
 			
@@ -836,7 +855,7 @@
 						1');
 
 			if (!$row)
-				throw new DataIterNotFoundException('Forum message not found');
+				throw new DataIterNotFoundException('Forum message not found.');
 			
 			return $this->_row_to_iter($row, 'DataIterForumMessage');
 		}
@@ -906,47 +925,50 @@
 			
 			if (isset($authors[$type][$id][$field]))
 				return $authors[$type][$id][$field];
+
+			// Default value when no author is found
+			$author = [
+				'name' => __('Onbekend'),
+				'avatar' => null,
+				'email' => null
+			];
 			
-			switch ($type) {
-				case self::TYPE_PERSON: /* Person */
-					$member_model = get_model('DataModelMember');
-					$member = $member_model->get_iter($id);
-					
-					if (!$member)
-						return null;
+			try {
+				switch ($type) {
+					case self::TYPE_PERSON: /* Person */
+						$member_model = get_model('DataModelMember');
+						$member = $member_model->get_iter($id);
+						
+						$name = member_nick_name($member);
 
-					$name = member_nick_name($member);
-
-					if ($name == '')
-						$name = member_full_name($member, BE_PERSONAL);
-					
-					$authors[$type][$id][$field] = array(
-						'name' => $name,
-						'avatar' => $member->get('avatar'),
-						'email' => $member->get('email')
-					);
-				break;
-				case self::TYPE_COMMITTEE: /* Commissie */
-					$commissie_model = get_model('DataModelCommissie');
-					$commissie = $commissie_model->get_iter($id);
-					
-					if (!$commissie)
-						return null;
-
-					$avatar_file = 'images/avatars/' . $commissie->get('nocaps') . '.png';
-					
-					$authors[$type][$id][$field] = array(
-						'name' => $commissie->get('naam'),
-						'avatar' => file_exists($avatar_file) ? $avatar_file : null,
-						'email' => $commissie->get('email')
-					);
-				break;
+						if ($name == '')
+							$name = member_full_name($member, BE_PERSONAL);
+						
+						$author = array(
+							'name' => $name,
+							'avatar' => $member->get('avatar'),
+							'email' => $member->get('email')
+						);
+					break;
+					case self::TYPE_COMMITTEE: /* Commissie */
+						$commissie_model = get_model('DataModelCommissie');
+						$commissie = $commissie_model->get_iter($id);
+						
+						$avatar_file = 'images/avatars/' . $commissie->get('nocaps') . '.png';
+						
+						$author = array(
+							'name' => $commissie->get('naam'),
+							'avatar' => file_exists($avatar_file) ? $avatar_file : null,
+							'email' => $commissie->get('email')
+						);
+					break;						
+				}
+			} catch (DataIterNotFoundException $e) {
+				// Too bad Zubat! We'll go with the default value that was set before the switch.
 			}
 			
-			if (!isset($authors[$type][$id][$field]))
-				$authors[$type][$id][$field] = array('name' => '', 'avatar' => null, 'email' => null);
-			
-			return $authors[$type][$id][$field];		
+			// Cache and return the value!
+			return $authors[$type][$id][$field] = $author;
 		}
 
 		/**
@@ -958,10 +980,12 @@
 		public function get_author_info(DataIter $message)
 		{
 			$info = $this->_get_author_info_real($message, 'author');
-			$info_last = $this->_get_author_info_real($message, 'last_author');
 			
-			$info['last_name'] = $info_last['name'];
-			$info['last_avatar'] = $info_last['avatar'];
+			if (isset($message['last_author'])) {
+				$info_last = $this->_get_author_info_real($message, 'last_author');
+				$info['last_name'] = $info_last['name'];
+				$info['last_avatar'] = $info_last['avatar'];
+			}
 			
 			return $info;
 		}
@@ -977,7 +1001,7 @@
 		public function get_acl_name(DataIterForumPermission $acl)
 		{
 			switch ($acl->get('type')) {
-				case self::TYPE_ANONYMOUS:
+				case self::TYPE_EVERYONE:
 					return __('Iedereen');
 				case self::TYPE_PERSON:
 					if ($acl->get('uid') == -1)
@@ -1025,7 +1049,7 @@
 		public function get_acl_type(DataIterForumPermission $acl)
 		{
 			switch ($acl->get('type')) {
-				case self::TYPE_ANONYMOUS:
+				case self::TYPE_EVERYONE:
 					return __('Iedereen');
 				case self::TYPE_PERSON:
 					return __('Lid');
@@ -1050,7 +1074,11 @@
 		  */
 		public function insert_thread(DataIterForumThread $iter)
 		{
-			return $this->_insert('forum_threads', $iter, true);
+			$id = $this->_insert('forum_threads', $iter, true);
+
+			$iter->set_id($id);
+
+			return $id;
 		}
 		
 		/**
@@ -1281,8 +1309,10 @@
 		public function insert_message(DataIterForumMessage $iter)
 		{
 			/* Mark the thread as unread */
-			$this->mark_unread($iter->get('thread'));
-			return $this->_insert('forum_messages', $iter, true);
+			$this->mark_unread($iter['thread']);
+			$id = $this->_insert('forum_messages', $iter, true);
+			$iter->set_id($id);
+			return $id;
 		}
 		
 		/**

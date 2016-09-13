@@ -19,7 +19,7 @@ class ControllerAnnouncements extends ControllerCRUD
 
 	protected function _validate(array $data, array &$errors)
 	{
-		if (!member_in_commissie($data['committee']))
+		if (!get_identity()->member_in_committee($data['committee']))
 			$errors[] = 'committee';
 
 		if (strlen($data['subject']) == 0)

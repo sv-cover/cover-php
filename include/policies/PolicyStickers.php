@@ -4,8 +4,9 @@ require_once 'include/member.php';
 
 class PolicyStickers implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $sticker)
 	{
+		// Members are allowed to add new stickers (also contributors etc.)
 		return get_auth()->logged_in();
 	}
 
@@ -16,8 +17,15 @@ class PolicyStickers implements Policy
 
 	public function user_can_update(DataIter $sticker)
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR)
-			|| ($sticker->get('toegevoegd_door') != null && $sticker->get('toegevoegd_door') == logged_in('id'));
+		// Board can admin the stickers
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+			return true;
+
+		// Only the owner can update their stickers
+		if ($sticker->get('toegevoegd_door') != null)
+			return $sticker->get('toegevoegd_door') == get_identity()->get('id');
+
+		return false;
 	}
 
 	public function user_can_delete(DataIter $sticker)

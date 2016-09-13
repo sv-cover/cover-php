@@ -106,6 +106,11 @@
 		{
 			return method_exists($this, 'get_' . $field);
 		}
+
+		public function has_setter($field)
+		{
+			return method_exists($this, 'set_'. $field);
+		}
 		
 		/**
 		  * Get iter data
@@ -124,7 +129,7 @@
 			if ($this->has_getter($field))
 				return call_user_func(array($this, 'get_' . $field));
 
-			trigger_error('DataIter has no field named ' . $field, E_USER_WARNING);
+			trigger_error(get_class($this) . ' has no field named ' . $field, E_USER_WARNING);
 			return null;
 		}
 		
@@ -135,6 +140,13 @@
 		  */
 		public function set($field, $value)
 		{
+			if ($field == 'id')
+				throw new InvalidArgumentException('id field can only be altered using DataIter::set_id');
+
+			/* if there is a setter for this field, delegate to that one */
+			if ($this->has_setter($field))
+				return call_user_func_array([$this, 'set_' . $field], [$value]);
+
 			/* Remove the literal if set at the moment */
 			if (($index = array_search($field, $this->literals)) !== false)
 				unset($this->literals[$index]);

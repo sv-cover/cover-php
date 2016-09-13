@@ -85,11 +85,15 @@
 			}
 		}
 
-		protected function _form_is_submitted($form)
+		protected function _form_is_submitted($action, $arg0 = null)
 		{
-			return $_SERVER['REQUEST_METHOD'] == 'POST';
-				// && !empty($_POST['_' . $form . '_nonce'])
-				// && in_array($_POST['_' . $form . '_nonce'], $_SESSION[$form . '_nonce']);
+			// Turn _form_is_submitted('delete', iter) to 'delete_24'
+			$args = array_slice(func_get_args(), 1);
+			$action_name = nonce_action_name($action, $args);
+
+			return $_SERVER['REQUEST_METHOD'] == 'POST'
+				&& !empty($_POST['_nonce'])
+				&& nonce_verify($_POST['_nonce'], $action_name);
 		}
 
 		final protected function get_content()

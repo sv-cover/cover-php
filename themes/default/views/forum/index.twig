@@ -17,7 +17,7 @@
 	{% set prev_header = null %}
 	{% set last_header = null %}
 		
-	{% for iter in iters %}
+	{% for iter in iters if user_can_read iter %}
 		{% for header in headers if iter.position > header.position %}
 			{% set last_header = header %}
 		{% endfor %}

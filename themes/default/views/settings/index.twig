@@ -30,7 +30,7 @@
 				{% endif %}
 			{% endfor %}
 		</tbody>
-		{% if user_can_create model %}
+		{% if user_can_create controller.new_iter %}
 		<tfoot>
 			<tr>
 				<td colspan="3">

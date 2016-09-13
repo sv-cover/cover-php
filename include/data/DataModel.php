@@ -44,7 +44,7 @@
 				$this->auto_increment = $this->id == 'id';
 		}
 
-		public function create_iter($row = array(), $dataiter = null)
+		public function new_iter($row = array(), $dataiter = null)
 		{
 			if (!$dataiter)
 				$dataiter = $this->dataiter;
@@ -181,6 +181,7 @@
 
 		/**
 		  * Create a #DataIter from data
+		  * TODO: public because often called from DataIter!
 		  * @row an array containing the data
 		  *
 		  * @result a #DataIter
@@ -188,13 +189,14 @@
 		/*protected*/ public function _row_to_iter($row, $dataiter = null)
 		{
 			if ($row)
-				return $this->create_iter($row, $dataiter);
+				return $this->new_iter($row, $dataiter);
 			else
 				return $row;
 		}
 		
 		/**
 		  * Create array of #DataIter from array of data
+		  * TODO: public because often called from DataIter!
 		  * @rows an array containing arrays of data
 		  *
 		  * @result an array of #DataIter
@@ -208,8 +210,6 @@
 
 		protected function _rows_to_table($rows, $key_field, $value_field)
 		{
-			
-
 			if (is_array($value_field))
 				$create_value = function($row) use ($value_field) {
 					return array_map(function($field) use ($row) {
@@ -316,7 +316,7 @@
 
 					default:
 					case 'eq':
-						$format = '%s = %s';
+						$format = "%s = '%s'";
 						break;
 				}
 

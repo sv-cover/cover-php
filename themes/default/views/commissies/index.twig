@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="pageHeading">
-	{% if user_can_create model %}
+	{% if user_can_create controller.new_iter %}
 		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuwe commissie') }}</a></div>
 	{% endif %}
 	<h1>{{ __('Commissies') }}</h1>

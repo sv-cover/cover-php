@@ -1,6 +1,6 @@
 <?php
 
-class Policy_Twig_Node_Expression_UserCanCreate extends Twig_Node_Expression
+abstract class Policy_Twig_Node_Expression_UserCan extends Twig_Node_Expression
 {
     public function __construct(Twig_NodeInterface $node, $lineno)
     {
@@ -11,29 +11,22 @@ class Policy_Twig_Node_Expression_UserCanCreate extends Twig_Node_Expression
     {
         $compiler->raw(' get_policy(');
         $compiler->subcompile($this->getNode('node'));
-        $compiler->raw(')->user_can_create()');
-    }
-}
-
-
-abstract class Policy_Twig_Node_Expression_UserCan extends Twig_Node_Expression
-{
-    public function __construct(Twig_NodeInterface $node, $lineno)
-    {
-        parent::__construct(array('node' => $node), array(), $lineno);
-    }
-
-    public function compile(Twig_Compiler $compiler)
-    {
-        $compiler->raw(' get_policy(call_user_func(array(');
-        $compiler->subcompile($this->getNode('node'));
-        $compiler->raw(', \'model\')))->' . $this->action() . '(');
+        $compiler->raw(')->' . $this->action() . '(');
         $compiler->subcompile($this->getNode('node'));
         $compiler->raw(')');
     }
 
     abstract protected function action();
 }
+
+class Policy_Twig_Node_Expression_UserCanCreate extends Policy_Twig_Node_Expression_UserCan
+{
+    protected function action()
+    {
+        return 'user_can_create';
+    }
+}
+
 
 class Policy_Twig_Node_Expression_UserCanRead extends Policy_Twig_Node_Expression_UserCan
 {
@@ -96,17 +89,17 @@ class PolicyTwigExtension extends Twig_Extension
         return [
             new Twig_SimpleFilter('user_can_read', function($iters) {
                 return array_filter($iters, function($iter) {
-                    return get_policy($iter->model())->user_can_read($iter);
+                    return get_policy($iter)->user_can_read($iter);
                 });
             }),
             new Twig_SimpleFilter('user_can_update', function($iters) {
                 return array_filter($iters, function($iter) {
-                    return get_policy($iter->model())->user_can_update($iter);
+                    return get_policy($iter)->user_can_update($iter);
                 });
             }),
             new Twig_SimpleFilter('user_can_delete', function($iters) {
                 return array_filter($iters, function($iter) {
-                    return get_policy($iter->model())->user_can_delete($iter);
+                    return get_policy($iter)->user_can_delete($iter);
                 });
             })
         ];

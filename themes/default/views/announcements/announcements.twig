@@ -1,7 +1,11 @@
 {% set hidden_announcements_cnt = iters|length - iters|map([policy, 'user_can_read'])|length  %}
 
 <div class="newsHeading">
-	{% if user_can_create model %}
+	{# Normally I would use controller.new_iter here, but this template is embedded
+	in the homepage and no controller is passed in. This is also the reason that
+	the controller isn't used to generate the links, as is done in all the other
+	CRUD-based views. #}
+	{% if user_can_create global.models.Announcement.new_iter %}
 		<div class="controls inline"><a href="announcements.php?view=create" class="create-link">{{ __('Nieuwe mededeling') }}</a></div>
 	{% endif %}
 	
@@ -14,7 +18,7 @@
 	{% endif %}
 </div>
 
-{% for item in iters if policy.user_can_read(item) %}
+{% for item in iters if user_can_read item %}
 	{% set committee = item.getIter('committee') %}
 	<hr class="colorAccent committee.login">
 	<div class="messageBox announcement frontpage">

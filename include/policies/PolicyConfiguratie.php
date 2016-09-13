@@ -2,7 +2,7 @@
 
 class PolicyConfiguratie implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $entry)
 	{
 		return get_identity()->member_in_committee(COMMISSIE_EASY);
 	}

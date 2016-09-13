@@ -46,7 +46,7 @@ class ControllerBesturen extends ControllerCRUD
 			'owner' => COMMISSIE_BESTUUR,
 			'titel' => $data['naam']);
 
-		$page = $editable_model->create_iter($page_data);
+		$page = $editable_model->new_iter($page_data);
 
 		$page_id = $editable_model->insert($page, true);
 

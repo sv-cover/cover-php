@@ -3,51 +3,47 @@
 {% block title thread.subject ~ ' :: ' ~ forum.name ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1><a href="forum.php">{{ __('Forum') }}</a> :: <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
+<h1><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
 
 <div class="topbar">
 	{% if max > 0 %}
-		{{ page_navigation('forum.php?thread=' ~ thread.id, page, max)|raw }}
+		{{ view.page_navigation('forum.php?thread=' ~ thread.id, page, max)|raw }}
 	{% endif %}
-	{% if can_reply %}
-		<button id="newbericht" class="button">{{ __('Nieuw antwoord') }}</button>
+	{% if user_can_create thread.new_message %}
+		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button new-reply-button">
+			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
+			{{ __('Nieuw antwoord') }}
+		</a>
 	{% else %}
 		{{ __('Je kunt niet antwoorden in dit forum') }}
 	{% endif %}
-	{% if thread.editable %}
+	{% if user_can_update thread %}
 		<div class="text_right">
-			<form method="post" action="forum.php">
-				{{ html_input_hidden('thread_id', thread.id) }}
-				{{ html_input_hidden('submforummovethread', 'yes') }}
+			<form method="post" action="forum.php?thread={{ thread.id }}">
+				{{ html_nonce('forum_move_thread_' ~ thread.id) }}
 				{{ html_label(__('Verplaats bericht naar'), 'forum_id') }}
-				{{ html_select('forum_id', model.check_acl(forum.id, constant('DataModelForum::ACL_WRITE')), {forum_id: thread.forum}) }}
+				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum}) }}
 				<input type="image" src="{{ link_static('images/next.png') }}">
 			</form>
 		</div>
 	{% endif %}
 </div>
 
-{% if can_reply %}
-	{{ include('new_message_form.twig', {
-		authors: view.get_authors(forum.id, constant('DataModelForum::ACL_REPLY'))
-		parent: thread,
-		subm: 'submforumnewmessage',
-		params: params,
-		subject: false
-	}) }}
-{% endif %}
-
 <table class="forum thread">
+	<colgroup>
+		<col class="author">
+		<col class="message">
+	</colgroup>
 	<thead>
 		<tr class="separator">
 			<td colspan="2">{{ thread.subject }}</td>
 		</tr>
 	</thead>
 	<tbody>
-	{% for message in messages %}	
+	{% for message in messages if user_can_read message %}
 		{% set author = model.get_author_info(message) %}
 		{% set author_link = view.get_author_link(message) %}
-		<tr id="p{{ message.id }}">
+		<tr id="p{{ message.id }}" class="{{ loop.index is odd ? 'r0' : 'r1' }}">
 			<td class="author">
 				{% if author %}
 					{% if author_link %}
@@ -63,7 +59,7 @@
 					{% set author_stats = model.get_author_stats(message) %}
 					<span class="smaller">
 						{{ __('Posts') }}: {{ author_stats.posts }}<br>
-						({{ '%02.02f'|format(author.percentage_of_total) }})
+						({{ '%02.02f'|format(author_stats.percentage_of_total) }})
 					</span>
 				{% else %}
 					__('Onbekend')
@@ -72,27 +68,29 @@
 			<td class="message">
 				<div class="right">{{ message.datum }}</div>
 				<div class="right">
-					{% if message.editable %}
-						<a href="forum.php?modmessage={{ message.id }}&amp;page={{ page }}">
+					{% if user_can_update message %}
+						<a href="forum.php?thread={{ thread.id }}&amp;view=reply&amp;message={{ message.id }}">
 							<img src="{{ link_static('images/edit_small.png') }}"
 							     alt="{{ __('Bewerk') }}"
 							     title="{{ __('Bewerk bericht') }}">
 						</a>
 					{% endif %}
 		
-					{% if can_delete %}
-						<a href="forum.php?delmessage={{ message.id }}&amp;page={{ page }}">
+					{% if user_can_delete message %}
+						<a href="forum.php?thread={{ thread.id }}&amp;view=delete_reply&amp;message={{ message.id }}">
 							<img src="{{ link_static('images/delete_small.png') }}"
-								 alt="{{ __('Verwijder') }}"
-								 title="{{ __('Verwijder bericht') }}">
+							     alt="{{ __('Verwijder') }}"
+							     title="{{ __('Verwijder bericht') }}">
 						</a>
 					{% endif %}
 	
-					<a href="#" onclick="quote({{ message.id }}, {{ author.name|json_encode|raw }})">
-						<img src="{{ link_static('images/quote.png') }}"
-						     alt="{{ __('quote') }}"
-						     title="{{ __('Quote geselecteerde tekst van bericht') }}">
-					</a>
+					{% if user_can_create thread.new_message %}
+						<a href="forum.php?thread={{ thread.id }}&amp;view=reply&amp;quote_message={{ message.id }}">
+							<img src="{{ link_static('images/quote.png') }}"
+							     alt="{{ __('quote') }}"
+							     title="{{ __('Quote geselecteerde tekst van bericht') }}">
+						</a>
+					{% endif %}
 				</div>
 
 				{{ message.message|parse_markup }}
@@ -104,6 +102,30 @@
 				{% endif %}
 			</td>
 		</tr>
+	{% endfor %}
 	</tbody>
 </table>
+<div class="bar">
+	{% if max > 0 %}
+		{{ view.page_navigation('forum.php?thread=' ~ thread.id, page, max)|raw }}
+	{% endif %}
+	{% if user_can_create thread.new_message %}
+		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button">
+			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
+			{{ __('Nieuw antwoord') }}
+		</a>
+	{% else %}
+		{{ __('Je kunt niet antwoorden in dit forum') }}
+	{% endif %}
+	{% if user_can_update thread %}
+		<div class="text_right">
+			<form method="post" action="forum.php?thread={{ thread.id }}">
+				{{ html_nonce('forum_move_thread_' ~ thread.id) }}
+				{{ html_label(__('Verplaats bericht naar'), 'forum_id') }}
+				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum}) }}
+				<input type="image" src="{{ link_static('images/next.png') }}">
+			</form>
+		</div>
+	{% endif %}
+</div>
 {% endblock %}

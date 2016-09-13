@@ -20,7 +20,13 @@ class ControllerCRUD extends Controller
 		if (!$this->_validate($iter, $data, $errors))
 			return false;
 
+		// TODO: Oh this is soo unsafe! We just set all the data, then insert all the data using the model :(
 		$iter->set_all($data);
+
+		// Huh, why are we checking again? Didn't we already check in the run_create() method?
+		// Well, yes, but sometimes a policy is picky about how you fill in the data!
+		if (!get_policy($iter)->user_can_create($iter))
+			throw new UnauthorizedException('You are not allowed to create this DataIter according to the policy.');
 
 		$id = $this->model->insert($iter);
 
@@ -63,9 +69,12 @@ class ControllerCRUD extends Controller
 		return View::byName($view, $this);
 	}
 
-	protected function _create_iter()
+	/**
+	 * The view needs an empty iter to check the user_can_create policy against.
+	 */
+	public function new_iter()
 	{
-		return $this->model->create_iter();
+		return $this->model->new_iter();
 	}
 
 	public function link(array $arguments)
@@ -105,14 +114,14 @@ class ControllerCRUD extends Controller
 
 	public function run_create()
 	{
-		if (!get_policy($this->model)->user_can_create())
+		$iter = $this->new_iter();
+
+		if (!get_policy($this->model)->user_can_create($iter))
 			throw new Exception('You are not allowed to add new items.');
 
 		$success = false;
 
 		$errors = array();
-
-		$iter = $this->_create_iter();
 
 		if ($this->_form_is_submitted('create'))
 			if ($this->_create($iter, $_POST, $errors))
@@ -138,7 +147,7 @@ class ControllerCRUD extends Controller
 
 		$errors = array();
 
-		if ($this->_form_is_submitted('update'))
+		if ($this->_form_is_submitted('update', $iter))
 			if ($this->_update($iter, $_POST, $errors))
 				$success = true;
 
@@ -154,7 +163,7 @@ class ControllerCRUD extends Controller
 
 		$errors = array();
 
-		if ($this->_form_is_submitted('delete'))
+		if ($this->_form_is_submitted('delete', $iter))
 			if ($this->_delete($iter, $errors))
 				$success = true;
 

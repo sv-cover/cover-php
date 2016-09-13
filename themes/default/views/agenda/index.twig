@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="pageHeading">
-	{% if user_can_create model %}
+	{% if user_can_create controller.new_iter %}
 		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuw agendapunt') }}</a></div>
 	{% endif %}
 	<h1>{{ view.title }}</h1>

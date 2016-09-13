@@ -105,7 +105,6 @@ class View
 			'view' => $this,
 			'controller' => $this->controller,
 			'model' => $this->controller ? $this->controller->model() : null,
-			'policy' => ($this->controller && $this->controller->model()) ? get_policy($this->controller->model()) : null,
 			'global' => [
 				'auth' => get_auth(),
 				'identity' => get_identity(),

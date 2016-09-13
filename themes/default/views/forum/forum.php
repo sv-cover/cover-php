@@ -1,4 +1,5 @@
 <?php
+require_once 'include/models/DataModelPoll.php';
 
 class ForumView extends View
 {
@@ -18,37 +19,44 @@ class ForumView extends View
 		return $this->twig->render('index.twig', compact('iters', 'headers'));
 	}
 
-	public function render_forum(DataIterForum $forum, $params)
+	public function render_forum(DataIterForum $forum)
 	{
 		$model = get_model('DataModelForum');
 
-		$page = isset($params['page']) ? $params['page'] : 0;
+		$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
 		
 		$threads = $model->get_threads($forum, $page, $max);
 
-		$can_create_topic = $model->check_acl($forum['id'], DataModelForum::ACL_WRITE);
-		
-		$can_create_poll = $model->check_acl($forum['id'], DataModelForum::ACL_POLL);
-
-		return $this->twig->render('forum.twig', compact('forum', 'params', 'page', 'max', 'threads', 'can_create_topic', 'can_create_poll'));
+		return $this->twig->render('forum.twig', compact('forum', 'page', 'max', 'threads'));
 	}
 
-	public function render_thread(DataIterForumThread $thread, $params)
+	public function render_thread(DataIterForumThread $thread)
 	{
 		$model = get_model('DataModelForum');
 
-		$forum = $model->get($thread['forum'], -1);
+		$forum = $model->get_iter($thread['forum']);
 
-		$page = isset($params['page']) ? $params['page'] : 0;
+		$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
 
 		$messages = $thread->get_messages($page, $max);
 
-		$can_reply = $model->check_acl($thread['forum'], DataModelForum::ACL_REPLY);
+		return $this->twig->render('thread.twig', compact('thread', 'forum', 'page', 'messages', 'max'));
+	}
 
-		$can_delete = get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-				   || get_identity()->member_in_committee(COMMISSIE_EASY);
+	public function render_message_form(DataIterForumMessage $iter, array $errors)
+	{
+		$model = get_model('DataModelForum');
 
-		return $this->twig->render('thread.twig', compact('thread', 'forum', 'page', 'messages', 'can_reply', 'can_delete', 'max'));
+		$thread = $model->get_thread($iter['thread']);
+
+		$forum = $model->get_iter($thread['forum']);
+
+		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_REPLY);
+
+		if ($iter->has_id() && !array_key_exists($iter['unified_author'], $unified_authors))
+			$unified_authors[$iter['unified_author']] = __('(Onveranderd)');
+
+		return $this->twig->render('reply_form.twig', compact('iter', 'thread', 'forum', 'errors', 'unified_authors'));
 	}
 
 	public function get_authors(DataIterForum $forum, $acl)
@@ -69,6 +77,32 @@ class ForumView extends View
 		return $authors;
 	}
 
+	public function get_unified_authors(DataIterForum $forum, $acl)
+	{
+		$model = get_model('DataModelForum');
+
+		$authors = array();
+
+		$member = get_identity()->member();
+		$authors[DataModelForum::TYPE_PERSON . '_' . $member['id']] = $member['full_name'];
+
+		$committee_model = get_model('DataModelCommissie');
+		
+		// TODO: Select using id instead if DataIterCommittee because $member['committees'] still returns id's instead of whole dataiters...
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY))
+			$committee_ids = array_select($committee_model->get(), 'id');
+		else
+			$committee_ids = $member['committees'];
+
+		foreach ($committee_ids as $committee_id)
+			if ($model->check_acl_commissie($forum, $acl, $committee_id))
+				$authors[DataModelForum::TYPE_COMMITTEE . '_' . $committee_id] = $committee_model->get_naam($committee_id);
+
+		return $authors;
+	}
+
 	public function get_author_link(DataIter $message, $last = false)
 	{
 		if ($last && $message['last_author_type'])
@@ -76,18 +110,23 @@ class ForumView extends View
 		else
 			$field = 'author';
 
-		switch (intval($message[$field . '_type']))
-		{
-			case DataModelForum::TYPE_PERSON: /* Person */
-				return 'profiel.php?lid=' . $message[$field];
-			
-			case DataModelForum::TYPE_COMMITTEE: /* Commissie */
-				$committee_model = get_model('DataModelCommissie');
-				$committee = $committee_model->get_iter($message[$field]);
-				return 'commissies.php?commissie=' . urlencode($committee['login']);
-			
-			default:
-				return null;
+		try {
+			switch (intval($message[$field . '_type']))
+			{
+				case DataModelForum::TYPE_PERSON: /* Person */
+					return 'profiel.php?lid=' . $message[$field];
+				
+				case DataModelForum::TYPE_COMMITTEE: /* Commissie */
+					$committee_model = get_model('DataModelCommissie');
+					$committee = $committee_model->get_iter($message[$field]);
+					return 'commissies.php?commissie=' . urlencode($committee['login']);
+				
+				default:
+					return null;
+			}
+		} catch (DataIterNotFoundException $e) {
+			// Sometimes an author just doesnt exist anymore in the database. That's legacy for you!
+			return null;
 		}
 	}
 
@@ -125,5 +164,21 @@ class ForumView extends View
 			$links[] = sprintf('<a href="forum.php?thread=%d&amp;page=%d">%d</a>', $thread['id'], $page, $page + 1);
 
 		return $links;
+	}
+
+	public function writeable_forums()
+	{
+		$model = get_model('DataModelForum');
+
+		$writeable = array();
+
+		$policy = get_policy('DataIterForumThread');
+
+		// Writeable forums are forums in which a new thread can be created
+		foreach ($model->get() as $forum)
+			if ($policy->user_can_create($forum->new_thread()))
+				$writeable[$forum['id']] = $forum['name'];
+
+		return $writeable;
 	}
 }

@@ -2,7 +2,7 @@
 
 class PolicyMember implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $iter)
 	{
 		// Nobody can create except for the API, which is called by Secretary.
 		return false;

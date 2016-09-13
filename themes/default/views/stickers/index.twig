@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="pageheading">
-	{% if user_can_create model %}
+	{% if user_can_create controller.new_iter %}
 	<div class="controls inline">
 		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="create-link" data-placement-selector="modal" data-partial-selector=".add-sticker-form">
 			{{ __('Nieuwe sticker') }}
@@ -50,9 +50,9 @@
 		? document.location.href.match(/sticker=(\d+)/)[1]
 		: null;
 
-	var removeLink = {{ controller.link_to_delete(model.create_iter({'id': 'XXX'}))|json_encode()|raw }};
+	var removeLink = {{ controller.link_to_delete(model.new_iter({'id': 'XXX'}))|json_encode()|raw }};
 
-	var addPhotoLink = {{ controller.link_to_add_photo(model.create_iter({'id': 'XXX'}))|json_encode()|raw }};
+	var addPhotoLink = {{ controller.link_to_add_photo(model.new_iter({'id': 'XXX'}))|json_encode()|raw }};
 
 	// Initialize the sticker map
 	$(function() {
