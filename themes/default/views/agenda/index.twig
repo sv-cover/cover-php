@@ -41,14 +41,14 @@
 {% else %}
 <table class="agenda" style="background-color: #000;">
 {% for punt in iters %}
-	{% if curmaand != punt.vanmaand %}
+	{% if curmaand != punt.van|date('n') %}
 		</table>
 		<h2>
-			{{ months[punt.vanmaand] }}
-			{% if show_year %}{{ punt.vanjaar }}{% endif %}
+			{{ months[punt.van|date('n')] }}
+			{% if show_year %}{{ punt.van|date('Y') }}{% endif %}
 		</h2>
 		<table class="agenda">
-		{% set curmaand = punt.vanmaand %}
+		{% set curmaand = punt.van|date('n') %}
 	{% endif %}
 	
 	<tr>
@@ -59,9 +59,9 @@
 			</div>
 		</td>
 		<td>
-			<a class="agendalink" href="{{ controller.link_to_read(punt) }}">{{ punt.kop }}</a>
-			{% if punt.is_proposal %}<span class="label-pending">{{ __('Nog niet gepubliceerd') }}</span>{% endif %}
-			<br>
+			<a class="agendalink" href="{{ controller.link_to_read(punt) }}">{{ punt.kop }}</a><br>
+			{% if punt.is_proposal %}<span class="label-pending">{{ __('Nog niet gepubliceerd') }}</span><br>{% endif %}
+			
 			{{ punt|period }}<br>
 
 			{% if punt.locatie %}
