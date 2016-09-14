@@ -39,6 +39,13 @@ class ControllerApi extends Controller
 			if (get_policy($agenda)->user_can_read($activity))
 				$activities[] = $activity->data;
 
+		// Add the properties that Newsletter expects
+		foreach ($activities as &$activity) {
+			$van = strtotime($activity['van']);
+			$activity['vandatum'] = date('d', $van);
+			$activity['vanmaand'] = date('m', $van);
+		}
+
 		return $activities;
 	}
 
