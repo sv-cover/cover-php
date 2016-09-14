@@ -106,15 +106,6 @@
 		if (match)
 			$(this).val(match[1]);
 	});
-
-{% if not iter.has_id %}
-	var now = new Date();
-	af = document.agenda_form;
-	af.vandatum.value = now.getDate();
-	af.vanmaand.value = now.getMonth() + 1;
-	af.vanjaar.value = (now.getYear() < 1900 ? now.getYear() + 1900 : now.getYear());
-	af.vanuur.value = now.getHours() + 1;
-{% endif %}
 </script>
 </div>
 {% endblock %}
