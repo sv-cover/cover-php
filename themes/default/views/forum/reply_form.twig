@@ -32,7 +32,7 @@
 		<div>
 			<button type="submit" class="button">{{ iter.has_id ? __('Wijzig bericht') : __('Plaats bericht') }}</button>
 			{% if iter.has_id %}
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Bekijk thread') }}</a>
+			<a href="forum.php?message={{ iter.id }}">{{ __('Bekijk bericht in thread') }}</a>
 			{% endif %}
 		</div>
 	</form>

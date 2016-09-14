@@ -1310,9 +1310,7 @@
 		{
 			/* Mark the thread as unread */
 			$this->mark_unread($iter['thread']);
-			$id = $this->_insert('forum_messages', $iter, true);
-			$iter->set_id($id);
-			return $id;
+			return $this->_insert('forum_messages', $iter, true);
 		}
 		
 		/**

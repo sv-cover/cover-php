@@ -29,8 +29,8 @@ class ControllerForum extends Controller
 
 	private function _is_admin()
 	{
-		return !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			&& !get_identity()->member_in_committee(COMMISSIE_EASY);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 	
 	private function _assert_admin()
@@ -60,7 +60,7 @@ class ControllerForum extends Controller
 				return $this->_is_admin() || get_identity()->member()->get('id') == $author_id ? $value : false;
 
 			case DataModelForum::TYPE_COMMITTEE:
-				return $this->_is_admin() || get_identity()->member_in_committee($author_id);
+				return $this->_is_admin() || get_identity()->member_in_committee($author_id) ? $value : false;
 
 			case DataModelForum::TYPE_GROUP:
 				try {
@@ -205,29 +205,6 @@ class ControllerForum extends Controller
 		}
 		
 		return $this->view->redirect('forum.php?thread=' . $tid);
-	}
-	
-	private function _process_new_message($params)
-	{
-		$thread = $this->model->get_thread(get_post('parent_id'));
-		
-		$this->_assert_access($thread->get('forum'), get_post('author'), DataModelForum::ACL_REPLY);
-		
-		$data = $this->_check_message_values($errors);
-		
-		if (count($errors) > 0) {
-			$params['errors'] = $errors;
-			return $this->view->render_thread($thread, $params);
-		}
-		
-		$data['thread'] = intval($thread->get('id'));
-		$this->_set_author_data($data);
-
-		$iter = new DataIterForumMessage($this->model, -1, $data);
-		$this->model->insert_message($iter);
-		$page = $thread->get_num_thread_pages() - 1;
-
-		return $this->view->redirect('forum.php?thread=' . $thread->get('id') . '&page=' . $page);
 	}
 	
 	private function _assert_may_edit_message(DataIterForumMessage $message)
@@ -596,51 +573,44 @@ class ControllerForum extends Controller
 	
 		return $this->view->redirect('forum.php?admin=groups');
 	}
-	
-	private function _process_forum_mod_message($id, $params)
+
+	private function _create_message(DataIterForumMessage $message, array $data, array &$errors)
 	{
-		$message = $this->model->get_message($id);
+		$message_data = check_values([
+			'message',
+			['name' => 'unified_author', 'function' => [$this, '_check_unified_author']]
+		], $errors, $data);
 
-		$this->_assert_may_edit_message($message);
+		if (count($errors) > 0)
+			return false;
+
+		$message->set_all($message_data);
+		$message->set_literal('date', 'CURRENT_TIMESTAMP');
+
+		$this->model->insert_message($message);
+
+		return true;
+	}
+	
+	private function _update_message(DataIterForumMessage $message, array $data, array &$errors)
+	{
+		$message_data = check_values(['message'], $errors, $data);
+
+		// If the author is changed, check it
+		if (isset($data['unified_author']) && $data['unified_author'] != $message['unified_author'])
+			$message_data = array_merge($message_data,
+				check_values([['name' => 'unified_author', 'function' => [$this, '_check_unified_author']]], $errors, $data));
 		
-		$data = $this->_check_message_values($merrors);
-		$terrors = array();
-		$tdata = array();
-		$first = $message->is_first_message();
-		
-		if ($first) {
-			$tdata = check_values(array(
-				array('name' => 'subject', 'function' => array(&$this, '_check_message_subject'))), $terrors);
-		}
-				
-		$errors = $merrors + $terrors;
+		if (count($errors) > 0)
+			return false;
 
-		if (count($errors) > 0) {
-			$params['errors'] = $errors;
-			return $this->view->render_mod_message($message, $params);
-		}
+		$message->set_all($message_data);
 
-		$message->message = $data['message'];
 		$this->model->update_message($message);
 
-		if ($first) {
-			$thread = $this->model->get_thread($message->thread);
-			$thread->subject = $tdata['subject'];
-			$this->model->update_thread($thread);
-		}
+		return true;
+	}
 
-		return $this->view->redirect('forum.php?thread=' . $message->thread . '&page=' . (isset($params['page']) ? '&page=' . $params['page'] : '') . '#p' . $message->id);
-	}
-	
-	private function _view_forum_del_message($id, $params) 
-	{
-		$this->_assert_admin();
-		
-		$message = $this->model->get_message($id);
-		
-		return $this->view->render_del_message($message, $params);
-	}
-	
 	private function _process_forum_del_message($id, $params)
 	{
 		$this->_assert_admin();
@@ -690,6 +660,11 @@ class ControllerForum extends Controller
 		return $this->view->render_thread_form($thread, $errors);
 	}
 
+	public function run_thread_delete(DataIterForumThread $thread)
+	{
+
+	}
+
 	public function run_thread_reply(DataIterForumThread $thread)
 	{
 		$message = $thread->new_message();
@@ -717,7 +692,7 @@ class ControllerForum extends Controller
 	public function run_message_update(DataIterForumMessage $message)
 	{
 		if (!get_policy($message)->user_can_update($message))
-			throw new UnauthorizedException('You are not allowed to modify this message');
+			throw new UnauthorizedException('You are not allowed to modify this message.');
 
 		$errors = [];
 
@@ -728,9 +703,26 @@ class ControllerForum extends Controller
 		return $this->view->render_message_form($message, $errors);
 	}
 
+	public function run_message_delete(DataIterForumMessage $message)
+	{
+		if (!get_policy($message)->user_can_delete($message))
+			throw new UnauthorizedException('You are not allowed to delete this message.');
+
+		$thread = $this->model->get_thread($message['thread']);
+
+		if ($message->is_first_message())
+			return $this->run_thread_delete($thread);
+
+		if ($this->_form_is_submitted('delete_message', $message))
+			if ($this->_delete_message($message))
+				return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d', $thread['id'], $thread['num_thread_pages']));
+
+		return $this->view->render_message_delete($message);
+	}
+
 	public function run_message_single(DataIterForumMessage $message)
 	{
-		return $this->view->redirect('forum.php?thread=%d&page=%d#p%d', $message['thread'], $message['thread_page'], $message['id']);
+		return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d#p%d', $message['thread'], $message['thread_page'], $message['id']));
 	}
 	
 	public function run_index()
@@ -778,7 +770,7 @@ class ControllerForum extends Controller
 			  || get_identity()->member_in_committee(COMMISSIE_EASY);
 		
 		if (isset($_GET['message'])) {
-			$message = $this->model->get_message($messageid);
+			$message = $this->model->get_message($_GET['message']);
 		
 			if ($view == 'update')
 				return $this->run_message_update($message);
