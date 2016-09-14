@@ -365,11 +365,15 @@
 	
 	/** @group Functions
 	  */
-	function agenda_time_for_display($iter, $field) {
-		if ($iter->get($field . 'uur') == 0 && $iter->get($field . 'minuut') == 0)
+	function agenda_time_for_display(DataIterAgenda $iter, $field)
+	{
+		$hour = intval($iter[$field . '_datetime']->format('G'), 10);
+		$minute = intval($iter[$field . '_datetime']->format('i'), 10);
+
+		if ($hour == 0 && $minute == 0)
 			return '';
 		else
-			return sprintf('%02d:%02d', $iter->get($field . 'uur'), $iter->get($field . 'minuut'));
+			return sprintf('%02d:%02d', $hour, $minute);
 	}
 
 	/** @group Functions
@@ -378,12 +382,13 @@
 	  *
 	  * @result a string ready for display
 	  */
-	function agenda_period_for_display($iter) {
+	function agenda_period_for_display(DataIterAgenda $iter)
+	{
 		// If there is no till date, leave it out
 		if (!$iter->get('tot') || $iter->get('tot') == $iter->get('van')) {
 			
 			// There is no time specified
-			if ($iter->get('vanuur') + 0 == 0)
+			if ($iter->get('van_datetime')->format('G') == 0)
 				$format = __('$from_dayname $from_day $from_month');
 			else
 				$format = __('$from_dayname $from_day $from_month, $from_time');
@@ -396,22 +401,10 @@
 			$format = __('$from_dayname $from_day $from_month, $from_time tot $till_time');
 		}
 
-		$days = get_days();
-		$months = get_months();
-		
-		return format_string($format, array(
-			'from_dayname' => $days[$iter->get('vandagnaam')],
-			'from_day' => $iter->get('vandatum'),
-			'from_month' => $months[$iter->get('vanmaand')],
-			'from_time' => agenda_time_for_display($iter, 'van'),
-			'till_dayname' => $days[$iter->get('totdagnaam')],
-			'till_day' => $iter->get('totdatum'),
-			'till_month' => $months[$iter->get('totmaand')],
-			'till_time' => agenda_time_for_display($iter, 'tot')
-		));
+		return agenda_format_period($iter, $format);
 	}
 
-	function agenda_short_period_for_display($iter)
+	function agenda_short_period_for_display(DataIterAgenda $iter)
 	{	
 		$months = get_short_months();
 
@@ -420,10 +413,10 @@
 			$format = __('vanaf $from_time');
 
 		// Not the same end date? Show the day range instead of the times
-		elseif ($iter->get('vandatum') != $iter->get('totdatum') - ($iter->get('totuur') < 10 ? 1 : 0))
+		elseif ($iter->get('van_datetime')->format('w') != $iter->get('tot_datetime')->format('w') - ($iter->get('tot_datetime')->format('G') < 10 ? 1 : 0))
 		{
 			// Not the same month? Add month name as well
-			if ($iter->get('vanmaand') != $iter->get('totmaand'))
+			if ($iter->get('van_datetime')->format('n') != $iter->get('tot_datetime')->format('n'))
 				$format = __('$from_day $from_month tot $till_day $till_month');
 			else
 				$format = __('$from_day tot $till_day $till_month');
@@ -431,12 +424,25 @@
 		else
 			$format = __('$from_time tot $till_time');
 
+		return agenda_format_period($iter, $format);
+	}
+
+	function agenda_format_period(DataIterAgenda $iter, $format)
+	{
+		$days = get_days();
+		$months = get_months();
+
+		$van = $iter['van_datetime'];
+		$tot = $iter['tot_datetime'];
+		
 		return format_string($format, array(
-			'from_day' => $iter->get('vandatum'),
-			'from_month' => $months[$iter->get('vanmaand')],
+			'from_dayname' => $days[$van->format('w')],
+			'from_day' => $van->format('d'),
+			'from_month' => $months[$van->format('n')],
 			'from_time' => agenda_time_for_display($iter, 'van'),
-			'till_day' => $iter->get('totdatum'),
-			'till_month' => $months[$iter->get('totmaand')],
+			'till_dayname' => $days[$tot->format('w')],
+			'till_day' => $tot->format('d'),
+			'till_month' => $months[$tot->format('n')],
 			'till_time' => agenda_time_for_display($iter, 'tot')
 		));
 	}

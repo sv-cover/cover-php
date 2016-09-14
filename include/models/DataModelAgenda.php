@@ -19,6 +19,16 @@
 			return sprintf('agenda.php?agenda_id=%d', $this->get_id());
 		}
 
+		public function get_van_datetime()
+		{
+			return $this['van'] ? new DateTime($this['van']) : null;
+		}
+
+		public function get_tot_datetime()
+		{
+			return $this['tot'] ? new DateTime($this['tot']) : null;
+		}
+
 		public function is_proposal()
 		{
 			return $this->get('replacement_for') !== null;
