@@ -89,7 +89,7 @@ class View
 		require_once 'include/routertwigextension.php';
 		$this->twig->addExtension(new RouterTwigExtension());
 
-		require_once 'include/HTMLtwigextension.php';
+		require_once 'include/htmltwigextension.php';
 		$this->twig->addExtension(new HTMLTwigExtension());
 
 		require_once 'themes/' . get_theme() . '/views/_layout/layout.php';

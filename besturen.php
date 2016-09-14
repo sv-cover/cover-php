@@ -20,7 +20,7 @@ class ControllerBesturen extends ControllerCRUD
 			return __('Besturen');
 	}
 
-	protected function _validate(DataIter $iter, $data, array &$errors)
+	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
 		if (!$iter->has_id() && !isset($data['naam']))
 			$errors[] = 'naam';
@@ -35,7 +35,7 @@ class ControllerBesturen extends ControllerCRUD
 		return count($errors) === 0;
 	}
 
-	protected function _create(DataIter $iter, $data, array &$errors)
+	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
 		if (!$this->_validate($iter, $data, $errors))
 			return false;
@@ -59,7 +59,7 @@ class ControllerBesturen extends ControllerCRUD
 		return parent::_create($iter, $bestuur_data, $errors);
 	}
 
-	protected function _update(DataIter $bestuur, $data, array &$errors)
+	protected function _update(DataIter $bestuur, array $data, array &$errors)
 	{
 		if (!$this->_validate($bestuur, $data, $errors))
 			return false;

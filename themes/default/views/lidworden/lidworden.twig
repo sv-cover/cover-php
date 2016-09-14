@@ -143,7 +143,7 @@
 			<legend>{{ __('Voorwaarden') }}</legend>
 			{% if user_can_update voorwaarden %}
 				<div class="controls inline">
-					<a href="{{ voorwaarden.link_to_update|e('html_attr') }}" class="edit-link">{{ __('Bewerk voorwaarden') }}</a>
+					<a href="{{ link('editable.update', editable=voorwaarden)|e('html_attr') }}" class="edit-link">{{ __('Bewerk voorwaarden') }}</a>
 				</div>
 			{% endif %}
 		
@@ -168,7 +168,7 @@
 	<section>
 		{% if user_can_update opmerkingen %}
 			<div class="controls inline">
-				<a href="{{ opmerkingen.link_to_update|e('html_attr') }}" class="edit-link right">{{ __('Bewerk opmerkingen') }}</a>
+				<a href="{{ link('editable.update', editable=opmerkingen)|e('html_attr') }}" class="edit-link right">{{ __('Bewerk opmerkingen') }}</a>
 			</div>
 		{% endif %}
 		<h2>{{ __('Opmerkingen') }}</h2>

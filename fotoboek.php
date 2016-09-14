@@ -120,7 +120,7 @@
 			$this->view = new CRUDView($this);
 		}
 
-		protected function _create(DataIter $iter, $data, array &$errors)
+		protected function _create(DataIter $iter, array $data, array &$errors)
 		{
 			$data['foto_id'] = $this->photo->get_id();
 			$data['tagged_by'] = logged_in('id');
@@ -128,7 +128,7 @@
 			return parent::_create($iter, $data, $errors);
 		}
 
-		protected function _update(DataIter $iter, $data, array &$errors)
+		protected function _update(DataIter $iter, array $data, array &$errors)
 		{
 			// Also update who changed it.
 			$data['tagged_by'] = logged_in('id');

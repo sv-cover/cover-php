@@ -10,12 +10,12 @@ class ControllerCRUD extends Controller
 
 	protected $_var_id = 'id';
 
-	protected function _validate(DataIter $iter, &$data, array &$errors)
+	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
 		return true;
 	}
 
-	protected function _create(DataIter $iter, $data, array &$errors)
+	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
 		if (!$this->_validate($iter, $data, $errors))
 			return false;
@@ -40,7 +40,7 @@ class ControllerCRUD extends Controller
 		return $this->model->get_iter($id);
 	}
 
-	protected function _update(DataIter $iter, $data, array &$errors)
+	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
 		if (!$this->_validate($iter, $data, $errors))
 			return false;

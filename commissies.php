@@ -21,9 +21,10 @@ class ControllerCommissies extends ControllerCRUD
 		return $this->model->get(false);
 	}
 
-	protected function _create(array $data, array &$errors)
+	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
-		$iter = parent::_create($data, $errors);
+		if (!parent::_create($iter, $data, $errors))
+			return false;
 
 		if (!empty($data['members']))
 			$this->model->set_members($iter, $data['members']);
@@ -67,7 +68,7 @@ class ControllerCommissies extends ControllerCRUD
 	/**
 	 * Override ControllerCRUD::link_to_iter to use the login name instead of the id for better links.
 	 */
-	public function link_to_iter(DataIter $iter, array $arguments)
+	public function link_to_iter(DataIter $iter, array $arguments = array())
 	{
 		return $this->link(array_merge(array($this->_var_id => $iter->get('login')), $arguments));
 	}

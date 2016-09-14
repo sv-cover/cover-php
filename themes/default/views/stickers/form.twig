@@ -9,6 +9,12 @@
 		<input type="hidden" name="lat">
 		<input type="hidden" name="lng">
 
+		{% if iter.has_id %}
+			{{ html_nonce('update', iter) }}
+		{% else %}
+			{{ html_nonce('create') }}
+		{% endif %}
+
 		<div>
 			{{ html_label(__('Label'), 'label', errors=errors, required=true) }}
 			{{ html_input_text('label', iter, required='required', placeholder=__('Bijv. op de lantaarnpaal')) }}

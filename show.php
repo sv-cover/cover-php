@@ -11,7 +11,7 @@ class ControllerShow extends ControllerCRUD
 		$this->view = View::byName('show', $this);
 	}
 
-	protected function _validate(DataIter $iter, &$data, &$errors)
+	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
 		$valid = true;
 
@@ -27,7 +27,7 @@ class ControllerShow extends ControllerCRUD
 		return $valid;
 	}
 
-	protected function _update(DataIter $iter, $data, &$errors)
+	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
 		$content_fields = ['content', 'content_en'];
 

@@ -5,18 +5,29 @@ require_once 'include/member.php';
 
 class DataModelStickers extends DataModel
 {
+	public $fields = [
+		'id',
+		'label',
+		'omschrijving',
+		'lat',
+		'lng',
+		'toegevoegd_op',
+		'toegevoegd_door',
+		'foto'
+	];
+
 	public function __construct($db)
 	{
 		parent::__construct($db, 'stickers');
 	}
 
-	public function _row_to_iter($row)
+	public function _row_to_iter($row, $dataiter = null)
 	{
 		$row['lat'] = (double) $row['lat'];
 		$row['lng'] = (double) $row['lng'];
 		$row['foto'] = $row['foto'] == 't';
 
-		return parent::_row_to_iter($row);
+		return parent::_row_to_iter($row, $dataiter);
 	}
 
 	public function addSticker($label, $omschrijving, $lat, $lng)
@@ -68,11 +79,6 @@ class DataModelStickers extends DataModel
 			LEFT JOIN leden l ON
 				l.id = stickers.toegevoegd_door
 			" . ($conditions ? " WHERE {$conditions}" : "");
-	}
-
-	protected function _id_string($value)
-	{
-		return sprintf('stickers.id = %d', $value);
 	}
 
 	public function getNearbyStickers($sticker, $limit)

@@ -11,12 +11,12 @@ class ControllerStickers extends ControllerCRUD
 		$this->view = View::byName('stickers', $this);
 	}
 
-	protected function _create($data, &$errors)
+	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
 		$data['toegevoegd_op'] = date('Y-m-d');
 		$data['toegevoegd_door'] = get_identity()->get('id');
 
-		return parent::_create($data, $errors);
+		return parent::_create($iter, $data, $errors);
 	}
 
 	public function link_to_add_photo(DataIter $iter)
@@ -31,7 +31,7 @@ class ControllerStickers extends ControllerCRUD
 
 	public function run_read(DataIter $iter)
 	{
-		return $this->redirect('stickers.php?sticker=' . $iter->get_id());
+		return $this->view->redirect('stickers.php?sticker=' . $iter['id']);
 	}
 
 	public function run_photo(DataIter $iter)
@@ -55,7 +55,7 @@ class ControllerStickers extends ControllerCRUD
 			$this->view->delete_thumbnail($sticker);
 		}
 
-		return $this->view->redirect('stickers.php?sticker=' . $sticker->get_id());
+		return $this->view->redirect('stickers.php?sticker=' . $sticker['id']);
 	}
 	
 }

@@ -975,6 +975,6 @@
 	{
 		return array_map(function($iter) use ($property, $default_value) {
 			return $iter->has($property) ? $iter->get($property) : $default_value;
-		}, $iters);
+		}, $array);
 	}
 	

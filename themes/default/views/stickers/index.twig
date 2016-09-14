@@ -29,6 +29,7 @@
 		<p class="sticker-description"></p>
 		<div class="controls">
 			<form method="post" action="" class="remove-sticker-form">
+				<input type="hidden" name="_nonce">
 				<button type="submit" class="button">{{ __('Verwijder sticker') }}</button>
 			</form>
 
@@ -104,6 +105,7 @@
 				description.find('.sticker-photo').toggle(sticker.foto != null);
 				description.find('.sticker-user').toggle(sticker.toegevoegd_door_naam != null);
 				description.find('.remove-sticker-form').prop('action', removeLink.replace(/XXX/, sticker.id));
+				description.find('.remove-sticker-form input[name=_nonce]').val(sticker.delete_nonce);
 				description.find('.add-photo-form').prop('action', addPhotoLink.replace(/XXX/, sticker.id));
 
 				// If it is known who added this sticker, show the 'by-line'

@@ -92,7 +92,8 @@ class StickersView extends CRUDView
 				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
 					? member_full_name($iter->getIter('toegevoegd_door'), BE_PERSONAL)
 					: null,
-				'editable' => $policy->user_can_update($iter)
+				'editable' => $policy->user_can_update($iter),
+				'delete_nonce' => nonce_generate(nonce_action_name('delete', [$iter]))
 			);
 
 			$stickers[] = $sticker;

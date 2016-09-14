@@ -1,6 +1,5 @@
 <?php
 require_once 'include/form.php';
-require_once 'include/editable.php';
 
 class HTMLTwigExtension extends Twig_Extension
 {

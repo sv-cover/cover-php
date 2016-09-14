@@ -13,17 +13,6 @@ class ControllerForum extends Controller
 		$this->view = View::byName('forum', $this);
 	}
 
-	/**
-	 * Todo: move this to Controller::_forum_is_submitted
-	 * as soon as all controllers are compatible.
-	 */
-	protected function _form_is_submitted($form)
-	{
-		return $_SERVER['REQUEST_METHOD'] == 'POST'
-			&& !empty($_POST['_nonce'])
-			&& nonce_verify($_POST['_nonce'], $form);
-	}
-
 	private function _assert_access(DataIterForum $forum, $authorid, $acl)
 	{
 		$authorid = intval($authorid);
