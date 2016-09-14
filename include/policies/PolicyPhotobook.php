@@ -6,14 +6,12 @@ class PolicyPhotobook implements Policy
 {
 	public function user_can_create(DataIter $book)
 	{
-		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE);
+		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE)
+			&& ctype_digit((string) $book['parent_id']); // no generated photobook
 	}
 
 	public function user_can_read(DataIter $book)
 	{
-		if (!$book instanceof DataIterPhotobook)
-			throw new RuntimeException('$book not an instance of DataIterPhotobook');
-		
 		// First: if the access to the photo book is of a higher level
 		// than the current user has, no way he/she can view the photo
 		// book.
@@ -33,9 +31,6 @@ class PolicyPhotobook implements Policy
 
 	public function user_can_update(DataIter $book)
 	{
-		if (!$book instanceof DataIterPhotobook)
-			throw new RuntimeException('$book not an instance of DataIterPhotobook');
-		
 		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE)
 			&& ctype_digit((string) $book->get_id()) // test whether this isn't a special book, such as the Favorites or Faces albums which are generated
 			&& $book->get_id() > 0;
@@ -43,9 +38,6 @@ class PolicyPhotobook implements Policy
 
 	public function user_can_delete(DataIter $book)
 	{
-		if (!$book instanceof DataIterPhotobook)
-			throw new RuntimeException('$book not an instance of DataIterPhotobook');
-		
 		return $this->user_can_update($book);
 	}
 

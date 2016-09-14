@@ -60,22 +60,26 @@
 		  * @iter a #DataIter representing the row
 		  * @getid optional; whether to get the last insert id
 		  *
-		  * @result if getid is true the last insert id is returned, -1 
+		  * @result if getid is true the last insert id is returned, NULL
 		  * otherwise
 		  */		
 		protected function _insert($table, DataIter $iter, $get_id = false)
 		{
 			$data = array();
 
+			$id = null;
+
 			foreach ($iter->data as $key => $value)
-				if (!$this->fields || in_array($key, $this->fields))
-					$data[$key] = $value;
+				$data[$key] = $value;
 			
 			$this->db->insert($table, $data, $iter->get_literals());
-			
-			return $get_id
-				? $this->db->get_last_insert_id()
-				: -1;
+
+			if ($get_id) {
+				$id = $this->db->get_last_insert_id();
+				$iter->set_id($id);
+			}
+
+			return $id;
 		}
 		
 		/**

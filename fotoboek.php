@@ -281,22 +281,19 @@
 		
 		private function _view_create_book(DataIterPhotobook $parent)
 		{
-			if (!$this->policy->user_can_create())
-				throw new UnauthorizedException();
+			$iter = $parent->new_book();
 
-			if (!ctype_digit((string) $parent->get_id()))
-				throw new RuntimeException('Cannot add books to generated books');
+			if (!$this->policy->user_can_create($iter))
+				throw new UnauthorizedException('You are not allowed to create new photo books inside this photo book.');
 
 			$errors = array();
 
-			$iter = new DataIterPhotobook($this->model, -1, array('parent_id' => $parent->get_id()));
-
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($this->_form_is_submitted('create_book', $parent))
 			{
+				// TODO: Move this checking into the model layer..
 				$data = $this->_check_fotoboek_values($errors);
-				$data['parent_id'] = $parent->get_id();
-
-				$iter = new DataIterPhotobook($this->model, -1, $data);
+				
+				$iter->set_all($data);
 					
 				if (count($errors) === 0)
 				{
@@ -317,7 +314,7 @@
 
 			$success = null;
 
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($this->_form_is_submitted('update_book', $book))
 			{
 				$data = $this->_check_fotoboek_values($errors);
 

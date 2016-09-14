@@ -12,6 +12,12 @@
 <h1>{{ form_title }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ form_action|e('html_attr') }}" class="vertical-form">
+		{% if book.id %}
+			{{ html_nonce('update_book', book) }}
+		{% else %}
+			{{ html_nonce('create_book', book.parent) }}
+		{% endif %}
+
 		<div>
 			{{ html_label(__('Titel'), 'titel', errors=errors, required=true) }}
 			{{ html_input_text('titel', book, required='required') }}

@@ -6,9 +6,9 @@
 <h1>{{ __('Fotoboek') }}</h1>
 <div class = "messageBox clearfix fotoboek-box">
 
-{% if user_can_update book or user_can_create model.new_photobook %}
+{% if user_can_update book or user_can_create book.new_book %}
 	<div class="controls">
-		{% if user_can_create model.new_iter and book.id is numeric %}
+		{% if user_can_create book.new_book %}
 		<a href="fotoboek.php?book={{ book.id }}&amp;view=add_book" class="button">
 			<i class="fa fa-plus"></i>
 			{{ __('Nieuw fotoboek') }}

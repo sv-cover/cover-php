@@ -237,6 +237,11 @@
 	{
 		private $_photos = null; // cache the results of DataModelPhotobook::get_photos for this book.
 
+		public function new_book()
+		{
+			return new DataIterPhotobook($this->model, null, ['parent_id' => $this['id']]);
+		}
+
 		public function get_books($metadata = null)
 		{
 			return $this->model->get_children($this, $metadata);
@@ -562,11 +567,9 @@
 		  */
 		public function get_previous_book(DataIterPhotobook $book)
 		{
-			$parent = $book->get_parent();
+			if (!$book['parent']) return null;
 
-			if (!$parent) return null;
-
-			$children = $parent->get_books();
+			$children = $book['parent']['books'];
 
 			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
 
@@ -583,11 +586,9 @@
 		  */
 		public function get_next_book(DataIterPhotobook $book)
 		{
-			$parent = $book->get_parent();
+			if (!$book['parent']) return null;
 
-			if (!$parent) return null;
-
-			$children = $parent->get_books();
+			$children = $book['parent']['books'];
 
 			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
 

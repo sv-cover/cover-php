@@ -404,7 +404,7 @@ CREATE SEQUENCE foto_boeken_id_seq
 
 CREATE TABLE foto_boeken (
     id integer DEFAULT nextval('foto_boeken_id_seq'::regclass) NOT NULL,
-    parent integer DEFAULT 0 NOT NULL,
+    parent_id integer DEFAULT 0 NOT NULL,
     titel character varying(255) NOT NULL,
     fotograaf text,
     date date,
@@ -415,7 +415,7 @@ CREATE TABLE foto_boeken (
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
-CREATE INDEX ON foto_boeken (parent);
+CREATE INDEX ON foto_boeken (parent_id);
 
 CREATE TABLE foto_boeken_visit (
     boek_id integer NOT NULL REFERENCES foto_boeken (id) ON UPDATE CASCADE ON DELETE CASCADE,
