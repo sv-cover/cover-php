@@ -17,7 +17,7 @@ class ControllerAnnouncements extends ControllerCRUD
 		$this->view = View::byName('announcements', $this);
 	}
 
-	protected function _validate(array $data, array &$errors)
+	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
 		if (!get_identity()->member_in_committee($data['committee']))
 			$errors[] = 'committee';
@@ -29,7 +29,7 @@ class ControllerAnnouncements extends ControllerCRUD
 			$errors[] = 'message';
 	}
 	
-	protected function _create($data, array &$errors)
+	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
 		$this->_validate($data, $errors);
 		
@@ -43,12 +43,12 @@ class ControllerAnnouncements extends ControllerCRUD
 			'visibility' => intval($data['visibility'])
 		);
 
-		return parent::_create($data, $errors);
+		return parent::_create($iter, $data, $errors);
 	}
 
-	protected function _update(DataIter $announcement, $data, array &$errors)
+	protected function _update(DataIter $announcement, array $data, array &$errors)
 	{
-		$this->_validate($data, $errors);
+		$this->_validate($announcement, $data, $errors);
 
 		if (count($errors) > 0)
 			return false;

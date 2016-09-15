@@ -1,4 +1,4 @@
-{% set hidden_announcements_cnt = iters|length - iters|map([policy, 'user_can_read'])|length  %}
+{% set hidden_announcements_cnt = iters|length - iters|map([global.policies.Announcement, 'user_can_read'])|length  %}
 
 <div class="newsHeading">
 	{# Normally I would use controller.new_iter here, but this template is embedded
