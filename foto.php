@@ -134,9 +134,12 @@
 
 		protected function _generate_placeholder(DataIterMember $member, $format, $width)
 		{
-			$text = sprintf('%s%s',
-				substr(trim($member->get('voornaam')), 0, 1),
-				substr(trim($member->get('achternaam')), 0, 1));
+			if ($member->is_private('naam'))
+				$text = ':)';
+			else
+				$text = sprintf('%s%s',
+					substr(trim($member->get('voornaam')), 0, 1),
+					substr(trim($member->get('achternaam')), 0, 1));
 
 			switch ($format)
 			{
