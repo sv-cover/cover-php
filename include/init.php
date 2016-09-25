@@ -23,15 +23,10 @@
 	{
 		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE ^ E_DEPRECATED);
 
-		set_error_handler(function($number, $message, $file, $line, $vars) {
-			// while (ob_get_level() > 0 && ob_end_clean());
-			// echo '<strong>' . htmlspecialchars($message) . '</strong>';
-			// echo '<pre style="background:white;padding: 1em; margin: 1em;color:#c60c30;">';
-			// debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 25);
-			// echo '</pre>';
-			// exit;
-			throw new Exception($message);
-		},	error_reporting());
+		set_error_handler(function($severity, $message, $file, $line, $vars) {
+			if (error_reporting() & $severity)
+				throw new ErrorException($message, 0, $severity, $file, $line);
+		});
 	}
 	elseif (version_compare(PHP_VERSION, '5.4.0') < 0)
 		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE);
