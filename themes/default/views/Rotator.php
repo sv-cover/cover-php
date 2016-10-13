@@ -19,8 +19,10 @@ class Rotator
             /* read json file */
             $data = file_get_contents($this -> dir. 'data.json');
             $banners = json_decode($data, true, 10);
-
         }
+
+        if(empty($banners))
+            return array();
         
         foreach ($banners as &$banner)
             if (! array_key_exists('type', $banner))
