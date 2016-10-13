@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-10-13 12:54+0200\n"
+"POT-Creation-Date: 2016-10-13 14:20+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1002,12 +1002,12 @@ msgid "Typ hier om te zoeken…"
 msgstr "Type here to search…"
 
 #: themes/default/views/footer.php:34
-msgid "Hoofdsponsor"
-msgstr "Main sponsor"
+msgid "Hoofdpartner"
+msgstr "Main partner"
 
 #: themes/default/views/footer.php:34
-msgid "Sponsoren"
-msgstr "Sponsors"
+msgid "Partners"
+msgstr "Partners"
 
 #: themes/default/views/forum.php:7 themes/default/views/forum.php:452
 msgid "Je kunt niet schrijven in dit forum"
@@ -3720,6 +3720,12 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
+
+#~ msgid "Hoofdsponsor"
+#~ msgstr "Main sponsor"
+
+#~ msgid "Sponsoren"
+#~ msgstr "Sponsors"
 
 #~ msgid ""
 #~ "Je hebt nog geen contract. Vraag je penningmeester om er een te maken!"

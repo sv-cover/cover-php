@@ -31,7 +31,7 @@
 	                            $main_sponsors .= '<a href="'.$banner['url'].'" target="_blank"><img src="images/banners/'.$banner['filename'].'"></a><br /><br />';
 
 	                    if(!empty($main_sponsors))
-	                    	echo '<h4>'.__('Hoofdsponsor').':</h4>' . $main_sponsors . '<h4>'.__('Sponsoren').':</h4>';
+	                    	echo '<h4>'.__('Hoofdpartner').':</h4>' . $main_sponsors . '<h4>'.__('Partners').':</h4>';
 
                         foreach ($banners as $banner)
                         	if ($banner['type'] === 'default')
