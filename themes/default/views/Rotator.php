@@ -22,6 +22,10 @@ class Rotator
 
         }
         
+        foreach ($banners as &$banner)
+            if (! array_key_exists('type', $banner))
+                $banner['type'] = 'default';
+
         if (count($banners) == 1)
             return $banners;
         else if ($n > count($banners))

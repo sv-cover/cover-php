@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-08-07 10:53+0200\n"
+"POT-Creation-Date: 2016-10-13 12:54+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.9\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -819,11 +819,6 @@ msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
 
-#: scherm/slides/03-wall-of-fame/slide.php:69
-#: themes/default/views/commissies/index.phtml:12
-msgid "Commissieleden gezocht!"
-msgstr "Looking for new members!"
-
 #: search.php:23 themes/default/views/forum.php:871
 #: themes/default/views/almanak/almanak.phtml:9
 #: themes/default/views/search/index.phtml:1
@@ -1005,6 +1000,14 @@ msgstr "close preview"
 #: themes/default/views/footer.php:16 themes/default/views/search/index.phtml:5
 msgid "Typ hier om te zoeken…"
 msgstr "Type here to search…"
+
+#: themes/default/views/footer.php:34
+msgid "Hoofdsponsor"
+msgstr "Main sponsor"
+
+#: themes/default/views/footer.php:34
+msgid "Sponsoren"
+msgstr "Sponsors"
 
 #: themes/default/views/forum.php:7 themes/default/views/forum.php:452
 msgid "Je kunt niet schrijven in dit forum"
@@ -2226,6 +2229,10 @@ msgstr "Back to all committees"
 #: themes/default/views/commissies/index.phtml:3
 msgid "Nieuwe commissie"
 msgstr "New committee"
+
+#: themes/default/views/commissies/index.phtml:12
+msgid "Commissieleden gezocht!"
+msgstr "Looking for new members!"
 
 #: themes/default/views/commissies/single.phtml:24
 msgid "Bewerk commissiepagina"
