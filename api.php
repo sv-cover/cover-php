@@ -110,7 +110,7 @@ class ControllerApi extends Controller
 
 		$ident = get_identity_provider($auth);
 
-		return array('result' => $ident->get_member()->data);
+		return array('result' => $ident->member()->data);
 	}
 
 	public function api_session_test_committee($session_id, $committees)

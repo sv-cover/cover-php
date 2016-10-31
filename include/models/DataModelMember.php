@@ -5,6 +5,35 @@
 
 	class DataIterMember extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'voornaam',
+				'tussenvoegsel',
+				'achternaam',
+				'adres',
+				'postcode',
+				'woonplaats',
+				'email',
+				'geboortedatum',
+				'geslacht',
+				'telefoonnummer',
+				'privacy',
+				'type',
+				'machtiging',
+				'beginjaar',
+				'lidid',
+				'onderschrift',
+				'avatar',
+				'homepage',
+				'msn',
+				'icq',
+				'nick',
+				'taal',
+			];
+		}
+
 		public function get_naam()
 		{
 			trigger_error('Use DataIterMember::full_name instead of DataIterMember::naam', E_USER_NOTICE);
@@ -100,7 +129,7 @@
 			$iter = $this->_row_to_iter($row);
 
 			// TODO: Rewrite this behaviour to return actual committee dataiters instead of id's.
-			$iter->data['committees'] = $this->get_commissies($id);
+			$iter['committees'] = $this->get_commissies($id);
 
 			return $iter;
 		}

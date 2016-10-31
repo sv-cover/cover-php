@@ -19,8 +19,8 @@ class ControllerAnnouncements extends ControllerCRUD
 
 	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
-		if (!get_identity()->member_in_committee($data['committee']))
-			$errors[] = 'committee';
+		if (!get_identity()->member_in_committee($data['committee_id']))
+			$errors[] = 'committee_id';
 
 		if (strlen($data['subject']) == 0)
 			$errors[] = 'subject';
@@ -39,7 +39,7 @@ class ControllerAnnouncements extends ControllerCRUD
 		$data = array(
 			'subject' => trim($data['subject']),
 			'message' => trim($data['message']),
-			'committee' => intval($data['committee']),
+			'committee_id' => intval($data['committee_id']),
 			'visibility' => intval($data['visibility'])
 		);
 
@@ -56,7 +56,7 @@ class ControllerAnnouncements extends ControllerCRUD
 		$data = array(
 			'subject' => trim($data['subject']),
 			'message' => trim($data['message']),
-			'committee' => intval($data['committee']),
+			'committee_id' => intval($data['committee_id']),
 			'visibility' => intval($data['visibility'])
 		);
 

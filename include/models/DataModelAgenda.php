@@ -4,6 +4,23 @@
 	
 	class DataIterAgenda extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'kop',
+				'beschrijving',
+				'commissie',
+				'van',
+				'tot',
+				'locatie',
+				'private',
+				'extern',
+				'facebook_id',
+				'replacement_for'
+			];
+		}
+
 		public function get_search_relevance()
 		{
 			return normalize_search_rank($this->get('search_relevance'));
@@ -65,20 +82,6 @@
 		public $include_private = false;
 
 		public $dataiter = 'DataIterAgenda';
-
-		public $fields = [
-			'id',
-			'kop',
-			'beschrijving',
-			'commissie',
-			'van',
-			'tot',
-			'locatie',
-			'private',
-			'extern',
-			'facebook_id',
-			'replacement_for'
-		];
 
 		public function __construct($db)
 		{
@@ -263,6 +266,22 @@
 			return $replacements_for === null
 				? $this->find("{$this->table}.replacement_for IS NOT NULL")
 				: $this->find(sprintf("{$this->table}.replacement_for = %d", $replacements_for['id']));
+		}
 
+		public function find_locations($query, $limit = null)
+		{
+			$sql_term = $this->db->escape_string($query);
+
+			$rows = $this->db->query("
+				SELECT locatie
+				FROM {$this->table}
+				WHERE locatie ILIKE '%{$sql_term}%'
+				GROUP BY locatie
+				ORDER BY COUNT(id) DESC"
+				. ($limit !== null
+					? sprintf('LIMIT %d', $limit)
+					: ''));
+
+			return array_select($rows, 'locatie');
 		}
 	}

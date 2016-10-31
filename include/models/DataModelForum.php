@@ -4,6 +4,17 @@
 
 	class DataIterForum extends DataIter
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'name',
+				'description',
+				'type',
+				'position',
+			];
+		}
+
 		public function new_thread()
 		{
 			return new DataIterForumThread($this->model, null, [
@@ -71,7 +82,7 @@
 					forum_messages
 				WHERE
 					forum_messages.thread = forum_threads.id AND
-					forum_threads.forum = ' . intval($this->get('id')));
+					forum_threads.forum = ' . intval($this['id']));
 		}
 
 		
@@ -88,7 +99,7 @@
 				FROM
 					forum_acl
 				WHERE
-					forumid = ' . intval($this->get('id')) . '
+					forumid = ' . intval($this['id']) . '
 				ORDER BY
 					id');
 
@@ -171,6 +182,18 @@
 
 	class DataIterForumMessage extends DataIter
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'thread',
+				'author',
+				'message',
+				'date',
+				'author_type',
+			];
+		}
+
 		public function get_unified_author()
 		{
 			return $this['author_type'] . '_' . $this['author'];
@@ -251,16 +274,46 @@
 		}
 	}
 
-	class DataIterForumPermission extends DataIter {
-		//
+	class DataIterForumPermission extends DataIter
+	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'forumid',
+				'type',
+				'uid',
+				'permissions'
+			];
+		}
 	}
 
-	class DataIterForumGroup extends DataIter {
-		//
+	class DataIterForumGroup extends DataIter
+	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'name'
+			];
+		}
 	}
 
 	class DataIterForumThread extends DataIter
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'forum',
+				'author',
+				'subject',
+				'date',
+				'author_type',
+				'poll',
+			];
+		}
+
 		public function new_message()
 		{
 			return new DataIterForumMessage($this->model, null, [
@@ -404,8 +457,16 @@
 		}
 	}
 
-	class DataIterForumHeader extends DataIter {
-		//
+	class DataIterForumHeader extends DataIter 
+	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'name',
+				'position',
+			];
+		}	
 	}
 	
 	/**
@@ -531,7 +592,7 @@
 		  */
 		protected function check_acl_commissies(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
-			foreach ($identity->get('committees') as $committee) {
+			foreach ($identity->get('committees', []) as $committee) {
 				if ($this->check_acl_commissie($forum, $acl, $committee))
 					return true;
 			}
@@ -551,6 +612,10 @@
 		  */		
 		protected function check_acl_group(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
+			$sql_user_specific = $identity->member() !== null
+				? sprintf('OR (forum_group_member.type = 1 AND forum_group_member.uid = %d)', $identity->get('id'))
+				: '';
+
 			$num = $this->db->query_value('
 					SELECT 
 						COUNT(*)
@@ -562,9 +627,7 @@
 						(forum_acl.permissions & ' . intval($acl) . ') <> 0 AND 
 						forum_acl.type = 3 AND
 						forum_acl.uid = forum_group_member.guid AND
-						(forum_group_member.type = -1 OR (
-						(forum_group_member.type = 1 AND
-						forum_group_member.uid = ' . intval($identity->get('id')) . ')))');
+						(forum_group_member.type = -1 ' . $sql_user_specific . ' )');
 			
 			return $num > 0;
 		}
@@ -606,8 +669,12 @@
 			// No specific policies? Then use the default
 			if (!$num)
 				return $acl & $this->get_default_acl();
+
+			// Check permissions for everyone (type == -1) and member (type == 1 AND uid = member)
+			$sql_where = $identity->member() !== null
+				? '(type = -1 OR (uid = ' . intval($identity->get('id')) . ' AND type = 1))'
+				: '(type = -1)';
 			
-			/* Check permissions for everyone (type == -1) and member (type == 1 AND uid = member) */
 			$num = $this->db->query_value('
 					SELECT 
 						COUNT(*)
@@ -616,10 +683,9 @@
 					WHERE
 						forumid = ' . intval($forum['id']) . ' AND
 						(permissions & ' . intval($acl) . ') <> 0 AND 
-						(type = -1 OR
-						(uid = ' . intval($identity->get('id')) . ' AND type = 1))');
+						' . $sql_where);
 			
-			/* Permission granted */
+			// Permission granted
 			return $num > 0;
 		}
 
@@ -635,9 +701,6 @@
 		  */
 		public function check_acl(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
-			if ($identity->member() === null)
-				return $acl & $this->get_default_acl();
-
 			return $this->check_acl_member($forum, $acl, $identity)
 				|| $this->check_acl_commissies($forum, $acl, $identity)
 				|| $this->check_acl_group($forum, $acl, $identity);
@@ -1213,7 +1276,7 @@
 			if ($member_id === null)
 				return;
 
-			$val = $this->db->query('
+			$val = $this->db->query_value('
 					SELECT
 						1
 					FROM
@@ -1227,12 +1290,11 @@
 			if ($val)
 				return;
 				
-			$iter = new DataIter($this, null, array(
-					'thread' => intval($thread->get('id')),
-					'lid' => intval($member_id),
-					'forum' => intval($thread->get('forum'))));
-
-			return $this->_insert('forum_sessionreads', $iter);
+			return $this->db->insert('forum_sessionreads', [
+				'thread' => intval($thread->get('id')),
+				'lid' => intval($member_id),
+				'forum' => intval($thread->get('forum'))
+			]);
 		}
 		
 		/**
@@ -1271,7 +1333,7 @@
 				if (!$forum)
 					return;
 				
-				$this->db->update('forum_visits', array('lastvisit' => 'sessiondate', 'sessiondate' => null), 'lid = ' . intval($member_id) . ' AND forum = ' . intval($forum_id) . ' AND sessiondate+INTERVAL \'15 minutes\' < CURRENT_TIMESTAMP', array('lastvisit'));
+				$this->db->update('forum_visits', array('lastvisit' => new DatabaseLiteral('sessiondate'), 'sessiondate' => null), 'lid = ' . intval($member_id) . ' AND forum = ' . intval($forum_id) . ' AND sessiondate+INTERVAL \'15 minutes\' < CURRENT_TIMESTAMP', array('lastvisit'));
 				
 				if ($this->db->get_affected_rows()) {
 					/* Delete all obsolete session reads */
@@ -1294,10 +1356,10 @@
 			$visit = $this->get_visit_info($forum_id, $member_id);
 			$this->update_last_visit($forum_id);
 			
-			$visit->set_literal('sessiondate', 'CURRENT_TIMESTAMP');
+			$visit->set('sessiondate', new DatabaseLiteral('CURRENT_TIMESTAMP'));
 			return $this->db->update('forum_visits',
 				$visit->get_changed_values(),
-				'lid = ' . intval($member_id) . ' AND forum = ' . intval($forum_id), $visit->get_literals());
+				'lid = ' . intval($member_id) . ' AND forum = ' . intval($forum_id));
 		}
 		
 		/**

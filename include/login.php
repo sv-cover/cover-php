@@ -47,7 +47,7 @@
 				return false;
 
 			return $property === null
-				? get_identity()->member()->data
+				? get_identity()->member()
 				: get_identity()->get($property);
 		}
 	}

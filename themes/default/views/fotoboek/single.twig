@@ -104,10 +104,12 @@
 
 	<div class="photo-meta">
 		{% macro format_face_label(face) -%}
-			{%- if face.lid_id is defined -%}
-				<a href="profiel.php?lid={{ face.lid__id }}" data-face-id="{{ face.id }}">{{ face.getIter('lid')|personal_full_name }}</a>
-			{%- elseif face.custom_label is defined -%}
+			{%- if face.lid_id is not null -%}
+				<a href="profiel.php?lid={{ face.lid.id }}" data-face-id="{{ face.id }}">{{ face.lid|personal_full_name }}</a>
+			{%- elseif face.custom_label != '' -%}
 				<span class="custom-label" data-face-id="{{ face.id }}">{{ face.custom_label }}</span>
+			{%- else -%}
+				<span data-face-id="{{ face.id }}">{{ __('Onbekend') }}</span>
 			{%- endif -%}
 		{%- endmacro -%}
 
@@ -121,6 +123,7 @@
 				and: __('en')
 			}|json_encode|e('html_attr') }}">
 				{% if photo.faces|user_can_read|length > 0 %}
+					{# todo: array_merge([name]*,["%d onbekende gezichten"]?)|human_join(',') #}
 					{{ __('Een foto met %s.')|format(photo.faces|user_can_read|map_macro('photo_macros.format_face_label')|human_join(','))|raw }}
 				{% endif %}
 				{% if user_can_create controller.faces_controller.new_iter %}

@@ -3,6 +3,47 @@ require_once 'include/data/DataModel.php';
 
 class DataIterPhotobookReactie extends DataIter
 {
+	static public function fields()
+	{
+		return [
+			'id',
+			'foto',
+			'auteur',
+			'reactie',
+			'date',
+		];
+	}
+
+	public function get_photo()
+	{
+		if (isset($this->data['foto__id']))
+			return $this->getIter('foto', 'DataIterPhoto');
+		else if ($this->get('foto'))
+			return get_model('DataModelPhotobook')->get_iter($this->get('foto'));
+		else
+			return null;
+	}
+
+	public function get_photobook()
+	{
+		if (isset($this->data['fotoboek__id']))
+			return $this->getIter('fotoboek', 'DataIterPhotobook');
+		else if ($this->get('foto'))
+			return $this->get('photo')->get('book');
+		else
+			return null;
+	}
+
+	public function get_author()
+	{
+		if (isset($this->data['auteur__id']))
+			return $this->getIter('auteur', 'DataIterMember');
+		else if ($this->get('foto'))
+			return get_model('DataModelMember')->get_iter($this->get('auteur'));
+		else
+			return null;
+	}
+
 	public function get_liked_by()
 	{
 		return get_model('DataModelMember')->find(sprintf('id IN (SELECT lid_id FROM foto_reacties_likes WHERE reactie_id = %d)', $this->id));
@@ -69,11 +110,6 @@ class DataModelPhotobookReactie extends DataModel
 					l.tussenvoegsel as auteur__tussenvoegsel,
 					l.achternaam as auteur__achternaam,
 					l.privacy as auteur__privacy,
-					DATE_PART('dow', f_r.date) AS dagnaam, 
-					DATE_PART('day', f_r.date) AS datum, 
-					DATE_PART('month', f_r.date) AS maand, 
-					DATE_PART('hours', f_r.date) AS uur, 
-					DATE_PART('minutes', f_r.date) AS minuut,
 					fotos.beschrijving AS foto__beschrijving,
 					fotos.id AS foto__id,
 					fotos.boek AS foto__boek,
@@ -123,11 +159,6 @@ class DataModelPhotobookReactie extends DataModel
 			foto_reacties.auteur,
 			foto_reacties.reactie,
 			foto_reacties.date,
-			DATE_PART('dow', foto_reacties.date) AS dagnaam, 
-			DATE_PART('day', foto_reacties.date) AS datum, 
-			DATE_PART('month', foto_reacties.date) AS maand, 
-			DATE_PART('hours', foto_reacties.date) AS uur, 
-			DATE_PART('minutes', foto_reacties.date) AS minuut,
 			(SELECT COUNT(f_r_l.id) FROM foto_reacties_likes f_r_l WHERE f_r_l.reactie_id = foto_reacties.id) as likes
 			FROM {$this->table}
 			" . ($where ? " WHERE {$where}" : "") . "

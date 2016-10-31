@@ -4,6 +4,23 @@ require_once 'include/data/DataModel.php';
 
 class DataIterAnnouncement extends DataIter implements SearchResult
 {
+	static public function fields()
+	{
+		return [
+			'id',
+			'committee_id',
+			'subject',
+			'message',
+			'created_on',
+			'visibility',
+		];
+	}
+
+	public function get_committee()
+	{
+		return $this->getIter('committee', 'DataIterCommissie');
+	}
+
 	public function get_search_relevance()
 	{
 		return 0.5;
@@ -42,7 +59,7 @@ class DataModelAnnouncement extends DataModel implements SearchProvider
 	{
 		return "SELECT
 				{$this->table}.id,
-				{$this->table}.committee,
+				{$this->table}.committee_id,
 				{$this->table}.subject,
 				{$this->table}.message,
 				TO_CHAR({$this->table}.created_on, 'DD-MM-YYYY, HH24:MI') AS created_on,
@@ -54,7 +71,7 @@ class DataModelAnnouncement extends DataModel implements SearchProvider
 			FROM
 				{$this->table}
 			LEFT JOIN commissies c ON
-				c.id = {$this->table}.committee"
+				c.id = {$this->table}.committee_id"
 			. ($conditions ? " WHERE $conditions" : "")
 			. " ORDER BY {$this->table}.created_on DESC";
 	}

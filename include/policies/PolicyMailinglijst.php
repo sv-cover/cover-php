@@ -40,7 +40,7 @@ class PolicyMailinglijst implements Policy
 			return false;
 
 		// You cannot 'subscribe' (opt back in) to an opt-out list if you are not a member
-		if ($lijst['type'] == self::TYPE_OPT_OUT && get_identity()->get('type') != MEMBER_STATUS_LID)
+		if ($lijst['type'] == DataModelMailinglijst::TYPE_OPT_OUT && get_identity()->get('type') != MEMBER_STATUS_LID)
 			return false;
 
 		return true;

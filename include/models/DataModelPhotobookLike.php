@@ -2,6 +2,14 @@
 require_once 'include/data/DataModel.php';
 require_once 'include/models/DataModelPhotobook.php';
 
+class DataIterPhotobookLike extends DataIter
+{
+	static public function fields()
+	{
+		return ['foto_id', 'lid_id', 'liked_on'];
+	}
+}
+
 class DataIterLikedPhotobook extends DataIterPhotobook
 {
 	public function get_id()
@@ -22,6 +30,8 @@ class DataIterLikedPhotobook extends DataIterPhotobook
 
 class DataModelPhotobookLike extends DataModel
 {
+	public $dataiter = 'DataIterPhotobookLike';
+
 	public function __construct($db)
 	{
 		parent::__construct($db, 'foto_likes');

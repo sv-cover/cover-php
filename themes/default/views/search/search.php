@@ -22,6 +22,6 @@ class SearchView extends View
 		if ($n_photos > 0)
 			$parts[] = __N('%d foto', '%d foto\'s', $n_photos);
 
-		return sprintf(__('Fotoboek met %s gemaakt op %s.'), implode_human($parts), $book['datum']);
+		return sprintf(__('Fotoboek met %s gemaakt op %s.'), implode_human($parts), $book['date']);
 	}
 }

@@ -8,7 +8,7 @@
 {% set agenda_items = view.layout.agenda %}
 {% set jarigen = view.layout.jarigen %}
 {% set cover_jarig = view.layout.is_cover_jarig() %}
-{% set count_jarigen = jarigen|length + cover_jarig ? 1 : 0 %}
+{% set count_jarigen = jarigen|length + (cover_jarig ? 1 : 0) %}
 
 {% if agenda_items|length > 0 %}
 <ol class="agenda">

@@ -4,6 +4,17 @@
 
 	class DataIterEditable extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'owner',
+				'titel',
+				'content',
+				'content_en',
+			];
+		}
+
 		public function get_locale_content($language = null)
 		{
 			if (!$language)

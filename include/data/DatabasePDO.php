@@ -163,7 +163,7 @@ class DatabasePDO
 	  * @literals optional; the fields that should be used literally in 
 	  * the query
 	  */
-	function insert($table, $values, $literals = null) {
+	function insert($table, $values) {
 		if (!$this->resource) {
 			return false;
 		}
@@ -184,8 +184,8 @@ class DatabasePDO
 
 			if ($values[$keys[$i]] === null)
 				$v .= 'NULL';
-			elseif ($literals && in_array($keys[$i], $literals))
-				$v .= $values[$keys[$i]];
+			elseif ($values[$keys[$i]] instanceof DatabaseLiteral)
+				$v .= $values[$keys[$i]]->toSQL();
 			else
 				$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
 		}
@@ -223,7 +223,7 @@ class DatabasePDO
 	  *
 	  * @result true if the update was successful, false otherwise 
 	  */
-	function update($table, $values, $condition, $literals = []) {
+	function update($table, $values, $condition) {
 		if (!$this->resource)
 			return false;
 
@@ -244,10 +244,16 @@ class DatabasePDO
 
 			if ($values[$keys[$i]] === null)
 				$k .= 'NULL';
-			elseif ($literals && in_array($keys[$i], $literals))
-				$k .= $values[$keys[$i]];
-			else
+			elseif ($values[$keys[$i]] instanceof DatabaseLiteral)
+				$k .= $values[$keys[$i]]->toSQL();
+			elseif (is_int($values[$keys[$i]]))
+				$k = sprintf('%d', $values[$keys[$i]]);
+			elseif (is_bool($values[$keys[$i]]))
+				$k = $values[$keys[$i]] ? '1' : '0';
+			elseif (is_string($values[$keys[$i]]))
 				$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
+			else
+				throw new InvalidArgumentException("Cannot encode the value of field '{$keys[$i]}': unsupported datatype " . gettype($values[$keys[$i]]));
 		}
 
 		$query .= $k;

@@ -13,8 +13,8 @@
 		{% endif %}
 		
 		<div>
-			{{ html_label(__('Plaats namens commissie'), 'committee', errors=errors, required=true) }}
-			{{ html_select_field('committee', view.get_committee_options(iter), iter.data) }}
+			{{ html_label(__('Plaats namens commissie'), 'committee_id', errors=errors, required=true) }}
+			{{ html_select_field('committee_id', view.get_committee_options(iter), iter.data) }}
 		</div>
 
 		<div>

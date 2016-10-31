@@ -12,7 +12,7 @@ class PolicyAnnouncement implements Policy
 
 	public function user_can_read(DataIter $announcement)
 	{
-		switch ($announcement->get('visibility'))
+		switch ($announcement['visibility'])
 		{
 			case DataModelAnnouncement::VISIBILITY_PUBLIC:
 				return true;
@@ -31,7 +31,7 @@ class PolicyAnnouncement implements Policy
 	public function user_can_update(DataIter $announcement)
 	{
 		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee($announcement->get('committee'));
+			|| get_identity()->member_in_committee($announcement['committee_id']);
 	}
 
 	public function user_can_delete(DataIter $announcement)

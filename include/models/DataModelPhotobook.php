@@ -13,6 +13,22 @@
 		const PORTRAIT = 'portrait';
 		const SQUARE = 'square';
 
+		static public function fields()
+		{
+			return [
+				'id',
+				'boek',
+				'beschrijving',
+				'filepath',
+				'filehash',
+				'width',
+				'height',
+				'created_on',
+				'added_on',
+				'sort_index'
+			];
+		}
+
 		public function get_size()
 		{
 			return array($this->get('width'), $this->get('height'));
@@ -235,6 +251,21 @@
 
 	class DataIterPhotobook extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'parent_id',
+				'titel',
+				'fotograaf',
+				'date',
+				'last_update',
+				'beschrijving',
+				'visibility',
+				'sort_index',
+			];
+		}
+
 		private $_photos = null; // cache the results of DataModelPhotobook::get_photos for this book.
 
 		public function new_book()
@@ -336,7 +367,7 @@
 
 		public function get_search_relevance()
 		{
-			$date = DateTime::createFromFormat('d-m-Y', $this->get('datum'));
+			$date = DateTime::createFromFormat('d-m-Y', $this->get('date'));
 
 			$recency = $date
 				? (1.0 / (time() - $date->getTimestamp()))
@@ -452,10 +483,7 @@
 					SELECT 
 						f_b.*,
 						COUNT(DISTINCT f.id) as num_photos,
-						COUNT(DISTINCT c_f_b.id) as num_books,
-						(TRIM(to_char(DATE_PART('day', f_b.date), '00')) || '-' ||
-						 TRIM(to_char(DATE_PART('month', f_b.date), '00')) || '-' ||
-						 DATE_PART('year', f_b.date)) AS datum
+						COUNT(DISTINCT c_f_b.id) as num_books
 					FROM 
 						foto_boeken f_b
 					LEFT JOIN fotos f ON
@@ -485,10 +513,7 @@
 			$query = "SELECT 
 					f_b.*,
 					COUNT(DISTINCT f.id) as num_photos,
-					COUNT(DISTINCT c_f_b.id) as num_books,
-					(TRIM(to_char(DATE_PART('day', f_b.date), '00')) || '-' ||
-					 TRIM(to_char(DATE_PART('month', f_b.date), '00')) || '-' ||
-					 DATE_PART('year', f_b.date)) AS datum
+					COUNT(DISTINCT c_f_b.id) as num_books
 				FROM 
 					foto_boeken f_b
 				LEFT JOIN fotos f ON

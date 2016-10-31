@@ -5,6 +5,32 @@ require_once 'include/models/DataModelPhotobook.php';
 
 class DataIterPhotobookFace extends DataIter
 {
+	static public function fields()
+	{
+		return [
+			'id',
+			'foto_id',
+			'x',
+			'y',
+			'w',
+			'h',
+			'lid_id',
+			'deleted',
+			'tagged_by',
+			'custom_label',
+		];
+	}
+
+	public function get_lid()
+	{
+		if (isset($this->data['lid__id']))
+			return $this->getIter('lid', 'DataIterMember');
+		else if ($this->get('lid_id'))
+			return get_model('DataModelMember')->get_iter($this->get('lid_id'));
+		else
+			return null;
+	}
+
 	public function get_position()
 	{
 		return array(
@@ -68,7 +94,11 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		$hidden = get_model('DataModelPhotobookPrivacy')->find(sprintf('lid_id IN(%s)', implode(',', $this->get('member_ids'))));
 		
 		// Also grab the ids of all the photos which should actually be hidden (e.g. are not of the logged in member)
-		$excluded_ids = array_filter(array_map(function($iter) { return logged_in('id') != $iter->get('lid_id') ? $iter->get('foto_id') : false; }, $hidden));
+		$excluded_ids = array_filter(array_map(function($iter) {
+			return logged_in('id') != $iter->get('lid_id')
+				? $iter->get('foto_id')
+				: false;
+			}, $hidden));
 
 		// If there are any photos that should be hidden, exclude them from the query
 		if (count($excluded_ids) > 0)

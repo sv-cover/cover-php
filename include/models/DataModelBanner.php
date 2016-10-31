@@ -2,7 +2,13 @@
 
 class DataIterBanner extends DataIter
 {
-    //
+    static public function fields()
+    {
+        return [
+            'filename',
+            'url'
+        ];
+    }
 }
 
 class DataModelBanner extends DataModel

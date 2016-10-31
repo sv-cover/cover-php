@@ -14,7 +14,7 @@
 	{% endif %}
 
 	<form method="post" action="lidworden.php" class="new-member-form vertical-form">
-		{{ html_input_hidden('submlidworden', 'yes') }}
+		{{ html_nonce('sign_up') }}
 		
 		<fieldset>
 			<legend>{{ __('Naam') }}</legend>

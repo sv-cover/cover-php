@@ -5,6 +5,21 @@
 	
 	class DataIterCommissie extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'type',
+				'naam',
+				'login',
+				'website',
+				'nocaps',
+				'page',
+				'hidden',
+				'vacancies',
+			];
+		}
+
 		public function get_members()
 		{
 			return $this->model->get_members($this);
@@ -136,7 +151,7 @@
 		public function update(DataIter $iter)
 		{
 			if ($iter->has('vacancies') && !$iter->get('vacancies'))
-				$iter->set_literal('vacancies', 'NULL');
+				$iter->set('vacancies', null);
 			
 			return parent::update($iter);
 		}
@@ -223,7 +238,7 @@
 			// Attach the committee positions to all its members
 			// Not using 'set' here because that would mess up the DataIter::get_changes()
 			foreach ($members as $member)
-				$member->data['functie'] = $positions[$member->get_id()];
+				$member['functie'] = $positions[$member->get_id()];
 
 			/* Sort by function */
 			usort($members, array(&$this, '_sort_leden'));

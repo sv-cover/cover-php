@@ -132,11 +132,11 @@
 
 			foreach ($data as $field => $value)
 			{
-				$current = $iter->get($field);
+				$current = $iter[$field];
 
 				// Unfortunately, we need to 'normalize' the time fields for this to work
 				if ($field == 'van' || $field == 'tot') {
-					$current = strtotime($iter->get($field));
+					$current = strtotime($iter[$field]);
 					$value = strtotime($value);
 				}
 
@@ -147,7 +147,7 @@
 			return $changed;
 		}
 		
-		protected function _create(DataIter $iter, $data, array &$errors)
+		protected function _create(DataIter $iter, array $data, array &$errors)
 		{
 			if (($data = $this->_check_values($iter, $errors)) === false)
 				return false;
@@ -155,9 +155,10 @@
 			// Placeholders for e-mail
 			$placeholders = array(
 				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
-				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
+				'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
+			);
 
-			$iter->data = $data;
+			$iter->set_all($data);
 
 			$id = $this->model->propose_insert($iter, true);
 
@@ -174,7 +175,7 @@
 			return true;
 		}
 
-		protected function _update(DataIter $iter, $data, array &$errors)
+		protected function _update(DataIter $iter, array $data, array &$errors)
 		{
 			if (($data = $this->_check_values($iter, $errors)) === false)
 				return false;
@@ -194,7 +195,7 @@
 			if ($skip_confirmation)
 			{
 				foreach ($data as $field => $value)
-					$iter->set($field, $value);
+					$iter[$field] = $value;
 
 				$this->model->update($iter);
 
@@ -204,7 +205,9 @@
 			// Previous item exists but it needs to be confirmed first.
 			else
 			{
-				$mod = new DataIterAgenda($this->model, -1, $data);
+				$mod = $this->model->new_iter();
+
+				$mod->set_all($data);
 
 				$override_id = $this->model->propose_update($mod, $iter);
 
@@ -278,14 +281,14 @@
 					$data['member_naam'] = member_full_name(null, IGNORE_PRIVACY);
 					$data['reden'] = get_post('comment_' . $id);
 
-					$subject = 'Agendapunt ' . $iter->get('kop') . ' geweigerd';
+					$subject = 'Agendapunt ' . $iter['kop'] . ' geweigerd';
 					$body = parse_email('agenda_cancel.txt', $data);
 					
 					$commissie_model = get_model('DataModelCommissie');
-					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter->get('commissie')));
+					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['commissie']));
 
 					mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
-					$cancelled[] = $commissie_model->get_naam($iter->get('commissie'));
+					$cancelled[] = $commissie_model->get_naam($iter['commissie']);
 				}
 			}
 			
@@ -312,7 +315,7 @@
 			if (!get_config_value('enable_facebook', false))
 				return;
 
-			if (!$iter->get('facebook_id'))
+			if (!$iter['facebook_id'])
 				return;
 
 			require_once 'include/facebook.php';
@@ -326,14 +329,14 @@
 				case 'attending':
 				case 'maybe':
 				case 'declined':
-					$result = $facebook->api(sprintf('/%d/%s' , $iter->get('facebook_id'), $_POST['rsvp_status']), 'POST');
+					$result = $facebook->api(sprintf('/%d/%s' , $iter['facebook_id'], $_POST['rsvp_status']), 'POST');
 					break;
 
 				default:
 					throw new Exception('Unknown rsvp status');
 			}
 
-			return $this->view->redirect('agenda.php?id=' . $iter->get('id'));
+			return $this->view->redirect('agenda.php?id=' . $iter['id']);
 		}
 
 		public function run_webcal()
@@ -352,20 +355,20 @@
 
 				$event = new WebCal_Event;
 				$event->uid = $punt->get_id() . '@svcover.nl';
-				$event->start = new DateTime($punt->get('van'), $timezone);
+				$event->start = new DateTime($punt['van'], $timezone);
 
-				if ($punt->get('van') != $punt->get('tot')) {
-					$event->end = new DateTime($punt->get('tot'), $timezone);
+				if ($punt['van'] != $punt['tot']) {
+					$event->end = new DateTime($punt['tot'], $timezone);
 				}
 				else {
-					$event->end = new DateTime($punt->get('van'), $timezone);
+					$event->end = new DateTime($punt['van'], $timezone);
 					$event->end->modify('+ 2 hour');
 				}
 				
-				$event->summary = $punt->get('extern')
-					? $punt->get('kop')
-					: sprintf('%s: %s', $punt->get('commissie__naam'), $punt->get('kop'));
-				$event->description = markup_strip($punt->get('beschrijving'));
+				$event->summary = $punt['extern']
+					? $punt['kop']
+					: sprintf('%s: %s', $punt['commissie__naam'], $punt['kop']);
+				$event->description = markup_strip($punt['beschrijving']);
 				$event->location = $punt->get('locatie');
 				$event->url = ROOT_DIR_URI . $this->link_to_read($punt);
 				$cal->add_event($event);
@@ -373,6 +376,17 @@
 
 			$cal->publish('cover.ics');
 			return null;
+		}
+
+		public function run_suggest_location()
+		{
+			$locations = $this->model->find_locations($_GET['search']);
+
+			$limit = isset($_GET['limit'])
+				? (int) $_GET['limit']
+				: 100;
+
+			return $this->view->render_json($locations, $limit);
 		}
 
 		protected function run_impl()

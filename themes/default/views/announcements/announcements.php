@@ -17,8 +17,8 @@ class AnnouncementsView extends CRUDView
 			$pairs[$committee->get_id()] = $committee->get('naam');
 
 		// Add the current committee as option if it isn't already (for editing)
-		if ($iter && $iter->has('committee') && !isset($pairs[$iter->get('committee')]))
-			$pairs[$iter->get('committee')] = $iter->getIter('committee')->get('naam');
+		if ($iter && $iter->has('committee_id') && !isset($pairs[$iter->get('committee_id')]))
+			$pairs[$iter->get('committee_id')] = $iter->getIter('committee')->get('naam');
 
 		return $pairs;
 	}

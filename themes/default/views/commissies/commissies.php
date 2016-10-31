@@ -1,5 +1,4 @@
 <?php
-require_once 'include/editable.php';
 
 class CommissiesView extends CRUDView
 {

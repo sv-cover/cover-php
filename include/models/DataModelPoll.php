@@ -3,6 +3,16 @@
 
 	class DataIterPollOption extends DataIter
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'pollid',
+				'optie',
+				'stemmen',
+			];
+		}
+
 		public $thread;
 
 		public function percentage()
@@ -13,6 +23,19 @@
 
 	class DataIterPoll extends DataIter
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'forum',
+				'author',
+				'subject',
+				'date',
+				'author_type',
+				'poll',
+			];
+		}
+
 		public $poll_model;
 
 		public $options = array();

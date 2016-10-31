@@ -179,7 +179,7 @@
 		
 		protected function run_impl()
 		{
-			if (isset($_POST['submlidworden']))
+			if ($this->form_is_submitted('sign_up'))
 				return $this->_process_lidworden();
 			elseif (isset($_GET['confirmation_code']))
 				return $this->_process_confirm($_GET['confirmation_code']);

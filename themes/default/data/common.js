@@ -796,3 +796,22 @@ $(document).on('ready partial-content-loaded', function(e) {
 		// No need to focus first, the autofocus attribute should have taken care of that already
 	})
 });
+
+// Autocomplete for locations
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('input[data-autocomplete=location]').each(function () {
+		$(this).autocomplete({
+			minLength: 3,
+			source: function(request, response) {
+				$.getJSON('agenda.php', {
+					'view': 'suggest-location',
+					'search': request.term,
+					'limit': 15
+				}, response);
+			},
+			focus: function() {
+				return false;
+			}
+		});
+	});
+});

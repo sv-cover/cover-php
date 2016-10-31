@@ -212,4 +212,9 @@
 			$model = get_model('DataModelPhotobook');
 			return $model->get_random_photos($count);
 		}
+
+		public function is_person(DataIterPhotobookFace $face)
+		{
+			return (bool) $face->get('lid_id');
+		}
 	}

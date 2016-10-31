@@ -1,0 +1,1 @@
+ALTER TABLE announcements RENAME COLUMN "committee" TO "committee_id";

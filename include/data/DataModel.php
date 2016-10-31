@@ -13,6 +13,21 @@
 		}
 	}
 
+	class DatabaseLiteral 
+	{
+		protected $sql;
+
+		public function __construct($sql)
+		{
+			$this->sql = $sql;
+		}
+
+		public function toSQL()
+		{
+			return $this->sql;
+		}
+	}
+
 	/**
 	  * This class provides a base class for accessing data. This class can
 	  * be used for very simple one-to-one, model-to-table type mappings.
@@ -24,7 +39,7 @@
 		public $db; /** The database backend */
 		public $table; /** The table to model */
 		public $id;
-		public $dataiter = 'DataIter';
+		public $dataiter = 'GenericDataIter';
 		public $fields = array();
 		protected $auto_increment;
 		
@@ -69,10 +84,13 @@
 
 			$id = null;
 
+			$fields = $iter::fields();
+
 			foreach ($iter->data as $key => $value)
-				$data[$key] = $value;
+				if (in_array($key, $fields))
+					$data[$key] = $value;
 			
-			$this->db->insert($table, $data, $iter->get_literals());
+			$this->db->insert($table, $data);
 
 			if ($get_id) {
 				$id = $this->db->get_last_insert_id();
@@ -129,8 +147,10 @@
 		{
 			$data = array();
 
+			$fields = $iter::fields();
+
 			foreach ($iter->get_changed_values() as $key => $value)
-				if (!$this->fields || in_array($key, $this->fields))
+				if (in_array($key, $fields))
 					$data[$key] = $value;
 
 			if (count($data) === 0)
@@ -138,8 +158,7 @@
 
 			return $this->db->update($table, 
 					$data, 
-					$this->_id_string($iter->get_id(), $table), 
-					$iter->get_literals());
+					$this->_id_string($iter->get_id(), $table));
 		}
 		
 		/**
@@ -252,7 +271,7 @@
 
 			$rows = $this->db->query($query);
 			
-			return $this->_rows_to_iters($rows);			
+			return $this->_rows_to_iters($rows);
 		}
 
 		public function find_one($conditions)
@@ -306,7 +325,7 @@
 						break;
 
 					case 'contains':
-						$format = "%s LIKE '%%%s%%'";
+						$format = "%s ILIKE '%%%s%%'";
 						break;
 
 					case 'isnull':

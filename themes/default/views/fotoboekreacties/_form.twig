@@ -1,4 +1,9 @@
 <form class="comment-form" id="comment-form" name="freactie" action="{{ iter.has_id ? controller.link_to_update(iter) : controller.link_to_create }}" method="post" data-partial-selector=".photo-comments" data-placement-selector=".photo-comments">
+	{% if iter.has_id %}
+		{{ html_nonce('update', iter) }}
+	{% else %}
+		{{ html_nonce('create', iter) }}
+	{% endif %}
 	<div>
 		{{ html_textarea_field('reactie', iter.data,
 			errors=errors,

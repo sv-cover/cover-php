@@ -5,10 +5,13 @@ class PolicyForumMessage extends PolicyForumAbstract
 {
 	public function user_can_create(DataIter $message)
 	{
+		// First of all, you need to be logged in
+		if (!get_auth()->logged_in())
+			return false;
+		
 		// Can I create a new message in a thread, or in other words, can I reply
 		// to a thread? Well, that depends on the access rights you have to a
 		// specific forum!
-
 		$thread = $this->model->get_thread($message['thread']);
 
 		$forum = $this->model->get_iter($thread['forum']);

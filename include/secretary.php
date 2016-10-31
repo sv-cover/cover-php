@@ -85,15 +85,9 @@ class SecretaryAPI
 	protected function getJSON($url)
 	{
 		$response = file_get_contents($this->root . $url);
-
-		if (!$response)
-			throw new RuntimeException('Could not get ' . $url);
-
+		
 		$data = json_decode($response);
-
-		if (!$data)
-			throw new RuntimeException('Could not decode response as JSON');
-
+		
 		return $data;
 	}
 

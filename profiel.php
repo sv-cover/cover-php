@@ -108,7 +108,8 @@ class ControllerProfiel extends Controller
 			$subject = "Lidgegevens gewijzigd";
 			$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
 			
-			$changes = $iter->get_changed_values();
+			// Get all/only changed values (but only the actual fields, not the computed cruft)
+			$changes = array_filter($iter->get_changed_values(), function($field) { return in_array($field, DataIterMember::fields()); });
 			
 			foreach ($changes as $field => $value)
 				$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);

@@ -19,7 +19,7 @@
 </div>
 
 {% for item in iters if user_can_read item %}
-	{% set committee = item.getIter('committee') %}
+	{% set committee = item.committee %}
 	<hr class="colorAccent committee.login">
 	<div class="messageBox announcement frontpage">
 		<div class="newsTitle">

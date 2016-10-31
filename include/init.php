@@ -19,15 +19,13 @@
 		throw new AssertionException($message, $script, $line);
 	});
 	
-	if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'www.svcover.dev')
-	{
-		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE ^ E_DEPRECATED);
+	set_error_handler(function($severity, $message, $file, $line, $vars) {
+		if (error_reporting() & $severity)
+			throw new ErrorException($message, 0, $severity, $file, $line);
+	});
 
-		set_error_handler(function($severity, $message, $file, $line, $vars) {
-			if (error_reporting() & $severity)
-				throw new ErrorException($message, 0, $severity, $file, $line);
-		});
-	}
+	if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'www.svcover.dev')
+		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE ^ E_DEPRECATED);
 	elseif (version_compare(PHP_VERSION, '5.4.0') < 0)
 		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE);
 	else

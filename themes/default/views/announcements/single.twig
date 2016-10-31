@@ -3,7 +3,7 @@
 {% block title iter.subject ~ ' :: ' ~ parent() %}
 
 {% block content %}
-{% set committee = iter.getIter('committee') %}
+{% set committee = iter.committee %}
 <h1>{{ iter.subject }}</h1>
 <div class="messageBox announcement frontpage">
 	<div class="newsTitle">

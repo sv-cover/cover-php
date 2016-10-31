@@ -136,7 +136,7 @@ function find_path($model, DataIterPhoto $photo, array &$tried = array())
 
 	// College year book is named using the year of the book (duh!)
 	$year_book = array_shift($parents);
-	$year = get_university_year(end(array_filter($parents, function ($b) { return (bool) $b->get('datum'); }))->get('datum'));
+	$year = get_university_year(end(array_filter($parents, function ($b) { return (bool) $b->get('date'); }))->get('date'));
 	$path .= sprintf('fotos%d%d/', $year, $year + 1);
 
 	// Activity book is based named using the date of the book, but it
@@ -152,8 +152,8 @@ function find_path($model, DataIterPhoto $photo, array &$tried = array())
 			throw new Exception("Could not find chantagemap");
 	}
 	else {
-		if (!preg_match('/^(?<day>\d{1,2})-(?<month>\d{1,2})-(?<year>\d\d\d\d)$/', $activity_book->get('datum'), $match)
-		&& !preg_match('/^(?<year>\d\d\d\d)-(?<month>\d{1,2})-(?<day>{1,2})$/', $activity_book->get('datum'), $match))
+		if (!preg_match('/^(?<day>\d{1,2})-(?<month>\d{1,2})-(?<year>\d\d\d\d)$/', $activity_book->get('date'), $match)
+		&& !preg_match('/^(?<year>\d\d\d\d)-(?<month>\d{1,2})-(?<day>{1,2})$/', $activity_book->get('date'), $match))
 			throw new Exception("Could not match activity date to common pattern");
 
 		$path .= sprintf('%04d%02d*/', $match['year'], $match['month'], $match['day']);
@@ -238,7 +238,7 @@ foreach (($photos) as $photo)
 			printf("%d\tCould not guess path for book %s (%s)\n", $photo->get_id(),
 				implode('/', array_map(function($book) { return $book->get('titel'); },
 					array_merge($photo_model->get_parents($photo->get_book()), [$photo->get_book()]))),
-				$photo->get_book()->get('datum'));
+				$photo->get_book()->get('date'));
 
 			echo "Searched in:\n";
 			array_walk($tried, function($path) { echo "$path\n"; });
@@ -247,7 +247,7 @@ foreach (($photos) as $photo)
 		printf("%d\tCaught an error for book %s (%s):\n", $photo->get_id(),
 			implode('/', array_map(function($book) { return $book->get('titel'); },
 				array_merge($photo_model->get_parents($photo->get_book()), [$photo->get_book()]))),
-			$photo->get_book()->get('datum'));
+			$photo->get_book()->get('date'));
 
 		echo "$e\n";
 	}

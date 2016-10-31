@@ -197,6 +197,8 @@ class ControllerCRUD extends Controller
 		if (!$view)
 			$view = 'index';
 
+		$view = str_replace('-', '_', $view);
+
 		if (!method_exists($this, 'run_' . $view))
 			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
 

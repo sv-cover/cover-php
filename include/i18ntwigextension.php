@@ -63,8 +63,7 @@ class I18NTwigExtension extends Twig_Extension
 			}, ['variadic' => true]),
 			new Twig_SimpleFunction('__translate_parts', '__translate_parts'),
 			new Twig_SimpleFunction('link_static', 'get_theme_data'),
-			new Twig_SimpleFunction('get_config_value', 'get_config_value'),
-			new Twig_SimpleFunction('get_author_link', 'get_author_link') // used by the forum & weblog
+			new Twig_SimpleFunction('get_config_value', 'get_config_value')
 		];
 	}
 

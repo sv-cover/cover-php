@@ -2,7 +2,7 @@
 	/**
 	  * This class provides access to a data row in a #DataModel
 	  */
-	class DataIter implements JsonSerializable, ArrayAccess
+	abstract class DataIter implements JsonSerializable, ArrayAccess
 	{
 		protected $model = null; /** The model the iter belongs to */
 		
@@ -12,11 +12,9 @@
 		
 		private $changes = null; /** Array containing the fields that have changed */
 		
-		private $literals = null; /** Array containing the fields that should be used literally */
-		
 		protected $db = null;
 
-		private $namespace = '';
+		abstract static public function fields();
 
 		/**
 		 * Clones a DataIter. Useful for transforming one iter to another.
@@ -24,7 +22,7 @@
 		static public function from_iter(DataIter $iter)
 		{
 			$class_name = get_called_class();
-			$instance = new $class_name($iter->model, $iter->get_id(), $iter->data, $iter->namespace);
+			$instance = new $class_name($iter->model, $iter->get_id(), $iter->data);
 			return $instance;
 		}
 
@@ -39,22 +37,20 @@
 		  * @id the id of the iter
 		  * @data the data of the iter (a hashtable)
 		  */
-		public function __construct(DataModel $model = null, $id, $data, $namespace = '') {
+		public function __construct(DataModel $model = null, $id, $data)
+		{
 			$this->model = $model;
 			$this->data = $data;
 			$this->_id = $id;			
 			$this->db = $model ? $model->db : null;
-			$this->namespace = $namespace;
 			
 			$this->changes = array();
-			$this->literals = array();
 		}
 
 		public function __debugInfo()
 		{
 			return [
 				'_id' => $this->_id,
-				'namespace' => $this->namespace,
 				'data' => $this->data
 			];
 		}
@@ -84,13 +80,18 @@
 			$this->_id = $id;
 		}
 
+		public function has($field)
+		{
+			return $this->has_field($field) || $this->has_value($field);
+		}
+
 		/**
 		 * Check whether there is some value set for a field.
 		 * @return boolean
 		 */
-		public function has($field)
+		public function has_value($field)
 		{
-			return isset($this->data[$this->namespace . $field]);
+			return isset($this->data[$field]);
 		}
 
 		/**
@@ -99,7 +100,7 @@
 		 */
 		public function has_field($field)
 		{
-			return array_key_exists($this->namespace . $field, $this->data);
+			return in_array($field, static::fields());
 		}
 
 		public function has_getter($field)
@@ -120,15 +121,23 @@
 		  */
 		public function get($field)
 		{
+			// ID is just special
 			if ($field == 'id')
 				return $this->get_id();
 
-			if ($this->has_field($field))
-				return $this->data[$this->namespace . $field];
+			// We have the field in our data array
+			if ($this->has_value($field))
+				return $this->data[$field];
 			
+			// The field exists, we just don't have data for it
+			if ($this->has_field($field))
+				return null;
+			
+			// We don't have it as a table field, but we do have a getter
 			if ($this->has_getter($field))
 				return call_user_func(array($this, 'get_' . $field));
 
+			// Nope.
 			trigger_error(get_class($this) . ' has no field named ' . $field, E_USER_WARNING);
 			return null;
 		}
@@ -147,13 +156,9 @@
 			if ($this->has_setter($field))
 				return call_user_func_array([$this, 'set_' . $field], [$value]);
 
-			/* Remove the literal if set at the moment */
-			if (($index = array_search($field, $this->literals)) !== false)
-				unset($this->literals[$index]);
-
 			/* Return if value hasn't really changed */
-			if (isset($this->data[$this->namespace . $field])
-				&& $this->data[$this->namespace . $field] === $value
+			if (isset($this->data[$field])
+				&& $this->data[$field] === $value
 				&& $this->_id != -1)
 				return;
 
@@ -162,30 +167,7 @@
 				$this->changes[] = $field;
 
 			/* Store new value */
-			$this->data[$this->namespace . $field] = $value;
-		}
-		
-		/**
-		  * Set literal iter data
-		  * @field the data field name
-		  * @value the data value
-		  */
-		public function set_literal($field, $value)
-		{
-			/* Return if value hasn't really changed */
-			if ($this->data[$this->namespace . $field] == $value && $this->_id != -1)
-				return;
-
-			/* Add field to changes if it's not already changed */
-			if (!in_array($field, $this->changes))
-				$this->changes[] = $field;
-	
-			/* Add field to literals */
-			if (!in_array($field, $this->literals))
-				$this->literals[] = $field;
-
-			/* Store new value */
-			$this->data[$this->namespace . $field] = $value;
+			$this->data[$field] = $value;
 		}
 		
 		/**
@@ -201,11 +183,7 @@
 		public function unset_field($field)
 		{
 			// Remove it from the data
-			unset($this->data[$this->namespace . $field]);
-
-			// Remove the literal if set at the moment
-			if (($index = array_search($field, $this->literals)) !== false)
-				unset($this->literals[$index]);
+			unset($this->data[$field]);
 		}
 		
 		/**
@@ -245,28 +223,30 @@
 			$changes = array();
 
 			foreach ($this->changes as $change)
-				$changes[$change] = $this->data[$this->namespace . $change];
+				$changes[$change] = $this->data[$change];
 			
 			return $changes;
 		}
 
-		public function getIter($field, $type = 'DataIter')
+		/**
+		 * Return a dataiter for all fields queried from a certain subresource.
+		 * @return instance of <$type extends DataIter>
+		 */
+		protected function getIter($field, $type)
 		{
 			$id = isset($this->data[$field . '__id'])
 				? $this->data[$field . '__id']
 				: -1;
-			
-			$class = new ReflectionClass($type);
-			return $class->newInstance(null, $id, $this->data, $field . '__');
-		}
-		
-		/**
-		  * Returns the field names of the fields which should be used literally
-		  *
-		  * @result an array with field names
-		  */
-		public function get_literals() {
-			return $this->literals;
+
+			$model = get_model(preg_replace('{^DataIter}', 'DataModel', $type));
+
+			$row = array();
+
+			foreach ($this->data as $k => $v)
+				if (strpos($k, $field . '__') === 0)
+					$row[substr($k, strlen($field) + 2)] = $v;
+
+			return $model->new_iter($row);
 		}
 		
 		public function __get($get)
@@ -305,7 +285,7 @@
 
 		public function offsetExists($offset)
 		{
-			return $this->has_field($offset) || $this->has_getter($offset);
+			return $this->has_field($offset) || $this->has_value($offset) || $this->has_getter($offset);
 		}
 
 		public function offsetUnset($offset)
@@ -316,5 +296,18 @@
 		public function jsonSerialize()
 		{
 			return $this->data;
+		}
+	}
+
+	class GenericDataIter extends DataIter
+	{
+		static public function fields()
+		{
+			return [];
+		}
+
+		public function has_field($field)
+		{
+			return isset($this->data[$field]);
 		}
 	}

@@ -231,7 +231,7 @@
 		{% if book.has('date') %}
 			<tr>
 				<th>{{ __('Datum') }}:</th>
-				<td>{{ book.datum }}</td>
+				<td>{{ book.date|date('d-m-Y') }}</td>
 			</tr>
 		{% endif %}
 		

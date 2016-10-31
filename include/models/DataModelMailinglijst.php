@@ -6,6 +6,21 @@ require_once 'include/email.php';
 
 class DataIterMailinglijst extends DataIter
 {
+	static public function fields()
+	{
+		return [
+			'id',
+			'naam',
+			'adres',
+			'omschrijving',
+			'type',
+			'publiek',
+			'toegang',
+			'commissie',
+			'tag',
+		];
+	}
+
 	public function bevat_lid($lid_id)
 	{
 		return $this->model->is_aangemeld($this, $lid_id);
