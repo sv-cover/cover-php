@@ -2,7 +2,7 @@
 {% set message = iter.get_first_message() %}
 <div class="weblog-post">
 	<div class="weblog-post-details profile-widget">
-		<a class="author" href="{{ get_author_link(iter)|e('html_attr') }}">
+		<a class="author" href="{{ view.get_author_link(iter)|e('html_attr') }}">
 			<img class="weblog_head" width="100" height="100" src="{{ view.weblog_head(iter) }}">
 			<span class="name">{{ author.name }}</span>
 		</a>
