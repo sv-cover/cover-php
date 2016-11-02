@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-10-13 14:20+0200\n"
+"POT-Creation-Date: 2016-11-02 16:44+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -501,7 +501,7 @@ msgstr "You!"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: include/models/DataModelCommissie.php:303
+#: include/models/DataModelCommissie.php:304
 msgid "onbekend"
 msgstr "unknown"
 
@@ -687,7 +687,7 @@ msgid "Penningmeester"
 msgstr "Treasurer"
 
 #: locale/strings.php:13
-msgid "Algemeen lid"
+msgid "Algemeen Lid"
 msgstr "General Member"
 
 #: locale/strings.php:14 themes/default/views/fotoboek/_fotoboek_edit.phtml:11
@@ -705,8 +705,8 @@ msgid "Commissaris Extern"
 msgstr "Commissioner of External Affairs"
 
 #: locale/strings.php:17
-msgid "Ouderejaars lid"
-msgstr "Senior member"
+msgid "Ouderejaars Lid"
+msgstr "Senior Member"
 
 #: locale/strings.php:18
 msgid "Commissaris Zorgtoeslag"
@@ -3720,6 +3720,12 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
+
+#~ msgid "Algemeen lid"
+#~ msgstr "General Member"
+
+#~ msgid "Ouderejaars lid"
+#~ msgstr "Senior member"
 
 #~ msgid "Hoofdsponsor"
 #~ msgstr "Main sponsor"
