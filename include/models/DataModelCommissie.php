@@ -188,7 +188,8 @@
 				'Penningmeester' => 3,
 				'Commissaris Intern' => 2,
 				'Commissaris Extern' => 1,
-				'Algemeen Lid' => 0);
+				'Vice-voorzitter' => 0,
+				'Algemeen Lid' => -1);
 			
 			return $functies;
 		}

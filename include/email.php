@@ -396,6 +396,15 @@ class MessagePart
 		return self::parse_stream(new PeakableStream($tmp_stream));
 	}
 
+	/**
+	 * Parse a stream as the email message header. Will stop as 
+	 * soon as the double newline is read.
+	 * 
+	 * @param $stream PeakableStream to read from.
+	 * @param $message MessagePart to append the read headers to.
+	 * @return true if the headers are read as expected, false if the
+	 * stream ends while reading the header.
+	 */
 	static public function parse_header(PeakableStream $stream, MessagePart $message)
 	{
 		$header = null;
@@ -404,8 +413,14 @@ class MessagePart
 		{
 			$line = $stream->readline();
 
+			// False? That is unexpected..
+			if ($line === false)
+			{
+				return false;
+			}
+
 			// Newline? Oh god end of headers!
-			if (preg_match('/^(\r?\n|\r)$/', $line))
+			elseif (preg_match('/^(\r?\n|\r)$/', $line))
 			{
 				if ($header !== null)
 					$message->addHeader($header[0], $header[1]);
@@ -426,6 +441,8 @@ class MessagePart
 				$header[1] .= " " . trim($line);
 			}
 		}
+
+		return true;
 	}
 
 	static private function parse_multipart_body(PeakableStream $stream, $boundary, MessagePart $message)

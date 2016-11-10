@@ -8,11 +8,25 @@
 		const FORMAT_SQUARE = 'square';
 
 		const TYPE_THUMBNAIL = 'thumbnail';
-		const TYPE_PLACEHOLDER = 'placeholder';
+		const TYPE_PLACEHOLDER_PRIVATE = 'placeholder-private';
+		const TYPE_PLACEHOLDER_PUBLIC = 'placeholder-public';
 
 		public function __construct()
 		{
 			$this->model = get_model('DataModelMember');
+		}
+
+		protected function _get_placeholder_type($member)
+		{
+			if ($member->is_private('naam'))
+				return self::TYPE_PLACEHOLDER_PUBLIC;
+
+			return self::TYPE_PLACEHOLDER_PRIVATE;
+		}
+
+		protected function _is_placeholder($type)
+		{
+			return $type == self::TYPE_PLACEHOLDER_PUBLIC || $type == self::TYPE_PLACEHOLDER_PRIVATE;
 		}
 
 		protected function _format_cache_file_path(DataIterMember $member, $width, $height, $type)
@@ -22,7 +36,7 @@
 			if ($file_path_format === null)
 				return null;
 
-			$extension = $type == self::TYPE_PLACEHOLDER ? 'png' : 'jpg';
+			$extension = $this->_is_placeholder($type) ? 'png' : 'jpg';
 
 			return sprintf($file_path_format, $member->get_id(), $width, $height, $type, $extension);
 		}
@@ -84,7 +98,7 @@
 
 			// Serve the actual stream including the appropriate headers
 			$this->_serve_stream($fh,
-				$type == self::TYPE_PLACEHOLDER ? 'image/png' : 'image/jpeg',
+				$this->_is_placeholder($type) ? 'image/png' : 'image/jpeg',
 				filesize($file_path));
 			fclose($fh);
 
@@ -134,9 +148,12 @@
 
 		protected function _generate_placeholder(DataIterMember $member, $format, $width)
 		{
-			$text = sprintf('%s%s',
-				substr(trim($member->get('voornaam')), 0, 1),
-				substr(trim($member->get('achternaam')), 0, 1));
+			if ($member->is_private('naam'))
+				$text = '?';
+			else
+				$text = sprintf('%s%s',
+					substr(trim($member->get('voornaam')), 0, 1),
+					substr(trim($member->get('achternaam')), 0, 1));
 
 			switch ($format)
 			{
@@ -181,11 +198,11 @@
 			$imagick->annotateImage($draw,
 				($width - $metrics['textWidth']) / 2, // x
 				($width - $metrics['boundingBox']['y2']) / 2 + $metrics['boundingBox']['y2'], // y
-				0, // angle
+				0, // angl
 				$text);
 
 			// Oh shit cache not writable? Fall back to a temp stream.
-			$fout = $this->_open_cache_stream($member, $width, $height, self::TYPE_PLACEHOLDER, 'w+') or $fout = fopen('php://temp', 'w+');
+			$fout = $this->_open_cache_stream($member, $width, $height, $this->_get_placeholder_type($member), 'w+') or $fout = fopen('php://temp', 'w+');
 
 			$imagick->setImageFormat('png');
 			$imagick->writeImageFile($fout);
@@ -216,7 +233,7 @@
 			$height = $format == self::FORMAT_SQUARE ? $width : 0;
 
 			if ($this->model->is_private($member, 'foto') || !$this->model->has_picture($member))
-				return $this->_view_cached($member, $width, $height, self::TYPE_PLACEHOLDER)
+				return $this->_view_cached($member, $width, $height, $this->_get_placeholder_type($member))
 					or $this->_generate_placeholder($member, $format, $width);
 			else
 				return $this->_view_cached($member, $width, $height, self::TYPE_THUMBNAIL)

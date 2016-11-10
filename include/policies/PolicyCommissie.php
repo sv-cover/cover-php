@@ -25,7 +25,6 @@ class PolicyCommissie implements Policy
 
 	public function user_can_delete(DataIter $committee)
 	{
-		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR);
 	}
 }

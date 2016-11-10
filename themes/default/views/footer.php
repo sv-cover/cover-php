@@ -23,10 +23,19 @@
                     	require_once dirname(__FILE__) . '/Rotator.php';
                         $rotator = new Rotator('images/banners/');
                         $banners = $rotator -> get(15);
+
+                        $main_sponsors = '';
+
                         foreach ($banners as $banner)
-                        {
-                            echo '<a href="'.$banner['url'].'" target="_blank"><img src="images/banners/'.$banner['filename'].'"></a><br /><br />';
-                        }
+                        	if ($banner['type'] === 'main-sponsor')
+	                            $main_sponsors .= '<a href="'.$banner['url'].'" target="_blank"><img src="images/banners/'.$banner['filename'].'"></a><br /><br />';
+
+	                    if(!empty($main_sponsors))
+	                    	echo '<h4>'.__('Hoofdpartner').':</h4>' . $main_sponsors . '<h4>'.__('Partners').':</h4>';
+
+                        foreach ($banners as $banner)
+                        	if ($banner['type'] === 'default')
+	                            echo '<a href="'.$banner['url'].'" target="_blank"><img src="images/banners/'.$banner['filename'].'"></a><br /><br />';
                     ?>
 				</div>
 		</div> <!-- CONTAINER -->
