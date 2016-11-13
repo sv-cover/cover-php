@@ -73,11 +73,23 @@
 			return in_array($value, array('nl', 'en')) ? $value : false;
 		}
 
+		function _check_phone($name, $value) {
+			try {
+				$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
+				$phone_number = $phone_util->parse($value, 'NL');
+				return $phone_util->isValidNumber($phone_number)
+					? $phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164)
+					: false;
+			} catch (\libphonenumber\NumberParseException $e) {
+				return false;
+			}
+		}
+
 		protected function _process_almanak(DataIterMember $iter)
 		{
 			$check = array(
 				array('name' => 'postcode', 'function' => array($this, '_check_size')),
-				array('name' => 'telefoonnummer', 'function' => array($this, '_check_size')),
+				array('name' => 'telefoonnummer', 'function' => array($this, '_check_phone')),
 				array('name' => 'adres', 'function' => array($this, '_check_size')),
 				array('name' => 'email', 'function' => array($this, '_check_size')),
 				array('name' => 'woonplaats', 'function' => array($this, '_check_size'))

@@ -5,7 +5,8 @@
         "camspiers/porter-stemmer": "~1.0",
         "ronanguilloux/isocodes": "~1.2",
         "99designs/http-signatures": "~2.0",
-        "jeroendesloovere/vcard": "~1.2"
+        "jeroendesloovere/vcard": "~1.2",
+        "giggsey/libphonenumber-for-php": "^7.7"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.7"
