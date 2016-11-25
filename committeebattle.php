@@ -1,27 +1,35 @@
 <?php
 require_once 'include/init.php';
-require_once 'include/controllers/Controller.php';
+require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerCommitteeBattle extends Controller
+class ControllerCommitteeBattle extends ControllerCRUD
 {
 	public function __construct()
 	{
 		$this->model = get_model('DataModelCommitteeBattleScores');
 	}
 
-	protected function run_impl()
+	protected function _index()
 	{
-		$scores = $this->model->get();
+		$committees = parent::_index();
 
-		usort($scores, function($a, $b) {
+		usort($committees, function($a, $b) {
 			if ($a['score'] == $b['score'])
 				return strcasecmp($a['naam'], $b['naam']);
 			else
 				return $a['score'] - $b['score'];
 		});
 
-		$this->get_content('committeebattle::index', $scores);
-	}	
+		return $committees;
+	}
+
+	public function link_to_create(DataIterCommissie $committee)
+	{
+		return $this->link([
+			$this->_var_view => 'create',
+			'committee' => $committee['id']
+		]);
+	}
 }
 
 $controller = new ControllerCommitteeBattle();

@@ -10,7 +10,12 @@
 			<?php foreach ($iter as $committee): ?>
 			<tr>
 				<td><?=markup_format_text($committee['naam'])?></td>
-				<td><?=$committee['score']?></td>
+				<td>
+					<?=$committee['score']?>
+					<?php if (get_policy($model)->user_can_create()): ?>
+					<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>">Add</a>
+					<?php endif ?>
+				</td>
 			</tr>
 			<?php endforeach ?>
 		</tbody>

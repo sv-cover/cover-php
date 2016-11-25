@@ -1,5 +1,5 @@
 <?php
 
-class CommitteeBattleView extends View {
+class CommitteeBattleView extends CRUDView {
 	protected $__file = __FILE__;
 }
