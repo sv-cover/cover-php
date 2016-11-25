@@ -1,0 +1,18 @@
+<div class="messageBox committee-battle">
+	<table>
+		<thead>
+			<tr>
+				<th><?=__('Committee')?></th>
+				<th><?=__('Score')?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($iter as $committee): ?>
+			<tr>
+				<td><?=markup_format_text($committee['naam'])?></td>
+				<td><?=$committee['score']?></td>
+			</tr>
+			<?php endforeach ?>
+		</tbody>
+	</table>
+</div>
