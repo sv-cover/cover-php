@@ -9,7 +9,7 @@
 		<tbody>
 			<?php foreach ($iter as $committee): ?>
 			<tr>
-				<td><?=markup_format_text($committee['naam'])?></td>
+				<td><a href="<?=markup_format_attribute($controller->link_to_read($committee))?>"><?=markup_format_text($committee['naam'])?></a></td>
 				<td>
 					<?=$committee['score']?>
 					<?php if (get_policy($model)->user_can_create()): ?>

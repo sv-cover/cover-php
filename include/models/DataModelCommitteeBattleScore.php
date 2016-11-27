@@ -21,34 +21,35 @@ class DataModelCommitteeBattleScore extends DataModel
 		return parent::_insert($table, $iter, $get_id);
 	}
 
-	public function get()
+	public function get_for_committee(DataIterCommissie $committee)
 	{
-		$committee_model = get_model('DataModelCommissie');
-		$committee_model->type = DataModelCommissie::TYPE_COMMITTEE;
+		return $this->find(['committee_id' => $committee['id']]);
+	}
 
+	public function get_scores_for_committees($committees)
+	{
 		$query = "
 		SELECT
 			committee_id,
 			SUM(points) as score
 		FROM
 			committee_battle_scores
+		WHERE
+			committee_id IN (%s)
 		GROUP BY
 			committee_id
 		";
 
-		$committees = array();
+		$committee_scores = array_combine(
+			array_map(getter('id'), $committees),
+			array_fill(0, count($committees), 0));
 
-		foreach ($committee_model->get(false) as $committee) {
-			$committee['score'] = 0;
-			$committees[$committee['id']] = $committee;
-		}
-
-		$scores = $this->db->query($query);
+		$scores = $this->db->query(sprintf($query,
+			implode(',', array_map(getter('id'), $committees))));
 
 		foreach ($scores as $score)
-			if (isset($committees[$score['committee_id']]))
-				$committees[$score['committee_id']]['score'] = $score['score'];
+			$committee_scores[$score['committee_id']] = $score['score'];
 
-		return $committees;
+		return $committee_scores;
 	}
 }

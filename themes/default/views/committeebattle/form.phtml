@@ -1,5 +1,6 @@
+<h1><?=$this->get_label($iter, __('Nieuwe punten toekennen'), __('Punten wijzigen')) ?></h1>
 <div class="messageBox">
-	<form action="" method="post" class="vertical-form">
+	<form method="post" action="<?=$this->get_form_action($iter)?>" class="vertical-form">
 		<div>
 			<?=label(__('Commissie'), 'committee_id', $errors, true)?>
 			<?=select_field('committee_id', $this->committee_options(), $iter) ?>
@@ -9,7 +10,12 @@
 			<?=_input_field('points', $iter, ['type' => 'number'])?>
 		</div>
 		<div>
-			<button type="submit"><?=__('Opslaan')?></button>
+			<?=label(__('Reden'), 'awarded_for', $errors, true)?>
+			<?=textarea_field('awarded_for', $iter, $errors)?>
+		</div>
+		<div>
+			<button type="submit" class="button"><?=$this->get_label($iter, __('Voeg punten toe'), __('Wijzig punten')) ?></button>
+			<a href="<?=markup_format_text($controller->link_to_index())?>"><?=__('Terug naar het overzicht')?></a>
 		</div>
 	</form>
 </div>
