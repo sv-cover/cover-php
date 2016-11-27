@@ -1,6 +1,6 @@
 <?php
 
-class PolicyCommitteeBattleScores implements Policy
+class PolicyCommitteeBattleScore implements Policy
 {
 	public function user_can_create()
 	{

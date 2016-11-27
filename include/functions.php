@@ -985,4 +985,10 @@
 
 		return $groups;
 	}
+
+	function getter($key) {
+		return function($map) use ($key) {
+			return $map[$key];
+		};
+	}
 	

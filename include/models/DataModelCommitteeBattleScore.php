@@ -1,8 +1,26 @@
 <?php
 require_once 'include/data/DataModel.php';
 
-class DataModelCommitteeBattleScores extends DataModel
+class DataIterCommitteeBattleScore extends DataIter
 {
+
+}
+
+class DataModelCommitteeBattleScore extends DataModel
+{
+	public $dataiter = 'DataIterCommitteeBattleScore';
+
+	public function __construct($db)
+	{
+		parent::__construct($db, 'committee_battle_scores');
+	}
+
+	protected function _insert($table, DataIter $iter, $get_id = false)
+	{
+		$iter->set_literal('awarded_on', 'current_timestamp');
+		return parent::_insert($table, $iter, $get_id);
+	}
+
 	public function get()
 	{
 		$committee_model = get_model('DataModelCommissie');
@@ -28,8 +46,8 @@ class DataModelCommitteeBattleScores extends DataModel
 		$scores = $this->db->query($query);
 
 		foreach ($scores as $score)
-			if (isset($commitees[$score['committee_id']]))
-				$commitees[$score['committee_id']]['score'] = $score['score'];
+			if (isset($committees[$score['committee_id']]))
+				$committees[$score['committee_id']]['score'] = $score['score'];
 
 		return $committees;
 	}
