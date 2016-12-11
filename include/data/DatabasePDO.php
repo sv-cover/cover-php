@@ -22,9 +22,6 @@ class DatabasePDO
 	{
 		/* Connect to database */
 		$this->_connect($dbid);
-
-		if (get_config_value('show_queries', false))
-			$this->history = array();
 	}
 	
 	/**
