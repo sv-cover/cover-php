@@ -37,6 +37,32 @@
 		{
 			return sprintf('commissies.php?commissie=%s', urlencode($this->get('login')));
 		}
+
+		public function get_thumbnail()
+		{
+			return self::find_image(array(
+				'images/committees/' . $this->get('login') . 'tn.gif',
+				'images/committees/' . $this->get('login') . 'tn.jpg',
+				'images/committees/logos/' . $this->get('login') . '.png'
+			));
+		}
+
+		public function get_photo()
+		{
+			return self::find_image(array(
+				'images/committees/' . $this->get('login') . '.gif',
+				'images/committees/' . $this->get('login') . '.jpg'
+			));
+		}
+
+		static private function find_image($search_paths)
+		{
+			foreach ($search_paths as $path)
+				if (file_exists($path))
+					return $path;
+
+			return null;
+		}
 	}
 
 	/**

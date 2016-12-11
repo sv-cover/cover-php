@@ -257,7 +257,7 @@
 
 		public function offsetExists($offset)
 		{
-			return $this->has_field($offset);
+			return $this->has_field($offset) || $this->has_getter($offset);
 		}
 
 		public function offsetUnset($offset)

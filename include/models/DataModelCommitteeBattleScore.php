@@ -40,9 +40,13 @@ class DataModelCommitteeBattleScore extends DataModel
 			committee_id
 		";
 
-		$committee_scores = array_combine(
-			array_map(getter('id'), $committees),
-			array_fill(0, count($committees), 0));
+		$committee_ids = array_filter(array_map(getter('id'), $committees));
+
+		if (count($committee_ids) === 0)
+			return [];
+
+		// Fill the score map with zeros
+		$committee_scores = array_combine($committee_ids, array_fill(0, count($committee_ids), 0));
 
 		$scores = $this->db->query(sprintf($query,
 			implode(',', array_map(getter('id'), $committees))));

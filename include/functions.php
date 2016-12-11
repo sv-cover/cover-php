@@ -986,9 +986,9 @@
 		return $groups;
 	}
 
-	function getter($key) {
-		return function($map) use ($key) {
-			return $map[$key];
+	function getter($key, $default = null) {
+		return function($map) use ($key, $default) {
+			return isset($map[$key]) ? $map[$key] : $default;
 		};
 	}
 	

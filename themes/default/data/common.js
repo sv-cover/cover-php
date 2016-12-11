@@ -719,3 +719,80 @@ $(document).on('mouseover', '[data-face-id]', function(e) {
 $(document).on('mouseout', '[data-face-id]', function(e) {
 	$('#face_' + $(this).data('face-id')).removeClass('highlight');
 });
+
+/* Promotional banners */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.sign-up-banner').each(function() {
+		var slides = $(this).find('.background');
+		var currentSlide = 0;
+
+		setInterval(function() {
+			currentSlide = (currentSlide + 1) % slides.length;
+			slides.removeClass("current");
+			slides.eq(currentSlide).addClass("current");
+		}, 3500);
+	});
+});
+
+/* Committee battle banner */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.committee-battle-banner').each(function() {
+		var columnCount = 5;
+		var imageCount = 3;
+		var paths = $(this).data('photos');
+		var pathIndex = 0;
+
+		var nextPath = function() {
+			return paths[pathIndex++ % paths.length];
+		};
+
+		var columns = $.map(new Array(columnCount), function(value, columnIndex) {
+			var column = $('<div>').css({
+				position: 'absolute',
+				top: '-100%',
+				left: 115 * (columnIndex / columnCount) - 35 + '%',
+				width: (100 / columnCount) + '%',
+				zIndex: -2,
+				transform: 'rotate(35deg) translate(0, 0%)',
+				border: '1px solid black',
+				background: 'black',
+				overflow: 'hidden',
+				animationDuration: 5 + 5 * Math.random() + 's',
+				animationDelay: -1 * Math.random() + 's',
+				animationName: 'banner-scroll',
+				animationTimingFuction: 'linear',
+				animationIterationCount: 'infinite'
+			});
+
+			var images = $.map(new Array(imageCount), function(value, imageIndex) {
+				return $('<img>').prop('src', nextPath()).css({
+					width: '200%',
+					margin: '10% -50% 10% -50%',
+					transform: 'rotate(-35deg)'
+				});
+			});
+
+			for (var i = 0; i < 2; ++i)
+				images.push(images[i].clone());
+
+			column.append(images);
+
+			return column;
+		});
+
+		var overlay = $('<div>').css({
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			bottom: 0,
+			right: 0,
+			background: '#000',
+			zIndex: -1,
+			opacity: 0.25
+		});
+
+		$(this).append(columns);
+
+		$(this).append(overlay);
+	});
+});

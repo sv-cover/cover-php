@@ -1,3 +1,4 @@
+<h1>Committee Battle</h1>
 <div class="messageBox committee-battle">
 	<table class="full-width-table committee-battle-scores">
 		<thead>
@@ -12,7 +13,7 @@
 			<tr>
 				<td>
 					<a href="<?=markup_format_attribute($controller->link_to_read($committee))?>"><?=markup_format_text($committee['naam'])?></a>
-					<ul class="inline-member-list">
+					<ul class="inline-profile-list">
 					<?php foreach ($committee['members'] as $lid): ?>
 						<li><a href="profiel.php?lid=<?=$lid->get('id')?>" class="committee-member">
 							<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;format=square&amp;width=50" width="25">
@@ -23,7 +24,7 @@
 				</td>
 				<td><?=$committee['score']?></td>
 				<td><?php if (get_policy($model)->user_can_create()): ?>
-					<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>">Add</a><?php endif ?></td>
+					<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>" class="button">Add</a><?php endif ?></td>
 			</tr>
 			<?php endforeach ?>
 		</tbody>
