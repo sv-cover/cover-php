@@ -2110,6 +2110,7 @@ body.modal-open {
 .promotional-banner h1,
 .promotional-banner p,
 .promotional-banner a {
+	color: white;
 	z-index: 1;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 }
@@ -2171,6 +2172,26 @@ body.modal-open {
 
 .promotional-banner .background-5 {
 	background-image: url(images/promotional-header/lanparty.jpg);
+}
+
+/* The embedded edition, used on the committees index */
+.messageBox .promotional-banner {
+	text-align: center;
+	min-width: auto;
+	max-width: auto;
+	width: calc(100% - 20px);
+	margin: 10px;
+	box-sizing: border-box;
+	transition: box-shadow 150ms ease-in-out;
+}
+
+.messageBox a:hover .promotional-banner {
+	box-shadow: 0 0 0 4px #c60c30;
+}
+
+.messageBox a:hover .promotional-banner h1 {
+	color: white;
+	text-decoration: underline;
 }
 
 .profile-widget {
