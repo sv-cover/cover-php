@@ -2855,6 +2855,18 @@ button .fa {
 	line-height: 200%;
 }
 
+.committee-battle-scores tr:nth-child(1) .inline-profile-list .committee-member::before {
+	content: '';
+	background: 0 0 url(images/crown.svg) no-repeat;
+	position: absolute;
+	top: -15px;
+	left: -5px;
+	right: 0;
+	height: 20px;
+	background-size: contain;
+	transform: rotate(-20deg);
+}
+
 .committee-battle-banner h1 {
 	font-family: Impact, Haettenschweiler, 'Franklin Gothic Bold', Charcoal, 'Helvetica Inserat', 'Bitstream Vera Sans Bold', 'Arial Black', 'sans serif';
 	font-style: italic;
@@ -2888,4 +2900,50 @@ button .fa {
 	to {
 		transform: rotate(35deg) translate(0, -60%);
 	}
+}
+
+.committee-battle .content {
+	margin-top: 1em;
+}
+
+.click-to-read-on {
+	overflow-y: hidden;
+	position: relative;
+	max-height: 5000px;
+	transition: max-height 500ms ease-in-out;
+}
+
+.click-to-read-on.collapsed {
+	max-height: 500px;
+	border-bottom: 1px solid #999;
+}
+
+.click-to-read-on.collapsed:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100px;
+	background: linear-gradient(to bottom, rgba(245, 245, 245, 0.0) 0%, rgba(245, 245, 245, 1.0) 60%, rgba(245, 245, 245, 1.0) 100%);
+}
+
+.click-to-read-on > button.read-on-button {
+	transition: box-shadow 150ms ease-in-out;
+	position: absolute;
+	bottom: 10px;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 200px;
+	z-index: 10;
+	display: none;
+}
+
+.click-to-read-on > button.read-on-button:hover {
+	box-shadow: 0 0 0 4px #c60c30;
+}
+
+.click-to-read-on.collapsed > button.read-on-button {
+	display: block;
 }

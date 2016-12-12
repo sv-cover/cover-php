@@ -1,6 +1,7 @@
 <?php
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
+require_once 'include/controllers/ControllerEditable.php';
 
 class ControllerCommitteeBattle extends ControllerCRUD
 {

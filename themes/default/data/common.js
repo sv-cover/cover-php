@@ -794,3 +794,17 @@ $(document).on('ready partial-content-loaded', function(e) {
 		}, 100);
 	});
 });
+
+/* Click to read more */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.click-to-read-on').each(function() {
+		var $div = $(this).addClass('collapsed');
+		var $button = $('<button>')
+			.addClass('button read-on-button')
+			.text($div.data('read-on-label') || 'Click to Read On')
+			.click(function() {
+				$div.removeClass('collapsed');
+			});
+		$div.append($button);
+	})
+})
