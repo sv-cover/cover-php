@@ -19,9 +19,6 @@
 	<ul class="commissie-index">
 	<?php foreach ($iter as $commissie): ?>
 		<li class="commissie">
-			<?php if ($commissie->get('vacancies')): ?>
-			<span class="vacancy-badge"><?=__('Commissieleden gezocht!')?></span>
-			<?php endif ?>
 			<a href="<?=$controller->link_to_read($commissie)?>" class="link">
 				<?php if ($imgpath = $this->get_commissie_thumb($commissie)): ?>
 					<img src="<?=markup_format_attribute($imgpath, ENT_QUOTES)?>" class="thumbnail">
@@ -31,6 +28,9 @@
 					<span class="summary"><?= $this->get_summary($commissie) ?></span>
 				</span>
 			</a>
+			<?php if ($commissie->get('vacancies')): ?>
+				<span class="vacancy-badge"><?=__('Commissieleden gezocht!')?></span>
+			<?php endif ?>
 		</li>
 	<?php endforeach ?>
 	</ul>
