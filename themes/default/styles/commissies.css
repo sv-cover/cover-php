@@ -81,6 +81,7 @@ ul.commissie-index {
 	background: #c60c30;
 	color: #fff;
 	box-shadow: 0 0 0 3px white, 0 0 0 6px #c60c30;
+	pointer-events: none;
 }
 
 .commissie-index .commissie .link:hover + .vacancy-badge {
