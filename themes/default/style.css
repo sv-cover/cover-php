@@ -2855,6 +2855,12 @@ button .fa {
 	line-height: 200%;
 }
 
+.committee-battle-banner h1 {
+	font-family: Impact, Haettenschweiler, 'Franklin Gothic Bold', Charcoal, 'Helvetica Inserat', 'Bitstream Vera Sans Bold', 'Arial Black', 'sans serif';
+	font-style: italic;
+	font-size: 3em;
+}
+
 .committee-battle-banner .column {
 	position: absolute;
 	top: -100%;
