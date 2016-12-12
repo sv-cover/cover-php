@@ -747,28 +747,18 @@ $(document).on('ready partial-content-loaded', function(e) {
 		};
 
 		var columns = $.map(new Array(columnCount), function(value, columnIndex) {
-			var column = $('<div>').css({
-				position: 'absolute',
-				top: '-100%',
+			var column = $('<div>').addClass('column').css({
 				left: 115 * (columnIndex / columnCount) - 35 + '%',
 				width: (100 / columnCount) + '%',
-				zIndex: -2,
-				transform: 'rotate(35deg) translate(0, 0%)',
-				border: '1px solid black',
-				background: 'black',
-				overflow: 'hidden',
-				animationDuration: 5 + 5 * Math.random() + 's',
-				animationDelay: -1 * Math.random() + 's',
-				animationName: 'banner-scroll',
-				animationTimingFuction: 'linear',
-				animationIterationCount: 'infinite'
+				animationDuration: 20 + 5 * (columnIndex % 2) + 's',
+				animationDelay: -1 * Math.random() + 's'
 			});
 
 			var images = $.map(new Array(imageCount), function(value, imageIndex) {
-				return $('<img>').prop('src', nextPath()).css({
-					width: '200%',
-					margin: '10% -50% 10% -50%',
-					transform: 'rotate(-35deg)'
+				return $('<img>').prop({
+					src: nextPath(),
+					width: 500,
+					height: 300
 				});
 			});
 
@@ -794,5 +784,13 @@ $(document).on('ready partial-content-loaded', function(e) {
 		$(this).append(columns);
 
 		$(this).append(overlay);
+
+		setTimeout(function() {
+			$(columns).each(function() {
+				$(this).css({
+					animationName: 'banner-scroll'
+				});
+			});
+		}, 100);
 	});
 });

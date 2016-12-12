@@ -2834,11 +2834,31 @@ button .fa {
 	line-height: 200%;
 }
 
+.committee-battle-banner .column {
+	position: absolute;
+	top: -100%;
+	
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	transform: rotate(35deg) translate(0, 0%);
+	border: 1px solid black;
+	background: black;
+	overflow: hidden;
+	z-index: -2;
+}
+
+.committee-battle-banner .column > img {
+	width: 200%;
+	height: 200%;
+	margin: 10% -50% 10% -50%;
+	transform: rotate(-35deg);
+}
+
 @keyframes banner-scroll {
-	from: { 
+	from { 
 		transform: rotate(35deg) translate(0, 0%);
 	}
-	to: {
+	to {
 		transform: rotate(35deg) translate(0, -60%);
 	}
 }

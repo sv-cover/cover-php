@@ -375,13 +375,13 @@
 		$committees = $committee_model->get(false);
 
 		$committee_photos = array_map(getter('thumbnail'), $committees);
-		$committee_photos = array_filter($committee_photos);
-		shuffle($committee_photos);
+		$committee_photos = array_values(array_filter($committee_photos));
+		// shuffle($committee_photos);
 
 		return '
 			<div class="promotional-banner committee-battle-banner" data-photos="' . markup_format_attribute(json_encode($committee_photos)) . '">
 				<h1>' . __('Committee battle') . '</h1>
-				<p>' . __('Kijk hoe goed jouw commissies het doen tijdens de Committee Battle.') . '</p>
+				<p>' . __('Hoe goed doet jouw commissie het in de Committee Battle?') . '</p>
 				<a href="committeebattle.php" class="button">' . __('Doe mee!') . '</a>
 			</div>
 		';
