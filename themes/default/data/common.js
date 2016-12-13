@@ -142,6 +142,21 @@ jQuery(function($) {
 		.on('submit', 'form[data-placement-selector]', inline_link_handler);
 });
 
+// If a link in a modal links to the current page, make that link just close the modal
+$(document).on('partial-content-loaded', function(e) {
+	var $modal = $(e.target).closest('.modal');
+	if ($modal.length) {
+		$(e.target).find('a').each(function() {
+			if (this.href == document.location.href) {
+				$(this).click(function(e) {
+					e.preventDefault();
+					$modal.remove();
+				});
+			}
+		});
+	}
+});
+
 jQuery(function($) {
 	$(document).on('click', 'a[data-image-popup]', function(e) {
 		if ($(this).data('image-popup') !== 'modal')
