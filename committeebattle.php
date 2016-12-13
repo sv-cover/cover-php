@@ -33,6 +33,13 @@ class ControllerCommitteeBattle extends ControllerCRUD
 				return $b['score'] - $a['score'];
 		});
 
+		// And finally attach the positions (without 0)
+		$score_position = array_unique(array_filter(array_values($scores)));
+		rsort($score_position, SORT_NUMERIC);
+
+		foreach ($committees as $committee)
+			$committee['position'] = $committee['score'] === 0 ? 0 : array_search($committee['score'], $score_position, true) + 1;
+
 		return $committees;
 	}
 

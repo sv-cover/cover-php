@@ -4,6 +4,7 @@
 		<table class="full-width-table committee-battle-scores">
 			<thead>
 				<tr>
+					<th><?=__('Positie')?></th>
 					<th><?=__('Commissie')?></th>
 					<th><?=__('Punten')?></th>
 					<th></th>
@@ -11,7 +12,8 @@
 			</thead>
 			<tbody>
 				<?php foreach ($iter as $committee): ?>
-				<tr>
+				<tr class="position-<?= $committee['position'] ?>">
+					<td><?= $committee['position'] ?></td>
 					<td>
 						<a href="<?=markup_format_attribute($controller->link_to_read($committee))?>"><?=markup_format_text($committee['naam'])?></a>
 						<ul class="inline-profile-list">
@@ -24,8 +26,11 @@
 						</ul>
 					</td>
 					<td><?=$committee['score']?></td>
-					<td><?php if (get_policy($model)->user_can_create()): ?>
-						<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>" class="button">Add</a><?php endif ?></td>
+					<td>
+						<?php if (get_policy($model)->user_can_create()): ?>
+							<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>" class="button">Add</a>
+						<?php endif ?>
+					</td>
 				</tr>
 				<?php endforeach ?>
 			</tbody>

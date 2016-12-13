@@ -19,10 +19,10 @@
 				<td><?=$score['points']?></td>
 				<td>
 					<?php if (get_policy($model)->user_can_update($score)): ?>
-						<a href="<?=markup_format_attribute($controller->link_to_update($score)) ?>"><?=__('Bewerk')?></a>
+						<a href="<?=markup_format_attribute($controller->link_to_update($score)) ?>" class="button"><?=__('Bewerk')?></a>
 					<?php endif ?>
 					<?php if (get_policy($model)->user_can_delete($score)): ?>
-						<a href="<?=markup_format_attribute($controller->link_to_delete($score)) ?>"><?=__('Verwijder')?></a>
+						<a href="<?=markup_format_attribute($controller->link_to_delete($score)) ?>" class="button"><?=__('Verwijder')?></a>
 					<?php endif ?>
 				</td>
 			</tr>

@@ -3,7 +3,10 @@ require_once 'include/data/DataModel.php';
 
 class DataIterCommitteeBattleScore extends DataIter
 {
-
+	public function get_committee()
+	{
+		return get_model('DataModelCommissie')->get_iter($this['committee_id']);
+	}
 }
 
 class DataModelCommitteeBattleScore extends DataModel
