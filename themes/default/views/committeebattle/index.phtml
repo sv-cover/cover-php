@@ -15,7 +15,7 @@
 				<tr class="position-<?= $committee['position'] ?>">
 					<td><?= $committee['position'] ?></td>
 					<td>
-						<a href="<?=markup_format_attribute($controller->link_to_read($committee))?>"><?=markup_format_text($committee['naam'])?></a>
+						<a href="commissies.php?commissie=<?=urlencode($committee['login'])?>"><?=markup_format_text($committee['naam'])?></a>
 						<ul class="inline-profile-list">
 						<?php foreach ($committee['members'] as $lid): ?>
 							<li><a href="profiel.php?lid=<?=$lid->get('id')?>" class="committee-member">
@@ -25,10 +25,10 @@
 						<?php endforeach ?>
 						</ul>
 					</td>
-					<td><?=$committee['score']?></td>
+					<td><a href="<?=markup_format_attribute($controller->link_to_read($committee))?>"><?=$committee['score']?></a></td>
 					<td>
 						<?php if (get_policy($model)->user_can_create()): ?>
-							<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>" class="button">Add</a>
+							<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">Add</a>
 						<?php endif ?>
 					</td>
 				</tr>

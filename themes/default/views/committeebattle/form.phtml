@@ -2,7 +2,7 @@
 <div class="messageBox">
 	<form method="post" action="<?=markup_format_attribute($iter && $iter->has_id()
 			? $this->controller->link_to_update($iter)
-			: $this->controller->link_to_create($iter['committee'])) ?>" class="vertical-form">
+			: $this->controller->link_to_create($iter['committee'])) ?>" class="vertical-form committee-battle-form"">
 		<div>
 			<?=label(__('Commissie'), 'committee_id', $errors, true)?>
 			<?=select_field('committee_id', $this->committee_options(), $iter) ?>
