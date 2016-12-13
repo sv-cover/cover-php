@@ -750,7 +750,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 			var column = $('<div>').addClass('column').css({
 				left: 115 * (columnIndex / columnCount) - 35 + '%',
 				width: (100 / columnCount) + '%',
-				animationDuration: 20 + 5 * (columnIndex % 2) + 's',
+				animationDuration: 60 + 10 * (columnIndex % 2) + 's',
 				animationDelay: -1 * Math.random() + 's'
 			});
 
