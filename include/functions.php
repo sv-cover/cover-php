@@ -19,8 +19,10 @@
 
 		foreach (debug_backtrace() as $trace) {
 			if (!in_array($trace['function'], $skip)) {
-				$result .= $trace['file'] . "\n";
-				$result .= ($trace['class'] ? ($trace['class'] . '::') : '');
+				if (isset($trace['file']))
+					$result .= $trace['file'] . "\n";
+				if (isset($trace['class']))
+					$result .= $trace['class'] . '::';
 				
 				$args = '';
 				
@@ -32,7 +34,8 @@
 				}
 				
 				$result .= $trace['function'] . ' (' . $args . ')';
-				$result .= ', line ' . $trace['line'];
+				if (isset($trace['line']))
+					$result .= ', line ' . $trace['line'];
 			}
 		}
 		
@@ -981,5 +984,11 @@
 		}
 
 		return $groups;
+	}
+
+	function getter($key, $default = null) {
+		return function($map) use ($key, $default) {
+			return isset($map[$key]) ? $map[$key] : $default;
+		};
 	}
 	

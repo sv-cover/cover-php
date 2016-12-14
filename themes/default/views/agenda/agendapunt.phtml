@@ -49,7 +49,7 @@ $date = strtotime($iter->get('van'));
 
 	<!-- Facebook attendees -->
 	<?php if ($attendees = $this->get_attending($iter)): ?>
-	<ul class="event-attendees">
+	<ul class="event-attendees inline-profile-list">
 	<?php foreach ($attendees as $attendee): ?>
 		<li>
 			<a href="https://facebook.com/<?=$attendee['id']?>" target="_new">

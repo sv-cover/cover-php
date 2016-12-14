@@ -142,6 +142,21 @@ jQuery(function($) {
 		.on('submit', 'form[data-placement-selector]', inline_link_handler);
 });
 
+// If a link in a modal links to the current page, make that link just close the modal
+$(document).on('partial-content-loaded', function(e) {
+	var $modal = $(e.target).closest('.modal');
+	if ($modal.length) {
+		$(e.target).find('a').each(function() {
+			if (this.href == document.location.href) {
+				$(this).click(function(e) {
+					e.preventDefault();
+					$modal.remove();
+				});
+			}
+		});
+	}
+});
+
 jQuery(function($) {
 	$(document).on('click', 'a[data-image-popup]', function(e) {
 		if ($(this).data('image-popup') !== 'modal')
@@ -719,3 +734,92 @@ $(document).on('mouseover', '[data-face-id]', function(e) {
 $(document).on('mouseout', '[data-face-id]', function(e) {
 	$('#face_' + $(this).data('face-id')).removeClass('highlight');
 });
+
+/* Promotional banners */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.sign-up-banner').each(function() {
+		var slides = $(this).find('.background');
+		var currentSlide = 0;
+
+		setInterval(function() {
+			currentSlide = (currentSlide + 1) % slides.length;
+			slides.removeClass("current");
+			slides.eq(currentSlide).addClass("current");
+		}, 3500);
+	});
+});
+
+/* Committee battle banner */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.committee-battle-banner').each(function() {
+		var columnCount = 5;
+		var imageCount = 3;
+		var paths = $(this).data('photos');
+		var pathIndex = 0;
+
+		var nextPath = function() {
+			return paths[pathIndex++ % paths.length];
+		};
+
+		var columns = $.map(new Array(columnCount), function(value, columnIndex) {
+			var column = $('<div>').addClass('column').css({
+				left: 115 * (columnIndex / columnCount) - 35 + '%',
+				width: (100 / columnCount) + '%',
+				animationDuration: 60 + 10 * (columnIndex % 2) + 's',
+				animationDelay: -1 * Math.random() + 's'
+			});
+
+			var images = $.map(new Array(imageCount), function(value, imageIndex) {
+				return $('<img>').prop({
+					src: nextPath(),
+					width: 500,
+					height: 300
+				});
+			});
+
+			for (var i = 0; i < 2; ++i)
+				images.push(images[i].clone());
+
+			column.append(images);
+
+			return column;
+		});
+
+		var overlay = $('<div>').css({
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			bottom: 0,
+			right: 0,
+			background: '#000',
+			zIndex: -1,
+			opacity: 0.25
+		});
+
+		$(this).append(columns);
+
+		$(this).append(overlay);
+
+		setTimeout(function() {
+			$(columns).each(function() {
+				$(this).css({
+					animationName: 'banner-scroll'
+				});
+			});
+		}, 100);
+	});
+});
+
+/* Click to read more */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.click-to-read-on').each(function() {
+		var $div = $(this).addClass('collapsed');
+		var $button = $('<button>')
+			.addClass('button read-on-button')
+			.text($div.data('read-on-label') || 'Click to Read On')
+			.click(function() {
+				$div.removeClass('collapsed');
+			});
+		$div.append($button);
+	})
+})

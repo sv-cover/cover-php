@@ -110,6 +110,14 @@ CREATE TABLE commissies (
     CONSTRAINT commissies_login_key UNIQUE(login)
 );
 
+CREATE TABLE committee_battle_scores (
+    id SERIAL NOT NULL PRIMARY KEY,
+    committee_id integer NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    points integer,
+    awarded_for text default '',
+    awarded_on timestamp without time zone
+);
+
 --
 -- TOC entry 188 (class 1259 OID 24203)
 -- Name: configuratie; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 

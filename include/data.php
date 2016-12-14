@@ -54,7 +54,7 @@
 			$db = new $database_class($dbids['easy']);
 
 			/* Enable query history if requested */
-			if (get_config_value('show_queries', false))
+			if (get_static_config_value('show_queries', false))
 				$db->history = array();
 		}
 		

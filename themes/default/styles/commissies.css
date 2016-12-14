@@ -75,14 +75,17 @@ ul.commissie-index {
 	border-radius: 4px;
 	-webkit-transform: rotate(-15deg);
 	transform: rotate(-15deg);
+	transition: transform 125ms ease-in-out;
+	transition-delay: 25ms;
 	z-index: 2;
 	background: #c60c30;
 	color: #fff;
 	box-shadow: 0 0 0 3px white, 0 0 0 6px #c60c30;
+	pointer-events: none;
 }
 
-.commissie-index .commissie a.vacancy-badge:hover {
-	text-decoration: underline;
+.commissie-index .commissie .link:hover + .vacancy-badge {
+	transform: translate(-40px, -30px) scale(0.5) rotate(-15deg);
 }
 
 .committee-vacancy {

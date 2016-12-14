@@ -1712,32 +1712,36 @@ form.add-sticker-form button {
 	text-decoration: underline;
 }
 
+ul.inline-profile-list {
+	display: inline-flex;
+	list-style: none;
+	vertical-align: middle;
+	margin: 0;
+}
+
 .event-header .event-attendees {
 	position: absolute;
 	bottom: 50px;
 	right: 15px;
 	left: 15px;
-	list-style: none;
 	margin-top: 6px;
 	z-index: 10;
 	text-align: right;
-
-	display: none;
-	display: -webkit-inline-flex;
-	display: inline-flex;
-	-webkit-flex-direction: row-reverse;
+	
 	flex-direction: row-reverse;
-	-webkit-flex-wrap: wrap-reverse;
 	flex-wrap: wrap-reverse;
 }
 
-.event-header .event-attendees li a {
+.inline-profile-list li a {
 	vertical-align: bottom;
-	line-height: auto;
 	position: relative;
 	font-weight: normal;
 	text-decoration: none;
 	margin-left: 4px;
+}
+
+.inline-profile-list li a .name {
+	font-size: 11px;
 }
 
 .event-header .event-attendees li:nth-child(n+40) {
@@ -1756,21 +1760,21 @@ form.add-sticker-form button {
 	}
 }
 
-.event-header .event-attendees li img {
-	width: 32px;
-	height: 32px;
+.inline-profile-list li img {
+	width: 1.75ex;
+	height: 1.75ex;
 	border-radius: 50%;
 	border: 1px solid #333;
 }
 
-.event-header .event-attendees li .name {
+.inline-profile-list li .name {
 	display: none;
 }
 
-.event-header .event-attendees li:hover .name {
+.inline-profile-list li:hover .name {
 	display: block;
 	position: absolute;
-	top: 15px;
+	top: 90%;
 	left: 0;
 	width: auto;
 	text-align: center;
@@ -1780,16 +1784,17 @@ form.add-sticker-form button {
 	padding: 4px;
 	box-shadow: 1px 1px 4px #333;
 	z-index: 10;
+	line-height: 16px;
 }
 
-.event-header .event-attendees li:hover .name:before {
+.inline-profile-list li:hover .name:before {
 	border: 7px solid;
 	border-color: transparent transparent #f5f5f5 transparent;
 	content: '';
 	display: block;
 	position: absolute;
 	top: -14px;
-	left: 10px;
+	left: 0;
 	z-index: 5;
 }
 
@@ -2086,7 +2091,7 @@ body.modal-open {
 
 }
 
-.promotional-header {
+.promotional-banner {
 	position: relative;
 	box-sizing: border-box;
 	min-width: 850px;
@@ -2102,14 +2107,15 @@ body.modal-open {
 	-webkit-transform:translate3d(0,0,0);
 }
 
-.promotional-header h1,
-.promotional-header p,
-.promotional-header a {
+.promotional-banner h1,
+.promotional-banner p,
+.promotional-banner a {
+	color: white;
 	z-index: 1;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 }
 
-.promotional-header .button {
+.promotional-banner .button {
 	background: transparent;
 	color: white;
 	font-size: 1em;
@@ -2124,15 +2130,15 @@ body.modal-open {
 	bottom: 40px;
 }
 
-.promotional-header .button:hover {
+.promotional-banner .button:hover {
 	background: rgba(255, 255, 255, 0.3);
 }
 
-.promotional-header .button:active {
+.promotional-banner .button:active {
 	background: rgba(255, 255, 255, 0.6);
 }
 
-.promotional-header .background {
+.promotional-banner .background {
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -2144,28 +2150,48 @@ body.modal-open {
 	background-size: cover;
 }
 
-.promotional-header .background.current {
+.promotional-banner .background.current {
 	opacity: 0.9;
 }
 
-.promotional-header .background-0 {
+.promotional-banner .background-0 {
 	background-image: url(images/promotional-header/llama-0.jpg)
 }
 
-.promotional-header .background-1 {
+.promotional-banner .background-1 {
 	background-image: url(images/promotional-header/llama-1.jpg)
 }
 
-.promotional-header .background-3 {
+.promotional-banner .background-3 {
 	background-image: url(images/promotional-header/borrel.jpg);
 }
 
-.promotional-header .background-4 {
+.promotional-banner .background-4 {
 	background-image: url(images/promotional-header/introkamp.jpg);
 }
 
-.promotional-header .background-5 {
+.promotional-banner .background-5 {
 	background-image: url(images/promotional-header/lanparty.jpg);
+}
+
+/* The embedded edition, used on the committees index */
+.messageBox .promotional-banner {
+	text-align: center;
+	min-width: auto;
+	max-width: auto;
+	width: calc(100% - 20px);
+	margin: 10px;
+	box-sizing: border-box;
+	transition: box-shadow 150ms ease-in-out;
+}
+
+.messageBox a:hover .promotional-banner {
+	box-shadow: 0 0 0 4px #c60c30;
+}
+
+.messageBox a:hover .promotional-banner h1 {
+	color: white;
+	text-decoration: underline;
 }
 
 .profile-widget {
@@ -2808,4 +2834,116 @@ button .fa {
 	font-size: 1.5em;
 	text-align: center;
 	color: #666;
+}
+
+.committee-battle-scores td {
+	line-height: 40px;
+}
+
+.committee-battle-scores tr.position-1 td {
+	font-size: 400%;
+	line-height: 200%;
+}
+
+.committee-battle-scores tr.position-2 td {
+	font-size: 300%;
+	line-height: 200%;
+}
+
+.committee-battle-scores tr.position-3 td {
+	font-size: 200%;
+	line-height: 200%;
+}
+
+.committee-battle-scores tr.position-1 .inline-profile-list .committee-member::before {
+	content: '';
+	background: 0 0 url(images/crown.svg) no-repeat;
+	position: absolute;
+	top: -15px;
+	left: -5px;
+	right: 0;
+	height: 20px;
+	background-size: contain;
+	transform: rotate(-20deg);
+}
+
+.committee-battle-banner h1 {
+	font-family: Impact, Haettenschweiler, 'Franklin Gothic Bold', Charcoal, 'Helvetica Inserat', 'Bitstream Vera Sans Bold', 'Arial Black', 'sans serif';
+	font-style: italic;
+	font-size: 3em;
+}
+
+.committee-battle-banner .column {
+	position: absolute;
+	top: -100%;
+	
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	transform: rotate(35deg) translate(0, 0%);
+	border: 1px solid black;
+	background: black;
+	overflow: hidden;
+	z-index: -2;
+}
+
+.committee-battle-banner .column > img {
+	width: 200%;
+	height: 200%;
+	margin: 10% -50% 10% -50%;
+	transform: rotate(-35deg);
+}
+
+@keyframes banner-scroll {
+	from { 
+		transform: rotate(35deg) translate(0, 0%);
+	}
+	to {
+		transform: rotate(35deg) translate(0, -60%);
+	}
+}
+
+.committee-battle .content {
+	margin-top: 1em;
+}
+
+.click-to-read-on {
+	overflow-y: hidden;
+	position: relative;
+	max-height: 5000px;
+	transition: max-height 500ms ease-in-out;
+}
+
+.click-to-read-on.collapsed {
+	max-height: 500px;
+	border-bottom: 1px solid #999;
+}
+
+.click-to-read-on.collapsed:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100px;
+	background: linear-gradient(to bottom, rgba(245, 245, 245, 0.0) 0%, rgba(245, 245, 245, 1.0) 60%, rgba(245, 245, 245, 1.0) 100%);
+}
+
+.click-to-read-on > button.read-on-button {
+	transition: box-shadow 150ms ease-in-out;
+	position: absolute;
+	bottom: 10px;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 200px;
+	z-index: 10;
+	display: none;
+}
+
+.click-to-read-on > button.read-on-button:focus {
+	box-shadow: 0 0 0 4px #c60c30;
+}
+
+.click-to-read-on.collapsed > button.read-on-button {
+	display: block;
 }

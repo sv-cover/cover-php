@@ -332,13 +332,20 @@
 		]));
 	}
 
-	function view_promotional_header()
+	function view_promotional_banner()
 	{
-		if (logged_in())
-			return '';
+		if (!logged_in())
+			return view_signup_banner();
+		else if (basename($_SERVER['SCRIPT_NAME']) == 'index.php') {
+			if (get_config_value('committee_battle', false))
+				return view_committee_battle_banner();
+		}
+	}
 
+	function view_signup_banner()
+	{
 		return '
-			<div class="promotional-header">
+			<div class="promotional-banner sign-up-banner">
 				<div class="background background-0 current"></div>
 				<div class="background background-1"></div>
 				<div class="background background-3"></div>
@@ -349,19 +356,37 @@
 				<p>' . __('Voor boeken, activiteiten en gezelligheid.') . '</p>
 				<a href="lidworden.php?utm_source=svcover.nl&utm_medium=banner&utm_campaign=member%20registration" class="button">' . __('Meld je aan!') . '</a>
 			</div>
-			<script>
-				var slides = jQuery(".promotional-header .background"),
-					currentSlide = 0;
-
-				setInterval(function() {
-					currentSlide = (currentSlide + 1) % slides.length;
-					slides.removeClass("current");
-					slides.eq(currentSlide).addClass("current");
-				}, 3500);
-			</script>
 		';
 	}
-			
+
+	function view_committee_battle_banner()
+	{
+		// $committees = get_identity()->get('committees');
+
+		// $model = get_model('DataModelCommitteeBattleScore');
+
+		// $scores = $model->get_scores_for_committees(array_map(function($id) {
+		// 	return ['id' => $id];
+		// }, $committees));
+
+		$committee_model = get_model('DataModelCommissie');
+		$committee_model->type = DataModelCommissie::TYPE_COMMITTEE;
+
+		$committees = $committee_model->get(false);
+
+		$committee_photos = array_map(getter('thumbnail'), $committees);
+		$committee_photos = array_values(array_filter($committee_photos));
+		// shuffle($committee_photos);
+
+		return '
+			<div class="promotional-banner committee-battle-banner" data-photos="' . markup_format_attribute(json_encode($committee_photos)) . '">
+				<h1>' . __('Committee Battle') . '</h1>
+				<p>' . __('Hoe goed doet jouw commissie het in de Committee Battle?') . '</p>
+				<a href="committeebattle.php" class="button">' . __('Doe mee!') . '</a>
+			</div>
+		';
+	}
+
 	function view_header($model, $iter, $params) {
 		header('Content-type: text/html; charset=UTF-8');
 
@@ -423,7 +448,7 @@
 		<div class="topMenu clearfix">
 			'. createTopMenu() . '
 		</div>
-		' . view_promotional_header() . '
+		' . view_promotional_banner() . '
 		<div class="container clearfix">
 			<div class="center column" id="contents">';
 	}

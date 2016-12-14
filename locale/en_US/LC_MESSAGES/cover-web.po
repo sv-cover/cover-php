@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2016-11-02 16:44+0100\n"
+"POT-Creation-Date: 2016-12-13 10:53+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -107,6 +107,11 @@ msgstr "Books"
 #: themes/default/views/sessions/overrides.phtml:12
 msgid "Commissies"
 msgstr "Committees"
+
+#: committeebattle.php:60 themes/default/views/header.php:383
+#: themes/default/views/commissies/index.phtml:15
+msgid "Committee Battle"
+msgstr "Committee Battle"
 
 #: confirm.php:36 themes/default/views/profiel/_password.phtml:2
 #: themes/default/views/profiel/_password.phtml:14
@@ -258,13 +263,13 @@ msgstr "This page does not exist..."
 msgid "Kan het model %s niet vinden"
 msgstr "Could not find the model %s"
 
-#: include/functions.php:52 themes/default/views/confirm.php:4
+#: include/functions.php:55 themes/default/views/confirm.php:4
 #: themes/default/views/confirm.php:9 themes/default/views/editable.php:14
 #: themes/default/views/wachtwoordvergeten/noaccount.phtml:2
 msgid "Fout"
 msgstr "Error"
 
-#: include/functions.php:64
+#: include/functions.php:67
 msgid ""
 "De webmaster is NIET op de hoogte gesteld. Stel de webmaster op de hoogte "
 "wanneer dit probleem zich voor blijft doen"
@@ -272,153 +277,153 @@ msgstr ""
 "The webmaster has NOT been informed. Please inform the webmaster if this "
 "problem keeps occurring"
 
-#: include/functions.php:66
+#: include/functions.php:69
 msgid "De webmaster is op de hoogte gesteld van het probleem"
 msgstr "The webmaster has been notified of the problem"
 
-#: include/functions.php:130
+#: include/functions.php:133
 #, php-format
 msgid "De view `%s` kan niet gevonden worden (thema: %s)"
 msgstr "The view %s could not be found (theme: %s)"
 
-#: include/functions.php:136
+#: include/functions.php:139
 #, php-format
 msgid "De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"
 msgstr "The view function %s in %s could not be found (theme: %s)"
 
-#: include/functions.php:164
+#: include/functions.php:167
 msgid "Zondag"
 msgstr "Sunday"
 
-#: include/functions.php:164
+#: include/functions.php:167
 msgid "Maandag"
 msgstr "Monday"
 
-#: include/functions.php:164
+#: include/functions.php:167
 msgid "Dinsdag"
 msgstr "Tuesday"
 
-#: include/functions.php:164
+#: include/functions.php:167
 msgid "Woensdag"
 msgstr "Wednesday"
 
-#: include/functions.php:164
+#: include/functions.php:167
 msgid "Donderdag"
 msgstr "Thursday"
 
-#: include/functions.php:164
+#: include/functions.php:167
 msgid "Vrijdag"
 msgstr "Friday"
 
-#: include/functions.php:164
+#: include/functions.php:167
 msgid "Zaterdag"
 msgstr "Saturday"
 
-#: include/functions.php:179 include/functions.php:188
+#: include/functions.php:182 include/functions.php:191
 msgid "geen"
 msgstr "no"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "Januari"
 msgstr "January"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "Februari"
 msgstr "February"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "Maart"
 msgstr "March"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "April"
 msgstr "April"
 
-#: include/functions.php:179 include/functions.php:188
+#: include/functions.php:182 include/functions.php:191
 msgid "Mei"
 msgstr "May"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "Juni"
 msgstr "June"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "Juli"
 msgstr "July"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "Augustus"
 msgstr "August"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "September"
 msgstr "September"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "Oktober"
 msgstr "October"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "November"
 msgstr "November"
 
-#: include/functions.php:179
+#: include/functions.php:182
 msgid "December"
 msgstr "December"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Jan"
 msgstr "Jan"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Feb"
 msgstr "Feb"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Mrt"
 msgstr "Mar"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Apr"
 msgstr "Apr"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Jun"
 msgstr "Jun"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Jul"
 msgstr "Jul"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Aug"
 msgstr "Aug"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Sept"
 msgstr "Sept"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Okt"
 msgstr "Oct"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Nov"
 msgstr "Nov"
 
-#: include/functions.php:188
+#: include/functions.php:191
 msgid "Dec"
 msgstr "Dec"
 
-#: include/functions.php:377
+#: include/functions.php:380
 msgid "$from_dayname $from_day $from_month"
 msgstr "$from_dayname $from_day|ordinal of $from_month"
 
-#: include/functions.php:379
+#: include/functions.php:382
 msgid "$from_dayname $from_day $from_month, $from_time"
 msgstr "$from_dayname $from_day|ordinal of $from_month, $from_time"
 
-#: include/functions.php:384
+#: include/functions.php:387
 msgid ""
 "$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day "
 "$till_month $till_time"
@@ -426,63 +431,63 @@ msgstr ""
 "$from_dayname $from_day|ordinal of $from_month $from_time till $till_dayname "
 "$till_day|ordinal of $till_month $till_time"
 
-#: include/functions.php:386
+#: include/functions.php:389
 msgid "$from_dayname $from_day $from_month, $from_time tot $till_time"
 msgstr ""
 "$from_dayname $from_day|ordinal of $from_month, $from_time till $till_time"
 
-#: include/functions.php:410
+#: include/functions.php:413
 msgid "vanaf $from_time"
 msgstr "starts at $from_time"
 
-#: include/functions.php:417
+#: include/functions.php:420
 msgid "$from_day $from_month tot $till_day $till_month"
 msgstr "$from_month $from_day|ordinal till $till_month $till_day|ordinal"
 
-#: include/functions.php:419
+#: include/functions.php:422
 msgid "$from_day tot $till_day $till_month"
 msgstr "$from_day|ordinal till $till_day|ordinal of $till_month"
 
-#: include/functions.php:422
+#: include/functions.php:425
 msgid "$from_time tot $till_time"
 msgstr "$from_time till $till_time"
 
-#: include/functions.php:596
+#: include/functions.php:599
 #: themes/default/views/fotoboek/_photo_faces.phtml:37
 msgid "en"
 msgstr "and"
 
-#: include/functions.php:611
+#: include/functions.php:614
 msgid "nu"
 msgstr "now"
 
-#: include/functions.php:619
+#: include/functions.php:622
 msgid "net"
 msgstr "just"
 
-#: include/functions.php:620
+#: include/functions.php:623
 msgid "1 minuut geleden"
 msgstr "1 minute ago"
 
-#: include/functions.php:621
+#: include/functions.php:624
 #, php-format
 msgid "%d minuten geleden"
 msgstr "%d minutes ago"
 
-#: include/functions.php:622
+#: include/functions.php:625
 msgid "1 uur geleden"
 msgstr "1 hour ago"
 
-#: include/functions.php:623
+#: include/functions.php:626
 #, php-format
 msgid "%d uren geleden"
 msgstr "%d hours ago"
 
-#: include/functions.php:625
+#: include/functions.php:628
 msgid "Gisteren"
 msgstr "Yesterday"
 
-#: include/functions.php:626
+#: include/functions.php:629
 #, php-format
 msgid "%d dagen geleden"
 msgstr "%d days ago"
@@ -501,7 +506,7 @@ msgstr "You!"
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: include/models/DataModelCommissie.php:304
+#: include/models/DataModelCommissie.php:330
 msgid "onbekend"
 msgstr "unknown"
 
@@ -527,7 +532,7 @@ msgstr "Groups"
 
 #: include/models/DataModelForum.php:671 include/models/DataModelMember.php:554
 #: themes/default/views/forum.php:839
-#: themes/default/views/profiel/profiel.php:64
+#: themes/default/views/profiel/profiel.php:74
 #: themes/default/views/almanak/almanak.phtml:23
 #: themes/default/views/commissies/form.phtml:25
 #: themes/default/views/search/_single_member.phtml:5
@@ -538,6 +543,8 @@ msgstr "Member"
 #: include/models/DataModelForum.php:674 themes/default/views/forum.php:839
 #: themes/default/views/agenda/edit.phtml:40
 #: themes/default/views/agenda/moderate.phtml:19
+#: themes/default/views/committeebattle/form.phtml:7
+#: themes/default/views/committeebattle/index.phtml:8
 #: themes/default/views/mailinglijsten/mailinglist.phtml:43
 #: themes/default/views/mailinglijsten/mailinglists.phtml:26
 #: themes/default/views/search/_single_committee.phtml:9
@@ -571,7 +578,7 @@ msgstr "Hidden"
 
 #: include/models/DataModelMember.php:560
 #: themes/default/views/almanak/almanak.php:29
-#: themes/default/views/profiel/profiel.php:66
+#: themes/default/views/profiel/profiel.php:76
 #: themes/default/views/almanak/almanak.phtml:25
 #: themes/default/views/search/_single_member.phtml:9
 msgid "Lid af"
@@ -579,7 +586,7 @@ msgstr "Previously a member"
 
 #: include/models/DataModelMember.php:563
 #: themes/default/views/almanak/almanak.php:34
-#: themes/default/views/profiel/profiel.php:67
+#: themes/default/views/profiel/profiel.php:77
 #: themes/default/views/almanak/almanak.phtml:26
 #: themes/default/views/search/_single_member.phtml:13
 msgid "Erelid"
@@ -587,7 +594,7 @@ msgstr "Honorary Member"
 
 #: include/models/DataModelMember.php:566
 #: themes/default/views/almanak/almanak.php:39
-#: themes/default/views/profiel/profiel.php:68
+#: themes/default/views/profiel/profiel.php:78
 #: themes/default/views/almanak/almanak.phtml:27
 #: themes/default/views/search/_single_member.phtml:17
 msgid "Donateur"
@@ -760,61 +767,61 @@ msgstr "New member"
 msgid "Profiel"
 msgstr "Profile"
 
-#: profiel.php:89
+#: profiel.php:101
 msgid "De volgende velden zijn onjuist ingevuld: "
 msgstr "The following fields are not correctly filled in: "
 
-#: profiel.php:155
+#: profiel.php:167
 msgid "Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd."
 msgstr "We’ve sent a confirmation mail to your new email address."
 
-#: profiel.php:173
+#: profiel.php:185
 msgid "De volgende velden zijn te lang: "
 msgstr "The following fields are to long: "
 
-#: profiel.php:200
+#: profiel.php:212
 msgid "Het huidige wachtwoord is onjuist."
 msgstr "The current password is incorrect"
 
-#: profiel.php:206
+#: profiel.php:218
 msgid "Het nieuwe wachtwoord is niet ingevuld."
 msgstr "The new password hasn't been filled in"
 
-#: profiel.php:209
+#: profiel.php:221
 msgid "Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld."
 msgstr "The new password hasn't been filled in correctly twice"
 
-#: profiel.php:248
+#: profiel.php:260
 msgid "Jij mag deze gegevens niet aanpassen."
 msgstr "Sorry, you are not allowed to modify this data."
 
-#: profiel.php:251
+#: profiel.php:263
 msgid "De zichtbaarheid van het profiel is niet ingevuld."
 msgstr "The visibility of the profile has not been selected."
 
-#: profiel.php:254
+#: profiel.php:266
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
-#: profiel.php:277 profiel.php:307
+#: profiel.php:289 profiel.php:319
 #, php-format
 msgid "Het fotobestand is te groot. Het maximum is %s."
 msgstr "The image file is too large. The maximum file size is %s."
 
-#: profiel.php:281 profiel.php:311
+#: profiel.php:293 profiel.php:323
 #, php-format
 msgid "Het bestand is niet geupload. Foutcode %d."
 msgstr "The image hasn't been uploaded correctly. PHP reports error code %d."
 
-#: profiel.php:284 profiel.php:314
+#: profiel.php:296 profiel.php:326
 msgid "Bestand is niet een door PHP geupload bestand."
 msgstr "The image file is not a file uploaded by PHP."
 
-#: profiel.php:287 profiel.php:317
+#: profiel.php:299 profiel.php:329
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
-#: profiel.php:329
+#: profiel.php:341
 msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
@@ -1367,6 +1374,7 @@ msgstr "Modify message"
 
 #: themes/default/views/forum.php:1217
 #: themes/default/views/agenda/moderate.phtml:18
+#: themes/default/views/committeebattle/committee.phtml:8
 #: themes/default/views/fotoboek/_info.phtml:7
 #: themes/default/views/mailinglijsten/list_archive.phtml:9
 #: themes/default/views/profiel/_incassomatic.phtml:69
@@ -1588,19 +1596,27 @@ msgstr ""
 "parts of the website are not yet accessible, such as all the photo albums "
 "and contact information of members."
 
-#: themes/default/views/header.php:348
+#: themes/default/views/header.php:355
 msgid "Word Coverlid"
 msgstr "Become a member"
 
-#: themes/default/views/header.php:349
+#: themes/default/views/header.php:356
 msgid "Voor boeken, activiteiten en gezelligheid."
 msgstr "For books, activities and fun."
 
-#: themes/default/views/header.php:350
+#: themes/default/views/header.php:357
 msgid "Meld je aan!"
 msgstr "Join now!"
 
-#: themes/default/views/header.php:377
+#: themes/default/views/header.php:384
+msgid "Hoe goed doet jouw commissie het in de Committee Battle?"
+msgstr "How is your committee doing in the Committee Battle?"
+
+#: themes/default/views/header.php:385
+msgid "Doe mee!"
+msgstr "Take part!"
+
+#: themes/default/views/header.php:402
 msgid "Studievereniging Kunstmatige Intelligentie en Informatica"
 msgstr "Study Association for Artificial Intelligence and Computing Science"
 
@@ -1624,12 +1640,12 @@ msgstr "Only *@svcover.nl addresses"
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
-#: themes/default/views/profiel/profiel.php:65
+#: themes/default/views/profiel/profiel.php:75
 #: themes/default/views/almanak/almanak.phtml:24
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
-#: themes/default/views/profiel/profiel.php:69
+#: themes/default/views/profiel/profiel.php:79
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
 
@@ -1721,6 +1737,7 @@ msgstr "Are you sure you want to delete this calendar event"
 #: themes/default/views/agenda/index.phtml:82
 #: themes/default/views/announcements/index.phtml:51
 #: themes/default/views/announcements/single.phtml:27
+#: themes/default/views/committeebattle/committee.phtml:25
 #: themes/default/views/fotoboekreacties/single.phtml:65
 #: themes/default/views/settings/index.phtml:21
 msgid "Verwijder"
@@ -2143,6 +2160,7 @@ msgstr "Delete committee"
 
 #: themes/default/views/commissies/confirm_delete.phtml:8
 #: themes/default/views/commissies/form.phtml:58
+#: themes/default/views/committeebattle/confirm_delete.phtml:8
 msgid "Terug naar commissie"
 msgstr "Back to committee page"
 
@@ -2230,13 +2248,73 @@ msgstr "Back to all committees"
 msgid "Nieuwe commissie"
 msgstr "New committee"
 
-#: themes/default/views/commissies/index.phtml:12
+#: themes/default/views/commissies/index.phtml:32
 msgid "Commissieleden gezocht!"
 msgstr "Looking for new members!"
 
 #: themes/default/views/commissies/single.phtml:24
 msgid "Bewerk commissiepagina"
 msgstr "Modify committee page"
+
+#: themes/default/views/committeebattle/committee.phtml:9
+#: themes/default/views/committeebattle/form.phtml:15
+msgid "Reden"
+msgstr "Reason"
+
+#: themes/default/views/committeebattle/committee.phtml:10
+#: themes/default/views/committeebattle/form.phtml:11
+#: themes/default/views/committeebattle/index.phtml:9
+msgid "Punten"
+msgstr "Points"
+
+#: themes/default/views/committeebattle/committee.phtml:22
+msgid "Bewerk"
+msgstr "Edit"
+
+#: themes/default/views/committeebattle/confirm_delete.phtml:1
+msgid "Score verwijderen"
+msgstr "Delete points"
+
+#: themes/default/views/committeebattle/confirm_delete.phtml:4
+#, php-format
+msgid "Weet je heel zeker dat je de punten voor <em>%s</em> wil verwijderen?"
+msgstr "Are you sure you want to delete the points awarded for <em>%s</em>?"
+
+#: themes/default/views/committeebattle/confirm_delete.phtml:7
+msgid "Verwijder punten"
+msgstr "Delete points"
+
+#: themes/default/views/committeebattle/form.phtml:1
+msgid "Nieuwe punten toekennen"
+msgstr "Award points"
+
+#: themes/default/views/committeebattle/form.phtml:1
+msgid "Punten wijzigen"
+msgstr "Update points"
+
+#: themes/default/views/committeebattle/form.phtml:19
+msgid "Voeg punten toe"
+msgstr "Add points"
+
+#: themes/default/views/committeebattle/form.phtml:19
+msgid "Wijzig punten"
+msgstr "Update points"
+
+#: themes/default/views/committeebattle/form.phtml:20
+msgid "Terug naar het overzicht"
+msgstr "Back to index"
+
+#: themes/default/views/committeebattle/index.phtml:3
+msgid "Toon alle commissies"
+msgstr "Show all committees"
+
+#: themes/default/views/committeebattle/index.phtml:7
+msgid "Positie"
+msgstr "Rank"
+
+#: themes/default/views/committeebattle/index.phtml:43
+msgid "Bewerk omschrijving"
+msgstr "Update description"
 
 #: themes/default/views/dreamspark/accept.phtml:1
 msgid "Inloggen op Dreamspark"
@@ -4144,9 +4222,6 @@ msgstr "Modify working group page"
 
 #~ msgid "Nieuw fotoboek aanmaken"
 #~ msgstr "Add a new photo album"
-
-#~ msgid "Bewerk"
-#~ msgstr "Edit"
 
 #~ msgid "Herschikken"
 #~ msgstr "Reorder"
