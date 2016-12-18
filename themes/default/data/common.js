@@ -265,21 +265,31 @@ jQuery(function($) {
 
 $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('fieldset:not(.jquery-fieldset)').each(function(i, fieldset) {
+		var masterSwitch = $(fieldset).find('legend input[type=checkbox], legend input[type=radio]');
+
+		if (masterSwitch.length === 0)
+			return;
+
 		$(fieldset).addClass('jquery-fieldset');
 
-		var masterSwitch = $(fieldset).find('legend input[type=checkbox]');
-
-		var toggles = $(fieldset).find('input').not(masterSwitch);
+		var fields = $(fieldset).find('input, select').not(masterSwitch);
 
 		var update = function() {
-			toggles.prop('disabled', !masterSwitch.is(':checked'));
+			fields.prop('disabled', !masterSwitch.is(':checked'));
+
+			// if (masterSwitch.is('input[type=radio]'))
+			// 	$(e.target).find('legend input[type=radio]').filter(function(i, el) {
+			// 		return el.name == masterSwitch.name;
+			// 	}).not(masterSwitch).change();
 		};
 
 		update();
 
 		masterSwitch.on('change', update);
 	});
+});
 
+$(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('input[data-autocomplete=member_id]').each(function(i, field) {
 		$(field).autocompleteAlmanac({
 			select: function(event, ui) {

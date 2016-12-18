@@ -311,7 +311,19 @@
 			$params['id'] = 'field-' . $name;
 
 		foreach ($values as $val => $title)
-			$options .= '<option value="' . markup_format_attribute($val) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . markup_format_text($title) . "</option>\n";
+		{
+			if ($default === null)
+				$is_selected = false;
+			elseif (is_array($default))
+				$is_selected = in_array($val, $default);
+			else
+				$is_selected = $val == $default;
+
+			$options .= sprintf('<option value="%s"%s>%s</option>' . "\n",
+				markup_format_attribute($val),
+				$is_selected ? ' selected' : '',
+				markup_format_text($title));
+		}
 		
 		$result = '<select name="' . $name . '"';
 		

@@ -43,29 +43,9 @@ class ControllerCommitteeBattle extends ControllerCRUD
 		return $committees;
 	}
 
-	protected function _create_iter()
-	{
-		$iter = parent::_create_iter();
-
-		if (isset($_GET['committee'])) {
-			$committee = get_model('DataModelCommissie')->get_iter($_GET['committee']);
-			$iter['committee_id'] = $committee->get_id();	
-		}
-
-		return $iter;
-	}
-
 	protected function _get_title($iter)
 	{
 		return $iter instanceof DataIter ? $iter->get('naam') : __('Committee Battle');
-	}
-
-	public function link_to_create(DataIterCommissie $committee)
-	{
-		return $this->link([
-			$this->_var_view => 'create',
-			'committee' => $committee['id']
-		]);
 	}
 
 	public function link_to_read(DataIter $iter)

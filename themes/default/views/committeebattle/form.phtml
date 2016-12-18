@@ -3,10 +3,34 @@
 	<form method="post" action="<?=markup_format_attribute($iter && $iter->has_id()
 			? $this->controller->link_to_update($iter)
 			: $this->controller->link_to_create($iter['committee'])) ?>" class="vertical-form committee-battle-form"">
-		<div>
-			<?=label(__('Commissie'), 'committee_id', $errors, true)?>
-			<?=select_field('committee_id', $this->committee_options(), $iter) ?>
-		</div>
+
+		<fieldset>
+			<legend>
+				<?=input_radio('awarded_to', $iter, 'committees', 'id', 'field-awarded_to_committee')?>
+				<?=label(__('Punten voor actie van de gehele commissie'), 'awarded_to_committee') ?>
+			</legend>
+
+			<label><?=__('Commissies')?></label>
+			<ul class="option-group columns">
+				<?php foreach ($this->committee_options() as $committee_id => $committee_name): ?>
+				<li>
+					<?=input_checkbox('committee_ids[]', $iter, $committee_id, 'id', 'field-committee-' . $committee_id)?>
+					<?=label($committee_name, 'committee-' . $committee_id)?>
+				</li>
+				<?php endforeach ?>
+			</ul>
+		</fieldset>
+
+		<fieldset>
+			<legend>
+				<?=input_radio('awarded_to', $iter, 'members', 'id', 'field-awarded_to_member')?>
+				<?=label(__('Punten voor actie van specifieke leden'), 'awarded_to_member') ?>
+			</legend>
+
+			<?=label(__('Leden'), 'member_ids[]', $errors, true)?>
+			<?=select_field('member_ids[]', $this->active_member_options(), $iter, 'field', 'member_ids', 'multiple', true)?>
+		</fieldset>
+
 		<div>
 			<?=label(__('Punten'), 'points', $errors, true)?>
 			<?=_input_field('points', $iter, ['type' => 'number'])?>

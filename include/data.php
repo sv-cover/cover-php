@@ -70,6 +70,10 @@
 	  * @result the POST value or null if the key isn't in $_POST
 	  */
 	function get_post($key) {
+		// Strip array field name thingies
+		if (substr($key, -2) == '[]')
+			$key = substr($key, 0, -2);
+
 		if (!isset($_POST[$key]))
 			return null;
 		

@@ -1,4 +1,11 @@
-<h1>Committee Battle</h1>
+<div class="pageheading">
+	<?php if (get_policy($model)->user_can_create()): ?>
+	<div class="controls inline">
+		<a href="<?=markup_format_attribute($controller->link_to_create()) ?>" class="create-link" data-placement-selector="modal" data-partial-selector=".committee-battle-form"><?=__('Ken punten toe')?></a>
+	</div>
+	<?php endif ?>
+	<h1>Committee Battle</h1>
+</div>
 <div class="messageBox committee-battle">
 	<div class="scores click-to-read-on" data-read-on-label="<?=markup_format_attribute(__('Toon alle commissies'))?>">
 		<table class="full-width-table committee-battle-scores">
@@ -7,7 +14,6 @@
 					<th><?=__('Positie')?></th>
 					<th><?=__('Commissie')?></th>
 					<th><?=__('Punten')?></th>
-					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -26,11 +32,6 @@
 						</ul>
 					</td>
 					<td><a href="<?=markup_format_attribute($controller->link_to_read($committee))?>"><?=$committee['score']?></a></td>
-					<td>
-						<?php if (get_policy($model)->user_can_create()): ?>
-							<a href="<?=markup_format_attribute($controller->link_to_create($committee)) ?>" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">Add</a>
-						<?php endif ?>
-					</td>
 				</tr>
 				<?php endforeach ?>
 			</tbody>
