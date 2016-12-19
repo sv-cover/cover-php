@@ -1447,6 +1447,10 @@ table.incassomatic thead::before
 	margin: 5px 0;
 }
 
+.vertical-form select {
+	width: 100%;
+}
+
 .mailinglists .mailinglist {
 	margin-bottom: 1em;
 }
@@ -2946,4 +2950,22 @@ button .fa {
 
 .click-to-read-on.collapsed > button.read-on-button {
 	display: block;
+}
+
+.select2-container {
+	color: black; /* because color of body is white for some reason */
+}
+
+.select2-container .select2-results__option {
+	padding: 0 6px;
+	line-height: 2.5em;
+}
+
+.select2-container .profile-image {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 50%;
+	border: 1px solid #333;
+	margin-right: 0.5ex;
+	vertical-align: middle;
 }

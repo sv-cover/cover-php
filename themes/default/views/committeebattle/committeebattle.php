@@ -12,6 +12,13 @@ class CommitteeBattleView extends CRUDView {
 		$this->committee_view = View::byName('commissies', $controller);
 	}
 
+	public function get_scripts()
+	{
+		return array_merge(parent::get_scripts(), [
+			get_theme_data('data/select2.min.js', false)
+		]);
+	}
+
 	public function committee_options()
 	{
 		$model = get_model('DataModelCommissie');

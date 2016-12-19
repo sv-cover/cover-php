@@ -276,16 +276,11 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 		var update = function() {
 			fields.prop('disabled', !masterSwitch.is(':checked'));
-
-			// if (masterSwitch.is('input[type=radio]'))
-			// 	$(e.target).find('legend input[type=radio]').filter(function(i, el) {
-			// 		return el.name == masterSwitch.name;
-			// 	}).not(masterSwitch).change();
 		};
 
 		update();
 
-		masterSwitch.on('change', update);
+		$(e.target).find('input[name="' + masterSwitch.attr('name') + '"]').on('change', update);
 	});
 });
 
@@ -832,4 +827,24 @@ $(document).on('ready partial-content-loaded', function(e) {
 			});
 		$div.append($button);
 	})
-})
+});
+
+/* Enable select2 automatically */
+$(document).on('ready partial-content-loaded', function(e) {
+	if (jQuery.fn.select2)
+		$(e.target).find('select[name="member_ids[]"]').select2({
+			templateResult: function(option) {
+				if (!option.id)
+					return document.createTextNode(option.text);
+
+				var img = document.createElement('img');
+				img.className = 'profile-image';
+				img.src = 'foto.php?lid_id=' + option.id + '&format=square&width=50';
+				var text = document.createTextNode(option.text);
+				var span = document.createElement('span');
+				span.appendChild(img);
+				span.appendChild(text);
+				return span;
+			}
+		});
+});

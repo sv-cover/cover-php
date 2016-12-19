@@ -29,7 +29,8 @@
 			'fotoboek' => 'fotoboek;markup',
 			'forum' => 'forum;markup',
 			'weblog' => 'weblog;markup',
-			'nieuwlid' => 'nieuwlid'
+			'nieuwlid' => 'nieuwlid',
+			'committeebattle' => 'select2'
 		);
 		
 		if (isset($mapping[$controller]))
