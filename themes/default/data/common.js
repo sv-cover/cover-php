@@ -851,12 +851,35 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 	// Check all checkboxes in the form that have a data-member-ids attribute
 	// to see if it contains one of the currently selected members. If so, check it.
-	$(e.target).on('change', '[name="member_ids[]"]', function(e) {
-		var value = $(this).val();
-		$(this.form).find('input[type=checkbox][data-member-ids]').prop('checked', function() {
-			return $(this).attr('data-member-ids').split(' ').some(function(member_id) {
-				return value !== null && value.indexOf(member_id) !== -1;
+	$(e.target).find('[name="member_ids[]"]').each(function() {
+		var $field = $(this);
+		var $form = $(this.form);
+
+		var $legend = $(this.form)
+			.find('input[type=checkbox][data-member-ids]')
+			.first()
+			.closest('fieldset')
+			.find('legend')
+			.first();
+
+		var $method = $('<select>\
+			<option value="some">Union of</option>\
+			<option value="every">Intersection of</option>\
+		</select>').prependTo($legend);
+
+		var update = function() {
+			var value = $field.val();
+			var method = $method.val();
+			console.log(value, method);
+			$form.find('input[type=checkbox][data-member-ids]').prop('checked', function() {
+				// Test whether this set of member-ids is completely or partially contained by value.
+				var member_ids = $(this).attr('data-member-ids').split(' ');
+				return value !== null && value[method](function(member_id) {
+					return member_ids.indexOf(member_id) !== -1;
+				});
 			});
-		});
+		};
+
+		$field.add($method).on('change', update);
 	});
 });

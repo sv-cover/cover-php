@@ -1422,6 +1422,11 @@ table.incassomatic thead::before
 	margin-left: 0;
 }
 
+.vertical-form fieldset legend select:first-child {
+	width: auto;
+	margin-right: 1ch;
+}
+
 .vertical-form .button-bar {
 	margin-bottom: 0;
 }
