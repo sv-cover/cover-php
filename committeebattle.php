@@ -64,11 +64,13 @@ class ControllerCommitteeBattle extends ControllerCRUD
 		if (!isset($_GET['committee']))
 			throw new DataIterNotFoundException('committee argument empty');
 
-		$committee = $this->committee_model->get_iter($_GET['committee']);
+		$committee_model = $this->committee_model;
+
+		$committee = $committee_model->get_iter($_GET['committee']);
 
 		$scores = $this->model->get_for_committee($committee);
 
-		return $this->get_content('committee', $committee, compact('scores'));
+		return $this->get_content('committee', $committee, compact('scores', 'committee_model'));
 	}
 }
 
