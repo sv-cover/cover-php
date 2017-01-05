@@ -5,12 +5,16 @@ class DataIterCommitteeBattleScore extends DataIter
 {
 	public function get_committees()
 	{
-		return get_model('DataModelCommissie')->find(['id__in' => $this->get_committee_ids()]);
+		return count($this['committee_ids'])
+			? get_model('DataModelCommissie')->find(['id__in' => $this['committee_ids']])
+			: [];
 	}
 
 	public function get_members()
 	{
-		return get_model('DataModelMember')->find(['id__in' => $this->get_member_ids()]);
+		return count($this['member_ids'])
+			? get_model('DataModelMember')->find(['id__in' => $this['member_ids']])
+			: [];
 	}
 
 	public function get_committee_ids()

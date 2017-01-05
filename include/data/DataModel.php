@@ -297,6 +297,17 @@
 						break;
 
 					case 'in':
+						// If the value is an iterator, make it an array first for easy use
+						if ($value instanceof Iterator)
+							$value = iterator_to_array($value, false);
+
+						// Check the value
+						if (!is_array($value))
+							throw new InvalidArgumentException("in-operator in '$field' condition expects an array or iterable.");
+
+						if (count($value) === 0)
+							throw new InvalidArgumentException("The value for the condition on '$field' is an empty set.");
+
 						$safe_values = array_map([$this->db, 'escape_string'], $value);
 						$format = sprintf('%%s IN (%s)', implode(', ', $safe_values));
 						unset($value);
