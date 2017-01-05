@@ -2850,17 +2850,17 @@ button .fa {
 }
 
 .committee-battle-scores tr.position-1 td {
-	font-size: 400%;
-	line-height: 200%;
-}
-
-.committee-battle-scores tr.position-2 td {
 	font-size: 300%;
 	line-height: 200%;
 }
 
+.committee-battle-scores tr.position-2 td {
+	font-size: 250%;
+	line-height: 200%;
+}
+
 .committee-battle-scores tr.position-3 td {
-	font-size: 200%;
+	font-size: 150%;
 	line-height: 200%;
 }
 
