@@ -831,7 +831,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 /* Enable select2 automatically */
 $(document).on('ready partial-content-loaded', function(e) {
-	if (jQuery.fn.select2)
+	if (jQuery.fn.select2) {
 		$(e.target).find('select[name="member_ids[]"]').select2({
 			templateResult: function(option) {
 				if (!option.id)
@@ -847,4 +847,16 @@ $(document).on('ready partial-content-loaded', function(e) {
 				return span;
 			}
 		});
+	}
+
+	// Check all checkboxes in the form that have a data-member-ids attribute
+	// to see if it contains one of the currently selected members. If so, check it.
+	$(e.target).on('change', '[name="member_ids[]"]', function(e) {
+		var value = $(this).val();
+		$(this.form).find('input[type=checkbox][data-member-ids]').prop('checked', function() {
+			return $(this).attr('data-member-ids').split(' ').some(function(member_id) {
+				return value !== null && value.indexOf(member_id) !== -1;
+			});
+		});
+	});
 });

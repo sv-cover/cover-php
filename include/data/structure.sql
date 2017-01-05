@@ -112,10 +112,21 @@ CREATE TABLE commissies (
 
 CREATE TABLE committee_battle_scores (
     id SERIAL NOT NULL PRIMARY KEY,
-    committee_id integer NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
     points integer,
     awarded_for text default '',
     awarded_on timestamp without time zone
+);
+
+CREATE TABLE committee_battle_committees (
+    id SERIAL NOT NULL PRIMARY KEY,
+    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    committee_id integer NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE committee_battle_users (
+    id SERIAL NOT NULL PRIMARY KEY,
+    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 --
