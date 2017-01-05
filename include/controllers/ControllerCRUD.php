@@ -30,10 +30,7 @@ class ControllerCRUD extends Controller
 	protected function _update(DataIter $iter, $data, array &$errors)
 	{
 		foreach ($data as $key => $value)
-			if (is_scalar($value))
-				$iter->set($key, trim($value));
-			elseif (is_null($value))
-				$iter->set($key, null);
+			$iter->set($key, $value);
 
 		return $this->model->update($iter) > 0;
 	}
