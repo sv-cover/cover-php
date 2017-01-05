@@ -132,6 +132,11 @@ class DataModelCommitteeBattleScore extends DataModel
 		return implode(' AND ', $atoms);
 	}
 
+	protected function _generate_query($where)
+	{
+		return parent::_generate_query($where) . ' ORDER BY awarded_on DESC';
+	}
+
 	public function get_for_committee(DataIterCommissie $committee)
 	{
 		return $this->find(['committee_id' => $committee['id']]);
