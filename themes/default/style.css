@@ -2876,10 +2876,29 @@ button .fa {
 	transform: rotate(-20deg);
 }
 
-.committee-battle-banner h1 {
+.committee-battle-banner > h1 {
 	font-family: Impact, Haettenschweiler, 'Franklin Gothic Bold', Charcoal, 'Helvetica Inserat', 'Bitstream Vera Sans Bold', 'Arial Black', 'sans serif';
 	font-style: italic;
 	font-size: 3em;
+	position: relative;
+	color: rgba(255, 255, 255, 0.0);
+	text-shadow: none;
+}
+
+.committee-battle-banner > h1:after {
+	content: '';
+	background-image: url(images/committee-battle.svg);
+	background-size: contain;
+	background-repeat: no-repeat;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.committee-battle-banner > p {
+	text-indent: 0.35em;
 }
 
 .committee-battle-banner .column {
