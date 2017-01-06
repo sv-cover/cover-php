@@ -2194,6 +2194,10 @@ body.modal-open {
 	transition: box-shadow 150ms ease-in-out;
 }
 
+.messageBox .promotional-banner > h1:after {
+	background-position: center;
+}
+
 .messageBox a:hover .promotional-banner {
 	box-shadow: 0 0 0 4px #c60c30;
 }
@@ -2881,7 +2885,7 @@ button .fa {
 	font-style: italic;
 	font-size: 3em;
 	position: relative;
-	color: rgba(255, 255, 255, 0.0);
+	color: rgba(255, 255, 255, 0.0) !important;
 	text-shadow: none;
 }
 
@@ -2891,9 +2895,10 @@ button .fa {
 	background-size: contain;
 	background-repeat: no-repeat;
 	position: absolute;
-	top: 0;
-	left: 0;
 	bottom: 0;
+	left: 0;
+	height: 1em;
+	left: 0;
 	right: 0;
 }
 
