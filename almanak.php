@@ -53,6 +53,7 @@
 					return array(
 						'id' => $lid->get_id(),
 						'starting_year' => $lid->get('beginjaar'),
+						'first_name' => member_first_name($lid),
 						'name' => member_full_name($lid));
 				}, $iters));
 			else
