@@ -20,6 +20,8 @@ SET client_min_messages = warning;
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
+-- A function that turns Jösé to Jose :)
+CREATE EXTENSION unaccent;
 
 --
 -- TOC entry 2627 (class 0 OID 0)
