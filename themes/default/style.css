@@ -2872,8 +2872,8 @@ button .fa {
 	content: '';
 	background: 0 0 url(images/crown.svg) no-repeat;
 	position: absolute;
-	top: -15px;
-	left: -5px;
+	top: -0.4em;
+	left: -0.25em;
 	right: 0;
 	height: 20px;
 	background-size: contain;
