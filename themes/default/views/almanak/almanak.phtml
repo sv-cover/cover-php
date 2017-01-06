@@ -11,9 +11,9 @@
 			</tr>
 			<tr>
 				<td class="title"><?= __('Beginjaar') ?>:</td><td class="alphabet" colspan="2">
-				<? foreach ($model->get_distinct_years() as $jaar) { ?>
+				<?php foreach ($model->get_distinct_years() as $jaar) { ?>
 					<a href="?search_year=<?= $jaar ?>"> <?= $jaar ?></a> 
-				<?}	// join($model->get_distinct_years()," ") .	?>
+				<?php }	// join($model->get_distinct_years()," ") .	?>
 				</td>
 			</tr>
 			<?php if (member_in_commissie(COMMISSIE_BESTUUR)): ?>
