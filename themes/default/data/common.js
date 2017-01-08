@@ -883,3 +883,59 @@ $(document).on('ready partial-content-loaded', function(e) {
 		$field.add($method).on('change', update);
 	});
 });
+
+// Load photo book photos only once they are (almost) in view
+// to speed up loading photo book pages
+$(document).on('ready partial-content-loaded', function(e) {
+	var triggered = false;
+
+	var threshold = 200; // pixels 'below the fold' where images should start loading
+
+	var emptyPixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
+	function isHidden() {
+		var $img = $(this);
+
+		// Keep hidden images for now
+		if ($img.is(':hidden'))
+			return true;
+
+		var windowTop = $(window).scrollTop(),
+			windowBottom = windowTop + $(window).height(),
+			elementTop = $img.offset().top,
+			elementBottom = elementTop + $img.height();
+
+		return !(elementBottom >= windowTop - threshold && elementTop <= windowBottom + threshold);
+	}
+
+	function load() {
+		this.src = $(this).data('src');
+	}
+
+	function update() {
+		// Load all images that are not hidden
+		var loaded = $images.not(isHidden).each(load);
+
+		// And remove those images from the set
+		$images = $images.not(loaded);
+
+		triggered = false;
+	};
+
+	// Find all images that aren't visible yet
+	var $images = $(e.target).find('.photos img').filter(isHidden);
+
+	// Remove their src attribute (and store it in the data-src attribute for now)
+	$images.each(function() {
+		$(this).data('src', $(this).prop('src'));
+		$(this).prop('src', emptyPixel);
+	});
+
+	// On scroll and resize we 'schedule' an update run
+	$(window).on('scroll resize', function() {
+		if (!triggered) {
+			window.requestAnimationFrame(update);
+			triggered = true;
+		}
+	});
+});
