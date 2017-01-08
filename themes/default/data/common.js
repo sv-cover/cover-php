@@ -889,7 +889,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 $(document).on('ready partial-content-loaded', function(e) {
 	var triggered = false;
 
-	var threshold = 200; // pixels 'below the fold' where images should start loading
+	var threshold = Math.max(300, $(window).height()); // pixels 'below the fold' where images should start loading
 
 	var emptyPixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
@@ -928,7 +928,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 	// Remove their src attribute (and store it in the data-src attribute for now)
 	$images.each(function() {
 		$(this).data('src', $(this).prop('src'));
-		$(this).prop('src', emptyPixel);
+		$(this).prop('src', $(this).data('placeholder-src') || emptyPixel);
 	});
 
 	// On scroll and resize we 'schedule' an update run
