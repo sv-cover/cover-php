@@ -1422,6 +1422,11 @@ table.incassomatic thead::before
 	margin-left: 0;
 }
 
+.vertical-form fieldset legend select:first-child {
+	width: auto;
+	margin-right: 1ch;
+}
+
 .vertical-form .button-bar {
 	margin-bottom: 0;
 }
@@ -2189,6 +2194,10 @@ body.modal-open {
 	transition: box-shadow 150ms ease-in-out;
 }
 
+.messageBox .promotional-banner > h1:after {
+	background-position: center;
+}
+
 .messageBox a:hover .promotional-banner {
 	box-shadow: 0 0 0 4px #c60c30;
 }
@@ -2845,17 +2854,17 @@ button .fa {
 }
 
 .committee-battle-scores tr.position-1 td {
-	font-size: 400%;
-	line-height: 200%;
-}
-
-.committee-battle-scores tr.position-2 td {
 	font-size: 300%;
 	line-height: 200%;
 }
 
+.committee-battle-scores tr.position-2 td {
+	font-size: 250%;
+	line-height: 200%;
+}
+
 .committee-battle-scores tr.position-3 td {
-	font-size: 200%;
+	font-size: 150%;
 	line-height: 200%;
 }
 
@@ -2863,18 +2872,38 @@ button .fa {
 	content: '';
 	background: 0 0 url(images/crown.svg) no-repeat;
 	position: absolute;
-	top: -15px;
-	left: -5px;
+	top: -0.4em;
+	left: -0.25em;
 	right: 0;
 	height: 20px;
 	background-size: contain;
 	transform: rotate(-20deg);
 }
 
-.committee-battle-banner h1 {
+.committee-battle-banner > h1 {
 	font-family: Impact, Haettenschweiler, 'Franklin Gothic Bold', Charcoal, 'Helvetica Inserat', 'Bitstream Vera Sans Bold', 'Arial Black', 'sans serif';
 	font-style: italic;
 	font-size: 3em;
+	position: relative;
+	color: rgba(255, 255, 255, 0.0) !important;
+	text-shadow: none;
+}
+
+.committee-battle-banner > h1:after {
+	content: '';
+	background-image: url(images/committee-battle.svg);
+	background-size: contain;
+	background-repeat: no-repeat;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 1em;
+	left: 0;
+	right: 0;
+}
+
+.committee-battle-banner > p {
+	text-indent: 0.35em;
 }
 
 .committee-battle-banner .column {
@@ -2930,6 +2959,7 @@ button .fa {
 	right: 0;
 	height: 100px;
 	background: linear-gradient(to bottom, rgba(245, 245, 245, 0.0) 0%, rgba(245, 245, 245, 1.0) 60%, rgba(245, 245, 245, 1.0) 100%);
+	pointer-events: none;
 }
 
 .click-to-read-on > button.read-on-button {

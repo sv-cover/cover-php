@@ -50,26 +50,27 @@ class ControllerCommitteeBattle extends ControllerCRUD
 
 	public function link_to_read(DataIter $iter)
 	{
-		if ($iter instanceof DataIterCommitteeBattleScore)
-			$committee_id = $iter['committee_id'];
-		elseif ($iter instanceof DataIterCommissie)
-			$committee_id = $iter['id'];
+		if ($iter instanceof DataIterCommissie)
+			return $this->link([
+				$this->_var_view => 'committee',
+				'committee' => $iter['id']
+			]);
 		else
-			throw new InvalidArgumentException();
-
-		return $this->link([
-			$this->_var_view => 'committee',
-			'committee' => $committee_id
-		]);
+			return $this->link_to_index();
 	}
 
 	public function run_committee()
 	{
-		$committee = $this->committee_model->get_iter($_GET['committee']);
+		if (!isset($_GET['committee']))
+			throw new DataIterNotFoundException('committee argument empty');
+
+		$committee_model = $this->committee_model;
+
+		$committee = $committee_model->get_iter($_GET['committee']);
 
 		$scores = $this->model->get_for_committee($committee);
 
-		return $this->get_content('committee', $committee, compact('scores'));
+		return $this->get_content('committee', $committee, compact('scores', 'committee_model'));
 	}
 }
 

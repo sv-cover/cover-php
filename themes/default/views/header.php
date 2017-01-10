@@ -383,7 +383,7 @@
 		return '
 			<div class="promotional-banner committee-battle-banner" data-photos="' . markup_format_attribute(json_encode($committee_photos)) . '">
 				<h1>' . __('Committee Battle') . '</h1>
-				<p>' . __('Hoe goed doet jouw commissie het in de Committee Battle?') . '</p>
+				<p>' . __('Vecht jouw commissie naar de top!') . '</p>
 				<a href="committeebattle.php" class="button">' . __('Doe mee!') . '</a>
 			</div>
 		';

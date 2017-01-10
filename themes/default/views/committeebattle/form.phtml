@@ -5,30 +5,20 @@
 			: $this->controller->link_to_create($iter['committee'])) ?>" class="vertical-form committee-battle-form"">
 
 		<fieldset>
-			<legend>
-				<?=input_radio('awarded_to', $iter, 'committees', 'id', 'field-awarded_to_committee')?>
-				<?=label(__('Punten voor actie van de gehele commissie'), 'awarded_to_committee') ?>
-			</legend>
-
-			<label><?=__('Commissies')?></label>
-			<ul class="option-group columns">
-				<?php foreach ($this->committee_options() as $committee_id => $committee_name): ?>
-				<li>
-					<?=input_checkbox('committee_ids[]', $iter, $committee_id, 'id', 'field-committee-' . $committee_id)?>
-					<?=label($committee_name, 'committee-' . $committee_id)?>
-				</li>
-				<?php endforeach ?>
-			</ul>
+			<legend><?=label(__('Leden'), 'member_ids[]', $errors, true)?></legend>
+			<?=select_field('member_ids[]', $this->active_member_options(), $iter, 'field', 'member_ids', 'multiple', true)?>
 		</fieldset>
 
 		<fieldset>
-			<legend>
-				<?=input_radio('awarded_to', $iter, 'members', 'id', 'field-awarded_to_member')?>
-				<?=label(__('Punten voor actie van specifieke leden'), 'awarded_to_member') ?>
-			</legend>
-
-			<?=label(__('Leden'), 'member_ids[]', $errors, true)?>
-			<?=select_field('member_ids[]', $this->active_member_options(), $iter, 'field', 'member_ids', 'multiple', true)?>
+			<legend><?=__('Commissies')?></legend>
+			<ul class="option-group columns">
+				<?php foreach ($this->committee_options() as $committee): ?>
+				<li>
+					<?=input_checkbox('committee_ids[]', $iter, $committee['id'], 'id', 'field-committee-' . $committee['id'], 'data-member-ids', implode(' ', (array_map(getter('id'), $committee['members']))))?>
+					<?=label($committee['naam'], 'committee-' . $committee['id'])?>
+				</li>
+				<?php endforeach ?>
+			</ul>
 		</fieldset>
 
 		<div>

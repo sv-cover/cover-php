@@ -11,6 +11,8 @@
 		var $db = null;
 		var $namespace = '';
 
+		private $getter_cache = [];
+
 		static public function is_same(DataIter $a, DataIter $b)
 		{
 			return $a->get_id() == $b->get_id();
@@ -78,6 +80,19 @@
 		{
 			return method_exists($this, 'get_' . $field);
 		}
+
+		public function call_getter($field)
+		{
+			if (!isset($this->getter_cache[$field]))
+				$this->getter_cache[$field] = $this->call_getter_nocache($field);
+
+			return $this->getter_cache[$field];
+		}
+
+		public function call_getter_nocache($field)
+		{
+			return call_user_func([$this, 'get_' . $field]);
+		}
 		
 		/**
 		  * Get iter data
@@ -91,7 +106,7 @@
 				return $this->data[$this->namespace . $field];
 			
 			if ($this->has_getter($field))
-				return call_user_func(array($this, 'get_' . $field));
+				return $this->call_getter($field);
 
 			trigger_error('DataIter has no field named ' . $field, E_USER_NOTICE);
 			return null;
@@ -130,7 +145,9 @@
 		public function set_literal($field, $value)
 		{
 			/* Return if value hasn't really changed */
-			if ($this->data[$this->namespace . $field] == $value && $this->_id != -1)
+			if (isset($this->data[$this->namespace . $field])
+				&& $this->data[$this->namespace . $field] == $value
+				&& $this->_id != -1)
 				return;
 
 			/* Add field to changes if it's not already changed */

@@ -15,7 +15,17 @@
 			<?php foreach ($scores as $score): ?>
 			<tr>
 				<td><?=markup_format_text(date_create_immutable($score['awarded_on'])->format('d-m-Y'))?></td>
-				<td><?=markup_format_text($score['awarded_for'])?></td>
+				<td>
+					<?=markup_format_text($score['awarded_for'])?>
+					<ul class="inline-profile-list">
+					<?php foreach ($score['members'] as $lid): ?>
+						<li><a href="profiel.php?lid=<?=$lid->get('id')?>" class="committee-member">
+							<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;format=square&amp;width=50" width="25">
+							<span class="name"><?=markup_format_text(member_full_name($lid, BE_PERSONAL)) ?></span>
+						</a></li>
+					<?php endforeach ?>
+					</ul>
+				</td>
 				<td><?=$score['points']?></td>
 				<td>
 					<?php if (get_policy($model)->user_can_update($score)): ?>
@@ -30,3 +40,5 @@
 		</tbody>
 	</table>
 </div>
+<?php $this->get_view('commissies')->render_partial('navigation',
+	['model' => $committee_model, 'iter' => $iter]); ?>

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-01-10 13:30+0100\n"
+"POT-Creation-Date: 2017-01-10 13:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -502,7 +502,7 @@ msgid "Jij!"
 msgstr "You!"
 
 #: include/member.php:101 include/models/DataModelForum.php:657
-#: include/models/DataModelForum.php:680 include/models/DataModelMember.php:572
+#: include/models/DataModelForum.php:680 include/models/DataModelMember.php:574
 #: themes/default/views/forum.php:499
 msgid "Onbekend"
 msgstr "Unknown"
@@ -531,7 +531,7 @@ msgstr "Committees"
 msgid "Alle groepen"
 msgstr "Groups"
 
-#: include/models/DataModelForum.php:671 include/models/DataModelMember.php:554
+#: include/models/DataModelForum.php:671 include/models/DataModelMember.php:556
 #: themes/default/views/forum.php:839
 #: themes/default/views/profiel/profiel.php:74
 #: themes/default/views/almanak/almanak.phtml:23
@@ -571,12 +571,12 @@ msgstr " and "
 msgid "Favoriete foto's"
 msgstr "Liked photos"
 
-#: include/models/DataModelMember.php:557
+#: include/models/DataModelMember.php:559
 #: themes/default/views/almanak/almanak.php:24
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: include/models/DataModelMember.php:560
+#: include/models/DataModelMember.php:562
 #: themes/default/views/almanak/almanak.php:29
 #: themes/default/views/profiel/profiel.php:76
 #: themes/default/views/almanak/almanak.phtml:25
@@ -584,7 +584,7 @@ msgstr "Hidden"
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: include/models/DataModelMember.php:563
+#: include/models/DataModelMember.php:565
 #: themes/default/views/almanak/almanak.php:34
 #: themes/default/views/profiel/profiel.php:77
 #: themes/default/views/almanak/almanak.phtml:26
@@ -592,7 +592,7 @@ msgstr "Previously a member"
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: include/models/DataModelMember.php:566
+#: include/models/DataModelMember.php:568
 #: themes/default/views/almanak/almanak.php:39
 #: themes/default/views/profiel/profiel.php:78
 #: themes/default/views/almanak/almanak.phtml:27
@@ -600,7 +600,7 @@ msgstr "Honorary Member"
 msgid "Donateur"
 msgstr "Donor"
 
-#: include/models/DataModelMember.php:569
+#: include/models/DataModelMember.php:571
 msgid "Geen status"
 msgstr "No status"
 
@@ -1329,7 +1329,7 @@ msgstr "Remove selected groups"
 
 #: themes/default/views/forum.php:1104 themes/default/views/header.php:110
 #: themes/default/views/commissies/_leden.phtml:3
-#: themes/default/views/committeebattle/form.phtml:30
+#: themes/default/views/committeebattle/form.phtml:8
 #: themes/default/views/profiel/_privacy.phtml:12
 #: themes/default/views/workinggroups/_leden.phtml:3
 msgid "Leden"
@@ -1615,8 +1615,8 @@ msgid "Meld je aan!"
 msgstr "Join now!"
 
 #: themes/default/views/header.php:386
-msgid "Hoe goed doet jouw commissie het in de Committee Battle?"
-msgstr "How is your committee doing in the Committee Battle?"
+msgid "Vecht jouw commissie naar de top!"
+msgstr "Battle your way to the top!"
 
 #: themes/default/views/header.php:387
 msgid "Doe mee!"
@@ -1744,7 +1744,7 @@ msgstr "Are you sure you want to delete this calendar event"
 #: themes/default/views/agenda/index.phtml:82
 #: themes/default/views/announcements/index.phtml:51
 #: themes/default/views/announcements/single.phtml:27
-#: themes/default/views/committeebattle/committee.phtml:25
+#: themes/default/views/committeebattle/committee.phtml:35
 #: themes/default/views/fotoboekreacties/single.phtml:65
 #: themes/default/views/settings/index.phtml:21
 msgid "Verwijder"
@@ -2264,17 +2264,17 @@ msgid "Bewerk commissiepagina"
 msgstr "Modify committee page"
 
 #: themes/default/views/committeebattle/committee.phtml:9
-#: themes/default/views/committeebattle/form.phtml:39
+#: themes/default/views/committeebattle/form.phtml:29
 msgid "Reden"
 msgstr "Reason"
 
 #: themes/default/views/committeebattle/committee.phtml:10
-#: themes/default/views/committeebattle/form.phtml:35
+#: themes/default/views/committeebattle/form.phtml:25
 #: themes/default/views/committeebattle/index.phtml:16
 msgid "Punten"
 msgstr "Points"
 
-#: themes/default/views/committeebattle/committee.phtml:22
+#: themes/default/views/committeebattle/committee.phtml:32
 msgid "Bewerk"
 msgstr "Edit"
 
@@ -2299,23 +2299,15 @@ msgstr "Award points"
 msgid "Punten wijzigen"
 msgstr "Update points"
 
-#: themes/default/views/committeebattle/form.phtml:10
-msgid "Punten voor actie van de gehele commissie"
-msgstr "Points for actions by the whole committee"
-
-#: themes/default/views/committeebattle/form.phtml:27
-msgid "Punten voor actie van specifieke leden"
-msgstr "Points for actions by specific members"
-
-#: themes/default/views/committeebattle/form.phtml:43
+#: themes/default/views/committeebattle/form.phtml:33
 msgid "Voeg punten toe"
 msgstr "Add points"
 
-#: themes/default/views/committeebattle/form.phtml:43
+#: themes/default/views/committeebattle/form.phtml:33
 msgid "Wijzig punten"
 msgstr "Update points"
 
-#: themes/default/views/committeebattle/form.phtml:44
+#: themes/default/views/committeebattle/form.phtml:34
 msgid "Terug naar het overzicht"
 msgstr "Back to index"
 
@@ -3821,6 +3813,9 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
+
+#~ msgid "Hoe goed doet jouw commissie het in de Committee Battle?"
+#~ msgstr "How is your committee doing in the Committee Battle?"
 
 #~ msgid "Algemeen lid"
 #~ msgstr "General Member"

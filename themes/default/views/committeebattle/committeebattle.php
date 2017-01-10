@@ -24,12 +24,7 @@ class CommitteeBattleView extends CRUDView {
 		$model = get_model('DataModelCommissie');
 		$model->type = DataModelCommissie::TYPE_COMMITTEE;
 
-		$committees = $model->get(false);
-
-		return array_combine(
-			array_map(getter('id'), $committees),
-			array_map(getter('naam'), $committees)
-		);
+		return $model->get(false);
 	}
 
 	public function active_member_options()
