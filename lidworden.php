@@ -233,7 +233,7 @@
 				SELECT
 					confirmation_code,
 					data,
-					registerd_on as registered_on
+					DATE(registerd_on) as registered_on
 				FROM
 					registrations
 				ORDER BY
