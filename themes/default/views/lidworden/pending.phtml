@@ -24,7 +24,7 @@
 						<td><?= markup_format_text(format_string('$first_name$family_name_preposition|optional $family_name', $row['data'])) ?></td>
 						<td><?= markup_format_text($row['data']['email_address']) ?></td>
 						<td><?= format_date($row['registered_on']) ?></td>
-						<td><a href="https://www.svcover.nl/lidworden.php?confirmation_code=<?=urlencode($row['confirmation_code'])?>" onclick="return confirm('Are you sure you want to confirm this registration instead on waiting on the person to confirm it themselves?')">confirm</a></td>
+						<td><a href="https://www.svcover.nl/lidworden.php?confirmation_code=<?=urlencode($row['confirmation_code'])?>" onclick="return confirm('Are you sure you want to confirm this registration instead on waiting on the person to confirm it themselves?')">confirmation link</a></td>
 					</tr>
 			<?php endforeach ?>
 			</tbody>
