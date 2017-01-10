@@ -1,0 +1,35 @@
+<div class="messageBox">
+	<?php if ($message): ?>
+		<p><?=$message?></p>
+	<?php endif ?>
+	<form method="post" action="">
+		<table class="full-width-table">
+			<col>
+			<col>
+			<col>
+			<col>
+			<thead>
+				<tr class="header">
+					<th></th>
+					<th><?= __('Naam') ?></th>
+					<th><?= __('Email') ?></th>
+					<th><?= __('Aangemeld op') ?></th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($iter as $row): ?>
+					<tr>
+						<td><input type="checkbox" name="confirmation_code[]" value="<?=markup_format_attribute($row['confirmation_code'])?>"></td>
+						<td><?= markup_format_text(format_string('$first_name$family_name_preposition|optional $family_name', $row['data'])) ?></td>
+						<td><?= markup_format_text($row['data']['email_address']) ?></td>
+						<td><?= markup_format_text($row['registered_on']) ?></td>
+					</tr>
+			<?php endforeach ?>
+			</tbody>
+		</table>
+		<div class="controls">
+			<button name="action" value="resend" class="button">Resend confirmation mail</button>
+			<button name="action" value="delete" class="button">Cancel registrations</button>
+		</div>
+	</form>
+</div>
