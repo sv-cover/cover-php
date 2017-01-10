@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-01-10 13:37+0100\n"
+"POT-Creation-Date: 2017-01-10 13:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -2980,6 +2980,10 @@ msgstr "Notes"
 #: themes/default/views/lidworden/pending.phtml:16
 msgid "Aangemeld op"
 msgstr "Registered on"
+
+#: themes/default/views/lidworden/pending.phtml:17
+msgid "Bevestigingslink"
+msgstr "Confirmation link"
 
 #: themes/default/views/lidworden/verzonden.phtml:3
 msgid ""
