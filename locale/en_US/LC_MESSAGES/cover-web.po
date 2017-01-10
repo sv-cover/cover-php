@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-01-10 13:43+0100\n"
+"POT-Creation-Date: 2017-01-10 14:03+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1237,7 +1237,7 @@ msgstr "New forum"
 #: themes/default/views/fotoboek/competition.phtml:41
 #: themes/default/views/fotoboek/competition.phtml:62
 #: themes/default/views/lidworden/_form.phtml:16
-#: themes/default/views/lidworden/pending.phtml:14
+#: themes/default/views/lidworden/pending.phtml:39
 #: themes/default/views/mailinglijsten/mailinglist.phtml:48
 #: themes/default/views/mailinglijsten/mailinglist.phtml:96
 #: themes/default/views/mailinglijsten/mailinglist.phtml:115
@@ -1428,7 +1428,8 @@ msgid "Actieve leden"
 msgstr "Active Members"
 
 #: themes/default/views/header.php:99
-msgid "Hangende registraties"
+#: themes/default/views/lidworden/pending.phtml:28
+msgid "Hangende aanmeldingen"
 msgstr "Pending registrations"
 
 #: themes/default/views/header.php:109
@@ -1667,7 +1668,7 @@ msgid "ID"
 msgstr "ID"
 
 #: themes/default/views/actieveleden/index.phtml:12
-#: themes/default/views/lidworden/pending.phtml:15
+#: themes/default/views/lidworden/pending.phtml:40
 msgid "Email"
 msgstr "Email"
 
@@ -2977,11 +2978,11 @@ msgstr "Modify notes"
 msgid "Opmerkingen"
 msgstr "Notes"
 
-#: themes/default/views/lidworden/pending.phtml:16
+#: themes/default/views/lidworden/pending.phtml:41
 msgid "Aangemeld op"
 msgstr "Registered on"
 
-#: themes/default/views/lidworden/pending.phtml:17
+#: themes/default/views/lidworden/pending.phtml:42
 msgid "Bevestigingslink"
 msgstr "Confirmation link"
 
@@ -3817,6 +3818,9 @@ msgstr "New working group"
 #: themes/default/views/workinggroups/single.phtml:20
 msgid "Bewerk werkgroeppagina"
 msgstr "Modify working group page"
+
+#~ msgid "Hangende registraties"
+#~ msgstr "Pending registrations"
 
 #~ msgid "Hoe goed doet jouw commissie het in de Committee Battle?"
 #~ msgstr "How is your committee doing in the Committee Battle?"

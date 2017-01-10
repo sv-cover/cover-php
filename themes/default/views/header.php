@@ -96,7 +96,7 @@
 		if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR)) {
 			$admin[] = '<a href="agenda.php?agenda_moderate">' . __('Agenda') . '</a>';
 			$admin[] = '<a href="actieveleden.php">' . __('Actieve leden') . '</a>';
-			$admin[] = '<a href="lidworden.php?view=pending-confirmation">' . __('Hangende registraties') . '</a>';
+			$admin[] = '<a href="lidworden.php?view=pending-confirmation">' . __('Hangende aanmeldingen') . '</a>';
 			$admin[] = '<a href="forum.php?admin=forums">' . __('Forum') . '</a>';
 			$admin[] = '<a href="nieuwlid.php">' . __('Leden toevoegen') . '</a>';
 		}

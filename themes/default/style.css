@@ -826,7 +826,8 @@ border-radius: 0 0 5px 5px;
 	text-decoration: none;
 }
 
-.messageBox ul {
+.messageBox ul,
+.messageBox ol {
 	list-style-position: inside;
 	margin: 10px 0px;
 	margin-left: 15px;
