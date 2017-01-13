@@ -44,14 +44,16 @@
 		{
 			require 'include/data/DBIds.php';
 
-			$database_class = isset($dbids['easy']['class'])
-				? $dbids['easy']['class']
+			$environment = 'development';
+
+			$database_class = isset($dbids[$environment]['class'])
+				? $dbids[$environment]['class']
 				: 'DatabasePDO';
 
 			require_once 'include/data/' . $database_class . '.php';
 
 			/* Create database */
-			$db = new $database_class($dbids['easy']);
+			$db = new $database_class($dbids[$environment]);
 
 			/* Enable query history if requested */
 			if (get_config_value('show_queries', false))
