@@ -19,7 +19,8 @@ class ControllerAnnouncements extends ControllerCRUD
 
 	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
-		if (!get_identity()->member_in_committee($data['committee_id']))
+		if (!get_identity()->member_in_committee($data['committee_id'])
+			&& !get_identity()->member_in_committee(COMMISSIE_BESTUUR))
 			$errors[] = 'committee_id';
 
 		if (strlen($data['subject']) == 0)
@@ -27,40 +28,8 @@ class ControllerAnnouncements extends ControllerCRUD
 
 		if (strlen($data['message']) == 0)
 			$errors[] = 'message';
-	}
-	
-	protected function _create(DataIter $iter, array $data, array &$errors)
-	{
-		$this->_validate($data, $errors);
-		
-		if (count($errors) > 0)
-			return false;
 
-		$data = array(
-			'subject' => trim($data['subject']),
-			'message' => trim($data['message']),
-			'committee_id' => intval($data['committee_id']),
-			'visibility' => intval($data['visibility'])
-		);
-
-		return parent::_create($iter, $data, $errors);
-	}
-
-	protected function _update(DataIter $announcement, array $data, array &$errors)
-	{
-		$this->_validate($announcement, $data, $errors);
-
-		if (count($errors) > 0)
-			return false;
-
-		$data = array(
-			'subject' => trim($data['subject']),
-			'message' => trim($data['message']),
-			'committee_id' => intval($data['committee_id']),
-			'visibility' => intval($data['visibility'])
-		);
-
-		return parent::_update($announcement, $data, $errors);
+		return count($errors) === 0;
 	}
 }
 

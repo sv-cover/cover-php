@@ -5,11 +5,12 @@
 {% block content %}
 <h1>{{ __('Mededeling verwijderen') }}</h1>
 <div class="messageBox">
-	<form method="post" action="announcements.php?view=delete&amp;id={{ iter.id }}" class="vertical-form">
+	<form method="post" action="{{ controller.link_to_delete(iter) }}" class="vertical-form">
+		{{ html_nonce('delete', iter) }}
 		<p>{{ __('Weet je heel zeker dat je de mededeling <em>%s</em> wil verwijderen?')|format(iter.subject|e('html'))|raw }}</p>
 		<div>
 			<button type="submit" class="button">{{ __('Verwijder mededeling') }}</button>
-			<a href="announcements.php?view=read&amp;id={{ iter.id }}">{{ __('Terug naar mededeling') }}</a>
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar mededeling') }}</a>
 		</div>
 	</form>
 </div>

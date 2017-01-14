@@ -24,7 +24,7 @@
 
 		<div>
 			{{ html_label(__('Onderwerp'), 'subject', errors=errors, required=true) }}
-			{{ html_input_text('subject', iter.data, 'required', 'required') }}
+			{{ html_input_text('subject', iter.data, required=true) }}
 		</div>
 
 		<div>

@@ -52,7 +52,7 @@ class DataModelAnnouncement extends DataModel implements SearchProvider
 
 	protected function _id_string($id, $table = null)
 	{
-		return sprintf("%s.id = %d", $table, $id);
+		return sprintf("%s.id = %d", $table !== null ? $table : $this->table, $id);
 	}
 
 	/* protected */ function _generate_query($conditions)
