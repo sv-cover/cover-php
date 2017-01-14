@@ -64,7 +64,7 @@ class MemberIdentityProvider implements IdentityProvider
 	public function member_is_active()
 	{
 		return $this->session_provider->logged_in()
-			&& in_array($this->member()->get('type'), [
+			&& in_array($this->member()['type'], [
 				MEMBER_STATUS_LID,
 				MEMBER_STATUS_LID_ONZICHTBAAR
 			]);
@@ -73,8 +73,8 @@ class MemberIdentityProvider implements IdentityProvider
 	public function member_in_committee($committee = null)
 	{
 		return $this->session_provider->logged_in() && ($committee !== null
-			? in_array($committee, $this->member()->get('committees'))
-			: count($this->member()->get('committees')));
+			? in_array($committee, $this->member()['committees'])
+			: count($this->member()['committees']));
 	}
 
 	public function member()
@@ -82,9 +82,9 @@ class MemberIdentityProvider implements IdentityProvider
 		if (!$this->session_provider->logged_in())
 			return null;
 
-		if (!$this->member)
+		if ($this->member === null) {
 			try {
-				$this->member = $this->member_model->get_iter($this->session_provider->get_session()->get('member_id'));
+				$this->member = $this->member_model->get_iter($this->session_provider->get_session()['member_id']);
 			}
 			catch (DataIterNotFoundException $e) {
 				// We are logged in as someone who doesn't exist. Let's logout and prevent any further undefined behavior
@@ -94,6 +94,7 @@ class MemberIdentityProvider implements IdentityProvider
 				// But also rethrow the exception
 				throw $e;
 			}
+		}
 
 		return $this->member;
 	}
@@ -102,8 +103,8 @@ class MemberIdentityProvider implements IdentityProvider
 	{
 		if (!$this->session_provider->logged_in())
 			return $default_value;
-		elseif ($this->member()->has($key))
-			return $this->member()->get($key);
+		elseif (!empty($this->member()[$key]))
+			return $this->member()[$key];
 		else
 			return $default_value;
 	}
@@ -125,7 +126,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		if (!$this->session_provider->logged_in())
 			return null;
 
-		if ($this->session_provider->get_session()->has('override_member_id'))
+		if ($this->session_provider->get_session()['override_member_id'] !== null)
 			$member = $this->get_override_member();
 		else
 			$member = parent::member();
@@ -151,11 +152,11 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 	{
 		$session = $this->session_provider->get_session();
 
-		if (!$session || !$session->has('override_member_id'))
+		if (!$session || $session['override_member_id'] === null)
 			return null;
 
 		if (!$this->override_member)
-			$this->override_member = get_model('DataModelMember')->get_iter($session->get('override_member_id'));
+			$this->override_member = get_model('DataModelMember')->get_iter($session['override_member_id']);
 		
 		return $this->override_member;
 	}
@@ -165,7 +166,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		$this->override_member = $member;
 
 		$session = $this->session_provider->get_session();
-		$session->set('override_member_id', $member->get_id());
+		$session['override_member_id'] = $member->get_id();
 		$session->update();
 	}
 
@@ -174,7 +175,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		$this->override_member = null;
 		
 		$session = $this->session_provider->get_session();
-		$session->set('override_member_id', null);
+		$session['override_member_id'] = null;
 		$session->update();
 	}
 
@@ -182,12 +183,12 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 	{
 		$session = $this->session_provider->get_session();
 
-		if (!$session || !$session->has('override_committees'))
+		if (!$session || $session['override_committees'] === null)
 			return null;
 
 		if (!$this->override_committees)
-			$this->override_committees = array_map('intval', $session->get('override_committees') !== ''
-				? explode(';', $session->get('override_committees'))
+			$this->override_committees = array_map('intval', $session['override_committees'] !== ''
+				? explode(';', $session['override_committees'])
 				: []);
 
 		return $this->override_committees;
@@ -198,7 +199,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		$this->override_committees = array_map('intval', $committee_ids);
 
 		$session = $this->session_provider->get_session();
-		$session->set('override_committees', implode(';', $committee_ids));
+		$session['override_committees'] = implode(';', $committee_ids);
 		$session->update();
 	}
 
@@ -207,7 +208,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		$this->override_committees = null;
 
 		$session = $this->session_provider->get_session();
-		$session->set('override_committees', null);
+		$session['override_committees'] = null;
 		$session->update();
 	}
 

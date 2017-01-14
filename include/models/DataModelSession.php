@@ -14,6 +14,8 @@ class DataIterSession extends DataIter
 			'created_on',
 			'last_active_on',
 			'timeout',
+			'override_member_id',
+			'override_committees'
 		];
 	}
 }
