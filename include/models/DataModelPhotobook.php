@@ -13,6 +13,11 @@
 		const PORTRAIT = 'portrait';
 		const SQUARE = 'square';
 
+		static public function model()
+		{
+			return get_model('DataModelPhotobook');
+		}
+
 		static public function fields()
 		{
 			return [

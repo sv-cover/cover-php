@@ -14,6 +14,17 @@
 		
 		protected $db = null;
 
+		/**
+		 * Returns an instance of the DataModel that can fetch these
+		 * specific DataIter types.
+		 */
+		static public function model()
+		{
+			$class_name = get_called_class();
+
+			return get_model(preg_replace('{^DataIter}', 'DataModel', $class_name));
+		}
+
 		abstract static public function fields();
 
 		/**
@@ -55,11 +66,6 @@
 			];
 		}
 
-		public function model()
-		{
-			return $this->model;
-		}
-		
 		/**
 		  * Get the id of the iter
 		  *
@@ -238,7 +244,8 @@
 				? $this->data[$field . '__id']
 				: -1;
 
-			$model = get_model(preg_replace('{^DataIter}', 'DataModel', $type));
+			// Call DataIter::model() on the specific DataIter type
+			$model = call_user_func([$type, 'model']);
 
 			$row = array();
 
