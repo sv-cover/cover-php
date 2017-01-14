@@ -747,9 +747,14 @@ $(document).on('ready partial-content-loaded', function(e) {
 		var $tabs = $(this).find('.nav-tabs li');
 		var $panels = $(this).find('.tab-panel');
 
+		var urlHash = function(url) {
+			var pos = url.indexOf('#');
+			return pos > -1 ? url.substr(pos + 1) : null;
+		}
+
 		var switchTab = function(tabId) {
 			$tabs.each(function() {
-				$(this).toggleClass('active', $(this).find('a').attr('href') == '#' + tabId);
+				$(this).toggleClass('active', urlHash($(this).find('a').attr('href')) == tabId);
 			});
 			$panels.each(function() {{
 				$(this).toggle($(this).prop('id') == tabId);
@@ -757,7 +762,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 		}
 
 		$tabs.find('a').click(function(e){
-			switchTab($(this).attr('href').substr(1));
+			switchTab(urlHash($(this).attr('href')));
 			e.preventDefault();
 		});
 
@@ -769,7 +774,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 			$activeTab = $tabs.first();
 
 		// Mark that tab as the active tab (and hide all the others)
-		switchTab($activeTab.find('a').attr('href').substr(1));
+		switchTab(urlHash($activeTab.find('a').attr('href')));
 	});
 });
 
