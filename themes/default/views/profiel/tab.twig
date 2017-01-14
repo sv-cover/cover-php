@@ -40,6 +40,7 @@
 
 <script>
 	$(function() {
+		/* Todo: integrate this with the tabs in common.js */
 		$('#profile-tab-container > .tab-sidebar .nav-tabs li a').on('click', function(e) {
 			e.preventDefault();
 			$(this).closest('.nav-tabs').find('li').removeClass('active');
