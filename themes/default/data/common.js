@@ -743,7 +743,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 // Tab panes
 $(document).on('ready partial-content-loaded', function(e) {
-	$(e.target).find('.tab-pane').each(function() {
+	$(e.target).find('.tab-container').each(function() {
 		var $tabs = $(this).find('.nav-tabs li');
 		var $panels = $(this).find('.tab-panel');
 

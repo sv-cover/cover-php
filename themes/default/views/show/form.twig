@@ -22,8 +22,8 @@
 			{{ html_select_field('owner', view.available_committees, iter) }}
 		</div>
 
-		<div class="tab-pane">
-			<ul class="nav-tabs">
+		<div class="tab-container">
+			<ul class="nav-tabs horizontal">
 				<li{% if view.preferred_tab(iter) == 'nl' %} class="active"{% endif %}><a href="#content-nl">{{ __('Nederlands') }}</a></li>
 				<li{% if view.preferred_tab(iter) == 'en' %} class="active"{% endif %}><a href="#content-en">{{ __('Engels') }}</a></li>
 			</ul>
