@@ -80,6 +80,11 @@
 		{
 			return $this->model->get_photo_mtime($this);
 		}
+
+		public function get_committees()
+		{
+			return $this->model->get_commissies($this->get_id());
+		}
 	}
 
 	class DataModelMember extends DataModel implements SearchProvider
@@ -126,12 +131,7 @@
 			if ($row === null)
 				throw new DataIterNotFoundException($id);
 
-			$iter = $this->_row_to_iter($row);
-
-			// TODO: Rewrite this behaviour to return actual committee dataiters instead of id's.
-			$iter['committees'] = $this->get_commissies($id);
-
-			return $iter;
+			return $this->_row_to_iter($row);
 		}
 
 		public function get_jarigen()
@@ -302,8 +302,8 @@
 		public function update_profiel(DataIter $iter)
 		{
 			return $this->db->update('profielen',
-					$iter->get_changed_values(), 'lidid = ' . $iter->get_id(),
-					$iter->get_literals());
+					$iter->get_changed_values(),
+					'lidid = ' . $iter->get_id());
 		}
 
 		/**
