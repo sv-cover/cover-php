@@ -113,7 +113,7 @@ class HTMLTwigExtension extends Twig_Extension
 		$params['type'] = 'datetime-local';
 		$params['placeholder'] = sprintf(__('Bijv. %d-9-20 11:00'), date('Y'));
 		$params['formatter'] = function($datetime) {
-			return trim($datetime) != '' ? date('Y-m-d H:i', strtotime($datetime)) : '';
+			return trim($datetime) != '' ? date('Y-m-d\TH:i', strtotime($datetime)) : '';
 		};
 
 		if (!isset($params['class']))

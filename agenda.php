@@ -28,27 +28,12 @@
 			if ($name == 'tot' && !get_post('use_tot'))
 				return null;
 			
-			$fields = array('jaar', 'maand', 'datum');
-			
-			/* Check for valid numbers */
-			$value = '';
-			
-			for ($i = 0; $i < count($fields); $i++) {
-				$field = $fields[$i];
-
-				if (!is_numeric(get_post($name . $field)))
-					return false;
-				
-				if ($value != '')
-					$value .= '-';
-
-				$value .= get_post($name . $field);
+			try {
+				$date = new DateTime($value);
+				return $date->format('Y-m-d H:i');
+			} catch (Exception $e) {
+				return false;
 			}
-			
-			$value .= ' ' . (is_numeric(get_post($name . 'uur')) ? intval(get_post($name . 'uur')) : '00');
-			$value .= ':' . (is_numeric(get_post($name . 'minuut')) ? intval(get_post($name . 'minuut')) : '00');
-			
-			return $value;
 		}
 		
 		public function _check_length($name, $value)
@@ -122,7 +107,12 @@
 
 			if ($data['tot'] === null)
 				$data['tot'] = $data['van'];
-
+			
+			if (new DateTime($data['van']) > new DateTime($data['tot'])) {
+				$errors[] = 'tot';
+				return false;
+			}
+		
 			return $data;
 		}
 
