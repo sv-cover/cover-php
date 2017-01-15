@@ -45,7 +45,7 @@ class ForumView extends View
 
 	public function render_thread_form(DataIterForum $forum, DataIterForumThread $thread, DataIterForumMessage $message, array $errors)
 	{
-		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_REPLY);
+		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_WRITE);
 
 		if ($message->has_id() && !array_key_exists($message['unified_author'], $unified_authors))
 			$unified_authors[$iter['unified_author']] = __('(Onveranderd)');
@@ -77,6 +77,16 @@ class ForumView extends View
 	public function render_message_delete(DataIterForumMessage $iter)
 	{
 		return $this->twig->render('confirm_delete_message.twig', compact('iter'));
+	}
+
+	public function render_poll_form(DataIterForum $forum, DataIterPoll $poll, DataIterForumMessage $message, array $options, array $errors)
+	{
+		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_WRITE);
+
+		if ($message->has_id() && !array_key_exists($message['unified_author'], $unified_authors))
+			$unified_authors[$iter['unified_author']] = __('(Onveranderd)');
+
+		return $this->twig->render('poll_form.twig', compact('forum', 'poll', 'message', 'options', 'errors', 'unified_authors'));
 	}
 
 	public function get_authors(DataIterForum $forum, $acl)

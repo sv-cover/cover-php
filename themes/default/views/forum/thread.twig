@@ -103,7 +103,7 @@
 
 				{% if thread.poll and page == 0 and loop.first %}
 					<div class="forum_poll">
-						{{ include('_poll.twig', {thread: thread}) }}
+						{{ include('_poll.twig', {poll: global.models.Poll.from_thread(thread)}) }}
 					</div>
 				{% endif %}
 			</td>

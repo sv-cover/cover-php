@@ -1,0 +1,16 @@
+<form method="post" action="forum.php?thread={{ thread.id }}">
+	{{ html_nonce('poll_vote', poll) }}
+	
+	<table class="poll">
+		{% for option in poll.options %}
+		<tr>
+			<td class="pollvoteRadio">{{ html_input_radio('poll_option', null, option.id, id='forum_poll_option_' ~ option.id) }}</td>
+			<td><label for="forum_poll_option_{{ option.id }}">{{ option.optie }}</label></td>
+		</tr>
+		{% endfor %}
+	</table>
+
+	<div class="poll_vote">
+		<button type="submit" class="button">{{ __('Stem') }}</button>
+	</div>
+</form>

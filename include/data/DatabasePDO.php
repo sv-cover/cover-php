@@ -340,6 +340,10 @@ class DatabasePDO
 	{
 		if ($this->transaction_counter++ === 0)
 			$this->resource->beginTransaction();
+
+
+		// TODO: Maybe use SAVEPOINT to make nested transactions actually support rollback
+		// See https://www.postgresql.org/docs/9.1/static/sql-savepoint.html
 	}
 
 	public function commit()

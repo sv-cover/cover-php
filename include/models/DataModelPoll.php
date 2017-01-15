@@ -1,5 +1,6 @@
 <?php
 	require_once 'include/data/DataModel.php';
+	require_once 'include/models/DataModelForum.php';
 
 	class DataIterPollOption extends DataIter
 	{
@@ -21,30 +22,30 @@
 		}
 	}
 
-	class DataIterPoll extends DataIter
+	class DataIterPoll extends DataIterForumThread
 	{
-		static public function fields()
-		{
-			return [
-				'id',
-				'forum',
-				'author',
-				'subject',
-				'date',
-				'author_type',
-				'poll',
-			];
-		}
-
-		public $poll_model;
-
-		public $options = array();
-
-		public $total_votes = null;
-
 		public function member_has_voted(DataIterMember $member = null)
 		{
-			return $this->poll_model->member_has_voted($this, $member);
+			return get_model('DataModelPoll')->member_has_voted($this, $member);
+		}
+
+		public function new_poll_option()
+		{
+			return new DataIterPollOption(null, -1, [
+				'optie' => '',
+				'pollid' => $this['id'],
+				'stemmen' => 0
+			]);
+		}
+
+		public function get_options()
+		{
+			return get_model('DataModelPoll')->get_options($this);
+		}
+
+		public function get_total_votes()
+		{
+			return array_reduce($this['options'], function($carry, $option) { return $carry + $option['stemmen']; }, 0);
 		}
 	}
 
@@ -56,6 +57,48 @@
 		public function __construct($db)
 		{
 			parent::__construct($db);
+		}
+
+		public function new_poll(DataIterForum $forum)
+		{
+			$forum_model = get_model('DataModelForum');
+
+			return new DataIterPoll($forum_model, null, [
+				'forum' => $forum['id'],
+				'author' => null,
+				'subject' => null,
+				'date' => date('Y-m-d H:i:s'),
+				'author_type' => null,
+				'poll' => 1
+			]);
+		}
+
+		public function from_thread(DataIterForumThread $thread)
+		{
+			return DataIterPoll::from_iter($thread);
+		}
+		
+		public function insert_poll(DataIterPoll $thread, DataIterForumMessage $message, array $options)
+		{
+			$forum_model = get_model('DataModelForum');
+
+			$this->db->beginTransaction();
+
+			$forum_model->insert_thread($thread, $message);
+
+			foreach ($options as $option) {
+				$option['pollid'] = $thread->get_id();
+				$this->_insert_poll_option($option);
+			}
+
+			$this->db->commit();
+
+			return true;
+		}
+
+		private function _insert_poll_option($iter)
+		{
+			$this->_insert('pollopties', $iter);
 		}
 		
 		public function can_create_new_poll(&$days = null)
@@ -105,25 +148,14 @@
 			if (!$thread)
 				return null;
 
-			$thread = DataIterPoll::from_iter($thread);
-			
-			$thread->poll_model = $this;
-
-			$thread->options = $this->get_votes($thread['id']);
-
-			foreach ($thread->options as $option)
-				$option->thread = $thread;
-
-			$thread->total_votes = array_reduce($thread->options, function($carry, $vote) { return $carry + $vote['stemmen']; }, 0);
-
-			return $thread;
+			return DataIterPoll::from_iter($thread);
 		}
 
-		public function get_votes($id)
+		public function get_options(DataIterPoll $poll)
 		{
 			$rows = $this->db->query('SELECT * 
 					FROM pollopties
-					WHERE pollid = ' . intval($id) . '
+					WHERE pollid = ' . intval($poll->get_id()) . '
 					ORDER BY id ASC');
 			
 			return $this->_rows_to_iters($rows, 'DataIterPollOption');
@@ -156,11 +188,6 @@
 			$this->db->insert('pollvoters', $iter->data, $iter->get_literals());
 		}
 
-		public function insert_optie($iter)
-		{
-			$this->db->insert('pollopties', $iter->data, $iter->get_literals());
-		}
-		
 		public function voted($iter) {
 			if (!($member_data = logged_in()))
 				return true;

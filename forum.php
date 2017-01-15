@@ -13,6 +13,12 @@ require_once 'include/controllers/Controller.php';
 
 class ControllerForum extends Controller
 {
+	const MINIMUM_POLL_OPTION_COUNT = 3;
+
+	const DEFAULT_POLL_OPTION_COUNT = 5;
+
+	const MAXIMUM_POLL_OPTION_COUNT = 10;
+
 	public function __construct()
 	{
 		$this->model = get_model('DataModelForum');
@@ -81,7 +87,7 @@ class ControllerForum extends Controller
 				return false;
 		}
 	}
-	
+
 	private function _create_thread(DataIterForum $forum)
 	{
 		$thread_data = check_values(array(
@@ -108,19 +114,75 @@ class ControllerForum extends Controller
 		
 		$message = $thread->new_message();
 		$message->set_all($message_data);
-		
+
 		if (count($errors) > 0)
 			return $this->view->render_thread_form($forum, $thread, $message, $errors);
-		
-		// Create new thread with given subject
-		$this->model->insert_thread($thread);
-		
-		// Create first message in the thread
-		// (We need to set the id manually because $thread->new_message()
-		// was called before the thread had an id.)
-		$message['thread'] = $thread['id'];
-		$this->model->insert_message($message);
 
+		// Create new thread with given subject
+		$this->model->insert_thread($thread, $message);
+		
+		// run_message_single redirects to the correct message in a thread
+		return $this->run_message_single($message);
+	}
+
+	private function _create_poll(DataIterForum $forum)
+	{
+		$poll_model = get_model('DataModelPoll');
+
+		$thread_data = check_values(array(
+			array(
+				'name' => 'subject',
+				'function' => array($this, '_check_message_subject')
+			),
+			array(
+				'name' => 'unified_author',
+				'function' => array($this, '_check_unified_author')
+			)
+		), $errors);
+
+		$message_data = check_values(array(
+			'message',
+			array(
+				'name' => 'unified_author',
+				'function' => array($this, '_check_unified_author')
+			)
+		), $errors);
+
+		$poll = $poll_model->new_poll($forum);
+		$poll->set_all($thread_data);
+		
+		$message = $poll->new_message();
+		$message->set_all($message_data);
+
+		$options = [];
+
+		$poll_errors = [];
+
+		foreach ($_POST['poll_option'] as $i => $label)
+		{
+			// Mark an empty option as an error, but process it anyway.
+			// If there are enough non-empty options, it is fine.
+			if (empty($label))
+				$poll_errors[] = 'poll_option[' . $i . ']';
+
+			$option = $poll->new_poll_option();
+			$option['optie'] = $label;
+			$options[] = $option;
+		}
+
+		$valid_options = array_filter($options, function($option) {
+			return !empty($option['optie']);
+		});
+
+		if (count($valid_options) > self::MAXIMUM_POLL_OPTION_COUNT)
+			$errors[] = 'poll_option_count';
+
+		if (count($errors) > 0 || count($valid_options) < self::MINIMUM_POLL_OPTION_COUNT)
+			return $this->view->render_poll_form($forum, $poll, $message, $options, array_merge($errors, $poll_errors));
+		
+		// Create new poll/thread with given subject
+		$poll_model->insert_poll($poll, $message, $options);
+		
 		// run_message_single redirects to the correct message in a thread
 		return $this->run_message_single($message);
 	}
@@ -138,69 +200,6 @@ class ControllerForum extends Controller
 		$poll_model->vote($_POST['optie']);
 		
 		return $this->view->redirect($_SERVER['HTTP_REFERER']);
-	}
-	
-	public function _check_poll_subject($name, $value)
-	{
-		return strlen($value) > 150 ? false : $value;
-	}		
-			
-	private function _process_forum_poll_nieuw(DataIterForum $forum)
-	{
-		$this->_assert_access($forum->get('id'), get_post('author'), DataModelForum::ACL_POLL);
-		
-		$tdata = check_values(array(
-				array('name' => 'subject', 'function' => array(&$this, '_check_poll_subject'))), $terrors);
-		$mdata = $this->_check_message_values($merrors);
-		
-		$errors = $terrors + $merrors;
-
-		$opties = array();
-
-		foreach ($_POST as $optie => $value) {
-			if (strncmp($optie, 'optie_', 6) != 0)
-				continue;
-			
-			if ($value == '')
-				continue;
-			
-			if (strlen($value) > 150)
-				$errors[] = $optie;
-			else
-				$opties[] = $value;
-		}
-		
-		if (count($opties) == 0)
-			$errors[] = 'optie_0';
-		
-		if (count($errors) > 0)
-			return $this->view->render_add_poll($forum, $opties, $errors);
-		
-		// Create thread
-		$tdata['poll'] = 1;
-		$tdata['forum'] = intval($forum->get('id'));
-		$this->_set_author_data($tdata);
-		$iter = new DataIterForumThread($this->model, -1, $tdata);
-		$tid = $this->model->insert_thread($iter);
-		
-		// Create message in thread
-		$this->_set_author_data($mdata);
-		$mdata['thread'] = intval($tid);	
-		$iter = new DataIterForumMessage($this->model, -1, $mdata);
-		$this->model->insert_message($iter);
-		
-		$poll_model = get_model('DataModelPoll');
-		
-		// Create poll options
-		foreach ($opties as $optie) {
-			$iter = new DataIter($this->model, -1,
-				array(	'pollid' => $tid,
-					'optie' => $optie));
-			
-			$poll_model->insert_optie($iter);
-		}
-		
-		return $this->view->redirect('forum.php?thread=' . $tid);
 	}
 	
 	private function _assert_may_edit_message(DataIterForumMessage $message)
@@ -628,10 +627,10 @@ class ControllerForum extends Controller
 		if (!get_policy($empty_thread)->user_can_create($empty_thread))
 			throw new UnauthorizedException('You are not allowed to create a new thread in this forum');
 		
-		$empty_message = new DataIterForumMessage($this->model, null, []);
-
 		if ($this->_form_is_submitted('create_thread', $forum))
 			return $this->_create_thread($forum);
+
+		$empty_message = new DataIterForumMessage($this->model, null, []);
 
 		return $this->view->render_thread_form($forum, $empty_thread, $empty_message, array());
 	}
@@ -706,6 +705,28 @@ class ControllerForum extends Controller
 	public function run_message_single(DataIterForumMessage $message)
 	{
 		return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d#p%d', $message['thread'], $message['thread_page'], $message['id']));
+	}
+
+	public function run_poll_create(DataIterForum $forum)
+	{
+		$poll_model = get_model('DataModelPoll');
+
+		$poll = $poll_model->new_poll($forum);
+
+		if (!get_policy($poll)->user_can_create($poll))
+			throw new UnauthorizedException('You are not allowed to create a new poll in this forum');
+		
+		if ($this->_form_is_submitted('create_poll', $forum))
+			return $this->_create_poll($forum);
+
+		$message = $poll->new_message();
+
+		$options = [];
+
+		for ($i = 0; $i < self::DEFAULT_POLL_OPTION_COUNT; ++$i)
+			$options[] = $poll->new_poll_option();
+
+		return $this->view->render_poll_form($forum, $poll, $message, $options, array());
 	}
 	
 	public function run_index()

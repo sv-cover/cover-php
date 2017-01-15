@@ -1,6 +1,5 @@
 <?php
 	require_once 'include/data/DataModel.php';
-	require_once 'include/models/DataModelPoll.php';
 
 	trait UnifiedAuthor {
 		public function get_unified_author()
@@ -74,14 +73,12 @@
 
 		public function new_poll()
 		{
-			return new DataIterPoll($this->model, null, [
-				'forum' => $this['id'],
-				'author' => null,
-				'subject' => null,
-				'date' => date('Y-m-d H:i:s'),
-				'author_type' => null,
-				'poll' => 1
-			]);
+			// Also here for easiness in the template. Now you can write
+			// ''user_can_create forum.new_poll'' instead of
+			// ''user_can_create models.Poll.new_poll(forum)'' which I doubt
+			// actually works...
+
+			return get_model('DataModelPoll')->new_poll($this);
 		}
 
 		/**
@@ -1141,11 +1138,19 @@
 		  *
 		  * @result true if the insert was succesful, false otherwise
 		  */
-		public function insert_thread(DataIterForumThread $iter)
+		public function insert_thread(DataIterForumThread $thread, DataIterForumMessage $message)
 		{
-			$id = $this->_insert('forum_threads', $iter, true);
+			$this->db->beginTransaction();
 
-			$iter->set_id($id);
+			$id = $this->_insert('forum_threads', $thread, true);
+
+			$thread->set_id($id);
+
+			$message['thread'] = $thread->get_id();
+
+			$this->insert_message($message);
+
+			$this->db->commit();
 
 			return $id;
 		}

@@ -18,7 +18,7 @@
 		</a>
 	{% endif %}
 	{% if user_can_create forum.new_poll %}
-		<a href="forum.php?forum={{ forum.id }}&amp;create_poll" class="button">
+		<a href="forum.php?forum={{ forum.id }}&amp;view=create_poll" class="button">
 			<img src="{{ link_static('images/new.png') }}"
 			     alt="{{ __('nieuw') }}"
 			     title="{{ __('Nieuwe poll toevoegen') }}">
