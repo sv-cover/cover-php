@@ -371,3 +371,8 @@ div#message_preview_content {
 {
 	vertical-align: middle;
 }
+
+.message .quote {
+	border-left: 3px solid #ccc;
+	padding: 5px;
+}
