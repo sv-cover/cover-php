@@ -81,16 +81,16 @@ class StickersView extends CRUDView
 		foreach ($iters as $iter)
 		{
 			$sticker = array(
-				'id' => $iter->get('id'),
-				'label' => $iter->get('label'),
-				'omschrijving' => $iter->get('omschrijving'),
-				'lat' => $iter->get('lat'),
-				'lng' => $iter->get('lng'),
-				'foto' => $iter->get('foto') ? $this->controller->link_to_photo($iter) : null,
-				'toegevoegd_op' => $iter->get('toegevoegd_op'),
-				'toegevoegd_door_id' => $iter->get('toegevoegd_door'),
-				'toegevoegd_door_naam' => $iter->get('toegevoegd_door')
-					? member_full_name($iter->getIter('toegevoegd_door'), BE_PERSONAL)
+				'id' => $iter['id'],
+				'label' => $iter['label'],
+				'omschrijving' => $iter['omschrijving'],
+				'lat' => $iter['lat'],
+				'lng' => $iter['lng'],
+				'foto' => $iter['foto'] ? $this->controller->link_to_photo($iter) : null,
+				'toegevoegd_op' => $iter['toegevoegd_op'],
+				'toegevoegd_door_id' => $iter['toegevoegd_door'],
+				'toegevoegd_door_naam' => $iter['toegevoegd_door']
+					? member_full_name($iter['member'], BE_PERSONAL)
 					: null,
 				'editable' => $policy->user_can_update($iter),
 				'delete_nonce' => nonce_generate(nonce_action_name('delete', [$iter]))

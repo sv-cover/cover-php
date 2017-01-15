@@ -4,7 +4,7 @@ chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/init.php';
 
-$sticker_model = get_model('DataModelStickers');
+$sticker_model = get_model('DataModelSticker');
 
 function import_kml($file)
 {

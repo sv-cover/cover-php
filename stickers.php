@@ -6,7 +6,7 @@ class ControllerStickers extends ControllerCRUD
 {
 	public function __construct()
 	{
-		$this->model = get_model('DataModelStickers');
+		$this->model = get_model('DataModelSticker');
 
 		$this->view = View::byName('stickers', $this);
 	}

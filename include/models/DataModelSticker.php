@@ -3,18 +3,33 @@
 require_once 'include/data/DataModel.php';
 require_once 'include/member.php';
 
-class DataModelStickers extends DataModel
+class DataIterSticker extends DataIter
 {
-	public $fields = [
-		'id',
-		'label',
-		'omschrijving',
-		'lat',
-		'lng',
-		'toegevoegd_op',
-		'toegevoegd_door',
-		'foto'
-	];
+	static public function fields()
+	{
+		return [
+			'id',
+			'label',
+			'omschrijving',
+			'lat',
+			'lng',
+			'toegevoegd_op',
+			'toegevoegd_door',
+			'foto'
+		];
+	}
+
+	public function get_member()
+	{
+		return $this['toegevoegd_door'] !== null
+			? get_model('DataModelMember')->get_iter($this['toegevoegd_door'])
+			: null;
+	}
+}
+
+class DataModelSticker extends DataModel
+{
+	public $dataiter = 'DataIterSticker';
 
 	public function __construct($db)
 	{
@@ -28,21 +43,6 @@ class DataModelStickers extends DataModel
 		$row['foto'] = $row['foto'] == 't';
 
 		return parent::_row_to_iter($row, $dataiter);
-	}
-
-	public function addSticker($label, $omschrijving, $lat, $lng)
-	{
-		die("Niet gebruiken.");
-
-		$toegevoegd_op = date('Y-m-d');
-
-		$toegevoegd_door = logged_in('id');
-
-		$data = compact('label', 'omschrijving', 'lat', 'lng', 'toegevoegd_op', 'toegevoegd_door');
-
-		$iter = new DataIter($this->model, -1, $data);
-
-		return $this->insert($iter, true);
 	}
 
 	public function getPhoto($sticker)

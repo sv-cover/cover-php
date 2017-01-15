@@ -2,7 +2,7 @@
 
 require_once 'include/member.php';
 
-class PolicyStickers implements Policy
+class PolicySticker implements Policy
 {
 	public function user_can_create(DataIter $sticker)
 	{
