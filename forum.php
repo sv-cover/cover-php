@@ -4,6 +4,13 @@ require_once 'include/member.php';
 require_once 'include/form.php';
 require_once 'include/controllers/Controller.php';
 
+/**
+ * Warning & Todo: The terms 'topic' and 'thread' are used 
+ * interchangeably throughout this part of the code. We should
+ * probably refactor it a bit to choose one of them (I prefer 'topic') 
+ * ~ Jelmer, 2017-01-15
+ */
+
 class ControllerForum extends Controller
 {
 	public function __construct()
@@ -599,29 +606,7 @@ class ControllerForum extends Controller
 
 		return true;
 	}
-
-	private function _process_forum_del_message($id, $params)
-	{
-		$this->_assert_admin();
-
-		$iter = $this->model->get_message($id);
-		
-		// If this is the first message, delete the whole thread
-		if ($iter->is_first_message()) {
-			$thread = $this->model->get_thread($iter->thread);
-			$this->model->delete_thread($thread);
-			return $this->view->redirect('forum.php?forum=' . $thread->get('forum'));
-		} else {
-			$ret = $this->model->delete_message($iter);
-			
-			if (is_int($ret)) {
-				return $this->view->redirect('forum.php?forum=' . $ret);
-			} else {
-				return $this->view->redirect('forum.php?thread=' . $iter->get('thread') . (isset($params['page']) ? ('&page=' . $params['page']) : ''));
-			}
-		}
-	}
-
+	
 	public function run_forum_index(DataIterForum $forum)
 	{
 		$this->model->set_forum_session_read($forum->get('id'));
@@ -653,7 +638,14 @@ class ControllerForum extends Controller
 
 	public function run_thread_delete(DataIterForumThread $thread)
 	{
+		if (!get_policy($thread)->user_can_delete($thread))
+			throw new UnauthorizedException('You are not allowed to delete this thread.');
 
+		if ($this->_form_is_submitted('delete_thread', $thread))
+			if ($this->model->delete_thread($thread))
+				return $this->view->redirect(sprintf('forum.php?forum=%d', $thread['forum']));
+
+		return $this->view->render_thread_delete($thread);
 	}
 
 	public function run_thread_reply(DataIterForumThread $thread)
@@ -701,7 +693,7 @@ class ControllerForum extends Controller
 
 		$thread = $this->model->get_thread($message['thread']);
 
-		if ($message->is_first_message())
+		if ($message->is_only_message())
 			return $this->run_thread_delete($thread);
 
 		if ($this->_form_is_submitted('delete_message', $message))
@@ -775,6 +767,8 @@ class ControllerForum extends Controller
 
 			if ($view == 'reply')
 				return $this->run_thread_reply($thread);
+			elseif ($view == 'delete')
+				return $this->run_thread_delete($thread);
 			else
 				return $this->run_thread_index($thread);
 		}

@@ -17,6 +17,12 @@
 	{% else %}
 		{{ __('Je kunt niet antwoorden in dit forum') }}
 	{% endif %}
+	{% if user_can_delete thread %}
+		<a href="forum.php?thread={{ thread.id }}&amp;view=delete" class="button delete-button">
+			<img src="{{ link_static('images/delete.png') }}" alt="{{ __('delete') }}" title="{{ __('Onderwerp verwijderen') }}">
+			{{ __('Verwijder onderwerp') }}
+		</a>
+	{% endif %}
 	{% if user_can_update thread %}
 		<div class="text_right">
 			<form method="post" action="forum.php?thread={{ thread.id }}">

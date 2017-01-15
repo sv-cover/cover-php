@@ -56,8 +56,8 @@ class PolicyForumMessage extends PolicyForumAbstract
 
 	public function user_can_delete(DataIter $message)
 	{
-		// You cannot simply delete the first message, because that means deleting a thread.
-		if ($message->is_first_message()) {
+		// You cannot simply delete the only message, because that means deleting a thread.
+		if ($message->is_only_message()) {
 			$thread = $this->model->get_thread($message['thread']);
 			return get_policy($thread)->user_can_delete($thread);
 		}

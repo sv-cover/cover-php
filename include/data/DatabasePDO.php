@@ -13,6 +13,8 @@ class DatabasePDO
 
 	public $history = null;
 
+	private $transaction_counter = 0;
+
 	/**
 	  * Create new postgresql database
 	  * @dbid a hash with database information (host, port, user, password, 
@@ -332,5 +334,17 @@ class DatabasePDO
 	public function write_blob($data)
 	{
 		return substr($this->resource->quote(stream_get_contents($data), PDO::PARAM_LOB), 1, -1);
+	}
+
+	public function beginTransaction()
+	{
+		if ($this->transaction_counter++ === 0)
+			$this->resource->beginTransaction();
+	}
+
+	public function commit()
+	{
+		if (--$this->transaction_counter === 0)
+			$this->resource->commit();
 	}
 }

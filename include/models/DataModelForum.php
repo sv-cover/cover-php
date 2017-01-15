@@ -242,15 +242,15 @@
 		}
 
 		/**
-		  * Return whether this message is the first message in the thread
+		  * Returns whether this message is the only message in the thread
 		  *
-		  * @result true if the message is the first message in the thread
+		  * @return bool true if the message is the only message in the thread
 		  */
-		public function is_first_message()
+		public function is_only_message()
 		{
-			$thread = $this->model->get_thread($this->thread);
-			$first = $thread->get_first_message();
-			return $first['id'] == $this['id'];
+			$thread = $this->model->get_thread($this['thread']);
+
+			return $thread['num_messages'] === 1;
 		}
 
 		/**
@@ -1546,10 +1546,16 @@
 		  */
 		public function delete_thread(DataIterForumThread $iter)
 		{
+			$this->db->beginTransaction();
+
 			$this->_delete('forum_threads', $iter);
 			
 			/* Delete all replies */
-			$this->db->delete('forum_messages', 'thread = ' . $iter->get('id'));
+			$this->db->delete('forum_messages', sprintf('thread = %d', $iter['id']));
+
+			$this->db->commit();
+
+			return true;
 		}
 		
 		/**
