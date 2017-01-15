@@ -714,7 +714,7 @@ class ControllerForum extends Controller
 			return $this->run_thread_delete($thread);
 
 		if ($this->_form_is_submitted('delete_message', $message))
-			if ($this->_delete_message($message))
+			if ($this->model->delete_message($message))
 				return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d', $thread['id'], $thread['num_thread_pages']));
 
 		return $this->view->render_message_delete($message);
@@ -774,6 +774,8 @@ class ControllerForum extends Controller
 		
 			if ($view == 'update')
 				return $this->run_message_update($message);
+			elseif ($view == 'delete')
+				return $this->run_message_delete($message);
 			else
 				return $this->run_message_single($message);
 		}

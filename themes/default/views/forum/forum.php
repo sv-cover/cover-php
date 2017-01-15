@@ -59,6 +59,11 @@ class ForumView extends View
 		return $this->twig->render('reply_form.twig', compact('iter', 'thread', 'forum', 'errors', 'unified_authors'));
 	}
 
+	public function render_message_delete(DataIterForumMessage $iter)
+	{
+		return $this->twig->render('confirm_delete_message.twig', compact('iter'));
+	}
+
 	public function get_authors(DataIterForum $forum, $acl)
 	{
 		$model = get_model('DataModelForum');
