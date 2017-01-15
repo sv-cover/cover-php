@@ -116,8 +116,8 @@
 			</div>
 
 			<div>
-				{{ html_label(__('BIC'), 'bic', errors=errors, required=true) }}
-				{{ html_input_text('bic', null, errors=errors, required=true) }}
+				{{ html_label(__('BIC'), 'bic', errors=errors) }}
+				{{ html_input_text('bic', null, errors=errors) }}
 				<small class="hint">{{ __("Alleen nodig wanneer IBAN [i]niet[/i] met 'NL' begint")|parse_markup }}</small>
 			</div>
 
