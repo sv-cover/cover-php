@@ -41,6 +41,8 @@
 						return false;
 
 					// Check whether the email address is not already in use
+					// Todo: If it is already in use, continue onwards to password recovery
+					// or some other form where you can re-activate your membership!
 					return !$this->model->get_from_email($x);
 				}],
 				'birth_date' => [function($x) {
@@ -179,7 +181,7 @@
 		
 		protected function run_impl()
 		{
-			if ($this->form_is_submitted('sign_up'))
+			if ($this->_form_is_submitted('sign_up'))
 				return $this->_process_lidworden();
 			elseif (isset($_GET['confirmation_code']))
 				return $this->_process_confirm($_GET['confirmation_code']);
