@@ -43,6 +43,16 @@ class ForumView extends View
 		return $this->twig->render('thread.twig', compact('thread', 'forum', 'page', 'messages', 'max'));
 	}
 
+	public function render_thread_form(DataIterForum $forum, DataIterForumThread $thread, DataIterForumMessage $message, array $errors)
+	{
+		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_REPLY);
+
+		if ($message->has_id() && !array_key_exists($message['unified_author'], $unified_authors))
+			$unified_authors[$iter['unified_author']] = __('(Onveranderd)');
+
+		return $this->twig->render('thread_form.twig', compact('forum', 'thread', 'message', 'errors', 'unified_authors'));
+	}
+
 	public function render_message_form(DataIterForumMessage $iter, array $errors)
 	{
 		$model = get_model('DataModelForum');

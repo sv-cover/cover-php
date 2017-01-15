@@ -2,6 +2,51 @@
 	require_once 'include/data/DataModel.php';
 	require_once 'include/models/DataModelPoll.php';
 
+	trait UnifiedAuthor {
+		public function get_unified_author()
+		{
+			return $this['author_type'] . '_' . $this['author'];
+		}
+
+		public function set_unified_author($author)
+		{
+			list($author_type, $author_id) = explode('_', $author, 2);
+
+			switch ($author_type)
+			{
+				case DataModelForum::TYPE_PERSON:
+					try {
+						get_model('DataModelMember')->get_iter($author_id);
+					} catch (DataIterNotFoundException $e) {
+						throw new InvalidArugmentException("No member with id '$author_id' found.", 0, $e);
+					}
+					break;
+
+				case DataModelForum::TYPE_COMMITTEE:
+					try {
+						get_model('DataModelCommissie')->get_iter($author_id);
+					} catch (DataIterNotFoundException $e) {
+						throw new InvalidArugmentException("No committee with id '$author_id' found.", 0, $e);
+					}
+					break;
+
+				case DataModelForum::TYPE_GROUP:
+					try {
+						get_model('DataModelForum')->get_group($author_id);
+					} catch (DataIterNotFoundException $e) {
+						throw new InvalidArugmentException("No group with id '$author_id' found.", 0, $e);
+					}
+					break;
+
+				default:
+					throw new InvalidArugmentException("Invalid author type");
+			}
+
+			$this->set('author', $author_id);
+			$this->set('author_type', $author_type);
+		}
+	}
+
 	class DataIterForum extends DataIter
 	{
 		static public function fields()
@@ -21,7 +66,7 @@
 				'forum' => $this['id'],
 				'author' => null,
 				'subject' => null,
-				'date' => null,
+				'date' => date('Y-m-d H:i:s'),
 				'author_type' => null,
 				'poll' => 0
 			]);
@@ -33,7 +78,7 @@
 				'forum' => $this['id'],
 				'author' => null,
 				'subject' => null,
-				'date' => null,
+				'date' => date('Y-m-d H:i:s'),
 				'author_type' => null,
 				'poll' => 1
 			]);
@@ -182,6 +227,8 @@
 
 	class DataIterForumMessage extends DataIter
 	{
+		use UnifiedAuthor;
+
 		static public function fields()
 		{
 			return [
@@ -192,49 +239,6 @@
 				'date',
 				'author_type',
 			];
-		}
-
-		public function get_unified_author()
-		{
-			return $this['author_type'] . '_' . $this['author'];
-		}
-
-		public function set_unified_author($author)
-		{
-			list($author_type, $author_id) = explode('_', $author, 2);
-
-			switch ($author_type)
-			{
-				case DataModelForum::TYPE_PERSON:
-					try {
-						get_model('DataModelMember')->get_iter($author_id);
-					} catch (DataIterNotFoundException $e) {
-						throw new InvalidArugmentException("No member with id '$author_id' found.", 0, $e);
-					}
-					break;
-
-				case DataModelForum::TYPE_COMMITTEE:
-					try {
-						get_model('DataModelCommissie')->get_iter($author_id);
-					} catch (DataIterNotFoundException $e) {
-						throw new InvalidArugmentException("No committee with id '$author_id' found.", 0, $e);
-					}
-					break;
-
-				case DataModelForum::TYPE_GROUP:
-					try {
-						get_model('DataModelForum')->get_group($author_id);
-					} catch (DataIterNotFoundException $e) {
-						throw new InvalidArugmentException("No group with id '$author_id' found.", 0, $e);
-					}
-					break;
-
-				default:
-					throw new InvalidArugmentException("Invalid author type");
-			}
-
-			$this->set('author', $author_id);
-			$this->set('author_type', $author_type);
 		}
 
 		/**
@@ -301,6 +305,8 @@
 
 	class DataIterForumThread extends DataIter
 	{
+		use UnifiedAuthor;
+
 		static public function fields()
 		{
 			return [
@@ -320,7 +326,7 @@
 				'thread' => $this['id'],
 				'author' => null,
 				'message' => null,
-				'date' => null,
+				'date' => date('Y-m-d H:i:s'),
 				'author_type' => null
 			]);
 		}

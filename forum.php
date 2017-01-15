@@ -17,7 +17,7 @@ class ControllerForum extends Controller
 	{
 		$authorid = intval($authorid);
 		
-		if (!$this->model->check_acl($forum, $acl))
+		if (!$this->model->check_acl($forum, $acl, get_identity()))
 			throw new UnauthorizedException('You do not have the right permissions for this action.');
 
 		if ($authorid != -1 && !$this->model->check_acl_commissie($forum, $acl, $authorid))
@@ -75,7 +75,7 @@ class ControllerForum extends Controller
 		}
 	}
 	
-	private function _create_thread(DataIterForum $forum, $params)
+	private function _create_thread(DataIterForum $forum)
 	{
 		$thread_data = check_values(array(
 			array(
@@ -96,39 +96,28 @@ class ControllerForum extends Controller
 			)
 		), $errors);
 
-		$thread = new DataIterForumThread($this->model, -1, $thread_data);
+		$thread = $forum->new_thread();
+		$thread->set_all($thread_data);
 		
-		$message = new DataIterForumMessage($this->model, -1, $mdata);
+		$message = $thread->new_message();
+		$message->set_all($message_data);
 		
 		if (count($errors) > 0)
 			return $this->view->render_thread_form($forum, $thread, $message, $errors);
 		
 		// Create new thread with given subject
-		$thread['forum'] = $forum['id'];
 		$this->model->insert_thread($thread);
 		
 		// Create first message in the thread
+		// (We need to set the id manually because $thread->new_message()
+		// was called before the thread had an id.)
 		$message['thread'] = $thread['id'];
 		$this->model->insert_message($message);
 
 		// run_message_single redirects to the correct message in a thread
-		return $this->run_message_single($message, $params);
+		return $this->run_message_single($message);
 	}
 
-	public function run_forum_create(DataIterForum $forum, $params)
-	{
-		$this->_assert_access($forum, get_post('author'), DataModelForum::ACL_WRITE);
-		
-		if ($this->_forum_is_submitted('create_thread_' . $forum['id']))
-			return $this->_create_thread($forum, $params);
-
-		$empty_thread = new DataIterForumThread($this->model, null, []);
-
-		$empty_message = new DataIterForumMessage($this->model, null, []);
-
-		return $this->view->render_thread_form($forum, $empty_thread, $empty_message, array());
-	}
-	
 	private function _process_forum_poll_vote(DataIterForumThread $thread)
 	{
 		if (!isset($_POST['optie']) || $_POST['optie'] === '')
@@ -649,15 +638,17 @@ class ControllerForum extends Controller
 
 	public function run_thread_create(DataIterForum $forum)
 	{
-		$thread = $forum->new_thread();
+		$empty_thread = $forum->new_thread();
 
-		$errors = array();
+		if (!get_policy($empty_thread)->user_can_create($empty_thread))
+			throw new UnauthorizedException('You are not allowed to create a new thread in this forum');
+		
+		$empty_message = new DataIterForumMessage($this->model, null, []);
 
 		if ($this->_form_is_submitted('create_thread', $forum))
-			if ($this->_create_thread($thread, $_POST, $errors))
-				return $this->view->redirect('forum.php?thread=' . $thread['id']);
+			return $this->_create_thread($forum);
 
-		return $this->view->render_thread_form($thread, $errors);
+		return $this->view->render_thread_form($forum, $empty_thread, $empty_message, array());
 	}
 
 	public function run_thread_delete(DataIterForumThread $thread)
