@@ -583,9 +583,9 @@ class ControllerForum extends Controller
 
 		if (count($errors) > 0)
 			return false;
-
+		
 		$message->set_all($message_data);
-		$message->set_literal('date', 'CURRENT_TIMESTAMP');
+		$message['date'] = new DatabaseLiteral('CURRENT_TIMESTAMP');
 
 		$this->model->insert_message($message);
 
