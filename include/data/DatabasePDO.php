@@ -249,9 +249,9 @@ class DatabasePDO
 			elseif ($values[$keys[$i]] instanceof DatabaseLiteral)
 				$k .= $values[$keys[$i]]->toSQL();
 			elseif (is_int($values[$keys[$i]]))
-				$k = sprintf('%d', $values[$keys[$i]]);
+				$k .= sprintf('%d', $values[$keys[$i]]);
 			elseif (is_bool($values[$keys[$i]]))
-				$k = $values[$keys[$i]] ? '1' : '0';
+				$k .= $values[$keys[$i]] ? '1' : '0';
 			elseif (is_string($values[$keys[$i]]))
 				$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
 			else
