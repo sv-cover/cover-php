@@ -316,7 +316,7 @@ class DatabasePDO
 	  *
 	  * @result the number of affected rows
 	  */
-	function get_affected_rows() {
+	public function get_affected_rows() {
 		if (!$this->resource)
 			return;
 

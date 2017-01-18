@@ -14,11 +14,14 @@
 			];
 		}
 
-		public $thread;
-
-		public function percentage()
+		public function get_poll()
 		{
-			return 100 * $this['stemmen'] / max($this->thread->total_votes, 1);
+			return get_model('DataModelPoll')->get_iter($this['pollid']);
+		}
+
+		public function get_percentage()
+		{
+			return 100 * $this['stemmen'] / max($this['poll']['total_votes'], 1);
 		}
 	}
 
@@ -35,6 +38,8 @@
 				'optie' => '',
 				'pollid' => $this['id'],
 				'stemmen' => 0
+			], [
+				'poll' => $this
 			]);
 		}
 
@@ -151,6 +156,13 @@
 			return DataIterPoll::from_iter($thread);
 		}
 
+		public function get_iter($id)
+		{
+			$thread = get_model('DataModelForum')->get_thread($id);
+
+			return DataIterPoll::from_iter($thread);
+		}
+
 		public function get_options(DataIterPoll $poll)
 		{
 			$rows = $this->db->query('SELECT * 
@@ -158,37 +170,26 @@
 					WHERE pollid = ' . intval($poll->get_id()) . '
 					ORDER BY id ASC');
 			
-			return $this->_rows_to_iters($rows, 'DataIterPollOption');
+			return $this->_rows_to_iters($rows, 'DataIterPollOption', compact('poll'));
 		}
 		
-		public function vote($id)
+		public function vote(DataIterPollOption $option, DataIterMember $member = null)
 		{
-			$row = $this->db->query_first('SELECT *
-					FROM pollopties
-					WHERE id = ' . intval($id));
-			
-			if (!$row)
-				return false;
-			
-			$iter = $this->_row_to_iter($row);
-			$iter->set('stemmen', $iter->get('stemmen') + 1);
-			
-			$this->db->update('pollopties',	
-					$iter->get_changed_values(), 
-					$this->_id_string($iter->get_id()), 
-					$iter->get_literals());
+			$this->db->query(sprintf("UPDATE pollopties SET stemmen = stemmen + 1 WHERE id = %d", $option->get_id()));
 
-			if (!($member_data = logged_in()))
-				return true;
-			
-			$iter = new DataIter($this, -1, 
-					array(	'lid' => $member_data['id'],
-						'poll' => $iter->get('pollid')));
+			$success = $this->db->get_affected_rows() === 1;
 
-			$this->db->insert('pollvoters', $iter->data, $iter->get_literals());
+			if ($member !== null) {
+				$this->db->insert('pollvoters', [
+					'lid' => $member['id'],
+					'poll' => $option['pollid']
+				]);
+			}
+
+			return $success;
 		}
 
-		public function voted($iter) {
+		public function voted(DataIterForumThread $iter) {
 			if (!($member_data = logged_in()))
 				return true;
 			

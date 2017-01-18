@@ -12,4 +12,10 @@ class PolicyPoll extends PolicyForumThread
 
 		return $this->model->check_acl($forum, DataModelForum::ACL_POLL, get_identity());
 	}
+
+	public function user_can_vote(DataIter $poll)
+	{
+		return $this->user_can_read($poll)
+			&& !$poll->member_has_voted(get_identity()->member());
+	}
 }

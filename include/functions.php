@@ -956,6 +956,15 @@
 		return true;
 	}
 
+	function array_find(array $elements, $test)
+	{
+		foreach ($elements as $index => $element)
+			if (call_user_func($test, $element, $index))
+				return $element;
+
+		return null;
+	}
+
 	function array_group_by($array, $key_accessor)
 	{
 		$groups = array();

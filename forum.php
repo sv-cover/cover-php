@@ -728,6 +728,36 @@ class ControllerForum extends Controller
 
 		return $this->view->render_poll_form($forum, $poll, $message, $options, array());
 	}
+
+	public function run_poll_vote(DataIterForumThread $thread)
+	{
+		if ($this->_form_is_submitted('poll_vote', $thread))
+		{
+			$poll_model = get_model('DataModelPoll');
+
+			$poll = $poll_model->from_thread($thread);
+
+			if (!isset($_POST['option']))
+				throw new InvalidArgumentException('Missing option post parameter');
+
+			if (!get_policy($poll_model)->user_can_vote($poll))
+				throw new UnauthorizedException('You cannot vote for this poll');
+
+			$options = $poll['options'];
+
+			$option = array_find($poll['options'], function($option) {
+				return $option['id'] == $_POST['option'];
+			});
+
+			if ($option === null)
+				throw new InvalidArgumentException('Poll option not found among the poll options');
+
+			if (!$poll_model->vote($option, get_identity()->member()))
+				throw new LogicException('Could not increment vote. Invalid poll option somehow?');
+		}
+
+		return $this->view->redirect('forum.php?thread=' . $thread['id']);
+	}
 	
 	public function run_index()
 	{
@@ -790,6 +820,8 @@ class ControllerForum extends Controller
 				return $this->run_thread_reply($thread);
 			elseif ($view == 'delete')
 				return $this->run_thread_delete($thread);
+			elseif ($view == 'vote')
+				return $this->run_poll_vote($thread);
 			else
 				return $this->run_thread_index($thread);
 		}

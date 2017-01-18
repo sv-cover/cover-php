@@ -10,7 +10,9 @@
 		
 		private $_id = 0; /** The id of the iter */
 		
-		private $changes = null; /** Array containing the fields that have changed */
+		private $_changes = []; /** Array containing the fields that have changed */
+
+		private $_getter_cache = [];
 		
 		protected $db = null;
 
@@ -48,14 +50,16 @@
 		  * @id the id of the iter
 		  * @data the data of the iter (a hashtable)
 		  */
-		public function __construct(DataModel $model = null, $id, $data)
+		public function __construct(DataModel $model = null, $id, $data, array $preseed = array())
 		{
 			$this->model = $model;
 			$this->data = $data;
 			$this->_id = $id;			
 			$this->db = $model ? $model->db : null;
+
+			$this->_getter_cache = $preseed;
 			
-			$this->changes = array();
+			$this->_changes = array();
 		}
 
 		public function __debugInfo()
@@ -140,8 +144,12 @@
 				return null;
 			
 			// We don't have it as a table field, but we do have a getter
-			if ($this->has_getter($field))
-				return call_user_func(array($this, 'get_' . $field));
+			if ($this->has_getter($field)) {
+				if (isset($this->_getter_cache[$field]))
+					return $this->_getter_cache[$field];
+				else
+					return $this->_getter_cache[$field] = call_user_func(array($this, 'get_' . $field));
+			}
 
 			// Nope.
 			trigger_error(get_class($this) . ' has no field named ' . $field, E_USER_WARNING);
@@ -169,8 +177,8 @@
 				return;
 
 			/* Add field to changes if it's not already changed */
-			if (!in_array($field, $this->changes))
-				$this->changes[] = $field;
+			if (!in_array($field, $this->_changes))
+				$this->_changes[] = $field;
 
 			/* Store new value */
 			$this->data[$field] = $value;
@@ -207,7 +215,7 @@
 		  * @result true if the iter has been changed, false otherwise
 		  */		
 		public function has_changes() {
-			return (count($this->changes) != 0);
+			return (count($this->_changes) != 0);
 		}
 		
 		/**
@@ -216,7 +224,7 @@
 		  * @result an array with the data field names that have been changed
 		  */
 		public function get_changes() {
-			return $this->changes;
+			return $this->_changes;
 		}
 		
 		/**
@@ -226,12 +234,12 @@
 		  * as the values
 		  */
 		public function get_changed_values() {
-			$changes = array();
-
-			foreach ($this->changes as $change)
-				$changes[$change] = $this->data[$change];
-			
-			return $changes;
+			return array_combine(
+				$this->_changes,
+				array_map(function($key) {
+					return $this->data[$key];
+				}, $this->_changes)
+			);
 		}
 
 		/**
