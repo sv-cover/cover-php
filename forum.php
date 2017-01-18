@@ -647,6 +647,26 @@ class ControllerForum extends Controller
 		return $this->view->render_thread_delete($thread);
 	}
 
+	public function run_thread_move(DataIterForumThread $thread)
+	{
+		if (!get_policy($thread)->user_can_update($thread))
+			throw new UnauthorizedException('You are not allowed to move this thread.');
+
+		if ($this->_form_is_submitted('move_thread', $thread))
+		{
+			$target_forum = $this->model->get_iter($_POST['forum_id']);
+
+			// You have to have the rights to create a thread in the target forum
+			$test_thread = $target_forum->new_thread();
+			if (!get_policy($test_thread)->user_can_create($test_thread))
+				throw new UnauthorizedException('You do not have the rights to create a new thread in the target forum');
+
+			$this->model->move_thread($thread, $target_forum);
+		}
+
+		return $this->view->redirect(sprintf('forum.php?thread=%d', $thread['id']));
+	}
+
 	public function run_thread_reply(DataIterForumThread $thread)
 	{
 		$message = $thread->new_message();
@@ -818,6 +838,8 @@ class ControllerForum extends Controller
 
 			if ($view == 'reply')
 				return $this->run_thread_reply($thread);
+			elseif ($view == 'move')
+				return $this->run_thread_move($thread);
 			elseif ($view == 'delete')
 				return $this->run_thread_delete($thread);
 			elseif ($view == 'vote')

@@ -1573,6 +1573,12 @@
 		{
 			return $this->_update('forum_threads', $iter);
 		}
+
+		public function move_thread(DataIterForumThread $thread, DataIterForum $target_forum)
+		{
+			$thread['forum'] = $target_forum['id'];
+			return $this->update_thread($thread);
+		}
 		
 		/**
 		  * Delete a message
