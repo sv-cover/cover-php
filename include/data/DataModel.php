@@ -59,12 +59,12 @@
 				$this->auto_increment = $this->id == 'id';
 		}
 
-		public function new_iter($row = array(), $dataiter = null)
+		public function new_iter($row = array(), $dataiter = null, $preseed = [])
 		{
 			if (!$dataiter)
 				$dataiter = $this->dataiter;
 
-			return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
+			return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row, $preseed);
 		}
 
 		/**
@@ -209,10 +209,10 @@
 		  *
 		  * @result a #DataIter
 		  */
-		/*protected*/ public function _row_to_iter($row, $dataiter = null)
+		/*protected*/ public function _row_to_iter($row, $dataiter = null, array $preseed = [])
 		{
 			if ($row)
-				return $this->new_iter($row, $dataiter);
+				return $this->new_iter($row, $dataiter, $preseed);
 			else
 				return $row;
 		}
@@ -224,10 +224,10 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		/*protected*/ public function _rows_to_iters($rows, $dataiter = null)
+		/*protected*/ public function _rows_to_iters($rows, $dataiter = null, array $preseed = [])
 		{
-			return array_map(function ($row) use ($dataiter) {
-				return $this->_row_to_iter($row, $dataiter);
+			return array_map(function ($row) use ($dataiter, $preseed) {
+				return $this->_row_to_iter($row, $dataiter, $preseed);
 			}, $rows);
 		}
 

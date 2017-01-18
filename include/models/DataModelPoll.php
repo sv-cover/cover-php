@@ -158,6 +158,7 @@
 
 		public function get_iter($id)
 		{
+			echo "Calling DataModelPoll::get_iter($id)<br>\n";
 			$thread = get_model('DataModelForum')->get_thread($id);
 
 			return DataIterPoll::from_iter($thread);
