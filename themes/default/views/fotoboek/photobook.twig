@@ -251,7 +251,7 @@
 	{% endif %}
 
 	{# show the top n comments on the front page (same one as with the info) #}
-	{% if book.id == 0 and global.auth.logged_in() %}
+	{% if book.id is same as(0) and global.auth.logged_in() %}
 		{{ include('_recent_comments.twig', {comments:view.recent_comments(10)}) }}
 	{% endif %}
 
