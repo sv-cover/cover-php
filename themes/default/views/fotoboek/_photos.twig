@@ -56,7 +56,7 @@ var closeModal = function() {
 
 var getModal = function() {
 	if (!$modal) {
-		$modal = $('<div class="modal" tabindex="-1">'),
+		$modal = $('<div class="modal photo-modal" tabindex="-1">'),
 		$modalWindow = $('<div class="window photo-window">').appendTo($modal),
 		$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
 

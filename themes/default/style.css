@@ -2023,6 +2023,10 @@ body .ui-autocomplete a.profile .starting-year {
 	position: relative;
 }
 
+.modal.photo-modal {
+	z-index: 90; /* make sure the normal modals show before the photo popup */
+}
+
 .modal > .window {
 	color: black;
 }
