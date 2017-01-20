@@ -208,7 +208,7 @@ class DatabasePDO
 		}
 
 		$query = $query . ' ' . $k . ') ' . $v . ');';
-		
+
 		/* Execute query */
 		$this->query($query);
 		

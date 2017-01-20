@@ -162,27 +162,28 @@
 
 		public function insert(DataIter $iter)
 		{
-			if ($iter->has('vacancies') && !$iter->get('vacancies'))
-				$iter->set_literal('vacancies', 'NULL');
-
+			if ($iter['vacancies'] === '')
+				$iter['vacancies'] = null;
+			
 			if (empty($iter['login']))
 				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
 
 			if ($this->type !== null)
 				$iter['type'] = $this->type;
 
-			$iter->set('nocaps', strtolower($iter->get('naam')));
+			$iter['nocaps'] = $iter['naam'];
 			
 			$committee_id = parent::insert($iter);
 
 			// Create the page for this committee
 			$editable_model = get_model('DataModelEditable');
 
-			$page_data = array(
+			$page_data = [
 				'owner' => $committee_id,
-				'titel' => $iter->get('naam'));
+				'titel' => $iter['naam']
+			];
 
-			$page = new DataIter($editable_model, -1, $page_data);
+			$page = $editable_model->new_iter($page_data);
 
 			$page_id = $editable_model->insert($page);
 
