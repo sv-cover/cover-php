@@ -671,6 +671,9 @@ class ControllerForum extends Controller
 	{
 		$message = $thread->new_message();
 
+		if (!get_policy($message)->user_can_create($message))
+			throw new UnauthorizedException('You are not allowed to create new messages in this thread.');
+
 		if (isset($_GET['quote_message'])) {
 			try {
 				$quoted_message = $this->model->get_message($_GET['quote_message']);
