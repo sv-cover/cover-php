@@ -751,12 +751,12 @@ class ControllerForum extends Controller
 
 	public function run_poll_vote(DataIterForumThread $thread)
 	{
-		if ($this->_form_is_submitted('poll_vote', $thread))
+		$poll_model = get_model('DataModelPoll');
+
+		$poll = $poll_model->from_thread($thread);
+
+		if ($this->_form_is_submitted('poll_vote', $poll))
 		{
-			$poll_model = get_model('DataModelPoll');
-
-			$poll = $poll_model->from_thread($thread);
-
 			if (!isset($_POST['option']))
 				throw new InvalidArgumentException('Missing option post parameter');
 

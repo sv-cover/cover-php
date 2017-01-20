@@ -9,7 +9,7 @@
 		{% if iter.has_id %}
 			{{ html_nonce('update', iter) }}
 		{% else %}
-			{{ html_nonce('create') }}
+			{{ html_nonce('create', iter) }}
 		{% endif %}
 		
 		<div>

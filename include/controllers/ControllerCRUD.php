@@ -120,7 +120,7 @@ class ControllerCRUD extends Controller
 
 		$errors = array();
 
-		if ($this->_form_is_submitted('create'))
+		if ($this->_form_is_submitted('create', $iter))
 			if ($this->_create($iter, $_POST, $errors))
 				$success = true;
 
