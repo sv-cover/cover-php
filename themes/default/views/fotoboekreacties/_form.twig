@@ -2,7 +2,7 @@
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
-		{{ html_nonce('create', iter) }}
+		{{ html_nonce('create') }}
 	{% endif %}
 	<div>
 		{{ html_textarea_field('reactie', iter.data,
