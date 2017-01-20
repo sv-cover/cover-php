@@ -143,7 +143,7 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 	$mailinglijsten_model = get_model('DataModelMailinglijst');
 
 	// Find that mailing list
-	if (!($lijst = $mailinglijsten_model->get_lijst($to)))
+	if (!($lijst = $mailinglijsten_model->get_lijst_by_address($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
 
 	// Append '[Cover]' or whatever tag is defined for this list to the subject

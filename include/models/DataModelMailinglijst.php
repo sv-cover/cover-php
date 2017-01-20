@@ -95,10 +95,12 @@ class DataModelMailinglijst extends DataModel
 		return parent::_row_to_iter($row);
 	}
 
-	public function get_lijsten($lid_id, $public_only = true)
+	public function get_list_for_member(DataIterMember $member, $public_only = true)
 	{
+		$lid_id = $member['id'];
+
 		if ($public_only)
-			if ($commissies = logged_in('commissies'))
+			if ($commissies = $member['committees'])
 				$where_clause = 'WHERE (l.publiek = TRUE OR l.commissie IN (' . implode(', ', $commissies) . '))';
 			else
 				$where_clause = 'WHERE l.publiek = TRUE';
@@ -138,22 +140,9 @@ class DataModelMailinglijst extends DataModel
 		return $this->_rows_to_iters($rows);
 	}
 
-	public function get_lijst($lijst_id)
+	public function get_iter_by_address($address)
 	{
-		if (is_numeric($lijst_id))
-			$query = sprintf('l.id = %d', $lijst_id);
-		else
-			$query = sprintf("l.adres = '%s'", $this->db->escape_string(strtolower($lijst_id)));
-		
-		$row = $this->db->query_first('
-			SELECT
-				l.*
-			FROM
-				mailinglijsten l
-			WHERE
-				' . $query);
-
-		return $this->_row_to_iter($row);
+		return $this->find_one(['adres' => $address]);
 	}
 
 	public function create_lijst($adres, $naam, $omschrijving, $publiek, $type, $toegang, $commissie)

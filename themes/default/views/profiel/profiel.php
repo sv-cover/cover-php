@@ -185,7 +185,7 @@ class ProfielView extends View
 	public function render_mailing_lists_tab(DataIterMember $iter)
 	{
 		$model = get_model('DataModelMailinglijst');
-		$mailing_lists = $model->get_lijsten($iter['id']);
+		$mailing_lists = $model->get_lists_for_member($iter);
 
 		return $this->render('mailing_lists_tab.twig', compact('iter', 'mailing_lists'));
 	}

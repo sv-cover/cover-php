@@ -6,8 +6,6 @@ require_once 'include/controllers/Controller.php';
 
 class ControllerMailinglijsten extends Controller
 {
-	public $model;
-
 	public function __construct()
 	{
 		$this->model = get_model('DataModelMailinglijst');
@@ -20,21 +18,10 @@ class ControllerMailinglijsten extends Controller
 		$this->model->update_abonnementen($me['id'], $subscriptions);
 	}
 
-	public function get_content($view, $iter = null, $params = null)
-	{
-		$this->run_header(array(
-			'title' => isset($params['lijst'])
-				? ucfirst($params['lijst']->get('naam')) . ' ' . __('Mailinglijst')
-				: __('Mailinglijsten')));
-
-		run_view($view, $this->model, $iter, $params);
-		$this->run_footer();
-	}
-
 	protected function _process_new_list()
 	{
-		if (!member_in_commissie(COMMISSIE_EASY))
-			return $this->get_content('common::auth');
+		if (!get_policy($this->model)->user_can_create($this->model->new_iter()))
+			throw new UnauthorizedException('You are not allowed to create new mailing lists');
 
 		$id = $this->model->create_lijst(
 			$_POST['adres'], $_POST['naam'],
@@ -74,7 +61,7 @@ class ControllerMailinglijsten extends Controller
 
 	protected function run_subscriptions_management($lijst_id)
 	{
-		$lijst = $this->model->get_lijst($lijst_id);
+		$lijst = $this->model->get_iter($lijst_id);
 
 		$return_url = isset($_POST['referer'])
 			? $_POST['referer']
@@ -155,45 +142,6 @@ class ControllerMailinglijsten extends Controller
 		$this->get_content('mailinglijsten::mailinglist', null, compact('lijst', 'aanmeldingen', 'aangemeld'));
 	}
 
-	protected function run_my_subscriptions_management()
-	{
-		$member_model = get_model('DataModelMember');
-
-		$member = $member_model->get_iter(logged_in('id'));
-
-		if (!$member) {
-			header('Status: 404 Not found');
-			$this->get_content('common::not_found');
-			return;
-		}
-	
-		if (!empty($_POST['action']))
-		{
-			$lijst = $this->model->get_lijst($_POST['mailinglijst_id']);
-
-			switch ($_POST['action'])
-			{
-				case 'subscribe':
-					if ($this->model->member_can_subscribe($lijst))
-						$this->model->aanmelden($lijst, logged_in('id'));
-					break;
-
-				case 'unsubscribe':
-					if ($this->model->member_can_unsubscribe($lijst))
-						$this->model->afmelden($lijst, logged_in('id'));
-					break;
-			}
-
-			header('Location: mailinglijsten.php');
-			return;
-		}
-
-		$subscriptions = $this->model->get_lijsten(logged_in('id'),
-			!member_in_commissie(COMMISSIE_BESTUUR)); // public only? Only if not WebCie.
-
-		$this->get_content('mailinglijsten::mailinglists', $subscriptions, compact('member'));
-	}
-
 	protected function show_list_archive($list_id)
 	{
 		$lijst = $this->model->get_lijst($list_id);
@@ -269,7 +217,7 @@ class ControllerMailinglijsten extends Controller
 		run_view('mailinglijsten::embedded', $this->model, $lijst, compact('aangemeld'));
 	}
 
-	public function run_impl()
+	protected function run_impl()
 	{
 		// Unsubscribe link? Show the unsubscribe confirmation page
 		if (!empty($_GET['abonnement_id']))
@@ -294,13 +242,9 @@ class ControllerMailinglijsten extends Controller
 		elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
 			return $this->_process_new_list();
 
-		// Manage your own subscriptions
-		elseif ($me = logged_in())
-			return $this->run_my_subscriptions_management($me['id']);
-
 		// There isn't really anything you can do when not logged in, Sorry!
 		else
-			return $this->get_content('common::auth');
+			throw new UnauthorizedException('You need to be logged in to access this functionality');
 	}
 }
 

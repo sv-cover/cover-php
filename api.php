@@ -321,7 +321,7 @@ class ControllerApi extends Controller
 		$member = $member_model->get_iter($member_id);
 
 		$mailing_model = get_model('DataModelMailinglijst');
-		$mailinglist = $mailing_model->get_lijst($mailinglist);
+		$mailinglist = $mailing_model->get_iter($mailinglist);
 		$id = $mailing_model->aanmelden($mailinglist, $member->get_id());
 
 		return ['success' => !!$id];

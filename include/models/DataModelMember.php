@@ -81,6 +81,9 @@
 			return $this->model->get_photo_mtime($this);
 		}
 
+		/**
+		 * Note: this getter returns a list of committee id's, not actual DataIterCommittee[]
+		 */
 		public function get_committees()
 		{
 			return $this->model->get_commissies($this->get_id());
