@@ -2780,7 +2780,11 @@ CREATE TABLE mailinglijsten (
     publiek boolean NOT NULL DEFAULT TRUE,
     toegang integer,
     commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
-    tag varchar(100) NOT NULL DEFAULT 'Cover'
+    tag varchar(100) NOT NULL DEFAULT 'Cover',
+    on_subscribtion_subject TEXT DEFAULT NULL,
+    on_subscribtion_message TEXT DEFAULT NULL,
+    on_first_email_subject TEXT DEFAULT NULL,
+    on_first_email_message TEXT DEFAULT NULL
 );
 
 CREATE TABLE mailinglijsten_abonnementen (
@@ -2798,6 +2802,7 @@ CREATE TABLE mailinglijsten_berichten (
     mailinglijst integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     commissie integer DEFAULT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     bericht TEXT NOT NULL,
+    sender TEXT DEFAULT NULL,
     return_code integer NOT NULL,
     verwerkt_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );

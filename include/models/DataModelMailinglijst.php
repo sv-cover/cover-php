@@ -18,6 +18,10 @@ class DataIterMailinglijst extends DataIter
 			'toegang',
 			'commissie',
 			'tag',
+			'on_subscription_subject',
+			'on_subscription_message',
+			'on_first_email_subject',
+			'on_first_email_message',
 		];
 	}
 
@@ -78,10 +82,6 @@ class DataModelMailinglijst extends DataModel
 	public function __construct($db)
 	{
 		parent::__construct($db, 'mailinglijsten');
-
-		$this->model_aanmeldingen = new DataModel($db, 'mailinglijsten_abonnementen', 'abonnement_id');
-
-		$this->model_opt_out = new DataModel($db, 'mailinglijsten_opt_out');
 	}
 
 	public function _row_to_iter($row, $dataiter = null)
@@ -334,11 +334,9 @@ class DataModelMailinglijst extends DataModel
 		if ($this->is_aangemeld($lijst, $lid->get_id()))
 			return;
 
-		$id = $this->insert_aanmelding_lid($lijst, $lid);
+		$this->insert_aanmelding_lid($lijst, $lid);
 
 		$this->stuur_aanmeldingsmail($lijst, member_full_name($lid, IGNORE_PRIVACY), $lid->get('email'));
-
-		return $id;
 	}
 
 	protected function insert_aanmelding_lid(DataIter $lijst, DataIterMember $lid)
@@ -347,19 +345,15 @@ class DataModelMailinglijst extends DataModel
 		{
 			// Opt in list: add a subscription to the table
 			case self::TYPE_OPT_IN:
-				$data = array(
+				return $this->db->insert('mailinglijsten_abonnementen', array(
 					'abonnement_id' => sha1(uniqid('', true)),
 					'lid_id' => $lid->get_id(),
 					'mailinglijst_id' => intval($lijst->get('id'))
-				);
-
-				$iter = new DataIter($this->model_aanmeldingen, -1, $data);
-
-				return $this->model_aanmeldingen->insert($iter);
+				));
 
 			// Opt out list: remove any opt-out entries from the table
 			case self::TYPE_OPT_OUT:
-				return $this->db->delete($this->model_opt_out->table,
+				return $this->db->delete('mailinglijsten_opt_out',
 					sprintf('lid_id = %d AND mailinglijst_id = %d',
 						$lid->get_id(), $lijst->get('id')));
 
@@ -370,20 +364,12 @@ class DataModelMailinglijst extends DataModel
 
 	public function aanmelden_gast(DataIter $lijst, $naam, $email)
 	{
-		$data = array(
+		return $this->db->insert('mailinglijsten_abonnementen', array(
 			'abonnement_id' => sha1(uniqid('', true)),
 			'naam' => $naam,
 			'email' => $email,
 			'mailinglijst_id' => intval($lijst->get('id'))
-		);
-
-		$iter = new DataIter($this->model_aanmeldingen, -1, $data);
-
-		$id = $this->model_aanmeldingen->insert($iter);
-
-		$this->stuur_aanmeldingsmail($lijst, $naam, $email);
-
-		return $id;
+		));
 	}
 
 	protected function stuur_aanmeldingsmail(DataIter $lijst, $naam, $email)
@@ -452,20 +438,15 @@ class DataModelMailinglijst extends DataModel
 					'lid_id' => intval($lid_id)
 				);
 
-				$iter = new DataIter($this->model_opt_out, -1, $data);
-
-				return $this->model_opt_out->insert($iter);
+				return $this->db->insert('mailinglijsten_opt_out', $data);
 		}
 	}
 
 	public function afmelden_via_abonnement_id($abonnement_id)
 	{
-		return $this->db->update(
-			$this->model_aanmeldingen->table,
-			array('opgezegd_op' => 'NOW()'),
-			sprintf("abonnement_id = '%s'",
-				$this->db->escape_string($abonnement_id)),
-			array('opgezegd_op'));
+		return $this->db->update('mailinglijsten_abonnementen',
+			['opgezegd_op' => new DatabaseLiteral('NOW()')],
+			sprintf("abonnement_id = '%s'", $this->db->escape_string($abonnement_id)));
 	}
 
 	public function member_can_access_archive(DataIterMailinglijst $lijst)
