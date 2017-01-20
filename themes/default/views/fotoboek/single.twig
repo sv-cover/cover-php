@@ -30,7 +30,7 @@
 			{% endif %}
 		</nav>
 		
-		<div id="photo" data-id="{{ photo.id }}" {%- if user_can_create controller.faces_controller.new_iter %} data-create-action="{{ controller.faces_controller.link_to_create }}"{% endif %}>
+		<div id="photo" data-id="{{ photo.id }}" {%- if user_can_create controller.faces_controller.new_iter %} data-create-action="{{ controller.faces_controller.json_link_to_create }}"{% endif %}>
 			<figure class="full-size-photo {{ photo.orientation }}">
 				<img
 					src="{{ photo.get_url(1600, 1600) }}"

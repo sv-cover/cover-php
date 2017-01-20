@@ -104,6 +104,30 @@ class ControllerCRUD extends Controller
 		return $this->link_to_iter($iter, [$this->_var_view => 'delete']);
 	}
 
+	public function json_link_to_create()
+	{
+		$new_iter = $this->model()->new_iter();
+		$nonce = nonce_generate(nonce_action_name('create', [$new_iter]));
+		return $this->link([$this->_var_view => 'create', '_nonce' => $nonce]);
+	}
+
+	public function json_link_to_read(DataIter $iter)
+	{
+		return $this->link_to_iter($iter, [$this->_var_view => 'read']);
+	}
+
+	public function json_link_to_update(DataIter $iter)
+	{
+		$nonce = nonce_generate(nonce_action_name('update', [$iter]));
+		return $this->link_to_iter($iter, [$this->_var_view => 'update', '_nonce' => $nonce]);
+	}
+
+	public function json_link_to_delete(DataIter $iter)
+	{
+		$nonce = nonce_generate(nonce_action_name('delete', [$iter]));
+		return $this->link_to_iter($iter, [$this->_var_view => 'delete', '_nonce' => $nonce]);
+	}
+
 	public function link_to_index()
 	{
 		return $_SERVER['SCRIPT_NAME'];

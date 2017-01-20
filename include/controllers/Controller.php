@@ -91,9 +91,16 @@
 			$args = array_slice(func_get_args(), 1);
 			$action_name = nonce_action_name($action, $args);
 
+			$nonce = null;
+
+			if (!empty($_POST['_nonce']))
+				$nonce = $_POST['_nonce'];
+			else if (!empty($_GET['_nonce']))
+				$nonce = $_GET['_nonce'];
+
 			$answer = $_SERVER['REQUEST_METHOD'] == 'POST'
-				&& !empty($_POST['_nonce'])
-				&& nonce_verify($_POST['_nonce'], $action_name);
+				&& $nonce !== null
+				&& nonce_verify($nonce, $action_name);
 
 			return $answer;
 		}

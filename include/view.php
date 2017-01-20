@@ -306,10 +306,8 @@ class CRUDView extends View
 
 		$new_iter = $this->controller->model()->new_iter();
 
-		if (get_policy($new_iter)->user_can_create($new_iter)) {
-			$nonce = nonce_generate(nonce_action_name('create', $new_iter));
-			$links['create'] = edit_url($this->controller->link_to_create(), ['_nonce' => $nonce]);
-		}
+		if (get_policy($new_iter)->user_can_create($new_iter)) 
+			$links['create'] = $this->controller->json_link_to_create();
 
 		return $this->render_json(array(
 			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
@@ -323,20 +321,14 @@ class CRUDView extends View
 
 		$policy = get_policy($this->controller->model());
 
-		if ($policy->user_can_read($iter)) {
-			$nonce = nonce_generate(nonce_action_name('read', $iter));
-			$links['read'] = edit_url($this->controller->link_to_read($iter), ['_nonce' => $nonce]);
-		}
+		if ($policy->user_can_read($iter))
+			$links['read'] = $this->controller->json_link_to_read($iter);
 
-		if ($policy->user_can_update($iter)) {
-			$nonce = nonce_generate(nonce_action_name('update', $iter));
-			$links['update'] = edit_url($this->controller->link_to_update($iter), ['_nonce' => $nonce]);
-		}
+		if ($policy->user_can_update($iter))
+			$links['update'] = $this->controller->json_link_to_update($iter);
 
-		if ($policy->user_can_delete($iter)){
-			$nonce = nonce_generate(nonce_action_name('delete', $iter));
-			$links['delete'] = edit_url($this->controller->link_to_delete($iter), ['_nonce' => $nonce]);
-		}
+		if ($policy->user_can_delete($iter))
+			$links['delete'] = $this->controller->json_link_to_delete($iter);
 
 		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
 	}
