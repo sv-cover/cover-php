@@ -360,6 +360,16 @@ class ProfielView extends View
 				return sprintf('<a href="mailto:%s">%s</a>',
 					urlencode($iter['email']),
 					markup_format_text($iter['email']));
+			case 'telefoonnummer':
+				try {
+					$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
+					$phone_number = $phone_util->parse($iter[$field], 'NL');
+					return sprintf('<a href="tel:%s">%s</a>',
+						$phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164),
+						$phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::INTERNATIONAL));
+				} catch (\libphonenumber\NumberParseException $e) {
+					return markup_format_text($iter[$field]);
+				}
 			default:
 				return markup_format_text($iter[$field]);
 		}

@@ -91,9 +91,11 @@
 			$args = array_slice(func_get_args(), 1);
 			$action_name = nonce_action_name($action, $args);
 
-			return $_SERVER['REQUEST_METHOD'] == 'POST'
+			$answer = $_SERVER['REQUEST_METHOD'] == 'POST'
 				&& !empty($_POST['_nonce'])
 				&& nonce_verify($_POST['_nonce'], $action_name);
+
+			return $answer;
 		}
 
 		final protected function get_content()

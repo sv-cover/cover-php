@@ -300,13 +300,13 @@
 			return $this->_row_to_iter($data);
 		}
 
-		protected function _generate_conditions_from_array($conditions)
+		protected function _generate_conditions_from_array(array $conditions)
 		{
 			$atoms = [];
 
 			foreach ($conditions as $key => $value)
 			{
-				if (preg_match('/^(.+?)__(eq|ne|gt|lt|contains|isnull)$/', $key, $match)) {
+				if (preg_match('/^(.+?)__(eq|ne|gt|lt|in|contains|isnull)$/', $key, $match)) {
 					$field = $match[1];
 					$operator = $match[2];
 				} else {
@@ -322,6 +322,23 @@
 
 					case 'gt':
 						$format = "%s > '%s'";
+						break;
+
+					case 'in':
+						// If the value is an iterator, make it an array first for easy use
+						if ($value instanceof Iterator)
+							$value = iterator_to_array($value, false);
+
+						// Check the value
+						if (!is_array($value))
+							throw new InvalidArgumentException("in-operator in '$field' condition expects an array or iterable.");
+
+						if (count($value) === 0)
+							throw new InvalidArgumentException("The value for the condition on '$field' is an empty set.");
+
+						$safe_values = array_map([$this->db, 'escape_string'], $value);
+						$format = sprintf('%%s IN (%s)', implode(', ', $safe_values));
+						unset($value);
 						break;
 
 					case 'contains':

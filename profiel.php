@@ -18,7 +18,7 @@ class ControllerProfiel extends Controller
 
 		$this->view = View::byName('profiel', $this);
 
-		$this->sizes = array(
+		$this->sizes = [
 			'adres' => 255,
 			'postcode' => 7,
 			'woonplaats' => 255,
@@ -26,14 +26,16 @@ class ControllerProfiel extends Controller
 			'telefoonnummer' => 20,
 			'avatar' => 100,
 			'homepage' => 255,
-			'nick' => 50);
+			'nick' => 50,
+			'onderschrift' => 200
+		];
 
-		$this->required = array(
+		$this->required = [
 			'adres',
 			'postcode',
 			'woonplaats',
 			'email'
-		);
+		];
 	}
 	
 	public function _check_size($name, $value)
@@ -68,11 +70,23 @@ class ControllerProfiel extends Controller
 		return in_array($value, array('nl', 'en')) ? $value : false;
 	}
 
+	public function _check_phone($name, $value) {
+		try {
+			$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
+			$phone_number = $phone_util->parse($value, 'NL');
+			return $phone_util->isValidNumber($phone_number)
+				? $phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164)
+				: false;
+		} catch (\libphonenumber\NumberParseException $e) {
+			return false;
+		}
+	}
+
 	protected function _update_personal(DataIterMember $iter)
 	{
 		$check = array(
 			array('name' => 'postcode', 'function' => array($this, '_check_size')),
-			array('name' => 'telefoonnummer', 'function' => array($this, '_check_size')),
+			array('name' => 'telefoonnummer', 'function' => array($this, '_check_phone')),
 			array('name' => 'adres', 'function' => array($this, '_check_size')),
 			array('name' => 'email', 'function' => array($this, '_check_size')),
 			array('name' => 'woonplaats', 'function' => array($this, '_check_size'))
@@ -158,6 +172,7 @@ class ControllerProfiel extends Controller
 		$check = array(
 			array('name' => 'nick', 'function' => array(&$this, '_check_size')),
 			array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
+			array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
 			array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
 			array('name' => 'taal', 'function' => array($this, '_check_language'))
 		);
@@ -169,13 +184,7 @@ class ControllerProfiel extends Controller
 			return $this->view->render_profile_tab($iter, $error, $errors);
 		}
 
-		$fields = array_map(function($check) { return $check['name']; }, $check);
-
-		foreach ($fields as $field)
-			if (isset($data[$field]))
-				$iter->set($field, $data[$field]);
-			else
-				$iter->set($field, get_post($field));
+		$iter->set_all($data);
 		
 		$this->model->update_profiel($iter);
 		

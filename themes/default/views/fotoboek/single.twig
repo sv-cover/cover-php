@@ -50,8 +50,7 @@
 				<!-- name label (and hidden update form) -->
 				<div class="tag-label">
 					{% if face.lid_id is not null %}
-						{% set lid = face.getIter('lid') %}
-						<a href="profiel.php?lid={{ lid.id }}" class="name">{{ lid|personal_full_name }}</a>
+						<a href="profiel.php?lid={{ face.lid.id }}" class="name">{{ face.lid|personal_full_name }}</a>
 					{% elseif face.custom_label is not null %}
 						<a class="name" href="#">{{ face.custom_label }}</a>
 					{% elseif user_can_update face %}

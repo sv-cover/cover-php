@@ -122,6 +122,21 @@
 		{
 			return method_exists($this, 'set_'. $field);
 		}
+
+		public function call_getter($field)
+		{
+			// Todo: implement either dependency tracking or getter cache clearing
+			
+			if (!isset($this->_getter_cache[$field]))
+				$this->_getter_cache[$field] = $this->call_getter_nocache($field);
+
+			return $this->_getter_cache[$field];
+		}
+
+		public function call_getter_nocache($field)
+		{
+			return call_user_func([$this, 'get_' . $field]);
+		}
 		
 		/**
 		  * Get iter data
@@ -144,12 +159,8 @@
 				return null;
 			
 			// We don't have it as a table field, but we do have a getter
-			if ($this->has_getter($field)) {
-				if (isset($this->_getter_cache[$field]))
-					return $this->_getter_cache[$field];
-				else
-					return $this->_getter_cache[$field] = call_user_func(array($this, 'get_' . $field));
-			}
+			if ($this->has_getter($field))
+				return $this->call_getter($field);
 
 			// Nope.
 			trigger_error(get_class($this) . ' has no field named ' . $field, E_USER_WARNING);
@@ -284,7 +295,7 @@
 
 		public function __isset($key)
 		{
-			return $this->has_field($key) || $this->has_getter($key);
+			return $this->has_field($key) || $this->has_value($key) || $this->has_getter($key);
 		}
 
 		/* ArrayAccess */

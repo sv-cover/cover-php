@@ -13,18 +13,15 @@ class ControllerShow extends ControllerCRUD
 
 	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
-		$valid = true;
+		if (!isset($data['owner']))
+			$errors[] = 'owner';
 
-		if (!isset($data['owner'])) {
-			$errors['owner'] = __('Eigenaar van de pagina ontbreekt');
-			$valid = false;
-		}
-		elseif (!get_identity()->member_in_committee($data['owner'])) {
-			$errors['owner'] = __('Je kan alleen maar pagina\'s aanmaken voor commissies waar je zelf in zit');
-			$valid = false;
-		}
+		elseif (!get_identity()->member_in_committee($data['owner'])
+			&& !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
+			$errors[] = 'owner';
 
-		return $valid;
+		return count($errors) === 0;
 	}
 
 	protected function _update(DataIter $iter, array $data, array &$errors)
@@ -75,7 +72,7 @@ class ControllerShow extends ControllerCRUD
 		return $success;
 	}
 
-	protected function _prepare_mail(DataIter $iter, $difference)
+	private function _prepare_mail(DataIter $iter, $difference)
 	{
 		$data = $iter->data;
 		$data['member_naam'] = member_full_name(get_identity()->member(), IGNORE_PRIVACY);

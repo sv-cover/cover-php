@@ -24,4 +24,30 @@ class LidwordenView extends View
 	{
 		return $this->render('confirmed.twig');
 	}
+
+	public function render_pending(array $registrations, $message = null)
+	{
+		return $this->render('pending.twig', compact('registrations', 'message'));
+	}
+
+	public function search_link($conditions)
+	{
+		$url = 'https://secretary.svcover.nl/administration/everyone/?' . http_build_query($conditions);
+		return sprintf('<a href="%s" target="_blank" title="Search for this in Secretary"><img src="themes/default/images/search.png" width="12" height="12"></a>', markup_format_attribute($url));
+	}
+
+	public function full_name($row)
+	{
+		return format_string('$first_name$family_name_preposition|optional $family_name', $row['data']);
+	}
+
+	public function search_link_for_full_name($row)
+	{
+		return $this->search_link(['full_name' => format_string('$first_name$family_name_preposition|optional $family_name', $row['data'])]
+	}
+
+	public function search_link_for_email_address($row)
+	{
+		return $this->search_link(['full_name' => '', 'email_address' => $row['data']['email_address']]);
+	}
 }

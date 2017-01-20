@@ -108,6 +108,21 @@ jQuery(function($) {
 		.on('submit', 'form[data-placement-selector]', inline_link_handler);
 });
 
+// If a link in a modal links to the current page, make that link just close the modal
+$(document).on('partial-content-loaded', function(e) {
+	var $modal = $(e.target).closest('.modal');
+	if ($modal.length) {
+		$(e.target).find('a').each(function() {
+			if (this.href == document.location.href) {
+				$(this).click(function(e) {
+					e.preventDefault();
+					$modal.remove();
+				});
+			}
+		});
+	}
+});
+
 jQuery(function($) {
 	$(document).on('click', 'a[data-image-popup]', function(e) {
 		if ($(this).data('image-popup') !== 'modal')
@@ -216,23 +231,26 @@ jQuery(function($) {
 
 $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('fieldset:not(.jquery-fieldset)').each(function(i, fieldset) {
+		var masterSwitch = $(fieldset).find('legend input[type=checkbox], legend input[type=radio]');
+
+		if (masterSwitch.length === 0)
+			return;
+
 		$(fieldset).addClass('jquery-fieldset');
 
-		var masterSwitch = $(fieldset).find('legend>input[type=checkbox]');
+		var fields = $(fieldset).find('input, select').not(masterSwitch);
 
-		if (masterSwitch.length) {
-			var toggles = $(fieldset).find('input').not(masterSwitch);
+		var update = function() {
+			fields.prop('disabled', !masterSwitch.is(':checked'));
+		};
 
-			var update = function() {
-				toggles.prop('disabled', !masterSwitch.is(':checked'));
-			};
+		update();
 
-			update();
-
-			masterSwitch.on('change', update);
-		}
+		$(e.target).find('input[name="' + masterSwitch.attr('name') + '"]').on('change', update);
 	});
+});
 
+$(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('input[data-autocomplete=member_id]').each(function(i, field) {
 		$(field).autocompleteAlmanac({
 			select: function(event, ui) {
@@ -818,5 +836,205 @@ $(document).on('ready partial-content-loaded', function(e) {
 				return false;
 			}
 		});
+	});
+});
+
+/* Promotional banners */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.sign-up-banner').each(function() {
+		var slides = $(this).find('.background');
+		var currentSlide = 0;
+
+		setInterval(function() {
+			currentSlide = (currentSlide + 1) % slides.length;
+			slides.removeClass("current");
+			slides.eq(currentSlide).addClass("current");
+		}, 3500);
+	});
+});
+
+/* Committee battle banner */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.committee-battle-banner').each(function() {
+		var columnCount = 5;
+		var imageCount = 3;
+		var paths = $(this).data('photos');
+		var pathIndex = 0;
+
+		var nextPath = function() {
+			return paths[pathIndex++ % paths.length];
+		};
+
+		var columns = $.map(new Array(columnCount), function(value, columnIndex) {
+			var column = $('<div>').addClass('column').css({
+				left: 115 * (columnIndex / columnCount) - 35 + '%',
+				width: (100 / columnCount) + '%',
+				animationDuration: 60 + 10 * (columnIndex % 2) + 's',
+				animationDelay: -1 * Math.random() + 's'
+			});
+
+			var images = $.map(new Array(imageCount), function(value, imageIndex) {
+				return $('<img>').prop({
+					src: nextPath(),
+					width: 500,
+					height: 300
+				});
+			});
+
+			for (var i = 0; i < 2; ++i)
+				images.push(images[i].clone());
+
+			column.append(images);
+
+			return column;
+		});
+
+		var overlay = $('<div>').css({
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			bottom: 0,
+			right: 0,
+			background: '#000',
+			zIndex: -1,
+			opacity: 0.25
+		});
+
+		$(this).append(columns);
+
+		$(this).append(overlay);
+
+		setTimeout(function() {
+			$(columns).each(function() {
+				$(this).css({
+					animationName: 'banner-scroll'
+				});
+			});
+		}, 100);
+	});
+});
+
+/* Click to read more */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.click-to-read-on').each(function() {
+		var $div = $(this).addClass('collapsed');
+		var $button = $('<button>')
+			.addClass('button read-on-button')
+			.text($div.data('read-on-label') || 'Click to Read On')
+			.click(function() {
+				$div.removeClass('collapsed');
+			});
+		$div.append($button);
+	})
+});
+
+/* Enable select2 automatically */
+$(document).on('ready partial-content-loaded', function(e) {
+	if (jQuery.fn.select2) {
+		$(e.target).find('select[name="member_ids[]"]').select2({
+			templateResult: function(option) {
+				if (!option.id)
+					return document.createTextNode(option.text);
+
+				var img = document.createElement('img');
+				img.className = 'profile-image';
+				img.src = 'foto.php?lid_id=' + option.id + '&format=square&width=50';
+				var text = document.createTextNode(option.text);
+				var span = document.createElement('span');
+				span.appendChild(img);
+				span.appendChild(text);
+				return span;
+			}
+		});
+	}
+
+	// Check all checkboxes in the form that have a data-member-ids attribute
+	// to see if it contains one of the currently selected members. If so, check it.
+	$(e.target).find('[name="member_ids[]"]').each(function() {
+		var $field = $(this);
+		var $form = $(this.form);
+
+		var $legend = $(this.form)
+			.find('input[type=checkbox][data-member-ids]')
+			.first()
+			.closest('fieldset')
+			.find('legend')
+			.first();
+
+		var $method = $('<select>\
+			<option value="some">Union of</option>\
+			<option value="every">Intersection of</option>\
+		</select>').prependTo($legend);
+
+		var update = function() {
+			var value = $field.val();
+			var method = $method.val();
+			console.log(value, method);
+			$form.find('input[type=checkbox][data-member-ids]').prop('checked', function() {
+				// Test whether this set of member-ids is completely or partially contained by value.
+				var member_ids = $(this).attr('data-member-ids').split(' ');
+				return value !== null && value[method](function(member_id) {
+					return member_ids.indexOf(member_id) !== -1;
+				});
+			});
+		};
+
+		$field.add($method).on('change', update);
+	});
+});
+
+// Load photo book photos only once they are (almost) in view
+// to speed up loading photo book pages
+$(document).on('ready partial-content-loaded', function(e) {
+	var triggered = false;
+
+	var threshold = Math.max(300, $(window).height()); // pixels 'below the fold' where images should start loading
+
+	var emptyPixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
+	function isHidden() {
+		var $img = $(this);
+
+		// Keep hidden images for now
+		if ($img.is(':hidden'))
+			return true;
+
+		var windowTop = $(window).scrollTop(),
+			windowBottom = windowTop + $(window).height(),
+			elementTop = $img.offset().top,
+			elementBottom = elementTop + $img.height();
+
+		return !(elementBottom >= windowTop - threshold && elementTop <= windowBottom + threshold);
+	}
+
+	function load() {
+		this.src = $(this).data('src');
+	}
+
+	function update() {
+		// Load all images that are not hidden
+		var loaded = $images.not(isHidden).each(load);
+
+		// And remove those images from the set
+		$images = $images.not(loaded);
+
+		triggered = false;
+	};
+
+	// Find all images that aren't visible yet
+	var $images = $(e.target).find('.photos img').filter(isHidden);
+
+	// Remove their src attribute (and store it in the data-src attribute for now)
+	$images.each(function() {
+		$(this).data('src', $(this).prop('src'));
+		$(this).prop('src', $(this).data('placeholder-src') || emptyPixel);
+	});
+
+	// On scroll and resize we 'schedule' an update run
+	$(window).on('scroll resize', function() {
+		if (!triggered) {
+			window.requestAnimationFrame(update);
+			triggered = true;
+		}
 	});
 });

@@ -37,7 +37,20 @@
 					return !$iter->is_private('naam');
 				});
 
-			return $this->view->render_index($iters, compact('search'));
+			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
+				array('application/json', 'text/html', '*/*'));
+
+			// The JSON is mostly used by the text inputs that autosuggest names
+			if ($preferred == 'application/json')
+				echo json_encode(array_map(function($lid) {
+					return array(
+						'id' => $lid->get_id(),
+						'starting_year' => $lid->get('beginjaar'),
+						'first_name' => member_first_name($lid),
+						'name' => member_full_name($lid));
+				}, $iters));
+			else
+				return $this->view->render_index($iters, compact('search'));
 		}
 		
 		/** 

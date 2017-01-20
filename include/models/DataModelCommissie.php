@@ -62,6 +62,49 @@
 		{
 			return strstr($this['login'], '@') ? $this['login'] : $this['login'] . '@svcover.nl';
 		}
+
+		public function get_thumbnail()
+		{
+			return self::find_image(array(
+				'images/committees/' . $this->get('login') . 'tn.gif',
+				'images/committees/' . $this->get('login') . 'tn.jpg',
+				'images/committees/logos/' . $this->get('login') . '.png'
+			));
+		}
+
+		public function get_photo()
+		{
+			$path = self::find_image(array(
+				'images/committees/' . $this->get('login') . '.gif',
+				'images/committees/' . $this->get('login') . '.jpg'
+			));
+
+			return $path === null ? null : [
+				'url' => $path,
+				'orientation' => self::get_orientation($path)
+			];
+		}
+
+		static private function find_image($search_paths)
+		{
+			foreach ($search_paths as $path)
+				if (file_exists($path))
+					return $path;
+
+			return null;
+		}
+
+		static private function get_orientation($path)
+		{
+			list($width, $height) = getimagesize($path);
+
+			if ($width == $height)
+				return 'square';
+			if ($width > $height)
+				return 'landscape';
+			else
+				return 'portrait';
+		}
 	}
 
 	/**

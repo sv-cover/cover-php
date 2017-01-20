@@ -24,9 +24,6 @@ class DatabasePDO
 	{
 		/* Connect to database */
 		$this->_connect($dbid);
-
-		if (get_config_value('show_queries', false))
-			$this->history = array();
 	}
 	
 	/**
@@ -154,6 +151,24 @@ class DatabasePDO
 			/* Return the result */
 			return $result;
 		}
+	}
+
+	/**
+	 * Query the database with any query and return the value from a
+	 * single column for each row..
+	 * @param $query SQL query
+	 * @param $col column as integer or name
+	 */
+	public function query_column($query, $col = 0)
+	{
+		// Execute query with indices if col index is numeric. If it isn't,
+		// then fetch as an associated array.
+		$rows = $this->query($query, is_int($col));
+
+		// Create a getter for the col (which is a function that returns
+		// $rows[$col]) and apply it to every row.
+		// I just love functional programming. #sorry #notsorry
+		return array_map(getter($col), $rows);
 	}
 	
 	/**

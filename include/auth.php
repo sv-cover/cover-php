@@ -412,5 +412,5 @@ function nonce_action_name($action, array $arguments)
 		$arg_strings[] = strval($arg);
 	}
 
-	$action_name = implode('_', array_merge([$action], $arg_strings));
+	return implode('_', array_merge([$action], $arg_strings));
 }

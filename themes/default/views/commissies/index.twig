@@ -12,6 +12,13 @@
 	<h1>{{ __('Commissies') }}</h1>
 </div>
 <div class="messageBox">
+	{% if get_config_value('committee_battle', false) %}
+		<a href="committeebattle.php">
+			<div class="promotional-banner committee-battle-banner" data-photos="{{ view.get_committee_battle_banner_photos(iters)|json_encode()|e('html_attr') }}">
+				<h1>{{ __('Committee Battle') }}</h1>
+			</div>
+		</a>
+	{% endif %}
 	<ul class="commissie-index">
 	{% for committee in iters %}
 		<li class="commissie">
@@ -19,9 +26,8 @@
 			<span class="vacancy-badge">{{ __('Commissieleden gezocht!') }}</span>
 			{% endif %}
 			<a href="{{ controller.link_to_read(committee) }}" class="link">
-				{% set imgpath = view.get_commissie_thumb(committee) %}
-				{% if imgpath %}
-					<img src="{{ imgpath }}" class="thumbnail">
+				{% if committee.thumbnail %}
+					<img src="{{ committee.thumbnail }}" class="thumbnail">
 				{% endif %}
 				<span class="overlay">
 					<span class="name">{{ committee.naam }}</span>

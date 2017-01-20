@@ -513,13 +513,15 @@
 						profielen.lidid = leden.id
 					WHERE
 						type IN (" . implode(',', $this->visible_types) . ")
-						AND (CASE
+						AND (
+							unaccent(lower(CASE
 								WHEN coalesce(tussenvoegsel, '') = '' THEN
 									voornaam || ' ' || achternaam
 								ELSE
 									voornaam || ' ' || tussenvoegsel || ' ' || achternaam
-							END ILIKE '%{$name}%'
-							OR profielen.nick ILIKE '%{$name}%')
+							END)) ILIKE unaccent('%{$name}%')
+							OR unaccent(profielen.nick) ILIKE unaccent('%{$name}%')
+						)
 					GROUP BY
 						leden.id
 					ORDER BY

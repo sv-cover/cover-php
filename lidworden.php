@@ -115,14 +115,28 @@
 				'data' => json_encode($data),
 			]);
 
+			$this->_send_confirmation_mail($confirmation_code);
+
+			return $this->view->redirect('lidworden.php?verzonden=true');
+		}
+
+		private function _send_confirmation_mail($confirmation_code)
+		{
+			$db = get_db();
+
+			$data_str = $db->query_value(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+
+			if ($data_str === null)
+				throw new InvalidArgumentException('Could not find registration code');
+
+			$data = json_decode($data_str, true);
+
 			$mail = parse_email(
 				'lidworden_confirmation_' . strtolower(i18n_get_language()) . '.txt',
 				array_merge($data, compact('confirmation_code')));
 
 			mail($data['email_address'], __('Lidmaatschapsaanvraag bevestigen'), $mail,
 				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-			
-			return $this->view->redirect('lidworden.php?verzonden=true');
 		}
 
 		protected function _process_confirm($confirmation_code)
@@ -178,6 +192,50 @@
 
 			return $this->view->redirect('lidworden.php?confirmed=true');
 		}
+
+		public function run_pending()
+		{
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+				throw new UnauthorizedException();
+
+			$db = get_db();
+
+			$message = null;
+
+			switch (isset($_POST['action']) ? $_POST['action'] : null) {
+				case 'resend':
+					foreach ($_POST['confirmation_code'] as $confirmation_code)
+						$this->_send_confirmation_mail($confirmation_code);
+					$message = sprintf('Resent %d confirmation emails', count($_POST['confirmation_code']));
+					break;
+
+				case 'delete':
+					if (count($_POST['confirmation_code']) > 0) {
+						$db->query(sprintf("DELETE FROM registrations WHERE confirmation_code IN (%s)",
+							implode(', ', array_map(function($code) use ($db) {
+								return sprintf("'%s'", $db->escape_string($code));
+							}, $_POST['confirmation_code']))));
+
+						$message = sprintf('Deleted %d registrations', $db->get_affected_rows());
+					}
+					break;
+			}
+
+			$registrations = $db->query("
+				SELECT
+					confirmation_code,
+					data,
+					DATE(registerd_on) as registered_on
+				FROM
+					registrations
+				ORDER BY
+					registerd_on DESC");
+
+			foreach ($registrations as &$registration)
+				$registration['data'] = json_decode($registration['data'], true);
+
+			return $this->view->render_pending($registrations, $message);
+		}
 		
 		protected function run_impl()
 		{
@@ -189,6 +247,8 @@
 				return $this->view->render_submitted();
 			else if (isset($_GET['confirmed']))
 				return $this->view->render_confirmed();
+			else if (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation')
+				return $this->run_pending();
 			else {
 				return $this->view->render_form();
 			}

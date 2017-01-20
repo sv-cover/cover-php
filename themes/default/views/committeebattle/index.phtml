@@ -1,0 +1,49 @@
+<div class="pageheading">
+	<?php if (get_policy($model)->user_can_create()): ?>
+	<div class="controls inline">
+		<a href="<?=markup_format_attribute($controller->link_to_create()) ?>" class="create-link" data-placement-selector="modal" data-partial-selector=".committee-battle-form"><?=__('Ken punten toe')?></a>
+	</div>
+	<?php endif ?>
+	<h1>Committee Battle</h1>
+</div>
+<div class="messageBox committee-battle">
+	<div class="scores click-to-read-on" data-read-on-label="<?=markup_format_attribute(__('Toon alle commissies'))?>">
+		<table class="full-width-table committee-battle-scores">
+			<thead>
+				<tr>
+					<th><?=__('Positie')?></th>
+					<th><?=__('Commissie')?></th>
+					<th><?=__('Punten')?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($iter as $committee): ?>
+				<tr class="position-<?= $committee['position'] ?>">
+					<td><?= $committee['position'] ?></td>
+					<td>
+						<a href="commissies.php?commissie=<?=urlencode($committee['login'])?>"><?=markup_format_text($committee['naam'])?></a>
+						<ul class="inline-profile-list">
+						<?php foreach ($committee['members'] as $lid): ?>
+							<li><a href="profiel.php?lid=<?=$lid->get('id')?>" class="committee-member">
+								<img src="foto.php?lid_id=<?=$lid->get('id')?>&amp;format=square&amp;width=50" width="25">
+								<span class="name"><?=markup_format_text(member_full_name($lid, BE_PERSONAL)) ?></span>
+							</a></li>
+						<?php endforeach ?>
+						</ul>
+					</td>
+					<td><a href="<?=markup_format_attribute($controller->link_to_read($committee))?>"><?=$committee['score']?></a></td>
+				</tr>
+				<?php endforeach ?>
+			</tbody>
+		</table>
+	</div>
+	<div class="content">
+		<?php $editable = new ControllerEditable('committee_battle', COMMISSIE_BESTUUR); ?>
+		<?php if($editable->user_can_update()): ?>
+			<div class="controls inline">
+				<a href="<?=markup_format_attribute($editable->link_to_update()) ?>" class="edit-link"><?= __('Bewerk omschrijving')?></a>
+			</div>
+		<?php endif ?>
+		<?php $editable->run() ?>
+	</div>
+</div>

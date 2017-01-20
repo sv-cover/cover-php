@@ -20,6 +20,8 @@ SET client_min_messages = warning;
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
+-- A function that turns Jösé to Jose :)
+CREATE EXTENSION unaccent;
 
 --
 -- TOC entry 2627 (class 0 OID 0)
@@ -108,6 +110,25 @@ CREATE TABLE commissies (
     hidden integer NOT NULL DEFAULT 0,
     vacancies DATE DEFAULT NULL,
     CONSTRAINT commissies_login_key UNIQUE(login)
+);
+
+CREATE TABLE committee_battle_scores (
+    id SERIAL NOT NULL PRIMARY KEY,
+    points integer,
+    awarded_for text default '',
+    awarded_on timestamp without time zone
+);
+
+CREATE TABLE committee_battle_committees (
+    id SERIAL NOT NULL PRIMARY KEY,
+    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    committee_id integer NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE committee_battle_users (
+    id SERIAL NOT NULL PRIMARY KEY,
+    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 --

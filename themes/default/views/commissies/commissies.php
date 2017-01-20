@@ -11,41 +11,10 @@ class CommissiesView extends CRUDView
 			[get_theme_data('styles/commissies.css')]);
 	}
 
-	public function get_commissie_thumb(DataIterCommissie $commissie)
+	public function get_committee_battle_banner_photos($iter)
 	{
-		return $this->find_image(array(
-			'images/committees/' . $commissie->get('login') . 'tn.gif',
-			'images/committees/' . $commissie->get('login') . 'tn.jpg',
-			'images/committees/logos/' . $commissie->get('login') . '.png'
-		));
-	}
-
-	public function get_commissie_photo(DataIterCommissie $commissie)
-	{
-		$path = $this->find_image(array(
-			'images/committees/' . $commissie->get('login') . '.gif',
-			'images/committees/' . $commissie->get('login') . '.jpg'
-		));
-
-		if (!$path)
-			return null;
-
-		list($width, $height) = getimagesize($path);
-		$orientation = $height > $width ? 'vertical' : 'horizontal';
-
-		return [
-			'orientation' => $orientation,
-			'url' => $path
-		];
-	}
-
-	private function find_image($search_paths)
-	{
-		foreach ($search_paths as $path)
-			if (file_exists($path))
-				return $path;
-
-		return null;
+		$committee_photos = array_map(getter('thumbnail'), $iter);
+		return array_values(array_filter($committee_photos));
 	}
 
 	public function get_summary(DataIterCommissie $commissie)

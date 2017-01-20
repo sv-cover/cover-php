@@ -77,7 +77,7 @@ function find_word_bound($text, $cursor)
 
 function parse_search_query($query)
 {
-	return preg_split('/\s+/', $query);
+	return preg_split('/\s+/', trim($query));
 }
 
 function parse_search_query_for_text($query)

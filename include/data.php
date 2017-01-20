@@ -56,7 +56,7 @@
 			$db = new $database_class($dbids[$environment]);
 
 			/* Enable query history if requested */
-			if (get_config_value('show_queries', false))
+			if (get_static_config_value('show_queries', false))
 				$db->history = array();
 		}
 		
@@ -72,6 +72,10 @@
 	  * @result the POST value or null if the key isn't in $_POST
 	  */
 	function get_post($key) {
+		// Strip array field name thingies
+		if (substr($key, -2) == '[]')
+			$key = substr($key, 0, -2);
+
 		if (!isset($_POST[$key]))
 			return null;
 		
