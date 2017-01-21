@@ -199,12 +199,7 @@ class DatabasePDO
 
 			$k .= '"' . $keys[$i] . '"';
 
-			if ($values[$keys[$i]] === null)
-				$v .= 'NULL';
-			elseif ($values[$keys[$i]] instanceof DatabaseLiteral)
-				$v .= $values[$keys[$i]]->toSQL();
-			else
-				$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
+			$v .= $this->_encode_value($values[$keys[$i]]);
 		}
 
 		$query = $query . ' ' . $k . ') ' . $v . ');';
@@ -257,20 +252,11 @@ class DatabasePDO
 				$k .= ', ';
 
 			/* Add <key>= */
-			$k .= '"' . $keys[$i] . '"=';
-
-			if ($values[$keys[$i]] === null)
-				$k .= 'NULL';
-			elseif ($values[$keys[$i]] instanceof DatabaseLiteral)
-				$k .= $values[$keys[$i]]->toSQL();
-			elseif (is_int($values[$keys[$i]]))
-				$k .= sprintf('%d', $values[$keys[$i]]);
-			elseif (is_bool($values[$keys[$i]]))
-				$k .= $values[$keys[$i]] ? '1' : '0';
-			elseif (is_string($values[$keys[$i]]))
-				$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
-			else
-				throw new InvalidArgumentException("Cannot encode the value of field '{$keys[$i]}': unsupported datatype " . gettype($values[$keys[$i]]));
+			try {
+				$k .= sprintf('"%s"=%s', $keys[$i], $this->_encode_value($values[$keys[$i]]));
+			} catch (InvalidArgumentException $e) {
+				throw new InvalidArgumentException("Cannot encode the value of field '{$keys[$i]}'", null, $e);
+			}
 		}
 
 		$query .= $k;
@@ -283,6 +269,24 @@ class DatabasePDO
 		$this->query($query);
 
 		return $this->last_affected;
+	}
+
+	private function _encode_value($value)
+	{
+		if ($value === null)
+			return 'NULL';
+		elseif ($value instanceof DateTime)
+			return "'" . $value->format('Y-m-d H:i:s') . "'";
+		elseif ($value instanceof DatabaseLiteral)
+			return $value->toSQL();
+		elseif (is_int($value))
+			return sprintf('%d', $value);
+		elseif (is_bool($value))
+			return $value ? '1' : '0';
+		elseif (is_string($value))
+			return "'" . $this->escape_string($value) . "'";
+		else
+			throw new InvalidArgumentException("unsupported datatype " . gettype($value));
 	}
 
 	/**
