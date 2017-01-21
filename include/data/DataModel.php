@@ -89,6 +89,9 @@
 			foreach ($iter->data as $key => $value)
 				if (in_array($key, $fields))
 					$data[$key] = $value;
+
+			if (count($data) === 0)
+				throw new LogicException('Trying to insert empty iterator into table');
 			
 			$this->db->insert($table, $data);
 

@@ -1155,29 +1155,6 @@
 			return $id;
 		}
 		
-		/**
-		  * Get visit info
-		  * @forumid the id of the forum to get visit info for
-		  * @member_id the id of the member to get visit info for
-		  *
-		  * @result a #DataIter or null if no visit info could be found
-		  */
-		private function _get_visit_info_real($forumid, $member_id)
-		{
-			$row = $this->db->query_first('
-					SELECT
-						*
-					FROM
-						forum_visits
-					WHERE
-						forum = ' . intval($forumid) . ' AND
-						lid = ' . intval($member_id) . '
-					LIMIT
-						1');
-			
-			return $this->_row_to_iter($row);
-		}
-		
 		/** 
 		  * Returns a #DataIter of the special forum ('weblog','news', or 'poll')
 		  * @name the name of the special forum
@@ -1203,6 +1180,29 @@
 		}
 
 		/**
+		  * Get visit info
+		  * @forumid the id of the forum to get visit info for
+		  * @member_id the id of the member to get visit info for
+		  *
+		  * @result a #DataIter or null if no visit info could be found
+		  */
+		private function _get_visit_info_real($forum_id, $member_id)
+		{
+			$row = $this->db->query_first('
+					SELECT
+						*
+					FROM
+						forum_visits
+					WHERE
+						forum = ' . intval($forum_id) . ' AND
+						lid = ' . intval($member_id) . '
+					LIMIT
+						1');
+			
+			return $this->_row_to_iter($row);
+		}
+		
+		/**
 		  * Get visit info. Creates a visit info entry if none exists
 		  * yet
 		  * @forumid the id of the forum to get visit info for
@@ -1210,16 +1210,17 @@
 		  *
 		  * @result a #DataIter
 		  */
-		public function get_visit_info($forumid, $member_id)
+		public function get_visit_info($forum_id, $member_id)
 		{
-			$iter = $this->_get_visit_info_real($forumid, $member_id);
+			$iter = $this->_get_visit_info_real($forum_id, $member_id);
 			
 			if (!$iter) {
-				$iter = new $this->dataiter($this, null, array(
-						'forum' => intval($forumid),
-						'lid' => intval($member_id)));
-				$this->_insert('forum_visits', $iter);
-				$iter = $this->_get_visit_info_real($forumid, $member_id);
+				$this->db->insert('forum_visits', [
+					'forum' => intval($forum_id),
+					'lid' => intval($member_id)
+				]);
+
+				$iter = $this->_get_visit_info_real($forum_id, $member_id);
 			}
 
 			return $iter;
