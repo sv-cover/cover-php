@@ -13,7 +13,7 @@
 		
 		<fieldset>
 			<legend>
-				{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() != null}) }}
+				{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }) }}
 				{{ html_label(__('Overschrijf commissielidmaatschappen'), 'override_committees') }}
 			</legend>
 			
@@ -30,7 +30,7 @@
 		
 		<fieldset>
 			<legend>
-				{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() != null}) }}
+				{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }) }}
 				{{ html_label(__('Overschrijf lidnummer'), 'override_member') }}
 			</legend>
 

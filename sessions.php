@@ -37,7 +37,15 @@ class ControllerSessions extends Controller
 				get_identity()->reset_member();
 
 			if (isset($_POST['override_committees']))
-				get_identity()->override_committees(isset($_POST['override_committee_ids']) ? $_POST['override_committee_ids'] : []);
+				get_identity()->override_committees(
+					isset($_POST['override_committee_ids'])
+						? array_filter(
+							$_POST['override_committee_ids'],
+							function($id) {
+								return $id !== ''; // because 0 is a valid id, namely the board (thanks to the idiot that did that)
+							})
+						: []
+				);
 			else
 				get_identity()->reset_committees();
 

@@ -156,7 +156,16 @@ class HTMLTwigExtension extends Twig_Extension
 			}
 		}
 
-		return self::input_field($name, null, $params);
+		$hidden_field = self::input_field($name, null, [
+			'type' => 'hidden',
+			'value' => '',
+			'nopost' => true,
+			'id' => null
+		]);
+
+		$checkbox_field = self::input_field($name, null, $params);
+
+		return $hidden_field . $checkbox_field;
 	}
 
 	static public function input_radio($name, $data, $value, array $params = array())
