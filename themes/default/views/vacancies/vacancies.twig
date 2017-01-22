@@ -16,13 +16,13 @@
 			{{ item.created  |date() }}
 		</div>
 
-		<div class="block">
+		<div class="companyDetails">
 			<div class="companyImage">
 				{% if not (view.get_logo(item.company) == "geen foto") %}
 					<img src="{{view.get_logo(item.company)}}">
 				{% endif %}
 			</div>
-			<div class="">
+			<div class="col-3">
 				<dl>
 					<span class="title">
 						<h2>{{ item.title }}</h2>
@@ -34,16 +34,18 @@
 						<h3>{{view.get_type(item.type)}}</h3>
 					{% endif %}
 					{% if item.study_year %}
+						<dt>{{ __('Studiejaar') }}<dt>
 						<dd>{{ view.get_study_year(item.study_year) }}</dd>
 					{% endif %}
 				</dl>
 			</div>
-			<div class="">
+			<div class="col-3">
 				<dl> 
 					{% if item.hours %}
 						<dt>{{ __('Tijd') }}</dt>
 						<dd>{{view.get_hours(item.hours) }}</dd>
 					{% endif %}
+					<br>
 					{% if item.experience %}
 						<dt>{{ __('Ervaring') }}</dt> 
 						<dd>{{item.experience}}</dd>
@@ -52,7 +54,7 @@
 			</div>
 		</div>
 		
-		<hr class="separator">
+		<hr class="separator after">
 
 		<div class="description">
 			{{ item.description|parse_markup }}
