@@ -2832,6 +2832,18 @@ CREATE TABLE applications (
     secret TEXT NOT NULL
 );
 
+CREATE TABLE vacancies(
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    type integer,
+    url TEXT NOT NULL,
+    company TEXT NOT NULL,
+    hours integer,
+    experience TEXT NOT NULL,
+    study_year integer,
+    created timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+);
 --
 -- TOC entry 2390 (class 2606 OID 25986)
 -- Name: actieveleden_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 

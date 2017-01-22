@@ -1,0 +1,56 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title iter.title ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ iter.title }}</h1>
+<div class="messageBox vacancy frontpage">
+	<div class="newsTitle">
+		<div class="right">
+			{{ iter.created }}
+		</div>
+	</div>
+	
+	<hr class="separator">
+	
+	<div class="details">
+		<dl>
+			{% if iter.company %}
+				<dd>{{ iter.company }}</dd>
+			{% endif %}
+			{% if iter.type %}
+				{{view.get_type(iter.type)}}
+			{% endif %}
+			{% if iter.hours %}
+				<dt>{{ __('Tijd') }}</dt>
+				<dd>{{view.get_hours(iter.hours) }}</dd>
+			{% endif %}
+			{% if iter.experience %}
+				<dt>{{ __('Ervaring') }}</dt> 
+				<dd>{{iter.experience}}</dd>
+			{% endif %}
+			{% if iter.study_year %}
+				<dt>{{__('Studiejaar')}} </dt>
+				<dd>{{ view.get_study_year(iter.study_year) }}</dd>
+			{% endif %}
+		</dl>
+	</div>
+
+	<div class="separator">
+	</div>
+
+	<div class="bericht">
+		{{ iter.description|parse_markup }}
+	</div>
+
+	<ul class="actions">
+		<li><a href="{{ controller.link_to_index() }}">{{ __('Alle vacatures bekijken') }}</a></li>
+		{% if user_can_update iter %}
+		<li><a href="{{ controller.link_to_update(iter) }}">{{ __('Wijzig') }}</a></li>
+		{% endif %}
+		{% if user_can_delete iter %}
+		<li><a href="{{ controller.link_to_delete(iter) }}">{{ __('Verwijder') }}</a></li>
+		{% endif %}
+	</ul>
+</div>
+{% endblock %}

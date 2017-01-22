@@ -1,0 +1,72 @@
+<div class="newsHeading">
+	{# Normally I would use controller.new_iter here, but this template is embedded
+	in the homepage and no controller is passed in. This is also the reason that
+	the controller isn't used to generate the links, as is done in all the other
+	CRUD-based views. #}
+	{% if user_can_create global.models.Vacancy.new_iter %}
+		<div class="controls inline"><a href="vacancies.php?view=create" class="create-link">{{ __('Nieuwe vacature') }}</a></div>
+	{% endif %}
+	
+	<h1>{{ __('vacatures') }}</h1>
+</div>
+
+{% for item in iters if user_can_read item %}
+	<div class="messageBox vacancy frontpage">
+		<div class="right">
+			{{ item.created  |date() }}
+		</div>
+
+		<div class="block">
+			<div class="companyImage">
+				{% if not (view.get_logo(item.company) == "geen foto") %}
+					<img src="{{view.get_logo(item.company)}}">
+				{% endif %}
+			</div>
+			<div class="">
+				<dl>
+					<span class="title">
+						<h2>{{ item.title }}</h2>
+					</span>
+					{% if item.company %}
+						<h3>{{ item.company }}</h3>
+					{% endif %}
+					{% if item.type %}
+						<h3>{{view.get_type(item.type)}}</h3>
+					{% endif %}
+					{% if item.study_year %}
+						<dd>{{ view.get_study_year(item.study_year) }}</dd>
+					{% endif %}
+				</dl>
+			</div>
+			<div class="">
+				<dl> 
+					{% if item.hours %}
+						<dt>{{ __('Tijd') }}</dt>
+						<dd>{{view.get_hours(item.hours) }}</dd>
+					{% endif %}
+					{% if item.experience %}
+						<dt>{{ __('Ervaring') }}</dt> 
+						<dd>{{item.experience}}</dd>
+					{% endif %}
+				</dl>
+			</div>
+		</div>
+		
+		<hr class="separator">
+
+		<div class="description">
+			{{ item.description|parse_markup }}
+		</div>
+
+		<ul class="actions">
+			{% if user_can_update item %}
+			<li><a href="vacancies.php?view=update&amp;id={{ item.id }}"
+				data-partial-selector=".vacancy"
+				data-placement-selector=".vacancy">{{ __('Wijzig') }}</a></li>
+			{% endif %}
+			{% if user_can_delete item %}
+			<li><a href="vacancies.php?view=delete&amp;id={{ item.id }}">{{ __('Verwijder') }}</a></li>
+			{% endif %}
+		</ul>
+	</div>
+{% endfor %}
