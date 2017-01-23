@@ -30,6 +30,14 @@
 		abstract static public function fields();
 
 		/**
+		 * Defines the set of rules applied during validation.
+		 */
+		static public function rules()
+		{
+			return [];
+		}
+
+		/**
 		 * Clones a DataIter. Useful for transforming one iter to another.
 		 */
 		static public function from_iter(DataIter $iter)
