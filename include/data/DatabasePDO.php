@@ -276,7 +276,7 @@ class DatabasePDO
 		if ($value === null)
 			return 'NULL';
 		elseif ($value instanceof DateTime)
-			return "'" . $value->format('Y-m-d H:i:s') . "'";
+			return sprintf("'%s'", $value->format('Y-m-d H:i:s'));
 		elseif ($value instanceof DatabaseLiteral)
 			return $value->toSQL();
 		elseif (is_int($value))
@@ -284,9 +284,9 @@ class DatabasePDO
 		elseif (is_bool($value))
 			return $value ? '1' : '0';
 		elseif (is_string($value))
-			return "'" . $this->escape_string($value) . "'";
+			return sprintf("'%s'",  $this->escape_string($value));
 		else
-			throw new InvalidArgumentException("unsupported datatype " . gettype($value));
+			throw new InvalidArgumentException('Unsupported datatype ' . gettype($value));
 	}
 
 	/**
