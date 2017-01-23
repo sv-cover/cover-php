@@ -327,12 +327,12 @@ class ControllerProfiel extends Controller
 		{
 			case 'subscribe':
 				if (get_policy($model)->user_can_subscribe($mailing_list))
-					$model->aanmelden($mailing_list, $iter['id']);
+					$model->subscribe($mailing_list, $iter['id']);
 				break;
 
 			case 'unsubscribe':
 				if (get_policy($model)->user_can_unsubscribe($mailing_list))
-					$model->afmelden($mailing_list, $iter['id']);
+					$model->unsubscribe($mailing_list, $iter['id']);
 				break;
 		}
 

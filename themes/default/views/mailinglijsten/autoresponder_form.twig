@@ -1,13 +1,18 @@
-<h1><?=__('Automatisch bericht wijzigen')?></h1>
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Automatisch bericht wijzigen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Automatisch bericht wijzigen') }}</h1>
 <div class="messageBox">
-	<form method="post" action="" class="vertical-form">
+	<form method="post" action="{{ controller.link_to_update_autoresponder(iter, autoresponder)|e('html_attr') }}" class="vertical-form">
 		<div>
-			<?=label(__('Onderwerp'), 'subject', $errors, true)?>
-			<?=input_text('subject', ['subject' => $iter->get($subject_field)], 'required', 'required')?>
+			{{ html_label(__('Onderwerp'), autoresponder ~ '_subject', errors=errors, required=true) }}
+			{{ html_input_text(autoresponder ~ '_subject', iter, errors=errors, required=true) }}
 		</div>
 
 		<div>
-			<?=label(__('Bericht'), 'message', $errors, true)?>
+			{{ html_label(__('Bericht'), autoresponder ~ '_message', errors=errors) }}
 
 			<div id="wysihtml-toolbar" class="button-bar" style="display: none;">
 				<span class="button-group">
@@ -36,22 +41,23 @@
 				</span>
 			</div>
 
-			<?=textarea_field('message', ['message' => $iter->get($message_field)], $errors, 'rows', 10, 'id', 'field-message')?>
+			{{ html_textarea_field(autoresponder ~ '_message', iter, errors=errors, rows=10) }}
 		</div>
 
 		<div>
-			<button type="submit" class="button"><?= __('Wijzig e-mail') ?></button>
-			<a href="mailinglijsten.php?lijst_id=<?=$iter->get_id()?>"><?=__('Terug naar mailinglijst')?></a>
+			<button type="submit" class="button">{{ __('Wijzig e-mail') }}</button>
+			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Terug naar mailinglijst') }}</a>
 		</div>
 	</form>
 </div>
-<script src="<?=get_theme_data('data/wysihtml5x-toolbar.min.js')?>"></script>
-<script src="<?=get_theme_data('data/wysihtml5x-parser-rules-simple.js')?>"></script>
+<script src="{{ link_static('data/wysihtml5x-toolbar.min.js')|e('html_attr') }}"></script>
+<script src="{{ link_static('data/wysihtml5x-parser-rules-simple.js')|e('html_attr') }}"></script>
 <script>
 	jQuery(function($) {
-		var editor = new wysihtml5.Editor('field-message',{
+		var editor = new wysihtml5.Editor({{ autoresponder ~ '_message'|json_encode() }},{
 			'toolbar': 'wysihtml-toolbar',
 			'parserRules': wysihtml5ParserRules
 		});
 	});
 </script>
+{% endblock %}

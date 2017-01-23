@@ -2,9 +2,22 @@
 
 require_once 'include/data/DataModel.php';
 
-class DataIterMailinglijstArchief extends DataIter
+class DataIterMailinglistArchive extends DataIter
 {
-	public function get_header($name)
+	static public function fields()
+	{
+		return [
+			'id',
+			'mailinglijst',
+			'commissie',
+			'bericht',
+			'sender',
+			'return_code',
+			'verwerkt_op'
+		];
+	}
+
+	public function header($name)
 	{
 		$end_header = strpos($this->get('bericht'), "\n\n");
 
@@ -50,9 +63,9 @@ class DataIterMailinglijstArchief extends DataIter
 	}
 }
 
-class DataModelMailinglijstArchief extends DataModel
+class DataModelMailinglistArchive extends DataModel
 {
-	/*protected*/ var $dataiter = 'DataIterMailinglijstArchief';
+	public $dataiter = 'DataIterMailinglistArchive';
 
 	public function __construct($db)
 	{

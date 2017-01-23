@@ -2,11 +2,9 @@
 require_once 'include/form.php';
 require_once 'include/markup.php';
 
-class MailinglijstenView extends View
+class MailinglijstenView extends CRUDView
 {
-	protected $__file = __FILE__;
-
-	public function get_all_commissies()
+	public function committee_options()
 	{
 		$commissie_model = get_model('DataModelCommissie');
 		$commissies = $commissie_model->get();
@@ -18,29 +16,38 @@ class MailinglijstenView extends View
 		return $values;
 	}
 
-	public function get_all_type_options()
+	public function type_options()
 	{
 		return array(
-			DataModelMailinglijst::TYPE_OPT_IN => __('Opt-in'),
-			DataModelMailinglijst::TYPE_OPT_OUT => __('Opt-out')
+			DataModelMailinglist::TYPE_OPT_IN => __('Opt-in'),
+			DataModelMailinglist::TYPE_OPT_OUT => __('Opt-out')
 		);
 	}
 
-	public function get_all_toegang_options()
+	public function toegang_options()
 	{
 		return array(
-			DataModelMailinglijst::TOEGANG_IEDEREEN => __('Iedereen'),
-			DataModelMailinglijst::TOEGANG_DEELNEMERS => __('Alleen mensen op de mailinglijst'),
-			DataModelMailinglijst::TOEGANG_COVER => __('Alleen *@svcover.nl adressen'),
-			DataModelMailinglijst::TOEGANG_EIGENAAR => __('Alleen de commissie van de lijst')
+			DataModelMailinglist::TOEGANG_IEDEREEN => __('Iedereen'),
+			DataModelMailinglist::TOEGANG_DEELNEMERS => __('Alleen mensen op de mailinglist'),
+			DataModelMailinglist::TOEGANG_COVER => __('Alleen *@svcover.nl adressen'),
+			DataModelMailinglist::TOEGANG_EIGENAAR => __('Alleen de commissie van de lijst')
 		);
 	}
 
-	public function uid($abonnement)
+	public function uid(DataIterMailinglistSubscription $abonnement)
 	{
-		return sprintf('aanmelding%s',
-			$abonnement->has('abonnement_id')
-				? $abonnement->get('abonnement_id')
-				: $abonnement->get('lid_id'));
+		return sprintf('aanmelding%s', $abonnement['abonnement_id'] ? $abonnement['abonnement_id'] : $abonnement['lid_id']);
+	}
+
+	public function render_unsubscribe_form(DataIterMailinglist $list, DataIterMailinglistSubscription $subscription)
+	{
+		return $this->render('unsubscribe_form.twig', compact('list', 'subscription'));
+	}
+
+	public function render_autoresponder_form(DataIterMailinglist $iter, $autoresponder, $success, $errors)
+	{
+		return $success
+			? $this->redirect($this->controller->link_to_update($iter))
+			: $this->render('autoresponder_form.twig', compact('iter', 'autoresponder', 'success', 'errors'));
 	}
 }

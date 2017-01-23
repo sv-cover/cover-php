@@ -1,0 +1,138 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title iter.naam ~ ' :: ' ~ __('Mailinglijsten') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageHeading">
+	{% if user_can_update iter %}
+		<div class="controls inline">
+			<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="edit-link">{{ __('Bewerk mailinglijsteigenschappen') }}</a>
+		</div>
+	{% endif %}
+	<h1>{{ __('Mailinglijsten') }} / {{ iter.naam }}</h1>
+</div>
+<div class="messageBox">
+	<div class="section mailinglist-header">
+		<p>
+			<em>{{ __('Adres') }}: {{ iter.adres }}</em>
+			{{ iter.omschrijving|parse_markup }}
+		</p>
+	</div>
+
+	{# if ($model->member_can_access_archive($lijst)): #}
+		<a href="" class="button">{{ __('Bekijk archief') }}</a>
+	{# endif #}
+</div>
+
+<div class="messageBox">
+	<h2>{{ __('Aanmeldingen') }}</h2>
+	<div class="section">
+		<form method="post" action="{{ controller.link_to_read(iter)|e('html_attr') }}">
+			{{ html_nonce('subscribe_member', iter) }}
+			{{ html_label(__('Lidnummer(s)'), 'member_id') }}:</label>
+			{{ html_input_text('member_id', []) }}
+			<button type="submit" class="button">{{ __('Meld aan') }}</button>
+		</form>
+	</div>
+
+	<div class="section">
+		<form class="vertical-form" method="post" action="{{ controller.link_to_read(iter)|e('html_attr') }}">
+			{{ html_nonce('subscribe_guest', iter) }}
+			<div>
+				{{ html_label(__('Naam'), 'naam') }}
+				{{ html_input_text('naam', []) }}
+			</div>
+			<div>
+				{{ html_label(__('E-Mail adres'), 'email') }}
+				{{ html_input_text('email', [], type='email') }}
+			</div>
+			<div class="controls">
+				<button type="submit" class="button">{{ __('Meld aan') }}</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="section">
+		<form method="post" action="{{ controller.link_to_read(iter)|e('html_attr') }}">
+		{{ html_nonce('unsubscribe', iter) }}
+		<table class="full-width-table">
+			<thead>
+				<tr>
+					<th width="20"></th>
+					<th>{{ __('Naam') }}</th>
+					<th>{{ __('E-Mail adres') }}</th>
+					<th width="40"></th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for subscription in iter.subscriptions %}
+				<tr>
+					<td><input type="checkbox" id="{{ view.uid(subscription) }}" name="unsubscribe[]" value="{{ (subscription.id ? subscription.id : subscription.lid_id)|e('html_attr') }}"></td>
+					{% if subscription.lid_id %}
+					<td><label for="{{ view.uid(subscription) }}">{{ subscription.lid|full_name() }}</label></td>
+					{% else %}
+					<td><label for="{{ view.uid(subscription) }}">{{ subscription.naam }}</label></td>
+					{% endif %}
+					<td>{{ subscription.email }}</td>
+					{% if subscription.lid_id %}
+					<td><a href="profiel.php?lid={{ subscription.lid_id }}">{{ __('Profiel') }}</a></td>
+					{% else %}
+					<td></td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<button class="button" type="submit">{{ __('Meld geselecteerde adressen af') }}</button>
+		</form>
+	</div>
+</div>
+
+<script>
+jQuery(function($) {
+	function split(val) {
+		return val.split(/,\s*/);
+	}
+
+	function extractLast(term) {
+		return split(term).pop();
+	}
+
+	$('.mailinglist-header + form').append(
+		$('<a>')
+			.addClass('button')
+			.attr({'href': '#mailinglist-settings'})
+			.text({{ __('Bewerk mailinglijsteigenschappen')|json_encode|raw }}));
+	
+	$('#lid_id')
+		.bind('keydown', function(e) {
+			if (event.keyCode === $.ui.keyCode.TAB
+				&& $(this).data('ui-autocomplete').menu.active)
+				e.preventDefault();
+		})
+		.autocompleteAlmanac({
+			source: function(request, response) {
+				$.getJSON('almanak.php', {
+					'search': extractLast(request.term)
+				}, response);
+			},
+			search: function() {
+				// custom minLength
+				if (extractLast(this.value).length < 2)
+					return false;
+			},
+			select: function(event, ui) {
+				var terms = split(this.value);
+				// remove the current input
+				terms.pop();
+				// add the selected item
+				terms.push(ui.item.id);
+				// add placeholder to get the comma-and-space at the end
+				terms.push('');
+				this.value = terms.join(', ');
+				return false;
+			}
+		});
+});
+</script>
+{% endblock %}

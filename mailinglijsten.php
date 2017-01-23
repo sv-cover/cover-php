@@ -2,99 +2,107 @@
 
 require_once 'include/init.php';
 require_once 'include/member.php';
-require_once 'include/controllers/Controller.php';
+require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerMailinglijsten extends Controller
+class ControllerMailinglijsten extends ControllerCRUD
 {
+	private $message_model;
+
+	private $subscription_model;
+
 	public function __construct()
 	{
-		$this->model = get_model('DataModelMailinglijst');
+		$this->model = get_model('DataModelMailinglist');
+
+		$this->message_model = get_model('DataModelMailinglistArchive');
+
+		$this->subscription_model = get_model('DataModelMailinglistSubscription');
+
+		$this->member_model = get_model('DataModelMember');
+
+		$this->view = View::byName('mailinglijsten', $this);
 	}
 
-	private function update_subscriptions(array $subscriptions)
+	protected function _index()
 	{
-		$me = logged_in();
+		$iters = parent::_index();
 
-		$this->model->update_abonnementen($me['id'], $subscriptions);
+		usort($iters, function($a, $b) {
+			return strcasecmp($a['naam'], $b['naam']);
+		});
+
+		return $iters;
 	}
 
-	protected function _process_new_list()
+	public function link_to_update_autoresponder(DataIterMailinglist $list, $message)
 	{
-		if (!get_policy($this->model)->user_can_create($this->model->new_iter()))
-			throw new UnauthorizedException('You are not allowed to create new mailing lists');
+		return $this->link(['id' => $list['id'], 'view' => 'update_autoresponder', 'autoresponder' => $message]);
+	}
 
-		$id = $this->model->create_lijst(
-			$_POST['adres'], $_POST['naam'],
-			$_POST['omschrijving'],
-			!empty($_POST['publiek']),
-			$_POST['type'],
-			$_POST['toegang'],
-			$_POST['commissie']);
+	protected function run_update_autoresponder(DataIterMailinglist $list)
+	{
+		if (!get_policy($this->model)->user_can_update($list))
+			throw new Exception('You are not allowed to edit this ' . get_class($list) . '.');
 
-		if ($id > 0)
-			return header('Location: mailinglijsten.php?lijst_id=' . $id);
+		$success = false;
+
+		$errors = array();
+
+		$autoresponder = $_GET['autoresponder'];
+
+		if (!in_array($autoresponder, ['on_subscription', 'on_first_email']))
+			throw new InvalidArgumentException('Invalid value for autoresponder parameter');
+
+
+		if ($this->_form_is_submitted('update', $list))
+		{
+			$data = [
+				$autoresponder . '_subject' => $_POST[$autoresponder . '_subject'],
+				$autoresponder . '_message' => $_POST[$autoresponder . '_message']
+			];
 		
-		echo 'Error';
-	}
-
-	protected function _process_remove_subscription()
-	{
-		$abonnement = $this->model->get_abonnement($_POST['abonnement_id']);
-
-		$this->model->afmelden_via_abonnement_id($_POST['abonnement_id']);
-
-		header(sprintf('Location: mailinglijsten.php?lijst_id=%d', $abonnement->get('lijst_id')));
-	}
-
-	protected function run_unsubscribe_confirm($abonnement_id)
-	{
-		$abonnement = $this->model->get_abonnement($abonnement_id);
-		$uitgeschreven = false;
-
-		if ($abonnement && !empty($_POST['unsubscribe'])) {
-			$this->model->afmelden($abonnement->get('abonnement_id'));
-			$uitgeschreven = true;
+			if ($this->_update($list, $data, $errors))
+				$success = true;
 		}
 
-		$this->get_content('mailinglijsten::unsubscribe', null, compact('abonnement', 'uitgeschreven'));
+		return $this->view()->render_autoresponder_form($list, $autoresponder, $success, $errors);
 	}
 
-	protected function run_subscriptions_management($lijst_id)
+	protected function run_unsubscribe_confirm($subscription_id)
 	{
-		$lijst = $this->model->get_iter($lijst_id);
+		$subscription = $this->subscription_model->get_iter($subscription_id);
 
+		$list = $subscription['mailinglist'];
+
+		if ($subscription->is_active() && $this->_form_is_submitted('unsubscribe', $subscription))
+			$subscription->cancel();
+
+		return $this->view->render_unsubscribe_form($list, $subscription);
+	}
+	
+	protected function run_update_subscriptions(DataIterMailinglist $lijst)
+	{
 		$return_url = isset($_POST['referer'])
 			? $_POST['referer']
 			: 'mailinglijsten.php?lijst_id=' . $lijst->get('id');
 
-		if (isset($_POST['action']))
-		{
-			switch ($_POST['action'])
-			{
-				case 'subscribe':
-					if ($this->model->member_can_subscribe($lijst))
-						$this->model->aanmelden($lijst, logged_in('id'));
-					break;
-
-				case 'unsubscribe':
-					if ($this->model->member_can_unsubscribe($lijst))
-						$this->model->afmelden($lijst, logged_in('id'));
-					break;
-			}
-			
-			return $this->redirect($return_url);
-		}
+		$policy = get_policy($this->subscription_model);
 
 		// Someone ordered someone execu.. unsubcribed? Bye bye.
-		if (!empty($_POST['unsubscribe']) && $this->model->member_can_edit($lijst))
+		if (!empty($_POST['unsubscribe']) && $policy->user_can_edit($lijst))
 		{
-			foreach ($_POST['unsubscribe'] as $lid_id)
-				if (!ctype_digit($lid_id))
-					$this->model->afmelden_via_abonnement_id($lid_id);
-				else
-					$this->model->afmelden($lijst, $lid_id);
+			foreach ($_POST['unsubscribe'] as $lid_id) {
+				if (!ctype_digit($lid_id)) {
+					$subscription = $this->subscription_model->get_iter($lid_id);
+					$subscription->cancel();
+				}
+				else {
+					$member = $this->member_model->get_iter($lid_id);
+					$this->subscription_model->unsubscribe_member($lijst, $member);
+				}
+			}
 
-			return $this->redirect($return_url);
+			return $this->view->redirect($return_url);
 		}
 
 		if (!empty($_POST['subscribe']) && $this->model->member_can_edit($lijst))
@@ -142,7 +150,7 @@ class ControllerMailinglijsten extends Controller
 		$this->get_content('mailinglijsten::mailinglist', null, compact('lijst', 'aanmeldingen', 'aangemeld'));
 	}
 
-	protected function show_list_archive($list_id)
+	protected function run_list_archive($list_id)
 	{
 		$lijst = $this->model->get_lijst($list_id);
 
@@ -156,7 +164,7 @@ class ControllerMailinglijsten extends Controller
 		return $this->get_content('mailinglijsten::list_archive', null, compact('lijst', 'messages'));
 	}
 
-	protected function show_list_message($message_id)
+	protected function run_list_message($message_id)
 	{
 		$model = get_model('DataModelMailinglijstArchief');
 
@@ -205,46 +213,13 @@ class ControllerMailinglijsten extends Controller
 		return $this->get_content('mailinglijsten::form_automessage', $list, compact('subject_field', 'message_field', 'errors'));
 	}
 
-	public function run_embedded($lijst_id)
-	{
-		$lijst = $this->model->get_lijst($lijst_id);
-
-		if (!$lijst)
-			return;
-
-		$aangemeld = logged_in() && $this->model->is_aangemeld($lijst, logged_in('id'));
-
-		run_view('mailinglijsten::embedded', $this->model, $lijst, compact('aangemeld'));
-	}
-
 	protected function run_impl()
 	{
 		// Unsubscribe link? Show the unsubscribe confirmation page
 		if (!empty($_GET['abonnement_id']))
 			return $this->run_unsubscribe_confirm($_GET['abonnement_id']);
-
-		// Manage the subscriptions to a list
-		elseif (!empty($_GET['lijst_id']))
-			if (isset($_GET['edit_message']))
-				return $this->run_automessage_management($_GET['lijst_id'], $_GET['edit_message']);
-			else
-				return $this->run_subscriptions_management($_GET['lijst_id']);
-
-		// Read archive
-		elseif (!empty($_GET['archive_list_id']))
-			return $this->show_list_archive($_GET['archive_list_id']);
-
-		// Read archived message
-		elseif (!empty($_GET['archive_message_id']))
-			return $this->show_list_message($_GET['archive_message_id']);
-
-		// No list but a post request -> create a new list
-		elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
-			return $this->_process_new_list();
-
-		// There isn't really anything you can do when not logged in, Sorry!
 		else
-			throw new UnauthorizedException('You need to be logged in to access this functionality');
+			return parent::run_impl();
 	}
 }
 

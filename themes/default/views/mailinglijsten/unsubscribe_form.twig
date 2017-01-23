@@ -1,0 +1,13 @@
+<h1>{{ __('Mailinglijst') }}</h1>
+<div class="messageBox">
+	{% if not subscription.is_active %}
+		<p>{{ __('Gelukt! Je staat niet langer op de lijst <em>%s</em>.')|format(subscription.naam|e('html'))|raw }}</p>
+	{% else %}
+	<form method="post" action="mailinglijsten.php?abonnement_id={{ subscription.id|e('url') }}">
+		{{ html_nonce('unsubscribe', subscription) }}
+		<p>{{ __('Je staat je op het punt uit te schrijven uit de mailinglijst <em>%s</em>. Weet je dit zeker?')|format(subscription.naam|e('html'))|raw }}</p>
+		<button class="button" type="submit">{{ __('Schrijf mij uit') }}</button>
+		<a href="index.php" class="button">{{ __('Nee, ik was gewoon nieuwsgierig') }}</a>
+	</form>
+	{% endif %}
+</div>		

@@ -1,0 +1,69 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Wijzig mailinglijst') : __('Mailinglijst toevoegen')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ iter.has_id ? __('Wijzig mailinglijst') : __('Mailinglijst toevoegen') }}</h1>
+<div class="messageBox">
+	<form method="post" class="vertical-form" action="{{ view.get_form_action(iter) }}">
+		{% if iter.has_id %}
+			{{ html_nonce('update', iter) }}
+		{% else %}
+			{{ html_nonce('create', iter) }}
+		{% endif %}
+
+		<div>
+			{{ html_label(__('Lijstadres'), 'adres', errors=errors)  }}
+			{{ html_input_text('adres', iter, type='email', placeholder=__('e.g. lijstnaam@svcover.nl'), errors=errors) }}
+		</div>
+		<div class="inline-block">
+			{{ html_label(__('Type'), 'type', errors=errors) }}
+			{{ html_select_field('type', view.type_options, iter, errors=errors) }}
+			<small>{{ __('Op basis waarvan wordt de lijst gevuld?') }}</small>
+		</div>
+		<div class="inline-block">
+			{{ html_label(__('Toegang'), 'toegang', errors=errors) }}
+			{{ html_select_field('toegang', view.toegang_options, iter, errors=errors) }}
+			<small>{{ __('Wie mag e-mails sturen naar deze lijst?') }}</small>
+		</div>
+		<div class="inline-block">
+			{{ html_label(__('Commissie'), 'commissie', errors=errors) }}
+			{{ html_select_field('commissie', view.committee_options, iter, errors=errors)  }}
+			<small>{{ __('Welke commissie mag bepalen wie er op de lijst staat?') }}</small>
+		</div>
+		<div>
+			{{ html_label(__('Naam'), 'naam', errors=errors) }}
+			{{ html_input_text('naam', iter, errors=errors) }}
+		</div>
+		<div>
+			{{ html_label(__('Omschrijving'), 'omschrijving', errors=errors) }}
+			{{ html_textarea_field('omschrijving', iter) }}
+		</div>
+		<div>
+			{{ html_input_checkbox('publiek', iter) }}
+			{{ html_label(__('Mensen mogen zichzelf aanmelden voor deze lijst.'), 'publiek') }}
+		</div>
+		{% if iter.has_id %}
+		<div>
+			<label for="automessages">{{ __('Automatische e-mails') }}</label>
+			<div style="margin-left: 1em">
+				{% if iter.sends_email_on_subscribing %}
+				<p>{{ __('Deze lijst stuurt iedereen die zichzelf aanmeldt automatisch een mailtje.') }} <a href="{{ controller.link_to_update_autoresponder(iter, 'on_subscription') }}">{{ __('Wijzig bericht') }}</a></p>
+				{% elseif iter.type == constant('DataModelMailinglist::TYPE_OPT_IN') %}
+				<p><a href="{{ controller.link_to_update_autoresponder(iter, 'on_subscription') }}">{{ __('Stel bericht in dat automatisch wordt verstuurd bij aanmelding.') }}</a></p>
+				{% endif %}
+
+				{% if iter.sends_email_on_first_email %}
+				<p>{{ __('Deze lijst stuurt automatisch een reactie wanneer je er voor de eerste keer naar toe mailt en niet op de lijst bent ingeschreven.') }} <a href="{{ controller.link_to_update_autoresponder(iter, 'on_first_email') }}">{{ __('Wijzig bericht') }}</a></p>
+				{% else %}
+				<p><a href="{{ controller.link_to_update_autoresponder(iter, 'on_first_email') }}">{{ __('Stel een automatische eerste reactie in die wordt verstuurd wanneer iemand mailt naar de mailinglijst.') }}</a></p>
+				{% endif %}
+			</div>
+		</div>
+		{% endif %}
+		<div class="controls">
+			<button class="button" type="submit">{{ __('Maak lijst') }}</button>
+		</div>
+	</form>
+</div>
+{% endblock %}
