@@ -49,8 +49,8 @@
 				{% endblock %}
 			</div>
 
-			{% if not global.auth.logged_in %}
-			{{ include('@layout/widgets/promotional-header.twig') }}
+			{% if view.layout.promotional_header %}
+			{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
 			{% endif %}
 
 			<div class="container clearfix">

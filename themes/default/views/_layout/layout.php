@@ -195,4 +195,38 @@ class LayoutViewHelper
 
 		return $alert;
 	}
+
+	public function promotional_header()
+	{
+		if (!get_auth()->logged_in())
+			return 'promotional-header.twig';
+		
+		if (basename($_SERVER['SCRIPT_NAME']) == 'index.php'
+			&& get_config_value('committee_battle', false))
+			return 'committee-battle-header.twig';
+
+		return null;
+	}
+
+	public function committee_battle_photos()
+	{
+		// $committees = get_identity()->get('committees');
+
+		// $model = get_model('DataModelCommitteeBattleScore');
+
+		// $scores = $model->get_scores_for_committees(array_map(function($id) {
+		// 	return ['id' => $id];
+		// }, $committees));
+
+		$committee_model = get_model('DataModelCommissie');
+		$committee_model->type = DataModelCommissie::TYPE_COMMITTEE;
+
+		$committees = $committee_model->get(false);
+
+		$committee_photos = array_map(getter('thumbnail'), $committees);
+		$committee_photos = array_values(array_filter($committee_photos));
+		// shuffle($committee_photos);
+
+		return $committee_photos;
+	}
 }
