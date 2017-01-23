@@ -64,6 +64,9 @@
 			if (!$dataiter)
 				$dataiter = $this->dataiter;
 
+			if (!is_subclass_of($dataiter, 'DataIter', true))
+				throw new LogicException('Calling new_iter with a class name for dataiter that does not extend DataIter');
+
 			return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row, $preseed);
 		}
 
