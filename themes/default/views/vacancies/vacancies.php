@@ -59,7 +59,7 @@ class VacanciesView extends CRUDView
 		$controller = new DataModelBanner();
 		$banners = $controller->get(15);
 		foreach($banners as $banner){
-			if($company == strtok($banner['filename'], '.')){
+			if($company == strtolower(strtok($banner['filename'], '.'))){
 				return '/images/banners/' . $banner['filename'];
 			}
 		}

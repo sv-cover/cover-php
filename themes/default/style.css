@@ -2966,9 +2966,8 @@ ol.almanac > li {
 
 .after{
 	clear: left;
-	font-style: bold;
 }
 
-.clabel dt{
-	text
+.dt{
+	font-style: bold;
 }
