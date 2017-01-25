@@ -56,13 +56,6 @@ class VacanciesView extends CRUDView
 	}
 
 	public function get_logo($company){
-		$controller = new DataModelBanner();
-		$banners = $controller->get(15);
-		foreach($banners as $banner){
-			if($company == strtolower(strtok($banner['filename'], '.'))){
-				return '/images/banners/' . $banner['filename'];
-			}
-		}
-		return 'geen foto';
+		return get_model('DataModelBanner')->get_for_company($company);
 	}
 }

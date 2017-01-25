@@ -4,8 +4,8 @@
 
 {% block content %}
 <h1>{{ iter.has_id ? __('vacature wijzigen') : __('Nieuwe vacature plaatsen') }}</h1>
-<div class="messageBox announcement">
-	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
+<div class="messageBox">
+	<form id="vacancy-form" method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
 		{% if iter.has_id %}
 			{{ html_nonce('update', iter) }}
 		{% else %}

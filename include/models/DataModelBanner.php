@@ -40,4 +40,18 @@ class DataModelBanner extends DataModel
 
         return $this->_rows_to_iters($banners, 'DataIterBanner');
     }
+
+    public function get_for_company($company)
+    {
+        $banners = $this->get();
+
+        foreach ($banners as $banner) {
+            $filename = basename($banner['filename']);
+            $name = substr($filename, 0, strpos($filename, '.'));
+            if (strcasecmp($name, $company) === 0)
+                return $this->dir . $banner['filename'];
+        }
+
+        return null;
+    }
 }

@@ -4,22 +4,22 @@
 	the controller isn't used to generate the links, as is done in all the other
 	CRUD-based views. #}
 	{% if user_can_create global.models.Vacancy.new_iter %}
-		<div class="controls inline"><a href="vacancies.php?view=create" class="create-link">{{ __('Nieuwe vacature') }}</a></div>
+		<div class="controls inline"><a href="{{ controller.link_to_create()|e('html_attr') }}" class="create-link">{{ __('Nieuwe vacature') }}</a></div>
 	{% endif %}
 	
 	<h1>{{ __('Vacatures') }}</h1>
 </div>
 
 {% for item in iters if user_can_read item %}
-	<div class="messageBox vacancy frontpage">
+	<div class="messageBox vacancy frontpage type-{{ view.get_type(item.type) }}">
 		<div class="right">
-			{{ item.created  |date() }}
+			{{ item.created|date() }}
 		</div>
 
 		<div class="companyDetails">
 			<div class="companyImage">
-				{% if not (view.get_logo(item.company) == "geen foto") %}
-					<img src="{{view.get_logo(item.company)}}">
+				{% if view.get_logo(item.company) %}
+					<img src="{{ view.get_logo(item.company)|e('html_attr') }}">
 				{% endif %}
 			</div>
 			<div class="col-3">
@@ -52,7 +52,7 @@
 					{% endif %}
 					<br>
 					{% if item.url %}
-						<dt><b><a href="https://{{item.url}}">{{ __('Meer info op de website') }}</a></b></dt>
+						<dt><b><a href="{{ item.url|e('html_attr') }}">{{ __('Meer info op de website') }}</a></b></dt>
 					{% endif %}
 				</dl>
 			</div>
@@ -66,12 +66,14 @@
 
 		<ul class="actions">
 			{% if user_can_update item %}
-			<li><a href="vacancies.php?view=update&amp;id={{ item.id }}"
-				data-partial-selector=".vacancy"
-				data-placement-selector=".vacancy">{{ __('Wijzig') }}</a></li>
+			<li><a href="{{ controller.link_to_update(item)|e('html_attr') }}"
+				data-partial-selector="#vacancy-form"
+				data-placement-selector="modal">{{ __('Wijzig') }}</a></li>
 			{% endif %}
 			{% if user_can_delete item %}
-			<li><a href="vacancies.php?view=delete&amp;id={{ item.id }}">{{ __('Verwijder') }}</a></li>
+			<li><a href="{{ controller.link_to_delete(item)|e('html_attr') }}"
+				data-partial-selector=".messageBox > form.vertical-form"
+				data-placement-selector="modal">{{ __('Verwijder') }}</a></li>
 			{% endif %}
 		</ul>
 	</div>
