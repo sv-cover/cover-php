@@ -27,7 +27,7 @@
 				<td><a href="{{ controller.link_to_read(mailinglist)|e('html_attr') }}">{{ mailinglist.naam }}</a></td>
 				<td>{{ mailinglist.adres }}</td>
 				<td>{{ mailinglist.publiek ? __('Publiek') : __('Privé') }}</td>
-				<td>0</td>
+				<td>{{ mailinglist.reach }}</td>
 			</tr>
 		{% endfor %}
 		</tbody>

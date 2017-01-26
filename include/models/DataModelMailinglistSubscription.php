@@ -122,9 +122,59 @@ class DataModelMailinglistSubscription extends DataModel
 						naam ASC',
 					$lijst->get('id')));
 				break;
+
+			default:
+				throw new LogicException('Invalid list type');
 		}
 
 		return $this->_rows_to_iters($rows, 'DataIterMailinglistSubscription');
+	}
+
+	public function get_reach(DataIterMailinglist $lijst)
+	{
+		switch ($lijst['type'])
+		{
+			case DataModelMailinglist::TYPE_OPT_IN:
+				return (int) $this->db->query_value(sprintf('
+					SELECT
+						COUNT(m.abonnement_id)
+					FROM
+						mailinglijsten_abonnementen m
+					LEFT JOIN leden l ON
+						m.lid_id = l.id
+					WHERE
+						m.mailinglijst_id = %d
+						AND (l.type IS NULL OR l.type <> %d)
+						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)',
+					$lijst->get('id'), MEMBER_STATUS_LID_AF));
+
+			case DataModelMailinglist::TYPE_OPT_OUT:
+				return (int) $this->db->query_value(sprintf('
+					SELECT
+						(
+							SELECT
+								COUNT(l.id)
+							FROM
+								leden l
+							LEFT JOIN mailinglijsten_opt_out o ON
+								o.mailinglijst_id = %d AND o.lid_id = l.id
+							WHERE
+								l.type = %d
+								AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL)
+						) + (
+							SELECT
+								COUNT(g.abonnement_id)
+							FROM
+								mailinglijsten_abonnementen g
+							WHERE
+								g.mailinglijst_id = %1$d
+								AND (g.opgezegd_op > NOW() OR g.opgezegd_op IS NULL)
+						)',
+					$lijst->get('id'), MEMBER_STATUS_LID));
+
+			default:
+				throw new LogicException('Invalid list type');
+		}
 	}
 
 	public function is_subscribed(DataIterMailinglist $list, DataIterMember $member)

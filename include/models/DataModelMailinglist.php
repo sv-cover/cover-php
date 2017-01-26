@@ -113,9 +113,14 @@ class DataIterMailinglist extends DataIter
 			&& strlen($this['on_first_email_message']) > 0;
 	} 
 
-	public function subscriptions()
+	public function get_subscriptions()
 	{
 		return get_model('DataModelMailinglistSubscription')->get_subscriptions($this);
+	}
+
+	public function get_reach()
+	{
+		return get_model('DataModelMailinglistSubscription')->get_reach($this);
 	}
 
 	public function archive()
