@@ -65,7 +65,9 @@ class DataModelVacancy extends DataModel implements SearchProvider
 				TO_CHAR({$this->table}.created, 'DD-MM-YYYY, HH24:MI') AS created
 			FROM
 				{$this->table}"
+			. ($conditions ? " WHERE $conditions" : "")
 			. " ORDER BY {$this->table}.created DESC";
+
 	}
 
 	public function get_latest($count = 5)

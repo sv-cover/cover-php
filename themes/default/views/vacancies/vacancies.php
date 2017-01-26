@@ -43,7 +43,7 @@ class VacanciesView extends CRUDView
 	{
 		return [
 			1 => __('Bijbaan'),
-			2 => __('Afstudeerdproject'),
+			2 => __('Afstudeerproject'),
 			3 => __('Voor afgestudeerden'),
 		];
 	}
