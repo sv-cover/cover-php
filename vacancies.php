@@ -14,7 +14,7 @@ class ControllerVacancies extends ControllerCRUD{
 	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
 		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
-			$errors[] = 'committee_id';
+			$errors[] = 'not_board';
 
 		if(strlen($data['title']) == 0)
 		{
