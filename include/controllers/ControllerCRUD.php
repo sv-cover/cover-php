@@ -140,29 +140,34 @@ class ControllerCRUD extends Controller
 		return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
 	}
 
-	protected function link_to_iter(DataIter $iter, array $arguments = array())
+	public function link_to($view, DataIter $iter = null, array $arguments = [])
 	{
-		return $this->link(array_merge(array($this->_var_id => $iter->get_id()), $arguments));
+		$arguments[$this->_var_view] = $view;
+
+		if ($iter !== null)
+			$arguments[$this->_var_id] = $iter->get_id();
+
+		return $this->link($arguments);
 	}
 
 	public function link_to_create()
 	{
-		return $this->link([$this->_var_view => 'create']);
+		return $this->link_to('create');
 	}
 
 	public function link_to_read(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'read']);
+		return $this->link_to('read', $iter);
 	}
 
 	public function link_to_update(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'update']);
+		return $this->link_to('update', $iter);
 	}
 
 	public function link_to_delete(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'delete']);
+		return $this->link_to('delete', $iter);
 	}
 
 	public function json_link_to_create()
@@ -174,19 +179,19 @@ class ControllerCRUD extends Controller
 
 	public function json_link_to_read(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'read']);
+		return $this->link_to('read', $iter, []);
 	}
 
 	public function json_link_to_update(DataIter $iter)
 	{
 		$nonce = nonce_generate(nonce_action_name('update', [$iter]));
-		return $this->link_to_iter($iter, [$this->_var_view => 'update', '_nonce' => $nonce]);
+		return $this->link_to('update', $iter, ['_nonce' => $nonce]);
 	}
 
 	public function json_link_to_delete(DataIter $iter)
 	{
 		$nonce = nonce_generate(nonce_action_name('delete', [$iter]));
-		return $this->link_to_iter($iter, [$this->_var_view => 'delete', '_nonce' => $nonce]);
+		return $this->link_to('delete', $iter, ['_nonce' => $nonce]);
 	}
 
 	public function link_to_index()

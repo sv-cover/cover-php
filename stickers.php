@@ -21,12 +21,12 @@ class ControllerStickers extends ControllerCRUD
 
 	public function link_to_add_photo(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'add_photo']);
+		return $this->link_to('add_photo', $iter);
 	}
 
 	public function link_to_photo(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'photo']);
+		return $this->link_to('photo', $iter);
 	}
 
 	public function run_read(DataIter $iter)

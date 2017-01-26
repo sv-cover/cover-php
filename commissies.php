@@ -66,11 +66,16 @@ class ControllerCommissies extends ControllerCRUD
 	}
 
 	/**
-	 * Override ControllerCRUD::link_to_iter to use the login name instead of the id for better links.
+	 * Override ControllerCRUD::link_to to use the login name instead of the id for better links.
 	 */
-	public function link_to_iter(DataIter $iter, array $arguments = array())
+	public function link_to($view, DataIter $iter = null, array $arguments = [])
 	{
-		return $this->link(array_merge(array($this->_var_id => $iter->get('login')), $arguments));
+		$arguments[$this->_var_view] = $view;
+
+		if ($iter !== null)
+			$arguments[$this->_var_id] = $iter['login'];
+
+		return $this->link($arguments);
 	}
 
 	/**
