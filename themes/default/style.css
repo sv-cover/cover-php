@@ -331,6 +331,22 @@ border-radius: 0 0 5px 5px;
 	color: #2a65bd !important;
 }
 
+.colorAccent.type-1
+{
+	background-color: #2a65bd !important;
+	color: #2a65bd !important;
+}
+.colorAccent.type-2
+{
+	background-color: #FFD700 !important;
+	color: #FFD700 !important;
+}
+.colorAccent.type-3
+{
+	background-color: #b80a0a !important;
+	color: #b80a0a !important;
+}
+
 .button, .button:visited
 {
 	border: 1px solid #666;
@@ -2960,14 +2976,10 @@ ol.almanac > li {
 
 .companyDetails{
 	width: 100%;
-	height: 175px;
+	height: 150px;
 	display: block;
 }
 
 .after{
 	clear: left;
-}
-
-.dt{
-	font-style: bold;
 }

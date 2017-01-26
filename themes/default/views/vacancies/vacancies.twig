@@ -11,7 +11,8 @@
 </div>
 
 {% for item in iters if user_can_read item %}
-	<div class="messageBox vacancy frontpage type-{{ view.get_type(item.type) }}">
+	<hr class="colorAccent type-{{ item.type }}">
+	<div class="messageBox vacancy frontpage">
 		<div class="right">
 			{{ item.created|date() }}
 		</div>
@@ -33,7 +34,7 @@
 					{% if item.type %}
 						<h3>{{view.get_type(item.type)}}</h3>
 					{% endif %}
-					{% if item.study_year %}
+					{% if item.study_year and view.get_type(item.type) != "Voor afgestudeerden" %}
 						<dt><b>{{ __('Studiejaar') }}</b><dt>
 						<dd>{{ view.get_study_year(item.study_year) }}</dd>
 					{% endif %}
