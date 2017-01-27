@@ -59,7 +59,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		if ($this->_cached_photos !== null)
 			return $this->_cached_photos;
 
-		$conditions = array();
+		$conditions = array("fotos.hidden = 'f'");
 
 		foreach ($this->get('member_ids') as $member_id)
 			$conditions[] = sprintf('fotos.id IN (SELECT foto_id FROM foto_faces WHERE lid_id = %d AND deleted = FALSE)', $member_id);

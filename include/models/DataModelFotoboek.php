@@ -427,6 +427,7 @@
 						foto_boeken f_b
 					LEFT JOIN fotos f ON
 						f.boek = f_b.id
+						AND f.hidden = 'f'
 					LEFT JOIN foto_boeken c_f_b ON
 						c_f_b.parent = f_b.id
 					WHERE 
@@ -460,6 +461,7 @@
 					foto_boeken f_b
 				LEFT JOIN fotos f ON
 					f.boek = f_b.id
+					AND f.hidden = 'f'
 				LEFT JOIN foto_boeken c_f_b ON
 					c_f_b.parent = f_b.id
 				WHERE 
@@ -501,9 +503,9 @@
 					c.id
 				FROM 
 					foto_boeken c
-				LEFT JOIN
-					fotos f
-					ON f.boek = c.id
+				LEFT JOIN fotos f ON
+					f.boek = c.id
+					AND f.hidden = 'f'
 				WHERE
 					c.visibility <= %d
 					AND c.date IS NOT NULL
@@ -590,11 +592,12 @@
 			$from = 'FROM
 				foto_boeken';
 
-			$joins = '
+			$joins = "
 				LEFT JOIN fotos ON
 					foto_boeken.id = fotos.boek
+					AND fotos.hidden = 'f'
 				LEFT JOIN foto_boeken child_books ON
-					child_books.parent = foto_boeken.id';
+					child_books.parent = foto_boeken.id";
 
 			$where = sprintf('WHERE
 				foto_boeken.visibility <= %d
@@ -689,7 +692,8 @@
 					{$this->table}
 				LEFT JOIN foto_reacties ON
 					foto_reacties.foto = {$this->table}.id
-				" . ($where ? 'WHERE ' . $where : '') . "
+				WHERE
+					{$this->table}.hidden = 'f'" . ($where ? ' AND (' . $where . ')' : '') . "
 				GROUP BY
 					{$this->table}.id
 				ORDER BY
@@ -715,6 +719,8 @@
 						FROM
 							fotos
 						WHERE
+							fotos.hidden = 'f'
+							AND
 							fotos.boek IN (
 								SELECT
 									foto_boeken.id
@@ -760,7 +766,8 @@
 				LEFT JOIN foto_reacties ON
 					foto_reacties.foto = fotos.id
 				WHERE
-					boek = {$book->get_id()}
+					boek = {$book->get_id()} -- Todo: security risk?
+					AND hidden = 'f'
 				GROUP BY
 					fotos.id
 				ORDER BY
@@ -775,7 +782,7 @@
 
 		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
 		{
-			$query = sprintf('
+			$query = sprintf("
 				WITH RECURSIVE book_children (id, visibility, parents) AS (
 						SELECT id, visibility, ARRAY[id] FROM foto_boeken WHERE id = %d
 					UNION ALL
@@ -789,12 +796,13 @@
 					book_children b_c
 				LEFT JOIN fotos f ON
 					f.boek = b_c.id
+					AND f.hidden = 'f'
 				WHERE
 					b_c.visibility <= %d
 				GROUP BY
 					f.id
 				HAVING
-					COUNT(f.id) > 0',
+					COUNT(f.id) > 0",
 					$book->get_id(),
 					get_policy($this)->get_access_level()); // BAD DEPENDENCY!
 

@@ -88,8 +88,9 @@ class DataModelFotoboekReacties extends DataModel
 					f_r_l.reactie_id = f_r.id
 				LEFT JOIN leden l ON
 					f_r.auteur = l.id
-				LEFT JOIN fotos ON
+				RIGHT JOIN fotos ON
 					fotos.id = f_r.foto
+					AND fotos.hidden = 'f'
 				LEFT JOIN foto_boeken ON
 					foto_boeken.id = fotos.boek
 				GROUP BY
