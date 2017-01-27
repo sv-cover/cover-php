@@ -96,9 +96,9 @@ class DataIterMailinglist extends DataIter
 		];
 	}
 
-	public function bevat_lid($lid_id)
+	public function bevat_lid(DataIterMember $member)
 	{
-		return $this->model->is_aangemeld($this, $lid_id);
+		return get_model('DataModelMailinglistSubscription')->is_subscribed($this, $member);
 	}
 
 	public function sends_email_on_subscribing()
@@ -271,15 +271,15 @@ class DataModelMailinglist extends DataModel
 		return mail('', $subject, $message_body, $message_headers);
 	}
 
-	public function member_can_access_archive(DataIterMailinglijst $lijst)
+	public function member_can_access_archive(DataIterMailinglist $lijst)
 	{
 		if (!logged_in())
 			return false;
 
-		if ($lijst->bevat_lid(get_identity()->get('id')))
+		if ($lijst->bevat_lid(get_identity()->member()))
 			return true;
 
-		if (get_identity()->member_in_committee($lijst->get('commissie')))
+		if (get_identity()->member_in_committee($lijst['commissie']))
 			return true;
 
 		return false;

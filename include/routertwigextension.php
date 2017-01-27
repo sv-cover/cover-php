@@ -43,8 +43,21 @@ class RouterTwigExtension extends Twig_Extension
 	public function getFunctions()
 	{
 		return [
-			new Twig_SimpleFunction('link', [$this, 'link_to'], ['is_variadic' => true, 'is_safe' => ['html', 'html_attr']])
+			// The old experiment
+			new Twig_SimpleFunction('link', [$this, 'link_to'], ['is_variadic' => true]),
+
+			new Twig_SimpleFunction('link_to',
+				[$this, 'link_to_via_controller'],
+				[
+					'is_variadic' => true,
+					'needs_context' => true
+				])
 		];
+	}
+
+	public function link_to_via_controller($context, $view, $iter = null, array $arguments = [])
+	{
+		return $context['controller']->link_to($view, $iter, $arguments);
 	}
 
 	public function link_to($name, array $arguments = array())

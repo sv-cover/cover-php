@@ -28,7 +28,7 @@ class DataIterMailinglistArchive extends DataIter
 
 	public function get_subject()
 	{
-		return $this->get_header('Subject');
+		return $this->header('Subject');
 	}
 
 	public function get_sender()
@@ -36,7 +36,7 @@ class DataIterMailinglistArchive extends DataIter
 		// This works because the mail server adds a 'from real@email.com wed 20 aug' to the
 		// beginning of the message. Alternatively, we could use the From header.
 		// return substr($this->get('bericht'), 5, strpos($this->get('bericht'), ' ', 5) - 5);
-		return $this->get_header('From');
+		return $this->header('From');
 	}
 
 	protected function _convert_header_encoding($data)
@@ -87,12 +87,12 @@ class DataModelMailinglistArchive extends DataModel
 		$this->insert($iter);
 	}
 
-	public function get_by_lijst($lijst_id)
+	public function get_for_list(DataIterMailinglist $list)
 	{
-		return $this->find('mailinglijst = ' . intval($lijst_id));
+		return $this->find(['mailinglijst' => (int) $list['id']]);
 	}
 
-	public function contains_email_from(DataIterMailinglijst $lijst, $sender)
+	public function contains_email_from(DataIterMailinglist $lijst, $sender)
 	{
 		$count = $this->db->query_value(sprintf("SELECT COUNT(id) FROM {$this->table} WHERE mailinglijst = %d AND sender = '%s' AND return_code = 0",
 			$lijst->get_id(), $this->db->escape_string($sender)));

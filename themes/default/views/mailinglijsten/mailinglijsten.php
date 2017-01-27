@@ -50,4 +50,24 @@ class MailinglijstenView extends CRUDView
 			? $this->redirect($this->controller->link_to_update($iter))
 			: $this->render('autoresponder_form.twig', compact('iter', 'autoresponder', 'success', 'errors'));
 	}
+
+	public function render_subscribe_member_form(DataIterMailinglist $list, array $errors)
+	{
+		return $this->render('subscribe_member_form.twig', compact('list', 'errors'));
+	}
+
+	public function render_subscribe_guest_form(DataIterMailinglist $list, array $errors)
+	{
+		return $this->render('subscribe_guest_form.twig', compact('list', 'errors'));
+	}
+
+	public function render_archive_index(DataIterMailinglist $list, $messages)
+	{
+		return $this->render('archive_index.twig', compact('list', 'messages'));
+	}
+
+	public function render_archive_read(DataIterMailinglist $list, DataIterMailinglistArchive $message)
+	{
+		return $this->render('archive_single.twig', compact('list', 'message'));
+	}
 }

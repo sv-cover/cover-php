@@ -79,7 +79,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 
 		return $this->view->render_unsubscribe_form($list, $subscription);
 	}
-	
+	/*
 	protected function run_update_subscriptions(DataIterMailinglist $lijst)
 	{
 		$return_url = isset($_POST['referer'])
@@ -149,68 +149,97 @@ class ControllerMailinglijsten extends ControllerCRUD
 
 		$this->get_content('mailinglijsten::mailinglist', null, compact('lijst', 'aanmeldingen', 'aangemeld'));
 	}
+	*/
 
-	protected function run_list_archive($list_id)
+	private function _subscribe_member(DataIterMailinglist $list, $member_id, &$errors)
 	{
-		$lijst = $this->model->get_lijst($list_id);
+		$subscribe_ids = is_array($member_id)
+			? $member_id
+			: preg_split('/[\s,]+/', $member_id);
 
-		if (!$this->model->member_can_access_archive($lijst))
-			return $this->get_content('common::auth');
-
-		$model = get_model('DataModelMailinglijstArchief');
-
-		$messages = $model->get_by_lijst($list_id);
-
-		return $this->get_content('mailinglijsten::list_archive', null, compact('lijst', 'messages'));
-	}
-
-	protected function run_list_message($message_id)
-	{
-		$model = get_model('DataModelMailinglijstArchief');
-
-		$message = $model->get_iter($message_id);
-
-		$lijst = $this->model->get_iter($message->get('mailinglijst'));
-
-		if (!$this->model->member_can_access_archive($lijst))
-			return $this->get_content('common::auth');
-
-		return $this->get_content('mailinglijsten::list_message', null, compact('message', 'lijst'));
-	}
-
-	protected function run_automessage_management($list_id, $message_category)
-	{
-		$list = $this->model->get_lijst($list_id);
-
-		$errors = [];
-
-		if (!$this->model->member_can_edit($list))
-			throw new UnauthorizedException();
-
-		switch ($message_category)
-		{
-			case 'subscription':
-				$subject_field = 'on_subscription_subject';
-				$message_field = 'on_subscription_message';
-				break;
-
-			case 'first_email':
-				$subject_field = 'on_first_email_subject';
-				$message_field = 'on_first_email_message';
-				break;
-
-			default:
-				throw new Exception('Unknown message category');
+		foreach ($subscribe_ids as $id) {
+			if (ctype_digit($id)) {
+				$member = $this->member_model->get_iter((int) $id);
+				$this->subscription_model->subscribe_member($list, $member);
+			}
 		}
 
-		if ($_SERVER['REQUEST_METHOD'] == 'POST')
-		{
-			$list->set($subject_field, $_POST['subject']);
-			$list->set($message_field, $_POST['message']);
-			$list->update();
+		return true;
+	}
+
+	private function _subscribe_guest(DataIterMailinglist $list, $data, &$errors)
+	{
+		if (empty($data['naam']))
+			$errors[] = 'naam';
+
+		if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
+			$errors[] = 'email';
+
+		if (count($errors) === 0) {
+			$this->subscription_model->subscribe_guest($list, $data['naam'], $data['email']);
+			return true;
 		}
 
-		return $this->get_content('mailinglijsten::form_automessage', $list, compact('subject_field', 'message_field', 'errors'));
+		return false;
+	}
+
+	protected function run_subscribe_member(DataIterMailinglist $list)
+	{
+		// Todo: instead of checking whether current user can update the list,
+		// check whether they can create new subscription iterators according
+		// to the policy?
+
+		if (!get_policy($this->model)->user_can_update($list))
+			throw new UnauthorizedException('You cannot modify this mailing list');
+
+		$errors = array();
+
+		if ($this->_form_is_submitted('subscribe_member', $list))
+			if ($this->_subscribe_member($list, $_POST['member_id'], $errors))
+				return $this->view->redirect($this->link_to_read($list));
+
+		return $this->view->render_subscribe_member_form($list, $errors);
+	}
+
+	protected function run_subscribe_guest(DataIterMailinglist $list)
+	{
+		if (!get_policy($this->model)->user_can_update($list))
+			throw new UnauthorizedException('You cannot modify this mailing list');
+
+		$errors = array();
+
+		if ($this->_form_is_submitted('subscribe_guest', $list))
+			if ($this->_subscribe_guest($list, $_POST, $errors))
+				return $this->view->redirect($this->link_to_read($list));
+
+		return $this->view->render_subscribe_guest_form($list, $errors);
+	}
+
+	protected function run_archive_index(DataIterMailinglist $list)
+	{
+		if (!$this->model->member_can_access_archive($list))
+			throw new UnauthorizedException('You cannot access the archives of this mailing list');
+
+		$model = get_model('DataModelMailinglistArchive');
+
+		$messages = $model->get_for_list($list);
+
+		return $this->view->render_archive_index($list, $messages);
+	}
+
+	protected function run_archive_read(DataIterMailinglist $list)
+	{
+		if (!$this->model->member_can_access_archive($list))
+			throw new UnauthorizedException('You cannot access the archives of this mailing list');
+
+		$model = get_model('DataModelMailinglistArchive');
+
+		$message = $model->get_iter($_GET['message_id']);
+
+		if ($message['mailinglijst'] != $list->get_id())
+			throw new NotFoundException('No such message found in this mailing list');
+
+		return $this->view->render_archive_read($list, $message);
 	}
 
 	protected function run_impl()

@@ -308,10 +308,17 @@
 
 		protected function _generate_conditions_from_array(array $conditions)
 		{
-			$atoms = [];
+			$atoms = []; // Query in CNF
 
 			foreach ($conditions as $key => $value)
 			{
+				// If the value is just a bit of raw SQL, add it directly to
+				// the atoms, and skip the rest of the create-sql-loop.
+				if (is_int($key) && $value instanceof DatabaseLiteral) {
+					$atoms[] = sprintf('(%s)', $value->toSQL());
+					continue;
+				}
+
 				if (preg_match('/^(.+?)__(eq|ne|gt|lt|in|contains|isnull)$/', $key, $match)) {
 					$field = $match[1];
 					$operator = $match[2];

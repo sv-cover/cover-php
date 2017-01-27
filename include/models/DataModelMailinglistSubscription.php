@@ -80,7 +80,7 @@ class DataModelMailinglistSubscription extends DataModel
 						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 					ORDER BY
 						naam ASC',
-					$lijst->get('id')));
+					$lijst['id']));
 				break;
 
 			case DataModelMailinglist::TYPE_OPT_OUT:
@@ -120,7 +120,7 @@ class DataModelMailinglistSubscription extends DataModel
 						AND (g.opgezegd_op > NOW() OR g.opgezegd_op IS NULL)
 					ORDER BY
 						naam ASC',
-					$lijst->get('id')));
+					$lijst['id']));
 				break;
 
 			default:
@@ -146,7 +146,7 @@ class DataModelMailinglistSubscription extends DataModel
 						m.mailinglijst_id = %d
 						AND (l.type IS NULL OR l.type <> %d)
 						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)',
-					$lijst->get('id'), MEMBER_STATUS_LID_AF));
+					$lijst['id'], MEMBER_STATUS_LID_AF));
 
 			case DataModelMailinglist::TYPE_OPT_OUT:
 				return (int) $this->db->query_value(sprintf('
@@ -170,7 +170,7 @@ class DataModelMailinglistSubscription extends DataModel
 								g.mailinglijst_id = %1$d
 								AND (g.opgezegd_op > NOW() OR g.opgezegd_op IS NULL)
 						)',
-					$lijst->get('id'), MEMBER_STATUS_LID));
+					$lijst['id'], MEMBER_STATUS_LID));
 
 			default:
 				throw new LogicException('Invalid list type');
@@ -212,7 +212,7 @@ class DataModelMailinglistSubscription extends DataModel
 		$iter = $this->find_one([
 			'mailinglijst_id' => $list['id'],
 			'lid_id' => $member['id'],
-			new DatabaseLiteral('(opgezegd_op IS NULL or opgezegd_op > NOW())')
+			new DatabaseLiteral('opgezegd_op IS NULL or opgezegd_op > NOW()')
 		]);
 
 		if (!$iter)
@@ -227,7 +227,7 @@ class DataModelMailinglistSubscription extends DataModel
 			'abonnement_id' => sha1(uniqid('', true)),
 			'naam' => $naam,
 			'email' => $email,
-			'mailinglijst_id' => intval($list->get('id'))
+			'mailinglijst_id' => intval($list['id'])
 		));
 	}
 
@@ -243,14 +243,14 @@ class DataModelMailinglistSubscription extends DataModel
 				return $this->db->insert('mailinglijsten_abonnementen', array(
 					'abonnement_id' => sha1(uniqid('', true)),
 					'lid_id' => $member->get_id(),
-					'mailinglijst_id' => intval($list->get('id'))
+					'mailinglijst_id' => intval($list['id'])
 				));
 
 			// Opt out list: remove any opt-out entries from the table
 			case DataModelMailinglist::TYPE_OPT_OUT:
 				return $this->db->delete('mailinglijsten_opt_out',
 					sprintf('lid_id = %d AND mailinglijst_id = %d',
-						$member->get_id(), $list->get('id')));
+						$member->get_id(), $list['id']));
 
 			default:
 				throw new RuntimeException('Subscribing to unknown list type not supported');
@@ -274,7 +274,7 @@ class DataModelMailinglistSubscription extends DataModel
 			// For opt-out lists: add an opt-out entry.
 			case DataModelMailinglist::TYPE_OPT_OUT:
 				$data = array(
-					'mailinglijst_id' => intval($lijst->get('id')),
+					'mailinglijst_id' => intval($lijst['id']),
 					'lid_id' => intval($lid_id)
 				);
 

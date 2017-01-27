@@ -9,7 +9,7 @@
 			<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="edit-link">{{ __('Bewerk mailinglijsteigenschappen') }}</a>
 		</div>
 	{% endif %}
-	<h1>{{ __('Mailinglijsten') }} / {{ iter.naam }}</h1>
+	<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailinglijsten') }}</a> / {{ iter.naam }}</h1>
 </div>
 <div class="messageBox">
 	<div class="section mailinglist-header">
@@ -18,38 +18,13 @@
 			{{ iter.omschrijving|parse_markup }}
 		</p>
 	</div>
-
-	{# if ($model->member_can_access_archive($lijst)): #}
-		<a href="" class="button">{{ __('Bekijk archief') }}</a>
-	{# endif #}
-</div>
-
-<div class="messageBox">
-	<h2>{{ __('Aanmeldingen') }}</h2>
+	
 	<div class="section">
-		<form method="post" action="{{ controller.link_to_read(iter)|e('html_attr') }}">
-			{{ html_nonce('subscribe_member', iter) }}
-			{{ html_label(__('Lidnummer(s)'), 'member_id') }}:</label>
-			{{ html_input_text('member_id', []) }}
-			<button type="submit" class="button">{{ __('Meld aan') }}</button>
-		</form>
-	</div>
+		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Lid toevoegen') }}</a>
 
-	<div class="section">
-		<form class="vertical-form" method="post" action="{{ controller.link_to_read(iter)|e('html_attr') }}">
-			{{ html_nonce('subscribe_guest', iter) }}
-			<div>
-				{{ html_label(__('Naam'), 'naam') }}
-				{{ html_input_text('naam', []) }}
-			</div>
-			<div>
-				{{ html_label(__('E-Mail adres'), 'email') }}
-				{{ html_input_text('email', [], type='email') }}
-			</div>
-			<div class="controls">
-				<button type="submit" class="button">{{ __('Meld aan') }}</button>
-			</div>
-		</form>
+		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Niet-lid toevoegen') }}</a>
+
+		<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}">{{ __('Archief') }}</a>
 	</div>
 
 	<div class="section">
