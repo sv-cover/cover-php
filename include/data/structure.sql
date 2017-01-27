@@ -505,6 +505,7 @@ CREATE TABLE fotos (
     created_on timestamp without time zone DEFAULT NULL,
     added_on timestamp without time zone DEFAULT NULL,
     sort_index integer DEFAULT NULL,
+    hidden BOOLEAN DEFAULT 'f',
     CONSTRAINT fotos_pkey PRIMARY KEY (id)
 );
 

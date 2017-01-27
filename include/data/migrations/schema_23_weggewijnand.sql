@@ -1,0 +1,1 @@
+ALTER TABLE fotos ADD COLUMN hidden TINYINT DEFAULT 'f';
