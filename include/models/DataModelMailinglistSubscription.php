@@ -49,9 +49,11 @@ class DataIterMailinglistSubscription extends DataIter
 
 class DataModelMailinglistSubscription extends DataModel
 {
+	public $dataiter = 'DataIterMailinglistSubscription';
+
 	public function __construct($db)
 	{
-		parent::__construct($db, 'mailinglijsten_abonnementen');
+		parent::__construct($db, 'mailinglijsten_abonnementen', 'abonnement_id');
 	}
 
 	public function get_subscriptions(DataIterMailinglist $lijst)
@@ -240,33 +242,35 @@ class DataModelMailinglistSubscription extends DataModel
 		{
 			// Opt in list: add a subscription to the table
 			case DataModelMailinglist::TYPE_OPT_IN:
-				return $this->db->insert('mailinglijsten_abonnementen', array(
+				$this->db->insert('mailinglijsten_abonnementen', array(
 					'abonnement_id' => sha1(uniqid('', true)),
 					'lid_id' => $member->get_id(),
 					'mailinglijst_id' => intval($list['id'])
 				));
+				break;
 
 			// Opt out list: remove any opt-out entries from the table
 			case DataModelMailinglist::TYPE_OPT_OUT:
-				return $this->db->delete('mailinglijsten_opt_out',
+				$this->db->delete('mailinglijsten_opt_out',
 					sprintf('lid_id = %d AND mailinglijst_id = %d',
 						$member->get_id(), $list['id']));
+				break;
 
 			default:
 				throw new RuntimeException('Subscribing to unknown list type not supported');
 		}
 
-		get_model('DataModelMailinglist')->send_subscription_email($list, member_full_name($member, IGNORE_PRIVACY), $member['email']);
+		get_model('DataModelMailinglist')->send_subscription_mail($list, member_full_name($member, IGNORE_PRIVACY), $member['email']);
 	}
 
-	public function unsubscribe_member(DataIter $lijst, $lid_id)
+	public function unsubscribe_member(DataIter $lijst, DataIterMember $member)
 	{
 		switch ($lijst->get('type'))
 		{
 			// For opt-in lists: find the abonnement and delete it.
 			case DataModelMailinglist::TYPE_OPT_IN:
 				// Find the abonnement id
-				$abonnement_id = $this->get_for_member($lijst, $lid_id);
+				$abonnement_id = $this->get_for_member($lijst, $member);
 				
 				// and unsubscribe using that id
 				return $this->cancel_subscription($abonnement_id);
@@ -275,7 +279,7 @@ class DataModelMailinglistSubscription extends DataModel
 			case DataModelMailinglist::TYPE_OPT_OUT:
 				$data = array(
 					'mailinglijst_id' => intval($lijst['id']),
-					'lid_id' => intval($lid_id)
+					'lid_id' => intval($member['id'])
 				);
 
 				return $this->db->insert('mailinglijsten_opt_out', $data);

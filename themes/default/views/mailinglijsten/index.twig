@@ -17,6 +17,7 @@
 			<tr>
 				<th>{{ __('Naam') }}</th>
 				<th>{{ __('Adres') }}</th>
+				<th>{{ __('Eigenaar') }}</th>
 				<th>{{ __('Zichtbaardheid') }}</th>
 				<th>{{ __('Bereik') }}</th>
 			</tr>
@@ -26,6 +27,7 @@
 			<tr>
 				<td><a href="{{ controller.link_to_read(mailinglist)|e('html_attr') }}">{{ mailinglist.naam }}</a></td>
 				<td>{{ mailinglist.adres }}</td>
+				<td>{{ mailinglist.committee.naam }}</td>
 				<td>{{ mailinglist.publiek ? __('Publiek') : __('Privé') }}</td>
 				<td>{{ mailinglist.reach }}</td>
 			</tr>

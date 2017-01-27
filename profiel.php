@@ -319,7 +319,9 @@ class ControllerProfiel extends Controller
 
 	protected function _update_mailing_lists(DataIterMember $iter)
 	{
-		$model = get_model('DataModelMailinglijst');
+		$model = get_model('DataModelMailinglist');
+
+		$subscription_model = get_model('DataModelMailinglistSubscription');
 
 		$mailing_list = $model->get_iter($_POST['mailing_list_id']);
 
@@ -327,12 +329,12 @@ class ControllerProfiel extends Controller
 		{
 			case 'subscribe':
 				if (get_policy($model)->user_can_subscribe($mailing_list))
-					$model->subscribe($mailing_list, $iter['id']);
+					$subscription_model->subscribe_member($mailing_list, $iter);
 				break;
 
 			case 'unsubscribe':
 				if (get_policy($model)->user_can_unsubscribe($mailing_list))
-					$model->unsubscribe($mailing_list, $iter['id']);
+					$subscription_model->unsubscribe_member($mailing_list, $iter);
 				break;
 		}
 

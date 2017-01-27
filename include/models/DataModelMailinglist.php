@@ -16,7 +16,7 @@ class DataIterMailinglist extends DataIter
 			'type',
 			'publiek',
 			'toegang',
-			'commissie',
+			'commissie', // Why didn't I correctly name it committee_id?! :(
 			'tag',
 			'on_subscription_subject',
 			'on_subscription_message',
@@ -123,9 +123,9 @@ class DataIterMailinglist extends DataIter
 		return get_model('DataModelMailinglistSubscription')->get_reach($this);
 	}
 
-	public function archive()
+	public function get_committee()
 	{
-		return new DataModelMailinglistArchiveAdapator($this);
+		return get_model('DataModelCommissie')->get_iter($this['commissie']);
 	}
 }
 
