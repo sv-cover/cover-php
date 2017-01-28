@@ -9,7 +9,7 @@
 		{{ html_nonce('subscribe_member', list) }}
 		<div>
 			{{ html_label(__('Lidnummer(s)'), 'member_id') }}
-			{{ html_input_text('member_id', [], autofocus=true) }}
+			{{ html_input_text('member_id', [], autofocus=true, data_autocomplete='member_id') }}
 		</div>
 		<div class="controls">
 			<button type="submit" class="button">{{ __('Meld aan') }}</button>
