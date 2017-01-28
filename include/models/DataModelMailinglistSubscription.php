@@ -18,9 +18,9 @@ class DataIterMailinglistSubscription extends DataIter
 		];
 	}
 
-	public function get_mailignlist()
+	public function get_mailinglist()
 	{
-		return get_model('DataModelMailinglijst')->get_iter($this['mailinglijst_id']);
+		return get_model('DataModelMailinglist')->get_iter($this['mailinglijst_id']);
 	}
 
 	public function get_lid()
@@ -40,10 +40,7 @@ class DataIterMailinglistSubscription extends DataIter
 
 	public function cancel()
 	{
-		if ($this['abonnement_id'])
-			return $this->model->cancel_subscription($this);
-		else
-			return $this->model->unsubscribe_member($this['mailinglist'], $this['lid']);
+		return $this->model->cancel_subscription($this);	
 	}
 }
 
@@ -56,6 +53,56 @@ class DataModelMailinglistSubscription extends DataModel
 		parent::__construct($db, 'mailinglijsten_abonnementen', 'abonnement_id');
 	}
 
+	private function _is_opt_out_subscription_id($id, &$list_id = null, &$member_id = null)
+	{
+		if (preg_match('/^(\d+)\-(\d+)$/', $id, $match))
+		{
+			$list_id = (int) $match[1];
+
+			$member_id = (int) $match[2];
+
+			return true;
+		}
+		
+		return false;
+	}
+
+	public function get_iter($id)
+	{
+		if ($this->_is_opt_out_subscription_id($id, $list_id, $member_id))
+		{
+			$row = $this->db->query_first("
+				SELECT
+						'{$list_id}' as mailinglijst_id,
+						'{$list_id}-' || l.id as abonnement_id,
+						l.id as lid_id,
+						l.voornaam as naam,
+						l.email,
+						l.id as lid__id,
+						l.voornaam as lid__voornaam,
+						l.tussenvoegsel as lid__tussenvoegsel,
+						l.achternaam as lid__achternaam,
+						l.privacy as lid__privacy
+					FROM
+						leden l
+					LEFT JOIN mailinglijsten_opt_out o ON
+						o.mailinglijst_id = {$list_id}
+						AND o.lid_id = l.id
+					WHERE
+						l.id = {$member_id}
+						AND l.type = " . MEMBER_STATUS_LID . "
+						AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL) -- filter out the valid opt-outs
+			");
+
+			if ($row === null)
+				throw new DataIterNotFoundException($id, $this);
+
+			return $this->_row_to_iter($row);
+		}
+		else
+			return parent::get_iter($id);
+	}
+
 	public function get_subscriptions(DataIterMailinglist $lijst)
 	{
 		switch ($lijst['type'])
@@ -63,6 +110,7 @@ class DataModelMailinglistSubscription extends DataModel
 			case DataModelMailinglist::TYPE_OPT_IN:
 				$rows = $this->db->query(sprintf('
 					SELECT
+						%d as mailinglijst_id,
 						m.abonnement_id,
 						l.id as lid_id,
 						coalesce(l.voornaam, m.naam) as naam,
@@ -77,7 +125,7 @@ class DataModelMailinglistSubscription extends DataModel
 					LEFT JOIN leden l ON
 						m.lid_id = l.id
 					WHERE
-						m.mailinglijst_id = %d
+						m.mailinglijst_id = %1$d
 						AND (l.type IS NULL OR l.type <> ' . MEMBER_STATUS_LID_AF . ')
 						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 					ORDER BY
@@ -86,9 +134,10 @@ class DataModelMailinglistSubscription extends DataModel
 				break;
 
 			case DataModelMailinglist::TYPE_OPT_OUT:
-				$rows = $this->db->query(sprintf('
+				$rows = $this->db->query(sprintf("
 					SELECT
-						NULL as abonnement_id,
+						%1\$d as mailinglijst_id,
+						'%1\$d-' || l.id as abonnement_id,
 						l.id as lid_id,
 						l.voornaam as naam,
 						l.email,
@@ -100,12 +149,13 @@ class DataModelMailinglistSubscription extends DataModel
 					FROM
 						leden l
 					LEFT JOIN mailinglijsten_opt_out o ON
-						o.mailinglijst_id = %d
+						o.mailinglijst_id = %1\$d
 						AND o.lid_id = l.id
 					WHERE
-						l.type = ' . MEMBER_STATUS_LID . '
+						l.type = " . MEMBER_STATUS_LID . "
 						AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL) -- filter out the valid opt-outs
 					UNION SELECT -- union the guest subscriptions
+						%1\$d as mailinglijst_id,
 						g.abonnement_id,
 						NULL as lid_id,
 						g.naam,
@@ -118,10 +168,10 @@ class DataModelMailinglistSubscription extends DataModel
 					FROM
 						mailinglijsten_abonnementen g
 					WHERE
-						g.mailinglijst_id = %1$d
+						g.mailinglijst_id = %1\$d
 						AND (g.opgezegd_op > NOW() OR g.opgezegd_op IS NULL)
 					ORDER BY
-						naam ASC',
+						naam ASC",
 					$lijst['id']));
 				break;
 
@@ -129,7 +179,7 @@ class DataModelMailinglistSubscription extends DataModel
 				throw new LogicException('Invalid list type');
 		}
 
-		return $this->_rows_to_iters($rows, 'DataIterMailinglistSubscription');
+		return $this->_rows_to_iters($rows);
 	}
 
 	public function get_reach(DataIterMailinglist $lijst)
@@ -291,10 +341,12 @@ class DataModelMailinglistSubscription extends DataModel
 		if ($subscription['opgezegd_op'])
 			return;
 
+		if ($this->_is_opt_out_subscription_id($subscription['id']))
+			return $this->unsubscribe_member($subscription['mailinglist'], $subscription['lid']);
+		
 		$subscription['opgezegd_op'] = new DateTime();
 
 		return $this->update($subscription);
 	}
-
 	
 }

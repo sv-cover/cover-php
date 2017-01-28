@@ -28,7 +28,7 @@
 	</div>
 
 	<div class="section">
-		<form method="post" action="{{ controller.link_to_read(iter)|e('html_attr') }}">
+		<form method="post" action="{{ controller.link_to('unsubscribe', iter)|e('html_attr') }}">
 		{{ html_nonce('unsubscribe', iter) }}
 		<table class="full-width-table">
 			<thead>
@@ -42,7 +42,7 @@
 			<tbody>
 			{% for subscription in iter.subscriptions %}
 				<tr>
-					<td><input type="checkbox" id="{{ view.uid(subscription) }}" name="unsubscribe[]" value="{{ (subscription.id ? subscription.id : subscription.lid_id)|e('html_attr') }}"></td>
+					<td><input type="checkbox" id="{{ view.uid(subscription) }}" name="unsubscribe[]" value="{{ subscription.id }}"></td>
 					{% if subscription.lid_id %}
 					<td><label for="{{ view.uid(subscription) }}">{{ subscription.lid|full_name() }}</label></td>
 					{% else %}

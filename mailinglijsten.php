@@ -215,6 +215,27 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return $this->view->render_subscribe_guest_form($list, $errors);
 	}
 
+	protected function run_unsubscribe(DataIterMailinglist $list)
+	{
+		if (!get_policy($this->model)->user_can_update($list))
+			throw new UnauthorizedException('You cannot modify this mailing list');
+
+		if ($this->_form_is_submitted('unsubscribe', $list))
+		{
+			foreach ($_POST['unsubscribe'] as $subscription_id)
+			{
+				$subscription = $this->subscription_model->get_iter($subscription_id);
+				
+				if ($subscription['mailinglijst_id'] != $list['id'])
+					throw new NotFoundException('Subscription not in this list');
+
+				$subscription->cancel();
+			}
+		}
+
+		return $this->view->redirect($this->link_to_read($list));
+	}
+
 	protected function run_archive_index(DataIterMailinglist $list)
 	{
 		if (!$this->model->member_can_access_archive($list))
