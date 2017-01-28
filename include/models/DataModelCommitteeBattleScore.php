@@ -3,6 +3,16 @@ require_once 'include/data/DataModel.php';
 
 class DataIterCommitteeBattleScore extends DataIter
 {
+	static public function fields()
+	{
+		return [
+			'id',
+			'points',
+			'awarded_on',
+			'awarded_for'
+		];
+	}
+	
 	public function get_committee_ids()
 	{
 		return $this->model->db->query_column(
@@ -35,13 +45,6 @@ class DataIterCommitteeBattleScore extends DataIter
 class DataModelCommitteeBattleScore extends DataModel
 {
 	public $dataiter = 'DataIterCommitteeBattleScore';
-
-	public $fields = [
-		'id',
-		'points',
-		'awarded_on',
-		'awarded_for'
-	];
 
 	public function __construct($db)
 	{

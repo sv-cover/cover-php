@@ -1,4 +1,4 @@
-{% set nav = view.get_navigation(iter) %}
+{% set nav = view.get_navigation(model, iter) %}
 <div class="committee-navigation navigation">
 	{% if nav.previous %}
 		<a href="{{ controller.link_to_read(nav.previous)|e('html_attr') }}" class="previous">

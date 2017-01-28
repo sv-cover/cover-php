@@ -1358,6 +1358,12 @@ table.incassomatic thead::before
 	font-weight: normal;
 }
 
+.committee-navigation {
+	margin-top: -20px;
+	height: 20px;
+	position: relative;
+}
+
 .vertical-form > div,
 .vertical-form > fieldset,
 .vertical-form > fieldset > div {
