@@ -235,8 +235,7 @@ class DataModelMailinglistSubscription extends DataModel
 		{
 			case DataModelMailinglist::TYPE_OPT_IN:
 				try {
-					$this->get_for_member($list, $member);
-					return true;
+					return $this->get_for_member($list, $member)->is_active();
 				} catch (NotFoundException $e) {
 					return false;
 				}
@@ -252,7 +251,7 @@ class DataModelMailinglistSubscription extends DataModel
 						AND o.lid_id = %d
 						AND o.opgezegd_op <= NOW()',
 					$list['id'], $member['id']));
-				return $count > 0;
+				return $count === 0;
 		}
 	}
 
