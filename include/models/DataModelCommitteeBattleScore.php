@@ -58,8 +58,7 @@ class DataModelCommitteeBattleScore extends DataModel
 	 */
 	protected function _insert($table, DataIter $iter, $get_id = false)
 	{
-		// Let PostgreSQL set the awarded_on field. 
-		$iter->set_literal('awarded_on', 'current_timestamp');
+		$iter['awarded_on'] = new DateTime();
 
 		// _insert() will behave thanks to $this->fields not
 		// including 'committee_ids' and 'member_ids'.

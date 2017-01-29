@@ -8,7 +8,7 @@
 	<form method="post" action="{{ iter and iter.has_id
 			? controller.link_to_update(iter)
 			: controller.link_to_create() }}" class="vertical-form committee-battle-form"">
-		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create') }}
+		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create', iter) }}
 
 		<fieldset>
 			<legend>{{ html_label(__('Leden'), 'member_ids[]', errors=errors, required=true) }}</legend>
@@ -20,7 +20,7 @@
 			<ul class="option-group columns">
 				{% for committee in view.committee_options %}
 				<li>
-					{{ html_input_checkbox('committee_ids[]', iter, committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' ')) }}
+					{{ html_input_checkbox('committee_ids[]', iter, value=committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' ')) }}
 					{{ html_label(committee.naam, 'committee-' ~ committee.id) }}
 				</li>
 				{% endfor %}
