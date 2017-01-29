@@ -216,7 +216,7 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 			'[MAILINGLIST]' => htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING)
 		);
 
-		if ($aanmelding->has('lid_id'))
+		if ($aanmelding->has_value('lid_id'))
 			$variables['[LID_ID]'] = $aanmelding->get('lid_id');
 
 		// If you are allowed to unsubscribe, parse the placeholder correctly (different for opt-in and opt-out lists)

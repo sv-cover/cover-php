@@ -41,7 +41,7 @@
 		else if ($iter === null)
 			$iter = get_identity()->member();
 		
-		return $iter && $iter->has('nick')
+		return $iter && $iter->has_value('nick')
 			? $iter->get('nick')
 			: __('Geen naam');
 	}

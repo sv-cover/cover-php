@@ -47,10 +47,10 @@
 			if (!$this->facebook)
 				return null;
 
-			if (!$item->has('facebook_id'))
+			if (!$item['facebook_id'])
 				return null;
 			
-			if ($cover_photo = $this->facebook->getCoverPhoto($item->get('facebook_id')))
+			if ($cover_photo = $this->facebook->getCoverPhoto($item['facebook_id']))
 				return $cover_photo;
 			else
 				return array(
@@ -63,7 +63,7 @@
 			if (!$this->facebook)
 				return array();
 
-			if (!$item->has('facebook_id'))
+			if (!$item['facebook_id'])
 				return array();
 
 			return $this->facebook->getAttending($item->get('facebook_id'));

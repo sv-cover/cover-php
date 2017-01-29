@@ -20,7 +20,7 @@
 				<i class="fa fa-trash-o"></i>
 			</a>
 			{% endif %}
-			{% if user_can_update book and book.has('visibility') %}
+			{% if user_can_update book and book.visibility is not same as(null) %}
 				{% if book.visibility == constant('DataModelPhotobook::VISIBILITY_PUBLIC') %}
 				<span class="visibility visibility-public" title="{{ __('Publiek') }}">{{ __('Publiek') }}</span>
 				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_MEMBERS') %}

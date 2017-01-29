@@ -923,18 +923,18 @@
 		public function insert(DataIter $iter)
 		{
 			// Determine width and height of the new image
-			if (!$iter->has('width') || !$iter->has('height'))
+			if (!$iter->has_value('width') || !$iter->has_value('height'))
 				$iter->set_all($iter->compute_size());
 
 			// Determine the CRC32 file hash, used for detecting changes later on
-			if (!$iter->has('filehash'))
+			if (!$iter->has_value('filehash'))
 				$iter->set('filehash', $iter->compute_hash());
 
-			if (!$iter->has('created_on'))
+			if (!$iter->has_value('created_on'))
 				$iter->set('created_on', $iter->compute_created_on_timestamp());
 
-			if (!$iter->has('added_on'))
-				$iter->set_literal('added_on', 'NOW()');
+			if (!$iter->has_value('added_on'))
+				$iter['added_on'] = new DateTime();
 
 			return parent::insert($iter);
 		}

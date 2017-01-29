@@ -509,7 +509,7 @@
 				if (count($new_photos))
 				{
 					// Update photo book last_update timestamp
-					$book->set_literal('last_update', 'NOW()');
+					$book['last_update'] = new DateTime();
 					$this->model->update_book($book);
 
 					// Update faces
@@ -633,7 +633,7 @@
 				$book_ancestors = [$book];
 
 				while (end($book_ancestors)->get_id() != $root_book->get_id()
-					&& end($book_ancestors)->has('parent_id')
+					&& end($book_ancestors)->has_value('parent_id')
 					&& isset($books[end($book_ancestors)->get('parent_id')]))
 					$book_ancestors[] = $books[end($book_ancestors)->get('parent_id')];
 				
@@ -657,12 +657,12 @@
 					// Add meta data to the zip file if available
 					$metadata = array();
 
-					if ($photo->has('created_on'))
+					if ($photo->has_value('created_on'))
 						$metadata['time'] = strtotime($photo->get('created_on'));
 					else
 						$metadata['time'] = filectime($photo->get_full_path());
 					
-					if ($photo->has('beschrijving'))
+					if ($photo->has_value('beschrijving'))
 						$metadata['comment'] = $photo->get('beschrijving');
 
 					// And finally add the photo to the actual stream

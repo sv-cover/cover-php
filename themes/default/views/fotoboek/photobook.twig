@@ -221,21 +221,21 @@
 
 	{# information about who made the photo's, and when #}
 	<table class="default_noborder vertical">
-		{% if book.has('fotograaf') %}
+		{% if book.has_value('fotograaf') %}
 			<tr>
 				<th>{{ __('Fotograaf') }}:</th>
 				<td>{{ book.fotograaf }}</td>
 			</tr>
 		{% endif %}
 
-		{% if book.has('date') %}
+		{% if book.has_value('date') %}
 			<tr>
 				<th>{{ __('Datum') }}:</th>
 				<td>{{ book.date|date('d-m-Y') }}</td>
 			</tr>
 		{% endif %}
 		
-		{% if book.has('beschrijving') and book.beschrijving|length > 0 %} 
+		{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 
 			<tr>
 				<th>{{ __('Beschrijving') }}:</th>
 				<td>{{ book.beschrijving }}</td>

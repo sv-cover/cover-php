@@ -199,7 +199,7 @@
 
 		public function update(DataIter $iter)
 		{
-			if ($iter->has('vacancies') && !$iter->get('vacancies'))
+			if ($iter->has_value('vacancies') && !$iter->get('vacancies'))
 				$iter->set('vacancies', null);
 			
 			return parent::update($iter);

@@ -15,7 +15,7 @@ class PolicyPhotobook implements Policy
 		// First: if the access to the photo book is of a higher level
 		// than the current user has, no way he/she can view the photo
 		// book.
-		if ($book->has('visibility') && $this->get_access_level() < $book->get('visibility'))
+		if ($book['visibility'] !== null && $this->get_access_level() < $book->get('visibility'))
 			return false;
 
 		// Member-specific albums are also forbidden terrain unless they are about you
@@ -23,7 +23,7 @@ class PolicyPhotobook implements Policy
 			return $book['member_ids'] == [get_identity()->get('id')];
 
 		// Older photo books are not visible for non-members
-		if (!get_identity()->member_is_active() && $book->has('date') && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
+		if (!get_identity()->member_is_active() && $book['date'] !== null && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
 			return intval($match[1]) >= intval(date("Y", strtotime("-2 year")));
 
 		return true;
