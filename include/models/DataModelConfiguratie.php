@@ -11,6 +11,16 @@
 		public function __construct($db)
 		{
 			parent::__construct($db, 'configuratie', 'key');
+
+			$this->_populate_cache();
+		}
+
+		private function _populate_cache()
+		{
+			$rows = $this->db->query("SELECT key, value FROM configuratie");
+
+			foreach ($rows as $row)
+				$this->_cache[$row['key']] = $row['value'];
 		}
 		
 		/**
@@ -21,17 +31,11 @@
 		  */
 		public function get_value($key, $default = null)
 		{
-			if (isset($this->_cache[$key]))
+			if (array_key_exists($key, $this->_cache))
 				$value = $this->_cache[$key];
 			else
-			{
-				$value = $this->db->query_value('SELECT value
-						FROM configuratie
-						WHERE key = \'' . $this->db->escape_string($key) . '\'');
-
-				$this->_cache[$key] = $value;
-			}
-						
+				$value = null;
+			
 			return $value === null ? $default : $value;
 		}
 
@@ -42,9 +46,6 @@
 		 */
 		protected function _insert($table, DataIter $iter, $get_id = false)
 		{
-			if (!$this->db)
-				return false;
-			
 			$this->db->insert($table, $iter->data, $iter->get_literals());
 			
 			return $get_id ? $key : -1;
@@ -60,6 +61,8 @@
 		public function set_value($key, $value)
 		{
 			$this->_cache[$key] = $value;
+
+			// Todo: You cannot set a value to null using this set-up
 
 			if (!is_null($this->get_value($key)))
 				$this->db->query_value('UPDATE configuratie SET value = \'' . $this->db->escape_string($value) . '\' WHERE key = \'' . $this->db->escape_string($key) . '\';');
