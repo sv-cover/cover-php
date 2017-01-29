@@ -1,3 +1,8 @@
+{% extends "@layout/layout.twig" %}
+
+{% block title __('Hangende aanmeldingen') ~ ' ::  '~ parent() %}
+
+{% block content %}
 <div class="messageBox">
 	{% if message %}
 		<p>{{ message }}</p>
@@ -20,6 +25,7 @@
 <h1>{{ __('Hangende aanmeldingen') }}</h1>
 <div class="messageBox">
 	<form method="post" action="">
+		{{ html_nonce('pending') }}
 		<table class="full-width-table">
 			<col>
 			<col>
@@ -37,7 +43,7 @@
 			<tbody>
 				{% for row in registrations %}
 					<tr>
-						<td><input type="checkbox" name="confirmation_code[]" value="<?=markup_format_attribute($row['confirmation_code'])?>"></td>
+						<td><input type="checkbox" name="confirmation_code[]" value="{{ row.confirmation_code|e('html_attr') }}"></td>
 						<td>
 							{{ view.full_name(row) }}
 							{{ view.search_link_for_full_name(row)|raw }}
@@ -59,3 +65,4 @@
 		</div>
 	</form>
 </div>
+{% endblock %}

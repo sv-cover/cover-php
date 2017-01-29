@@ -39,6 +39,11 @@ class LayoutViewHelper
 				];
 
 				$menus['admin']['submenu'][] = [
+					'url' => 'lidworden.php?view=pending-confirmation',
+					'label' => __('Hangende aanmeldingen')
+				];
+
+				$menus['admin']['submenu'][] = [
 					'url' => 'forum.php?admin=forums',
 					'label' => 'Forum'
 				];
