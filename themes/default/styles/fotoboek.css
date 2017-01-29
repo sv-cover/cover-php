@@ -371,7 +371,7 @@ table.navigation td:nth-child(3) {
 
 #folder-selector ol {
 	display: inline-block;
-	width: 250px;
+	width: 200px;
 	height: 100%;
 	overflow: hidden;
 	overflow-y: auto;
@@ -385,7 +385,8 @@ table.navigation td:nth-child(3) {
 	padding: 0 4px;
 	line-height: 1.5em;
 	display: block;
-
+	user-select:none;
+	cursor: default;
 }
 
 #folder-selector li.selected {

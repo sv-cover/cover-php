@@ -26,7 +26,7 @@
 				</span>
 				<img class="thumbnail">
 				<span class="description">
-					<input type="text" name="photo[$index][description]" placeholder="<?=__('Omschrijving')?>">
+					<input type="text" name="photo[$index][description]" placeholder="{{ __('Omschrijving')|e('html_attr') }}">
 				</span>
 				<span class="filename"></span>
 				<span class="created-on"></span>
@@ -84,8 +84,6 @@ jQuery(function($) {
 
 		stream.addEventListener('photo', function(e) {
 			var photo = JSON.parse(e.data);
-
-			console.log(photo);
 
 			var $li = $photo_template.clone();
 			$li.data('sort-order', Date.parse(photo['created_on'].replace(' ', 'T')));
@@ -153,6 +151,9 @@ jQuery(function($) {
 			ol.empty();
 		else
 			ol = $('<ol>').insertAfter($(this).parent('ol'));
+
+		// Scroll all the way to the right
+		e.delegateTarget.scrollLeft = e.delegateTarget.scrollWidth - e.delegateTarget.clientWidth;
 
 		load_folders($(this).data('folder'), ol);
 		

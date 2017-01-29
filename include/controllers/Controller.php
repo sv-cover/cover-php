@@ -76,7 +76,8 @@
 
 		protected function run_500_internal_server_error(Exception $e)
 		{
-			header('Status: 500 Interal Server Error');
+			if (!headers_sent())
+				header('Status: 500 Interal Server Error');
 
 			if (get_config_value('show_exceptions'))
 				return '<pre>' . $e . '</pre>';

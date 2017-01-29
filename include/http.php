@@ -14,6 +14,8 @@ class HTTPEventStream
 	public function event($event, $data = '')
 	{
 		echo "event: $event\ndata: $data\n\n";
-		ob_flush();
+		
+		while (ob_get_level())
+			ob_flush();
 	}
 }
