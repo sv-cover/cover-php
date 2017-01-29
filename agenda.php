@@ -379,6 +379,11 @@
 			return $this->view->render_json($locations, $limit);
 		}
 
+		public function run_preview()
+		{
+			return markup_parse($_POST['beschrijving']);
+		}
+
 		protected function run_impl()
 		{
 			// Compatibility

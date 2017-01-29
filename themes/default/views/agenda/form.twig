@@ -54,8 +54,19 @@
 	</div>
 	
 	<div>
-		{{ html_label(__('Beschrijving'), 'beschrijving', errors=errors) }}
-		{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
+		<div class="tab-container">
+			<ul class="nav-tabs horizontal">
+				<li class="active"><a href="#beschrijving-tab">{{ __('Beschrijving') }}</a></li>
+				<li><a href="#beschrijving-preview-tab">{{ __('Voorbeeld') }}</a></li>
+			</ul>
+			<div id="beschrijving-tab" class="tab-panel">
+				{{ html_label(__('Beschrijving'), 'beschrijving', errors=errors) }}
+				{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
+			</div>
+			<div class="tab-panel" id="beschrijving-preview-tab" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
+				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+			</div>
+		</div>
 	</div>
 			
 	<div>
