@@ -20,6 +20,11 @@
 			];
 		}
 
+		public function get_member_ids()
+		{
+			return $this->model->get_member_ids($this);
+		}
+
 		public function get_members()
 		{
 			return $this->model->get_members($this);
@@ -259,6 +264,20 @@
 			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
 		}
 		
+		private function _get_members(DataIterCommissie $committee)
+		{
+			$rows = $this->db->query('SELECT lidid, functie FROM actieveleden WHERE commissieid = ' . $committee->get_id());
+
+			return array_combine(
+				array_map(function($row) { return $row['lidid']; }, $rows),
+				array_map(function($row) { return $row['functie']; }, $rows));
+		}
+		
+		public function get_member_ids(DataIterCommissie $committee)
+		{
+			return array_keys($this->_get_members($committee));
+		}
+
 		/**
 		  * Get all members of a specific commissie
 		  * @id the commissie id
@@ -269,21 +288,19 @@
 		{
 			$member_model = get_model('DataModelMember');
 
-			$rows = $this->db->query('SELECT lidid, functie FROM actieveleden WHERE commissieid = ' . $committee->get_id());
+			$positions = $this->_get_members($committee);
 
-			if (count($rows) === 0)
-				return array();
+			if (count($positions) === 0)
+				return [];
 
-			$ids = array_map(function($row) { return $row['lidid']; }, $rows);
+			$ids = array_keys($positions);
 
 			$members = $member_model->find('leden.id IN (' . implode(', ', $ids) . ')');
-
-			$positions = array_combine($ids, array_map(function($row) { return $row['functie']; }, $rows));
 			
 			// Attach the committee positions to all its members
 			// Not using 'set' here because that would mess up the DataIter::get_changes()
 			foreach ($members as $member)
-				$member['functie'] = $positions[$member->get_id()];
+				$member->data['functie'] = $positions[$member['id']];
 
 			/* Sort by function */
 			usort($members, array(&$this, '_sort_leden'));
