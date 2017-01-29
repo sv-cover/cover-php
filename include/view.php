@@ -129,6 +129,16 @@ class View
 		];
 	}
 
+	public function scripts()
+	{
+		return [
+			get_theme_data('data/jquery-2.2.0.min.js'),
+			'//code.jquery.com/ui/1.10.4/jquery-ui.js',
+			get_theme_data('data/common.js'),
+			get_theme_data('data/dropdown.js')
+		];
+	}
+
 	public function stylesheets()
 	{
 		return [

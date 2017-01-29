@@ -11,12 +11,9 @@
 		<link rel="stylesheet" href="{{ stylesheet|e('html') }}" type="text/css">
 		{% endfor %}
 		
-		{% block scripts %}
-		<script src="{{ link_static('data/jquery-2.2.0.min.js') }}"></script>
-		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-		<script type="text/javascript" src="{{ link_static('data/common.js') }}"></script>
-		<script type="text/javascript" src="{{ link_static('data/dropdown.js') }}"></script>
-		{% endblock %}
+		{% for script in view.scripts %}
+		<script src="{{ script|e('html_attr') }}"></script>
+		{% endfor %}
 	</head>
 	<body>
 		<div class="world">
