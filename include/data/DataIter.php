@@ -109,7 +109,7 @@
 		 */
 		public function has_value($field)
 		{
-			return isset($this->data[$field]);
+			return array_key_exists($field, $this->data);
 		}
 
 		/**
