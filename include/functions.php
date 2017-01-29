@@ -801,11 +801,11 @@
 	 * @var string ...
 	 * @return string the concatenated path
 	 */
-	function path_concat($path_component)
+	function path_concat(...$path_components)
 	{
 		$path = '';
 		
-		foreach (func_get_args() as $path_component)
+		foreach ($path_components as $path_component)
 		{
 			if (strlen($path) === 0)
 				$path .= rtrim($path_component, '/');

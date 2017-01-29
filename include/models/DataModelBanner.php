@@ -26,24 +26,29 @@ class DataModelBanner extends DataModel
     {
         $this->_dir = get_config_value('path_to_banners', 'images/banners/');
     }
+
+    public function get_from_file($path)
+    {
+        $banners = array();
+
+        //check if path is directory and if dir can be opened
+        if (file_exists($path) && is_readable($path))
+        {
+            /* read json file */
+            $data = file_get_contents($path);
+            $rows = json_decode($data, true, 10);
+            $banners = $this->_rows_to_iters($rows);
+        }
+    
+        shuffle($banners);
+
+        return $banners;
+    }
     
     public function get($n = null)
     {
         if ($this->_banners === null)
-        {
-            $this->_banners = array();
-
-            //check if path is directory and if dir can be opened
-            if (is_dir($this->_dir) and $resource = opendir($this->_dir))
-            {
-                /* read json file */
-                $data = file_get_contents($this->_dir. 'data.json');
-                $banners = json_decode($data, true, 10);
-                $this->_banners = $this->_rows_to_iters($banners);
-            }
-        
-            shuffle($this->_banners);
-        }
+            $this->_banners = $this->get_from_file(path_concat($this->_dir, 'data.json'));
 
         if ($n !== null && $n < count($this->_banners))
             return array_slice($this->_banners, 0, $n);
