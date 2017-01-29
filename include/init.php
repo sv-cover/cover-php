@@ -45,3 +45,6 @@
 	session_start();
 
 	init_i18n();
+
+	if (get_config_value('show_queries', false))
+		get_db()->history = [];

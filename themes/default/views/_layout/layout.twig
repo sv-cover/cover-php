@@ -89,15 +89,14 @@
 		  ga('send', 'pageview');
 		</script>
 
-		{% if get_config_value('show_queries', false) %}
-		{#
-		{% for query in global.db.history %}
-			printf("%f: %s\n\n", $query['duration'], $query['query']);
-
-			printf("Driver: %s\n", get_class(get_db()));
-			printf("Total time: %fs", array_sum(array_map(function($query) { return $query['duration']; }, get_db()->history)));
-		{% endforeach %}
-		#}
+		{% if global.db.history|length > 0 %}
+			<!--
+			Total number of queries run: {{ global.db.history|length }}
+			
+			{% for query in global.db.history %}
+				{{ "%f: %s\n\n"|format(query.duration, query.query) }}
+			{% endfor %}
+			-->
 		{% endif %}
 	</body>
 </html>
