@@ -408,44 +408,53 @@
 			
 			foreach ($iter as $full_path)
 			{
-				if (!preg_match('/\.(je?pg|gif)$/i', $full_path))
-					continue;
+				try {
+					if (!preg_match('/\.(je?pg|gif)$/i', $full_path))
+						continue;
 
-				$id = null;
+					$id = null;
 
-				$description = '';
+					$description = '';
 
-				$file_path = path_subtract($full_path, get_config_value('path_to_photos'));
+					$file_path = path_subtract($full_path, get_config_value('path_to_photos'));
 
-				// Find existing photo
-				foreach ($photos_in_album as $photo) {
-					if ($photo->get('filepath') == $file_path) {
-						$id = $photo->get_id();
-						$description = $photo->get('beschrijving');
-						break;
+					// Find existing photo
+					foreach ($photos_in_album as $photo) {
+						if ($photo->get('filepath') == $file_path) {
+							$id = $photo->get_id();
+							$description = $photo->get('beschrijving');
+							break;
+						}
 					}
+
+					$exif_data = @exif_read_data($full_path);
+
+					if ($exif_data === false)
+						$exif_data = array('FileDateTime' => filemtime($full_path));
+
+					if ($exif_thumbnail = exif_thumbnail($full_path, $th_width, $th_height, $th_image_type))
+						$thumbnail = encode_data_uri(image_type_to_mime_type($th_image_type), $exif_thumbnail);
+					else
+						$thumbnail = null;
+
+					$out->event('photo', json_encode(array(
+						'id' => $id,
+						'description' => (string) $description,
+						'path' => $file_path,
+						'created_on' => strftime('%Y-%m-%d %H:%M:%S',
+							isset($exif_data['DateTimeOriginal'])
+								? strtotime($exif_data['DateTimeOriginal'])
+								: $exif_data['FileDateTime']),
+						'thumbnail' => $thumbnail,
+					)));
+				} catch (\Exception $e) {
+					$out->event('error', json_encode([
+						'message' => $e->getMessage(),
+						'file' => $e->getFile(),
+						'line' => $e->getLine(),
+						'trace' => $e->getTrace()
+					]));
 				}
-
-				$exif_data = @exif_read_data($full_path);
-
-				if ($exif_data === false)
-					$exif_data = array('FileDateTime' => filemtime($full_path));
-
-				if ($exif_thumbnail = exif_thumbnail($full_path, $th_width, $th_height, $th_image_type))
-					$thumbnail = encode_data_uri(image_type_to_mime_type($th_image_type), $exif_thumbnail);
-				else
-					$thumbnail = null;
-
-				$out->event('photo', json_encode(array(
-					'id' => $id,
-					'description' => (string) $description,
-					'path' => $file_path,
-					'created_on' => strftime('%Y-%m-%d %H:%M:%S',
-						isset($exif_data['DateTimeOriginal'])
-							? strtotime($exif_data['DateTimeOriginal'])
-							: $exif_data['FileDateTime']),
-					'thumbnail' => $thumbnail,
-				)));
 			}
 
 			$out->event('end');
@@ -480,7 +489,7 @@
 
 			$success = null;
 
-			if (isset($_POST['photo']))
+			if ($this->_form_is_submitted('add_photos', $book))
 			{
 				$new_photos = array();
 

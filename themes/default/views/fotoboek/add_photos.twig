@@ -18,6 +18,7 @@
 	<div id="folder-selector"></div>
 
 	<form id="add-photos-form" action="fotoboek.php?book={{ book.id|e('url') }}&amp;view=add_photos" method="post">
+		{{ html_nonce('add_photos', book) }}
 		<ul id="photo-selector">
 			<li>
 				<span class="add-control">
@@ -61,12 +62,6 @@ jQuery(function($) {
 
 	var stream = null;
 
-	function handle_stream_error(e) {
-		if (e.readyState != EventSource.CLOSED) {
-			console.error(e);
-		} 
-	}
-
 	var $photo_template = $('#photo-selector li').detach();
 
 	function load_photos(path, $ol) {
@@ -76,7 +71,15 @@ jQuery(function($) {
 		var index = 0;
 
 		stream = new EventSource(baseurl + '&view=add_photos_list_photos&path=' + encodeURIComponent(path));
-		stream.addEventListener('error', handle_stream_error);
+		stream.addEventListener('error', function(e) {
+			if (e.readyState != EventSource.CLOSED)
+				return;
+			
+			$('<li>')
+				.addClass('error-section')
+				.text(e.message)
+				.appendTo($ol);
+		});
 
 		stream.addEventListener('end', function(e) {
 			stream.close();
@@ -151,6 +154,9 @@ jQuery(function($) {
 			ol.empty();
 		else
 			ol = $('<ol>').insertAfter($(this).parent('ol'));
+
+		// Remove all next columns
+		ol.parent().find('ol').slice(ol.parent().find('ol').index(ol) + 1).remove();
 
 		// Scroll all the way to the right
 		e.delegateTarget.scrollLeft = e.delegateTarget.scrollWidth - e.delegateTarget.clientWidth;
