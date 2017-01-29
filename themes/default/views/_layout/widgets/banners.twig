@@ -1,7 +1,21 @@
-{% for banner in global.models.Banner.get(15) %}
-	<a href="{{ banner.url }}" target="_blank">
-		<img src="images/banners/{{ banner.filename }}">
-	</a>
-	<br>
-	<br>
-{% endfor %}
+{% if global.models.Banner.main_sponsors|length > 0 %}
+	<h4>{{ __('Hoofdpartner') }}</h4>
+	{% for banner in global.models.Banner.main_sponsors %}
+		<a href="{{ banner.url }}" target="_blank">
+			<img src="images/banners/{{ banner.filename }}">
+		</a>
+		<br>
+		<br>
+	{% endfor %}
+{% endif %}
+
+{% if global.models.Banner.partners|length > 0 %}
+	<h4>{{ __('Partners') }}</h4>
+	{% for banner in global.models.Banner.partners %}
+		<a href="{{ banner.url }}" target="_blank">
+			<img src="images/banners/{{ banner.filename }}">
+		</a>
+		<br>
+		<br>
+	{% endfor %}
+{% endif %}
