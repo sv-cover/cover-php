@@ -2,9 +2,9 @@
 
 class CommitteeBattleView extends CRUDView
 {
-	public function get_scripts()
+	public function scripts()
 	{
-		return array_merge(parent::get_scripts(), [
+		return array_merge(parent::scripts(), [
 			get_theme_data('data/select2.min.js', false)
 		]);
 	}
