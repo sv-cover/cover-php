@@ -128,6 +128,8 @@ class DataModelPhotobookReactie extends DataModel
 					fotos.id = f_r.foto
 				LEFT JOIN foto_boeken ON
 					foto_boeken.id = fotos.boek
+				WHERE
+					fotos.hidden = 'f'
 				GROUP BY
 					f_r.id,
 					f_r.foto,
