@@ -6,6 +6,7 @@
 <h1>{{ __('Fotoboek verwijderen') }}</h1>
 <div class="messageBox">
 	<form method="post" action="fotoboek.php?view=delete_book&amp;book={{ iter.id }}" class="vertical-form delete-photobook-form">
+		{{ html_nonce('delete', iter) }}
 		<div>
 			<p>{{ __('Weet je heel zeker dat je het fotoboek <em>%s</em> wil verwijderen?')|format(iter.titel|e)|raw }}</p>
 			{{ html_label(__('Typ om dit fotoboek te verwijderen de naam van het fotoboek over ter bevestiging'), 'confirm_delete', errors=errors, required=true) }}

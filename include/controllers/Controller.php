@@ -106,6 +106,11 @@
 			return $answer;
 		}
 
+		public function link(array $arguments)
+		{
+			return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
+		}
+
 		final protected function get_content()
 		{
 			throw new LogicException("Controller::get_content is no longer accepted");

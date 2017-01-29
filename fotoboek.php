@@ -334,6 +334,9 @@
 
 		private function _view_update_photo_order(DataIterPhotobook $book)
 		{
+			if (!$this->_form_is_submitted('update_photo_order', $book))
+				throw new RuntimeException('Missing nonce');
+
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 
@@ -356,6 +359,9 @@
 
 		private function _view_update_book_order(DataIterPhotobook $parent)
 		{
+			if (!$this->_form_is_submitted('update_book_order', $parent))
+				throw new RuntimeException('Missing nonce');
+
 			if (!$this->policy->user_can_update($parent))
 				throw new UnauthorizedException();
 
@@ -542,7 +548,7 @@
 
 			$errors = array();
 
-			if (!empty($_POST['confirm_delete']))
+			if ($this->_form_is_submitted('delete', $book))
 			{
 				if ($_POST['confirm_delete'] == $book->get('titel')) {
 					$this->model->delete_book($book);
@@ -756,6 +762,18 @@
 				$this->model->mark_read(logged_in('id'), $book);
 
 			return $this->view->render_photobook($book);
+		}
+
+		public function json_link_to_update_book_order(DataIterPhotobook $book)
+		{
+			$nonce = nonce_generate(nonce_action_name('update_book_order', [$book]));
+			return $this->link(['view' => 'update_book_order', 'book' => $book['id'], '_nonce' => $nonce]);
+		}
+
+		public function json_link_to_update_photo_order(DataIterPhotobook $book)
+		{
+			$nonce = nonce_generate(nonce_action_name('update_photo_order', [$book]));
+			return $this->link(['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
 		}
 
 		protected function run_impl()

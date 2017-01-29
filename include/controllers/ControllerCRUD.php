@@ -135,11 +135,6 @@ class ControllerCRUD extends Controller
 		return $this->model->new_iter();
 	}
 
-	public function link(array $arguments)
-	{
-		return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
-	}
-
 	public function link_to($view, DataIter $iter = null, array $arguments = [])
 	{
 		$arguments[$this->_var_view] = $view;

@@ -114,13 +114,13 @@
 			};
 
 			var submitPhotoOrder = function() {
-				$.post('fotoboek.php?book={{ book.id }}&view=update_photo_order', {
+				$.post({{ controller.json_link_to_update_photo_order(book)|json_encode()|raw }}, {
 					'order': $photos.sortable('toArray').map(getPhotoId)
 				}).fail(printError);
 			};
 
 			var submitBookOrder = function() {
-				$.post('fotoboek.php?book={{ book.id }}&view=update_book_order', {
+				$.post({{ controller.json_link_to_update_book_order(book)|json_encode()|raw }}, {
 					'order': $books.sortable('toArray').map(getBookId).filter(isNotNull)
 				}).fail(printError);
 			};
