@@ -2704,6 +2704,10 @@ ul.committee-list > li .position {
 	border: 1px solid #ccc;
 }
 
+.nav-tabs.horizontal li a.connected-tab {
+	margin-left: -1ch;
+}
+
 .nav-tabs.horizontal li.active a {
 	border-bottom-color: #f5f5f5;
 }

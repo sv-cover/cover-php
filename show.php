@@ -109,7 +109,7 @@ class ControllerShow extends ControllerCRUD
 
 		$page = new DataIterEditable($this->model, null, $_POST);
 
-		return editable_parse($page, null);
+		return $this->view->render_preview($page, isset($_GET['lang']) ? $_GET['lang'] : null);
 	}
 
 	public function run_index()

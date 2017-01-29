@@ -40,4 +40,19 @@ class ShowView extends CRUDView
 		// And if that is also empty, return the preferred language anyway.
 		return $language;
 	}
+
+	public function render_preview(DataIterEditable $editable, $lang = null)
+	{
+		$language = i18n_get_language();
+
+		$field_map = array(
+			'en' => 'content_en',
+			'nl' => 'content'
+		);
+
+		if ($lang !== null && array_key_exists($lang, $field_map))
+			$language = $lang;
+		
+		return markup_parse($editable[$field_map[$language]]);
+	}
 }

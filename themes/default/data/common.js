@@ -1102,11 +1102,12 @@ $(document).on('ready partial-content-loaded', function(e) {
 		}
 
 		var refresh = throttle(function() {
+			// If the target isn't visible (e.g. different tab) then don't go
+			// through all this hassle.
 			if (!$target.is(':visible'))
 				return;
 			
 			var data = $source.closest('form').serialize();
-			console.log($source.length, data);
 			$.post(previewURL, data).done(function(response) {
 				$target.html(response);
 			});

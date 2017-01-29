@@ -25,13 +25,21 @@
 		<div class="tab-container">
 			<ul class="nav-tabs horizontal">
 				<li{% if view.preferred_tab(iter) == 'nl' %} class="active"{% endif %}><a href="#content-nl">{{ __('Nederlands') }}</a></li>
+				<li><a href="#content-nl-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
 				<li{% if view.preferred_tab(iter) == 'en' %} class="active"{% endif %}><a href="#content-en">{{ __('Engels') }}</a></li>
+				<li><a href="#content-en-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
 			</ul>
 			<div class="tab-panel" id="content-nl">
 				{{ html_textarea_field('content', iter, rows=15) }}
 			</div>
 			<div class="tab-panel" id="content-en">
 				{{ html_textarea_field('content_en', iter, rows=15) }}
+			</div>
+			<div class="tab-panel" id="content-nl-preview" data-preview-source="#content-nl textarea" data-preview-url="show.php?view=preview&amp;lang=nl">
+				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+			</div>
+			<div class="tab-panel" id="content-en-preview" data-preview-source="#content-en textarea" data-preview-url="show.php?view=preview&amp;lang=en">
+				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
 			</div>
 		</div>
 
