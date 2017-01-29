@@ -12,6 +12,38 @@ function append_ai_email(input) {
 		input.value += '@ai.rug.nl';
 }
 
+/**
+ * Creates a throttelable version of a function. Calling the 'throttled' function
+ * directly will call the function directly (and clear any scheduled delayed call)
+ * but you can also create a new delayed callback by calling .delay(500) on the
+ * throttled function:
+ * 
+ * Example:
+ *   var fun = throttle(updateCallback);
+ *   $('input').on('keyup', fun.delay(500));
+ * 
+ * This will call updateCallback 500ms after the last keyup event. However, if
+ * you call fun() directly after the last keyup, it won't be called a second
+ * time when the 500ms delay timer runs out.
+ */
+function throttle(callback)
+{
+	var timeout = null;
+
+	var caller = function() {
+		clearTimeout(timeout);
+		callback();
+	};
+
+	caller.delay = function(delay) {
+		return function() {
+			clearTimeout(timeout);
+			timeout = setTimeout(callback, delay);
+		};
+	};
+
+	return caller;
+}
 
 jQuery(function($) {
 	$('.hide-by-default').hide();
@@ -35,6 +67,9 @@ jQuery(function($) {
 });
 
 // Inline links (use data-placement-selector and data-partial-selector attributes)
+// Note that this function triggers the partial-content-loaded event on the loaded
+// content, which is used by many functions here to attach event listeners to the
+// new stuff.
 jQuery(function($) {
 	var inline_link_handler = function(e) {
 		// Do not disturb any effect of modifier keys
@@ -123,6 +158,8 @@ $(document).on('partial-content-loaded', function(e) {
 	}
 });
 
+// If a link has the attribute data-image-popup, and its value is 'modal', open
+// the image (href attribute) it points to in a modal popup.
 jQuery(function($) {
 	$(document).on('click', 'a[data-image-popup]', function(e) {
 		if ($(this).data('image-popup') !== 'modal')
@@ -775,7 +812,17 @@ $(document).on('ready partial-content-loaded', function(e) {
 				$(this).toggleClass('active', urlHash($(this).find('a').attr('href')) == tabId);
 			});
 			$panels.each(function() {{
-				$(this).toggle($(this).prop('id') == tabId);
+				var visible = $(this).prop('id') == tabId;
+				var event = null;
+				
+				if (visible && !$(this).is(':visible'))
+					event = 'show';
+				else if (!visible && $(this).is(':visible'))
+					event = 'hide';
+
+				$(this).toggle(visible);
+				if (event)
+					$(this).trigger(event);
 			}});
 		}
 
@@ -1036,5 +1083,39 @@ $(document).on('ready partial-content-loaded', function(e) {
 			window.requestAnimationFrame(update);
 			triggered = true;
 		}
+	});
+});
+
+// Previews of editable content and forum topics. Use data-preview-source attribute
+// to select which element to take the input value from, and use data-preview-url
+// to select to which url to make a post request. It will send all the form data
+// with it to that endpoint, and display the response in the element itself.
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-preview-source][data-preview-url]').each(function() {
+		var $target = $(this);
+		var $source = $($target.attr('data-preview-source'));
+		var previewURL = $target.attr('data-preview-url');
+
+		if ($source.length === 0) {
+			console.warn('Could not find element', $target.attr('data-preview-source'));
+			return;
+		}
+
+		var refresh = throttle(function() {
+			if (!$target.is(':visible'))
+				return;
+			
+			var data = $source.closest('form').serialize();
+			console.log($source.length, data);
+			$.post(previewURL, data).done(function(response) {
+				$target.html(response);
+			});
+		});
+
+		// Either update the field when we change stuff in the source field
+		$source.on('keyup', refresh.delay(500));
+
+		// Or when it becomes visible (e.g. different tab)
+		$target.on('show', refresh);
 	});
 });

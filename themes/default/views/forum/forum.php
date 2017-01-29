@@ -89,6 +89,11 @@ class ForumView extends View
 		return $this->twig->render('poll_form.twig', compact('forum', 'poll', 'message', 'options', 'errors', 'unified_authors'));
 	}
 
+	public function render_preview($text)
+	{
+		return markup_parse($text);
+	}
+
 	public function get_authors(DataIterForum $forum, $acl)
 	{
 		$model = get_model('DataModelForum');

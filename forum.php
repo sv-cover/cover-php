@@ -794,7 +794,7 @@ class ControllerForum extends Controller
 	
 	public function run_preview()
 	{
-		return $this->view->render_preview(get_post('message'));
+		return $this->view->render_preview($_POST['message']);
 	}
 	
 	private function _process_forum_move_thread($thread_id, $forum_id)
