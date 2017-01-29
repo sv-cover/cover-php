@@ -34,13 +34,7 @@
 
 			$mutation = count($mutations) > 0 ? current($mutations) : null;
 
-			try {
-				$committee = get_model('DataModelCommissie')->get_iter($iter['commissie']);
-			} catch (DataIterNotFoundException $e) {
-				$committee = null;
-			}
-
-			return $this->twig->render('single.twig', compact('iter', 'mutation', 'committee'));
+			return $this->twig->render('single.twig', compact('iter', 'mutation'));
 		}
 
 		public function render_moderate($iters, $highlighted_id)

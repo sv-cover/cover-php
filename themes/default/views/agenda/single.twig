@@ -97,8 +97,8 @@
 <p>{{ iter.beschrijving|parse_markup }}</p>
 
 <!-- Some meta-data -->
-{% if committee %}
-<p><span class="smaller">{{  __('Geplaatst door') }}: <a href="commissies.php?commissie={{ committee.login }}">{{ committee.naam }}</a></span></p>
+{% if iter.committee %}
+<p><span class="smaller">{{  __('Geplaatst door') }}: <a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></span></p>
 {% endif %}
 
 <!-- Actions applicable to the event -->

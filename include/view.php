@@ -77,7 +77,7 @@ class View
 		$this->twig = new Twig_Environment($loader, array(
 			'debug' => true,
 			'strict_variables' => true,
-		    'cache' => get_config_value('twig_cache', 'tmp/twig'),
+			'cache' => get_config_value('twig_cache', 'tmp/twig'),
 		));
 
 		require_once 'include/policytwigextension.php';
