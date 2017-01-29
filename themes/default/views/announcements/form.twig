@@ -28,8 +28,19 @@
 		</div>
 
 		<div>
-			{{ html_label(__('Bericht'), 'message', errors=errors, required=true) }}
-			{{ html_textarea_field('message', iter.data, errors=errors, rows=10) }}
+			<div class="tab-container">
+				<ul class="nav-tabs horizontal">
+					<li class="active"><a href="#message-tab">{{ __('Bericht') }}</a></li>
+					<li><a href="#message-preview-tab">{{ __('Voorbeeld') }}</a></li>
+				</ul>
+				<div class="tab-panel" id="message-tab">
+					{{ html_label(__('Bericht'), 'message', errors=errors, required=true) }}
+					{{ html_textarea_field('message', iter.data, errors=errors, rows=10) }}
+				</div>
+				<div class="tab-panel" id="message-preview-tab" data-preview-source="#message-tab textarea" data-preview-url="announcements.php?view=preview">
+					<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+				</div>
+			</div>
 		</div>
 
 		<div>

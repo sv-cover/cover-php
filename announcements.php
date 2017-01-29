@@ -31,6 +31,11 @@ class ControllerAnnouncements extends ControllerCRUD
 
 		return count($errors) === 0;
 	}
+
+	public function run_preview()
+	{
+		return markup_parse($_POST['message']);
+	}
 }
 
 $controller = new ControllerAnnouncements();

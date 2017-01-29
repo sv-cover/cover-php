@@ -263,7 +263,7 @@ class ControllerCRUD extends Controller
 
 		return $this->view()->render_index($iters);
 	}
-	
+
 	protected function run_impl()
 	{
 		$iter = null;
