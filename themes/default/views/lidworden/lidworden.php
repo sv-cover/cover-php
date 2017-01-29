@@ -43,7 +43,7 @@ class LidwordenView extends View
 
 	public function search_link_for_full_name($row)
 	{
-		return $this->search_link(['full_name' => format_string('$first_name$family_name_preposition|optional $family_name', $row['data'])]
+		return $this->search_link(['full_name' => format_string('$first_name$family_name_preposition|optional $family_name', $row['data'])]);
 	}
 
 	public function search_link_for_email_address($row)
