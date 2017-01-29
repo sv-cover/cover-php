@@ -45,9 +45,16 @@
 					// or some other form where you can re-activate your membership!
 					return !$this->model->get_from_email($x);
 				}],
-				'birth_date' => [function($x) {
-					return preg_match('/^(\d{4})\-([01]\d)\-([0123]\d)$/', $x, $match)
-						&& checkdate($match[2], $match[3], $match[1]);
+				'birth_date' => [
+					function($x) {
+						return preg_match('/^((?:19|20)\d\d)\-([01]?\d)\-([0123]?\d)$/', $x, $match)
+							&& checkdate((int) $match[2], (int) $match[3], (int) $match[1]);
+					},
+					function($x) {
+						// Turn date around if passed the other way
+						return preg_match('/^([0123]?\d)\-([01]?\d)\-((?:19|20)\d\d)$/', $x, $match)
+							? sprintf('%s-%s-%s', $match[3], $match[2], $match[1])
+							: $x;
 					}],
 				'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
 				'iban' => [
@@ -158,7 +165,8 @@
 			mail('administratie@svcover.nl', 'Lidaanvraag ' . $name, $mail,
 				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
-			try {
+			try
+			{
 				$response = get_secretary()->createPerson($data);
 
 				mail('secretaris@svcover.nl',
@@ -170,8 +178,6 @@
 			}
 			catch (Exception $e)
 			{
-				throw $e;
-				
 				mail('secretaris@svcover.nl',
 					'Lidaanvraag (niet verwerkt in Secretary)',
 					"Er is een nieuwe lidaanvraag ingediend.\n"
@@ -202,23 +208,27 @@
 
 			$message = null;
 
-			switch (isset($_POST['action']) ? $_POST['action'] : null) {
-				case 'resend':
-					foreach ($_POST['confirmation_code'] as $confirmation_code)
-						$this->_send_confirmation_mail($confirmation_code);
-					$message = sprintf('Resent %d confirmation emails', count($_POST['confirmation_code']));
-					break;
+			if ($this->_form_is_submitted('pending'))
+			{
+				switch (isset($_POST['action']) ? $_POST['action'] : null)
+				{
+					case 'resend':
+						foreach ($_POST['confirmation_code'] as $confirmation_code)
+							$this->_send_confirmation_mail($confirmation_code);
+						$message = sprintf('Resent %d confirmation emails', count($_POST['confirmation_code']));
+						break;
 
-				case 'delete':
-					if (count($_POST['confirmation_code']) > 0) {
-						$db->query(sprintf("DELETE FROM registrations WHERE confirmation_code IN (%s)",
-							implode(', ', array_map(function($code) use ($db) {
-								return sprintf("'%s'", $db->escape_string($code));
-							}, $_POST['confirmation_code']))));
+					case 'delete':
+						if (count($_POST['confirmation_code']) > 0) {
+							$db->query(sprintf("DELETE FROM registrations WHERE confirmation_code IN (%s)",
+								implode(', ', array_map(function($code) use ($db) {
+									return sprintf("'%s'", $db->escape_string($code));
+								}, $_POST['confirmation_code']))));
 
-						$message = sprintf('Deleted %d registrations', $db->get_affected_rows());
-					}
-					break;
+							$message = sprintf('Deleted %d registrations', $db->get_affected_rows());
+						}
+						break;
+				}
 			}
 
 			$registrations = $db->query("
