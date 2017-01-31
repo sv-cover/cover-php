@@ -211,6 +211,7 @@ class ControllerForum extends Controller
 			throw new UnauthorizedException('You do not have permission to edit this message.');
 	}
 	
+	/*
 	private function _view_admin($sub, DataIterForum $forum)
 	{
 		$this->_assert_admin();
@@ -233,9 +234,9 @@ class ControllerForum extends Controller
 			$info = explode('=', $order[$i], 2);
 
 			if (substr($info[0], 0, 1) == '-') {
-				/* Header */
+				// Header
 				if ($info[0] == '-') {
-					/* New header */
+					// New header
 					$iter = new DataIterForumHeader($this->model, -1, array(
 							'name' => $info[1],
 							'position' => $i + 1));
@@ -355,10 +356,10 @@ class ControllerForum extends Controller
 		$uid = null;
 		
 		switch (intval(get_post('type'))) {
-			case DataModelForum::TYPE_ANONYMOUS: /* Everyone */
+			case DataModelForum::TYPE_ANONYMOUS: // Everyone
 				$uid = -1;
 			break;
-			case DataModelForum::TYPE_PERSON: /* Member */
+			case DataModelForum::TYPE_PERSON: // Member
 				$id = intval(get_post('member'));
 
 				if ($id != 0) {
@@ -369,7 +370,7 @@ class ControllerForum extends Controller
 						$uid = $id;
 				}
 			break;
-			case DataModelForum::TYPE_COMMITTEE: /* Commissie */
+			case DataModelForum::TYPE_COMMITTEE: // Commissie
 				$id = intval(get_post('commissie'));
 				
 				if ($id == -1)
@@ -382,7 +383,7 @@ class ControllerForum extends Controller
 						$uid = $id;
 				}
 			break;
-			case DataModelForum::TYPE_GROUP: /* Group */
+			case DataModelForum::TYPE_GROUP: // Group
 				$id = intval(get_post('group'));
 				
 				if ($id == -1)
@@ -491,17 +492,17 @@ class ControllerForum extends Controller
 	{
 		$this->_assert_admin();
 		
-		/* Check group */
+		// Check group
 		$group = $this->model->get_group(get_post('guid'));
 		
 		if (!$group)
 			return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => array('guid')));
 		
 		switch (intval(get_post('type'))) {
-			case DataModelForum::TYPE_ANONYMOUS: /* Everyone */
+			case DataModelForum::TYPE_ANONYMOUS:
 				$uid = -1;
 			break;
-			case DataModelForum::TYPE_PERSON: /* Member */
+			case DataModelForum::TYPE_PERSON:
 				$id = intval(get_post('member'));
 
 				if ($id != 0) {
@@ -510,7 +511,7 @@ class ControllerForum extends Controller
 					$uid = $member->get('id');
 				}
 			break;
-			case DataModelForum::TYPE_COMMITTEE: /* Commissie */
+			case DataModelForum::TYPE_COMMITTEE:
 				$id = intval(get_post('commissie'));
 				
 				if ($id == -1)
@@ -568,6 +569,7 @@ class ControllerForum extends Controller
 	
 		return $this->view->redirect('forum.php?admin=groups');
 	}
+	*/
 
 	private function _create_message(DataIterForumMessage $message, array $data, array &$errors)
 	{
@@ -611,12 +613,35 @@ class ControllerForum extends Controller
 		$this->model->set_forum_session_read($forum->get('id'));
 		return $this->view->render_forum($forum);
 	}
+
+	public function run_forum_update(DataIterForum $forum)
+	{
+		if (!get_policy($forum)->user_can_update($forum))
+			throw new UnauthorizedException('You are not allowed to update the name or description of this forum');
+
+		if ($this->_form_is_submitted('update_forum', $forum))
+		{
+			if (!empty($_POST['name']))
+				$forum['name'] = $_POST['name'];
+			
+			if (isset($_POST['description']))
+				$forum['description'] = $_POST['description'];
+
+			$forum->update($forum);
+		}
+
+		return $this->view->render_forum_form($forum);
+	}
 	
 	public function run_thread_index(DataIterForumThread $thread)
 	{
-		/* Mark the thread as read */
-		$this->model->set_forum_session_read($thread->get('forum'));
-		$this->model->mark_read($thread);
+		if ($member = get_identity()->member())
+		{
+			$this->model->set_forum_session_read($member, $thread['forum']);
+
+			$this->model->mark_read($member, $thread);
+		}
+		
 		return $this->view->render_thread($thread);
 	}
 
@@ -642,7 +667,7 @@ class ControllerForum extends Controller
 
 		if ($this->_form_is_submitted('delete_thread', $thread))
 			if ($this->model->delete_thread($thread))
-				return $this->view->redirect(sprintf('forum.php?forum=%d', $thread['forum']));
+				return $this->view->redirect(sprintf('forum.php?forum=%d', $thread['forum_id']));
 
 		return $this->view->render_thread_delete($thread);
 	}
@@ -713,7 +738,7 @@ class ControllerForum extends Controller
 		if (!get_policy($message)->user_can_delete($message))
 			throw new UnauthorizedException('You are not allowed to delete this message.');
 
-		$thread = $this->model->get_thread($message['thread']);
+		$thread = $this->model->get_thread($message['thread_id']);
 
 		if ($message->is_only_message())
 			return $this->run_thread_delete($thread);
@@ -727,7 +752,7 @@ class ControllerForum extends Controller
 
 	public function run_message_single(DataIterForumMessage $message)
 	{
-		return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d#p%d', $message['thread'], $message['thread_page'], $message['id']));
+		return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d#p%d', $message['thread_id'], $message['thread_page'], $message['id']));
 	}
 
 	public function run_poll_create(DataIterForum $forum)
@@ -784,8 +809,9 @@ class ControllerForum extends Controller
 	
 	public function run_index()
 	{
-		/* Set last visit for all fora to current time */
-		$this->model->update_last_visit();
+		// Set last visit for all fora to current time
+		if ($member = get_identity()->member())
+			$this->model->update_last_visit($member);
 
 		$forums = $this->model->get();
 
@@ -857,6 +883,8 @@ class ControllerForum extends Controller
 				return $this->run_thread_create($forum);
 			elseif ($view == 'create_poll')
 				return $this->run_poll_create($forum);
+			elseif ($view == 'update')
+				return $this->run_forum_update($forum);
 			else
 				return $this->run_forum_index($forum);
 		}

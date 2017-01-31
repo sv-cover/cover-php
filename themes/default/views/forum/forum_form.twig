@@ -1,0 +1,51 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<h1>
+	<a href="forum.php">{{ __('Forum') }}</a>
+	{% if forum.has_id %}
+		/ <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a>
+	{% endif %}
+</h1>
+<div class="messageBox">
+	<div class="tab-container">
+		<ul class="nav-tabs horizontal">
+			<li class="active"><a href="#forum-properties-tab">General</a></li>
+			{% if forum.has_id %}
+				<li><a href="#forum-rights-tab">Rights</a></li>
+			{% endif %}
+		</ul>
+		<div class="tab-panel" id="forum-properties-tab">
+			<form action="{{ forum.has_id ? 'forum.php?forum=%d&view=update'|format(forum.id) : 'forum.php?view=create' }}" method="post" class="vertical-form">
+				{% if forum.has_id %}
+					{{ html_nonce('update_forum', forum) }}
+				{% else %}
+					{{ html_nonce('create_forum') }}
+				{% endif %}
+
+				<div>
+					{{ html_label(__('Naam'), 'name', required=true) }}
+					{{ html_input_text('name', forum, required=true) }}
+				</div>
+
+				<div>
+					{{ html_label(__('Omschrijving'), 'description') }}
+					{{ html_textarea_field('description', forum, rows=2) }}
+				</div>
+
+				<div>
+					<button type="submit" class="button">{{ forum.has_id ? __('Bewerk forum') : __('Maak nieuw forum aan') }}</button>
+					{% if forum.has_id %}
+						<a href="forum.php?forum={{ forum.id }}">{{ __('Terug naar forum') }}</a>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+		{% if forum.has_id %}
+			<div class="tab-panel" id="forum-rights-tab">
+				Rights!
+			</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

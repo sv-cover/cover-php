@@ -30,6 +30,11 @@ class ForumView extends View
 		return $this->twig->render('forum.twig', compact('forum', 'page', 'max', 'threads'));
 	}
 
+	public function render_forum_form(DataIterForum $forum)
+	{
+		return $this->twig->render('forum_form.twig', compact('forum'));
+	}
+
 	public function render_thread(DataIterForumThread $thread)
 	{
 		$model = get_model('DataModelForum');

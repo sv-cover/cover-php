@@ -2682,6 +2682,10 @@ ul.committee-list > li .position {
 	margin: 20px 0;
 }
 
+.messageBox > .tab-container:first-child ul.nav-tabs {
+	margin-top: 0; /* fix that massive margin-top a bit if there is nothing above the tabs */
+}
+
 .nav-tabs > li > a {
 	display: inline-block;
 	padding: 0 10px;

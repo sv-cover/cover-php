@@ -4,7 +4,7 @@
 	trait UnifiedAuthor {
 		public function get_unified_author()
 		{
-			return $this['author_type'] . '_' . $this['author'];
+			return $this['author_type'] . '_' . $this['author_id'];
 		}
 
 		public function set_unified_author($author)
@@ -41,7 +41,7 @@
 					throw new InvalidArugmentException("Invalid author type");
 			}
 
-			$this->set('author', $author_id);
+			$this->set('author_id', $author_id);
 			$this->set('author_type', $author_type);
 		}
 	}
@@ -54,7 +54,6 @@
 				'id',
 				'name',
 				'description',
-				'type',
 				'position',
 			];
 		}
@@ -62,11 +61,11 @@
 		public function new_thread()
 		{
 			return new DataIterForumThread($this->model, null, [
-				'forum' => $this['id'],
-				'author' => null,
-				'subject' => null,
-				'date' => date('Y-m-d H:i:s'),
+				'forum_id' => $this['id'],
+				'author_id' => null,
 				'author_type' => null,
+				'subject' => null,
+				'date' => new DateTime(),
 				'poll' => 0
 			]);
 		}
@@ -94,7 +93,7 @@
 				FROM
 					forum_threads
 				WHERE
-					forum = ' . intval($this->get('id')));
+					forum_id = ' . intval($this['id']));
 		}
 		
 		/**
@@ -123,8 +122,8 @@
 					forum_threads,
 					forum_messages
 				WHERE
-					forum_messages.thread = forum_threads.id AND
-					forum_threads.forum = ' . intval($this['id']));
+					forum_messages.thread_id = forum_threads.id AND
+					forum_threads.forum_id = ' . intval($this['id']));
 		}
 
 		
@@ -141,7 +140,7 @@
 				FROM
 					forum_acl
 				WHERE
-					forumid = ' . intval($this['id']) . '
+					forum_id = ' . intval($this['id']) . '
 				ORDER BY
 					id');
 
@@ -168,17 +167,16 @@
 
 					forum_messages.date AS last_date,
 					forum_messages.id AS last_id,
-					to_char(forum_messages.date, \'DD-MM-YYYY, HH24:MI\') AS datum,
-
-					forum_messages.author AS last_author,
+					
+					forum_messages.author_id AS last_author_id,
 					forum_messages.author_type AS last_author_type,
 					date_part(\'day\', CURRENT_TIMESTAMP - forum_threads.date) AS since
 				FROM
 					forum_threads
-				LEFT JOIN forum_messages ON (forum_messages.thread = forum_threads.id AND
-					forum_messages.id IN (SELECT ' . ($last_reply ? 'MAX' : 'MIN') . '(forum_messages.id) FROM forum_threads, forum_messages WHERE forum_threads.forum = ' . intval($this->get('id')) . ' AND forum_messages.thread = forum_threads.id GROUP BY forum_messages.thread))
+				LEFT JOIN forum_messages ON (forum_messages.thread_id = forum_threads.id AND
+					forum_messages.id IN (SELECT ' . ($last_reply ? 'MAX' : 'MIN') . '(forum_messages.id) FROM forum_threads, forum_messages WHERE forum_threads.forum_id = ' . intval($this['id']) . ' AND forum_messages.thread_id = forum_threads.id GROUP BY forum_messages.thread_id))
 				WHERE
-					forum = ' . intval($this->get('id')) . '
+					forum_id = ' . intval($this['id']) . '
 				ORDER BY
 					last_date DESC' .
 				($offset != -1 ? (' OFFSET ' . intval($offset)) : '') .
@@ -209,7 +207,7 @@
 					FROM
 						forum_threads
 					WHERE 
-						forum = ' . intval($this->get('id')) .'
+						forum_id = ' . intval($this['id']) .'
 					ORDER BY 
 						id DESC
 					LIMIT 
@@ -230,11 +228,11 @@
 		{
 			return [
 				'id',
-				'thread',
-				'author',
+				'thread_id',
+				'author_id',
+				'author_type',
 				'message',
 				'date',
-				'author_type',
 			];
 		}
 
@@ -245,7 +243,7 @@
 		  */
 		public function is_only_message()
 		{
-			$thread = $this->model->get_thread($this['thread']);
+			$thread = $this->model->get_thread($this['thread_id']);
 
 			return $thread['num_messages'] === 1;
 		}
@@ -262,14 +260,14 @@
 						ROW_NUMBER() OVER (ORDER BY f_m.date ASC) as position
 					FROM
 						forum_messages f_m
-					WHERE f_m.thread = %d
+					WHERE f_m.thread_id = %d
 				) 
 				SELECT
 					position
 				FROM
 					thread_messages
 				WHERE
-					id = %d', $this['thread'], $this['id']));
+					id = %d', $this['thread_id'], $this['id']));
 
 			return floor($position / $this->model->messages_per_page);
 		}
@@ -281,9 +279,9 @@
 		{
 			return [
 				'id',
-				'forumid',
-				'type',
-				'uid',
+				'forum_id',
+				'author_id',
+				'author_type',
 				'permissions'
 			];
 		}
@@ -308,11 +306,11 @@
 		{
 			return [
 				'id',
-				'forum',
-				'author',
+				'forum_id',
+				'author_id',
+				'author_type',
 				'subject',
 				'date',
-				'author_type',
 				'poll',
 			];
 		}
@@ -320,11 +318,11 @@
 		public function new_message()
 		{
 			return new DataIterForumMessage($this->model, null, [
-				'thread' => $this['id'],
-				'author' => null,
+				'thread_id' => $this['id'],
+				'author_id' => null,
+				'author_type' => null,
 				'message' => null,
 				'date' => date('Y-m-d H:i:s'),
-				'author_type' => null
 			]);
 		}
 
@@ -342,7 +340,7 @@
 					FROM
 						forum_messages
 					WHERE
-						forum_messages.thread = ' . intval($this->get('id'))));
+						forum_messages.thread_id = ' . intval($this['id'])));
 		}
 		
 		/**
@@ -370,7 +368,7 @@
 					FROM
 						forum_messages
 					WHERE
-						thread = ' . intval($this->get('id')) . '
+						thread_id = ' . intval($this['id']) . '
 					ORDER BY
 						id
 					LIMIT 1');
@@ -398,12 +396,11 @@
 
 			$rows = $this->db->query('
 					SELECT
-						*,
-						to_char(date, \'DD-MM-YYYY, HH24:MI\') AS datum
+						*
 					FROM
 						forum_messages
 					WHERE
-						thread = ' . intval($this->get('id')) . '
+						thread_id = ' . intval($this['id']) . '
 					ORDER BY
 						id
 					OFFSET
@@ -422,6 +419,7 @@
 		  */
 		public function has_unread_messages()
 		{
+			// Todo: Booo! get_identity() in a Model method instead of passed in as a parameter!
 			$member_id = get_identity()->get('id', null);
 			
 			if ($member_id === null)
@@ -437,10 +435,10 @@
 					FROM
 						forum_threads
 					LEFT JOIN forum_messages ON 
-						(forum_threads.id = forum_messages.thread)
+						(forum_threads.id = forum_messages.thread_id)
 					WHERE
 						forum_threads.id = ' . $this['id'] . ' AND 
-						forum_messages.date > TIMESTAMP \'' . $visit->get('lastvisit') . '\'');
+						forum_messages.date > TIMESTAMP \'' . $visit['lastvisit'] . '\''); // Todo: is this safe to assume safe? Only way to get user data in that value is through sql injection, so in that case we are compromised anyway.
 			
 			/* Thread isn't older then last visit, return false */
 			if (!$num_visit_unread)
@@ -453,8 +451,8 @@
 					FROM
 						forum_sessionreads
 					WHERE
-						thread = ' . intval($this['id']) . ' AND
-						lid = ' . intval($member_id));
+						thread_id = ' . intval($this['id']) . ' AND
+						lid_id = ' . intval($member_id));
 			
 			return !$read;
 		}
@@ -557,10 +555,10 @@
 					FROM
 						forum_acl
 					WHERE
-						forumid = ' . intval($forum['id']) . ' AND
+						forum_id = ' . intval($forum['id']) . ' AND
 						(permissions & ' . intval($acl) . ') <> 0 AND
-						(uid = ' . intval($committee_id) . ' OR uid = -1) AND
-						type = 2');
+						(author_id = ' . intval($committee_id) . ' OR author_id = -1) AND
+						author_type = ' . self::TYPE_COMMITTEE);
 			
 			if ($num > 0)
 				return true;
@@ -574,9 +572,9 @@
 						forum_acl,
 						forum_group_member
 					WHERE
-						forum_acl.type = 3 AND 
-						(forum_acl.uid = forum_group_member.guid OR forum_acl.uid = -1) AND
-						forum_group_member.type = 2 AND (forum_group_member.uid = ' . intval($committee_id) . ' OR forum_group_member.uid = -1)');
+						forum_acl.type = ' . self::TYPE_GROUP . ' AND 
+						(forum_acl.author_id = forum_group_member.group_id OR forum_acl.author_id = -1) AND
+						forum_group_member.author_type = ' . self::TYPE_COMMITTEE . ' AND (forum_group_member.author_id = ' . intval($committee_id) . ' OR forum_group_member.author_id = -1)');
 			
 			return $num > 0;
 		}
@@ -616,9 +614,11 @@
 		protected function check_acl_group(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
 			$sql_user_specific = $identity->member() !== null
-				? sprintf('OR (forum_group_member.type = 1 AND forum_group_member.uid = %d)', $identity->get('id'))
+				? sprintf('OR (forum_group_member.type = %d AND forum_group_member.uid = %d)',
+					self::TYPE_PERSON, $identity->get('id'))
 				: '';
 
+			// Todo: seriously check this or rewrite it to be better readable DNF!
 			$num = $this->db->query_value('
 					SELECT 
 						COUNT(*)
@@ -626,11 +626,11 @@
 						forum_acl,
 						forum_group_member
 					WHERE
-						forum_acl.forumid = ' . intval($forum['id']) . ' AND
+						forum_acl.forum_id = ' . intval($forum['id']) . ' AND
 						(forum_acl.permissions & ' . intval($acl) . ') <> 0 AND 
-						forum_acl.type = 3 AND
+						forum_acl.type = ' . self::TYPE_GROUP . ' AND
 						forum_acl.uid = forum_group_member.guid AND
-						(forum_group_member.type = -1 ' . $sql_user_specific . ' )');
+						(forum_group_member.type = ' . self::TYPE_EVERYONE . ' ' . $sql_user_specific . ' )');
 			
 			return $num > 0;
 		}
@@ -665,7 +665,7 @@
 					FROM
 						forum_acl
 					WHERE
-						forum_acl.forumid = ' . intval($forum['id']) . '
+						forum_acl.forum_id = ' . intval($forum['id']) . '
 					LIMIT
 						1');
 			
@@ -684,7 +684,7 @@
 					FROM 
 						forum_acl
 					WHERE
-						forumid = ' . intval($forum['id']) . ' AND
+						forum_id = ' . intval($forum['id']) . ' AND
 						(permissions & ' . intval($acl) . ') <> 0 AND 
 						' . $sql_where);
 			
@@ -865,7 +865,6 @@
 			$row = $this->db->query_first('
 					SELECT
 						*,
-						to_char(date, \'DD-MM-YYYY, HH24:MI\') AS datum,
 						date_part(\'day\', CURRENT_TIMESTAMP - date) AS since
 					FROM
 						forum_threads
@@ -911,14 +910,11 @@
 		{
 			$row = $this->db->query_first('
 					SELECT
-						*,
-						to_char(date, \'DD-MM-YYYY, HH24:MI\') AS datum
+						*
 					FROM
 						forum_messages
 					WHERE
-						id = ' . intval($id) . '
-					LIMIT
-						1');
+						id = ' . intval($id));
 
 			if (!$row)
 				throw new DataIterNotFoundException('Forum message not found.');
@@ -935,24 +931,24 @@
 		  *
 		  * @result the number of posts
 		  */
-		protected function _get_num_messages($authorid = -1, $author_type = -1)
+		protected function _get_num_messages($author_id = -1, $author_type = -1)
 		{
 			static $posts = array();
 			
-			if (isset($posts[$author_type][$authorid]))
-				return $posts[$author_type][$authorid];
+			if (isset($posts[$author_type][$author_id]))
+				return $posts[$author_type][$author_id];
 			
 			$num = $this->db->query_value('
 					SELECT
 						COUNT(*)
 					FROM
 						forum_messages' .
-					($authorid != -1 ? ('
+					($author_id != -1 ? ('
 					WHERE
-						forum_messages.author = ' . intval($authorid) . ' AND
+						forum_messages.author_id = ' . intval($author_id) . ' AND
 						forum_messages.author_type = ' . intval($author_type)) : ''));
 
-			$posts[$author_type][$authorid] = $num;
+			$posts[$author_type][$author_id] = $num;
 
 			return $num;
 		}
@@ -969,7 +965,7 @@
 		{
 			$stats = new stdClass();
 			$stats->total = $this->_get_num_messages();
-			$stats->posts = $this->_get_num_messages($message->get('author'), $message->get('author_type'));
+			$stats->posts = $this->_get_num_messages($message['author_id'], $message['author_type']);
 			$stats->percentage_of_total = $stats->posts / $stats->total * 100;
 			return $stats;
 		}
@@ -986,8 +982,8 @@
 		{
 			static $authors = array();
 			
-			$id = $message->get($field);
-			$type = intval($message->get($field . '_type'));
+			$id = intval($message[$field . '_id']);
+			$type = intval($message[$field . '_type']);
 			
 			if (isset($authors[$type][$id][$field]))
 				return $authors[$type][$id][$field];
@@ -1012,20 +1008,20 @@
 						
 						$author = array(
 							'name' => $name,
-							'avatar' => $member->get('avatar'),
-							'email' => $member->get('email')
+							'avatar' => $member['avatar'],
+							'email' => $member['email']
 						);
 					break;
 					case self::TYPE_COMMITTEE: /* Commissie */
 						$commissie_model = get_model('DataModelCommissie');
 						$commissie = $commissie_model->get_iter($id);
 						
-						$avatar_file = 'images/avatars/' . $commissie->get('nocaps') . '.png';
+						$avatar_file = 'images/avatars/' . $commissie['nocaps'] . '.png';
 						
 						$author = array(
-							'name' => $commissie->get('naam'),
+							'name' => $commissie['naam'],
 							'avatar' => file_exists($avatar_file) ? $avatar_file : null,
-							'email' => $commissie->get('email')
+							'email' => $commissie['email']
 						);
 					break;						
 				}
@@ -1066,31 +1062,32 @@
 		  */
 		public function get_acl_name(DataIterForumPermission $acl)
 		{
-			switch ($acl->get('type')) {
+			switch ($acl->get('type'))
+			{
 				case self::TYPE_EVERYONE:
 					return __('Iedereen');
 				case self::TYPE_PERSON:
-					if ($acl->get('uid') == -1)
+					if ($acl->get('author_id') == self::TYPE_EVERYONE)
 						return __('Alle leden');
 
 					$member_model = get_model('DataModelMember');
-					$member_data = $member_model->get_iter($acl->get('uid'));
+					$member_data = $member_model->get_iter($acl->get('author_id'));
 					
 					if ($member_data)
 						return member_full_name($member_data, IGNORE_PRIVACY);
 				break;
 				case self::TYPE_COMMITTEE:
-					if ($acl->get('uid') == -1)
+					if ($acl->get('author_id') == self::TYPE_EVERYONE)
 						return __('Alle commissies');
 
 					$commissie_model = get_model('DataModelCommissie');
-					$commissie_data = $commissie_model->get_iter($acl->get('uid'));
+					$commissie_data = $commissie_model->get_iter($acl->get('author_id'));
 					
 					if ($commissie_data)
 						return $commissie_data->get('naam');
 				break;
 				case self::TYPE_GROUP:
-					if ($acl->get('uid') == -1)
+					if ($acl->get('author_id') == self::TYPE_EVERYONE)
 						return __('Alle groepen');
 
 					return $this->db->query_value('
@@ -1099,7 +1096,7 @@
 							FROM
 								forum_group
 							WHERE
-								id = ' . intval($acl->get('uid')));
+								id = ' . intval($acl->get('author_id')));
 				break;
 			}
 
@@ -1114,21 +1111,22 @@
 		  */
 		public function get_acl_type(DataIterForumPermission $acl)
 		{
-			switch ($acl->get('type')) {
+			switch ($acl->get('author_type'))
+			{
 				case self::TYPE_EVERYONE:
 					return __('Iedereen');
+				
 				case self::TYPE_PERSON:
 					return __('Lid');
-				break;
+				
 				case self::TYPE_COMMITTEE:
 					return __('Commissie');
-				break;
+				
 				case self::TYPE_GROUP:
 					return __('Groep');
-				break;
+				
 				default:
 					return __('Onbekend');
-				break;
 			}
 		}
 
@@ -1146,7 +1144,7 @@
 
 			$thread->set_id($id);
 
-			$message['thread'] = $thread->get_id();
+			$message['thread_id'] = $thread->get_id();
 
 			$this->insert_message($message);
 
@@ -1157,26 +1155,23 @@
 		
 		/** 
 		  * Returns a #DataIter of the special forum ('weblog','news', or 'poll')
-		  * @name the name of the special forum
+		  * @param $name the name of the special forum
 		  *
-		  * @result a #DataIter of the specified forum
+		  * @return a #DataIterForum of the specified forum or throws an exception
 		  */
 		public function get_special_forum($name)
 		{
 			$specials = array('poll', 'news', 'weblog');
 			
 			if (!in_array($name, $specials))
-				return false;
-			else {
-				$config_model = get_model('DataModelConfiguratie');
-				$config_iter = $config_model->get_iter($name . '_forum');
+				throw new InvalidArugmentException('Unknown special forum');
+
+			$value = get_config_value($name, null);
+
+			if ($value === null)
+				throw new NotFoundException('No value configured for this special forum');
 				
-				if ($config_iter === null)
-					return false;
-					
-				$iter = $this->get_iter($config_iter->get('value'));
-				return $iter;
-			}
+			return $this->get_iter($value);
 		}
 
 		/**
@@ -1194,10 +1189,8 @@
 					FROM
 						forum_visits
 					WHERE
-						forum = ' . intval($forum_id) . ' AND
-						lid = ' . intval($member_id) . '
-					LIMIT
-						1');
+						forum_id = ' . intval($forum_id) . ' AND
+						lid_id = ' . intval($member_id));
 			
 			return $this->_row_to_iter($row);
 		}
@@ -1214,10 +1207,11 @@
 		{
 			$iter = $this->_get_visit_info_real($forum_id, $member_id);
 			
-			if (!$iter) {
+			if (!$iter)
+			{
 				$this->db->insert('forum_visits', [
-					'forum' => intval($forum_id),
-					'lid' => intval($member_id)
+					'forum_id' => intval($forum_id),
+					'lid_id' => intval($member_id)
 				]);
 
 				$iter = $this->_get_visit_info_real($forum_id, $member_id);
@@ -1255,10 +1249,10 @@
 					FROM
 						forum_threads
 					LEFT JOIN forum_messages ON 
-						(forum_threads.id = forum_messages.thread)
+						(forum_threads.id = forum_messages.thread_id)
 					WHERE
-						forum_threads.forum = ' . intval($forum['id']) . ' AND 
-						forum_messages.date > TIMESTAMP \'' . $visit->get('lastvisit') . '\'');
+						forum_threads.forum_id = ' . intval($forum['id']) . ' AND 
+						forum_messages.date > TIMESTAMP \'' . $visit['lastvisit'] . '\'');
 
 			/* No unread threads, return false */
 			if (!$num_visit_unread)
@@ -1271,8 +1265,8 @@
 					FROM
 						forum_sessionreads
 					WHERE
-						lid = ' . intval($member_data['id']) . ' AND
-						forum = ' . intval($forum['id']));
+						lid_id = ' . intval($member_data['id']) . ' AND
+						forum_id = ' . intval($forum['id']));
 
 			return $num_visit_unread > $num_session_read;
 		}
@@ -1281,11 +1275,9 @@
 		  * Mark a thread to be read
 		  * @thread_id the id of the thread to mark as read
 		  */
-		public function mark_read(DataIterForumThread $thread)
+		public function mark_read(DataIterMember $member, DataIterForumThread $thread)
 		{
-			$member_id = get_identity()->get('id', null);
-			
-			if ($member_id === null)
+			if ($member === null)
 				return;
 
 			$val = $this->db->query_value('
@@ -1294,8 +1286,8 @@
 					FROM
 						forum_sessionreads
 					WHERE
-						thread = ' . intval($thread->get('id')) . ' AND
-						lid = ' . intval($member_id) . '
+						thread_id = ' . intval($thread['id']) . ' AND
+						lid_id = ' . intval($member['id']) . '
 					LIMIT
 						1');
 			
@@ -1303,9 +1295,9 @@
 				return;
 				
 			return $this->db->insert('forum_sessionreads', [
-				'thread' => intval($thread->get('id')),
-				'lid' => intval($member_id),
-				'forum' => intval($thread->get('forum'))
+				'thread_id' => intval($thread['id']),
+				'lid_id' => intval($member['id']),
+				'forum_id' => intval($thread['forum'])
 			]);
 		}
 		
@@ -1313,43 +1305,43 @@
 		  * Mark a thread as unread
 		  * @threadid the id of the thread to mark as unread
 		  */
-		public function mark_unread($thread_id)
+		public function mark_unread(DataIterForumThread $thread)
 		{
 			/* Deletes all session reads for this thread so that
 			   the thread becomes unread for everyone again */
-			return $this->db->delete('forum_sessionreads', 'thread = ' . intval($thread_id));
+			return $this->db->delete('forum_sessionreads', 'thread_id = ' . intval($thread['id']));
 		}
 		
 		/**
 		  * Update the last time a user has visited a forum
-		  * @forum_id optional; the id of the forum the user has visited 
-		  * or 0 to update all the forums (defaults to 0)
+		  * @param $forum optional; the iter of the forum the user has visited 
+		  * or null to update all the forums (defaults to null)
 		  */
-		public function update_last_visit($forum_id = 0)
+		public function update_last_visit(DataIterMember $member, DataIterForum $forum = null)
 		{
-			$member_id = get_identity()->get('id', null);
-			
-			if ($member_id === null)
+			if ($member === null)
 				return;
 
-			if ($forum_id == 0) {
+			if ($forum === null) {
 				$forums = $this->get();
 				
 				foreach ($forums as $forum)
-					$this->update_last_visit($forum->get('id'));
+					$this->update_last_visit($member, $forum);
 			} else {
 				/* Set last visit date to the session date, and set the session date to null
 				   for all visits that are older than 15 minutes */
-				$forum = $this->get_iter($forum_id);
-				
-				if (!$forum)
-					return;
-				
-				$this->db->update('forum_visits', array('lastvisit' => new DatabaseLiteral('sessiondate'), 'sessiondate' => null), 'lid = ' . intval($member_id) . ' AND forum = ' . intval($forum_id) . ' AND sessiondate+INTERVAL \'15 minutes\' < CURRENT_TIMESTAMP', array('lastvisit'));
+				$this->db->update('forum_visits', array(
+					'lastvisit' => new DatabaseLiteral('sessiondate'),
+					'sessiondate' => null),
+					'lid_id = ' . intval($member['id']) . '
+					 AND forum_id = ' . intval($forum['id']) . '
+					 AND sessiondate + INTERVAL \'15 minutes\' < CURRENT_TIMESTAMP');
 				
 				if ($this->db->get_affected_rows()) {
 					/* Delete all obsolete session reads */
-					$this->db->delete('forum_sessionreads', 'lid = ' . intval($member_id) . ' AND forum = ' . intval($forum_id));
+					$this->db->delete('forum_sessionreads',
+						'lid_id = ' . intval($member['id']) . '
+						 AND forum_id = ' . intval($forum['id']));
 				}
 			}
 		}
@@ -1358,20 +1350,19 @@
 		  * Set a forum to be read
 		  * @forum_id the id of the forum to set to be read
 		  */
-		public function set_forum_session_read($forum_id)
+		public function set_forum_session_read(DataIterMember $member, DataIterForum $forum)
 		{
-			$member_id = get_identity()->get('id', null);
-			
-			if ($member_id === null)
+			if ($member === null || $forum === null)
 				return;
 
-			$visit = $this->get_visit_info($forum_id, $member_id);
-			$this->update_last_visit($forum_id);
+			$visit = $this->get_visit_info($forum, $member);
+			$this->update_last_visit($member, $forum);
 			
 			$visit->set('sessiondate', new DatabaseLiteral('CURRENT_TIMESTAMP'));
+
 			return $this->db->update('forum_visits',
 				$visit->get_changed_values(),
-				'lid = ' . intval($member_id) . ' AND forum = ' . intval($forum_id));
+				'lid_id = ' . intval($member['id']) . ' AND forum_id = ' . intval($forum['id']));
 		}
 		
 		/**
@@ -1384,6 +1375,7 @@
 		{
 			/* Mark the thread as unread */
 			$this->mark_unread($iter['thread']);
+
 			return $this->_insert('forum_messages', $iter, true);
 		}
 		
@@ -1399,24 +1391,28 @@
 			
 			$id = intval($iter->get('id'));
 
+			// Todo: the constraints on the database should also have this effect,
+			// maybe it is worth just falling back on those, and don't bothering
+			// with it here.
+
 			/* delete all messages */
-			$threads = $this->db->query('SELECT id FROM forum_threads WHERE forum = ' . $id);
+			$threads = $this->db->query('SELECT id FROM forum_threads WHERE forum_id = ' . $id);
 			
 			if ($threads) {
 				foreach ($threads as $thread)
-					$this->db->delete('forum_messages', 'thread = ' . intval($thread['id']));
+					$this->db->delete('forum_messages', 'thread_id = ' . intval($thread['id']));
 			}
 			
-			$this->db->delete('forum_threads', 'forum = ' . $id);
+			$this->db->delete('forum_threads', 'forum_id = ' . $id);
 			
 			/* delete acl */
-			$this->db->delete('forum_acl', 'forumid = ' . $id);
+			$this->db->delete('forum_acl', 'forum_id = ' . $id);
 			
 			/* last visits */
-			$this->db->delete('forum_lastvisits', 'forum = ' . $id);
+			$this->db->delete('forum_lastvisits', 'forum_id = ' . $id);
 			
 			/* session read */
-			$this->db->delete('forum_sessionreads', 'forum = ' . $id);
+			$this->db->delete('forum_sessionreads', 'forum_id = ' . $id);
 		}
 		
 		/**
@@ -1446,9 +1442,9 @@
 					FROM
 						forum_acl
 					WHERE
-						forumid = ' . intval($iter->get('forumid')) . ' AND
-						type = ' . intval($iter->get('type')) . ' AND
-						uid = ' . intval($iter->get('uid')));
+						forum_id = ' . intval($iter->get('forum_id')) . ' AND
+						author_type = ' . intval($iter->get('author_type')) . ' AND
+						author_id = ' . intval($iter->get('author_id')));
 
 			if ($row) {
 				/* Acl already exist, overwrite perms */
@@ -1493,8 +1489,8 @@
 		public function delete_group(DataIterForumGroup $iter)
 		{
 			$result = $this->_delete('forum_group', $iter);
-			$this->db->delete('forum_group_member', 'guid = ' . intval($iter->get('id')));
-			$this->db->delete('forum_acl', sprintf('type = %d AND uid = %d', self::TYPE_GROUP, $iter->get('id')));
+			$this->db->delete('forum_group_member', 'group_id = ' . intval($iter->get('id')));
+			$this->db->delete('forum_acl', sprintf('author_type = %d AND author_id = %d', self::TYPE_GROUP, $iter->get('id')));
 			return $result;
 		}
 		
@@ -1538,9 +1534,15 @@
 		  * @iter a #DataIter representing a commissie
 		  */
 		public function commissie_deleted(DataIterCommissie $iter)
-		{
-			$this->db->delete('forum_acl', 'type = 2 AND uid = ' . intval($iter->get('id')));
-			$this->db->delete('forum_group_member', 'type = 2 AND uid = ' . intval($iter->get('id')));
+		{	
+			// Todo: again, should we bother doing the work the database constraints
+			// are already doing for us?
+
+			$this->db->delete('forum_acl', sprintf('author_type = %d AND author_id = %d',
+				self::TYPE_COMMITTEE, $iter->get('id')));
+
+			$this->db->delete('forum_group_member', sprintf('author_type = %d AND author_id = ',
+				self::TYPE_COMMITTEE, $iter->get('id')));
 		}
 		
 		/**
@@ -1557,7 +1559,7 @@
 			$this->_delete('forum_threads', $iter);
 			
 			/* Delete all replies */
-			$this->db->delete('forum_messages', sprintf('thread = %d', $iter['id']));
+			$this->db->delete('forum_messages', sprintf('thread_id = %d', $iter['id']));
 
 			$this->db->commit();
 
@@ -1577,7 +1579,7 @@
 
 		public function move_thread(DataIterForumThread $thread, DataIterForum $target_forum)
 		{
-			$thread['forum'] = $target_forum['id'];
+			$thread['forum_id'] = $target_forum['id'];
 			return $this->update_thread($thread);
 		}
 		
@@ -1592,12 +1594,12 @@
 		public function delete_message(DataIterForumMessage $iter)
 		{
 			$ret = $this->_delete('forum_messages', $iter);
-			$thread = $this->get_thread($iter->get('thread'));
+			$thread = $this->get_thread($iter->get('thread_id'));
 
 			/* Check if last message was removed */
 			if ($thread && $thread->get_num_messages() == 0)
 			{
-				$ret = intval($thread->get('forum'));
+				$ret = intval($thread->get('forum_id'));
 				$this->delete_thread($thread);
 			}
 			

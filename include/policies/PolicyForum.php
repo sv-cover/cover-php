@@ -15,7 +15,7 @@ class PolicyForum extends PolicyForumAbstract
 
 	public function user_can_update(DataIter $forum)
 	{
-		return $this->member_is_admin() || $this->model->check_acl($forum, DataModelForum::ACL_WRITE, get_identity());
+		return $this->member_is_admin();
 	}
 
 	public function user_can_delete(DataIter $forum)
