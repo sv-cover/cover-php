@@ -37,13 +37,12 @@
 				<a class="bold" href="forum.php?forum={{ iter.id }}">{{ iter.name }}</a>
 				<div class="smaller">{{ iter.description }}</div>
 			</td>
-			<td class="threadcount text_center">{{ iter.get_num_threads() }}</td>
-			<td class="messagecount text_center">{{ iter.get_num_forum_messages }}</td>
+			<td class="threadcount text_center">{{ iter.num_threads }}</td>
+			<td class="messagecount text_center">{{ iter.num_forum_messages }}</td>
 			<td class="last">
-				{% set last_thread = iter.get_last_thread() %}
-				{% if last_thread %}
-					{{ last_thread.datum }}<br>
-					<a id="last-thread" href="forum.php?thread={{ last_thread.id }}&amp;page={{ last_thread.get_num_thread_pages - 1 }}#p{{ last_thread.last_id }}">{{ last_thread.subject }}</a>
+				{% if iter.last_thread %}
+					{{ iter.last_thread.datum }}<br>
+					<a id="last-thread" href="forum.php?thread={{ iter.last_thread.id }}&amp;page={{ iter.last_thread.get_num_thread_pages - 1 }}#p{{ iter.last_thread.last_id }}">{{ iter.last_thread.subject }}</a>
 				{% endif %}
 			</td>
 		</tr>

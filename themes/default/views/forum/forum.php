@@ -146,9 +146,9 @@ class ForumView extends View
 	public function get_author_link(DataIter $message, $last = false)
 	{
 		if ($last && $message['last_author_type'])
-			$field = 'last_author';
+			$field = 'last_author_id';
 		else
-			$field = 'author';
+			$field = 'author_id';
 
 		try {
 			switch (intval($message[$field . '_type']))
