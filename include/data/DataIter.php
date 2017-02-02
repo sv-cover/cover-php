@@ -282,29 +282,6 @@
 
 			return $model->new_iter($row);
 		}
-		
-		public function __get($get)
-		{
-			trigger_error('Propery access is deprecated. Use Array access or DataIter::get', E_USER_NOTICE);
-			return $this->get($get);
-		}
-		
-		public function __set($key, $value)
-		{
-			trigger_error('Propery access is deprecated. Use Array access or DataIter::set', E_USER_NOTICE);
-			return $this->set($key, $value);
-		}
-
-		public function __unset($key)
-		{
-			trigger_error('Propery access is deprecated. Use Array access or DataIter::unset_field', E_USER_NOTICE);
-			return $this->unset_field($key);
-		}
-
-		public function __isset($key)
-		{
-			return $this->has_field($key) || $this->has_value($key) || $this->has_getter($key);
-		}
 
 		/* ArrayAccess */
 		public function offsetGet($offset)
