@@ -25,10 +25,13 @@ class ProfielTest extends TestCase
 		]);
 
 		$response_document = new DOMDocument();
+
+		libxml_use_internal_errors(true);
 		$response_document->loadHTML($response_body);
+		libxml_use_internal_errors(false);
 
 		$query = new DOMXPath($response_document);
-		$nonce = $query->evaluate('//div[@id="personal-tab"]//form[@method="post"]//input[@name="_nonce"]/@value');
+		$nonce = $query->evaluate('string(//div[@id="personal-tab"]//form[@method="post"]//input[@name="_nonce"]/@value)');
 
 		$post_data = array_merge($new_data, ['_nonce' => $nonce]);
 
@@ -45,7 +48,10 @@ class ProfielTest extends TestCase
 
 		$member = $model->get_iter(self::$member_id);
 
+		// Assume that the data was correctly reformatted
+		$new_data['telefoonnummer'] = '+31612345678';
+
 		foreach ($new_data as $field => $expected_value)
-			$this->assertEquals($member->get($field), $expected_value);
+			$this->assertEquals($member[$field], $expected_value, "Value of field '{$field}' differs");
 	}
 }

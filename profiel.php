@@ -134,7 +134,8 @@ class ControllerProfiel extends Controller
 			try {
 				get_secretary()->updatePersonFromIterChanges($iter);
 			} catch (RuntimeException $e) {
-				error_log($e);
+				// Todo: replace this with a serious more general logging call
+				error_log($e, 1, 'webcie@rug.nl', "From: webcie-cover-php@svcover.nl");
 			}
 		}
 
