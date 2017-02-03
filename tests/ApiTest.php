@@ -3,7 +3,9 @@
 require_once 'include/init.php';
 require_once 'include/test.php';
 
-class ApiTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ApiTest extends TestCase
 {
 	use \cover\test\MemberTestTrait;
 

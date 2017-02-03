@@ -48,7 +48,12 @@ function simulate_request($path, $params)
 		'-d sendmail_path=' . test_sendmail_path()
 	];
 
-	$proc = proc_open(implode(' ', ['php-cgi'] + $program_options + [$path]), $descriptors, $pipes, getcwd(), $env);
+	$php_cgi = system('which php-cgi', $ret_val);
+
+	if ($ret_val !== 0)
+		throw new RuntimeException('Could not locate php-cgi binary');
+
+	$proc = proc_open(implode(' ', [$php_cgi] + $program_options + [$path]), $descriptors, $pipes, getcwd(), $env);
 
 	if (!is_resource($proc))
 		throw new RuntimeException('Could not start CGI process');
@@ -113,14 +118,11 @@ trait MemberTestTrait
 			'geboortedatum' => '1988-01-01',
 			'geslacht' => 'm',
 			'privacy' => 958698063,
-			'type' => MEMBER_STATUS_LID
+			'type' => MEMBER_STATUS_LID,
+			'nick' => 'unittest'
 		]);
 
 		$model->insert($member);
-
-		$profiel = new \DataIter($model, self::$member_id, ['lidid' => self::$member_id, 'nick' => 'unittest']);
-
-		$model->insert_profiel($profiel);
 
 		$model->set_password($member, self::$member_password);
 	}

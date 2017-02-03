@@ -3,7 +3,9 @@
 require_once 'include/init.php';
 require_once 'include/test.php';
 
-class ProfielTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ProfielTest extends TestCase
 {
 	use \cover\test\SessionTestTrait;
 	
@@ -17,10 +19,21 @@ class ProfielTest extends PHPUnit_Framework_TestCase
 			'woonplaats' => 'new woonplaats'
 		];
 
-		$post_data = array_merge($new_data, ['submprofiel_almanak' => 'yes', 'id' => self::$member_id]);
+		// First get the form (for the nonce)
+		list($response_header, $response_body) = $this->simulateRequestWithSession('profiel.php', [
+			'GET' => ['lid' => self::$member_id, 'view' => 'personal']
+		]);
+
+		$response_document = new DOMDocument();
+		$response_document->loadHTML($response_body);
+
+		$query = new DOMXPath($response_document);
+		$nonce = $query->evaluate('//div[@id="personal-tab"]//form[@method="post"]//input[@name="_nonce"]/@value');
+
+		$post_data = array_merge($new_data, ['_nonce' => $nonce]);
 
 		list($response_header, $response_body) = $this->simulateRequestWithSession('profiel.php', [
-			'GET' => ['lid' => self::$member_id],
+			'GET' => ['lid' => self::$member_id, 'view' => 'personal'],
 			'POST' => $post_data
 		]);
 
