@@ -39,7 +39,7 @@ class ForumView extends View
 	{
 		$model = get_model('DataModelForum');
 
-		$forum = $model->get_iter($thread['forum']);
+		$forum = $thread['forum'];
 
 		$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
 
@@ -65,11 +65,9 @@ class ForumView extends View
 
 	public function render_message_form(DataIterForumMessage $iter, array $errors)
 	{
-		$model = get_model('DataModelForum');
+		$thread = $iter['thread'];
 
-		$thread = $model->get_thread($iter['thread']);
-
-		$forum = $model->get_iter($thread['forum']);
+		$forum = $thread['forum'];
 
 		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_REPLY);
 
@@ -146,19 +144,19 @@ class ForumView extends View
 	public function get_author_link(DataIter $message, $last = false)
 	{
 		if ($last && $message['last_author_type'])
-			$field = 'last_author_id';
+			$field = 'last_author';
 		else
-			$field = 'author_id';
+			$field = 'author';
 
 		try {
 			switch (intval($message[$field . '_type']))
 			{
 				case DataModelForum::TYPE_PERSON: /* Person */
-					return 'profiel.php?lid=' . $message[$field];
+					return 'profiel.php?lid=' . $message[$field . '_id'];
 				
 				case DataModelForum::TYPE_COMMITTEE: /* Commissie */
 					$committee_model = get_model('DataModelCommissie');
-					$committee = $committee_model->get_iter($message[$field]);
+					$committee = $committee_model->get_iter($message[$field . '_id']);
 					return 'commissies.php?commissie=' . urlencode($committee['login']);
 				
 				default:
@@ -184,14 +182,22 @@ class ForumView extends View
 			$nav_max = min($max, $nav_min + $nav_num - 1);
 		
 		for ($i = $nav_min; $i <= $nav_max; $i++) {
-			if ($i == $current)
-				$nav .= '<span class="bold">' . ($i + 1) . '</span> ';
-			else
-				$nav .= '<a href="' . add_request($url, 'page=' . $i) . '">' . ($i + 1) . '</a> ';
+			if ($i == $current) {
+				$nav .= sprintf('<span class="bold">%d</span> ', $i + 1);
+			}
+			else {
+				$nav .= sprintf('<a href="%s">%d</a> ',
+					markup_format_attribute(edit_url($url, ['page' => $i])),
+					$i + 1);
+			}
 		}
 		
 		if ($current != $max)
-			$nav .= '<a href="' . add_request($url, 'page=' . ($current + 1)) . '">' . image('next.png', __('volgende'), __('Volgende pagina')) . '</a>';
+			$nav .= sprintf('<a href="%s"><img src="%s" alt="%s" title="%s"></a>',
+				markup_format_attribute(edit_url($url, ['page' => $current + 1])),
+				markup_format_attribute(get_theme_data('images/next.png')),
+				markup_format_attribute(__('volgende')),
+				markup_format_attribute(__('Volgende pagina')));
 		
 		return $nav . "</div>\n";
 	}
@@ -204,6 +210,16 @@ class ForumView extends View
 			$links[] = sprintf('<a href="forum.php?thread=%d&amp;page=%d">%d</a>', $thread['id'], $page, $page + 1);
 
 		return $links;
+	}
+
+	public function has_unread_messages(DataIterForumThread $thread)
+	{
+		return !get_auth()->logged_in() || $thread->has_unread_messages(get_identity()->member());
+	}
+
+	public function has_unread_threads(DataIter $forum)
+	{
+		return !get_auth()->logged_in() || $forum->has_unread_threads(get_identity()->member());
 	}
 
 	public function writeable_forums()

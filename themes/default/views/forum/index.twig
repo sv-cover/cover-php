@@ -31,7 +31,7 @@
 
 		<tr class="r{{ loop.index is odd ? 1 : 0 }}">
 			<td class="icon">
-				<img src="{{ link_static('images/' ~ (model.forum_unread(iter) ? 'thread_new.png' : 'thread.png'))|e('html_attr') }}">
+				<img src="{{ link_static('images/' ~ (view.has_unread_threads(iter) ? 'thread_new.png' : 'thread.png'))|e('html_attr') }}">
 			</td>
 			<td class="forum">
 				<a class="bold" href="forum.php?forum={{ iter.id }}">{{ iter.name }}</a>
@@ -41,7 +41,7 @@
 			<td class="messagecount text_center">{{ iter.num_forum_messages }}</td>
 			<td class="last">
 				{% if iter.last_thread %}
-					{{ iter.last_thread.datum }}<br>
+					{{ iter.last_thread.date|date('d-m-Y H:i') }}<br>
 					<a id="last-thread" href="forum.php?thread={{ iter.last_thread.id }}&amp;page={{ iter.last_thread.get_num_thread_pages - 1 }}#p{{ iter.last_thread.last_id }}">{{ iter.last_thread.subject }}</a>
 				{% endif %}
 			</td>

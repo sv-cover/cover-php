@@ -72,7 +72,7 @@
 				{% endif %}
 			</td>
 			<td class="message">
-				<div class="right">{{ message.datum }}</div>
+				<div class="right">{{ message.date|date('d-m-Y H:i') }}</div>
 				<div class="right">
 					{% if user_can_update message %}
 						<a href="forum.php?thread={{ thread.id }}&amp;view=update&amp;message={{ message.id }}">

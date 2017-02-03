@@ -8,7 +8,7 @@ class PolicyForumThread extends PolicyForumAbstract
 		if ($this->member_is_admin())
 			return true;
 		
-		$forum = $this->model->get_iter($thread['forum']);
+		$forum = $this->model->get_iter($thread['forum_id']);
 
 		return $this->model->check_acl($forum, DataModelForum::ACL_WRITE, get_identity());
 	}	
@@ -18,7 +18,7 @@ class PolicyForumThread extends PolicyForumAbstract
 		if ($this->member_is_admin())
 			return true;
 		
-		$forum = $this->model->get_iter($thread['forum']);
+		$forum = $this->model->get_iter($thread['forum_id']);
 
 		return $this->model->check_acl($forum, DataModelForum::ACL_READ, get_identity());
 	}
@@ -34,10 +34,10 @@ class PolicyForumThread extends PolicyForumAbstract
 		switch ($thread['author_type'])
 		{
 			case DataModelForum::TYPE_PERSON: /* Person */
-				return $thread['author'] == get_identity()->get('id');
+				return $thread['author_id'] == get_identity()->get('id');
 			break;
 			case DataModelForum::TYPE_COMMITTEE: /* Commissie */
-				return get_identity()->member_in_committee($thread['author']);
+				return get_identity()->member_in_committee($thread['author_id']);
 			break;
 		}
 

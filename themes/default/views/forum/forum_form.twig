@@ -43,7 +43,26 @@
 		</div>
 		{% if forum.has_id %}
 			<div class="tab-panel" id="forum-rights-tab">
-				Rights!
+				<table class="full-width-table">
+					<tr>
+						<th></th>
+						<th>Name</th>
+						<th>Read</th>
+						<th>Write</th>
+						<th>Reply</th>
+						<th>Poll</th>
+					</tr>
+					{% for permission in forum.rights %}
+					<tr>
+						<td><input type="checkbox" name="delete[]" value="{{ permission.id }}"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					{% endfor %}
+				</table>
 			</div>
 		{% endif %}
 	</div>

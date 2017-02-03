@@ -610,7 +610,9 @@ class ControllerForum extends Controller
 	
 	public function run_forum_index(DataIterForum $forum)
 	{
-		$this->model->set_forum_session_read($forum->get('id'));
+		if (get_identity()->member())
+			$this->model->set_forum_session_read($forum, get_identity()->member());
+		
 		return $this->view->render_forum($forum);
 	}
 
@@ -637,9 +639,9 @@ class ControllerForum extends Controller
 	{
 		if ($member = get_identity()->member())
 		{
-			$this->model->set_forum_session_read($member, $thread['forum']);
+			$this->model->set_forum_session_read($thread['forum'], $member);
 
-			$this->model->mark_read($member, $thread);
+			$this->model->mark_read($thread, $member);
 		}
 		
 		return $this->view->render_thread($thread);

@@ -218,6 +218,45 @@
 			
 			return $this->model->_row_to_iter($row[0], 'DataIterForumThread');
 		}
+
+		/**
+		 * Returns whether a certain member has unread threads in this forum.
+		 * @param DataIterMember $member
+		 * @return bool
+		 */
+		public function has_unread_threads(DataIterMember $member): bool
+		{
+			/* Get visit info */
+			$visit = $this->model->get_visit_info($this, $member);
+			
+			/* Check the number of unread threads in the forum by last visit */
+			$num_visit_unread = $this->db->query_value('
+					SELECT
+						COUNT(DISTINCT forum_threads.id)
+					FROM
+						forum_threads
+					LEFT JOIN forum_messages ON 
+						(forum_threads.id = forum_messages.thread_id)
+					WHERE
+						forum_threads.forum_id = ' . intval($this['id']) . ' AND 
+						forum_messages.date > TIMESTAMP \'' . $visit['lastvisit'] . '\'');
+
+			/* No unread threads, return false */
+			if (!$num_visit_unread)
+				return false;
+
+			/* Check the number of read threads in the forum by session */
+			$num_session_read = $this->db->query_value('
+					SELECT
+						COUNT(*)
+					FROM
+						forum_sessionreads
+					WHERE
+						lid_id = ' . intval($member['id']) . ' AND
+						forum_id = ' . intval($this['id']));
+
+			return $num_visit_unread > $num_session_read;
+		}
 	}
 
 	class DataIterForumMessage extends DataIter
@@ -238,18 +277,25 @@
 
 		/**
 		  * Returns whether this message is the only message in the thread
-		  *
 		  * @return bool true if the message is the only message in the thread
 		  */
 		public function is_only_message()
 		{
-			$thread = $this->model->get_thread($this['thread_id']);
+			return $this['thread']['num_messages'] === 1;
+		}
 
-			return $thread['num_messages'] === 1;
+		/**
+		 * Return the thread this message is a part of.
+		 * @return DataIterForumThread
+		 */
+		public function get_thread()
+		{
+			return $this->model->get_thread($this['thread_id']);
 		}
 
 		/**
 		 * Returns on which page in a thread this message will appear.
+		 * @return int page index
 		 */
 		public function get_thread_page()
 		{
@@ -326,6 +372,11 @@
 			]);
 		}
 
+		public function get_forum()
+		{
+			return $this->model->get_iter($this['forum_id']);
+		}
+
 		/**
 		  * Get the number of replies in a thread
 		  * @iter a #DataIter representing a thread
@@ -375,6 +426,7 @@
 			
 			return $this->model->_row_to_iter($row, 'DataIterForumMessage');
 		}
+
 		/**
 		  * Get replies from a thread on a certain page
 		  * @page reference; specifies the page of the thread to
@@ -417,16 +469,10 @@
 		  * @result true if the thread as unread messages, false 
 		  * otherwise
 		  */
-		public function has_unread_messages()
+		public function has_unread_messages(DataIterMember $member)
 		{
-			// Todo: Booo! get_identity() in a Model method instead of passed in as a parameter!
-			$member_id = get_identity()->get('id', null);
-			
-			if ($member_id === null)
-				return;
-
 			/* Get visit info */
-			$visit = $this->model->get_visit_info($this['forum'], $member_id);
+			$visit = $this->model->get_visit_info($this['forum'], $member);
 			
 			/* Check if the thread is unread by last visit */
 			$num_visit_unread = $this->db->query_value('
@@ -452,7 +498,7 @@
 						forum_sessionreads
 					WHERE
 						thread_id = ' . intval($this['id']) . ' AND
-						lid_id = ' . intval($member_id));
+						lid_id = ' . intval($member['id']));
 			
 			return !$read;
 		}
@@ -614,7 +660,7 @@
 		protected function check_acl_group(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
 			$sql_user_specific = $identity->member() !== null
-				? sprintf('OR (forum_group_member.type = %d AND forum_group_member.uid = %d)',
+				? sprintf('OR (forum_group_member.author_type = %d AND forum_group_member.author_id = %d)',
 					self::TYPE_PERSON, $identity->get('id'))
 				: '';
 
@@ -628,9 +674,9 @@
 					WHERE
 						forum_acl.forum_id = ' . intval($forum['id']) . ' AND
 						(forum_acl.permissions & ' . intval($acl) . ') <> 0 AND 
-						forum_acl.type = ' . self::TYPE_GROUP . ' AND
-						forum_acl.uid = forum_group_member.guid AND
-						(forum_group_member.type = ' . self::TYPE_EVERYONE . ' ' . $sql_user_specific . ' )');
+						forum_acl.author_type = ' . self::TYPE_GROUP . ' AND
+						forum_acl.author_id = forum_group_member.author_id AND
+						(forum_group_member.author_type = ' . self::TYPE_EVERYONE . ' ' . $sql_user_specific . ' )');
 			
 			return $num > 0;
 		}
@@ -675,8 +721,8 @@
 
 			// Check permissions for everyone (type == -1) and member (type == 1 AND uid = member)
 			$sql_where = $identity->member() !== null
-				? '(type = -1 OR (uid = ' . intval($identity->get('id')) . ' AND type = 1))'
-				: '(type = -1)';
+				? '(author_type = -1 OR (author_id = ' . intval($identity->get('id')) . ' AND author_type = 1))'
+				: '(author_type = -1)';
 			
 			$num = $this->db->query_value('
 					SELECT 
@@ -854,13 +900,12 @@
 		}
 
 		/**
-		  * Get a thread. The thread is only returned if the current
-		  * user has read permissions for the thread
-		  * @id the id of the thread
-		  *
-		  * @result a #DataIter
+		  * Get a thread by its ID
+		  * @param $id thread id
+		  * @throws DataIterNotFoundExcepion if there is no thread with the specified id
+		  * @return DataIterForumThread
 		  */
-		public function get_thread($id)
+		public function get_thread(int $id): DataIterForumThread
 		{
 			$row = $this->db->query_first('
 					SELECT
@@ -1181,7 +1226,7 @@
 		  *
 		  * @result a #DataIter or null if no visit info could be found
 		  */
-		private function _get_visit_info_real($forum_id, $member_id)
+		private function _get_visit_info_real(DataIterForum $forum, DataIterMember $member)
 		{
 			$row = $this->db->query_first('
 					SELECT
@@ -1189,8 +1234,8 @@
 					FROM
 						forum_visits
 					WHERE
-						forum_id = ' . intval($forum_id) . ' AND
-						lid_id = ' . intval($member_id));
+						forum_id = ' . intval($forum['id']) . ' AND
+						lid_id = ' . intval($member['id']));
 			
 			return $this->_row_to_iter($row);
 		}
@@ -1203,79 +1248,28 @@
 		  *
 		  * @result a #DataIter
 		  */
-		public function get_visit_info($forum_id, $member_id)
+		public function get_visit_info(DataIterForum $forum, DataIterMember $member)
 		{
-			$iter = $this->_get_visit_info_real($forum_id, $member_id);
+			$iter = $this->_get_visit_info_real($forum, $member);
 			
 			if (!$iter)
 			{
 				$this->db->insert('forum_visits', [
-					'forum_id' => intval($forum_id),
-					'lid_id' => intval($member_id)
+					'forum_id' => intval($forum['id']),
+					'lid_id' => intval($member['id'])
 				]);
 
-				$iter = $this->_get_visit_info_real($forum_id, $member_id);
+				$iter = $this->_get_visit_info_real($forum, $member);
 			}
 
 			return $iter;
 		}
 		
 		/**
-		  * Returns whether a forum contains unread messages for the
-		  * current user
-		  * @forumid the id of the forum to check unread messages for
-		  *
-		  * @result true if the forum as unread messages, false 
-		  * otherwise
-		  */
-		public function forum_unread(DataIterForum $forum)
-		{
-			/* Returns whether the forum contains unread messages.
-			   The function checks if there are any new messages
-			   since the last visit to the forum (forum_visits). And if so if the
-			   messages have been read since the last visit (forum_sessionreads) */
-			$member_data = logged_in();
-			
-			if (!$member_data)
-				return;
-			
-			/* Get visit info */
-			$visit = $this->get_visit_info($forum['id'], $member_data['id']);
-			
-			/* Check the number of unread threads in the forum by last visit */
-			$num_visit_unread = $this->db->query_value('
-					SELECT
-						COUNT(DISTINCT forum_threads.id)
-					FROM
-						forum_threads
-					LEFT JOIN forum_messages ON 
-						(forum_threads.id = forum_messages.thread_id)
-					WHERE
-						forum_threads.forum_id = ' . intval($forum['id']) . ' AND 
-						forum_messages.date > TIMESTAMP \'' . $visit['lastvisit'] . '\'');
-
-			/* No unread threads, return false */
-			if (!$num_visit_unread)
-				return false;
-
-			/* Check the number of read threads in the forum by session */
-			$num_session_read = $this->db->query_value('
-					SELECT
-						COUNT(*)
-					FROM
-						forum_sessionreads
-					WHERE
-						lid_id = ' . intval($member_data['id']) . ' AND
-						forum_id = ' . intval($forum['id']));
-
-			return $num_visit_unread > $num_session_read;
-		}
-		
-		/**
 		  * Mark a thread to be read
 		  * @thread_id the id of the thread to mark as read
 		  */
-		public function mark_read(DataIterMember $member, DataIterForumThread $thread)
+		public function mark_read(DataIterForumThread $thread, DataIterMember $member)
 		{
 			if ($member === null)
 				return;
@@ -1297,7 +1291,7 @@
 			return $this->db->insert('forum_sessionreads', [
 				'thread_id' => intval($thread['id']),
 				'lid_id' => intval($member['id']),
-				'forum_id' => intval($thread['forum'])
+				'forum_id' => intval($thread['forum_id'])
 			]);
 		}
 		
@@ -1350,11 +1344,8 @@
 		  * Set a forum to be read
 		  * @forum_id the id of the forum to set to be read
 		  */
-		public function set_forum_session_read(DataIterMember $member, DataIterForum $forum)
+		public function set_forum_session_read(DataIterForum $forum, DataIterMember $member)
 		{
-			if ($member === null || $forum === null)
-				return;
-
 			$visit = $this->get_visit_info($forum, $member);
 			$this->update_last_visit($member, $forum);
 			

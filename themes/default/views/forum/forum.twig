@@ -52,7 +52,7 @@
 			{% set author_link = view.get_author_link(thread) %}
 			<tr class="r{{ loop.index is odd ? 1 : 0 }}">
 				<td class="icon">
-					<img src="{{ link_static('images/' ~ (thread.has_unread_messages ? 'thread_new.png' : 'thread.png')) }}">
+					<img src="{{ link_static('images/' ~ (view.has_unread_messages(thread) ? 'thread_new.png' : 'thread.png')) }}">
 				</td>
 				<td class="subject">
 					<a href="forum.php?thread={{ thread.id }}" class="subject">
@@ -75,10 +75,10 @@
 					{{ thread.num_messages }}
 				</td>
 				<td class="last">
-					{% if thread.datum %}
-						{{ thread.datum }}
-						{% if author.name or author.last_name %}
-							<br><a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">{{ author.last_name ?: author.name }}</a>
+					{% if thread.date %}
+						{{ thread.date|date('d-m-Y H:i') }}
+						{% if author.name is defined or author.last_name is defined %}
+							<br><a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">{{ author.last_name is defined ? author.last_name : author.name }}</a>
 						{% endif %}
 					{% endif %}
 				</td>

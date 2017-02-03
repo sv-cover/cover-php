@@ -69,11 +69,11 @@
 			$forum_model = get_model('DataModelForum');
 
 			return new DataIterPoll($forum_model, null, [
-				'forum' => $forum['id'],
-				'author' => null,
-				'subject' => null,
-				'date' => date('Y-m-d H:i:s'),
+				'forum_id' => $forum['id'],
+				'author_id' => null,
 				'author_type' => null,
+				'subject' => null,
+				'date' => new DateTime(),
 				'poll' => 1
 			]);
 		}
@@ -124,24 +124,24 @@
 
 			if (!$prev_thread) return true;
 
-			$thread = get_model('DataModelForum')->get_thread($prev_thread->get('id'));
+			$thread = get_model('DataModelForum')->get_thread($prev_thread['id']);
 
 			// Threshold is 7 days by default, unless you where the author of the previous poll
-			$threshold = $thread->get('author') == $current_user['id'] ? 14 : 7;
+			$threshold = $thread['author_type'] == DataModelForum::TYPE_PERSON
+			             && $thread['author_id'] == $current_user['id']
+			             ? 14 : 7;
 
-			$days = $threshold - $thread->get('since');
+			$days = $threshold - $thread['since'];
 
 			return $days <= 0;
 		}
 
 		public function get_latest_poll()
 		{
-			$config_model = get_model('DataModelConfiguratie');
 			$forum_model = get_model('DataModelForum');
 			
-			$id = $config_model->get_value('poll_forum');
+			$id = get_config_value('poll_forum', null);
 			
-			/* Get last thread */
 			if (!$id) return null;
 			
 			$forum = $forum_model->get_iter($id);
@@ -167,7 +167,7 @@
 		{
 			$rows = $this->db->query('SELECT * 
 					FROM pollopties
-					WHERE pollid = ' . intval($poll->get_id()) . '
+					WHERE pollid = ' . intval($poll['id']) . '
 					ORDER BY id ASC');
 			
 			return $this->_rows_to_iters($rows, 'DataIterPollOption', compact('poll'));
@@ -198,11 +198,11 @@
 			
 			// If this poll is in the Polls forum on the forum, it is
 			// closed as soon as there is a newer poll.
-			if ($iter->get('forum') == $id) {
+			if ($iter['forum_id'] == $id) {
 				try {
 					$thread = $this->get_latest_poll();
 						
-					if ($thread->get('id') != $iter->get('id'))
+					if ($thread['id'] != $iter['id'])
 						return true;
 				} catch (DataIterNotFoundException $e) {
 					// Oh shit the configuration is fucked up and we cannot find
@@ -217,23 +217,22 @@
 						pollvoters
 					WHERE 
 						lid = ' . intval($member_data['id']) . ' AND 
-						poll = ' . $iter->get('id'));
+						poll = ' . $iter['id']);
 			
 			return $row !== null;
 		}
 
 		public function member_has_voted(DataIter $poll, DataIterMember $member = null)
 		{
-			$config_model = get_model('DataModelConfiguratie');
-			$id = $config_model->get_value('poll_forum');
+			$id = get_config_value('poll_forum');
 			
 			// If this poll is in the Polls forum on the forum, it is
 			// closed as soon as there is a newer poll.
-			if ($poll->get('forum') == $id) {
+			if ($poll['forum_id'] == $id) {
 				try {
 					$thread = $this->get_latest_poll();
 						
-					if ($thread->get('id') != $poll->get('id'))
+					if ($thread['id'] != $poll['id'])
 						return true;
 				} catch (DataIterNotFoundException $e) {
 					// Oh shit the configuration is fucked up and we cannot find

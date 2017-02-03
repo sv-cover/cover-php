@@ -39,7 +39,7 @@
 		{% elseif global.models.Poll.can_create_new_poll %}
 			<tr>
 				<td colspan="2">
-					<a class="button" href="forum.php?forum={{ poll.forum }}&amp;addpoll=true">{{ __('Nieuwe poll ') }}</a>
+					<a class="button" href="forum.php?forum={{ poll.forum_id }}&amp;addpoll=true">{{ __('Nieuwe poll ') }}</a>
 				</td>
 		{% endif %}
 	</table>

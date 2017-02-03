@@ -14,7 +14,7 @@
 	{% if not global.auth.logged_in %}
 		<p><a href="{{ link('sessions.login') }}">{{ __('Log in om te stemmen') }}</a></p>
 	{% elseif global.models.Poll.can_create_new_poll %}
-		<p><a class="button" href="forum.php?forum={{ poll.forum }}&amp;addpoll=true">{{ __('Nieuwe poll ') }}</a></p>
+		<p><a class="button" href="forum.php?forum={{ poll.forum_id }}&amp;addpoll=true">{{ __('Nieuwe poll ') }}</a></p>
 	{% endif %}
 {% else %}
 	<p>{{ __('Er is op dit moment geen poll') }}</p>

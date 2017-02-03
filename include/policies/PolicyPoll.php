@@ -8,7 +8,7 @@ class PolicyPoll extends PolicyForumThread
 		if ($this->member_is_admin())
 			return true;
 		
-		$forum = $this->model->get_iter($poll['forum']);
+		$forum = $this->model->get_iter($poll['forum_id']);
 
 		return $this->model->check_acl($forum, DataModelForum::ACL_POLL, get_identity());
 	}
