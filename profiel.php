@@ -214,7 +214,7 @@ class ControllerProfiel extends Controller
 		} elseif (!isset($_POST['wachtwoord_opnieuw']) || $_POST['wachtwoord_nieuw'] !== $_POST['wachtwoord_opnieuw']) {
 			$errors[] = 'wachtwoord_opnieuw';
 			$message[] = __('Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld.');
-		} elseif (strlen($_POST['wachtwoord_nieuw']) < 4) {
+		} elseif (strlen($_POST['wachtwoord_nieuw']) < 6) {
 			$errors[] = 'wachtwoord_nieuw';
 			$message[] = __('Het nieuwe wachtwoord is te kort.');
 		}
