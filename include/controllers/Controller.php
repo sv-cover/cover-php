@@ -99,10 +99,9 @@
 			}
 		}
 
-		protected function _form_is_submitted($action, $arg0 = null)
+		protected function _form_is_submitted($action, ...$args)
 		{
 			// Turn _form_is_submitted('delete', iter) to 'delete_24'
-			$args = array_slice(func_get_args(), 1);
 			$action_name = nonce_action_name($action, $args);
 
 			$nonce = null;
