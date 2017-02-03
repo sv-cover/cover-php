@@ -33,8 +33,11 @@
 			try {
 				echo $this->run_impl();
 			}
-			catch(Exception $e) {
+			catch (Exception $e) {
 				echo $this->run_exception($e);
+			}
+			catch (TypeError $e) {
+				echo $this->run_500_stupid_programmar($e);
 			}
 		}
 
@@ -83,6 +86,18 @@
 				return '<pre>' . $e . '</pre>';
 			else {
 				return __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)');
+			}
+		}
+
+		protected function run_500_stupid_programmar(TypeError $e)
+		{
+			if (!headers_sent())
+				header('Status: 500 Interal Server Error');
+
+			if (get_config_value('show_exceptions'))
+				return '<pre>' . $e . '</pre>';
+			else {
+				return __('Sorry, een (oud) AC/DCee-lid kan voor geen meter programmeren. Als je daar vaker last van hebt, vertel het door aan de commissie (webcie@svcover.nl) zodat ze taart van die persoon kunnen eisen.');
 			}
 		}
 
