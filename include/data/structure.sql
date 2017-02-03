@@ -58,7 +58,18 @@ CREATE TABLE leden (
     privacy integer NOT NULL,
     type integer DEFAULT 1,
     machtiging smallint,
-    beginjaar integer DEFAULT date_part('year'::text, now())
+    beginjaar integer DEFAULT date_part('year'::text, now()),
+    onderschrift character varying(200),
+    avatar character varying(100),
+    homepage character varying(255),
+    nick character varying(50),
+    taal character varying(10) DEFAULT 'en'::character varying
+);
+
+
+CREATE TABLE passwords (
+    lid_id INTEGER NOT NULL PRIMARY KEY REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    password character varying (255) NOT NULL
 );
 
 
@@ -480,35 +491,6 @@ CREATE TABLE pollopties (
 CREATE TABLE pollvoters (
     lid integer NOT NULL REFERENCES leden (id) ON DELETE CASCADE ON UPDATE CASCADE,
     poll integer NOT NULL REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
---
--- TOC entry 229 (class 1259 OID 24395)
--- Name: profielen_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE profielen_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 230 (class 1259 OID 24397)
--- Name: profielen; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE profielen (
-    lidid integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    wachtwoord character varying(255),
-    onderschrift character varying(200),
-    avatar character varying(100),
-    homepage character varying(255),
-    msn character varying(100),
-    icq character varying(15),
-    nick character varying(50),
-    taal character varying(10) DEFAULT 'nl'::character varying
 );
 
 --

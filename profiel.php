@@ -186,7 +186,7 @@ class ControllerProfiel extends Controller
 
 		$iter->set_all($data);
 		
-		$this->model->update_profiel($iter);
+		$this->model->update($iter);
 		
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
@@ -202,7 +202,7 @@ class ControllerProfiel extends Controller
 		// Only test the old password if we are not a member of the board
 		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-			if (!isset($_POST['wachtwoord_oud']) || !$this->model->login($iter['email'], $_POST['wachtwoord_oud'])) {
+			if (!isset($_POST['wachtwoord_oud']) || !$this->model->test_password($iter, $_POST['wachtwoord_oud'])) {
 				$errors[] = 'wachtwoord_oud';
 				$message[] = __('Het huidige wachtwoord is onjuist.');
 			}

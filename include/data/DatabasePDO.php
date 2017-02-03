@@ -3,6 +3,7 @@
   * This class provides a postgresql backend with commonly used functions
   * like insert, update and delete
   */
+
 class DatabasePDO
 {
 	private $resource;
@@ -54,6 +55,8 @@ class DatabasePDO
 		/* Open connection */
 		$this->resource = new PDO('pgsql:' . implode(';', $params));
 
+		$this->resource->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 		$this->resource->exec("SET NAMES 'UTF-8'; SET DateStyle = 'ISO, DMY'; SET bytea_output=escape");
 		
 		if (!$this->resource)
@@ -94,9 +97,6 @@ class DatabasePDO
 				'duration' => $duration
 			);
 
-		if ($handle === false)
-			throw new RuntimeException('Query failed: ' . $this->get_last_error());
-			
 		/* Fetch all the rows */
 		$this->last_result = $handle->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
 

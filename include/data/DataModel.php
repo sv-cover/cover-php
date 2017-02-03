@@ -367,6 +367,10 @@
 						$format = "%s <> '%s'";
 						break;
 
+					case 'cieq': // Case insensitive equivalence
+						$format = "LOWER(%s) = LOWER('%s')";
+						break;
+
 					default:
 					case 'eq':
 						$format = "%s = '%s'";
