@@ -319,7 +319,7 @@
 					continue;
 				}
 
-				if (preg_match('/^(.+?)__(eq|ne|gt|lt|in|contains|isnull)$/', $key, $match)) {
+				if (preg_match('/^(.+?)__(eq|cieq|ne|gt|lt|in|contains|isnull)$/', $key, $match)) {
 					$field = $match[1];
 					$operator = $match[2];
 				} else {
