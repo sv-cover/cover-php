@@ -55,8 +55,6 @@
 			throw new NotFoundException('No route for path "' . $path . '"');
 		}
 
-		
-
 		protected function run_exception(Exception $e)
 		{
 			if ($e instanceof NotFoundException)
