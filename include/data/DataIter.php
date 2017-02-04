@@ -60,14 +60,14 @@
 		  * @id the id of the iter
 		  * @data the data of the iter (a hashtable)
 		  */
-		public function __construct(DataModel $model = null, $id, $data, array $preseed = array())
+		public function __construct(DataModel $model = null, $id, $data, array $seed = array())
 		{
 			$this->model = $model;
 			$this->data = $data;
 			$this->_id = $id;
 			$this->db = $model ? $model->db : null;
 
-			$this->_getter_cache = array_map(function($entry) { return [$entry, []]; }, $preseed);
+			$this->_getter_cache = array_map(function($entry) { return [$entry, []]; }, $seed);
 			
 			$this->_changes = array();
 		}
