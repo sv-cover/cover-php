@@ -24,9 +24,16 @@ class SearchController extends Controller
 	{
 		$results = array();
 
+		// Query all providers
 		foreach ($this->providers as $provider)
 			$results = array_merge($results, $provider->search($query, 10));
 
+		// Filter all results on readability
+		$results = array_filter($results, function($result) {
+			return get_policy($result)->user_can_read($result);
+		});
+
+		// Sort them by relevance
 		usort($results, function(SearchResult $a, SearchResult $b) {
 			return $a->get_search_relevance() < $b->get_search_relevance();
 		});
