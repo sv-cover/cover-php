@@ -256,7 +256,7 @@
 	{% endif %}
 
 	{# and if there are no photos on this page, show a few random photos for discovery in the bottom. They are not confused with the photos of a book. #}
-	{% if book.count_photos == 0 and global.auth.logged_in() %}
+	{% if book.count_photos == 0 and global.identity.member_is_active %}
 		{% include('_random_photos.twig') %}
 	{% endif %}
 </div>
