@@ -64,10 +64,10 @@
 		{
 			$this->model = $model;
 			$this->data = $data;
-			$this->_id = $id;			
+			$this->_id = $id;
 			$this->db = $model ? $model->db : null;
 
-			$this->_getter_cache = $preseed;
+			$this->_getter_cache = array_map(function($entry) { return [$entry, []]; }, $preseed);
 			
 			$this->_changes = array();
 		}
