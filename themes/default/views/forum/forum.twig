@@ -25,9 +25,6 @@
 			{{ __('Nieuwe poll') }}
 		</a>
 	{% endif %}
-	{% if not user_can_create forum.new_thread and not user_can_create forum.new_poll %}
-		{{ __('Je kunt niet schrijven in dit forum') }}
-	{% endif %}
 </div>
 
 <table class="forum">

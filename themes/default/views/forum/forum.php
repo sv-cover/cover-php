@@ -200,12 +200,12 @@ class ForumView extends View
 
 	public function has_unread_messages(DataIterForumThread $thread)
 	{
-		return !get_auth()->logged_in() || $thread->has_unread_messages(get_identity()->member());
+		return get_auth()->logged_in() && $thread->has_unread_messages(get_identity()->member());
 	}
 
 	public function has_unread_threads(DataIter $forum)
 	{
-		return !get_auth()->logged_in() || $forum->has_unread_threads(get_identity()->member());
+		return get_auth()->logged_in() && $forum->has_unread_threads(get_identity()->member());
 	}
 
 	public function writeable_forums()

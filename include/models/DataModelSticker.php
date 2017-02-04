@@ -36,13 +36,13 @@ class DataModelSticker extends DataModel
 		parent::__construct($db, 'stickers');
 	}
 
-	public function _row_to_iter($row, $dataiter = null)
+	public function _row_to_iter($row, $dataiter = null, array $preseed = [])
 	{
 		$row['lat'] = (double) $row['lat'];
 		$row['lng'] = (double) $row['lng'];
 		$row['foto'] = $row['foto'] == 't';
 
-		return parent::_row_to_iter($row, $dataiter);
+		return parent::_row_to_iter($row, $dataiter, $preseed);
 	}
 
 	public function getPhoto($sticker)

@@ -7,6 +7,10 @@ class PolicyForumThread extends PolicyForumAbstract
 	{
 		if ($this->member_is_admin())
 			return true;
+
+		// For now, you need to be logged in at least to create new stuff
+		if (!get_auth()->logged_in())
+			return false;
 		
 		$forum = $this->model->get_iter($thread['forum_id']);
 

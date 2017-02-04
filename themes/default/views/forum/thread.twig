@@ -14,8 +14,6 @@
 			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
 			{{ __('Nieuw antwoord') }}
 		</a>
-	{% else %}
-		{{ __('Je kunt niet antwoorden in dit forum') }}
 	{% endif %}
 	{% if user_can_delete thread %}
 		<a href="forum.php?thread={{ thread.id }}&amp;view=delete" class="button delete-button">
@@ -120,8 +118,6 @@
 			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
 			{{ __('Nieuw antwoord') }}
 		</a>
-	{% else %}
-		{{ __('Je kunt niet antwoorden in dit forum') }}
 	{% endif %}
 	{% if user_can_update thread %}
 		<div class="text_right">
