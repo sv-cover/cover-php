@@ -45,7 +45,7 @@
 
 		public function render_photo(DataIterPhotobook $book, DataIterPhoto $photo)
 		{
-			$is_liked = get_auth()->logged_in() && get_model('DataModelPhotobookLike')->is_liked($photo, get_identity()->member()->id);
+			$is_liked = get_auth()->logged_in() && get_model('DataModelPhotobookLike')->is_liked($photo, get_identity()->member()->get_id());
 
 			return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
 		}
@@ -143,10 +143,13 @@
 				else
 					$anchor = '';
 
-				$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
-					urlencode($parents[$i]->get_id()),
-					$anchor,
-					markup_format_text($parents[$i]->get('titel')));
+				if (get_policy($parents[$i])->user_can_read($parents[$i]))
+					$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
+						urlencode($parents[$i]->get_id()),
+						$anchor,
+						markup_format_text($parents[$i]->get('titel')));
+				else
+					$path[] = markup_format_text($parents[$i]->get('titel'));
 			}
 
 			return $path;

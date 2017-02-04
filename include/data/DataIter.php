@@ -13,6 +13,8 @@
 		private $_changes = []; /** Array containing the fields that have changed */
 
 		private $_getter_cache = [];
+
+		private $_getter_stack = [];
 		
 		protected $db = null;
 
@@ -136,9 +138,17 @@
 			// Todo: implement either dependency tracking or getter cache clearing
 			
 			if (!isset($this->_getter_cache[$field]))
-				$this->_getter_cache[$field] = $this->call_getter_nocache($field);
+			{
+				array_push($this->_getter_stack, []);
 
-			return $this->_getter_cache[$field];
+				$value = $this->call_getter_nocache($field);
+
+				$dependencies = array_pop($this->_getter_stack);
+				
+				$this->_getter_cache[$field] = [$value, array_unique($dependencies)];
+			}
+
+			return $this->_getter_cache[$field][0];
 		}
 
 		public function call_getter_nocache($field)
@@ -146,6 +156,23 @@
 			return call_user_func([$this, 'get_' . $field]);
 		}
 		
+		public function call_setter($field, $value)
+		{
+			return call_user_func([$this, 'set_' . $field], $value);
+		}
+
+		private function _clear_getter_cache($changed_field)
+		{
+			$to_clear = [];
+
+			foreach ($this->_getter_cache as $field => list($value, $dependencies))
+				if ($field == $changed_field || in_array($changed_field, $dependencies))
+					$to_clear[] = $field;
+
+			foreach ($to_clear as $field)
+				unset($this->_getter_cache[$field]);
+		}
+
 		/**
 		  * Get iter data
 		  * @field the data field name
@@ -154,6 +181,10 @@
 		  */
 		public function get($field)
 		{
+			// Track getter dependencies
+			for ($i = 0; $i < count($this->_getter_stack); ++$i)
+				$this->_getter_stack[$i][] = $field;
+
 			// ID is just special
 			if ($field == 'id')
 				return $this->get_id();
@@ -185,9 +216,11 @@
 			if ($field == 'id')
 				throw new InvalidArgumentException('id field can only be altered using DataIter::set_id');
 
+			$this->_clear_getter_cache($field);
+
 			/* if there is a setter for this field, delegate to that one */
 			if ($this->has_setter($field))
-				return call_user_func_array([$this, 'set_' . $field], [$value]);
+				return $this->call_setter($field, $value);
 
 			/* Return if value hasn't really changed */
 			if (isset($this->data[$field])

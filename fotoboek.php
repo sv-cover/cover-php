@@ -38,7 +38,9 @@
 
 		public function link(array $arguments)
 		{
-			$arguments['photo'] = $this->photo->get_id();
+			$arguments['photo'] = $this->photo['id'];
+
+			$arguments['book'] = $this->photo['scope']['id'];
 
 			$arguments['module'] = 'comments';
 
@@ -47,7 +49,10 @@
 
 		public function link_to_index()
 		{
-			return parent::link(['photo' => $this->photo->get_id()]);
+			return parent::link([
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			]);
 		}
 
 		public function link_to_read(DataIter $iter)
@@ -179,11 +184,12 @@
 
 			$response = array();
 
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($this->_form_is_submitted('privacy', $this->photo)) {
 				if ($_POST['visibility'] == 'hidden')
 					$this->model->mark_hidden($this->photo, $member);
 				else
 					$this->model->mark_visible($this->photo, $member);
+			}
 			
 			return $this->view->render_privacy($this->photo, $this->model->is_visible($this->photo, $member) ? 'visible' : 'hidden');
 		}
@@ -585,8 +591,12 @@
 		{
 			// Note again that this function ignores the view completely and produces output on its own.
 
-			// For now require login for these originals
-			if (!get_identity()->member_is_active())
+			// We don't want 'guests' to download our originals
+			if (!get_auth()->logged_in())
+				throw new UnauthorizedException();
+
+			// Also, you need at least read access to this photo
+			if (!get_policy($photo)->user_can_read($photo))
 				throw new UnauthorizedException();
 
 			if (!$photo->file_exists())
@@ -666,6 +676,10 @@
 					if (!$photo->file_exists())
 						continue;
 
+					// Skip photo's you cannot access
+					if (!get_policy($photo)->user_can_read($photo))
+						continue;
+
 					// Let's just assume that the filename the photo already has is sane and safe
 					$photo_path = $book_path . '/' . basename($photo->get('filepath'));
 
@@ -693,6 +707,9 @@
 
 		protected function _view_confirm_download_book(DataIterPhotobook $root_book)
 		{
+			if (!$this->user_can_download_book($root_book))
+				throw new UnauthorizedException();
+
 			$books = array($root_book);
 
 			// Make a list of all the books to be added to the zip
@@ -718,7 +735,7 @@
 
 		protected function _view_scaled_photo(DataIterPhoto $photo)
 		{
-			if (!$this->policy->user_can_read($photo->get_book()))
+			if (!get_policy($photo)->user_can_read($photo))
 				throw new UnauthorizedException();
 
 			$width = isset($_GET['width']) ? min($_GET['width'], 1600) : null;
@@ -743,7 +760,7 @@
 
 		protected function _view_read_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
-			if (!$this->policy->user_can_read($book))
+			if (!get_policy($photo)->user_can_read($photo))
 				throw new UnauthorizedException();
 
 			$photos = $book->get_photos();
@@ -817,9 +834,8 @@
 				$book = $this->model->get_root_book();
 			}
 
-			// If we have both, we assert that the photo is in the book, right?
-			if ($photo && $book && !$book->has_photo($photo))
-				throw new NotFoundException('This photo book does not contain this photo');
+			if ($photo && $book)
+				$photo['scope'] = $book;
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {

@@ -142,7 +142,7 @@
 					><span class="like-count">{{ photo.likes|length }}</span></button>
 			</form>
 			
-			<a href="fotoboek.php?photo={{ photo.id }}&amp;view=download" class="photo-download-link">{{ __('Download') }}</a>
+			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download" class="photo-download-link">{{ __('Download') }}</a>
 			
 			{% if global.identity.member.id in photo.faces|select('lid_id') %}
 			<a href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form" class="photo-privacy-link">{{ __('Zichtbaarheid') }}</a>

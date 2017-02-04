@@ -8,6 +8,8 @@
 <div class="messageBox">
 	
 	<form class="privacy-preference-form vertical-form" method="post" action="fotoboek.php?photo={{ photo.id|e('url') }}&amp;module=privacy">
+		{{ html_nonce('privacy', photo) }}
+		
 		<div class="photo">
 			<img src="{{ photo.get_url(null, 400)|e('html_attr') }}" {{ 'width="%d" height="%d"'|vformat(photo.get_scaled_size(400, 400))|raw }}>
 		</div>

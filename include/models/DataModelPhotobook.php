@@ -13,6 +13,8 @@
 		const PORTRAIT = 'portrait';
 		const SQUARE = 'square';
 
+		private $_scope = null; // Photo book in which this photo is currently viewed.
+
 		static public function model()
 		{
 			return get_model('DataModelPhotobook');
@@ -251,6 +253,19 @@
 		public function get_file_size()
 		{
 			return filesize($this->get_full_path());
+		}
+
+		public function get_scope()
+		{
+			return $this->_scope ?: $this['book'];
+		}
+
+		public function set_scope(DataIterPhotobook $book)
+		{
+			if (!$book->has_photo($this))
+				throw new LogicException('Book assigned as scope says it does not contain this photo');
+
+			$this->_scope = $book;
 		}
 	}
 

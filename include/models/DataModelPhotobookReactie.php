@@ -18,8 +18,8 @@ class DataIterPhotobookReactie extends DataIter
 	{
 		if (isset($this->data['foto__id']))
 			return $this->getIter('foto', 'DataIterPhoto');
-		else if ($this->get('foto'))
-			return get_model('DataModelPhotobook')->get_iter($this->get('foto'));
+		else if ($this['foto'])
+			return get_model('DataModelPhotobook')->get_iter($this['foto']);
 		else
 			return null;
 	}
@@ -28,8 +28,8 @@ class DataIterPhotobookReactie extends DataIter
 	{
 		if (isset($this->data['fotoboek__id']))
 			return $this->getIter('fotoboek', 'DataIterPhotobook');
-		else if ($this->get('foto'))
-			return $this->get('photo')->get('book');
+		else if ($this['foto'])
+			return $this['photo']['book'];
 		else
 			return null;
 	}
@@ -38,15 +38,15 @@ class DataIterPhotobookReactie extends DataIter
 	{
 		if (isset($this->data['auteur__id']))
 			return $this->getIter('auteur', 'DataIterMember');
-		else if ($this->get('foto'))
-			return get_model('DataModelMember')->get_iter($this->get('auteur'));
+		else if ($this['foto'])
+			return get_model('DataModelMember')->get_iter($this['auteur']);
 		else
 			return null;
 	}
 
 	public function get_liked_by()
 	{
-		return get_model('DataModelMember')->find(sprintf('id IN (SELECT lid_id FROM foto_reacties_likes WHERE reactie_id = %d)', $this->id));
+		return get_model('DataModelMember')->find(sprintf('id IN (SELECT lid_id FROM foto_reacties_likes WHERE reactie_id = %d)', $this['id']));
 	}
 
 	public function like(DataIterMember $member)
@@ -97,14 +97,18 @@ class DataModelPhotobookReactie extends DataModel
 
 	public function get_for_photo(DataIter $photo)
 	{
-		return $this->find(sprintf('foto_reacties.foto = %d', $photo->get('id')));
+		return $this->find(sprintf('foto_reacties.foto = %d', $photo['id']));
 	}
 
 	public function get_latest($num)
 	{
 		$rows = $this->db->query("
 				SELECT
-					f_r.*,
+					f_r.id,
+					f_r.foto,
+					f_r.auteur,
+					f_r.reactie,
+					f_r.date,
 					l.id as auteur__id,
 					l.voornaam as auteur__voornaam,
 					l.tussenvoegsel as auteur__tussenvoegsel,
