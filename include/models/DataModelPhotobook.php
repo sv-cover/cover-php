@@ -1045,7 +1045,7 @@
 			
 			$query = sprintf('
 				WITH RECURSIVE book_children (id, visibility, parents) AS (
-						SELECT id, visibility, ARRAY[0] FROM foto_boeken WHERE parent = %2$d
+						SELECT id, visibility, ARRAY[0] FROM foto_boeken WHERE parent_id = %2$d
 					UNION ALL
 						SELECT f_b.id, f_b.visibility, b_c.parents || f_b.parent_id
 						FROM book_children b_c, foto_boeken f_b
