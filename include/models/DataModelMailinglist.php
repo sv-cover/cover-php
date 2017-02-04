@@ -127,6 +127,11 @@ class DataIterMailinglist extends DataIter
 	{
 		return get_model('DataModelCommissie')->get_iter($this['commissie']);
 	}
+
+	public function get_archive()
+	{
+		return new DataModelMailinglistArchiveAdaptor($this);
+	}
 }
 
 class DataModelMailinglistArchiveAdaptor
@@ -145,6 +150,11 @@ class DataModelMailinglistArchiveAdaptor
 	public function contains_email_from($sender)
 	{
 		return $this->model->contains_email_from($this->lijst, $sender);
+	}
+
+	public function get()
+	{
+		return $this->model->get_for_list($this->lijst);
 	}
 }
 
@@ -165,15 +175,16 @@ class DataModelMailinglist extends DataModel
 		parent::__construct($db, 'mailinglijsten');
 	}
 
-	public function _row_to_iter($row, $dataiter = null)
+	public function _row_to_iter($row, $dataiter = null, array $preseed = [])
 	{
+		// Stupid PGSQL boolean stuff...
 		if ($row && isset($row['publiek']))
 			$row['publiek'] = $row['publiek'] == 't';
 
 		if ($row && isset($row['subscribed']))
 			$row['subscribed'] = $row['subscribed'] == 't';
 
-		return parent::_row_to_iter($row);
+		return parent::_row_to_iter($row, $dataiter, $preseed);
 	}
 
 	public function get_for_member(DataIterMember $member, $public_only = true)

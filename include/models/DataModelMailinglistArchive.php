@@ -82,7 +82,7 @@ class DataModelMailinglistArchive extends DataModel
 			'return_code' => $return_code
 		);
 
-		$iter = new DataIter($this, -1, $data);
+		$iter = $this->new_iter($data);
 
 		$this->insert($iter);
 	}
