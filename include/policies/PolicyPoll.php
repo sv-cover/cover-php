@@ -15,7 +15,8 @@ class PolicyPoll extends PolicyForumThread
 
 	public function user_can_vote(DataIter $poll)
 	{
-		return $this->user_can_read($poll)
+		return get_auth()->logged_in()
+			&& $this->user_can_read($poll)
 			&& !$poll->member_has_voted(get_identity()->member());
 	}
 }

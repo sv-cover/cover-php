@@ -618,7 +618,7 @@
 						forum_acl,
 						forum_group_member
 					WHERE
-						forum_acl.type = ' . self::TYPE_GROUP . ' AND 
+						forum_acl.author_type = ' . self::TYPE_GROUP . ' AND 
 						(forum_acl.author_id = forum_group_member.group_id OR forum_acl.author_id = -1) AND
 						forum_group_member.author_type = ' . self::TYPE_COMMITTEE . ' AND (forum_group_member.author_id = ' . intval($committee_id) . ' OR forum_group_member.author_id = -1)');
 			

@@ -97,24 +97,6 @@ class ForumView extends View
 		return markup_parse($text);
 	}
 
-	public function get_authors(DataIterForum $forum, $acl)
-	{
-		$model = get_model('DataModelForum');
-
-		$authors = array();
-		$member_data = logged_in();
-		$authors[-1] = member_full_name();
-
-		$commissie_model = get_model('DataModelCommissie');
-
-		foreach ($member_data['committees'] as $commissie) {
-			if ($model->check_acl_commissie($forum['id'], $acl, $commissie))
-				$authors[$commissie] = $commissie_model->get_naam($commissie);
-		}
-		
-		return $authors;
-	}
-
 	public function get_unified_authors(DataIterForum $forum, $acl)
 	{
 		$model = get_model('DataModelForum');
@@ -122,6 +104,10 @@ class ForumView extends View
 		$authors = array();
 
 		$member = get_identity()->member();
+
+		if ($member === null) // Not logged in
+			return [];
+
 		$authors[DataModelForum::TYPE_PERSON . '_' . $member['id']] = $member['full_name'];
 
 		$committee_model = get_model('DataModelCommissie');
