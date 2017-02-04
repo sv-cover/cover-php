@@ -76,7 +76,13 @@
 		{
 			return [
 				'_id' => $this->_id,
-				'data' => $this->data
+				'_getter_cache' => array_map(function($entry) {
+					return [
+						'value' => is_object($entry[0]) ? "instance of " . get_class($entry[0]) : gettype($entry[0]), // Don't go too deep
+						'depend_on' => $entry[1] // list of dependencies
+					];
+				}, $this->_getter_cache),
+				'data' => $this->data,
 			];
 		}
 
