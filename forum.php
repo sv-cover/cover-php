@@ -179,9 +179,9 @@ class ControllerForum extends Controller
 
 		if (count($errors) > 0 || count($valid_options) < self::MINIMUM_POLL_OPTION_COUNT)
 			return $this->view->render_poll_form($forum, $poll, $message, $options, array_merge($errors, $poll_errors));
-		
+
 		// Create new poll/thread with given subject
-		$poll_model->insert_poll($poll, $message, $options);
+		$poll_model->insert_poll($poll, $message, $valid_options);
 		
 		// run_message_single redirects to the correct message in a thread
 		return $this->run_message_single($message);
