@@ -4,6 +4,7 @@ require_once 'include/init.php';
 require_once 'include/test.php';
 
 use PHPUnit\Framework\TestCase;
+use \cover\test\Form;
 
 class ProfielTest extends TestCase
 {
@@ -15,33 +16,24 @@ class ProfielTest extends TestCase
 			'postcode' => '2222BB',
 			'telefoonnummer' => '0612345678',
 			'adres' => 'bar',
-			'email' => self::$member_email,
 			'woonplaats' => 'new woonplaats'
 		];
 
 		// First get the form (for the nonce)
-		list($response_header, $response_body) = $this->simulateRequestWithSession('profiel.php', [
+		$response = $this->simulateRequestWithSession('profiel.php', [
 			'GET' => ['lid' => self::$member_id, 'view' => 'personal']
 		]);
 
-		$response_document = new DOMDocument();
+		$form = Form::fromResponse($response, '//div[@id="personal-tab"]//form[@method="post"]');
 
-		libxml_use_internal_errors(true);
-		$response_document->loadHTML($response_body);
-		libxml_use_internal_errors(false);
+		// Merge in the new data
+		$form->fields = array_merge($form->fields, $new_data);
 
-		$query = new DOMXPath($response_document);
-		$nonce = $query->evaluate('string(//div[@id="personal-tab"]//form[@method="post"]//input[@name="_nonce"]/@value)');
-
-		$post_data = array_merge($new_data, ['_nonce' => $nonce]);
-
-		list($response_header, $response_body) = $this->simulateRequestWithSession('profiel.php', [
-			'GET' => ['lid' => self::$member_id, 'view' => 'personal'],
-			'POST' => $post_data
-		]);
+		$response = $form->submit([$this, 'simulateRequestWithSession']);
 
 		// If the profile was correctly updated, expect a redirect
-		$this->assertEquals(preg_match('/^Location: profiel\.php\?lid=' . self::$member_id . '/im', $response_header), 1);
+		$this->assertEquals(1, preg_match('/^Location: profiel\.php\?lid=' . self::$member_id . '/im', $response->header),
+			"Assume we have been redirected to the profile again");
 
 		// Also, the member data should have been updated in the database
 		$model = get_model('DataModelMember');
@@ -52,6 +44,7 @@ class ProfielTest extends TestCase
 		$new_data['telefoonnummer'] = '+31612345678';
 
 		foreach ($new_data as $field => $expected_value)
-			$this->assertEquals($member[$field], $expected_value, "Value of field '{$field}' differs");
+			$this->assertEquals($member[$field], $expected_value,
+				"Value of field '{$field}' differs");
 	}
 }

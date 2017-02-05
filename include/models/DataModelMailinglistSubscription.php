@@ -2,6 +2,7 @@
 
 require_once 'include/data/DataModel.php';
 require_once 'include/models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
+require_once 'include/member.php'; // Required for member_full_name
 
 class DataIterMailinglistSubscription extends DataIter
 {

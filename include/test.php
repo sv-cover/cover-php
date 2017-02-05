@@ -124,6 +124,26 @@ class MailCatcher
 }
 
 
+class Response
+{
+	public $location;
+	
+	public $header;
+
+	public $body;
+
+	public $messages;
+
+	public function __construct($location, $header, $body, $messages = null)
+	{
+		$this->location = $location;
+		$this->header = $header;
+		$this->body = $body;
+		$this->messages = $messages;
+	}
+}
+
+
 function simulate_request($path, $params)
 {
 	$path = ltrim($path, '/');
@@ -187,23 +207,97 @@ function simulate_request($path, $params)
 	$response = stream_get_contents($pipes[1]);
 	fclose($pipes[1]);
 
-	list($headers, $data) = explode("\r\n\r\n", $response, 2);
+	list($headers, $body) = explode("\r\n\r\n", $response, 2);
 
 	$exit_code = proc_close($proc);
 
 	$messages = $mail_catcher->catch();
 
-	return [$headers, $data, $messages];
+	$location = $path . (isset($env['QUERY_STRING']) ? '?' . $env['QUERY_STRING'] : '');
+
+	return new Response($location, $headers, $body, $messages);
 }
 
 function simulate_json_request($path, $params)
 {
-	list($headers, $data, $messages) = simulate_request($path, $params);
+	$response = simulate_request($path, $params);
 
-	$json = json_decode($data, true);
+	$json = json_decode($response->body, true);
 
 	return $json;
 }
+
+class Form
+{
+	public $action;
+
+	public $method;
+
+	public $fields = [];
+
+	public $origin;
+
+	public function submit($method = 'simulate_request')
+	{
+		$params = [];
+
+		$url = $this->action ?: $this->origin->location;
+		
+		$url_components = parse_url($url);
+
+		if (isset($url_components['query']))
+			parse_str($url_components['query'], $params['GET']);
+		else
+			$params['GET'] = [];
+
+		switch (strtoupper($this->method))
+		{
+			case 'POST':
+				$params['POST'] = $this->fields;
+				break;
+
+			case 'GET':
+			default:
+				$params['GET'] = array_merge($params['GET'], $this->fields);
+				break;
+		}
+
+		return call_user_func($method, $url_components['path'], $params);
+	}
+
+	static public function fromResponse(Response $response, $xpath)
+	{
+		$response_document = new \DOMDocument();
+
+		libxml_use_internal_errors(true);
+		$response_document->loadHTML($response->body);
+		libxml_use_internal_errors(false);
+
+		$query = new \DOMXPath($response_document);
+
+		$form_node = $query->query($xpath)->item(0);
+
+		$form = new self();
+
+		$form->origin = $response;
+
+		$form->action = $form_node->getAttribute('action');
+
+		$form->method = $form_node->getAttribute('method');
+
+		$fields_query = $query->query('.//input', $form_node);
+
+		foreach ($fields_query as $field_node)
+		{
+			$name = $field_node->getAttribute('name');
+			$value = $field_node->getAttribute('value');
+			$form->fields[$name] = $value;
+		}
+
+		return $form;
+	}
+}
+
 
 trait MemberTestTrait
 {
