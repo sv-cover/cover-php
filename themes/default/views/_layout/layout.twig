@@ -8,11 +8,11 @@
 		<title>{% block title %}Cover :: {{ __('Studievereniging Kunstmatige Intelligentie en Informatica, RUG') }}{% endblock %}</title>
 		
 		{% for stylesheet in view.stylesheets %}
-		<link rel="stylesheet" href="{{ stylesheet|e('html') }}" type="text/css">
+		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
 		
 		{% for script in view.scripts %}
-		<script src="{{ script|e('html_attr') }}"></script>
+		<script src="{{ script }}"></script>
 		{% endfor %}
 	</head>
 	<body>

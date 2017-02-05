@@ -9,7 +9,7 @@
 	</div>
 	<div class="weblog-post-content">
 		<div class="weblog-post-header">
-			<div class="weblog-post-date">{{ iter.datum }}</div>
+			<div class="weblog-post-date">{{ iter.date|date('d-m-Y H:i') }}</div>
 			<h3><a href="forum.php?thread={{ iter.id|e('url') }}">{{ iter.subject }}</a></h3>
 		</div>
 		

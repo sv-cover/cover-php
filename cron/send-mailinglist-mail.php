@@ -160,12 +160,12 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 	switch ($lijst['toegang'])
 	{
 		// Everyone can send mail to this list
-		case DataModelMailinglijst::TOEGANG_IEDEREEN:
+		case DataModelMailinglist::TOEGANG_IEDEREEN:
 			// No problem, you can mail
 			break;
 
 		// Only people on the list can send mail to the list
-		case DataModelMailinglijst::TOEGANG_DEELNEMERS:
+		case DataModelMailinglist::TOEGANG_DEELNEMERS:
 			foreach ($aanmeldingen as $aanmelding)
 				if (strcasecmp($aanmelding['email'], $from) === 0)
 					break 2;
@@ -178,14 +178,14 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
 
 		// Only people who sent mail from an *@svcover.nl address can send to the list
-		case DataModelMailinglijst::TOEGANG_COVER:
+		case DataModelMailinglist::TOEGANG_COVER:
 			if (!preg_match('/\@svcover.nl$/i', $from))
 				return RETURN_NOT_ALLOWED_NOT_COVER;
 
 			break;
 
 		// Only the owning committee can send mail to this list.
-		case DataModelMailinglijst::TOEGANG_EIGENAAR:
+		case DataModelMailinglist::TOEGANG_EIGENAAR:
 			if (strcasecmp($from, $lijst['committee']['email']) !== 0)
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
 
