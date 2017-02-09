@@ -34,7 +34,7 @@
 
 		{% if not global.auth.logged_in %}
 			<tr>
-				<td colspan="2"><a href="{{ link('sessions.login') }}">{{ __('Log in om te stemmen') }}</a></td>
+				<td colspan="2"><a href="{{ link('sessions.login') }}" data-placement-selector="modal" data-partial-selector="#login-form">{{ __('Log in om te stemmen') }}</a></td>
 			</tr>
 		{% elseif global.models.Poll.can_create_new_poll %}
 			<tr>
