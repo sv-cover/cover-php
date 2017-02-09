@@ -224,7 +224,7 @@
 		 * @param DataIterMember $member
 		 * @return bool
 		 */
-		public function has_unread_threads(DataIterMember $member): bool
+		public function has_unread_threads(DataIterMember $member)
 		{
 			/* Get visit info */
 			$visit = $this->model->get_visit_info($this, $member);
@@ -905,7 +905,7 @@
 		  * @throws DataIterNotFoundExcepion if there is no thread with the specified id
 		  * @return DataIterForumThread
 		  */
-		public function get_thread(int $id): DataIterForumThread
+		public function get_thread(int $id)
 		{
 			$row = $this->db->query_first('
 					SELECT
