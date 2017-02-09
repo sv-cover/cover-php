@@ -1,12 +1,25 @@
 <?php
 	require_once 'include/data/DataModel.php';
 
+	class DataIterConfiguratie extends DataIter
+	{
+		static public function fields()
+		{
+			return [
+				'key',
+				'value'
+			];
+		}
+	}
+
 	/**
 	  * A class implementing configuration data
 	  */
 	class DataModelConfiguratie extends DataModel
 	{
 		private $_cache = array();
+
+		public $dataiter = 'DataIterConfiguratie';
 
 		public function __construct($db)
 		{
