@@ -49,4 +49,19 @@ password: `password`
 ## Getting Face detection to work
 Face detection makes use of OpenCV and Python and the python libraries numpy and psycopg2. Make sure those are installed. If that is done correctly, the python script in opt/facedetect should work without editing.
 
+## Using Poedit with Twig templates
+You can use Poedit to update the *.po and *.mo files with cover the English translation. To make Poedit scan the .twig-files as well, you'll have to add it to the list of scanners. The following settings will work (but will cause some non-fatal errors).
+
+1. Create a Poedit project for your theme if you haven’t already, and make sure to add __ on the Sources keywords tab.
+2. Go to Edit->Preferences.
+3. On the Parsers tab, add a new parser with these settings:  
+   Language: *Twig*  
+   List of extensions: ``*.twig``  
+   Parser command: ``xgettext --language=Python --add-comments=TRANSLATORS --force-po -o %o %C %K %F``  
+   An item in keyword list: ``-k%k``  
+   An item in input files list: ``%f``  
+   Source code charset: ``--from-code=%c``
+
+Save and Update!
+
 Have fun!

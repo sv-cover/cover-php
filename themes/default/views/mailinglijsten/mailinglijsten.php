@@ -28,7 +28,7 @@ class MailinglijstenView extends CRUDView
 	{
 		return array(
 			DataModelMailinglist::TOEGANG_IEDEREEN => __('Iedereen'),
-			DataModelMailinglist::TOEGANG_DEELNEMERS => __('Alleen mensen op de mailinglist'),
+			DataModelMailinglist::TOEGANG_DEELNEMERS => __('Alleen mensen op de mailinglijst'),
 			DataModelMailinglist::TOEGANG_COVER => __('Alleen *@svcover.nl adressen'),
 			DataModelMailinglist::TOEGANG_EIGENAAR => __('Alleen de commissie van de lijst')
 		);
