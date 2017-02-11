@@ -44,7 +44,7 @@
 		{
 			require 'include/data/DBIds.php';
 
-			$environment = 'development';
+			$environment = get_static_config_value('environment', 'development');
 
 			$database_class = isset($dbids[$environment]['class'])
 				? $dbids[$environment]['class']
