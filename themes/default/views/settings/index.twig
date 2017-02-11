@@ -20,10 +20,10 @@
 						<td><pre>{{ item.value }}</pre></td>
 						<td style="text-align: right">
 							{% if user_can_update item %}
-								<a href="{{ controller.link_to_update(item)|e('html_attr') }}">{{ __('Wijzig') }}</a>
+								<a href="{{ controller.link_to_update(item)|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#settings-form">{{ __('Wijzig') }}</a>
 							{% endif %}
 							{% if user_can_delete item %}
-								<a href="{{ controller.link_to_delete(item)|e('html_attr') }}">{{ __('Verwijder') }}</a>
+								<a href="{{ controller.link_to_delete(item)|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#delete-settings-form">{{ __('Verwijder') }}</a>
 							{% endif %}
 						</td>
 					</tr>
@@ -34,7 +34,7 @@
 		<tfoot>
 			<tr>
 				<td colspan="3">
-					<a href="{{ controller.link_to_create|e('html_attr') }}">{{ __('Nieuwe sleutel toevoegen') }}</a>
+					<a href="{{ controller.link_to_create|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#settings-form">{{ __('Nieuwe sleutel toevoegen') }}</a>
 				</td>
 			</tr>
 		</tfoot>

@@ -5,7 +5,7 @@
 {% block content %}
 <h1>{{ view.get_label(iter, __('Nieuwe sleutel toevoegen'), __('Sleutel wijzigen')) }}</h1>
 <div class="messageBox">
-	<form method="post" action="{{ view.get_form_action(iter)|e('html_attr') }}" class="vertical-form">
+	<form id="settings-form" method="post" action="{{ view.get_form_action(iter)|e('html_attr') }}" class="vertical-form">
 		{% if iter.id != null %}
 			{{ html_nonce('update', iter) }}
 			<div>
