@@ -12,6 +12,7 @@
 				'titel',
 				'content',
 				'content_en',
+				'content_de',
 			];
 		}
 

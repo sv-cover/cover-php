@@ -59,7 +59,7 @@
 		 */
 		protected function _insert($table, DataIter $iter, $get_id = false)
 		{
-			$this->db->insert($table, $iter->data, $iter->get_literals());
+			$this->db->insert($table, $iter->data);
 			
 			return $get_id ? $key : -1;
 		}
