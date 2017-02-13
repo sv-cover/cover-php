@@ -4,6 +4,23 @@
 	
 	class DataIterAgenda extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'kop',
+				'beschrijving',
+				'commissie',
+				'van',
+				'tot',
+				'locatie',
+				'private',
+				'extern',
+				'facebook_id',
+				'replacement_for'
+			];
+		}
+
 		public function get_search_relevance()
 		{
 			return normalize_search_rank($this->get('search_relevance'));
@@ -19,6 +36,16 @@
 			return sprintf('agenda.php?agenda_id=%d', $this->get_id());
 		}
 
+		public function get_van_datetime()
+		{
+			return $this['van'] ? new DateTime($this['van']) : null;
+		}
+
+		public function get_tot_datetime()
+		{
+			return $this['tot'] ? new DateTime($this['tot']) : null;
+		}
+
 		public function is_proposal()
 		{
 			return $this->get('replacement_for') !== null;
@@ -28,6 +55,26 @@
 		{
 			return $this->model->get_proposed($this);
 		}
+
+		public function get_formatted_period()
+		{
+			return agenda_period_for_display($this);
+		}
+
+		public function get_use_tot()
+		{
+			return $this['van'] != $this['tot'];
+		}
+
+		public function get_use_locatie()
+		{
+			return $this['locatie'];
+		}
+
+		public function get_committee()
+		{
+			return get_model('DataModelCommissie')->get_iter($this->data['commissie']);
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider
@@ -35,20 +82,6 @@
 		public $include_private = false;
 
 		public $dataiter = 'DataIterAgenda';
-
-		public $fields = [
-			'id',
-			'kop',
-			'beschrijving',
-			'commissie',
-			'van',
-			'tot',
-			'locatie',
-			'private',
-			'extern',
-			'facebook_id',
-			'replacement_for'
-		];
 
 		public function __construct($db)
 		{
@@ -80,18 +113,6 @@
 			return "
 				SELECT
 					{$this->table}.*,
-					DATE_PART('dow', {$this->table}.van) AS vandagnaam, 
-					DATE_PART('day', {$this->table}.van) AS vandatum, 
-					DATE_PART('year', {$this->table}.van) AS vanjaar,
-					DATE_PART('month', {$this->table}.van) AS vanmaand, 
-					DATE_PART('hours', {$this->table}.van) AS vanuur, 
-					DATE_PART('minutes', {$this->table}.van) AS vanminuut, 
-					DATE_PART('dow', {$this->table}.tot) AS totdagnaam, 
-					DATE_PART('year', {$this->table}.tot) AS totjaar, 
-					DATE_PART('day', {$this->table}.tot) AS totdatum, 
-					DATE_PART('month', {$this->table}.tot) AS totmaand, 
-					DATE_PART('hours', {$this->table}.tot) AS totuur, 
-					DATE_PART('minutes', {$this->table}.tot) AS totminuut,
 					commissies.naam as commissie__naam,
 					commissies.page as commissie__page
 				FROM
@@ -152,20 +173,7 @@
 
 			$query = "
 				SELECT
-					agenda.*,
 					{$this->table}.*,
-					DATE_PART('dow', {$this->table}.van) AS vandagnaam, 
-					DATE_PART('day', {$this->table}.van) AS vandatum, 
-					DATE_PART('year', {$this->table}.van) AS vanjaar,
-					DATE_PART('month', {$this->table}.van) AS vanmaand, 
-					DATE_PART('hours', {$this->table}.van) AS vanuur, 
-					DATE_PART('minutes', {$this->table}.van) AS vanminuut, 
-					DATE_PART('dow', {$this->table}.tot) AS totdagnaam, 
-					DATE_PART('year', {$this->table}.tot) AS totjaar, 
-					DATE_PART('day', {$this->table}.tot) AS totdatum, 
-					DATE_PART('month', {$this->table}.tot) AS totmaand, 
-					DATE_PART('hours', {$this->table}.tot) AS totuur, 
-					DATE_PART('minutes', {$this->table}.tot) AS totminuut,
 					commissies.naam as commissie__naam,
 					commissies.page as commissie__page,
 					ts_rank_cd(
@@ -197,7 +205,7 @@
 					$this->reject_proposal($proposed_update);
 			
 			/* Chain up */
-			parent::delete($iter);
+			return parent::delete($iter);
 		}
 
 		public function propose_insert(DataIterAgenda $new_item)
@@ -258,6 +266,22 @@
 			return $replacements_for === null
 				? $this->find("{$this->table}.replacement_for IS NOT NULL")
 				: $this->find(sprintf("{$this->table}.replacement_for = %d", $replacements_for['id']));
+		}
 
+		public function find_locations($query, $limit = null)
+		{
+			$sql_term = $this->db->escape_string($query);
+
+			$rows = $this->db->query("
+				SELECT locatie
+				FROM {$this->table}
+				WHERE locatie ILIKE '%{$sql_term}%'
+				GROUP BY locatie
+				ORDER BY COUNT(id) DESC"
+				. ($limit !== null
+					? sprintf('LIMIT %d', $limit)
+					: ''));
+
+			return array_select($rows, 'locatie');
 		}
 	}

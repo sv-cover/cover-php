@@ -12,39 +12,37 @@ function append_ai_email(input) {
 		input.value += '@ai.rug.nl';
 }
 
-function alert_request() {
-	alert(this.get_response());
-}
+/**
+ * Creates a throttelable version of a function. Calling the 'throttled' function
+ * directly will call the function directly (and clear any scheduled delayed call)
+ * but you can also create a new delayed callback by calling .delay(500) on the
+ * throttled function:
+ * 
+ * Example:
+ *   var fun = throttle(updateCallback);
+ *   $('input').on('keyup', fun.delay(500));
+ * 
+ * This will call updateCallback 500ms after the last keyup event. However, if
+ * you call fun() directly after the last keyup, it won't be called a second
+ * time when the 500ms delay timer runs out.
+ */
+function throttle(callback)
+{
+	var timeout = null;
 
-function add_request(str, add) {
-	var test = str.replace(/[^\?]+(\?$|\?.+)/, "$1")
+	var caller = function() {
+		clearTimeout(timeout);
+		callback();
+	};
 
-	if (test == str)
-		return str + '?' + add;
-	
-	if (test.length == 1)
-		return str + add;
-	else
-		return str + '&' + add;
-}
+	caller.delay = function(delay) {
+		return function() {
+			clearTimeout(timeout);
+			timeout = setTimeout(callback, delay);
+		};
+	};
 
-function submit_form(name, xmlrequest) {
-	if (!xmlrequest) {
-		document.forms[name].submit();
-		return;
-	}
-	
-	var request = new Connection();
-	request.on_task_finished = alert_request;
-
-	var action = document.forms[name].getAttribute('action');
-	
-	action = add_request(action, 'xmlrequest');
-	request.post(name, action);
-}
-
-function reset_form(name) {
-	document.forms[name].reset();
+	return caller;
 }
 
 jQuery(function($) {
@@ -69,6 +67,9 @@ jQuery(function($) {
 });
 
 // Inline links (use data-placement-selector and data-partial-selector attributes)
+// Note that this function triggers the partial-content-loaded event on the loaded
+// content, which is used by many functions here to attach event listeners to the
+// new stuff.
 jQuery(function($) {
 	var inline_link_handler = function(e) {
 		// Do not disturb any effect of modifier keys
@@ -157,6 +158,8 @@ $(document).on('partial-content-loaded', function(e) {
 	}
 });
 
+// If a link has the attribute data-image-popup, and its value is 'modal', open
+// the image (href attribute) it points to in a modal popup.
 jQuery(function($) {
 	$(document).on('click', 'a[data-image-popup]', function(e) {
 		if ($(this).data('image-popup') !== 'modal')
@@ -188,7 +191,7 @@ jQuery.fn.autocompleteAlmanac = function(options)
 {
 	var defaults = {
 		minLength: 3,
-        source: function(request, response) {
+		source: function(request, response) {
 			$.getJSON('almanak.php', {
 				'search': request.term,
 				'limit': 15
@@ -740,6 +743,149 @@ $(document).on('mouseout', '[data-face-id]', function(e) {
 	$('#face_' + $(this).data('face-id')).removeClass('highlight');
 });
 
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.contenteditable').each(function() {
+		var $editable = $(this),
+			$previewButton = $(this).find('.editable-mode-preview'),
+			$editButton = $(this).find('.editable-mode-edit'),
+			$form = $(this).find('form[name=editable]'),
+			$editPane = $(this).find('.editable_content'),
+			$previewPane = $(this).find('.editable_preview');
+
+		var switchMode = function(mode) {
+			$editButton.toggle(mode == 'preview');
+			$editPane.toggle(mode == 'edit');
+			$previewButton.toggle(mode == 'edit');
+			$previewPane.toggle(mode == 'preview');
+		};
+
+		var updatePreview = function() {
+			$previewPane.text('Loading…');
+
+			$.post('show.php?preview', $form.serialize()).then(function(response) {
+				$previewPane.html(response);
+			});
+		};
+
+		$(this).find('.editable-save').click(function() {
+			var url = $form.prop('action').replace(/#.*/, '') + '&xmlrequest=1';
+			$.post(url, $form.serialize())
+				.then(function(response) {
+					alert(response);
+				});
+		});
+
+		$(this).find('.editable-revert').click(function() {
+			$form.reset();
+		});
+
+		$(this).find('form[name=editable_language] select').change(function() {
+			this.form.submit();
+		});
+
+		$editButton.click(function() {
+			switchMode('edit');
+		});
+
+		$previewButton.click(function() {
+			switchMode('preview');
+			updatePreview();
+		});
+
+		switchMode('edit'); // default to edit mode
+	});
+});
+
+// Tab panes
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.tab-container').each(function() {
+		var $tabs = $(this).find('.nav-tabs li');
+		var $panels = $(this).find('.tab-panel');
+
+		var urlHash = function(url) {
+			var pos = url.indexOf('#');
+			return pos > -1 ? url.substr(pos + 1) : null;
+		}
+
+		var switchTab = function(tabId) {
+			$tabs.each(function() {
+				$(this).toggleClass('active', urlHash($(this).find('a').attr('href')) == tabId);
+			});
+			$panels.each(function() {{
+				var visible = $(this).prop('id') == tabId;
+				var event = null;
+				
+				if (visible && !$(this).is(':visible'))
+					event = 'show';
+				else if (!visible && $(this).is(':visible'))
+					event = 'hide';
+
+				$(this).toggle(visible);
+				if (event)
+					$(this).trigger(event);
+			}});
+		}
+
+		$tabs.find('a').click(function(e){
+			switchTab(urlHash($(this).attr('href')));
+			e.preventDefault();
+		});
+
+		// Find the first active tab
+		var $activeTab = $tabs.filter('.active').first();
+
+		// If none is explicitly active, go to the first tab in general
+		if ($activeTab.length == 0)
+			$activeTab = $tabs.first();
+
+		// Mark that tab as the active tab (and hide all the others)
+		switchTab(urlHash($activeTab.find('a').attr('href')));
+	});
+});
+
+// Datalist like behaviour for form.
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('input[data-suggestions]').each(function () {
+		var suggestions = $(this).data('suggestions');
+		$(this).autocomplete({
+			source: suggestions,
+			delay: 0,
+			minLength: 0
+		});
+		$(this).on('focus', function() {
+			$(this).autocomplete('search', '');
+		});
+	});
+});
+
+// When autofocus=end, put the cursor at the end of the text
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find("*[autofocus='end']").each(function() {
+		var len = $(this).val().length;
+		$(this).get(0).setSelectionRange(len, len);
+		// No need to focus first, the autofocus attribute should have taken care of that already
+	})
+});
+
+// Autocomplete for locations
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('input[data-autocomplete=location]').each(function () {
+		$(this).autocomplete({
+			minLength: 3,
+			source: function(request, response) {
+				$.getJSON('agenda.php', {
+					'view': 'suggest-location',
+					'search': request.term,
+					'limit': 15
+				}, response);
+			},
+			focus: function() {
+				return false;
+			}
+		});
+	});
+});
+
 /* Promotional banners */
 $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('.sign-up-banner').each(function() {
@@ -937,5 +1083,40 @@ $(document).on('ready partial-content-loaded', function(e) {
 			window.requestAnimationFrame(update);
 			triggered = true;
 		}
+	});
+});
+
+// Previews of editable content and forum topics. Use data-preview-source attribute
+// to select which element to take the input value from, and use data-preview-url
+// to select to which url to make a post request. It will send all the form data
+// with it to that endpoint, and display the response in the element itself.
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-preview-source][data-preview-url]').each(function() {
+		var $target = $(this);
+		var $source = $($target.attr('data-preview-source'));
+		var previewURL = $target.attr('data-preview-url');
+
+		if ($source.length === 0) {
+			console.warn('Could not find element', $target.attr('data-preview-source'));
+			return;
+		}
+
+		var refresh = throttle(function() {
+			// If the target isn't visible (e.g. different tab) then don't go
+			// through all this hassle.
+			if (!$target.is(':visible'))
+				return;
+			
+			var data = $source.closest('form').serialize();
+			$.post(previewURL, data).done(function(response) {
+				$target.html(response);
+			});
+		});
+
+		// Either update the field when we change stuff in the source field
+		$source.on('keyup', refresh.delay(500));
+
+		// Or when it becomes visible (e.g. different tab)
+		$target.on('show', refresh);
 	});
 });

@@ -4,7 +4,7 @@ require_once 'include/member.php';
 
 class PolicyBesturen implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $board)
 	{
 		return member_in_commissie(COMMISSIE_BESTUUR);
 	}

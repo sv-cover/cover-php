@@ -35,7 +35,7 @@ function filename_with_letter($filename, $index)
 
 $recursive = false;
 
-$photo_model = get_model('DataModelFotoboek');
+$photo_model = get_model('DataModelPhotobook');
 
 $photos = $photo_model->find(sprintf('boek = %d', $argv[1]));
 

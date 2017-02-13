@@ -1,4 +1,7 @@
 <?php
+
+const ALLOW_SUBDOMAINS = 1;
+
 /**
   * A Class implementing the default view. New views should subclass this one.
   * creating functions in the same directory as the view, with the extension .phtml
@@ -9,12 +12,28 @@ class ViewNotFoundException extends RuntimeException {
 	//
 }
 
+class TwigAccessor
+{
+	private $callback;
+
+	public function __construct($callback)
+	{
+		$this->callback = $callback;
+	}
+
+	public function __call($argument, array $args)
+	{
+		return call_user_func($this->callback, $argument);
+	}
+}
+
 class View
 { 	
 	static public function byName($view, Controller $controller = null)
 	{
 		$possible_paths = [
 			'themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php',
+			'themes/' . get_theme() . '/views/' . $view . '.php',
 			'themes/default/views/' . $view . '/' . $view . '.php'
 		];
 
@@ -31,117 +50,167 @@ class View
 			throw new RuntimeException("Expected the class $view_name in $file");
 
 		$refl = new ReflectionClass($view_name);
-		return $refl->newInstance($controller);
+		return $refl->newInstance($controller, dirname($file));
 	}
 
 	protected $controller;
 
-	public function __construct(Controller $controller = null)
+	protected $layout;
+
+	public function __construct(Controller $controller = null, $path = null)
 	{
+		// Default $path to @theme so View::render() is at least somewhat useful.
+		if (!$path)
+			$path = 'themes/' . get_theme() . '/views';
+
 		$this->controller = $controller;
+
+		// First look in our own view directory
+		$loader = new Twig_Loader_Filesystem($path);
+
+		// Then, look in the top level theme views directory
+		$loader->addPath('themes/' . get_theme() . '/views', 'theme');
+
+		// And add a shortcut to the layout directory through @layout
+		$loader->addPath('themes/' . get_theme() . '/views/_layout', 'layout');
+
+		$this->twig = new Twig_Environment($loader, array(
+			'debug' => true,
+			'strict_variables' => true,
+			'cache' => get_config_value('twig_cache', 'tmp/twig'),
+		));
+
+		require_once 'include/policytwigextension.php';
+		$this->twig->addExtension(new PolicyTwigExtension());
+
+		require_once 'include/i18ntwigextension.php';
+		$this->twig->addExtension(new I18NTwigExtension());
+
+		require_once 'include/routertwigextension.php';
+		$this->twig->addExtension(new RouterTwigExtension());
+
+		require_once 'include/htmltwigextension.php';
+		$this->twig->addExtension(new HTMLTwigExtension());
+
+		require_once 'themes/' . get_theme() . '/views/_layout/layout.php';
+		$this->layout = new LayoutViewHelper();
+
+		foreach ($this->_globals() as $key => $var)
+			$this->twig->addGlobal($key, $var);
 	}
 
-	function get_name() {
-		return str_replace("view", "", strtolower(get_class($this)));
-	}
-
-	public function get_view($name)
+	protected function _globals()
 	{
-		return self::byName($name, $this->controller);
+		return [
+			'view' => $this,
+			'controller' => $this->controller,
+			'model' => $this->controller ? $this->controller->model() : null,
+			'global' => [
+				'auth' => get_auth(),
+				'identity' => get_identity(),
+				'db' => get_db(),
+				'server' => $_SERVER,
+				'GET' => $_GET,
+				'POST' => $_POST,
+				'i18n' => [
+					'language' => i18n_get_language(),
+					'languages' => i18n_get_languages()
+				],
+				'models' => new TwigAccessor(function($model) {
+					return get_model('DataModel' . $model);
+				}),
+				'controllers' => new TwigAccessor(function($controller) {
+					return null;
+				}),
+				'policies' => new TwigAccessor(function($model) {
+					return get_policy('DataModel' . $model);
+				})
+			]
+		];
 	}
 
-	public function get_scripts()
+	public function scripts()
 	{
-		return [];
+		return [
+			get_theme_data('data/jquery-2.2.0.min.js'),
+			'//code.jquery.com/ui/1.10.4/jquery-ui.js',
+			get_theme_data('data/common.js'),
+			get_theme_data('data/dropdown.js')
+		];
 	}
-	
-	/**
-	 * Renders the file with the name of _$name.phtml in the directory of 
-	 * the view
-	 *
-	 * @name the name of the partial to be rendered
-	 * @params a hash with variables local to the partial
-	 *
-	 * @result true if the rendering was successful; otherwise false
-	 * @author Pieter de Bie
-	 **/
-	function render_partial($name, $params = array())
-	{
-		$filename = dirname($this->__file) . '/_' . $name . '.phtml';
 
-		if (!file_exists($filename))
-			throw new Exception("Partial {$name} not found");
-		
-		// Insert hash into local space
-		extract($params);
-		include($filename);
-		
-		return true;
-	}
-	
-	/**
-	 * Renders the file with the name of _$name.phtml in the directory of 
-	 * the view and returns the resulting string
-	 *
-	 * @name the name of the partial to be rendered
-	 * @params a hash with variables local to the partial
-	 *
-	 * @result the contents of the partial of null if the partial coouldn't
-	 * be rendered
-	 * @author Jesse van den Kieboom
-	 **/
-	function render_partial_s($name, $params = array())
+	public function stylesheets()
 	{
-		ob_start();
-		$this->render_partial($name, $params);
-		$contents = ob_get_contents();
-		ob_end_clean();
-		
-		return $contents;
+		return [
+			get_theme_data('style.css'),
+			get_theme_data('styles/font-awesome.min.css'),
+			'//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css'
+		];
 	}
-	
-	function __call($name, $args) {
-		$filename = dirname($this->__file) . '/' . $name . '.phtml';
 
-		if (file_exists($filename))
-		{
-			// Insert hash into local space
-			$controller = $this->controller;
-			extract($args[0]);
-			include($filename);
-			return true;
+	public function layout()
+	{
+		return $this->layout;
+	}
+
+	public function redirect($url, $permanent = false, $flags = 0)
+	{
+		// parse and selectively rebuild the url to prevent
+		// weird tricks where a custom form redirects you to
+		// outside the Cover website.
+		$parts = parse_url($url);
+
+		$url = '';
+
+		if (($flags & ALLOW_SUBDOMAINS)
+			&& isset($parts['host'])
+			&& is_same_domain($parts['host'], $_SERVER['HTTP_HOST'])) {
+			$url = '//' . $parts['host'];
 		}
-		
-		// Fallback on old methods
-		$method_name = "view_" . $name;
-		if (method_exists($this, $method_name))
-		{
-			extract($args[0]);
-			$this->$method_name($args[0]["model"], $args[0]["iter"], $args[0]);
-			return true;
-		}
-		
-		echo report_error(
-			N__("View"),
-			N__("De gespecificeerde functie <b>%s</b> kon niet worden gevonden voor de view <b>%s</b>.")
-			. N__("Er is gezocht in <em>%s</em> en de methode <em>%s</em>"), $name, $this->get_name(), $filename, $method_name);
-		return false;
+
+		$url .= $parts['path'];
+
+		if (isset($parts['query']))
+			$url .= '?' . $parts['query'];
+
+		if (isset($parts['fragment']))
+			$url .= '#' . $parts['fragment'];
+
+		if ($permanent)
+			header('Status: 301 Moved Permanently');
+
+		header('Location: ' . $url);
+		return '<a href="' . htmlentities($url, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
 	}
-	
-	/** 
-	  * Common generic automatic authentication message view 
-	  */
-	function view_auth_common() {
-		echo '<div class="messageBox error_message">' . 
-		sprintf(__('Dit deel van de website is alleen toegankelijk voor Cover-leden. Vul rechtsboven je E-Mail en wachtwoord in te loggen. Indien je je wachtwoord vergeten bent kun je een nieuw wachtwoord %s. Heb je problemen met inloggen, mail dan naar %s.'), '<a href="wachtwoordvergeten.php">' . __('aanvragen') . '</a>', '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>') . '</div>';
+
+	public function render_401_unauthorized(UnauthorizedException $e) {
+		header('Status: 401 Unauthorized');
+		header('WWW-Authenticate: FormBased');
+		return '<h1>Unauthorized</h1><pre>' . $e->getMessage() . '</pre>';
 	}
-	
-	/** 
-	  * Common generic automatic bestuur authentication message view 
-	  */
-	function view_auth_bestuur() {
-		echo '<div class="messageBox error_message">' . 
-		sprintf(__('Dit deel van de website is alleen toegankelijk voor het bestuur. Vul rechtsboven je E-Mail en wachtwoord in te loggen. Indien je je wachtwoord vergeten bent kun je een nieuw wachtwoord %s. Heb je problemen met inloggen, mail dan naar %s.'), '<a href="wachtwoordvergeten.php">' . __('aanvragen') . '</a>', '<a href="mailto:webcie@ai.rug.nl">' . __('de WebCie') . '</a>') . '</div>';
+
+	public function render_404_not_found(NotFoundException $e) {
+		header('Status: 404 Not Found');
+		return '<h1>Not Found</h1><pre>' . $e->getMessage() . '</pre>';
+	}
+
+	public function render($template_file, array $data = array())
+	{
+		$template = $this->twig->loadTemplate($template_file);
+
+		return $template->render($data);
+	}
+
+	public function render_json(array $data)
+	{
+		header('Content-Type: application/json');
+		return json_encode($data);
+	}
+
+	protected function _get_preferred_response()
+	{
+		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
+			array('application/json', 'text/html', '*/*'));
 	}
 }
 
@@ -157,5 +226,120 @@ class CRUDView extends View
 	public function get_label(DataIter $iter = null, $create_label, $update_label)
 	{
 		return $iter && $iter->has_id() ? $update_label : $create_label;
+	}
+
+	public function render_delete(DataIter $iter, $success, $errors)
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				return $this->render_json(compact('errors'));
+
+			default:
+				if ($success)
+					return $this->redirect($this->controller->link_to_index());
+				else
+					return $this->render('confirm_delete.twig', compact('iter', 'errors'));
+		}
+	}
+
+	public function render_create(DataIter $iter, $success, $errors)
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				if ($success)
+					return $this->_send_json_single($iter);
+				else
+					return $this->render_json(compact('errors'));
+
+			default:
+				if ($success)
+					return $this->redirect($this->controller->link_to_read($iter));
+				else
+					return $this->render('form.twig', compact('iter', 'errors'));
+		}
+	}
+
+	public function render_read(DataIter $iter)
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				return $this->_send_json_single($iter);
+
+			default:
+				return $this->render('single.twig', compact('iter'));
+		}
+	}
+
+	public function render_update(DataIter $iter, $success, $errors)
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				if ($success)
+					return $this->_send_json_single($iter);
+				else
+					return $this->render_json(compact('errors'));
+
+			default:
+				if ($success)
+					return $this->redirect($this->controller->link_to_read($iter));
+				else
+					return $this->render('form.twig', compact('iter', 'errors'));
+		}
+	}
+
+	public function render_index($iters)
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				return $this->_send_json_index($iters);
+
+			default:
+				return $this->render('index.twig', compact('iters'));
+		}
+	}
+
+	protected function _send_json_single(DataIter $iter)
+	{
+		return $this->render_json(array(
+			'iter' => $this->_json_augment_iter($iter)
+		));
+	}
+
+	protected function _send_json_index(array $iters)
+	{
+		$links = array();
+
+		$new_iter = $this->controller->model()->new_iter();
+
+		if (get_policy($new_iter)->user_can_create($new_iter)) 
+			$links['create'] = $this->controller->json_link_to_create();
+
+		return $this->render_json(array(
+			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
+			'_links' => $links
+		));
+	}
+
+	protected function _json_augment_iter(DataIter $iter)
+	{
+		$links = array();
+
+		$policy = get_policy($this->controller->model());
+
+		if ($policy->user_can_read($iter))
+			$links['read'] = $this->controller->json_link_to_read($iter);
+
+		if ($policy->user_can_update($iter))
+			$links['update'] = $this->controller->json_link_to_update($iter);
+
+		if ($policy->user_can_delete($iter))
+			$links['delete'] = $this->controller->json_link_to_delete($iter);
+
+		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
 	}
 }

@@ -1,0 +1,92 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title view.title ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageHeading">
+	{% if user_can_create controller.new_iter %}
+		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuw agendapunt') }}</a></div>
+	{% endif %}
+	<h1>{{ view.title }}</h1>
+</div>
+
+<div class="messageBox">
+{% if not global.auth.logged_in %}
+	<p class="italic">{{ __('Log in om eventuele afgeschermde agendapunten te bekijken.') }}</p>
+{% endif %}
+
+<div class="navigation">
+	{% if view.previous_year %}
+	<a href="agenda.php?year={{ view.previous_year }}" class="previous">
+		{{ __('Toon alles uit het jaar %d-%d')|format(view.previous_year, view.previous_year + 1) }}
+	</a>
+	{% endif %}
+
+	{% if view.next_year %}
+	<a href="agenda.php?year={{ view.next_year }}" class="next">
+		{{ __('Toon alles uit het jaar %d-%d')|format(view.next_year, view.next_year + 1) }}
+	</a>
+	{% elseif globals.GET.year is defined %}
+	<a href="agenda.php" class="next">
+		{{ __('Toon actuele agenda') }}
+	</a>
+	{% endif %}
+</div>
+
+{% set curmaand = -1 %}
+{% set showyear = true %}
+
+{% if iters|length == 0 %}
+	<p>{{ __('Er staan op dit moment geen activiteiten op de agenda.') }}</p>
+{% else %}
+<table class="agenda" style="background-color: #000;">
+{% for punt in iters %}
+	{% if curmaand != punt.van|date('n') %}
+		</table>
+		<h2>
+			{{ months[punt.van|date('n')] }}
+			{% if show_year %}{{ punt.van|date('Y') }}{% endif %}
+		</h2>
+		<table class="agenda">
+		{% set curmaand = punt.van|date('n') %}
+	{% endif %}
+	
+	<tr>
+		<td class="vandatum">
+			<div class="calendar-icon">
+				<span class="month">{{ punt.van|date('M') }}</span>
+				<span class="day">{{ punt.van|date('d') }}</span>
+			</div>
+		</td>
+		<td>
+			<a class="agendalink" href="{{ controller.link_to_read(punt) }}">{{ punt.kop }}</a><br>
+			{% if punt.is_proposal %}<span class="label-pending">{{ __('Nog niet gepubliceerd') }}</span><br>{% endif %}
+			
+			{{ punt|period }}<br>
+
+			{% if punt.locatie %}
+			{{ __('Locatie') }}: {{ punt.locatie }}<br>
+			{% endif %}
+
+			<ul class="actions">
+				{% if user_can_delete punt %}
+				<li><a href="{{ controller.link_to_delete(punt) }}">{{ __('Verwijder') }}</a></li>
+				{% endif %}
+				{% if user_can_update punt %}
+				<li><a href="{{ controller.link_to_update(punt) }}">{{ __('Wijzig') }}</a></li>
+				{% endif %}
+			</ul>
+		</td>
+	</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+<p>{{ __('De Coveragenda is ook beschikbaar in verschillende standaarden:') }}
+{% if global.auth.logged_in %}
+<a href="agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">iCal (website)</a>, 
+{% endif %}
+<a href="http://www.google.com/calendar/feeds/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic">XML (gcal)</a>,
+<a href="http://www.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics">iCal (gcal)</a></p>
+</div>
+{% endblock %}

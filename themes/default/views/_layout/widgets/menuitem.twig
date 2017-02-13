@@ -1,0 +1,10 @@
+<div class="menuItem">
+	<hr class="menu_contents">
+	<div class="menu_header">
+		{% block title %}{% endblock %}
+		<hr>
+	</div>
+	<div class="menu_contents" id="menu_{% block name %}{% endblock %}">
+		{% block content %}{% endblock %}
+	</div>
+</div>

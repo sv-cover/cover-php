@@ -1,0 +1,53 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Forum') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Forum') }}</h1>
+<div class="topbar"></div>
+<table class="forum">
+	<colgroup>
+		<col class="icon">
+		<col class="forum">
+		<col class="threadcount">
+		<col class="messagecount">
+		<col class="last">
+	</colgroup>
+	<tbody>
+	{% set prev_header = null %}
+	{% set last_header = null %}
+		
+	{% for iter in iters if user_can_read iter %}
+		{% for header in headers if iter.position > header.position %}
+			{% set last_header = header %}
+		{% endfor %}
+		
+		{% if last_header and last_header != prev_header %}
+			<tr class="forum_header">
+				<td colspan="5">{{ last_header.name }}</td>
+			</tr>
+			{% set prev_header = last_header %}
+		{% endif %}
+
+		<tr class="r{{ loop.index is odd ? 1 : 0 }}">
+			<td class="icon">
+				<img src="{{ link_static('images/' ~ (view.has_unread_threads(iter) ? 'thread_new.png' : 'thread.png'))|e('html_attr') }}">
+			</td>
+			<td class="forum">
+				<a class="bold" href="forum.php?forum={{ iter.id }}">{{ iter.name }}</a>
+				<div class="smaller">{{ iter.description }}</div>
+			</td>
+			<td class="threadcount text_center">{{ iter.num_threads }}</td>
+			<td class="messagecount text_center">{{ iter.num_forum_messages }}</td>
+			<td class="last">
+				{% if iter.last_thread %}
+					{{ iter.last_thread.date|date('d-m-Y H:i') }}<br>
+					<a id="last-thread" href="forum.php?thread={{ iter.last_thread.id }}&amp;page={{ iter.last_thread.get_num_thread_pages - 1 }}#p{{ iter.last_thread.last_id }}">{{ iter.last_thread.subject }}</a>
+				{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+<div class="bar"></div>
+{% endblock %}

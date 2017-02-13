@@ -8,16 +8,7 @@ class DreamsparkController extends Controller
 {
 	public function __construct()
 	{
-		//
-	}
-
-	function get_content($view)
-	{
-		$this->run_header(array('title' => __('Log in op Dreamspark')));
-
-		run_view($view);
-		
-		$this->run_footer();
+		$this->view = View::byName('dreamspark', $this);
 	}
 
 	protected function redirect_to_dreamspark()
@@ -62,22 +53,19 @@ class DreamsparkController extends Controller
 		if (!$response)
 			throw new RuntimeException('Could not get redirect url from the ELMS endpoint');
 
-		header('Location: ' . $response);
-		printf('Redirecting to <a href="%s">%1$s</a>',
-			markup_format_text($response));
-
-		return true;
+		return $this->view->redirect($response, ALLOW_SUBDOMAINS);
 	}
 
-	public function run_impl()
+	protected function run_impl()
 	{
-		if (!logged_in())
-			return $this->get_content('common::auth');
+		if (!get_auth()->logged_in())
+			return $this->view->redirect('sessions.php?view=login&referrer=dreamspark.php');
 
-		if (isset($_POST['accept_terms']) && $_POST['accept_terms'] == 'true')
-			$this->redirect_to_dreamspark();
+		if ($this->_form_is_submitted('accept_dreamspark_terms'))
+			if (isset($_POST['accept_terms']) && $_POST['accept_terms'] == 'true')
+				return $this->redirect_to_dreamspark();
 
-		return $this->get_content('dreamspark::accept');
+		return $this->view->render_accept();
 	}
 }
 

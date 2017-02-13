@@ -1,0 +1,109 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Agenda') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Agenda') }}</h1>
+<div class="messageBox">
+	{% if iters|length == 0 %}
+		<p>{{ __('Er staan geen agendapunten in de wachtrij om goedgekeurd te worden.') }}</p>
+	{% else %}
+		<p>{{ __('Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden.') }}</p>
+		<form name="agenda_moderate" action="" method="post">
+			{{ html_nonce('moderate') }}
+			<table class="full-width-table" id="table_moderate">
+				<thead>
+					<tr class="header">
+						<th class="text_center">
+							<img src="{{ link_static('images/accept.png')|e('html_attr') }}" title="{{ __('Accepteer agendapunt')|e('html_attr') }}">
+						</th>
+						<th class="text_center">
+							<img src="{{ link_static('images/cancel.png')|e('html_attr') }}" title="{{ __('Weiger agendapunt')|e('html_attr') }}">
+						</th>
+						<th>{{ __('Kop') }}</th>
+						<th>{{ __('Datum') }}</th>
+						<th>{{ __('Commissie') }}</th>
+						<th>{{ __('Privé') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in iters %}
+						<tr id="punt{{ item.id }}" class="{% if item.id == highlighted_id %}highlight{% endif %}">
+							<td>{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accepteer agendapunt')) }}</td>
+							<td>{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Weiger agendapunt')) }}</td>
+							<td><a href="agenda.php?agenda_id={{ item.id|e('url') }}">{{ item.kop }}</a></td>
+							<td>{{ item|period }}</td>
+							<td>{{ item.committee.naam }}</td>
+							<td>{{ html_input_checkbox('private_' ~ item.id, item, 'yes', field='private', title=__('Alleen zichtbaar voor leden')) }}</td>
+						</tr>
+	
+						<tr id="comment_{{ item.id }}">
+							<td colspan="2"></td>
+							<td colspan="5">{{ html_textarea_field('comment_' ~ item.id, null, null, rows='4') }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td class="text_center">
+							<a href="javascript:accept_all();">
+								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Alle agendapunten op accepteren zetten')|e('html_attr') }}">
+							</a>
+						</td>
+						<td class="text_center">
+							<a href="javascript:cancel_all();">
+								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Alle agendapunten op weigeren zetten')|e('html_attr') }}">
+							</a>
+						</td>
+						<td colspan="5" class="submit">
+							<button type="submit" class="button" name="submmoderate" value="yes">{{ __('Toepassen') }}</button>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		<script type="text/javascript">
+			var ids = {{ [0]|merge(iters|select('id'))|json_encode|raw }};
+
+			function action_clicked(id, accept) {
+				var div = document.getElementById("comment_" + id);
+
+				if (accept)
+					div.style.display = "none";
+				else
+					div.style.display = "";
+			}
+			
+			function set_all(accept) {
+				for (i = 1; i < ids.length; i++) {
+					var id = ids[i];
+					
+					if (accept)
+						radio = document.getElementById("accept_" + id);
+					else
+						radio = document.getElementById("cancel_" + id);
+					
+					radio.checked = true;
+					action_clicked(id, accept);
+				}				
+			}
+			
+			function accept_all() {
+				set_all(true);
+			}
+			
+			function cancel_all() {
+				set_all(false);
+			}
+			
+			for (var i = 1; i < ids.length; i++) {
+				var id = ids[i];
+
+				/* Check radio state */
+				cancel = document.getElementById("cancel_" + id);
+				action_clicked(id, !cancel.checked);
+			}
+		</script>
+	{% endif %}
+</div>
+{% endblock %}

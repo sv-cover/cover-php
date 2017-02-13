@@ -5,7 +5,41 @@
 
 	class DataIterMember extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'voornaam',
+				'tussenvoegsel',
+				'achternaam',
+				'adres',
+				'postcode',
+				'woonplaats',
+				'email',
+				'geboortedatum',
+				'geslacht',
+				'telefoonnummer',
+				'privacy',
+				'type',
+				'machtiging',
+				'beginjaar',
+				'lidid',
+				'onderschrift',
+				'avatar',
+				'homepage',
+				'nick',
+				'taal',
+			];
+		}
+
 		public function get_naam()
+		{
+			trigger_error('Use DataIterMember::full_name instead of DataIterMember::naam', E_USER_NOTICE);
+			
+			return member_full_name($this);
+		}
+
+		public function get_full_Name()
 		{
 			return member_full_name($this);
 		}
@@ -17,7 +51,7 @@
 
 		public function get_search_relevance()
 		{
-			return 0.5 + normalize_search_rank($this->get('number_of_committees'));
+			return 0.5 + normalize_search_rank($this['number_of_committees']);
 		}
 
 		public function get_search_type()
@@ -28,6 +62,29 @@
 		public function get_absolute_url()
 		{
 			return sprintf('profiel.php?lid=%d', $this->get_id());
+		}
+
+		public function has_photo()
+		{
+			return $this->model->has_photo($this);
+		}
+
+		public function get_photo()
+		{
+			return $this->model->get_photo($this);
+		}
+
+		public function get_photo_mtime()
+		{
+			return $this->model->get_photo_mtime($this);
+		}
+
+		/**
+		 * Note: this getter returns a list of committee id's, not actual DataIterCommittee[]
+		 */
+		public function get_committees()
+		{
+			return $this->model->get_commissies($this->get_id());
 		}
 	}
 
@@ -50,36 +107,6 @@
 		public function __construct($db)
 		{
 			parent::__construct($db, 'leden');
-		}
-
-		protected function _generate_select()
-		{
-			return 'leden.*,
-				profielen.lidid,
-				profielen.onderschrift,
-				profielen.avatar,
-				profielen.homepage,
-				profielen.msn,
-				profielen.icq,
-				profielen.nick,
-				profielen.taal';
-		}
-
-		function get_iter($id)
-		{
-			$row = $this->db->query_first('SELECT ' . $this->_generate_select() . '
-					FROM leden
-					LEFT JOIN profielen ON leden.id = profielen.lidid
-					WHERE leden.id = ' . intval($id));
-
-			if ($row === null)
-				throw new DataIterNotFoundException($id);
-
-			$iter = $this->_row_to_iter($row);
-
-			$iter->data['committees'] = $this->get_commissies($id);
-
-			return $iter;
 		}
 
 		public function get_jarigen()
@@ -141,15 +168,6 @@
 			return $this->has_photo($iter);
 		}
 
-		public function get()
-		{
-			$rows = $this->db->query('SELECT ' . $this->_generate_select() . '
-					FROM leden, profielen
-					WHERE leden.id = profielen.lidid');
-
-			return $this->_rows_to_iters($rows);
-		}
-
 		/**
 		 * Get limited member data (id, type, wachtwoord) from email and password combination.
 		 * @param $email string email address of the user
@@ -158,14 +176,8 @@
 		 */
 		public function login($email, $passwd)
 		{
-			$row = $this->db->query_first("SELECT
-					leden.id,
-					leden.type,
-					profielen.wachtwoord
-					FROM leden, profielen
-					WHERE leden.id = profielen.lidid AND
-					lower(leden.email) = lower('" . $this->db->escape_string($email) . "')");
-
+			$iter = $this->get_from_email($email);
+			
 			$active_member_types = array(
 				MEMBER_STATUS_LID,
 				MEMBER_STATUS_LID_ONZICHTBAAR,
@@ -173,33 +185,56 @@
 				MEMBER_STATUS_DONATEUR,
 				MEMBER_STATUS_UNCONFIRMED);
 
-			if (!$row || !in_array($row['type'], $active_member_types))
+			if ($iter === null || !in_array($iter['type'], $active_member_types))
 				return false;
 
-			// Old md5 password
-			if (preg_match('/^[a-z0-9]{32}$/', $row['wachtwoord'])) {
-				if (md5($passwd) != $row['wachtwoord'])
-					return false;
-			}
-
-			// New PHP 5.5 password function crypt-like passwords
-			else if (!password_verify($passwd, $row['wachtwoord']))
+			if (!$this->test_password($iter, $passwd))
 				return false;
-
-			/** @var DataModelMember $iter */
-			$iter = $this->_row_to_iter($row);
-
-			if (password_needs_rehash($row['wachtwoord'], PASSWORD_DEFAULT))
-				$this->set_password($iter, $passwd);
 
 			return $iter;
 		}
 
+		public function test_password(DataIterMember $member, $password)
+		{
+			$stored_password = $this->db->query_value(sprintf('SELECT password FROM passwords WHERE lid_id = %d', $member->get_id()));
+
+			// Old md5 password
+			if (preg_match('/^[a-z0-9]{32}$/', $stored_password)) {
+				if (md5($password) !== $stored_password)
+					return false;
+			}
+
+			// New PHP 5.5 password function crypt-like passwords
+			else if (!password_verify($password, $stored_password))
+				return false;
+
+			if (password_needs_rehash($stored_password, PASSWORD_DEFAULT))
+				$this->set_password($iter, $password);
+
+			return true;
+		}
+
 		public function set_password(DataIterMember $member, $new_password)
 		{
-			$this->db->update('profielen',
-				array('wachtwoord' => password_hash($new_password, PASSWORD_DEFAULT)),
-				sprintf('lidid = %d', $member->get_id()));
+			// Todo: If we are sure we have PSQL 9.5 or higher, we could do an INSERT .. ON CONFLICT UPDATE query.
+
+			try {
+				$hash = password_hash($new_password, PASSWORD_DEFAULT);
+
+				$this->db->insert('passwords', ['lid_id' => $member->get_id(), 'password' => $hash]);
+
+				return true;
+			} catch (PDOException $e) {
+				// Assume the exception is a conflicting row. If it is not, rethrow!
+				if ($e->getCode() != '23505')
+					throw $e;
+				
+				$affected = $this->db->update('passwords',
+					['password' => $hash],
+					sprintf('lid_id = %d', $member->get_id()));
+
+				return $affected === 1;
+			}
 		}
 
 		/**
@@ -234,24 +269,7 @@
 		  */
 		public function get_from_email($email)
 		{
-			$row = $this->db->query_first("SELECT *
-					FROM leden
-					WHERE leden.email = '" . $this->db->escape_string($email) . "'");
-
-			return $this->_row_to_iter($row);
-		}
-
-		/**
-		  * Update a member profiel
-		  * @iter a #DataIter with the profiel data
-		  *
-		  * @result true if the update was successful, false otherwise
-		  */
-		public function update_profiel(DataIter $iter)
-		{
-			return $this->db->update('profielen',
-					$iter->get_changed_values(), 'lidid = ' . $iter->get_id(),
-					$iter->get_literals());
+			return $this->find_one(['email__cieq' => $email]);
 		}
 
 		/**
@@ -262,7 +280,7 @@
 		  */
 		public function get_full_name(DataIter $iter)
 		{
-			return $iter->get('voornaam') . ($iter->get('tussenvoegsel') ? (' ' . $iter->get('tussenvoegsel')) : '') . ' ' . $iter->get('achternaam');
+			return $iter['voornaam'] . ($iter['tussenvoegsel'] ? (' ' . $iter['tussenvoegsel']) : '') . ' ' . $iter['achternaam'];
 		}
 
 		/**
@@ -299,23 +317,31 @@
 		public function is_private(DataIter $iter, $field, $self=false)
 		{
 			$value = $this->get_privacy_for_field($iter,$field);
-			$cur = logged_in();
-			if ($cur && $self && $cur['id'] == $iter->get_id()) {
+			
+			// If we are viewing ourself ourselves, then it isn't private, obviously ;)
+			if (get_auth()->logged_in() && $self && get_identity()->get('id') == $iter->get_id())
 				return false;
-			}
-			if ($value == self::VISIBLE_TO_NONE) /* Visible to none */
+
+			// Visible to none -> private.
+			if ($value == self::VISIBLE_TO_NONE)
 				return true;
-			elseif ($value == self::VISIBLE_TO_EVERYONE) /* Visible to all */
+
+			// Visible to all -> not private.
+			elseif ($value == self::VISIBLE_TO_EVERYONE)
 				return false;
-			elseif (($value & self::VISIBLE_TO_MEMBERS) && !logged_in_as_active_member()) /* Visible to members */
+			
+			// Only visible to members, and I am not a member? -> private.
+			elseif (($value & self::VISIBLE_TO_MEMBERS) && !get_identity()->member_is_active())
 				return true;
+			
+			// Otherwise, not private
 			else
 				return false;
 		}
 
 		public function is_visible($iter)
 		{
-			return in_array($iter->get('type'), $this->visible_types);
+			return in_array($iter['type'], $this->visible_types);
 		}
 
 		/**
@@ -337,7 +363,7 @@
 			if (!array_key_exists($field, $privacy))
 				return false;
 
-			$value = ($iter->get('privacy') >> ($privacy[$field] * 3)) & 7;
+			$value = ($iter['privacy'] >> ($privacy[$field] * 3)) & 7;
 			return $value;
 		}
 
@@ -457,8 +483,6 @@
 						actieveleden.lidid = leden.id
 					LEFT JOIN foto_faces ON
 						foto_faces.lid_id = leden.id
-					LEFT JOIN profielen ON
-						profielen.lidid = leden.id
 					WHERE
 						type IN (" . implode(',', $this->visible_types) . ")
 						AND (
@@ -468,7 +492,7 @@
 								ELSE
 									voornaam || ' ' || tussenvoegsel || ' ' || achternaam
 							END)) ILIKE unaccent('%{$name}%')
-							OR unaccent(profielen.nick) ILIKE unaccent('%{$name}%')
+							OR unaccent(leden.nick) ILIKE unaccent('%{$name}%')
 						)
 					GROUP BY
 						leden.id
@@ -491,7 +515,7 @@
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 				&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 				$members = array_filter($members, function($member) {
-					return !$this->is_private($member, 'naam') || $member->get_id() == get_identity()->get('id');
+					return !$this->is_private($member, 'naam') || $member->get_id() == get_identity()['id'];
 				});
 
 			//'rebase' the array so PHP doesn't forget to count properly starting from zero ;)
@@ -533,7 +557,7 @@
 			$rows = $this->_rows_to_iters($rows);
 			$years = array();
 			foreach ($rows as $row) {
-				array_push($years,$row->get('beginjaar'));
+				array_push($years,$row['beginjaar']);
 			}
 			return $years;
 		}
@@ -550,7 +574,7 @@
 
 		public function get_status($iter)
 		{
-			switch ($iter->get('type'))
+			switch ($iter['type'])
 			{
 				case MEMBER_STATUS_LID:
 					return __('Lid');
@@ -589,20 +613,9 @@
 			$members = array();
 
 			foreach ($this->_rows_to_iters($rows) as $iter)
-				$members[$iter->get('facebook_id')] = $iter;
+				$members[$iter['facebook_id']] = $iter;
 
 			return $members;
-		}
-
-		/**
-		  * Insert a profiel
-		  * @iter a #DataIter representing the profiel
-		  *
-		  * @result whether the insert was successful
-		  */
-		public function insert_profiel(DataIter $iter)
-		{
-			return $this->_insert('profielen', $iter);
 		}
 
 		/**

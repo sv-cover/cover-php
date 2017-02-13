@@ -1,8 +1,0 @@
-<?php if (get_identity()->member_is_active()
-	&& !($iter instanceof DataIterRootPhotobook)
-	&& get_policy($model)->user_can_read($iter)): ?>
-<a href="fotoboek.php?book=<?=$iter->get_id()?>&amp;view=confirm_download_book" class="button download-photos-button">
-	<i class="fa fa-download"></i>
-	<?=__('Download fotoboek')?>
-</a>
-<?php endif ?>

@@ -1,0 +1,18 @@
+{% extends '@layout/widgets/menuitem.twig' %}
+
+{% block title __('Poll') %}
+
+{% block name 'poll' %}
+
+{% block content %}
+
+{% set poll = global.models.Poll.get_latest_poll() %}
+
+{% if poll %}
+	<p><a href="forum.php?thread={{poll.id}}">{{ poll.subject }}</a></p>
+	{% include '@theme/forum/_poll.twig' %}
+{% else %}
+	<p>{{ __('Er is op dit moment geen poll') }}</p>
+{% endif %}
+
+{% endblock %}

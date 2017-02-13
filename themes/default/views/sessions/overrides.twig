@@ -1,0 +1,48 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+	{{ __('Website bekijken als een ander') }} :: {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<h2>{{ __('Website bekijken als een ander') }}</h2>
+<div class="messageBox">
+	<form method="post" action="{{ link('sessions.overrides') }} " class="vertical-form overrides-form">
+		{{ html_nonce('session_overrides') }}
+		{{ html_input_hidden('referrer', referrer) }}
+		
+		<fieldset>
+			<legend>
+				{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }) }}
+				{{ html_label(__('Overschrijf commissielidmaatschappen'), 'override_committees') }}
+			</legend>
+			
+			<label>{{ __('Commissies') }}</label>
+			<ul class="option-group columns">
+				{% for committee in committees %}
+				<li>
+					{{ html_input_checkbox('override_committee_ids[]', {override_committee_ids: global.identity.get_override_committees()}, value=committee.id, id='field-override-committee-' ~ committee.id) }}
+					{{ html_label(committee.naam, 'override-committee-' ~ committee.id) }}
+				</li>
+				{% endfor %}
+			</ul>
+		</fieldset>
+		
+		<fieldset>
+			<legend>
+				{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }) }}
+				{{ html_label(__('Overschrijf lidnummer'), 'override_member') }}
+			</legend>
+
+			<div>
+				{{ html_label(__('Lidnummer'), 'override_member_id') }}
+				{{ html_input_text('override_member_id', {'override_member_id': global.identity.get_override_member() ? global.identity.get_override_member().id : null}, data_autocomplete='member_id') }}
+			</div>
+		</fieldset>
+
+		<div>
+			<button type="submit" class="button">{{ __('Stel in') }}</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

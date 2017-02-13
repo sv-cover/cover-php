@@ -8,11 +8,8 @@ class ControllerSettings extends ControllerCRUD
 	public function __construct()
 	{
 		$this->model = get_model('DataModelConfiguratie');
-	}
 
-	protected function _get_title($iter)
-	{
-		return $iter instanceof DataIter ? $iter->get('key') : __('Instellingen');
+		$this->view = View::byName('settings', $this);
 	}
 
 	public function link_to_read(DataIter $item)

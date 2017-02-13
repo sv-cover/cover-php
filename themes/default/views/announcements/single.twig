@@ -1,0 +1,36 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title iter.subject ~ ' :: ' ~ parent() %}
+
+{% block content %}
+{% set committee = iter.committee %}
+<h1>{{ iter.subject }}</h1>
+<div class="messageBox announcement frontpage">
+	<div class="newsTitle">
+		<div class="right">
+			{{ iter.created_on }}
+		</div>
+
+		<div class="subtitle">
+			{{ __('Geplaatst door') }}:
+			<a href="commissies.php?commissie={{ committee.login }}">{{ committee.naam }}</a>
+		</div>
+	</div>
+	
+	<hr class="separator">
+	
+	<div class="bericht">
+		{{ iter.message|parse_markup }}
+	</div>
+
+	<ul class="actions">
+		<li><a href="{{ controller.link_to_index() }}">{{ __('Alle mededelingen bekijken') }}</a></li>
+		{% if user_can_update iter %}
+		<li><a href="{{ controller.link_to_update(iter) }}">{{ __('Wijzig') }}</a></li>
+		{% endif %}
+		{% if user_can_delete iter %}
+		<li><a href="{{ controller.link_to_delete(iter) }}">{{ __('Verwijder') }}</a></li>
+		{% endif %}
+	</ul>
+</div>
+{% endblock %}

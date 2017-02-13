@@ -39,9 +39,9 @@
 			$iter = $model->get_iter($iter);
 		}
 		else if ($iter === null)
-			$iter = get_identity()->get_member();
+			$iter = get_identity()->member();
 		
-		return $iter && $iter->has('nick')
+		return $iter && $iter->has_value('nick')
 			? $iter->get('nick')
 			: __('Geen naam');
 	}
@@ -81,7 +81,7 @@
 		}
 		// No argument provided, get the full name of the currently logged in member.
 		else {
-			$iter = $identity->get_member();
+			$iter = $identity->member();
 			$is_self = true;
 		}
 

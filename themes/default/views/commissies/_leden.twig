@@ -1,0 +1,17 @@
+{% set members = iter.members %}
+{% if members|length > 0 %}
+<div class="commissie-members">
+	<h3 class="alignCenter">{{ __('Leden') }}</h3>
+	<ul>
+	{% for member in members %}
+		<li>
+			<a href="profiel.php?lid={{ member.id }}" class="commissie-member profile-widget round">
+				<img src="foto.php?lid_id={{ member.id }}&amp;format=square&amp;width=200" width="100">
+				<span class="name">{{ member|full_name }}</span>
+				<span class="function">{{ member.functie|translate_parts(',/') }}</span>
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
+</div>
+{% endif %}

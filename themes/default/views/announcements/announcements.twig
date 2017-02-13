@@ -1,0 +1,57 @@
+{% set hidden_announcements_cnt = iters|length - iters|map([global.policies.Announcement, 'user_can_read'])|length  %}
+
+<div class="newsHeading">
+	{# Normally I would use controller.new_iter here, but this template is embedded
+	in the homepage and no controller is passed in. This is also the reason that
+	the controller isn't used to generate the links, as is done in all the other
+	CRUD-based views. #}
+	{% if user_can_create global.models.Announcement.new_iter %}
+		<div class="controls inline"><a href="announcements.php?view=create" class="create-link">{{ __('Nieuwe mededeling') }}</a></div>
+	{% endif %}
+	
+	<h1>{{ __('Mededelingen') }}</h1>
+	{% if hidden_announcements_cnt > 0 %}
+	<p>{{ __N(
+		'Er is %d mededeling alleen beschikbaar voor leden. Log in om deze te lezen.',
+		'Er zijn %d mededelingen alleen beschikbaar voor leden. Log in om ze te lezen.',
+		hidden_announcements_cnt) }}</p>
+	{% endif %}
+</div>
+
+{% for item in iters if user_can_read item %}
+	{% set committee = item.committee %}
+	<hr class="colorAccent committee.login">
+	<div class="messageBox announcement frontpage">
+		<div class="newsTitle">
+			<div class="right">
+				{{ item.created_on|date() }}
+			</div>
+			<span class="subject">
+				<h3><a href="announcements.php?view=read&amp;id={{ item.id }}" class="permalink">{{ item.subject }}</a></h3>
+			</span>
+			<div class="subtitle">
+				{{ __('Geplaatst door') }}:
+				<a href="commissies.php?commissie={{ committee.login }}">{{ committee.naam }}</a>
+			</div>
+		</div>
+		
+		<hr class="separator">
+
+		<div class="bericht">
+			{{ item.message|parse_markup }}
+		</div>
+
+		<ul class="actions">
+			{% if user_can_update item %}
+			<li><a href="announcements.php?view=update&amp;id={{ item.id }}"
+				data-partial-selector=".announcement"
+				data-placement-selector=".announcement">{{ __('Wijzig') }}</a></li>
+			{% endif %}
+			{% if user_can_delete item %}
+			<li><a href="announcements.php?view=delete&amp;id={{ item.id }}">{{ __('Verwijder') }}</a></li>
+			{% endif %}
+		</ul>
+	</div>
+{% endfor %}
+
+<p class="align-center"><a href="announcements.php">{{ __('Alle mededelingen bekijken') }}</a></p>

@@ -1,9 +1,0 @@
-<div class="bar_sep"><?= __('Inhoud') ?></div>
-
-<? if ($model->get_num_children($iter) == 0 && $model->get_num_photos($iter) == 0) { ?>
-	<p><?= __('Er zijn nog geen foto\'s in dit fotoboek') ?></p>
-<? } else {
-	$this->render_partial('books', compact('model', 'iter'));
-	$this->render_partial('photos', compact('model', 'iter'));
-}
-?>

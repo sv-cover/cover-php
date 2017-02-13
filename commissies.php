@@ -1,16 +1,19 @@
 <?php
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
-require_once 'include/controllers/ControllerEditable.php';
+require_once 'themes/default/views/commissies/commissies.php';
 
 class ControllerCommissies extends ControllerCRUD
 {	
 	protected $_var_id = 'commissie';
 
+	public $mode;
+
 	public function __construct()
 	{
 		$this->model = get_model('DataModelCommissie');
-		$this->model->type = DataModelCommissie::TYPE_COMMITTEE;
+		
+		$this->view = View::byName('commissies', $this);
 	}
 
 	protected function _index()
@@ -18,9 +21,10 @@ class ControllerCommissies extends ControllerCRUD
 		return $this->model->get(false);
 	}
 
-	protected function _create(array $data, array &$errors)
+	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
-		$iter = parent::_create($data, $errors);
+		if (!parent::_create($iter, $data, $errors))
+			return false;
 
 		if (!empty($data['members']))
 			$this->model->set_members($iter, $data['members']);
@@ -46,44 +50,50 @@ class ControllerCommissies extends ControllerCRUD
 			return parent::_read($id);
 	}
 
-	public function link_to_iter(DataIter $iter, array $arguments)
+	/**
+	 * Override ControllerCRUD::run_read to also restrict the model to the same type as the iter.
+	 */ 
+	public function run_read(DataIter $iter)
 	{
-		return $this->link(array_merge(array($this->_var_id => $iter->get('login')), $arguments));
+		if (!get_policy($this->model)->user_can_read($iter))
+			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
+
+		// restrict the model to only this type (either committees or working groups)
+		// to allow the navigation around the page to match
+		$this->model->type = $iter['type'];
+		
+		return $this->view()->render_read($iter);
 	}
 
-	public function link_to_read(DataIter $iter)
+	/**
+	 * Override ControllerCRUD::link_to to use the login name instead of the id for better links.
+	 */
+	public function link_to($view, DataIter $iter = null, array $arguments = [])
 	{
-		return $this->link_to_iter($iter, array());
+		$arguments[$this->_var_view] = $view;
+
+		if ($iter !== null)
+			$arguments[$this->_var_id] = $iter['login'];
+
+		return $this->link($arguments);
 	}
 
-	/*
-	public function link(array $arguments)
+	/**
+	 * Index page that shows only working groups.
+	 */
+	public function run_working_groups()
 	{
-		$link = '/committees';
+		$this->model->type = DataModelCommissie::TYPE_WORKING_GROUP;
 
-		if (isset($arguments['view'])) {
-			$link .= '/' . $arguments['view'];
-			unset($arguments['view']);
-		}
+		$iters = $this->model->get(false);
 
-		if (isset($arguments['id'])) {
-			$link .= '/' . $arguments['id'];
-			unset($arguments['id']);
-		}
-
-		if (!empty($arguments))
-			$link .= '?' . http_build_query($arguments);
-
-		return $link;
-	}
-	*/
-
-	protected function _get_title($iter)
-	{
-		return $iter instanceof DataIter ? $iter->get('naam') : __('Commissies');
+		return $this->view->render_working_groups($iters); 
 	}
 
-	/* protected */ function run_impl()
+	/**
+	 * Override the default ControllerCRUD::run_impl to allow either ?commissie= and ?id=.
+	 */
+	protected function run_impl()
 	{
 		// Support for old urls
 		if (isset($_GET['id']) && !isset($_GET['commissie']))

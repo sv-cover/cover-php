@@ -1,0 +1,39 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<h1><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
+<div class="messageBox">
+	<form action="" method="post" class="vertical-form">
+		{{ html_nonce('create_thread', forum) }}
+		<div>
+			{{ html_label(__('Auteur'), 'unified_author', errors=errors, required=true) }}
+			{{ html_select_field('unified_author', unified_authors, message, errors=errors, required=true) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Onderwerp'), 'subject', errors=errors, required=true) }}
+			{{ html_input_text('subject', thread, errors=errors, required=true, autofocus='end') }}
+		</div>
+
+		<div>
+			<div class="tab-container">
+				<ul class="nav-tabs horizontal">
+					<li class="active"><a href="#forum-message">{{ __('Bericht') }}</a></li>
+					<li><a href="#forum-message-preview">{{ __('Voorbeeld') }}</a></li>
+				</ul>
+				<div class="tab-panel" id="forum-message">
+					{{ html_textarea_field('message', message, rows=15) }}
+				</div>
+				<div class="tab-panel" id="forum-message-preview">
+					<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<button type="submit" class="button">{{ __('Plaats bericht') }}</button>
+			<a href="forum.php?forum={{ forum.id }}">{{ __('Terug naar forum') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

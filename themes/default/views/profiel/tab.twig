@@ -1,0 +1,85 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title iter|personal_full_name ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Profiel van %s')|format(iter|full_name) }}</h1>
+<div class="messageBox clearfix">
+
+	{% if errors is defined and errors|length > 0 %}
+	<div class="textCenter error-section">
+		<p><span class="error">{{ __('Niet alle velden zijn goed ingevuld') }}</span></p>
+		
+		{% if error_message is defined %}
+		<p>{{ error_message|nl2br }}</p>
+		{% endif %}
+	</div>
+	{% endif %}
+
+	<div id="profile-tab-container" class="tab-container">
+		<div class="tab-sidebar">
+			{{ include('_profile_widget.twig') }}
+			<ul class="nav-tabs vertical">
+				{% for tab_name, tab in view.tabs(iter) %}
+					{% if tab.visible %}
+						<li class="{{ tab_name == active_tab ? 'active' : '' }} {{ tab.class is defined ? tab.class : '' }}">
+							<a href="profiel.php?lid={{ iter.id }}&amp;view={{ tab_name }}#{{ tab_name }}-tab">{{ tab.label }}</a>
+						</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+
+		<div class="tab-content">
+			<div id="{{ active_tab }}-tab" class="tab-pane active">
+				{% block tab_content %}{% endblock %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function() {
+		/* Todo: integrate this with the tabs in common.js */
+		$('#profile-tab-container > .tab-sidebar .nav-tabs li a').on('click', function(e) {
+			e.preventDefault();
+			$(this).closest('.nav-tabs').find('li').removeClass('active');
+			$('#profile-tab-container > .tab-content > .tab-pane').removeClass('active');
+
+			$(this).closest('li').addClass('active');
+
+			var tabName = $(this).attr('href').match(/view=([a-z_]+)/)[1] + '-tab';
+
+			var tab = $('#profile-tab-container > .tab-content #' + tabName);
+			if (tab.length) {
+				tab.addClass('active');
+			} else {
+				tab = $('<div>').attr('id', tabName).addClass('tab-pane active')
+				tab.html('<div class="loading-indicator"><i class="fa fa-spinner fa-pulse"></i></div>');
+				tab.load($(this).attr('href') + ' #profile-tab-container > .tab-content > .tab-pane#' + tabName, function() {
+					$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
+				});
+				$('#profile-tab-container > .tab-content').append(tab);
+			}
+
+			window.history.pushState({'tabName' : tabName}, $(this).text(), $(this).attr('href'));
+		});
+	});
+
+	$(document).on('ready partial-content-loaded', function(loaded) {
+		$(loaded.target).find('form.toggle-action-button').on('submit', function(e) {
+			e.preventDefault();
+			var $form = $(this);
+			var id = $form.attr('id');
+
+			var tmp = document.createDocumentFragment();
+			$(tmp).load($form.attr('action'), $form.serializeArray(), function() {
+				var btn = tmp.querySelector('#' + id);
+				$form.get(0).className = btn.className;
+				$form.find('input[type=hidden]').remove();
+				$form.append(btn.querySelectorAll('input[type=hidden]'));
+			});
+		});
+	});
+</script>
+{% endblock %}

@@ -2,5 +2,8 @@
 
 class DreamsparkView extends View
 {
-	protected $__file = __FILE__;
+	public function render_accept()
+	{
+		return $this->twig->render('accept.twig');
+	}
 }

@@ -5,135 +5,54 @@
 	require_once 'include/functions.php';
 	require_once 'include/markup.php';
 
-	const ALLOW_SUBDOMAINS = 1;
-
 	/** 
 	  * A class implementing the simplest controller. This class provides
 	  * viewing a simple static page by running the header view, then
 	  * the specified view and then the footer view
 	  */
-	class Controller {
+	class Controller
+	{
 		protected $view;
+
 		protected $model;
-		protected $iter;
-		protected $params;
-		protected $embedded;
 
-		/** 
-		  * Controller constructor
-		  * @view the view to show
-		  * @model optional; the model to pass on to the view
-		  * @iter optional; the iter to pass on to the view
-		  * @params optional; the params to pass on to the view
-		  */
-		public function Controller($view, $model = null, $iter = null, $params = null) {
-			$this->view = $view;
-			$this->model = $model;
-			$this->iter = $iter;
+		protected $routes = array();
+
+		public function view()
+		{
+			return $this->view;
 		}
-
+		
 		public function model()
 		{
 			return $this->model;
 		}
 		
-		/** 
-		  * Convenient function which runs the header view
-		  * @params optional; the params to pass on to the header view
-		  */
-		protected function run_header($params = null) {
-			run_view('header', null, null, $params);
-		}
-
-		/** 
-		  * Convenient function which runs the footer view
-		  * @params optional; the params to pass on to the footer view
-		  */
-		protected function run_footer($params = null) {
-			run_view('footer', null, null, $params);
-		}
-	
-		/** 
-		  * Function which shows the page. It first runs the header,
-		  * then the view specified in the constructor and finally
-		  * the footer
-		  */
-		protected function get_content($view, $iters = null, array $params = array())
-		{
-			$this->run_header(array('title' => ucfirst($this->view)));
-			run_view($view, $this->model, $iters, $params);
-			$this->run_footer();
-		}
-	
-		/** 
-		  * Run the controller
-		  */
 		public function run()
 		{
-			ob_start();
-			
 			try {
-				$this->run_impl();
+				echo $this->run_impl();
 			}
-			catch(Exception $e) {
-				$this->run_exception($e);
+			catch (Exception $e) {
+				echo $this->run_exception($e);
 			}
-			
-			ob_end_flush();
+			catch (TypeError $e) {
+				echo $this->run_exception($e);
+			}
 		}
 
-		public function run_embedded()
-		{
-			ob_start();
-			
-			$this->embedded = true;
-
-			try {
-				$this->run_impl();
-			}
-			catch(Exception $e) {
-				$this->run_exception($e);
-			}
-
-			$this->embedded = false;
-
-			return ob_get_clean();
-		}
-		
 		protected function run_impl()
 		{
-			$this->get_content();
-		}
+			$path = substr($_SERVER['REQUEST_URI'], strlen($_SERVER['SCRIPT_NAME']));
 
-		protected function redirect($url, $permanent = false, $flags = 0)
-		{
-			// parse and selectively rebuild the url to prevent
-			// weird tricks where a custom form redirects you to
-			// outside the Cover website.
-			$parts = parse_url($url);
+			if (!$path)
+				$path = '/';
 
-			$url = '';
+			foreach ($this->routes as $route => $callback)
+			 	if (preg_match('{^' . $route . '$}i', $path, $match))
+			 		return call_user_func_array($callback, array_slice($match, 1));
 
-			if (($flags & ALLOW_SUBDOMAINS)
-				&& isset($parts['host'])
-				&& is_same_domain($parts['host'], $_SERVER['HTTP_HOST'])) {
-				$url = '//' . $parts['host'];
-			}
-
-			$url .= $parts['path'];
-
-			if (isset($parts['query']))
-				$url .= '?' . $parts['query'];
-
-			if (isset($parts['fragment']))
-				$url .= '#' . $parts['fragment'];
-
-			if ($permanent)
-				header('Status: 301 Moved Permanently');
-
-			header('Location: ' . $url);
-			echo '<a href="' . htmlentities($url, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
-			exit;
+			throw new NotFoundException('No route for path "' . $path . '"');
 		}
 
 		protected function run_exception(Exception $e)
@@ -148,40 +67,67 @@
 
 		protected function run_401_unauthorized(UnauthorizedException $exception)
 		{
-			header('Status: 401 Unauthorized');
-			header('WWW-Authenticate: FormBased');
-			$this->run_header(array('title' => __('Geen toegang')));
-			run_view('common::auth', null, null, null);
-			$this->run_footer();
+			return $this->view()->render_401_unauthorized($exception);
 		}
 
 		protected function run_404_not_found(NotFoundException $exception)
 		{
-			try {
-				header('Status: 404 Not Found');
-				$this->run_header(Array('title' => ucfirst($this->view)));
-				run_view('common::not_found', null, null, array('details' => $exception->getMessage()));
-				$this->run_footer();
-			} catch (Exception $e) {
-				$this->run_500($e);
-			}
+			return $this->view()->render_404_not_found($exception);
 		}
 
 		protected function run_500_internal_server_error(Exception $e)
 		{
-			header('Status: 500 Interal Server Error');
+			if (!headers_sent())
+				header('Status: 500 Interal Server Error');
 
-			if (get_config_value('show_exceptions'))
-				echo '<pre>' . $e . '</pre>';
-			else {
-				ob_clean();
-				echo __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)');
+			if (get_config_value('show_exceptions', false))
+				$out = sprintf('<pre>%s</pre>', $e);
+			else
+				$out = sprintf('<p>%s</p>', __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)'));
+			
+			if (get_config_value('sentry_url')) {
+				$client = new Raven_Client('https://927c99b077cc4ae2bc9f839aa71499ff:39ea9ce5f6e04ec4ba35aa5ff4619a4a@sentry.svcover.nl/2');
+
+				$extra = [];
+
+				if (get_auth()->logged_in()) {
+					$extra['session_id'] = get_auth()->get_session()->get('id');
+					$extra['user_id'] = get_identity()->get('id');
+				}
+
+				$event_id = $client->captureException($e, ['extra' => $extra]);
+				$out .= sprintf('<p>Sentry event id: <code>%s</code></p>', $event_id);
 			}
+
+			return $out;
 		}
 
-		protected function _send_json($data)
+		protected function _form_is_submitted($action, ...$args)
 		{
-			header('Content-Type: application/json');
-			echo json_encode($data, JSON_PRETTY_PRINT);
+			// Turn _form_is_submitted('delete', iter) to 'delete_24'
+			$action_name = nonce_action_name($action, $args);
+
+			$nonce = null;
+
+			if (!empty($_POST['_nonce']))
+				$nonce = $_POST['_nonce'];
+			else if (!empty($_GET['_nonce']))
+				$nonce = $_GET['_nonce'];
+
+			$answer = $_SERVER['REQUEST_METHOD'] == 'POST'
+				&& $nonce !== null
+				&& nonce_verify($nonce, $action_name);
+
+			return $answer;
+		}
+
+		public function link(array $arguments)
+		{
+			return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
+		}
+
+		final protected function get_content()
+		{
+			throw new LogicException("Controller::get_content is no longer accepted");
 		}
 	}

@@ -5,6 +5,26 @@
 	
 	class DataIterCommissie extends DataIter implements SearchResult
 	{
+		static public function fields()
+		{
+			return [
+				'id',
+				'type',
+				'naam',
+				'login',
+				'website',
+				'nocaps',
+				'page',
+				'hidden',
+				'vacancies',
+			];
+		}
+
+		public function get_member_ids()
+		{
+			return $this->model->get_member_ids($this);
+		}
+
 		public function get_members()
 		{
 			return $this->model->get_members($this);
@@ -38,6 +58,16 @@
 			return sprintf('commissies.php?commissie=%s', urlencode($this->get('login')));
 		}
 
+		public function has_vacancy_deadline()
+		{
+			return strtotime($this->get('vacancies')) < strtotime('+1 year');
+		}
+
+		public function get_email()
+		{
+			return strstr($this['login'], '@') ? $this['login'] : $this['login'] . '@svcover.nl';
+		}
+
 		public function get_thumbnail()
 		{
 			return self::find_image(array(
@@ -49,10 +79,15 @@
 
 		public function get_photo()
 		{
-			return self::find_image(array(
+			$path = self::find_image(array(
 				'images/committees/' . $this->get('login') . '.gif',
 				'images/committees/' . $this->get('login') . '.jpg'
 			));
+
+			return $path === null ? null : [
+				'url' => $path,
+				'orientation' => self::get_orientation($path)
+			];
 		}
 
 		static private function find_image($search_paths)
@@ -62,6 +97,18 @@
 					return $path;
 
 			return null;
+		}
+
+		static private function get_orientation($path)
+		{
+			list($width, $height) = getimagesize($path);
+
+			if ($width == $height)
+				return 'square';
+			if ($width > $height)
+				return 'landscape';
+			else
+				return 'portrait';
 		}
 	}
 
@@ -120,27 +167,28 @@
 
 		public function insert(DataIter $iter)
 		{
-			if ($iter->has('vacancies') && !$iter->get('vacancies'))
-				$iter->set_literal('vacancies', 'NULL');
-
+			if ($iter['vacancies'] === '')
+				$iter['vacancies'] = null;
+			
 			if (empty($iter['login']))
 				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
 
 			if ($this->type !== null)
 				$iter['type'] = $this->type;
 
-			$iter->set('nocaps', strtolower($iter->get('naam')));
+			$iter['nocaps'] = $iter['naam'];
 			
 			$committee_id = parent::insert($iter);
 
 			// Create the page for this committee
 			$editable_model = get_model('DataModelEditable');
 
-			$page_data = array(
+			$page_data = [
 				'owner' => $committee_id,
-				'titel' => $iter->get('naam'));
+				'titel' => $iter['naam']
+			];
 
-			$page = new DataIter($editable_model, -1, $page_data);
+			$page = $editable_model->new_iter($page_data);
 
 			$page_id = $editable_model->insert($page);
 
@@ -151,8 +199,8 @@
 
 		public function update(DataIter $iter)
 		{
-			if ($iter->has('vacancies') && !$iter->get('vacancies'))
-				$iter->set_literal('vacancies', 'NULL');
+			if ($iter->has_value('vacancies') && !$iter->get('vacancies'))
+				$iter->set('vacancies', null);
 			
 			return parent::update($iter);
 		}
@@ -216,6 +264,20 @@
 			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
 		}
 		
+		private function _get_members(DataIterCommissie $committee)
+		{
+			$rows = $this->db->query('SELECT lidid, functie FROM actieveleden WHERE commissieid = ' . $committee->get_id());
+
+			return array_combine(
+				array_map(function($row) { return $row['lidid']; }, $rows),
+				array_map(function($row) { return $row['functie']; }, $rows));
+		}
+		
+		public function get_member_ids(DataIterCommissie $committee)
+		{
+			return array_keys($this->_get_members($committee));
+		}
+
 		/**
 		  * Get all members of a specific commissie
 		  * @id the commissie id
@@ -226,21 +288,19 @@
 		{
 			$member_model = get_model('DataModelMember');
 
-			$rows = $this->db->query('SELECT lidid, functie FROM actieveleden WHERE commissieid = ' . $committee->get_id());
+			$positions = $this->_get_members($committee);
 
-			if (count($rows) === 0)
-				return array();
+			if (count($positions) === 0)
+				return [];
 
-			$ids = array_map(function($row) { return $row['lidid']; }, $rows);
+			$ids = array_keys($positions);
 
 			$members = $member_model->find('leden.id IN (' . implode(', ', $ids) . ')');
-
-			$positions = array_combine($ids, array_map(function($row) { return $row['functie']; }, $rows));
 			
 			// Attach the committee positions to all its members
 			// Not using 'set' here because that would mess up the DataIter::get_changes()
 			foreach ($members as $member)
-				$member->data['functie'] = $positions[$member->get_id()];
+				$member->data['functie'] = $positions[$member['id']];
 
 			/* Sort by function */
 			usort($members, array(&$this, '_sort_leden'));
@@ -324,12 +384,7 @@
 		  */
 		public function get_email($id)
 		{
-			$value = $this->get_login($id);
-					
-			if (!$value)
-				$value = __('onbekend');
-			
-			return strstr($value, '@') ? $value : $value . '@svcover.nl';
+			return $this->get_iter($id)->get('email');
 		}
 		
 		/**

@@ -13,6 +13,21 @@
 		}
 	}
 
+	class DatabaseLiteral 
+	{
+		protected $sql;
+
+		public function __construct($sql)
+		{
+			$this->sql = $sql;
+		}
+
+		public function toSQL()
+		{
+			return $this->sql;
+		}
+	}
+
 	/**
 	  * This class provides a base class for accessing data. This class can
 	  * be used for very simple one-to-one, model-to-table type mappings.
@@ -24,7 +39,7 @@
 		public $db; /** The database backend */
 		public $table; /** The table to model */
 		public $id;
-		public $dataiter = 'DataIter';
+		public $dataiter = 'GenericDataIter';
 		public $fields = array();
 		protected $auto_increment;
 		
@@ -44,6 +59,17 @@
 				$this->auto_increment = $this->id == 'id';
 		}
 
+		public function new_iter($row = array(), $dataiter = null, $preseed = [])
+		{
+			if (!$dataiter)
+				$dataiter = $this->dataiter;
+
+			if (!is_subclass_of($dataiter, 'DataIter', true))
+				throw new LogicException('Calling new_iter with a class name for dataiter that does not extend DataIter');
+
+			return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row, $preseed);
+		}
+
 		/**
 		  * Insert a new row (syncs with the database backend). This
 		  * is a convenient function to be used by descendents of
@@ -52,22 +78,32 @@
 		  * @iter a #DataIter representing the row
 		  * @getid optional; whether to get the last insert id
 		  *
-		  * @result if getid is true the last insert id is returned, -1 
+		  * @result if getid is true the last insert id is returned, NULL
 		  * otherwise
 		  */		
 		protected function _insert($table, DataIter $iter, $get_id = false)
 		{
 			$data = array();
 
+			$id = null;
+
+			$fields = $iter::fields();
+
 			foreach ($iter->data as $key => $value)
-				if (!$this->fields || in_array($key, $this->fields))
+				if (in_array($key, $fields))
 					$data[$key] = $value;
+
+			if (count($data) === 0)
+				throw new LogicException('Trying to insert empty iterator into table');
 			
-			$this->db->insert($table, $data, $iter->get_literals());
-			
-			return $get_id
-				? $this->db->get_last_insert_id()
-				: -1;
+			$this->db->insert($table, $data);
+
+			if ($get_id) {
+				$id = $this->db->get_last_insert_id();
+				$iter->set_id($id);
+			}
+
+			return $id;
 		}
 		
 		/**
@@ -117,8 +153,10 @@
 		{
 			$data = array();
 
+			$fields = $iter::fields();
+
 			foreach ($iter->get_changed_values() as $key => $value)
-				if (!$this->fields || in_array($key, $this->fields))
+				if (in_array($key, $fields))
 					$data[$key] = $value;
 
 			if (count($data) === 0)
@@ -126,8 +164,7 @@
 
 			return $this->db->update($table, 
 					$data, 
-					$this->_id_string($iter->get_id(), $table), 
-					$iter->get_literals());
+					$this->_id_string($iter->get_id(), $table));
 		}
 		
 		/**
@@ -173,38 +210,35 @@
 
 		/**
 		  * Create a #DataIter from data
+		  * TODO: public because often called from DataIter!
 		  * @row an array containing the data
 		  *
 		  * @result a #DataIter
 		  */
-		/*protected*/ public function _row_to_iter($row, $dataiter = null)
+		/*protected*/ public function _row_to_iter($row, $dataiter = null, array $preseed = [])
 		{
-			if (!$dataiter)
-				$dataiter = $this->dataiter;
-
 			if ($row)
-				return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row);
+				return $this->new_iter($row, $dataiter, $preseed);
 			else
 				return $row;
 		}
 		
 		/**
 		  * Create array of #DataIter from array of data
+		  * TODO: public because often called from DataIter!
 		  * @rows an array containing arrays of data
 		  *
 		  * @result an array of #DataIter
 		  */
-		/*protected*/ public function _rows_to_iters($rows, $dataiter = null)
+		/*protected*/ public function _rows_to_iters($rows, $dataiter = null, array $preseed = [])
 		{
-			return array_map(function ($row) use ($dataiter) {
-				return $this->_row_to_iter($row, $dataiter);
+			return array_map(function ($row) use ($dataiter, $preseed) {
+				return $this->_row_to_iter($row, $dataiter, $preseed);
 			}, $rows);
 		}
 
 		protected function _rows_to_table($rows, $key_field, $value_field)
 		{
-			
-
 			if (is_array($value_field))
 				$create_value = function($row) use ($value_field) {
 					return array_map(function($field) use ($row) {
@@ -243,7 +277,7 @@
 
 			$rows = $this->db->query($query);
 			
-			return $this->_rows_to_iters($rows);			
+			return $this->_rows_to_iters($rows);
 		}
 
 		public function find_one($conditions)
@@ -274,11 +308,18 @@
 
 		protected function _generate_conditions_from_array(array $conditions)
 		{
-			$atoms = [];
+			$atoms = []; // Query in CNF
 
 			foreach ($conditions as $key => $value)
 			{
-				if (preg_match('/^(.+?)__(eq|ne|gt|lt|in|contains|isnull)$/', $key, $match)) {
+				// If the value is just a bit of raw SQL, add it directly to
+				// the atoms, and skip the rest of the create-sql-loop.
+				if (is_int($key) && $value instanceof DatabaseLiteral) {
+					$atoms[] = sprintf('(%s)', $value->toSQL());
+					continue;
+				}
+
+				if (preg_match('/^(.+?)__(eq|cieq|ne|gt|lt|in|contains|isnull)$/', $key, $match)) {
 					$field = $match[1];
 					$operator = $match[2];
 				} else {
@@ -314,7 +355,7 @@
 						break;
 
 					case 'contains':
-						$format = "%s LIKE '%%%s%%'";
+						$format = "%s ILIKE '%%%s%%'";
 						break;
 
 					case 'isnull':
@@ -326,9 +367,13 @@
 						$format = "%s <> '%s'";
 						break;
 
+					case 'cieq': // Case insensitive equivalence
+						$format = "LOWER(%s) = LOWER('%s')";
+						break;
+
 					default:
 					case 'eq':
-						$format = '%s = %s';
+						$format = "%s = '%s'";
 						break;
 				}
 

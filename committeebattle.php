@@ -1,7 +1,6 @@
 <?php
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
-require_once 'include/controllers/ControllerEditable.php';
 
 class ControllerCommitteeBattle extends ControllerCRUD
 {
@@ -11,7 +10,9 @@ class ControllerCommitteeBattle extends ControllerCRUD
 	{
 		$this->model = get_model('DataModelCommitteeBattleScore');
 
-		$this->committee_model = get_model('DataModelCommissie');
+		$this->view = View::byName('committeebattle', $this);
+
+		$this->committee_model = clone get_model('DataModelCommissie');
 		$this->committee_model->type = DataModelCommissie::TYPE_COMMITTEE;
 	}
 
@@ -43,18 +44,10 @@ class ControllerCommitteeBattle extends ControllerCRUD
 		return $committees;
 	}
 
-	protected function _get_title($iter)
-	{
-		return $iter instanceof DataIter ? $iter->get('naam') : __('Committee Battle');
-	}
-
 	public function link_to_read(DataIter $iter)
 	{
 		if ($iter instanceof DataIterCommissie)
-			return $this->link([
-				$this->_var_view => 'committee',
-				'committee' => $iter['id']
-			]);
+			return $this->link_to('committee', null, ['committee' => $iter['id']]);
 		else
 			return $this->link_to_index();
 	}
@@ -70,7 +63,7 @@ class ControllerCommitteeBattle extends ControllerCRUD
 
 		$scores = $this->model->get_for_committee($committee);
 
-		return $this->get_content('committee', $committee, compact('scores', 'committee_model'));
+		return $this->view->render_committee($committee, $scores, $committee_model);
 	}
 }
 

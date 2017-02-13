@@ -92,13 +92,13 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 
 	foreach ($committees as $committee)
 	{
-		$email = $committee->get('login') . '@svcover.nl';
+		$email = $committee['login'] . '@svcover.nl';
 
-		echo "Sending mail to " . $committee->get('naam') . " <" . $email . ">: ";
+		echo "Sending mail to " . $committee['naam'] . " <" . $email . ">: ";
 		
 		$variables = array(
-			'[COMMISSIE]' => $committee->get('naam'),
-			'[COMMITTEE]' => $committee->get('naam')
+			'[COMMISSIE]' => $committee['naam'],
+			'[COMMITTEE]' => $committee['naam']
 		);
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
@@ -121,18 +121,18 @@ function process_message_to_committee($message, $message_headers, $to, &$committ
 
 	foreach ($members as $member)
 	{
-		echo "Sending mail to " . $member->get('voornaam') . " <" . $member->get('email') . ">: ";
+		echo "Sending mail to " . $member['voornaam'] . " <" . $member['email'] . ">: ";
 
 		$variables = array(
-			'[NAAM]' => $member->get('voornaam'),
-			'[NAME]' => $member->get('voornaam'),
-			'[COMMISSIE]' => $committee->get('naam'),
-			'[COMMITTEE]' => $committee->get('naam')
+			'[NAAM]' => $member['voornaam'],
+			'[NAME]' => $member['voornaam'],
+			'[COMMISSIE]' => $committee['naam'],
+			'[COMMITTEE]' => $committee['naam']
 		);
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
 
-		echo send_message($personalized_message, $member->get('email')), "\n";
+		echo send_message($personalized_message, $member['email']), "\n";
 	}
 
 	return 0;
@@ -140,56 +140,53 @@ function process_message_to_committee($message, $message_headers, $to, &$committ
 
 function process_message_to_mailinglist($message, $message_header, $to, $from, &$lijst)
 {
-	$mailinglijsten_model = get_model('DataModelMailinglijst');
+	$mailinglijsten_model = get_model('DataModelMailinglist');
 
 	// Find that mailing list
-	if (!($lijst = $mailinglijsten_model->get_lijst($to)))
+	if (!($lijst = $mailinglijsten_model->get_iter_by_address($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
 
 	// Append '[Cover]' or whatever tag is defined for this list to the subject
 	// but do so only if it is set.
-	if (!empty($lijst->get('tag')))
+	if (!empty($lijst['tag']))
 		$message = preg_replace(
-			'/^Subject: (?!(?:Re:\s*)?\[' . preg_quote($lijst->get('tag'), '/') . '\])(.+?)$/im',
-			'Subject: [' . $lijst->get('tag') . '] $1',
+			'/^Subject: (?!(?:Re:\s*)?\[' . preg_quote($lijst['tag'], '/') . '\])(.+?)$/im',
+			'Subject: [' . $lijst['tag'] . '] $1',
 			$message, 1);
 
 	// Find everyone who is subscribed to that list
-	$aanmeldingen = $mailinglijsten_model->get_aanmeldingen($lijst);
+	$aanmeldingen = $lijst['subscriptions'];
 
-	switch ($lijst->get('toegang'))
+	switch ($lijst['toegang'])
 	{
 		// Everyone can send mail to this list
-		case DataModelMailinglijst::TOEGANG_IEDEREEN:
+		case DataModelMailinglist::TOEGANG_IEDEREEN:
 			// No problem, you can mail
 			break;
 
 		// Only people on the list can send mail to the list
-		case DataModelMailinglijst::TOEGANG_DEELNEMERS:
+		case DataModelMailinglist::TOEGANG_DEELNEMERS:
 			foreach ($aanmeldingen as $aanmelding)
-				if (strcasecmp($aanmelding->get('email'), $from) === 0)
+				if (strcasecmp($aanmelding['email'], $from) === 0)
 					break 2;
 
 			// Also test whether the owner is sending mail, he should also be accepted.
-			$commissie_model = get_model('DataModelCommissie');
-			$commissie_adres = $commissie_model->get_email($lijst->get('commissie'));
-			if (strcasecmp($from, $commissie_adres) === 0)
+			if (strcasecmp($from, $lijst['committee']['email']) === 0)
 				break;
 			
+			// Nope, access denied
 			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
 
 		// Only people who sent mail from an *@svcover.nl address can send to the list
-		case DataModelMailinglijst::TOEGANG_COVER:
+		case DataModelMailinglist::TOEGANG_COVER:
 			if (!preg_match('/\@svcover.nl$/i', $from))
 				return RETURN_NOT_ALLOWED_NOT_COVER;
 
 			break;
 
 		// Only the owning committee can send mail to this list.
-		case DataModelMailinglijst::TOEGANG_EIGENAAR:
-			$commissie_model = get_model('DataModelCommissie');
-			$commissie_adres = $commissie_model->get_email($lijst->get('commissie'));
-			if (strcasecmp($from, $commissie_adres) !== 0)
+		case DataModelMailinglist::TOEGANG_EIGENAAR:
+			if (strcasecmp($from, $lijst['committee']['email']) !== 0)
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
 
 			break;
@@ -198,44 +195,42 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 			return RETURN_NOT_ALLOWED_UNKNOWN_POLICY;
 	}
 
-	if ($lijst->sends_email_on_first_email() && !$lijst->archive()->contains_email_from($from))
+	if ($lijst->sends_email_on_first_email() && !$lijst['archive']->contains_email_from($from))
 		send_welcome_mail($lijst, $from);
 
 	foreach ($aanmeldingen as $aanmelding)
 	{
 		// Skip subscriptions without an e-mail address silently
-		if (trim($aanmelding->get('email')) == '')
+		if (trim($aanmelding['email']) == '')
 			continue;
 
-		echo "Sending mail to " . $aanmelding->get('naam') . " <" . $aanmelding->get('email') . ">: ";
+		echo "Sending mail to " . $aanmelding['naam'] . " <" . $aanmelding['email'] . ">: ";
 
 		// Personize the message for the receiver
 		$variables = array(
-			'[NAAM]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
-			'[NAME]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
-			'[MAILINGLIST]' => htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING)
+			'[NAAM]' => htmlspecialchars($aanmelding['naam'], ENT_COMPAT, 'UTF-8'),
+			'[NAME]' => htmlspecialchars($aanmelding['naam'], ENT_COMPAT, 'UTF-8'),
+			'[MAILINGLIST]' => htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8')
 		);
 
-		if ($aanmelding->has('lid_id'))
-			$variables['[LID_ID]'] = $aanmelding->get('lid_id');
+		if ($aanmelding['lid_id'])
+			$variables['[LID_ID]'] = $aanmelding['lid_id'];
 
 		// If you are allowed to unsubscribe, parse the placeholder correctly (different for opt-in and opt-out lists)
-		if ($lijst->get('publiek'))
+		if ($lijst['publiek'])
 		{
-			$url = $lijst->get('type')== DataModelMailinglijst::TYPE_OPT_IN
-				? ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', $aanmelding->get('abonnement_id'))
-				: ROOT_DIR_URI . sprintf('mailinglijsten.php?lijst_id=%d', $lijst->get('id'));
+			$url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
 
-			$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING);
+			$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
 			$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
-				htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING),
-				htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING));
+				htmlspecialchars($url, ENT_QUOTES, 'UTF-8'),
+				htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8'));
 		}
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
 
-		echo send_message($personalized_message, $aanmelding->get('email')), "\n";
+		echo send_message($personalized_message, $aanmelding['email']), "\n";
 	}
 
 	return 0;
@@ -253,7 +248,7 @@ function process_return_to_sender($message, $message_header, $from, $destination
 
 	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message_part->header('Subject'));
 	$reply->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
-	$reply->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
+	$reply->setHeader('Reply-To', 'AC/DCee Cover <webcie@rug.nl>');
 
 	return send_message($reply->toString(), $from);
 }
@@ -263,11 +258,11 @@ function send_welcome_mail(DataIterMailinglijst $lijst, $to)
 	$message = new \Cover\email\MessagePart();
 
 	$message->setHeader('To', $to);
-	$message->setHeader('From', sprintf('%s <%s>', $lijst->get('naam'), $lijst->get('adres')));
-	$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
-	$message->setHeader('Subject', $lijst->get('on_first_email_subject'));
-	$message->addBody('text/plain', strip_tags($lijst->get('on_first_email_message')));
-	$message->addBody('text/html', $lijst->get('on_first_email_message'));
+	$message->setHeader('From', sprintf('%s <%s>', $lijst['naam'], $lijst['adres']));
+	$message->setHeader('Reply-To', 'AC/DCee Cover <webcie@rug.nl>');
+	$message->setHeader('Subject', $lijst['on_first_email_subject']);
+	$message->addBody('text/plain', strip_tags($lijst['on_first_email_message']));
+	$message->addBody('text/html', $lijst['on_first_email_message']);
 
 	return send_message($message->toString(), $to);
 }
@@ -421,7 +416,7 @@ function main()
 		}
 
 		// Archive the message.
-		$archief = get_model('DataModelMailinglijstArchief');
+		$archief = get_model('DataModelMailinglistArchive');
 		$archief->archive($message, $from, $lijst, $commissie, $return_code);
 
 		if ($return_code !== 0)

@@ -1,0 +1,16 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title message.subject ~ ' :: ' ~ list.naam ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailinglijsten') }}</a> / <a href="{{ controller.link_to_read(list)|e('html_attr') }}">{{ list.naam }}</a> / <a href="{{ link_to('archive_index', list)|e('html_attr') }}">{{ __('Archief') }}</a></h1>
+
+<div class="messageBox">
+	<p>{{ __('Bericht uit Archief van %s, verwerkt op %s (return-code %s)')|e('html')|format('<a href="%s">%s</a>'|format(controller.link_to_read(list)|e('html_attr'), list.naam|e('html'))|raw, message.verwerkt_op|date(), message.return_code)|raw }}</p>
+	<pre style="white-space: pre-wrap; 
+white-space: -moz-pre-wrap; 
+white-space: -pre-wrap; 
+white-space: -o-pre-wrap; 
+word-wrap: break-word;">{{ message.bericht }}</pre>
+</div>
+{% endblock %}

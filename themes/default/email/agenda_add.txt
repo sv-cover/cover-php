@@ -1,13 +1,13 @@
 $member_naam heeft namens de $commissie_naam het volgende agendapunt toegevoegd:
 
 Kop:     $kop
-Van:	 $van
-Tot:	 $tot
-Locatie: $locatie 
+Van:     $van
+Tot:     $tot
+Locatie: $locatie
 
 $beschrijving
 
-Je kunt op de pagina ROOT_DIR_URIagenda.php?agenda_moderate=$id#$id dit agendapunt goedkeuren (of weigeren).
+Je kunt op de pagina ROOT_DIR_URIagenda.php?view=moderate&agenda_id=$id dit agendapunt goedkeuren (of weigeren).
 
 Met vriendelijke groeten,
 

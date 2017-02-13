@@ -5,9 +5,7 @@ require_once 'include/models/DataModelAnnouncement.php';
 
 class AnnouncementsView extends CRUDView
 {
-	protected $__file = __FILE__;
-
-	protected function get_committee_options(DataIter $iter = null)
+	public function get_committee_options(DataIter $iter = null)
 	{
 		$model = get_model('DataModelCommissie');
 
@@ -19,13 +17,13 @@ class AnnouncementsView extends CRUDView
 			$pairs[$committee->get_id()] = $committee->get('naam');
 
 		// Add the current committee as option if it isn't already (for editing)
-		if ($iter && $iter->has('committee') && !isset($pairs[$iter->get('committee')]))
-			$pairs[$iter->get('committee')] = $iter->getIter('committee')->get('naam');
+		if ($iter && !empty($iter['committee_id']) && !isset($pairs[$iter->get('committee_id')]))
+			$pairs[$iter->get('committee_id')] = $iter->get('committee')->get('naam');
 
 		return $pairs;
 	}
 
-	protected function get_visibility_options()
+	public function get_visibility_options()
 	{
 		return array(
 			DataModelAnnouncement::VISIBILITY_PUBLIC => __('Iedereen'),

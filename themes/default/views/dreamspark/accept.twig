@@ -1,0 +1,25 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Inloggen op Dreamspark') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Inloggen op Dreamspark') }}</h1>
+<div class="messageBox">
+	<form method="post" action="" class="vertical-form" target="_blank">
+		{{ html_nonce('accept_dreamspark_terms') }}
+		
+		<p>{{ __('Als je doorgaat worden je naam en e-mailadres doorgegeven aan de Dreamspark webstore.') }}</p>
+		
+		{% if global.identity.member_in_committee(constant('COMMISSIE_EASY')) %}
+		<div>
+			<input type="checkbox" name="log_in_as_webcie" id="field-log_in_as_webcie" value="yes">
+			<label for="field-log_in_as_webcie">{{ __('Log in als WebCie admin') }}</label>
+		</div>
+		{% endif %}
+		
+		<div>
+			<button type="submit" class="button" name="accept_terms" value="true">{{ __('Ga verder naar de Dreamspark Webstore') }}</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

@@ -5,7 +5,7 @@ Taal:  $taal
 
 $page
 
-ROOT_DIR_URIshow.php?id=$id
+Bekijk de nieuwe pagina op: ROOT_DIR_URIshow.php?id=$id
 
 Met vriendelijke groeten,
 

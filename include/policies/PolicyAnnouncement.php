@@ -5,14 +5,14 @@ require_once 'include/models/DataModelAnnouncement.php';
 
 class PolicyAnnouncement implements Policy
 {
-	public function user_can_create()
+	public function user_can_create(DataIter $announcement)
 	{
 		return get_identity()->member_in_committee();
 	}
 
 	public function user_can_read(DataIter $announcement)
 	{
-		switch ($announcement->get('visibility'))
+		switch ($announcement['visibility'])
 		{
 			case DataModelAnnouncement::VISIBILITY_PUBLIC:
 				return true;
@@ -30,7 +30,8 @@ class PolicyAnnouncement implements Policy
 
 	public function user_can_update(DataIter $announcement)
 	{
-		return get_identity()->member_in_committee($announcement->get('committee'));
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee($announcement['committee_id']);
 	}
 
 	public function user_can_delete(DataIter $announcement)

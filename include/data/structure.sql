@@ -43,23 +43,55 @@ SET default_with_oids = false;
 -- Name: agenda_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
 
-CREATE SEQUENCE agenda_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+CREATE TABLE leden (
+    id integer NOT NULL PRIMARY KEY, -- determined by member administration
+    voornaam character varying(255) NOT NULL,
+    tussenvoegsel character varying(255),
+    achternaam character varying(255) NOT NULL,
+    adres character varying(255) NOT NULL,
+    postcode character varying(7) NOT NULL,
+    woonplaats character varying(255) NOT NULL,
+    email character varying(255) NOT NULL,
+    geboortedatum date NOT NULL,
+    geslacht character(1) NOT NULL,
+    telefoonnummer character varying(20),
+    privacy integer NOT NULL,
+    type integer DEFAULT 1,
+    machtiging smallint,
+    beginjaar integer DEFAULT date_part('year'::text, now()),
+    onderschrift character varying(200),
+    avatar character varying(100),
+    homepage character varying(255),
+    nick character varying(50),
+    taal character varying(10) DEFAULT 'en'::character varying
+);
 
---
--- TOC entry 173 (class 1259 OID 24131)
--- Name: agenda; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
+
+CREATE TABLE passwords (
+    lid_id INTEGER NOT NULL PRIMARY KEY REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    password character varying (255) NOT NULL
+);
+
+
+CREATE TABLE commissies (
+    id SERIAL NOT NULL PRIMARY KEY,
+    type integer NOT NULL DEFAULT 1,
+    naam character varying(25) NOT NULL,
+    login character varying(50), -- mainly used for pretty urls these days
+    website character varying(100),
+    nocaps text,
+    page integer, -- references pages (todo)
+    hidden integer NOT NULL DEFAULT 0,
+    vacancies DATE DEFAULT NULL,
+    CONSTRAINT commissies_login_key UNIQUE(login)
+);
+
 
 CREATE TABLE agenda (
-    id integer DEFAULT nextval('agenda_id_seq'::regclass) NOT NULL,
+    id SERIAL,
     kop character varying(100) NOT NULL,
     beschrijving text,
-    commissie smallint NOT NULL,
+    commissie integer NOT NULL REFERENCES commissies (id),
     van timestamp with time zone NOT NULL,
     tot timestamp with time zone,
     locatie character varying(100),
@@ -97,19 +129,6 @@ CREATE TABLE cache (
     key character(40) NOT NULL PRIMARY KEY,
     value TEXT NOT NULL,
     expires integer NOT NULL
-);
-
-CREATE TABLE commissies (
-    id SERIAL NOT NULL PRIMARY KEY,
-    type integer NOT NULL DEFAULT 1,
-    naam character varying(25) NOT NULL,
-    login character varying(50),
-    website character varying(100),
-    nocaps text,
-    page integer,
-    hidden integer NOT NULL DEFAULT 0,
-    vacancies DATE DEFAULT NULL,
-    CONSTRAINT commissies_login_key UNIQUE(login)
 );
 
 CREATE TABLE committee_battle_scores (
@@ -153,108 +172,43 @@ CREATE TABLE confirm (
     type text DEFAULT ''::text NOT NULL
 );
 
---
--- TOC entry 190 (class 1259 OID 24217)
--- Name: forum_acl_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
 
-CREATE SEQUENCE forum_acl_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 191 (class 1259 OID 24219)
--- Name: forum_acl; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE forum_acl (
-    id integer DEFAULT nextval('forum_acl_id_seq'::regclass) NOT NULL,
-    forumid integer NOT NULL,
-    type smallint,
-    uid integer,
-    permissions integer
+CREATE TABLE forums (
+    id SERIAL,
+    name character varying(50) NOT NULL,
+    description character varying(255) NOT NULL,
+    "position" integer DEFAULT 0,
+    CONSTRAINT forums_pkey PRIMARY KEY (id)
 );
 
---
--- TOC entry 192 (class 1259 OID 24223)
--- Name: forum_group_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
 
-CREATE SEQUENCE forum_group_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+CREATE TABLE forum_acl (
+    id SERIAL PRIMARY KEY,
+    forum_id integer NOT NULL REFERENCES forums (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    author_type smallint, -- Todo: rewrite this author_id & author_type stuff to three columns and a table check so we can have proper foreign key constraints!
+    author_id integer,
+    permissions integer,
+    PRIMARY KEY (id),
+    CONSTRAINT forum_acl_uniq UNIQUE (forum_id, author_id, author_type)
+);
 
---
--- TOC entry 193 (class 1259 OID 24225)
--- Name: forum_group; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
 
 CREATE TABLE forum_group (
-    id integer DEFAULT nextval('forum_group_id_seq'::regclass) NOT NULL,
+    id SERIAL PRIMARY KEY,
     name character varying(50)
 );
 
---
--- TOC entry 194 (class 1259 OID 24229)
--- Name: forum_group_member_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE forum_group_member_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 195 (class 1259 OID 24231)
--- Name: forum_group_member; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
 
 CREATE TABLE forum_group_member (
-    id integer DEFAULT nextval('forum_group_member_id_seq'::regclass) NOT NULL,
-    guid integer,
-    type smallint,
-    uid integer
+    id SERIAL,
+    group_id integer REFERENCES forum_group (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    author_type smallint,
+    author_id integer
 );
 
---
--- TOC entry 196 (class 1259 OID 24235)
--- Name: forum_guestnames; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE forum_guestnames (
-    thread integer NOT NULL,
-    reply integer NOT NULL,
-    naam character varying(100) NOT NULL,
-    email character varying(100)
-);
-
---
--- TOC entry 197 (class 1259 OID 24238)
--- Name: forum_header_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE forum_header_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 198 (class 1259 OID 24240)
--- Name: forum_header; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
 
 CREATE TABLE forum_header (
-    id integer DEFAULT nextval('forum_header_id_seq'::regclass) NOT NULL,
+    id SERIAL,
     name character varying(150),
     "position" integer
 );
@@ -266,34 +220,27 @@ CREATE TABLE forum_header (
 
 CREATE TABLE forum_lastvisits (
     lid integer NOT NULL,
-    forum integer NOT NULL,
+    forum_id integer NOT NULL REFERENCES forums(id) ON UPDATE CASCADE ON DELETE CASCADE,
     date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
---
--- TOC entry 200 (class 1259 OID 24248)
--- Name: forum_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE forum_messages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 201 (class 1259 OID 24250)
--- Name: forum_messages; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
+CREATE TABLE forum_threads (
+    id SERIAL PRIMARY KEY,
+    forum_id integer NOT NULL REFERENCES forums(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    author_type smallint,
+    author_id integer,
+    subject character varying(250) NOT NULL,
+    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    poll smallint DEFAULT 0 NOT NULL
+);
 
 CREATE TABLE forum_messages (
-    id integer DEFAULT nextval('forum_messages_id_seq'::regclass) NOT NULL,
-    thread integer NOT NULL,
-    author integer NOT NULL,
+    id SERIAL PRIMARY KEY,
+    thread_id integer NOT NULL REFERENCES forum_threads(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    author_id integer NOT NULL,
+    author_type smallint DEFAULT 1,
     message text NOT NULL,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    author_type smallint DEFAULT 1
+    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
 );
 
 --
@@ -302,97 +249,22 @@ CREATE TABLE forum_messages (
 --
 
 CREATE TABLE forum_sessionreads (
-    lid integer NOT NULL,
-    forum integer NOT NULL,
-    thread integer NOT NULL
+    lid_id integer NOT NULL,
+    forum_id integer NOT NULL REFERENCES forums(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    thread_id integer NOT NULL REFERENCES forum_threads(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (lid_id, forum_id, thread_id)
 );
 
---
--- TOC entry 203 (class 1259 OID 24262)
--- Name: forum_threads_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE forum_threads_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 204 (class 1259 OID 24264)
--- Name: forum_threads; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE forum_threads (
-    id integer DEFAULT nextval('forum_threads_id_seq'::regclass) NOT NULL,
-    forum integer NOT NULL,
-    author integer NOT NULL,
-    subject character varying(250) NOT NULL,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    author_type smallint DEFAULT 1,
-    poll integer DEFAULT 0 NOT NULL
-);
-
---
--- TOC entry 205 (class 1259 OID 24271)
--- Name: forum_visits; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
 
 CREATE TABLE forum_visits (
-    lid integer NOT NULL,
-    forum integer NOT NULL,
+    lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    forum_id integer NOT NULL REFERENCES forums (id) ON UPDATE CASCADE ON DELETE CASCADE,
     lastvisit timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    sessiondate timestamp without time zone
+    sessiondate timestamp without time zone,
+    PRIMARY KEY (lid_id, forum_id)
 );
 
---
--- TOC entry 206 (class 1259 OID 24275)
--- Name: forums_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
 
-CREATE SEQUENCE forums_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 207 (class 1259 OID 24277)
--- Name: forums; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE forums (
-    id integer DEFAULT nextval('forums_id_seq'::regclass) NOT NULL,
-    name character varying(50) NOT NULL,
-    description character varying(255) NOT NULL,
-    type smallint DEFAULT 0,
-    "position" integer DEFAULT 0
-);
-
---
--- TOC entry 217 (class 1259 OID 24336)
--- Name: leden; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE leden (
-    id integer NOT NULL PRIMARY KEY,
-    voornaam character varying(255) NOT NULL,
-    tussenvoegsel character varying(255),
-    achternaam character varying(255) NOT NULL,
-    adres character varying(255) NOT NULL,
-    postcode character varying(7) NOT NULL,
-    woonplaats character varying(255) NOT NULL,
-    email character varying(255) NOT NULL,
-    geboortedatum date NOT NULL,
-    geslacht character(1) NOT NULL,
-    telefoonnummer character varying(20),
-    privacy integer NOT NULL,
-    type integer DEFAULT 1,
-    machtiging smallint,
-    beginjaar integer DEFAULT date_part('year'::text, now())
-);
 
 CREATE TABLE studies (
     lidid integer NOT NULL,
@@ -425,7 +297,7 @@ CREATE SEQUENCE foto_boeken_id_seq
 
 CREATE TABLE foto_boeken (
     id integer DEFAULT nextval('foto_boeken_id_seq'::regclass) NOT NULL,
-    parent integer DEFAULT 0 NOT NULL,
+    parent_id integer DEFAULT 0 NOT NULL,
     titel character varying(255) NOT NULL,
     fotograaf text,
     date date,
@@ -436,7 +308,7 @@ CREATE TABLE foto_boeken (
     CONSTRAINT foto_boeken_pkey PRIMARY KEY (id)
 );
 
-CREATE INDEX ON foto_boeken (parent);
+CREATE INDEX ON foto_boeken (parent_id);
 
 CREATE TABLE foto_boeken_visit (
     boek_id integer NOT NULL REFERENCES foto_boeken (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -619,35 +491,6 @@ CREATE TABLE pollopties (
 CREATE TABLE pollvoters (
     lid integer NOT NULL REFERENCES leden (id) ON DELETE CASCADE ON UPDATE CASCADE,
     poll integer NOT NULL REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
---
--- TOC entry 229 (class 1259 OID 24395)
--- Name: profielen_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE profielen_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- TOC entry 230 (class 1259 OID 24397)
--- Name: profielen; Type: TABLE; Schema: public; Owner: webcie; Tablespace: 
---
-
-CREATE TABLE profielen (
-    lidid integer NOT NULL REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    wachtwoord character varying(255),
-    onderschrift character varying(200),
-    avatar character varying(100),
-    homepage character varying(255),
-    msn character varying(100),
-    icq character varying(15),
-    nick character varying(50),
-    taal character varying(10) DEFAULT 'nl'::character varying
 );
 
 --
@@ -2781,7 +2624,11 @@ CREATE TABLE mailinglijsten (
     publiek boolean NOT NULL DEFAULT TRUE,
     toegang integer,
     commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
-    tag varchar(100) NOT NULL DEFAULT 'Cover'
+    tag varchar(100) NOT NULL DEFAULT 'Cover',
+    on_subscribtion_subject TEXT DEFAULT NULL,
+    on_subscribtion_message TEXT DEFAULT NULL,
+    on_first_email_subject TEXT DEFAULT NULL,
+    on_first_email_message TEXT DEFAULT NULL
 );
 
 CREATE TABLE mailinglijsten_abonnementen (
@@ -2799,6 +2646,7 @@ CREATE TABLE mailinglijsten_berichten (
     mailinglijst integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     commissie integer DEFAULT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     bericht TEXT NOT NULL,
+    sender TEXT DEFAULT NULL,
     return_code integer NOT NULL,
     verwerkt_op timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
@@ -2834,7 +2682,7 @@ CREATE TABLE facebook (
 
 CREATE TABLE announcements (
     id SERIAL NOT NULL,
-    committee INTEGER NOT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+    committee_id INTEGER NOT NULL REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     subject TEXT NOT NULL,
     message TEXT NOT NULL,
     created_on TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT ('now'::text)::timestamp(6) WITHOUT TIME ZONE,
@@ -2933,43 +2781,6 @@ ALTER TABLE ONLY configuratie
 
 ALTER TABLE ONLY confirm
     ADD CONSTRAINT confirm_pkey PRIMARY KEY (key);
-
-
---
--- TOC entry 2414 (class 2606 OID 26006)
--- Name: forum_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY forum_threads
-    ADD CONSTRAINT forum_messages_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2410 (class 2606 OID 26008)
--- Name: forum_replies_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY forum_messages
-    ADD CONSTRAINT forum_replies_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2412 (class 2606 OID 26010)
--- Name: forum_sessionreads_lid_key; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY forum_sessionreads
-    ADD CONSTRAINT forum_sessionreads_lid_key UNIQUE (lid, forum, thread);
-
-
---
--- TOC entry 2416 (class 2606 OID 26012)
--- Name: forums_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie; Tablespace: 
---
-
-ALTER TABLE ONLY forums
-    ADD CONSTRAINT forums_pkey PRIMARY KEY (id);
-
 
 --
 -- TOC entry 2422 (class 2606 OID 26018)

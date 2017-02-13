@@ -1,0 +1,54 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Pagina wijzigen') : __('Nieuwe pagina maken')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ iter.has_id ? __('Pagina wijzigen') : __('Nieuwe pagina maken') }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
+		{% if iter.has_id %}
+			{{ html_nonce('update', iter) }}
+		{% else %}
+			{{ html_nonce('create', iter) }}
+		{% endif %}
+		
+		<div>
+			{{ html_label(__('Titel'), 'titel', errors=errors, required=true) }}
+			{{ html_input_text('titel', iter) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Eigenaar'), 'owner', errors=errors, required=true) }}
+			{{ html_select_field('owner', view.available_committees, iter) }}
+		</div>
+
+		<div class="tab-container">
+			<ul class="nav-tabs horizontal">
+				<li{% if view.preferred_tab(iter) == 'nl' %} class="active"{% endif %}><a href="#content-nl">{{ __('Nederlands') }}</a></li>
+				<li><a href="#content-nl-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
+				<li{% if view.preferred_tab(iter) == 'en' %} class="active"{% endif %}><a href="#content-en">{{ __('Engels') }}</a></li>
+				<li><a href="#content-en-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
+			</ul>
+			<div class="tab-panel" id="content-nl">
+				{{ html_textarea_field('content', iter, rows=15) }}
+			</div>
+			<div class="tab-panel" id="content-en">
+				{{ html_textarea_field('content_en', iter, rows=15) }}
+			</div>
+			<div class="tab-panel" id="content-nl-preview" data-preview-source="#content-nl textarea" data-preview-url="show.php?view=preview&amp;lang=nl">
+				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+			</div>
+			<div class="tab-panel" id="content-en-preview" data-preview-source="#content-en textarea" data-preview-url="show.php?view=preview&amp;lang=en">
+				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+			</div>
+		</div>
+
+		<div>
+			<button type="submit" class="button">{{ iter.has_id ? __('Wijzig pagina') : __('Maak pagina') }}</button>
+			{% if iter.has_id %}
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Bekijk pagina') }}</a>
+			{% endif %}
+		</div>
+	</form>
+</div>
+{% endblock %}

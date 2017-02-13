@@ -42,46 +42,6 @@
 	box-sizing: border-box;
 }
 
-
-ul.nav-tabs {
-	list-style: none;
-	margin: 0;
-}
-
-ul.nav-tabs > li > a {
-	display: block;
-	padding: 10px 4px;
-}
-
-ul.nav-tabs > li.active {
-	background: #ddd;
-	color: white;
-}
-
-ul.nav-tabs.vertical > li:not(:first-child) {
-	border-top: 1px solid #ccc;
-} 
-
-ul.nav-tabs > li.fa-icon > a:after {
-	padding-left: 4px;
-	color: #999;
-	display: inline-block;
-	font: normal normal normal 14px/1 FontAwesome;
-	font-size: inherit;
-	text-rendering: auto;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	transform: translate(0, 0);
-}
-
-ul.nav-tabs > li.icon-system > a:after {
-	content: "\f013";
-}
-
-ul.nav-tabs > li.icon-public > a:after {
-	content: "\f0ac";
-}
-
 .tab-content {
 	display: table-cell;
 	vertical-align: top;

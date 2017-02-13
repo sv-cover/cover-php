@@ -1,0 +1,28 @@
+{% set status = null %}
+{% if result.type  == constant('MEMBER_STATUS_LID') %}
+	{% set status = __('Lid') %}
+{% elseif result.type == constant('MEMBER_STATUS_LID_AF') %}
+	{% set status = __('Lid af') %}
+{% elseif result.type == constant('MEMBER_STATUS_ERELID') %}
+	{% set status = __('Erelid') %}
+{% elseif result.type == constant('MEMBER_STATUS_DONATEUR') %}
+	{% set status = __('Donateur') %}
+{% endif %}
+<div class="search-result-member">
+	<h2>
+		<a href="{{ result.absolute_url|e('html_attr') }}">{{ result|full_name }}</a>
+		{% if status is not null %}<small>{{ status }}</small>{% endif %}
+	</h2>
+	
+	<div class="profile-widget">
+		<img src="foto.php?lid_id={{ result.id|e('url') }}&amp;format=square&amp;width=200" width="100" height="100">
+	</div>
+
+	{% set fields = ['adres', 'email', 'telefoonnummer'] %}
+	<dl class="member">
+		{% for field in fields if not result.is_private(field) %}
+			<dt>{{ __(field) }}</dt>
+			<dd>{{ result[field] }}</dd>
+		{% endfor %}
+	</dl>
+</div>

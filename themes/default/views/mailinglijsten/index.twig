@@ -1,0 +1,38 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Mailinglijsten') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageHeading">
+	{% if user_can_create model.new_iter %}
+		<div class="controls inline">
+			<a href="{{ controller.link_to_create()|e('html_attr') }}" class="create-link">{{ __('Nieuwe mailinglijst')  }}</a>
+		</div>
+	{% endif %}
+	<h1>{{ __('Mailinglijsten') }}</h1>
+</div>
+<div class="messageBox">
+	<table class="full-width-table">
+		<thead>
+			<tr>
+				<th>{{ __('Naam') }}</th>
+				<th>{{ __('Adres') }}</th>
+				<th>{{ __('Eigenaar') }}</th>
+				<th>{{ __('Zichtbaardheid') }}</th>
+				<th>{{ __('Bereik') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for mailinglist in iters %}
+			<tr>
+				<td><a href="{{ controller.link_to_read(mailinglist)|e('html_attr') }}">{{ mailinglist.naam }}</a></td>
+				<td>{{ mailinglist.adres }}</td>
+				<td>{{ mailinglist.committee.naam }}</td>
+				<td>{{ mailinglist.publiek ? __('Publiek') : __('Privé') }}</td>
+				<td>{{ mailinglist.reach }}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% if global.auth.logged_in %}
+	{{ __('Ingelogd') }}: <b>{{ global.identity.member.voornaam }}</b><br/>
+	<a class="logButton" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">{{ __('Uitloggen') }}</a>
+	<a class="logButton" href="{{ link('profiel.read', member=global.identity.member) }}">{{ __('Profiel') }}</a>
+
+	{% if global.identity.can_impersonate %}
+		<a href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">{{ __('Bekijk als…') }}</a>
+	{% endif %}
+{% else %}
+	<a class="logButton" href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form">Log in</a>
+{% endif %}

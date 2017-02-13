@@ -4,7 +4,20 @@ require_once 'include/data/DataModel.php';
 
 class DataIterSession extends DataIter
 {
-	//
+	static public function fields()
+	{
+		return [
+			'session_id',
+			'member_id',
+			'ip_address',
+			'application',
+			'created_on',
+			'last_active_on',
+			'timeout',
+			'override_member_id',
+			'override_committees'
+		];
+	}
 }
 
 /**

@@ -39,6 +39,13 @@ class ControllerApi extends Controller
 			if (get_policy($agenda)->user_can_read($activity))
 				$activities[] = $activity->data;
 
+		// Add the properties that Newsletter expects
+		foreach ($activities as &$activity) {
+			$van = strtotime($activity['van']);
+			$activity['vandatum'] = date('d', $van);
+			$activity['vanmaand'] = date('m', $van);
+		}
+
 		return $activities;
 	}
 
@@ -103,7 +110,7 @@ class ControllerApi extends Controller
 
 		$ident = get_identity_provider($auth);
 
-		return array('result' => $ident->get_member()->data);
+		return array('result' => $ident->member()->data);
 	}
 
 	public function api_session_test_committee($session_id, $committees)
@@ -218,22 +225,20 @@ class ControllerApi extends Controller
 		}
 		
 		$member = new DataIterMember($model, $data['id'], $data);
-		$member->set('privacy', 958698063);
-
-		$model->insert($member);
+		$member['privacy'] = 958698063;
 
 		// Create profile for this member
 		$nick = member_full_name($member, IGNORE_PRIVACY);
 		
 		if (strlen($nick) > 50)
-			$nick = $member->get('voornaam');
+			$nick = $member['voornaam'];
 		
 		if (strlen($nick) > 50)
 			$nick = '';
 		
-		$iter = new DataIterMember($model, -1, array('lidid' => $member->get_id(), 'nick' => $nick));
+		$iter['nick'] = $nick;
 		
-		$model->insert_profiel($iter);
+		$model->insert($member);
 
 		// Create a password
 		$passwd = create_pronouncable_password();
@@ -313,11 +318,14 @@ class ControllerApi extends Controller
 		$member_model = get_model('DataModelMember');
 		$member = $member_model->get_iter($member_id);
 
-		$mailing_model = get_model('DataModelMailinglijst');
-		$mailinglist = $mailing_model->get_lijst($mailinglist);
-		$id = $mailing_model->aanmelden($mailinglist, $member->get_id());
+		$mailing_model = get_model('DataModelMailinglist');
+		$mailinglist = $mailing_model->get_iter($mailinglist);
 
-		return ['success' => !!$id];
+		$subscription_model = get_model('DataModelMailinglistSubscription');
+
+		$mailing_model->subscribe_member($mailinglist, $member);
+
+		return ['success' => true];
 	}
 
 	private function assert_auth_api_application()

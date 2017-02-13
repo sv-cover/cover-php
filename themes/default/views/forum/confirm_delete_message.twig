@@ -1,0 +1,17 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Bericht verwijderen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Bericht verwijderen') }}</h1>
+<div class="messageBox">
+	<form method="post" action="forum.php?view=delete&amp;message={{ iter.id }}" class="vertical-form">
+		{{ html_nonce('delete_message', iter) }}
+		<p>{{ __('Weet je heel zeker dat je het bericht wil verwijderen?') }}</p>
+		<div>
+			<button type="submit" class="button">{{ __('Verwijder bericht')  }}</button>
+			<a href="forum.php?message={{ iter.id }}">{{ __('Terug naar thread') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

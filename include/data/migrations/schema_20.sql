@@ -1,0 +1,1 @@
+ALTER TABLE foto_boeken RENAME parent TO parent_id;

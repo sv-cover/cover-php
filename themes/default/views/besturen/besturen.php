@@ -1,11 +1,7 @@
 <?php
 
-require_once 'include/editable.php';
-
 class BesturenView extends CRUDView
 {
-	protected $__file = __FILE__;
-
 	public function get_summary($page_id)
 	{
 		$editable_model = get_model('DataModelEditable');

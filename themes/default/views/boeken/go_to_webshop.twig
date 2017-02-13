@@ -1,0 +1,11 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Boeken bestellen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+{{ include('@layout/editable.twig', {editable: global.models.Editable.get_iter_from_title('Boeken bestellen')}) }}
+
+<div class="messageBox bookcee-webshop-call-to-action">
+	<a href="{{ webshop_link }}" class="button large-button" target="_blank">{{ __('Ga verder naar de BookCee webshop') }}</a>
+</div>
+{% endblock %}

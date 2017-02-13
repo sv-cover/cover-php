@@ -4,22 +4,96 @@ require_once 'include/init.php';
 require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
 
+function validate_not_empty($value)
+{
+	return strlen($value) > 0;
+}
+
+function validate_email($value)
+{
+	return filter_var($value, FILTER_VALIDATE_EMAIL);
+}
+
+function validate_committee($committee_id)
+{
+	try {
+		get_model('DataModelCommissie')->get_iter($committee_id);
+		return true;
+	} catch (NotFoundException $e) {
+		return false;
+	}
+}
+
+function validate_member($member_id)
+{
+	try {
+		get_model('DataModelMember')->get_iter($member_id);
+		return true;
+	} catch (NotFoundException $e) {
+		return false;
+	}
+}
+
 class ControllerCRUD extends Controller
 {
 	protected $_var_view = 'view';
 
 	protected $_var_id = 'id';
 
-	protected function _create($data, array &$errors)
+	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
-		$iter = $this->_create_iter();
+		$rules = $iter->rules();
 
+		foreach ($rules as $field => $options)
+		{
+			$cleaner = isset($options['clean']) ? $options['clean'] : 'trim';
+
+			$validators = isset($options['validate']) ? $options['validate'] : [];
+
+			$required = isset($options['required']) ? $options['required'] : false;
+
+			if (!isset($data[$field])) {
+				if (!$iter->has_id() && $required)
+					$errors[] = $field;
+
+				continue;
+			}
+
+			$data[$field] = call_user_func($cleaner, $data[$field]);
+
+			foreach ($validators as $validator)
+			{
+				if (is_string($validator))
+					$validator = 'validate_' . $validator;
+
+				if (!call_user_func($validator, $data[$field], $field, $iter)) {
+					$errors[] = $field;
+					break;
+				}
+			}
+		}
+
+		return count($errors) === 0;
+	}
+
+	protected function _create(DataIter $iter, array $data, array &$errors)
+	{
+		if (!$this->_validate($iter, $data, $errors))
+			return false;
+
+		// TODO: Oh this is soo unsafe! We just set all the data, then insert all the data using the model :(
 		$iter->set_all($data);
+
+		// Huh, why are we checking again? Didn't we already check in the run_create() method?
+		// Well, yes, but sometimes a policy is picky about how you fill in the data!
+		if (!get_policy($iter)->user_can_create($iter))
+			throw new UnauthorizedException('You are not allowed to create this DataIter according to the policy.');
 
 		$id = $this->model->insert($iter);
 
-		$dataiter_class = new ReflectionClass($iter);
-		return $dataiter_class->newInstance($this->model, $id, $iter->data);
+		$iter->set_id($id);
+
+		return true;
 	}
 
 	protected function _read($id)
@@ -27,8 +101,11 @@ class ControllerCRUD extends Controller
 		return $this->model->get_iter($id);
 	}
 
-	protected function _update(DataIter $iter, $data, array &$errors)
+	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
+		if (!$this->_validate($iter, $data, $errors))
+			return false;
+		
 		foreach ($data as $key => $value)
 			$iter->set($key, $value);
 
@@ -45,144 +122,71 @@ class ControllerCRUD extends Controller
 		return $this->model->get();
 	}
 
-	protected function _form_is_submitted($form)
-	{
-		return $_SERVER['REQUEST_METHOD'] == 'POST';
-			// && !empty($_POST['_' . $form . '_nonce'])
-			// && in_array($_POST['_' . $form . '_nonce'], $_SESSION[$form . '_nonce']);
-	}
-
 	protected function _create_view($view)
 	{
 		return View::byName($view, $this);
 	}
 
-	protected function run_view($view, DataModel $model, $iter, array $params)
+	/**
+	 * The view needs an empty iter to check the user_can_create policy against.
+	 */
+	public function new_iter()
 	{
-		throw new RuntimeException("ControllerCRUD::run_view() is not implemented anymore");
+		return $this->model->new_iter();
 	}
 
-	protected function _create_iter()
+	public function link_to($view, DataIter $iter = null, array $arguments = [])
 	{
-		$dataiter_class = new ReflectionClass($this->model->dataiter);
-		return $dataiter_class->newInstance($this->model, null, array());
-	}
+		$arguments[$this->_var_view] = $view;
 
-	protected function _get_title($iters = null)
-	{
-		return '';
-	}
+		if ($iter !== null)
+			$arguments[$this->_var_id] = $iter->get_id();
 
-	protected function _get_view_name()
-	{
-		return strtolower(substr(get_class($this), strlen('Controller')));
-	}
-
-	protected function _get_default_view_params()
-	{
-		return array_merge(
-			get_object_vars($this), // stuff like 'model' and other user defined stuff
-			array('controller' => $this));
-	}
-
-	protected function _get_preferred_response()
-	{
-		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
-			array('application/json', 'text/html', '*/*'));
-	}
-
-	protected function _send_json_single(DataIter $iter)
-	{
-		$this->_send_json(array(
-			'iter' => $this->_json_augment_iter($iter)
-		));
-	}
-
-	protected function _send_json_index(array $iters)
-	{
-		$links = array();
-
-		if (get_policy($this->model)->user_can_create())
-			$links['create'] = $this->link_to_create();
-
-		$this->_send_json(array(
-			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
-			'_links' => $links
-		));
-	}
-
-	protected function _json_augment_iter(DataIter $iter)
-	{
-		$links = array();
-
-		if (get_policy($this->model)->user_can_read($iter))
-			$links['read'] = $this->link_to_read($iter);
-
-		if (get_policy($this->model)->user_can_update($iter))
-			$links['update'] = $this->link_to_update($iter);
-
-		if (get_policy($this->model)->user_can_delete($iter))
-			$links['delete'] = $this->link_to_delete($iter);
-
-		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
-	}
-
-	protected function get_content($view, $iter = null, array $params = array())
-	{
-		if (strpos($view, '::') === false) {
-			$view_method = $view;
-			$view_instance = $this->_create_view($this->_get_view_name());
-		}
-		else {
-			list($view_class, $view_method) = explode('::', $view, 2);
-			$view_instance = $this->_create_view($view_class);
-		}
-
-		if (!$this->embedded)
-			$this->run_header([
-				'controller' => $this,
-				'view' => $view_instance,
-				'title' => $this->_get_title($iter),
-			]);
-
-		call_user_func([$view_instance, $view_method],
-			array_merge(
-				$this->_get_default_view_params(),
-				compact('model', 'iter'),
-				$params));
-
-		if (!$this->embedded)
-			$this->run_footer();
-	}
-
-	public function link(array $arguments)
-	{
-		return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
-	}
-
-	protected function link_to_iter(DataIter $iter, array $arguments = array())
-	{
-		return $this->link(array_merge(array($this->_var_id => $iter->get_id()), $arguments));
+		return $this->link($arguments);
 	}
 
 	public function link_to_create()
 	{
-		return $this->link([$this->_var_view => 'create']);
+		return $this->link_to('create');
 	}
 
 	public function link_to_read(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'read']);
+		return $this->link_to('read', $iter);
 	}
 
 	public function link_to_update(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'update']);
+		return $this->link_to('update', $iter);
 	}
 
 	public function link_to_delete(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'delete']);
+		return $this->link_to('delete', $iter);
+	}
+
+	public function json_link_to_create()
+	{
+		$new_iter = $this->model()->new_iter();
+		$nonce = nonce_generate(nonce_action_name('create', [$new_iter]));
+		return $this->link([$this->_var_view => 'create', '_nonce' => $nonce]);
+	}
+
+	public function json_link_to_read(DataIter $iter)
+	{
+		return $this->link_to('read', $iter, []);
+	}
+
+	public function json_link_to_update(DataIter $iter)
+	{
+		$nonce = nonce_generate(nonce_action_name('update', [$iter]));
+		return $this->link_to('update', $iter, ['_nonce' => $nonce]);
+	}
+
+	public function json_link_to_delete(DataIter $iter)
+	{
+		$nonce = nonce_generate(nonce_action_name('delete', [$iter]));
+		return $this->link_to('delete', $iter, ['_nonce' => $nonce]);
 	}
 
 	public function link_to_index()
@@ -192,33 +196,20 @@ class ControllerCRUD extends Controller
 
 	public function run_create()
 	{
-		if (!get_policy($this->model)->user_can_create())
+		$iter = $this->new_iter();
+
+		if (!get_policy($this->model)->user_can_create($iter))
 			throw new Exception('You are not allowed to add new items.');
 
 		$success = false;
 
 		$errors = array();
 
-		if ($this->_form_is_submitted('create'))
-			if ($iter = $this->_create($_POST, $errors))
+		if ($this->_form_is_submitted('create', $iter))
+			if ($this->_create($iter, $_POST, $errors))
 				$success = true;
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					$this->_send_json_single($iter);
-				else
-					$this->_send_json(compact('errors'));
-				break;
-
-			default:
-				if ($success)
-					$this->redirect($this->link_to_read($iter));
-				else
-					$this->get_content('form', $this->_create_iter(), compact('errors'));
-				break;	
-		}
+		return $this->view()->render_create($iter, $success, $errors);
 	}
 
 	public function run_read(DataIter $iter)
@@ -226,16 +217,7 @@ class ControllerCRUD extends Controller
 		if (!get_policy($this->model)->user_can_read($iter))
 			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				$this->_send_json_single($iter);
-				break;
-
-			default:
-				return $this->get_content('single', $iter);
-				break;
-		}
+		return $this->view()->render_read($iter);
 	}
 
 	public function run_update(DataIter $iter)
@@ -247,26 +229,11 @@ class ControllerCRUD extends Controller
 
 		$errors = array();
 
-		if ($this->_form_is_submitted('update'))
+		if ($this->_form_is_submitted('update', $iter))
 			if ($this->_update($iter, $_POST, $errors))
 				$success = true;
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					$this->_send_json_single($iter);
-				else
-					$this->_send_json(compact('errors'));
-				break;
-
-			default:
-				if ($success)
-					$this->redirect($this->link_to_read($iter));
-				else
-					$this->get_content('form', $iter, compact('errors'));
-				break;	
-		}
+		return $this->view()->render_update($iter, $success, $errors);
 	}
 
 	public function run_delete(DataIter $iter)
@@ -278,42 +245,21 @@ class ControllerCRUD extends Controller
 
 		$errors = array();
 
-		if ($this->_form_is_submitted('delete'))
+		if ($this->_form_is_submitted('delete', $iter))
 			if ($this->_delete($iter, $errors))
 				$success = true;
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				$this->_send_json(compact('errors'));
-				break;
-
-			default:
-				if ($success)
-					$this->redirect($this->link_to_index());
-				else
-					$this->get_content('confirm_delete', $iter, compact('errors'));
-				break;	
-		}
+		return $this->view()->render_delete($iter, $success, $errors);
 	}
 
 	public function run_index()
 	{
 		$iters = array_filter($this->_index(), array(get_policy($this->model), 'user_can_read'));
 
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				$this->_send_json_index($iters);
-				break;
-
-			default:
-				$this->get_content('index', $iters);
-				break;
-		}
+		return $this->view()->render_index($iters);
 	}
-	
-	/* protected */ function run_impl()
+
+	protected function run_impl()
 	{
 		$iter = null;
 
@@ -327,13 +273,17 @@ class ControllerCRUD extends Controller
 				$view = 'read';
 
 			if (!$iter)
-				return run_view('common::not_found');
+				throw new NotFoundException('ControllerCRUD::_read could not find the model instance.');
 		}
 
-		if (!$view) $view = 'index';
+		if (!$view)
+			$view = 'index';
 
-		return method_exists($this, 'run_' . $view)
-			? call_user_func_array([$this, 'run_' . $view], [$iter])
-			: run_view('common::not_found');
+		$view = str_replace('-', '_', $view);
+
+		if (!method_exists($this, 'run_' . $view))
+			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+
+		return call_user_func_array([$this, 'run_' . $view], [$iter]);
 	}
 }

@@ -1,0 +1,40 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Sticker wijzigen') : __('Nieuwe sticker toevoegen')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ iter.has_id ? __('Sticker wijzigen') : __('Nieuwe sticker toevoegen') }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ view.get_form_action(iter) }}" class="add-sticker-form vertical-form">
+		<input type="hidden" name="lat">
+		<input type="hidden" name="lng">
+
+		{% if iter.has_id %}
+			{{ html_nonce('update', iter) }}
+		{% else %}
+			{{ html_nonce('create', iter) }}
+		{% endif %}
+
+		<div>
+			{{ html_label(__('Label'), 'label', errors=errors, required=true) }}
+			{{ html_input_text('label', iter, required='required', placeholder=__('Bijv. op de lantaarnpaal')) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Boodschap'), 'omschrijving', errors=errors, required=true) }}
+			{{ html_textarea_field('omschrijving', iter) }}
+		</div>
+
+		<div>
+			<label for="sticker-location">{{ __('Locatie') }} <small>{{ __('Sleep of klik met de rechter muisknop om de marker te plaatsen') }}</small></label>
+			<div class="sticker-location-picker">
+				<div class="sticker-location-map"></div>
+			</div>
+		</div>
+
+		<div>
+			<button type="submit" class="button">{{ __('Zet sticker op kaart') }}</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

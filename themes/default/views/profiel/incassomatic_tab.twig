@@ -1,0 +1,59 @@
+{% extends 'tab.twig' %}
+
+{% set active_tab = 'incassomatic' %}
+
+{% block tab_content %}
+<section class="aligned-list-section">
+	<h2>{{ __('Incass-o-matic') }}</h2>
+	<h4>{{ __('Contract') }}</h4>
+	<p>{{ __('Getekend en actief sinds %s.')|format(contract.start_datum|date('j-n-Y')) }}</p>
+</section>
+
+<section class="aligned-list-section">
+	<p>{{ __("Je laatste vijftien incasso's.") }}</p>
+	<table class="full-width-table incassomatic">
+	{% if incassos_per_batch[null] is defined %}
+		<thead>
+			<tr>
+				<th colspan="3"><h4>{{ __('Nog te incasseren') }}</h4></th>
+			</tr>
+			<tr>
+				<th>{{ __('Omschrijving') }}</th>
+				<th class="numeric">{{ __('Prijs') }}</th>
+				<th class="timestamp">{{ __('Datum') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for incasso in incassos_per_batch[null] %}
+			<tr>
+				<td>{{ incasso.omschrijving }}</td>
+				<td class="numeric">&euro;&nbsp;{{ '%0.2f'|format(incasso.bedrag / 100) }}</td>
+				<td class="timestamp"><time datetime="{{ incasso.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ incasso.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ incasso.aangemaakt|date_relative }}</time></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	{% endif %}
+	{% for batch_id, incassos in incassos_per_batch if batch_id is not null %}
+		<thead>
+			<tr>
+				<th><h4>{{ __('Incassobatch %d')|format(batch_id) }}</h4></th>
+			</tr>
+			<tr>
+				<th>{{ __('Omschrijving') }}</th>
+				<th class="numeric">{{ __('Prijs') }}</th>
+				<th class="timestamp">{{ __('Datum') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for incasso in incassos %}
+			<tr>
+				<td>{{ incasso.omschrijving }}</td>
+				<td class="numeric">&euro;&nbsp;{{ '%0.2f'|format(incasso.bedrag / 100) }}</td>
+				<td class="timestamp"><time datetime="{{ incasso.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ incasso.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ incasso.aangemaakt|date_relative }}</time></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	{% endfor %}
+	</table>
+</section>
+{% endblock %}

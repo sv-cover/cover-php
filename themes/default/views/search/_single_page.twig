@@ -1,0 +1,2 @@
+<h2><a href="{{ result.absolute_url|e('html_attr') }}">{{ result.title }}</a></h2>
+<p>{{ result.locale_content|strip_markup|e('html')|excerpt(query_parts, 50)|raw }}</p>

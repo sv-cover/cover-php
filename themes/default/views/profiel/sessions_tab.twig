@@ -1,0 +1,37 @@
+{% extends 'tab.twig' %}
+
+{% set active_tab = 'sessions' %}
+
+{% block tab_content %}
+<section>
+	<h2>{{ __('Sessies') }}</h2>
+	<p>{{ __('Hieronder staan alle sessies die voor jouw account nog open staan.') }}</p>
+	<form method="post" action="sessions.php?view=sessions&amp;member_id={{ iter.id|e('url') }}">
+		{{ html_nonce('delete_sessions') }}
+		{{ html_input_hidden('referer', 'profiel.php?lid=%d&view=sessions'|format(iter.id|e('url'))) }}
+		<table class="full-width-table">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th>{{ __('IP-adres') }}</th>
+					<th>{{ __('Applicatie') }}</th>
+					<th>{{ __('Ingelogd') }}</th>
+					<th>{{ __('Laatst actief') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for session in sessions %}
+				<tr>
+					<td><input type="checkbox" name="sessions[]" value="{{ session.id|e('html_attr') }}"></td>
+					<td>{{ session.ip_address }}</td>
+					<td>{{ sessions_view.format_application(session.application)|raw }}</td>
+					<td>{{ sessions_view.format_time(session.created_on)|raw }}</td>
+					<td>{{ sessions_view.format_time(session.last_active_on)|raw }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<button type="submit" class="button" name="destroy" value="yes">{{ __('Sluit geselecteerde sessies') }}</button>
+	</form>
+</section>
+{% endblock %}

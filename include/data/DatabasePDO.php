@@ -3,6 +3,7 @@
   * This class provides a postgresql backend with commonly used functions
   * like insert, update and delete
   */
+
 class DatabasePDO
 {
 	private $resource;
@@ -12,6 +13,8 @@ class DatabasePDO
 	private $last_insert_table = null;
 
 	public $history = null;
+
+	private $transaction_counter = 0;
 
 	/**
 	  * Create new postgresql database
@@ -51,6 +54,8 @@ class DatabasePDO
 		
 		/* Open connection */
 		$this->resource = new PDO('pgsql:' . implode(';', $params));
+
+		$this->resource->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$this->resource->exec("SET NAMES 'UTF-8'; SET DateStyle = 'ISO, DMY'; SET bytea_output=escape");
 		
@@ -92,9 +97,6 @@ class DatabasePDO
 				'duration' => $duration
 			);
 
-		if ($handle === false)
-			throw new RuntimeException('Query failed: ' . $this->get_last_error());
-			
 		/* Fetch all the rows */
 		$this->last_result = $handle->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
 
@@ -178,7 +180,7 @@ class DatabasePDO
 	  * @literals optional; the fields that should be used literally in 
 	  * the query
 	  */
-	function insert($table, $values, $literals = null) {
+	function insert($table, $values) {
 		if (!$this->resource) {
 			return false;
 		}
@@ -197,16 +199,11 @@ class DatabasePDO
 
 			$k .= '"' . $keys[$i] . '"';
 
-			if ($values[$keys[$i]] === null)
-				$v .= 'NULL';
-			elseif ($literals && in_array($keys[$i], $literals))
-				$v .= $values[$keys[$i]];
-			else
-				$v .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
+			$v .= $this->_encode_value($values[$keys[$i]]);
 		}
 
 		$query = $query . ' ' . $k . ') ' . $v . ');';
-		
+
 		/* Execute query */
 		$this->query($query);
 		
@@ -238,7 +235,7 @@ class DatabasePDO
 	  *
 	  * @result true if the update was successful, false otherwise 
 	  */
-	function update($table, $values, $condition, $literals = []) {
+	function update($table, $values, $condition) {
 		if (!$this->resource)
 			return false;
 
@@ -255,14 +252,11 @@ class DatabasePDO
 				$k .= ', ';
 
 			/* Add <key>= */
-			$k .= '"' . $keys[$i] . '"=';
-
-			if ($values[$keys[$i]] === null)
-				$k .= 'NULL';
-			elseif ($literals && in_array($keys[$i], $literals))
-				$k .= $values[$keys[$i]];
-			else
-				$k .= "'" . $this->escape_string($values[$keys[$i]]) . "'";
+			try {
+				$k .= sprintf('"%s"=%s', $keys[$i], $this->_encode_value($values[$keys[$i]]));
+			} catch (InvalidArgumentException $e) {
+				throw new InvalidArgumentException("Cannot encode the value of field '{$keys[$i]}'", null, $e);
+			}
 		}
 
 		$query .= $k;
@@ -275,6 +269,24 @@ class DatabasePDO
 		$this->query($query);
 
 		return $this->last_affected;
+	}
+
+	private function _encode_value($value)
+	{
+		if ($value === null)
+			return 'NULL';
+		elseif ($value instanceof DateTime)
+			return sprintf("'%s'", $value->format('Y-m-d H:i:s'));
+		elseif ($value instanceof DatabaseLiteral)
+			return $value->toSQL();
+		elseif (is_int($value))
+			return sprintf('%d', $value);
+		elseif (is_bool($value))
+			return $value ? '1' : '0';
+		elseif (is_string($value))
+			return sprintf("'%s'",  $this->escape_string($value));
+		else
+			throw new InvalidArgumentException('Unsupported datatype ' . gettype($value));
 	}
 
 	/**
@@ -323,7 +335,7 @@ class DatabasePDO
 	  *
 	  * @result the number of affected rows
 	  */
-	function get_affected_rows() {
+	public function get_affected_rows() {
 		if (!$this->resource)
 			return;
 
@@ -341,5 +353,21 @@ class DatabasePDO
 	public function write_blob($data)
 	{
 		return substr($this->resource->quote(stream_get_contents($data), PDO::PARAM_LOB), 1, -1);
+	}
+
+	public function beginTransaction()
+	{
+		if ($this->transaction_counter++ === 0)
+			$this->resource->beginTransaction();
+
+
+		// TODO: Maybe use SAVEPOINT to make nested transactions actually support rollback
+		// See https://www.postgresql.org/docs/9.1/static/sql-savepoint.html
+	}
+
+	public function commit()
+	{
+		if (--$this->transaction_counter === 0)
+			$this->resource->commit();
 	}
 }

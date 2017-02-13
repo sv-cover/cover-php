@@ -1,0 +1,22 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Fotoboek verwijderen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Fotoboek verwijderen') }}</h1>
+<div class="messageBox">
+	<form method="post" action="fotoboek.php?view=delete_book&amp;book={{ iter.id }}" class="vertical-form delete-photobook-form">
+		{{ html_nonce('delete', iter) }}
+		<div>
+			<p>{{ __('Weet je heel zeker dat je het fotoboek <em>%s</em> wil verwijderen?')|format(iter.titel|e)|raw }}</p>
+			{{ html_label(__('Typ om dit fotoboek te verwijderen de naam van het fotoboek over ter bevestiging'), 'confirm_delete', errors=errors, required=true) }}
+			{{ html_input_text('confirm_delete', null, errors=errors, required=true) }}
+		</div>
+		
+		<div>
+			<button type="submit" class="button">{{ __('Verwijder fotoboek') }}</button>
+			<a href="fotoboek.php?book={{iter.parent.id}}#book_{{iter.id}}">{{ __('Terug naar fotoboek') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

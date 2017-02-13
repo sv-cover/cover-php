@@ -263,22 +263,32 @@
 			throw new \InvalidArgumentException('$params has to behave like an array');
 
 		$callback =  function($match) use ($params) {
-			// If this key does not exist, just return the matched pattern
-			if (!isset($params[$match[1]]))
-				return $match[0];
+			$path = explode('[', $match[1]);
 
-			// Find the value for this key
-			$value = $params[$match[1]];
+			// remove ] from all 1..n components
+			for ($i = 1; $i < count($path); ++$i)
+				$path[$i] = substr($path[$i], 0, -1);
+
+			// Step 0
+			$value = $params;
+
+			foreach ($path as $step) {
+				if (isset($value[$step])) {
+					$value = $value[$step];
+				} else {
+					$value = null;
+					break;
+				}
+			}
 
 			// If there is a modifier, apply it
-			if (isset($match[2])) {
+			if (isset($match[2]))
 				$value = call_user_func($match[2], $value);
-			}
 
 			return $value;
 		};
 
-		return preg_replace_callback('/\$([a-z][a-z0-9_]*)(?:\|([a-z_]+))?\b/i', $callback, $format);
+		return preg_replace_callback('/\$([a-z][a-z0-9_]*(?:\[[a-z0-9_]+\])*)(?:\|([a-z_]+))?/i', $callback, $format);
 	}
 
 	function optional($value)
@@ -358,11 +368,15 @@
 	
 	/** @group Functions
 	  */
-	function agenda_time_for_display($iter, $field) {
-		if ($iter->get($field . 'uur') == 0 && $iter->get($field . 'minuut') == 0)
+	function agenda_time_for_display(DataIterAgenda $iter, $field)
+	{
+		$hour = intval($iter[$field . '_datetime']->format('G'), 10);
+		$minute = intval($iter[$field . '_datetime']->format('i'), 10);
+
+		if ($hour == 0 && $minute == 0)
 			return '';
 		else
-			return sprintf('%02d:%02d', $iter->get($field . 'uur'), $iter->get($field . 'minuut'));
+			return sprintf('%02d:%02d', $hour, $minute);
 	}
 
 	/** @group Functions
@@ -371,12 +385,13 @@
 	  *
 	  * @result a string ready for display
 	  */
-	function agenda_period_for_display($iter) {
+	function agenda_period_for_display(DataIterAgenda $iter)
+	{
 		// If there is no till date, leave it out
 		if (!$iter->get('tot') || $iter->get('tot') == $iter->get('van')) {
 			
 			// There is no time specified
-			if ($iter->get('vanuur') + 0 == 0)
+			if ($iter->get('van_datetime')->format('G') == 0)
 				$format = __('$from_dayname $from_day $from_month');
 			else
 				$format = __('$from_dayname $from_day $from_month, $from_time');
@@ -389,22 +404,10 @@
 			$format = __('$from_dayname $from_day $from_month, $from_time tot $till_time');
 		}
 
-		$days = get_days();
-		$months = get_months();
-		
-		return format_string($format, array(
-			'from_dayname' => $days[$iter->get('vandagnaam')],
-			'from_day' => $iter->get('vandatum'),
-			'from_month' => $months[$iter->get('vanmaand')],
-			'from_time' => agenda_time_for_display($iter, 'van'),
-			'till_dayname' => $days[$iter->get('totdagnaam')],
-			'till_day' => $iter->get('totdatum'),
-			'till_month' => $months[$iter->get('totmaand')],
-			'till_time' => agenda_time_for_display($iter, 'tot')
-		));
+		return agenda_format_period($iter, $format);
 	}
 
-	function agenda_short_period_for_display($iter)
+	function agenda_short_period_for_display(DataIterAgenda $iter)
 	{	
 		$months = get_short_months();
 
@@ -413,10 +416,10 @@
 			$format = __('vanaf $from_time');
 
 		// Not the same end date? Show the day range instead of the times
-		elseif ($iter->get('vandatum') != $iter->get('totdatum') - ($iter->get('totuur') < 10 ? 1 : 0))
+		elseif ($iter->get('van_datetime')->format('w') != $iter->get('tot_datetime')->format('w') - ($iter->get('tot_datetime')->format('G') < 10 ? 1 : 0))
 		{
 			// Not the same month? Add month name as well
-			if ($iter->get('vanmaand') != $iter->get('totmaand'))
+			if ($iter->get('van_datetime')->format('n') != $iter->get('tot_datetime')->format('n'))
 				$format = __('$from_day $from_month tot $till_day $till_month');
 			else
 				$format = __('$from_day tot $till_day $till_month');
@@ -424,12 +427,25 @@
 		else
 			$format = __('$from_time tot $till_time');
 
+		return agenda_format_period($iter, $format);
+	}
+
+	function agenda_format_period(DataIterAgenda $iter, $format)
+	{
+		$days = get_days();
+		$months = get_months();
+
+		$van = $iter['van_datetime'];
+		$tot = $iter['tot_datetime'];
+		
 		return format_string($format, array(
-			'from_day' => $iter->get('vandatum'),
-			'from_month' => $months[$iter->get('vanmaand')],
+			'from_dayname' => $days[$van->format('w')],
+			'from_day' => $van->format('d'),
+			'from_month' => $months[$van->format('n')],
 			'from_time' => agenda_time_for_display($iter, 'van'),
-			'till_day' => $iter->get('totdatum'),
-			'till_month' => $months[$iter->get('totmaand')],
+			'till_dayname' => $days[$tot->format('w')],
+			'till_day' => $tot->format('d'),
+			'till_month' => $months[$tot->format('n')],
 			'till_time' => agenda_time_for_display($iter, 'tot')
 		));
 	}
@@ -453,7 +469,7 @@
 		else
 			throw new RuntimeException("Could not find email template '$email'");
 
-		$contents = preg_replace_callback('/[A-Z]+_[A-Z_]+/', 'constant', $contents);
+		$contents = preg_replace_callback('/[A-Z]+_[A-Z_]+/', function($match) { return constant($match[0]); }, $contents);
 		
 		return format_string($contents, $data);
 	}
@@ -599,7 +615,7 @@
 			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('en') . ' ' . end($list);
 	}
 
-	function human_filesize($bytes, $decimals = 2)
+	function human_file_size($bytes, $decimals = 2)
 	{
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
 		$factor = floor((strlen($bytes) - 1) / 3);
@@ -608,6 +624,9 @@
 
 	function format_date_relative($time)
 	{
+		if (!is_int($time) && !ctype_digit($time))
+			$time = strtotime($time);
+		
 		$diff = time() - $time;
 
 		if ($diff == 0)
@@ -646,37 +665,6 @@
 			return 'http://' . $url;
 		else
 			return $url;
-	}
-	
-	/** @group Functions
-	  * Get forum post author url
-	  * @message the forum message iter
-	  * @last optional; whether or not get the last author
-	  * 
-	  * @result the url
-	  */
-	function get_author_link($message, $last = false) {
-		if ($last && $message->get('last_author_type'))
-			$field = 'last_author';
-		else
-			$field = 'author';
-
-		$type = intval($message->get($field . '_type'));
-		
-		switch ($type) {
-			case 1: /* Person */
-				return 'profiel.php?lid=' . $message->get($field);
-			break;
-			case 2: /* Commissie */
-				$commissie_model = get_model('DataModelCommissie');
-				$page = $commissie_model->get_page($message->get($field));
-				
-				if ($page !== null)
-					return 'show.php?id=' . $page;
-			break;
-		}
-		
-		return '';
 	}
 	
 	/** @group Functions
@@ -813,11 +801,11 @@
 	 * @var string ...
 	 * @return string the concatenated path
 	 */
-	function path_concat($path_component)
+	function path_concat(...$path_components)
 	{
 		$path = '';
 		
-		foreach (func_get_args() as $path_component)
+		foreach ($path_components as $path_component)
 		{
 			if (strlen($path) === 0)
 				$path .= rtrim($path_component, '/');
@@ -858,11 +846,8 @@
 		return array_slice($input, 0, $sample_size);
 	}
 
-	function curry_call_method($method)
+	function curry_call_method($method, ...$arguments)
 	{
-		$arguments = func_get_args();
-		array_shift($arguments);
-
 		return function($object) use ($method, $arguments) {
 			return call_user_func_array([$object, $method], $arguments);
 		};
@@ -894,8 +879,8 @@
 	 */
 	function send_mail_with_attachment($to, $subject, $message, $additional_headers, array $attachments)
 	{
-		$fout = popen('sendmail -t -oi', 'w');
-		
+		$fout = popen(ini_get('sendmail_path') . ' -oi', 'w');
+
 		if (!$fout)
 			throw new Exception("Could not open sendmail");
 
@@ -971,6 +956,15 @@
 		return true;
 	}
 
+	function array_find(array $elements, $test)
+	{
+		foreach ($elements as $index => $element)
+			if (call_user_func($test, $element, $index))
+				return $element;
+
+		return null;
+	}
+
 	function array_group_by($array, $key_accessor)
 	{
 		$groups = array();
@@ -984,6 +978,13 @@
 		}
 
 		return $groups;
+	}
+
+	function array_select($array, $property, $default_value = null)
+	{
+		return array_map(function($iter) use ($property, $default_value) {
+			return isset($iter[$property]) ? $iter[$property] : $default_value;
+		}, $array);
 	}
 
 	function getter($key, $default = null) {

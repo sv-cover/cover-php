@@ -1,0 +1,122 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Wijzig agendapunt') : __('Agendapunt toevoegen')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ iter.has_id ? __('Wijzig agendapunt') : __('Agendapunt toevoegen') }}</h1>
+
+<div class="messageBox">
+{% if errors %}
+	<p><span class="error">{{ __('Niet alle velden zijn goed ingevuld') }}</span></p>
+{% endif %}
+
+<form class="vertical-form" name="agenda_form" action="{{ view.get_form_action(iter) }}" method="post">
+	{% if iter.has_id %}
+		{{ html_nonce('update', iter) }}
+	{% else %}
+		{{ html_nonce('create', iter) }}
+	{% endif %}
+	
+	<div>
+		{{ html_label(__('Kop'), 'kop', errors=errors, required=true) }}
+		{{ html_input_text('kop', iter, maxlength=100) }}
+	</div>
+
+	<div>
+		{{ html_label(__('Commissie'), 'commissie', errors=errors, required=true) }}
+		{{ html_select_field('commissie', view.available_committees, iter) }}
+	</div>
+
+	<div>
+		{{ html_label(__('Begintijd'), 'van', errors=errors, required=true) }}
+		{{ html_input_datetime('van', iter, errors=errors) }}
+	</div>
+
+	<div>
+		{{ html_label(__('Eindtijd'), 'tot', errors=errors) }}
+		{{ html_input_checkbox('use_tot', iter, 'yes', id='agenda_use_tot', onclick='set_visibility(this, \'agenda_tot\')', class='field-toggle') }}
+		<div id="agenda_tot">
+			{{ html_input_datetime('tot', iter, errors=errors) }}
+		</div>
+	</div>
+
+	<div>
+		{{ html_label(__('Locatie'), 'locatie', errors=errors) }}
+		{{ html_input_checkbox('use_locatie', iter, 'yes', id='agenda_use_locatie', onclick='set_visibility(this, \'agenda_locatie\')', class='field-toggle') }}
+		<div id="agenda_locatie">
+			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='location') }}
+		</div>
+	</div>
+
+	<div>
+		{{ html_label(__('Facebook Event'), 'facebook_id', errors=errors) }}
+		{{ html_input_text('facebook_id', iter, size='20') }}
+	</div>
+	
+	<div>
+		<div class="tab-container">
+			<ul class="nav-tabs horizontal">
+				<li class="active"><a href="#beschrijving-tab">{{ __('Beschrijving') }}</a></li>
+				<li><a href="#beschrijving-preview-tab">{{ __('Voorbeeld') }}</a></li>
+			</ul>
+			<div id="beschrijving-tab" class="tab-panel">
+				{{ html_label(__('Beschrijving'), 'beschrijving', errors=errors) }}
+				{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
+			</div>
+			<div class="tab-panel" id="beschrijving-preview-tab" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
+				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+			</div>
+		</div>
+	</div>
+			
+	<div>
+		{{ html_input_checkbox('private', iter) }}
+		{{ html_label(__('Alleen zichtbaar voor leden'), 'private', errors=errors) }}
+	</div>
+	
+	<div>
+		{{ html_input_checkbox('extern', iter) }}
+		{{ html_label(__('Externe activiteit'), 'extern', errors=errors) }}
+	</div>
+				
+	<div>
+		<button type="submit" class="button">
+			{{ iter.has_id ? __('Wijzig agendapunt') : __('Plaats agendapunt') }}
+		</button>
+	</div>
+</form>
+
+<script type="text/javascript">
+	check_checkbox("agenda_use_tot", "agenda_tot");
+	check_checkbox("agenda_use_locatie", "agenda_locatie");
+	
+	function check_checkbox(box, div) {
+		var box = document.getElementById(box);
+		var div = document.getElementById(div);
+		
+		if (box.getAttribute("checked") == "checked")
+			div.style.display = "block";
+		else
+			div.style.display = "none";
+		
+	}
+
+	function set_visibility(elem, div) {
+		var div = document.getElementById(div);
+
+		if (elem.checked)
+			div.style.display = "block";
+		else
+			div.style.display = "none";
+	}
+
+	jQuery('input[name=facebook_id]').change(function(e) {
+		var expr = /^https:\/\/www\.facebook\.com\/events\/(\d+)\//;
+		var match = $(this).val().match(expr);
+
+		if (match)
+			$(this).val(match[1]);
+	});
+</script>
+</div>
+{% endblock %}

@@ -2,8 +2,25 @@
 
 require_once 'include/data/DataModel.php';
 
+class DataIterBestuur extends DataIter
+{
+	//
+	static public function fields()
+	{
+		return [
+			'id',
+			'naam',
+			'login',
+			'nocaps',
+			'page'
+		];	
+	}
+}
+
 class DataModelBesturen extends DataModel
 {
+	public $dataiter = 'DataIterBestuur';
+
 	public function __construct($db)
 	{
 		parent::__construct($db, 'besturen');

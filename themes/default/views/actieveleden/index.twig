@@ -1,0 +1,30 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Actieve leden') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Actieve leden') }}</h1>
+<div class="messageBox">
+	<p>{{ __('In alle commisses en werkgroepen samen zitten op dit moment <strong>%d</strong> actieve Coverleden.')|format(iters|length)|raw }}</p>
+<table class="full-width-table">
+	<thead>
+		<tr class="header">
+			<th>{{ __('ID') }}</th>
+			<th>{{ __('Naam') }}</th>
+			<th>{{ __('Email') }}</th>
+			<th style="text-align: right">{{ __('Commissies/Werkgroepen') }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for iter in iters %}
+			<tr>
+				<td>{{ iter.id }}</td>
+				<td><a href="{{ link('profiel.read', member=iter) }}">{{ iter|full_name_ignore_privacy }}</a></td>
+				<td>{{ iter.email }}</td>
+				<td style="text-align: right">{{ iter.commissie_count }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+{% endblock %}

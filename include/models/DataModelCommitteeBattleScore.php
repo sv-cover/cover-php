@@ -3,6 +3,16 @@ require_once 'include/data/DataModel.php';
 
 class DataIterCommitteeBattleScore extends DataIter
 {
+	static public function fields()
+	{
+		return [
+			'id',
+			'points',
+			'awarded_on',
+			'awarded_for'
+		];
+	}
+	
 	public function get_committee_ids()
 	{
 		return $this->model->db->query_column(
@@ -36,13 +46,6 @@ class DataModelCommitteeBattleScore extends DataModel
 {
 	public $dataiter = 'DataIterCommitteeBattleScore';
 
-	public $fields = [
-		'id',
-		'points',
-		'awarded_on',
-		'awarded_for'
-	];
-
 	public function __construct($db)
 	{
 		parent::__construct($db, 'committee_battle_scores');
@@ -55,8 +58,7 @@ class DataModelCommitteeBattleScore extends DataModel
 	 */
 	protected function _insert($table, DataIter $iter, $get_id = false)
 	{
-		// Let PostgreSQL set the awarded_on field. 
-		$iter->set_literal('awarded_on', 'current_timestamp');
+		$iter['awarded_on'] = new DateTime();
 
 		// _insert() will behave thanks to $this->fields not
 		// including 'committee_ids' and 'member_ids'.

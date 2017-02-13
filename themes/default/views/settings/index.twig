@@ -1,0 +1,44 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Instellingen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Instellingen') }}</h1>
+<div class="messageBox">
+	<table class="full-width-table">
+		<thead>
+			<tr>
+				<th>{{ __('Sleutel') }}</th>
+				<th colspan="2">{{ __('Waarde') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in iters %}
+				{% if user_can_read item %}
+					<tr>
+						<td>{{ item.key }}</td>
+						<td><pre>{{ item.value }}</pre></td>
+						<td style="text-align: right">
+							{% if user_can_update item %}
+								<a href="{{ controller.link_to_update(item)|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#settings-form">{{ __('Wijzig') }}</a>
+							{% endif %}
+							{% if user_can_delete item %}
+								<a href="{{ controller.link_to_delete(item)|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#delete-settings-form">{{ __('Verwijder') }}</a>
+							{% endif %}
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+		{% if user_can_create controller.new_iter %}
+		<tfoot>
+			<tr>
+				<td colspan="3">
+					<a href="{{ controller.link_to_create|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#settings-form">{{ __('Nieuwe sleutel toevoegen') }}</a>
+				</td>
+			</tr>
+		</tfoot>
+		{% endif %}
+	</table>
+</div>
+{% endblock %}

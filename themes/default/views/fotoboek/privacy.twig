@@ -1,0 +1,41 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Zichtbaarheid foto') ~ ' :: ' ~ parent() %}
+
+
+{% block content %}
+<h1>{{ __('Zichtbaarheid foto') }}</h1>
+<div class="messageBox">
+	
+	<form class="privacy-preference-form vertical-form" method="post" action="fotoboek.php?photo={{ photo.id|e('url') }}&amp;module=privacy">
+		{{ html_nonce('privacy', photo) }}
+		
+		<div class="photo">
+			<img src="{{ photo.get_url(null, 400)|e('html_attr') }}" {{ 'width="%d" height="%d"'|vformat(photo.get_scaled_size(400, 400))|raw }}>
+		</div>
+		
+		<div>
+			<label>{{ __('Zichtbaarheid foto')}}</label>
+			<ul class="option-group">
+				<li>
+					<input type="radio" id="privacy-visibility-visible" name="visibility" value="visible" {{ visibility == 'visible' ? 'checked' : ''}}>
+					<label for="privacy-visibility-visible">
+						<i class="fa fa-eye"></i>
+						{{ __('Toon in het overzicht van mij') }}
+					</label>
+				</li>
+				<li>
+					<input type="radio" id="privacy-visibility-hidden" name="visibility" value="hidden" {{ visibility == 'hidden' ? 'checked' : ''}}>
+					<label for="privacy-visibility-hidden">
+						<i class="fa fa-eye-slash"></i>
+						{{ __('Laat weg uit het overzicht van mij') }}
+					</label>
+				</li>
+			</ul>
+		</div>
+		<div>
+			<button type="submit" class="button">{{ __('Zichtbaarheid instellen') }}</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

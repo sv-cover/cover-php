@@ -25,7 +25,7 @@
 	function get_model($name)
 	{
 		static $models = array();
-		
+
 		return isset($models[$name])
 			? $models[$name]
 			: $models[$name] = create_model($name);
@@ -44,14 +44,16 @@
 		{
 			require 'include/data/DBIds.php';
 
-			$database_class = isset($dbids['easy']['class'])
-				? $dbids['easy']['class']
+			$environment = get_static_config_value('environment', 'development');
+
+			$database_class = isset($dbids[$environment]['class'])
+				? $dbids[$environment]['class']
 				: 'DatabasePDO';
 
 			require_once 'include/data/' . $database_class . '.php';
 
 			/* Create database */
-			$db = new $database_class($dbids['easy']);
+			$db = new $database_class($dbids[$environment]);
 
 			/* Enable query history if requested */
 			if (get_static_config_value('show_queries', false))

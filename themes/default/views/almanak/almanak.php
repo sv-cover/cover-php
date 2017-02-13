@@ -2,55 +2,118 @@
 	require_once 'include/member.php';
 	require_once 'include/csv.php';
 	
-	class AlmanakView extends View {
-		protected $__file = __FILE__;
-
-		function almanak_info($model, $iter) {
-			$photo = "foto.php?format=portrait&width=200&lid_id=" . $iter->get_id();
-
-			$name = member_full_name($iter, BE_PERSONAL);
-			
-			$classes = array();
-			$status = '';
-
-			switch ($iter->get('type'))
+	class AlmanakView extends View
+	{
+		public function classname(DataIterMember $member)
+		{
+			switch ($member['type'])
 			{
 				case MEMBER_STATUS_LID:
-					$classes[] = 'status-lid';
-					break;
+					return 'status-lid';
+					
+				case MEMBER_STATUS_LID_ONZICHTBAAR:
+					return 'status-onzichtbaar';
+				
+				case MEMBER_STATUS_LID_AF:
+					return 'status-lid-af';
+				
+				case MEMBER_STATUS_ERELID:
+					return 'status-erelid';
+				
+				case MEMBER_STATUS_DONATEUR:
+					return 'status-donateur';
+			}
+		}
+
+		public function status_label(DataIterMember $member)
+		{
+			switch ($member['type'])
+			{
+				case MEMBER_STATUS_LID:
+					return null;
 
 				case MEMBER_STATUS_LID_ONZICHTBAAR:
-					$classes[] = 'status-onzichtbaar';
-					$status = __('Onzichtbaar');
-					break;
+					return __('Onzichtbaar');
 
 				case MEMBER_STATUS_LID_AF:
-					$classes[] = 'status-lid-af';
-					$status = __('Lid af');
-					break;
+					return __('Lid af');
 
 				case MEMBER_STATUS_ERELID:
-					$classes[] = 'status-erelid';
-					$status = __('Erelid');
-					break;
+					return __('Erelid');
 
 				case MEMBER_STATUS_DONATEUR:
-					$classes[] = 'status-donateur';
-					$status = __('Donateur');
-					break;
+					return __('Donateur');
 			}
-			
-			return sprintf('
-				<a href="profiel.php?lid=%d" class="%s">
-					<img width="100" height="150" src="%s" alt="%s">
-					<span class="name">%s</span>
-					%s
-				</a>',
-					$iter->get('id'),
-					implode(' ', $classes),
-					markup_format_attribute($photo),
-					markup_format_attribute(sprintf(__('foto van %s'), $name)),
-					markup_format_text($name),
-					$status ? sprintf('<span class="status">(%s)</span>', markup_format_text($status)) : '');
+		}
+
+		public function render_csv($iters)
+		{
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/force-download');
+			header('Content-Disposition: attachment; filename="almanak.csv"');
+
+			$delim = ','; // Used to be ';'
+
+			// Add Unicode byte order marker for Excel
+			echo chr(239) . chr(187) . chr(191);
+
+			// print the column headers
+			echo csv_row([
+				__('id'),
+				__('voornaam'),
+				__('tussenvoegsel'),
+				__('achternaam'),
+				__('adres'),
+				__('postcode'),
+				__('woonplaats'),
+				__('email'),
+				__('geboortedatum'),
+				__('geslacht'),
+				__('telefoonnummer'),
+				__('studie'),
+				__('beginjaar'),
+				__('status')], $delim) . "\n";
+
+			foreach ($iter as $item)
+				echo csv_row([
+					$item['id'],
+					$item['voornaam'],
+					$item['tussenvoegsel'],
+					$item['achternaam'],
+					$item['adres'],
+					$item['postcode'],
+					$item['woonplaats'],
+					$item['email'],
+					$item['geboortedatum'],
+					$item['geslacht'],
+					$item['telefoonnummer'],
+					$item['studie'],
+					$item['beginjaar'],
+					$item['status']], $delim) . "\n";
+
+			exit();
+		}
+
+		public function render_index($iters = null, array $params = array())
+		{
+			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
+				array('application/json', 'text/html', '*/*'));
+
+			// Set default params for search fields in template
+			$params = array_merge([
+				'search' => '',
+				'year' => null,
+				'status' => null
+			], $params);
+
+			if ($preferred == 'application/json')
+				return json_encode(array_map(function($lid) {
+					return array(
+						'id' => $lid->get_id(),
+						'starting_year' => $lid->get('beginjaar'),
+						'name' => member_full_name($lid));
+				}, $iters));
+			else
+				return $this->twig->render('index.twig', compact('iters','params'));
 		}
 	}

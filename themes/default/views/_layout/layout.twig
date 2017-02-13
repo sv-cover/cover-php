@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=9">
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<link rel="icon" type="image/png" href="images/favicon.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">		
+		<title>{% block title %}Cover :: {{ __('Studievereniging Kunstmatige Intelligentie en Informatica, RUG') }}{% endblock %}</title>
+		
+		{% for stylesheet in view.stylesheets %}
+		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
+		{% endfor %}
+		
+		{% for script in view.scripts %}
+		<script src="{{ script }}"></script>
+		{% endfor %}
+	</head>
+	<body>
+		<div class="world">
+			<div class="header clearfix">
+				{% if global.auth.logged_in() %}
+					{% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
+					{% if agenda_items_to_moderate|length > 0 %}
+						<div class="message">
+							<a href="agenda.php?view=moderate">{{ __N(
+								'Er staat nog %d agendapunt in de wachtrij',
+								'Er staan nog %d agendapunten in de wachtrij', agenda_items_to_moderate|length) }}</a>
+						</div>
+					{% endif %}
+					{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+						<div class="message">{{ __('Je lidmaatschap is nog niet goedgekeurd door de secretaris. Tot dan is de toegang tot sommige delen van de website, zoals de oude foto\'s en lidgegevens, beperkt.') }}</div>
+					{% endif %}
+				{% endif %}
+				<div class="login">
+					{{ include('@layout/widgets/login.twig') }}
+				</div>
+				{% if date() > date('12/26') %}
+					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo_christmas.png') }}" alt="logo" style="height:auto;margin-top:-12px"></a>
+				{% else %}
+					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="logo"></a>
+					{% endif %}
+			</div>
+			<div class="topMenu clearfix">
+				{% block menu %}
+					{{ include('@layout/widgets/menu.twig') }}
+				{% endblock %}
+			</div>
+
+			{% if view.layout.promotional_header %}
+			{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
+			{% endif %}
+
+			<div class="container clearfix">
+				<div class="center column" id="contents">
+					{% block content %}{% endblock %}
+				</div> <!-- CONTENTS_TEXT -->
+					
+				<div class="menu column">
+					{{ include('@layout/widgets/agenda.twig') }}
+					
+					{{ include('@layout/widgets/poll.twig') }}
+
+					{{ include('@layout/widgets/search.twig') }}
+				</div>	
+				
+				<div class="aff column">
+					{{ include('@layout/widgets/banners.twig') }}
+				</div>
+			</div> <!-- CONTAINER -->
+
+		</div> <!-- .world -->
+
+		{% if view.layout.has_alert %}
+			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>
+		{% endif %}
+		
+		<!-- Google Analytics -->
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-12500955-1', 'auto');
+		  ga('require', 'displayfeatures');
+		  ga('send', 'pageview');
+		</script>
+
+		{% if global.db.history|length > 0 %}
+			<!--
+			Total number of queries run: {{ global.db.history|length }}
+			
+			{% for query in global.db.history %}
+				{{ "%f: %s\n\n"|format(query.duration, query.query) }}
+			{% endfor %}
+			-->
+		{% endif %}
+	</body>
+</html>
