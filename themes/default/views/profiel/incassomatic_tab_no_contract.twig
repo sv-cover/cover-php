@@ -12,7 +12,7 @@
 	<p>{{ __("Download het contract, onderteken het, en lever het in bij de penningmeester, %s, of laat het achter in het postvakje in de Coverkamer.")|e|format(treasurer_link)|raw }}</p>
 
 	<div class="center">
-		<a href="profiel.php?view=export_incassocontract" class="button large-button" target="_blank">{{ __('Download contract') }}</a>
+		<a href="profiel.php?view=export_incassocontract&amp;lid={{ iter.id|e('url') }}" class="button large-button" target="_blank">{{ __('Download contract') }}</a>
 	</div>
 
 	<p>{{ __("Zodra het contract verwerkt is kan je hier op ieder moment de incasso's hier inzien, zowel de incasso's die net zijn aangemaakt als de incasso's die al zijn afgeschreven.") }}</p>
