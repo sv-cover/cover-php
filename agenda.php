@@ -259,7 +259,8 @@
 					/* Accept agendapunt */
 
 					// If it is marked private, set that perference first.
-					$iter['private'] = isset($_POST['private_' . $iter['id']]) ? 1 : 0;
+					$iter['private'] = !empty($_POST['private_' . $iter['id']]) ? 1 : 0;
+					
 					$iter->update();
 					
 					$this->model->accept_proposal($iter);
