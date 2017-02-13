@@ -82,7 +82,11 @@ hr.colorAccent {
 	width: 100%;
 }
 
-img {border:0;}
+img {
+	border: 0;
+	-webkit-image-orientation: from-image;
+	image-orientation: from-image;
+}
 
 li.expander{
 	margin-left:-17px;
