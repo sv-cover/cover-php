@@ -102,8 +102,11 @@
 			return $out;
 		}
 
-		protected function _form_is_submitted($action, ...$args)
+		protected function _form_is_submitted($action, $args)
 		{
+			$args = func_get_args();
+			array_shift($args);
+			
 			// Turn _form_is_submitted('delete', iter) to 'delete_24'
 			$action_name = nonce_action_name($action, $args);
 
