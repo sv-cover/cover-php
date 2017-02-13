@@ -49,7 +49,9 @@ jQuery(function($) {
 	$('.hide-by-default').hide();
 
 	$(document).on('click', "a[href^='#']", function(e) {
-		$(this.href.match(/(#.+)$/)[1]).show();
+		var match = this.href.match(/(#.+)$/);
+		if (match)
+			$(match[1]).show();
 	});
 
 	$('.dropdown-button').each(function() {
