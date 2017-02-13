@@ -515,7 +515,7 @@
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 				&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 				$members = array_filter($members, function($member) {
-					return !$this->is_private($member, 'naam') || $member->get_id() == get_identity()->get('id');
+					return !$this->is_private($member, 'naam');
 				});
 
 			//'rebase' the array so PHP doesn't forget to count properly starting from zero ;)
