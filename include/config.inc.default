@@ -45,6 +45,9 @@
 			[null, 400] // size used for the thumbnails below photo and in photo books
 		),
 
+		// Enable Committee battle
+		'committee_battle' => true,
+
 		// Used for forms & XSS prevention. Generate with `openssl rand -base64 64`.
 		'nonce_salt' => null, 
 
@@ -68,5 +71,8 @@
 		// For the website calling Incassomatic to fetch the current balance and contract status.
 		'incassomatic_root' => 'https://incasso.svcover.nl/api/',
 		'incassomatic_app' => '',
-		'incassomatic_secret' => ''
+		'incassomatic_secret' => '',
+
+		// Sentry exception reporting
+		'sentry_url' => '',
 	);

@@ -37,7 +37,7 @@
 				echo $this->run_exception($e);
 			}
 			catch (TypeError $e) {
-				echo $this->run_500_stupid_programmar($e);
+				echo $this->run_exception($e);
 			}
 		}
 
@@ -80,23 +80,26 @@
 			if (!headers_sent())
 				header('Status: 500 Interal Server Error');
 
-			if (get_config_value('show_exceptions'))
-				return '<pre>' . $e . '</pre>';
-			else {
-				return __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)');
-			}
-		}
+			if (get_config_value('show_exceptions', false))
+				$out = sprintf('<pre>%s</pre>', $e);
+			else
+				$out = sprintf('<p>%s</p>', __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)'));
+			
+			if (get_config_value('sentry_url')) {
+				$client = new Raven_Client('https://927c99b077cc4ae2bc9f839aa71499ff:39ea9ce5f6e04ec4ba35aa5ff4619a4a@sentry.svcover.nl/2');
 
-		protected function run_500_stupid_programmar(TypeError $e)
-		{
-			if (!headers_sent())
-				header('Status: 500 Interal Server Error');
+				$extra = [];
 
-			if (get_config_value('show_exceptions'))
-				return '<pre>' . $e . '</pre>';
-			else {
-				return __('Sorry, een (oud) AC/DCee-lid kan voor geen meter programmeren. Als je daar vaker last van hebt, vertel het door aan de commissie (webcie@svcover.nl) zodat ze taart van die persoon kunnen eisen.');
+				if (get_auth()->logged_in()) {
+					$extra['session_id'] = get_auth()->get_session()->get('id');
+					$extra['user_id'] = get_identity()->get('id');
+				}
+
+				$event_id = $client->captureException($e, ['extra' => $extra]);
+				$out .= sprintf('<p>Sentry event id: <code>%s</code></p>', $event_id);
 			}
+
+			return $out;
 		}
 
 		protected function _form_is_submitted($action, ...$args)
