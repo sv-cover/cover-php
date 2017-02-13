@@ -401,7 +401,7 @@ function nonce_verify($nonce, $action)
 	return hash_equals($nonce, nonce_generate($action));
 }
 
-function nonce_action_name($action, array $arguments)
+function nonce_action_name($action, array $arguments = [])
 {
 	$arg_strings = array();
 

@@ -102,7 +102,7 @@
 			return $out;
 		}
 
-		protected function _form_is_submitted($action, $args)
+		protected function _form_is_submitted($action, $args = [])
 		{
 			$args = func_get_args();
 			array_shift($args);
