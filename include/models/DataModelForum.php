@@ -905,7 +905,7 @@
 		  * @throws DataIterNotFoundExcepion if there is no thread with the specified id
 		  * @return DataIterForumThread
 		  */
-		public function get_thread(int $id)
+		public function get_thread($id)
 		{
 			$row = $this->db->query_first('
 					SELECT
