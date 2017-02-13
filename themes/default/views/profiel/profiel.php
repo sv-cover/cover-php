@@ -322,9 +322,12 @@ class ProfielView extends View
 
 			fclose($fout);
 		}
+
+		if (!is_array($card->getProperties()))
+			throw new NotFoundException('This member has no public fields in their profile.');
 		
 		$card->download();
-
+		
 		return null;
 	}
 
