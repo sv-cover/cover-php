@@ -41,10 +41,10 @@
 			{% for face in photo.faces if user_can_read face %}
 			<div id="face_{{ face.id }}" class="face {{ face.lid_id or face.custom_label ? 'tagged' : 'untagged' }} {% if face.lid_id and global.identity.member and face.lid_id == global.identity.member.id %}me{% endif %}" style="{{ "left: %0.2F%%; top: %0.2F%%; width: %0.2F%%; height: %0.2F%%;"|vformat(face.position) }}"
 				{%- if user_can_delete face -%}
-					data-delete-action="{{ controller.faces_controller.link_to_delete(face) }}"
+					data-delete-action="{{ controller.faces_controller.json_link_to_delete(face) }}"
 				{%- endif -%}
 				{%- if user_can_update face -%}
-					data-update-action="{{ controller.faces_controller.link_to_update(face) }}"
+					data-update-action="{{ controller.faces_controller.json_link_to_update(face) }}"
 				{%- endif -%}
 				>
 				<!-- name label (and hidden update form) -->
