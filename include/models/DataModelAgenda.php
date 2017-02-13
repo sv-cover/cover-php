@@ -247,7 +247,7 @@
 				$current = $this->get_iter($proposal->get('replacement_for'));
 
 				// Copy everything but the item id and its update proposal data
-				foreach (array_diff($this->fields, ['id', 'replacement_for']) as $field)
+				foreach (array_diff(DataIterAgenda::fields(), ['id', 'replacement_for']) as $field)
 					$current->set($field, $proposal->get($field));
 
 				$this->update($current);
