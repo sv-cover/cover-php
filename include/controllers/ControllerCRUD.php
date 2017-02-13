@@ -199,7 +199,7 @@ class ControllerCRUD extends Controller
 		$iter = $this->new_iter();
 
 		if (!get_policy($this->model)->user_can_create($iter))
-			throw new Exception('You are not allowed to add new items.');
+			throw new UnauthorizedException('You are not allowed to add new items.');
 
 		$success = false;
 
@@ -215,7 +215,7 @@ class ControllerCRUD extends Controller
 	public function run_read(DataIter $iter)
 	{
 		if (!get_policy($this->model)->user_can_read($iter))
-			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
+			throw new UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
 
 		return $this->view()->render_read($iter);
 	}
@@ -223,7 +223,7 @@ class ControllerCRUD extends Controller
 	public function run_update(DataIter $iter)
 	{
 		if (!get_policy($this->model)->user_can_update($iter))
-			throw new Exception('You are not allowed to edit this ' . get_class($iter) . '.');
+			throw new UnauthorizedException('You are not allowed to edit this ' . get_class($iter) . '.');
 
 		$success = false;
 
@@ -239,7 +239,7 @@ class ControllerCRUD extends Controller
 	public function run_delete(DataIter $iter)
 	{
 		if (!get_policy($this->model)->user_can_delete($iter))
-			throw new Exception('You are not allowed to delete this ' . get_class($iter) . '.');
+			throw new UnauthorizedException('You are not allowed to delete this ' . get_class($iter) . '.');
 
 		$success = false;
 
