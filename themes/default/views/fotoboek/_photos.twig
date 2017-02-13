@@ -84,6 +84,10 @@ var getModal = function() {
 			if (['TEXTAREA', 'INPUT'].indexOf(e.target.nodeName) !== -1)
 				return;
 
+			// Don't prevent normal keyboard shortcuts
+			if (e.shiftKey || e.metaKey || e.ctrlKey)
+				return;
+
 			switch (e.keyCode) {
 				case 27: // escape
 					if ($modal.parent()) {
