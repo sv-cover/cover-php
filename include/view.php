@@ -124,6 +124,9 @@ class View
 				}),
 				'policies' => new TwigAccessor(function($model) {
 					return get_policy('DataModel' . $model);
+				}),
+				'config' => new TwigAccessor(function($key) {
+					return get_config_value($key);
 				})
 			]
 		];
