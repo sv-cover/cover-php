@@ -31,13 +31,22 @@
 		public function run()
 		{
 			try {
-				echo $this->run_impl();
-			}
-			catch (Exception $e) {
-				echo $this->run_exception($e);
-			}
-			catch (TypeError $e) {
-				echo $this->run_exception($e);
+				try {
+					echo $this->run_impl();
+				}
+				catch (Exception $e) {
+					echo $this->run_exception($e);
+				}
+				catch (TypeError $e) {
+					echo $this->run_exception($e);
+				}
+			} catch (Exception $e) {
+				$this->_report_exception($e);
+
+				if (get_config_value('show_exceptions'))
+					printf('<pre>%s</pre>', $e);
+
+				die('Exception during the exception?! Something went double wrong!');
 			}
 		}
 
@@ -80,26 +89,25 @@
 			if (!headers_sent())
 				header('Status: 500 Interal Server Error');
 
-			if (get_config_value('show_exceptions', false))
-				$out = sprintf('<pre>%s</pre>', $e);
-			else
-				$out = sprintf('<p>%s</p>', __('Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail de WebCie (webcie@svcover.nl)'));
-			
-			if (get_config_value('sentry_url')) {
-				$client = new Raven_Client('https://927c99b077cc4ae2bc9f839aa71499ff:39ea9ce5f6e04ec4ba35aa5ff4619a4a@sentry.svcover.nl/2');
+			$sentry_id = $this->_report_exception($e);
 
-				$extra = [];
+			return $this->view()->render('@layout/500.twig', ['exception' => $e, 'sentry_id' => $sentry_id]);
+		}
 
-				if (get_auth()->logged_in()) {
-					$extra['session_id'] = get_auth()->get_session()->get('id');
-					$extra['user_id'] = get_identity()->get('id');
-				}
+		protected function _report_exception(Exception $e) {
+			if (!get_config_value('sentry_url'))
+				return null;
 
-				$event_id = $client->captureException($e, ['extra' => $extra]);
-				$out .= sprintf('<p>Sentry event id: <code>%s</code></p>', $event_id);
+			$client = new Raven_Client('https://927c99b077cc4ae2bc9f839aa71499ff:39ea9ce5f6e04ec4ba35aa5ff4619a4a@sentry.svcover.nl/2');
+
+			$extra = [];
+
+			if (get_auth()->logged_in()) {
+				$extra['session_id'] = get_auth()->get_session()->get('id');
+				$extra['user_id'] = get_identity()->get('id');
 			}
 
-			return $out;
+			return $client->captureException($e, ['extra' => $extra]);
 		}
 
 		protected function _form_is_submitted($action, $args = [])
