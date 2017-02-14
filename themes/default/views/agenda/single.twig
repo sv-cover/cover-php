@@ -41,7 +41,7 @@
 	<!-- Facebook attendees -->
 	{% set attendees = view.attendees(iter) %}
 	{% if attendees %}
-	<ul class="event-attendees">
+	<ul class="event-attendees inline-profile-list">
 	{% for attendee in attendees %}
 		<li>
 			<a href="https://facebook.com/{{ attendee.id }}" target="_new">

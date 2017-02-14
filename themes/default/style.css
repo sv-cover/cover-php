@@ -1797,6 +1797,8 @@ ul.inline-profile-list {
 	
 	flex-direction: row-reverse;
 	flex-wrap: wrap-reverse;
+
+	font-size: 2em; /* for the inline profile list */
 }
 
 .inline-profile-list li a {
