@@ -11,23 +11,20 @@ class PolicyMailinglist implements Policy
 
 	public function user_can_read(DataIter $iter)
 	{
-		return $this->user_can_subscribe($iter) || $this->user_can_unsubscribe($iter);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY)
+			|| get_identity()->member_in_committee($iter['commissie']);
 	}
 
 	public function user_can_update(DataIter $iter)
 	{
-		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_EASY)
-			|| get_identity()->member_in_committee($iter['commissie']);
+		return $this->user_can_read($iter);
 	}
 
 	public function user_can_delete(DataIter $iter)
 	{
-		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_EASY)
-			|| get_identity()->member_in_committee($iter['commissie']);
+		return $this->user_can_read($iter);
 	}
 
 	public function user_can_subscribe(DataIterMailinglist $lijst)
