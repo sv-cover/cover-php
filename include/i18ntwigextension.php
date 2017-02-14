@@ -39,6 +39,7 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('flip', 'array_flip'),
 			new Twig_SimpleFilter('values', 'array_values'),
 			new Twig_SimpleFilter('select', 'array_select'),
+			new Twig_SimpleFilter('sum', 'array_sum'),
 			new Twig_SimpleFilter('group_by', function($iters, $property) {
 				$groups = [];
 
