@@ -876,7 +876,7 @@
 					FROM
 						forum_group_member
 					WHERE
-						guid = ' . intval($id));
+						group_id = ' . intval($id));
 			
 			return $this->_rows_to_iters($rows, 'DataIterForumGroupMember');
 		}
