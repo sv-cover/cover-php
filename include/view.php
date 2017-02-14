@@ -189,7 +189,7 @@ class View
 	public function render_401_unauthorized(UnauthorizedException $e) {
 		header('Status: 401 Unauthorized');
 		header('WWW-Authenticate: FormBased');
-		return '<h1>Unauthorized</h1><pre>' . $e->getMessage() . '</pre>';
+		return $this->render('@layout/401_unauthorized.twig', ['exception' => $e]);
 	}
 
 	public function render_404_not_found(NotFoundException $e) {
