@@ -194,12 +194,7 @@ class View
 
 	public function render_404_not_found(NotFoundException $e) {
 		header('Status: 404 Not Found');
-		$out = '<h1>Not Found</h1><pre>' . $e->getMessage() . '</pre>';
-
-		if (get_config_value('show_exceptions', false))
-			$out .= sprintf('<pre>%s</pre>', $e);
-
-		return $out;
+		return $this->render('@layout/404_not_found.twig', ['exception' => $e]);
 	}
 
 	public function render($template_file, array $data = array())
