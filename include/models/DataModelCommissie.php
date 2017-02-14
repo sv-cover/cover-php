@@ -201,6 +201,9 @@
 		{
 			if ($iter->has_value('vacancies') && !$iter->get('vacancies'))
 				$iter->set('vacancies', null);
+
+			if ($iter->has_value('hidden'))
+				$iter->set('hidden', (int) $iter->get('hidden'));
 			
 			return parent::update($iter);
 		}
