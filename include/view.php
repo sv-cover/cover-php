@@ -194,7 +194,12 @@ class View
 
 	public function render_404_not_found(NotFoundException $e) {
 		header('Status: 404 Not Found');
-		return '<h1>Not Found</h1><pre>' . $e->getMessage() . '</pre>';
+		$out = '<h1>Not Found</h1><pre>' . $e->getMessage() . '</pre>';
+
+		if (get_config_value('show_exceptions', false))
+			$out .= sprintf('<pre>%s</pre>', $e);
+
+		return $out;
 	}
 
 	public function render($template_file, array $data = array())
