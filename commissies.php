@@ -18,7 +18,7 @@ class ControllerCommissies extends ControllerCRUD
 
 	protected function _index()
 	{
-		return $this->model->get(false);
+		return $this->model->get(DataModelCommissie::TYPE_COMMITTEE);
 	}
 
 	protected function _create(DataIter $iter, array $data, array &$errors)
@@ -58,11 +58,9 @@ class ControllerCommissies extends ControllerCRUD
 		if (!get_policy($this->model)->user_can_read($iter))
 			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
 
-		// restrict the model to only this type (either committees or working groups)
-		// to allow the navigation around the page to match
-		$this->model->type = $iter['type'];
-		
-		return $this->view()->render_read($iter);
+		$iters = $this->model->get($iter['type']);
+
+		return $this->view()->render_read($iter, ['iters' => $iters]);
 	}
 
 	/**
@@ -83,9 +81,7 @@ class ControllerCommissies extends ControllerCRUD
 	 */
 	public function run_working_groups()
 	{
-		$this->model->type = DataModelCommissie::TYPE_WORKING_GROUP;
-
-		$iters = $this->model->get(false);
+		$iters = $this->model->get(DataModelCommissie::TYPE_WORKING_GROUP);
 
 		return $this->view->render_working_groups($iters); 
 	}

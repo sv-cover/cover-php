@@ -13,12 +13,11 @@ class ControllerCommitteeBattle extends ControllerCRUD
 		$this->view = View::byName('committeebattle', $this);
 
 		$this->committee_model = clone get_model('DataModelCommissie');
-		$this->committee_model->type = DataModelCommissie::TYPE_COMMITTEE;
 	}
 
 	protected function _index()
 	{
-		$committees = $this->committee_model->get(false);
+		$committees = $this->committee_model->get(DataModelCommissie::TYPE_COMMITTEE);
 
 		$scores = $this->model->get_scores_for_committees($committees);
 

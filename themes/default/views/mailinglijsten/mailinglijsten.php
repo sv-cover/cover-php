@@ -7,7 +7,7 @@ class MailinglijstenView extends CRUDView
 	public function committee_options()
 	{
 		$commissie_model = get_model('DataModelCommissie');
-		$commissies = $commissie_model->get();
+		$commissies = $commissie_model->get(null, true);
 		$values = array();
 
 		foreach ($commissies as $commissie)

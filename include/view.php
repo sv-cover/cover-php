@@ -264,7 +264,7 @@ class CRUDView extends View
 		}
 	}
 
-	public function render_read(DataIter $iter)
+	public function render_read(DataIter $iter, array $extra = [])
 	{
 		switch ($this->_get_preferred_response())
 		{
@@ -272,7 +272,7 @@ class CRUDView extends View
 				return $this->_send_json_single($iter);
 
 			default:
-				return $this->render('single.twig', compact('iter'));
+				return $this->render('single.twig', array_merge($extra, compact('iter')));
 		}
 	}
 

@@ -116,7 +116,7 @@ class ForumView extends View
 		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_EASY))
-			$committee_ids = array_select($committee_model->get(), 'id');
+			$committee_ids = array_select($committee_model->get(null, true), 'id');
 		else
 			$committee_ids = $member['committees'];
 

@@ -86,9 +86,7 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 	if (!preg_match('/@svcover\.nl$/i', $from))
 		return RETURN_NOT_ALLOWED_NOT_COVER;
 
-	$committee_model->type = $destinations[$to];
-
-	$committees = $committee_model->get(false); // Get all committees of that type, not including hidden committees (such as board)
+	$committees = $committee_model->get($destinations[$to]); // Get all committees of that type, not including hidden committees (such as board)
 
 	foreach ($committees as $committee)
 	{

@@ -224,9 +224,8 @@ class LayoutViewHelper
 		// }, $committees));
 
 		$committee_model = get_model('DataModelCommissie');
-		$committee_model->type = DataModelCommissie::TYPE_COMMITTEE;
-
-		$committees = $committee_model->get(false);
+		
+		$committees = $committee_model->get(DataModelCommissie::TYPE_COMMITTEE);
 
 		$committee_photos = array_map(getter('thumbnail'), $committees);
 		$committee_photos = array_values(array_filter($committee_photos));

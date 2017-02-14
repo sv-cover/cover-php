@@ -120,8 +120,6 @@
 		const TYPE_COMMITTEE = 1;
 		const TYPE_WORKING_GROUP = 2;
 
-		public $type = null;
-		
 		public $dataiter = 'DataIterCommissie';
 
 		public $fields = array(
@@ -152,15 +150,15 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function get($include_hidden = true)
+		public function get($type = null, $include_hidden = false)
 		{
 			$conditions = [];
 
 			if (!$include_hidden)
 				$conditions['hidden__ne'] = 1;
 
-			if ($this->type !== null)
-				$conditions['type'] = $this->type;
+			if ($type !== null)
+				$conditions['type'] = $type;
 
 			return $this->find($conditions);
 		}
@@ -172,9 +170,6 @@
 			
 			if (empty($iter['login']))
 				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
-
-			if ($this->type !== null)
-				$iter['type'] = $this->type;
 
 			$iter['nocaps'] = $iter['naam'];
 			
@@ -480,12 +475,12 @@
 			return $this->_rows_to_iters($this->db->query($query));
 		}
 
-		public function get_random()
+		public function get_random($type = null)
 		{
 			$conditions = "c.hidden <> 1";
 
-			if ($this->type !== null)
-				$conditions .= sprintf(" AND type = %d", $this->type);
+			if ($type !== null)
+				$conditions .= sprintf(" AND type = %d", $type);
 
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c

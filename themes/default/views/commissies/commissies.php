@@ -41,11 +41,9 @@ class CommissiesView extends CRUDView
 		return $activiteiten;
 	}
 
-	public function get_navigation(DataModelCommissie $model, DataIterCommissie $iter)
+	public function get_navigation(array $committees, DataIterCommissie $iter)
 	{
-		$committees = $model->get(false);
-
-		$committees = array_filter($committees, [get_policy($model), 'user_can_read']);
+		$committees = array_filter($committees, [get_policy('DataModelCommissie'), 'user_can_read']);
 
 		$current_index = array_usearch($iter, $committees,
 			function($a, $b) { return $a->get_id() == $b->get_id(); });

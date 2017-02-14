@@ -24,9 +24,7 @@ class CommitteeBattleView extends CRUDView
 	public function committee_options()
 	{
 		$model = get_model('DataModelCommissie');
-		$model->type = DataModelCommissie::TYPE_COMMITTEE;
-
-		return $model->get(false);
+		return $model->get(DataModelCommissie::TYPE_COMMITTEE);
 	}
 
 	public function active_member_options()
@@ -40,8 +38,10 @@ class CommitteeBattleView extends CRUDView
 		);
 	}
 
-	public function render_committee(DataIterCommissie $iter, $scores, DataModelCommissie $committee_model)
+	public function render_committee(DataIterCommissie $iter, array $scores, DataModelCommissie $committee_model)
 	{
-		return $this->render('committee.twig', compact('iter', 'scores', 'committee_model'));
+		$committees = $committee_model->get(DataModelCommissie::TYPE_COMMITTEE);
+		
+		return $this->render('committee.twig', compact('iter', 'scores', 'committee_model', 'committees'));
 	}
 }

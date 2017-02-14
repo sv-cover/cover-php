@@ -28,13 +28,13 @@
 			return $this->twig->render('index.twig', compact('iters', 'months', 'days', 'show_year'));
 		}
 
-		public function render_read(DataIter $iter)
+		public function render_read(DataIter $iter, array $extra = [])
 		{
 			$mutations = array_filter($iter->get_proposals(), [$this->controller->policy, 'user_can_read']);
 
 			$mutation = count($mutations) > 0 ? current($mutations) : null;
 
-			return $this->twig->render('single.twig', compact('iter', 'mutation'));
+			return $this->twig->render('single.twig', array_merge(compact('iter', 'mutation'), $extra));
 		}
 
 		public function render_moderate($iters, $highlighted_id)
@@ -103,7 +103,7 @@
 			$model = get_model('DataModelCommissie');
 
 			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
-				foreach ($model->get() as $commissie)
+				foreach ($model->get(null, true) as $commissie)
 					$commissies[$commissie->get_id()] = $commissie->get('naam');
 			else
 				foreach (get_identity()->member()->get('committees') as $commissie)
