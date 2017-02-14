@@ -44,6 +44,27 @@
 			$this->set('author_id', $author_id);
 			$this->set('author_type', $author_type);
 		}
+
+		public function is_author(IdentityProvider $identity)
+		{
+			switch ($this['author_type'])
+			{
+				case DataModelForum::TYPE_PERSON:
+					return $this['author_id'] === $identity->get('id');
+
+				case DataModelForum::TYPE_COMMITTEE:
+					return in_array($this['author_id'], $identity->get('committees', []));
+
+				case DataModelForum::TYPE_GROUP:
+					return $this->model->get_group($this['author_id'])->is_member($identity);
+
+				case DataModelForum::TYPE_EVERYONE:
+					return true;
+
+				default:
+					throw new LogicException('Unknown author type');
+			}
+		}
 	}
 
 	class DataIterForum extends DataIter
@@ -340,6 +361,35 @@
 			return [
 				'id',
 				'name'
+			];
+		}
+
+		public function get_members()
+		{
+			return $this->model->get_group_members($this);
+		}
+
+		public function is_member(IdentityProvider $identity)
+		{
+			foreach ($this['members'] as $member)
+				if ($member->is_author($identity))
+					return true;
+
+			return false;
+		}
+	}
+
+	class DataIterForumGroupMember extends DataIter
+	{
+		use UnifiedAuthor;
+
+		static public function fields()
+		{
+			return [
+				'id',
+				'group_id',
+				'author_type',
+				'author_id'
 			];
 		}
 	}
@@ -868,7 +918,7 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function get_group_members($id)
+		public function get_group_members(DataIterForumGroup $group)
 		{
 			$rows = $this->db->query('
 					SELECT
@@ -876,7 +926,7 @@
 					FROM
 						forum_group_member
 					WHERE
-						group_id = ' . intval($id));
+						group_id = ' . intval($group['id']));
 			
 			return $this->_rows_to_iters($rows, 'DataIterForumGroupMember');
 		}

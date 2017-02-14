@@ -610,6 +610,9 @@ class ControllerForum extends Controller
 	
 	public function run_forum_index(DataIterForum $forum)
 	{
+		if (!get_policy($forum)->user_can_read($forum))
+			throw new UnauthorizedException('You are not allowed to read this forum');
+
 		if (get_identity()->member())
 			$this->model->set_forum_session_read($forum, get_identity()->member());
 		
@@ -637,6 +640,9 @@ class ControllerForum extends Controller
 	
 	public function run_thread_index(DataIterForumThread $thread)
 	{
+		if (!get_policy($thread)->user_can_read($thread))
+			throw new UnauthorizedException('You are not allowed to read this thread');
+
 		if ($member = get_identity()->member())
 		{
 			$this->model->set_forum_session_read($thread['forum'], $member);
@@ -784,6 +790,9 @@ class ControllerForum extends Controller
 		$poll_model = get_model('DataModelPoll');
 
 		$poll = $poll_model->from_thread($thread);
+
+		if (!get_policy($poll)->user_can_vote($poll))
+			throw new UnauthorizedException('You are not allowed to cast your vote (again) for this poll');
 
 		if ($this->_form_is_submitted('poll_vote', $poll))
 		{
