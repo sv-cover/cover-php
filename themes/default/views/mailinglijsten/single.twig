@@ -48,10 +48,11 @@
 					{% else %}
 					<td><label for="{{ view.uid(subscription) }}">{{ subscription.naam }}</label></td>
 					{% endif %}
-					<td>{{ subscription.email }}</td>
 					{% if subscription.lid_id %}
+					<td>{{ subscription.lid.is_private('email') ? __('Onbekend') : subscription.email }}</td>
 					<td><a href="profiel.php?lid={{ subscription.lid_id }}">{{ __('Profiel') }}</a></td>
 					{% else %}
+					<td>{{ subscription.email }}</td>
 					<td></td>
 					{% endif %}
 				</tr>
