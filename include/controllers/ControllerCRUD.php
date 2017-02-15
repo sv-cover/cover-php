@@ -281,9 +281,18 @@ class ControllerCRUD extends Controller
 
 		$view = str_replace('-', '_', $view);
 
-		if (!method_exists($this, 'run_' . $view))
-			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+		try {
+			$method = new ReflectionMethod($this, 'run_' . $view);
 
-		return call_user_func_array([$this, 'run_' . $view], [$iter]);
+			if ($method->getNumberOfRequiredParameters() > 1)
+				throw new LogicException('trying to call run_' . $view . ' which requires more than one argument');
+
+			if ($method->getNumberOfRequiredParameters() === 1 && $iter === null)
+				throw new NotFoundException($view . ' requires an iterator, but none was specified');
+
+			return $method->invoke($this, $iter);
+		} catch (ReflectionException $e) {
+			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+		}
 	}
 }
