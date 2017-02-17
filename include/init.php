@@ -31,11 +31,11 @@
 	else
 		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE ^ E_DEPRECATED ^ E_STRICT);
 
+	require_once 'include/sentry.php';
 	require_once 'include/functions.php';
 	require_once 'include/i18n.php';
 	require_once 'include/constants.php';
 	require_once 'include/policies/policy.php';
-	require_once 'include/sentry.php';
 
 	date_default_timezone_set('Europe/Amsterdam');
 
@@ -45,9 +45,9 @@
 	/* Initialize session */
 	session_start();
 
-	init_i18n();
-
 	init_sentry();
+
+	init_i18n();
 
 	if (get_config_value('show_queries', false))
 		get_db()->history = [];

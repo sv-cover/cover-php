@@ -12,19 +12,12 @@ function sentry_get_client()
 	return $client ? $client : null;
 }
 
-function sentry_report_exception(Exception $e)
+function sentry_report_exception(Exception $e, $extra = [])
 {
 	$client = sentry_get_client();
 
 	if ($client === null)
 		return null;
-
-	$extra = [];
-
-	if (get_auth()->logged_in()) {
-		$extra['session_id'] = get_auth()->get_session()->get('id');
-		$extra['user_id'] = get_identity()->get('id');
-	}
 
 	return $client->captureException($e, ['extra' => $extra]);
 }
@@ -35,6 +28,21 @@ function init_sentry()
 
 	if (!$client)
 		return;
+
+	$client->tags_context([
+		'locale' => i18n_get_locale()
+	]);
+
+	if (get_auth()->logged_in()) {
+		$client->user_context([
+			'id' => get_identity()->get('id'),
+			'email' => get_identity()->get('email')
+		]);
+
+		$client->extra_context([
+			'session_id' => get_auth()->get_session()->get('id')
+		]);
+	}
 
 	// We already take care of the exceptions ourselves, and use our
 	// own error handler to turn warnings etc. into exceptions.
