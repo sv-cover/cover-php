@@ -284,13 +284,16 @@ class DataModelMailinglist extends DataModel
 
 	public function member_can_access_archive(DataIterMailinglist $lijst)
 	{
-		if (!logged_in())
+		if (!get_auth()->logged_in())
 			return false;
 
 		if ($lijst->bevat_lid(get_identity()->member()))
 			return true;
 
 		if (get_identity()->member_in_committee($lijst['commissie']))
+			return true;
+
+		if (get_identity()->member_in_committee(COMMISSIE_EASY))
 			return true;
 
 		return false;
