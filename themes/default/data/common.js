@@ -83,7 +83,7 @@ jQuery(function($) {
 		var $target = null;
 
 		if ($(this).data('placement-selector') == 'modal') {
-			var $modal = $('<div class="modal">'),
+			var $modal = $('<div class="modal" tabindex="0">'),
 				$modalWindow = $('<div class="window">').appendTo($modal),
 				$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
 
@@ -96,6 +96,8 @@ jQuery(function($) {
 			// need to keep track of how many popups are stacked before
 			// removing that class again.
 			$modal.insertBefore($('.world'));//.delay(100).addClass('')
+
+			$modal.focus();
 
 			// Close the modal on clicking the close button
 			$closeButton.on('click', function(e) {
