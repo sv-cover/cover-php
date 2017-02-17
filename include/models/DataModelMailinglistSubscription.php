@@ -185,15 +185,24 @@ class DataModelMailinglistSubscription extends DataModel
 
 	public function get_reach(DataIterMailinglist $lijst, $partition_by = null)
 	{
-		if ($partition_by !== null && !DataIterMember::has_field($partition_by))
-			throw new InvalidArgumentException("Invalid partition_by field: $partition_by not in DataIterMember::fields()");
+		if ($partition_by === null)
+			$partition_field = 'NULL';
+
+		elseif ($partition_by == 'leeftijd')
+			$partition_field = '(EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM l.geboortedatum))';
+
+		else {
+			if (!DataIterMember::has_field($partition_by))
+				throw new InvalidArgumentException("Invalid partition_by field: $partition_by not in DataIterMember::fields()");
+			$partition_field = 'l.' . $partition_by;
+		}
 
 		switch ($lijst['type'])
 		{
 			case DataModelMailinglist::TYPE_OPT_IN:
 				$rows = $this->db->query(sprintf('
 					SELECT
-						COALESCE(%s, -1) as partition_group,
+						cast(%s as text) as partition_group,
 						COUNT(m.abonnement_id) as cnt
 					FROM
 						mailinglijsten_abonnementen m
@@ -205,7 +214,7 @@ class DataModelMailinglistSubscription extends DataModel
 						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 					GROUP BY
 						partition_group',
-					$partition_by !== null ? ('l.' . $partition_by) : 'NULL',
+					$partition_field,
 					$lijst['id'],
 					MEMBER_STATUS_LID_AF));
 				break;
@@ -218,7 +227,7 @@ class DataModelMailinglistSubscription extends DataModel
 						FROM
 						(
 							SELECT
-								COALESCE(%s, -1) as partition_group,
+								CAST(%s as text) as partition_group,
 								COUNT(l.id) as cnt
 							FROM
 								leden l
@@ -231,7 +240,7 @@ class DataModelMailinglistSubscription extends DataModel
 								partition_group
 							UNION
 							SELECT
-								COALESCE(%1$s, -1) as partition_group,
+								CAST(%1$s as text) as partition_group,
 								COUNT(g.abonnement_id)
 							FROM
 								mailinglijsten_abonnementen g
@@ -245,7 +254,7 @@ class DataModelMailinglistSubscription extends DataModel
 						) u
 						GROUP BY
 							partition_group',
-					$partition_by !== null ? ('l.' . $partition_by) : 'NULL',
+					$partition_field,
 					$lijst['id'],
 					MEMBER_STATUS_LID));
 				break;
