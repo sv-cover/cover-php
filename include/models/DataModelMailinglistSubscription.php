@@ -265,7 +265,7 @@ class DataModelMailinglistSubscription extends DataModel
 
 		// If you didn't particularly partition by anything, there will only be one row :) 
 		if ($partition_by === null)
-			return (int) $rows[0]['cnt'];
+			return count($rows) === 1 ? (int) $rows[0]['cnt'] : 0;
 
 		// Convert the partition-count rows into a dictionary
 		$partitions = [];
