@@ -848,7 +848,7 @@
 		return array_slice($input, 0, $sample_size);
 	}
 
-	function curry_call_method($method, $arguments)
+	function curry_call_method($method, $arguments = [])
 	{
 		$arguments = func_get_args();
 		array_shift($arguments);
