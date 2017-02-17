@@ -233,7 +233,7 @@ class ProfielView extends View
 
 			$incassos_per_batch = array_group_by($incassos, function($incasso) { return $incasso->batch_id; });
 
-			return $this->render('incassomatic_tab.twig', compact('iter', 'treasurer_link', 'incassos_per_batch'));
+			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'incassos_per_batch'));
 		} catch (Exception $exception) {
 			sentry_report_exception($exception);
 			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
