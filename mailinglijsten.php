@@ -200,6 +200,31 @@ class ControllerMailinglijsten extends ControllerCRUD
 		else
 			return parent::run_impl();
 	}
+
+	public function run_embedded($mailinglist_id)
+	{
+		$mailing_list = ctype_digit($mailinglist_id)
+			? $this->model->get_iter($mailinglist_id)
+			: $this->model->get_iter_by_address($mailinglist_id);
+
+		if ($this->_form_is_submitted('embedded_mailinglist', $mailing_list))
+		{
+			switch ($_POST['action'])
+			{
+				case 'subscribe':
+					if (get_policy($this->model)->user_can_subscribe($mailing_list))
+						$this->subscription_model->subscribe_member($mailing_list, get_identity()->member());
+					break;
+
+				case 'unsubscribe':
+					if (get_policy($this->model)->user_can_unsubscribe($mailing_list))
+						$this->subscription_model->unsubscribe_member($mailing_list, get_identity()->member());
+					break;
+			}
+		}
+
+		return $this->view->render_embedded($mailing_list, $this->model);
+	}
 }
 
 if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {

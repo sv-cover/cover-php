@@ -1,0 +1,23 @@
+<div class="mailinglist-embed">
+	<h2>{{ list.naam }}</h2>
+	<p>
+		<em>{{ list.adres }}:</em>
+		{{ list.omschrijving|parse_markup }}
+	</p>
+	
+	<form method="post" action="">
+		{{ html_nonce('embedded_mailinglist', list) }}
+	{% if not global.auth.logged_in %}
+		<p>{{ __('Log in om je aan te kunnen melden voor deze mailinglijst.') }}</p>
+	{% elseif list.bevat_lid(global.identity.member) and global.policies.Mailinglist.user_can_unsubscribe(list) %}
+		<input type="hidden" name="action" value="unsubscribe">
+		<p>
+			<input type="submit" class="button" value="{{ __('Uitschrijven') }}">
+			{{ __('Je bent aangemeld voor deze mailinglijst.') }}
+		</p>
+	{% elseif global.policies.Mailinglist.user_can_subscribe(list) %}
+		<input type="hidden" name="action" value="subscribe">
+		<input type="submit" class="button" value="{{ __('Aanmelden') }}">
+	{% endif %}
+	</form>
+</div>

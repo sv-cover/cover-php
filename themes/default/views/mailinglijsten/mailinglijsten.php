@@ -70,4 +70,9 @@ class MailinglijstenView extends CRUDView
 	{
 		return $this->render('archive_single.twig', compact('list', 'message'));
 	}
+
+	public function render_embedded(DataIterMailinglist $list, DataModelMailinglist $model)
+	{
+		return $this->render('embedded.twig', compact('list', 'embedded'));
+	}
 }

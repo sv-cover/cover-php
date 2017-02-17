@@ -259,17 +259,17 @@
 
 		while (preg_match('/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i', $markup, $match))
 		{
-			ob_start();
 			try {
 				require_once 'mailinglijsten.php';
 				$controller = new ControllerMailinglijsten();
-				$controller->run_embedded($match[1]);
+				$content = $controller->run_embedded($match[1]);	
 			} catch (Exception $e) {
-				echo markup_format_text($e->getMessage());
+				sentry_report_exception($e);
+				$content = sprintf('<pre>%s</pre>', $e->getMessage());
 			}
-
+			
 			$placeholder = sprintf('#MAILINGLIST%d#', $count++);
-			$placeholders[$placeholder] = ob_get_clean();
+			$placeholders[$placeholder] = $content;
 
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}

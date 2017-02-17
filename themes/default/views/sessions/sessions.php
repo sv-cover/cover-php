@@ -5,7 +5,7 @@ class SessionsView extends View
 {
 	public function render_overrides($referrer = null)
 	{
-		$committees = get_model('DataModelCommissie')->get(null);
+		$committees = get_model('DataModelCommissie')->get(null, true);
 
 		return $this->twig->render('overrides.twig', compact('committees', 'referrer'));
 	}
