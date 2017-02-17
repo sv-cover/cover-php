@@ -290,7 +290,7 @@ class ControllerCRUD extends Controller
 			if ($method->getNumberOfRequiredParameters() === 1 && $iter === null)
 				throw new NotFoundException($view . ' requires an iterator, but none was specified');
 
-			return $method->invoke($this, $iter);
+			return call_user_func([$this, 'run_' . $view], $iter);
 		} catch (ReflectionException $e) {
 			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
 		}
