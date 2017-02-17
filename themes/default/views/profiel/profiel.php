@@ -235,6 +235,20 @@ class ProfielView extends View
 
 			return $this->render('incassomatic_tab.twig', compact('iter', 'treasurer_link', 'incassos_per_batch'));
 		} catch (Exception $exception) {
+			if (get_config_value('sentry_url') !== null)
+			{
+				$client = new Raven_Client(get_config_value('sentry_url'));
+
+				$extra = [];
+
+				if (get_auth()->logged_in()) {
+					$extra['session_id'] = get_auth()->get_session()->get('id');
+					$extra['user_id'] = get_identity()->get('id');
+				}
+
+				$client->captureException($e, ['extra' => $extra]);
+			}
+
 			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
 		}
 	}

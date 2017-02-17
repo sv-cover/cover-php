@@ -94,11 +94,12 @@
 			return $this->view()->render('@layout/500.twig', ['exception' => $e, 'sentry_id' => $sentry_id]);
 		}
 
-		protected function _report_exception(Exception $e) {
+		protected function _report_exception(Exception $e)
+		{
 			if (!get_config_value('sentry_url'))
 				return null;
 
-			$client = new Raven_Client('https://927c99b077cc4ae2bc9f839aa71499ff:39ea9ce5f6e04ec4ba35aa5ff4619a4a@sentry.svcover.nl/2');
+			$client = new Raven_Client(get_config_value('sentry_url'));
 
 			$extra = [];
 
