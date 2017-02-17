@@ -31,7 +31,7 @@
 				$iter = $model->get_iter($member_data['id']);
 				
 				$iter->set('taal', $language);
-				$model->update_profiel($iter);
+				$model->update($iter);
 			} else {
 				/* Set language in session */
 				$_SESSION['taal'] = $language;
