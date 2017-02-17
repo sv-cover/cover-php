@@ -108,7 +108,7 @@
 
 		public function has($field)
 		{
-			return $this->has_field($field) || $this->has_value($field);
+			return static::has_field($field) || $this->has_value($field);
 		}
 
 		/**
@@ -124,19 +124,19 @@
 		 * Check whether this iter has a field named $field.
 		 * @return boolean
 		 */
-		public function has_field($field)
+		static public function has_field($field)
 		{
 			return in_array($field, static::fields());
 		}
 
-		public function has_getter($field)
+		static public function has_getter($field)
 		{
-			return method_exists($this, 'get_' . $field);
+			return method_exists(get_called_class(), 'get_' . $field);
 		}
 
-		public function has_setter($field)
+		static public function has_setter($field)
 		{
-			return method_exists($this, 'set_'. $field);
+			return method_exists(get_called_class(), 'set_'. $field);
 		}
 
 		public function call_getter($field)
@@ -200,11 +200,11 @@
 				return $this->data[$field];
 			
 			// The field exists, we just don't have data for it
-			if ($this->has_field($field))
+			if (static::has_field($field))
 				return null;
 			
 			// We don't have it as a table field, but we do have a getter
-			if ($this->has_getter($field))
+			if (static::has_getter($field))
 				return $this->call_getter($field);
 
 			// Nope.
@@ -225,7 +225,7 @@
 			$this->_clear_getter_cache($field);
 
 			/* if there is a setter for this field, delegate to that one */
-			if ($this->has_setter($field))
+			if (static::has_setter($field))
 				return $this->call_setter($field, $value);
 
 			/* Return if value hasn't really changed */
@@ -335,7 +335,7 @@
 
 		public function offsetExists($offset)
 		{
-			return $this->has_field($offset) || $this->has_value($offset) || $this->has_getter($offset);
+			return static::has_field($offset) || static::has_getter($offset) || $this->has_value($offset);
 		}
 
 		public function offsetUnset($offset)
@@ -354,10 +354,5 @@
 		static public function fields()
 		{
 			return [];
-		}
-
-		public function has_field($field)
-		{
-			return isset($this->data[$field]);
 		}
 	}
