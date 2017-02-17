@@ -89,26 +89,9 @@
 			if (!headers_sent())
 				header('Status: 500 Interal Server Error');
 
-			$sentry_id = $this->_report_exception($e);
+			$sentry_id = sentry_report_exception($e);
 
 			return $this->view()->render('@layout/500.twig', ['exception' => $e, 'sentry_id' => $sentry_id]);
-		}
-
-		protected function _report_exception(Exception $e)
-		{
-			if (!get_config_value('sentry_url'))
-				return null;
-
-			$client = new Raven_Client(get_config_value('sentry_url'));
-
-			$extra = [];
-
-			if (get_auth()->logged_in()) {
-				$extra['session_id'] = get_auth()->get_session()->get('id');
-				$extra['user_id'] = get_identity()->get('id');
-			}
-
-			return $client->captureException($e, ['extra' => $extra]);
 		}
 
 		protected function _form_is_submitted($action, $args = [])
