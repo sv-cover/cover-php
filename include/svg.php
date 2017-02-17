@@ -5,6 +5,9 @@ namespace cover\svg;
 function barchart($data)
 {
 	// Inspiration: https://bost.ocks.org/mike/bar/3/
+
+	if (count($data) === 0)
+		return null;
 	
 	$chart_width = 350;
 
