@@ -12,14 +12,14 @@ function sentry_get_client()
 	return $client ? $client : null;
 }
 
-function sentry_report_exception(Exception $e, $extra = [])
+function sentry_report_exception(Exception $e, $attributes = [])
 {
 	$client = sentry_get_client();
 
 	if ($client === null)
 		return null;
 
-	return $client->captureException($e, ['extra' => $extra]);
+	return $client->captureException($e, $attributes);
 }
 
 function init_sentry()

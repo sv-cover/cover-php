@@ -81,6 +81,8 @@
 
 		protected function run_404_not_found(NotFoundException $exception)
 		{
+			sentry_report_exception($exception, ['level' => 'warning']);
+
 			return $this->view()->render_404_not_found($exception);
 		}
 
