@@ -864,6 +864,14 @@ border-radius: 0 0 5px 5px;
 	padding-bottom: 0;
 }
 
+.messageBox figure {
+	display: inline-block;
+}
+
+.messageBox figure figcaption {
+	text-align: center;
+}
+
 .actions,
 .messageBox .actions { /* Override default .messageBox ul styling */
 	list-style: none;

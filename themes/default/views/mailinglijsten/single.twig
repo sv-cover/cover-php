@@ -17,14 +17,6 @@
 			<em>{{ __('Adres') }}: {{ iter.adres }}</em>
 			{{ iter.omschrijving|parse_markup }}
 		</p>
-		<div class="graph">
-			<h3>{{ __('Beginjaar') }}</h3>
-			{{ view.barchart(iter.get_reach('beginjaar'))|raw }}
-		</div>
-		<div class="graph">
-			<h3>{{ __('Leeftijd') }}</h3>
-			{{ view.barchart(iter.get_reach('leeftijd'))|raw }}
-		</div>
 	</div>
 	
 	<div class="section">
@@ -69,6 +61,22 @@
 		</table>
 		<button class="button" type="submit">{{ __('Meld geselecteerde adressen af') }}</button>
 		</form>
+	</div>
+
+	<div class="section">
+		<h3>Statistics</h3>
+		<figure class="graph">
+			{{ view.barchart(iter.get_reach('beginjaar'))|raw }}
+			<figcaption>{{ __('Beginjaar') }}</figcaption>
+		</figure>
+		<figure class="graph">
+			{{ view.barchart(iter.get_reach('leeftijd'))|raw }}
+			<figcaption>{{ __('Leeftijd') }}</figcaption>
+		</figure>
+		<figure class="graph">
+			{{ view.barchart(iter.get_reach('committee_count'))|raw }}
+			<figcaption>{{ __('Commissies') }}</figcaption>
+		</figure>
 	</div>
 </div>
 
