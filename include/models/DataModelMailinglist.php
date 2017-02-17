@@ -118,11 +118,6 @@ class DataIterMailinglist extends DataIter
 		return get_model('DataModelMailinglistSubscription')->get_subscriptions($this);
 	}
 
-	public function get_reach()
-	{
-		return get_model('DataModelMailinglistSubscription')->get_reach($this);
-	}
-
 	public function get_committee()
 	{
 		return get_model('DataModelCommissie')->get_iter($this['commissie']);
@@ -131,6 +126,11 @@ class DataIterMailinglist extends DataIter
 	public function get_archive()
 	{
 		return new DataModelMailinglistArchiveAdaptor($this);
+	}
+
+	public function get_reach($partition_by = null)
+	{
+		return get_model('DataModelMailinglistSubscription')->get_reach($this, $partition_by);
 	}
 }
 

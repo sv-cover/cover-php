@@ -183,14 +183,18 @@ class DataModelMailinglistSubscription extends DataModel
 		return $this->_rows_to_iters($rows);
 	}
 
-	public function get_reach(DataIterMailinglist $lijst)
+	public function get_reach(DataIterMailinglist $lijst, $partition_by = null)
 	{
+		if ($partition_by !== null && !DataIterMember::has_field($partition_by))
+			throw new InvalidArgumentException("Invalid partition_by field: $partition_by not in DataIterMember::fields()");
+
 		switch ($lijst['type'])
 		{
 			case DataModelMailinglist::TYPE_OPT_IN:
-				return (int) $this->db->query_value(sprintf('
+				$rows = $this->db->query(sprintf('
 					SELECT
-						COUNT(m.abonnement_id)
+						COALESCE(%s, -1) as partition_group,
+						COUNT(m.abonnement_id) as cnt
 					FROM
 						mailinglijsten_abonnementen m
 					LEFT JOIN leden l ON
@@ -198,15 +202,24 @@ class DataModelMailinglistSubscription extends DataModel
 					WHERE
 						m.mailinglijst_id = %d
 						AND (l.type IS NULL OR l.type <> %d)
-						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)',
-					$lijst['id'], MEMBER_STATUS_LID_AF));
+						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
+					GROUP BY
+						partition_group',
+					$partition_by !== null ? ('l.' . $partition_by) : 'NULL',
+					$lijst['id'],
+					MEMBER_STATUS_LID_AF));
+				break;
 
 			case DataModelMailinglist::TYPE_OPT_OUT:
-				return (int) $this->db->query_value(sprintf('
-					SELECT
+				$rows = $this->db->query(sprintf('
+						SELECT
+							u.partition_group,
+							SUM(u.cnt) as cnt
+						FROM
 						(
 							SELECT
-								COUNT(l.id)
+								COALESCE(%s, -1) as partition_group,
+								COUNT(l.id) as cnt
 							FROM
 								leden l
 							LEFT JOIN mailinglijsten_opt_out o ON
@@ -214,20 +227,46 @@ class DataModelMailinglistSubscription extends DataModel
 							WHERE
 								l.type = %d
 								AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL)
-						) + (
+							GROUP BY
+								partition_group
+							UNION
 							SELECT
+								COALESCE(%1$s, -1) as partition_group,
 								COUNT(g.abonnement_id)
 							FROM
 								mailinglijsten_abonnementen g
+							LEFT JOIN leden l ON
+								l.id = g.lid_id
 							WHERE
-								g.mailinglijst_id = %1$d
+								g.mailinglijst_id = %2$d
 								AND (g.opgezegd_op > NOW() OR g.opgezegd_op IS NULL)
-						)',
-					$lijst['id'], MEMBER_STATUS_LID));
+							GROUP BY
+								partition_group
+						) u
+						GROUP BY
+							partition_group',
+					$partition_by !== null ? ('l.' . $partition_by) : 'NULL',
+					$lijst['id'],
+					MEMBER_STATUS_LID));
+				break;
 
 			default:
 				throw new LogicException('Invalid list type');
 		}
+
+		// If you didn't particularly partition by anything, there will only be one row :) 
+		if ($partition_by === null)
+			return (int) $rows[0]['cnt'];
+
+		// Convert the partition-count rows into a dictionary
+		$partitions = [];
+
+		foreach ($rows as $row)
+			$partitions[$row['partition_group']] = (int) $row['cnt'];
+
+		ksort($partitions);
+
+		return $partitions;
 	}
 
 	public function is_subscribed(DataIterMailinglist $list, DataIterMember $member)
