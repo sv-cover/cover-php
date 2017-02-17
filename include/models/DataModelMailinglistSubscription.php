@@ -191,6 +191,9 @@ class DataModelMailinglistSubscription extends DataModel
 		elseif ($partition_by == 'leeftijd')
 			$partition_field = '(EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM l.geboortedatum))';
 
+		elseif ($partition_by == 'committee_count')
+			$partition_field = '(SELECT COUNT(commissieid) FROM actieveleden WHERE lidid = l.id)';
+
 		else {
 			if (!DataIterMember::has_field($partition_by))
 				throw new InvalidArgumentException("Invalid partition_by field: $partition_by not in DataIterMember::fields()");
