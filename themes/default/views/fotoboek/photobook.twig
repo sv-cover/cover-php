@@ -201,7 +201,7 @@
 	{# Controls, if applicable, and path #}
 	<div class="photo-page-header">
 		{% if controller.user_can_download_book(book) %}
-		<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button download-photos-button">
+		<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button download-photos-button" data-partial-selector="#download-photo-book-form" data-placement-selector="modal">
 			<i class="fa fa-download"></i>
 			{{ __('Download fotoboek') }}
 		</a>
