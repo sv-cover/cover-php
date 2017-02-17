@@ -17,6 +17,14 @@
 			<em>{{ __('Adres') }}: {{ iter.adres }}</em>
 			{{ iter.omschrijving|parse_markup }}
 		</p>
+		<div class="graph">
+			<h3>{{ __('Beginjaar') }}</h3>
+			{{ view.barchart(iter.get_reach('beginjaar'))|raw }}
+		</div>
+		<div class="graph">
+			<h3>{{ __('Leeftijd') }}</h3>
+			{{ view.barchart(iter.get_reach('leeftijd'))|raw }}
+		</div>
 	</div>
 	
 	<div class="section">

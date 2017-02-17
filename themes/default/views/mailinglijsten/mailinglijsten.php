@@ -1,6 +1,7 @@
 <?php
 require_once 'include/form.php';
 require_once 'include/markup.php';
+require_once 'include/svg.php';
 
 class MailinglijstenView extends CRUDView
 {
@@ -74,5 +75,10 @@ class MailinglijstenView extends CRUDView
 	public function render_embedded(DataIterMailinglist $list, DataModelMailinglist $model)
 	{
 		return $this->render('embedded.twig', compact('list', 'embedded'));
+	}
+
+	public function barchart($data)
+	{
+		return \cover\svg\barchart($data);
 	}
 }
