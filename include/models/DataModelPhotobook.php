@@ -293,9 +293,14 @@
 			return new DataIterPhotobook($this->model, null, ['parent_id' => $this['id']]);
 		}
 
-		public function get_books($metadata = null)
+		public function get_books()
 		{
-			return $this->model->get_children($this, $metadata);
+			return $this->model->get_children($this);
+		}
+
+		public function get_books_without_metadata()
+		{
+			return $this->model->get_children($this, 0);
 		}
 
 		public function get_photos()
@@ -616,7 +621,7 @@
 		{
 			if (!$book['parent']) return null;
 
-			$children = $book['parent']['books'];
+			$children = $book['parent']['books_without_metadata'];
 
 			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
 
@@ -635,7 +640,7 @@
 		{
 			if (!$book['parent']) return null;
 
-			$children = $book['parent']['books'];
+			$children = $book['parent']['books_without_metadata'];
 
 			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
 
