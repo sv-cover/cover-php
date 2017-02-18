@@ -9,6 +9,7 @@
 {% macro classnames(photo) %}
 	{%- if my_likes[photo.id] is defined %}liked{% endif -%}
 	{%- if visibility[photo.id] is defined and visibility[photo.id] == false %} hidden{% endif -%}
+	{{ photo.read_status }}
 {% endmacro %}
 
 {% import _self as fotoboek %}

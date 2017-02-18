@@ -2812,8 +2812,12 @@ button .fa {
 	padding: 0;
 	overflow: hidden;
 	text-align: center;
-
+	box-sizing: border-box;
 	transition: width 100ms;
+}
+
+.photos .thumbnail.unread {
+	box-shadow: 0 0 0 3px #c60c30;
 }
 
 .photos .thumbnail a {

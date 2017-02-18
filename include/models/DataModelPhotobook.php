@@ -761,6 +761,7 @@
 			return "
 				SELECT
 					{$this->table}.*,
+					NULL AS read_status,
 					COUNT(DISTINCT foto_reacties.id) AS num_reacties
 				FROM
 					{$this->table}
@@ -831,14 +832,40 @@
 		  */
 		public function get_photos(DataIterPhotobook $book)
 		{
+			if (get_config_value('enable_photos_read_status', true) && get_auth()->logged_in())
+			{
+				$lid_id = get_identity()->get('id');
+
+				$read_status_select_atom = "
+					CASE
+						WHEN fotos.added_on > MAX(f_b_v.last_visit)
+						THEN '" . self::READ_STATUS_UNREAD . "'
+						ELSE '" . self::READ_STATUS_READ . "'
+					END read_status";
+
+				$read_status_join_atom = "
+					LEFT JOIN foto_boeken_visit f_b_v ON
+						f_b_v.boek_id = fotos.boek
+						AND f_b_v.lid_id = {$lid_id}";
+			}
+			else
+			{
+				$read_status_select_atom = "
+					NULL as read_status";
+
+				$read_status_join_atom = "";
+			}
+
 			$query = "
 				SELECT
 					fotos.*,
-					COUNT(DISTINCT foto_reacties.id) AS num_reacties
+					COUNT(DISTINCT foto_reacties.id) AS num_reacties,
+					{$read_status_select_atom}
 				FROM
 					fotos
 				LEFT JOIN foto_reacties ON
 					foto_reacties.foto = fotos.id
+				{$read_status_join_atom}
 				WHERE
 					boek = {$book->get_id()} -- Todo: security risk?
 					AND hidden = 'f'
