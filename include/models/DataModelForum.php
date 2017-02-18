@@ -832,17 +832,22 @@
 		  * @result a #DataIter if the forum could be found and
 		  * if permissions were met, false otherwise
 		  */
-		public function get_iter($forumid)
+		public function get_iter($forum_id)
 		{
+			static $cache = [];
+
+			if (isset($cache[$forum_id]))
+				return $cache[$forum_id];
+
 			$row = $this->db->query_first('
 					SELECT
 						*
 					FROM
 						forums
 					WHERE
-						id = ' . intval($forumid));
+						id = ' . intval($forum_id));
 			
-			return $this->_row_to_iter($row, 'DataIterForum');
+			return $cache[$forum_id] = $this->_row_to_iter($row, 'DataIterForum');
 		}
 		
 		/**
