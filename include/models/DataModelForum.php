@@ -627,7 +627,7 @@
 						id = ' . intval($id));
 
 			if (!$row)
-				throw new DataIterNotFoundException('Could not found ACL rule.');
+				throw new DataIterNotFoundException($id, $this);
 			
 			return $this->_row_to_iter($row, 'DataIterForumPermission');
 		}
@@ -890,7 +890,7 @@
 					LIMIT 1');
 
 			if (!$row)
-				throw new DataIterNotFoundException('Forum group not found');
+				throw new DataIterNotFoundException($id, $this);
 
 			return $this->_row_to_iter($row, 'DataIterForumGroup');		
 		}
@@ -912,7 +912,7 @@
 						id = ' . intval($id));
 
 			if (!$row)
-				throw new DataIterNotFoundException('Forum group member not found');
+				throw new DataIterNotFoundException($id, $this);
 			
 			return $this->_row_to_iter($row, 'DataIterForumGroupMember');
 		}
@@ -972,7 +972,7 @@
 						id = ' . intval($id));
 
 			if (!$row)
-				throw new DataIterNotFoundException('Forum thread could not be found.');
+				throw new DataIterNotFoundException($id, $this);
 
 			return $this->_row_to_iter($row, 'DataIterForumThread');
 		}
@@ -1017,7 +1017,7 @@
 						id = ' . intval($id));
 
 			if (!$row)
-				throw new DataIterNotFoundException('Forum message not found.');
+				throw new DataIterNotFoundException($id, $this);
 			
 			return $this->_row_to_iter($row, 'DataIterForumMessage');
 		}

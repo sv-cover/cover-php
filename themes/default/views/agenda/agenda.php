@@ -136,6 +136,7 @@
 		public function previous_year()
 		{
 			return ($year = $this->selected_year()) !== null
+				&& $year > 2002
 				? $year - 1
 				: $this->current_year();
 		}

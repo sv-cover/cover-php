@@ -332,11 +332,6 @@ class ProfielView extends View
 		return null;
 	}
 
-	public function render_public(DataIterMember $iter)
-	{
-
-	}
-
 	function is_current_member(DataIterMember $iter)
 	{
 		return get_identity()->get('id') == $iter->get_id();
