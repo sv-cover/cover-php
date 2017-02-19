@@ -251,7 +251,7 @@ function process_return_to_sender($message, $message_header, $from, $destination
 	return send_message($reply->toString(), $from);
 }
 
-function send_welcome_mail(DataIterMailinglijst $lijst, $to)
+function send_welcome_mail(DataIterMailinglist $lijst, $to)
 {
 	$message = new \Cover\email\MessagePart();
 
