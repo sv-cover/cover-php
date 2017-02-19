@@ -449,7 +449,7 @@ class ControllerProfiel extends Controller
 	public function run_public(DataIterMember $member)
 	{
 		if (!$this->policy->user_can_read($member))
-			throw new UnauthorizedException('You are not allowed to access this member');
+			throw new UnauthorizedException('This person is no longer a member of Cover, which is why they no longer have a public profile.');
 
 		return $this->view->render_public_tab($member);
 	}

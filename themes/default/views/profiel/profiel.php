@@ -332,11 +332,6 @@ class ProfielView extends View
 		return null;
 	}
 
-	public function render_404_not_found(NotFoundException $e) {
-		header('Status: 404 Not Found');
-		return $this->render('404_not_found.twig', ['exception' => $e]);
-	}
-
 	function is_current_member(DataIterMember $iter)
 	{
 		return get_identity()->get('id') == $iter->get_id();
