@@ -138,23 +138,23 @@ class DataModelMailinglistArchiveAdaptor
 {
 	protected $model;
 
-	protected $lijst;
+	protected $mailing_list;
 	
-	public function __construct(DataIterMailinglijst $lijst)
+	public function __construct(DataIterMailinglist $mailing_list)
 	{
 		$this->model = get_model('DataModelMailinglistArchive');
 
-		$this->lijst = $lijst;
+		$this->mailing_list = $mailing_list;
 	}
 
 	public function contains_email_from($sender)
 	{
-		return $this->model->contains_email_from($this->lijst, $sender);
+		return $this->model->contains_email_from($this->mailing_list, $sender);
 	}
 
 	public function get()
 	{
-		return $this->model->get_for_list($this->lijst);
+		return $this->model->get_for_list($this->mailing_list);
 	}
 }
 
