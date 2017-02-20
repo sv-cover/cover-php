@@ -30,10 +30,10 @@
 				<li><a href="#content-en-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
 			</ul>
 			<div class="tab-panel" id="content-nl">
-				{{ html_textarea_field('content', iter, rows=15) }}
+				{{ html_textarea_field('content', iter, rows=25) }}
 			</div>
 			<div class="tab-panel" id="content-en">
-				{{ html_textarea_field('content_en', iter, rows=15) }}
+				{{ html_textarea_field('content_en', iter, rows=25) }}
 			</div>
 			<div class="tab-panel" id="content-nl-preview" data-preview-source="#content-nl textarea" data-preview-url="show.php?view=preview&amp;lang=nl">
 				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
