@@ -19,3 +19,7 @@ CREATE INDEX ON foto_boeken_visit (lid_id);
 
 DROP INDEX fotos_boek_idx;
 CREATE INDEX ON fotos (boek, hidden);
+
+CREATE INDEX ON forum_threads (forum_id);
+
+CREATE INDEX ON forum_messages (thread_id);
