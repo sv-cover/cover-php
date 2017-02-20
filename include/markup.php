@@ -122,7 +122,7 @@
 	
 	function _markup_parse_table_real($matches) {
 		$class = $matches[2];
-		$contents = $matches[3];
+		$contents = trim($matches[3]);
 		$result = '';
 
 		if (!$class)
@@ -131,8 +131,8 @@
 			$class = 'markup_' . $class;
 		
 		$result = '<table class="' . $class . '">';
-		
-		if (preg_match_all('/^\|\|(.*?)\|\|$/ims', $contents, $matches)) {
+
+		if (preg_match_all('/^\s*\|\|(.*?)\|\|\s*$/mu', $contents, $matches)) {
 			$maxcol = 0;
 
 			foreach ($matches[1] as $match)
@@ -141,12 +141,12 @@
 			foreach ($matches[1] as $match)
 				$result .= _markup_parse_table_row($match, $maxcol);		
 		}
-		
+
 		return $result . '</table>';
 	}
 	
 	function _markup_parse_table(&$markup) {
-		$markup = preg_replace_callback('/\[table( ([a-z]+))?\](.*?)\[\/table\]/ims', '_markup_parse_table_real', $markup);
+		$markup = preg_replace_callback('/\[table( ([a-z]+))?\](.*?)\[\/table\]/is', '_markup_parse_table_real', $markup);
 	}
 	
 	function _markup_parse_spaces(&$markup) {
