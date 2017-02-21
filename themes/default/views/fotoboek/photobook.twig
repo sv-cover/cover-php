@@ -171,7 +171,8 @@
 	</script>
 	{% endif %}
 
-	{# comment navigation! #}
+	{% if book.id is not same as(0) %}
+	{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}
 	{% set nav = view.navigation(book) %}
 	<div class="bar">
 		<div class="photos-navigation navigation">
@@ -192,9 +193,10 @@
 			{% endif %}
 		</div>
 	</div>
+	{% endif %}
 
 	{# introduction to the Photo album page, only visible in the root book #}
-	{% if book.id == 0 %}
+	{% if book.id is same as (0) %}
 	<p>{{ __('Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, meld dat dan aan de PhotoCee.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
 	{% endif %}
 
