@@ -12,7 +12,7 @@ class DataIterBestuur extends DataIter
 			'naam',
 			'login',
 			'nocaps',
-			'page'
+			'page_id'
 		];	
 	}
 }
@@ -28,7 +28,7 @@ class DataModelBesturen extends DataModel
 
 	public function get_from_page($page_id)
 	{
-		$hits = $this->find(sprintf('page = %d', $page_id));
+		$hits = $this->find(sprintf('page_id = %d', $page_id));
 		
 		return $hits ? current($hits) : null;
 	}

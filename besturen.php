@@ -54,7 +54,7 @@ class ControllerBesturen extends ControllerCRUD
 			'naam' => $data['naam'],
 			'login' => $data['login'],
 			'nocaps' => strtolower($data['naam']),
-			'page' => $page_id);
+			'page_id' => $page_id);
 
 		return parent::_create($iter, $bestuur_data, $errors);
 	}
@@ -68,7 +68,7 @@ class ControllerBesturen extends ControllerCRUD
 
 		$editable_model = get_model('DataModelEditable');
 
-		$editable = $editable_model->get_iter($bestuur->get('page'));
+		$editable = $bestuur['page'];
 		$editable->set('titel', $data['naam']);
 	
 		$editable_model->update($editable);

@@ -10,7 +10,7 @@
 				'id',
 				'kop',
 				'beschrijving',
-				'commissie',
+				'committee_id',
 				'van',
 				'tot',
 				'locatie',
@@ -73,7 +73,7 @@
 
 		public function get_committee()
 		{
-			return get_model('DataModelCommissie')->get_iter($this->data['commissie']);
+			return get_model('DataModelCommissie')->get_iter($this->data['committee_id']);
 		}
 	}
 
@@ -113,12 +113,12 @@
 			return "
 				SELECT
 					{$this->table}.*,
-					commissies.naam as commissie__naam,
-					commissies.page as commissie__page
+					commissies.naam as committee__naam,
+					commissies.page_id as committee__page_id
 				FROM
 					{$this->table}
 				LEFT JOIN commissies ON
-					commissies.id = agenda.commissie"
+					commissies.id = agenda.committee_id"
 				. ($where ? " WHERE {$where}" : "")
 				. " ORDER BY {$this->table}.van ASC";
 		}
@@ -174,8 +174,8 @@
 			$query = "
 				SELECT
 					{$this->table}.*,
-					commissies.naam as commissie__naam,
-					commissies.page as commissie__page,
+					commissies.naam as committee__naam,
+					commissies.page_id as committee__page_id,
 					ts_rank_cd(
 						setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B'),
 						to_tsquery('" . $this->db->escape_string($ts_query) . "')
@@ -183,7 +183,7 @@
 				FROM
 					agenda
 				LEFT JOIN commissies ON
-					commissies.id = agenda.commissie
+					commissies.id = agenda.committee_id
 				WHERE
 					agenda.replacement_for IS NULL
 					" . (!$this->include_private ? ' AND agenda.private = 0 ' : '') . "

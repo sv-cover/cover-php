@@ -14,10 +14,15 @@
 				'login',
 				'website',
 				'nocaps',
-				'page',
+				'page_id',
 				'hidden',
 				'vacancies',
 			];
+		}
+
+		public function get_page()
+		{
+			return get_model('DataModelEditable')->get_iter($this['page_id']);
 		}
 
 		public function get_member_ids()
@@ -37,10 +42,8 @@
 
 		public function get_summary()
 		{
-			/* Get the first editable page */
 			$editable_model = get_model('DataModelEditable');
-
-			return $editable_model->get_summary($this->get('page'));
+			return $editable_model->get_summary($this['page_id']);
 		}
 
 		public function get_search_relevance()
@@ -122,17 +125,6 @@
 
 		public $dataiter = 'DataIterCommissie';
 
-		public $fields = array(
-			'id',
-			'type',
-			'naam',
-			'login',
-			'website',
-			'nocaps',
-			'page',
-			'hidden',
-			'vacancies');
-
 		public function __construct($db)
 		{
 			parent::__construct($db, 'commissies');
@@ -179,7 +171,7 @@
 			$editable_model = get_model('DataModelEditable');
 
 			$page_data = [
-				'owner' => $committee_id,
+				'owner_id' => $committee_id,
 				'titel' => $iter['naam']
 			];
 
@@ -187,7 +179,7 @@
 
 			$page_id = $editable_model->insert($page);
 
-			$this->db->update($this->table, array('page' => $page_id), $this->_id_string($committee_id), array());
+			$this->db->update($this->table, array('page_id' => $page_id), $this->_id_string($committee_id), array());
 
 			return $committee_id;
 		}
@@ -209,8 +201,7 @@
 			$editable_model = get_model('DataModelEditable');
 
 			try {
-				$page = $editable_model->get_iter($iter->get('page'));
-				$editable_model->delete($page);
+				$editable_model->delete($iter['page']);
 			} catch (DataIterNotFoundException $e) {
 				// Well, never mind.
 			}
@@ -256,18 +247,18 @@
 		{
 			$pattern = '/\s*[,\/]\s*/';
 
-			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a->get('functie'))));
-			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b->get('functie'))));
+			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a['functie'])));
+			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b['functie'])));
 			
 			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
 		}
 		
 		private function _get_members(DataIterCommissie $committee)
 		{
-			$rows = $this->db->query('SELECT lidid, functie FROM actieveleden WHERE commissieid = ' . $committee->get_id());
+			$rows = $this->db->query('SELECT member_id, functie FROM committee_members WHERE committee_id = ' . $committee->get_id());
 
 			return array_combine(
-				array_map(function($row) { return $row['lidid']; }, $rows),
+				array_map(function($row) { return $row['member_id']; }, $rows),
 				array_map(function($row) { return $row['functie']; }, $rows));
 		}
 		
@@ -321,12 +312,12 @@
 
 		public function set_members(DataIterCommissie $committee, array $members)
 		{
-			$this->db->delete('actieveleden', sprintf('commissieid = %d', $committee->get_id()));
+			$this->db->delete('committee_members', sprintf('committee_id = %d', $committee->get_id()));
 
 			foreach ($members as $member_id => $position)
-				$this->db->insert('actieveleden', array(
-					'commissieid' => $committee->get_id(),
-					'lidid' => intval($member_id),
+				$this->db->insert('committee_members', array(
+					'committee_id' => $committee->get_id(),
+					'member_id' => intval($member_id),
 					'functie' => $position));
 		}
 
@@ -335,16 +326,16 @@
 			$rows = $this->db->query("
 				SELECT
 					c.*,
-					al.functie
+					c_m.functie
 				FROM
-					actieveleden al
+					committee_members c_m
 				RIGHT JOIN commissies c ON
-					al.commissieid = c.id
+					c_m.committee_id = c.id
 				WHERE
-					al.lidid = " . intval($lid_id) ."
+					c_m.member_id = " . intval($lid_id) ."
 				GROUP by
 					c.id,
-					al.functie
+					c_m.functie
 				ORDER BY
 					c.naam ASC");
 
@@ -456,11 +447,11 @@
 					'committee_member_match' as search_match_reason,
 					l.id as search_match_committee_member_id
 				FROM
-					actieveleden al
+					committee_members c_m
 				INNER JOIN leden l ON
-					l.id = al.lidid
+					l.id = c_m.member_id
 				INNER JOIN commissies c ON
-					c.id = al.commissieid
+					c.id = c_m.committee_id
 				WHERE
 					c.hidden <> 1
 					AND (((l.privacy >> ($privacy_bit * 3)) & 7) & $current_privacy_setting) <> 0
@@ -484,11 +475,11 @@
 
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c
-					LEFT JOIN actieveleden a ON
-						a.commissieid = c.id
+					LEFT JOIN committee_members c_m ON
+						c_m.committee_id = c.id
 					WHERE $conditions
 					GROUP BY c.id
-					HAVING COUNT(a.id) > 0
+					HAVING COUNT(c_m.id) > 0 -- non-empty committees only
 					ORDER BY RANDOM()
 					LIMIT 1");
 					
@@ -499,7 +490,7 @@
 		{
 			$row = $this->db->query_first(sprintf("SELECT * 
 					FROM commissies
-					WHERE page = %d", $page_id));
+					WHERE page_id = %d", $page_id));
 			
 			return $this->_row_to_iter($row);
 		}

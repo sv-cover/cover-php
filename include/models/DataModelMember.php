@@ -245,9 +245,9 @@
 		  */
 		public function get_commissies($memberid)
 		{
-			$rows = $this->db->query("SELECT commissieid
-					FROM actieveleden
-					WHERE lidid = " . intval($memberid));
+			$rows = $this->db->query("SELECT committee_id
+					FROM committee_members
+					WHERE member_id = " . intval($memberid));
 
 			$commissies = array();
 
@@ -255,7 +255,7 @@
 				return $commissies;
 
 			foreach ($rows as $row)
-				$commissies[] = $row['commissieid'];
+				$commissies[] = $row['committee_id'];
 
 			return $commissies;
 		}
@@ -476,11 +476,11 @@
 			$query = "SELECT
 					leden.*,
 					COUNT(DISTINCT foto_faces.id) as number_of_tags,
-					COUNT(DISTINCT actieveleden.commissieid) number_of_committees
+					COUNT(DISTINCT committee_members.committee_id) number_of_committees
 					FROM
 						leden
-					LEFT JOIN actieveleden ON
-						actieveleden.lidid = leden.id
+					LEFT JOIN committee_members ON
+						committee_members.member_id = leden.id
 					LEFT JOIN foto_faces ON
 						foto_faces.lid_id = leden.id
 					WHERE

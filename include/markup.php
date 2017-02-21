@@ -222,7 +222,7 @@
 		if ($iter === null)
 			return '';
 		
-		return '<a href="show.php?id=' . $iter->get('page') . '">' . markup_format_text($iter->get('naam')) . '</a>';
+		return '<a href="show.php?id=' . $iter->get('page_id') . '">' . markup_format_text($iter->get('naam')) . '</a>';
 	}
 	
 	function _markup_parse_macro_real($matches) {

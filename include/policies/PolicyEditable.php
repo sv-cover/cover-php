@@ -23,7 +23,7 @@ class PolicyEditable implements Policy
 		// (which works right now because the committees are the owner)
 		// but pages such as study information could also be editable by members
 		// of both the BookCee, StudCee, and other study-related groups?
-		return get_identity()->member_in_committee($editable['owner'])
+		return get_identity()->member_in_committee($editable['committee_id'])
 			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
 	}

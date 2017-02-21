@@ -93,7 +93,7 @@
 				array(
 					array('name' => 'kop', 'function' => array($this, '_check_length')),
 					'beschrijving',
-					array('name' => 'commissie', 'function' => array($this, '_check_commissie')),
+					array('name' => 'committee_id', 'function' => array($this, '_check_commissie')),
 					array('name' => 'van', 'function' => array($this, '_check_datum')),
 					array('name' => 'tot', 'function' => array($this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
@@ -144,7 +144,7 @@
 
 			// Placeholders for e-mail
 			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
 				'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
 			);
 
@@ -178,7 +178,7 @@
 
 			// Placeholders for e-mail
 			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
 				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
 
 			// Previous exists and there is no need to let the board confirm it
@@ -276,10 +276,10 @@
 					$body = parse_email('agenda_cancel.txt', $data);
 					
 					$commissie_model = get_model('DataModelCommissie');
-					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['commissie']));
+					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['committee_id']));
 
 					mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
-					$cancelled[] = $commissie_model->get_naam($iter['commissie']);
+					$cancelled[] = $commissie_model->get_naam($iter['committee_id']);
 				}
 			}
 			
@@ -358,7 +358,7 @@
 				
 				$event->summary = $punt['extern']
 					? $punt['kop']
-					: sprintf('%s: %s', $punt['commissie__naam'], $punt['kop']);
+					: sprintf('%s: %s', $punt['committee__naam'], $punt['kop']);
 				$event->description = markup_strip($punt['beschrijving']);
 				$event->location = $punt->get('locatie');
 				$event->url = ROOT_DIR_URI . $this->link_to_read($punt);

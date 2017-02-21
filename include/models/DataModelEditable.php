@@ -8,11 +8,11 @@
 		{
 			return [
 				'id',
-				'owner',
+				'committee_id',
 				'titel',
 				'content',
 				'content_en',
-				'content_de',
+				'content_de', // not used anymore
 			];
 		}
 
@@ -70,15 +70,6 @@
 	class DataModelEditable extends DataModel implements SearchProvider
 	{
 		public $dataiter = 'DataIterEditable';
-
-		public $fields = [
-			// 'id', // disabled because we should never be able to manually set it.
-			'owner',
-			'titel',
-			'content',
-			'content_en',
-			'content_de'
-		];
 
 		public function __construct($db)
 		{
@@ -142,7 +133,7 @@
 			// Enhance search relevance score when the keywords appear in the title of a page :D
 			foreach ($iters as $iter)
 			{
-				$keywords_in_title = preg_match_all($pattern, $iter->get_title(), $matches);
+				$keywords_in_title = preg_match_all($pattern, $iter['title'], $matches);
 				$iter->set('search_relevance', $iter->get('search_relevance') + $keywords_in_title);
 			}
 

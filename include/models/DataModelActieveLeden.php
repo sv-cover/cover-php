@@ -8,7 +8,7 @@
 	{
 		public function __construct($db)
 		{
-			parent::__construct($db, 'actieveleden');
+			parent::__construct($db, 'committee_members');
 		}
 		
 		public function get_active_members($type = null, $include_hidden = true)
@@ -31,11 +31,11 @@
 				array_agg(c.id) as commissie_ids,
 				COUNT(c.id) as commissie_count
 				FROM
-					actieveleden a
+					committee_members a
 				LEFT JOIN leden l ON
-					a.lidid = l.id
+					a.member_id = l.id
 				RIGHT JOIN commissies c ON 
-					a.commissieid = c.id
+					a.committee_id = c.id
 					$committee_conditions
 				GROUP BY
 					l.id,

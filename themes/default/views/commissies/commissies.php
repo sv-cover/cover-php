@@ -19,14 +19,7 @@ class CommissiesView extends CRUDView
 
 	public function get_summary(DataIterCommissie $commissie)
 	{
-		/* Get the first editable page */
-		$editable_model = get_model('DataModelEditable');
-		$page = $editable_model->get_iter($commissie->get('page'));
-
-		if (!$page)
-			return '';
-
-		return $page->get_summary();
+		return $commissie['page'] ? $commissie['page']['summary'] : '';
 	}
 
 	public function get_activities(DataIterCommissie $iter)
@@ -35,7 +28,7 @@ class CommissiesView extends CRUDView
 		$activiteiten = array();
 
 		foreach ($model->get_agendapunten() as $punt)
-			if ($punt->get('commissie') == $iter->get('id') && get_policy($model)->user_can_read($punt))
+			if ($punt['committee_id'] == $iter['id'] && get_policy($model)->user_can_read($punt))
 				$activiteiten[] = $punt;
 
 		return $activiteiten;
