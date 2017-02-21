@@ -136,7 +136,7 @@ class View
 	{
 		return [
 			get_theme_data('data/jquery-2.2.0.min.js'),
-			'//code.jquery.com/ui/1.10.4/jquery-ui.js',
+			get_theme_data('data/jquery-ui.min.js'),
 			get_theme_data('data/common.js'),
 			get_theme_data('data/dropdown.js')
 		];
@@ -145,9 +145,9 @@ class View
 	public function stylesheets()
 	{
 		return [
-			get_theme_data('style.css'),
 			get_theme_data('styles/font-awesome.min.css'),
-			'//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css'
+			get_theme_data('styles/jquery-ui.min.css'),
+			get_theme_data('style.css')
 		];
 	}
 
