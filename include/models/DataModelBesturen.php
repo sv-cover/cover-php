@@ -4,7 +4,6 @@ require_once 'include/data/DataModel.php';
 
 class DataIterBestuur extends DataIter
 {
-	//
 	static public function fields()
 	{
 		return [
@@ -14,6 +13,11 @@ class DataIterBestuur extends DataIter
 			'nocaps',
 			'page_id'
 		];	
+	}
+
+	public function get_page()
+	{
+		return get_model('DataModelEditable')->get_iter($this['page_id']);
 	}
 }
 
