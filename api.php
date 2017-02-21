@@ -64,7 +64,12 @@ class ControllerApi extends Controller
 		if (!get_policy('DataModelAgenda')->user_can_read($agendapunt))
 			throw new UnauthorizedException('You are not authorized to read this event');
 
-		return ['result' => $agendapunt->data];
+		$data = $agendapunt->data;
+		
+		// Backwards compatibility for consumers of the API
+		$data['commissie'] = $data['committee_id'];
+
+		return ['result' => $data];
 	}
 
 	public function api_session_create($email, $password, $application)
@@ -141,7 +146,7 @@ class ControllerApi extends Controller
 
 			// And finally, test whether the searched for committee and the member is committees intersect
 			if ($ident->member_in_committee($committee->get_id()))
-				return array('result' => true, 'committee' => $committee->get('naam'));
+				return array('result' => true, 'committee' => $committee['naam']);
 		}
 
 		return array('result' => false);
@@ -184,7 +189,7 @@ class ControllerApi extends Controller
 		{
 			$committee = $committee_model->get_iter($committee_id);
 
-			$committees[$committee->get('login')] = $committee->get('naam');
+			$committees[$committee['login']] = $committee['naam'];
 		}
 
 		return array('result' => $committees);
