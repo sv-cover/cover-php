@@ -17,7 +17,7 @@
 	</form>
 	{% endif %}
 
-	{% if iter.nick is defined and not iter.is_private('naam') %}
+	{% if iter.nick != '' and not iter.is_private('naam') %}
 	<h3 class="nickname">{{ iter.nick }}</h3>
 	{% endif %}
 

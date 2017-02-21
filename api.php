@@ -241,7 +241,7 @@ class ControllerApi extends Controller
 		if (strlen($nick) > 50)
 			$nick = '';
 		
-		$iter['nick'] = $nick;
+		$member['nick'] = $nick;
 		
 		$model->insert($member);
 
