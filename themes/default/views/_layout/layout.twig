@@ -99,10 +99,10 @@
 
 		{% if global.db.history|length > 0 %}
 			<script>
-				console.info('Total number of queries run: %d (%0.5f sec)', {{ global.db.history|length }}, {{ global.db.history|select('duration')|sum }});
+				console.info('Total number of queries run: %d (%0.1fms)', {{ global.db.history|length }}, {{ global.db.history|select('duration')|sum * 1000 }});
 				console.groupCollapsed("Queries");
 				{% for query in global.db.history %}
-				console.info("Duration: %0.5f sec: %s", {{query.duration}}, {{query.query|json_encode()|raw}});
+				console.info("Duration: %0.3fms: %s", {{query.duration * 1000}}, {{query.query|json_encode()|raw}}, {{ query.backtrace|json_encode()|raw }});
 				{% endfor %}
 			</script>
 		{% endif %}

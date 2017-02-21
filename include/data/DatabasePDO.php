@@ -94,7 +94,8 @@ class DatabasePDO
 		if ($this->history !== null)
 			$this->history[] = array(
 				'query' => $query,
-				'duration' => $duration
+				'duration' => $duration,
+				'backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
 			);
 
 		/* Fetch all the rows */
