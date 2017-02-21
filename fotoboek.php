@@ -736,20 +736,23 @@
 		protected function _view_scaled_photo(DataIterPhoto $photo)
 		{
 			if (!get_policy($photo)->user_can_read($photo))
-				throw new UnauthorizedException();
+				throw new UnauthorizedException('You may need to log in to view this photo');
 
 			$width = isset($_GET['width']) ? min($_GET['width'], 1600) : null;
 			$height = isset($_GET['height']) ? min($_GET['height'], 1600) : null;
 
+			$cache_status = null;
+
 			// First open the resource because this could throw a 404 exception with
 			// the appropriate headers.
-			$fhandle = $photo->get_resource($width, $height);
+			$fhandle = $photo->get_resource($width, $height, !empty($_GET['skip_cache']), $cache_status);
 			
 			header('Pragma: public');
 			header('Cache-Control: max-age=86400');
 			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+			header('X-Cache-Status: ' . $cache_status);
 			
-			if (substr($photo->get('filepath'), -3, 3) == 'gif')
+			if (substr($photo['filepath'], -3, 3) == 'gif')
 				header('Content-Type: image/gif');
 			else
 				header('Content-Type: image/jpeg');

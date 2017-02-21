@@ -170,18 +170,22 @@
 			return file_exists($this->get_full_path());
 		}
 
-		public function get_resource($width = null, $height = null, $skip_cache = false)
+		public function get_resource($width = null, $height = null, $skip_cache = false, &$cache_status = null)
 		{
 			if (!$this->file_exists())
 				throw new NotFoundException("Could not find original file ({$this->get('filepath')}) of photo {$this->get_id()}.");
 			
 			// Special case of no width and height -> use original file
-			if (!$width && !$height)
+			if (!$width && !$height) {
+				$cache_status = 'original';
 				return fopen($this->get_full_path(), 'rb');
+			}
 
 			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
 
 			list($scaled_width, $scaled_height, $scale) = $this->get_scaled_size($width, $height);
+
+			$cache_status = 'hit';
 
 			// If we are upscaling, just use the original image
 			if ($scale > 1.0)
@@ -192,6 +196,8 @@
 				|| filesize($scaled_path) === 0
 				|| $skip_cache)
 			{
+				$cache_status = 'miss';
+				
 				if (!file_exists(dirname($scaled_path)))
 					mkdir(dirname($scaled_path), 0777, true);
 				
