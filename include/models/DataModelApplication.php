@@ -9,7 +9,7 @@ class DataIterApplication extends DataIter
 			'key',
 			'name',
 			'secret'
-		]
+		];
 	}
 }
 
