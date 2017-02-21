@@ -245,11 +245,11 @@
 		{% endif %}
 	</table>
 
-	{% if book.count_books == 0 and book.count_photos == 0 %}
+	{% if book.num_books == 0 and book.num_photos == 0 %}
 		<p>{{ __('Er zijn nog geen foto\'s in dit fotoboek') }}</p>
 	{% else %}
-		{{ include('_books.twig', {books: book.get_books()|user_can_read}) }}
-		{{ include('_photos.twig', {photos: book.get_photos()}) }}
+		{{ include('_books.twig', {books: book.books|user_can_read}) }}
+		{{ include('_photos.twig', {photos: book.photos}) }}
 	{% endif %}
 
 	{# show the top n comments on the front page (same one as with the info) #}
