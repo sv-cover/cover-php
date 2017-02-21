@@ -104,6 +104,7 @@
 				{% for query in global.db.history %}
 				console.info("Duration: %0.3fms: %s", {{query.duration * 1000}}, {{query.query|json_encode()|raw}}, {{ query.backtrace|json_encode()|raw }});
 				{% endfor %}
+				console.groupEnd();
 			</script>
 		{% endif %}
 	</body>
