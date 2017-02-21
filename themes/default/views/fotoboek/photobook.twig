@@ -173,22 +173,21 @@
 
 	{% if book.id is not same as(0) %}
 	{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}
-	{% set nav = view.navigation(book) %}
 	<div class="bar">
 		<div class="photos-navigation navigation">
-			{% if nav.previous and user_can_read nav.previous %}
-				<a href="fotoboek.php?book={{ nav.previous.id }}" class="previous">
-					{{ nav.previous.titel }}
+			{% if book.previous_book and user_can_read book.previous_book %}
+				<a href="fotoboek.php?book={{ book.previous_book.id }}" class="previous">
+					{{ book.previous_book.titel }}
 				</a>
 			{% endif %}
-			{% if nav.parent and user_can_read nav.parent %}
-				<a href="fotoboek.php?book={{ nav.parent.id }}" class="up">
-					{{ nav.parent.titel }}
+			{% if book.parent and user_can_read book.parent %}
+				<a href="fotoboek.php?book={{ book.parent.id }}" class="up">
+					{{ book.parent.titel }}
 				</a>
 			{% endif %}
-			{% if nav.next and user_can_read nav.next %}
-				<a href="fotoboek.php?book={{ nav.next.id }}" class="next">
-					{{ nav.next.titel }}
+			{% if book.next_book and user_can_read book.next_book %}
+				<a href="fotoboek.php?book={{ book.next_book.id }}" class="next">
+					{{ book.next_book.titel }}
 				</a>
 			{% endif %}
 		</div>
@@ -258,7 +257,7 @@
 	{% endif %}
 
 	{# and if there are no photos on this page, show a few random photos for discovery in the bottom. They are not confused with the photos of a book. #}
-	{% if book.count_photos == 0 and global.identity.member_is_active %}
+	{% if book.num_photos == 0 and global.identity.member_is_active %}
 		{% include('_random_photos.twig') %}
 	{% endif %}
 </div>

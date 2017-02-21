@@ -7,9 +7,9 @@
 		<span class="timestamp">{{ iter.date|date('l j F, H:i') }}</span>
 	</div>
 
-	<a href="profiel.php?lid={{ iter.auteur }}" class="comment-author">
-		<img src="foto.php?lid_id={{ iter.auteur }}&amp;format=square&amp;width=200" width="150">
-		<span class="name">{{ iter.auteur|personal_full_name }}</span>
+	<a href="profiel.php?lid={{ iter.author.id }}" class="comment-author">
+		<img src="foto.php?lid_id={{ iter.author.id }}&amp;format=square&amp;width=200" width="150">
+		<span class="name">{{ iter.author|personal_full_name }}</span>
 	</a>
 		
 	<div class="comment-message">

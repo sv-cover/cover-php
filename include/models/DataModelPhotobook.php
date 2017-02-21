@@ -325,16 +325,6 @@
 			return false;
 		}
 
-		public function count_books()
-		{
-			return $this->get('num_books');
-		}
-
-		public function count_photos()
-		{
-			return $this->get('num_photos');
-		}
-
 		public function get_next_photo(DataIterPhoto $current, $num = 1)
 		{
 			$photos = $this->get_photos();
@@ -446,9 +436,9 @@
 			return $books;
 		}
 
-		public function count_books()
+		public function get_num_books()
 		{
-			return parent::count_books() + (logged_in() ? 2 : 0);
+			return parent::get_num_books() + (logged_in() ? 2 : 0);
 		}
 
 		public function get_next_book()
@@ -936,7 +926,7 @@
 		{
 			$result = array();
 
-			while ($book = $book->get_parent())
+			while ($book = $book['parent'])
 				$result[] = $book;
 			
 			return array_reverse($result);

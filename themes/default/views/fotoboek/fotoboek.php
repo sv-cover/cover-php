@@ -147,34 +147,23 @@
 					$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
 						urlencode($parents[$i]->get_id()),
 						$anchor,
-						markup_format_text($parents[$i]->get('titel')));
+						markup_format_text($parents[$i]['titel']));
 				else
-					$path[] = markup_format_text($parents[$i]->get('titel'));
+					$path[] = markup_format_text($parents[$i]['titel']);
 			}
 
 			return $path;
-		}
-
-		public function navigation(DataIterPhotobook $book)
-		{
-			$nav = new stdClass();
-
-			$nav->previous = $book->get_previous_book();
-			$nav->parent = $book->get_parent();
-			$nav->next = $book->get_next_book();
-
-			return $nav;
 		}
 
 		public function summary(DataIterPhotobook $book)
 		{
 			$subtitle = array();
 
-			if (($num = $book->count_books()) > 0)
-				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $num), $num);
+			if ($book['num_books'] > 0)
+				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $book['num_books']), $book['num_books']);
 
-			if (($num = $book->count_photos()) > 0)
-				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
+			if ($book['num_photos'] > 0)
+				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $book['num_photos']), $book['num_photos']);
 			
 			if (count($subtitle) > 0)
 				return sprintf('<small class="fotoboek_highlight">(%s)</small>', markup_format_text(implode_human($subtitle)));
@@ -218,6 +207,6 @@
 
 		public function is_person(DataIterPhotobookFace $face)
 		{
-			return (bool) $face->get('lid_id');
+			return (bool) $face['lid_id'];
 		}
 	}

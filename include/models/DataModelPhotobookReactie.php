@@ -73,6 +73,7 @@ class DataIterPhotobookReactie extends DataIter
 
 	public function is_liked_by(DataIterMember $member)
 	{
+		// Todo: fetch these instead of the count using GROUP_CONCAT?
 		return $this->model->db->query_value(sprintf(
 			'SELECT COUNT(id) FROM foto_reacties_likes WHERE reactie_id = %d AND lid_id = %d',
 			$this->get_id(), $member->get_id())) > 0;

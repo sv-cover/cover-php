@@ -44,8 +44,6 @@ class DataIterPhotobookFace extends DataIter
 
 class DataIterFacesPhotobook extends DataIterPhotobook
 {
-	private $_cached_photos = null;
-
 	/**
 	 * Add a special id to this photo book, consisting of 'member_' and the 
 	 * member ids shown in this book.
@@ -82,9 +80,6 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 	 */
 	public function get_photos()
 	{
-		if ($this->_cached_photos !== null)
-			return $this->_cached_photos;
-
 		$conditions = array("fotos.hidden = 'f'");
 
 		foreach ($this->get('member_ids') as $member_id)
@@ -106,7 +101,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		
 		$photos = $this->model->find(implode("\nAND ", $conditions));
 
-		return $this->_cached_photos = array_reverse($photos);
+		return array_reverse($photos);
 	}
 
 	public function get_read_status()
@@ -115,12 +110,15 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		return DataModelPhotobook::READ_STATUS_READ;
 	}
 
-	/**
-	 * @override
-	 */
-	public function count_photos()
+	public function get_num_books()
 	{
-		return count($this->get_photos());
+		return 0;
+	}
+
+	public function get_num_photos()
+	{
+		// Todo: this query is too expensive for just showing the count on the index page
+		return count($this['photos']);
 	}
 }
 
@@ -159,7 +157,6 @@ class DataModelPhotobookFace extends DataModel
 				get_model('DataModelPhotobook'), -1, array(
 				'titel' => sprintf(__('Foto\'s van %s'),
 					implode(__(' en '), array_map(function($member) { return member_first_name($member); }, $members))),
-				'num_books' => 0,
 				'datum' => null,
 				'parent_id' => 0,
 				'member_ids' => array_map(function($member) { return $member->get_id(); }, $members)));

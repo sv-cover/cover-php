@@ -235,7 +235,7 @@
 				&& $book->get_id() 
 				
 				// which is not artificial (faces, likes) and has photos
-				&& ctype_digit($book->get_id()) && $book->count_books() > 0;
+				&& ctype_digit($book->get_id()) && $book['num_books'] > 0;
 		}
 		
 		/* Helper functions for _check_foto_values */

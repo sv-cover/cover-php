@@ -5,7 +5,7 @@
 			result.parent.id, result.parent.titel|e('html')))|raw }}</small>
 </h2>
 <p>{{ view.photobook_summary(result) }}</p>
-{% if result.count_photos > 0 %}
+{% if result.num_photos > 0 %}
 <ul class="photos flow-gallery">
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	{% for photo in result.get_photos[0:5] %}
