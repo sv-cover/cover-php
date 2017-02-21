@@ -164,8 +164,12 @@ CREATE TABLE agenda (
     replacement_for integer DEFAULT NULL -- refers to itself
 );
 
-ALTER TABLE agenda ADD CONSTRAINT agenda_replacement_for_fkey
-    FOREIGN KEY (replacement_for) REFERENCES agenda (id);
+-- Todo: add a separate column for agenda item approving. Currently new
+-- agenda items that are pending approval are marked with replacement_for=0
+-- which violates this constraint, obviously. Better to create a separate
+-- field for approving.
+-- ALTER TABLE agenda ADD CONSTRAINT agenda_replacement_for_fkey
+--     FOREIGN KEY (replacement_for) REFERENCES agenda (id);
 
 --
 -- Committee battle scores!

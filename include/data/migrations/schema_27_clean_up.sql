@@ -12,8 +12,9 @@ ALTER TABLE besturen ADD CONSTRAINT besturen_page_fkey
 	FOREIGN KEY (page_id) REFERENCES pages (id);
 
 ALTER TABLE agenda RENAME commissie TO committee_id;
-ALTER TABLE agenda ADD CONSTRAINT agenda_replacement_for_fkey
-	FOREIGN KEY (replacement_for) REFERENCES agenda (id);
+-- Can't use this yet because new unapproved items are marked as replacements for '0'
+-- ALTER TABLE agenda ADD CONSTRAINT agenda_replacement_for_fkey
+-- 	FOREIGN KEY (replacement_for) REFERENCES agenda (id);
 
 ALTER TABLE configuratie ADD CONSTRAINT configuratie_pkey
 	PRIMARY KEY (key);
