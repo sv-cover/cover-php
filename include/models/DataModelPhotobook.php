@@ -45,6 +45,9 @@
 		{
 			$size = $this->get_size();
 
+			if ($size[0] == 0 || $size[1] == 0)
+				return [null, null, null];
+
 			if ($max_width) {
 				$width = $max_width;
 				$height = round($max_width * ($size[1] / $size[0]));
