@@ -14,6 +14,8 @@
 		public function __construct()
 		{
 			$this->model = get_model('DataModelMember');
+
+			$this->view = new View($this);
 		}
 
 		protected function _get_placeholder_type($member)
