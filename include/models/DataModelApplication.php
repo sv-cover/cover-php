@@ -3,7 +3,14 @@ require_once 'include/data/DataModel.php';
 
 class DataIterApplication extends DataIter
 {
-	//
+	static public function fields()
+	{
+		return [
+			'key',
+			'name',
+			'secret'
+		]
+	}
 }
 
 class DataModelApplication extends DataModel 
