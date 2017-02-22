@@ -368,7 +368,18 @@ class DatabasePDO
 
 	public function commit()
 	{
-		if (--$this->transaction_counter === 0)
+		--$this->transaction_counter;
+
+		if ($this->transaction_counter < 0)
+			throw new Exception('Cannot commit this transaction: no open transaction');
+
+		if ($this->transaction_counter === 0)
 			$this->resource->commit();
+	}
+
+	public function rollback()
+	{
+		$this->resource->rollback();
+		$this->transaction_counter = 0;
 	}
 }

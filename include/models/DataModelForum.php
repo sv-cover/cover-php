@@ -1585,10 +1585,10 @@
 			// are already doing for us?
 
 			$this->db->delete('forum_acl', sprintf('author_type = %d AND author_id = %d',
-				self::TYPE_COMMITTEE, $iter->get('id')));
+				self::TYPE_COMMITTEE, $iter->get_id()));
 
-			$this->db->delete('forum_group_member', sprintf('author_type = %d AND author_id = ',
-				self::TYPE_COMMITTEE, $iter->get('id')));
+			$this->db->delete('forum_group_member', sprintf('author_type = %d AND author_id = %d',
+				self::TYPE_COMMITTEE, $iter->get_id()));
 		}
 		
 		/**

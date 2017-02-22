@@ -197,25 +197,36 @@
 
 		public function delete(DataIter $iter)
 		{
-			// Remove committee page
-			$editable_model = get_model('DataModelEditable');
+			get_db()->beginTransaction();
 
 			try {
-				$editable_model->delete($iter['page']);
-			} catch (DataIterNotFoundException $e) {
-				// Well, never mind.
+				// Save a reference to the page because I'm going to change page_id
+				$page = $iter['page'];
+
+				// Unset the page to prevent foreign key constraints
+				$iter['page_id'] = null;
+				parent::update($iter);
+
+				// Remove committee page
+				$editable_model = get_model('DataModelEditable');
+				$editable_model->delete($page);
+		
+				// Remove members from committee
+				$this->set_members($iter, array());
+
+				// Remove forum permissions
+				$forum_model = get_model('DataModelForum');
+				$forum_model->commissie_deleted($iter);
+
+				$result = parent::delete($iter);
+
+				get_db()->commit();
+			} catch (Exception $e) {
+				get_db()->rollback();
+				throw $e;
 			}
 
-			// Remove members from committee
-			$this->set_members($iter, array());
-
-			// Remove forum permissions
-			$forum_model = get_model('DataModelForum');
-			$forum_model->commissie_deleted($iter);
-
-			
-
-			return parent::delete($iter);
+			return $result;
 		}
 		
 		public function get_functies()
