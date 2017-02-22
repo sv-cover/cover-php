@@ -80,6 +80,10 @@ class DataModelPhotobookLike extends DataModel
 
 	public function get_for_lid(DataIter $member, array $photos = null)
 	{
+		// Todo: exclude hidden photos from this query? Or should hidden photos
+		// mainly be hidden from non-logged-in members, in which case it is not
+		// relevant for this query?
+
 		if ($photos === null)
 			$query = sprintf('lid_id = %d', $member->get_id());
 		elseif (count($photos) === 0)
