@@ -1406,7 +1406,7 @@ msgstr "Only visible to members"
 
 #: themes/default/views/agenda/form.twig:84
 msgid "Plaats agendapunt"
-msgstr "Accept calendar event"
+msgstr "Create calendar event"
 
 #: themes/default/views/agenda/index.twig:8
 msgid "Nieuw agendapunt"
