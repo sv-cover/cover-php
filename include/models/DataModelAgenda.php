@@ -276,10 +276,11 @@
 				SELECT locatie
 				FROM {$this->table}
 				WHERE locatie ILIKE '%{$sql_term}%'
+				  AND van > (CURRENT_TIMESTAMP - INTERVAL '2 year')
 				GROUP BY locatie
 				ORDER BY COUNT(id) DESC"
 				. ($limit !== null
-					? sprintf('LIMIT %d', $limit)
+					? sprintf(' LIMIT %d', $limit)
 					: ''));
 
 			return array_select($rows, 'locatie');
