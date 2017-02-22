@@ -371,11 +371,11 @@
 
 		public function run_suggest_location()
 		{
-			$locations = $this->model->find_locations($_GET['search']);
-
 			$limit = isset($_GET['limit'])
 				? (int) $_GET['limit']
 				: 100;
+
+			$locations = $this->model->find_locations($_GET['search'], $limit);
 
 			return $this->view->render_json($locations, $limit);
 		}
