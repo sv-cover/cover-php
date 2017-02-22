@@ -561,15 +561,12 @@
 
 		public function get_root_book()
 		{
-			$num_books = $this->db->query_value('SELECT COUNT(id) FROM foto_boeken WHERE parent_id = 0');
+			$counts = $this->db->query_first("
+				SELECT
+					(SELECT COUNT(id) FROM foto_boeken WHERE parent_id = 0) as num_books,
+					(SELECT COUNT(id) FROM fotos WHERE boek = 0 AND hidden = 'f') as num_photos");
 			
-			$num_photos = $this->db->query_value('SELECT COUNT(id) FROM fotos WHERE boek = 0');
-
-			return new DataIterRootPhotobook($this, 0, array(
-				'titel' => __('Fotoboek'),
-				'num_books' => $num_books,
-				'num_photos' => $num_photos
-			));
+			return new DataIterRootPhotobook($this, 0, array_merge(['titel' => __('Fotoboek')], $counts));
 		}
 
 		/**
