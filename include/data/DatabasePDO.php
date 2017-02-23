@@ -200,7 +200,7 @@ class DatabasePDO
 
 			$k .= '"' . $keys[$i] . '"';
 
-			$v .= $this->_encode_value($values[$keys[$i]]);
+			$v .= $this->escape_value($values[$keys[$i]]);
 		}
 
 		$query = $query . ' ' . $k . ') ' . $v . ');';
@@ -254,7 +254,7 @@ class DatabasePDO
 
 			/* Add <key>= */
 			try {
-				$k .= sprintf('"%s"=%s', $keys[$i], $this->_encode_value($values[$keys[$i]]));
+				$k .= sprintf('"%s"=%s', $keys[$i], $this->escape_value($values[$keys[$i]]));
 			} catch (InvalidArgumentException $e) {
 				throw new InvalidArgumentException("Cannot encode the value of field '{$keys[$i]}'", null, $e);
 			}
@@ -272,7 +272,22 @@ class DatabasePDO
 		return $this->last_affected;
 	}
 
-	private function _encode_value($value)
+	/**
+	  * Escape a string so it can be used in queries
+	  * @s the string to be escaped
+	  *
+	  * @result the escaped string
+	  */
+	function escape_string($s) {
+		return substr($this->resource->quote($s), 1, -1);
+	}
+	
+	/**
+	 * Escape any type of value (or get an InvalidArgumentException)
+	 * @param $value mixed
+	 * @return string SQL
+	 */
+	public function escape_value($value)
 	{
 		if ($value === null)
 			return 'NULL';
@@ -312,16 +327,6 @@ class DatabasePDO
 		return $this->last_affected;
 	}
 
-	/**
-	  * Escape a string so it can be used in queries
-	  * @s the string to be escaped
-	  *
-	  * @result the escaped string
-	  */
-	function escape_string($s) {
-		return substr($this->resource->quote($s), 1, -1);
-	}
-	
 	/**
 	  * Checks whether there is a connection
 	  *

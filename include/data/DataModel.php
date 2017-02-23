@@ -319,7 +319,7 @@
 					continue;
 				}
 
-				if (preg_match('/^(.+?)__(eq|cieq|ne|gt|lt|in|contains|isnull)$/', $key, $match)) {
+				if (preg_match('/^(.+?)__(eq|cieq|ne|gt|gte|lt|lte|in|contains|isnull)$/', $key, $match)) {
 					$field = $match[1];
 					$operator = $match[2];
 				} else {
@@ -330,11 +330,19 @@
 				switch ($operator)
 				{
 					case 'lt':
-						$format = "%s < '%s'";
+						$format = "%s < %s";
+						break;
+
+					case 'lte':
+						$format = "%s <= %s";
 						break;
 
 					case 'gt':
-						$format = "%s > '%s'";
+						$format = "%s > %s";
+						break;
+
+					case 'gte':
+						$format = "%s >= %s";
 						break;
 
 					case 'in':
@@ -349,13 +357,14 @@
 						if (count($value) === 0)
 							throw new InvalidArgumentException("The value for the condition on '$field' is an empty set.");
 
-						$safe_values = array_map([$this->db, 'escape_string'], $value);
+						$safe_values = array_map([$this->db, 'escape_value'], $value);
 						$format = sprintf('%%s IN (%s)', implode(', ', $safe_values));
 						unset($value);
 						break;
 
 					case 'contains':
-						$format = "%s ILIKE '%%%s%%'";
+						$format = "%s ILIKE %s";
+						$value = '%' . $value . '%';
 						break;
 
 					case 'isnull':
@@ -364,21 +373,21 @@
 						break;
 
 					case 'ne':
-						$format = "%s <> '%s'";
+						$format = "%s <> %s";
 						break;
 
 					case 'cieq': // Case insensitive equivalence
-						$format = "LOWER(%s) = LOWER('%s')";
+						$format = "LOWER(%s) = LOWER(%s)";
 						break;
 
 					default:
 					case 'eq':
-						$format = "%s = '%s'";
+						$format = "%s = %s";
 						break;
 				}
 
 				$atoms[] = isset($value)
-					? sprintf($format, $field, $this->db->escape_string($value))
+					? sprintf($format, $field, $this->db->escape_value($value))
 					: sprintf($format, $field);
 			}
 
