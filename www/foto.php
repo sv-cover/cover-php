@@ -191,7 +191,7 @@
 			$imagick->newImage($width, $height, $background);
 
 			$draw->setFillColor($foreground);
-			$draw->setFont('fonts/verdana.ttf');
+			$draw->setFont('../fonts/verdana.ttf');
 			$draw->setFontSize($width / 2);
 			$draw->setTextAntialias(true);
 

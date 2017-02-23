@@ -25,7 +25,7 @@
 	  *
 	  */
 	function init_i18n() {
-		i18n_translation::set_path(dirname(__FILE__) . '/../locale');
+		i18n_translation::set_path(dirname(__FILE__) . '/../../locale');
 		i18n_translation::set_locale(i18n_get_locale());
 		
 		/* Set language to use */
