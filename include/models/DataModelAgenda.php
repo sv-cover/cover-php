@@ -95,21 +95,22 @@
 			$conditions = array();
 
 			if ($from !== null)
-				$conditions[] = "agenda.tot >= date '$from'";
+				$conditions['van__gte'] = $from;
 
 			if ($till !== null)
-				$conditions[] = "agenda.tot < date '$till'";
+				$conditions['tot__lt'] = $till;
 
 			if ($confirmed_only)
-				$conditions[] = "agenda.replacement_for IS NULL";
+				$conditions['replacement_for__isnull'] = true;
 
-			$where_clause = implode(' AND ', $conditions);
-
-			return $this->find($where_clause);
+			return $this->find($conditions);
 		}
 		
 		protected function _generate_query($where)
 		{
+			if (is_array($where))
+				$where = $this->_generate_conditions_from_array($where);
+			
 			return "
 				SELECT
 					{$this->table}.*,
