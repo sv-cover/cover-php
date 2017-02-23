@@ -26,8 +26,7 @@ class ControllerWachtwoordVergeten extends Controller
 					'type' => 'wachtwoord',
 					'value' => $iter['id']);
 			
-			$confirm_model = new DataModel(get_db(), 'confirm', null);
-			$confirm_model->insert(new DataIter($confirm_model, -1, $values));
+			get_db()->insert('confirm', $values);
 			
 			$language_code = strtolower(i18n_get_language());
 			$variables = array(
