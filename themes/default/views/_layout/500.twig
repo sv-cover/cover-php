@@ -19,7 +19,7 @@
 				{% if sentry_id %}
 				<p class="align-center">
 					Sentry event id: <code>{{ sentry_id }}</code><br>
-					<button onclick="reportUserFeedback({{ sentry_id|json_encode()|raw }})">Provide feedback</button>
+					<button class="button" onclick="reportUserFeedback()">Provide feedback</button>
 				</p>
 				{% endif %}
 
@@ -33,12 +33,12 @@
 
 		<script src="https://cdn.ravenjs.com/3.10.0/raven.min.js"></script>
 		<script>
-			function reportUserFeedback(sentry_id) {
+			function reportUserFeedback() {
 				Raven.config({{ global.config.sentry_public_url|json_encode()|raw }});
 				{% if global.auth.logged_in %}
-					Raven.setUserContext({ user_id: {{ global.identity.member.id|json_encode()|raw }} });
+				Raven.setUserContext({ id: {{ global.identity.member.id|json_encode()|raw }} });
 				{% endif %}
-				Raven.showReportDialog({ eventId: eventId });
+				Raven.showReportDialog({ eventId: {{ sentry_id|json_encode()|raw }} });
 			}
 		</script>
 	</body>
