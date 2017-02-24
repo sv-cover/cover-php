@@ -589,6 +589,8 @@
 
 		public $current_page = 0;
 
+		private $_acl_cache = [];
+
 		/**
 		  * Create a new DataModelForum object
 		  * @db the database to use
@@ -800,9 +802,15 @@
 		  */
 		public function check_acl(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
-			return $this->check_acl_member($forum, $acl, $identity)
-				|| $this->check_acl_commissies($forum, $acl, $identity)
-				|| $this->check_acl_group($forum, $acl, $identity);
+			$key = sprintf('%d|%d|%d', $forum['id'], $acl, $identity->get('id'));
+
+			if (!array_key_exists($key, $this->_acl_cache)) {
+				$this->_acl_cache[$key] = $this->check_acl_member($forum, $acl, $identity)
+					|| $this->check_acl_commissies($forum, $acl, $identity)
+					|| $this->check_acl_group($forum, $acl, $identity);
+			}
+
+			return $this->_acl_cache[$key];
 		}
 		
 		/**
