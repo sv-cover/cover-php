@@ -1,0 +1,45 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Wachtwoord instellen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Wachtwoord instellen') }}</h1>
+<div class="messageBox">
+	<form class="vertical-form" method="post" action="">
+		{{ html_nonce('reset', token) }}
+		{% if success is same as(true) %}
+			<section class="success-section">
+				<p>{{ __('Je wachtwoord is opnieuw ingesteld.') }}</p>
+				<p><a href="sessions.php?view=login" class="button">{{ __('Log in') }}</a></p>
+			</section>
+		{% elseif success is same as(false) %}
+			<section class="error-section">
+				{% if 'password' in errors %}
+					<p>{{ __('Je wachtwoord is te kort, of te voorspelbaar. Maak het langer of gebruik wat meer verschillende karakters.')}}</p>
+				{% endif %}
+				{% if 'password_repeat' in errors %}
+					<p>{{ __('De twee wachtwoorden komen niet overeen.') }}</p>
+				{% endif %}
+			</section>
+		{% endif %}
+
+		{% if not success %}
+			<p>{{ __('Kies een nieuw wachtwoord. Lange wachtwoorden zijn prima, wachtwoorden met veel verschillende karakters ook.') }}</p>
+			
+			<div>
+				{{ html_label(__('Nieuw wachtwoord'), 'password', required=true, errors=errors) }}
+				{{ html_input_password('password', required=true, errors=errors) }}
+			</div>
+
+			<div>
+				{{ html_label(__('Herhaal wachtwoord'), 'password_repeat', required=true, errors=errors) }}
+				{{ html_input_password('password_repeat', required=true, errors=errors) }}
+			</div>
+
+			<div class="controls">
+				<button type="submit" class="button">{{ __('Stel wachtwoord in') }}</button>
+			</div>
+		{% endif %}
+	</form>
+</div>
+{% endblock %}

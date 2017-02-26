@@ -246,12 +246,10 @@ class ControllerApi extends Controller
 		$model->insert($member);
 
 		// Create a password
-		$passwd = create_pronouncable_password();
-		
-		$model->set_password($member, $passwd);
+		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
 		
 		// Setup e-mail
-		$data['wachtwoord'] = $passwd;
+		$data['password_link'] = $token['link'];
 		$mail = implode("\n\n", [
 				'(For English version see below)',
 				parse_email('nieuwlid_nl.txt', $data),

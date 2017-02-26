@@ -30,6 +30,6 @@ Het Coverbestuur
 
 -----------------------------
 
-Je logingegevens:
-email:      $email
-password:   $wachtwoord
+Voordat je kan inloggen heb je nog een wachtwoord nodig. Stel er een in via deze link:
+$password_link
+

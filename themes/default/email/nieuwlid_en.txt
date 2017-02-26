@@ -31,6 +31,5 @@ The board of study association Cover
 
 -----------------------------
 
-Your login details:
-email:      $email
-password:   $wachtwoord
+Choose your password by following this link:
+$password_link

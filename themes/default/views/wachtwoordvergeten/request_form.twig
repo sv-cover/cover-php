@@ -6,18 +6,19 @@
 <h1>{{ __('Wachtwoord vergeten') }}</h1>
 <div class="messageBox">
 	<form class="vertical-form" method="post" action="">
+		{{ html_nonce('request') }}
 		{% if success is same as(true) %}
 			<section class="success-section">
-				<p>{{ __('Er is een mailtje gestuurd naar %s. Volg de aanwijzingen hierin op om de aanvraag van een nieuw wachtwoord te bevestigen.')|format(email) }}</p>
+				<p>{{ __('Er is een mailtje gestuurd naar %s. Volg de aanwijzingen hierin op om de aanvraag van een nieuw wachtwoord te bevestigen.')|format(email_address) }}</p>
 			</section>
 		{% elseif success is same as(false) %}
 			<section class="error-section">
-				<p>{{ __('Er bestaat geen account met het opgegeven E-Mail adres (%s).')|format(email) }}</p>
+				<p>{{ __('Er bestaat geen account met het opgegeven E-Mail adres (%s).')|format(email_address) }}</p>
 			</section>
 		{% endif %}
 
 		{% if not success %}
-			<p>{{ __('Vul hieronder je E-mail adres in en druk op de `Reset wachtwoord` knop. Hierna wordt er een mailtje naar dat adres gestuurd met verdere aanwijzingen.') }}</p>
+			<p>{{ __('Vul hieronder je e-mailadres in en druk op de `Reset wachtwoord` knop. Hierna wordt er een mailtje naar dat adres gestuurd met verdere aanwijzingen.') }}</p>
 			
 			<div>
 				{{ html_label(__('E-Mail'), 'email', required=true) }}
