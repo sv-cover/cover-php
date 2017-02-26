@@ -16,7 +16,7 @@
 		{{ message.message | parse_markup}}
 
 		<p class="weblog-post-footer">
-			<a href="forum.php?thread={{ iter.id|e('url') }}">{{ __('Reacties') }}: {{ iter.get_num_messages() - 1 }}</a>
+			<a href="forum.php?thread={{ iter.id|e('url') }}">{{ __('Reacties') }}: {{ iter.num_messages - 1 }}</a>
 		</p>
 	</div>
 </div>

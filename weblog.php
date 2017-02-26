@@ -24,7 +24,7 @@ class ControllerWeblog extends Controller
 		if (!$forum)
 			$iters = null;
 		else
-			$iters = $forum->get_last_thread(0, 20);
+			$iters = $forum->get_threads(0, 20);
 
 		return $this->view->render_index($iters);
 	}

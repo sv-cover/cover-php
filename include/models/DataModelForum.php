@@ -100,22 +100,6 @@
 
 			return get_model('DataModelPoll')->new_poll($this);
 		}
-
-		/**
-		  * Get the number of threads in a forum
-		  * @iter a #DataIter representing a forum
-		  *
-		  * @result the number of threads in the forum
-		  */
-		public function get_num_threads() {
-			return (int) $this->db->query_value('
-				SELECT
-					COUNT(*)
-				FROM
-					forum_threads
-				WHERE
-					forum_id = ' . intval($this['id']));
-		}
 		
 		/**
 		  * Get the number of pages in a forum
@@ -125,28 +109,8 @@
 		  */
 		public function get_num_forum_pages()
 		{
-			return intval(ceil($this->get_num_threads() / floatval($this->model->threads_per_page)));
+			return intval(ceil($this['num_threads'] / floatval($this->model->threads_per_page)));
 		}
-		
-		
-		/**
-		  * Get the number of messages in the forum
-		  *
-		  * @result the number of messages in the forum
-		  */		
-		public function get_num_forum_messages()
-		{
-			return (int) $this->db->query_value('
-				SELECT
-					COUNT(*)
-				FROM
-					forum_threads,
-					forum_messages
-				WHERE
-					forum_messages.thread_id = forum_threads.id AND
-					forum_threads.forum_id = ' . intval($this['id']));
-		}
-
 		
 		/**
 		  * Get permissions for a certain forum
@@ -168,23 +132,55 @@
 			return $this->model->_rows_to_iters($rows, 'DataIterForumPermission');
 		}
 					
-		/**
-		  * Get a number of last written threads in a forum
-		  * @iter a #DataIter representing a forum
-		  * @offset optional; the offset from which to get the last 
-		  * written threads (defaults to no offset)
-		  * @limit optional; the number of threads to get. The 
-		  * default returns only the last thread
-		  *
-		  * @result if no limit is specified it returns the last
-		  * thread in a forum as a #DataIter. It returns the last
-		  * threads as an array of #DataIter otherwise
-		  */
-		public function get_last_thread($offset = -1, $limit = -1, $last_reply = true)
+		public function get_last_thread()
+		{
+			$row = [
+				'id' => $this['last_thread__id'],
+				'forum_id' => $this['last_thread__forum_id'],
+				'author_type' => $this['last_thread__author_type'],
+				'author_id' => $this['last_thread__author_id'],
+				'subject' => $this['last_thread__subject'],
+				'date' => $this['last_thread__date'],
+				'poll' => $this['last_thread__poll'],
+				'num_messages' => $this['last_thread__num_messages']
+			];
+
+			return $this->model->_row_to_iter($row, DataIterForumThread::class);
+		}
+
+		public function get_last_message()
+		{
+			$row = [
+				'id' => $this['last_message__id'],
+				'thread_id' => $this['last_message__thread_id'],
+				'author_id' => $this['last_message__author_id'],
+				'author_type' => $this['last_message__author_type'],
+				'message' => $this['last_message__message'],
+				'date' => $this['last_message__date'],
+			];
+
+			return $this->model->_row_to_iter($row, DataIterForumMessage::class);
+		}
+
+		// /**
+		//   * Get a number of last written threads in a forum
+		//   * @iter a #DataIter representing a forum
+		//   * @offset optional; the offset from which to get the last 
+		//   * written threads (defaults to no offset)
+		//   * @limit optional; the number of threads to get. The 
+		//   * default returns only the last thread
+		//   *
+		//   * @result if no limit is specified it returns the last
+		//   * thread in a forum as a #DataIter. It returns the last
+		//   * threads as an array of #DataIter otherwise
+		//   */
+		public function get_threads($offset = -1, $limit = -1, $last_reply = true)
 		{
 			$rows = $this->db->query('
 				SELECT
 					forum_threads.*,
+
+					(SELECT COUNT(id) FROM forum_messages WHERE thread_id = forum_threads.id) as num_messages,
 
 					forum_messages.date AS last_date,
 					forum_messages.id AS last_id,
@@ -426,23 +422,6 @@
 		{
 			return $this->model->get_iter($this['forum_id']);
 		}
-
-		/**
-		  * Get the number of replies in a thread
-		  * @iter a #DataIter representing a thread
-		  *
-		  * @result the number of replies in the thread
-		  */
-		public function get_num_messages()
-		{
-			return intval($this->db->query_value('
-					SELECT
-						COUNT(*)
-					FROM
-						forum_messages
-					WHERE
-						forum_messages.thread_id = ' . intval($this['id'])));
-		}
 		
 		/**
 		  * Get the number of pages in a thread
@@ -452,7 +431,7 @@
 		  */
 		public function get_num_thread_pages()
 		{
-			return intval(ceil($this->get_num_messages() / floatval($this->model->messages_per_page)));
+			return intval(ceil($this['num_messages'] / floatval($this->model->messages_per_page)));
 		}
 		
 		/**
@@ -847,13 +826,18 @@
 			if (isset($cache[$forum_id]))
 				return $cache[$forum_id];
 
-			$row = $this->db->query_first('
+			$row = $this->db->query_first(sprintf('
 					SELECT
-						*
+						forums.*,
+						COUNT(f_t.id) as num_threads 
 					FROM
 						forums
+					LEFT JOIN forum_threads f_t ON
+						f_t.forum_id = forums.id
 					WHERE
-						id = ' . intval($forum_id));
+						forums.id = %d
+					GROUP BY
+						forums.id', $forum_id));
 			
 			return $cache[$forum_id] = $this->_row_to_iter($row, 'DataIterForum');
 		}
@@ -870,12 +854,68 @@
 		{
 			$rows = $this->db->query('
 					SELECT
-						*
+						forums.*,
+						(
+							SELECT
+								COUNT(f_t.id)
+							FROM
+								forum_threads f_t
+							WHERE
+								f_t.forum_id = forums.id
+						) as num_threads,
+						(
+							SELECT
+								COUNT(f_m.id)
+							FROM
+								forum_threads f_t
+							LEFT JOIN forum_messages f_m ON
+								f_m.thread_id = f_t.id
+							WHERE
+								f_t.forum_id = forums.id
+						) as num_forum_messages,
+						l_f_t.id last_thread__id,
+						l_f_t.forum_id last_thread__forum_id,
+						l_f_t.author_type last_thread__author_type,
+						l_f_t.author_id last_thread__author_id,
+						l_f_t.subject last_thread__subject,
+						l_f_t.date last_thread__date,
+						l_f_t.poll last_thread__poll,
+						(
+							SELECT
+								COUNT(f_m.id)
+							FROM
+								forum_messages f_m
+							WHERE
+								f_m.thread_id = l_f_t.id
+						) last_thread__num_messages,
+						l_f_m.id last_message__id,
+						l_f_m.thread_id last_message__thread_id,
+						l_f_m.author_id last_message__author_id,
+						l_f_m.author_type last_message__author_type,
+						l_f_m.message last_message__message,
+						l_f_m.date last_message__date
 					FROM
 						forums
+					LEFT JOIN LATERAL (
+						SELECT
+							f.id forum_id,
+							MAX(f_m.id) last_message_id
+						FROM
+							forums f
+						LEFT JOIN forum_threads f_t ON
+							f_t.forum_id = f.id
+						LEFT JOIN forum_messages f_m ON
+							f_m.thread_id = f_t.id
+						GROUP BY
+							f.id
+					) l_m ON l_m.forum_id = forums.id
+					LEFT JOIN forum_messages l_f_m ON
+						l_f_m.id = l_m.last_message_id
+					LEFT JOIN forum_threads l_f_t ON
+						l_f_t.id = l_f_m.thread_id
 					ORDER BY
-						position,
-						name');
+						forums.position,
+						forums.name');
 			
 			return $this->_rows_to_iters($rows, 'DataIterForum');
 		}
@@ -970,14 +1010,19 @@
 		  */
 		public function get_thread($id)
 		{
-			$row = $this->db->query_first('
+			$row = $this->db->query_first(sprintf('
 					SELECT
-						*,
-						date_part(\'day\', CURRENT_TIMESTAMP - date) AS since
+						f_t.*,
+						COUNT(f_m.id) as num_messages,
+						date_part(\'day\', CURRENT_TIMESTAMP - f_t.date) AS since
 					FROM
-						forum_threads
+						forum_threads f_t
+					LEFT JOIN forum_messages f_m ON
+						f_m.thread_id = f_t.id
 					WHERE
-						id = ' . intval($id));
+						f_t.id = %d
+					GROUP BY
+						f_t.id', $id));
 
 			if (!$row)
 				throw new DataIterNotFoundException($id, $this);
@@ -998,14 +1043,14 @@
 		  * the specified page of the forum. It returns null when the
 		  * forum is not readable by the current user
 		  */
-		public function get_threads($forum, &$page, &$max)
+		public function get_threads(DataIterForum $forum, &$page, &$max)
 		{
-			$max = max($forum->get_num_forum_pages() - 1, 0);
+			$max = max($forum['num_forum_pages'] - 1, 0);
 			$page = min($max, max(0, intval($page)));
 			
 			$this->current_page = $page;
 			
-			return $forum->get_last_thread(($page * $this->threads_per_page), $this->threads_per_page);
+			return $forum->get_threads(($page * $this->threads_per_page), $this->threads_per_page);
 		}
 		
 		/**
@@ -1379,27 +1424,20 @@
 			if ($member === null)
 				return;
 
-			if ($forum === null) {
-				$forums = $this->get();
-				
-				foreach ($forums as $forum)
-					$this->update_last_visit($member, $forum);
-			} else {
-				/* Set last visit date to the session date, and set the session date to null
-				   for all visits that are older than 15 minutes */
-				$this->db->update('forum_visits', array(
-					'lastvisit' => new DatabaseLiteral('sessiondate'),
-					'sessiondate' => null),
-					'lid_id = ' . intval($member['id']) . '
-					 AND forum_id = ' . intval($forum['id']) . '
-					 AND sessiondate + INTERVAL \'15 minutes\' < CURRENT_TIMESTAMP');
-				
-				if ($this->db->get_affected_rows()) {
-					/* Delete all obsolete session reads */
-					$this->db->delete('forum_sessionreads',
-						'lid_id = ' . intval($member['id']) . '
-						 AND forum_id = ' . intval($forum['id']));
-				}
+			/* Set last visit date to the session date, and set the session date to null
+			   for all visits that are older than 15 minutes */
+			$this->db->update('forum_visits', array(
+				'lastvisit' => new DatabaseLiteral('sessiondate'),
+				'sessiondate' => null),
+				'lid_id = ' . intval($member['id'])
+				. ' AND sessiondate + INTERVAL \'15 minutes\' < CURRENT_TIMESTAMP'
+				. ($forum === null ? '' : ' AND forum_id = ' . intval($forum['id'])));
+			
+			if ($this->db->get_affected_rows()) {
+				/* Delete all obsolete session reads */
+				$this->db->delete('forum_sessionreads',
+					'lid_id = ' . intval($member['id'])
+					. ($forum === null ? '' : ' AND forum_id = ' . intval($forum['id'])));
 			}
 		}
 		
@@ -1651,7 +1689,7 @@
 			$thread = $this->get_thread($iter->get('thread_id'));
 
 			/* Check if last message was removed */
-			if ($thread && $thread->get_num_messages() == 0)
+			if ($thread && $thread['num_messages'] == 0)
 			{
 				$ret = intval($thread->get('forum_id'));
 				$this->delete_thread($thread);
