@@ -927,7 +927,7 @@ msgstr "Email"
 
 #: themes/default/views/almanak/almanak.php:70
 msgid "geboortedatum"
-msgstr "Birth date"
+msgstr "Date of birth"
 
 #: themes/default/views/almanak/almanak.php:71
 msgid "geslacht"
