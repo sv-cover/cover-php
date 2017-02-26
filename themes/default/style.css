@@ -2683,6 +2683,28 @@ ul.committee-list > li .position {
 	margin-left: 20px;
 }
 
+.toggle-action-button.toggle-state-disabled .button {
+	background-color: #ccc;
+	cursor: default;
+}
+
+.toggle-action-button.toggle-state-disabled .button:before {
+	background-color: #eee;
+}
+
+.toggle-action-button.toggle-state-disabled .button:after {
+	background-color: #ccc;
+	margin-left: 24px;
+}
+
+.toggle-action-button.toggle-state-disabled:hover .button:after {
+	margin-left: 0;
+}
+
+.toggle-action-button.toggle-state-disabled.toggle-state-active:hover .button:after {
+	margin-left: 24px;
+}
+
 #login-form {
 
 }
