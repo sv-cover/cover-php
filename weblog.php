@@ -20,13 +20,17 @@ class ControllerWeblog extends Controller
 			throw new RuntimeException('weblog_forum setting is missing.');
 		
 		$forum = $this->model->get_iter($forumid);
-		
+
+		$posts_per_page = 5;
+
+		$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+
 		if (!$forum)
 			$iters = null;
 		else
-			$iters = $forum->get_threads(0, 20);
+			$iters = $forum->get_threads($page * $posts_per_page, $posts_per_page);
 
-		return $this->view->render_index($iters);
+		return $this->view->render_index($iters, $page);
 	}
 }
 
