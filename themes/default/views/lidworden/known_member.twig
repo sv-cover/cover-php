@@ -1,0 +1,13 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<h1>{{ __('Lidmaatschapsformulier') }}</h1>
+<div class="messageBox">
+	<p>{{ __('Het e-mailadres dat je gebruikt is al bekend bij ons, dus waarschijnlijk zit je al in onze administratie! In dat geval is het makkelijker om even contact op te nemen met de secretaris via secretary@svcover.nl.') }}</p>
+	<div class="call-to-action-or-block">
+		<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
+		<span class="separator">{{ __('of') }}</span>
+		<a href="wachtwoordvergeten.php" class="button reset-password">{{ __('Reset je wachtwoord') }}</a>
+	</div>
+</div>
+{% endblock %}
