@@ -2,9 +2,9 @@
 	
 class WeblogView extends View
 {
-	public function render_index($iters)
+	public function render_index(array $iters, $page)
 	{
-		return $this->render('index.twig', compact('iters'));
+		return $this->render('index.twig', compact('iters', 'page'));
 	}
 
 	public function stylesheets()
