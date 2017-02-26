@@ -2694,7 +2694,6 @@ ul.committee-list > li .position {
 
 .toggle-action-button.toggle-state-disabled .button:after {
 	background-color: #ccc;
-	margin-left: 24px;
 }
 
 .toggle-action-button.toggle-state-disabled:hover .button:after {

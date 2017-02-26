@@ -25,7 +25,7 @@
 			{% endif %}
 		</form>
 		{% else %}
-		<div class="list-group-item-action toggle-action-button toggle-state-active toggle-state-disabled">
+		<div class="list-group-item-action toggle-action-button toggle-state-disabled {{ mailing_list.subscribed ? 'toggle-state-active' : '' }}">
 			<button disabled="disabled" class="button" title="{{ __('Je bent aangemeld. Vraag de commissie om je af te melden.')|e('html_attr') }}">{{ __('Uitschrijven') }}</button>
 		</div>
 		{% endif %}
