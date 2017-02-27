@@ -5,7 +5,7 @@
 	{
 		public function __construct($id, DataModel $source = null)
 		{
-			parent::__construct(sprintf('%s with id %d was not found',
+			parent::__construct(sprintf('%s with id %s was not found',
 				$source
 					? substr(get_class($source), strlen('DataModel'))
 					: 'DataIter',

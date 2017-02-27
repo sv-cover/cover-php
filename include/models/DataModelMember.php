@@ -279,7 +279,7 @@
 			$iter = $this->find_one(['email__cieq' => $email]);
 
 			if ($iter === null)
-				throw new DataIterNotFoundException($this, $email);
+				throw new DataIterNotFoundException($email, $this);
 
 			return $iter;
 		}
