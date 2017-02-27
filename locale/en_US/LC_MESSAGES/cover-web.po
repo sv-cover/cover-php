@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-02-11 20:20+0100\n"
+"POT-Creation-Date: 2017-02-27 01:35+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -38,21 +38,21 @@ msgstr ""
 "The changes to the calendar event are waiting for approval. Once the "
 "governing board has accepted the event, it shall be placed on the website."
 
-#: agenda.php:290
+#: agenda.php:291
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar event."
 
-#: agenda.php:292
+#: agenda.php:293
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar events"
 
-#: agenda.php:295
+#: agenda.php:296
 #, php-format
 msgid ""
 "De commissies %s zijn op de hoogte gesteld van het weigeren van de "
@@ -60,7 +60,7 @@ msgid ""
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events"
 
-#: agenda.php:335
+#: agenda.php:336
 msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
@@ -70,6 +70,7 @@ msgstr "Boards"
 
 #: confirm.php:30 themes/default/views/profiel/profile_tab.twig:41
 #: themes/default/views/profiel/profile_tab.twig:53
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:30
 msgid "Nieuw wachtwoord"
 msgstr "New password"
 
@@ -111,25 +112,6 @@ msgid ""
 msgstr ""
 "This action cannot be done, if this keeps occuring contact  the easy at "
 "easy@ai.rug.nl"
-
-#: include/controllers/Controller.php:86
-msgid ""
-"Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
-"de WebCie (webcie@svcover.nl)"
-msgstr ""
-"Sorry, something went horribly wrong. Please try again in a bit or contact "
-"the WebCie (webcie@svcover.nl)"
-
-#: include/controllers/Controller.php:98
-msgid ""
-"Sorry, een (oud) AC/DCee-lid kan voor geen meter programmeren. Als je daar "
-"vaker last van hebt, vertel het door aan de commissie (webcie@svcover.nl) "
-"zodat ze taart van die persoon kunnen eisen."
-msgstr ""
-"Our apologies! An (old) AC/DCee member couldn't program for shit, and now "
-"something broke down. If you experience this problem more often, please "
-"contact the committee (webcie@svcover.nl) so they can demand pie from the "
-"person in question. "
 
 #: include/data.php:10
 #, php-format
@@ -384,47 +366,48 @@ msgstr "No name"
 msgid "Jij!"
 msgstr "You!"
 
-#: include/member.php:101 include/models/DataModelForum.php:1038
-#: include/models/DataModelForum.php:1148
-#: include/models/DataModelForum.php:1174
-#: include/models/DataModelMember.php:598
+#: include/member.php:101 include/models/DataModelForum.php:1146
+#: include/models/DataModelForum.php:1256
+#: include/models/DataModelForum.php:1282
+#: include/models/DataModelMember.php:610
 #: themes/default/views/forum/forum.twig:68
 #: themes/default/views/forum/thread.twig:69
 #: themes/default/views/fotoboek/single.twig:111
+#: themes/default/views/mailinglijsten/single.twig:52
 msgid "Onbekend"
 msgstr "Unknown"
 
-#: include/models/DataModelForum.php:1113
-#: include/models/DataModelForum.php:1162
+#: include/models/DataModelForum.php:1221
+#: include/models/DataModelForum.php:1270
 #: themes/default/views/announcements/announcements.php:29
-#: themes/default/views/mailinglijsten/mailinglijsten.php:30
+#: themes/default/views/mailinglijsten/mailinglijsten.php:31
 #: themes/default/views/profiel/privacy_tab.twig:18
 msgid "Iedereen"
 msgstr "Everyone"
 
-#: include/models/DataModelForum.php:1116
+#: include/models/DataModelForum.php:1224
 msgid "Alle leden"
 msgstr "All members"
 
-#: include/models/DataModelForum.php:1126
+#: include/models/DataModelForum.php:1234
 msgid "Alle commissies"
 msgstr "Committees"
 
-#: include/models/DataModelForum.php:1136
+#: include/models/DataModelForum.php:1244
 msgid "Alle groepen"
 msgstr "Groups"
 
-#: include/models/DataModelForum.php:1165
-#: include/models/DataModelMember.php:580
-#: themes/default/views/profiel/profiel.php:380
+#: include/models/DataModelForum.php:1273
+#: include/models/DataModelMember.php:592
+#: themes/default/views/profiel/profiel.php:379
 #: themes/default/views/almanak/index.twig:22
 #: themes/default/views/commissies/form.twig:41
 #: themes/default/views/search/_single_member.twig:3
 msgid "Lid"
 msgstr "Member"
 
-#: include/models/DataModelForum.php:1168
-#: themes/default/views/commissies/commissies.php:80
+#: include/models/DataModelForum.php:1276
+#: themes/default/views/commissies/commissies.php:71
 #: themes/default/views/agenda/form.twig:26
 #: themes/default/views/agenda/moderate.twig:25
 #: themes/default/views/committeebattle/index.twig:20
@@ -433,44 +416,44 @@ msgstr "Member"
 msgid "Commissie"
 msgstr "Committee"
 
-#: include/models/DataModelForum.php:1171
+#: include/models/DataModelForum.php:1279
 msgid "Groep"
 msgstr "Group"
 
-#: include/models/DataModelMember.php:583
+#: include/models/DataModelMember.php:595
 #: themes/default/views/almanak/almanak.php:36
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: include/models/DataModelMember.php:586
+#: include/models/DataModelMember.php:598
 #: themes/default/views/almanak/almanak.php:39
-#: themes/default/views/profiel/profiel.php:382
+#: themes/default/views/profiel/profiel.php:381
 #: themes/default/views/almanak/index.twig:24
 #: themes/default/views/search/_single_member.twig:5
 msgid "Lid af"
 msgstr "Previously a member"
 
-#: include/models/DataModelMember.php:589
+#: include/models/DataModelMember.php:601
 #: themes/default/views/almanak/almanak.php:42
-#: themes/default/views/profiel/profiel.php:383
+#: themes/default/views/profiel/profiel.php:382
 #: themes/default/views/almanak/index.twig:25
 #: themes/default/views/search/_single_member.twig:7
 msgid "Erelid"
 msgstr "Honorary Member"
 
-#: include/models/DataModelMember.php:592
+#: include/models/DataModelMember.php:604
 #: themes/default/views/almanak/almanak.php:45
-#: themes/default/views/profiel/profiel.php:384
+#: themes/default/views/profiel/profiel.php:383
 #: themes/default/views/almanak/index.twig:26
 #: themes/default/views/search/_single_member.twig:9
 msgid "Donateur"
 msgstr "Donor"
 
-#: include/models/DataModelMember.php:595
+#: include/models/DataModelMember.php:607
 msgid "Geen status"
 msgstr "No status"
 
-#: include/models/DataModelPhotobook.php:565
+#: include/models/DataModelPhotobook.php:569
 #: themes/default/views/fotoboek/add_photos.twig:6
 #: themes/default/views/fotoboek/photobook.twig:3
 #: themes/default/views/fotoboek/photobook.twig:6
@@ -478,17 +461,17 @@ msgstr "No status"
 msgid "Fotoboek"
 msgstr "Photo album"
 
-#: include/models/DataModelPhotobookFace.php:160
+#: include/models/DataModelPhotobookFace.php:158
 #: themes/default/views/profiel/public_tab.twig:46
 #, python-format, php-format
 msgid "Foto's van %s"
 msgstr "Photos of %s"
 
-#: include/models/DataModelPhotobookFace.php:161
+#: include/models/DataModelPhotobookFace.php:159
 msgid " en "
 msgstr " and "
 
-#: include/models/DataModelPhotobookLike.php:137
+#: include/models/DataModelPhotobookLike.php:141
 msgid "Favoriete foto's"
 msgstr "Liked photos"
 
@@ -501,6 +484,7 @@ msgid "vorige"
 msgstr "previous"
 
 #: include/pagenavigation.php:6 themes/default/views/forum/forum.php:162
+#: themes/default/views/weblog/index.twig:18
 msgid "Vorige pagina"
 msgstr "Previous page"
 
@@ -509,18 +493,19 @@ msgid "volgende"
 msgstr "next"
 
 #: include/pagenavigation.php:22 themes/default/views/forum/forum.php:186
+#: themes/default/views/weblog/index.twig:21
 msgid "Volgende pagina"
 msgstr "Next page"
 
-#: include/view.php:183
+#: include/view.php:186
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
-#: lidworden.php:145
+#: lidworden.php:151
 msgid "Lidmaatschapsaanvraag bevestigen"
 msgstr "Confirm membership application"
 
-#: lidworden.php:157
+#: lidworden.php:163
 msgid ""
 "We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan te "
 "melden, of het bestuur (board@svcover.nl) even mailen."
@@ -548,7 +533,7 @@ msgstr "Treasurer"
 msgid "Algemeen Lid"
 msgstr "General Member"
 
-#: locale/strings.php:14 themes/default/views/fotoboek/photobook.twig:226
+#: locale/strings.php:14 themes/default/views/fotoboek/photobook.twig:227
 #: themes/default/views/fotoboek/photobook_form.twig:37
 msgid "Fotograaf"
 msgstr "Photographer"
@@ -660,7 +645,7 @@ msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
 
-#: sessions.php:115
+#: sessions.php:116
 msgid "Verkeerde combinatie van e-mailadres en wachtwoord"
 msgstr "Wrong combination of e-mail address and password"
 
@@ -735,6 +720,7 @@ msgstr "Former Boards"
 #: themes/default/views/commissies/index.twig:4
 #: themes/default/views/commissies/index.twig:12
 #: themes/default/views/committeebattle/form.twig:19
+#: themes/default/views/mailinglijsten/single.twig:78
 #: themes/default/views/sessions/overrides.twig:20
 msgid "Commissies"
 msgstr "Committees"
@@ -836,7 +822,7 @@ msgid "Foto's"
 msgstr "Photos"
 
 #: themes/default/views/_layout/layout.php:136
-#: themes/default/views/lidworden/lidworden.twig:83
+#: themes/default/views/lidworden/lidworden.twig:82
 msgid "Studie"
 msgstr "Study"
 
@@ -868,7 +854,7 @@ msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
 #: themes/default/views/_layout/layout.php:148
-#: themes/default/views/lidworden/lidworden.twig:68
+#: themes/default/views/lidworden/lidworden.twig:67
 msgid "Contact"
 msgstr "Contact"
 
@@ -961,7 +947,7 @@ msgstr "Only logged in members"
 msgid "Alleen ingelogde actieve leden"
 msgstr "Only logged in active members"
 
-#: themes/default/views/commissies/commissies.php:81
+#: themes/default/views/commissies/commissies.php:72
 msgid "Werkgroep"
 msgstr "Working group"
 
@@ -982,39 +968,39 @@ msgstr "Public"
 msgid "Alleen ingelogde leden van de PhotoCee"
 msgstr "Only logged in members of the PhotoCee"
 
-#: themes/default/views/fotoboek/fotoboek.php:174
-#: themes/default/views/search/search.php:20
+#: themes/default/views/fotoboek/fotoboek.php:163
+#: themes/default/views/search/search.php:17
 #, php-format
 msgid "%d boek"
 msgid_plural "%d boeken"
 msgstr[0] "%d book"
 msgstr[1] "%d books"
 
-#: themes/default/views/fotoboek/fotoboek.php:177
-#: themes/default/views/search/search.php:23
+#: themes/default/views/fotoboek/fotoboek.php:166
+#: themes/default/views/search/search.php:20
 #, php-format
 msgid "%d foto"
 msgid_plural "%d foto's"
 msgstr[0] "%d photo"
 msgstr[1] "%d photos"
 
-#: themes/default/views/mailinglijsten/mailinglijsten.php:22
+#: themes/default/views/mailinglijsten/mailinglijsten.php:23
 msgid "Opt-in"
 msgstr "Opt-in"
 
-#: themes/default/views/mailinglijsten/mailinglijsten.php:23
+#: themes/default/views/mailinglijsten/mailinglijsten.php:24
 msgid "Opt-out"
 msgstr "Opt-out"
 
-#: themes/default/views/mailinglijsten/mailinglijsten.php:31
+#: themes/default/views/mailinglijsten/mailinglijsten.php:32
 msgid "Alleen mensen op de mailinglijst"
 msgstr "Only people subscribed to this mailing list"
 
-#: themes/default/views/mailinglijsten/mailinglijsten.php:32
+#: themes/default/views/mailinglijsten/mailinglijsten.php:33
 msgid "Alleen *@svcover.nl adressen"
 msgstr "Only *@svcover.nl addresses"
 
-#: themes/default/views/mailinglijsten/mailinglijsten.php:33
+#: themes/default/views/mailinglijsten/mailinglijsten.php:34
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
@@ -1078,74 +1064,53 @@ msgid "Geboortedatum"
 msgstr "Birthdate"
 
 #: themes/default/views/profiel/profiel.php:118
-#: themes/default/views/lidworden/lidworden.twig:104
+#: themes/default/views/lidworden/lidworden.twig:103
+#: themes/default/views/mailinglijsten/single.twig:70
 msgid "Beginjaar"
 msgstr "Starting year"
 
 #: themes/default/views/profiel/profiel.php:123
-#: themes/default/views/lidworden/lidworden.twig:49
+#: themes/default/views/lidworden/lidworden.twig:48
 #: themes/default/views/mailinglijsten/index.twig:19
 #: themes/default/views/mailinglijsten/single.twig:17
 msgid "Adres"
 msgstr "Adress"
 
 #: themes/default/views/profiel/profiel.php:127
-#: themes/default/views/lidworden/lidworden.twig:57
+#: themes/default/views/lidworden/lidworden.twig:56
 msgid "Postcode"
 msgstr "Zipcode"
 
 #: themes/default/views/profiel/profiel.php:131
-#: themes/default/views/lidworden/lidworden.twig:61
+#: themes/default/views/lidworden/lidworden.twig:60
 msgid "Woonplaats"
 msgstr "Place of residence"
 
 #: themes/default/views/profiel/profiel.php:135
-#: themes/default/views/lidworden/lidworden.twig:71
+#: themes/default/views/lidworden/lidworden.twig:70
 msgid "Telefoonnummer"
 msgstr "Phone number"
 
 #: themes/default/views/profiel/profiel.php:139
-#: themes/default/views/lidworden/lidworden.twig:76
+#: themes/default/views/lidworden/lidworden.twig:75
 #: themes/default/views/mailinglijsten/single.twig:38
 #: themes/default/views/mailinglijsten/subscribe_guest_form.twig:15
 msgid "E-Mail adres"
 msgstr "E-Mail address"
 
-#: themes/default/views/profiel/profiel.php:381
+#: themes/default/views/profiel/profiel.php:380
 #: themes/default/views/almanak/index.twig:23
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
-#: themes/default/views/profiel/profiel.php:385
+#: themes/default/views/profiel/profiel.php:384
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
 
-#: themes/default/views/search/search.php:25
+#: themes/default/views/search/search.php:22
 #, php-format
 msgid "Fotoboek met %s gemaakt op %s."
 msgstr "Photo album with %s made on %s."
-
-#: themes/default/views/mailinglijsten/embedded.phtml:11
-msgid "Log in om je aan te kunnen melden voor deze mailinglijst."
-msgstr "Sign in to subscribe to this mailing list."
-
-#: themes/default/views/mailinglijsten/embedded.phtml:14
-#: themes/default/views/profiel/mailing_lists_tab.twig:21
-msgid "Uitschrijven"
-msgstr "Unsubscribe"
-
-#: themes/default/views/mailinglijsten/embedded.phtml:15
-msgid "Je bent aangemeld voor deze mailinglijst."
-msgstr "You are subscribed to this mailinglist."
-
-#: themes/default/views/mailinglijsten/embedded.phtml:18
-#: themes/default/views/profiel/mailing_lists_tab.twig:24
-msgid "Aanmelden"
-msgstr "Subscribe"
-
-#: themes/default/views/mailinglijsten/embedded.phtml:21
-msgid "Bekijk archief"
-msgstr "Show message archive"
 
 #: themes/default/views/profiel/_facebook.phtml:8
 #, php-format
@@ -1170,6 +1135,54 @@ msgstr "Connect to Facebook"
 #: themes/default/views/profiel/_facebook.phtml:26
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
+
+#: themes/default/views/_layout/401_unauthorized.twig:3
+#: themes/default/views/_layout/401_unauthorized.twig:6
+msgid "Geen toegang"
+msgstr "No access"
+
+#: themes/default/views/_layout/401_unauthorized.twig:13
+#: themes/default/views/boeken/go_to_log_in.twig:12
+#: themes/default/views/lidworden/known_member.twig:8
+#: themes/default/views/sessions/login.twig:42
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:13
+msgid "Log in"
+msgstr "Log in"
+
+#: themes/default/views/_layout/401_unauthorized.twig:14
+#: themes/default/views/boeken/go_to_log_in.twig:11
+#: themes/default/views/lidworden/known_member.twig:9
+msgid "of"
+msgstr "or"
+
+#: themes/default/views/_layout/401_unauthorized.twig:15
+#: themes/default/views/boeken/go_to_log_in.twig:10
+msgid "Word lid van Cover"
+msgstr "Become a member"
+
+#: themes/default/views/_layout/404_not_found.twig:3
+#: themes/default/views/_layout/404_not_found.twig:6
+msgid "Niet gevonden"
+msgstr "Not found"
+
+#: themes/default/views/_layout/404_not_found.twig:11
+msgid "Denk je dat dit een fout is? Meld het en mail naar acdcee@svcover.nl!"
+msgstr ""
+"Do you think this is a mistake? Report it to the AC/DCee at acdcee@svcover."
+"nl!"
+
+#: themes/default/views/_layout/404_not_found.twig:12
+#: themes/default/views/_layout/500.twig:26
+msgid "Terug naar homepage"
+msgstr "Back to homepage"
+
+#: themes/default/views/_layout/500.twig:17
+msgid ""
+"Sorry, er ging iets verschrikkelijk mis. Probeer het later nog eens of mail "
+"de WebCie (webcie@svcover.nl)"
+msgstr ""
+"Sorry, something went horribly wrong. Please try again in a bit or contact "
+"the WebCie (webcie@svcover.nl)"
 
 #: themes/default/views/_layout/editable.twig:4
 #: themes/default/views/show/single.twig:9
@@ -1376,7 +1389,7 @@ msgstr "Facebook Event"
 
 #: themes/default/views/agenda/form.twig:59
 #: themes/default/views/agenda/form.twig:63
-#: themes/default/views/fotoboek/photobook.twig:240
+#: themes/default/views/fotoboek/photobook.twig:241
 #: themes/default/views/fotoboek/photobook_form.twig:47
 msgid "Beschrijving"
 msgstr "Description"
@@ -1460,7 +1473,7 @@ msgstr "The calendar events below are put up for approval"
 
 #: themes/default/views/agenda/moderate.twig:24
 #: themes/default/views/committeebattle/committee.twig:13
-#: themes/default/views/fotoboek/photobook.twig:233
+#: themes/default/views/fotoboek/photobook.twig:234
 #: themes/default/views/mailinglijsten/archive_index.twig:13
 #: themes/default/views/profiel/incassomatic_tab.twig:23
 #: themes/default/views/profiel/incassomatic_tab.twig:44
@@ -1708,22 +1721,9 @@ msgstr "Back to the former boards"
 msgid "Oud-besturen"
 msgstr "Former boards"
 
-#: themes/default/views/besturen/index.twig:51
+#: themes/default/views/besturen/index.twig:50
 msgid "Nieuw bestuur toevoegen..."
 msgstr "Add a new board..."
-
-#: themes/default/views/boeken/go_to_log_in.twig:10
-msgid "Word lid van Cover"
-msgstr "Become a member"
-
-#: themes/default/views/boeken/go_to_log_in.twig:11
-msgid "of"
-msgstr "or"
-
-#: themes/default/views/boeken/go_to_log_in.twig:12
-#: themes/default/views/sessions/login.twig:42
-msgid "Log in"
-msgstr "Log in"
 
 #: themes/default/views/boeken/go_to_webshop.twig:9
 msgid "Ga verder naar de BookCee webshop"
@@ -1884,11 +1884,11 @@ msgstr "New committee"
 msgid "Commissieleden gezocht!"
 msgstr "Looking for new members!"
 
-#: themes/default/views/commissies/single.twig:12
+#: themes/default/views/commissies/single.twig:11
 msgid "Wijzig commissie"
 msgstr "Modify committee"
 
-#: themes/default/views/commissies/single.twig:28
+#: themes/default/views/commissies/single.twig:27
 msgid "Bewerk commissiepagina"
 msgstr "Modify committee page"
 
@@ -2174,11 +2174,11 @@ msgstr "Back to topic"
 msgid "Deze foto komt uit"
 msgstr "This photo originates from"
 
-#: themes/default/views/fotoboek/_photos.twig:28
+#: themes/default/views/fotoboek/_photos.twig:29
 msgid "Verborgen voor anderen"
 msgstr "Hidden from index"
 
-#: themes/default/views/fotoboek/_photos.twig:31
+#: themes/default/views/fotoboek/_photos.twig:32
 #: themes/default/views/search/_single_fotoboek.twig:16
 #, python-format
 msgid "%d reactie"
@@ -2298,7 +2298,7 @@ msgstr ""
 "album is automatically generator or you don’t have permission to update the "
 "album."
 
-#: themes/default/views/fotoboek/photobook.twig:198
+#: themes/default/views/fotoboek/photobook.twig:199
 #, python-format
 msgid ""
 "Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden "
@@ -2309,19 +2309,19 @@ msgstr ""
 "%s. Please inform the PhotoCee when you made photos at an activity so they "
 "can add them to the photo album."
 
-#: themes/default/views/fotoboek/photobook.twig:198
+#: themes/default/views/fotoboek/photobook.twig:199
 msgid "PhotoCee"
 msgstr "PhotoCee"
 
-#: themes/default/views/fotoboek/photobook.twig:206
+#: themes/default/views/fotoboek/photobook.twig:207
 msgid "Download fotoboek"
 msgstr "Download photo album"
 
-#: themes/default/views/fotoboek/photobook.twig:214
+#: themes/default/views/fotoboek/photobook.twig:215
 msgid "Markeer alle boeken als gezien"
 msgstr "Mark all albums as seen"
 
-#: themes/default/views/fotoboek/photobook.twig:247
+#: themes/default/views/fotoboek/photobook.twig:248
 msgid "Er zijn nog geen foto's in dit fotoboek"
 msgstr "There are no photos in this photo album yet"
 
@@ -2504,11 +2504,26 @@ msgstr ""
 "email soon with your password and a bit of information on how the website "
 "works, how to order books, etc."
 
+#: themes/default/views/lidworden/known_member.twig:4
 #: themes/default/views/lidworden/lidworden.twig:3
 #: themes/default/views/lidworden/lidworden.twig:6
 #: themes/default/views/lidworden/submitted.twig:4
 msgid "Lidmaatschapsformulier"
 msgstr "Membership application form"
+
+#: themes/default/views/lidworden/known_member.twig:6
+msgid ""
+"Het e-mailadres dat je gebruikt is al bekend bij ons, dus waarschijnlijk zit "
+"je al in onze administratie! In dat geval is het makkelijker om even contact "
+"op te nemen met de secretaris via secretary@svcover.nl."
+msgstr ""
+"Your email address is already known to us, which means you are already in "
+"our member administration! In this case it is easier to quickly contact the "
+"secretary of Cover via secretary@svcover.nl. "
+
+#: themes/default/views/lidworden/known_member.twig:10
+msgid "Reset je wachtwoord"
+msgstr "Reset your password"
 
 #: themes/default/views/lidworden/lidworden.twig:8
 msgid "Word lid van Cover!"
@@ -2546,39 +2561,39 @@ msgstr "E.g. Jansen"
 msgid "Bijv. 1993-9-20"
 msgstr "E.g. 1993-9-20"
 
-#: themes/default/views/lidworden/lidworden.twig:43
+#: themes/default/views/lidworden/lidworden.twig:42
 msgid "Gender"
 msgstr "Gender"
 
-#: themes/default/views/lidworden/lidworden.twig:44
+#: themes/default/views/lidworden/lidworden.twig:43
 msgid "Niet gespecificeerd"
 msgstr "Unspecified"
 
-#: themes/default/views/lidworden/lidworden.twig:44
+#: themes/default/views/lidworden/lidworden.twig:43
 msgid "Man"
 msgstr "Male"
 
-#: themes/default/views/lidworden/lidworden.twig:44
+#: themes/default/views/lidworden/lidworden.twig:43
 msgid "Vrouw"
 msgstr "Female"
 
-#: themes/default/views/lidworden/lidworden.twig:52
+#: themes/default/views/lidworden/lidworden.twig:51
 msgid "Straatnaam + Huisnummer"
 msgstr "Street name + number"
 
-#: themes/default/views/lidworden/lidworden.twig:53
+#: themes/default/views/lidworden/lidworden.twig:52
 msgid "Bijv. Nijenborgh 9"
 msgstr "E.g. Nijenborgh 9"
 
-#: themes/default/views/lidworden/lidworden.twig:58
+#: themes/default/views/lidworden/lidworden.twig:57
 msgid "Bijv. 9747 AG"
 msgstr "E.g. 9747 AG"
 
-#: themes/default/views/lidworden/lidworden.twig:62
+#: themes/default/views/lidworden/lidworden.twig:61
 msgid "Bijv. Groningen"
 msgstr "E.g. Groningen"
 
-#: themes/default/views/lidworden/lidworden.twig:78
+#: themes/default/views/lidworden/lidworden.twig:77
 msgid ""
 "Je ontvangt een bevestigingsmail met een link. Je aanmelding wordt pas "
 "verwerkt wanneer je op de link klikt."
@@ -2586,58 +2601,58 @@ msgstr ""
 "You will receive a confirmation email with a link. Your application will be "
 "processed after you have clicked the link."
 
-#: themes/default/views/lidworden/lidworden.twig:86
+#: themes/default/views/lidworden/lidworden.twig:85
 msgid "Studentnummer"
 msgstr "Student number"
 
-#: themes/default/views/lidworden/lidworden.twig:87
+#: themes/default/views/lidworden/lidworden.twig:86
 msgid "Bijv. s123456"
 msgstr "E.g. s123456"
 
-#: themes/default/views/lidworden/lidworden.twig:92
+#: themes/default/views/lidworden/lidworden.twig:91
 msgid "Studierichting"
 msgstr "Study"
 
-#: themes/default/views/lidworden/lidworden.twig:93
+#: themes/default/views/lidworden/lidworden.twig:92
 msgid "Kies uit de lijst of typ een andere studie"
 msgstr "Pick one from the list or type if your study isn't on it."
 
-#: themes/default/views/lidworden/lidworden.twig:98
+#: themes/default/views/lidworden/lidworden.twig:97
 msgid "Fase"
 msgstr "Phase"
 
-#: themes/default/views/lidworden/lidworden.twig:99
+#: themes/default/views/lidworden/lidworden.twig:98
 msgid "Bachelor"
 msgstr "Bachelor"
 
-#: themes/default/views/lidworden/lidworden.twig:99
+#: themes/default/views/lidworden/lidworden.twig:98
 msgid "Master"
 msgstr "Master"
 
-#: themes/default/views/lidworden/lidworden.twig:106
+#: themes/default/views/lidworden/lidworden.twig:105
 msgid ""
 "In welk jaar ben je begonnen of ga je beginnen met de hierboven ingevulde "
 "studie."
 msgstr ""
 "In which year did you start or are you expecting to start with your study."
 
-#: themes/default/views/lidworden/lidworden.twig:111
+#: themes/default/views/lidworden/lidworden.twig:110
 msgid "Betaling"
 msgstr "Payment"
 
-#: themes/default/views/lidworden/lidworden.twig:114
+#: themes/default/views/lidworden/lidworden.twig:113
 msgid "IBAN"
 msgstr "IBAN"
 
-#: themes/default/views/lidworden/lidworden.twig:119
+#: themes/default/views/lidworden/lidworden.twig:118
 msgid "BIC"
 msgstr "BIC"
 
-#: themes/default/views/lidworden/lidworden.twig:121
+#: themes/default/views/lidworden/lidworden.twig:120
 msgid "Alleen nodig wanneer IBAN [i]niet[/i] met 'NL' begint"
 msgstr "Only required if your IBAN [i]does not[/i] begin with 'NL'"
 
-#: themes/default/views/lidworden/lidworden.twig:126
+#: themes/default/views/lidworden/lidworden.twig:125
 msgid ""
 "Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn "
 "rekening af te schrijven (verplicht)"
@@ -2645,11 +2660,11 @@ msgstr ""
 "I hereby authorize Cover to automatically deduct the membership fee from my "
 "bank account one time per year. (mandatory)"
 
-#: themes/default/views/lidworden/lidworden.twig:131
+#: themes/default/views/lidworden/lidworden.twig:130
 msgid "Mailing"
 msgstr "Mailing list"
 
-#: themes/default/views/lidworden/lidworden.twig:133
+#: themes/default/views/lidworden/lidworden.twig:132
 msgid ""
 "Cover stuurt af en toe een mailtje over aankomende activiteiten. Als je de "
 "mail niet meer wil ontvangen, kan je je heel gemakkelijk uitschrijven via de "
@@ -2659,43 +2674,43 @@ msgstr ""
 "don't want to receive these emails anymore, you can very easily unsubscribe "
 "right here on the website."
 
-#: themes/default/views/lidworden/lidworden.twig:137
+#: themes/default/views/lidworden/lidworden.twig:136
 msgid "Ik wil graag e-mails over activiteiten van Cover ontvangen."
 msgstr "I want to receive emails about activities organized by Cover."
 
-#: themes/default/views/lidworden/lidworden.twig:138
+#: themes/default/views/lidworden/lidworden.twig:137
 msgid "Afmelden kan op ieder moment via deze website."
 msgstr "You can unsubscribe at any moment through this website."
 
-#: themes/default/views/lidworden/lidworden.twig:143
+#: themes/default/views/lidworden/lidworden.twig:142
 msgid "Voorwaarden"
 msgstr "Conditions"
 
-#: themes/default/views/lidworden/lidworden.twig:146
+#: themes/default/views/lidworden/lidworden.twig:145
 msgid "Bewerk voorwaarden"
 msgstr "Modify conditions"
 
-#: themes/default/views/lidworden/lidworden.twig:154
+#: themes/default/views/lidworden/lidworden.twig:153
 msgid "Intelligentietest"
 msgstr "Intelligence test"
 
-#: themes/default/views/lidworden/lidworden.twig:157
+#: themes/default/views/lidworden/lidworden.twig:156
 msgid "Wat is de kleur van gras? (ik ben geen spam-bot)"
 msgstr "What is the colour of grass? (I am not a robot)"
 
-#: themes/default/views/lidworden/lidworden.twig:159
+#: themes/default/views/lidworden/lidworden.twig:158
 msgid "Als je het niet zeker weet, vul dan 'groen' in."
 msgstr "If you are unsure, just enter ‘green’."
 
-#: themes/default/views/lidworden/lidworden.twig:163
+#: themes/default/views/lidworden/lidworden.twig:162
 msgid "Word lid"
 msgstr "Become a member"
 
-#: themes/default/views/lidworden/lidworden.twig:171
+#: themes/default/views/lidworden/lidworden.twig:170
 msgid "Bewerk opmerkingen"
 msgstr "Modify notes"
 
-#: themes/default/views/lidworden/lidworden.twig:174
+#: themes/default/views/lidworden/lidworden.twig:173
 msgid "Opmerkingen"
 msgstr "Notes"
 
@@ -2752,6 +2767,14 @@ msgstr "Change emai"
 #: themes/default/views/mailinglijsten/autoresponder_form.twig:49
 msgid "Terug naar mailinglijst"
 msgstr "Return to mailing list"
+
+#: themes/default/views/mailinglijsten/embedded.twig:11
+msgid "Log in om je aan te kunnen melden voor deze mailinglijst."
+msgstr "Sign in to subscribe to this mailing list."
+
+#: themes/default/views/mailinglijsten/embedded.twig:16
+msgid "Je bent aangemeld voor deze mailinglijst."
+msgstr "You are subscribed to this mailinglist."
 
 #: themes/default/views/mailinglijsten/form.twig:3
 #: themes/default/views/mailinglijsten/form.twig:6
@@ -2846,7 +2869,7 @@ msgid "Bereik"
 msgstr "Reach"
 
 #: themes/default/views/mailinglijsten/single.twig:9
-#: themes/default/views/mailinglijsten/single.twig:80
+#: themes/default/views/mailinglijsten/single.twig:97
 msgid "Bewerk mailinglijsteigenschappen"
 msgstr "Modify mailing list properties"
 
@@ -2860,9 +2883,13 @@ msgstr "Add member"
 msgid "Niet-lid toevoegen"
 msgstr "Subscribe a non-member"
 
-#: themes/default/views/mailinglijsten/single.twig:61
+#: themes/default/views/mailinglijsten/single.twig:62
 msgid "Meld geselecteerde adressen af"
 msgstr "Unsubscribe selected"
+
+#: themes/default/views/mailinglijsten/single.twig:74
+msgid "Leeftijd"
+msgstr "Age"
 
 #: themes/default/views/mailinglijsten/subscribe_guest_form.twig:3
 #: themes/default/views/mailinglijsten/subscribe_member_form.twig:3
@@ -3011,6 +3038,15 @@ msgstr "Date of purchase"
 msgid "Sorry, je KAST aankoophistorie kon op het moment niet worden opgehaald."
 msgstr ""
 "Our appoligies, we can't fetch the KAST purchase history at this moment."
+
+#: themes/default/views/profiel/mailing_lists_tab.twig:21
+#: themes/default/views/profiel/mailing_lists_tab.twig:29
+msgid "Uitschrijven"
+msgstr "Unsubscribe"
+
+#: themes/default/views/profiel/mailing_lists_tab.twig:24
+msgid "Aanmelden"
+msgstr "Subscribe"
 
 #: themes/default/views/profiel/personal_tab.twig:7
 msgid "Almanakgegevens"
@@ -3181,11 +3217,24 @@ msgid_plural "Er zijn %d zoekresultaten"
 msgstr[0] "There is %d search result"
 msgstr[1] "There are %d search results"
 
+#: themes/default/views/sessions/inactive.twig:4
 #: themes/default/views/sessions/login.twig:4
 #: themes/default/views/sessions/login.twig:8
 #: themes/default/views/sessions/login.twig:14
 msgid "Inloggen"
 msgstr "Log in"
+
+#: themes/default/views/sessions/inactive.twig:6
+#, python-format
+msgid ""
+"Je account is niet langer actief omdat je op het moment niet lid of donateur "
+"van Cover bent. Wil je dat wel (weer) worden, of wil je om een andere reden "
+"toegang tot de site? Neem dan even contact op met %s (secretary@svcover.nl)."
+msgstr ""
+"Your account is no longer active because you are currently not a member nor "
+"a donor of Cover. Do you want to become one (again), or do you want your "
+"access to the site reinstated for other purposes? Contact the secretary, %s "
+"(secretary@svcover.nl)."
 
 #: themes/default/views/sessions/login.twig:15
 msgid "Lid worden"
@@ -3366,12 +3415,12 @@ msgstr "Choose photo"
 msgid "Weet je zeker dat je je sticker wil verwijderen?"
 msgstr "Are you sure you want to delete your sticker from the map?"
 
-#: themes/default/views/wachtwoordvergeten/form.twig:3
-#: themes/default/views/wachtwoordvergeten/form.twig:6
+#: themes/default/views/wachtwoordvergeten/request_form.twig:3
+#: themes/default/views/wachtwoordvergeten/request_form.twig:6
 msgid "Wachtwoord vergeten"
 msgstr "Forgot your password?"
 
-#: themes/default/views/wachtwoordvergeten/form.twig:11
+#: themes/default/views/wachtwoordvergeten/request_form.twig:12
 #, python-format
 msgid ""
 "Er is een mailtje gestuurd naar %s. Volg de aanwijzingen hierin op om de "
@@ -3380,30 +3429,88 @@ msgstr ""
 "An e-mail has been sent to %s. Follow the instructions in the mail to "
 "confirm your request for a new password."
 
-#: themes/default/views/wachtwoordvergeten/form.twig:15
+#: themes/default/views/wachtwoordvergeten/request_form.twig:16
 #, python-format
 msgid "Er bestaat geen account met het opgegeven E-Mail adres (%s)."
 msgstr "There is no account with the given E-Mail address (%s)."
 
-#: themes/default/views/wachtwoordvergeten/form.twig:20
+#: themes/default/views/wachtwoordvergeten/request_form.twig:21
 msgid ""
-"Vul hieronder je E-mail adres in en druk op de `Reset wachtwoord` knop. "
+"Vul hieronder je e-mailadres in en druk op de `Reset wachtwoord` knop. "
 "Hierna wordt er een mailtje naar dat adres gestuurd met verdere aanwijzingen."
 msgstr ""
-"Fill in your E-mail address and press `Send`. A mail will be sent to the "
-"specified E-mail address with further instructions."
+"Fill in your email address and click on `Reset password`. You will then "
+"receive an email with further instructions."
 
-#: themes/default/views/wachtwoordvergeten/form.twig:23
+#: themes/default/views/wachtwoordvergeten/request_form.twig:24
 msgid "E-Mail"
 msgstr "E-Mail"
 
-#: themes/default/views/wachtwoordvergeten/form.twig:28
+#: themes/default/views/wachtwoordvergeten/request_form.twig:29
 msgid "Reset wachtwoord"
 msgstr "Reset password"
+
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:3
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:6
+msgid "Wachtwoord instellen"
+msgstr "Change password"
+
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:12
+msgid "Je wachtwoord is opnieuw ingesteld."
+msgstr "Your password has been changed."
+
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:18
+msgid ""
+"Je wachtwoord is te kort, of te voorspelbaar. Maak het langer of gebruik wat "
+"meer verschillende karakters."
+msgstr ""
+"Your password is too short or too predictable. Try to make it longer and "
+"with more different characters."
+
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:21
+msgid "De twee wachtwoorden komen niet overeen."
+msgstr "The two passwords are not the same."
+
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:27
+msgid ""
+"Kies een nieuw wachtwoord. Lange wachtwoorden zijn prima, wachtwoorden met "
+"veel verschillende karakters ook."
+msgstr ""
+"Choose a new password. Long passwords are great, passwords with different "
+"character types as well."
+
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:35
+msgid "Herhaal wachtwoord"
+msgstr "Repeat password"
+
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:40
+msgid "Stel wachtwoord in"
+msgstr "Set password"
 
 #: themes/default/views/weblog/index.twig:9
 msgid "Er zijn op dit moment geen weblogs"
 msgstr "There are no blog posts at this moment."
+
+#~ msgid ""
+#~ "Sorry, een (oud) AC/DCee-lid kan voor geen meter programmeren. Als je "
+#~ "daar vaker last van hebt, vertel het door aan de commissie "
+#~ "(webcie@svcover.nl) zodat ze taart van die persoon kunnen eisen."
+#~ msgstr ""
+#~ "Our apologies! An (old) AC/DCee member couldn't program for shit, and now "
+#~ "something broke down. If you experience this problem more often, please "
+#~ "contact the committee (webcie@svcover.nl) so they can demand pie from the "
+#~ "person in question. "
+
+#~ msgid "Bekijk archief"
+#~ msgstr "Show message archive"
+
+#~ msgid ""
+#~ "Vul hieronder je E-mail adres in en druk op de `Reset wachtwoord` knop. "
+#~ "Hierna wordt er een mailtje naar dat adres gestuurd met verdere "
+#~ "aanwijzingen."
+#~ msgstr ""
+#~ "Fill in your E-mail address and press `Send`. A mail will be sent to the "
+#~ "specified E-mail address with further instructions."
 
 #~ msgid "ActieveLeden"
 #~ msgstr "Active Members"
@@ -3433,9 +3540,6 @@ msgstr "There are no blog posts at this moment."
 #~ "With kind regards,\n"
 #~ "\n"
 #~ "The WebCie"
-
-#~ msgid "Geen toegang"
-#~ msgstr "No access"
 
 #~ msgid "Deze pagina kan niet door jou worden bewerkt."
 #~ msgstr "This page can not be modified by you."
@@ -3510,9 +3614,6 @@ msgstr "There are no blog posts at this moment."
 #~ "enter your email address and password to log on. If you have forgotten "
 #~ "your password you can %s a news password. If you have any problems, "
 #~ "please send an email to %s."
-
-#~ msgid "Niet gevonden"
-#~ msgstr "Not found"
 
 #~ msgid "De pagina die je zocht bestaat niet."
 #~ msgstr "The page you where looking for does not exist."
