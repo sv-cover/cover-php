@@ -82,41 +82,45 @@ class ControllerSessions extends Controller
 
 	protected function run_view_login()
 	{
-		$errors = array();
+		try {
+			$errors = array();
 
-		$error_message = null;
+			$error_message = null;
 
-		if (isset($_POST['referrer']))
-			$referrer = $_POST['referrer'];
-		elseif (isset($_GET['referrer']))
-			$referrer = $_GET['referrer'];
-		else
-			$referrer = null;
+			if (isset($_POST['referrer']))
+				$referrer = $_POST['referrer'];
+			elseif (isset($_GET['referrer']))
+				$referrer = $_GET['referrer'];
+			else
+				$referrer = null;
 
-		$referrer_host = parse_url($referrer, PHP_URL_HOST);
+			$referrer_host = parse_url($referrer, PHP_URL_HOST);
 
-		if ($referrer_host && !is_same_domain($referrer_host, $_SERVER['HTTP_HOST'], 3))
-			$external_domain = parse_url($referrer, PHP_URL_HOST);
-		else
-			$external_domain = null;
+			if ($referrer_host && !is_same_domain($referrer_host, $_SERVER['HTTP_HOST'], 3))
+				$external_domain = parse_url($referrer, PHP_URL_HOST);
+			else
+				$external_domain = null;
 
-		// Prevent returning to the logout link
-		if ($external_domain === null && $referrer == '/sessions.php?view=logout')
-			$referrer = null;
+			// Prevent returning to the logout link
+			if ($external_domain === null && $referrer == '/sessions.php?view=logout')
+				$referrer = null;
 
-		if (!empty($_POST['email']) && !empty($_POST['password']))
-		{
-			if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
+			if (!empty($_POST['email']) && !empty($_POST['password']))
 			{
-				return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
+				if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
+				{
+					return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
+				}
+				else {
+					$errors = ['email', 'password'];
+					$error_message = __('Verkeerde combinatie van e-mailadres en wachtwoord');
+				}
 			}
-			else {
-				$errors = ['email', 'password'];
-				$error_message = __('Verkeerde combinatie van e-mailadres en wachtwoord');
-			}
-		}
 
-		return $this->view->render_login($errors, $error_message, $referrer, $external_domain);
+			return $this->view->render_login($errors, $error_message, $referrer, $external_domain);
+		} catch (InactiveMemberException $e) {
+			return $this->view->render('inactive.twig');
+		}
 	}
 
 	protected function run_view_logout()

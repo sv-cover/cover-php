@@ -186,11 +186,14 @@
 					MEMBER_STATUS_DONATEUR,
 					MEMBER_STATUS_UNCONFIRMED);
 
-				if ($iter === null || !in_array($iter['type'], $active_member_types))
+				if ($iter === null)
 					return false;
 
 				if (!$this->test_password($iter, $passwd))
 					return false;
+
+				if (!in_array($iter['type'], $active_member_types))
+					throw new InactiveMemberException();
 
 				return $iter;
 			} catch (DataIterNotFoundException $e) {

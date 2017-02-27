@@ -9,3 +9,8 @@ class NotFoundException extends Exception
 {
 	//
 }
+
+class InactiveMemberException extends UnauthorizedException
+{
+	//
+}
