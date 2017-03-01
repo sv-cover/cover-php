@@ -118,7 +118,7 @@ class ControllerApi extends Controller
 		// Prepare data for member 
 		$member = $ident->member();
 		$data = [];
-		foreach (DataModelMember::fields() as $field)
+		foreach (DataIterMember::fields() as $field)
 			$data[$field] = $member[$field];
 
 		// Prepare committee data
