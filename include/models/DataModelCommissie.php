@@ -332,7 +332,7 @@
 					'functie' => $position));
 		}
 
-		public function get_commissies_for_member($lid_id)
+		public function get_for_member(DataIterMember $member)
 		{
 			$rows = $this->db->query("
 				SELECT
@@ -343,7 +343,7 @@
 				RIGHT JOIN commissies c ON
 					c_m.committee_id = c.id
 				WHERE
-					c_m.member_id = " . intval($lid_id) ."
+					c_m.member_id = " . $member->get_id() ."
 				GROUP by
 					c.id,
 					c_m.functie

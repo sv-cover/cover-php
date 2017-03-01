@@ -150,7 +150,7 @@ class ProfielView extends View
 
 		$model = get_model('DataModelCommissie');
 
-		$committees = $model->get_commissies_for_member($iter->get_id());
+		$committees = $model->get_for_member($iter);
 
 		return $this->render('public_tab.twig', compact('iter', 'is_current_user', 'can_download_vcard', 'committees'));
 	}

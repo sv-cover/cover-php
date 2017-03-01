@@ -115,7 +115,20 @@ class ControllerApi extends Controller
 
 		$ident = get_identity_provider($auth);
 
-		return array('result' => $ident->member()->data);
+		// Prepare data for member 
+		$member = $ident->member();
+		$data = [];
+		foreach (DataModelMember::fields() as $field)
+			$data[$field] = $member[$field];
+
+		// Prepare committee data
+		$committee_model = get_model('DataModelCommissie');
+		$committees = $committee_model->get_for_member($member);
+		$committee_data = [];
+		foreach ($committees as $committee)
+			$committee_data[$committee['login']] = $committee['naam'];
+		
+		return array('result' => array_merge($data, ['committees' => $committee_data]));
 	}
 
 	public function api_session_test_committee($session_id, $committees)
