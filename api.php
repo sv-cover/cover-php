@@ -123,8 +123,11 @@ class ControllerApi extends Controller
 
 		// Prepare committee data
 		$committee_model = get_model('DataModelCommissie');
-		$committees = $committee_model->get_for_member($member);
 		$committee_data = [];
+
+		$committees = $committee_model->find(['id__in' => $member['committees']]);
+		
+		// For now just return login and committee name
 		foreach ($committees as $committee)
 			$committee_data[$committee['login']] = $committee['naam'];
 		
