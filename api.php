@@ -26,8 +26,12 @@ class ControllerApi extends Controller
 		// Do nothing.
 	}
 
-	public function api_agenda()
+
+	public function api_agenda($committees=null)
 	{
+		if (isset($committees) && !is_array($committees))
+			$committees = array($committees);
+
 		/** @var DataModelAgenda $agenda */
 		$agenda = get_model('DataModelAgenda');
 
@@ -35,9 +39,12 @@ class ControllerApi extends Controller
 
 		// TODO logged_in() incidentally works because the session is read from $_GET[session_id] by
 		// the session provider. But the current session should be set more explicit.
-		foreach ($agenda->get_agendapunten() as $activity)
-			if (get_policy($agenda)->user_can_read($activity))
+		foreach ($agenda->get_agendapunten() as $activity){
+			if ($committees !== null && !in_array($activity->get_committee()->data['login'], $committees))
+				continue;
+			if (get_policy($agenda)->user_can_read($activity) )
 				$activities[] = $activity->data;
+		}
 
 		// Add the properties that Newsletter expects
 		foreach ($activities as &$activity) {
@@ -381,7 +388,7 @@ class ControllerApi extends Controller
 		{
 			// GET api.php?method=agenda
 			case 'agenda':
-				$response = $this->api_agenda();
+				$response = $this->api_agenda(isset($_GET['committees']) ? explode(',', $_GET['committees']) : null);
 				break;
 
 			case 'get_agendapunt':
