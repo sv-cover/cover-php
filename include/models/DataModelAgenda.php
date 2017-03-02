@@ -115,6 +115,7 @@
 				SELECT
 					{$this->table}.*,
 					commissies.naam as committee__naam,
+					commissies.login as committee__login,
 					commissies.page_id as committee__page_id
 				FROM
 					{$this->table}

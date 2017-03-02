@@ -29,7 +29,7 @@ class ControllerApi extends Controller
 
 	public function api_agenda($committees=null)
 	{
-		if (isset($committees) && !is_array($committees))
+		if ($committees !== null && !is_array($committees))
 			$committees = array($committees);
 
 		/** @var DataModelAgenda $agenda */
@@ -40,7 +40,7 @@ class ControllerApi extends Controller
 		// TODO logged_in() incidentally works because the session is read from $_GET[session_id] by
 		// the session provider. But the current session should be set more explicit.
 		foreach ($agenda->get_agendapunten() as $activity){
-			if ($committees !== null && !in_array($activity->get_committee()->data['login'], $committees))
+			if ($committees !== null && !in_array($activity['committee']['login'], $committees))
 				continue;
 			if (get_policy($agenda)->user_can_read($activity) )
 				$activities[] = $activity->data;
@@ -386,9 +386,9 @@ class ControllerApi extends Controller
 
 		switch ($method)
 		{
-			// GET api.php?method=agenda
+			// GET api.php?method=agenda[&committee[]={committee}]
 			case 'agenda':
-				$response = $this->api_agenda(isset($_GET['committees']) ? explode(',', $_GET['committees']) : null);
+				$response = $this->api_agenda(isset($_GET['committee']) ? $_GET['committee'] : null);
 				break;
 
 			case 'get_agendapunt':
