@@ -354,11 +354,14 @@
 						if (!is_array($value))
 							throw new InvalidArgumentException("in-operator in '$field' condition expects an array or iterable.");
 
-						if (count($value) === 0)
-							throw new InvalidArgumentException("The value for the condition on '$field' is an empty set.");
+						// Empty list? -> the value can only be NULL, right?
+						if (count($value) === 0) {
+							$format = '%s IS NULL';
+						} else {
+							$safe_values = array_map([$this->db, 'escape_value'], $value);
+							$format = sprintf('%%s IN (%s)', implode(', ', $safe_values));
+						}
 
-						$safe_values = array_map([$this->db, 'escape_value'], $value);
-						$format = sprintf('%%s IN (%s)', implode(', ', $safe_values));
 						unset($value);
 						break;
 
