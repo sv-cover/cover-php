@@ -975,7 +975,7 @@
 		$groups = array();
 
 		foreach ($array as $element) {
-			$key = call_user_func($key_accessor, $element);
+			$key = (string) call_user_func($key_accessor, $element);
 			if (isset($groups[$key]))
 				$groups[$key][] = $element;
 			else

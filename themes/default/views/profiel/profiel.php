@@ -229,12 +229,13 @@ class ProfielView extends View
 			if (!$contract)
 				return $this->render('incassomatic_tab_no_contract.twig', compact('iter', 'treasurer_link'));
 			
-			$incassos = $incasso_api->getIncassos($iter, 15);
+			$debits = $incasso_api->getDebits($iter, 15);
 
-			$incassos_per_batch = array_group_by($incassos, function($incasso) { return $incasso->batch_id; });
+			$debits_per_batch = array_group_by($debits, function($debit) { return $debit->batch_id; });
 
-			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'incassos_per_batch'));
+			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'debits_per_batch'));
 		} catch (Exception $exception) {
+			die($exception);
 			sentry_report_exception($exception);
 			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
 		}

@@ -18,7 +18,7 @@ class API
 		$this->api_app_secret = $secret;
 	}
 
-	public function getIncassos(\DataIterMember $member, $limit = null)
+	public function getDebits(\DataIterMember $member, $limit = null)
 	{
 		$data = [
 			'cover_id' => $member->get_id()
@@ -27,7 +27,9 @@ class API
 		if ($limit !== null)
 			$data['limit'] = (int) $limit;
 
-		return $this->_get($this->api_root, $data);
+		$debits = $this->_get($this->api_root, $data);
+
+		return $debits;
 	}
 
 	public function getContracts(\DataIterMember $member)

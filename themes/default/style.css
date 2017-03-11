@@ -2555,7 +2555,8 @@ a.profile-widget:after {
 	text-align: center;
 }
 
-.tab-pane .aligned-list-section h4 {
+.tab-pane .aligned-list-section h4,
+.tab-pane .aligned-list-section h4 + small {
 	display: block;
 	width: 130px;
 	position: absolute;
@@ -2563,6 +2564,12 @@ a.profile-widget:after {
 	text-align: right;
 	color: #000;
 	font-weight: normal;
+}
+
+.tab-pane .aligned-list-section h4 + small {
+	margin-top: 1.5em;
+	font-size: 0.8em;
+	color: #333;
 }
 
 .aligned-list-section .vertical-form > div {
