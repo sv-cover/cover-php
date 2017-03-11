@@ -421,9 +421,6 @@ class ControllerProfiel extends Controller
 
 	public function run_export_vcard(DataIterMember $member)
 	{
-		if (get_identity()->get('id') != $member['id'])
-			throw new UnauthorizedException();
-
 		if (!get_identity()->member_is_active())
 			throw new UnauthorizedException();
 
