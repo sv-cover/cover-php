@@ -444,7 +444,7 @@
 					if ($exif_data === false)
 						$exif_data = array('FileDateTime' => filemtime($full_path));
 
-					if ($exif_thumbnail = exif_thumbnail($full_path, $th_width, $th_height, $th_image_type))
+					if ($exif_thumbnail = @exif_thumbnail($full_path, $th_width, $th_height, $th_image_type))
 						$thumbnail = encode_data_uri(image_type_to_mime_type($th_image_type), $exif_thumbnail);
 					else
 						$thumbnail = null;
