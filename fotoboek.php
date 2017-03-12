@@ -503,9 +503,11 @@
 
 			if ($this->_form_is_submitted('add_photos', $book))
 			{
+				$photos = isset($_POST['photo']) ? $_POST['photo'] : [];
+				
 				$new_photos = array();
 
-				foreach ($_POST['photo'] as $photo)
+				foreach ($photos as $photo)
 				{
 					if (!isset($photo['add']))
 						continue;
