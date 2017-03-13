@@ -256,7 +256,7 @@
 
 		public function get_exif_data()
 		{
-			return exif_read_data($this->get_full_path());
+			return @exif_read_data($this->get_full_path());
 		}
 
 		public function get_file_size()
