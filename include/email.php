@@ -132,7 +132,7 @@ class MessagePart
 
 		// Or if I am multipart, is one of my sections of the type?
 		if ($this->isMultipart())
-			foreach ($this->parts as $part)
+			foreach ($this->body as $part)
 				if ($part->hasBodyOfType($content_type))
 					return true;
 
