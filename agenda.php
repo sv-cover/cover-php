@@ -367,10 +367,8 @@
 
 			$external_url = get_config_value('url_to_external_ical');
 
-			if ($external_url){
-				$external = file_get_contents($external_url);
+			if ($external = file_get_contents($external_url))
 				$cal->inject($external);
-			}
 
 			$cal->publish('cover.ics');
 			return null;
