@@ -64,6 +64,14 @@ class WebCal_Calendar extends WebCal
 		
 		echo $this->export();
 	}
+
+	public function inject($ical)
+	{
+		preg_match_all('/BEGIN:VEVENT.*?END:VEVENT/s', $ical, $events);
+		foreach ($events[0] as $event){
+			$this->add_event(new WebCal_External_Event($event));
+		}
+	}
 }
 
 class WebCal_Event extends WebCal
@@ -136,5 +144,21 @@ class WebCal_Event extends WebCal
 		$out[] = 'END:VEVENT';
 		
 		return implode("\r\n", $out);
+	}
+}
+
+
+class WebCal_External_Event extends WebCal_Event
+{
+	public $content;
+
+	public function __construct($content)
+	{
+		$this->content = $content;
+	}
+
+	public function export()
+	{
+		return $this->content;
 	}
 }
