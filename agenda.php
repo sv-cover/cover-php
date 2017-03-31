@@ -335,7 +335,7 @@
 			$cal = new WebCal_Calendar('Cover');
 			$cal->description = __('Alle activiteiten van studievereniging Cover');
 
-			$punten = array_filter($this->model->get_agendapunten(), [get_policy($this->model), 'user_can_read']);
+			$punten = array_filter($this->model->get(), [get_policy($this->model), 'user_can_read']);
 			
 			$timezone = new DateTimeZone('Europe/Amsterdam');
 
