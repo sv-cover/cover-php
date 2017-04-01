@@ -24,6 +24,8 @@ class WebCal_Calendar extends WebCal
 	
 	public $description;
 
+	public $additional_headers = array();
+
 	public function __construct($name)
 	{
 		$this->name = $name;
@@ -34,18 +36,27 @@ class WebCal_Calendar extends WebCal
 		$this->events[] = $event;
 	}
 	
-	public function export()
+	public function export_headers()
 	{
-	 	$out = array(
-			'BEGIN:VCALENDAR',
+		$out = array(
 			'METHOD:PUBLISH',
 			'CALSCALE:GREGORIAN',
 			'VERSION:2.0',
-			'PRODID:-//IkHoefGeen.nl//NONSGML v1.0//EN',
+			'PRODID:-//svCover.nl//NONSGML Cover Calendar v1.0//EN',
 			'X-WR-CALNAME:' . $this->_encode($this->name),
 			'X-WR-CALDESC:' . $this->_encode($this->description),
 			'X-WR-RELCALID:' . md5($this->name)
 		);
+
+		return array_merge($out, $this->additional_headers);
+	}
+
+	public function export()
+	{
+	 	$out = array_merge(
+	 		['BEGIN:VCALENDAR'],
+	 		$this->export_headers()
+	 	);
 		
 		foreach ($this->events as $event)
 			$out[] = $event->export();
@@ -67,10 +78,15 @@ class WebCal_Calendar extends WebCal
 
 	public function inject($ical)
 	{
+		preg_match_all('/BEGIN:VTIMEZONE.*?END:VTIMEZONE/s', $ical, $timezones);
+		$this->additional_headers = array_merge(
+			$this->additional_headers,
+			$timezones[0]
+		);
+
 		preg_match_all('/BEGIN:VEVENT.*?END:VEVENT/s', $ical, $events);
-		foreach ($events[0] as $event){
+		foreach ($events[0] as $event)
 			$this->add_event(new WebCal_External_Event($event));
-		}
 	}
 }
 
