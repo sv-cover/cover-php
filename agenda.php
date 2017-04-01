@@ -337,7 +337,7 @@
 
 			$fromdate = new DateTime();
 			$fromdate = $fromdate->modify('-1 year')->format('Y-m-d');
-			
+
 			$punten = array_filter($this->model->get($fromdate, null, true), [get_policy($this->model), 'user_can_read']);
 			
 			$timezone = new DateTimeZone('Europe/Amsterdam');
@@ -370,8 +370,14 @@
 
 			$external_url = get_config_value('url_to_external_ical');
 
-			if ($external = file_get_contents($external_url))
-				$cal->inject($external);
+			if ($external_url !== null){
+				try {
+					$external = file_get_contents($external_url);
+					$cal->inject($external);
+				} catch (Exception $e) {
+					// if something goes wrong, just don't merge with external agenda
+				}
+			}
 
 			$cal->publish('cover.ics');
 			return null;
