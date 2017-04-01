@@ -335,7 +335,10 @@
 			$cal = new WebCal_Calendar('Cover');
 			$cal->description = __('Alle activiteiten van studievereniging Cover');
 
-			$punten = array_filter($this->model->get(), [get_policy($this->model), 'user_can_read']);
+			$fromdate = new DateTime();
+			$fromdate = $fromdate->modify('-1 year')->format('Y-m-d');
+			
+			$punten = array_filter($this->model->get($fromdate, null, true), [get_policy($this->model), 'user_can_read']);
 			
 			$timezone = new DateTimeZone('Europe/Amsterdam');
 
