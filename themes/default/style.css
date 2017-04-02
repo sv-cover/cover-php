@@ -1137,6 +1137,8 @@ div.beheer table {
 .full-width-table {
 	width: 100%;
 	border-collapse: collapse;
+	max-width: 100%;
+	overflow: hidden;
 }
 
 .full-width-table th {
@@ -1147,8 +1149,37 @@ div.beheer table {
 	line-height: 2.4em;
 }
 
+.full-width-table th,
+.full-width-table td {
+	padding: 0 2px;
+}
+
+.full-width-table th:first-child,
+.full-width-table td:first-child {
+	padding-left: 0;
+}
+
+.full-width-table th:last-child,
+.full-width-table td:last-child {
+	padding-right: 0;
+}
+
 .full-width-table tbody td {
 	border-bottom: 1px solid #ccc;
+}
+
+.full-width-table tbody td pre {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	word-break: break-all;
+	overflow-wrap: break-word;
+	line-height: 1.2em;
+}
+
+.full-width-table th.actions, 
+.full-width-table td.actions {
+	text-align: right;
+	white-space: nowrap;
 }
 
 .full-width-table tr.highlight td,
