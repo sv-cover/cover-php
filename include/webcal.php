@@ -78,13 +78,13 @@ class WebCal_Calendar extends WebCal
 
 	public function inject($ical)
 	{
-		preg_match_all('/BEGIN:VTIMEZONE.*?END:VTIMEZONE/s', $ical, $timezones);
+		preg_match_all('/(*ANYCRLF)^BEGIN:VTIMEZONE$.*?^END:VTIMEZONE$/sm', $ical, $timezones);
 		$this->additional_headers = array_merge(
 			$this->additional_headers,
 			$timezones[0]
 		);
 
-		preg_match_all('/BEGIN:VEVENT.*?END:VEVENT/s', $ical, $events);
+		preg_match_all('/(*ANYCRLF)^BEGIN:VEVENT$.*?^END:VEVENT$/sm', $ical, $events);
 		foreach ($events[0] as $event)
 			$this->add_event(new WebCal_External_Event($event));
 	}
