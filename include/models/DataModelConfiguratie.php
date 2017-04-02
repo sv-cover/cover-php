@@ -59,7 +59,7 @@
 		 */
 		protected function _insert($table, DataIter $iter, $get_id = false)
 		{
-			$this->db->insert($table, $iter->data);
+			parent::_insert($table, $iter, false);
 			
 			return $get_id ? $key : -1;
 		}
