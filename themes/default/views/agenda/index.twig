@@ -82,11 +82,9 @@
 </table>
 {% endif %}
 
-<p>{{ __('De Coveragenda is ook beschikbaar in verschillende standaarden:') }}
+<p>{{ __('Voeg de Coveragenda toe aan je eigen agenda:') }}
 {% if global.auth.logged_in %}
-<a href="agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">iCal (website)</a>, 
+<a href="agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">download iCal</a>
 {% endif %}
-<a href="http://www.google.com/calendar/feeds/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic">XML (gcal)</a>,
-<a href="http://www.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics">iCal (gcal)</a></p>
 </div>
 {% endblock %}
