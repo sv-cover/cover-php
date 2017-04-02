@@ -872,20 +872,20 @@ border-radius: 0 0 5px 5px;
 	text-align: center;
 }
 
-.actions,
-.messageBox .actions { /* Override default .messageBox ul styling */
+ul.actions,
+.messageBox ul.actions { /* Override default .messageBox ul styling */
 	list-style: none;
 	display: inline-block;
 	margin: 1em 0 0 0;
 }
 
-.actions li {
+ul.actions li {
 	margin: 0 1em 0 0;
 	padding: 0;
 	display: inline-block;
 }
 
-.actions li a {
+ul.actions li a {
 	/*font-weight: normal;*/
 }
 
@@ -1174,6 +1174,7 @@ div.beheer table {
 	word-break: break-all;
 	overflow-wrap: break-word;
 	line-height: 1.2em;
+	margin: 0.6em 0;
 }
 
 .full-width-table th.actions, 
