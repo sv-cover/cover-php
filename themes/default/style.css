@@ -3232,3 +3232,57 @@ ol.almanac > li {
 	margin-right: 0.5ex;
 	vertical-align: middle;
 }
+
+body.without-menu .header {
+	min-width: 0;
+}
+
+body.without-menu .container {
+	padding: 0;
+	max-width: 400px;
+	font-size: 1.2em;
+	line-height: 1.4em;
+}
+
+body.without-menu #contents {
+	width: auto;
+	margin: 10px 20px;
+}
+
+body.without-menu .messageBox {
+	margin: 0;
+}
+
+ul.call-to-action {
+	margin-left: 0;
+}
+
+ul.call-to-action li {
+	list-style: none;
+	line-height: 2.4em;
+}
+
+ul.call-to-action li a {
+	display: block;
+	margin: 4px 0;
+	padding: 4px 12px;
+	background: #eee;
+	border-radius: 2px;
+}
+
+ul.call-to-action li a:hover,
+ul.call-to-action li a:active {
+	text-decoration: none;
+	background: #ccc;
+}
+
+ul.call-to-action li a::before {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	content: "\f18e";
+	display: inline-block;
+	padding-right: 5px;
+}
+

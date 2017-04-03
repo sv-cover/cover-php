@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=9">
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<link rel="icon" type="image/png" href="images/favicon.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">		
+		<title>{% block title %}Cover :: {{ __('Studievereniging Kunstmatige Intelligentie en Informatica, RUG') }}{% endblock %}</title>
+		
+		{% for stylesheet in view.stylesheets %}
+		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
+		{% endfor %}
+		
+		{% for script in view.scripts %}
+		<script src="{{ script }}"></script>
+		{% endfor %}
+	</head>
+	<body class="without-menu">
+		<div class="world">
+			<div class="header clearfix">
+				<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="logo"></a>
+			</div>
+			<div class="container clearfix">
+				<div class="center column" id="contents">
+					{% block content %}{% endblock %}
+				</div>
+			</div>
+		</div>
+
+		{% if view.layout.has_alert %}
+			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>
+		{% endif %}
+		
+		<!-- Google Analytics -->
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-12500955-1', 'auto');
+		  ga('require', 'displayfeatures');
+		  ga('send', 'pageview');
+		</script>
+
+		<!-- Sentry -->
+		{% if global.config.sentry_public_url %}
+			<script src="https://cdn.ravenjs.com/3.10.0/raven.min.js"></script>
+			<script>
+				Raven.config({{ global.config.sentry_public_url|json_encode()|raw }}).install();
+				{% if global.auth.logged_in %}
+				Raven.setUserContext({ user_id: {{ global.identity.member.id|json_encode()|raw }} });
+				{% endif %}
+			</script>
+		{% endif %}
+
+		{% if global.db.history|length > 0 %}
+			<script>
+				console.info('Total number of queries run: %d (%0.1fms)', {{ global.db.history|length }}, {{ global.db.history|select('duration')|sum * 1000 }});
+				console.groupCollapsed("Queries");
+				{% for query in global.db.history %}
+				console.info("Duration: %0.3fms: %s", {{query.duration * 1000}}, {{query.query|json_encode()|raw}}, {{ query.backtrace|json_encode()|raw }});
+				{% endfor %}
+				console.groupEnd();
+			</script>
+		{% endif %}
+	</body>
+</html>

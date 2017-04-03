@@ -399,6 +399,14 @@
 			return markup_parse($_POST['beschrijving']);
 		}
 
+		public function run_subscribe()
+		{
+			if (get_auth()->logged_in())
+				return $this->view->render('subscribe.twig');
+			else
+				return $this->view->redirect('sessions.php?view=login&referrer=' . rawurlencode('agenda.php?view=subscribe'));
+		}
+
 		protected function run_impl()
 		{
 			// Compatibility
