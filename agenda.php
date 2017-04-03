@@ -370,7 +370,7 @@
 
 			$external_url = get_config_value('url_to_external_ical');
 
-			if ($external_url !== null){
+			if ($external_url){
 				try {
 					$external = file_get_contents($external_url);
 					$cal->inject($external);
