@@ -18,7 +18,7 @@
 					<tr>
 						<td>{{ item.key }}</td>
 						<td><pre>{{ item.value }}</pre></td>
-						<td style="text-align: right">
+						<td class="actions">
 							{% if user_can_update item %}
 								<a href="{{ controller.link_to_update(item)|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#settings-form">{{ __('Wijzig') }}</a>
 							{% endif %}
