@@ -40,7 +40,7 @@ table.forum a:hover {
 
 table.forum a.button,
 table.forum a.button:hover,
-table.forum a.button:visitied {
+table.forum a.button:visited {
 	color: #000;
 	text-decoration: none;
 }
