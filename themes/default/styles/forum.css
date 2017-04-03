@@ -38,6 +38,13 @@ table.forum a:hover {
 	color: #004274;
 }
 
+table.forum a.button,
+table.forum a.button:hover,
+table.forum a.button:visitied {
+	color: #000;
+	text-decoration: none;
+}
+
 table.forum
 {
 	border-collapse: collapse;
