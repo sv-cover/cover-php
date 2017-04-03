@@ -3267,7 +3267,7 @@ ul.call-to-action li a {
 	margin: 4px 0;
 	padding: 4px 12px;
 	background: #eee;
-	border-radius: 2px;
+	border-radius: 3px;
 }
 
 ul.call-to-action li a:hover,
@@ -3286,3 +3286,14 @@ ul.call-to-action li a::before {
 	padding-right: 5px;
 }
 
+.well {
+	background: #e0e0e0;
+	padding: 12px 20px;
+	margin: 8px 0;
+	border-radius: 3px;
+}
+
+.well .button.login {
+	display: inline-block;
+	margin: 0 auto;
+}

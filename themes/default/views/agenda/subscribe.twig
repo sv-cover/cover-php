@@ -6,10 +6,18 @@
 	<h1>{{ __('Abonneer je op de agenda') }}</h1>
 	<div class="messageBox">
 		<p>{{ __('Voeg jouw Cover-agenda toe aan jouw eigen agenda, zodat je altijd kan zien wat er te doen is.') }}</p>
-		<ul class="call-to-action">
-			<li><a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">{{ __('Voeg toe aan mijn %s')|format('Google Calendar') }}</a></li>
-			<li><a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&amp;url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" target="_blank">{{ __('Voeg toe aan mijn %s')|format('Outlook.com') }}</a></li>
-			<li><a href="webcal://www.svcover.nl/agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" target="_blank">{{ __('Voeg toe aan mijn %s')|format('iCloud/other') }}</a></li>
-		</ul>
+		{% if global.auth.logged_in %}
+			<ul class="call-to-action">
+				<li><a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">{{ __('Voeg toe aan mijn %s')|format('Google Calendar') }}</a></li>
+				<li><a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&amp;url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" target="_blank">{{ __('Voeg toe aan mijn %s')|format('Outlook.com') }}</a></li>
+				<li><a href="webcal://www.svcover.nl/agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" target="_blank">{{ __('Voeg toe aan mijn %s')|format('iCloud/other') }}</a></li>
+			</ul>
+		{% else %}
+			<div class="well">
+				<p>{{ __('De Cover-agendalink is persoonlijk zodat je ook alle activiteiten die jij alleen als lid mag zien kan zien.') }}</p> 
+				<p>{{ __('Daarom moet je eerst even inloggen.') }}</p>
+				<a href="sessions.php?view=login&amp;referrer={{ 'agenda.php?view=subscribe'|url_encode }}" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
+			</div>
+		{% endif %}
 	</div>
 {% endblock %}
