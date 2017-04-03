@@ -82,11 +82,13 @@
 </table>
 {% endif %}
 
-<p>{{ __('De Coveragenda is ook beschikbaar in verschillende standaarden:') }}
 {% if global.auth.logged_in %}
-<a href="agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">iCal (website)</a>, 
+<p>
+	{{ __('Voeg de Coveragenda toe aan je eigen agenda:') }}
+	<a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Google Calendar</a>
+	<a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Outlook.com</a>
+	<a href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">iCloud/other</a>
+</p>
 {% endif %}
-<a href="http://www.google.com/calendar/feeds/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic">XML (gcal)</a>,
-<a href="http://www.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics">iCal (gcal)</a></p>
 </div>
 {% endblock %}
