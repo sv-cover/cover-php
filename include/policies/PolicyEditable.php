@@ -7,7 +7,8 @@ class PolicyEditable implements Policy
 	public function user_can_create(DataIter $editable)
 	{
 		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
 	public function user_can_read(DataIter $editable)
@@ -25,12 +26,14 @@ class PolicyEditable implements Policy
 		// of both the BookCee, StudCee, and other study-related groups?
 		return get_identity()->member_in_committee($editable['committee_id'])
 			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
 	public function user_can_delete(DataIter $editable)
 	{
 		// (I don't trust the candidate board enough yet to give them destructive powers!)
-		return get_identity()->member_in_committee(COMMISSIE_BESTUUR);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 }

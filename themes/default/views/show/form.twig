@@ -12,15 +12,20 @@
 			{{ html_nonce('create', iter) }}
 		{% endif %}
 		
+		{% if controller.can_set_titel(iter) %}
 		<div>
-			{{ html_label(__('Titel'), 'titel', errors=errors, required=true) }}
+			{{ html_label(__('Identifier'), 'titel', errors=errors, required=true) }}
 			{{ html_input_text('titel', iter) }}
+			<small>{{ __('Deze waarde wordt vaak in de code gebruikt om naar een specifieke pagina te verwijzen.') }}</small>
 		</div>
-
+		{% endif %}
+	
+		{% if controller.can_set_committee_id(iter) %}
 		<div>
-			{{ html_label(__('Eigenaar'), 'owner', errors=errors, required=true) }}
-			{{ html_select_field('owner', view.available_committees, iter) }}
+			{{ html_label(__('Eigenaar'), 'committee_id', errors=errors, required=true) }}
+			{{ html_select_field('committee_id', view.available_committees, iter) }}
 		</div>
+		{% endif %}
 
 		<div class="tab-container">
 			<ul class="nav-tabs horizontal">
