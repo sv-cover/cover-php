@@ -12,6 +12,9 @@
 		/* Bestuur */
 		'email_bestuur' => 'bestuur@svcover.nl',
 
+		/* Support */
+		'email_support' => 'acdcee@svcover.nl',
+		
 		'default_language' => 'en',
 
 		'facebook_app_id' => '',

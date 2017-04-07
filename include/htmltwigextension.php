@@ -22,7 +22,8 @@ class HTMLTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('html_select_field', [__CLASS__, 'select_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_textarea_field', [__CLASS__, 'textarea_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_label', [__CLASS__, 'label'], ['is_variadic' => true, 'is_safe' => ['html']]),
-			new Twig_SimpleFunction('html_nonce', [__CLASS__, 'nonce'], ['is_variadic' => true, 'is_safe' => ['html']])
+			new Twig_SimpleFunction('html_nonce', [__CLASS__, 'nonce'], ['is_variadic' => true, 'is_safe' => ['html']]),
+			new Twig_SimpleFunction('html_email', [__CLASS__, 'email'], ['is_variadic' => true, 'is_safe' => ['html']]),
 		];
 	}
 
@@ -322,5 +323,12 @@ class HTMLTwigExtension extends Twig_Extension
 		$action_name = nonce_action_name($action, $arguments);
 
 		return self::input_hidden('_nonce', nonce_generate($action_name));
+	}
+
+	static public function email($email, array $arguments = [])
+	{
+		return sprintf('<a href="mailto:%s">%s</a>',
+			markup_format_attribute($email),
+			markup_format_text($email));
 	}
 }
