@@ -25,7 +25,7 @@
 			{% if global.identity.member_is_active or global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
 				<dt>{{ html_label(field.label, field.name) }}</dt>
 				<dd class="data-members-only">
-					{{ view.format_member_data(iter, field.name)|raw }} xxx
+					{{ view.format_member_data(iter, field.name)|raw }}
 					<i class="fa fa-lock" title="{{ __('Alleen zichtbaar voor ingelogde leden')|e('html_attr') }}"></i>
 				</dd>
 			{% endif %}
