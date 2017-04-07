@@ -42,14 +42,14 @@
 		</div>
 
 		<ul class="actions">
-			{% if user_can_update item %}
+			{%- if user_can_update item -%}
 			<li><a href="announcements.php?view=update&amp;id={{ item.id }}"
 				data-partial-selector=".announcement"
 				data-placement-selector=".announcement">{{ __('Wijzig') }}</a></li>
-			{% endif %}
-			{% if user_can_delete item %}
+			{%- endif -%}
+			{%- if user_can_delete item -%}
 			<li><a href="announcements.php?view=delete&amp;id={{ item.id }}">{{ __('Verwijder') }}</a></li>
-			{% endif %}
+			{%- endif -%}
 		</ul>
 	</div>
 {% endfor %}

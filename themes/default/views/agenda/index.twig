@@ -83,12 +83,15 @@
 {% endif %}
 
 {% if global.auth.logged_in %}
-<p>
-	{{ __('Voeg de Coveragenda toe aan je eigen agenda:') }}
-	<a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Google Calendar</a>
-	<a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Outlook.com</a>
-	<a href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">iCloud/other</a>
-</p>
+<footer class="alt-section">
+	<p>
+		{{ __('Voeg de Coveragenda toe aan je eigen agenda:') }}
+		<a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Google Calendar</a>,
+		<a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Outlook.com</a>
+		{{ __('of') }}
+		<a href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">iCloud/other</a>
+	</p>
+</footer>
 {% endif %}
 </div>
 {% endblock %}

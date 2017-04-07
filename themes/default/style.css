@@ -815,8 +815,9 @@ border-radius: 0 0 5px 5px;
 	color:#000000;
 	padding:15px;
 	margin-bottom: 30px;
-	background: #f5f5f5 url('images/cbox-bg.png') repeat-x scroll left top ;
-	border-bottom-left-radius:4px; border-bottom-right-radius:5px;
+	background: #f5f5f5 url('images/cbox-bg.png') repeat-x scroll left top;
+	border-radius: 0 0 4px 4px;
+	overflow: hidden;
 }
 
 .messageBox .almanak form { text-align:center; margin: 0 auto; }
@@ -885,8 +886,26 @@ ul.actions li {
 	display: inline-block;
 }
 
-ul.actions li a {
-	/*font-weight: normal;*/
+.messageBox > .alt-section,
+.messageBox > ul.actions {
+	background: #ddd;
+	margin: 15px -15px;
+	padding: 15px;
+	display: block;
+}
+
+.messageBox > ul.actions:empty {
+	display: none;
+}
+
+.messageBox .alt-section:first-child,
+.messageBox ul.actions:first-child {
+	margin-top: -15px;
+}
+
+.messageBox .alt-section:last-child,
+.messageBox ul.actions:last-child {
+	margin-bottom: -15px;
 }
 
 .newsHeading {
