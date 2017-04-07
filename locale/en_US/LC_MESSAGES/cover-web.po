@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-04-03 15:40+0200\n"
+"POT-Creation-Date: 2017-04-08 00:08+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -33,6 +33,7 @@ msgid "Log in"
 msgstr "Log in"
 
 #: themes/default/views/_layout/401_unauthorized.twig:14
+#: themes/default/views/agenda/index.twig:91
 #: themes/default/views/boeken/go_to_log_in.twig:11
 #: themes/default/views/lidworden/known_member.twig:9
 msgid "of"
@@ -116,7 +117,7 @@ msgstr "Not yet published"
 #: themes/default/views/_layout/widgets/agenda.twig:32
 #: themes/default/views/agenda/index.twig:40
 msgid "Er staan op dit moment geen activiteiten op de agenda."
-msgstr "There are no activities on the calendar at the moment. "
+msgstr "There are no activities on the calendar at the moment."
 
 #: themes/default/views/_layout/widgets/agenda.twig:35
 #: themes/default/views/agenda/single.twig:106
@@ -338,8 +339,8 @@ msgstr "Preview"
 #: themes/default/views/forum/poll_form.twig:37
 #: themes/default/views/forum/reply_form.twig:27
 #: themes/default/views/forum/thread_form.twig:28
-#: themes/default/views/show/form.twig:39
-#: themes/default/views/show/form.twig:42
+#: themes/default/views/show/form.twig:44
+#: themes/default/views/show/form.twig:47
 msgid "Voorbeeld wordt geladen…"
 msgstr "Loading preview…"
 
@@ -389,13 +390,13 @@ msgstr "Delete"
 msgid "Wijzig"
 msgstr "Modify"
 
-#: themes/default/views/agenda/index.twig:87
+#: themes/default/views/agenda/index.twig:88
 msgid "Voeg de Coveragenda toe aan je eigen agenda:"
 msgstr "Add the Cover Calendar to your own calendar:"
 
 #: themes/default/views/agenda/moderate.twig:9
 msgid "Er staan geen agendapunten in de wachtrij om goedgekeurd te worden."
-msgstr "There are no calendar events waiting for approval"
+msgstr "There are no calendar events waiting for approval."
 
 #: themes/default/views/agenda/moderate.twig:11
 msgid ""
@@ -475,7 +476,7 @@ msgstr "Date & time"
 
 #: themes/default/views/agenda/single.twig:93
 msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
-msgstr "This activity is not organised by Cover"
+msgstr "This activity is not organised by Cover."
 
 #: themes/default/views/agenda/single.twig:101
 #: themes/default/views/announcements/announcements.twig:33
@@ -536,12 +537,12 @@ msgstr "Visibility"
 #: themes/default/views/search/_single_member.twig:3
 #: include/models/DataModelForum.php:1273
 #: include/models/DataModelMember.php:592
-#: themes/default/views/profiel/profiel.php:380
+#: themes/default/views/profiel/profiel.php:385
 msgid "Lid"
 msgstr "Member"
 
 #: themes/default/views/almanak/index.twig:23
-#: themes/default/views/profiel/profiel.php:381
+#: themes/default/views/profiel/profiel.php:386
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
@@ -549,7 +550,7 @@ msgstr "Member (hidden)"
 #: themes/default/views/search/_single_member.twig:5
 #: include/models/DataModelMember.php:598
 #: themes/default/views/almanak/almanak.php:39
-#: themes/default/views/profiel/profiel.php:382
+#: themes/default/views/profiel/profiel.php:387
 msgid "Lid af"
 msgstr "Previously a member"
 
@@ -557,7 +558,7 @@ msgstr "Previously a member"
 #: themes/default/views/search/_single_member.twig:7
 #: include/models/DataModelMember.php:601
 #: themes/default/views/almanak/almanak.php:42
-#: themes/default/views/profiel/profiel.php:383
+#: themes/default/views/profiel/profiel.php:388
 msgid "Erelid"
 msgstr "Honorary Member"
 
@@ -565,27 +566,27 @@ msgstr "Honorary Member"
 #: themes/default/views/search/_single_member.twig:9
 #: include/models/DataModelMember.php:604
 #: themes/default/views/almanak/almanak.php:45
-#: themes/default/views/profiel/profiel.php:384
+#: themes/default/views/profiel/profiel.php:389
 msgid "Donateur"
 msgstr "Donor"
 
-#: themes/default/views/almanak/index.twig:44
+#: themes/default/views/almanak/index.twig:43
 msgid "Maak hierboven een selectie om de almanak te bekijken."
-msgstr "Make a selection above to view the almanac"
+msgstr "Make a selection above to view the almanac."
 
-#: themes/default/views/almanak/index.twig:47
+#: themes/default/views/almanak/index.twig:46
 msgid "Download almanakgegevens:"
 msgstr "Download yearbook data:"
 
-#: themes/default/views/almanak/index.twig:48
+#: themes/default/views/almanak/index.twig:47
 msgid "CSV met persoonsgegevens"
 msgstr "CSV with personal details"
 
-#: themes/default/views/almanak/index.twig:49
+#: themes/default/views/almanak/index.twig:48
 msgid "ZIP met foto's"
 msgstr "ZIP archive with profile pictures"
 
-#: themes/default/views/almanak/index.twig:53
+#: themes/default/views/almanak/index.twig:52
 #, python-format
 msgid "Er is <em>%d</em> lid gevonden die voldoet aan de zoekterm(en)."
 msgid_plural ""
@@ -701,11 +702,11 @@ msgstr "Add a new board"
 
 #: themes/default/views/besturen/form.twig:16
 msgid "Bestuursnaam"
-msgstr "Board name:"
+msgstr "Board name"
 
 #: themes/default/views/besturen/form.twig:21
 msgid "Sorteernaam"
-msgstr "Sort order name:"
+msgstr "Sort order name"
 
 #: themes/default/views/besturen/form.twig:23
 msgid ""
@@ -997,53 +998,6 @@ msgstr "Rank"
 #: themes/default/views/committeebattle/index.twig:50
 msgid "Bewerk omschrijving"
 msgstr "Update description"
-
-#: themes/default/views/confirm/email_confirmed.twig:3
-#: themes/default/views/confirm/email_confirmed.twig:6
-msgid "E-mailadres veranderd"
-msgstr "Email address changed"
-
-#: themes/default/views/confirm/email_confirmed.twig:8
-#, python-format
-msgid "Je e-mailadres is nu veranderd naar %s."
-msgstr "Your email address has been updated to %s."
-
-#: themes/default/views/confirm/invalid_key.twig:3
-#: themes/default/views/confirm/invalid_key.twig:6
-msgid "Bevestiging"
-msgstr "Confirmation"
-
-#: themes/default/views/confirm/invalid_key.twig:6 include/functions.php:55
-msgid "Fout"
-msgstr "Error"
-
-#: themes/default/views/confirm/invalid_key.twig:8
-#, python-format
-msgid ""
-"Je hebt een ongeldige link gevolgd. Er staat geen actie in de wachtrij met "
-"de opgegeven sleutel. Probeer het opnieuw of neem contact op met %s als het "
-"probleem zich blijft voordoen."
-msgstr ""
-"You have followed an invalid link. There is no task in the queue with the "
-"given key. Try again or contact %s if the problem keeps occurring."
-
-#: themes/default/views/confirm/invalid_key.twig:8
-msgid "de WebCie"
-msgstr "the WebCie"
-
-#: themes/default/views/confirm/password_reset.twig:3
-#: themes/default/views/confirm/password_reset.twig:6
-msgid "Wachtwoord gereset"
-msgstr "Password reset"
-
-#: themes/default/views/confirm/password_reset.twig:8
-#, python-format
-msgid ""
-"Je wachtwoord is gereset. Er is een mailtje naar %s gestuurd met je nieuwe "
-"inlog-gegevens."
-msgstr ""
-"You password has been changed. A mail has been sent to %s with your new "
-"login information."
 
 #: themes/default/views/dreamspark/accept.twig:3
 #: themes/default/views/dreamspark/accept.twig:6
@@ -1473,7 +1427,6 @@ msgid "Maak fotoboek"
 msgstr "Add photo album"
 
 #: themes/default/views/fotoboek/photobook_form.twig:22
-#: themes/default/views/show/form.twig:16
 msgid "Titel"
 msgstr "Title"
 
@@ -1598,6 +1551,8 @@ msgid "Bewerk introductie"
 msgstr "Modify introduction"
 
 #: themes/default/views/lidworden/confirmed.twig:4
+#: themes/default/views/profiel/confirm_email.twig:3
+#: themes/default/views/profiel/confirm_email.twig:6
 msgid "E-mailadres bevestigen"
 msgstr "Confirm email address"
 
@@ -1626,7 +1581,7 @@ msgid ""
 msgstr ""
 "Your email address is already known to us, which means you are already in "
 "our member administration! In this case it is easier to quickly contact the "
-"secretary of Cover via secretary@svcover.nl. "
+"secretary of Cover via secretary@svcover.nl."
 
 #: themes/default/views/lidworden/known_member.twig:10
 msgid "Reset je wachtwoord"
@@ -1634,11 +1589,11 @@ msgstr "Reset your password"
 
 #: themes/default/views/lidworden/lidworden.twig:8
 msgid "Word lid van Cover!"
-msgstr "Become a member"
+msgstr "Become a member!"
 
 #: themes/default/views/lidworden/lidworden.twig:12
 msgid "Niet alle velden zijn goed ingevuld."
-msgstr "You haven't filled in all the fields correctly"
+msgstr "You haven't filled in all the fields correctly."
 
 #: themes/default/views/lidworden/lidworden.twig:23
 msgid "Voornaam"
@@ -1766,7 +1721,7 @@ msgstr "Study"
 
 #: themes/default/views/lidworden/lidworden.twig:92
 msgid "Kies uit de lijst of typ een andere studie"
-msgstr "Pick one from the list or type if your study isn't on it."
+msgstr "Pick one from the list or type if your study isn't on it"
 
 #: themes/default/views/lidworden/lidworden.twig:97
 msgid "Fase"
@@ -1807,7 +1762,7 @@ msgstr "BIC"
 
 #: themes/default/views/lidworden/lidworden.twig:120
 msgid "Alleen nodig wanneer IBAN [i]niet[/i] met 'NL' begint"
-msgstr "Only required if your IBAN [i]does not[/i] begin with 'NL'"
+msgstr "Only required if your IBAN [i]does not[/i] start with 'NL'"
 
 #: themes/default/views/lidworden/lidworden.twig:125
 msgid ""
@@ -2032,7 +1987,7 @@ msgid "Nieuwe mailinglijst"
 msgstr "New mailing list"
 
 #: themes/default/views/mailinglijsten/index.twig:20
-#: themes/default/views/show/form.twig:21
+#: themes/default/views/show/form.twig:25
 msgid "Eigenaar"
 msgstr "Owner"
 
@@ -2111,6 +2066,36 @@ msgstr "No, I was just curious."
 #: themes/default/views/profiel/profile_tab.twig:73
 msgid "Kies nieuwe foto"
 msgstr "Choose photo"
+
+#: themes/default/views/profiel/confirm_email.twig:9
+msgid "Klaar! Je e-mailadres is bevestigd en bijgewerkt!"
+msgstr "Finished! Your email address has been confirmed and updated!"
+
+#: themes/default/views/profiel/confirm_email.twig:11
+msgid "Oh jee! Deze link is niet meer geldig."
+msgstr "Oh dear, this link is no longer valid."
+
+#: themes/default/views/profiel/confirm_email.twig:12
+msgid ""
+"Het kan goed zijn dat je je e-mailadres al eerder bevestigd hebt. Probeer in "
+"te loggen met je nieuwe e-mailadres. Mocht dat niet lukken, probeer het dan "
+"toch weer eens met je vorige adres. Klopt het wachtwoord niet? Probeer dan "
+"beide e-mailadressen wanneer je een nieuw wachtwoord aanvraagt."
+msgstr ""
+"It might be the case that you’ve already confirmed your email address. Try "
+"to log in with your new address. It that doesn’t work, try to use your "
+"previous address once again. Did you forget your password? You might want to "
+"try both your previous and current email address when asking for password "
+"recovery."
+
+#: themes/default/views/profiel/confirm_email.twig:13
+#, python-format
+msgid "Kom je er niet uit? Mail dan naar %s zodat we je verder kunnen helpen."
+msgstr "Still having trouble? Send an email to %s and we’ll help you."
+
+#: themes/default/views/profiel/confirm_email.twig:16
+msgid "Terug naar de website"
+msgstr "Back to the homepage"
 
 #: themes/default/views/profiel/incassomatic_tab.twig:7
 #: themes/default/views/profiel/incassomatic_tab_exception.twig:7
@@ -2293,7 +2278,7 @@ msgstr "Language"
 
 #: themes/default/views/profiel/profile_tab.twig:41
 #: themes/default/views/profiel/profile_tab.twig:53
-#: themes/default/views/wachtwoordvergeten/reset_form.twig:30 confirm.php:30
+#: themes/default/views/wachtwoordvergeten/reset_form.twig:30
 msgid "Nieuw wachtwoord"
 msgstr "New password"
 
@@ -2558,23 +2543,33 @@ msgstr "Modify page"
 msgid "Nieuwe pagina maken"
 msgstr "Make a page"
 
-#: themes/default/views/show/form.twig:27
+#: themes/default/views/show/form.twig:17
+msgid "Identifier"
+msgstr "Identifier"
+
+#: themes/default/views/show/form.twig:19
+msgid ""
+"Deze waarde wordt vaak in de code gebruikt om naar een specifieke pagina te "
+"verwijzen."
+msgstr "This value is often used in the code base to refer to a specific page."
+
+#: themes/default/views/show/form.twig:32
 msgid "Nederlands"
 msgstr "Dutch"
 
-#: themes/default/views/show/form.twig:29
+#: themes/default/views/show/form.twig:34
 msgid "Engels"
 msgstr "English"
 
-#: themes/default/views/show/form.twig:47
+#: themes/default/views/show/form.twig:52
 msgid "Wijzig pagina"
 msgstr "Modify page"
 
-#: themes/default/views/show/form.twig:47
+#: themes/default/views/show/form.twig:52
 msgid "Maak pagina"
 msgstr "Create page"
 
-#: themes/default/views/show/form.twig:49
+#: themes/default/views/show/form.twig:54
 msgid "Bekijk pagina"
 msgstr "Show page"
 
@@ -2776,29 +2771,6 @@ msgstr "All activities of study association Cover"
 msgid "Besturen"
 msgstr "Boards"
 
-#: confirm.php:31
-#, php-format
-msgid ""
-"Het wachtwoord van het account op dit E-Mail adres van de Cover site is "
-"gewijzigd. Je kunt nu inloggen met de volgende gegevens:\n"
-"\n"
-"E-Mail:\t\t%s\n"
-"Wachtwoord:\t%s\n"
-"\n"
-"Met vriendelijke groeten,\n"
-"\n"
-"De WebCie"
-msgstr ""
-"The password of the account with this E-Mail address on the Cover site has "
-"been changed. You can now login with the following:\n"
-"\n"
-"E-Mail:\t\t%s\n"
-"Password:\t%s\n"
-"\n"
-"With kind regards,\n"
-"\n"
-"The WebCie"
-
 #: data/menuconfig.php:5
 msgid ""
 "Er is geen menu opgegeven, mocht dit vaker voorkomen neem dan contact op met "
@@ -2819,6 +2791,10 @@ msgstr ""
 #, php-format
 msgid "Kan het model %s niet vinden"
 msgstr "Could not find the model %s"
+
+#: include/functions.php:55
+msgid "Fout"
+msgstr "Error"
 
 #: include/functions.php:67
 msgid ""
@@ -3038,17 +3014,17 @@ msgstr "Yesterday"
 msgid "%d dagen geleden"
 msgstr "%d days ago"
 
-#: include/htmltwigextension.php:103
+#: include/htmltwigextension.php:104
 #, php-format
 msgid "Bijv. %d-9-20"
 msgstr "E.g. %d-9-20"
 
-#: include/htmltwigextension.php:114
+#: include/htmltwigextension.php:115
 #, php-format
 msgid "Bijv. %d-9-20 11:00"
 msgstr "E.g. %d-9-20 11:00"
 
-#: include/htmltwigextension.php:313
+#: include/htmltwigextension.php:314
 msgid "Verplicht"
 msgstr "Required"
 
@@ -3185,65 +3161,65 @@ msgstr "Promotion Homosexual"
 msgid "De volgende velden zijn onjuist ingevuld: "
 msgstr "The following fields are not correctly filled in: "
 
-#: profiel.php:162
+#: profiel.php:146
 msgid "Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd."
 msgstr "We’ve sent a confirmation mail to your new email address."
 
-#: profiel.php:184
+#: profiel.php:188
 msgid "De volgende velden zijn te lang: "
 msgstr "The following fields are to long: "
 
-#: profiel.php:208
+#: profiel.php:212
 msgid "Het huidige wachtwoord is onjuist."
-msgstr "The current password is incorrect"
+msgstr "The current password is incorrect."
 
-#: profiel.php:214
+#: profiel.php:218
 msgid "Het nieuwe wachtwoord is niet ingevuld."
-msgstr "The new password hasn't been filled in"
+msgstr "The new password hasn't been filled in."
 
-#: profiel.php:217
+#: profiel.php:221
 msgid "Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld."
-msgstr "The new password hasn't been filled in correctly twice"
+msgstr "The new password hasn't been filled in correctly twice."
 
-#: profiel.php:220
+#: profiel.php:224
 msgid "Het nieuwe wachtwoord is te kort."
 msgstr "Your new password is too short."
 
-#: profiel.php:230
+#: profiel.php:234
 msgid "Je wachtwoord is gewijzigd."
 msgstr "Your password has been changed."
 
-#: profiel.php:260
+#: profiel.php:264
 msgid "De zichtbaarheid van het profiel is niet ingevuld."
 msgstr "The visibility of the profile has not been selected."
 
-#: profiel.php:263
+#: profiel.php:267
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
-#: profiel.php:282
+#: profiel.php:286
 #, php-format
 msgid "Het fotobestand is te groot. Het maximum is %s."
 msgstr "The image file is too large. The maximum file size is %s."
 
-#: profiel.php:286
+#: profiel.php:290
 #, php-format
 msgid "Het bestand is niet geupload. Foutcode %d."
 msgstr "The image hasn't been uploaded correctly. PHP reports error code %d."
 
-#: profiel.php:289
+#: profiel.php:293
 msgid "Bestand is niet een door PHP geupload bestand."
 msgstr "The image file is not a file uploaded by PHP."
 
-#: profiel.php:292
+#: profiel.php:296
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
-#: profiel.php:300
+#: profiel.php:304
 msgid "Het geuploadde bestand kon niet worden geopend."
 msgstr "The uploaded file could not be opened."
 
-#: profiel.php:315
+#: profiel.php:319
 msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
@@ -3373,62 +3349,6 @@ msgstr "Attend"
 msgid "Agenda %d-%d"
 msgstr "Calendar %d-%d"
 
-#: themes/default/views/almanak/almanak.php:62
-msgid "id"
-msgstr "ID"
-
-#: themes/default/views/almanak/almanak.php:63
-msgid "voornaam"
-msgstr "First name"
-
-#: themes/default/views/almanak/almanak.php:64
-msgid "tussenvoegsel"
-msgstr "Infix"
-
-#: themes/default/views/almanak/almanak.php:65
-msgid "achternaam"
-msgstr "Last name"
-
-#: themes/default/views/almanak/almanak.php:66
-msgid "adres"
-msgstr "Address"
-
-#: themes/default/views/almanak/almanak.php:67
-msgid "postcode"
-msgstr "Zipcode"
-
-#: themes/default/views/almanak/almanak.php:68
-msgid "woonplaats"
-msgstr "City or Village"
-
-#: themes/default/views/almanak/almanak.php:69
-msgid "email"
-msgstr "Email"
-
-#: themes/default/views/almanak/almanak.php:70
-msgid "geboortedatum"
-msgstr "Date of birth"
-
-#: themes/default/views/almanak/almanak.php:71
-msgid "geslacht"
-msgstr "Gender"
-
-#: themes/default/views/almanak/almanak.php:72
-msgid "telefoonnummer"
-msgstr "Phone number"
-
-#: themes/default/views/almanak/almanak.php:73
-msgid "studie"
-msgstr "Study"
-
-#: themes/default/views/almanak/almanak.php:74
-msgid "beginjaar"
-msgstr "Starting year"
-
-#: themes/default/views/almanak/almanak.php:75
-msgid "status"
-msgstr "Status"
-
 #: themes/default/views/commissies/commissies.php:72
 msgid "Werkgroep"
 msgstr "Working group"
@@ -3495,7 +3415,7 @@ msgstr "Direct debits"
 msgid "Systeem"
 msgstr "System"
 
-#: themes/default/views/profiel/profiel.php:385
+#: themes/default/views/profiel/profiel.php:390
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
 
@@ -3503,6 +3423,105 @@ msgstr "To be processed"
 #, php-format
 msgid "Fotoboek met %s gemaakt op %s."
 msgstr "Photo album with %s made on %s."
+
+#~ msgid "Id"
+#~ msgstr "ID"
+
+#~ msgid "Geslacht"
+#~ msgstr "Gender"
+
+#~ msgid "id"
+#~ msgstr "ID"
+
+#~ msgid "voornaam"
+#~ msgstr "First name"
+
+#~ msgid "tussenvoegsel"
+#~ msgstr "Infix"
+
+#~ msgid "achternaam"
+#~ msgstr "Last name"
+
+#~ msgid "adres"
+#~ msgstr "Address"
+
+#~ msgid "postcode"
+#~ msgstr "Zipcode"
+
+#~ msgid "woonplaats"
+#~ msgstr "City or Village"
+
+#~ msgid "email"
+#~ msgstr "Email"
+
+#~ msgid "geboortedatum"
+#~ msgstr "Date of birth"
+
+#~ msgid "geslacht"
+#~ msgstr "Gender"
+
+#~ msgid "telefoonnummer"
+#~ msgstr "Phone number"
+
+#~ msgid "studie"
+#~ msgstr "Study"
+
+#~ msgid "beginjaar"
+#~ msgstr "Starting year"
+
+#~ msgid "status"
+#~ msgstr "Status"
+
+#~ msgid "E-mailadres veranderd"
+#~ msgstr "Email address changed"
+
+#~ msgid "Je e-mailadres is nu veranderd naar %s."
+#~ msgstr "Your email address has been updated to %s."
+
+#~ msgid "Bevestiging"
+#~ msgstr "Confirmation"
+
+#~ msgid ""
+#~ "Je hebt een ongeldige link gevolgd. Er staat geen actie in de wachtrij "
+#~ "met de opgegeven sleutel. Probeer het opnieuw of neem contact op met %s "
+#~ "als het probleem zich blijft voordoen."
+#~ msgstr ""
+#~ "You have followed an invalid link. There is no task in the queue with the "
+#~ "given key. Try again or contact %s if the problem keeps occurring."
+
+#~ msgid "de WebCie"
+#~ msgstr "the WebCie"
+
+#~ msgid "Wachtwoord gereset"
+#~ msgstr "Password reset"
+
+#~ msgid ""
+#~ "Je wachtwoord is gereset. Er is een mailtje naar %s gestuurd met je "
+#~ "nieuwe inlog-gegevens."
+#~ msgstr ""
+#~ "You password has been changed. A mail has been sent to %s with your new "
+#~ "login information."
+
+#~ msgid ""
+#~ "Het wachtwoord van het account op dit E-Mail adres van de Cover site is "
+#~ "gewijzigd. Je kunt nu inloggen met de volgende gegevens:\n"
+#~ "\n"
+#~ "E-Mail:\t\t%s\n"
+#~ "Wachtwoord:\t%s\n"
+#~ "\n"
+#~ "Met vriendelijke groeten,\n"
+#~ "\n"
+#~ "De WebCie"
+#~ msgstr ""
+#~ "The password of the account with this E-Mail address on the Cover site "
+#~ "has been changed. You can now login with the following:\n"
+#~ "\n"
+#~ "E-Mail:\t\t%s\n"
+#~ "Password:\t%s\n"
+#~ "\n"
+#~ "With kind regards,\n"
+#~ "\n"
+#~ "The WebCie"
 
 #~ msgid "Je bent ingelogd als %s."
 #~ msgstr "You are connected to the Facebook profile of %s."
@@ -5144,9 +5163,6 @@ msgstr "Photo album with %s made on %s."
 
 #~ msgid "Prive"
 #~ msgstr "Private"
-
-#~ msgid "Geslacht"
-#~ msgstr "Gender"
 
 #~ msgid "Bank- of <br>girorekeningnummer"
 #~ msgstr "Bank number"
