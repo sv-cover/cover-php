@@ -53,7 +53,8 @@ class DreamsparkController extends Controller
 		if (!$response)
 			throw new RuntimeException('Could not get redirect url from the ELMS endpoint');
 
-		return $this->view->redirect($response, ALLOW_SUBDOMAINS);
+		header('Location: ' . $response);
+		return '<a href="' . htmlentities($response, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
 	}
 
 	protected function run_impl()
