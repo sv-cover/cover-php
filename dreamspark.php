@@ -47,14 +47,8 @@ class DreamsparkController extends Controller
 
 		fclose($fh);
 
-		if (!isset($metadata['wrapper_data']) || strpos($metadata['wrapper_data'][0], '200 OK') === false)
-			throw new RuntimeException('Handshake error: ' . $response);
-
-		if (!$response)
-			throw new RuntimeException('Could not get redirect url from the ELMS endpoint');
-
-		header('Location: ' . $response);
-		return '<a href="' . htmlentities($response, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
+		$response = 'https://www.martijnluinstra.nl/';
+		return $this->view->redirect($response, False, ALLOW_EXTERNAL_DOMAINS);
 	}
 
 	protected function run_impl()

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-04-08 00:08+0200\n"
+"POT-Creation-Date: 2017-04-13 22:09+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0\n"
+"X-Generator: Poedit 2.0.1\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -463,6 +463,7 @@ msgid "Gaat niet"
 msgstr "Not going"
 
 #: themes/default/views/agenda/single.twig:73
+#: themes/default/views/profiel/_facebook.phtml:22
 msgid "Koppel Facebook"
 msgstr "Connect to Facebook"
 
@@ -1001,24 +1002,24 @@ msgstr "Update description"
 
 #: themes/default/views/dreamspark/accept.twig:3
 #: themes/default/views/dreamspark/accept.twig:6
-msgid "Inloggen op Dreamspark"
-msgstr "Log in to Dreamspark"
+msgid "Inloggen op Microsoft Imagine"
+msgstr "Log in to Microsoft Imagine"
 
 #: themes/default/views/dreamspark/accept.twig:11
 msgid ""
-"Als je doorgaat worden je naam en e-mailadres doorgegeven aan de Dreamspark "
-"webstore."
+"Als je doorgaat worden je naam en e-mailadres doorgegeven aan de Microsoft "
+"Imagine webstore."
 msgstr ""
-"To log in to the Dreamspark Webstore we need to pass your name and e-mail "
-"address to Microsoft."
+"To log in to the Microsoft Imagine Webstore we need to pass your name and e-"
+"mail address to Microsoft."
 
 #: themes/default/views/dreamspark/accept.twig:16
 msgid "Log in als WebCie admin"
 msgstr "Log in as WebCie administrator"
 
 #: themes/default/views/dreamspark/accept.twig:21
-msgid "Ga verder naar de Dreamspark Webstore"
-msgstr "Continue to the Dreamspark Webstore"
+msgid "Ga verder naar de Microsoft Imagine Webstore"
+msgstr "Continue to the Microsoft Imagine Webstore"
 
 #: themes/default/views/forum/_poll.twig:15
 msgid "Stem"
@@ -3081,7 +3082,7 @@ msgstr "previous"
 msgid "volgende"
 msgstr "next"
 
-#: include/view.php:186
+#: include/view.php:188
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
@@ -3281,8 +3282,8 @@ msgid "Merchandise"
 msgstr "Merchandise"
 
 #: themes/default/views/_layout/layout.php:111
-msgid "Dreamspark"
-msgstr "Dreamspark"
+msgid "Microsoft Imagine"
+msgstr "Microsoft Imagine"
 
 #: themes/default/views/_layout/layout.php:116
 msgid "Bedrijven"
@@ -3404,6 +3405,7 @@ msgid "Privacy"
 msgstr "Privacy"
 
 #: themes/default/views/profiel/profiel.php:74
+#: themes/default/views/profiel/_facebook.phtml:20
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -3423,6 +3425,31 @@ msgstr "To be processed"
 #, php-format
 msgid "Fotoboek met %s gemaakt op %s."
 msgstr "Photo album with %s made on %s."
+
+#: themes/default/views/profiel/_facebook.phtml:8
+#, php-format
+msgid "Je bent ingelogd als %s."
+msgstr "You are connected to the Facebook profile of %s."
+
+#: themes/default/views/profiel/_facebook.phtml:11
+msgid "Je bent niet langer gekoppeld aan Facebook."
+msgstr "Your profile is no longer connected to your Facebook account"
+
+#: themes/default/views/profiel/_facebook.phtml:17
+msgid "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."
+msgstr ""
+"Connect your Facebook account to see who of your friends are attending the "
+"activities."
+
+#: themes/default/views/profiel/_facebook.phtml:26
+msgid "Ontkoppel Facebook"
+msgstr "Disconnect Facebook"
+
+#~ msgid "Inloggen op Dreamspark"
+#~ msgstr "Log in to Dreamspark"
+
+#~ msgid "Dreamspark"
+#~ msgstr "Dreamspark"
 
 #~ msgid "Id"
 #~ msgstr "ID"
@@ -3522,21 +3549,6 @@ msgstr "Photo album with %s made on %s."
 #~ "With kind regards,\n"
 #~ "\n"
 #~ "The WebCie"
-
-#~ msgid "Je bent ingelogd als %s."
-#~ msgstr "You are connected to the Facebook profile of %s."
-
-#~ msgid "Je bent niet langer gekoppeld aan Facebook."
-#~ msgstr "Your profile is no longer connected to your Facebook account"
-
-#~ msgid ""
-#~ "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."
-#~ msgstr ""
-#~ "Connect your Facebook account to see who of your friends are attending "
-#~ "the activities."
-
-#~ msgid "Ontkoppel Facebook"
-#~ msgstr "Disconnect Facebook"
 
 #~ msgid "Voeg toe aan %s"
 #~ msgstr "Add to my %s"
