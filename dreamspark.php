@@ -47,7 +47,6 @@ class DreamsparkController extends Controller
 
 		fclose($fh);
 
-		$response = 'https://www.martijnluinstra.nl/';
 		return $this->view->redirect($response, False, ALLOW_EXTERNAL_DOMAINS);
 	}
 
