@@ -40,6 +40,11 @@
 			return $this->model->set_members($this, $members);
 		}
 
+		public function get_mascots()
+		{
+			return get_model('DataModelCommitteeMascot')->find_for_committee($this);
+		}
+
 		public function get_summary()
 		{
 			$editable_model = get_model('DataModelEditable');
