@@ -1,16 +1,17 @@
 {% set activiteiten = view.get_activities(iter) %}
 {% if activiteiten %}
-<a name="activiteiten"></a>
-<h3>{{ __('Commissieagenda') }}</h3>
-<ul>
-{% for punt in activiteiten %}
-	<li>
-		<a href="agenda.php?agenda_id={{ punt.id }}"><strong>{{ punt.kop }}</strong></a><br>
-		{{ punt.formatted_period }}<br>
-		{% if punt.locatie %}
-			{{ __('Locatie') }}: {{ punt.locatie }}
-		{% endif %}
-	</li>
-{% endfor %}
-</ul>
+<div class="commissie-agenda" id="activiteiten">
+	<h3>{{ __('Commissieagenda') }}</h3>
+	<ul>
+	{% for punt in activiteiten %}
+		<li>
+			<a href="agenda.php?agenda_id={{ punt.id }}"><strong>{{ punt.kop }}</strong></a><br>
+			{{ punt.formatted_period }}<br>
+			{% if punt.locatie %}
+				{{ __('Locatie') }}: {{ punt.locatie }}
+			{% endif %}
+		</li>
+	{% endfor %}
+	</ul>
+</div>
 {% endif %}
