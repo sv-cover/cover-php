@@ -6,15 +6,12 @@ class DataModelCommitteeMascot
 
 	public function __construct($db)
 	{
-		$this->mascots = [
-			'herocee' => [
-				[
-					'name' => 'Koda',
-					'functie' => 'Care bear',
-					'photo' => 'images/mascots/koda.jpg'
-				]
-			]
-		];
+		try {
+			$data = file_get_contents('images/mascots/data.json');
+			$this->mascots = json_decode($data, true);
+		} catch (Exception $e) {
+			$this->mascots = [];
+		}
 	}
 
 	public function find_for_committee(DataIterCommissie $committee)
