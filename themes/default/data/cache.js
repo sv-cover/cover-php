@@ -1,6 +1,6 @@
 jQuery(function($) {
 	$.ajax('https://cache.svcover.nl/').then(function(response) {
-		var status = response.match(/\bopen\b/i) ? 'open' : 'closed';
+			var status = response.match(/<p>.*\bopen\b.*<\/p>/i) ? 'open' : 'closed';
 
 		if (status != 'open')
 			return;
