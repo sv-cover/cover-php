@@ -3316,3 +3316,18 @@ ul.call-to-action li a::before {
 	display: inline-block;
 	margin: 0 auto;
 }
+
+.header > .cover-room-open {
+	position: absolute;
+	top: 35px;
+	left: 260px;
+	font-size: 1.7em;
+	text-transform: uppercase;
+	display: inline-block;
+	background: #C8102E;
+	color: white;
+	padding: 4px 18px;
+	border-radius: 4px;
+	box-shadow: 0 0 0 2px white, 0 0 0 4px #C8102E, -1px 1px 4px 3px rgba(0, 0, 0, 0.6);
+	transform: rotate(-7deg);
+}
