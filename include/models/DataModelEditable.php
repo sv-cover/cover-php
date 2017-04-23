@@ -45,7 +45,10 @@
 		{
 			$content = $this->get_locale_content($language);
 
-			return preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches) ? $matches[1] : null;
+			if (preg_match('/\[samenvatting\](.+?)\[\/samenvatting\]/msi', $content, $matches))
+				return markup_strip($matches[1]);
+
+			return $summary = summarize(markup_strip($content), 128);
 		}
 
 		public function get_search_relevance()

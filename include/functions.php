@@ -1015,3 +1015,18 @@
 			return !$ret;
 		}
 	}
+
+	function summarize($text, $length)
+	{
+		$text = trim($text);
+
+		if (strlen($text) < $length)
+			return $text;
+
+		$summary = substr($text, 0, $length);
+
+		if (!in_array(substr($summary, -1, 1), ['.', ' ', '!', '?']))
+			$summary = substr($summary, 0, -1) . '…';
+
+		return $summary;
+	}
