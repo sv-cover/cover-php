@@ -434,4 +434,3 @@
 	function markup_format_attribute($text) {
 		return htmlspecialchars($text, ENT_QUOTES, WEBSITE_ENCODING);
 	}
-?>
