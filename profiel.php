@@ -116,9 +116,6 @@ class ControllerProfiel extends Controller
 
 		if ($iter->has_changes())
 		{
-			var_dump($iter->get_changes());
-			exit;
-
 			$changed_fields = array_keys($iter->get_changes());
 
 			$this->model->update($iter);
