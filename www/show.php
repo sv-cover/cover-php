@@ -11,15 +11,26 @@ class ControllerShow extends ControllerCRUD
 		$this->view = View::byName('show', $this);
 	}
 
+	public function can_set_titel(DataIter $iter)
+	{
+		return !$iter->has_id() || get_identity()->member_in_committee(COMMISSIE_EASY);
+	}
+
+	public function can_set_committee_id(DataIter $iter)
+	{
+		return !$iter->has_id()
+			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
+	}
+
 	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
-		if (!isset($data['owner']))
-			$errors[] = 'owner';
+		if (!isset($iter['committee_id']) && !isset($data['committee_id']))
+			$errors[] = 'committee_id';
 
-		elseif (!get_identity()->member_in_committee($data['owner'])
-			&& !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
-			$errors[] = 'owner';
+		elseif (isset($data['committee_id']) && !get_identity()->member_in_committee($data['committee_id']) && !$this->can_set_committee_id($iter))
+			$errors[] = 'committee_id';
 
 		return count($errors) === 0;
 	}
@@ -27,6 +38,20 @@ class ControllerShow extends ControllerCRUD
 	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
 		$content_fields = ['content', 'content_en'];
+
+		$meta_fields = [];
+
+		if ($this->can_set_committee_id($iter))
+			$meta_fields[] = 'committee_id';
+
+		if ($this->can_set_titel($iter))
+			$meta_fields[] = 'titel';  // The name 'titel' is misleading, its value is used as identifier in the code!
+
+		// Limit the fields that can be updated
+		$fields = array_merge($content_fields, $meta_fields);
+
+		// Limit $data to white-listed fields in $fields
+		$data = array_intersect_key($data, array_flip($fields));
 
 		// Store the current values for diffing 
 		$old_data = array();
@@ -80,26 +105,26 @@ class ControllerShow extends ControllerCRUD
 
 		$commissie_model = get_model('DataModelCommissie');
 
-		$in_bestuur = member_in_commissie(COMMISSIE_BESTUUR, false);
-		$in_commissie = member_in_commissie($iter['owner'], false);
+		$in_bestuur = get_identity()->member_in_committee(COMMISSIE_BESTUUR);
+		$in_commissie = get_identity()->member_in_committee($iter['committee_id']);
 		
 		if (!$in_commissie && $in_bestuur) {
 			/* Bestuur changed something, notify commissie */
 			$data['commissie_naam'] = $commissie_model->get_naam(COMMISSIE_BESTUUR);
-			$data['email'] = array($commissie_model->get_email($iter->get('owner')));
+			$data['email'] = array($commissie_model->get_email($iter['committee_id']));
 		} elseif (!$in_bestuur && $in_commissie) {
 			/* Commissie changed something, notify bestuur */
-			$data['commissie_naam'] = $commissie_model->get_naam($iter->get('owner'));
-			$data['email'] = array(get_config_value('email_bestuur'));
+			$data['commissie_naam'] = $commissie_model->get_naam($iter['committee_id']);
+			$data['email'] = array($commissie_model->get_email(COMMISSIE_BESTUUR));
 		} else {
-			/* Easy changed something, notify bestuur and commissie */
+			/* AC/DCee changed something, notify bestuur and commissie */
 			$data['commissie_naam'] = $commissie_model->get_naam(COMMISSIE_EASY);
 			$data['email'] = array(
-				$commissie_model->get_email($iter->get('owner')),
-				get_config_value('email_bestuur'));
+				$commissie_model->get_email($iter['committee_id']),
+				$commissie_model->get_email(COMMISSIE_BESTUUR));
 		}
 		
-		return $data;		
+		return $data;
 	}
 
 	public function run_preview(DataIterEditable $iter = null)

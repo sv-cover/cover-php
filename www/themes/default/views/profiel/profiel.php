@@ -150,7 +150,7 @@ class ProfielView extends View
 
 		$model = get_model('DataModelCommissie');
 
-		$committees = $model->get_commissies_for_member($iter->get_id());
+		$committees = $model->get_for_member($iter);
 
 		return $this->render('public_tab.twig', compact('iter', 'is_current_user', 'can_download_vcard', 'committees'));
 	}
@@ -229,12 +229,13 @@ class ProfielView extends View
 			if (!$contract)
 				return $this->render('incassomatic_tab_no_contract.twig', compact('iter', 'treasurer_link'));
 			
-			$incassos = $incasso_api->getIncassos($iter, 15);
+			$debits = $incasso_api->getDebits($iter, 15);
 
-			$incassos_per_batch = array_group_by($incassos, function($incasso) { return $incasso->batch_id; });
+			$debits_per_batch = array_group_by($debits, function($debit) { return $debit->batch_id; });
 
-			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'incassos_per_batch'));
+			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'debits_per_batch'));
 		} catch (Exception $exception) {
+			die($exception);
 			sentry_report_exception($exception);
 			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
 		}
@@ -330,6 +331,11 @@ class ProfielView extends View
 		$card->download();
 		
 		return null;
+	}
+
+	public function render_confirm_email($success)
+	{
+		return $this->render('confirm_email.twig', compact('success'));
 	}
 
 	function is_current_member(DataIterMember $iter)

@@ -218,21 +218,6 @@ CREATE TABLE configuratie (
 );
 
 --
--- The confirm table is mainly used for people who need to reset or
--- verify their changed email address. value is a json-encoded text
--- encoding the pending change that will only be committed once the
--- page with 'key' is visited and the change is confirmed there.
--- Typically, key is encoded in a link that is send via email.
---
-
-CREATE TABLE confirm (
-    key character(32) NOT NULL PRIMARY KEY,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    value text NOT NULL,
-    type text DEFAULT ''::text NOT NULL
-);
-
---
 -- The forums! Includes its own ACL system and group system. Pretty cool
 -- because you can have both committees and single members in groups.
 --
@@ -593,4 +578,28 @@ CREATE TABLE applications (
     key VARCHAR(255) NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     secret TEXT NOT NULL
+);
+
+--
+-- Temporarily stored password (re)set codes.
+--
+
+CREATE TABLE password_reset_tokens (
+    key character (40) PRIMARY KEY,
+    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    created_on timestamp without time zone NOT NULL
+);
+
+--
+-- Temporarily stored email address confirmation codes
+-- Note that these are only used when changing your email,
+-- and not during registration. Those are stored in the registrations table.
+-- Reason: member_id has to be known for this table to work.
+--
+
+CREATE TABLE email_confirmation_tokens (
+    key character (40) PRIMARY KEY,
+    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    created_on timestamp without time zone NOT NULL
 );

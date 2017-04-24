@@ -1,6 +1,7 @@
 <?php
 
 const ALLOW_SUBDOMAINS = 1;
+const ALLOW_EXTERNAL_DOMAINS = 2;
 
 /**
   * A Class implementing the default view. New views should subclass this one.
@@ -138,7 +139,8 @@ class View
 			get_theme_data('data/jquery-2.2.0.min.js'),
 			get_theme_data('data/jquery-ui.min.js'),
 			get_theme_data('data/common.js'),
-			get_theme_data('data/dropdown.js')
+			get_theme_data('data/dropdown.js'),
+			get_theme_data('data/cache.js')
 		];
 	}
 
@@ -165,9 +167,10 @@ class View
 
 		$url = '';
 
-		if (($flags & ALLOW_SUBDOMAINS)
-			&& isset($parts['host'])
-			&& is_same_domain($parts['host'], $_SERVER['HTTP_HOST'])) {
+		if (($flags & ALLOW_EXTERNAL_DOMAINS)
+			|| ($flags & ALLOW_SUBDOMAINS)
+				&& isset($parts['host'])
+				&& is_same_domain($parts['host'], $_SERVER['HTTP_HOST'])) {
 			$url = '//' . $parts['host'];
 		}
 

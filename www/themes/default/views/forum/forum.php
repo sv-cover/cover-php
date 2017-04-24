@@ -112,13 +112,7 @@ class ForumView extends View
 
 		$committee_model = get_model('DataModelCommissie');
 		
-		// TODO: Select using id instead if DataIterCommittee because $member['committees'] still returns id's instead of whole dataiters...
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_EASY))
-			$committee_ids = array_select($committee_model->get(null, true), 'id');
-		else
-			$committee_ids = $member['committees'];
+		$committee_ids = $member['committees'];
 
 		foreach ($committee_ids as $committee_id)
 			if ($model->check_acl_commissie($forum, $acl, $committee_id))

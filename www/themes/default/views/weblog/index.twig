@@ -11,6 +11,15 @@
 		{% for blog_post in iters %}
 			{{ include('_blog_post.twig', {iter:blog_post}) }}
 		{% endfor %}
-	 {% endif %}
+	{% endif %}
+
+	<div class="navigation">
+		{% if page > 0 %}
+			<a href="weblog.php?page={{ page - 1 }}" class="previous">{{ __('Vorige pagina') }}</a>
+		{% endif %}
+		{% if iters|length > 0 %}
+			<a href="weblog.php?page={{ page + 1 }}" class="next">{{ __('Volgende pagina') }}</a>
+		{% endif %}
+	</div>
 </div>
 {% endblock %}

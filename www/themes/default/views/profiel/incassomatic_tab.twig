@@ -12,7 +12,7 @@
 <section class="aligned-list-section">
 	<p>{{ __("Je laatste vijftien incasso's.") }}</p>
 	<table class="full-width-table incassomatic">
-	{% if incassos_per_batch[null] is defined %}
+	{% if debits_per_batch[""] is defined %}
 		<thead>
 			<tr>
 				<th colspan="3"><h4>{{ __('Nog te incasseren') }}</h4></th>
@@ -24,19 +24,19 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for incasso in incassos_per_batch[null] %}
+			{% for debit in debits_per_batch[""] %}
 			<tr>
-				<td>{{ incasso.omschrijving }}</td>
-				<td class="numeric">&euro;&nbsp;{{ '%0.2f'|format(incasso.bedrag / 100) }}</td>
-				<td class="timestamp"><time datetime="{{ incasso.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ incasso.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ incasso.aangemaakt|date_relative }}</time></td>
+				<td>{{ debit.omschrijving }}</td>
+				<td class="numeric">&euro;&nbsp;{{ '%0.2f'|format(debit.bedrag / 100) }}</td>
+				<td class="timestamp"><time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time></td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	{% endif %}
-	{% for batch_id, incassos in incassos_per_batch if batch_id is not null %}
+	{% for batch_id, debits in debits_per_batch if batch_id != "" %}
 		<thead>
 			<tr>
-				<th><h4>{{ __('Incassobatch %d')|format(batch_id) }}</h4></th>
+				<th><h4>{{ __('Incassobatch %d')|format(batch_id) }}</h4><small>{{ debits[0].batch.verwerkingsdatum|date('j-n-Y') }}</small></th>
 			</tr>
 			<tr>
 				<th>{{ __('Omschrijving') }}</th>
@@ -45,11 +45,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for incasso in incassos %}
+			{% for debit in debits %}
 			<tr>
-				<td>{{ incasso.omschrijving }}</td>
-				<td class="numeric">&euro;&nbsp;{{ '%0.2f'|format(incasso.bedrag / 100) }}</td>
-				<td class="timestamp"><time datetime="{{ incasso.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ incasso.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ incasso.aangemaakt|date_relative }}</time></td>
+				<td>{{ debit.omschrijving }}</td>
+				<td class="numeric">&euro;&nbsp;{{ '%0.2f'|format(debit.bedrag / 100) }}</td>
+				<td class="timestamp"><time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time></td>
 			</tr>
 			{% endfor %}
 		</tbody>

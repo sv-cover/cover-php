@@ -975,7 +975,7 @@
 		$groups = array();
 
 		foreach ($array as $element) {
-			$key = call_user_func($key_accessor, $element);
+			$key = (string) call_user_func($key_accessor, $element);
 			if (isset($groups[$key]))
 				$groups[$key][] = $element;
 			else
@@ -1014,4 +1014,19 @@
 			
 			return !$ret;
 		}
+	}
+
+	function summarize($text, $length)
+	{
+		$text = trim($text);
+
+		if (strlen($text) < $length)
+			return $text;
+
+		$summary = substr($text, 0, $length);
+
+		if (!in_array(substr($summary, -1, 1), ['.', ' ', '!', '?']))
+			$summary = substr($summary, 0, -1) . '…';
+
+		return $summary;
 	}

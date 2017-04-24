@@ -42,7 +42,7 @@
 			<td class="last">
 				{% if iter.last_thread %}
 					{{ iter.last_thread.date|date('d-m-Y H:i') }}<br>
-					<a id="last-thread" href="forum.php?thread={{ iter.last_thread.id }}&amp;page={{ iter.last_thread.get_num_thread_pages - 1 }}#p{{ iter.last_thread.last_id }}">{{ iter.last_thread.subject }}</a>
+					<a id="last-thread" href="forum.php?thread={{ iter.last_thread.id }}&amp;page={{ iter.last_thread.get_num_thread_pages - 1 }}#p{{ iter.last_message.id }}">{{ iter.last_thread.subject }}</a>
 				{% endif %}
 			</td>
 		</tr>

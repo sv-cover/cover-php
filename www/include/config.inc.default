@@ -12,6 +12,9 @@
 		/* Bestuur */
 		'email_bestuur' => 'bestuur@svcover.nl',
 
+		/* Support */
+		'email_support' => 'acdcee@svcover.nl',
+		
 		'default_language' => 'en',
 
 		'facebook_app_id' => '',
@@ -77,4 +80,7 @@
 		'sentry_url' => '',
 
 		'sentry_public_url' => '',
+
+		// url for merging internal ical with google ical
+		'url_to_external_ical' => 'https://calendar.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics'
 	);

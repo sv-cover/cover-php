@@ -1081,10 +1081,13 @@ $(document).on('ready partial-content-loaded', function(e) {
 		$(this).prop('src', $(this).data('placeholder-src') || emptyPixel);
 	});
 
+	// Very rudimentary polyfill for requestAnimationFrame
+	var schedule = window.requestAnimationFrame || function (callback) { return setTimeout(callback, 16); };
+
 	// On scroll and resize we 'schedule' an update run
 	$(window).on('scroll resize', function() {
 		if (!triggered) {
-			window.requestAnimationFrame(update);
+			schedule(update);
 			triggered = true;
 		}
 	});

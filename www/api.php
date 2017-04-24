@@ -26,8 +26,12 @@ class ControllerApi extends Controller
 		// Do nothing.
 	}
 
-	public function api_agenda()
+
+	public function api_agenda($committees=null)
 	{
+		if ($committees !== null && !is_array($committees))
+			$committees = array($committees);
+
 		/** @var DataModelAgenda $agenda */
 		$agenda = get_model('DataModelAgenda');
 
@@ -35,9 +39,12 @@ class ControllerApi extends Controller
 
 		// TODO logged_in() incidentally works because the session is read from $_GET[session_id] by
 		// the session provider. But the current session should be set more explicit.
-		foreach ($agenda->get_agendapunten() as $activity)
-			if (get_policy($agenda)->user_can_read($activity))
+		foreach ($agenda->get_agendapunten() as $activity){
+			if ($committees !== null && !in_array($activity['committee']['login'], $committees))
+				continue;
+			if (get_policy($agenda)->user_can_read($activity) )
 				$activities[] = $activity->data;
+		}
 
 		// Add the properties that Newsletter expects
 		foreach ($activities as &$activity) {
@@ -115,7 +122,23 @@ class ControllerApi extends Controller
 
 		$ident = get_identity_provider($auth);
 
-		return array('result' => $ident->member()->data);
+		// Prepare data for member 
+		$member = $ident->member();
+		$data = [];
+		foreach (DataIterMember::fields() as $field)
+			$data[$field] = $member[$field];
+
+		// Prepare committee data
+		$committee_model = get_model('DataModelCommissie');
+		$committee_data = [];
+
+		$committees = $committee_model->find(['id__in' => $member['committees']]);
+		
+		// For now just return login and committee name
+		foreach ($committees as $committee)
+			$committee_data[$committee['login']] = $committee['naam'];
+		
+		return array('result' => array_merge($data, ['committees' => $committee_data]));
 	}
 
 	public function api_session_test_committee($session_id, $committees)
@@ -246,12 +269,10 @@ class ControllerApi extends Controller
 		$model->insert($member);
 
 		// Create a password
-		$passwd = create_pronouncable_password();
-		
-		$model->set_password($member, $passwd);
+		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
 		
 		// Setup e-mail
-		$data['wachtwoord'] = $passwd;
+		$data['password_link'] = $token['link'];
 		$mail = implode("\n\n", [
 				'(For English version see below)',
 				parse_email('nieuwlid_nl.txt', $data),
@@ -365,9 +386,9 @@ class ControllerApi extends Controller
 
 		switch ($method)
 		{
-			// GET api.php?method=agenda
+			// GET api.php?method=agenda[&committee[]={committee}]
 			case 'agenda':
-				$response = $this->api_agenda();
+				$response = $this->api_agenda(isset($_GET['committee']) ? $_GET['committee'] : null);
 				break;
 
 			case 'get_agendapunt':

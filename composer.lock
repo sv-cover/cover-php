@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1d1d629fe2a3919ead405e85892239c7",
-    "content-hash": "9b5ff71e3d6e789ccde1afa2aa4d2ded",
+    "hash": "fbc187f877dbdd030a54da3b89f091c2",
+    "content-hash": "308d9681800fda656860dd479227c2da",
     "packages": [
         {
             "name": "99designs/http-signatures",
@@ -125,6 +125,58 @@
             ],
             "description": "Porter Stemmer created by Richard Heyes",
             "time": "2013-02-06 21:39:08"
+        },
+        {
+            "name": "embed/embed",
+            "version": "v3.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oscarotero/Embed.git",
+                "reference": "e0043bb98e008825bb94e8df3be197ebe0e4e86d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oscarotero/Embed/zipball/e0043bb98e008825bb94e8df3be197ebe0e4e86d",
+                "reference": "e0043bb98e008825bb94e8df3be197ebe0e4e86d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-mbstring": "*",
+                "php": "^5.5|^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "^4.8|^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Embed\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oscar Otero",
+                    "email": "oom@oscarotero.com",
+                    "homepage": "http://oscarotero.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP library to retrieve page info using oembed, opengraph, etc",
+            "homepage": "https://github.com/oscarotero/Embed",
+            "keywords": [
+                "embed",
+                "embedly",
+                "oembed",
+                "opengraph",
+                "twitter cards"
+            ],
+            "time": "2017-02-12 21:48:59"
         },
         {
             "name": "facebook/php-sdk-v4",

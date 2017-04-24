@@ -15,7 +15,7 @@ We would like to advise you to change your password and (if you feel it is neces
 In addition to the website, Cover also has its own room in the Bernoulliborg (V 5161.0041a). The comfortable meeting spot is great for taking a break, gaming or just having fun with fellow students.  You can also buy drinks and food at the Cover room, for a cheap price (the system is non-profit based). To get something you will need an account in KAST, our credit system. For you convenience we have already created an account with five consumptions worth of credits!
 
 Furthermore, being a member offers the following perks:
-- You can download Windows 8 and other products from the DreamSpark package for free, by clicking on the DreamSpark in the members menu once you are logged in.
+- You can download Windows 10 and other products from the Microsoft Imagine package for free, by clicking on the Microsoft Imagine in the members menu once you are logged in.
 - Any purchases that you make at Shirt a la Minute will have a 15% discount.
 
 You can enhance your experience with Cover by offering help to the many committees Cover has. By lending a hand to the various committees, you can broaden your horizon. Check https://www.svcover.nl/commissies.php to find out what kind of committees there are. To learn more about these opportunities, you can mail our Commissioner of Internal Affairs at intern@svcover.nl .
@@ -31,6 +31,5 @@ The board of study association Cover
 
 -----------------------------
 
-Your login details:
-email:      $email
-password:   $wachtwoord
+Choose your password by following this link:
+$password_link

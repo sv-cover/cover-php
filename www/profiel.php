@@ -105,7 +105,7 @@ class ControllerProfiel extends Controller
 		// Remove the e-mail field, that is a special case
 		$fields = array_filter($fields, function($field) { return $field != 'email'; });
 
-		$oud = $iter->data;
+		$old_values = $iter->data;
 		
 		foreach ($fields as $field) {
 			if (isset($data[$field]) && $data[$field] !== null)
@@ -116,53 +116,54 @@ class ControllerProfiel extends Controller
 
 		if ($iter->has_changes())
 		{
+			$changed_fields = array_keys($iter->get_changes());
+
 			$this->model->update($iter);
 		
-			// Inform the board that member info has been changed.
-			$subject = "Lidgegevens gewijzigd";
-			$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
-			
-			// Get all/only changed values (but only the actual fields, not the computed cruft)
-			$changes = array_filter($iter->get_changed_values(), function($field) { return in_array($field, DataIterMember::fields()); });
-			
-			foreach ($changes as $field => $value)
-				$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);
-				
-			mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-			mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-
-			try {
-				get_secretary()->updatePersonFromIterChanges($iter);
-			} catch (RuntimeException $e) {
-				// Todo: replace this with a serious more general logging call
-				error_log($e, 1, 'webcie@rug.nl', "From: webcie-cover-php@svcover.nl");
-			}
+			$this->_report_changes_upstream($iter, $changed_fields, $old_values);
 		}
 
 		// If the email address has changed, add a confirmation.
-		if (isset($data['email']) && $data['email'] !== null
-			&& $data['email'] != $iter['email'])
+		if (isset($data['email']) && $data['email'] !== null && $data['email'] != $iter['email'])
 		{
-			$model = new DataModel(get_db(), 'confirm', 'key');
-			$key = randstr(32);
-			$payload = ['lidid' => $iter['id'], 'email' => $data['email']];
-			$confirm_iter = new DataIter($model, null, ['key' => $key, 'type' => 'email', 'value' => json_encode($payload)]);
-			$model->insert($confirm_iter);
+			$model = get_model('DataModelEmailConfirmationToken');
+
+			$token = $model->create_token($iter, $data['email']);
 
 			$language_code = strtolower(i18n_get_language());
 
 			$variables = [
 				'naam' => member_first_name($iter, IGNORE_PRIVACY),
-				'email' => $data['email'],
-				'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($key)
+				'email' => $token['email'],
+				'link' => $token['link']
 			];
 
 			// Send the confirmation to the new email address
-			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($data['email']);
+			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($token['email']);
 			$_SESSION['alert'] = __('Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd.');
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=personal');
+	}
+
+	private function _report_changes_upstream(DataIterMember $iter, array $fields, array $old_values)
+	{
+		// Inform the board that member info has been changed.
+		$subject = "Lidgegevens gewijzigd";
+		$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
+		
+		foreach ($fields as $field)
+			$body .= sprintf("%s:\t%s (was: %s)\n", $field, $iter[$field] ? $iter[$field] : "<verwijderd>", $old_values[$field]);
+			
+		mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+		mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+
+		try {
+			get_secretary()->updatePersonFromIterChanges($iter);
+		} catch (RuntimeException $e) {
+			// Todo: replace this with a serious more general logging call
+			error_log($e, 1, 'webcie@rug.nl', "From: webcie-cover-php@svcover.nl");
+		}
 	}
 
 	protected function _update_profile(DataIterMember $iter)
@@ -421,9 +422,6 @@ class ControllerProfiel extends Controller
 
 	public function run_export_vcard(DataIterMember $member)
 	{
-		if (get_identity()->get('id') != $member['id'])
-			throw new UnauthorizedException();
-
 		if (!get_identity()->member_is_active())
 			throw new UnauthorizedException();
 
@@ -486,6 +484,31 @@ class ControllerProfiel extends Controller
 		return $this->view->render_incassomatic_tab($member);
 	}
 
+	public function run_confirm_email()
+	{
+		$model = get_model('DataModelEmailConfirmationToken');
+
+		try {
+			$token = $model->get_iter($_GET['token']);
+		} catch (Exception $e) {
+			return $this->view->render_confirm_email(false);
+		}
+
+		// Update the member's email address
+		$member = $token['member'];
+		$old_email = $member['email'];
+		$member['email'] = $token['email'];
+		$this->model->update($member);
+
+		// Report the changes to the secretary and to Secretary (the system...)
+		$this->_report_changes_upstream($member, ['email'], ['email' => $old_email]);
+
+		// Delete this and all other tokens for this user
+		$model->invalidate_all($token['member']);
+
+		return $this->view->render_confirm_email(true);
+	}
+
 	public function run_index()
 	{
 		return $this->view->redirect('almanak.php');
@@ -493,13 +516,18 @@ class ControllerProfiel extends Controller
 
 	protected function run_impl()
 	{
-		if (!isset($_GET['lid']))
-			return $this->run_index();
-		
-		$iter = $this->model->get_iter($_GET['lid']);
-		
 		$view = isset($_GET['view']) ? $_GET['view'] : 'public';
 		
+		if ($view == 'confirm_email')
+			return $this->run_confirm_email(); // a bit of a special case: a method that does not need a DataIterMember :O
+
+		if (isset($_GET['lid']))
+			$iter = $this->model->get_iter($_GET['lid']);
+		elseif (get_auth()->logged_in())
+			$iter = get_identity()->member();
+		else
+			return $this->run_index();
+
 		if (!method_exists($this, 'run_' . $view))
 			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
 

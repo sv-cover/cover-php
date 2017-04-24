@@ -108,7 +108,7 @@ class LayoutViewHelper
 				['url' => 'https://sd.svcover.nl/', 'target' => '_blank', 'label' => __('Standaardocumenten')],
 				['url' => 'stickers.php', 'label' => __('Stickerkaart')],
 				['url' => 'http://www.shitbestellen.nl', 'target' => '_blank', 'label' => __('Merchandise')],
-				['url' => 'dreamspark.php', 'label' => __('Dreamspark')]
+				['url' => 'dreamspark.php', 'label' => __('Microsoft Imagine')]
 			]
 		];
 

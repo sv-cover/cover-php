@@ -86,17 +86,6 @@
 		  ga('send', 'pageview');
 		</script>
 
-		<!-- Sentry -->
-		{% if global.config.sentry_public_url %}
-			<script src="https://cdn.ravenjs.com/3.10.0/raven.min.js"></script>
-			<script>
-				Raven.config({{ global.config.sentry_public_url|json_encode()|raw }}).install();
-				{% if global.auth.logged_in %}
-				Raven.setUserContext({ user_id: {{ global.identity.member.id|json_encode()|raw }} });
-				{% endif %}
-			</script>
-		{% endif %}
-
 		{% if global.db.history|length > 0 %}
 			<script>
 				console.info('Total number of queries run: %d (%0.1fms)', {{ global.db.history|length }}, {{ global.db.history|select('duration')|sum * 1000 }});

@@ -335,7 +335,10 @@
 			$cal = new WebCal_Calendar('Cover');
 			$cal->description = __('Alle activiteiten van studievereniging Cover');
 
-			$punten = array_filter($this->model->get_agendapunten(), [get_policy($this->model), 'user_can_read']);
+			$fromdate = new DateTime();
+			$fromdate = $fromdate->modify('-1 year')->format('Y-m-d');
+
+			$punten = array_filter($this->model->get($fromdate, null, true), [get_policy($this->model), 'user_can_read']);
 			
 			$timezone = new DateTimeZone('Europe/Amsterdam');
 
@@ -365,6 +368,17 @@
 				$cal->add_event($event);
 			}
 
+			$external_url = get_config_value('url_to_external_ical');
+
+			if ($external_url){
+				try {
+					$external = file_get_contents($external_url);
+					$cal->inject($external);
+				} catch (Exception $e) {
+					// if something goes wrong, just don't merge with external agenda
+				}
+			}
+
 			$cal->publish('cover.ics');
 			return null;
 		}
@@ -383,6 +397,11 @@
 		public function run_preview()
 		{
 			return markup_parse($_POST['beschrijving']);
+		}
+
+		public function run_subscribe()
+		{
+			return $this->view->render('subscribe.twig');
 		}
 
 		protected function run_impl()

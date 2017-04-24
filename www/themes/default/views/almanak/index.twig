@@ -39,7 +39,6 @@
 			</tr>
 		</table>
 	</form>
-	</div>
 	{% if iters is null %}
 		<p>{{ __('Maak hierboven een selectie om de almanak te bekijken.') }}</p>
 		{% if global.identity.member_in_committee(constant('COMMISSIE_ALMANAKCIE')) %}
@@ -51,20 +50,20 @@
 		{% endif %}
 	{% else %}
 		<h3>{{ __N('Er is <em>%d</em> lid gevonden die voldoet aan de zoekterm(en).', 'Er zijn <em>%d</em> leden gevonden die voldoen aan de zoekterm(en).', iters|length)|raw }}</h3>
-		<div class="messageBox">
-			<ol class="almanac">
-				{% for iter in iters %}
-				<li>
-					<a href="{{ link('profiel.read', member=iter) }}" class="profile-widget round {{ view.classname(iter) }}">
-						<img width="100" height="100" src="{{ link('foto.square', member=iter, width=200) }}" alt="{{ __('foto van %s')|format(iter|full_name) }}">
-						<span class="name">{{ iter|personal_full_name }}</span>
-						{% if view.status_label(iter) %}
-							<span class="status">{{ view.status_label(iter) }}</span>
-						{% endif %}
-					</a>
-				</li>
-				{% endfor %}
-			</ol>
-		</div>
+		
+		<ol class="almanac">
+			{% for iter in iters %}
+			<li>
+				<a href="{{ link('profiel.read', member=iter) }}" class="profile-widget round {{ view.classname(iter) }}">
+					<img width="100" height="100" src="{{ link('foto.square', member=iter, width=200) }}" alt="{{ __('foto van %s')|format(iter|full_name) }}">
+					<span class="name">{{ iter|personal_full_name }}</span>
+					{% if view.status_label(iter) %}
+						<span class="status">{{ view.status_label(iter) }}</span>
+					{% endif %}
+				</a>
+			</li>
+			{% endfor %}
+		</ol>
 	{% endif %}
+</div>
 {% endblock %}

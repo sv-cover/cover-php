@@ -82,12 +82,14 @@ class DatabasePDO
 	  * @result an array with for each row a hash with the values (with 
 	  * keys being the column names) or null if an error occurred
 	  */
-	function query($query, $indices = false)
+	function query($query, $indices = false, array $input_parameters = [])
 	{
 		$start = microtime(true);
 
 		/* Query the database */
-		$handle = $this->resource->query($query);
+		$statement = $this->resource->prepare($query);
+
+		$statement->execute($input_parameters);
 
 		$duration = microtime(true) - $start;
 
@@ -99,9 +101,9 @@ class DatabasePDO
 			);
 
 		/* Fetch all the rows */
-		$this->last_result = $handle->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
+		$this->last_result = $statement->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
 
-		$this->last_affected = $handle->rowCount();
+		$this->last_affected = $statement->rowCount();
 
 		/* Return the results */
 		return $this->last_result;
@@ -192,6 +194,8 @@ class DatabasePDO
 		$k = '(';
 		$v = 'VALUES(';
 
+		$data = [];
+
 		for ($i = 0; $i < count($keys); $i++) {
 			if ($i != 0) {
 				$k .= ', ';
@@ -200,14 +204,16 @@ class DatabasePDO
 
 			$k .= '"' . $keys[$i] . '"';
 
-			$v .= $this->escape_value($values[$keys[$i]]);
+			$placeholder = ':' . $keys[$i];
+
+			$v .= $this->prepare_value($values[$keys[$i]], $placeholder, $data);
 		}
 
 		$query = $query . ' ' . $k . ') ' . $v . ');';
 
 		/* Execute query */
-		$this->query($query);
-		
+		$this->query($query, false, $data);
+
 		/* Save last insertion table so we can use it in 
 		   get_last_insert_id */
 		$this->last_insert_table = $table;
@@ -245,6 +251,7 @@ class DatabasePDO
 
 		$query = 'UPDATE "' . $table . '" SET ';
 		$keys = array_keys($values);
+		$data = [];
 		$k = '';
 
 		/* For all values */
@@ -254,7 +261,7 @@ class DatabasePDO
 
 			/* Add <key>= */
 			try {
-				$k .= sprintf('"%s"=%s', $keys[$i], $this->escape_value($values[$keys[$i]]));
+				$k .= sprintf('"%s" = %s', $keys[$i], $this->prepare_value($values[$keys[$i]], ':' . $keys[$i], $data));
 			} catch (InvalidArgumentException $e) {
 				throw new InvalidArgumentException("Cannot encode the value of field '{$keys[$i]}'", null, $e);
 			}
@@ -267,7 +274,7 @@ class DatabasePDO
 			$query .= ' WHERE ' . $condition;
 
 		/* Execute query */
-		$this->query($query);
+		$this->query($query, false, $data);
 
 		return $this->last_affected;
 	}
@@ -300,9 +307,29 @@ class DatabasePDO
 		elseif (is_bool($value))
 			return $value ? '1' : '0';
 		elseif (is_string($value))
-			return sprintf("'%s'",  $this->escape_string($value));
+			return $this->resource->quote($value);
 		else
 			throw new InvalidArgumentException('Unsupported datatype ' . gettype($value));
+	}
+
+	protected function prepare_value($value, $placeholder, array &$values = [])
+	{
+		if ($value === null)
+			return 'NULL';
+		elseif ($value instanceof DatabaseLiteral)
+			return $value->toSQL();
+		elseif (is_int($value))
+			return sprintf('%d', $value);
+		elseif (is_bool($value))
+			return $value ? '1' : '0';
+		elseif ($value instanceof DateTime)
+			$values[$placeholder] = $value->format('Y-m-d H:i:s');
+		elseif (is_string($value))
+			$values[$placeholder] = $value;
+		else
+			throw new InvalidArgumentException('Unsupported datatype ' . gettype($value));
+
+		return $placeholder;
 	}
 
 	/**

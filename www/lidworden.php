@@ -39,11 +39,6 @@
 					// Check whether the email address is something looking like an email address
 					if (!preg_match('/@\w+\.\w+/', $x))
 						return false;
-
-					// Check whether the email address is not already in use
-					// Todo: If it is already in use, continue onwards to password recovery
-					// or some other form where you can re-activate your membership!
-					return !$this->model->get_from_email($x);
 				}],
 				'birth_date' => [
 					function($x) {
@@ -101,6 +96,17 @@
 			
 			if (count(array_intersect(['first_name', 'family_name', 'family_name_preposition'], $errors)) > 0)
 				$errors[] = 'name';
+
+			// Test whether email is already used
+			// (already a member? Or previous member?)
+			if (!in_array('email', $errors)) {
+				try {
+					$existing_member = $this->model->get_from_email($_POST['email_address']);
+					return $this->view->render('known_member.twig', compact('existing_member'));
+				} catch (DataIterNotFoundException $e) {
+					// All clear :)
+				}
+			}
 
 			if (count($errors) > 0)
 				return $this->view->render_form($errors);

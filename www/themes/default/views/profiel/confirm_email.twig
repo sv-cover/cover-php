@@ -1,0 +1,19 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('E-mailadres bevestigen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+	<h1>{{ __('E-mailadres bevestigen') }}</h1>
+	<div class="messageBox">
+		{% if success %}
+			<p>{{ __('Klaar! Je e-mailadres is bevestigd en bijgewerkt!') }}</p>
+		{% else %}
+			<p>{{ __('Oh jee! Deze link is niet meer geldig.') }}</p>
+			<p>{{ __('Het kan goed zijn dat je je e-mailadres al eerder bevestigd hebt. Probeer in te loggen met je nieuwe e-mailadres. Mocht dat niet lukken, probeer het dan toch weer eens met je vorige adres. Klopt het wachtwoord niet? Probeer dan beide e-mailadressen wanneer je een nieuw wachtwoord aanvraagt.') }}</p>
+			<p>{{ __('Kom je er niet uit? Mail dan naar %s zodat we je verder kunnen helpen.')|e|format(html_email(global.config.email_support))|raw }}</p>
+		{% endif %}
+		<footer class="alt-section">
+			<a href="/">{{ __('Terug naar de website') }}</a>
+		</footer>
+	</div>
+{% endblock %}

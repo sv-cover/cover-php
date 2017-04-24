@@ -59,20 +59,20 @@
 
 			// print the column headers
 			echo csv_row([
-				__('id'),
-				__('voornaam'),
-				__('tussenvoegsel'),
-				__('achternaam'),
-				__('adres'),
-				__('postcode'),
-				__('woonplaats'),
-				__('email'),
-				__('geboortedatum'),
-				__('geslacht'),
-				__('telefoonnummer'),
-				__('studie'),
-				__('beginjaar'),
-				__('status')], $delim) . "\n";
+				'id',
+				'voornaam',
+				'tussenvoegsel',
+				'achternaam',
+				'adres',
+				'postcode',
+				'woonplaats',
+				'email',
+				'geboortedatum',
+				'geslacht',
+				'telefoonnummer',
+				'studie',
+				'beginjaar',
+				'status'], $delim) . "\n";
 
 			foreach ($iter as $item)
 				echo csv_row([

@@ -176,22 +176,29 @@
 		 */
 		public function login($email, $passwd)
 		{
-			$iter = $this->get_from_email($email);
-			
-			$active_member_types = array(
-				MEMBER_STATUS_LID,
-				MEMBER_STATUS_LID_ONZICHTBAAR,
-				MEMBER_STATUS_ERELID,
-				MEMBER_STATUS_DONATEUR,
-				MEMBER_STATUS_UNCONFIRMED);
+			try {		
+				$iter = $this->get_from_email($email);
+				
+				$active_member_types = array(
+					MEMBER_STATUS_LID,
+					MEMBER_STATUS_LID_ONZICHTBAAR,
+					MEMBER_STATUS_ERELID,
+					MEMBER_STATUS_DONATEUR,
+					MEMBER_STATUS_UNCONFIRMED);
 
-			if ($iter === null || !in_array($iter['type'], $active_member_types))
+				if ($iter === null)
+					return false;
+
+				if (!$this->test_password($iter, $passwd))
+					return false;
+
+				if (!in_array($iter['type'], $active_member_types))
+					throw new InactiveMemberException();
+
+				return $iter;
+			} catch (DataIterNotFoundException $e) {
 				return false;
-
-			if (!$this->test_password($iter, $passwd))
-				return false;
-
-			return $iter;
+			}
 		}
 
 		public function test_password(DataIterMember $member, $password)
@@ -269,7 +276,12 @@
 		  */
 		public function get_from_email($email)
 		{
-			return $this->find_one(['email__cieq' => $email]);
+			$iter = $this->find_one(['email__cieq' => $email]);
+
+			if ($iter === null)
+				throw new DataIterNotFoundException($email, $this);
+
+			return $iter;
 		}
 
 		/**

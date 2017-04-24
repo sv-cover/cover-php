@@ -47,13 +47,7 @@ class DreamsparkController extends Controller
 
 		fclose($fh);
 
-		if (!isset($metadata['wrapper_data']) || strpos($metadata['wrapper_data'][0], '200 OK') === false)
-			throw new RuntimeException('Handshake error: ' . $response);
-
-		if (!$response)
-			throw new RuntimeException('Could not get redirect url from the ELMS endpoint');
-
-		return $this->view->redirect($response, ALLOW_SUBDOMAINS);
+		return $this->view->redirect($response, False, ALLOW_EXTERNAL_DOMAINS);
 	}
 
 	protected function run_impl()

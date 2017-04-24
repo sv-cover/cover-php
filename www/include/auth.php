@@ -126,14 +126,14 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		if (!$this->session_provider->logged_in())
 			return null;
 
-		if ($this->session_provider->get_session()['override_member_id'] !== null)
+		if ($this->get_override_member() !== null)
 			$member = $this->get_override_member();
 		else
 			$member = parent::member();
 
-		if ($this->override_committees !== null)
+		if ($this->get_override_committees() !== null)
 			$member = new DataIterMember($member->model(), $member->get_id(),
-				array_merge($member->data, ['committees' => $this->override_committees]));
+				array_merge($member->data, ['committees' => $this->get_override_committees()]));
 
 		return $member;
 	}

@@ -132,7 +132,7 @@ class MessagePart
 
 		// Or if I am multipart, is one of my sections of the type?
 		if ($this->isMultipart())
-			foreach ($this->parts as $part)
+			foreach ($this->body as $part)
 				if ($part->hasBodyOfType($content_type))
 					return true;
 
@@ -162,7 +162,7 @@ class MessagePart
 					break;
 
 				case 'B':
-					$data = base64_decode($data);
+					$data = base64_decode($match[3]);
 					break;
 			}
 

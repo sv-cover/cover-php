@@ -31,7 +31,7 @@ class Cache
 
 		$data = array(
 			'key' => $this->_hash($key),
-			'value' => serialize($value),
+			'value' => base64_encode(serialize($value)),
 			'expires' => time() + $ttl
 		);
 
@@ -45,7 +45,7 @@ class Cache
 			$this->_hash($key),
 			time()));
 
-		return $value !== null ? unserialize($value) : $fallback;
+		return $value !== null ? unserialize(base64_decode($value)) : $fallback;
 	}
 
 	public function delete($key)
