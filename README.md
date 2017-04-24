@@ -13,18 +13,13 @@ Please, if you find a bug or security issue, please report it by making an issue
 If you want to contribute code please fork this repository, create a new branch in which you implement your fix or feature, make sure it merges with the most up to date code in our master branch. (i.e. Just `git rebase master` when your master branch is in sync.) When the code is ready to be set live create a pull request and the WebCie will test and review your contribution.
 
 ## Running locally
-To run the Cover site you need a webserver with PHP (at least 5.3 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database. (8.2 and 9.3 both seem to work so I guess it doesn't really matter which version.)
-
-To get all the dependencies, run composer in the root directory of your repository. There should be a file named `composer.json` in there:
-
 ```bash
-composer install
+docker build -t cover-webcie/cover-php .
+docker run -p 5000:80 cover-webcie/cover-php
 ```
 
 ## Setting up the database
-Copy the contents of the file `include/data/DBIds.php.default` file to a file named `include/data/DBIds.php` and input your own database configuration data.
-
-Do the same for `include/config.inc.default`. Copy its contents to `include/config.inc` and adjust the values where needed.
+TODO set the proper environment variables
 
 ### Set up a bare database
 Run the `include/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website:
