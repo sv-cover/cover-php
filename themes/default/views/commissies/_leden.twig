@@ -12,6 +12,15 @@
 			</a>
 		</li>
 	{% endfor %}
+	{% for mascot in iter.mascots %}
+		<li>
+			<span class="commissie-member committee-mascot profile-widget round">
+				<img src="{{ mascot.photo }}" width="100">
+				<span class="name">{{ mascot.name }}</span>
+				<span class="function">{{ mascot.functie|translate_parts(',/') }}</span>
+			</span>
+		</li>
+	{% endfor %}
 	</ul>
 </div>
 {% endif %}
