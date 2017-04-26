@@ -155,7 +155,7 @@
 
 			$fields = $iter::fields();
 
-			foreach ($iter->get_changed_values() as $key => $value)
+			foreach ($iter->changed_values() as $key => $value)
 				if (in_array($key, $fields))
 					$data[$key] = $value;
 

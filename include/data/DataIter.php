@@ -281,7 +281,7 @@
 		  *
 		  * @result an array with the data field names that have been changed
 		  */
-		public function get_changes() {
+		public function changed_fields() {
 			return $this->_changes;
 		}
 		
@@ -291,7 +291,7 @@
 		  * @result a hash with the data field names as the keys and data values
 		  * as the values
 		  */
-		public function get_changed_values() {
+		public function changed_values() {
 			return array_combine(
 				$this->_changes,
 				array_map(function($key) {

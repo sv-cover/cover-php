@@ -1453,7 +1453,7 @@
 			$visit->set('sessiondate', new DatabaseLiteral('CURRENT_TIMESTAMP'));
 
 			return $this->db->update('forum_visits',
-				$visit->get_changed_values(),
+				$visit->changed_values(),
 				'lid_id = ' . intval($member['id']) . ' AND forum_id = ' . intval($forum['id']));
 		}
 		

@@ -303,7 +303,7 @@
 			$members = $member_model->find('leden.id IN (' . implode(', ', $ids) . ')');
 			
 			// Attach the committee positions to all its members
-			// Not using 'set' here because that would mess up the DataIter::get_changes()
+			// Not using 'set' here because that would mess up the DataIter::changed_fields()
 			foreach ($members as $member)
 				$member->data['functie'] = $positions[$member['id']];
 
