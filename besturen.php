@@ -92,6 +92,11 @@ class ControllerBesturen extends ControllerCRUD
 		return -1 * strnatcmp($left->get('login'), $right->get('login'));
 	}
 
+	public function run_read(DataIter $iter)
+	{
+		return $this->view->redirect($this->link_to_read($iter));
+	}
+
 	public function link_to_read(DataIter $iter)
 	{
 		return sprintf('besturen.php#%s', urlencode($iter['login']));
