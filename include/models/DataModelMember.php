@@ -330,6 +330,10 @@
 		{
 			$value = $this->get_privacy_for_field($iter,$field);
 			
+			// Visible to all -> not private.
+			if ($value == self::VISIBLE_TO_EVERYONE)
+				return false;
+			
 			// If we are viewing ourself ourselves, then it isn't private, obviously ;)
 			if (get_auth()->logged_in() && $self && get_identity()->get('id') == $iter->get_id())
 				return false;
@@ -338,10 +342,6 @@
 			if ($value == self::VISIBLE_TO_NONE)
 				return true;
 
-			// Visible to all -> not private.
-			elseif ($value == self::VISIBLE_TO_EVERYONE)
-				return false;
-			
 			// Only visible to members, and I am not a member? -> private.
 			elseif (($value & self::VISIBLE_TO_MEMBERS) && !get_identity()->member_is_active())
 				return true;
