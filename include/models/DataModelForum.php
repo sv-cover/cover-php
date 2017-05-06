@@ -1,5 +1,6 @@
 <?php
 	require_once 'include/data/DataModel.php';
+	require_once 'include/search.php';
 
 	trait UnifiedAuthor {
 		public function get_unified_author()
