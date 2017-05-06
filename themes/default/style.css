@@ -1398,11 +1398,14 @@ table.incassomatic thead::before
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	text-align: center;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
 }
 
 .committee-members li {
-	display: inline;
+	flex: 0 0 auto;
+	margin: 5px 0;
 }
 
 .committee-navigation {
