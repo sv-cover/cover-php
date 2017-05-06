@@ -306,10 +306,6 @@
 		 */
 		protected function getIter($field, $type)
 		{
-			$id = isset($this->data[$field . '__id'])
-				? $this->data[$field . '__id']
-				: -1;
-
 			// Call DataIter::model() on the specific DataIter type
 			$model = call_user_func([$type, 'model']);
 
@@ -319,7 +315,7 @@
 				if (strpos($k, $field . '__') === 0)
 					$row[substr($k, strlen($field) + 2)] = $v;
 
-			return $model->new_iter($row);
+			return $model->new_iter($row, $type);
 		}
 
 		/* ArrayAccess */
