@@ -350,7 +350,7 @@
 
 		public function get_absolute_url()
 		{
-			return sprintf('forum.php?thread=%d#p%d', $this['thread_id'], $this['id']);
+			return sprintf('forum.php?thread=%d&page=%d#p%d', $this['thread_id'], $this['thread_page'], $this['id']);
 		}
 	}
 
