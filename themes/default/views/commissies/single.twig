@@ -29,11 +29,11 @@
 		{% endif %}
 		
 		{{ iter.page.locale_content|parse_markup }}
-
-		{{ include('_leden.twig') }}
-
-		{{ include('_agenda.twig') }}
 	</div>
+
+	{{ include('_leden.twig') }}
+
+	{{ include('_agenda.twig') }}
 </div>
 
 {{ include ('_navigation.twig') }}

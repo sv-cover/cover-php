@@ -430,6 +430,22 @@
 		return agenda_format_period($iter, $format);
 	}
 
+	/**
+	 * Format the period of a calendar item according to $format. You can use 
+	 * variables in the form $aaa_bbb where aaa is either 'from' or 'till', and
+	 * bbb is 'dayname', 'day', 'month' or 'time'. The formatting is done using
+	 * format_string, so you can also use modifiers such as |ordinal.
+	 * The function returns HTML including <time> elements that adhere to the
+	 * h-event microformat.
+	 *
+	 * Example usage:
+	 * 
+	 *    agenda_format_period($iter, '$from_day|ordinal to $till_day|ordinal $till_month')
+	 *
+	 * @param DataIterAgenda calendar item
+	 * @param string formatting string
+	 * @return string formatted html
+	 */
 	function agenda_format_period(DataIterAgenda $iter, $format)
 	{
 		$days = get_days();
@@ -437,6 +453,17 @@
 
 		$van = $iter['van_datetime'];
 		$tot = $iter['tot_datetime'];
+
+		$format = preg_replace(
+			[
+				'/(\$from_[a-z]+(\|[a-z]+)?\b)(.+\$from_[a-z]+(\|[a-z]+)?\b)?/',
+				'/(\$till_[a-z]+(\|[a-z]+)?\b)(.+\$till_[a-z]+(\|[a-z]+)?\b)?/'
+			],
+			[
+				'<time class="dt-start" datetime="' . $van->format('Y-m-d H:i') . '">$0</time>',
+				'<time class="dt-end" datetime="' . $tot->format('Y-m-d H:i') . '">$0</time>'
+			], 
+			$format);
 		
 		return format_string($format, array(
 			'from_dayname' => $days[$van->format('w')],
@@ -450,15 +477,14 @@
 		));
 	}
 	
-	/** @group Functions
+	/**
 	  * Parse an email message and substitute variables and constants. The 
 	  * function will first look for email in themes/<theme>/email and will
 	  * fallback to the default theme if the file could not be found
-	  * @email the email file to parse
-	  * @data the data to substitute
+	  * @param string the name of the email file to parse
+	  * @param array the data to substitute
 	  *
-	  * @result A string with substituted data and constants or false
-	  * if the specified email file could not be found
+	  * @return string A string with substituted data and constants
 	  */
 	function parse_email($email, $data)
 	{

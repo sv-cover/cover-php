@@ -56,11 +56,6 @@
 			return $this->model->get_proposed($this);
 		}
 
-		public function get_formatted_period()
-		{
-			return agenda_period_for_display($this);
-		}
-
 		public function get_use_tot()
 		{
 			return $this['van'] != $this['tot'];

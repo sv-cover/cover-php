@@ -39,47 +39,50 @@
 {% if iters|length == 0 %}
 	<p>{{ __('Er staan op dit moment geen activiteiten op de agenda.') }}</p>
 {% else %}
-<table class="agenda" style="background-color: #000;">
+	<section class="agenda">
 {% for punt in iters %}
 	{% if curmaand != punt.van|date('n') %}
-		</table>
 		<h2>
 			{{ months[punt.van|date('n')] }}
 			{% if show_year %}{{ punt.van|date('Y') }}{% endif %}
 		</h2>
-		<table class="agenda">
 		{% set curmaand = punt.van|date('n') %}
 	{% endif %}
-	
-	<tr>
-		<td class="vandatum">
-			<div class="calendar-icon">
-				<span class="month">{{ punt.van|date('M') }}</span>
-				<span class="day">{{ punt.van|date('d') }}</span>
-			</div>
-		</td>
-		<td>
-			<a class="agendalink" href="{{ controller.link_to_read(punt) }}">{{ punt.kop }}</a><br>
-			{% if punt.is_proposal %}<span class="label-pending">{{ __('Nog niet gepubliceerd') }}</span><br>{% endif %}
-			
-			{{ punt|period }}<br>
+	<div class="h-event">
+		<div class="calendar-icon">
+			<span class="month">{{ punt.van|date('M') }}</span>
+			<span class="day">{{ punt.van|date('d') }}</span>
+		</div>
+		<h3><a class="agendalink" href="{{ controller.link_to_read(punt) }}">{{ punt.kop }}</a></h3>
+		{% if punt.is_proposal %}
+			<p class="label-pending">{{ __('Nog niet gepubliceerd') }}</p>
+		{% endif %}
+		
+		<p>{{ punt|period }}</p>
 
-			{% if punt.locatie %}
-			{{ __('Locatie') }}: {{ punt.locatie }}<br>
-			{% endif %}
+		{% if punt.locatie %}
+			<p class="location">{{ __('Locatie') }}: <span class="p-location">{{ punt.locatie }}</span></p>
+		{% endif %}
 
-			<ul class="actions">
-				{% if user_can_delete punt %}
-				<li><a href="{{ controller.link_to_delete(punt) }}">{{ __('Verwijder') }}</a></li>
-				{% endif %}
-				{% if user_can_update punt %}
-				<li><a href="{{ controller.link_to_update(punt) }}">{{ __('Wijzig') }}</a></li>
-				{% endif %}
-			</ul>
-		</td>
-	</tr>
+		{% if punt.extern %}
+			{{  __('Deze activiteit wordt niet georganiseerd door Cover zelf.') }}</br>
+		{% endif %}
+
+		<p class="p-summary details">
+			{{ punt.beschrijving|parse_markup }}
+		</p>
+
+		<ul class="actions">
+			{%- if user_can_delete punt %}
+			<li><a href="{{ controller.link_to_delete(punt) }}">{{ __('Verwijder') }}</a></li>
+			{% endif -%}
+			{%- if user_can_update punt %}
+			<li><a href="{{ controller.link_to_update(punt) }}">{{ __('Wijzig') }}</a></li>
+			{% endif -%}
+		</ul>
+	</div>
 {% endfor %}
-</table>
+</section>
 {% endif %}
 
 {% if global.auth.logged_in %}

@@ -72,7 +72,6 @@ h1
 	margin:0px 0px 10px 0px;
 	text-shadow:1px 1px 1px rgba(0,0,0,0.5);
 }
-h3 {margin:8px 0px; }
 
 hr.colorAccent {
 	border:0;
@@ -171,12 +170,14 @@ ul.expander{
 	width: 120px;
 }
 
-table.agenda {
+.agenda .h-event {
 	display: block;
+	position: relative;
+	padding: 10px 0 10px 40px;
 }
 
-table.agenda .vandatum {
-	vertical-align: top;
+.agenda .h-event + .h-event {
+	border-top: 1px solid #ccc;
 }
 
 .menu_contents .agenda li {
@@ -186,7 +187,7 @@ table.agenda .vandatum {
 	margin-bottom: 5px;
 }
 
-.menu_contents .agenda .calendar-icon {
+.agenda .calendar-icon {
 	position: absolute;
 	top: 2px;
 	left: 0;
@@ -195,12 +196,16 @@ table.agenda .vandatum {
 	color: #000;
 }
 
-.menu_contents .agenda .details {
+.agenda .h-event .calendar-icon {
+	top: 10px;
+}
+
+.agenda .details {
 	display: block;
 	font-weight: normal;
 }
 
-.menu_contents .agenda .label-pending {
+.agenda .label-pending {
 	display: inline-block;
 	background: #FFD700;
 	padding: 4px;
@@ -894,7 +899,7 @@ ul.actions li {
 	display: block;
 }
 
-.messageBox > ul.actions:empty {
+.messageBox ul.actions:empty {
 	display: none;
 }
 
@@ -1370,55 +1375,34 @@ table.incassomatic thead::before
 	position: relative;
 }
 
-.committee-page.messageBox {
-	padding: 0;
+.committee-photo {
+	margin: -15px -15px 0 -15px;
 }
 
-.committee-page.messageBox .content {
-	padding: 15px;
-}
-
-.commissie_foto {
-	
-}
-
-.commissie_foto img {
+.committee-photo img {
 	display: block;
 	width: 100%;
 }
 
-.commissie_foto.vertical {
+.committee-photo.vertical {
 	width: 50%;
 	float: left;
 	margin-right: 15px;
 }
 
-.commissie-members ul {
+.committee-members {
+	margin: 15px 0;
+}
+
+.committee-members ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	text-align: center;
 }
 
-.commissie-members li {
+.committee-members li {
 	display: inline;
-}
-
-.commissie-members .commissie-member {
-	display: inline-block;
-	vertical-align: top;
-	width: 125px;
-	overflow: hidden;
-	margin-bottom: 16px;
-}
-
-.commissie-members .commissie-member .name {
-	display: block;
-}
-
-.commissie-members .commissie-member .function {
-	display: block;
-	font-weight: normal;
 }
 
 .committee-navigation {
