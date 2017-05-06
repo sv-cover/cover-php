@@ -2365,6 +2365,7 @@ body.modal-open {
 	right: 0;
 	border-radius: 50%;
 	box-sizing: border-box;
+	pointer-events: none;
 }
 
 .profile-widget > span {
