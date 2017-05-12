@@ -216,7 +216,7 @@
 				return false;
 
 			if (password_needs_rehash($stored_password, PASSWORD_DEFAULT))
-				$this->set_password($iter, $password);
+				$this->set_password($member, $password);
 
 			return true;
 		}
