@@ -364,7 +364,7 @@
 					: sprintf('%s: %s', $punt['committee__naam'], $punt['kop']);
 				$event->description = markup_strip($punt['beschrijving']);
 				$event->location = $punt->get('locatie');
-				$event->url = ROOT_DIR_URI . $this->link_to_read($punt);
+				$event->url = path_concat(ROOT_DIR_URI, $this->link_to_read($punt));
 				$cal->add_event($event);
 			}
 
