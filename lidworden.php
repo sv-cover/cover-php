@@ -37,8 +37,7 @@
 				'phone_number' => [function($x) { return strlen($x) == 0 || preg_match('/^\+?\d+$/', $x); }, function($x) { return str_replace(' ', '', $x); }],
 				'email_address' => [function($x) {
 					// Check whether the email address is something looking like an email address
-					if (!preg_match('/@\w+\.\w+/', $x))
-						return false;
+					return preg_match('/@\w+\.\w+/', $x);
 				}],
 				'birth_date' => [
 					function($x) {
