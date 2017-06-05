@@ -314,17 +314,12 @@
 
 		public function get_photos()
 		{
-			if ($this->_photos === null)
-				$this->_photos = $this->model->get_photos($this);
-
-			return $this->_photos;
+			return $this->model->get_photos($this);
 		}
 
 		public function has_photo(DataIterPhoto $needle)
 		{
-			$photos = $this->get_photos();
-
-			foreach ($photos as $photo)
+			foreach ($this['photos'] as $photo)
 				if ($photo->get_id() == $needle->get_id())
 					return true;
 
@@ -333,7 +328,7 @@
 
 		public function get_next_photo(DataIterPhoto $current, $num = 1)
 		{
-			$photos = $this->get_photos();
+			$photos = $this['photos'];
 
 			foreach ($photos as $index => $photo)
 				if ($photo->get_id() == $current->get_id())
@@ -347,7 +342,7 @@
 
 		public function get_previous_photo(DataIterPhoto $current, $num = 1)
 		{
-			$photos = $this->get_photos();
+			$photos = $this['photos'];
 
 			foreach ($photos as $index => $photo)
 				if ($photo->get_id() == $current->get_id())
