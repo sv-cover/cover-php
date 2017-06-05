@@ -762,7 +762,7 @@
 			return "
 				SELECT
 					{$this->table}.*,
-					NULL AS read_status,
+					NULL AS read_status, -- TODO this could cause trouble with the grouping in _photos.twig
 					COUNT(DISTINCT foto_reacties.id) AS num_reacties
 				FROM
 					{$this->table}
@@ -852,7 +852,7 @@
 			else
 			{
 				$read_status_select_atom = "
-					NULL as read_status";
+					'" . self::READ_STATUS_READ . "' as read_status";
 
 				$read_status_join_atom = "";
 			}
