@@ -865,6 +865,9 @@
 						forums.id = %d
 					GROUP BY
 						forums.id', $forum_id));
+
+			if (!$row)
+				throw new DataIterNotFoundException($forum_id, $this);
 			
 			return $cache[$forum_id] = $this->_row_to_iter($row, 'DataIterForum');
 		}
@@ -1032,7 +1035,7 @@
 		/**
 		  * Get a thread by its ID
 		  * @param $id thread id
-		  * @throws DataIterNotFoundExcepion if there is no thread with the specified id
+		  * @throws DataIterNotFoundException if there is no thread with the specified id
 		  * @return DataIterForumThread
 		  */
 		public function get_thread($id)
