@@ -1640,30 +1640,14 @@ form textarea {
 	vertical-align: bottom;
 }
 
-form.add-sticker-form {
-	position: relative;
-	height: 100%;
-	width: 450px;
-	min-height: 450px;
+.add-sticker-form {
+	min-width: 500px;
 }
 
-form .sticker-location-picker {
-	position: absolute;
-	top: 142px;
-	bottom: 42px;
-	left: 0;
-	right: 0;
-	border-radius: 4px;
-}
-
-form .sticker-location-map {
+.sticker-location-map {
 	width: 100%;
 	height: 100%;
-}
-
-form.add-sticker-form button {
-	position: absolute;
-	bottom: 8px;
+	min-height: 300px;
 }
 
 .event-cover-photo {
