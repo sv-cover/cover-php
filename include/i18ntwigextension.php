@@ -25,7 +25,6 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('period_short', 'agenda_short_period_for_display', ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('period', 'agenda_period_for_display', ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('date_relative', 'format_date_relative'),
-			new Twig_SimpleFilter('array_filter', 'array_filter'),
 			new Twig_SimpleFilter('vformat', 'vsprintf'),
 			new Twig_SimpleFilter('map', function($iterable, $callback) {
 				return array_map($callback, $iterable);

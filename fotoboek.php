@@ -780,10 +780,12 @@
 			if (!$this->policy->user_can_read($book))
 				throw new UnauthorizedException();
 
+			$rendered_page = $this->view->render_photobook($book);
+
 			if (logged_in())
 				$this->model->mark_read(logged_in('id'), $book);
 
-			return $this->view->render_photobook($book);
+			return $rendered_page;
 		}
 
 		public function json_link_to_update_book_order(DataIterPhotobook $book)

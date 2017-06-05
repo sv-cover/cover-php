@@ -6,15 +6,15 @@
 	{% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
 {% endif %}
 
+{% import _self as fotoboek %}
+
 {% macro classnames(photo) %}
 	{%- if my_likes[photo.id] is defined %}liked{% endif -%}
 	{%- if visibility[photo.id] is defined and visibility[photo.id] == false %} hidden{% endif -%}
-	{{ photo.read_status }}
 {% endmacro %}
 
+{% macro flowgallery(book, photos) %}
 {% import _self as fotoboek %}
-
-{% if photos|length > 0 %}
 <ul class="photos flow-gallery">
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	{% for photo in photos %}
@@ -38,6 +38,21 @@
 	</li>
 	{% endfor %}
 </ul>
+{% endmacro %}
+
+{% set photos = photos|group_by('read_status') %}
+
+{% if photos.unread is defined %}
+	<h2>{{ __('Nieuw sinds je laatste bezoek') }}</h2>
+	{{ fotoboek.flowgallery(book, photos.unread) }}
+{% endif %}
+
+{% if photos.read is defined %}
+	{% if photos.unread is defined %}
+		<h2>{{ __('Oudere foto\'s') }}</h2>
+	{% endif %}
+	{{ fotoboek.flowgallery(book, photos.read) }}
+{% endif %}
 
 <script src="{{ link_static('data/flowgallery.js') }}"></script>
 <script>$('.photos.flow-gallery').flowgallery();</script>
@@ -204,4 +219,3 @@ $('.photos').on('click', '.thumbnail > a', function(e) {
 	loadPhotoLink($(this).attr('href'));
 });
 </script>
-{% endif %}
