@@ -757,7 +757,7 @@
 			return "
 				SELECT
 					{$this->table}.*,
-					NULL AS read_status, -- TODO this could cause trouble with the grouping in _photos.twig
+					'" . self::READ_STATUS_READ . "' AS read_status, -- Assume this otherwise it could cause trouble with the grouping in _photos.twig
 					COUNT(DISTINCT foto_reacties.id) AS num_reacties
 				FROM
 					{$this->table}
