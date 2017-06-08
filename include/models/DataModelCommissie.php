@@ -434,6 +434,9 @@
 			$row = $this->db->query_first("SELECT * 
 					FROM commissies
 					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login, nocaps)");
+
+			if ($row === null)
+				throw new DataIterNotFoundException($name, $this);
 			
 			return $this->_row_to_iter($row);
 		}
