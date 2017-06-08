@@ -92,6 +92,10 @@ function parse_search_query_for_text($query)
 		return Porter::stem($part);
 	}, $parts);
 
+	$parts = array_map(function($part) {
+		return sprintf('"%s"', $part);
+	}, $parts);
+
 	return $parts;
 }
 
