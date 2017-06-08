@@ -24,7 +24,11 @@ function text_excerpt($text, $keywords, $radius = 30,
 	// Remove newlines and extra spaces from text
 	$text = preg_replace('/\s+/m', ' ', $text);
 
-	$keyword_pattern = '/(' . implode('|', array_map('preg_quote', $keywords)) . ')/i';
+	$escape_keyword = function($keyword) {
+		return preg_quote($keyword, '/');
+	};
+
+	$keyword_pattern = '/(' . implode('|', array_map($escape_keyword, $keywords)) . ')/i';
 
 	$chunks = array();
 	$offset = 0;
@@ -54,7 +58,7 @@ function text_excerpt($text, $keywords, $radius = 30,
 	// Cut the chunks from the text, creating excerpts
 	$excerpts = array();
 
-	$keyword_pattern = '/(' . implode('|', array_map('preg_quote', array_map('htmlspecialchars', $keywords))) . ')/i';
+	$keyword_pattern = '/(' . implode('|', array_map($escape_keyword, array_map('htmlspecialchars', $keywords))) . ')/i';
 
 	foreach ($chunks as $chunk)
 	{
