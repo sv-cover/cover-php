@@ -1199,7 +1199,7 @@
 						$commissie_model = get_model('DataModelCommissie');
 						$commissie = $commissie_model->get_iter($id);
 						
-						$avatar_file = 'images/avatars/' . $commissie['nocaps'] . '.png';
+						$avatar_file = 'images/avatars/' . $commissie['login'] . '.png';
 						
 						$author = array(
 							'name' => $commissie['naam'],

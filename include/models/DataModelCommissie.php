@@ -13,7 +13,6 @@
 				'naam',
 				'login',
 				'website',
-				'nocaps',
 				'page_id',
 				'hidden',
 				'vacancies',
@@ -168,8 +167,6 @@
 			if (empty($iter['login']))
 				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
 
-			$iter['nocaps'] = $iter['naam'];
-			
 			$committee_id = parent::insert($iter);
 
 			// Create the page for this committee
@@ -433,7 +430,7 @@
 		{
 			$row = $this->db->query_first("SELECT * 
 					FROM commissies
-					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login, nocaps)");
+					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login)");
 
 			if ($row === null)
 				throw new DataIterNotFoundException($name, $this);
