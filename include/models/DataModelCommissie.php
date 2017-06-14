@@ -164,8 +164,7 @@
 			if ($iter['vacancies'] === '')
 				$iter['vacancies'] = null;
 			
-			if (empty($iter['login']))
-				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
+			$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
 
 			$committee_id = parent::insert($iter);
 
