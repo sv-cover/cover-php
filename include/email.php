@@ -77,13 +77,13 @@ class MessagePart
 					return array_map([$this, 'decodeHeader'], $values);
 		}
 
-		return null;
+		return [];
 	}
 
 	public function header($search_key)
 	{
 		$headers = $this->headers($search_key);
-		return $headers === null ? null : $headers[0];
+		return $headers === [] ? null : $headers[0];
 	}
 
 	public function setHeader($key, $value)
