@@ -104,7 +104,9 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 		
 		$variables = array(
 			'[COMMISSIE]' => $committee['naam'],
-			'[COMMITTEE]' => $committee['naam']
+			'[COMMITTEE]' => $committee['naam'],
+			'[NAAM]' => $committee['naam'],
+			'[NAME]' => $committee['naam']
 		);
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
