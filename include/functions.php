@@ -792,7 +792,11 @@
 		if ($value === null)
 			$cookie_time = 1;
 
-		setcookie($name, $value, $cookie_time, '/', $domain);
+		$secure = !empty($_SERVER['HTTPS']);
+
+		$http_only = true;
+
+		setcookie($name, $value, $cookie_time, '/', $domain, $secure, $http_only);
 
 		if ($cookie_time === 0 || $cookie_time > time())
 			$_COOKIE[$name] = $value;
