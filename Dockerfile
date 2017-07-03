@@ -50,5 +50,6 @@ RUN mkdir -m 0777 -p /var/www/tmp/profiles
 # Install stuff in /var/www/vendor
 WORKDIR /var/www/
 COPY composer.* /var/www/
+ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer install --no-plugins --no-scripts --no-dev
 
