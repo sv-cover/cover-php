@@ -20,6 +20,7 @@ define('RETURN_NOT_ALLOWED_UNKNOWN_POLICY', 404);
 
 define('RETURN_FAILURE_MESSAGE_EMPTY', 502);
 define('RETURN_MARKED_AS_SPAM', 503);
+define('RETURN_MAIL_LOOP_DETECTED', 504);
 
 error_reporting(E_ALL);
 ini_set('display_errors', true);
@@ -86,6 +87,13 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 	if (!preg_match('/@svcover\.nl$/i', $from))
 		return RETURN_NOT_ALLOWED_NOT_COVER;
 
+	$loop_id = sprintf('all-%s', $to);
+
+	if (in_array($loop_id, $message_headers->headers('X-Loop')))
+		return RETURN_MAIL_LOOP_DETECTED;
+
+	$message = add_header($message, 'X-Loop: ' . $loop_id);
+
 	$committees = $committee_model->get($destinations[$to]); // Get all committees of that type, not including hidden committees (such as board)
 
 	foreach ($committees as $committee)
@@ -96,7 +104,9 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 		
 		$variables = array(
 			'[COMMISSIE]' => $committee['naam'],
-			'[COMMITTEE]' => $committee['naam']
+			'[COMMITTEE]' => $committee['naam'],
+			'[NAAM]' => $committee['naam'],
+			'[NAME]' => $committee['naam']
 		);
 
 		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
@@ -114,6 +124,13 @@ function process_message_to_committee($message, $message_headers, $to, &$committ
 	// Find that committee
 	if (!($committee = $commissie_model->get_from_email($to)))
 		return RETURN_COULD_NOT_DETERMINE_COMMITTEE;
+
+	$loop_id = sprintf('committee-%d', $committee['id']);
+
+	if (in_array($loop_id, $message_headers->headers('X-Loop')))
+		return RETURN_MAIL_LOOP_DETECTED;
+
+	$message = add_header($message, 'X-Loop: ' . $loop_id);
 
 	$members = $committee->get_members();
 
@@ -143,6 +160,13 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 	// Find that mailing list
 	if (!($lijst = $mailinglijsten_model->get_iter_by_address($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
+
+	$loop_id = sprintf('mailinglist-%d', $lijst['id']);
+
+	if (in_array($loop_id, $message_header->headers('X-Loop')))
+		return RETURN_MAIL_LOOP_DETECTED;
+
+	$message = add_header($message, 'X-Loop: ' . $loop_id);
 
 	// Append '[Cover]' or whatever tag is defined for this list to the subject
 	// but do so only if it is set.
@@ -344,6 +368,15 @@ function read_message_headers($stream)
 		return false;
 
 	return $message_header;
+}
+
+function add_header($message, $header)
+{
+	// Just find the first \n\n occurrence, and prepend it there. Yes, sloppy.
+	if (!preg_match('/\r?\n\r?\n/', $message, $match, PREG_OFFSET_CAPTURE))
+		throw new RuntimeException('Cannot add header: cannot find the end of the message\'s header.');
+
+	return substr($message, 0, $match[0][1]) . "\r\n" . $header . substr($message, $match[0][1]);
 }
 
 function verbose($return_value)

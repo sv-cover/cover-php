@@ -56,11 +56,6 @@
 			return $this->model->get_proposed($this);
 		}
 
-		public function get_formatted_period()
-		{
-			return agenda_period_for_display($this);
-		}
-
 		public function get_use_tot()
 		{
 			return $this['van'] != $this['tot'];
@@ -134,17 +129,10 @@
 		  */
 		public function get_agendapunten()
 		{
-			$conditions = "
-				(
-					(agenda.tot > CURRENT_TIMESTAMP)
-					OR (CURRENT_TIMESTAMP < agenda.van + interval '1 day')
-					OR  (
-							DATE_PART('hours', agenda.van) = 0
-							AND CURRENT_TIMESTAMP < agenda.van + interval '1 day'
-						)
-				)";
-
-			return $this->find($conditions);
+			return $this->find("
+				CAST(agenda.van as DATE) >= CURRENT_DATE -- activities in the future
+				OR CAST(agenda.tot as DATE) >= CURRENT_DATE -- activities currently ongoing
+			");
 		}
 		
 		/**

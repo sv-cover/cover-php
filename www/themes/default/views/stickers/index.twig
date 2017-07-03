@@ -2,11 +2,6 @@
 
 {% block title __('Stickerkaart') ~ ' :: ' ~ parent() %}
 
-{% block scripts %}
-	{{ parent() }}
-	<script src="{{ link_static('data/stickers.js') }}"></script>
-{% endblock %}
-
 {% block content %}
 <div class="pageheading">
 	{% if user_can_create controller.new_iter %}

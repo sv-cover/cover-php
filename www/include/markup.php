@@ -252,12 +252,13 @@
 		if ($model === null)
 			$model = get_model('DataModelCommissie');
 		
-		$iter = $model->get_from_name($commissie);
+		try {
+			$iter = $model->get_from_name($commissie);
 		
-		if ($iter === null)
+			return '<a href="show.php?id=' . $iter->get('page_id') . '">' . markup_format_text($iter->get('naam')) . '</a>';
+		} catch (DataIterNotFoundException $e) {
 			return '';
-		
-		return '<a href="show.php?id=' . $iter->get('page_id') . '">' . markup_format_text($iter->get('naam')) . '</a>';
+		}
 	}
 	
 	function _markup_parse_macro_real($matches) {

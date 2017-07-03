@@ -54,7 +54,7 @@ class SecretaryAPI
 
 		$data = [];
 		
-		foreach ($iter->get_changed_values() as $field => $value)
+		foreach ($iter->changed_values() as $field => $value)
 			$data[$this->mapping[$field]] = $value;
 
 		return $this->updatePerson($iter->get_id(), $data);

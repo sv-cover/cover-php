@@ -109,7 +109,6 @@ CREATE TABLE commissies (
     naam character varying(25) NOT NULL,
     login character varying(50), -- mainly used for pretty urls these days
     website character varying(100),
-    nocaps text,
     page_id integer REFERENCES pages (id),
     hidden integer NOT NULL DEFAULT 0,
     vacancies DATE DEFAULT NULL,
@@ -141,7 +140,6 @@ CREATE TABLE besturen (
     naam character varying(25) NOT NULL,
     login character varying(50), -- mainly used for pretty urls these days
     website character varying(100),
-    nocaps text,
     page_id integer REFERENCES pages (id),
     CONSTRAINT besturen_login_key UNIQUE(login)
 );

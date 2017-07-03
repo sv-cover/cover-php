@@ -13,7 +13,6 @@
 				'naam',
 				'login',
 				'website',
-				'nocaps',
 				'page_id',
 				'hidden',
 				'vacancies',
@@ -38,6 +37,11 @@
 		public function set_members(array $members)
 		{
 			return $this->model->set_members($this, $members);
+		}
+
+		public function get_mascots()
+		{
+			return get_model('DataModelCommitteeMascot')->find_for_committee($this);
 		}
 
 		public function get_summary()
@@ -160,11 +164,8 @@
 			if ($iter['vacancies'] === '')
 				$iter['vacancies'] = null;
 			
-			if (empty($iter['login']))
-				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
+			$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
 
-			$iter['nocaps'] = $iter['naam'];
-			
 			$committee_id = parent::insert($iter);
 
 			// Create the page for this committee
@@ -298,7 +299,7 @@
 			$members = $member_model->find('leden.id IN (' . implode(', ', $ids) . ')');
 			
 			// Attach the committee positions to all its members
-			// Not using 'set' here because that would mess up the DataIter::get_changes()
+			// Not using 'set' here because that would mess up the DataIter::changed_fields()
 			foreach ($members as $member)
 				$member->data['functie'] = $positions[$member['id']];
 
@@ -428,7 +429,10 @@
 		{
 			$row = $this->db->query_first("SELECT * 
 					FROM commissies
-					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login, nocaps)");
+					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login)");
+
+			if ($row === null)
+				throw new DataIterNotFoundException($name, $this);
 			
 			return $this->_row_to_iter($row);
 		}

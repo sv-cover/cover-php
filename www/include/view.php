@@ -215,8 +215,9 @@ class View
 
 	protected function _get_preferred_response()
 	{
-		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
-			array('application/json', 'text/html', '*/*'));
+		return isset($_SERVER['HTTP_ACCEPT'])
+			? parse_http_accept($_SERVER['HTTP_ACCEPT'], ['application/json', 'text/html', '*/*'])
+			: 'text/html';
 	}
 }
 

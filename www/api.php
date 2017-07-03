@@ -164,9 +164,6 @@ class ControllerApi extends Controller
 			// Find the committee id
 			$committee = $committee_model->get_from_name($committee_name);
 
-			if (!$committee)
-				return array('result' => false, 'error' => 'Committee "' . $committee_name . '" not found');
-
 			// And finally, test whether the searched for committee and the member is committees intersect
 			if ($ident->member_in_committee($committee->get_id()))
 				return array('result' => true, 'committee' => $committee['naam']);

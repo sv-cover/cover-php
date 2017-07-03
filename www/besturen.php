@@ -53,7 +53,6 @@ class ControllerBesturen extends ControllerCRUD
 		$bestuur_data = array(
 			'naam' => $data['naam'],
 			'login' => $data['login'],
-			'nocaps' => strtolower($data['naam']),
 			'page_id' => $page_id);
 
 		return parent::_create($iter, $bestuur_data, $errors);
@@ -64,8 +63,6 @@ class ControllerBesturen extends ControllerCRUD
 		if (!$this->_validate($bestuur, $data, $errors))
 			return false;
 		
-		$data['nocaps'] = $data['naam'];
-
 		$editable_model = get_model('DataModelEditable');
 
 		$editable = $bestuur['page'];
@@ -90,6 +87,11 @@ class ControllerBesturen extends ControllerCRUD
 	public function _compare_bestuur($left, $right)
 	{
 		return -1 * strnatcmp($left->get('login'), $right->get('login'));
+	}
+
+	public function run_read(DataIter $iter)
+	{
+		return $this->view->redirect($this->link_to_read($iter));
 	}
 
 	public function link_to_read(DataIter $iter)

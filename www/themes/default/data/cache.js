@@ -1,13 +1,13 @@
 jQuery(function($) {
-	$.ajax('https://cache.svcover.nl/').then(function(response) {
-			var status = response.match(/<p>.*\bopen\b.*<\/p>/i) ? 'open' : 'closed';
-
-		if (status != 'open')
+	$.getJSON('https://cache.svcover.nl/json.php').then(function(response) {
+		if (response.status != 'open')
 			return;
 
-		var label = $('<span>')
-			.addClass('cover-room-' + status)
-			.text(status);
+		var label = $('<a>')
+			.attr('href', 'https://cache.svcover.nl/')
+			.addClass('cover-room-' + response.status)
+			.text('the Cover room is')
+			.append($('<span>').text(response.status));
 		$('.world > .header').append(label);
 	});
 });

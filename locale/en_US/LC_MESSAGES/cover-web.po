@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-04-13 22:09+0200\n"
+"POT-Creation-Date: 2017-06-05 19:25+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.2\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -33,7 +33,7 @@ msgid "Log in"
 msgstr "Log in"
 
 #: themes/default/views/_layout/401_unauthorized.twig:14
-#: themes/default/views/agenda/index.twig:91
+#: themes/default/views/agenda/index.twig:94
 #: themes/default/views/boeken/go_to_log_in.twig:11
 #: themes/default/views/lidworden/known_member.twig:9
 msgid "of"
@@ -104,38 +104,38 @@ msgstr ""
 msgid "Agenda"
 msgstr "Calendar"
 
-#: themes/default/views/_layout/widgets/agenda.twig:23
+#: themes/default/views/_layout/widgets/agenda.twig:24
 #: themes/default/views/agenda/form.twig:79
 msgid "Externe activiteit"
 msgstr "External activity"
 
-#: themes/default/views/_layout/widgets/agenda.twig:25
-#: themes/default/views/agenda/index.twig:63
+#: themes/default/views/_layout/widgets/agenda.twig:29
+#: themes/default/views/agenda/index.twig:58
 msgid "Nog niet gepubliceerd"
 msgstr "Not yet published"
 
-#: themes/default/views/_layout/widgets/agenda.twig:32
+#: themes/default/views/_layout/widgets/agenda.twig:36
 #: themes/default/views/agenda/index.twig:40
 msgid "Er staan op dit moment geen activiteiten op de agenda."
 msgstr "There are no activities on the calendar at the moment."
 
-#: themes/default/views/_layout/widgets/agenda.twig:35
+#: themes/default/views/_layout/widgets/agenda.twig:39
 #: themes/default/views/agenda/single.twig:106
 msgid "Volledige agenda"
 msgstr "Complete calendar"
 
-#: themes/default/views/_layout/widgets/agenda.twig:37
+#: themes/default/views/_layout/widgets/agenda.twig:41
 msgid "Jarigen"
 msgstr "Birthdays"
 
-#: themes/default/views/_layout/widgets/agenda.twig:41
+#: themes/default/views/_layout/widgets/agenda.twig:45
 #, python-format
 msgid "Er is vandaag %d jarige:"
 msgid_plural "Er zijn vandaag %d jarigen:"
 msgstr[0] "There is %d birthday today:"
 msgstr[1] "There are %d birthdays today:"
 
-#: themes/default/views/_layout/widgets/agenda.twig:49
+#: themes/default/views/_layout/widgets/agenda.twig:53
 msgid "Er zijn vandaag geen jarigen"
 msgstr "It's nobody's birthday today"
 
@@ -294,7 +294,7 @@ msgstr "Head"
 #: themes/default/views/committeebattle/index.twig:20
 #: themes/default/views/mailinglijsten/form.twig:30
 #: themes/default/views/search/_single_committee.twig:8
-#: include/models/DataModelForum.php:1276
+#: include/models/DataModelForum.php:1306
 #: themes/default/views/commissies/commissies.php:71
 msgid "Commissie"
 msgstr "Committee"
@@ -308,9 +308,9 @@ msgid "Eindtijd"
 msgstr "End time"
 
 #: themes/default/views/agenda/form.twig:44
-#: themes/default/views/agenda/index.twig:68
+#: themes/default/views/agenda/index.twig:64
 #: themes/default/views/agenda/single.twig:87
-#: themes/default/views/commissies/_agenda.twig:11
+#: themes/default/views/commissies/_agenda.twig:16
 #: themes/default/views/stickers/form.twig:29
 msgid "Locatie"
 msgstr "Location"
@@ -371,9 +371,15 @@ msgstr "Show the complete year %d-%d"
 msgid "Toon actuele agenda"
 msgstr "Show current agenda"
 
-#: themes/default/views/agenda/index.twig:73
+#: themes/default/views/agenda/index.twig:68
+#: themes/default/views/agenda/single.twig:93
+#: themes/default/views/commissies/_agenda.twig:20
+msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
+msgstr "This activity is not organised by Cover."
+
+#: themes/default/views/agenda/index.twig:77
 #: themes/default/views/agenda/single.twig:108
-#: themes/default/views/announcements/announcements.twig:51
+#: themes/default/views/announcements/announcements.twig:49
 #: themes/default/views/announcements/single.twig:32
 #: themes/default/views/committeebattle/committee.twig:40
 #: themes/default/views/fotoboekreacties/_comment.twig:51
@@ -381,16 +387,16 @@ msgstr "Show current agenda"
 msgid "Verwijder"
 msgstr "Delete"
 
-#: themes/default/views/agenda/index.twig:76
+#: themes/default/views/agenda/index.twig:80
 #: themes/default/views/agenda/single.twig:111
-#: themes/default/views/announcements/announcements.twig:48
+#: themes/default/views/announcements/announcements.twig:46
 #: themes/default/views/announcements/single.twig:29
 #: themes/default/views/fotoboekreacties/_comment.twig:46
 #: themes/default/views/settings/index.twig:23
 msgid "Wijzig"
 msgstr "Modify"
 
-#: themes/default/views/agenda/index.twig:88
+#: themes/default/views/agenda/index.twig:91
 msgid "Voeg de Coveragenda toe aan je eigen agenda:"
 msgstr "Add the Cover Calendar to your own calendar:"
 
@@ -475,10 +481,6 @@ msgstr "Show on Facebook"
 msgid "Datum & Tijd"
 msgstr "Date & time"
 
-#: themes/default/views/agenda/single.twig:93
-msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
-msgstr "This activity is not organised by Cover."
-
 #: themes/default/views/agenda/single.twig:101
 #: themes/default/views/announcements/announcements.twig:33
 #: themes/default/views/announcements/single.twig:15
@@ -536,7 +538,7 @@ msgstr "Visibility"
 #: themes/default/views/almanak/index.twig:22
 #: themes/default/views/commissies/form.twig:41
 #: themes/default/views/search/_single_member.twig:3
-#: include/models/DataModelForum.php:1273
+#: include/models/DataModelForum.php:1303
 #: include/models/DataModelMember.php:592
 #: themes/default/views/profiel/profiel.php:385
 msgid "Lid"
@@ -619,7 +621,7 @@ msgstr[1] ""
 "There are %d announcements which are only available to members. Log in to "
 "read them."
 
-#: themes/default/views/announcements/announcements.twig:57
+#: themes/default/views/announcements/announcements.twig:55
 #: themes/default/views/announcements/single.twig:27
 msgid "Alle mededelingen bekijken"
 msgstr "Show all announcements"
@@ -1099,9 +1101,9 @@ msgstr "Page"
 #: themes/default/views/forum/thread.twig:69
 #: themes/default/views/fotoboek/single.twig:111
 #: themes/default/views/mailinglijsten/single.twig:52 include/member.php:101
-#: include/models/DataModelForum.php:1146
-#: include/models/DataModelForum.php:1256
-#: include/models/DataModelForum.php:1282
+#: include/models/DataModelForum.php:1176
+#: include/models/DataModelForum.php:1286
+#: include/models/DataModelForum.php:1312
 #: include/models/DataModelMember.php:610
 msgid "Onbekend"
 msgstr "Unknown"
@@ -1230,6 +1232,14 @@ msgid "%d reactie"
 msgid_plural "%d reacties"
 msgstr[0] "%d comment"
 msgstr[1] "%d comments"
+
+#: themes/default/views/fotoboek/_photos.twig:46
+msgid "Nieuw sinds je laatste bezoek"
+msgstr "New since your last visit"
+
+#: themes/default/views/fotoboek/_photos.twig:52
+msgid "Oudere foto's"
+msgstr "Older photos"
 
 #: themes/default/views/fotoboek/_random_photos.twig:1
 msgid "Willekeurige foto's"
@@ -1494,7 +1504,7 @@ msgstr "%d unknown faces"
 msgid "%d onbekende gezichten"
 msgstr "%d unknown faces"
 
-#: themes/default/views/fotoboek/single.twig:122 include/functions.php:615
+#: themes/default/views/fotoboek/single.twig:122 include/functions.php:641
 msgid "en"
 msgstr "and"
 
@@ -2239,8 +2249,8 @@ msgid "Niemand"
 msgstr "Nobody"
 
 #: themes/default/views/profiel/privacy_tab.twig:18
-#: include/models/DataModelForum.php:1221
-#: include/models/DataModelForum.php:1270
+#: include/models/DataModelForum.php:1251
+#: include/models/DataModelForum.php:1300
 #: themes/default/views/announcements/announcements.php:29
 #: themes/default/views/mailinglijsten/mailinglijsten.php:31
 msgid "Iedereen"
@@ -2388,6 +2398,11 @@ msgstr "Announcement made by %s in %d"
 #, python-format
 msgid "%s is een lid in deze commissie"
 msgstr "%s is a member of this committee"
+
+#: themes/default/views/search/_single_forum_message.twig:3
+#, python-format
+msgid "in het forum %s uit %s %d"
+msgstr "in forum %s from %s %d"
 
 #: themes/default/views/search/_single_fotoboek.twig:3
 #, python-format
@@ -2605,28 +2620,28 @@ msgid "Zet sticker op kaart"
 msgstr "Add sticker to map"
 
 #: themes/default/views/stickers/index.twig:3
-#: themes/default/views/stickers/index.twig:19
+#: themes/default/views/stickers/index.twig:14
 #: themes/default/views/_layout/layout.php:109
 msgid "Stickerkaart"
 msgstr "Sticker map"
 
-#: themes/default/views/stickers/index.twig:15
+#: themes/default/views/stickers/index.twig:10
 msgid "Nieuwe sticker"
 msgstr "New sticker"
 
-#: themes/default/views/stickers/index.twig:28
+#: themes/default/views/stickers/index.twig:23
 msgid "Geplakt door"
 msgstr "Placed by"
 
-#: themes/default/views/stickers/index.twig:33
+#: themes/default/views/stickers/index.twig:28
 msgid "Verwijder sticker"
 msgstr "Delete sticker"
 
-#: themes/default/views/stickers/index.twig:38
+#: themes/default/views/stickers/index.twig:33
 msgid "Kies foto"
 msgstr "Choose photo"
 
-#: themes/default/views/stickers/index.twig:86
+#: themes/default/views/stickers/index.twig:81
 msgid "Weet je zeker dat je je sticker wil verwijderen?"
 msgstr "Are you sure you want to delete your sticker from the map?"
 
@@ -2754,7 +2769,7 @@ msgstr ""
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten."
 msgstr ""
-"The committee %s has been notified of the denying of the calendar events"
+"The committee %s has been notified of the denying of the calendar events."
 
 #: agenda.php:296
 #, php-format
@@ -2762,7 +2777,7 @@ msgid ""
 "De commissies %s zijn op de hoogte gesteld van het weigeren van de "
 "agendapunten."
 msgstr ""
-"The committees %s have been notified of the denying of the calendar events"
+"The committees %s have been notified of the denying of the calendar events."
 
 #: agenda.php:336
 msgid "Alle activiteiten van studievereniging Cover"
@@ -2980,37 +2995,37 @@ msgstr "$from_day|ordinal till $till_day|ordinal of $till_month"
 msgid "$from_time tot $till_time"
 msgstr "$from_time till $till_time"
 
-#: include/functions.php:633
+#: include/functions.php:659
 msgid "nu"
 msgstr "now"
 
-#: include/functions.php:641
+#: include/functions.php:667
 msgid "net"
 msgstr "just"
 
-#: include/functions.php:642
+#: include/functions.php:668
 msgid "1 minuut geleden"
 msgstr "1 minute ago"
 
-#: include/functions.php:643
+#: include/functions.php:669
 #, php-format
 msgid "%d minuten geleden"
 msgstr "%d minutes ago"
 
-#: include/functions.php:644
+#: include/functions.php:670
 msgid "1 uur geleden"
 msgstr "1 hour ago"
 
-#: include/functions.php:645
+#: include/functions.php:671
 #, php-format
 msgid "%d uren geleden"
 msgstr "%d hours ago"
 
-#: include/functions.php:647
+#: include/functions.php:673
 msgid "Gisteren"
 msgstr "Yesterday"
 
-#: include/functions.php:648
+#: include/functions.php:674
 #, php-format
 msgid "%d dagen geleden"
 msgstr "%d days ago"
@@ -3037,19 +3052,19 @@ msgstr "No name"
 msgid "Jij!"
 msgstr "You!"
 
-#: include/models/DataModelForum.php:1224
+#: include/models/DataModelForum.php:1254
 msgid "Alle leden"
 msgstr "All members"
 
-#: include/models/DataModelForum.php:1234
+#: include/models/DataModelForum.php:1264
 msgid "Alle commissies"
 msgstr "Committees"
 
-#: include/models/DataModelForum.php:1244
+#: include/models/DataModelForum.php:1274
 msgid "Alle groepen"
 msgstr "Groups"
 
-#: include/models/DataModelForum.php:1279
+#: include/models/DataModelForum.php:1309
 msgid "Groep"
 msgstr "Group"
 
@@ -3082,15 +3097,15 @@ msgstr "previous"
 msgid "volgende"
 msgstr "next"
 
-#: include/view.php:188
+#: include/view.php:189
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
-#: lidworden.php:151
+#: lidworden.php:150
 msgid "Lidmaatschapsaanvraag bevestigen"
 msgstr "Confirm membership application"
 
-#: lidworden.php:163
+#: lidworden.php:162
 msgid ""
 "We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan te "
 "melden, of het bestuur (board@svcover.nl) even mailen."
@@ -3162,65 +3177,65 @@ msgstr "Promotion Homosexual"
 msgid "De volgende velden zijn onjuist ingevuld: "
 msgstr "The following fields are not correctly filled in: "
 
-#: profiel.php:146
+#: profiel.php:143
 msgid "Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd."
 msgstr "We’ve sent a confirmation mail to your new email address."
 
-#: profiel.php:188
+#: profiel.php:185
 msgid "De volgende velden zijn te lang: "
 msgstr "The following fields are to long: "
 
-#: profiel.php:212
+#: profiel.php:209
 msgid "Het huidige wachtwoord is onjuist."
 msgstr "The current password is incorrect."
 
-#: profiel.php:218
+#: profiel.php:215
 msgid "Het nieuwe wachtwoord is niet ingevuld."
 msgstr "The new password hasn't been filled in."
 
-#: profiel.php:221
+#: profiel.php:218
 msgid "Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld."
 msgstr "The new password hasn't been filled in correctly twice."
 
-#: profiel.php:224
+#: profiel.php:221
 msgid "Het nieuwe wachtwoord is te kort."
 msgstr "Your new password is too short."
 
-#: profiel.php:234
+#: profiel.php:231
 msgid "Je wachtwoord is gewijzigd."
 msgstr "Your password has been changed."
 
-#: profiel.php:264
+#: profiel.php:261
 msgid "De zichtbaarheid van het profiel is niet ingevuld."
 msgstr "The visibility of the profile has not been selected."
 
-#: profiel.php:267
+#: profiel.php:264
 msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 msgstr "You have entered an invalid value."
 
-#: profiel.php:286
+#: profiel.php:283
 #, php-format
 msgid "Het fotobestand is te groot. Het maximum is %s."
 msgstr "The image file is too large. The maximum file size is %s."
 
-#: profiel.php:290
+#: profiel.php:287
 #, php-format
 msgid "Het bestand is niet geupload. Foutcode %d."
 msgstr "The image hasn't been uploaded correctly. PHP reports error code %d."
 
-#: profiel.php:293
+#: profiel.php:290
 msgid "Bestand is niet een door PHP geupload bestand."
 msgstr "The image file is not a file uploaded by PHP."
 
-#: profiel.php:296
+#: profiel.php:293
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
-#: profiel.php:304
+#: profiel.php:301
 msgid "Het geuploadde bestand kon niet worden geopend."
 msgstr "The uploaded file could not be opened."
 
-#: profiel.php:319
+#: profiel.php:316
 msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
@@ -3433,7 +3448,7 @@ msgstr "You are connected to the Facebook profile of %s."
 
 #: themes/default/views/profiel/_facebook.phtml:11
 msgid "Je bent niet langer gekoppeld aan Facebook."
-msgstr "Your profile is no longer connected to your Facebook account"
+msgstr "Your profile is no longer connected to your Facebook account."
 
 #: themes/default/views/profiel/_facebook.phtml:17
 msgid "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."

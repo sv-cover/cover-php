@@ -1,5 +1,6 @@
 <?php
 	require_once 'include/data/DataModel.php';
+	require_once 'include/search.php';
 
 	trait UnifiedAuthor {
 		public function get_unified_author()
@@ -276,7 +277,7 @@
 		}
 	}
 
-	class DataIterForumMessage extends DataIter
+	class DataIterForumMessage extends DataIter implements SearchResult
 	{
 		use UnifiedAuthor;
 
@@ -307,7 +308,10 @@
 		 */
 		public function get_thread()
 		{
-			return $this->model->get_thread($this['thread_id']);
+			if (isset($this->data['thread__id']))
+				return $this->getIter('thread', 'DataIterForumThread');
+			else
+				return $this->model->get_thread($this['thread_id']);
 		}
 
 		/**
@@ -333,6 +337,21 @@
 					id = %d', $this['thread_id'], $this['id']));
 
 			return floor($position / $this->model->messages_per_page);
+		}
+
+		public function get_search_relevance()
+		{
+			return -0.1 + normalize_search_rank($this['search_relevance']);
+		}
+	
+		public function get_search_type()
+		{
+			return 'forum_message';
+		}
+
+		public function get_absolute_url()
+		{
+			return sprintf('forum.php?thread=%d&page=%d#p%d', $this['thread_id'], $this['thread_page'], $this['id']);
 		}
 	}
 
@@ -394,6 +413,11 @@
 	{
 		use UnifiedAuthor;
 
+		static public function model()
+		{
+			return get_model('DataModelForum');
+		}
+
 		static public function fields()
 		{
 			return [
@@ -420,7 +444,10 @@
 
 		public function get_forum()
 		{
-			return $this->model->get_iter($this['forum_id']);
+			if (isset($this->data['forum__id']))
+				return $this->getIter('forum', 'DataIterForum');
+			else
+				return $this->model->get_iter($this['forum_id']);
 		}
 		
 		/**
@@ -548,7 +575,7 @@
 	/**
 	  * A class implementing forum data
 	  */
-	class DataModelForum extends DataModel
+	class DataModelForum extends DataModel implements SearchProvider
 	{
 		// Author types
 		const TYPE_EVERYONE = -1;
@@ -838,6 +865,9 @@
 						forums.id = %d
 					GROUP BY
 						forums.id', $forum_id));
+
+			if (!$row)
+				throw new DataIterNotFoundException($forum_id, $this);
 			
 			return $cache[$forum_id] = $this->_row_to_iter($row, 'DataIterForum');
 		}
@@ -1005,7 +1035,7 @@
 		/**
 		  * Get a thread by its ID
 		  * @param $id thread id
-		  * @throws DataIterNotFoundExcepion if there is no thread with the specified id
+		  * @throws DataIterNotFoundException if there is no thread with the specified id
 		  * @return DataIterForumThread
 		  */
 		public function get_thread($id)
@@ -1052,7 +1082,7 @@
 			
 			return $forum->get_threads(($page * $this->threads_per_page), $this->threads_per_page);
 		}
-		
+
 		/**
 		  * Get a forum message
 		  * @id the id of the message
@@ -1169,7 +1199,7 @@
 						$commissie_model = get_model('DataModelCommissie');
 						$commissie = $commissie_model->get_iter($id);
 						
-						$avatar_file = 'images/avatars/' . $commissie['nocaps'] . '.png';
+						$avatar_file = 'images/avatars/' . $commissie['login'] . '.png';
 						
 						$author = array(
 							'name' => $commissie['naam'],
@@ -1453,7 +1483,7 @@
 			$visit->set('sessiondate', new DatabaseLiteral('CURRENT_TIMESTAMP'));
 
 			return $this->db->update('forum_visits',
-				$visit->get_changed_values(),
+				$visit->changed_values(),
 				'lid_id = ' . intval($member['id']) . ' AND forum_id = ' . intval($forum['id']));
 		}
 		
@@ -1740,5 +1770,87 @@
 		public function delete_header(DataIterForumHeader $iter)
 		{
 			return $this->_delete('forum_header', $iter);
+		}
+
+		public function search($query, $limit = null)
+		{
+			$keywords = parse_search_query_for_text($query);
+
+			$text_query = implode(' & ', $keywords);
+
+			$query = "
+				WITH
+					-- Find all messages that match our search query
+					search_results AS (
+						SELECT
+							id,
+							thread_id,
+							ts_rank_cd(to_tsvector(message), query) as search_relevance
+						FROM
+							forum_messages,
+							to_tsquery('" . $this->db->escape_string($text_query) . "') query
+						WHERE
+							to_tsvector(message) @@ query	
+					),
+					-- Limit those found message to only the most relevant per topic
+					distinct_search_results AS (
+						SELECT DISTINCT ON (thread_id)
+							last_value(id) OVER win as id,
+							last_value(search_relevance) OVER win as search_relevance
+						FROM
+							search_results
+						WINDOW win AS (
+							PARTITION BY thread_id ORDER BY search_relevance ASC
+							ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+						)
+					)
+					-- And now fetch those messages with their topic and forum
+				SELECT
+					f_m.id,
+					f_m.thread_id,
+					f_m.author_id,
+					f_m.author_type,
+					f_m.message,
+					f_m.date,
+					f_t.id as thread__id,
+					f_t.forum_id as thread__forum_id,
+					f_t.author_type as thread__author_type,
+					f_t.author_id as thread__author_id,
+					f_t.subject as thread__subject,
+					f_t.date as thread__date,
+					f_t.poll as thread__poll,
+					f_f.id as thread__forum__id,
+					f_f.name as thread__forum__name,
+					f_f.description as thread__forum__description,
+					f_f.position as thread__forum__position,
+					s.search_relevance
+				FROM
+					distinct_search_results s
+				JOIN forum_messages f_m ON
+					f_m.id = s.id
+				JOIN forum_threads f_t ON
+					f_t.id = f_m.thread_id
+				JOIN forums f_f ON
+					f_f.id = f_t.forum_id
+				ORDER BY
+					s.search_relevance DESC";
+
+			if ($limit !== null)
+				$query .= sprintf(" LIMIT %d", $limit);
+
+			$rows = $this->db->query($query);
+
+			$iters = $this->_rows_to_iters($rows, 'DataIterForumMessage');
+
+			$pattern = sprintf('/(%s)/i', implode('|', array_map(function($p) { return preg_quote($p, '/'); }, $keywords)));
+
+			// Enhance search relevance score when the keywords appear in the title of a thread
+			foreach ($iters as $iter)
+			{
+				$keywords_in_title = preg_match_all($pattern, $iter['thread__subject'], $matches);
+				$iter->set('search_relevance', $iter->get('search_relevance') + $keywords_in_title);
+			}
+
+			return $iters;
 		}
 	}

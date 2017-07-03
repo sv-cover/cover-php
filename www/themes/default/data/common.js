@@ -1037,7 +1037,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 // Load photo book photos only once they are (almost) in view
 // to speed up loading photo book pages
 $(document).on('ready partial-content-loaded', function(e) {
-	var triggered = false;
+	var updateScheduled = false;
 
 	var threshold = Math.max(300, $(window).height()); // pixels 'below the fold' where images should start loading
 
@@ -1069,26 +1069,28 @@ $(document).on('ready partial-content-loaded', function(e) {
 		// And remove those images from the set
 		$images = $images.not(loaded);
 
-		triggered = false;
+		updateScheduled = false;
 	};
 
-	// Find all images that aren't visible yet
-	var $images = $(e.target).find('.photos img').filter(isHidden);
+	// Find all images
+	var $images = $(e.target).find('.photos img[data-src]');
 
 	// Remove their src attribute (and store it in the data-src attribute for now)
 	$images.each(function() {
-		$(this).data('src', $(this).prop('src'));
 		$(this).prop('src', $(this).data('placeholder-src') || emptyPixel);
 	});
 
 	// Very rudimentary polyfill for requestAnimationFrame
 	var schedule = window.requestAnimationFrame || function (callback) { return setTimeout(callback, 16); };
 
+	// Schedule an update right now to load those initial images
+	update();
+
 	// On scroll and resize we 'schedule' an update run
 	$(window).on('scroll resize', function() {
-		if (!triggered) {
+		if (!updateScheduled) {
 			schedule(update);
-			triggered = true;
+			updateScheduled = true;
 		}
 	});
 });

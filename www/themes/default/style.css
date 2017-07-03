@@ -72,7 +72,6 @@ h1
 	margin:0px 0px 10px 0px;
 	text-shadow:1px 1px 1px rgba(0,0,0,0.5);
 }
-h3 {margin:8px 0px; }
 
 hr.colorAccent {
 	border:0;
@@ -171,12 +170,14 @@ ul.expander{
 	width: 120px;
 }
 
-table.agenda {
+.agenda .h-event {
 	display: block;
+	position: relative;
+	padding: 10px 0 10px 40px;
 }
 
-table.agenda .vandatum {
-	vertical-align: top;
+.agenda .h-event + .h-event {
+	border-top: 1px solid #ccc;
 }
 
 .menu_contents .agenda li {
@@ -186,7 +187,7 @@ table.agenda .vandatum {
 	margin-bottom: 5px;
 }
 
-.menu_contents .agenda .calendar-icon {
+.agenda .calendar-icon {
 	position: absolute;
 	top: 2px;
 	left: 0;
@@ -195,12 +196,16 @@ table.agenda .vandatum {
 	color: #000;
 }
 
-.menu_contents .agenda .details {
+.agenda .h-event .calendar-icon {
+	top: 10px;
+}
+
+.agenda .details {
 	display: block;
 	font-weight: normal;
 }
 
-.menu_contents .agenda .label-pending {
+.agenda .label-pending {
 	display: inline-block;
 	background: #FFD700;
 	padding: 4px;
@@ -894,7 +899,7 @@ ul.actions li {
 	display: block;
 }
 
-.messageBox > ul.actions:empty {
+.messageBox ul.actions:empty {
 	display: none;
 }
 
@@ -1370,55 +1375,37 @@ table.incassomatic thead::before
 	position: relative;
 }
 
-.committee-page.messageBox {
-	padding: 0;
+.committee-photo {
+	margin: -15px -15px 0 -15px;
 }
 
-.committee-page.messageBox .content {
-	padding: 15px;
-}
-
-.commissie_foto {
-	
-}
-
-.commissie_foto img {
+.committee-photo img {
 	display: block;
 	width: 100%;
 }
 
-.commissie_foto.vertical {
+.committee-photo.vertical {
 	width: 50%;
 	float: left;
 	margin-right: 15px;
 }
 
-.commissie-members ul {
+.committee-members {
+	margin: 15px 0;
+}
+
+.committee-members ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	text-align: center;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 }
 
-.commissie-members li {
-	display: inline;
-}
-
-.commissie-members .commissie-member {
-	display: inline-block;
-	vertical-align: top;
-	width: 125px;
-	overflow: hidden;
-	margin-bottom: 16px;
-}
-
-.commissie-members .commissie-member .name {
-	display: block;
-}
-
-.commissie-members .commissie-member .function {
-	display: block;
-	font-weight: normal;
+.committee-members li {
+	flex: 0 0 auto;
+	margin: 5px 0;
 }
 
 .committee-navigation {
@@ -1653,30 +1640,14 @@ form textarea {
 	vertical-align: bottom;
 }
 
-form.add-sticker-form {
-	position: relative;
-	height: 100%;
-	width: 450px;
-	min-height: 450px;
+.add-sticker-form {
+	min-width: 500px;
 }
 
-form .sticker-location-picker {
-	position: absolute;
-	top: 142px;
-	bottom: 42px;
-	left: 0;
-	right: 0;
-	border-radius: 4px;
-}
-
-form .sticker-location-map {
+.sticker-location-map {
 	width: 100%;
 	height: 100%;
-}
-
-form.add-sticker-form button {
-	position: absolute;
-	bottom: 8px;
+	min-height: 300px;
 }
 
 .event-cover-photo {
@@ -2366,7 +2337,7 @@ body.modal-open {
 	border-radius: 50%;
 }
 
-a.profile-widget:after {
+.profile-widget:after {
 	content: '';
 	border: 1px solid rgba(32, 32, 32, 0.25);
 	position: absolute;
@@ -2378,15 +2349,16 @@ a.profile-widget:after {
 	right: 0;
 	border-radius: 50%;
 	box-sizing: border-box;
+	pointer-events: none;
 }
 
 .profile-widget > span {
 	display: block;
+	font-weight: normal;
 }
 
-.profile-widget .function,
-.profile-widget .status {
-	font-weight: normal;
+.profile-widget .name {
+	font-weight: bold;
 }
 
 .search .search-widget {
@@ -3319,15 +3291,29 @@ ul.call-to-action li a::before {
 
 .header > .cover-room-open {
 	position: absolute;
-	top: 35px;
-	left: 260px;
-	font-size: 1.7em;
-	text-transform: uppercase;
+	top: 20px;
+	left: 270px;
+	font-size: 8px;
+	text-decoration: none;
+	text-align: center;
+	color: white;
+	transform: rotate(-7deg);
 	display: inline-block;
 	background: #C8102E;
-	color: white;
-	padding: 4px 18px;
+	margin: 6px 0;
+	padding: 4px;
 	border-radius: 4px;
-	box-shadow: 0 0 0 2px white, 0 0 0 4px #C8102E, -1px 1px 4px 3px rgba(0, 0, 0, 0.6);
-	transform: rotate(-7deg);
+	box-shadow: 0 0 0 2px white, 0 0 0 4px #C8102E, -1px 1px 4px 3px rgba(0, 0, 0, 0.3);
+	transition: box-shadow 75ms ease-out;
+}
+
+.header > .cover-room-open:hover,
+.header > .cover-room-open:active {
+	box-shadow: 0 0 0 4px white, 0 0 0 8px #C8102E, -1px 1px 8px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header > .cover-room-open > span {
+	display: block;
+	font-size: 24px;
+	text-transform: uppercase;
 }

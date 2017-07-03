@@ -96,8 +96,7 @@
 
 		public function render_index($iters = null, array $params = array())
 		{
-			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
-				array('application/json', 'text/html', '*/*'));
+			$preferred = $this->_get_preferred_response();
 
 			// Set default params for search fields in template
 			$params = array_merge([

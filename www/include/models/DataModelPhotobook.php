@@ -314,17 +314,12 @@
 
 		public function get_photos()
 		{
-			if ($this->_photos === null)
-				$this->_photos = $this->model->get_photos($this);
-
-			return $this->_photos;
+			return $this->model->get_photos($this);
 		}
 
 		public function has_photo(DataIterPhoto $needle)
 		{
-			$photos = $this->get_photos();
-
-			foreach ($photos as $photo)
+			foreach ($this['photos'] as $photo)
 				if ($photo->get_id() == $needle->get_id())
 					return true;
 
@@ -333,7 +328,7 @@
 
 		public function get_next_photo(DataIterPhoto $current, $num = 1)
 		{
-			$photos = $this->get_photos();
+			$photos = $this['photos'];
 
 			foreach ($photos as $index => $photo)
 				if ($photo->get_id() == $current->get_id())
@@ -347,7 +342,7 @@
 
 		public function get_previous_photo(DataIterPhoto $current, $num = 1)
 		{
-			$photos = $this->get_photos();
+			$photos = $this['photos'];
 
 			foreach ($photos as $index => $photo)
 				if ($photo->get_id() == $current->get_id())
@@ -762,7 +757,7 @@
 			return "
 				SELECT
 					{$this->table}.*,
-					NULL AS read_status,
+					'" . self::READ_STATUS_READ . "' AS read_status, -- Assume this otherwise it could cause trouble with the grouping in _photos.twig
 					COUNT(DISTINCT foto_reacties.id) AS num_reacties
 				FROM
 					{$this->table}
@@ -852,7 +847,7 @@
 			else
 			{
 				$read_status_select_atom = "
-					NULL as read_status";
+					'" . self::READ_STATUS_READ . "' as read_status";
 
 				$read_status_join_atom = "";
 			}

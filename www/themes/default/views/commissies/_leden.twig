@@ -1,15 +1,24 @@
 {% set members = iter.members %}
 {% if members|length > 0 %}
-<div class="commissie-members">
-	<h3 class="alignCenter">{{ __('Leden') }}</h3>
+<div class="committee-members">
+	<h2>{{ __('Leden') }}</h2>
 	<ul>
 	{% for member in members %}
 		<li>
-			<a href="profiel.php?lid={{ member.id }}" class="commissie-member profile-widget round">
+			<a href="profiel.php?lid={{ member.id }}" class="committee-member profile-widget round">
 				<img src="foto.php?lid_id={{ member.id }}&amp;format=square&amp;width=200" width="100">
 				<span class="name">{{ member|full_name }}</span>
 				<span class="function">{{ member.functie|translate_parts(',/') }}</span>
 			</a>
+		</li>
+	{% endfor %}
+	{% for mascot in iter.mascots %}
+		<li>
+			<span class="committee-member committee-mascot profile-widget round">
+				<img src="{{ mascot.photo }}" width="100">
+				<span class="name">{{ mascot.name }}</span>
+				<span class="function">{{ mascot.functie|translate_parts(',/') }}</span>
+			</span>
 		</li>
 	{% endfor %}
 	</ul>

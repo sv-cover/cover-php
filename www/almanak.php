@@ -37,8 +37,9 @@
 					return !$iter->is_private('naam');
 				});
 
-			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
-				array('application/json', 'text/html', '*/*'));
+			$preferred = isset($_SERVER['HTTP_ACCEPT'])
+				? parse_http_accept($_SERVER['HTTP_ACCEPT'], array('application/json', 'text/html', '*/*'))
+				: 'text/html';
 
 			// The JSON is mostly used by the text inputs that autosuggest names
 			if ($preferred == 'application/json')

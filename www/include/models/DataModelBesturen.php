@@ -10,7 +10,6 @@ class DataIterBestuur extends DataIter
 			'id',
 			'naam',
 			'login',
-			'nocaps',
 			'page_id'
 		];	
 	}
