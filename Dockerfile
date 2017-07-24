@@ -35,7 +35,11 @@ RUN docker-php-ext-install mbstring
 RUN apt-get update && apt-get install -y git zip
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Todo: install face recognition stuff
+# Install face recognition stuff
+RUN apt-get update && apt-get install -y \
+	python-numpy \
+	python-opencv \
+	python-psycopg2
 
 # Copy the application
 COPY fonts locale /var/www/
