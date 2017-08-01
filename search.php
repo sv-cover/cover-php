@@ -17,6 +17,7 @@ class SearchController extends Controller
 			get_model('DataModelPhotobook'),
 			get_model('DataModelAnnouncement'),
 			get_model('DataModelForum'),
+			get_model('DataModelWiki'),
 		);
 
 		$this->view = View::byName('search', $this);
