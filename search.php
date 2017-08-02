@@ -9,30 +9,55 @@ class SearchController extends Controller
 
 	public function __construct()
 	{
-		$this->providers = array(
-			get_model('DataModelMember'),
-			get_model('DataModelEditable'),
-			get_model('DataModelCommissie'),
-			get_model('DataModelAgenda'),
-			get_model('DataModelPhotobook'),
-			get_model('DataModelAnnouncement'),
-			get_model('DataModelForum'),
-			get_model('DataModelWiki'),
-		);
+		$this->providers = [
+			[
+				'model' => get_model('DataModelMember'),
+				'category_name' => __('leden')
+			],
+			[
+				'model' => get_model('DataModelEditable'),
+				'category_name' => __('pagina\'s')
+			],
+			[
+				'model' => get_model('DataModelCommissie'),
+				'category_name' => __('commissies')
+			],
+			[
+				'model' => get_model('DataModelAgenda'),
+				'category_name' => __('agendapunten')
+			],
+			[
+				'model' => get_model('DataModelPhotobook'),
+				'category_name' => __('fotoboeken')
+			],
+			[
+				'model' => get_model('DataModelAnnouncement'),
+				'category_name' => __('mededelingen')
+			],
+			[
+				'model' => get_model('DataModelForum'),
+				'category_name' => __('forum topics')
+			],
+			[
+				'model' => get_model('DataModelWiki'),
+				'category_name' => __('wiki-pagina\'s')
+			],
+		];
 
 		$this->view = View::byName('search', $this);
 	}
 
-	protected function _query($query)
+	protected function _query($query, array &$errors = [])
 	{
 		$results = array();
 
 		// Query all providers
 		foreach ($this->providers as $provider) {
 			try {
-				$results = array_merge($results, $provider->search($query, 10));
+				$results = array_merge($results, $provider['model']->search($query, 10));
 			} catch (Exception $e) {
-				// Ignore errors on search providers for now
+				sentry_report_exception($e);
+				$errors[] = $provider['category_name'];
 			}
 		}
 
@@ -51,19 +76,19 @@ class SearchController extends Controller
 	
 	protected function run_impl()
 	{
+		$query = '';
+		$iters = null;
+		$errors = [];
+
 		if (!empty($_GET['query'])) {
 			$query = $_GET['query'];
-			$iters = $this->_query($query);
+			$iters = $this->_query($query, $errors);
 
 			if (isset($_GET['im_feeling']) && $_GET['im_feeling'] == 'lucky' && count($iters) > 0)
 				return $this->view->redirect($iters[0]->get_absolute_url());
 		}
-		else {
-			$query = '';
-			$iters = null;
-		}
-
-		return $this->view->render_index($query, $iters);
+		
+		return $this->view->render_index($query, $iters, $errors);
 	}
 }
 
