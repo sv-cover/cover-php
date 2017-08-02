@@ -28,8 +28,13 @@ class SearchController extends Controller
 		$results = array();
 
 		// Query all providers
-		foreach ($this->providers as $provider)
-			$results = array_merge($results, $provider->search($query, 10));
+		foreach ($this->providers as $provider) {
+			try {
+				$results = array_merge($results, $provider->search($query, 10));
+			} catch (Exception $e) {
+				// Ignore errors on search providers for now
+			}
+		}
 
 		// Filter all results on readability
 		$results = array_filter($results, function($result) {
