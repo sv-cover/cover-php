@@ -12,7 +12,12 @@
 	</form>
 
 	{% if results is not null %}
-	<p class="search-result-statistics">{{ __N('Er is %d zoekresultaat', 'Er zijn %d zoekresultaten', results|length) }}</p>
+	<p class="search-result-statistics">
+		{{ __N('Er is %d zoekresultaat.', 'Er zijn %d zoekresultaten.', results|length) }}
+		{% if errors %}
+			{{ __N('Zoekresultaten uit de categorie %s ontbreken vanwege fouten.', 'Zoekresultaten uit de categorieën %s ontbreken vanwege fouten.', errors|human_join, errors|length) }}
+		{% endif %}
+	</p>
 	<ul class="search-results">
 		{% for result in results %}
 		<li data-search-relevance="{{ '%0.2F'|format(result.search_relevance) }}">
