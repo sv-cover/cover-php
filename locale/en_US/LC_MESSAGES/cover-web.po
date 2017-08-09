@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-06-05 19:25+0200\n"
+"POT-Creation-Date: 2017-08-04 12:31+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -407,7 +407,7 @@ msgstr "There are no calendar events waiting for approval."
 #: themes/default/views/agenda/moderate.twig:11
 msgid ""
 "Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden."
-msgstr "The calendar events below are put up for approval"
+msgstr "The calendar events below are put up for approval."
 
 #: themes/default/views/agenda/moderate.twig:24
 #: themes/default/views/committeebattle/committee.twig:13
@@ -469,7 +469,6 @@ msgid "Gaat niet"
 msgstr "Not going"
 
 #: themes/default/views/agenda/single.twig:73
-#: themes/default/views/profiel/_facebook.phtml:22
 msgid "Koppel Facebook"
 msgstr "Connect to Facebook"
 
@@ -536,7 +535,7 @@ msgid "Zichtbaarheid"
 msgstr "Visibility"
 
 #: themes/default/views/almanak/index.twig:22
-#: themes/default/views/commissies/form.twig:41
+#: themes/default/views/commissies/form.twig:35
 #: themes/default/views/search/_single_member.twig:3
 #: include/models/DataModelForum.php:1303
 #: include/models/DataModelMember.php:592
@@ -806,12 +805,12 @@ msgid "Weet je heel zeker dat je de commissie <em>%s</em> wil verwijderen?"
 msgstr "Are you certain you want to delete <em>%s</em> committee?"
 
 #: themes/default/views/commissies/confirm_delete.twig:12
-#: themes/default/views/commissies/form.twig:81
+#: themes/default/views/commissies/form.twig:75
 msgid "Verwijder commissie"
 msgstr "Delete committee"
 
 #: themes/default/views/commissies/confirm_delete.twig:13
-#: themes/default/views/commissies/form.twig:76
+#: themes/default/views/commissies/form.twig:70
 #: themes/default/views/committeebattle/confirm_delete.twig:13
 msgid "Terug naar commissie"
 msgstr "Back to committee page"
@@ -831,25 +830,11 @@ msgstr "Add a new committee/working group"
 msgid "Type"
 msgstr "Type"
 
-#: themes/default/views/commissies/form.twig:26
-msgid "Interne naam"
-msgstr "Internal name"
-
-#: themes/default/views/commissies/form.twig:28
-msgid ""
-"Je wil de interne naam alleen veranderen als je een verdomd goede reden "
-"hebt. Veel interne zaken (o.a. de commissiefoto en het e-mailadres) worden "
-"via deze naam gekoppeld."
-msgstr ""
-"You only want to change the internal committee name if you have a damn good "
-"reason to do so. Many interal links (such as the committee photo, the email "
-"address, the url in the link) depend on this name."
-
-#: themes/default/views/commissies/form.twig:33
+#: themes/default/views/commissies/form.twig:27
 msgid "Deze commissie/werkgroep is verborgen"
 msgstr "This committee/working group is hidden"
 
-#: themes/default/views/commissies/form.twig:34
+#: themes/default/views/commissies/form.twig:28
 msgid ""
 "Verborgen commissies en werkgroepen worden niet getoond in het overzicht of "
 "op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de "
@@ -859,19 +844,19 @@ msgstr ""
 "index or Scherm but sometimes it is useful to create one to allow access to "
 "certain features of the website."
 
-#: themes/default/views/commissies/form.twig:42
+#: themes/default/views/commissies/form.twig:36
 msgid "Functie"
 msgstr "Function"
 
-#: themes/default/views/commissies/form.twig:61
+#: themes/default/views/commissies/form.twig:55
 msgid "Toevoegen"
 msgstr "Add"
 
-#: themes/default/views/commissies/form.twig:68
+#: themes/default/views/commissies/form.twig:62
 msgid "Deze commissie/werkgroep zoekt nieuwe leden tot"
 msgstr "This committee/working group is looking for new members till"
 
-#: themes/default/views/commissies/form.twig:70
+#: themes/default/views/commissies/form.twig:64
 msgid ""
 "Commissies en werkgroepen die leden zoeken hebben een banner met het hoofd "
 "van de Intern op de website en op het scherm. De datum is de deadline. Geef "
@@ -884,23 +869,23 @@ msgstr ""
 "the committee or working group is not looking for new members, leave the "
 "field empty."
 
-#: themes/default/views/commissies/form.twig:74
+#: themes/default/views/commissies/form.twig:68
 msgid "Wijzig commissie/werkgroep"
 msgstr "Modify committee/working group"
 
-#: themes/default/views/commissies/form.twig:74
+#: themes/default/views/commissies/form.twig:68
 msgid "Maak commissie/werkgroep aan"
 msgstr "Create new committee/working group"
 
-#: themes/default/views/commissies/form.twig:76
+#: themes/default/views/commissies/form.twig:70
 msgid "Terug naar werkgroep"
 msgstr "Back to working group"
 
-#: themes/default/views/commissies/form.twig:78
+#: themes/default/views/commissies/form.twig:72
 msgid "Terug naar alle commissies"
 msgstr "Back to all committees"
 
-#: themes/default/views/commissies/form.twig:81
+#: themes/default/views/commissies/form.twig:75
 msgid "Verwijder werkgroep"
 msgstr "Delete working group"
 
@@ -1221,11 +1206,11 @@ msgstr "Only logged in members of the PhotoCee"
 msgid "Deze foto komt uit"
 msgstr "This photo originates from"
 
-#: themes/default/views/fotoboek/_photos.twig:29
+#: themes/default/views/fotoboek/_photos.twig:30
 msgid "Verborgen voor anderen"
 msgstr "Hidden from index"
 
-#: themes/default/views/fotoboek/_photos.twig:32
+#: themes/default/views/fotoboek/_photos.twig:33
 #: themes/default/views/search/_single_fotoboek.twig:16
 #, python-format
 msgid "%d reactie"
@@ -1233,11 +1218,11 @@ msgid_plural "%d reacties"
 msgstr[0] "%d comment"
 msgstr[1] "%d comments"
 
-#: themes/default/views/fotoboek/_photos.twig:46
+#: themes/default/views/fotoboek/_photos.twig:47
 msgid "Nieuw sinds je laatste bezoek"
 msgstr "New since your last visit"
 
-#: themes/default/views/fotoboek/_photos.twig:52
+#: themes/default/views/fotoboek/_photos.twig:53
 msgid "Oudere foto's"
 msgstr "Older photos"
 
@@ -1263,7 +1248,7 @@ msgstr "Add photos"
 #: themes/default/views/fotoboek/photobook.twig:3
 #: themes/default/views/fotoboek/photobook.twig:6
 #: themes/default/views/fotoboek/single.twig:6
-#: include/models/DataModelPhotobook.php:569
+#: include/models/DataModelPhotobook.php:564
 msgid "Fotoboek"
 msgstr "Photo album"
 
@@ -1930,7 +1915,7 @@ msgstr "New mailing list"
 
 #: themes/default/views/mailinglijsten/form.twig:16
 msgid "Lijstadres"
-msgstr "List email address:"
+msgstr "List email address"
 
 #: themes/default/views/mailinglijsten/form.twig:17
 msgid "e.g. lijstnaam@svcover.nl"
@@ -2071,7 +2056,7 @@ msgstr "Unsubscribe me"
 
 #: themes/default/views/mailinglijsten/unsubscribe_form.twig:10
 msgid "Nee, ik was gewoon nieuwsgierig"
-msgstr "No, I was just curious."
+msgstr "No, I was just curious"
 
 #: themes/default/views/profiel/_profile_widget.twig:14
 #: themes/default/views/profiel/profile_tab.twig:73
@@ -2242,7 +2227,7 @@ msgstr "Privacy settings"
 
 #: themes/default/views/profiel/privacy_tab.twig:8
 msgid "Je privacy instellingen geven aan wie welke informatie mag zien."
-msgstr "Modify your privacy preferences to indicate who can see what info"
+msgstr "Modify your privacy preferences to indicate who can see what info."
 
 #: themes/default/views/profiel/privacy_tab.twig:16
 msgid "Niemand"
@@ -2409,6 +2394,13 @@ msgstr "in forum %s from %s %d"
 msgid "Fotoboek in %s"
 msgstr "Photo album in %s"
 
+#: themes/default/views/search/_single_wiki.twig:3
+#, python-format
+msgid "%d hit"
+msgid_plural "%d hits"
+msgstr[0] "%d hit"
+msgstr[1] "%d hits"
+
 #: themes/default/views/search/index.twig:3
 #: themes/default/views/search/index.twig:6
 msgid "Zoeken"
@@ -2418,12 +2410,19 @@ msgstr "Search"
 msgid "Zoekopdracht"
 msgstr "Search query"
 
-#: themes/default/views/search/index.twig:15
+#: themes/default/views/search/index.twig:16
 #, python-format
-msgid "Er is %d zoekresultaat"
-msgid_plural "Er zijn %d zoekresultaten"
-msgstr[0] "There is %d search result"
-msgstr[1] "There are %d search results"
+msgid "Er is %d zoekresultaat."
+msgid_plural "Er zijn %d zoekresultaten."
+msgstr[0] "There is %d search result."
+msgstr[1] "There are %d search results."
+
+#: themes/default/views/search/index.twig:18
+#, python-format
+msgid "Zoekresultaten uit de categorie %s ontbreken vanwege fouten."
+msgid_plural "Zoekresultaten uit de categorieën %s ontbreken vanwege fouten."
+msgstr[0] "Search results from the %s category are missing due to errors."
+msgstr[1] "Search results from the categories %s are missing due to errors."
 
 #: themes/default/views/sessions/inactive.twig:4
 #: themes/default/views/sessions/login.twig:4
@@ -2725,7 +2724,7 @@ msgstr "Weblog"
 
 #: themes/default/views/weblog/index.twig:9
 msgid "Er zijn op dit moment geen weblogs"
-msgstr "There are no blog posts at this moment."
+msgstr "There are no blog posts at this moment"
 
 #: themes/default/views/weblog/index.twig:18 include/pagenavigation.php:6
 #: themes/default/views/forum/forum.php:156
@@ -3240,6 +3239,38 @@ msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
 
+#: search.php:15
+msgid "leden"
+msgstr "members"
+
+#: search.php:19
+msgid "pagina's"
+msgstr "pages"
+
+#: search.php:23
+msgid "commissies"
+msgstr "committees"
+
+#: search.php:27
+msgid "agendapunten"
+msgstr "calendar events"
+
+#: search.php:31
+msgid "fotoboeken"
+msgstr "photo books"
+
+#: search.php:35
+msgid "mededelingen"
+msgstr "announcements"
+
+#: search.php:39
+msgid "forum topics"
+msgstr "forum topics"
+
+#: search.php:43
+msgid "wiki-pagina's"
+msgstr "wiki pages"
+
 #: sessions.php:116
 msgid "Verkeerde combinatie van e-mailadres en wachtwoord"
 msgstr "Wrong combination of e-mail address and password"
@@ -3420,7 +3451,6 @@ msgid "Privacy"
 msgstr "Privacy"
 
 #: themes/default/views/profiel/profiel.php:74
-#: themes/default/views/profiel/_facebook.phtml:20
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -3441,24 +3471,32 @@ msgstr "To be processed"
 msgid "Fotoboek met %s gemaakt op %s."
 msgstr "Photo album with %s made on %s."
 
-#: themes/default/views/profiel/_facebook.phtml:8
-#, php-format
-msgid "Je bent ingelogd als %s."
-msgstr "You are connected to the Facebook profile of %s."
+#~ msgid "Interne naam"
+#~ msgstr "Internal name"
 
-#: themes/default/views/profiel/_facebook.phtml:11
-msgid "Je bent niet langer gekoppeld aan Facebook."
-msgstr "Your profile is no longer connected to your Facebook account."
+#~ msgid ""
+#~ "Je wil de interne naam alleen veranderen als je een verdomd goede reden "
+#~ "hebt. Veel interne zaken (o.a. de commissiefoto en het e-mailadres) "
+#~ "worden via deze naam gekoppeld."
+#~ msgstr ""
+#~ "You only want to change the internal committee name if you have a damn "
+#~ "good reason to do so. Many interal links (such as the committee photo, "
+#~ "the email address, the url in the link) depend on this name."
 
-#: themes/default/views/profiel/_facebook.phtml:17
-msgid "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."
-msgstr ""
-"Connect your Facebook account to see who of your friends are attending the "
-"activities."
+#~ msgid "Je bent ingelogd als %s."
+#~ msgstr "You are connected to the Facebook profile of %s."
 
-#: themes/default/views/profiel/_facebook.phtml:26
-msgid "Ontkoppel Facebook"
-msgstr "Disconnect Facebook"
+#~ msgid "Je bent niet langer gekoppeld aan Facebook."
+#~ msgstr "Your profile is no longer connected to your Facebook account."
+
+#~ msgid ""
+#~ "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."
+#~ msgstr ""
+#~ "Connect your Facebook account to see who of your friends are attending "
+#~ "the activities."
+
+#~ msgid "Ontkoppel Facebook"
+#~ msgstr "Disconnect Facebook"
 
 #~ msgid "Inloggen op Dreamspark"
 #~ msgstr "Log in to Dreamspark"
@@ -5109,9 +5147,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "%s zijn op de hoogte gesteld van het weigeren van de documenten."
 #~ msgstr "%s have been notified that their documents have been denied."
-
-#~ msgid "Fotoboeken"
-#~ msgstr "Photo books"
 
 #~ msgid "Het opgegeven pad bestaat niet"
 #~ msgstr "The given path doesn't exist"
