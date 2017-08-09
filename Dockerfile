@@ -1,4 +1,7 @@
-FROM php:7.0-apache
+FROM php:7.1-apache
+
+# Stop composer from nagging
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
 # Install PDO pgsql drivers
 RUN apt-get update \
@@ -23,7 +26,8 @@ RUN apt-get update \
 		imagemagick \
 		libmagickwand-dev \
 		libfreetype6-dev \
-	&& pecl install imagick
+	&& pecl install imagick \
+	&& echo "extension=imagick.so" > /usr/local/etc/php/conf.d/docker-php-ext-imagick.ini
 
 # Install bcmath (used by iban library stuff)
 RUN docker-php-ext-install bcmath
@@ -41,19 +45,25 @@ RUN apt-get update && apt-get install -y \
 	python-opencv \
 	python-psycopg2
 
+# Copy our entrypoint file (which will init the nonce)
+COPY cover-php-run /usr/local/bin/
+CMD ["cover-php-run"]
+
 # Copy the application
-COPY fonts locale /var/www/
+COPY fonts/ /var/www/fonts/
+COPY locale/ /var/www/locale/
 COPY www/ /var/www/html/
 
 # Create temporary folders :)
 # Alternatively link these to a more persistent location
-RUN mkdir -m 0777 -p /var/www/tmp/twig
-RUN mkdir -m 0777 -p /var/www/tmp/stickers
-RUN mkdir -m 0777 -p /var/www/tmp/profiles
+RUN mkdir -m 0777 -p \
+	/var/www/tmp/twig \
+	/var/www/tmp/stickers \
+	/var/www/tmp/photos \
+	/var/www/tmp/profiles
 
 # Install stuff in /var/www/vendor
 WORKDIR /var/www/
 COPY composer.* /var/www/
-ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer install --no-plugins --no-scripts --no-dev
 

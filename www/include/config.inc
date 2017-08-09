@@ -2,14 +2,6 @@
 if (!defined('IN_SITE'))
 	return;
 
-function _generate_nonce()
-{
-	if (!file_exists('/var/tmp/nonce'))
-		shell_exec('openssl rand -base64 64 > /var/tmp/nonce');
-
-	return file_get_contents('/var/tmp/nonce');
-}
-
 $config = [
 	'theme' => 'default',
 	'report_errors' => true,
@@ -18,6 +10,10 @@ $config = [
 	'report_to' => 'webcie@ai.rug.nl',
 
 	'environment' => 'docker',
+
+	'twig_cache' => '/var/www/tmp/twig',
+
+	'sticker_cache' => '/var/www/tmp/stickers',
 	
 	/* Bestuur */
 	'email_bestuur' => 'bestuur@svcover.nl',
@@ -62,7 +58,7 @@ $config = [
 	'committee_battle' => true,
 
 	// Used for forms & XSS prevention. Generate with `openssl rand -base64 64`.
-	'nonce_salt' => _generate_nonce(), 
+	'nonce_salt' => file_get_contents('/var/www/tmp/nonce'), 
 
 	// Lifetime in seconds.
 	'nonce_lifetime' => 3600 * 12, 

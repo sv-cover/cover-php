@@ -34,9 +34,14 @@ class StickersView extends CRUDView
 		readfile($thumb_file);
 	}
 
+	private function _cache_path(DataIter $sticker)
+	{
+		return path_concat(get_config_value('sticker_cache', 'tmp/stickers'), $sticker->get_id() . '.jpg');
+	}
+
 	public function generate_thumbnail(DataIter $sticker)
 	{
-		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
+		$cache_file = $this->_cache_path($sticker);
 
 		$use_cache = file_exists($cache_file) && filemtime($cache_file) > $sticker['foto_mtime'];
 
@@ -62,7 +67,7 @@ class StickersView extends CRUDView
 
 	public function delete_thumbnail(DataIter $sticker)
 	{
-		$cache_file = 'tmp/stickers/' . $sticker->get_id() . '.jpg';
+		$cache_file = $this->_cache_path($sticker);
 
 		if (file_exists($cache_file))
 			unlink($cache_file);
