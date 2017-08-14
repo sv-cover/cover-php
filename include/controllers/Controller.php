@@ -41,7 +41,7 @@
 					echo $this->run_exception($e);
 				}
 			} catch (Exception $e) {
-				$this->_report_exception($e);
+				sentry_report_exception($e);
 
 				if (get_config_value('show_exceptions'))
 					printf('<pre>%s</pre>', $e);
