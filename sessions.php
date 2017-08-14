@@ -109,7 +109,16 @@ class ControllerSessions extends Controller
 			{
 				if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
 				{
-					return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
+					// User can apparently login, so invalidate all their password reset tokens
+					try {
+						$password_reset_model = get_model('DataModelPasswordResetToken');
+						$password_reset_model->invalidate_all(get_identity()->member());
+					} catch (Exception $e) {
+						throw $e;
+						sentry_report_exception($e);
+					}
+
+					return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS);
 				}
 				else {
 					$errors = ['email', 'password'];
