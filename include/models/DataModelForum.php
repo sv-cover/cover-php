@@ -2,6 +2,29 @@
 	require_once 'include/data/DataModel.php';
 	require_once 'include/search.php';
 
+	class PermissionStatus
+	{
+		private $_granted;
+
+		public $function;
+
+		public $reason;
+
+		public function __construct($granted, $function, $reason)
+		{
+			$this->_granted = $granted;
+
+			$this->function = $function;
+
+			$this->reason = $reason;
+		}
+
+		public function granted()
+		{
+			return $this->_granted;
+		}
+	}
+
 	trait UnifiedAuthor {
 		public function get_unified_author()
 		{
@@ -665,7 +688,7 @@
 						author_type = ' . self::TYPE_COMMITTEE);
 			
 			if ($num > 0)
-				return true;
+				return new PermissionStatus(true, __FUNCTION__, sprintf('committee %d has permission', $committee_id));
 				
 			/* Check for commissie in a group */
 
@@ -680,7 +703,7 @@
 						(forum_acl.author_id = forum_group_member.group_id OR forum_acl.author_id = -1) AND
 						forum_group_member.author_type = ' . self::TYPE_COMMITTEE . ' AND (forum_group_member.author_id = ' . intval($committee_id) . ' OR forum_group_member.author_id = -1)');
 			
-			return $num > 0;
+			return new PermissionStatus($num > 0, __FUNCTION__, sprintf('a group of which the committee %d is a member has permission', $committee_id));
 		}
 
 		/**
@@ -697,12 +720,15 @@
 		  */
 		protected function check_acl_commissies(DataIterForum $forum, $acl, IdentityProvider $identity)
 		{
-			foreach ($identity->get('committees', []) as $committee) {
-				if ($this->check_acl_commissie($forum, $acl, $committee))
-					return true;
+			foreach ($identity->get('committees', []) as $committee)
+			{
+				$access = $this->check_acl_commissie($forum, $acl, $committee);
+				
+				if ($access->granted())
+					return $access;
 			}
 			
-			return false;
+			return new PermissionStatus(false, __FUNCTION__, 'none of the committees of this member has access');
 		}
 		
 		/**
@@ -723,9 +749,9 @@
 				: '';
 
 			// Todo: seriously check this or rewrite it to be better readable DNF!
-			$num = $this->db->query_value('
+			$group_ids = $this->db->query_column('
 					SELECT 
-						COUNT(*)
+						DISTINCT forum_group_member.group_id
 					FROM 
 						forum_acl,
 						forum_group_member
@@ -735,8 +761,11 @@
 						forum_acl.author_type = ' . self::TYPE_GROUP . ' AND
 						forum_acl.author_id = forum_group_member.author_id AND
 						(forum_group_member.author_type = ' . self::TYPE_EVERYONE . ' ' . $sql_user_specific . ' )');
-			
-			return $num > 0;
+
+			return new PermissionStatus(count($group_ids) > 0, __FUNCTION__, sprintf($sql_user_specific == '' 
+				? 'the group(s) %s of which TYPE_EVERYONE is member has permission'
+				: 'the group(s) %s of which TYPE_EVERYONE is member or the logged in identity is a member has permission',
+					implode(', ', $group_ids)));
 		}
 		
 		/**
@@ -745,9 +774,11 @@
 		  *
 		  * @result the default permission bitmask
 		  */
-		public function get_default_acl()
+		public function get_default_acl(IdentityProvider $identity)
 		{
-			return self::ACL_READ | self::ACL_WRITE | self::ACL_REPLY;
+			return $identity->member() !== null
+				? (self::ACL_READ | self::ACL_WRITE | self::ACL_REPLY)
+				: 0;
 		}
 		
 		/**
@@ -775,7 +806,7 @@
 			
 			// No specific policies? Then use the default
 			if (!$num)
-				return $acl & $this->get_default_acl();
+				return new PermissionStatus($acl & $this->get_default_acl($identity), __FUNCTION__, 'the default member acl status has permission');
 
 			// Check permissions for everyone (type == -1) and member (type == 1 AND uid = member)
 			$sql_where = $identity->member() !== null
@@ -793,7 +824,7 @@
 						' . $sql_where);
 			
 			// Permission granted
-			return $num > 0;
+			return new PermissionStatus($num > 0, __FUNCTION__, 'the forum has permissions which allow access for ' . $sql_where);
 		}
 
 		/**
@@ -811,12 +842,25 @@
 			$key = sprintf('%d|%d|%d', $forum['id'], $acl, $identity->get('id'));
 
 			if (!array_key_exists($key, $this->_acl_cache)) {
-				$this->_acl_cache[$key] = $this->check_acl_member($forum, $acl, $identity)
-					|| $this->check_acl_commissies($forum, $acl, $identity)
-					|| $this->check_acl_group($forum, $acl, $identity);
+				$permission = $this->check_acl_member($forum, $acl, $identity);
+
+				if (!$permission->granted())
+					$permission = $this->check_acl_commissies($forum, $acl, $identity);
+
+				if (!$permission->granted())
+					$permission = $this->check_acl_group($forum, $acl, $identity);
+
+				$this->_acl_cache[$key] = $permission;
 			}
 
-			return $this->_acl_cache[$key];
+			// if ($this->_acl_cache[$key]->granted())
+			// 	printf('%s is %s: %s (%s)<br>',
+			// 		$key,
+			// 		$this->_acl_cache[$key]->granted() ? 'granted' : 'denied',
+			// 		$this->_acl_cache[$key]->reason,
+			// 		$this->_acl_cache[$key]->function);
+
+			return $this->_acl_cache[$key]->granted();
 		}
 		
 		/**
