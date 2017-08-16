@@ -14,6 +14,9 @@ class MailinglistTest extends TestCase
 	{
 		$result = $this->simulateEmail('testcase@example.com', 'does-not-exist@svcover.nl', 'Hello world!', ['Subject: test-mail']);
 
+		if ($result->exit_code == 255)
+			$result->write();
+
 		$this->assertEquals(103, $result->exit_code, 'Expect the script to return the error code RETURN_COULD_NOT_DETERMINE_LIST');
 
 		$this->assertCount(1, $result->messages, 'Expect it also to send a return message to the sender');
