@@ -1,5 +1,38 @@
 <?php namespace Cover\email;
 
+class ParseException extends \RuntimeException
+{
+	protected $bodyLine;
+
+	public function __construct($line, $body = null, $previous = null)
+	{
+		parent::__construct(self::formatMessage($line, $body), 0, $previous);
+	}
+
+	static private function formatMessage($line, $email = null)
+	{
+		$body = "Parse error on line $line";
+		
+		if ($email !== null) {
+			$offset = max(0, $line - 5);
+			$lines = explode("\n", $email);
+			$lines = array_slice($lines, $offset, 11);
+				
+			for ($n = 0; $n < count($lines); ++$n)
+				$lines[$n] = sprintf('%d: %s', $offset + $n + 1, $lines[$n]);
+
+			$body .= "\nContext: " . implode("\n", $lines);
+		}
+
+		return $body;
+	}
+
+	public function withMessage($message)
+	{
+		return new self($this->bodyLine, $message, $this);
+	}
+}
+
 class PeakableStream
 {
 	protected $stream;
@@ -393,7 +426,11 @@ class MessagePart
 		fwrite($tmp_stream, $raw_message);
 		rewind($tmp_stream);
 
-		return self::parse_stream(new PeakableStream($tmp_stream));
+		try {
+			return self::parse_stream(new PeakableStream($tmp_stream));
+		} catch (ParseException $e) {
+			throw $e->withMessage($raw_message);
+		}
 	}
 
 	/**
@@ -468,7 +505,7 @@ class MessagePart
 			}
 
 			else
-				throw new \RuntimeException('Could not parse ' . $stream->lineNumber());
+				throw new ParseException($stream->lineNumber());
 		}
 	}
 
