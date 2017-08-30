@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0\n"
+"X-Generator: Poedit 2.0.3\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -2200,7 +2200,7 @@ msgstr "Date of purchase"
 #: themes/default/views/profiel/kast_tab_exception.twig:8
 msgid "Sorry, je KAST aankoophistorie kon op het moment niet worden opgehaald."
 msgstr ""
-"Our appoligies, we can't fetch the KAST purchase history at this moment."
+"Our apologies, we can't fetch the KAST purchase history at this moment."
 
 #: themes/default/views/profiel/mailing_lists_tab.twig:21
 #: themes/default/views/profiel/mailing_lists_tab.twig:29
