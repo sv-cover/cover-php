@@ -34,7 +34,14 @@
 				'street_name' => [function($x) { return preg_match('/\d+/', $x); }],
 				'postal_code' => [function($x) { return preg_match('/^\d{4}\s*[a-z]{2}$/i', $x); }],
 				'place' => [$non_empty],
-				'phone_number' => [function($x) { return strlen($x) == 0 || preg_match('/^\+?\d+$/', $x); }, function($x) { return str_replace(' ', '', $x); }],
+				'phone_number' => [
+					function($x) {
+						return preg_match('/^\+?\d+$/', $x);
+					},
+					function($x) {
+						return str_replace(' ', '', $x);
+					}
+				],
 				'email_address' => [function($x) {
 					// Check whether the email address is something looking like an email address
 					return preg_match('/@\w+\.\w+/', $x);
