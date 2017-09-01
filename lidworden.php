@@ -247,7 +247,7 @@
 				SELECT
 					confirmation_code,
 					data,
-					registered_on
+					registerd_on as registered_on
 				FROM
 					registrations
 				ORDER BY
