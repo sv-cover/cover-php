@@ -281,12 +281,19 @@ class DatabasePDO
 
 	/**
 	  * Escape a string so it can be used in queries
-	  * @s the string to be escaped
+	  * @s the string to be escaped (not surrounded by quotes)
 	  *
 	  * @result the escaped string
 	  */
 	function escape_string($s) {
 		return substr($this->resource->quote($s), 1, -1);
+	}
+
+	/**
+	 * Quote the string (including surrounding quotes)
+	 */
+	public function quote($s) {
+		return $this->resource->quote($s);
 	}
 	
 	/**
