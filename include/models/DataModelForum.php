@@ -1816,12 +1816,8 @@
 			return $this->_delete('forum_header', $iter);
 		}
 
-		public function search($query, $limit = null)
+		public function search($search_query, $limit = null)
 		{
-			$keywords = parse_search_query_for_text($query);
-
-			$text_query = implode(' & ', $keywords);
-
 			$query = "
 				WITH
 					-- Find all messages that match our search query
@@ -1832,9 +1828,9 @@
 							ts_rank_cd(to_tsvector(message), query) as search_relevance
 						FROM
 							forum_messages,
-							to_tsquery('" . $this->db->escape_string($text_query) . "') query
+							plainto_tsquery(:query) query
 						WHERE
-							to_tsvector(message) @@ query	
+							to_tsvector(message) @@ query
 					),
 					-- Limit those found message to only the most relevant per topic
 					distinct_search_results AS (
@@ -1882,9 +1878,11 @@
 			if ($limit !== null)
 				$query .= sprintf(" LIMIT %d", $limit);
 
-			$rows = $this->db->query($query);
+			$rows = $this->db->query($query, false, [':query' => $search_query]);
 
 			$iters = $this->_rows_to_iters($rows, 'DataIterForumMessage');
+
+			$keywords = parse_search_query($search_query);
 
 			$pattern = sprintf('/(%s)/i', implode('|', array_map(function($p) { return preg_quote($p, '/'); }, $keywords)));
 
