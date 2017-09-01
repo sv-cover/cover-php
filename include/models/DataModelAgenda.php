@@ -159,30 +159,47 @@
 
 		public function search($keywords, $limit = null)
 		{
-			$ts_query = implode(' & ', parse_search_query($keywords));
+			$fields = implode(', ', array_map(function ($field) { return "a.$field"; }, call_user_func([$this->dataiter, 'fields'])));
 
 			$query = "
+				WITH
+					search_items AS (
+						SELECT
+							id,
+							setweight(to_tsvector(kop), 'A') || setweight(to_tsvector(beschrijving), 'B') body
+						FROM
+							{$this->table}
+						WHERE
+							replacement_for IS NULL
+							" . (!$this->include_private ? ' AND private = 0 ' : '') . "
+					),
+					matching_items AS (
+						SELECT
+							id,
+							body,
+							ts_rank_cd(body, query) as search_relevance
+						FROM
+							search_items,
+							plainto_tsquery('english', :keywords) query
+						WHERE
+							body @@ query
+					)
 				SELECT
-					{$this->table}.*,
-					commissies.naam as committee__naam,
-					commissies.page_id as committee__page_id,
-					ts_rank_cd(
-						setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B'),
-						to_tsquery('" . $this->db->escape_string($ts_query) . "')
-					) as search_relevance
+					a.*,
+					c.naam as committee__naam,
+					c.page_id as committee__page_id,
+					m.search_relevance
 				FROM
-					agenda
-				LEFT JOIN commissies ON
-					commissies.id = agenda.committee_id
-				WHERE
-					agenda.replacement_for IS NULL
-					" . (!$this->include_private ? ' AND agenda.private = 0 ' : '') . "
-					AND (setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B')) @@ to_tsquery('" . $this->db->escape_string($ts_query) . "')
+					matching_items m
+				LEFT JOIN {$this->table} a ON
+					a.id = m.id
+				LEFT JOIN commissies c ON
+					c.id = a.committee_id
 				ORDER BY
-					agenda.van DESC
+					a.van DESC
 				" . ($limit !== null ? " LIMIT " . intval($limit) : "");
 
-			$rows = $this->db->query($query);
+			$rows = $this->db->query($query, false, [':keywords' => $keywords]);
 
 			return $this->_rows_to_iters($rows);
 		}
