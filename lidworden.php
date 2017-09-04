@@ -235,7 +235,9 @@
 
 		public function run_pending()
 		{
-			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_EASY))
 				throw new UnauthorizedException();
 
 			$db = get_db();
