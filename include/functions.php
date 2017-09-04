@@ -467,11 +467,11 @@
 		
 		return format_string($format, array(
 			'from_dayname' => $days[$van->format('w')],
-			'from_day' => $van->format('d'),
+			'from_day' => $van->format('j'),
 			'from_month' => $months[$van->format('n')],
 			'from_time' => agenda_time_for_display($iter, 'van'),
 			'till_dayname' => $days[$tot->format('w')],
-			'till_day' => $tot->format('d'),
+			'till_day' => $tot->format('j'),
 			'till_month' => $months[$tot->format('n')],
 			'till_time' => agenda_time_for_display($iter, 'tot')
 		));

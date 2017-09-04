@@ -98,16 +98,17 @@
 		switch (i18n_get_locale())
 		{
 			case 'nl_NL':
-				if ($n >= 20)
-					return sprintf('%dste', $n);
-				else
-					return sprintf('%de', $n);
+				return sprintf('%de', $n);
 
 			case 'en_US':
-				if ($n == 1)
+				if ($n >= 11 && $n <= 13)
+					return sprintf('%dth', $n);
+				elseif ($n % 10 == 1)
 					return sprintf('%dst', $n);
-				elseif ($n == 2)
+				elseif ($n % 10 == 2)
 					return sprintf('%dnd', $n);
+				elseif ($n % 10 == 3)
+					return sprintf('%drd', $n);
 				else
 					return sprintf('%dth', $n);
 
