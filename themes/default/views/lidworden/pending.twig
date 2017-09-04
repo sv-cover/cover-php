@@ -3,10 +3,13 @@
 {% block title __('Hangende aanmeldingen') ~ ' ::  '~ parent() %}
 
 {% block content %}
-<div class="messageBox">
-	{% if message %}
+{% if message %}
+	<div class="warning-section">
 		<p>{{ message }}</p>
-	{% endif %}
+	</div>
+{% endif %}
+
+<div class="messageBox">
 	<p>After a new student signs up for Cover through the online registration form, they have to confirm their email address. Until they clicked the link in the confirmation email that was send when they finished filling in the form, their registration is stuck here.</p>
 	<p>Unfortunately, not everyone confirms their email address, and some don't even receive the initial confirmation mail. That is why this page exists. Here you can take one of the following steps:</p>
 	<p><strong>Before you do any of these steps, please confirm that the student didn't already finish their registration at a different moment by checking <a href="https://secretary.svcover.nl/" target="_blank">Secretary</a>.</strong></p>
@@ -19,6 +22,7 @@
 		</ol>
 		<li>Delete a registration when a the person is already a member (e.g. they finished their registration at a different moment)</li>
 		<li>Delete duplicate registrations (note that the links in the confirmation emails for those registrations then won't work any more)</li>
+		<li>Force push the registration to Secretary. This will skip the whole email confirmation procedure.</li>
 	</ol>
 </div>
 
@@ -53,16 +57,27 @@
 							{{ view.search_link_for_email_address(row)|raw }}
 						</td>
 						<td>{{ row.registered_on|date }}</td>
-						<td><input type="text" value="{{ 'https://www.svcover.nl/lidworden.php?confirmation_code=%s'|format(row.confirmation_code|e('url'))|e('html_attr') }}"></td>
+						{% if row.confirmed_on %}
+							<td>Confirmed<sup>2</sup></td>
+						{% else %}
+							<td><input type="text" value="{{ 'https://www.svcover.nl/lidworden.php?confirmation_code=%s'|format(row.confirmation_code|e('url'))|e('html_attr') }}"></td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 		<div class="controls">
 			<button name="action" value="resend" class="button">Resend confirmation mail</button>
+			or <button name="action" value="push" class="button">Push to Secretary<sup>1</sup></button>
 			or <button name="action" value="delete" class="button">Cancel registrations</button>
-			of all the selected names
+			of the selected names
 		</div>
 	</form>
+</div>
+
+<div class="messageBox">
+	<p><sup>1</sup>: This will push the registrations to Secretary even when they have not been confirmed yet by clicking on the confirmation link. Normally, this happens automatically as soon as a registration is confirmed.</p>
+	<p><sup>2</sup>: The registration has been confirmed and sent to administratie@svcover.nl, but could not yet be added to Secretary due to an error. You can try again by using the <em>Push to secretary</em> option, or ask the AC/DCee to fix their shit.</p>
+	</dl>
 </div>
 {% endblock %}

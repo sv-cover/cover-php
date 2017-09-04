@@ -138,7 +138,7 @@
 		{
 			$db = get_db();
 
-			$data_str = $db->query_value(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+			$data_str = $db->query_value(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL", $db->escape_string($confirmation_code)));
 
 			if ($data_str === null)
 				throw new InvalidArgumentException('Could not find registration code');
@@ -155,42 +155,26 @@
 
 		protected function _process_confirm($confirmation_code)
 		{
-			$db = get_db();
-
-			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL",
-				$db->escape_string($confirmation_code)));
-
-			if (!$row)
-				die(__('We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan te melden, of het bestuur (board@svcover.nl) even mailen.'));
-
-			$data = json_decode($row['data'], true);
-
-			$mail = parse_email('lidworden.txt', $data);
-
-			$name = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
-
-			mail('administratie@svcover.nl', 'Lidaanvraag ' . $name, $mail,
-				implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
-
-			$db->update('registrations',
+			// First, send a mail to administratie@svcover.nl for archiving purposes
+			$this->_process_confirm_mail($confirmation_code);
+			
+			// If that worked out right, we can mark this registration as confirmed.
+			get_db()->update('registrations',
 				['confirmed_on' => date('Y-m-d H:i:s')],
-				sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+				sprintf("confirmation_code = '%s'", get_db()->escape_string($confirmation_code)));
 
 			try
 			{
-				$response = get_secretary()->createPerson($data);
-
-				mail('secretaris@svcover.nl',
-					'Lidaanvraag',
-					"Er is een nieuwe lidaanvraag ingediend.\n"
-					. "Je kan de aanvraag bevestigen op " . $response->url . "\n"
-					. "De gegevens zijn voor de zekerheid ook te vinden op administratie@svcover.nl.",
-					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
-
-				$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+				// Try to add the member to Secretary. If this works out correctly
+				// the registration will be deleted (and Secretary will add the
+				// member to the leden table through the API).
+				$this->_process_confirm_secretary($confirmation_code);
 			}
 			catch (Exception $e)
 			{
+				// Well, that didn't work out. Report the error to everybody.
+				// The registration will be marked as confirmed, but not deleted
+				// so one can try again later when Secretary is available again.
 				sentry_report_exception($e);
 
 				mail('secretaris@svcover.nl',
@@ -212,6 +196,43 @@
 			return $this->view->redirect('lidworden.php?confirmed=true');
 		}
 
+		protected function _process_confirm_mail($confirmation_code)
+		{
+			$db = get_db();
+
+			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL",
+				$db->escape_string($confirmation_code)));
+
+			if (!$row)
+				throw new RuntimeException('Cannot find registration info');
+
+			$data = json_decode($row['data'], true);
+
+			$mail = parse_email('lidworden.txt', $data);
+
+			$name = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
+
+			mail('administratie@svcover.nl', 'Lidaanvraag ' . $name, $mail,
+				implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+		}
+
+		protected function _process_confirm_secretary($confirmation_code)
+		{
+			$db = get_db();
+
+			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'",
+				$db->escape_string($confirmation_code)));
+
+			if (!$row)
+				throw new RuntimeException('Cannot find registration info');
+
+			$data = json_decode($row['data'], true);
+
+			$response = get_secretary()->createPerson($data);
+
+			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+		}
+
 		public function run_pending()
 		{
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
@@ -225,6 +246,21 @@
 			{
 				switch (isset($_POST['action']) ? $_POST['action'] : null)
 				{
+					case 'push':
+						$success = 0;
+						foreach ($_POST['confirmation_code'] as $confirmation_code) {
+							try {
+								$this->_process_confirm_secretary($confirmation_code);
+								$success++;
+							} catch (Exception $e) {
+								sentry_report_exception($e);
+							}
+						}
+						$message = sprintf('Added %d out of %d registrations to Secretary',
+							$success,
+							count($_POST['confirmation_code']));
+						break;
+
 					case 'resend':
 						foreach ($_POST['confirmation_code'] as $confirmation_code)
 							$this->_send_confirmation_mail($confirmation_code);
@@ -248,7 +284,8 @@
 				SELECT
 					confirmation_code,
 					data,
-					registerd_on as registered_on
+					registerd_on as registered_on,
+					confirmed_on
 				FROM
 					registrations
 				ORDER BY
