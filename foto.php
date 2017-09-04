@@ -110,8 +110,13 @@
 
 		protected function _generate_thumbnail(DataIterMember $member, $format, $width)
 		{
+			$photo = $this->model->get_photo_stream($member);
+			
+			if (!$photo)
+				throw new NotFoundException('Member has no photo');
+
 			$imagick = new Imagick();
-			$imagick->readImageBlob($this->model->get_photo($member));
+			$imagick->readImageFile($photo['foto']);
 			$height = 0;
 			
 			if ($format == self::FORMAT_SQUARE)
@@ -250,15 +255,15 @@
 			if (!$this->model->has_picture($member))
 				return new NotFoundException('Member has no photo');
 
-			$photo = $this->model->get_photo($member);
+			$photo = $this->model->get_photo_stream($member);
 
 			header('Pragma: public');
 			header('Cache-Control: max-age=86400');
 			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 			header('Content-Type: image/jpeg');
-			header('Content-Length: ' . strlen($photo));
+			header('Content-Length: ' . $photo['filesize']);
 
-			echo $photo;
+			fpassthru($photo['foto']);
 		}
 		
 		protected function run_impl()

@@ -152,13 +152,13 @@
 					continue;
 
 				// Skip members that don't have a photo
-				if (($data = $this->model->get_photo($iter)) === null)
+				if (($data = $this->model->get_photo_stream($iter)) === null)
 					continue;
 
 				$metadata = ['time' => $this->model->get_photo_mtime($iter)];
 
 				// And finally add the photo to the actual stream
-				$zip->addFile(sprintf('%d.jpg', $iter->get_id()), $data, $metadata);
+				$zip->addFileFromStream(sprintf('%d.jpg', $iter->get_id()), $data['foto'], $metadata);
 			}
 
 			$zip->finish();

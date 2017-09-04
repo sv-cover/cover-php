@@ -293,8 +293,10 @@ class ProfielView extends View
 		if ($is_visible('foto') && $this->controller->model()->has_picture($member)) {
 			$fout = null;
 
+			$photo = $this->controller->model()->get_photo_stream($member);
+
 			$imagick = new \Imagick();
-			$imagick->readImageBlob($this->controller->model()->get_photo($member));
+			$imagick->readImageFile($photo['foto']);
 			
 			$y = 0.05 * $imagick->getImageHeight();
 			$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
