@@ -60,20 +60,15 @@
 				'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
 				'iban' => [
 					function($x) {
-						// If it looks like IBAN, validate it as IBAN. This allows us to still pass in info like "I don't have any yet"
-						$stripped = preg_replace('/\s+|\./', '', strtoupper($x));
-						return preg_match('/^[A-Z]{2}\d{2,}/', $stripped)
-							? \IsoCodes\Iban::validate($stripped)
-							: true;
+						return \IsoCodes\Iban::validate($x);
 					},
 					function($x) {
-						$stripped = preg_replace('/\s+|\./', '', strtoupper($x));
-						return \IsoCodes\Iban::validate($stripped) ? $stripped : $x;
+						return preg_replace('/[^A-Z0-9]/u', '', strtoupper($x));
 					}
 				],
 				'bic' => [
 					function($x) { return strlen($x) === 0 || \IsoCodes\SwiftBic::validate($x);},
-					function($x) { return trim($x, ' '); }
+					function($x) { return trim($x); }
 				],
 				'membership_study_name' => [],
 				'membership_study_phase' => [function($x) { return in_array($x, ['b', 'm']); }],
