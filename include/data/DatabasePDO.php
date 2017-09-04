@@ -249,6 +249,9 @@ class DatabasePDO
 		if (count($values) == 0)
 			return true;
 
+		if ($condition && !is_string($condition))
+			throw new InvalidArgumentException('Condition parameter needs to be a string');
+
 		$query = 'UPDATE "' . $table . '" SET ';
 		$keys = array_keys($values);
 		$data = [];

@@ -157,7 +157,7 @@
 		{
 			$db = get_db();
 
-			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'",
+			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL",
 				$db->escape_string($confirmation_code)));
 
 			if (!$row)
@@ -170,7 +170,11 @@
 			$name = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
 
 			mail('administratie@svcover.nl', 'Lidaanvraag ' . $name, $mail,
-				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+				implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+
+			$db->update('registrations',
+				['confirmed_on' => date('Y-m-d H:i:s')],
+				sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 
 			try
 			{
@@ -181,16 +185,20 @@
 					"Er is een nieuwe lidaanvraag ingediend.\n"
 					. "Je kan de aanvraag bevestigen op " . $response->url . "\n"
 					. "De gegevens zijn voor de zekerheid ook te vinden op administratie@svcover.nl.",
-					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+
+				$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 			}
 			catch (Exception $e)
 			{
+				sentry_report_exception($e);
+
 				mail('secretaris@svcover.nl',
 					'Lidaanvraag (niet verwerkt in Secretary)',
 					"Er is een nieuwe lidaanvraag ingediend.\n"
 					. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
 					. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
-					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
 
 				mail('webcie@svcover.nl',
 					'Fout tijdens lidaanvraag',
@@ -198,10 +206,8 @@
 					.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
 					. $e->getMessage() . "\n"
 					. $e->getTraceAsString(),
-					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
 			}
-
-			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 
 			return $this->view->redirect('lidworden.php?confirmed=true');
 		}
