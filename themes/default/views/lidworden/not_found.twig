@@ -1,0 +1,9 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<h1>{{ __('E-mailadres bevestigen') }}</h1>
+<div class="messageBox">
+	<p>{{ __('Deze bevestingslink is niet (meer) geldig. Waarschijnlijk is je account al geactiveerd.') }}</p>
+	<p>{{ __('Als het goed is heb je een introductiemail gekregen met onderaan een link om een wachtwoord in te stellen. Mocht je de mail niet kunnen vinden, dan kan je je <a href="%s">wachtwoord resetten</a>.')|format('wachtwoordvergeten.php')|raw }}</p>
+</div>
+{% endblock %}

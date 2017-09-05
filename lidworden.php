@@ -141,7 +141,7 @@
 			$data_str = $db->query_value(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL", $db->escape_string($confirmation_code)));
 
 			if ($data_str === null)
-				throw new InvalidArgumentException('Could not find registration code');
+				throw new NotFoundException('Could not find registration code');
 
 			$data = json_decode($data_str, true);
 
@@ -155,45 +155,49 @@
 
 		protected function _process_confirm($confirmation_code)
 		{
-			// First, send a mail to administratie@svcover.nl for archiving purposes
-			$this->_process_confirm_mail($confirmation_code);
-			
-			// If that worked out right, we can mark this registration as confirmed.
-			get_db()->update('registrations',
-				['confirmed_on' => date('Y-m-d H:i:s')],
-				sprintf("confirmation_code = '%s'", get_db()->escape_string($confirmation_code)));
+			try {
+				// First, send a mail to administratie@svcover.nl for archiving purposes
+				$this->_process_confirm_mail($confirmation_code);
+				
+				// If that worked out right, we can mark this registration as confirmed.
+				get_db()->update('registrations',
+					['confirmed_on' => date('Y-m-d H:i:s')],
+					sprintf("confirmation_code = '%s'", get_db()->escape_string($confirmation_code)));
 
-			try
-			{
-				// Try to add the member to Secretary. If this works out correctly
-				// the registration will be deleted (and Secretary will add the
-				// member to the leden table through the API).
-				$this->_process_confirm_secretary($confirmation_code);
+				try
+				{
+					// Try to add the member to Secretary. If this works out correctly
+					// the registration will be deleted (and Secretary will add the
+					// member to the leden table through the API).
+					$this->_process_confirm_secretary($confirmation_code);
+				}
+				catch (Exception $e)
+				{
+					// Well, that didn't work out. Report the error to everybody.
+					// The registration will be marked as confirmed, but not deleted
+					// so one can try again later when Secretary is available again.
+					sentry_report_exception($e);
+
+					mail('secretaris@svcover.nl',
+						'Lidaanvraag (niet verwerkt in Secretary)',
+						"Er is een nieuwe lidaanvraag ingediend.\n"
+						. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
+						. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
+						implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+
+					mail('webcie@svcover.nl',
+						'Fout tijdens lidaanvraag',
+						'Er ging iets fout tijdens een lidaanvraag.'
+						.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
+						. $e->getMessage() . "\n"
+						. $e->getTraceAsString(),
+						implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+				}
+
+				return $this->view->redirect('lidworden.php?confirmed=true');
+			} catch (NotFoundException $e) {
+				return $this->view->render('not_found.twig');
 			}
-			catch (Exception $e)
-			{
-				// Well, that didn't work out. Report the error to everybody.
-				// The registration will be marked as confirmed, but not deleted
-				// so one can try again later when Secretary is available again.
-				sentry_report_exception($e);
-
-				mail('secretaris@svcover.nl',
-					'Lidaanvraag (niet verwerkt in Secretary)',
-					"Er is een nieuwe lidaanvraag ingediend.\n"
-					. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
-					. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
-					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
-
-				mail('webcie@svcover.nl',
-					'Fout tijdens lidaanvraag',
-					'Er ging iets fout tijdens een lidaanvraag.'
-					.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
-					. $e->getMessage() . "\n"
-					. $e->getTraceAsString(),
-					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
-			}
-
-			return $this->view->redirect('lidworden.php?confirmed=true');
 		}
 
 		protected function _process_confirm_mail($confirmation_code)
@@ -204,7 +208,7 @@
 				$db->escape_string($confirmation_code)));
 
 			if (!$row)
-				throw new RuntimeException('Cannot find registration info');
+				throw new NotFoundException('Could not find registration code');
 
 			$data = json_decode($row['data'], true);
 
@@ -224,7 +228,7 @@
 				$db->escape_string($confirmation_code)));
 
 			if (!$row)
-				throw new RuntimeException('Cannot find registration info');
+				throw new NotFoundException('Could not find registration code');
 
 			$data = json_decode($row['data'], true);
 

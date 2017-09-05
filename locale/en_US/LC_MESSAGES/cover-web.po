@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-08-04 12:31+0200\n"
+"POT-Creation-Date: 2017-09-05 11:30+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -99,7 +99,7 @@ msgstr ""
 #: themes/default/views/agenda/moderate.twig:3
 #: themes/default/views/agenda/moderate.twig:6
 #: themes/default/views/agenda/subscribe.twig:3
-#: themes/default/views/_layout/layout.php:33
+#: themes/default/views/_layout/layout.php:43
 #: themes/default/views/agenda/agenda.php:119
 msgid "Agenda"
 msgstr "Calendar"
@@ -208,7 +208,7 @@ msgstr "Join now!"
 
 #: themes/default/views/actieveleden/index.twig:3
 #: themes/default/views/actieveleden/index.twig:6
-#: themes/default/views/_layout/layout.php:38
+#: themes/default/views/_layout/layout.php:48
 msgid "Actieve leden"
 msgstr "Active Members"
 
@@ -232,7 +232,7 @@ msgstr "ID"
 #: themes/default/views/fotoboek/competition.twig:15
 #: themes/default/views/fotoboek/competition.twig:36
 #: themes/default/views/lidworden/lidworden.twig:20
-#: themes/default/views/lidworden/pending.twig:37
+#: themes/default/views/lidworden/pending.twig:41
 #: themes/default/views/mailinglijsten/form.twig:35
 #: themes/default/views/mailinglijsten/index.twig:18
 #: themes/default/views/mailinglijsten/single.twig:37
@@ -242,7 +242,7 @@ msgid "Naam"
 msgstr "Name"
 
 #: themes/default/views/actieveleden/index.twig:14
-#: themes/default/views/lidworden/pending.twig:38
+#: themes/default/views/lidworden/pending.twig:42
 msgid "Email"
 msgstr "Email"
 
@@ -294,7 +294,7 @@ msgstr "Head"
 #: themes/default/views/committeebattle/index.twig:20
 #: themes/default/views/mailinglijsten/form.twig:30
 #: themes/default/views/search/_single_committee.twig:8
-#: include/models/DataModelForum.php:1306
+#: include/models/DataModelForum.php:1350
 #: themes/default/views/commissies/commissies.php:71
 msgid "Commissie"
 msgstr "Committee"
@@ -469,6 +469,7 @@ msgid "Gaat niet"
 msgstr "Not going"
 
 #: themes/default/views/agenda/single.twig:73
+#: themes/default/views/profiel/_facebook.phtml:22
 msgid "Koppel Facebook"
 msgstr "Connect to Facebook"
 
@@ -519,7 +520,7 @@ msgstr "That is why you need to log in."
 
 #: themes/default/views/almanak/index.twig:3
 #: themes/default/views/almanak/index.twig:6
-#: themes/default/views/_layout/layout.php:106
+#: themes/default/views/_layout/layout.php:101
 msgid "Almanak"
 msgstr "Almanac"
 
@@ -537,7 +538,7 @@ msgstr "Visibility"
 #: themes/default/views/almanak/index.twig:22
 #: themes/default/views/commissies/form.twig:35
 #: themes/default/views/search/_single_member.twig:3
-#: include/models/DataModelForum.php:1303
+#: include/models/DataModelForum.php:1347
 #: include/models/DataModelMember.php:592
 #: themes/default/views/profiel/profiel.php:385
 msgid "Lid"
@@ -741,7 +742,7 @@ msgstr "Add a new board..."
 #: themes/default/views/boeken/go_to_log_in.twig:3
 #: themes/default/views/boeken/go_to_log_in.twig:6
 #: themes/default/views/boeken/go_to_webshop.twig:3
-#: themes/default/views/_layout/layout.php:141
+#: themes/default/views/_layout/layout.php:136
 msgid "Boeken bestellen"
 msgstr "Order books"
 
@@ -761,7 +762,7 @@ msgstr "E-mail the %s at %s"
 #: themes/default/views/commissies/_leden.twig:4
 #: themes/default/views/committeebattle/form.twig:14
 #: themes/default/views/profiel/privacy_tab.twig:17
-#: themes/default/views/_layout/layout.php:104
+#: themes/default/views/_layout/layout.php:99
 msgid "Leden"
 msgstr "Members"
 
@@ -894,7 +895,7 @@ msgstr "Delete working group"
 #: themes/default/views/committeebattle/form.twig:19
 #: themes/default/views/mailinglijsten/single.twig:78
 #: themes/default/views/sessions/overrides.twig:20
-#: themes/default/views/_layout/layout.php:78
+#: themes/default/views/_layout/layout.php:73
 msgid "Commissies"
 msgstr "Committees"
 
@@ -916,7 +917,7 @@ msgstr "Modify committee page"
 
 #: themes/default/views/commissies/working_groups.twig:3
 #: themes/default/views/commissies/working_groups.twig:10
-#: themes/default/views/_layout/layout.php:82
+#: themes/default/views/_layout/layout.php:77
 msgid "Werkgroepen"
 msgstr "Working groups"
 
@@ -1050,7 +1051,7 @@ msgstr "Back to thread"
 #: themes/default/views/forum/reply_form.twig:4
 #: themes/default/views/forum/thread.twig:6
 #: themes/default/views/forum/thread_form.twig:4
-#: themes/default/views/_layout/layout.php:127
+#: themes/default/views/_layout/layout.php:122
 msgid "Forum"
 msgstr "Forum"
 
@@ -1086,9 +1087,9 @@ msgstr "Page"
 #: themes/default/views/forum/thread.twig:69
 #: themes/default/views/fotoboek/single.twig:111
 #: themes/default/views/mailinglijsten/single.twig:52 include/member.php:101
-#: include/models/DataModelForum.php:1176
-#: include/models/DataModelForum.php:1286
-#: include/models/DataModelForum.php:1312
+#: include/models/DataModelForum.php:1220
+#: include/models/DataModelForum.php:1330
+#: include/models/DataModelForum.php:1356
 #: include/models/DataModelMember.php:610
 msgid "Onbekend"
 msgstr "Unknown"
@@ -1547,6 +1548,7 @@ msgid "Bewerk introductie"
 msgstr "Modify introduction"
 
 #: themes/default/views/lidworden/confirmed.twig:4
+#: themes/default/views/lidworden/not_found.twig:4
 #: themes/default/views/profiel/confirm_email.twig:3
 #: themes/default/views/profiel/confirm_email.twig:6
 msgid "E-mailadres bevestigen"
@@ -1674,7 +1676,7 @@ msgid "Bijv. Groningen"
 msgstr "E.g. Groningen"
 
 #: themes/default/views/lidworden/lidworden.twig:67
-#: themes/default/views/_layout/layout.php:148
+#: themes/default/views/_layout/layout.php:143
 msgid "Contact"
 msgstr "Contact"
 
@@ -1699,7 +1701,7 @@ msgstr ""
 "processed after you have clicked the link."
 
 #: themes/default/views/lidworden/lidworden.twig:82
-#: themes/default/views/_layout/layout.php:136
+#: themes/default/views/_layout/layout.php:131
 msgid "Studie"
 msgstr "Study"
 
@@ -1822,17 +1824,36 @@ msgstr "Modify notes"
 msgid "Opmerkingen"
 msgstr "Notes"
 
+#: themes/default/views/lidworden/not_found.twig:6
+msgid ""
+"Deze bevestingslink is niet (meer) geldig. Waarschijnlijk is je account al "
+"geactiveerd."
+msgstr ""
+"Your confirmation link is no longer valid. Your account has probably already "
+"been activated."
+
+#: themes/default/views/lidworden/not_found.twig:7
+#, python-format
+msgid ""
+"Als het goed is heb je een introductiemail gekregen met onderaan een link om "
+"een wachtwoord in te stellen. Mocht je de mail niet kunnen vinden, dan kan "
+"je je <a href=\"%s\">wachtwoord resetten</a>."
+msgstr ""
+"By now you should have received a long and informative email about Cover, "
+"and at the bottom of that email there is a link to set your password. If you "
+"can't find the email, you can <a href=\"%s\">reset your password</a>."
+
 #: themes/default/views/lidworden/pending.twig:3
-#: themes/default/views/lidworden/pending.twig:25
-#: themes/default/views/_layout/layout.php:43
+#: themes/default/views/lidworden/pending.twig:29
+#: themes/default/views/_layout/layout.php:31
 msgid "Hangende aanmeldingen"
 msgstr "Pending registrations"
 
-#: themes/default/views/lidworden/pending.twig:39
+#: themes/default/views/lidworden/pending.twig:43
 msgid "Aangemeld op"
 msgstr "Registered on"
 
-#: themes/default/views/lidworden/pending.twig:40
+#: themes/default/views/lidworden/pending.twig:44
 msgid "Bevestigingslink"
 msgstr "Confirmation link"
 
@@ -2234,8 +2255,8 @@ msgid "Niemand"
 msgstr "Nobody"
 
 #: themes/default/views/profiel/privacy_tab.twig:18
-#: include/models/DataModelForum.php:1251
-#: include/models/DataModelForum.php:1300
+#: include/models/DataModelForum.php:1295
+#: include/models/DataModelForum.php:1344
 #: themes/default/views/announcements/announcements.php:29
 #: themes/default/views/mailinglijsten/mailinglijsten.php:31
 msgid "Iedereen"
@@ -2546,7 +2567,7 @@ msgstr "Modify key"
 
 #: themes/default/views/settings/index.twig:3
 #: themes/default/views/settings/index.twig:6
-#: themes/default/views/_layout/layout.php:60
+#: themes/default/views/_layout/layout.php:55
 msgid "Instellingen"
 msgstr "Settings"
 
@@ -2620,7 +2641,7 @@ msgstr "Add sticker to map"
 
 #: themes/default/views/stickers/index.twig:3
 #: themes/default/views/stickers/index.twig:14
-#: themes/default/views/_layout/layout.php:109
+#: themes/default/views/_layout/layout.php:104
 msgid "Stickerkaart"
 msgstr "Sticker map"
 
@@ -2718,7 +2739,7 @@ msgstr "Set password"
 
 #: themes/default/views/weblog/index.twig:3
 #: themes/default/views/weblog/index.twig:6
-#: themes/default/views/_layout/layout.php:98
+#: themes/default/views/_layout/layout.php:93
 msgid "Weblog"
 msgstr "Weblog"
 
@@ -3051,19 +3072,19 @@ msgstr "No name"
 msgid "Jij!"
 msgstr "You!"
 
-#: include/models/DataModelForum.php:1254
+#: include/models/DataModelForum.php:1298
 msgid "Alle leden"
 msgstr "All members"
 
-#: include/models/DataModelForum.php:1264
+#: include/models/DataModelForum.php:1308
 msgid "Alle commissies"
 msgstr "Committees"
 
-#: include/models/DataModelForum.php:1274
+#: include/models/DataModelForum.php:1318
 msgid "Alle groepen"
 msgstr "Groups"
 
-#: include/models/DataModelForum.php:1309
+#: include/models/DataModelForum.php:1353
 msgid "Groep"
 msgstr "Group"
 
@@ -3100,17 +3121,9 @@ msgstr "next"
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
-#: lidworden.php:150
+#: lidworden.php:152
 msgid "Lidmaatschapsaanvraag bevestigen"
 msgstr "Confirm membership application"
-
-#: lidworden.php:162
-msgid ""
-"We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan te "
-"melden, of het bestuur (board@svcover.nl) even mailen."
-msgstr ""
-"We couldn't locate your application. You might want to try the form again or "
-"contact the board of Cover at board@svcover.nl."
 
 #: locale/strings.php:9
 msgid "Voorzitter"
@@ -3271,7 +3284,7 @@ msgstr "forum topics"
 msgid "wiki-pagina's"
 msgstr "wiki pages"
 
-#: sessions.php:116
+#: sessions.php:125
 msgid "Verkeerde combinatie van e-mailadres en wachtwoord"
 msgstr "Wrong combination of e-mail address and password"
 
@@ -3287,91 +3300,87 @@ msgstr "Admin"
 msgid "Pagina maken"
 msgstr "Make a page"
 
-#: themes/default/views/_layout/layout.php:53
-msgid "Leden toevoegen"
-msgstr "Add a member"
-
-#: themes/default/views/_layout/layout.php:66
+#: themes/default/views/_layout/layout.php:61
 msgid "Vereniging"
 msgstr "Association"
 
-#: themes/default/views/_layout/layout.php:70
+#: themes/default/views/_layout/layout.php:65
 msgid "Bestuur"
 msgstr "Governing Board"
 
-#: themes/default/views/_layout/layout.php:74
+#: themes/default/views/_layout/layout.php:69
 msgid "Vorige besturen"
 msgstr "Former Boards"
 
-#: themes/default/views/_layout/layout.php:86
+#: themes/default/views/_layout/layout.php:81
 msgid "Zusterverenigingen"
 msgstr "Sister unions"
 
-#: themes/default/views/_layout/layout.php:90
+#: themes/default/views/_layout/layout.php:85
 msgid "Lid/donateur worden"
 msgstr "Become a member/donor"
 
-#: themes/default/views/_layout/layout.php:94
+#: themes/default/views/_layout/layout.php:89
 msgid "Documenten"
 msgstr "Documents"
 
-#: themes/default/views/_layout/layout.php:107
+#: themes/default/views/_layout/layout.php:102
 msgid "Wiki"
 msgstr "Wiki"
 
-#: themes/default/views/_layout/layout.php:108
+#: themes/default/views/_layout/layout.php:103
 msgid "Standaardocumenten"
 msgstr "Documents & Templates"
 
-#: themes/default/views/_layout/layout.php:110
+#: themes/default/views/_layout/layout.php:105
 msgid "Merchandise"
 msgstr "Merchandise"
 
-#: themes/default/views/_layout/layout.php:111
+#: themes/default/views/_layout/layout.php:106
 msgid "Microsoft Imagine"
 msgstr "Microsoft Imagine"
 
-#: themes/default/views/_layout/layout.php:116
+#: themes/default/views/_layout/layout.php:111
 msgid "Bedrijven"
 msgstr "Companies"
 
-#: themes/default/views/_layout/layout.php:118
+#: themes/default/views/_layout/layout.php:113
 msgid "Bedrijfsprofielen"
 msgstr "Company profiles"
 
-#: themes/default/views/_layout/layout.php:119
+#: themes/default/views/_layout/layout.php:114
 msgid "Vacatures"
 msgstr "Vacancies"
 
-#: themes/default/views/_layout/layout.php:120
+#: themes/default/views/_layout/layout.php:115
 msgid "Stages/afstudeerplaatsen"
 msgstr "Internships/Graduate programs"
 
-#: themes/default/views/_layout/layout.php:121
+#: themes/default/views/_layout/layout.php:116
 msgid "Sponsormogelijkheden"
 msgstr "Sponsorship opportunities"
 
-#: themes/default/views/_layout/layout.php:132
+#: themes/default/views/_layout/layout.php:127
 msgid "Foto's"
 msgstr "Photos"
 
-#: themes/default/views/_layout/layout.php:138
+#: themes/default/views/_layout/layout.php:133
 msgid "K.I."
 msgstr "A.I."
 
-#: themes/default/views/_layout/layout.php:139
+#: themes/default/views/_layout/layout.php:134
 msgid "Informatica"
 msgstr "Computing Science"
 
-#: themes/default/views/_layout/layout.php:140
+#: themes/default/views/_layout/layout.php:135
 msgid "Alumni"
 msgstr "Alumni"
 
-#: themes/default/views/_layout/layout.php:142
+#: themes/default/views/_layout/layout.php:137
 msgid "Info voor studenten"
 msgstr "Student info"
 
-#: themes/default/views/_layout/layout.php:143
+#: themes/default/views/_layout/layout.php:138
 msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
@@ -3451,6 +3460,7 @@ msgid "Privacy"
 msgstr "Privacy"
 
 #: themes/default/views/profiel/profiel.php:74
+#: themes/default/views/profiel/_facebook.phtml:20
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -3471,6 +3481,35 @@ msgstr "To be processed"
 msgid "Fotoboek met %s gemaakt op %s."
 msgstr "Photo album with %s made on %s."
 
+#: themes/default/views/profiel/_facebook.phtml:8
+#, php-format
+msgid "Je bent ingelogd als %s."
+msgstr "You are connected to the Facebook profile of %s."
+
+#: themes/default/views/profiel/_facebook.phtml:11
+msgid "Je bent niet langer gekoppeld aan Facebook."
+msgstr "Your profile is no longer connected to your Facebook account."
+
+#: themes/default/views/profiel/_facebook.phtml:17
+msgid "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."
+msgstr ""
+"Connect your Facebook account to see who of your friends are attending the "
+"activities."
+
+#: themes/default/views/profiel/_facebook.phtml:26
+msgid "Ontkoppel Facebook"
+msgstr "Disconnect Facebook"
+
+#~ msgid ""
+#~ "We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan "
+#~ "te melden, of het bestuur (board@svcover.nl) even mailen."
+#~ msgstr ""
+#~ "We couldn't locate your application. You might want to try the form again "
+#~ "or contact the board of Cover at board@svcover.nl."
+
+#~ msgid "Leden toevoegen"
+#~ msgstr "Add a member"
+
 #~ msgid "Interne naam"
 #~ msgstr "Internal name"
 
@@ -3482,21 +3521,6 @@ msgstr "Photo album with %s made on %s."
 #~ "You only want to change the internal committee name if you have a damn "
 #~ "good reason to do so. Many interal links (such as the committee photo, "
 #~ "the email address, the url in the link) depend on this name."
-
-#~ msgid "Je bent ingelogd als %s."
-#~ msgstr "You are connected to the Facebook profile of %s."
-
-#~ msgid "Je bent niet langer gekoppeld aan Facebook."
-#~ msgstr "Your profile is no longer connected to your Facebook account."
-
-#~ msgid ""
-#~ "Koppel Facebook om te zien wie van je vrienden naar activiteiten gaan."
-#~ msgstr ""
-#~ "Connect your Facebook account to see who of your friends are attending "
-#~ "the activities."
-
-#~ msgid "Ontkoppel Facebook"
-#~ msgstr "Disconnect Facebook"
 
 #~ msgid "Inloggen op Dreamspark"
 #~ msgstr "Log in to Dreamspark"
