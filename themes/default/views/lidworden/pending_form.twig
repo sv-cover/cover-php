@@ -1,0 +1,23 @@
+{% extends "@layout/layout.twig" %}
+
+{% block title __('Bewerk hangende aanmelding') ~ ' ::  '~ parent() %}
+
+{% block content %}
+<div class="messageBox">
+	<form action="" method="post" class="vertical-form">
+		{{ html_nonce('update_pending', registration.confirmation_code) }}
+	
+		{% for field, value in registration.data %}
+		<div>
+			{{ html_label(field, 'data[' ~ field ~ ']')  }}
+			{{ html_input_text('data[' ~ field ~ ']', {}, value=value) }}
+		</div>
+		{% endfor %}
+
+		<div>
+			<button type="submit" class="button">{{ __('Wijzig') }}</button>
+			<a href="lidworden.php?view=pending-confirmation">{{ __('Terug') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

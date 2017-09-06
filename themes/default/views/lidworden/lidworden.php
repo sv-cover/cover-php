@@ -30,6 +30,11 @@ class LidwordenView extends View
 		return $this->render('pending.twig', compact('registrations', 'message'));
 	}
 
+	public function render_pending_form(array $registration)
+	{
+		return $this->render('pending_form.twig', compact('registration'));
+	}
+
 	public function search_link($conditions)
 	{
 		$url = 'https://secretary.svcover.nl/administration/everyone/?' . http_build_query($conditions);

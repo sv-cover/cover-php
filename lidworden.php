@@ -237,7 +237,7 @@
 			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
 		}
 
-		public function run_pending()
+		public function run_pending_index()
 		{
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
 				!get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) &&
@@ -302,19 +302,49 @@
 
 			return $this->view->render_pending($registrations, $message);
 		}
+
+		protected function run_pending_update($confirmation_code)
+		{
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_EASY))
+				throw new UnauthorizedException();
+
+			$db = get_db();
+
+			if ($this->_form_is_submitted('update_pending', $confirmation_code)) {
+				$db->update('registrations',
+					['data' => json_encode($_POST['data'])],
+					sprintf('confirmation_code = %s', $db->quote($confirmation_code)));
+
+				return $this->view->redirect('lidworden.php?view=pending-confirmation');
+			}
+
+			$row = $db->query_first(sprintf("SELECT * FROM registrations WHERE confirmation_code = '%s'",
+				$db->escape_string($confirmation_code)));
+
+			if ($row === null)
+				throw new NotFoundException();
+
+			$row['data'] = json_decode($row['data'], true);
+
+			return $this->view->render_pending_form($row);
+		}
 		
 		protected function run_impl()
 		{
 			if ($this->_form_is_submitted('sign_up'))
 				return $this->_process_lidworden();
-			elseif (isset($_GET['confirmation_code']))
+			elseif (isset($_GET['confirmation_code']) && !isset($_GET['view']))
 				return $this->_process_confirm($_GET['confirmation_code']);
 			else if (isset($_GET['verzonden']))
 				return $this->view->render_submitted();
 			else if (isset($_GET['confirmed']))
 				return $this->view->render_confirmed();
+			else if (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation' && !empty($_GET['confirmation_code']))
+				return $this->run_pending_update($_GET['confirmation_code']);
 			else if (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation')
-				return $this->run_pending();
+				return $this->run_pending_index();
 			else {
 				return $this->view->render_form();
 			}

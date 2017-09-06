@@ -42,6 +42,7 @@
 					<th>{{ __('Email') }}</th>
 					<th>{{ __('Aangemeld op') }}</th>
 					<th>{{ __('Bevestigingslink') }}<sup>3</sup></th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -62,6 +63,9 @@
 						{% else %}
 							<td><input type="text" value="{{ 'https://www.svcover.nl/lidworden.php?confirmation_code=%s'|format(row.confirmation_code|e('url'))|e('html_attr') }}"></td>
 						{% endif %}
+						<td>
+							<a href="lidworden.php?view=pending-confirmation&amp;confirmation_code={{ row.confirmation_code|e('url') }}" class="edit-link"></a>
+						</td>
 					</tr>
 				{% endfor %}
 			</tbody>
