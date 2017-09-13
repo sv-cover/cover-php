@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:9.6
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+  web:
+    build: .
+    volumes:
+      - ./data/photo-masters:/opt/photos
+    ports:
+      - 8000:80
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=postgres
+      - SECRETARY_ROOT=https://sercretary.svcover.nl/api/
+      - SECRETARY_USER=
+      - SECRETARY_PASSWORD=
+      - SECRETARY_SHARED_SECRET=
+      - KAST_ROOT=https://kast.svcover.nl/api
+      - KAST_APP=
+      - KAST_SECRET=
+      - INCASSO_ROOT=https://incasso.svcover.nl/api/
+      - INCASSO_APP=
+      - INCASSO_SECRET=
+      - SENTRY_URL=
+      - SENTRY_PUBLIC_URL=
+      - WIKI_URL=https://wiki.svcover.nl/lib/exe/xmlrpc.php
+      - WIKI_PUBLIC_URL=https://wiki.svcover.nl/%s
+      - ELMS_ID=
+      - ELMS_SECRET=
+      - CALENDAR_URL=https://calendar.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics
