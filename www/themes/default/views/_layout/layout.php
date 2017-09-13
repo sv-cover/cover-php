@@ -24,7 +24,17 @@ class LayoutViewHelper
 			$menus['admin']['submenu'][] = [
 				'url' => 'mailinglijsten.php',
 				'label' => __('Mailinglijsten')
-			];	
+			];
+			
+			$menus['admin']['submenu'][] = [
+				'url' => 'lidworden.php?view=pending-confirmation',
+				'label' => __('Hangende aanmeldingen')
+			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'forum.php?admin=forums',
+				'label' => 'Forum'
+			];
 
 			if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
 				get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
@@ -36,21 +46,6 @@ class LayoutViewHelper
 				$menus['admin']['submenu'][] = [
 					'url' => 'actieveleden.php',
 					'label' => __('Actieve leden')
-				];
-
-				$menus['admin']['submenu'][] = [
-					'url' => 'lidworden.php?view=pending-confirmation',
-					'label' => __('Hangende aanmeldingen')
-				];
-
-				$menus['admin']['submenu'][] = [
-					'url' => 'forum.php?admin=forums',
-					'label' => 'Forum'
-				];
-
-				$menus['admin']['submenu'][] = [
-					'url' => 'nieuwlid.php',
-					'label' => __('Leden toevoegen')
 				];
 			}
 			

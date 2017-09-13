@@ -34,7 +34,14 @@
 				'street_name' => [function($x) { return preg_match('/\d+/', $x); }],
 				'postal_code' => [function($x) { return preg_match('/^\d{4}\s*[a-z]{2}$/i', $x); }],
 				'place' => [$non_empty],
-				'phone_number' => [function($x) { return strlen($x) == 0 || preg_match('/^\+?\d+$/', $x); }, function($x) { return str_replace(' ', '', $x); }],
+				'phone_number' => [
+					function($x) {
+						return preg_match('/^\+?\d+$/', $x);
+					},
+					function($x) {
+						return str_replace(' ', '', $x);
+					}
+				],
 				'email_address' => [function($x) {
 					// Check whether the email address is something looking like an email address
 					return preg_match('/@\w+\.\w+/', $x);
@@ -53,20 +60,15 @@
 				'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
 				'iban' => [
 					function($x) {
-						// If it looks like IBAN, validate it as IBAN. This allows us to still pass in info like "I don't have any yet"
-						$stripped = preg_replace('/\s+|\./', '', strtoupper($x));
-						return preg_match('/^[A-Z]{2}\d{2,}/', $stripped)
-							? \IsoCodes\Iban::validate($stripped)
-							: true;
+						return \IsoCodes\Iban::validate($x);
 					},
 					function($x) {
-						$stripped = preg_replace('/\s+|\./', '', strtoupper($x));
-						return \IsoCodes\Iban::validate($stripped) ? $stripped : $x;
+						return preg_replace('/[^A-Z0-9]/u', '', strtoupper($x));
 					}
 				],
 				'bic' => [
 					function($x) { return strlen($x) === 0 || \IsoCodes\SwiftBic::validate($x);},
-					function($x) { return trim($x, ' '); }
+					function($x) { return trim($x); }
 				],
 				'membership_study_name' => [],
 				'membership_study_phase' => [function($x) { return in_array($x, ['b', 'm']); }],
@@ -136,10 +138,10 @@
 		{
 			$db = get_db();
 
-			$data_str = $db->query_value(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+			$data_str = $db->query_value(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL", $db->escape_string($confirmation_code)));
 
 			if ($data_str === null)
-				throw new InvalidArgumentException('Could not find registration code');
+				throw new NotFoundException('Could not find registration code');
 
 			$data = json_decode($data_str, true);
 
@@ -153,13 +155,60 @@
 
 		protected function _process_confirm($confirmation_code)
 		{
+			try {
+				// First, send a mail to administratie@svcover.nl for archiving purposes
+				$this->_process_confirm_mail($confirmation_code);
+				
+				// If that worked out right, we can mark this registration as confirmed.
+				get_db()->update('registrations',
+					['confirmed_on' => date('Y-m-d H:i:s')],
+					sprintf("confirmation_code = '%s'", get_db()->escape_string($confirmation_code)));
+
+				try
+				{
+					// Try to add the member to Secretary. If this works out correctly
+					// the registration will be deleted (and Secretary will add the
+					// member to the leden table through the API).
+					$this->_process_confirm_secretary($confirmation_code);
+				}
+				catch (Exception $e)
+				{
+					// Well, that didn't work out. Report the error to everybody.
+					// The registration will be marked as confirmed, but not deleted
+					// so one can try again later when Secretary is available again.
+					sentry_report_exception($e);
+
+					mail('secretaris@svcover.nl',
+						'Lidaanvraag (niet verwerkt in Secretary)',
+						"Er is een nieuwe lidaanvraag ingediend.\n"
+						. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
+						. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
+						implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+
+					mail('webcie@svcover.nl',
+						'Fout tijdens lidaanvraag',
+						'Er ging iets fout tijdens een lidaanvraag.'
+						.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
+						. $e->getMessage() . "\n"
+						. $e->getTraceAsString(),
+						implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+				}
+
+				return $this->view->redirect('lidworden.php?confirmed=true');
+			} catch (NotFoundException $e) {
+				return $this->view->render('not_found.twig');
+			}
+		}
+
+		protected function _process_confirm_mail($confirmation_code)
+		{
 			$db = get_db();
 
-			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'",
+			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL",
 				$db->escape_string($confirmation_code)));
 
 			if (!$row)
-				die(__('We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan te melden, of het bestuur (board@svcover.nl) even mailen.'));
+				throw new NotFoundException('Could not find registration code');
 
 			$data = json_decode($row['data'], true);
 
@@ -168,45 +217,31 @@
 			$name = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
 
 			mail('administratie@svcover.nl', 'Lidaanvraag ' . $name, $mail,
-				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-
-			try
-			{
-				$response = get_secretary()->createPerson($data);
-
-				mail('secretaris@svcover.nl',
-					'Lidaanvraag',
-					"Er is een nieuwe lidaanvraag ingediend.\n"
-					. "Je kan de aanvraag bevestigen op " . $response->url . "\n"
-					. "De gegevens zijn voor de zekerheid ook te vinden op administratie@svcover.nl.",
-					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-			}
-			catch (Exception $e)
-			{
-				mail('secretaris@svcover.nl',
-					'Lidaanvraag (niet verwerkt in Secretary)',
-					"Er is een nieuwe lidaanvraag ingediend.\n"
-					. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
-					. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
-					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-
-				mail('webcie@svcover.nl',
-					'Fout tijdens lidaanvraag',
-					'Er ging iets fout tijdens een lidaanvraag.'
-					.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
-					. $e->getMessage() . "\n"
-					. $e->getTraceAsString(),
-					implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-			}
-
-			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
-
-			return $this->view->redirect('lidworden.php?confirmed=true');
+				implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
 		}
 
-		public function run_pending()
+		protected function _process_confirm_secretary($confirmation_code)
 		{
-			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+			$db = get_db();
+
+			$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'",
+				$db->escape_string($confirmation_code)));
+
+			if (!$row)
+				throw new NotFoundException('Could not find registration code');
+
+			$data = json_decode($row['data'], true);
+
+			$response = get_secretary()->createPerson($data);
+
+			$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+		}
+
+		public function run_pending_index()
+		{
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_EASY))
 				throw new UnauthorizedException();
 
 			$db = get_db();
@@ -217,6 +252,21 @@
 			{
 				switch (isset($_POST['action']) ? $_POST['action'] : null)
 				{
+					case 'push':
+						$success = 0;
+						foreach ($_POST['confirmation_code'] as $confirmation_code) {
+							try {
+								$this->_process_confirm_secretary($confirmation_code);
+								$success++;
+							} catch (Exception $e) {
+								sentry_report_exception($e);
+							}
+						}
+						$message = sprintf('Added %d out of %d registrations to Secretary',
+							$success,
+							count($_POST['confirmation_code']));
+						break;
+
 					case 'resend':
 						foreach ($_POST['confirmation_code'] as $confirmation_code)
 							$this->_send_confirmation_mail($confirmation_code);
@@ -240,7 +290,8 @@
 				SELECT
 					confirmation_code,
 					data,
-					DATE(registerd_on) as registered_on
+					registerd_on as registered_on,
+					confirmed_on
 				FROM
 					registrations
 				ORDER BY
@@ -251,19 +302,49 @@
 
 			return $this->view->render_pending($registrations, $message);
 		}
+
+		protected function run_pending_update($confirmation_code)
+		{
+			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) &&
+				!get_identity()->member_in_committee(COMMISSIE_EASY))
+				throw new UnauthorizedException();
+
+			$db = get_db();
+
+			if ($this->_form_is_submitted('update_pending', $confirmation_code)) {
+				$db->update('registrations',
+					['data' => json_encode($_POST['data'])],
+					sprintf('confirmation_code = %s', $db->quote($confirmation_code)));
+
+				return $this->view->redirect('lidworden.php?view=pending-confirmation');
+			}
+
+			$row = $db->query_first(sprintf("SELECT * FROM registrations WHERE confirmation_code = '%s'",
+				$db->escape_string($confirmation_code)));
+
+			if ($row === null)
+				throw new NotFoundException();
+
+			$row['data'] = json_decode($row['data'], true);
+
+			return $this->view->render_pending_form($row);
+		}
 		
 		protected function run_impl()
 		{
 			if ($this->_form_is_submitted('sign_up'))
 				return $this->_process_lidworden();
-			elseif (isset($_GET['confirmation_code']))
+			elseif (isset($_GET['confirmation_code']) && !isset($_GET['view']))
 				return $this->_process_confirm($_GET['confirmation_code']);
 			else if (isset($_GET['verzonden']))
 				return $this->view->render_submitted();
 			else if (isset($_GET['confirmed']))
 				return $this->view->render_confirmed();
+			else if (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation' && !empty($_GET['confirmation_code']))
+				return $this->run_pending_update($_GET['confirmation_code']);
 			else if (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation')
-				return $this->run_pending();
+				return $this->run_pending_index();
 			else {
 				return $this->view->render_form();
 			}

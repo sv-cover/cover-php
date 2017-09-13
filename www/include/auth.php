@@ -358,10 +358,15 @@ function get_auth()
 
 function get_identity()
 {
-	static $identity;
+	static $identity, $identity_is_logged_in;
 
-	if ($identity === null)
+	$authenticator = get_auth();
+
+	if ($identity === null || $authenticator->logged_in() !== $identity_is_logged_in)
+	{
 		$identity = get_identity_provider(get_auth());
+		$identity_is_logged_in = $authenticator->logged_in();
+	}
 
 	return $identity;
 }

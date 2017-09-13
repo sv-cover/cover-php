@@ -2,6 +2,7 @@
 require_once 'include/init.php';
 require_once 'include/search.php';
 require_once 'include/controllers/Controller.php';
+require_once 'include/view.php';
 	
 class SearchController extends Controller
 {
@@ -85,7 +86,7 @@ class SearchController extends Controller
 			$iters = $this->_query($query, $errors);
 
 			if (isset($_GET['im_feeling']) && $_GET['im_feeling'] == 'lucky' && count($iters) > 0)
-				return $this->view->redirect($iters[0]->get_absolute_url());
+				return $this->view->redirect($iters[0]->get_absolute_url(), false, ALLOW_SUBDOMAINS);
 		}
 		
 		return $this->view->render_index($query, $iters, $errors);

@@ -1,6 +1,5 @@
 <?php namespace cover\test;
 
-
 class MailCatcherMessage
 {
 	public $buffer = '';
@@ -49,7 +48,7 @@ class MailCatcherMessage
 		return trim(substr($this->buffer, $boundary_pos + 1));
 	}
 
-	public function print($fh = STDOUT)
+	public function write($fh = STDOUT)
 	{
 		fwrite($fh, "===\n{$this->buffer}\n===\n");
 	}
@@ -83,7 +82,7 @@ class MailCatcher
 		unlink($this->socket_file);
 	}
 
-	public function catch($timeout = 0.25)
+	public function catchMail($timeout = 0.25)
 	{
 		// Wait for the script to call our stuff
 		$read = [$this->socket];
@@ -143,6 +142,20 @@ class Response
 	}
 }
 
+function path_to_php_cgi_binary()
+{
+	// First try the php-cgi binary that is part of this PHP distribution
+	if (is_executable(PHP_BINDIR . '/php-cgi'))
+		return PHP_BINDIR . '/php-cgi';
+
+	// If that doens't work, try the globally installed php-cgi
+	$php_cgi = exec('which php-cgi', $output, $ret_val);
+
+	if ($ret_val !== 0)
+		throw new \RuntimeException('Could not locate php-cgi binary');
+
+	return $php_cgi;
+}
 
 function simulate_request($path, $params)
 {
@@ -187,10 +200,7 @@ function simulate_request($path, $params)
 		'-d sendmail_path="' . escapeshellarg($mail_catcher->sendmail_cmd()) . '"'
 	];
 
-	$php_cgi = exec('which php-cgi', $output, $ret_val);
-
-	if ($ret_val !== 0)
-		throw new \RuntimeException('Could not locate php-cgi binary');
+	$php_cgi = path_to_php_cgi_binary();
 
 	$proc = proc_open(implode(' ', [$php_cgi] + $program_options + [$path]), $descriptors, $pipes, getcwd(), $env);
 
@@ -211,7 +221,7 @@ function simulate_request($path, $params)
 
 	$exit_code = proc_close($proc);
 
-	$messages = $mail_catcher->catch();
+	$messages = $mail_catcher->catchMail();
 
 	$location = $path . (isset($env['QUERY_STRING']) ? '?' . $env['QUERY_STRING'] : '');
 
@@ -237,7 +247,7 @@ class Form
 
 	public $origin;
 
-	public function submit($method = 'simulate_request')
+	public function submit($method = '\cover\test\simulate_request')
 	{
 		$params = [];
 
@@ -412,7 +422,7 @@ class ProcResult
 {
 	public $exit_code, $stdout, $stderr, $messages;
 
-	public function __construct(int $exit_code, string $stdout, string $stderr, array $messages = [])
+	public function __construct($exit_code, $stdout, $stderr, array $messages = [])
 	{
 		$this->exit_code = $exit_code;
 		$this->stdout = $stdout;
@@ -420,7 +430,7 @@ class ProcResult
 		$this->messages = $messages;
 	}
 
-	public function print($fh = STDOUT)
+	public function write($fh = STDOUT)
 	{
 		fwrite($fh, "Exit code: {$this->exit_code}\n\n");
 		fwrite($fh, "Stdout:\n-----\n{$this->stdout}\n-----\n\n");
@@ -452,14 +462,9 @@ trait EmailTestTrait
 
 		$sendmail_cmd = $mail_catcher->sendmail_cmd();
 
-		$cmd = dirname(__FILE__) . '/../cron/send-mailinglist-mail.php';
-
-		$program_options = [];
+		$program_options = ['-f', dirname(__FILE__) . '/../cron/send-mailinglist-mail.php', '--'];
 
 		$env = ['SENDMAIL' => $sendmail_cmd];
-
-		if (!is_executable($cmd))
-			throw new \RuntimeException('Could not locate executable send-mailinglist-mail script');
 
 		$descriptors = [
 			0 => ['pipe', 'r'],
@@ -467,7 +472,7 @@ trait EmailTestTrait
 			2 => ['pipe', 'w']
 		];
 
-		$proc = proc_open(implode(' ', [$cmd] + $program_options), $descriptors, $pipes, getcwd(), $env);
+		$proc = proc_open(implode(' ', [PHP_BINARY] + $program_options), $descriptors, $pipes, getcwd(), $env);
 
 		if (!is_resource($proc))
 			throw new \RuntimeException('Could not start process');
@@ -478,7 +483,7 @@ trait EmailTestTrait
 		fclose($pipes[0]);
 
 		// Catch all mail for one () second
-		$messages = $mail_catcher->catch();
+		$messages = $mail_catcher->catchMail();
 
 		// Read STDOUT
 		$response = stream_get_contents($pipes[1]);

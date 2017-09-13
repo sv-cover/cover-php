@@ -465,7 +465,7 @@ class ControllerApi extends Controller
 		echo json_encode($response);
 	}
 
-	public function run_exception(Exception $e)
+	protected function run_exception($e)
 	{
 		header('Content-Type: application/json');
 		echo json_encode(array('error' => $e->getMessage()));

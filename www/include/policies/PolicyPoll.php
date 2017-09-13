@@ -7,6 +7,9 @@ class PolicyPoll extends PolicyForumThread
 	{
 		if ($this->member_is_admin())
 			return true;
+
+		if (!get_auth()->logged_in())
+			return false;
 		
 		$forum = $this->model->get_iter($poll['forum_id']);
 

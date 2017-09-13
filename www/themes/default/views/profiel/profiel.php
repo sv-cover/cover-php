@@ -293,8 +293,10 @@ class ProfielView extends View
 		if ($is_visible('foto') && $this->controller->model()->has_picture($member)) {
 			$fout = null;
 
+			$photo = $this->controller->model()->get_photo_stream($member);
+
 			$imagick = new \Imagick();
-			$imagick->readImageBlob($this->controller->model()->get_photo($member));
+			$imagick->readImageFile($photo['foto']);
 			
 			$y = 0.05 * $imagick->getImageHeight();
 			$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
@@ -318,9 +320,9 @@ class ProfielView extends View
 			// Use reflection to get to the private addMedia method. Only addPhoto is public, but that
 			// doesn't accept a stream and I'm not in the mood to write a temporary file to disk.
 			$vCardClass = new \ReflectionClass($card);
-			$vCard_addMedia = $vCardClass->getMethod('addMedia');
+			$vCard_addMedia = $vCardClass->getMethod('setProperty');
 			$vCard_addMedia->setAccessible(true);
-			$vCard_addMedia->invoke($card, 'PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout), false, 'photo');
+			$vCard_addMedia->invoke($card, 'photo', 'PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout));
 
 			fclose($fout);
 		}

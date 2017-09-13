@@ -12,7 +12,7 @@ function sentry_get_client()
 	return $client ? $client : null;
 }
 
-function sentry_report_exception(Exception $e, $attributes = [])
+function sentry_report_exception($e, $attributes = [])
 {
 	$client = sentry_get_client();
 

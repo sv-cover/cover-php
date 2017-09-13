@@ -9,7 +9,7 @@ class DataIterWiki extends DataIter implements SearchResult
 
 	public function get_search_relevance()
 	{
-		return $this->get('score');
+		return normalize_search_rank($this->get('score'));
 	}
 
 	public function get_search_type()

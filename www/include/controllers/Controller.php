@@ -41,7 +41,7 @@
 					echo $this->run_exception($e);
 				}
 			} catch (Exception $e) {
-				$this->_report_exception($e);
+				sentry_report_exception($e);
 
 				if (get_config_value('show_exceptions'))
 					printf('<pre>%s</pre>', $e);
@@ -64,7 +64,7 @@
 			throw new NotFoundException('No route for path "' . $path . '"');
 		}
 
-		protected function run_exception(Exception $e)
+		protected function run_exception($e)
 		{
 			if ($e instanceof NotFoundException)
 				return $this->run_404_not_found($e);
@@ -86,7 +86,7 @@
 			return $this->view()->render_404_not_found($exception);
 		}
 
-		protected function run_500_internal_server_error(Exception $e)
+		protected function run_500_internal_server_error($e)
 		{
 			if (!headers_sent())
 				header('Status: 500 Interal Server Error');

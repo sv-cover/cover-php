@@ -67,8 +67,8 @@
 			<legend>{{ __('Contact') }}</legend>
 
 			<div>
-				{{ html_label(__('Telefoonnummer'), 'phone_number', errors=errors) }}
-				{{ html_input_text('phone_number', null, errors=errors, type='tel') }}
+				{{ html_label(__('Telefoonnummer'), 'phone_number', errors=errors, required=true) }}
+				{{ html_input_text('phone_number', null, errors=errors, required=true, type='tel') }}
 			</div>
 
 			<div>

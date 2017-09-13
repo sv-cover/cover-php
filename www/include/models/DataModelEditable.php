@@ -18,6 +18,9 @@
 
 		public function get_locale_content($language = null)
 		{
+			if (!$language && $this->has_value('search_language'))
+				$language = $this['search_language'];
+
 			if (!$language)
 				$language = i18n_get_language();
 
@@ -106,37 +109,71 @@
 			return $this->get_iter($id)->get_summary();
 		}
 
-		public function search($query, $limit = null)
+		public function search($search_query, $limit = null)
 		{
-			$keywords = parse_search_query_for_text($query);
-
-			$text_query = implode(' & ', $keywords);
-
 			$query = "
+				WITH
+					search_results AS (
+						SELECT
+							id,
+							ts_rank_cd(to_tsvector('english', content_en), query) as search_relevance,
+							'en' as search_language
+						FROM
+							{$this->table},
+							plainto_tsquery('english', :query) query
+						WHERE
+							to_tsvector('english', content_en) @@ query
+					UNION
+						SELECT
+							id,
+							ts_rank_cd(to_tsvector(content), query) as search_relevance,
+							'nl' as search_language
+						FROM
+							{$this->table},
+							plainto_tsquery('dutch', :query) query
+						WHERE
+							to_tsvector('dutch', content) @@ query
+					),
+					unique_search_results AS (
+						SELECT
+							s.id,
+							s.search_relevance,
+							s.search_language
+						FROM
+							search_results s
+						LEFT JOIN search_results s2 ON
+							s.id = s2.id
+							AND s2.search_relevance > s.search_relevance
+						WHERE
+							s2.id IS NULL
+					)
 				SELECT
 					p.*,
-					ts_rank_cd(to_tsvector(content) || to_tsvector(content_en), query) as search_relevance
+					s.*
 				FROM
-					{$this->table} p,
-					to_tsquery('" . $this->db->escape_string($text_query) . "') query
-				WHERE
-					(to_tsvector(content) || to_tsvector(content_en)) @@ query
+					unique_search_results s
+				LEFT JOIN {$this->table} p ON
+					p.id = s.id
 				ORDER BY
-					search_relevance DESC";
+					s.search_relevance DESC
+			";
 
 			if ($limit !== null)
 				$query .= sprintf(" LIMIT %d", $limit);
 
-			$rows = $this->db->query($query);
-
+			$rows = $this->db->query($query, false, [':query' => $search_query]);
 			$iters = $this->_rows_to_iters($rows);
 
+			$keywords = parse_search_query($search_query);
+			
 			$pattern = sprintf('/(%s)/i', implode('|', array_map(function($p) { return preg_quote($p, '/'); }, $keywords)));
 
 			// Enhance search relevance score when the keywords appear in the title of a page :D
 			foreach ($iters as $iter)
 			{
-				$keywords_in_title = preg_match_all($pattern, $iter['title'], $matches);
+				$keywords_in_title = preg_match_all($pattern, $iter->get_title('nl'))
+				                   + preg_match_all($pattern, $iter->get_title('en'));
+
 				$iter->set('search_relevance', $iter->get('search_relevance') + $keywords_in_title);
 			}
 

@@ -69,9 +69,9 @@
 			return $this->model->has_photo($this);
 		}
 
-		public function get_photo()
+		public function get_photo_stream()
 		{
-			return $this->model->get_photo($this);
+			return $this->model->get_photo_stream($this);
 		}
 
 		public function get_photo_mtime()
@@ -136,14 +136,12 @@
 		{
 			return (bool) $this->db->query_first('SELECT id from lid_fotos WHERE lid_id = ' . $iter->get_id());
 		}
-		
-		public function get_photo(DataIter $iter)
+
+		public function get_photo_stream(DataIter $iter)
 		{
-			$photo = $this->db->query_first('SELECT foto from lid_fotos WHERE lid_id = ' . $iter->get_id() . ' ORDER BY id DESC LIMIT 1');
-
-			return $photo ? $this->db->read_blob($photo['foto']) : null;
+			return $this->db->query_first('SELECT foto, length(foto) as filesize from lid_fotos WHERE lid_id = ' . $iter->get_id() . ' ORDER BY id DESC LIMIT 1');
 		}
-
+		
 		public function get_photo_mtime(DataIter $iter)
 		{
 			$row = $this->db->query_first('SELECT EXTRACT(EPOCH FROM foto_mtime) as mtime FROM lid_fotos WHERE lid_id = ' . $iter->get_id() . ' ORDER BY id DESC LIMIT 1');
