@@ -2072,7 +2072,7 @@ body .ui-autocomplete a.profile .starting-year {
 	right: 0;
 	z-index: 100;
 	text-align: center;
-	background: rgba(0, 0, 0, 0.4);
+	background: rgba(0, 0, 0, 0.7);
 	overflow: auto;
 }
 
@@ -2117,15 +2117,6 @@ body .ui-autocomplete a.profile .starting-year {
 	background: #c60c30;
 	color: #fff;
 	border-radius: 0 4px 0 0;
-}
-
-body.modal-open > .world,
-.modal + .world {
-	-webkit-filter: blur(8px);
-	-moz-filter: blur(8px);
-	-o-filter: blur(8px);
-	-ms-filter: blur(8px);
-	filter: blur(8px);
 }
 
 body.modal-open {
