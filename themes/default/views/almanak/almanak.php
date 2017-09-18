@@ -74,7 +74,7 @@
 				'beginjaar',
 				'status'], $delim) . "\n";
 
-			foreach ($iter as $item)
+			foreach ($iters as $item)
 				echo csv_row([
 					$item['id'],
 					$item['voornaam'],
