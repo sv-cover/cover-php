@@ -63,6 +63,7 @@
 				'voornaam',
 				'tussenvoegsel',
 				'achternaam',
+				'naam',
 				'adres',
 				'postcode',
 				'woonplaats',
@@ -74,12 +75,13 @@
 				'beginjaar',
 				'status'], $delim) . "\n";
 
-			foreach ($iter as $item)
+			foreach ($iters as $item)
 				echo csv_row([
 					$item['id'],
 					$item['voornaam'],
 					$item['tussenvoegsel'],
 					$item['achternaam'],
+					member_full_name($item, IGNORE_PRIVACY),
 					$item['adres'],
 					$item['postcode'],
 					$item['woonplaats'],
