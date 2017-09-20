@@ -397,7 +397,7 @@
 			{
 				$photo->set('beschrijving', $_POST['beschrijving']);
 				$this->model->update($photo);
-				$this->redirect('fotoboek.php?photo=' . $photo->get_id());
+				$this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
 			}
 			
 			return $this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
