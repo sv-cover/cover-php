@@ -217,6 +217,10 @@
 		{
 			$selected_year = isset($_GET['year']) ? intval($_GET['year']) : null;
 
+			// No screwing around with invalid dates anymore
+			if ($selected_year < 1993 || $selected_year > date('Y') + 2)
+				$selected_year = null;
+
 			if ($selected_year === null)
 				return $this->model->get_agendapunten();
 			
