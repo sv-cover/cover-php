@@ -43,7 +43,7 @@ class ControllerBesturen extends ControllerCRUD
 		$editable_model = get_model('DataModelEditable');
 
 		$page_data = array(
-			'owner' => COMMISSIE_BESTUUR,
+			'committee_id' => COMMISSIE_BESTUUR,
 			'titel' => $data['naam']);
 
 		$page = $editable_model->new_iter($page_data);
