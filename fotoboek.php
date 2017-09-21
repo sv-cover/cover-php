@@ -887,6 +887,8 @@
 					return $this->_view_add_photos($book);
 
 				case 'update_photo':
+					if (!$photo)
+						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_update_photo($photo);
 
 				case 'update_photo_order':
@@ -905,6 +907,8 @@
 					return $this->_view_list_photos($book);
 
 				case 'download':
+					if (!$photo)
+						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_download_photo($photo);
 
 				case 'download_book':
@@ -914,6 +918,8 @@
 					return $this->_view_confirm_download_book($book);
 
 				case 'scaled':
+					if (!$photo)
+						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_scaled_photo($photo);
 
 				default:
