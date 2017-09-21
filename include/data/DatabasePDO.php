@@ -44,14 +44,15 @@ class DatabasePDO
 		$params[] = 'user=' . $dbid['user'];
 		
 		/* Add password */
-		$params[] = 'password=' . $dbid['password'];
+		if (!empty($dbid['password']))
+			$params[] = 'password=' . $dbid['password'];
 		
 		/* Add database */
 		$params[] = 'dbname=' . $dbid['database'];
 
 		/* Add client encoding */
 		$params[] = "options='--client_encoding=UTF8'";
-		
+
 		/* Open connection */
 		$this->resource = new PDO('pgsql:' . implode(';', $params));
 

@@ -52,6 +52,9 @@
 
 			require_once 'include/data/' . $database_class . '.php';
 
+			if (!isset($dbids[$environment]))
+				throw new RuntimeException("No database configuration for environment '$environment'");
+
 			/* Create database */
 			$db = new $database_class($dbids[$environment]);
 
