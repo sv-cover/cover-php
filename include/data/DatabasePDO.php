@@ -59,9 +59,6 @@ class DatabasePDO
 		$this->resource->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$this->resource->exec("SET NAMES 'UTF-8'; SET DateStyle = 'ISO, DMY'; SET bytea_output=escape");
-		
-		if (!$this->resource)
-			trigger_error('Could not connect to database: ' . $php_errormsg);
 	}
 
 	/**
