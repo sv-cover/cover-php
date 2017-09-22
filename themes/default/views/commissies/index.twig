@@ -38,4 +38,8 @@
 	{% endfor %}
 	</ul>
 </div>
+{% if user_can_create controller.new_iter %}
+	{# If someone can create, someone can probably also reactivate #}
+	<p class="archive-link"><a href="{{ controller.link_to('archive') }}">{{ __('Commissiearchief') }}</a></p>
+{% endif %}
 {% endblock %}

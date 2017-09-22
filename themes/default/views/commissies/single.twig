@@ -8,7 +8,7 @@
 <div class="pageheading">
 	{% if user_can_update iter %}
 	<div class="controls inline">
-		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Wijzig commissie') }}</a>
+		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Wijzig %s')|format(view.available_committee_types[iter.type]) }}</a>
 	</div>
 	{% endif %}
 	<h1>{{ iter.naam }}</h1>
@@ -24,7 +24,7 @@
 	<div class="content">
 		{% if user_can_update iter.page %}
 		<div class="controls inline">
-			<a href="{{ link('editable.update', editable=iter.page) }}" class="edit-link">{{ __('Bewerk commissiepagina') }}</a>
+			<a href="{{ link('editable.update', editable=iter.page) }}" class="edit-link">{{ __('Bewerk %spagina')|format(view.available_committee_types[iter.type]) }}</a>
 		</div>
 		{% endif %}
 		

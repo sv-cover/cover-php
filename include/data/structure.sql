@@ -105,12 +105,12 @@ CREATE TABLE pages (
 
 CREATE TABLE commissies (
     id SERIAL PRIMARY KEY,
-    type integer NOT NULL DEFAULT 1, -- 1: committee, 2: working group
+    type integer NOT NULL DEFAULT 1, -- 1: committee, 2: working group, 3: other (hidden)
     naam character varying(25) NOT NULL,
     login character varying(50), -- mainly used for pretty urls these days
     website character varying(100),
     page_id integer REFERENCES pages (id),
-    hidden integer NOT NULL DEFAULT 0,
+    hidden integer NOT NULL DEFAULT 0, # Deactivated
     vacancies DATE DEFAULT NULL,
     CONSTRAINT commissies_login_key UNIQUE(login)
 );

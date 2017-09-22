@@ -30,7 +30,7 @@ class ControllerCommissies extends ControllerCRUD
 			$this->model->set_members($iter, $data['members']);
 
 		return $iter;
-	} 
+	}
 
 	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
@@ -40,6 +40,18 @@ class ControllerCommissies extends ControllerCRUD
 		$this->model->set_members($iter, $data['members'] ? $data['members'] : array());
 
 		return true;
+	}
+
+	protected function _delete(DataIter $iter, array &$errors)
+	{
+		// Some committees already have pages etc. We will mark the committee as hidden.
+		// That way they remain in the history of Cover and could, if needed, be reactivated.
+		$iter['hidden'] = true;
+
+		// We'll also remove all its members at least
+		$iter['members'] = [];
+
+		return $this->model->update($iter);
 	}
 
 	protected function _read($id)
@@ -55,8 +67,11 @@ class ControllerCommissies extends ControllerCRUD
 	 */ 
 	public function run_read(DataIter $iter)
 	{
+		if ($iter['hidden'])
+			throw new NotFoundException('This committee/group is no longer available');
+
 		if (!get_policy($this->model)->user_can_read($iter))
-			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
+			throw new UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
 
 		$iters = $this->model->get($iter['type']);
 
@@ -84,6 +99,16 @@ class ControllerCommissies extends ControllerCRUD
 		$iters = $this->model->get(DataModelCommissie::TYPE_WORKING_GROUP);
 
 		return $this->view->render_working_groups($iters); 
+	}
+
+	/**
+	 * The Thrash! All (including deleted) committees/groups/others/etc
+	 */
+	public function run_archive()
+	{
+		$iters = $this->model->get(null, true);
+
+		return $this->view->render_archive($iters);
 	}
 
 	/**

@@ -126,6 +126,7 @@
 	{
 		const TYPE_COMMITTEE = 1;
 		const TYPE_WORKING_GROUP = 2;
+		const TYPE_OTHER = 3;
 
 		public $dataiter = 'DataIterCommissie';
 
@@ -134,11 +135,6 @@
 			parent::__construct($db, 'commissies');
 		}
 
-		protected function _generate_query($conditions)
-		{
-			return parent::_generate_query($conditions) . ' ORDER BY naam ASC';
-		}
-		
 		/**
 		  * Get all commissies (optionally leaving out bestuur)
 		  * @include_bestuur optional; whether or not to include
@@ -157,6 +153,23 @@
 				$conditions['type'] = $type;
 
 			return $this->find($conditions);
+		}
+
+		protected function _generate_query($where)
+		{
+			if (is_array($where))
+				$where = $this->_generate_conditions_from_array($where);
+
+			return "SELECT
+					{$this->table}.*,
+					COUNT(DISTINCT c_m.member_id) as member_count
+				FROM
+					{$this->table}
+					LEFT JOIN committee_members c_m ON
+						c_m.committee_id = {$this->table}.id"
+				. ($where ? " WHERE {$where}" : "")
+				. " GROUP BY {$this->table}.id"
+				. " ORDER BY naam ASC";
 		}
 
 		public function insert(DataIter $iter)
@@ -345,6 +358,7 @@
 					c_m.committee_id = c.id
 				WHERE
 					c_m.member_id = " . $member->get_id() ."
+					AND c.hidden <> 1
 				GROUP by
 					c.id,
 					c_m.functie

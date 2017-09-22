@@ -913,6 +913,11 @@ ul.actions li {
 	margin-bottom: -15px;
 }
 
+.messageBox + .archive-link {
+	margin-top: -15px; /* To compensate for the 30px margin-bottom */
+	text-align: center;
+}
+
 .newsHeading {
 	clear: both;
 }
@@ -1222,6 +1227,11 @@ div.beheer table {
 
 th.numeric,
 td.numeric {
+	text-align: right;
+}
+
+th.enum,
+td.enum {
 	text-align: right;
 }
 

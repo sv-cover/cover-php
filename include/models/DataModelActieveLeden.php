@@ -11,7 +11,7 @@
 			parent::__construct($db, 'committee_members');
 		}
 		
-		public function get_active_members($type = null, $include_hidden = true)
+		public function get_active_members($type = null, $include_hidden = false)
 		{
 			$committee_conditions = "";
 
