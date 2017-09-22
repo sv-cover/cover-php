@@ -1140,27 +1140,8 @@ html .clearfix {
 }
 /* END FIXES AND PATCHES */
 
-/* menu's standaard ingeklapt... */
-div.beheer {
-	/*
-	margin-right: -10px;
-	margin-left: -10px;
-	margin-top: 0px;
-	padding: 10px;*/
-	display: none;
-	color: #000;
-	background-color: #F5F5F5;
-	margin-top: 10px;
-	width: 100%;
-	/*
-	border-top: 1px solid #8486a1;
-	border-bottom: 1px solid #8486a1;
-	margin-bottom: 15px;*/
-}
-
-div.beheer table {
-	margin: 0 auto;
-	width: 90%;
+table {
+	margin-bottom: 10px;
 }
 
 .full-width-table {
