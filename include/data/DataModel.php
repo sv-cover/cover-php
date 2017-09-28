@@ -327,6 +327,9 @@
 					$operator = 'eq';
 				}
 
+				// Prefix field with table name to counter ambiguity
+				$field = $this->table . '.' . $field;
+
 				switch ($operator)
 				{
 					case 'lt':
