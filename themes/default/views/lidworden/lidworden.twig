@@ -132,7 +132,7 @@
 			<p>{{ __('Cover stuurt af en toe een mailtje over aankomende activiteiten. Als je de mail niet meer wil ontvangen, kan je je heel gemakkelijk uitschrijven via de website.')}}
 
 			<div>
-				{{ html_input_checkbox('option_mailing', null) }}
+				{{ html_input_checkbox('option_mailing', {'option_mailing': 'yes'}) }}
 				{{ html_label(__('Ik wil graag e-mails over activiteiten van Cover ontvangen.'), 'option_mailing', errors=errors) }}
 				<small>{{ __('Afmelden kan op ieder moment via deze website.') }}</small>
 			</div>
