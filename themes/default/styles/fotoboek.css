@@ -69,7 +69,7 @@ table.navigation td:nth-child(3) {
 	max-height: calc(100vh - 120px);
 }
 
-.slides {
+.messageBox .slides {
 	width: auto;
 	background: #ccc;
 	padding: 15px 15px;
@@ -80,13 +80,13 @@ table.navigation td:nth-child(3) {
 	list-style: none;
 }
 
-.slides:after {
+.messageBox .slides:after {
 	content: '';
 	display: block;
 	clear: both;
 }
 
-.slides .slide {
+.messageBox .slides .slide {
 	display: block;
 	float: left;
 	width: 20%;
@@ -98,13 +98,13 @@ table.navigation td:nth-child(3) {
 	overflow: hidden;
 }
 
-.slides .slide img {
+.messageBox .slides .slide img {
 	max-width: 97%;
 	width: auto;
 	height: auto;
 }
 
-.slides .slide.current {
+.messageBox .slides .slide.current {
 	background: #ccc;
 	margin: -15px 0;
 	padding: 20px 0;
