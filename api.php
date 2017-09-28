@@ -467,6 +467,8 @@ class ControllerApi extends Controller
 
 	protected function run_exception($e)
 	{
+		sentry_report_exception($e);
+		
 		header('Content-Type: application/json');
 		echo json_encode(array('error' => $e->getMessage()));
 	}
