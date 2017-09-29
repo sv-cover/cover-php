@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-09-05 11:30+0200\n"
+"POT-Creation-Date: 2017-09-29 17:41+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.4\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -141,11 +141,15 @@ msgstr "It's nobody's birthday today"
 
 #: themes/default/views/_layout/widgets/banners.twig:2
 msgid "Hoofdpartner"
-msgstr "Main partner"
+msgid_plural "Hoofdpartners"
+msgstr[0] "Main partner"
+msgstr[1] "Main partners"
 
 #: themes/default/views/_layout/widgets/banners.twig:13
-msgid "Partners"
-msgstr "Partners"
+msgid "Partner"
+msgid_plural "Partners"
+msgstr[0] "Partner"
+msgstr[1] "Partners"
 
 #: themes/default/views/_layout/widgets/committee-battle-header.twig:2
 #: themes/default/views/commissies/index.twig:18
@@ -161,7 +165,7 @@ msgid "Doe mee!"
 msgstr "Take part!"
 
 #: themes/default/views/_layout/widgets/login.twig:2
-#: themes/default/views/profiel/sessions_tab.twig:18
+#: themes/default/views/profiel/sessions_tab.twig:17
 msgid "Ingelogd"
 msgstr "Logged in"
 
@@ -227,7 +231,9 @@ msgstr "ID"
 
 #: themes/default/views/actieveleden/index.twig:13
 #: themes/default/views/almanak/index.twig:11
-#: themes/default/views/commissies/form.twig:21
+#: themes/default/views/commissies/archive.twig:24
+#: themes/default/views/commissies/archive.twig:49
+#: themes/default/views/commissies/form.twig:28
 #: themes/default/views/forum/forum_form.twig:27
 #: themes/default/views/fotoboek/competition.twig:15
 #: themes/default/views/fotoboek/competition.twig:36
@@ -295,7 +301,6 @@ msgstr "Head"
 #: themes/default/views/mailinglijsten/form.twig:30
 #: themes/default/views/search/_single_committee.twig:8
 #: include/models/DataModelForum.php:1350
-#: themes/default/views/commissies/commissies.php:71
 msgid "Commissie"
 msgstr "Committee"
 
@@ -392,6 +397,7 @@ msgstr "Delete"
 #: themes/default/views/announcements/announcements.twig:46
 #: themes/default/views/announcements/single.twig:29
 #: themes/default/views/fotoboekreacties/_comment.twig:46
+#: themes/default/views/lidworden/pending_form.twig:18
 #: themes/default/views/settings/index.twig:23
 msgid "Wijzig"
 msgstr "Modify"
@@ -536,40 +542,40 @@ msgid "Zichtbaarheid"
 msgstr "Visibility"
 
 #: themes/default/views/almanak/index.twig:22
-#: themes/default/views/commissies/form.twig:35
+#: themes/default/views/commissies/form.twig:36
 #: themes/default/views/search/_single_member.twig:3
 #: include/models/DataModelForum.php:1347
-#: include/models/DataModelMember.php:592
-#: themes/default/views/profiel/profiel.php:385
+#: include/models/DataModelMember.php:590
+#: themes/default/views/profiel/profiel.php:387
 msgid "Lid"
 msgstr "Member"
 
 #: themes/default/views/almanak/index.twig:23
-#: themes/default/views/profiel/profiel.php:386
+#: themes/default/views/profiel/profiel.php:388
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
 #: themes/default/views/almanak/index.twig:24
 #: themes/default/views/search/_single_member.twig:5
-#: include/models/DataModelMember.php:598
+#: include/models/DataModelMember.php:596
 #: themes/default/views/almanak/almanak.php:39
-#: themes/default/views/profiel/profiel.php:387
+#: themes/default/views/profiel/profiel.php:389
 msgid "Lid af"
 msgstr "Previously a member"
 
 #: themes/default/views/almanak/index.twig:25
 #: themes/default/views/search/_single_member.twig:7
-#: include/models/DataModelMember.php:601
+#: include/models/DataModelMember.php:599
 #: themes/default/views/almanak/almanak.php:42
-#: themes/default/views/profiel/profiel.php:388
+#: themes/default/views/profiel/profiel.php:390
 msgid "Erelid"
 msgstr "Honorary Member"
 
 #: themes/default/views/almanak/index.twig:26
 #: themes/default/views/search/_single_member.twig:9
-#: include/models/DataModelMember.php:604
+#: include/models/DataModelMember.php:602
 #: themes/default/views/almanak/almanak.php:45
-#: themes/default/views/profiel/profiel.php:389
+#: themes/default/views/profiel/profiel.php:391
 msgid "Donateur"
 msgstr "Donor"
 
@@ -760,6 +766,7 @@ msgid "E-mail de %s via %s"
 msgstr "E-mail the %s at %s"
 
 #: themes/default/views/commissies/_leden.twig:4
+#: themes/default/views/commissies/archive.twig:25
 #: themes/default/views/committeebattle/form.twig:14
 #: themes/default/views/profiel/privacy_tab.twig:17
 #: themes/default/views/_layout/layout.php:99
@@ -772,7 +779,7 @@ msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden.\n"
 "Heb jij interesse? Zeg het de Commissaris Intern, %s (intern@svcover.nl)"
 msgstr ""
-"Hey, this committee is looking for new members. Are you interested?\n"
+"Hey! This committee is looking for new members. Are you interested?\n"
 "Tell your Commissioner of Internal Affairs, %s by e-mailing to "
 "intern@svcover.nl."
 
@@ -783,8 +790,8 @@ msgid ""
 "Zeg het <strong>voor %s</strong> tegen de Commissaris Intern, %s "
 "(intern@svcover.nl)"
 msgstr ""
-"Hey, this committee is looking for new members. Are you interested? Tell "
-"your Commissioner of Internal Affairs, %2$s <strong>before %1$s</strong> by "
+"Hey! This committee is looking for new members. Are you interested?\n"
+"Tell your Commissioner of Internal Affairs, %s <strong>before %s</strong> by "
 "e-mailing to intern@svcover.nl."
 
 #: themes/default/views/commissies/_leden_gezocht.twig:11
@@ -792,8 +799,39 @@ msgid ""
 "Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het "
 "de Intern via intern@svcover.nl."
 msgstr ""
-"Hey, this committee is looking for new members. Are you interested?<br>Tell "
-"your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
+"Hey! This committee is looking for new members. Are you interested?\n"
+"Tell your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
+
+#: themes/default/views/commissies/archive.twig:4
+#: themes/default/views/commissies/archive.twig:13
+msgid "Groepen"
+msgstr "Groups"
+
+#: themes/default/views/commissies/archive.twig:11
+#: themes/default/views/commissies/index.twig:10
+msgid "Nieuwe commissie"
+msgstr "New committee"
+
+#: themes/default/views/commissies/archive.twig:16
+msgid "Actief"
+msgstr "Active"
+
+#: themes/default/views/commissies/archive.twig:26
+#: themes/default/views/commissies/archive.twig:50
+#: themes/default/views/commissies/form.twig:23
+#: themes/default/views/mailinglijsten/form.twig:20
+msgid "Type"
+msgstr "Type"
+
+#: themes/default/views/commissies/archive.twig:36
+#: themes/default/views/commissies/archive.twig:59
+#: themes/default/views/committeebattle/committee.twig:37
+msgid "Bewerk"
+msgstr "Edit"
+
+#: themes/default/views/commissies/archive.twig:42
+msgid "Inactief"
+msgstr "Inactive"
 
 #: themes/default/views/commissies/confirm_delete.twig:3
 #: themes/default/views/commissies/confirm_delete.twig:6
@@ -806,12 +844,10 @@ msgid "Weet je heel zeker dat je de commissie <em>%s</em> wil verwijderen?"
 msgstr "Are you certain you want to delete <em>%s</em> committee?"
 
 #: themes/default/views/commissies/confirm_delete.twig:12
-#: themes/default/views/commissies/form.twig:75
 msgid "Verwijder commissie"
 msgstr "Delete committee"
 
 #: themes/default/views/commissies/confirm_delete.twig:13
-#: themes/default/views/commissies/form.twig:70
 #: themes/default/views/committeebattle/confirm_delete.twig:13
 msgid "Terug naar commissie"
 msgstr "Back to committee page"
@@ -826,38 +862,23 @@ msgstr "Modify committee/working group"
 msgid "Nieuwe commissie/werkgroep maken"
 msgstr "Add a new committee/working group"
 
-#: themes/default/views/commissies/form.twig:16
-#: themes/default/views/mailinglijsten/form.twig:20
-msgid "Type"
-msgstr "Type"
+#: themes/default/views/commissies/form.twig:18
+msgid "Deze commissie/werkgroep is gedeactiveerd"
+msgstr "This committee/working group is deactivated"
 
-#: themes/default/views/commissies/form.twig:27
-msgid "Deze commissie/werkgroep is verborgen"
-msgstr "This committee/working group is hidden"
-
-#: themes/default/views/commissies/form.twig:28
-msgid ""
-"Verborgen commissies en werkgroepen worden niet getoond in het overzicht of "
-"op het scherm maar zijn soms wel handig om een groep bepaalde te geven op de "
-"website."
-msgstr ""
-"Hidden committees and working groups will not be shown in the committee "
-"index or Scherm but sometimes it is useful to create one to allow access to "
-"certain features of the website."
-
-#: themes/default/views/commissies/form.twig:36
+#: themes/default/views/commissies/form.twig:37
 msgid "Functie"
 msgstr "Function"
 
-#: themes/default/views/commissies/form.twig:55
+#: themes/default/views/commissies/form.twig:56
 msgid "Toevoegen"
 msgstr "Add"
 
-#: themes/default/views/commissies/form.twig:62
+#: themes/default/views/commissies/form.twig:63
 msgid "Deze commissie/werkgroep zoekt nieuwe leden tot"
 msgstr "This committee/working group is looking for new members till"
 
-#: themes/default/views/commissies/form.twig:64
+#: themes/default/views/commissies/form.twig:65
 msgid ""
 "Commissies en werkgroepen die leden zoeken hebben een banner met het hoofd "
 "van de Intern op de website en op het scherm. De datum is de deadline. Geef "
@@ -870,25 +891,32 @@ msgstr ""
 "the committee or working group is not looking for new members, leave the "
 "field empty."
 
-#: themes/default/views/commissies/form.twig:68
-msgid "Wijzig commissie/werkgroep"
-msgstr "Modify committee/working group"
+#: themes/default/views/commissies/form.twig:69
+#: themes/default/views/commissies/single.twig:11
+#, python-format
+msgid "Wijzig %s"
+msgstr "Modify %s"
 
-#: themes/default/views/commissies/form.twig:68
+#: themes/default/views/commissies/form.twig:69
 msgid "Maak commissie/werkgroep aan"
 msgstr "Create new committee/working group"
 
-#: themes/default/views/commissies/form.twig:70
-msgid "Terug naar werkgroep"
-msgstr "Back to working group"
+#: themes/default/views/commissies/form.twig:71
+#: themes/default/views/fotoboek/add_photos.twig:39
+#: themes/default/views/fotoboek/photobook_confirm_download.twig:15
+#: themes/default/views/fotoboek/photobook_form.twig:54
+#: themes/default/views/fotoboek/photobook_form.twig:56
+#, python-format
+msgid "Terug naar %s"
+msgstr "Return to %s"
 
-#: themes/default/views/commissies/form.twig:72
+#: themes/default/views/commissies/form.twig:73
 msgid "Terug naar alle commissies"
 msgstr "Back to all committees"
 
-#: themes/default/views/commissies/form.twig:75
-msgid "Verwijder werkgroep"
-msgstr "Delete working group"
+#: themes/default/views/commissies/form.twig:76
+msgid "Deactiveer"
+msgstr "Deactivate"
 
 #: themes/default/views/commissies/index.twig:4
 #: themes/default/views/commissies/index.twig:12
@@ -899,21 +927,18 @@ msgstr "Delete working group"
 msgid "Commissies"
 msgstr "Committees"
 
-#: themes/default/views/commissies/index.twig:10
-msgid "Nieuwe commissie"
-msgstr "New committee"
-
 #: themes/default/views/commissies/index.twig:26
 msgid "Commissieleden gezocht!"
 msgstr "Looking for new members!"
 
-#: themes/default/views/commissies/single.twig:11
-msgid "Wijzig commissie"
-msgstr "Modify committee"
+#: themes/default/views/commissies/index.twig:43
+msgid "Commissiearchief"
+msgstr "Committee archive"
 
 #: themes/default/views/commissies/single.twig:27
-msgid "Bewerk commissiepagina"
-msgstr "Modify committee page"
+#, python-format
+msgid "Bewerk %spagina"
+msgstr "Modify %s page"
 
 #: themes/default/views/commissies/working_groups.twig:3
 #: themes/default/views/commissies/working_groups.twig:10
@@ -935,10 +960,6 @@ msgstr "Reason"
 #: themes/default/views/committeebattle/index.twig:21
 msgid "Punten"
 msgstr "Points"
-
-#: themes/default/views/committeebattle/committee.twig:37
-msgid "Bewerk"
-msgstr "Edit"
 
 #: themes/default/views/committeebattle/confirm_delete.twig:3
 #: themes/default/views/committeebattle/confirm_delete.twig:6
@@ -1090,7 +1111,7 @@ msgstr "Page"
 #: include/models/DataModelForum.php:1220
 #: include/models/DataModelForum.php:1330
 #: include/models/DataModelForum.php:1356
-#: include/models/DataModelMember.php:610
+#: include/models/DataModelMember.php:608
 msgid "Onbekend"
 msgstr "Unknown"
 
@@ -1256,14 +1277,6 @@ msgstr "Photo album"
 #: themes/default/views/fotoboek/add_photos.twig:38
 msgid "Voeg foto's toe"
 msgstr "Add photos"
-
-#: themes/default/views/fotoboek/add_photos.twig:39
-#: themes/default/views/fotoboek/photobook_confirm_download.twig:15
-#: themes/default/views/fotoboek/photobook_form.twig:54
-#: themes/default/views/fotoboek/photobook_form.twig:56
-#, python-format
-msgid "Terug naar %s"
-msgstr "Return to %s"
 
 #: themes/default/views/fotoboek/competition.twig:3
 #: themes/default/views/fotoboek/competition.twig:6
@@ -1857,6 +1870,14 @@ msgstr "Registered on"
 msgid "Bevestigingslink"
 msgstr "Confirmation link"
 
+#: themes/default/views/lidworden/pending_form.twig:3
+msgid "Bewerk hangende aanmelding"
+msgstr "Edit pending registrations"
+
+#: themes/default/views/lidworden/pending_form.twig:19
+msgid "Terug"
+msgstr "Back"
+
 #: themes/default/views/lidworden/submitted.twig:6
 msgid ""
 "Je lidmaatschapsaanvraag is verstuurd. Als het goed is heb je inmiddels een "
@@ -2361,19 +2382,19 @@ msgid "Hieronder staan alle sessies die voor jouw account nog open staan."
 msgstr ""
 "Here all currently open sessions listed which are logged-in to your account."
 
-#: themes/default/views/profiel/sessions_tab.twig:16
+#: themes/default/views/profiel/sessions_tab.twig:15
 msgid "IP-adres"
 msgstr "IP-address"
 
-#: themes/default/views/profiel/sessions_tab.twig:17
+#: themes/default/views/profiel/sessions_tab.twig:16
 msgid "Applicatie"
 msgstr "Application"
 
-#: themes/default/views/profiel/sessions_tab.twig:19
+#: themes/default/views/profiel/sessions_tab.twig:18
 msgid "Laatst actief"
 msgstr "Last active"
 
-#: themes/default/views/profiel/sessions_tab.twig:34
+#: themes/default/views/profiel/sessions_tab.twig:33
 msgid "Sluit geselecteerde sessies"
 msgstr "End selected sessions"
 
@@ -2777,21 +2798,21 @@ msgstr ""
 "The changes to the calendar event are waiting for approval. Once the "
 "governing board has accepted the event, it shall be placed on the website."
 
-#: agenda.php:291
+#: agenda.php:295
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar event."
 
-#: agenda.php:293
+#: agenda.php:297
 #, php-format
 msgid ""
 "De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten."
 msgstr ""
 "The committee %s has been notified of the denying of the calendar events."
 
-#: agenda.php:296
+#: agenda.php:300
 #, php-format
 msgid ""
 "De commissies %s zijn op de hoogte gesteld van het weigeren van de "
@@ -2799,7 +2820,7 @@ msgid ""
 msgstr ""
 "The committees %s have been notified of the denying of the calendar events."
 
-#: agenda.php:336
+#: agenda.php:340
 msgid "Alle activiteiten van studievereniging Cover"
 msgstr "All activities of study association Cover"
 
@@ -3088,12 +3109,12 @@ msgstr "Groups"
 msgid "Groep"
 msgstr "Group"
 
-#: include/models/DataModelMember.php:595
+#: include/models/DataModelMember.php:593
 #: themes/default/views/almanak/almanak.php:36
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: include/models/DataModelMember.php:607
+#: include/models/DataModelMember.php:605
 msgid "Geen status"
 msgstr "No status"
 
@@ -3252,35 +3273,35 @@ msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
 msgstr ""
 "Your photo has been submitted. It may take a while before it will be updated."
 
-#: search.php:15
+#: search.php:16
 msgid "leden"
 msgstr "members"
 
-#: search.php:19
+#: search.php:20
 msgid "pagina's"
 msgstr "pages"
 
-#: search.php:23
+#: search.php:24
 msgid "commissies"
 msgstr "committees"
 
-#: search.php:27
+#: search.php:28
 msgid "agendapunten"
 msgstr "calendar events"
 
-#: search.php:31
+#: search.php:32
 msgid "fotoboeken"
 msgstr "photo books"
 
-#: search.php:35
+#: search.php:36
 msgid "mededelingen"
 msgstr "announcements"
 
-#: search.php:39
+#: search.php:40
 msgid "forum topics"
 msgstr "forum topics"
 
-#: search.php:43
+#: search.php:44
 msgid "wiki-pagina's"
 msgstr "wiki pages"
 
@@ -3405,9 +3426,17 @@ msgstr "Attend"
 msgid "Agenda %d-%d"
 msgstr "Calendar %d-%d"
 
-#: themes/default/views/commissies/commissies.php:72
-msgid "Werkgroep"
-msgstr "Working group"
+#: themes/default/views/commissies/commissies.php:76
+msgid "commissie"
+msgstr "committee"
+
+#: themes/default/views/commissies/commissies.php:77
+msgid "werkgroep"
+msgstr "working group"
+
+#: themes/default/views/commissies/commissies.php:78
+msgid "overig"
+msgstr "other"
 
 #: themes/default/views/forum/forum.php:56
 #: themes/default/views/forum/forum.php:75
@@ -3472,7 +3501,7 @@ msgstr "Direct debits"
 msgid "Systeem"
 msgstr "System"
 
-#: themes/default/views/profiel/profiel.php:390
+#: themes/default/views/profiel/profiel.php:392
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
 
@@ -3499,6 +3528,30 @@ msgstr ""
 #: themes/default/views/profiel/_facebook.phtml:26
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
+
+#~ msgid ""
+#~ "Verborgen commissies en werkgroepen worden niet getoond in het overzicht "
+#~ "of op het scherm maar zijn soms wel handig om een groep bepaalde te geven "
+#~ "op de website."
+#~ msgstr ""
+#~ "Hidden committees and working groups will not be shown in the committee "
+#~ "index or Scherm but sometimes it is useful to create one to allow access "
+#~ "to certain features of the website."
+
+#~ msgid "Wijzig commissie/werkgroep"
+#~ msgstr "Modify committee/working group"
+
+#~ msgid "Terug naar werkgroep"
+#~ msgstr "Back to working group"
+
+#~ msgid "Verwijder werkgroep"
+#~ msgstr "Delete working group"
+
+#~ msgid "Wijzig commissie"
+#~ msgstr "Modify committee"
+
+#~ msgid "Bewerk commissiepagina"
+#~ msgstr "Modify committee page"
 
 #~ msgid ""
 #~ "We konden je aanmelding niet meer vinden. Je kan je proberen opnieuw aan "
@@ -3877,9 +3930,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Rechten"
 #~ msgstr "Rights"
-
-#~ msgid "Groepen"
-#~ msgstr "Groups"
 
 #~ msgid "Volgorde"
 #~ msgstr "Order"
@@ -5066,9 +5116,6 @@ msgstr "Disconnect Facebook"
 #~ msgid "Vakken"
 #~ msgstr "Courses"
 
-#~ msgid "Terug"
-#~ msgstr "Back"
-
 #~ msgid "Ga terug naar de Studieondersteuningspagina"
 #~ msgstr "Go back to the study support page"
 
@@ -5346,9 +5393,6 @@ msgstr "Disconnect Facebook"
 #~ msgid "De CoverKamer is <b>dicht</b>"
 #~ msgstr "The Coverkamer is <b>closed</b>"
 
-#~ msgid "Inactief"
-#~ msgstr "Inactive"
-
 #~ msgid "de Easy"
 #~ msgstr "the Easy"
 
@@ -5416,9 +5460,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "5e jaar"
 #~ msgstr "5th year"
-
-#~ msgid "Overige"
-#~ msgstr "Other"
 
 #~ msgid "Aantekeningen"
 #~ msgstr "Notes"

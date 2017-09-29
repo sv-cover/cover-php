@@ -1,5 +1,5 @@
 {% if global.models.Banner.main_sponsors|length > 0 %}
-	<h4>{{ __('Hoofdpartner') }}</h4>
+	<h4>{{ __N('Hoofdpartner', 'Hoofdpartners', global.models.Banner.main_sponsors|length) }}</h4>
 	{% for banner in global.models.Banner.main_sponsors %}
 		<a href="{{ banner.url }}" target="_blank">
 			<img src="images/banners/{{ banner.filename }}">
@@ -10,7 +10,7 @@
 {% endif %}
 
 {% if global.models.Banner.partners|length > 0 %}
-	<h4>{{ __('Partners') }}</h4>
+	<h4>{{ __N('Partner', 'Partners', global.models.Banner.partners|length) }}</h4>
 	{% for banner in global.models.Banner.partners %}
 		<a href="{{ banner.url }}" target="_blank">
 			<img src="images/banners/{{ banner.filename }}">
