@@ -85,7 +85,7 @@ class ControllerApi extends Controller
 		$user_model = get_model('DataModelMember');
 
 		if (!($member = $user_model->login($email, $password)))
-			throw new RuntimeException('Invalid username or password');
+			throw new InvalidArgumentException('Invalid username or password');
 
 		/** @var DataModelSession $session_model */
 		$session_model = get_model('DataModelSession');
@@ -116,7 +116,7 @@ class ControllerApi extends Controller
 		$session = $session_model->resume($session_id);
 
 		if (!$session)
-			throw new RuntimeException('Invalid session id');
+			throw new InvalidArgumentException('Invalid session id');
 
 		$auth = new ConstantSessionProvider($session);
 
@@ -467,7 +467,8 @@ class ControllerApi extends Controller
 
 	protected function run_exception($e)
 	{
-		sentry_report_exception($e);
+		if (!($e instanceof InvalidArgumentException) && !($e instanceof UnauthorizedException))
+			sentry_report_exception($e);
 		
 		header('Content-Type: application/json');
 		echo json_encode(array('error' => $e->getMessage()));
