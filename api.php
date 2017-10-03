@@ -342,7 +342,7 @@ class ControllerApi extends Controller
 		$member = $member_model->get_iter($member_id);
 
 		$mailing_model = get_model('DataModelMailinglist');
-		$mailinglist = $mailing_model->get_iter($mailinglist);
+		$mailinglist = $mailing_model->get_iter_by_address($mailinglist);
 
 		$subscription_model = get_model('DataModelMailinglistSubscription');
 
