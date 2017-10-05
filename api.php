@@ -346,7 +346,7 @@ class ControllerApi extends Controller
 
 		$subscription_model = get_model('DataModelMailinglistSubscription');
 
-		$mailing_model->subscribe_member($mailinglist, $member);
+		$subscription_model->subscribe_member($mailinglist, $member);
 
 		return ['success' => true];
 	}
