@@ -77,6 +77,8 @@
 					'action': 'fotoboek.php?book={{ book.id }}&view=delete_photos'
 				}).appendTo(document.body);
 
+				$('{{ html_nonce('delete_photos') }}').appendTo($form);
+
 				$.each(selection, function(i, id) {
 					$('<input>', {
 						'type': 'hidden',
