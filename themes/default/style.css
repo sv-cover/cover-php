@@ -2436,10 +2436,14 @@ body.modal-open {
 	overflow: hidden;
 }
 
-/* Ugly fix for the companies page, will come up with a solution in the new layout -Martijn */
+.markup-image.company-logo {
+	max-width: 240px;
+	float: left;
+	margin: 0 10px 10px 0;
+}
 
-#page_51 table.markup_default td img, table.markup_noborder td img {
-	max-width: 240px !important;
+.markup-header {
+	clear: both;
 }
 
 .working-groups {

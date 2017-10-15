@@ -185,10 +185,12 @@
 	{
 		static $count = 0;
 
-		while (preg_match('/\[img=(.+?)\]/', $markup, $match))
+		while (preg_match('/\[img(?P<classes>(\.[a-z-]+)*)=(?P<url>.+?)\]/', $markup, $match))
 		{
 			$placeholder = sprintf('#IMAGE%d#', $count++);
-			$placeholders[$placeholder] = '<img src="' . htmlentities($match[1], ENT_QUOTES) . '" style="max-width: 100%;">';
+			$placeholders[$placeholder] = sprintf('<img class="%s" src="%s">',
+				'markup-image' . str_replace('.', ' ', $match['classes']),
+				markup_format_attribute($match['url']));
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
@@ -237,7 +239,14 @@
 	}
 	
 	function _markup_parse_header(&$markup) {
-		$markup = preg_replace('/\[(\/)?h(.+?)\]\s*/is', '<$1h$2>', $markup);
+		$markup = preg_replace_callback(
+			'/\[h(?P<level>\d)(?<classes>(\.[a-z-])*)\](?P<content>.+?)\[\/h\\1\]\s*/is',
+			function($match) {
+				return sprintf('<h%d class="%s">%s</h%1$d>',
+					$match['level'],
+					'markup-header' . str_replace('.', ' ', $match['classes']),
+					$match['content']);
+			}, $markup);
 	}
 
 	function _markup_parse_placeholders(&$markup, $placeholders)
