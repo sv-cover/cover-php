@@ -576,9 +576,10 @@
 			
 			if ($this->_form_is_submitted('delete_photos'))
 			{
-				foreach ($_POST['photo'] as $id)
-					if ($photo = $this->model->get_iter($id))
-						$this->model->delete($photo);
+				if (isset($_POST['photo']))
+					foreach ($_POST['photo'] as $id)
+						if ($photo = $this->model->get_iter($id))
+							$this->model->delete($photo);
 			}
 			
 			return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
