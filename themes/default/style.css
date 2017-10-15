@@ -2442,6 +2442,12 @@ body.modal-open {
 	margin: 0 10px 10px 0;
 }
 
+.markup-region::after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
 .markup-header {
 	clear: both;
 }
