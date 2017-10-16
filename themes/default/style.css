@@ -2436,6 +2436,10 @@ body.modal-open {
 	overflow: hidden;
 }
 
+.markup-image {
+	max-width: 100%;
+}
+
 .markup-image.company-logo {
 	max-width: 240px;
 	float: left;
