@@ -1,5 +1,7 @@
 {% extends '@layout/layout.twig' %}
 
+{% set option_values = options|select('optie') %}
+
 {% block content %}
 <h1><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
 <div class="messageBox">
@@ -19,7 +21,7 @@
 			{% for option in options %}
 			<div>
 				{{ html_label(__('Optie %d')|format(loop.index), 'poll_option[' ~ loop.index0 ~ ']', errors=errors) }}
-				{{ html_input_text('poll_option[' ~ loop.index0 ~ ']', options, errors=errors) }}
+				{{ html_input_text('poll_option[' ~ loop.index0 ~ ']', {'poll_option': option_values}, errors=errors) }}
 			</div>
 			{% endfor %}
 		</div>
@@ -31,7 +33,8 @@
 					<li><a href="#forum-message-preview">{{ __('Voorbeeld') }}</a></li>
 				</ul>
 				<div class="tab-panel" id="forum-message">
-					{{ html_textarea_field('message', message, rows=3) }}
+					{{ html_label(__('Vraag'), 'message', errors=errors) }}
+					{{ html_textarea_field('message', message, rows=3, errors=errors) }}
 				</div>
 				<div class="tab-panel" id="forum-message-preview">
 					<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>

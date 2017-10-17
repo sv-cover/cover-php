@@ -53,10 +53,12 @@ class HTMLTwigExtension extends Twig_Extension
 		if ($name)
 			$attributes['name'] = $name;
 
-		if (!isset($params['nopost']) && isset($_POST[$name]))
-			$attributes['value'] = $_POST[$name];
-		elseif ($data && isset($data[$field]))
-			$attributes['value'] = isset($params['formatter']) ? call_user_func($params['formatter'], $data[$field]) : $data[$field];
+		if (!isset($params['nopost']) && array_path($_POST, $name) !== null)
+			$attributes['value'] = array_path($_POST, $name);
+		elseif ($data && array_path($data, $name) !== null)
+			$attributes['value'] = isset($params['formatter'])
+				? call_user_func($params['formatter'], array_path($data, $name))
+				: array_path($data, $name);
 
 		if (isset($params['errors']) && in_array($name, $params['errors']))
 			$params['class'] = (isset($params['class']) ? ($params['class'] . '_') : '') . 'error';

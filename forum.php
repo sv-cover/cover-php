@@ -162,7 +162,7 @@ class ControllerForum extends Controller
 		{
 			// Mark an empty option as an error, but process it anyway.
 			// If there are enough non-empty options, it is fine.
-			if (empty($label))
+			if (empty($label) && $i + 1 < self::MINIMUM_POLL_OPTION_COUNT)
 				$poll_errors[] = 'poll_option[' . $i . ']';
 
 			$option = $poll->new_poll_option();
@@ -177,7 +177,10 @@ class ControllerForum extends Controller
 		if (count($valid_options) > self::MAXIMUM_POLL_OPTION_COUNT)
 			$errors[] = 'poll_option_count';
 
-		if (count($errors) > 0 || count($valid_options) < self::MINIMUM_POLL_OPTION_COUNT)
+		if (count($valid_options) < self::MINIMUM_POLL_OPTION_COUNT)
+			$errors[] = 'poll_option_count';
+
+		if (count($errors) > 0)
 			return $this->view->render_poll_form($forum, $poll, $message, $options, array_merge($errors, $poll_errors));
 
 		// Create new poll/thread with given subject
