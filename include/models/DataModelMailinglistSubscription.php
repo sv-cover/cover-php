@@ -201,7 +201,7 @@ class DataModelMailinglistSubscription extends DataModel
 					commissies.id = committee_members.committee_id
 				WHERE
 					member_id = l.id
-					AND commissies.type = ' . DataModelCommissie::TYPE_COMMITTEE . '
+					AND commissies.type = ' . constant(get_class(get_model('DataModelCommissie')) . '::TYPE_COMMITTEE') . '
 					AND commissies.hidden != 1
 				)';
 
