@@ -61,7 +61,7 @@ function barchart($data)
 				<text fill="#000" x="-9" y="0.5" dy="0.32em">%d</text>
 			</g>',
 			$chart_height - $bar_height - $padding,
-			$value);
+			round($value));
 	}
 
 	return sprintf('
