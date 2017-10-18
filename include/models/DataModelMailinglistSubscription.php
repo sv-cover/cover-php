@@ -192,7 +192,18 @@ class DataModelMailinglistSubscription extends DataModel
 			$partition_field = '(EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM l.geboortedatum))';
 
 		elseif ($partition_by == 'committee_count')
-			$partition_field = '(SELECT COUNT(committee_id) FROM committee_members WHERE member_id = l.id)';
+			$partition_field = '(
+				SELECT
+					COUNT(committee_id)
+				FROM
+					committee_members
+				LEFT JOIN commissies ON
+					commissies.id = committee_members.committee_id
+				WHERE
+					member_id = l.id
+					AND commissies.type = ' . DataModelCommissie::TYPE_COMMITTEE . '
+					AND commissies.hidden != 1
+				)';
 
 		else {
 			if (!DataIterMember::has_field($partition_by))
