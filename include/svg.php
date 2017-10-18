@@ -43,11 +43,12 @@ function barchart($data)
 			$bar_width / 2 + $padding + ($bar_width + 2 * $padding) * $i,
 			$partition);
 
-		$bars[] = sprintf('<rect class="barchart-bar" x="%d" y="%d" width="%d" height="%d" fill="brown"></rect>',
+		$bars[] = sprintf('<rect class="barchart-bar" x="%d" y="%d" width="%d" height="%d" fill="brown"><title>%d</title></rect>',
 			$padding + ($bar_width + 2 * $padding) * $i,
 			$chart_height - $bar_height,
 			$bar_width,
-			$bar_height);
+			$bar_height,
+			$count);
 	}
 
 	for ($i = 0; $i <= $tick_scale; ++$i)
