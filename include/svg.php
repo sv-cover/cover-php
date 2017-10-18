@@ -23,6 +23,8 @@ function barchart($data)
 
 	$bar_scale = ($chart_height - 40) / $data_max;
 
+	$tick_scale = max(1, min($data_max, 10)); // At most 10 ticks
+
 	$x_ticks = [];
 
 	$y_ticks = [];
@@ -48,9 +50,9 @@ function barchart($data)
 			$bar_height);
 	}
 
-	for ($i = 0; $i <= 10; ++$i)
+	for ($i = 0; $i <= $tick_scale; ++$i)
 	{
-		$value = (1.0 - $i / 10) / $data_scale;
+		$value = (1.0 - $i / $tick_scale) / $data_scale;
 		$bar_height = $value * $bar_scale;
 
 		$y_ticks[] = sprintf('
