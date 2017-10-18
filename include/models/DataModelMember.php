@@ -175,7 +175,7 @@
 		public function login($email, $passwd)
 		{
 			try {		
-				$iter = $this->get_from_email($email);
+				$iter = $this->get_from_email(trim($email));
 				
 				$active_member_types = array(
 					MEMBER_STATUS_LID,
