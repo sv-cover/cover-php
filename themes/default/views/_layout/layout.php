@@ -17,7 +17,7 @@ class LayoutViewHelper
 			$menus['admin'] = ['label' => __('Beheer'), 'submenu' => []];
 		
 			$menus['admin']['submenu'][] = [
-				'url' => 'show.php?show_new',
+				'url' => 'show.php?view=create',
 				'label' => __('Pagina maken')
 			];
 
