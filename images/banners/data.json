@@ -2,11 +2,11 @@
 	{"filename":"tno.jpg","url":"https:\/\/www.tno.nl\/nl\/career\/","type":"main-sponsor"},
 	{"filename":"belsimpel.png","url":"https:\/\/werkenbijbelsimpel.nl\/","type":"main-sponsor"},
 	{"filename":"axonlogo.png","url":"http:\/\/www.axonline.nl\/"},
-	{"filename":"topicus.png","url":"http:\/\/www.topicus.nl\/werken"},
 	{"filename":"quintor.jpg","url":"http:\/\/www.quintor.nl\/"},
-	{"filename":"ibm.png","url":"http:\/\/www-05.ibm.com\/nl\/groningenexperience\/index.html"},
 	{"filename":"tapperij.jpg","url":"http:\/\/www.cafedetapperij.com\/"},
-	{"filename":"rabobank.png","url":"https://www.raboworkx.nl/nl/studenten_en_starters/"},
 	{"filename":"nsvki.png","url":"http://nsvki.nl/"},
-	{"filename":"tomtom.png","url":"https://www.tomtom.com/careers/jobs/"}
+    {"filename":"tomtom.png","url":"https:\/\/www.tomtom.com\/careers\/jobs\/"},
+    {"filename":"asml.jpg","url":"https:\/\/www.asml.com\/careers\/working-at-asml\/en\/s32408?rid=42455"},
+    {"filename":"dataprovider.png","url":"https:\/\/www.dataprovider.com\/careers\/"},
+	{"filename":"get_there.png","url":"http:\/\/www.getthere.nl\/werken-bij\/"}
 ]
