@@ -49,7 +49,8 @@
 				'birth_date' => [
 					function($x) {
 						return preg_match('/^((?:19|20)\d\d)\-([01]?\d)\-([0123]?\d)$/', $x, $match)
-							&& checkdate((int) $match[2], (int) $match[3], (int) $match[1]);
+							&& checkdate((int) $match[2], (int) $match[3], (int) $match[1])
+							&& $match[1] < (int) date('Y') - 9; // You need to be at least 10 years old ;)
 					},
 					function($x) {
 						// Turn date around if passed the other way
