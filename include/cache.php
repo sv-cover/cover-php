@@ -27,6 +27,8 @@ class Cache
 
 	public function put($key, $value, $ttl)
 	{
+		$this->db->beginTransaction();
+
 		$this->delete($key);
 
 		$data = array(
@@ -36,6 +38,8 @@ class Cache
 		);
 
 		$this->db->insert($this->table, $data);
+
+		$this->db->commit();
 	}
 
 	public function get($key, $fallback = null)
