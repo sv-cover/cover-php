@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block content %}
+{% if interest_reported %}
+	<div class="warning-section">
+		<p>{{ __('Cool! Je interesse is doorgegeven aan de Commissaris Intern!') }}</p>
+	</div>
+{% endif %}
 <div class="pageheading">
 	{% if user_can_update iter %}
 	<div class="controls inline">

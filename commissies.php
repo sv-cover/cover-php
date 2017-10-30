@@ -75,7 +75,31 @@ class ControllerCommissies extends ControllerCRUD
 
 		$iters = $this->model->get($iter['type']);
 
-		return $this->view()->render_read($iter, ['iters' => $iters]);
+		return $this->view()->render_read($iter, [
+			'iters' => $iters,
+			'interest_reported' => !empty($_GET['interest_reported'])
+		]);
+	}
+
+	public function run_show_interest(DataIter $iter)
+	{
+		if (!get_identity()->member_is_active())
+			throw new UnauthorizedException('Only active members can apply for a committee');
+
+		if (!get_policy($this->model)->user_can_read($iter))
+			throw new UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
+
+		if ($this->_form_is_submitted('show_interest', $iter)) {
+			$mail = parse_email_object("interst_in_committee.txt", [
+				'committee' => $iter,
+				'member' => get_identity()->member()
+			]);
+			$mail->send('intern@svcover.nl');
+
+			return $this->view->redirect($this->link_to('read', $iter, ['interest_reported' => true]));
+		}
+
+		return $this->view->redirect($this->link_to_read($iter));
 	}
 
 	/**

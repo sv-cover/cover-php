@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-09-29 17:41+0200\n"
+"POT-Creation-Date: 2017-10-30 18:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -300,7 +300,7 @@ msgstr "Head"
 #: themes/default/views/committeebattle/index.twig:20
 #: themes/default/views/mailinglijsten/form.twig:30
 #: themes/default/views/search/_single_committee.twig:8
-#: include/models/DataModelForum.php:1350
+#: include/models/DataModelForum.php:1361
 msgid "Commissie"
 msgstr "Committee"
 
@@ -326,14 +326,14 @@ msgstr "Facebook Event"
 
 #: themes/default/views/agenda/form.twig:59
 #: themes/default/views/agenda/form.twig:63
-#: themes/default/views/fotoboek/photobook.twig:241
+#: themes/default/views/fotoboek/photobook.twig:243
 #: themes/default/views/fotoboek/photobook_form.twig:47
 msgid "Beschrijving"
 msgstr "Description"
 
 #: themes/default/views/agenda/form.twig:60
 #: themes/default/views/announcements/form.twig:34
-#: themes/default/views/forum/poll_form.twig:31
+#: themes/default/views/forum/poll_form.twig:33
 #: themes/default/views/forum/reply_form.twig:21
 #: themes/default/views/forum/thread_form.twig:22
 msgid "Voorbeeld"
@@ -341,7 +341,7 @@ msgstr "Preview"
 
 #: themes/default/views/agenda/form.twig:67
 #: themes/default/views/announcements/form.twig:41
-#: themes/default/views/forum/poll_form.twig:37
+#: themes/default/views/forum/poll_form.twig:40
 #: themes/default/views/forum/reply_form.twig:27
 #: themes/default/views/forum/thread_form.twig:28
 #: themes/default/views/show/form.twig:44
@@ -417,7 +417,7 @@ msgstr "The calendar events below are put up for approval."
 
 #: themes/default/views/agenda/moderate.twig:24
 #: themes/default/views/committeebattle/committee.twig:13
-#: themes/default/views/fotoboek/photobook.twig:234
+#: themes/default/views/fotoboek/photobook.twig:236
 #: themes/default/views/mailinglijsten/archive_index.twig:13
 #: themes/default/views/profiel/incassomatic_tab.twig:23
 #: themes/default/views/profiel/incassomatic_tab.twig:44
@@ -544,7 +544,7 @@ msgstr "Visibility"
 #: themes/default/views/almanak/index.twig:22
 #: themes/default/views/commissies/form.twig:36
 #: themes/default/views/search/_single_member.twig:3
-#: include/models/DataModelForum.php:1347
+#: include/models/DataModelForum.php:1358
 #: include/models/DataModelMember.php:590
 #: themes/default/views/profiel/profiel.php:387
 msgid "Lid"
@@ -672,7 +672,7 @@ msgstr "Visible to"
 
 #: themes/default/views/announcements/form.twig:26
 #: themes/default/views/forum/forum.twig:40
-#: themes/default/views/forum/poll_form.twig:14
+#: themes/default/views/forum/poll_form.twig:16
 #: themes/default/views/forum/thread_form.twig:14
 #: themes/default/views/mailinglijsten/archive_index.twig:11
 #: themes/default/views/mailinglijsten/autoresponder_form.twig:10
@@ -802,6 +802,10 @@ msgstr ""
 "Hey! This committee is looking for new members. Are you interested?\n"
 "Tell your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl."
 
+#: themes/default/views/commissies/_leden_gezocht.twig:16
+msgid "Ik ben geïnteresseerd!"
+msgstr "I’m interested!"
+
 #: themes/default/views/commissies/archive.twig:4
 #: themes/default/views/commissies/archive.twig:13
 msgid "Groepen"
@@ -892,7 +896,7 @@ msgstr ""
 "field empty."
 
 #: themes/default/views/commissies/form.twig:69
-#: themes/default/views/commissies/single.twig:11
+#: themes/default/views/commissies/single.twig:16
 #, python-format
 msgid "Wijzig %s"
 msgstr "Modify %s"
@@ -935,7 +939,11 @@ msgstr "Looking for new members!"
 msgid "Commissiearchief"
 msgstr "Committee archive"
 
-#: themes/default/views/commissies/single.twig:27
+#: themes/default/views/commissies/single.twig:10
+msgid "Cool! Je interesse is doorgegeven aan de Commissaris Intern!"
+msgstr "Cool! We’ve notified the Commissioner of Internal Affairs for you!"
+
+#: themes/default/views/commissies/single.twig:32
 #, python-format
 msgid "Bewerk %spagina"
 msgstr "Modify %s page"
@@ -1068,7 +1076,7 @@ msgstr "Back to thread"
 #: themes/default/views/forum/forum_form.twig:5
 #: themes/default/views/forum/index.twig:3
 #: themes/default/views/forum/index.twig:6
-#: themes/default/views/forum/poll_form.twig:4
+#: themes/default/views/forum/poll_form.twig:6
 #: themes/default/views/forum/reply_form.twig:4
 #: themes/default/views/forum/thread.twig:6
 #: themes/default/views/forum/thread_form.twig:4
@@ -1085,7 +1093,7 @@ msgid "Nieuwe poll"
 msgstr "New poll"
 
 #: themes/default/views/forum/forum.twig:41
-#: themes/default/views/forum/poll_form.twig:9
+#: themes/default/views/forum/poll_form.twig:11
 #: themes/default/views/forum/reply_form.twig:13
 #: themes/default/views/forum/thread_form.twig:9
 msgid "Auteur"
@@ -1108,9 +1116,9 @@ msgstr "Page"
 #: themes/default/views/forum/thread.twig:69
 #: themes/default/views/fotoboek/single.twig:111
 #: themes/default/views/mailinglijsten/single.twig:52 include/member.php:101
-#: include/models/DataModelForum.php:1220
-#: include/models/DataModelForum.php:1330
-#: include/models/DataModelForum.php:1356
+#: include/models/DataModelForum.php:1231
+#: include/models/DataModelForum.php:1341
+#: include/models/DataModelForum.php:1367
 #: include/models/DataModelMember.php:608
 msgid "Onbekend"
 msgstr "Unknown"
@@ -1131,21 +1139,22 @@ msgid "Maak nieuw forum aan"
 msgstr "Create new forum"
 
 #: themes/default/views/forum/forum_form.twig:39
-#: themes/default/views/forum/poll_form.twig:44
+#: themes/default/views/forum/poll_form.twig:47
 #: themes/default/views/forum/thread_form.twig:35
 msgid "Terug naar forum"
 msgstr "Back to forum"
 
-#: themes/default/views/forum/poll_form.twig:21
+#: themes/default/views/forum/poll_form.twig:23
 #, python-format
 msgid "Optie %d"
 msgstr "Option %d"
 
-#: themes/default/views/forum/poll_form.twig:30
+#: themes/default/views/forum/poll_form.twig:32
+#: themes/default/views/forum/poll_form.twig:36
 msgid "Vraag"
 msgstr "Subject/question"
 
-#: themes/default/views/forum/poll_form.twig:43
+#: themes/default/views/forum/poll_form.twig:46
 msgid "Plaats poll"
 msgstr "Publish poll"
 
@@ -1350,7 +1359,7 @@ msgstr "Delete selected photos"
 msgid "Weet je zeker dat je %d geselecteerde foto's wilt verwijderen?"
 msgstr "Are you sure you want to delete the %d selected photos?"
 
-#: themes/default/views/fotoboek/photobook.twig:113
+#: themes/default/views/fotoboek/photobook.twig:115
 msgid ""
 "De volgorde kon niet worden opgeslagen. De volgorde kan niet worden "
 "opgeslagen voor automatisch gegenereerde albums en albums waar je geen "
@@ -1360,7 +1369,7 @@ msgstr ""
 "album is automatically generator or you don’t have permission to update the "
 "album."
 
-#: themes/default/views/fotoboek/photobook.twig:199
+#: themes/default/views/fotoboek/photobook.twig:201
 #, python-format
 msgid ""
 "Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden "
@@ -1371,24 +1380,24 @@ msgstr ""
 "%s. Please inform the PhotoCee when you made photos at an activity so they "
 "can add them to the photo album."
 
-#: themes/default/views/fotoboek/photobook.twig:199
+#: themes/default/views/fotoboek/photobook.twig:201
 msgid "PhotoCee"
 msgstr "PhotoCee"
 
-#: themes/default/views/fotoboek/photobook.twig:207
+#: themes/default/views/fotoboek/photobook.twig:209
 msgid "Download fotoboek"
 msgstr "Download photo album"
 
-#: themes/default/views/fotoboek/photobook.twig:215
+#: themes/default/views/fotoboek/photobook.twig:217
 msgid "Markeer alle boeken als gezien"
 msgstr "Mark all albums as seen"
 
-#: themes/default/views/fotoboek/photobook.twig:227
+#: themes/default/views/fotoboek/photobook.twig:229
 #: themes/default/views/fotoboek/photobook_form.twig:37 locale/strings.php:14
 msgid "Fotograaf"
 msgstr "Photographer"
 
-#: themes/default/views/fotoboek/photobook.twig:248
+#: themes/default/views/fotoboek/photobook.twig:250
 msgid "Er zijn nog geen foto's in dit fotoboek"
 msgstr "There are no photos in this photo album yet"
 
@@ -2276,8 +2285,8 @@ msgid "Niemand"
 msgstr "Nobody"
 
 #: themes/default/views/profiel/privacy_tab.twig:18
-#: include/models/DataModelForum.php:1295
-#: include/models/DataModelForum.php:1344
+#: include/models/DataModelForum.php:1306
+#: include/models/DataModelForum.php:1355
 #: themes/default/views/announcements/announcements.php:29
 #: themes/default/views/mailinglijsten/mailinglijsten.php:31
 msgid "Iedereen"
@@ -3071,17 +3080,17 @@ msgstr "Yesterday"
 msgid "%d dagen geleden"
 msgstr "%d days ago"
 
-#: include/htmltwigextension.php:104
+#: include/htmltwigextension.php:106
 #, php-format
 msgid "Bijv. %d-9-20"
 msgstr "E.g. %d-9-20"
 
-#: include/htmltwigextension.php:115
+#: include/htmltwigextension.php:117
 #, php-format
 msgid "Bijv. %d-9-20 11:00"
 msgstr "E.g. %d-9-20 11:00"
 
-#: include/htmltwigextension.php:314
+#: include/htmltwigextension.php:316
 msgid "Verplicht"
 msgstr "Required"
 
@@ -3093,19 +3102,19 @@ msgstr "No name"
 msgid "Jij!"
 msgstr "You!"
 
-#: include/models/DataModelForum.php:1298
+#: include/models/DataModelForum.php:1309
 msgid "Alle leden"
 msgstr "All members"
 
-#: include/models/DataModelForum.php:1308
+#: include/models/DataModelForum.php:1319
 msgid "Alle commissies"
 msgstr "Committees"
 
-#: include/models/DataModelForum.php:1318
+#: include/models/DataModelForum.php:1329
 msgid "Alle groepen"
 msgstr "Groups"
 
-#: include/models/DataModelForum.php:1353
+#: include/models/DataModelForum.php:1364
 msgid "Groep"
 msgstr "Group"
 
