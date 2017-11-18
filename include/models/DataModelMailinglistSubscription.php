@@ -36,7 +36,7 @@ class DataIterMailinglistSubscription extends DataIter
 	
 	public function is_active()
 	{
-		return empty($this['opgezegd_op']) || new DateTime($this['opgezegd_op']) > new DateTime();
+		return empty($this['opgezegd_op']) || new DateTime($this['opgezegd_op']) >= new DateTime();
 	}
 
 	public function cancel()
@@ -400,15 +400,15 @@ class DataModelMailinglistSubscription extends DataModel
 
 	public function cancel_subscription(DataIterMailinglistSubscription $subscription)
 	{
-		if ($subscription['opgezegd_op'])
+		if (!$subscription->is_active())
 			return;
+
+		$subscription['opgezegd_op'] = (new DateTime())->format('Y-m-d H:i:s');
 
 		if ($this->_is_opt_out_subscription_id($subscription['id']))
 			return $this->unsubscribe_member($subscription['mailinglist'], $subscription['lid']);
-		
-		$subscription['opgezegd_op'] = new DateTime();
-
-		return $this->update($subscription);
+		else
+			return $this->update($subscription);
 	}
 	
 }

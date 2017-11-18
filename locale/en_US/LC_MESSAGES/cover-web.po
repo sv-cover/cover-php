@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-10-30 18:16+0100\n"
+"POT-Creation-Date: 2017-11-18 12:41+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -300,7 +300,7 @@ msgstr "Head"
 #: themes/default/views/committeebattle/index.twig:20
 #: themes/default/views/mailinglijsten/form.twig:30
 #: themes/default/views/search/_single_committee.twig:8
-#: include/models/DataModelForum.php:1361
+#: include/models/DataModelForum.php:1350
 msgid "Commissie"
 msgstr "Committee"
 
@@ -544,7 +544,7 @@ msgstr "Visibility"
 #: themes/default/views/almanak/index.twig:22
 #: themes/default/views/commissies/form.twig:36
 #: themes/default/views/search/_single_member.twig:3
-#: include/models/DataModelForum.php:1358
+#: include/models/DataModelForum.php:1347
 #: include/models/DataModelMember.php:590
 #: themes/default/views/profiel/profiel.php:387
 msgid "Lid"
@@ -1116,9 +1116,9 @@ msgstr "Page"
 #: themes/default/views/forum/thread.twig:69
 #: themes/default/views/fotoboek/single.twig:111
 #: themes/default/views/mailinglijsten/single.twig:52 include/member.php:101
-#: include/models/DataModelForum.php:1231
-#: include/models/DataModelForum.php:1341
-#: include/models/DataModelForum.php:1367
+#: include/models/DataModelForum.php:1220
+#: include/models/DataModelForum.php:1330
+#: include/models/DataModelForum.php:1356
 #: include/models/DataModelMember.php:608
 msgid "Onbekend"
 msgstr "Unknown"
@@ -2083,16 +2083,21 @@ msgstr "Subscribe"
 msgid "Lidnummer(s)"
 msgstr "Member id(s)"
 
-#: themes/default/views/mailinglijsten/unsubscribe_form.twig:1
+#: themes/default/views/mailinglijsten/unsubscribe_form.twig:3
+#, python-format
+msgid "Uitschrijven %s"
+msgstr "Unsubscribe from %s"
+
+#: themes/default/views/mailinglijsten/unsubscribe_form.twig:6
 msgid "Mailinglijst"
 msgstr "Mailing list"
 
-#: themes/default/views/mailinglijsten/unsubscribe_form.twig:4
+#: themes/default/views/mailinglijsten/unsubscribe_form.twig:9
 #, python-format
-msgid "Gelukt! Je staat niet langer op de lijst <em>%s</em>."
-msgstr "Success! You are no longer subscribed to the <em>%s</em> mailing list."
+msgid "Je staat niet langer op de lijst <em>%s</em>."
+msgstr "You are no longer subscribed to the <em>%s</em> mailing list."
 
-#: themes/default/views/mailinglijsten/unsubscribe_form.twig:8
+#: themes/default/views/mailinglijsten/unsubscribe_form.twig:13
 #, python-format
 msgid ""
 "Je staat je op het punt uit te schrijven uit de mailinglijst <em>%s</em>. "
@@ -2101,11 +2106,11 @@ msgstr ""
 "You are about to unsubscribe from the <em>%s</em> mailing list. Are you sure "
 "you want to continue?"
 
-#: themes/default/views/mailinglijsten/unsubscribe_form.twig:9
+#: themes/default/views/mailinglijsten/unsubscribe_form.twig:14
 msgid "Schrijf mij uit"
 msgstr "Unsubscribe me"
 
-#: themes/default/views/mailinglijsten/unsubscribe_form.twig:10
+#: themes/default/views/mailinglijsten/unsubscribe_form.twig:15
 msgid "Nee, ik was gewoon nieuwsgierig"
 msgstr "No, I was just curious"
 
@@ -2285,8 +2290,8 @@ msgid "Niemand"
 msgstr "Nobody"
 
 #: themes/default/views/profiel/privacy_tab.twig:18
-#: include/models/DataModelForum.php:1306
-#: include/models/DataModelForum.php:1355
+#: include/models/DataModelForum.php:1295
+#: include/models/DataModelForum.php:1344
 #: themes/default/views/announcements/announcements.php:29
 #: themes/default/views/mailinglijsten/mailinglijsten.php:31
 msgid "Iedereen"
@@ -3102,19 +3107,19 @@ msgstr "No name"
 msgid "Jij!"
 msgstr "You!"
 
-#: include/models/DataModelForum.php:1309
+#: include/models/DataModelForum.php:1298
 msgid "Alle leden"
 msgstr "All members"
 
-#: include/models/DataModelForum.php:1319
+#: include/models/DataModelForum.php:1308
 msgid "Alle commissies"
 msgstr "Committees"
 
-#: include/models/DataModelForum.php:1329
+#: include/models/DataModelForum.php:1318
 msgid "Alle groepen"
 msgstr "Groups"
 
-#: include/models/DataModelForum.php:1364
+#: include/models/DataModelForum.php:1353
 msgid "Groep"
 msgstr "Group"
 
@@ -3151,7 +3156,7 @@ msgstr "next"
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
-#: lidworden.php:152
+#: lidworden.php:153
 msgid "Lidmaatschapsaanvraag bevestigen"
 msgstr "Confirm membership application"
 
