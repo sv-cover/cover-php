@@ -80,6 +80,13 @@ class ControllerSessions extends Controller
 		return $this->view->redirect('profiel.php?lid=' . get_identity()->get('id') . '&view=sessions');
 	}
 
+	protected function _resolve_referrer($referrer) {
+		while (preg_match('/^\/?sessions.php\?view=login&referrer=(.+?)$/', $referrer, $match))
+			$referrer = rawurldecode($match[1]);
+
+		return $referrer;
+	}
+
 	protected function run_view_login()
 	{
 		try {
@@ -94,6 +101,8 @@ class ControllerSessions extends Controller
 			else
 				$referrer = null;
 
+			$referrer = $this->_resolve_referrer($referrer);
+
 			$referrer_host = parse_url($referrer, PHP_URL_HOST);
 
 			if ($referrer_host && !is_same_domain($referrer_host, $_SERVER['HTTP_HOST'], 3))
@@ -104,6 +113,8 @@ class ControllerSessions extends Controller
 			// Prevent returning to the logout link
 			if ($external_domain === null && $referrer == '/sessions.php?view=logout')
 				$referrer = null;
+
+
 
 			if (!empty($_POST['email']) && !empty($_POST['password']))
 			{
