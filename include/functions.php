@@ -788,7 +788,7 @@
 		else
 			$domain = null;
 
-		$domain = preg_replace('/:\d+$/', $domain, '');
+		$domain = preg_replace('/:\d+$/', '', $domain);
 
 		// If the value is empty, expire the cookie
 		if ($value === null)
