@@ -50,4 +50,4 @@
 	init_i18n();
 
 	if (get_config_value('show_queries', false))
-		get_db()->history = [];
+		get_db()->track_history = true;

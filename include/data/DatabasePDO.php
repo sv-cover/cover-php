@@ -12,7 +12,8 @@ class DatabasePDO
 	private $last_affected = null;
 	private $last_insert_table = null;
 
-	public $history = null;
+	public $history = [];
+	public $track_history = false;
 
 	private $transaction_counter = 0;
 
@@ -91,7 +92,7 @@ class DatabasePDO
 
 		$duration = microtime(true) - $start;
 
-		if ($this->history !== null)
+		if ($this->track_history)
 			$this->history[] = array(
 				'query' => $query,
 				'duration' => $duration,
