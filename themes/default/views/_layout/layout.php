@@ -11,21 +11,19 @@ class LayoutViewHelper
 			'url' => 'index.php'
 		];
 
+		$menus['admin'] = [
+			'label' => __('Beheer'),
+			'submenu' => []
+		];
+
 		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
-			$menus['admin'] = ['label' => __('Beheer'), 'submenu' => []];
-		
 			$menus['admin']['submenu'][] = [
 				'url' => 'show.php?view=create',
 				'label' => __('Pagina maken')
 			];
 
-			$menus['admin']['submenu'][] = [
-				'url' => 'mailinglijsten.php',
-				'label' => __('Mailinglijsten')
-			];
-			
 			$menus['admin']['submenu'][] = [
 				'url' => 'lidworden.php?view=pending-confirmation',
 				'label' => __('Hangende aanmeldingen')
@@ -35,28 +33,35 @@ class LayoutViewHelper
 				'url' => 'forum.php?admin=forums',
 				'label' => 'Forum'
 			];
-
-			if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
-				get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-				$menus['admin']['submenu'][] = [
-					'url' => 'agenda.php?agenda_moderate',
-					'label' => __('Agenda')
-				];
-
-				$menus['admin']['submenu'][] = [
-					'url' => 'actieveleden.php',
-					'label' => __('Actieve leden')
-				];
-			}
-			
-			if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
-				$menus['admin']['submenu'][] = [
-					'url' => 'settings.php',
-					'label' => __('Instellingen')
-				];
-			}
 		}
 
+		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
+			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
+			$menus['admin']['submenu'][] = [
+				'url' => 'agenda.php?agenda_moderate',
+				'label' => __('Agenda')
+			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'actieveleden.php',
+				'label' => __('Actieve leden')
+			];
+		}
+		
+		if (get_identity()->member_in_committee()) { // Member in any committee at all
+			$menus['admin']['submenu'][] = [
+				'url' => 'mailinglijsten.php',
+				'label' => __('Mailinglijsten')
+			];
+		}
+
+		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
+			$menus['admin']['submenu'][] = [
+				'url' => 'settings.php',
+				'label' => __('Instellingen')
+			];
+		}
+		
 		$menus['vereniging'] = [
 			'label' => __('Vereniging'),
 			'submenu' => [
@@ -143,6 +148,11 @@ class LayoutViewHelper
 			'label' => __('Contact'),
 			'url' => 'show.php?id=17'
 		];
+
+		// Filter out any empty menu items (I'm looking at you, admin menu!)
+		$menus = array_filter($menus, function($menu) {
+			return isset($menu['url']) || !empty($menu['submenu']);
+		});
 
 		return $menus;
 	}
