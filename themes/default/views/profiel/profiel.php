@@ -155,12 +155,12 @@ class ProfielView extends View
 		return $this->render('public_tab.twig', compact('iter', 'is_current_user', 'can_download_vcard', 'committees'));
 	}
 
-	public function render_personal_tab(DataIterMember $iter, $error_message = null, array $errors = null)
+	public function render_personal_tab(DataIterMember $iter, $error_message = null, array $errors = [])
 	{
 		return $this->render('personal_tab.twig', compact('iter', 'error_message', 'errors'));
 	}
 
-	public function render_profile_tab(DataIterMember $iter, $error_message = null, array $errors = null)
+	public function render_profile_tab(DataIterMember $iter, $error_message = null, array $errors = [])
 	{
 		$current_password_required = !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 		                          && !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
@@ -168,7 +168,7 @@ class ProfielView extends View
 		return $this->render('profile_tab.twig', compact('iter', 'error_message', 'errors', 'current_password_required'));
 	}
 
-	public function render_privacy_tab(DataIterMember $iter, $error_message = null, array $errors = null)
+	public function render_privacy_tab(DataIterMember $iter, $error_message = null, array $errors = [])
 	{
 		$fields = [];
 
@@ -241,7 +241,7 @@ class ProfielView extends View
 		}
 	}
 
-	public function render_system_tab(DataIterMember $iter, $error_message = null, array $errors = null)
+	public function render_system_tab(DataIterMember $iter, $error_message = null, array $errors = [])
 	{
 		$types = [
 			MEMBER_STATUS_LID,
