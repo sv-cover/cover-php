@@ -60,7 +60,7 @@
 
 			/* Enable query history if requested */
 			if (get_static_config_value('show_queries', false))
-				$db->history = array();
+				$db->track_history = true;
 		}
 		
 		return $db;
