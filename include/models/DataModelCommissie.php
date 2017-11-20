@@ -70,6 +70,11 @@
 			return strtotime($this->get('vacancies')) < strtotime('+1 year');
 		}
 
+		public function has_vacancy()
+		{
+			return $this['vacancies'] && strtotime($this['vacancies']) > time();
+		}
+
 		public function get_email()
 		{
 			return strstr($this['login'], '@') ? $this['login'] : $this['login'] . '@svcover.nl';

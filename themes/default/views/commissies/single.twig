@@ -18,7 +18,7 @@
 	{% endif %}
 	<h1>{{ iter.naam }}</h1>
 </div>
-{% if iter.vacancies %}
+{% if iter.has_vacancy %}
 	{{ include('_leden_gezocht.twig') }}
 {% endif %}
 <div class="committee-page messageBox">
