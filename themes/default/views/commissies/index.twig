@@ -22,7 +22,7 @@
 	<ul class="commissie-index">
 	{% for committee in iters %}
 		<li class="commissie">
-			{% if committee.vacancies %}
+			{% if committee.has_vacancy %}
 			<span class="vacancy-badge">{{ __('Commissieleden gezocht!') }}</span>
 			{% endif %}
 			<a href="{{ controller.link_to_read(committee) }}" class="link">
