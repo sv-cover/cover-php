@@ -70,7 +70,8 @@ class ControllerProfiel extends Controller
 		return in_array($value, array('nl', 'en')) ? $value : false;
 	}
 
-	public function _check_phone($name, $value) {
+	public function _check_phone($name, $value)
+	{
 		try {
 			$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
 			$phone_number = $phone_util->parse($value, 'NL');
@@ -82,13 +83,18 @@ class ControllerProfiel extends Controller
 		}
 	}
 
+	public function _check_email($name, $value)
+	{
+		return filter_var($value, FILTER_VALIDATE_EMAIL);
+	}
+
 	protected function _update_personal(DataIterMember $iter)
 	{
 		$check = array(
 			array('name' => 'postcode', 'function' => array($this, '_check_size')),
 			array('name' => 'telefoonnummer', 'function' => array($this, '_check_phone')),
 			array('name' => 'adres', 'function' => array($this, '_check_size')),
-			array('name' => 'email', 'function' => array($this, '_check_size')),
+			array('name' => 'email', 'function' => array($this, '_check_email')),
 			array('name' => 'woonplaats', 'function' => array($this, '_check_size'))
 		);
 		
