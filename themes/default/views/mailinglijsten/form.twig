@@ -62,7 +62,7 @@
 		</div>
 		{% endif %}
 		<div class="controls">
-			<button class="button" type="submit">{{ __('Maak lijst') }}</button>
+			<button class="button" type="submit">{{ iter.has_id() ? __('Wijzig lijst') : __('Maak lijst') }}</button>
 		</div>
 	</form>
 </div>
