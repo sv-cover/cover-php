@@ -67,9 +67,7 @@
 	}
 	
 	/** @group Data
-	  * Return a $_POST variable. This function will stripslashes when
-	  * get_magic_quotes_gpc is true so that $_POST values are unified
-	  * regardless of the PHP setup.
+	  * Return a $_POST variable.
 	  * @key the POST variable name to get the value of
 	  * 
 	  * @result the POST value or null if the key isn't in $_POST
@@ -82,9 +80,5 @@
 		if (!isset($_POST[$key]))
 			return null;
 		
-		if (get_magic_quotes_gpc())
-			return stripslashes($_POST[$key]);
-		else
-			return $_POST[$key];
+		return $_POST[$key];
 	}
-?>
