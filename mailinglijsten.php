@@ -149,7 +149,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 		if (!get_policy($this->model)->user_can_update($list))
 			throw new UnauthorizedException('You cannot modify this mailing list');
 
-		if ($this->_form_is_submitted('unsubscribe', $list))
+		if ($this->_form_is_submitted('unsubscribe', $list) && !empty($_POST['unsubscribe']))
 		{
 			foreach ($_POST['unsubscribe'] as $subscription_id)
 			{
