@@ -235,7 +235,6 @@ class ProfielView extends View
 
 			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'debits_per_batch'));
 		} catch (Exception $exception) {
-			die($exception);
 			sentry_report_exception($exception);
 			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
 		}
