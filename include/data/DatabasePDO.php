@@ -8,7 +8,6 @@ class DatabasePDO
 {
 	private $resource;
 
-	private $last_result = null;
 	private $last_affected = null;
 	private $last_insert_table = null;
 
@@ -100,12 +99,10 @@ class DatabasePDO
 			);
 
 		/* Fetch all the rows */
-		$this->last_result = $statement->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
-
 		$this->last_affected = $statement->rowCount();
 
 		/* Return the results */
-		return $this->last_result;
+		return $statement->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
 	}
 	
 	/**
