@@ -34,7 +34,7 @@
 							<td><a href="agenda.php?agenda_id={{ item.id|e('url') }}">{{ item.kop }}</a></td>
 							<td>{{ item|period }}</td>
 							<td>{{ item.committee.naam }}</td>
-							<td>{{ html_input_checkbox('private_' ~ item.id, item, 'yes', field='private', title=__('Alleen zichtbaar voor leden')) }}</td>
+							<td>{{ html_input_checkbox('private_' ~ item.id, item, value='yes', field='private', title=__('Alleen zichtbaar voor leden')) }}</td>
 						</tr>
 	
 						<tr id="comment_{{ item.id }}">

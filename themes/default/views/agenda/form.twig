@@ -34,7 +34,7 @@
 
 	<div>
 		{{ html_label(__('Eindtijd'), 'tot', errors=errors) }}
-		{{ html_input_checkbox('use_tot', iter, 'yes', id='agenda_use_tot', onclick='set_visibility(this, \'agenda_tot\')', class='field-toggle') }}
+		{{ html_input_checkbox('use_tot', iter, value='yes', id='agenda_use_tot', onclick='set_visibility(this, \'agenda_tot\')', class='field-toggle') }}
 		<div id="agenda_tot">
 			{{ html_input_datetime('tot', iter, errors=errors) }}
 		</div>
@@ -42,7 +42,7 @@
 
 	<div>
 		{{ html_label(__('Locatie'), 'locatie', errors=errors) }}
-		{{ html_input_checkbox('use_locatie', iter, 'yes', id='agenda_use_locatie', onclick='set_visibility(this, \'agenda_locatie\')', class='field-toggle') }}
+		{{ html_input_checkbox('use_locatie', iter, value='yes', id='agenda_use_locatie', onclick='set_visibility(this, \'agenda_locatie\')', class='field-toggle') }}
 		<div id="agenda_locatie">
 			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='location') }}
 		</div>

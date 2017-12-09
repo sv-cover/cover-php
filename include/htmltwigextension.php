@@ -71,9 +71,13 @@ class HTMLTwigExtension extends Twig_Extension
 		
 		$result = '<input';
 
-		foreach ($attributes as $attribute => $value)
+		foreach ($attributes as $attribute => $value) {
+			if (is_int($attribute))
+				trigger_error('input_field tries to make an attribute without an attribute name', E_USER_WARNING);
+
 			if ($value !== null)
 				$result .= sprintf(' %s="%s"', str_replace('_', '-', $attribute), markup_format_attribute($value));
+		}
 		
 		return $result . '>';
 	}
