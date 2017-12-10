@@ -38,10 +38,10 @@
 
 <p class="smaller"><a href="agenda.php"><b>{{ __('Volledige agenda') }}</b></a></p>
 
+{% if count_jarigen > 0 %}
 <p class="bold">{{ __('Jarigen') }}</p>
 <hr>
 <div class="smaller">
-{% if count_jarigen > 0 %}
 	{{ __N('Er is vandaag %d jarige:', 'Er zijn vandaag %d jarigen:', count_jarigen) }}<br>
 	{% if cover_jarig %}
 		<span style="font-weight: bold; color: #c60c30;">Cover!</span> ({{ view.layout.cover_leeftijd }})<br>
@@ -49,8 +49,6 @@
 	{% for jarige in jarigen %}
 		<a href="{{ link('profiel.read', member=jarige) }}">{{ jarige|personal_full_name }} ({{ jarige.leeftijd }})</a><br>
 	{% endfor %}
-{% else %}
-	{{ __('Er zijn vandaag geen jarigen') }}<br>
-{% endif %}
 </div>
+{% endif %}
 {% endblock %}
