@@ -276,12 +276,9 @@
 
 					case 'delete':
 						if (count($_POST['confirmation_code']) > 0) {
-							$db->query(sprintf("DELETE FROM registrations WHERE confirmation_code IN (%s)",
-								implode(', ', array_map(function($code) use ($db) {
-									return sprintf("'%s'", $db->escape_string($code));
-								}, $_POST['confirmation_code']))));
-
-							$message = sprintf('Deleted %d registrations', $db->get_affected_rows());
+							$rows = $db->execute(sprintf("DELETE FROM registrations WHERE confirmation_code IN (%s)",
+								$db->quote_value($_POST['confirmation_code'])));
+							$message = sprintf('Deleted %d registrations', $rows);
 						}
 						break;
 				}

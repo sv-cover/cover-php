@@ -21,18 +21,10 @@ class DatabasePDO
 	  * @dbid a hash with database information (host, port, user, password, 
 	  * dbname)
 	  */
-	public function __construct($dbid)
-	{
-		/* Connect to database */
-		$this->_connect($dbid);
-	}
-	
-	/**
-	  * Make connection to database
-	  */
-	private function _connect($dbid)
+	public function __construct(array $dbid)
 	{
 		$params = array();
+
 		/* Add host */
 		$params[] = 'host=' . ($dbid['host'] ? $dbid['host'] : 'localhost');
 		
@@ -80,7 +72,7 @@ class DatabasePDO
 	  * @result an array with for each row a hash with the values (with 
 	  * keys being the column names) or null if an error occurred
 	  */
-	function query($query, $indices = false, array $input_parameters = [])
+	public function query($query, $indices = false, array $input_parameters = [])
 	{
 		$start = microtime(true);
 
@@ -98,11 +90,29 @@ class DatabasePDO
 				'backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
 			);
 
-		/* Fetch all the rows */
-		$this->last_affected = $statement->rowCount();
-
 		/* Return the results */
 		return $statement->fetchAll($indices ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
+	}
+
+	public function execute($query, array $input_parameters = [])
+	{
+		$start = microtime(true);
+
+		/* Query the database */
+		$statement = $this->resource->prepare($query);
+
+		$statement->execute($input_parameters);
+
+		$duration = microtime(true) - $start;
+
+		if ($this->track_history)
+			$this->history[] = array(
+				'query' => $query,
+				'duration' => $duration,
+				'backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
+			);
+
+		return $this->last_affected = $statement->rowCount();
 	}
 	
 	/**
@@ -114,42 +124,22 @@ class DatabasePDO
 	  * @result a hash with the values (with keys being the column names)
 	  * or null if there are no results (or an error occurred)
 	  */
-	function query_first($query, $indices = false)
+	public function query_first($query, $indices = false, array $input_parameters = [])
 	{
-		/* Execute query */
-		$result = $this->query($query, $indices);
-		
-		if (is_string($result)) {
-			/* Result is a string, this means an error occurred */
-			return $result;
-		} else if (!is_array($result) || count($result) == 0) {
-			/* There are no results */
-			return null;
-		} else {
-			/* Return the result */
-			return $result[0];
-		}
+		$rows = $this->query($query, $indices, $input_parameters);
+		return count($rows) > 0 ? $rows[0] : null;
 	}
 	
 	/**
 	  * Query the database with any query and return a single value of
 	  * the first row 
-	  * @query a string with the query
-	  * @col optional; the column to get the value from
-	  *
-	  * @result a value or null if there are no results
+	  * @param query a string with the query
+	  * @return result a value or null if there are no results
 	  */
-	function query_value($query, $col = 0) {
-		/* Execute the query */
-		$result = $this->query_first($query, true);
-		
-		if ($result) {
-			/* Return the value */
-			return $result[$col];
-		} else {
-			/* Return the result */
-			return $result;
-		}
+	public function query_value($query, array $input_parameters = [])
+	{
+		$row = $this->query_first($query, true, $input_parameters);
+		return $row ? $row[0] : null;
 	}
 
 	/**
@@ -172,18 +162,13 @@ class DatabasePDO
 	
 	/**
 	  * Insert a new row into a table in the database
-	  * @table the table to insert the new row in
-	  * @values a hash containing the values to insert. The key each item
+	  * @param table the table to insert the new row in
+	  * @param values a hash containing the values to insert. The key each item
 	  * in the hash is the column name, the value the column value. Strings
 	  * will automatically be escaped (except for special SQL functions)
-	  * @literals optional; the fields that should be used literally in 
-	  * the query
 	  */
-	function insert($table, $values) {
-		if (!$this->resource) {
-			return false;
-		}
-
+	public function insert($table, array $values)
+	{
 		$query = 'INSERT INTO "' . $table . '"';
 		$keys = array_keys($values);
 
@@ -207,22 +192,24 @@ class DatabasePDO
 
 		$query = $query . ' ' . $k . ') ' . $v . ');';
 
-		/* Execute query */
-		$this->query($query, false, $data);
-
 		/* Save last insertion table so we can use it in 
 		   get_last_insert_id */
 		$this->last_insert_table = $table;
+
+		/* Execute query */
+		return $this->execute($query, $data);
 	}
 	
 	/**
 	  * Get the last insert id (uses currval("<last_table>_id_sec")
-	  *
-	  * @result the id of the last inserted row
+	  * This is not done automatically because not every table has a
+	  * auto increment (serial) column, and calling it on a table
+	  * which has none causes an error to occur.
+	  * @return the id of the last inserted row
 	  */
-	function get_last_insert_id() {
-		return $this->query_value("SELECT currval('" . 
-				$this->last_insert_table . "_id_seq'::regclass)");
+	public function get_last_insert_id()
+	{
+		return $this->query_value(sprintf("SELECT currval('%s_id_seq'::regclass)", $this->last_insert_table));
 	}
 	
 	/**
@@ -238,17 +225,18 @@ class DatabasePDO
 	  *
 	  * @result true if the update was successful, false otherwise 
 	  */
-	function update($table, $values, $condition) {
-		if (!$this->resource)
-			return false;
-
+	public function update($table, array $values, $condition)
+	{
+		// Is there anything to update? Otherwise, hey, easy job!
 		if (count($values) == 0)
 			return true;
+
+		if (empty($condition))
+			throw new InvalidArgumentException('Calling DatabasePDO::update without conditions');
 
 		if ($condition && !is_string($condition))
 			throw new InvalidArgumentException('Condition parameter needs to be a string');
 
-		$query = 'UPDATE "' . $table . '" SET ';
 		$keys = array_keys($values);
 		$data = [];
 		$k = '';
@@ -266,16 +254,10 @@ class DatabasePDO
 			}
 		}
 
-		$query .= $k;
-
-		/* Add condition */
-		if ($condition)
-			$query .= ' WHERE ' . $condition;
+		$query = sprintf('UPDATE "%s" SET %s WHERE %s', $table, $k, $condition);
 
 		/* Execute query */
-		$this->query($query, false, $data);
-
-		return $this->last_affected;
+		return $this->execute($query, $data);
 	}
 
 	/**
@@ -284,14 +266,16 @@ class DatabasePDO
 	  *
 	  * @result the escaped string
 	  */
-	function escape_string($s) {
+	public function escape_string($s)
+	{
 		return substr($this->resource->quote($s), 1, -1);
 	}
 
 	/**
 	 * Quote the string (including surrounding quotes)
 	 */
-	public function quote($s) {
+	public function quote($s)
+	{
 		return $this->resource->quote($s);
 	}
 	
@@ -300,7 +284,7 @@ class DatabasePDO
 	 * @param $value mixed
 	 * @return string SQL
 	 */
-	public function escape_value($value)
+	public function quote_value($value)
 	{
 		if ($value === null)
 			return 'NULL';
@@ -314,6 +298,8 @@ class DatabasePDO
 			return $value ? '1' : '0';
 		elseif (is_string($value))
 			return $this->resource->quote($value);
+		elseif (is_array($value))
+			return implode(', ', array_map([$this, 'quote_value'], $value));
 		else
 			throw new InvalidArgumentException('Unsupported datatype ' . gettype($value));
 	}
@@ -348,37 +334,15 @@ class DatabasePDO
 	  *
 	  * @result true if delete was successful, false otherwise
 	  */
-	function delete($table, $condition) {
-		if (!$this->resource)
-			return false;
-
+	public function delete($table, $condition)
+	{
 		if (!$condition)
 			throw new RuntimeException('Are you really really sure you want to delete everything?');
 
-		$this->query('DELETE FROM "' . $table . '" WHERE ' . $condition);
+		if (!is_string($condition))
+			throw new InvalidArgumentException('condition parameter has to be a SQL query string');
 
-		return $this->last_affected;
-	}
-
-	/**
-	  * Checks whether there is a connection
-	  *
-	  * @result true if there is a connection, false otherwise
-	  */
-	function is_connected() {
-		return (bool) $this->resource;
-	}
-	
-	/**
-	  * Get the number of affected rows
-	  *
-	  * @result the number of affected rows
-	  */
-	public function get_affected_rows() {
-		if (!$this->resource)
-			return;
-
-		return $this->last_affected;
+		return $this->execute(sprintf('DELETE FROM "%s" WHERE %s', $table, $condition));
 	}
 
 	public function read_blob($data)
@@ -391,6 +355,9 @@ class DatabasePDO
 
 	public function write_blob($data)
 	{
+		if (!is_resource($data))
+			throw new InvalidArgumentException('DatabasePDO::write_blob expected resource as argument');
+
 		return substr($this->resource->quote(stream_get_contents($data), PDO::PARAM_LOB), 1, -1);
 	}
 

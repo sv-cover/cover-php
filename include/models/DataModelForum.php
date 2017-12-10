@@ -1500,14 +1500,14 @@
 
 			/* Set last visit date to the session date, and set the session date to null
 			   for all visits that are older than 15 minutes */
-			$this->db->update('forum_visits', array(
+			$affected = $this->db->update('forum_visits', array(
 				'lastvisit' => new DatabaseLiteral('sessiondate'),
 				'sessiondate' => null),
 				'lid_id = ' . intval($member['id'])
 				. ' AND sessiondate + INTERVAL \'15 minutes\' < CURRENT_TIMESTAMP'
 				. ($forum === null ? '' : ' AND forum_id = ' . intval($forum['id'])));
 			
-			if ($this->db->get_affected_rows()) {
+			if ($affected) {
 				/* Delete all obsolete session reads */
 				$this->db->delete('forum_sessionreads',
 					'lid_id = ' . intval($member['id'])

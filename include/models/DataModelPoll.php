@@ -175,9 +175,7 @@
 		
 		public function vote(DataIterPollOption $option, DataIterMember $member = null)
 		{
-			$this->db->query(sprintf("UPDATE pollopties SET stemmen = stemmen + 1 WHERE id = %d", $option->get_id()));
-
-			$success = $this->db->get_affected_rows() === 1;
+			$success = $this->db->execute(sprintf("UPDATE pollopties SET stemmen = stemmen + 1 WHERE id = %d", $option->get_id())) === 1;
 
 			if ($member !== null) {
 				$this->db->insert('pollvoters', [

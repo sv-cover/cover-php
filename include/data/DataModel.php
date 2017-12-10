@@ -361,7 +361,7 @@
 						if (count($value) === 0) {
 							$format = '%s IS NULL';
 						} else {
-							$safe_values = array_map([$this->db, 'escape_value'], $value);
+							$safe_values = array_map([$this->db, 'quote_value'], $value);
 							$format = sprintf('%%s IN (%s)', implode(', ', $safe_values));
 						}
 
@@ -393,7 +393,7 @@
 				}
 
 				$atoms[] = isset($value)
-					? sprintf($format, $field, $this->db->escape_value($value))
+					? sprintf($format, $field, $this->db->quote_value($value))
 					: sprintf($format, $field);
 			}
 
