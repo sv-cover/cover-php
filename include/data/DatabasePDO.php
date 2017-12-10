@@ -8,7 +8,6 @@ class DatabasePDO
 {
 	private $resource;
 
-	private $last_affected = null;
 	private $last_insert_table = null;
 
 	public $history = [];
@@ -112,7 +111,7 @@ class DatabasePDO
 				'backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
 			);
 
-		return $this->last_affected = $statement->rowCount();
+		return $statement->rowCount();
 	}
 	
 	/**
