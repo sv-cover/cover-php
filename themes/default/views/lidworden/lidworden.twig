@@ -21,15 +21,15 @@
 			<div class="field-group">
 				<div class="large-field">
 					{{ html_label(__('Voornaam'), 'first_name', errors=errors, required=true) }}
-					{{ html_input_text('first_name', null, errors=errors, required=true, placeholder=__('Bijv. Jan')) }}
+					{{ html_input_text('first_name', null, errors=errors, required=true, placeholder=__('Bijv. John')) }}
 				</div>
 				<div>
 					{{ html_label(__('Tussenvoegsel'), 'family_name_preposition', errors=errors) }}
-					{{ html_input_text('family_name_preposition', null, errors=errors, class='small', placeholder=__('Bijv. van')) }}
+					{{ html_input_text('family_name_preposition', null, errors=errors, class='small', placeholder=__('Bijv. von')) }}
 				</div>
 				<div class="large-field">
 					{{ html_label(__('Achternaam'), 'family_name', errors=errors, required=true) }}
-					{{ html_input_text('family_name', null, errors=errors, required=true, placeholder=__('Bijv. Jansen')) }}
+					{{ html_input_text('family_name', null, errors=errors, required=true, placeholder=__('Bijv. Neumann')) }}
 				</div>
 			</div>
 
