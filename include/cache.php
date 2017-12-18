@@ -29,6 +29,8 @@ class Cache
 	{
 		$this->db->beginTransaction();
 
+		$this->db->execute("LOCK TABLE {$this->table} IN SHARE ROW EXCLUSIVE MODE");
+
 		$this->delete($key);
 
 		$data = array(
