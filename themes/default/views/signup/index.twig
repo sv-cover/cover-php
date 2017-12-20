@@ -1,0 +1,35 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Inschrijfformulieren') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageheading">
+	{% if user_can_create controller.new_iter %}
+	<div class="controls inline">
+		<a href="{{ controller.link_to_create() }}" class="create-link">
+			{{ __('Nieuw inschrijfformulier') }}
+		</a>
+	</div>
+	{% endif %}
+	<h1>{{ __('Inschrijfformulieren') }}</h1>
+</div>
+
+<div class="messageBox">
+	<table class="full-width-table">
+		<thead>
+			<tr>
+				<th>Form</th>
+				<th>Sign-ups</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for iter in iters %}
+				<tr>
+					<td>{{ iter.description }}</td>
+					<td>{{ iter.signup_count }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
