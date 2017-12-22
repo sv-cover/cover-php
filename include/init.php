@@ -24,12 +24,7 @@
 			throw new ErrorException($message, 0, $severity, $file, $line);
 	});
 
-	if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'www.svcover.dev')
-		error_reporting(E_ALL ^ E_STRICT ^ E_USER_NOTICE ^ E_DEPRECATED);
-	elseif (version_compare(PHP_VERSION, '5.4.0') < 0)
-		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE);
-	else
-		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE ^ E_DEPRECATED ^ E_STRICT);
+	error_reporting(E_ALL ^ E_DEPRECATED);
 
 	require_once 'include/sentry.php';
 	require_once 'include/functions.php';

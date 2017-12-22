@@ -82,7 +82,7 @@
 		{
 			parent::__construct($db, 'agenda');
 
-			$this->include_private = logged_in();
+			$this->include_private = get_identity()->member_is_active();
 		}
 		
 		public function get($from = null, $till = null, $confirmed_only = false)
