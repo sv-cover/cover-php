@@ -14,6 +14,123 @@ interface SearchResult
 	public function get_absolute_url();
 }
 
+function split_sentences($text)
+{
+	return preg_split('/(?<=[.?!;])\s+(?=\p{Lu})/', strip_tags($text), null, PREG_SPLIT_NO_EMPTY);
+}
+
+function split_words($sentence)
+{
+	return preg_match_all('/(\b[^\s]+\b)/', $sentence, $matches) ? $matches[0] : [];
+}
+
+function text_filter_non_utf8($text)
+{
+	$regex = <<<'END'
+	/
+	  (
+	    (?: [\x00-\x7F]                 # single-byte sequences   0xxxxxxx
+	    |   [\xC0-\xDF][\x80-\xBF]      # double-byte sequences   110xxxxx 10xxxxxx
+	    |   [\xE0-\xEF][\x80-\xBF]{2}   # triple-byte sequences   1110xxxx 10xxxxxx * 2
+	    |   [\xF0-\xF7][\x80-\xBF]{3}   # quadruple-byte sequence 11110xxx 10xxxxxx * 3 
+	    ){1,100}                        # ...one or more times
+	  )
+	| .                                 # anything else
+	/x
+END;
+
+	return preg_replace($regex, '$1', $text);
+}
+
+function text_fix_utf8($text)
+{
+	static $regex = <<<'END'
+	/
+	  (
+		(?: [\x00-\x7F]               # single-byte sequences   0xxxxxxx
+		|   [\xC0-\xDF][\x80-\xBF]    # double-byte sequences   110xxxxx 10xxxxxx
+		|   [\xE0-\xEF][\x80-\xBF]{2} # triple-byte sequences   1110xxxx 10xxxxxx * 2
+		|   [\xF0-\xF7][\x80-\xBF]{3} # quadruple-byte sequence 11110xxx 10xxxxxx * 3 
+		){1,100}                      # ...one or more times
+	  )
+	| ( [\x80-\xBF] )                 # invalid byte in range 10000000 - 10111111
+	| ( [\xC0-\xFF] )                 # invalid byte in range 11000000 - 11111111
+	/x
+END;
+
+	$replace = function ($captures) {
+		if ($captures[1] != "") {
+			// Valid byte sequence. Return unmodified.
+			return $captures[1];
+		}
+		elseif ($captures[2] != "") {
+			// Invalid byte of the form 10xxxxxx.
+			// Encode as 11000010 10xxxxxx.
+			return "\xC2".$captures[2];
+		}
+		else {
+			// Invalid byte of the form 11xxxxxx.
+			// Encode as 11000011 10xxxxxx.
+			return "\xC3".chr(ord($captures[3])-64);
+		}
+	};
+
+	return preg_replace_callback($regex, $replace, $text);
+}
+
+function text_sentence_score($sentence, $query, $language)
+{
+	$occurrences = 0;
+	$keyword_hits = 0;
+
+	$stemmed_keywords = array_map([text_stemmer($language), 'stem'], parse_search_query('/\s+/', $query));
+
+	$stemmed_sentence = array_map([text_stemmer($language), 'stem'], split_words($sentence));
+
+	foreach ($stemmed_keywords as $stemmed_keyword) {
+		$hits = count(array_keys($stemmed_sentence, $stemmed_keyword));
+		$occurrences += $hits;
+		$keyword_hits += $hits > 0 ? 1 : 0;
+	}
+
+	return $keyword_hits + ($occurrences / strlen($sentence));
+}
+
+function text_stemmer($language)
+{
+	static $stemmers = [];
+
+	static $classes = [
+		'nl' => 'Wamania\Snowball\Dutch',
+		'en' => 'Wamania\Snowball\English'
+	];
+
+	return isset($stemmers[$language])
+		? $stemmers[$language]
+		: $stemmers[$language] = (new ReflectionClass($classes[$language]))->newInstance();
+}
+
+function text_summary($text, $query, $language = 'en')
+{
+	$sentences = [];
+
+	foreach (split_sentences($text) as $sentence) {
+		$sentences[] = [
+			'sentence' => $sentence,
+			'score' => text_sentence_score($sentence, $query, $language)
+		];
+	}
+
+	usort($sentences, function($a, $b) {
+		if ($b['score'] == $a['score'])
+			return 0;
+		else
+			return $b['score'] > $a['score'] ? 1 : -1;
+	});
+
+	return count($sentences) > 0 ? $sentences[0]['sentence'] : null;
+}
+
 function text_excerpt($text, $keywords, $radius = 30,
 	$highlight_format = '<span class="keyword">$1</span>',
 	$glue = '<span class="glue">...</span>')

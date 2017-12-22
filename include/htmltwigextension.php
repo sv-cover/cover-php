@@ -32,6 +32,7 @@ class HTMLTwigExtension extends Twig_Extension
 		return [
 			new Twig_SimpleFilter('parse_markup', 'markup_parse', ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('strip_markup', 'markup_strip'),
+			new Twig_SimpleFilter('summary', 'text_summary'),
 			new Twig_SimpleFilter('excerpt', 'text_excerpt')
 		];
 	}

@@ -4,6 +4,11 @@
 
 	class DataIterEditable extends DataIter implements SearchResult
 	{
+		static $content_fields = [
+			'en' => 'content_en',
+			'nl' => 'content'
+		];
+
 		static public function fields()
 		{
 			return [
@@ -16,7 +21,7 @@
 			];
 		}
 
-		public function get_locale_content($language = null)
+		public function get_locale($language = null)
 		{
 			if (!$language && $this->has_value('search_language'))
 				$language = $this['search_language'];
@@ -25,14 +30,20 @@
 				$language = i18n_get_language();
 
 			$preferred_fields = $language == 'en'
-				? array('content_en', 'content')
-				: array('content', 'content_en');
+				? array('en', 'nl')
+				: array('nl', 'en');
 
-			foreach ($preferred_fields as $field)
-				if ($this->has_field($field) && $this->get($field) != '')
-					return $this->get($field);
+			foreach ($preferred_fields as $lang)
+				if ($this->has_field(self::$content_fields[$lang]) && $this->get(self::$content_fields[$lang]) != '')
+					return $lang;
 
 			return null;
+		}
+
+		public function get_locale_content($language = null)
+		{
+			$lang = $this->get_locale($language);
+			return $lang ? $this->get(self::$content_fields[$lang]) : null;
 		}
 
 		public function get_title($language = null)
