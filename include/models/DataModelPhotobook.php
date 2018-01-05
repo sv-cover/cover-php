@@ -429,9 +429,9 @@
 		{
 			$books = parent::get_books($metadata);
 
-			if (logged_in()) {
-				$books[] = get_model('DataModelPhotobookLike')->get_book(logged_in_member());
-				$books[] = get_model('DataModelPhotobookFace')->get_book(array(logged_in_member()));
+			if (get_auth()->logged_in()) {
+				$books[] = get_model('DataModelPhotobookLike')->get_book(get_identity()->member());
+				$books[] = get_model('DataModelPhotobookFace')->get_book(array(get_identity()->member()));
 			}
 			
 			return $books;
@@ -439,7 +439,7 @@
 
 		public function get_num_books()
 		{
-			return parent::get_num_books() + (logged_in() ? 2 : 0);
+			return parent::get_num_books() + (get_auth()->logged_in() ? 2 : 0);
 		}
 
 		public function get_next_book()
@@ -688,7 +688,7 @@
 				date DESC,
 				foto_boeken.id';
 
-			if (get_config_value('enable_photos_read_status', true) && logged_in() && $metadata & self::READ_STATUS)
+			if (get_config_value('enable_photos_read_status', true) && get_auth()->logged_in() && $metadata & self::READ_STATUS)
 			{
 				$select = sprintf('
 					WITH RECURSIVE book_children (id, date, last_update, visibility, parents) AS (
@@ -734,9 +734,9 @@
 							foto_boeken.id
 					) as f_b_read_status ON
 						f_b_read_status.id = foto_boeken.id",
-						logged_in('beginjaar'),
+						get_identity()->get('beginjaar'),
 						get_policy($this)->get_access_level(),
-						logged_in('id'));
+						get_identity()->get('id'));
 				
 				$group_by .= ",
 					f_b_read_status.read_status";

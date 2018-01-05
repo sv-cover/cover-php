@@ -27,7 +27,7 @@
 	if (isset($_SERVER['HTTP_HOST']) && preg_match('/^(www\.)?svcover\.nl$/', $_SERVER['HTTP_HOST']))
 		error_reporting(E_ALL ^ E_NOTICE ^ E_USER_NOTICE ^ E_DEPRECATED ^ E_STRICT);
 	else
-		error_reporting(E_ALL ^ E_DEPRECATED);
+		error_reporting(E_ALL);
 
 	require_once 'include/sentry.php';
 	require_once 'include/functions.php';

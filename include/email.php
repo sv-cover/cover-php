@@ -321,7 +321,7 @@ class MessagePart
 
 	public function addBody($content_type, $body, $content_transfer_encoding = null)
 	{
-		assert('is_string($body)');
+		assert(is_string($body));
 
 		// No previous body was set, this is the part :O
 		if ($this->body === null) {
@@ -366,7 +366,7 @@ class MessagePart
 
 	private function makeMultipart()
 	{
-		assert('is_string($this->body)');
+		assert(is_string($this->body));
 
 		if ($this->body !== null)
 			$this->body = [new MessagePart(['Content-Type' => [$this->header('Content-Type')]], $this->body)];

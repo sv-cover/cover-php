@@ -91,7 +91,7 @@ class ProfielView extends View
 				// }
 			],
 			'system' => [
-				'visible' => member_in_commissie(COMMISSIE_EASY),
+				'visible' => get_identity()->member_in_committee(COMMISSIE_EASY),
 				'label' => __('Systeem'),
 				'class' => 'fa-icon icon-system'
 				// 'body' => function() use ($iter) {
@@ -106,7 +106,7 @@ class ProfielView extends View
 		return [
 			[	
 				'label' => __('Naam'),
-				'name' => 'naam',
+				'name' => 'full_name',
 				'read_only' => true
 			],
 			[

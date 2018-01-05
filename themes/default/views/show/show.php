@@ -8,7 +8,7 @@ class ShowView extends CRUDView
 
 		$model = get_model('DataModelCommissie');
 
-		if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 			foreach ($model->get() as $commissie)
 				$commissies[$commissie->get_id()] = $commissie->get('naam');
 		else

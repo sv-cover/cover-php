@@ -90,7 +90,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		
 		// Also grab the ids of all the photos which should actually be hidden (e.g. are not of the logged in member)
 		$excluded_ids = array_filter(array_map(function($iter) {
-			return logged_in('id') != $iter->get('lid_id')
+			return get_identity()->get('id') != $iter->get('lid_id')
 				? $iter->get('foto_id')
 				: false;
 			}, $hidden));
@@ -151,7 +151,7 @@ class DataModelPhotobookFace extends DataModel
 	public function get_book(array $members)
 	{
 		foreach ($members as $member)
-			assert('$member instanceof DataIterMember');
+			assert($member instanceof DataIterMember);
 
 		return new DataIterFacesPhotobook(
 				get_model('DataModelPhotobook'), -1, array(
@@ -173,7 +173,7 @@ class DataModelPhotobookFace extends DataModel
 		$photo_ids = array();
 
 		foreach ($photos as $photo) {
-			assert('$photo instanceof DataIterPhoto');
+			assert($photo instanceof DataIterPhoto);
 			$photo_ids[] = $photo->get_id();
 		}
 

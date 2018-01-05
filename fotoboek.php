@@ -96,12 +96,12 @@
 
 		public function run()
 		{
-			if (logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
-				$this->model->toggle($this->photo, logged_in('id'));
+			if (get_auth()->logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
+				$this->model->toggle($this->photo, get_identity()->get('id'));
 
 			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 				return $this->view->render_json([
-					'liked' => logged_in() && $this->model->is_liked($this->photo, logged_in('id')),
+					'liked' => logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
 			}
@@ -128,7 +128,7 @@
 		protected function _create(DataIter $iter, array $data, array &$errors)
 		{
 			$data['foto_id'] = $this->photo->get_id();
-			$data['tagged_by'] = logged_in('id');
+			$data['tagged_by'] = get_identity()->get('id');
 
 			return parent::_create($iter, $data, $errors);
 		}
@@ -136,7 +136,7 @@
 		protected function _update(DataIter $iter, array $data, array &$errors)
 		{
 			// Also update who changed it.
-			$data['tagged_by'] = logged_in('id');
+			$data['tagged_by'] = get_identity()->get('id');
 
 			// Only a custom label XOR a lid_id can be assigned to a tag
 			if (isset($data['custom_label']))
@@ -587,8 +587,8 @@
 
 		protected function _view_mark_read(DataIterPhotobook $book)
 		{
-			if (logged_in())
-				$this->model->mark_read_recursively(logged_in('id'), $book);
+			if (get_auth()->logged_in())
+				$this->model->mark_read_recursively(get_identity()->get('id'), $book);
 
 			return $this->view->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
 		}
@@ -786,8 +786,8 @@
 
 			$rendered_page = $this->view->render_photobook($book);
 
-			if (logged_in())
-				$this->model->mark_read(logged_in('id'), $book);
+			if (get_auth()->logged_in())
+				$this->model->mark_read(get_identity()->get('id'), $book);
 
 			return $rendered_page;
 		}

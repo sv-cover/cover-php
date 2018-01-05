@@ -188,7 +188,7 @@
 		}
 
 		public function voted(DataIterForumThread $iter) {
-			if (!($member_data = logged_in()))
+			if (!get_identity()->member_is_active())
 				return true;
 			
 			$config_model = get_model('DataModelConfiguratie');
