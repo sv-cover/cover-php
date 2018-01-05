@@ -13,19 +13,19 @@ class DreamsparkController extends Controller
 
 	protected function redirect_to_dreamspark()
 	{
-		$member = logged_in_member();
+		$member = get_identity()->member();
 
 		$request = array(
-			'username' => $member->get('id'),
+			'username' => $member['id'],
 			'account' => get_config_value('elms_id'),
 			'key' => get_config_value('elms_secret'),
 			'academic_statuses' => 'students',
-			'email' => $member->get('email'),
-			'first_name' => $member->get('voornaam'),
-			'last_name' => (trim($member->get('tussenvoegsel')) ? $member->get('tussenvoegsel') . ' ' : '') . $member->get('achternaam'),
+			'email' => $member['email'],
+			'first_name' => $member['voornaam'],
+			'last_name' => (trim($member['tussenvoegsel']) ? $member['tussenvoegsel'] . ' ' : '') . $member['achternaam'],
 			'shopper_ip' => $_SERVER['REMOTE_ADDR']);
 
-		if (member_in_commissie(COMMISSIE_EASY)
+		if (get_identity()->member_in_committee(COMMISSIE_EASY)
 			&& !empty($_POST['log_in_as_webcie']))
 			$request['username'] = 'webcie@ai.rug.nl';
 

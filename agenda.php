@@ -78,9 +78,9 @@
 
 		public function _check_commissie($name, $value)
 		{
-			if (member_in_commissie($value)
-				|| member_in_commissie(COMMISSIE_BESTUUR)
-				|| member_in_commissie(COMMISSIE_KANDIBESTUUR))
+			if (get_identity()->member_in_committee($value)
+				|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 				return $value;
 			
 			return false;

@@ -101,7 +101,7 @@
 
 			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 				return $this->view->render_json([
-					'liked' => logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
+					'liked' => get_auth()->logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
 			}
