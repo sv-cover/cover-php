@@ -49,7 +49,7 @@ class DataIterMailinglistArchive extends DataIter
 					break;
 
 				case 'B':
-					$data = base64_decode($data);
+					$data = base64_decode($match[3]);
 					break;
 			}
 
