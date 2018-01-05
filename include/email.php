@@ -4,16 +4,22 @@ namespace Cover\email;
 
 class ParseException extends \RuntimeException
 {
+	protected $reason;
+
 	protected $bodyLine;
 
-	public function __construct($line, $body = null, $previous = null)
+	public function __construct($line, $reason, $body = null, $previous = null)
 	{
-		parent::__construct(self::formatMessage($line, $body), 0, $previous);
+		parent::__construct(self::formatMessage($line, $reason, $body), 0, $previous);
+
+		$this->reason = $reason;
+
+		$this->bodyLine = $line;
 	}
 
-	static private function formatMessage($line, $email = null)
+	static private function formatMessage($line, $reason, $email = null)
 	{
-		$body = "Parse error on line $line";
+		$body = "Parse error on line $line: $reason";
 		
 		if ($email !== null) {
 			$offset = max(0, $line - 5);
@@ -29,9 +35,9 @@ class ParseException extends \RuntimeException
 		return $body;
 	}
 
-	public function withMessage($message)
+	public function withMessage($body)
 	{
-		return new self($this->bodyLine, $message, $this);
+		return new self($this->bodyLine, $this->reason, $body, $this);
 	}
 }
 
@@ -88,6 +94,8 @@ class MessagePart
 	const BOUNDARY_LENGTH = 12;
 
 	const TRANSFER_ENCODING_7BIT = '7bit';
+
+	const TRANSFER_ENCODING_8BIT = '8bit';
 
 	const TRANSFER_ENCODING_BASE64 = 'base64';
 
@@ -159,7 +167,7 @@ class MessagePart
 
 	public function parts()
 	{
-		return $this->isMultipart() ? $this->body : [$this->body];
+		return $this->isMultipart() ? $this->body : [$this];
 	}
 
 	/**
@@ -273,6 +281,7 @@ class MessagePart
 				return base64_encode($data);
 
 			case self::TRANSFER_ENCODING_7BIT:
+			case self::TRANSFER_ENCODING_8BIT:
 				return mb_convert_encoding($data, $charset, 'auto');
 
 			default:
@@ -291,6 +300,7 @@ class MessagePart
 				return base64_decode($data);
 
 			case self::TRANSFER_ENCODING_7BIT:
+			case self::TRANSFER_ENCODING_8BIT:
 				return mb_convert_encoding($data, 'UTF-8', $charset ?: 'auto');
 
 			default:
@@ -481,6 +491,8 @@ class MessagePart
 	{
 		$message = new self();
 
+		self::consume_junk($stream);
+
 		self::parse_header($stream, $message);
 
 		if ($message->header('Content-Type') && preg_match('/^multipart\/.+?;\s*boundary=("?)([^;]+?)(\1)(;|$)/', $message->header('Content-Type'), $match))
@@ -489,6 +501,17 @@ class MessagePart
 			self::parse_plain_body($stream, $parent_boundary, $message);
 
 		return $message;
+	}
+
+	/**
+	 * Remove the junk the mailing system is adding to our messages
+	 */
+	static public function consume_junk(PeakableStream $stream)
+	{
+		$line = $stream->peek();
+
+		if (strncasecmp($line, 'From ', 5) === 0)
+			$stream->readline();
 	}
 
 	static public function parse_text($raw_message)
@@ -574,7 +597,9 @@ class MessagePart
 				$message->body[] = self::parse_stream($stream, $boundary);
 
 			else
-				throw new ParseException($stream->lineNumber());
+				// One would assume: throw new ParseException($stream->lineNumber(), "Unexpected content");
+				// But! Some programs but a notice like "This is a multipart message" just before the first boundary.
+				continue;
 		}
 	}
 
