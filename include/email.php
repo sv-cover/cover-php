@@ -185,6 +185,9 @@ class MessagePart
 
 			if ($part->isMultipart())
 				yield from $part->textParts();
+
+			if ($part === $this && !$this->isMultipart() && $this->header('Content-Type') === null)
+				yield $part;
 		}
 	}
 

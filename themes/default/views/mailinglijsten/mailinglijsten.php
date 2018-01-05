@@ -80,18 +80,10 @@ class MailinglijstenView extends CRUDView
 			$subject = $parsed->header('Subject');
 
 			foreach ($parsed->textParts() as $part) {
-				if (!preg_match('/^text\/(html|plain)\b/i', $part->header('Content-Type'), $match))
-					continue;
-
-				switch ($match[1]) {
-					case 'html':
-						$html_body = $part->body();
-						break;
-
-					case 'plain':
-						$text_body = $part->body();
-						break;
-				}
+				if (preg_match('/^text\/html\b/i', $part->header('Content-Type')))
+					$html_body = $part->body();
+				else
+					$text_body = $part->body();
 			}
 		} catch (Exception $e) {
 			$error = $e;
