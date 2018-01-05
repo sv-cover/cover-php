@@ -7,10 +7,55 @@
 
 <div class="messageBox">
 	<p>{{ __('Bericht uit Archief van %s, verwerkt op %s (return-code %s)')|e('html')|format('<a href="%s">%s</a>'|format(controller.link_to_read(list)|e('html_attr'), list.naam|e('html'))|raw, message.verwerkt_op|date(), message.return_code)|raw }}</p>
-	<pre style="white-space: pre-wrap; 
-white-space: -moz-pre-wrap; 
-white-space: -pre-wrap; 
-white-space: -o-pre-wrap; 
-word-wrap: break-word;">{{ message.bericht }}</pre>
 </div>
+
+{% if error %}
+	<div class="messageBox">
+		<p>Could not parse message due to the following error</p>
+		<p>{{error}}</p>
+	</div>
+{% else %}
+	<div class="messageBox">
+		{% if subject is not null %}
+			<h3>{{ subject }}</h3>
+		{% endif %}
+		<div class="tab-container">
+			<ul class="nav-tabs horizontal">
+				{% if html_body is not null %}
+					<li><a href="#email-html-body">Formatted</a></li>
+				{% endif %}
+				{% if text_body is not null %}
+					<li><a href="#email-text-body">Plain text</a></li>
+				{% endif %}
+			</ul>
+			{% if html_body %}
+				<div class="tab-panel" id="email-html-body">
+					<iframe sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" target="_blank" srcdoc="{{html_body|e('html_attr')}}" style="width: 100%; height: 400px;" onload="makeLegible(this)"></iframe>
+					<script>
+						function makeLegible(iframe) {
+							// Make the default text sans-serif
+							var doc = iframe.contentWindow.document;
+							doc.body.style.fontFamily='sans-serif';
+
+							// Make sure links open in new windows
+							var base = doc.createElement('base');
+							base.target = '_blank';
+							doc.head.appendChild(base);
+						}
+					</script>
+				</div>
+			{% endif %}
+			{% if text_body %}
+				<div class="tab-panel" id="email-text-body">
+					<pre style="white-space: pre-wrap; 
+						white-space: -moz-pre-wrap; 
+						white-space: -pre-wrap; 
+						white-space: -o-pre-wrap; 
+						word-wrap: break-word;">{{ text_body }}</pre>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+{% endif %}
+
 {% endblock %}

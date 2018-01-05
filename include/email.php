@@ -165,7 +165,7 @@ class MessagePart
 	/**
 	 * @return MessagePart[] all message parts that make up the displayable content (plain/text, html, not attachment)
 	 */
-	public function messageParts()
+	public function textParts()
 	{
 		foreach ($this->parts() as $part)
 		{
@@ -176,7 +176,7 @@ class MessagePart
 				yield $part;
 
 			if ($part->isMultipart())
-				yield from $part->messageParts();
+				yield from $part->textParts();
 		}
 	}
 
@@ -690,7 +690,7 @@ function reply(MessagePart $message, $reply_text)
 
 function personalize(MessagePart $message, callable $text_filter)
 {
-	foreach ($message->messageParts() as $part)
+	foreach ($message->textParts() as $part)
 		$part->setBody($text_filter($part->body()));
 }
 
