@@ -275,6 +275,9 @@ class MessagePart
 
 	protected function encodeBody($data, $transfer_encoding, $charset)
 	{
+		if ($charset !== null)
+			$data = mb_convert_encoding($data, $charset, 'auto');
+
 		switch (strtolower($transfer_encoding))
 		{
 			case self::TRANSFER_ENCODING_QUOTED_PRINTABLE:
@@ -285,32 +288,35 @@ class MessagePart
 
 			case self::TRANSFER_ENCODING_7BIT:
 			case self::TRANSFER_ENCODING_8BIT:
-				return mb_convert_encoding($data, $charset, 'auto');
+				return $data;
 
 			default:
 				throw new \InvalidArgumentException('Encoding for this Content-Transfer-Encoding (' . $transfer_encoding . ') is not supported');
 		}
 	}
 
-	protected function decodeBody($data, $transfer_encoding = null, $charset = null)
+	protected function decodeBody($data, $transfer_encoding, $charset)
 	{
 		switch (strtolower($transfer_encoding))
 		{
 			case self::TRANSFER_ENCODING_QUOTED_PRINTABLE:
-				return quoted_printable_decode($data);
+				$data = quoted_printable_decode($data);
+				break;
 
 			case self::TRANSFER_ENCODING_BASE64:
-				return base64_decode($data);
+				$data = base64_decode($data);
+				break;
 
 			case self::TRANSFER_ENCODING_7BIT:
 			case self::TRANSFER_ENCODING_8BIT:
-				return mb_convert_encoding($data, 'UTF-8', $charset ?: 'auto');
-
 			default:
-				return $data;
-
-			// For 7bit encoding see http://www.jugbit.com/php/encoding-ascii-to-7bit-strings-and-decoding/
+				break;
 		}
+
+		if ($charset !== null)
+			$data = mb_convert_encoding($data, 'UTF-8', $charset ?: 'auto');
+
+		return $data;
 	}
 
 	public function addBody($content_type, $body, $content_transfer_encoding = null)
