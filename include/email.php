@@ -634,7 +634,7 @@ class MessagePart
 function charset($content_type)
 {
 	// E.g. "text/html; charset=us-ascii"
-	return preg_match('/^text\/.+;\s*charset=([A-Z0-9-]+?)(;|$)/i', $content_type, $match) ? $match[1] : null;
+	return preg_match('/^text\/.+;\s*charset=(["\']?)([A-Z0-9-]+?)\\1(;|$)/i', $content_type, $match) ? $match[2] : null;
 }
 
 function break_line($line, $max_length)
