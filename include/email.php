@@ -8,7 +8,7 @@ class ParseException extends \RuntimeException
 
 	protected $bodyLine;
 
-	public function __construct($line, $reason, $body = null, $previous = null)
+	public function __construct(int $line, string $reason, ?string $body = null, ?Exception $previous = null)
 	{
 		parent::__construct(self::formatMessage($line, $reason, $body), 0, $previous);
 
@@ -17,7 +17,7 @@ class ParseException extends \RuntimeException
 		$this->bodyLine = $line;
 	}
 
-	static private function formatMessage($line, $reason, $email = null)
+	static private function formatMessage(int $line, string $reason, ?string $email = null): string
 	{
 		$body = "Parse error on line $line: $reason";
 		
@@ -35,7 +35,7 @@ class ParseException extends \RuntimeException
 		return $body;
 	}
 
-	public function withMessage($body)
+	public function withMessage(string $body): ParseException
 	{
 		return new self($this->bodyLine, $this->reason, $body, $this);
 	}
@@ -79,7 +79,7 @@ class PeakableStream
 		return $out;
 	}
 
-	public function lineNumber()
+	public function lineNumber(): int
 	{
 		return $this->lineNumber;
 	}
@@ -108,7 +108,12 @@ class MessagePart
 		$this->body = $body;
 	}
 
-	public function headers($search_key = null)
+	public function __clone()
+	{
+		return new self($this->headers, $this->body);
+	}
+
+	public function headers(?string $search_key = null): array
 	{
 		if ($search_key === null)
 			return array_map(function($values) {
@@ -136,18 +141,18 @@ class MessagePart
 		return [];
 	}
 
-	public function header($search_key)
+	public function header(string $search_key): ?string
 	{
 		$headers = $this->headers($search_key);
 		return $headers === [] ? null : $headers[0];
 	}
 
-	public function setHeader($key, $value)
+	public function setHeader(string $key, string $value)
 	{
 		$this->headers[$key] = [$this->encodeHeaderIfNeeded($value)];
 	}
 
-	public function addHeader($key, $value)
+	public function addHeader(string $key, string $value)
 	{
 		if (isset($this->headers[$key]))
 			$this->headers[$key][] = $this->encodeHeaderIfNeeded($value);
@@ -155,17 +160,17 @@ class MessagePart
 			$this->setHeader($key, $value);
 	}
 
-	public function removeHeader($key)
+	public function removeHeader(string $key)
 	{
 		unset($this->headers[$key]);
 	}
 
-	public function isMultipart()
+	public function isMultipart(): bool
 	{
 		return is_array($this->body);
 	}
 
-	public function parts()
+	public function parts(): array
 	{
 		return $this->isMultipart() ? $this->body : [$this];
 	}
@@ -191,7 +196,30 @@ class MessagePart
 		}
 	}
 
-	public function body($preferred_content_type = null)
+	/**
+	 * Make a copy of the message by applying the transformer function to all
+	 * text parts.
+	 *
+	 * Parts that are text parts (either content-type text, or entirely without
+	 * content type and not an attachment) are untouched and referenced instead
+	 * of copied.
+	 */
+	public function derive(callable $transformer): MessagePart
+	{
+		$copy = clone $this;
+
+		if ($copy->isMultipart())
+			foreach ($copy->body as &$part)
+				$part = $part->derive($transformer);
+			
+		else
+			if ($this->isText() && !$this->isAttachment())
+				$copy->setBody($transformer($this->body()));
+		
+		return $copy;
+	}
+
+	public function body(string $preferred_content_type = null): ?string
 	{
 		// If this is a simple part (no multipart) just return the data
 		if (!$this->isMultipart())
@@ -208,7 +236,7 @@ class MessagePart
 		return null;
 	}
 
-	public function hasBodyOfType($content_type)
+	public function hasBodyOfType(string $content_type): bool
 	{
 		// Am I a body of the content type? (And thus probably not multipart)
 		if ($this->hasContentType($content_type))
@@ -223,26 +251,32 @@ class MessagePart
 		return false;
 	}
 
-	public function hasContentType($content_type)
+	public function hasContentType(string $content_type): bool
 	{
 		return preg_match(
 			'/^' . preg_quote($content_type, '/') . '(;\s*charset=(.+?))?$/i',
 			$this->header('Content-Type'));
 	}
 
-	public function isAttachment()
+	public function isAttachment(): bool
 	{
 		return preg_match(
 			'/^attachment(;.+)?$/i',
 			$this->header('Content-Disposition'));
 	}
 
-	protected function encodeHeader($data)
+	public function isText(): bool
+	{
+		return $this->header('Content-Type') === null
+			|| preg_match('/^text\//', $this->header('Content-Type'));
+	}
+
+	protected function encodeHeader(string $data): string
 	{
 		return '=?' . base64_encode($data) . '?B?UTF-8?=';
 	}
 
-	protected function encodeHeaderIfNeeded($data)
+	protected function encodeHeaderIfNeeded(string $data): string
 	{
 		if (preg_match('/^[[:ascii:]]*$/', $data))
 			return $data;
@@ -250,13 +284,14 @@ class MessagePart
 		return $this->encodeHeader($data);
 	}
 
-	protected function decodeHeader($data)
+	protected function decodeHeader(string $data): string
 	{
 		$decode = function($match) {
 			switch ($match[2])
 			{
 				case 'Q':
 					$data = quoted_printable_decode($match[3]);
+					$data = str_replace('_', ' ', $data); // quoted_printable_decode is magic. But bad magic.
 					break;
 
 				case 'B':
@@ -397,23 +432,23 @@ class MessagePart
 		return null;
 	}
 
-	private function breakLine($line, $preferred_length, $max_length, $split_pattern = '/[[:space:],-:]/')
+	private function breakLine(string $line, int $preferred_length, int $max_length, string $split_pattern = '/[[:space:],;]+/')
 	{
 		if (strlen($line) <= $preferred_length)
 			return [$line, ''];
 		elseif (preg_match($split_pattern, $line, $match, PREG_OFFSET_CAPTURE, $preferred_length))
-			return [substr($line, 0, $match[0][1]), substr($line, $match[0][1])];
+			return [substr($line, 0, $match[0][1] + strlen($match[0][0])), substr($line, $match[0][1] + strlen($match[0][0]))];
 		elseif (strlen($line) <= $max_length)
 			return [$line, ''];
 		else
 			return [substr($line, 0, $max_length), substr($line, $max_length + 1)];
 	}
 
-	private function wrapLines($text, $preferred_length, $max_length, $prefix = '')
+	private function wrapLines(string $text, int $preferred_length, int $max_length, ?callable $prefix = null): string
 	{
 		$lines = preg_split('/\r?\n/', $text);
 
-		if (!is_callable($prefix))
+		if ($prefix === null)
 			$prefix = function() use ($prefix) {
 				return $prefix;
 			};
@@ -442,7 +477,7 @@ class MessagePart
 		return implode("\r\n", $lines);
 	}
 
-	public function headerAsString()
+	public function headerAsString(): string
 	{
 		$out = '';
 
@@ -461,7 +496,7 @@ class MessagePart
 		return $out;
 	}
 
-	public function bodyAsString()
+	public function bodyAsString(): string
 	{
 		if (!$this->isMultipart())
 		{
@@ -491,12 +526,12 @@ class MessagePart
 		return $out;
 	}
 
-	public function toString()
+	public function toString(): string
 	{
 		return $this->headerAsString() . "\r\n" . $this->bodyAsString();
 	}
 
-	static public function parse_stream(PeakableStream $stream, $parent_boundary = null)
+	static public function parse_stream(PeakableStream $stream, ?string $parent_boundary = null): MessagePart
 	{
 		$message = new self();
 
@@ -523,7 +558,7 @@ class MessagePart
 			$stream->readline();
 	}
 
-	static public function parse_text($raw_message)
+	static public function parse_text(string $raw_message): MessagePart
 	{
 		$tmp_stream = fopen('php://temp', 'r+');
 		fwrite($tmp_stream, $raw_message);
@@ -555,9 +590,7 @@ class MessagePart
 
 			// False? That is unexpected..
 			if ($line === false)
-			{
-				return false;
-			}
+				throw new ParseException($stream->lineNumber(), 'Unexpected end of stream');
 
 			// Newline? Oh god end of headers!
 			elseif (preg_match('/^(\r?\n|\r)$/', $line))
@@ -573,19 +606,19 @@ class MessagePart
 				if ($header !== null)
 					$message->addHeader($header[0], $header[1]);
 
-				$header = [$match[1], trim($match[2])];
+				$header = [$match[1], ltrim($match[2])];
 			}
 
 			elseif ($header !== null)
 			{
-				$header[1] .= " " . trim($line);
+				$header[1] .= rtrim(ltrim($line), "\r\n");
 			}
 		}
 
 		return true;
 	}
 
-	static private function parse_multipart_body(PeakableStream $stream, $boundary, MessagePart $message)
+	static private function parse_multipart_body(PeakableStream $stream, string $boundary, MessagePart $message)
 	{
 		$message->body = [];
 
@@ -594,7 +627,7 @@ class MessagePart
 			$line = $stream->readline();
 
 			if ($line === false)
-				throw new \RuntimeException("Unexpected end of stream");
+				throw new \ParseException($stream->lineNumber(), "Unexpected end of stream");
 
 			if (trim($line) === '')
 				continue;
@@ -612,7 +645,7 @@ class MessagePart
 		}
 	}
 
-	static private function parse_plain_body(PeakableStream $stream, $boundary, MessagePart $message)
+	static private function parse_plain_body(PeakableStream $stream, ?string $boundary, MessagePart $message)
 	{
 		while (true)
 		{
@@ -631,13 +664,13 @@ class MessagePart
 	}
 }
 
-function charset($content_type)
+function charset(?string $content_type)
 {
 	// E.g. "text/html; charset=us-ascii"
-	return preg_match('/^text\/.+;\s*charset=(["\']?)([A-Z0-9-]+?)\\1(;|$)/i', $content_type, $match) ? $match[2] : null;
+	return $content_type !== null && preg_match('/^text\/.+;\s*charset=(["\']?)([A-Z0-9-]+?)\\1(;|$)/i', $content_type, $match) ? $match[2] : null;
 }
 
-function break_line($line, $max_length)
+function break_line(string $line, int $max_length): array
 {
 	$last_space = strrpos($line, ' ', $max_length - strlen($line));
 
@@ -647,7 +680,7 @@ function break_line($line, $max_length)
 		return [substr($line, 0, $last_space), substr($line, $last_space + 1)];
 }
 
-function quote_plain_text($text_body, $line_wrap = 78)
+function quote_plain_text(string $text_body, int $line_wrap = 78): string
 {
 	$lines = [];
 
@@ -681,7 +714,7 @@ function quote_plain_text($text_body, $line_wrap = 78)
 	return $out;
 }
 
-function reply(MessagePart $message, $reply_text)
+function reply(MessagePart $message, string $reply_text): MessagePart
 {
 	$receipient = $message->header('Sender|From');
 
@@ -722,13 +755,16 @@ function reply(MessagePart $message, $reply_text)
 	return $reply;
 }
 
-function personalize(MessagePart $message, callable $text_filter)
+function personalize(MessagePart $message, callable $transformer): MessagePart
 {
-	foreach ($message->textParts() as $part)
-		$part->setBody($text_filter($part->body()));
+	$derived = $message->derive($transformer);
+
+	$derived->setHeader('Subject', $transformer($message->header('Subject')));
+
+	return $derived;
 }
 
-function send(MessagePart $message)
+function send(MessagePart $message): bool
 {
 	$to = $message->header('To');
 	$message->removeHeader('To');

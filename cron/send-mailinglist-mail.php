@@ -1,9 +1,14 @@
 #!/usr/bin/env php
 <?php
+declare(strict_types=1);
+
 chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/init.php';
 require_once 'include/email.php';
+
+use \Cover\email\MessagePart;
+use \Cover\email\PeakableStream;
 
 define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
@@ -23,9 +28,9 @@ define('RETURN_MARKED_AS_SPAM', 503);
 define('RETURN_MAIL_LOOP_DETECTED', 504);
 
 error_reporting(E_ALL);
-ini_set('display_errors', true);
+ini_set('display_errors', '1');
 
-function parse_email_address($email)
+function parse_email_address(string $email): ?string
 {
 	$email = trim($email);
 
@@ -39,10 +44,10 @@ function parse_email_address($email)
 		return $match[1];
 
 	else
-		return false;
+		return null;
 }
 
-function parse_email_addresses($emails)
+function parse_email_addresses(string $emails): array
 {
 	return array_filter(array_map('parse_email_address', explode(',', $emails)));
 }
@@ -64,7 +69,7 @@ function parse_email_addresses($emails)
  * @return RETURN_NOT_ALLOWED_NOT_COVER if the mail was not sent from an
  * address ending in @svcover.nl.
  */
-function process_message_to_all_committees($message, $message_headers, $to, $from)
+function process_message_to_all_committees(MessagePart $message, string $to, string $from): int
 {
 	$committee_model = get_model('DataModelCommissie');
 
@@ -89,10 +94,10 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 
 	$loop_id = sprintf('all-%s', $to);
 
-	if (in_array($loop_id, $message_headers->headers('X-Loop')))
+	if (in_array($loop_id, $message->headers('X-Loop')))
 		return RETURN_MAIL_LOOP_DETECTED;
 
-	$message = add_header($message, 'X-Loop: ' . $loop_id);
+	$message = $message->addHeader('X-Loop', $loop_id);
 
 	$committees = $committee_model->get($destinations[$to]); // Get all committees of that type, not including hidden committees (such as board)
 
@@ -109,7 +114,9 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 			'[NAME]' => $committee['naam']
 		);
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
+			return str_replace(array_keys($variables), array_values($variables), $text);
+		});
 
 		echo send_message($personalized_message, $email), "\n";
 	}
@@ -117,7 +124,7 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 	return 0;
 }
 
-function process_message_to_committee($message, $message_headers, $to, &$committee)
+function process_message_to_committee(MessagePart $message, string $to, ?DataIterCommissie &$committee): int
 {
 	$commissie_model = get_model('DataModelCommissie');
 
@@ -127,10 +134,10 @@ function process_message_to_committee($message, $message_headers, $to, &$committ
 
 	$loop_id = sprintf('committee-%d', $committee['id']);
 
-	if (in_array($loop_id, $message_headers->headers('X-Loop')))
+	if (in_array($loop_id, $message->headers('X-Loop')))
 		return RETURN_MAIL_LOOP_DETECTED;
 
-	$message = add_header($message, 'X-Loop: ' . $loop_id);
+	$message->addHeader('X-Loop', $loop_id);
 
 	$members = $committee->get_members();
 
@@ -145,7 +152,9 @@ function process_message_to_committee($message, $message_headers, $to, &$committ
 			'[COMMITTEE]' => $committee['naam']
 		);
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
+			return str_replace(array_keys($variables), array_values($variables), $text);
+		});
 
 		echo send_message($personalized_message, $member['email']), "\n";
 	}
@@ -153,7 +162,7 @@ function process_message_to_committee($message, $message_headers, $to, &$committ
 	return 0;
 }
 
-function process_message_to_mailinglist($message, $message_header, $to, $from, &$lijst)
+function process_message_to_mailinglist(MessagePart $message, string $to, string $from, ?DataIterMailinglist &$lijst): int
 {
 	$mailinglijsten_model = get_model('DataModelMailinglist');
 
@@ -163,18 +172,18 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 
 	$loop_id = sprintf('mailinglist-%d', $lijst['id']);
 
-	if (in_array($loop_id, $message_header->headers('X-Loop')))
+	if (in_array($loop_id, $message->headers('X-Loop')))
 		return RETURN_MAIL_LOOP_DETECTED;
 
-	$message = add_header($message, 'X-Loop: ' . $loop_id);
+	$message->addHeader('X-Loop', $loop_id);
 
 	// Append '[Cover]' or whatever tag is defined for this list to the subject
 	// but do so only if it is set.
 	if (!empty($lijst['tag']))
-		$message = preg_replace(
-			'/^Subject: (?!(?:Re:\s*)?\[' . preg_quote($lijst['tag'], '/') . '\])(.+?)$/im',
-			'Subject: [' . $lijst['tag'] . '] $1',
-			$message, 1);
+		$message->setHeader('Subject', preg_replace(
+			'/^(?!(?:Re:\s*)?\[' . preg_quote($lijst['tag'], '/') . '\])(.+?)$/im',
+			'[' . $lijst['tag'] . '] $1',
+			$message->header('Subject'), 1));
 
 	// Find everyone who is subscribed to that list
 	$aanmeldingen = $lijst['subscriptions'];
@@ -250,7 +259,9 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 				htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8'));
 		}
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
+			return str_replace(array_keys($variables), array_values($variables), $text);
+		});
 
 		echo send_message($personalized_message, $aanmelding['email']), "\n";
 	}
@@ -258,24 +269,22 @@ function process_message_to_mailinglist($message, $message_header, $to, $from, &
 	return 0;
 }
 
-function process_return_to_sender($message, $message_header, $from, $destination, $return_code)
+function process_return_to_sender(MessagePart $message, string $from, ?string $destination): int
 {
 	$notice = 'Sorry, but your message' . ($destination ? ' to ' . $destination : '') . " could not be delivered:\n" . get_error_message($return_code);
 
 	echo "Return message to sender $from\n";
 
-	$message_part = \Cover\email\MessagePart::parse_text($message);
+	$reply = \Cover\email\reply($message, $notice);
 
-	$reply = \Cover\email\reply($message_part, $notice);
-
-	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message_part->header('Subject'));
+	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message->header('Subject'));
 	$reply->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
 	$reply->setHeader('Reply-To', 'AC/DCee Cover <webcie@rug.nl>');
 
-	return send_message($reply->toString(), $from);
+	return send_message($reply, $from);
 }
 
-function send_welcome_mail(DataIterMailinglist $lijst, $to)
+function send_welcome_mail(DataIterMailinglist $lijst, string $to): int
 {
 	$message = new \Cover\email\MessagePart();
 
@@ -286,10 +295,10 @@ function send_welcome_mail(DataIterMailinglist $lijst, $to)
 	$message->addBody('text/plain', strip_tags($lijst['on_first_email_message']));
 	$message->addBody('text/html', $lijst['on_first_email_message']);
 
-	return send_message($message->toString(), $to);
+	return send_message($message, $to);
 }
 
-function send_message($message, $email)
+function send_message(MessagePart $message, string $email): int
 {
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
@@ -308,13 +317,13 @@ function send_message($message, $email)
 		$descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
-	fwrite($pipes[0], $message);
+	fwrite($pipes[0], $message->toString());
 	fclose($pipes[0]);
 
 	return proc_close($sendmail);
 }
 
-function get_error_message($return_value)
+function get_error_message(int $return_value): string
 {
 	switch ($return_value)
 	{
@@ -356,30 +365,7 @@ function get_error_message($return_value)
 	}
 }
 
-function read_message_headers($stream)
-{
-	$message_header = new \cover\email\MessagePart();
-
-	$success = \cover\email\MessagePart::parse_header(
-		new \cover\email\PeakableStream($stream),
-		$message_header);
-
-	if (!$success)
-		return false;
-
-	return $message_header;
-}
-
-function add_header($message, $header)
-{
-	// Just find the first \n\n occurrence, and prepend it there. Yes, sloppy.
-	if (!preg_match('/\r?\n\r?\n/', $message, $match, PREG_OFFSET_CAPTURE))
-		throw new RuntimeException('Cannot add header: cannot find the end of the message\'s header.');
-
-	return substr($message, 0, $match[0][1]) . "\r\n" . $header . substr($message, $match[0][1]);
-}
-
-function verbose($return_value)
+function verbose(int $return_value): int
 {
 	if ($return_value !== 0)
 		fwrite(STDERR, get_error_message($return_value) . "\n");
@@ -387,43 +373,33 @@ function verbose($return_value)
 	return $return_value;
 }
 
-function main()
+function main(): int
 {
-	// Copy STDIN to buffer stream because th
+	// Copy STDIN to buffer stream because we want to stream it to the parser,
+	// but we currently also want a copy as string for the database.
 	$buffer_stream = fopen('php://temp', 'r+');
 	stream_copy_to_stream(STDIN, $buffer_stream);
 
-	// Read the complete email from the stdin.
-	rewind($buffer_stream);
-	$message = stream_get_contents($buffer_stream);
+	try {
+		// Read the complete email from the stdin.
+		rewind($buffer_stream);
+		$message = MessagePart::parse_stream(new PeakableStream($buffer_stream));
+	} catch (Exception $e) {
+		sentry_report_exception($e);
+		return RETURN_COULD_NOT_PARSE_MESSAGE_HEADER;
+	}
 	
 	$lijst = null;
 	$comissie = null;
 
-	if ($message === false || trim($message) == '')
-		return RETURN_FAILURE_MESSAGE_EMPTY;
-
-	// Rewind the STDIN but skip the first line
-	rewind($buffer_stream);
-	fgets($buffer_stream); // Skip the first line
-
-	// Next, read the header of the mail again, but now using the message parser that
-	// correctly handles headers with newlines (which are hell with regexps).
-	$message_header = read_message_headers($buffer_stream);
-
-	if ($message_header === false)
-		return RETURN_COULD_NOT_PARSE_MESSAGE_HEADER;
-
-	fclose($buffer_stream);
-
 	// Test at least the sender already
-	if (!$message_header->header('From') || !$from = parse_email_address($message_header->header('From')))
+	if (!$message->header('From') || !$from = parse_email_address($message->header('From')))
 		return RETURN_COULD_NOT_DETERMINE_SENDER;
 
-	if (!$message_header->header('Envelope-To') || !$destinations = parse_email_addresses($message_header->header('Envelope-To')))
+	if (!$message->header('Envelope-To') || !$destinations = parse_email_addresses($message->header('Envelope-To')))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
-	if ($message_header->header('X-Spam-Flag') == 'YES')
+	if ($message->header('X-Spam-Flag') == 'YES')
 		return RETURN_MARKED_AS_SPAM;
 
 	foreach ($destinations as $destination)
@@ -431,24 +407,28 @@ function main()
 		$commissie = null;
 
 		// First try if this message is addressed to committees@svcover.nl
-		$return_code = process_message_to_all_committees($message, $message_header, $destination, $from);
+		$return_code = process_message_to_all_committees($message, $destination, $from);
 
 		if ($return_code === RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST)
 		{
 			// Then try sending the message to a committee
-			$return_code = process_message_to_committee($message, $message_header, $destination, $commissie);
+			$return_code = process_message_to_committee($message, $destination, $commissie);
 
 			// If that didn't work, try sending it to a mailing list
 			if ($return_code === RETURN_COULD_NOT_DETERMINE_COMMITTEE)
 			{
 				// Process the message: parse it and send it to the list.
-				$return_code = process_message_to_mailinglist($message, $message_header, $destination, $from, $lijst);
+				$return_code = process_message_to_mailinglist($message, $destination, $from, $lijst);
 			}
 		}
 
 		// Archive the message.
+		rewind($buffer_stream);
+		$raw_message = stream_get_contents($buffer_stream);
+		fclose($buffer_stream);
+
 		$archief = get_model('DataModelMailinglistArchive');
-		$archief->archive($message, $from, $lijst, $commissie, $return_code);
+		$archief->archive($raw_message, $from, $lijst, $commissie, $return_code);
 
 		if ($return_code !== 0)
 			process_return_to_sender($message, $message_header, $from, $destination, $return_code);
