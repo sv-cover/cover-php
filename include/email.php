@@ -8,7 +8,7 @@ class ParseException extends \RuntimeException
 
 	protected $bodyLine;
 
-	public function __construct(int $line, string $reason, ?string $body = null, ?Exception $previous = null)
+	public function __construct(int $line, string $reason, $body = null, Exception $previous = null)
 	{
 		parent::__construct(self::formatMessage($line, $reason, $body), 0, $previous);
 
@@ -17,7 +17,7 @@ class ParseException extends \RuntimeException
 		$this->bodyLine = $line;
 	}
 
-	static private function formatMessage(int $line, string $reason, ?string $email = null): string
+	static private function formatMessage(int $line, string $reason, $email = null): string
 	{
 		$body = "Parse error on line $line: $reason";
 		
@@ -113,7 +113,7 @@ class MessagePart
 		return new self($this->headers, $this->body);
 	}
 
-	public function headers(?string $search_key = null): array
+	public function headers($search_key = null): array
 	{
 		if ($search_key === null)
 			return array_map(function($values) {
@@ -141,7 +141,7 @@ class MessagePart
 		return [];
 	}
 
-	public function header(string $search_key): ?string
+	public function header(string $search_key)
 	{
 		$headers = $this->headers($search_key);
 		return $headers === [] ? null : $headers[0];
@@ -219,7 +219,7 @@ class MessagePart
 		return $copy;
 	}
 
-	public function body(string $preferred_content_type = null): ?string
+	public function body(string $preferred_content_type = null)
 	{
 		// If this is a simple part (no multipart) just return the data
 		if (!$this->isMultipart())
@@ -444,7 +444,7 @@ class MessagePart
 			return [substr($line, 0, $max_length), substr($line, $max_length + 1)];
 	}
 
-	private function wrapLines(string $text, int $preferred_length, int $max_length, ?callable $prefix = null): string
+	private function wrapLines(string $text, int $preferred_length, int $max_length, $prefix = null): string
 	{
 		$lines = preg_split('/\r?\n/', $text);
 
@@ -531,7 +531,7 @@ class MessagePart
 		return $this->headerAsString() . "\r\n" . $this->bodyAsString();
 	}
 
-	static public function parse_stream(PeakableStream $stream, ?string $parent_boundary = null): MessagePart
+	static public function parse_stream(PeakableStream $stream, $parent_boundary = null): MessagePart
 	{
 		$message = new self();
 
@@ -645,7 +645,7 @@ class MessagePart
 		}
 	}
 
-	static private function parse_plain_body(PeakableStream $stream, ?string $boundary, MessagePart $message)
+	static private function parse_plain_body(PeakableStream $stream, $boundary, MessagePart $message)
 	{
 		while (true)
 		{
@@ -664,7 +664,7 @@ class MessagePart
 	}
 }
 
-function charset(?string $content_type)
+function charset($content_type)
 {
 	// E.g. "text/html; charset=us-ascii"
 	return $content_type !== null && preg_match('/^text\/.+;\s*charset=(["\']?)([A-Z0-9-]+?)\\1(;|$)/i', $content_type, $match) ? $match[2] : null;

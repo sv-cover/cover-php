@@ -30,7 +30,7 @@ define('RETURN_MAIL_LOOP_DETECTED', 504);
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-function parse_email_address(string $email): ?string
+function parse_email_address(string $email)
 {
 	$email = trim($email);
 
@@ -124,7 +124,7 @@ function process_message_to_all_committees(MessagePart $message, string $to, str
 	return 0;
 }
 
-function process_message_to_committee(MessagePart $message, string $to, ?DataIterCommissie &$committee): int
+function process_message_to_committee(MessagePart $message, string $to, DataIterCommissie &$committee = null): int
 {
 	$commissie_model = get_model('DataModelCommissie');
 
@@ -162,7 +162,7 @@ function process_message_to_committee(MessagePart $message, string $to, ?DataIte
 	return 0;
 }
 
-function process_message_to_mailinglist(MessagePart $message, string $to, string $from, ?DataIterMailinglist &$lijst): int
+function process_message_to_mailinglist(MessagePart $message, string $to, string $from, DataIterMailinglist &$lijst = null): int
 {
 	$mailinglijsten_model = get_model('DataModelMailinglist');
 
@@ -269,7 +269,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 	return 0;
 }
 
-function process_return_to_sender(MessagePart $message, string $from, ?string $destination): int
+function process_return_to_sender(MessagePart $message, string $from, $destination): int
 {
 	$notice = 'Sorry, but your message' . ($destination ? ' to ' . $destination : '') . " could not be delivered:\n" . get_error_message($return_code);
 
