@@ -31,7 +31,9 @@ function barchart($data)
 
 	$bars = [];
 
-	for ($i = 0; list($partition, $count) = each($data); ++$i)
+	$i = 0;
+
+	foreach ($data as $partition => $count)
 	{
 		$bar_height = $count * $bar_scale;
 
@@ -49,6 +51,8 @@ function barchart($data)
 			$bar_width,
 			$bar_height,
 			$count);
+		
+		$i += 1;
 	}
 
 	for ($i = 0; $i <= $tick_scale; ++$i)
