@@ -273,7 +273,7 @@ class MessagePart
 
 	protected function encodeHeader(string $data): string
 	{
-		return '=?' . base64_encode($data) . '?B?UTF-8?=';
+		return '=?UTF-8?B?' . base64_encode($data) . '?=';
 	}
 
 	protected function encodeHeaderIfNeeded(string $data): string
