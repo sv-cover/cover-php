@@ -1,4 +1,6 @@
-<?php namespace Cover\email;
+<?php
+
+namespace Cover\email;
 
 class ParseException extends \RuntimeException
 {
@@ -85,6 +87,8 @@ class MessagePart
 
 	const BOUNDARY_LENGTH = 12;
 
+	const TRANSFER_ENCODING_7BIT = '7bit';
+
 	const TRANSFER_ENCODING_BASE64 = 'base64';
 
 	const TRANSFER_ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
@@ -96,19 +100,30 @@ class MessagePart
 		$this->body = $body;
 	}
 
-	public function headers($search_key)
+	public function headers($search_key = null)
 	{
-		foreach (explode('|', $search_key) as $key)
-		{
-			// Short-cut
-			if (isset($this->headers[$key]))
-				return array_map([$this, 'decodeHeader'], $this->headers[$key]);
+		if ($search_key === null)
+			return array_map(function($values) {
+				return array_map([$this, 'decodeHeader'], $values);
+			}, $this->headers);
 
-			// Case-insensitive search
-			foreach ($this->headers as $header_key => $values)
-				if (strcasecmp($key, $header_key) === 0)
-					return array_map([$this, 'decodeHeader'], $values);
+		$keys = explode('|', $search_key);
+
+		if (count($keys) > 1) {
+			foreach ($keys as $key)
+				if ($headers = $this->headers($key))
+					return $headers;
+			return [];
 		}
+
+		// Short-cut
+		if (isset($this->headers[$search_key]))
+			return array_map([$this, 'decodeHeader'], $this->headers[$search_key]);
+
+		// Case-insensitive search
+		foreach ($this->headers as $header_key => $values)
+			if (strcasecmp($search_key, $header_key) === 0)
+				return array_map([$this, 'decodeHeader'], $values);
 
 		return [];
 	}
@@ -142,15 +157,40 @@ class MessagePart
 		return is_array($this->body);
 	}
 
-	public function body($preferred_content_type)
+	public function parts()
+	{
+		return $this->isMultipart() ? $this->body : [$this->body];
+	}
+
+	/**
+	 * @return MessagePart[] all message parts that make up the displayable content (plain/text, html, not attachment)
+	 */
+	public function messageParts()
+	{
+		foreach ($this->parts() as $part)
+		{
+			if ($part->isAttachment())
+				continue;
+
+			if ($part->hasContentType('text/html') || $part->hasContentType('text/plain'))
+				yield $part;
+
+			if ($part->isMultipart())
+				yield from $part->messageParts();
+		}
+	}
+
+	public function body($preferred_content_type = null)
 	{
 		// If this is a simple part (no multipart) just return the data
 		if (!$this->isMultipart())
-			return $this->decodeBody($this->body, $this->header('Content-Transfer-Encoding'));
+			return $this->decodeBody($this->body,
+				$this->header('Content-Transfer-Encoding'),
+				charset($this->header('Content-Type')));
 
 		// However, if this is a multipart message, search all the sub parts for the preferred content type
 		foreach ($this->body as $part)
-			if ($part->hasBodyOfType($preferred_content_type))
+			if ($preferred_content_type === null || $part->hasBodyOfType($preferred_content_type))
 				return $part->body($preferred_content_type);
 
 		// And return null if it could not be found
@@ -160,7 +200,7 @@ class MessagePart
 	public function hasBodyOfType($content_type)
 	{
 		// Am I a body of the content type? (And thus probably not multipart)
-		if (preg_match('/^' . preg_quote($content_type, '/') . '(;\s*charset=(.+?))?$/i', $this->header('Content-Type')))
+		if ($this->hasContentType($content_type))
 			return true;
 
 		// Or if I am multipart, is one of my sections of the type?
@@ -170,6 +210,20 @@ class MessagePart
 					return true;
 
 		return false;
+	}
+
+	public function hasContentType($content_type)
+	{
+		return preg_match(
+			'/^' . preg_quote($content_type, '/') . '(;\s*charset=(.+?))?$/i',
+			$this->header('Content-Type'));
+	}
+
+	public function isAttachment()
+	{
+		return preg_match(
+			'/^attachment(;.+)?$/i',
+			$this->header('Content-Disposition'));
 	}
 
 	protected function encodeHeader($data)
@@ -208,7 +262,7 @@ class MessagePart
 		return preg_replace_callback('/=\?([a-zA-Z0-9_-]+)\?(Q|B)\?(.+?)\?=/', $decode, $data);
 	}
 
-	protected function encodeBody($data, $transfer_encoding)
+	protected function encodeBody($data, $transfer_encoding, $charset)
 	{
 		switch (strtolower($transfer_encoding))
 		{
@@ -218,20 +272,26 @@ class MessagePart
 			case self::TRANSFER_ENCODING_BASE64:
 				return base64_encode($data);
 
+			case self::TRANSFER_ENCODING_7BIT:
+				return mb_convert_encoding($data, $charset, 'auto');
+
 			default:
-				throw new InvalidArgumentException('Encoding for this Content-Transfer-Encoding is not supported');
+				throw new \InvalidArgumentException('Encoding for this Content-Transfer-Encoding (' . $transfer_encoding . ') is not supported');
 		}
 	}
 
-	protected function decodeBody($data, $transfer_encoding = null)
+	protected function decodeBody($data, $transfer_encoding = null, $charset = null)
 	{
 		switch (strtolower($transfer_encoding))
 		{
-			case 'quoted-printable':
+			case self::TRANSFER_ENCODING_QUOTED_PRINTABLE:
 				return quoted_printable_decode($data);
 
-			case 'base64':
+			case self::TRANSFER_ENCODING_BASE64:
 				return base64_decode($data);
+
+			case self::TRANSFER_ENCODING_7BIT:
+				return mb_convert_encoding($data, 'UTF-8', $charset ?: 'auto');
 
 			default:
 				return $data;
@@ -253,17 +313,28 @@ class MessagePart
 			$this->addPart($part);
 		}
 		
-		$part->setHeader('Content-Type', $content_type);
+		$part->setBody($body, $content_type, $content_transfer_encoding);
+	}
 
-		if (preg_match('/^text\/html/', $content_type) && $content_transfer_encoding === null)
+	public function setBody($body, $content_type = null, $content_transfer_encoding = null)
+	{
+		if ($content_type === null)
+			$content_type = $this->header('Content-Type');
+
+		if ($content_transfer_encoding === null)
+			$content_transfer_encoding = $this->header('Content-Transfer-Encoding');
+
+		$this->setHeader('Content-Type', $content_type);
+
+		if (preg_match('/^text\//', $content_type) && $content_transfer_encoding === null)
 			$content_transfer_encoding = self::TRANSFER_ENCODING_QUOTED_PRINTABLE;
 
 		if ($content_transfer_encoding !== null) {
-			$body = $this->encodeBody($body, $content_transfer_encoding);
-			$part->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
+			$body = $this->encodeBody($body, $content_transfer_encoding, charset($content_type));
+			$this->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
 		}
 
-		$part->body = $body;
+		$this->body = $body;
 	}
 
 	public function addPart(MessagePart $part)
@@ -500,9 +571,7 @@ class MessagePart
 				break;
 
 			elseif (trim($line) === '--' . $boundary)
-			{
 				$message->body[] = self::parse_stream($stream, $boundary);
-			}
 
 			else
 				throw new ParseException($stream->lineNumber());
@@ -526,6 +595,12 @@ class MessagePart
 			$message->body .= $stream->readline();
 		}
 	}
+}
+
+function charset($content_type)
+{
+	// E.g. "text/html; charset=us-ascii"
+	return preg_match('/^text\/.+;\s*charset=([A-Z0-9-]+?)(;|$)/i', $content_type, $match) ? $match[1] : null;
 }
 
 function break_line($line, $max_length)
@@ -611,6 +686,12 @@ function reply(MessagePart $message, $reply_text)
 	}
 
 	return $reply;
+}
+
+function personalize(MessagePart $message, callable $text_filter)
+{
+	foreach ($message->messageParts() as $part)
+		$part->setBody($text_filter($part->body()));
 }
 
 function send(MessagePart $message)
