@@ -109,9 +109,7 @@ function process_message_to_all_committees(MessagePart $message, string $to, str
 		
 		$variables = array(
 			'[COMMISSIE]' => $committee['naam'],
-			'[COMMITTEE]' => $committee['naam'],
-			'[NAAM]' => $committee['naam'],
-			'[NAME]' => $committee['naam']
+			'[COMMITTEE]' => $committee['naam']
 		);
 
 		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
