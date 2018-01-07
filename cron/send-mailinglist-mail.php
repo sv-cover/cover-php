@@ -246,7 +246,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 			$variables['[LID_ID]'] = $aanmelding['lid_id'];
 
 		$unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
-		$personalized_message->setHeader('List-Unsubscribe', sprintf('<%s>', $unsubscribe_url));
+		$archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $lijst['id']);
 
 		$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($unsubscribe_url, ENT_QUOTES, 'UTF-8');
 
@@ -258,7 +258,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 			return str_replace(array_keys($variables), array_values($variables), $text);
 		});
 
-		$archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $lijst['id']);
+		$personalized_message->setHeader('List-Unsubscribe', sprintf('<%s>', $unsubscribe_url));
 		$personalized_message->setHeader('List-Archive', sprintf('<%s>', $archive_url));
 
 		echo send_message($personalized_message, $aanmelding['email']), "\n";
