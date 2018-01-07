@@ -245,17 +245,13 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 		if ($aanmelding['lid_id'])
 			$variables['[LID_ID]'] = $aanmelding['lid_id'];
 
-		// If you are allowed to unsubscribe, parse the placeholder correctly (different for opt-in and opt-out lists)
-		if ($lijst['publiek'])
-		{
-			$url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
+		$url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
 
-			$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+		$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
-			$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
-				htmlspecialchars($url, ENT_QUOTES, 'UTF-8'),
-				htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8'));
-		}
+		$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
+			htmlspecialchars($url, ENT_QUOTES, 'UTF-8'),
+			htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8'));
 
 		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
 			return str_replace(array_keys($variables), array_values($variables), $text);
