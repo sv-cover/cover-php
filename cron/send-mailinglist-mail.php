@@ -245,17 +245,21 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 		if ($aanmelding['lid_id'])
 			$variables['[LID_ID]'] = $aanmelding['lid_id'];
 
-		$url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
+		$unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
+		$personalized_message->setHeader('List-Unsubscribe', sprintf('<%s>', $unsubscribe_url));
 
-		$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+		$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($unsubscribe_url, ENT_QUOTES, 'UTF-8');
 
 		$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
-			htmlspecialchars($url, ENT_QUOTES, 'UTF-8'),
+			htmlspecialchars($unsubscribe_url, ENT_QUOTES, 'UTF-8'),
 			htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8'));
 
 		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
 			return str_replace(array_keys($variables), array_values($variables), $text);
 		});
+
+		$archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $lijst['id']);
+		$personalized_message->setHeader('List-Archive', sprintf('<%s>', $archive_url));
 
 		echo send_message($personalized_message, $aanmelding['email']), "\n";
 	}
