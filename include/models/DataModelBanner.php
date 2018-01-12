@@ -39,8 +39,14 @@ class DataModelBanner extends DataModel
             $rows = json_decode($data, true, 10);
             $banners = $this->_rows_to_iters($rows);
         }
-    
+        
+        // Shuffle the banners
         shuffle($banners);
+
+        // But then do sort them at least a bit by 'weight', moving NSVKI and AXON to the bottom
+        usort($banners, function($a, $b) {
+            return ($a['weight'] ?? 0) - ($b['weight'] ?? 0);
+        });
 
         return $banners;
     }

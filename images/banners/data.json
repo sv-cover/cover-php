@@ -1,9 +1,9 @@
 [
 	{"filename":"tno.jpg","url":"https:\/\/www.tno.nl\/nl\/career\/","type":"main-sponsor"},
 	{"filename":"belsimpel.png","url":"https:\/\/werkenbijbelsimpel.nl\/","type":"main-sponsor"},
-	{"filename":"axonlogo.png","url":"http:\/\/www.axonline.nl\/"},
+	{"filename":"axonlogo.png","url":"http:\/\/www.axonline.nl\/", "weight": 1},
 	{"filename":"quintor.jpg","url":"http:\/\/www.quintor.nl\/"},
-	{"filename":"nsvki.png","url":"http://nsvki.nl/"},
+	{"filename":"nsvki.png","url":"http://nsvki.nl/", "weight": 1},
     {"filename":"tomtom.png","url":"https:\/\/www.tomtom.com\/careers\/jobs\/"},
     {"filename":"asml.jpg","url":"https:\/\/www.asml.com\/careers\/working-at-asml\/en\/s32408?rid=42455"},
     {"filename":"dataprovider.png","url":"https:\/\/www.dataprovider.com\/careers\/"},
