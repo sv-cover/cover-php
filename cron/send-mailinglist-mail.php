@@ -235,26 +235,35 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 
 		echo "Sending mail to " . $aanmelding['naam'] . " <" . $aanmelding['email'] . ">: ";
 
-		// Personize the message for the receiver
-		$variables = array(
-			'[NAAM]' => htmlspecialchars($aanmelding['naam'], ENT_COMPAT, 'UTF-8'),
-			'[NAME]' => htmlspecialchars($aanmelding['naam'], ENT_COMPAT, 'UTF-8'),
-			'[MAILINGLIST]' => htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8')
-		);
-
-		if ($aanmelding['lid_id'])
-			$variables['[LID_ID]'] = $aanmelding['lid_id'];
-
 		$unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
 		$archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $lijst['id']);
 
-		$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($unsubscribe_url, ENT_QUOTES, 'UTF-8');
+		// Personize the message for the receiver
+		$personalized_message = \Cover\email\personalize($message, function($text, $content_type) use ($aanmelding, $lijst, $unsubscribe_url, $archive_url) {
+			$use_html = preg_match('/^text\/html/', $content_type);
 
-		$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
-			htmlspecialchars($unsubscribe_url, ENT_QUOTES, 'UTF-8'),
-			htmlspecialchars($lijst['naam'], ENT_COMPAT, 'UTF-8'));
+			// Escape function depends on content type (text/html is treated differently)
+			$escape = $use_html
+				? function($text, $entities = ENT_COMPAT) { return htmlspecialchars($text, $entities, 'utf-8'); }
+				: function($text, $entities = null) { return $text; };
 
-		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
+			$variables = array(
+				'[NAAM]' => $escape($aanmelding['naam']),
+				'[NAME]' => $escape($aanmelding['naam']),
+				'[MAILINGLIST]' => $escape($lijst['naam'])
+			);
+
+			if ($aanmelding['lid_id'])
+				$variables['[LID_ID]'] = $aanmelding['lid_id'];
+
+			$variables['[UNSUBSCRIBE_URL]'] = $escape($unsubscribe_url, ENT_QUOTES);
+
+			$variables['[UNSUBSCRIBE]'] = sprintf(($use_html
+				? '<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>'
+				: 'To unsubscribe from the %2$s mailinglist, go to %1$s'),
+					$escape($unsubscribe_url),
+					$escape($lijst['naam']));
+
 			return str_replace(array_keys($variables), array_values($variables), $text);
 		});
 

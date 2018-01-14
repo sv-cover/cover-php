@@ -210,11 +210,11 @@ class MessagePart
 
 		if ($copy->isMultipart())
 			foreach ($copy->body as &$part)
-				$part = $part->derive($transformer);
+				$part = $part->derive($transformer, $part->header('Content-Type'));
 			
 		else
 			if ($this->isText() && !$this->isAttachment())
-				$copy->setBody($transformer($this->body()));
+				$copy->setBody($transformer($this->body(), $this->header('Content-Type')));
 		
 		return $copy;
 	}
@@ -768,15 +768,15 @@ function personalize(MessagePart $message, callable $transformer): MessagePart
 {
 	$changed = false;
 
-	$change_checker = function($text) use ($transformer, &$changed) {
-		$output = $transformer($text);
+	$change_checker = function($text, $content_type) use ($transformer, &$changed) {
+		$output = $transformer($text, $content_type);
 		$changed = $changed || $output != $text;
 		return $output;
 	};
 
 	$derived = $message->derive($change_checker);
 
-	$derived->setHeader('Subject', $change_checker($message->header('Subject')));
+	$derived->setHeader('Subject', $change_checker($message->header('Subject'), 'text/plain'));
 
 	if ($changed)
 		$derived->removeHeader('DKIM-Signature');
