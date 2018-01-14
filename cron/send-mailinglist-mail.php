@@ -14,7 +14,7 @@ define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
 define('RETURN_COULD_NOT_DETERMINE_LIST', 103);
 define('RETURN_COULD_NOT_DETERMINE_COMMITTEE', 104);
-define('RETURN_COULD_NOT_PARSE_MESSAGE_HEADER', 105);
+define('RETURN_COULD_NOT_PARSE_MESSAGE', 105);
 
 define('RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST', 201);
 
@@ -210,14 +210,12 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 		case DataModelMailinglist::TOEGANG_COVER:
 			if (!preg_match('/\@svcover.nl$/i', $from))
 				return RETURN_NOT_ALLOWED_NOT_COVER;
-
 			break;
 
 		// Only the owning committee can send mail to this list.
 		case DataModelMailinglist::TOEGANG_EIGENAAR:
 			if (strcasecmp($from, $lijst['committee']['email']) !== 0)
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
-
 			break;
 
 		default:
@@ -345,8 +343,8 @@ function get_error_message(int $return_value): string
 {
 	switch ($return_value)
 	{
-		case RETURN_COULD_NOT_PARSE_MESSAGE_HEADER:
-			return "Error: Could not parse the message header.";
+		case RETURN_COULD_NOT_PARSE_MESSAGE:
+			return "Error: Could not parse the message.";
 
 		case RETURN_COULD_NOT_DETERMINE_SENDER:
 			return "Error: Could not determine sender.";
@@ -404,7 +402,7 @@ function main(): int
 		$message = MessagePart::parse_stream(new PeakableStream($buffer_stream));
 	} catch (Exception $e) {
 		sentry_report_exception($e);
-		return RETURN_COULD_NOT_PARSE_MESSAGE_HEADER;
+		return RETURN_COULD_NOT_PARSE_MESSAGE;
 	}
 	
 	$lijst = null;
