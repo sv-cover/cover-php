@@ -270,16 +270,14 @@ class DataModelMailinglist extends DataModel
 
 		$message = new \Cover\email\MessagePart();
 
-		$message->setHeader('To', sprintf('%s <%s>', $naam, $email));
 		$message->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
 		$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
-		$message->setHeader('Subject', $subject);
 		$message->addBody('text/plain', strip_tags($personalized_message));
 		$message->addBody('text/html', $personalized_message);
 
 		list($message_headers, $message_body) = preg_split("/\r?\n\r?\n/", $message->toString(), 2);
 
-		return mail('', $subject, $message_body, $message_headers);
+		return mail(sprintf('%s <%s>', $naam, $email), $subject, $message_body, $message_headers);
 	}
 
 	public function member_can_access_archive(DataIterMailinglist $lijst)
