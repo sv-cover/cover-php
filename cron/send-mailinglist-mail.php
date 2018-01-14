@@ -240,7 +240,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 
 		// Personize the message for the receiver
 		$personalized_message = \Cover\email\personalize($message, function($text, $content_type) use ($aanmelding, $lijst, $unsubscribe_url, $archive_url) {
-			$use_html = preg_match('/^text\/html/', $content_type);
+			$use_html = $content_type !== null && preg_match('/^text\/html/', $content_type);
 
 			// Escape function depends on content type (text/html is treated differently)
 			$escape = $use_html
@@ -262,6 +262,17 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 				? '<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>'
 				: 'To unsubscribe from the %2$s mailinglist, go to %1$s'),
 					$escape($unsubscribe_url),
+					$escape($lijst['naam']));
+
+			// Add an unsubscribe link to the footer when there isn't already a link in there, and
+			// if users can unsubscribe from the list (i.e. public lists)
+			if ($content_type !== null
+				&& $lijst['publiek']
+				&& strpos($text, '[UNSUBSCRIBE]') === false
+				&& strpos($text, '[UNSUBSCRIBE_URL]') === false)
+				$text .= sprintf($use_html
+					? "<br><br><hr><small>You are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]</small>"
+					: "\n\n---\nYou are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]",
 					$escape($lijst['naam']));
 
 			return str_replace(array_keys($variables), array_values($variables), $text);

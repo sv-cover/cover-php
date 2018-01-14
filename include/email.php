@@ -776,7 +776,7 @@ function personalize(MessagePart $message, callable $transformer): MessagePart
 
 	$derived = $message->derive($change_checker);
 
-	$derived->setHeader('Subject', $change_checker($message->header('Subject'), 'text/plain'));
+	$derived->setHeader('Subject', $change_checker($message->header('Subject'), null));
 
 	if ($changed)
 		$derived->removeHeader('DKIM-Signature');
