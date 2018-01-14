@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-12-12 21:31+0100\n"
+"POT-Creation-Date: 2018-01-14 23:07+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -421,7 +421,7 @@ msgid "Datum"
 msgstr "Date"
 
 #: themes/default/views/agenda/moderate.twig:26
-#: themes/default/views/mailinglijsten/index.twig:31
+#: themes/default/views/mailinglijsten/index.twig:32
 msgid "Privé"
 msgstr "Private"
 
@@ -1207,7 +1207,7 @@ msgid "Terug naar onderwerp"
 msgstr "Back to topic"
 
 #: themes/default/views/fotoboek/_books.twig:25
-#: themes/default/views/mailinglijsten/index.twig:31
+#: themes/default/views/mailinglijsten/index.twig:32
 #: themes/default/views/fotoboek/fotoboek.php:117
 msgid "Publiek"
 msgstr "Public"
@@ -1665,7 +1665,7 @@ msgstr "Female"
 #: themes/default/views/mailinglijsten/single.twig:17
 #: themes/default/views/profiel/profiel.php:123
 msgid "Adres"
-msgstr "Adress"
+msgstr "Address"
 
 #: themes/default/views/lidworden/lidworden.twig:51
 msgid "Straatnaam + Huisnummer"
@@ -2022,8 +2022,6 @@ msgstr ""
 "mailing list (while not a member of said list)."
 
 #: themes/default/views/mailinglijsten/form.twig:65
-#, fuzzy
-#| msgid "Wijzig mailinglijst"
 msgid "Wijzig lijst"
 msgstr "Modify mailing list"
 
@@ -2045,6 +2043,10 @@ msgid "Zichtbaardheid"
 msgstr "Visibility"
 
 #: themes/default/views/mailinglijsten/index.twig:22
+msgid "Activiteit"
+msgstr "Activity"
+
+#: themes/default/views/mailinglijsten/index.twig:23
 msgid "Bereik"
 msgstr "Reach"
 
@@ -3222,6 +3224,10 @@ msgstr "Commissioner Fire Chief"
 msgid "Promohomo"
 msgstr "Promotion Homosexual"
 
+#: locale/strings.php:25
+msgid "Typ hier om te zoeken…"
+msgstr "Type here to search…"
+
 #: profiel.php:104
 msgid "De volgende velden zijn onjuist ingevuld: "
 msgstr "The following fields are not correctly filled in: "
@@ -3883,9 +3889,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "voorbeeld sluiten"
 #~ msgstr "close preview"
-
-#~ msgid "Typ hier om te zoeken…"
-#~ msgstr "Type here to search…"
 
 #~ msgid "Je kunt niet schrijven in dit forum"
 #~ msgstr "You can't write in this forum"

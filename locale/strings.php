@@ -22,3 +22,4 @@ __('Huisarts');
 __('Huisarts-assistent');
 __('Commissaris Heethoofd');
 __('Promohomo');
+__('Typ hier om te zoeken…'); // this one in _layout/widgets/search.twig doesn't get pick up for some reason
