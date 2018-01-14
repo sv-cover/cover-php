@@ -156,6 +156,11 @@ class DataModelMailinglistArchiveAdaptor
 	{
 		return $this->model->get_for_list($this->mailing_list);
 	}
+
+	public function count($span_in_days = null)
+	{
+		return $this->model->count_for_list($this->mailing_list, $span_in_days);
+	}
 }
 
 class DataModelMailinglist extends DataModel
