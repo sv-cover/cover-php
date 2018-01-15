@@ -58,7 +58,6 @@ function parse_email_addresses(string $emails): array
  * plain message will be replaced with the name of the committee. 
  * 
  * @param $message the raw message body
- * @param $message_headers the message headers, parsed> Not actually used.
  * @param $to destination address, ideally committees@svcover.nl
  *            or workinggroups@svcover.nl.
  * @param $from the email address of the sender. Must end in @svcover.nl or
@@ -285,7 +284,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 	return 0;
 }
 
-function process_return_to_sender(MessagePart $message, string $from, $destination): int
+function process_return_to_sender(MessagePart $message, string $from, $destination, $return_code): int
 {
 	$notice = 'Sorry, but your message' . ($destination ? ' to ' . $destination : '') . " could not be delivered:\n" . get_error_message($return_code);
 
@@ -447,7 +446,7 @@ function main(): int
 		$archief->archive($raw_message, $from, $lijst, $commissie, $return_code);
 
 		if ($return_code !== 0)
-			process_return_to_sender($message, $message_header, $from, $destination, $return_code);
+			process_return_to_sender($message, $from, $destination, $return_code);
 	}
 
 	// Return the result of the processing step.
