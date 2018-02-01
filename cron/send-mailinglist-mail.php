@@ -96,7 +96,7 @@ function process_message_to_all_committees(MessagePart $message, string $to, str
 	if (in_array($loop_id, $message->headers('X-Loop')))
 		return RETURN_MAIL_LOOP_DETECTED;
 
-	$message = $message->addHeader('X-Loop', $loop_id);
+	$message->addHeader('X-Loop', $loop_id);
 
 	$committees = $committee_model->get($destinations[$to]); // Get all committees of that type, not including hidden committees (such as board)
 
