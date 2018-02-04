@@ -64,7 +64,11 @@ CREATE TABLE leden (
     avatar character varying(100),
     homepage character varying(255),
     nick character varying(50),
-    taal character varying(10) DEFAULT 'en'::character varying
+    taal character varying(10) DEFAULT 'en'::character varying,
+    member_from DATE DEFAULT NULL,
+    member_till DATE DEFAULT NULL,
+    donor_from DATE DEFAULT NULL,
+    donor_till DATE DEFAULT NULL
 );
 
 -- Passwords for members are stored separately so they don't get fetched, ever.

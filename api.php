@@ -18,7 +18,11 @@ class ControllerApi extends Controller
 		'telefoonnummer' => 'phone_number',
 		'beginjaar' => 'membership_year_of_enrollment',
 		'geboortedatum' => 'birth_date',
-		'geslacht' => 'gender'
+		'geslacht' => 'gender',
+		'member_from' => 'membership_started_on',
+		'member_till' => 'membership_ended_on',
+		'donor_from' => 'donorship_date_of_authorization',
+		'donor_till' => 'donorship_ended_on'
 	];
 		
 	public function __construct()

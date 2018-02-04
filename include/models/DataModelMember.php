@@ -29,7 +29,41 @@
 				'homepage',
 				'nick',
 				'taal',
+				'member_from',
+				'member_till',
+				'donor_from',
+				'donor_till',
 			];
+		}
+
+		public function set_member_from($date)
+		{
+			$this->_set_date_field('member_from', $date);
+		}
+
+		public function set_member_till($date)
+		{
+			$this->_set_date_field('member_till', $date);
+		}
+
+		public function set_donor_from($date)
+		{
+			$this->_set_date_field('donor_from', $date);
+		}
+
+		public function set_donor_till($date)
+		{
+			$this->_set_date_field('donor_till', $date);
+		}
+
+		private function _set_date_field($field, $value) {
+			if (!$value)
+				$value = null;
+			else
+				$value = new DateTime($value);
+
+			$this->data[$field] = $value;
+			$this->mark_changed($field);
 		}
 
 		public function get_naam()
