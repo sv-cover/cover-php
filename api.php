@@ -325,7 +325,7 @@ class ControllerApi extends Controller
 
 		$model->update($member);
 
-		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+		return ['success' => true, 'url' => ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
 
 	public function api_secretary_delete_member($member_id)
