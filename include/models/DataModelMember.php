@@ -20,7 +20,6 @@
 				'geslacht',
 				'telefoonnummer',
 				'privacy',
-				'type',
 				'machtiging',
 				'beginjaar',
 				'lidid',
@@ -64,6 +63,25 @@
 
 			$this->data[$field] = $value;
 			$this->mark_changed($field);
+		}
+
+		public function get_type()
+		{
+			$now = new DateTime();
+
+			if ($this['member_from'] && $this['member_from'] < $now
+				&& (!$this['member_till'] || $this['member_till'] > $now))
+				return MEMBER_STATUS_LID;
+
+			else if ($this['donor_from'] && $this['donor_from'] < $now
+				&& (!$this['donor_till'] || $this['donor_till'] > $now))
+				return MEMBER_STATUS_DONATEUR;
+
+			else if ($this['member_till'] && $this['member_till'] < $now)
+				return MEMBER_STATUS_LID_AF;
+			
+			else
+				return MEMBER_STATUS_UNCONFIRMED;
 		}
 
 		public function get_naam()
