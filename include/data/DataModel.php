@@ -93,6 +93,9 @@
 				if (in_array($key, $fields))
 					$data[$key] = $value;
 
+			if ($this->auto_increment)
+				unset($data[$this->id]);
+
 			if (count($data) === 0)
 				throw new LogicException('Trying to insert empty iterator into table');
 			
