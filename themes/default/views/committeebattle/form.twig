@@ -11,7 +11,7 @@
 		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create', iter) }}
 
 		<fieldset>
-			<legend>{{ html_label(__('Leden'), 'member_ids[]', errors=errors, required=true) }}</legend>
+			<legend>{{ html_label(__('Leden'), 'member_ids[]', errors=errors) }}</legend>
 			{{ html_select_field('member_ids[]', view.active_member_options, iter, field='member_ids', multiple=true) }}
 		</fieldset>
 
