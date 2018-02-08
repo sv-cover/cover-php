@@ -23,7 +23,11 @@ class ControllerCommissies extends ControllerCRUD
 
 	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
-		if (!parent::_create($iter, $data, $errors))
+		// Prevent DataIterCommissie::set_members from being called too early
+		$iter_data = $data;
+		unset($iter_data['members']);
+
+		if (!parent::_create($iter, $iter_data, $errors))
 			return false;
 
 		if (!empty($data['members']))

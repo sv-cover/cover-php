@@ -190,7 +190,7 @@
 			$editable_model = get_model('DataModelEditable');
 
 			$page_data = [
-				'owner_id' => $committee_id,
+				'committee_id' => $committee_id,
 				'titel' => $iter['naam']
 			];
 
