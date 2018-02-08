@@ -363,8 +363,8 @@
 		{
 			static $privacy = null;
 
-			// Hack for these three fields which are often combined.
-			if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam')))
+			// Hack for these three fields which are often combined, and the correct alias
+			if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name')))
 				$field = 'naam';
 
 			if ($privacy == null)
