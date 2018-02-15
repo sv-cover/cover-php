@@ -69,19 +69,40 @@
 		{
 			$now = new DateTime();
 
-			if ($this['member_from'] && $this['member_from'] < $now
-				&& (!$this['member_till'] || $this['member_till'] > $now))
+			if ($this->is_member())
 				return MEMBER_STATUS_LID;
 
-			else if ($this['donor_from'] && $this['donor_from'] < $now
-				&& (!$this['donor_till'] || $this['donor_till'] > $now))
+			else if ($this->is_donor())
 				return MEMBER_STATUS_DONATEUR;
 
-			else if ($this['member_till'] && $this['member_till'] < $now)
+			else if ($this->has_been_member())
 				return MEMBER_STATUS_LID_AF;
 			
 			else
 				return MEMBER_STATUS_UNCONFIRMED;
+		}
+
+		public function is_member()
+		{
+			$now = new DateTime();
+
+			return $this['member_from'] && $this['member_from'] <= $now
+				&& (!$this['member_till'] || $this['member_till'] >= $now);
+		}
+
+		public function is_donor()
+		{
+			$now = new DateTime();
+
+			return $this['donor_from'] && $this['donor_from'] <= $now
+				&& (!$this['donor_till'] || $this['donor_till'] >= $now);
+		}
+
+		public function has_been_member()
+		{
+			$now = new DateTime();
+
+			return $this['member_till'] && $this['member_till'] < $now;
 		}
 
 		public function get_naam()

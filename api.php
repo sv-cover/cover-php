@@ -269,22 +269,25 @@ class ControllerApi extends Controller
 		
 		$model->insert($member);
 
-		// Create a password
-		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
-		
-		// Setup e-mail
-		$data['password_link'] = $token['link'];
-		$mail = implode("\n\n", [
-				'(For English version see below)',
-				parse_email('nieuwlid_nl.txt', $data),
-				'------------------',
-				parse_email('nieuwlid_en.txt', $data)]);
+		// Only email new members (not historical updates) about their new password 
+		if ($member->is_member()) {
+			// Create a password
+			$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
+			
+			// Setup e-mail
+			$data['password_link'] = $token['link'];
+			$mail = implode("\n\n", [
+					'(For English version see below)',
+					parse_email('nieuwlid_nl.txt', $data),
+					'------------------',
+					parse_email('nieuwlid_en.txt', $data)]);
 
-		mail($data['email'], 'Website Cover', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+			mail($data['email'], 'Website Cover', $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
-		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+			mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+		}
 
 		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
@@ -295,8 +298,10 @@ class ControllerApi extends Controller
 
 		$member = $model->get_iter($member_id);
 
-		$data = $member->data;
-		$data['type_string'] = $model->get_status($member);
+		$data = [];
+
+		foreach (self::$secretary_mapping as $prop => $field)
+			$data[$field] = $member[$prop];
 
 		return ['success' => true, 'data' => $data];
 	}
@@ -475,7 +480,7 @@ class ControllerApi extends Controller
 			sentry_report_exception($e);
 		
 		header('Content-Type: application/json');
-		echo json_encode(array('error' => $e->getMessage()));
+		echo json_encode(array('success' => false, 'error' => $e->getMessage()));
 	}
 }
 
