@@ -28,6 +28,7 @@
 				'homepage',
 				'nick',
 				'taal',
+				'type',
 				'member_from',
 				'member_till',
 				'donor_from',
