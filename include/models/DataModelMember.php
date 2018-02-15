@@ -65,6 +65,7 @@
 			$this->mark_changed($field);
 		}
 
+		/* disabled until I've synced the databases manually
 		public function get_type()
 		{
 			$now = new DateTime();
@@ -81,6 +82,7 @@
 			else
 				return MEMBER_STATUS_UNCONFIRMED;
 		}
+		*/
 
 		public function is_member()
 		{
