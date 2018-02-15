@@ -214,8 +214,8 @@
 		
 		/**
 		  * Set iter data
-		  * @field the data field name
-		  * @value the data value
+		  * @param string $field the data field name
+		  * @param mixed $value the data value
 		  */
 		public function set($field, $value)
 		{
@@ -235,16 +235,15 @@
 				return;
 
 			/* Add field to changes if it's not already changed */
-			if (!in_array($field, $this->_changes))
-				$this->_changes[] = $field;
+			$this->mark_changed($field);
 
 			/* Store new value */
 			$this->data[$field] = $value;
 		}
-		
+
 		/**
 		  * Set iter data for multiple fields
-		  * @values a hashtable where keys are the data field names and the 
+		  * @param array $values a hashtable where keys are the data field names and the 
 		  * values are the data values 
 		  */
 		public function set_all($values) {
@@ -274,6 +273,15 @@
 		  */		
 		public function has_changes() {
 			return (count($this->_changes) != 0);
+		}
+
+		/**
+		 * Mark a data field as changed.
+		 * @param string $field field
+		 */
+		protected function mark_changed($field) {
+			if (!in_array($field, $this->_changes))
+				$this->_changes[] = $field;
 		}
 		
 		/**

@@ -18,7 +18,11 @@ class ControllerApi extends Controller
 		'telefoonnummer' => 'phone_number',
 		'beginjaar' => 'membership_year_of_enrollment',
 		'geboortedatum' => 'birth_date',
-		'geslacht' => 'gender'
+		'geslacht' => 'gender',
+		'member_from' => 'membership_started_on',
+		'member_till' => 'membership_ended_on',
+		'donor_from' => 'donorship_date_of_authorization',
+		'donor_till' => 'donorship_ended_on'
 	];
 		
 	public function __construct()
@@ -265,22 +269,25 @@ class ControllerApi extends Controller
 		
 		$model->insert($member);
 
-		// Create a password
-		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
-		
-		// Setup e-mail
-		$data['password_link'] = $token['link'];
-		$mail = implode("\n\n", [
-				'(For English version see below)',
-				parse_email('nieuwlid_nl.txt', $data),
-				'------------------',
-				parse_email('nieuwlid_en.txt', $data)]);
+		// Only email new members (not historical updates) about their new password 
+		if ($member->is_member()) {
+			// Create a password
+			$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
+			
+			// Setup e-mail
+			$data['password_link'] = $token['link'];
+			$mail = implode("\n\n", [
+					'(For English version see below)',
+					parse_email('nieuwlid_nl.txt', $data),
+					'------------------',
+					parse_email('nieuwlid_en.txt', $data)]);
 
-		mail($data['email'], 'Website Cover', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+			mail($data['email'], 'Website Cover', $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 
-		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+			mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
+				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+		}
 
 		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
@@ -291,8 +298,10 @@ class ControllerApi extends Controller
 
 		$member = $model->get_iter($member_id);
 
-		$data = $member->data;
-		$data['type_string'] = $model->get_status($member);
+		$data = [];
+
+		foreach (self::$secretary_mapping as $prop => $field)
+			$data[$field] = $member[$prop];
 
 		return ['success' => true, 'data' => $data];
 	}
@@ -321,7 +330,7 @@ class ControllerApi extends Controller
 
 		$model->update($member);
 
-		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+		return ['success' => true, 'url' => ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
 
 	public function api_secretary_delete_member($member_id)
@@ -471,7 +480,7 @@ class ControllerApi extends Controller
 			sentry_report_exception($e);
 		
 		header('Content-Type: application/json');
-		echo json_encode(array('error' => $e->getMessage()));
+		echo json_encode(array('success' => false, 'error' => $e->getMessage()));
 	}
 }
 

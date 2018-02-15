@@ -20,7 +20,6 @@
 				'geslacht',
 				'telefoonnummer',
 				'privacy',
-				'type',
 				'machtiging',
 				'beginjaar',
 				'lidid',
@@ -29,7 +28,83 @@
 				'homepage',
 				'nick',
 				'taal',
+				'member_from',
+				'member_till',
+				'donor_from',
+				'donor_till',
 			];
+		}
+
+		public function set_member_from($date)
+		{
+			$this->_set_date_field('member_from', $date);
+		}
+
+		public function set_member_till($date)
+		{
+			$this->_set_date_field('member_till', $date);
+		}
+
+		public function set_donor_from($date)
+		{
+			$this->_set_date_field('donor_from', $date);
+		}
+
+		public function set_donor_till($date)
+		{
+			$this->_set_date_field('donor_till', $date);
+		}
+
+		private function _set_date_field($field, $value) {
+			if (!$value)
+				$value = null;
+			else
+				$value = new DateTime($value);
+
+			$this->data[$field] = $value;
+			$this->mark_changed($field);
+		}
+
+		/* disabled until I've synced the databases manually
+		public function get_type()
+		{
+			$now = new DateTime();
+
+			if ($this->is_member())
+				return MEMBER_STATUS_LID;
+
+			else if ($this->is_donor())
+				return MEMBER_STATUS_DONATEUR;
+
+			else if ($this->has_been_member())
+				return MEMBER_STATUS_LID_AF;
+			
+			else
+				return MEMBER_STATUS_UNCONFIRMED;
+		}
+		*/
+
+		public function is_member()
+		{
+			$now = new DateTime();
+
+			return $this['member_from'] && $this['member_from'] <= $now
+				&& (!$this['member_till'] || $this['member_till'] >= $now);
+		}
+
+		public function is_donor()
+		{
+			$now = new DateTime();
+
+			return $this['donor_from'] && $this['donor_from'] <= $now
+				&& (!$this['donor_till'] || $this['donor_till'] >= $now);
+		}
+
+		public function has_been_member()
+		{
+			$now = new DateTime();
+
+			return $this['member_till'] && $this['member_till'] < $now;
 		}
 
 		public function get_naam()
