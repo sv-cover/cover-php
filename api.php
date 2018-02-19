@@ -126,10 +126,12 @@ class ControllerApi extends Controller
 
 		$ident = get_identity_provider($auth);
 
+		$fields = array_merge(DataIterMember::fields(), ['type']);
+
 		// Prepare data for member 
 		$member = $ident->member();
 		$data = [];
-		foreach (DataIterMember::fields() as $field)
+		foreach ($fields as $field)
 			$data[$field] = $member[$field];
 
 		// Prepare committee data
