@@ -193,7 +193,10 @@ class ControllerApi extends Controller
 		// This one is passed as parameter anyway, it is already known.
 		$member->data['id'] = (int) $member_id;
 
-		return array('result' => $member->data);
+		return array('result' => array_merge(
+			$member->data,
+			['type' => $member['type']]
+		));
 	}
 
 	public function api_get_committees($member_id)
