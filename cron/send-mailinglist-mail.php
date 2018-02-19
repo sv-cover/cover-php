@@ -199,7 +199,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 					break 2;
 
 			// Also test whether the owner is sending mail, he should also be accepted.
-			if (strcasecmp($from, $lijst['committee']['email']) === 0)
+			if (in_array($from, $lijst['committee']['email_addresses']))
 				break;
 			
 			// Nope, access denied
@@ -213,7 +213,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 
 		// Only the owning committee can send mail to this list.
 		case DataModelMailinglist::TOEGANG_EIGENAAR:
-			if (strcasecmp($from, $lijst['committee']['email']) !== 0)
+			if (!in_array($from, $lijst['committee']['email_addresses']))
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
 			break;
 

@@ -147,11 +147,11 @@ class DatabasePDO
 	 * @param $query SQL query
 	 * @param $col column as integer or name
 	 */
-	public function query_column($query, $col = 0)
+	public function query_column($query, $col = 0, array $input_parameters = [])
 	{
 		// Execute query with indices if col index is numeric. If it isn't,
 		// then fetch as an associated array.
-		$rows = $this->query($query, is_int($col));
+		$rows = $this->query($query, is_int($col), $input_parameters);
 
 		// Create a getter for the col (which is a function that returns
 		// $rows[$col]) and apply it to every row.

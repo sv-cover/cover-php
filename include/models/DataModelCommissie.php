@@ -80,6 +80,11 @@
 			return strstr($this['login'], '@') ? $this['login'] : $this['login'] . '@svcover.nl';
 		}
 
+		public function get_email_addresses()
+		{
+			return get_model('DataModelCommissie')->get_email_addresses($this);
+		}
+
 		public function get_thumbnail()
 		{
 			return self::find_image(array(
@@ -371,6 +376,16 @@
 					c.naam ASC");
 
 			return $this->_rows_to_iters($rows);
+		}
+
+		public function get_email_addresses(DataIterCommissie $committee)
+		{
+			$aliasses = $this->db->query_column(
+				"SELECT email FROM committee_email WHERE committee_id = :committee_id",
+				'email',
+				[':committee_id' => $committee->get_id()]);
+
+			return array_merge([$committee['email']], $aliasses);
 		}
 
 		/**

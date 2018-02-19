@@ -133,6 +133,19 @@ CREATE TABLE committee_members (
     functie character varying(50) -- Todo: field still needs an English name
 );
 
+
+--
+-- committee email addresses, used for mailing lists to determine whether they may send mail
+--
+
+CREATE TABLE committee_email (
+    committee_id smallint NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    email TEXT,
+    CONSTRAINT committee_email_uniq UNIQUE (committee_id, email)
+);
+
+CREATE INDEX ON committee_email (committee_id);
+
 --
 -- Previous boards page table. Very similar to committees due to the
 -- hacky nature of this implementation. Maybe someday they will be merged
