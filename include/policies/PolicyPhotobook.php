@@ -23,8 +23,9 @@ class PolicyPhotobook implements Policy
 			return $book['member_ids'] == [get_identity()->get('id')];
 
 		// Older photo books are not visible for non-members
-		if (!get_identity()->member_is_active() && $book['date'] !== null && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
-			return intval($match[1]) >= intval(date("Y", strtotime("-2 year")));
+		if (!get_identity()->member_is_active() && $book['date'] !== null && preg_match('/^(?P<year>\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
+			return intval($match['year']) >= intval(date("Y", strtotime("-2 year")))
+				|| (get_identity()->member() !== null && get_identity()->member()->is_member_on(new DateTime($match[0])));
 
 		return true;
 	}

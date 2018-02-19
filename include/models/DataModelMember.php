@@ -62,7 +62,7 @@
 			else
 				$value = new DateTime($value);
 
-			$this->data[$field] = $value;
+			$this->data[$field] = $value->format('Y-m-d');
 			$this->mark_changed($field);
 		}
 
@@ -85,25 +85,29 @@
 		
 		public function is_member()
 		{
-			$now = new DateTime();
-
-			return $this['member_from'] && $this['member_from'] <= $now
-				&& (!$this['member_till'] || $this['member_till'] >= $now);
+			return $this->is_member_on(new DateTime());
 		}
 
 		public function is_donor()
 		{
-			$now = new DateTime();
+			return $this->is_donor_on(new DateTime());
+		}
 
-			return $this['donor_from'] && $this['donor_from'] <= $now
-				&& (!$this['donor_till'] || $this['donor_till'] >= $now);
+		public function is_member_on(DateTime $moment)
+		{
+			return $this['member_from'] && new DateTime($this['member_from']) <= $moment
+				&& (!$this['member_till'] || new DateTime($this['member_till']) >= $moment);
+		}
+
+		public function is_donor_on(DateTime $moment)
+		{
+			return $this['donor_from'] && new DateTime($this['donor_from']) <= $moment
+				&& (!$this['donor_till'] || new DateTime($this['donor_till']) >= $moment);
 		}
 
 		public function has_been_member()
 		{
-			$now = new DateTime();
-
-			return $this['member_till'] && $this['member_till'] < $now;
+			return $this['member_till'] && new DateTime($this['member_till']) < new DateTime();
 		}
 
 		public function get_naam()
