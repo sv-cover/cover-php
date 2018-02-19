@@ -89,14 +89,6 @@ class ProfielView extends View
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('incassomatic', compact('iter'));
 				// }
-			],
-			'system' => [
-				'visible' => get_identity()->member_in_committee(COMMISSIE_EASY),
-				'label' => __('Systeem'),
-				'class' => 'fa-icon icon-system'
-				// 'body' => function() use ($iter) {
-				// 	$this->render_partial('visibility', compact('iter'));
-				// }
 			]
 		];
 	}
@@ -238,20 +230,6 @@ class ProfielView extends View
 			sentry_report_exception($exception);
 			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
 		}
-	}
-
-	public function render_system_tab(DataIterMember $iter, $error_message = null, array $errors = [])
-	{
-		$types = [
-			MEMBER_STATUS_LID,
-			MEMBER_STATUS_LID_ONZICHTBAAR,
-			MEMBER_STATUS_LID_AF,
-			MEMBER_STATUS_ERELID,
-			MEMBER_STATUS_DONATEUR,
-			MEMBER_STATUS_UNCONFIRMED
-		];
-
-		return $this->render('system_tab.twig', compact('iter', 'error_message', 'errors', 'types'));
 	}
 
 	public function render_vcard(DataIterMember $member)
