@@ -219,22 +219,6 @@ class ControllerApi extends Controller
 		return array('result' => $committees);
 	}
 
-	private function _get_member_type_from_secretary_info($data)
-	{
-		$type = MEMBER_STATUS_UNCONFIRMED;
-
-		if (!empty($data['donorship_ended_on']))
-			$type = MEMBER_STATUS_LID_AF;
-		elseif (!empty($data['donorship_date_of_authorization']))
-			$type = MEMBER_STATUS_DONATEUR;
-		elseif (!empty($data['membership_ended_on']))
-			$type = MEMBER_STATUS_LID_AF;
-		elseif (!empty($data['membership_started_on']))
-			$type = MEMBER_STATUS_LID;
-
-		return $type;
-	}
-
 	public function api_secretary_create_member()
 	{
 		$model = get_model('DataModelMember');
@@ -243,8 +227,7 @@ class ControllerApi extends Controller
 			throw new InvalidArgumentException('Missing id field in POST');
 
 		$data = [
-			'id' => $_POST['id'],
-			'type' => $this->_get_member_type_from_secretary_info($_POST)
+			'id' => $_POST['id']
 		];
 
 		foreach (self::$secretary_mapping as $field => $secretary_field)
@@ -325,8 +308,6 @@ class ControllerApi extends Controller
 			$field = $reverse_mapping[$remote_field];
 			$member[$field] = $value;
 		}
-
-		$member['type'] = $this->_get_member_type_from_secretary_info($_POST);
 
 		$model->update($member);
 
