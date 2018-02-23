@@ -59,7 +59,7 @@ CREATE TABLE leden (
     privacy integer NOT NULL,
     type integer DEFAULT 1,
     machtiging smallint,
-    beginjaar integer DEFAULT date_part('year'::text, now()),
+    beginjaar integer DEFAULT NULL,
     onderschrift character varying(200),
     avatar character varying(100),
     homepage character varying(255),
