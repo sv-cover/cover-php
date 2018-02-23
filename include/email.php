@@ -378,7 +378,8 @@ class MessagePart
 		if ($content_transfer_encoding === null)
 			$content_transfer_encoding = $this->header('Content-Transfer-Encoding');
 
-		$this->setHeader('Content-Type', $content_type);
+		if ($content_type)
+			$this->setHeader('Content-Type', $content_type);
 
 		if (preg_match('/^text\//', $content_type) && $content_transfer_encoding === null)
 			$content_transfer_encoding = self::TRANSFER_ENCODING_QUOTED_PRINTABLE;
