@@ -1,16 +1,18 @@
 <div class="bar_sep">{{ __('Laatste reacties') }}</div>
 {% for comment_group in comments|group_by('foto') %}
-	<div class="recent-comment">
-		<a href="fotoboek.php?photo={{ (comment_group|first).foto|e('url') }}" class="thumbnail">
-			<img src="{{ (comment_group|first).photo.get_url(null, 400)|e('html_attr') }}"
-				height="100"
-				title="{{ '%s / %s'|format(
-					(comment_group|first).photobook.titel,
-					(comment_group|first).beschrijving is defined ? (comment_group|first).beschrijving : __('geen titel'))|e('html_attr') }}">
-		</a>
-		{% set photo_comment_controller = view.comment_controller_for_photo((comment_group|first).photo) %}
-		{% for comment in comment_group|reverse %}
-			{{ include('@theme/fotoboekreacties/_comment.twig', {controller:photo_comment_controller, iter:comment}) }}
-		{% endfor %}
-	</div>
+	{% if user_can_read comment_group|first.foto %}
+		<div class="recent-comment">
+			<a href="fotoboek.php?photo={{ (comment_group|first).foto|e('url') }}" class="thumbnail">
+				<img src="{{ (comment_group|first).photo.get_url(null, 400)|e('html_attr') }}"
+					height="100"
+					title="{{ '%s / %s'|format(
+						(comment_group|first).photobook.titel,
+						(comment_group|first).beschrijving is defined ? (comment_group|first).beschrijving : __('geen titel'))|e('html_attr') }}">
+			</a>
+			{% set photo_comment_controller = view.comment_controller_for_photo((comment_group|first).photo) %}
+			{% for comment in comment_group|reverse %}
+				{{ include('@theme/fotoboekreacties/_comment.twig', {controller:photo_comment_controller, iter:comment}) }}
+			{% endfor %}
+		</div>
+	{% endif %}
 {% endfor %}
