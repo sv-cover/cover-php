@@ -53,7 +53,7 @@ CREATE TABLE leden (
     postcode character varying(7) NOT NULL,
     woonplaats character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
-    geboortedatum date NOT NULL,
+    geboortedatum date DEFAULT NULL,
     geslacht character(1) NOT NULL,
     telefoonnummer character varying(20),
     privacy integer NOT NULL,

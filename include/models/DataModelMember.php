@@ -60,9 +60,9 @@
 			if (!$value)
 				$value = null;
 			else
-				$value = new DateTime($value);
+				$value = (new DateTime($value))->format('Y-m-d');
 
-			$this->data[$field] = $value->format('Y-m-d');
+			$this->data[$field] = $value;
 			$this->mark_changed($field);
 		}
 
