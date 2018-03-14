@@ -268,7 +268,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 				&& strpos($text, '[UNSUBSCRIBE]') === false
 				&& strpos($text, '[UNSUBSCRIBE_URL]') === false)
 				$text .= sprintf($use_html
-					? "<br><hr style=\"border:0;border-top:1px solid #ccc\"><small>You are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]</small>"
+					? "<div><hr style=\"border:0;border-top:1px solid #ccc\"><small>You are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]</small></div>"
 					: "\n\n---\nYou are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]",
 					$escape($lijst['naam']));
 
