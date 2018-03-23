@@ -21,12 +21,13 @@ def read_image(path):
 def find_faces(path):
 	try:
 		img, width, height = read_image(path)
-		for face in detector(img, 1):
-			x = face.left() / width
-			y = face.top() / height
-			w = (face.right() - face.left()) / width
-			h = (face.bottom() - face.top()) / height
-			yield (x, y, w, h)
+		return [
+			(
+				face.left() / width,
+				face.top() / height,
+				(face.right() - face.left()) / width,
+				(face.bottom() - face.top()) / height
+			) for face in detector(img, 1)]
 	except Exception as ex:
 		print("Skipping %s: %s" % (path, ex))
 		return []
