@@ -15,7 +15,7 @@ dirname = os.path.dirname(__file__)
 
 detector = dlib.get_frontal_face_detector()
 shape_predictor = dlib.shape_predictor(os.path.join(dirname, "models/shape_predictor_5_face_landmarks.dat"))
-face_recognizer = dlib.face_recognition_model_v1(os.path.join(dirname, "dlib_face_recognition_resnet_model_v1.dat"))
+face_recognizer = dlib.face_recognition_model_v1(os.path.join(dirname, "models/dlib_face_recognition_resnet_model_v1.dat"))
 
 def read_image(path):
 	img = Image.open(path)
