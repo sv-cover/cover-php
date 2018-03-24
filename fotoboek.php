@@ -790,6 +790,19 @@
 			return $rendered_page;
 		}
 
+		protected function _view_people(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_read($book))
+				throw new UnauthorizedException();
+
+			$photos = $book->get_photos();
+
+			$face_model = get_model('DataModelPhotobookFace');
+			$faces = $face_model->get_for_book($book);
+
+			return $this->view->render_people($book, $faces);
+		}
+
 		public function json_link_to_update_book_order(DataIterPhotobook $book)
 		{
 			$nonce = nonce_generate(nonce_action_name('update_book_order', [$book]));
@@ -923,6 +936,9 @@
 					if (!$photo)
 						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_scaled_photo($photo);
+
+				case 'people':
+					return $this->_view_people($book);
 
 				default:
 					if ($photo)

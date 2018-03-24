@@ -21,6 +21,11 @@ class DataIterPhotobookFace extends DataIter
 		];
 	}
 
+	public function get_photo()
+	{
+		return get_model('DataModelPhotobook')->get_iter($this['foto_id']);
+	}
+
 	public function get_lid()
 	{
 		if (isset($this->data['lid__id']))
@@ -142,6 +147,11 @@ class DataModelPhotobookFace extends DataModel
 		return $this->find(sprintf('foto_faces.foto_id = %d', $photo->get_id()));
 	}
 
+	public function get_for_book(DataIterPhotobook $book)
+	{
+		return $this->find(sprintf("foto_faces.foto_id IN (SELECT id FROM fotos WHERE boek = %d AND hidden = 'f')", $book->get_id()));
+	}
+
 	/**
 	 * Get photo book of all photos in which each photo all $members are tagged together.
 	 *
@@ -229,6 +239,7 @@ class DataModelPhotobookFace extends DataModel
 			foto_faces.lid_id,
 			foto_faces.tagged_by,
 			foto_faces.custom_label,
+			foto_faces.cluster_id,
 			l.id as lid__id,
 			l.voornaam as lid__voornaam,
 			l.tussenvoegsel as lid__tussenvoegsel,

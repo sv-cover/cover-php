@@ -107,6 +107,21 @@
 			return $this->render('competition.twig', compact('taggers', 'tagged'));
 		}
 
+		public function render_people(DataIterPhotobook $book, array $faces)
+		{
+			$clusters = ['null' => []];
+
+			foreach ($faces as $face) {
+				$cluster_id = $face['cluster_id'] ? strval($face['cluster_id']) : 'null';
+				if (!isset($clusters[$cluster_id]))
+					$clusters[$cluster_id] = [];
+
+				$clusters[$cluster_id][] = $face;
+			}
+
+			return $this->render('people.twig', compact('book', 'clusters'));
+		}
+
 		/**
 		 * Helper functions, called from the templates
 		 */
