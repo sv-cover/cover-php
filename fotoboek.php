@@ -774,8 +774,6 @@
 
 			$photos = $book->get_photos();
 
-			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
-
 			return $this->view->render_photo($book, $photo);
 		}
 
