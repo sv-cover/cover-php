@@ -259,7 +259,7 @@ class DataModelPhotobookFace extends DataModel
 				':cluster_id' => $face['cluster_id']
 			]);
 
-		return $suggestion !== null
+		return $suggestion && $suggestion['lid_id']
 			? get_model('DataModelMember')->get_iter($suggestion['lid_id'])
 			: null;
 	}
