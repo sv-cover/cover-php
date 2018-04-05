@@ -54,6 +54,13 @@
 					{% elseif face.custom_label is not null %}
 						<a class="name" href="#">{{ face.custom_label }}</a>
 					{% elseif user_can_update face %}
+						{% if face.suggested_member %}
+							<div class="suggested-face" data-member-id="{{ face.suggested_member.id }}">
+								<span>Is this <a href="{{ link('profiel.read', member=face.suggested_member)|e('html_attr') }}" class="name">{{ face.suggested_member|personal_full_name }}</a>?</span>
+								<button class="yes">Yes</button>
+								<button class="no">No</button>
+							</div>
+						{% endif %}
 						<a class="name" href="#">{{ __('Klik om te taggen') }}</a>
 					{% else %}
 						<a class="name" href="#">{{ __('Niet getagged') }}</a>

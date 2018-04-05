@@ -1,0 +1,1 @@
+ALTER TABLE foto_faces ADD COLUMN cluster_id INTEGER DEFAULT NULL;

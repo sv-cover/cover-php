@@ -306,6 +306,10 @@ table.navigation td:nth-child(3) {
 	white-space: nowrap;
 }
 
+.face .tag-label {
+	text-align: center;
+}
+
 .face .tag-search {
 	width: 150px;
 	z-index: 2;
@@ -326,6 +330,31 @@ table.navigation td:nth-child(3) {
 .face.untagged .tag-label a.name {
 	font-style: italic;
 	cursor: pointer;
+}
+
+.face .tag-label .suggested-face + a.name {
+	display: none;
+}
+
+.face .tag-label .suggested-face > span {
+	display: block;
+}
+
+.face .tag-label .suggested-face button {
+	font: inherit;
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	color: white;
+	padding: 0 4px;
+	margin: 2px 2px 4px 2px;
+	width: 4em;
+	font-size: 0.85em;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+.face .tag-label .suggested-face button:hover {
+	background: rgba(255, 255, 255, 0.2);
 }
 
 .hidden img {

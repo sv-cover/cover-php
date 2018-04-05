@@ -18,6 +18,7 @@ class DataIterPhotobookFace extends DataIter
 			'deleted',
 			'tagged_by',
 			'custom_label',
+			'cluster_id',
 		];
 	}
 
@@ -34,6 +35,11 @@ class DataIterPhotobookFace extends DataIter
 			return get_model('DataModelMember')->get_iter($this->get('lid_id'));
 		else
 			return null;
+	}
+
+	public function get_suggested_member()
+	{
+		return $this->model->get_suggested_member($this);
 	}
 
 	public function get_position()
@@ -222,6 +228,40 @@ class DataModelPhotobookFace extends DataModel
 				foto_id", implode(',', $photo_ids)));
 
 		return $this->_rows_to_table($query, 'foto_id', ['x', 'y']);
+	}
+
+	public function get_suggested_member(DataIterPhotobookFace $face)
+	{
+		if ($face['cluster_id'] === null)
+			return null;
+
+		$suggestion = $this->db->query_first("
+			SELECT
+				ff.lid_id,
+				COUNT(ff.*) as cnt
+			FROM
+				fotos f
+			LEFT JOIN fotos f2 ON
+				f2.boek = f.boek
+			LEFT JOIN foto_faces ff ON
+				ff.foto_id = f2.id
+				AND ff.cluster_id = :cluster_id
+			WHERE
+				f.id = :foto_id
+			GROUP BY
+				ff.lid_id
+			ORDER BY
+				cnt DESC
+			LIMIT 1",
+			false,
+			[
+				':foto_id' => $face['foto_id'],
+				':cluster_id' => $face['cluster_id']
+			]);
+
+		return $suggestion !== null
+			? get_model('DataModelMember')->get_iter($suggestion['lid_id'])
+			: null;
 	}
 
 	/**
