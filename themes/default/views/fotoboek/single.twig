@@ -56,9 +56,11 @@
 					{% elseif user_can_update face %}
 						{% if face.suggested_member %}
 							<div class="suggested-face" data-member-id="{{ face.suggested_member.id }}">
-								<span>Is this <a href="{{ link('profiel.read', member=face.suggested_member)|e('html_attr') }}" class="name">{{ face.suggested_member|personal_full_name }}</a>?</span>
-								<button class="yes">Yes</button>
-								<button class="no">No</button>
+								Is this <a href="{{ link('profiel.read', member=face.suggested_member)|e('html_attr') }}" class="name">{{ face.suggested_member|personal_full_name }}</a>?
+								<div class="button-group">
+									<button class="yes">Yes</button>
+									<button class="no">No</button>
+								</div>
 							</div>
 						{% endif %}
 						<a class="name" href="#">{{ __('Klik om te taggen') }}</a>

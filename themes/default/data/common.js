@@ -624,7 +624,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 			}, 'json');
 		});
 
-		$photo.on('click', '.face.untagged .tag-label > .suggested-face > button', function(e) {
+		$photo.on('click', '.face.untagged .tag-label .suggested-face button', function(e) {
 			e.preventDefault();
 			e.stopImmediatePropagation();
 

@@ -293,7 +293,7 @@ table.navigation td:nth-child(3) {
 	display: inline-block;
 	position: absolute;
 	left: 50%;
-	bottom: -24px;
+	bottom: -30px;
 	-moz-transform: translate(-50%, 0);
 	-webkit-transform: translate(-50%, 0);
 	transform: translate(-50%, 0);
@@ -301,7 +301,7 @@ table.navigation td:nth-child(3) {
 	color: white;
 	padding: 0 10px;
 	border-radius: 4px;
-	font: 13px/20px sans-serif;
+	font: 13px/26px sans-serif;
 	z-index: 1;
 	white-space: nowrap;
 }
@@ -336,24 +336,26 @@ table.navigation td:nth-child(3) {
 	display: none;
 }
 
-.face .tag-label .suggested-face > span {
-	display: block;
+.face .tag-label .button-group {
+	display: flex;
+	margin: 0 -10px; /* compensate for the padding of .tag-label */
+	border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.face .tag-label .suggested-face button {
+.face .tag-label .button-group button {
+	flex: 1 0 auto;
 	font: inherit;
-	background: transparent;
-	border: 1px solid rgba(255, 255, 255, 0.5);
 	color: white;
-	padding: 0 4px;
-	margin: 2px 2px 4px 2px;
-	width: 4em;
-	font-size: 0.85em;
-	border-radius: 2px;
+	background: rgba(255, 255, 255, 0.0);
+	border: 0;
 	cursor: pointer;
 }
 
-.face .tag-label .suggested-face button:hover {
+.face .tag-label .button-group button + button {
+	border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.face .tag-label .button-group button:hover {
 	background: rgba(255, 255, 255, 0.2);
 }
 
