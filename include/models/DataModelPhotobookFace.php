@@ -250,6 +250,8 @@ class DataModelPhotobookFace extends DataModel
 				f.id = :foto_id
 			GROUP BY
 				ff.lid_id
+			HAVING
+				ff.lid_id IS NOT NULL
 			ORDER BY
 				cnt DESC
 			LIMIT 1",
@@ -259,7 +261,7 @@ class DataModelPhotobookFace extends DataModel
 				':cluster_id' => $face['cluster_id']
 			]);
 
-		return $suggestion && $suggestion['lid_id']
+		return $suggestion
 			? get_model('DataModelMember')->get_iter($suggestion['lid_id'])
 			: null;
 	}
