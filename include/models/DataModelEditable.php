@@ -56,7 +56,7 @@
 
 		public function get_search_relevance()
 		{
-			return normalize_search_rank($this->get('search_relevance'));
+			return normalize_search_rank($this->data['search_relevance']);
 		}
 
 		public function get_search_type()
