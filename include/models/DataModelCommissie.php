@@ -52,7 +52,7 @@
 
 		public function get_search_relevance()
 		{
-			return floatval($this->get('search_relevance'));
+			return floatval($this->data['search_relevance']);
 		}
 
 		public function get_search_type()

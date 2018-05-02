@@ -141,17 +141,21 @@
 
 		public function call_getter($field)
 		{
-			// Todo: implement either dependency tracking or getter cache clearing
-			
 			if (!isset($this->_getter_cache[$field]))
 			{
-				array_push($this->_getter_stack, []);
+				foreach ($this->_getter_stack as $frame)
+					if ($frame['field'] == $field)
+						throw new Exception('Infinite loop while trying to calculate ' . get_class($this) . '::' . $field);
+
+				array_push($this->_getter_stack, ['field' => $field, 'dependencies' => []]);
 
 				$value = $this->call_getter_nocache($field);
 
-				$dependencies = array_pop($this->_getter_stack);
+				$frame = array_pop($this->_getter_stack);
+
+				assert($frame['field'] == $field);
 				
-				$this->_getter_cache[$field] = [$value, array_unique($dependencies)];
+				$this->_getter_cache[$field] = [$value, array_unique($frame['dependencies'])];
 			}
 
 			return $this->_getter_cache[$field][0];
@@ -189,11 +193,15 @@
 		{
 			// Track getter dependencies
 			for ($i = 0; $i < count($this->_getter_stack); ++$i)
-				$this->_getter_stack[$i][] = $field;
+				$this->_getter_stack[$i]['dependencies'][] = $field;
 
 			// ID is just special
 			if ($field == 'id')
 				return $this->get_id();
+
+			// Do we have a getter? Use that one.
+			if (static::has_getter($field))
+				return $this->call_getter($field);
 
 			// We have the field in our data array
 			if ($this->has_value($field))
@@ -203,10 +211,6 @@
 			if (static::has_field($field))
 				return null;
 			
-			// We don't have it as a table field, but we do have a getter
-			if (static::has_getter($field))
-				return $this->call_getter($field);
-
 			// Nope.
 			trigger_error(get_class($this) . ' has no field named ' . $field, E_USER_WARNING);
 			return null;

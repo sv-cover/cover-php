@@ -439,7 +439,7 @@
 
 		public function get_num_books()
 		{
-			return parent::get_num_books() + (get_auth()->logged_in() ? 2 : 0);
+			return $this->data['num_books'] + (get_auth()->logged_in() ? 2 : 0);
 		}
 
 		public function get_next_book()

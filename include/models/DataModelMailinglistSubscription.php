@@ -91,7 +91,7 @@ class DataModelMailinglistSubscription extends DataModel
 						AND o.lid_id = l.id
 					WHERE
 						l.id = {$member_id}
-						AND l.type = " . MEMBER_STATUS_LID . "
+						AND (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
 						AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL) -- filter out the valid opt-outs
 			");
 
@@ -127,7 +127,11 @@ class DataModelMailinglistSubscription extends DataModel
 						m.lid_id = l.id
 					WHERE
 						m.mailinglijst_id = %1$d
-						AND (l.type IS NULL OR l.type <> ' . MEMBER_STATUS_LID_AF . ')
+						AND (
+							l.id IS NULL
+							OR (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+							OR (l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
+						)
 						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 					ORDER BY
 						naam ASC',
@@ -153,7 +157,7 @@ class DataModelMailinglistSubscription extends DataModel
 						o.mailinglijst_id = %1\$d
 						AND o.lid_id = l.id
 					WHERE
-						l.type = " . MEMBER_STATUS_LID . "
+						(l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
 						AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL) -- filter out the valid opt-outs
 					UNION SELECT -- union the guest subscriptions
 						%1\$d as mailinglijst_id,
@@ -203,7 +207,7 @@ class DataModelMailinglistSubscription extends DataModel
 					member_id = l.id
 					AND commissies.type = ' . constant(get_class(get_model('DataModelCommissie')) . '::TYPE_COMMITTEE') . '
 					AND commissies.hidden != 1
-				)';
+				)'; // using get_class(get_model(..)) to make sure the class is loaded
 
 		else {
 			if (!DataIterMember::has_field($partition_by))
@@ -224,13 +228,16 @@ class DataModelMailinglistSubscription extends DataModel
 						m.lid_id = l.id
 					WHERE
 						m.mailinglijst_id = %d
-						AND (l.type IS NULL OR l.type <> %d)
+						AND (
+							l.id IS NULL
+							OR (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+							OR (l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
+						)
 						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
 					GROUP BY
 						partition_group',
 					$partition_field,
-					$lijst['id'],
-					MEMBER_STATUS_LID_AF));
+					$lijst['id']));
 				break;
 
 			case DataModelMailinglist::TYPE_OPT_OUT:
@@ -248,7 +255,7 @@ class DataModelMailinglistSubscription extends DataModel
 							LEFT JOIN mailinglijsten_opt_out o ON
 								o.mailinglijst_id = %d AND o.lid_id = l.id
 							WHERE
-								l.type = %d
+								(l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
 								AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL)
 							GROUP BY
 								partition_group
@@ -269,8 +276,7 @@ class DataModelMailinglistSubscription extends DataModel
 						GROUP BY
 							partition_group',
 					$partition_field,
-					$lijst['id'],
-					MEMBER_STATUS_LID));
+					$lijst['id']));
 				break;
 
 			default:
