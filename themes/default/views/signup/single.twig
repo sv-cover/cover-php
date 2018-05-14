@@ -1,0 +1,16 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Formulier') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Formulier') }}</h1>
+<div class="messageBox">
+	<form action="" method="post">
+		{% for field in iter.fields %}
+			<div>
+				{{ field.widget.render()|raw }}
+			</div>
+		{% endfor %}
+	</form>
+</div>
+{% endblock %}

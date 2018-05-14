@@ -611,7 +611,7 @@ CREATE TABLE sign_up_forms (
     id SERIAL PRIMARY KEY,
     committee_id INTEGER REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE SET NULL,
     created_on timestamp without time zone NOT NULL,
-    closed_on timestamp without time zone NOT NULL
+    closed_on timestamp without time zone DEFAULT NULL
 );
 
 CREATE TABLE sign_up_fields(

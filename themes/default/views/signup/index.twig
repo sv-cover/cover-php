@@ -25,7 +25,7 @@
 		<tbody>
 			{% for iter in iters %}
 				<tr>
-					<td>{{ iter.description }}</td>
+					<td><a href="{{ controller.link_to_read(iter) }}">{{ iter.description }}</a></td>
 					<td>{{ iter.signup_count }}</td>
 				</tr>
 			{% endfor %}

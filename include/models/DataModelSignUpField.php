@@ -4,11 +4,8 @@ require_once 'include/data/DataModel.php';
 
 interface SignUpFieldType
 {
-	// The name of this type as stored in the database (string)
-	public function type();
-
 	// Store the current configuration as an associative array
-	public function serialze();
+	public function serialize();
 
 	// Pick the value from the post_data associative array and, if valid, return
 	// the content as how it has to be saved in the database. If it didn't
@@ -22,7 +19,7 @@ interface SignUpFieldType
 	public function export();
 }
 
-class Error
+class SignUpValidationError
 {
 	public function __construct($message)
 	{
@@ -34,16 +31,14 @@ class TextField implements SignUpFieldType
 {
 	protected $required;
 
-	public function __construct($name, array $configuration, $value)
+	public function __construct($name, array $configuration)
 	{
 		$this->name = $name;
 
 		$this->required = $configuration['required'] ?? false;
-
-		$this->value = $value;
 	}
 
-	public function serialze()
+	public function serialize()
 	{
 		return ['required' => $this->required];
 	}
@@ -53,7 +48,7 @@ class TextField implements SignUpFieldType
 		$this->value = trim($post_data[$this->name] ?? '');
 
 		if ($this->required && $this->value == '')
-			return new Error(__('Value required'));
+			return new SignUpValidationError(__('Value required'));
 
 		return $this->value;
 	}
@@ -80,15 +75,13 @@ class Checkbox implements SignUpFieldType
 
 	protected $checked;
 
-	public function __construct($name, array $configuration, $value)
+	public function __construct($name, array $configuration)
 	{
 		$this->name = $name;
 
 		$this->required = $configuration['required'] ?? false;
 
 		$this->description = $configuration['description'] ?? '';
-
-		$this->checked = (bool) $value;
 	}
 
 	public function serialize()
@@ -105,7 +98,7 @@ class Checkbox implements SignUpFieldType
 			$this->checked = $post_data[$this->name];
 
 		if ($this->required && !$this->checked)
-			return new Error('Required');
+			return new SignUpValidationError('Required');
 
 		return $this->checked ? '0' : '1';
 	}
@@ -138,9 +131,28 @@ class DataIterSignUpField extends DataIter
 		];
 	}
 
+	public function get_properties()
+	{
+		try {
+			return json_decode($this->data['properties'], true);
+		} catch (Exception $e) {
+			return [];
+		}
+	}
+
+	public function set_properties(array $properties)
+	{
+		$this->data['properties'] = json_encode($properties);
+	}
+
 	public function get_form()
 	{
 		return get_model('DataModelSignUpForm')->get_iter($this['form_id']);
+	}
+
+	public function get_widget()
+	{
+		return get_model('DataModelSignUpField')->instantiate($this['type'], $this['name'], $this['properties']);
 	}
 
 	public function process($post_value, &$error)
@@ -153,8 +165,19 @@ class DataModelSignUpField extends DataModel
 {
 	public $dataiter = 'DataIterSignUpField';
 
+	public $field_types = [
+		'checkbox' => Checkbox::class,
+		'text' => TextField::class
+	];
+
 	public function __construct($db)
 	{
 		parent::__construct($db, 'sign_up_fields');
+	}
+
+	public function instantiate($type, string $name, array $properties)
+	{
+		$class = new ReflectionClass($this->field_types[$type]);
+		return $class->newInstance($name, $properties);
 	}
 }

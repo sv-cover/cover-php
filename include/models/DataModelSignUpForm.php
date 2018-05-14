@@ -14,6 +14,27 @@ class DataIterSignUpForm extends DataIter
 		];
 	}
 
+	static public function rules()
+	{
+		return [
+			'committee_id' => [
+				'validate' => ['committee']
+			],
+			'created_on' => [
+				'default' => function() {
+					return new DateTime('now');
+				},
+				'validate' => ['datetime']
+			],
+			'closed_on' => [
+				'clean' => function($value) {
+					return $value ? $value : null;
+				},
+				'validate' => ['datetime']
+			]
+		];
+	}
+
 	public function get_fields()
 	{
 		return get_model('DataModelSignUpField')->find(['form_id' => $this['id']]);
@@ -23,6 +44,16 @@ class DataIterSignUpForm extends DataIter
 	{
 		return get_model('DataModelSignUpEntry')->find(['form_id' => $this['id']]);
 	}
+
+	public function get_description()
+	{
+		return sprintf('Sign-up form #%d', $this['id']);
+	}
+
+	public function get_signup_count()
+	{
+		return count($this['entries']);
+	} 
 
 	public function process_for_member(DataModelMember $member, $post_data, array &$errors = [])
 	{
