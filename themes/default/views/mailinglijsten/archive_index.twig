@@ -17,10 +17,10 @@
 		<tbody>
 		{% for message in messages %}
 			<tr>
-				<td><a href="{{ link_to('archive_read', list, message_id=message.id)|e('html_attr') }}">{{ message.subject }}</a></td>
+				<td><a href="{{ link_to('archive_read', list, message_id=message.id)|e('html_attr') }}">{{ message.subject|default('<No subject>') }}</a></td>
 				<td>{{ message.sender }}</td>
 				<td>{{ message.verwerkt_op|date() }}</td>
-				<td>{{ message.return_code }}</td>
+				<td class="numeric">{{ message.return_code }}</td>
 			</tr>
 		{% endfor %}
 		</tbody>

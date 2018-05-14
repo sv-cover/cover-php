@@ -257,30 +257,6 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=privacy');
 	}
 
-	protected function _update_system(DataIterMember $iter)
-	{
-		$errors = array();
-		$message = array();
-
-		if (!get_post('type')) {
-			$errors[] = 'type';
-			$message[] = __('De zichtbaarheid van het profiel is niet ingevuld.');
-		} elseif (get_post('type') < MEMBER_STATUS_MIN || get_post('type') > MEMBER_STATUS_MAX) {
-			$errors[] = 'type';
-			$message[] = __('Er is een ongeldige waarde voor zichtbaarheid ingevuld.');
-		}
-
-		if (count($errors) > 0) {
-			$error = implode("\n", $message);
-			return $this->view->render_system_tab($iter, $error, $errors);
-		}
-
-		$iter->set('type', intval(get_post('type')));
-		$this->model->update($iter);
-
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=system');
-	}
-
 	protected function _update_photo(DataIterMember $iter)
 	{
 		$error = null;
@@ -384,17 +360,6 @@ class ControllerProfiel extends Controller
 			return $this->_update_privacy($iter);
 
 		return $this->view->render_privacy_tab($iter);
-	}
-
-	public function run_system(DataIterMember $iter)
-	{
-		if (!get_identity()->member_in_committee(COMMISSIE_EASY))
-			throw new UnauthorizedException();
-
-		if ($this->_form_is_submitted('system', $iter))
-			return $this->_update_system($iter);
-
-		return $this->view->render_system_tab($iter);
 	}
 
 	protected function run_photo(DataIterMember $iter)

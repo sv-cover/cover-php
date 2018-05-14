@@ -390,7 +390,7 @@ trait SessionTestTrait
 	{
 		self::setUpMember();
 
-		assert('self::getMemberId() != 0');
+		assert(self::getMemberId() != 0);
 
 		$model = get_model('DataModelSession');
 		self::$cover_session = $model->create(self::getMemberId(), 'TestCase', '1 HOUR');
@@ -400,7 +400,7 @@ trait SessionTestTrait
 	{
 		self::tearDownMember();
 
-		assert('self::$cover_session instanceof \DataIter');
+		assert(self::$cover_session instanceof \DataIter);
 
 		$model = get_model('DataModelSession');
 		$model->delete(self::$cover_session);

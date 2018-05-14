@@ -96,12 +96,12 @@
 
 		public function run()
 		{
-			if (logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
-				$this->model->toggle($this->photo, logged_in('id'));
+			if (get_auth()->logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
+				$this->model->toggle($this->photo, get_identity()->get('id'));
 
 			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 				return $this->view->render_json([
-					'liked' => logged_in() && $this->model->is_liked($this->photo, logged_in('id')),
+					'liked' => get_auth()->logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
 			}
@@ -128,7 +128,7 @@
 		protected function _create(DataIter $iter, array $data, array &$errors)
 		{
 			$data['foto_id'] = $this->photo->get_id();
-			$data['tagged_by'] = logged_in('id');
+			$data['tagged_by'] = get_identity()->get('id');
 
 			return parent::_create($iter, $data, $errors);
 		}
@@ -136,7 +136,7 @@
 		protected function _update(DataIter $iter, array $data, array &$errors)
 		{
 			// Also update who changed it.
-			$data['tagged_by'] = logged_in('id');
+			$data['tagged_by'] = get_identity()->get('id');
 
 			// Only a custom label XOR a lid_id can be assigned to a tag
 			if (isset($data['custom_label']))
@@ -587,8 +587,8 @@
 
 		protected function _view_mark_read(DataIterPhotobook $book)
 		{
-			if (logged_in())
-				$this->model->mark_read_recursively(logged_in('id'), $book);
+			if (get_auth()->logged_in())
+				$this->model->mark_read_recursively(get_identity()->get('id'), $book);
 
 			return $this->view->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
 		}
@@ -774,8 +774,6 @@
 
 			$photos = $book->get_photos();
 
-			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
-
 			return $this->view->render_photo($book, $photo);
 		}
 
@@ -786,10 +784,23 @@
 
 			$rendered_page = $this->view->render_photobook($book);
 
-			if (logged_in())
-				$this->model->mark_read(logged_in('id'), $book);
+			if (get_auth()->logged_in())
+				$this->model->mark_read(get_identity()->get('id'), $book);
 
 			return $rendered_page;
+		}
+
+		protected function _view_people(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_read($book))
+				throw new UnauthorizedException();
+
+			$photos = $book->get_photos();
+
+			$face_model = get_model('DataModelPhotobookFace');
+			$faces = $face_model->get_for_book($book);
+
+			return $this->view->render_people($book, $faces);
 		}
 
 		public function json_link_to_update_book_order(DataIterPhotobook $book)
@@ -925,6 +936,9 @@
 					if (!$photo)
 						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_scaled_photo($photo);
+
+				case 'people':
+					return $this->_view_people($book);
 
 				default:
 					if ($photo)

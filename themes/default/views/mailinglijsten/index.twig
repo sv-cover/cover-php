@@ -19,7 +19,8 @@
 				<th>{{ __('Adres') }}</th>
 				<th>{{ __('Eigenaar') }}</th>
 				<th>{{ __('Zichtbaardheid') }}</th>
-				<th>{{ __('Bereik') }}</th>
+				<th title="messages in last 30 days">{{ __('Activiteit') }}</th>
+				<th title="subscriber count">{{ __('Bereik') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,7 +30,8 @@
 				<td>{{ mailinglist.adres }}</td>
 				<td>{{ mailinglist.committee.naam }}</td>
 				<td>{{ mailinglist.publiek ? __('Publiek') : __('Privé') }}</td>
-				<td>{{ mailinglist.reach }}</td>
+				<td class="numeric">{{ mailinglist.archive.count(30) }}</td>
+				<td class="numeric">{{ mailinglist.reach }}</td>
 			</tr>
 		{% endfor %}
 		</tbody>

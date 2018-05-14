@@ -53,18 +53,22 @@ CREATE TABLE leden (
     postcode character varying(7) NOT NULL,
     woonplaats character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
-    geboortedatum date NOT NULL,
+    geboortedatum date DEFAULT NULL,
     geslacht character(1) NOT NULL,
     telefoonnummer character varying(20),
     privacy integer NOT NULL,
     type integer DEFAULT 1,
     machtiging smallint,
-    beginjaar integer DEFAULT date_part('year'::text, now()),
+    beginjaar integer DEFAULT NULL,
     onderschrift character varying(200),
     avatar character varying(100),
     homepage character varying(255),
     nick character varying(50),
-    taal character varying(10) DEFAULT 'en'::character varying
+    taal character varying(10) DEFAULT 'en'::character varying,
+    member_from DATE DEFAULT NULL,
+    member_till DATE DEFAULT NULL,
+    donor_from DATE DEFAULT NULL,
+    donor_till DATE DEFAULT NULL
 );
 
 -- Passwords for members are stored separately so they don't get fetched, ever.
@@ -128,6 +132,19 @@ CREATE TABLE committee_members (
     committee_id smallint NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
     functie character varying(50) -- Todo: field still needs an English name
 );
+
+
+--
+-- committee email addresses, used for mailing lists to determine whether they may send mail
+--
+
+CREATE TABLE committee_email (
+    committee_id smallint NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    email TEXT,
+    CONSTRAINT committee_email_uniq UNIQUE (committee_id, email)
+);
+
+CREATE INDEX ON committee_email (committee_id);
 
 --
 -- Previous boards page table. Very similar to committees due to the
@@ -417,7 +434,8 @@ CREATE TABLE foto_faces (
     lid_id integer REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     deleted boolean NOT NULL DEFAULT FALSE,
     tagged_by INTEGER REFERENCES "leden" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-    custom_label character varying (255)
+    custom_label character varying (255),
+    cluster_id INTEGER DEFAULT NULL
 );
 
 CREATE INDEX ON foto_faces (lid_id, deleted);

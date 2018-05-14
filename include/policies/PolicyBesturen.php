@@ -6,7 +6,7 @@ class PolicyBesturen implements Policy
 {
 	public function user_can_create(DataIter $board)
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR);
 	}
 
 	public function user_can_read(DataIter $board)
@@ -16,7 +16,7 @@ class PolicyBesturen implements Policy
 
 	public function user_can_update(DataIter $board)
 	{
-		return member_in_commissie(COMMISSIE_BESTUUR);
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR);
 	}
 
 	public function user_can_delete(DataIter $board)

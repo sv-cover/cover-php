@@ -293,7 +293,7 @@ table.navigation td:nth-child(3) {
 	display: inline-block;
 	position: absolute;
 	left: 50%;
-	bottom: -24px;
+	bottom: -30px;
 	-moz-transform: translate(-50%, 0);
 	-webkit-transform: translate(-50%, 0);
 	transform: translate(-50%, 0);
@@ -301,9 +301,13 @@ table.navigation td:nth-child(3) {
 	color: white;
 	padding: 0 10px;
 	border-radius: 4px;
-	font: 13px/20px sans-serif;
+	font: 13px/26px sans-serif;
 	z-index: 1;
 	white-space: nowrap;
+}
+
+.face .tag-label {
+	text-align: center;
 }
 
 .face .tag-search {
@@ -326,6 +330,33 @@ table.navigation td:nth-child(3) {
 .face.untagged .tag-label a.name {
 	font-style: italic;
 	cursor: pointer;
+}
+
+.face .tag-label .suggested-face + a.name {
+	display: none;
+}
+
+.face .tag-label .button-group {
+	display: flex;
+	margin: 0 -10px; /* compensate for the padding of .tag-label */
+	border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.face .tag-label .button-group button {
+	flex: 1 0 auto;
+	font: inherit;
+	color: white;
+	background: rgba(255, 255, 255, 0.0);
+	border: 0;
+	cursor: pointer;
+}
+
+.face .tag-label .button-group button + button {
+	border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.face .tag-label .button-group button:hover {
+	background: rgba(255, 255, 255, 0.2);
 }
 
 .hidden img {

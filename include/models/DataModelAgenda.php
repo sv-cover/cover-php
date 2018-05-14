@@ -24,7 +24,7 @@
 
 		public function get_search_relevance()
 		{
-			return normalize_search_rank($this->get('search_relevance'));
+			return normalize_search_rank($this->data['search_relevance']);
 		}
 
 		public function get_search_type()
@@ -83,7 +83,7 @@
 		{
 			parent::__construct($db, 'agenda');
 
-			$this->include_private = logged_in();
+			$this->include_private = get_identity()->member_is_active();
 		}
 		
 		public function get($from = null, $till = null, $confirmed_only = false)

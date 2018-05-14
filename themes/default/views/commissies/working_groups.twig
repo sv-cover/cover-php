@@ -16,12 +16,14 @@
 		<p>{{ view.get_summary(working_group) }}</p>
 		<ul>
 		{% for member in working_group.members %}
-			<li>
-				<a href="{{ link('profiel.read', member=member) }}">
-					<img src="{{ link('foto.square', width=60, member=member) }}">
-					{{ member|personal_full_name }}
-				</a>
-			</li>
+			{% if user_can_read member %}
+				<li>
+					<a href="{{ link('profiel.read', member=member) }}">
+						<img src="{{ link('foto.square', width=60, member=member) }}">
+						{{ member|personal_full_name }}
+					</a>
+				</li>
+			{% endif %}
 		{% endfor %}
 		</ul>
 	</section>

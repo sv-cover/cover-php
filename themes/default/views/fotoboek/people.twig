@@ -1,0 +1,50 @@
+{% extends '@layout/layout.twig' %}
+
+{% import _self as fotoboek %}
+
+{% macro render_face(face) %}
+	{% set size = face.photo.get_scaled_size(null, 400) %}
+	<div style="width: {{face.w * size[0] }}px; height: {{face.h * size[1]}}px; overflow: hidden; position: relative;">
+		<img src="{{ face.photo.get_url(null, 400) }}" width="{{ size[0] }}" height="{{ size[1] }}" style="position: absolute; left: -{{face.x * size[0]}}px; top: -{{face.y * size[1] }}px">
+	</div>
+{% endmacro %}
+
+{% block title book.has('title') ? book.title : __('Fotoboek') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Gezichten') }}</h1>
+<div class="messageBox">
+	{% if book.id is not same as(0) %}
+	{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}
+	<div class="bar">
+		<div class="photos-navigation navigation">
+			{% if book.previous_book and user_can_read book.previous_book %}
+				<a href="fotoboek.php?book={{ book.previous_book.id }}" class="previous">
+					{{ book.previous_book.titel }}
+				</a>
+			{% endif %}
+			{% if book.parent and user_can_read book.parent %}
+				<a href="fotoboek.php?book={{ book.parent.id }}" class="up">
+					{{ book.parent.titel }}
+				</a>
+			{% endif %}
+			{% if book.next_book and user_can_read book.next_book %}
+				<a href="fotoboek.php?book={{ book.next_book.id }}" class="next">
+					{{ book.next_book.titel }}
+				</a>
+			{% endif %}
+		</div>
+	</div>
+	{% endif %}
+
+	<ul>
+	{% for cluster, faces in clusters %}
+		<li>{{cluster}}</li>
+		<ul>
+			{% for face in faces %}
+				{{ fotoboek.render_face(face) }}
+			{% endfor %}
+		</ul>
+	{% endfor %}		
+</div>
+{% endblock %}

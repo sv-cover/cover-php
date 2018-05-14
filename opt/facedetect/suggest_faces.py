@@ -1,63 +1,50 @@
-import numpy as np
-import cv2
+from __future__ import print_function, division
+
 import psycopg2
-import urllib2
+from PIL import Image
+import numpy as np
+import dlib
 import sys
 import os
 
-opencv_shared = os.path.dirname(os.path.abspath(__file__)) + '/cascades/'
-face_cascade = cv2.CascadeClassifier(opencv_shared + 'haarcascade_frontalface_default.xml')
-
 conn = psycopg2.connect("dbname=webcie")
 cur = conn.cursor()
-
 icur = conn.cursor()
 
-def read_image_remote(url):
-	if url[0:2] == '//':
-		url = 'https:' + url
-	
-	request = urllib2.urlopen(url)
-	data = np.asarray(bytearray(request.read()), dtype=np.uint8)
-	image = cv2.imdecode(data, cv2.CV_LOAD_IMAGE_GRAYSCALE)
+dirname = os.path.dirname(__file__)
 
-	if image is None:
-		raise Exception("cv.imdecode could not decode image")
-
-	return image
+detector = dlib.get_frontal_face_detector()
+shape_predictor = dlib.shape_predictor(os.path.join(dirname, "models/shape_predictor_5_face_landmarks.dat"))
+face_recognizer = dlib.face_recognition_model_v1(os.path.join(dirname, "models/dlib_face_recognition_resnet_model_v1.dat"))
 
 def read_image(path):
-	image = cv2.imread(path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
-	if image is None:
-		raise Exception("cv.imdecode could not decode image")
-	return image
+	img = Image.open(path)
+	img.thumbnail((800,800)) # downscale it a bit for performance
+	return np.array(img), img.width, img.height
 
-def find_faces(path):
-	try:
-		gray = read_image(path)
-		ih, iw = gray.shape
-		faces = face_cascade.detectMultiScale(gray, 1.1, 4, 0, (int(iw * 0.05), int(ih * 0.05)))
-		return [(float(x / float(iw)), float(y / float(ih)), float(w / float(iw)), float(h / float(ih))) for (x, y, w, h) in faces]
-	except Exception as ex:
-		print("Skipping %s: %s" % (path, ex))
-		return []
 
-def insert_face(foto_id, face):
-	icur.execute("""SELECT COUNT(id) FROM foto_faces WHERE foto_id = %(id)s
+def insert_face(face, cluster_id):
+	data = {
+		'cluster_id': cluster_id,
+		'id': face['foto_id'],
+		'x': face['face'].left() / face['width'],
+		'y': face['face'].top() / face['height'],
+		'w': (face['face'].right() - face['face'].left()) / face['width'],
+		'h': (face['face'].bottom() - face['face'].top()) / face['height']
+	}
+	icur.execute("""
+		UPDATE foto_faces SET cluster_id = %(cluster_id)s WHERE foto_id = %(id)s
 		AND x > %(x)s - 0.05 AND x < %(x)s + 0.05
 		AND y > %(y)s - 0.05 AND y < %(y)s + 0.05
 		AND w > %(w)s - 0.05 AND w < %(w)s + 0.05
-		AND h > %(h)s - 0.05 AND h < %(h)s + 0.05""", {
-			'id': foto_id,
-			'x': face[0], 'y': face[1],
-			'w': face[2], 'h': face[3]
-		})
-
-	if icur.fetchone()[0] == 0:
-		icur.execute("""INSERT INTO foto_faces (foto_id, x, y, w, h) VALUES (%s, %s, %s, %s, %s)""", (foto_id,) + face)
-		return True
-
-	return False
+		AND h > %(h)s - 0.05 AND h < %(h)s + 0.05
+		""", data)
+	if icur.rowcount == 0:
+		icur.execute("""
+			INSERT INTO foto_faces
+			(foto_id, x, y, w, h, cluster_id)
+			VALUES (%(id)s, %(x)s, %(y)s, %(w)s, %(h)s, %(cluster_id)s)
+			""", data)
 
 
 if __name__ == '__main__':
@@ -71,18 +58,30 @@ if __name__ == '__main__':
 
 	cur.execute("SELECT id, filepath FROM fotos WHERE id = ANY (%s)", (photo_ids,));
 
+	faces = []
+
 	for row in cur.fetchall():
-		faces = find_faces(os.path.join(sys.argv[1], row[1]))
+		print("{}\t{}\t" .format(*row), end='')
+		try:
+			img, width, height = read_image(os.path.join(sys.argv[1], row[1]))
+			for face in detector(img, 1):
+				shape = shape_predictor(img, face)
+				descriptor = face_recognizer.compute_face_descriptor(img, shape)
+				faces.append({
+					'foto_id': row[0],
+					'width': width,
+					'height': height,
+					'face': face,
+					'descriptor': descriptor
+				})
+			print("queued")
+		except:
+			print("error")
 
-		print("%d:" % row[0])
-
-		for face in faces:
-			print("  x: %0.2f y: %0.2f w: %0.2f h: %0.2f" % face)
-			if insert_face(row[0], face):
-				print("  added")
-				conn.commit()
-			else:
-				print("  duplicate")
+	labels = dlib.chinese_whispers_clustering([face['descriptor'] for face in faces], 0.5)
+	for n, cluster_id in enumerate(labels):
+		insert_face(faces[n], cluster_id)
+	conn.commit()
 
 	print("Finished.")
 	exit(0)

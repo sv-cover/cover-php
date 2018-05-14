@@ -188,7 +188,7 @@
 			$random_b = max($random_b, (0.5 - ($s_r + $s_g)) / 0.072);
 
 			$s_b = 0.072 * $random_b;
-			assert('$s_r + $s_g + $s_b >= 0.5');
+			assert($s_r + $s_g + $s_b >= 0.5);
 
 			$background = new ImagickPixel(sprintf('#%02x%02x%02x', $random_r, $random_g, $random_b));
 			$foreground = '#fff';

@@ -18,13 +18,12 @@ class PolicyPhotobookReactie implements Policy
 	{
 		// PhotoCee and the authors of comments are the only one who can clean/update and delete comments.
 		
-		return member_in_commissie(COMMISSIE_FOTOCIE)
+		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE)
 			|| get_auth()->logged_in() && get_identity()->get('id') == $reactie->get('auteur');
 	}
 
 	public function user_can_delete(DataIter $reactie)
 	{
-		return member_in_commissie(COMMISSIE_FOTOCIE)
-			|| get_auth()->logged_in() && get_identity()->get('id') == $reactie->get('auteur');;
+		return $this->user_can_update($reactie);
 	}
 }

@@ -353,6 +353,10 @@ $(document).on('ready partial-content-loaded', function(e) {
 			});
 		});
 
+		$foto.find('.face').each(function() {
+			make_face($(this));
+		});
+
 		function human_implode(elements, glue) {
 			if (elements.length < 2)
 				return elements.join('');
@@ -390,7 +394,8 @@ $(document).on('ready partial-content-loaded', function(e) {
 			});
 		};
 
-		function make_face_editable($face)
+		// Give every face a small model (with a single method: accept)
+		function make_face($face)
 		{
 			var accept = function(lid_id, name) {
 				$face.removeClass('untagged');
@@ -409,6 +414,11 @@ $(document).on('ready partial-content-loaded', function(e) {
 				update_names_list();
 			};
 
+			$face.data('model', {accept: accept});
+		}
+
+		function make_face_editable($face)
+		{
 			$face.resizable({
 				containment: $photo,
 				aspectRatio: 1,
@@ -444,13 +454,11 @@ $(document).on('ready partial-content-loaded', function(e) {
 				})
 				.appendTo($face);
 
-			$face.click(function(e) {
-				e.preventDefault();
-				e.stopPropagation();
+			$face.data('model').focus = function() {
 				update_names_list();
 				$face.find('.name').hide();
 				$face.find('.tag-search').show().focus();
-			});
+			};
 
 			$('<input type="text" class="tag-search" spellcheck="false">')
 				.on('keydown', function(e) {
@@ -463,7 +471,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 						case $.ui.keyCode.ENTER:
 							if ($(this).data('ui-autocomplete').menu.active)
 								break;
-							accept(null, $(this).val());
+							$face.data('model').accept(null, $(this).val());
 							// fall-through intentional
 						
 						case $.ui.keyCode.ESCAPE:
@@ -492,7 +500,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 						return false;
 					},
 					select: function(event, ui) {
-						accept(ui.item.id, ui.item.name);
+						$face.data('model').accept(ui.item.id, ui.item.name);
 						$(this).blur();
 						cancelNextClick = false;
 						return false;
@@ -610,22 +618,49 @@ $(document).on('ready partial-content-loaded', function(e) {
 				$face.attr('id', 'face_' + resp.iter.__id);
 				$face.data('update-action', resp.iter.__links.update);
 				$face.data('delete-action', resp.iter.__links.delete);
+				make_face($face);
 				make_face_editable($face);
+				$face.data('model').focus();
 			}, 'json');
 		});
 
-		$photo.on('click', '.face.untagged .tag-label', function(e) {
+		$photo.on('click', '.face.untagged .tag-label .suggested-face button', function(e) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+
+			var $face = $(this).closest('.face');
+			var $suggestion = $(this).closest('.suggested-face').remove();
+
+			if ($(this).hasClass('yes')) {
+				$face.data('model').accept($suggestion.data('member-id'), $suggestion.find('.name').text());
+			} else {
+				$toggle.prop('checked', true).change();
+				$face.data('model').focus();
+			}
+		});
+
+		$photo.on('click', '.face.untagged .tag-label > .name', function(e) {
 			if ($photo.hasClass('tagging-enabled'))
 				return;
 
 			e.preventDefault();
-			e.stopPropagation();
+			e.stopImmediatePropagation();
 
 			var $face = $(this).closest('.face');
 			
 			$toggle.prop('checked', true).change();
 			
-			$face.click();
+			$face.data('model').focus();
+		});
+
+		$photo.on('click', '.face', function(e) {
+			if (!$photo.hasClass('tagging-enabled'))
+				return;
+
+			e.preventDefault();
+			e.stopPropagation();
+			
+			$(this).data('model').focus();
 		});
 	});
 });

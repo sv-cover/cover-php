@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2017-12-12 21:31+0100\n"
+"POT-Creation-Date: 2018-05-07 12:43+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.7\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_ngettext:1,2;__N:1,2\n"
@@ -173,7 +173,7 @@ msgstr "Logout"
 
 #: themes/default/views/_layout/widgets/login.twig:4
 #: themes/default/views/mailinglijsten/single.twig:53
-#: themes/default/views/profiel/profiel.php:44
+#: themes/default/views/profiel/profiel.php:52
 msgid "Profiel"
 msgstr "Profile"
 
@@ -199,8 +199,8 @@ msgid "Word Coverlid"
 msgstr "Become a member"
 
 #: themes/default/views/_layout/widgets/promotional-header.twig:9
-msgid "Voor boeken, activiteiten en gezelligheid."
-msgstr "For books, activities and fun."
+msgid "Voor boeken, carrière en gezelligheid."
+msgstr "For books, career and fun."
 
 #: themes/default/views/_layout/widgets/promotional-header.twig:10
 msgid "Meld je aan!"
@@ -421,7 +421,7 @@ msgid "Datum"
 msgstr "Date"
 
 #: themes/default/views/agenda/moderate.twig:26
-#: themes/default/views/mailinglijsten/index.twig:31
+#: themes/default/views/mailinglijsten/index.twig:32
 msgid "Privé"
 msgstr "Private"
 
@@ -532,8 +532,7 @@ msgid "Zoek"
 msgstr "Search"
 
 #: themes/default/views/almanak/index.twig:19
-#: themes/default/views/fotoboek/single.twig:148
-#: themes/default/views/profiel/system_tab.twig:7
+#: themes/default/views/fotoboek/single.twig:157
 msgid "Zichtbaarheid"
 msgstr "Visibility"
 
@@ -541,37 +540,37 @@ msgstr "Visibility"
 #: themes/default/views/commissies/form.twig:36
 #: themes/default/views/search/_single_member.twig:3
 #: include/models/DataModelForum.php:1347
-#: include/models/DataModelMember.php:590
-#: themes/default/views/profiel/profiel.php:386
+#: include/models/DataModelMember.php:666
+#: themes/default/views/profiel/profiel.php:377
 msgid "Lid"
 msgstr "Member"
 
 #: themes/default/views/almanak/index.twig:23
-#: themes/default/views/profiel/profiel.php:387
+#: themes/default/views/profiel/profiel.php:378
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
 #: themes/default/views/almanak/index.twig:24
 #: themes/default/views/search/_single_member.twig:5
-#: include/models/DataModelMember.php:596
+#: include/models/DataModelMember.php:672
 #: themes/default/views/almanak/almanak.php:39
-#: themes/default/views/profiel/profiel.php:388
+#: themes/default/views/profiel/profiel.php:379
 msgid "Lid af"
 msgstr "Previously a member"
 
 #: themes/default/views/almanak/index.twig:25
 #: themes/default/views/search/_single_member.twig:7
-#: include/models/DataModelMember.php:599
+#: include/models/DataModelMember.php:675
 #: themes/default/views/almanak/almanak.php:42
-#: themes/default/views/profiel/profiel.php:389
+#: themes/default/views/profiel/profiel.php:380
 msgid "Erelid"
 msgstr "Honorary Member"
 
 #: themes/default/views/almanak/index.twig:26
 #: themes/default/views/search/_single_member.twig:9
-#: include/models/DataModelMember.php:602
+#: include/models/DataModelMember.php:678
 #: themes/default/views/almanak/almanak.php:45
-#: themes/default/views/profiel/profiel.php:390
+#: themes/default/views/profiel/profiel.php:381
 msgid "Donateur"
 msgstr "Donor"
 
@@ -1110,12 +1109,12 @@ msgstr "Page"
 
 #: themes/default/views/forum/forum.twig:68
 #: themes/default/views/forum/thread.twig:69
-#: themes/default/views/fotoboek/single.twig:111
+#: themes/default/views/fotoboek/single.twig:120
 #: themes/default/views/mailinglijsten/single.twig:52 include/member.php:101
 #: include/models/DataModelForum.php:1220
 #: include/models/DataModelForum.php:1330
 #: include/models/DataModelForum.php:1356
-#: include/models/DataModelMember.php:608
+#: include/models/DataModelMember.php:684
 msgid "Onbekend"
 msgstr "Unknown"
 
@@ -1207,25 +1206,25 @@ msgid "Terug naar onderwerp"
 msgstr "Back to topic"
 
 #: themes/default/views/fotoboek/_books.twig:25
-#: themes/default/views/mailinglijsten/index.twig:31
-#: themes/default/views/fotoboek/fotoboek.php:117
+#: themes/default/views/mailinglijsten/index.twig:32
+#: themes/default/views/fotoboek/fotoboek.php:132
 msgid "Publiek"
 msgstr "Public"
 
 #: themes/default/views/fotoboek/_books.twig:27
 #: themes/default/views/announcements/announcements.php:30
-#: themes/default/views/fotoboek/fotoboek.php:118
+#: themes/default/views/fotoboek/fotoboek.php:133
 msgid "Alleen ingelogde leden"
 msgstr "Only logged in members"
 
 #: themes/default/views/fotoboek/_books.twig:29
 #: themes/default/views/announcements/announcements.php:31
-#: themes/default/views/fotoboek/fotoboek.php:119
+#: themes/default/views/fotoboek/fotoboek.php:134
 msgid "Alleen ingelogde actieve leden"
 msgstr "Only logged in active members"
 
 #: themes/default/views/fotoboek/_books.twig:31
-#: themes/default/views/fotoboek/fotoboek.php:120
+#: themes/default/views/fotoboek/fotoboek.php:135
 msgid "Alleen ingelogde leden van de PhotoCee"
 msgstr "Only logged in members of the PhotoCee"
 
@@ -1261,7 +1260,7 @@ msgstr "Random photos"
 msgid "Laatste reacties"
 msgstr "Last comments"
 
-#: themes/default/views/fotoboek/_recent_comments.twig:9
+#: themes/default/views/fotoboek/_recent_comments.twig:10
 msgid "geen titel"
 msgstr "no title"
 
@@ -1272,6 +1271,7 @@ msgid "Foto's toevoegen"
 msgstr "Add photos"
 
 #: themes/default/views/fotoboek/add_photos.twig:6
+#: themes/default/views/fotoboek/people.twig:12
 #: themes/default/views/fotoboek/photobook.twig:3
 #: themes/default/views/fotoboek/photobook.twig:6
 #: themes/default/views/fotoboek/single.twig:6
@@ -1333,6 +1333,10 @@ msgstr "Delete photo album"
 #: themes/default/views/fotoboek/confirm_delete.twig:18
 msgid "Terug naar fotoboek"
 msgstr "Return to photo album"
+
+#: themes/default/views/fotoboek/people.twig:15
+msgid "Gezichten"
+msgstr "Faces"
 
 #: themes/default/views/fotoboek/photobook.twig:14
 msgid "Nieuw fotoboek"
@@ -1484,39 +1488,39 @@ msgstr "Previous"
 msgid "Volgende"
 msgstr "Next"
 
-#: themes/default/views/fotoboek/single.twig:57
+#: themes/default/views/fotoboek/single.twig:66
 msgid "Klik om te taggen"
 msgstr "Click to tag"
 
-#: themes/default/views/fotoboek/single.twig:59
+#: themes/default/views/fotoboek/single.twig:68
 msgid "Niet getagged"
 msgstr "Not yet tagged"
 
-#: themes/default/views/fotoboek/single.twig:119
-#: themes/default/views/fotoboek/single.twig:126
+#: themes/default/views/fotoboek/single.twig:128
+#: themes/default/views/fotoboek/single.twig:135
 #, python-format
 msgid "Een foto met %s."
 msgstr "A photo with %s."
 
-#: themes/default/views/fotoboek/single.twig:120
+#: themes/default/views/fotoboek/single.twig:129
 #, python-format
 msgid "%d onbekend gezicht"
 msgstr "%d unknown faces"
 
-#: themes/default/views/fotoboek/single.twig:121
+#: themes/default/views/fotoboek/single.twig:130
 #, python-format
 msgid "%d onbekende gezichten"
 msgstr "%d unknown faces"
 
-#: themes/default/views/fotoboek/single.twig:122 include/functions.php:641
+#: themes/default/views/fotoboek/single.twig:131 include/functions.php:641
 msgid "en"
 msgstr "and"
 
-#: themes/default/views/fotoboek/single.twig:129
+#: themes/default/views/fotoboek/single.twig:138
 msgid "Tag gezichten"
 msgstr "Tag faces"
 
-#: themes/default/views/fotoboek/single.twig:145
+#: themes/default/views/fotoboek/single.twig:154
 msgid "Download"
 msgstr "Download"
 
@@ -1665,7 +1669,7 @@ msgstr "Female"
 #: themes/default/views/mailinglijsten/single.twig:17
 #: themes/default/views/profiel/profiel.php:123
 msgid "Adres"
-msgstr "Adress"
+msgstr "Address"
 
 #: themes/default/views/lidworden/lidworden.twig:51
 msgid "Straatnaam + Huisnummer"
@@ -1905,7 +1909,7 @@ msgstr "Archives of %s"
 #: themes/default/views/mailinglijsten/single.twig:12
 #: themes/default/views/profiel/mailing_lists_tab.twig:7
 #: themes/default/views/_layout/layout.php:54
-#: themes/default/views/profiel/profiel.php:60
+#: themes/default/views/profiel/profiel.php:68
 msgid "Mailinglijsten"
 msgstr "Mailing lists"
 
@@ -2022,8 +2026,6 @@ msgstr ""
 "mailing list (while not a member of said list)."
 
 #: themes/default/views/mailinglijsten/form.twig:65
-#, fuzzy
-#| msgid "Wijzig mailinglijst"
 msgid "Wijzig lijst"
 msgstr "Modify mailing list"
 
@@ -2045,6 +2047,10 @@ msgid "Zichtbaardheid"
 msgstr "Visibility"
 
 #: themes/default/views/mailinglijsten/index.twig:22
+msgid "Activiteit"
+msgstr "Activity"
+
+#: themes/default/views/mailinglijsten/index.twig:23
 msgid "Bereik"
 msgstr "Reach"
 
@@ -2116,7 +2122,8 @@ msgstr "Unsubscribe me"
 msgid "Nee, ik was gewoon nieuwsgierig"
 msgstr "No, I was just curious"
 
-#: themes/default/views/profiel/_profile_widget.twig:14
+#: themes/default/views/profiel/_profile_widget.twig:15
+#: themes/default/views/profiel/photo_form.twig:11
 #: themes/default/views/profiel/profile_tab.twig:73
 msgid "Kies nieuwe foto"
 msgstr "Choose photo"
@@ -2228,7 +2235,7 @@ msgstr ""
 
 #: themes/default/views/profiel/kast_tab.twig:7
 #: themes/default/views/profiel/kast_tab_exception.twig:7
-#: themes/default/views/profiel/profiel.php:81
+#: themes/default/views/profiel/profiel.php:89
 msgid "KAST"
 msgstr "KAST"
 
@@ -2278,6 +2285,11 @@ msgstr "Personal data"
 #: themes/default/views/profiel/profile_tab.twig:36
 msgid "Opslaan"
 msgstr "Save"
+
+#: themes/default/views/profiel/photo_form.twig:3
+#: themes/default/views/profiel/photo_form.twig:6
+msgid "Profielfoto"
+msgstr "Profile picture"
 
 #: themes/default/views/profiel/privacy_tab.twig:7
 msgid "Privacy instellingen"
@@ -2374,7 +2386,7 @@ msgstr ""
 "a>."
 
 #: themes/default/views/profiel/public_tab.twig:46
-#: include/models/DataModelPhotobookFace.php:158
+#: include/models/DataModelPhotobookFace.php:174
 #, python-format, php-format
 msgid "Foto's van %s"
 msgstr "Photos of %s"
@@ -2389,7 +2401,7 @@ msgid "%s is lid van de volgende commissies:"
 msgstr "%s is a member of the following committees:"
 
 #: themes/default/views/profiel/sessions_tab.twig:7
-#: themes/default/views/profiel/profiel.php:67
+#: themes/default/views/profiel/profiel.php:75
 msgid "Sessies"
 msgstr "Sessions"
 
@@ -2413,14 +2425,6 @@ msgstr "Last active"
 #: themes/default/views/profiel/sessions_tab.twig:33
 msgid "Sluit geselecteerde sessies"
 msgstr "End selected sessions"
-
-#: themes/default/views/profiel/system_tab.twig:11
-msgid "Lidmaadschapsstatus"
-msgstr "Membership status"
-
-#: themes/default/views/profiel/system_tab.twig:19
-msgid "Wijzig status"
-msgstr "Change status"
 
 #: themes/default/views/profiel/tab.twig:6
 #, python-format
@@ -2645,6 +2649,14 @@ msgstr "Create page"
 #: themes/default/views/show/form.twig:54
 msgid "Bekijk pagina"
 msgstr "Show page"
+
+#: themes/default/views/signup/single.twig:7
+msgid "Inschrijfformulier"
+msgstr "Registration Form"
+
+#: themes/default/views/signup/single.twig:17
+msgid "Schfij in"
+msgstr ""
 
 #: themes/default/views/stickers/form.twig:3
 #: themes/default/views/stickers/form.twig:6
@@ -3125,16 +3137,16 @@ msgstr "Groups"
 msgid "Groep"
 msgstr "Group"
 
-#: include/models/DataModelMember.php:593
+#: include/models/DataModelMember.php:669
 #: themes/default/views/almanak/almanak.php:36
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: include/models/DataModelMember.php:605
+#: include/models/DataModelMember.php:681
 msgid "Geen status"
 msgstr "No status"
 
-#: include/models/DataModelPhotobookFace.php:159
+#: include/models/DataModelPhotobookFace.php:175
 msgid " en "
 msgstr " and "
 
@@ -3153,6 +3165,10 @@ msgstr "previous"
 #: include/pagenavigation.php:22 themes/default/views/forum/forum.php:179
 msgid "volgende"
 msgstr "next"
+
+#: include/signup.php:51
+msgid "Value required"
+msgstr ""
 
 #: include/view.php:189
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
@@ -3222,6 +3238,10 @@ msgstr "Commissioner Fire Chief"
 msgid "Promohomo"
 msgstr "Promotion Homosexual"
 
+#: locale/strings.php:25
+msgid "Typ hier om te zoeken…"
+msgstr "Type here to search…"
+
 #: profiel.php:104
 msgid "De volgende velden zijn onjuist ingevuld: "
 msgstr "The following fields are not correctly filled in: "
@@ -3254,40 +3274,27 @@ msgstr "Your new password is too short."
 msgid "Je wachtwoord is gewijzigd."
 msgstr "Your password has been changed."
 
-#: profiel.php:267
-msgid "De zichtbaarheid van het profiel is niet ingevuld."
-msgstr "The visibility of the profile has not been selected."
-
-#: profiel.php:270
-msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
-msgstr "You have entered an invalid value."
-
-#: profiel.php:289
+#: profiel.php:265
 #, php-format
 msgid "Het fotobestand is te groot. Het maximum is %s."
 msgstr "The image file is too large. The maximum file size is %s."
 
-#: profiel.php:293
+#: profiel.php:269
 #, php-format
 msgid "Het bestand is niet geupload. Foutcode %d."
 msgstr "The image hasn't been uploaded correctly. PHP reports error code %d."
 
-#: profiel.php:296
+#: profiel.php:272
 msgid "Bestand is niet een door PHP geupload bestand."
 msgstr "The image file is not a file uploaded by PHP."
 
-#: profiel.php:299
+#: profiel.php:275
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
-#: profiel.php:307
+#: profiel.php:281
 msgid "Het geuploadde bestand kon niet worden geopend."
 msgstr "The uploaded file could not be opened."
-
-#: profiel.php:322
-msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
-msgstr ""
-"Your photo has been submitted. It may take a while before it will be updated."
 
 #: search.php:16
 msgid "leden"
@@ -3460,7 +3467,7 @@ msgstr "other"
 msgid "(Onveranderd)"
 msgstr "(Unchanged)"
 
-#: themes/default/views/fotoboek/fotoboek.php:163
+#: themes/default/views/fotoboek/fotoboek.php:178
 #: themes/default/views/search/search.php:17
 #, php-format
 msgid "%d boek"
@@ -3468,7 +3475,7 @@ msgid_plural "%d boeken"
 msgstr[0] "%d book"
 msgstr[1] "%d books"
 
-#: themes/default/views/fotoboek/fotoboek.php:166
+#: themes/default/views/fotoboek/fotoboek.php:181
 #: themes/default/views/search/search.php:20
 #, php-format
 msgid "%d foto"
@@ -3496,28 +3503,24 @@ msgstr "Only *@svcover.nl addresses"
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
-#: themes/default/views/profiel/profiel.php:37
+#: themes/default/views/profiel/profiel.php:45
 msgid "Lidgegevens"
 msgstr "Personal"
 
-#: themes/default/views/profiel/profiel.php:53
+#: themes/default/views/profiel/profiel.php:61
 msgid "Privacy"
 msgstr "Privacy"
 
-#: themes/default/views/profiel/profiel.php:74
+#: themes/default/views/profiel/profiel.php:82
 #: themes/default/views/profiel/_facebook.phtml:20
 msgid "Facebook"
 msgstr "Facebook"
 
-#: themes/default/views/profiel/profiel.php:88
+#: themes/default/views/profiel/profiel.php:96
 msgid "Incasso's"
 msgstr "Direct debits"
 
-#: themes/default/views/profiel/profiel.php:95
-msgid "Systeem"
-msgstr "System"
-
-#: themes/default/views/profiel/profiel.php:391
+#: themes/default/views/profiel/profiel.php:382
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
 
@@ -3544,6 +3547,26 @@ msgstr ""
 #: themes/default/views/profiel/_facebook.phtml:26
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
+
+#~ msgid "Lidmaadschapsstatus"
+#~ msgstr "Membership status"
+
+#~ msgid "Wijzig status"
+#~ msgstr "Change status"
+
+#~ msgid "De zichtbaarheid van het profiel is niet ingevuld."
+#~ msgstr "The visibility of the profile has not been selected."
+
+#~ msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
+#~ msgstr "You have entered an invalid value."
+
+#~ msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
+#~ msgstr ""
+#~ "Your photo has been submitted. It may take a while before it will be "
+#~ "updated."
+
+#~ msgid "Systeem"
+#~ msgstr "System"
 
 #~ msgid "Er zijn vandaag geen jarigen"
 #~ msgstr "It's nobody's birthday today"
@@ -3883,9 +3906,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "voorbeeld sluiten"
 #~ msgstr "close preview"
-
-#~ msgid "Typ hier om te zoeken…"
-#~ msgstr "Type here to search…"
 
 #~ msgid "Je kunt niet schrijven in dit forum"
 #~ msgstr "You can't write in this forum"
@@ -4861,9 +4881,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Spam"
 #~ msgstr "Spam"
-
-#~ msgid "Berichten"
-#~ msgstr "Messages"
 
 #~ msgid "tot en met"
 #~ msgstr "til"

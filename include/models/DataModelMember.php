@@ -20,7 +20,6 @@
 				'geslacht',
 				'telefoonnummer',
 				'privacy',
-				'type',
 				'machtiging',
 				'beginjaar',
 				'lidid',
@@ -29,7 +28,86 @@
 				'homepage',
 				'nick',
 				'taal',
+				// 'type',
+				'member_from',
+				'member_till',
+				'donor_from',
+				'donor_till',
 			];
+		}
+
+		public function set_member_from($date)
+		{
+			$this->_set_date_field('member_from', $date);
+		}
+
+		public function set_member_till($date)
+		{
+			$this->_set_date_field('member_till', $date);
+		}
+
+		public function set_donor_from($date)
+		{
+			$this->_set_date_field('donor_from', $date);
+		}
+
+		public function set_donor_till($date)
+		{
+			$this->_set_date_field('donor_till', $date);
+		}
+
+		private function _set_date_field($field, $value) {
+			if (!$value)
+				$value = null;
+			else
+				$value = (new DateTime($value))->format('Y-m-d');
+
+			$this->data[$field] = $value;
+			$this->mark_changed($field);
+		}
+
+		public function get_type()
+		{
+			$now = new DateTime();
+
+			if ($this->is_member())
+				return MEMBER_STATUS_LID;
+
+			else if ($this->is_donor())
+				return MEMBER_STATUS_DONATEUR;
+
+			else if ($this->has_been_member())
+				return MEMBER_STATUS_LID_AF;
+			
+			else
+				return MEMBER_STATUS_UNCONFIRMED;
+		}
+		
+		public function is_member()
+		{
+			return $this->is_member_on(new DateTime());
+		}
+
+		public function is_donor()
+		{
+			return $this->is_donor_on(new DateTime());
+		}
+
+		public function is_member_on(DateTime $moment)
+		{
+			return $this['member_from'] && new DateTime($this['member_from']) <= $moment
+				&& (!$this['member_till'] || new DateTime($this['member_till']) >= $moment);
+		}
+
+		public function is_donor_on(DateTime $moment)
+		{
+			return $this['donor_from'] && new DateTime($this['donor_from']) <= $moment
+				&& (!$this['donor_till'] || new DateTime($this['donor_till']) >= $moment);
+		}
+
+		public function has_been_member()
+		{
+			return $this['member_till'] && new DateTime($this['member_till']) < new DateTime();
 		}
 
 		public function get_naam()
@@ -94,12 +172,6 @@
 		const VISIBLE_TO_MEMBERS = 1;
 		const VISIBLE_TO_EVERYONE = 7;
 
-		public $visible_types = array(
-			MEMBER_STATUS_LID,
-			MEMBER_STATUS_ERELID,
-			MEMBER_STATUS_DONATEUR
-		);
-
 		public $dataiter = 'DataIterMember';
 
 		protected $auto_increment = false;
@@ -124,7 +196,7 @@
 					WHERE
 						EXTRACT(MONTH FROM geboortedatum) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND
 						EXTRACT(DAY FROM geboortedatum) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND
-						type IN (' . implode(',', $this->visible_types) . ') AND
+						member_from < NOW() AND (member_till IS NULL OR member_till > NOW()) AND
 						geboortedatum <> \'1970-01-01\'
 					ORDER BY
 						voornaam, tussenvoegsel, achternaam');
@@ -177,20 +249,13 @@
 			try {		
 				$iter = $this->get_from_email(trim($email));
 				
-				$active_member_types = array(
-					MEMBER_STATUS_LID,
-					MEMBER_STATUS_LID_ONZICHTBAAR,
-					MEMBER_STATUS_ERELID,
-					MEMBER_STATUS_DONATEUR,
-					MEMBER_STATUS_UNCONFIRMED);
-
 				if ($iter === null)
 					return false;
 
 				if (!$this->test_password($iter, $passwd))
 					return false;
 
-				if (!in_array($iter['type'], $active_member_types))
+				if (!$iter->is_member() && !$iter->is_donor())
 					throw new InactiveMemberException();
 
 				return $iter;
@@ -349,11 +414,6 @@
 				return false;
 		}
 
-		public function is_visible($iter)
-		{
-			return in_array($iter['type'], $this->visible_types);
-		}
-
 		/**
 		  * Return the privacy value for a field
 		  * @result integer that corresponds to privacy
@@ -363,8 +423,8 @@
 		{
 			static $privacy = null;
 
-			// Hack for these three fields which are often combined.
-			if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam')))
+			// Hack for these three fields which are often combined, and the correct alias
+			if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name')))
 				$field = 'naam';
 
 			if ($privacy == null)
@@ -408,7 +468,7 @@
 			$query = 'SELECT l.*, s.studie
 				FROM leden l
 				LEFT JOIN studies s ON s.lidid = l.id
-				WHERE l.type IN (' . implode(',', $this->visible_types) . ') ';
+				WHERE True';
 
 			$order = array();
 
@@ -494,16 +554,13 @@
 					LEFT JOIN foto_faces ON
 						foto_faces.lid_id = leden.id
 					WHERE
-						type IN (" . implode(',', $this->visible_types) . ")
-						AND (
-							unaccent(lower(CASE
-								WHEN coalesce(tussenvoegsel, '') = '' THEN
-									voornaam || ' ' || achternaam
-								ELSE
-									voornaam || ' ' || tussenvoegsel || ' ' || achternaam
-							END)) ILIKE unaccent('%{$name}%')
-							OR unaccent(leden.nick) ILIKE unaccent('%{$name}%')
-						)
+						unaccent(lower(CASE
+							WHEN coalesce(tussenvoegsel, '') = '' THEN
+								voornaam || ' ' || achternaam
+							ELSE
+								voornaam || ' ' || tussenvoegsel || ' ' || achternaam
+						END)) ILIKE unaccent('%{$name}%')
+						OR unaccent(leden.nick) ILIKE unaccent('%{$name}%')
 					GROUP BY
 						leden.id
 					ORDER BY
@@ -546,8 +603,7 @@
 		{
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type IN (" . implode(',', $this->visible_types) . ")
-					AND beginjaar = " . intval($year) . "
+					WHERE beginjaar = " . intval($year) . "
 					ORDER BY achternaam");
 
 			return $this->_rows_to_iters($rows);
@@ -562,7 +618,6 @@
 		{
 			$rows = $this->db->query("SELECT DISTINCT beginjaar
 						FROM leden
-						WHERE type IN (" . implode(',', $this->visible_types) . ")
 						ORDER BY beginjaar ASC");
 			$rows = $this->_rows_to_iters($rows);
 			$years = array();
@@ -574,9 +629,30 @@
 
 		public function get_from_status($status)
 		{
+			switch($status) {
+				case MEMBER_STATUS_LID:
+					$condition = "member_from < NOW() AND (member_till IS NULL OR member_till > NOW())";
+					break;
+
+				case MEMBER_STATUS_DONATEUR:
+					$condition = "donor_from < NOW() AND (donor_till IS NULL OR donor_till > NOW())";
+					break;
+
+				case MEMBER_STATUS_LID_AF:
+					$condition = "member_from < NOW()";
+					break;
+			
+				case MEMBER_STATUS_UNCONFIRMED:
+					$condition = "member_from IS NULL AND donor_from IS NULL";
+					break;
+
+				default:
+					throw new InvalidArgumentException('DataModelMember::get_from_status() does not support this status');
+			}
+
 			$rows = $this->db->query("SELECT *
 					FROM leden
-					WHERE type =  " . intval($status)  . "
+					WHERE $condition
 					ORDER BY voornaam");
 
 			return $this->_rows_to_iters($rows);

@@ -49,7 +49,7 @@ class DataIterMailinglistArchive extends DataIter
 					break;
 
 				case 'B':
-					$data = base64_decode($data);
+					$data = base64_decode($match[3]);
 					break;
 			}
 
@@ -90,6 +90,16 @@ class DataModelMailinglistArchive extends DataModel
 	public function get_for_list(DataIterMailinglist $list)
 	{
 		return $this->find(['mailinglijst' => (int) $list['id']]);
+	}
+
+	public function count_for_list(DataIterMailinglist $list, $span_in_days = null)
+	{
+		$query = sprintf("SELECT COUNT(id) FROM {$this->table} WHERE mailinglijst = %d AND return_code = 0", $list->get_id());
+		
+		if ($span_in_days !== null)
+			$query .= sprintf(" AND verwerkt_op > CURRENT_DATE - INTERVAL '%d days'", $span_in_days);
+
+		return (int) $this->db->query_value($query);
 	}
 
 	public function contains_email_from(DataIterMailinglist $lijst, $sender)

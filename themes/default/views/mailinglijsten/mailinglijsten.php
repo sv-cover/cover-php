@@ -69,7 +69,27 @@ class MailinglijstenView extends CRUDView
 
 	public function render_archive_read(DataIterMailinglist $list, DataIterMailinglistArchive $message)
 	{
-		return $this->render('archive_single.twig', compact('list', 'message'));
+		$html_body = null;
+		$text_body = null;
+		$subject = null;
+		$error = null;
+
+		try {
+			$parsed = Cover\email\MessagePart::parse_text($message['bericht']);
+
+			$subject = $parsed->header('Subject');
+
+			foreach ($parsed->textParts() as $part) {
+				if (preg_match('/^text\/html\b/i', $part->header('Content-Type')))
+					$html_body = $part->body();
+				else
+					$text_body = $part->body();
+			}
+		} catch (Exception $e) {
+			$error = $e;
+		}
+		
+		return $this->render('archive_single.twig', compact('list', 'message', 'subject', 'html_body', 'text_body', 'error'));
 	}
 
 	public function render_embedded(DataIterMailinglist $list, DataModelMailinglist $model)

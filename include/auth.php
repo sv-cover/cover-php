@@ -285,7 +285,12 @@ class CookieSessionProvider implements SessionProvider
 
 	public function logout()
 	{
-		$this->session_model->delete($this->get_session());
+		$session = $this->get_session();
+
+		if (!$session)
+			return true;
+
+		$this->session_model->delete($session);
 
 		set_domain_cookie('cover_session_id', null);
 

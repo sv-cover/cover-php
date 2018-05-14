@@ -52,7 +52,7 @@
 
 		public function get_search_relevance()
 		{
-			return floatval($this->get('search_relevance'));
+			return floatval($this->data['search_relevance']);
 		}
 
 		public function get_search_type()
@@ -78,6 +78,11 @@
 		public function get_email()
 		{
 			return strstr($this['login'], '@') ? $this['login'] : $this['login'] . '@svcover.nl';
+		}
+
+		public function get_email_addresses()
+		{
+			return get_model('DataModelCommissie')->get_email_addresses($this);
 		}
 
 		public function get_thumbnail()
@@ -190,7 +195,7 @@
 			$editable_model = get_model('DataModelEditable');
 
 			$page_data = [
-				'owner_id' => $committee_id,
+				'committee_id' => $committee_id,
 				'titel' => $iter['naam']
 			];
 
@@ -371,6 +376,16 @@
 					c.naam ASC");
 
 			return $this->_rows_to_iters($rows);
+		}
+
+		public function get_email_addresses(DataIterCommissie $committee)
+		{
+			$aliasses = $this->db->query_column(
+				"SELECT email FROM committee_email WHERE committee_id = :committee_id",
+				'email',
+				[':committee_id' => $committee->get_id()]);
+
+			return array_merge([$committee['email']], $aliasses);
 		}
 
 		/**

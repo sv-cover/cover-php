@@ -108,14 +108,14 @@
 		
 		public function can_create_new_poll(&$days = null)
 		{
-			$current_user = logged_in();
+			$current_user = get_identity();
 
 			// Not logged in? You can't create a poll
-			if (!$current_user)
+			if (!$current_user->member_is_active())
 				return false;
 
 			// EASY? Yes, you can create a poll
-			if (member_in_commissie(COMMISSIE_EASY))
+			if ($current_user->member_in_committee(COMMISSIE_EASY))
 				return true;
 
 			// Otherwise look at the last poll and see how many days
@@ -128,7 +128,7 @@
 
 			// Threshold is 7 days by default, unless you where the author of the previous poll
 			$threshold = $thread['author_type'] == DataModelForum::TYPE_PERSON
-			             && $thread['author_id'] == $current_user['id']
+			             && $thread['author_id'] == $current_user->get('id')
 			             ? 14 : 7;
 
 			$days = $threshold - $thread['since'];
@@ -188,7 +188,7 @@
 		}
 
 		public function voted(DataIterForumThread $iter) {
-			if (!($member_data = logged_in()))
+			if (!get_identity()->member_is_active())
 				return true;
 			
 			$config_model = get_model('DataModelConfiguratie');
