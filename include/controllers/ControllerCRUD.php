@@ -16,12 +16,13 @@ class ControllerCRUD extends Controller
 		return validate_dataiter($iter, $data, $errors);	
 	}
 
-	protected function _create(DataIter $iter, array $data, array &$errors)
+	protected function _create(DataIter $iter, array $input, array &$errors)
 	{
-		if (!$this->_validate($iter, $data, $errors))
+		$data = $this->_validate($iter, $input, $errors);
+
+		if ($data === false)
 			return false;
 
-		// TODO: Oh this is soo unsafe! We just set all the data, then insert all the data using the model :(
 		$iter->set_all($data);
 
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?

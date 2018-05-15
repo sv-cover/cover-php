@@ -47,9 +47,11 @@ function trim_string($value)
 	return is_string($value) ? trim($value) : $value;
 }
 
-function validate_dataiter(DataIter $iter, array &$data, array &$errors)
+function validate_dataiter(DataIter $iter, array $data, array &$errors)
 {
 	$rules = $iter->rules();
+
+	$out = [];
 
 	foreach ($rules as $field => $options)
 	{
@@ -72,19 +74,19 @@ function validate_dataiter(DataIter $iter, array &$data, array &$errors)
 				$data[$field] = call_user_func($options['default'], $field, $iter);
 		}
 
-		$data[$field] = call_user_func($cleaner, $data[$field]);
+		$out[$field] = call_user_func($cleaner, $data[$field]);
 
 		foreach ($validators as $validator)
 		{
 			if (is_string($validator))
 				$validator = 'validate_' . $validator;
 
-			if (!call_user_func($validator, $data[$field], $field, $iter)) {
+			if (!call_user_func($validator, $out[$field], $field, $iter)) {
 				$errors[] = $field;
 				break;
 			}
 		}
 	}
 
-	return count($errors) === 0;
+	return count($errors) === 0 ? $out : false;
 }
