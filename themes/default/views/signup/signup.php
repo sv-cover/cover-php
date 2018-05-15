@@ -1,6 +1,6 @@
 <?php
 
-class SignUpView extends CRUDView
+class SignUpView extends View
 {
 	protected $__file = __FILE__;
 

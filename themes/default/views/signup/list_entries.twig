@@ -1,0 +1,32 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Inschrijvingen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageheading">
+	<h1>{{ __('Inschrijvingen') }}</h1>
+</div>
+
+<div class="messageBox">
+	<table class="full-width-table">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Member</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for entry in form.entries %}
+				{% if user_can_read entry %}
+					<tr>
+						<td>{{ entry.id }}</td>
+						<td>{{ entry.member|full_name }}</td>
+						<td>{{ entry.signed_up_on|date('d-m-Y H:i') }}</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}

@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="pageheading">
-	{% if user_can_create controller.new_iter %}
+	{% if user_can_create controller.new_form %}
 	<div class="controls inline">
-		<a href="{{ controller.link_to_create() }}" class="create-link">
+		<a href="{{ controller.link({'view': 'create_form'}) }}" class="create-link">
 			{{ __('Nieuw inschrijfformulier') }}
 		</a>
 	</div>
@@ -23,10 +23,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for iter in iters %}
+			{% for form in forms %}
 				<tr>
-					<td><a href="{{ controller.link_to_read(iter) }}">{{ iter.description }}</a></td>
-					<td>{{ iter.signup_count }}</td>
+					<td><a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></td>
+					<td>{{ form.signup_count }}</td>
 				</tr>
 			{% endfor %}
 		</tbody>

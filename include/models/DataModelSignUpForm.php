@@ -53,25 +53,26 @@ class DataIterSignUpForm extends DataIter
 	public function get_signup_count()
 	{
 		return count($this['entries']);
-	} 
+	}
 
-	public function process_for_member(DataModelMember $member, $post_data, array &$errors = [])
+	public function is_open()
 	{
-		$field_values = [];
+		if (!$this['closed_on'])
+			return true;
 
-		foreach ($this['field'] as $field)
-			$field_values[$field['id']] = $field->process($post_data, $errors);
+		if (new DateTime($this['closed_on']) > new DateTime())
+			return true;
 
-		if (count($errors) > 0)
-			return false;
+		return false;
+	}
 
-		$entry_model = get_model('DataModelSignUpEntry');
-
-		$entry = $entry_model->get_or_create_for_member($this, $member);
-
-		$entry->set_field_values($field_values);
-
-		return true;
+	public function new_entry(DataIterMember $member)
+	{
+		return get_model('DataModelSignUpEntry')->new_iter([
+			'form_id' => $this['id'],
+			'member_id' => $member['id'],
+			'signed_up_on' => date('Y-m-d H:i:s')
+		]);
 	}
 }
 

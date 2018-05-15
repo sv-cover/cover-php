@@ -1,0 +1,30 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (form.has_id ? __('Wijzig formulier') : __('Formulier toevoegen')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ form.has_id ? __('Wijzig formulier') : __('Formulier toevoegen') }}</h1>
+<div class="messageBox">
+	<form method="post" class="vertical-form" action="{{ form.has_id ? controller.link({'view': 'update_form', 'form': form.id}) : controller.link({'view': 'create_form'}) }}">
+		{% if form.has_id %}
+			{{ html_nonce('update_form', form) }}
+		{% else %}
+			{{ html_nonce('create_form', form) }}
+		{% endif %}
+
+		<div>
+			{{ html_label(__('Commissie'), 'committee_id', errors=errors, required=true) }}
+			{{ html_select_field('committee_id', view.available_committees, form) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Sluitdatum'), 'closed_on', errors=errors)  }}
+			{{ html_input_datetime('closed_on', form, errors=errors) }}
+		</div>
+
+		<div class="controls">
+			<button class="button" type="submit">{{ form.has_id() ? __('Wijzig formulier') : __('Maak formulier') }}</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Formulier') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Formulier') }}</h1>
+<div class="messageBox">
+	<form action="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" method="post" class="vertical-form">
+		{% if entry.has_id %}
+			{{ html_nonce('update_entry', entry) }}
+		{% else %}
+			{{ html_nonce('create_entry', form) }}
+		{% endif %}
+		
+		{% for field in form.fields %}
+			<div>
+				{{ field.widget.render(view)|raw }}
+			</div>
+		{% endfor %}
+	</form>
+</div>
+{% endblock %}
