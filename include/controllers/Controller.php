@@ -10,13 +10,11 @@
 	  * viewing a simple static page by running the header view, then
 	  * the specified view and then the footer view
 	  */
-	class Controller
+	abstract class Controller
 	{
 		protected $view;
 
 		protected $model;
-
-		protected $routes = array();
 
 		public function view()
 		{
@@ -50,19 +48,7 @@
 			}
 		}
 
-		protected function run_impl()
-		{
-			$path = substr($_SERVER['REQUEST_URI'], strlen($_SERVER['SCRIPT_NAME']));
-
-			if (!$path)
-				$path = '/';
-
-			foreach ($this->routes as $route => $callback)
-			 	if (preg_match('{^' . $route . '$}i', $path, $match))
-			 		return call_user_func_array($callback, array_slice($match, 1));
-
-			throw new NotFoundException('No route for path "' . $path . '"');
-		}
+		abstract protected function run_impl();
 
 		protected function run_exception($e)
 		{
