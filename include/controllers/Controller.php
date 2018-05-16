@@ -10,7 +10,7 @@
 	  * viewing a simple static page by running the header view, then
 	  * the specified view and then the footer view
 	  */
-	abstract class Controller
+	class Controller
 	{
 		protected $view;
 
@@ -48,7 +48,10 @@
 			}
 		}
 
-		abstract protected function run_impl();
+		protected function run_impl()
+		{
+			return;
+		}
 
 		protected function run_exception($e)
 		{
