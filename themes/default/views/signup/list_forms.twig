@@ -4,13 +4,11 @@
 
 {% block content %}
 <div class="pageheading">
-	{% if user_can_create controller.new_form %}
 	<div class="controls inline">
-		<a href="{{ controller.link({'view': 'create_form'}) }}" class="create-link">
-			{{ __('Nieuw inschrijfformulier') }}
-		</a>
+		{% if user_can_create controller.new_form %}
+			<a href="{{ controller.link({'view': 'create_form'}) }}" class="create-link">{{ __('Nieuw inschrijfformulier') }}</a>
+		{% endif %}
 	</div>
-	{% endif %}
 	<h1>{{ __('Inschrijfformulieren') }}</h1>
 </div>
 

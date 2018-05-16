@@ -25,6 +25,24 @@ class ControllerSignUpForms extends Controller
 			throw new NotFoundException('No such view');
 	}
 
+	public function run_export_entries()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_read($form))
+			throw new UnauthorizedException();
+
+		$entries = array_filter($form['entries'], function($entry) {
+			return get_policy($entry)->user_can_read($entry);
+		});
+
+		$rows = array_map(function($entry) {
+			return $entry->export();
+		}, $entries);
+
+		$this->view->render_csv($rows);
+	}
+
 	public function run_list_entries()
 	{
 		$form = $this->form_model->get_iter($_GET['form']);
@@ -49,23 +67,38 @@ class ControllerSignUpForms extends Controller
 
 		$success = false;
 
-		$errors = [];
-
-		if ($this->_form_is_submitted('create_entry', $form))
-		{
-			$field_values = [];
-
-			foreach ($form['fields'] as $field)
-				$field_values[$field['id']] = $field->process($_POST, $errors);
-
-			if (count($errors) === 0) {
+		if ($this->_form_is_submitted('create_entry', $form)) {
+			if ($entry->process($_POST)) {
 				$this->entry_model->insert($entry);
-				$entry->set_field_values($field_values);
 				$success = true;
 			}
 		}
 
-		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success', 'errors'));
+		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success'));
+	}
+
+	public function run_update_entry()
+	{
+		$entry = $this->entry_model->get_iter($_GET['entry']);
+
+		$form = $entry['form'];
+
+		if (!get_policy($this->form_model)->user_can_read($form))
+			throw new UnauthorizedException();
+
+		if (!get_policy($this->entry_model)->user_can_update($entry))
+			throw new UnauthorizedException();
+
+		$success = false;
+
+		if ($this->_form_is_submitted('update_entry', $entry)) {
+			if ($entry->process($_POST)) {
+				$this->entry_model->update($entry);
+				$success = true;
+			}
+		}
+
+		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success'));
 	}
 
 	public function run_list_forms()

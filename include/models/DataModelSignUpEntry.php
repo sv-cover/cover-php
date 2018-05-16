@@ -4,6 +4,8 @@ require_once 'include/data/DataModel.php';
 
 class DataIterSignUpEntry extends DataIter
 {
+	public $errors = [];
+
 	static public function fields()
 	{
 		return [
@@ -24,22 +26,72 @@ class DataIterSignUpEntry extends DataIter
 		return get_model('DataModelMember')->get_iter($this['member_id']);
 	}
 
-	public function set_field_values(array $field_values)
+	public function set_values(array $field_values)
 	{
-		$this->db->beginTransaction();
+		$this->data['values'] = $field_values;
+	}
 
-		// Delete the old values
-		$this->db->delete(['entry_id' => $this['id']]);
+	public function get_values()
+	{
+		if (isset($this->data['values']))
+			return $this->data['values'];
 
-		// Insert the new values
-		foreach ($field_values as $field_id => $value)
-			$this->db->insert('sign_up_entry_values', [
-				'entry_id' => $this['id'],
-				'field_id' => $field_id,
-				'value' => $value
-			]);
+		if (!$this['id'])
+			return [];
 
-		$this->db->commit();
+		return $this->model->get_values($this);	
+	}
+
+	public function get_values_by_name()
+	{
+		$fields_by_id = array_combine(
+			array_select($this['form']['fields'], 'id'),
+			array_values($this['form']['fields']));
+
+		$values = $this['values'];
+
+		return array_combine(
+			array_map(function($id) use ($fields_by_id) {
+				return $fields_by_id[$id];
+			}, array_keys($values)),
+			array_values($values));
+	}
+
+	public function value_for_field(DataIterSignUpField $field, $default = null)
+	{
+		return $this['values'][$field['id']] ?? $default;
+	}
+
+	public function error_for_field(DataIterSignUpField $field)
+	{
+		return $this->errors[$field['id']] ?? null;
+	}
+
+	public function process(array $post_data)
+	{
+		$this->errors = [];
+
+		$field_values = [];
+
+		foreach ($this['form']['fields'] as $field)
+			$field_values[$field['id']] = $field->process($post_data, $this->errors[$field['id']]);
+
+		$this['values'] = $field_values;
+
+		return count(array_filter($this->errors)) == 0;
+	}
+
+	public function export()
+	{
+		$row = [
+			'member' => member_full_name($this['member'], IGNORE_PRIVACY),
+			'signed_up_on' => $this['signed_up_on']
+		];
+
+		foreach ($this['form']['fields'] as $field)
+			$row = array_merge($row, $field->export($this));
+
+		return $row;
 	}
 }
 
@@ -52,20 +104,51 @@ class DataModelSignUpEntry extends DataModel
 		parent::__construct($db, 'sign_up_entries');
 	}
 
-	public function get_or_create_for_member(DataModelSignUpForm $form, DataModelMember $member)
+	public function insert(DataIter $iter)
 	{
-		$props = [
-			'form_id' => $form['id'],
-			'member_id' => $member['id']
-		];
+		$out = parent::insert($iter);
+		$this->_save_values($iter);
+		return $out;
+	}
 
-		$entry = $this->find_one($props);
+	public function update(DataIter $iter)
+	{
+		$out = parent::update($iter);
+		$this->_save_values($iter);
+		return $out;
+	}
 
-		if (!$entry) {
-			$entry = $this->new_iter($props);
-			$this->insert($entry);
-		}
+	public function get_values(DataIter $iter)
+	{
+		$rows = $this->db->query("SELECT field_id, value FROM sign_up_entry_values WHERE entry_id = :id", false, [':id' => $iter['id']]);
 
-		return $entry;
+		return array_combine(
+			array_select($rows, 'field_id'),
+			array_select($rows, 'value'));
+	}
+
+	private function _save_values(DataIter $iter)
+	{
+		// If the iter did not change the values, ignore this call
+		if (!isset($iter->data['values']))
+			return;
+
+		if (!$iter->has_id())
+			throw new LogicException('_save_values on iter without id');
+
+		$this->db->beginTransaction();
+
+		// Delete the old values
+		$this->db->delete('sign_up_entry_values', 'entry_id = :id', [':id' => $iter['id']]);
+
+		// Insert the new values
+		foreach ($iter['values'] as $field_id => $value)
+			$this->db->insert('sign_up_entry_values', [
+				'entry_id' => $iter['id'],
+				'field_id' => $field_id,
+				'value' => $value
+			]);
+
+		$this->db->commit();
 	}
 }

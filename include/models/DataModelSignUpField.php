@@ -10,13 +10,13 @@ interface SignUpFieldType
 	// Pick the value from the post_data associative array and, if valid, return
 	// the content as how it has to be saved in the database. If it didn't
 	// validate, return an error.
-	public function process(array $post_data);
+	public function process(array $post_data, &$error);
 
 	// Render the form field
-	public function render($renderer);
+	public function render($renderer, $value, $error);
 
 	// Export it to a CSV (as an array with column => text value)
-	public function export();
+	public function export($value);
 }
 
 class SignUpValidationError
@@ -35,8 +35,6 @@ class TextField implements SignUpFieldType
 
 	public $required;
 
-	public $value;
-
 	public function __construct($name, array $configuration)
 	{
 		$this->name = $name;
@@ -44,8 +42,6 @@ class TextField implements SignUpFieldType
 		$this->label = $configuration['label'] ?? $name;
 
 		$this->required = $configuration['required'] ?? false;
-
-		$this->value = '';
 	}
 
 	public function options()
@@ -62,24 +58,28 @@ class TextField implements SignUpFieldType
 		];
 	}
 
-	public function process(array $post_data)
+	public function process(array $post_data, &$error)
 	{
-		$this->value = trim($post_data[$this->name] ?? '');
+		$value = trim($post_data[$this->name] ?? '');
 
-		if ($this->required && $this->value == '')
-			return new SignUpValidationError(__('Value required'));
+		if ($this->required && $value == '')
+			$error = __('Value required');
 
-		return $this->value;
+		return $value;
 	}
 
-	public function render($renderer)
+	public function render($renderer, $value, $error)
 	{
-		return $renderer->render('@form/textfield.twig', ['field' => $this]);
+		return $renderer->render('@form/textfield.twig', [
+			'field' => $this,
+			'data' => [$this->name => $value],
+			'errors' => $error ? [$this->name => $error] : []
+		]);
 	}
 
-	public function export()
+	public function export($value)
 	{
-		return [$this->name => $this->value];
+		return [$this->name => $value];
 	}
 }
 
@@ -89,8 +89,6 @@ class Checkbox implements SignUpFieldType
 
 	protected $required;
 
-	protected $checked;
-
 	public function __construct($name, array $configuration)
 	{
 		$this->name = $name;
@@ -98,8 +96,6 @@ class Checkbox implements SignUpFieldType
 		$this->required = $configuration['required'] ?? false;
 
 		$this->description = $configuration['description'] ?? '';
-
-		$this->checked = false;
 	}
 
 	public function options()
@@ -116,25 +112,28 @@ class Checkbox implements SignUpFieldType
 		];
 	}
 
-	public function process(array $post_data)
+	public function process(array $post_data, &$error)
 	{
-		if (isset($post_data[$this->name]))
-			$this->checked = $post_data[$this->name];
+		$checked = isset($post_data[$this->name]) && $post_data[$this->name] == 'yes';
 
-		if ($this->required && !$this->checked)
-			return new SignUpValidationError('Required');
+		if ($this->required && !$checked)
+			$error = 'Required';
 
-		return $this->checked ? '0' : '1';
+		return $checked ? '0' : '1';
 	}
 
-	public function render($renderer)
+	public function render($renderer, $value, $error)
 	{
-		return $renderer->render('@form/checkbox.twig', ['field' => $this]);
+		return $renderer->render('@form/checkbox.twig', [
+			'field' => $this,
+			'data' => [$this->name => (bool) $value],
+			'errors' => $error ? [$this->name => $error] : []
+		]);
 	}
 
-	public function export()
+	public function export($value)
 	{
-		return [$this->name => $this->value ? 0 : 1];
+		return [$this->name => $value ? 0 : 1];
 	}
 }
 
@@ -170,14 +169,24 @@ class DataIterSignUpField extends DataIter
 		return get_model('DataModelSignUpForm')->get_iter($this['form_id']);
 	}
 
-	public function get_widget()
+	public function process(array $post_data, &$error)
 	{
-		return get_model('DataModelSignUpField')->instantiate($this['type'], $this['name'], $this['properties']);
+		return $this->widget()->process($post_data, $error);
 	}
 
-	public function process($post_value, &$error)
+	public function render($renderer, DataIterSignUpEntry $entry)
 	{
+		return $this->widget()->render($renderer, $entry->value_for_field($this), $entry->error_for_field($this));
+	}
 
+	public function export(DataIterSignUpEntry $entry)
+	{
+		return $this->widget()->export($entry->value_for_field($this));
+	}
+
+	private function widget()
+	{
+		return get_model('DataModelSignUpField')->instantiate($this['type'], $this['name'], $this['properties']);
 	}
 }
 
