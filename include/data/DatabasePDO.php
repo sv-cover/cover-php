@@ -333,7 +333,7 @@ class DatabasePDO
 	  *
 	  * @result true if delete was successful, false otherwise
 	  */
-	public function delete($table, $condition)
+	public function delete($table, $condition, array $input_parameters = [])
 	{
 		if (!$condition)
 			throw new RuntimeException('Are you really really sure you want to delete everything?');
@@ -341,7 +341,7 @@ class DatabasePDO
 		if (!is_string($condition))
 			throw new InvalidArgumentException('condition parameter has to be a SQL query string');
 
-		return $this->execute(sprintf('DELETE FROM "%s" WHERE %s', $table, $condition));
+		return $this->execute(sprintf('DELETE FROM "%s" WHERE %s', $table, $condition), $input_parameters);
 	}
 
 	public function read_blob($data)
