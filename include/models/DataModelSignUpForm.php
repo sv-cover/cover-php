@@ -52,7 +52,7 @@ class DataIterSignUpForm extends DataIter
 
 	public function get_signup_count()
 	{
-		return count($this['entries']);
+		return $this->data['signup_count'] ?? count($this['entries']);
 	}
 
 	public function is_open()
@@ -83,5 +83,28 @@ class DataModelSignUpForm extends DataModel
 	public function __construct($db)
 	{
 		parent::__construct($db, 'sign_up_forms');
+	}
+
+	protected function _generate_query($where)
+	{
+		if (is_array($where))
+			$where = $this->_generate_conditions_from_array($where);
+
+		$WHERE = $where ? " WHERE {$where}" : "";
+
+		return "
+			SELECT
+				{$this->table}.*,
+				COUNT(sign_up_entries.id) as signup_count
+			FROM
+				{$this->table}
+			LEFT JOIN sign_up_entries ON
+				sign_up_entries.form_id = {$this->table}.id
+			{$WHERE}
+			GROUP BY
+				{$this->table}.id,
+				{$this->table}.committee_id,
+				{$this->table}.created_on,
+				{$this->table}.closed_on";
 	}
 }
