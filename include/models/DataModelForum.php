@@ -898,17 +898,17 @@
 				return $cache[$forum_id];
 
 			$row = $this->db->query_first(sprintf('
-					SELECT
-						forums.*,
-						COUNT(f_t.id) as num_threads 
-					FROM
-						forums
-					LEFT JOIN forum_threads f_t ON
-						f_t.forum_id = forums.id
+					SELECT forums.*
+						  ,f_t.num_threads 
+					  FROM forums
+					       LEFT JOIN (
+					       		SELECT forum_threads.forum_id
+					       		      ,COUNT(forum_threads.id) as num_threads
+					       		  FROM forum_threads
+					       		 GROUP BY forum_threads.forum_id
+					       ) f_t ON f_t.forum_id = forums.id
 					WHERE
-						forums.id = %d
-					GROUP BY
-						forums.id', $forum_id));
+						forums.id = %d', $forum_id));
 
 			if (!$row)
 				throw new DataIterNotFoundException($forum_id, $this);
