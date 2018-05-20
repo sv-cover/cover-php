@@ -138,8 +138,9 @@ class ControllerApi extends Controller
 		$committee_model = get_model('DataModelCommissie');
 		$committee_data = [];
 
-		$committee_ids = $ident->get_override_committees() ?? $member['committees'];
-		$committees = $committee_model->find(['id__in' => $committee_ids ]);
+		
+		// $committee_ids = $ident->get_override_committees() ?? $member['committees'];
+		$committees = $committee_model->find(['id__in' => $member['committees'] ]);
 
 		// For now just return login and committee name
 		foreach ($committees as $committee)
