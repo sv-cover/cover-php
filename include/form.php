@@ -538,4 +538,49 @@
 		
 		return $fields;
 	}
-?>
+
+/**
+ * Class that helps collect errors when validating a form.
+ */
+class ErrorSet implements ArrayAccess
+{
+	public function __construct(array $namespace = [], &$errors = null)
+	{
+		$this->namespace = $namespace;
+
+		$this->errors =& $errors ? $errors : [];
+	}
+
+	protected function key($field)
+	{
+		return implode('.', array_merge($this->namespace, [$field]));
+	}
+
+	public function namespace($namespace)
+	{
+		return new ErrorSet(array_merge($this->namespace, [$namespace]), $this->errors);
+	}
+
+	public function offsetSet($field, $error)
+	{
+		$this->errors[$this->key($field)] = $error;
+	}
+
+	public function offsetGet($field)
+	{
+		$key = $this->key($field);
+		return isset($this->errors[$key])
+			? $this->errors[$key]
+			: null;
+	}
+
+	public function offsetExists($field)
+	{
+		return isset($this->errors[$this->key($field)]);
+	}
+
+	public function offsetUnset($field)
+	{
+		unset($this->errors[$this->key($field)]);
+	}
+}

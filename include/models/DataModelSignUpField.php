@@ -1,5 +1,6 @@
 <?php
 
+require_once 'include/form.php';
 require_once 'include/data/DataModel.php';
 
 interface SignUpFieldType
@@ -21,49 +22,6 @@ interface SignUpFieldType
 
 	// Export it to a CSV (as an array with column => text value)
 	public function export($value);
-}
-
-class ErrorSet implements ArrayAccess
-{
-	public function __construct(array $namespace = [], &$errors = null)
-	{
-		$this->namespace = $namespace;
-
-		$this->errors =& $errors ? $errors : [];
-	}
-
-	protected function key($field)
-	{
-		return implode('.', array_merge($this->namespace, [$field]));
-	}
-
-	public function namespace($namespace)
-	{
-		return new ErrorSet(array_merge($this->namespace, [$namespace]), $this->errors);
-	}
-
-	public function offsetSet($field, $error)
-	{
-		$this->errors[$this->key($field)] = $error;
-	}
-
-	public function offsetGet($field)
-	{
-		$key = $this->key($field);
-		return isset($this->errors[$key])
-			? $this->errors[$key]
-			: null;
-	}
-
-	public function offsetExists($field)
-	{
-		return isset($this->errors[$this->key($field)]);
-	}
-
-	public function offsetUnset($field)
-	{
-		unset($this->errors[$this->key($field)]);
-	}
 }
 
 class SignUpValidationError
