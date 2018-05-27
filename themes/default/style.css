@@ -3339,23 +3339,19 @@ ul.call-to-action li a::before {
 
 .form-field .sortable-drag-handle:hover,
 .form-field .sortable-drag-handle:hover + form {
-	background: #ccc;
-}
-
-.form-field .field-type-textfield,
-.form-field .field-type-checkbox {
-	position: relative;
+	background: #ececec;
 }
 
 .field-type-textfield::before,
-.field-type-checkbox::before {
+.field-type-checkbox::before,
+.field-type-choice::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit;
 	text-rendering: auto;
 	-webkit-font-smoothing: antialiased;
 	display: inline-block;
 	position: absolute;
-	left: -38px;
+	left: 8px;
 	top: 10px;
 	height: 30px;
 	margin: auto auto;
@@ -3370,4 +3366,8 @@ ul.call-to-action li a::before {
 
 .field-type-checkbox::before {
 	content: "\f14a";
+}
+
+.field-type-choice::before {
+	content: "\f05d";
 }
