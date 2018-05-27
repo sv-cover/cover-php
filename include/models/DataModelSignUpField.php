@@ -134,7 +134,7 @@ class Checkbox implements SignUpFieldType
 		if ($this->required && !$checked)
 			$error = 'Required';
 
-		return $checked ? '0' : '1';
+		return $checked ? '1' : '0';
 	}
 
 	public function render($renderer, $value, $error)
