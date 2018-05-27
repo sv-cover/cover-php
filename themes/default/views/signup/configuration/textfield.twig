@@ -7,6 +7,17 @@
 		</div>
 	</fieldset>
 	<fieldset>
+		<legend>Field type</legend>
+		<div class="radio">
+			{{ html_input_radio('multiline', data, '0', errors=errors) }}
+			{{ html_label('Single line of text', 'multiline', errors=errors) }}
+		</div>
+		<div class="radio">
+			{{ html_input_radio('multiline', data, '1', errors=errors) }}
+			{{ html_label('Multiple lines of text', 'multiline', errors=errors) }}
+		</div>
+	</fieldset>
+	<fieldset>
 		<legend>Required</legend>
 		<div>
 			{{ html_input_checkbox('required', data, errors=errors) }}

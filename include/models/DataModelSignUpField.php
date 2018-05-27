@@ -40,6 +40,8 @@ class TextField implements SignUpFieldType
 
 	protected $required;
 
+	protected $multiline;
+
 	public function __construct($name, array $configuration)
 	{
 		$this->name = $name;
@@ -47,13 +49,16 @@ class TextField implements SignUpFieldType
 		$this->label = $configuration['label'] ?? $name;
 
 		$this->required = $configuration['required'] ?? false;
+
+		$this->multiline = $configuration['multiline'] ?? false;
 	}
 
 	public function configuration()
 	{
 		return [
 			'label' => $this->label,
-			'required' => (bool) $this->required
+			'required' => (bool) $this->required,
+			'multiline' => (bool) $this->multiline
 		];
 	}
 
@@ -81,6 +86,7 @@ class TextField implements SignUpFieldType
 	{
 		$this->label = strval($post_data['label']);
 		$this->required = !empty($post_data['required']);
+		$this->multiline = !empty($post_data['multiline']);
 		return true;
 	}
 
