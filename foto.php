@@ -117,6 +117,11 @@
 
 			$imagick = new Imagick();
 			$imagick->readImageFile($photo['foto']);
+
+			apply_image_orientation($imagick);
+
+			strip_exif_data($imagick);
+
 			$height = 0;
 			
 			if ($format == self::FORMAT_SQUARE)
