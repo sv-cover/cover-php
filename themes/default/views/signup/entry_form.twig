@@ -8,7 +8,7 @@
 	{% if success %}
 		<p>{{ __('Succes! Je inschrijving is compleet.') }}</p>
 	{% else %}
-		<form action="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" method="post" class="vertical-form">
+		<form action="{{ entry.has_id ? controller.link({view: 'update_entry', form: form.id, entry: entry.id}) : controller.link({view: 'create_entry', form: form.id}) }}" method="post" class="vertical-form">
 			{% if entry.has_id %}
 				{{ html_nonce('update_entry', entry) }}
 			{% else %}
