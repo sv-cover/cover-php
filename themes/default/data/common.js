@@ -1164,3 +1164,23 @@ $(document).on('ready partial-content-loaded', function(e) {
 		$target.on('show', refresh);
 	});
 });
+
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-sortable-action]').each(function() {
+		var $list = $(this);
+
+		$list.sortable({
+			handle: '.sortable-drag-handle',
+			update: function() {
+				console.log($list.data('sortableAction'), $list.children().map(function() {
+					return $(this).data('sortableId');
+				}));
+				$.post($list.data('sortableAction'), {
+					order: $list.children().map(function() {
+						return $(this).data('sortableId');
+					}).get()
+				});
+			}
+		});
+	});
+});

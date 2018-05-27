@@ -60,7 +60,9 @@ class HTMLTwigExtension extends Twig_Extension
 				? call_user_func($params['formatter'], array_path($data, $name))
 				: array_path($data, $name);
 
-		if (isset($params['errors']) && in_array($name, $params['errors']))
+		if (
+			(isset($params['errors']) && is_array($params['errors']) && in_array($name, $params['errors']))
+			|| (isset($params['errors']) && isset($params['errors'][$name])))
 			$params['class'] = (isset($params['class']) ? ($params['class'] . '_') : '') . 'error';
 		
 		unset($params['errors']);
@@ -240,7 +242,7 @@ class HTMLTwigExtension extends Twig_Extension
 
 		// Do we need to add the error class?
 		if (isset($params['errors']))
-			if (in_array($field, $params['errors']))
+			if ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))
 				if (isset($params['class']))
 					$params['class'] .= ' error';
 				else
@@ -289,7 +291,7 @@ class HTMLTwigExtension extends Twig_Extension
 		unset($params['value']);
 		unset($params['formatter']);
 
-		if (isset($params['errors']) && in_array($name, $params['errors'])) {
+		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($name, $params['errors'])) || isset($params['errors'][$name]))) {
 			if (isset($params['class']))
 				$params['class'] = $params['class'] . '_error';
 			else
@@ -311,9 +313,11 @@ class HTMLTwigExtension extends Twig_Extension
 		$name = markup_format_text($name);
 		$classes = isset($params['class']) ? explode(' ', $params['class']) : ['label'];
 		$extra_content = '';
-				
-		if (isset($params['errors']) && in_array($field, $params['errors']))
+		
+		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))) {
+			$params['class'] = (isset($params['class']) ? ($params['class'] . '_') : '') . 'error';
 			$classes[] = 'label_error';
+		}
 
 		if (isset($params['required']) && $params['required']) {
 			$classes[] = 'label_required';

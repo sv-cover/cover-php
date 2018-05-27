@@ -30,24 +30,29 @@
 
 {% if form.has_id %}
 <div class="messageBox">
-	<form action="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" method="post">
+	<form action="{{ controller.link({view: 'create_form_field', form: form.id}) }}" method="post">
 		{{ html_nonce('create_form_field', form) }}
-		<p>Add a new {{ html_select_field('field_type', view.available_field_types) }} to this form</p>
+		<p>Add a new {{ html_select_field('field_type', view.available_field_types, null) }} to this form</p>
 		<div class="controls">
 			<button type="submit" class="button">Add field</button>
 		</div>
 	</form>
 	
+	<div class="form-fields" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}">
 	{% for field in form.fields %}
-		<form action="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" method="post">
-			{{ html_nonce('update_form_field', form, field) }}
-			{{ field.render_options(view)|raw }}
-			<div class="controls">
-				<button type="submit" class="button" name="action" value="update">Update field</button>
-				<button type="submit" class="button" name="action" value="delete">Delete field</button>
-			</div>
-		</form>
+		<div class="form-field" data-sortable-id="{{ field.id }}">
+			<div class="sortable-drag-handle">Drag me</div>
+			<form action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post">
+				{{ html_nonce('update_form_field', form, field) }}
+				{{ field.render_configuration(view, errors.namespace(field.id))|raw }}
+				<div class="controls">
+					<button type="submit" class="button" name="action" value="update">Update field</button>
+					<button type="submit" class="button" name="action" value="delete">Delete field</button>
+				</div>
+			</form>
+		</div>
 	{% endfor %}
+	</div>
 </div>
 {% endif %}
 

@@ -10,6 +10,8 @@ class ControllerSignUpForms extends Controller
 	{
 		$this->form_model = get_model('DataModelSignUpForm');
 
+		$this->field_model = get_model('DataModelSignUpField');
+
 		$this->entry_model = get_model('DataModelSignUpEntry');
 
 		$this->view = View::byName('signup', $this);
@@ -123,7 +125,7 @@ class ControllerSignUpForms extends Controller
 
 		$success = false;
 
-		$errors = [];
+		$errors = new ErrorSet();
 
 		if ($this->_form_is_submitted('create_form'))
 			if ($this->_create($this->form_model, $form, $_POST, $errors))
@@ -141,7 +143,7 @@ class ControllerSignUpForms extends Controller
 
 		$success = false;
 
-		$errors = [];
+		$errors = new ErrorSet();
 
 		if ($this->_form_is_submitted('update_form', $form))
 			if ($this->_update($this->form_model, $form, $_POST, $errors))
@@ -150,7 +152,71 @@ class ControllerSignUpForms extends Controller
 		return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
 	}
 
-	private function _create(DataModel $model, DataIter $iter, array $input, array &$errors)
+	public function run_create_form_field()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_update($form))
+			throw new UnauthorizedException('You cannot update this form.');
+
+		if ($this->_form_is_submitted('create_form_field', $form))
+			$this->field_model->insert($form->new_field($_POST['field_type']));
+
+		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+	}
+
+	public function run_update_form_field()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_update($form))
+			throw new UnauthorizedException('You cannot update this form.');
+
+		$field = array_find($form['fields'], function($field) { return $field['id'] == $_GET['field']; });
+
+		if (!$field)
+			throw new NotFoundException('Field not part of this form');
+
+		$success = false;
+
+		$errors = new ErrorSet();
+
+		if ($this->_form_is_submitted('update_form_field', $form, $field))
+		{
+			if ($_POST['action'] == 'update')
+				if ($field->process_configuration($_POST, $errors->namespace($field['id'])))
+					$this->field_model->update($field);
+				else
+					return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+			
+			if ($_POST['action'] == 'delete')
+				$this->field_model->delete($field);
+		}
+
+		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+	}
+
+	public function run_update_form_field_order()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_update($form))
+			throw new UnauthorizedException('You cannot update this form.');
+
+		$fields = $form['fields'];
+
+		$indexes = array_map(function($field) {
+			return array_search($field['id'], $_POST['order']);
+		}, $fields);
+
+		array_multisort($indexes, $fields);
+
+		$this->field_model->update_order($fields);
+
+		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+	}
+
+	private function _create(DataModel $model, DataIter $iter, array $input, ErrorSet $errors)
 	{
 		$data = validate_dataiter($iter, $input, $errors);
 

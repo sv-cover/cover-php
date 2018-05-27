@@ -1,4 +1,4 @@
 <div>
-	{{ html_input_checkbox(field.name, data, errors=errors, required=field.required) }}
-	{{ html_label(field.description, field.name, errors=errors, required=field.required) }}
+	{{ html_input_checkbox(name, data, errors=errors, required=configuration.required) }}
+	{{ html_label(configuration.description, name, errors=errors, required=configuration.required) }}
 </div>

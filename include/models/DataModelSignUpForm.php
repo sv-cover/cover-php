@@ -74,6 +74,21 @@ class DataIterSignUpForm extends DataIter
 			'signed_up_on' => date('Y-m-d H:i:s')
 		]);
 	}
+
+	public function new_field($type)
+	{
+		$model = get_model('DataModelSignUpField');
+
+		if (!isset($model->field_types[$type]))
+			throw new InvalidArgumentException('Unknown form field type');
+
+		return $model->new_iter([
+			'form_id' => $this['id'],
+			'name' => uniqid(), // for now
+			'type' => $type,
+			'properties' => '{}'
+		]);
+	}
 }
 
 class DataModelSignUpForm extends DataModel
