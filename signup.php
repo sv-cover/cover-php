@@ -84,10 +84,10 @@ class ControllerSignUpForms extends Controller
 		$form = $entry['form'];
 
 		if (!get_policy($this->form_model)->user_can_read($form))
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('You cannot access this form.');
 
 		if (!get_policy($this->entry_model)->user_can_update($entry))
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('You cannot update this entry.');
 
 		$success = false;
 
@@ -103,6 +103,9 @@ class ControllerSignUpForms extends Controller
 
 	public function run_list_forms()
 	{
+		if (!get_identity()->get('committees'))
+			throw new UnauthorizedException('Only committee members may create and manage forms.');
+
 		$forms = $this->form_model->find(['committee_id__in' => get_identity()->get('committees')]);
 
 		return $this->view->render('list_forms.twig', compact('forms'));
@@ -112,8 +115,11 @@ class ControllerSignUpForms extends Controller
 	{
 		$form = $this->new_form();
 
+		if (!get_identity()->get('committees'))
+			throw new UnauthorizedException('Only committee members may create and manage forms.');
+
 		if (!get_policy($this->form_model)->user_can_create($form))
-			throw new UnauthorizedException('You are not allowed to create new forms');
+			throw new UnauthorizedException('You cannot create new forms.');
 
 		$success = false;
 
@@ -131,7 +137,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_update($form))
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('You cannot update this form.');
 
 		$success = false;
 
@@ -156,7 +162,7 @@ class ControllerSignUpForms extends Controller
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?
 		// Well, yes, but sometimes a policy is picky about how you fill in the data!
 		if (!get_policy($iter)->user_can_create($iter))
-			throw new UnauthorizedException('You are not allowed to create this DataIter according to the policy.');
+			throw new UnauthorizedException('You cannot create new forms.');
 
 		$id = $model->insert($iter);
 
