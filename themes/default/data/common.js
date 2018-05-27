@@ -1204,3 +1204,42 @@ $(document).on('ready partial-content-loaded', function(e) {
 		$(this).addClass('submit-on-change');
 	})
 })
+
+// Growing lists (i.e. the options list in form fields)
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-growing-list]').each(function() {
+		var $list = $(this);
+		var $template = $(this).find('[data-template]').detach();
+
+		function check() {
+			if ($list.find('input').last().val() != '')
+				$list.append($template.clone());
+		}
+
+		$list.on('input', function(e) {
+			check();
+		});
+
+		$list.on('keydown', function(e) {
+			if (e.keyCode == 8 && e.target.value == '') {// backspace in empty field
+				e.preventDefault();
+
+				var $child = $(e.target).closest($list.children());
+				$child.prev($list.children()).each(function() {
+					$(this).find('input:first-of-type').each(function() {
+						this.setSelectionRange(this.value.length, this.value.length);
+					});
+				});
+				$child.remove();
+			}
+		});
+
+		$list.sortable({
+			update: function() {
+				$list.trigger('change');
+			}
+		});
+
+		check();
+	})
+});

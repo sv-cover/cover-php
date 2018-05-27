@@ -1,0 +1,13 @@
+<fieldset>
+	<legend>{{ configuration.description }}</legend>
+	{% for option in configuration.options %}
+	<div>
+		{% if configuration.allow_multiple %}
+			{{ html_input_checkbox(name, data, field=name ~ '[]', id='field-' ~ name ~ loop.index, value=option, errors=errors) }}
+		{% else %}
+			{{ html_input_radio(name, data, option, field=name ~ '[]', id='field-' ~ name ~ loop.index, errors=errors) }}
+		{% endif %}
+		{{ html_label(option, name ~ loop.index, errors=errors) }}
+	</div>
+	{% endfor %}
+</fieldset>

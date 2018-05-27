@@ -53,12 +53,12 @@ class HTMLTwigExtension extends Twig_Extension
 		if ($name)
 			$attributes['name'] = $name;
 
-		if (!isset($params['nopost']) && array_path($_POST, $name) !== null)
-			$attributes['value'] = array_path($_POST, $name);
-		elseif ($data && array_path($data, $name) !== null)
+		if (!isset($params['nopost']) && array_path($_POST, $field) !== null)
+			$attributes['value'] = array_path($_POST, $field);
+		elseif ($data && array_path($data, $field) !== null)
 			$attributes['value'] = isset($params['formatter'])
-				? call_user_func($params['formatter'], array_path($data, $name))
-				: array_path($data, $name);
+				? call_user_func($params['formatter'], array_path($data, $field))
+				: array_path($data, $field);
 
 		if (
 			(isset($params['errors']) && is_array($params['errors']) && in_array($name, $params['errors']))
@@ -191,11 +191,20 @@ class HTMLTwigExtension extends Twig_Extension
 		else
 			$field = $name;
 		
-		if (get_post($name) != null) {
-			if (get_post($name) == $value)
+		if (substr($field, -2, 2) == '[]') {
+			if (isset($data[substr($field, 0, -2)]) && in_array($value, $data[substr($field, 0, -2)]))
 				$params['checked'] = 'checked';
-		} elseif ($data[$field] == $value) {
+		}
+		elseif (isset($_POST[$name]) && $_POST[$name] == $value) 
 			$params['checked'] = 'checked';
+		elseif (isset($data[$field])) {
+			if ($value == 'on' || $value == 'yes') {// Boolean mode
+				if ((bool) $data[$field])
+					$params['checked'] = 'checked';
+			} else {
+				if ($data[$field] === $value)
+					$params['checked'] = 'checked';
+			}
 		}
 
 		return self::input_field($name, null, $params);

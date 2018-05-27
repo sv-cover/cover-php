@@ -1439,6 +1439,7 @@ table.incassomatic thead::before
 	box-sizing: border-box;
 }
 
+.vertical-form li input[type],
 .vertical-form input[size] {
 	width: auto;
 }
