@@ -228,6 +228,9 @@
 
 			$this->_clear_getter_cache($field);
 
+			/* Add field to changes if it's not already changed */
+			$this->mark_changed($field);
+
 			/* if there is a setter for this field, delegate to that one */
 			if (static::has_setter($field))
 				return $this->call_setter($field, $value);
@@ -237,9 +240,6 @@
 				&& $this->data[$field] === $value
 				&& $this->_id != -1)
 				return;
-
-			/* Add field to changes if it's not already changed */
-			$this->mark_changed($field);
 
 			/* Store new value */
 			$this->data[$field] = $value;
