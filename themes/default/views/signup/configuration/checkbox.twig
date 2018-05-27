@@ -1,10 +1,16 @@
 <div class="field-type-checkbox vertical-form">
-	<div>
-		{{ html_label('Text next to the checkbox', 'description', errors=errors) }}
-		{{ html_input_text('description', data, errors=errors) }}
-	</div>
-	<div>
-		{{ html_input_checkbox('required', data, errors=errors) }}
-		{{ html_label('Checking this checkbox is mandatory', 'required', errors=errors) }}
-	</div>
+	<fieldset>
+		<legend>Appearance</legend>
+		<div>
+			{{ html_label('Text next to the checkbox', 'description', errors=errors) }}
+			{{ html_input_text('description', data, errors=errors) }}
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Required</legend>
+		<div>
+			{{ html_input_checkbox('required', data, errors=errors) }}
+			{{ html_label('Checking this checkbox is mandatory', 'required', errors=errors) }}
+		</div>
+	</fieldset>
 </div>

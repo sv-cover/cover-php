@@ -183,6 +183,9 @@ class HTMLTwigExtension extends Twig_Extension
 		$params['value'] = $value;
 		$params['nopost'] = true;
 
+		if (!isset($params['id']))
+			$params['id'] = sprintf('field-%s-%s', $name, $value);
+
 		if (isset($params['field']))
 			$field = $params['field'];
 		else

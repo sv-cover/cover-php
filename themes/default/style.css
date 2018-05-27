@@ -1509,11 +1509,6 @@ table.incassomatic thead::before
 	margin-bottom: 0;
 }
 
-.vertical-form .radio label {
-	position: static;
-	display: block;
-}
-
 .vertical-form .controls .button.primary {
 	float: right;
 	line-height: 42px;
@@ -3359,9 +3354,8 @@ ul.call-to-action li a::before {
 	-webkit-font-smoothing: antialiased;
 	display: inline-block;
 	position: absolute;
-	left: -34px;
-	top: -10px;
-	bottom: 0;
+	left: -38px;
+	top: 10px;
 	height: 30px;
 	margin: auto auto;
 	font-size: 24px;
