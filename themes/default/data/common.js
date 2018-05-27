@@ -1165,6 +1165,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 	});
 });
 
+// Make elements sortable by using data-sortable-action and data-sortable-id attributes.
 $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('[data-sortable-action]').each(function() {
 		var $list = $(this);
@@ -1184,3 +1185,22 @@ $(document).on('ready partial-content-loaded', function(e) {
 		});
 	});
 });
+
+// Forms that autosubmit on change (just submit, no feedback)
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('form[data-submit-on-change]').each(function() {
+		var extraData = $.map($(this).data('submitOnChange'), function(value, name) {
+			return {name: name, value: value};
+		});
+
+		$(this).on('change', function(e) {
+			$.ajax({
+				url: $(this).attr('action'),
+				method: $(this).attr('method').toUpperCase(),
+				data: $(this).serializeArray().concat(extraData)
+			});
+		});
+
+		$(this).addClass('submit-on-change');
+	})
+})

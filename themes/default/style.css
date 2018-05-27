@@ -1436,6 +1436,7 @@ table.incassomatic thead::before
 .vertical-form textarea,
 .vertical-form {
 	width: 100%;
+	box-sizing: border-box;
 }
 
 .vertical-form input[size] {
@@ -3312,4 +3313,66 @@ ul.call-to-action li a::before {
 	display: block;
 	font-size: 24px;
 	text-transform: uppercase;
+}
+
+/* Sign up forms */
+
+.submit-on-change .hide-if-submit-on-change {
+	display: none;
+}
+
+.form-field {
+	position: relative;
+	margin: 8px 0;
+	padding: 0 0 0 38px;
+	border-bottom: 1px solid #ccc;
+}
+
+.form-field .sortable-drag-handle {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 38px;
+	cursor: move;
+}
+
+.form-field > form {
+	padding: 8px;
+}
+
+.form-field .sortable-drag-handle:hover,
+.form-field .sortable-drag-handle:hover + form {
+	background: #ccc;
+}
+
+.form-field .field-type-textfield,
+.form-field .field-type-checkbox {
+	position: relative;
+}
+
+.field-type-textfield::before,
+.field-type-checkbox::before {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	position: absolute;
+	left: -34px;
+	top: -10px;
+	bottom: 0;
+	height: 30px;
+	margin: auto auto;
+	font-size: 24px;
+	opacity: 0.3;
+	pointer-events: none;
+}
+
+.field-type-textfield::before {
+	content: "\f031";
+}
+
+.field-type-checkbox::before {
+	content: "\f14a";
 }
