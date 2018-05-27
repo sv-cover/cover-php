@@ -638,7 +638,7 @@ CREATE TABLE sign_up_fields(
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     properties TEXT NOT NULL,
-    sort_index INTEGER NOT NULL DEFAULT 0
+    sort_index INTEGER DEFAULT NULL
 );
 
 CREATE INDEX sign_up_fields_form_id_idx ON public.sign_up_fields(form_id);

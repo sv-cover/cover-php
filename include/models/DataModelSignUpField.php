@@ -243,6 +243,22 @@ class DataModelSignUpField extends DataModel
 		parent::__construct($db, 'sign_up_fields');
 	}
 
+	public function update_order(array $fields)
+	{
+		$values = [];
+
+		foreach (array_values($fields) as $n => $field)
+			$values[] = sprintf('(%d, %d)', $field['id'], $n);
+
+		$sql_values = implode(', ', $values);
+		
+		$this->db->query("
+			UPDATE {$this->table} as t 
+			SET sort_index = index
+			FROM (VALUES $sql_values) as v(id, index)
+			WHERE v.id = t.id");
+	}
+
 	public function instantiate($type, string $name, array $properties)
 	{
 		$class = new ReflectionClass($this->field_types[$type]);
@@ -251,6 +267,6 @@ class DataModelSignUpField extends DataModel
 
 	protected function _generate_query($where)
 	{
-		return parent::_generate_query($where) . ' ORDER BY sort_index ASC';
+		return parent::_generate_query($where) . ' ORDER BY sort_index ASC NULLS LAST';
 	}
 }
