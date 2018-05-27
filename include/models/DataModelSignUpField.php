@@ -15,6 +15,10 @@ interface SignUpFieldType
 	// Render the form field
 	public function render($renderer, $value, $error);
 
+	public function process_options(array $post_data, &$error);
+
+	public function render_options($renderer);
+
 	// Export it to a CSV (as an array with column => text value)
 	public function export($value);
 }
@@ -24,6 +28,31 @@ class SignUpValidationError
 	public function __construct($message)
 	{
 		$this->message = $message;
+	}
+}
+
+class SignUpField implements SignUpFieldType
+{
+	abstract public function options();
+
+	public function process_options(array $post_data, &$error)
+	{
+		static $mapping = [
+			'string' => 'strval',
+			'boolean' => 'boolval'
+		];
+		
+		foreach ($this->options() as $option => $props)
+		{
+			$value = $post_data[$option] ?? null;
+
+
+		}
+	}
+
+	public function render_options($renderer, $error)
+	{
+
 	}
 }
 
@@ -177,6 +206,16 @@ class DataIterSignUpField extends DataIter
 	public function render($renderer, DataIterSignUpEntry $entry)
 	{
 		return $this->widget()->render($renderer, $entry->value_for_field($this), $entry->error_for_field($this));
+	}
+
+	public function process_options(array $post_data, &$error)
+	{
+		return $this->widget()->process($post_data, $error);
+	}
+
+	public function render_options($renderer)
+	{
+		return $this->widget()->render_options($renderer);
 	}
 
 	public function export(DataIterSignUpEntry $entry)
