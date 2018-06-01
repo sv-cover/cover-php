@@ -3330,7 +3330,27 @@ ul.call-to-action li a::before {
 	top: 0;
 	bottom: 0;
 	width: 38px;
-	cursor: move;
+	cursor: grab;
+}
+
+.form-field *[data-growing-list] {
+	list-style: none;
+	margin: 0 0 1em 0;
+}
+
+.form-field .drag-handle {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	cursor: grab;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+}
+
+.form-field .drag-handle::before {
+	content: '\f0c9';
 }
 
 .form-field > form {

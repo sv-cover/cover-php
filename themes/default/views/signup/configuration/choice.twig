@@ -8,14 +8,18 @@
 	</fieldset>
 	<fieldset>
 		<legend>Options</legend>
-		<ul data-growing-list>
+		<ol data-growing-list>
 			{% for option in data.options %}
-				<li>{{ html_input_text('options[]', data, field='options['~ loop.index0 ~']') }}</li>
+				<li>
+					<span class="drag-handle"></span>
+					{{ html_input_text('options[]', data, field='options['~ loop.index0 ~']') }}
+				</li>
 			{% endfor %}
 			<li data-template>
+				<span class="drag-handle"></span>
 				<input type="text" name="options[]">
 			</li>
-		</ul>
+		</ol>
 		<div>
 			{{ html_input_checkbox('allow_multiple', data, errors=errors) }}
 			{{ html_label('Allow multiple options to be picked', 'allow_multiple', errors=errors) }}

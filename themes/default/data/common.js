@@ -1172,6 +1172,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 
 		$list.sortable({
 			handle: '.sortable-drag-handle',
+			cursor: 'grabbing',
 			update: function() {
 				console.log($list.data('sortableAction'), $list.children().map(function() {
 					return $(this).data('sortableId');
@@ -1235,6 +1236,8 @@ $(document).on('ready partial-content-loaded', function(e) {
 		});
 
 		$list.sortable({
+			handle: '.drag-handle',
+			cursor: 'grabbing',
 			update: function() {
 				$list.trigger('change');
 			}
