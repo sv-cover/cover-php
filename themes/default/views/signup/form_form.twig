@@ -3,7 +3,15 @@
 {% block title (form.has_id ? __('Wijzig formulier') : __('Formulier toevoegen')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ form.has_id ? __('Wijzig formulier') : __('Formulier toevoegen') }}</h1>
+<div class="pageheading">
+	<div class="controls inline">
+		{% if form.has_id and user_can_read form %}
+			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" class="edit-link">Show form</a>
+			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="download-link">Show entries</a>
+		{% endif %}
+	</div>
+	<h1>{{ form.has_id ? __('Wijzig formulier') : __('Formulier toevoegen') }}</h1>
+</div>
 <div class="messageBox">
 	<form method="post" class="vertical-form" action="{{ form.has_id ? controller.link({'view': 'update_form', 'form': form.id}) : controller.link({'view': 'create_form'}) }}">
 		{% if form.has_id %}

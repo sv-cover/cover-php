@@ -3,7 +3,15 @@
 {% block title __('Formulier') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Formulier') }}</h1>
+<div class="pageheading">
+	<div class="controls inline">
+		{% if form.has_id and user_can_update form %}
+			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">Edit form</a>
+			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="download-link">Show entries</a>
+		{% endif %}
+	</div>
+	<h1>{{ __('Formulier') }}</h1>
+</div>
 <div class="messageBox">
 	{% if success %}
 		<p>{{ __('Succes! Je inschrijving is compleet.') }}</p>
