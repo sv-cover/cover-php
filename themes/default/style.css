@@ -3354,7 +3354,7 @@ ul.call-to-action li a::before {
 }
 
 .form-field > form {
-	padding: 8px;
+	padding: 0 8px;
 }
 
 .form-field .sortable-drag-handle:hover,
@@ -3364,7 +3364,8 @@ ul.call-to-action li a::before {
 
 .field-type-textfield::before,
 .field-type-checkbox::before,
-.field-type-choice::before {
+.field-type-choice::before,
+.field-type-editable::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit;
 	text-rendering: auto;
@@ -3380,8 +3381,12 @@ ul.call-to-action li a::before {
 	pointer-events: none;
 }
 
-.field-type-textfield::before {
+.field-type-editable::before {
 	content: "\f031";
+}
+
+.field-type-textfield::before {
+	content: "\f044";
 }
 
 .field-type-checkbox::before {

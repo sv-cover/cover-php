@@ -255,11 +255,62 @@ class Choice implements SignUpFieldType
 
 	public function export($value)
 	{
-		return null;
+		return [];
 	}
 }
 
+class Editable implements SignUpFieldType
+{
+	protected $name;
 
+	protected $content;
+
+	public function __construct($name, array $configuration)
+	{
+		$this->name = $name;
+
+		$this->content = $configuration['content'] ?? '';
+	}
+
+	public function configuration()
+	{
+		return [
+			'content' => $this->content
+		];
+	}
+
+	public function process(array $post_data, &$error)
+	{
+		return null;
+	}
+
+	public function render($renderer, $value, $error)
+	{
+		return $renderer->render('@form_fields/editable.twig', [
+			'name' => $this->name,
+			'configuration' => $this->configuration()
+		]);
+	}
+
+	public function process_configuration(array $post_data, ErrorSet $errors)
+	{
+		$this->content = strval($post_data['content']);
+		return true;
+	}
+
+	public function render_configuration($renderer, ErrorSet $errors)
+	{
+		return $renderer->render('@form_configuration/editable.twig', [
+			'name' => $this->name,
+			'data' => $this->configuration()
+		]);
+	}
+
+	public function export($value)
+	{
+		return [];
+	}
+}
 
 class DataIterSignUpField extends DataIter
 {
@@ -339,7 +390,8 @@ class DataModelSignUpField extends DataModel
 	public $field_types = [
 		'checkbox' => Checkbox::class,
 		'text' => TextField::class,
-		'choice' => Choice::class
+		'choice' => Choice::class,
+		'editable' => Editable::class
 	];
 
 	public function __construct($db)
