@@ -74,7 +74,7 @@
 
 		public function get_signup_forms()
 		{
-			return get_model('DataModelSignupForm')->find(['agenda_id' => $this['id']]);
+			return get_model('DataModelSignUpForm')->find(['agenda_id' => $this['id']]);
 		}
 	}
 
