@@ -28,7 +28,7 @@ class DataIterSignUpEntry extends DataIter
 
 	public function set_values(array $field_values)
 	{
-		$this->data['values'] = $field_values;
+		$this->data['values'] = array_filter($field_values, function($value) { return $value !== null; });
 	}
 
 	public function get_values()
