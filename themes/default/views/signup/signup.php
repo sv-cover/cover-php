@@ -6,15 +6,6 @@ class SignUpView extends View
 {
 	protected $__file = __FILE__;
 
-	public function __construct(Controller $controller = null, $path = null)
-	{
-		parent::__construct($controller, $path);
-
-		$this->twig->getLoader()->addPath('themes/' . get_theme() . '/views/signup/fields', 'form_fields');
-
-		$this->twig->getLoader()->addPath('themes/' . get_theme() . '/views/signup/configuration', 'form_configuration');
-	}
-
 	public function available_committees()
 	{
 		$committees = array();

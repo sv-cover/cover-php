@@ -101,6 +101,12 @@
 <p><span class="smaller">{{  __('Geplaatst door') }}: <a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></span></p>
 {% endif %}
 
+{% for form in iter.signup_forms %}
+	{% if user_can_read form %}
+		{{ include('signup_form.twig', {form: form}) }}
+	{% endif %}
+{% endfor %}
+
 <!-- Actions applicable to the event -->
 <ul class="actions">
 	<li><a href="agenda.php">{{  __('Volledige agenda') }}</a></li>

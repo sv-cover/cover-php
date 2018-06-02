@@ -1,0 +1,20 @@
+{% set entry = form.new_entry(global.identity.member) %}
+<div class="signup-form">
+	<form action="{{ 'signup.php?' ~ (entry.has_id ? 'view=update_entry&form=' ~ form.id ~ '&entry=' ~ entry.id : 'view=create_entry&form=' ~ form.id) }}" method="post" class="vertical-form">
+		{% if entry.has_id %}
+			{{ html_nonce('update_entry', entry) }}
+		{% else %}
+			{{ html_nonce('create_entry', form) }}
+		{% endif %}
+		
+		{% for field in form.fields %}
+			<div>
+				{{ field.render(view, entry)|raw }}
+			</div>
+		{% endfor %}
+
+		<div class="controls">
+			<button class="button" type="submit">{{ entry.has_id ? __('Wijzig inschrijving') : __('Schrijf mij in') }}</button>
+		</div>
+	</form>
+</div>
