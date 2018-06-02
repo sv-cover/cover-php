@@ -55,6 +55,22 @@ class ControllerSignUpForms extends Controller
 		return $this->view->render('list_entries.twig', compact('form'));
 	}
 
+	public function run_delete_entries()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_read($form))
+			throw new UnauthorizedException();
+
+		if ($this->_form_is_submitted('delete_entries', $form))
+			foreach ($_POST['entries'] as $entry_id)
+				if ($entry = $this->entry_model->find_one(['form_id' => $form['id'], 'id' => $entry_id]))
+					if (get_policy($this->entry_model)->user_can_delete($entry))
+						$this->entry_model->delete($entry);
+
+		return $this->view->redirect($this->link(['view' => 'list_entries', 'form' => $form['id']]));
+	}
+
 	public function run_create_entry()
 	{
 		$form = $this->form_model->get_iter($_GET['form']);

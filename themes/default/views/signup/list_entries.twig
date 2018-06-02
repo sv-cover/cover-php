@@ -17,29 +17,37 @@
 </div>
 
 <div class="messageBox">
-	<table class="full-width-table">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Member</th>
-				<th>Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for entry in form.entries %}
-				{% if user_can_read entry %}
-					<tr>
-						{% if user_can_update entry %}
-							<td><a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id}) }}">{{ entry.id }}</a></td>
-						{% else %}
-							<td>{{ entry.id }}</td>
-						{% endif %}
-						<td>{{ entry.member|full_name }}</td>
-						<td>{{ entry.signed_up_on|date('d-m-Y H:i') }}</td>
-					</tr>
-				{% endif %}
-			{% endfor %}
-		</tbody>
-	</table>
+	<form action="{{ controller.link({view: 'delete_entries', form: form.id}) }}" method="post">
+		{{ html_nonce('delete_entries', form) }}
+		<table class="full-width-table">
+			<thead>
+				<tr>
+					<th><input type="checkbox" onchange="Array.from(this.form.querySelectorAll('input[type=checkbox]')).forEach(cb => cb.checked = this.checked)"></th>
+					<th>ID</th>
+					<th>Member</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for entry in form.entries %}
+					{% if user_can_read entry %}
+						<tr>
+							<td><input type="checkbox" name="entries[]" value="{{ entry.id }}"></td>
+							{% if user_can_update entry %}
+								<td><a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id}) }}">{{ entry.id }}</a></td>
+							{% else %}
+								<td>{{ entry.id }}</td>
+							{% endif %}
+							<td>{{ entry.member|full_name }}</td>
+							<td>{{ entry.signed_up_on|date('d-m-Y H:i') }}</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="controls">
+			<button type="submit" class="button">Delete selected entries</button>
+		</div>
+	</form>
 </div>
 {% endblock %}
