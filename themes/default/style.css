@@ -3396,3 +3396,10 @@ ul.call-to-action li a::before {
 .field-type-choice::before {
 	content: "\f05d";
 }
+
+.messageBox .signup-form {
+	padding: 15px;
+	border: 1px solid #ccc;
+	background: #eee;
+	border-radius: 4px;
+}
