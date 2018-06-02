@@ -21,7 +21,7 @@
 
 		<div>
 			{{ html_label(__('Type'), 'type', errors=errors, required=true) }}
-			{{ html_select_field('type', view.available_committee_types, iter) }}
+			{{ html_select_field('type', view.available_committee_types, iter, required=true) }}
 		</div>
 
 		<div>

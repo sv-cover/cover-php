@@ -18,17 +18,17 @@
 		</div>
 		<div class="inline-block">
 			{{ html_label(__('Type'), 'type', errors=errors) }}
-			{{ html_select_field('type', view.type_options, iter, errors=errors) }}
+			{{ html_select_field('type', view.type_options, iter, errors=errors, required=true) }}
 			<small>{{ __('Op basis waarvan wordt de lijst gevuld?') }}</small>
 		</div>
 		<div class="inline-block">
 			{{ html_label(__('Toegang'), 'toegang', errors=errors) }}
-			{{ html_select_field('toegang', view.toegang_options, iter, errors=errors) }}
+			{{ html_select_field('toegang', view.toegang_options, iter, errors=errors, required=true) }}
 			<small>{{ __('Wie mag e-mails sturen naar deze lijst?') }}</small>
 		</div>
 		<div class="inline-block">
 			{{ html_label(__('Commissie'), 'commissie', errors=errors) }}
-			{{ html_select_field('commissie', view.committee_options, iter, errors=errors)  }}
+			{{ html_select_field('commissie', view.committee_options, iter, errors=errors, required=true)  }}
 			<small>{{ __('Welke commissie mag bepalen wie er op de lijst staat?') }}</small>
 		</div>
 		<div>

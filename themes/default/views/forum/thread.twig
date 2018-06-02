@@ -26,7 +26,7 @@
 			<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
 				{{ html_nonce('move_thread', thread) }}
 				{{ html_label(__('Verplaats bericht naar'), 'forum_id') }}
-				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}) }}
+				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
 				<input type="image" src="{{ link_static('images/next.png') }}">
 			</form>
 		</div>
@@ -124,7 +124,7 @@
 			<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
 				{{ html_nonce('move_thread', thread) }}
 				{{ html_label(__('Verplaats bericht naar'), 'forum_id') }}
-				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}) }}
+				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
 				<input type="image" src="{{ link_static('images/next.png') }}">
 			</form>
 		</div>

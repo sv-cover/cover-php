@@ -22,11 +22,11 @@
 
 		<div>
 			{{ html_label(__('Commissie'), 'committee_id', errors=errors, required=true) }}
-			{{ html_select_field('committee_id', view.available_committees, form) }}
+			{{ html_select_field('committee_id', view.available_committees, form, required=true) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Activiteit'), 'agenda_id', errors=errors, required=false) }}
+			{{ html_label(__('Activiteit'), 'agenda_id', errors=errors) }}
 			{{ html_select_field('agenda_id', view.available_activitees, form) }}
 		</div>
 
@@ -45,7 +45,7 @@
 <div class="messageBox">
 	<form action="{{ controller.link({view: 'create_form_field', form: form.id}) }}" class="inline-form" method="post">
 		{{ html_nonce('create_form_field', form) }}
-		<p>Add a new {{ html_select_field('field_type', view.available_field_types, null) }} to this form <button type="submit" class="button">Add field</button></p>
+		<p>Add a new {{ html_select_field('field_type', view.available_field_types, null, required=true) }} to this form <button type="submit" class="button">Add field</button></p>
 	</form>
 	
 	<div class="form-fields" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}">

@@ -40,7 +40,7 @@
 
 		<div>
 			{{ html_label(__('Zichtbaar voor'), 'visibility', errors=errors, required=true) }}
-			{{ html_select_field('visibility', view.visibility_options, book) }}
+			{{ html_select_field('visibility', view.visibility_options, book, required=true) }}
 		</div>		
 
 		<div>
