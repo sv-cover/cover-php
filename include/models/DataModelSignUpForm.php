@@ -104,6 +104,14 @@ class DataIterSignUpForm extends DataIter
 		]);
 	}
 
+	public function get_entries_for_member(DataIterMember $member)
+	{
+		return get_model('DataModelSignUpEntry')->find([
+			'form_id' => $this['id'],
+			'member_id' => $member['id']
+		]);
+	}
+
 	public function new_field($type)
 	{
 		$model = get_model('DataModelSignUpField');

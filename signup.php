@@ -90,6 +90,9 @@ class ControllerSignUpForms extends Controller
 				$this->entry_model->insert($entry);
 				$success = true;
 			}
+
+			if ($success && !empty($_POST['return-path']))
+				return $this->view->redirect($_POST['return-path']);
 		}
 
 		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success'));
