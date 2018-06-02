@@ -31,6 +31,23 @@ class SignUpView extends View
 		return $committees;
 	}
 
+	public function available_activitees()
+	{
+		$committees = $this->available_committees();
+
+		$activities = get_model('DataModelAgenda')->find([
+			'committee_id__in' => array_keys($committees),
+			'van__gt' => new DateTime()
+		]);
+
+		$options = [];
+
+		foreach ($activities as $activity)
+			$options[$activity['id']] = sprintf('(%s) %s', $activity['committee__naam'], $activity['kop']);
+
+		return $options;
+	}
+
 	public function available_field_types()
 	{
 		return get_model('DataModelSignUpField')->field_types;

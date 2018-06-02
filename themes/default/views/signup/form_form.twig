@@ -26,6 +26,11 @@
 		</div>
 
 		<div>
+			{{ html_label(__('Activiteit'), 'agenda_id', errors=errors, required=false) }}
+			{{ html_select_field('agenda_id', view.available_activitees, form) }}
+		</div>
+
+		<div>
 			{{ html_label(__('Sluitdatum'), 'closed_on', errors=errors)  }}
 			{{ html_input_datetime('closed_on', form, errors=errors) }}
 		</div>

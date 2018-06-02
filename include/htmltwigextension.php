@@ -266,6 +266,10 @@ class HTMLTwigExtension extends Twig_Extension
 			$params['id'] = 'field-' . $name;
 
 		$options = '';
+
+		if (!isset($params['required']) || !$params['required'])
+			$options .= '<option value=""></option>';
+
 		foreach ($values as $val => $title)
 			$options .= '<option value="' . markup_format_attribute($val) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . markup_format_text($title) . "</option>\n";
 		

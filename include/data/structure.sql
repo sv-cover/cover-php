@@ -628,6 +628,7 @@ CREATE TABLE email_confirmation_tokens (
 CREATE TABLE sign_up_forms (
     id SERIAL PRIMARY KEY,
     committee_id INTEGER REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE SET NULL,
+    agenda_id INTEGER DEFAULT NULL REFERENCES agenda (id) ON UPDATE CASCADE ON DELETE SET NULL,
     created_on timestamp without time zone NOT NULL,
     closed_on timestamp without time zone DEFAULT NULL
 );

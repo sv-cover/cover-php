@@ -47,17 +47,17 @@ function trim_string($value)
 	return is_string($value) ? trim($value) : $value;
 }
 
-function validate_dataiter(DataIter $iter, array $data, array &$errors)
+function validate_dataiter(DataIter $iter, array $data, &$errors)
 {
 	$rules = $iter->rules();
 
 	$out = [];
 
+	// First fill $out, then validate it, so that the validation functions
+	// have access to all submitted (and maybe invalid) data.
 	foreach ($rules as $field => $options)
 	{
 		$cleaner = isset($options['clean']) ? $options['clean'] : 'trim_string';
-
-		$validators = isset($options['validate']) ? $options['validate'] : [];
 
 		$required = isset($options['required']) ? $options['required'] : false;
 
@@ -75,13 +75,22 @@ function validate_dataiter(DataIter $iter, array $data, array &$errors)
 		}
 
 		$out[$field] = call_user_func($cleaner, $data[$field]);
+	}
+
+	foreach ($rules as $field => $options)
+	{
+		// Only check fields that are submitted. Requirement checks have been done in the previous loop.
+		if (!isset($out[$field]))
+			continue;
+
+		$validators = isset($options['validate']) ? $options['validate'] : [];
 
 		foreach ($validators as $validator)
 		{
 			if (is_string($validator))
 				$validator = 'validate_' . $validator;
 
-			if (!call_user_func($validator, $out[$field], $field, $iter)) {
+			if (!call_user_func($validator, $out[$field], $field, $iter, $out)) {
 				$errors[] = $field;
 				break;
 			}

@@ -10,7 +10,8 @@ class DataIterSignUpForm extends DataIter
 			'id',
 			'committee_id',
 			'created_on',
-			'closed_on'
+			'closed_on',
+			'agenda_id'
 		];
 	}
 
@@ -31,6 +32,29 @@ class DataIterSignUpForm extends DataIter
 					return $value ? $value : null;
 				},
 				'validate' => ['datetime']
+			],
+			'agenda_id' => [
+				'clean' => function($value) {
+					return $value ? intval($value) : null;
+				},
+				'validate' => [
+					function($agenda_id, $field, $iter, $data) {
+						// Null is fine
+						if ($agenda_id === null)
+							return true;
+
+						// But if it is filled in, it has to be an activity organized by the
+						// committee that owns this form.
+						$committee_id = $data['committee_id'] ?? $iter['committee_id'];
+
+						if ($committee_id === null)
+							return false;
+
+						$agenda_item = get_model('DataModelAgenda')->get_iter($agenda_id);
+
+						return $agenda_item['committee_id'] == $committee_id;
+					}
+				]
 			]
 		];
 	}
@@ -43,6 +67,11 @@ class DataIterSignUpForm extends DataIter
 	public function get_entries()
 	{
 		return get_model('DataModelSignUpEntry')->find(['form_id' => $this['id']]);
+	}
+
+	public function get_agenda_item()
+	{
+		return $this['agenda_id'] ? get_model('DataModelAgenda')->get_iter($this['agenda_id']) : null;
 	}
 
 	public function get_description()
@@ -119,6 +148,7 @@ class DataModelSignUpForm extends DataModel
 			GROUP BY
 				{$this->table}.id,
 				{$this->table}.committee_id,
+				{$this->table}.agenda_id,
 				{$this->table}.created_on,
 				{$this->table}.closed_on";
 	}

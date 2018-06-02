@@ -243,12 +243,26 @@ class ControllerSignUpForms extends Controller
 
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?
 		// Well, yes, but sometimes a policy is picky about how you fill in the data!
-		if (!get_policy($iter)->user_can_create($iter))
+		if (!get_policy($model)->user_can_create($iter))
 			throw new UnauthorizedException('You cannot create new forms.');
 
 		$id = $model->insert($iter);
 
 		$iter->set_id($id);
+
+		return true;
+	}
+
+	private function _update(DataModel $model, DataIter $iter, array $input, ErrorSet $errors)
+	{
+		$data = validate_dataiter($iter, $input, $errors);
+
+		$iter->set_all($data);
+
+		if (!get_policy($model)->user_can_update($iter))
+			throw new UnauthorizedException('You cannot update this form');
+
+		$model->update($iter);
 
 		return true;
 	}
