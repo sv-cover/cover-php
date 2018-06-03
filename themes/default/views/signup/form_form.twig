@@ -35,6 +35,13 @@
 			{{ html_input_datetime('closed_on', form, errors=errors) }}
 		</div>
 
+		{% if not form.has_id %}
+			<div>
+				{{ html_label(__('Sjabloon'), 'template', errors=errors)  }}
+				{{ html_select_field('template', controller.available_templates, null, errors=errors) }}
+			</div>			
+		{% endif %}
+
 		<div class="controls">
 			<button class="button" type="submit">{{ form.has_id() ? __('Wijzig formulier') : __('Maak formulier') }}</button>
 		</div>

@@ -4,9 +4,9 @@ namespace fields;
 
 class Checkbox implements \SignUpFieldType
 {
-	protected $description;
+	public $description;
 
-	protected $required;
+	public $required;
 
 	public function __construct($name, array $configuration)
 	{

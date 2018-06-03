@@ -112,19 +112,24 @@ class DataIterSignUpForm extends DataIter
 		]);
 	}
 
-	public function new_field($type)
+	public function new_field($type, callable $configure_callback = null)
 	{
 		$model = get_model('DataModelSignUpField');
 
 		if (!isset($model->field_types[$type]))
 			throw new InvalidArgumentException('Unknown form field type');
 
-		return $model->new_iter([
+		$iter = $model->new_iter([
 			'form_id' => $this['id'],
 			'name' => uniqid(), // for now
 			'type' => $type,
 			'properties' => '{}'
 		]);
+
+		if ($configure_callback)
+			$iter->configure($configure_callback);
+
+		return $iter;
 	}
 }
 

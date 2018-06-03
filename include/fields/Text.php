@@ -4,13 +4,13 @@ namespace fields;
 
 class Text implements \SignUpFieldType
 {
-	protected $name;
+	public $name;
 	
-	protected $label;
+	public $label;
 
-	protected $required;
+	public $required;
 
-	protected $multiline;
+	public $multiline;
 
 	public function __construct($name, array $configuration)
 	{

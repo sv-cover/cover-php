@@ -4,9 +4,9 @@ namespace fields;
 
 class BankAccount implements \SignUpFieldType
 {
-	protected $name;
+	public $name;
 	
-	protected $required;
+	public $required;
 
 	public function __construct($name, array $configuration)
 	{

@@ -63,6 +63,13 @@ class DataIterSignUpField extends DataIter
 		return $this->widget()->render_configuration($renderer, $errors);
 	}
 
+	public function configure($callback)
+	{
+		$widget = $this->widget();
+		$callback($widget);
+		$this['properties'] = $widget->configuration();
+	}
+
 	public function export(DataIterSignUpEntry $entry)
 	{
 		return $this->widget()->export($entry->value_for_field($this));

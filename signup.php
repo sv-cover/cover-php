@@ -149,9 +149,13 @@ class ControllerSignUpForms extends Controller
 
 		$errors = new ErrorSet();
 
-		if ($this->_form_is_submitted('create_form'))
+		if ($this->_form_is_submitted('create_form')) {
 			if ($this->_create($this->form_model, $form, $_POST, $errors))
 				$success = true;
+
+			if ($success && !empty($_POST['template']))
+				$this->_init_form_with_template($form, $_POST['template']);
+		}
 
 		if ($success)
 			return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
@@ -274,6 +278,36 @@ class ControllerSignUpForms extends Controller
 		$model->update($iter);
 
 		return true;
+	}
+
+	public function available_templates()
+	{
+		return [
+			'paid_activity' => 'Paid activity'
+		];
+	}
+
+	private function _init_form_with_template(DataIter $form, $template)
+	{
+		if ($template == 'paid_activity')
+		{
+			$this->field_model->db->beginTransaction();
+
+			$this->field_model->insert($form->new_field('address', function($widget) {
+				$widget->required = true;
+			}));
+
+			$this->field_model->insert($form->new_field('bankaccount', function($widget) {
+				$widget->required = true;
+			}));
+
+			$this->field_model->insert($form->new_field('checkbox', function($widget) {
+				$widget->required = true;
+				$widget->description = 'I allow Cover to deduct €x,xx from my bank account.';
+			}));
+
+			$this->field_model->db->commit();
+		}
 	}
 
 	public function new_form()

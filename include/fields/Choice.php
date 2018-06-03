@@ -4,13 +4,13 @@ namespace fields;
 
 class Choice implements \SignUpFieldType
 {
-	protected $description;
+	public $description;
 
-	protected $options;
+	public $options;
 
-	protected $required;
+	public $required;
 
-	protected $allow_multiple;
+	public $allow_multiple;
 
 	public function __construct($name, array $configuration)
 	{

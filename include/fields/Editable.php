@@ -4,9 +4,9 @@ namespace fields;
 
 class Editable implements \SignUpFieldType
 {
-	protected $name;
+	public $name;
 
-	protected $content;
+	public $content;
 
 	public function __construct($name, array $configuration)
 	{
