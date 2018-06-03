@@ -83,10 +83,6 @@ class DataModelSignUpField extends DataModel
 			'class' => \fields\Text::class,
 			'label' => 'Text field'
 		],
-		'address' => [
-			'class' => \fields\Address::class,
-			'label' => 'Address field'
-		],
 		'checkbox' => [
 			'class' => \fields\Checkbox::class,
 			'label' => 'Checkbox'
@@ -94,6 +90,14 @@ class DataModelSignUpField extends DataModel
 		'choice' => [
 			'class' => \fields\Choice::class,
 			'label' => 'Multiple choice'
+		],
+		'address' => [
+			'class' => \fields\Address::class,
+			'label' => 'Address field'
+		],
+		'bankaccount' => [
+			'class' => \fields\BankAccount::class,
+			'label' => 'Bank account field'
 		],
 		'editable' => [
 			'class' => \fields\Editable::class,
