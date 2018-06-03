@@ -172,6 +172,9 @@ class HTMLTwigExtension extends Twig_Extension
 			'id' => null
 		]);
 
+		if (substr($field, -2, 2) == '[]')
+			$hidden_field = '';
+
 		$checkbox_field = self::input_field($name, null, $params);
 
 		return $hidden_field . $checkbox_field;
