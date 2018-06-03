@@ -1,386 +1,7 @@
 <?php
 
-require_once 'include/form.php';
 require_once 'include/data/DataModel.php';
-
-interface SignUpFieldType
-{
-	// Pick the value from the post_data associative array and, if valid, return
-	// the content as how it has to be saved in the database. If it didn't
-	// validate, return an error.
-	public function process(array $post_data, &$error);
-
-	// Render the form field
-	public function render($renderer, $value, $error);
-
-	public function process_configuration(array $post_data, ErrorSet $errors);
-
-	public function render_configuration($renderer, ErrorSet $errors);
-
-	// Store the current configuration as an associative array
-	public function configuration();
-
-	// Export it to a CSV (as an array with column => text value)
-	public function export($value);
-}
-
-class SignUpValidationError
-{
-	public function __construct($message)
-	{
-		$this->message = $message;
-	}
-}
-
-class TextField implements SignUpFieldType
-{
-	protected $name;
-	
-	protected $label;
-
-	protected $required;
-
-	protected $multiline;
-
-	public function __construct($name, array $configuration)
-	{
-		$this->name = $name;
-
-		$this->label = $configuration['label'] ?? $name;
-
-		$this->required = $configuration['required'] ?? false;
-
-		$this->multiline = $configuration['multiline'] ?? false;
-	}
-
-	public function configuration()
-	{
-		return [
-			'label' => $this->label,
-			'required' => (bool) $this->required,
-			'multiline' => (bool) $this->multiline
-		];
-	}
-
-	public function process(array $post_data, &$error)
-	{
-		$value = trim($post_data[$this->name] ?? '');
-
-		if ($this->required && $value == '')
-			$error = __('Value required');
-
-		return $value;
-	}
-
-	public function render($renderer, $value, $error)
-	{
-		return $renderer->render('@form_fields/textfield.twig', [
-			'name' => $this->name,
-			'data' => [$this->name => $value],
-			'configuration' => $this->configuration(),
-			'errors' => $error ? [$this->name => $error] : []
-		]);
-	}
-
-	public function process_configuration(array $post_data, ErrorSet $errors)
-	{
-		$this->label = strval($post_data['label']);
-		$this->required = !empty($post_data['required']);
-		$this->multiline = !empty($post_data['multiline']);
-		return true;
-	}
-
-	public function render_configuration($renderer, ErrorSet $errors)
-	{
-		return $renderer->render('@form_configuration/textfield.twig', [
-			'data' => $this->configuration(),
-			'errors' => $errors
-		]);
-	}
-
-	public function export($value)
-	{
-		return [$this->name => $value];
-	}
-}
-
-class Checkbox implements SignUpFieldType
-{
-	protected $description;
-
-	protected $required;
-
-	public function __construct($name, array $configuration)
-	{
-		$this->name = $name;
-
-		$this->required = $configuration['required'] ?? false;
-
-		$this->description = $configuration['description'] ?? '';
-	}
-
-	public function configuration()
-	{
-		return [
-			'required' => $this->required,
-			'description' => $this->description
-		];
-	}
-
-	public function process(array $post_data, &$error)
-	{
-		$checked = isset($post_data[$this->name]) && $post_data[$this->name] == 'yes';
-
-		if ($this->required && !$checked)
-			$error = 'Required';
-
-		return $checked ? '1' : '0';
-	}
-
-	public function render($renderer, $value, $error)
-	{
-		return $renderer->render('@form_fields/checkbox.twig', [
-			'name' => $this->name,
-			'data' => [$this->name => (bool) $value],
-			'configuration' => $this->configuration(),
-			'errors' => $error ? [$this->name => $error] : []
-		]);
-	}
-
-	public function process_configuration(array $post_data, ErrorSet $errors)
-	{
-		$this->description = strval($post_data['description']);
-		$this->required = !empty($post_data['required']);
-		return true;
-	}
-
-	public function render_configuration($renderer, ErrorSet $errors)
-	{
-		return $renderer->render('@form_configuration/checkbox.twig', [
-			'data' => $this->configuration(),
-			'errors' => $errors
-		]);
-	}
-
-	public function export($value)
-	{
-		return [$this->name => $value ? 0 : 1];
-	}
-}
-
-class Choice implements SignUpFieldType
-{
-	protected $description;
-
-	protected $options;
-
-	protected $required;
-
-	protected $allow_multiple;
-
-	public function __construct($name, array $configuration)
-	{
-		$this->name = $name;
-
-		$this->required = $configuration['required'] ?? false;
-
-		$this->allow_multiple = $configuration['allow_multiple'] ?? false;
-
-		$this->description = $configuration['description'] ?? '';
-
-		$this->options = $configuration['options'] ?? [];
-	}
-
-	public function configuration()
-	{
-		return [
-			'required' => $this->required,
-			'allow_multiple' => $this->allow_multiple,
-			'description' => $this->description,
-			'options' => array_values($this->options)
-		];
-	}
-
-	public function process(array $post_data, &$error)
-	{
-		$options = $post_data[$this->name] ?? [];
-
-		if (!is_array($options))
-			$options = [$options];
-
-		if (array_diff($options, $this->options) != []) {
-			$error = 'Unknown option';
-			return false;
-		}
-
-		if ($this->required && count($options) === 0) {
-			$error = 'Required';
-			return false;
-		}
-
-		if (!$this->allow_multiple && count($options) > 1) {
-			$error = 'You can only pick a single option';
-			return false;
-		}
-
-		return json_encode($options);
-	}
-
-	public function render($renderer, $value, $error)
-	{
-		return $renderer->render('@form_fields/choice.twig', [
-			'name' => $this->name,
-			'data' => [$this->name => (array) json_decode($value, true)],
-			'configuration' => $this->configuration(),
-			'errors' => $error ? [$this->name => $error] : []
-		]);
-	}
-
-	public function process_configuration(array $post_data, ErrorSet $errors)
-	{
-		$this->description = strval($post_data['description']);
-		$this->required = !empty($post_data['required']);
-		$this->options = array_filter((array) $post_data['options']);
-		$this->allow_multiple = !empty($post_data['allow_multiple']);
-		return true;
-	}
-
-	public function render_configuration($renderer, ErrorSet $errors)
-	{
-		return $renderer->render('@form_configuration/choice.twig', [
-			'data' => $this->configuration(),
-			'errors' => $errors
-		]);
-	}
-
-	public function export($value)
-	{
-		return [];
-	}
-}
-
-class Address implements SignUpFieldType
-{
-	protected $name;
-	
-	protected $required;
-
-	public function __construct($name, array $configuration)
-	{
-		$this->name = $name;
-
-		$this->required = $configuration['required'] ?? false;
-	}
-
-	public function configuration()
-	{
-		return [
-			'required' => (bool) $this->required
-		];
-	}
-
-	public function process(array $post_data, &$error)
-	{
-		$address = trim($post_data[$this->name . '-address'] ?? '');
-
-		$city = trim($post_data[$this->name . '-city'] ?? '');
-
-		if ($this->required && ($address == '' || $city == ''))
-			$error = __('Value required');
-
-		return json_encode(compact('address', 'city'));
-	}
-
-	public function render($renderer, $value, $error)
-	{
-		$data = json_decode($value, true);
-
-		return $renderer->render('@form_fields/address.twig', [
-			'name' => $this->name,
-			'configuration' => $this->configuration(),
-			'data' => [
-				$this->name . '-address' => $data['address'] ?? '',
-				$this->name . '-city' => $data['city'] ?? ''
-			],
-			'errors' => $error ? [
-				$this->name . '-address' => $error,
-				$this->name . '-city' => $error
-			] : []
-		]);
-	}
-
-	public function process_configuration(array $post_data, ErrorSet $errors)
-	{
-		$this->required = !empty($post_data['required']);
-		return true;
-	}
-
-	public function render_configuration($renderer, ErrorSet $errors)
-	{
-		return $renderer->render('@form_configuration/address.twig', [
-			'data' => $this->configuration(),
-			'errors' => $errors
-		]);
-	}
-
-	public function export($value)
-	{
-		return json_decode($value, true);
-	}
-}
-
-class Editable implements SignUpFieldType
-{
-	protected $name;
-
-	protected $content;
-
-	public function __construct($name, array $configuration)
-	{
-		$this->name = $name;
-
-		$this->content = $configuration['content'] ?? '';
-	}
-
-	public function configuration()
-	{
-		return [
-			'content' => $this->content
-		];
-	}
-
-	public function process(array $post_data, &$error)
-	{
-		return null;
-	}
-
-	public function render($renderer, $value, $error)
-	{
-		return $renderer->render('@form_fields/editable.twig', [
-			'name' => $this->name,
-			'configuration' => $this->configuration()
-		]);
-	}
-
-	public function process_configuration(array $post_data, ErrorSet $errors)
-	{
-		$this->content = strval($post_data['content']);
-		return true;
-	}
-
-	public function render_configuration($renderer, ErrorSet $errors)
-	{
-		return $renderer->render('@form_configuration/editable.twig', [
-			'name' => $this->name,
-			'data' => $this->configuration()
-		]);
-	}
-
-	public function export($value)
-	{
-		return [];
-	}
-}
+require_once 'include/fields.php';
 
 class DataIterSignUpField extends DataIter
 {
@@ -458,11 +79,26 @@ class DataModelSignUpField extends DataModel
 	public $dataiter = 'DataIterSignUpField';
 
 	public $field_types = [
-		'checkbox' => Checkbox::class,
-		'text' => TextField::class,
-		'choice' => Choice::class,
-		'address' => Address::class,
-		'editable' => Editable::class
+		'text' => [
+			'class' => \fields\Text::class,
+			'label' => 'Text field'
+		],
+		'address' => [
+			'class' => \fields\Address::class,
+			'label' => 'Address field'
+		],
+		'checkbox' => [
+			'class' => \fields\Checkbox::class,
+			'label' => 'Checkbox'
+		],
+		'choice' => [
+			'class' => \fields\Choice::class,
+			'label' => 'Multiple choice'
+		],
+		'editable' => [
+			'class' => \fields\Editable::class,
+			'label' => 'Heading or text (layout)'
+		]
 	];
 
 	public function __construct($db)
@@ -488,7 +124,7 @@ class DataModelSignUpField extends DataModel
 
 	public function instantiate($type, string $name, array $properties)
 	{
-		$class = new ReflectionClass($this->field_types[$type]);
+		$class = new ReflectionClass($this->field_types[$type]['class']);
 		return $class->newInstance($name, $properties);
 	}
 

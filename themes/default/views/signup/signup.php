@@ -41,7 +41,7 @@ class SignUpView extends View
 
 	public function available_field_types()
 	{
-		return get_model('DataModelSignUpField')->field_types;
+		return array_map(function($type) { return $type['label']; }, get_model('DataModelSignUpField')->field_types);
 	}
 
 	public function render_csv(array $entries)
