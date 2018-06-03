@@ -3365,7 +3365,8 @@ ul.call-to-action li a::before {
 .field-type-textfield::before,
 .field-type-checkbox::before,
 .field-type-choice::before,
-.field-type-editable::before {
+.field-type-editable::before,
+.field-type-address::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit;
 	text-rendering: auto;
@@ -3379,6 +3380,10 @@ ul.call-to-action li a::before {
 	font-size: 24px;
 	opacity: 0.3;
 	pointer-events: none;
+}
+
+.field-type-address::before {
+	content: "\f015";
 }
 
 .field-type-editable::before {

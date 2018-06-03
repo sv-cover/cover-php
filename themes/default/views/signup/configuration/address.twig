@@ -1,0 +1,9 @@
+<div class="field-type-address vertical-form">
+	<fieldset>
+		<legend>Required</legend>
+		<div>
+			{{ html_input_checkbox('required', data, errors=errors) }}
+			{{ html_label('Filling in the address is mandatory', 'required', errors=errors) }}
+		</div>
+	</fieldset>
+</div>
