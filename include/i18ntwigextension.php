@@ -49,6 +49,31 @@ class I18NTwigExtension extends Twig_Extension
 						$groups[$iter[$property]][] = $iter;
 
 				return $groups;
+			}),
+			new Twig_SimpleFilter('sort_by', function($iters, ...$args) {
+				$sort_args = [];
+
+				foreach ($args as $sort_arg) {
+					if (!preg_match('/^(?P<index>[^\s]+)(?:\s+(?P<order>asc|desc))$/i', $sort_arg, $match))
+						throw new InvalidArgumentException('Cannot parse sort arg: '. $sort_arg);
+
+					$sort_args[] = array_select($iters, $match['index']);
+					switch ($match['order']) {
+						case 'desc':
+							$sort_args[] = SORT_DESC;
+							break;
+						case 'asc':
+						default:
+							$sort_args[] = SORT_ASC;
+							break;
+					}
+				}
+
+				$sort_args[] =& $iters;
+
+				array_multisort(...$sort_args);
+
+				return $iters;
 			})
 		];
 	}

@@ -17,13 +17,15 @@
 		<thead>
 			<tr>
 				<th>Form</th>
+				<th>Activity</th>
 				<th>Sign-ups</th>
 			</tr>
 		</thead>
 		<tbody>
-			{% for form in forms %}
+			{% for form in forms|sort_by('created_on desc') %}
 				<tr>
 					<td><a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></td>
+					<td>{% if form.agenda_id %}<a href="agenda.php?agenda_id={{form.agenda_id}}">{{ form.agenda_item.kop }} ({{ form.agenda_item|period }})</a>{% endif %}</td>
 					<td>{{ form.signup_count }}</td>
 				</tr>
 			{% endfor %}
