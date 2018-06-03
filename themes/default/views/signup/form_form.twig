@@ -44,6 +44,9 @@
 
 		<div class="controls">
 			<button class="button" type="submit">{{ form.has_id() ? __('Wijzig formulier') : __('Maak formulier') }}</button>
+			{% if form.has_id and user_can_delete form %}
+				<a href="{{ controller.link({view: 'delete_form', form: form.id}) }}">{{ __('Verwijder formulier…') }}</a>
+			{% endif %}
 		</div>
 	</form>
 </div>

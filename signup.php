@@ -181,6 +181,20 @@ class ControllerSignUpForms extends Controller
 		return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
 	}
 
+	public function run_delete_form()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_delete($form))
+			throw new UnauthorizedException('You cannot delete this form.');
+
+		if ($this->_form_is_submitted('delete_form', $form))
+			if ($this->form_model->delete($form))
+				return $this->view->redirect($this->link(['view' => 'list_forms']));
+
+		return $this->view->render('delete_form.twig', compact('form'));
+	}
+
 	public function run_create_form_field()
 	{
 		$form = $this->form_model->get_iter($_GET['form']);
