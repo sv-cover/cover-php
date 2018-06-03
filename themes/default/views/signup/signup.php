@@ -44,11 +44,13 @@ class SignUpView extends View
 		return array_map(function($type) { return $type['label']; }, get_model('DataModelSignUpField')->field_types);
 	}
 
-	public function render_csv(array $entries)
+	public function render_csv(array $entries, $filename = null)
 	{
-		header('Content-Description: File Transfer');
-		header('Content-Type: application/force-download');
-		header('Content-Disposition: attachment; filename="almanak.csv"');
+		if ($filename) {
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/force-download');
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+		}
 
 		if (count($entries) === 0)
 			return;

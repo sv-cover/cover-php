@@ -42,7 +42,7 @@ class ControllerSignUpForms extends Controller
 			return $entry->export();
 		}, $entries);
 
-		$this->view->render_csv($rows);
+		$this->view->render_csv($rows, sprintf('signup-form-%d-%s.csv', $form['id'], date('ymd-his')));
 	}
 
 	public function run_list_entries()

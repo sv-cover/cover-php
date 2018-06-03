@@ -70,6 +70,6 @@ class Text implements \SignUpFieldType
 
 	public function export($value)
 	{
-		return [$this->name => $value];
+		return [$this->label => $value];
 	}
 }

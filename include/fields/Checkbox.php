@@ -62,6 +62,6 @@ class Checkbox implements \SignUpFieldType
 
 	public function export($value)
 	{
-		return [$this->name => $value ? 0 : 1];
+		return [$this->description => $value ? 0 : 1];
 	}
 }
