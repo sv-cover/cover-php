@@ -136,8 +136,11 @@ class ControllerSignUpForms extends Controller
 	{
 		$form = $this->new_form();
 
-		if (!get_identity()->get('committees'))
-			throw new UnauthorizedException('Only committee members may create and manage forms.');
+		if (isset($_GET['agenda'])) {
+			$activity = get_model('DataModelAgenda')->get_iter($_GET['agenda']);
+			$form['committee_id'] = $activity['committee_id'];
+			$form['agenda_id'] = $activity['id'];
+		}
 
 		if (!get_policy($this->form_model)->user_can_create($form))
 			throw new UnauthorizedException('You cannot create new forms.');
@@ -150,7 +153,10 @@ class ControllerSignUpForms extends Controller
 			if ($this->_create($this->form_model, $form, $_POST, $errors))
 				$success = true;
 
-		return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+		if ($success)
+			return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+		else
+			return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
 	}
 
 	public function run_update_form()

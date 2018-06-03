@@ -76,6 +76,14 @@
 		{
 			return get_model('DataModelSignUpForm')->find(['agenda_id' => $this['id']]);
 		}
+
+		public function new_signup_form()
+		{
+			return get_model('DataModelSignUpForm')->new_iter([
+				'committee_id' => $this['committee_id'],
+				'agenda_id' => $this['id']
+			]);
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider

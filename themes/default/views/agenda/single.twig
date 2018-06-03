@@ -116,6 +116,9 @@
 	{% if user_can_update iter %}
 	<li><a href="{{ controller.link_to_update(iter) }}">{{  __('Wijzig') }}</a></li>
 	{% endif %}
+	{% if user_can_create iter.new_signup_form %}
+	<li><a href="signup.php?view=create_form&amp;agenda={{iter.id}}">Add a form</a></li>
+	{% endif %}
 </ul>
 </div>
 {% endblock %}

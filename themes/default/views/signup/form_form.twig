@@ -17,7 +17,7 @@
 		{% if form.has_id %}
 			{{ html_nonce('update_form', form) }}
 		{% else %}
-			{{ html_nonce('create_form', form) }}
+			{{ html_nonce('create_form') }}
 		{% endif %}
 
 		<div>

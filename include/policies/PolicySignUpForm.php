@@ -6,7 +6,10 @@ class PolicySignUpForm implements Policy
 {
 	public function user_can_create(DataIter $form)
 	{
-		return get_identity()->member_in_committee();
+		if ($form['committee_id'] !== null)
+			return get_identity()->member_in_committee($form['committee_id']);
+		else
+			return get_identity()->member_in_committee();
 	}
 
 	public function user_can_read(DataIter $form)
