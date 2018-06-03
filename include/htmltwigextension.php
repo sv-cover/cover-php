@@ -77,7 +77,7 @@ class HTMLTwigExtension extends Twig_Extension
 			if (is_int($attribute))
 				trigger_error('input_field tries to make an attribute without an attribute name', E_USER_WARNING);
 
-			if ($value !== null)
+			if ($value !== null && $value !== false)
 				$result .= sprintf(' %s="%s"', str_replace('_', '-', $attribute), markup_format_attribute($value));
 		}
 		
@@ -319,7 +319,8 @@ class HTMLTwigExtension extends Twig_Extension
 		$result = '<textarea name="' . markup_format_attribute($name) . '"';
 		
 		foreach ($params as $attribute => $val)
-			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($val) . '"';
+			if ($val !== null && $val !== false)
+				$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($val) . '"';
 		
 		return $result . ">\n" . $value . "</textarea>";
 	}
