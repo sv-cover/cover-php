@@ -202,7 +202,7 @@ class HTMLTwigExtension extends Twig_Extension
 				if ((bool) $data[$field])
 					$params['checked'] = 'checked';
 			} else {
-				if ($data[$field] === $value)
+				if ($data[$field] == $value)
 					$params['checked'] = 'checked';
 			}
 		}
