@@ -39,7 +39,7 @@
 								<td>{{ entry.id }}</td>
 							{% endif %}
 							<td>{{ entry.member|full_name }}</td>
-							<td>{{ entry.signed_up_on|date('d-m-Y H:i') }}</td>
+							<td>{{ entry.created_on|date('d-m-Y H:i') }}</td>
 						</tr>
 					{% endif %}
 				{% endfor %}
