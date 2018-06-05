@@ -65,7 +65,7 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 	 */
 	public function get_id()
 	{
-		return sprintf('member_%s', implode('_', $this->get('member_ids')));
+		return sprintf('member_%s', implode('_', $this['member_ids']));
 	}
 
 	/**
@@ -102,8 +102,8 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 		
 		// Also grab the ids of all the photos which should actually be hidden (e.g. are not of the logged in member)
 		$excluded_ids = array_filter(array_map(function($iter) {
-			return get_identity()->get('id') != $iter->get('lid_id')
-				? $iter->get('foto_id')
+			return get_identity()->get('id') != $iter['lid_id']
+				? $iter['foto_id']
 				: false;
 			}, $hidden));
 
@@ -118,8 +118,31 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 
 	public function get_read_status()
 	{
-		// FIXME: Implement this and proper tracking of the last visit moment.
-		return DataModelPhotobook::READ_STATUS_READ;
+		if (!get_auth()->logged_in())
+			return DataModelPhotobook::READ_STATUS_READ;
+
+		$sql_member_ids = implode(',', array_map([$this->db, 'quote_value'], $this['member_ids']));
+
+		$count = $this->db->query_value("
+			SELECT
+				COUNT(*)
+			FROM
+				foto_faces ff
+			LEFT JOIN foto_boeken_custom_visit fbcv ON
+				fbcv.lid_id = :lid_id
+				AND fbcv.boek_id = :boek_id
+			WHERE
+				ff.lid_id IN ($sql_member_ids)
+				AND ff.deleted = FALSE
+				AND ff.tagged_on > fbcv.last_visit",
+			[
+				':lid_id' => get_identity()->get('id'),
+				':boek_id' => $this['id']
+			]);
+
+		return $count > 0
+			? DataModelPhotobook::READ_STATUS_UNREAD
+			: DataModelPhotobook::READ_STATUS_READ;
 	}
 
 	public function get_num_books()
