@@ -6,8 +6,15 @@ class PolicySignUpEntry implements Policy
 {
 	public function user_can_create(DataIter $entry)
 	{
-		// Active members can sign up
-		return get_identity()->member_is_active(); 
+		// Active members can sign up if it is open
+		if ($entry['form']->is_open())
+			return get_identity()->member_is_active(); 
+		
+		// The committee of the activity can always add people to the activity
+		if (get_identity()->member_in_committee($entry['form']['committee_id']))
+			return true;
+
+		return false;
 	}
 
 	public function user_can_read(DataIter $entry)
