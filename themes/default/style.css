@@ -892,7 +892,7 @@ ul.actions li {
 }
 
 .messageBox > .alt-section,
-.messageBox > ul.actions {
+.messageBox ul.actions {
 	background: #ddd;
 	margin: 15px -15px;
 	padding: 15px;
@@ -1468,6 +1468,7 @@ table.incassomatic thead::before
 
 .vertical-form label + input + p,
 .vertical-form label + textarea + p,
+.vertical-form label + select + p,
 .vertical-form input + label + p {
 	font-size: 0.85em;
 }

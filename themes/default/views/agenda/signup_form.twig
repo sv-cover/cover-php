@@ -22,4 +22,10 @@
 		</div>
 	</form>
 {% endfor %}
+{% if user_can_update form %}
+	<ul class="actions">
+		<li><a href="signup.php?view=update_form&amp;form={{ form.id }}">{{ __('Bewerk formulier') }}</a></li>
+		<li><a href="signup.php?view=list_entries&amp;form={{ form.id }}">{{ __('Bekijk inschrijvingen') }}</a></li>
+	</ul>
+{% endif %}
 </div>
