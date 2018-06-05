@@ -1034,9 +1034,14 @@
 			if (!get_config_value('enable_photos_read_status', true))
 				return;
 
-			if (!ctype_digit((string) $book->get_id()))
-				return;
+			if (ctype_digit((string) $book->get_id()))
+				$this->_mark_database_book_read($lid_id, $book);
+			else
+				$this->_mark_custom_book_read($lid_id, $book);
+		}
 
+		private function _mark_database_book_read($lid_id, DataIterPhotobook $book)
+		{
 			try {
 				$this->db->insert('foto_boeken_visit',
 					array(
@@ -1049,6 +1054,24 @@
 				$this->db->update('foto_boeken_visit',
 					array('last_visit' => 'NOW()'),
 					sprintf('lid_id = %d AND boek_id = %d', $lid_id, $book->get_id()),
+					array('last_visit'));
+			}
+		}
+
+		private function _mark_custom_book_read($lid_id, DataIterPhotobook $book)
+		{
+			try {
+				$this->db->insert('foto_boeken_custom_visit',
+					array(
+						'lid_id' => $lid_id,
+						'boek_id' => $book->get_id(),
+						'last_visit' => 'NOW()'
+					),
+					array('last_visit'));
+			} catch (Exception $e) {
+				$this->db->update('foto_boeken_custom_visit',
+					array('last_visit' => 'NOW()'),
+					sprintf('lid_id = %d AND boek_id = %s', $lid_id, $this->db->quote_value($book->get_id())),
 					array('last_visit'));
 			}
 		}
