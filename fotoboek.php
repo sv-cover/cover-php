@@ -129,6 +129,7 @@
 		{
 			$data['foto_id'] = $this->photo->get_id();
 			$data['tagged_by'] = get_identity()->get('id');
+			$data['tagged_on'] = new DateTime();
 
 			return parent::_create($iter, $data, $errors);
 		}
@@ -137,6 +138,7 @@
 		{
 			// Also update who changed it.
 			$data['tagged_by'] = get_identity()->get('id');
+			$data['tagged_on'] = new DateTime();
 
 			// Only a custom label XOR a lid_id can be assigned to a tag
 			if (isset($data['custom_label']))

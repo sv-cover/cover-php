@@ -1,0 +1,1 @@
+ALTER TABLE foto_faces ADD COLUMN tagged_on timestamp without time zone DEFAULT NULL;

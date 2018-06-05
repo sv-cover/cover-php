@@ -17,6 +17,7 @@ class DataIterPhotobookFace extends DataIter
 			'lid_id',
 			'deleted',
 			'tagged_by',
+			'tagged_on',
 			'custom_label',
 			'cluster_id',
 		];
