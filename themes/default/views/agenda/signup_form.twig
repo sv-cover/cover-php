@@ -3,24 +3,37 @@
 	<p>{{ __('Je hebt je aangemeld op %s.')|format(entry.created_on|date('d-m-Y H:i')) }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Bekijk je aanmelding') }}</a>.{% endif %}</p>
 {% else %}
 	{% set entry = form.new_entry(global.identity.member) %}
-	<form action="{{ 'signup.php?view=create_entry&form=' ~ form.id }}" method="post" class="vertical-form">
-		{{ html_input_hidden('return-path', controller.link_to_read(form.agenda_item)) }}
-		{% if entry.has_id %}
-			{{ html_nonce('update_entry', entry) }}
-		{% else %}
-			{{ html_nonce('create_entry', form) }}
-		{% endif %}
-		
-		{% for field in form.fields %}
-			<div>
-				{{ field.render(view, entry)|raw }}
-			</div>
-		{% endfor %}
 
-		<div class="controls">
-			<button class="button" type="submit">{{ entry.has_id ? __('Wijzig inschrijving') : __('Schrijf mij in') }}</button>
-		</div>
-	</form>
+	{% if not form.is_open %}
+		{% if user_can_create entry %}
+			<section class="warning-section">
+				<h3>{{ __('De inschrijvingen zijn gesloten.') }}</h3>
+				<p>{{ __('De inschrijvingen zijn gesloten. Jij kan dit formulier nog zien omdat je de rechten hebt om mensen in te schrijven na de deadline.') }}</p>
+			</section>
+		{% else %}
+			<p>{{ __('De inschrijvingen zijn gesloten.') }} {{ __('De deadline voor inschrijven was %s.')|format(form.closed_on|date('d-m-Y H:i')) }}</p>
+		{% endif %}
+	{% endif %}
+	{% if user_can_create entry %}
+		<form action="{{ 'signup.php?view=create_entry&form=' ~ form.id }}" method="post" class="vertical-form">
+			{{ html_input_hidden('return-path', controller.link_to_read(form.agenda_item)) }}
+			{% if entry.has_id %}
+				{{ html_nonce('update_entry', entry) }}
+			{% else %}
+				{{ html_nonce('create_entry', form) }}
+			{% endif %}
+			
+			{% for field in form.fields %}
+				<div>
+					{{ field.render(view, entry)|raw }}
+				</div>
+			{% endfor %}
+
+			<div class="controls">
+				<button class="button" type="submit">{{ entry.has_id ? __('Wijzig inschrijving') : __('Schrijf mij in') }}</button>
+			</div>
+		</form>
+	{% endif %}
 {% endfor %}
 {% if user_can_update form %}
 	<ul class="actions">

@@ -13,6 +13,13 @@
 	<h1>{{ __('Formulier') }}</h1>
 </div>
 <div class="messageBox">
+	{% if not form.is_open %}
+	<section class="warning-section">
+		<h3>{{ __('De inschrijvingen zijn gesloten.') }}</h3>
+		<p>{{ __('De inschrijvingen zijn gesloten. Jij kan dit formulier nog zien omdat je de rechten hebt om mensen in te schrijven na de deadline.') }}</p>
+	</section>
+	{% endif %}
+	
 	{% if success %}
 		<p>{{ __('Succes! Je inschrijving is compleet.') }}</p>
 	{% else %}
