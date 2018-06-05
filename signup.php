@@ -307,6 +307,10 @@ class ControllerSignUpForms extends Controller
 		{
 			$this->field_model->db->beginTransaction();
 
+			$this->field_model->insert($form->new_field('editable', function($widget) {
+				$widget->content = "[h2]Sign up now![/h2]\nShort description of why you need to sign up and what you will receive in return.";
+			}));
+
 			$this->field_model->insert($form->new_field('address', function($widget) {
 				$widget->required = true;
 			}));
