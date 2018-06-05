@@ -24,8 +24,8 @@
 				<tr>
 					<th><input type="checkbox" onchange="Array.from(this.form.querySelectorAll('input[type=checkbox]')).forEach(cb => cb.checked = this.checked)"></th>
 					<th>ID</th>
-					<th>Member</th>
-					<th>Date</th>
+					<th>{{ __('Lid') }}</th>
+					<th>{{ __('Datum') }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -46,7 +46,7 @@
 			</tbody>
 		</table>
 		<div class="controls">
-			<button type="submit" class="button">Delete selected entries</button>
+			<button type="submit" class="button">{{ __('Verwijder geselecteerde inschrijvingen') }}</button>
 		</div>
 	</form>
 </div>

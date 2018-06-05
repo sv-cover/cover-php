@@ -101,11 +101,19 @@
 <p><span class="smaller">{{  __('Geplaatst door') }}: <a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></span></p>
 {% endif %}
 
-{% for form in iter.signup_forms %}
-	{% if user_can_read form %}
-		{{ include('signup_form.twig', {form: form}) }}
+{% if iter.signup_forms %}
+	{% if global.auth.logged_in %}
+		{% for form in iter.signup_forms %}
+			{% if user_can_read form %}
+				{{ include('signup_form.twig', {form: form}) }}
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<div class="signup-form">
+			<p>{{ __('%s om je aan te melden voor deze activiteit.')|e('html')|format('<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id=' ~ iter.id ~ '" data-placement-selector="modal" data-partial-selector="#login-form" class="login">%s</a>'|format(__('Log in')|e('html')))|raw }}</p>
+		</div>
 	{% endif %}
-{% endfor %}
+{% endif %}
 
 <!-- Actions applicable to the event -->
 <ul class="actions">
@@ -117,7 +125,7 @@
 	<li><a href="{{ controller.link_to_update(iter) }}">{{  __('Wijzig') }}</a></li>
 	{% endif %}
 	{% if user_can_create iter.new_signup_form %}
-	<li><a href="signup.php?view=create_form&amp;agenda={{iter.id}}">Add a form</a></li>
+	<li><a href="signup.php?view=create_form&amp;agenda={{iter.id}}">{{ __('Nieuw inschrijfformulier') }}</a></li>
 	{% endif %}
 </ul>
 </div>

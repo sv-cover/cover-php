@@ -1,9 +1,9 @@
 <div>
-	{{ html_label('Address', name ~ '-address', errors=errors, required=configuration.required) }}
-	{{ html_input_text(name ~ '-address', data, errors=errors, required=configuration.required, placeholder='E.g. Nijenborgh 9') }}
-	<p class="hint">Street + house number</p>
+	{{ html_label(__('Straatnaam + Huisnummer'), name ~ '-address', errors=errors, required=configuration.required) }}
+	{{ html_input_text(name ~ '-address', data, errors=errors, required=configuration.required, placeholder=__('Bijv. Nijenborgh 9')) }}
+	<p>{{ __('Straatnaam + Huisnummer') }}</p>
 </div>
 <div>
-	{{ html_label('Place', name ~ '-city', errors=errors, required=configuration.required) }}
-	{{ html_input_text(name ~ '-city', data, errors=errors, required=configuration.required, placeholder='E.g. Groningen') }}
+	{{ html_label(__('Woonplaats'), name ~ '-city', errors=errors, required=configuration.required) }}
+	{{ html_input_text(name ~ '-city', data, errors=errors, required=configuration.required, placeholder=__('Bijv. Groningen')) }}
 </div>

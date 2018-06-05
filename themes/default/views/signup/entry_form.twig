@@ -6,8 +6,8 @@
 <div class="pageheading">
 	<div class="controls inline">
 		{% if form.has_id and user_can_update form %}
-			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">Edit form</a>
-			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="download-link">Show entries</a>
+			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">{{ __('Bewerk formulier') }}</a>
+			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="download-link">{{ __('Bekijk inschrijvingen') }}</a>
 		{% endif %}
 	</div>
 	<h1>{{ __('Formulier') }}</h1>

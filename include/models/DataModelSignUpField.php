@@ -85,36 +85,38 @@ class DataModelSignUpField extends DataModel
 {
 	public $dataiter = 'DataIterSignUpField';
 
-	public $field_types = [
-		'text' => [
-			'class' => \fields\Text::class,
-			'label' => 'Text field'
-		],
-		'checkbox' => [
-			'class' => \fields\Checkbox::class,
-			'label' => 'Checkbox'
-		],
-		'choice' => [
-			'class' => \fields\Choice::class,
-			'label' => 'Multiple choice'
-		],
-		'address' => [
-			'class' => \fields\Address::class,
-			'label' => 'Address field'
-		],
-		'bankaccount' => [
-			'class' => \fields\BankAccount::class,
-			'label' => 'Bank account field'
-		],
-		'editable' => [
-			'class' => \fields\Editable::class,
-			'label' => 'Heading or text (layout)'
-		]
-	];
+	public $field_types;
 
 	public function __construct($db)
 	{
 		parent::__construct($db, 'sign_up_fields');
+
+		$this->field_types = [
+			'text' => [
+				'class' => \fields\Text::class,
+				'label' => __('Tekstveld')
+			],
+			'checkbox' => [
+				'class' => \fields\Checkbox::class,
+				'label' => __('Vinkje')
+			],
+			'choice' => [
+				'class' => \fields\Choice::class,
+				'label' => __('Meerkeuzevraag')
+			],
+			'address' => [
+				'class' => \fields\Address::class,
+				'label' => __('Adresveld')
+			],
+			'bankaccount' => [
+				'class' => \fields\BankAccount::class,
+				'label' => __('Rekeningnummer')
+			],
+			'editable' => [
+				'class' => \fields\Editable::class,
+				'label' => __('Titels en tekst (lay-out)')
+			]
+		];
 	}
 
 	public function update_order(array $fields)
