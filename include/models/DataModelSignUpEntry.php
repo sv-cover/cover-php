@@ -12,7 +12,7 @@ class DataIterSignUpEntry extends DataIter
 			'id',
 			'form_id',
 			'member_id',
-			'signed_up_on',
+			'created_on',
 		];
 	}
 
@@ -85,7 +85,7 @@ class DataIterSignUpEntry extends DataIter
 	{
 		$row = [
 			'member' => member_full_name($this['member'], IGNORE_PRIVACY),
-			'signed_up_on' => $this['signed_up_on']
+			'created_on' => $this['created_on']
 		];
 
 		foreach ($this['form']['fields'] as $field)
