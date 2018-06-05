@@ -274,6 +274,10 @@ class ProfielView extends View
 
 			$imagick = new \Imagick();
 			$imagick->readImageFile($photo['foto']);
+
+			apply_image_orientation($imagick);
+
+			strip_exif_data($imagick);
 			
 			$y = 0.05 * $imagick->getImageHeight();
 			$size = min($imagick->getImageWidth(), $imagick->getImageHeight());

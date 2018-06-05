@@ -129,6 +129,7 @@
 		{
 			$data['foto_id'] = $this->photo->get_id();
 			$data['tagged_by'] = get_identity()->get('id');
+			$data['tagged_on'] = new DateTime();
 
 			return parent::_create($iter, $data, $errors);
 		}
@@ -137,6 +138,7 @@
 		{
 			// Also update who changed it.
 			$data['tagged_by'] = get_identity()->get('id');
+			$data['tagged_on'] = new DateTime();
 
 			// Only a custom label XOR a lid_id can be assigned to a tag
 			if (isset($data['custom_label']))
@@ -197,7 +199,7 @@
 
 	class ControllerFotoboek extends Controller
 	{
-		protected $policy;
+		public $policy;
 
 		public $faces_controller;
 
@@ -214,28 +216,6 @@
 			$this->policy = get_policy($this->model);
 
 			$this->view = View::byName('fotoboek', $this);
-		}
-
-		public function user_can_download_book(DataIterPhotobook $book)
-		{
-			return get_identity()->member_is_active()
-				&& !($book instanceof DataIterRootPhotobook)
-				&& $this->policy->user_can_read($book);
-		}
-
-		public function user_can_mark_as_read(DataIterPhotobook $book)
-		{
-			return // only logged in members can track their viewed photo books
-				get_auth()->logged_in() 
-				
-				// and only if enabled
-				&& get_config_value('enable_photos_read_status', true) 
-
-				// and only if we actually are watching a book
-				&& $book->get_id() 
-				
-				// which is not artificial (faces, likes) and has photos
-				&& ctype_digit($book->get_id()) && $book['num_books'] > 0;
 		}
 		
 		/* Helper functions for _check_foto_values */
@@ -623,7 +603,7 @@
 		{
 			// This function does not use the $view but produces its own output via ZipStream.
 
-			if (!$this->user_can_download_book($root_book))
+			if (!$this->policy->user_can_download_book($root_book))
 				throw new UnauthorizedException();
 
 			// Disable all output buffering
@@ -642,7 +622,7 @@
 			// but filter out the books I can't read.
 			for ($i = 0; $i < count($books); ++$i)
 				foreach ($books[$i]['books_without_metadata'] as $child)
-					if ($this->policy->user_can_read($child))
+					if ($this->policy->user_can_download_book($child))
 						$books[] = $child;
 			
 			// Turn that list into a hashtable linking book id to book instance.
@@ -713,7 +693,7 @@
 
 		protected function _view_confirm_download_book(DataIterPhotobook $root_book)
 		{
-			if (!$this->user_can_download_book($root_book))
+			if (!$this->policy->user_can_download_book($root_book))
 				throw new UnauthorizedException();
 
 			$books = array($root_book);
@@ -722,19 +702,20 @@
 			// but filter out the books I can't read.
 			for ($i = 0; $i < count($books); ++$i)
 				foreach ($books[$i]['books_without_metadata'] as $child)
-					if ($this->policy->user_can_read($child))
+					if ($this->policy->user_can_download_book($child))
 						$books[] = $child;
 
 			$total_photos = 0;
 			$total_file_size = 0;
 
-			foreach ($books as $book)
-				foreach ($book->get_photos() as $photo)
-					if ($photo->file_exists())
-					{
+			foreach ($books as $book) {
+				foreach ($book->get_photos() as $photo) {
+					if ($photo->file_exists() && get_policy($photo)->user_can_read($photo)) {
 						$total_photos += 1;
 						$total_file_size += $photo->get_file_size();
 					}
+				}
+			}
 
 			return $this->view->render_download_photobook($root_book, $total_photos, $total_file_size);
 		}

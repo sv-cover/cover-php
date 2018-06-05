@@ -4,6 +4,30 @@ require_once 'include/member.php';
 
 class PolicyPhotobook implements Policy
 {
+	private function _was_member_at_the_time(DataIter $book) {
+		if (get_identity()->member() === null)
+			return false;
+
+		if ($book['date'] === null)
+			return false;
+
+		if (!preg_match('/^(?P<year>\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
+			return false;
+
+		return get_identity()->member()->is_member_on(new DateTime($match[0]));
+	}
+
+	private function _inside_public_period(DataIter $book)
+	{
+		if ($book['date'] === null)
+			return false;
+
+		if (!preg_match('/^(?P<year>\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
+			return false;
+
+		return intval($match['year']) >= intval(date("Y", strtotime("-2 year")));
+	}
+
 	public function user_can_create(DataIter $book)
 	{
 		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE)
@@ -23,11 +47,19 @@ class PolicyPhotobook implements Policy
 			return $book['member_ids'] == [get_identity()->get('id')];
 
 		// Older photo books are not visible for non-members
-		if (!get_identity()->member_is_active() && $book['date'] !== null && preg_match('/^(?P<year>\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
-			return intval($match['year']) >= intval(date("Y", strtotime("-2 year")))
-				|| (get_identity()->member() !== null && get_identity()->member()->is_member_on(new DateTime($match[0])));
+		if (get_identity()->member_is_active())
+			return true;
 
-		return true;
+		if ($book['date'] === null)
+			return true;
+
+		if ($this->_was_member_at_the_time($book))
+			return true;
+
+		if ($this->_inside_public_period($book))
+			return true;
+
+		return false;
 	}
 
 	public function user_can_update(DataIter $book)
@@ -40,6 +72,35 @@ class PolicyPhotobook implements Policy
 	public function user_can_delete(DataIter $book)
 	{
 		return $this->user_can_update($book);
+	}
+
+	public function user_can_download_book(DataIterPhotobook $book)
+	{
+		if ($book instanceof DataIterRootPhotobook)
+			return false;
+
+		if (!get_identity()->member())
+			return false;
+
+		if (get_identity()->member_is_active() || ($book['date'] && get_identity()->member()->is_member_on(new DateTime($book['date']))))
+			return $this->user_can_read($book);
+
+		return false;
+	}
+
+	public function user_can_mark_as_read(DataIterPhotobook $book)
+	{
+		return // only logged in members can track their viewed photo books
+			get_auth()->logged_in() 
+			
+			// and only if enabled
+			&& get_config_value('enable_photos_read_status', true) 
+
+			// and only if we actually are watching a book
+			&& $book->get_id() 
+			
+			// which is not artificial (faces, likes) and has photos
+			&& ctype_digit($book->get_id()) && $book['num_books'] > 0;
 	}
 
 	public function get_access_level()

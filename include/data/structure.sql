@@ -381,6 +381,14 @@ CREATE TABLE foto_boeken_visit (
 
 CREATE INDEX ON foto_boeken_visit (lid_id);
 
+-- Photo albums that are not actually in the database, like your likes or the faces photo book
+CREATE TABLE foto_boeken_custom_visit (
+    boek_id text NOT NULL,
+    lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    last_visit timestamp without time zone DEFAULT ('now'::text)::timestamp(6) without time zone NOT NULL,
+    CONSTRAINT foto_boeken_custom_visit_pk PRIMARY KEY (boek_id, lid_id)
+);
+
 
 CREATE TABLE fotos (
     id SERIAL PRIMARY KEY,
@@ -433,6 +441,7 @@ CREATE TABLE foto_faces (
     h real NOT NULL,
     lid_id integer REFERENCES "leden" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     deleted boolean NOT NULL DEFAULT FALSE,
+    tagged_on timestamp without time zone DEFAULT NULL,
     tagged_by INTEGER REFERENCES "leden" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     custom_label character varying (255),
     cluster_id INTEGER DEFAULT NULL
