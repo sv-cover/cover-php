@@ -1060,18 +1060,20 @@ font-size: 10px;
 	text-align:center;
 }
 
+.warning-section, .error-section {
+	padding: 15px;
+	margin-bottom: 15px;
+	border-radius: 4px;
+}
+
 .error-section {
 	background: #c60c30;
 	color: white;
-	padding: 4px;
-	font-size: 1.2em;
 }
 
 .warning-section {
 	background: #FFD700;
 	color: black;
-	padding: 4px;
-	border-radius: 4px;
 }
 
 .warning-section a {
