@@ -1,6 +1,6 @@
 <div class="signup-form">
 {% for entry in form.get_entries_for_member(global.identity.member) %}
-	<p>{{ __('Je heb je aangemeld!') }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Bewerk je aanmelding.') }}</a>{% endif %}</p>
+	<p>{{ __('Je hebt je aangemeld op %s.')|format(entry.created_on|date('d-m-Y H:i')) }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Bekijk je aanmelding') }}</a>.{% endif %}</p>
 {% else %}
 	{% set entry = form.new_entry(global.identity.member) %}
 	<form action="{{ 'signup.php?view=create_entry&form=' ~ form.id }}" method="post" class="vertical-form">
