@@ -663,5 +663,3 @@ CREATE TABLE sign_up_entry_values(
     PRIMARY KEY (entry_id, field_id)
 );
 
-ALTER TABLE agenda
-    ADD COLUMN sign_up_form_id INTEGER DEFAULT NULL REFERENCES sign_up_forms (id) ON UPDATE CASCADE ON DELETE SET NULL;
