@@ -648,7 +648,8 @@ CREATE TABLE sign_up_fields(
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     properties TEXT NOT NULL,
-    sort_index INTEGER DEFAULT NULL
+    sort_index INTEGER DEFAULT NULL,
+    deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE INDEX sign_up_fields_form_id_idx ON public.sign_up_fields(form_id);

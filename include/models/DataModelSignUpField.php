@@ -13,7 +13,8 @@ class DataIterSignUpField extends DataIter
 			'name',
 			'type',
 			'properties',
-			'sort_index'
+			'sort_index',
+			'deleted'
 		];
 	}
 
@@ -133,6 +134,26 @@ class DataModelSignUpField extends DataModel
 			SET sort_index = index
 			FROM (VALUES $sql_values) as v(id, index)
 			WHERE v.id = t.id");
+	}
+
+	public function find($conditions)
+	{
+		if (is_array($conditions) && !isset($conditions['deleted']))
+			$conditions['deleted'] = false;
+
+		return parent::find($conditions);
+	}
+
+	public function delete(DataIter $iter)
+	{
+		$iter['deleted'] = true;
+		$this->update($iter);
+	}
+
+	public function restore(DataIter $iter)
+	{
+		$iter['deleted'] = false;
+		$this->update($iter);
 	}
 
 	public function instantiate($type, string $name, array $properties)
