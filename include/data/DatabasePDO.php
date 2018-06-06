@@ -294,7 +294,7 @@ class DatabasePDO
 		elseif (is_int($value))
 			return sprintf('%d', $value);
 		elseif (is_bool($value))
-			return $value ? '1' : '0';
+			return $value ? 'TRUE' : 'FALSE';
 		elseif (is_string($value))
 			return $this->resource->quote($value);
 		elseif (is_array($value))
@@ -305,6 +305,7 @@ class DatabasePDO
 
 	protected function prepare_value($value, $placeholder, array &$values = [])
 	{
+		// Raw values
 		if ($value === null)
 			return 'NULL';
 		elseif ($value instanceof DatabaseLiteral)
@@ -312,7 +313,9 @@ class DatabasePDO
 		elseif (is_int($value))
 			return sprintf('%d', $value);
 		elseif (is_bool($value))
-			return $value ? '1' : '0';
+			return $value ? 'TRUE' : 'FALSE';
+
+		// Values that actually fill placeholders
 		elseif ($value instanceof DateTime)
 			$values[$placeholder] = $value->format('Y-m-d H:i:s');
 		elseif (is_string($value))
