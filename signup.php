@@ -226,17 +226,69 @@ class ControllerSignUpForms extends Controller
 
 		if ($this->_form_is_submitted('update_form_field', $form, $field))
 		{
-			if ($_POST['action'] == 'update')
-				if ($field->process_configuration($_POST, $errors->namespace($field['id'])))
-					$this->field_model->update($field);
-				else
-					return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
-			
-			if ($_POST['action'] == 'delete')
-				$this->field_model->delete($field);
+			if ($field->process_configuration($_POST, $errors->namespace($field['id'])))
+				$this->field_model->update($field);
+			else
+				return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
 		}
 
 		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+	}
+
+	public function run_delete_form_field()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_update($form))
+			throw new UnauthorizedException('You cannot update this form.');
+
+		$field = $this->field_model->find_one([
+			'id' => $_GET['field'], 
+			'form_id' => $form['id']
+		]);
+
+		if ($field === null)
+			throw new NotFoundException('Field not found.');
+
+		if ($this->_form_is_submitted('delete_form_field', $form, $field))
+		{
+			$this->field_model->delete($field);
+			return $this->view->redirect($this->link([
+				'view' => 'restore_form_field',
+				'form' => $form['id'],
+				'field' => $field['id']
+			]));
+		}
+
+		return $this->view->render('delete_field.twig', compact('form', 'field'));
+	}
+
+	public function run_restore_form_field()
+	{
+		$form = $this->form_model->get_iter($_GET['form']);
+
+		if (!get_policy($this->form_model)->user_can_update($form))
+			throw new UnauthorizedException('You cannot update this form.');
+
+		$field = $this->field_model->find_one([
+			'id' => $_GET['field'],
+			'form_id' => $form['id'],
+			'deleted' => true
+		]);
+
+		if ($field === null)
+			throw new NotFoundException('Field not found.');
+
+		if ($this->_form_is_submitted('restore_form_field', $form, $field))
+		{
+			$this->field_model->restore($field);
+			return $this->view->redirect($this->link([
+				'view' => 'update_form',
+				'form' => $form['id']
+			]));
+		}
+
+		return $this->view->render('restore_field.twig', compact('form', 'field'));
 	}
 
 	public function run_update_form_field_order()

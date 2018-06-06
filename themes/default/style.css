@@ -3316,7 +3316,8 @@ ul.call-to-action li a::before {
 
 /* Sign up forms */
 
-.submit-on-change .hide-if-submit-on-change {
+.submit-on-change .hide-if-submit-on-change,
+.submit-on-change.hide-if-submit-on-change {
 	display: none;
 }
 
@@ -3356,7 +3357,8 @@ ul.call-to-action li a::before {
 	content: '\f0c9';
 }
 
-.form-field > form {
+.form-field > form,
+.form-field > .controls {
 	padding: 0 8px;
 }
 

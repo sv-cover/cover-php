@@ -63,16 +63,19 @@
 	
 	<div class="form-fields" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}">
 	{% for field in form.fields %}
-		<div class="form-field" data-sortable-id="{{ field.id }}">
+		<div class="form-field" id="form-field-{{field.id}}" data-sortable-id="{{ field.id }}">
 			<div class="sortable-drag-handle" title="Drag me to reorder"></div>
-			<form action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-submit-on-change="{&quot;action&quot;:&quot;update&quot;}">
+			<form id="field-{{field.id}}-update" action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-submit-on-change="{&quot;action&quot;:&quot;update&quot;}">
 				{{ html_nonce('update_form_field', form, field) }}
 				{{ field.render_configuration(view, errors.namespace(field.id))|raw }}
-				<div class="controls">
-					<button type="submit" class="button hide-if-submit-on-change" name="action" value="update">{{ __('Wijzig veld') }}</button>
-					<button type="submit" class="button" name="action" value="delete">{{ __('Verwijder veld') }}</button>
-				</div>
 			</form>
+			<form id="field-{{field.id}}-delete" action="{{ controller.link({view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
+				{{ html_nonce('delete_form_field', form, field) }}
+			</form>
+			<div class="controls">
+				<button type="submit" class="button hide-if-submit-on-change" form="field-{{field.id}}-update">{{ __('Wijzig veld') }}</button>
+				<button type="submit" class="button" form="field-{{field.id}}-delete">{{ __('Verwijder veld') }}</button>
+			</div>
 		</div>
 	{% endfor %}
 	</div>

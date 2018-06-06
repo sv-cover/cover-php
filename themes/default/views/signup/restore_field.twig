@@ -1,0 +1,15 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Veld terughalen') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Veld terughalen') }}</h1>
+<div class="messageBox">
+	<div class="form-field" id="form-field-{{field.id}}">
+		<form method="post" action="{{ controller.link({view: 'restore_form_field', form: form.id, field: field.id}) }}" class="vertical-form" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}">
+			{{ html_nonce('restore_form_field', form, field) }}
+			<p>{{ __('Dit %s is verwijderd.')|format(field.model.field_types[field.type].label|lower) }} <button type="submit" class="link">{{ __('Herstel veld')  }}</button></p>
+		</form>
+	</div>
+</div>
+{% endblock %}

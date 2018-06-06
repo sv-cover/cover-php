@@ -1203,6 +1203,11 @@ $(document).on('ready partial-content-loaded', function(e) {
 		});
 
 		$(this).addClass('submit-on-change');
+
+		var form = this;
+		$(e.target).find('button').filter(function() {
+			return this.form === form;
+		}).addClass('submit-on-change');
 	})
 })
 
