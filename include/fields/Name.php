@@ -39,11 +39,13 @@ class Name implements \SignUpFieldType
 		return $value;
 	}
 
+	public function suggest(\DataIterMember $member)
+	{
+		return $member['full_name'];
+	}
+
 	public function render($renderer, $value, $error)
 	{
-		if ($value === null && get_auth()->logged_in())
-			$value = get_identity()->member()['full_name'];
-		
 		return $renderer->render('@form_fields/name.twig', [
 			'name' => $this->name,
 			'data' => [$this->name => $value],

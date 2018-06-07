@@ -23,7 +23,9 @@ class DataIterSignUpEntry extends DataIter
 
 	public function get_member()
 	{
-		return get_model('DataModelMember')->get_iter($this['member_id']);
+		return $this['member_id']
+			? get_model('DataModelMember')->get_iter($this['member_id'])
+			: null;
 	}
 
 	public function set_values(array $field_values)
@@ -84,7 +86,7 @@ class DataIterSignUpEntry extends DataIter
 	public function export()
 	{
 		$row = [
-			'member' => member_full_name($this['member'], IGNORE_PRIVACY),
+			'member' => $this['member'] ? member_full_name($this['member'], IGNORE_PRIVACY) : null,
 			'created_on' => $this['created_on']
 		];
 

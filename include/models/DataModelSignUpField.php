@@ -44,7 +44,15 @@ class DataIterSignUpField extends DataIter
 
 	public function render($renderer, DataIterSignUpEntry $entry)
 	{
-		return $this->widget()->render($renderer, $entry->value_for_field($this), $entry->error_for_field($this));
+		// First try to get the value for the field
+		$value = $entry->value_for_field($this, null);
+
+		// If that wasn't set, try to set it based on the entry's associated member
+		if ($value === null && $entry['member'])
+			$value = $this->widget()->suggest($entry['member']);
+
+		// Now render it
+		return $this->widget()->render($renderer, $value, $entry->error_for_field($this));
 	}
 
 	public function process_configuration(array $post_data, ErrorSet $errors)
@@ -71,9 +79,9 @@ class DataIterSignUpField extends DataIter
 		$this['properties'] = $widget->configuration();
 	}
 
-	public function export(DataIterSignUpEntry $entry)
+	public function export(DataIterSignUpEntry $entry = null)
 	{
-		return $this->widget()->export($entry->value_for_field($this));
+		return $this->widget()->export($entry ? $entry->value_for_field($this) : null);
 	}
 
 	private function widget()

@@ -17,6 +17,8 @@
 	{% if user_can_create entry %}
 		<form action="{{ 'signup.php?view=create_entry&form=' ~ form.id }}" method="post" class="vertical-form">
 			{{ html_input_hidden('return-path', controller.link_to_read(form.agenda_item)) }}
+			{{ html_input_hidden('member_id', entry.member_id) }}
+			
 			{% if entry.has_id %}
 				{{ html_nonce('update_entry', entry) }}
 			{% else %}

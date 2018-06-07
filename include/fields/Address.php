@@ -34,18 +34,20 @@ class Address implements \SignUpFieldType
 		return json_encode(compact('address', 'city'));
 	}
 
+	public function suggest(\DataIterMember $member)
+	{
+		return json_encode([
+			'address' => $member['adres'],
+			'city' => $member['woonplaats']
+		]);
+	}
+
 	public function render($renderer, $value, $error)
 	{
 		if ($value !== null)
 			$data = json_decode($value, true);
-		else if (get_auth()->logged_in())
-			$data = [
-				'address' => get_identity()->get('adres'),
-				'city' => get_identity()->get('woonplaats')
-			];
 		else
 			$data = [];
-			
 
 		return $renderer->render('@form_fields/address.twig', [
 			'name' => $this->name,
@@ -77,6 +79,7 @@ class Address implements \SignUpFieldType
 
 	public function export($value)
 	{
-		return json_decode($value, true);
+		$defaults = ['address' => '', 'city' => ''];
+		return array_merge($defaults, array_intersect_key((array) json_decode($value, true), $defaults));
 	}
 }

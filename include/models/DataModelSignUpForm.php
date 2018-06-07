@@ -95,11 +95,11 @@ class DataIterSignUpForm extends DataIter
 		return false;
 	}
 
-	public function new_entry(DataIterMember $member)
+	public function new_entry(DataIterMember $member = null)
 	{
 		return get_model('DataModelSignUpEntry')->new_iter([
 			'form_id' => $this['id'],
-			'member_id' => $member['id'],
+			'member_id' => $member ? $member['id'] : null,
 			'created_on' => date('Y-m-d H:i:s')
 		]);
 	}

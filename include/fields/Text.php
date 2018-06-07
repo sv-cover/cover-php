@@ -42,6 +42,11 @@ class Text implements \SignUpFieldType
 		return $value;
 	}
 
+	public function suggest(\DataIterMember $member)
+	{
+		return null;
+	}
+
 	public function render($renderer, $value, $error)
 	{
 		return $renderer->render('@form_fields/text.twig', [

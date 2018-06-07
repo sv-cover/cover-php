@@ -21,6 +21,9 @@ interface SignUpFieldType
 
 	// Export it to a CSV (as an array with column => text value)
 	public function export($value);
+
+	// Suggest a value (like process) for a logged-in member
+	public function suggest(DataIterMember $member);
 }
 
 // Register an autoloader for field types

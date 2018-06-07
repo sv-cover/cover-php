@@ -42,9 +42,14 @@ class BankAccount implements \SignUpFieldType
 		return json_encode(compact('iban', 'bic'));
 	}
 
+	public function suggest(\DataIterMember $member)
+	{
+		return null;
+	}
+
 	public function render($renderer, $value, $error)
 	{
-		$data = \json_decode($value, true);
+		$data = $value !== null ? json_decode($value, true) : [];
 
 		return $renderer->render('@form_fields/bankaccount.twig', [
 			'name' => $this->name,
@@ -76,6 +81,7 @@ class BankAccount implements \SignUpFieldType
 
 	public function export($value)
 	{
-		return json_decode($value, true);
+		$defaults = ['iban' => '', 'bic' => ''];
+		return array_merge($defaults, array_intersect_key((array) json_decode($value, true), $defaults));
 	}
 }

@@ -27,6 +27,11 @@ class Editable implements \SignUpFieldType
 		return null;
 	}
 
+	public function suggest(\DataIterMember $member)
+	{
+		return null;
+	}
+
 	public function render($renderer, $value, $error)
 	{
 		return $renderer->render('@form_fields/editable.twig', [

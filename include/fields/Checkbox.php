@@ -35,6 +35,11 @@ class Checkbox implements \SignUpFieldType
 		return $checked ? '1' : '0';
 	}
 
+	public function suggest(\DataIterMember $member)
+	{
+		return null;
+	}
+
 	public function render($renderer, $value, $error)
 	{
 		return $renderer->render('@form_fields/checkbox.twig', [

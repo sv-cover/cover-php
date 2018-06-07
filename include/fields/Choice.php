@@ -60,6 +60,11 @@ class Choice implements \SignUpFieldType
 		return json_encode($options);
 	}
 
+	public function suggest(\DataIterMember $member)
+	{
+		return null;
+	}
+
 	public function render($renderer, $value, $error)
 	{
 		return $renderer->render('@form_fields/choice.twig', [

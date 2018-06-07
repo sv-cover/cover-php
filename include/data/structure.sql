@@ -660,7 +660,7 @@ CREATE UNIQUE INDEX sign_up_fields_form_id_name_idx ON public.sign_up_fields(for
 CREATE TABLE sign_up_entries(
     id SERIAL PRIMARY KEY,
     form_id INTEGER NOT NULL REFERENCES sign_up_forms (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    member_id INTEGER DEFAULT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
     created_on timestamp without time zone NOT NULL
     -- in a future version we will make member_id optional and add fields for containing the
     -- necessary information for non-members, e.g. name, bank account, etc.

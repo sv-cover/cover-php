@@ -78,7 +78,7 @@ class ControllerSignUpForms extends Controller
 		if (!get_policy($this->form_model)->user_can_read($form))
 			throw new UnauthorizedException();
 
-		$entry = $form->new_entry(get_identity()->member());
+		$entry = $form->new_entry(null);
 
 		if (!get_policy($this->entry_model)->user_can_create($entry))
 			throw new UnauthorizedException();
@@ -86,13 +86,28 @@ class ControllerSignUpForms extends Controller
 		$success = false;
 
 		if ($this->_form_is_submitted('create_entry', $form)) {
+			// If the form submitted a member-id (i.e. a logged-in member filled it in) then
+			// check whether that member is indeed the logged-in member and assign the entry
+			// to them if so.
+			if (!empty($_POST['member_id']) && get_identity()->get('id') == $_POST['member_id'])
+				$entry['member_id'] = (int) $_POST['member_id'];
+
+			// Process the posted values. This will delegate all data handling to the classes
+			// in includes/fields/*.php
 			if ($entry->process($_POST)) {
 				$this->entry_model->insert($entry);
 				$success = true;
 			}
 
+			// Redirect submissions from elsewhere back to their return-path
 			if ($success && !empty($_POST['return-path']))
 				return $this->view->redirect($_POST['return-path']);
+
+			// Redirect admins back to the entry index
+			if ($success && get_policy($form)->user_can_update($form))
+				return $this->view->redirect($this->link(['view' => 'list_entries', 'form' => $form['id']]));
+
+			// and everyone else will just see the form with a success message
 		}
 
 		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success'));
