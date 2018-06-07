@@ -107,7 +107,7 @@ class DataModelSignUpField extends DataModel
 			],
 			'name' => [
 				'class' => \fields\Name::class,
-				'label' => __('Voor en achternaam')
+				'label' => __('Voor- en achternaam')
 			],
 			'address' => [
 				'class' => \fields\Address::class,
