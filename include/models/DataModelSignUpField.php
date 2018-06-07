@@ -105,6 +105,10 @@ class DataModelSignUpField extends DataModel
 				'class' => \fields\Choice::class,
 				'label' => __('Meerkeuzevraag')
 			],
+			'name' => [
+				'class' => \fields\Name::class,
+				'label' => __('Voor en achternaam')
+			],
 			'address' => [
 				'class' => \fields\Address::class,
 				'label' => __('Adresveld')
