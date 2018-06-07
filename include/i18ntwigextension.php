@@ -14,12 +14,14 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('trans', '__'),
 			new Twig_SimpleFilter('translate_parts', '__translate_parts'),
 			new Twig_SimpleFilter('ordinal', 'ordinal'),
-			new Twig_SimpleFilter('full_name', 'member_full_name'),
+			new Twig_SimpleFilter('full_name', function($member) {
+				return $member ? member_full_name($member) : null;
+			}),
 			new Twig_SimpleFilter('personal_full_name', function($member) {
-				return member_full_name($member, BE_PERSONAL);
+				return $member ? member_full_name($member, BE_PERSONAL) : null;
 			}),
 			new Twig_SimpleFilter('full_name_ignore_privacy', function($member) {
-				return member_full_name($member, IGNORE_PRIVACY);
+				return $member ? member_full_name($member, IGNORE_PRIVACY) : null;
 			}),
 			new Twig_SimpleFilter('first_name', 'member_first_name'),
 			new Twig_SimpleFilter('period_short', 'agenda_short_period_for_display', ['is_safe' => ['html']]),
