@@ -16,7 +16,7 @@ class Text implements \SignUpFieldType
 	{
 		$this->name = $name;
 
-		$this->label = $configuration['label'] ?? $name;
+		$this->label = $configuration['label'] ?? '';
 
 		$this->required = $configuration['required'] ?? false;
 
