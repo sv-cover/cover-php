@@ -36,7 +36,16 @@ class Address implements \SignUpFieldType
 
 	public function render($renderer, $value, $error)
 	{
-		$data = \json_decode($value, true);
+		if ($value !== null)
+			$data = json_decode($value, true);
+		else if (get_auth()->logged_in())
+			$data = [
+				'address' => get_identity()->get('adres'),
+				'city' => get_identity()->get('woonplaats')
+			];
+		else
+			$data = [];
+			
 
 		return $renderer->render('@form_fields/address.twig', [
 			'name' => $this->name,
