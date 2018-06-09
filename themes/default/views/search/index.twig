@@ -27,6 +27,11 @@
 	</ul>
 	{% endif %}
 </div>
+<!--
+	{% for category, time in timings %}
+		{{ category }} {{ (time * 1000)|round(2) }}ms
+	{% endfor %}
+-->
 <script>
 jQuery(function($) {
 	var links = $('.search-results > li h2 > a');

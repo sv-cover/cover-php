@@ -48,29 +48,39 @@ class SearchController extends Controller
 		$this->view = View::byName('search', $this);
 	}
 
-	protected function _query($query, array &$errors = [])
+	protected function _query($query, array &$errors = [], array &$timings = [])
 	{
 		$results = array();
 
 		// Query all providers
 		foreach ($this->providers as $provider) {
 			try {
+				$start = microtime(true);
 				$results = array_merge($results, $provider['model']->search($query, 10));
+				$timings[$provider['category_name']] = microtime(true) - $start;
 			} catch (Exception $e) {
 				sentry_report_exception($e);
 				$errors[] = $provider['category_name'];
 			}
 		}
 
+		$start = microtime(true);
+
 		// Filter all results on readability
 		$results = array_filter($results, function($result) {
 			return get_policy($result)->user_can_read($result);
 		});
 
+		$timings['_filtering'] = microtime(true) - $start;
+
+		$start = microtime(true);
+
 		// Sort them by relevance
 		usort($results, function(SearchResult $a, SearchResult $b) {
 			return $a->get_search_relevance() < $b->get_search_relevance();
 		});
+
+		$timings['_sorting'] = microtime(true) - $start;
 
 		return $results;
 	}
@@ -78,18 +88,21 @@ class SearchController extends Controller
 	protected function run_impl()
 	{
 		$query = '';
-		$iters = null;
+		$query_parts = [];
+		$results = null;
 		$errors = [];
+		$timings = [];
 
 		if (!empty($_GET['query'])) {
 			$query = $_GET['query'];
-			$iters = $this->_query($query, $errors);
+			$query_parts = parse_search_query($query);
+			$results = $this->_query($query, $errors, $timings);
 
-			if (isset($_GET['im_feeling']) && $_GET['im_feeling'] == 'lucky' && count($iters) > 0)
-				return $this->view->redirect($iters[0]->get_absolute_url(), false, ALLOW_SUBDOMAINS);
+			if (isset($_GET['im_feeling']) && $_GET['im_feeling'] == 'lucky' && count($results) > 0)
+				return $this->view->redirect($results[0]->get_absolute_url(), false, ALLOW_SUBDOMAINS);
 		}
-		
-		return $this->view->render_index($query, $iters, $errors);
+
+		return $this->view->render('index.twig', compact('query', 'query_parts', 'results', 'errors', 'timings'));
 	}
 }
 

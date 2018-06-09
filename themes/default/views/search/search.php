@@ -2,13 +2,6 @@
 
 class SearchView extends View
 {
-	public function render_index($query, $results, $errors)
-	{
-		$query_parts = parse_search_query($query);
-
-		return $this->render('index.twig', compact('query', 'query_parts', 'results', 'errors'));
-	}
-
 	public function photobook_summary(DataIterPhotobook $book)
 	{
 		$parts = [];
