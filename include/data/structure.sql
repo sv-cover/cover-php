@@ -663,8 +663,6 @@ CREATE TABLE sign_up_entries(
     form_id INTEGER NOT NULL REFERENCES sign_up_forms (id) ON UPDATE CASCADE ON DELETE CASCADE,
     member_id INTEGER DEFAULT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
     created_on timestamp without time zone NOT NULL
-    -- in a future version we will make member_id optional and add fields for containing the
-    -- necessary information for non-members, e.g. name, bank account, etc.
 );
 
 CREATE TABLE sign_up_entry_values(
