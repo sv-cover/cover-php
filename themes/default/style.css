@@ -892,7 +892,8 @@ ul.actions li {
 }
 
 .messageBox > .alt-section,
-.messageBox ul.actions {
+.messageBox > ul.actions,
+.signup-form > ul.actions {
 	background: #ddd;
 	margin: 15px -15px;
 	padding: 15px;
