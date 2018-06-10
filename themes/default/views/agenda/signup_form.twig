@@ -3,15 +3,22 @@
 	<p>{{ __('Je hebt je aangemeld op %s.')|format(entry.created_on|date('d-m-Y H:i')) }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Bekijk je aanmelding') }}</a>.{% endif %}</p>
 {% else %}
 	{% set entry = form.new_entry(global.identity.member) %}
-
 	{% if not form.is_open %}
 		{% if user_can_create entry %}
 			<section class="warning-section">
 				<h3>{{ __('De inschrijvingen zijn gesloten.') }}</h3>
-				<p>{{ __('De inschrijvingen zijn gesloten. Jij kan dit formulier nog zien omdat je de rechten hebt om mensen in te schrijven na de deadline.') }}</p>
+				<p>{{ __('Jij kan dit formulier nu wel zien omdat je de rechten hebt om mensen in te schrijven buiten de inschrijfperiode.') }}</p>
 			</section>
 		{% else %}
-			<p>{{ __('De inschrijvingen zijn gesloten.') }} {{ __('De deadline voor inschrijven was %s.')|format(form.closed_on|date('d-m-Y H:i')) }}</p>
+			<p>
+				{% if form.open_on is null %}
+					{{ __('Het inschrijfformulier is hier binnenkort te vinden.')}}
+				{% elseif form.open_on is future %}
+					{{ __('De inschrijvingen gaan open op %s.')|format(form.open_on|date_relative) }}
+				{% elseif form.closed_on is past %}
+					{{ __('De inschrijvingen zijn gesloten. De deadline voor inschrijven was %s.')|format(form.closed_on|date('d-m-Y H:i')) }}
+				{% endif %}
+			</p>
 		{% endif %}
 	{% endif %}
 	{% if user_can_create entry %}

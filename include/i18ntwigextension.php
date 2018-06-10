@@ -105,6 +105,24 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleTest('numeric', 'is_numeric'),
 			new Twig_SimpleTest('instance_of', function($var, $classname) {
 				return $var instanceof $classname; 
+			}),
+			new Twig_SimpleTest('past', function($date) {
+				if (!$date)
+					return false;
+				
+				if (!($date instanceof DateTime))
+					$date = new DateTime($date);
+
+				return $date < new DateTime();
+			}),
+			new Twig_SimpleTest('future', function($date) {
+				if (!$date)
+					return false;
+				
+				if (!($date instanceof DateTime))
+					$date = new DateTime($date);
+
+				return $date > new DateTime();
 			})
 		];
 	}

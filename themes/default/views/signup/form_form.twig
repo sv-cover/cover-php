@@ -31,11 +31,19 @@
 			<p>{{ __('Als je een activiteit kiest wordt het formulier bij het agendapunt getoond.') }}</p>
 		</div>
 
-		<div>
-			{{ html_label(__('Sluitdatum'), 'closed_on', errors=errors)  }}
-			{{ html_input_datetime('closed_on', form, errors=errors) }}
-			<p>{{ __('Als je nog geen sluitdatum hebt mag je dit veld leeg laten.') }}</p>
-		</div>
+		<fieldset>
+			<legend>{{ __('Inschrijfperiode') }}</legend>
+			<div>
+				{{ html_label(__('Openingsdatum'), 'open_on', errors=errors)  }}
+				{{ html_input_datetime('open_on', form, errors=errors) }}
+				<p>{{ __('Het formulier gaat open op deze datum. Let op dat je het formulier niet al open zet terwijl je het nog aan het maken bent.') }}</p>
+			</div>
+			<div>
+				{{ html_label(__('Sluitdatum'), 'closed_on', errors=errors)  }}
+				{{ html_input_datetime('closed_on', form, errors=errors) }}
+				<p>{{ __('Als je nog geen sluitdatum hebt mag je dit veld leeg laten.') }}</p>
+			</div>
+		</fieldset>
 
 		{% if not form.has_id %}
 			<div>

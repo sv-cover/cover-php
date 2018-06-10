@@ -10,6 +10,7 @@ class DataIterSignUpForm extends DataIter
 			'id',
 			'committee_id',
 			'created_on',
+			'open_on',
 			'closed_on',
 			'agenda_id'
 		];
@@ -24,6 +25,12 @@ class DataIterSignUpForm extends DataIter
 			'created_on' => [
 				'default' => function() {
 					return new DateTime('now');
+				},
+				'validate' => ['datetime']
+			],
+			'open_on' => [
+				'clean' => function($value) {
+					return $value ? $value : null;
 				},
 				'validate' => ['datetime']
 			],
@@ -86,13 +93,13 @@ class DataIterSignUpForm extends DataIter
 
 	public function is_open()
 	{
-		if (!$this['closed_on'])
-			return true;
+		if (!$this['open_on'] || new DateTime($this['open_on']) > new DateTime())
+			return false;
 
-		if (new DateTime($this['closed_on']) > new DateTime())
-			return true;
+		if ($this['closed_on'] && new DateTime($this['closed_on']) < new DateTime())
+			return false;
 
-		return false;
+		return true;
 	}
 
 	public function new_entry(DataIterMember $member = null)
@@ -163,6 +170,7 @@ class DataModelSignUpForm extends DataModel
 				{$this->table}.committee_id,
 				{$this->table}.agenda_id,
 				{$this->table}.created_on,
+				{$this->table}.open_on,
 				{$this->table}.closed_on";
 	}
 }
