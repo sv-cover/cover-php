@@ -48,7 +48,7 @@
 		</h2>
 		{% set curmaand = punt.van|date('n') %}
 	{% endif %}
-	<div class="h-event">
+	<div class="h-event by-committee-{{punt.committee.login}}">
 		<div class="calendar-icon">
 			<span class="month">{{ punt.van|date('M') }}</span>
 			<span class="day">{{ punt.van|date('d') }}</span>
@@ -65,7 +65,7 @@
 		{% endif %}
 
 		{% if punt.extern %}
-			{{  __('Deze activiteit wordt niet georganiseerd door Cover zelf.') }}</br>
+			<p>{{  __('Deze activiteit wordt niet georganiseerd door Cover zelf.') }}</p>
 		{% endif %}
 
 		<p class="p-summary details">
