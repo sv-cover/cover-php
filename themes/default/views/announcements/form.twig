@@ -14,12 +14,12 @@
 		
 		<div>
 			{{ html_label(__('Plaats namens commissie'), 'committee_id', errors=errors, required=true) }}
-			{{ html_select_field('committee_id', view.get_committee_options(iter), iter.data) }}
+			{{ html_select_field('committee_id', view.get_committee_options(iter), iter.data, required=true) }}
 		</div>
 
 		<div>
 			{{ html_label(__('Zichtbaar voor'), 'visibility', errors=errors, required=true) }}
-			{{ html_select_field('visibility', view.get_visibility_options(), iter.data) }}
+			{{ html_select_field('visibility', view.get_visibility_options(), iter.data, required=true) }}
 		</div>		
 
 		<div>

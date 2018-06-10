@@ -1,0 +1,35 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Inschrijfformulieren') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageheading">
+	<div class="controls inline">
+		{% if user_can_create controller.new_form %}
+			<a href="{{ controller.link({'view': 'create_form'}) }}" class="create-link">{{ __('Nieuw inschrijfformulier') }}</a>
+		{% endif %}
+	</div>
+	<h1>{{ __('Inschrijfformulieren') }}</h1>
+</div>
+
+<div class="messageBox">
+	<table class="full-width-table">
+		<thead>
+			<tr>
+				<th>{{ __('Formulier') }}</th>
+				<th>{{ __('Activiteit') }}</th>
+				<th>{{ __('Aanmeldingen') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for form in forms|sort_by('created_on desc') %}
+				<tr>
+					<td><a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></td>
+					<td>{% if form.agenda_id %}<a href="agenda.php?agenda_id={{form.agenda_id}}">{{ form.agenda_item.kop }} ({{ form.agenda_item|period }})</a>{% endif %}</td>
+					<td>{{ form.signup_count }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}

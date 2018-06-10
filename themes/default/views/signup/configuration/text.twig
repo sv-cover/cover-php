@@ -1,0 +1,28 @@
+<div class="field-type-textfield vertical-form">
+	<h3 class="field-type">{{ __('Tekstveld') }}</h3>
+	<fieldset>
+		<legend>Appearance</legend>
+		<div>
+			{{ html_label('Label for textfield', 'label', errors=errors) }}
+			{{ html_input_text('label', data, errors=errors) }}
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Field type</legend>
+		<div class="radio">
+			{{ html_input_radio('multiline', data, '0', errors=errors) }}
+			{{ html_label('Single line of text', 'multiline', errors=errors) }}
+		</div>
+		<div class="radio">
+			{{ html_input_radio('multiline', data, '1', errors=errors) }}
+			{{ html_label('Multiple lines of text', 'multiline', errors=errors) }}
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Required</legend>
+		<div>
+			{{ html_input_checkbox('required', data, errors=errors) }}
+			{{ html_label('Filling in this field is mandatory', 'required', errors=errors) }}
+		</div>
+	</fieldset>
+</div>

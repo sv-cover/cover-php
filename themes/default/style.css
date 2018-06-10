@@ -892,7 +892,8 @@ ul.actions li {
 }
 
 .messageBox > .alt-section,
-.messageBox > ul.actions {
+.messageBox > ul.actions,
+.signup-form > ul.actions {
 	background: #ddd;
 	margin: 15px -15px;
 	padding: 15px;
@@ -1060,18 +1061,20 @@ font-size: 10px;
 	text-align:center;
 }
 
+.warning-section, .error-section {
+	padding: 15px;
+	margin-bottom: 15px;
+	border-radius: 4px;
+}
+
 .error-section {
 	background: #c60c30;
 	color: white;
-	padding: 4px;
-	font-size: 1.2em;
 }
 
 .warning-section {
 	background: #FFD700;
 	color: black;
-	padding: 4px;
-	border-radius: 4px;
 }
 
 .warning-section a {
@@ -1436,8 +1439,10 @@ table.incassomatic thead::before
 .vertical-form textarea,
 .vertical-form {
 	width: 100%;
+	box-sizing: border-box;
 }
 
+.vertical-form li input[type],
 .vertical-form input[size] {
 	width: auto;
 }
@@ -1466,6 +1471,7 @@ table.incassomatic thead::before
 
 .vertical-form label + input + p,
 .vertical-form label + textarea + p,
+.vertical-form label + select + p,
 .vertical-form input + label + p {
 	font-size: 0.85em;
 }
@@ -1506,11 +1512,6 @@ table.incassomatic thead::before
 
 .vertical-form .button-bar {
 	margin-bottom: 0;
-}
-
-.vertical-form .radio label {
-	position: static;
-	display: block;
 }
 
 .vertical-form .controls .button.primary {
@@ -3312,4 +3313,123 @@ ul.call-to-action li a::before {
 	display: block;
 	font-size: 24px;
 	text-transform: uppercase;
+}
+
+/* Sign up forms */
+
+.submit-on-change .hide-if-submit-on-change,
+.submit-on-change.hide-if-submit-on-change {
+	display: none;
+}
+
+.form-field {
+	position: relative;
+	padding: 0 0 0 38px;
+	border-bottom: 1px solid #ccc;
+}
+
+.form-field .sortable-drag-handle {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 38px;
+	cursor: grab;
+}
+
+.form-field .sortable-drag-handle + form {
+	padding-top: 8px;
+}
+
+.form-field *[data-growing-list] {
+	list-style: none;
+	margin: 0 0 1em 0;
+}
+
+.form-field .drag-handle {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	cursor: grab;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+}
+
+.form-field .drag-handle::before {
+	content: '\f0c9';
+}
+
+.form-field > form,
+.form-field > .controls {
+	padding: 0 8px;
+}
+
+.form-field .sortable-drag-handle:hover,
+.form-field .sortable-drag-handle:hover + form,
+.form-field .sortable-drag-handle:hover + form + form,
+.form-field .sortable-drag-handle:hover + form + form + .controls {
+	background: #ececec;
+}
+
+.form-field .field-type {
+	font-size: 1em;
+}
+
+.field-type-name::before,
+.field-type-textfield::before,
+.field-type-checkbox::before,
+.field-type-choice::before,
+.field-type-editable::before,
+.field-type-address::before,
+.field-type-bank-account::before {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	position: absolute;
+	left: 18px;
+	top: 8px;
+	height: 30px;
+	margin: auto auto;
+	font-size: 18px;
+	opacity: 0.3;
+	pointer-events: none;
+}
+
+.field-type-name::before {
+	content: "\f007";
+}
+
+.field-type-address::before {
+	content: "\f015";
+}
+
+.field-type-editable::before {
+	content: "\f031";
+}
+
+.field-type-textfield::before {
+	content: "\f044";
+}
+
+.field-type-checkbox::before {
+	content: "\f14a";
+}
+
+.field-type-choice::before {
+	content: "\f05d";
+}
+
+.field-type-bank-account::before {
+	content: "\f09d";
+}
+
+.messageBox .signup-form {
+	padding: 15px;
+	border: 1px solid #ccc;
+	background: #eee;
+	border-radius: 4px;
 }

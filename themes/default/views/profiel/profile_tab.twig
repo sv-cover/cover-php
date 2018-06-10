@@ -30,7 +30,7 @@
 
 		<div>
 			{{ html_label(__('Taal'), 'taal', errors=errors) }}
-			{{ html_select_field('taal', global.i18n.languages, iter) }}
+			{{ html_select_field('taal', global.i18n.languages, iter, required=true) }}
 		</div>
 		
 		<button type="submit" class="button">{{ __('Opslaan') }}</button>

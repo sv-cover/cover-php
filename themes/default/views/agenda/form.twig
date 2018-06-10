@@ -19,17 +19,17 @@
 	
 	<div>
 		{{ html_label(__('Kop'), 'kop', errors=errors, required=true) }}
-		{{ html_input_text('kop', iter, maxlength=100) }}
+		{{ html_input_text('kop', iter, maxlength=100, required=true) }}
 	</div>
 
 	<div>
 		{{ html_label(__('Commissie'), 'committee_id', errors=errors, required=true) }}
-		{{ html_select_field('committee_id', view.available_committees, iter) }}
+		{{ html_select_field('committee_id', view.available_committees, iter, required=true) }}
 	</div>
 
 	<div>
 		{{ html_label(__('Begintijd'), 'van', errors=errors, required=true) }}
-		{{ html_input_datetime('van', iter, errors=errors) }}
+		{{ html_input_datetime('van', iter, errors=errors, required=true) }}
 	</div>
 
 	<div>

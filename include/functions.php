@@ -1041,13 +1041,13 @@
 	function array_path($array, $path, $default_value = null)
 	{
 		// Construct the path
-		if (!preg_match('/^(?P<head>\w+)(?P<rest>(\[\w+\]|->\w+)*)$/', $path, $match))
+		if (!preg_match('/^(?P<head>[\w-]+)(?P<rest>(\[[\w-]+\]|->\w+)*)$/', $path, $match))
 			throw new InvalidArgumentException("The path '$path' is malformed");
 
 		$steps = [['index' => $match['head']]];
 
 		if (!empty($match['rest'])) {
-			if (!preg_match_all('/\[(?P<index>\w+)\]|->(?P<property>\w+)/', $match['rest'], $match, PREG_SET_ORDER))
+			if (!preg_match_all('/\[(?P<index>[\w-]+)\]|->(?P<property>\w+)/', $match['rest'], $match, PREG_SET_ORDER))
 				throw new InvalidArgumentException('The rest of the path is malformed');
 
 			$steps = array_merge($steps, $match);

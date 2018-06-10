@@ -538,4 +538,76 @@
 		
 		return $fields;
 	}
-?>
+
+/**
+ * Class that helps collect errors when validating a form.
+ */
+class ErrorSet implements ArrayAccess, Countable
+{
+	public $namespace;
+
+	public $errors;
+
+	public function __construct(array $namespace = [], &$errors = null)
+	{
+		$this->namespace = $namespace;
+
+		if ($errors !== null)
+			$this->errors =& $errors;
+		else
+			$this->errors = [];
+	}
+
+	protected function key($field)
+	{
+		return implode('.', array_merge($this->namespace, [$field]));
+	}
+
+	public function namespace($namespace)
+	{
+		return new ErrorSet(array_merge($this->namespace, [$namespace]), $this->errors);
+	}
+
+	public function offsetSet($field, $error)
+	{
+		if (is_null($field)) // Old append syntax
+			$field = $error;
+
+		$this->errors[$this->key($field)] = $error;
+	}
+
+	public function offsetGet($field)
+	{
+		$key = $this->key($field);
+		return isset($this->errors[$key])
+			? $this->errors[$key]
+			: null;
+	}
+
+	public function offsetExists($field)
+	{
+		return isset($this->errors[$this->key($field)]);
+	}
+
+	public function offsetUnset($field)
+	{
+		unset($this->errors[$this->key($field)]);
+	}
+
+	public function count()
+	{
+		$counter = 0;
+
+		foreach ($this->errors as $field => $error)
+			if ($this->inNamespace($field))
+				$counter++;
+
+		return $counter;
+	}
+
+	private function inNamespace($field)
+	{
+		$ns = implode('.', $this->namespace);
+		return substr_compare($field, $ns, 0, strlen($ns)) === 0;
+	}
+}

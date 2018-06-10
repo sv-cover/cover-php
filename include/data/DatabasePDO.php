@@ -294,7 +294,7 @@ class DatabasePDO
 		elseif (is_int($value))
 			return sprintf('%d', $value);
 		elseif (is_bool($value))
-			return $value ? '1' : '0';
+			return $value ? 'TRUE' : 'FALSE';
 		elseif (is_string($value))
 			return $this->resource->quote($value);
 		elseif (is_array($value))
@@ -305,6 +305,7 @@ class DatabasePDO
 
 	protected function prepare_value($value, $placeholder, array &$values = [])
 	{
+		// Raw values
 		if ($value === null)
 			return 'NULL';
 		elseif ($value instanceof DatabaseLiteral)
@@ -312,7 +313,9 @@ class DatabasePDO
 		elseif (is_int($value))
 			return sprintf('%d', $value);
 		elseif (is_bool($value))
-			return $value ? '1' : '0';
+			return $value ? 'TRUE' : 'FALSE';
+
+		// Values that actually fill placeholders
 		elseif ($value instanceof DateTime)
 			$values[$placeholder] = $value->format('Y-m-d H:i:s');
 		elseif (is_string($value))
@@ -333,7 +336,7 @@ class DatabasePDO
 	  *
 	  * @result true if delete was successful, false otherwise
 	  */
-	public function delete($table, $condition)
+	public function delete($table, $condition, array $input_parameters = [])
 	{
 		if (!$condition)
 			throw new RuntimeException('Are you really really sure you want to delete everything?');
@@ -341,7 +344,7 @@ class DatabasePDO
 		if (!is_string($condition))
 			throw new InvalidArgumentException('condition parameter has to be a SQL query string');
 
-		return $this->execute(sprintf('DELETE FROM "%s" WHERE %s', $table, $condition));
+		return $this->execute(sprintf('DELETE FROM "%s" WHERE %s', $table, $condition), $input_parameters);
 	}
 
 	public function read_blob($data)

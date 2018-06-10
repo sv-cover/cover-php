@@ -3,36 +3,7 @@
 require_once 'include/init.php';
 require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
-
-function validate_not_empty($value)
-{
-	return strlen($value) > 0;
-}
-
-function validate_email($value)
-{
-	return filter_var($value, FILTER_VALIDATE_EMAIL);
-}
-
-function validate_committee($committee_id)
-{
-	try {
-		get_model('DataModelCommissie')->get_iter($committee_id);
-		return true;
-	} catch (NotFoundException $e) {
-		return false;
-	}
-}
-
-function validate_member($member_id)
-{
-	try {
-		get_model('DataModelMember')->get_iter($member_id);
-		return true;
-	} catch (NotFoundException $e) {
-		return false;
-	}
-}
+require_once 'include/validate.php';
 
 class ControllerCRUD extends Controller
 {
@@ -42,46 +13,16 @@ class ControllerCRUD extends Controller
 
 	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
-		$rules = $iter->rules();
-
-		foreach ($rules as $field => $options)
-		{
-			$cleaner = isset($options['clean']) ? $options['clean'] : 'trim';
-
-			$validators = isset($options['validate']) ? $options['validate'] : [];
-
-			$required = isset($options['required']) ? $options['required'] : false;
-
-			if (!isset($data[$field])) {
-				if (!$iter->has_id() && $required)
-					$errors[] = $field;
-
-				continue;
-			}
-
-			$data[$field] = call_user_func($cleaner, $data[$field]);
-
-			foreach ($validators as $validator)
-			{
-				if (is_string($validator))
-					$validator = 'validate_' . $validator;
-
-				if (!call_user_func($validator, $data[$field], $field, $iter)) {
-					$errors[] = $field;
-					break;
-				}
-			}
-		}
-
-		return count($errors) === 0;
+		return validate_dataiter($iter, $data, $errors);	
 	}
 
-	protected function _create(DataIter $iter, array $data, array &$errors)
+	protected function _create(DataIter $iter, array $input, array &$errors)
 	{
-		if (!$this->_validate($iter, $data, $errors))
+		$data = $this->_validate($iter, $input, $errors);
+
+		if ($data === false)
 			return false;
 
-		// TODO: Oh this is soo unsafe! We just set all the data, then insert all the data using the model :(
 		$iter->set_all($data);
 
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?

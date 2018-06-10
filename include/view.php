@@ -75,6 +75,10 @@ class View
 		// And add a shortcut to the layout directory through @layout
 		$loader->addPath('themes/' . get_theme() . '/views/_layout', 'layout');
 
+		$loader->addPath('themes/' . get_theme() . '/views/signup/fields', 'form_fields');
+
+		$loader->addPath('themes/' . get_theme() . '/views/signup/configuration', 'form_configuration');
+
 		$this->twig = new Twig_Environment($loader, array(
 			'debug' => true,
 			'strict_variables' => true,

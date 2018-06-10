@@ -1164,3 +1164,90 @@ $(document).on('ready partial-content-loaded', function(e) {
 		$target.on('show', refresh);
 	});
 });
+
+// Make elements sortable by using data-sortable-action and data-sortable-id attributes.
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-sortable-action]').each(function() {
+		var $list = $(this);
+
+		$list.sortable({
+			handle: '.sortable-drag-handle',
+			cursor: 'grabbing',
+			update: function() {
+				console.log($list.data('sortableAction'), $list.children().map(function() {
+					return $(this).data('sortableId');
+				}));
+				$.post($list.data('sortableAction'), {
+					order: $list.children().map(function() {
+						return $(this).data('sortableId');
+					}).get()
+				});
+			}
+		});
+	});
+});
+
+// Forms that autosubmit on change (just submit, no feedback)
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('form[data-submit-on-change]').each(function() {
+		var extraData = $.map($(this).data('submitOnChange'), function(value, name) {
+			return {name: name, value: value};
+		});
+
+		$(this).on('change', function(e) {
+			$.ajax({
+				url: $(this).attr('action'),
+				method: $(this).attr('method').toUpperCase(),
+				data: $(this).serializeArray().concat(extraData)
+			});
+		});
+
+		$(this).addClass('submit-on-change');
+
+		var form = this;
+		$(e.target).find('button').filter(function() {
+			return this.form === form;
+		}).addClass('submit-on-change');
+	})
+})
+
+// Growing lists (i.e. the options list in form fields)
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-growing-list]').each(function() {
+		var $list = $(this);
+		var $template = $(this).find('[data-template]').detach();
+
+		function check() {
+			if ($list.find('input').last().val() != '')
+				$list.append($template.clone());
+		}
+
+		$list.on('input', function(e) {
+			check();
+		});
+
+		$list.on('keydown', function(e) {
+			if (e.keyCode == 8 && e.target.value == '') {// backspace in empty field
+				e.preventDefault();
+
+				var $child = $(e.target).closest($list.children());
+				$child.prev($list.children()).each(function() {
+					$(this).find('input:first-of-type').each(function() {
+						this.setSelectionRange(this.value.length, this.value.length);
+					});
+				});
+				$child.remove();
+			}
+		});
+
+		$list.sortable({
+			handle: '.drag-handle',
+			cursor: 'grabbing',
+			update: function() {
+				$list.trigger('change');
+			}
+		});
+
+		check();
+	})
+});

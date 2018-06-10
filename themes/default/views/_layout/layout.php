@@ -53,6 +53,11 @@ class LayoutViewHelper
 				'url' => 'mailinglijsten.php',
 				'label' => __('Mailinglijsten')
 			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'signup.php',
+				'label' => __('Formulieren')
+			];
 		}
 
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {

@@ -16,8 +16,6 @@
 
 		protected $model;
 
-		protected $routes = array();
-
 		public function view()
 		{
 			return $this->view;
@@ -52,16 +50,7 @@
 
 		protected function run_impl()
 		{
-			$path = substr($_SERVER['REQUEST_URI'], strlen($_SERVER['SCRIPT_NAME']));
-
-			if (!$path)
-				$path = '/';
-
-			foreach ($this->routes as $route => $callback)
-			 	if (preg_match('{^' . $route . '$}i', $path, $match))
-			 		return call_user_func_array($callback, array_slice($match, 1));
-
-			throw new NotFoundException('No route for path "' . $path . '"');
+			return;
 		}
 
 		protected function run_exception($e)

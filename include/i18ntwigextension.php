@@ -14,12 +14,14 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('trans', '__'),
 			new Twig_SimpleFilter('translate_parts', '__translate_parts'),
 			new Twig_SimpleFilter('ordinal', 'ordinal'),
-			new Twig_SimpleFilter('full_name', 'member_full_name'),
+			new Twig_SimpleFilter('full_name', function($member) {
+				return $member ? member_full_name($member) : null;
+			}),
 			new Twig_SimpleFilter('personal_full_name', function($member) {
-				return member_full_name($member, BE_PERSONAL);
+				return $member ? member_full_name($member, BE_PERSONAL) : null;
 			}),
 			new Twig_SimpleFilter('full_name_ignore_privacy', function($member) {
-				return member_full_name($member, IGNORE_PRIVACY);
+				return $member ? member_full_name($member, IGNORE_PRIVACY) : null;
 			}),
 			new Twig_SimpleFilter('first_name', 'member_first_name'),
 			new Twig_SimpleFilter('period_short', 'agenda_short_period_for_display', ['is_safe' => ['html']]),
@@ -49,6 +51,31 @@ class I18NTwigExtension extends Twig_Extension
 						$groups[$iter[$property]][] = $iter;
 
 				return $groups;
+			}),
+			new Twig_SimpleFilter('sort_by', function($iters, ...$args) {
+				$sort_args = [];
+
+				foreach ($args as $sort_arg) {
+					if (!preg_match('/^(?P<index>[^\s]+)(?:\s+(?P<order>asc|desc))$/i', $sort_arg, $match))
+						throw new InvalidArgumentException('Cannot parse sort arg: '. $sort_arg);
+
+					$sort_args[] = array_select($iters, $match['index']);
+					switch ($match['order']) {
+						case 'desc':
+							$sort_args[] = SORT_DESC;
+							break;
+						case 'asc':
+						default:
+							$sort_args[] = SORT_ASC;
+							break;
+					}
+				}
+
+				$sort_args[] =& $iters;
+
+				array_multisort(...$sort_args);
+
+				return $iters;
 			})
 		];
 	}
@@ -78,6 +105,24 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleTest('numeric', 'is_numeric'),
 			new Twig_SimpleTest('instance_of', function($var, $classname) {
 				return $var instanceof $classname; 
+			}),
+			new Twig_SimpleTest('past', function($date) {
+				if (!$date)
+					return false;
+				
+				if (!($date instanceof DateTime))
+					$date = new DateTime($date);
+
+				return $date < new DateTime();
+			}),
+			new Twig_SimpleTest('future', function($date) {
+				if (!$date)
+					return false;
+				
+				if (!($date instanceof DateTime))
+					$date = new DateTime($date);
+
+				return $date > new DateTime();
 			})
 		];
 	}
