@@ -19,7 +19,7 @@
 					<span class="month">{{ item.van|date('M') }}</span>
 					<span class="day">{{ item.van|date('d') }}</span>
 				</div>
-				<span class="title">{{ item.kop }}</span>
+				<span class="title">{{ item.kop|parse_tags }}</span>
 				{% if item.extern %}
 					<span class="details">{{ __('Externe activiteit') }}</span>
 				{% else %}

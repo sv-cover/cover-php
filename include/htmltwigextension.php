@@ -31,6 +31,7 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		return [
 			new Twig_SimpleFilter('parse_markup', 'markup_parse', ['is_safe' => ['html']]),
+			new Twig_SimpleFilter('parse_tags', [__CLASS__, 'parse_tags'], ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('strip_markup', 'markup_strip'),
 			new Twig_SimpleFilter('excerpt', 'text_excerpt')
 		];
@@ -360,5 +361,12 @@ class HTMLTwigExtension extends Twig_Extension
 		return sprintf('<a href="mailto:%s">%s</a>',
 			markup_format_attribute($email),
 			markup_format_text($email));
+	}
+
+	static public function parse_tags($input)
+	{
+		return preg_replace_callback('/\[([a-z]+)\]/i', function($match) {
+			return sprintf('<span class="tag %s">%s</span>', strtolower($match[1]), ucfirst($match[1]));
+		}, markup_format_text($input));
 	}
 }

@@ -205,14 +205,19 @@ ul.expander{
 	font-weight: normal;
 }
 
+.agenda .tag,
 .agenda .label-pending {
+	background: rgba(0, 0, 0, 0.1);
 	display: inline-block;
-	background: #FFD700;
 	padding: 4px;
 	border-radius: 4px;
 	font-size: 0.8em;
 	font-weight: normal;
 	font-style: italic;
+}
+
+.agenda .label-pending {
+	background: #FFD700;
 }
 
 .menu hr {
