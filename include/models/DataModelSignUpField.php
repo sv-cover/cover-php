@@ -156,6 +156,26 @@ class DataModelSignUpField extends DataModel
 		return parent::find($conditions);
 	}
 
+	public function insert(DataIter $iter)
+	{
+		if ($iter['sort_index'] === null)
+			$iter['sort_index'] = $this->_next_sort_index($iter['form_id']);
+
+		return parent::insert($iter);
+	}
+
+	private function _next_sort_index($form_id)
+	{
+		return $this->db->query_value("
+			SELECT
+				COALESCE(MAX(sort_index) + 1, 0)
+			FROM
+				{$this->table}
+			WHERE
+				form_id = :form_id
+			", [':form_id' => $form_id]);
+	}
+
 	public function delete(DataIter $iter)
 	{
 		$iter['deleted'] = true;
