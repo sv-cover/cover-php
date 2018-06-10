@@ -44,7 +44,22 @@ class BankAccount implements \SignUpFieldType
 
 	public function suggest(\DataIterMember $member)
 	{
-		return null;
+		try {
+			require_once 'include/incassomatic.php';
+
+			$incasso_api = \incassomatic\shared_instance();
+			$contracts = $incasso_api->getContracts($member);
+
+			// Only use valid contracts
+			$contract = current(array_filter($contracts, function($contract) { return $contract->is_geldig; }));
+
+			if (!$contract)
+				return null;
+
+			return json_encode(['iban' => $contract->iban, 'bic' => $contract->bic]);
+		} catch (\RuntimeException $e) {
+			return null;
+		}
 	}
 
 	public function render($renderer, $value, $error)
