@@ -3324,7 +3324,6 @@ ul.call-to-action li a::before {
 
 .form-field {
 	position: relative;
-	margin: 8px 0;
 	padding: 0 0 0 38px;
 	border-bottom: 1px solid #ccc;
 }
@@ -3336,6 +3335,10 @@ ul.call-to-action li a::before {
 	bottom: 0;
 	width: 38px;
 	cursor: grab;
+}
+
+.form-field .sortable-drag-handle + form {
+	padding-top: 8px;
 }
 
 .form-field *[data-growing-list] {
@@ -3364,28 +3367,40 @@ ul.call-to-action li a::before {
 }
 
 .form-field .sortable-drag-handle:hover,
-.form-field .sortable-drag-handle:hover + form {
+.form-field .sortable-drag-handle:hover + form,
+.form-field .sortable-drag-handle:hover + form + form,
+.form-field .sortable-drag-handle:hover + form + form + .controls {
 	background: #ececec;
 }
 
+.form-field .field-type {
+	font-size: 1em;
+}
+
+.field-type-name::before,
 .field-type-textfield::before,
 .field-type-checkbox::before,
 .field-type-choice::before,
 .field-type-editable::before,
-.field-type-address::before {
+.field-type-address::before,
+.field-type-bank-account::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit;
 	text-rendering: auto;
 	-webkit-font-smoothing: antialiased;
 	display: inline-block;
 	position: absolute;
-	left: 8px;
-	top: 10px;
+	left: 18px;
+	top: 8px;
 	height: 30px;
 	margin: auto auto;
-	font-size: 24px;
+	font-size: 18px;
 	opacity: 0.3;
 	pointer-events: none;
+}
+
+.field-type-name::before {
+	content: "\f007";
 }
 
 .field-type-address::before {
@@ -3406,6 +3421,10 @@ ul.call-to-action li a::before {
 
 .field-type-choice::before {
 	content: "\f05d";
+}
+
+.field-type-bank-account::before {
+	content: "\f09d";
 }
 
 .messageBox .signup-form {
