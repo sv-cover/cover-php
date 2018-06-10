@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2018-05-07 12:43+0200\n"
+"POT-Creation-Date: 2018-06-10 16:04+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -24,6 +24,7 @@ msgid "Geen toegang"
 msgstr "No access"
 
 #: themes/default/views/_layout/401_unauthorized.twig:13
+#: themes/default/views/agenda/single.twig:113
 #: themes/default/views/agenda/subscribe.twig:19
 #: themes/default/views/boeken/go_to_log_in.twig:12
 #: themes/default/views/lidworden/known_member.twig:8
@@ -120,7 +121,7 @@ msgid "Er staan op dit moment geen activiteiten op de agenda."
 msgstr "There are no activities on the calendar at the moment."
 
 #: themes/default/views/_layout/widgets/agenda.twig:39
-#: themes/default/views/agenda/single.twig:106
+#: themes/default/views/agenda/single.twig:120
 msgid "Volledige agenda"
 msgstr "Complete calendar"
 
@@ -173,7 +174,7 @@ msgstr "Logout"
 
 #: themes/default/views/_layout/widgets/login.twig:4
 #: themes/default/views/mailinglijsten/single.twig:53
-#: themes/default/views/profiel/profiel.php:52
+#: themes/default/views/profiel/profiel.php:44
 msgid "Profiel"
 msgstr "Profile"
 
@@ -239,7 +240,7 @@ msgstr "ID"
 #: themes/default/views/mailinglijsten/index.twig:18
 #: themes/default/views/mailinglijsten/single.twig:37
 #: themes/default/views/mailinglijsten/subscribe_guest_form.twig:11
-#: themes/default/views/profiel/profiel.php:108
+#: themes/default/views/profiel/profiel.php:100
 msgid "Naam"
 msgstr "Name"
 
@@ -296,6 +297,7 @@ msgstr "Head"
 #: themes/default/views/committeebattle/index.twig:20
 #: themes/default/views/mailinglijsten/form.twig:30
 #: themes/default/views/search/_single_committee.twig:8
+#: themes/default/views/signup/form_form.twig:24
 #: include/models/DataModelForum.php:1350
 msgid "Commissie"
 msgstr "Committee"
@@ -342,6 +344,7 @@ msgstr "Preview"
 #: themes/default/views/forum/thread_form.twig:28
 #: themes/default/views/show/form.twig:44
 #: themes/default/views/show/form.twig:47
+#: themes/default/views/signup/configuration/editable.twig:12
 msgid "Voorbeeld wordt geladen…"
 msgstr "Loading preview…"
 
@@ -379,7 +382,7 @@ msgid "Deze activiteit wordt niet georganiseerd door Cover zelf."
 msgstr "This activity is not organised by Cover."
 
 #: themes/default/views/agenda/index.twig:77
-#: themes/default/views/agenda/single.twig:108
+#: themes/default/views/agenda/single.twig:122
 #: themes/default/views/announcements/announcements.twig:49
 #: themes/default/views/announcements/single.twig:32
 #: themes/default/views/committeebattle/committee.twig:40
@@ -389,7 +392,7 @@ msgid "Verwijder"
 msgstr "Delete"
 
 #: themes/default/views/agenda/index.twig:80
-#: themes/default/views/agenda/single.twig:111
+#: themes/default/views/agenda/single.twig:125
 #: themes/default/views/announcements/announcements.twig:46
 #: themes/default/views/announcements/single.twig:29
 #: themes/default/views/fotoboekreacties/_comment.twig:46
@@ -436,6 +439,65 @@ msgstr "Deny calendar event"
 #: themes/default/views/agenda/moderate.twig:59
 msgid "Toepassen"
 msgstr "Apply changes"
+
+#: themes/default/views/agenda/signup_form.twig:3
+#, python-format
+msgid "Je hebt je aangemeld op %s."
+msgstr "You signed up on %s."
+
+#: themes/default/views/agenda/signup_form.twig:3
+msgid "Bekijk je aanmelding"
+msgstr "Show my registration"
+
+#: themes/default/views/agenda/signup_form.twig:9
+#: themes/default/views/signup/entry_form.twig:18
+msgid "De inschrijvingen zijn gesloten."
+msgstr "The registrations are closed."
+
+#: themes/default/views/agenda/signup_form.twig:10
+#: themes/default/views/signup/entry_form.twig:19
+msgid ""
+"Jij kan dit formulier nu wel zien omdat je de rechten hebt om mensen in te "
+"schrijven buiten de inschrijfperiode."
+msgstr ""
+"You can see this form because you are allowed to sign up people outside of "
+"the sign-up period."
+
+#: themes/default/views/agenda/signup_form.twig:15
+msgid "Het inschrijfformulier is hier binnenkort te vinden."
+msgstr "The sign-up form will soon be available on this page."
+
+#: themes/default/views/agenda/signup_form.twig:17
+#, python-format
+msgid "De inschrijvingen gaan open op %s."
+msgstr "The registrations will open on %s."
+
+#: themes/default/views/agenda/signup_form.twig:19
+#, python-format
+msgid "De inschrijvingen zijn gesloten. De deadline voor inschrijven was %s."
+msgstr "The registrations are closed. The deadline was %s."
+
+#: themes/default/views/agenda/signup_form.twig:42
+#: themes/default/views/signup/entry_form.twig:40
+msgid "Wijzig inschrijving"
+msgstr "Modify entry"
+
+#: themes/default/views/agenda/signup_form.twig:42
+#: themes/default/views/signup/entry_form.twig:40
+msgid "Schrijf mij in"
+msgstr "Sign me up"
+
+#: themes/default/views/agenda/signup_form.twig:49
+#: themes/default/views/signup/entry_form.twig:9
+#: themes/default/views/signup/list_entries.twig:9
+msgid "Bewerk formulier"
+msgstr "Modify form"
+
+#: themes/default/views/agenda/signup_form.twig:50
+#: themes/default/views/signup/entry_form.twig:10
+#: themes/default/views/signup/form_form.twig:10
+msgid "Bekijk inschrijvingen"
+msgstr "Show sign-ups"
 
 #: themes/default/views/agenda/single.twig:7
 msgid ""
@@ -489,6 +551,16 @@ msgstr "Date & time"
 msgid "Geplaatst door"
 msgstr "Placed by"
 
+#: themes/default/views/agenda/single.twig:113
+#, python-format
+msgid "%s om je aan te melden voor deze activiteit."
+msgstr "%s to sign-up for this activity."
+
+#: themes/default/views/agenda/single.twig:128
+#: themes/default/views/signup/list_forms.twig:9
+msgid "Nieuw inschrijfformulier"
+msgstr "New sign-up form"
+
 #: themes/default/views/agenda/subscribe.twig:6
 msgid "Abonneer je op de agenda"
 msgstr "Subscribe to Cover's calendar"
@@ -522,7 +594,7 @@ msgstr "That is why you need to log in."
 
 #: themes/default/views/almanak/index.twig:3
 #: themes/default/views/almanak/index.twig:6
-#: themes/default/views/_layout/layout.php:106
+#: themes/default/views/_layout/layout.php:111
 msgid "Almanak"
 msgstr "Almanac"
 
@@ -540,37 +612,37 @@ msgstr "Visibility"
 #: themes/default/views/commissies/form.twig:36
 #: themes/default/views/search/_single_member.twig:3
 #: include/models/DataModelForum.php:1347
-#: include/models/DataModelMember.php:666
-#: themes/default/views/profiel/profiel.php:377
+#: include/models/DataModelMember.php:668
+#: themes/default/views/profiel/profiel.php:368
 msgid "Lid"
 msgstr "Member"
 
 #: themes/default/views/almanak/index.twig:23
-#: themes/default/views/profiel/profiel.php:378
+#: themes/default/views/profiel/profiel.php:369
 msgid "Lid (verborgen)"
 msgstr "Member (hidden)"
 
 #: themes/default/views/almanak/index.twig:24
 #: themes/default/views/search/_single_member.twig:5
-#: include/models/DataModelMember.php:672
+#: include/models/DataModelMember.php:674
 #: themes/default/views/almanak/almanak.php:39
-#: themes/default/views/profiel/profiel.php:379
+#: themes/default/views/profiel/profiel.php:370
 msgid "Lid af"
 msgstr "Previously a member"
 
 #: themes/default/views/almanak/index.twig:25
 #: themes/default/views/search/_single_member.twig:7
-#: include/models/DataModelMember.php:675
+#: include/models/DataModelMember.php:677
 #: themes/default/views/almanak/almanak.php:42
-#: themes/default/views/profiel/profiel.php:380
+#: themes/default/views/profiel/profiel.php:371
 msgid "Erelid"
 msgstr "Honorary Member"
 
 #: themes/default/views/almanak/index.twig:26
 #: themes/default/views/search/_single_member.twig:9
-#: include/models/DataModelMember.php:678
+#: include/models/DataModelMember.php:680
 #: themes/default/views/almanak/almanak.php:45
-#: themes/default/views/profiel/profiel.php:381
+#: themes/default/views/profiel/profiel.php:372
 msgid "Donateur"
 msgstr "Donor"
 
@@ -743,7 +815,7 @@ msgstr "Add a new board..."
 #: themes/default/views/boeken/go_to_log_in.twig:3
 #: themes/default/views/boeken/go_to_log_in.twig:6
 #: themes/default/views/boeken/go_to_webshop.twig:3
-#: themes/default/views/_layout/layout.php:141
+#: themes/default/views/_layout/layout.php:146
 msgid "Boeken bestellen"
 msgstr "Order books"
 
@@ -764,7 +836,7 @@ msgstr "E-mail the %s at %s"
 #: themes/default/views/commissies/archive.twig:25
 #: themes/default/views/committeebattle/form.twig:14
 #: themes/default/views/profiel/privacy_tab.twig:17
-#: themes/default/views/_layout/layout.php:104
+#: themes/default/views/_layout/layout.php:109
 msgid "Leden"
 msgstr "Members"
 
@@ -922,7 +994,7 @@ msgstr "Deactivate"
 #: themes/default/views/committeebattle/form.twig:19
 #: themes/default/views/mailinglijsten/single.twig:78
 #: themes/default/views/sessions/overrides.twig:20
-#: themes/default/views/_layout/layout.php:78
+#: themes/default/views/_layout/layout.php:83
 msgid "Commissies"
 msgstr "Committees"
 
@@ -945,7 +1017,7 @@ msgstr "Modify %s page"
 
 #: themes/default/views/commissies/working_groups.twig:3
 #: themes/default/views/commissies/working_groups.twig:10
-#: themes/default/views/_layout/layout.php:82
+#: themes/default/views/_layout/layout.php:87
 msgid "Werkgroepen"
 msgstr "Working groups"
 
@@ -1075,7 +1147,7 @@ msgstr "Back to thread"
 #: themes/default/views/forum/reply_form.twig:4
 #: themes/default/views/forum/thread.twig:6
 #: themes/default/views/forum/thread_form.twig:4
-#: themes/default/views/_layout/layout.php:127
+#: themes/default/views/_layout/layout.php:132
 msgid "Forum"
 msgstr "Forum"
 
@@ -1114,7 +1186,7 @@ msgstr "Page"
 #: include/models/DataModelForum.php:1220
 #: include/models/DataModelForum.php:1330
 #: include/models/DataModelForum.php:1356
-#: include/models/DataModelMember.php:684
+#: include/models/DataModelMember.php:686
 msgid "Onbekend"
 msgstr "Unknown"
 
@@ -1640,7 +1712,7 @@ msgid "Bijv. Neumann"
 msgstr "E.g. Neumann"
 
 #: themes/default/views/lidworden/lidworden.twig:37
-#: themes/default/views/profiel/profiel.php:113
+#: themes/default/views/profiel/profiel.php:105
 msgid "Geboortedatum"
 msgstr "Birthdate"
 
@@ -1667,20 +1739,23 @@ msgstr "Female"
 #: themes/default/views/lidworden/lidworden.twig:48
 #: themes/default/views/mailinglijsten/index.twig:19
 #: themes/default/views/mailinglijsten/single.twig:17
-#: themes/default/views/profiel/profiel.php:123
+#: themes/default/views/signup/fields/address.twig:2
+#: themes/default/views/profiel/profiel.php:115
 msgid "Adres"
 msgstr "Address"
 
 #: themes/default/views/lidworden/lidworden.twig:51
+#: themes/default/views/signup/fields/address.twig:4
 msgid "Straatnaam + Huisnummer"
 msgstr "Street name + number"
 
 #: themes/default/views/lidworden/lidworden.twig:52
+#: themes/default/views/signup/fields/address.twig:3
 msgid "Bijv. Nijenborgh 9"
 msgstr "E.g. Nijenborgh 9"
 
 #: themes/default/views/lidworden/lidworden.twig:56
-#: themes/default/views/profiel/profiel.php:127
+#: themes/default/views/profiel/profiel.php:119
 msgid "Postcode"
 msgstr "Zipcode"
 
@@ -1689,28 +1764,30 @@ msgid "Bijv. 9747 AG"
 msgstr "E.g. 9747 AG"
 
 #: themes/default/views/lidworden/lidworden.twig:60
-#: themes/default/views/profiel/profiel.php:131
+#: themes/default/views/signup/fields/address.twig:7
+#: themes/default/views/profiel/profiel.php:123
 msgid "Woonplaats"
 msgstr "Place of residence"
 
 #: themes/default/views/lidworden/lidworden.twig:61
+#: themes/default/views/signup/fields/address.twig:8
 msgid "Bijv. Groningen"
 msgstr "E.g. Groningen"
 
 #: themes/default/views/lidworden/lidworden.twig:67
-#: themes/default/views/_layout/layout.php:148
+#: themes/default/views/_layout/layout.php:153
 msgid "Contact"
 msgstr "Contact"
 
 #: themes/default/views/lidworden/lidworden.twig:70
-#: themes/default/views/profiel/profiel.php:135
+#: themes/default/views/profiel/profiel.php:127
 msgid "Telefoonnummer"
 msgstr "Phone number"
 
 #: themes/default/views/lidworden/lidworden.twig:75
 #: themes/default/views/mailinglijsten/single.twig:38
 #: themes/default/views/mailinglijsten/subscribe_guest_form.twig:15
-#: themes/default/views/profiel/profiel.php:139
+#: themes/default/views/profiel/profiel.php:131
 msgid "E-Mail adres"
 msgstr "E-Mail address"
 
@@ -1723,7 +1800,7 @@ msgstr ""
 "processed after you have clicked the link."
 
 #: themes/default/views/lidworden/lidworden.twig:82
-#: themes/default/views/_layout/layout.php:136
+#: themes/default/views/_layout/layout.php:141
 msgid "Studie"
 msgstr "Study"
 
@@ -1757,7 +1834,7 @@ msgstr "Master"
 
 #: themes/default/views/lidworden/lidworden.twig:103
 #: themes/default/views/mailinglijsten/single.twig:70
-#: themes/default/views/profiel/profiel.php:118
+#: themes/default/views/profiel/profiel.php:110
 msgid "Beginjaar"
 msgstr "Starting year"
 
@@ -1773,14 +1850,17 @@ msgid "Betaling"
 msgstr "Payment"
 
 #: themes/default/views/lidworden/lidworden.twig:113
+#: themes/default/views/signup/fields/bankaccount.twig:2
 msgid "IBAN"
 msgstr "IBAN"
 
 #: themes/default/views/lidworden/lidworden.twig:118
+#: themes/default/views/signup/fields/bankaccount.twig:6
 msgid "BIC"
 msgstr "BIC"
 
 #: themes/default/views/lidworden/lidworden.twig:120
+#: themes/default/views/signup/fields/bankaccount.twig:8
 msgid "Alleen nodig wanneer IBAN [i]niet[/i] met 'NL' begint"
 msgstr "Only required if your IBAN [i]does not[/i] start with 'NL'"
 
@@ -1909,7 +1989,7 @@ msgstr "Archives of %s"
 #: themes/default/views/mailinglijsten/single.twig:12
 #: themes/default/views/profiel/mailing_lists_tab.twig:7
 #: themes/default/views/_layout/layout.php:54
-#: themes/default/views/profiel/profiel.php:68
+#: themes/default/views/profiel/profiel.php:60
 msgid "Mailinglijsten"
 msgstr "Mailing lists"
 
@@ -2047,6 +2127,8 @@ msgid "Zichtbaardheid"
 msgstr "Visibility"
 
 #: themes/default/views/mailinglijsten/index.twig:22
+#: themes/default/views/signup/form_form.twig:29
+#: themes/default/views/signup/list_forms.twig:20
 msgid "Activiteit"
 msgstr "Activity"
 
@@ -2122,8 +2204,7 @@ msgstr "Unsubscribe me"
 msgid "Nee, ik was gewoon nieuwsgierig"
 msgstr "No, I was just curious"
 
-#: themes/default/views/profiel/_profile_widget.twig:15
-#: themes/default/views/profiel/photo_form.twig:11
+#: themes/default/views/profiel/_profile_widget.twig:14
 #: themes/default/views/profiel/profile_tab.twig:73
 msgid "Kies nieuwe foto"
 msgstr "Choose photo"
@@ -2235,7 +2316,7 @@ msgstr ""
 
 #: themes/default/views/profiel/kast_tab.twig:7
 #: themes/default/views/profiel/kast_tab_exception.twig:7
-#: themes/default/views/profiel/profiel.php:89
+#: themes/default/views/profiel/profiel.php:81
 msgid "KAST"
 msgstr "KAST"
 
@@ -2285,11 +2366,6 @@ msgstr "Personal data"
 #: themes/default/views/profiel/profile_tab.twig:36
 msgid "Opslaan"
 msgstr "Save"
-
-#: themes/default/views/profiel/photo_form.twig:3
-#: themes/default/views/profiel/photo_form.twig:6
-msgid "Profielfoto"
-msgstr "Profile picture"
 
 #: themes/default/views/profiel/privacy_tab.twig:7
 msgid "Privacy instellingen"
@@ -2386,7 +2462,7 @@ msgstr ""
 "a>."
 
 #: themes/default/views/profiel/public_tab.twig:46
-#: include/models/DataModelPhotobookFace.php:174
+#: include/models/DataModelPhotobookFace.php:220
 #, python-format, php-format
 msgid "Foto's van %s"
 msgstr "Photos of %s"
@@ -2401,7 +2477,7 @@ msgid "%s is lid van de volgende commissies:"
 msgstr "%s is a member of the following committees:"
 
 #: themes/default/views/profiel/sessions_tab.twig:7
-#: themes/default/views/profiel/profiel.php:75
+#: themes/default/views/profiel/profiel.php:67
 msgid "Sessies"
 msgstr "Sessions"
 
@@ -2608,7 +2684,7 @@ msgstr "Modify key"
 
 #: themes/default/views/settings/index.twig:3
 #: themes/default/views/settings/index.twig:6
-#: themes/default/views/_layout/layout.php:61
+#: themes/default/views/_layout/layout.php:66
 msgid "Instellingen"
 msgstr "Settings"
 
@@ -2650,13 +2726,216 @@ msgstr "Create page"
 msgid "Bekijk pagina"
 msgstr "Show page"
 
-#: themes/default/views/signup/single.twig:7
-msgid "Inschrijfformulier"
-msgstr "Registration Form"
+#: themes/default/views/signup/configuration/address.twig:2
+#: include/models/DataModelSignUpField.php:122
+msgid "Adresveld"
+msgstr "Address field"
 
-#: themes/default/views/signup/single.twig:17
-msgid "Schfij in"
+#: themes/default/views/signup/configuration/bankaccount.twig:2
+#: include/models/DataModelSignUpField.php:126
+msgid "Rekeningnummer"
+msgstr "Bank account number"
+
+#: themes/default/views/signup/configuration/checkbox.twig:2
+#: include/models/DataModelSignUpField.php:110
+msgid "Vinkje"
+msgstr "Checkbox"
+
+#: themes/default/views/signup/configuration/choice.twig:2
+#: include/models/DataModelSignUpField.php:114
+msgid "Meerkeuzevraag"
+msgstr "Multiple choice question"
+
+#: themes/default/views/signup/configuration/editable.twig:2
+#: include/models/DataModelSignUpField.php:130
+msgid "Titels en tekst (lay-out)"
+msgstr "Titles and text (layout)"
+
+#: themes/default/views/signup/configuration/editable.twig:5
+msgid "Tekst"
+msgstr "Text"
+
+#: themes/default/views/signup/configuration/name.twig:2
+#: themes/default/views/signup/fields/name.twig:2
+#: include/models/DataModelSignUpField.php:118
+msgid "Voor- en achternaam"
+msgstr "Full name"
+
+#: themes/default/views/signup/configuration/text.twig:2
+#: include/models/DataModelSignUpField.php:106
+msgid "Tekstveld"
+msgstr "Text field"
+
+#: themes/default/views/signup/delete_field.twig:3
+#: themes/default/views/signup/delete_field.twig:6
+msgid "Veld verwijderen"
+msgstr "Delete field"
+
+#: themes/default/views/signup/delete_field.twig:11
+#: themes/default/views/signup/form_form.twig:85
+msgid "Verwijder veld"
+msgstr "Delete field"
+
+#: themes/default/views/signup/delete_field.twig:12
+#: themes/default/views/signup/delete_form.twig:14
+msgid "Terug naar formulier"
+msgstr "Back to form"
+
+#: themes/default/views/signup/delete_form.twig:3
+#: themes/default/views/signup/delete_form.twig:6
+msgid "Formulier verwijderen"
+msgstr "Delete form"
+
+#: themes/default/views/signup/delete_form.twig:10
+msgid "Weet je heel zeker dat je het formulier wil verwijderen?"
+msgstr "Are you sure you want to delete this sign-up form?"
+
+#: themes/default/views/signup/delete_form.twig:11
+msgid ""
+"Ook alle aanmeldingen worden hiermee verwijderd. Er is geen manier om dit "
+"ongedaan te maken."
 msgstr ""
+"This will also delete all registrations. There is no way to undo this action."
+
+#: themes/default/views/signup/delete_form.twig:13
+msgid "Verwijder formulier"
+msgstr "Delete form"
+
+#: themes/default/views/signup/entry_form.twig:3
+#: themes/default/views/signup/entry_form.twig:13
+#: themes/default/views/signup/list_forms.twig:19
+msgid "Formulier"
+msgstr "Form"
+
+#: themes/default/views/signup/entry_form.twig:24
+msgid "Succes! Je inschrijving is compleet."
+msgstr "Success! You have signed up."
+
+#: themes/default/views/signup/fields/name.twig:3
+msgid "Bijv. John von Neumann"
+msgstr "E.g. John von Neumann"
+
+#: themes/default/views/signup/form_form.twig:3
+#: themes/default/views/signup/form_form.twig:57
+msgid "Wijzig formulier"
+msgstr "Modify form"
+
+#: themes/default/views/signup/form_form.twig:3
+msgid "Formulier toevoegen"
+msgstr "Add form"
+
+#: themes/default/views/signup/form_form.twig:9
+msgid "Bekijk formulier"
+msgstr "Show form"
+
+#: themes/default/views/signup/form_form.twig:13
+msgid "Formulier wijzigen"
+msgstr "Modify form"
+
+#: themes/default/views/signup/form_form.twig:13
+msgid "Formulier maken"
+msgstr "Create form"
+
+#: themes/default/views/signup/form_form.twig:31
+msgid ""
+"Als je een activiteit kiest wordt het formulier bij het agendapunt getoond."
+msgstr ""
+"If you link the form to an activity, it will be shown next to the calendar "
+"entry."
+
+#: themes/default/views/signup/form_form.twig:35
+msgid "Inschrijfperiode"
+msgstr "Sign-up period"
+
+#: themes/default/views/signup/form_form.twig:37
+msgid "Openingsdatum"
+msgstr "Open date"
+
+#: themes/default/views/signup/form_form.twig:39
+msgid ""
+"Het formulier gaat open op deze datum. Let op dat je het formulier niet al "
+"open zet terwijl je het nog aan het maken bent."
+msgstr ""
+"People will be able to register from this date. Make sure you don't open "
+"registrations before you finished configuring the sign-up form."
+
+#: themes/default/views/signup/form_form.twig:42
+msgid "Sluitdatum"
+msgstr "Deadline"
+
+#: themes/default/views/signup/form_form.twig:44
+msgid "Als je nog geen sluitdatum hebt mag je dit veld leeg laten."
+msgstr "If you do not have a deadline, leave this field blank."
+
+#: themes/default/views/signup/form_form.twig:50
+msgid "Sjabloon"
+msgstr "Template"
+
+#: themes/default/views/signup/form_form.twig:52
+msgid ""
+"Kies een sjabloon als je alvast een aantal standaard velden wil toevoegen."
+msgstr "Choose a template to start with a set of predefined fields."
+
+#: themes/default/views/signup/form_form.twig:57
+msgid "Maak formulier"
+msgstr "Create form"
+
+#: themes/default/views/signup/form_form.twig:59
+msgid "Verwijder formulier…"
+msgstr "Delete this form…"
+
+#: themes/default/views/signup/form_form.twig:69
+#, python-format
+msgid "Voeg een nieuw %s veld toe aan dit formulier"
+msgstr "Add a new %s to this form"
+
+#: themes/default/views/signup/form_form.twig:69
+msgid "Voeg veld toe"
+msgstr "Add field"
+
+#: themes/default/views/signup/form_form.twig:84
+msgid "Wijzig veld"
+msgstr "Modify field"
+
+#: themes/default/views/signup/list_entries.twig:3
+#: themes/default/views/signup/list_entries.twig:16
+msgid "Inschrijvingen"
+msgstr "Sign-ups"
+
+#: themes/default/views/signup/list_entries.twig:12
+msgid "Nieuwe inschrijving"
+msgstr "New sign-up"
+
+#: themes/default/views/signup/list_entries.twig:14
+msgid "Download als CSV"
+msgstr "Download as CSV"
+
+#: themes/default/views/signup/list_entries.twig:53
+msgid "Verwijder geselecteerde inschrijvingen"
+msgstr "Remove selected sign-ups"
+
+#: themes/default/views/signup/list_forms.twig:3
+#: themes/default/views/signup/list_forms.twig:12
+msgid "Inschrijfformulieren"
+msgstr "Sign-up forms"
+
+#: themes/default/views/signup/list_forms.twig:21
+msgid "Aanmeldingen"
+msgstr "Subscriptions"
+
+#: themes/default/views/signup/restore_field.twig:3
+#: themes/default/views/signup/restore_field.twig:6
+msgid "Veld terughalen"
+msgstr "Restore field"
+
+#: themes/default/views/signup/restore_field.twig:11
+#, python-format
+msgid "Dit %s is verwijderd."
+msgstr "This %s is deleted."
+
+#: themes/default/views/signup/restore_field.twig:11
+msgid "Herstel veld"
+msgstr "Restore field"
 
 #: themes/default/views/stickers/form.twig:3
 #: themes/default/views/stickers/form.twig:6
@@ -2690,7 +2969,7 @@ msgstr "Add sticker to map"
 
 #: themes/default/views/stickers/index.twig:3
 #: themes/default/views/stickers/index.twig:14
-#: themes/default/views/_layout/layout.php:109
+#: themes/default/views/_layout/layout.php:114
 msgid "Stickerkaart"
 msgstr "Sticker map"
 
@@ -2788,7 +3067,7 @@ msgstr "Set password"
 
 #: themes/default/views/weblog/index.twig:3
 #: themes/default/views/weblog/index.twig:6
-#: themes/default/views/_layout/layout.php:98
+#: themes/default/views/_layout/layout.php:103
 msgid "Weblog"
 msgstr "Weblog"
 
@@ -2876,6 +3155,19 @@ msgstr ""
 #, php-format
 msgid "Kan het model %s niet vinden"
 msgstr "Could not find the model %s"
+
+#: include/fields/Address.php:32 include/fields/BankAccount.php:34
+#: include/fields/Name.php:37 include/fields/Text.php:40
+msgid "Value required"
+msgstr "Value required"
+
+#: include/fields/BankAccount.php:37
+msgid "Invalid IBAN"
+msgstr "Invalid IBAN"
+
+#: include/fields/BankAccount.php:40
+msgid "Invalid BIC code"
+msgstr "Invalid BIC code"
 
 #: include/functions.php:55
 msgid "Fout"
@@ -3099,17 +3391,17 @@ msgstr "Yesterday"
 msgid "%d dagen geleden"
 msgstr "%d days ago"
 
-#: include/htmltwigextension.php:110
+#: include/htmltwigextension.php:112
 #, php-format
 msgid "Bijv. %d-9-20"
 msgstr "E.g. %d-9-20"
 
-#: include/htmltwigextension.php:121
+#: include/htmltwigextension.php:123
 #, php-format
 msgid "Bijv. %d-9-20 11:00"
 msgstr "E.g. %d-9-20 11:00"
 
-#: include/htmltwigextension.php:320
+#: include/htmltwigextension.php:344
 msgid "Verplicht"
 msgstr "Required"
 
@@ -3137,16 +3429,16 @@ msgstr "Groups"
 msgid "Groep"
 msgstr "Group"
 
-#: include/models/DataModelMember.php:669
+#: include/models/DataModelMember.php:671
 #: themes/default/views/almanak/almanak.php:36
 msgid "Onzichtbaar"
 msgstr "Hidden"
 
-#: include/models/DataModelMember.php:681
+#: include/models/DataModelMember.php:683
 msgid "Geen status"
 msgstr "No status"
 
-#: include/models/DataModelPhotobookFace.php:175
+#: include/models/DataModelPhotobookFace.php:221
 msgid " en "
 msgstr " and "
 
@@ -3166,11 +3458,7 @@ msgstr "previous"
 msgid "volgende"
 msgstr "next"
 
-#: include/signup.php:51
-msgid "Value required"
-msgstr ""
-
-#: include/view.php:189
+#: include/view.php:193
 msgid "Je wordt doorgestuurd. Klik hier om verder te gaan."
 msgstr "You are being redirected. Click here to continue."
 
@@ -3292,9 +3580,14 @@ msgstr "The image file is not a file uploaded by PHP."
 msgid "Het geuploadde bestand kon niet worden gelezen."
 msgstr "The uploaded file could not be read."
 
-#: profiel.php:281
+#: profiel.php:283
 msgid "Het geuploadde bestand kon niet worden geopend."
 msgstr "The uploaded file could not be opened."
+
+#: profiel.php:298
+msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
+msgstr ""
+"Your photo has been submitted. It may take a while before it will be updated."
 
 #: search.php:16
 msgid "leden"
@@ -3332,6 +3625,10 @@ msgstr "wiki pages"
 msgid "Verkeerde combinatie van e-mailadres en wachtwoord"
 msgstr "Wrong combination of e-mail address and password"
 
+#: signup.php:367
+msgid "Inschrijfformulier voor betaalde activiteit"
+msgstr "Sign-up form for a paid activitee"
+
 #: themes/default/views/_layout/layout.php:10
 msgid "Home"
 msgstr "Home"
@@ -3344,87 +3641,91 @@ msgstr "Admin"
 msgid "Pagina maken"
 msgstr "Make a page"
 
-#: themes/default/views/_layout/layout.php:66
+#: themes/default/views/_layout/layout.php:59
+msgid "Formulieren"
+msgstr "Forms"
+
+#: themes/default/views/_layout/layout.php:71
 msgid "Vereniging"
 msgstr "Association"
 
-#: themes/default/views/_layout/layout.php:70
+#: themes/default/views/_layout/layout.php:75
 msgid "Bestuur"
 msgstr "Governing Board"
 
-#: themes/default/views/_layout/layout.php:74
+#: themes/default/views/_layout/layout.php:79
 msgid "Vorige besturen"
 msgstr "Former Boards"
 
-#: themes/default/views/_layout/layout.php:86
+#: themes/default/views/_layout/layout.php:91
 msgid "Zusterverenigingen"
 msgstr "Sister unions"
 
-#: themes/default/views/_layout/layout.php:90
+#: themes/default/views/_layout/layout.php:95
 msgid "Lid/donateur worden"
 msgstr "Become a member/donor"
 
-#: themes/default/views/_layout/layout.php:94
+#: themes/default/views/_layout/layout.php:99
 msgid "Documenten"
 msgstr "Documents"
 
-#: themes/default/views/_layout/layout.php:107
+#: themes/default/views/_layout/layout.php:112
 msgid "Wiki"
 msgstr "Wiki"
 
-#: themes/default/views/_layout/layout.php:108
+#: themes/default/views/_layout/layout.php:113
 msgid "Standaardocumenten"
 msgstr "Documents & Templates"
 
-#: themes/default/views/_layout/layout.php:110
+#: themes/default/views/_layout/layout.php:115
 msgid "Merchandise"
 msgstr "Merchandise"
 
-#: themes/default/views/_layout/layout.php:111
+#: themes/default/views/_layout/layout.php:116
 msgid "Microsoft Imagine"
 msgstr "Microsoft Imagine"
 
-#: themes/default/views/_layout/layout.php:116
+#: themes/default/views/_layout/layout.php:121
 msgid "Bedrijven"
 msgstr "Companies"
 
-#: themes/default/views/_layout/layout.php:118
+#: themes/default/views/_layout/layout.php:123
 msgid "Bedrijfsprofielen"
 msgstr "Company profiles"
 
-#: themes/default/views/_layout/layout.php:119
+#: themes/default/views/_layout/layout.php:124
 msgid "Vacatures"
 msgstr "Vacancies"
 
-#: themes/default/views/_layout/layout.php:120
+#: themes/default/views/_layout/layout.php:125
 msgid "Stages/afstudeerplaatsen"
 msgstr "Internships/Graduate programs"
 
-#: themes/default/views/_layout/layout.php:121
+#: themes/default/views/_layout/layout.php:126
 msgid "Sponsormogelijkheden"
 msgstr "Sponsorship opportunities"
 
-#: themes/default/views/_layout/layout.php:132
+#: themes/default/views/_layout/layout.php:137
 msgid "Foto's"
 msgstr "Photos"
 
-#: themes/default/views/_layout/layout.php:138
+#: themes/default/views/_layout/layout.php:143
 msgid "K.I."
 msgstr "A.I."
 
-#: themes/default/views/_layout/layout.php:139
+#: themes/default/views/_layout/layout.php:144
 msgid "Informatica"
 msgstr "Computing Science"
 
-#: themes/default/views/_layout/layout.php:140
+#: themes/default/views/_layout/layout.php:145
 msgid "Alumni"
 msgstr "Alumni"
 
-#: themes/default/views/_layout/layout.php:142
+#: themes/default/views/_layout/layout.php:147
 msgid "Info voor studenten"
 msgstr "Student info"
 
-#: themes/default/views/_layout/layout.php:143
+#: themes/default/views/_layout/layout.php:148
 msgid "Tentamens & Samenvattingen"
 msgstr "Exams & Summaries"
 
@@ -3503,24 +3804,24 @@ msgstr "Only *@svcover.nl addresses"
 msgid "Alleen de commissie van de lijst"
 msgstr "Only the committee this list belongs to"
 
-#: themes/default/views/profiel/profiel.php:45
+#: themes/default/views/profiel/profiel.php:37
 msgid "Lidgegevens"
 msgstr "Personal"
 
-#: themes/default/views/profiel/profiel.php:61
+#: themes/default/views/profiel/profiel.php:53
 msgid "Privacy"
 msgstr "Privacy"
 
-#: themes/default/views/profiel/profiel.php:82
+#: themes/default/views/profiel/profiel.php:74
 #: themes/default/views/profiel/_facebook.phtml:20
 msgid "Facebook"
 msgstr "Facebook"
 
-#: themes/default/views/profiel/profiel.php:96
+#: themes/default/views/profiel/profiel.php:88
 msgid "Incasso's"
 msgstr "Direct debits"
 
-#: themes/default/views/profiel/profiel.php:382
+#: themes/default/views/profiel/profiel.php:373
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
 
@@ -3548,6 +3849,14 @@ msgstr ""
 msgid "Ontkoppel Facebook"
 msgstr "Disconnect Facebook"
 
+#~ msgid ""
+#~ "De inschrijvingen zijn gesloten. Jij kan dit formulier nog zien omdat je "
+#~ "de rechten hebt om mensen in te schrijven na de deadline."
+#~ msgstr "The registrations are closed You "
+
+#~ msgid "Profielfoto"
+#~ msgstr "Profile picture"
+
 #~ msgid "Lidmaadschapsstatus"
 #~ msgstr "Membership status"
 
@@ -3559,11 +3868,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Er is een ongeldige waarde voor zichtbaarheid ingevuld."
 #~ msgstr "You have entered an invalid value."
-
-#~ msgid "Je foto is ingestuurd. Het kan even duren voordat hij is aangepast."
-#~ msgstr ""
-#~ "Your photo has been submitted. It may take a while before it will be "
-#~ "updated."
 
 #~ msgid "Systeem"
 #~ msgstr "System"
@@ -3591,9 +3895,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Verwijder werkgroep"
 #~ msgstr "Delete working group"
-
-#~ msgid "Wijzig commissie"
-#~ msgstr "Modify committee"
 
 #~ msgid "Bewerk commissiepagina"
 #~ msgstr "Modify committee page"
@@ -3640,9 +3941,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "tussenvoegsel"
 #~ msgstr "Infix"
-
-#~ msgid "achternaam"
-#~ msgstr "Last name"
 
 #~ msgid "adres"
 #~ msgstr "Address"
@@ -3740,9 +4038,6 @@ msgstr "Disconnect Facebook"
 #~ "something broke down. If you experience this problem more often, please "
 #~ "contact the committee (webcie@svcover.nl) so they can demand pie from the "
 #~ "person in question. "
-
-#~ msgid "Bekijk archief"
-#~ msgstr "Show message archive"
 
 #~ msgid ""
 #~ "Vul hieronder je E-mail adres in en druk op de `Reset wachtwoord` knop. "
@@ -3886,9 +4181,6 @@ msgstr "Disconnect Facebook"
 #~ msgid "Sla pagina op"
 #~ msgstr "Save page"
 
-#~ msgid "herstellen"
-#~ msgstr "revert"
-
 #~ msgid "Herstel pagina"
 #~ msgstr "Revert changes"
 
@@ -3991,17 +4283,11 @@ msgstr "Disconnect Facebook"
 #~ msgid "Wijzigen"
 #~ msgstr "Modify"
 
-#~ msgid "Verwijderen"
-#~ msgstr "Delete"
-
 #~ msgid "Nieuw forum toevoegen"
 #~ msgstr "Add a new forum"
 
 #~ msgid "Nieuw forum"
 #~ msgstr "New forum"
-
-#~ msgid "Forum toevoegen"
-#~ msgstr "Add forum"
 
 #~ msgid "Verwijder geselecteerde forums"
 #~ msgstr "Remove selected forums"
@@ -4029,9 +4315,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Geef minstens 3 letters op om naar te zoeken"
 #~ msgstr "There is a 3 letter search minimum"
-
-#~ msgid "Verwijder geselecteerde rechten"
-#~ msgstr "Remove selected rights"
 
 #~ msgid "Lees"
 #~ msgstr "Read"
@@ -4123,9 +4406,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Nieuwe commissie maken"
 #~ msgstr "Add a new committee"
-
-#~ msgid "Commissie wijzigen"
-#~ msgstr "Modify committee"
 
 #~ msgid "Commissienaam"
 #~ msgstr "Committee name"
@@ -4279,9 +4559,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Update lijst"
 #~ msgstr "Modify list"
-
-#~ msgid "Aanmeldingen"
-#~ msgstr "Subscriptions"
 
 #~ msgid "Niet-lid aanmelden voor mailinglijst"
 #~ msgstr "Subscribe a non-member to the mailing list"
@@ -4619,9 +4896,6 @@ msgstr "Disconnect Facebook"
 #~ msgid "1 bestelling"
 #~ msgstr "1 order"
 
-#~ msgid "Annuleren"
-#~ msgstr "Cancel"
-
 #~ msgid ""
 #~ "Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden "
 #~ "door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, "
@@ -4689,11 +4963,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Oud wachtwoord"
 #~ msgstr "Old password"
-
-#~ msgid "Je bent aangemeld voor %d mailinglijst."
-#~ msgid_plural "Je bent aangemeld voor %d mailinglijsten."
-#~ msgstr[0] "You are subscribed to %d mailing list."
-#~ msgstr[1] "You are subscribed to %d mailing lists."
 
 #~ msgid "Deze persoon is aangemeld voor %d mailinglijst."
 #~ msgid_plural "Deze persoon is aangemeld voor %d mailinglijsten."
@@ -5016,9 +5285,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Login"
 #~ msgstr "Login"
-
-#~ msgid "Commissie aanmaken"
-#~ msgstr "Add committee"
 
 #~ msgid "Nieuwe afstudeerplaats toevoegen"
 #~ msgstr "Add a new phd position"
@@ -5386,9 +5652,6 @@ msgstr "Disconnect Facebook"
 
 #~ msgid "Ga naar de volgende pagina"
 #~ msgstr "Go to next page"
-
-#~ msgid "verwijderen"
-#~ msgstr "delete"
 
 #~ msgid "Verwijder pagina"
 #~ msgstr "Delete page"
