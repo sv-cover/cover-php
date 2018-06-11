@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2018-06-10 16:04+0200\n"
+"POT-Creation-Date: 2018-06-11 12:01+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -1789,7 +1789,7 @@ msgstr "Phone number"
 #: themes/default/views/mailinglijsten/subscribe_guest_form.twig:15
 #: themes/default/views/profiel/profiel.php:131
 msgid "E-Mail adres"
-msgstr "E-Mail address"
+msgstr "E-mail address"
 
 #: themes/default/views/lidworden/lidworden.twig:77
 msgid ""
@@ -2587,8 +2587,10 @@ msgstr "Sign up"
 
 #: themes/default/views/sessions/login.twig:26
 #: themes/default/views/sessions/login.twig:27
+#: themes/default/views/signup/configuration/email.twig:2
+#: themes/default/views/signup/fields/email.twig:2
 msgid "E-mailadres"
-msgstr "E-Mail address"
+msgstr "E-mail address"
 
 #: themes/default/views/sessions/login.twig:31
 #: themes/default/views/sessions/login.twig:32
@@ -2732,7 +2734,7 @@ msgid "Adresveld"
 msgstr "Address field"
 
 #: themes/default/views/signup/configuration/bankaccount.twig:2
-#: include/models/DataModelSignUpField.php:126
+#: include/models/DataModelSignUpField.php:130
 msgid "Rekeningnummer"
 msgstr "Bank account number"
 
@@ -2747,7 +2749,7 @@ msgid "Meerkeuzevraag"
 msgstr "Multiple choice question"
 
 #: themes/default/views/signup/configuration/editable.twig:2
-#: include/models/DataModelSignUpField.php:130
+#: include/models/DataModelSignUpField.php:134
 msgid "Titels en tekst (lay-out)"
 msgstr "Titles and text (layout)"
 
@@ -2810,6 +2812,10 @@ msgstr "Form"
 #: themes/default/views/signup/entry_form.twig:24
 msgid "Succes! Je inschrijving is compleet."
 msgstr "Success! You have signed up."
+
+#: themes/default/views/signup/fields/email.twig:3
+msgid "Bijv. chris@gmail.com"
+msgstr "E.g. chris@gmail.com"
 
 #: themes/default/views/signup/fields/name.twig:3
 msgid "Bijv. John von Neumann"
@@ -2910,7 +2916,7 @@ msgstr "New sign-up"
 msgid "Download als CSV"
 msgstr "Download as CSV"
 
-#: themes/default/views/signup/list_entries.twig:53
+#: themes/default/views/signup/list_entries.twig:54
 msgid "Verwijder geselecteerde inschrijvingen"
 msgstr "Remove selected sign-ups"
 
@@ -3010,7 +3016,7 @@ msgstr ""
 #: themes/default/views/wachtwoordvergeten/request_form.twig:16
 #, python-format
 msgid "Er bestaat geen account met het opgegeven E-Mail adres (%s)."
-msgstr "There is no account with the given E-Mail address (%s)."
+msgstr "There is no account with the given E-mail address (%s)."
 
 #: themes/default/views/wachtwoordvergeten/request_form.twig:21
 msgid ""
@@ -3157,7 +3163,8 @@ msgid "Kan het model %s niet vinden"
 msgstr "Could not find the model %s"
 
 #: include/fields/Address.php:32 include/fields/BankAccount.php:34
-#: include/fields/Name.php:37 include/fields/Text.php:40
+#: include/fields/Email.php:40 include/fields/Name.php:37
+#: include/fields/Text.php:40
 msgid "Value required"
 msgstr "Value required"
 
@@ -3168,6 +3175,10 @@ msgstr "Invalid IBAN"
 #: include/fields/BankAccount.php:40
 msgid "Invalid BIC code"
 msgstr "Invalid BIC code"
+
+#: include/fields/Email.php:37
+msgid "Ongeldig e-mailadres"
+msgstr "Invalid e-mail address"
 
 #: include/functions.php:55
 msgid "Fout"
@@ -3445,6 +3456,10 @@ msgstr " and "
 #: include/models/DataModelPhotobookLike.php:141
 msgid "Favoriete foto's"
 msgstr "Liked photos"
+
+#: include/models/DataModelSignUpField.php:126
+msgid "E-mailadresveld"
+msgstr "E-mail address field"
 
 #: include/pagenavigation.php:3 themes/default/views/forum/forum.php:153
 msgid "Ga naar pagina"
@@ -3769,7 +3784,7 @@ msgid "(Onveranderd)"
 msgstr "(Unchanged)"
 
 #: themes/default/views/fotoboek/fotoboek.php:178
-#: themes/default/views/search/search.php:17
+#: themes/default/views/search/search.php:10
 #, php-format
 msgid "%d boek"
 msgid_plural "%d boeken"
@@ -3777,7 +3792,7 @@ msgstr[0] "%d book"
 msgstr[1] "%d books"
 
 #: themes/default/views/fotoboek/fotoboek.php:181
-#: themes/default/views/search/search.php:20
+#: themes/default/views/search/search.php:13
 #, php-format
 msgid "%d foto"
 msgid_plural "%d foto's"
@@ -3825,7 +3840,7 @@ msgstr "Direct debits"
 msgid "Nog niet verwerkt"
 msgstr "To be processed"
 
-#: themes/default/views/search/search.php:22
+#: themes/default/views/search/search.php:15
 #, php-format
 msgid "Fotoboek met %s gemaakt op %s."
 msgstr "Photo album with %s made on %s."
