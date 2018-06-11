@@ -17,8 +17,7 @@
 				'private',
 				'extern',
 				'facebook_id',
-				'replacement_for',
-				'sign_up_form_id'
+				'replacement_for'
 			];
 		}
 
