@@ -378,6 +378,18 @@ class ControllerSignUpForms extends Controller
 				$widget->content = "[h2]Sign up now![/h2]\nShort description of why you need to sign up and what you will receive in return.";
 			}));
 
+			$this->field_model->insert($form->new_field('name', function($widget) {
+				$widget->required = true;
+			}));
+
+			$this->field_model->insert($form->new_field('editable', function($widget) {
+				$widget->content = "We also need your email address to contact you, and address and bank account details to make a direct debit for you.";
+			}));
+
+			$this->field_model->insert($form->new_field('email', function($widget) {
+				$widget->required = true;
+			}));
+
 			$this->field_model->insert($form->new_field('address', function($widget) {
 				$widget->required = true;
 			}));
