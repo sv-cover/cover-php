@@ -121,6 +121,10 @@ class DataModelSignUpField extends DataModel
 				'class' => \fields\Address::class,
 				'label' => __('Adresveld')
 			],
+			'email' => [
+				'class' => \fields\Email::class,
+				'label' => __('E-mailadresveld')
+			],
 			'bankaccount' => [
 				'class' => \fields\BankAccount::class,
 				'label' => __('Rekeningnummer')
