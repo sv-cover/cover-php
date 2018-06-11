@@ -111,10 +111,20 @@
 
 		public function search($search_query, $limit = null)
 		{
-			$language = i18n_get_language();
+			$preferred_language = i18n_get_language();
 
-			$weigth_en = $language == 'en' ? 1.0 : 0.9;
-			$weigth_nl = $language == 'nl' ? 1.0 : 0.9;
+			$weigths = [];
+
+			foreach (['en', 'nl'] as $language)
+				$weights[$language] = $preferred_language == $language ? 1.0 : 0.9;
+
+			$language_table = implode(',',
+				array_map(
+					function($lang, $weight) {
+						return sprintf("('%s', %f)", $lang, $weight);
+					},
+					array_keys($weights),
+					array_values($weights)));
 
 			$query = "
 				WITH
@@ -122,10 +132,7 @@
 					weights AS (
 						SELECT
 							v.*
-						FROM (VALUES
-									('en', $weight_en),
-									('nl', $weight_nl)
-							) as v (language, weight)
+						FROM (VALUES $language_table) as v (language, weight)
 					),
 					search_results AS (
 						SELECT
