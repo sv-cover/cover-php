@@ -112,7 +112,7 @@ function process_message_to_all_committees(MessagePart $message, string $to, str
 		);
 
 		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
-			return str_replace(array_keys($variables), array_values($variables), $text);
+			return str_ireplace(array_keys($variables), array_values($variables), $text);
 		});
 
 		echo send_message($personalized_message, $email), "\n";
@@ -150,7 +150,7 @@ function process_message_to_committee(MessagePart $message, string $to, DataIter
 		);
 
 		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
-			return str_replace(array_keys($variables), array_values($variables), $text);
+			return str_ireplace(array_keys($variables), array_values($variables), $text);
 		});
 
 		echo send_message($personalized_message, $member['email']), "\n";
@@ -272,7 +272,7 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 					: "\n\n---\nYou are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]",
 					$escape($lijst['naam']));
 
-			return str_replace(array_keys($variables), array_values($variables), $text);
+			return str_ireplace(array_keys($variables), array_values($variables), $text);
 		});
 
 		$personalized_message->setHeader('List-Unsubscribe', sprintf('<%s>', $unsubscribe_url));
