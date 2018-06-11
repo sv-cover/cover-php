@@ -83,8 +83,8 @@ msgstr "Study Association for Artificial Intelligence and Computing Science"
 #, python-format
 msgid "Er staat nog %d agendapunt in de wachtrij"
 msgid_plural "Er staan nog %d agendapunten in de wachtrij"
-msgstr[0] "There is %d agenda item waiting for your confirmation"
-msgstr[1] "There are %d agenda items waiting for your confirmation"
+msgstr[0] "There is %d activity waiting for your confirmation"
+msgstr[1] "There are %d activities waiting for your confirmation"
 
 #: themes/default/views/_layout/layout.twig:32
 msgid ""
@@ -504,12 +504,12 @@ msgid ""
 "Dit agendapunt is nog niet gepubliceerd. Het moet nog worden goedgekeurd "
 "door Bestuur."
 msgstr ""
-"This agenda item has not yet been published. It still needs to be accepted "
-"by the Board."
+"This activity has not yet been published. It still needs to be accepted by "
+"the Board."
 
 #: themes/default/views/agenda/single.twig:9
 msgid "Deze versie van dit agendapunt is nog niet gepubliceerd."
-msgstr "This revision of the agenda item has not yet been published."
+msgstr "This revision of the activity has not yet been published."
 
 #: themes/default/views/agenda/single.twig:16
 #, python-format
@@ -517,7 +517,7 @@ msgid ""
 "Er is <a href=\"%s\">een wijziging op dit agendapunt</a> dat nog niet "
 "gepubliceerd is."
 msgstr ""
-"There is <a href=\"%s\">a change on this agenda item</a> that is not yet "
+"There is <a href=\"%s\">a change on this activity</a> that is not yet "
 "published."
 
 #: themes/default/views/agenda/single.twig:65
@@ -2510,7 +2510,7 @@ msgstr "Profile of %s"
 #: themes/default/views/search/_single_agendapunt.twig:10
 #, python-format
 msgid "Agendapunt uit %d"
-msgstr "Agenda item from %d"
+msgstr "Activity from %d"
 
 #: themes/default/views/search/_single_announcement.twig:3
 #, python-format
@@ -3095,7 +3095,7 @@ msgstr ""
 
 #: agenda.php:192
 msgid "De wijzigingen voor het agendapunt zijn geplaatst."
-msgstr "The changes you've made to this agenda item have been published."
+msgstr "The changes you've made to this activity have been published."
 
 #: agenda.php:204
 msgid ""
