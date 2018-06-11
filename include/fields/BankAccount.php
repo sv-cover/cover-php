@@ -36,7 +36,7 @@ class BankAccount implements \SignUpFieldType
 		if ($iban != '' && !\IsoCodes\Iban::validate($iban))
 			$error = __('Invalid IBAN');
 
-		if ($bic != '' && \IsoCodes\SwiftBic::validate($bic))
+		if ($bic != '' && !\IsoCodes\SwiftBic::validate($bic))
 			$error = __('Invalid BIC code');
 
 		return json_encode(compact('iban', 'bic'));
