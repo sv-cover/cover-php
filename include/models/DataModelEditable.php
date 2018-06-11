@@ -111,8 +111,22 @@
 
 		public function search($search_query, $limit = null)
 		{
+			$language = i18n_get_language();
+
+			$weigth_en = $language == 'en' ? 1.0 : 0.9;
+			$weigth_nl = $language == 'nl' ? 1.0 : 0.9;
+
 			$query = "
 				WITH
+					-- Use weights as tiebreakers when results from both languages match equally well
+					weights AS (
+						SELECT
+							v.*
+						FROM (VALUES
+									('en', $weight_en),
+									('nl', $weight_nl)
+							) as v (language, weight)
+					),
 					search_results AS (
 						SELECT
 							id,
@@ -141,11 +155,15 @@
 							s.search_language
 						FROM
 							search_results s
+						LEFT JOIN weights w ON
+							w.language = s.search_language
 						LEFT JOIN search_results s2 ON
 							s.id = s2.id
-							AND s2.search_relevance > s.search_relevance
+						LEFT JOIN weights w2 ON
+							w2.language = s2.search_language
 						WHERE
-							s2.id IS NULL
+							-- Find the result with the largest weighted search relevance
+							w.weight * s.search_relevance > w2.weight * s2.search_relevance
 					)
 				SELECT
 					p.*,
