@@ -24,9 +24,10 @@
 				<tr>
 					<th><input type="checkbox" onchange="Array.from(this.form.querySelectorAll('input[type=checkbox]')).forEach(cb => cb.checked = this.checked)"></th>
 					<th>ID</th>
+					<th>Sign-up date</th>
 					{% for field in form.fields %}
 						{% for column in field.export|keys %}
-							<th>{{ column|capitalize }}</th>
+							<th class="column-field-type-{{field.type}}" title="{{ column|capitalize }}">{{ column|capitalize }}</th>
 						{% endfor %}
 					{% endfor %}
 				</tr>
@@ -41,7 +42,7 @@
 							{% else %}
 								<td>{{ entry.id }}</td>
 							{% endif %}
-							{% for column, value in entry.export[2:] %}
+							{% for column, value in entry.export[1:] %}
 								<td title="{{column}}">{{ value }}</td>
 							{% endfor %}
 						</tr>

@@ -3427,6 +3427,13 @@ ul.call-to-action li a::before {
 	content: "\f09d";
 }
 
+.column-field-type-checkbox {
+	max-width: 100px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 .messageBox .signup-form {
 	padding: 15px;
 	border: 1px solid #ccc;
