@@ -7,9 +7,12 @@
 	require_once 'include/data.php';
 	require_once 'include/view.php';
 
-	function _dump($arg) {
-		printf('<code style="overflow-x:scroll;display:block;background:white;padding:10px;border:1px solid black;"><pre>%s</pre></code>', $arg);
-		return $arg;
+	function _dump(...$args) {
+		ob_start();
+		var_dump(...$args);
+		$data = ob_get_clean();
+		printf('<code style="overflow-x:scroll;display:block;background:white;color: black;padding:10px;border:1px solid black;"><pre>%s</pre></code>', $data);
+		return $args[0];
 	}
 
 	function _get_backtrace() {
