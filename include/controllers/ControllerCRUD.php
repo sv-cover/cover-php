@@ -13,7 +13,7 @@ class ControllerCRUD extends Controller
 
 	protected function _validate(DataIter $iter, array &$data, array &$errors)
 	{
-		return validate_dataiter($iter, $data, $errors);	
+		return validate_dataiter($iter, $data, $errors);
 	}
 
 	protected function _create(DataIter $iter, array $input, array &$errors)

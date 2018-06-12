@@ -36,7 +36,12 @@
 		 */
 		static public function rules()
 		{
-			return [];
+			$rules = [];
+
+			foreach (static::fields() as $field)
+				$rules[$field] = [];
+
+			return $rules;
 		}
 
 		/**
@@ -250,7 +255,7 @@
 		  * @param array $values a hashtable where keys are the data field names and the 
 		  * values are the data values 
 		  */
-		public function set_all($values) {
+		public function set_all(array $values) {
 			foreach ($values as $field => $value)
 				$this->set($field, $value);
 		}
@@ -284,7 +289,7 @@
 		 * @param string $field field
 		 */
 		protected function mark_changed($field) {
-			if (!in_array($field, $this->_changes))
+			if (static::has_field($field) && !in_array($field, $this->_changes))
 				$this->_changes[] = $field;
 		}
 		

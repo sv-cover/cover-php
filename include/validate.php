@@ -72,6 +72,8 @@ function validate_dataiter(DataIter $iter, array $data, &$errors)
 
 			if (isset($options['default']))
 				$data[$field] = call_user_func($options['default'], $field, $iter);
+			else
+				continue;
 		}
 
 		$out[$field] = call_user_func($cleaner, $data[$field]);
