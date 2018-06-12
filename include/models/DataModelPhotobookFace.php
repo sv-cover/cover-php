@@ -75,7 +75,12 @@ class DataIterFacesPhotobook extends DataIterPhotobook
 	 * @override
 	 * @return DataIterPhotobook[]
 	 */
-	public function get_books($metadata = null)
+	public function get_books()
+	{
+		return array();
+	}
+
+	public function get_books_without_metadata()
 	{
 		return array();
 	}
