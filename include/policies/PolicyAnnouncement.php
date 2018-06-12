@@ -7,6 +7,10 @@ class PolicyAnnouncement implements Policy
 {
 	public function user_can_create(DataIter $announcement)
 	{
+		if (isset($announcement['committee_id']))
+			return get_identity()->member_in_committee($announcement['committee_id'])
+				|| get_identity()->member_in_committee(COMMISSIE_BESTUUR);
+
 		return get_identity()->member_in_committee();
 	}
 

@@ -5,7 +5,7 @@
 {% block content %}
 <h1>{{ iter.has_id ? __('Mededeling wijzigen') : __('Nieuwe mededeling plaatsen') }}</h1>
 <div class="messageBox announcement">
-	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form" data-partial-selector=".announcement" data-placement-selector=".announcement">
+	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
 		{% if iter.has_id %}
 			{{ html_nonce('update', iter) }}
 		{% else %}
@@ -43,7 +43,7 @@
 			</div>
 		</div>
 
-		<div>
+		<div class="controls">
 			<button type="submit" class="button">{{ iter.has_id ? __('Wijzig mededeling') : __('Plaats mededeling') }}</button>
 			{% if iter.has_id %}
 			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar mededeling') }}</a>

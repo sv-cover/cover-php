@@ -15,7 +15,7 @@
 			{% if photo.num_reacties > 0 %}
 			<span class="comments">{{ __N('%d reactie', '%d reacties', photo.num_reacties) }}</span>
 			{% endif %}
-			{% if photo.beschrijving|length > 0 %}
+			{% if photo.beschrijving %}
 			<span class="description">{{ photo.beschrijving }}</span>
 			{% endif %}
 		</a>

@@ -17,21 +17,6 @@ class ControllerAnnouncements extends ControllerCRUD
 		$this->view = View::byName('announcements', $this);
 	}
 
-	protected function _validate(DataIter $iter, array &$data, array &$errors)
-	{
-		if (!get_identity()->member_in_committee($data['committee_id'])
-			&& !get_identity()->member_in_committee(COMMISSIE_BESTUUR))
-			$errors[] = 'committee_id';
-
-		if (strlen($data['subject']) == 0)
-			$errors[] = 'subject';
-
-		if (strlen($data['message']) == 0)
-			$errors[] = 'message';
-
-		return count($errors) === 0;
-	}
-
 	public function run_preview()
 	{
 		return markup_parse($_POST['message']);
