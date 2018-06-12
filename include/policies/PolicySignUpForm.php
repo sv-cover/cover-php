@@ -4,13 +4,15 @@ require_once 'include/member.php';
 
 class PolicySignUpForm implements Policy
 {
+	static private $pilot_committees = [COMMISSIE_BESTUUR, 2]; // Activitee
+
 	public function user_can_create(DataIter $form)
 	{
-		// BEGIN Trial period, only for activitee right now
-		if (!get_identity()->member_in_committee(2)) // Activitee
+		// BEGIN Trial period
+		if (!array_one(self::$pilot_committees, [get_identity(), 'member_in_committee']))
 			return false;
 
-		if ($form['committee_id'] !== null && $form['committee_id'] != 2)
+		if ($form['committee_id'] !== null && !in_array($form['committee_id'], self::$pilot_committees))
 			return false;
 		// END
 
