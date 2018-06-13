@@ -29,7 +29,15 @@
 			{% else %}
 				{{ html_nonce('create_entry', form) }}
 			{% endif %}
-			
+
+			{% if global.POST['return-path'] is defined %}
+				{{ html_input_hidden('return-path', global.POST['return-path']) }}
+			{% endif %}
+
+			{% if not entry.has_id %}
+				{{ html_input_hidden('member_id', entry.member_id) }}
+			{% endif %}
+
 			{% for field in form.fields %}
 				<div>
 					{{ field.render(view, entry)|raw }}
