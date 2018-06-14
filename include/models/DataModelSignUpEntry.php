@@ -129,6 +129,11 @@ class DataModelSignUpEntry extends DataModel
 			array_select($rows, 'value'));
 	}
 
+	protected function _generate_query($where)
+	{
+		return parent::_generate_query($where) . " ORDER BY created_on ASC";
+	}
+
 	private function _save_values(DataIter $iter)
 	{
 		// If the iter did not change the values, ignore this call
