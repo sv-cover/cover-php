@@ -36,7 +36,7 @@
 			<div>
 				{{ html_label(__('Open date'), 'open_on', errors=errors)  }}
 				{{ html_input_datetime('open_on', form, errors=errors) }}
-				<p>{{ __('People will be able to register from this date. Make sure you don't open registrations before you finished configuring the sign-up form.') }}</p>
+				<p>{{ __("People will be able to register from this date. Make sure you don't open registrations before you finished configuring the sign-up form.") }}</p>
 			</div>
 			<div>
 				{{ html_label(__('Deadline'), 'closed_on', errors=errors)  }}
@@ -56,7 +56,7 @@
 		<div class="controls">
 			<button class="button" type="submit">{{ form.has_id() ? __('Modify form') : __('Create form') }}</button>
 			{% if form.has_id and user_can_delete form %}
-				<a href="{{ controller.link({view: 'delete_form', form: form.id}) }}">{{ __('Verwijder formulier…') }}</a>
+				<a href="{{ controller.link({view: 'delete_form', form: form.id}) }}">{{ __('Delete this form…') }}</a>
 			{% endif %}
 		</div>
 	</form>

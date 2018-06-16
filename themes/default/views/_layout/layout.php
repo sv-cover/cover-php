@@ -134,7 +134,7 @@ class LayoutViewHelper
 
 		$menus['fotoboek'] = [
 			'url' => 'fotoboek.php',
-			'label' => __('Foto\'s')
+			'label' => __('Photos')
 		];
 
 		$menus['studie'] = [

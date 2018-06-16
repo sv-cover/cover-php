@@ -7,7 +7,7 @@
 <div class="messageBox">
 	<form method="post" action="{{ iter and iter.has_id
 			? controller.link_to_update(iter)
-			: controller.link_to_create() }}" class="vertical-form committee-battle-form"">
+			: controller.link_to_create() }}" class="vertical-form committee-battle-form">
 		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create', iter) }}
 
 		<fieldset>

@@ -43,7 +43,7 @@
 
 	{% set facebook_of_iter = global.models.PhotobookFace.get_book([iter]) %}
 	{% if user_can_read facebook_of_iter %}
-		<p><a href="fotoboek.php?book={{ facebook_of_iter.id|e('url') }}">{{ __('Foto\'s van %s')|format(iter|first_name) }}</a></p>
+		<p><a href="fotoboek.php?book={{ facebook_of_iter.id|e('url') }}">{{ __('Photos of %s')|format(iter|first_name) }}</a></p>
 	{% endif %}
 </section>
 

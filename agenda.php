@@ -189,7 +189,7 @@
 
 				$this->model->update($iter);
 
-				$_SESSION['alert'] = __('The changes you've made to this activity have been published.');
+				$_SESSION['alert'] = __('The changes you\'ve made to this activity have been published.');
 			}
 
 			// Previous item exists but it needs to be confirmed first.

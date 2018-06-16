@@ -7,7 +7,7 @@
 
 <div class="messageBox">
 {% if errors %}
-	<p><span class="error">{{ __('You haven't filled in all the fields correctly') }}</span></p>
+	<p><span class="error">{{ __("You haven't filled in all the fields correctly") }}</span></p>
 {% endif %}
 
 <form class="vertical-form" name="agenda_form" action="{{ view.get_form_action(iter) }}" method="post">
@@ -64,7 +64,7 @@
 				{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
 			</div>
 			<div class="tab-panel" id="beschrijving-preview-tab" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
-				<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+				<span class="loading">{{ __('Loading preview…') }}</span>
 			</div>
 		</div>
 	</div>

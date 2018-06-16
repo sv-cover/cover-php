@@ -9,7 +9,7 @@
 
 	{% if errors|length > 0 %}
 	<section class="error-section">
-		<p>{{ __('You haven't filled in all the fields correctly.') }}</p>
+		<p>{{ __("You haven't filled in all the fields correctly.") }}</p>
 	</section>
 	{% endif %}
 
@@ -89,7 +89,7 @@
 			<div class="field-group">
 				<div>
 					{{ html_label(__('Study'), 'membership_study_name', errors=errors, required=true) }}
-					{{ html_input_text('membership_study_name', null, errors=errors, required=true, list='studies', data_suggestions=['Artificial Intelligence', 'Computing Science']|json_encode, placeholder=__('Pick one from the list or type if your study isn't on it')) }}
+					{{ html_input_text('membership_study_name', null, errors=errors, required=true, list='studies', data_suggestions=['Artificial Intelligence', 'Computing Science']|json_encode, placeholder=__("Pick one from the list or type if your study isn't on it")) }}
 					
 				</div>
 
@@ -129,7 +129,7 @@
 		<fieldset>
 			<legend>{{ __('Mailing list') }}</legend>
 			
-			<p>{{ __('From time to time Cover sends an email about an upcoming activity. If you don't want to receive these emails anymore, you can very easily unsubscribe right here on the website.')}}
+			<p>{{ __("From time to time Cover sends an email about an upcoming activity. If you don't want to receive these emails anymore, you can very easily unsubscribe right here on the website.")}}
 
 			<div>
 				{{ html_input_checkbox('option_mailing', {'option_mailing': 'yes'}) }}

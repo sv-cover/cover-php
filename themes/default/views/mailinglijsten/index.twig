@@ -29,7 +29,7 @@
 				<td><a href="{{ controller.link_to_read(mailinglist)|e('html_attr') }}">{{ mailinglist.naam }}</a></td>
 				<td>{{ mailinglist.adres }}</td>
 				<td>{{ mailinglist.committee.naam }}</td>
-				<td>{{ mailinglist.publiek ? __('Public') : __('Privé') }}</td>
+				<td>{{ mailinglist.publiek ? __('Public') : __('Private') }}</td>
 				<td class="numeric">{{ mailinglist.archive.count(30) }}</td>
 				<td class="numeric">{{ mailinglist.reach }}</td>
 			</tr>

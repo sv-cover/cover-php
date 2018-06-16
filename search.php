@@ -17,7 +17,7 @@ class SearchController extends Controller
 			],
 			[
 				'model' => get_model('DataModelEditable'),
-				'category_name' => __('pagina\'s')
+				'category_name' => __('pages')
 			],
 			[
 				'model' => get_model('DataModelCommissie'),
@@ -41,7 +41,7 @@ class SearchController extends Controller
 			],
 			[
 				'model' => get_model('DataModelWiki'),
-				'category_name' => __('wiki-pagina\'s')
+				'category_name' => __('wiki pages')
 			],
 		];
 

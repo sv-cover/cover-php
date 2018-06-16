@@ -15,7 +15,7 @@
 	<p class="search-result-statistics">
 		{{ __N('There is %d search result.', 'There are %d search results.', results|length) }}
 		{% if errors %}
-			{{ __N('Zoekresultaten uit de categorie %s ontbreken vanwege fouten.', 'Zoekresultaten uit de categorieën %s ontbreken vanwege fouten.', errors|human_join, errors|length) }}
+			{{ __N('Search results from the %s category are missing due to errors.', 'Search results from the categories %s are missing due to errors.', errors|human_join, errors|length) }}
 		{% endif %}
 	</p>
 	<ul class="search-results">

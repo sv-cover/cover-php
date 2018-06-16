@@ -146,7 +146,7 @@ class ControllerProfiel extends Controller
 
 			// Send the confirmation to the new email address
 			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($token['email']);
-			$_SESSION['alert'] = __('We’ve sent a confirmation mail to your new email address.');
+			$_SESSION['alert'] = __('Weï¿½ve sent a confirmation mail to your new email address.');
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=personal');
@@ -218,10 +218,10 @@ class ControllerProfiel extends Controller
 
 		if (!isset($_POST['wachtwoord_nieuw'])) {
 			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('The new password hasn't been filled in.');
+			$message[] = __('The new password hasn\'t been filled in.');
 		} elseif (!isset($_POST['wachtwoord_opnieuw']) || $_POST['wachtwoord_nieuw'] !== $_POST['wachtwoord_opnieuw']) {
 			$errors[] = 'wachtwoord_opnieuw';
-			$message[] = __('The new password hasn't been filled in correctly twice.');
+			$message[] = __('The new password hasn\'t been filled in correctly twice.');
 		} elseif (strlen($_POST['wachtwoord_nieuw']) < 6) {
 			$errors[] = 'wachtwoord_nieuw';
 			$message[] = __('Your new password is too short.');
@@ -266,7 +266,7 @@ class ControllerProfiel extends Controller
 				ini_get('upload_max_filesize') . ' bytes');
 
 		elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
-			$error = sprintf(__('The image hasn't been uploaded correctly. PHP reports error code %d.'), $_FILES['photo']['error']);
+			$error = sprintf(__('The image hasn\'t been uploaded correctly. PHP reports error code %d.'), $_FILES['photo']['error']);
 
 		elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
 			$error = __('The image file is not a file uploaded by PHP.');

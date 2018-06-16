@@ -85,7 +85,7 @@ class ProfielView extends View
 			],
 			'incassomatic' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Incasso\'s')
+				'label' => __('Direct debits')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('incassomatic', compact('iter'));
 				// }

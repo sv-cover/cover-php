@@ -22,4 +22,4 @@ __('General Practitioner');
 __('GP assistant');
 __('Commissioner Fire Chief');
 __('Promotion Homosexual');
-__('Typ hier om te zoeken…'); // this one in _layout/widgets/search.twig doesn't get pick up for some reason
+__('Type here to search…'); // this one in _layout/widgets/search.twig doesn't get pick up for some reason

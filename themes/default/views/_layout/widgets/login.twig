@@ -4,7 +4,7 @@
 	<a class="logButton" href="{{ link('profiel.read', member=global.identity.member) }}">{{ __('Profile') }}</a>
 
 	{% if global.identity.can_impersonate %}
-		<a href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">{{ __('Bekijk als…') }}</a>
+		<a href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">{{ __('Impersonate…') }}</a>
 	{% endif %}
 {% else %}
 	<a class="logButton" href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form">Log in</a>

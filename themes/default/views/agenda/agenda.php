@@ -82,10 +82,10 @@
 					return __('I might go');
 
 				case 'attending':
-					return __('I'm going');
+					return __('I\'m going');
 
 				case 'declined':
-					return __('I'm not going');
+					return __('I\'m not going');
 
 				case '':
 				case 'not_replied':

@@ -50,7 +50,7 @@
 
 {% if photos.read is defined %}
 	{% if photos.unread is defined %}
-		<h2>{{ __('Oudere foto\'s') }}</h2>
+		<h2>{{ __('Older photos') }}</h2>
 	{% endif %}
 	{{ fotoboek.flowgallery(book, photos.read) }}
 {% endif %}

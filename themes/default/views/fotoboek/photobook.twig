@@ -22,7 +22,7 @@
 		</a>
 		<a href="fotoboek.php?book={{ book.id }}&amp;view=add_photos" class="button">
 			<i class="fa fa-picture-o"></i>
-			{{ __('Foto\'s toevoegen') }}
+			{{ __('Add photos') }}
 		</a>
 		<a id="order-photos-button" class="button">
 			<i class="fa fa-arrows"></i>
@@ -30,7 +30,7 @@
 		</a>
 		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#">
 			<i class="fa fa-trash-o"></i>
-			{{ __('Geselecteerde foto\'s verwijderen') }}
+			{{ __('Delete selected photos') }}
 		</a>
 		{% endif %}
 	</div>
@@ -69,7 +69,7 @@
 					return this.value;
 				});
 
-				if (!confirm(sprintf({{ __('Weet je zeker dat je %d geselecteerde foto\'s wilt verwijderen?')|json_encode()|raw }}, selection.length)))
+				if (!confirm(sprintf({{ __('Are you sure you want to delete the %d selected photos?')|json_encode()|raw }}, selection.length)))
 					return;
 
 				var $form = $('<form>', {
@@ -247,7 +247,7 @@
 	</table>
 
 	{% if book.num_books == 0 and book.num_photos == 0 %}
-		<p>{{ __('Er zijn nog geen foto\'s in dit fotoboek') }}</p>
+		<p>{{ __('There are no photos in this photo album yet') }}</p>
 	{% else %}
 		{{ include('_books.twig', {books: book.books|user_can_read}) }}
 		{{ include('_photos.twig', {photos: book.photos}) }}
