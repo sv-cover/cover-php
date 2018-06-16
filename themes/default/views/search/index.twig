@@ -1,19 +1,19 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Zoeken') ~ ' :: ' ~ parent() %}
+{% block title __('Search') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Zoeken') }}</h1>
+<h1>{{ __('Search') }}</h1>
 <div class="messageBox search">
 	<form method="get" action="search.php" class="search-widget">
-		<label for="field-query">{{ __('Zoekopdracht') }}</label>
+		<label for="field-query">{{ __('Search query') }}</label>
 		<input type="search" name="query" id="field-query" value="{{ query|e('html_attr') }}" placeholder="{{ __('Typ hier om te zoeken…')|e('html_attr') }}" tabindex="1" {% if not results %}autofocus{% endif %}>
-		<button type="submit" class="button">{{ __('Zoek') }}</button>
+		<button type="submit" class="button">{{ __('Search') }}</button>
 	</form>
 
 	{% if results is not null %}
 	<p class="search-result-statistics">
-		{{ __N('Er is %d zoekresultaat.', 'Er zijn %d zoekresultaten.', results|length) }}
+		{{ __N('There is %d search result.', 'There are %d search results.', results|length) }}
 		{% if errors %}
 			{{ __N('Zoekresultaten uit de categorie %s ontbreken vanwege fouten.', 'Zoekresultaten uit de categorieën %s ontbreken vanwege fouten.', errors|human_join, errors|length) }}
 		{% endif %}

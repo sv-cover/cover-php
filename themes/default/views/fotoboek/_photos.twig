@@ -27,10 +27,10 @@
 				<span class="like-button" title="{{ __N('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', likes[photo.id]) }}"><span class="like-count">{{ likes[photo.id] }}</span></span>
 			{% endif %}
 			{% if visibility[photo.id] is defined and visibility[photo.id] == false %}
-			<span class="privacy">{{ __('Verborgen voor anderen') }}</span>
+			<span class="privacy">{{ __('Hidden from index') }}</span>
 			{% endif %}
 			{% if photo.num_reacties > 0 %}
-			<span class="comments">{{ __N('%d reactie', '%d reacties', photo.num_reacties) }}</span>
+			<span class="comments">{{ __N('%d comment', '%d comments', photo.num_reacties) }}</span>
 			{% endif %}
 			{% if photo.beschrijving %}
 			<span class="description">{{ photo.beschrijving }}</span>
@@ -44,7 +44,7 @@
 {% set photos = photos|group_by('read_status') %}
 
 {% if photos.unread is defined %}
-	<h2>{{ __('Nieuw sinds je laatste bezoek') }}</h2>
+	<h2>{{ __('New since your last visit') }}</h2>
 	{{ fotoboek.flowgallery(book, photos.unread) }}
 {% endif %}
 

@@ -12,20 +12,20 @@
 	{% if user_can_create thread.new_message %}
 		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button new-reply-button">
 			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
-			{{ __('Nieuw antwoord') }}
+			{{ __('New comment') }}
 		</a>
 	{% endif %}
 	{% if user_can_delete thread %}
 		<a href="forum.php?thread={{ thread.id }}&amp;view=delete" class="button delete-button">
 			<img src="{{ link_static('images/delete.png') }}" alt="{{ __('delete') }}" title="{{ __('Onderwerp verwijderen') }}">
-			{{ __('Verwijder onderwerp') }}
+			{{ __('Delete topic') }}
 		</a>
 	{% endif %}
 	{% if user_can_update thread %}
 		<div class="text_right">
 			<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
 				{{ html_nonce('move_thread', thread) }}
-				{{ html_label(__('Verplaats bericht naar'), 'forum_id') }}
+				{{ html_label(__('Move message to'), 'forum_id') }}
 				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
 				<input type="image" src="{{ link_static('images/next.png') }}">
 			</form>
@@ -66,7 +66,7 @@
 						({{ '%02.02f'|format(author_stats.percentage_of_total) }})
 					</span>
 				{% else %}
-					__('Onbekend')
+					__('Unknown')
 				{% endif %}
 			</td>
 			<td class="message">
@@ -116,14 +116,14 @@
 	{% if user_can_create thread.new_message %}
 		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button">
 			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
-			{{ __('Nieuw antwoord') }}
+			{{ __('New comment') }}
 		</a>
 	{% endif %}
 	{% if user_can_update thread %}
 		<div class="text_right">
 			<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
 				{{ html_nonce('move_thread', thread) }}
-				{{ html_label(__('Verplaats bericht naar'), 'forum_id') }}
+				{{ html_label(__('Move message to'), 'forum_id') }}
 				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
 				<input type="image" src="{{ link_static('images/next.png') }}">
 			</form>

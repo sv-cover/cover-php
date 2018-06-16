@@ -4,7 +4,7 @@
 
 {% block tab_content %}
 <section class="aligned-list-section personal-section">
-	<h2>{{ __('Persoonlijk') }}</h2>
+	<h2>{{ __('Personal') }}</h2>
 	
 	{% if can_download_vcard %}
 		<a href="profiel.php?lid={{ iter.id }}&amp;view=export_vcard" class="vcard-link" title="Download vCard"><i class="fa fa-download"></i></a>
@@ -12,7 +12,7 @@
 	
 	{% if is_current_user %}
 	<p class="hint">
-		{{ __('Verander wie deze gegevens kunnen zien in het <a href="%s">privacy tabblad</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}</p>
+		{{ __('Change who can see these personal details on the <a href="%s">privacy tab</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}</p>
 	{% endif %}
 	
 	<dl class="profile">
@@ -49,8 +49,8 @@
 
 {% if committees|length > 0 %}
 <section class="aligned-list-section committee-section">
-	<h2 id="commissies">{{ __('Commissies & Werkgroepen') }}</h2>
-	<p>{{ __('%s is lid van de volgende commissies:')|format(iter|first_name) }}</p>
+	<h2 id="commissies">{{ __('Committees & Working groups') }}</h2>
+	<p>{{ __('%s is a member of the following committees:')|format(iter|first_name) }}</p>
 	<ul class="committee-list">
 		{% for committee in committees %}
 		<li>

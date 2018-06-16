@@ -2,7 +2,7 @@
 	include('../include/init.php');
 
 	if (!isset($_GET['menu'])) {
-		echo __('Er is geen menu opgegeven, mocht dit vaker voorkomen neem dan contact op met easy@ai.rug.nl');
+		echo __('There is a problem with the menu, if this keeps occuring, contact the Easy at easy@ai.rug.nl');
 		exit;
 	}
 	
@@ -11,7 +11,7 @@
 	if (isset($_GET['collapse']))
 		do_collapse($menu, $_GET['collapse'] == true);
 	else
-		echo __('Deze actie kan niet worden behandeld, mocht dit vaker voorkomen neem dan contact op met easy@ai.rug.nl');
+		echo __('This action cannot be done, if this keeps occuring contact  the easy at easy@ai.rug.nl');
 		
 	
 	function do_collapse($menu, $collapse) {

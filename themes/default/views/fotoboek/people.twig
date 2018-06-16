@@ -9,10 +9,10 @@
 	</div>
 {% endmacro %}
 
-{% block title book.has('title') ? book.title : __('Fotoboek') ~ ' :: ' ~ parent() %}
+{% block title book.has('title') ? book.title : __('Photo album') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Gezichten') }}</h1>
+<h1>{{ __('Faces') }}</h1>
 <div class="messageBox">
 	{% if book.id is not same as(0) %}
 	{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}

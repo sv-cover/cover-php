@@ -1,24 +1,24 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Inschrijfformulieren') ~ ' :: ' ~ parent() %}
+{% block title __('Sign-up forms') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="pageheading">
 	<div class="controls inline">
 		{% if user_can_create controller.new_form %}
-			<a href="{{ controller.link({'view': 'create_form'}) }}" class="create-link">{{ __('Nieuw inschrijfformulier') }}</a>
+			<a href="{{ controller.link({'view': 'create_form'}) }}" class="create-link">{{ __('New sign-up form') }}</a>
 		{% endif %}
 	</div>
-	<h1>{{ __('Inschrijfformulieren') }}</h1>
+	<h1>{{ __('Sign-up forms') }}</h1>
 </div>
 
 <div class="messageBox">
 	<table class="full-width-table">
 		<thead>
 			<tr>
-				<th>{{ __('Formulier') }}</th>
-				<th>{{ __('Activiteit') }}</th>
-				<th>{{ __('Aanmeldingen') }}</th>
+				<th>{{ __('Form') }}</th>
+				<th>{{ __('Activity') }}</th>
+				<th>{{ __('Subscriptions') }}</th>
 			</tr>
 		</thead>
 		<tbody>

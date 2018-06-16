@@ -1,22 +1,22 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Lid abonneren') ~ ' :: ' ~ parent() %}
+{% block title __('Subscribe a member') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Niet-lid toevoegen') }}</h1>
+<h1>{{ __('Subscribe a non-member') }}</h1>
 <div class="messageBox">
 	<form class="vertical-form" method="post" action="{{ controller.link_to('subscribe_guest', list)|e('html_attr') }}">
 		{{ html_nonce('subscribe_guest', list) }}
 		<div>
-			{{ html_label(__('Naam'), 'naam', errors=errors, required=true) }}
+			{{ html_label(__('Name'), 'naam', errors=errors, required=true) }}
 			{{ html_input_text('naam', [], errors=errors, required=true, autofocus=true) }}
 		</div>
 		<div>
-			{{ html_label(__('E-Mail adres'), 'email', errors=errors, required=true) }}
+			{{ html_label(__('E-mail address'), 'email', errors=errors, required=true) }}
 			{{ html_input_text('email', [], type='email', errors=errors, required=true) }}
 		</div>
 		<div class="controls">
-			<button type="submit" class="button">{{ __('Meld aan') }}</button>
+			<button type="submit" class="button">{{ __('Subscribe') }}</button>
 		</div>
 	</form>
 </div>

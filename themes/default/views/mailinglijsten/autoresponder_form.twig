@@ -1,18 +1,18 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Automatisch bericht wijzigen') ~ ' :: ' ~ parent() %}
+{% block title __('Modify message') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Automatisch bericht wijzigen') }}</h1>
+<h1>{{ __('Modify message') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ controller.link_to_update_autoresponder(iter, autoresponder)|e('html_attr') }}" class="vertical-form">
 		<div>
-			{{ html_label(__('Onderwerp'), autoresponder ~ '_subject', errors=errors, required=true) }}
+			{{ html_label(__('Subject'), autoresponder ~ '_subject', errors=errors, required=true) }}
 			{{ html_input_text(autoresponder ~ '_subject', iter, errors=errors, required=true) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Bericht'), autoresponder ~ '_message', errors=errors) }}
+			{{ html_label(__('Message'), autoresponder ~ '_message', errors=errors) }}
 
 			<div id="wysihtml-toolbar" class="button-bar" style="display: none;">
 				<span class="button-group">
@@ -45,8 +45,8 @@
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ __('Wijzig e-mail') }}</button>
-			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Terug naar mailinglijst') }}</a>
+			<button type="submit" class="button">{{ __('Change emai') }}</button>
+			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Return to mailing list') }}</a>
 		</div>
 	</form>
 </div>

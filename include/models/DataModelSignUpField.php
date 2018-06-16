@@ -103,35 +103,35 @@ class DataModelSignUpField extends DataModel
 		$this->field_types = [
 			'text' => [
 				'class' => \fields\Text::class,
-				'label' => __('Tekstveld')
+				'label' => __('Text field')
 			],
 			'checkbox' => [
 				'class' => \fields\Checkbox::class,
-				'label' => __('Vinkje')
+				'label' => __('Checkbox')
 			],
 			'choice' => [
 				'class' => \fields\Choice::class,
-				'label' => __('Meerkeuzevraag')
+				'label' => __('Multiple choice question')
 			],
 			'name' => [
 				'class' => \fields\Name::class,
-				'label' => __('Voor- en achternaam')
+				'label' => __('Full name')
 			],
 			'address' => [
 				'class' => \fields\Address::class,
-				'label' => __('Adresveld')
+				'label' => __('Address field')
 			],
 			'email' => [
 				'class' => \fields\Email::class,
-				'label' => __('E-mailadresveld')
+				'label' => __('E-mail address field')
 			],
 			'bankaccount' => [
 				'class' => \fields\BankAccount::class,
-				'label' => __('Rekeningnummer')
+				'label' => __('Bank account number')
 			],
 			'editable' => [
 				'class' => \fields\Editable::class,
-				'label' => __('Titels en tekst (lay-out)')
+				'label' => __('Titles and text (layout)')
 			]
 		];
 	}

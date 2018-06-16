@@ -1,16 +1,16 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Sleutel verwijderen') ~ ' :: ' ~ parent() %}
+{% block title __('Delete key') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Sleutel verwijderen') }}</h1>
+<h1>{{ __('Delete key') }}</h1>
 <div class="messageBox">
 	<form method="post" id="delete-settings-form" action="{{ controller.link_to_delete(iter)|e('html_attr') }}" class="vertical-form">
 		{{ html_nonce('delete', iter) }}
-		<p>{{ __('Weet je heel zeker dat je de sleutel <em>%s</em> wil verwijderen?')|format(iter.key|e('html'))|raw }}</p>
+		<p>{{ __('Are you certain you want to delete the key <em>%s</em>?')|format(iter.key|e('html'))|raw }}</p>
 		<div>
-			<button type="submit" class="button">{{ __('Verwijder sleutel') }}</button>
-			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Terug naar instellingen') }}</a>
+			<button type="submit" class="button">{{ __('Delete key') }}</button>
+			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Back to settings') }}</a>
 		</div>
 	</form>
 </div>

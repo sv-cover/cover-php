@@ -22,13 +22,13 @@
 			{% endif %}
 			{% if user_can_update book and book.visibility is not same as(null) %}
 				{% if book.visibility == constant('DataModelPhotobook::VISIBILITY_PUBLIC') %}
-				<span class="visibility visibility-public" title="{{ __('Publiek') }}">{{ __('Publiek') }}</span>
+				<span class="visibility visibility-public" title="{{ __('Public') }}">{{ __('Public') }}</span>
 				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_MEMBERS') %}
-				<span class="visibility visibility-members" title="{{ __('Alleen ingelogde leden') }}">{{ __('Alleen ingelogde leden') }}</span>
+				<span class="visibility visibility-members" title="{{ __('Only logged in members') }}">{{ __('Only logged in members') }}</span>
 				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS') %}
-				<span class="visibility visibility-active-members" title="{{ __('Alleen ingelogde actieve leden') }}">{{ __('Alleen ingelogde actieve leden') }}</span>
+				<span class="visibility visibility-active-members" title="{{ __('Only logged in active members') }}">{{ __('Only logged in active members') }}</span>
 				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_PHOTOCEE') %}
-				<span class="visibility visibility-photocee" title="{{ __('Alleen ingelogde leden van de PhotoCee') }}">{{ __('Alleen ingelogde leden van de PhotoCee') }}</span>
+				<span class="visibility visibility-photocee" title="{{ __('Only logged in members of the PhotoCee') }}">{{ __('Only logged in members of the PhotoCee') }}</span>
 				{% endif %}
 			{% endif %}
 		</span>

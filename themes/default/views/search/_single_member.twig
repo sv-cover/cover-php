@@ -1,12 +1,12 @@
 {% set status = null %}
 {% if result.type  == constant('MEMBER_STATUS_LID') %}
-	{% set status = __('Lid') %}
+	{% set status = __('Member') %}
 {% elseif result.type == constant('MEMBER_STATUS_LID_AF') %}
-	{% set status = __('Lid af') %}
+	{% set status = __('Previously a member') %}
 {% elseif result.type == constant('MEMBER_STATUS_ERELID') %}
-	{% set status = __('Erelid') %}
+	{% set status = __('Honorary Member') %}
 {% elseif result.type == constant('MEMBER_STATUS_DONATEUR') %}
-	{% set status = __('Donateur') %}
+	{% set status = __('Donor') %}
 {% endif %}
 <div class="search-result-member">
 	<h2>

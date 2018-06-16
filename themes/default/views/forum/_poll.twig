@@ -12,7 +12,7 @@
 		</table>
 
 		<div class="poll_vote">
-			<button type="submit" class="button">{{ __('Stem') }}</button>
+			<button type="submit" class="button">{{ __('Vote') }}</button>
 		</div>
 	</form>
 {% else %}
@@ -28,18 +28,18 @@
 		{% endfor %}
 		<tr>
 			<td colspan="2">
-				{{ __('Aantal stemmen') }}: {{ poll.total_votes }}
+				{{ __('Number of votes') }}: {{ poll.total_votes }}
 			</td>
 		</tr>
 
 		{% if not global.auth.logged_in %}
 			<tr>
-				<td colspan="2"><a href="{{ link('sessions.login') }}" data-placement-selector="modal" data-partial-selector="#login-form">{{ __('Log in om te stemmen') }}</a></td>
+				<td colspan="2"><a href="{{ link('sessions.login') }}" data-placement-selector="modal" data-partial-selector="#login-form">{{ __('Log in to vote') }}</a></td>
 			</tr>
 		{% elseif global.models.Poll.can_create_new_poll %}
 			<tr>
 				<td colspan="2">
-					<a class="button" href="forum.php?forum={{ poll.forum_id }}&amp;view=create_poll">{{ __('Nieuwe poll ') }}</a>
+					<a class="button" href="forum.php?forum={{ poll.forum_id }}&amp;view=create_poll">{{ __('New poll ') }}</a>
 				</td>
 		{% endif %}
 	</table>

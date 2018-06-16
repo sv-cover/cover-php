@@ -4,17 +4,17 @@
 
 {% block tab_content %}
 <section class="aligned-list-section">
-	<h2>{{ __('Webgegevens') }}</h2>
-	<p>{{ __('Je webgegevens worden gebruikt om je er een beetje (on)herkenbaar te maken op het forum.') }}</p>
+	<h2>{{ __('Webinformation') }}</h2>
+	<p>{{ __('Your profile details are used to make you (un)recognizable on the forum.') }}</p>
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=profile" method="post" class="vertical-form">
 		{{ html_nonce('profile', iter) }}
 		<div>
-			{{ html_label(__('Bijnaam'), 'nick', errors=errors) }}
+			{{ html_label(__('Nickname'), 'nick', errors=errors) }}
 			{{ html_input_text('nick', iter) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Onderschrift'), 'onderschrift', errors=errors) }}
+			{{ html_label(__('Signature'), 'onderschrift', errors=errors) }}
 			{{ html_input_text('onderschrift', iter) }}
 		</div>
 
@@ -29,48 +29,48 @@
 		</div>
 
 		<div>
-			{{ html_label(__('Taal'), 'taal', errors=errors) }}
+			{{ html_label(__('Language'), 'taal', errors=errors) }}
 			{{ html_select_field('taal', global.i18n.languages, iter, required=true) }}
 		</div>
 		
-		<button type="submit" class="button">{{ __('Opslaan') }}</button>
+		<button type="submit" class="button">{{ __('Save') }}</button>
 	</form>
 </section>
 
 <section class="aligned-list-section">
-	<h2 id="wachtwoord">{{ __('Nieuw wachtwoord') }}</h2>
+	<h2 id="wachtwoord">{{ __('New password') }}</h2>
 	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=profile" method="post" class="vertical-form">
 		{{ html_nonce('password', iter) }}
 
 		{% if current_password_required %}
 			<div>
-				{{ html_label(__('Huidige wachtwoord'), 'wachtwoord_oud', errors=errors) }}
+				{{ html_label(__('Current password'), 'wachtwoord_oud', errors=errors) }}
 				{{ html_input_password('wachtwoord_oud') }}
 			</div>
 		{% endif %}
 		
 		<div>
-			{{ html_label(__('Nieuw wachtwoord'), 'wachtwoord_nieuw', errors=errors) }}
+			{{ html_label(__('New password'), 'wachtwoord_nieuw', errors=errors) }}
 			{{ html_input_password('wachtwoord_nieuw') }}
 		</div>
 
 		<div>
-			{{ html_label(__('Opnieuw'), 'wachtwoord_opnieuw', errors=errors) }}
+			{{ html_label(__('Again'), 'wachtwoord_opnieuw', errors=errors) }}
 			{{ html_input_password('wachtwoord_opnieuw') }}
 		</div>
 
-		<button type="submit" class="button">{{ __('Wijzig wachtwoord') }}</button>
+		<button type="submit" class="button">{{ __('Change password') }}</button>
 	</form>
 </section>
 
 <section class="aligned-list-section">
-	<h2>{{ __('Foto') }}</h2>
-	<p>{{ __('Je foto wordt ook gebruikt op deze website, maar ook in de jaarlijkse almanak. Wil je een recentere foto hier hebben? Stuur de beste versie die je hebt in! Ze worden met de hand verwerkt, dus het kan even duren voordat hij aangepast is.') }}</p>
+	<h2>{{ __('Photo') }}</h2>
+	<p>{{ __('Your photo is not only used on this website, but also in the annual yearbook. You want to use a more recent photo? Send in the best version you have! Submissions are processed by hand, so it might take a while for the new photo to show up.') }}</p>
 	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=photo" method="post" enctype="multipart/form-data">
 		{{ html_nonce('photo', iter) }}
 		<div>
 			<div class="file-upload-button button">
-				<span>{{ __('Kies nieuwe foto') }}&hellip;</span>
+				<span>{{ __('Choose photo') }}&hellip;</span>
 				<input type="file" name="photo" accept="image/jpeg" title="{{ __('Alleen JPEG-plaatjes mogen.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
 			</div>
 		</div>

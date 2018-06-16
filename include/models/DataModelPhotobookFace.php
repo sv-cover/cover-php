@@ -223,7 +223,7 @@ class DataModelPhotobookFace extends DataModel
 		return new DataIterFacesPhotobook(
 				get_model('DataModelPhotobook'), -1, array(
 				'titel' => sprintf(__('Foto\'s van %s'),
-					implode(__(' en '), array_map(function($member) { return member_first_name($member); }, $members))),
+					implode(__(' and '), array_map(function($member) { return member_first_name($member); }, $members))),
 				'datum' => null,
 				'parent_id' => 0,
 				'member_ids' => array_map(function($member) { return $member->get_id(); }, $members)));

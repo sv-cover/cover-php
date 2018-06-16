@@ -129,10 +129,10 @@
 		public function visibility_options()
 		{
 			return array(
-				DataModelPhotobook::VISIBILITY_PUBLIC => __('Publiek'),
-				DataModelPhotobook::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
-				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
-				DataModelPhotobook::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
+				DataModelPhotobook::VISIBILITY_PUBLIC => __('Public'),
+				DataModelPhotobook::VISIBILITY_MEMBERS => __('Only logged in members'),
+				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS => __('Only logged in active members'),
+				DataModelPhotobook::VISIBILITY_PHOTOCEE => __('Only logged in members of the PhotoCee')
 			);
 		}
 

@@ -665,25 +665,25 @@
 			switch ($iter['type'])
 			{
 				case MEMBER_STATUS_LID:
-					return __('Lid');
+					return __('Member');
 
 				case MEMBER_STATUS_LID_ONZICHTBAAR:
-					return __('Onzichtbaar');
+					return __('Hidden');
 
 				case MEMBER_STATUS_LID_AF:
-					return __('Lid af');
+					return __('Previously a member');
 
 				case MEMBER_STATUS_ERELID:
-					return __('Erelid');
+					return __('Honorary Member');
 
 				case MEMBER_STATUS_DONATEUR:
-					return __('Donateur');
+					return __('Donor');
 
 				case MEMBER_STATUS_UNCONFIRMED:
-					return __('Geen status');
+					return __('No status');
 
 				default:
-					return __('Onbekend');
+					return __('Unknown');
 			}
 		}
 

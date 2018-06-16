@@ -1,22 +1,22 @@
 <div class="signup-form">
 {% for entry in form.get_entries_for_member(global.identity.member) %}
-	<p>{{ __('Je hebt je aangemeld op %s.')|format(entry.created_on|date('d-m-Y H:i')) }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Bekijk je aanmelding') }}</a>.{% endif %}</p>
+	<p>{{ __('You signed up on %s.')|format(entry.created_on|date('d-m-Y H:i')) }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Show my registration') }}</a>.{% endif %}</p>
 {% else %}
 	{% set entry = form.new_entry(global.identity.member) %}
 	{% if not form.is_open %}
 		{% if user_can_create entry %}
 			<section class="warning-section">
-				<h3>{{ __('De inschrijvingen zijn gesloten.') }}</h3>
-				<p>{{ __('Jij kan dit formulier nu wel zien omdat je de rechten hebt om mensen in te schrijven buiten de inschrijfperiode.') }}</p>
+				<h3>{{ __('The registrations are closed.') }}</h3>
+				<p>{{ __('You can see this form because you are allowed to sign up people outside of the sign-up period.') }}</p>
 			</section>
 		{% else %}
 			<p>
 				{% if form.open_on is null %}
-					{{ __('Het inschrijfformulier is hier binnenkort te vinden.')}}
+					{{ __('The sign-up form will soon be available on this page.')}}
 				{% elseif form.open_on is future %}
-					{{ __('De inschrijvingen gaan open op %s.')|format(form.open_on|date('d-m-Y, H:i')) }}
+					{{ __('The registrations will open on %s.')|format(form.open_on|date('d-m-Y, H:i')) }}
 				{% elseif form.closed_on is past %}
-					{{ __('De inschrijvingen zijn gesloten. De deadline voor inschrijven was %s.')|format(form.closed_on|date('d-m-Y H:i')) }}
+					{{ __('The registrations are closed. The deadline was %s.')|format(form.closed_on|date('d-m-Y H:i')) }}
 				{% endif %}
 			</p>
 		{% endif %}
@@ -39,15 +39,15 @@
 			{% endfor %}
 
 			<div class="controls">
-				<button class="button" type="submit">{{ entry.has_id ? __('Wijzig inschrijving') : __('Schrijf mij in') }}</button>
+				<button class="button" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
 			</div>
 		</form>
 	{% endif %}
 {% endfor %}
 {% if user_can_update form %}
 	<ul class="actions">
-		<li><a href="signup.php?view=update_form&amp;form={{ form.id }}">{{ __('Bewerk formulier') }}</a></li>
-		<li><a href="signup.php?view=list_entries&amp;form={{ form.id }}">{{ __('Bekijk inschrijvingen') }}</a></li>
+		<li><a href="signup.php?view=update_form&amp;form={{ form.id }}">{{ __('Modify form') }}</a></li>
+		<li><a href="signup.php?view=list_entries&amp;form={{ form.id }}">{{ __('Show sign-ups') }}</a></li>
 	</ul>
 {% endif %}
 </div>

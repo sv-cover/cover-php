@@ -1,30 +1,30 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title iter.naam ~ ' :: ' ~ __('Mailinglijsten') ~ ' :: ' ~ parent() %}
+{% block title iter.naam ~ ' :: ' ~ __('Mailing lists') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="pageHeading">
 	{% if user_can_update iter %}
 		<div class="controls inline">
-			<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="edit-link">{{ __('Bewerk mailinglijsteigenschappen') }}</a>
+			<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="edit-link">{{ __('Modify mailing list properties') }}</a>
 		</div>
 	{% endif %}
-	<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailinglijsten') }}</a> / {{ iter.naam }}</h1>
+	<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a> / {{ iter.naam }}</h1>
 </div>
 <div class="messageBox">
 	<div class="section mailinglist-header">
 		<p>
-			<em>{{ __('Adres') }}: {{ iter.adres }}</em>
+			<em>{{ __('Address') }}: {{ iter.adres }}</em>
 			{{ iter.omschrijving|parse_markup }}
 		</p>
 	</div>
 	
 	<div class="section">
-		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Lid toevoegen') }}</a>
+		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Add member') }}</a>
 
-		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Niet-lid toevoegen') }}</a>
+		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Subscribe a non-member') }}</a>
 
-		<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}">{{ __('Archief') }}</a>
+		<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}">{{ __('Archived messages') }}</a>
 	</div>
 
 	<div class="section">
@@ -34,8 +34,8 @@
 			<thead>
 				<tr>
 					<th width="20"></th>
-					<th>{{ __('Naam') }}</th>
-					<th>{{ __('E-Mail adres') }}</th>
+					<th>{{ __('Name') }}</th>
+					<th>{{ __('E-mail address') }}</th>
 					<th width="40"></th>
 				</tr>
 			</thead>
@@ -49,8 +49,8 @@
 					<td><label for="{{ view.uid(subscription) }}">{{ subscription.naam }}</label></td>
 					{% endif %}
 					{% if subscription.lid_id %}
-					<td>{{ subscription.lid.is_private('email') ? __('Onbekend') : subscription.email }}</td>
-					<td><a href="profiel.php?lid={{ subscription.lid_id }}">{{ __('Profiel') }}</a></td>
+					<td>{{ subscription.lid.is_private('email') ? __('Unknown') : subscription.email }}</td>
+					<td><a href="profiel.php?lid={{ subscription.lid_id }}">{{ __('Profile') }}</a></td>
 					{% else %}
 					<td>{{ subscription.email }}</td>
 					<td></td>
@@ -59,7 +59,7 @@
 			{% endfor %}
 			</tbody>
 		</table>
-		<button class="button" type="submit">{{ __('Meld geselecteerde adressen af') }}</button>
+		<button class="button" type="submit">{{ __('Unsubscribe selected') }}</button>
 		</form>
 	</div>
 
@@ -67,15 +67,15 @@
 		<h3>Statistics</h3>
 		<figure class="graph">
 			{{ view.barchart(iter.get_reach('beginjaar'))|raw }}
-			<figcaption>{{ __('Beginjaar') }}</figcaption>
+			<figcaption>{{ __('Starting year') }}</figcaption>
 		</figure>
 		<figure class="graph">
 			{{ view.barchart(iter.get_reach('leeftijd'))|raw }}
-			<figcaption>{{ __('Leeftijd') }}</figcaption>
+			<figcaption>{{ __('Age') }}</figcaption>
 		</figure>
 		<figure class="graph">
 			{{ view.barchart(iter.get_reach('committee_count'))|raw }}
-			<figcaption>{{ __('Commissies') }}</figcaption>
+			<figcaption>{{ __('Committees') }}</figcaption>
 		</figure>
 	</div>
 </div>
@@ -94,7 +94,7 @@ jQuery(function($) {
 		$('<a>')
 			.addClass('button')
 			.attr({'href': '#mailinglist-settings'})
-			.text({{ __('Bewerk mailinglijsteigenschappen')|json_encode|raw }}));
+			.text({{ __('Modify mailing list properties')|json_encode|raw }}));
 	
 	$('#lid_id')
 		.bind('keydown', function(e) {

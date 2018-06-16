@@ -7,7 +7,7 @@
 		require_once 'include/models/' . $name . '.php';
 
 		if (!class_exists($name))
-			throw new InvalidArgumentException(sprintf(__("Kan het model %s niet vinden"), $name));
+			throw new InvalidArgumentException(sprintf(__("Could not find the model %s"), $name));
 
 		$refl = new ReflectionClass($name);
 		return $refl->newInstance(get_db());

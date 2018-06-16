@@ -6,7 +6,7 @@
 		<link rel="icon" type="image/png" href="images/favicon.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">
 		<link rel="search" href="opensearch.xml"  type="application/opensearchdescription+xml" title="Cover">
-		<title>{% block title %}Cover :: {{ __('Studievereniging Kunstmatige Intelligentie en Informatica, RUG') }}{% endblock %}</title>
+		<title>{% block title %}Cover :: {{ __('Study Association for Artificial Intelligence and Computing Science') }}{% endblock %}</title>
 		
 		{% for stylesheet in view.stylesheets %}
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
@@ -24,8 +24,8 @@
 					{% if agenda_items_to_moderate|length > 0 %}
 						<div class="message">
 							<a href="agenda.php?view=moderate">{{ __N(
-								'Er staat nog %d agendapunt in de wachtrij',
-								'Er staan nog %d agendapunten in de wachtrij', agenda_items_to_moderate|length) }}</a>
+								'There is %d activity waiting for your confirmation',
+								'There are %d activities waiting for your confirmation', agenda_items_to_moderate|length) }}</a>
 						</div>
 					{% endif %}
 					{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}

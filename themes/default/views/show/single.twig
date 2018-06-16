@@ -6,7 +6,7 @@
 <div class="pageheading">
 	{% if user_can_update iter %}
 	<div class="controls inline">
-		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Bewerk pagina') }}</a>
+		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Modify page') }}</a>
 	</div>
 	{% endif %}
 	<h1>{{ iter.get_title }}</h1>

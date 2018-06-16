@@ -1,26 +1,26 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Mailinglijsten') ~ ' :: ' ~ parent() %}
+{% block title __('Mailing lists') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="pageHeading">
 	{% if user_can_create model.new_iter %}
 		<div class="controls inline">
-			<a href="{{ controller.link_to_create()|e('html_attr') }}" class="create-link">{{ __('Nieuwe mailinglijst')  }}</a>
+			<a href="{{ controller.link_to_create()|e('html_attr') }}" class="create-link">{{ __('New mailing list')  }}</a>
 		</div>
 	{% endif %}
-	<h1>{{ __('Mailinglijsten') }}</h1>
+	<h1>{{ __('Mailing lists') }}</h1>
 </div>
 <div class="messageBox">
 	<table class="full-width-table">
 		<thead>
 			<tr>
-				<th>{{ __('Naam') }}</th>
-				<th>{{ __('Adres') }}</th>
-				<th>{{ __('Eigenaar') }}</th>
-				<th>{{ __('Zichtbaardheid') }}</th>
-				<th title="messages in last 30 days">{{ __('Activiteit') }}</th>
-				<th title="subscriber count">{{ __('Bereik') }}</th>
+				<th>{{ __('Name') }}</th>
+				<th>{{ __('Address') }}</th>
+				<th>{{ __('Owner') }}</th>
+				<th>{{ __('Visibility') }}</th>
+				<th title="messages in last 30 days">{{ __('Activity') }}</th>
+				<th title="subscriber count">{{ __('Reach') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,7 +29,7 @@
 				<td><a href="{{ controller.link_to_read(mailinglist)|e('html_attr') }}">{{ mailinglist.naam }}</a></td>
 				<td>{{ mailinglist.adres }}</td>
 				<td>{{ mailinglist.committee.naam }}</td>
-				<td>{{ mailinglist.publiek ? __('Publiek') : __('Privé') }}</td>
+				<td>{{ mailinglist.publiek ? __('Public') : __('Privé') }}</td>
 				<td class="numeric">{{ mailinglist.archive.count(30) }}</td>
 				<td class="numeric">{{ mailinglist.reach }}</td>
 			</tr>

@@ -1217,7 +1217,7 @@
 
 			// Default value when no author is found
 			$author = [
-				'name' => __('Onbekend'),
+				'name' => __('Unknown'),
 				'avatar' => null,
 				'email' => null
 			];
@@ -1292,10 +1292,10 @@
 			switch ($acl->get('type'))
 			{
 				case self::TYPE_EVERYONE:
-					return __('Iedereen');
+					return __('Everyone');
 				case self::TYPE_PERSON:
 					if ($acl->get('author_id') == self::TYPE_EVERYONE)
-						return __('Alle leden');
+						return __('All members');
 
 					$member_model = get_model('DataModelMember');
 					$member_data = $member_model->get_iter($acl->get('author_id'));
@@ -1305,7 +1305,7 @@
 				break;
 				case self::TYPE_COMMITTEE:
 					if ($acl->get('author_id') == self::TYPE_EVERYONE)
-						return __('Alle commissies');
+						return __('Committees');
 
 					$commissie_model = get_model('DataModelCommissie');
 					$commissie_data = $commissie_model->get_iter($acl->get('author_id'));
@@ -1315,7 +1315,7 @@
 				break;
 				case self::TYPE_GROUP:
 					if ($acl->get('author_id') == self::TYPE_EVERYONE)
-						return __('Alle groepen');
+						return __('Groups');
 
 					return $this->db->query_value('
 							SELECT
@@ -1327,7 +1327,7 @@
 				break;
 			}
 
-			return __('Onbekend');
+			return __('Unknown');
 		}
 		
 		/**
@@ -1341,19 +1341,19 @@
 			switch ($acl->get('author_type'))
 			{
 				case self::TYPE_EVERYONE:
-					return __('Iedereen');
+					return __('Everyone');
 				
 				case self::TYPE_PERSON:
-					return __('Lid');
+					return __('Member');
 				
 				case self::TYPE_COMMITTEE:
-					return __('Commissie');
+					return __('Committee');
 				
 				case self::TYPE_GROUP:
-					return __('Groep');
+					return __('Group');
 				
 				default:
-					return __('Onbekend');
+					return __('Unknown');
 			}
 		}
 

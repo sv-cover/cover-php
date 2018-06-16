@@ -1,33 +1,33 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title view.get_label(iter, __('Nieuwe sleutel toevoegen'), __('Sleutel wijzigen')) ~ ' :: ' ~ parent() %}
+{% block title view.get_label(iter, __('Add a new key'), __('Modify key')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ view.get_label(iter, __('Nieuwe sleutel toevoegen'), __('Sleutel wijzigen')) }}</h1>
+<h1>{{ view.get_label(iter, __('Add a new key'), __('Modify key')) }}</h1>
 <div class="messageBox">
 	<form id="settings-form" method="post" action="{{ view.get_form_action(iter)|e('html_attr') }}" class="vertical-form">
 		{% if iter.id != null %}
 			{{ html_nonce('update', iter) }}
 			<div>
-				{{ html_label(__('Sleutel'), 'key', errors=errors, required=true) }}
+				{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
 				{{ html_input_text('key', iter, disabled='disabled') }}
 			</div>
 		{% else %}
 			{{ html_nonce('create', iter) }}
 			<div>
-				{{ html_label(__('Sleutel'), 'key', errors=errors, required=true) }}
+				{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
 				{{ html_input_text('key', iter, required='required', maxlength=100) }}
 			</div>
 		{% endif %}
 
 		<div>
-			{{ html_label(__('Waarde'), 'value', errors=errors, required=true) }}
+			{{ html_label(__('Value'), 'value', errors=errors, required=true) }}
 			{{ html_textarea_field('value', iter) }}
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ view.get_label(iter, __('Voeg sleutel toe'), __('Wijzig sleutel')) }}</button>
-			<a href="{{ controller.link_to_index|e('html_attr') }}">{{ __('Terug naar instellingen') }}</a>
+			<button type="submit" class="button">{{ view.get_label(iter, __('Add key'), __('Modify key')) }}</button>
+			<a href="{{ controller.link_to_index|e('html_attr') }}">{{ __('Back to settings') }}</a>
 		</div>
 	</form>
 </div>

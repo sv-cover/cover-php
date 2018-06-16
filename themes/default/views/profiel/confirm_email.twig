@@ -1,19 +1,19 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('E-mailadres bevestigen') ~ ' :: ' ~ parent() %}
+{% block title __('Confirm email address') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-	<h1>{{ __('E-mailadres bevestigen') }}</h1>
+	<h1>{{ __('Confirm email address') }}</h1>
 	<div class="messageBox">
 		{% if success %}
-			<p>{{ __('Klaar! Je e-mailadres is bevestigd en bijgewerkt!') }}</p>
+			<p>{{ __('Finished! Your email address has been confirmed and updated!') }}</p>
 		{% else %}
-			<p>{{ __('Oh jee! Deze link is niet meer geldig.') }}</p>
-			<p>{{ __('Het kan goed zijn dat je je e-mailadres al eerder bevestigd hebt. Probeer in te loggen met je nieuwe e-mailadres. Mocht dat niet lukken, probeer het dan toch weer eens met je vorige adres. Klopt het wachtwoord niet? Probeer dan beide e-mailadressen wanneer je een nieuw wachtwoord aanvraagt.') }}</p>
-			<p>{{ __('Kom je er niet uit? Mail dan naar %s zodat we je verder kunnen helpen.')|e|format(html_email(global.config.email_support))|raw }}</p>
+			<p>{{ __('Oh dear, this link is no longer valid.') }}</p>
+			<p>{{ __('It might be the case that you’ve already confirmed your email address. Try to log in with your new address. It that doesn’t work, try to use your previous address once again. Did you forget your password? You might want to try both your previous and current email address when asking for password recovery.') }}</p>
+			<p>{{ __('Still having trouble? Send an email to %s and we’ll help you.')|e|format(html_email(global.config.email_support))|raw }}</p>
 		{% endif %}
 		<footer class="alt-section">
-			<a href="/">{{ __('Terug naar de website') }}</a>
+			<a href="/">{{ __('Back to the homepage') }}</a>
 		</footer>
 	</div>
 {% endblock %}

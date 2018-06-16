@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Oud-besturen') ~ ' :: ' ~ parent() %}
+{% block title __('Former boards') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="timeline-container">
@@ -47,7 +47,7 @@
 
 	{% if user_can_create controller.new_iter %}
 		<div class="timeline-footer">
-			<a href="{{ controller.link_to_create() }}" class="add-new-bestuur button">{{ __('Nieuw bestuur toevoegen...') }}</a>
+			<a href="{{ controller.link_to_create() }}" class="add-new-bestuur button">{{ __('Add a new board...') }}</a>
 		</div>
 	{% endif %}
 	</div>

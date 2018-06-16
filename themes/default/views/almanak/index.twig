@@ -1,29 +1,29 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Almanak') ~ ' :: ' ~ parent() %}
+{% block title __('Almanac') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Almanak') }}</h1>
+<h1>{{ __('Almanac') }}</h1>
 <div class="messageBox">	
 	<form name="almanak" action="almanak.php" method="GET">
 		<table class="almanak_navigation">
 			<tr>
-				<td class="title">{{ __('Naam') }}:</td>
+				<td class="title">{{ __('Name') }}:</td>
 				<td>
 					{{ html_input_text('search', params, size=40) }}
-					{{ html_input_submit('', __('Zoek')) }}
+					{{ html_input_submit('', __('Search')) }}
 				</td>
 			</tr>
 			{% if global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
 			<tr>
-				<td class="title">{{ __('Zichtbaarheid') }}:</td>
+				<td class="title">{{ __('Visibility') }}:</td>
 				<td colspan="2">
 					<ul class="nav-tabs horizontal">
-						<li><a href="?status={{ constant('MEMBER_STATUS_LID') }}">{{ __('Lid') }}</a></li>
-						<li><a href="?status={{ constant('MEMBER_STATUS_LID_ONZICHTBAAR') }}">{{ __('Lid (verborgen)') }}</a></li>
-						<li><a href="?status={{ constant('MEMBER_STATUS_LID_AF') }}">{{ __('Lid af') }}</a></li>
-						<li><a href="?status={{ constant('MEMBER_STATUS_ERELID') }}">{{ __('Erelid') }}</a></li>
-						<li><a href="?status={{ constant('MEMBER_STATUS_DONATEUR') }}">{{ __('Donateur') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_LID') }}">{{ __('Member') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_LID_ONZICHTBAAR') }}">{{ __('Member (hidden)') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_LID_AF') }}">{{ __('Previously a member') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_ERELID') }}">{{ __('Honorary Member') }}</a></li>
+						<li><a href="?status={{ constant('MEMBER_STATUS_DONATEUR') }}">{{ __('Donor') }}</a></li>
 					</ul>
 				</td>
 			</tr>
@@ -40,16 +40,16 @@
 		</table>
 	</form>
 	{% if iters is null %}
-		<p>{{ __('Maak hierboven een selectie om de almanak te bekijken.') }}</p>
+		<p>{{ __('Make a selection above to view the almanac.') }}</p>
 		{% if global.identity.member_in_committee(constant('COMMISSIE_ALMANAKCIE')) %}
 		<p>
-			{{ __('Download almanakgegevens:') }}
-			<a href="almanak.php?export=csv">{{ __('CSV met persoonsgegevens') }}</a>
+			{{ __('Download yearbook data:') }}
+			<a href="almanak.php?export=csv">{{ __('CSV with personal details') }}</a>
 			<a href="almanak.php?export=photos">{{ __('ZIP met foto\'s') }}</a>
 		</p>
 		{% endif %}
 	{% else %}
-		<h3>{{ __N('Er is <em>%d</em> lid gevonden die voldoet aan de zoekterm(en).', 'Er zijn <em>%d</em> leden gevonden die voldoen aan de zoekterm(en).', iters|length)|raw }}</h3>
+		<h3>{{ __N('There is <em>%d</em> member that coincide with your searching criteria.', 'There are <em>%d</em> members that coincide with your searching criteria.', iters|length)|raw }}</h3>
 		
 		<ol class="almanac">
 			{% for iter in iters %}

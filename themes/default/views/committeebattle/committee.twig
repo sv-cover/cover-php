@@ -10,9 +10,9 @@
 	<table class="full-width-table">
 		<thead>
 			<tr>
-				<th>{{ __('Datum') }}</th>
-				<th>{{ __('Reden') }}</th>
-				<th>{{ __('Punten') }}</th>
+				<th>{{ __('Date') }}</th>
+				<th>{{ __('Reason') }}</th>
+				<th>{{ __('Points') }}</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -34,10 +34,10 @@
 				<td>{{ score.points }}</td>
 				<td>
 					{% if user_can_update score %}
-						<a href="{{ controller.link_to_update(score)|e('html_attr') }}" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Bewerk') }}</a>
+						<a href="{{ controller.link_to_update(score)|e('html_attr') }}" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Edit') }}</a>
 					{% endif %}
 					{% if user_can_delete score %}
-						<a href="{{ controller.link_to_delete(score)|e('html_attr') }}" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Verwijder') }}</a>
+						<a href="{{ controller.link_to_delete(score)|e('html_attr') }}" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Delete') }}</a>
 					{% endif %}
 				</td>
 			</tr>

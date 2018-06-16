@@ -13,7 +13,7 @@ class SearchController extends Controller
 		$this->providers = [
 			[
 				'model' => get_model('DataModelMember'),
-				'category_name' => __('leden')
+				'category_name' => __('members')
 			],
 			[
 				'model' => get_model('DataModelEditable'),
@@ -21,19 +21,19 @@ class SearchController extends Controller
 			],
 			[
 				'model' => get_model('DataModelCommissie'),
-				'category_name' => __('commissies')
+				'category_name' => __('committees')
 			],
 			[
 				'model' => get_model('DataModelAgenda'),
-				'category_name' => __('agendapunten')
+				'category_name' => __('calendar events')
 			],
 			[
 				'model' => get_model('DataModelPhotobook'),
-				'category_name' => __('fotoboeken')
+				'category_name' => __('photo books')
 			],
 			[
 				'model' => get_model('DataModelAnnouncement'),
-				'category_name' => __('mededelingen')
+				'category_name' => __('announcements')
 			],
 			[
 				'model' => get_model('DataModelForum'),

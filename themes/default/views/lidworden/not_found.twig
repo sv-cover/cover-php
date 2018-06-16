@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
 {% block content %}
-<h1>{{ __('E-mailadres bevestigen') }}</h1>
+<h1>{{ __('Confirm email address') }}</h1>
 <div class="messageBox">
-	<p>{{ __('Deze bevestingslink is niet (meer) geldig. Waarschijnlijk is je account al geactiveerd.') }}</p>
-	<p>{{ __('Als het goed is heb je een introductiemail gekregen met onderaan een link om een wachtwoord in te stellen. Mocht je de mail niet kunnen vinden, dan kan je je <a href="%s">wachtwoord resetten</a>.')|format('wachtwoordvergeten.php')|raw }}</p>
+	<p>{{ __('Your confirmation link is no longer valid. Your account has probably already been activated.') }}</p>
+	<p>{{ __('By now you should have received a long and informative email about Cover, and at the bottom of that email there is a link to set your password. If you can't find the email, you can <a href="%s">reset your password</a>.')|format('wachtwoordvergeten.php')|raw }}</p>
 </div>
 {% endblock %}

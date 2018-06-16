@@ -53,7 +53,7 @@ class ForumView extends View
 		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_WRITE);
 
 		if ($message->has_id() && !array_key_exists($message['unified_author'], $unified_authors))
-			$unified_authors[$iter['unified_author']] = __('(Onveranderd)');
+			$unified_authors[$iter['unified_author']] = __('(Unchanged)');
 
 		return $this->twig->render('thread_form.twig', compact('forum', 'thread', 'message', 'errors', 'unified_authors'));
 	}
@@ -72,7 +72,7 @@ class ForumView extends View
 		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_REPLY);
 
 		if ($iter->has_id() && !array_key_exists($iter['unified_author'], $unified_authors))
-			$unified_authors[$iter['unified_author']] = __('(Onveranderd)');
+			$unified_authors[$iter['unified_author']] = __('(Unchanged)');
 
 		return $this->twig->render('reply_form.twig', compact('iter', 'thread', 'forum', 'errors', 'unified_authors'));
 	}
@@ -87,7 +87,7 @@ class ForumView extends View
 		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_WRITE);
 
 		if ($message->has_id() && !array_key_exists($message['unified_author'], $unified_authors))
-			$unified_authors[$iter['unified_author']] = __('(Onveranderd)');
+			$unified_authors[$iter['unified_author']] = __('(Unchanged)');
 
 		return $this->twig->render('poll_form.twig', compact('forum', 'poll', 'message', 'options', 'errors', 'unified_authors'));
 	}
@@ -150,10 +150,10 @@ class ForumView extends View
 
 	public function page_navigation($url, $current, $max, $nav_num = 10)
 	{
-		$nav = '<div class="page_navigation">' . __('Ga naar pagina') . ': ';
+		$nav = '<div class="page_navigation">' . __('Go to page') . ': ';
 
 		if ($current != 0)
-			$nav .= '<a href="' . add_request($url, 'page=' . ($current - 1)) . '">' . image('previous.png', __('vorige'), __('Vorige pagina') . '</a>');
+			$nav .= '<a href="' . add_request($url, 'page=' . ($current - 1)) . '">' . image('previous.png', __('previous'), __('Previous page') . '</a>');
 		
 		$nav_min = max(0, $current - ($nav_num / 2));
 		$nav_max = min($max, $current + ($nav_num / 2) - 1);
@@ -176,8 +176,8 @@ class ForumView extends View
 			$nav .= sprintf('<a href="%s"><img src="%s" alt="%s" title="%s"></a>',
 				markup_format_attribute(edit_url($url, ['page' => $current + 1])),
 				markup_format_attribute(get_theme_data('images/next.png')),
-				markup_format_attribute(__('volgende')),
-				markup_format_attribute(__('Volgende pagina')));
+				markup_format_attribute(__('next')),
+				markup_format_attribute(__('Next page')));
 		
 		return $nav . "</div>\n";
 	}

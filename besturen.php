@@ -17,7 +17,7 @@ class ControllerBesturen extends ControllerCRUD
 		if ($iters instanceof DataIter)
 			return $iters->get('naam');
 		else
-			return __('Besturen');
+			return __('Boards');
 	}
 
 	protected function _validate(DataIter $iter, array &$data, array &$errors)

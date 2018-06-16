@@ -4,16 +4,16 @@
 {% if iter.is_proposal %}
 	<div class="warning-section">
 		{% if iter.replacement_for == 0 %}
-			<p>{{ __('Dit agendapunt is nog niet gepubliceerd. Het moet nog worden goedgekeurd door Bestuur.') }}</p>
+			<p>{{ __('This activity has not yet been published. It still needs to be accepted by the Board.') }}</p>
 		{% else %}
-			<p>{{ __('Deze versie van dit agendapunt is nog niet gepubliceerd.') }}</p>
+			<p>{{ __('This revision of the activity has not yet been published.') }}</p>
 		{% endif %}
 	</div>
 {% endif %}
 
 {% if mutation %}
 	<div class="warning-section">
-		<p>{{ __('Er is <a href="%s">een wijziging op dit agendapunt</a> dat nog niet gepubliceerd is.')|format(mutation.get_absolute_url()|e('html'))|raw }}</p>
+		<p>{{ __('There is <a href="%s">a change on this activity</a> that is not yet published.')|format(mutation.get_absolute_url()|e('html'))|raw }}</p>
 	</div>
 {% endif %}
 
@@ -62,35 +62,35 @@
 			<form method="post">
 				<input type="hidden" name="agenda_id" value="{{ iter.id }}">
 				<ul class="dropdown-menu">
-					<li><button type="submit" name="rsvp_status" value="attending">{{ __('Aanwezig') }}</button></li>
-					<li><button type="submit" name="rsvp_status" value="maybe">{{ __('Misschien') }}</button></li>
-					<li><button type="submit" name="rsvp_status" value="declined">{{ __('Gaat niet') }}</button></li>
+					<li><button type="submit" name="rsvp_status" value="attending">{{ __('Going') }}</button></li>
+					<li><button type="submit" name="rsvp_status" value="maybe">{{ __('Maybe') }}</button></li>
+					<li><button type="submit" name="rsvp_status" value="declined">{{ __('Not going') }}</button></li>
 				</ul>
 			</form>
 		</div>
 		{% elseif iter.facebook_id %}
 		<div class="rsvp-status-button">
-			<a href="{{ view.facebook.coverLoginURL }}" class="button">{{ __('Koppel Facebook') }}</a>
+			<a href="{{ view.facebook.coverLoginURL }}" class="button">{{ __('Connect to Facebook') }}</a>
 		</div>
 		{% endif %}
 	{% elseif get_config_value('enable_facebook', false) and iter.facebook_id %}
 	<div class="rsvp-status-button">
-		<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" class="button">{{ __('Toon op Facebook') }}</a>
+		<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" class="button">{{ __('Show on Facebook') }}</a>
 	</div>
 	{% endif %}
 </div>
 
 <!-- Actual event -->
 <div class="messageBox">
-<p>{{  __('Datum & Tijd') }}: {{  iter|period }}<br>
+<p>{{  __('Date & time') }}: {{  iter|period }}<br>
 {% if iter.locatie %}
-	{{  __('Locatie') }}: {{ iter.locatie }}<br>
+	{{  __('Location') }}: {{ iter.locatie }}<br>
 {% endif %}
 </p>
 
 <!-- If the event is organised externally, add a clear notice to it -->
 {% if iter.extern %}
-	<p>{{  __('Deze activiteit wordt niet georganiseerd door Cover zelf.') }}</p>
+	<p>{{  __('This activity is not organised by Cover.') }}</p>
 {% endif %}
 
 <!-- Formatted description of the event -->
@@ -98,7 +98,7 @@
 
 <!-- Some meta-data -->
 {% if iter.committee %}
-<p><span class="smaller">{{  __('Geplaatst door') }}: <a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></span></p>
+<p><span class="smaller">{{  __('Placed by') }}: <a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></span></p>
 {% endif %}
 
 {% if iter.signup_forms %}
@@ -110,22 +110,22 @@
 		{% endfor %}
 	{% else %}
 		<div class="signup-form">
-			<p>{{ __('%s om je aan te melden voor deze activiteit.')|e('html')|format('<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id=' ~ iter.id ~ '" data-placement-selector="modal" data-partial-selector="#login-form" class="login">%s</a>'|format(__('Log in')|e('html')))|raw }}</p>
+			<p>{{ __('%s to sign-up for this activity.')|e('html')|format('<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id=' ~ iter.id ~ '" data-placement-selector="modal" data-partial-selector="#login-form" class="login">%s</a>'|format(__('Log in')|e('html')))|raw }}</p>
 		</div>
 	{% endif %}
 {% endif %}
 
 <!-- Actions applicable to the event -->
 <ul class="actions">
-	<li><a href="agenda.php">{{  __('Volledige agenda') }}</a></li>
+	<li><a href="agenda.php">{{  __('Complete calendar') }}</a></li>
 	{% if user_can_delete iter %}
-	<li><a href="{{ controller.link_to_delete(iter) }}">{{  __('Verwijder') }}</a></li>
+	<li><a href="{{ controller.link_to_delete(iter) }}">{{  __('Delete') }}</a></li>
 	{% endif %}
 	{% if user_can_update iter %}
-	<li><a href="{{ controller.link_to_update(iter) }}">{{  __('Wijzig') }}</a></li>
+	<li><a href="{{ controller.link_to_update(iter) }}">{{  __('Modify') }}</a></li>
 	{% endif %}
 	{% if user_can_create iter.new_signup_form %}
-	<li><a href="signup.php?view=create_form&amp;agenda={{iter.id}}">{{ __('Nieuw inschrijfformulier') }}</a></li>
+	<li><a href="signup.php?view=create_form&amp;agenda={{iter.id}}">{{ __('New sign-up form') }}</a></li>
 	{% endif %}
 </ul>
 </div>

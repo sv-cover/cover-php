@@ -1,6 +1,6 @@
 <div class="photo-comments">
 	{% if comments|length == 0 %}
-		<p>{{ __('Er zijn nog geen reacties') }}</p>
+		<p>{{ __('There are no comments yet') }}</p>
 	{% else %}
 		{% for comment in comments %}
 			{{ include('@theme/fotoboekreacties/_comment.twig', {iter: comment}) }}

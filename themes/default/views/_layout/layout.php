@@ -12,7 +12,7 @@ class LayoutViewHelper
 		];
 
 		$menus['admin'] = [
-			'label' => __('Beheer'),
+			'label' => __('Admin'),
 			'submenu' => []
 		];
 
@@ -21,12 +21,12 @@ class LayoutViewHelper
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$menus['admin']['submenu'][] = [
 				'url' => 'show.php?view=create',
-				'label' => __('Pagina maken')
+				'label' => __('Make a page')
 			];
 
 			$menus['admin']['submenu'][] = [
 				'url' => 'lidworden.php?view=pending-confirmation',
-				'label' => __('Hangende aanmeldingen')
+				'label' => __('Pending registrations')
 			];
 
 			$menus['admin']['submenu'][] = [
@@ -39,64 +39,64 @@ class LayoutViewHelper
 			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 			$menus['admin']['submenu'][] = [
 				'url' => 'agenda.php?agenda_moderate',
-				'label' => __('Agenda')
+				'label' => __('Calendar')
 			];
 
 			$menus['admin']['submenu'][] = [
 				'url' => 'actieveleden.php',
-				'label' => __('Actieve leden')
+				'label' => __('Active Members')
 			];
 		}
 		
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
 			$menus['admin']['submenu'][] = [
 				'url' => 'mailinglijsten.php',
-				'label' => __('Mailinglijsten')
+				'label' => __('Mailing lists')
 			];
 
 			$menus['admin']['submenu'][] = [
 				'url' => 'signup.php',
-				'label' => __('Formulieren')
+				'label' => __('Forms')
 			];
 		}
 
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$menus['admin']['submenu'][] = [
 				'url' => 'settings.php',
-				'label' => __('Instellingen')
+				'label' => __('Settings')
 			];
 		}
 		
 		$menus['vereniging'] = [
-			'label' => __('Vereniging'),
+			'label' => __('Association'),
 			'submenu' => [
 				[
 					'url' => 'commissies.php?commissie=board',
-					'label' => __('Bestuur')
+					'label' => __('Governing Board')
 				],
 				[
 					'url' => 'besturen.php',
-					'label' => __('Vorige besturen')
+					'label' => __('Former Boards')
 				],
 				[
 					'url' => 'commissies.php',
-					'label' => __('Commissies')
+					'label' => __('Committees')
 				],
 				[
 					'url' => 'workinggroups.php',
-					'label' => __('Werkgroepen')
+					'label' => __('Working groups')
 				],
 				[
 					'url' => 'show.php?id=28',
-					'label' => __('Zusterverenigingen')
+					'label' => __('Sister unions')
 				],
 				[
 					'url' => 'show.php?id=18',
-					'label' => __('Lid/donateur worden')
+					'label' => __('Become a member/donor')
 				],
 				[
 					'url' => 'show.php?id=30',
-					'label' => __('Documenten'),
+					'label' => __('Documents'),
 				],
 				[
 					'url' => 'weblog.php',
@@ -106,24 +106,24 @@ class LayoutViewHelper
 		];
 
 		$menus['leden'] = [
-			'label' => __('Leden'),
+			'label' => __('Members'),
 			'submenu' => [
-				['url' => 'almanak.php', 'label' => __('Almanak')],
+				['url' => 'almanak.php', 'label' => __('Almanac')],
 				['url' => 'https://wiki.svcover.nl/', 'target' => '_blank', 'label' => __('Wiki')],
-				['url' => 'https://sd.svcover.nl/', 'target' => '_blank', 'label' => __('Standaardocumenten')],
-				['url' => 'stickers.php', 'label' => __('Stickerkaart')],
+				['url' => 'https://sd.svcover.nl/', 'target' => '_blank', 'label' => __('Documents & Templates')],
+				['url' => 'stickers.php', 'label' => __('Sticker map')],
 				['url' => 'http://www.shitbestellen.nl', 'target' => '_blank', 'label' => __('Merchandise')],
 				['url' => 'dreamspark.php', 'label' => __('Microsoft Imagine')]
 			]
 		];
 
 		$menus['bedrijven'] = [
-			'label' => __('Bedrijven'),
+			'label' => __('Companies'),
 			'submenu' => [
-				['url' => 'show.php?id=51', 'label' => __('Bedrijfsprofielen')],
-				['url' => 'show.php?id=54', 'label' => __('Vacatures')],
-				['url' => 'show.php?id=31', 'label' => __('Stages/afstudeerplaatsen')],
-				['url' => 'show.php?id=56', 'label' => __('Sponsormogelijkheden')]
+				['url' => 'show.php?id=51', 'label' => __('Company profiles')],
+				['url' => 'show.php?id=54', 'label' => __('Vacancies')],
+				['url' => 'show.php?id=31', 'label' => __('Internships/Graduate programs')],
+				['url' => 'show.php?id=56', 'label' => __('Sponsorship opportunities')]
 			]
 		];
 
@@ -138,14 +138,14 @@ class LayoutViewHelper
 		];
 
 		$menus['studie'] = [
-			'label' => __('Studie'),
+			'label' => __('Study'),
 			'submenu' => [
-				['url' => 'show.php?id=23', 'label' => __('K.I.')],
-				['url' => 'show.php?id=41', 'label' => __('Informatica')],
+				['url' => 'show.php?id=23', 'label' => __('A.I.')],
+				['url' => 'show.php?id=41', 'label' => __('Computing Science')],
 				['url' => 'show.php?id=24', 'label' => __('Alumni')],
-				['url' => 'boeken.php', 'label' => __('Boeken bestellen')],
-				['url' => 'show.php?id=27', 'label' => __('Info voor studenten')],
-				['url' => 'http://studieondersteuning.svcover.nl/', 'target' => '_blank', 'label' => __('Tentamens & Samenvattingen')]
+				['url' => 'boeken.php', 'label' => __('Order books')],
+				['url' => 'show.php?id=27', 'label' => __('Student info')],
+				['url' => 'http://studieondersteuning.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')]
 			]
 		];
 

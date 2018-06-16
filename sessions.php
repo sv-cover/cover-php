@@ -133,7 +133,7 @@ class ControllerSessions extends Controller
 				}
 				else {
 					$errors = ['email', 'password'];
-					$error_message = __('Verkeerde combinatie van e-mailadres en wachtwoord');
+					$error_message = __('Wrong combination of e-mail address and password');
 				}
 			}
 

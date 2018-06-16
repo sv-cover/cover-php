@@ -7,13 +7,13 @@
 {% block content %}
 {% if interest_reported %}
 	<div class="warning-section">
-		<p>{{ __('Cool! Je interesse is doorgegeven aan de Commissaris Intern!') }}</p>
+		<p>{{ __('Cool! We’ve notified the Commissioner of Internal Affairs for you!') }}</p>
 	</div>
 {% endif %}
 <div class="pageheading">
 	{% if user_can_update iter %}
 	<div class="controls inline">
-		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Wijzig %s')|format(view.available_committee_types[iter.type]) }}</a>
+		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Modify %s')|format(view.available_committee_types[iter.type]) }}</a>
 	</div>
 	{% endif %}
 	<h1>{{ iter.naam }}</h1>
@@ -29,7 +29,7 @@
 	<div class="content">
 		{% if user_can_update iter.page %}
 		<div class="controls inline">
-			<a href="{{ link('editable.update', editable=iter.page) }}" class="edit-link">{{ __('Bewerk %spagina')|format(view.available_committee_types[iter.type]) }}</a>
+			<a href="{{ link('editable.update', editable=iter.page) }}" class="edit-link">{{ __('Modify %s page')|format(view.available_committee_types[iter.type]) }}</a>
 		</div>
 		{% endif %}
 		

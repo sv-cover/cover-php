@@ -364,7 +364,7 @@ class ControllerSignUpForms extends Controller
 	public function available_templates()
 	{
 		return [
-			'paid_activity' => __('Inschrijfformulier voor betaalde activiteit')
+			'paid_activity' => __('Sign-up form for a paid activitee')
 		];
 	}
 

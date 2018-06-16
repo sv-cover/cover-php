@@ -1,16 +1,16 @@
 {% extends "@layout/layout.twig" %}
 
-{% block title __('Score verwijderen') ~ ' :: ' ~ parent() %}
+{% block title __('Delete points') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Score verwijderen') }}</h1>
+<h1>{{ __('Delete points') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ controller.link_to_delete(iter)|e('html_attr') }}" class="vertical-form committee-battle-form">
 		{{ html_nonce('delete', iter) }}
-		<p>{{ __('Weet je heel zeker dat je de punten voor <em>%s</em> wil verwijderen?')|format(iter.awarded_for|e('html'))|raw }}</p>
+		<p>{{ __('Are you sure you want to delete the points awarded for <em>%s</em>?')|format(iter.awarded_for|e('html'))|raw }}</p>
 		<div>
-			<button type="submit" class="button">{{ __('Verwijder punten') }}</button>
-			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Terug naar commissie') }}</a>
+			<button type="submit" class="button">{{ __('Delete points') }}</button>
+			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Back to committee page') }}</a>
 		</div>
 	</form>
 </div>

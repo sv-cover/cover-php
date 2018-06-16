@@ -1,6 +1,6 @@
 {% extends "@layout/layout.twig" %}
 
-{% block title __('Hangende aanmeldingen') ~ ' ::  '~ parent() %}
+{% block title __('Pending registrations') ~ ' ::  '~ parent() %}
 
 {% block content %}
 {% if message %}
@@ -26,7 +26,7 @@
 	</ul>
 </div>
 
-<h1>{{ __('Hangende aanmeldingen') }}</h1>
+<h1>{{ __('Pending registrations') }}</h1>
 <div class="messageBox">
 	<form method="post" action="">
 		{{ html_nonce('pending') }}
@@ -38,10 +38,10 @@
 			<thead>
 				<tr class="header">
 					<th></th>
-					<th>{{ __('Naam') }}</th>
+					<th>{{ __('Name') }}</th>
 					<th>{{ __('Email') }}</th>
-					<th>{{ __('Aangemeld op') }}</th>
-					<th>{{ __('Bevestigingslink') }}<sup>3</sup></th>
+					<th>{{ __('Registered on') }}</th>
+					<th>{{ __('Confirmation link') }}<sup>3</sup></th>
 					<th></th>
 				</tr>
 			</thead>

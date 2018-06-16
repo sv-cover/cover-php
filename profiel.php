@@ -101,7 +101,7 @@ class ControllerProfiel extends Controller
 		$data = check_values($check, $errors);
 
 		if (count($errors) > 0) {
-			$error = __('De volgende velden zijn onjuist ingevuld: ') . implode(', ', array_map('field_for_display', $errors));
+			$error = __('The following fields are not correctly filled in: ') . implode(', ', array_map('field_for_display', $errors));
 			return $this->view->render_personal_tab($iter, $error, $errors);
 		}
 		
@@ -146,7 +146,7 @@ class ControllerProfiel extends Controller
 
 			// Send the confirmation to the new email address
 			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($token['email']);
-			$_SESSION['alert'] = __('Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd.');
+			$_SESSION['alert'] = __('We’ve sent a confirmation mail to your new email address.');
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=personal');
@@ -188,7 +188,7 @@ class ControllerProfiel extends Controller
 		$data = check_values($check, $errors);
 	
 		if (count($errors) > 0) {
-			$error = __('De volgende velden zijn te lang: ') . implode(', ', array_map('field_for_display', $errors));
+			$error = __('The following fields are to long: ') . implode(', ', array_map('field_for_display', $errors));
 			return $this->view->render_profile_tab($iter, $error, $errors);
 		}
 
@@ -212,19 +212,19 @@ class ControllerProfiel extends Controller
 			&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 			if (!isset($_POST['wachtwoord_oud']) || !$this->model->test_password($iter, $_POST['wachtwoord_oud'])) {
 				$errors[] = 'wachtwoord_oud';
-				$message[] = __('Het huidige wachtwoord is onjuist.');
+				$message[] = __('The current password is incorrect.');
 			}
 		}
 
 		if (!isset($_POST['wachtwoord_nieuw'])) {
 			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('Het nieuwe wachtwoord is niet ingevuld.');
+			$message[] = __('The new password hasn't been filled in.');
 		} elseif (!isset($_POST['wachtwoord_opnieuw']) || $_POST['wachtwoord_nieuw'] !== $_POST['wachtwoord_opnieuw']) {
 			$errors[] = 'wachtwoord_opnieuw';
-			$message[] = __('Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld.');
+			$message[] = __('The new password hasn't been filled in correctly twice.');
 		} elseif (strlen($_POST['wachtwoord_nieuw']) < 6) {
 			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('Het nieuwe wachtwoord is te kort.');
+			$message[] = __('Your new password is too short.');
 		}
 		
 		if (count($errors) > 0) {
@@ -234,7 +234,7 @@ class ControllerProfiel extends Controller
 		
 		$this->model->set_password($iter, $_POST['wachtwoord_nieuw']);
 
-		$_SESSION['alert'] = __('Je wachtwoord is gewijzigd.');
+		$_SESSION['alert'] = __('Your password has been changed.');
 
 		return $this->view->redirect('Location: profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
@@ -262,17 +262,17 @@ class ControllerProfiel extends Controller
 		$error = null;
 
 		if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
-			$error = sprintf(__('Het fotobestand is te groot. Het maximum is %s.'),
+			$error = sprintf(__('The image file is too large. The maximum file size is %s.'),
 				ini_get('upload_max_filesize') . ' bytes');
 
 		elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
-			$error = sprintf(__('Het bestand is niet geupload. Foutcode %d.'), $_FILES['photo']['error']);
+			$error = sprintf(__('The image hasn't been uploaded correctly. PHP reports error code %d.'), $_FILES['photo']['error']);
 
 		elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
-			$error = __('Bestand is niet een door PHP geupload bestand.');
+			$error = __('The image file is not a file uploaded by PHP.');
 		
 		elseif (!($image_meta = getimagesize($_FILES['photo']['tmp_name'])))
-			$error = __('Het geuploadde bestand kon niet worden gelezen.');
+			$error = __('The uploaded file could not be read.');
 
 		if ($error)
 			return $this->view->render_profile_tab($iter, $error, array('photo'));
@@ -280,7 +280,7 @@ class ControllerProfiel extends Controller
 		if (get_identity()->member_in_committee(COMMISSIE_EASY))
 		{
 			if (!($fh = fopen($_FILES['photo']['tmp_name'], 'rb')))
-				throw new RuntimeException(__('Het geuploadde bestand kon niet worden geopend.'));
+				throw new RuntimeException(__('The uploaded file could not be opened.'));
 
 			$this->model->set_photo($iter, $fh);
 
@@ -295,7 +295,7 @@ class ControllerProfiel extends Controller
 				sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email']),
 				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
-			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');
+			$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');

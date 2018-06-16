@@ -14,7 +14,7 @@
 			<img src="{{ link_static('images/new.png') }}"
 			     alt="{{ __('nieuw') }}"
 			     title="{{ __('Nieuw bericht toevoegen') }}">
-			<span class="messageText">{{ __('Nieuw onderwerp') }}</span>
+			<span class="messageText">{{ __('New Topic') }}</span>
 		</a>
 	{% endif %}
 	{% if user_can_create forum.new_poll %}
@@ -22,7 +22,7 @@
 			<img src="{{ link_static('images/new.png') }}"
 			     alt="{{ __('nieuw') }}"
 			     title="{{ __('Nieuwe poll toevoegen') }}">
-			{{ __('Nieuwe poll') }}
+			{{ __('New poll') }}
 		</a>
 	{% endif %}
 </div>
@@ -37,10 +37,10 @@
 	</colgroup>
 	<thead>
 		<tr class="header">
-			<td colspan="2">{{ __('Onderwerp') }}</td>
-			<td class="text_center">{{ __('Auteur') }}</td>
-			<td>{{ __('Reacties') }}</td>
-			<td class="text_center">{{ __('Laatste') }}</td>
+			<td colspan="2">{{ __('Subject') }}</td>
+			<td class="text_center">{{ __('Author') }}</td>
+			<td>{{ __('Comments') }}</td>
+			<td class="text_center">{{ __('Last') }}</td>
 		</tr>
 	</thead>
 	<tbody>
@@ -58,14 +58,14 @@
 					</a>
 					{% set thread_pages = thread.num_thread_pages %}
 					{% if thread_pages > 1 %}
-						<br><span class="smaller">[ {{ __('Pagina') }}: {{ view.thread_page_links(thread, thread_pages)|join(', ')|raw }} ]</span>
+						<br><span class="smaller">[ {{ __('Page') }}: {{ view.thread_page_links(thread, thread_pages)|join(', ')|raw }} ]</span>
 					{% endif %}
 				</td>
 				<td class="text_center">
 					{% if author.name %}
 						<a href="{{ author_link|e('html_attr') }}">{{ author.name }}</a>
 					{% else %}
-						{{ __('Onbekend') }}
+						{{ __('Unknown') }}
 					{% endif %}
 				</td>
 				<td class="text_center">

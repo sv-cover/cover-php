@@ -1,16 +1,16 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Archief van %s')|format(list.naam) ~ ' :: ' ~ __('Mailinglijsten') ~ ' :: ' ~ parent() %}
+{% block title __('Archives of %s')|format(list.naam) ~ ' :: ' ~ __('Mailing lists') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailinglijsten') }}</a> / <a href="{{ controller.link_to_read(list)|e('html_attr') }}">{{ list.naam }}</a> / {{ __('Archief') }}</h1>
+<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a> / <a href="{{ controller.link_to_read(list)|e('html_attr') }}">{{ list.naam }}</a> / {{ __('Archived messages') }}</h1>
 <div class="messageBox">
 	<table class="full-width-table">
 		<thead>
 			<tr>
-				<th>{{ __('Onderwerp') }}</th>
-				<th>{{ __('Afzender') }}</th>
-				<th>{{ __('Datum') }}</th>
+				<th>{{ __('Subject') }}</th>
+				<th>{{ __('Sender') }}</th>
+				<th>{{ __('Date') }}</th>
 				<th width="40">{{ __('Status') }}</th>
 			</tr>
 		</thead>
