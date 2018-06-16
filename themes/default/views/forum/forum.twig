@@ -12,16 +12,16 @@
 	{% if user_can_create forum.new_thread %}
 		<a href="forum.php?forum={{ forum.id }}&amp;view=create" class="button">
 			<img src="{{ link_static('images/new.png') }}"
-			     alt="{{ __('nieuw') }}"
-			     title="{{ __('Nieuw bericht toevoegen') }}">
+			     alt="{{ __('new') }}"
+			     title="{{ __('Add a new message') }}">
 			<span class="messageText">{{ __('New Topic') }}</span>
 		</a>
 	{% endif %}
 	{% if user_can_create forum.new_poll %}
 		<a href="forum.php?forum={{ forum.id }}&amp;view=create_poll" class="button">
 			<img src="{{ link_static('images/new.png') }}"
-			     alt="{{ __('nieuw') }}"
-			     title="{{ __('Nieuwe poll toevoegen') }}">
+			     alt="{{ __('new') }}"
+			     title="{{ __('Add a new poll') }}">
 			{{ __('New poll') }}
 		</a>
 	{% endif %}

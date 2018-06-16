@@ -18,13 +18,13 @@
 	<div class="photo {{ photo.orientation }}">
 		<nav class="photo-navigation navigation">
 			{% if nav.previous %}
-			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" class="prev-button previous" title="{{ __('Ga naar vorige foto') }}">
+			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" class="prev-button previous" title="{{ __('Go to the previous photo') }}">
 				{{ __('Previous') }}
 			</a>
 			{% endif %}
 
 			{% if nav.next %}
-			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.next.id }}" class="next-button next" title="{{ __('Ga naar volgende foto') }}">
+			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.next.id }}" class="next-button next" title="{{ __('Go to next photo') }}">
 				{{ __('Next') }}
 			</a>
 			{% endif %}
