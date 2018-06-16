@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Website Cover\n"
-"POT-Creation-Date: 2018-06-16 18:50+0200\n"
+"POT-Creation-Date: 2018-06-16 23:46+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jelmer van der Linde <jelmer@ikhoefgeen.nl>\n"
 "Language-Team: \n"
@@ -77,7 +77,7 @@ msgstr ""
 
 #: themes/default/views/_layout/editable.twig:4
 #: themes/default/views/show/form.twig:3 themes/default/views/show/form.twig:6
-#: themes/default/views/show/form.twig:52
+#: themes/default/views/show/form.twig:58
 #: themes/default/views/show/single.twig:9
 msgid "Modify page"
 msgstr "Bewerk pagina"
@@ -190,7 +190,7 @@ msgstr "Profiel"
 msgid "Impersonate…"
 msgstr "Bekijk als…"
 
-#: themes/default/views/_layout/widgets/menu.twig:21
+#: themes/default/views/_layout/widgets/menu.twig:22
 msgid "Change Language"
 msgstr "Verander taal"
 
@@ -347,8 +347,8 @@ msgstr "Voorbeeld"
 #: themes/default/views/forum/poll_form.twig:40
 #: themes/default/views/forum/reply_form.twig:27
 #: themes/default/views/forum/thread_form.twig:28
-#: themes/default/views/show/form.twig:44
-#: themes/default/views/show/form.twig:47
+#: themes/default/views/show/form.twig:49
+#: themes/default/views/show/form.twig:53
 #: themes/default/views/signup/configuration/editable.twig:12
 msgid "Loading preview…"
 msgstr "Voorbeeld wordt geladen…"
@@ -1408,7 +1408,7 @@ msgstr "Weet je zeker dat je %d geselecteerde foto's wilt verwijderen?"
 #: themes/default/views/fotoboek/photobook.twig:115
 msgid ""
 "The order could not be saved. Generally, the order cannot be saved when the "
-"album is automatically generator or you don�t have permission to update the "
+"album is automatically generator or you don’t have permission to update the "
 "album."
 msgstr ""
 "De volgorde kon niet worden opgeslagen. De volgorde kan niet worden "
@@ -1869,7 +1869,7 @@ msgid "What is the colour of grass? (I am not a robot)"
 msgstr "Wat is de kleur van gras? (ik ben geen spam-bot)"
 
 #: themes/default/views/lidworden/lidworden.twig:158
-msgid "If you are unsure, just enter �green�."
+msgid "If you are unsure, just enter ‘green’."
 msgstr "Als je het niet zeker weet, vul dan 'groen' in."
 
 #: themes/default/views/lidworden/lidworden.twig:170
@@ -2156,8 +2156,8 @@ msgstr "Oh jee! Deze link is niet meer geldig."
 
 #: themes/default/views/profiel/confirm_email.twig:12
 msgid ""
-"It might be the case that you�ve already confirmed your email address. Try "
-"to log in with your new address. It that doesn�t work, try to use your "
+"It might be the case that you’ve already confirmed your email address. Try "
+"to log in with your new address. It that doesn’t work, try to use your "
 "previous address once again. Did you forget your password? You might want to "
 "try both your previous and current email address when asking for password "
 "recovery."
@@ -2169,7 +2169,7 @@ msgstr ""
 
 #: themes/default/views/profiel/confirm_email.twig:13
 #, python-format
-msgid "Still having trouble? Send an email to %s and we�ll help you."
+msgid "Still having trouble? Send an email to %s and we’ll help you."
 msgstr "Kom je er niet uit? Mail dan naar %s zodat we je verder kunnen helpen."
 
 #: themes/default/views/profiel/confirm_email.twig:16
@@ -2618,19 +2618,19 @@ msgstr ""
 "Deze waarde wordt vaak in de code gebruikt om naar een specifieke pagina te "
 "verwijzen."
 
-#: themes/default/views/show/form.twig:32
+#: themes/default/views/show/form.twig:33
 msgid "Dutch"
 msgstr "Nederlands"
 
-#: themes/default/views/show/form.twig:34
+#: themes/default/views/show/form.twig:36
 msgid "English"
 msgstr "Engels"
 
-#: themes/default/views/show/form.twig:52
+#: themes/default/views/show/form.twig:58
 msgid "Create page"
 msgstr "Maak pagina"
 
-#: themes/default/views/show/form.twig:54
+#: themes/default/views/show/form.twig:60
 msgid "Show page"
 msgstr "Bekijk pagina"
 
@@ -3405,7 +3405,7 @@ msgid "The following fields are not correctly filled in: "
 msgstr "De volgende velden zijn onjuist ingevuld: "
 
 #: profiel.php:149
-msgid "We�ve sent a confirmation mail to your new email address."
+msgid "We’ve sent a confirmation mail to your new email address."
 msgstr "Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd."
 
 #: profiel.php:191
@@ -3435,7 +3435,7 @@ msgstr "Het fotobestand is te groot. Het maximum is %s."
 
 #: profiel.php:269
 #, php-format
-msgid "The image hasn't been uploaded correctly. PHP reports error code %d."
+msgid "The image hasn’t been uploaded correctly. PHP reports error code %d."
 msgstr "Het bestand is niet geupload. Foutcode %d."
 
 #: profiel.php:272
