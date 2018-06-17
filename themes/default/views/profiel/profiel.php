@@ -164,9 +164,18 @@ class ProfielView extends View
 	{
 		$fields = [];
 
+		$labels = [];
+
+		foreach ($this->personal_fields() as $field)
+			$labels[$field['name']] = $field['label'];
+
+		// Stupid aliasses
+		$labels['naam'] = $labels['full_name'];
+		$labels['foto'] = __('Photo');
+
 		foreach ($this->controller->model()->get_privacy() as $field => $nr)
 			$fields[] = [
-				'label' => field_for_display($field),
+				'label' => $labels[$field] ?? $field,
 				'name' => 'privacy_' . $nr,
 				'data' => ['privacy_' . $nr => ($iter['privacy'] >> ($nr * 3)) & 7]
 			];
