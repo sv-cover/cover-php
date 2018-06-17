@@ -16,7 +16,7 @@
 				{% if user_can_update bestuur %}
 				<div class="controls inline">
 					<a href="{{ controller.link_to_update(bestuur) }}">
-						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('bewerken') }}" title="{{ __('Bestuur bewerken') }}">
+						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('modify') }}" title="{{ __('Modify board') }}">
 					</a>
 				</div>
 				{% endif %}
@@ -29,7 +29,7 @@
 				{% if user_can_update bestuur.page %}
 				<div class="controls inline">
 					<a href="{{ link('editable.update', editable=bestuur.page) }}">
-						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('bewerken') }}" title="{{ __('Pagina bewerken') }}">
+						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('modify') }}" title="{{ __('Modify board') }}">
 					</a>
 				</div>
 				{% endif %}

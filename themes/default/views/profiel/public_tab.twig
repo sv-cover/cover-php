@@ -26,14 +26,14 @@
 				<dt>{{ html_label(field.label, field.name) }}</dt>
 				<dd class="data-members-only">
 					{{ view.format_member_data(iter, field.name)|raw }}
-					<i class="fa fa-lock" title="{{ __('Alleen zichtbaar voor ingelogde leden')|e('html_attr') }}"></i>
+					<i class="fa fa-lock" title="{{ __('Only visible for logged-in members.')|e('html_attr') }}"></i>
 				</dd>
 			{% endif %}
 		{% elseif global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
 			<dt>{{ html_label(field.label, field.name) }}</dt>
 			<dd class="data-private">
 				{{ view.format_member_data(iter, field.name)|raw }}
-				<i class="fa fa-eye-slash" title="{{ __('Privé')|e('html_attr') }}"></i>
+				<i class="fa fa-eye-slash" title="{{ __('Private')|e('html_attr') }}"></i>
 			</dd>
 		{% endif %}
 	{% endfor %}

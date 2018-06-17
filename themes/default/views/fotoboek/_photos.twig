@@ -24,7 +24,7 @@
 			<img data-src="{{ photo.get_url(null, 400) }}" {% if size %} width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}>
 			<noscript><img data-src="{{ photo.get_url(null, 400) }}" {% if size %} width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}></noscript>
 			{% if likes[photo.id] is defined %}
-				<span class="like-button" title="{{ __N('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', likes[photo.id]) }}"><span class="like-count">{{ likes[photo.id] }}</span></span>
+				<span class="like-button" title="{{ __N('%d member liked this photo', '%d members liked this photo', likes[photo.id]) }}"><span class="like-count">{{ likes[photo.id] }}</span></span>
 			{% endif %}
 			{% if visibility[photo.id] is defined and visibility[photo.id] == false %}
 			<span class="privacy">{{ __('Hidden from index') }}</span>

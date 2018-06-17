@@ -7,7 +7,7 @@
 <div class="messageBox search">
 	<form method="get" action="search.php" class="search-widget">
 		<label for="field-query">{{ __('Search query') }}</label>
-		<input type="search" name="query" id="field-query" value="{{ query|e('html_attr') }}" placeholder="{{ __('Typ hier om te zoeken…')|e('html_attr') }}" tabindex="1" {% if not results %}autofocus{% endif %}>
+		<input type="search" name="query" id="field-query" value="{{ query|e('html_attr') }}" placeholder="{{ __('Type here to search…')|e('html_attr') }}" tabindex="1" {% if not results %}autofocus{% endif %}>
 		<button type="submit" class="button">{{ __('Search') }}</button>
 	</form>
 

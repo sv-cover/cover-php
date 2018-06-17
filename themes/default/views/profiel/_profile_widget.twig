@@ -1,6 +1,6 @@
 <div class="commissie-member profile-widget round">
 	{% if iter.has_photo and not iter.is_private('foto') %}
-	<a href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-image-popup="modal" title="{{ __('Klik om de foto te vergroten')|e('html_attr') }}">
+	<a href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-image-popup="modal" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
 		<img src="foto.php?lid_id={{ iter.id }}&amp;format=square&amp;width=200&amp;timestamp={{ iter.photo_mtime }}" width="150">
 	</a>
 	{% else %}

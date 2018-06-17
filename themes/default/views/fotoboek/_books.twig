@@ -11,12 +11,12 @@
 		</a>
 		{% if user_can_update book %}
 		<span class="controls">
-			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" title="{{ __('Fotoboek bewerken') }}">
+			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" title="{{ __('Modify photobook') }}">
 				<i class="fa fa-pencil-square-o"></i>
 			</a>
 			{% endif %}
 			{% if user_can_delete book %}
-			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" title="{{ __('Fotoboek verwijderen') }}" data-placement-selector="modal" data-partial-selector=".delete-photobook-form">
+			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" title="{{ __('Delete photobook') }}" data-placement-selector="modal" data-partial-selector=".delete-photobook-form">
 				<i class="fa fa-trash-o"></i>
 			</a>
 			{% endif %}

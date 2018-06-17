@@ -11,13 +11,13 @@
 	{% endif %}
 	{% if user_can_create thread.new_message %}
 		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button new-reply-button">
-			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
+			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Add a new message') }}">
 			{{ __('New comment') }}
 		</a>
 	{% endif %}
 	{% if user_can_delete thread %}
 		<a href="forum.php?thread={{ thread.id }}&amp;view=delete" class="button delete-button">
-			<img src="{{ link_static('images/delete.png') }}" alt="{{ __('delete') }}" title="{{ __('Onderwerp verwijderen') }}">
+			<img src="{{ link_static('images/delete.png') }}" alt="{{ __('delete') }}" title="{{ __('Delete topic') }}">
 			{{ __('Delete topic') }}
 		</a>
 	{% endif %}
@@ -75,24 +75,24 @@
 					{% if user_can_update message %}
 						<a href="forum.php?thread={{ thread.id }}&amp;view=update&amp;message={{ message.id }}">
 							<img src="{{ link_static('images/edit_small.png') }}"
-							     alt="{{ __('Bewerk') }}"
-							     title="{{ __('Bewerk bericht') }}">
+							     alt="{{ __('Modify') }}"
+							     title="{{ __('Modify message') }}">
 						</a>
 					{% endif %}
 		
 					{% if user_can_delete message %}
 						<a href="forum.php?thread={{ thread.id }}&amp;view=delete&amp;message={{ message.id }}">
 							<img src="{{ link_static('images/delete_small.png') }}"
-							     alt="{{ __('Verwijder') }}"
-							     title="{{ __('Verwijder bericht') }}">
+							     alt="{{ __('Delete') }}"
+							     title="{{ __('Delete message') }}">
 						</a>
 					{% endif %}
 	
 					{% if user_can_create thread.new_message %}
 						<a href="forum.php?thread={{ thread.id }}&amp;view=reply&amp;quote_message={{ message.id }}">
 							<img src="{{ link_static('images/quote.png') }}"
-							     alt="{{ __('quote') }}"
-							     title="{{ __('Quote geselecteerde tekst van bericht') }}">
+							     alt="{{ __('Quote') }}"
+							     title="{{ __('Quote the selected part of the message') }}">
 						</a>
 					{% endif %}
 				</div>
@@ -115,7 +115,7 @@
 	{% endif %}
 	{% if user_can_create thread.new_message %}
 		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button">
-			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Nieuw bericht toevoegen') }}">
+			<img src="{{ link_static('images/new.png') }}" alt="{{ __('New') }}" title="{{ __('New comment') }}">
 			{{ __('New comment') }}
 		</a>
 	{% endif %}
