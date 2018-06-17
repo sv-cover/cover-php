@@ -8,19 +8,19 @@
 	<form action="" method="post" class="vertical-form">
 		{{ html_nonce('create_poll', forum) }}
 		<div>
-			{{ html_label(__('Auteur'), 'unified_author', errors=errors, required=true) }}
+			{{ html_label(__('Author'), 'unified_author', errors=errors, required=true) }}
 			{{ html_select_field('unified_author', unified_authors, message, errors=errors, required=true) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Onderwerp'), 'subject', errors=errors, required=true) }}
+			{{ html_label(__('Subject'), 'subject', errors=errors, required=true) }}
 			{{ html_input_text('subject', poll, errors=errors, required=true, autofocus='end') }}
 		</div>
 
 		<div>
 			{% for option in options %}
 			<div>
-				{{ html_label(__('Optie %d')|format(loop.index), 'poll_option[' ~ loop.index0 ~ ']', errors=errors) }}
+				{{ html_label(__('Option %d')|format(loop.index), 'poll_option[' ~ loop.index0 ~ ']', errors=errors) }}
 				{{ html_input_text('poll_option[' ~ loop.index0 ~ ']', {'poll_option': option_values}, errors=errors) }}
 			</div>
 			{% endfor %}
@@ -29,22 +29,22 @@
 		<div>
 			<div class="tab-container">
 				<ul class="nav-tabs horizontal">
-					<li class="active"><a href="#forum-message">{{ __('Vraag') }}</a></li>
-					<li><a href="#forum-message-preview">{{ __('Voorbeeld') }}</a></li>
+					<li class="active"><a href="#forum-message">{{ __('Subject/question') }}</a></li>
+					<li><a href="#forum-message-preview">{{ __('Preview') }}</a></li>
 				</ul>
 				<div class="tab-panel" id="forum-message">
-					{{ html_label(__('Vraag'), 'message', errors=errors) }}
+					{{ html_label(__('Subject/question'), 'message', errors=errors) }}
 					{{ html_textarea_field('message', message, rows=3, errors=errors) }}
 				</div>
 				<div class="tab-panel" id="forum-message-preview">
-					<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ __('Plaats poll') }}</button>
-			<a href="forum.php?forum={{ forum.id }}">{{ __('Terug naar forum') }}</a>
+			<button type="submit" class="button">{{ __('Publish poll') }}</button>
+			<a href="forum.php?forum={{ forum.id }}">{{ __('Back to forum') }}</a>
 		</div>
 	</form>
 </div>

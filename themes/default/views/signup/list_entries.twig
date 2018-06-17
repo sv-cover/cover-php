@@ -1,19 +1,19 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Inschrijvingen') ~ ' :: ' ~ parent() %}
+{% block title __('Sign-ups') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="pageheading">
 	<div class="controls inline">
 		{% if user_can_update form %}
-			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">{{ __('Bewerk formulier') }}</a>
+			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">{{ __('Modify form') }}</a>
 		{% endif %}
 		{% if user_can_create form.new_entry(global.identity.member) %}
-			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" class="create-link">{{ __('Nieuwe inschrijving') }}</a>
+			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" class="create-link">{{ __('New sign-up') }}</a>
 		{% endif %}
-		<a href="{{ controller.link({'view': 'export_entries', 'form': form.id}) }}" class="download-link">{{ __('Download als CSV') }}</a>
+		<a href="{{ controller.link({'view': 'export_entries', 'form': form.id}) }}" class="download-link">{{ __('Download as CSV') }}</a>
 	</div>
-	<h1>{{ __('Inschrijvingen') }}</h1>
+	<h1>{{ __('Sign-ups') }}</h1>
 </div>
 
 <div class="messageBox">
@@ -51,7 +51,7 @@
 			</tbody>
 		</table>
 		<div class="controls">
-			<button type="submit" class="button">{{ __('Verwijder geselecteerde inschrijvingen') }}</button>
+			<button type="submit" class="button">{{ __('Remove selected sign-ups') }}</button>
 		</div>
 	</form>
 </div>

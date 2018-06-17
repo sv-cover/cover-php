@@ -24,19 +24,19 @@
 				{% endif %}
 
 				<div>
-					{{ html_label(__('Naam'), 'name', required=true) }}
+					{{ html_label(__('Name'), 'name', required=true) }}
 					{{ html_input_text('name', forum, required=true) }}
 				</div>
 
 				<div>
-					{{ html_label(__('Omschrijving'), 'description') }}
+					{{ html_label(__('Description'), 'description') }}
 					{{ html_textarea_field('description', forum, rows=2) }}
 				</div>
 
 				<div>
-					<button type="submit" class="button">{{ forum.has_id ? __('Bewerk forum') : __('Maak nieuw forum aan') }}</button>
+					<button type="submit" class="button">{{ forum.has_id ? __('Modify forum') : __('Create new forum') }}</button>
 					{% if forum.has_id %}
-						<a href="forum.php?forum={{ forum.id }}">{{ __('Terug naar forum') }}</a>
+						<a href="forum.php?forum={{ forum.id }}">{{ __('Back to forum') }}</a>
 					{% endif %}
 				</div>
 			</form>

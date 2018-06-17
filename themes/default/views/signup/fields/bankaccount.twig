@@ -5,5 +5,5 @@
 <div>
 	{{ html_label(__('BIC'), name ~ '-bic', errors=errors) }}
 	{{ html_input_text(name ~ '-bic', data, errors=errors) }}
-	<small class="hint">{{ __("Alleen nodig wanneer IBAN [i]niet[/i] met 'NL' begint")|parse_markup }}</small>
+	<small class="hint">{{ __("Only required if your IBAN [i]does not[/i] start with 'NL'")|parse_markup }}</small>
 </div>

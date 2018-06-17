@@ -8,12 +8,12 @@
 	<form method="post" action="">
 		{{ html_nonce('embedded_mailinglist', list) }}
 	{% if not global.auth.logged_in %}
-		<p>{{ __('Log in om je aan te kunnen melden voor deze mailinglijst.') }}</p>
+		<p>{{ __('Sign in to subscribe to this mailing list.') }}</p>
 	{% elseif list.bevat_lid(global.identity.member) and global.policies.Mailinglist.user_can_unsubscribe(list) %}
 		<input type="hidden" name="action" value="unsubscribe">
 		<p>
 			<input type="submit" class="button" value="{{ __('Uitschrijven') }}">
-			{{ __('Je bent aangemeld voor deze mailinglijst.') }}
+			{{ __('You are subscribed to this mailinglist.') }}
 		</p>
 	{% elseif global.policies.Mailinglist.user_can_subscribe(list) %}
 		<input type="hidden" name="action" value="subscribe">

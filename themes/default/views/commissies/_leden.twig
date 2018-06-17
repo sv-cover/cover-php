@@ -1,7 +1,7 @@
 {% set members = iter.members %}
 {% if members|length > 0 %}
 <div class="committee-members">
-	<h2>{{ __('Leden') }}</h2>
+	<h2>{{ __('Members') }}</h2>
 	<ul>
 	{% for member in members %}
 		{% if user_can_read member %}

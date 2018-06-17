@@ -129,10 +129,10 @@
 		public function visibility_options()
 		{
 			return array(
-				DataModelPhotobook::VISIBILITY_PUBLIC => __('Publiek'),
-				DataModelPhotobook::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
-				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
-				DataModelPhotobook::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
+				DataModelPhotobook::VISIBILITY_PUBLIC => __('Public'),
+				DataModelPhotobook::VISIBILITY_MEMBERS => __('Only logged in members'),
+				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS => __('Only logged in active members'),
+				DataModelPhotobook::VISIBILITY_PHOTOCEE => __('Only logged in members of the PhotoCee')
 			);
 		}
 
@@ -175,10 +175,10 @@
 			$subtitle = array();
 
 			if ($book['num_books'] > 0)
-				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $book['num_books']), $book['num_books']);
+				$subtitle[] = sprintf(_ngettext('%d book', '%d books', $book['num_books']), $book['num_books']);
 
 			if ($book['num_photos'] > 0)
-				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $book['num_photos']), $book['num_photos']);
+				$subtitle[] = sprintf(_ngettext('%d photo', '%d photos', $book['num_photos']), $book['num_photos']);
 			
 			if (count($subtitle) > 0)
 				return sprintf('<small class="fotoboek_highlight">(%s)</small>', markup_format_text(implode_human($subtitle)));

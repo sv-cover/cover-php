@@ -1,5 +1,5 @@
 {% if global.models.Banner.main_sponsors|length > 0 %}
-	<h4>{{ __N('Hoofdpartner', 'Hoofdpartners', global.models.Banner.main_sponsors|length) }}</h4>
+	<h4>{{ __N('Main partner', 'Main partners', global.models.Banner.main_sponsors|length) }}</h4>
 	{% for banner in global.models.Banner.main_sponsors %}
 		<a href="{{ banner.url }}" target="_blank">
 			<img src="images/banners/{{ banner.filename }}">

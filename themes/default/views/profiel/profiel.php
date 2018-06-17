@@ -34,14 +34,14 @@ class ProfielView extends View
 			],
 			'personal' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Lidgegevens')
+				'label' => __('Personal')
 				// 'body' => function () use ($model, $iter, $errors, $personal_fields) {
 				// 	$this->render_partial('personal', compact('model', 'iter', 'errors', 'personal_fields'));
 				// }
 			],
 			'profile' => [
 				'visible' => $this->member_write_permission($iter),
-				'label' => __('Profiel')
+				'label' => __('Profile')
 				// 'body' => function () use ($model, $iter, $errors) {
 				// 	$this->render_partial('photo', compact('iter', 'errors'));
 				// 	$this->render_partial('profile', compact('model', 'iter', 'errors'));
@@ -57,14 +57,14 @@ class ProfielView extends View
 			],
 			'mailing_lists' => [
 				'visible' => $this->member_write_permission($iter),
-				'label' => __('Mailinglijsten')
+				'label' => __('Mailing lists')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('mailinglists', compact('iter'));
 				// }
 			],
 			'sessions' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Sessies')
+				'label' => __('Sessions')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('sessions', compact('iter'));
 				// }
@@ -85,7 +85,7 @@ class ProfielView extends View
 			],
 			'incassomatic' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Incasso\'s')
+				'label' => __('Direct debits')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('incassomatic', compact('iter'));
 				// }
@@ -97,38 +97,38 @@ class ProfielView extends View
 	{
 		return [
 			[	
-				'label' => __('Naam'),
+				'label' => __('Name'),
 				'name' => 'full_name',
 				'read_only' => true
 			],
 			[
-				'label' => __('Geboortedatum'),
+				'label' => __('Birthdate'),
 				'name' => 'geboortedatum',
 				'read_only' => true
 			],
 			[
-				'label' => __('Beginjaar'),
+				'label' => __('Starting year'),
 				'name' => 'beginjaar',
 				'read_only' => true
 			],
 			[
-				'label' => __('Adres'),
+				'label' => __('Address'),
 				'name' => 'adres'
 			],
 			[
-				'label' => __('Postcode'),
+				'label' => __('Zipcode'),
 				'name' => 'postcode'
 			],
 			[
-				'label' => __('Woonplaats'),
+				'label' => __('Place of residence'),
 				'name' => 'woonplaats'
 			],
 			[
-				'label' => __('Telefoonnummer'),
+				'label' => __('Phone number'),
 				'name' => 'telefoonnummer'
 			],
 			[
-				'label' => __('E-Mail adres'),
+				'label' => __('E-mail address'),
 				'name' => 'email'
 			]
 		];
@@ -164,9 +164,18 @@ class ProfielView extends View
 	{
 		$fields = [];
 
+		$labels = [];
+
+		foreach ($this->personal_fields() as $field)
+			$labels[$field['name']] = $field['label'];
+
+		// Stupid aliasses
+		$labels['naam'] = $labels['full_name'];
+		$labels['foto'] = __('Photo');
+
 		foreach ($this->controller->model()->get_privacy() as $field => $nr)
 			$fields[] = [
-				'label' => field_for_display($field),
+				'label' => $labels[$field] ?? $field,
 				'name' => 'privacy_' . $nr,
 				'data' => ['privacy_' . $nr => ($iter['privacy'] >> ($nr * 3)) & 7]
 			];
@@ -365,12 +374,12 @@ class ProfielView extends View
 	public function member_type_to_string($type)
 	{
 		$mapping = [
-			MEMBER_STATUS_LID => __('Lid'),
-			MEMBER_STATUS_LID_ONZICHTBAAR => __('Lid (verborgen)'),
-			MEMBER_STATUS_LID_AF => __('Lid af'),
-			MEMBER_STATUS_ERELID => __('Erelid'),
-			MEMBER_STATUS_DONATEUR => __('Donateur'),
-			MEMBER_STATUS_UNCONFIRMED => __('Nog niet verwerkt')
+			MEMBER_STATUS_LID => __('Member'),
+			MEMBER_STATUS_LID_ONZICHTBAAR => __('Member (hidden)'),
+			MEMBER_STATUS_LID_AF => __('Previously a member'),
+			MEMBER_STATUS_ERELID => __('Honorary Member'),
+			MEMBER_STATUS_DONATEUR => __('Donor'),
+			MEMBER_STATUS_UNCONFIRMED => __('To be processed')
 		];
 
 		return $mapping[$type];

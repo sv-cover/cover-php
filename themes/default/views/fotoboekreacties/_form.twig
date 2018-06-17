@@ -7,16 +7,16 @@
 	<div>
 		{{ html_textarea_field('reactie', iter.data,
 			errors=errors,
-			placeholder=__('Typ hier je reactie…'),
+			placeholder=__('Type your comment here…'),
 			rows=3) }}
 	</div>
 	
 	<div>
-		<button type="submit" class="button">{{ iter.has_id ? __('Wijzig reactie') : __('Plaats reactie') }}</button>
+		<button type="submit" class="button">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
 		{% if iter.has_id %}
 		<a href="{{ controller.link_to_read(iter) }}"
 			data-partial-selector="#comment{{ iter.id }}"
-			data-placement-selector=".replyBox">{{ __('Terug naar foto') }}</a>
+			data-placement-selector=".replyBox">{{ __('Return to photo') }}</a>
 		{% endif %}
 	</div>
 </form>

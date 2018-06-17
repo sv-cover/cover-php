@@ -5,16 +5,16 @@
 {% block tab_content %}
 <section class="aligned-list-section">
 	<h2>{{ __('Incass-o-matic') }}</h2>
-	<em>{{ __('Je hebt nog geen doorlopend incassocontract.') }}</em>
-	<p>{{ __("Met een doorlopend incassocontract hoef je niet meer zelf incasso's te printen en te ondertekenen. Dus nooit meer naar de printer lopen nadat je in KAST kruisjes hebt gekocht!") }}</p>
+	<em>{{ __('You do not yet have a continuous direct debit contract.') }}</em>
+	<p>{{ __("With a continuous direct debit contract, you no longer have to print and sign direct debit forms. No more going to the printer after buying new credits in KAST!") }}</p>
 </section>
 <section class="aligned-list-section">
-	<p>{{ __("Download het contract, onderteken het, en lever het in bij de penningmeester, %s, of laat het achter in het postvakje in de Coverkamer.")|e|format(treasurer_link)|raw }}</p>
+	<p>{{ __("Download the contract, sign it, and hand it to the treasurer, %s, or deliver it to the mailbox in the Cover room.")|e|format(treasurer_link)|raw }}</p>
 
 	<div class="center">
 		<a href="profiel.php?view=export_incassocontract&amp;lid={{ iter.id|e('url') }}" class="button large-button" target="_blank">{{ __('Download contract') }}</a>
 	</div>
 
-	<p>{{ __("Zodra het contract verwerkt is kan je hier op ieder moment de incasso's hier inzien, zowel de incasso's die net zijn aangemaakt als de incasso's die al zijn afgeschreven.") }}</p>
+	<p>{{ __("As soon as your contract has been processed, you can view your direct debits here every moment of the day. Both freshly created direct debit transactions as well as already debited ones will be displayed here.") }}</p>
 </section>
 {% endblock %}

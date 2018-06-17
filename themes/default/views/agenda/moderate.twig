@@ -1,40 +1,40 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Agenda') ~ ' :: ' ~ parent() %}
+{% block title __('Calendar') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Agenda') }}</h1>
+<h1>{{ __('Calendar') }}</h1>
 <div class="messageBox">
 	{% if iters|length == 0 %}
-		<p>{{ __('Er staan geen agendapunten in de wachtrij om goedgekeurd te worden.') }}</p>
+		<p>{{ __('There are no calendar events waiting for approval.') }}</p>
 	{% else %}
-		<p>{{ __('Onderstaande agendapunten staan in de wachtrij om goedgekeurd te worden.') }}</p>
+		<p>{{ __('The calendar events below are put up for approval.') }}</p>
 		<form name="agenda_moderate" action="" method="post">
 			{{ html_nonce('moderate') }}
 			<table class="full-width-table" id="table_moderate">
 				<thead>
 					<tr class="header">
 						<th class="text_center">
-							<img src="{{ link_static('images/accept.png')|e('html_attr') }}" title="{{ __('Accepteer agendapunt')|e('html_attr') }}">
+							<img src="{{ link_static('images/accept.png')|e('html_attr') }}" title="{{ __('Accept calendar event')|e('html_attr') }}">
 						</th>
 						<th class="text_center">
-							<img src="{{ link_static('images/cancel.png')|e('html_attr') }}" title="{{ __('Weiger agendapunt')|e('html_attr') }}">
+							<img src="{{ link_static('images/cancel.png')|e('html_attr') }}" title="{{ __('Deny calendar event')|e('html_attr') }}">
 						</th>
-						<th>{{ __('Kop') }}</th>
-						<th>{{ __('Datum') }}</th>
-						<th>{{ __('Commissie') }}</th>
-						<th>{{ __('Privé') }}</th>
+						<th>{{ __('Head') }}</th>
+						<th>{{ __('Date') }}</th>
+						<th>{{ __('Committee') }}</th>
+						<th>{{ __('Private') }}</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in iters %}
 						<tr id="punt{{ item.id }}" class="{% if item.id == highlighted_id %}highlight{% endif %}">
-							<td>{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accepteer agendapunt')) }}</td>
-							<td>{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Weiger agendapunt')) }}</td>
+							<td>{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accept calendar event')) }}</td>
+							<td>{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Deny calendar event')) }}</td>
 							<td><a href="agenda.php?agenda_id={{ item.id|e('url') }}">{{ item.kop }}</a></td>
 							<td>{{ item|period }}</td>
 							<td>{{ item.committee.naam }}</td>
-							<td>{{ html_input_checkbox('private_' ~ item.id, item, value='yes', field='private', title=__('Alleen zichtbaar voor leden')) }}</td>
+							<td>{{ html_input_checkbox('private_' ~ item.id, item, value='yes', field='private', title=__('Only visible to members')) }}</td>
 						</tr>
 	
 						<tr id="comment_{{ item.id }}">
@@ -47,16 +47,16 @@
 					<tr>
 						<td class="text_center">
 							<a href="javascript:accept_all();">
-								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Alle agendapunten op accepteren zetten')|e('html_attr') }}">
+								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Mark all calendar items as accepted')|e('html_attr') }}">
 							</a>
 						</td>
 						<td class="text_center">
 							<a href="javascript:cancel_all();">
-								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Alle agendapunten op weigeren zetten')|e('html_attr') }}">
+								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Mark all calendar items as denied')|e('html_attr') }}">
 							</a>
 						</td>
 						<td colspan="5" class="submit">
-							<button type="submit" class="button" name="submmoderate" value="yes">{{ __('Toepassen') }}</button>
+							<button type="submit" class="button" name="submmoderate" value="yes">{{ __('Apply changes') }}</button>
 						</td>
 					</tr>
 				</tfoot>

@@ -5,18 +5,18 @@
 {% block tab_content %}
 <section class="aligned-list-section">
 	<h2>{{ __('KAST') }}</h2>
-	<h4>{{ __('Kredietbalans') }}</h4>
-	<em>{{ __N('%d kruisje', '%d kruisjes', status.credits) }}</em>
+	<h4>{{ __('Credit balanse') }}</h4>
+	<em>{{ __N('%d credit', '%d credits', status.credits) }}</em>
 </section>
 
 <section class="aligned-list-section">
-	<p>{{ __('Je tien meest recente aankopen staan hier genoemd.') }}</p>
+	<p>{{ __('Your ten most recent purchases are listed here.') }}</p>
 	<table class="full-width-table">
 		<thead>
 			<tr>
-				<th>{{ __('Produkt') }}</th>
-				<th class="numeric">{{ __('Prijs') }}</th>
-				<th class="timestamp">{{ __('Datum van aankoop') }}</th>
+				<th>{{ __('Product') }}</th>
+				<th class="numeric">{{ __('Price') }}</th>
+				<th class="timestamp">{{ __('Date of purchase') }}</th>
 			</tr>
 		</thead>
 		<tbody>

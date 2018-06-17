@@ -1,16 +1,16 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Mededeling verwijderen') ~ ' :: ' ~ parent() %}
+{% block title __('Delete announcement') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Mededeling verwijderen') }}</h1>
+<h1>{{ __('Delete announcement') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ controller.link_to_delete(iter) }}" class="vertical-form">
 		{{ html_nonce('delete', iter) }}
-		<p>{{ __('Weet je heel zeker dat je de mededeling <em>%s</em> wil verwijderen?')|format(iter.subject|e('html'))|raw }}</p>
+		<p>{{ __('Are you certain you want to delete the announcement <em>%s</em>?')|format(iter.subject|e('html'))|raw }}</p>
 		<div>
-			<button type="submit" class="button">{{ __('Verwijder mededeling') }}</button>
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar mededeling') }}</a>
+			<button type="submit" class="button">{{ __('Delete announcement') }}</button>
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Back to announcement') }}</a>
 		</div>
 	</form>
 </div>

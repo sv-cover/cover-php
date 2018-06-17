@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title book.has('title') ? book.title : __('Fotoboek') ~ ' :: ' ~ parent() %}
+{% block title book.has('title') ? book.title : __('Photo album') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Fotoboek') }}</h1>
+<h1>{{ __('Photo album') }}</h1>
 <div class = "messageBox clearfix fotoboek-box">
 
 {% if user_can_update book or user_can_create book.new_book %}
@@ -11,26 +11,26 @@
 		{% if user_can_create book.new_book %}
 		<a href="fotoboek.php?book={{ book.id }}&amp;view=add_book" class="button">
 			<i class="fa fa-plus"></i>
-			{{ __('Nieuw fotoboek') }}
+			{{ __('New photo album') }}
 		</a>
 		{% endif %}
 		
 		{% if user_can_update book %}
 		<a href="fotoboek.php?book={{ book.id }}&amp;view=update_book" class="button">
 			<i class="fa fa-pencil"></i>
-			{{ __('Bewerk fotoboek') }}
+			{{ __('Modify photo album') }}
 		</a>
 		<a href="fotoboek.php?book={{ book.id }}&amp;view=add_photos" class="button">
 			<i class="fa fa-picture-o"></i>
-			{{ __('Foto\'s toevoegen') }}
+			{{ __('Add photos') }}
 		</a>
 		<a id="order-photos-button" class="button">
 			<i class="fa fa-arrows"></i>
-			{{ __("Foto's herschikken") }}
+			{{ __("Reorder photos") }}
 		</a>
 		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#">
 			<i class="fa fa-trash-o"></i>
-			{{ __('Geselecteerde foto\'s verwijderen') }}
+			{{ __('Delete selected photos') }}
 		</a>
 		{% endif %}
 	</div>
@@ -69,7 +69,7 @@
 					return this.value;
 				});
 
-				if (!confirm(sprintf({{ __('Weet je zeker dat je %d geselecteerde foto\'s wilt verwijderen?')|json_encode()|raw }}, selection.length)))
+				if (!confirm(sprintf({{ __('Are you sure you want to delete the %d selected photos?')|json_encode()|raw }}, selection.length)))
 					return;
 
 				var $form = $('<form>', {
@@ -112,7 +112,7 @@
 			};
 
 			var printError = function(response) {
-				alert({{ __('De volgorde kon niet worden opgeslagen. De volgorde kan niet worden opgeslagen voor automatisch gegenereerde albums en albums waar je geen update-rechten voor hebt.')|json_encode()|raw }});
+				alert({{ __('The order could not be saved. Generally, the order cannot be saved when the album is automatically generator or you don’t have permission to update the album.')|json_encode()|raw }});
 			};
 
 			var submitPhotoOrder = function() {
@@ -198,7 +198,7 @@
 
 	{# introduction to the Photo album page, only visible in the root book #}
 	{% if book.id is same as (0) %}
-	<p>{{ __('Welkom op het fotoboek van Cover. Dit deel van de site wordt onderhouden door de %s. Heb je zelf nog leuke (digitale) fotos van een activiteit, meld dat dan aan de PhotoCee.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
+	<p>{{ __('Welcome at Covers photo album. This part of the site is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo album.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
 	{% endif %}
 
 	{# Controls, if applicable, and path #}
@@ -206,7 +206,7 @@
 		{% if controller.policy.user_can_download_book(book) %}
 		<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button download-photos-button" data-partial-selector="#download-photo-book-form" data-placement-selector="modal">
 			<i class="fa fa-download"></i>
-			{{ __('Download fotoboek') }}
+			{{ __('Download photo album') }}
 		</a>
 		{% endif %}
 
@@ -214,7 +214,7 @@
 		<form method="post" action="fotoboek.php?book={{ book.id }}&amp;view=mark_book_read">
 			<button type="submit" class="button mark-read-button">
 				<i class="fa fa-check"></i>
-				{{ __('Markeer alle boeken als gezien') }}
+				{{ __('Mark all albums as seen') }}
 			</button>
 		</form>
 		{% endif %}
@@ -226,28 +226,28 @@
 	<table class="default_noborder vertical">
 		{% if book.has_value('fotograaf') %}
 			<tr>
-				<th>{{ __('Fotograaf') }}:</th>
+				<th>{{ __('Photographer') }}:</th>
 				<td>{{ book.fotograaf }}</td>
 			</tr>
 		{% endif %}
 
 		{% if book.has_value('date') %}
 			<tr>
-				<th>{{ __('Datum') }}:</th>
+				<th>{{ __('Date') }}:</th>
 				<td>{{ book.date|date('d-m-Y') }}</td>
 			</tr>
 		{% endif %}
 		
 		{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 
 			<tr>
-				<th>{{ __('Beschrijving') }}:</th>
+				<th>{{ __('Description') }}:</th>
 				<td>{{ book.beschrijving }}</td>
 			</tr>
 		{% endif %}
 	</table>
 
 	{% if book.num_books == 0 and book.num_photos == 0 %}
-		<p>{{ __('Er zijn nog geen foto\'s in dit fotoboek') }}</p>
+		<p>{{ __('There are no photos in this photo album yet') }}</p>
 	{% else %}
 		{{ include('_books.twig', {books: book.books|user_can_read}) }}
 		{{ include('_photos.twig', {photos: book.photos}) }}

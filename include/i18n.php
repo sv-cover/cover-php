@@ -131,8 +131,9 @@
 	  * @result the current locale
 	  */
 	function i18n_get_locale() {
-		/* TODO: make this member configurable. 
-		   Default to global locale for now */
+		// Bypass logic, the website should be English only now
+		return 'en_US';
+
 		if (get_auth()->logged_in())
 			$language = get_identity()->get('taal');
 		elseif (isset($_SESSION['taal']))
@@ -141,7 +142,7 @@
 			$language = http_get_preferred_language();
 		
 		if (!isset($language) || !i18n_valid_language($language))
-			$language = get_config_value('default_language', 'nl');
+			$language = get_config_value('default_language', 'en');
 		
 		$locales = _i18n_locale_map();
 		
@@ -204,7 +205,7 @@
 		if (isset($languages[$locale]))
 			return $languages[$locale];
 		else
-			return get_config_value('default_language', 'nl');	
+			return get_config_value('default_language', 'en');	
 	}
 
 	function http_get_preferred_language($get_sorted_list = false, $accepted_languages = null)

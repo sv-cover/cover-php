@@ -1,20 +1,20 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Fotoboek statistieken') ~ ' :: ' ~ parent() %}
+{% block title __('Photo album statistics') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Fotoboek statistieken') }}</h1>
+<h1>{{ __('Photo album statistics') }}</h1>
 <div class = "messageBox">
 	<table class="full-width-table">
 		<tr>
 			<td style="vertical-align: top; padding: 1em">
-				<h2>{{ __('Meest taggende leden') }}</h2>
+				<h2>{{ __('Most active taggers') }}</h2>
 				<table class="full-width-table">
 					<thead>
 						<tr>
-							<th style="text-align: left">{{ __('Naam') }}</th>
-							<th style="text-align: right">{{ __('Aantal') }}</th>
-							<th style="text-align: right">{{ __('Favoriet') }}</th>
+							<th style="text-align: left">{{ __('Name') }}</th>
+							<th style="text-align: right">{{ __('Count') }}</th>
+							<th style="text-align: right">{{ __('Favorite') }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -29,12 +29,12 @@
 				</table>
 			</td>
 			<td style="vertical-align: top; padding: 1em;">
-				<h2>{{ __('Meest getagde leden') }}</h2>
+				<h2>{{ __('Most tagged members') }}</h2>
 				<table class="full-width-table">
 					<thead>
 						<tr>
-							<th style="text-align: left">{{ __('Naam') }}</th>
-							<th style="text-align: right">{{ __('Aantal maal getagged') }}</th>
+							<th style="text-align: left">{{ __('Name') }}</th>
+							<th style="text-align: right">{{ __('Times tagged') }}</th>
 						</tr>
 					</thead>
 					<tbody>

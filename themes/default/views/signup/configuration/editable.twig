@@ -1,15 +1,15 @@
 <div class="field-type-editable vertical-form">
-	<h3 class="field-type">{{ __('Titels en tekst (lay-out)') }}</h3>
+	<h3 class="field-type">{{ __('Titles and text (layout)') }}</h3>
 	<div class="tab-container">
 		<ul class="nav-tabs horizontal">
-			<li class="active"><a href="#editable-{{name}}-content">{{ __('Tekst') }}</a></li>
+			<li class="active"><a href="#editable-{{name}}-content">{{ __('Text') }}</a></li>
 			<li><a href="#editable-{{name}}-content-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
 		</ul>
 		<div class="tab-panel" id="editable-{{name}}-content">
 			{{ html_textarea_field('content', data, rows=4) }}
 		</div>
 		<div class="tab-panel markup-region" id="editable-{{name}}-content-preview" data-preview-source="#editable-{{name}}-content textarea" data-preview-url="show.php?view=preview&amp;lang=nl">
-			<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+			<span class="loading">{{ __('Loading preview…') }}</span>
 		</div>
 	</div>
 </div>

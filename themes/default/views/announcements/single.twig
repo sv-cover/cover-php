@@ -12,7 +12,7 @@
 		</div>
 
 		<div class="subtitle">
-			{{ __('Geplaatst door') }}:
+			{{ __('Placed by') }}:
 			<a href="commissies.php?commissie={{ committee.login }}">{{ committee.naam }}</a>
 		</div>
 	</div>
@@ -24,12 +24,12 @@
 	</div>
 
 	<ul class="actions">
-		<li><a href="{{ controller.link_to_index() }}">{{ __('Alle mededelingen bekijken') }}</a></li>
+		<li><a href="{{ controller.link_to_index() }}">{{ __('Show all announcements') }}</a></li>
 		{% if user_can_update iter %}
-		<li><a href="{{ controller.link_to_update(iter) }}">{{ __('Wijzig') }}</a></li>
+		<li><a href="{{ controller.link_to_update(iter) }}">{{ __('Modify') }}</a></li>
 		{% endif %}
 		{% if user_can_delete iter %}
-		<li><a href="{{ controller.link_to_delete(iter) }}">{{ __('Verwijder') }}</a></li>
+		<li><a href="{{ controller.link_to_delete(iter) }}">{{ __('Delete') }}</a></li>
 		{% endif %}
 	</ul>
 </div>

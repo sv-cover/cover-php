@@ -1,18 +1,18 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Fotoboek downloaden') ~ ' :: ' ~ parent() %}
+{% block title __('Download photo album') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Fotoboek downloaden') }}</h1>
+<h1>{{ __('Download photo album') }}</h1>
 <div class="messageBox">
 	<form method="get" action="fotoboek.php" id="download-photo-book-form">
 		<input type="hidden" name="book" value="{{ book.id }}">
-		<p>{{ __('Weet je heel zeker dat je het fotoboek <a href="%s">%s</a> en alle sub-boeken wil downloaden?')|format('fotoboek.php?book=' ~ book.id|e('url'), book.titel|e)|raw }}</p>
-		<p>{{ __('Let op dat je dan %d originele foto\'s download. Dat is in totaal <strong>%s</strong> aan fotos!')|format(total_photos, total_file_size|human_file_size)|raw }}</p>
+		<p>{{ __('Are you sure you want to download <a href="%s">%s</a> and all of its sub albums?')|format('fotoboek.php?book=' ~ book.id|e('url'), book.titel|e)|raw }}</p>
+		<p>{{ __('Note that you will be downloading %d originals. That is <strong>%s</strong> in total!')|format(total_photos, total_file_size|human_file_size)|raw }}</p>
 
-		<button type="submit" class="button" name="view" value="download_book">{{ __('Download %s als ZIP (%s)')|format(book.titel, total_file_size|human_file_size) }}</button>
+		<button type="submit" class="button" name="view" value="download_book">{{ __('Download %s as a ZIP (%s)')|format(book.titel, total_file_size|human_file_size) }}</button>
 
-		<a href="fotoboek.php?book={{ book.id }}">{{ __('Terug naar %s')|format(book.titel) }}</a>
+		<a href="fotoboek.php?book={{ book.id }}">{{ __('Return to %s')|format(book.titel) }}</a>
 	</form> 
 </div>
 {% endblock %}

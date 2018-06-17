@@ -150,7 +150,7 @@
 				'lidworden_confirmation_' . strtolower(i18n_get_language()) . '.txt',
 				array_merge($data, compact('confirmation_code')));
 
-			mail($data['email_address'], __('Lidmaatschapsaanvraag bevestigen'), $mail,
+			mail($data['email_address'], __('Confirm membership application'), $mail,
 				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 		}
 

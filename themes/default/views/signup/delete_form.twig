@@ -1,17 +1,17 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Formulier verwijderen') ~ ' :: ' ~ parent() %}
+{% block title __('Delete form') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Formulier verwijderen') }}</h1>
+<h1>{{ __('Delete form') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ controller.link({view: 'delete_form', 'form': form.id}) }}" class="vertical-form">
 		{{ html_nonce('delete_form', form) }}
-		<p>{{ __('Weet je heel zeker dat je het formulier wil verwijderen?') }}</p>
-		<p>{{ __('Ook alle aanmeldingen worden hiermee verwijderd. Er is geen manier om dit ongedaan te maken.') }}</p>
+		<p>{{ __('Are you sure you want to delete this sign-up form?') }}</p>
+		<p>{{ __('This will also delete all registrations. There is no way to undo this action.') }}</p>
 		<div>
-			<button type="submit" class="button">{{ __('Verwijder formulier')  }}</button>
-			<a href="{{ controller.link({view: 'update_form', form: form.id}) }}" class="back-link">{{ __('Terug naar formulier') }}</a>
+			<button type="submit" class="button">{{ __('Delete form')  }}</button>
+			<a href="{{ controller.link({view: 'update_form', form: form.id}) }}" class="back-link">{{ __('Back to form') }}</a>
 		</div>
 	</form>
 </div>

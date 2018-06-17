@@ -43,12 +43,12 @@
 		{% if user_can_update iter %}
 		<li><a href="{{ controller.link_to_update(iter) }}"
 			data-partial-selector="#comment-form"
-			data-placement-selector="#comment{{ iter.id }}">{{ __('Wijzig') }}</a></li>
+			data-placement-selector="#comment{{ iter.id }}">{{ __('Modify') }}</a></li>
 		{% endif %}
 		{% if user_can_delete iter %}
 		<li><a href="{{ controller.link_to_delete(iter) }}"
 			data-partial-selector="#confirm-delete-comment-form"
-			data-placement-selector="modal">{{ __('Verwijder') }}</a></li>
+			data-placement-selector="modal">{{ __('Delete') }}</a></li>
 		{% endif %}
 	</ul>
 </div>

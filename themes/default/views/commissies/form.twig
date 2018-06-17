@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id() ? __('Commissie/werkgroep wijzigen') : __('Nieuwe commissie/werkgroep maken')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id() ? __('Commissie/werkgroep wijzigen') : __('Nieuwe commissie/werkgroep maken') }}</h1>
+<h1>{{ iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
 		{% if iter.has_id %}
@@ -15,7 +15,7 @@
 		{% if iter.hidden %}
 			<div class="warning-section">
 				{{ html_input_checkbox('hidden', iter.data) }}
-				{{ html_label(__('Deze commissie/werkgroep is gedeactiveerd'), 'hidden', errors=errors) }}
+				{{ html_label(__('This committee/working group is deactivated'), 'hidden', errors=errors) }}
 			</div>
 		{% endif %}
 
@@ -25,7 +25,7 @@
 		</div>
 
 		<div>
-			{{ html_label(__('Naam'), 'naam', errors=errors, required=true) }}
+			{{ html_label(__('Name'), 'naam', errors=errors, required=true) }}
 			{{ html_input_text('naam', iter.data, required=true) }}
 		</div>
 
@@ -33,8 +33,8 @@
 			<table>
 				<thead>
 					<tr>
-						<th>{{ __('Lid') }}</th>
-						<th>{{ __('Functie') }}</th>
+						<th>{{ __('Member') }}</th>
+						<th>{{ __('Function') }}</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -44,36 +44,36 @@
 							<tr>
 								<td>{{ member|full_name_ignore_privacy }}</td>
 								<td><input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="autocomplete-function"></td>
-								<td><button type="button" class="button remove-button" title="{{ __('Verwijder lid uit commissie') }}">&times;</button></td>
+								<td><button type="button" class="button remove-button" title="{{ __('Remove member from committee') }}">&times;</button></td>
 							</tr>
 						{% endfor %}
 					{% endif %}
 				</tbody>
 				<tfoot>
 					<tr>
-						<td><input type="text" class="committee-member-name" placeholder="{{ __('Naam') }}"></td>
-						<td><input type="text" class="committee-member-function autocomplete-function" placeholder="{{ __('Functie') }}"></td>
-						<td><button type="button" class="button add-button">{{ __('Toevoegen') }}</button></td>
+						<td><input type="text" class="committee-member-name" placeholder="{{ __('Name') }}"></td>
+						<td><input type="text" class="committee-member-function autocomplete-function" placeholder="{{ __('Function') }}"></td>
+						<td><button type="button" class="button add-button">{{ __('Add') }}</button></td>
 					</tr>
 				</tfoot>
 			</table>
 		</div>
 
 		<div>
-			{{ html_label(__('Deze commissie/werkgroep zoekt nieuwe leden tot'), 'vacancies', errors=errors) }}
+			{{ html_label(__('This committee/working group is looking for new members till'), 'vacancies', errors=errors) }}
 			{{ html_input_date('vacancies', iter.data) }}
-			<p>{{ __('Commissies en werkgroepen die leden zoeken hebben een banner met het hoofd van de Intern op de website en op het scherm. De datum is de deadline. Geef een datum meer dan een jaar in de toekomst om geen specifieke te tonen. Laat het veld leeg als de commissie geen nieuwe leden zoekt.') }}</p>
+			<p>{{ __("A banner with the face of the Commissioner of Internal Affairs is shown on the pages of committees or working groups who have vacancies. If you don't have a specific deadline, enter a value more than a year into the future. If the committee or working group is not looking for new members, leave the field empty.") }}</p>
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ iter.has_id() ? __('Wijzig %s')|format(view.available_committee_types[iter.type]) : __('Maak commissie/werkgroep aan') }}</button>
+			<button type="submit" class="button">{{ iter.has_id() ? __('Modify %s')|format(view.available_committee_types[iter.type]) : __('Create new committee/working group') }}</button>
 			{% if iter.has_id %}
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar %s')|format(view.available_committee_types[iter.type]) }}</a>
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Return to %s')|format(view.available_committee_types[iter.type]) }}</a>
 			{% else %}
-			<a href="{{ controller.link_to_index() }}">{{ __('Terug naar alle commissies') }}</a>
+			<a href="{{ controller.link_to_index() }}">{{ __('Back to all committees') }}</a>
 			{% endif %}
 			{% if iter.has_id and not iter.hidden and user_can_delete iter %}
-			<a href="{{ controller.link_to_delete(iter) }}" class="delete-link">{{ __('Deactiveer') }}</a>
+			<a href="{{ controller.link_to_delete(iter) }}" class="delete-link">{{ __('Deactivate') }}</a>
 			{% endif %}
 		</div>
 	</form>

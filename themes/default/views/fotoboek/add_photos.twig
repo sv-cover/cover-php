@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __("Foto's toevoegen") ~ ' :: ' ~ parent() %}
+{% block title __("Add photos") ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Fotoboek') }} :: {{ __("Foto's toevoegen") }}</h1>
+<h1>{{ __('Photo album') }} :: {{ __("Add photos") }}</h1>
 <div class="messageBox">
 	{{ include('_path.twig') }}
 
@@ -35,8 +35,8 @@
 			</li>
 		</ul>
 
-		<button type="submit" class="button">{{ __("Voeg foto's toe") }}</button>
-		<a href="fotoboek.php?book={{ book.id|e('url') }}">{{ __('Terug naar %s')|format(book.titel) }}</a>
+		<button type="submit" class="button">{{ __("Add photos") }}</button>
+		<a href="fotoboek.php?book={{ book.id|e('url') }}">{{ __('Return to %s')|format(book.titel) }}</a>
 	</form>
 </div>
 

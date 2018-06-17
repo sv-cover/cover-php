@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Mededeling wijzigen') : __('Nieuwe mededeling plaatsen')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id ? __('Modify announcement') : __('Add a new announcement')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id ? __('Mededeling wijzigen') : __('Nieuwe mededeling plaatsen') }}</h1>
+<h1>{{ iter.has_id ? __('Modify announcement') : __('Add a new announcement') }}</h1>
 <div class="messageBox announcement">
 	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
 		{% if iter.has_id %}
@@ -13,42 +13,42 @@
 		{% endif %}
 		
 		<div>
-			{{ html_label(__('Plaats namens commissie'), 'committee_id', errors=errors, required=true) }}
+			{{ html_label(__('Post as committee'), 'committee_id', errors=errors, required=true) }}
 			{{ html_select_field('committee_id', view.get_committee_options(iter), iter.data, required=true) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Zichtbaar voor'), 'visibility', errors=errors, required=true) }}
+			{{ html_label(__('Visible to'), 'visibility', errors=errors, required=true) }}
 			{{ html_select_field('visibility', view.get_visibility_options(), iter.data, required=true) }}
 		</div>		
 
 		<div>
-			{{ html_label(__('Onderwerp'), 'subject', errors=errors, required=true) }}
+			{{ html_label(__('Subject'), 'subject', errors=errors, required=true) }}
 			{{ html_input_text('subject', iter.data, required=true) }}
 		</div>
 
 		<div>
 			<div class="tab-container">
 				<ul class="nav-tabs horizontal">
-					<li class="active"><a href="#message-tab">{{ __('Bericht') }}</a></li>
-					<li><a href="#message-preview-tab">{{ __('Voorbeeld') }}</a></li>
+					<li class="active"><a href="#message-tab">{{ __('Message') }}</a></li>
+					<li><a href="#message-preview-tab">{{ __('Preview') }}</a></li>
 				</ul>
 				<div class="tab-panel" id="message-tab">
-					{{ html_label(__('Bericht'), 'message', errors=errors, required=true) }}
+					{{ html_label(__('Message'), 'message', errors=errors, required=true) }}
 					{{ html_textarea_field('message', iter.data, errors=errors, rows=10) }}
 				</div>
 				<div class="tab-panel" id="message-preview-tab" data-preview-source="#message-tab textarea" data-preview-url="announcements.php?view=preview">
-					<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
 		</div>
 
 		<div class="controls">
-			<button type="submit" class="button">{{ iter.has_id ? __('Wijzig mededeling') : __('Plaats mededeling') }}</button>
+			<button type="submit" class="button">{{ iter.has_id ? __('Modify announcement') : __('Post announcement') }}</button>
 			{% if iter.has_id %}
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar mededeling') }}</a>
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Back to announcement') }}</a>
 			{% else %}
-			<a href="{{ controller.link_to_index() }}">{{ __('Terug naar alle mededelingen') }}</a>
+			<a href="{{ controller.link_to_index() }}">{{ __('Back to all announcements') }}</a>
 			{% endif %}
 		</div>
 	</form>

@@ -26,9 +26,9 @@ class AnnouncementsView extends CRUDView
 	public function get_visibility_options()
 	{
 		return array(
-			DataModelAnnouncement::VISIBILITY_PUBLIC => __('Iedereen'),
-			DataModelAnnouncement::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
-			DataModelAnnouncement::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden')
+			DataModelAnnouncement::VISIBILITY_PUBLIC => __('Everyone'),
+			DataModelAnnouncement::VISIBILITY_MEMBERS => __('Only logged in members'),
+			DataModelAnnouncement::VISIBILITY_ACTIVE_MEMBERS => __('Only logged in active members')
 		);
 	}
 }

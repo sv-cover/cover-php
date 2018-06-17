@@ -55,7 +55,7 @@
 		$formatargs = array_slice(func_get_args(), 2);
 		$description = vsprintf($descformat, $formatargs);
 		
-		echo '<div class="error"><h3>' . __($group) . ' ' . __('Fout') . '</h3>';
+		echo '<div class="error"><h3>' . __($group) . ' ' . __('Error') . '</h3>';
 		echo '<p>' . vsprintf(__($descformat), $formatargs) . '</p>';
 		
 		if (get_config_value('report_errors', false)) {
@@ -67,9 +67,9 @@
 			$body .= _get_backtrace('report_error');
 			
 			if (!mail($to, $subject, $body))
-				echo "<p>" . __("De webmaster is NIET op de hoogte gesteld. Stel de webmaster op de hoogte wanneer dit probleem zich voor blijft doen") . "</p>";
+				echo "<p>" . __("The webmaster has NOT been informed. Please inform the webmaster if this problem keeps occurring") . "</p>";
 			else
-				echo "<p>" . __("De webmaster is op de hoogte gesteld van het probleem") . "</p>";
+				echo "<p>" . __("The webmaster has been notified of the problem") . "</p>";
 		}
 	
 		echo '</div>';
@@ -133,13 +133,13 @@
 		} catch(ViewNotFoundException $e) {
 			if (!_load_view("../themes/" . get_theme() . "/views/$name.php"))
 				if (!_load_view("../themes/default/views/$name.php"))
-					throw new ViewNotFoundException(sprintf(__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme()));
+					throw new ViewNotFoundException(sprintf(__("The view %s could not be found (theme: %s)"), $name, get_theme()));
 
 			/* Locate the function */
 			if (function_exists("view_$function"))
 				return call_user_func("view_$function", $model, $iter, $params);
 			else
-				throw new ViewNotFoundException(sprintf(__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme()));
+				throw new ViewNotFoundException(sprintf(__("The view function %s in %s could not be found (theme: %s)"), $function, $name, get_theme()));
 		}
 	}
 	
@@ -167,7 +167,7 @@
 		static $days = null;
 		
 		if (!$days)
-			$days = Array(__('Zondag'), __('Maandag'), __('Dinsdag'), __('Woensdag'), __('Donderdag'), __('Vrijdag'), __('Zaterdag'), __('Zondag'));
+			$days = Array(__('Sunday'), __('Monday'), __('Tuesday'), __('Wednesday'), __('Thursday'), __('Friday'), __('Saturday'), __('Sunday'));
 		
 		return $days;
 	}
@@ -182,7 +182,7 @@
 		static $months = null;
 		
 		if (!$months)
-			$months = Array(__('geen'), __('Januari'), __('Februari'), __('Maart'), __('April'), __('Mei'), __('Juni'), __('Juli'), __('Augustus'), __('September'), __('Oktober'), __('November'), __('December'));
+			$months = Array(__('no'), __('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December'));
 		
 		return $months;	
 	}
@@ -191,7 +191,7 @@
 		static $months = null;
 		
 		if (!$months)
-			$months = Array(__('geen'), __('Jan'), __('Feb'), __('Mrt'), __('Apr'), __('Mei'), __('Jun'), __('Jul'), __('Aug'), __('Sept'), __('Okt'), __('Nov'), __('Dec'));
+			$months = Array(__('no'), __('Jan'), __('Feb'), __('Mar'), __('Apr'), __('May'), __('Jun'), __('Jul'), __('Aug'), __('Sept'), __('Oct'), __('Nov'), __('Dec'));
 		
 		return $months;	
 	}
@@ -395,16 +395,16 @@
 			
 			// There is no time specified
 			if ($iter->get('van_datetime')->format('G') == 0)
-				$format = __('$from_dayname $from_day $from_month');
+				$format = __('$from_dayname $from_day|ordinal of $from_month');
 			else
-				$format = __('$from_dayname $from_day $from_month, $from_time');
+				$format = __('$from_dayname $from_day|ordinal of $from_month, $from_time');
 		}
 
 		/* Check if date part (not time) is not the same */
 		else if (substr($iter->get('van'), 0, 10) != substr($iter->get('tot'), 0, 10)) {
-			$format = __('$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day $till_month $till_time');
+			$format = __('$from_dayname $from_day|ordinal of $from_month $from_time till $till_dayname $till_day|ordinal of $till_month $till_time');
 		} else {
-			$format = __('$from_dayname $from_day $from_month, $from_time tot $till_time');
+			$format = __('$from_dayname $from_day|ordinal of $from_month, $from_time till $till_time');
 		}
 
 		return agenda_format_period($iter, $format);
@@ -416,19 +416,19 @@
 
 		// Same time? Only display start time.
 		if ($iter->get('van') == $iter->get('tot'))
-			$format = __('vanaf $from_time');
+			$format = __('starts at $from_time');
 
 		// Not the same end date? Show the day range instead of the times
 		elseif ($iter->get('van_datetime')->format('w') != $iter->get('tot_datetime')->format('w') - ($iter->get('tot_datetime')->format('G') < 10 ? 1 : 0))
 		{
 			// Not the same month? Add month name as well
 			if ($iter->get('van_datetime')->format('n') != $iter->get('tot_datetime')->format('n'))
-				$format = __('$from_day $from_month tot $till_day $till_month');
+				$format = __('$from_month $from_day|ordinal till $till_month $till_day|ordinal');
 			else
-				$format = __('$from_day tot $till_day $till_month');
+				$format = __('$from_day|ordinal till $till_day|ordinal of $till_month');
 		}
 		else
-			$format = __('$from_time tot $till_time');
+			$format = __('$from_time till $till_time');
 
 		return agenda_format_period($iter, $format);
 	}
@@ -641,7 +641,7 @@
 		elseif ($len === 1)
 			return reset($list);
 		else
-			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('en') . ' ' . end($list);
+			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('and') . ' ' . end($list);
 	}
 
 	function human_file_size($bytes, $decimals = 2)
@@ -659,7 +659,7 @@
 		$diff = time() - $time;
 
 		if ($diff == 0)
-			return __('nu');
+			return __('now');
 
 		else if ($diff > 0)
 		{
@@ -667,14 +667,14 @@
 			
 			if ($day_diff == 0)
 			{
-				if ($diff < 60) return __('net');
-				if ($diff < 120) return __('1 minuut geleden');
-				if ($diff < 3600) return sprintf(__('%d minuten geleden'), floor($diff / 60));
-				if ($diff < 7200) return __('1 uur geleden');
-				if ($diff < 86400) return sprintf(__('%d uren geleden'), floor($diff / 3600));
+				if ($diff < 60) return __('just');
+				if ($diff < 120) return __('1 minute ago');
+				if ($diff < 3600) return sprintf(__('%d minutes ago'), floor($diff / 60));
+				if ($diff < 7200) return __('1 hour ago');
+				if ($diff < 86400) return sprintf(__('%d hours ago'), floor($diff / 3600));
 			}
-			if ($day_diff == 1) return __('Gisteren');
-			if ($day_diff < 7) return sprintf(__('%d dagen geleden'), $day_diff);
+			if ($day_diff == 1) return __('Yesterday');
+			if ($day_diff < 7) return sprintf(__('%d days ago'), $day_diff);
 			// if ($day_diff < 31) return sprintf(__('%d weken geleden'), floor($day_diff / 7));
 			// if ($day_diff < 60) return __('afgelopen maand');
 			return date('j-n-Y', $time);

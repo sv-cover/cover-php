@@ -6,7 +6,7 @@
 <div class="pageheading">
 	{% if user_can_create model.new_iter %}
 	<div class="controls inline">
-		<a href="{{ controller.link_to_create()|e('html_attr') }}" class="create-link" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Ken punten toe') }}</a>
+		<a href="{{ controller.link_to_create()|e('html_attr') }}" class="create-link" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Award points') }}</a>
 	</div>
 	{% endif %}
 	<h1>Committee Battle</h1>
@@ -16,9 +16,9 @@
 		<table class="full-width-table committee-battle-scores">
 			<thead>
 				<tr>
-					<th>{{ __('Positie') }}</th>
-					<th>{{ __('Commissie') }}</th>
-					<th>{{ __('Punten') }}</th>
+					<th>{{ __('Rank') }}</th>
+					<th>{{ __('Committee') }}</th>
+					<th>{{ __('Points') }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -47,7 +47,7 @@
 	<div class="content">
 		{% if user_can_update editable %}
 		<div class="controls inline">
-			<a href="{{ link('editable.update', editable=editable)|e('html_attr') }}" class="edit-link">{{ __('Bewerk omschrijving') }}</a>
+			<a href="{{ link('editable.update', editable=editable)|e('html_attr') }}" class="edit-link">{{ __('Update description') }}</a>
 		</div>
 		{% endif %}
 		{{ editable.locale_content|parse_markup }}

@@ -143,7 +143,7 @@ class DataModelPhotobookLike extends DataModel
 		$favorites = array_keys($this->get_for_lid($member));
 
 		return new DataIterLikedPhotobook(get_model('DataModelPhotobook'), -1, array(
-			'titel' => __('Favoriete foto\'s'),
+			'titel' => __('Liked photos'),
 			'has_photos' => count($favorites) > 0,
 			'num_photos' => count($favorites),
 			'num_books' => 0,

@@ -4,7 +4,7 @@
 
 {% block tab_content %}
 <section id="mailinglijsten-section">
-<h2>{{ __('Mailinglijsten') }}</h2>
+<h2>{{ __('Mailing lists') }}</h2>
 <div class="list-group">
 {% for mailing_list in mailing_lists %}
 	<div href="#" class="list-group-item list-group-item-with-action">
@@ -18,15 +18,15 @@
 			{{ html_input_hidden('mailing_list_id', mailing_list.id) }}
 			{% if mailing_list.subscribed %}
 				<input type="hidden" name="action" value="unsubscribe">
-				<button type="submit" class="button" title="{{ __('Je bent aangemeld. Klik om je af te melden.')|e('html_attr') }}">{{ __('Uitschrijven') }}</button>
+				<button type="submit" class="button" title="{{ __('You are subscribed to this list. Click to unsubscribe.')|e('html_attr') }}">{{ __('Unsubscribe') }}</button>
 			{% else %}
 				<input type="hidden" name="action" value="subscribe">
-				<button type="submit" class="button" title="{{ __('Klik om je aan te melden voor deze lijst')|e('html_attr') }}">{{ __('Aanmelden') }}</button>
+				<button type="submit" class="button" title="{{ __('Click to subscribe.')|e('html_attr') }}">{{ __('Subscribe') }}</button>
 			{% endif %}
 		</form>
 		{% else %}
 		<div class="list-group-item-action toggle-action-button toggle-state-disabled {{ mailing_list.subscribed ? 'toggle-state-active' : '' }}">
-			<button disabled="disabled" class="button" title="{{ __('Je bent aangemeld. Vraag de commissie om je af te melden.')|e('html_attr') }}">{{ __('Uitschrijven') }}</button>
+			<button disabled="disabled" class="button" title="{{ __('You are subscribed to this list. You can ask the committee to unsubscribe you.')|e('html_attr') }}">{{ __('Unsubscribe') }}</button>
 		</div>
 		{% endif %}
 

@@ -3,12 +3,12 @@
 {% block title iter|personal_full_name ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Profiel van %s')|format(iter|full_name) }}</h1>
+<h1>{{ __('Profile of %s')|format(iter|full_name) }}</h1>
 <div class="messageBox clearfix">
 
 	{% if errors is defined and errors|length > 0 %}
 	<div class="textCenter error-section">
-		<p><span class="error">{{ __('Niet alle velden zijn goed ingevuld') }}</span></p>
+		<p><span class="error">{{ __('You haven\'t filled in all the fields correctly') }}</span></p>
 		
 		{% if error_message is defined %}
 		<p>{{ error_message|nl2br }}</p>

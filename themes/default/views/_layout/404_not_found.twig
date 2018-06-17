@@ -1,14 +1,14 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Niet gevonden') ~ ' :: ' ~ parent() %}
+{% block title __('Not found') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Niet gevonden') }}</h1>
+<h1>{{ __('Not found') }}</h1>
 <div class="messageBox">
 	<section class="error-section">
 		<p>{{ exception.message }}</p>
 	</section>
-	<p>{{ __('Denk je dat dit een fout is? Meld het en mail naar acdcee@svcover.nl!') }}</p>
-	<p class="align-center"><a href="index.php">{{ __('Terug naar homepage') }}</a></p>
+	<p>{{ __('Do you think this is a mistake? Report it to the AC/DCee at acdcee@svcover.nl!') }}</p>
+	<p class="align-center"><a href="index.php">{{ __('Back to homepage') }}</a></p>
 </div>
 {% endblock %}

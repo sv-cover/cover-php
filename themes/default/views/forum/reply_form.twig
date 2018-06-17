@@ -10,29 +10,29 @@
 			{{ html_nonce('reply', thread) }}
 		{% endif %}
 		<div>
-			{{ html_label(__('Auteur'), 'unified_author', errors=errors, required=true) }}
+			{{ html_label(__('Author'), 'unified_author', errors=errors, required=true) }}
 			{{ html_select_field('unified_author', unified_authors, iter, errors=errors, required=true) }}
 		</div>
 
 		<div>
 			<div class="tab-container">
 				<ul class="nav-tabs horizontal">
-					<li class="active"><a href="#forum-message">{{ __('Bericht') }}</a></li>
-					<li><a href="#forum-message-preview">{{ __('Voorbeeld') }}</a></li>
+					<li class="active"><a href="#forum-message">{{ __('Message') }}</a></li>
+					<li><a href="#forum-message-preview">{{ __('Preview') }}</a></li>
 				</ul>
 				<div class="tab-panel" id="forum-message">
 					{{ html_textarea_field('message', iter, rows=15, id='reply-field', autofocus='end') }}
 				</div>
 				<div class="tab-panel" id="forum-message-preview" data-preview-source="#reply-field" data-preview-url="forum.php?view=preview">
-					<span class="loading">{{ __('Voorbeeld wordt geladen…') }}</span>
+					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ iter.has_id ? __('Wijzig bericht') : __('Plaats bericht') }}</button>
+			<button type="submit" class="button">{{ iter.has_id ? __('Modify message') : __('Publish message') }}</button>
 			{% if iter.has_id %}
-			<a href="forum.php?message={{ iter.id }}">{{ __('Bekijk bericht in thread') }}</a>
+			<a href="forum.php?message={{ iter.id }}">{{ __('Show message in thread') }}</a>
 			{% endif %}
 		</div>
 	</form>

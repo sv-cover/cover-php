@@ -154,7 +154,7 @@
 
 			$iter->set_id($id);
 				
-			$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
+			$_SESSION['alert'] = __('The new calendar event is now waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
 
 			mail(
 				get_config_value('defer_email_to', get_config_value('email_bestuur')),
@@ -189,7 +189,7 @@
 
 				$this->model->update($iter);
 
-				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn geplaatst.');
+				$_SESSION['alert'] = __('The changes you\'ve made to this activity have been published.');
 			}
 
 			// Previous item exists but it needs to be confirmed first.
@@ -201,7 +201,7 @@
 
 				$override_id = $this->model->propose_update($mod, $iter);
 
-				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
+				$_SESSION['alert'] = __('The changes to the calendar event are waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
 
 				mail(
 					get_config_value('defer_email_to', get_config_value('email_bestuur')),
@@ -292,12 +292,12 @@
 
 			if (count($cancelled_un) == 1)
 				if (count($cancelled) == 1) {
-					$_SESSION['alert'] = sprintf(__('De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt.'), $s);
+					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar event.'), $s);
 				} else {
-					$_SESSION['alert'] = sprintf(__('De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
+					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar events.'), $s);
 				}
 			elseif (count($cancelled_un) > 0)
-				$_SESSION['alert'] = sprintf(__('De commissies %s zijn op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
+				$_SESSION['alert'] = sprintf(__('The committees %s have been notified of the denying of the calendar events.'), $s);
 			
 			return true;
 		}
@@ -337,7 +337,7 @@
 		public function run_webcal()
 		{
 			$cal = new WebCal_Calendar('Cover');
-			$cal->description = __('Alle activiteiten van studievereniging Cover');
+			$cal->description = __('All activities of study association Cover');
 
 			$fromdate = new DateTime();
 			$fromdate = $fromdate->modify('-1 year')->format('Y-m-d');

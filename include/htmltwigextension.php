@@ -109,7 +109,7 @@ class HTMLTwigExtension extends Twig_Extension
 	static public function input_date($name, $data, array $params = array())
 	{
 		$params['type'] = 'date';
-		$params['placeholder'] = sprintf(__('Bijv. %d-9-20'), date('Y'));
+		$params['placeholder'] = sprintf(__('E.g. %d-9-20'), date('Y'));
 
 		if (!isset($params['class']))
 			$params['class'] = 'date';
@@ -120,7 +120,7 @@ class HTMLTwigExtension extends Twig_Extension
 	static public function input_datetime($name, $data, array $params = array())
 	{
 		$params['type'] = 'datetime-local';
-		$params['placeholder'] = sprintf(__('Bijv. %d-9-20 11:00'), date('Y'));
+		$params['placeholder'] = sprintf(__('E.g. %d-9-20 11:00'), date('Y'));
 		$params['formatter'] = function($datetime) {
 			return trim($datetime) != '' ? date('Y-m-d\TH:i', strtotime($datetime)) : '';
 		};
@@ -341,7 +341,7 @@ class HTMLTwigExtension extends Twig_Extension
 
 		if (isset($params['required']) && $params['required']) {
 			$classes[] = 'label_required';
-			$extra_content = sprintf('<span class="required-badge" title="%s">*</span>', __('Verplicht'));
+			$extra_content = sprintf('<span class="required-badge" title="%s">*</span>', __('Required'));
 		}
 		
 		return sprintf('<label for="field-%s" class="%s">%s%s</label>',

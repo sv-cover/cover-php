@@ -1,6 +1,6 @@
 <h2>
 	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.subject }}</a>
-	<small>{{ __('Mededeling van %s uit %d')|format(
+	<small>{{ __('Announcement made by %s in %d')|format(
 		'<a href="commissies.php?commissie=%s">%s</a>'|format(
 			result.committee.login|e('url'),
 			result.committee.naam|e('html')),

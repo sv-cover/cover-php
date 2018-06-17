@@ -43,7 +43,7 @@
 		
 		return $iter && $iter->has_value('nick')
 			? $iter->get('nick')
-			: __('Geen naam');
+			: __('No name');
 	}
 	
 	/** @group Member
@@ -87,10 +87,10 @@
 
 		// When the user is not found (or not logged in)
 		if (!$iter)
-			return __('Geen naam');
+			return __('No name');
 
 		if (($flags & BE_PERSONAL) && $is_self)
-			return __('Jij!');
+			return __('You!');
 
 		// Or when the privacy settings prevent their name from being displayed
 		if (!($flags & IGNORE_PRIVACY)
@@ -98,7 +98,7 @@
 			&& !$identity->member_in_committee(COMMISSIE_BESTUUR)
 			&& !$identity->member_in_committee(COMMISSIE_KANDIBESTUUR)
 			&& $model->is_private($iter, 'naam'))
-			return __('Onbekend');
+			return __('Unknown');
 
 		return format_string($format, $iter);
 	}

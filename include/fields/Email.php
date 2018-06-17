@@ -34,7 +34,7 @@ class Email implements \SignUpFieldType
 		$value = trim($post_data[$this->name] ?? '');
 
 		if ($value != '' && filter_var($value, FILTER_VALIDATE_EMAIL) === false)
-			$error = __('Ongeldig e-mailadres');
+			$error = __('Invalid e-mail address');
 
 		if ($this->required && $value == '')
 			$error = __('Value required');

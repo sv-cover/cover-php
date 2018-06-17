@@ -1,10 +1,10 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Zichtbaarheid foto') ~ ' :: ' ~ parent() %}
+{% block title __('Visibility of photo') ~ ' :: ' ~ parent() %}
 
 
 {% block content %}
-<h1>{{ __('Zichtbaarheid foto') }}</h1>
+<h1>{{ __('Visibility of photo') }}</h1>
 <div class="messageBox">
 	
 	<form class="privacy-preference-form vertical-form" method="post" action="fotoboek.php?photo={{ photo.id|e('url') }}&amp;module=privacy">
@@ -15,26 +15,26 @@
 		</div>
 		
 		<div>
-			<label>{{ __('Zichtbaarheid foto')}}</label>
+			<label>{{ __('Visibility of photo')}}</label>
 			<ul class="option-group">
 				<li>
 					<input type="radio" id="privacy-visibility-visible" name="visibility" value="visible" {{ visibility == 'visible' ? 'checked' : ''}}>
 					<label for="privacy-visibility-visible">
 						<i class="fa fa-eye"></i>
-						{{ __('Toon in het overzicht van mij') }}
+						{{ __('Show photo in my personal photo album') }}
 					</label>
 				</li>
 				<li>
 					<input type="radio" id="privacy-visibility-hidden" name="visibility" value="hidden" {{ visibility == 'hidden' ? 'checked' : ''}}>
 					<label for="privacy-visibility-hidden">
 						<i class="fa fa-eye-slash"></i>
-						{{ __('Laat weg uit het overzicht van mij') }}
+						{{ __('Hide from my personal photo album') }}
 					</label>
 				</li>
 			</ul>
 		</div>
 		<div>
-			<button type="submit" class="button">{{ __('Zichtbaarheid instellen') }}</button>
+			<button type="submit" class="button">{{ __('Change visibility') }}</button>
 		</div>
 	</form>
 </div>

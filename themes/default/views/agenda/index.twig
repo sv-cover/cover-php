@@ -5,30 +5,30 @@
 {% block content %}
 <div class="pageHeading">
 	{% if user_can_create controller.new_iter %}
-		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuw agendapunt') }}</a></div>
+		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('New calendar event') }}</a></div>
 	{% endif %}
 	<h1>{{ view.title }}</h1>
 </div>
 
 <div class="messageBox">
 {% if not global.auth.logged_in %}
-	<p class="italic">{{ __('Log in om eventuele afgeschermde agendapunten te bekijken.') }}</p>
+	<p class="italic">{{ __('Log in to view hidden calendar events.') }}</p>
 {% endif %}
 
 <div class="navigation">
 	{% if view.previous_year %}
 	<a href="agenda.php?year={{ view.previous_year }}" class="previous">
-		{{ __('Toon alles uit het jaar %d-%d')|format(view.previous_year, view.previous_year + 1) }}
+		{{ __('Show the complete year %d-%d')|format(view.previous_year, view.previous_year + 1) }}
 	</a>
 	{% endif %}
 
 	{% if view.next_year %}
 	<a href="agenda.php?year={{ view.next_year }}" class="next">
-		{{ __('Toon alles uit het jaar %d-%d')|format(view.next_year, view.next_year + 1) }}
+		{{ __('Show the complete year %d-%d')|format(view.next_year, view.next_year + 1) }}
 	</a>
 	{% elseif globals.GET.year is defined %}
 	<a href="agenda.php" class="next">
-		{{ __('Toon actuele agenda') }}
+		{{ __('Show current agenda') }}
 	</a>
 	{% endif %}
 </div>
@@ -37,7 +37,7 @@
 {% set showyear = true %}
 
 {% if iters|length == 0 %}
-	<p>{{ __('Er staan op dit moment geen activiteiten op de agenda.') }}</p>
+	<p>{{ __('There are no activities on the calendar at the moment.') }}</p>
 {% else %}
 	<section class="agenda">
 {% for punt in iters %}
@@ -55,17 +55,17 @@
 		</div>
 		<h3><a class="agendalink" href="{{ controller.link_to_read(punt) }}">{{ punt.kop }}</a></h3>
 		{% if punt.is_proposal %}
-			<p class="label-pending">{{ __('Nog niet gepubliceerd') }}</p>
+			<p class="label-pending">{{ __('Not yet published') }}</p>
 		{% endif %}
 		
 		<p>{{ punt|period }}</p>
 
 		{% if punt.locatie %}
-			<p class="location">{{ __('Locatie') }}: <span class="p-location">{{ punt.locatie }}</span></p>
+			<p class="location">{{ __('Location') }}: <span class="p-location">{{ punt.locatie }}</span></p>
 		{% endif %}
 
 		{% if punt.extern %}
-			<p>{{  __('Deze activiteit wordt niet georganiseerd door Cover zelf.') }}</p>
+			<p>{{  __('This activity is not organised by Cover.') }}</p>
 		{% endif %}
 
 		<p class="p-summary details">
@@ -74,10 +74,10 @@
 
 		<ul class="actions">
 			{%- if user_can_delete punt %}
-			<li><a href="{{ controller.link_to_delete(punt) }}">{{ __('Verwijder') }}</a></li>
+			<li><a href="{{ controller.link_to_delete(punt) }}">{{ __('Delete') }}</a></li>
 			{% endif -%}
 			{%- if user_can_update punt %}
-			<li><a href="{{ controller.link_to_update(punt) }}">{{ __('Wijzig') }}</a></li>
+			<li><a href="{{ controller.link_to_update(punt) }}">{{ __('Modify') }}</a></li>
 			{% endif -%}
 		</ul>
 	</div>
@@ -88,10 +88,10 @@
 {% if global.auth.logged_in %}
 <footer class="alt-section">
 	<p>
-		{{ __('Voeg de Coveragenda toe aan je eigen agenda:') }}
+		{{ __('Add the Cover Calendar to your own calendar:') }}
 		<a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Google Calendar</a>,
 		<a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Outlook.com</a>
-		{{ __('of') }}
+		{{ __('or') }}
 		<a href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">iCloud/other</a>
 	</p>
 </footer>

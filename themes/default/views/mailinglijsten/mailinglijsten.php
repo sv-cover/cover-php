@@ -28,10 +28,10 @@ class MailinglijstenView extends CRUDView
 	public function toegang_options()
 	{
 		return array(
-			DataModelMailinglist::TOEGANG_IEDEREEN => __('Iedereen'),
-			DataModelMailinglist::TOEGANG_DEELNEMERS => __('Alleen mensen op de mailinglijst'),
-			DataModelMailinglist::TOEGANG_COVER => __('Alleen *@svcover.nl adressen'),
-			DataModelMailinglist::TOEGANG_EIGENAAR => __('Alleen de commissie van de lijst')
+			DataModelMailinglist::TOEGANG_IEDEREEN => __('Everyone'),
+			DataModelMailinglist::TOEGANG_DEELNEMERS => __('Only people subscribed to this mailing list'),
+			DataModelMailinglist::TOEGANG_COVER => __('Only *@svcover.nl addresses'),
+			DataModelMailinglist::TOEGANG_EIGENAAR => __('Only the committee this list belongs to')
 		);
 	}
 

@@ -1,15 +1,15 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Lidmaatschapsformulier') ~ ' :: ' ~ parent() %}
+{% block title __('Membership application form') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Lidmaatschapsformulier') }}</h1>
+<h1>{{ __('Membership application form') }}</h1>
 <div class="messageBox">
-	<h2>{{ __('Word lid van Cover!') }}</h2>
+	<h2>{{ __('Become a member!') }}</h2>
 
 	{% if errors|length > 0 %}
 	<section class="error-section">
-		<p>{{ __('Niet alle velden zijn goed ingevuld.') }}</p>
+		<p>{{ __("You haven't filled in all the fields correctly.") }}</p>
 	</section>
 	{% endif %}
 
@@ -17,48 +17,48 @@
 		{{ html_nonce('sign_up') }}
 		
 		<fieldset>
-			<legend>{{ __('Naam') }}</legend>
+			<legend>{{ __('Name') }}</legend>
 			<div class="field-group">
 				<div class="large-field">
-					{{ html_label(__('Voornaam'), 'first_name', errors=errors, required=true) }}
-					{{ html_input_text('first_name', null, errors=errors, required=true, placeholder=__('Bijv. John')) }}
+					{{ html_label(__('First name'), 'first_name', errors=errors, required=true) }}
+					{{ html_input_text('first_name', null, errors=errors, required=true, placeholder=__('E.g. John')) }}
 				</div>
 				<div>
-					{{ html_label(__('Tussenvoegsel'), 'family_name_preposition', errors=errors) }}
-					{{ html_input_text('family_name_preposition', null, errors=errors, class='small', placeholder=__('Bijv. von')) }}
+					{{ html_label(__('Infix'), 'family_name_preposition', errors=errors) }}
+					{{ html_input_text('family_name_preposition', null, errors=errors, class='small', placeholder=__('E.g. von')) }}
 				</div>
 				<div class="large-field">
-					{{ html_label(__('Achternaam'), 'family_name', errors=errors, required=true) }}
-					{{ html_input_text('family_name', null, errors=errors, required=true, placeholder=__('Bijv. Neumann')) }}
+					{{ html_label(__('Last name'), 'family_name', errors=errors, required=true) }}
+					{{ html_input_text('family_name', null, errors=errors, required=true, placeholder=__('E.g. Neumann')) }}
 				</div>
 			</div>
 
 			<div>
-				{{ html_label(__('Geboortedatum'), 'birth_date', errors=errors, required=true) }}
-				{{ html_input_date('birth_date', null, errors=errors, required=true, placeholder=__('Bijv. 1993-9-20')) }}
+				{{ html_label(__('Birthdate'), 'birth_date', errors=errors, required=true) }}
+				{{ html_input_date('birth_date', null, errors=errors, required=true, placeholder=__('E.g. 1993-9-20')) }}
 			</div>
 
 			<div>
 				{{ html_label(__('Gender'), 'gender', errors=errors, required=true) }}
-				{{ html_select_field('gender', {o: __('Niet gespecificeerd'), m: __('Man'), f: __('Vrouw')}, null, errors=errors, required=true, default='o') }}
+				{{ html_select_field('gender', {o: __('Unspecified'), m: __('Male'), f: __('Female')}, null, errors=errors, required=true, default='o') }}
 			</div>
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ __('Adres') }}</legend>
+			<legend>{{ __('Address') }}</legend>
 
 			<div>
-				{{ html_label(__('Straatnaam + Huisnummer'), 'street_name', errors=errors, required=true) }}
-				{{ html_input_text('street_name', null, errors=errors, required=true, placeholder=__('Bijv. Nijenborgh 9')) }}
+				{{ html_label(__('Street name + number'), 'street_name', errors=errors, required=true) }}
+				{{ html_input_text('street_name', null, errors=errors, required=true, placeholder=__('E.g. Nijenborgh 9')) }}
 			</div>
 			<div class="field-group">
 				<div>
-					{{ html_label(__('Postcode'), 'postal_code', errors=errors, required=true) }}
-					{{ html_input_text('postal_code', null, errors=errors, required=true, placeholder=__('Bijv. 9747 AG')) }}
+					{{ html_label(__('Zipcode'), 'postal_code', errors=errors, required=true) }}
+					{{ html_input_text('postal_code', null, errors=errors, required=true, placeholder=__('E.g. 9747 AG')) }}
 				</div>
 				<div class="large-field">
-					{{ html_label(__('Woonplaats'), 'place', errors=errors, required=true) }}
-					{{ html_input_text('place', null, errors=errors, required=true, placeholder=__('Bijv. Groningen')) }}
+					{{ html_label(__('Place of residence'), 'place', errors=errors, required=true) }}
+					{{ html_input_text('place', null, errors=errors, required=true, placeholder=__('E.g. Groningen')) }}
 				</div>
 			</div>
 		</fieldset>
@@ -67,47 +67,47 @@
 			<legend>{{ __('Contact') }}</legend>
 
 			<div>
-				{{ html_label(__('Telefoonnummer'), 'phone_number', errors=errors, required=true) }}
+				{{ html_label(__('Phone number'), 'phone_number', errors=errors, required=true) }}
 				{{ html_input_text('phone_number', null, errors=errors, required=true, type='tel') }}
 			</div>
 
 			<div>
-				{{ html_label(__('E-Mail adres'), 'email_address', errors=errors, required=true) }}
+				{{ html_label(__('E-mail address'), 'email_address', errors=errors, required=true) }}
 				{{ html_input_text('email_address', null, errors=errors, required=true, type='email') }}
-				<small>{{ __('Je ontvangt een bevestigingsmail met een link. Je aanmelding wordt pas verwerkt wanneer je op de link klikt.') }}</small>
+				<small>{{ __('You will receive a confirmation email with a link. Your application will be processed after you have clicked the link.') }}</small>
 			</div>
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ __('Studie') }}</legend>
+			<legend>{{ __('Study') }}</legend>
 			
 			<div>
-				{{ html_label(__('Studentnummer'), 'membership_student_number', errors=errors, required=true) }}
-				{{ html_input_text('membership_student_number', null, errors=errors, required=true, placeholder=__('Bijv. s123456')) }}
+				{{ html_label(__('Student number'), 'membership_student_number', errors=errors, required=true) }}
+				{{ html_input_text('membership_student_number', null, errors=errors, required=true, placeholder=__('E.g. s123456')) }}
 			</div>
 
 			<div class="field-group">
 				<div>
-					{{ html_label(__('Studierichting'), 'membership_study_name', errors=errors, required=true) }}
-					{{ html_input_text('membership_study_name', null, errors=errors, required=true, list='studies', data_suggestions=['Artificial Intelligence', 'Computing Science']|json_encode, placeholder=__('Kies uit de lijst of typ een andere studie')) }}
+					{{ html_label(__('Study'), 'membership_study_name', errors=errors, required=true) }}
+					{{ html_input_text('membership_study_name', null, errors=errors, required=true, list='studies', data_suggestions=['Artificial Intelligence', 'Computing Science']|json_encode, placeholder=__("Pick one from the list or type if your study isn't on it")) }}
 					
 				</div>
 
 				<div>
-					{{ html_label(__('Fase'), 'membership_study_phase', errors=errors, required=true) }}
+					{{ html_label(__('Phase'), 'membership_study_phase', errors=errors, required=true) }}
 					{{ html_select_field('membership_study_phase', {b: __('Bachelor'), m: __('Master')}, null, errors=errors, required=true) }}
 				</div>
 			</div>
 
 			<div>
-				{{ html_label(__('Beginjaar'), 'membership_year_of_enrollment', errors=errors, required=true) }}
+				{{ html_label(__('Starting year'), 'membership_year_of_enrollment', errors=errors, required=true) }}
 				{{ html_input_text('membership_year_of_enrollment', {'membership_year_of_enrollment': academic_year}, errors=errors, required=true) }}
-				<small>{{ __('In welk jaar ben je begonnen of ga je beginnen met de hierboven ingevulde studie.') }}</small>
+				<small>{{ __('In which year did you start or are you expecting to start with your study.') }}</small>
 			</div>
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ __('Betaling') }}</legend>
+			<legend>{{ __('Payment') }}</legend>
 			
 			<div>
 				{{ html_label(__('IBAN'), 'iban', errors=errors, required=true) }}
@@ -117,32 +117,32 @@
 			<div>
 				{{ html_label(__('BIC'), 'bic', errors=errors) }}
 				{{ html_input_text('bic', null, errors=errors) }}
-				<small class="hint">{{ __("Alleen nodig wanneer IBAN [i]niet[/i] met 'NL' begint")|parse_markup }}</small>
+				<small class="hint">{{ __("Only required if your IBAN [i]does not[/i] start with 'NL'")|parse_markup }}</small>
 			</div>
 
 			<div>
 				{{ html_input_checkbox('authorization', null) }}
-				{{ html_label(__('Ik machtig hierbij Cover om 1x per jaar de contributie automatisch van mijn rekening af te schrijven (verplicht)'), 'authorization', errors=errors, required=true) }}
+				{{ html_label(__('I hereby authorize Cover to automatically deduct the membership fee from my bank account one time per year. (mandatory)'), 'authorization', errors=errors, required=true) }}
 			</div>
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ __('Mailing') }}</legend>
+			<legend>{{ __('Mailing list') }}</legend>
 			
-			<p>{{ __('Cover stuurt af en toe een mailtje over aankomende activiteiten. Als je de mail niet meer wil ontvangen, kan je je heel gemakkelijk uitschrijven via de website.')}}
+			<p>{{ __("From time to time Cover sends an email about an upcoming activity. If you don't want to receive these emails anymore, you can very easily unsubscribe right here on the website.")}}
 
 			<div>
 				{{ html_input_checkbox('option_mailing', {'option_mailing': 'yes'}) }}
-				{{ html_label(__('Ik wil graag e-mails over activiteiten van Cover ontvangen.'), 'option_mailing', errors=errors) }}
-				<small>{{ __('Afmelden kan op ieder moment via deze website.') }}</small>
+				{{ html_label(__('I want to receive emails about activities organized by Cover.'), 'option_mailing', errors=errors) }}
+				<small>{{ __('You can unsubscribe at any moment through this website.') }}</small>
 			</div>
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ __('Voorwaarden') }}</legend>
+			<legend>{{ __('Conditions') }}</legend>
 			{% if user_can_update voorwaarden %}
 				<div class="controls inline">
-					<a href="{{ link('editable.update', editable=voorwaarden)|e('html_attr') }}" class="edit-link">{{ __('Bewerk voorwaarden') }}</a>
+					<a href="{{ link('editable.update', editable=voorwaarden)|e('html_attr') }}" class="edit-link">{{ __('Modify conditions') }}</a>
 				</div>
 			{% endif %}
 		
@@ -150,16 +150,16 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>{{ __('Intelligentietest') }}</legend>
+			<legend>{{ __('Intelligence test') }}</legend>
 
 			<div>
-				{{ html_label(__('Wat is de kleur van gras? (ik ben geen spam-bot)'), 'spam', errors=errors, required=true) }}
+				{{ html_label(__('What is the colour of grass? (I am not a robot)'), 'spam', errors=errors, required=true) }}
 				{{ html_input_text('spam', null, errors=errors, required=true) }}
-				<small class="hint">{{ __("Als je het niet zeker weet, vul dan 'groen' in.") }}</small>
+				<small class="hint">{{ __("If you are unsure, just enter ‘green’.") }}</small>
 			</div>
 		</fieldset>
 
-		<button type="submit" name="subm" value="yes" class="button large-button">{{ __('Word lid') }}</button>
+		<button type="submit" name="subm" value="yes" class="button large-button">{{ __('Become a member') }}</button>
 	</form>
 
 
@@ -167,10 +167,10 @@
 	<section>
 		{% if user_can_update opmerkingen %}
 			<div class="controls inline">
-				<a href="{{ link('editable.update', editable=opmerkingen)|e('html_attr') }}" class="edit-link right">{{ __('Bewerk opmerkingen') }}</a>
+				<a href="{{ link('editable.update', editable=opmerkingen)|e('html_attr') }}" class="edit-link right">{{ __('Modify notes') }}</a>
 			</div>
 		{% endif %}
-		<h2>{{ __('Opmerkingen') }}</h2>
+		<h2>{{ __('Notes') }}</h2>
 		{{ opmerkingen.locale_content|parse_markup }}
 	</section>
 </div>

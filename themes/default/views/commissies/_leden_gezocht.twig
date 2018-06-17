@@ -3,17 +3,17 @@
 	{% if commissioner %}
 		<a href="profiel.php?lid={{ commissioner.id }}" class="profile-widget"><img src="foto.php?lid_id={{ commissioner.id }}&amp;format=square&amp;width=100"></a>
 		{% if iter.has_vacancy_deadline %}
-		<p>{{ __("Hey! Deze commissie zoekt nieuwe commissieleden.\nHeb jij interesse? Zeg het de Commissaris Intern, %s (intern@svcover.nl)")|format(commissioner.voornaam) }}</p>
+		<p>{{ __("Hey! This committee is looking for new members.\nAre you interested? Tell your Commissioner of Internal Affairs, %s (intern@svcover.nl)")|format(commissioner.voornaam) }}</p>
 		{% else %}
-		<p>{{ __("Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse?\nZeg het <strong>voor %s</strong> tegen de Commissaris Intern, %s (intern@svcover.nl)")|format(iter.vacancies|date('l j F'),commissioner.voornaam|e('html'))|raw }}
+		<p>{{ __("Hey! This committee is looking for new members. Are you interested?\nTell your Commissioner of Internal Affairs, %s (intern@svcover.nl) <strong>before %s</strong>")|format(commissioner.voornaam|e('html'), iter.vacancies|date('l j F'))|raw }}
 		{% endif %}
 	{% else %}
-		<p>{{ __("Hey! Deze commissie zoekt nieuwe commissieleden. Heb jij interesse? Zeg het de Intern via intern@svcover.nl.") }}</p>
+		<p>{{ __("Hey! This committee is looking for new members. Are you interested?\nTell your Commissioner of Internal Affairs by e-mailing to intern@svcover.nl.") }}</p>
 	{% endif %}
 	{% if global.identity.member_is_active and not global.identity.member_in_committee(iter.id) %}
 		<form action="{{ controller.link_to('show_interest', iter) }}" method="post" class="committee-vacancy-interest-form">
 			{{ html_nonce('show_interest', iter) }}
-			<button type="submit" class="button">{{ __('Ik ben geïnteresseerd!') }}</button>
+			<button type="submit" class="button">{{ __('I’m interested!') }}</button>
 		</form>
 	{% endif %}
 </div>

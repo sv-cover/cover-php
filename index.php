@@ -15,7 +15,7 @@
 			{
 				$language = $_POST['language'];
 				
-				$member_data = logged_in();
+				$member_data = get_identity()->member();
 				
 				if ($member_data) {
 					/* Set language in profile of member */

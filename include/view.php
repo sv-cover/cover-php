@@ -190,7 +190,7 @@ class View
 			header('Status: 301 Moved Permanently');
 
 		header('Location: ' . $url);
-		return '<a href="' . htmlentities($url, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
+		return '<a href="' . htmlentities($url, ENT_QUOTES) . '">' . __('You are being redirected. Click here to continue.') . '</a>';
 	}
 
 	public function render_401_unauthorized(UnauthorizedException $e) {

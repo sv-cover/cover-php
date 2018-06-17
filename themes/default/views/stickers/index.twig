@@ -1,17 +1,17 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Stickerkaart') ~ ' :: ' ~ parent() %}
+{% block title __('Sticker map') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="pageheading">
 	{% if user_can_create controller.new_iter %}
 	<div class="controls inline">
 		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="create-link" data-placement-selector="modal" data-partial-selector=".add-sticker-form">
-			{{ __('Nieuwe sticker') }}
+			{{ __('New sticker') }}
 		</a>
 	</div>
 	{% endif %}
-	<h1>{{ __('Stickerkaart') }}</h1>
+	<h1>{{ __('Sticker map') }}</h1>
 </div>
 
 <div id="sticker-map">
@@ -20,18 +20,18 @@
 			<img src="">
 		</a>
 		<h3 class="sticker-label"></h3>
-		<small class="sticker-user">{{ __('Geplakt door') }} <a href="#"></a></small>
+		<small class="sticker-user">{{ __('Placed by') }} <a href="#"></a></small>
 		<p class="sticker-description"></p>
 		<div class="controls">
 			<form method="post" action="" class="remove-sticker-form">
 				<input type="hidden" name="_nonce">
-				<button type="submit" class="button">{{ __('Verwijder sticker') }}</button>
+				<button type="submit" class="button">{{ __('Delete sticker') }}</button>
 			</form>
 
 			<form method="post" action="" enctype="multipart/form-data" class="add-photo-form">
 				<div class="file-upload-button button">
-					<span>{{ __('Kies foto') }}&hellip;</span>
-					<input type="file" name="photo" accept="image/jpeg" title="{{ __('Voeg een foto toe bij deze sticker. Alleen JPEG-plaatjes mogen.') }}">
+					<span>{{ __('Choose photo') }}&hellip;</span>
+					<input type="file" name="photo" accept="image/jpeg" title="{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}">
 				</div>
 			</form>
 		</div>
@@ -78,7 +78,7 @@
 		});
 
 		description.find('.remove-sticker-form').submit(function(e) {
-			if (!confirm({{ __('Weet je zeker dat je je sticker wil verwijderen?')|json_encode()|raw }}))
+			if (!confirm({{ __('Are you sure you want to delete your sticker from the map?')|json_encode()|raw }}))
 				e.preventDefault();
 		})
 

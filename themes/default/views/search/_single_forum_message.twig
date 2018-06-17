@@ -1,6 +1,6 @@
 <h2>
 	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.thread.subject }}</a>
-	<small>{{ __('in het forum %s uit %s %d')|format(
+	<small>{{ __('in forum %s from %s %d')|format(
 		'<a href="forum.php?forum=%d">%s</a>'|format(
 			result.thread.forum.id,
 			result.thread.forum.name|e('html')),

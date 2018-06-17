@@ -1,27 +1,27 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Formulier') ~ ' :: ' ~ parent() %}
+{% block title __('Form') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="pageheading">
 	<div class="controls inline">
 		{% if form.has_id and user_can_update form %}
-			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">{{ __('Bewerk formulier') }}</a>
-			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="download-link">{{ __('Bekijk inschrijvingen') }}</a>
+			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">{{ __('Modify form') }}</a>
+			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="download-link">{{ __('Show sign-ups') }}</a>
 		{% endif %}
 	</div>
-	<h1>{{ __('Formulier') }}</h1>
+	<h1>{{ __('Form') }}</h1>
 </div>
 <div class="messageBox">
 	{% if not form.is_open %}
 	<section class="warning-section">
-		<h3>{{ __('De inschrijvingen zijn gesloten.') }}</h3>
-		<p>{{ __('Jij kan dit formulier nu wel zien omdat je de rechten hebt om mensen in te schrijven buiten de inschrijfperiode.') }}</p>
+		<h3>{{ __('The registrations are closed.') }}</h3>
+		<p>{{ __('You can see this form because you are allowed to sign up people outside of the sign-up period.') }}</p>
 	</section>
 	{% endif %}
 	
 	{% if success %}
-		<p>{{ __('Succes! Je inschrijving is compleet.') }}</p>
+		<p>{{ __('Success! You have signed up.') }}</p>
 	{% else %}
 		<form action="{{ entry.has_id ? controller.link({view: 'update_entry', form: form.id, entry: entry.id}) : controller.link({view: 'create_entry', form: form.id}) }}" method="post" class="vertical-form">
 			{% if entry.has_id %}
@@ -45,7 +45,7 @@
 			{% endfor %}
 
 			<div class="controls">
-				<button class="button" type="submit">{{ entry.has_id ? __('Wijzig inschrijving') : __('Schrijf mij in') }}</button>
+				<button class="button" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
 			</div>
 		</form>
 	{% endif %}

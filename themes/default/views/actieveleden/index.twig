@@ -1,18 +1,18 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Actieve leden') ~ ' :: ' ~ parent() %}
+{% block title __('Active Members') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Actieve leden') }}</h1>
+<h1>{{ __('Active Members') }}</h1>
 <div class="messageBox">
-	<p>{{ __('In alle commisses en werkgroepen samen zitten op dit moment <strong>%d</strong> actieve Coverleden.')|format(iters|length)|raw }}</p>
+	<p>{{ __('Taking all committees and working groups together, there are currently <strong>%d</strong> active Cover members.')|format(iters|length)|raw }}</p>
 <table class="full-width-table">
 	<thead>
 		<tr class="header">
 			<th>{{ __('ID') }}</th>
-			<th>{{ __('Naam') }}</th>
+			<th>{{ __('Name') }}</th>
 			<th>{{ __('Email') }}</th>
-			<th style="text-align: right">{{ __('Commissies/Werkgroepen') }}</th>
+			<th style="text-align: right">{{ __('Committees/Working groups') }}</th>
 		</tr>
 	</thead>
 	<tbody>

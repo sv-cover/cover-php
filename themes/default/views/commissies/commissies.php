@@ -73,9 +73,9 @@ class CommissiesView extends CRUDView
 	public function available_committee_types()
 	{
 		return [
-			DataModelCommissie::TYPE_COMMITTEE => __('commissie'),
-			DataModelCommissie::TYPE_WORKING_GROUP => __('werkgroep'),
-			DataModelCommissie::TYPE_OTHER => __('overig')
+			DataModelCommissie::TYPE_COMMITTEE => __('committee'),
+			DataModelCommissie::TYPE_WORKING_GROUP => __('working group'),
+			DataModelCommissie::TYPE_OTHER => __('other')
 		];
 	}
 }

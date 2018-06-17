@@ -79,17 +79,17 @@
 			switch ($rsvp_status['rsvp_status'])
 			{
 				case 'unsure':
-					return __('Ik ga misschien');
+					return __('I might go');
 
 				case 'attending':
-					return __('Ik ben erbij');
+					return __('I\'m going');
 
 				case 'declined':
-					return __('Ik ga niet');
+					return __('I\'m not going');
 
 				case '':
 				case 'not_replied':
-					return __('Neem deel');
+					return __('Attend');
 
 				default:
 					return $rsvp_status['rsvp_status'];
@@ -115,8 +115,8 @@
 		public function title()
 		{
 			$title = $this->selected_year()
-				? sprintf(__('Agenda %d-%d'), $this->selected_year(), $this->selected_year() + 1)
-				: __('Agenda');
+				? sprintf(__('Calendar %d-%d'), $this->selected_year(), $this->selected_year() + 1)
+				: __('Calendar');
 
 			return str_replace('-', '–', $title);
 		}
