@@ -682,6 +682,16 @@
 		else
 			return date('j-n-Y', $time);
 	}
+
+	function format_table(array $data)
+	{
+		$rows = [];
+
+		foreach ($data as $key => $value)
+			$rows[] = sprintf('<tr><th style="text-align:left">%s</th><td>%s</td></tr>', markup_format_text($key), markup_format_text($value));
+
+		return sprintf('<table>%s</table>', implode('', $rows));
+	}
 	
 	/** @group Functions
 	  * Normalizes an url (putting http:// in front if needed)

@@ -95,6 +95,14 @@ class DataIterSignUpEntry extends DataIter
 
 		return $row;
 	}
+
+	/**
+	 * Alias for export(), used in signup_confirmation.txt email via $entry['array'].
+	 */
+	public function get_array()
+	{
+		return $this->export();
+	}
 }
 
 class DataModelSignUpEntry extends DataModel

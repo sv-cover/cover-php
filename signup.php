@@ -99,6 +99,16 @@ class ControllerSignUpForms extends Controller
 				$success = true;
 			}
 
+			try {
+				if ($success && !empty($entry['member_id']) && $form['agenda_item']) {
+					$email = parse_email_object("signup_confirmation.txt", compact('entry'));
+					$email->send($member['email']);
+				}
+			} catch (Exception $e) {
+				// Catch it, but it is not important for the rest of the process.
+				sentry_report_exception($e);
+			}
+
 			// Redirect submissions from elsewhere back to their return-path
 			if ($success && !empty($_POST['return-path']))
 				return $this->view->redirect($_POST['return-path']);
