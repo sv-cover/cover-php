@@ -109,7 +109,9 @@ class HTMLTwigExtension extends Twig_Extension
 	static public function input_date($name, $data, array $params = array())
 	{
 		$params['type'] = 'date';
-		$params['placeholder'] = sprintf(__('E.g. %d-9-20'), date('Y'));
+
+		if (!isset($params['placeholder']))
+			$params['placeholder'] = sprintf(__('E.g. %d-9-20'), date('Y'));
 
 		if (!isset($params['class']))
 			$params['class'] = 'date';
@@ -120,10 +122,12 @@ class HTMLTwigExtension extends Twig_Extension
 	static public function input_datetime($name, $data, array $params = array())
 	{
 		$params['type'] = 'datetime-local';
-		$params['placeholder'] = sprintf(__('E.g. %d-9-20 11:00'), date('Y'));
 		$params['formatter'] = function($datetime) {
 			return trim($datetime) != '' ? date('Y-m-d\TH:i', strtotime($datetime)) : '';
 		};
+		
+		if (!isset($params['placeholder']))
+			$params['placeholder'] = sprintf(__('E.g. %d-9-20 11:00'), date('Y'));
 
 		if (!isset($params['class']))
 			$params['class'] = 'datetime';
