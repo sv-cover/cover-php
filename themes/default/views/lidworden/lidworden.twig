@@ -161,17 +161,5 @@
 
 		<button type="submit" name="subm" value="yes" class="button large-button">{{ __('Become a member') }}</button>
 	</form>
-
-
-
-	<section>
-		{% if user_can_update opmerkingen %}
-			<div class="controls inline">
-				<a href="{{ link('editable.update', editable=opmerkingen)|e('html_attr') }}" class="edit-link right">{{ __('Modify notes') }}</a>
-			</div>
-		{% endif %}
-		<h2>{{ __('Notes') }}</h2>
-		{{ opmerkingen.locale_content|parse_markup }}
-	</section>
 </div>
 {% endblock %}
