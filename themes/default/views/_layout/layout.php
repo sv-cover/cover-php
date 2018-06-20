@@ -11,62 +11,6 @@ class LayoutViewHelper
 			'url' => 'index.php'
 		];
 
-		$menus['admin'] = [
-			'label' => __('Admin'),
-			'submenu' => []
-		];
-
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
-			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
-			get_identity()->member_in_committee(COMMISSIE_EASY)) {
-			$menus['admin']['submenu'][] = [
-				'url' => 'show.php?view=create',
-				'label' => __('Make a page')
-			];
-
-			$menus['admin']['submenu'][] = [
-				'url' => 'lidworden.php?view=pending-confirmation',
-				'label' => __('Pending registrations')
-			];
-
-			$menus['admin']['submenu'][] = [
-				'url' => 'forum.php?admin=forums',
-				'label' => 'Forum'
-			];
-		}
-
-		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
-			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-			$menus['admin']['submenu'][] = [
-				'url' => 'agenda.php?agenda_moderate',
-				'label' => __('Calendar')
-			];
-
-			$menus['admin']['submenu'][] = [
-				'url' => 'actieveleden.php',
-				'label' => __('Active Members')
-			];
-		}
-		
-		if (get_identity()->member_in_committee()) { // Member in any committee at all
-			$menus['admin']['submenu'][] = [
-				'url' => 'mailinglijsten.php',
-				'label' => __('Mailing lists')
-			];
-
-			$menus['admin']['submenu'][] = [
-				'url' => 'signup.php',
-				'label' => __('Forms')
-			];
-		}
-
-		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
-			$menus['admin']['submenu'][] = [
-				'url' => 'settings.php',
-				'label' => __('Settings')
-			];
-		}
-		
 		$menus['vereniging'] = [
 			'label' => __('Association'),
 			'submenu' => [
@@ -155,6 +99,62 @@ class LayoutViewHelper
 			'url' => 'show.php?id=17'
 		];
 
+		$menus['admin'] = [
+			'label' => __('Admin'),
+			'submenu' => []
+		];
+
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_EASY)) {
+			$menus['admin']['submenu'][] = [
+				'url' => 'show.php?view=create',
+				'label' => __('Make a page')
+			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'lidworden.php?view=pending-confirmation',
+				'label' => __('Pending registrations')
+			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'forum.php?admin=forums',
+				'label' => 'Forum'
+			];
+		}
+
+		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
+			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
+			$menus['admin']['submenu'][] = [
+				'url' => 'agenda.php?agenda_moderate',
+				'label' => __('Calendar')
+			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'actieveleden.php',
+				'label' => __('Active Members')
+			];
+		}
+		
+		if (get_identity()->member_in_committee()) { // Member in any committee at all
+			$menus['admin']['submenu'][] = [
+				'url' => 'mailinglijsten.php',
+				'label' => __('Mailing lists')
+			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'signup.php',
+				'label' => __('Forms')
+			];
+		}
+
+		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
+			$menus['admin']['submenu'][] = [
+				'url' => 'settings.php',
+				'label' => __('Settings')
+			];
+		}
+		
 		// Filter out any empty menu items (I'm looking at you, admin menu!)
 		$menus = array_filter($menus, function($menu) {
 			return isset($menu['url']) || !empty($menu['submenu']);
