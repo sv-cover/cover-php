@@ -1165,6 +1165,7 @@ table {
 .full-width-table th,
 .full-width-table td {
 	padding: 0 2px;
+	white-space: nowrap;
 }
 
 .full-width-table th:first-child,

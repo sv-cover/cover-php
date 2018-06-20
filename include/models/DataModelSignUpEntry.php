@@ -85,13 +85,13 @@ class DataIterSignUpEntry extends DataIter
 
 	public function export()
 	{
-		$row = [
-			'member' => $this['member'] ? member_full_name($this['member'], IGNORE_PRIVACY) : null,
-			'created_on' => $this['created_on']
-		];
+		$row = [];
 
 		foreach ($this['form']['fields'] as $field)
 			$row = array_merge($row, $field->export($this));
+
+		// Put that on the end
+		$row['Signed up on'] = $this['created_on'];
 
 		return $row;
 	}
