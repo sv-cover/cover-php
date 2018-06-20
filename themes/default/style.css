@@ -1202,6 +1202,14 @@ table {
 	background-color: #FFD700;
 }
 
+.scrollable-table {
+	overflow-x: scroll;
+}
+
+.scrollable-table .full-width-table {
+	max-width: none;
+}
+
 .purchase-admin td {
 	font-style: italic;
 }
