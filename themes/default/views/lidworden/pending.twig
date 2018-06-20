@@ -12,7 +12,6 @@
 <div class="messageBox">
 	<p>After a new student signs up for Cover through the online registration form, they have to confirm their email address. Until they clicked the link<sup>3</sup> in the confirmation email that was send when they finished filling in the form, their registration is stuck here.</p>
 	<p>Unfortunately, not everyone confirms their email address, and some don't even receive the initial confirmation mail. That is why this page exists. Here you can take one of the following steps:</p>
-	<p><strong>Before you do any of these steps, please confirm that the student didn't already finish their registration at a different moment by checking <a href="https://secretary.svcover.nl/" target="_blank">Secretary</a>.</strong></p>
 	<ul>
 		<li>Re-send the confirmation email</li>
 		<li>Copy the link from the confirmation email. With that link, you can either</li>
@@ -24,6 +23,7 @@
 		<li>Delete duplicate registrations (note that the links in the confirmation emails for those registrations then won't work any more)</li>
 		<li>Force push the registration to Secretary. This will skip the whole email confirmation procedure.</li>
 	</ul>
+	<p><strong>Before you do any of these steps, please confirm that the student didn't already finish their registration at a different moment by checking <a href="https://secretary.svcover.nl/" target="_blank">Secretary</a>.</strong></p>
 </div>
 
 <h1>{{ __('Pending registrations') }}</h1>
@@ -77,9 +77,7 @@
 			of the selected names
 		</div>
 	</form>
-</div>
 
-<div class="messageBox">
 	<p><sup>1</sup> This will push the registrations to Secretary even when they have not been confirmed yet by clicking on the confirmation link. Normally, this happens automatically as soon as a registration is confirmed.</p>
 	<p><sup>2</sup> The registration has been confirmed and sent to administratie@svcover.nl, but could not yet be added to Secretary due to an error. You can try again by using the <em>Push to secretary</em> option, or ask the AC/DCee to fix their shit.</p>
 	<p><sup>3</sup> The registration link is the link that new members get sent via email as soon as they sign up through the website. They will first need to click this link to confirm their email address. Only then they are added to Secretary as pending new members. Following this link will confirm the registration.</p>
