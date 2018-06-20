@@ -1231,6 +1231,11 @@ table.incassomatic thead::before
     height: 20px;
 }
 
+table.vertical th {
+	text-align: right;
+	padding-right: 1ch;
+}
+
 #language-switch {
 	position: absolute;
 	right: 4px;
