@@ -2,9 +2,9 @@
 	<ul>
 	{% for menu_id, menu in view.layout.top_menu %}
 		{% if menu.submenu is defined %}
-		<li class="dropDown"><a drop="{{ menu_id }}" href="" onclick="return false;">{{ menu.label }}</a></li>
+		<li class="dropDown{% if menu.className is defined %} {{ menu.className }}{% endif %}"{%if menu.title is defined %} title="{{ menu.title }}"{% endif %}><a drop="{{ menu_id }}" href="" onclick="return false;">{{ menu.label }}</a></li>
 		{% else %}
-		<li><a href="{{ menu.url }}" target="{{ menu.target|default('') }}">{{ menu.label }}</a></li>
+		<li{% if menu.className is defined %} class="{{ menu.className }}"{% endif %}{%if menu.title is defined %} title="{{ menu.title }}"{% endif %}><a href="{{ menu.url }}" target="{{ menu.target|default('') }}">{{ menu.label }}</a></li>
 		{% endif %}
 	{% endfor %}
 	</ul>
