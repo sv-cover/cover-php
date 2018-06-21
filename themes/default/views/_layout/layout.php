@@ -109,7 +109,8 @@ class LayoutViewHelper
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
 			$menus['admin']['submenu'][] = [
 				'url' => 'https://webmail.svcover.nl/',
-				'label' => __('Webmail')
+				'label' => __('Webmail'),
+				'target' => '_blank'
 			];
 
 			$menus['admin']['submenu'][] = [
