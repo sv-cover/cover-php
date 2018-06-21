@@ -100,7 +100,7 @@ class LayoutViewHelper
 		];
 
 		$menus['admin'] = [
-			'label' => __('Admin'),
+			'label' => __('Tools'),
 			'submenu' => []
 		];
 
