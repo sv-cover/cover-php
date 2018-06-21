@@ -101,7 +101,7 @@ class LayoutViewHelper
 
 		$menus['admin'] = [
 			'label' => __('Tools'),
-			'title' => __('These are tools available to you because you are a member of certain committees.'),
+			'title' => __('These are tools available to you because you are a member of a committee.'),
 			'className' => 'authorized-only',
 			'submenu' => []
 		];
