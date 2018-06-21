@@ -137,10 +137,10 @@ class LayoutViewHelper
 				'label' => __('Pending registrations')
 			];
 
-			$menus['admin']['submenu'][] = [
-				'url' => 'forum.php?admin=forums',
-				'label' => 'Forum'
-			];
+			// $menus['admin']['submenu'][] = [
+			// 	'url' => 'forum.php?admin=forums',
+			// 	'label' => 'Forum'
+			// ];
 		}
 
 		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
