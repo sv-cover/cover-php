@@ -78,7 +78,8 @@ class LayoutViewHelper
 
 		$menus['fotoboek'] = [
 			'url' => 'fotoboek.php',
-			'label' => __('Photos')
+			'label' => __('Photos'),
+			'title' => __('Photos of activities of Cover.')
 		];
 
 		$menus['studie'] = [
@@ -110,17 +111,20 @@ class LayoutViewHelper
 			$menus['admin']['submenu'][] = [
 				'url' => 'https://webmail.svcover.nl/',
 				'label' => __('Webmail'),
-				'target' => '_blank'
+				'target' => '_blank',
+				'title' => __('Webmail for Cover email accounts.')
 			];
 
 			$menus['admin']['submenu'][] = [
 				'url' => 'mailinglijsten.php',
-				'label' => __('Mailing lists')
+				'label' => __('Mailing lists'),
+				'title' => __('Manage your committee\'s mailing lists.')
 			];
 
 			$menus['admin']['submenu'][] = [
 				'url' => 'signup.php',
-				'label' => __('Forms')
+				'label' => __('Forms'),
+				'title' => __('Manage your committee\'s sign-up forms.')
 			];
 		}
 
@@ -129,12 +133,14 @@ class LayoutViewHelper
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$menus['admin']['submenu'][] = [
 				'url' => 'show.php?view=create',
-				'label' => __('Make a page')
+				'label' => __('Make a page'),
+				'title' => __('Make a new content page on the website.')
 			];
 
 			$menus['admin']['submenu'][] = [
 				'url' => 'lidworden.php?view=pending-confirmation',
-				'label' => __('Pending registrations')
+				'label' => __('Pending registrations'),
+				'title' => __('People who signed up for Cover, but did not yet confirm their email address.')
 			];
 
 			// $menus['admin']['submenu'][] = [
@@ -147,19 +153,22 @@ class LayoutViewHelper
 			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 			$menus['admin']['submenu'][] = [
 				'url' => 'agenda.php?agenda_moderate',
-				'label' => __('Calendar')
+				'label' => __('Calendar'),
+				'title' => __('Moderate calendar items.')
 			];
 
 			$menus['admin']['submenu'][] = [
 				'url' => 'actieveleden.php',
-				'label' => __('Active Members')
+				'label' => __('Active Members'),
+				'title' => __('All active committee members according to the website.')
 			];
 		}
 		
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$menus['admin']['submenu'][] = [
 				'url' => 'settings.php',
-				'label' => __('Settings')
+				'label' => __('Settings'),
+				'title' => __('Manage a few of the website\'s settings.')
 			];
 		}
 		

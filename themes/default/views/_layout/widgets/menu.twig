@@ -27,7 +27,7 @@
 	{% for menu_id, menu in view.layout.top_menu if menu.submenu is defined %}
 		<ul id="{{ menu_id }}" class="expander">
 			{% for submenu_item in menu.submenu %}
-				<li><a href="{{ submenu_item.url }}" target="{{ submenu_item.target|default() }}">{{ submenu_item.label }}</a></li>
+				<li{% if submenu_item.className is defined %} class="{{ submenu_item.className }}"{% endif %}{%if submenu_item.title is defined %} title="{{ submenu_item.title }}"{% endif %}><a href="{{ submenu_item.url }}" target="{{ submenu_item.target|default() }}">{{ submenu_item.label }}</a></li>
 			{% endfor %}
 		</ul>
 	{% endfor %}
