@@ -33,6 +33,19 @@
 				<td class="numeric">{{ mailinglist.archive.count(30) }}</td>
 				<td class="numeric">{{ mailinglist.reach }}</td>
 			</tr>
+		{% else %}
+			<tr>
+				<td colspan="6">
+					<p class="hint">
+						{% if global.identity.member.committees|length > 1 %}
+							{{ __('None of you committees is managing any mailing lists.') }}
+						{% else %}
+							{{ __('Your committee is not managing any mailing lists.') }}
+						{% endif %}
+						<br>{{ __('If you need one, ask the AC/DCee to make one for you.') }}
+					</p>
+				</td>
+			</tr>
 		{% endfor %}
 		</tbody>
 	</table>

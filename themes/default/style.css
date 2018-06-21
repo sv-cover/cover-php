@@ -1211,6 +1211,14 @@ table {
 	background-color: #FFD700;
 }
 
+.full-width-table .hint {
+	text-align: center;
+	white-space: normal;
+	margin: auto;
+	padding: 40px;
+	max-width: 450px;
+}
+
 .scrollable-table {
 	overflow-x: scroll;
 }
