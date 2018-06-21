@@ -1018,6 +1018,15 @@ font-size: 10px;
 .topMenu ul li { display:inline; margin:3px 7px;}
 .topMenu a {color:#fff; text-decoration:none;}
 .topMenu a:hover { text-decoration:underline; }
+.topMenu .authorized-only::after {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	content: "\f023";
+	display: inline-block;
+	padding-left: 3px;
+}
 
 .headNav
 {
@@ -1200,6 +1209,14 @@ table {
 .full-width-table tr.highlight td,
 .full-width-table tr.highlight th {
 	background-color: #FFD700;
+}
+
+.full-width-table .hint {
+	text-align: center;
+	white-space: normal;
+	margin: auto;
+	padding: 40px;
+	max-width: 450px;
 }
 
 .scrollable-table {
