@@ -78,7 +78,7 @@ class ProfielView extends View
 			],
 			'kast' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('KAST')
+				'label' => __('Purchases')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('kast', compact('iter'));
 				// }
