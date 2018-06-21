@@ -89,7 +89,7 @@ class LayoutViewHelper
 				['url' => 'show.php?id=24', 'label' => __('Alumni')],
 				['url' => 'boeken.php', 'label' => __('Order books')],
 				['url' => 'show.php?id=27', 'label' => __('Student info')],
-				['url' => 'https://studieondersteuning.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
+				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
 				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
 			]
 		];
