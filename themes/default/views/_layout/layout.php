@@ -106,6 +106,18 @@ class LayoutViewHelper
 			'submenu' => []
 		];
 
+		if (get_identity()->member_in_committee()) { // Member in any committee at all
+			$menus['admin']['submenu'][] = [
+				'url' => 'mailinglijsten.php',
+				'label' => __('Mailing lists')
+			];
+
+			$menus['admin']['submenu'][] = [
+				'url' => 'signup.php',
+				'label' => __('Forms')
+			];
+		}
+
 		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
@@ -138,18 +150,6 @@ class LayoutViewHelper
 			];
 		}
 		
-		if (get_identity()->member_in_committee()) { // Member in any committee at all
-			$menus['admin']['submenu'][] = [
-				'url' => 'mailinglijsten.php',
-				'label' => __('Mailing lists')
-			];
-
-			$menus['admin']['submenu'][] = [
-				'url' => 'signup.php',
-				'label' => __('Forms')
-			];
-		}
-
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$menus['admin']['submenu'][] = [
 				'url' => 'settings.php',
