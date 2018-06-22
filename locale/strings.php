@@ -21,5 +21,4 @@ __('Commissioner Bandage box');
 __('General Practitioner');
 __('GP assistant');
 __('Commissioner Fire Chief');
-__('Promotion Homosexual');
 __('Type here to search…'); // this one in _layout/widgets/search.twig doesn't get pick up for some reason
