@@ -102,7 +102,7 @@ class ControllerSignUpForms extends Controller
 			try {
 				if ($success && !empty($entry['member_id']) && $form['agenda_item']) {
 					$email = parse_email_object("signup_confirmation.txt", compact('entry'));
-					$email->send($member['email']);
+					$email->send($entry['member']['email']);
 				}
 			} catch (Exception $e) {
 				// Catch it, but it is not important for the rest of the process.
