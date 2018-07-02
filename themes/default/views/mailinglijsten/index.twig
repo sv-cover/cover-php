@@ -37,7 +37,7 @@
 			<tr>
 				<td colspan="6">
 					<p class="hint">
-						{% if global.identity.member.committees|length > 1 %}
+						{% if global.identity.member and global.identity.member.committees|length > 1 %}
 							{{ __('None of you committees is managing any mailing lists.') }}
 						{% else %}
 							{{ __('Your committee is not managing any mailing lists.') }}
