@@ -260,24 +260,8 @@ class ControllerApi extends Controller
 		$model->insert($member);
 
 		// Only email new members (not historical updates) about their new password 
-		if ($member->is_member()) {
-			// Create a password
-			$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
-			
-			// Setup e-mail
-			$data['password_link'] = $token['link'];
-			$mail = implode("\n\n", [
-					'(For English version see below)',
-					parse_email('nieuwlid_nl.txt', $data),
-					'------------------',
-					parse_email('nieuwlid_en.txt', $data)]);
-
-			mail($data['email'], 'Website Cover', $mail,
-				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-
-			mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
-				implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-		}
+		if ($member->is_member())
+			$this->_send_welcome_mail($member);
 
 		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
@@ -305,6 +289,8 @@ class ControllerApi extends Controller
 
 		$member = $model->get_iter($member_id);
 
+		$member_is_member = $member->is_member();
+
 		$reverse_mapping = array_flip(self::$secretary_mapping);
 
 		foreach ($_POST as $remote_field => $value)
@@ -318,7 +304,33 @@ class ControllerApi extends Controller
 
 		$model->update($member);
 
+		// If this person just has become a member, send them the welcome email
+		if (!$member_is_member && $member->is_member())
+			$this->_send_welcome_mail($member);
+
 		return ['success' => true, 'url' => ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+	}
+
+	private function _send_welcome_mail(DataIterMember $member)
+	{
+		// Create a password
+		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
+		
+		// Setup e-mail
+		$data = $member->data;
+		$data['password_link'] = $token['link'];
+
+		$mail = implode("\n\n", [
+				'(For English version see below)',
+				parse_email('nieuwlid_nl.txt', $data),
+				'------------------',
+				parse_email('nieuwlid_en.txt', $data)]);
+
+		mail($data['email'], 'Website Cover', $mail,
+			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+
+		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
+			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 	}
 
 	public function api_secretary_delete_member($member_id)
