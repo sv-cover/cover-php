@@ -25,7 +25,7 @@
 				<thead>
 					<tr>
 						<th><input type="checkbox" onchange="Array.from(this.form.querySelectorAll('input[type=checkbox]')).forEach(cb => cb.checked = this.checked)"></th>
-						<th>ID</th>
+						<th>#</th>
 						{% for field in form.fields %}
 							{% for column in field.export|keys %}
 								<th class="column-field-type-{{field.type}}" title="{{ column|capitalize }}">{{ column|capitalize }}</th>
@@ -40,9 +40,9 @@
 							<tr>
 								<td><input type="checkbox" name="entries[]" value="{{ entry.id }}"></td>
 								{% if user_can_update entry %}
-									<td><a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id}) }}">{{ entry.id }}</a></td>
+									<td><a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id}) }}">{{ loop.index }}</a></td>
 								{% else %}
-									<td>{{ entry.id }}</td>
+									<td>{{ loop.index }}</td>
 								{% endif %}
 								{% for column, value in entry.export %}
 									<td title="{{column}}">{{ value }}</td>
