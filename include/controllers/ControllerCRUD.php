@@ -11,7 +11,7 @@ class ControllerCRUD extends Controller
 
 	protected $_var_id = 'id';
 
-	protected function _validate(DataIter $iter, array &$data, array &$errors)
+	protected function _validate(DataIter $iter, array $data, array &$errors)
 	{
 		return validate_dataiter($iter, $data, $errors);
 	}
@@ -42,9 +42,11 @@ class ControllerCRUD extends Controller
 		return $this->model->get_iter($id);
 	}
 
-	protected function _update(DataIter $iter, array $data, array &$errors)
+	protected function _update(DataIter $iter, array $input, array &$errors)
 	{
-		if (!$this->_validate($iter, $data, $errors))
+		$data = $this->_validate($iter, $input, $errors);
+
+		if ($data === false)
 			return false;
 		
 		foreach ($data as $key => $value)
