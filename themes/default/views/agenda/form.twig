@@ -91,10 +91,10 @@
 	check_checkbox("agenda_use_locatie", "agenda_locatie");
 	
 	function check_checkbox(box, div) {
-		var box = document.getElementById(box);
-		var div = document.getElementById(div);
+		box = document.getElementById(box);
+		div = document.getElementById(div);
 		
-		if (box.getAttribute("checked") == "checked")
+		if (box.getAttribute("checked") === "checked")
 			div.style.display = "block";
 		else
 			div.style.display = "none";
@@ -102,7 +102,7 @@
 	}
 
 	function set_visibility(elem, div) {
-		var div = document.getElementById(div);
+		div = document.getElementById(div);
 
 		if (elem.checked)
 			div.style.display = "block";

@@ -635,7 +635,7 @@ class ControllerForum extends Controller
 			if (isset($_POST['description']))
 				$forum['description'] = $_POST['description'];
 
-			$forum->update($forum);
+			$forum->update();
 		}
 
 		return $this->view->render_forum_form($forum);

@@ -137,7 +137,7 @@
 		{
 			$preferred_language = i18n_get_language();
 
-			$weigths = [];
+			$weights = [];
 
 			foreach (['en', 'nl'] as $language)
 				$weights[$language] = $preferred_language == $language ? 1.0 : 0.9;

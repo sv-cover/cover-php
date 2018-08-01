@@ -10,8 +10,10 @@
 	class ControllerAgenda extends ControllerCRUD
 	{
 		protected $_var_id = 'agenda_id';
-		
-		public function __construct()
+
+        private $policy;
+
+        public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
 

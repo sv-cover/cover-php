@@ -234,7 +234,7 @@
 				throw new InvalidArgumentException('How come the proposed insert already has an id?');
 			
 			$new_item->set('replacement_for', 0);
-			return $this->insert($new_item, true);
+			return $this->insert($new_item);
 		}
 		
 		public function propose_update(DataIterAgenda $replacement, DataIterAgenda $current)
@@ -246,7 +246,7 @@
 				throw new InvalidArgumentException('How come the proposed replacement already has an id?');
 			
 			$replacement->set('replacement_for', $current->get_id());
-			return $this->insert($replacement, true);
+			return $this->insert($replacement);
 		}
 
 		public function accept_proposal(DataIterAgenda $proposal)

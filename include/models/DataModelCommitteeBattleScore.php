@@ -141,6 +141,8 @@ class DataModelCommitteeBattleScore extends DataModel
 	{
 		$fallback = [];
 
+		$atoms = [];
+
 		foreach ($conditions as $key => $value) {
 			switch ($key) {
 				case 'committee_id':

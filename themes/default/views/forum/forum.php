@@ -24,7 +24,7 @@ class ForumView extends View
 		$model = get_model('DataModelForum');
 
 		$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-		
+
 		$threads = $model->get_threads($forum, $page, $max);
 
 		return $this->twig->render('forum.twig', compact('forum', 'page', 'max', 'threads'));
@@ -37,8 +37,6 @@ class ForumView extends View
 
 	public function render_thread(DataIterForumThread $thread)
 	{
-		$model = get_model('DataModelForum');
-
 		$forum = $thread['forum'];
 
 		$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
@@ -53,7 +51,7 @@ class ForumView extends View
 		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_WRITE);
 
 		if ($message->has_id() && !array_key_exists($message['unified_author'], $unified_authors))
-			$unified_authors[$iter['unified_author']] = __('(Unchanged)');
+			$unified_authors[$message['unified_author']] = __('(Unchanged)');
 
 		return $this->twig->render('thread_form.twig', compact('forum', 'thread', 'message', 'errors', 'unified_authors'));
 	}
@@ -87,7 +85,7 @@ class ForumView extends View
 		$unified_authors = $this->get_unified_authors($forum, DataModelForum::ACL_WRITE);
 
 		if ($message->has_id() && !array_key_exists($message['unified_author'], $unified_authors))
-			$unified_authors[$iter['unified_author']] = __('(Unchanged)');
+			$unified_authors[$message['unified_author']] = __('(Unchanged)');
 
 		return $this->twig->render('poll_form.twig', compact('forum', 'poll', 'message', 'options', 'errors', 'unified_authors'));
 	}

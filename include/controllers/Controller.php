@@ -50,7 +50,7 @@
 
 		protected function run_impl()
 		{
-			return;
+			return '';
 		}
 
 		protected function run_exception($e)

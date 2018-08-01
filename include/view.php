@@ -29,8 +29,8 @@ class TwigAccessor
 }
 
 class View
-{ 	
-	static public function byName($view, Controller $controller = null)
+{
+    static public function byName($view, Controller $controller = null)
 	{
 		$possible_paths = [
 			'themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php',
@@ -58,7 +58,15 @@ class View
 
 	protected $layout;
 
-	public function __construct(Controller $controller = null, $path = null)
+    protected $twig;
+
+    /**
+     * View constructor.
+     * @param Controller|null $controller
+     * @param null $path
+     * @throws Twig_Error_Loader
+     */
+    public function __construct(Controller $controller = null, $path = null)
 	{
 		// Default $path to @theme so View::render() is at least somewhat useful.
 		if (!$path)

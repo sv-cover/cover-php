@@ -353,7 +353,7 @@
 
 		public function offsetUnset($offset)
 		{
-			return $this->unset_field($key);
+			return $this->unset_field($offset);
 		}
 
 		public function jsonSerialize()

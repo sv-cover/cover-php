@@ -306,7 +306,7 @@ function send_welcome_mail(DataIterMailinglist $lijst, string $to): int
 	$message->setHeader('To', $to);
 	$message->setHeader('From', sprintf('%s <%s>', $lijst['naam'], $lijst['adres']));
 	$message->setHeader('Reply-To', 'AC/DCee Cover <webcie@rug.nl>');
-	$message->setHeader('Subject', $lijst['on_first_email_subject']);
+	$message->setHeader('Subject', (string) $lijst['on_first_email_subject']);
 	$message->addBody('text/plain', strip_tags($lijst['on_first_email_message']));
 	$message->addBody('text/html', $lijst['on_first_email_message']);
 
@@ -416,6 +416,8 @@ function main(): int
 
 	if ($message->header('X-Spam-Flag') == 'YES')
 		return RETURN_MARKED_AS_SPAM;
+
+	$return_code = 0;
 
 	foreach ($destinations as $destination)
 	{

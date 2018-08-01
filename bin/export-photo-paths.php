@@ -66,16 +66,16 @@ function find_path_using_exif($guessed_path)
 
 		foreach (new FilesystemIterator($search_path) as $photo)
 		{
-			if (!preg_match('/\.(jpg|gif)$/i', $file))
+			if (!preg_match('/\.(jpg|gif)$/i', $photo))
 				continue;
 
-			$exif_filename = filename_from_exif($file);
+			$exif_filename = filename_from_exif($photo);
 
 			$i = 0;
 			while (isset($translation_table[$search_path][$exif_filename])) {
 				$alt_filename = filename_with_letter($exif_filename, $i++);
 				if (!isset($translation_table[$search_path][$alt_filename])) {
-					echo "Indexed $file as $alt_filename\n";
+					echo "Indexed $exif_filename as $alt_filename\n";
 					$exif_filename = $alt_filename;
 					break;
 				}

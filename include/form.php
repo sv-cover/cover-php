@@ -208,30 +208,6 @@
 
 		return _input_field($name, array($name => $value), $params);
 	}
-
-	/** @group Form
-	  * Convenient function to create a button field. 
-	  * This function creates a button field. For a full description of
-	  * form element functions see #using_forms
-	  * @value the value of the button
-	  * @onclick optional; the onclick action of the button
-	  * @class optional; the button class
-	  *
-	  * @result a button
-	  */
-	function input_button($value, $onclick = null, $class = 'button') {
-		$params = _parse_rest(func_get_args(), 3);
-
-		$params['type'] = 'button';
-		$params['nopost'] = true;
-		$params['class'] = $class;
-		$params['value'] = $value;
-		
-		if ($onclick)
-			$params['onClick'] = $onclick;
-
-		return _input_field($name, null, $params);
-	}
 	
 	/** @group Form
 	  * Convenient function to create an image field.

@@ -84,6 +84,8 @@
 
 			$errors = array();
 
+			$data = [];
+
 			foreach ($fields as $field => $properties)
 			{
 				$data[$field] = isset($_POST[$field]) ? $_POST[$field] : '';

@@ -1,6 +1,6 @@
 <?php
 
-function parse_options($argv, array &$options)
+function parse_options($argv, array &$options, array $help)
 {
 	$argc = count($argv);
 	$argi = 1;

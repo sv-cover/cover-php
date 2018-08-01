@@ -647,7 +647,7 @@
 	function human_file_size($bytes, $decimals = 2)
 	{
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
-		$factor = floor((strlen($bytes) - 1) / 3);
+		$factor = (int) floor((strlen($bytes) - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $size[$factor];
 	}
 
@@ -824,7 +824,7 @@
 	 * Returns the key or index at which $needle is found in $haystack. If needle
 	 * is not found, it returns NULL.
 	 * 
-	 * @var $needle The item searched for
+	 * @var mixed $needle The item searched for
 	 * @var array $haystack The array to search in (list or hashtable)
 	 * @var callable $compare_function A compare function that gets $needle and an item
 	 *      from $haystack and should return true if they are 'equal' or false otherwise.
@@ -903,7 +903,7 @@
 		};
 	}
 
-	function ends_with($haystack, $neelde)
+	function ends_with($haystack, $needle)
 	{
 		return substr_compare($haystack, $needle, -strlen($needle));
 	}

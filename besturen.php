@@ -20,7 +20,7 @@ class ControllerBesturen extends ControllerCRUD
 			return __('Boards');
 	}
 
-	protected function _validate(DataIter $iter, array &$data, array &$errors)
+	protected function _validate(DataIter $iter, array $data, array &$errors)
 	{
 		if (!$iter->has_id() && !isset($data['naam']))
 			$errors[] = 'naam';
@@ -32,7 +32,7 @@ class ControllerBesturen extends ControllerCRUD
 		elseif (isset($data['login']) && !preg_match('/^[a-z0-9]+$/i', $data['login']))
 			$errors[] = 'login';
 
-		return count($errors) === 0;
+		return count($errors) === 0 ? $data : false;
 	}
 
 	protected function _create(DataIter $iter, array $data, array &$errors)

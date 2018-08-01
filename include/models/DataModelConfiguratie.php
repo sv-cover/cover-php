@@ -61,7 +61,7 @@
 		{
 			parent::_insert($table, $iter, false);
 			
-			return $get_id ? $key : -1;
+			return $get_id ? $iter['key'] : -1;
 		}
 		
 		/**

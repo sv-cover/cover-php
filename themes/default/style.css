@@ -164,7 +164,7 @@ ul.expander{
 }
 .aff img
 {
-	border: 1px transparent #F5F5F5;
+	border: 1px solid #F5F5F5;
 	border-radius: 3px;
 	box-shadow: 0px 2px 3px #333;
 	width: 120px;
@@ -302,7 +302,7 @@ border-radius: 0 0 5px 5px;
 }
 .bannerRotator .frontpage_banner
 {
-	border: 1px transparent #7D7D7D;
+	border: 1px solid #7D7D7D;
 	border-radius: 3px;
 	box-shadow: 0px 2px 5px #333;
 	max-width: 100%;
@@ -2305,7 +2305,7 @@ body.modal-open {
 .messageBox .promotional-banner {
 	text-align: center;
 	min-width: auto;
-	max-width: auto;
+	max-width: initial;
 	width: calc(100% - 20px);
 	margin: 10px;
 	box-sizing: border-box;

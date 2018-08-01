@@ -187,7 +187,7 @@
 			return $success;
 		}
 
-		public function voted(DataIterForumThread $iter) {
+		public function voted(DataIterForumThread $iter, DataIterMember $member) {
 			if (!get_identity()->member_is_active())
 				return true;
 			
@@ -214,7 +214,7 @@
 					FROM 
 						pollvoters
 					WHERE 
-						lid = ' . intval($member_data['id']) . ' AND 
+						lid = ' . intval($member['id']) . ' AND 
 						poll = ' . $iter['id']);
 			
 			return $row !== null;

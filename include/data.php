@@ -22,7 +22,7 @@
 	  * @result a #DataModel object (either created or the one that was 
 	  * created before), or false if the model could not be created
 	  */
-	function get_model($name)
+	function get_model(string $name)
 	{
 		static $models = array();
 
@@ -43,6 +43,9 @@
 		if ($db == null)
 		{
 			require 'include/data/DBIds.php';
+
+			if (!isset($dbids) || !is_array($dbids))
+				throw new RuntimeException('Variable $dbids not defined as array in DBIds.php');
 
 			$environment = get_static_config_value('environment', 'development');
 

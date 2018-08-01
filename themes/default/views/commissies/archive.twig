@@ -15,10 +15,12 @@
 <div class="messageBox">
 	<h2>{{ __('Active') }}</h2>
 	<table class="full-width-table">
-		<col class="name">
-		<col  class="numeric">
-		<col style="width: 100px" class="enum">
-		<col style="width: 50px" class="actions">
+		<colgroup>
+			<col class="name">
+			<col class="numeric">
+			<col style="width: 100px" class="enum">
+			<col style="width: 50px" class="actions">
+		</colgroup>
 		<thead>
 			<tr>
 				<th>{{ __('Name') }}</th>
@@ -41,9 +43,11 @@
 
 	<h2>{{ __('Inactive') }}</h2>
 	<table class="full-width-table">
-		<col class="name">
-		<col style="width: 100px" class="enum">
-		<col style="width: 50px" class="actions">
+		<colgroup>
+			<col class="name">
+			<col style="width: 100px" class="enum">
+			<col style="width: 50px" class="actions">
+		</colgroup>
 		<thead>
 			<tr>
 				<th>{{ __('Name') }}</th>

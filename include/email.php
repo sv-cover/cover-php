@@ -20,12 +20,12 @@ class ParseException extends \RuntimeException
 	static private function formatMessage(int $line, string $reason, $email = null): string
 	{
 		$body = "Parse error on line $line: $reason";
-		
+
 		if ($email !== null) {
 			$offset = max(0, $line - 5);
 			$lines = explode("\n", $email);
 			$lines = array_slice($lines, $offset, 11);
-				
+
 			for ($n = 0; $n < count($lines); ++$n)
 				$lines[$n] = sprintf('%d: %s', $offset + $n + 1, $lines[$n]);
 
@@ -141,6 +141,10 @@ class MessagePart
 		return [];
 	}
 
+	/**
+	 * @param string $search_key
+	 * @return string|null
+	 */
 	public function header(string $search_key)
 	{
 		$headers = $this->headers($search_key);
@@ -211,11 +215,11 @@ class MessagePart
 		if ($copy->isMultipart())
 			foreach ($copy->body as &$part)
 				$part = $part->derive($transformer, $part->header('Content-Type'));
-			
+
 		else
 			if ($this->isText() && !$this->isAttachment())
 				$copy->setBody($transformer($this->body(), $this->header('Content-Type')));
-		
+
 		return $copy;
 	}
 
@@ -366,7 +370,7 @@ class MessagePart
 			$part = new MessagePart();
 			$this->addPart($part);
 		}
-		
+
 		$part->setBody($body, $content_type, $content_transfer_encoding);
 	}
 
@@ -408,7 +412,7 @@ class MessagePart
 			$this->body = [new MessagePart(['Content-Type' => [$this->header('Content-Type')]], $this->body)];
 		else
 			$this->body = [];
-		
+
 		if (!$this->header('Content-Type') || $this->boundary() === null)
 			$this->setHeader('Content-Type', 'multipart/alternative; boundary=' . $this->generateBoundary());
 	}
@@ -450,7 +454,7 @@ class MessagePart
 		$lines = preg_split('/\r?\n/', $text);
 
 		if ($prefix === null)
-			$prefix = function() use ($prefix) {
+			$prefix = function($line_number) use ($prefix) {
 				return $prefix;
 			};
 
@@ -573,9 +577,9 @@ class MessagePart
 	}
 
 	/**
-	 * Parse a stream as the email message header. Will stop as 
+	 * Parse a stream as the email message header. Will stop as
 	 * soon as the double newline is read.
-	 * 
+	 *
 	 * @param $stream PeakableStream to read from.
 	 * @param $message MessagePart to append the read headers to.
 	 * @return true if the headers are read as expected, false if the
@@ -598,10 +602,10 @@ class MessagePart
 			{
 				if ($header !== null)
 					$message->addHeader($header[0], $header[1]);
-				
+
 				break;
 			}
-			
+
 			elseif (preg_match('/^([^:\s]+[^:]*): ?(.*)$/', $line, $match))
 			{
 				if ($header !== null)
@@ -659,7 +663,7 @@ class MessagePart
 			// End of this multipart section
 			if ($boundary !== null && (trim($line) == '--' . $boundary . '--' || trim($line) === '--' . $boundary))
 				break;
-			
+
 			$message->body .= $stream->readline();
 		}
 	}
@@ -759,7 +763,7 @@ function reply(MessagePart $message, string $reply_text): MessagePart
 /**
  * Transforms the message's text body (plain and html) using a transformer
  * function. A shallow copy of the message is returned, with only the headers
- * and the body parts that have been touched by the transformer copied. The 
+ * and the body parts that have been touched by the transformer copied. The
  * transformer is also applied to the subject header of the mail.
  *
  * If any changes are actually made, this function also drops the DKIM-Signature
@@ -792,7 +796,7 @@ function send(MessagePart $message): bool
 
 	$subject = $message->header('Subject');
 	$message->removeHeader('Subject');
-	
+
 	return mail($to, $subject,
 		$message->bodyAsString(),
 		$message->headerAsString());

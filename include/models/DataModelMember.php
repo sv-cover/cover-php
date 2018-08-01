@@ -290,9 +290,9 @@
 		{
 			// Todo: If we are sure we have PSQL 9.5 or higher, we could do an INSERT .. ON CONFLICT UPDATE query.
 
-			try {
-				$hash = password_hash($new_password, PASSWORD_DEFAULT);
+			$hash = password_hash($new_password, PASSWORD_DEFAULT);
 
+			try {
 				$this->db->insert('passwords', ['lid_id' => $member->get_id(), 'password' => $hash]);
 
 				return true;

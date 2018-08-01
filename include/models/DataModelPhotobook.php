@@ -170,6 +170,15 @@
 			return file_exists($this->get_full_path());
 		}
 
+		/**
+		 * @param null $width
+		 * @param null $height
+		 * @param bool $skip_cache
+		 * @param null $cache_status
+		 * @return bool|resource
+		 * @throws ImagickException
+		 * @throws NotFoundException
+		 */
 		public function get_resource($width = null, $height = null, $skip_cache = false, &$cache_status = null)
 		{
 			if (!$this->file_exists())
@@ -222,16 +231,16 @@
 					// Rotate the image according to the EXIF data
 					switch($imagick->getImageOrientation())
 					{
-						case imagick::ORIENTATION_BOTTOMRIGHT:
-							$imagick->rotateimage('#000', 180); // rotate 180 degrees 
+						case Imagick::ORIENTATION_BOTTOMRIGHT:
+							$imagick->rotateImage('#000', 180); // rotate 180 degrees
 							break; 
 
-						case imagick::ORIENTATION_RIGHTTOP:
-							$imagick->rotateimage('#000', 90); // rotate 90 degrees CW 
+						case Imagick::ORIENTATION_RIGHTTOP:
+							$imagick->rotateImage('#000', 90); // rotate 90 degrees CW
 							break; 
 
-						case imagick::ORIENTATION_LEFTBOTTOM:
-							$imagick->rotateimage('#000', -90); // rotate 90 degrees CCW 
+						case Imagick::ORIENTATION_LEFTBOTTOM:
+							$imagick->rotateImage('#000', -90); // rotate 90 degrees CCW
 							break;
 					}
 
@@ -425,9 +434,9 @@
 
 	class DataIterRootPhotobook extends DataIterPhotobook
 	{
-		public function get_books($metadata = null)
+		public function get_books()
 		{
-			$books = parent::get_books($metadata);
+			$books = parent::get_books();
 
 			if (get_auth()->logged_in()) {
 				$books[] = get_model('DataModelPhotobookLike')->get_book(get_identity()->member());

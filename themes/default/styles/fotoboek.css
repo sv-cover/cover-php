@@ -382,10 +382,6 @@ table.navigation td:nth-child(3) {
 	background-image: url(../images/visibility-members.png);
 }
 
-.visibility-active-members {
-	background-image: url(../images/visibility-active-members.png);
-}
-
 .visibility-photocee {
 	background-image: url(../images/visibility-photocee.png);
 }

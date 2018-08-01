@@ -204,7 +204,7 @@ class DatabasePDO
 	  * This is not done automatically because not every table has a
 	  * auto increment (serial) column, and calling it on a table
 	  * which has none causes an error to occur.
-	  * @return the id of the last inserted row
+	  * @return mixed the id of the last inserted row
 	  */
 	public function get_last_insert_id()
 	{
@@ -386,7 +386,7 @@ class DatabasePDO
 
 	public function rollback()
 	{
-		$this->resource->rollback();
+		$this->resource->rollBack();
 		$this->transaction_counter = 0;
 	}
 }
