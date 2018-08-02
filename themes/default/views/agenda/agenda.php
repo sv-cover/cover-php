@@ -30,7 +30,7 @@
 
 		public function render_read(DataIter $iter, array $extra = [])
 		{
-			$mutations = array_filter($iter->get_proposals(), [$this->controller->policy, 'user_can_read']);
+			$mutations = array_filter($iter->get_proposals(), [get_policy($iter), 'user_can_read']);
 
 			$mutation = count($mutations) > 0 ? current($mutations) : null;
 

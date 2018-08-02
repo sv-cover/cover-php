@@ -11,13 +11,9 @@
 	{
 		protected $_var_id = 'agenda_id';
 
-        private $policy;
-
         public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
-
-			$this->policy = get_policy($this->model);
 
 			$this->view = View::byName('agenda', $this);
 		}
@@ -240,7 +236,7 @@
 				if ($this->_moderate())
 					return $this->view->redirect('agenda.php');
 
-			$agenda_items = array_filter($this->model->get_proposed(), [$this->policy, 'user_can_moderate']);
+			$agenda_items = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
 
 			return $this->view->render_moderate($agenda_items, $item ? $item['id'] : null);
 		}
@@ -258,7 +254,7 @@
 
 				$iter = $this->model->get_iter($id);
 				
-				if (!$this->policy->user_can_moderate($iter))
+				if (!get_policy($this->model)->user_can_moderate($iter))
 					throw new UnauthorizedException();
 
 				if ($value == 'accept') {
@@ -350,7 +346,7 @@
 
 			foreach ($punten as $punt)
 			{
-				if (!$this->policy->user_can_read($punt))
+				if (!get_policy($this->model)->user_can_read($punt))
 					continue;
 
 				$event = new WebCal_Event;
