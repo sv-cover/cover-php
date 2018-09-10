@@ -2,6 +2,7 @@
 
 require_once 'include/init.php';
 require_once 'include/controllers/Controller.php';
+require_once 'include/member.php';
 require_once 'include/validate.php';
 
 class ControllerSignUpForms extends Controller
@@ -152,7 +153,10 @@ class ControllerSignUpForms extends Controller
 		if (!get_identity()->get('committees'))
 			throw new UnauthorizedException('Only committee members may create and manage forms.');
 
-		$forms = $this->form_model->find(['committee_id__in' => get_identity()->get('committees')]);
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
+			$forms = $this->form_model->get();
+		else
+			$forms = $this->form_model->find(['committee_id__in' => get_identity()->get('committees')]);
 
 		return $this->view->render('list_forms.twig', compact('forms'));
 	}

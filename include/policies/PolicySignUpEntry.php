@@ -20,7 +20,7 @@ class PolicySignUpEntry implements Policy
 	public function user_can_read(DataIter $entry)
 	{
 		// Board can read & update them
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 			return true;
 
 		// and of course the committee of the form can
@@ -37,7 +37,7 @@ class PolicySignUpEntry implements Policy
 	public function user_can_update(DataIter $entry)
 	{
 		// Board can read & update them
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 			return true;
 
 		// and of course the committee of the form can
@@ -57,7 +57,7 @@ class PolicySignUpEntry implements Policy
 		if (get_identity()->member_in_committee($entry['form']['committee_id']))
 			return true;
 
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 			return true;
 
 		return false;
