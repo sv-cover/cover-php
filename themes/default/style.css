@@ -642,6 +642,11 @@ border-radius: 0 0 5px 5px;
 	vertical-align: bottom;
 }
 
+.world > .footer {
+	text-align: center;
+	line-height: 30px;
+}
+
 .login > table {
 	margin: 0;
 	border-spacing: 0;
