@@ -256,13 +256,14 @@
 		public function get_functies()
 		{
 			static $functies = array(
-				'Voorzitter' => 5,
-				'Secretaris' => 4,
-				'Penningmeester' => 3,
-				'Commissaris Intern' => 2,
-				'Commissaris Extern' => 1,
-				'Vice-voorzitter' => 0,
-				'Algemeen Lid' => -1);
+				'Chairman' => 6,
+				'Secretary' => 5,
+				'Treasurer' => 4,
+				'Commissioner of Internal Affairs' => 3,
+				'Commissioner of External Affairs' => 2,
+				'Commissioner of Educational Affairs' => 1,
+				'Vice-chairman' => 0,
+				'General Member' => -1);
 			
 			return $functies;
 		}
