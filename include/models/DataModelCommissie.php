@@ -89,6 +89,7 @@
 		{
 			return self::find_image(array(
 				'images/committees/' . $this->get('login') . 'tn.gif',
+				'images/committees/' . $this->get('login') . 'tn.png',
 				'images/committees/' . $this->get('login') . 'tn.jpg',
 				'images/committees/logos/' . $this->get('login') . '.png'
 			));
@@ -98,6 +99,7 @@
 		{
 			$path = self::find_image(array(
 				'images/committees/' . $this->get('login') . '.gif',
+				'images/committees/' . $this->get('login') . '.png',
 				'images/committees/' . $this->get('login') . '.jpg'
 			));
 
