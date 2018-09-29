@@ -1,4 +1,4 @@
-{% set author = model.get_author_info(iter) %}
+{% set author = model.get_author_info(iter, 'author') %}
 {% set message = iter.get_first_message() %}
 <div class="weblog-post">
 	<div class="weblog-post-details profile-widget">

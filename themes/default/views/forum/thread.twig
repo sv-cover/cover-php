@@ -45,29 +45,25 @@
 	</thead>
 	<tbody>
 	{% for message in messages if user_can_read message %}
-		{% set author = model.get_author_info(message) %}
+		{% set author = model.get_author_info(message, 'author') %}
 		{% set author_link = view.get_author_link(message) %}
 		<tr id="p{{ message.id }}" class="{{ loop.index is odd ? 'r0' : 'r1' }}">
 			<td class="author">
-				{% if author %}
-					{% if author_link %}
-						<a href="{{ author_link|e('html_attr') }}" class="bold">{{ author.name }}</a>
-					{% else %}
-						<span class="bold">{{ author.name }}</span>
-					{% endif %}
-					<br>
-					{% if author.avatar %}
-						<img class="avatar" src="{{ author.avatar|e('html_attr') }}" alt="Avatar">
-					{% endif %}
-					<br>
-					{% set author_stats = model.get_author_stats(message) %}
-					<span class="smaller">
-						{{ __('Posts') }}: {{ author_stats.posts }}<br>
-						({{ '%02.02f'|format(author_stats.percentage_of_total) }})
-					</span>
+				{% if author_link %}
+					<a href="{{ author_link|e('html_attr') }}" class="bold">{{ author.name }}</a>
 				{% else %}
-					__('Unknown')
+					<span class="bold">{{ author.name }}</span>
 				{% endif %}
+				<br>
+				{% if author.avatar %}
+					<img class="avatar" src="{{ author.avatar|e('html_attr') }}" alt="Avatar">
+				{% endif %}
+				<br>
+				{% set author_stats = model.get_author_stats(message) %}
+				<span class="smaller">
+					{{ __('Posts') }}: {{ author_stats.posts }}<br>
+					({{ '%02.02f'|format(author_stats.percentage_of_total) }})
+				</span>
 			</td>
 			<td class="message">
 				<div class="right">{{ message.date|date('d-m-Y H:i') }}</div>

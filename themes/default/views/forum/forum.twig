@@ -45,8 +45,8 @@
 	</thead>
 	<tbody>
 		{% for thread in threads %}
-			{% set author = model.get_author_info(thread) %}
-			{% set author_link = view.get_author_link(thread) %}
+			{% set author = model.get_author_info(thread, 'author') %}
+			{% set last_author = model.get_author_info(thread, 'last_author') %}
 			<tr class="r{{ loop.index is odd ? 1 : 0 }}">
 				<td class="icon">
 					<img src="{{ link_static('images/' ~ (view.has_unread_messages(thread) ? 'thread_new.png' : 'thread.png')) }}">
@@ -62,21 +62,15 @@
 					{% endif %}
 				</td>
 				<td class="text_center">
-					{% if author.name %}
-						<a href="{{ author_link|e('html_attr') }}">{{ author.name }}</a>
-					{% else %}
-						{{ __('Unknown') }}
-					{% endif %}
+					<a href="{{ view.get_author_link(thread)|e('html_attr') }}">{{ author.name }}</a>
 				</td>
 				<td class="text_center">
 					{{ thread.num_messages }}
 				</td>
 				<td class="last">
 					{% if thread.date %}
-						{{ thread.date|date('d-m-Y H:i') }}
-						{% if author.name is defined or author.last_name is defined %}
-							<br><a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">{{ author.last_name is defined ? author.last_name : author.name }}</a>
-						{% endif %}
+						{{ thread.date|date('d-m-Y H:i') }}<br>
+						<a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">{{ last_author.name }}</a>
 					{% endif %}
 				</td>
 			</tr>

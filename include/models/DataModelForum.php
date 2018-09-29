@@ -202,22 +202,26 @@
 		{
 			$rows = $this->db->query('
 				SELECT
-					forum_threads.*,
-
-					(SELECT COUNT(id) FROM forum_messages WHERE thread_id = forum_threads.id) as num_messages,
-
-					forum_messages.date AS last_date,
-					forum_messages.id AS last_id,
-					
-					forum_messages.author_id AS last_author_id,
-					forum_messages.author_type AS last_author_type,
-					date_part(\'day\', CURRENT_TIMESTAMP - forum_threads.date) AS since
+					t.*,
+					(SELECT COUNT(id) FROM forum_messages WHERE thread_id = t.id) as num_messages,
+					l_m.date AS last_date,
+					l_m.id AS last_id,
+					l_m.author_id AS last_author_id,
+					l_m.author_type AS last_author_type
 				FROM
-					forum_threads
-				LEFT JOIN forum_messages ON (forum_messages.thread_id = forum_threads.id AND
-					forum_messages.id IN (SELECT ' . ($last_reply ? 'MAX' : 'MIN') . '(forum_messages.id) FROM forum_threads, forum_messages WHERE forum_threads.forum_id = ' . intval($this['id']) . ' AND forum_messages.thread_id = forum_threads.id GROUP BY forum_messages.thread_id))
+					forum_threads t,
+					LATERAL (
+						SELECT
+							m.*
+						FROM
+							forum_messages m
+						WHERE
+							m.thread_id = t.id
+						ORDER BY
+							m.date DESC
+						LIMIT 1) l_m
 				WHERE
-					forum_id = ' . intval($this['id']) . '
+					t.forum_id = ' . intval($this['id']) . '
 				ORDER BY
 					last_date DESC' .
 				($offset != -1 ? (' OFFSET ' . intval($offset)) : '') .
@@ -1198,6 +1202,7 @@
 		}
 		
 		/**
+
 		  * Get author info (name, avatar, email) for a certain message
 		  * @message a #DataIter representing a message
 		  * @field the field (author, last_author) to get the info for
@@ -1205,7 +1210,7 @@
 		  * @result an associative array containing the author
 		  * information
 		  */
-		protected function _get_author_info_real($message, $field)
+		public function get_author_info($message, $field)
 		{
 			static $authors = array();
 			
@@ -1260,25 +1265,6 @@
 			return $authors[$type][$id][$field] = $author;
 		}
 
-		/**
-		  * Get author info for a message
-		  * @message a #DataIter representing a message
-		  *
-		  * @result an associative array containing author information
-		  */
-		public function get_author_info(DataIter $message)
-		{
-			$info = $this->_get_author_info_real($message, 'author');
-			
-			if (isset($message['last_author'])) {
-				$info_last = $this->_get_author_info_real($message, 'last_author');
-				$info['last_name'] = $info_last['name'];
-				$info['last_avatar'] = $info_last['avatar'];
-			}
-			
-			return $info;
-		}
-		
 		/**
 		  * Get the name of the person/group/commissie of a certain
 		  * permission

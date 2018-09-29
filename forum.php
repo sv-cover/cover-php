@@ -713,7 +713,7 @@ class ControllerForum extends Controller
 		if (isset($_GET['quote_message'])) {
 			try {
 				$quoted_message = $this->model->get_message($_GET['quote_message']);
-				$quoted_author = $this->model->get_author_info($quoted_message);
+				$quoted_author = $this->model->get_author_info($quoted_message, 'author');
 				$message['message'] = sprintf("[quote=%s]%s[/quote]\n\n", $quoted_author['name'], $quoted_message['message']);
 			} catch (DataIterNotFoundException $e) {
 				// Yeah, it's not really an issue if we can't find the message we wanted to quote.
