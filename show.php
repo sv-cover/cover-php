@@ -25,6 +25,17 @@ class ControllerShow extends ControllerCRUD
 			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
+	public function new_iter()
+	{
+		$iter = parent::new_iter();
+
+		// Default to owner = board
+		if ($this->can_set_committee_id($iter))
+			$iter['committee_id'] = COMMISSIE_BESTUUR;
+
+		return $iter;
+	}
+
 	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
 		$content_fields = ['content', 'content_en'];

@@ -2,20 +2,29 @@
 
 class ShowView extends CRUDView
 {
-	public function available_committees()
+	public function available_committees(DataIterEditable $iter)
 	{
-		$commissies = array();
+		$options = array(
+			'member' => [],
+			'all' => []
+		);
 
 		$model = get_model('DataModelCommissie');
 
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
-			foreach ($model->get() as $commissie)
-				$commissies[$commissie->get_id()] = $commissie->get('naam');
-		else
-			foreach (get_identity()->member()->get('committees') as $commissie)
-				$commissies[$commissie] = $model->get_naam($commissie);
+		// At least populate my list of committees
+		foreach (get_identity()->member()->get('committees') as $commissie)
+			$options['member'][$commissie] = $model->get_naam($commissie);
 
-		return $commissies;
+		// And if I am very important, also populate the all list. That there are doubles is not a problem.
+		if ($this->controller->can_set_committee_id($iter))
+			foreach ($model->get(null, true) as $commissie)
+				$options['all'][$commissie->get_id()] = $commissie->get('naam');
+		
+		// Empty groups will be pruned anyway
+		return [
+			__('Your committees') => $options['member'],
+			__('All committees') => $options['all']
+		];
 	}
 
 	public function preferred_tab(DataIterEditable $editable)

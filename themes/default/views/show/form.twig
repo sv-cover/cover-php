@@ -23,7 +23,7 @@
 		{% if controller.can_set_committee_id(iter) %}
 		<div>
 			{{ html_label(__('Owner'), 'committee_id', errors=errors, required=true) }}
-			{{ html_select_field('committee_id', view.available_committees, iter, required=true) }}
+			{{ html_select_field('committee_id', view.available_committees(iter), iter, required=true) }}
 		</div>
 		{% endif %}
 

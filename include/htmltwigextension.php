@@ -36,6 +36,21 @@ class HTMLTwigExtension extends Twig_Extension
 		];
 	}
 
+	static protected function input_attributes(array $attributes)
+	{
+		$result = '';
+
+		foreach ($attributes as $attribute => $value) {
+			if (is_int($attribute))
+				trigger_error('input_field tries to make an attribute without an attribute name', E_USER_WARNING);
+
+			if ($value !== null && $value !== false)
+				$result .= sprintf(' %s="%s"', str_replace('_', '-', $attribute), markup_format_attribute($value));
+		}
+		
+		return $result;
+	}
+
 	static protected function input_field($name, $data, $params)
 	{
 		if (isset($params['field'])) {
@@ -71,17 +86,7 @@ class HTMLTwigExtension extends Twig_Extension
 
 		$attributes = array_merge($attributes, $params);
 		
-		$result = '<input';
-
-		foreach ($attributes as $attribute => $value) {
-			if (is_int($attribute))
-				trigger_error('input_field tries to make an attribute without an attribute name', E_USER_WARNING);
-
-			if ($value !== null && $value !== false)
-				$result .= sprintf(' %s="%s"', str_replace('_', '-', $attribute), markup_format_attribute($value));
-		}
-		
-		return $result . '>';
+		return sprintf('<input%s>', self::input_attributes($attributes));
 	}
 
 	static public function input_text($name, $data, array $params = array())
@@ -247,6 +252,8 @@ class HTMLTwigExtension extends Twig_Extension
 		} else {
 			$field = $name;
 		}
+
+		$params['name'] = $name;
 		
 		// Which value is selected
 		if (!isset($params['nopost']) && get_post($name) !== null)
@@ -272,20 +279,44 @@ class HTMLTwigExtension extends Twig_Extension
 		if (!isset($params['id']))
 			$params['id'] = 'field-' . $name;
 
-		$options = '';
+		$html = [];
 
 		if (!isset($params['required']) || !$params['required'])
-			$options .= '<option value=""></option>';
+			$html[] = '<option value=""></option>';
 
-		foreach ($values as $val => $title)
-			$options .= '<option value="' . markup_format_attribute($val) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . markup_format_text($title) . "</option>\n";
-		
-		$result = '<select name="' . $name . '"';
+		foreach ($values as $group => $options)
+		{
+			if (!is_array($options)) {
+				$options = [$group => $options];
+				$group = null;
+			}
 
-		foreach ($params as $attribute => $value)
-			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($value) . '"';
+			if (count($options) === 0)
+				continue;
+
+			$html_options = [];
+
+			foreach ($options as $val => $title)
+			{
+				if ($default === null)
+					$is_selected = false;
+				elseif (is_array($default))
+					$is_selected = in_array($val, $default);
+				else
+					$is_selected = $val == $default;
+
+				$html_options[] = sprintf('<option value="%s"%s>%s</option>',
+					markup_format_attribute($val),
+					$is_selected ? ' selected' : '',
+					markup_format_text($title));
+			}
+
+			$html[] = $group
+				? sprintf('<optgroup label="%s">%s</optgroup>', markup_format_attribute($group), implode("\n", $html_options))
+				: implode("\n", $html_options);
+		}
 		
-		return $result . ">\n" . $options . "</select>";
+		return sprintf('<select%s>%s</select>', self::input_attributes($params), implode("\n", $html));
 	}
 
 	static public function textarea_field($name, $data, array $params = array())
