@@ -135,7 +135,7 @@
 		
 		$result = '<table class="' . $class . '">';
 
-		if (preg_match_all('/^\s*\|\|(.*?)\|\|\s*$/mu', $contents, $matches)) {
+		if (preg_match_all('/^\s*\|\|(.*?)\|\|\s*$/smu', $contents, $matches)) {
 			$maxcol = 0;
 
 			foreach ($matches[1] as $match)
@@ -143,6 +143,8 @@
 
 			foreach ($matches[1] as $match)
 				$result .= _markup_parse_table_row($match, $maxcol);		
+		} else {
+			$result .= sprintf('<!-- cannot parse table %s -->', $contents);
 		}
 
 		return $result . '</table>';
