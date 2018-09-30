@@ -42,6 +42,13 @@
 			return $this->render('moderate.twig', compact('iters', 'highlighted_id'));
 		}
 
+		public function render_401_unauthorized(UnauthorizedException $e)
+		{
+			header('Status: 401 Unauthorized');
+			header('WWW-Authenticate: FormBased');
+			return $this->render('unauthorized.twig', ['exception' => $e]);
+		}
+
 		public function cover_photo(DataIterAgenda $item)
 		{
 			if (!$this->facebook)
