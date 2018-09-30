@@ -12,7 +12,8 @@
 				'titel',
 				'content',
 				'content_en',
-				'content_de', // not used anymore
+				'content_de', // not used anymore,
+				'last_modified'
 			];
 		}
 
@@ -37,6 +38,7 @@
 				],
 				'content' => [],
 				'content_en' => []
+				// Explicitly no rule for last_modified
 			];
 		}
 
@@ -227,5 +229,19 @@
 			}
 
 			return $iters;
+		}
+
+		public function insert(DataIter $iter)
+		{
+			$iter['last_modified'] = new DateTime();
+
+			return parent::insert($iter);
+		}
+
+		public function update(DataIter $iter)
+		{
+			$iter['last_modified'] = new DateTime();
+
+			return parent::update($iter);
 		}
 	}

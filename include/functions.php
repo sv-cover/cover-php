@@ -667,7 +667,7 @@
 			
 			if ($day_diff == 0)
 			{
-				if ($diff < 60) return __('just');
+				if ($diff < 60) return __('less than a minute ago');
 				if ($diff < 120) return __('1 minute ago');
 				if ($diff < 3600) return sprintf(__('%d minutes ago'), floor($diff / 60));
 				if ($diff < 7200) return __('1 hour ago');

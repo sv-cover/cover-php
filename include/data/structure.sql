@@ -99,7 +99,8 @@ CREATE TABLE pages (
     titel character varying(100) NOT NULL,
     content text,
     content_en text,
-    content_de text
+    content_de text,
+    last_modified timestamp without time zone DEFAULT NULL
 );
 
 --

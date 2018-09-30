@@ -919,6 +919,10 @@ ul.actions li {
 	margin-bottom: -15px;
 }
 
+.messageBox .last-modified {
+	color: rgba(0, 0, 0, 0.5);
+}
+
 .messageBox + .archive-link {
 	margin-top: -15px; /* To compensate for the 30px margin-bottom */
 	text-align: center;

@@ -13,5 +13,10 @@
 </div>
 <div class="messageBox markup-region" id="page_{{ iter.id }}">
 	{{ iter.locale_content|parse_markup }}
+	{% if iter.last_modified %}
+		<footer class="last-modified">
+			<p>{{ __('Last updated: %s')|format(iter.last_modified|date_relative) }}</p>
+		</footer>
+	{% endif %}
 </div>
 {% endblock %}
