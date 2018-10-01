@@ -212,6 +212,15 @@ class DataModelMailinglistSubscription extends DataModel
 		elseif ($partition_by == 'leeftijd')
 			$partition_field = '(EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM l.geboortedatum))';
 
+		elseif ($partition_by == 'type')
+			$partition_field = "
+				CASE
+					WHEN (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW())) THEN 'Member'
+					WHEN (l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW())) THEN 'Contributor'
+					ELSE 'Other'
+				END
+			";
+
 		elseif ($partition_by == 'committee_count')
 			$partition_field = '(
 				SELECT
