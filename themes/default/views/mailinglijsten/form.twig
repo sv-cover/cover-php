@@ -62,7 +62,7 @@
 		<div class="inline-block">
 			{{ html_label(__('Starting year'), 'has_starting_year', errors=errors) }}
 			{{ html_input_text('has_starting_year', iter, errors=errors) }}
-			<small>{{ __('The starting year required for people on this list, leave blank for none.') }}</small>
+			<small>{{ __('Opt-in: only people from this year can opt-in. Opt-out: everybody from this year is subscribed by default. Leave blank for none.') }}</small>
 		</div>
 		{% if iter.has_id %}
 		<div>
