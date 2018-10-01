@@ -510,6 +510,9 @@ CREATE TABLE mailinglijsten (
     toegang integer,
     commissie integer NOT NULL DEFAULT 0 REFERENCES commissies (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
     tag varchar(100) NOT NULL DEFAULT 'Cover',
+    has_members boolean NOT NULL DEFAULT TRUE, -- condition for opt-out lists
+    has_contributors boolean NOT NULL DEFAULT FALSE, -- condition for opt-out lists
+    has_starting_year integer DEFAULT NULL, -- condition for opt-out lists
     on_subscribtion_subject TEXT DEFAULT NULL,
     on_subscribtion_message TEXT DEFAULT NULL,
     on_first_email_subject TEXT DEFAULT NULL,
