@@ -25,7 +25,9 @@ class PolicyMember implements Policy
 
 	public function user_can_update(DataIter $iter)
 	{
-		return $this->user_can_read($iter);
+		if ($iter['id'] == get_identity()->get('id'))
+			return true;
+		return false;
 	}
 
 	public function user_can_delete(DataIter $iter)
