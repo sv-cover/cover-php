@@ -338,7 +338,7 @@ class ControllerProfiel extends Controller
 
 	public function run_profile(DataIterMember $iter)
 	{
-		if (!$this->policy->user_can_read($iter))
+		if (!$this->policy->user_can_update($iter))
 			throw new UnauthorizedException();
 
 		if ($this->_form_is_submitted('profile', $iter))
@@ -365,7 +365,7 @@ class ControllerProfiel extends Controller
 	protected function run_photo(DataIterMember $iter)
 	{
 		// Only members themselves and the AC/DCee can change photos
-		if ($iter['id'] != get_identity()->get('id')
+		if (!$this->policy->user_can_update($iter)
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new UnauthorizedException();
 
@@ -393,7 +393,7 @@ class ControllerProfiel extends Controller
 
 	public function run_export_vcard(DataIterMember $member)
 	{
-		if (!get_identity()->member_is_active())
+		if (!get_identity()->user_can_read())
 			throw new UnauthorizedException();
 
 		return $this->view->render_vcard($member);
@@ -401,7 +401,7 @@ class ControllerProfiel extends Controller
 
 	public function run_export_incassocontract(DataIterMember $member)
 	{
-		if (get_identity()->get('id') != $member['id'])
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		require_once 'include/incassomatic.php';
@@ -425,6 +425,11 @@ class ControllerProfiel extends Controller
 
 	public function run_mailing_lists(DataIterMember $member)
 	{
+
+		if (!$this->policy->user_can_update($member)
+			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
+			throw new UnauthorizedException();
+
 		if ($this->_form_is_submitted('mailing_list', $member))
 			return $this->_update_mailing_lists($member);
 
@@ -433,7 +438,7 @@ class ControllerProfiel extends Controller
 
 	public function run_sessions(DataIterMember $member)
 	{
-		if ($member['id'] != get_identity()->get('id'))
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		return $this->view->render_sessions_tab($member);
@@ -441,7 +446,7 @@ class ControllerProfiel extends Controller
 
 	public function run_kast(DataIterMember $member)
 	{
-		if ($member['id'] != get_identity()->get('id'))
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		return $this->view->render_kast_tab($member);
@@ -449,7 +454,7 @@ class ControllerProfiel extends Controller
 
 	public function run_incassomatic(DataIterMember $member)
 	{
-		if ($member['id'] != get_identity()->get('id'))
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		return $this->view->render_incassomatic_tab($member);
