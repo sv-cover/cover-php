@@ -433,7 +433,16 @@ class ControllerProfiel extends Controller
 		if ($this->_form_is_submitted('mailing_list', $member))
 			return $this->_update_mailing_lists($member);
 
-		return $this->view->render_mailing_lists_tab($member);
+		$model = get_model('DataModelMailinglist');
+		$mailing_lists = $model->get_for_member($member);
+	
+		$lists = array_filter($mailing_lists, function($list) {
+			// return true;
+			return get_policy($list)->user_can_subscribe($list);
+		});
+
+		return $this->view->render('mailing_lists_tab.twig', ['iter' => $member, 'mailing_lists' => $lists]);
+		// return $this->view->render_mailing_lists_tab($lists);
 	}
 
 	public function run_sessions(DataIterMember $member)

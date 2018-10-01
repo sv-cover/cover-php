@@ -216,17 +216,6 @@ class DataModelMailinglist extends DataModel
 
 	public function get_for_member(DataIterMember $member, $public_only = true)
 	{
-		if ($public_only)
-			if ($commissies = $member['committees'])
-				$where_clause = 'WHERE (l.publiek = TRUE OR l.commissie IN (' . implode(', ', $commissies) . '))';
-			else
-				$where_clause = 'WHERE l.publiek = TRUE';
-		else
-			$where_clause = '';
-
-		// FIXME deze query houdt geen rekening met leden.type = MEMBER_STATUS_LID
-		// voor opt-out lijsten en leden.type <> MEMBER_STATUS_LID_AF voor opt-in
-		// lijsten.
 		$rows = $this->db->query('
 			SELECT
 				l.*,
@@ -247,7 +236,6 @@ class DataModelMailinglist extends DataModel
 				ON o.mailinglijst_id = l.id
 				AND o.lid_id = ' . intval($member['id']) . '
 				AND o.opgezegd_op < NOW()
-			' . $where_clause . '
 			GROUP BY
 				l.id,
 				l.naam

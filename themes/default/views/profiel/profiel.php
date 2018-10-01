@@ -183,13 +183,6 @@ class ProfielView extends View
 		return $this->render('privacy_tab.twig', compact('iter', 'error_message', 'errors', 'fields'));
 	}
 
-	public function render_mailing_lists_tab(DataIterMember $iter)
-	{
-		$model = get_model('DataModelMailinglist');
-		$mailing_lists = $model->get_for_member($iter);
-		return $this->render('mailing_lists_tab.twig', compact('iter', 'mailing_lists'));
-	}
-
 	public function render_sessions_tab(DataIterMember $iter)
 	{
 		$model = get_model('DataModelSession');

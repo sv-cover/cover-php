@@ -29,15 +29,17 @@ class PolicyMailinglist implements Policy
 
 	public function user_can_subscribe(DataIterMailinglist $lijst)
 	{
-		if ($this->user_can_update($lijst))
-			return true;
-
 		// You cannot subscribe yourself to a non-public list
 		if (!$lijst['publiek'])
 			return false;
 
-		// You cannot 'subscribe' (opt back in) to an opt-out list if you are not a member
-		if ($lijst['type'] == DataModelMailinglist::TYPE_OPT_OUT && get_identity()->get('type') != MEMBER_STATUS_LID)
+		// You cannot subscribe to a list (or opt back in to an opt-out list) that doesn't accept your type
+		if (!($lijst['has_members'] && get_identity()->get('type') == MEMBER_STATUS_LID)
+			&& !($lijst['has_contributors'] && get_identity()->get('type') == MEMBER_STATUS_DONATEUR))	
+			return false;
+
+		// You cannot subscribe to a list that is targeted at a starting year that's not yours
+		if (!empty($lijst['has_starting_year']) && get_identity()->get('beginjaar') != $lijst['has_starting_year'])
 			return false;
 
 		return true;
@@ -45,9 +47,6 @@ class PolicyMailinglist implements Policy
 
 	public function user_can_unsubscribe(DataIterMailinglist $lijst)
 	{
-		if ($this->user_can_update($lijst))
-			return true;
-
 		// You cannot unsubscribe from non-public lists
 		if (!$lijst['publiek'])
 			return false;
