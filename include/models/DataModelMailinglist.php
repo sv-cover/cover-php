@@ -84,6 +84,9 @@ class DataIterMailinglist extends DataIter
 					'committee'
 				]
 			],
+			'tag' => [
+				'required' => true
+			],
 			'has_members' => [
 				'clean' => function($value) {
 					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
@@ -95,7 +98,9 @@ class DataIterMailinglist extends DataIter
 				}
 			],
 			'has_starting_year' => [
-				'clean' => 'intval'
+				'clean' => function($value) {
+					return $value ? intval($value) : null;
+				}
 			],
 			'on_subscription_subject' => [
 				'validate' => []
