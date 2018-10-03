@@ -73,9 +73,9 @@ class DataModelMailinglistSubscription extends DataModel
 		if ($this->_is_opt_out_subscription_id($id, $list_id, $member_id))
 		{
 			$row = $this->db->query_first("
-				SELECT
-						'%1\$d' as mailinglijst_id,
-						'%1\$d-' || l.id as abonnement_id,
+					SELECT
+						':list_id' as mailinglijst_id,
+						':list_id' || l.id as abonnement_id,
 						l.id as lid_id,
 						l.voornaam as naam,
 						l.email,
@@ -87,21 +87,19 @@ class DataModelMailinglistSubscription extends DataModel
 					FROM
 						leden l
 					LEFT JOIN mailinglijsten_opt_out o ON
-						o.mailinglijst_id = %1\$d
+						o.mailinglijst_id = :list_id
 						AND o.lid_id = l.id
 					LEFT JOIN mailinglijsten m ON
-						m.id = %1\$d -- This is no beauty, but I need info about the mailing list...
+						m.id = :list_id -- This is no beauty, but I need info about the mailing list...
 					WHERE
-						l.id = %2\$d
+						l.id = :member_id
 						(
 							(m.has_members and l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
 							or (m.has_contributors and l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
 						)
 						AND (m.has_starting_year IS NULL OR l.beginjaar = m.has_starting_year)
 						AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL) -- filter out the valid opt-outs
-			", 
-			$list_id, 
-			$member_id);
+			", false, [':list_id' => $list_id, ':member_id' => $member_id]);
 
 			if ($row === null)
 				throw new DataIterNotFoundException($id, $this);
