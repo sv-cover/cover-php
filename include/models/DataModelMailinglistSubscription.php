@@ -75,7 +75,7 @@ class DataModelMailinglistSubscription extends DataModel
 			$row = $this->db->query_first("
 					SELECT
 						:list_id as mailinglijst_id,
-						:list_id || l.id as abonnement_id,
+						:list_id || '-' || l.id as abonnement_id,
 						l.id as lid_id,
 						l.voornaam as naam,
 						l.email,
