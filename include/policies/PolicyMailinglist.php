@@ -38,7 +38,7 @@ class PolicyMailinglist implements Policy
 
 		// You cannot subscribe to a list (or opt back in to an opt-out list) that doesn't accept your type
 		if (!($lijst['has_members'] && get_identity()->member()->is_member())
-			&& !($lijst['has_contributors'] && get_identity()->member()->is_donor())	
+			&& !($lijst['has_contributors'] && get_identity()->member()->is_donor()))
 			return false;
 
 		// You cannot subscribe to a list that is targeted at a starting year that's not yours
