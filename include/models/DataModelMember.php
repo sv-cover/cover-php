@@ -258,7 +258,7 @@
 					return false;
 
 				if (!$iter->is_member() && !$iter->is_donor())
-					throw new InactiveMemberException();
+					throw new InactiveMemberException('This user is currently not a member nor a donor and can therefore not log in.');
 
 				return $iter;
 			} catch (DataIterNotFoundException $e) {

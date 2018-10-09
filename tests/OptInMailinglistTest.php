@@ -71,7 +71,7 @@ class OptInMailinglistTest extends TestCase
 		{
 			$this->assertEquals($message->header('From'), 'board@svcover.nl', "Message From header should be board@svcover.nl.");
 
-			$this->assertEquals($message->body(), 'Test message', "Message body should be 'test message'.");
+			$this->assertEquals(trim($message->body()), 'Test message', "Message body should be 'test message'.");
 		}
 	}
 
@@ -103,7 +103,9 @@ class OptInMailinglistTest extends TestCase
 		
 		$result = $this->simulateEmail('board@svcover.nl', $this->mailinglist['adres'], "Hello [NAME] please receive this [MAILINGLIST] message");
 
-		$this->assertEquals($result->messages[0]->body(), "Hello Person X please receive this {$this->mailinglist['naam']} message");
+		$this->assertCount(1, $result->messages, "It should send a single message");
+
+		$this->assertEquals(trim($result->messages[0]->body()), "Hello Person X please receive this {$this->mailinglist['naam']} message");
 	}
 
 	public function testMemberPlaceholder()
@@ -116,7 +118,9 @@ class OptInMailinglistTest extends TestCase
 		
 		$result = $this->simulateEmail('board@svcover.nl', $this->mailinglist['adres'], "Hello [NAME] please receive this [MAILINGLIST] message");
 
-		$this->assertEquals($result->messages[0]->body(), "Hello Unit please receive this {$this->mailinglist['naam']} message");
+		$this->assertCount(1, $result->messages, "It should send a single message");
+
+		$this->assertEquals(trim($result->messages[0]->body()), "Hello Unit please receive this {$this->mailinglist['naam']} message");
 	}
 
 	public function testGuestUnsubscribeLink()
@@ -127,9 +131,11 @@ class OptInMailinglistTest extends TestCase
 		
 		$result = $this->simulateEmail('board@svcover.nl', $this->mailinglist['adres'], "Click to [UNSUBSCRIBE_URL]");
 
+		$this->assertCount(1, $result->messages, "It should send a single message");
+
 		// Find the unsubscribe link
 
-		$url = substr($result->messages[0]->body(), strlen("Click to "));
+		$url = substr(trim($result->messages[0]->body()), strlen("Click to "));
 
 		$this->assertStringStartsWith(ROOT_DIR_URI, $url);
 

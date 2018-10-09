@@ -6,9 +6,10 @@ class MailCatcherMessage
 
 	public function sendmail_args()
 	{
-		$first_row = strpos($this->buffer, "\n", 0);
-		$line = substr($this->buffer, 0, $first_row);
-		return str_getcsv($line, ' ');
+		if (!preg_match('/^(?<args>.*?)\r?\n/', $this->buffer, $match))
+			throw new \RuntimeException('Could not separate command line args and message in captured output.');
+
+		return str_getcsv($match['args'], ' ');
 	}
 
 	public function sendmail_arg($n)
@@ -19,20 +20,20 @@ class MailCatcherMessage
 	public function header($name)
 	{
 		// First row are the command line args to sendmail
-		$first_row = strpos($this->buffer, "\n", 0);
+		if (!preg_match('/^(?<args>.*?)\r?\n(?<stdin>.*)$/s', $this->buffer, $match))
+			throw new \RuntimeException('Could not separate command line args and message in captured output.');
 
-		// Second row is always ignored for some reason
-		$second_row = strpos($this->buffer, "\n", $first_row + 1);
-
-		$boundary_pos = strpos($this->buffer, "\n\n", $second_row + 1);
-
-		$message_header = substr($this->buffer, $second_row, $boundary_pos);
+		if (!preg_match('/^(?<header>.*?)\r?\n\r?\n/s', $match['stdin'], $match))
+			throw new \RuntimeException('Could not separate message header and body in captured output.');
 
 		// Very bad way to parse email headers:
-		$headers = explode("\n", $message_header);
+		$headers = array_filter(explode("\n", $match['header']));
 
 		foreach ($headers as $header)
 		{
+			if (strpos($header, ":") === false)
+				throw new \RuntimeException(sprintf('Header without name-value separator: %s', $header));
+
 			list($header_name, $header_value) = explode(":", $header, 2);
 
 			if ($header_name == $name)
@@ -44,8 +45,10 @@ class MailCatcherMessage
 
 	public function body()
 	{
-		$boundary_pos = strpos($this->buffer, "\n\n");
-		return trim(substr($this->buffer, $boundary_pos + 1));
+		if (!preg_match('/^.*?\r?\n\r?\n(?<body>.*)$/s', $this->buffer, $match))
+			throw new \RuntimeException('Could not separate message header and body in captured output.');
+
+		return $match['body'];
 	}
 
 	public function write($fh = STDOUT)
@@ -163,9 +166,11 @@ function simulate_request($path, $params)
 
 	$env = [
 		'REQUEST_URI' => '/' . $path,
+		'SCRIPT_NAME' => $path,
 		'SCRIPT_FILENAME' => realpath(__DIR__ . '/../' . $path),
 		'REDIRECT_STATUS' => 'true',
 		'REQUEST_METHOD' => 'GET',
+		'REMOTE_ADDR' => '127.0.0.1',
 		'GATEWAY_INTERFACE' => 'CGI/1.1'
 	];
 
@@ -287,6 +292,9 @@ class Form
 
 		$form_node = $query->query($xpath)->item(0);
 
+		if (!$form_node)
+			throw new \InvalidArgumentException(sprintf('No node at path %s', $xpath));
+
 		$form = new self();
 
 		$form->origin = $response;
@@ -342,7 +350,11 @@ trait MemberTestTrait
 			'geslacht' => 'm',
 			'privacy' => 958698063,
 			'type' => MEMBER_STATUS_LID,
-			'nick' => 'unittest'
+			'nick' => 'unittest',
+			'member_from' => '2010-10-01',
+			'member_till' => null,
+			'donor_from' => null,
+			'donor_till' => null
 		]);
 
 		$model->insert($member);
@@ -393,6 +405,9 @@ trait SessionTestTrait
 		assert(self::getMemberId() != 0);
 
 		$model = get_model('DataModelSession');
+
+		if (!isset($_SERVER['REMOTE_ADDR']))
+			$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 		self::$cover_session = $model->create(self::getMemberId(), 'TestCase', '1 HOUR');
 	}
 
