@@ -77,6 +77,10 @@
 			{{ view.barchart(iter.get_reach('committee_count'))|raw }}
 			<figcaption>{{ __('Committees') }}</figcaption>
 		</figure>
+		<figure class="graph">
+			{{ view.barchart(iter.get_reach('type'))|raw }}
+			<figcaption>{{ __('Type') }}</figcaption>
+		</figure>
 	</div>
 </div>
 

@@ -18,6 +18,9 @@ class DataIterMailinglist extends DataIter
 			'toegang',
 			'commissie', // Why didn't I correctly name it committee_id?! :(
 			'tag',
+			'has_members',
+			'has_contributors',
+			'has_starting_year',
 			'on_subscription_subject',
 			'on_subscription_message',
 			'on_first_email_subject',
@@ -80,6 +83,24 @@ class DataIterMailinglist extends DataIter
 					'not_empty',
 					'committee'
 				]
+			],
+			'tag' => [
+				'required' => true
+			],
+			'has_members' => [
+				'clean' => function($value) {
+					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
+				}				
+			],
+			'has_contributors' => [
+				'clean' => function($value) {
+					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
+				}
+			],
+			'has_starting_year' => [
+				'clean' => function($value) {
+					return $value ? intval($value) : null;
+				}
 			],
 			'on_subscription_subject' => [
 				'validate' => []
@@ -186,6 +207,12 @@ class DataModelMailinglist extends DataModel
 		if ($row && isset($row['publiek']))
 			$row['publiek'] = $row['publiek'] == 't';
 
+		if ($row && isset($row['has_members']))
+			$row['has_members'] = $row['has_members'] == 't';
+
+		if ($row && isset($row['has_contributors']))
+			$row['has_contributors'] = $row['has_contributors'] == 't';
+
 		if ($row && isset($row['subscribed']))
 			$row['subscribed'] = $row['subscribed'] == 't';
 
@@ -194,17 +221,6 @@ class DataModelMailinglist extends DataModel
 
 	public function get_for_member(DataIterMember $member, $public_only = true)
 	{
-		if ($public_only)
-			if ($commissies = $member['committees'])
-				$where_clause = 'WHERE (l.publiek = TRUE OR l.commissie IN (' . implode(', ', $commissies) . '))';
-			else
-				$where_clause = 'WHERE l.publiek = TRUE';
-		else
-			$where_clause = '';
-
-		// FIXME deze query houdt geen rekening met leden.type = MEMBER_STATUS_LID
-		// voor opt-out lijsten en leden.type <> MEMBER_STATUS_LID_AF voor opt-in
-		// lijsten.
 		$rows = $this->db->query('
 			SELECT
 				l.*,
@@ -225,7 +241,6 @@ class DataModelMailinglist extends DataModel
 				ON o.mailinglijst_id = l.id
 				AND o.lid_id = ' . intval($member['id']) . '
 				AND o.opgezegd_op < NOW()
-			' . $where_clause . '
 			GROUP BY
 				l.id,
 				l.naam

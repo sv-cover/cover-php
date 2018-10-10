@@ -39,9 +39,30 @@
 			{{ html_label(__('Description'), 'omschrijving', errors=errors) }}
 			{{ html_textarea_field('omschrijving', iter) }}
 		</div>
-		<div>
+		<div class="inline-block">
+			{{ html_label(__('Tag'), 'tag', errors=errors) }}
+			{{ html_input_text('tag', iter.data ? iter : {'tag': 'Cover'}, errors=errors)  }}
+			<small>{{ __('Puts \'[<tag>]\' before the email subject, leave blank for none.') }}</small>
+		</div>
+		<div class="inline-block">
 			{{ html_input_checkbox('publiek', iter) }}
 			{{ html_label(__('People can subscribe themselves to this list.'), 'publiek') }}
+			<small>{{ __('This makes the list show up in the mailing list tab of the profile page.') }}</small>
+		</div>
+		<div class="inline-block">
+			{{ html_input_checkbox('has_members', iter.data ? iter : {'has_members': 'yes'}) }}
+			{{ html_label(__('Contains members.'), 'has_members') }}
+			<small>{{ __('Opt-in: members can opt-in for this list. Opt-out: all members are subscribed by default.') }}</small>
+		</div>
+		<div class="inline-block">
+			{{ html_input_checkbox('has_contributors', iter) }}
+			{{ html_label(__('Contains contributors.'), 'has_contributors') }}
+			<small>{{ __('Opt-in: contributors can opt-in for this list. Opt-out: all contributors are subscribed by default.') }}</small>
+		</div>
+		<div class="inline-block">
+			{{ html_label(__('Starting year'), 'has_starting_year', errors=errors) }}
+			{{ html_input_text('has_starting_year', iter, errors=errors) }}
+			<small>{{ __('Opt-in: only people from this year can opt-in. Opt-out: everybody from this year is subscribed by default. Leave blank for none.') }}</small>
 		</div>
 		{% if iter.has_id %}
 		<div>

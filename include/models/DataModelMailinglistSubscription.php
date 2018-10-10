@@ -73,9 +73,9 @@ class DataModelMailinglistSubscription extends DataModel
 		if ($this->_is_opt_out_subscription_id($id, $list_id, $member_id))
 		{
 			$row = $this->db->query_first("
-				SELECT
-						'{$list_id}' as mailinglijst_id,
-						'{$list_id}-' || l.id as abonnement_id,
+					SELECT
+						:list_id as mailinglijst_id,
+						:list_id || '-' || l.id as abonnement_id,
 						l.id as lid_id,
 						l.voornaam as naam,
 						l.email,
@@ -87,13 +87,19 @@ class DataModelMailinglistSubscription extends DataModel
 					FROM
 						leden l
 					LEFT JOIN mailinglijsten_opt_out o ON
-						o.mailinglijst_id = {$list_id}
+						o.mailinglijst_id = :list_id
 						AND o.lid_id = l.id
+					LEFT JOIN mailinglijsten m ON
+						m.id = :list_id -- This is no beauty, but I need info about the mailing list...
 					WHERE
-						l.id = {$member_id}
-						AND (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+						l.id = :member_id
+						(
+							(m.has_members and l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+							or (m.has_contributors and l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
+						)
+						AND (m.has_starting_year IS NULL OR l.beginjaar = m.has_starting_year)
 						AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL) -- filter out the valid opt-outs
-			");
+			", false, [':list_id' => $list_id, ':member_id' => $member_id]);
 
 			if ($row === null)
 				throw new DataIterNotFoundException($id, $this);
@@ -112,27 +118,30 @@ class DataModelMailinglistSubscription extends DataModel
 				$rows = $this->db->query(sprintf('
 					SELECT
 						%d as mailinglijst_id,
-						m.abonnement_id,
+						s.abonnement_id,
 						l.id as lid_id,
-						coalesce(l.voornaam, m.naam) as naam,
-						coalesce(l.email, m.email) as email,
+						coalesce(l.voornaam, s.naam) as naam,
+						coalesce(l.email, s.email) as email,
 						l.id as lid__id,
 						l.voornaam as lid__voornaam,
 						l.tussenvoegsel as lid__tussenvoegsel,
 						l.achternaam as lid__achternaam,
 						l.privacy as lid__privacy
 					FROM
-						mailinglijsten_abonnementen m
+						mailinglijsten_abonnementen s
+					JOIN mailinglijsten m ON
+						s.mailinglijst_id = m.id
 					LEFT JOIN leden l ON
-						m.lid_id = l.id
+						s.lid_id = l.id
 					WHERE
-						m.mailinglijst_id = %1$d
+						s.mailinglijst_id = %1$d
 						AND (
 							l.id IS NULL
-							OR (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
-							OR (l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
+							OR (m.has_members and l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+							OR (m.has_contributors and l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
 						)
-						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
+						AND (m.has_starting_year IS NULL OR l.beginjaar = m.has_starting_year)
+						AND (s.opgezegd_op > NOW() OR s.opgezegd_op IS NULL)
 					ORDER BY
 						naam ASC',
 					$lijst['id']));
@@ -156,8 +165,14 @@ class DataModelMailinglistSubscription extends DataModel
 					LEFT JOIN mailinglijsten_opt_out o ON
 						o.mailinglijst_id = %1\$d
 						AND o.lid_id = l.id
+					LEFT JOIN mailinglijsten m ON
+						m.id = %1\$d -- This is no beauty, but I need info about the mailing list...
 					WHERE
-						(l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+						(
+							(m.has_members and l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+							or (m.has_contributors and l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
+						)
+						AND (m.has_starting_year IS NULL OR l.beginjaar = m.has_starting_year)
 						AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL) -- filter out the valid opt-outs
 					UNION SELECT -- union the guest subscriptions
 						%1\$d as mailinglijst_id,
@@ -195,6 +210,15 @@ class DataModelMailinglistSubscription extends DataModel
 		elseif ($partition_by == 'leeftijd')
 			$partition_field = '(EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM l.geboortedatum))';
 
+		elseif ($partition_by == 'type')
+			$partition_field = "
+				CASE
+					WHEN (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW())) THEN 'Member'
+					WHEN (l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW())) THEN 'Contributor'
+					ELSE 'Other'
+				END
+			";
+
 		elseif ($partition_by == 'committee_count')
 			$partition_field = '(
 				SELECT
@@ -221,19 +245,22 @@ class DataModelMailinglistSubscription extends DataModel
 				$rows = $this->db->query(sprintf('
 					SELECT
 						cast(%s as text) as partition_group,
-						COUNT(m.abonnement_id) as cnt
+						COUNT(s.abonnement_id) as cnt
 					FROM
-						mailinglijsten_abonnementen m
+						mailinglijsten_abonnementen s
+					JOIN mailinglijsten m ON
+						s.mailinglijst_id = m.id
 					LEFT JOIN leden l ON
-						m.lid_id = l.id
+						s.lid_id = l.id
 					WHERE
-						m.mailinglijst_id = %d
+						s.mailinglijst_id = %d
 						AND (
 							l.id IS NULL
-							OR (l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
-							OR (l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
+							OR (m.has_members and l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+							OR (m.has_contributors and l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
 						)
-						AND (m.opgezegd_op > NOW() OR m.opgezegd_op IS NULL)
+						AND (m.has_starting_year IS NULL OR l.beginjaar = m.has_starting_year)
+						AND (s.opgezegd_op > NOW() OR s.opgezegd_op IS NULL)
 					GROUP BY
 						partition_group',
 					$partition_field,
@@ -248,14 +275,20 @@ class DataModelMailinglistSubscription extends DataModel
 						FROM
 						(
 							SELECT
-								CAST(%s as text) as partition_group,
+								CAST(%1$s as text) as partition_group,
 								COUNT(l.id) as cnt
 							FROM
 								leden l
 							LEFT JOIN mailinglijsten_opt_out o ON
-								o.mailinglijst_id = %d AND o.lid_id = l.id
+								o.mailinglijst_id = %2$d AND o.lid_id = l.id
+							LEFT JOIN mailinglijsten m ON 
+								m.id = %2$d -- This is no beauty, but I need info about the mailing list...
 							WHERE
-								(l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+								(
+									(m.has_members and l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
+									or (m.has_contributors and l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
+								)
+								AND (m.has_starting_year IS NULL OR l.beginjaar = m.has_starting_year)
 								AND (o.opgezegd_op > NOW() OR o.opgezegd_op IS NULL)
 							GROUP BY
 								partition_group
