@@ -1,5 +1,7 @@
 <div>
-	{{ html_label(configuration.label, name, errors=errors, required=configuration.required) }}
+	{% if configuration.label != '' %}
+		{{ html_label(configuration.label, name, errors=errors, required=configuration.required) }}
+	{% endif %}
 	{% if configuration.multiline %}
 		{{html_textarea_field(name, data, errors=errors, required=configuration.required) }}
 	{% else %}
