@@ -209,7 +209,7 @@ class ProfielView extends View
 	{
 		require_once 'include/incassomatic.php';
 
-		$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'penningmeester');
+		$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');
 		$treasurer_link = sprintf('<a href="profiel.php?lid=%d">%s</a>',
 			$treasurer['id'], markup_format_text(member_full_name($treasurer)));
 
