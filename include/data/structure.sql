@@ -644,7 +644,8 @@ CREATE TABLE sign_up_forms (
     agenda_id INTEGER DEFAULT NULL REFERENCES agenda (id) ON UPDATE CASCADE ON DELETE SET NULL,
     created_on timestamp without time zone NOT NULL,
     open_on timestamp without time zone DEFAULT NULL,
-    closed_on timestamp without time zone DEFAULT NULL
+    closed_on timestamp without time zone DEFAULT NULL,
+    participant_limit INTEGER DEFAULT NULL,
 );
 
 CREATE TABLE sign_up_fields(

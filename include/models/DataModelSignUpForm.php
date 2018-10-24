@@ -12,6 +12,7 @@ class DataIterSignUpForm extends DataIter
 			'created_on',
 			'open_on',
 			'closed_on',
+			'participant_limit',
 			'agenda_id'
 		];
 	}
@@ -39,6 +40,11 @@ class DataIterSignUpForm extends DataIter
 					return $value ? $value : null;
 				},
 				'validate' => ['datetime']
+			],
+			'participant_limit' => [
+				'clean' => function($value) {
+					return $value !== '' ? intval($value) : null;
+				}
 			],
 			'agenda_id' => [
 				'clean' => function($value) {
@@ -97,6 +103,9 @@ class DataIterSignUpForm extends DataIter
 			return false;
 
 		if ($this['closed_on'] && new DateTime($this['closed_on']) < new DateTime())
+			return false;
+
+		if ($this['participant_limit'] !== '' && $this['signup_count'] >= $this['participant_limit'])
 			return false;
 
 		return true;

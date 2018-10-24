@@ -43,6 +43,11 @@
 				{{ html_input_datetime('closed_on', form, errors=errors) }}
 				<p>{{ __('If you do not have a deadline, leave this field blank.') }}</p>
 			</div>
+			<div>
+				{{ html_label(__('Participant limit'), 'participant_limit', errors=errors) }}
+				{{ html_input_number('participant_limit', form, errors=errors, min=0) }}
+				<p>{{ __('If you do not have a participant limit, leave this field blank.') }}</p>
+			</div>
 		</fieldset>
 
 		{% if not form.has_id %}

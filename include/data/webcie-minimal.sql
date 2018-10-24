@@ -1382,7 +1382,8 @@ CREATE TABLE public.sign_up_forms (
     agenda_id integer,
     created_on timestamp without time zone NOT NULL,
     open_on timestamp without time zone,
-    closed_on timestamp without time zone
+    closed_on timestamp without time zone,
+    participant_limit INTEGER DEFAULT NULL
 );
 
 
