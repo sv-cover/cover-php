@@ -27,7 +27,7 @@
 			$code = preg_replace('/ ( +?)/', $sp, $code, 1);
 		}
 
-		return '<div class="code" title="Code">' . $code . '</div>';
+		return '<code class="code" title="Code"><pre>' . $code . '</pre></code>';
 	}
 
 	function _markup_parse_code(&$markup, &$placeholders)
