@@ -36,7 +36,7 @@
 					{{ html_label(__('Subject/question'), 'message', errors=errors) }}
 					{{ html_textarea_field('message', message, rows=3, errors=errors) }}
 				</div>
-				<div class="tab-panel" id="forum-message-preview">
+				<div class="tab-panel markup-region" id="forum-message-preview"  data-preview-source="#forum-message textarea" data-preview-url="forum.php?view=preview">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
