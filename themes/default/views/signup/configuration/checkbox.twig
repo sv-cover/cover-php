@@ -3,15 +3,17 @@
 	<fieldset>
 		<legend>Appearance</legend>
 		<div>
-			{{ html_label('Text next to the checkbox', 'description', errors=errors) }}
-			{{ html_input_text('description', data, errors=errors) }}
+			{{ html_label('Text next to the checkbox', 'description', errors=errors, id='field-' ~ name ~ '-description') }}
+			{{ html_input_text('description', data, errors=errors, for='field-' ~ name ~ '-description') }}
 		</div>
 	</fieldset>
 	<fieldset>
 		<legend>Required</legend>
-		<div>
-			{{ html_input_checkbox('required', data, errors=errors) }}
-			{{ html_label('Checking this checkbox is mandatory', 'required', errors=errors) }}
+		<div class="checkbox">
+			<label>
+				{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required') }}
+				{{ __('Checking this checkbox is mandatory') }}
+			</label>
 		</div>
 	</fieldset>
 </div>

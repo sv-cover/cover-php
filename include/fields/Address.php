@@ -72,6 +72,7 @@ class Address implements \SignUpFieldType
 	public function render_configuration($renderer, \ErrorSet $errors)
 	{
 		return $renderer->render('@form_configuration/address.twig', [
+			'name' => $this->name,
 			'data' => $this->configuration(),
 			'errors' => $errors
 		]);

@@ -67,6 +67,7 @@ class Email implements \SignUpFieldType
 	public function render_configuration($renderer, \ErrorSet $errors)
 	{
 		return $renderer->render('@form_configuration/email.twig', [
+			'name' => $this->name,
 			'data' => $this->configuration(),
 			'errors' => $errors
 		]);

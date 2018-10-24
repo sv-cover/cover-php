@@ -1467,6 +1467,11 @@ table.vertical th {
 	content: ':';
 }
 
+.vertical-form .checkbox label:after,
+.vertical-form .radio label:after {
+	content: none;
+}
+
 .vertical-form label .required-badge {
 	color: #c00;
 	cursor: help;

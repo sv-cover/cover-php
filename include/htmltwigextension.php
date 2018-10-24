@@ -328,6 +328,9 @@ class HTMLTwigExtension extends Twig_Extension
 			$field = $name;
 		}
 
+		if (!isset($params['id']))
+			$params['id'] = 'field-' . $name;
+
 		if (!isset($params['nopost']) && isset($_POST[$name]))
 			$value = get_post($name);
 		elseif (isset($data[$field]))
@@ -368,6 +371,7 @@ class HTMLTwigExtension extends Twig_Extension
 		$name = markup_format_text($name);
 		$classes = isset($params['class']) ? explode(' ', $params['class']) : ['label'];
 		$extra_content = '';
+		$for = isset($params['for']) ? $params['for'] : sprintf('field-%s', $field);
 		
 		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))) {
 			$params['class'] = (isset($params['class']) ? ($params['class'] . '_') : '') . 'error';
@@ -379,8 +383,8 @@ class HTMLTwigExtension extends Twig_Extension
 			$extra_content = sprintf('<span class="required-badge" title="%s">*</span>', __('Required'));
 		}
 		
-		return sprintf('<label for="field-%s" class="%s">%s%s</label>',
-			$field, implode(' ', $classes), $name, $extra_content);
+		return sprintf('<label for="%s" class="%s">%s%s</label>',
+			$for, implode(' ', $classes), $name, $extra_content);
 	}
 
 	static public function nonce($action, array $arguments = array())
