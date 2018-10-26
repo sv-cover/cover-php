@@ -93,7 +93,7 @@ class DataModelMailinglistSubscription extends DataModel
 						m.id = :list_id -- This is no beauty, but I need info about the mailing list...
 					WHERE
 						l.id = :member_id
-						(
+						AND (
 							(m.has_members and l.member_from < NOW() and (l.member_till IS NULL OR l.member_till > NOW()))
 							or (m.has_contributors and l.donor_from < NOW() and (l.donor_till IS NULL OR l.donor_till > NOW()))
 						)
