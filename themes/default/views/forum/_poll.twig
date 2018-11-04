@@ -5,7 +5,7 @@
 		<table class="poll">
 			{% for option in poll.options %}
 			<tr>
-				<td class="pollvoteRadio">{{ html_input_radio('option', null, option.id, id='forum_poll_option_' ~ option.id) }}</td>
+				<td class="pollvoteRadio">{{ html_input_radio('option', null, option.id, id='forum_poll_option_' ~ option.id, required=true) }}</td>
 				<td><label for="forum_poll_option_{{ option.id }}">{{ option.optie }}</label></td>
 			</tr>
 			{% endfor %}
