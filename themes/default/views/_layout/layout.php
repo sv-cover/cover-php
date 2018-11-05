@@ -61,8 +61,21 @@ class LayoutViewHelper
 			]
 		];
 
+		$menus['studie'] = [
+			'label' => __('Education'),
+			'submenu' => [
+				['url' => 'show.php?id=149', 'label' => __('Degree Programmes')],
+				['url' => 'show.php?id=24', 'label' => __('Alumni')],
+				['url' => 'boeken.php', 'label' => __('Order books')],
+				['url' => 'show.php?id=27', 'label' => __('Student info')],
+				['url' => 'show.php?id=118', 'label' => __('Student representation')],
+				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
+				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
+			]
+		];
+
 		$menus['bedrijven'] = [
-			'label' => __('Companies'),
+			'label' => __('Career'),
 			'submenu' => [
 				['url' => 'show.php?id=51', 'label' => __('Company profiles')],
 				['url' => 'show.php?id=54', 'label' => __('Vacancies')],
@@ -80,19 +93,6 @@ class LayoutViewHelper
 			'url' => 'fotoboek.php',
 			'label' => __('Photos'),
 			'title' => __('Photos of activities of Cover.')
-		];
-
-		$menus['studie'] = [
-			'label' => __('Study'),
-			'submenu' => [
-				['url' => 'show.php?id=149', 'label' => __('Degree Programmes')],
-				['url' => 'show.php?id=24', 'label' => __('Alumni')],
-				['url' => 'boeken.php', 'label' => __('Order books')],
-				['url' => 'show.php?id=27', 'label' => __('Student info')],
-				['url' => 'show.php?id=118', 'label' => __('Student representation')],
-				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
-				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
-			]
 		];
 
 		$menus['contact'] = [
