@@ -27,7 +27,10 @@ class PolicyMember implements Policy
 	{
 		if ($iter['id'] == get_identity()->get('id'))
 			return true;
-		return false;
+
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
 	public function user_can_delete(DataIter $iter)
