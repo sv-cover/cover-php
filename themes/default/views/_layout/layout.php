@@ -85,11 +85,11 @@ class LayoutViewHelper
 		$menus['studie'] = [
 			'label' => __('Study'),
 			'submenu' => [
-				['url' => 'show.php?id=23', 'label' => __('Artificial Intelligence')],
-				['url' => 'show.php?id=41', 'label' => __('Computing Science')],
+				['url' => 'show.php?id=149', 'label' => __('Degree Programmes')],
 				['url' => 'show.php?id=24', 'label' => __('Alumni')],
 				['url' => 'boeken.php', 'label' => __('Order books')],
 				['url' => 'show.php?id=27', 'label' => __('Student info')],
+				['url' => 'show.php?id=118', 'label' => __('Student representation')],
 				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
 				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
 			]
