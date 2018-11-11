@@ -93,9 +93,14 @@ class Choice implements \SignUpFieldType
 		]);
 	}
 
+	public function info()
+	{
+		return [$this->name => $this->description];
+	}
+
 	public function export($value)
 	{
 		$options = (array) json_decode($value, true);
-		return [$this->description => implode('; ', $options)];
+		return [$this->name => implode('; ', $options)];
 	}
 }

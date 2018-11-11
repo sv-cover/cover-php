@@ -19,8 +19,11 @@ interface SignUpFieldType
 	// Store the current configuration as an associative array
 	public function configuration();
 
-	// Export it to a CSV (as an array with column => text value)
+	// Export it to a CSV (as an array with name => text value)
 	public function export($value);
+
+	// Get field info as name => info
+	public function info();
 
 	// Suggest a value (like process) for a logged-in member
 	public function suggest(DataIterMember $member);

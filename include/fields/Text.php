@@ -74,8 +74,13 @@ class Text implements \SignUpFieldType
 		]);
 	}
 
+	public function info()
+	{
+		return [$this->name => $this->label];
+	}
+
 	public function export($value)
 	{
-		return [$this->label => $value];
+		return [$this->name => $value];
 	}
 }

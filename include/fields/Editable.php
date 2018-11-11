@@ -54,6 +54,11 @@ class Editable implements \SignUpFieldType
 		]);
 	}
 
+	public function info()
+	{
+		return [];
+	}
+
 	public function export($value)
 	{
 		return [];
