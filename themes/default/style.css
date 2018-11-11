@@ -1215,6 +1215,14 @@ table {
 	white-space: nowrap;
 }
 
+.full-width-table th.truncate, 
+.full-width-table td.truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 15em;
+}
+
 .full-width-table tr.highlight td,
 .full-width-table tr.highlight th {
 	background-color: #FFD700;
@@ -3471,13 +3479,6 @@ ul.call-to-action li a::before {
 
 .field-type-bank-account::before {
 	content: "\f09d";
-}
-
-.column-field-type-checkbox {
-	max-width: 100px;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
 }
 
 .messageBox .signup-form {
