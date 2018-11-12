@@ -44,7 +44,7 @@ class SignUpView extends View
 		return array_map(function($type) { return $type['label']; }, get_model('DataModelSignUpField')->field_types);
 	}
 
-	public function render_csv(array $entries, $filename = null)
+	public function render_csv(array $entries, array $headers, $filename = null)
 	{
 		if ($filename) {
 			header('Content-Description: File Transfer');
@@ -62,7 +62,7 @@ class SignUpView extends View
 		echo chr(239) . chr(187) . chr(191);
 
 		// print the column headers
-		echo csv_row(array_keys($entries[0]), $delim), $lb;
+		echo csv_row($headers, $delim), $lb;
 
 		foreach ($entries as $entry)
 			echo csv_row($entry, $delim), $lb;

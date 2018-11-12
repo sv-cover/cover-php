@@ -79,6 +79,11 @@ class DataIterSignUpField extends DataIter
 		$this['properties'] = $widget->configuration();
 	}
 
+	public function column_labels()
+	{
+		return $this->widget()->column_labels();
+	}
+
 	public function export(DataIterSignUpEntry $entry = null)
 	{
 		return $this->widget()->export($entry ? $entry->value_for_field($this) : null);

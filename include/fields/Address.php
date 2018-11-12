@@ -78,9 +78,20 @@ class Address implements \SignUpFieldType
 		]);
 	}
 
+	public function column_labels()
+	{
+		return [
+			$this->name . '-address' => 'address',
+			$this->name . '-city' => 'place of residence'
+		];
+	}
+
 	public function export($value)
 	{
-		$defaults = ['address' => '', 'city' => ''];
-		return array_merge($defaults, array_intersect_key((array) json_decode($value, true), $defaults));
+		$data = $value !== null ? json_decode($value, true) : [];
+		return [
+			$this->name . '-address' => $data['address'] ?? '',
+			$this->name . '-city' => $data['city'] ?? ''
+		];
 	}
 }

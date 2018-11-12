@@ -95,9 +95,20 @@ class BankAccount implements \SignUpFieldType
 		]);
 	}
 
+	public function column_labels()
+	{
+		return [
+			$this->name . '-iban' => 'iban',
+			$this->name . '-bic' => 'bic'
+		];
+	}
+
 	public function export($value)
 	{
-		$defaults = ['iban' => '', 'bic' => ''];
-		return array_merge($defaults, array_intersect_key((array) json_decode($value, true), $defaults));
+		$data = $value !== null ? json_decode($value, true) : [];
+		return [
+			$this->name . '-iban' => $data['iban'] ?? '',
+			$this->name . '-bic' => $data['bic'] ?? ''
+		];
 	}
 }

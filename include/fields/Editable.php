@@ -54,6 +54,11 @@ class Editable implements \SignUpFieldType
 		]);
 	}
 
+	public function column_labels()
+	{
+		return [];
+	}
+
 	public function export($value)
 	{
 		return [];

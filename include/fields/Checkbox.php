@@ -66,8 +66,13 @@ class Checkbox implements \SignUpFieldType
 		]);
 	}
 
+	public function column_labels()
+	{
+		return [$this->name => $this->description];
+	}
+
 	public function export($value)
 	{
-		return [$this->description => $value ? 1 : 0];
+		return [$this->name => $value ? 1 : 0];
 	}
 }
