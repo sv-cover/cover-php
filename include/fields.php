@@ -23,7 +23,7 @@ interface SignUpFieldType
 	public function export($value);
 
 	// Get field info as name => info
-	public function info();
+	public function column_labels();
 
 	// Suggest a value (like process) for a logged-in member
 	public function suggest(DataIterMember $member);

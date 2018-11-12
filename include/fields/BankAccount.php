@@ -95,7 +95,7 @@ class BankAccount implements \SignUpFieldType
 		]);
 	}
 
-	public function info()
+	public function column_labels()
 	{
 		return [
 			$this->name . '-iban' => 'iban',

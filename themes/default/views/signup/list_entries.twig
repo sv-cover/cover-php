@@ -27,7 +27,7 @@
 						<th><input type="checkbox" onchange="Array.from(this.form.querySelectorAll('input[type=checkbox]')).forEach(cb => cb.checked = this.checked)"></th>
 						<th>#</th>
 						{% for field in form.fields %}
-							{% for column in field.info|values %}
+							{% for column in field.column_labels|values %}
 								<th class="column-field-type-{{field.type}} truncate" title="{{ column|capitalize }}">{{ column|capitalize }}</th>
 							{% endfor %}
 						{% endfor %}

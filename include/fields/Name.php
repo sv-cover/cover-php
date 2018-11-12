@@ -70,7 +70,7 @@ class Name implements \SignUpFieldType
 		]);
 	}
 
-	public function info()
+	public function column_labels()
 	{
 		return [$this->name => $this->label];
 	}

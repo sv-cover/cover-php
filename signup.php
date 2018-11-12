@@ -45,7 +45,7 @@ class ControllerSignUpForms extends Controller
 
 		$headers = [];
 		foreach ($form->get_fields() as $field)
-			$headers = array_merge($headers, $field->info());
+			$headers = array_merge($headers, $field->column_labels());
 
 		$headers[] = 'Signed up on';
 
