@@ -43,11 +43,7 @@ class ControllerSignUpForms extends Controller
 			return $entry->export();
 		}, $entries);
 
-		$headers = [];
-		foreach ($form->get_fields() as $field)
-			$headers = array_merge($headers, $field->column_labels());
-
-		$headers[] = 'Signed up on';
+		$headers = $form->get_column_labels();
 
 		$this->view->render_csv($rows, array_values($headers), sprintf('signup-form-%d-%s.csv', $form['id'], date('ymd-his')));
 	}
@@ -108,7 +104,9 @@ class ControllerSignUpForms extends Controller
 
 			try {
 				if ($success && !empty($entry['member_id']) && $form['agenda_item']) {
-					$email = parse_email_object("signup_confirmation.txt", compact('entry'));
+					$headers = $form->get_column_labels();
+					$data = array_combine(array_values($headers), array_values($entry['array']));
+					$email = parse_email_object("signup_confirmation.txt", ['entry' => $data]);
 					$email->send($entry['member']['email']);
 				}
 			} catch (Exception $e) {

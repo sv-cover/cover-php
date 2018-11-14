@@ -82,6 +82,18 @@ class DataIterSignUpForm extends DataIter
 		return get_model('DataModelSignUpEntry')->find(['form_id' => $this['id']]);
 	}
 
+	public function get_column_labels()
+	{
+		$headers = [];
+
+		foreach ($this->get_fields() as $field)
+			$headers = array_merge($headers, $field->column_labels());
+
+		$headers[] = 'Signed up on';
+
+		return $headers;
+	}
+
 	public function get_agenda_item()
 	{
 		return $this['agenda_id'] ? get_model('DataModelAgenda')->get_iter($this['agenda_id']) : null;
