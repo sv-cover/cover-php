@@ -19,13 +19,16 @@ class Email implements \SignUpFieldType
 		$this->label = $configuration['label'] ?? 'Email';
 
 		$this->required = $configuration['required'] ?? false;
+
+		$this->autofill = $configuration['autofill'] ?? true;
 	}
 
 	public function configuration()
 	{
 		return [
 			'label' => $this->label,
-			'required' => (bool) $this->required
+			'required' => (bool) $this->required,
+			'autofill' => (bool) $this->autofill
 		];
 	}
 
@@ -44,6 +47,9 @@ class Email implements \SignUpFieldType
 
 	public function suggest(\DataIterMember $member)
 	{
+		if (!$this->autofill)
+			return null;
+
 		return $member['email'];
 	}
 
@@ -61,6 +67,7 @@ class Email implements \SignUpFieldType
 	{
 		$this->label = strval($post_data['label'] ?? $this->label);
 		$this->required = !empty($post_data['required']);
+		$this->autofill = !empty($post_data['autofill']);
 		return true;
 	}
 

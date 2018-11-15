@@ -13,12 +13,15 @@ class BankAccount implements \SignUpFieldType
 		$this->name = $name;
 
 		$this->required = $configuration['required'] ?? false;
+
+		$this->autofill = $configuration['autofill'] ?? true;
 	}
 
 	public function configuration()
 	{
 		return [
-			'required' => (bool) $this->required
+			'required' => (bool) $this->required,
+			'autofill' => (bool) $this->autofill
 		];
 	}
 
@@ -44,6 +47,9 @@ class BankAccount implements \SignUpFieldType
 
 	public function suggest(\DataIterMember $member)
 	{
+		if (!$this->autofill)
+			return null;
+
 		try {
 			require_once 'include/incassomatic.php';
 
@@ -83,6 +89,7 @@ class BankAccount implements \SignUpFieldType
 	public function process_configuration(array $post_data, \ErrorSet $errors)
 	{
 		$this->required = !empty($post_data['required']);
+		$this->autofill = !empty($post_data['autofill']);
 		return true;
 	}
 

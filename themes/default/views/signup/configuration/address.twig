@@ -9,4 +9,13 @@
 			</label>
 		</div>
 	</fieldset>
+	<fieldset>
+		<legend>Autofill</legend>
+		<div class="checkbox">
+			<label>
+				{{ html_input_checkbox('autofill', data, errors=errors, id='field-' ~ name ~ '-autofill') }}
+				{{ __('Autofill this form with member data (disable if people are not supposed to fill in their own information)') }}
+			</label>
+		</div>
+	</fieldset>
 </div>
