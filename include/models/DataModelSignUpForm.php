@@ -117,7 +117,7 @@ class DataIterSignUpForm extends DataIter
 		if ($this['closed_on'] && new DateTime($this['closed_on']) < new DateTime())
 			return false;
 
-		if ($this['participant_limit'] !== '' && $this['signup_count'] >= $this['participant_limit'])
+		if (!empty($this['participant_limit']) && $this['signup_count'] >= $this['participant_limit'])
 			return false;
 
 		return true;

@@ -17,6 +17,8 @@
 					{{ __('The registrations will open on %s.')|format(form.open_on|date('d-m-Y, H:i')) }}
 				{% elseif form.closed_on is past %}
 					{{ __('The registrations are closed. The deadline was %s.')|format(form.closed_on|date('d-m-Y H:i')) }}
+				{% else %}
+					{{ __('The registrations are closed. The participant limited has been exceeded.') }}
 				{% endif %}
 			</p>
 		{% endif %}
