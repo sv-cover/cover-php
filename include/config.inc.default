@@ -24,9 +24,6 @@
 
 		'enable_photos_read_status' => true,
 
-		'elms_id' => '',
-		'elms_secret' => '',
-
 		// Absolute path to the root folder of all photos. The paths
 		// in the database are appended to this path to form the complete
 		// absolute path of each photo. You can use something like sshfs

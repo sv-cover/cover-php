@@ -56,8 +56,7 @@ class LayoutViewHelper
 				['url' => 'https://wiki.svcover.nl/', 'target' => '_blank', 'label' => __('Wiki')],
 				['url' => 'https://sd.svcover.nl/', 'target' => '_blank', 'label' => __('Documents & Templates')],
 				['url' => 'stickers.php', 'label' => __('Sticker map')],
-				['url' => 'https://merchandise.svcover.nl/', 'target' => '_blank', 'label' => __('Merchandise')],
-				['url' => 'dreamspark.php', 'label' => __('Microsoft Imagine')]
+				['url' => 'https://merchandise.svcover.nl/', 'target' => '_blank', 'label' => __('Merchandise')]
 			]
 		];
 
