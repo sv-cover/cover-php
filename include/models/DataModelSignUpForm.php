@@ -31,13 +31,21 @@ class DataIterSignUpForm extends DataIter
 			],
 			'open_on' => [
 				'clean' => function($value) {
-					return $value ? $value : null;
+					try {
+						return $value ? new DateTime($value) : null;
+					} catch (Exception $e) {
+						return $value; // the validate will catch the invalid value next
+					}
 				},
 				'validate' => ['datetime']
 			],
 			'closed_on' => [
 				'clean' => function($value) {
-					return $value ? $value : null;
+					try {
+						return $value ? new DateTime($value) : null;
+					} catch (Exception $e) {
+						return $value; // the validate will catch the invalid value next
+					}
 				},
 				'validate' => ['datetime']
 			],
