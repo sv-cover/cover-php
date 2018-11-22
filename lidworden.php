@@ -103,7 +103,7 @@
 
 			// Test whether email is already used
 			// (already a member? Or previous member?)
-			if (!in_array('email', $errors)) {
+			if (!in_array('email_address', $errors)) {
 				try {
 					$existing_member = $this->model->get_from_email($_POST['email_address']);
 					return $this->view->render('known_member.twig', compact('existing_member'));
