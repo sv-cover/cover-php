@@ -1,5 +1,10 @@
 <?php
 
+class WikiRemoteCallException extends Exception
+{
+	//
+}
+
 class DataIterWiki extends DataIter implements SearchResult
 {
 	static public function fields()
@@ -39,17 +44,21 @@ class DataModelWiki implements SearchProvider
 
 	public function search($query, $limit = null)
 	{
-		if (!$this->isConfigured())
+		try {
+			if (!$this->isConfigured())
+				throw new WikiRemoteCallException('Wiki data model is not configured', 1);
+		
+			$results = $this->_call('dokuwiki.search', [$query]);
+		
+			$iters = [];
+
+			foreach ($results as $result)
+				$iters[] = new DataIterWiki(null, $result['id'], $result);
+
+			return $iters;
+		} catch (WikiRemoteCallException $e) {
 			return [];
-
-		$results = $this->_call('dokuwiki.search', [$query]);
-
-		$iters = [];
-
-		foreach ($results as $result)
-			$iters[] = new DataIterWiki(null, $result['id'], $result);
-
-		return $iters;
+		}
 	}
 
 	private function _encodeMethodCall($method, array $args)
@@ -84,11 +93,15 @@ class DataModelWiki implements SearchProvider
 
 	private function _decodeMethodResponse($xml)
 	{
-		$doc = new SimpleXMLElement($xml);
+		try {
+			$doc = new SimpleXMLElement($xml);
 
-		$value = $doc->params[0]->param[0]->value[0]->children()[0];
+			$value = $doc->params[0]->param[0]->value[0]->children()[0];
 
-		return $this->_decodeValue($value);
+			return $this->_decodeValue($value);
+		} catch (Exception $e) {
+			throw new WikiRemoteCallException('Could not decode response', 2, $e);
+		}
 	}
 
 	private function _decodeValue(SimpleXMLElement $element)
