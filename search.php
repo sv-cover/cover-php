@@ -94,7 +94,7 @@ class SearchController extends Controller
 		$timings = [];
 
 		if (!empty($_GET['query'])) {
-			$query = $_GET['query'];
+			$query = iconv('UTF-8', 'UTF-8//IGNORE', $_GET['query']); // Remove invalid character points
 			$query_parts = parse_search_query($query);
 			$results = $this->_query($query, $errors, $timings);
 
