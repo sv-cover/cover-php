@@ -274,7 +274,7 @@
 				: self::FORMAT_PORTRAIT;
 
 			$width = isset($_GET['width'])
-				? min($_GET['width'], 600)
+				? min(intval($_GET['width']), 600)
 				: 600;
 
 			$height = $format == self::FORMAT_SQUARE ? $width : 0;
