@@ -65,7 +65,7 @@ class ControllerSignUpForms extends Controller
 		if (!get_policy($this->form_model)->user_can_read($form))
 			throw new UnauthorizedException();
 
-		if ($this->_form_is_submitted('delete_entries', $form))
+		if ($this->_form_is_submitted('delete_entries', $form) && !empty($_POST['entries']))
 			foreach ($_POST['entries'] as $entry_id)
 				if ($entry = $this->entry_model->find_one(['form_id' => $form['id'], 'id' => $entry_id]))
 					if (get_policy($this->entry_model)->user_can_delete($entry))
