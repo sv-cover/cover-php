@@ -224,8 +224,8 @@
 					t.forum_id = ' . intval($this['id']) . '
 				ORDER BY
 					last_date DESC' .
-				($offset != -1 ? (' OFFSET ' . intval($offset)) : '') .
-				' LIMIT ' . ($limit != -1 ? intval($limit) : '1'));
+				($offset > 0 ? (' OFFSET ' . intval($offset)) : '') .
+				' LIMIT ' . ($limit > 1 ? intval($limit) : '1'));
 
 			if ($rows && $limit == -1) {
 				if (count($rows) > 0)
