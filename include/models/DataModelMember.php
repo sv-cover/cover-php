@@ -667,9 +667,6 @@
 				case MEMBER_STATUS_LID:
 					return __('Member');
 
-				case MEMBER_STATUS_LID_ONZICHTBAAR:
-					return __('Hidden');
-
 				case MEMBER_STATUS_LID_AF:
 					return __('Previously a member');
 

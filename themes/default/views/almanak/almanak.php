@@ -11,9 +11,6 @@
 				case MEMBER_STATUS_LID:
 					return 'status-lid';
 					
-				case MEMBER_STATUS_LID_ONZICHTBAAR:
-					return 'status-onzichtbaar';
-				
 				case MEMBER_STATUS_LID_AF:
 					return 'status-lid-af';
 				
@@ -31,9 +28,6 @@
 			{
 				case MEMBER_STATUS_LID:
 					return null;
-
-				case MEMBER_STATUS_LID_ONZICHTBAAR:
-					return __('Hidden');
 
 				case MEMBER_STATUS_LID_AF:
 					return __('Previously a member');

@@ -368,7 +368,6 @@ class ProfielView extends View
 	{
 		$mapping = [
 			MEMBER_STATUS_LID => __('Member'),
-			MEMBER_STATUS_LID_ONZICHTBAAR => __('Member (hidden)'),
 			MEMBER_STATUS_LID_AF => __('Previously a member'),
 			MEMBER_STATUS_ERELID => __('Honorary Member'),
 			MEMBER_STATUS_DONATEUR => __('Donor'),

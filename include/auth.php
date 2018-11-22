@@ -65,8 +65,7 @@ class MemberIdentityProvider implements IdentityProvider
 	{
 		return $this->session_provider->logged_in()
 			&& in_array($this->member()['type'], [
-				MEMBER_STATUS_LID,
-				MEMBER_STATUS_LID_ONZICHTBAAR
+				MEMBER_STATUS_LID
 			]);
 	}
 
