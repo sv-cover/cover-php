@@ -837,8 +837,15 @@
 				$book = $this->model->get_root_book();
 			}
 
-			if ($photo && $book)
-				$photo['scope'] = $book;
+			try {
+				if ($photo && $book)
+					$photo['scope'] = $book;
+			} catch (LogicException $e) {
+				// This occurs when $book is not the book that contains $photo.
+				// So we redirect to $photo, and let that figure out $book.
+				// No undefined state.
+				return $this->view->redirect('fotoboek.php?photo=' . $photo['id']);
+			}
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {
