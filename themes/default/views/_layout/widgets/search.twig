@@ -1,8 +1,17 @@
-<div class="menuItem search">
-	<form action="search.php" method="get">
-		<label for="menu-search-query">
-			<i class="fa fa-search"></i>
-		</label>
-		<input type="search" id="menu-search-query" name="query" placeholder="{{ __('Type here to search…') }}" accesskey="s">
-	</form>
-</div>
+<form action="search.php" method="get">
+    <div class="field has-addons">
+        <p class="control is-expanded">
+            <label for="menu-search-query" class="is-sr-only">Search query</label>
+            <input class="input" type="search" id="menu-search-query" name="query" placeholder="{{ __('Type here to search…') }}" accesskey="s">
+        </p>
+        <p class="control">
+            <button class="button" type="submit">
+                <span class="icon">
+                    <i class="fas fa-search"></i>
+                    <span class="is-sr-only">Search</span>
+                </span>
+            </button>
+            </a>
+        </p>
+    </div>
+</form>

@@ -1,11 +1,37 @@
-{% if global.auth.logged_in %}
-	{{ __('Logged in') }}: <b>{{ global.identity.member.voornaam }}</b><br/>
-	<a class="logButton" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">{{ __('Logout') }}</a>
-	<a class="logButton" href="{{ link('profiel.read', member=global.identity.member) }}">{{ __('Profile') }}</a>
+{% from '@theme/sessions/_login_widget.twig' import login_form %}
 
-	{% if global.identity.can_impersonate %}
-		<a href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector=".overrides-form" class="logLink">{{ __('Impersonate…') }}</a>
-	{% endif %}
-{% else %}
-	<a class="logButton" href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form">Log in</a>
-{% endif %}
+
+<a class="navbar-link is-arrowless">
+    {% if global.auth.logged_in %}
+        <span class="icon">
+            <i class="fas fa-user"></i>
+            <span class="is-sr-only">
+                User
+            </span>
+        </span>
+    {% else %}
+        login
+    {% endif %}
+</a>
+<div class="navbar-dropdown is-right">
+    {% if global.auth.logged_in %}
+        {% if global.identity.can_impersonate %}
+            <a class="navbar-item" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector=".overrides-form">
+                {{ __('Impersonate…') }}
+            </a>
+            <hr class="navbar-divider">
+        {% endif %}
+
+        <div class="navbar-item">
+            {{ __('Logged in') }}: {{ global.identity.member.voornaam }}
+        </div>
+        <a class="navbar-item" href="{{ link('profiel.read', member=global.identity.member) }}">
+            {{ __('Profile') }}
+        </a>
+        <a class="navbar-item" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">
+            {{ __('Logout') }}
+        </a>
+    {% else %}
+        {{ login_form() }}
+    {% endif %}
+</div>
