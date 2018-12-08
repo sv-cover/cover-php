@@ -87,7 +87,7 @@ class ControllerCommissies extends ControllerCRUD
 
 	public function run_show_interest(DataIter $iter)
 	{
-		if (!get_identity()->member_is_active())
+		if (!get_identity()->is_member())
 			throw new UnauthorizedException('Only active members can apply for a committee');
 
 		if (!get_policy($this->model)->user_can_read($iter))

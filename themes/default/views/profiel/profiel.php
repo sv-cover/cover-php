@@ -136,7 +136,7 @@ class ProfielView extends View
 
 	public function render_public_tab(DataIterMember $iter)
 	{
-		$can_download_vcard = get_identity()->member_is_active();
+		$can_download_vcard = get_identity()->is_member();
 
 		$is_current_user = get_identity()->get('id') == $iter->get('id');
 

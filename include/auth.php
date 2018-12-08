@@ -5,7 +5,8 @@ require_once 'include/functions.php';
 
 interface IdentityProvider
 {
-	public function member_is_active();
+	public function is_member();
+	public function is_donor();
 	public function member_in_committee($committee = null);
 	public function can_impersonate();
 	public function member();
@@ -20,7 +21,12 @@ interface SessionProvider
 
 class GuestIdentityProvider implements IdentityProvider
 {
-	public function member_is_active()
+	public function is_member()
+	{
+		return false;
+	}
+
+	public function is_donor()
 	{
 		return false;
 	}
@@ -61,12 +67,16 @@ class MemberIdentityProvider implements IdentityProvider
 		$this->member_model = get_model('DataModelMember');
 	}
 
-	public function member_is_active()
+	public function is_member()
 	{
 		return $this->session_provider->logged_in()
-			&& in_array($this->member()['type'], [
-				MEMBER_STATUS_LID
-			]);
+			&& $this->member()->is_member();
+	}
+
+	public function is_donor()
+	{
+		return $this->session_provider->logged_in()
+			&& $this->member()->is_donor();
 	}
 
 	public function member_in_committee($committee = null)

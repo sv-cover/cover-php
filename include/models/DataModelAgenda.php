@@ -95,7 +95,7 @@
 		{
 			parent::__construct($db, 'agenda');
 
-			$this->include_private = get_identity()->member_is_active();
+			$this->include_private = get_identity()->is_member() || get_identity()->is_donor();
 		}
 		
 		public function get($from = null, $till = null, $confirmed_only = false)

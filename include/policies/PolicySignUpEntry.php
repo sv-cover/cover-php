@@ -8,7 +8,8 @@ class PolicySignUpEntry implements Policy
 	{
 		// Active members can sign up if it is open
 		if ($entry['form']->is_open())
-			return get_identity()->member_is_active(); 
+			return get_identity()->is_member()
+				|| get_identity()->is_donor();
 		
 		// The committee of the activity can always add people to the activity
 		if (get_identity()->member_in_committee($entry['form']['committee_id']))
@@ -29,7 +30,7 @@ class PolicySignUpEntry implements Policy
 
 		// The member of the entry can read their own entries
 		if (get_identity()->get('id') === $entry['member_id'])
-			return $entry['form']->is_open();
+			return true;
 		
 		return false;
 	}

@@ -43,11 +43,11 @@ class PolicyPhotobook implements Policy
 			return false;
 
 		// Member-specific albums are also forbidden terrain unless they are about you
-		if (!get_identity()->member_is_active() && $book instanceof DataIterFacesPhotobook)
+		if (!get_identity()->is_member() && $book instanceof DataIterFacesPhotobook)
 			return $book['member_ids'] == [get_identity()->get('id')];
 
 		// Older photo books are not visible for non-members
-		if (get_identity()->member_is_active())
+		if (get_identity()->is_member())
 			return true;
 
 		if ($book['date'] === null)
@@ -82,7 +82,7 @@ class PolicyPhotobook implements Policy
 		if (!get_identity()->member())
 			return false;
 
-		if (get_identity()->member_is_active() || ($book['date'] && get_identity()->member()->is_member_on(new DateTime($book['date']))))
+		if (get_identity()->is_member() || ($book['date'] && get_identity()->member()->is_member_on(new DateTime($book['date']))))
 			return $this->user_can_read($book);
 
 		return false;
@@ -111,10 +111,10 @@ class PolicyPhotobook implements Policy
 		if (get_identity()->member_in_committee())
 			return DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS;
 
-		if (get_identity()->member_is_active())
+		if (get_identity()->is_member())
 			return DataModelPhotobook::VISIBILITY_MEMBERS;
 
-		else
+		else // Donors are also treated as PUBLIC
 			return DataModelPhotobook::VISIBILITY_PUBLIC;
 	}
 }

@@ -111,7 +111,7 @@
 			$current_user = get_identity();
 
 			// Not logged in? You can't create a poll
-			if (!$current_user->member_is_active())
+			if (!$current_user->is_member())
 				return false;
 
 			// EASY? Yes, you can create a poll
@@ -187,8 +187,9 @@
 			return $success;
 		}
 
-		public function voted(DataIterForumThread $iter, DataIterMember $member) {
-			if (!get_identity()->member_is_active())
+		public function voted(DataIterForumThread $iter, DataIterMember $member)
+		{
+			if (!get_identity()->is_member() && !get_identity()->is_donor())
 				return true;
 			
 			$config_model = get_model('DataModelConfiguratie');

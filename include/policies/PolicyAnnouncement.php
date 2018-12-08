@@ -22,7 +22,7 @@ class PolicyAnnouncement implements Policy
 				return true;
 
 			case DataModelAnnouncement::VISIBILITY_MEMBERS:
-				return get_identity()->member_is_active();
+				return get_identity()->is_member() || get_identity()->is_donor();
 
 			case DataModelAnnouncement::VISIBILITY_ACTIVE_MEMBERS:
 				return get_identity()->member_in_committee();

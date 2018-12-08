@@ -22,7 +22,7 @@
 			<dt>{{ html_label(field.label, field.name) }}</dt>
 			<dd class="data-public">{{ view.format_member_data(iter, field.name)|raw }}</dd>
 		{% elseif field_visibility == constant('DataModelMember::VISIBLE_TO_MEMBERS') %}
-			{% if global.identity.member_is_active or global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
+			{% if global.identity.is_member or global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
 				<dt>{{ html_label(field.label, field.name) }}</dt>
 				<dd class="data-members-only">
 					{{ view.format_member_data(iter, field.name)|raw }}

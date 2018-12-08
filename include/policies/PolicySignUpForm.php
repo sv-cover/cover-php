@@ -15,7 +15,7 @@ class PolicySignUpForm implements Policy
 
 	public function user_can_read(DataIter $form)
 	{
-		return get_identity()->member_is_active();
+		return get_identity()->is_member() || get_identity()->is_donor();
 	}
 
 	public function user_can_update(DataIter $form)

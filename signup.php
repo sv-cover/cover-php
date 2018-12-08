@@ -79,12 +79,12 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_read($form))
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('You cannot access this form.');
 
 		$entry = $form->new_entry(null);
 
 		if (!get_policy($this->entry_model)->user_can_create($entry))
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('You cannot create new entries for this form.');
 
 		$success = false;
 
@@ -137,12 +137,15 @@ class ControllerSignUpForms extends Controller
 		if (!get_policy($this->form_model)->user_can_read($form))
 			throw new UnauthorizedException('You cannot access this form.');
 
-		if (!get_policy($this->entry_model)->user_can_update($entry))
-			throw new UnauthorizedException('You cannot update this entry.');
+		if (!get_policy($this->form_model)->user_can_read($entry))
+			throw new UnauthorizedException('You cannot access this entry.');
 
 		$success = false;
 
 		if ($this->_form_is_submitted('update_entry', $entry)) {
+			if (!get_policy($this->entry_model)->user_can_update($entry))
+				throw new UnauthorizedException('You cannot update this entry.');
+		
 			if ($entry->process($_POST)) {
 				$this->entry_model->update($entry);
 				$success = true;

@@ -393,7 +393,7 @@ class ControllerProfiel extends Controller
 
 	public function run_export_vcard(DataIterMember $member)
 	{
-		if (!get_identity()->member_is_active())
+		if (!get_identity()->is_member())
 			throw new UnauthorizedException('You need to log in to be able to export v-cards/');
 
 		if (!$this->policy->user_can_read($member))

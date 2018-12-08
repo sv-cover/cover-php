@@ -16,10 +16,16 @@
 	{% if not form.is_open %}
 	<section class="warning-section">
 		<h3>{{ __('The registrations are closed.') }}</h3>
-		<p>{{ __('You can see this form because you are allowed to sign up people outside of the sign-up period.') }}</p>
+		{% if (not entry.has_id and user_can_create entry) %}
+			<p>{{ __('You can see this form because you are allowed to sign up people outside of the sign-up period.') }}</p>
+		{% elseif (entry.has_id and user_can_update entry) %}
+			<p>{{ __('You can see this entry because you are allowed to modify entries for this form.') }}</p>
+		{% else %}
+			<p>{{ __('You can see your entry, but you cannot change it anymore. If you would like to change something, ask a committee member.') }}</p>
+		{% endif %}
 	</section>
 	{% endif %}
-	
+
 	{% if success %}
 		<p>{{ __('Success! You have signed up.') }}</p>
 	{% else %}
@@ -44,9 +50,11 @@
 				</div>
 			{% endfor %}
 
+			{% if user_can_create entry or user_can_update entry %}
 			<div class="controls">
 				<button class="button" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
 			</div>
+			{% endif %}
 		</form>
 	{% endif %}
 </div>

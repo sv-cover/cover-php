@@ -259,7 +259,7 @@
 	{% endif %}
 
 	{# and if there are no photos on this page, show a few random photos for discovery in the bottom. They are not confused with the photos of a book. #}
-	{% if book.num_photos == 0 and global.identity.member_is_active %}
+	{% if book.num_photos == 0 and global.identity.is_member %}
 	<section class="alt-section">
 		{% include('_random_photos.twig') %}
 	</section>

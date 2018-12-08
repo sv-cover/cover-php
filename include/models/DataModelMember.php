@@ -408,7 +408,7 @@
 				return true;
 
 			// Only visible to members, and I am not a member? -> private.
-			elseif (($value & self::VISIBLE_TO_MEMBERS) && !get_identity()->member_is_active())
+			elseif (($value & self::VISIBLE_TO_MEMBERS) && !get_identity()->is_member())
 				return true;
 			
 			// Otherwise, not private

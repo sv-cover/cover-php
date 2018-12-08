@@ -19,9 +19,10 @@ class PolicyAgenda implements Policy
 				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
 				|| get_identity()->member_in_committee($agenda_item->get('committee_id'));
 
-		// Private agenda items can only be seen by active members
+		// Private agenda items can only be seen by people who could attend it
 		if ($agenda_item['private'])
-			return get_identity()->member_is_active();
+			return get_identity()->member()->is_member()
+				|| get_identity()->member()->is_donor();
 
 		// By default all agenda items are accessible
 		return true;
