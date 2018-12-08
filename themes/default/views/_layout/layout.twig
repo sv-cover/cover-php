@@ -45,7 +45,9 @@
 
 		<section class="section">
 			<div class="container">
-				{% block content %}{% endblock %}
+				<div class="old">
+					{% block content %}{% endblock %}
+				</div>
 			</div>
 		</section>
 
@@ -54,7 +56,7 @@
 			{{ include('@layout/widgets/banners.twig') }}
 			</div>
 		</section>
-	
+
 		<footer class="footer">
 			<div class="content has-text-centered">
 				<a href="show.php?id=17">{{ __('Contact') }}</a>
