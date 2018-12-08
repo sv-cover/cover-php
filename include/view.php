@@ -159,9 +159,9 @@ class View
 	public function stylesheets()
 	{
 		return [
-			// get_theme_data('styles/font-awesome.min.css'),
+			get_theme_data('styles/font-awesome.min.css'),
 			// get_theme_data('styles/jquery-ui.min.css'),
-			// get_theme_data('style.css')
+			get_theme_data('style.css')
 		];
 	}
 
