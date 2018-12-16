@@ -167,3 +167,32 @@ class DataModelSignUpEntry extends DataModel
 		$this->db->commit();
 	}
 }
+
+function signup_format_entry(DataIterSignUpEntry $entry)
+{
+	$rows = [];
+
+	$data = $entry->get_array();
+
+	foreach ($entry['form']['fields'] as $field) {
+		if ($field['type'] == 'checkbox') {
+			$label = $field->column_labels();
+
+			if ($data[key($label)]) {
+				$rows[] = sprintf('<tr><td style="text-align:left" colspan="2">✓ %s</td></tr>',
+					markup_format_text(current($label)));
+			} else {
+				// Just don't add a row for it :)
+			}
+		} else {
+			foreach ($field->column_labels() as $key => $label)
+				$rows[] = sprintf('<tr><th style="text-align:left">%s</th><td>%s</td></tr>',
+					markup_format_text($label),
+					$data[$key] === '' || $data[$key] === null
+						? '<em>left blank</em>'
+						: markup_format_text($data[$key]));
+		}
+	}
+
+	return sprintf('<table>%s</table>', implode('', $rows));
+}

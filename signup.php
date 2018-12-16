@@ -104,9 +104,7 @@ class ControllerSignUpForms extends Controller
 
 			try {
 				if ($success && !empty($entry['member_id']) && $form['agenda_item']) {
-					$headers = $form->get_column_labels();
-					$data = array_combine(array_values($headers), array_values($entry['array']));
-					$email = parse_email_object("signup_confirmation.txt", ['entry' => $data]);
+					$email = parse_email_object("signup_confirmation.txt", ['entry' => $entry]);
 					$email->send($entry['member']['email']);
 				}
 			} catch (Exception $e) {
