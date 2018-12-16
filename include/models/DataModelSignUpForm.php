@@ -97,7 +97,7 @@ class DataIterSignUpForm extends DataIter
 		foreach ($this->get_fields() as $field)
 			$headers = array_merge($headers, $field->column_labels());
 
-		$headers[] = 'Signed up on';
+		$headers['signed-up-on'] = 'Signed up on';
 
 		return $headers;
 	}

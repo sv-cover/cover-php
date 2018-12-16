@@ -91,7 +91,7 @@ class DataIterSignUpEntry extends DataIter
 			$row = array_merge($row, $field->export($this));
 
 		// Put that on the end
-		$row['Signed up on'] = $this['created_on'];
+		$row['signed-up-on'] = $this['created_on'];
 
 		return $row;
 	}
