@@ -16,7 +16,7 @@ class Name implements \SignUpFieldType
 	{
 		$this->name = $name;
 
-		$this->label = $configuration['label'] ?? 'Name';
+		$this->label = 'Name';
 
 		$this->required = $configuration['required'] ?? false;
 
@@ -62,7 +62,6 @@ class Name implements \SignUpFieldType
 
 	public function process_configuration(array $post_data, \ErrorSet $errors)
 	{
-		$this->label = strval($post_data['label'] ?? $this->label);
 		$this->required = !empty($post_data['required']);
 		$this->autofill = !empty($post_data['autofill']);
 		return true;
