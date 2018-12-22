@@ -3,15 +3,20 @@
 {% block title __('Delete topic') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Delete topic') }}</h1>
-<div class="messageBox">
-	<form method="post" action="forum.php?view=delete&amp;thread={{ iter.id }}" class="vertical-form">
-		{{ html_nonce('delete_thread', iter) }}
-		<p>{{ __('Are you sure you want to delete the whole <em>%s</em> topic, including all its messages?')|format(iter.subject|e)|raw }}</p>
-		<div>
-			<button type="submit" class="button">{{ __('Delete topic')  }}</button>
-			<a href="forum.php?thread={{ iter.id }}">{{ __('Back to topic') }}</a>
-		</div>
-	</form>
+<div class="level">
+    <div class="level-left">
+        <h1 class="title">{{ __('Delete topic') }}</h1>
+    </div>
 </div>
+
+<form method="post" action="forum.php?view=delete&amp;thread={{ iter.id }}">
+	{{ html_nonce('delete_thread', iter) }}
+    <div class="field">
+        <p>{{ __('Are you sure you want to delete the whole <em>%s</em> topic, including all its messages?')|format(iter.subject|e)|raw }}</p>
+    </div>
+	<div class="controls buttons">
+		<button type="submit" class="button is-danger">{{ __('Delete topic')  }}</button>
+		<a href="forum.php?thread={{ iter.id }}" class="button">{{ __('Back to topic') }}</a>
+	</div>
+</form>
 {% endblock %}

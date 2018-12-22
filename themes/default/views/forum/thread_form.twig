@@ -1,39 +1,56 @@
 {% extends '@layout/layout.twig' %}
 
 {% block content %}
-<h1><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
-<div class="messageBox">
-	<form action="" method="post" class="vertical-form">
-		{{ html_nonce('create_thread', forum) }}
-		<div>
-			{{ html_label(__('Author'), 'unified_author', errors=errors, required=true) }}
-			{{ html_select_field('unified_author', unified_authors, message, errors=errors, required=true) }}
-		</div>
+<div class="level">
+	<div class="level-left">
+		<h1 class="title"><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
+	</div>
+</div>
 
-		<div>
+<form action="" method="post">
+	{{ html_nonce('create_thread', forum) }}
+	<div class="field">
+		<div class="control">
+			{{ html_label(__('Author'), 'unified_author', errors=errors, required=true) }}
+			<div class="select">
+				{{ html_select_field('unified_author', unified_authors, message, errors=errors, required=true) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<div class="control">
 			{{ html_label(__('Subject'), 'subject', errors=errors, required=true) }}
 			{{ html_input_text('subject', thread, errors=errors, required=true, autofocus='end') }}
 		</div>
+	</div>
 
-		<div>
-			<div class="tab-container">
-				<ul class="nav-tabs horizontal">
-					<li class="active"><a href="#forum-message">{{ __('Message') }}</a></li>
-					<li><a href="#forum-message-preview">{{ __('Preview') }}</a></li>
-				</ul>
-				<div class="tab-panel" id="forum-message">
-					{{ html_textarea_field('message', message, rows=15) }}
-				</div>
-				<div class="tab-panel" id="forum-message-preview">
-					<span class="loading">{{ __('Loading preview…') }}</span>
-				</div>
+	<div class="tabs-wrapper">
+		<div class="tabs">
+			<ul>
+				<li class="is-active">
+					<a href="#forum-message">{{ __('Message') }}</a>
+				</li>
+				<li>
+					<a href="#forum-message-preview">{{ __('Preview') }}</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="tabs-content">
+			<div id="forum-message">
+				{{ html_label(__('Message'), 'message', errors=errors) }}
+				{{ html_textarea_field('message', message, rows=15) }}
+			</div>
+			<div id="forum-message-preview" class="is-invisible" data-preview-source="#forum-message textarea" data-preview-url="forum.php?view=preview">
+				<span class="loading">{{ __('Loading preview…') }}</span>
 			</div>
 		</div>
+	</div>
 
-		<div>
-			<button type="submit" class="button">{{ __('Publish message') }}</button>
-			<a href="forum.php?forum={{ forum.id }}">{{ __('Back to forum') }}</a>
-		</div>
-	</form>
-</div>
+	<div class="control buttons">
+		<button type="submit" class="button is-primary">{{ __('Publish message') }}</button>
+		<a href="forum.php?forum={{ forum.id }}" class="button">{{ __('Back to forum') }}</a>
+	</div>
+</form>
 {% endblock %}

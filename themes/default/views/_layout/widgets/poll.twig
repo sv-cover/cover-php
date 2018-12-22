@@ -9,7 +9,6 @@
 {% set poll = global.models.Poll.get_latest_poll() %}
 
 {% if poll %}
-	<p><a href="forum.php?thread={{poll.id}}">{{ poll.subject }}</a></p>
 	{% include '@theme/forum/_poll.twig' %}
 {% else %}
 	<p>{{ __('There is no poll at the moment') }}</p>
