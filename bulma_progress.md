@@ -1,0 +1,100 @@
+# Bulma Implementation ToDo
+
+- [-] \_layout
+    - [-] widgets
+        - [ ] agenda.twig
+        - [*] banners.twig
+        - [ ] committee-battle-header.twig
+        - [*] login.twig
+        - [*] menu.twig
+        - [ ] menuitem.twig (deprecated?)
+        - [ ] poll.twig
+        - [ ] promotional-header.twig
+        - [*] search.twig
+    - [ ] 401_unauthorized.twig
+    - [ ] 404_not_found.twig
+    - [ ] 500.twig
+    - [ ] editable.twig
+    - [*] layout.twig
+    - [ ] layout_without_menu.twig
+- [ ] actieveleden
+- [ ] agenda
+- [ ] almanak
+- [ ] announcements
+- [ ] besturen
+- [ ] boeken
+- [ ] commissies
+- [ ] committeebattle
+- [*] forum
+    - [*] \_poll.twig
+    - [*] confirm_delete_message.twig
+    - [*] forum.twig
+    - [ ] forum_form.twig (deprecated)
+    - [*] index.twig
+    - [*] poll_form.twig
+    - [*] reply_form.twig
+    - [*] thread.twig
+    - [*] thread_confirm_delete.twig
+    - [*] thread_form.twig
+- [ ] fotoboekreacties
+- [ ] homepage
+- [ ] lidworden
+- [ ] mailinglijsten
+- [ ] profiel
+- [ ] search
+- [-] sessions
+    - [*] \_login_widget.twig
+    - [ ] inactive.twig
+    - [ ] login.twig
+    - [ ] logout.twig
+    - [ ] overrides.twig
+- [ ] settings
+- [ ] show
+- [ ] signup
+- [ ] stickers
+- [ ] wachtwoordvergeten
+- [ ] weblog
+
+
+# Bulma Implementation Issues
+
+
+## JS needed
+
+- Mobile menu collapse
+- Show/hide search intelligently
+- Clickable (toggable) dropdowns. This would improve UX for complex dropdowns
+    - _layout/widgets/menu.twig (mainly login)
+    - forum/thread.twig (move thread)
+- Tabs. Switch between tabbed content
+    - forum/poll_form.twig
+    - forum/reply_form.twig
+    - forum/thread_form.twig
+- Preview (page) content
+    - forum/poll_form.twig
+    - forum/reply_form.twig
+    - forum/thread_form.twig
+- Search form (like wiki/sd)
+- Modals
+    - Impersonate
+    - [maybe] Forum delete thread/message
+    - [maybe] Forum edit message
+
+
+## Bulma extensions / custom CSS
+
+- Vertically padded container. Sometimes a container element for vertical grouping would be nice.
+    - Pagination bar in:
+        - forum/forum.twig
+        - forum/thread.twig
+    - Poll in forum/_poll.twig
+- Divider (like the one of semantic ui)
+    - sessions/_login_widget.twig (to separate the form from the become a member button)
+- Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
+- Narrow content container for improved readability. Probably with TOC sidebar.
+
+
+## Other
+
+- Remove profile signature, it isn't used and didn't fit in the design
+- Remove language switch from profile
