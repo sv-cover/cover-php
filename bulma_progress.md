@@ -17,7 +17,8 @@
     - [ ] editable.twig
     - [*] layout.twig
     - [ ] layout_without_menu.twig
-- [ ] actieveleden
+- [*] actieveleden
+    - [*] index.twig
 - [ ] agenda
 - [ ] almanak
 - [ ] announcements
