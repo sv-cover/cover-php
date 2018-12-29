@@ -16,7 +16,7 @@
 <div class="navbar-dropdown is-right">
     {% if global.auth.logged_in %}
         {% if global.identity.can_impersonate %}
-            <a class="navbar-item" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector=".overrides-form">
+            <a class="navbar-item" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}">
                 {{ __('Impersonate…') }}
             </a>
             <hr class="navbar-divider">
@@ -32,6 +32,8 @@
             {{ __('Logout') }}
         </a>
     {% else %}
-        {{ login_form() }}
+        <div class="navbar-item">
+            {{ login_form() }}
+        </div>
     {% endif %}
 </div>

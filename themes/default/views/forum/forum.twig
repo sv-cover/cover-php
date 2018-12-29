@@ -78,10 +78,11 @@
 					{% if thread.date %}
 						&ndash;
 						<small>
-							{{ __('Last comment by') }}
 							<a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">
-								{{ last_author.name }}
+								{{ __('Last comment') }}
 							</a>
+							{{ __('by') }}
+							<a href="{{ view.get_author_link(thread, true)|e('html_attr') }}">{{ last_author.name }}</a>
 							{{ __('on') }}
 							{{ thread.last_date|date('d-m-Y H:i') }}
 						</small>

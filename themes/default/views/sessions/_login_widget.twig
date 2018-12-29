@@ -1,4 +1,5 @@
 {% macro login_form(errors = [], error_message = null, referrer = null, external_domain = null) %}
+<div>
     <form id="login-form" method="post" action="{{ link('sessions.login') }}">
         {% if error_message %}
         <div class="error-section">
@@ -44,4 +45,5 @@
     </form>
     <div>or</div>
     <a class="button is-fullwidth">Become a member</a>
+</div>
 {% endmacro %}
