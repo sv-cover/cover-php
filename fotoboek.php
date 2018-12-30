@@ -515,9 +515,9 @@
 					$book['last_update'] = new DateTime();
 					$this->model->update_book($book);
 
-					// Update faces
+					// Update faces (but re-run on all photos to align clusters)
 					$face_model = get_model('DataModelPhotobookFace');
-					$face_model->refresh_faces($new_photos);
+					$face_model->refresh_faces($book->get_photos());
 				}
 				
 				if (count($errors) == 0)
