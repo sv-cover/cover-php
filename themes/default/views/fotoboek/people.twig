@@ -20,17 +20,17 @@
 	<div class="bar">
 		<div class="photos-navigation navigation">
 			{% if book.previous_book and user_can_read book.previous_book %}
-				<a href="fotoboek.php?book={{ book.previous_book.id }}" class="previous">
+				<a href="fotoboek.php?book={{ book.previous_book.id }}&amp;view=people" class="previous">
 					{{ book.previous_book.titel }}
 				</a>
 			{% endif %}
 			{% if book.parent and user_can_read book.parent %}
-				<a href="fotoboek.php?book={{ book.parent.id }}" class="up">
+				<a href="fotoboek.php?book={{ book.parent.id }}&amp;view=people" class="up">
 					{{ book.parent.titel }}
 				</a>
 			{% endif %}
 			{% if book.next_book and user_can_read book.next_book %}
-				<a href="fotoboek.php?book={{ book.next_book.id }}" class="next">
+				<a href="fotoboek.php?book={{ book.next_book.id }}&amp;view=people" class="next">
 					{{ book.next_book.titel }}
 				</a>
 			{% endif %}
