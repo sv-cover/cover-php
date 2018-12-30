@@ -14,16 +14,19 @@
     - [ ] 401_unauthorized.twig
     - [ ] 404_not_found.twig
     - [ ] 500.twig
-    - [ ] editable.twig
+    - [*] editable.twig
     - [*] layout.twig
     - [ ] layout_without_menu.twig
 - [*] actieveleden
     - [*] index.twig
 - [ ] agenda
-- [ ] almanak
+- [*] almanak
+    - [*] index.twig
 - [ ] announcements
 - [ ] besturen
-- [ ] boeken
+- [*] boeken
+    - [*] go_to_log_in.twig
+    - [*] go_to_webshop.twig
 - [ ] commissies
 - [ ] committeebattle
 - [*] forum
@@ -50,7 +53,9 @@
     - [ ] logout.twig
     - [ ] overrides.twig
 - [ ] settings
-- [ ] show
+- [-] show
+    - [ ] form.twig
+    - [*] single.twig
 - [ ] signup
 - [ ] stickers
 - [ ] wachtwoordvergeten
@@ -91,6 +96,7 @@
     - Poll in forum/_poll.twig
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
+    - boeken/go_to_login.twig
 - Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - Narrow content container for improved readability. Probably with TOC sidebar.
 - Almanak rendering. Last row is weird, images are not centered.
@@ -98,6 +104,7 @@
     - forum/poll_form.twig
     - forum/reply_form.twig
     - forum/thread_form.twig
+- Bulma typography is inconsistent across a single page.
 
 
 ## Other
@@ -105,7 +112,7 @@
 - Remove profile signature, it isn't used and didn't fit in the design
 - Remove language switch from profile
 - Almanac form is weird. May need some backend improvements (filter on filter). 
-
+- Titles in pages behave weird. Maybe some backend improvements?
 
 # Pending Design Decisions
 
