@@ -58,7 +58,9 @@
     - [*] single.twig
 - [ ] signup
 - [ ] stickers
-- [ ] wachtwoordvergeten
+- [*] wachtwoordvergeten
+    - [*] request_form.twig
+    - [*] reset_form.twig
 - [ ] weblog
 
 
@@ -124,3 +126,4 @@
 
 - Inline login form or separate page?
 - Rounded profile pictures in Almanak? Forum?
+- Depracate weblog?

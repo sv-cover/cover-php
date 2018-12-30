@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Modify page') : __('Make a page') }}</h1>
 
-<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
+<form method="post" action="{{ view.get_form_action(iter) }}">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}

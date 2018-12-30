@@ -6,7 +6,7 @@
 
 {% block content %}
 <h1 class="title">{{ __('Impersonate a user') }}</h1>
-<form method="post" action="{{ link('sessions.overrides') }} " class="vertical-form overrides-form">
+<form method="post" action="{{ link('sessions.overrides') }} ">
 	{{ html_nonce('session_overrides') }}
 	{{ html_input_hidden('referrer', referrer) }}
 	
