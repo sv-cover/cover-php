@@ -48,13 +48,13 @@
 - [ ] search
 - [-] sessions
     - [*] \_login_widget.twig
-    - [ ] inactive.twig
-    - [ ] login.twig
-    - [ ] logout.twig
-    - [ ] overrides.twig
+    - [*] inactive.twig
+    - [*] login.twig
+    - [*] logout.twig
+    - [*] overrides.twig
 - [ ] settings
-- [-] show
-    - [ ] form.twig
+- [*] show
+    - [*] form.twig
     - [*] single.twig
 - [ ] signup
 - [ ] stickers
@@ -85,6 +85,8 @@
     - Impersonate
     - [maybe] Forum delete thread/message
     - [maybe] Forum edit message
+- Autocomplete
+    - session/overrides.twig (autocomlete member)
 
 
 ## Bulma extensions / custom CSS
@@ -105,6 +107,8 @@
     - forum/reply_form.twig
     - forum/thread_form.twig
 - Bulma typography is inconsistent across a single page.
+- Fieldset in: 
+    - sessions/overrides.twig
 
 
 ## Other
@@ -113,6 +117,8 @@
 - Remove language switch from profile
 - Almanac form is weird. May need some backend improvements (filter on filter). 
 - Titles in pages behave weird. Maybe some backend improvements?
+- Transpose columns in session/overrides.twig
+
 
 # Pending Design Decisions
 

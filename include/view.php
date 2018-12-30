@@ -148,11 +148,11 @@ class View
 	public function scripts()
 	{
 		return [
-			get_theme_data('data/jquery-2.2.0.min.js'),
-			get_theme_data('data/jquery-ui.min.js'),
-			get_theme_data('data/common.js'),
-			get_theme_data('data/dropdown.js'),
-			get_theme_data('data/cache.js')
+			// get_theme_data('data/jquery-2.2.0.min.js'),
+			// get_theme_data('data/jquery-ui.min.js'),
+			// get_theme_data('data/common.js'),
+			// get_theme_data('data/dropdown.js'),
+			// get_theme_data('data/cache.js')
 		];
 	}
 

@@ -213,7 +213,8 @@ class HTMLTwigExtension extends Twig_Extension
 		if ($label) {
 			$label = markup_format_text($label);
 			$params['class'] = (isset($params['class']) ? ($params['class'] . ' ') : '') . 'checkbox';
-			$checkbox_field = self::_label(sprintf('%s %s', $checkbox_field, $label), $name, $params);
+			$id = isset($params['id']) ? preg_replace('/^field-/', '', $params['id'], 1) : $name;
+			$checkbox_field = self::_label(sprintf('%s %s', $checkbox_field, $label), $id, $params);
 		}
 
 		return $hidden_field . $checkbox_field;
@@ -260,7 +261,8 @@ class HTMLTwigExtension extends Twig_Extension
 		if ($label) {
 			$label = markup_format_text($label);
 			$params['class'] = (isset($params['class']) ? ($params['class'] . ' ') : '') . 'radio';
-			$radio_field = self::_label(sprintf('%s %s', $radio_field, $label), $name, $params);
+			$id = isset($params['id']) ? preg_replace('/^field-/', '', $params['id'], 1) : $name;
+			$radio_field = self::_label(sprintf('%s %s', $radio_field, $label), $id, $params);
 		}
 
 		return $radio_field;
