@@ -34,7 +34,9 @@ def insert_face(face, cluster_id):
 		'h': (face['face'].bottom() - face['face'].top()) / face['height']
 	}
 	icur.execute("""
-		UPDATE foto_faces SET cluster_id = %(cluster_id)s WHERE foto_id = %(id)s
+		UPDATE foto_faces
+		SET cluster_id = %(cluster_id)s
+		WHERE foto_id = %(id)s
 		AND x > %(x)s - 0.05 AND x < %(x)s + 0.05
 		AND y > %(y)s - 0.05 AND y < %(y)s + 0.05
 		AND w > %(w)s - 0.05 AND w < %(w)s + 0.05

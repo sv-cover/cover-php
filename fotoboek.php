@@ -778,6 +778,14 @@
 
 			$photos = $book->get_photos();
 
+			if ($this->_form_is_submitted('cluster_photos', $book)) {
+				if (!$this->policy->user_can_update($book))
+					throw new UnauthorizedException();
+				
+				$face_model = get_model('DataModelPhotobookFace');
+				$face_model->refresh_faces($photos);
+			}
+
 			$face_model = get_model('DataModelPhotobookFace');
 			$faces = $face_model->get_for_book($book);
 

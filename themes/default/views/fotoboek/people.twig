@@ -38,6 +38,13 @@
 	</div>
 	{% endif %}
 
+	{% if user_can_update book %}
+	<form action="" method="post">
+		{{ html_nonce('cluster_photos', book) }}
+		<button type="submit" class="button">{{ __("Re-run face detection") }}</button>
+	</form>
+	{% endif %}
+
 	{% for cluster, faces in clusters %}
 	<section style="margin-bottom: 2em; border-bottom: 1px solid #ccc">
 		<h2>Cluster {{cluster}}</h2>
