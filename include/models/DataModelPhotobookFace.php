@@ -56,6 +56,10 @@ class DataIterPhotobookFace extends DataIter
 
 class DataIterFacesPhotobook extends DataIterPhotobook
 {
+	public function get_members()
+	{
+		return array_map([get_model('DataModelMember'), 'get_iter'], $this['member_ids']);
+	}
 	/**
 	 * Add a special id to this photo book, consisting of 'member_' and the 
 	 * member ids shown in this book.

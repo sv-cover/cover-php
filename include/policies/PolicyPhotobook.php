@@ -46,6 +46,12 @@ class PolicyPhotobook implements Policy
 		if (!get_identity()->is_member() && $book instanceof DataIterFacesPhotobook)
 			return $book['member_ids'] == [get_identity()->get('id')];
 
+		// Member-specific albums are forbidden if one of the members has marked their photo* as hidden
+		if ($book instanceof DataIterFacesPhotobook && !get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+			foreach ($book['members'] as $member)
+				if ($member->is_private('foto'))
+					return false;
+
 		// Older photo books are not visible for non-members
 		if (get_identity()->is_member())
 			return true;
