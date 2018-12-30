@@ -4,8 +4,9 @@
 
 {% macro render_face(face) %}
 	{% set size = face.photo.get_scaled_size(null, 400) %}
-	<div style="width: {{face.w * size[0] }}px; height: {{face.h * size[1]}}px; overflow: hidden; position: relative;">
-		<img src="{{ face.photo.get_url(null, 400) }}" width="{{ size[0] }}" height="{{ size[1] }}" style="position: absolute; left: -{{face.x * size[0]}}px; top: -{{face.y * size[1] }}px">
+	{% set scale = 100 / (face.h * size[1]) %}
+	<div style="display: inline-block; width: {{scale * face.w * size[0] }}px; height: {{scale * face.h * size[1]}}px; overflow: hidden; position: relative;" title="Added on {{face.photo.added_on}}">
+		<img src="{{ face.photo.get_url(null, 400) }}" width="{{ scale * size[0] }}" height="{{ scale * size[1] }}" style="position: absolute; left: -{{scale * face.x * size[0]}}px; top: -{{scale * face.y * size[1] }}px">
 	</div>
 {% endmacro %}
 
@@ -37,14 +38,22 @@
 	</div>
 	{% endif %}
 
-	<ul>
 	{% for cluster, faces in clusters %}
-		<li>{{cluster}}</li>
-		<ul>
-			{% for face in faces %}
-				{{ fotoboek.render_face(face) }}
-			{% endfor %}
-		</ul>
-	{% endfor %}		
+	<section style="margin-bottom: 2em; border-bottom: 1px solid #ccc">
+		<h2>Cluster {{cluster}}</h2>
+		{% for lid_id, lid_faces in faces|group_by('lid_id') %}
+			<section style="margin-bottom: 1em">
+				{% if not lid_id %}
+					<h3>Not tagged</h3>
+				{% else %}
+					<h3>Tagged as <a href="profiel.php?lid={{lid_id}}">{{ lid_id }}</a></h3>
+				{% endif %}
+				{% for face in lid_faces %}
+					{{ fotoboek.render_face(face) }}
+				{% endfor %}
+			</section>
+		{% endfor %}
+		</section>
+	{% endfor %}
 </div>
 {% endblock %}
