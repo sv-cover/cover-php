@@ -204,17 +204,8 @@
 	  * @result a string with random characters
 	  */
 	function randstr($length = 8) {
-		mt_srand((double)microtime() * 10000);
-
-		$ranges = array(1 => array(48, 57), 2 => array(65, 90), 3 => array(97, 122));
-		$str = '';
-
-		for ($i = 0; $i < $length; $i++) {
-			$x = mt_rand(1,3);
-			$str .= chr(mt_rand($ranges[$x][0], $ranges[$x][1]));
-		}
-
-		return $str;
+		$length = ($length < 4) ? 4 : $length;
+        return bin2hex(random_bytes(($length-($length%2))/2));
 	}
 
 	/** @group Functions
