@@ -3,65 +3,86 @@
 {% block title __('Almanac') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Almanac') }}</h1>
-<div class="messageBox">	
-	<form name="almanak" action="almanak.php" method="GET">
-		<table class="almanak_navigation">
-			<tr>
-				<td class="title">{{ __('Name') }}:</td>
-				<td>
-					{{ html_input_text('search', params, size=40) }}
-					{{ html_input_submit('', __('Search')) }}
-				</td>
-			</tr>
-			{% if global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
-			<tr>
-				<td class="title">{{ __('Visibility') }}:</td>
-				<td colspan="2">
-					<ul class="nav-tabs horizontal">
-						<li><a href="?status={{ constant('MEMBER_STATUS_LID') }}">{{ __('Member') }}</a></li>
-						<li><a href="?status={{ constant('MEMBER_STATUS_LID_AF') }}">{{ __('Previously a member') }}</a></li>
-						<li><a href="?status={{ constant('MEMBER_STATUS_DONATEUR') }}">{{ __('Donor') }}</a></li>
+<h1 class="title">{{ __('Almanac') }}</h1>
+<div class="media">
+	<form class="media-content" name="almanak" action="almanak.php" method="GET">
+		<div class="field">
+			{{ html_label(__('Name'), 'search') }}
+			<div class="control">
+				{{ html_input_text('search', params, size=40) }}
+			</div>
+		</div>
+		<div class="control buttons">
+			<button type="submit" class="button">{{ __('Search') }}</button>
+		</div>
+
+		<div class="field">
+			<label class="label" for="status">Status</label>
+			<div class="control">
+				<div class="tabs is-toggle is-small" id="status">
+					<ul>
+						<li class="{% if params.status == constant('MEMBER_STATUS_LID') %}is-active{% endif %}">
+							<a href="?status={{ constant('MEMBER_STATUS_LID') }}">{{ __('Member') }}</a>
+						</li>
+						<li class="{% if params.status == constant('MEMBER_STATUS_LID_AF') %}is-active{% endif %}">
+							<a href="?status={{ constant('MEMBER_STATUS_LID_AF') }}">{{ __('Previously a member') }}</a>
+						</li>
+						<li class="{% if params.status == constant('MEMBER_STATUS_DONATEUR') %}is-active{% endif %}">
+							<a href="?status={{ constant('MEMBER_STATUS_DONATEUR') }}">{{ __('Donor') }}</a>
+						</li>
 					</ul>
-				</td>
-			</tr>
-			{% endif %}
-			<tr>
-				<td class="alphabet" colspan="3">
-					<ol class="nav-tabs horizontal">
-					{% for jaar in model.get_distinct_years if jaar != '' %}
-						<li class="{% if params.year == jaar %}active{% endif %}"><a href="?search_year={{ jaar }}">{{ jaar }}</a></li>
-					{% endfor %}
-					</ol>
-				</td>
-			</tr>
-		</table>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<label for="starting-year" class="label">Starting Year</label>
+			<div class="control">
+				<div class="tabs is-toggle is-small" id="starting-year">
+					<ul>
+						{% for year in model.get_distinct_years if year != '' %}
+							<li class="{% if params.year == year %}is-active{% endif %}"><a href="?search_year={{ year }}">{{ year }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
 	</form>
-	{% if iters is null %}
-		<p>{{ __('Make a selection above to view the almanac.') }}</p>
-		{% if global.identity.member_in_committee(constant('COMMISSIE_ALMANAKCIE')) %}
-		<p>
-			{{ __('Download yearbook data:') }}
-			<a href="almanak.php?export=csv">{{ __('CSV with personal details') }}</a>
-			<a href="almanak.php?export=photos">{{ __('ZIP archive with profile pictures') }}</a>
-		</p>
+</div>
+
+<div class="media">
+	<div class="media-content">
+		{% if iters is null %}
+			<div class="content">
+				<p>{{ __('Make a selection above to view the almanac.') }}</p>
+				{% if global.identity.member_in_committee(constant('COMMISSIE_ALMANAKCIE')) %}
+				<p>
+					{{ __('Download yearbook data:') }}
+					<a href="almanak.php?export=csv">{{ __('CSV with personal details') }}</a>
+					{{ __('or') }}
+					<a href="almanak.php?export=photos">{{ __('ZIP archive with profile pictures') }}</a>
+				</p>
+				{% endif %}
+			</div>
+		{% else %}
+			<div class="content">
+				<p>{{ __N('There is <em>%d</em> member that coincide with your searching criteria.', 'There are <em>%d</em> members that coincide with your searching criteria.', iters|length)|raw }}</p>
+			</div>
+			<ul class="columns is-multiline is-mobile">
+				{% for iter in iters %}
+				<li class="column has-text-centered">
+					<a href="{{ link('profiel.read', member=iter) }}">	
+						<figure class="image is-128x128">
+							<img width="128" height="128" src="{{ link('foto.square', member=iter, width=256) }}" alt="{{ __('Photo of %s')|format(iter|full_name) }}">
+						</figure>
+						<span class="name">{{ iter|personal_full_name }}</span>
+						{% if view.status_label(iter) %}
+							<small><span class="status is-block">{{ view.status_label(iter) }}</span></small>
+						{% endif %}
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
 		{% endif %}
-	{% else %}
-		<h3>{{ __N('There is <em>%d</em> member that coincide with your searching criteria.', 'There are <em>%d</em> members that coincide with your searching criteria.', iters|length)|raw }}</h3>
-		
-		<ol class="almanac">
-			{% for iter in iters %}
-			<li>
-				<a href="{{ link('profiel.read', member=iter) }}" class="profile-widget round {{ view.classname(iter) }}">
-					<img width="100" height="100" src="{{ link('foto.square', member=iter, width=200) }}" alt="{{ __('foto van %s')|format(iter|full_name) }}">
-					<span class="name">{{ iter|personal_full_name }}</span>
-					{% if view.status_label(iter) %}
-						<span class="status">{{ view.status_label(iter) }}</span>
-					{% endif %}
-				</a>
-			</li>
-			{% endfor %}
-		</ol>
-	{% endif %}
+	</div>
 </div>
 {% endblock %}

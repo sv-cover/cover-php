@@ -93,9 +93,17 @@
     - sessions/_login_widget.twig (to separate the form from the become a member button)
 - Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - Narrow content container for improved readability. Probably with TOC sidebar.
+- Almanak rendering. Last row is weird, images are not centered.
 
 
 ## Other
 
 - Remove profile signature, it isn't used and didn't fit in the design
 - Remove language switch from profile
+- Almanac form is weird. May need some backend improvements (filter on filter). 
+
+
+# Pending Design Decisions
+
+- Inline login form or separate page?
+- Rounded profile pictures in Almanak? Forum?
