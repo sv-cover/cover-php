@@ -52,7 +52,10 @@
     - [*] login.twig
     - [*] logout.twig
     - [*] overrides.twig
-- [ ] settings
+- [*] settings
+    - [*] confirm_delete.twig
+    - [*] form.twig
+    - [*] index.twig
 - [*] show
     - [*] form.twig
     - [*] single.twig
