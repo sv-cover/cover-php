@@ -122,9 +122,9 @@
 			return member_full_name($this);
 		}
 
-		public function is_private($field)
+		public function is_private($field, $unless_self = false)
 		{
-			return $this->model->is_private($this, $field);
+			return $this->model->is_private($this, $field, $unless_self);
 		}
 
 		public function get_search_relevance()
