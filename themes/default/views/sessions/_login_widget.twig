@@ -11,15 +11,15 @@
             {{ html_input_hidden('referrer', referrer) }}
         {% endif %}
         <div class="field">
+            {{ html_label(__('E-mail address'), 'email', errors=errors, required=true) }} 
             <div class="control">
-                {{ html_label(__('E-mail address'), 'email', errors=errors, required=true) }} 
                 {{ html_input_text('email', null, placeholder=__('E-mail address'), autofocus=true) }}
             </div>
         </div>
 
         <div class="field">
+            {{ html_label(__('Password'), 'password', errors=errors, required=true) }}
             <div class="control">
-                {{ html_label(__('Password'), 'password', errors=errors, required=true) }}
                 {{ html_input_password('password', placeholder=__('Password')) }}
             </div>
         </div>
@@ -30,16 +30,18 @@
             </div>
         </div>
 
-        <div class="control">
-            <button type="submit" class="button is-primary is-fullwidth">
-                {{ __('Log in') }}
-                {% if external_domain %}
-                    <small>{{ __('and continue to %s')|format(external_domain) }}</small>
-                {% endif %}
-            </button>
+        <div class="field">
+            <div class="control">
+                <button type="submit" class="button is-primary is-fullwidth">
+                    {{ __('Log in') }}
+                    {% if external_domain %}
+                        <small>{{ __('and continue to %s')|format(external_domain) }}</small>
+                    {% endif %}
+                </button>
+            </div>
         </div>
     
-        <div class="control">
+        <div class="field">
             <a href="wachtwoordvergeten.php">{{ __('Forgot your password?') }}</a>
         </div>
     </form>

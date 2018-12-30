@@ -94,6 +94,10 @@
 - Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - Narrow content container for improved readability. Probably with TOC sidebar.
 - Almanak rendering. Last row is weird, images are not centered.
+- Tabs in form field (for preview rendering) should be closer to field in:
+    - forum/poll_form.twig
+    - forum/reply_form.twig
+    - forum/thread_form.twig
 
 
 ## Other
