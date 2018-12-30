@@ -45,8 +45,17 @@
 - [ ] lidworden
 - [ ] mailinglijsten
 - [ ] profiel
-- [ ] search
-- [-] sessions
+- [*] search
+    - [*] \_single_agendapunt.twig
+    - [*] \_single_announcement.twig
+    - [*] \_single_committee.twig
+    - [*] \_single_forum_message.twig
+    - [*] \_single_fotoboek.twig
+    - [*] \_single_member.twig
+    - [*] \_single_page.twig
+    - [*] \_single_wiki.twig
+    - [*] index.twig
+- [*] sessions
     - [*] \_login_widget.twig
     - [*] inactive.twig
     - [*] login.twig
@@ -92,6 +101,7 @@
     - [maybe] Forum edit message
 - Autocomplete
     - session/overrides.twig (autocomlete member)
+- Whatever is happening in search results :P
 
 
 ## Bulma extensions / custom CSS
@@ -101,6 +111,7 @@
         - forum/forum.twig
         - forum/thread.twig
     - Poll in forum/_poll.twig
+    - Search statistics in search/index.twig.
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
@@ -114,6 +125,9 @@
 - Bulma typography is inconsistent across a single page.
 - Fieldset in: 
     - sessions/overrides.twig
+- Calendar icon in:
+    - search/\_single_agendapunt.twig
+- Bulma dl is ugly
 
 
 ## Other
@@ -124,9 +138,8 @@
 - Titles in pages behave weird. Maybe some backend improvements?
 - Transpose columns in session/overrides.twig
 
-
 # Pending Design Decisions
 
 - Inline login form or separate page?
 - Rounded profile pictures in Almanak? Forum?
-- Depracate weblog?
+- Deprecate weblog?

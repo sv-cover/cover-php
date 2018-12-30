@@ -71,15 +71,15 @@
 	{% set author_link = view.get_author_link(message) %}
 	{% set author_photo = view.get_author_photo(message) %}
 	<article class="media">
-			<figure class="media-left">
-				<p class="image is-64x64">
-					{% if author.avatar %}
-						<img src="{{ author.avatar|e('html_attr') }}" alt="Avatar of {{ author.name }}">
-					{% elseif author_photo %}
-						<img src="{{ author_photo|e('html_attr') }}" alt="Photo of {{ author.name }}">
-					{% endif %}
-				</p>
-			</figure>
+		<figure class="media-left">
+			<p class="image is-64x64">
+				{% if author.avatar %}
+					<img src="{{ author.avatar|e('html_attr') }}" alt="Avatar of {{ author.name }}">
+				{% elseif author_photo %}
+					<img src="{{ author_photo|e('html_attr') }}" alt="Photo of {{ author.name }}">
+				{% endif %}
+			</p>
+		</figure>
 		<div class="media-content">
 			<div class="content">
 				<p>
