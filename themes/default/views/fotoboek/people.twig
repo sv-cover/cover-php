@@ -56,7 +56,7 @@
 					<h3>Tagged as <a href="profiel.php?lid={{lid_id}}">{{ lid_id }}</a></h3>
 				{% endif %}
 				{% for face in lid_faces %}
-					<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ face.photo_id }}">{{ fotoboek.render_face(face) }}</a>
+					<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ face.foto_id }}">{{ fotoboek.render_face(face) }}</a>
 				{% endfor %}
 			</section>
 		{% endfor %}
