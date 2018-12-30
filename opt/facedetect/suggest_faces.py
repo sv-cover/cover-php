@@ -6,6 +6,7 @@ import numpy as np
 import dlib
 import sys
 import os
+from random import random
 
 conn = psycopg2.connect("dbname=webcie")
 cur = conn.cursor()
@@ -79,8 +80,13 @@ if __name__ == '__main__':
 			print("error")
 
 	labels = dlib.chinese_whispers_clustering([face['descriptor'] for face in faces], 0.5)
+	
+	# Add a random offset to the cluster ids as to make them not overlap
+	cluster_offset = random() * 2147483647
+
 	for n, cluster_id in enumerate(labels):
-		insert_face(faces[n], cluster_id)
+		insert_face(faces[n], cluster_offset + cluster_id)
+	
 	conn.commit()
 
 	print("Finished.")
