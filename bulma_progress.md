@@ -22,8 +22,15 @@
 - [ ] agenda
 - [*] almanak
     - [*] index.twig
-- [ ] announcements
-- [ ] besturen
+- [*] announcements
+    - [*] announcements.twig
+    - [*] confirm_delete.twig
+    - [*] form.twig
+    - [*] index.twig
+    - [*] single.twig
+- [*] besturen
+    - [*] form.twig
+    - [*] index.twig
 - [*] boeken
     - [*] go_to_log_in.twig
     - [*] go_to_webshop.twig
@@ -76,6 +83,8 @@
 - [ ] weblog
 
 
+
+
 # Bulma Implementation Issues
 
 
@@ -99,6 +108,8 @@
     - Impersonate
     - [maybe] Forum delete thread/message
     - [maybe] Forum edit message
+    - Delete announcement
+    - [maybe] Edit announcement
 - Autocomplete
     - session/overrides.twig (autocomlete member)
 - Whatever is happening in search results :P
@@ -127,7 +138,7 @@
     - sessions/overrides.twig
 - Calendar icon in:
     - search/\_single_agendapunt.twig
-- Bulma dl is ugly
+- Bulma dl styling is ugly
 
 
 ## Other
@@ -137,9 +148,14 @@
 - Almanac form is weird. May need some backend improvements (filter on filter). 
 - Titles in pages behave weird. Maybe some backend improvements?
 - Transpose columns in session/overrides.twig
+- Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
+
+
+
 
 # Pending Design Decisions
 
 - Inline login form or separate page?
 - Rounded profile pictures in Almanak? Forum?
 - Deprecate weblog?
+- Standardise edit/delete/whatever buttons (announcements vs forum vs editable)

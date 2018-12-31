@@ -3,34 +3,54 @@
 {% block title iter.subject ~ ' :: ' ~ parent() %}
 
 {% block content %}
-{% set committee = iter.committee %}
-<h1>{{ iter.subject }}</h1>
-<div class="messageBox announcement frontpage">
-	<div class="newsTitle">
-		<div class="right">
-			{{ iter.created_on }}
+<article class="media">
+	<div class="media-content">
+		<div class="level is-marginless">
+			<div class="level-left">
+				<h1 class="title">
+					{{ iter.subject }}
+				</h1>
+			</div>
+			<nav class="level-right">
+				{% if user_can_update iter %}
+					<a class="level-item" href="{{ controller.link_to_update(iter) }}" title="{{ __('Modify announcement') }}">
+						<span class="icon is-small">
+							<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+						</span>
+						<span class="is-sr-only">
+							{{ __('Modify announcement') }}
+						</span>
+					</a>
+				{% endif %}
+				{% if user_can_delete iter %}
+					<a class="level-item" href="{{ controller.link_to_delete(iter) }}" title="{{ __('Delete announcement') }}">
+						<span class="icon is-small">
+							<i class="fas fa-trash" aria-hidden="true"></i>
+						</span>
+						<span class="is-sr-only">
+							{{ __('Delete announcement') }}
+						</span>
+					</a>
+				{% endif %}
+			</nav>
+		</div>
+		<p class="subtitle is-6">
+			<small>
+				{{ __('By') }}:
+				<a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a>
+				{{ __('on') }}
+				{{ iter.created_on|date() }}
+			</small>
+		</p>
+		<div class="content">
+			{{ iter.message|parse_markup }}
 		</div>
 
-		<div class="subtitle">
-			{{ __('Placed by') }}:
-			<a href="commissies.php?commissie={{ committee.login }}">{{ committee.naam }}</a>
-		</div>
 	</div>
-	
-	<hr class="separator">
-	
-	<div class="bericht">
-		{{ iter.message|parse_markup }}
+</article>
+<article class="media">
+	<div class="media-content has-text-centered">
+		<a href="{{ controller.link_to_index() }}">{{ __('Show all announcements') }}</a>
 	</div>
-
-	<ul class="actions">
-		<li><a href="{{ controller.link_to_index() }}">{{ __('Show all announcements') }}</a></li>
-		{% if user_can_update iter %}
-		<li><a href="{{ controller.link_to_update(iter) }}">{{ __('Modify') }}</a></li>
-		{% endif %}
-		{% if user_can_delete iter %}
-		<li><a href="{{ controller.link_to_delete(iter) }}">{{ __('Delete') }}</a></li>
-		{% endif %}
-	</ul>
-</div>
+</article>
 {% endblock %}
