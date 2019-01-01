@@ -34,7 +34,19 @@
 - [*] boeken
     - [*] go_to_log_in.twig
     - [*] go_to_webshop.twig
-- [ ] commissies
+- [*] commissies
+    - [*] \_agenda.twig
+    - [*] \_contact.twig
+    - [*] \_foto.twig
+    - [*] \_leden.twig
+    - [*] \_leden_gezocht.twig
+    - [ ] \_navigation.twig (deprecated?)
+    - [*] archive.twig
+    - [*] confirm_delete.twig
+    - [*] form.twig
+    - [*] index.twig
+    - [*] single.twig
+    - [*] working_groups.twig
 - [ ] committeebattle
 - [*] forum
     - [*] \_poll.twig
@@ -113,6 +125,7 @@
 - Autocomplete
     - session/overrides.twig (autocomlete member)
 - Whatever is happening in search results :P
+- Whatever is happening on the committee form
 
 
 ## Bulma extensions / custom CSS
@@ -123,12 +136,16 @@
         - forum/thread.twig
     - Poll in forum/_poll.twig
     - Search statistics in search/index.twig.
+    - Individual parts of commissies/archive.twig
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
 - Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - Narrow content container for improved readability. Probably with TOC sidebar.
 - Almanak rendering. Last row is weird, images are not centered.
+    - almanak/index.twig
+    - commissies/_leden.twig
+    - commissies/working_groups.twig
 - Tabs in form field (for preview rendering) should be closer to field in:
     - forum/poll_form.twig
     - forum/reply_form.twig
@@ -138,6 +155,7 @@
     - sessions/overrides.twig
 - Calendar icon in:
     - search/\_single_agendapunt.twig
+    - commissies/_agenda.twig
 - Bulma dl styling is ugly
 
 
@@ -149,13 +167,17 @@
 - Titles in pages behave weird. Maybe some backend improvements?
 - Transpose columns in session/overrides.twig
 - Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
-
+- Old committee page was better. But at least it's bulma now :)
+- Single committee page is crap now.
+- Working groups page needs major redesign.
 
 
 
 # Pending Design Decisions
 
 - Inline login form or separate page?
-- Rounded profile pictures in Almanak? Forum?
+- Circular or square profile pictures in Almanak? Forum?
 - Deprecate weblog?
 - Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
+- If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
+- The head>title separator is weird (::) and I hate it.

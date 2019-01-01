@@ -5,34 +5,37 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="level">
+	<div class="level-left">
+		<h1 class="title">{{ iter.naam }}</h1>
+	</div>
+	<div class="buttons level-right">
+		{% if user_can_update iter %}
+			<a href="{{ controller.link_to_update(iter) }}" class="button">{{ __('Modify %s')|format(view.available_committee_types[iter.type]) }}</a>
+		{% endif %}
+		
+		{% if user_can_update iter.page %}
+			<a href="{{ link('editable.update', editable=iter.page) }}" class="button">{{ __('Modify %s page')|format(view.available_committee_types[iter.type]) }}</a>
+		{% endif %}
+	</div>
+</div>
+
 {% if interest_reported %}
-	<div class="warning-section">
+	<div class="notification is-danger">
+		<button class="delete"></button>
 		<p>{{ __('Cool! We’ve notified the Commissioner of Internal Affairs for you!') }}</p>
 	</div>
-{% endif %}
-<div class="pageheading">
-	{% if user_can_update iter %}
-	<div class="controls inline">
-		<a href="{{ controller.link_to_update(iter) }}" class="edit-link">{{ __('Modify %s')|format(view.available_committee_types[iter.type]) }}</a>
-	</div>
-	{% endif %}
-	<h1>{{ iter.naam }}</h1>
-</div>
-{% if iter.has_vacancy %}
+{% elseif iter.has_vacancy %}
 	{{ include('_leden_gezocht.twig') }}
 {% endif %}
+
 <div class="committee-page messageBox">
 	{{ include('_foto.twig') }}
 
 	{{ include('_contact.twig') }}
 
-	<div class="content">
-		{% if user_can_update iter.page %}
-		<div class="controls inline">
-			<a href="{{ link('editable.update', editable=iter.page) }}" class="edit-link">{{ __('Modify %s page')|format(view.available_committee_types[iter.type]) }}</a>
-		</div>
-		{% endif %}
-		
+	<div class="content">		
 		{{ iter.page.locale_content|parse_markup }}
 	</div>
 
@@ -41,5 +44,4 @@
 	{{ include('_agenda.twig') }}
 </div>
 
-{{ include ('_navigation.twig') }}
 {% endblock %}

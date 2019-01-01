@@ -3,81 +3,103 @@
 {% block title (iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group') }}</h1>
-<div class="messageBox">
-	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
-		{% if iter.has_id %}
-			{{ html_nonce('update', iter) }}
-		{% else %}
-			{{ html_nonce('create', iter) }}
-		{% endif %}
+<h1 class="title">{{ iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group') }}</h1>
+<form method="post" action="{{ view.get_form_action(iter) }}">
+	{% if iter.has_id %}
+		{{ html_nonce('update', iter) }}
+	{% else %}
+		{{ html_nonce('create', iter) }}
+	{% endif %}
 
-		{% if iter.hidden %}
-			<div class="warning-section">
-				{{ html_input_checkbox('hidden', iter.data) }}
-				{{ html_label(__('This committee/working group is deactivated'), 'hidden', errors=errors) }}
+	{% if iter.hidden %}
+		<div class="field notification is-danger">
+			<div class="control">
+				{{ html_input_checkbox('hidden', iter.data, label=__('This committee/working group is deactivated'), errors=errors) }}
 			</div>
-		{% endif %}
-
-		<div>
-			{{ html_label(__('Type'), 'type', errors=errors, required=true) }}
-			{{ html_select_field('type', view.available_committee_types, iter, required=true) }}
 		</div>
+	{% endif %}
 
-		<div>
-			{{ html_label(__('Name'), 'naam', errors=errors, required=true) }}
+	<div class="field">
+		{{ html_label(__('Type'), 'type', errors=errors, required=true) }}
+		<div class="control">
+			<div class="select">
+				{{ html_select_field('type', view.available_committee_types, iter, required=true) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Name'), 'naam', errors=errors, required=true) }}
+		<div class="control">
 			{{ html_input_text('naam', iter.data, required=true) }}
 		</div>
+	</div>
 
-		<div class="committee-members">
-			<table>
-				<thead>
-					<tr>
-						<th>{{ __('Member') }}</th>
-						<th>{{ __('Function') }}</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% if iter.has_id() %}
-						{% for member in iter.members %}
-							<tr>
-								<td>{{ member|full_name_ignore_privacy }}</td>
-								<td><input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="autocomplete-function"></td>
-								<td><button type="button" class="button remove-button" title="{{ __('Remove member from committee') }}">&times;</button></td>
-							</tr>
-						{% endfor %}
-					{% endif %}
-				</tbody>
-				<tfoot>
-					<tr>
-						<td><input type="text" class="committee-member-name" placeholder="{{ __('Name') }}"></td>
-						<td><input type="text" class="committee-member-function autocomplete-function" placeholder="{{ __('Function') }}"></td>
-						<td><button type="button" class="button add-button">{{ __('Add') }}</button></td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
+	<div class="field">
+		<table class="table is-fullwidth">
+			<thead>
+				<tr>
+					<th>{{ __('Member') }}</th>
+					<th>{{ __('Function') }}</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if iter.has_id() %}
+					{% for member in iter.members %}
+						<tr>
+							<td>{{ member|full_name_ignore_privacy }}</td>
+							<td>
+								<input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="input is-small autocomplete-function">
+							</td>
+							<td class="has-text-right">
+								<button type="button" class="button is-small remove-button" title="{{ __('Remove member from committee') }}">&times;</button>
+							</td>
+						</tr>
+					{% endfor %}
+				{% endif %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td>
+						<input class="input" type="text" class="committee-member-name" placeholder="{{ __('Name') }}">
+					</td>
+					<td>
+						<input class="input" type="text" class="committee-member-function autocomplete-function" placeholder="{{ __('Function') }}">
+					</td>
+					<td class="has-text-right">
+						<button type="button" class="button add-button">{{ __('Add') }}</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
 
-		<div>
-			{{ html_label(__('This committee/working group is looking for new members till'), 'vacancies', errors=errors) }}
+	<div class="field">
+		{{ html_label(__('This committee/working group is looking for new members till'), 'vacancies', errors=errors) }}
+		<div class="control">
 			{{ html_input_date('vacancies', iter.data) }}
-			<p>{{ __("A banner with the face of the Commissioner of Internal Affairs is shown on the pages of committees or working groups who have vacancies. If you don't have a specific deadline, enter a value more than a year into the future. If the committee or working group is not looking for new members, leave the field empty.") }}</p>
 		</div>
+		<p class="help">
+			{{ __("A banner with the face of the Commissioner of Internal Affairs is shown on the pages of committees or working groups who have vacancies. If you don't have a specific deadline, enter a value more than a year into the future. If the committee or working group is not looking for new members, leave the field empty.") }}
+		</p>
+	</div>
 
-		<div>
-			<button type="submit" class="button">{{ iter.has_id() ? __('Modify %s')|format(view.available_committee_types[iter.type]) : __('Create new committee/working group') }}</button>
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">{{ iter.has_id() ? __('Modify %s')|format(view.available_committee_types[iter.type]) : __('Create new committee/working group') }}</button>
 			{% if iter.has_id %}
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Return to %s')|format(view.available_committee_types[iter.type]) }}</a>
+				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Return to %s')|format(view.available_committee_types[iter.type]) }}</a>
 			{% else %}
-			<a href="{{ controller.link_to_index() }}">{{ __('Back to all committees') }}</a>
+				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to all committees') }}</a>
 			{% endif %}
 			{% if iter.has_id and not iter.hidden and user_can_delete iter %}
-			<a href="{{ controller.link_to_delete(iter) }}" class="delete-link">{{ __('Deactivate') }}</a>
+				<a href="{{ controller.link_to_delete(iter) }}" class="button">{{ __('Deactivate') }}</a>
 			{% endif %}
 		</div>
-	</form>
-</div>
+	</div>
+</form>
+
 <script>
 jQuery(function($) {
 	var $form = $('form .committee-members')
