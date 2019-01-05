@@ -47,7 +47,11 @@
     - [*] index.twig
     - [*] single.twig
     - [*] working_groups.twig
-- [ ] committeebattle
+- [*] committeebattle
+    - [*] committee.twig
+    - [*] confirm_delete.twig
+    - [*] form.twig
+    - [*] index.twig
 - [*] forum
     - [*] \_poll.twig
     - [*] confirm_delete_message.twig
@@ -59,6 +63,7 @@
     - [*] thread.twig
     - [*] thread_confirm_delete.twig
     - [*] thread_form.twig
+- [ ] fotoboek
 - [ ] fotoboekreacties
 - [ ] homepage
 - [ ] lidworden
@@ -122,8 +127,10 @@
     - [maybe] Forum edit message
     - Delete announcement
     - [maybe] Edit announcement
+    - Award / edit / delete committee battle points
 - Autocomplete
     - session/overrides.twig (autocomlete member)
+    - committeebattle/form.twig (member)
 - Whatever is happening in search results :P
 - Whatever is happening on the committee form
 
@@ -157,6 +164,7 @@
     - search/\_single_agendapunt.twig
     - commissies/_agenda.twig
 - Bulma dl styling is ugly
+- Multiline select is broken
 
 
 ## Other
@@ -176,7 +184,7 @@
 # Pending Design Decisions
 
 - Inline login form or separate page?
-- Circular or square profile pictures in Almanak? Forum?
+- Circular or square profile pictures in Almanak? Forum? Committee pages?
 - Deprecate weblog?
 - Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
 - If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
