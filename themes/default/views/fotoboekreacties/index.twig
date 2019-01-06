@@ -1,4 +1,5 @@
-<div class="photo-comments">
+<article>
+	<h2 class="title is-4">Comments</h2>
 	{% if comments|length == 0 %}
 		<p>{{ __('There are no comments yet') }}</p>
 	{% else %}
@@ -14,4 +15,4 @@
 			errors: []
 		}) }}
 	{% endif %}
-</div>
+</article>

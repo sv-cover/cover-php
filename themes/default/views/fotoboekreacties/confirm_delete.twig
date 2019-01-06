@@ -1,15 +1,18 @@
 {% extends '@layout/layout.twig' %}
 
 {% block content %}
-<h1>{{ __('Remove comment') }}</h1>
-<div class="messageBox">
-	<form id="confirm-delete-comment-form" method="post" action="{{ controller.link_to_delete(iter)|e('html_attr') }}" class="vertical-form">
-		{{ html_nonce('delete', iter) }}
+<h1 class="title">{{ __('Remove comment') }}</h1>
+<form id="confirm-delete-comment-form" method="post" action="{{ controller.link_to_delete(iter)|e('html_attr') }}">
+	{{ html_nonce('delete', iter) }}
+	<div class="field">
 		<p>{{ __('Are you certain you want to delete the comment posted by <em>%s</em>?')|format(iter.auteur|personal_full_name|e('html'))|raw }}</p>
-		<div>
-			<button type="submit" class="button">{{ __('Remove comment') }}</button>
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Return to photo') }}</a>
+	</div>
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-danger">{{ __('Remove comment') }}</button>
+			<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Return to photo') }}</a>
 		</div>
-	</form>
+	</div>
+</form>
 </div>
 {% endblock %}

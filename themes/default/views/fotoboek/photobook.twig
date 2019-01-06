@@ -1,12 +1,34 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title book.has('title') ? book.title : __('Photo book') ~ ' :: ' ~ parent() %}
+{% block title book.has('titel') ? book.titel : __('Photo book') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <header>
+	{% if book.id is not same as(0) %}
+		<div class="level">
+			<div class="level-left">
+				{{ include('_path.twig') }}
+			</div>
+			<div class="level-right buttons">
+				{% if book.previous_book and user_can_read book.previous_book %}
+					<a href="fotoboek.php?book={{ book.previous_book.id }}" class="button">
+						<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+						<span>{{ book.previous_book.titel }}</span>
+					</a>
+				{% endif %}	
+				{% if book.next_book and user_can_read book.next_book %}
+					<a href="fotoboek.php?book={{ book.next_book.id }}" class="button">
+						<span>{{ book.next_book.titel }}</span>
+						<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+					</a>
+				{% endif %}
+			</div>
+		</div>
+	{% endif %}
+
 	<div class="level">
 		<div class="level-left">
-			<h1 class="title">{{ __('Photo book') }}</h1>
+			<h1 class="title">{{ book.has('titel') ? book.titel : __('Photo book') }}</h1>
 		</div>
 		{# Controls, if applicable #}
 		<div class="level-right">
@@ -101,32 +123,10 @@
 		</div>
 	</div>
 
-	{% if book.id is not same as(0) %}
-		<div class="level">
-			<div class="level-left">
-				{{ include('_path.twig') }}
-			</div>
-			<div class="level-right buttons">
-				{% if book.previous_book and user_can_read book.previous_book %}
-					<a href="fotoboek.php?book={{ book.previous_book.id }}" class="button">
-						<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
-						<span>{{ book.previous_book.titel }}</span>
-					</a>
-				{% endif %}	
-				{% if book.next_book and user_can_read book.next_book %}
-					<a href="fotoboek.php?book={{ book.next_book.id }}" class="button">
-						<span>{{ book.next_book.titel }}</span>
-						<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-					</a>
-				{% endif %}
-			</div>
-		</div>
-	{% endif %}
-
 	{# introduction to the Photo book page, only visible in the root book #}
 	{% if book.id is same as (0) %}
 		<div class="content">
-			<p>{{ __('Welcome at Covers photo book. This part of the site is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo book.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
+			<p>{{ __('Welcome to Covers photo book. This part of the site is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo book.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
 			
 		</div>
 	{% endif %}

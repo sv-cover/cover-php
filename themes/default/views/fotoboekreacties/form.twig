@@ -1,7 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
 {% block content %}
-<div class="messageBox">
-	{{ include('_form.twig') }}
-</div>
+<h1 class="title">{{__('Modify comment')}}</h1>
+{{ include('_form.twig') }}
 {% endblock %}

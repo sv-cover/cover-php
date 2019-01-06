@@ -21,38 +21,30 @@
 		<nav class="level is-mobile">
 			<div class="level-left">
 				{% if global.auth.logged_in %}
-					<span class="level-item" title="{{ iter.likes > 0 ? __N('%d member likes this', '%s members like this', iter.likes)|e('html_attr') : '' }}">
-						{{- __N('%d like', '%d likes', iter.likes) -}}
-					</span>
-					{% if iter.is_liked_by(global.identity.member) %}
-						<form class="level-item"
+					{% set liked = iter.is_liked_by(global.identity.member)%}
+					<form class="level-item"
 							method="post"
 							action="{{ controller.link_to_like(iter) }}"
 							data-partial-selector="#comment{{ iter.id }}"
 							data-placement-selector="#comment{{ iter.id }}">
-							<input type="hidden" name="action" value="unlike">
-							<button type="submit" class="button is-text" title="{{ __('Unlike comment') }}">
-								<span class="icon is-small">
-									<i class="fas fa-thumbs-up has-text-danger" aria-hidden="true"></i>
-									<span class="is-sr-only">{{ __('Unlike comment') }}</span>
-								</span>
-							</button>
-						</form>
-					{% else %}
-						<form class="level-item"
-							method="post"
-							action="{{ controller.link_to_like(iter) }}"
-							data-partial-selector="#comment{{ iter.id }}"
-							data-placement-selector="#comment{{ iter.id }}">
-							<input type="hidden" name="action" value="like">
-							<button type="submit" class="button is-text" title="{{ __('Like comment') }}">
-								<span class="icon is-small">
-									<i class="fas fa-thumbs-up has-text-link" aria-hidden="true"></i>
+						<input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
+						<span title="{{ iter.likes > 0 ? __N('%d member likes this', '%s members like this', iter.likes)|e('html_attr') : '' }}">
+							{# Oof, don't like that &nbsp; #}
+							{{ iter.likes }}&nbsp;
+							<span class="is-sr-only">{{- __N('like', 'likes', iter.likes) -}}</span>
+						</span>
+						<button type="submit" class="button is-text is-paddingless" title="{{ liked ? __('Unlike comment') : __('Like comment') }}">
+							<span class="icon is-small">
+								{% if liked %}
+									<i class="fas fa-heart has-text-danger" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('You like this comment. Click to unlike.') }}</span>
+								{% else %}
+									<i class="far fa-heart has-text-link" aria-hidden="true"></i>
 									<span class="is-sr-only">{{ __('Like comment') }}</span>
-								</span>
-							</button>
-						</form>
-					{% endif %}
+								{% endif %}
+							</span>
+						</button>
+					</form>
 				{% endif %}
 				{% if user_can_update iter %}
 					<a class="level-item"

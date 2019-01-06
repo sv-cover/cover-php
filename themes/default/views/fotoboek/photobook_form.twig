@@ -9,53 +9,67 @@
 {% block title form_title ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ form_title }}</h1>
-<div class="messageBox">
-	<form method="post" action="{{ form_action|e('html_attr') }}" class="vertical-form">
-		{% if book.id %}
-			{{ html_nonce('update_book', book) }}
-		{% else %}
-			{{ html_nonce('create_book', book.parent) }}
-		{% endif %}
+<h1 class="title">{{ form_title }}</h1>
+<form method="post" action="{{ form_action|e('html_attr') }}">
+	{% if book.id %}
+		{{ html_nonce('update_book', book) }}
+	{% else %}
+		{{ html_nonce('create_book', book.parent) }}
+	{% endif %}
 
-		<div>
-			{{ html_label(__('Title'), 'titel', errors=errors, required=true) }}
+	<div class="field">
+		{{ html_label(__('Title'), 'titel', errors=errors, required=true) }}
+		<div class="control">
 			{{ html_input_text('titel', book, required='required') }}
 		</div>
+	</div>
 
-		<div>
-			{{ html_label(__('Part of'), 'parent', errors=errors, required=false) }}
-			<a href="fotoboek.php?book={{ book.parent.id }}">{{ book.parent.titel }}</a>
+	<div class="field">
+		{{ html_label(__('Part of'), 'parent', errors=errors, required=false) }}
+		<div class="control">
+			<a href="fotoboek.php?book={{ book.parent.id }}" id="parent">{{ book.parent.titel }}</a>
 		</div>
+	</div>
 
-		<div>
-			{{ html_label(__('Date (dd-mm-yyyy)'), 'date', errors=errors, required=true) }}
+	<div class="field">
+		{{ html_label(__('Date (dd-mm-yyyy)'), 'date', errors=errors, required=true) }}
+		<div class="control">
 			{{ html_input_text('date', book, required='required') }}
 		</div>
+	</div>
 
-		<div>
-			{{ html_label(__('Photographer'), 'fotograaf', errors=errors, required=true) }}
+	<div class="field">
+		{{ html_label(__('Photographer'), 'fotograaf', errors=errors, required=true) }}
+		<div class="control">
 			{{ html_input_text('fotograaf', book, required='required') }}
 		</div>
+	</div>
 
-		<div>
-			{{ html_label(__('Visible to'), 'visibility', errors=errors, required=true) }}
-			{{ html_select_field('visibility', view.visibility_options, book, required=true) }}
-		</div>		
+	<div class="field">
+		{{ html_label(__('Visible to'), 'visibility', errors=errors, required=true) }}
+		<div class="control">
+			<div class="select">
+				{{ html_select_field('visibility', view.visibility_options, book, required=true) }}
+			</div>
+		</div>
+	</div>		
 
-		<div>
-			{{ html_label(__('Description'), 'beschrijving', errors=errors) }}
+	<div class="field">
+		{{ html_label(__('Description'), 'beschrijving', errors=errors) }}
+		<div class="control">
 			{{ html_textarea_field('beschrijving', book, errors=errors, rows=5) }}
 		</div>
+	</div>
 
-		<div>
-			<button type="submit" class="button">{{ form_submit_button }}</button>
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">{{ form_submit_button }}</button>
 			{% if book.id > 0 %}
-			<a href="fotoboek.php?book={{ book.id }}">{{ __('Return to %s')|format(book.titel) }}</a>
+				<a href="fotoboek.php?book={{ book.id }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
 			{% else %}
-			<a href="fotoboek.php?book={{ book.parent.id }}">{{ __('Return to %s')|format(book.parent.titel) }}</a>
+				<a href="fotoboek.php?book={{ book.parent.id }}" class="button">{{ __('Return to %s')|format(book.parent.titel) }}</a>
 			{% endif %}
 		</div>
-	</form>
-</div>
+	</div>
+</form>
 {% endblock %}

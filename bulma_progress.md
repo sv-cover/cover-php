@@ -63,28 +63,28 @@
     - [*] thread.twig
     - [*] thread_confirm_delete.twig
     - [*] thread_form.twig
-- [ ] fotoboek
+- [-] fotoboek
     - [*] \_books.twig
     - [*] \_path.twig
     - [-] \_photos.twig
     - [*] \_random_photos.twig
     - [*] \_recent_comments.twig
-    - [ ] add_photos.twig
-    - [ ] competition.twig
-    - [ ] confirm_delete.twig
-    - [ ] people.twig
-    - [ ] photobook.twig
-    - [ ] photobook_confirm_download.twig
-    - [ ] photobook_form.twig
-    - [ ] privacy.twig
-    - [ ] single.twig
-- [ ] fotoboekreacties
+    - [-] add_photos.twig
+    - [*] competition.twig
+    - [*] confirm_delete.twig
+    - [*] people.twig
+    - [*] photobook.twig
+    - [*] photobook_confirm_download.twig
+    - [*] photobook_form.twig
+    - [*] privacy.twig
+    - [-] single.twig
+- [*] fotoboekreacties
     - [*] \_comment.twig
-    - [ ] \_form.twig
-    - [ ] confirm_delete.twig
-    - [ ] form.twig
-    - [ ] index.twig
-    - [ ] single.twig
+    - [*] \_form.twig
+    - [*] confirm_delete.twig
+    - [*] form.twig
+    - [*] index.twig
+    - [*] single.twig
 - [ ] homepage
 - [ ] lidworden
 - [ ] mailinglijsten
@@ -150,6 +150,8 @@
     - Award / edit / delete committee battle points
     - download photo album
     - delete photo album button in album icon
+    - photo visibility form (photos in photos of member book)
+    - view photo modal
 - Autocomplete
     - session/overrides.twig (autocomlete member)
     - committeebattle/form.twig (member)
@@ -157,6 +159,9 @@
 - Whatever is happening on the committee form
 - All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
 - Everything in fotoboek/\_photos.twig
+- Change photo name (photocee functionality)
+- Fotoboek/single.twig
+- Add photo's to photobook
 
 
 ## Bulma extensions / custom CSS
@@ -168,6 +173,7 @@
     - Poll in forum/_poll.twig
     - Search statistics in search/index.twig.
     - Individual parts of commissies/archive.twig
+    - Single photo fotoboek/single.twig
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
@@ -190,10 +196,17 @@
 - Bulma dl styling is ugly
 - Multiline select is broken
 - Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
-- Lines of media objects are nog always wished for.
+- Lines of media objects are not always wished for, especially in nested media objects.
     - comments on photobook main page
 - A bootstrap style "link" button may be desired
-    - like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover. 
+    - like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
+    - like button on photo
+- Level-right doesn't work if there's no level-left
+- Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
+    - commissies/index.twig
+    - fotoboek/\_path.twig
+    - fotoboek/single.twig
+    - fotoboekreacties/\_comment.twig
 
 
 ## Other
@@ -208,6 +221,7 @@
 - Single committee page is crap now.
 - Working groups page needs major redesign.
 - Photo origin path in fotoboek/\_path.twig is ugly html.
+- Redesign photobook: rendering of books could be better. May need some backend changes. Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
 
 
 
