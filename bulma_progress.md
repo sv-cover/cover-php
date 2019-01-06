@@ -64,7 +64,27 @@
     - [*] thread_confirm_delete.twig
     - [*] thread_form.twig
 - [ ] fotoboek
+    - [*] \_books.twig
+    - [*] \_path.twig
+    - [-] \_photos.twig
+    - [*] \_random_photos.twig
+    - [*] \_recent_comments.twig
+    - [ ] add_photos.twig
+    - [ ] competition.twig
+    - [ ] confirm_delete.twig
+    - [ ] people.twig
+    - [ ] photobook.twig
+    - [ ] photobook_confirm_download.twig
+    - [ ] photobook_form.twig
+    - [ ] privacy.twig
+    - [ ] single.twig
 - [ ] fotoboekreacties
+    - [*] \_comment.twig
+    - [ ] \_form.twig
+    - [ ] confirm_delete.twig
+    - [ ] form.twig
+    - [ ] index.twig
+    - [ ] single.twig
 - [ ] homepage
 - [ ] lidworden
 - [ ] mailinglijsten
@@ -128,11 +148,15 @@
     - Delete announcement
     - [maybe] Edit announcement
     - Award / edit / delete committee battle points
+    - download photo album
+    - delete photo album button in album icon
 - Autocomplete
     - session/overrides.twig (autocomlete member)
     - committeebattle/form.twig (member)
 - Whatever is happening in search results :P
 - Whatever is happening on the committee form
+- All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
+- Everything in fotoboek/\_photos.twig
 
 
 ## Bulma extensions / custom CSS
@@ -165,6 +189,11 @@
     - commissies/_agenda.twig
 - Bulma dl styling is ugly
 - Multiline select is broken
+- Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
+- Lines of media objects are nog always wished for.
+    - comments on photobook main page
+- A bootstrap style "link" button may be desired
+    - like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover. 
 
 
 ## Other
@@ -173,11 +202,12 @@
 - Remove language switch from profile
 - Almanac form is weird. May need some backend improvements (filter on filter). 
 - Titles in pages behave weird. Maybe some backend improvements?
-- Transpose columns in session/overrides.twig
+- Transpose columns in session/overrides.twig and committeebattle/form.twig
 - Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
 - Old committee page was better. But at least it's bulma now :)
 - Single committee page is crap now.
 - Working groups page needs major redesign.
+- Photo origin path in fotoboek/\_path.twig is ugly html.
 
 
 
@@ -189,3 +219,4 @@
 - Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
 - If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
 - The head>title separator is weird (::) and I hate it.
+- How to display metadata? Eg. forum messages, announcements, search results, photo album

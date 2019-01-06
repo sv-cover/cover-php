@@ -7,12 +7,12 @@
 		 * Configuration
 		 */
 
-		public function stylesheets()
-		{
-			return array_merge(parent::stylesheets(), [
-				get_theme_data('styles/fotoboek.css')
-			]);
-		}
+		// public function stylesheets()
+		// {
+		// 	return array_merge(parent::stylesheets(), [
+		// 		get_theme_data('styles/fotoboek.css')
+		// 	]);
+		// }
 
 		/**
 		 * Render methods, called from the controller
@@ -159,9 +159,11 @@
 					$anchor = '';
 
 				if (get_policy($parents[$i])->user_can_read($parents[$i]))
-					$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
+					$path[] = sprintf('<li%s><a href="fotoboek.php?book=%s%s"%s>%s</a></li>',
+						$i == count($parents) - 1 ? ' class="is-active"' : '',
 						urlencode($parents[$i]->get_id()),
 						$anchor,
+						$i == count($parents) - 1 ? ' aria-current="page"' : '',
 						markup_format_text($parents[$i]['titel']));
 				else
 					$path[] = markup_format_text($parents[$i]['titel']);
@@ -181,7 +183,7 @@
 				$subtitle[] = sprintf(_ngettext('%d photo', '%d photos', $book['num_photos']), $book['num_photos']);
 			
 			if (count($subtitle) > 0)
-				return sprintf('<small class="fotoboek_highlight">(%s)</small>', markup_format_text(implode_human($subtitle)));
+				return implode_human($subtitle);
 			else
 				return '';
 		}

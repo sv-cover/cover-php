@@ -3,193 +3,85 @@
 {% block title book.has('title') ? book.title : __('Photo album') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Photo album') }}</h1>
-<div class = "messageBox clearfix fotoboek-box">
-
-{% if user_can_update book or user_can_create book.new_book %}
-	<div class="controls">
-		{% if user_can_create book.new_book %}
-		<a href="fotoboek.php?book={{ book.id }}&amp;view=add_book" class="button">
-			<i class="fa fa-plus"></i>
-			{{ __('New photo album') }}
-		</a>
-		{% endif %}
-		
-		{% if user_can_update book %}
-		<a href="fotoboek.php?book={{ book.id }}&amp;view=update_book" class="button">
-			<i class="fa fa-pencil"></i>
-			{{ __('Modify photo album') }}
-		</a>
-		<a href="fotoboek.php?book={{ book.id }}&amp;view=add_photos" class="button">
-			<i class="fa fa-picture-o"></i>
-			{{ __('Add photos') }}
-		</a>
-		<a id="order-photos-button" class="button">
-			<i class="fa fa-arrows"></i>
-			{{ __("Reorder photos") }}
-		</a>
-		<a id="delete-selected-photos-button" class="button photo-selection-control" href="#">
-			<i class="fa fa-trash-o"></i>
-			{{ __('Delete selected photos') }}
-		</a>
+<header>
+	<div class="level">
+		<div class="level-left">
+			<h1 class="title">{{ __('Photo album') }}</h1>
+		</div>
+		{% if user_can_update book or user_can_create book.new_book %}
+		<div class="level-right buttons">
+			{% if user_can_create book.new_book %}
+			<a href="fotoboek.php?book={{ book.id }}&amp;view=add_book" class="button">
+				<span class="icon">
+					<i class="fas fa-plus" aria-hidden="true"></i>
+				</span>
+				<span>
+					{{ __('New photo album') }}
+				</span>
+			</a>
+			{% endif %}
+			{% if user_can_update book %}
+			<a href="fotoboek.php?book={{ book.id }}&amp;view=update_book" class="button">
+				<span class="icon">
+					<i class="fas fa-pencil-alt"></i>
+				</span>
+				<span>
+					{{ __('Modify photo album') }}
+				</span>
+			</a>
+			<a href="fotoboek.php?book={{ book.id }}&amp;view=add_photos" class="button">
+				<span class="icon">
+					<i class="fas fa-image" aria-hidden="true"></i>
+				</span>
+				<span>
+					{{ __('Add photos') }}
+				</span>
+			</a>
+			<a id="order-photos-button" class="button">
+				<span class="icon">
+					<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+				</span>
+				<span>
+					{{ __("Reorder photos") }}
+				</span>
+			</a>
+			<a id="delete-selected-photos-button" class="button photo-selection-control" href="#">
+				<span class="icon">
+					<i class="fas fa-trash" aria-hidden="true"></i>
+				</span>
+				<span>
+					{{ __('Delete selected photos') }}
+				</span>
+			</a>
+			{% endif %}
+		</div>
 		{% endif %}
 	</div>
-	
-	<script src="{{ link_static('data/wiggle.js') }}"></script>
-	<script type="text/javascript">
-		function sprintf(format)
-		{
-			for (var i = 1; i < arguments.length; ++i)
-				format = format.replace(/\%d/, arguments[i]);
-
-			return format;
-		}
-
-		$(document).ready(function() {
-			var checkboxes = $('.photos .thumbnail').map(function() {
-				return $('<input type="checkbox">')
-					.attr('name', 'photo[]')
-					.val($(this).data('id'))
-					.addClass('selection-checkbox photo-edit-control')
-					.appendTo(this)
-					.change(function() {
-						updateSelectionControls();
-					}).get();
-			});
-
-			var updateSelectionControls = function() {
-				$('.photo-selection-control').toggle(
-					checkboxes.is(':checked'));
-			};
-
-			$('#delete-selected-photos-button').click(function(e) {
-				e.preventDefault();
-
-				var selection = checkboxes.filter(':checked').map(function() {
-					return this.value;
-				});
-
-				if (!confirm(sprintf({{ __('Are you sure you want to delete the %d selected photos?')|json_encode()|raw }}, selection.length)))
-					return;
-
-				var $form = $('<form>', {
-					'method': 'post',
-					'action': 'fotoboek.php?book={{ book.id }}&view=delete_photos'
-				}).appendTo(document.body);
-
-				$('{{ html_nonce('delete_photos') }}').appendTo($form);
-
-				$.each(selection, function(i, id) {
-					$('<input>', {
-						'type': 'hidden',
-						'name': 'photo[]',
-						'value': id
-					}).appendTo($form);
-				});
-				
-				$form.submit();
-			});
-
-			updateSelectionControls();
-		});
-
-		$(document).ready(function($) {
-			var $photos = $('.photos');
-
-			var $books = $('.photobooks');
-
-			var getPhotoId = function(el_id) {
-				return el_id.match(/^photo_(\d+)$/)[1];
-			};
-
-			var getBookId = function(el_id) {
-				var match = el_id.match(/^book_(\d+)$/);
-				return match ? match[1] : null;
-			};
-
-			var isNotNull = function(val) {
-				return val !== null;
-			};
-
-			var printError = function(response) {
-				alert({{ __('The order could not be saved. Generally, the order cannot be saved when the album is automatically generator or you don’t have permission to update the album.')|json_encode()|raw }});
-			};
-
-			var submitPhotoOrder = function() {
-				$.post({{ controller.json_link_to_update_photo_order(book)|json_encode()|raw }}, {
-					'order': $photos.sortable('toArray').map(getPhotoId)
-				}).fail(printError);
-			};
-
-			var submitBookOrder = function() {
-				$.post({{ controller.json_link_to_update_book_order(book)|json_encode()|raw }}, {
-					'order': $books.sortable('toArray').map(getBookId).filter(isNotNull)
-				}).fail(printError);
-			};
-
-			var activate = function() {
-				if ($books.length) {
-					$books.children().wiggle('start');
-
-					$books.sortable({
-						cursor: 'move',
-						items: '> .photobook',
-						update: submitBookOrder
-
-					});
-				}
-
-				if ($photos.length) {
-					$photos.children().wiggle('start');
-
-					$photos.flowgallery('destroy');
-					$photos.sortable({
-						cursor: 'move',
-						update: submitPhotoOrder
-					});
-				}
-			};
-
-			var deactivate = function() {
-				if ($books.length) {
-					$books.children().wiggle('stop');
-					$books.sortable('destroy');
-				}
-
-				if ($photos.length) {
-					$photos.children().wiggle('stop');
-					$photos.flowgallery();
-					$photos.sortable('destroy');
-				}
-			};
-
-			$('#order-photos-button').click(function(e) {
-				if ($photos.hasClass('ui-sortable') || $books.hasClass('ui-sortable'))
-					deactivate();
-				else
-					activate();
-			});
-		});
-	</script>
-	{% endif %}
 
 	{% if book.id is not same as(0) %}
-	{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}
-	<div class="bar">
-		<div class="photos-navigation navigation">
+	<div class="level is-mobile">
+		{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}
+		<div class="level-left">
 			{% if book.previous_book and user_can_read book.previous_book %}
-				<a href="fotoboek.php?book={{ book.previous_book.id }}" class="previous">
-					{{ book.previous_book.titel }}
+				<a href="fotoboek.php?book={{ book.previous_book.id }}" class="button">
+					<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+					<span>{{ book.previous_book.titel }}</span>
 				</a>
 			{% endif %}
+		</div>
+		<div class="level-item">
 			{% if book.parent and user_can_read book.parent %}
-				<a href="fotoboek.php?book={{ book.parent.id }}" class="up">
-					{{ book.parent.titel }}
+				<a href="fotoboek.php?book={{ book.parent.id }}" class="button">
+					<span class="icon"><i class="fas fa-arrow-up" aria-hidden="true"></i></span>
+					<span>{{ book.parent.titel }}</span>
 				</a>
 			{% endif %}
+		</div>
+		<div class="level-right">
 			{% if book.next_book and user_can_read book.next_book %}
-				<a href="fotoboek.php?book={{ book.next_book.id }}" class="next">
-					{{ book.next_book.titel }}
+				<a href="fotoboek.php?book={{ book.next_book.id }}" class="button">
+					<span>{{ book.next_book.titel }}</span>
+					<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
 				</a>
 			{% endif %}
 		</div>
@@ -198,65 +90,77 @@
 
 	{# introduction to the Photo album page, only visible in the root book #}
 	{% if book.id is same as (0) %}
-	<p>{{ __('Welcome at Covers photo album. This part of the site is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo album.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
+		<div class="content">
+			<p>{{ __('Welcome at Covers photo album. This part of the site is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo album.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
+			
+		</div>
 	{% endif %}
 
 	{# Controls, if applicable, and path #}
-	<div class="photo-page-header">
-		{% if controller.policy.user_can_download_book(book) %}
-		<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button download-photos-button" data-partial-selector="#download-photo-book-form" data-placement-selector="modal">
-			<i class="fa fa-download"></i>
-			{{ __('Download photo album') }}
-		</a>
-		{% endif %}
-
-		{% if controller.policy.user_can_mark_as_read(book) %}
-		<form method="post" action="fotoboek.php?book={{ book.id }}&amp;view=mark_book_read">
-			<button type="submit" class="button mark-read-button">
-				<i class="fa fa-check"></i>
-				{{ __('Mark all albums as seen') }}
-			</button>
-		</form>
-		{% endif %}
-
-		{{ include('_path.twig') }}
-	</div>
-
-	{# information about who made the photo's, and when #}
-	<table class="default_noborder vertical">
-		{% if book.has_value('fotograaf') %}
-			<tr>
-				<th>{{ __('Photographer') }}:</th>
-				<td>{{ book.fotograaf }}</td>
-			</tr>
-		{% endif %}
-
-		{% if book.has_value('date') %}
-			<tr>
-				<th>{{ __('Date') }}:</th>
-				<td>{{ book.date|date('d-m-Y') }}</td>
-			</tr>
-		{% endif %}
+	<div class="level">
+		<div class="level-left">
+			{{ include('_path.twig') }}
+		</div>
 		
-		{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 
-			<tr>
-				<th>{{ __('Description') }}:</th>
-				<td>{{ book.beschrijving }}</td>
-			</tr>
-		{% endif %}
-	</table>
+		<div class="level-right buttons">
+			{% if controller.policy.user_can_download_book(book) %}
+			<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button">
+				<span class="icon"><i class="fas fa-download" aria-hidden="true"></i></span>
+				<span>{{ __('Download photo album') }}</span>
+			</a>
+			{% endif %}
 
-	{% if book.num_books == 0 and book.num_photos == 0 %}
+			{% if controller.policy.user_can_mark_as_read(book) %}
+			<form method="post" action="fotoboek.php?book={{ book.id }}&amp;view=mark_book_read">
+				<button type="submit" class="button mark-read-button">
+					<span class="icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+					<span>{{ __('Mark all albums as seen') }}</span>
+				</button>
+			</form>
+			{% endif %}
+		</div>
+	</div>
+</header>
+
+<article>
+	{# information about who made the photo's, and when #}
+	<div class="media">
+		<div class="media-content content">
+			{% if book.has_value('fotograaf') %}
+				<div>
+					<strong>{{ __('Photographer') }}:</strong>
+					{{ book.fotograaf }}
+				</div>
+			{% endif %}
+		 	{% if book.has_value('date') %}
+		 		<div>
+					<strong>{{ __('Date') }}:</strong>
+					{{ book.date|date('d-m-Y') }}
+				</div>
+			{% endif %}
+			{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 
+				<div class="content">
+					<strong>{{ __('Description') }}:</strong><br>
+					{{ book.beschrijving }}
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</article>
+
+{% if book.num_books == 0 and book.num_photos == 0 %}
+	<article>
 		<p>{{ __('There are no photos in this photo album yet') }}</p>
-	{% else %}
-		{{ include('_books.twig', {books: book.books|user_can_read}) }}
-		{{ include('_photos.twig', {photos: book.photos}) }}
-	{% endif %}
+	</article>
+{% else %}
+	{{ include('_books.twig', {books: book.books|user_can_read}) }}
+	{{ include('_photos.twig', {photos: book.photos}) }}
+{% endif %}
 
-	{# show the top n comments on the front page (same one as with the info) #}
-	{% if book.id is same as(0) and global.auth.logged_in() %}
-		{{ include('_recent_comments.twig', {comments:view.recent_comments(10)}) }}
-	{% endif %}
+{# show the top n comments on the front page (same one as with the info) #}
+{% if book.id is same as(0) and global.auth.logged_in() %}
+	{{ include('_recent_comments.twig', {comments:view.recent_comments(10)}) }}
+{% endif %}
 
 	{# and if there are no photos on this page, show a few random photos for discovery in the bottom. They are not confused with the photos of a book. #}
 	{% if book.num_photos == 0 and global.identity.is_member %}
@@ -264,5 +168,148 @@
 		{% include('_random_photos.twig') %}
 	</section>
 	{% endif %}
-</div>
+
+
+
+
+
+{% if user_can_update book or user_can_create book.new_book %}
+<script src="{{ link_static('data/wiggle.js') }}"></script>
+<script type="text/javascript">
+	function sprintf(format)
+	{
+		for (var i = 1; i < arguments.length; ++i)
+			format = format.replace(/\%d/, arguments[i]);
+
+		return format;
+	}
+
+	$(document).ready(function() {
+		var checkboxes = $('.photos .thumbnail').map(function() {
+			return $('<input type="checkbox">')
+				.attr('name', 'photo[]')
+				.val($(this).data('id'))
+				.addClass('selection-checkbox photo-edit-control')
+				.appendTo(this)
+				.change(function() {
+					updateSelectionControls();
+				}).get();
+		});
+
+		var updateSelectionControls = function() {
+			$('.photo-selection-control').toggle(
+				checkboxes.is(':checked'));
+		};
+
+		$('#delete-selected-photos-button').click(function(e) {
+			e.preventDefault();
+
+			var selection = checkboxes.filter(':checked').map(function() {
+				return this.value;
+			});
+
+			if (!confirm(sprintf({{ __('Are you sure you want to delete the %d selected photos?')|json_encode()|raw }}, selection.length)))
+				return;
+
+			var $form = $('<form>', {
+				'method': 'post',
+				'action': 'fotoboek.php?book={{ book.id }}&view=delete_photos'
+			}).appendTo(document.body);
+
+			$('{{ html_nonce('delete_photos') }}').appendTo($form);
+
+			$.each(selection, function(i, id) {
+				$('<input>', {
+					'type': 'hidden',
+					'name': 'photo[]',
+					'value': id
+				}).appendTo($form);
+			});
+			
+			$form.submit();
+		});
+
+		updateSelectionControls();
+	});
+
+	$(document).ready(function($) {
+		var $photos = $('.photos');
+
+		var $books = $('.photobooks');
+
+		var getPhotoId = function(el_id) {
+			return el_id.match(/^photo_(\d+)$/)[1];
+		};
+
+		var getBookId = function(el_id) {
+			var match = el_id.match(/^book_(\d+)$/);
+			return match ? match[1] : null;
+		};
+
+		var isNotNull = function(val) {
+			return val !== null;
+		};
+
+		var printError = function(response) {
+			alert({{ __('The order could not be saved. Generally, the order cannot be saved when the album is automatically generator or you don’t have permission to update the album.')|json_encode()|raw }});
+		};
+
+		var submitPhotoOrder = function() {
+			$.post({{ controller.json_link_to_update_photo_order(book)|json_encode()|raw }}, {
+				'order': $photos.sortable('toArray').map(getPhotoId)
+			}).fail(printError);
+		};
+
+		var submitBookOrder = function() {
+			$.post({{ controller.json_link_to_update_book_order(book)|json_encode()|raw }}, {
+				'order': $books.sortable('toArray').map(getBookId).filter(isNotNull)
+			}).fail(printError);
+		};
+
+		var activate = function() {
+			if ($books.length) {
+				$books.children().wiggle('start');
+
+				$books.sortable({
+					cursor: 'move',
+					items: '> .photobook',
+					update: submitBookOrder
+
+				});
+			}
+
+			if ($photos.length) {
+				$photos.children().wiggle('start');
+
+				$photos.flowgallery('destroy');
+				$photos.sortable({
+					cursor: 'move',
+					update: submitPhotoOrder
+				});
+			}
+		};
+
+		var deactivate = function() {
+			if ($books.length) {
+				$books.children().wiggle('stop');
+				$books.sortable('destroy');
+			}
+
+			if ($photos.length) {
+				$photos.children().wiggle('stop');
+				$photos.flowgallery();
+				$photos.sortable('destroy');
+			}
+		};
+
+		$('#order-photos-button').click(function(e) {
+			if ($photos.hasClass('ui-sortable') || $books.hasClass('ui-sortable'))
+				deactivate();
+			else
+				activate();
+		});
+	});
+</script>
+{% endif %}
+
 {% endblock %}

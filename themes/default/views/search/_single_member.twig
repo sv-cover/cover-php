@@ -16,7 +16,7 @@
 
 <div class="columns is-mobile">
 	<figure class="column is-narrow image is-128x128">
-		<img src="foto.php?lid_id={{ result.id|e('url') }}&amp;format=square&amp;width=256" width="128" height="128" alt="Photo of {{ result|full_name }}">
+		<img src="{{ link('foto.square', member=result, width=256) }}" width="128" height="128" alt="Photo of {{ result|full_name }}">
 	</figure>
 	<div class="column content">
 		<dl class="member">
