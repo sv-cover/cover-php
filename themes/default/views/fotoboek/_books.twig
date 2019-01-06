@@ -23,17 +23,17 @@
 		</a>
 		{% if user_can_update book %}
 		<div class="level is-mobile">
-			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Modify photobook') }}">
+			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Modify photo album') }}">
 				<span class="icon is-small">
 					<i class="fas fa-pencil-alt"></i>
-					<span class="is-sr-only">{{ __('Modify photobook') }}</span>
+					<span class="is-sr-only">{{ __('Modify photo album') }}</span>
 				</span>
 			</a>
 			{% if user_can_delete book %}
-			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Delete photobook') }}">
+			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Delete photo album') }}">
 				<span class="icon is-small">
 					<i class="fas fa-trash"></i>
-					<span class="is-sr-only">{{ __('Delete photobook') }}</span>
+					<span class="is-sr-only">{{ __('Delete photo album') }}</span>
 				</span>
 			</a>
 			{% endif %}
