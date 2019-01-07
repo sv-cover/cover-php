@@ -19,13 +19,13 @@
     - [ ] layout_without_menu.twig
 - [×] actieveleden
     - [×] index.twig
-- [ ] agenda
+- [×] agenda
     - [×] confirm_delete.twig
     - [×] form.twig
     - [×] index.twig
     - [×] moderate.twig
-    - [ ] signup_form.twig
-    - [ ] single.twig
+    - [×] signup_form.twig
+    - [×] single.twig
     - [×] subscribe.twig
     - [×] unauthorized.twig
 - [×] almanak
@@ -208,6 +208,7 @@
     - Individual parts of commissies/archive.twig
     - Single photo fotoboek/single.twig
     - header in mailinglists/archive_single.twig
+    - header in agenda/single.twig
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
@@ -225,8 +226,10 @@
 - Fieldset in: 
     - sessions/overrides.twig
 - Calendar icon in:
-    - search/\_single_agendapunt.twig
+    - agenda/index.twig
+    - agenda/single.twig
     - commissies/_agenda.twig
+    - search/\_single_agendapunt.twig
 - Bulma dl styling is ugly
 - Multiline select is broken
 - Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
@@ -246,6 +249,7 @@
     - fotoboekreacties/\_comment.twig
 - No margin around dropdown in .buttons
     - agenda/index.twig
+- Why does a .number make form elements rounded?
 
 ## Other
 
@@ -262,8 +266,9 @@
 - Redesign photobook: rendering of books could be better. May need some backend changes. 
 - Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
 - Consistent HTML structure (how to use headers, article footer etc)
-- Embedded mailing list form doesn't seem to work
+- Embedded mailing list form doesn't seem to work…
 - Fix select fields
+- Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
 
 
 

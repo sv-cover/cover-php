@@ -84,14 +84,12 @@
 
 				{% if user_can_create book.new_book %}
 				<div class="control">
-				<div class="buttons">
 					<a href="fotoboek.php?book={{ book.id }}&amp;view=add_book" class="button" title="{{ __('New photo book') }}">
 						<span class="icon">
 							<i class="fas fa-folder-plus" aria-hidden="true"></i>
 							<span class="is-sr-only">{{ __('New photo book') }}</span>
 						</span>
 					</a>
-				</div>
 				</div>
 				{% endif %}
 
