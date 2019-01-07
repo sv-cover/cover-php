@@ -7,12 +7,12 @@ class WeblogView extends View
 		return $this->render('index.twig', compact('iters', 'page'));
 	}
 
-	public function stylesheets()
-	{
-		return array_merge(
-			parent::stylesheets(),
-			[get_theme_data('styles/weblog.css')]);
-	}
+	// public function stylesheets()
+	// {
+	// 	return array_merge(
+	// 		parent::stylesheets(),
+	// 		[get_theme_data('styles/weblog.css')]);
+	// }
 
 	public function weblog_head($iter)
 	{

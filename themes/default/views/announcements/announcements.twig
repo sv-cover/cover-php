@@ -8,7 +8,7 @@
 	CRUD-based views. #}
 	{% if user_can_create global.models.Announcement.new_iter %}
 		<div class="level-right buttons">
-			<a href="announcements.php?view=create" class="create-link">{{ __('Add a new announcement') }}</a>
+			<a href="announcements.php?view=create" class="button">{{ __('New announcement') }}</a>
 		</div>
 	{% endif %}
 </div>

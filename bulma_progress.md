@@ -3,121 +3,144 @@
 - [-] \_layout
     - [-] widgets
         - [ ] agenda.twig
-        - [*] banners.twig
+        - [×] banners.twig
         - [ ] committee-battle-header.twig
-        - [*] login.twig
-        - [*] menu.twig
+        - [×] login.twig
+        - [×] menu.twig
         - [ ] menuitem.twig (deprecated?)
         - [ ] poll.twig
         - [ ] promotional-header.twig
-        - [*] search.twig
+        - [×] search.twig
     - [ ] 401_unauthorized.twig
     - [ ] 404_not_found.twig
     - [ ] 500.twig
-    - [*] editable.twig
-    - [*] layout.twig
+    - [×] editable.twig
+    - [×] layout.twig
     - [ ] layout_without_menu.twig
-- [*] actieveleden
-    - [*] index.twig
+- [×] actieveleden
+    - [×] index.twig
 - [ ] agenda
-- [*] almanak
-    - [*] index.twig
-- [*] announcements
-    - [*] announcements.twig
-    - [*] confirm_delete.twig
-    - [*] form.twig
-    - [*] index.twig
-    - [*] single.twig
-- [*] besturen
-    - [*] form.twig
-    - [*] index.twig
-- [*] boeken
-    - [*] go_to_log_in.twig
-    - [*] go_to_webshop.twig
-- [*] commissies
-    - [*] \_agenda.twig
-    - [*] \_contact.twig
-    - [*] \_foto.twig
-    - [*] \_leden.twig
-    - [*] \_leden_gezocht.twig
+    - [×] confirm_delete.twig
+    - [×] form.twig
+    - [×] index.twig
+    - [×] moderate.twig
+    - [ ] signup_form.twig
+    - [ ] single.twig
+    - [×] subscribe.twig
+    - [×] unauthorized.twig
+- [×] almanak
+    - [×] index.twig
+- [×] announcements
+    - [×] announcements.twig
+    - [×] confirm_delete.twig
+    - [×] form.twig
+    - [×] index.twig
+    - [×] single.twig
+- [×] besturen
+    - [×] form.twig
+    - [×] index.twig
+- [×] boeken
+    - [×] go_to_log_in.twig
+    - [×] go_to_webshop.twig
+- [×] commissies
+    - [×] \_agenda.twig
+    - [×] \_contact.twig
+    - [×] \_foto.twig
+    - [×] \_leden.twig
+    - [×] \_leden_gezocht.twig
     - [ ] \_navigation.twig (deprecated?)
-    - [*] archive.twig
-    - [*] confirm_delete.twig
-    - [*] form.twig
-    - [*] index.twig
-    - [*] single.twig
-    - [*] working_groups.twig
-- [*] committeebattle
-    - [*] committee.twig
-    - [*] confirm_delete.twig
-    - [*] form.twig
-    - [*] index.twig
-- [*] forum
-    - [*] \_poll.twig
-    - [*] confirm_delete_message.twig
-    - [*] forum.twig
+    - [×] archive.twig
+    - [×] confirm_delete.twig
+    - [×] form.twig
+    - [×] index.twig
+    - [×] single.twig
+    - [×] working_groups.twig
+- [×] committeebattle
+    - [×] committee.twig
+    - [×] confirm_delete.twig
+    - [×] form.twig
+    - [×] index.twig
+- [×] forum
+    - [×] \_poll.twig
+    - [×] confirm_delete_message.twig
+    - [×] forum.twig
     - [ ] forum_form.twig (deprecated)
-    - [*] index.twig
-    - [*] poll_form.twig
-    - [*] reply_form.twig
-    - [*] thread.twig
-    - [*] thread_confirm_delete.twig
-    - [*] thread_form.twig
+    - [×] index.twig
+    - [×] poll_form.twig
+    - [×] reply_form.twig
+    - [×] thread.twig
+    - [×] thread_confirm_delete.twig
+    - [×] thread_form.twig
 - [-] fotoboek
-    - [*] \_books.twig
-    - [*] \_path.twig
+    - [×] \_books.twig
+    - [×] \_path.twig
     - [-] \_photos.twig
-    - [*] \_random_photos.twig
-    - [*] \_recent_comments.twig
+    - [×] \_random_photos.twig
+    - [×] \_recent_comments.twig
     - [-] add_photos.twig
-    - [*] competition.twig
-    - [*] confirm_delete.twig
-    - [*] people.twig
-    - [*] photobook.twig
-    - [*] photobook_confirm_download.twig
-    - [*] photobook_form.twig
-    - [*] privacy.twig
+    - [×] competition.twig
+    - [×] confirm_delete.twig
+    - [×] people.twig
+    - [×] photobook.twig
+    - [×] photobook_confirm_download.twig
+    - [×] photobook_form.twig
+    - [×] privacy.twig
     - [-] single.twig
-- [*] fotoboekreacties
-    - [*] \_comment.twig
-    - [*] \_form.twig
-    - [*] confirm_delete.twig
-    - [*] form.twig
-    - [*] index.twig
-    - [*] single.twig
-- [ ] homepage
+- [×] fotoboekreacties
+    - [×] \_comment.twig
+    - [×] \_form.twig
+    - [×] confirm_delete.twig
+    - [×] form.twig
+    - [×] index.twig
+    - [×] single.twig
+- [×] homepage
+    - [×] homepage.twig
 - [ ] lidworden
-- [ ] mailinglijsten
+- [×] mailinglijsten
+    - [×] archive_index.twig
+    - [×] archive_single.twig
+    - [×] autoresponder_form.twig
+    - [×] embedded.twig
+    - [×] form.twig
+    - [×] index.twig
+    - [×] single.twig
+    - [×] subscribe_guest_form.twig
+    - [×] subscribe_member_form.twig
+    - [×] unsubscribe_form.twig
 - [ ] profiel
-- [*] search
-    - [*] \_single_agendapunt.twig
-    - [*] \_single_announcement.twig
-    - [*] \_single_committee.twig
-    - [*] \_single_forum_message.twig
-    - [*] \_single_fotoboek.twig
-    - [*] \_single_member.twig
-    - [*] \_single_page.twig
-    - [*] \_single_wiki.twig
-    - [*] index.twig
-- [*] sessions
-    - [*] \_login_widget.twig
-    - [*] inactive.twig
-    - [*] login.twig
-    - [*] logout.twig
-    - [*] overrides.twig
-- [*] settings
-    - [*] confirm_delete.twig
-    - [*] form.twig
-    - [*] index.twig
-- [*] show
-    - [*] form.twig
-    - [*] single.twig
+- [×] search
+    - [×] \_single_agendapunt.twig
+    - [×] \_single_announcement.twig
+    - [×] \_single_committee.twig
+    - [×] \_single_forum_message.twig
+    - [×] \_single_fotoboek.twig
+    - [×] \_single_member.twig
+    - [×] \_single_page.twig
+    - [×] \_single_wiki.twig
+    - [×] index.twig
+- [×] sessions
+    - [×] \_login_widget.twig
+    - [×] inactive.twig
+    - [×] login.twig
+    - [×] logout.twig
+    - [×] overrides.twig
+- [×] settings
+    - [×] confirm_delete.twig
+    - [×] form.twig
+    - [×] index.twig
+- [×] show
+    - [×] form.twig
+    - [×] single.twig
 - [ ] signup
-- [ ] stickers
-- [*] wachtwoordvergeten
-    - [*] request_form.twig
-    - [*] reset_form.twig
-- [ ] weblog
+- [×] stickers
+    - [×] form.twig
+    - [×] index.twig
+- [×] wachtwoordvergeten
+    - [×] request_form.twig
+    - [×] reset_form.twig
+- [×] weblog
+    - [×] \_blog_post.twig
+    - [×] index.twig
 
 
 
@@ -133,9 +156,13 @@
     - _layout/widgets/menu.twig (mainly login)
     - forum/thread.twig (move thread)
 - Tabs. Switch between tabbed content
+    - agenda/form.twig
+    - announcements/form.twig
     - forum/poll_form.twig
     - forum/reply_form.twig
     - forum/thread_form.twig
+    - mailinglijsten/archive_single.twig
+    - show/form.twig
 - Preview (page) content
     - forum/poll_form.twig
     - forum/reply_form.twig
@@ -152,6 +179,8 @@
     - delete photo album button in album icon
     - photo visibility form (photos in photos of member book)
     - view photo modal
+    - create sticker in sticker map
+    - Mailinglist subscribe forms
 - Autocomplete
     - session/overrides.twig (autocomlete member)
     - committeebattle/form.twig (member)
@@ -162,6 +191,9 @@
 - Change photo name (photocee functionality)
 - Fotoboek/single.twig
 - Add photo's to photobook
+- Sticker map
+- WYSIWYG editor in mailinglijsten/autoresponder_form.twig
+- Stuff happening in mailijnlijsten/single.twig
 
 
 ## Bulma extensions / custom CSS
@@ -170,10 +202,12 @@
     - Pagination bar in:
         - forum/forum.twig
         - forum/thread.twig
+        - weblog/index.twig
     - Poll in forum/_poll.twig
     - Search statistics in search/index.twig.
     - Individual parts of commissies/archive.twig
     - Single photo fotoboek/single.twig
+    - header in mailinglists/archive_single.twig
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
@@ -202,12 +236,16 @@
     - like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
     - like button on photo
 - Level-right doesn't work if there's no level-left
+- Same for pagination 
+    - weblog/index.twig
+    - agenda/index.twig
 - Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
     - commissies/index.twig
     - fotoboek/\_path.twig
     - fotoboek/single.twig
     - fotoboekreacties/\_comment.twig
-
+- No margin around dropdown in .buttons
+    - agenda/index.twig
 
 ## Other
 
@@ -221,7 +259,11 @@
 - Single committee page is crap now.
 - Working groups page needs major redesign.
 - Photo origin path in fotoboek/\_path.twig is ugly html.
-- Redesign photobook: rendering of books could be better. May need some backend changes. Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
+- Redesign photobook: rendering of books could be better. May need some backend changes. 
+- Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
+- Consistent HTML structure (how to use headers, article footer etc)
+- Embedded mailing list form doesn't seem to work
+- Fix select fields
 
 
 
@@ -234,3 +276,6 @@
 - If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
 - The head>title separator is weird (::) and I hate it.
 - How to display metadata? Eg. forum messages, announcements, search results, photo album
+- Icons in buttons?
+- How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
+- Deprecate horizontal banner rotator?

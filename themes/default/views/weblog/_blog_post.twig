@@ -1,22 +1,27 @@
 {% set author = model.get_author_info(iter, 'author') %}
 {% set message = iter.get_first_message() %}
-<div class="weblog-post">
-	<div class="weblog-post-details profile-widget">
+<article class="media">
+	<div class="media-left">
 		<a class="author" href="{{ view.get_author_link(iter)|e('html_attr') }}">
-			<img class="weblog_head" width="100" height="100" src="{{ view.weblog_head(iter) }}">
-			<span class="name">{{ author.name }}</span>
+			<figure class="image is-128x128">
+				<img class="weblog_head" width="128" height="128" src="{{ view.weblog_head(iter) }}">
+			</figure>
 		</a>
 	</div>
-	<div class="weblog-post-content">
-		<div class="weblog-post-header">
-			<div class="weblog-post-date">{{ iter.date|date('d-m-Y H:i') }}</div>
-			<h3><a href="forum.php?thread={{ iter.id|e('url') }}">{{ iter.subject }}</a></h3>
+	<div class="media-content">
+		<h2 class="title is-4">
+			<a href="forum.php?thread={{ iter.id|e('url') }}">{{ iter.subject }}</a>
+		</h2>
+		<p class="subtitle is-6">
+			by
+			<a class="author" href="{{ view.get_author_link(iter)|e('html_attr') }}">{{ author.name }}</a>
+			on {{ iter.date|date('d-m-Y H:i') }}
+		</p>
+		<div class="content">
+			{{ message.message | parse_markup}}
 		</div>
-		
-		{{ message.message | parse_markup}}
-
-		<p class="weblog-post-footer">
+		<p>
 			<a href="forum.php?thread={{ iter.id|e('url') }}">{{ __('Comments') }}: {{ iter.num_messages - 1 }}</a>
 		</p>
 	</div>
-</div>
+</article>

@@ -14,12 +14,12 @@ function empty_to_http_formatter($value) {
 
 class ProfielView extends View
 {
-	public function stylesheets()
-	{
-		return array_merge(parent::stylesheets(), [
-			get_theme_data('styles/profiel.css')
-		]);
-	}
+	// public function stylesheets()
+	// {
+	// 	return array_merge(parent::stylesheets(), [
+	// 		get_theme_data('styles/profiel.css')
+	// 	]);
+	// }
 
 	public function tabs(DataIterMember $iter)
 	{

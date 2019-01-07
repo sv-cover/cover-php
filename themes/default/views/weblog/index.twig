@@ -3,23 +3,28 @@
 {% block title __('Weblog') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Weblog') }}</h1>
-<div class="messageBox">
-	{% if iters|length == 0 %}
-		<p>{{ __('There are no blog posts at this moment') }}</p>
-	{% else %}
-		{% for blog_post in iters %}
-			{{ include('_blog_post.twig', {iter:blog_post}) }}
-		{% endfor %}
-	{% endif %}
+<header>
+	<h1 class="title">{{ __('Weblog') }}</h1>
+</header>
 
-	<div class="navigation">
-		{% if page > 0 %}
-			<a href="weblog.php?page={{ page - 1 }}" class="previous">{{ __('Previous page') }}</a>
-		{% endif %}
-		{% if iters|length > 0 %}
-			<a href="weblog.php?page={{ page + 1 }}" class="next">{{ __('Next page') }}</a>
-		{% endif %}
-	</div>
-</div>
+{% if iters|length == 0 %}
+	<article class="media">
+		<p>{{ __('There are no blog posts at this moment') }}</p>
+	</article>
+{% else %}
+	{% for blog_post in iters %}
+		{{ include('_blog_post.twig', {iter:blog_post}) }}
+	{% endfor %}
+{% endif %}
+
+<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+	{% if page > 0 %}
+		<a href="weblog.php?page={{ page - 1 }}" class="pagination-previous">{{ __('Previous page') }}</a>
+	{% endif %}
+	{% if iters|length > 0 %}
+		<a href="weblog.php?page={{ page + 1 }}" class="pagination-next">{{ __('Next page') }}</a>
+	{% endif %}
+	{# Needs this to display pagination correctly #}
+	<ul class="pagination-list"></ul>
+</nav>
 {% endblock %}

@@ -3,40 +3,65 @@
 {% block title __('Sticker map') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<div class="pageheading">
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Sticker map') }}</h1>
+	</div>
 	{% if user_can_create controller.new_iter %}
-	<div class="controls inline">
-		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="create-link" data-placement-selector="modal" data-partial-selector=".add-sticker-form">
+	<div class="level-right buttons">
+		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="button" data-placement-selector="modal" data-partial-selector=".add-sticker-form">
 			{{ __('New sticker') }}
 		</a>
 	</div>
 	{% endif %}
-	<h1>{{ __('Sticker map') }}</h1>
-</div>
+</header>
 
-<div id="sticker-map">
+<article id="sticker-map">
 	<div id="sticker-info-window">
 		<a href="" class="sticker-photo" target="_new">
-			<img src="">
+			<figure>
+				<img src="">
+			</figure>
 		</a>
-		<h3 class="sticker-label"></h3>
-		<small class="sticker-user">{{ __('Placed by') }} <a href="#"></a></small>
-		<p class="sticker-description"></p>
-		<div class="controls">
-			<form method="post" action="" class="remove-sticker-form">
+		<div class="content">
+			<h3 class="sticker-label"></h3>
+			<small class="sticker-user">{{ __('Placed by') }} <a href="#"></a></small>
+			<p class="sticker-description"></p>
+		</div>
+		<div>
+			<form method="post" action="" class="field">
 				<input type="hidden" name="_nonce">
-				<button type="submit" class="button">{{ __('Delete sticker') }}</button>
+				<button type="submit" class="button">
+					<span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
+					<span>{{ __('Delete sticker') }}</span>
+				</button>
 			</form>
-
-			<form method="post" action="" enctype="multipart/form-data" class="add-photo-form">
-				<div class="file-upload-button button">
-					<span>{{ __('Choose photo') }}&hellip;</span>
-					<input type="file" name="photo" accept="image/jpeg" title="{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}">
+			
+			<form method="post" action="" enctype="multipart/form-data" class="field">
+				<div class="field">
+					<div class="control">
+						<div class="file">
+							<label class="file-label" for="field-photo">
+								<input id="field-photo" class="file-input" type="file" name="photo" accept="image/jpeg">
+								<span class="file-cta">
+									<span class="file-icon">
+										<i class="fas fa-upload" aria-hidden="true"></i>
+									</span>
+									<span class="file-label">
+										{{ __('Choose photo…') }}
+									</span>
+								</span>
+							</label>
+						</div>
+					</div>
+					<p class="help">
+						{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}
+					</p>
 				</div>
 			</form>
 		</div>
 	</div>
-</div>
+</article>
 
 <!-- TODO: misschien Google Maps vervangen met iets mooiers/vrijers, bijv. OSM? -->
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&amp;sensor=false"></script>

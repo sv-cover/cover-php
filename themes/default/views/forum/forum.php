@@ -3,12 +3,12 @@ require_once 'include/models/DataModelPoll.php';
 
 class ForumView extends View
 {
-	public function stylesheets()
-	{
-		return array_merge(parent::stylesheets(), [
-			// get_theme_data('styles/forum.css')
-		]);
-	}
+	// public function stylesheets()
+	// {
+	// 	return array_merge(parent::stylesheets(), [
+	// 		get_theme_data('styles/forum.css')
+	// 	]);
+	// }
 
 	public function render_index($iters)
 	{
