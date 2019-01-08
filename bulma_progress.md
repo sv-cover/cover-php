@@ -95,7 +95,14 @@
     - [×] single.twig
 - [×] homepage
     - [×] homepage.twig
-- [ ] lidworden
+- [×] lidworden
+    - [×] confirmed.twig
+    - [×] known_member.twig
+    - [×] lidworden.twig
+    - [×] not_found.twig
+    - [×] pending.twig
+    - [×] pending_form.twig
+    - [×] submitted.twig
 - [×] mailinglijsten
     - [×] archive_index.twig
     - [×] archive_single.twig
@@ -219,6 +226,8 @@
 - Sticker map
 - WYSIWYG editor in mailinglijsten/autoresponder_form.twig
 - Stuff happening in mailijnlijsten/single.twig
+- Fancyness in signup/form_form.twig
+- Autocomplete in lidworden/lidworden.twig
 
 
 ## Bulma extensions / custom CSS
@@ -236,9 +245,12 @@
     - header in agenda/single.twig
     - article in signup/form_form.twig
     - cards in signup/form_form.twig
+    - entire form in lidworden/lidworden.twig
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
+    - lidworden/known_member.twig
+    - lidworden/pending.twig
 - Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - Narrow content container for improved readability. Probably with TOC sidebar.
 - Almanak rendering. Last row is weird, images are not centered.
@@ -284,6 +296,7 @@
     - signup/list_entries.twig
 - Buttons don't work that well as card-footer-item
     - signpu/form_form.twig
+- fullwidth/expanding select? maybe?
 
 
 ## Other
@@ -319,3 +332,4 @@
 - Icons in buttons?
 - How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
 - Deprecate horizontal banner rotator?
+- Redesign inclusion process (lidworden)
