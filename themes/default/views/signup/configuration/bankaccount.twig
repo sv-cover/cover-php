@@ -1,21 +1,18 @@
-<div class="field-type-bank-account vertical-form">
-	<h3 class="field-type">{{ __('Bank account number') }}</h3>
-	<fieldset>
-		<legend>Required</legend>
-		<div class="checkbox">
-			<label>
-				{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required') }}
-				{{ __('Filling in the IBAN is mandatory') }}
-			</label>
+<header class="card-header">
+	<h3 class="card-header-title">{{ __('Bank account number') }}</h3>
+	{# Ugh. Want this in form_form.twig #}
+	<div class="card-header-icon sortable-drag-handle" title="Drag me to reorder"></div>
+</header>
+<div class="card-content">
+	<div class="field">
+		<div class="control">
+			{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required', label=__('Filling in the IBAN is mandatory')) }}
 		</div>
-	</fieldset>
-	<fieldset>
-		<legend>Autofill</legend>
-		<div class="checkbox">
-			<label>
-				{{ html_input_checkbox('autofill', data, errors=errors, id='field-' ~ name ~ '-autofill') }}
-				{{ __('Autofill this form with member data (disable if people are not supposed to fill in their own information)') }}
-			</label>
+	</div>
+	<div class="field">
+		<div class="control">
+			{{ html_input_checkbox('autofill', data, errors=errors, id='field-' ~ name ~ '-autofill', label=__('Autofill this field with member data.')) }}
 		</div>
-	</fieldset>
+		<p class="help">{{ __('Disable if people are not supposed to fill in their own information.') }}</p>
+	</div>
 </div>

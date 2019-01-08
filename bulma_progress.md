@@ -131,7 +131,32 @@
 - [×] show
     - [×] form.twig
     - [×] single.twig
-- [ ] signup
+- [×] signup
+    - [×] configuration
+        - [×] address.twig
+        - [×] bankaccount.twig
+        - [×] checkbox.twig
+        - [×] choice.twig
+        - [×] editable.twig
+        - [×] email.twig
+        - [×] name.twig
+        - [×] text.twig
+    - [×] fields
+        - [×] address.twig
+        - [×] bankaccount.twig
+        - [×] checkbox.twig
+        - [×] choice.twig
+        - [×] editable.twig
+        - [×] email.twig
+        - [×] name.twig
+        - [×] text.twig
+    - [×] delete_field.twig (Doesn't seem to be linked to)
+    - [×] delete_form.twig (Doesn't seem to be linked to)
+    - [×] entry_form.twig
+    - [×] form_form.twig
+    - [×] list_entries.twig
+    - [×] list_forms.twig
+    - [×] restore_field.twig
 - [×] stickers
     - [×] form.twig
     - [×] index.twig
@@ -209,6 +234,8 @@
     - Single photo fotoboek/single.twig
     - header in mailinglists/archive_single.twig
     - header in agenda/single.twig
+    - article in signup/form_form.twig
+    - cards in signup/form_form.twig
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
@@ -225,6 +252,7 @@
 - Bulma typography is inconsistent across a single page.
 - Fieldset in: 
     - sessions/overrides.twig
+    - signup/fields/choice.twig
 - Calendar icon in:
     - agenda/index.twig
     - agenda/single.twig
@@ -250,6 +278,13 @@
 - No margin around dropdown in .buttons
     - agenda/index.twig
 - Why does a .number make form elements rounded?
+- A table-responsive like element would be nice (or probably an .is-scrollable modifier)
+    - signup/list_entries.twig
+- A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
+    - signup/list_entries.twig
+- Buttons don't work that well as card-footer-item
+    - signpu/form_form.twig
+
 
 ## Other
 

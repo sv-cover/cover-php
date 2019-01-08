@@ -1,9 +1,13 @@
-<div>
+<div class="field">
 	{{ html_label(__('Address'), name ~ '-address', errors=errors, required=configuration.required) }}
-	{{ html_input_text(name ~ '-address', data, errors=errors, required=configuration.required, placeholder=__('E.g. Nijenborgh 9')) }}
-	<p>{{ __('Street name + number') }}</p>
+    <div class="control">
+        {{ html_input_text(name ~ '-address', data, errors=errors, required=configuration.required, placeholder=__('E.g. Nijenborgh 9')) }}
+    </div>
+	<p class="help">{{ __('Street name + number') }}</p>
 </div>
-<div>
+<div class="field">
 	{{ html_label(__('Place of residence'), name ~ '-city', errors=errors, required=configuration.required) }}
-	{{ html_input_text(name ~ '-city', data, errors=errors, required=configuration.required, placeholder=__('E.g. Groningen')) }}
+    <div class="control">
+    	{{ html_input_text(name ~ '-city', data, errors=errors, required=configuration.required, placeholder=__('E.g. Groningen')) }}
+    </div>
 </div>

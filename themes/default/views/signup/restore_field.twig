@@ -3,13 +3,19 @@
 {% block title __('Restore field') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Restore field') }}</h1>
-<div class="messageBox">
-	<div class="form-field" id="form-field-{{field.id}}">
-		<form method="post" action="{{ controller.link({view: 'restore_form_field', form: form.id, field: field.id}) }}" class="vertical-form" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}">
-			{{ html_nonce('restore_form_field', form, field) }}
-			<p>{{ __('This %s is deleted.')|format(field.model.field_types[field.type].label|lower) }} <button type="submit" class="link">{{ __('Restore field')  }}</button></p>
-		</form>
-	</div>
+<h1 class="title">{{ __('Restore field') }}</h1>
+{# This wrapper seems necessary for js #}
+<div class="form-field" id="form-field-{{field.id}}">
+	<form method="post" action="{{ controller.link({view: 'restore_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}">
+		{{ html_nonce('restore_form_field', form, field) }}
+        <div class="field">
+    		<p>{{ __('This %s is deleted.')|format(field.model.field_types[field.type].label|lower) }} </p>
+        </div>
+        <div class="field">
+            <div class="control buttons">
+                <button type="submit" class="button">{{ __('Restore field')  }}</button>
+            </div>
+        </div>
+	</form>
 </div>
 {% endblock %}
