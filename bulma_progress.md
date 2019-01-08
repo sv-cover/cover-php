@@ -114,7 +114,22 @@
     - [×] subscribe_guest_form.twig
     - [×] subscribe_member_form.twig
     - [×] unsubscribe_form.twig
-- [ ] profiel
+- [×] profiel
+    - [ ] _facebook.phtml (This is very old, can be deleted I think)
+    - [×] _profile_widget.twig
+    - [×] confirm_email.twig
+    - [×] incassomatic_tab.twig
+    - [×] incassomatic_tab_exception.twig
+    - [×] incassomatic_tab_no_contract.twig
+    - [×] kast_tab.twig (is broken anyway, so will fix later)
+    - [×] kast_tab_exception.twig
+    - [×] mailing_lists_tab.twig
+    - [×] personal_tab.twig
+    - [×] privacy_tab.twig
+    - [×] profile_tab.twig
+    - [×] public_tab.twig
+    - [×] sessions_tab.twig
+    - [×] tab.twig
 - [×] search
     - [×] \_single_agendapunt.twig
     - [×] \_single_announcement.twig
@@ -246,6 +261,7 @@
     - article in signup/form_form.twig
     - cards in signup/form_form.twig
     - entire form in lidworden/lidworden.twig
+    - article on any profile page
 - Divider (like the one of semantic ui)
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig

@@ -3,13 +3,16 @@
 {% set active_tab = 'privacy' %}
 
 {% block tab_content %}
-<section class="aligned-list-section">
-	<h2>{{ __('Privacy settings') }}</h2>
-	<p>{{ __('Modify your privacy preferences to indicate who can see what info.') }}</p>
+<article>
+	<h2 class="title is-4">{{ __('Privacy settings') }}</h2>
 
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="post">
 		{{ html_nonce('privacy', iter) }}
-		<table class="privacy">
+		<div class="field">
+			<p>{{ __('Modify your privacy preferences to indicate who can see what info.') }}</p>
+		</div>
+
+		<table class="field table is-fullwidth">
 			<thead>
 				<tr>
 					<td></td>
@@ -30,7 +33,11 @@
 			</tbody>
 		</table>
 
-		<button type="submit" class="button">{{ __('Save') }}</button>
+		<div class="field">
+			<div class="control buttons">
+				<button type="submit" class="button is-primary">{{ __('Save') }}</button>
+			</div>
+		</div>
 	</form>
-</section>
+</article>
 {% endblock %}

@@ -27,7 +27,7 @@ class ProfielView extends View
 			'public' => [
 				'visible' => true,
 				'label' => member_full_name($iter, BE_PERSONAL),
-				'class' => 'fa-icon icon-public'
+				'icon' => 'fas fa-globe'
 				// 'body' => function () use ($model, $iter, $personal_fields) {
 				// 	$this->render_partial('public', compact('model', 'iter', 'personal_fields'));
 				// }
@@ -212,6 +212,7 @@ class ProfielView extends View
 		$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');
 		$treasurer_link = sprintf('<a href="profiel.php?lid=%d">%s</a>',
 			$treasurer['id'], markup_format_text(member_full_name($treasurer)));
+		return $this->render('incassomatic_tab_no_contract.twig', compact('iter', 'treasurer_link'));
 
 		try {
 			$incasso_api = \incassomatic\shared_instance();
