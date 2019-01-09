@@ -2,21 +2,21 @@
 
 - [-] \_layout
     - [-] widgets
-        - [ ] agenda.twig
+        - [ ] agenda.twig (currently unused)
         - [×] banners.twig
-        - [ ] committee-battle-header.twig
+        - [×] committee-battle-header.twig
         - [×] login.twig
         - [×] menu.twig
-        - [ ] menuitem.twig (deprecated?)
-        - [ ] poll.twig
-        - [ ] promotional-header.twig
+        - [ ] menuitem.twig
+        - [ ] poll.twig (currently unused)
+        - [×] promotional-header.twig
         - [×] search.twig
-    - [ ] 401_unauthorized.twig
-    - [ ] 404_not_found.twig
-    - [ ] 500.twig
+    - [×] 401_unauthorized.twig
+    - [×] 404_not_found.twig
+    - [×] 500.twig
     - [×] editable.twig
     - [×] layout.twig
-    - [ ] layout_without_menu.twig
+    - [×] layout_without_menu.twig
 - [×] actieveleden
     - [×] index.twig
 - [×] agenda
@@ -262,7 +262,10 @@
     - cards in signup/form_form.twig
     - entire form in lidworden/lidworden.twig
     - article on any profile page
+    - article in \_layout/500.twig
+    - article anywhere basically
 - Divider (like the one of semantic ui)
+    - \_layout/401.twig
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
     - lidworden/known_member.twig
@@ -333,6 +336,8 @@
 - Embedded mailing list form doesn't seem to work…
 - Fix select fields
 - Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
+- Move Headings inside of articles, unless header. Got to do proper HTML5 :)
+- Error 500. What if link_static is broken? Or i18n?
 
 
 
@@ -349,3 +354,4 @@
 - How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
 - Deprecate horizontal banner rotator?
 - Redesign inclusion process (lidworden)
+- Notification system?

@@ -2,34 +2,45 @@
 <html>
 	<head>
 		<title>Error! :: Cover</title>
-		<link rel="stylesheet" href="themes/default/style.css">
-		<style>
-		.exception-container {
-			max-width: 500px;
-			margin: 100px auto;
-		}
-		</style>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
 	</head>
-	<body>
-		<div class="exception-container">
-			<h1>Error!</h1>
-			<div class="messageBox">
-				<p>{{ __('Sorry, something went horribly wrong. Please try again in a bit or contact the WebCie (webcie@svcover.nl)') }}</p>
-
-				{% if sentry_id %}
-				<p class="align-center">
-					Sentry event id: <code>{{ sentry_id }}</code><br>
-					<button class="button" onclick="reportUserFeedback()">Provide feedback</button>
-				</p>
-				{% endif %}
-
-				<p class="align-center"><a href="index.php">{{ __('Back to homepage') }}</a></p>
+	<body class="has-navbar-fixed-top">
+		<nav class="navbar is-danger is-fixed-top" role="navigation" aria-label="main navigation">
+			<div class="container">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="/">
+						<img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
+					</a>
+				</div>
 			</div>
-		</div>
+		</nav>
 
-		{% if global.config.show_exceptions %}
-			<pre>{{ exception }}</pre>
-		{% endif %}
+		<section class="section">
+			<div class="container">
+				<article>
+					<h1 class="title">Error!</h1>
+					<div class="content">
+						<p>{{ __('Sorry, something went horribly wrong. Please try again in a bit or contact the WebCie (webcie@svcover.nl)') }}</p>
+
+						{% if sentry_id %}
+						<p>
+							Sentry event id: <code>{{ sentry_id }}</code><br>
+							<button class="button" onclick="reportUserFeedback()">Provide feedback</button>
+						</p>
+						{% endif %}
+
+						<p><a href="index.php" class="button">{{ __('Back to homepage') }}</a></p>
+					</div>
+				</article>
+				{% block content %}{% endblock %}
+				{% if global.config.show_exceptions %}
+					<article>
+						<h2 class="title is-4">Error information</h2>
+						<pre>{{ exception }}</pre>
+					</article>
+				{% endif %}
+			</div>
+		</section>
 
 		<script src="https://cdn.ravenjs.com/3.14.0/raven.min.js"></script>
 		<script>
