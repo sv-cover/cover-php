@@ -338,7 +338,7 @@
 - Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
 - Move Headings inside of articles, unless header. Got to do proper HTML5 :)
 - Error 500. What if link_static is broken? Or i18n?
-
+- Poll on mobile doesn't work that well.
 
 
 # Pending Design Decisions
