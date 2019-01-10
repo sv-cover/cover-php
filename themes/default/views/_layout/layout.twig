@@ -73,6 +73,61 @@
 			</div>
 		</footer>
 
+
+		{# Warn accidental visitors that this is a test version #}
+		<div class="modal is-active" id="development-warning-modal">
+			<div class="modal-background"></div>
+			<div class="modal-content">
+				<div class="notification is-danger">
+					<h1 class="title is-1">Proceed with caution!</h1>
+					<div class="content">
+						<p>
+							As the URL suggests this is a developmental version of our website, which means that some things may not work as expected.
+						</p>
+						<p>
+							If you want to test this new thing, that's fine. But please don't get angry if you run into issues. We would appreciate if you report these issues through the <a href="https://bitbucket.org/cover-webcie/cover-php/issues">usual ways</a>, but please mention that you're issue is with the <em>redesigned</em> website and not the regular one.
+						</p>
+					</div>
+					<div class="buttons">
+						<a href="https://www.svcover.nl" class="button is-danger is-inverted is-large">I want a working website</a>
+						<button type="button" class="button is-danger is-inverted is-large is-outlined" id="continue-button">Continue testing</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{# Some scripts for the development modal. Keep it all contained as much as possible to not interfere with other scripts #}
+		<script>
+			function DevelopmentModal() {
+				function closeModal(evt) {
+					var modal = document.getElementById('development-warning-modal');
+					document.cookie = 'istester=true';
+					modal.remove();	
+				}
+
+				function getCookie(name) {
+					var cookie = document.cookie
+						.split(';')
+						.map( cookie => cookie.trim().split("=", 2) )
+						.find( cookie => cookie[0] == name );
+
+					if (!cookie) return null;
+
+					return decodeURIComponent(cookie[1])
+				}
+
+				var modal = document.getElementById('development-warning-modal');
+			
+				if (getCookie('istester') == 'true') {
+					modal.remove()
+				} else {
+					modal.querySelector('#continue-button').addEventListener('click', closeModal);
+				}
+			}
+
+			DevelopmentModal();
+		</script>
+
 		{% if view.layout.has_alert %}
 			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>
 		{% endif %}
