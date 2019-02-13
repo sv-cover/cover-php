@@ -5,5 +5,12 @@
 			"functie": "Care bear",
 			"photo": "images/mascots/koda.jpg"
 		}
-	]
+	],
+    "excee": [
+        {
+            "name": "Dibbes",
+            "functie": "Meowscot",
+            "photo": "images/mascots/dibbes.jpg"
+        }
+    ]
 }
