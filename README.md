@@ -14,7 +14,7 @@ If you want to contribute code please fork this repository, create a new branch 
 
 ## Running locally
 
-To run the Cover site locally, you can follow the instructions in [quick_install.md](src/master/quick_install.md). This guide has been written for Ubuntu 18.04 (stand alone or on Windows Subsystem for Linux).
+To run the Cover site locally, you can follow the instructions in [quick_install.md](./quick_install.md). This guide has been written for Ubuntu 18.04 (stand alone or on Windows Subsystem for Linux).
 
 To run the Cover site you need a webserver with PHP (at least 7.0 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database. (8.2, 9.3 and 10 all seem to work so I guess it doesn't really matter which version.)
 
@@ -66,7 +66,7 @@ Face detection makes use of OpenCV and Python and the python libraries numpy and
 
 You can use Poedit to update the \*.po and \*.mo files with cover the English translation. To make Poedit scan the .twig-files as well, you'll have to add it to the list of scanners. The following settings will work (but will cause some non-fatal errors).
 
-1. Create a Poedit project for your theme if you havenâ€™t already, and make sure to add __ on the Sources keywords tab.
+1. Create a Poedit project for your theme if you haven’t already, and make sure to add __ on the Sources keywords tab.
 2. Go to Edit->Preferences.
 3. On the Parsers tab, add a new parser with these settings:  
    Language: *Twig*  
