@@ -1,4 +1,4 @@
-# Quickinstall Guide
+# Quick Install Guide
 
 This guide has been written for Ubuntu 18.04 LTS and tested on Ubuntu 18.04 on Windows Subsystem for Linux (WSL).
 
