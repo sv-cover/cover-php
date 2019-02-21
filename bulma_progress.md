@@ -343,8 +343,6 @@
 
 # Pending Design Decisions
 
-- Inline login form or separate page?
-- Circular or square profile pictures in Almanak? Forum? Committee pages?
 - Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
 - If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
 - How to display metadata? Eg. forum messages, announcements, search results, photo album
