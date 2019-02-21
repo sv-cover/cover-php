@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title book.has('titel') ? book.titel : __('Photo book') ~ ' &ndash; ' ~ parent() %}
+{% block title book.has('titel') ? book.titel : __('Photo book') ~ ' – ' ~ parent() %}
 
 {% block content %}
 <header>

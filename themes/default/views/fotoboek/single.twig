@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title book.titel ~ ' &ndash; ' ~ parent() %}
+{% block title book.titel ~ ' – ' ~ parent() %}
 
 {% macro format_face_label(face) -%}
 	{%- if face.lid_id is not null -%}
@@ -17,7 +17,7 @@
 {% block content %}
 
 <header>
-	<h1 class="title">{{ __('Photo album') }} &ndash; {{ __('Photo') }}</h1>
+	<h1 class="title">{{ __('Photo album') }} – {{ __('Photo') }}</h1>
 	{{ include('_path.twig') }}
 	<div class="level">
 		<div class="level-left">
