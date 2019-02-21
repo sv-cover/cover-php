@@ -43,8 +43,8 @@
 				<td>
 					<a href="commissies.php?commissie={{ committee.login|e('url') }}">{{ committee.naam }}</a>
 					{% for member in committee.members %}
-						<a href="{{ link('profiel.read', member=member)|e('html_attr') }}">
-							<img src="{{ link('foto.square', member=member, width=50)|e('html_attr') }}" width="25" title="{{ member|personal_full_name }}">
+						<a href="{{ link('profiel.read', member=member)|e('html_attr') }}" class="image is-16x16 is-inline-block">
+							<img  class="is-rounded" src="{{ link('foto.square', member=member, width=50)|e('html_attr') }}" width="25" title="{{ member|personal_full_name }}">
 							<span class="is-sr-only">{{ member|personal_full_name }}</span>
 						</a>
 					{% endfor %}

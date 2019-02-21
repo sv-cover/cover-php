@@ -74,9 +74,9 @@
 		<figure class="media-left">
 			<p class="image is-64x64">
 				{% if author.avatar %}
-					<img src="{{ author.avatar|e('html_attr') }}" alt="Avatar of {{ author.name }}">
+					<img class="is-rounded" src="{{ author.avatar|e('html_attr') }}" alt="Avatar of {{ author.name }}">
 				{% elseif author_photo %}
-					<img src="{{ author_photo|e('html_attr') }}" alt="Photo of {{ author.name }}">
+					<img class="is-rounded" src="{{ author_photo|e('html_attr') }}" alt="Photo of {{ author.name }}">
 				{% endif %}
 			</p>
 		</figure>

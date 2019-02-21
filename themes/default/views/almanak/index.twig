@@ -73,7 +73,7 @@
 				<li class="column has-text-centered">
 					<a href="{{ link('profiel.read', member=iter) }}">	
 						<figure class="image is-128x128">
-							<img width="128" height="128" src="{{ link('foto.square', member=iter, width=256) }}" alt="{{ __('Photo of %s')|format(iter|full_name) }}">
+							<img class="is-rounded" width="128" height="128" src="{{ link('foto.square', member=iter, width=256) }}" alt="{{ __('Photo of %s')|format(iter|full_name) }}">
 						</figure>
 						<span class="name">{{ iter|personal_full_name }}</span>
 						{% if view.status_label(iter) %}

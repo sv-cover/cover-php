@@ -7,9 +7,9 @@
 	<figure class="media-left">
 		<p class="image is-64x64">
 			{% if iter.has_id %}
-				<img src="{{ link('foto.square', member=iter.author, width=128) }}" alt="Photo of {{ iter.author|personal_full_name }}">
+				<img class="is-rounded" src="{{ link('foto.square', member=iter.author, width=128) }}" alt="Photo of {{ iter.author|personal_full_name }}">
 			{% else %}
-				<img src="{{ link('foto.square', member=global.identity.member, width=128) }}" alt="Photo of {{ global.identity.member|personal_full_name }}">
+				<img class="is-rounded" src="{{ link('foto.square', member=global.identity.member, width=128) }}" alt="Photo of {{ global.identity.member|personal_full_name }}">
 			{% endif %}
 		</p>
 	</figure>
