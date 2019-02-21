@@ -6,7 +6,7 @@
 
 {% set form_submit_button = book.id > 0 ? __('Modify photo album') : __('Add photo album') %}
 
-{% block title form_title ~ ' :: ' ~ parent() %}
+{% block title form_title ~ ' &ndash; ' ~ parent() %}
 
 {% block content %}
 <h1 class="title">{{ form_title }}</h1>

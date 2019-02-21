@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Modify calendar event') : __('Add a calendar event')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id ? __('Modify calendar event') : __('Add a calendar event')) ~ ' &ndash; ' ~ parent() %}
 
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Modify calendar event') : __('Add a calendar event') }}</h1>
