@@ -36,10 +36,6 @@ class LayoutViewHelper
 				[
 					'url' => 'show.php?id=30',
 					'label' => __('Documents'),
-				],
-				[
-					'url' => 'weblog.php',
-					'label' => __('Weblog')
 				]
 			]
 		];
