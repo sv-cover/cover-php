@@ -9,12 +9,12 @@ class CommitteeBattleView extends CRUDView
 		]);
 	}
 
-	public function stylesheets()
-	{
-		return array_merge(parent::stylesheets(), [
-			get_theme_data('styles/select2.css')
-		]);
-	}
+	// public function stylesheets()
+	// {
+	// 	return array_merge(parent::stylesheets(), [
+	// 		get_theme_data('styles/select2.css')
+	// 	]);
+	// }
 
 	public function committee_view()
 	{

@@ -3,17 +3,19 @@
 {% block title __('Subscribe a member') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Add member') }}</h1>
-<div class="messageBox">
-	<form method="post" action="{{ controller.link_to('subscribe_member', list)|e('html_attr') }}" class="vertical-form">
-		{{ html_nonce('subscribe_member', list) }}
-		<div>
-			{{ html_label(__('Member id(s)'), 'member_id') }}
+<h1 class="title">{{ __('Add member') }}</h1>
+<form method="post" action="{{ controller.link_to('subscribe_member', list)|e('html_attr') }}">
+	{{ html_nonce('subscribe_member', list) }}
+	<div class="field">
+		{{ html_label(__('Member id(s)'), 'member_id') }}
+		<div class="control">
 			{{ html_input_text('member_id', [], autofocus=true, data_autocomplete='member_id') }}
 		</div>
-		<div class="controls">
-			<button type="submit" class="button">{{ __('Subscribe') }}</button>
+	</div>
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">{{ __('Subscribe') }}</button>
 		</div>
-	</form>
-</div>
+	</div>
+</form>
 {% endblock %}

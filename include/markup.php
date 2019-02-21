@@ -129,9 +129,9 @@
 		$result = '';
 
 		if (!$class)
-			$class = 'markup_default';
+			$class = 'table';
 		else
-			$class = 'markup_' . $class;
+			$class = 'table ' . $class;
 		
 		$result = '<table class="' . $class . '">';
 
@@ -151,7 +151,7 @@
 	}
 	
 	function _markup_parse_table(&$markup) {
-		$markup = preg_replace_callback('/\[table( ([a-z]+))?\](.*?)\[\/table\]/is', '_markup_parse_table_real', $markup);
+		$markup = preg_replace_callback('/\[table( ([a-z-]+))?\](.*?)\[\/table\]/is', '_markup_parse_table_real', $markup);
 	}
 	
 	function _markup_parse_spaces(&$markup) {
@@ -191,7 +191,7 @@
 		{
 			$placeholder = sprintf('#IMAGE%d#', $count++);
 			$placeholders[$placeholder] = sprintf('<img class="%s" src="%s">',
-				'markup-image' . str_replace('.', ' ', $match['classes']),
+				str_replace('.', ' ', $match['classes']),
 				markup_format_attribute($match['url']));
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
@@ -204,7 +204,7 @@
 		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match))
 		{
 			$placeholder = sprintf('#VIDEO%d#', $count++);
-			$placeholders[$placeholder] = '<div class="youtube-container"><iframe src="//www.youtube.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe></div>';
+			$placeholders[$placeholder] = '<iframe src="//www.youtube.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
@@ -246,7 +246,7 @@
 			function($match) {
 				return sprintf('<h%d class="%s">%s</h%1$d>',
 					$match['level'],
-					'markup-header' . str_replace('.', ' ', $match['classes']),
+					str_replace('.', ' ', $match['classes']),
 					$match['content']);
 			}, $markup);
 	}

@@ -3,12 +3,12 @@ require_once 'include/models/DataModelPoll.php';
 
 class ForumView extends View
 {
-	public function stylesheets()
-	{
-		return array_merge(parent::stylesheets(), [
-			get_theme_data('styles/forum.css')
-		]);
-	}
+	// public function stylesheets()
+	// {
+	// 	return array_merge(parent::stylesheets(), [
+	// 		get_theme_data('styles/forum.css')
+	// 	]);
+	// }
 
 	public function render_index($iters)
 	{
@@ -146,38 +146,77 @@ class ForumView extends View
 		}
 	}
 
-	public function page_navigation($url, $current, $max, $nav_num = 10)
+	public function get_author_photo(DataIter $message, $last = false)
 	{
-		$nav = '<div class="page_navigation">' . __('Go to page') . ': ';
+		if ($last && $message['last_author_type'])
+			$field = 'last_author';
+		else
+			$field = 'author';
+
+		try {
+			switch (intval($message[$field . '_type']))
+			{
+				case DataModelForum::TYPE_PERSON: /* Person */
+					return 'foto.php?&format=square&width=128&lid_id='. $message[$field . '_id'];
+				
+				default:
+					return null;
+			}
+		} catch (DataIterNotFoundException $e) {
+			// Sometimes an author just doesnt exist anymore in the database. That's legacy for you!
+			return null;
+		}
+	}
+
+	public function page_navigation($url, $current, $max, $nav_num = 5)
+	{
+		$nav = '<nav class="pagination" role="navigation" aria-label="pagination">';
 
 		if ($current != 0)
-			$nav .= '<a href="' . add_request($url, 'page=' . ($current - 1)) . '">' . image('previous.png', __('previous'), __('Previous page') . '</a>');
+			$nav .= sprintf('<a href="%s" class="pagination-previous">%s</a>',
+							markup_format_attribute(edit_url($url, ['page' => $current - 1])),
+							markup_format_attribute(__('Previous')));
 		
-		$nav_min = max(0, $current - ($nav_num / 2));
-		$nav_max = min($max, $current + ($nav_num / 2) - 1);
+		if ($current != $max)
+			$nav .= sprintf('<a href="%s" class="pagination-next">%s</a>',
+				markup_format_attribute(edit_url($url, ['page' => $current + 1])),
+				markup_format_attribute(__('Next page')));
+
+		$nav .= '<ul class="pagination-list">';
+
+		$nav_min = max(0, floor($current - ($nav_num / 2)));
+		$nav_max = min($max, floor($current + ($nav_num / 2) - 1));
 		
+		if ($nav_min > 0)
+			$nav .= sprintf('<li><a href="%1$s" class="pagination-link" aria-label="Goto page 1">1</a></li>', 
+					markup_format_attribute(edit_url($url, ['page' => 0])));
+
+		if ($nav_min > 1)
+			$nav .= '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+
 		if ($nav_max - $nav_min < $nav_num)
 			$nav_max = min($max, $nav_min + $nav_num - 1);
 		
 		for ($i = $nav_min; $i <= $nav_max; $i++) {
 			if ($i == $current) {
-				$nav .= sprintf('<span class="bold">%d</span> ', $i + 1);
+				$nav .= sprintf('<li><a class="pagination-link is-current" aria-label="Page %1$d" aria-current="page">%1$d</a></li>', $i + 1);
 			}
 			else {
-				$nav .= sprintf('<a href="%s">%d</a> ',
+				$nav .= sprintf('<li><a href="%1$s" class="pagination-link" aria-label="Goto page %2$d">%2$d</a></li>', 
 					markup_format_attribute(edit_url($url, ['page' => $i])),
 					$i + 1);
 			}
 		}
-		
-		if ($current != $max)
-			$nav .= sprintf('<a href="%s"><img src="%s" alt="%s" title="%s"></a>',
-				markup_format_attribute(edit_url($url, ['page' => $current + 1])),
-				markup_format_attribute(get_theme_data('images/next.png')),
-				markup_format_attribute(__('next')),
-				markup_format_attribute(__('Next page')));
-		
-		return $nav . "</div>\n";
+
+		if ($nav_max < $max - 1) 
+			$nav .= '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+
+		if ($nav_max < $max)
+			$nav .= sprintf('<li><a href="%1$s" class="pagination-link" aria-label="Goto page %2$d">%2$d</a></li>', 
+					markup_format_attribute(edit_url($url, ['page' => $max])),
+					$max + 1);
+				
+		return $nav . "</ul></nav>\n";
 	}
 
 	public function thread_page_links(DataIterForumThread $thread, $pages)

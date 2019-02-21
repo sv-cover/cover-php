@@ -1,13 +1,12 @@
-<fieldset>
+<fieldset class="field">
 	<legend>{{ configuration.description }}</legend>
 	{% for option in configuration.options %}
-	<div>
-		{% if configuration.allow_multiple %}
-			{{ html_input_checkbox(name ~ '[]', data, id='field-' ~ name ~ '-' ~ loop.index, value=option, errors=errors) }}
-		{% else %}
-			{{ html_input_radio(name, data, option, field=name ~ '[]', id='field-' ~ name ~ '-' ~ loop.index, errors=errors) }}
-		{% endif %}
-		{{ html_label(option, name ~ '-' ~ loop.index, errors=errors) }}
-	</div>
+		<div class="control">
+			{% if configuration.allow_multiple %}
+				{{ html_input_checkbox(name ~ '[]', data, id='field-' ~ name ~ '-' ~ loop.index, value=option, errors=errors, label=option) }}
+			{% else %}
+				{{ html_input_radio(name, data, option, field=name ~ '[]', id='field-' ~ name ~ '-' ~ loop.index, errors=errors, label=option) }}
+			{% endif %}
+		</div>
 	{% endfor %}
 </fieldset>

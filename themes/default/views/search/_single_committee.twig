@@ -1,4 +1,4 @@
-<h2>
+<h2 class="title is-5">
 	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.naam }}</a>
 	{% if result.search_match_reason == 'committee_member_match' %}
 		<small class="match-reason">{{ __('%s is a member of this committee')|format(
@@ -8,4 +8,4 @@
 		<small>{{ __('Committee') }}</small>
 	{% endif %}
 </h2>
-<p>{{ result.summary }}</p>
+<p class="content">{{ result.summary }}</p>

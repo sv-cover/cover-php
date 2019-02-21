@@ -1,18 +1,24 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Download photo album') ~ ' :: ' ~ parent() %}
+{% block title __('Download photo book') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Download photo album') }}</h1>
-<div class="messageBox">
-	<form method="get" action="fotoboek.php" id="download-photo-book-form">
-		<input type="hidden" name="book" value="{{ book.id }}">
-		<p>{{ __('Are you sure you want to download <a href="%s">%s</a> and all of its sub albums?')|format('fotoboek.php?book=' ~ book.id|e('url'), book.titel|e)|raw }}</p>
-		<p>{{ __('Note that you will be downloading %d originals. That is <strong>%s</strong> in total!')|format(total_photos, total_file_size|human_file_size)|raw }}</p>
+<h1 class="title">{{ __('Download photo book') }}</h1>
+<form method="get" action="fotoboek.php" id="download-photo-book-form">
+	<input type="hidden" name="book" value="{{ book.id }}">
+    <div class="field">
+    	<p>{{ __('Are you sure you want to download <a href="%s">%s</a> and all of its sub books?')|format('fotoboek.php?book=' ~ book.id|e('url'), book.titel|e)|raw }}</p>
+    </div>
 
-		<button type="submit" class="button" name="view" value="download_book">{{ __('Download %s as a ZIP (%s)')|format(book.titel, total_file_size|human_file_size) }}</button>
-
-		<a href="fotoboek.php?book={{ book.id }}">{{ __('Return to %s')|format(book.titel) }}</a>
-	</form> 
-</div>
+    <div class="field">
+    	<p>{{ __('Note that you will be downloading %d originals. That is <strong>%s</strong> in total!')|format(total_photos, total_file_size|human_file_size)|raw }}</p>
+    </div>
+    
+    <div class="field">
+        <div class="control buttons">
+        	<button type="submit" class="button is-primary" name="view" value="download_book">{{ __('Download %s as a ZIP (%s)')|format(book.titel, total_file_size|human_file_size) }}</button>
+            <a href="fotoboek.php?book={{ book.id }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
+        </div>
+    </div>
+</form>
 {% endblock %}

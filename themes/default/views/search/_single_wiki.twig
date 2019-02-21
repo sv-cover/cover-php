@@ -1,5 +1,5 @@
-<h2>
+<h2 class="title is-5">
 	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.title }}</a>
 	<small>Wiki, {{ __N('%d hit', '%d hits', result.score) }}</small>
 </h2>
-<p>{{ result.snippet|raw }}</p>
+<p class="content">{{ result.snippet|raw }}</p>

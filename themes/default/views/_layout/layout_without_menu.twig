@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 		<link rel="icon" type="image/png" href="images/favicon.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">		
 		<title>{% block title %}Cover :: {{ __('Study Association for Artificial Intelligence and Computing Science') }}{% endblock %}</title>
 		
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
 		{% for stylesheet in view.stylesheets %}
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
@@ -15,21 +20,33 @@
 		<script src="{{ script }}"></script>
 		{% endfor %}
 	</head>
-	<body class="without-menu">
-		<div class="world">
-			<div class="header clearfix">
-				<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="logo"></a>
-			</div>
-			<div class="container clearfix">
-				<div class="center column" id="contents">
-					{% block content %}{% endblock %}
+	<body class="has-navbar-fixed-top">
+		<nav class="navbar is-danger is-fixed-top" role="navigation" aria-label="main navigation">
+			<div class="container">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="/">
+						<img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
+					</a>
 				</div>
 			</div>
-			<div class="footer">
+		</nav>
+
+
+		{% block page %}
+			<section class="section">
+				<div class="container">
+					{% block content %}{% endblock %}
+				</div>
+			</section>
+		{% endblock %}
+
+		<footer class="footer">
+			<div class="content has-text-centered">
 				<a href="show.php?id=17">{{ __('Contact') }}</a>
 				&mdash; <a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
+				&mdash; <a href="https://bitbucket.org/cover-webcie/cover-php/issues">{{ __('Report a bug')}}</a>
 			</div>
-		</div>
+		</footer>
 
 		{% if view.layout.has_alert %}
 			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>

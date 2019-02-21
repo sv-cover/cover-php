@@ -3,163 +3,220 @@
 {% block title __('Membership application form') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Membership application form') }}</h1>
-<div class="messageBox">
-	<h2>{{ __('Become a member!') }}</h2>
-
+<header>
+	<h1 class="title">{{ __('Membership application form') }}</h1>
+	<p class="subtitle is-4">{{ __('Become a member!') }}</p>
+</header>
+<article>
 	{% if errors|length > 0 %}
-	<section class="error-section">
-		<p>{{ __("You haven't filled in all the fields correctly.") }}</p>
-	</section>
+		<p class="notification is-danger">{{ __("You haven't filled in all the fields correctly.") }}</p>
 	{% endif %}
 
 	<form method="post" action="lidworden.php" class="new-member-form vertical-form">
 		{{ html_nonce('sign_up') }}
 		
-		<fieldset>
-			<legend>{{ __('Name') }}</legend>
-			<div class="field-group">
-				<div class="large-field">
-					{{ html_label(__('First name'), 'first_name', errors=errors, required=true) }}
-					{{ html_input_text('first_name', null, errors=errors, required=true, placeholder=__('E.g. John')) }}
-				</div>
-				<div>
-					{{ html_label(__('Infix'), 'family_name_preposition', errors=errors) }}
-					{{ html_input_text('family_name_preposition', null, errors=errors, class='small', placeholder=__('E.g. von')) }}
-				</div>
-				<div class="large-field">
-					{{ html_label(__('Last name'), 'family_name', errors=errors, required=true) }}
-					{{ html_input_text('family_name', null, errors=errors, required=true, placeholder=__('E.g. Neumann')) }}
+		<div class="field">
+			<h2 class="title is-5">{{ __('Basic information') }}</h2>
+		</div>
+
+		<div class="field">
+			<div>{# Getting around column margins is hard#}
+				<div class="columns">
+					<div class="field column is-marginless">
+						{{ html_label(__('First name'), 'first_name', errors=errors, required=true) }}
+						<div class="control">
+							{{ html_input_text('first_name', null, errors=errors, required=true, placeholder=__('E.g. John')) }}
+						</div>
+					</div>
+					<div class="field column is-marginless is-one-fifth">
+						{{ html_label(__('Infix'), 'family_name_preposition', errors=errors) }}
+						<div class="control">
+							{{ html_input_text('family_name_preposition', null, errors=errors, class='small', placeholder=__('E.g. von')) }}
+						</div>
+					</div>
+					<div class="field column is-marginless">
+						{{ html_label(__('Last name'), 'family_name', errors=errors, required=true) }}
+						<div class="control">
+							{{ html_input_text('family_name', null, errors=errors, required=true, placeholder=__('E.g. Neumann')) }}
+						</div>
+					</div>
 				</div>
 			</div>
+			<p class="help">{{ __('Infix (tussenvoegsel) is a common thing in Dutch surnames. It\'s separated from the rest of the surname to sort your surname with N instead of V if your name is John von Neuman. Leave this field empty if you don\'t know what to do with this.') }}</p>
+		</div>
 
-			<div>
-				{{ html_label(__('Birthdate'), 'birth_date', errors=errors, required=true) }}
+		<div class="field">
+			{{ html_label(__('Birthdate'), 'birth_date', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_date('birth_date', null, errors=errors, required=true, placeholder=__('E.g. 1993-9-20')) }}
 			</div>
+		</div>
 
-			<div>
-				{{ html_label(__('Gender'), 'gender', errors=errors, required=true) }}
-				{{ html_select_field('gender', {o: __('Unspecified'), m: __('Male'), f: __('Female')}, null, errors=errors, required=true, default='o') }}
+		<div class="field">
+			{{ html_label(__('Gender'), 'gender', errors=errors, required=true) }}
+			<div class="control">
+				<div class="select">
+					{{ html_select_field('gender', {o: __('Unspecified'), m: __('Male'), f: __('Female')}, null, errors=errors, required=true, default='o') }}
+				</div>
 			</div>
-		</fieldset>
+		</div>
 
-		<fieldset>
-			<legend>{{ __('Address') }}</legend>
+		<div class="field">
+			<h2 class="title is-5">{{ __('Address') }}</h2>
+		</div>
 
-			<div>
-				{{ html_label(__('Street name + number'), 'street_name', errors=errors, required=true) }}
+		<div class="field">
+			{{ html_label(__('Street name + number'), 'street_name', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('street_name', null, errors=errors, required=true, placeholder=__('E.g. Nijenborgh 9')) }}
 			</div>
-			<div class="field-group">
-				<div>
+		</div>
+		<div class="field">
+			<div class="columns">
+				<div class="field column is-marginless is-one-third">
 					{{ html_label(__('Zipcode'), 'postal_code', errors=errors, required=true) }}
-					{{ html_input_text('postal_code', null, errors=errors, required=true, placeholder=__('E.g. 9747 AG')) }}
+					<div class="control">
+						{{ html_input_text('postal_code', null, errors=errors, required=true, placeholder=__('E.g. 9747 AG')) }}
+					</div>
 				</div>
-				<div class="large-field">
+				<div class="field column is-marginless">
 					{{ html_label(__('Place of residence'), 'place', errors=errors, required=true) }}
-					{{ html_input_text('place', null, errors=errors, required=true, placeholder=__('E.g. Groningen')) }}
+					<div class="control">
+						{{ html_input_text('place', null, errors=errors, required=true, placeholder=__('E.g. Groningen')) }}
+					</div>
 				</div>
 			</div>
-		</fieldset>
+		</div>
 
-		<fieldset>
-			<legend>{{ __('Contact') }}</legend>
+		<div class="field">
+			<h2 class="title is-5">{{ __('Contact') }}</h2>
+		</div>
 
-			<div>
-				{{ html_label(__('Phone number'), 'phone_number', errors=errors, required=true) }}
+		<div class="field">
+			{{ html_label(__('Phone number'), 'phone_number', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('phone_number', null, errors=errors, required=true, type='tel') }}
 			</div>
+		</div>
 
-			<div>
-				{{ html_label(__('E-mail address'), 'email_address', errors=errors, required=true) }}
+		<div class="field">
+			{{ html_label(__('E-mail address'), 'email_address', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('email_address', null, errors=errors, required=true, type='email') }}
-				<small>{{ __('You will receive a confirmation email with a link. Your application will be processed after you have clicked the link.') }}</small>
 			</div>
-		</fieldset>
+			<p class="help">{{ __('You will receive a confirmation email with a link. Your application will be processed after you have clicked the link.') }}</p>
+		</div>
 
-		<fieldset>
-			<legend>{{ __('Study') }}</legend>
-			
-			<div>
-				{{ html_label(__('Student number'), 'membership_student_number', errors=errors, required=true) }}
+		<div class="field">
+			<h2 class="title is-5">{{ __('Study') }}</h2>
+		</div>
+
+		<div class="field">
+			{{ html_label(__('Student number'), 'membership_student_number', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('membership_student_number', null, errors=errors, required=true, placeholder=__('E.g. s123456')) }}
 			</div>
+		</div>
 
-			<div class="field-group">
-				<div>
-					{{ html_label(__('Study'), 'membership_study_name', errors=errors, required=true) }}
+		<div class="field columns">
+			<div class="field column is-marginless is-two-thirds">
+				{{ html_label(__('Study'), 'membership_study_name', errors=errors, required=true) }}
+				<div class="control">
 					{{ html_input_text('membership_study_name', null, errors=errors, required=true, list='studies', data_suggestions=['Artificial Intelligence', 'Computing Science']|json_encode, placeholder=__("Pick one from the list or type if your study isn't on it")) }}
-					
-				</div>
-
-				<div>
-					{{ html_label(__('Phase'), 'membership_study_phase', errors=errors, required=true) }}
-					{{ html_select_field('membership_study_phase', {b: __('Bachelor'), m: __('Master')}, null, errors=errors, required=true) }}
 				</div>
 			</div>
 
-			<div>
-				{{ html_label(__('Starting year'), 'membership_year_of_enrollment', errors=errors, required=true) }}
+			<div class="field column is-marginless is-one-third">
+				{{ html_label(__('Phase'), 'membership_study_phase', errors=errors, required=true) }}
+				<div class="control">
+					<div class="select">
+						{{ html_select_field('membership_study_phase', {b: __('Bachelor'), m: __('Master')}, null, errors=errors, required=true) }}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="field">
+			{{ html_label(__('Starting year'), 'membership_year_of_enrollment', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('membership_year_of_enrollment', {'membership_year_of_enrollment': academic_year}, errors=errors, required=true) }}
-				<small>{{ __('In which year did you start or are you expecting to start with your study.') }}</small>
 			</div>
-		</fieldset>
+			<p class="help">{{ __('In which year did you start or are you expecting to start with your study.') }}</p>
+		</div>
 
-		<fieldset>
-			<legend>{{ __('Payment') }}</legend>
-			
-			<div>
-				{{ html_label(__('IBAN'), 'iban', errors=errors, required=true) }}
+		<div class="field">
+			<h2 class="title is-5">{{ __('Payment') }}</h2>
+		</div>
+
+		<div class="field">
+			{{ html_label(__('IBAN'), 'iban', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('iban', null, errors=errors, required=true) }}
 			</div>
+		</div>
 
-			<div>
-				{{ html_label(__('BIC'), 'bic', errors=errors) }}
+		<div class="field">
+			{{ html_label(__('BIC'), 'bic', errors=errors) }}
+			<div class="control">
 				{{ html_input_text('bic', null, errors=errors) }}
-				<small class="hint">{{ __("Only required if your IBAN [i]does not[/i] start with 'NL'")|parse_markup }}</small>
 			</div>
+			<p class="help">{{ __("Only required if your IBAN [i]does not[/i] start with 'NL'")|parse_markup }}</p>
+		</div>
 
-			<div>
-				{{ html_input_checkbox('authorization', null) }}
-				{{ html_label(__('I hereby authorize Cover to automatically deduct the membership fee from my bank account one time per year. (mandatory)'), 'authorization', errors=errors, required=true) }}
+		<div class="field">
+			<div class="control">
+				{{ html_input_checkbox('authorization', null, errors=errors, required=true, label=__('I hereby authorize Cover to automatically deduct the membership fee from my bank account one time per year. (mandatory)')) }}
 			</div>
-		</fieldset>
+		</div>
 
-		<fieldset>
-			<legend>{{ __('Mailing list') }}</legend>
-			
+		<div class="field">
+			<h2 class="title is-5">{{ __('Mailing list') }}</h2>
+		</div>
+
+		<div class="field">
 			<p>{{ __("From time to time Cover sends an email about an upcoming activity. If you don't want to receive these emails anymore, you can very easily unsubscribe right here on the website.")}}
+		</div>
 
-			<div>
-				{{ html_input_checkbox('option_mailing', {'option_mailing': ''}) }}
-				{{ html_label(__('I want to receive emails about activities organized by Cover.'), 'option_mailing', errors=errors) }}
-				<small>{{ __('You can unsubscribe at any moment through this website.') }}</small>
+		<div class="field">
+			<div class="control">
+				{{ html_input_checkbox('option_mailing', {'option_mailing': ''}, errors=errors, label=__('I want to receive emails about activities organized by Cover.')) }}
 			</div>
-		</fieldset>
+			<p class="help">{{ __('We won\'t spam you and you can unsubscribe at any moment through this website.') }}</p>
+		</div>
 
-		<fieldset>
-			<legend>{{ __('Conditions') }}</legend>
+		<div class="level field">
+			<div class="level-left">
+				<h2 class="title is-5">{{ __('Conditions') }}</h2>
+			</div>
 			{% if user_can_update voorwaarden %}
-				<div class="controls inline">
-					<a href="{{ link('editable.update', editable=voorwaarden)|e('html_attr') }}" class="edit-link">{{ __('Modify conditions') }}</a>
+				<div class="level-right buttons">
+					<a href="{{ link('editable.update', editable=voorwaarden)|e('html_attr') }}" class="button">{{ __('Modify conditions') }}</a>
 				</div>
 			{% endif %}
-		
-			{{ voorwaarden.locale_content|parse_markup }}
-		</fieldset>
-
-		<fieldset>
-			<legend>{{ __('Intelligence test') }}</legend>
-
-			<div>
-				{{ html_label(__('What is the colour of grass? (I am not a robot)'), 'spam', errors=errors, required=true) }}
-				{{ html_input_text('spam', null, errors=errors, required=true) }}
-				<small class="hint">{{ __("If you are unsure, just enter ‘green’.") }}</small>
+		</div>
+		<div class="field">
+			<div class="box content">
+				{{ voorwaarden.locale_content|parse_markup }}
 			</div>
-		</fieldset>
+		</div>
+	
+		<div class="field">
+			<h2 class="title is-5">{{ __('Intelligence test') }}</h2>
+		</div>
 
-		<button type="submit" name="subm" value="yes" class="button large-button">{{ __('Become a member') }}</button>
+		<div class="field">
+			{{ html_label(__('What is the colour of grass? (I am not a robot)'), 'spam', errors=errors, required=true) }}
+			<div class="control">
+				{{ html_input_text('spam', null, errors=errors, required=true) }}
+			</div>
+			<p class="help">{{ __("If you are unsure, just enter ‘green’.") }}</p>
+		</div>
+
+		<div class="field">
+			<div class="control">
+				<button type="submit" name="subm" value="yes" class="button is-large is-primary">{{ __('Become a member') }}</button>
+			</div>
+		</div>
 	</form>
-</div>
+</article>
 {% endblock %}

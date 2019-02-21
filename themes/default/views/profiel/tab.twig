@@ -3,35 +3,42 @@
 {% block title iter|personal_full_name ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Profile of %s')|format(iter|full_name) }}</h1>
-<div class="messageBox clearfix">
-
+<header>
+	<h1 class="title">{{ __('Profile of %s')|format(iter|full_name) }}</h1>
+	
 	{% if errors is defined and errors|length > 0 %}
-	<div class="textCenter error-section">
-		<p><span class="error">{{ __('You haven\'t filled in all the fields correctly') }}</span></p>
+	<div class="notification is-danger content">
+		<p>{{ __('You haven\'t filled in all the fields correctly') }}</p>
 		
 		{% if error_message is defined %}
-		<p>{{ error_message|nl2br }}</p>
+			<p>{{ error_message|nl2br }}</p>
 		{% endif %}
 	</div>
 	{% endif %}
 
-	<div id="profile-tab-container" class="tab-container">
-		<div class="tab-sidebar">
-			{{ include('_profile_widget.twig') }}
-			<ul class="nav-tabs vertical">
+	{{ include('_profile_widget.twig') }}
+</header>
+
+<div>
+	<div class="tabs-wrapper">
+		<div class="tabs">
+			<ul>
 				{% for tab_name, tab in view.tabs(iter) %}
 					{% if tab.visible %}
-						<li class="{{ tab_name == active_tab ? 'active' : '' }} {{ tab.class is defined ? tab.class : '' }}">
-							<a href="profiel.php?lid={{ iter.id }}&amp;view={{ tab_name }}#{{ tab_name }}-tab">{{ tab.label }}</a>
+						<li class="{{ tab_name == active_tab ? 'is-active' : '' }} {{ tab.class is defined ? tab.class : '' }}">
+							<a href="profiel.php?lid={{ iter.id }}&amp;view={{ tab_name }}#{{ tab_name }}-tab">
+								{%- if tab.icon is defined -%}
+									<span class="icon is-small"><i class="{{ tab.icon }}" aria-hidden="true"></i></span>
+								{%- endif -%}
+								<span>{{ tab.label }}</span>
+							</a>
 						</li>
 					{% endif %}
 				{% endfor %}
 			</ul>
 		</div>
-
-		<div class="tab-content">
-			<div id="{{ active_tab }}-tab" class="tab-pane active">
+		<div class="tabs-content">
+			<div id="{{ active_tab }}-tab">
 				{% block tab_content %}{% endblock %}
 			</div>
 		</div>

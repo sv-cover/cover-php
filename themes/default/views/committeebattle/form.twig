@@ -3,41 +3,55 @@
 {% block title view.get_label(iter, __('Award points'), __('Update points')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ view.get_label(iter, __('Award points'), __('Update points')) }}</h1>
+<h1 class="title">{{ view.get_label(iter, __('Award points'), __('Update points')) }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ iter and iter.has_id
 			? controller.link_to_update(iter)
 			: controller.link_to_create() }}" class="vertical-form committee-battle-form">
 		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create', iter) }}
 
-		<fieldset>
-			<legend>{{ html_label(__('Members'), 'member_ids[]', errors=errors) }}</legend>
-			{{ html_select_field('member_ids[]', view.active_member_options, iter, field='member_ids', multiple=true) }}
-		</fieldset>
+		<div class="field">
+			{{ html_label(__('Members'), 'member_ids[]', errors=errors) }}
+			<div class="select">
+				{{ html_select_field('member_ids[]', view.active_member_options, iter, field='member_ids', multiple=true) }}
+			</div>
+		</div>
 
-		<fieldset>
-			<legend>{{ __('Committees') }}</legend>
-			<ul class="option-group columns">
+		<fieldset class="field">
+			<legend class="label">{{ __('Committees') }}</legend>
+			<ul class="columns is-multiline">
 				{% for committee in view.committee_options %}
-				<li>
-					{{ html_input_checkbox('committee_ids[]', iter, value=committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' ')) }}
-					{{ html_label(committee.naam, 'committee-' ~ committee.id) }}
+				<li class="column is-half-mobile is-one-third-tablet is-one-quarter-desktop">
+					<div class="field">
+						<div class="control">
+							{{ html_input_checkbox('committee_ids[]', iter, value=committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' '), label=committee.naam) }}
+							
+						</div>
+					</div>
 				</li>
 				{% endfor %}
 			</ul>
 		</fieldset>
 
-		<div>
+		<div class="field">
 			{{ html_label(__('Points'), 'points', errors=errors, required=true) }}
-			{{ html_input_text('points', iter, errors=errors, type='number', class='number') }}
+			<div class="control">
+				{{ html_input_text('points', iter, errors=errors, type='number') }}
+			</div>
 		</div>
-		<div>
+
+		<div class="field">
 			{{ html_label(__('Reason'), 'awarded_for', errors=errors, required=true) }}
-			{{ html_textarea_field('awarded_for', iter, errors=errors) }}
+			<div class="control">
+				{{ html_textarea_field('awarded_for', iter, errors=errors) }}
+			</div>
 		</div>
-		<div>
-			<button type="submit" class="button">{{ view.get_label(iter, __('Add points'), __('Update points')) }}</button>
-			<a href="{{ controller.link_to_index() }}">{{ __('Back to index') }}</a>
+
+		<div class="field">
+			<div class="control buttons">
+				<button type="submit" class="button is-primary">{{ view.get_label(iter, __('Add points'), __('Update points')) }}</button>
+				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to index') }}</a>
+			</div>
 		</div>
 	</form>
 </div>

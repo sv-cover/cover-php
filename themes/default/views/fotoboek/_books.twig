@@ -1,38 +1,76 @@
 {% if books|length > 0 %}
-<div class = "clearfix photobooks">
+<article class="columns is-multiline is-mobile">
 {% for book in books %}
-	<div id="book_{{ book.id }}" class="photobook {{ book.read_status }}">
+	<div id="book_{{ book.id }}" class="column is-2-desktop is-one-quarter-tablet is-half-mobile {{ book.read_status }}">
 		<a href="fotoboek.php?book={{ book.id }}">
-			<img src="{{ link_static('images/book.png') }}" class="book_thumb">
-			<span class="photo-book-title">
-				{{ book.titel }}
-				{{ view.summary(book)|raw }}
-			</span>
+			<div class="icon is-large" title="Photobook">
+				<span class="fa-layers fa-fw fa-2x">
+					<i class="fas fa-folder-open" aria-hidden="true"></i>
+					{% if book.read_status == 'unread' %}
+						<span class="fa-layers-counter has-text-danger" aria-hidden="true"></span>
+						<span class="is-sr-only">Photobook with new photo's</span>
+					{% else %}
+						<span class="is-sr-only">Photobook</span>
+					{% endif %}
+				</span>
+			</div>
+
+			{# <img src="{{ link_static('images/book.png') }}" class="book_thumb"> #}
+			<div>
+				{{ book.titel }} 
+				<div><small>{{ view.summary(book) }}</small></div>
+			</div>
 		</a>
 		{% if user_can_update book %}
-		<span class="controls">
-			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" title="{{ __('Modify photobook') }}">
-				<i class="fa fa-pencil-square-o"></i>
+		<div class="level is-mobile">
+			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Modify photo album') }}">
+				<span class="icon is-small">
+					<i class="fas fa-pencil-alt"></i>
+					<span class="is-sr-only">{{ __('Modify photo album') }}</span>
+				</span>
 			</a>
-			{% endif %}
 			{% if user_can_delete book %}
-			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" title="{{ __('Delete photobook') }}" data-placement-selector="modal" data-partial-selector=".delete-photobook-form">
-				<i class="fa fa-trash-o"></i>
+			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Delete photo album') }}">
+				<span class="icon is-small">
+					<i class="fas fa-trash"></i>
+					<span class="is-sr-only">{{ __('Delete photo album') }}</span>
+				</span>
 			</a>
 			{% endif %}
 			{% if user_can_update book and book.visibility is not same as(null) %}
 				{% if book.visibility == constant('DataModelPhotobook::VISIBILITY_PUBLIC') %}
-				<span class="visibility visibility-public" title="{{ __('Public') }}">{{ __('Public') }}</span>
+					<span class="level-item button is-small is-static" title="{{ __('Public') }}">
+						<span class="icon">
+							<i class="fas fa-globe" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Public') }}</span>
+						</span>
+					</span>
 				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_MEMBERS') %}
-				<span class="visibility visibility-members" title="{{ __('Only logged in members') }}">{{ __('Only logged in members') }}</span>
+					<span class="level-item button is-small is-static" title="{{ __('Only logged in members') }}">
+						<span class="icon">
+							<i class="fas fa-user" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Only logged in members') }}</span>
+						</span>
+					</span>
 				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS') %}
-				<span class="visibility visibility-active-members" title="{{ __('Only logged in active members') }}">{{ __('Only logged in active members') }}</span>
+					<span class="level-item button is-small is-static" title="{{ __('Only logged in active members') }}">
+						<span class="icon">
+							<i class="fas fa-user-check" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Only logged in active members') }}</span>
+						</span>
+					</span>
 				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_PHOTOCEE') %}
-				<span class="visibility visibility-photocee" title="{{ __('Only logged in members of the PhotoCee') }}">{{ __('Only logged in members of the PhotoCee') }}</span>
+					<span class="level-item button is-small is-static" title="{{ __('Only logged in members of the PhotoCee') }}">
+						<span class="icon">
+							<i class="fas fa-lock" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Only logged in members of the PhotoCee') }}</span>
+						</span>
+					</span>
 				{% endif %}
 			{% endif %}
-		</span>
+		</div>
+		{% endif %}
 	</div>
 {% endfor %}
-</div>
+</article>
 {% endif %}

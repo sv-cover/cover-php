@@ -4,42 +4,69 @@
 	{{ __('Committees') }} :: {{ parent() }}
 {% endblock %}
 
-{% block content %}
-<div class="pageHeading">
-	{% if user_can_create controller.new_iter %}
-		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('New committee') }}</a></div>
-	{% endif %}
-	<h1>{{ __('Committees') }}</h1>
-</div>
-<div class="messageBox">
-	{% if get_config_value('committee_battle', false) %}
-		<a href="committeebattle.php">
-			<div class="promotional-banner committee-battle-banner" data-photos="{{ view.get_committee_battle_banner_photos(iters)|json_encode()|e('html_attr') }}">
-				<h1>{{ __('Committee Battle') }}</h1>
+{% block page %}
+<header class="section">
+	<div class="container level">
+		<div class="level-left">
+			<h1 class="title">{{ __('Committees') }}</h1>
+		</div>
+		{% if user_can_create controller.new_iter %}
+		<div class="level-right buttons">
+			{# If someone can create, someone can probably also reactivate #}
+			<a href="{{ controller.link_to('archive') }}" class="button">{{ __('Committee archive') }}</a>
+			<a href="{{ controller.link_to_create() }}" class="button">{{ __('New committee') }}</a>
+		</div>
+		{% endif %}
+	</div>
+</header>
+
+{% if get_config_value('committee_battle', false) %}
+<a href="committeebattle.php">
+	<section class="hero is-primary">
+		<div class="container">
+			<div class="hero-body" data-photos="{{ view.get_committee_battle_banner_photos(iters)|json_encode()|e('html_attr') }}">
+				<h1 class="title">{{ __('Committee Battle') }}</h1>
 			</div>
-		</a>
-	{% endif %}
-	<ul class="commissie-index">
-	{% for committee in iters %}
-		<li class="commissie">
-			{% if committee.has_vacancy %}
-			<span class="vacancy-badge">{{ __('Looking for new members!') }}</span>
-			{% endif %}
-			<a href="{{ controller.link_to_read(committee) }}" class="link">
-				{% if committee.thumbnail %}
-					<img src="{{ committee.thumbnail }}" class="thumbnail">
-				{% endif %}
-				<span class="overlay">
-					<span class="name">{{ committee.naam }}</span>
-					<span class="summary">{{ view.get_summary(committee)|parse_markup }} </span>
-				</span>
-			</a>
-		</li>
-	{% endfor %}
-	</ul>
-</div>
-{% if user_can_create controller.new_iter %}
-	{# If someone can create, someone can probably also reactivate #}
-	<p class="archive-link"><a href="{{ controller.link_to('archive') }}">{{ __('Committee archive') }}</a></p>
+		</div>
+	</section>
+</a>
 {% endif %}
+
+<section class="section">
+	<div class="container">
+		<div class="columns is-multiline">
+			{% for committee in iters %}
+				<div class="column is-half">
+					<a href="{{ controller.link_to_read(committee) }}">
+						<article class="card">
+							<header class="card-header">
+								<h2 class="card-header-title">
+									{{ committee.naam }}
+									{% if committee.has_vacancy %}
+										{# Oof, don't like that &nbsp; #}
+										&nbsp;<span class="tag is-danger">{{ __('Looking for new members!') }}</span>
+									{% endif %}
+								</h2>
+							</header>
+
+							{% if committee.thumbnail %}
+								<div class="card-image has-background-danger">
+									<figure class="image">
+										<img src="{{ committee.thumbnail }}" alt="Photo of {{ committee.naam }}">
+									</figure>
+								</div>
+							{% endif %}
+							
+							<div class="card-content">
+								<div class="content">
+									{{ view.get_summary(committee)|parse_markup }}
+								</div>
+							</div>
+						</article>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
 {% endblock %}

@@ -3,32 +3,36 @@
 {% block title __('Sign-ups') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<div class="pageheading">
-	<div class="controls inline">
-		{% if user_can_update form %}
-			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="edit-link">{{ __('Modify form') }}</a>
-		{% endif %}
-		{% if user_can_create form.new_entry(global.identity.member) %}
-			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" class="create-link">{{ __('New sign-up') }}</a>
-		{% endif %}
-		<a href="{{ controller.link({'view': 'export_entries', 'form': form.id}) }}" class="download-link">{{ __('Download as CSV') }}</a>
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Sign-ups') }}</h1>
 	</div>
-	<h1>{{ __('Sign-ups') }}</h1>
-</div>
+	<div class="level-right buttons">		
+		{% if user_can_create form.new_entry(global.identity.member) %}
+			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" class="button">{{ __('New sign-up') }}</a>
+		{% endif %}
+		{% if user_can_update form %}
+			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="button">{{ __('Modify form') }}</a>
+		{% endif %}
+		<a href="{{ controller.link({'view': 'export_entries', 'form': form.id}) }}" class="button">{{ __('Download as CSV') }}</a>
+	</div>
+</header>
 
-<div class="messageBox">
+<article>
 	<p>{{ __N('There is currently %d sign-up.', 'There are currently %d sign-ups.', form.entries|length) }}</p>
 	<form action="{{ controller.link({view: 'delete_entries', form: form.id}) }}" method="post">
 		{{ html_nonce('delete_entries', form) }}
-		<div class="scrollable-table">
-			<table class="full-width-table">
+		<div class="field is-scrollable">
+			<table class="table is-fullwidth">
 				<thead>
 					<tr>
-						<th><input type="checkbox" onchange="Array.from(this.form.querySelectorAll('input[type=checkbox]')).forEach(cb => cb.checked = this.checked)"></th>
+						<th>
+							<input type="checkbox" onchange="Array.from(this.form.querySelectorAll('input[type=checkbox]')).forEach(cb => cb.checked = this.checked)">
+						</th>
 						<th>#</th>
 						{% for field in form.fields %}
 							{% for column in field.column_labels|values %}
-								<th class="column-field-type-{{field.type}} truncate" title="{{ column|capitalize }}">{{ column|capitalize }}</th>
+								<th class="column-field-type-{{field.type}} is-truncated" title="{{ column|capitalize }}">{{ column|capitalize }}</th>
 							{% endfor %}
 						{% endfor %}
 						<th>Sign-up date</th>
@@ -45,7 +49,7 @@
 									<td>{{ loop.index }}</td>
 								{% endif %}
 								{% for column, value in entry.export %}
-									<td class="truncate" title="{{value}}">{{ value }}</td>
+									<td class="is-truncated" title="{{value}}">{{ value }}</td>
 								{% endfor %}
 							</tr>
 						{% endif %}
@@ -53,9 +57,11 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="controls">
-			<button type="submit" class="button">{{ __('Remove selected sign-ups') }}</button>
+		<div class="field">
+			<div class="contol buttons">
+				<button type="submit" class="button is-danger">{{ __('Remove selected sign-ups') }}</button>
+			</div>
 		</div>
 	</form>
-</div>
+</article>
 {% endblock %}

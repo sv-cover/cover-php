@@ -3,13 +3,16 @@
 {% block title __('Order books') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Order books') }}</h1>
-<div class="messageBox">
-	<p>To order books with a 10% discount, you need to be a member of Cover.</p>
-	<div class="call-to-action-or-block">
-		<a href="lidworden.php" class="button register">{{ __('Become a member') }}</a>
-		<span class="separator">{{ __('or') }}</span>
-		<a href="sessions.php?view=login&amp;referrer=boeken.php" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
-	</div>
+<h1 class="title">{{ __('Order books') }}</h1>
+
+<div class="media">
+    <div class="content">
+    	<p>To order books with a 10% discount, you need to be a member of Cover.</p>
+    	<div>
+    		<a href="lidworden.php" class="button register">{{ __('Become a member') }}</a>
+    		{{ __('or') }}
+    		<a href="sessions.php?view=login&amp;referrer=boeken.php" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
+    	</div>
+    </div>
 </div>
 {% endblock %}

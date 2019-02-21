@@ -3,15 +3,23 @@
 {% block title __('Archives of %s')|format(list.naam) ~ ' :: ' ~ __('Mailing lists') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a> / <a href="{{ controller.link_to_read(list)|e('html_attr') }}">{{ list.naam }}</a> / {{ __('Archived messages') }}</h1>
-<div class="messageBox">
-	<table class="full-width-table">
+<header>
+	<nav class="breadcrumb" aria-label="breadcrumbs">
+		<ul>
+			<li><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a></li>
+			<li><a href="{{ controller.link_to_read(list)|e('html_attr') }}">{{ list.naam }}</a></li>
+			<li class="is-active"><a href="#" aria-current="page">{{ __('Archived messages') }}</a></li>
+		</ul>
+	</nav>
+</header>
+<article>
+	<table class="table is-fullwidth">
 		<thead>
 			<tr>
 				<th>{{ __('Subject') }}</th>
 				<th>{{ __('Sender') }}</th>
 				<th>{{ __('Date') }}</th>
-				<th width="40">{{ __('Status') }}</th>
+				<th class="has-text-right">{{ __('Status') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -20,10 +28,10 @@
 				<td><a href="{{ link_to('archive_read', list, message_id=message.id)|e('html_attr') }}">{{ message.subject|default('<No subject>') }}</a></td>
 				<td>{{ message.sender }}</td>
 				<td>{{ message.verwerkt_op|date() }}</td>
-				<td class="numeric">{{ message.return_code }}</td>
+				<td class="has-text-right">{{ message.return_code }}</td>
 			</tr>
 		{% endfor %}
 		</tbody>
 	</table>
-</div>
+</article>
 {% endblock %}

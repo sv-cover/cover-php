@@ -3,9 +3,11 @@
 {% block title __("Add photos") ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Photo album') }} :: {{ __("Add photos") }}</h1>
-<div class="messageBox">
+<header>
 	{{ include('_path.twig') }}
+	<h1 class="title">{{ __('Photo album') }} :: {{ __("Add photos") }}</h1>
+</header>
+<article>
 
 	{% if errors|length > 0 %}
 		<div class="errors">
@@ -34,11 +36,15 @@
 				<input type="hidden" name="photo[$index][path]">
 			</li>
 		</ul>
-
-		<button type="submit" class="button">{{ __("Add photos") }}</button>
-		<a href="fotoboek.php?book={{ book.id|e('url') }}">{{ __('Return to %s')|format(book.titel) }}</a>
+		
+		<div class="field">
+			<div class="content buttons">
+				<button type="submit" class="button is-primary">{{ __("Add photos") }}</button>
+				<a href="fotoboek.php?book={{ book.id|e('url') }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
+			</div>
+		</div>
 	</form>
-</div>
+</article>
 
 <script>
 var baseurl = 'fotoboek.php?book={{ book.id|e('url') }}';

@@ -3,86 +3,97 @@
 {% block title iter.naam ~ ' :: ' ~ __('Mailing lists') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<div class="pageHeading">
+<header class="level">
+	<div class="level-left">
+		<nav class="breadcrumb" aria-label="breadcrumbs">
+			<ul>
+				<li><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a></li>
+				<li class="is-active"><a href="#" aria-current="page">{{ iter.naam }}</a></li>
+			</ul>
+		</nav>
+	</div>
 	{% if user_can_update iter %}
-		<div class="controls inline">
-			<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="edit-link">{{ __('Modify mailing list properties') }}</a>
+		<div class="level-right buttons">
+			<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="button">{{ __('Modify mailing list properties') }}</a>
 		</div>
 	{% endif %}
-	<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a> / {{ iter.naam }}</h1>
-</div>
-<div class="messageBox">
-	<div class="section mailinglist-header">
-		<p>
-			<em>{{ __('Address') }}: {{ iter.adres }}</em>
-			{{ iter.omschrijving|parse_markup }}
-		</p>
+</header>
+<article>
+	<p>
+		<em>{{ __('Address') }}: {{ iter.adres }}</em>
+		{{ iter.omschrijving|parse_markup }}
+	</p>
+</article>
+<article class="level">
+	<div class="level-left buttons">
+		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="button" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Add member') }}</a>
+
+		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="button" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Subscribe a non-member') }}</a>
+
+		<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}" class="button">{{ __('Archived messages') }}</a>
 	</div>
-	
-	<div class="section">
-		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Add member') }}</a>
-
-		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="create-link" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Subscribe a non-member') }}</a>
-
-		<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}">{{ __('Archived messages') }}</a>
-	</div>
-
-	<div class="section">
-		<form method="post" action="{{ controller.link_to('unsubscribe', iter)|e('html_attr') }}">
+</article>
+<article>
+	<form method="post" action="{{ controller.link_to('unsubscribe', iter)|e('html_attr') }}">
 		{{ html_nonce('unsubscribe', iter) }}
-		<table class="full-width-table">
+		<table class="field table is-fullwidth">
 			<thead>
 				<tr>
-					<th width="20"></th>
+					<th></th>
 					<th>{{ __('Name') }}</th>
 					<th>{{ __('E-mail address') }}</th>
-					<th width="40"></th>
 				</tr>
 			</thead>
 			<tbody>
 			{% for subscription in iter.subscriptions %}
 				<tr>
-					<td><input type="checkbox" id="{{ view.uid(subscription) }}" name="unsubscribe[]" value="{{ subscription.id }}"></td>
+					<td>
+						<label class="is-sr-only" for="{{ view.uid(subscription) }}">{{ __('Unsubscribe')}} {{ subscription.lid_id ? subscription.lid|full_name() : subscription.naam }}</label>
+						<input type="checkbox" id="{{ view.uid(subscription) }}" name="unsubscribe[]" value="{{ subscription.id }}">
+					</td>
 					{% if subscription.lid_id %}
-					<td><label for="{{ view.uid(subscription) }}">{{ subscription.lid|full_name() }}</label></td>
+						<td>
+							<a href="profiel.php?lid={{ subscription.lid_id }}">{{ subscription.lid|full_name() }}
+						</td>
+						<td>
+							{{ subscription.lid.is_private('email') ? __('Unknown') : subscription.email }}
+						</td>
 					{% else %}
-					<td><label for="{{ view.uid(subscription) }}">{{ subscription.naam }}</label></td>
-					{% endif %}
-					{% if subscription.lid_id %}
-					<td>{{ subscription.lid.is_private('email') ? __('Unknown') : subscription.email }}</td>
-					<td><a href="profiel.php?lid={{ subscription.lid_id }}">{{ __('Profile') }}</a></td>
-					{% else %}
-					<td>{{ subscription.email }}</td>
-					<td></td>
+						<td>{{ subscription.naam }}</td>
+						<td>{{ subscription.email }}</td>
 					{% endif %}
 				</tr>
 			{% endfor %}
 			</tbody>
 		</table>
-		<button class="button" type="submit">{{ __('Unsubscribe selected') }}</button>
-		</form>
-	</div>
-
-	<div class="section">
-		<h3>Statistics</h3>
-		<figure class="graph">
+		<div class="field">
+			<div class="control buttons">
+				<button class="button is-primary" type="submit">{{ __('Unsubscribe selected') }}</button>
+			</div>
+		</div>
+	</form>	
+</article>
+<article>
+	<h2 class="title is-4">Statistics</h2>
+	<div class="columns is-multiline">
+		<figure class="column is-half">
 			{{ view.barchart(iter.get_reach('beginjaar'))|raw }}
 			<figcaption>{{ __('Starting year') }}</figcaption>
 		</figure>
-		<figure class="graph">
+		<figure class="column is-half">
 			{{ view.barchart(iter.get_reach('leeftijd'))|raw }}
 			<figcaption>{{ __('Age') }}</figcaption>
 		</figure>
-		<figure class="graph">
+		<figure class="column is-half">
 			{{ view.barchart(iter.get_reach('committee_count'))|raw }}
 			<figcaption>{{ __('Committees') }}</figcaption>
 		</figure>
-		<figure class="graph">
+		<figure class="column is-half">
 			{{ view.barchart(iter.get_reach('type'))|raw }}
 			<figcaption>{{ __('Type') }}</figcaption>
 		</figure>
 	</div>
-</div>
+</article>
 
 <script>
 jQuery(function($) {

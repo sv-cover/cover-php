@@ -3,83 +3,98 @@
 {% block title forum.name ~ ' :: ' ~ __('Forum') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1><a href="forum.php">{{ __('Forum') }}</a> / {{ forum.name }}</h1>
 
-<div class="topbar">
-	{% if max > 0 %}
-		{{ view.page_navigation('forum.php?forum=' ~ forum.id, page, max)|raw }}
-	{% endif %}
-	{% if user_can_create forum.new_thread %}
-		<a href="forum.php?forum={{ forum.id }}&amp;view=create" class="button">
-			<img src="{{ link_static('images/new.png') }}"
-			     alt="{{ __('new') }}"
-			     title="{{ __('Add a new message') }}">
-			<span class="messageText">{{ __('New Topic') }}</span>
-		</a>
-	{% endif %}
-	{% if user_can_create forum.new_poll %}
-		<a href="forum.php?forum={{ forum.id }}&amp;view=create_poll" class="button">
-			<img src="{{ link_static('images/new.png') }}"
-			     alt="{{ __('new') }}"
-			     title="{{ __('Add a new poll') }}">
-			{{ __('New poll') }}
-		</a>
-	{% endif %}
+
+<div class="level">
+	<div class="level-left">
+		<h1 class="title"><a href="forum.php">{{ __('Forum') }}</a> / {{ forum.name }}</h1>
+	</div>
+	<div class="buttons level-right">
+		{% if user_can_create forum.new_thread %}
+			<a href="forum.php?forum={{ forum.id }}&amp;view=create" class="button">
+				<span class="icon is-small">
+					<i class="fas fa-comments" aria-hidden="true"></i>
+				</span>
+				<span>{{ __('New Topic') }}</span>
+			</a>
+		{% endif %}
+		{% if user_can_create forum.new_poll %}
+			<a href="forum.php?forum={{ forum.id }}&amp;view=create_poll" class="button">
+				<span class="icon is-small">
+					<i class="fas fa-poll-h" aria-hidden="true"></i>
+				</span>
+				<span>{{ __('New poll') }}</span>
+			</a>
+		{% endif %}
+	</div>
 </div>
 
-<table class="forum">
-	<colgroup>
-		<col class="icon">
-		<col class="subject">
-		<col class="author">
-		<col class="commentcount">
-		<col class="last">
-	</colgroup>
-	<thead>
-		<tr class="header">
-			<td colspan="2">{{ __('Subject') }}</td>
-			<td class="text_center">{{ __('Author') }}</td>
-			<td>{{ __('Comments') }}</td>
-			<td class="text_center">{{ __('Last') }}</td>
-		</tr>
-	</thead>
-	<tbody>
-		{% for thread in threads %}
-			{% set author = model.get_author_info(thread, 'author') %}
-			{% set last_author = model.get_author_info(thread, 'last_author') %}
-			<tr class="r{{ loop.index is odd ? 1 : 0 }}">
-				<td class="icon">
-					<img src="{{ link_static('images/' ~ (view.has_unread_messages(thread) ? 'thread_new.png' : 'thread.png')) }}">
-				</td>
-				<td class="subject">
-					<a href="forum.php?thread={{ thread.id }}" class="subject">
-						{{ thread.poll ? ('[' ~ __('Poll') ~ '] ') : ''}}
-						{{ thread.subject }}
-					</a>
-					{% set thread_pages = thread.num_thread_pages %}
-					{% if thread_pages > 1 %}
-						<br><span class="smaller">[ {{ __('Page') }}: {{ view.thread_page_links(thread, thread_pages)|join(', ')|raw }} ]</span>
-					{% endif %}
-				</td>
-				<td class="text_center">
-					<a href="{{ view.get_author_link(thread)|e('html_attr') }}">{{ author.name }}</a>
-				</td>
-				<td class="text_center">
-					{{ thread.num_messages }}
-				</td>
-				<td class="last">
+{% for thread in threads %}
+	{% set author = model.get_author_info(thread, 'author') %}
+	{% set last_author = model.get_author_info(thread, 'last_author') %}
+	{% set thread_pages = thread.num_thread_pages %}
+	<article class="media">
+		<div class="media-left">
+			{% if thread.poll %}
+				<span class="icon is-large" title="Poll">
+					<span class="is-sr-only">Poll</span>
+					<span class="fa-layers fa-fw fa-2x">
+						<i class="fas fa-poll-h" aria-hidden="true"></i>
+						{% if view.has_unread_messages(thread) %}
+							<span class="fa-layers-counter has-text-danger" aria-hidden="true"></span>
+							<span class="is-sr-only">New messages</span>
+						{% endif %}
+					</span>
+				</span>
+			{% else %}
+				<span class="icon is-large" title="Conversation">
+					<span class="is-sr-only">Conversation</span>
+					<span class="fa-layers fa-fw fa-2x">
+						<i class="fas fa-comments" aria-hidden="true"></i>
+						{% if view.has_unread_messages(thread) %}
+							<span class="fa-layers-counter has-text-danger" aria-hidden="true"></span>
+							<span class="is-sr-only">New messages</span>
+						{% endif %}
+					</span>
+				</span>
+			{% endif %}
+		</div>
+		<div class="media-content">
+			<div class="content">
+				<p>
+					<strong>
+						<a href="forum.php?thread={{ thread.id }}" class="subject">{{ thread.subject }}</a>
+					</strong>
+					&ndash;
+					<small>
+						{{ __('by') }}
+						<a href="{{ view.get_author_link(thread)|e('html_attr') }}">{{ author.name }}</a>
+					</small>
+					<br>
+					<small>
+						{{ thread.num_messages }}
+						{{ __N('comment', 'comments', thread.num_messages )}}
+					</small>
 					{% if thread.date %}
-						{{ thread.date|date('d-m-Y H:i') }}<br>
-						<a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">{{ last_author.name }}</a>
+						&ndash;
+						<small>
+							<a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">
+								{{ __('Last comment') }}
+							</a>
+							{{ __('by') }}
+							<a href="{{ view.get_author_link(thread, true)|e('html_attr') }}">{{ last_author.name }}</a>
+							{{ __('on') }}
+							{{ thread.last_date|date('d-m-Y H:i') }}
+						</small>
 					{% endif %}
-				</td>
-			</tr>
-		{% endfor %}
-	</tbody>
-</table>
-<div class="bar">
-	{% if max > 0 %}
-		<div class="right">{{ view.page_navigation('forum.php?forum=' ~ forum.id, page, max)|raw }}</div>
-	{% endif %}
-</div>
+				</p>
+			</div>
+		</div>
+	</article>
+{% endfor %}
+
+{% if max > 0 %}
+	{{ view.page_navigation('forum.php?forum=' ~ forum.id, page, max)|raw }}
+{% endif %}
+
 {% endblock %}

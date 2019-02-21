@@ -1,21 +1,25 @@
 {% if global.models.Banner.main_sponsors|length > 0 %}
-	<h4>{{ __N('Main partner', 'Main partners', global.models.Banner.main_sponsors|length) }}</h4>
-	{% for banner in global.models.Banner.main_sponsors %}
-		<a href="{{ banner.url }}" target="_blank">
-			<img src="images/banners/{{ banner.filename }}">
-		</a>
-		<br>
-		<br>
-	{% endfor %}
+	<div class="container">
+		<h4 class="title is-4 has-text-centered">{{ __N('Main partner', 'Main partners', global.models.Banner.main_sponsors|length) }}</h4>
+		<div class="columns is-multiline is-centered is-mobile">
+		{% for banner in global.models.Banner.main_sponsors %}
+			<a class="column is-3" href="{{ banner.url }}" target="_blank">
+				<img src="images/banners/{{ banner.filename }}">
+			</a>
+		{% endfor %}
+		</div>
+	</div>
 {% endif %}
 
 {% if global.models.Banner.partners|length > 0 %}
-	<h4>{{ __N('Partner', 'Partners', global.models.Banner.partners|length) }}</h4>
-	{% for banner in global.models.Banner.partners %}
-		<a href="{{ banner.url }}" target="_blank">
-			<img src="images/banners/{{ banner.filename }}">
-		</a>
-		<br>
-		<br>
-	{% endfor %}
+	<div class="container">
+		<h4 class="title is-4 has-text-centered">{{ __N('Partner', 'Partners', global.models.Banner.partners|length) }}</h4>
+		<div class="columns is-multiline is-centered">
+		{% for banner in global.models.Banner.partners %}
+			<a class="column is-2" href="{{ banner.url }}" target="_blank">
+				<img src="images/banners/{{ banner.filename }}">
+			</a>
+		{% endfor %}
+		</div>
+	</div>
 {% endif %}

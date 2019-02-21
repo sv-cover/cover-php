@@ -3,24 +3,25 @@
 {% block title __('Mailing lists') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<div class="pageHeading">
-	{% if user_can_create model.new_iter %}
-		<div class="controls inline">
-			<a href="{{ controller.link_to_create()|e('html_attr') }}" class="create-link">{{ __('New mailing list')  }}</a>
-		</div>
-	{% endif %}
-	<h1>{{ __('Mailing lists') }}</h1>
-</div>
-<div class="messageBox">
-	<table class="full-width-table">
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Mailing lists') }}</h1>
+	</div>
+	<div class="level-right buttons">
+		<a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">{{ __('New mailing list')  }}</a>
+	</div>
+</header>
+
+<article>
+	<table class="table is-fullwidth">
 		<thead>
 			<tr>
 				<th>{{ __('Name') }}</th>
 				<th>{{ __('Address') }}</th>
 				<th>{{ __('Owner') }}</th>
 				<th>{{ __('Visibility') }}</th>
-				<th title="messages in last 30 days">{{ __('Activity') }}</th>
-				<th title="subscriber count">{{ __('Reach') }}</th>
+				<th class="has-text-right" title="messages in last 30 days">{{ __('Activity') }}</th>
+				<th class="has-text-right" title="subscriber count">{{ __('Reach') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -30,13 +31,13 @@
 				<td>{{ mailinglist.adres }}</td>
 				<td>{{ mailinglist.committee.naam }}</td>
 				<td>{{ mailinglist.publiek ? __('Public') : __('Private') }}</td>
-				<td class="numeric">{{ mailinglist.archive.count(30) }}</td>
-				<td class="numeric">{{ mailinglist.reach }}</td>
+				<td class="has-text-right">{{ mailinglist.archive.count(30) }}</td>
+				<td class="has-text-right">{{ mailinglist.reach }}</td>
 			</tr>
 		{% else %}
 			<tr>
 				<td colspan="6">
-					<p class="hint">
+					<p class="has-text-centered">
 						{% if global.identity.member and global.identity.member.committees|length > 1 %}
 							{{ __('None of you committees is managing any mailing lists.') }}
 						{% else %}
@@ -49,5 +50,5 @@
 		{% endfor %}
 		</tbody>
 	</table>
-</div>
+</article>
 {% endblock %}

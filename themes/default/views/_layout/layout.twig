@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
 		<link rel="icon" type="image/png" href="images/favicon.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">
 		<link rel="search" href="opensearch.xml"  type="application/opensearchdescription+xml" title="Cover">
 		<title>{% block title %}Cover :: {{ __('Study Association for Artificial Intelligence and Computing Science') }}{% endblock %}</title>
 		
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
 		{% for stylesheet in view.stylesheets %}
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
@@ -16,65 +21,111 @@
 		<script src="{{ script }}"></script>
 		{% endfor %}
 	</head>
-	<body>
-		<div class="world">
-			<div class="header clearfix">
-				{% if global.auth.logged_in() %}
-					{% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
-					{% if agenda_items_to_moderate|length > 0 %}
-						<div class="message">
-							<a href="agenda.php?view=moderate">{{ __N(
-								'There is %d activity waiting for your confirmation',
-								'There are %d activities waiting for your confirmation', agenda_items_to_moderate|length) }}</a>
-						</div>
-					{% endif %}
-					{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
-						<div class="message">{{ __('Your application hasn\'t been accepted yet by our secretary. Until then some parts of the website are not yet accessible, such as all the photo albums and contact information of members.') }}</div>
-					{% endif %}
-				{% endif %}
-				<div class="login">
-					{{ include('@layout/widgets/login.twig') }}
-				</div>
-				{% if date() > date('12/06') %}
-					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo_christmas.png') }}" alt="logo" style="height:auto;margin-top:-12px"></a>
-				{% else %}
-					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="logo"></a>
-					{% endif %}
-			</div>
-			<div class="topMenu clearfix">
-				{% block menu %}
-					{{ include('@layout/widgets/menu.twig') }}
-				{% endblock %}
-			</div>
+	<body class="has-navbar-fixed-top">
+		{% block menu %}
+			{{ include('@layout/widgets/menu.twig') }}
+		{% endblock %}
 
-			{% if view.layout.promotional_header %}
-			{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
+		{% if view.layout.promotional_header %}
+		{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
+		{% endif %}
+		
+		{% if global.auth.logged_in() %}
+			{% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
+			{% if  agenda_items_to_moderate|length > 0  or global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+				<section class="section">
+					<div class="container">
+						{% if agenda_items_to_moderate|length > 0 %}
+							<div class="notification">
+								<a href="agenda.php?view=moderate">{{ __N(
+									'There is %d activity waiting for your confirmation',
+									'There are %d activities waiting for your confirmation', agenda_items_to_moderate|length) }}</a>
+							</div>
+						{% endif %}
+						{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+							<div class="notification">{{ __('Your application hasn\'t been accepted yet by our secretary. Until then some parts of the website are not yet accessible, such as all the photo albums and contact information of members.') }}</div>
+						{% endif %}
+					</div>
+				</section>
 			{% endif %}
-
-			<div class="container clearfix">
-				<div class="center column" id="contents">
+		{% endif %}
+	
+		
+		{% block page %}
+			<section class="section">
+				<div class="container">
 					{% block content %}{% endblock %}
-				</div> <!-- CONTENTS_TEXT -->
-					
-				<div class="menu column">
-					{{ include('@layout/widgets/agenda.twig') }}
-					
-					{{ include('@layout/widgets/poll.twig') }}
-
-					{{ include('@layout/widgets/search.twig') }}
-				</div>	
-				
-				<div class="aff column">
-					{{ include('@layout/widgets/banners.twig') }}
 				</div>
-			</div> <!-- CONTAINER -->
+			</section>
+		{% endblock %}
 
-			<div class="footer">
+		<section class="section">
+			<div class="container">
+			{{ include('@layout/widgets/banners.twig') }}
+			</div>
+		</section>
+
+		<footer class="footer">
+			<div class="content has-text-centered">
 				<a href="show.php?id=17">{{ __('Contact') }}</a>
 				&mdash; <a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
 				&mdash; <a href="https://bitbucket.org/cover-webcie/cover-php/issues">{{ __('Report a bug')}}</a>
 			</div>
-		</div> <!-- .world -->
+		</footer>
+
+		{# Warn accidental visitors that this is a test version #}
+		<div class="modal is-active" id="development-warning-modal">
+			<div class="modal-background"></div>
+			<div class="modal-content">
+				<div class="notification is-danger">
+					<h1 class="title is-1">Proceed with caution!</h1>
+					<div class="content">
+						<p>
+							As the URL suggests this is a developmental version of our website, which means that some things may not work as expected.
+						</p>
+						<p>
+							If you want to test this new thing, that's fine. But please don't get angry if you run into issues. We would appreciate if you'd report these issues in the <a href="https://bitbucket.org/cover-webcie/cover-php/issues">usual way</a>, but please select <em>Redesign</em> as the version instead of <em>Master</em>.
+						</p>
+					</div>
+					<div class="buttons">
+						<a href="https://www.svcover.nl" class="button is-danger is-inverted is-large">I want a working website</a>
+						<button type="button" class="button is-danger is-inverted is-large is-outlined" id="continue-button">Continue testing</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{# Some scripts for the development modal. Keep it all contained as much as possible to not interfere with other scripts #}
+		<script>
+			function DevelopmentModal() {
+				function closeModal(evt) {
+					var modal = document.getElementById('development-warning-modal');
+					document.cookie = 'istester=true';
+					modal.remove();	
+				}
+
+				function getCookie(name) {
+					var cookie = document.cookie
+						.split(';')
+						.map( cookie => cookie.trim().split("=", 2) )
+						.find( cookie => cookie[0] == name );
+
+					if (!cookie) return null;
+
+					return decodeURIComponent(cookie[1])
+				}
+
+				var modal = document.getElementById('development-warning-modal');
+			
+				if (getCookie('istester') == 'true') {
+					modal.remove()
+				} else {
+					modal.querySelector('#continue-button').addEventListener('click', closeModal);
+				}
+			}
+
+			DevelopmentModal();
+		</script>
 
 		{% if view.layout.has_alert %}
 			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>

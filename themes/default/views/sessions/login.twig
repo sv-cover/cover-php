@@ -1,51 +1,14 @@
 {% extends '@layout/layout.twig' %}
 
+{% from '@theme/sessions/_login_widget.twig' import login_form %}
+
 {% block title %}
 {{ __('Log in') }} :: {{ parent() }}
 {% endblock %}
 
 {% block content %}
-<h1>{{ __('Log in') }}</h1>
-<div class="messageBox">
-	<form id="login-form" method="post" action="{{ link('sessions.login') }}" class="vertical-form">
-		<img src="{{ link_static('images/cover_logo_black.png') }}" class="cover-logo" alt="Cover">
+<h1 class="title">{{ __('Log in') }}</h1>
 
-		<ul class="nav-tabs horizontal">
-			<li class="active"><a href="{{ link('sessions.login') }}">{{ __('Log in') }}</a></li>
-			<li><a href="lidworden.php#contents">{{ __('Sign up') }}</a></li>
-		</ul>
+{{ login_form(errors, error_message, referrer, external_domain) }}
 
-		{% if error_message %}
-		<div class="error-section">
-			<p>{{ error_message }}</p>
-		</div>
-		{% endif %}
-
-		{{ html_input_hidden('referrer', referrer) }}
-		<div>
-			{{ html_label(__('E-mail address'), 'email', errors=errors, required=true) }} 
-			{{ html_input_text('email', null, placeholder=__('E-mail address'), autofocus=true) }}
-		</div>
-
-		<div>
-			{{ html_label(__('Password'), 'password', errors=errors, required=true) }}
-			{{ html_input_password('password', placeholder=__('Password')) }}
-		</div>
-
-		<div>
-			{{ html_input_checkbox('remember', {'remember': 'yes'}, value='yes') }}
-			{{ html_label(__('Keep me logged in'), 'remember', errors=errors) }}
-		</div>
-
-		<div class="controls">
-			<button type="submit" class="button primary">
-				{{ __('Log in') }}
-				{% if external_domain %}
-					<small>{{ __('and continue to %s')|format(external_domain) }}</small>
-				{% endif %}
-			</button>
-			<a href="wachtwoordvergeten.php">{{ __('Forgot your password?') }}</a>
-		</div>
-	</form>
-</div>
 {% endblock %}

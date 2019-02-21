@@ -3,21 +3,25 @@
 {% block title __('Subscribe a member') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Subscribe a non-member') }}</h1>
-<div class="messageBox">
-	<form class="vertical-form" method="post" action="{{ controller.link_to('subscribe_guest', list)|e('html_attr') }}">
+<h1 class="title">{{ __('Subscribe a non-member') }}</h1>
+	<form method="post" action="{{ controller.link_to('subscribe_guest', list)|e('html_attr') }}">
 		{{ html_nonce('subscribe_guest', list) }}
-		<div>
+		<div class="field">
 			{{ html_label(__('Name'), 'naam', errors=errors, required=true) }}
-			{{ html_input_text('naam', [], errors=errors, required=true, autofocus=true) }}
+			<div class="control">
+				{{ html_input_text('naam', [], errors=errors, required=true, autofocus=true) }}
+			</div>
 		</div>
-		<div>
+		<div class="field">
 			{{ html_label(__('E-mail address'), 'email', errors=errors, required=true) }}
-			{{ html_input_text('email', [], type='email', errors=errors, required=true) }}
+			<div class="control">
+				{{ html_input_text('email', [], type='email', errors=errors, required=true) }}
+			</div>
 		</div>
-		<div class="controls">
-			<button type="submit" class="button">{{ __('Subscribe') }}</button>
+		<div class="field">
+			<div class="control buttons">
+				<button type="submit" class="button is-primary">{{ __('Subscribe') }}</button>
+			</div>
 		</div>
 	</form>
-</div>
 {% endblock %}

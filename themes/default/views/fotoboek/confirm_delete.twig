@@ -1,22 +1,26 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Delete photo album') ~ ' :: ' ~ parent() %}
+{% block title __('Delete photo book') ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Delete photo album') }}</h1>
-<div class="messageBox">
-	<form method="post" action="fotoboek.php?view=delete_book&amp;book={{ iter.id }}" class="vertical-form delete-photobook-form">
-		{{ html_nonce('delete', iter) }}
-		<div>
-			<p>{{ __('Are you sure you want to delete the <em>%s</em> photo album?')|format(iter.titel|e)|raw }}</p>
-			{{ html_label(__('As confirmation, enter the name of the photo album you are about to entirely delete'), 'confirm_delete', errors=errors, required=true) }}
+<h1 class="title">{{ __('Delete photo book') }}</h1>
+<form method="post" action="fotoboek.php?view=delete_book&amp;book={{ iter.id }}">
+	{{ html_nonce('delete', iter) }}
+	<div class="field">
+		<p>{{ __('Are you sure you want to delete the <em>%s</em> photo book?')|format(iter.titel|e)|raw }}</p>
+	</div>
+	<div class="field">
+		{{ html_label(__('As confirmation, enter the name of the photo book you are about to entirely delete'), 'confirm_delete', errors=errors, required=true) }}
+		<div class="control">
 			{{ html_input_text('confirm_delete', null, errors=errors, required=true) }}
 		</div>
-		
-		<div>
-			<button type="submit" class="button">{{ __('Delete photo album') }}</button>
-			<a href="fotoboek.php?book={{iter.parent.id}}#book_{{iter.id}}">{{ __('Return to photo album') }}</a>
+	</div>
+	
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-danger">{{ __('Delete photo book') }}</button>
+			<a href="fotoboek.php?book={{iter.parent.id}}#book_{{iter.id}}" class="button">{{ __('Return to photo book') }}</a>
 		</div>
-	</form>
-</div>
+	</div>
+</form>
 {% endblock %}

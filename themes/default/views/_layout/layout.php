@@ -5,11 +5,6 @@ class LayoutViewHelper
 	public function top_menu()
 	{
 		$menus = [];
-		
-		$menus['home'] = [
-			'label' => __('Home'),
-			'url' => 'index.php'
-		];
 
 		$menus['vereniging'] = [
 			'label' => __('Association'),
