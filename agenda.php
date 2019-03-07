@@ -28,6 +28,8 @@
 			
 			try {
 				$date = new DateTime($value);
+				if ($date < new DateTime())
+					return false;
 				return $date->format('Y-m-d H:i');
 			} catch (Exception $e) {
 				return false;
