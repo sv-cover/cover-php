@@ -1,0 +1,25 @@
+<div class="navbar-item has-dropdown is-hoverable">
+    <a class="navbar-link is-arrowless">
+        <span class="icon">
+            <i class="fas fa-th"></i>
+            <span class="is-sr-only">
+                {{ __('Applications') }}
+            </span>
+        </span>
+    </a>
+    <div class="navbar-dropdown is-right">
+        {% for tool_set_id, tool_set in view.layout.tools %}
+            {% if not loop.first %}
+                <hr class="navbar-divider">
+            {% endif %}
+            {% if tool_set.label %}
+                <div class="navbar-item">
+                    {{ tool_set.label }}
+                </div>
+            {% endif %}
+            {% for tool in tool_set.items %}
+                <a href="{{ tool.url }}" class="navbar-item" target="{{ tool.target|default() }}" {% if tool.title is defined %} title="{{ tool.title }}"{% endif %}>{{ tool.label }}</a>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>

@@ -6,6 +6,52 @@ class LayoutViewHelper
 	{
 		$menus = [];
 
+		$menus['activities'] = [
+			'label' => __('Activities'),
+			'submenu' => [
+				[
+					'url' => 'agenda.php',
+					'label' => __('Calendar'),
+					'title' => __('Upcoming activities')
+				],
+				[
+					'url' => 'fotoboek.php',
+					'label' => __('Photos'),
+					'title' => __('Photos of activities of Cover.')
+				]
+			]
+		];
+
+		// $menus['leden'] = [
+		// 	'label' => __('Members'),
+		// 	'submenu' => [
+
+		// 	]
+		// ];
+
+		$menus['studie'] = [
+			'label' => __('Education'),
+			'submenu' => [
+				['url' => 'show.php?id=149', 'label' => __('Degree Programmes')],
+				['url' => 'show.php?id=24', 'label' => __('Alumni')],
+				['url' => 'boeken.php', 'label' => __('Order books')],
+				['url' => 'show.php?id=27', 'label' => __('Student info')],
+				['url' => 'show.php?id=118', 'label' => __('Student representation')],
+				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
+				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
+			]
+		];
+
+		$menus['bedrijven'] = [
+			'label' => __('Career'),
+			'submenu' => [
+				['url' => 'show.php?id=51', 'label' => __('Company profiles')],
+				['url' => 'show.php?id=54', 'label' => __('Vacancies')],
+				['url' => 'show.php?id=31', 'label' => __('Internships/Graduate programs')],
+				['url' => 'show.php?id=56', 'label' => __('Sponsorship opportunities')]
+			]
+		];
+
 		$menus['vereniging'] = [
 			'label' => __('Association'),
 			'submenu' => [
@@ -33,85 +79,117 @@ class LayoutViewHelper
 					'url' => 'show.php?id=18',
 					'label' => __('Become a member/donor')
 				],
+				// [
+				// 	'url' => 'show.php?id=30',
+				// 	'label' => __('Documents'),
+				// ],
 				[
-					'url' => 'show.php?id=30',
-					'label' => __('Documents'),
+					'url' => 'almanak.php',
+					'label' => __('Almanac')
 				]
 			]
 		];
 
-		$menus['leden'] = [
-			'label' => __('Members'),
-			'submenu' => [
-				['url' => 'almanak.php', 'label' => __('Almanac')],
-				['url' => 'https://wiki.svcover.nl/', 'target' => '_blank', 'label' => __('Wiki')],
-				['url' => 'https://sd.svcover.nl/', 'target' => '_blank', 'label' => __('Documents & Templates')],
-				['url' => 'stickers.php', 'label' => __('Sticker map')],
-				['url' => 'https://merchandise.svcover.nl/', 'target' => '_blank', 'label' => __('Merchandise')]
-			]
-		];
+		// $menus['forum'] = [
+		// 	'url' => 'forum.php',
+		// 	'label' => __('Forum')
+		// ];
 
-		$menus['studie'] = [
-			'label' => __('Education'),
-			'submenu' => [
-				['url' => 'show.php?id=149', 'label' => __('Degree Programmes')],
-				['url' => 'show.php?id=24', 'label' => __('Alumni')],
-				['url' => 'boeken.php', 'label' => __('Order books')],
-				['url' => 'show.php?id=27', 'label' => __('Student info')],
-				['url' => 'show.php?id=118', 'label' => __('Student representation')],
-				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
-				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
-			]
-		];
-
-		$menus['bedrijven'] = [
-			'label' => __('Career'),
-			'submenu' => [
-				['url' => 'show.php?id=51', 'label' => __('Company profiles')],
-				['url' => 'show.php?id=54', 'label' => __('Vacancies')],
-				['url' => 'show.php?id=31', 'label' => __('Internships/Graduate programs')],
-				['url' => 'show.php?id=56', 'label' => __('Sponsorship opportunities')]
-			]
-		];
-
-		$menus['forum'] = [
-			'url' => 'forum.php',
-			'label' => __('Forum')
-		];
-
-		$menus['fotoboek'] = [
-			'url' => 'fotoboek.php',
-			'label' => __('Photos'),
-			'title' => __('Photos of activities of Cover.')
-		];
+		// $menus['fotoboek'] = [
+		// 	'url' => 'fotoboek.php',
+		// 	'label' => __('Photos'),
+		// 	'title' => __('Photos of activities of Cover.')
+		// ];
 
 		$menus['contact'] = [
 			'label' => __('Contact'),
 			'url' => 'show.php?id=17'
 		];
 
-		$menus['admin'] = [
+		// $menus['admin'] = [
+		// 	'label' => __('Tools'),
+		// 	'title' => __('These are tools available to you because you are a member of a committee.'),
+		// 	'className' => 'authorized-only',
+		// 	'submenu' => []
+		// ];
+		
+		// Filter out any empty menu items (I'm looking at you, admin menu!)
+		$menus = array_filter($menus, function($menu) {
+			return isset($menu['url']) || !empty($menu['submenu']);
+		});
+
+		return $menus;
+	}
+
+	public function tools()
+	{
+		$tools = [];
+
+		$tools['internal'] = [
+			'label' => __(''),
+			'items' => [
+				[
+					'url' => 'forum.php',
+					'label' => __('Forum')
+				],
+				[
+					'url' => 'stickers.php',
+					'label' => __('Sticker map')
+				]
+			]
+		];
+
+		$tools['external'] = [
 			'label' => __('Tools'),
-			'title' => __('These are tools available to you because you are a member of a committee.'),
-			'className' => 'authorized-only',
-			'submenu' => []
+			'items' => [
+				[
+					'url' => 'https://wiki.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Wiki')
+				],
+				[
+					'url' => 'https://sd.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Documents & Templates')
+				],
+				[
+					'url' => 'https://merchandise.svcover.nl/',
+					'target' => '_blank', 
+					'label' => __('Merchandise')
+				],
+				[
+					'url' => 'https://studysupport.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Exams & Summaries')
+				],
+				[
+					'url' => 'https://tutoring.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Tutoring')
+				]
+			]
+		];
+
+		$tools['admin'] = [
+			'label' => __('Admin'),
+			'items' => []
 		];
 
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
-			$menus['admin']['submenu'][] = [
+			$tools['external']['items'][] = [
 				'url' => 'https://webmail.svcover.nl/',
 				'label' => __('Webmail'),
 				'target' => '_blank',
 				'title' => __('Webmail for Cover email accounts.')
 			];
 
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
 				'url' => 'mailinglijsten.php',
 				'label' => __('Mailing lists'),
 				'title' => __('Manage your committee\'s mailing lists.')
 			];
 
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
 				'url' => 'signup.php',
 				'label' => __('Forms'),
 				'title' => __('Manage your committee\'s sign-up forms.')
@@ -121,53 +199,49 @@ class LayoutViewHelper
 		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
 				'url' => 'show.php?view=create',
 				'label' => __('Make a page'),
 				'title' => __('Make a new content page on the website.')
 			];
 
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
 				'url' => 'lidworden.php?view=pending-confirmation',
 				'label' => __('Pending registrations'),
 				'title' => __('People who signed up for Cover, but did not yet confirm their email address.')
 			];
-
-			// $menus['admin']['submenu'][] = [
-			// 	'url' => 'forum.php?admin=forums',
-			// 	'label' => 'Forum'
-			// ];
 		}
 
 		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
 				'url' => 'agenda.php?agenda_moderate',
 				'label' => __('Calendar'),
 				'title' => __('Moderate calendar items.')
 			];
 
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
 				'url' => 'actieveleden.php',
 				'label' => __('Active Members'),
 				'title' => __('All active committee members according to the website.')
 			];
 		}
+
 		
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
 				'url' => 'settings.php',
 				'label' => __('Settings'),
 				'title' => __('Manage a few of the website\'s settings.')
 			];
 		}
-		
+
 		// Filter out any empty menu items (I'm looking at you, admin menu!)
-		$menus = array_filter($menus, function($menu) {
-			return isset($menu['url']) || !empty($menu['submenu']);
+		$tools = array_filter($tools, function($tool) {
+			return !empty($tool['items']);
 		});
 
-		return $menus;
+		return $tools;
 	}
 
 	public function agenda()

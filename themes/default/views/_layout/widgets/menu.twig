@@ -33,22 +33,8 @@
 			</div>
 
 			<div class="navbar-end">
-				<div class="navbar-item">
-					{{ include('@layout/widgets/search.twig') }}
-				</div>
-				<div class="navbar-item has-dropdown is-hoverable">
-					<a class="navbar-link is-arrowless">
-						<span class="icon">
-							<i class="fas fa-th"></i>
-							<span class="is-sr-only">
-								Applications
-							</span>
-						</span>
-					</a>
-					<div class="navbar-dropdown">
-						{# {{ include('@layout/widgets/login.twig') }} #}
-					</div>
-				</div>
+				{{ include('@layout/widgets/search.twig') }}
+				{{ include('@layout/widgets/applications.twig') }}
 				{{ include('@layout/widgets/login.twig') }}
 			</div>
 		</div>	
