@@ -197,12 +197,12 @@
 
 ## JS needed
 
-- Mobile menu collapse
-- Show/hide search intelligently
-- Clickable (toggable) dropdowns. This would improve UX for complex dropdowns
+- Mobile menu collapse [BULMA JS]
+- Show/hide search intelligently (like wiki/sd) [GLOBAL]
+- Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
     - _layout/widgets/menu.twig (mainly login)
     - forum/thread.twig (move thread)
-- Tabs. Switch between tabbed content
+- Tabs. Switch between tabbed content  [BULMA JS]
     - agenda/form.twig
     - announcements/form.twig
     - forum/poll_form.twig
@@ -214,8 +214,8 @@
     - forum/poll_form.twig
     - forum/reply_form.twig
     - forum/thread_form.twig
-- Search form (like wiki/sd)
-- Modals
+    - see previous list
+- Modals [GLOBAL]
     - Impersonate
     - [maybe] Forum delete thread/message
     - [maybe] Forum edit message
@@ -231,6 +231,7 @@
 - Autocomplete
     - session/overrides.twig (autocomlete member)
     - committeebattle/form.twig (member)
+    - tagging people in photo album
 - Whatever is happening in search results :P
 - Whatever is happening on the committee form
 - All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
@@ -239,11 +240,11 @@
 - Fotoboek/single.twig
 - Add photo's to photobook
 - Sticker map
-- WYSIWYG editor in mailinglijsten/autoresponder_form.twig
+- WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
 - Stuff happening in mailijnlijsten/single.twig
 - Fancyness in signup/form_form.twig
 - Autocomplete in lidworden/lidworden.twig
-
+- Profile page
 
 ## Bulma extensions / custom CSS
 
