@@ -309,7 +309,7 @@ class MessagePart
 			return $data;
 		};
 
-		return preg_replace_callback('/=\?([a-zA-Z0-9_-]+)\?(Q|B)\?(.+?)\?=/', $decode, $data);
+		return trim(preg_replace_callback('/=\?([a-zA-Z0-9_-]+)\?(Q|B)\?(.+?)\?=/', $decode, $data));
 	}
 
 	protected function encodeBody($data, $transfer_encoding, $charset)
@@ -317,17 +317,20 @@ class MessagePart
 		if ($charset !== null)
 			$data = mb_convert_encoding($data, $charset, 'auto');
 
+		if ($transfer_encoding === null)
+			$transfer_encoding = self::TRANSFER_ENCODING_QUOTED_PRINTABLE;
+
 		switch (strtolower($transfer_encoding))
 		{
 			case self::TRANSFER_ENCODING_QUOTED_PRINTABLE:
 				return quoted_printable_encode($data);
 
 			case self::TRANSFER_ENCODING_BASE64:
-				return base64_encode($data);
+				return chunk_split(base64_encode($data));
 
 			case self::TRANSFER_ENCODING_7BIT:
 			case self::TRANSFER_ENCODING_8BIT:
-				return $data;
+				return $this->wrapLines($data, 78, 998);
 
 			default:
 				throw new \InvalidArgumentException('Encoding for this Content-Transfer-Encoding (' . $transfer_encoding . ') is not supported');
@@ -388,11 +391,9 @@ class MessagePart
 		if (preg_match('/^text\//', $content_type) && $content_transfer_encoding === null)
 			$content_transfer_encoding = self::TRANSFER_ENCODING_QUOTED_PRINTABLE;
 
-		if ($content_transfer_encoding !== null) {
-			$body = $this->encodeBody($body, $content_transfer_encoding, charset($content_type));
-			$this->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
-		}
-
+		$body = $this->encodeBody($body, $content_transfer_encoding, charset($content_type));
+		$this->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
+		
 		$this->body = $body;
 	}
 
@@ -451,7 +452,7 @@ class MessagePart
 
 	private function wrapLines(string $text, int $preferred_length, int $max_length, $prefix = null): string
 	{
-		$lines = preg_split('/\r?\n/', $text);
+		$lines = preg_split("/((\r(?!\n))|((?<!\r)\n)|(\r\n))/", $text, -1, PREG_SPLIT_NO_EMPTY);
 
 		if ($prefix === null)
 			$prefix = function($line_number) use ($prefix) {
@@ -475,7 +476,7 @@ class MessagePart
 				if (!isset($lines[$i + 1]) || preg_match('/^\s*$/', $lines[$i + 1]))
 					array_splice($lines, $i + 1, 0, [$next_line]);
 				else
-					$lines[$i + 1] = $next_line . ' ' . $lines[$i + 1];
+					$lines[$i + 1] = $next_line . ' ' . ltrim($lines[$i + 1]);
 			}
 		}
 
@@ -486,7 +487,7 @@ class MessagePart
 	{
 		$out = '';
 
-		$header_indent = str_repeat(" ", 8);
+		$header_indent = str_repeat(" ", 4);
 
 		foreach ($this->headers as $key => $values)
 		{
@@ -504,30 +505,26 @@ class MessagePart
 	public function bodyAsString(): string
 	{
 		if (!$this->isMultipart())
+			return $this->body . (substr($this->body, -2, 2) != "\r\n" ? "\r\n" : "");
+		
+		$out = '';
+
+		$boundary = $this->boundary();
+
+		if (!$boundary)
+			throw new \RuntimeException('Could not parse boundary string out of the Content-Type header');
+
+		foreach ($this->body as $part)
 		{
-			$out = $this->wrapLines($this->body, 78, 998);
-		}
-		else
-		{
-			$out = '';
+			if (strlen($out) > 0 && substr($out, -2, 2) != "\r\n")
+				$out .= "\r\n";
 
-			$boundary = $this->boundary();
-
-			if (!$boundary)
-				throw new \RuntimeException('Could not parse boundary string out of the Content-Type header');
-
-			foreach ($this->body as $part)
-			{
-				if (substr($out, -2, 2) != "\r\n")
-					$out .= "\r\n";
-
-				$out .= "--$boundary\r\n";
-				$out .= $part->toString();
-			}
-
-			$out .= "\r\n--$boundary--\r\n";
+			$out .= "--$boundary\r\n";
+			$out .= $part->toString();
 		}
 
+		$out .= "\r\n--$boundary--\r\n";
+		
 		return $out;
 	}
 
@@ -632,7 +629,7 @@ class MessagePart
 			$line = $stream->readline();
 
 			if ($line === false)
-				throw new \ParseException($stream->lineNumber(), "Unexpected end of stream");
+				throw new ParseException($stream->lineNumber(), "Unexpected end of stream");
 
 			if (trim($line) === '')
 				continue;
