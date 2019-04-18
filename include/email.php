@@ -491,6 +491,9 @@ class MessagePart
 
 		foreach ($this->headers as $key => $values)
 		{
+			if (empty($values[0]))
+				continue;
+
 			foreach ($values as $value)
 				$out .= $this->wrapLines($value, 78, 998,
 						function ($i) use ($key, $header_indent) {
