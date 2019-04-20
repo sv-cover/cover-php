@@ -66,12 +66,27 @@ class ControllerSessions extends Controller
 		{
 			$member = get_identity()->member();
 
-			foreach ($_POST['sessions'] as $session_id)
-			{
-				$session = $this->model->get_iter($session_id);
+			$current_session = get_auth()->get_session();
 
-				if ($session && $session->get('member_id') == $member->get_id())
-					$this->model->delete($session);
+			if (isset($_POST['sessions']) && is_array($_POST['sessions']))
+			{
+				foreach ($_POST['sessions'] as $session_id)
+				{
+					try {
+						$session = $this->model->get_iter($session_id);
+
+						// Make sure we can only delete our own sessions
+						if ($session && $session->get('member_id') == $member->get_id())
+							$this->model->delete($session);
+
+						// Extra warning after we end the current session of the user
+						if ($session && $session->get_id() === $current_session->get_id())
+							$_SESSION['alert'] = __('Your session has been ended. You will need to log in again.');
+						
+					} catch (DataIterNotFoundException $e) {
+						// To bad Zubat!
+					}
+				}
 			}
 
 			return $this->view->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
