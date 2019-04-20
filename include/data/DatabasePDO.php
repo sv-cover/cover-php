@@ -100,7 +100,14 @@ class DatabasePDO
 		/* Query the database */
 		$statement = $this->resource->prepare($query);
 
-		$statement->execute($input_parameters);
+		/* Bind parameters (default is same default as PHP: String) */
+		foreach ($input_parameters as $placeholder => $value)
+			if (is_resource($value) && get_resource_type($value) === 'stream')
+				$statement->bindValue($placeholder, $value, PDO::PARAM_LOB);
+			else
+				$statement->bindValue($placeholder, $value, PDO::PARAM_STR);
+
+		$statement->execute();
 
 		$duration = microtime(true) - $start;
 
@@ -319,6 +326,8 @@ class DatabasePDO
 		elseif ($value instanceof DateTime)
 			$values[$placeholder] = $value->format('Y-m-d H:i:s');
 		elseif (is_string($value))
+			$values[$placeholder] = $value;
+		elseif (is_resource($value) && get_resource_type($value) === 'stream')
 			$values[$placeholder] = $value;
 		else
 			throw new InvalidArgumentException('Unsupported datatype ' . gettype($value));

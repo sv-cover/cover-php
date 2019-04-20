@@ -441,15 +441,15 @@ function main(): int
 
 		// Archive the message.
 		rewind($buffer_stream);
-		$raw_message = stream_get_contents($buffer_stream);
-		fclose($buffer_stream);
-
 		$archief = get_model('DataModelMailinglistArchive');
-		$archief->archive($raw_message, $from, $lijst, $commissie, $return_code);
+		$archief->archive($buffer_stream, $from, $lijst, $commissie, $return_code);
 
 		if ($return_code !== 0)
 			process_return_to_sender($message, $from, $destination, $return_code);
 	}
+
+	// Close the buffered message at last
+	fclose($buffer_stream);
 
 	// Return the result of the processing step.
 	return $return_code;
