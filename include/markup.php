@@ -64,7 +64,7 @@
 	{
 		$linkcount = 0;
 
-		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)[A-Za-z0-9.-]+|(?:www.)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match))
+		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)[A-Za-z0-9.-]+|(?:www.)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w\-_]*)?\??(?:[\-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match))
 		{
 			$url = preg_match('~^https?://~', $match[0]) ? $match[0] : 'http://' . $match[0];
 			
