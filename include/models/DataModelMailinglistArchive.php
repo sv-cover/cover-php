@@ -21,6 +21,14 @@ class DataIterMailinglistArchive extends DataIter
 	{
 		$end_header = strpos($this->get('bericht'), "\n\n");
 
+		// If that didn't work, try \r\n, which may occur if the system configuration changed
+		if ($end_header === false)
+			$end_header = strpos($this->get('bericht'), "\r\n\r\n");
+
+		// Still false? Give up.
+		if ($end_header === false)
+			return null;
+
 		return preg_match('/^' . preg_quote($name) . ': (.+?)$/im', substr($this->get('bericht'), 0, $end_header), $match)
 			? $this->_convert_header_encoding($match[1])
 			: null;
