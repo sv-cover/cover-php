@@ -419,7 +419,7 @@ function main(): int
 
 	$return_code = 0;
 
-	foreach ($destinations as $destination)
+	foreach (array_unique($destinations) as $destination)
 	{
 		$commissie = null;
 
