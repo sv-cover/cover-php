@@ -611,12 +611,12 @@ class MessagePart
 				if ($header !== null)
 					$message->addHeader($header[0], $header[1]);
 
-				$header = [$match[1], ltrim($match[2])];
+				$header = [$match[1], trim($match[2])];
 			}
 
 			elseif ($header !== null)
 			{
-				$header[1] .= rtrim(ltrim($line), "\r\n");
+				$header[1] .= trim($line);
 			}
 		}
 
