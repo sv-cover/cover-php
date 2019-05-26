@@ -391,8 +391,10 @@ class MessagePart
 		if (preg_match('/^text\//', $content_type) && $content_transfer_encoding === null)
 			$content_transfer_encoding = self::TRANSFER_ENCODING_QUOTED_PRINTABLE;
 
-		$body = $this->encodeBody($body, $content_transfer_encoding, charset($content_type));
-		$this->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
+		if ($content_transfer_encoding !== null) {
+			$body = $this->encodeBody($body, $content_transfer_encoding, charset($content_type));
+			$this->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
+		}
 		
 		$this->body = $body;
 	}
@@ -410,7 +412,13 @@ class MessagePart
 		assert(is_string($this->body));
 
 		if ($this->body !== null)
-			$this->body = [new MessagePart(['Content-Type' => [$this->header('Content-Type')]], $this->body)];
+			$this->body = [
+				new MessagePart(
+					$this->header('Content-Type') !== null
+						? ['Content-Type' => [$this->header('Content-Type')]]
+						: [],
+					$this->body)
+			];
 		else
 			$this->body = [];
 
@@ -491,7 +499,7 @@ class MessagePart
 
 		foreach ($this->headers as $key => $values)
 		{
-			if (empty($values[0]))
+			if (empty($values[0])) // all because we allowed empty headers somewhere
 				continue;
 
 			foreach ($values as $value)
