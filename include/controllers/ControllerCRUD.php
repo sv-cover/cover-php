@@ -3,6 +3,7 @@
 require_once 'include/init.php';
 require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
+require_once 'include/validate.php';
 
 class ControllerCRUD extends Controller
 {
@@ -10,17 +11,18 @@ class ControllerCRUD extends Controller
 
 	protected $_var_id = 'id';
 
-	protected function _validate(DataIter $iter, array &$data, array &$errors)
+	protected function _validate(DataIter $iter, array $data, array &$errors)
 	{
-		return true;
+		return validate_dataiter($iter, $data, $errors);
 	}
 
-	protected function _create(DataIter $iter, array $data, array &$errors)
+	protected function _create(DataIter $iter, array $input, array &$errors)
 	{
-		if (!$this->_validate($iter, $data, $errors))
+		$data = $this->_validate($iter, $input, $errors);
+
+		if ($data === false)
 			return false;
 
-		// TODO: Oh this is soo unsafe! We just set all the data, then insert all the data using the model :(
 		$iter->set_all($data);
 
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?
@@ -40,16 +42,15 @@ class ControllerCRUD extends Controller
 		return $this->model->get_iter($id);
 	}
 
-	protected function _update(DataIter $iter, array $data, array &$errors)
+	protected function _update(DataIter $iter, array $input, array &$errors)
 	{
-		if (!$this->_validate($iter, $data, $errors))
+		$data = $this->_validate($iter, $input, $errors);
+
+		if ($data === false)
 			return false;
 		
 		foreach ($data as $key => $value)
-			if (is_scalar($value))
-				$iter->set($key, trim($value));
-			elseif (is_null($value))
-				$iter->set($key, null);
+			$iter->set($key, $value);
 
 		return $this->model->update($iter) > 0;
 	}
@@ -77,34 +78,58 @@ class ControllerCRUD extends Controller
 		return $this->model->new_iter();
 	}
 
-	public function link(array $arguments)
+	public function link_to($view, DataIter $iter = null, array $arguments = [])
 	{
-		return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
-	}
+		$arguments[$this->_var_view] = $view;
 
-	protected function link_to_iter(DataIter $iter, array $arguments = array())
-	{
-		return $this->link(array_merge(array($this->_var_id => $iter->get_id()), $arguments));
+		if ($iter !== null)
+			$arguments[$this->_var_id] = $iter->get_id();
+
+		return $this->link($arguments);
 	}
 
 	public function link_to_create()
 	{
-		return $this->link([$this->_var_view => 'create']);
+		return $this->link_to('create');
 	}
 
 	public function link_to_read(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'read']);
+		return $this->link_to('read', $iter);
 	}
 
 	public function link_to_update(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'update']);
+		return $this->link_to('update', $iter);
 	}
 
 	public function link_to_delete(DataIter $iter)
 	{
-		return $this->link_to_iter($iter, [$this->_var_view => 'delete']);
+		return $this->link_to('delete', $iter);
+	}
+
+	public function json_link_to_create()
+	{
+		$new_iter = $this->model()->new_iter();
+		$nonce = nonce_generate(nonce_action_name('create', [$new_iter]));
+		return $this->link([$this->_var_view => 'create', '_nonce' => $nonce]);
+	}
+
+	public function json_link_to_read(DataIter $iter)
+	{
+		return $this->link_to('read', $iter, []);
+	}
+
+	public function json_link_to_update(DataIter $iter)
+	{
+		$nonce = nonce_generate(nonce_action_name('update', [$iter]));
+		return $this->link_to('update', $iter, ['_nonce' => $nonce]);
+	}
+
+	public function json_link_to_delete(DataIter $iter)
+	{
+		$nonce = nonce_generate(nonce_action_name('delete', [$iter]));
+		return $this->link_to('delete', $iter, ['_nonce' => $nonce]);
 	}
 
 	public function link_to_index()
@@ -117,13 +142,13 @@ class ControllerCRUD extends Controller
 		$iter = $this->new_iter();
 
 		if (!get_policy($this->model)->user_can_create($iter))
-			throw new Exception('You are not allowed to add new items.');
+			throw new UnauthorizedException('You are not allowed to add new items.');
 
 		$success = false;
 
 		$errors = array();
 
-		if ($this->_form_is_submitted('create'))
+		if ($this->_form_is_submitted('create', $iter))
 			if ($this->_create($iter, $_POST, $errors))
 				$success = true;
 
@@ -133,7 +158,7 @@ class ControllerCRUD extends Controller
 	public function run_read(DataIter $iter)
 	{
 		if (!get_policy($this->model)->user_can_read($iter))
-			throw new Exception('You are not allowed to read this ' . get_class($iter) . '.');
+			throw new UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
 
 		return $this->view()->render_read($iter);
 	}
@@ -141,7 +166,7 @@ class ControllerCRUD extends Controller
 	public function run_update(DataIter $iter)
 	{
 		if (!get_policy($this->model)->user_can_update($iter))
-			throw new Exception('You are not allowed to edit this ' . get_class($iter) . '.');
+			throw new UnauthorizedException('You are not allowed to edit this ' . get_class($iter) . '.');
 
 		$success = false;
 
@@ -157,7 +182,7 @@ class ControllerCRUD extends Controller
 	public function run_delete(DataIter $iter)
 	{
 		if (!get_policy($this->model)->user_can_delete($iter))
-			throw new Exception('You are not allowed to delete this ' . get_class($iter) . '.');
+			throw new UnauthorizedException('You are not allowed to delete this ' . get_class($iter) . '.');
 
 		$success = false;
 
@@ -176,7 +201,7 @@ class ControllerCRUD extends Controller
 
 		return $this->view()->render_index($iters);
 	}
-	
+
 	protected function run_impl()
 	{
 		$iter = null;
@@ -199,9 +224,18 @@ class ControllerCRUD extends Controller
 
 		$view = str_replace('-', '_', $view);
 
-		if (!method_exists($this, 'run_' . $view))
-			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+		try {
+			$method = new ReflectionMethod($this, 'run_' . $view);
 
-		return call_user_func_array([$this, 'run_' . $view], [$iter]);
+			if ($method->getNumberOfRequiredParameters() > 1)
+				throw new LogicException('trying to call run_' . $view . ' which requires more than one argument');
+
+			if ($method->getNumberOfRequiredParameters() === 1 && $iter === null)
+				throw new NotFoundException($view . ' requires an iterator, but none was specified');
+
+			return call_user_func([$this, 'run_' . $view], $iter);
+		} catch (ReflectionException $e) {
+			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+		}
 	}
 }

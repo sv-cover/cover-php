@@ -1,0 +1,98 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (form.has_id ? __('Modify form') : __('Add form')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<div class="pageheading">
+	<div class="controls inline">
+		{% if form.has_id and user_can_read form %}
+			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" class="edit-link">{{ __('Show form') }}</a>
+			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="download-link">{{ __('Show sign-ups') }}</a>
+		{% endif %}
+	</div>
+	<h1>{{ form.has_id ? __('Modify form') : __('Create form') }}</h1>
+</div>
+<div class="messageBox">
+	<form method="post" class="vertical-form" action="{{ form.has_id ? controller.link({'view': 'update_form', 'form': form.id}) : controller.link({'view': 'create_form'}) }}">
+		{% if form.has_id %}
+			{{ html_nonce('update_form', form) }}
+		{% else %}
+			{{ html_nonce('create_form') }}
+		{% endif %}
+
+		<div>
+			{{ html_label(__('Committee'), 'committee_id', errors=errors, required=true) }}
+			{{ html_select_field('committee_id', view.available_committees, form, required=true) }}
+		</div>
+
+		<div>
+			{{ html_label(__('Activity'), 'agenda_id', errors=errors) }}
+			{{ html_select_field('agenda_id', view.available_activitees, form) }}
+			<p>{{ __('If you link the form to an activity, it will be shown next to the calendar entry.') }}</p>
+		</div>
+
+		<fieldset>
+			<legend>{{ __('Sign-up period') }}</legend>
+			<div>
+				{{ html_label(__('Open date'), 'open_on', errors=errors)  }}
+				{{ html_input_datetime('open_on', form, errors=errors) }}
+				<p>{{ __("People will be able to register from this date. Make sure you don't open registrations before you finished configuring the sign-up form.") }}</p>
+			</div>
+			<div>
+				{{ html_label(__('Deadline'), 'closed_on', errors=errors)  }}
+				{{ html_input_datetime('closed_on', form, errors=errors) }}
+				<p>{{ __('If you do not have a deadline, leave this field blank.') }}</p>
+			</div>
+			<div>
+				{{ html_label(__('Participant limit'), 'participant_limit', errors=errors) }}
+				{{ html_input_number('participant_limit', form, errors=errors, min=0) }}
+				<p>{{ __('If you do not have a participant limit, leave this field blank.') }}</p>
+			</div>
+		</fieldset>
+
+		{% if not form.has_id %}
+			<div>
+				{{ html_label(__('Template'), 'template', errors=errors)  }}
+				{{ html_select_field('template', controller.available_templates, null, errors=errors) }}
+				<p>{{ __('Choose a template to start with a set of predefined fields.') }}
+			</div>			
+		{% endif %}
+
+		<div class="controls">
+			<button class="button" type="submit">{{ form.has_id() ? __('Modify form') : __('Create form') }}</button>
+			{% if form.has_id and user_can_delete form %}
+				<a href="{{ controller.link({view: 'delete_form', form: form.id}) }}">{{ __('Delete this form…') }}</a>
+			{% endif %}
+		</div>
+	</form>
+</div>
+
+{% if form.has_id %}
+<div class="messageBox">
+	<form action="{{ controller.link({view: 'create_form_field', form: form.id}) }}" class="inline-form" method="post">
+		{{ html_nonce('create_form_field', form) }}
+		<p>{{ __('Add a new %s to this form')|e('html')|format(html_select_field('field_type', view.available_field_types, null, required=true))|raw }} <button type="submit" class="button">{{ __('Add field') }}</button></p>
+	</form>
+	
+	<div class="form-fields" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}">
+	{% for field in form.fields %}
+		<div class="form-field" id="form-field-{{field.id}}" data-sortable-id="{{ field.id }}">
+			<div class="sortable-drag-handle" title="Drag me to reorder"></div>
+			<form id="field-{{field.id}}-update" action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-submit-on-change="{&quot;action&quot;:&quot;update&quot;}">
+				{{ html_nonce('update_form_field', form, field) }}
+				{{ field.render_configuration(view, errors.namespace(field.id))|raw }}
+			</form>
+			<form id="field-{{field.id}}-delete" action="{{ controller.link({view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
+				{{ html_nonce('delete_form_field', form, field) }}
+			</form>
+			<div class="controls">
+				<button type="submit" class="button hide-if-submit-on-change" form="field-{{field.id}}-update">{{ __('Modify field') }}</button>
+				<button type="submit" class="button" form="field-{{field.id}}-delete">{{ __('Delete field') }}</button>
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+</div>
+{% endif %}
+
+{% endblock %}

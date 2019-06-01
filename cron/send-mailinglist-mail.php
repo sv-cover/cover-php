@@ -1,15 +1,20 @@
 #!/usr/bin/env php
 <?php
+declare(strict_types=1);
+
 chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/init.php';
 require_once 'include/email.php';
 
+use \Cover\email\MessagePart;
+use \Cover\email\PeakableStream;
+
 define('RETURN_COULD_NOT_DETERMINE_SENDER', 101);
 define('RETURN_COULD_NOT_DETERMINE_DESTINATION', 102);
 define('RETURN_COULD_NOT_DETERMINE_LIST', 103);
 define('RETURN_COULD_NOT_DETERMINE_COMMITTEE', 104);
-define('RETURN_COULD_NOT_PARSE_MESSAGE_HEADER', 105);
+define('RETURN_COULD_NOT_PARSE_MESSAGE', 105);
 
 define('RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST', 201);
 
@@ -20,11 +25,12 @@ define('RETURN_NOT_ALLOWED_UNKNOWN_POLICY', 404);
 
 define('RETURN_FAILURE_MESSAGE_EMPTY', 502);
 define('RETURN_MARKED_AS_SPAM', 503);
+define('RETURN_MAIL_LOOP_DETECTED', 504);
 
 error_reporting(E_ALL);
-ini_set('display_errors', true);
+ini_set('display_errors', '1');
 
-function parse_email_address($email)
+function parse_email_address(string $email)
 {
 	$email = trim($email);
 
@@ -38,10 +44,10 @@ function parse_email_address($email)
 		return $match[1];
 
 	else
-		return false;
+		return null;
 }
 
-function parse_email_addresses($emails)
+function parse_email_addresses(string $emails): array
 {
 	return array_filter(array_map('parse_email_address', explode(',', $emails)));
 }
@@ -52,7 +58,6 @@ function parse_email_addresses($emails)
  * plain message will be replaced with the name of the committee. 
  * 
  * @param $message the raw message body
- * @param $message_headers the message headers, parsed> Not actually used.
  * @param $to destination address, ideally committees@svcover.nl
  *            or workinggroups@svcover.nl.
  * @param $from the email address of the sender. Must end in @svcover.nl or
@@ -63,7 +68,7 @@ function parse_email_addresses($emails)
  * @return RETURN_NOT_ALLOWED_NOT_COVER if the mail was not sent from an
  * address ending in @svcover.nl.
  */
-function process_message_to_all_committees($message, $message_headers, $to, $from)
+function process_message_to_all_committees(MessagePart $message, string $to, string $from): int
 {
 	$committee_model = get_model('DataModelCommissie');
 
@@ -86,22 +91,29 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 	if (!preg_match('/@svcover\.nl$/i', $from))
 		return RETURN_NOT_ALLOWED_NOT_COVER;
 
-	$committee_model->type = $destinations[$to];
+	$loop_id = sprintf('all-%s', $to);
 
-	$committees = $committee_model->get(false); // Get all committees of that type, not including hidden committees (such as board)
+	if (in_array($loop_id, $message->headers('X-Loop')))
+		return RETURN_MAIL_LOOP_DETECTED;
+
+	$message->addHeader('X-Loop', $loop_id);
+
+	$committees = $committee_model->get($destinations[$to]); // Get all committees of that type, not including hidden committees (such as board)
 
 	foreach ($committees as $committee)
 	{
-		$email = $committee->get('login') . '@svcover.nl';
+		$email = $committee['login'] . '@svcover.nl';
 
-		echo "Sending mail to " . $committee->get('naam') . " <" . $email . ">: ";
+		echo "Sending mail to " . $committee['naam'] . " <" . $email . ">: ";
 		
 		$variables = array(
-			'[COMMISSIE]' => $committee->get('naam'),
-			'[COMMITTEE]' => $committee->get('naam')
+			'[COMMISSIE]' => $committee['naam'],
+			'[COMMITTEE]' => $committee['naam']
 		);
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
+			return str_ireplace(array_keys($variables), array_values($variables), $text);
+		});
 
 		echo send_message($personalized_message, $email), "\n";
 	}
@@ -109,7 +121,7 @@ function process_message_to_all_committees($message, $message_headers, $to, $fro
 	return 0;
 }
 
-function process_message_to_committee($message, $message_headers, $to, &$committee)
+function process_message_to_committee(MessagePart $message, string $to, DataIterCommissie &$committee = null): int
 {
 	$commissie_model = get_model('DataModelCommissie');
 
@@ -117,162 +129,191 @@ function process_message_to_committee($message, $message_headers, $to, &$committ
 	if (!($committee = $commissie_model->get_from_email($to)))
 		return RETURN_COULD_NOT_DETERMINE_COMMITTEE;
 
+	$loop_id = sprintf('committee-%d', $committee['id']);
+
+	if (in_array($loop_id, $message->headers('X-Loop')))
+		return RETURN_MAIL_LOOP_DETECTED;
+
+	$message->addHeader('X-Loop', $loop_id);
+
 	$members = $committee->get_members();
 
 	foreach ($members as $member)
 	{
-		echo "Sending mail to " . $member->get('voornaam') . " <" . $member->get('email') . ">: ";
+		echo "Sending mail to " . $member['voornaam'] . " <" . $member['email'] . ">: ";
 
 		$variables = array(
-			'[NAAM]' => $member->get('voornaam'),
-			'[NAME]' => $member->get('voornaam'),
-			'[COMMISSIE]' => $committee->get('naam'),
-			'[COMMITTEE]' => $committee->get('naam')
+			'[NAAM]' => $member['voornaam'],
+			'[NAME]' => $member['voornaam'],
+			'[COMMISSIE]' => $committee['naam'],
+			'[COMMITTEE]' => $committee['naam']
 		);
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
+			return str_ireplace(array_keys($variables), array_values($variables), $text);
+		});
 
-		echo send_message($personalized_message, $member->get('email')), "\n";
+		echo send_message($personalized_message, $member['email']), "\n";
 	}
 
 	return 0;
 }
 
-function process_message_to_mailinglist($message, $message_header, $to, $from, &$lijst)
+function process_message_to_mailinglist(MessagePart $message, string $to, string $from, DataIterMailinglist &$lijst = null): int
 {
-	$mailinglijsten_model = get_model('DataModelMailinglijst');
+	$mailinglijsten_model = get_model('DataModelMailinglist');
 
 	// Find that mailing list
-	if (!($lijst = $mailinglijsten_model->get_lijst($to)))
+	if (!($lijst = $mailinglijsten_model->get_iter_by_address($to)))
 		return RETURN_COULD_NOT_DETERMINE_LIST;
+
+	$loop_id = sprintf('mailinglist-%d', $lijst['id']);
+
+	if (in_array($loop_id, $message->headers('X-Loop')))
+		return RETURN_MAIL_LOOP_DETECTED;
+
+	$message->addHeader('X-Loop', $loop_id);
 
 	// Append '[Cover]' or whatever tag is defined for this list to the subject
 	// but do so only if it is set.
-	if (!empty($lijst->get('tag')))
-		$message = preg_replace(
-			'/^Subject: (?!(?:Re:\s*)?\[' . preg_quote($lijst->get('tag'), '/') . '\])(.+?)$/im',
-			'Subject: [' . $lijst->get('tag') . '] $1',
-			$message, 1);
+	if (!empty($lijst['tag']))
+		$message->setHeader('Subject', preg_replace(
+			'/^(?!(?:Re:\s*)?\[' . preg_quote($lijst['tag'], '/') . '\])(.+?)$/im',
+			'[' . $lijst['tag'] . '] $1',
+			$message->header('Subject'), 1));
 
 	// Find everyone who is subscribed to that list
-	$aanmeldingen = $mailinglijsten_model->get_aanmeldingen($lijst);
+	$aanmeldingen = $lijst['subscriptions'];
 
-	switch ($lijst->get('toegang'))
+	switch ($lijst['toegang'])
 	{
 		// Everyone can send mail to this list
-		case DataModelMailinglijst::TOEGANG_IEDEREEN:
+		case DataModelMailinglist::TOEGANG_IEDEREEN:
 			// No problem, you can mail
 			break;
 
 		// Only people on the list can send mail to the list
-		case DataModelMailinglijst::TOEGANG_DEELNEMERS:
+		case DataModelMailinglist::TOEGANG_DEELNEMERS:
 			foreach ($aanmeldingen as $aanmelding)
-				if (strcasecmp($aanmelding->get('email'), $from) === 0)
+				if (strcasecmp($aanmelding['email'], $from) === 0)
 					break 2;
 
 			// Also test whether the owner is sending mail, he should also be accepted.
-			$commissie_model = get_model('DataModelCommissie');
-			$commissie_adres = $commissie_model->get_email($lijst->get('commissie'));
-			if (strcasecmp($from, $commissie_adres) === 0)
+			if (in_array($from, $lijst['committee']['email_addresses']))
 				break;
 			
+			// Nope, access denied
 			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
 
 		// Only people who sent mail from an *@svcover.nl address can send to the list
-		case DataModelMailinglijst::TOEGANG_COVER:
+		case DataModelMailinglist::TOEGANG_COVER:
 			if (!preg_match('/\@svcover.nl$/i', $from))
 				return RETURN_NOT_ALLOWED_NOT_COVER;
-
 			break;
 
 		// Only the owning committee can send mail to this list.
-		case DataModelMailinglijst::TOEGANG_EIGENAAR:
-			$commissie_model = get_model('DataModelCommissie');
-			$commissie_adres = $commissie_model->get_email($lijst->get('commissie'));
-			if (strcasecmp($from, $commissie_adres) !== 0)
+		case DataModelMailinglist::TOEGANG_EIGENAAR:
+			if (!in_array($from, $lijst['committee']['email_addresses']))
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
-
 			break;
 
 		default:
 			return RETURN_NOT_ALLOWED_UNKNOWN_POLICY;
 	}
 
-	if ($lijst->sends_email_on_first_email() && !$lijst->archive()->contains_email_from($from))
+	if ($lijst->sends_email_on_first_email() && !$lijst['archive']->contains_email_from($from))
 		send_welcome_mail($lijst, $from);
 
 	foreach ($aanmeldingen as $aanmelding)
 	{
 		// Skip subscriptions without an e-mail address silently
-		if (trim($aanmelding->get('email')) == '')
+		if (trim($aanmelding['email']) == '')
 			continue;
 
-		echo "Sending mail to " . $aanmelding->get('naam') . " <" . $aanmelding->get('email') . ">: ";
+		echo "Sending mail to " . $aanmelding['naam'] . " <" . $aanmelding['email'] . ">: ";
+
+		$unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
+		$archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $lijst['id']);
 
 		// Personize the message for the receiver
-		$variables = array(
-			'[NAAM]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
-			'[NAME]' => htmlspecialchars($aanmelding->get('naam'), ENT_COMPAT, WEBSITE_ENCODING),
-			'[MAILINGLIST]' => htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING)
-		);
+		$personalized_message = \Cover\email\personalize($message, function($text, $content_type) use ($aanmelding, $lijst, $unsubscribe_url, $archive_url) {
+			$use_html = $content_type !== null && preg_match('/^text\/html/', $content_type);
 
-		if ($aanmelding->has('lid_id'))
-			$variables['[LID_ID]'] = $aanmelding->get('lid_id');
+			// Escape function depends on content type (text/html is treated differently)
+			$escape = $use_html
+				? function($text, $entities = ENT_COMPAT) { return htmlspecialchars($text, $entities, 'utf-8'); }
+				: function($text, $entities = null) { return $text; };
 
-		// If you are allowed to unsubscribe, parse the placeholder correctly (different for opt-in and opt-out lists)
-		if ($lijst->get('publiek'))
-		{
-			$url = $lijst->get('type')== DataModelMailinglijst::TYPE_OPT_IN
-				? ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', $aanmelding->get('abonnement_id'))
-				: ROOT_DIR_URI . sprintf('mailinglijsten.php?lijst_id=%d', $lijst->get('id'));
+			$variables = array(
+				'[NAAM]' => $escape($aanmelding['naam']),
+				'[NAME]' => $escape($aanmelding['naam']),
+				'[MAILINGLIST]' => $escape($lijst['naam'])
+			);
 
-			$variables['[UNSUBSCRIBE_URL]'] = htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING);
+			if ($aanmelding['lid_id'])
+				$variables['[LID_ID]'] = $aanmelding['lid_id'];
 
-			$variables['[UNSUBSCRIBE]'] = sprintf('<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>',
-				htmlspecialchars($url, ENT_QUOTES, WEBSITE_ENCODING),
-				htmlspecialchars($lijst->get('naam'), ENT_COMPAT, WEBSITE_ENCODING));
-		}
+			$variables['[UNSUBSCRIBE_URL]'] = $escape($unsubscribe_url, ENT_QUOTES);
 
-		$personalized_message = str_replace(array_keys($variables), array_values($variables), $message);
+			$variables['[UNSUBSCRIBE]'] = sprintf(($use_html
+				? '<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>'
+				: 'To unsubscribe from the %2$s mailinglist, go to %1$s'),
+					$escape($unsubscribe_url),
+					$escape($lijst['naam']));
 
-		echo send_message($personalized_message, $aanmelding->get('email')), "\n";
+			// Add an unsubscribe link to the footer when there isn't already a link in there, and
+			// if users can unsubscribe from the list (i.e. public lists)
+			if ($content_type !== null
+				&& $lijst['publiek']
+				&& strpos($text, '[UNSUBSCRIBE]') === false
+				&& strpos($text, '[UNSUBSCRIBE_URL]') === false)
+				$text .= sprintf($use_html
+					? "<div><hr style=\"border:0;border-top:1px solid #ccc\"><small>You are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]</small></div>"
+					: "\n\n---\nYou are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]",
+					$escape($lijst['naam']));
+
+			return str_ireplace(array_keys($variables), array_values($variables), $text);
+		});
+
+		$personalized_message->setHeader('List-Unsubscribe', sprintf('<%s>', $unsubscribe_url));
+		$personalized_message->setHeader('List-Archive', sprintf('<%s>', $archive_url));
+
+		echo send_message($personalized_message, $aanmelding['email']), "\n";
 	}
 
 	return 0;
 }
 
-function process_return_to_sender($message, $message_header, $from, $destination, $return_code)
+function process_return_to_sender(MessagePart $message, string $from, $destination, $return_code): int
 {
 	$notice = 'Sorry, but your message' . ($destination ? ' to ' . $destination : '') . " could not be delivered:\n" . get_error_message($return_code);
 
 	echo "Return message to sender $from\n";
 
-	$message_part = \Cover\email\MessagePart::parse_text($message);
+	$reply = \Cover\email\reply($message, $notice);
 
-	$reply = \Cover\email\reply($message_part, $notice);
-
-	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message_part->header('Subject'));
+	$reply->setHeader('Subject', 'Message could not be delivered: ' . $message->header('Subject'));
 	$reply->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
-	$reply->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
+	$reply->setHeader('Reply-To', 'AC/DCee Cover <webcie@rug.nl>');
 
-	return send_message($reply->toString(), $from);
+	return send_message($reply, $from);
 }
 
-function send_welcome_mail(DataIterMailinglijst $lijst, $to)
+function send_welcome_mail(DataIterMailinglist $lijst, string $to): int
 {
 	$message = new \Cover\email\MessagePart();
 
 	$message->setHeader('To', $to);
-	$message->setHeader('From', sprintf('%s <%s>', $lijst->get('naam'), $lijst->get('adres')));
-	$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
-	$message->setHeader('Subject', $lijst->get('on_first_email_subject'));
-	$message->addBody('text/plain', strip_tags($lijst->get('on_first_email_message')));
-	$message->addBody('text/html', $lijst->get('on_first_email_message'));
+	$message->setHeader('From', sprintf('%s <%s>', $lijst['naam'], $lijst['adres']));
+	$message->setHeader('Reply-To', 'AC/DCee Cover <webcie@rug.nl>');
+	$message->setHeader('Subject', (string) $lijst['on_first_email_subject']);
+	$message->addBody('text/plain', strip_tags($lijst['on_first_email_message']));
+	$message->addBody('text/html', $lijst['on_first_email_message']);
 
-	return send_message($message->toString(), $to);
+	return send_message($message, $to);
 }
 
-function send_message($message, $email)
+function send_message(MessagePart $message, string $email): int
 {
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
@@ -291,18 +332,18 @@ function send_message($message, $email)
 		$descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
-	fwrite($pipes[0], $message);
+	fwrite($pipes[0], $message->toString());
 	fclose($pipes[0]);
 
 	return proc_close($sendmail);
 }
 
-function get_error_message($return_value)
+function get_error_message(int $return_value): string
 {
 	switch ($return_value)
 	{
-		case RETURN_COULD_NOT_PARSE_MESSAGE_HEADER:
-			return "Error: Could not parse the message header.";
+		case RETURN_COULD_NOT_PARSE_MESSAGE:
+			return "Error: Could not parse the message.";
 
 		case RETURN_COULD_NOT_DETERMINE_SENDER:
 			return "Error: Could not determine sender.";
@@ -339,21 +380,7 @@ function get_error_message($return_value)
 	}
 }
 
-function read_message_headers($stream)
-{
-	$message_header = new \cover\email\MessagePart();
-
-	$success = \cover\email\MessagePart::parse_header(
-		new \cover\email\PeakableStream($stream),
-		$message_header);
-
-	if (!$success)
-		return false;
-
-	return $message_header;
-}
-
-function verbose($return_value)
+function verbose(int $return_value): int
 {
 	if ($return_value !== 0)
 		fwrite(STDERR, get_error_message($return_value) . "\n");
@@ -361,72 +388,68 @@ function verbose($return_value)
 	return $return_value;
 }
 
-function main()
+function main(): int
 {
-	// Copy STDIN to buffer stream because th
+	// Copy STDIN to buffer stream because we want to stream it to the parser,
+	// but we currently also want a copy as string for the database.
 	$buffer_stream = fopen('php://temp', 'r+');
 	stream_copy_to_stream(STDIN, $buffer_stream);
 
-	// Read the complete email from the stdin.
-	rewind($buffer_stream);
-	$message = stream_get_contents($buffer_stream);
+	try {
+		// Read the complete email from the stdin.
+		rewind($buffer_stream);
+		$message = MessagePart::parse_stream(new PeakableStream($buffer_stream));
+	} catch (Exception $e) {
+		sentry_report_exception($e);
+		return RETURN_COULD_NOT_PARSE_MESSAGE;
+	}
 	
 	$lijst = null;
 	$comissie = null;
 
-	if ($message === false || trim($message) == '')
-		return RETURN_FAILURE_MESSAGE_EMPTY;
-
-	// Rewind the STDIN but skip the first line
-	rewind($buffer_stream);
-	fgets($buffer_stream); // Skip the first line
-
-	// Next, read the header of the mail again, but now using the message parser that
-	// correctly handles headers with newlines (which are hell with regexps).
-	$message_header = read_message_headers($buffer_stream);
-
-	if ($message_header === false)
-		return RETURN_COULD_NOT_PARSE_MESSAGE_HEADER;
-
-	fclose($buffer_stream);
-
 	// Test at least the sender already
-	if (!$message_header->header('From') || !$from = parse_email_address($message_header->header('From')))
+	if (!$message->header('From') || !$from = parse_email_address($message->header('From')))
 		return RETURN_COULD_NOT_DETERMINE_SENDER;
 
-	if (!$message_header->header('Envelope-To') || !$destinations = parse_email_addresses($message_header->header('Envelope-To')))
+	if (!$message->header('Envelope-To') || !$destinations = parse_email_addresses($message->header('Envelope-To')))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
-	if ($message_header->header('X-Spam-Flag') == 'YES')
+	if ($message->header('X-Spam-Flag') == 'YES')
 		return RETURN_MARKED_AS_SPAM;
 
-	foreach ($destinations as $destination)
+	$return_code = 0;
+
+	foreach (array_unique($destinations) as $destination)
 	{
 		$commissie = null;
 
 		// First try if this message is addressed to committees@svcover.nl
-		$return_code = process_message_to_all_committees($message, $message_header, $destination, $from);
+		$return_code = process_message_to_all_committees($message, $destination, $from);
 
 		if ($return_code === RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST)
 		{
 			// Then try sending the message to a committee
-			$return_code = process_message_to_committee($message, $message_header, $destination, $commissie);
+			$return_code = process_message_to_committee($message, $destination, $commissie);
 
 			// If that didn't work, try sending it to a mailing list
 			if ($return_code === RETURN_COULD_NOT_DETERMINE_COMMITTEE)
 			{
 				// Process the message: parse it and send it to the list.
-				$return_code = process_message_to_mailinglist($message, $message_header, $destination, $from, $lijst);
+				$return_code = process_message_to_mailinglist($message, $destination, $from, $lijst);
 			}
 		}
 
 		// Archive the message.
-		$archief = get_model('DataModelMailinglijstArchief');
-		$archief->archive($message, $from, $lijst, $commissie, $return_code);
+		rewind($buffer_stream);
+		$archief = get_model('DataModelMailinglistArchive');
+		$archief->archive($buffer_stream, $from, $lijst, $commissie, $return_code);
 
 		if ($return_code !== 0)
-			process_return_to_sender($message, $message_header, $from, $destination, $return_code);
+			process_return_to_sender($message, $from, $destination, $return_code);
 	}
+
+	// Close the buffered message at last
+	fclose($buffer_stream);
 
 	// Return the result of the processing step.
 	return $return_code;

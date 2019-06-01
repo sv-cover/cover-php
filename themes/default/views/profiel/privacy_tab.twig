@@ -4,8 +4,8 @@
 
 {% block tab_content %}
 <section class="aligned-list-section">
-	<h2>{{ __('Privacy instellingen') }}</h2>
-	<p>{{ __('Je privacy instellingen geven aan wie welke informatie mag zien.') }}</p>
+	<h2>{{ __('Privacy settings') }}</h2>
+	<p>{{ __('Modify your privacy preferences to indicate who can see what info.') }}</p>
 
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="post">
 		{{ html_nonce('privacy', iter) }}
@@ -13,9 +13,9 @@
 			<thead>
 				<tr>
 					<td></td>
-					<th>{{ __('Niemand') }}</th>
-					<th>{{ __('Leden') }}</th>
-					<th>{{ __('Iedereen') }}</th>
+					<th>{{ __('Nobody') }}</th>
+					<th>{{ __('Members') }}</th>
+					<th>{{ __('Everyone') }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,7 +30,7 @@
 			</tbody>
 		</table>
 
-		<button type="submit" class="button">{{ __('Opslaan') }}</button>
+		<button type="submit" class="button">{{ __('Save') }}</button>
 	</form>
 </section>
 {% endblock %}

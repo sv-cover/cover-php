@@ -3,7 +3,7 @@
 {% block title book.titel ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Fotoboek') }} :: {{ __('Foto') }}</h1>
+<h1>{{ __('Photo album') }} :: {{ __('Photo') }}</h1>
 
 <div id="foto" data-photo-id="{{ photo.id }}" class="messageBox {% if is_liked %}liked{% endif %}">
 
@@ -18,19 +18,19 @@
 	<div class="photo {{ photo.orientation }}">
 		<nav class="photo-navigation navigation">
 			{% if nav.previous %}
-			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" class="prev-button previous" title="{{ __('Ga naar vorige foto') }}">
-				{{ __('Vorige') }}
+			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" class="prev-button previous" title="{{ __('Go to the previous photo') }}">
+				{{ __('Previous') }}
 			</a>
 			{% endif %}
 
 			{% if nav.next %}
-			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.next.id }}" class="next-button next" title="{{ __('Ga naar volgende foto') }}">
-				{{ __('Volgende') }}
+			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.next.id }}" class="next-button next" title="{{ __('Go to next photo') }}">
+				{{ __('Next') }}
 			</a>
 			{% endif %}
 		</nav>
 		
-		<div id="photo" data-id="{{ photo.id }}" {%- if user_can_create controller.faces_controller.new_iter %} data-create-action="{{ controller.faces_controller.link_to_create }}"{% endif %}>
+		<div id="photo" data-id="{{ photo.id }}" {%- if user_can_create controller.faces_controller.new_iter %} data-create-action="{{ controller.faces_controller.json_link_to_create }}"{% endif %}>
 			<figure class="full-size-photo {{ photo.orientation }}">
 				<img
 					src="{{ photo.get_url(1600, 1600) }}"
@@ -39,25 +39,33 @@
 			</figure>
 
 			{% for face in photo.faces if user_can_read face %}
-			<div id="face_{{ face.id }}" class="face {{ face.lid_id is defined or face.custom_label is defined ? 'tagged' : 'untagged' }} {% if face.lid_id is defined and global.identity.member and face.lid_id == global.identity.member.id %}me{% endif %}" style="{{ "left: %0.2F%%; top: %0.2F%%; width: %0.2F%%; height: %0.2F%%;"|vformat(face.position) }}"
+			<div id="face_{{ face.id }}" class="face {{ face.lid_id or face.custom_label ? 'tagged' : 'untagged' }} {% if face.lid_id and global.identity.member and face.lid_id == global.identity.member.id %}me{% endif %}" style="{{ "left: %0.2F%%; top: %0.2F%%; width: %0.2F%%; height: %0.2F%%;"|vformat(face.position) }}"
 				{%- if user_can_delete face -%}
-					data-delete-action="{{ controller.faces_controller.link_to_delete(face) }}"
+					data-delete-action="{{ controller.faces_controller.json_link_to_delete(face) }}"
 				{%- endif -%}
 				{%- if user_can_update face -%}
-					data-update-action="{{ controller.faces_controller.link_to_update(face) }}"
+					data-update-action="{{ controller.faces_controller.json_link_to_update(face) }}"
 				{%- endif -%}
 				>
 				<!-- name label (and hidden update form) -->
 				<div class="tag-label">
 					{% if face.lid_id is not null %}
-						{% set lid = face.getIter('lid') %}
-						<a href="profiel.php?lid={{ lid.id }}" class="name">{{ lid|personal_full_name }}</a>
+						<a href="profiel.php?lid={{ face.lid.id }}" class="name">{{ face.lid|personal_full_name }}</a>
 					{% elseif face.custom_label is not null %}
 						<a class="name" href="#">{{ face.custom_label }}</a>
 					{% elseif user_can_update face %}
-						<a class="name" href="#">{{ __('Klik om te taggen') }}</a>
+						{% if face.suggested_member %}
+							<div class="suggested-face" data-member-id="{{ face.suggested_member.id }}">
+								Is this <a href="{{ link('profiel.read', member=face.suggested_member)|e('html_attr') }}" class="name">{{ face.suggested_member|personal_full_name }}</a>?
+								<div class="button-group">
+									<button class="yes">Yes</button>
+									<button class="no">No</button>
+								</div>
+							</div>
+						{% endif %}
+						<a class="name" href="#">{{ __('Click to tag') }}</a>
 					{% else %}
-						<a class="name" href="#">{{ __('Niet getagged') }}</a>
+						<a class="name" href="#">{{ __('Not yet tagged') }}</a>
 					{% endif %}
 				</div>
 			</div>
@@ -109,7 +117,7 @@
 			{%- elseif face.custom_label != '' -%}
 				<span class="custom-label" data-face-id="{{ face.id }}">{{ face.custom_label }}</span>
 			{%- else -%}
-				<span data-face-id="{{ face.id }}">{{ __('Onbekend') }}</span>
+				<span data-face-id="{{ face.id }}">{{ __('Unknown') }}</span>
 			{%- endif -%}
 		{%- endmacro -%}
 
@@ -117,17 +125,17 @@
 
 		{% if photo.faces|user_can_read|length > 0 or user_can_create controller.faces_controller.new_iter %}
 			<p class="photo-faces" data-template-format="{{ {
-				intro: __('Een foto met %s.'),
-				unknown_sg: __('%d onbekend gezicht'),
-				unknown_pl: __('%d onbekende gezichten'),
-				and: __('en')
+				intro: __('A photo with %s.'),
+				unknown_sg: __('%d unknown faces'),
+				unknown_pl: __('%d unknown faces'),
+				and: __('and')
 			}|json_encode|e('html_attr') }}">
 				{% if photo.faces|user_can_read|length > 0 %}
 					{# todo: array_merge([name]*,["%d onbekende gezichten"]?)|human_join(',') #}
-					{{ __('Een foto met %s.')|format(photo.faces|user_can_read|map_macro('photo_macros.format_face_label')|human_join(','))|raw }}
+					{{ __('A photo with %s.')|format(photo.faces|user_can_read|map_macro('photo_macros.format_face_label')|human_join(','))|raw }}
 				{% endif %}
 				{% if user_can_create controller.faces_controller.new_iter %}
-					<span class="toggle tag-faces-toggle"><input id="tagging-toggle" type="checkbox"><label for="tagging-toggle">{{ __('Tag gezichten') }}</label></span>
+					<span class="toggle tag-faces-toggle"><input id="tagging-toggle" type="checkbox"><label for="tagging-toggle">{{ __('Tag faces') }}</label></span>
 				{% endif %}
 			</p>
 		{% endif %}
@@ -143,10 +151,10 @@
 					><span class="like-count">{{ photo.likes|length }}</span></button>
 			</form>
 			
-			<a href="fotoboek.php?photo={{ photo.id }}&amp;view=download" class="photo-download-link">{{ __('Download') }}</a>
+			<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download" class="photo-download-link">{{ __('Download') }}</a>
 			
 			{% if global.identity.member.id in photo.faces|select('lid_id') %}
-			<a href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form" class="photo-privacy-link">{{ __('Zichtbaarheid') }}</a>
+			<a href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-placement-selector="modal" data-partial-selector=".privacy-preference-form" class="photo-privacy-link">{{ __('Visibility') }}</a>
 			{% endif %}
 		</div>
 		{% endif %}

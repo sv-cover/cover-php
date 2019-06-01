@@ -12,12 +12,46 @@ function append_ai_email(input) {
 		input.value += '@ai.rug.nl';
 }
 
+/**
+ * Creates a throttelable version of a function. Calling the 'throttled' function
+ * directly will call the function directly (and clear any scheduled delayed call)
+ * but you can also create a new delayed callback by calling .delay(500) on the
+ * throttled function:
+ * 
+ * Example:
+ *   var fun = throttle(updateCallback);
+ *   $('input').on('keyup', fun.delay(500));
+ * 
+ * This will call updateCallback 500ms after the last keyup event. However, if
+ * you call fun() directly after the last keyup, it won't be called a second
+ * time when the 500ms delay timer runs out.
+ */
+function throttle(callback)
+{
+	var timeout = null;
+
+	var caller = function() {
+		clearTimeout(timeout);
+		callback();
+	};
+
+	caller.delay = function(delay) {
+		return function() {
+			clearTimeout(timeout);
+			timeout = setTimeout(callback, delay);
+		};
+	};
+
+	return caller;
+}
 
 jQuery(function($) {
 	$('.hide-by-default').hide();
 
 	$(document).on('click', "a[href^='#']", function(e) {
-		$(this.href.match(/(#.+)$/)[1]).show();
+		var match = this.href.match(/(#.+)$/);
+		if (match)
+			$(match[1]).show();
 	});
 
 	$('.dropdown-button').each(function() {
@@ -35,6 +69,9 @@ jQuery(function($) {
 });
 
 // Inline links (use data-placement-selector and data-partial-selector attributes)
+// Note that this function triggers the partial-content-loaded event on the loaded
+// content, which is used by many functions here to attach event listeners to the
+// new stuff.
 jQuery(function($) {
 	var inline_link_handler = function(e) {
 		// Do not disturb any effect of modifier keys
@@ -46,7 +83,7 @@ jQuery(function($) {
 		var $target = null;
 
 		if ($(this).data('placement-selector') == 'modal') {
-			var $modal = $('<div class="modal">'),
+			var $modal = $('<div class="modal" tabindex="0">'),
 				$modalWindow = $('<div class="window">').appendTo($modal),
 				$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
 
@@ -59,6 +96,8 @@ jQuery(function($) {
 			// need to keep track of how many popups are stacked before
 			// removing that class again.
 			$modal.insertBefore($('.world'));//.delay(100).addClass('')
+
+			$modal.focus();
 
 			// Close the modal on clicking the close button
 			$closeButton.on('click', function(e) {
@@ -108,6 +147,23 @@ jQuery(function($) {
 		.on('submit', 'form[data-placement-selector]', inline_link_handler);
 });
 
+// If a link in a modal links to the current page, make that link just close the modal
+$(document).on('partial-content-loaded', function(e) {
+	var $modal = $(e.target).closest('.modal');
+	if ($modal.length) {
+		$(e.target).find('a').each(function() {
+			if (this.href == document.location.href) {
+				$(this).click(function(e) {
+					e.preventDefault();
+					$modal.remove();
+				});
+			}
+		});
+	}
+});
+
+// If a link has the attribute data-image-popup, and its value is 'modal', open
+// the image (href attribute) it points to in a modal popup.
 jQuery(function($) {
 	$(document).on('click', 'a[data-image-popup]', function(e) {
 		if ($(this).data('image-popup') !== 'modal')
@@ -216,23 +272,26 @@ jQuery(function($) {
 
 $(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('fieldset:not(.jquery-fieldset)').each(function(i, fieldset) {
+		var masterSwitch = $(fieldset).find('legend input[type=checkbox], legend input[type=radio]');
+
+		if (masterSwitch.length === 0)
+			return;
+
 		$(fieldset).addClass('jquery-fieldset');
 
-		var masterSwitch = $(fieldset).find('legend>input[type=checkbox]');
+		var fields = $(fieldset).find('input, select').not(masterSwitch);
 
-		if (masterSwitch.length) {
-			var toggles = $(fieldset).find('input').not(masterSwitch);
+		var update = function() {
+			fields.prop('disabled', !masterSwitch.is(':checked'));
+		};
 
-			var update = function() {
-				toggles.prop('disabled', !masterSwitch.is(':checked'));
-			};
+		update();
 
-			update();
-
-			masterSwitch.on('change', update);
-		}
+		$(e.target).find('input[name="' + masterSwitch.attr('name') + '"]').on('change', update);
 	});
+});
 
+$(document).on('ready partial-content-loaded', function(e) {
 	$(e.target).find('input[data-autocomplete=member_id]').each(function(i, field) {
 		$(field).autocompleteAlmanac({
 			select: function(event, ui) {
@@ -294,6 +353,10 @@ $(document).on('ready partial-content-loaded', function(e) {
 			});
 		});
 
+		$foto.find('.face').each(function() {
+			make_face($(this));
+		});
+
 		function human_implode(elements, glue) {
 			if (elements.length < 2)
 				return elements.join('');
@@ -331,7 +394,8 @@ $(document).on('ready partial-content-loaded', function(e) {
 			});
 		};
 
-		function make_face_editable($face)
+		// Give every face a small model (with a single method: accept)
+		function make_face($face)
 		{
 			var accept = function(lid_id, name) {
 				$face.removeClass('untagged');
@@ -350,6 +414,11 @@ $(document).on('ready partial-content-loaded', function(e) {
 				update_names_list();
 			};
 
+			$face.data('model', {accept: accept});
+		}
+
+		function make_face_editable($face)
+		{
 			$face.resizable({
 				containment: $photo,
 				aspectRatio: 1,
@@ -385,13 +454,11 @@ $(document).on('ready partial-content-loaded', function(e) {
 				})
 				.appendTo($face);
 
-			$face.click(function(e) {
-				e.preventDefault();
-				e.stopPropagation();
+			$face.data('model').focus = function() {
 				update_names_list();
 				$face.find('.name').hide();
 				$face.find('.tag-search').show().focus();
-			});
+			};
 
 			$('<input type="text" class="tag-search" spellcheck="false">')
 				.on('keydown', function(e) {
@@ -404,7 +471,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 						case $.ui.keyCode.ENTER:
 							if ($(this).data('ui-autocomplete').menu.active)
 								break;
-							accept(null, $(this).val());
+							$face.data('model').accept(null, $(this).val());
 							// fall-through intentional
 						
 						case $.ui.keyCode.ESCAPE:
@@ -433,7 +500,7 @@ $(document).on('ready partial-content-loaded', function(e) {
 						return false;
 					},
 					select: function(event, ui) {
-						accept(ui.item.id, ui.item.name);
+						$face.data('model').accept(ui.item.id, ui.item.name);
 						$(this).blur();
 						cancelNextClick = false;
 						return false;
@@ -551,22 +618,49 @@ $(document).on('ready partial-content-loaded', function(e) {
 				$face.attr('id', 'face_' + resp.iter.__id);
 				$face.data('update-action', resp.iter.__links.update);
 				$face.data('delete-action', resp.iter.__links.delete);
+				make_face($face);
 				make_face_editable($face);
+				$face.data('model').focus();
 			}, 'json');
 		});
 
-		$photo.on('click', '.face.untagged .tag-label', function(e) {
+		$photo.on('click', '.face.untagged .tag-label .suggested-face button', function(e) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+
+			var $face = $(this).closest('.face');
+			var $suggestion = $(this).closest('.suggested-face').remove();
+
+			if ($(this).hasClass('yes')) {
+				$face.data('model').accept($suggestion.data('member-id'), $suggestion.find('.name').text());
+			} else {
+				$toggle.prop('checked', true).change();
+				$face.data('model').focus();
+			}
+		});
+
+		$photo.on('click', '.face.untagged .tag-label > .name', function(e) {
 			if ($photo.hasClass('tagging-enabled'))
 				return;
 
 			e.preventDefault();
-			e.stopPropagation();
+			e.stopImmediatePropagation();
 
 			var $face = $(this).closest('.face');
 			
 			$toggle.prop('checked', true).change();
 			
-			$face.click();
+			$face.data('model').focus();
+		});
+
+		$photo.on('click', '.face', function(e) {
+			if (!$photo.hasClass('tagging-enabled'))
+				return;
+
+			e.preventDefault();
+			e.stopPropagation();
+			
+			$(this).data('model').focus();
 		});
 	});
 });
@@ -757,7 +851,17 @@ $(document).on('ready partial-content-loaded', function(e) {
 				$(this).toggleClass('active', urlHash($(this).find('a').attr('href')) == tabId);
 			});
 			$panels.each(function() {{
-				$(this).toggle($(this).prop('id') == tabId);
+				var visible = $(this).prop('id') == tabId;
+				var event = null;
+				
+				if (visible && !$(this).is(':visible'))
+					event = 'show';
+				else if (!visible && $(this).is(':visible'))
+					event = 'hide';
+
+				$(this).toggle(visible);
+				if (event)
+					$(this).trigger(event);
 			}});
 		}
 
@@ -819,4 +923,331 @@ $(document).on('ready partial-content-loaded', function(e) {
 			}
 		});
 	});
+});
+
+/* Promotional banners */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.sign-up-banner').each(function() {
+		var slides = $(this).find('.background');
+		var currentSlide = 0;
+
+		setInterval(function() {
+			currentSlide = (currentSlide + 1) % slides.length;
+			slides.removeClass("current");
+			slides.eq(currentSlide).addClass("current");
+		}, 3500);
+	});
+});
+
+/* Committee battle banner */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.committee-battle-banner').each(function() {
+		var columnCount = 5;
+		var imageCount = 3;
+		var paths = $(this).data('photos');
+		var pathIndex = 0;
+
+		var nextPath = function() {
+			return paths[pathIndex++ % paths.length];
+		};
+
+		var columns = $.map(new Array(columnCount), function(value, columnIndex) {
+			var column = $('<div>').addClass('column').css({
+				left: 115 * (columnIndex / columnCount) - 35 + '%',
+				width: (100 / columnCount) + '%',
+				animationDuration: 60 + 10 * (columnIndex % 2) + 's',
+				animationDelay: -1 * Math.random() + 's'
+			});
+
+			var images = $.map(new Array(imageCount), function(value, imageIndex) {
+				return $('<img>').prop({
+					src: nextPath(),
+					width: 500,
+					height: 300
+				});
+			});
+
+			for (var i = 0; i < 2; ++i)
+				images.push(images[i].clone());
+
+			column.append(images);
+
+			return column;
+		});
+
+		var overlay = $('<div>').css({
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			bottom: 0,
+			right: 0,
+			background: '#000',
+			zIndex: -1,
+			opacity: 0.25
+		});
+
+		$(this).append(columns);
+
+		$(this).append(overlay);
+
+		setTimeout(function() {
+			$(columns).each(function() {
+				$(this).css({
+					animationName: 'banner-scroll'
+				});
+			});
+		}, 100);
+	});
+});
+
+/* Click to read more */
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('.click-to-read-on').each(function() {
+		var $div = $(this).addClass('collapsed');
+		var $button = $('<button>')
+			.addClass('button read-on-button')
+			.text($div.data('read-on-label') || 'Click to Read On')
+			.click(function() {
+				$div.removeClass('collapsed');
+			});
+		$div.append($button);
+	})
+});
+
+/* Enable select2 automatically */
+$(document).on('ready partial-content-loaded', function(e) {
+	if (jQuery.fn.select2) {
+		$(e.target).find('select[name="member_ids[]"]').select2({
+			templateResult: function(option) {
+				if (!option.id)
+					return document.createTextNode(option.text);
+
+				var img = document.createElement('img');
+				img.className = 'profile-image';
+				img.src = 'foto.php?lid_id=' + option.id + '&format=square&width=50';
+				var text = document.createTextNode(option.text);
+				var span = document.createElement('span');
+				span.appendChild(img);
+				span.appendChild(text);
+				return span;
+			}
+		});
+	}
+
+	// Check all checkboxes in the form that have a data-member-ids attribute
+	// to see if it contains one of the currently selected members. If so, check it.
+	$(e.target).find('[name="member_ids[]"]').each(function() {
+		var $field = $(this);
+		var $form = $(this.form);
+
+		var $legend = $(this.form)
+			.find('input[type=checkbox][data-member-ids]')
+			.first()
+			.closest('fieldset')
+			.find('legend')
+			.first();
+
+		var $method = $('<select>\
+			<option value="some">Union of</option>\
+			<option value="every">Intersection of</option>\
+		</select>').prependTo($legend);
+
+		var update = function() {
+			var value = $field.val();
+			var method = $method.val();
+			console.log(value, method);
+			$form.find('input[type=checkbox][data-member-ids]').prop('checked', function() {
+				// Test whether this set of member-ids is completely or partially contained by value.
+				var member_ids = $(this).attr('data-member-ids').split(' ');
+				return value !== null && value[method](function(member_id) {
+					return member_ids.indexOf(member_id) !== -1;
+				});
+			});
+		};
+
+		$field.add($method).on('change', update);
+	});
+});
+
+// Load photo book photos only once they are (almost) in view
+// to speed up loading photo book pages
+$(document).on('ready partial-content-loaded', function(e) {
+	var updateScheduled = false;
+
+	var threshold = Math.max(300, $(window).height()); // pixels 'below the fold' where images should start loading
+
+	var emptyPixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
+	function isHidden() {
+		var $img = $(this);
+
+		// Keep hidden images for now
+		if ($img.is(':hidden'))
+			return true;
+
+		var windowTop = $(window).scrollTop(),
+			windowBottom = windowTop + $(window).height(),
+			elementTop = $img.offset().top,
+			elementBottom = elementTop + $img.height();
+
+		return !(elementBottom >= windowTop - threshold && elementTop <= windowBottom + threshold);
+	}
+
+	function load() {
+		this.src = $(this).data('src');
+	}
+
+	function update() {
+		// Load all images that are not hidden
+		var loaded = $images.not(isHidden).each(load);
+
+		// And remove those images from the set
+		$images = $images.not(loaded);
+
+		updateScheduled = false;
+	};
+
+	// Find all images
+	var $images = $(e.target).find('.photos img[data-src]');
+
+	// Remove their src attribute (and store it in the data-src attribute for now)
+	$images.each(function() {
+		$(this).prop('src', $(this).data('placeholder-src') || emptyPixel);
+	});
+
+	// Very rudimentary polyfill for requestAnimationFrame
+	var schedule = window.requestAnimationFrame || function (callback) { return setTimeout(callback, 16); };
+
+	// Schedule an update right now to load those initial images
+	update();
+
+	// On scroll and resize we 'schedule' an update run
+	$(window).on('scroll resize', function() {
+		if (!updateScheduled) {
+			schedule(update);
+			updateScheduled = true;
+		}
+	});
+});
+
+// Previews of editable content and forum topics. Use data-preview-source attribute
+// to select which element to take the input value from, and use data-preview-url
+// to select to which url to make a post request. It will send all the form data
+// with it to that endpoint, and display the response in the element itself.
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-preview-source][data-preview-url]').each(function() {
+		var $target = $(this);
+		var $source = $($target.attr('data-preview-source'));
+		var previewURL = $target.attr('data-preview-url');
+
+		if ($source.length === 0) {
+			console.warn('Could not find element', $target.attr('data-preview-source'));
+			return;
+		}
+
+		var refresh = throttle(function() {
+			// If the target isn't visible (e.g. different tab) then don't go
+			// through all this hassle.
+			if (!$target.is(':visible'))
+				return;
+			
+			var data = $source.closest('form').serialize();
+			$.post(previewURL, data).done(function(response) {
+				$target.html(response);
+			});
+		});
+
+		// Either update the field when we change stuff in the source field
+		$source.on('keyup', refresh.delay(500));
+
+		// Or when it becomes visible (e.g. different tab)
+		$target.on('show', refresh);
+	});
+});
+
+// Make elements sortable by using data-sortable-action and data-sortable-id attributes.
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-sortable-action]').each(function() {
+		var $list = $(this);
+
+		$list.sortable({
+			handle: '.sortable-drag-handle',
+			cursor: 'grabbing',
+			update: function() {
+				console.log($list.data('sortableAction'), $list.children().map(function() {
+					return $(this).data('sortableId');
+				}));
+				$.post($list.data('sortableAction'), {
+					order: $list.children().map(function() {
+						return $(this).data('sortableId');
+					}).get()
+				});
+			}
+		});
+	});
+});
+
+// Forms that autosubmit on change (just submit, no feedback)
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('form[data-submit-on-change]').each(function() {
+		var extraData = $.map($(this).data('submitOnChange'), function(value, name) {
+			return {name: name, value: value};
+		});
+
+		$(this).on('change', function(e) {
+			$.ajax({
+				url: $(this).attr('action'),
+				method: $(this).attr('method').toUpperCase(),
+				data: $(this).serializeArray().concat(extraData)
+			});
+		});
+
+		$(this).addClass('submit-on-change');
+
+		var form = this;
+		$(e.target).find('button').filter(function() {
+			return this.form === form;
+		}).addClass('submit-on-change');
+	})
+})
+
+// Growing lists (i.e. the options list in form fields)
+$(document).on('ready partial-content-loaded', function(e) {
+	$(e.target).find('[data-growing-list]').each(function() {
+		var $list = $(this);
+		var $template = $(this).find('[data-template]').detach();
+
+		function check() {
+			if ($list.find('input').last().val() != '')
+				$list.append($template.clone());
+		}
+
+		$list.on('input', function(e) {
+			check();
+		});
+
+		$list.on('keydown', function(e) {
+			if (e.keyCode == 8 && e.target.value == '') {// backspace in empty field
+				e.preventDefault();
+
+				var $child = $(e.target).closest($list.children());
+				$child.prev($list.children()).each(function() {
+					$(this).find('input:first-of-type').each(function() {
+						this.setSelectionRange(this.value.length, this.value.length);
+					});
+				});
+				$child.remove();
+			}
+		});
+
+		$list.sortable({
+			handle: '.drag-handle',
+			cursor: 'grabbing',
+			update: function() {
+				$list.trigger('change');
+			}
+		});
+
+		check();
+	})
 });

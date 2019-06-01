@@ -17,7 +17,12 @@ class DataIterLikedPhotobook extends DataIterPhotobook
 		return 'liked';
 	}
 
-	public function get_books($metadata = null)
+	public function get_books()
+	{
+		return array();
+	}
+
+	public function get_books_without_metadata()
 	{
 		return array();
 	}
@@ -80,6 +85,10 @@ class DataModelPhotobookLike extends DataModel
 
 	public function get_for_lid(DataIter $member, array $photos = null)
 	{
+		// Todo: exclude hidden photos from this query? Or should hidden photos
+		// mainly be hidden from non-logged-in members, in which case it is not
+		// relevant for this query?
+
 		if ($photos === null)
 			$query = sprintf('lid_id = %d', $member->get_id());
 		elseif (count($photos) === 0)
@@ -134,7 +143,7 @@ class DataModelPhotobookLike extends DataModel
 		$favorites = array_keys($this->get_for_lid($member));
 
 		return new DataIterLikedPhotobook(get_model('DataModelPhotobook'), -1, array(
-			'titel' => __('Favoriete foto\'s'),
+			'titel' => __('Liked photos'),
 			'has_photos' => count($favorites) > 0,
 			'num_photos' => count($favorites),
 			'num_books' => 0,

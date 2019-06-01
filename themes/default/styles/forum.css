@@ -16,6 +16,7 @@ h1 a:hover
 
 table.forum {
 	table-layout: fixed;
+	margin: 0;
 }
 
 table.forum tbody
@@ -36,6 +37,13 @@ table.forum a:visited {
 table.forum a:hover {
 	text-decoration: underline;
 	color: #004274;
+}
+
+table.forum a.button,
+table.forum a.button:hover,
+table.forum a.button:visited {
+	color: #000;
+	text-decoration: none;
 }
 
 table.forum
@@ -159,10 +167,7 @@ table.forum tr.r1 > td {
 	color: #000;
 	padding: 10px;
 }
-#menu_poll table.votes td
-{
-	border-bottom: 1px dashes #999;
-}
+
 .forum_poll table.votes, .forum_poll table.poll
 {
 	padding: 0px 10px;

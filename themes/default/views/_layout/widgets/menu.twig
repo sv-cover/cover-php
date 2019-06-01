@@ -2,13 +2,14 @@
 	<ul>
 	{% for menu_id, menu in view.layout.top_menu %}
 		{% if menu.submenu is defined %}
-		<li class="dropDown"><a drop="{{ menu_id }}" href="" onclick="return false;">{{ menu.label }}</a></li>
+		<li class="dropDown{% if menu.className is defined %} {{ menu.className }}{% endif %}"{%if menu.title is defined %} title="{{ menu.title }}"{% endif %}><a drop="{{ menu_id }}" href="" onclick="return false;">{{ menu.label }}</a></li>
 		{% else %}
-		<li><a href="{{ menu.url }}" target="{{ menu.target|default('') }}">{{ menu.label }}</a></li>
+		<li{% if menu.className is defined %} class="{{ menu.className }}"{% endif %}{%if menu.title is defined %} title="{{ menu.title }}"{% endif %}><a href="{{ menu.url }}" target="{{ menu.target|default('') }}">{{ menu.label }}</a></li>
 		{% endif %}
 	{% endfor %}
 	</ul>
-	
+
+{# Disabled language switcher as the website should be available in English only
 	<form method="post" id="language-switch" action="index.php">
 		<input type="hidden" name="submindexlanguage" value="1">
 		<input type="hidden" name="return_to" value="{{ global.server.REQUEST_URI }}">
@@ -18,14 +19,15 @@
 				<span>{{ code|upper }}</span>
 			</label>
 		{% endfor %}
-		<button type="submit">{{ __('Verander taal') }}</button>
+		<button type="submit">{{ __('Change Language') }}</button>
 	</form>
+#}
 </div>
 <div class="subNav">
 	{% for menu_id, menu in view.layout.top_menu if menu.submenu is defined %}
 		<ul id="{{ menu_id }}" class="expander">
 			{% for submenu_item in menu.submenu %}
-				<li><a href="{{ submenu_item.url }}" target="{{ submenu_item.target|default() }}">{{ submenu_item.label }}</a></li>
+				<li{% if submenu_item.className is defined %} class="{{ submenu_item.className }}"{% endif %}{%if submenu_item.title is defined %} title="{{ submenu_item.title }}"{% endif %}><a href="{{ submenu_item.url }}" target="{{ submenu_item.target|default() }}">{{ submenu_item.label }}</a></li>
 			{% endfor %}
 		</ul>
 	{% endfor %}

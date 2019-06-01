@@ -7,6 +7,7 @@
 		const FORMAT_PORTRAIT = 'portrait';
 		const FORMAT_SQUARE = 'square';
 
+		const TYPE_ORIGINAL = 'original';
 		const TYPE_THUMBNAIL = 'thumbnail';
 		const TYPE_PLACEHOLDER_PRIVATE = 'placeholder-private';
 		const TYPE_PLACEHOLDER_PUBLIC = 'placeholder-public';
@@ -14,6 +15,8 @@
 		public function __construct()
 		{
 			$this->model = get_model('DataModelMember');
+
+			$this->view = new View($this);
 		}
 
 		protected function _get_placeholder_type($member)
@@ -69,7 +72,7 @@
 			header('Cache-Control: max-age=86400');
 			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 
-			if ($length > 0)
+			if ($length !== null)
 				header(sprintf('Content-Length: %d', $length));
 
 			if ($type !== null)
@@ -106,10 +109,54 @@
 			return true;
 		}
 
+		protected function _generate_original(DataIterMember $member)
+		{
+			$photo = $this->model->get_photo_stream($member);
+			
+			if (!$photo)
+				throw new NotFoundException('Member has no photo');
+
+			$imagick = new Imagick();
+			$imagick->readImageFile($photo['foto']);
+
+			apply_image_orientation($imagick);
+
+			strip_exif_data($imagick);
+
+			// Oh shit cache not writable? Fall back to a temp stream.
+			$fout = $this->_open_cache_stream($member, 0, 0, self::TYPE_ORIGINAL, 'w+') or $fout = fopen('php://temp', 'w+');
+
+			// Write image to php output buffer
+			$imagick->setImageFormat('jpeg');
+			$imagick->writeImageFile($fout);
+			$imagick->destroy();
+
+			fseek($fout, 0, SEEK_END);
+			$file_size = ftell($fout);
+			rewind($fout);
+
+			$this->_serve_stream($fout, 'image/jpeg', $file_size);
+
+			// And clean up.
+			fclose($fout);
+
+			return true;
+		}
+
 		protected function _generate_thumbnail(DataIterMember $member, $format, $width)
 		{
+			$photo = $this->model->get_photo_stream($member);
+			
+			if (!$photo)
+				throw new NotFoundException('Member has no photo');
+
 			$imagick = new Imagick();
-			$imagick->readImageBlob($this->model->get_photo($member));
+			$imagick->readImageFile($photo['foto']);
+
+			apply_image_orientation($imagick);
+
+			strip_exif_data($imagick);
+
 			$height = 0;
 			
 			if ($format == self::FORMAT_SQUARE)
@@ -181,7 +228,7 @@
 			$random_b = max($random_b, (0.5 - ($s_r + $s_g)) / 0.072);
 
 			$s_b = 0.072 * $random_b;
-			assert('$s_r + $s_g + $s_b >= 0.5');
+			assert($s_r + $s_g + $s_b >= 0.5);
 
 			$background = new ImagickPixel(sprintf('#%02x%02x%02x', $random_r, $random_g, $random_b));
 			$foreground = '#fff';
@@ -227,7 +274,7 @@
 				: self::FORMAT_PORTRAIT;
 
 			$width = isset($_GET['width'])
-				? min($_GET['width'], 600)
+				? min(intval($_GET['width']), 600)
 				: 600;
 
 			$height = $format == self::FORMAT_SQUARE ? $width : 0;
@@ -248,15 +295,8 @@
 			if (!$this->model->has_picture($member))
 				return new NotFoundException('Member has no photo');
 
-			$photo = $this->model->get_photo($member);
-
-			header('Pragma: public');
-			header('Cache-Control: max-age=86400');
-			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-			header('Content-Type: image/jpeg');
-			header('Content-Length: ' . strlen($photo));
-
-			echo $photo;
+			return $this->_view_cached($member, 0, 0, self::TYPE_ORIGINAL)
+				or $this->_generate_original($member);
 		}
 		
 		protected function run_impl()

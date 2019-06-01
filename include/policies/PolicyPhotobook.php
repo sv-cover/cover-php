@@ -4,6 +4,30 @@ require_once 'include/member.php';
 
 class PolicyPhotobook implements Policy
 {
+	private function _was_member_at_the_time(DataIter $book) {
+		if (get_identity()->member() === null)
+			return false;
+
+		if ($book['date'] === null)
+			return false;
+
+		if (!preg_match('/^(?P<year>\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
+			return false;
+
+		return get_identity()->member()->is_member_on(new DateTime($match[0]));
+	}
+
+	private function _inside_public_period(DataIter $book)
+	{
+		if ($book['date'] === null)
+			return false;
+
+		if (!preg_match('/^(?P<year>\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
+			return false;
+
+		return intval($match['year']) >= intval(date("Y", strtotime("-2 year")));
+	}
+
 	public function user_can_create(DataIter $book)
 	{
 		return get_identity()->member_in_committee(COMMISSIE_FOTOCIE)
@@ -15,18 +39,34 @@ class PolicyPhotobook implements Policy
 		// First: if the access to the photo book is of a higher level
 		// than the current user has, no way he/she can view the photo
 		// book.
-		if ($book->has('visibility') && $this->get_access_level() < $book->get('visibility'))
+		if ($book['visibility'] !== null && $this->get_access_level() < $book->get('visibility'))
 			return false;
 
 		// Member-specific albums are also forbidden terrain unless they are about you
-		if (!get_identity()->member_is_active() && $book instanceof DataIterFacesPhotobook)
+		if (!get_identity()->is_member() && $book instanceof DataIterFacesPhotobook)
 			return $book['member_ids'] == [get_identity()->get('id')];
 
-		// Older photo books are not visible for non-members
-		if (!get_identity()->member_is_active() && $book->has('date') && preg_match('/^(\d{4})-\d{1,2}-\d{1,2}$/', $book->get('date'), $match))
-			return intval($match[1]) >= intval(date("Y", strtotime("-2 year")));
+		// Member-specific albums are forbidden if one of the members has marked their photo* as hidden
+		// or if their whole profile has been made inaccessible
+		if ($book instanceof DataIterFacesPhotobook && !get_identity()->member_in_committee(COMMISSIE_BESTUUR))
+			foreach ($book['members'] as $member)
+				if (!get_policy($member)->user_can_read($member) || $member->is_private('foto', true))
+					return false;
 
-		return true;
+		// Older photo books are not visible for non-members
+		if (get_identity()->is_member())
+			return true;
+
+		if ($book['date'] === null)
+			return true;
+
+		if ($this->_was_member_at_the_time($book))
+			return true;
+
+		if ($this->_inside_public_period($book))
+			return true;
+
+		return false;
 	}
 
 	public function user_can_update(DataIter $book)
@@ -41,6 +81,35 @@ class PolicyPhotobook implements Policy
 		return $this->user_can_update($book);
 	}
 
+	public function user_can_download_book(DataIterPhotobook $book)
+	{
+		if ($book instanceof DataIterRootPhotobook)
+			return false;
+
+		if (!get_identity()->member())
+			return false;
+
+		if (get_identity()->is_member() || ($book['date'] && get_identity()->member()->is_member_on(new DateTime($book['date']))))
+			return $this->user_can_read($book);
+
+		return false;
+	}
+
+	public function user_can_mark_as_read(DataIterPhotobook $book)
+	{
+		return // only logged in members can track their viewed photo books
+			get_auth()->logged_in() 
+			
+			// and only if enabled
+			&& get_config_value('enable_photos_read_status', true) 
+
+			// and only if we actually are watching a book
+			&& $book->get_id() 
+			
+			// which is not artificial (faces, likes) and has photos
+			&& ctype_digit($book->get_id()) && $book['num_books'] > 0;
+	}
+
 	public function get_access_level()
 	{
 		if (get_identity()->member_in_committee(COMMISSIE_FOTOCIE))
@@ -49,10 +118,10 @@ class PolicyPhotobook implements Policy
 		if (get_identity()->member_in_committee())
 			return DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS;
 
-		if (get_identity()->member_is_active())
+		if (get_identity()->is_member())
 			return DataModelPhotobook::VISIBILITY_MEMBERS;
 
-		else
+		else // Donors are also treated as PUBLIC
 			return DataModelPhotobook::VISIBILITY_PUBLIC;
 	}
 }

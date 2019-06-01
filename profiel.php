@@ -18,7 +18,7 @@ class ControllerProfiel extends Controller
 
 		$this->view = View::byName('profiel', $this);
 
-		$this->sizes = array(
+		$this->sizes = [
 			'adres' => 255,
 			'postcode' => 7,
 			'woonplaats' => 255,
@@ -26,14 +26,16 @@ class ControllerProfiel extends Controller
 			'telefoonnummer' => 20,
 			'avatar' => 100,
 			'homepage' => 255,
-			'nick' => 50);
+			'nick' => 50,
+			'onderschrift' => 200
+		];
 
-		$this->required = array(
+		$this->required = [
 			'adres',
 			'postcode',
 			'woonplaats',
 			'email'
-		);
+		];
 	}
 	
 	public function _check_size($name, $value)
@@ -68,20 +70,38 @@ class ControllerProfiel extends Controller
 		return in_array($value, array('nl', 'en')) ? $value : false;
 	}
 
+	public function _check_phone($name, $value)
+	{
+		try {
+			$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
+			$phone_number = $phone_util->parse($value, 'NL');
+			return $phone_util->isValidNumber($phone_number)
+				? $phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164)
+				: false;
+		} catch (\libphonenumber\NumberParseException $e) {
+			return false;
+		}
+	}
+
+	public function _check_email($name, $value)
+	{
+		return filter_var($value, FILTER_VALIDATE_EMAIL);
+	}
+
 	protected function _update_personal(DataIterMember $iter)
 	{
 		$check = array(
 			array('name' => 'postcode', 'function' => array($this, '_check_size')),
-			array('name' => 'telefoonnummer', 'function' => array($this, '_check_size')),
+			array('name' => 'telefoonnummer', 'function' => array($this, '_check_phone')),
 			array('name' => 'adres', 'function' => array($this, '_check_size')),
-			array('name' => 'email', 'function' => array($this, '_check_size')),
+			array('name' => 'email', 'function' => array($this, '_check_email')),
 			array('name' => 'woonplaats', 'function' => array($this, '_check_size'))
 		);
 		
 		$data = check_values($check, $errors);
 
 		if (count($errors) > 0) {
-			$error = __('De volgende velden zijn onjuist ingevuld: ') . implode(', ', array_map('field_for_display', $errors));
+			$error = __('The following fields are not correctly filled in: ') . implode(', ', array_map('field_for_display', $errors));
 			return $this->view->render_personal_tab($iter, $error, $errors);
 		}
 		
@@ -91,7 +111,7 @@ class ControllerProfiel extends Controller
 		// Remove the e-mail field, that is a special case
 		$fields = array_filter($fields, function($field) { return $field != 'email'; });
 
-		$oud = $iter->data;
+		$old_values = $iter->data;
 		
 		foreach ($fields as $field) {
 			if (isset($data[$field]) && $data[$field] !== null)
@@ -102,52 +122,54 @@ class ControllerProfiel extends Controller
 
 		if ($iter->has_changes())
 		{
+			$changed_fields = $iter->changed_fields();
+
 			$this->model->update($iter);
 		
-			// Inform the board that member info has been changed.
-			$subject = "Lidgegevens gewijzigd";
-			$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
-			
-			// Get all/only changed values (but only the actual fields, not the computed cruft)
-			$changes = array_filter($iter->get_changed_values(), function($field) { return in_array($field, DataIterMember::fields()); });
-			
-			foreach ($changes as $field => $value)
-				$body .= sprintf("%s:\t%s (was: %s)\n", $field, $value ? $value : "<verwijderd>", $oud[$field]);
-				
-			mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-			mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-
-			try {
-				get_secretary()->updatePersonFromIterChanges($iter);
-			} catch (RuntimeException $e) {
-				error_log($e);
-			}
+			$this->_report_changes_upstream($iter, $changed_fields, $old_values);
 		}
 
 		// If the email address has changed, add a confirmation.
-		if (isset($data['email']) && $data['email'] !== null
-			&& $data['email'] != $iter['email'])
+		if (isset($data['email']) && $data['email'] !== null && $data['email'] != $iter['email'])
 		{
-			$model = new DataModel(get_db(), 'confirm', 'key');
-			$key = randstr(32);
-			$payload = ['lidid' => $iter['id'], 'email' => $data['email']];
-			$confirm_iter = new DataIter($model, null, ['key' => $key, 'type' => 'email', 'value' => json_encode($payload)]);
-			$model->insert($confirm_iter);
+			$model = get_model('DataModelEmailConfirmationToken');
+
+			$token = $model->create_token($iter, $data['email']);
 
 			$language_code = strtolower(i18n_get_language());
 
 			$variables = [
 				'naam' => member_first_name($iter, IGNORE_PRIVACY),
-				'email' => $data['email'],
-				'link' => 'https://www.svcover.nl/confirm.php?key=' . urlencode($key)
+				'email' => $token['email'],
+				'link' => $token['link']
 			];
 
 			// Send the confirmation to the new email address
-			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($data['email']);
-			$_SESSION['alert'] = __('Er is een bevestigingsmailtje naar je nieuwe e-mailadres gestuurd.');
+			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($token['email']);
+			$_SESSION['alert'] = __('We’ve sent a confirmation mail to your new email address.');
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=personal');
+	}
+
+	private function _report_changes_upstream(DataIterMember $iter, array $fields, array $old_values)
+	{
+		// Inform the board that member info has been changed.
+		$subject = "Lidgegevens gewijzigd";
+		$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
+		
+		foreach ($fields as $field)
+			$body .= sprintf("%s:\t%s (was: %s)\n", $field, $iter[$field] ? $iter[$field] : "<verwijderd>", $old_values[$field]);
+			
+		mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+		mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+
+		try {
+			get_secretary()->updatePersonFromIterChanges($iter);
+		} catch (RuntimeException $e) {
+			// Todo: replace this with a serious more general logging call
+			error_log($e, 1, 'webcie@rug.nl', "From: webcie-cover-php@svcover.nl");
+		}
 	}
 
 	protected function _update_profile(DataIterMember $iter)
@@ -158,6 +180,7 @@ class ControllerProfiel extends Controller
 		$check = array(
 			array('name' => 'nick', 'function' => array(&$this, '_check_size')),
 			array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
+			array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
 			array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
 			array('name' => 'taal', 'function' => array($this, '_check_language'))
 		);
@@ -165,19 +188,13 @@ class ControllerProfiel extends Controller
 		$data = check_values($check, $errors);
 	
 		if (count($errors) > 0) {
-			$error = __('De volgende velden zijn te lang: ') . implode(', ', array_map('field_for_display', $errors));
+			$error = __('The following fields are to long: ') . implode(', ', array_map('field_for_display', $errors));
 			return $this->view->render_profile_tab($iter, $error, $errors);
 		}
 
-		$fields = array_map(function($check) { return $check['name']; }, $check);
-
-		foreach ($fields as $field)
-			if (isset($data[$field]))
-				$iter->set($field, $data[$field]);
-			else
-				$iter->set($field, get_post($field));
+		$iter->set_all($data);
 		
-		$this->model->update_profiel($iter);
+		$this->model->update($iter);
 		
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
@@ -193,21 +210,21 @@ class ControllerProfiel extends Controller
 		// Only test the old password if we are not a member of the board
 		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-			if (!isset($_POST['wachtwoord_oud']) || !$this->model->login($iter['email'], $_POST['wachtwoord_oud'])) {
+			if (!isset($_POST['wachtwoord_oud']) || !$this->model->test_password($iter, $_POST['wachtwoord_oud'])) {
 				$errors[] = 'wachtwoord_oud';
-				$message[] = __('Het huidige wachtwoord is onjuist.');
+				$message[] = __('The current password is incorrect.');
 			}
 		}
 
 		if (!isset($_POST['wachtwoord_nieuw'])) {
 			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('Het nieuwe wachtwoord is niet ingevuld.');
+			$message[] = __('The new password hasn\'t been filled in.');
 		} elseif (!isset($_POST['wachtwoord_opnieuw']) || $_POST['wachtwoord_nieuw'] !== $_POST['wachtwoord_opnieuw']) {
 			$errors[] = 'wachtwoord_opnieuw';
-			$message[] = __('Het nieuwe wachtwoord is niet twee keer hetzelfde ingevuld.');
-		} elseif (strlen($_POST['wachtwoord_nieuw']) < 4) {
+			$message[] = __('The new password hasn\'t been filled in correctly twice.');
+		} elseif (strlen($_POST['wachtwoord_nieuw']) < 6) {
 			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('Het nieuwe wachtwoord is te kort.');
+			$message[] = __('Your new password is too short.');
 		}
 		
 		if (count($errors) > 0) {
@@ -217,7 +234,7 @@ class ControllerProfiel extends Controller
 		
 		$this->model->set_password($iter, $_POST['wachtwoord_nieuw']);
 
-		$_SESSION['alert'] = __('Je wachtwoord is gewijzigd.');
+		$_SESSION['alert'] = __('Your password has been changed.');
 
 		return $this->view->redirect('Location: profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
@@ -240,46 +257,22 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=privacy');
 	}
 
-	protected function _update_system(DataIterMember $iter)
-	{
-		$errors = array();
-		$message = array();
-
-		if (!get_post('type')) {
-			$errors[] = 'type';
-			$message[] = __('De zichtbaarheid van het profiel is niet ingevuld.');
-		} elseif (get_post('type') < MEMBER_STATUS_MIN || get_post('type') > MEMBER_STATUS_MAX) {
-			$errors[] = 'type';
-			$message[] = __('Er is een ongeldige waarde voor zichtbaarheid ingevuld.');
-		}
-
-		if (count($errors) > 0) {
-			$error = implode("\n", $message);
-			return $this->view->render_system_tab($iter, $error, $errors);
-		}
-
-		$iter->set('type', intval(get_post('type')));
-		$this->model->update($iter);
-
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=system');
-	}
-
 	protected function _update_photo(DataIterMember $iter)
 	{
 		$error = null;
 
 		if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
-			$error = sprintf(__('Het fotobestand is te groot. Het maximum is %s.'),
+			$error = sprintf(__('The image file is too large. The maximum file size is %s.'),
 				ini_get('upload_max_filesize') . ' bytes');
 
 		elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
-			$error = sprintf(__('Het bestand is niet geupload. Foutcode %d.'), $_FILES['photo']['error']);
+			$error = sprintf(__('The image hasn’t been uploaded correctly. PHP reports error code %d.'), $_FILES['photo']['error']);
 
 		elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
-			$error = __('Bestand is niet een door PHP geupload bestand.');
+			$error = __('The image file is not a file uploaded by PHP.');
 		
 		elseif (!($image_meta = getimagesize($_FILES['photo']['tmp_name'])))
-			$error = __('Het geuploadde bestand kon niet worden gelezen.');
+			$error = __('The uploaded file could not be read.');
 
 		if ($error)
 			return $this->view->render_profile_tab($iter, $error, array('photo'));
@@ -287,7 +280,7 @@ class ControllerProfiel extends Controller
 		if (get_identity()->member_in_committee(COMMISSIE_EASY))
 		{
 			if (!($fh = fopen($_FILES['photo']['tmp_name'], 'rb')))
-				throw new RuntimeException(__('Het geuploadde bestand kon niet worden geopend.'));
+				throw new RuntimeException(__('The uploaded file could not be opened.'));
 
 			$this->model->set_photo($iter, $fh);
 
@@ -302,7 +295,7 @@ class ControllerProfiel extends Controller
 				sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email']),
 				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
-			$_SESSION['alert'] = __('Je foto is ingestuurd. Het kan even duren voordat hij is aangepast.');
+			$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
@@ -310,7 +303,9 @@ class ControllerProfiel extends Controller
 
 	protected function _update_mailing_lists(DataIterMember $iter)
 	{
-		$model = get_model('DataModelMailinglijst');
+		$model = get_model('DataModelMailinglist');
+
+		$subscription_model = get_model('DataModelMailinglistSubscription');
 
 		$mailing_list = $model->get_iter($_POST['mailing_list_id']);
 
@@ -318,12 +313,12 @@ class ControllerProfiel extends Controller
 		{
 			case 'subscribe':
 				if (get_policy($model)->user_can_subscribe($mailing_list))
-					$model->aanmelden($mailing_list, $iter['id']);
+					$subscription_model->subscribe_member($mailing_list, $iter);
 				break;
 
 			case 'unsubscribe':
 				if (get_policy($model)->user_can_unsubscribe($mailing_list))
-					$model->afmelden($mailing_list, $iter['id']);
+					$subscription_model->unsubscribe_member($mailing_list, $iter);
 				break;
 		}
 
@@ -343,7 +338,7 @@ class ControllerProfiel extends Controller
 
 	public function run_profile(DataIterMember $iter)
 	{
-		if (!$this->policy->user_can_read($iter))
+		if (!$this->policy->user_can_update($iter))
 			throw new UnauthorizedException();
 
 		if ($this->_form_is_submitted('profile', $iter))
@@ -367,21 +362,10 @@ class ControllerProfiel extends Controller
 		return $this->view->render_privacy_tab($iter);
 	}
 
-	public function run_system(DataIterMember $iter)
-	{
-		if (!get_identity()->member_in_committee(COMMISSIE_EASY))
-			throw new UnauthorizedException();
-
-		if ($this->_form_is_submitted('system', $iter))
-			return $this->_update_system($iter);
-
-		return $this->view->render_system_tab($iter);
-	}
-
 	protected function run_photo(DataIterMember $iter)
 	{
 		// Only members themselves and the AC/DCee can change photos
-		if ($iter['id'] != get_identity()->get('id')
+		if (!$this->policy->user_can_update($iter)
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new UnauthorizedException();
 
@@ -409,18 +393,18 @@ class ControllerProfiel extends Controller
 
 	public function run_export_vcard(DataIterMember $member)
 	{
-		if (get_identity()->get('id') != $member['id'])
-			throw new UnauthorizedException();
+		if (!get_identity()->is_member())
+			throw new UnauthorizedException('You need to log in to be able to export v-cards/');
 
-		if (!get_identity()->member_is_active())
-			throw new UnauthorizedException();
+		if (!$this->policy->user_can_read($member))
+			throw new UnauthorizedException('This member is no longer a member of Cover.');
 
 		return $this->view->render_vcard($member);
 	}
 
 	public function run_export_incassocontract(DataIterMember $member)
 	{
-		if (get_identity()->get('id') != $member['id'])
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		require_once 'include/incassomatic.php';
@@ -437,22 +421,36 @@ class ControllerProfiel extends Controller
 	public function run_public(DataIterMember $member)
 	{
 		if (!$this->policy->user_can_read($member))
-			throw new UnauthorizedException('You are not allowed to access this member');
+			throw new UnauthorizedException('This person is no longer a member of Cover, which is why they no longer have a public profile.');
 
 		return $this->view->render_public_tab($member);
 	}
 
 	public function run_mailing_lists(DataIterMember $member)
 	{
+
+		if (!$this->policy->user_can_update($member)
+			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
+			throw new UnauthorizedException();
+
 		if ($this->_form_is_submitted('mailing_list', $member))
 			return $this->_update_mailing_lists($member);
 
-		return $this->view->render_mailing_lists_tab($member);
+		$model = get_model('DataModelMailinglist');
+		$mailing_lists = $model->get_for_member($member);
+	
+		$lists = array_filter($mailing_lists, function($list) {
+			// return true;
+			return get_policy($list)->user_can_subscribe($list);
+		});
+
+		return $this->view->render('mailing_lists_tab.twig', ['iter' => $member, 'mailing_lists' => $lists]);
+		// return $this->view->render_mailing_lists_tab($lists);
 	}
 
 	public function run_sessions(DataIterMember $member)
 	{
-		if ($member['id'] != get_identity()->get('id'))
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		return $this->view->render_sessions_tab($member);
@@ -460,7 +458,7 @@ class ControllerProfiel extends Controller
 
 	public function run_kast(DataIterMember $member)
 	{
-		if ($member['id'] != get_identity()->get('id'))
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		return $this->view->render_kast_tab($member);
@@ -468,10 +466,35 @@ class ControllerProfiel extends Controller
 
 	public function run_incassomatic(DataIterMember $member)
 	{
-		if ($member['id'] != get_identity()->get('id'))
+		if (!$this->policy->user_can_update($member))
 			throw new UnauthorizedException();
 
 		return $this->view->render_incassomatic_tab($member);
+	}
+
+	public function run_confirm_email()
+	{
+		$model = get_model('DataModelEmailConfirmationToken');
+
+		try {
+			$token = $model->get_iter($_GET['token']);
+		} catch (Exception $e) {
+			return $this->view->render_confirm_email(false);
+		}
+
+		// Update the member's email address
+		$member = $token['member'];
+		$old_email = $member['email'];
+		$member['email'] = $token['email'];
+		$this->model->update($member);
+
+		// Report the changes to the secretary and to Secretary (the system...)
+		$this->_report_changes_upstream($member, ['email'], ['email' => $old_email]);
+
+		// Delete this and all other tokens for this user
+		$model->invalidate_all($token['member']);
+
+		return $this->view->render_confirm_email(true);
 	}
 
 	public function run_index()
@@ -481,13 +504,18 @@ class ControllerProfiel extends Controller
 
 	protected function run_impl()
 	{
-		if (!isset($_GET['lid']))
-			return $this->run_index();
-		
-		$iter = $this->model->get_iter($_GET['lid']);
-		
 		$view = isset($_GET['view']) ? $_GET['view'] : 'public';
 		
+		if ($view == 'confirm_email')
+			return $this->run_confirm_email(); // a bit of a special case: a method that does not need a DataIterMember :O
+
+		if (isset($_GET['lid']))
+			$iter = $this->model->get_iter($_GET['lid']);
+		elseif (get_auth()->logged_in())
+			$iter = get_identity()->member();
+		else
+			return $this->run_index();
+
 		if (!method_exists($this, 'run_' . $view))
 			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
 

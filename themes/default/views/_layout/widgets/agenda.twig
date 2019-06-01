@@ -2,7 +2,7 @@
 
 {% block name 'agenda' %}
 
-{% block title __('Agenda') %}
+{% block title __('Calendar') %}
 
 {% block content %}
 {% set agenda_items = view.layout.agenda %}
@@ -13,40 +13,42 @@
 {% if agenda_items|length > 0 %}
 <ol class="agenda">
 	{% for item in agenda_items|slice(0, 10) %}
-		<li>
+		<li class="by-committee-{{item.committee.login}}">
 			<a href="agenda.php?agenda_id={{ item.id }}">
 				<div class="calendar-icon">
 					<span class="month">{{ item.van|date('M') }}</span>
 					<span class="day">{{ item.van|date('d') }}</span>
 				</div>
 				<span class="title">{{ item.kop }}</span>
-				<span class="details">{{ item.extern ? __('Externe activiteit') : item|period_short }}</span>
+				{% if item.extern %}
+					<span class="details">{{ __('External activity') }}</span>
+				{% else %}
+					<span class="details">{{ item|period_short }}</span>
+				{% endif %}
 				{% if item.is_proposal() %}
-					<span class="label-pending">{{ __('Nog niet gepubliceerd') }}</span>
+					<span class="label-pending">{{ __('Not yet published') }}</span>
 				{% endif %}
 			</a>
 		</li>
 	{% endfor %}
 </ol>
 {% else %}
-<p class="smaller">{{ __('Er staan op dit moment geen activiteiten op de agenda.') }}</p>
+<p class="smaller">{{ __('There are no activities on the calendar at the moment.') }}</p>
 {% endif %}
 
-<p class="smaller"><a href="agenda.php"><b>{{ __('Volledige agenda') }}</b></a></p>
+<p class="smaller"><a href="agenda.php"><b>{{ __('Complete calendar') }}</b></a></p>
 
-<p class="bold">{{ __('Jarigen') }}</p>
+{% if count_jarigen > 0 %}
+<p class="bold">{{ __('Birthdays') }}</p>
 <hr>
 <div class="smaller">
-{% if count_jarigen > 0 %}
-	{{ __N('Er is vandaag %d jarige:', 'Er zijn vandaag %d jarigen:', count_jarigen) }}<br>
+	{{ __N('There is %d birthday today:', 'There are %d birthdays today:', count_jarigen) }}<br>
 	{% if cover_jarig %}
 		<span style="font-weight: bold; color: #c60c30;">Cover!</span> ({{ view.layout.cover_leeftijd }})<br>
 	{% endif %}
 	{% for jarige in jarigen %}
 		<a href="{{ link('profiel.read', member=jarige) }}">{{ jarige|personal_full_name }} ({{ jarige.leeftijd }})</a><br>
 	{% endfor %}
-{% else %}
-	{{ __('Er zijn vandaag geen jarigen') }}<br>
-{% endif %}
 </div>
+{% endif %}
 {% endblock %}

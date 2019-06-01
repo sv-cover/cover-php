@@ -34,14 +34,14 @@ class ProfielView extends View
 			],
 			'personal' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Lidgegevens')
+				'label' => __('Personal')
 				// 'body' => function () use ($model, $iter, $errors, $personal_fields) {
 				// 	$this->render_partial('personal', compact('model', 'iter', 'errors', 'personal_fields'));
 				// }
 			],
 			'profile' => [
 				'visible' => $this->member_write_permission($iter),
-				'label' => __('Profiel')
+				'label' => __('Profile')
 				// 'body' => function () use ($model, $iter, $errors) {
 				// 	$this->render_partial('photo', compact('iter', 'errors'));
 				// 	$this->render_partial('profile', compact('model', 'iter', 'errors'));
@@ -57,14 +57,14 @@ class ProfielView extends View
 			],
 			'mailing_lists' => [
 				'visible' => $this->member_write_permission($iter),
-				'label' => __('Mailinglijsten')
+				'label' => __('Mailing lists')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('mailinglists', compact('iter'));
 				// }
 			],
 			'sessions' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Sessies')
+				'label' => __('Sessions')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('sessions', compact('iter'));
 				// }
@@ -78,24 +78,16 @@ class ProfielView extends View
 			],
 			'kast' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('KAST')
+				'label' => __('Consumptions')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('kast', compact('iter'));
 				// }
 			],
 			'incassomatic' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Incasso\'s')
+				'label' => __('Direct debits')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('incassomatic', compact('iter'));
-				// }
-			],
-			'system' => [
-				'visible' => member_in_commissie(COMMISSIE_EASY),
-				'label' => __('Systeem'),
-				'class' => 'fa-icon icon-system'
-				// 'body' => function() use ($iter) {
-				// 	$this->render_partial('visibility', compact('iter'));
 				// }
 			]
 		];
@@ -105,38 +97,38 @@ class ProfielView extends View
 	{
 		return [
 			[	
-				'label' => __('Naam'),
-				'name' => 'naam',
+				'label' => __('Name'),
+				'name' => 'full_name',
 				'read_only' => true
 			],
 			[
-				'label' => __('Geboortedatum'),
+				'label' => __('Birthdate'),
 				'name' => 'geboortedatum',
 				'read_only' => true
 			],
 			[
-				'label' => __('Beginjaar'),
+				'label' => __('Starting year'),
 				'name' => 'beginjaar',
 				'read_only' => true
 			],
 			[
-				'label' => __('Adres'),
+				'label' => __('Address'),
 				'name' => 'adres'
 			],
 			[
-				'label' => __('Postcode'),
+				'label' => __('Zipcode'),
 				'name' => 'postcode'
 			],
 			[
-				'label' => __('Woonplaats'),
+				'label' => __('Place of residence'),
 				'name' => 'woonplaats'
 			],
 			[
-				'label' => __('Telefoonnummer'),
+				'label' => __('Phone number'),
 				'name' => 'telefoonnummer'
 			],
 			[
-				'label' => __('E-Mail adres'),
+				'label' => __('E-mail address'),
 				'name' => 'email'
 			]
 		];
@@ -144,23 +136,23 @@ class ProfielView extends View
 
 	public function render_public_tab(DataIterMember $iter)
 	{
-		$can_download_vcard = get_identity()->member_is_active();
+		$can_download_vcard = get_identity()->is_member();
 
 		$is_current_user = get_identity()->get('id') == $iter->get('id');
 
 		$model = get_model('DataModelCommissie');
 
-		$committees = $model->get_commissies_for_member($iter->get_id());
+		$committees = $model->get_for_member($iter);
 
 		return $this->render('public_tab.twig', compact('iter', 'is_current_user', 'can_download_vcard', 'committees'));
 	}
 
-	public function render_personal_tab(DataIterMember $iter, $error_message = null, array $errors = null)
+	public function render_personal_tab(DataIterMember $iter, $error_message = null, array $errors = [])
 	{
 		return $this->render('personal_tab.twig', compact('iter', 'error_message', 'errors'));
 	}
 
-	public function render_profile_tab(DataIterMember $iter, $error_message = null, array $errors = null)
+	public function render_profile_tab(DataIterMember $iter, $error_message = null, array $errors = [])
 	{
 		$current_password_required = !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 		                          && !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
@@ -168,26 +160,27 @@ class ProfielView extends View
 		return $this->render('profile_tab.twig', compact('iter', 'error_message', 'errors', 'current_password_required'));
 	}
 
-	public function render_privacy_tab(DataIterMember $iter, $error_message = null, array $errors = null)
+	public function render_privacy_tab(DataIterMember $iter, $error_message = null, array $errors = [])
 	{
 		$fields = [];
 
+		$labels = [];
+
+		foreach ($this->personal_fields() as $field)
+			$labels[$field['name']] = $field['label'];
+
+		// Stupid aliasses
+		$labels['naam'] = $labels['full_name'];
+		$labels['foto'] = __('Photo');
+
 		foreach ($this->controller->model()->get_privacy() as $field => $nr)
 			$fields[] = [
-				'label' => field_for_display($field),
+				'label' => $labels[$field] ?? $field,
 				'name' => 'privacy_' . $nr,
 				'data' => ['privacy_' . $nr => ($iter['privacy'] >> ($nr * 3)) & 7]
 			];
 		
 		return $this->render('privacy_tab.twig', compact('iter', 'error_message', 'errors', 'fields'));
-	}
-
-	public function render_mailing_lists_tab(DataIterMember $iter)
-	{
-		$model = get_model('DataModelMailinglijst');
-		$mailing_lists = $model->get_lijsten($iter['id']);
-
-		return $this->render('mailing_lists_tab.twig', compact('iter', 'mailing_lists'));
 	}
 
 	public function render_sessions_tab(DataIterMember $iter)
@@ -216,7 +209,7 @@ class ProfielView extends View
 	{
 		require_once 'include/incassomatic.php';
 
-		$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'penningmeester');
+		$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');
 		$treasurer_link = sprintf('<a href="profiel.php?lid=%d">%s</a>',
 			$treasurer['id'], markup_format_text(member_full_name($treasurer)));
 
@@ -230,28 +223,15 @@ class ProfielView extends View
 			if (!$contract)
 				return $this->render('incassomatic_tab_no_contract.twig', compact('iter', 'treasurer_link'));
 			
-			$incassos = $incasso_api->getIncassos($iter, 15);
+			$debits = $incasso_api->getDebits($iter, 15);
 
-			$incassos_per_batch = array_group_by($incassos, function($incasso) { return $incasso->batch_id; });
+			$debits_per_batch = array_group_by($debits, function($debit) { return $debit->batch_id; });
 
-			return $this->render('incassomatic_tab.twig', compact('iter', 'treasurer_link', 'incassos_per_batch'));
+			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'debits_per_batch'));
 		} catch (Exception $exception) {
+			sentry_report_exception($exception);
 			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
 		}
-	}
-
-	public function render_system_tab(DataIterMember $iter, $error_message = null, array $errors = null)
-	{
-		$types = [
-			MEMBER_STATUS_LID,
-			MEMBER_STATUS_LID_ONZICHTBAAR,
-			MEMBER_STATUS_LID_AF,
-			MEMBER_STATUS_ERELID,
-			MEMBER_STATUS_DONATEUR,
-			MEMBER_STATUS_UNCONFIRMED
-		];
-
-		return $this->render('system_tab.twig', compact('iter', 'error_message', 'errors', 'types'));
 	}
 
 	public function render_vcard(DataIterMember $member)
@@ -292,8 +272,14 @@ class ProfielView extends View
 		if ($is_visible('foto') && $this->controller->model()->has_picture($member)) {
 			$fout = null;
 
+			$photo = $this->controller->model()->get_photo_stream($member);
+
 			$imagick = new \Imagick();
-			$imagick->readImageBlob($this->controller->model()->get_photo($member));
+			$imagick->readImageFile($photo['foto']);
+
+			apply_image_orientation($imagick);
+
+			strip_exif_data($imagick);
 			
 			$y = 0.05 * $imagick->getImageHeight();
 			$size = min($imagick->getImageWidth(), $imagick->getImageHeight());
@@ -317,21 +303,24 @@ class ProfielView extends View
 			// Use reflection to get to the private addMedia method. Only addPhoto is public, but that
 			// doesn't accept a stream and I'm not in the mood to write a temporary file to disk.
 			$vCardClass = new \ReflectionClass($card);
-			$vCard_addMedia = $vCardClass->getMethod('addMedia');
+			$vCard_addMedia = $vCardClass->getMethod('setProperty');
 			$vCard_addMedia->setAccessible(true);
-			$vCard_addMedia->invoke($card, 'PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout), false, 'photo');
+			$vCard_addMedia->invoke($card, 'photo', 'PHOTO;ENCODING=b;TYPE=JPEG', stream_get_contents($fout));
 
 			fclose($fout);
 		}
+
+		if (!is_array($card->getProperties()))
+			throw new NotFoundException('This member has no public fields in their profile.');
 		
 		$card->download();
-
+		
 		return null;
 	}
 
-	public function render_public(DataIterMember $iter)
+	public function render_confirm_email($success)
 	{
-
+		return $this->render('confirm_email.twig', compact('success'));
 	}
 
 	function is_current_member(DataIterMember $iter)
@@ -360,6 +349,16 @@ class ProfielView extends View
 				return sprintf('<a href="mailto:%s">%s</a>',
 					urlencode($iter['email']),
 					markup_format_text($iter['email']));
+			case 'telefoonnummer':
+				try {
+					$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
+					$phone_number = $phone_util->parse($iter[$field], 'NL');
+					return sprintf('<a href="tel:%s">%s</a>',
+						$phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164),
+						$phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::INTERNATIONAL));
+				} catch (\libphonenumber\NumberParseException $e) {
+					return markup_format_text($iter[$field]);
+				}
 			default:
 				return markup_format_text($iter[$field]);
 		}
@@ -368,12 +367,11 @@ class ProfielView extends View
 	public function member_type_to_string($type)
 	{
 		$mapping = [
-			MEMBER_STATUS_LID => __('Lid'),
-			MEMBER_STATUS_LID_ONZICHTBAAR => __('Lid (verborgen)'),
-			MEMBER_STATUS_LID_AF => __('Lid af'),
-			MEMBER_STATUS_ERELID => __('Erelid'),
-			MEMBER_STATUS_DONATEUR => __('Donateur'),
-			MEMBER_STATUS_UNCONFIRMED => __('Nog niet verwerkt')
+			MEMBER_STATUS_LID => __('Member'),
+			MEMBER_STATUS_LID_AF => __('Previously a member'),
+			MEMBER_STATUS_ERELID => __('Honorary Member'),
+			MEMBER_STATUS_DONATEUR => __('Donor'),
+			MEMBER_STATUS_UNCONFIRMED => __('To be processed')
 		];
 
 		return $mapping[$type];

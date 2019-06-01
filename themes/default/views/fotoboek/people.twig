@@ -1,0 +1,66 @@
+{% extends '@layout/layout.twig' %}
+
+{% import _self as fotoboek %}
+
+{% macro render_face(face) %}
+	{% set size = face.photo.get_scaled_size(null, 400) %}
+	{% set scale = 100 / (face.h * size[1]) %}
+	<div style="display: inline-block; width: {{scale * face.w * size[0] }}px; height: {{scale * face.h * size[1]}}px; overflow: hidden; position: relative;" title="Added on {{face.photo.added_on}}">
+		<img src="{{ face.photo.get_url(null, 400) }}" width="{{ scale * size[0] }}" height="{{ scale * size[1] }}" style="position: absolute; left: -{{scale * face.x * size[0]}}px; top: -{{scale * face.y * size[1] }}px">
+	</div>
+{% endmacro %}
+
+{% block title book.has('title') ? book.title : __('Photo album') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Faces') }}</h1>
+<div class="messageBox">
+	{% if book.id is not same as(0) %}
+	{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}
+	<div class="bar">
+		<div class="photos-navigation navigation">
+			{% if book.previous_book and user_can_read book.previous_book %}
+				<a href="fotoboek.php?book={{ book.previous_book.id }}&amp;view=people" class="previous">
+					{{ book.previous_book.titel }}
+				</a>
+			{% endif %}
+			{% if book.parent and user_can_read book.parent %}
+				<a href="fotoboek.php?book={{ book.parent.id }}&amp;view=people" class="up">
+					{{ book.parent.titel }}
+				</a>
+			{% endif %}
+			{% if book.next_book and user_can_read book.next_book %}
+				<a href="fotoboek.php?book={{ book.next_book.id }}&amp;view=people" class="next">
+					{{ book.next_book.titel }}
+				</a>
+			{% endif %}
+		</div>
+	</div>
+	{% endif %}
+
+	{% if user_can_update book %}
+	<form action="" method="post">
+		{{ html_nonce('cluster_photos', book) }}
+		<button type="submit" class="button">{{ __("Re-run face detection") }}</button>
+	</form>
+	{% endif %}
+
+	{% for cluster, faces in clusters %}
+	<section style="margin-bottom: 2em; border-bottom: 1px solid #ccc">
+		<h2>Cluster {{cluster}}</h2>
+		{% for lid_id, lid_faces in faces|group_by('lid_id') %}
+			<section style="margin-bottom: 1em">
+				{% if not lid_id %}
+					<h3>Not tagged</h3>
+				{% else %}
+					<h3>Tagged as <a href="profiel.php?lid={{lid_id}}">{{ lid_id }}</a></h3>
+				{% endif %}
+				{% for face in lid_faces %}
+					<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ face.foto_id }}">{{ fotoboek.render_face(face) }}</a>
+				{% endfor %}
+			</section>
+		{% endfor %}
+		</section>
+	{% endfor %}
+</div>
+{% endblock %}

@@ -10,25 +10,15 @@
 			$this->model = create_model('DataModelMember');
 
 			$this->view = View::byName('almanak', $this);
-
-			// If current visitor is the board, show all members in the
-			// database, including those that are no longer a member
-			// and any users that are "deleted" by making them hidden.
-			if (get_identity()->member_in_committee(COMMISSIE_BESTUUR))
-				$this->model->visible_types = array(
-					MEMBER_STATUS_LID,
-					MEMBER_STATUS_LID_ONZICHTBAAR,
-					MEMBER_STATUS_UNCONFIRMED,
-					MEMBER_STATUS_LID_AF,
-					MEMBER_STATUS_ERELID,
-					MEMBER_STATUS_DONATEUR
-				);
 		}
 		
 		public function run_index_search($search)
 		{
 			$iters = $this->model->search_name($search,
 				isset($_GET['limit']) ? $_GET['limit'] : null);
+
+			// Filter out everyone who may not be seen
+			$iters = array_filter($iters, [get_policy($this->model), 'user_can_read']);
 
 			// Filter out everyone that doesn't want to be found by their name
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
@@ -37,7 +27,21 @@
 					return !$iter->is_private('naam');
 				});
 
-			return $this->view->render_index($iters, compact('search'));
+			$preferred = isset($_SERVER['HTTP_ACCEPT'])
+				? parse_http_accept($_SERVER['HTTP_ACCEPT'], array('application/json', 'text/html', '*/*'))
+				: 'text/html';
+
+			// The JSON is mostly used by the text inputs that autosuggest names
+			if ($preferred == 'application/json')
+				echo json_encode(array_map(function($lid) {
+					return array(
+						'id' => $lid->get_id(),
+						'starting_year' => $lid->get('beginjaar'),
+						'first_name' => member_first_name($lid),
+						'name' => member_full_name($lid));
+				}, $iters));
+			else
+				return $this->view->render_index($iters, compact('search'));
 		}
 		
 		/** 
@@ -49,6 +53,8 @@
 			$year = (int) $_GET['search_year'];
 
 			$iters = $this->model->get_from_search_year($year);
+
+			$iters = array_filter($iters, [get_policy($this->model), 'user_can_read']);
 
 			return $this->view->render_index($iters, compact('year'));
 		}
@@ -62,6 +68,8 @@
 			
 			$iters = $this->model->get_from_status($status);
 
+			$iters = array_filter($iters, [get_policy($this->model), 'user_can_read']);
+
 			return $this->view->render_index($iters, compact('status'));
 		}
 		
@@ -72,11 +80,7 @@
 
 			$iters = $this->model->get_from_search_first_last(null, null);
 
-			// Filter all previous and hidden members
-			$this->model->visible_types = array(MEMBER_STATUS_LID,
-				MEMBER_STATUS_ERELID, MEMBER_STATUS_DONATEUR);
-
-			$iters = array_filter($iters, array($this->model, 'is_visible'));
+			$iters = array_filter($iters, [get_policy($this->model), 'user_can_read']);
 
 			// Filter all hidden information (set the field to null)
 			$privacy_fields = $this->model->get_privacy();
@@ -123,10 +127,7 @@
 			// Now for each book find all photos and add them to the zip stream
 			$iters = $this->model->get_from_search_first_last(null, null);
 
-			// Filter all previous and hidden members
-			$this->model->visible_types = [MEMBER_STATUS_LID, MEMBER_STATUS_ERELID, MEMBER_STATUS_DONATEUR];
-
-			$iters = array_filter($iters, [$this->model, 'is_visible']);
+			$iters = array_filter($iters, [get_policy($this->model), 'user_can_read']);
 
 			// Filter all hidden information (set the field to null)
 			$privacy_fields = $this->model->get_privacy();
@@ -138,13 +139,13 @@
 					continue;
 
 				// Skip members that don't have a photo
-				if (($data = $this->model->get_photo($iter)) === null)
+				if (($data = $this->model->get_photo_stream($iter)) === null)
 					continue;
 
 				$metadata = ['time' => $this->model->get_photo_mtime($iter)];
 
 				// And finally add the photo to the actual stream
-				$zip->addFile(sprintf('%d.jpg', $iter->get_id()), $data, $metadata);
+				$zip->addFileFromStream(sprintf('%d.jpg', $iter->get_id()), $data['foto'], $metadata);
 			}
 
 			$zip->finish();

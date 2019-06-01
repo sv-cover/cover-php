@@ -1,0 +1,1 @@
+ALTER TABLE sign_up_forms ADD COLUMN participant_limit INTEGER DEFAULT NULL;

@@ -1,6 +1,7 @@
 <?php
 
 const ALLOW_SUBDOMAINS = 1;
+const ALLOW_EXTERNAL_DOMAINS = 2;
 
 /**
   * A Class implementing the default view. New views should subclass this one.
@@ -28,8 +29,8 @@ class TwigAccessor
 }
 
 class View
-{ 	
-	static public function byName($view, Controller $controller = null)
+{
+    static public function byName($view, Controller $controller = null)
 	{
 		$possible_paths = [
 			'themes/' . get_theme() . '/views/' . $view . '/' . $view . '.php',
@@ -57,7 +58,15 @@ class View
 
 	protected $layout;
 
-	public function __construct(Controller $controller = null, $path = null)
+    protected $twig;
+
+    /**
+     * View constructor.
+     * @param Controller|null $controller
+     * @param null $path
+     * @throws Twig_Error_Loader
+     */
+    public function __construct(Controller $controller = null, $path = null)
 	{
 		// Default $path to @theme so View::render() is at least somewhat useful.
 		if (!$path)
@@ -74,10 +83,14 @@ class View
 		// And add a shortcut to the layout directory through @layout
 		$loader->addPath('themes/' . get_theme() . '/views/_layout', 'layout');
 
+		$loader->addPath('themes/' . get_theme() . '/views/signup/fields', 'form_fields');
+
+		$loader->addPath('themes/' . get_theme() . '/views/signup/configuration', 'form_configuration');
+
 		$this->twig = new Twig_Environment($loader, array(
 			'debug' => true,
 			'strict_variables' => true,
-		    'cache' => get_config_value('twig_cache', 'tmp/twig'),
+			'cache' => get_config_value('twig_cache', 'tmp/twig'),
 		));
 
 		require_once 'include/policytwigextension.php';
@@ -124,17 +137,32 @@ class View
 				}),
 				'policies' => new TwigAccessor(function($model) {
 					return get_policy('DataModel' . $model);
+				}),
+				'config' => new TwigAccessor(function($key) {
+					return get_config_value($key);
 				})
 			]
+		];
+	}
+
+	public function scripts()
+	{
+		return [
+			get_theme_data('data/jquery-2.2.0.min.js'),
+			get_theme_data('data/jquery-ui.min.js'),
+			get_theme_data('data/common.js'),
+			get_theme_data('data/dropdown.js'),
+			// get_theme_data('data/professionalism.js'),
+			get_theme_data('data/cache.js')
 		];
 	}
 
 	public function stylesheets()
 	{
 		return [
-			get_theme_data('style.css'),
 			get_theme_data('styles/font-awesome.min.css'),
-			'//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css'
+			get_theme_data('styles/jquery-ui.min.css'),
+			get_theme_data('style.css')
 		];
 	}
 
@@ -152,9 +180,10 @@ class View
 
 		$url = '';
 
-		if (($flags & ALLOW_SUBDOMAINS)
-			&& isset($parts['host'])
-			&& is_same_domain($parts['host'], $_SERVER['HTTP_HOST'])) {
+		if (($flags & ALLOW_EXTERNAL_DOMAINS)
+			|| ($flags & ALLOW_SUBDOMAINS)
+				&& isset($parts['host'])
+				&& is_same_domain($parts['host'], $_SERVER['HTTP_HOST'])) {
 			$url = '//' . $parts['host'];
 		}
 
@@ -170,18 +199,18 @@ class View
 			header('Status: 301 Moved Permanently');
 
 		header('Location: ' . $url);
-		return '<a href="' . htmlentities($url, ENT_QUOTES) . '">' . __('Je wordt doorgestuurd. Klik hier om verder te gaan.') . '</a>';
+		return '<a href="' . htmlentities($url, ENT_QUOTES) . '">' . __('You are being redirected. Click here to continue.') . '</a>';
 	}
 
 	public function render_401_unauthorized(UnauthorizedException $e) {
 		header('Status: 401 Unauthorized');
 		header('WWW-Authenticate: FormBased');
-		return '<h1>Unauthorized</h1><pre>' . $e->getMessage() . '</pre>';
+		return $this->render('@layout/401_unauthorized.twig', ['exception' => $e]);
 	}
 
 	public function render_404_not_found(NotFoundException $e) {
 		header('Status: 404 Not Found');
-		return '<h1>Not Found</h1><pre>' . $e->getMessage() . '</pre>';
+		return $this->render('@layout/404_not_found.twig', ['exception' => $e]);
 	}
 
 	public function render($template_file, array $data = array())
@@ -199,8 +228,9 @@ class View
 
 	protected function _get_preferred_response()
 	{
-		return parse_http_accept($_SERVER['HTTP_ACCEPT'],
-			array('application/json', 'text/html', '*/*'));
+		return isset($_SERVER['HTTP_ACCEPT'])
+			? parse_http_accept($_SERVER['HTTP_ACCEPT'], ['application/json', 'text/html', '*/*'])
+			: 'text/html';
 	}
 }
 
@@ -241,7 +271,7 @@ class CRUDView extends View
 				if ($success)
 					return $this->_send_json_single($iter);
 				else
-					return $this->_send_json(compact('errors'));
+					return $this->render_json(compact('errors'));
 
 			default:
 				if ($success)
@@ -251,7 +281,7 @@ class CRUDView extends View
 		}
 	}
 
-	public function render_read(DataIter $iter)
+	public function render_read(DataIter $iter, array $extra = [])
 	{
 		switch ($this->_get_preferred_response())
 		{
@@ -259,7 +289,7 @@ class CRUDView extends View
 				return $this->_send_json_single($iter);
 
 			default:
-				return $this->render('single.twig', compact('iter'));
+				return $this->render('single.twig', array_merge($extra, compact('iter')));
 		}
 	}
 
@@ -271,7 +301,7 @@ class CRUDView extends View
 				if ($success)
 					return $this->_send_json_single($iter);
 				else
-					return $this->_send_json(compact('errors'));
+					return $this->render_json(compact('errors'));
 
 			default:
 				if ($success)
@@ -295,7 +325,7 @@ class CRUDView extends View
 
 	protected function _send_json_single(DataIter $iter)
 	{
-		return $this->_send_json(array(
+		return $this->render_json(array(
 			'iter' => $this->_json_augment_iter($iter)
 		));
 	}
@@ -304,10 +334,12 @@ class CRUDView extends View
 	{
 		$links = array();
 
-		if (get_policy($this->controller->mode())->user_can_create())
-			$links['create'] = $this->controller->link_to_create();
+		$new_iter = $this->controller->model()->new_iter();
 
-		return $this->_send_json(array(
+		if (get_policy($new_iter)->user_can_create($new_iter)) 
+			$links['create'] = $this->controller->json_link_to_create();
+
+		return $this->render_json(array(
 			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
 			'_links' => $links
 		));
@@ -320,13 +352,13 @@ class CRUDView extends View
 		$policy = get_policy($this->controller->model());
 
 		if ($policy->user_can_read($iter))
-			$links['read'] = $this->controller->link_to_read($iter);
+			$links['read'] = $this->controller->json_link_to_read($iter);
 
 		if ($policy->user_can_update($iter))
-			$links['update'] = $this->controller->link_to_update($iter);
+			$links['update'] = $this->controller->json_link_to_update($iter);
 
 		if ($policy->user_can_delete($iter))
-			$links['delete'] = $this->controller->link_to_delete($iter);
+			$links['delete'] = $this->controller->json_link_to_delete($iter);
 
 		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
 	}

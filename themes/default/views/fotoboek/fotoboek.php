@@ -45,7 +45,7 @@
 
 		public function render_photo(DataIterPhotobook $book, DataIterPhoto $photo)
 		{
-			$is_liked = get_auth()->logged_in() && get_model('DataModelPhotobookLike')->is_liked($photo, get_identity()->member()->id);
+			$is_liked = get_auth()->logged_in() && get_model('DataModelPhotobookLike')->is_liked($photo, get_identity()->member()->get_id());
 
 			return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
 		}
@@ -107,6 +107,21 @@
 			return $this->render('competition.twig', compact('taggers', 'tagged'));
 		}
 
+		public function render_people(DataIterPhotobook $book, array $faces)
+		{
+			$clusters = ['null' => []];
+
+			foreach ($faces as $face) {
+				$cluster_id = $face['cluster_id'] ? strval($face['cluster_id']) : 'null';
+				if (!isset($clusters[$cluster_id]))
+					$clusters[$cluster_id] = [];
+
+				$clusters[$cluster_id][] = $face;
+			}
+
+			return $this->render('people.twig', compact('book', 'clusters'));
+		}
+
 		/**
 		 * Helper functions, called from the templates
 		 */
@@ -114,10 +129,10 @@
 		public function visibility_options()
 		{
 			return array(
-				DataModelPhotobook::VISIBILITY_PUBLIC => __('Publiek'),
-				DataModelPhotobook::VISIBILITY_MEMBERS => __('Alleen ingelogde leden'),
-				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS => __('Alleen ingelogde actieve leden'),
-				DataModelPhotobook::VISIBILITY_PHOTOCEE => __('Alleen ingelogde leden van de PhotoCee')
+				DataModelPhotobook::VISIBILITY_PUBLIC => __('Public'),
+				DataModelPhotobook::VISIBILITY_MEMBERS => __('Only logged in members'),
+				DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS => __('Only logged in active members'),
+				DataModelPhotobook::VISIBILITY_PHOTOCEE => __('Only logged in members of the PhotoCee')
 			);
 		}
 
@@ -143,35 +158,27 @@
 				else
 					$anchor = '';
 
-				$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
-					urlencode($parents[$i]->get_id()),
-					$anchor,
-					markup_format_text($parents[$i]->get('titel')));
+				if (get_policy($parents[$i])->user_can_read($parents[$i]))
+					$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
+						urlencode($parents[$i]->get_id()),
+						$anchor,
+						markup_format_text($parents[$i]['titel']));
+				else
+					$path[] = markup_format_text($parents[$i]['titel']);
 			}
 
 			return $path;
-		}
-
-		public function navigation(DataIterPhotobook $book)
-		{
-			$nav = new stdClass();
-
-			$nav->previous = $book->get_previous_book();
-			$nav->parent = $book->get_parent();
-			$nav->next = $book->get_next_book();
-
-			return $nav;
 		}
 
 		public function summary(DataIterPhotobook $book)
 		{
 			$subtitle = array();
 
-			if (($num = $book->count_books()) > 0)
-				$subtitle[] = sprintf(_ngettext('%d boek', '%d boeken', $num), $num);
+			if ($book['num_books'] > 0)
+				$subtitle[] = sprintf(_ngettext('%d book', '%d books', $book['num_books']), $book['num_books']);
 
-			if (($num = $book->count_photos()) > 0)
-				$subtitle[] = sprintf(_ngettext('%d foto', '%d foto\'s', $num), $num);
+			if ($book['num_photos'] > 0)
+				$subtitle[] = sprintf(_ngettext('%d photo', '%d photos', $book['num_photos']), $book['num_photos']);
 			
 			if (count($subtitle) > 0)
 				return sprintf('<small class="fotoboek_highlight">(%s)</small>', markup_format_text(implode_human($subtitle)));
@@ -215,6 +222,6 @@
 
 		public function is_person(DataIterPhotobookFace $face)
 		{
-			return (bool) $face->get('lid_id');
+			return (bool) $face['lid_id'];
 		}
 	}

@@ -27,15 +27,21 @@ class Cache
 
 	public function put($key, $value, $ttl)
 	{
+		$this->db->beginTransaction();
+
+		$this->db->execute("LOCK TABLE {$this->table} IN SHARE ROW EXCLUSIVE MODE");
+
 		$this->delete($key);
 
 		$data = array(
 			'key' => $this->_hash($key),
-			'value' => serialize($value),
+			'value' => base64_encode(serialize($value)),
 			'expires' => time() + $ttl
 		);
 
 		$this->db->insert($this->table, $data);
+
+		$this->db->commit();
 	}
 
 	public function get($key, $fallback = null)
@@ -45,7 +51,7 @@ class Cache
 			$this->_hash($key),
 			time()));
 
-		return $value !== null ? unserialize($value) : $fallback;
+		return $value !== null ? unserialize(base64_decode($value)) : $fallback;
 	}
 
 	public function delete($key)

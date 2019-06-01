@@ -7,6 +7,6 @@
 
 	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.kop }}</a>
 
-	<small>{{ __('Agendapunt uit %d')|format(result.van|date('Y')) }}</small>
+	<small>{{ __('Activity from %d')|format(result.van|date('Y')) }}</small>
 </h2>
 <p>{{ result.beschrijving|parse_markup }}</p>

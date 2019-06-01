@@ -4,26 +4,30 @@
 
 {% block tab_content %}
 <section id="mailinglijsten-section">
-<h2>{{ __('Mailinglijsten') }}</h2>
+<h2>{{ __('Mailing lists') }}</h2>
 <div class="list-group">
 {% for mailing_list in mailing_lists %}
 	<div href="#" class="list-group-item list-group-item-with-action">
 		<h4 class="list-group-item-heading">
-			<a href="mailinglijsten.php?lijst_id={{ mailing_list.id|e('url') }}">{{ mailing_list.naam }}</a>
-			<small>{{ mailing_list.adres }}</small>
+			{{ mailing_list.naam }}
+			<small>({{ mailing_list.adres }})</small>
 		</h4>
-		{% if user_can_read mailing_list %}
+		{% if global.policies.Mailinglist.user_can_subscribe(mailing_list) or global.policies.Mailinglist.user_can_unsubscribe(mailing_list) %}
 		<form id="mailinglijst-{{ mailing_list.id|e('url') }}-toggle" class="list-group-item-action toggle-action-button {{ mailing_list.subscribed ? 'toggle-state-active' : '' }}" method="post" action="profiel.php?lid={{ iter.id }}&amp;view=mailing_lists">
 			{{ html_nonce('mailing_list', iter) }}
 			{{ html_input_hidden('mailing_list_id', mailing_list.id) }}
 			{% if mailing_list.subscribed %}
 				<input type="hidden" name="action" value="unsubscribe">
-				<button type="submit" class="button">{{ __('Uitschrijven') }}</button>
+				<button type="submit" class="button" title="{{ __('You are subscribed to this list. Click to unsubscribe.')|e('html_attr') }}">{{ __('Unsubscribe') }}</button>
 			{% else %}
 				<input type="hidden" name="action" value="subscribe">
-				<button type="submit" class="button">{{ __('Aanmelden') }}</button>
+				<button type="submit" class="button" title="{{ __('Click to subscribe.')|e('html_attr') }}">{{ __('Subscribe') }}</button>
 			{% endif %}
 		</form>
+		{% else %}
+		<div class="list-group-item-action toggle-action-button toggle-state-disabled {{ mailing_list.subscribed ? 'toggle-state-active' : '' }}">
+			<button disabled="disabled" class="button" title="{{ __('You are subscribed to this list. You can ask the committee to unsubscribe you.')|e('html_attr') }}">{{ __('Unsubscribe') }}</button>
+		</div>
 		{% endif %}
 
 		<div class="list-group-item-text">

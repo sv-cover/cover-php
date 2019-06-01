@@ -24,7 +24,11 @@ function text_excerpt($text, $keywords, $radius = 30,
 	// Remove newlines and extra spaces from text
 	$text = preg_replace('/\s+/m', ' ', $text);
 
-	$keyword_pattern = '/(' . implode('|', array_map('preg_quote', $keywords)) . ')/i';
+	$escape_keyword = function($keyword) {
+		return preg_quote($keyword, '/');
+	};
+
+	$keyword_pattern = '/(' . implode('|', array_map($escape_keyword, $keywords)) . ')/i';
 
 	$chunks = array();
 	$offset = 0;
@@ -54,7 +58,7 @@ function text_excerpt($text, $keywords, $radius = 30,
 	// Cut the chunks from the text, creating excerpts
 	$excerpts = array();
 
-	$keyword_pattern = '/(' . implode('|', array_map('preg_quote', array_map('htmlspecialchars', $keywords))) . ')/i';
+	$keyword_pattern = '/(' . implode('|', array_map($escape_keyword, array_map('htmlspecialchars', $keywords))) . ')/i';
 
 	foreach ($chunks as $chunk)
 	{
@@ -77,22 +81,7 @@ function find_word_bound($text, $cursor)
 
 function parse_search_query($query)
 {
-	return preg_split('/\s+/', $query);
-}
-
-function parse_search_query_for_text($query)
-{
-	$parts = parse_search_query($query);
-	
-	$parts = array_filter($parts, function($part) {
-		return !in_array(strtolower($part), array('and', 'or'));
-	});
-
-	$parts = array_map(function($part) {
-		return Porter::stem($part);
-	}, $parts);
-
-	return $parts;
+	return preg_split('/\s+/', trim($query));
 }
 
 function normalize_search_rank($rank)

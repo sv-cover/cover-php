@@ -10,28 +10,27 @@ class PolicyMember implements Policy
 
 	public function user_can_read(DataIter $iter)
 	{
-		// Only 
-		if ($iter->get('type') == MEMBER_STATUS_LID_AF)
-			return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
+		// You can see yourself
+		if ($iter['id'] == get_identity()->get('id'))
+			return true;
 
-		return true;
+		// You can see members, honourary members and donors
+		if (in_array($iter['type'], [MEMBER_STATUS_LID, MEMBER_STATUS_ERELID, MEMBER_STATUS_DONATEUR]))
+			return true;
+		
+		// And only the board can see the rest.
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
 	}
 
 	public function user_can_update(DataIter $iter)
 	{
-		// Members who are not no-member can update themselves
-		if ($iter->get('type') != MEMBER_STATUS_LID_AF
-			&& $iter->get('id') == get_identity()->get('id'))
+		if ($iter['id'] == get_identity()->get('id'))
 			return true;
 
-		// Board and candidate board can update anyone
-		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
-			return true;
-
-		// And that's it.
-		return false;
+		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
 	public function user_can_delete(DataIter $iter)

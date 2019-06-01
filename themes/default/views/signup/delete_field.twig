@@ -1,0 +1,16 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Delete field') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Delete field') }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ controller.link({view: 'delete_form_field', form: form.id, field: field.id}) }}" class="vertical-form">
+		{{ html_nonce('delete_form_field', form, field) }}
+		<div>
+			<button type="submit" class="button">{{ __('Delete field')  }}</button>
+			<a href="{{ controller.link({view: 'update_form', form: form.id}) }}">{{ __('Back to form') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

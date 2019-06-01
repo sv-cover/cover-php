@@ -6,37 +6,54 @@
 	{% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
 {% endif %}
 
+{% import _self as fotoboek %}
+
 {% macro classnames(photo) %}
 	{%- if my_likes[photo.id] is defined %}liked{% endif -%}
 	{%- if visibility[photo.id] is defined and visibility[photo.id] == false %} hidden{% endif -%}
 {% endmacro %}
 
+{% macro flowgallery(book, photos) %}
 {% import _self as fotoboek %}
-
-{% if photos|length > 0 %}
 <ul class="photos flow-gallery">
 	<!-- add the 'grid-gallery' class for awesomeness -->
 	{% for photo in photos %}
 	<li id="photo_{{ photo.id }}" data-id="{{ photo.id }}" class="thumbnail {{ fotoboek.classnames(photo) }}">
 		<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}">
 			{% set size = photo.get_scaled_size(null, 400) %}
-			<img src="{{ photo.get_url(null, 400) }}" {% if size %} width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}>
+			<img data-src="{{ photo.get_url(null, 400) }}" {% if size %} width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}>
+			<noscript><img data-src="{{ photo.get_url(null, 400) }}" {% if size %} width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}></noscript>
 			{% if likes[photo.id] is defined %}
-				<span class="like-button" title="{{ __N('%d lid vindt deze foto awesome', '%d leden vinden deze foto awesome', likes[photo.id]) }}"><span class="like-count">{{ likes[photo.id] }}</span></span>
+				<span class="like-button" title="{{ __N('%d member liked this photo', '%d members liked this photo', likes[photo.id]) }}"><span class="like-count">{{ likes[photo.id] }}</span></span>
 			{% endif %}
 			{% if visibility[photo.id] is defined and visibility[photo.id] == false %}
-			<span class="privacy">{{ __('Verborgen voor anderen') }}</span>
+			<span class="privacy">{{ __('Hidden from index') }}</span>
 			{% endif %}
 			{% if photo.num_reacties > 0 %}
-			<span class="comments">{{ __N('%d reactie', '%d reacties', photo.num_reacties) }}</span>
+			<span class="comments">{{ __N('%d comment', '%d comments', photo.num_reacties) }}</span>
 			{% endif %}
-			{% if photo.beschrijving|length > 0 %}
+			{% if photo.beschrijving %}
 			<span class="description">{{ photo.beschrijving }}</span>
 			{% endif %}
 		</a>
 	</li>
 	{% endfor %}
 </ul>
+{% endmacro %}
+
+{% set photos = photos|group_by('read_status') %}
+
+{% if photos.unread is defined %}
+	<h2>{{ __('New since your last visit') }}</h2>
+	{{ fotoboek.flowgallery(book, photos.unread) }}
+{% endif %}
+
+{% if photos.read is defined %}
+	{% if photos.unread is defined %}
+		<h2>{{ __('Older photos') }}</h2>
+	{% endif %}
+	{{ fotoboek.flowgallery(book, photos.read) }}
+{% endif %}
 
 <script src="{{ link_static('data/flowgallery.js') }}"></script>
 <script>$('.photos.flow-gallery').flowgallery();</script>
@@ -82,6 +99,10 @@ var getModal = function() {
 		$modal.on('keydown.nav', function(e) {
 			// Don't prevent normal keyboard usage
 			if (['TEXTAREA', 'INPUT'].indexOf(e.target.nodeName) !== -1)
+				return;
+
+			// Don't prevent normal keyboard shortcuts
+			if (e.shiftKey || e.metaKey || e.ctrlKey)
 				return;
 
 			switch (e.keyCode) {
@@ -199,4 +220,3 @@ $('.photos').on('click', '.thumbnail > a', function(e) {
 	loadPhotoLink($(this).attr('href'));
 });
 </script>
-{% endif %}

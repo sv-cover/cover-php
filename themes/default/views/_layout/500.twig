@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Error! :: Cover</title>
+		<link rel="stylesheet" href="themes/default/style.css">
+		<style>
+		.exception-container {
+			max-width: 500px;
+			margin: 100px auto;
+		}
+		</style>
+	</head>
+	<body>
+		<div class="exception-container">
+			<h1>Error!</h1>
+			<div class="messageBox">
+				<p>{{ __('Sorry, something went horribly wrong. Please try again in a bit or contact the WebCie (webcie@svcover.nl)') }}</p>
+
+				{% if sentry_id %}
+				<p class="align-center">
+					Sentry event id: <code>{{ sentry_id }}</code><br>
+					<button class="button" onclick="reportUserFeedback()">Provide feedback</button>
+				</p>
+				{% endif %}
+
+				<p class="align-center"><a href="index.php">{{ __('Back to homepage') }}</a></p>
+			</div>
+		</div>
+
+		{% if global.config.show_exceptions %}
+			<pre>{{ exception }}</pre>
+		{% endif %}
+
+		<script src="https://cdn.ravenjs.com/3.14.0/raven.min.js"></script>
+		<script>
+			function reportUserFeedback() {
+				Raven.config({{ global.config.sentry_public_url|json_encode()|raw }});
+				{% if global.auth.logged_in %}
+				Raven.setUserContext({ id: {{ global.identity.member.id|json_encode()|raw }} });
+				{% endif %}
+				Raven.showReportDialog({ eventId: {{ sentry_id|json_encode()|raw }} });
+			}
+		</script>
+	</body>
+</html>

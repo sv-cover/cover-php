@@ -28,19 +28,13 @@
 			return $this->twig->render('index.twig', compact('iters', 'months', 'days', 'show_year'));
 		}
 
-		public function render_read(DataIter $iter)
+		public function render_read(DataIter $iter, array $extra = [])
 		{
-			$mutations = array_filter($iter->get_proposals(), [$this->controller->policy, 'user_can_read']);
+			$mutations = array_filter($iter->get_proposals(), [get_policy($iter), 'user_can_read']);
 
 			$mutation = count($mutations) > 0 ? current($mutations) : null;
 
-			try {
-				$committee = get_model('DataModelCommissie')->get_iter($iter['commissie']);
-			} catch (DataIterNotFoundException $e) {
-				$committee = null;
-			}
-
-			return $this->twig->render('single.twig', compact('iter', 'mutation', 'committee'));
+			return $this->twig->render('single.twig', array_merge(compact('iter', 'mutation'), $extra));
 		}
 
 		public function render_moderate($iters, $highlighted_id)
@@ -48,15 +42,22 @@
 			return $this->render('moderate.twig', compact('iters', 'highlighted_id'));
 		}
 
+		public function render_401_unauthorized(UnauthorizedException $e)
+		{
+			header('Status: 401 Unauthorized');
+			header('WWW-Authenticate: FormBased');
+			return $this->render('unauthorized.twig', ['exception' => $e]);
+		}
+
 		public function cover_photo(DataIterAgenda $item)
 		{
 			if (!$this->facebook)
 				return null;
 
-			if (!$item->has('facebook_id'))
+			if (!$item['facebook_id'])
 				return null;
 			
-			if ($cover_photo = $this->facebook->getCoverPhoto($item->get('facebook_id')))
+			if ($cover_photo = $this->facebook->getCoverPhoto($item['facebook_id']))
 				return $cover_photo;
 			else
 				return array(
@@ -69,7 +70,7 @@
 			if (!$this->facebook)
 				return array();
 
-			if (!$item->has('facebook_id'))
+			if (!$item['facebook_id'])
 				return array();
 
 			return $this->facebook->getAttending($item->get('facebook_id'));
@@ -85,17 +86,17 @@
 			switch ($rsvp_status['rsvp_status'])
 			{
 				case 'unsure':
-					return __('Ik ga misschien');
+					return __('I might go');
 
 				case 'attending':
-					return __('Ik ben erbij');
+					return __('I\'m going');
 
 				case 'declined':
-					return __('Ik ga niet');
+					return __('I\'m not going');
 
 				case '':
 				case 'not_replied':
-					return __('Neem deel');
+					return __('Attend');
 
 				default:
 					return $rsvp_status['rsvp_status'];
@@ -108,8 +109,8 @@
 
 			$model = get_model('DataModelCommissie');
 
-			if (member_in_commissie(COMMISSIE_BESTUUR) || member_in_commissie(COMMISSIE_KANDIBESTUUR))
-				foreach ($model->get() as $commissie)
+			if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
+				foreach ($model->get(null, true) as $commissie)
 					$commissies[$commissie->get_id()] = $commissie->get('naam');
 			else
 				foreach (get_identity()->member()->get('committees') as $commissie)
@@ -121,8 +122,8 @@
 		public function title()
 		{
 			$title = $this->selected_year()
-				? sprintf(__('Agenda %d-%d'), $this->selected_year(), $this->selected_year() + 1)
-				: __('Agenda');
+				? sprintf(__('Calendar %d-%d'), $this->selected_year(), $this->selected_year() + 1)
+				: __('Calendar');
 
 			return str_replace('-', '–', $title);
 		}
@@ -142,6 +143,7 @@
 		public function previous_year()
 		{
 			return ($year = $this->selected_year()) !== null
+				&& $year > 2002
 				? $year - 1
 				: $this->current_year();
 		}

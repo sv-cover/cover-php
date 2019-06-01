@@ -37,7 +37,15 @@ class ControllerSessions extends Controller
 				get_identity()->reset_member();
 
 			if (isset($_POST['override_committees']))
-				get_identity()->override_committees(isset($_POST['override_committee_ids']) ? $_POST['override_committee_ids'] : []);
+				get_identity()->override_committees(
+					isset($_POST['override_committee_ids'])
+						? array_filter(
+							$_POST['override_committee_ids'],
+							function($id) {
+								return $id !== ''; // because 0 is a valid id, namely the board (thanks to the idiot that did that)
+							})
+						: []
+				);
 			else
 				get_identity()->reset_committees();
 
@@ -58,12 +66,27 @@ class ControllerSessions extends Controller
 		{
 			$member = get_identity()->member();
 
-			foreach ($_POST['sessions'] as $session_id)
-			{
-				$session = $this->model->get_iter($session_id);
+			$current_session = get_auth()->get_session();
 
-				if ($session && $session->get('member_id') == $member->get_id())
-					$this->model->delete($session);
+			if (isset($_POST['sessions']) && is_array($_POST['sessions']))
+			{
+				foreach ($_POST['sessions'] as $session_id)
+				{
+					try {
+						$session = $this->model->get_iter($session_id);
+
+						// Make sure we can only delete our own sessions
+						if ($session && $session->get('member_id') == $member->get_id())
+							$this->model->delete($session);
+
+						// Extra warning after we end the current session of the user
+						if ($session && $session->get_id() === $current_session->get_id())
+							$_SESSION['alert'] = __('Your session has been ended. You will need to log in again.');
+						
+					} catch (DataIterNotFoundException $e) {
+						// To bad Zubat!
+					}
+				}
 			}
 
 			return $this->view->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
@@ -72,43 +95,67 @@ class ControllerSessions extends Controller
 		return $this->view->redirect('profiel.php?lid=' . get_identity()->get('id') . '&view=sessions');
 	}
 
+	protected function _resolve_referrer($referrer) {
+		while (preg_match('/^\/?sessions.php\?view=login&referrer=(.+?)$/', $referrer, $match))
+			$referrer = rawurldecode($match[1]);
+
+		return $referrer;
+	}
+
 	protected function run_view_login()
 	{
-		$errors = array();
+		try {
+			$errors = array();
 
-		$error_message = null;
+			$error_message = null;
 
-		if (isset($_POST['referrer']))
-			$referrer = $_POST['referrer'];
-		elseif (isset($_GET['referrer']))
-			$referrer = $_GET['referrer'];
-		else
-			$referrer = null;
+			if (isset($_POST['referrer']))
+				$referrer = $_POST['referrer'];
+			elseif (isset($_GET['referrer']))
+				$referrer = $_GET['referrer'];
+			else
+				$referrer = null;
 
-		$referrer_host = parse_url($referrer, PHP_URL_HOST);
+			$referrer = $this->_resolve_referrer($referrer);
 
-		if ($referrer_host && !is_same_domain($referrer_host, $_SERVER['HTTP_HOST'], 3))
-			$external_domain = parse_url($referrer, PHP_URL_HOST);
-		else
-			$external_domain = null;
+			$referrer_host = parse_url($referrer, PHP_URL_HOST);
 
-		// Prevent returning to the logout link
-		if ($external_domain === null && $referrer == '/sessions.php?view=logout')
-			$referrer = null;
+			if ($referrer_host && !is_same_domain($referrer_host, $_SERVER['HTTP_HOST'], 3))
+				$external_domain = parse_url($referrer, PHP_URL_HOST);
+			else
+				$external_domain = null;
 
-		if (!empty($_POST['email']) && !empty($_POST['password']))
-		{
-			if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
+			// Prevent returning to the logout link
+			if ($external_domain === null && $referrer == '/sessions.php?view=logout')
+				$referrer = null;
+
+
+
+			if (!empty($_POST['email']) && !empty($_POST['password']))
 			{
-				return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS); // Todo: allow us to redirect to other subdomains
-			}
-			else {
-				$errors = ['email', 'password'];
-				$error_message = __('Verkeerde combinatie van e-mailadres en wachtwoord');
-			}
-		}
+				if (get_auth()->login($_POST['email'], $_POST['password'], !empty($_POST['remember']), !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null))
+				{
+					// User can apparently login, so invalidate all their password reset tokens
+					try {
+						$password_reset_model = get_model('DataModelPasswordResetToken');
+						$password_reset_model->invalidate_all(get_identity()->member());
+					} catch (Exception $e) {
+						throw $e;
+						sentry_report_exception($e);
+					}
 
-		return $this->view->render_login($errors, $error_message, $referrer, $external_domain);
+					return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS);
+				}
+				else {
+					$errors = ['email', 'password'];
+					$error_message = __('Wrong combination of e-mail address and password');
+				}
+			}
+
+			return $this->view->render_login($errors, $error_message, $referrer, $external_domain);
+		} catch (InactiveMemberException $e) {
+			return $this->view->render('inactive.twig');
+		}
 	}
 
 	protected function run_view_logout()

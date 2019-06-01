@@ -6,39 +6,74 @@ class DataIterBanner extends DataIter
     {
         return [
             'filename',
-            'url'
+            'url',
+            'type'
         ];
     }
 }
 
 class DataModelBanner extends DataModel
 {
-    private $dir;
+    const TYPE_MAIN_SPONSOR = 'main-sponsor';
+
+    public $dataiter = 'DataIterBanner';
+
+    private $_dir;
+
+    private $_banners = null;
     
     public function __construct()
     {
-        $this->dir = get_config_value('path_to_banners', 'images/banners/');
+        $this->_dir = get_config_value('path_to_banners', 'images/banners/');
+    }
+
+    public function get_from_file($path)
+    {
+        $banners = array();
+
+        //check if path is directory and if dir can be opened
+        if (file_exists($path) && is_readable($path))
+        {
+            /* read json file */
+            $data = file_get_contents($path);
+            $rows = json_decode($data, true, 10);
+            $banners = $this->_rows_to_iters($rows);
+        }
+        
+        // Shuffle the banners
+        shuffle($banners);
+
+        // But then do sort them at least a bit by 'weight', moving NSVKI and AXON to the bottom
+        usort($banners, function($a, $b) {
+            return ($a['weight'] ?? 0) - ($b['weight'] ?? 0);
+        });
+
+        return $banners;
     }
     
     public function get($n = null)
     {
-        $banners = array();
-        $return = array();
+        if ($this->_banners === null)
+            $this->_banners = $this->get_from_file(path_concat($this->_dir, 'data.json'));
 
-        //check if path is directory and if dir can be opened
-        if (is_dir($this->dir) and $resource = opendir($this->dir))
-        {
-            /* read json file */
-            $data = file_get_contents($this->dir. 'data.json');
-            $banners = json_decode($data, true, 10);
-        }
-        
-        shuffle($banners);
+        if ($n !== null && $n < count($this->_banners))
+            return array_slice($this->_banners, 0, $n);
+        else
+            return $this->_banners;
+    }
 
-        if ($n !== null && $n < count($banners))
-            $banners = array_slice($banners, 0, $n);
+    public function main_sponsors()
+    {
+        return array_filter($this->get(), function($banner) {
+            return $banner['type'] == DataModelBanner::TYPE_MAIN_SPONSOR;
+        });
+    }
 
-        return $this->_rows_to_iters($banners, 'DataIterBanner');
+    public function partners()
+    {
+        return array_filter($this->get(), function($banner) {
+            return $banner['type'] != DataModelBanner::TYPE_MAIN_SPONSOR;
+        });   
     }
 
     public function get_for_company($company)

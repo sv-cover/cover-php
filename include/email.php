@@ -1,4 +1,45 @@
-<?php namespace Cover\email;
+<?php
+
+namespace Cover\email;
+
+class ParseException extends \RuntimeException
+{
+	protected $reason;
+
+	protected $bodyLine;
+
+	public function __construct(int $line, string $reason, $body = null, Exception $previous = null)
+	{
+		parent::__construct(self::formatMessage($line, $reason, $body), 0, $previous);
+
+		$this->reason = $reason;
+
+		$this->bodyLine = $line;
+	}
+
+	static private function formatMessage(int $line, string $reason, $email = null): string
+	{
+		$body = "Parse error on line $line: $reason";
+
+		if ($email !== null) {
+			$offset = max(0, $line - 5);
+			$lines = explode("\n", $email);
+			$lines = array_slice($lines, $offset, 11);
+
+			for ($n = 0; $n < count($lines); ++$n)
+				$lines[$n] = sprintf('%d: %s', $offset + $n + 1, $lines[$n]);
+
+			$body .= "\nContext: " . implode("\n", $lines);
+		}
+
+		return $body;
+	}
+
+	public function withMessage(string $body): ParseException
+	{
+		return new self($this->bodyLine, $this->reason, $body, $this);
+	}
+}
 
 class PeakableStream
 {
@@ -38,7 +79,7 @@ class PeakableStream
 		return $out;
 	}
 
-	public function lineNumber()
+	public function lineNumber(): int
 	{
 		return $this->lineNumber;
 	}
@@ -52,6 +93,10 @@ class MessagePart
 
 	const BOUNDARY_LENGTH = 12;
 
+	const TRANSFER_ENCODING_7BIT = '7bit';
+
+	const TRANSFER_ENCODING_8BIT = '8bit';
+
 	const TRANSFER_ENCODING_BASE64 = 'base64';
 
 	const TRANSFER_ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
@@ -63,35 +108,55 @@ class MessagePart
 		$this->body = $body;
 	}
 
-	public function headers($search_key)
+	public function __clone()
 	{
-		foreach (explode('|', $search_key) as $key)
-		{
-			// Short-cut
-			if (isset($this->headers[$key]))
-				return array_map([$this, 'decodeHeader'], $this->headers[$key]);
+		return new self($this->headers, $this->body);
+	}
 
-			// Case-insensitive search
-			foreach ($this->headers as $header_key => $values)
-				if (strcasecmp($key, $header_key) === 0)
-					return array_map([$this, 'decodeHeader'], $values);
+	public function headers($search_key = null): array
+	{
+		if ($search_key === null)
+			return array_map(function($values) {
+				return array_map([$this, 'decodeHeader'], $values);
+			}, $this->headers);
+
+		$keys = explode('|', $search_key);
+
+		if (count($keys) > 1) {
+			foreach ($keys as $key)
+				if ($headers = $this->headers($key))
+					return $headers;
+			return [];
 		}
 
-		return null;
+		// Short-cut
+		if (isset($this->headers[$search_key]))
+			return array_map([$this, 'decodeHeader'], $this->headers[$search_key]);
+
+		// Case-insensitive search
+		foreach ($this->headers as $header_key => $values)
+			if (strcasecmp($search_key, $header_key) === 0)
+				return array_map([$this, 'decodeHeader'], $values);
+
+		return [];
 	}
 
-	public function header($search_key)
+	/**
+	 * @param string $search_key
+	 * @return string|null
+	 */
+	public function header(string $search_key)
 	{
 		$headers = $this->headers($search_key);
-		return $headers === null ? null : $headers[0];
+		return $headers === [] ? null : $headers[0];
 	}
 
-	public function setHeader($key, $value)
+	public function setHeader(string $key, string $value)
 	{
 		$this->headers[$key] = [$this->encodeHeaderIfNeeded($value)];
 	}
 
-	public function addHeader($key, $value)
+	public function addHeader(string $key, string $value)
 	{
 		if (isset($this->headers[$key]))
 			$this->headers[$key][] = $this->encodeHeaderIfNeeded($value);
@@ -99,52 +164,123 @@ class MessagePart
 			$this->setHeader($key, $value);
 	}
 
-	public function removeHeader($key)
+	public function removeHeader(string $key)
 	{
 		unset($this->headers[$key]);
 	}
 
-	public function isMultipart()
+	public function isMultipart(): bool
 	{
 		return is_array($this->body);
 	}
 
-	public function body($preferred_content_type)
+	public function parts(): array
+	{
+		return $this->isMultipart() ? $this->body : [$this];
+	}
+
+	/**
+	 * @return MessagePart[] all message parts that make up the displayable content (plain/text, html, not attachment)
+	 */
+	public function textParts()
+	{
+		foreach ($this->parts() as $part)
+		{
+			if ($part->isAttachment())
+				continue;
+
+			if ($part->hasContentType('text/html') || $part->hasContentType('text/plain'))
+				yield $part;
+
+			if ($part->isMultipart())
+				yield from $part->textParts();
+
+			if ($part === $this && !$this->isMultipart() && $this->header('Content-Type') === null)
+				yield $part;
+		}
+	}
+
+	/**
+	 * Make a copy of the message by applying the transformer function to all
+	 * text parts.
+	 *
+	 * Parts that are text parts (either content-type text, or entirely without
+	 * content type and not an attachment) are untouched and referenced instead
+	 * of copied.
+	 */
+	public function derive(callable $transformer): MessagePart
+	{
+		$copy = clone $this;
+
+		if ($copy->isMultipart())
+			foreach ($copy->body as &$part)
+				$part = $part->derive($transformer, $part->header('Content-Type'));
+
+		else
+			if ($this->isText() && !$this->isAttachment())
+				$copy->setBody($transformer($this->body(), $this->header('Content-Type')));
+
+		return $copy;
+	}
+
+	public function body(string $preferred_content_type = null)
 	{
 		// If this is a simple part (no multipart) just return the data
 		if (!$this->isMultipart())
-			return $this->decodeBody($this->body, $this->header('Content-Transfer-Encoding'));
+			return $this->decodeBody($this->body,
+				$this->header('Content-Transfer-Encoding'),
+				charset($this->header('Content-Type')));
 
 		// However, if this is a multipart message, search all the sub parts for the preferred content type
 		foreach ($this->body as $part)
-			if ($part->hasBodyOfType($preferred_content_type))
+			if ($preferred_content_type === null || $part->hasBodyOfType($preferred_content_type))
 				return $part->body($preferred_content_type);
 
 		// And return null if it could not be found
 		return null;
 	}
 
-	public function hasBodyOfType($content_type)
+	public function hasBodyOfType(string $content_type): bool
 	{
 		// Am I a body of the content type? (And thus probably not multipart)
-		if (preg_match('/^' . preg_quote($content_type, '/') . '(;\s*charset=(.+?))?$/i', $this->header('Content-Type')))
+		if ($this->hasContentType($content_type))
 			return true;
 
 		// Or if I am multipart, is one of my sections of the type?
 		if ($this->isMultipart())
-			foreach ($this->parts as $part)
+			foreach ($this->body as $part)
 				if ($part->hasBodyOfType($content_type))
 					return true;
 
 		return false;
 	}
 
-	protected function encodeHeader($data)
+	public function hasContentType(string $content_type): bool
 	{
-		return '=?' . base64_encode($data) . '?B?UTF-8?=';
+		return preg_match(
+			'/^' . preg_quote($content_type, '/') . '(;\s*charset=(.+?))?$/i',
+			$this->header('Content-Type'));
 	}
 
-	protected function encodeHeaderIfNeeded($data)
+	public function isAttachment(): bool
+	{
+		return preg_match(
+			'/^attachment(;.+)?$/i',
+			$this->header('Content-Disposition'));
+	}
+
+	public function isText(): bool
+	{
+		return $this->header('Content-Type') === null
+			|| preg_match('/^text\//', $this->header('Content-Type'));
+	}
+
+	protected function encodeHeader(string $data): string
+	{
+		return '=?UTF-8?B?' . base64_encode($data) . '?=';
+	}
+
+	protected function encodeHeaderIfNeeded(string $data): string
 	{
 		if (preg_match('/^[[:ascii:]]*$/', $data))
 			return $data;
@@ -152,17 +288,18 @@ class MessagePart
 		return $this->encodeHeader($data);
 	}
 
-	protected function decodeHeader($data)
+	protected function decodeHeader(string $data): string
 	{
 		$decode = function($match) {
 			switch ($match[2])
 			{
 				case 'Q':
 					$data = quoted_printable_decode($match[3]);
+					$data = str_replace('_', ' ', $data); // quoted_printable_decode is magic. But bad magic.
 					break;
 
 				case 'B':
-					$data = base64_decode($data);
+					$data = base64_decode($match[3]);
 					break;
 			}
 
@@ -172,44 +309,61 @@ class MessagePart
 			return $data;
 		};
 
-		return preg_replace_callback('/=\?([a-zA-Z0-9_-]+)\?(Q|B)\?(.+?)\?=/', $decode, $data);
+		return trim(preg_replace_callback('/=\?([a-zA-Z0-9_-]+)\?(Q|B)\?(.+?)\?=/', $decode, $data));
 	}
 
-	protected function encodeBody($data, $transfer_encoding)
+	protected function encodeBody($data, $transfer_encoding, $charset)
 	{
+		if ($charset !== null)
+			$data = mb_convert_encoding($data, $charset, 'auto');
+
+		if ($transfer_encoding === null)
+			$transfer_encoding = self::TRANSFER_ENCODING_QUOTED_PRINTABLE;
+
 		switch (strtolower($transfer_encoding))
 		{
 			case self::TRANSFER_ENCODING_QUOTED_PRINTABLE:
 				return quoted_printable_encode($data);
 
 			case self::TRANSFER_ENCODING_BASE64:
-				return base64_encode($data);
+				return chunk_split(base64_encode($data));
+
+			case self::TRANSFER_ENCODING_7BIT:
+			case self::TRANSFER_ENCODING_8BIT:
+				return $this->wrapLines($data, 78, 998);
 
 			default:
-				throw new InvalidArgumentException('Encoding for this Content-Transfer-Encoding is not supported');
+				throw new \InvalidArgumentException('Encoding for this Content-Transfer-Encoding (' . $transfer_encoding . ') is not supported');
 		}
 	}
 
-	protected function decodeBody($data, $transfer_encoding = null)
+	protected function decodeBody($data, $transfer_encoding, $charset)
 	{
 		switch (strtolower($transfer_encoding))
 		{
-			case 'quoted-printable':
-				return quoted_printable_decode($data);
+			case self::TRANSFER_ENCODING_QUOTED_PRINTABLE:
+				$data = quoted_printable_decode($data);
+				break;
 
-			case 'base64':
-				return base64_decode($data);
+			case self::TRANSFER_ENCODING_BASE64:
+				$data = base64_decode($data);
+				break;
 
+			case self::TRANSFER_ENCODING_7BIT:
+			case self::TRANSFER_ENCODING_8BIT:
 			default:
-				return $data;
-
-			// For 7bit encoding see http://www.jugbit.com/php/encoding-ascii-to-7bit-strings-and-decoding/
+				break;
 		}
+
+		if ($charset !== null)
+			$data = mb_convert_encoding($data, 'UTF-8', $charset ?: 'auto');
+
+		return $data;
 	}
 
 	public function addBody($content_type, $body, $content_transfer_encoding = null)
 	{
-		assert('is_string($body)');
+		assert(is_string($body));
 
 		// No previous body was set, this is the part :O
 		if ($this->body === null) {
@@ -219,18 +373,28 @@ class MessagePart
 			$part = new MessagePart();
 			$this->addPart($part);
 		}
-		
-		$part->setHeader('Content-Type', $content_type);
 
-		if (preg_match('/^text\/html/', $content_type) && $content_transfer_encoding === null)
+		$part->setBody($body, $content_type, $content_transfer_encoding);
+	}
+
+	public function setBody($body, $content_type = null, $content_transfer_encoding = null)
+	{
+		if ($content_type === null)
+			$content_type = $this->header('Content-Type');
+
+		if ($content_transfer_encoding === null)
+			$content_transfer_encoding = $this->header('Content-Transfer-Encoding');
+
+		if ($content_type)
+			$this->setHeader('Content-Type', $content_type);
+
+		if (preg_match('/^text\//', $content_type) && $content_transfer_encoding === null)
 			$content_transfer_encoding = self::TRANSFER_ENCODING_QUOTED_PRINTABLE;
 
-		if ($content_transfer_encoding !== null) {
-			$body = $this->encodeBody($body, $content_transfer_encoding);
-			$part->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
-		}
-
-		$part->body = $body;
+		$body = $this->encodeBody($body, $content_transfer_encoding, charset($content_type));
+		$this->setHeader('Content-Transfer-Encoding', $content_transfer_encoding);
+		
+		$this->body = $body;
 	}
 
 	public function addPart(MessagePart $part)
@@ -243,13 +407,13 @@ class MessagePart
 
 	private function makeMultipart()
 	{
-		assert('is_string($this->body)');
+		assert(is_string($this->body));
 
 		if ($this->body !== null)
 			$this->body = [new MessagePart(['Content-Type' => [$this->header('Content-Type')]], $this->body)];
 		else
 			$this->body = [];
-		
+
 		if (!$this->header('Content-Type') || $this->boundary() === null)
 			$this->setHeader('Content-Type', 'multipart/alternative; boundary=' . $this->generateBoundary());
 	}
@@ -274,24 +438,24 @@ class MessagePart
 		return null;
 	}
 
-	private function breakLine($line, $preferred_length, $max_length, $split_pattern = '/[[:space:],-:]/')
+	private function breakLine(string $line, int $preferred_length, int $max_length, string $split_pattern = '/[[:space:],;]+/')
 	{
 		if (strlen($line) <= $preferred_length)
 			return [$line, ''];
 		elseif (preg_match($split_pattern, $line, $match, PREG_OFFSET_CAPTURE, $preferred_length))
-			return [substr($line, 0, $match[0][1]), substr($line, $match[0][1])];
+			return [substr($line, 0, $match[0][1] + strlen($match[0][0])), substr($line, $match[0][1] + strlen($match[0][0]))];
 		elseif (strlen($line) <= $max_length)
 			return [$line, ''];
 		else
 			return [substr($line, 0, $max_length), substr($line, $max_length + 1)];
 	}
 
-	private function wrapLines($text, $preferred_length, $max_length, $prefix = '')
+	private function wrapLines(string $text, int $preferred_length, int $max_length, $prefix = null): string
 	{
-		$lines = preg_split('/\r?\n/', $text);
+		$lines = preg_split("/((\r(?!\n))|((?<!\r)\n)|(\r\n))/", $text, -1, PREG_SPLIT_NO_EMPTY);
 
-		if (!is_callable($prefix))
-			$prefix = function() use ($prefix) {
+		if ($prefix === null)
+			$prefix = function($line_number) use ($prefix) {
 				return $prefix;
 			};
 
@@ -312,21 +476,24 @@ class MessagePart
 				if (!isset($lines[$i + 1]) || preg_match('/^\s*$/', $lines[$i + 1]))
 					array_splice($lines, $i + 1, 0, [$next_line]);
 				else
-					$lines[$i + 1] = $next_line . ' ' . $lines[$i + 1];
+					$lines[$i + 1] = $next_line . ' ' . ltrim($lines[$i + 1]);
 			}
 		}
 
 		return implode("\r\n", $lines);
 	}
 
-	public function headerAsString()
+	public function headerAsString(): string
 	{
 		$out = '';
 
-		$header_indent = str_repeat(" ", 8);
+		$header_indent = str_repeat(" ", 4);
 
 		foreach ($this->headers as $key => $values)
 		{
+			if (empty($values[0]))
+				continue;
+
 			foreach ($values as $value)
 				$out .= $this->wrapLines($value, 78, 998,
 						function ($i) use ($key, $header_indent) {
@@ -338,44 +505,42 @@ class MessagePart
 		return $out;
 	}
 
-	public function bodyAsString()
+	public function bodyAsString(): string
 	{
 		if (!$this->isMultipart())
+			return $this->body . (substr($this->body, -2, 2) != "\r\n" ? "\r\n" : "");
+		
+		$out = '';
+
+		$boundary = $this->boundary();
+
+		if (!$boundary)
+			throw new \RuntimeException('Could not parse boundary string out of the Content-Type header');
+
+		foreach ($this->body as $part)
 		{
-			$out = $this->wrapLines($this->body, 78, 998);
-		}
-		else
-		{
-			$out = '';
+			if (strlen($out) > 0 && substr($out, -2, 2) != "\r\n")
+				$out .= "\r\n";
 
-			$boundary = $this->boundary();
-
-			if (!$boundary)
-				throw new \RuntimeException('Could not parse boundary string out of the Content-Type header');
-
-			foreach ($this->body as $part)
-			{
-				if (substr($out, -2, 2) != "\r\n")
-					$out .= "\r\n";
-
-				$out .= "--$boundary\r\n";
-				$out .= $part->toString();
-			}
-
-			$out .= "\r\n--$boundary--\r\n";
+			$out .= "--$boundary\r\n";
+			$out .= $part->toString();
 		}
 
+		$out .= "\r\n--$boundary--\r\n";
+		
 		return $out;
 	}
 
-	public function toString()
+	public function toString(): string
 	{
 		return $this->headerAsString() . "\r\n" . $this->bodyAsString();
 	}
 
-	static public function parse_stream(PeakableStream $stream, $parent_boundary = null)
+	static public function parse_stream(PeakableStream $stream, $parent_boundary = null): MessagePart
 	{
 		$message = new self();
+
+		self::consume_junk($stream);
 
 		self::parse_header($stream, $message);
 
@@ -387,19 +552,34 @@ class MessagePart
 		return $message;
 	}
 
-	static public function parse_text($raw_message)
+	/**
+	 * Remove the junk the mailing system is adding to our messages
+	 */
+	static public function consume_junk(PeakableStream $stream)
+	{
+		$line = $stream->peek();
+
+		if (strncasecmp($line, 'From ', 5) === 0)
+			$stream->readline();
+	}
+
+	static public function parse_text(string $raw_message): MessagePart
 	{
 		$tmp_stream = fopen('php://temp', 'r+');
 		fwrite($tmp_stream, $raw_message);
 		rewind($tmp_stream);
 
-		return self::parse_stream(new PeakableStream($tmp_stream));
+		try {
+			return self::parse_stream(new PeakableStream($tmp_stream));
+		} catch (ParseException $e) {
+			throw $e->withMessage($raw_message);
+		}
 	}
 
 	/**
-	 * Parse a stream as the email message header. Will stop as 
+	 * Parse a stream as the email message header. Will stop as
 	 * soon as the double newline is read.
-	 * 
+	 *
 	 * @param $stream PeakableStream to read from.
 	 * @param $message MessagePart to append the read headers to.
 	 * @return true if the headers are read as expected, false if the
@@ -415,19 +595,17 @@ class MessagePart
 
 			// False? That is unexpected..
 			if ($line === false)
-			{
-				return false;
-			}
+				throw new ParseException($stream->lineNumber(), 'Unexpected end of stream');
 
 			// Newline? Oh god end of headers!
 			elseif (preg_match('/^(\r?\n|\r)$/', $line))
 			{
 				if ($header !== null)
 					$message->addHeader($header[0], $header[1]);
-				
+
 				break;
 			}
-			
+
 			elseif (preg_match('/^([^:\s]+[^:]*): ?(.*)$/', $line, $match))
 			{
 				if ($header !== null)
@@ -438,14 +616,14 @@ class MessagePart
 
 			elseif ($header !== null)
 			{
-				$header[1] .= " " . trim($line);
+				$header[1] .= trim($line);
 			}
 		}
 
 		return true;
 	}
 
-	static private function parse_multipart_body(PeakableStream $stream, $boundary, MessagePart $message)
+	static private function parse_multipart_body(PeakableStream $stream, string $boundary, MessagePart $message)
 	{
 		$message->body = [];
 
@@ -454,7 +632,7 @@ class MessagePart
 			$line = $stream->readline();
 
 			if ($line === false)
-				throw new \RuntimeException("Unexpected end of stream");
+				throw new ParseException($stream->lineNumber(), "Unexpected end of stream");
 
 			if (trim($line) === '')
 				continue;
@@ -463,12 +641,12 @@ class MessagePart
 				break;
 
 			elseif (trim($line) === '--' . $boundary)
-			{
 				$message->body[] = self::parse_stream($stream, $boundary);
-			}
 
 			else
-				throw new \RuntimeException('Could not parse ' . $stream->lineNumber());
+				// One would assume: throw new ParseException($stream->lineNumber(), "Unexpected content");
+				// But! Some programs but a notice like "This is a multipart message" just before the first boundary.
+				continue;
 		}
 	}
 
@@ -485,13 +663,19 @@ class MessagePart
 			// End of this multipart section
 			if ($boundary !== null && (trim($line) == '--' . $boundary . '--' || trim($line) === '--' . $boundary))
 				break;
-			
+
 			$message->body .= $stream->readline();
 		}
 	}
 }
 
-function break_line($line, $max_length)
+function charset($content_type)
+{
+	// E.g. "text/html; charset=us-ascii"
+	return $content_type !== null && preg_match('/^text\/.+;\s*charset=(["\']?)([A-Z0-9-]+?)\\1(;|$)/i', $content_type, $match) ? $match[2] : null;
+}
+
+function break_line(string $line, int $max_length): array
 {
 	$last_space = strrpos($line, ' ', $max_length - strlen($line));
 
@@ -501,7 +685,7 @@ function break_line($line, $max_length)
 		return [substr($line, 0, $last_space), substr($line, $last_space + 1)];
 }
 
-function quote_plain_text($text_body, $line_wrap = 78)
+function quote_plain_text(string $text_body, int $line_wrap = 78): string
 {
 	$lines = [];
 
@@ -535,7 +719,7 @@ function quote_plain_text($text_body, $line_wrap = 78)
 	return $out;
 }
 
-function reply(MessagePart $message, $reply_text)
+function reply(MessagePart $message, string $reply_text): MessagePart
 {
 	$receipient = $message->header('Sender|From');
 
@@ -576,14 +760,43 @@ function reply(MessagePart $message, $reply_text)
 	return $reply;
 }
 
-function send(MessagePart $message)
+/**
+ * Transforms the message's text body (plain and html) using a transformer
+ * function. A shallow copy of the message is returned, with only the headers
+ * and the body parts that have been touched by the transformer copied. The
+ * transformer is also applied to the subject header of the mail.
+ *
+ * If any changes are actually made, this function also drops the DKIM-Signature
+ * from the email.
+ */
+function personalize(MessagePart $message, callable $transformer): MessagePart
+{
+	$changed = false;
+
+	$change_checker = function($text, $content_type) use ($transformer, &$changed) {
+		$output = $transformer($text, $content_type);
+		$changed = $changed || $output != $text;
+		return $output;
+	};
+
+	$derived = $message->derive($change_checker);
+
+	$derived->setHeader('Subject', $change_checker($message->header('Subject'), null));
+
+	if ($changed)
+		$derived->removeHeader('DKIM-Signature');
+
+	return $derived;
+}
+
+function send(MessagePart $message): bool
 {
 	$to = $message->header('To');
 	$message->removeHeader('To');
 
 	$subject = $message->header('Subject');
 	$message->removeHeader('Subject');
-	
+
 	return mail($to, $subject,
 		$message->bodyAsString(),
 		$message->headerAsString());

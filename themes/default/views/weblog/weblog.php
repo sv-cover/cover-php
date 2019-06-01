@@ -2,9 +2,9 @@
 	
 class WeblogView extends View
 {
-	public function render_index($iters)
+	public function render_index(array $iters, $page)
 	{
-		return $this->render('index.twig', compact('iters'));
+		return $this->render('index.twig', compact('iters', 'page'));
 	}
 
 	public function stylesheets()
@@ -19,10 +19,10 @@ class WeblogView extends View
 		if ($iter['author_type'] != 1)
 			return 'images/heads/none.png';
 
-		if (file_exists('images/heads/' . $iter['author'] . '.png'))
-			return 'images/heads/' . $iter['author'] . '.png';
+		if (file_exists('images/heads/' . $iter['author_id'] . '.png'))
+			return 'images/heads/' . $iter['author_id'] . '.png';
 		else
-			return 'foto.php?lid_id=' . $iter['author'] . '&format=square&width=200';
+			return 'foto.php?lid_id=' . $iter['author_id'] . '&format=square&width=200';
 	}
 
 	public function get_author_link(DataIter $message, $last = false)
@@ -36,11 +36,11 @@ class WeblogView extends View
 			switch (intval($message[$field . '_type']))
 			{
 				case DataModelForum::TYPE_PERSON: /* Person */
-					return 'profiel.php?lid=' . $message[$field];
+					return 'profiel.php?lid=' . $message[$field . '_id'];
 				
 				case DataModelForum::TYPE_COMMITTEE: /* Commissie */
 					$committee_model = get_model('DataModelCommissie');
-					$committee = $committee_model->get_iter($message[$field]);
+					$committee = $committee_model->get_iter($message[$field . '_id']);
 					return 'commissies.php?commissie=' . urlencode($committee['login']);
 				
 				default:

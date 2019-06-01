@@ -31,6 +31,8 @@ function get_policy($model, $original_model_name = null)
 		$model_name = substr(get_class($model), strlen('DataIter'));
 	elseif ($model instanceof DataIter)
 		return get_policy($model->model());
+	elseif ($model === null)
+		throw new InvalidArgumentException('get_policy() requires class name or instance of the model or the iter, null given.');
 	else
 		throw new InvalidArgumentException('Cannot determine model name from anonymous DataModel instance.');
 

@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Oud-besturen') ~ ' :: ' ~ parent() %}
+{% block title __('Former boards') ~ ' :: ' ~ parent() %}
 
 {% block content %}
 <div class="timeline-container">
@@ -11,31 +11,30 @@
 			{{ include('@layout/editable.twig', {'editable': introduction}) }}
 		</div>
 	{% for bestuur in iters %}
-		{% set editable = global.models.Editable.get_iter(bestuur.page) %}
 		<div id="{{ bestuur.login }}" class="bestuur timeline-event has-header">
 			<div class="pageheading">
 				{% if user_can_update bestuur %}
 				<div class="controls inline">
 					<a href="{{ controller.link_to_update(bestuur) }}">
-						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('bewerken') }}" title="{{ __('Bestuur bewerken') }}">
+						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('modify') }}" title="{{ __('Modify board') }}">
 					</a>
 				</div>
 				{% endif %}
-				<h1>{{ editable.get_title }}</h1>
+				<h1>{{ bestuur.page.get_title }}</h1>
 			</div>
 			<div class="messageBox">
 				{% if view.has_bestuursfoto(bestuur) %}
 					<img class="board-photo" src="{{ view.get_bestuursfoto(bestuur) }}" width="100%%">
 				{% endif %}
-				{% if user_can_update editable %}
+				{% if user_can_update bestuur.page %}
 				<div class="controls inline">
-					<a href="{{ link('editable.update', editable=editable) }}">
-						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('bewerken') }}" title="{{ __('Pagina bewerken') }}">
+					<a href="{{ link('editable.update', editable=bestuur.page) }}">
+						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('modify') }}" title="{{ __('Modify board') }}">
 					</a>
 				</div>
 				{% endif %}
 				<div class="content">
-					{{ view.parse_bestuursfoto(bestuur, editable.locale_content|parse_markup)|raw }}
+					{{ view.parse_bestuursfoto(bestuur, bestuur.page.locale_content|parse_markup)|raw }}
 				</div>
 			</div>
 		</div>
@@ -48,7 +47,7 @@
 
 	{% if user_can_create controller.new_iter %}
 		<div class="timeline-footer">
-			<a href="{{ controller.link_to_create() }}" class="add-new-bestuur button">{{ __('Nieuw bestuur toevoegen...') }}</a>
+			<a href="{{ controller.link_to_create() }}" class="add-new-bestuur button">{{ __('Add a new board...') }}</a>
 		</div>
 	{% endif %}
 	</div>

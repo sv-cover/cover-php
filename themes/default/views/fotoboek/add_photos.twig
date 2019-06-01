@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __("Foto's toevoegen") ~ ' :: ' ~ parent() %}
+{% block title __("Add photos") ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Fotoboek') }} :: {{ __("Foto's toevoegen") }}</h1>
+<h1>{{ __('Photo album') }} :: {{ __("Add photos") }}</h1>
 <div class="messageBox">
 	{{ include('_path.twig') }}
 
@@ -18,6 +18,7 @@
 	<div id="folder-selector"></div>
 
 	<form id="add-photos-form" action="fotoboek.php?book={{ book.id|e('url') }}&amp;view=add_photos" method="post">
+		{{ html_nonce('add_photos', book) }}
 		<ul id="photo-selector">
 			<li>
 				<span class="add-control">
@@ -26,7 +27,7 @@
 				</span>
 				<img class="thumbnail">
 				<span class="description">
-					<input type="text" name="photo[$index][description]" placeholder="<?=__('Omschrijving')?>">
+					<input type="text" name="photo[$index][description]" placeholder="{{ __('Omschrijving')|e('html_attr') }}">
 				</span>
 				<span class="filename"></span>
 				<span class="created-on"></span>
@@ -34,8 +35,8 @@
 			</li>
 		</ul>
 
-		<button type="submit" class="button">{{ __("Voeg foto's toe") }}</button>
-		<a href="fotoboek.php?book={{ book.id|e('url') }}">{{ __('Terug naar %s')|format(book.titel) }}</a>
+		<button type="submit" class="button">{{ __("Add photos") }}</button>
+		<a href="fotoboek.php?book={{ book.id|e('url') }}">{{ __('Return to %s')|format(book.titel) }}</a>
 	</form>
 </div>
 
@@ -61,12 +62,6 @@ jQuery(function($) {
 
 	var stream = null;
 
-	function handle_stream_error(e) {
-		if (e.readyState != EventSource.CLOSED) {
-			console.error(e);
-		} 
-	}
-
 	var $photo_template = $('#photo-selector li').detach();
 
 	function load_photos(path, $ol) {
@@ -76,7 +71,15 @@ jQuery(function($) {
 		var index = 0;
 
 		stream = new EventSource(baseurl + '&view=add_photos_list_photos&path=' + encodeURIComponent(path));
-		stream.addEventListener('error', handle_stream_error);
+		stream.addEventListener('error', function(e) {
+			if (e.readyState != EventSource.CLOSED)
+				return;
+			
+			$('<li>')
+				.addClass('error-section')
+				.text(e.message)
+				.appendTo($ol);
+		});
 
 		stream.addEventListener('end', function(e) {
 			stream.close();
@@ -84,8 +87,6 @@ jQuery(function($) {
 
 		stream.addEventListener('photo', function(e) {
 			var photo = JSON.parse(e.data);
-
-			console.log(photo);
 
 			var $li = $photo_template.clone();
 			$li.data('sort-order', Date.parse(photo['created_on'].replace(' ', 'T')));
@@ -153,6 +154,12 @@ jQuery(function($) {
 			ol.empty();
 		else
 			ol = $('<ol>').insertAfter($(this).parent('ol'));
+
+		// Remove all next columns
+		ol.parent().find('ol').slice(ol.parent().find('ol').index(ol) + 1).remove();
+
+		// Scroll all the way to the right
+		e.delegateTarget.scrollLeft = e.delegateTarget.scrollWidth - e.delegateTarget.clientWidth;
 
 		load_folders($(this).data('folder'), ol);
 		

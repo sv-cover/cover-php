@@ -4,7 +4,7 @@
 
 {% block tab_content %}
 <section class="aligned-list-section personal-section">
-	<h2>{{ __('Persoonlijk') }}</h2>
+	<h2>{{ __('Personal') }}</h2>
 	
 	{% if can_download_vcard %}
 		<a href="profiel.php?lid={{ iter.id }}&amp;view=export_vcard" class="vcard-link" title="Download vCard"><i class="fa fa-download"></i></a>
@@ -12,7 +12,7 @@
 	
 	{% if is_current_user %}
 	<p class="hint">
-		{{ __('Verander wie deze gegevens kunnen zien in het <a href="%s">privacy tabblad</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}</p>
+		{{ __('Change who can see these personal details on the <a href="%s">privacy tab</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}</p>
 	{% endif %}
 	
 	<dl class="profile">
@@ -22,18 +22,18 @@
 			<dt>{{ html_label(field.label, field.name) }}</dt>
 			<dd class="data-public">{{ view.format_member_data(iter, field.name)|raw }}</dd>
 		{% elseif field_visibility == constant('DataModelMember::VISIBLE_TO_MEMBERS') %}
-			{% if global.identity.member_is_active or global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
+			{% if global.identity.is_member or global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
 				<dt>{{ html_label(field.label, field.name) }}</dt>
 				<dd class="data-members-only">
 					{{ view.format_member_data(iter, field.name)|raw }}
-					<i class="fa fa-lock" title="{{ __('Alleen zichtbaar voor ingelogde leden')|e('html_attr') }}"></i>
+					<i class="fa fa-lock" title="{{ __('Only visible for logged-in members.')|e('html_attr') }}"></i>
 				</dd>
 			{% endif %}
 		{% elseif global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
 			<dt>{{ html_label(field.label, field.name) }}</dt>
 			<dd class="data-private">
 				{{ view.format_member_data(iter, field.name)|raw }}
-				<i class="fa fa-eye-slash" title="{{ __('Privé')|e('html_attr') }}"></i>
+				<i class="fa fa-eye-slash" title="{{ __('Private')|e('html_attr') }}"></i>
 			</dd>
 		{% endif %}
 	{% endfor %}
@@ -43,14 +43,14 @@
 
 	{% set facebook_of_iter = global.models.PhotobookFace.get_book([iter]) %}
 	{% if user_can_read facebook_of_iter %}
-		<p><a href="fotoboek.php?book={{ facebook_of_iter.id|e('url') }}">{{ __('Foto\'s van %s')|format(iter|first_name) }}</a></p>
+		<p><a href="fotoboek.php?book={{ facebook_of_iter.id|e('url') }}">{{ __('Photos of %s')|format(iter|first_name) }}</a></p>
 	{% endif %}
 </section>
 
 {% if committees|length > 0 %}
 <section class="aligned-list-section committee-section">
-	<h2 id="commissies">{{ __('Commissies & Werkgroepen') }}</h2>
-	<p>{{ __('%s is lid van de volgende commissies:')|format(iter|first_name) }}</p>
+	<h2 id="commissies">{{ __('Committees & Working groups') }}</h2>
+	<p>{{ __('%s is a member of the following committees:')|format(iter|first_name) }}</p>
 	<ul class="committee-list">
 		{% for committee in committees %}
 		<li>

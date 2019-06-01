@@ -113,11 +113,11 @@ class CoverFacebookStorage
 
 	protected function setPersistentData($key, $value)
 	{
-		if (!logged_in())
+		if (!get_auth()->logged_in())
 			throw new Exception('Cannot store persistent data while not logged in');
 
 		$data = array(
-			'lid_id' => logged_in('id'),
+			'lid_id' => get_identity()->get('id'),
 			'data_key' => $key,
 			'data_value' => $value);
 
@@ -125,7 +125,7 @@ class CoverFacebookStorage
 			$this->db->insert('facebook', $data);
 		else
 			$this->db->update('facebook', $data, array(
-				'lid_id' => logged_in('id'),
+				'lid_id' => get_identity()->get('id'),
 				'data_key' => $key));
 
 		$this->cache[$key] = $value;
@@ -133,13 +133,13 @@ class CoverFacebookStorage
 
 	protected function getPersistentData($key, $default = false)
 	{
-		if (!logged_in())
+		if (!get_auth()->logged_in())
 			return $default;
 
 		if (!isset($this->cache[$key]))
 		{
 			$query = sprintf("SELECT data_value FROM facebook WHERE lid_id = %d AND data_key = '%s'",
-				logged_in('id'), $this->db->escape_string($key));
+				get_identity()->get('id'), $this->db->escape_string($key));
 
 			$this->cache[$key] = $this->db->query_value($query);
 		}
@@ -149,11 +149,11 @@ class CoverFacebookStorage
 
 	protected function clearPersistentData($key)
 	{
-		if (!logged_in())
+		if (!get_auth()->logged_in())
 			throw new Exception('Cannot store persistent data while not logged in');
 
 		$query = sprintf("DELETE FROM facebook WHERE lid_id = %d AND data_key = '%s'",
-				logged_in('id'), $this->db->escape_string($key));
+				get_identity()->get('id'), $this->db->escape_string($key));
 
 		$this->db->query($query);
 
@@ -162,11 +162,11 @@ class CoverFacebookStorage
 
 	protected function clearAllPersistentData()
 	{
-		if (!logged_in())
+		if (!get_auth()->logged_in())
 			throw new Exception('Cannot store persistent data while not logged in');
 
 		$query = sprintf("DELETE FROM facebook WHERE lid_id = %d",
-				logged_in('id'));
+				get_identity()->get('id'));
 
 		$this->db->query($query);
 

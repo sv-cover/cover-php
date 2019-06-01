@@ -1,0 +1,19 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Subscribe a member') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('Add member') }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ controller.link_to('subscribe_member', list)|e('html_attr') }}" class="vertical-form">
+		{{ html_nonce('subscribe_member', list) }}
+		<div>
+			{{ html_label(__('Member id(s)'), 'member_id') }}
+			{{ html_input_text('member_id', [], autofocus=true, data_autocomplete='member_id') }}
+		</div>
+		<div class="controls">
+			<button type="submit" class="button">{{ __('Subscribe') }}</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

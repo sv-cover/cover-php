@@ -10,12 +10,10 @@
 	class ControllerAgenda extends ControllerCRUD
 	{
 		protected $_var_id = 'agenda_id';
-		
-		public function __construct()
+
+        public function __construct()
 		{
 			$this->model = get_model('DataModelAgenda');
-
-			$this->policy = get_policy($this->model);
 
 			$this->view = View::byName('agenda', $this);
 		}
@@ -30,6 +28,8 @@
 			
 			try {
 				$date = new DateTime($value);
+				if ($date < new DateTime())
+					return false;
 				return $date->format('Y-m-d H:i');
 			} catch (Exception $e) {
 				return false;
@@ -78,9 +78,9 @@
 
 		public function _check_commissie($name, $value)
 		{
-			if (member_in_commissie($value)
-				|| member_in_commissie(COMMISSIE_BESTUUR)
-				|| member_in_commissie(COMMISSIE_KANDIBESTUUR))
+			if (get_identity()->member_in_committee($value)
+				|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 				return $value;
 			
 			return false;
@@ -93,7 +93,7 @@
 				array(
 					array('name' => 'kop', 'function' => array($this, '_check_length')),
 					'beschrijving',
-					array('name' => 'commissie', 'function' => array($this, '_check_commissie')),
+					array('name' => 'committee_id', 'function' => array($this, '_check_commissie')),
 					array('name' => 'van', 'function' => array($this, '_check_datum')),
 					array('name' => 'tot', 'function' => array($this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
@@ -144,7 +144,7 @@
 
 			// Placeholders for e-mail
 			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
 				'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
 			);
 
@@ -154,7 +154,7 @@
 
 			$iter->set_id($id);
 				
-			$_SESSION['alert'] = __('Het nieuwe agendapunt is in de wachtrij geplaatst. Zodra het bestuur ernaar gekeken heeft zal het punt op de website geplaatst worden');
+			$_SESSION['alert'] = __('The new calendar event is now waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
 
 			mail(
 				get_config_value('defer_email_to', get_config_value('email_bestuur')),
@@ -178,7 +178,7 @@
 
 			// Placeholders for e-mail
 			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['commissie']),
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
 				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
 
 			// Previous exists and there is no need to let the board confirm it
@@ -189,7 +189,7 @@
 
 				$this->model->update($iter);
 
-				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn geplaatst.');
+				$_SESSION['alert'] = __('The changes you\'ve made to this activity have been published.');
 			}
 
 			// Previous item exists but it needs to be confirmed first.
@@ -201,7 +201,7 @@
 
 				$override_id = $this->model->propose_update($mod, $iter);
 
-				$_SESSION['alert'] = __('De wijzigingen voor het agendapunt zijn opgestuurd. Zodra het bestuur ernaar gekeken heeft zal het punt op de website gewijzigd worden.');
+				$_SESSION['alert'] = __('The changes to the calendar event are waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
 
 				mail(
 					get_config_value('defer_email_to', get_config_value('email_bestuur')),
@@ -216,6 +216,10 @@
 		protected function _index()
 		{
 			$selected_year = isset($_GET['year']) ? intval($_GET['year']) : null;
+
+			// No screwing around with invalid dates anymore
+			if ($selected_year < 1993 || $selected_year > date('Y') + 2)
+				$selected_year = null;
 
 			if ($selected_year === null)
 				return $this->model->get_agendapunten();
@@ -234,7 +238,7 @@
 				if ($this->_moderate())
 					return $this->view->redirect('agenda.php');
 
-			$agenda_items = array_filter($this->model->get_proposed(), [$this->policy, 'user_can_moderate']);
+			$agenda_items = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
 
 			return $this->view->render_moderate($agenda_items, $item ? $item['id'] : null);
 		}
@@ -252,14 +256,15 @@
 
 				$iter = $this->model->get_iter($id);
 				
-				if (!$this->policy->user_can_moderate($iter))
+				if (!get_policy($this->model)->user_can_moderate($iter))
 					throw new UnauthorizedException();
 
 				if ($value == 'accept') {
 					/* Accept agendapunt */
 
 					// If it is marked private, set that perference first.
-					$iter['private'] = isset($_POST['private_' . $iter['id']]) ? 1 : 0;
+					$iter['private'] = !empty($_POST['private_' . $iter['id']]) ? 1 : 0;
+					
 					$iter->update();
 					
 					$this->model->accept_proposal($iter);
@@ -275,10 +280,10 @@
 					$body = parse_email('agenda_cancel.txt', $data);
 					
 					$commissie_model = get_model('DataModelCommissie');
-					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['commissie']));
+					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['committee_id']));
 
 					mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
-					$cancelled[] = $commissie_model->get_naam($iter['commissie']);
+					$cancelled[] = $commissie_model->get_naam($iter['committee_id']);
 				}
 			}
 			
@@ -287,12 +292,12 @@
 
 			if (count($cancelled_un) == 1)
 				if (count($cancelled) == 1) {
-					$_SESSION['alert'] = sprintf(__('De commissie %s is op de hoogte gesteld van het weigeren van het agendapunt.'), $s);
+					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar event.'), $s);
 				} else {
-					$_SESSION['alert'] = sprintf(__('De commissie %s is op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
+					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar events.'), $s);
 				}
 			elseif (count($cancelled_un) > 0)
-				$_SESSION['alert'] = sprintf(__('De commissies %s zijn op de hoogte gesteld van het weigeren van de agendapunten.'), $s);
+				$_SESSION['alert'] = sprintf(__('The committees %s have been notified of the denying of the calendar events.'), $s);
 			
 			return true;
 		}
@@ -332,15 +337,18 @@
 		public function run_webcal()
 		{
 			$cal = new WebCal_Calendar('Cover');
-			$cal->description = __('Alle activiteiten van studievereniging Cover');
+			$cal->description = __('All activities of study association Cover');
 
-			$punten = array_filter($this->model->get_agendapunten(), [get_policy($this->model), 'user_can_read']);
+			$fromdate = new DateTime();
+			$fromdate = $fromdate->modify('-1 year')->format('Y-m-d');
+
+			$punten = array_filter($this->model->get($fromdate, null, true), [get_policy($this->model), 'user_can_read']);
 			
 			$timezone = new DateTimeZone('Europe/Amsterdam');
 
 			foreach ($punten as $punt)
 			{
-				if (!$this->policy->user_can_read($punt))
+				if (!get_policy($this->model)->user_can_read($punt))
 					continue;
 
 				$event = new WebCal_Event;
@@ -357,11 +365,22 @@
 				
 				$event->summary = $punt['extern']
 					? $punt['kop']
-					: sprintf('%s: %s', $punt['commissie__naam'], $punt['kop']);
+					: sprintf('%s: %s', $punt['committee__naam'], $punt['kop']);
 				$event->description = markup_strip($punt['beschrijving']);
 				$event->location = $punt->get('locatie');
-				$event->url = ROOT_DIR_URI . $this->link_to_read($punt);
+				$event->url = path_concat(ROOT_DIR_URI, $this->link_to_read($punt));
 				$cal->add_event($event);
+			}
+
+			$external_url = get_config_value('url_to_external_ical');
+
+			if ($external_url){
+				try {
+					$external = file_get_contents($external_url);
+					$cal->inject($external);
+				} catch (Exception $e) {
+					// if something goes wrong, just don't merge with external agenda
+				}
 			}
 
 			$cal->publish('cover.ics');
@@ -370,13 +389,23 @@
 
 		public function run_suggest_location()
 		{
-			$locations = $this->model->find_locations($_GET['search']);
-
 			$limit = isset($_GET['limit'])
 				? (int) $_GET['limit']
 				: 100;
 
+			$locations = $this->model->find_locations($_GET['search'], $limit);
+
 			return $this->view->render_json($locations, $limit);
+		}
+
+		public function run_preview()
+		{
+			return markup_parse($_POST['beschrijving']);
+		}
+
+		public function run_subscribe()
+		{
+			return $this->view->render('subscribe.twig');
 		}
 
 		protected function run_impl()

@@ -1,0 +1,44 @@
+{% extends "@layout/layout.twig" %}
+
+{% block title view.get_label(iter, __('Award points'), __('Update points')) ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ view.get_label(iter, __('Award points'), __('Update points')) }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ iter and iter.has_id
+			? controller.link_to_update(iter)
+			: controller.link_to_create() }}" class="vertical-form committee-battle-form">
+		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create', iter) }}
+
+		<fieldset>
+			<legend>{{ html_label(__('Members'), 'member_ids[]', errors=errors) }}</legend>
+			{{ html_select_field('member_ids[]', view.active_member_options, iter, field='member_ids', multiple=true) }}
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ __('Committees') }}</legend>
+			<ul class="option-group columns">
+				{% for committee in view.committee_options %}
+				<li>
+					{{ html_input_checkbox('committee_ids[]', iter, value=committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' ')) }}
+					{{ html_label(committee.naam, 'committee-' ~ committee.id) }}
+				</li>
+				{% endfor %}
+			</ul>
+		</fieldset>
+
+		<div>
+			{{ html_label(__('Points'), 'points', errors=errors, required=true) }}
+			{{ html_input_text('points', iter, errors=errors, type='number', class='number') }}
+		</div>
+		<div>
+			{{ html_label(__('Reason'), 'awarded_for', errors=errors, required=true) }}
+			{{ html_textarea_field('awarded_for', iter, errors=errors) }}
+		</div>
+		<div>
+			<button type="submit" class="button">{{ view.get_label(iter, __('Add points'), __('Update points')) }}</button>
+			<a href="{{ controller.link_to_index() }}">{{ __('Back to index') }}</a>
+		</div>
+	</form>
+</div>
+{% endblock %}

@@ -1,10 +1,10 @@
 <?php
-        $dbids = array(
-                'easy' => array(
-                        'host' => 'localhost',
-                        'user' => 'webcie',
-                        'password' => '',
-                        'database' => 'webcie'
-                        )
-                );
-?>
+
+$dbids = [
+    'development' => [
+        'host' => 'localhost',
+        'user' => 'webcie',
+        'password' => '',
+        'database' => 'webcie'
+    ]
+];

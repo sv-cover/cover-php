@@ -17,10 +17,10 @@ class ControllerBesturen extends ControllerCRUD
 		if ($iters instanceof DataIter)
 			return $iters->get('naam');
 		else
-			return __('Besturen');
+			return __('Boards');
 	}
 
-	protected function _validate(DataIter $iter, array &$data, array &$errors)
+	protected function _validate(DataIter $iter, array $data, array &$errors)
 	{
 		if (!$iter->has_id() && !isset($data['naam']))
 			$errors[] = 'naam';
@@ -32,7 +32,7 @@ class ControllerBesturen extends ControllerCRUD
 		elseif (isset($data['login']) && !preg_match('/^[a-z0-9]+$/i', $data['login']))
 			$errors[] = 'login';
 
-		return count($errors) === 0;
+		return count($errors) === 0 ? $data : false;
 	}
 
 	protected function _create(DataIter $iter, array $data, array &$errors)
@@ -43,7 +43,7 @@ class ControllerBesturen extends ControllerCRUD
 		$editable_model = get_model('DataModelEditable');
 
 		$page_data = array(
-			'owner' => COMMISSIE_BESTUUR,
+			'committee_id' => COMMISSIE_BESTUUR,
 			'titel' => $data['naam']);
 
 		$page = $editable_model->new_iter($page_data);
@@ -53,8 +53,7 @@ class ControllerBesturen extends ControllerCRUD
 		$bestuur_data = array(
 			'naam' => $data['naam'],
 			'login' => $data['login'],
-			'nocaps' => strtolower($data['naam']),
-			'page' => $page_id);
+			'page_id' => $page_id);
 
 		return parent::_create($iter, $bestuur_data, $errors);
 	}
@@ -64,11 +63,9 @@ class ControllerBesturen extends ControllerCRUD
 		if (!$this->_validate($bestuur, $data, $errors))
 			return false;
 		
-		$data['nocaps'] = $data['naam'];
-
 		$editable_model = get_model('DataModelEditable');
 
-		$editable = $editable_model->get_iter($bestuur->get('page'));
+		$editable = $bestuur['page'];
 		$editable->set('titel', $data['naam']);
 	
 		$editable_model->update($editable);
@@ -90,6 +87,11 @@ class ControllerBesturen extends ControllerCRUD
 	public function _compare_bestuur($left, $right)
 	{
 		return -1 * strnatcmp($left->get('login'), $right->get('login'));
+	}
+
+	public function run_read(DataIter $iter)
+	{
+		return $this->view->redirect($this->link_to_read($iter));
 	}
 
 	public function link_to_read(DataIter $iter)

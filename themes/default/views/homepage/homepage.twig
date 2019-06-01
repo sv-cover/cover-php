@@ -6,13 +6,19 @@
 <div class="pageheading">
 	{% if user_can_update editable %}
 	<div class="controls inline">
-		<a href="{{ link('editable.update', editable=editable) }}" class="edit-link">{{ __('Bewerk introductie') }}</a>
+		<a href="{{ link('editable.update', editable=editable) }}" class="edit-link">{{ __('Modify introduction') }}</a>
 	</div>
 	{% endif %}
 	<h1>{{ editable.get_title }}</h1>
 </div>
 <div class="messageBox">
 {{ editable.locale_content|parse_markup }}
+</div>
+
+<div class="bannerRotator">
+{% for banner in global.models.Banner.get_from_file('images/sponsors/data.json') %}
+	<a href="{{ banner.url|e('html_attr') }}"><img src="images/sponsors/{{ banner.filename|e('url') }}" class="frontpage_banner"></a>
+{% endfor %}
 </div>
 
 {{ include('@theme/announcements/announcements.twig', {

@@ -4,19 +4,17 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<link rel="icon" type="image/png" href="images/favicon.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">		
-		<title>{% block title %}Cover :: {{ __('Studievereniging Kunstmatige Intelligentie en Informatica, RUG') }}{% endblock %}</title>
+		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">
+		<link rel="search" href="opensearch.xml"  type="application/opensearchdescription+xml" title="Cover">
+		<title>{% block title %}Cover :: {{ __('Study Association for Artificial Intelligence and Computing Science') }}{% endblock %}</title>
 		
 		{% for stylesheet in view.stylesheets %}
-		<link rel="stylesheet" href="{{ stylesheet|e('html') }}" type="text/css">
+		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
 		
-		{% block scripts %}
-		<script src="{{ link_static('data/jquery-2.2.0.min.js') }}"></script>
-		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-		<script type="text/javascript" src="{{ link_static('data/common.js') }}"></script>
-		<script type="text/javascript" src="{{ link_static('data/dropdown.js') }}"></script>
-		{% endblock %}
+		{% for script in view.scripts %}
+		<script src="{{ script }}"></script>
+		{% endfor %}
 	</head>
 	<body>
 		<div class="world">
@@ -26,18 +24,18 @@
 					{% if agenda_items_to_moderate|length > 0 %}
 						<div class="message">
 							<a href="agenda.php?view=moderate">{{ __N(
-								'Er staat nog %d agendapunt in de wachtrij',
-								'Er staan nog %d agendapunten in de wachtrij', agenda_items_to_moderate|length) }}</a>
+								'There is %d activity waiting for your confirmation',
+								'There are %d activities waiting for your confirmation', agenda_items_to_moderate|length) }}</a>
 						</div>
 					{% endif %}
 					{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
-						<div class="message">{{ __('Je lidmaatschap is nog niet goedgekeurd door de secretaris. Tot dan is de toegang tot sommige delen van de website, zoals de oude foto\'s en lidgegevens, beperkt.') }}</div>
+						<div class="message">{{ __('Your application hasn\'t been accepted yet by our secretary. Until then some parts of the website are not yet accessible, such as all the photo albums and contact information of members.') }}</div>
 					{% endif %}
 				{% endif %}
 				<div class="login">
 					{{ include('@layout/widgets/login.twig') }}
 				</div>
-				{% if date() > date('12/26') %}
+				{% if date() > date('12/06') %}
 					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo_christmas.png') }}" alt="logo" style="height:auto;margin-top:-12px"></a>
 				{% else %}
 					<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="logo"></a>
@@ -49,8 +47,8 @@
 				{% endblock %}
 			</div>
 
-			{% if not global.auth.logged_in %}
-			{{ include('@layout/widgets/promotional-header.twig') }}
+			{% if view.layout.promotional_header %}
+			{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
 			{% endif %}
 
 			<div class="container clearfix">
@@ -71,33 +69,26 @@
 				</div>
 			</div> <!-- CONTAINER -->
 
+			<div class="footer">
+				<a href="show.php?id=17">{{ __('Contact') }}</a>
+				&mdash; <a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
+				&mdash; <a href="https://bitbucket.org/cover-webcie/cover-php/issues">{{ __('Report a bug')}}</a>
+			</div>
 		</div> <!-- .world -->
 
 		{% if view.layout.has_alert %}
 			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>
 		{% endif %}
-		
-		<!-- Google Analytics -->
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-		  ga('create', 'UA-12500955-1', 'auto');
-		  ga('require', 'displayfeatures');
-		  ga('send', 'pageview');
-		</script>
-
-		{% if get_config_value('show_queries', false) %}
-		{#
-		{% for query in global.db.history %}
-			printf("%f: %s\n\n", $query['duration'], $query['query']);
-
-			printf("Driver: %s\n", get_class(get_db()));
-			printf("Total time: %fs", array_sum(array_map(function($query) { return $query['duration']; }, get_db()->history)));
-		{% endforeach %}
-		#}
+		{% if global.db.history|length > 0 %}
+			<script>
+				console.info('Total number of queries run: %d (%0.1fms)', {{ global.db.history|length }}, {{ global.db.history|select('duration')|sum * 1000 }});
+				console.groupCollapsed("Queries");
+				{% for query in global.db.history %}
+				console.info("Duration: %0.3fms: %s", {{query.duration * 1000}}, {{query.query|json_encode()|raw}}, {{ query.backtrace|json_encode()|raw }});
+				{% endfor %}
+				console.groupEnd();
+			</script>
 		{% endif %}
 	</body>
 </html>

@@ -2,7 +2,7 @@
 
 {% if photo is defined and photo.book.id != book.id %}
 <div class="fotoboek_path original_path">
-	{{ __('Deze foto komt uit') }}
+	{{ __('This photo originates from') }}
 	{{ view.path(photo.book, photo)|join(' / ')|raw }}
 </div>	
 {% endif %}

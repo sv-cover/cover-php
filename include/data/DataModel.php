@@ -5,7 +5,7 @@
 	{
 		public function __construct($id, DataModel $source = null)
 		{
-			parent::__construct(sprintf('%s with id %d was not found',
+			parent::__construct(sprintf('%s with id %s was not found',
 				$source
 					? substr(get_class($source), strlen('DataModel'))
 					: 'DataIter',
@@ -64,6 +64,9 @@
 			if (!$dataiter)
 				$dataiter = $this->dataiter;
 
+			if (!is_subclass_of($dataiter, 'DataIter', true))
+				throw new LogicException('Calling new_iter with a class name for dataiter that does not extend DataIter');
+
 			return new $dataiter($this, isset($row[$this->id]) ? $row[$this->id] : null, $row, $preseed);
 		}
 
@@ -89,6 +92,12 @@
 			foreach ($iter->data as $key => $value)
 				if (in_array($key, $fields))
 					$data[$key] = $value;
+
+			if ($this->auto_increment)
+				unset($data[$this->id]);
+
+			if (count($data) === 0)
+				throw new LogicException('Trying to insert empty iterator into table');
 			
 			$this->db->insert($table, $data);
 
@@ -149,7 +158,7 @@
 
 			$fields = $iter::fields();
 
-			foreach ($iter->get_changed_values() as $key => $value)
+			foreach ($iter->changed_values() as $key => $value)
 				if (in_array($key, $fields))
 					$data[$key] = $value;
 
@@ -300,13 +309,20 @@
 			return $this->_row_to_iter($data);
 		}
 
-		protected function _generate_conditions_from_array($conditions)
+		protected function _generate_conditions_from_array(array $conditions)
 		{
-			$atoms = [];
+			$atoms = []; // Query in CNF
 
 			foreach ($conditions as $key => $value)
 			{
-				if (preg_match('/^(.+?)__(eq|ne|gt|lt|contains|isnull)$/', $key, $match)) {
+				// If the value is just a bit of raw SQL, add it directly to
+				// the atoms, and skip the rest of the create-sql-loop.
+				if (is_int($key) && $value instanceof DatabaseLiteral) {
+					$atoms[] = sprintf('(%s)', $value->toSQL());
+					continue;
+				}
+
+				if (preg_match('/^(.+?)__(eq|cieq|ne|gt|gte|lt|lte|in|contains|isnull)$/', $key, $match)) {
 					$field = $match[1];
 					$operator = $match[2];
 				} else {
@@ -314,18 +330,50 @@
 					$operator = 'eq';
 				}
 
+				// Prefix field with table name to counter ambiguity
+				$field = $this->table . '.' . $field;
+
 				switch ($operator)
 				{
 					case 'lt':
-						$format = "%s < '%s'";
+						$format = "%s < %s";
+						break;
+
+					case 'lte':
+						$format = "%s <= %s";
 						break;
 
 					case 'gt':
-						$format = "%s > '%s'";
+						$format = "%s > %s";
+						break;
+
+					case 'gte':
+						$format = "%s >= %s";
+						break;
+
+					case 'in':
+						// If the value is an iterator, make it an array first for easy use
+						if ($value instanceof Iterator)
+							$value = iterator_to_array($value, false);
+
+						// Check the value
+						if (!is_array($value))
+							throw new InvalidArgumentException("in-operator in '$field' condition expects an array or iterable.");
+
+						// Empty list? -> the value can only be NULL, right?
+						if (count($value) === 0) {
+							$format = '%s IS NULL';
+						} else {
+							$safe_values = array_map([$this->db, 'quote_value'], $value);
+							$format = sprintf('%%s IN (%s)', implode(', ', $safe_values));
+						}
+
+						unset($value);
 						break;
 
 					case 'contains':
-						$format = "%s ILIKE '%%%s%%'";
+						$format = "%s ILIKE %s";
+						$value = '%' . $value . '%';
 						break;
 
 					case 'isnull':
@@ -334,17 +382,21 @@
 						break;
 
 					case 'ne':
-						$format = "%s <> '%s'";
+						$format = "%s <> %s";
+						break;
+
+					case 'cieq': // Case insensitive equivalence
+						$format = "LOWER(%s) = LOWER(%s)";
 						break;
 
 					default:
 					case 'eq':
-						$format = "%s = '%s'";
+						$format = "%s = %s";
 						break;
 				}
 
 				$atoms[] = isset($value)
-					? sprintf($format, $field, $this->db->escape_string($value))
+					? sprintf($format, $field, $this->db->quote_value($value))
 					: sprintf($format, $field);
 			}
 

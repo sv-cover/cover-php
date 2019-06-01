@@ -17,11 +17,12 @@ class PolicyAgenda implements Policy
 		if ($agenda_item->is_proposal())
 			return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-				|| get_identity()->member_in_committee($agenda_item->get('commissie'));
+				|| get_identity()->member_in_committee($agenda_item->get('committee_id'));
 
-		// Private agenda items can only be seen by active members
+		// Private agenda items can only be seen by people who could attend it
 		if ($agenda_item['private'])
-			return get_identity()->member_is_active();
+			return get_identity()->is_member()
+				|| get_identity()->is_donor();
 
 		// By default all agenda items are accessible
 		return true;
@@ -38,7 +39,7 @@ class PolicyAgenda implements Policy
 			return true;
 
 		// And committee members may update their own agenda items of course
-		if (get_identity()->member_in_committee($agenda_item->get('commissie')))
+		if (get_identity()->member_in_committee($agenda_item->get('committee_id')))
 			return true;
 
 		return false;

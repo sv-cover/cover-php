@@ -54,7 +54,7 @@ class SecretaryAPI
 
 		$data = [];
 		
-		foreach ($iter->get_changed_values() as $field => $value)
+		foreach ($iter->changed_values() as $field => $value)
 			$data[$this->mapping[$field]] = $value;
 
 		return $this->updatePerson($iter->get_id(), $data);
@@ -102,17 +102,21 @@ class SecretaryAPI
 
 	protected function postJSON($url, array $data)
 	{
-		$options = array(
-			'http' => array(
-				'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-				'method'  => 'POST',
-				'content' => http_build_query($data),
-				'ignore_errors' => true
-			)
-		);
-		$context  = stream_context_create($options);
+		try {
+			$options = array(
+				'http' => array(
+					'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+					'method'  => 'POST',
+					'content' => http_build_query($data),
+					'ignore_errors' => true
+				)
+			);
+			$context  = stream_context_create($options);
 
-		$response = file_get_contents($this->root . $url, false, $context);
+			$response = file_get_contents($this->root . $url, false, $context);
+		} catch (ErrorException $e) {
+			throw new RuntimeException('Could not send request to host.', 0, $e);
+		}
 
 		if (!preg_match('/^HTTP\/1\.\d\s(\d+)\s/', $http_response_header[0], $match))
 			throw new RuntimeException('Could not get HTTP STATUS response header');

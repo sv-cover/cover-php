@@ -1,4 +1,4 @@
-{% set author = model.get_author_info(iter) %}
+{% set author = model.get_author_info(iter, 'author') %}
 {% set message = iter.get_first_message() %}
 <div class="weblog-post">
 	<div class="weblog-post-details profile-widget">
@@ -9,14 +9,14 @@
 	</div>
 	<div class="weblog-post-content">
 		<div class="weblog-post-header">
-			<div class="weblog-post-date">{{ iter.datum }}</div>
+			<div class="weblog-post-date">{{ iter.date|date('d-m-Y H:i') }}</div>
 			<h3><a href="forum.php?thread={{ iter.id|e('url') }}">{{ iter.subject }}</a></h3>
 		</div>
 		
 		{{ message.message | parse_markup}}
 
 		<p class="weblog-post-footer">
-			<a href="forum.php?thread={{ iter.id|e('url') }}">{{ __('Reacties') }}: {{ iter.get_num_messages() - 1 }}</a>
+			<a href="forum.php?thread={{ iter.id|e('url') }}">{{ __('Comments') }}: {{ iter.num_messages - 1 }}</a>
 		</p>
 	</div>
 </div>

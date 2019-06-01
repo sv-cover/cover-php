@@ -5,7 +5,8 @@ require_once 'include/functions.php';
 
 interface IdentityProvider
 {
-	public function member_is_active();
+	public function is_member();
+	public function is_donor();
 	public function member_in_committee($committee = null);
 	public function can_impersonate();
 	public function member();
@@ -20,7 +21,12 @@ interface SessionProvider
 
 class GuestIdentityProvider implements IdentityProvider
 {
-	public function member_is_active()
+	public function is_member()
+	{
+		return false;
+	}
+
+	public function is_donor()
 	{
 		return false;
 	}
@@ -61,13 +67,16 @@ class MemberIdentityProvider implements IdentityProvider
 		$this->member_model = get_model('DataModelMember');
 	}
 
-	public function member_is_active()
+	public function is_member()
 	{
 		return $this->session_provider->logged_in()
-			&& in_array($this->member()['type'], [
-				MEMBER_STATUS_LID,
-				MEMBER_STATUS_LID_ONZICHTBAAR
-			]);
+			&& $this->member()->is_member();
+	}
+
+	public function is_donor()
+	{
+		return $this->session_provider->logged_in()
+			&& $this->member()->is_donor();
 	}
 
 	public function member_in_committee($committee = null)
@@ -126,14 +135,14 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		if (!$this->session_provider->logged_in())
 			return null;
 
-		if ($this->session_provider->get_session()['override_member_id'] !== null)
+		if ($this->get_override_member() !== null)
 			$member = $this->get_override_member();
 		else
 			$member = parent::member();
 
-		if ($this->override_committees !== null)
+		if ($this->get_override_committees() !== null)
 			$member = new DataIterMember($member->model(), $member->get_id(),
-				array_merge($member->data, ['committees' => $this->override_committees]));
+				array_merge($member->data, ['committees' => $this->get_override_committees()]));
 
 		return $member;
 	}
@@ -248,11 +257,6 @@ class CookieSessionProvider implements SessionProvider
 		if (!empty($_COOKIE['cover_session_id']))
 			return $_COOKIE['cover_session_id'];
 
-		$auto_login_ips = get_config_value('auto_login', array());
-
-		if (isset($_SERVER['REMOTE_ADDR'], $auto_login_ips[$_SERVER['REMOTE_ADDR']]))
-			return $auto_login_ips[$_SERVER['REMOTE_ADDR']];
-
 		return null;
 	}
 
@@ -290,7 +294,12 @@ class CookieSessionProvider implements SessionProvider
 
 	public function logout()
 	{
-		$this->session_model->delete($this->get_session());
+		$session = $this->get_session();
+
+		if (!$session)
+			return true;
+
+		$this->session_model->delete($session);
 
 		set_domain_cookie('cover_session_id', null);
 
@@ -363,10 +372,15 @@ function get_auth()
 
 function get_identity()
 {
-	static $identity;
+	static $identity, $identity_is_logged_in;
 
-	if ($identity === null)
+	$authenticator = get_auth();
+
+	if ($identity === null || $authenticator->logged_in() !== $identity_is_logged_in)
+	{
 		$identity = get_identity_provider(get_auth());
+		$identity_is_logged_in = $authenticator->logged_in();
+	}
 
 	return $identity;
 }
@@ -401,7 +415,7 @@ function nonce_verify($nonce, $action)
 	return hash_equals($nonce, nonce_generate($action));
 }
 
-function nonce_action_name($action, array $arguments)
+function nonce_action_name($action, array $arguments = [])
 {
 	$arg_strings = array();
 
@@ -412,5 +426,5 @@ function nonce_action_name($action, array $arguments)
 		$arg_strings[] = strval($arg);
 	}
 
-	$action_name = implode('_', array_merge([$action], $arg_strings));
+	return implode('_', array_merge([$action], $arg_strings));
 }

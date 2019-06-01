@@ -48,10 +48,10 @@ class DataModelSession extends DataModel
 		{
 			// Update last active
 			$update = array(
-				'last_active_on' => 'NOW()',
+				'last_active_on' => new DatabaseLiteral('NOW()'),
 				'ip_address' => $_SERVER['REMOTE_ADDR']);
 
-			$this->db->update($this->table, $update, $id_string, array('last_active_on'));
+			$this->db->update($this->table, $update, $id_string);
 
 			return $this->_row_to_iter($data);
 		}
@@ -68,8 +68,8 @@ class DataModelSession extends DataModel
 			'member_id' => (int) $member_id,
 			'ip_address' => $_SERVER['REMOTE_ADDR'],
 			'application' => $application,
-			'created_on' => date('Y-m-d H:i:s'),
-			'last_active_on' => date('Y-m-d H:i:s'),
+			'created_on' => new DateTime(),
+			'last_active_on' => new DateTime(),
 			'timeout' => $timeout
 		);
 

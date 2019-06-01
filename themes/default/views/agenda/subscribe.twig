@@ -1,0 +1,23 @@
+{% extends '@layout/layout_without_menu.twig' %}
+
+{% block title __('Calendar') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+	<h1>{{ __('Subscribe to Cover\'s calendar') }}</h1>
+	<div class="messageBox">
+		<p>{{ __('Add your Cover calendar to your personal calendar to stay up-to-date on the latest activities, always.') }}</p>
+		{% if global.auth.logged_in %}
+			<ul class="call-to-action">
+				<li><a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">{{ __('Add to my %s')|format('Google Calendar') }}</a></li>
+				<li><a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&amp;url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" target="_blank">{{ __('Add to my %s')|format('Outlook.com') }}</a></li>
+				<li><a href="webcal://www.svcover.nl/agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" target="_blank">{{ __('Add to my %s')|format('iCloud/other') }}</a></li>
+			</ul>
+		{% else %}
+			<div class="well">
+				<p>{{ __('The link to the Cover calendar is personalized to let you also see the activities that only you as a member of Cover may see.') }}</p> 
+				<p>{{ __('That is why you need to log in.') }}</p>
+				<a href="sessions.php?view=login&amp;referrer={{ 'agenda.php?view=subscribe'|url_encode }}" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

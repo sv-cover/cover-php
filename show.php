@@ -11,20 +11,29 @@ class ControllerShow extends ControllerCRUD
 		$this->view = View::byName('show', $this);
 	}
 
-	protected function _validate(DataIter $iter, array &$data, array &$errors)
+	/* These two can_set_* checks are used by the view to check whether it needs to display the fields */
+	public function can_set_titel(DataIter $iter)
 	{
-		$valid = true;
+		return !$iter->has_id() || get_identity()->member_in_committee(COMMISSIE_EASY);
+	}
 
-		if (!isset($data['owner'])) {
-			$errors['owner'] = __('Eigenaar van de pagina ontbreekt');
-			$valid = false;
-		}
-		elseif (!get_identity()->member_in_committee($data['owner'])) {
-			$errors['owner'] = __('Je kan alleen maar pagina\'s aanmaken voor commissies waar je zelf in zit');
-			$valid = false;
-		}
+	public function can_set_committee_id(DataIter $iter)
+	{
+		return !$iter->has_id()
+			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY);
+	}
 
-		return $valid;
+	public function new_iter()
+	{
+		$iter = parent::new_iter();
+
+		// Default to owner = board
+		if ($this->can_set_committee_id($iter))
+			$iter['committee_id'] = COMMISSIE_BESTUUR;
+
+		return $iter;
 	}
 
 	protected function _update(DataIter $iter, array $data, array &$errors)
@@ -75,7 +84,7 @@ class ControllerShow extends ControllerCRUD
 		return $success;
 	}
 
-	protected function _prepare_mail(DataIter $iter, $difference)
+	private function _prepare_mail(DataIter $iter, $difference)
 	{
 		$data = $iter->data;
 		$data['member_naam'] = member_full_name(get_identity()->member(), IGNORE_PRIVACY);
@@ -83,26 +92,26 @@ class ControllerShow extends ControllerCRUD
 
 		$commissie_model = get_model('DataModelCommissie');
 
-		$in_bestuur = member_in_commissie(COMMISSIE_BESTUUR, false);
-		$in_commissie = member_in_commissie($iter['owner'], false);
+		$in_bestuur = get_identity()->member_in_committee(COMMISSIE_BESTUUR);
+		$in_commissie = get_identity()->member_in_committee($iter['committee_id']);
 		
 		if (!$in_commissie && $in_bestuur) {
 			/* Bestuur changed something, notify commissie */
 			$data['commissie_naam'] = $commissie_model->get_naam(COMMISSIE_BESTUUR);
-			$data['email'] = array($commissie_model->get_email($iter->get('owner')));
+			$data['email'] = array($commissie_model->get_email($iter['committee_id']));
 		} elseif (!$in_bestuur && $in_commissie) {
 			/* Commissie changed something, notify bestuur */
-			$data['commissie_naam'] = $commissie_model->get_naam($iter->get('owner'));
-			$data['email'] = array(get_config_value('email_bestuur'));
+			$data['commissie_naam'] = $commissie_model->get_naam($iter['committee_id']);
+			$data['email'] = array($commissie_model->get_email(COMMISSIE_BESTUUR));
 		} else {
-			/* Easy changed something, notify bestuur and commissie */
+			/* AC/DCee changed something, notify bestuur and commissie */
 			$data['commissie_naam'] = $commissie_model->get_naam(COMMISSIE_EASY);
 			$data['email'] = array(
-				$commissie_model->get_email($iter->get('owner')),
-				get_config_value('email_bestuur'));
+				$commissie_model->get_email($iter['committee_id']),
+				$commissie_model->get_email(COMMISSIE_BESTUUR));
 		}
 		
-		return $data;		
+		return $data;
 	}
 
 	public function run_preview(DataIterEditable $iter = null)
@@ -112,7 +121,7 @@ class ControllerShow extends ControllerCRUD
 
 		$page = new DataIterEditable($this->model, null, $_POST);
 
-		return editable_parse($page, null);
+		return $this->view->render_preview($page, isset($_GET['lang']) ? $_GET['lang'] : null);
 	}
 
 	public function run_index()

@@ -17,6 +17,20 @@ class DataIterAnnouncement extends DataIter implements SearchResult
 		];
 	}
 
+	static public function rules()
+	{
+		return array_merge(parent::rules(), [
+			'subject' => [
+				'required' => true,
+				'validate' => ['not_empty']
+			],
+			'message' => [
+				'required' => true,
+				'validate' => ['not_empty']
+			]
+		]);
+	}
+
 	public function get_committee()
 	{
 		return $this->getIter('committee', 'DataIterCommissie');
@@ -68,7 +82,7 @@ class DataModelAnnouncement extends DataModel implements SearchProvider
 				c.id as committee__id,
 				c.naam as committee__naam,
 				c.login as committee__login,
-				c.page as committee__page
+				c.page_id as committee__page_id
 			FROM
 				{$this->table}
 			LEFT JOIN commissies c ON

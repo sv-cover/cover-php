@@ -7,7 +7,7 @@
 		require_once 'include/models/' . $name . '.php';
 
 		if (!class_exists($name))
-			throw new InvalidArgumentException(sprintf(__("Kan het model %s niet vinden"), $name));
+			throw new InvalidArgumentException(sprintf(__("Could not find the model %s"), $name));
 
 		$refl = new ReflectionClass($name);
 		return $refl->newInstance(get_db());
@@ -22,7 +22,7 @@
 	  * @result a #DataModel object (either created or the one that was 
 	  * created before), or false if the model could not be created
 	  */
-	function get_model($name)
+	function get_model(string $name)
 	{
 		static $models = array();
 
@@ -44,7 +44,10 @@
 		{
 			require 'include/data/DBIds.php';
 
-			$environment = 'development';
+			if (!isset($dbids) || !is_array($dbids))
+				throw new RuntimeException('Variable $dbids not defined as array in DBIds.php');
+
+			$environment = get_static_config_value('environment', 'development');
 
 			$database_class = isset($dbids[$environment]['class'])
 				? $dbids[$environment]['class']
@@ -52,32 +55,33 @@
 
 			require_once 'include/data/' . $database_class . '.php';
 
+			if (!isset($dbids[$environment]))
+				throw new RuntimeException("No database configuration for environment '$environment'");
+
 			/* Create database */
 			$db = new $database_class($dbids[$environment]);
 
 			/* Enable query history if requested */
-			if (get_config_value('show_queries', false))
-				$db->history = array();
+			if (get_static_config_value('show_queries', false))
+				$db->track_history = true;
 		}
 		
 		return $db;
 	}
 	
 	/** @group Data
-	  * Return a $_POST variable. This function will stripslashes when
-	  * get_magic_quotes_gpc is true so that $_POST values are unified
-	  * regardless of the PHP setup.
+	  * Return a $_POST variable.
 	  * @key the POST variable name to get the value of
 	  * 
 	  * @result the POST value or null if the key isn't in $_POST
 	  */
 	function get_post($key) {
+		// Strip array field name thingies
+		if (substr($key, -2) == '[]')
+			$key = substr($key, 0, -2);
+
 		if (!isset($_POST[$key]))
 			return null;
 		
-		if (get_magic_quotes_gpc())
-			return stripslashes($_POST[$key]);
-		else
-			return $_POST[$key];
+		return $_POST[$key];
 	}
-?>

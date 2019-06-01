@@ -1,6 +1,6 @@
 <div class="commissie-member profile-widget round">
 	{% if iter.has_photo and not iter.is_private('foto') %}
-	<a href="foto.php?lid_id={{ iter.id }}" data-image-popup="modal" title="{{ __('Klik om de foto te vergroten')|e('html_attr') }}">
+	<a href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-image-popup="modal" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
 		<img src="foto.php?lid_id={{ iter.id }}&amp;format=square&amp;width=200&amp;timestamp={{ iter.photo_mtime }}" width="150">
 	</a>
 	{% else %}
@@ -11,13 +11,13 @@
 	<form id="upload-photo" action="profiel.php?lid={{iter.id}}&amp;view=photo" method="post" enctype="multipart/form-data">
 		{{ html_nonce('photo', iter) }}
 		<div class="file-upload-button button">
-			<span>{{ __('Kies nieuwe foto') }}&hellip;</span>
-			<input type="file" name="photo" accept="image/jpeg" title="{{ __('Alleen JPEG-plaatjes mogen.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
+			<span>{{ __('Choose photo') }}&hellip;</span>
+			<input type="file" name="photo" accept="image/jpeg" title="{{ __('Only JPEG-images are allowed.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
 		</div>
 	</form>
 	{% endif %}
 
-	{% if iter.nick is defined and not iter.is_private('naam') %}
+	{% if iter.nick != '' and not iter.is_private('naam') %}
 	<h3 class="nickname">{{ iter.nick }}</h3>
 	{% endif %}
 

@@ -162,7 +162,7 @@ class ControllerForum extends Controller
 		{
 			// Mark an empty option as an error, but process it anyway.
 			// If there are enough non-empty options, it is fine.
-			if (empty($label))
+			if (empty($label) && $i + 1 < self::MINIMUM_POLL_OPTION_COUNT)
 				$poll_errors[] = 'poll_option[' . $i . ']';
 
 			$option = $poll->new_poll_option();
@@ -177,11 +177,14 @@ class ControllerForum extends Controller
 		if (count($valid_options) > self::MAXIMUM_POLL_OPTION_COUNT)
 			$errors[] = 'poll_option_count';
 
-		if (count($errors) > 0 || count($valid_options) < self::MINIMUM_POLL_OPTION_COUNT)
+		if (count($valid_options) < self::MINIMUM_POLL_OPTION_COUNT)
+			$errors[] = 'poll_option_count';
+
+		if (count($errors) > 0)
 			return $this->view->render_poll_form($forum, $poll, $message, $options, array_merge($errors, $poll_errors));
-		
+
 		// Create new poll/thread with given subject
-		$poll_model->insert_poll($poll, $message, $options);
+		$poll_model->insert_poll($poll, $message, $valid_options);
 		
 		// run_message_single redirects to the correct message in a thread
 		return $this->run_message_single($message);
@@ -211,6 +214,7 @@ class ControllerForum extends Controller
 			throw new UnauthorizedException('You do not have permission to edit this message.');
 	}
 	
+	/*
 	private function _view_admin($sub, DataIterForum $forum)
 	{
 		$this->_assert_admin();
@@ -233,9 +237,9 @@ class ControllerForum extends Controller
 			$info = explode('=', $order[$i], 2);
 
 			if (substr($info[0], 0, 1) == '-') {
-				/* Header */
+				// Header
 				if ($info[0] == '-') {
-					/* New header */
+					// New header
 					$iter = new DataIterForumHeader($this->model, -1, array(
 							'name' => $info[1],
 							'position' => $i + 1));
@@ -355,10 +359,10 @@ class ControllerForum extends Controller
 		$uid = null;
 		
 		switch (intval(get_post('type'))) {
-			case DataModelForum::TYPE_ANONYMOUS: /* Everyone */
+			case DataModelForum::TYPE_ANONYMOUS: // Everyone
 				$uid = -1;
 			break;
-			case DataModelForum::TYPE_PERSON: /* Member */
+			case DataModelForum::TYPE_PERSON: // Member
 				$id = intval(get_post('member'));
 
 				if ($id != 0) {
@@ -369,7 +373,7 @@ class ControllerForum extends Controller
 						$uid = $id;
 				}
 			break;
-			case DataModelForum::TYPE_COMMITTEE: /* Commissie */
+			case DataModelForum::TYPE_COMMITTEE: // Commissie
 				$id = intval(get_post('commissie'));
 				
 				if ($id == -1)
@@ -382,7 +386,7 @@ class ControllerForum extends Controller
 						$uid = $id;
 				}
 			break;
-			case DataModelForum::TYPE_GROUP: /* Group */
+			case DataModelForum::TYPE_GROUP: // Group
 				$id = intval(get_post('group'));
 				
 				if ($id == -1)
@@ -491,17 +495,17 @@ class ControllerForum extends Controller
 	{
 		$this->_assert_admin();
 		
-		/* Check group */
+		// Check group
 		$group = $this->model->get_group(get_post('guid'));
 		
 		if (!$group)
 			return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => array('guid')));
 		
 		switch (intval(get_post('type'))) {
-			case DataModelForum::TYPE_ANONYMOUS: /* Everyone */
+			case DataModelForum::TYPE_ANONYMOUS:
 				$uid = -1;
 			break;
-			case DataModelForum::TYPE_PERSON: /* Member */
+			case DataModelForum::TYPE_PERSON:
 				$id = intval(get_post('member'));
 
 				if ($id != 0) {
@@ -510,7 +514,7 @@ class ControllerForum extends Controller
 					$uid = $member->get('id');
 				}
 			break;
-			case DataModelForum::TYPE_COMMITTEE: /* Commissie */
+			case DataModelForum::TYPE_COMMITTEE:
 				$id = intval(get_post('commissie'));
 				
 				if ($id == -1)
@@ -568,6 +572,7 @@ class ControllerForum extends Controller
 	
 		return $this->view->redirect('forum.php?admin=groups');
 	}
+	*/
 
 	private function _create_message(DataIterForumMessage $message, array $data, array &$errors)
 	{
@@ -608,15 +613,46 @@ class ControllerForum extends Controller
 	
 	public function run_forum_index(DataIterForum $forum)
 	{
-		$this->model->set_forum_session_read($forum->get('id'));
+		if (!get_policy($forum)->user_can_read($forum))
+			throw new UnauthorizedException('You are not allowed to read this forum');
+
+		if (get_identity()->member())
+			$this->model->set_forum_session_read($forum, get_identity()->member());
+		
 		return $this->view->render_forum($forum);
+	}
+
+	public function run_forum_update(DataIterForum $forum)
+	{
+		if (!get_policy($forum)->user_can_update($forum))
+			throw new UnauthorizedException('You are not allowed to update the name or description of this forum');
+
+		if ($this->_form_is_submitted('update_forum', $forum))
+		{
+			if (!empty($_POST['name']))
+				$forum['name'] = $_POST['name'];
+			
+			if (isset($_POST['description']))
+				$forum['description'] = $_POST['description'];
+
+			$forum->update();
+		}
+
+		return $this->view->render_forum_form($forum);
 	}
 	
 	public function run_thread_index(DataIterForumThread $thread)
 	{
-		/* Mark the thread as read */
-		$this->model->set_forum_session_read($thread->get('forum'));
-		$this->model->mark_read($thread);
+		if (!get_policy($thread)->user_can_read($thread))
+			throw new UnauthorizedException('You are not allowed to read this thread');
+
+		if ($member = get_identity()->member())
+		{
+			$this->model->set_forum_session_read($thread['forum'], $member);
+
+			$this->model->mark_read($thread, $member);
+		}
+		
 		return $this->view->render_thread($thread);
 	}
 
@@ -642,7 +678,7 @@ class ControllerForum extends Controller
 
 		if ($this->_form_is_submitted('delete_thread', $thread))
 			if ($this->model->delete_thread($thread))
-				return $this->view->redirect(sprintf('forum.php?forum=%d', $thread['forum']));
+				return $this->view->redirect(sprintf('forum.php?forum=%d', $thread['forum_id']));
 
 		return $this->view->render_thread_delete($thread);
 	}
@@ -671,10 +707,13 @@ class ControllerForum extends Controller
 	{
 		$message = $thread->new_message();
 
+		if (!get_policy($message)->user_can_create($message))
+			throw new UnauthorizedException('You are not allowed to create new messages in this thread.');
+
 		if (isset($_GET['quote_message'])) {
 			try {
 				$quoted_message = $this->model->get_message($_GET['quote_message']);
-				$quoted_author = $this->model->get_author_info($quoted_message);
+				$quoted_author = $this->model->get_author_info($quoted_message, 'author');
 				$message['message'] = sprintf("[quote=%s]%s[/quote]\n\n", $quoted_author['name'], $quoted_message['message']);
 			} catch (DataIterNotFoundException $e) {
 				// Yeah, it's not really an issue if we can't find the message we wanted to quote.
@@ -710,7 +749,7 @@ class ControllerForum extends Controller
 		if (!get_policy($message)->user_can_delete($message))
 			throw new UnauthorizedException('You are not allowed to delete this message.');
 
-		$thread = $this->model->get_thread($message['thread']);
+		$thread = $this->model->get_thread($message['thread_id']);
 
 		if ($message->is_only_message())
 			return $this->run_thread_delete($thread);
@@ -724,7 +763,7 @@ class ControllerForum extends Controller
 
 	public function run_message_single(DataIterForumMessage $message)
 	{
-		return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d#p%d', $message['thread'], $message['thread_page'], $message['id']));
+		return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d#p%d', $message['thread_id'], $message['thread_page'], $message['id']));
 	}
 
 	public function run_poll_create(DataIterForum $forum)
@@ -751,12 +790,15 @@ class ControllerForum extends Controller
 
 	public function run_poll_vote(DataIterForumThread $thread)
 	{
-		if ($this->_form_is_submitted('poll_vote', $thread))
+		$poll_model = get_model('DataModelPoll');
+
+		$poll = $poll_model->from_thread($thread);
+
+		if (!get_policy($poll)->user_can_vote($poll))
+			throw new UnauthorizedException('You are not allowed to cast your vote (again) for this poll');
+
+		if ($this->_form_is_submitted('poll_vote', $poll))
 		{
-			$poll_model = get_model('DataModelPoll');
-
-			$poll = $poll_model->from_thread($thread);
-
 			if (!isset($_POST['option']))
 				throw new InvalidArgumentException('Missing option post parameter');
 
@@ -781,8 +823,9 @@ class ControllerForum extends Controller
 	
 	public function run_index()
 	{
-		/* Set last visit for all fora to current time */
-		$this->model->update_last_visit();
+		// Set last visit for all fora to current time
+		if ($member = get_identity()->member())
+			$this->model->update_last_visit($member);
 
 		$forums = $this->model->get();
 
@@ -791,7 +834,7 @@ class ControllerForum extends Controller
 	
 	public function run_preview()
 	{
-		return $this->view->render_preview(get_post('message'));
+		return $this->view->render_preview($_POST['message']);
 	}
 	
 	private function _process_forum_move_thread($thread_id, $forum_id)
@@ -854,6 +897,8 @@ class ControllerForum extends Controller
 				return $this->run_thread_create($forum);
 			elseif ($view == 'create_poll')
 				return $this->run_poll_create($forum);
+			elseif ($view == 'update')
+				return $this->run_forum_update($forum);
 			else
 				return $this->run_forum_index($forum);
 		}

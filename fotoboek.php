@@ -38,7 +38,9 @@
 
 		public function link(array $arguments)
 		{
-			$arguments['photo'] = $this->photo->get_id();
+			$arguments['photo'] = $this->photo['id'];
+
+			$arguments['book'] = $this->photo['scope']['id'];
 
 			$arguments['module'] = 'comments';
 
@@ -47,7 +49,10 @@
 
 		public function link_to_index()
 		{
-			return parent::link(['photo' => $this->photo->get_id()]);
+			return parent::link([
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			]);
 		}
 
 		public function link_to_read(DataIter $iter)
@@ -91,12 +96,12 @@
 
 		public function run()
 		{
-			if (logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
-				$this->model->toggle($this->photo, logged_in('id'));
+			if (get_auth()->logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
+				$this->model->toggle($this->photo, get_identity()->get('id'));
 
 			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 				return $this->view->render_json([
-					'liked' => logged_in() && $this->model->is_liked($this->photo, logged_in('id')),
+					'liked' => get_auth()->logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
 			}
@@ -123,7 +128,8 @@
 		protected function _create(DataIter $iter, array $data, array &$errors)
 		{
 			$data['foto_id'] = $this->photo->get_id();
-			$data['tagged_by'] = logged_in('id');
+			$data['tagged_by'] = get_identity()->get('id');
+			$data['tagged_on'] = new DateTime();
 
 			return parent::_create($iter, $data, $errors);
 		}
@@ -131,7 +137,8 @@
 		protected function _update(DataIter $iter, array $data, array &$errors)
 		{
 			// Also update who changed it.
-			$data['tagged_by'] = logged_in('id');
+			$data['tagged_by'] = get_identity()->get('id');
+			$data['tagged_on'] = new DateTime();
 
 			// Only a custom label XOR a lid_id can be assigned to a tag
 			if (isset($data['custom_label']))
@@ -179,11 +186,12 @@
 
 			$response = array();
 
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($this->_form_is_submitted('privacy', $this->photo)) {
 				if ($_POST['visibility'] == 'hidden')
 					$this->model->mark_hidden($this->photo, $member);
 				else
 					$this->model->mark_visible($this->photo, $member);
+			}
 			
 			return $this->view->render_privacy($this->photo, $this->model->is_visible($this->photo, $member) ? 'visible' : 'hidden');
 		}
@@ -191,7 +199,7 @@
 
 	class ControllerFotoboek extends Controller
 	{
-		protected $policy;
+		public $policy;
 
 		public $faces_controller;
 
@@ -208,28 +216,6 @@
 			$this->policy = get_policy($this->model);
 
 			$this->view = View::byName('fotoboek', $this);
-		}
-
-		public function user_can_download_book(DataIterPhotobook $book)
-		{
-			return get_identity()->member_is_active()
-				&& !($book instanceof DataIterRootPhotobook)
-				&& $this->policy->user_can_read($book);
-		}
-
-		public function user_can_mark_as_read(DataIterPhotobook $book)
-		{
-			return // only logged in members can track their viewed photo books
-				get_auth()->logged_in() 
-				
-				// and only if enabled
-				&& get_config_value('enable_photos_read_status', true) 
-
-				// and only if we actually are watching a book
-				&& $book->get_id() 
-				
-				// which is not artificial (faces, likes) and has photos
-				&& ctype_digit($book->get_id()) && $book->count_books() > 0;
 		}
 		
 		/* Helper functions for _check_foto_values */
@@ -334,6 +320,9 @@
 
 		private function _view_update_photo_order(DataIterPhotobook $book)
 		{
+			if (!$this->_form_is_submitted('update_photo_order', $book))
+				throw new RuntimeException('Missing nonce');
+
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 
@@ -356,6 +345,9 @@
 
 		private function _view_update_book_order(DataIterPhotobook $parent)
 		{
+			if (!$this->_form_is_submitted('update_book_order', $parent))
+				throw new RuntimeException('Missing nonce');
+
 			if (!$this->policy->user_can_update($parent))
 				throw new UnauthorizedException();
 
@@ -385,7 +377,7 @@
 			{
 				$photo->set('beschrijving', $_POST['beschrijving']);
 				$this->model->update($photo);
-				$this->redirect('fotoboek.php?photo=' . $photo->get_id());
+				$this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
 			}
 			
 			return $this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
@@ -408,44 +400,53 @@
 			
 			foreach ($iter as $full_path)
 			{
-				if (!preg_match('/\.(je?pg|gif)$/i', $full_path))
-					continue;
+				try {
+					if (!preg_match('/\.(je?pg|gif)$/i', $full_path))
+						continue;
 
-				$id = null;
+					$id = null;
 
-				$description = '';
+					$description = '';
 
-				$file_path = path_subtract($full_path, get_config_value('path_to_photos'));
+					$file_path = path_subtract($full_path, get_config_value('path_to_photos'));
 
-				// Find existing photo
-				foreach ($photos_in_album as $photo) {
-					if ($photo->get('filepath') == $file_path) {
-						$id = $photo->get_id();
-						$description = $photo->get('beschrijving');
-						break;
+					// Find existing photo
+					foreach ($photos_in_album as $photo) {
+						if ($photo->get('filepath') == $file_path) {
+							$id = $photo->get_id();
+							$description = $photo->get('beschrijving');
+							break;
+						}
 					}
+
+					$exif_data = @exif_read_data($full_path);
+
+					if ($exif_data === false)
+						$exif_data = array('FileDateTime' => filemtime($full_path));
+
+					if ($exif_thumbnail = @exif_thumbnail($full_path, $th_width, $th_height, $th_image_type))
+						$thumbnail = encode_data_uri(image_type_to_mime_type($th_image_type), $exif_thumbnail);
+					else
+						$thumbnail = null;
+
+					$out->event('photo', json_encode(array(
+						'id' => $id,
+						'description' => (string) $description,
+						'path' => $file_path,
+						'created_on' => strftime('%Y-%m-%d %H:%M:%S',
+							isset($exif_data['DateTimeOriginal'])
+								? strtotime($exif_data['DateTimeOriginal'])
+								: $exif_data['FileDateTime']),
+						'thumbnail' => $thumbnail,
+					)));
+				} catch (\Exception $e) {
+					$out->event('error', json_encode([
+						'message' => $e->getMessage(),
+						'file' => $e->getFile(),
+						'line' => $e->getLine(),
+						'trace' => $e->getTrace()
+					]));
 				}
-
-				$exif_data = @exif_read_data($full_path);
-
-				if ($exif_data === false)
-					$exif_data = array('FileDateTime' => filemtime($full_path));
-
-				if ($exif_thumbnail = exif_thumbnail($full_path, $th_width, $th_height, $th_image_type))
-					$thumbnail = encode_data_uri(image_type_to_mime_type($th_image_type), $exif_thumbnail);
-				else
-					$thumbnail = null;
-
-				$out->event('photo', json_encode(array(
-					'id' => $id,
-					'description' => (string) $description,
-					'path' => $file_path,
-					'created_on' => strftime('%Y-%m-%d %H:%M:%S',
-						isset($exif_data['DateTimeOriginal'])
-							? strtotime($exif_data['DateTimeOriginal'])
-							: $exif_data['FileDateTime']),
-					'thumbnail' => $thumbnail,
-				)));
 			}
 
 			$out->event('end');
@@ -480,11 +481,13 @@
 
 			$success = null;
 
-			if (isset($_POST['photo']))
+			if ($this->_form_is_submitted('add_photos', $book))
 			{
+				$photos = isset($_POST['photo']) ? $_POST['photo'] : [];
+				
 				$new_photos = array();
 
-				foreach ($_POST['photo'] as $photo)
+				foreach ($photos as $photo)
 				{
 					if (!isset($photo['add']))
 						continue;
@@ -509,12 +512,12 @@
 				if (count($new_photos))
 				{
 					// Update photo book last_update timestamp
-					$book->set_literal('last_update', 'NOW()');
+					$book['last_update'] = new DateTime();
 					$this->model->update_book($book);
 
-					// Update faces
+					// Update faces (but re-run on all photos to align clusters)
 					$face_model = get_model('DataModelPhotobookFace');
-					$face_model->refresh_faces($new_photos);
+					$face_model->refresh_faces($book->get_photos());
 				}
 				
 				if (count($errors) == 0)
@@ -533,7 +536,7 @@
 
 			$errors = array();
 
-			if (!empty($_POST['confirm_delete']))
+			if ($this->_form_is_submitted('delete', $book))
 			{
 				if ($_POST['confirm_delete'] == $book->get('titel')) {
 					$this->model->delete_book($book);
@@ -551,17 +554,21 @@
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
 			
-			foreach ($_POST['photo'] as $id)
-				if ($photo = $this->model->get_iter($id))
-					$this->model->delete($photo);
+			if ($this->_form_is_submitted('delete_photos'))
+			{
+				if (isset($_POST['photo']))
+					foreach ($_POST['photo'] as $id)
+						if ($photo = $this->model->get_iter($id))
+							$this->model->delete($photo);
+			}
 			
 			return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
 		}
 
 		protected function _view_mark_read(DataIterPhotobook $book)
 		{
-			if (logged_in())
-				$this->model->mark_read_recursively(logged_in('id'), $book);
+			if (get_auth()->logged_in())
+				$this->model->mark_read_recursively(get_identity()->get('id'), $book);
 
 			return $this->view->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
 		}
@@ -570,8 +577,12 @@
 		{
 			// Note again that this function ignores the view completely and produces output on its own.
 
-			// For now require login for these originals
-			if (!get_identity()->member_is_active())
+			// We don't want 'guests' to download our originals
+			if (!get_auth()->logged_in())
+				throw new UnauthorizedException();
+
+			// Also, you need at least read access to this photo
+			if (!get_policy($photo)->user_can_read($photo))
 				throw new UnauthorizedException();
 
 			if (!$photo->file_exists())
@@ -592,7 +603,7 @@
 		{
 			// This function does not use the $view but produces its own output via ZipStream.
 
-			if (!$this->user_can_download_book($root_book))
+			if (!$this->policy->user_can_download_book($root_book))
 				throw new UnauthorizedException();
 
 			// Disable all output buffering
@@ -610,8 +621,8 @@
 			// Make a list of all the books to be added to the zip
 			// but filter out the books I can't read.
 			for ($i = 0; $i < count($books); ++$i)
-				foreach ($books[$i]->get_books(0) as $child)
-					if ($this->policy->user_can_read($child))
+				foreach ($books[$i]['books_without_metadata'] as $child)
+					if ($this->policy->user_can_download_book($child))
 						$books[] = $child;
 			
 			// Turn that list into a hashtable linking book id to book instance.
@@ -633,7 +644,7 @@
 				$book_ancestors = [$book];
 
 				while (end($book_ancestors)->get_id() != $root_book->get_id()
-					&& end($book_ancestors)->has('parent_id')
+					&& end($book_ancestors)->has_value('parent_id')
 					&& isset($books[end($book_ancestors)->get('parent_id')]))
 					$book_ancestors[] = $books[end($book_ancestors)->get('parent_id')];
 				
@@ -651,18 +662,22 @@
 					if (!$photo->file_exists())
 						continue;
 
+					// Skip photo's you cannot access
+					if (!get_policy($photo)->user_can_read($photo))
+						continue;
+
 					// Let's just assume that the filename the photo already has is sane and safe
 					$photo_path = $book_path . '/' . basename($photo->get('filepath'));
 
 					// Add meta data to the zip file if available
 					$metadata = array();
 
-					if ($photo->has('created_on'))
+					if ($photo->has_value('created_on'))
 						$metadata['time'] = strtotime($photo->get('created_on'));
 					else
 						$metadata['time'] = filectime($photo->get_full_path());
 					
-					if ($photo->has('beschrijving'))
+					if ($photo->has_value('beschrijving'))
 						$metadata['comment'] = $photo->get('beschrijving');
 
 					// And finally add the photo to the actual stream
@@ -678,46 +693,53 @@
 
 		protected function _view_confirm_download_book(DataIterPhotobook $root_book)
 		{
+			if (!$this->policy->user_can_download_book($root_book))
+				throw new UnauthorizedException();
+
 			$books = array($root_book);
 
 			// Make a list of all the books to be added to the zip
 			// but filter out the books I can't read.
 			for ($i = 0; $i < count($books); ++$i)
-				foreach ($books[$i]->get_books(0) as $child)
-					if ($this->policy->user_can_read($child))
+				foreach ($books[$i]['books_without_metadata'] as $child)
+					if ($this->policy->user_can_download_book($child))
 						$books[] = $child;
 
 			$total_photos = 0;
 			$total_file_size = 0;
 
-			foreach ($books as $book)
-				foreach ($book->get_photos() as $photo)
-					if ($photo->file_exists())
-					{
+			foreach ($books as $book) {
+				foreach ($book->get_photos() as $photo) {
+					if ($photo->file_exists() && get_policy($photo)->user_can_read($photo)) {
 						$total_photos += 1;
 						$total_file_size += $photo->get_file_size();
 					}
+				}
+			}
 
 			return $this->view->render_download_photobook($root_book, $total_photos, $total_file_size);
 		}
 
 		protected function _view_scaled_photo(DataIterPhoto $photo)
 		{
-			if (!$this->policy->user_can_read($photo->get_book()))
-				throw new UnauthorizedException();
+			if (!get_policy($photo)->user_can_read($photo))
+				throw new UnauthorizedException('You may need to log in to view this photo');
 
 			$width = isset($_GET['width']) ? min($_GET['width'], 1600) : null;
 			$height = isset($_GET['height']) ? min($_GET['height'], 1600) : null;
 
+			$cache_status = null;
+
 			// First open the resource because this could throw a 404 exception with
 			// the appropriate headers.
-			$fhandle = $photo->get_resource($width, $height);
+			$fhandle = $photo->get_resource($width, $height, !empty($_GET['skip_cache']), $cache_status);
 			
 			header('Pragma: public');
 			header('Cache-Control: max-age=86400');
 			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+			header('X-Cache-Status: ' . $cache_status);
 			
-			if (substr($photo->get('filepath'), -3, 3) == 'gif')
+			if (substr($photo['filepath'], -3, 3) == 'gif')
 				header('Content-Type: image/gif');
 			else
 				header('Content-Type: image/jpeg');
@@ -728,12 +750,10 @@
 
 		protected function _view_read_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
-			if (!$this->policy->user_can_read($book))
+			if (!get_policy($photo)->user_can_read($photo))
 				throw new UnauthorizedException();
 
 			$photos = $book->get_photos();
-
-			$current_index = array_usearch($photo, $photos, ['DataIter', 'is_same']);
 
 			return $this->view->render_photo($book, $photo);
 		}
@@ -743,10 +763,45 @@
 			if (!$this->policy->user_can_read($book))
 				throw new UnauthorizedException();
 
-			if (logged_in())
-				$this->model->mark_read(logged_in('id'), $book);
+			$rendered_page = $this->view->render_photobook($book);
 
-			return $this->view->render_photobook($book);
+			if (get_auth()->logged_in())
+				$this->model->mark_read(get_identity()->get('id'), $book);
+
+			return $rendered_page;
+		}
+
+		protected function _view_people(DataIterPhotobook $book)
+		{
+			if (!$this->policy->user_can_read($book))
+				throw new UnauthorizedException();
+
+			$photos = $book->get_photos();
+
+			if ($this->_form_is_submitted('cluster_photos', $book)) {
+				if (!$this->policy->user_can_update($book))
+					throw new UnauthorizedException();
+				
+				$face_model = get_model('DataModelPhotobookFace');
+				$face_model->refresh_faces($photos);
+			}
+
+			$face_model = get_model('DataModelPhotobookFace');
+			$faces = $face_model->get_for_book($book);
+
+			return $this->view->render_people($book, $faces);
+		}
+
+		public function json_link_to_update_book_order(DataIterPhotobook $book)
+		{
+			$nonce = nonce_generate(nonce_action_name('update_book_order', [$book]));
+			return $this->link(['view' => 'update_book_order', 'book' => $book['id'], '_nonce' => $nonce]);
+		}
+
+		public function json_link_to_update_photo_order(DataIterPhotobook $book)
+		{
+			$nonce = nonce_generate(nonce_action_name('update_photo_order', [$book]));
+			return $this->link(['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
 		}
 
 		protected function run_impl()
@@ -790,9 +845,15 @@
 				$book = $this->model->get_root_book();
 			}
 
-			// If we have both, we assert that the photo is in the book, right?
-			if ($photo && $book && !$book->has_photo($photo))
-				throw new NotFoundException('This photo book does not contain this photo');
+			try {
+				if ($photo && $book)
+					$photo['scope'] = $book;
+			} catch (LogicException $e) {
+				// This occurs when $book is not the book that contains $photo.
+				// So we redirect to $photo, and let that figure out $book.
+				// No undefined state.
+				return $this->view->redirect('fotoboek.php?photo=' . $photo['id']);
+			}
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {
@@ -837,6 +898,8 @@
 					return $this->_view_add_photos($book);
 
 				case 'update_photo':
+					if (!$photo)
+						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_update_photo($photo);
 
 				case 'update_photo_order':
@@ -855,6 +918,8 @@
 					return $this->_view_list_photos($book);
 
 				case 'download':
+					if (!$photo)
+						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_download_photo($photo);
 
 				case 'download_book':
@@ -864,7 +929,12 @@
 					return $this->_view_confirm_download_book($book);
 
 				case 'scaled':
+					if (!$photo)
+						throw new NotFoundException('Missing photo parameter');
 					return $this->_view_scaled_photo($photo);
+
+				case 'people':
+					return $this->_view_people($book);
 
 				default:
 					if ($photo)

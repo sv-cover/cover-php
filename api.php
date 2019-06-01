@@ -18,7 +18,11 @@ class ControllerApi extends Controller
 		'telefoonnummer' => 'phone_number',
 		'beginjaar' => 'membership_year_of_enrollment',
 		'geboortedatum' => 'birth_date',
-		'geslacht' => 'gender'
+		'geslacht' => 'gender',
+		'member_from' => 'membership_started_on',
+		'member_till' => 'membership_ended_on',
+		'donor_from' => 'donorship_date_of_authorization',
+		'donor_till' => 'donorship_ended_on'
 	];
 		
 	public function __construct()
@@ -26,8 +30,12 @@ class ControllerApi extends Controller
 		// Do nothing.
 	}
 
-	public function api_agenda()
+
+	public function api_agenda($committees=null)
 	{
+		if ($committees !== null && !is_array($committees))
+			$committees = array($committees);
+
 		/** @var DataModelAgenda $agenda */
 		$agenda = get_model('DataModelAgenda');
 
@@ -35,9 +43,12 @@ class ControllerApi extends Controller
 
 		// TODO logged_in() incidentally works because the session is read from $_GET[session_id] by
 		// the session provider. But the current session should be set more explicit.
-		foreach ($agenda->get_agendapunten() as $activity)
-			if (get_policy($agenda)->user_can_read($activity))
+		foreach ($agenda->get_agendapunten() as $activity){
+			if ($committees !== null && !in_array($activity['committee']['login'], $committees))
+				continue;
+			if (get_policy($agenda)->user_can_read($activity) )
 				$activities[] = $activity->data;
+		}
 
 		// Add the properties that Newsletter expects
 		foreach ($activities as &$activity) {
@@ -64,7 +75,12 @@ class ControllerApi extends Controller
 		if (!get_policy('DataModelAgenda')->user_can_read($agendapunt))
 			throw new UnauthorizedException('You are not authorized to read this event');
 
-		return ['result' => $agendapunt->data];
+		$data = $agendapunt->data;
+		
+		// Backwards compatibility for consumers of the API
+		$data['commissie'] = $data['committee_id'];
+
+		return ['result' => $data];
 	}
 
 	public function api_session_create($email, $password, $application)
@@ -73,7 +89,7 @@ class ControllerApi extends Controller
 		$user_model = get_model('DataModelMember');
 
 		if (!($member = $user_model->login($email, $password)))
-			throw new RuntimeException('Invalid username or password');
+			throw new InvalidArgumentException('Invalid username or password');
 
 		/** @var DataModelSession $session_model */
 		$session_model = get_model('DataModelSession');
@@ -104,13 +120,33 @@ class ControllerApi extends Controller
 		$session = $session_model->resume($session_id);
 
 		if (!$session)
-			throw new RuntimeException('Invalid session id');
+			throw new InvalidArgumentException('Invalid session id');
 
 		$auth = new ConstantSessionProvider($session);
 
 		$ident = get_identity_provider($auth);
 
-		return array('result' => $ident->member()->data);
+		$fields = array_merge(DataIterMember::fields(), ['type']);
+
+		// Prepare data for member 
+		$member = $ident->member();
+		$data = [];
+		foreach ($fields as $field)
+			$data[$field] = $member[$field];
+
+		// Prepare committee data
+		$committee_model = get_model('DataModelCommissie');
+		$committee_data = [];
+
+		
+		// $committee_ids = $ident->get_override_committees() ?? $member['committees'];
+		$committees = $committee_model->find(['id__in' => $member['committees'] ]);
+
+		// For now just return login and committee name
+		foreach ($committees as $committee)
+			$committee_data[$committee['login']] = $committee['naam'];
+		
+		return array('result' => array_merge($data, ['committees' => $committee_data]));
 	}
 
 	public function api_session_test_committee($session_id, $committees)
@@ -136,12 +172,9 @@ class ControllerApi extends Controller
 			// Find the committee id
 			$committee = $committee_model->get_from_name($committee_name);
 
-			if (!$committee)
-				return array('result' => false, 'error' => 'Committee "' . $committee_name . '" not found');
-
 			// And finally, test whether the searched for committee and the member is committees intersect
 			if ($ident->member_in_committee($committee->get_id()))
-				return array('result' => true, 'committee' => $committee->get('naam'));
+				return array('result' => true, 'committee' => $committee['naam']);
 		}
 
 		return array('result' => false);
@@ -164,7 +197,10 @@ class ControllerApi extends Controller
 		// This one is passed as parameter anyway, it is already known.
 		$member->data['id'] = (int) $member_id;
 
-		return array('result' => $member->data);
+		return array('result' => array_merge(
+			$member->data,
+			['type' => $member['type']]
+		));
 	}
 
 	public function api_get_committees($member_id)
@@ -184,26 +220,10 @@ class ControllerApi extends Controller
 		{
 			$committee = $committee_model->get_iter($committee_id);
 
-			$committees[$committee->get('login')] = $committee->get('naam');
+			$committees[$committee['login']] = $committee['naam'];
 		}
 
 		return array('result' => $committees);
-	}
-
-	private function _get_member_type_from_secretary_info($data)
-	{
-		$type = MEMBER_STATUS_UNCONFIRMED;
-
-		if (!empty($data['donorship_ended_on']))
-			$type = MEMBER_STATUS_LID_AF;
-		elseif (!empty($data['donorship_date_of_authorization']))
-			$type = MEMBER_STATUS_DONATEUR;
-		elseif (!empty($data['membership_ended_on']))
-			$type = MEMBER_STATUS_LID_AF;
-		elseif (!empty($data['membership_started_on']))
-			$type = MEMBER_STATUS_LID;
-
-		return $type;
 	}
 
 	public function api_secretary_create_member()
@@ -214,8 +234,7 @@ class ControllerApi extends Controller
 			throw new InvalidArgumentException('Missing id field in POST');
 
 		$data = [
-			'id' => $_POST['id'],
-			'type' => $this->_get_member_type_from_secretary_info($_POST)
+			'id' => $_POST['id']
 		];
 
 		foreach (self::$secretary_mapping as $field => $secretary_field)
@@ -225,41 +244,24 @@ class ControllerApi extends Controller
 		}
 		
 		$member = new DataIterMember($model, $data['id'], $data);
-		$member->set('privacy', 958698063);
-
-		$model->insert($member);
+		$member['privacy'] = 958698063;
 
 		// Create profile for this member
 		$nick = member_full_name($member, IGNORE_PRIVACY);
 		
 		if (strlen($nick) > 50)
-			$nick = $member->get('voornaam');
+			$nick = $member['voornaam'];
 		
 		if (strlen($nick) > 50)
 			$nick = '';
 		
-		$iter = new DataIterMember($model, -1, array('lidid' => $member->get_id(), 'nick' => $nick));
+		$member['nick'] = $nick;
 		
-		$model->insert_profiel($iter);
+		$model->insert($member);
 
-		// Create a password
-		$passwd = create_pronouncable_password();
-		
-		$model->set_password($member, $passwd);
-		
-		// Setup e-mail
-		$data['wachtwoord'] = $passwd;
-		$mail = implode("\n\n", [
-				'(For English version see below)',
-				parse_email('nieuwlid_nl.txt', $data),
-				'------------------',
-				parse_email('nieuwlid_en.txt', $data)]);
-
-		mail($data['email'], 'Website Cover', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-
-		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+		// Only email new members (not historical updates) about their new password 
+		if ($member->is_member())
+			$this->_send_welcome_mail($member);
 
 		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
@@ -270,8 +272,10 @@ class ControllerApi extends Controller
 
 		$member = $model->get_iter($member_id);
 
-		$data = $member->data;
-		$data['type_string'] = $model->get_status($member);
+		$data = [];
+
+		foreach (self::$secretary_mapping as $prop => $field)
+			$data[$field] = $member[$prop];
 
 		return ['success' => true, 'data' => $data];
 	}
@@ -285,6 +289,8 @@ class ControllerApi extends Controller
 
 		$member = $model->get_iter($member_id);
 
+		$member_is_member = $member->is_member();
+
 		$reverse_mapping = array_flip(self::$secretary_mapping);
 
 		foreach ($_POST as $remote_field => $value)
@@ -296,11 +302,35 @@ class ControllerApi extends Controller
 			$member[$field] = $value;
 		}
 
-		$member['type'] = $this->_get_member_type_from_secretary_info($_POST);
-
 		$model->update($member);
 
-		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+		// If this person just has become a member, send them the welcome email
+		if (!$member_is_member && $member->is_member())
+			$this->_send_welcome_mail($member);
+
+		return ['success' => true, 'url' => ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+	}
+
+	private function _send_welcome_mail(DataIterMember $member)
+	{
+		// Create a password
+		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
+		
+		// Setup e-mail
+		$data = $member->data;
+		$data['password_link'] = $token['link'];
+
+		$mail = implode("\n\n", [
+				'(For English version see below)',
+				parse_email('nieuwlid_nl.txt', $data),
+				'------------------',
+				parse_email('nieuwlid_en.txt', $data)]);
+
+		mail($data['email'], 'Website Cover', $mail,
+			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+
+		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
+			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 	}
 
 	public function api_secretary_delete_member($member_id)
@@ -320,11 +350,14 @@ class ControllerApi extends Controller
 		$member_model = get_model('DataModelMember');
 		$member = $member_model->get_iter($member_id);
 
-		$mailing_model = get_model('DataModelMailinglijst');
-		$mailinglist = $mailing_model->get_lijst($mailinglist);
-		$id = $mailing_model->aanmelden($mailinglist, $member->get_id());
+		$mailing_model = get_model('DataModelMailinglist');
+		$mailinglist = $mailing_model->get_iter_by_address($mailinglist);
 
-		return ['success' => !!$id];
+		$subscription_model = get_model('DataModelMailinglistSubscription');
+
+		$subscription_model->subscribe_member($mailinglist, $member);
+
+		return ['success' => true];
 	}
 
 	private function assert_auth_api_application()
@@ -359,9 +392,9 @@ class ControllerApi extends Controller
 
 		switch ($method)
 		{
-			// GET api.php?method=agenda
+			// GET api.php?method=agenda[&committee[]={committee}]
 			case 'agenda':
-				$response = $this->api_agenda();
+				$response = $this->api_agenda(isset($_GET['committee']) ? $_GET['committee'] : null);
 				break;
 
 			case 'get_agendapunt':
@@ -441,10 +474,13 @@ class ControllerApi extends Controller
 		echo json_encode($response);
 	}
 
-	public function run_exception(Exception $e)
+	protected function run_exception($e)
 	{
+		if (!($e instanceof InvalidArgumentException) && !($e instanceof UnauthorizedException))
+			sentry_report_exception($e);
+		
 		header('Content-Type: application/json');
-		echo json_encode(array('error' => $e->getMessage()));
+		echo json_encode(array('success' => false, 'error' => $e->getMessage()));
 	}
 }
 

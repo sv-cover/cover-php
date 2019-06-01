@@ -3,6 +3,9 @@
 		return;
 
 	require_once 'include/smileys.php';
+	require_once 'include/cache.php';
+
+	use Embed\Embed;
 
 	function str_replace_once($search, $replace, $subject)
 	{
@@ -24,7 +27,7 @@
 			$code = preg_replace('/ ( +?)/', $sp, $code, 1);
 		}
 
-		return '<div class="code" title="Code">' . $code . '</div>';
+		return '<code class="code" title="Code"><pre>' . $code . '</pre></code>';
 	}
 
 	function _markup_parse_code(&$markup, &$placeholders)
@@ -61,7 +64,7 @@
 	{
 		$linkcount = 0;
 
-		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)[A-Za-z0-9.-]+|(?:www.)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match))
+		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)[A-Za-z0-9.-]+|(?:www.)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w\-_]*)?\??(?:[\-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match))
 		{
 			$url = preg_match('~^https?://~', $match[0]) ? $match[0] : 'http://' . $match[0];
 			
@@ -122,7 +125,7 @@
 	
 	function _markup_parse_table_real($matches) {
 		$class = $matches[2];
-		$contents = $matches[3];
+		$contents = trim($matches[3]);
 		$result = '';
 
 		if (!$class)
@@ -131,8 +134,8 @@
 			$class = 'markup_' . $class;
 		
 		$result = '<table class="' . $class . '">';
-		
-		if (preg_match_all('/^\|\|(.*?)\|\|$/ims', $contents, $matches)) {
+
+		if (preg_match_all('/^\s*\|\|(.*?)\|\|\s*$/smu', $contents, $matches)) {
 			$maxcol = 0;
 
 			foreach ($matches[1] as $match)
@@ -140,13 +143,15 @@
 
 			foreach ($matches[1] as $match)
 				$result .= _markup_parse_table_row($match, $maxcol);		
+		} else {
+			$result .= sprintf('<!-- cannot parse table %s -->', $contents);
 		}
-		
+
 		return $result . '</table>';
 	}
 	
 	function _markup_parse_table(&$markup) {
-		$markup = preg_replace_callback('/\[table( ([a-z]+))?\](.*?)\[\/table\]/ims', '_markup_parse_table_real', $markup);
+		$markup = preg_replace_callback('/\[table( ([a-z]+))?\](.*?)\[\/table\]/is', '_markup_parse_table_real', $markup);
 	}
 	
 	function _markup_parse_spaces(&$markup) {
@@ -180,18 +185,21 @@
 	
 	function _markup_parse_images(&$markup, &$placeholders)
 	{
-		$count = 0;
+		static $count = 0;
 
-		while (preg_match('/\[img=(.+?)\]/', $markup, $match))
+		while (preg_match('/\[img(?P<classes>(\.[a-z-]+)*)=(?P<url>.+?)\]/', $markup, $match))
 		{
 			$placeholder = sprintf('#IMAGE%d#', $count++);
-			$placeholders[$placeholder] = '<img src="' . htmlentities($match[1], ENT_QUOTES) . '" style="max-width: 100%;">';
+			$placeholders[$placeholder] = sprintf('<img class="%s" src="%s">',
+				'markup-image' . str_replace('.', ' ', $match['classes']),
+				markup_format_attribute($match['url']));
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
+
 	function _markup_parse_youtube(&$markup, &$placeholders)
 	{
-		$count = 0;
+		static $count = 0;
 
 		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match))
 		{
@@ -200,9 +208,47 @@
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
+
+	function _markup_parse_embed(&$markup, &$placeholders)
+	{
+		static $count = 0;
+		
+		$cache = get_cache();
+
+		$markup = preg_replace_callback('/\[embed\](.+?)\[\/embed\]/', function($match) use ($cache, &$placeholders, &$count) {
+			if (!filter_var($match[1], FILTER_VALIDATE_URL))
+				return $match[0];
+
+			try {
+				$embed = $cache->get($match[1]);
+
+				if ($embed === null) {
+					$embed = Embed::create($match[1]);
+					$cache->put($match[1], $embed, 48 * 3600);
+				}
+
+				$html = $embed->code;
+
+			} catch (Exception $e) {
+				$html = sprintf('<a href="%s">%1$s</a> <small>(could not embed due to error: <pre>%s</pre>)</small>', markup_format_text($match[1]), $e);
+			}
+
+			$placeholder = sprintf('#EMBED%d#', $count++);
+			$placeholders[$placeholder] = sprintf('<div class="embed">%s</div>', $html);
+			
+			return $placeholder;
+		}, $markup);
+	}
 	
 	function _markup_parse_header(&$markup) {
-		$markup = preg_replace('/\[(\/)?h(.+?)\]\s*/is', '<$1h$2>', $markup);
+		$markup = preg_replace_callback(
+			'/\[h(?P<level>\d)(?<classes>(\.[a-z-])*)\](?P<content>.+?)\[\/h\\1\]\s*/is',
+			function($match) {
+				return sprintf('<h%d class="%s">%s</h%1$d>',
+					$match['level'],
+					'markup-header' . str_replace('.', ' ', $match['classes']),
+					$match['content']);
+			}, $markup);
 	}
 
 	function _markup_parse_placeholders(&$markup, $placeholders)
@@ -217,12 +263,13 @@
 		if ($model === null)
 			$model = get_model('DataModelCommissie');
 		
-		$iter = $model->get_from_name($commissie);
+		try {
+			$iter = $model->get_from_name($commissie);
 		
-		if ($iter === null)
+			return '<a href="show.php?id=' . $iter->get('page_id') . '">' . markup_format_text($iter->get('naam')) . '</a>';
+		} catch (DataIterNotFoundException $e) {
 			return '';
-		
-		return '<a href="show.php?id=' . $iter->get('page') . '">' . markup_format_text($iter->get('naam')) . '</a>';
+		}
 	}
 	
 	function _markup_parse_macro_real($matches) {
@@ -259,17 +306,17 @@
 
 		while (preg_match('/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i', $markup, $match))
 		{
-			ob_start();
 			try {
 				require_once 'mailinglijsten.php';
 				$controller = new ControllerMailinglijsten();
-				$controller->run_embedded($match[1]);
+				$content = $controller->run_embedded($match[1]);	
 			} catch (Exception $e) {
-				echo markup_format_text($e->getMessage());
+				sentry_report_exception($e);
+				$content = sprintf('<pre>%s</pre>', $e->getMessage());
 			}
-
+			
 			$placeholder = sprintf('#MAILINGLIST%d#', $count++);
-			$placeholders[$placeholder] = ob_get_clean();
+			$placeholders[$placeholder] = $content;
 
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
@@ -305,6 +352,8 @@
 		_markup_parse_images($markup, $placeholders);
 
 		_markup_parse_youtube($markup, $placeholders);
+
+		_markup_parse_embed($markup, $placeholders);
 		
 		/* Filter [url] */
 		_markup_parse_links($markup, $placeholders);
@@ -397,4 +446,3 @@
 	function markup_format_attribute($text) {
 		return htmlspecialchars($text, ENT_QUOTES, WEBSITE_ENCODING);
 	}
-?>

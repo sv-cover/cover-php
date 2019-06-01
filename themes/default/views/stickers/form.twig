@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Sticker wijzigen') : __('Nieuwe sticker toevoegen')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id ? __('Update sticker') : __('Add a new sticker')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id ? __('Sticker wijzigen') : __('Nieuwe sticker toevoegen') }}</h1>
+<h1>{{ iter.has_id ? __('Update sticker') : __('Add a new sticker') }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ view.get_form_action(iter) }}" class="add-sticker-form vertical-form">
 		<input type="hidden" name="lat">
@@ -12,28 +12,28 @@
 		{% if iter.has_id %}
 			{{ html_nonce('update', iter) }}
 		{% else %}
-			{{ html_nonce('create') }}
+			{{ html_nonce('create', iter) }}
 		{% endif %}
 
 		<div>
 			{{ html_label(__('Label'), 'label', errors=errors, required=true) }}
-			{{ html_input_text('label', iter, required='required', placeholder=__('Bijv. op de lantaarnpaal')) }}
+			{{ html_input_text('label', iter, required='required', placeholder=__('E.g. on a lamppost')) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Boodschap'), 'omschrijving', errors=errors, required=true) }}
+			{{ html_label(__('Message'), 'omschrijving', errors=errors, required=true) }}
 			{{ html_textarea_field('omschrijving', iter) }}
 		</div>
 
 		<div>
-			<label for="sticker-location">{{ __('Locatie') }} <small>{{ __('Sleep of klik met de rechter muisknop om de marker te plaatsen') }}</small></label>
+			<label for="sticker-location">{{ __('Location') }} <small>{{ __('Drag or right click to place the marker') }}</small></label>
 			<div class="sticker-location-picker">
 				<div class="sticker-location-map"></div>
 			</div>
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ __('Zet sticker op kaart') }}</button>
+			<button type="submit" class="button">{{ __('Add sticker to map') }}</button>
 		</div>
 	</form>
 </div>

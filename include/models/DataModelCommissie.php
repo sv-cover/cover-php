@@ -13,11 +13,20 @@
 				'naam',
 				'login',
 				'website',
-				'nocaps',
-				'page',
+				'page_id',
 				'hidden',
 				'vacancies',
 			];
+		}
+
+		public function get_page()
+		{
+			return get_model('DataModelEditable')->get_iter($this['page_id']);
+		}
+
+		public function get_member_ids()
+		{
+			return $this->model->get_member_ids($this);
 		}
 
 		public function get_members()
@@ -30,17 +39,20 @@
 			return $this->model->set_members($this, $members);
 		}
 
+		public function get_mascots()
+		{
+			return get_model('DataModelCommitteeMascot')->find_for_committee($this);
+		}
+
 		public function get_summary()
 		{
-			/* Get the first editable page */
 			$editable_model = get_model('DataModelEditable');
-
-			return $editable_model->get_summary($this->get('page'));
+			return $editable_model->get_summary($this['page_id']);
 		}
 
 		public function get_search_relevance()
 		{
-			return floatval($this->get('search_relevance'));
+			return floatval($this->data['search_relevance']);
 		}
 
 		public function get_search_type()
@@ -58,9 +70,64 @@
 			return strtotime($this->get('vacancies')) < strtotime('+1 year');
 		}
 
+		public function has_vacancy()
+		{
+			return $this['vacancies'] && strtotime($this['vacancies']) > time();
+		}
+
 		public function get_email()
 		{
 			return strstr($this['login'], '@') ? $this['login'] : $this['login'] . '@svcover.nl';
+		}
+
+		public function get_email_addresses()
+		{
+			return get_model('DataModelCommissie')->get_email_addresses($this);
+		}
+
+		public function get_thumbnail()
+		{
+			return self::find_image(array(
+				'images/committees/' . $this->get('login') . 'tn.gif',
+				'images/committees/' . $this->get('login') . 'tn.png',
+				'images/committees/' . $this->get('login') . 'tn.jpg',
+				'images/committees/logos/' . $this->get('login') . '.png'
+			));
+		}
+
+		public function get_photo()
+		{
+			$path = self::find_image(array(
+				'images/committees/' . $this->get('login') . '.gif',
+				'images/committees/' . $this->get('login') . '.png',
+				'images/committees/' . $this->get('login') . '.jpg'
+			));
+
+			return $path === null ? null : [
+				'url' => $path,
+				'orientation' => self::get_orientation($path)
+			];
+		}
+
+		static private function find_image($search_paths)
+		{
+			foreach ($search_paths as $path)
+				if (file_exists($path))
+					return $path;
+
+			return null;
+		}
+
+		static private function get_orientation($path)
+		{
+			list($width, $height) = getimagesize($path);
+
+			if ($width == $height)
+				return 'square';
+			if ($width > $height)
+				return 'landscape';
+			else
+				return 'portrait';
 		}
 	}
 
@@ -71,32 +138,15 @@
 	{
 		const TYPE_COMMITTEE = 1;
 		const TYPE_WORKING_GROUP = 2;
+		const TYPE_OTHER = 3;
 
-		public $type = null;
-		
 		public $dataiter = 'DataIterCommissie';
-
-		public $fields = array(
-			'id',
-			'type',
-			'naam',
-			'login',
-			'website',
-			'nocaps',
-			'page',
-			'hidden',
-			'vacancies');
 
 		public function __construct($db)
 		{
 			parent::__construct($db, 'commissies');
 		}
 
-		protected function _generate_query($conditions)
-		{
-			return parent::_generate_query($conditions) . ' ORDER BY naam ASC';
-		}
-		
 		/**
 		  * Get all commissies (optionally leaving out bestuur)
 		  * @include_bestuur optional; whether or not to include
@@ -104,92 +154,118 @@
 		  *
 		  * @result an array of #DataIter
 		  */
-		public function get($include_hidden = true)
+		public function get($type = null, $include_hidden = false)
 		{
 			$conditions = [];
 
 			if (!$include_hidden)
 				$conditions['hidden__ne'] = 1;
 
-			if ($this->type !== null)
-				$conditions['type'] = $this->type;
+			if ($type !== null)
+				$conditions['type'] = $type;
 
 			return $this->find($conditions);
 		}
 
+		protected function _generate_query($where)
+		{
+			if (is_array($where))
+				$where = $this->_generate_conditions_from_array($where);
+
+			return "SELECT
+					{$this->table}.*,
+					COUNT(DISTINCT c_m.member_id) as member_count
+				FROM
+					{$this->table}
+					LEFT JOIN committee_members c_m ON
+						c_m.committee_id = {$this->table}.id"
+				. ($where ? " WHERE {$where}" : "")
+				. " GROUP BY {$this->table}.id"
+				. " ORDER BY naam ASC";
+		}
+
 		public function insert(DataIter $iter)
 		{
-			if ($iter->has('vacancies') && !$iter->get('vacancies'))
-				$iter->set_literal('vacancies', 'NULL');
-
-			if (empty($iter['login']))
-				$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
-
-			if ($this->type !== null)
-				$iter['type'] = $this->type;
-
-			$iter->set('nocaps', strtolower($iter->get('naam')));
+			if ($iter['vacancies'] === '')
+				$iter['vacancies'] = null;
 			
+			$iter['login'] = preg_replace('[^a-z0-9]', '', strtolower($iter['naam']));
+
 			$committee_id = parent::insert($iter);
 
 			// Create the page for this committee
 			$editable_model = get_model('DataModelEditable');
 
-			$page_data = array(
-				'owner' => $committee_id,
-				'titel' => $iter->get('naam'));
+			$page_data = [
+				'committee_id' => $committee_id,
+				'titel' => $iter['naam']
+			];
 
-			$page = new DataIter($editable_model, -1, $page_data);
+			$page = $editable_model->new_iter($page_data);
 
 			$page_id = $editable_model->insert($page);
 
-			$this->db->update($this->table, array('page' => $page_id), $this->_id_string($committee_id), array());
+			$this->db->update($this->table, array('page_id' => $page_id), $this->_id_string($committee_id), array());
 
 			return $committee_id;
 		}
 
 		public function update(DataIter $iter)
 		{
-			if ($iter->has('vacancies') && !$iter->get('vacancies'))
+			if ($iter->has_value('vacancies') && !$iter->get('vacancies'))
 				$iter->set('vacancies', null);
+
+			if ($iter->has_value('hidden'))
+				$iter->set('hidden', (int) $iter->get('hidden'));
 			
 			return parent::update($iter);
 		}
 
 		public function delete(DataIter $iter)
 		{
-			// Remove committee page
-			$editable_model = get_model('DataModelEditable');
+			get_db()->beginTransaction();
 
 			try {
-				$page = $editable_model->get_iter($iter->get('page'));
+				// Save a reference to the page because I'm going to change page_id
+				$page = $iter['page'];
+
+				// Unset the page to prevent foreign key constraints
+				$iter['page_id'] = null;
+				parent::update($iter);
+
+				// Remove committee page
+				$editable_model = get_model('DataModelEditable');
 				$editable_model->delete($page);
-			} catch (DataIterNotFoundException $e) {
-				// Well, never mind.
+		
+				// Remove members from committee
+				$this->set_members($iter, array());
+
+				// Remove forum permissions
+				$forum_model = get_model('DataModelForum');
+				$forum_model->commissie_deleted($iter);
+
+				$result = parent::delete($iter);
+
+				get_db()->commit();
+			} catch (Exception $e) {
+				get_db()->rollback();
+				throw $e;
 			}
 
-			// Remove members from committee
-			$this->set_members($iter, array());
-
-			// Remove forum permissions
-			$forum_model = get_model('DataModelForum');
-			$forum_model->commissie_deleted($iter);
-
-			
-
-			return parent::delete($iter);
+			return $result;
 		}
 		
 		public function get_functies()
 		{
 			static $functies = array(
-				'Voorzitter' => 5,
-				'Secretaris' => 4,
-				'Penningmeester' => 3,
-				'Commissaris Intern' => 2,
-				'Commissaris Extern' => 1,
-				'Vice-voorzitter' => 0,
-				'Algemeen Lid' => -1);
+				'Chairman' => 6,
+				'Secretary' => 5,
+				'Treasurer' => 4,
+				'Commissioner of Internal Affairs' => 3,
+				'Commissioner of External Affairs' => 2,
+				'Commissioner of Educational Affairs' => 1,
+				'Vice-chairman' => 0,
+				'General Member' => -1);
 			
 			return $functies;
 		}
@@ -209,12 +285,26 @@
 		{
 			$pattern = '/\s*[,\/]\s*/';
 
-			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a->get('functie'))));
-			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b->get('functie'))));
+			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a['functie'])));
+			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b['functie'])));
 			
 			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
 		}
 		
+		private function _get_members(DataIterCommissie $committee)
+		{
+			$rows = $this->db->query('SELECT member_id, functie FROM committee_members WHERE committee_id = ' . $committee->get_id());
+
+			return array_combine(
+				array_map(function($row) { return $row['member_id']; }, $rows),
+				array_map(function($row) { return $row['functie']; }, $rows));
+		}
+		
+		public function get_member_ids(DataIterCommissie $committee)
+		{
+			return array_keys($this->_get_members($committee));
+		}
+
 		/**
 		  * Get all members of a specific commissie
 		  * @id the commissie id
@@ -225,21 +315,19 @@
 		{
 			$member_model = get_model('DataModelMember');
 
-			$rows = $this->db->query('SELECT lidid, functie FROM actieveleden WHERE commissieid = ' . $committee->get_id());
+			$positions = $this->_get_members($committee);
 
-			if (count($rows) === 0)
-				return array();
+			if (count($positions) === 0)
+				return [];
 
-			$ids = array_map(function($row) { return $row['lidid']; }, $rows);
+			$ids = array_keys($positions);
 
 			$members = $member_model->find('leden.id IN (' . implode(', ', $ids) . ')');
-
-			$positions = array_combine($ids, array_map(function($row) { return $row['functie']; }, $rows));
 			
 			// Attach the committee positions to all its members
-			// Not using 'set' here because that would mess up the DataIter::get_changes()
+			// Not using 'set' here because that would mess up the DataIter::changed_fields()
 			foreach ($members as $member)
-				$member['functie'] = $positions[$member->get_id()];
+				$member->data['functie'] = $positions[$member['id']];
 
 			/* Sort by function */
 			usort($members, array(&$this, '_sort_leden'));
@@ -262,34 +350,45 @@
 
 		public function set_members(DataIterCommissie $committee, array $members)
 		{
-			$this->db->delete('actieveleden', sprintf('commissieid = %d', $committee->get_id()));
+			$this->db->delete('committee_members', sprintf('committee_id = %d', $committee->get_id()));
 
 			foreach ($members as $member_id => $position)
-				$this->db->insert('actieveleden', array(
-					'commissieid' => $committee->get_id(),
-					'lidid' => intval($member_id),
+				$this->db->insert('committee_members', array(
+					'committee_id' => $committee->get_id(),
+					'member_id' => intval($member_id),
 					'functie' => $position));
 		}
 
-		public function get_commissies_for_member($lid_id)
+		public function get_for_member(DataIterMember $member)
 		{
 			$rows = $this->db->query("
 				SELECT
 					c.*,
-					al.functie
+					c_m.functie
 				FROM
-					actieveleden al
+					committee_members c_m
 				RIGHT JOIN commissies c ON
-					al.commissieid = c.id
+					c_m.committee_id = c.id
 				WHERE
-					al.lidid = " . intval($lid_id) ."
+					c_m.member_id = " . $member->get_id() ."
+					AND c.hidden <> 1
 				GROUP by
 					c.id,
-					al.functie
+					c_m.functie
 				ORDER BY
 					c.naam ASC");
 
 			return $this->_rows_to_iters($rows);
+		}
+
+		public function get_email_addresses(DataIterCommissie $committee)
+		{
+			$aliasses = $this->db->query_column(
+				"SELECT email FROM committee_email WHERE committee_id = :committee_id",
+				'email',
+				[':committee_id' => $committee->get_id()]);
+
+			return array_merge([$committee['email']], $aliasses);
 		}
 
 		/**
@@ -367,7 +466,10 @@
 		{
 			$row = $this->db->query_first("SELECT * 
 					FROM commissies
-					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login, nocaps)");
+					WHERE '" . $this->db->escape_string($name) . "' IN (naam, login)");
+
+			if ($row === null)
+				throw new DataIterNotFoundException($name, $this);
 			
 			return $this->_row_to_iter($row);
 		}
@@ -397,11 +499,11 @@
 					'committee_member_match' as search_match_reason,
 					l.id as search_match_committee_member_id
 				FROM
-					actieveleden al
+					committee_members c_m
 				INNER JOIN leden l ON
-					l.id = al.lidid
+					l.id = c_m.member_id
 				INNER JOIN commissies c ON
-					c.id = al.commissieid
+					c.id = c_m.committee_id
 				WHERE
 					c.hidden <> 1
 					AND (((l.privacy >> ($privacy_bit * 3)) & 7) & $current_privacy_setting) <> 0
@@ -416,20 +518,20 @@
 			return $this->_rows_to_iters($this->db->query($query));
 		}
 
-		public function get_random()
+		public function get_random($type = null)
 		{
 			$conditions = "c.hidden <> 1";
 
-			if ($this->type !== null)
-				$conditions .= sprintf(" AND type = %d", $this->type);
+			if ($type !== null)
+				$conditions .= sprintf(" AND type = %d", $type);
 
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c
-					LEFT JOIN actieveleden a ON
-						a.commissieid = c.id
+					LEFT JOIN committee_members c_m ON
+						c_m.committee_id = c.id
 					WHERE $conditions
 					GROUP BY c.id
-					HAVING COUNT(a.id) > 0
+					HAVING COUNT(c_m.id) > 0 -- non-empty committees only
 					ORDER BY RANDOM()
 					LIMIT 1");
 					
@@ -440,7 +542,7 @@
 		{
 			$row = $this->db->query_first(sprintf("SELECT * 
 					FROM commissies
-					WHERE page = %d", $page_id));
+					WHERE page_id = %d", $page_id));
 			
 			return $this->_row_to_iter($row);
 		}

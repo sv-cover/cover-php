@@ -15,6 +15,7 @@ class HTMLTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('html_input_password', [__CLASS__, 'input_password'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_date', [__CLASS__, 'input_date'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_datetime', [__CLASS__, 'input_datetime'], ['is_variadic' => true, 'is_safe' => ['html']]),
+			new Twig_SimpleFunction('html_input_number', [__CLASS__, 'input_number'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_checkbox', [__CLASS__, 'input_checkbox'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_radio', [__CLASS__, 'input_radio'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_input_hidden', [__CLASS__, 'input_hidden'], ['is_variadic' => true, 'is_safe' => ['html']]),
@@ -22,7 +23,8 @@ class HTMLTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('html_select_field', [__CLASS__, 'select_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_textarea_field', [__CLASS__, 'textarea_field'], ['is_variadic' => true, 'is_safe' => ['html']]),
 			new Twig_SimpleFunction('html_label', [__CLASS__, 'label'], ['is_variadic' => true, 'is_safe' => ['html']]),
-			new Twig_SimpleFunction('html_nonce', [__CLASS__, 'nonce'], ['is_variadic' => true, 'is_safe' => ['html']])
+			new Twig_SimpleFunction('html_nonce', [__CLASS__, 'nonce'], ['is_variadic' => true, 'is_safe' => ['html']]),
+			new Twig_SimpleFunction('html_email', [__CLASS__, 'email'], ['is_variadic' => true, 'is_safe' => ['html']]),
 		];
 	}
 
@@ -33,6 +35,21 @@ class HTMLTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('strip_markup', 'markup_strip'),
 			new Twig_SimpleFilter('excerpt', 'text_excerpt')
 		];
+	}
+
+	static protected function input_attributes(array $attributes)
+	{
+		$result = '';
+
+		foreach ($attributes as $attribute => $value) {
+			if (is_int($attribute))
+				trigger_error('input_field tries to make an attribute without an attribute name', E_USER_WARNING);
+
+			if ($value !== null && $value !== false)
+				$result .= sprintf(' %s="%s"', str_replace('_', '-', $attribute), markup_format_attribute($value));
+		}
+		
+		return $result;
 	}
 
 	static protected function input_field($name, $data, $params)
@@ -52,12 +69,16 @@ class HTMLTwigExtension extends Twig_Extension
 		if ($name)
 			$attributes['name'] = $name;
 
-		if (!isset($params['nopost']) && isset($_POST[$name]))
-			$attributes['value'] = $_POST[$name];
-		elseif ($data && isset($data[$field]))
-			$attributes['value'] = isset($params['formatter']) ? call_user_func($params['formatter'], $data[$field]) : $data[$field];
+		if (!isset($params['nopost']) && array_path($_POST, $field) !== null)
+			$attributes['value'] = array_path($_POST, $field);
+		elseif ($data && array_path($data, $field) !== null)
+			$attributes['value'] = isset($params['formatter'])
+				? call_user_func($params['formatter'], array_path($data, $field))
+				: array_path($data, $field);
 
-		if (isset($params['errors']) && in_array($name, $params['errors']))
+		if (
+			(isset($params['errors']) && is_array($params['errors']) && in_array($name, $params['errors']))
+			|| (isset($params['errors']) && isset($params['errors'][$name])))
 			$params['class'] = (isset($params['class']) ? ($params['class'] . '_') : '') . 'error';
 		
 		unset($params['errors']);
@@ -66,13 +87,7 @@ class HTMLTwigExtension extends Twig_Extension
 
 		$attributes = array_merge($attributes, $params);
 		
-		$result = '<input';
-
-		foreach ($attributes as $attribute => $value)
-			if ($value !== null)
-				$result .= sprintf(' %s="%s"', str_replace('_', '-', $attribute), markup_format_attribute($value));
-		
-		return $result . '>';
+		return sprintf('<input%s>', self::input_attributes($attributes));
 	}
 
 	static public function input_text($name, $data, array $params = array())
@@ -97,10 +112,22 @@ class HTMLTwigExtension extends Twig_Extension
 		return self::input_field($name, null, $params);
 	}
 
+	static public function input_number($name, $data, array $params = array())
+	{
+		$params['type'] = 'number';
+
+		if (!isset($params['class']))
+			$params['class'] = 'number';
+		
+		return self::input_field($name, $data, $params);
+	}
+
 	static public function input_date($name, $data, array $params = array())
 	{
 		$params['type'] = 'date';
-		$params['placeholder'] = sprintf(__('Bijv. %d-9-20'), date('Y'));
+
+		if (!isset($params['placeholder']))
+			$params['placeholder'] = sprintf(__('E.g. %d-9-20'), date('Y'));
 
 		if (!isset($params['class']))
 			$params['class'] = 'date';
@@ -111,10 +138,12 @@ class HTMLTwigExtension extends Twig_Extension
 	static public function input_datetime($name, $data, array $params = array())
 	{
 		$params['type'] = 'datetime-local';
-		$params['placeholder'] = sprintf(__('Bijv. %d-9-20 11:00'), date('Y'));
 		$params['formatter'] = function($datetime) {
 			return trim($datetime) != '' ? date('Y-m-d\TH:i', strtotime($datetime)) : '';
 		};
+		
+		if (!isset($params['placeholder']))
+			$params['placeholder'] = sprintf(__('E.g. %d-9-20 11:00'), date('Y'));
 
 		if (!isset($params['class']))
 			$params['class'] = 'datetime';
@@ -156,7 +185,19 @@ class HTMLTwigExtension extends Twig_Extension
 			}
 		}
 
-		return self::input_field($name, null, $params);
+		$hidden_field = self::input_field($name, null, [
+			'type' => 'hidden',
+			'value' => '',
+			'nopost' => true,
+			'id' => null
+		]);
+
+		if (substr($field, -2, 2) == '[]')
+			$hidden_field = '';
+
+		$checkbox_field = self::input_field($name, null, $params);
+
+		return $hidden_field . $checkbox_field;
 	}
 
 	static public function input_radio($name, $data, $value, array $params = array())
@@ -165,18 +206,30 @@ class HTMLTwigExtension extends Twig_Extension
 		$params['value'] = $value;
 		$params['nopost'] = true;
 
+		if (!isset($params['id']))
+			$params['id'] = sprintf('field-%s-%s', $name, $value);
+
 		if (isset($params['field']))
 			$field = $params['field'];
 		else
 			$field = $name;
 		
-		if (get_post($name) != null) {
-			if (get_post($name) == $value)
+		if (substr($field, -2, 2) == '[]') {
+			if (isset($data[substr($field, 0, -2)]) && in_array($value, $data[substr($field, 0, -2)]))
 				$params['checked'] = 'checked';
-		} elseif ($data[$field] == $value) {
-			$params['checked'] = 'checked';
 		}
-
+		elseif (isset($_POST[$name]) && $_POST[$name] == $value) 
+			$params['checked'] = 'checked';
+		elseif (isset($data[$field])) {
+			if ($value === 'on' || $value === 'yes') {// Boolean mode
+				if ((bool) $data[$field])
+					$params['checked'] = 'checked';
+			} else {
+				if ($data[$field] == $value)
+					$params['checked'] = 'checked';
+			}
+		}
+		
 		return self::input_field($name, null, $params);
 	}
 
@@ -210,6 +263,8 @@ class HTMLTwigExtension extends Twig_Extension
 		} else {
 			$field = $name;
 		}
+
+		$params['name'] = $name;
 		
 		// Which value is selected
 		if (!isset($params['nopost']) && get_post($name) !== null)
@@ -224,7 +279,7 @@ class HTMLTwigExtension extends Twig_Extension
 
 		// Do we need to add the error class?
 		if (isset($params['errors']))
-			if (in_array($field, $params['errors']))
+			if ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))
 				if (isset($params['class']))
 					$params['class'] .= ' error';
 				else
@@ -235,16 +290,44 @@ class HTMLTwigExtension extends Twig_Extension
 		if (!isset($params['id']))
 			$params['id'] = 'field-' . $name;
 
-		$options = '';
-		foreach ($values as $val => $title)
-			$options .= '<option value="' . markup_format_attribute($val) . '"' . (($default !== null && $val == $default) ? ' selected="selected"' : '') . '>' . markup_format_text($title) . "</option>\n";
-		
-		$result = '<select name="' . $name . '"';
+		$html = [];
 
-		foreach ($params as $attribute => $value)
-			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($value) . '"';
+		if (!isset($params['required']) || !$params['required'])
+			$html[] = '<option value=""></option>';
+
+		foreach ($values as $group => $options)
+		{
+			if (!is_array($options)) {
+				$options = [$group => $options];
+				$group = null;
+			}
+
+			if (count($options) === 0)
+				continue;
+
+			$html_options = [];
+
+			foreach ($options as $val => $title)
+			{
+				if ($default === null)
+					$is_selected = false;
+				elseif (is_array($default))
+					$is_selected = in_array($val, $default);
+				else
+					$is_selected = $val == $default;
+
+				$html_options[] = sprintf('<option value="%s"%s>%s</option>',
+					markup_format_attribute($val),
+					$is_selected ? ' selected' : '',
+					markup_format_text($title));
+			}
+
+			$html[] = $group
+				? sprintf('<optgroup label="%s">%s</optgroup>', markup_format_attribute($group), implode("\n", $html_options))
+				: implode("\n", $html_options);
+		}
 		
-		return $result . ">\n" . $options . "</select>";
+		return sprintf('<select%s>%s</select>', self::input_attributes($params), implode("\n", $html));
 	}
 
 	static public function textarea_field($name, $data, array $params = array())
@@ -255,6 +338,9 @@ class HTMLTwigExtension extends Twig_Extension
 		} else {
 			$field = $name;
 		}
+
+		if (!isset($params['id']))
+			$params['id'] = 'field-' . $name;
 
 		if (!isset($params['nopost']) && isset($_POST[$name]))
 			$value = get_post($name);
@@ -273,7 +359,7 @@ class HTMLTwigExtension extends Twig_Extension
 		unset($params['value']);
 		unset($params['formatter']);
 
-		if (isset($params['errors']) && in_array($name, $params['errors'])) {
+		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($name, $params['errors'])) || isset($params['errors'][$name]))) {
 			if (isset($params['class']))
 				$params['class'] = $params['class'] . '_error';
 			else
@@ -285,7 +371,8 @@ class HTMLTwigExtension extends Twig_Extension
 		$result = '<textarea name="' . markup_format_attribute($name) . '"';
 		
 		foreach ($params as $attribute => $val)
-			$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($val) . '"';
+			if ($val !== null && $val !== false)
+				$result .= ' ' . str_replace('_', '-', $attribute) . '="' . markup_format_attribute($val) . '"';
 		
 		return $result . ">\n" . $value . "</textarea>";
 	}
@@ -295,17 +382,20 @@ class HTMLTwigExtension extends Twig_Extension
 		$name = markup_format_text($name);
 		$classes = isset($params['class']) ? explode(' ', $params['class']) : ['label'];
 		$extra_content = '';
-				
-		if (isset($params['errors']) && in_array($field, $params['errors']))
+		$for = isset($params['for']) ? $params['for'] : sprintf('field-%s', $field);
+		
+		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))) {
+			$params['class'] = (isset($params['class']) ? ($params['class'] . '_') : '') . 'error';
 			$classes[] = 'label_error';
+		}
 
 		if (isset($params['required']) && $params['required']) {
 			$classes[] = 'label_required';
-			$extra_content = sprintf('<span class="required-badge" title="%s">*</span>', __('Verplicht'));
+			$extra_content = sprintf('<span class="required-badge" title="%s">*</span>', __('Required'));
 		}
 		
-		return sprintf('<label for="field-%s" class="%s">%s%s</label>',
-			$field, implode(' ', $classes), $name, $extra_content);
+		return sprintf('<label for="%s" class="%s">%s%s</label>',
+			$for, implode(' ', $classes), $name, $extra_content);
 	}
 
 	static public function nonce($action, array $arguments = array())
@@ -313,5 +403,12 @@ class HTMLTwigExtension extends Twig_Extension
 		$action_name = nonce_action_name($action, $arguments);
 
 		return self::input_hidden('_nonce', nonce_generate($action_name));
+	}
+
+	static public function email($email, array $arguments = [])
+	{
+		return sprintf('<a href="mailto:%s">%s</a>',
+			markup_format_attribute($email),
+			markup_format_text($email));
 	}
 }

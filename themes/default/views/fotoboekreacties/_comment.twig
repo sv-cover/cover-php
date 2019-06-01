@@ -1,15 +1,15 @@
 <div class="comment" id="comment{{ iter.id }}">
 	<div class="comment-meta">
-		<span class="number-of-likes" title="{{ iter.likes > 0 ? __N('%s vindt dit leuk', '%s vinden dit leuk', iter.liked_by|map('member_first_name')|human_join, count=iter.likes)|e('html_attr') : '' }}">
+		<span class="number-of-likes" title="{{ iter.likes > 0 ? __N('%d lid vindt dit leuk', '%s leden vinden dit leuk', iter.likes)|e('html_attr') : '' }}">
 			{{- __N('%d like', '%d likes', iter.likes) -}}
 		</span>
 		
 		<span class="timestamp">{{ iter.date|date('l j F, H:i') }}</span>
 	</div>
 
-	<a href="profiel.php?lid={{ iter.auteur }}" class="comment-author">
-		<img src="foto.php?lid_id={{ iter.auteur }}&amp;format=square&amp;width=200" width="150">
-		<span class="name">{{ iter.auteur|personal_full_name }}</span>
+	<a href="profiel.php?lid={{ iter.author.id }}" class="comment-author">
+		<img src="foto.php?lid_id={{ iter.author.id }}&amp;format=square&amp;width=200" width="150">
+		<span class="name">{{ iter.author|personal_full_name }}</span>
 	</a>
 		
 	<div class="comment-message">
@@ -43,12 +43,12 @@
 		{% if user_can_update iter %}
 		<li><a href="{{ controller.link_to_update(iter) }}"
 			data-partial-selector="#comment-form"
-			data-placement-selector="#comment{{ iter.id }}">{{ __('Wijzig') }}</a></li>
+			data-placement-selector="#comment{{ iter.id }}">{{ __('Modify') }}</a></li>
 		{% endif %}
 		{% if user_can_delete iter %}
 		<li><a href="{{ controller.link_to_delete(iter) }}"
 			data-partial-selector="#confirm-delete-comment-form"
-			data-placement-selector="modal">{{ __('Verwijder') }}</a></li>
+			data-placement-selector="modal">{{ __('Delete') }}</a></li>
 		{% endif %}
 	</ul>
 </div>

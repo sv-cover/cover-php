@@ -1,27 +1,33 @@
 {% extends '@layout/layout.twig' %}
 
 {% block title %}
-	{{ __('Commissies') }} :: {{ parent() }}
+	{{ __('Committees') }} :: {{ parent() }}
 {% endblock %}
 
 {% block content %}
 <div class="pageHeading">
 	{% if user_can_create controller.new_iter %}
-		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('Nieuwe commissie') }}</a></div>
+		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('New committee') }}</a></div>
 	{% endif %}
-	<h1>{{ __('Commissies') }}</h1>
+	<h1>{{ __('Committees') }}</h1>
 </div>
 <div class="messageBox">
+	{% if get_config_value('committee_battle', false) %}
+		<a href="committeebattle.php">
+			<div class="promotional-banner committee-battle-banner" data-photos="{{ view.get_committee_battle_banner_photos(iters)|json_encode()|e('html_attr') }}">
+				<h1>{{ __('Committee Battle') }}</h1>
+			</div>
+		</a>
+	{% endif %}
 	<ul class="commissie-index">
 	{% for committee in iters %}
 		<li class="commissie">
-			{% if committee.vacancies %}
-			<span class="vacancy-badge">{{ __('Commissieleden gezocht!') }}</span>
+			{% if committee.has_vacancy %}
+			<span class="vacancy-badge">{{ __('Looking for new members!') }}</span>
 			{% endif %}
 			<a href="{{ controller.link_to_read(committee) }}" class="link">
-				{% set imgpath = view.get_commissie_thumb(committee) %}
-				{% if imgpath %}
-					<img src="{{ imgpath }}" class="thumbnail">
+				{% if committee.thumbnail %}
+					<img src="{{ committee.thumbnail }}" class="thumbnail">
 				{% endif %}
 				<span class="overlay">
 					<span class="name">{{ committee.naam }}</span>
@@ -32,4 +38,8 @@
 	{% endfor %}
 	</ul>
 </div>
+{% if user_can_create controller.new_iter %}
+	{# If someone can create, someone can probably also reactivate #}
+	<p class="archive-link"><a href="{{ controller.link_to('archive') }}">{{ __('Committee archive') }}</a></p>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,1 @@
+DELETE FROM leden WHERE id IN (-2, -1);

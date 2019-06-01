@@ -61,9 +61,9 @@
 
 	function logged_in_as_active_member()
 	{
-		trigger_error('logged_in_as_active_member() deprecated. Use get_identity()->member_is_active()', E_USER_NOTICE);
+		trigger_error('logged_in_as_active_member() deprecated. Use get_identity()->is_member()', E_USER_NOTICE);
 
-		return get_identity()->member_is_active();
+		return get_identity()->is_member();
 	}
 
 	function login_link($label, array $attributes = array())

@@ -7,9 +7,12 @@
 	require_once 'include/data.php';
 	require_once 'include/view.php';
 
-	function _dump($arg) {
-		printf('<code style="overflow-x:scroll;display:block;background:white;padding:10px;border:1px solid black;"><pre>%s</pre></code>', $arg);
-		return $arg;
+	function _dump(...$args) {
+		ob_start();
+		var_dump(...$args);
+		$data = ob_get_clean();
+		printf('<code style="overflow-x:scroll;display:block;background:white;color: black;padding:10px;border:1px solid black;"><pre>%s</pre></code>', $data);
+		return $args[0];
 	}
 
 	function _get_backtrace() {
@@ -19,8 +22,10 @@
 
 		foreach (debug_backtrace() as $trace) {
 			if (!in_array($trace['function'], $skip)) {
-				$result .= $trace['file'] . "\n";
-				$result .= ($trace['class'] ? ($trace['class'] . '::') : '');
+				if (isset($trace['file']))
+					$result .= $trace['file'] . "\n";
+				if (isset($trace['class']))
+					$result .= $trace['class'] . '::';
 				
 				$args = '';
 				
@@ -32,7 +37,8 @@
 				}
 				
 				$result .= $trace['function'] . ' (' . $args . ')';
-				$result .= ', line ' . $trace['line'];
+				if (isset($trace['line']))
+					$result .= ', line ' . $trace['line'];
 			}
 		}
 		
@@ -49,7 +55,7 @@
 		$formatargs = array_slice(func_get_args(), 2);
 		$description = vsprintf($descformat, $formatargs);
 		
-		echo '<div class="error"><h3>' . __($group) . ' ' . __('Fout') . '</h3>';
+		echo '<div class="error"><h3>' . __($group) . ' ' . __('Error') . '</h3>';
 		echo '<p>' . vsprintf(__($descformat), $formatargs) . '</p>';
 		
 		if (get_config_value('report_errors', false)) {
@@ -61,9 +67,9 @@
 			$body .= _get_backtrace('report_error');
 			
 			if (!mail($to, $subject, $body))
-				echo "<p>" . __("De webmaster is NIET op de hoogte gesteld. Stel de webmaster op de hoogte wanneer dit probleem zich voor blijft doen") . "</p>";
+				echo "<p>" . __("The webmaster has NOT been informed. Please inform the webmaster if this problem keeps occurring") . "</p>";
 			else
-				echo "<p>" . __("De webmaster is op de hoogte gesteld van het probleem") . "</p>";
+				echo "<p>" . __("The webmaster has been notified of the problem") . "</p>";
 		}
 	
 		echo '</div>';
@@ -127,13 +133,13 @@
 		} catch(ViewNotFoundException $e) {
 			if (!_load_view("../themes/" . get_theme() . "/views/$name.php"))
 				if (!_load_view("../themes/default/views/$name.php"))
-					throw new ViewNotFoundException(sprintf(__("De view `%s` kan niet gevonden worden (thema: %s)"), $name, get_theme()));
+					throw new ViewNotFoundException(sprintf(__("The view %s could not be found (theme: %s)"), $name, get_theme()));
 
 			/* Locate the function */
 			if (function_exists("view_$function"))
 				return call_user_func("view_$function", $model, $iter, $params);
 			else
-				throw new ViewNotFoundException(sprintf(__("De view functie `%s` in `%s` kan niet gevonden worden (thema: %s)"), $function, $name, get_theme()));
+				throw new ViewNotFoundException(sprintf(__("The view function %s in %s could not be found (theme: %s)"), $function, $name, get_theme()));
 		}
 	}
 	
@@ -161,7 +167,7 @@
 		static $days = null;
 		
 		if (!$days)
-			$days = Array(__('Zondag'), __('Maandag'), __('Dinsdag'), __('Woensdag'), __('Donderdag'), __('Vrijdag'), __('Zaterdag'), __('Zondag'));
+			$days = Array(__('Sunday'), __('Monday'), __('Tuesday'), __('Wednesday'), __('Thursday'), __('Friday'), __('Saturday'), __('Sunday'));
 		
 		return $days;
 	}
@@ -176,7 +182,7 @@
 		static $months = null;
 		
 		if (!$months)
-			$months = Array(__('geen'), __('Januari'), __('Februari'), __('Maart'), __('April'), __('Mei'), __('Juni'), __('Juli'), __('Augustus'), __('September'), __('Oktober'), __('November'), __('December'));
+			$months = Array(__('no'), __('January'), __('February'), __('March'), __('April'), __('May'), __('June'), __('July'), __('August'), __('September'), __('October'), __('November'), __('December'));
 		
 		return $months;	
 	}
@@ -185,7 +191,7 @@
 		static $months = null;
 		
 		if (!$months)
-			$months = Array(__('geen'), __('Jan'), __('Feb'), __('Mrt'), __('Apr'), __('Mei'), __('Jun'), __('Jul'), __('Aug'), __('Sept'), __('Okt'), __('Nov'), __('Dec'));
+			$months = Array(__('no'), __('Jan'), __('Feb'), __('Mar'), __('Apr'), __('May'), __('Jun'), __('Jul'), __('Aug'), __('Sept'), __('Oct'), __('Nov'), __('Dec'));
 		
 		return $months;	
 	}
@@ -198,17 +204,8 @@
 	  * @result a string with random characters
 	  */
 	function randstr($length = 8) {
-		mt_srand((double)microtime() * 10000);
-
-		$ranges = array(1 => array(48, 57), 2 => array(65, 90), 3 => array(97, 122));
-		$str = '';
-
-		for ($i = 0; $i < $length; $i++) {
-			$x = mt_rand(1,3);
-			$str .= chr(mt_rand($ranges[$x][0], $ranges[$x][1]));
-		}
-
-		return $str;
+		$length = ($length < 4) ? 4 : $length;
+        return bin2hex(random_bytes(($length-($length%2))/2));
 	}
 
 	/** @group Functions
@@ -389,16 +386,16 @@
 			
 			// There is no time specified
 			if ($iter->get('van_datetime')->format('G') == 0)
-				$format = __('$from_dayname $from_day $from_month');
+				$format = __('$from_dayname $from_day|ordinal of $from_month');
 			else
-				$format = __('$from_dayname $from_day $from_month, $from_time');
+				$format = __('$from_dayname $from_day|ordinal of $from_month, $from_time');
 		}
 
 		/* Check if date part (not time) is not the same */
 		else if (substr($iter->get('van'), 0, 10) != substr($iter->get('tot'), 0, 10)) {
-			$format = __('$from_dayname $from_day $from_month $from_time tot $till_dayname $till_day $till_month $till_time');
+			$format = __('$from_dayname $from_day|ordinal of $from_month $from_time till $till_dayname $till_day|ordinal of $till_month $till_time');
 		} else {
-			$format = __('$from_dayname $from_day $from_month, $from_time tot $till_time');
+			$format = __('$from_dayname $from_day|ordinal of $from_month, $from_time till $till_time');
 		}
 
 		return agenda_format_period($iter, $format);
@@ -410,23 +407,39 @@
 
 		// Same time? Only display start time.
 		if ($iter->get('van') == $iter->get('tot'))
-			$format = __('vanaf $from_time');
+			$format = __('starts at $from_time');
 
 		// Not the same end date? Show the day range instead of the times
 		elseif ($iter->get('van_datetime')->format('w') != $iter->get('tot_datetime')->format('w') - ($iter->get('tot_datetime')->format('G') < 10 ? 1 : 0))
 		{
 			// Not the same month? Add month name as well
 			if ($iter->get('van_datetime')->format('n') != $iter->get('tot_datetime')->format('n'))
-				$format = __('$from_day $from_month tot $till_day $till_month');
+				$format = __('$from_month $from_day|ordinal till $till_month $till_day|ordinal');
 			else
-				$format = __('$from_day tot $till_day $till_month');
+				$format = __('$from_day|ordinal till $till_day|ordinal of $till_month');
 		}
 		else
-			$format = __('$from_time tot $till_time');
+			$format = __('$from_time till $till_time');
 
 		return agenda_format_period($iter, $format);
 	}
 
+	/**
+	 * Format the period of a calendar item according to $format. You can use 
+	 * variables in the form $aaa_bbb where aaa is either 'from' or 'till', and
+	 * bbb is 'dayname', 'day', 'month' or 'time'. The formatting is done using
+	 * format_string, so you can also use modifiers such as |ordinal.
+	 * The function returns HTML including <time> elements that adhere to the
+	 * h-event microformat.
+	 *
+	 * Example usage:
+	 * 
+	 *    agenda_format_period($iter, '$from_day|ordinal to $till_day|ordinal $till_month')
+	 *
+	 * @param DataIterAgenda calendar item
+	 * @param string formatting string
+	 * @return string formatted html
+	 */
 	function agenda_format_period(DataIterAgenda $iter, $format)
 	{
 		$days = get_days();
@@ -434,28 +447,38 @@
 
 		$van = $iter['van_datetime'];
 		$tot = $iter['tot_datetime'];
+
+		$format = preg_replace(
+			[
+				'/(\$from_[a-z]+(\|[a-z]+)?\b)(.+\$from_[a-z]+(\|[a-z]+)?\b)?/',
+				'/(\$till_[a-z]+(\|[a-z]+)?\b)(.+\$till_[a-z]+(\|[a-z]+)?\b)?/'
+			],
+			[
+				'<time class="dt-start" datetime="' . $van->format('Y-m-d H:i') . '">$0</time>',
+				'<time class="dt-end" datetime="' . $tot->format('Y-m-d H:i') . '">$0</time>'
+			], 
+			$format);
 		
 		return format_string($format, array(
 			'from_dayname' => $days[$van->format('w')],
-			'from_day' => $van->format('d'),
+			'from_day' => $van->format('j'),
 			'from_month' => $months[$van->format('n')],
 			'from_time' => agenda_time_for_display($iter, 'van'),
 			'till_dayname' => $days[$tot->format('w')],
-			'till_day' => $tot->format('d'),
+			'till_day' => $tot->format('j'),
 			'till_month' => $months[$tot->format('n')],
 			'till_time' => agenda_time_for_display($iter, 'tot')
 		));
 	}
 	
-	/** @group Functions
+	/**
 	  * Parse an email message and substitute variables and constants. The 
 	  * function will first look for email in themes/<theme>/email and will
 	  * fallback to the default theme if the file could not be found
-	  * @email the email file to parse
-	  * @data the data to substitute
+	  * @param string the name of the email file to parse
+	  * @param array the data to substitute
 	  *
-	  * @result A string with substituted data and constants or false
-	  * if the specified email file could not be found
+	  * @return string A string with substituted data and constants
 	  */
 	function parse_email($email, $data)
 	{
@@ -609,13 +632,13 @@
 		elseif ($len === 1)
 			return reset($list);
 		else
-			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('en') . ' ' . end($list);
+			return implode(', ', array_slice($list, 0, $len - 1)) . ' ' . __('and') . ' ' . end($list);
 	}
 
 	function human_file_size($bytes, $decimals = 2)
 	{
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
-		$factor = floor((strlen($bytes) - 1) / 3);
+		$factor = (int) floor((strlen($bytes) - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $size[$factor];
 	}
 
@@ -627,7 +650,7 @@
 		$diff = time() - $time;
 
 		if ($diff == 0)
-			return __('nu');
+			return __('now');
 
 		else if ($diff > 0)
 		{
@@ -635,20 +658,30 @@
 			
 			if ($day_diff == 0)
 			{
-				if ($diff < 60) return __('net');
-				if ($diff < 120) return __('1 minuut geleden');
-				if ($diff < 3600) return sprintf(__('%d minuten geleden'), floor($diff / 60));
-				if ($diff < 7200) return __('1 uur geleden');
-				if ($diff < 86400) return sprintf(__('%d uren geleden'), floor($diff / 3600));
+				if ($diff < 60) return __('less than a minute ago');
+				if ($diff < 120) return __('1 minute ago');
+				if ($diff < 3600) return sprintf(__('%d minutes ago'), floor($diff / 60));
+				if ($diff < 7200) return __('1 hour ago');
+				if ($diff < 86400) return sprintf(__('%d hours ago'), floor($diff / 3600));
 			}
-			if ($day_diff == 1) return __('Gisteren');
-			if ($day_diff < 7) return sprintf(__('%d dagen geleden'), $day_diff);
+			if ($day_diff == 1) return __('Yesterday');
+			if ($day_diff < 7) return sprintf(__('%d days ago'), $day_diff);
 			// if ($day_diff < 31) return sprintf(__('%d weken geleden'), floor($day_diff / 7));
 			// if ($day_diff < 60) return __('afgelopen maand');
 			return date('j-n-Y', $time);
 		}
 		else
 			return date('j-n-Y', $time);
+	}
+
+	function format_table(array $data)
+	{
+		$rows = [];
+
+		foreach ($data as $key => $value)
+			$rows[] = sprintf('<tr><th style="text-align:left">%s</th><td>%s</td></tr>', markup_format_text($key), markup_format_text($value));
+
+		return sprintf('<table>%s</table>', implode('', $rows));
 	}
 	
 	/** @group Functions
@@ -759,11 +792,17 @@
 		else
 			$domain = null;
 
+		$domain = preg_replace('/:\d+$/', '', $domain);
+
 		// If the value is empty, expire the cookie
 		if ($value === null)
 			$cookie_time = 1;
 
-		setcookie($name, $value, $cookie_time, '/', $domain);
+		$secure = !empty($_SERVER['HTTPS']);
+
+		$http_only = true;
+
+		setcookie($name, $value, $cookie_time, '/', $domain, $secure, $http_only);
 
 		if ($cookie_time === 0 || $cookie_time > time())
 			$_COOKIE[$name] = $value;
@@ -776,7 +815,7 @@
 	 * Returns the key or index at which $needle is found in $haystack. If needle
 	 * is not found, it returns NULL.
 	 * 
-	 * @var $needle The item searched for
+	 * @var mixed $needle The item searched for
 	 * @var array $haystack The array to search in (list or hashtable)
 	 * @var callable $compare_function A compare function that gets $needle and an item
 	 *      from $haystack and should return true if they are 'equal' or false otherwise.
@@ -798,11 +837,13 @@
 	 * @var string ...
 	 * @return string the concatenated path
 	 */
-	function path_concat($path_component)
+	function path_concat($path_components)
 	{
+		$path_components = func_get_args();
+
 		$path = '';
 		
-		foreach (func_get_args() as $path_component)
+		foreach ($path_components as $path_component)
 		{
 			if (strlen($path) === 0)
 				$path .= rtrim($path_component, '/');
@@ -843,17 +884,17 @@
 		return array_slice($input, 0, $sample_size);
 	}
 
-	function curry_call_method($method)
+	function curry_call_method($method, $arguments = [])
 	{
 		$arguments = func_get_args();
 		array_shift($arguments);
-
+		
 		return function($object) use ($method, $arguments) {
 			return call_user_func_array([$object, $method], $arguments);
 		};
 	}
 
-	function ends_with($haystack, $neelde)
+	function ends_with($haystack, $needle)
 	{
 		return substr_compare($haystack, $needle, -strlen($needle));
 	}
@@ -970,7 +1011,7 @@
 		$groups = array();
 
 		foreach ($array as $element) {
-			$key = call_user_func($key_accessor, $element);
+			$key = (string) call_user_func($key_accessor, $element);
 			if (isset($groups[$key]))
 				$groups[$key][] = $element;
 			else
@@ -986,4 +1027,144 @@
 			return isset($iter[$property]) ? $iter[$property] : $default_value;
 		}, $array);
 	}
-	
+
+	/**
+	 * Follow a path through $array. The path can contain array index operators and
+	 * object property accessors, similar to PHP's syntax.
+	 *
+	 * Examples:
+	 *   options[0]->value
+	 *   options[0][test][4]
+	 *   options
+	 *
+	 * @param mixed $array the source of the data
+	 * @param string $path the path to follow
+	 * @param mixed $default_value the value returned if the path does not exist.
+	 * @return mixed the data in $array at the end of $path, or $default_value if that path did not exist.
+	 */
+	function array_path($array, $path, $default_value = null)
+	{
+		// Construct the path
+		if (!preg_match('/^(?P<head>[\w-]+)(?P<rest>(\[[\w-]+\]|->\w+)*)$/', $path, $match))
+			throw new InvalidArgumentException("The path '$path' is malformed");
+
+		$steps = [['index' => $match['head']]];
+
+		if (!empty($match['rest'])) {
+			if (!preg_match_all('/\[(?P<index>[\w-]+)\]|->(?P<property>\w+)/', $match['rest'], $match, PREG_SET_ORDER))
+				throw new InvalidArgumentException('The rest of the path is malformed');
+
+			$steps = array_merge($steps, $match);
+		}
+
+		// Unwind the path
+		foreach ($steps as $step) {
+			if (isset($step['property'])) {
+				if (!isset($array->{$step['property']}))
+					return $default_value;
+				else
+					$array = $array->{$step['property']};
+			} else {
+				if (!isset($array[$step['index']]))
+					return $default_value;
+				else
+					$array = $array[$step['index']];
+			}
+		}
+
+		return $array;
+	}
+
+	function getter($key, $default = null)
+	{
+		return function($map) use ($key, $default) {
+			return isset($map[$key]) ? $map[$key] : $default;
+		};
+	}
+
+	if (!function_exists('hash_equals'))
+	{
+		function hash_equals($str1, $str2)
+		{
+			if (strlen($str1) != strlen($str2))
+				return false;
+			
+			$res = $str1 ^ $str2;
+			$ret = 0;
+
+			for ($i = strlen($res) - 1; $i >= 0; $i--)
+				$ret |= ord($res[$i]);
+			
+			return !$ret;
+		}
+	}
+
+	function summarize($text, $length)
+	{
+		$text = trim($text);
+
+		if (strlen($text) < $length)
+			return $text;
+
+		$summary = substr($text, 0, $length);
+
+		if (!in_array(substr($summary, -1, 1), ['.', ' ', '!', '?']))
+			$summary = substr($summary, 0, -1) . '…';
+
+		return $summary;
+	}
+
+	function apply_image_orientation(\Imagick $image, $background_color = '#000')
+	{
+		// Copied from https://stackoverflow.com/a/31943940/770911
+
+		$orientation = $image->getImageOrientation();
+
+		// See https://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
+		switch ($image->getImageOrientation())
+		{
+			case \Imagick::ORIENTATION_TOPLEFT:
+				break;
+			case \Imagick::ORIENTATION_TOPRIGHT:
+				$image->flopImage();
+				break;
+			case \Imagick::ORIENTATION_BOTTOMRIGHT:
+				$image->rotateImage($background_color, 180);
+				break;
+			case \Imagick::ORIENTATION_BOTTOMLEFT:
+				$image->flopImage();
+				$image->rotateImage($background_color, 180);
+				break;
+			case \Imagick::ORIENTATION_LEFTTOP:
+				$image->flopImage();
+				$image->rotateImage($background_color, -90);
+				break;
+			case \Imagick::ORIENTATION_RIGHTTOP:
+				$image->rotateImage($background_color, 90);
+				break;
+			case \Imagick::ORIENTATION_RIGHTBOTTOM:
+				$image->flopImage();
+				$image->rotateImage($background_color, 90);
+				break;
+			case \Imagick::ORIENTATION_LEFTBOTTOM:
+				$image->rotateImage($background_color, -90);
+				break;
+			default: // Invalid orientation
+				break;
+		}
+		
+		$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+	} 
+
+	function strip_exif_data(\Imagick $image)
+	{
+		// Safe the color profiles because those we want to keep 
+		$profiles = $image->getImageProfiles('icc', true);
+
+		// Strip all the exif info (including orientation!)
+		$image->stripImage();
+
+		// Reset those profiles (if there were any in the first place)
+		if ($profiles)
+    		$image->profileImage('icc', $profiles['icc']);
+	}

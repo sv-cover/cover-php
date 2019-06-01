@@ -98,16 +98,17 @@
 		switch (i18n_get_locale())
 		{
 			case 'nl_NL':
-				if ($n >= 20)
-					return sprintf('%dste', $n);
-				else
-					return sprintf('%de', $n);
+				return sprintf('%de', $n);
 
 			case 'en_US':
-				if ($n == 1)
+				if ($n >= 11 && $n <= 13)
+					return sprintf('%dth', $n);
+				elseif ($n % 10 == 1)
 					return sprintf('%dst', $n);
-				elseif ($n == 2)
+				elseif ($n % 10 == 2)
 					return sprintf('%dnd', $n);
+				elseif ($n % 10 == 3)
+					return sprintf('%drd', $n);
 				else
 					return sprintf('%dth', $n);
 
@@ -130,8 +131,9 @@
 	  * @result the current locale
 	  */
 	function i18n_get_locale() {
-		/* TODO: make this member configurable. 
-		   Default to global locale for now */
+		// Bypass logic, the website should be English only now
+		return 'en_US';
+
 		if (get_auth()->logged_in())
 			$language = get_identity()->get('taal');
 		elseif (isset($_SESSION['taal']))
@@ -140,7 +142,7 @@
 			$language = http_get_preferred_language();
 		
 		if (!isset($language) || !i18n_valid_language($language))
-			$language = get_config_value('default_language', 'nl');
+			$language = get_config_value('default_language', 'en');
 		
 		$locales = _i18n_locale_map();
 		
@@ -203,7 +205,7 @@
 		if (isset($languages[$locale]))
 			return $languages[$locale];
 		else
-			return get_config_value('default_language', 'nl');	
+			return get_config_value('default_language', 'en');	
 	}
 
 	function http_get_preferred_language($get_sorted_list = false, $accepted_languages = null)

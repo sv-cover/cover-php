@@ -5,14 +5,14 @@
 		<table class="poll">
 			{% for option in poll.options %}
 			<tr>
-				<td class="pollvoteRadio">{{ html_input_radio('option', null, option.id, id='forum_poll_option_' ~ option.id) }}</td>
+				<td class="pollvoteRadio">{{ html_input_radio('option', null, option.id, id='forum_poll_option_' ~ option.id, required=true) }}</td>
 				<td><label for="forum_poll_option_{{ option.id }}">{{ option.optie }}</label></td>
 			</tr>
 			{% endfor %}
 		</table>
 
 		<div class="poll_vote">
-			<button type="submit" class="button">{{ __('Stem') }}</button>
+			<button type="submit" class="button">{{ __('Vote') }}</button>
 		</div>
 	</form>
 {% else %}
@@ -28,18 +28,18 @@
 		{% endfor %}
 		<tr>
 			<td colspan="2">
-				{{ __('Aantal stemmen') }}: {{ poll.total_votes }}
+				{{ __('Number of votes') }}: {{ poll.total_votes }}
 			</td>
 		</tr>
 
 		{% if not global.auth.logged_in %}
 			<tr>
-				<td colspan="2"><a href="{{ link('sessions.login') }}">{{ __('Log in om te stemmen') }}</a></td>
+				<td colspan="2"><a href="{{ link('sessions.login') }}" data-placement-selector="modal" data-partial-selector="#login-form">{{ __('Log in to vote') }}</a></td>
 			</tr>
 		{% elseif global.models.Poll.can_create_new_poll %}
 			<tr>
 				<td colspan="2">
-					<a class="button" href="forum.php?forum={{ poll.forum }}&amp;addpoll=true">{{ __('Nieuwe poll ') }}</a>
+					<a class="button" href="forum.php?forum={{ poll.forum_id }}&amp;view=create_poll">{{ __('New poll ') }}</a>
 				</td>
 		{% endif %}
 	</table>

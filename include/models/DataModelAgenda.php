@@ -10,7 +10,7 @@
 				'id',
 				'kop',
 				'beschrijving',
-				'commissie',
+				'committee_id',
 				'van',
 				'tot',
 				'locatie',
@@ -23,7 +23,7 @@
 
 		public function get_search_relevance()
 		{
-			return normalize_search_rank($this->get('search_relevance'));
+			return normalize_search_rank($this->data['search_relevance']);
 		}
 
 		public function get_search_type()
@@ -56,11 +56,6 @@
 			return $this->model->get_proposed($this);
 		}
 
-		public function get_formatted_period()
-		{
-			return agenda_period_for_display($this);
-		}
-
 		public function get_use_tot()
 		{
 			return $this['van'] != $this['tot'];
@@ -73,7 +68,20 @@
 
 		public function get_committee()
 		{
-			return get_model('DataModelCommissie')->get_iter($this->data['commissie']);
+			return get_model('DataModelCommissie')->get_iter($this->data['committee_id']);
+		}
+
+		public function get_signup_forms()
+		{
+			return get_model('DataModelSignUpForm')->find(['agenda_id' => $this['id']]);
+		}
+
+		public function new_signup_form()
+		{
+			return get_model('DataModelSignUpForm')->new_iter([
+				'committee_id' => $this['committee_id'],
+				'agenda_id' => $this['id']
+			]);
 		}
 	}
 
@@ -87,7 +95,7 @@
 		{
 			parent::__construct($db, 'agenda');
 
-			$this->include_private = logged_in();
+			$this->include_private = get_identity()->is_member() || get_identity()->is_donor();
 		}
 		
 		public function get($from = null, $till = null, $confirmed_only = false)
@@ -95,30 +103,32 @@
 			$conditions = array();
 
 			if ($from !== null)
-				$conditions[] = "agenda.tot >= date '$from'";
+				$conditions['van__gte'] = $from;
 
 			if ($till !== null)
-				$conditions[] = "agenda.tot < date '$till'";
+				$conditions['tot__lt'] = $till;
 
 			if ($confirmed_only)
-				$conditions[] = "agenda.replacement_for IS NULL";
+				$conditions['replacement_for__isnull'] = true;
 
-			$where_clause = implode(' AND ', $conditions);
-
-			return $this->find($where_clause);
+			return $this->find($conditions);
 		}
 		
 		protected function _generate_query($where)
 		{
+			if (is_array($where))
+				$where = $this->_generate_conditions_from_array($where);
+			
 			return "
 				SELECT
 					{$this->table}.*,
-					commissies.naam as commissie__naam,
-					commissies.page as commissie__page
+					commissies.naam as committee__naam,
+					commissies.login as committee__login,
+					commissies.page_id as committee__page_id
 				FROM
 					{$this->table}
 				LEFT JOIN commissies ON
-					commissies.id = agenda.commissie"
+					commissies.id = agenda.committee_id"
 				. ($where ? " WHERE {$where}" : "")
 				. " ORDER BY {$this->table}.van ASC";
 		}
@@ -132,17 +142,10 @@
 		  */
 		public function get_agendapunten()
 		{
-			$conditions = "
-				(
-					(agenda.tot > CURRENT_TIMESTAMP)
-					OR (CURRENT_TIMESTAMP < agenda.van + interval '1 day')
-					OR  (
-							DATE_PART('hours', agenda.van) = 0
-							AND CURRENT_TIMESTAMP < agenda.van + interval '1 day'
-						)
-				)";
-
-			return $this->find($conditions);
+			return $this->find("
+				CAST(agenda.van as DATE) >= CURRENT_DATE -- activities in the future
+				OR CAST(agenda.tot as DATE) >= CURRENT_DATE -- activities currently ongoing
+			");
 		}
 		
 		/**
@@ -169,30 +172,47 @@
 
 		public function search($keywords, $limit = null)
 		{
-			$ts_query = implode(' & ', parse_search_query($keywords));
+			$fields = implode(', ', array_map(function ($field) { return "a.$field"; }, call_user_func([$this->dataiter, 'fields'])));
 
 			$query = "
+				WITH
+					search_items AS (
+						SELECT
+							id,
+							setweight(to_tsvector(kop), 'A') || setweight(to_tsvector(beschrijving), 'B') body
+						FROM
+							{$this->table}
+						WHERE
+							replacement_for IS NULL
+							" . (!$this->include_private ? ' AND private = 0 ' : '') . "
+					),
+					matching_items AS (
+						SELECT
+							id,
+							body,
+							ts_rank_cd(body, query) as search_relevance
+						FROM
+							search_items,
+							plainto_tsquery('english', :keywords) query
+						WHERE
+							body @@ query
+					)
 				SELECT
-					{$this->table}.*,
-					commissies.naam as commissie__naam,
-					commissies.page as commissie__page,
-					ts_rank_cd(
-						setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B'),
-						to_tsquery('" . $this->db->escape_string($ts_query) . "')
-					) as search_relevance
+					a.*,
+					c.naam as committee__naam,
+					c.page_id as committee__page_id,
+					m.search_relevance
 				FROM
-					agenda
-				LEFT JOIN commissies ON
-					commissies.id = agenda.commissie
-				WHERE
-					agenda.replacement_for IS NULL
-					" . (!$this->include_private ? ' AND agenda.private = 0 ' : '') . "
-					AND (setweight(to_tsvector(agenda.kop), 'A') || setweight(to_tsvector(agenda.beschrijving), 'B')) @@ to_tsquery('" . $this->db->escape_string($ts_query) . "')
+					matching_items m
+				LEFT JOIN {$this->table} a ON
+					a.id = m.id
+				LEFT JOIN commissies c ON
+					c.id = a.committee_id
 				ORDER BY
-					agenda.van DESC
+					a.van DESC
 				" . ($limit !== null ? " LIMIT " . intval($limit) : "");
 
-			$rows = $this->db->query($query);
+			$rows = $this->db->query($query, false, [':keywords' => $keywords]);
 
 			return $this->_rows_to_iters($rows);
 		}
@@ -214,7 +234,7 @@
 				throw new InvalidArgumentException('How come the proposed insert already has an id?');
 			
 			$new_item->set('replacement_for', 0);
-			return $this->insert($new_item, true);
+			return $this->insert($new_item);
 		}
 		
 		public function propose_update(DataIterAgenda $replacement, DataIterAgenda $current)
@@ -226,7 +246,7 @@
 				throw new InvalidArgumentException('How come the proposed replacement already has an id?');
 			
 			$replacement->set('replacement_for', $current->get_id());
-			return $this->insert($replacement, true);
+			return $this->insert($replacement);
 		}
 
 		public function accept_proposal(DataIterAgenda $proposal)
@@ -247,7 +267,7 @@
 				$current = $this->get_iter($proposal->get('replacement_for'));
 
 				// Copy everything but the item id and its update proposal data
-				foreach (array_diff($this->fields, ['id', 'replacement_for']) as $field)
+				foreach (array_diff(DataIterAgenda::fields(), ['id', 'replacement_for']) as $field)
 					$current->set($field, $proposal->get($field));
 
 				$this->update($current);
@@ -276,10 +296,11 @@
 				SELECT locatie
 				FROM {$this->table}
 				WHERE locatie ILIKE '%{$sql_term}%'
+				  AND van > (CURRENT_TIMESTAMP - INTERVAL '2 year')
 				GROUP BY locatie
 				ORDER BY COUNT(id) DESC"
 				. ($limit !== null
-					? sprintf('LIMIT %d', $limit)
+					? sprintf(' LIMIT %d', $limit)
 					: ''));
 
 			return array_select($rows, 'locatie');

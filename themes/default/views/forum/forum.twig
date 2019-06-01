@@ -12,21 +12,18 @@
 	{% if user_can_create forum.new_thread %}
 		<a href="forum.php?forum={{ forum.id }}&amp;view=create" class="button">
 			<img src="{{ link_static('images/new.png') }}"
-			     alt="{{ __('nieuw') }}"
-			     title="{{ __('Nieuw bericht toevoegen') }}">
-			<span class="messageText">{{ __('Nieuw onderwerp') }}</span>
+			     alt="{{ __('new') }}"
+			     title="{{ __('Add a new message') }}">
+			<span class="messageText">{{ __('New Topic') }}</span>
 		</a>
 	{% endif %}
 	{% if user_can_create forum.new_poll %}
 		<a href="forum.php?forum={{ forum.id }}&amp;view=create_poll" class="button">
 			<img src="{{ link_static('images/new.png') }}"
-			     alt="{{ __('nieuw') }}"
-			     title="{{ __('Nieuwe poll toevoegen') }}">
-			{{ __('Nieuwe poll') }}
+			     alt="{{ __('new') }}"
+			     title="{{ __('Add a new poll') }}">
+			{{ __('New poll') }}
 		</a>
-	{% endif %}
-	{% if not user_can_create forum.new_thread and not user_can_create forum.new_poll %}
-		{{ __('Je kunt niet schrijven in dit forum') }}
 	{% endif %}
 </div>
 
@@ -40,19 +37,19 @@
 	</colgroup>
 	<thead>
 		<tr class="header">
-			<td colspan="2">{{ __('Onderwerp') }}</td>
-			<td class="text_center">{{ __('Auteur') }}</td>
-			<td>{{ __('Reacties') }}</td>
-			<td class="text_center">{{ __('Laatste') }}</td>
+			<td colspan="2">{{ __('Subject') }}</td>
+			<td class="text_center">{{ __('Author') }}</td>
+			<td>{{ __('Comments') }}</td>
+			<td class="text_center">{{ __('Last') }}</td>
 		</tr>
 	</thead>
 	<tbody>
 		{% for thread in threads %}
-			{% set author = model.get_author_info(thread) %}
-			{% set author_link = view.get_author_link(thread) %}
+			{% set author = model.get_author_info(thread, 'author') %}
+			{% set last_author = model.get_author_info(thread, 'last_author') %}
 			<tr class="r{{ loop.index is odd ? 1 : 0 }}">
 				<td class="icon">
-					<img src="{{ link_static('images/' ~ (thread.has_unread_messages ? 'thread_new.png' : 'thread.png')) }}">
+					<img src="{{ link_static('images/' ~ (view.has_unread_messages(thread) ? 'thread_new.png' : 'thread.png')) }}">
 				</td>
 				<td class="subject">
 					<a href="forum.php?thread={{ thread.id }}" class="subject">
@@ -61,25 +58,19 @@
 					</a>
 					{% set thread_pages = thread.num_thread_pages %}
 					{% if thread_pages > 1 %}
-						<br><span class="smaller">[ {{ __('Pagina') }}: {{ view.thread_page_links(thread, thread_pages)|join(', ')|raw }} ]</span>
+						<br><span class="smaller">[ {{ __('Page') }}: {{ view.thread_page_links(thread, thread_pages)|join(', ')|raw }} ]</span>
 					{% endif %}
 				</td>
 				<td class="text_center">
-					{% if author.name %}
-						<a href="{{ author_link|e('html_attr') }}">{{ author.name }}</a>
-					{% else %}
-						{{ __('Onbekend') }}
-					{% endif %}
+					<a href="{{ view.get_author_link(thread)|e('html_attr') }}">{{ author.name }}</a>
 				</td>
 				<td class="text_center">
 					{{ thread.num_messages }}
 				</td>
 				<td class="last">
-					{% if thread.datum %}
-						{{ thread.datum }}
-						{% if author.name or author.last_name %}
-							<br><a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">{{ author.last_name ?: author.name }}</a>
-						{% endif %}
+					{% if thread.date %}
+						{{ thread.date|date('d-m-Y H:i') }}<br>
+						<a href="forum.php?thread={{ thread.id }}&amp;page={{ thread_pages - 1 }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">{{ last_author.name }}</a>
 					{% endif %}
 				</td>
 			</tr>

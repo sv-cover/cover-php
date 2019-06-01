@@ -14,8 +14,7 @@ abstract class PolicyForumAbstract implements Policy
 
 	protected function member_is_admin()
 	{
-		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_EASY);
+		return false;
+		// return get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 }

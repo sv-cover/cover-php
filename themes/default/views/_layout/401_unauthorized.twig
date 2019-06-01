@@ -1,0 +1,22 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('No access') ~ ' :: ' ~ parent() %}
+
+{% block content %}
+<h1>{{ __('No access') }}</h1>
+<div class="messageBox">
+	{% block error_message %}
+		<section class="error-section">
+			<p>{{ exception.message|default(__('Access to this part of the website is restricted.')) }}</p>
+		</section>
+	{% endblock %}
+	{% if not global.auth.logged_in %}
+	<div class="call-to-action-or-block">
+		<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
+		<span class="separator">{{ __('or') }}</span>
+		<a href="lidworden.php" class="button register">{{ __('Become a member') }}</a>
+		<p>{{ __('…or back to <a href="%s">the homepage</a>')|format('/')|raw }}</p>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

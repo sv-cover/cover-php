@@ -11,9 +11,6 @@
 				case MEMBER_STATUS_LID:
 					return 'status-lid';
 					
-				case MEMBER_STATUS_LID_ONZICHTBAAR:
-					return 'status-onzichtbaar';
-				
 				case MEMBER_STATUS_LID_AF:
 					return 'status-lid-af';
 				
@@ -32,17 +29,14 @@
 				case MEMBER_STATUS_LID:
 					return null;
 
-				case MEMBER_STATUS_LID_ONZICHTBAAR:
-					return __('Onzichtbaar');
-
 				case MEMBER_STATUS_LID_AF:
-					return __('Lid af');
+					return __('Previously a member');
 
 				case MEMBER_STATUS_ERELID:
-					return __('Erelid');
+					return __('Honorary Member');
 
 				case MEMBER_STATUS_DONATEUR:
-					return __('Donateur');
+					return __('Donor');
 			}
 		}
 
@@ -59,27 +53,29 @@
 
 			// print the column headers
 			echo csv_row([
-				__('id'),
-				__('voornaam'),
-				__('tussenvoegsel'),
-				__('achternaam'),
-				__('adres'),
-				__('postcode'),
-				__('woonplaats'),
-				__('email'),
-				__('geboortedatum'),
-				__('geslacht'),
-				__('telefoonnummer'),
-				__('studie'),
-				__('beginjaar'),
-				__('status')], $delim) . "\n";
+				'id',
+				'voornaam',
+				'tussenvoegsel',
+				'achternaam',
+				'naam',
+				'adres',
+				'postcode',
+				'woonplaats',
+				'email',
+				'geboortedatum',
+				'geslacht',
+				'telefoonnummer',
+				'studie',
+				'beginjaar',
+				'status'], $delim) . "\n";
 
-			foreach ($iter as $item)
+			foreach ($iters as $item)
 				echo csv_row([
 					$item['id'],
 					$item['voornaam'],
 					$item['tussenvoegsel'],
 					$item['achternaam'],
+					member_full_name($item, IGNORE_PRIVACY),
 					$item['adres'],
 					$item['postcode'],
 					$item['woonplaats'],
@@ -96,8 +92,7 @@
 
 		public function render_index($iters = null, array $params = array())
 		{
-			$preferred = parse_http_accept($_SERVER['HTTP_ACCEPT'],
-				array('application/json', 'text/html', '*/*'));
+			$preferred = $this->_get_preferred_response();
 
 			// Set default params for search fields in template
 			$params = array_merge([

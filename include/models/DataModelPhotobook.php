@@ -13,6 +13,8 @@
 		const PORTRAIT = 'portrait';
 		const SQUARE = 'square';
 
+		private $_scope = null; // Photo book in which this photo is currently viewed.
+
 		static public function model()
 		{
 			return get_model('DataModelPhotobook');
@@ -42,6 +44,9 @@
 		public function get_scaled_size($max_width = null, $max_height = null)
 		{
 			$size = $this->get_size();
+
+			if ($size[0] == 0 || $size[1] == 0)
+				return [null, null, null];
 
 			if ($max_width) {
 				$width = $max_width;
@@ -165,18 +170,31 @@
 			return file_exists($this->get_full_path());
 		}
 
-		public function get_resource($width = null, $height = null, $skip_cache = false)
+		/**
+		 * @param null $width
+		 * @param null $height
+		 * @param bool $skip_cache
+		 * @param null $cache_status
+		 * @return bool|resource
+		 * @throws ImagickException
+		 * @throws NotFoundException
+		 */
+		public function get_resource($width = null, $height = null, $skip_cache = false, &$cache_status = null)
 		{
 			if (!$this->file_exists())
 				throw new NotFoundException("Could not find original file ({$this->get('filepath')}) of photo {$this->get_id()}.");
 			
 			// Special case of no width and height -> use original file
-			if (!$width && !$height)
+			if (!$width && !$height) {
+				$cache_status = 'original';
 				return fopen($this->get_full_path(), 'rb');
+			}
 
 			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
 
 			list($scaled_width, $scaled_height, $scale) = $this->get_scaled_size($width, $height);
+
+			$cache_status = 'hit';
 
 			// If we are upscaling, just use the original image
 			if ($scale > 1.0)
@@ -187,6 +205,8 @@
 				|| filesize($scaled_path) === 0
 				|| $skip_cache)
 			{
+				$cache_status = 'miss';
+				
 				if (!file_exists(dirname($scaled_path)))
 					mkdir(dirname($scaled_path), 0777, true);
 				
@@ -211,16 +231,16 @@
 					// Rotate the image according to the EXIF data
 					switch($imagick->getImageOrientation())
 					{
-						case imagick::ORIENTATION_BOTTOMRIGHT:
-							$imagick->rotateimage('#000', 180); // rotate 180 degrees 
+						case Imagick::ORIENTATION_BOTTOMRIGHT:
+							$imagick->rotateImage('#000', 180); // rotate 180 degrees
 							break; 
 
-						case imagick::ORIENTATION_RIGHTTOP:
-							$imagick->rotateimage('#000', 90); // rotate 90 degrees CW 
+						case Imagick::ORIENTATION_RIGHTTOP:
+							$imagick->rotateImage('#000', 90); // rotate 90 degrees CW
 							break; 
 
-						case imagick::ORIENTATION_LEFTBOTTOM:
-							$imagick->rotateimage('#000', -90); // rotate 90 degrees CCW 
+						case Imagick::ORIENTATION_LEFTBOTTOM:
+							$imagick->rotateImage('#000', -90); // rotate 90 degrees CCW
 							break;
 					}
 
@@ -245,12 +265,25 @@
 
 		public function get_exif_data()
 		{
-			return exif_read_data($this->get_full_path());
+			return @exif_read_data($this->get_full_path());
 		}
 
 		public function get_file_size()
 		{
 			return filesize($this->get_full_path());
+		}
+
+		public function get_scope()
+		{
+			return $this->_scope ?: $this['book'];
+		}
+
+		public function set_scope(DataIterPhotobook $book)
+		{
+			if (!$book->has_photo($this))
+				throw new LogicException('Book assigned as scope says it does not contain this photo');
+
+			$this->_scope = $book;
 		}
 	}
 
@@ -278,43 +311,33 @@
 			return new DataIterPhotobook($this->model, null, ['parent_id' => $this['id']]);
 		}
 
-		public function get_books($metadata = null)
+		public function get_books()
 		{
-			return $this->model->get_children($this, $metadata);
+			return $this->model->get_children($this);
+		}
+
+		public function get_books_without_metadata()
+		{
+			return $this->model->get_children($this, 0);
 		}
 
 		public function get_photos()
 		{
-			if ($this->_photos === null)
-				$this->_photos = $this->model->get_photos($this);
-
-			return $this->_photos;
+			return $this->model->get_photos($this);
 		}
 
 		public function has_photo(DataIterPhoto $needle)
 		{
-			$photos = $this->get_photos();
-
-			foreach ($photos as $photo)
+			foreach ($this['photos'] as $photo)
 				if ($photo->get_id() == $needle->get_id())
 					return true;
 
 			return false;
 		}
 
-		public function count_books()
-		{
-			return $this->get('num_books');
-		}
-
-		public function count_photos()
-		{
-			return $this->get('num_photos');
-		}
-
 		public function get_next_photo(DataIterPhoto $current, $num = 1)
 		{
-			$photos = $this->get_photos();
+			$photos = $this['photos'];
 
 			foreach ($photos as $index => $photo)
 				if ($photo->get_id() == $current->get_id())
@@ -328,7 +351,7 @@
 
 		public function get_previous_photo(DataIterPhoto $current, $num = 1)
 		{
-			$photos = $this->get_photos();
+			$photos = $this['photos'];
 
 			foreach ($photos as $index => $photo)
 				if ($photo->get_id() == $current->get_id())
@@ -411,21 +434,21 @@
 
 	class DataIterRootPhotobook extends DataIterPhotobook
 	{
-		public function get_books($metadata = null)
+		public function get_books()
 		{
-			$books = parent::get_books($metadata);
+			$books = parent::get_books();
 
-			if (logged_in()) {
-				$books[] = get_model('DataModelPhotobookLike')->get_book(logged_in_member());
-				$books[] = get_model('DataModelPhotobookFace')->get_book(array(logged_in_member()));
+			if (get_auth()->logged_in()) {
+				$books[] = get_model('DataModelPhotobookLike')->get_book(get_identity()->member());
+				$books[] = get_model('DataModelPhotobookFace')->get_book(array(get_identity()->member()));
 			}
 			
 			return $books;
 		}
 
-		public function count_books()
+		public function get_num_books()
 		{
-			return parent::count_books() + (logged_in() ? 2 : 0);
+			return $this->data['num_books'] + (get_auth()->logged_in() ? 2 : 0);
 		}
 
 		public function get_next_book()
@@ -493,6 +516,7 @@
 						foto_boeken f_b
 					LEFT JOIN fotos f ON
 						f.boek = f_b.id
+						AND f.hidden = 'f'
 					LEFT JOIN foto_boeken c_f_b ON
 						c_f_b.parent_id = f_b.id
 					WHERE 
@@ -523,6 +547,7 @@
 					foto_boeken f_b
 				LEFT JOIN fotos f ON
 					f.boek = f_b.id
+					AND f.hidden = 'f'
 				LEFT JOIN foto_boeken c_f_b ON
 					c_f_b.parent_id = f_b.id
 				WHERE 
@@ -540,15 +565,12 @@
 
 		public function get_root_book()
 		{
-			$num_books = $this->db->query_value('SELECT COUNT(id) FROM foto_boeken WHERE parent_id = 0');
+			$counts = $this->db->query_first("
+				SELECT
+					(SELECT COUNT(id) FROM foto_boeken WHERE parent_id = 0) as num_books,
+					(SELECT COUNT(id) FROM fotos WHERE boek = 0 AND hidden = 'f') as num_photos");
 			
-			$num_photos = $this->db->query_value('SELECT COUNT(id) FROM fotos WHERE boek = 0');
-
-			return new DataIterRootPhotobook($this, 0, array(
-				'titel' => __('Fotoboek'),
-				'num_books' => $num_books,
-				'num_photos' => $num_photos
-			));
+			return new DataIterRootPhotobook($this, 0, array_merge(['titel' => __('Photo album')], $counts));
 		}
 
 		/**
@@ -564,9 +586,9 @@
 					c.id
 				FROM 
 					foto_boeken c
-				LEFT JOIN
-					fotos f
-					ON f.boek = c.id
+				LEFT JOIN fotos f ON
+					f.boek = c.id
+					AND f.hidden = 'f'
 				WHERE
 					c.visibility <= %d
 					AND c.date IS NOT NULL
@@ -599,7 +621,7 @@
 		{
 			if (!$book['parent']) return null;
 
-			$children = $book['parent']['books'];
+			$children = $book['parent']['books_without_metadata'];
 
 			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
 
@@ -618,7 +640,7 @@
 		{
 			if (!$book['parent']) return null;
 
-			$children = $book['parent']['books'];
+			$children = $book['parent']['books_without_metadata'];
 
 			$index = array_usearch($book, $children, ['DataIter', 'is_same']);
 
@@ -649,11 +671,12 @@
 			$from = 'FROM
 				foto_boeken';
 
-			$joins = '
+			$joins = "
 				LEFT JOIN fotos ON
 					foto_boeken.id = fotos.boek
+					AND fotos.hidden = 'f'
 				LEFT JOIN foto_boeken child_books ON
-					child_books.parent_id = foto_boeken.id';
+					child_books.parent_id = foto_boeken.id";
 
 			$where = sprintf('WHERE
 				foto_boeken.visibility <= %d
@@ -674,7 +697,7 @@
 				date DESC,
 				foto_boeken.id';
 
-			if (get_config_value('enable_photos_read_status', true) && logged_in() && $metadata & self::READ_STATUS)
+			if (get_config_value('enable_photos_read_status', true) && get_auth()->logged_in() && $metadata & self::READ_STATUS)
 			{
 				$select = sprintf('
 					WITH RECURSIVE book_children (id, date, last_update, visibility, parents) AS (
@@ -720,9 +743,9 @@
 							foto_boeken.id
 					) as f_b_read_status ON
 						f_b_read_status.id = foto_boeken.id",
-						logged_in('beginjaar'),
+						get_identity()->get('beginjaar'),
 						get_policy($this)->get_access_level(),
-						logged_in('id'));
+						get_identity()->get('id'));
 				
 				$group_by .= ",
 					f_b_read_status.read_status";
@@ -743,12 +766,14 @@
 			return "
 				SELECT
 					{$this->table}.*,
+					'" . self::READ_STATUS_READ . "' AS read_status, -- Assume this otherwise it could cause trouble with the grouping in _photos.twig
 					COUNT(DISTINCT foto_reacties.id) AS num_reacties
 				FROM
 					{$this->table}
 				LEFT JOIN foto_reacties ON
 					foto_reacties.foto = {$this->table}.id
-				" . ($where ? 'WHERE ' . $where : '') . "
+				WHERE
+					{$this->table}.hidden = 'f'" . ($where ? ' AND (' . $where . ')' : '') . "
 				GROUP BY
 					{$this->table}.id
 				ORDER BY
@@ -774,6 +799,8 @@
 						FROM
 							fotos
 						WHERE
+							fotos.hidden = 'f'
+							AND
 							fotos.boek IN (
 								SELECT
 									foto_boeken.id
@@ -810,16 +837,43 @@
 		  */
 		public function get_photos(DataIterPhotobook $book)
 		{
+			if (get_config_value('enable_photos_read_status', true) && get_auth()->logged_in())
+			{
+				$lid_id = get_identity()->get('id');
+
+				$read_status_select_atom = "
+					CASE
+						WHEN fotos.added_on > MAX(f_b_v.last_visit)
+						THEN '" . self::READ_STATUS_UNREAD . "'
+						ELSE '" . self::READ_STATUS_READ . "'
+					END read_status";
+
+				$read_status_join_atom = "
+					LEFT JOIN foto_boeken_visit f_b_v ON
+						f_b_v.boek_id = fotos.boek
+						AND f_b_v.lid_id = {$lid_id}";
+			}
+			else
+			{
+				$read_status_select_atom = "
+					'" . self::READ_STATUS_READ . "' as read_status";
+
+				$read_status_join_atom = "";
+			}
+
 			$query = "
 				SELECT
 					fotos.*,
-					COUNT(DISTINCT foto_reacties.id) AS num_reacties
+					COUNT(DISTINCT foto_reacties.id) AS num_reacties,
+					{$read_status_select_atom}
 				FROM
 					fotos
 				LEFT JOIN foto_reacties ON
 					foto_reacties.foto = fotos.id
+				{$read_status_join_atom}
 				WHERE
-					boek = {$book->get_id()}
+					boek = {$book->get_id()} -- Todo: security risk?
+					AND hidden = 'f'
 				GROUP BY
 					fotos.id
 				ORDER BY
@@ -834,7 +888,7 @@
 
 		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
 		{
-			$query = sprintf('
+			$query = sprintf("
 				WITH RECURSIVE book_children (id, visibility, parents) AS (
 						SELECT id, visibility, ARRAY[id] FROM foto_boeken WHERE id = %d
 					UNION ALL
@@ -848,12 +902,13 @@
 					book_children b_c
 				LEFT JOIN fotos f ON
 					f.boek = b_c.id
+					AND f.hidden = 'f'
 				WHERE
 					b_c.visibility <= %d
 				GROUP BY
 					f.id
 				HAVING
-					COUNT(f.id) > 0',
+					COUNT(f.id) > 0",
 					$book->get_id(),
 					get_policy($this)->get_access_level()); // BAD DEPENDENCY!
 
@@ -878,7 +933,7 @@
 		{
 			$result = array();
 
-			while ($book = $book->get_parent())
+			while ($book = $book['parent'])
 				$result[] = $book;
 			
 			return array_reverse($result);
@@ -915,18 +970,18 @@
 		public function insert(DataIter $iter)
 		{
 			// Determine width and height of the new image
-			if (!$iter->has('width') || !$iter->has('height'))
+			if (!$iter->has_value('width') || !$iter->has_value('height'))
 				$iter->set_all($iter->compute_size());
 
 			// Determine the CRC32 file hash, used for detecting changes later on
-			if (!$iter->has('filehash'))
+			if (!$iter->has_value('filehash'))
 				$iter->set('filehash', $iter->compute_hash());
 
-			if (!$iter->has('created_on'))
+			if (!$iter->has_value('created_on'))
 				$iter->set('created_on', $iter->compute_created_on_timestamp());
 
-			if (!$iter->has('added_on'))
-				$iter->set_literal('added_on', 'NOW()');
+			if (!$iter->has_value('added_on'))
+				$iter['added_on'] = new DateTime();
 
 			return parent::insert($iter);
 		}
@@ -988,9 +1043,14 @@
 			if (!get_config_value('enable_photos_read_status', true))
 				return;
 
-			if (!ctype_digit((string) $book->get_id()))
-				return;
+			if (ctype_digit((string) $book->get_id()))
+				$this->_mark_database_book_read($lid_id, $book);
+			else
+				$this->_mark_custom_book_read($lid_id, $book);
+		}
 
+		private function _mark_database_book_read($lid_id, DataIterPhotobook $book)
+		{
 			try {
 				$this->db->insert('foto_boeken_visit',
 					array(
@@ -1003,6 +1063,24 @@
 				$this->db->update('foto_boeken_visit',
 					array('last_visit' => 'NOW()'),
 					sprintf('lid_id = %d AND boek_id = %d', $lid_id, $book->get_id()),
+					array('last_visit'));
+			}
+		}
+
+		private function _mark_custom_book_read($lid_id, DataIterPhotobook $book)
+		{
+			try {
+				$this->db->insert('foto_boeken_custom_visit',
+					array(
+						'lid_id' => $lid_id,
+						'boek_id' => $book->get_id(),
+						'last_visit' => 'NOW()'
+					),
+					array('last_visit'));
+			} catch (Exception $e) {
+				$this->db->update('foto_boeken_custom_visit',
+					array('last_visit' => 'NOW()'),
+					sprintf('lid_id = %d AND boek_id = %s', $lid_id, $this->db->quote_value($book->get_id())),
 					array('last_visit'));
 			}
 		}
@@ -1022,7 +1100,7 @@
 			
 			$query = sprintf('
 				WITH RECURSIVE book_children (id, visibility, parents) AS (
-						SELECT id, visibility, ARRAY[0] FROM foto_boeken WHERE parent = %2$d
+						SELECT id, visibility, ARRAY[0] FROM foto_boeken WHERE parent_id = %2$d
 					UNION ALL
 						SELECT f_b.id, f_b.visibility, b_c.parents || f_b.parent_id
 						FROM book_children b_c, foto_boeken f_b
