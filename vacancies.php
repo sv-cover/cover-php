@@ -11,7 +11,7 @@ class ControllerVacancies extends ControllerCRUD{
 		$this->view = View::byName('vacancies', $this);
 	}
 
-	protected function _validate(DataIter $iter, array &$data, array &$errors)
+	protected function _validate(DataIter $iter, array $data, array &$errors)
 	{
 		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
 			$errors[] = 'not_board';
@@ -21,7 +21,7 @@ class ControllerVacancies extends ControllerCRUD{
 			$errors[] = 'title';
 		}
 
-		return count($errors) === 0;
+		return count($errors) === 0 ? $data : false;
 	}
 }
 
