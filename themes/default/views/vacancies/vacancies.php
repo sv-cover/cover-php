@@ -6,12 +6,13 @@ class VacanciesView extends CRUDView
 {
 	public function study_year_options() {
 		return [
-			1 => __('Eerstejaars Bachelor'),
-			2 => __('Tweedejaars Bachelor'),
-			3 => __('Derdejaars Bachelor'),
-			4 => __('Eerstejaars Master'),
-			5 => __('Tweedejaars Master'),
-			6 => __('Afgestudeerd')
+			1 => __('First Year Bachelor'),
+			2 => __('Second Year Bachelor'),
+			3 => __('Third Year Bachelor'),
+			4 => __('First Year Master'),
+			5 => __('Second Year Master'),
+			6 => __('Graduated Bachelor'),
+			6 => __('Graduated Master')
 		];
 	}
 
@@ -19,7 +20,7 @@ class VacanciesView extends CRUDView
 	{
 		return $year && isset($this->study_year_options()[$year])
 			? $this->study_year_options()[$year]
-			:  __('Niet gespecificeert');
+			:  __('Not specified');
 	}
 
 	public function hours_options()
@@ -36,15 +37,15 @@ class VacanciesView extends CRUDView
 	{
 		return $hours && isset($this->hours_options()[$hours])
 			? $this->hours_options()[$hours]
-			:  __('Niet gespecificeert');
+			:  __('Not specified');
 	}
 
 	public function type_options()
 	{
 		return [
-			1 => __('Bijbaan'),
-			2 => __('Afstudeerproject'),
-			3 => __('Voor afgestudeerden'),
+			1 => __('Side job'),
+			2 => __('Graduation project'),
+			3 => __('For graduated students'),
 		];
 	}
 
@@ -52,7 +53,7 @@ class VacanciesView extends CRUDView
 	{
 		return $type && isset($this->type_options()[$type])
 			? $this->type_options()[$type]
-			:  __('Niet gespecificeert');
+			:  __('Not specified');
 	}
 
 	public function get_logo($company){

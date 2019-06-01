@@ -1,9 +1,9 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Vacature wijzigen') : __('Nieuwe vacature plaatsen')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id ? __('Edit vacancy') : __('New vacancy')) ~ ' :: ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id ? __('vacature wijzigen') : __('Nieuwe vacature plaatsen') }}</h1>
+<h1>{{ iter.has_id ? __('Edit vacancy') : __('New vacancy') }}</h1>
 <div class="messageBox">
 	<form id="vacancy-form" method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
 		{% if iter.has_id %}
@@ -13,17 +13,17 @@
 		{% endif %}	
 
 		<div>
-			{{ html_label(__('Titel'), 'title', errors=errors, required=true) }}
+			{{ html_label(__('Title'), 'title', errors=errors, required=true) }}
 			{{ html_input_text('title', iter, required=true) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Beschrijving'), 'description', errors=errors, required=true) }}
+			{{ html_label(__('Description'), 'description', errors=errors, required=true) }}
 			{{ html_textarea_field('description', iter, errors=errors, rows=10) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Bedrijf'), 'company', errors=errors, required=true) }}
+			{{ html_label(__('Company'), 'company', errors=errors, required=true) }}
 			{{ html_input_text('company', iter, errors=errors) }}
 		</div>
 		<div>
@@ -32,31 +32,31 @@
 		</div>
 
 		<div>
-			{{ html_label(__('Website'), 'url', errors=errors, required=true) }}
+			{{ html_label(__('URL'), 'url', errors=errors, required=true) }}
 			{{ html_input_text('url', iter, errors=errors) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Aantal uren'), 'hours', errors=errors) }}
+			{{ html_label(__('Number of hours'), 'hours', errors=errors) }}
 			{{ html_select_field('hours', view.hours_options(),iter, errors=errors) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Ervaring'), 'experience', errors=errors) }}
+			{{ html_label(__('Experience'), 'experience', errors=errors) }}
 			{{ html_input_text('experience', iter, errors=errors) }}
 		</div>
 
 		<div>
-			{{ html_label(__('Studiejaar'), 'study_year', errors=errors) }}
+			{{ html_label(__('Study year'), 'study_year', errors=errors) }}
 			{{ html_select_field('study_year', view.study_year_options(), iter, errors=errors) }}
 		</div>
 
 		<div>
-			<button type="submit" class="button">{{ iter.has_id ? __('Wijzig vacature') : __('Plaats vacature') }}</button>
+			<button type="submit" class="button">{{ iter.has_id ? __('Modify vacancy') : __('Create vacancy') }}</button>
 			{% if iter.has_id %}
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Terug naar vacature') }}</a>
+			<a href="{{ controller.link_to_read(iter) }}">{{ __('Back to vacancy') }}</a>
 			{% else %}
-			<a href="{{ controller.link_to_index() }}">{{ __('Terug naar alle vacatures') }}</a>
+			<a href="{{ controller.link_to_index() }}">{{ __('Back to all vacancies') }}</a>
 			{% endif %}
 		</div>
 	</form>
