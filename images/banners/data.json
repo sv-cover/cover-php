@@ -4,12 +4,13 @@
 	{"filename":"axonlogo.png","url":"http://www.axonline.nl/", "weight": 1},
 	{"filename":"invariant.png","url":"https://www.invariant.nl/", "weight": 1},
 	{"filename":"nsvki.png","url":"http://nsvki.nl/", "weight": 1},
-    {"filename":"asml.jpg","url":"https://www.asml.com/careers/working-at-asml/en/s32408?rid=42455"},
+    {"filename":"asml.jpg","url":"https://www.workingatasml.com/students?ppc=CAM-104"},
     {"filename":"dataprovider.png","url":"https://www.dataprovider.com/careers/"},
 	{"filename":"ing.png","url":"https://www.ing.jobs/Netherlands/Home.htm"},
 	{"filename":"nedap.png", "url":"https://lifeatnedap.com/"},
     {"filename":"thefactore.png", "url":"https://tfe.nl/vacatures/"},
 	{"filename":"gat_van_groningen.jpg", "url":"http://tgatvangroningen.nl/"},
     {"filename":"rdw.png", "url": "https://www.werkenbijderdw.nl"},
+    {"filename":"tkp.png", "url": "https://www.werkenbijtkp.nl/vakgebieden/ict?utm_source=cover&utm_medium=website&utm_campaign=studievereniging"},
 	{"filename":"duo.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"}
 ]

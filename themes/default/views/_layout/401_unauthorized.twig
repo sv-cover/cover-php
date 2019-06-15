@@ -13,6 +13,7 @@
 		<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
 		<span class="separator">{{ __('or') }}</span>
 		<a href="lidworden.php" class="button register">{{ __('Become a member') }}</a>
+		<p>{{ __('…or back to <a href="%s">the homepage</a>')|format('/')|raw }}</p>
 	</div>
 	{% endif %}
 </article>

@@ -1,4 +1,11 @@
 {
+    "excee": [
+        {
+            "name": "Dibbes",
+            "functie": "Meowscot",
+            "photo": "images/mascots/dibbes.jpg"
+        }
+    ],
 	"herocee": [
 		{
 			"name": "Koda",
@@ -6,11 +13,11 @@
 			"photo": "images/mascots/koda.jpg"
 		}
 	],
-    "excee": [
+    "roomcee": [
         {
-            "name": "Dibbes",
-            "functie": "Meowscot",
-            "photo": "images/mascots/dibbes.jpg"
+            "name": "Chewbarka",
+            "functie": "Pet dog",
+            "photo": "images/mascots/chewbarka.jpg"
         }
     ]
 }
