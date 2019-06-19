@@ -27,14 +27,14 @@ class API
 		if ($limit !== null)
 			$data['limit'] = (int) $limit;
 
-		$debits = $this->_get($this->api_root, $data);
+		$debits = $this->_request($this->api_root, $data);
 
 		return $debits;
 	}
 
 	public function getContracts(\DataIterMember $member)
 	{
-		return $this->_get($this->api_root . 'contracten/', ['cover_id' => $member->get_id()]);
+		return $this->_request($this->api_root . 'contracten/', ['cover_id' => $member->get_id()]);
 	}
 
 	public function getContractTemplatePDF(\DataIterMember $member)
@@ -42,15 +42,28 @@ class API
 		return $this->_stream(sprintf('%scontracten/templates/%d', $this->api_root, $member['id']));
 	}
 
-	protected function _getRequest($url, array $data)
+	public function printContractTemplatePDF(\DataIterMember $member)
+	{
+		return $this->_request(
+			sprintf('%scontracten/templates/%d', $this->api_root, $member['id']),
+			[],
+			'POST',
+			['X-Document-Destination' => 'printer/cache']
+		);
+	}
+
+	protected function _getRequest($url, array $data, $method='GET', array $headers=[])
 	{
 		$query = http_build_query($data);
 
-		$headers = array(
-			'Date' => gmdate('D, d M Y H:i:s T'),
-			'Host' => parse_url($url, PHP_URL_HOST),
-			'X-App' => $this->api_app_id,
-			'X-Hash' => sha1($query . $this->api_app_secret)
+		$headers = array_merge(
+			$headers,
+			[
+				'Date' => gmdate('D, d M Y H:i:s T'),
+				'Host' => parse_url($url, PHP_URL_HOST),
+				'X-App' => $this->api_app_id,
+				'X-Hash' => sha1($query . $this->api_app_secret)
+			]
 		);
 
 		$options = array(
@@ -61,7 +74,7 @@ class API
 					},
 					array_keys($headers),
 					array_values($headers))),
-				'method'  => 'GET',
+				'method'  => $method,
 				'ignore_errors' => true
 			)
 		);
@@ -74,9 +87,9 @@ class API
 		];
 	}
 
-	protected function _get($url, array $data = array())
+	protected function _request($url, array $data=[], $method='GET', array $headers=[])
 	{
-		$request = $this->_getRequest($url, $data);
+		$request = $this->_getRequest($url, $data, $method, $headers);
 
 		$response = \file_get_contents($request->url, false, $request->context);
 
@@ -97,7 +110,7 @@ class API
 		return $data;
 	}
 
-	protected function _stream($url, array $data = array())
+	protected function _stream($url, array $data=[])
 	{
 		$request = $this->_getRequest($url, $data);
 		return fopen($request->url, 'rb', false, $request->context);

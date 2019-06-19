@@ -418,6 +418,21 @@ class ControllerProfiel extends Controller
 		fclose($fh);
 	}
 
+	public function run_print_incassocontract(DataIterMember $member)
+	{
+		if (!$this->policy->user_can_update($member))
+			throw new UnauthorizedException();
+
+		require_once 'include/incassomatic.php';
+
+		$incasso_api = \incassomatic\shared_instance();
+
+		$result = $incasso_api->printContractTemplatePDF($member);
+
+		return $this->view->render_incassomatic_tab($member, $result->message);
+	}
+
+
 	public function run_public(DataIterMember $member)
 	{
 		if (!$this->policy->user_can_read($member))

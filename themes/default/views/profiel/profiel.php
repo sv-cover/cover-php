@@ -205,7 +205,7 @@ class ProfielView extends View
 		}
 	}
 
-	public function render_incassomatic_tab(DataIterMember $iter)
+	public function render_incassomatic_tab(DataIterMember $iter, $message=null)
 	{
 		require_once 'include/incassomatic.php';
 
@@ -220,8 +220,9 @@ class ProfielView extends View
 			// Only show valid contracts
 			$contract = current(array_filter($contracts, function($contract) { return $contract->is_geldig; }));
 
+
 			if (!$contract)
-				return $this->render('incassomatic_tab_no_contract.twig', compact('iter', 'treasurer_link'));
+				return $this->render('incassomatic_tab_no_contract.twig', compact('iter', 'treasurer_link', 'message'));
 			
 			$debits = $incasso_api->getDebits($iter, 15);
 
