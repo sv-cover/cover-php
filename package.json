@@ -1,0 +1,24 @@
+{
+  "name": "cover-php",
+  "version": "1.0.0",
+  "description": "This is the source code of the Cover website.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/cover-webcie/cover-php.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/cover-webcie/cover-php#readme",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}
