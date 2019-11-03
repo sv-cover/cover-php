@@ -53,7 +53,7 @@
 								<img src="{{ committee.thumbnail }}" alt="Photo of {{ committee.naam }}">
 							</figure>
 						{% elseif committee.members|length > 0 %}
-							<div class="columns is-gapless member-images">
+							<div class="member-images columns is-gapless is-mobile">
 								{% for member in committee.members %}
 									{% if user_can_read member %}
 										<figure class="column image">
