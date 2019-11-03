@@ -30,6 +30,14 @@ a.committee
             min-height: 100%
             object-fit: cover
 
+    .member-images
+        &::before
+            background: rgba($cover-blue, .4)
+
+        .image
+            filter: saturate(20%)
+
+
     .name
         background: $cover-red
         box-decoration-break: clone
