@@ -198,7 +198,7 @@
 ## JS needed
 
 - Mobile menu collapse [BULMA JS]
-- Show/hide search intelligently (like wiki/sd) [GLOBAL]
+- [issue] Show/hide search intelligently (like wiki/sd) [GLOBAL]
 - Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
     - _layout/widgets/menu.twig (mainly login)
     - forum/thread.twig (move thread)
@@ -215,7 +215,7 @@
     - forum/reply_form.twig
     - forum/thread_form.twig
     - see previous list
-- Modals [GLOBAL]
+- [issue] Modals [GLOBAL]
     - Impersonate
     - [maybe] Forum delete thread/message
     - [maybe] Forum edit message
@@ -245,10 +245,11 @@
 - Fancyness in signup/form_form.twig
 - Autocomplete in lidworden/lidworden.twig
 - Profile page
+- Improve Dark Theme switch JS (is inline now, should be pulled out)
 
 ## Bulma extensions / custom CSS
 
-- Vertically padded container. Sometimes a container element for vertical grouping would be nice.
+- [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
     - Pagination bar in:
         - forum/forum.twig
         - forum/thread.twig
@@ -265,14 +266,14 @@
     - article on any profile page
     - article in \_layout/500.twig
     - article anywhere basically
-- Divider (like the one of semantic ui)
+- [issue] Divider (like the one of semantic ui)
     - \_layout/401.twig
     - sessions/_login_widget.twig (to separate the form from the become a member button)
     - boeken/go_to_login.twig
     - lidworden/known_member.twig
     - lidworden/pending.twig
 - Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
-- Narrow content container for improved readability. Probably with TOC sidebar.
+- [issue] Narrow content container for improved readability. Probably with TOC sidebar.
 - Almanak rendering. Last row is weird, images are not centered.
     - almanak/index.twig
     - commissies/_leden.twig
@@ -281,8 +282,8 @@
     - forum/poll_form.twig
     - forum/reply_form.twig
     - forum/thread_form.twig
-- Bulma typography is inconsistent across a single page.
-- Fieldset in: 
+- [issue] Bulma typography is inconsistent across a single page.
+- [issue] Fieldset in: 
     - sessions/overrides.twig
     - signup/fields/choice.twig
 - Calendar icon in:
@@ -290,16 +291,17 @@
     - agenda/single.twig
     - commissies/_agenda.twig
     - search/\_single_agendapunt.twig
-- Bulma dl styling is ugly
-- Multiline select is broken
+- [issue] Bulma dl styling is ugly
+- [issue] Multiline select is broken
 - Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
 - Lines of media objects are not always wished for, especially in nested media objects.
     - comments on photobook main page
 - A bootstrap style "link" button may be desired
     - like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
     - like button on photo
-- Level-right doesn't work if there's no level-left
-- Same for pagination 
+    - Fix by making everything buttons
+- [issue] Level-right doesn't work if there's no level-left
+- [issue] Same for pagination 
     - weblog/index.twig
     - agenda/index.twig
 - Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
@@ -307,7 +309,7 @@
     - fotoboek/\_path.twig
     - fotoboek/single.twig
     - fotoboekreacties/\_comment.twig
-- No margin around dropdown in .buttons
+- [issue] No margin around dropdown in .buttons
     - agenda/index.twig
 - Why does a .number make form elements rounded?
 - A table-responsive like element would be nice (or probably an .is-scrollable modifier)
@@ -315,7 +317,7 @@
 - A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
     - signup/list_entries.twig
 - Buttons don't work that well as card-footer-item
-    - signpu/form_form.twig
+    - signup/form_form.twig
 - fullwidth/expanding select? maybe?
 
 
