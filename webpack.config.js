@@ -17,16 +17,19 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader',
                     options: {
                         presets: [[
                             '@babel/preset-env',
                             {
-                                targets: "> 2.5%, not dead",
+                                targets: {
+                                    'node': "6.10",
+                                    'esmodules': true
+                                }
                             },
-                        ]]
+                        ]],
+                        plugins: ['@babel/plugin-proposal-object-rest-spread']
                     }
                 }
             },
