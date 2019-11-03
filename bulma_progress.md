@@ -323,34 +323,35 @@
 
 ## Other
 
-- Remove profile signature, it isn't used and didn't fit in the design
-- Remove language switch from profile
-- Almanac form is weird. May need some backend improvements (filter on filter). 
-- Titles in pages behave weird. Maybe some backend improvements?
-- Transpose columns in session/overrides.twig and committeebattle/form.twig
-- Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
-- Old committee page was better. But at least it's bulma now :)
-- Single committee page is crap now.
-- Working groups page needs major redesign.
-- Photo origin path in fotoboek/\_path.twig is ugly html.
-- Redesign photobook: rendering of books could be better. May need some backend changes. 
-- Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
-- Consistent HTML structure (how to use headers, article footer etc)
-- Embedded mailing list form doesn't seem to work…
-- Fix select fields
-- Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
-- Move Headings inside of articles, unless header. Got to do proper HTML5 :)
-- Error 500. What if link_static is broken? Or i18n?
-- Poll on mobile doesn't work that well.
+- [ ] Remove profile signature, it isn't used and didn't fit in the design
+- [ ] Remove language switch from profile
+- [ ] Almanac form is weird. May need some backend improvements (filter on filter). 
+- [ ] Titles in pages behave weird. Maybe some backend improvements?
+- [ ] Transpose columns in session/overrides.twig and committeebattle/form.twig
+- [ ] Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
+- [×] Old committee page was better. But at least it's bulma now :)
+- [ ] Single committee page is crap now.
+- [ ] Working groups page needs major redesign.
+- [ ] Photo origin path in fotoboek/\_path.twig is ugly html.
+- [ ] Redesign photobook: rendering of books could be better. May need some backend changes. 
+- [ ] Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
+- [ ] Consistent HTML structure (how to use headers, article footer etc)
+- [ ] Embedded mailing list form doesn't seem to work…
+- [ ] Fix select fields
+- [ ] Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
+- [ ] Move Headings inside of articles, unless header. Got to do proper HTML5 :)
+- [ ] Error 500. What if link_static is broken? Or i18n?
+- [ ] Poll on mobile doesn't work that well.
+- [ ] Photo privacy form doesn't return to original photo
 
 
 # Pending Design Decisions
 
-- Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
-- If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
-- How to display metadata? Eg. forum messages, announcements, search results, photo album
-- Icons in buttons?
-- How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
-- Deprecate horizontal banner rotator?
-- Redesign inclusion process (lidworden)
-- Notification system?
+- [ ] Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
+- [ ] If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
+- [ ] How to display metadata? Eg. forum messages, announcements, search results, photo album
+- [ ] Icons in buttons?
+- [ ] How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
+- [ ] Deprecate horizontal banner rotator?
+- [ ] Redesign inclusion process (lidworden)
+- [ ] Notification system?

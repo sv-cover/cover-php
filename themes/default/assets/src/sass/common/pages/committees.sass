@@ -1,0 +1,71 @@
+$committee-padding: 1.25rem
+$name-padding: 0 $committee-padding
+$name-line-height: $title-line-height + .8
+$name-size: $size-5
+$overlay-transition-timing: 150ms ease-in-out
+
+a.committee
+    @extend .box
+    position: relative
+    padding: 0
+    padding-top: 66.6666% // is-3by2
+    background: $black
+    color: $white
+
+    & > .image,
+    .member-images
+        @extend .is-3by2
+        +overlay
+        overflow: hidden
+        
+        &::before
+            +overlay
+            display: block
+            content: ''
+            background: rgba($black, 0)
+            transition: background $overlay-transition-timing
+            z-index: 1
+
+        img
+            min-height: 100%
+            object-fit: cover
+
+    .name
+        background: $cover-red
+        box-decoration-break: clone
+        color: $cover-red-invert
+        line-height: $name-line-height
+        display: inline-block
+        font-size: $name-size
+        font-weight: $title-weight
+        margin-bottom: 0
+        padding: $name-padding
+
+    .summary
+        color: $white
+        padding: $committee-padding
+        font-size: $size-7
+
+    .overlay
+        +overlay
+        overflow: hidden
+        padding: $committee-padding 0
+        top: calc(100% - #{$name-size * $name-line-height + 2 * $committee-padding})
+        transition: top $overlay-transition-timing
+        z-index: 10
+
+    &:hover,
+    &:focus
+        box-shadow: $box-shadow
+        
+        & > .image,
+        .member-images
+            &::before
+                background: rgba($black, .8)
+
+        .overlay
+            top: 0
+            bottom: 0
+
+    &:focus
+        outline: $control-border-width solid $cover-red
