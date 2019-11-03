@@ -35,7 +35,7 @@
 					</a>
 				{% endif %}
 				{% if user_can_delete item %}
-					<a class="level-item" href="announcements.php?view=delete&amp;id={{ item.id }}" title="{{ __('Delete announcement') }}">
+					<a class="level-item" href="announcements.php?view=delete&amp;id={{ item.id }}" title="{{ __('Delete announcement') }}" data-popup="modal">
 						<span class="icon is-small">
 							<i class="fas fa-trash" aria-hidden="true"></i>
 						</span>

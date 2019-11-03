@@ -197,12 +197,12 @@
 
 ## JS needed
 
-- [ ] Mobile menu collapse [BULMA JS]
-- [ ] [issue] Show/hide search intelligently (like wiki/sd) [GLOBAL]
+- [×] Mobile menu collapse [BULMA JS]
+- [-] [issue] Show/hide search intelligently (like wiki/sd) [GLOBAL]
 - [ ] Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
     - [ ] _layout/widgets/menu.twig (mainly login)
     - [ ] forum/thread.twig (move thread)
-- [ ] Tabs. Switch between tabbed content  [BULMA JS]
+- [ ] [issue] Tabs. Switch between tabbed content  [BULMA JS]
     - [ ] agenda/form.twig
     - [ ] announcements/form.twig
     - [ ] forum/poll_form.twig
@@ -215,16 +215,16 @@
     - [ ] forum/reply_form.twig
     - [ ] forum/thread_form.twig
     - [ ] see previous list
-- [ ] [issue] Modals [GLOBAL]
-    - [ ] Impersonate
+- [-] [issue] Modals [GLOBAL]
+    - [×] Impersonate
     - [ ] [maybe] Forum delete thread/message
     - [ ] [maybe] Forum edit message
-    - [ ] Delete announcement
+    - [×] Delete announcement
     - [ ] [maybe] Edit announcement
     - [ ] Award / edit / delete committee battle points
-    - [ ] download photo album
-    - [ ] delete photo album button in album icon
-    - [ ] photo visibility form (photos in photos of member book)
+    - [×] download photo album
+    - [×] delete photo album button in album icon
+    - [×] photo visibility form (photos in photos of member book)
     - [ ] view photo modal
     - [ ] create sticker in sticker map
     - [ ] Mailinglist subscribe forms
@@ -272,7 +272,7 @@
     - [ ] boeken/go_to_login.twig
     - [ ] lidworden/known_member.twig
     - [ ] lidworden/pending.twig
-- [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
+-   [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - [ ] [issue] Narrow content container for improved readability. Probably with TOC sidebar.
 - [ ] Almanak rendering. Last row is weird, images are not centered.
     - [ ] almanak/index.twig

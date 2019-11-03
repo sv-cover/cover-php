@@ -23,7 +23,7 @@
 					</a>
 				{% endif %}
 				{% if user_can_delete iter %}
-					<a class="level-item" href="{{ controller.link_to_delete(iter) }}" title="{{ __('Delete announcement') }}">
+					<a class="level-item" href="{{ controller.link_to_delete(iter) }}" title="{{ __('Delete announcement') }}" data-popup="modal">
 						<span class="icon is-small">
 							<i class="fas fa-trash" aria-hidden="true"></i>
 						</span>

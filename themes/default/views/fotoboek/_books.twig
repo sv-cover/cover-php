@@ -30,7 +30,7 @@
 				</span>
 			</a>
 			{% if user_can_delete book %}
-			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Delete photo album') }}">
+			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Delete photo album') }}" data-popup="modal">
 				<span class="icon is-small">
 					<i class="fas fa-trash"></i>
 					<span class="is-sr-only">{{ __('Delete photo album') }}</span>
