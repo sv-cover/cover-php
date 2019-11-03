@@ -1,14 +1,8 @@
-<nav class="navbar is-danger is-fixed-top" role="navigation" aria-label="main navigation">
-	<div class="container">
-		<div class="navbar-brand">
-			<a class="navbar-item" href="/">
-				<img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
-			</a>
-
-			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
+<nav class="navbar is-cover is-fixed-top" role="navigation" aria-label="main navigation">
+	<div class="container is-flex">
+		<div class="navbar-brand is-inline-flex">
+			<a class="navbar-item cover-logo" href="/">
+				<img src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
 			</a>
 		</div>
 
@@ -17,7 +11,7 @@
 			{% for menu_id, menu in view.layout.top_menu %}
 				{% if menu.submenu is defined %}
 					<div class="navbar-item has-dropdown is-hoverable">
-						<a href="" class="navbar-link is-arrowless"{% if menu.title is defined %} title="{{ menu.title }}"{% endif %}>
+						<a class="navbar-link is-arrowless"{% if menu.title is defined %} title="{{ menu.title }}"{% endif %} tabindex="0">
 							{{ menu.label }}
 						</a>
 						<div class="navbar-dropdown">
@@ -32,11 +26,16 @@
 			{% endfor %}
 			</div>
 
-			<div class="navbar-end">
-				{{ include('@layout/widgets/search.twig') }}
-				{{ include('@layout/widgets/applications.twig') }}
-				{{ include('@layout/widgets/login.twig') }}
-			</div>
 		</div>	
+		<div class="navbar-controls">
+			{{ include('@layout/widgets/search.twig') }}
+			{{ include('@layout/widgets/applications.twig') }}
+			{{ include('@layout/widgets/login.twig') }}
+			<a role="button" class="navbar-burger is-hoverable" aria-label="menu" aria-expanded="false" data-trigger data-target="navbar-main">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+		</div>
 	</div>
 </nav>

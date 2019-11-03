@@ -10,16 +10,12 @@
 		<link rel="search" href="opensearch.xml"  type="application/opensearchdescription+xml" title="Cover">
 		<title>{% block title %}Cover{% endblock %}</title>
 		
-	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
-	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
 		{% for stylesheet in view.stylesheets %}
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
 		
-		{% for script in view.scripts %}
-		<script src="{{ script }}"></script>
-		{% endfor %}
+	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	</head>
 	<body class="has-navbar-fixed-top">
 		{% block menu %}
@@ -94,6 +90,10 @@
 				</div>
 			</div>
 		</div>
+
+		{% for script in view.scripts %}
+			<script src="{{ script }}"></script>
+		{% endfor %}
 
 		{# Some scripts for the development modal. Keep it all contained as much as possible to not interfere with other scripts #}
 		<script>

@@ -279,6 +279,12 @@ class LayoutViewHelper
 		return array_filter($model->get_proposed(), [get_policy($model), 'user_can_moderate']);
 	}
 
+
+	public function color_mode()
+	{
+		return $_COOKIE['cover_color_mode'] ?? 'light';
+	}
+
 	public function has_alert()
 	{
 		return isset($_SESSION['alert']) && $_SESSION['alert'] != '';
