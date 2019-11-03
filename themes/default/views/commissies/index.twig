@@ -64,9 +64,9 @@
 							</div>
 						{% endif %}
 						
-{# 							{% if committee.has_vacancy %}
-							<span class="tag is-danger">{{ __('Looking for new members!') }}</span>
-						{% endif %} #}
+						{% if committee.has_vacancy %}
+							<div class="vacancy-badge">{{ __('Looking for new members!') }}</div>
+						{% endif %}
 					</a>
 				</div>
 			{% endfor %}

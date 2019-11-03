@@ -64,6 +64,19 @@ a.committee
         top: calc(100% - #{$name-size * $name-line-height + 2 * $committee-padding})
         transition: top $overlay-transition-timing
         z-index: 10
+    
+    .vacancy-badge
+        position: absolute
+        top: -.5rem
+        right: -.5rem
+        padding: .25ch $committee-padding
+        background: $black
+        color: $white
+        border: $control-border-width solid $white
+        font-weight: $weight-semibold
+        transform: rotate(3deg)
+        box-shadow: $box-shadow
+        z-index: 100
 
     &:hover,
     &:focus
