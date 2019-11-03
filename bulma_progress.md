@@ -197,128 +197,128 @@
 
 ## JS needed
 
-- Mobile menu collapse [BULMA JS]
-- [issue] Show/hide search intelligently (like wiki/sd) [GLOBAL]
-- Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
-    - _layout/widgets/menu.twig (mainly login)
-    - forum/thread.twig (move thread)
-- Tabs. Switch between tabbed content  [BULMA JS]
-    - agenda/form.twig
-    - announcements/form.twig
-    - forum/poll_form.twig
-    - forum/reply_form.twig
-    - forum/thread_form.twig
-    - mailinglijsten/archive_single.twig
-    - show/form.twig
-- Preview (page) content
-    - forum/poll_form.twig
-    - forum/reply_form.twig
-    - forum/thread_form.twig
-    - see previous list
-- [issue] Modals [GLOBAL]
-    - Impersonate
-    - [maybe] Forum delete thread/message
-    - [maybe] Forum edit message
-    - Delete announcement
-    - [maybe] Edit announcement
-    - Award / edit / delete committee battle points
-    - download photo album
-    - delete photo album button in album icon
-    - photo visibility form (photos in photos of member book)
-    - view photo modal
-    - create sticker in sticker map
-    - Mailinglist subscribe forms
-- Autocomplete
-    - session/overrides.twig (autocomlete member)
-    - committeebattle/form.twig (member)
-    - tagging people in photo album
-- Whatever is happening in search results :P
-- Whatever is happening on the committee form
-- All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
-- Everything in fotoboek/\_photos.twig
-- Change photo name (photocee functionality)
-- Fotoboek/single.twig
-- Add photo's to photobook
-- Sticker map
-- WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
-- Stuff happening in mailijnlijsten/single.twig
-- Fancyness in signup/form_form.twig
-- Autocomplete in lidworden/lidworden.twig
-- Profile page
-- Improve Dark Theme switch JS (is inline now, should be pulled out)
+- [ ] Mobile menu collapse [BULMA JS]
+- [ ] [issue] Show/hide search intelligently (like wiki/sd) [GLOBAL]
+- [ ] Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
+    - [ ] _layout/widgets/menu.twig (mainly login)
+    - [ ] forum/thread.twig (move thread)
+- [ ] Tabs. Switch between tabbed content  [BULMA JS]
+    - [ ] agenda/form.twig
+    - [ ] announcements/form.twig
+    - [ ] forum/poll_form.twig
+    - [ ] forum/reply_form.twig
+    - [ ] forum/thread_form.twig
+    - [ ] mailinglijsten/archive_single.twig
+    - [ ] show/form.twig
+- [ ] Preview (page) content
+    - [ ] forum/poll_form.twig
+    - [ ] forum/reply_form.twig
+    - [ ] forum/thread_form.twig
+    - [ ] see previous list
+- [ ] [issue] Modals [GLOBAL]
+    - [ ] Impersonate
+    - [ ] [maybe] Forum delete thread/message
+    - [ ] [maybe] Forum edit message
+    - [ ] Delete announcement
+    - [ ] [maybe] Edit announcement
+    - [ ] Award / edit / delete committee battle points
+    - [ ] download photo album
+    - [ ] delete photo album button in album icon
+    - [ ] photo visibility form (photos in photos of member book)
+    - [ ] view photo modal
+    - [ ] create sticker in sticker map
+    - [ ] Mailinglist subscribe forms
+- [ ] Autocomplete
+    - [ ] session/overrides.twig (autocomlete member)
+    - [ ] committeebattle/form.twig (member)
+    - [ ] tagging people in photo album
+- [ ] Whatever is happening in search results :P
+- [ ] Whatever is happening on the committee form
+- [ ] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
+- [ ] Everything in fotoboek/\_photos.twig
+- [ ] Change photo name (photocee functionality)
+- [ ] Fotoboek/single.twig
+- [ ] Add photo's to photobook
+- [ ] Sticker map
+- [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
+- [ ] Stuff happening in mailijnlijsten/single.twig
+- [ ] Fancyness in signup/form_form.twig
+- [ ] Autocomplete in lidworden/lidworden.twig
+- [ ] Profile page
+- [ ] Improve Dark Theme switch JS (is inline now, should be pulled out)
 
 ## Bulma extensions / custom CSS
 
-- [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
-    - Pagination bar in:
-        - forum/forum.twig
-        - forum/thread.twig
-        - weblog/index.twig
-    - Poll in forum/_poll.twig
-    - Search statistics in search/index.twig.
-    - Individual parts of commissies/archive.twig
-    - Single photo fotoboek/single.twig
-    - header in mailinglists/archive_single.twig
-    - header in agenda/single.twig
-    - article in signup/form_form.twig
-    - cards in signup/form_form.twig
-    - entire form in lidworden/lidworden.twig
-    - article on any profile page
-    - article in \_layout/500.twig
-    - article anywhere basically
-- [issue] Divider (like the one of semantic ui)
-    - \_layout/401.twig
-    - sessions/_login_widget.twig (to separate the form from the become a member button)
-    - boeken/go_to_login.twig
-    - lidworden/known_member.twig
-    - lidworden/pending.twig
-- Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
-- [issue] Narrow content container for improved readability. Probably with TOC sidebar.
-- Almanak rendering. Last row is weird, images are not centered.
-    - almanak/index.twig
-    - commissies/_leden.twig
-    - commissies/working_groups.twig
-- Tabs in form field (for preview rendering) should be closer to field in:
-    - forum/poll_form.twig
-    - forum/reply_form.twig
-    - forum/thread_form.twig
-- [issue] Bulma typography is inconsistent across a single page.
-- [issue] Fieldset in: 
-    - sessions/overrides.twig
-    - signup/fields/choice.twig
-- Calendar icon in:
-    - agenda/index.twig
-    - agenda/single.twig
-    - commissies/_agenda.twig
-    - search/\_single_agendapunt.twig
-- [issue] Bulma dl styling is ugly
-- [issue] Multiline select is broken
-- Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
-- Lines of media objects are not always wished for, especially in nested media objects.
-    - comments on photobook main page
-- A bootstrap style "link" button may be desired
-    - like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
-    - like button on photo
-    - Fix by making everything buttons
-- [issue] Level-right doesn't work if there's no level-left
-- [issue] Same for pagination 
-    - weblog/index.twig
-    - agenda/index.twig
-- Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
-    - commissies/index.twig
-    - fotoboek/\_path.twig
-    - fotoboek/single.twig
-    - fotoboekreacties/\_comment.twig
-- [issue] No margin around dropdown in .buttons
-    - agenda/index.twig
-- Why does a .number make form elements rounded?
-- A table-responsive like element would be nice (or probably an .is-scrollable modifier)
-    - signup/list_entries.twig
-- A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
-    - signup/list_entries.twig
-- Buttons don't work that well as card-footer-item
-    - signup/form_form.twig
-- fullwidth/expanding select? maybe?
+- [ ] [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
+    - [ ] Pagination bar in:
+        - [ ] forum/forum.twig
+        - [ ] forum/thread.twig
+        - [ ] weblog/index.twig
+    - [ ] Poll in forum/_poll.twig
+    - [ ] Search statistics in search/index.twig.
+    - [ ] Individual parts of commissies/archive.twig
+    - [ ] Single photo fotoboek/single.twig
+    - [ ] header in mailinglists/archive_single.twig
+    - [ ] header in agenda/single.twig
+    - [ ] article in signup/form_form.twig
+    - [ ] cards in signup/form_form.twig
+    - [ ] entire form in lidworden/lidworden.twig
+    - [ ] article on any profile page
+    - [ ] article in \_layout/500.twig
+    - [ ] article anywhere basically
+- [ ] [issue] Divider (like the one of semantic ui)
+    - [ ] \_layout/401.twig
+    - [ ] sessions/_login_widget.twig (to separate the form from the become a member button)
+    - [ ] boeken/go_to_login.twig
+    - [ ] lidworden/known_member.twig
+    - [ ] lidworden/pending.twig
+- [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
+- [ ] [issue] Narrow content container for improved readability. Probably with TOC sidebar.
+- [ ] Almanak rendering. Last row is weird, images are not centered.
+    - [ ] almanak/index.twig
+    - [ ] commissies/_leden.twig
+    - [ ] commissies/working_groups.twig
+- [ ] Tabs in form field (for preview rendering) should be closer to field in:
+    - [ ] forum/poll_form.twig
+    - [ ] forum/reply_form.twig
+    - [ ] forum/thread_form.twig
+- [ ] [issue] Bulma typography is inconsistent across a single page.
+- [ ] [issue] Fieldset in: 
+    - [ ] sessions/overrides.twig
+    - [ ] signup/fields/choice.twig
+- [ ] Calendar icon in:
+    - [ ] agenda/index.twig
+    - [ ] agenda/single.twig
+    - [ ] commissies/_agenda.twig
+    - [ ] search/\_single_agendapunt.twig
+- [ ] [issue] Bulma dl styling is ugly
+- [ ] [issue] Multiline select is broken
+- [ ] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
+- [ ] Lines of media objects are not always wished for, especially in nested media objects.
+    - [ ] comments on photobook main page
+- [ ] A bootstrap style "link" button may be desired
+    - [ ] like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
+    - [ ] like button on photo
+    - [ ] Fix by making everything buttons
+- [ ] [issue] Level-right doesn't work if there's no level-left
+- [ ] [issue] Same for pagination 
+    - [ ] weblog/index.twig
+    - [ ] agenda/index.twig
+- [ ] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
+    - [ ] commissies/index.twig
+    - [ ] fotoboek/\_path.twig
+    - [ ] fotoboek/single.twig
+    - [ ] fotoboekreacties/\_comment.twig
+- [ ] [issue] No margin around dropdown in .buttons
+    - [ ] agenda/index.twig
+- [ ] Why does a .number make form elements rounded?
+- [ ] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
+    - [ ] signup/list_entries.twig
+- [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
+    - [ ] signup/list_entries.twig
+- [ ] Buttons don't work that well as card-footer-item
+    - [ ] signup/form_form.twig
+- [ ] fullwidth/expanding select? maybe?
 
 
 ## Other
