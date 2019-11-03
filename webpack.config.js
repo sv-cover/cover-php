@@ -1,10 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-
-// const lightCss = new ExtractTextWebpackPlugin("light.css");
-// const darkCss = new ExtractTextWebpackPlugin("dark.css");
 
 module.exports = {
     context: __dirname + '/themes/default/assets',
@@ -42,7 +38,6 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({ filename: '[name].css', }),
-        new CopyPlugin([{ from: 'public', to: '' }]),
         new CompressionPlugin({ exclude: /.+\.html/ })
     ]
 };
