@@ -87,6 +87,6 @@ function parse_search_query($query)
 function normalize_search_rank($rank)
 {
 	$relevance = floatval($rank);
-			
-	return $relevance / ($relevance + 1);		
+
+	return $relevance / ($relevance + 1);
 }
