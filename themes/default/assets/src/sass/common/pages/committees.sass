@@ -31,8 +31,11 @@ a.committee
             object-fit: cover
 
     .member-images
-        &::before
-            background: rgba($cover-blue, .4)
+        &::after
+            +overlay
+            display: block
+            content: ''
+            background: linear-gradient(to bottom right, rgba($purple, .4), rgba($cover-blue, .4))
 
         .image
             filter: saturate(20%)
