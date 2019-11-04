@@ -6,10 +6,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ __('Log in') }} – Cover</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+        {% for stylesheet in view.stylesheets %}
+        <link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
+        {% endfor %}
     </head>
     <body class="has-navbar-fixed-top">
-        <nav class="navbar is-danger is-fixed-top" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-fixed-top is-cover" role="navigation" aria-label="main navigation">
             <div class="container">
                 <div class="navbar-brand">
                     <a class="navbar-item" href="/">
@@ -20,14 +22,16 @@
         </nav>
 
         <section class="section">
-            <div class="container">
-                <article>
-                    <h1 class="title">{{ __('Log in') }}</h1>
+            <div class="container columns is-centered">
+                <div class="column is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-third-fullhd">
+                    <article class="box">
+                        <h1 class="title">{{ __('Log in') }}</h1>
 
-                    {% from '@theme/sessions/_login_widget.twig' import login_form %}
+                        {% from '@theme/sessions/_login_widget.twig' import login_form %}
 
-                    {{ login_form(errors, error_message, referrer, external_domain) }}
-                </article>
+                        {{ login_form(errors, error_message, referrer, external_domain) }}
+                    </article>
+                </div>
             </div>
         </section>
     </body>
