@@ -199,10 +199,10 @@
 
 - [×] Mobile menu collapse [BULMA JS]
 - [-] [issue] Show/hide search intelligently (like wiki/sd) [GLOBAL]
-- [ ] Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
-    - [ ] _layout/widgets/menu.twig (mainly login)
-    - [ ] forum/thread.twig (move thread)
-- [×]  Tabs. Switch between tabbed content  [BULMA JS]
+- [×] Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
+    - [×] _layout/widgets/menu.twig (mainly login)
+    - [×] forum/thread.twig (move thread)
+- [×] Tabs. Switch between tabbed content  [BULMA JS]
     - [×] agenda/form.twig
     - [×] announcements/form.twig
     - [×] forum/poll_form.twig
