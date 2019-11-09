@@ -202,14 +202,14 @@
 - [ ] Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
     - [ ] _layout/widgets/menu.twig (mainly login)
     - [ ] forum/thread.twig (move thread)
-- [ ] [issue] Tabs. Switch between tabbed content  [BULMA JS]
-    - [ ] agenda/form.twig
-    - [ ] announcements/form.twig
-    - [ ] forum/poll_form.twig
-    - [ ] forum/reply_form.twig
-    - [ ] forum/thread_form.twig
-    - [ ] mailinglijsten/archive_single.twig
-    - [ ] show/form.twig
+- [×]  Tabs. Switch between tabbed content  [BULMA JS]
+    - [×] agenda/form.twig
+    - [×] announcements/form.twig
+    - [×] forum/poll_form.twig
+    - [×] forum/reply_form.twig
+    - [×] forum/thread_form.twig
+    - [×] mailinglijsten/archive_single.twig
+    - [×] show/form.twig
 - [ ] Preview (page) content
     - [ ] forum/poll_form.twig
     - [ ] forum/reply_form.twig
