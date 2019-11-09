@@ -1,14 +1,14 @@
 # Bulma Implementation ToDo
 
-- [-] \_layout
-    - [-] widgets
-        - [ ] agenda.twig (currently unused)
+- [×] \_layout
+    - [×] widgets
+        - [×] agenda.twig (currently unused)
         - [×] banners.twig
         - [×] committee-battle-header.twig
         - [×] login.twig
         - [×] menu.twig
-        - [ ] menuitem.twig
-        - [ ] poll.twig (currently unused)
+        - [×] menuitem.twig
+        - [×] poll.twig (currently unused)
         - [×] promotional-header.twig
         - [×] search.twig
     - [×] 401_unauthorized.twig

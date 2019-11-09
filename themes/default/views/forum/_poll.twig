@@ -20,7 +20,7 @@
 		<div class="media">
 			<div class="media-content">
 				{{ option.optie }}
-				<div class="columns is-vcentered">
+				<div class="columns is-vcentered is-mobile">
 					<div class="column is-9">
 						<progress class="progress is-danger" value="{{ option.percentage }}" max="100">{{ '%0.1f'|format(option.percentage) }}%</progress>	
 					</div>
@@ -31,6 +31,11 @@
 			</div>
 		</div>
 	{% endfor %}
+	<div class="media">
+		<div class="media-content">
+			{{ __('Number of votes') }}: {{ poll.total_votes }}
+		</div>
+	</div>
 	<div class="level">
 		<div class="level-left">
 			{% if not global.auth.logged_in %}
