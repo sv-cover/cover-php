@@ -8,7 +8,7 @@
 
 {% block content %}
 
-{% if poll %}
+{% if global.models.Poll.get_latest_poll() %}
 	{{ poll.render_poll(global.models.Poll.get_latest_poll(), true) }}
 {% else %}
 	<p>{{ __('There is no poll at the moment') }}</p>
