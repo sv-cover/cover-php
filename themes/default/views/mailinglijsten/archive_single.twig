@@ -39,7 +39,7 @@
 					{% if text_body is not null %}
 						<li><a href="#email-text-body">{{ __('Plain text') }}</a></li>
 					{% endif %}
-					<li><a href="#email-raw">Raw</a></li>
+					<li class="is-active"><a href="#email-raw">Raw</a></li>
 				</ul>
 			</div>
 
@@ -66,7 +66,7 @@
 						white-space: -o-pre-wrap; 
 						word-wrap: break-word;">{{ text_body }}</pre>
 				</div>
-				<div id="email-raw">	
+				<div id="email-raw" class="is-active">	
 					<pre style="white-space: pre-wrap; 
 						white-space: -moz-pre-wrap; 
 						white-space: -pre-wrap; 

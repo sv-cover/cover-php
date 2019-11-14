@@ -1,0 +1,17 @@
+{% extends '@theme/homepage/_card.twig' %}
+    
+{% import "@theme/forum/_poll.twig" as poll %}
+
+{% block title __('Poll') %}
+
+{% block name 'poll' %}
+
+{% block content %}
+
+{% if global.models.Poll.get_latest_poll() %}
+	{{ poll.render_poll(global.models.Poll.get_latest_poll(), true) }}
+{% else %}
+	<p>{{ __('There is no poll at the moment') }}</p>
+{% endif %}
+
+{% endblock %}

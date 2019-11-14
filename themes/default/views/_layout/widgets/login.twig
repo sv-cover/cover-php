@@ -1,6 +1,6 @@
 {% if global.auth.logged_in %}
-<div class="navbar-item has-dropdown is-hoverable">
-    <a class="navbar-link is-arrowless">
+<div class="navbar-item has-dropdown is-hoverable-desktop">
+    <a class="navbar-link is-arrowless" tabindex="0">
         <span class="icon">
             <i class="fas fa-user"></i>
             <span class="is-sr-only">
@@ -11,7 +11,7 @@
     <div class="navbar-dropdown is-right">
         {% if global.auth.logged_in %}
             {% if global.identity.can_impersonate %}
-                <a class="navbar-item" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}">
+                <a class="navbar-item" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-popup="modal">
                     {{ __('Impersonate…') }}
                 </a>
                 <hr class="navbar-divider">
@@ -26,6 +26,14 @@
             <a class="navbar-item" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">
                 {{ __('Logout') }}
             </a>
+            <hr class="navbar-divider">
+            <form class="navbar-item">
+                <div class="field">                        
+                    {{ __('Dark mode') }}
+                    <input id="dark-mode-switch" type="checkbox" name="dark-mode-switch" class="switch is-small is-rounded dark-mode-switch" {{ view.layout.color_mode == 'dark' ? 'checked' : ''}}>
+                    <label for="dark-mode-switch"><span class="is-sr-only">{{ __('Toggle dark mode') }}</span></label>
+                </div>
+            </form>
         {% endif %}
     </div>
 </div>

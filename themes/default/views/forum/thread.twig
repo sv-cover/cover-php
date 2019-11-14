@@ -1,4 +1,5 @@
 {% extends '@layout/layout.twig' %}
+{% import "@theme/forum/_poll.twig" as poll %}
 
 {% block title thread.subject ~ ' – ' ~ forum.name ~ ' – ' ~ parent() %}
 
@@ -30,7 +31,7 @@
 			</a>
 		{% endif %}
 		{% if user_can_update thread %}
-			<div class="dropdown is-right is-hoverable">
+			<div class="dropdown is-right">
 				<div class="dropdown-trigger">
 					<button class="button" aria-haspopup="true" aria-controls="dropdown-move-thread">
 						<span>{{ __('Move topic') }} </span>
@@ -98,8 +99,8 @@
 					{{ message.message|parse_markup }}
 				</p>
 				{% if thread.poll and page == 0 and loop.first %}
-					<div class="forum_poll">
-						{{ include('_poll.twig', {poll: global.models.Poll.from_thread(thread)}) }}
+					<div class="box">
+						{{ poll.render_poll(global.models.Poll.from_thread(thread)) }}
 					</div>
 				{% endif %}
 			</div>

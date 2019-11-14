@@ -39,7 +39,7 @@
 		<div class="tabs-wrapper">
 			<div class="tabs is-toggle">
 				<ul>
-					<li{% if view.preferred_tab(iter) == 'en' %} class="is-active"{% endif %}>
+					<li class="is-active">
 						<a href="#content-en">{{ __('Raw') }}</a>
 					</li>
 					<li>
@@ -49,7 +49,7 @@
 			</div>
 
 			<div class="tabs-content">
-				<div id="content-en">
+				<div id="content-en" class="is-active">
 					{{ html_textarea_field('content_en', iter, rows=25) }}
 				</div>
 				<div id="content-en-preview" class="is-invisible" data-preview-source="#forum-message textarea" data-preview-url="forum.php?view=preview">

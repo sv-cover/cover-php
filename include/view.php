@@ -148,21 +148,22 @@ class View
 	public function scripts()
 	{
 		return [
-			// get_theme_data('data/jquery-2.2.0.min.js'),
-			// get_theme_data('data/jquery-ui.min.js'),
-			// get_theme_data('data/common.js'),
-			// get_theme_data('data/dropdown.js'),
-			// get_theme_data('data/cache.js')
+			get_theme_data('assets/dist/js/cover.js'),
 		];
 	}
 
 	public function stylesheets()
 	{
-		return [
+		$color_mode = $_COOKIE['cover_color_mode'] ?? 'light';
+		if ($color_mode === 'dark')
+			$base = [get_theme_data('assets/dist/css/cover-dark.css')];
+		else
+			$base = [get_theme_data('assets/dist/css/cover.css')];
+		return array_merge($base, [
 			// get_theme_data('styles/font-awesome.min.css'),
 			// get_theme_data('styles/jquery-ui.min.css'),
 			// get_theme_data('style.css')
-		];
+		]);
 	}
 
 	public function layout()

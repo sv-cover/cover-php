@@ -1,14 +1,14 @@
 # Bulma Implementation ToDo
 
-- [-] \_layout
-    - [-] widgets
-        - [ ] agenda.twig (currently unused)
+- [×] \_layout
+    - [×] widgets
+        - [×] agenda.twig (currently unused)
         - [×] banners.twig
         - [×] committee-battle-header.twig
         - [×] login.twig
         - [×] menu.twig
-        - [ ] menuitem.twig
-        - [ ] poll.twig (currently unused)
+        - [×] menuitem.twig
+        - [×] poll.twig (currently unused)
         - [×] promotional-header.twig
         - [×] search.twig
     - [×] 401_unauthorized.twig
@@ -197,158 +197,161 @@
 
 ## JS needed
 
-- Mobile menu collapse [BULMA JS]
-- Show/hide search intelligently (like wiki/sd) [GLOBAL]
-- Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
-    - _layout/widgets/menu.twig (mainly login)
-    - forum/thread.twig (move thread)
-- Tabs. Switch between tabbed content  [BULMA JS]
-    - agenda/form.twig
-    - announcements/form.twig
-    - forum/poll_form.twig
-    - forum/reply_form.twig
-    - forum/thread_form.twig
-    - mailinglijsten/archive_single.twig
-    - show/form.twig
-- Preview (page) content
-    - forum/poll_form.twig
-    - forum/reply_form.twig
-    - forum/thread_form.twig
-    - see previous list
-- Modals [GLOBAL]
-    - Impersonate
-    - [maybe] Forum delete thread/message
-    - [maybe] Forum edit message
-    - Delete announcement
-    - [maybe] Edit announcement
-    - Award / edit / delete committee battle points
-    - download photo album
-    - delete photo album button in album icon
-    - photo visibility form (photos in photos of member book)
-    - view photo modal
-    - create sticker in sticker map
-    - Mailinglist subscribe forms
-- Autocomplete
-    - session/overrides.twig (autocomlete member)
-    - committeebattle/form.twig (member)
-    - tagging people in photo album
-- Whatever is happening in search results :P
-- Whatever is happening on the committee form
-- All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
-- Everything in fotoboek/\_photos.twig
-- Change photo name (photocee functionality)
-- Fotoboek/single.twig
-- Add photo's to photobook
-- Sticker map
-- WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
-- Stuff happening in mailijnlijsten/single.twig
-- Fancyness in signup/form_form.twig
-- Autocomplete in lidworden/lidworden.twig
-- Profile page
+- [×] Mobile menu collapse [BULMA JS]
+- [-] [issue] Show/hide search intelligently (like wiki/sd) [GLOBAL]
+- [×] Clickable (toggable) dropdowns. This would improve UX for complex dropdowns [BULMA JS]
+    - [×] _layout/widgets/menu.twig (mainly login)
+    - [×] forum/thread.twig (move thread)
+- [×] Tabs. Switch between tabbed content  [BULMA JS]
+    - [×] agenda/form.twig
+    - [×] announcements/form.twig
+    - [×] forum/poll_form.twig
+    - [×] forum/reply_form.twig
+    - [×] forum/thread_form.twig
+    - [×] mailinglijsten/archive_single.twig
+    - [×] show/form.twig
+- [ ] Preview (page) content
+    - [ ] forum/poll_form.twig
+    - [ ] forum/reply_form.twig
+    - [ ] forum/thread_form.twig
+    - [ ] see previous list
+- [-] [issue] Modals [GLOBAL]
+    - [×] Impersonate
+    - [ ] [maybe] Forum delete thread/message
+    - [ ] [maybe] Forum edit message
+    - [×] Delete announcement
+    - [ ] [maybe] Edit announcement
+    - [ ] Award / edit / delete committee battle points
+    - [×] download photo album
+    - [×] delete photo album button in album icon
+    - [×] photo visibility form (photos in photos of member book)
+    - [ ] view photo modal
+    - [ ] create sticker in sticker map
+    - [ ] Mailinglist subscribe forms
+- [ ] Autocomplete
+    - [ ] session/overrides.twig (autocomlete member)
+    - [ ] committeebattle/form.twig (member)
+    - [ ] tagging people in photo album
+- [ ] Whatever is happening in search results :P
+- [ ] Whatever is happening on the committee form
+- [ ] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
+- [ ] Everything in fotoboek/\_photos.twig
+- [ ] Change photo name (photocee functionality)
+- [ ] Fotoboek/single.twig
+- [ ] Add photo's to photobook
+- [ ] Sticker map
+- [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
+- [ ] Stuff happening in mailijnlijsten/single.twig
+- [ ] Fancyness in signup/form_form.twig
+- [ ] Autocomplete in lidworden/lidworden.twig
+- [ ] Profile page
+- [ ] Improve Dark Theme switch JS (is inline now, should be pulled out)
 
 ## Bulma extensions / custom CSS
 
-- Vertically padded container. Sometimes a container element for vertical grouping would be nice.
-    - Pagination bar in:
-        - forum/forum.twig
-        - forum/thread.twig
-        - weblog/index.twig
-    - Poll in forum/_poll.twig
-    - Search statistics in search/index.twig.
-    - Individual parts of commissies/archive.twig
-    - Single photo fotoboek/single.twig
-    - header in mailinglists/archive_single.twig
-    - header in agenda/single.twig
-    - article in signup/form_form.twig
-    - cards in signup/form_form.twig
-    - entire form in lidworden/lidworden.twig
-    - article on any profile page
-    - article in \_layout/500.twig
-    - article anywhere basically
-- Divider (like the one of semantic ui)
-    - \_layout/401.twig
-    - sessions/_login_widget.twig (to separate the form from the become a member button)
-    - boeken/go_to_login.twig
-    - lidworden/known_member.twig
-    - lidworden/pending.twig
-- Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
-- Narrow content container for improved readability. Probably with TOC sidebar.
-- Almanak rendering. Last row is weird, images are not centered.
-    - almanak/index.twig
-    - commissies/_leden.twig
-    - commissies/working_groups.twig
-- Tabs in form field (for preview rendering) should be closer to field in:
-    - forum/poll_form.twig
-    - forum/reply_form.twig
-    - forum/thread_form.twig
-- Bulma typography is inconsistent across a single page.
-- Fieldset in: 
-    - sessions/overrides.twig
-    - signup/fields/choice.twig
-- Calendar icon in:
-    - agenda/index.twig
-    - agenda/single.twig
-    - commissies/_agenda.twig
-    - search/\_single_agendapunt.twig
-- Bulma dl styling is ugly
-- Multiline select is broken
-- Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
-- Lines of media objects are not always wished for, especially in nested media objects.
-    - comments on photobook main page
-- A bootstrap style "link" button may be desired
-    - like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
-    - like button on photo
-- Level-right doesn't work if there's no level-left
-- Same for pagination 
-    - weblog/index.twig
-    - agenda/index.twig
-- Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
-    - commissies/index.twig
-    - fotoboek/\_path.twig
-    - fotoboek/single.twig
-    - fotoboekreacties/\_comment.twig
-- No margin around dropdown in .buttons
-    - agenda/index.twig
-- Why does a .number make form elements rounded?
-- A table-responsive like element would be nice (or probably an .is-scrollable modifier)
-    - signup/list_entries.twig
-- A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
-    - signup/list_entries.twig
-- Buttons don't work that well as card-footer-item
-    - signpu/form_form.twig
-- fullwidth/expanding select? maybe?
+- [ ] [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
+    - [ ] Pagination bar in:
+        - [ ] forum/forum.twig
+        - [ ] forum/thread.twig
+        - [ ] weblog/index.twig
+    - [ ] Poll in forum/_poll.twig
+    - [ ] Search statistics in search/index.twig.
+    - [ ] Individual parts of commissies/archive.twig
+    - [ ] Single photo fotoboek/single.twig
+    - [ ] header in mailinglists/archive_single.twig
+    - [ ] header in agenda/single.twig
+    - [ ] article in signup/form_form.twig
+    - [ ] cards in signup/form_form.twig
+    - [ ] entire form in lidworden/lidworden.twig
+    - [ ] article on any profile page
+    - [ ] article in \_layout/500.twig
+    - [ ] article anywhere basically
+- [ ] [issue] Divider (like the one of semantic ui)
+    - [ ] \_layout/401.twig
+    - [ ] sessions/_login_widget.twig (to separate the form from the become a member button)
+    - [ ] boeken/go_to_login.twig
+    - [ ] lidworden/known_member.twig
+    - [ ] lidworden/pending.twig
+-   [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
+- [ ] [issue] Narrow content container for improved readability. Probably with TOC sidebar.
+- [ ] Almanak rendering. Last row is weird, images are not centered.
+    - [ ] almanak/index.twig
+    - [ ] commissies/_leden.twig
+    - [ ] commissies/working_groups.twig
+- [ ] Tabs in form field (for preview rendering) should be closer to field in:
+    - [ ] forum/poll_form.twig
+    - [ ] forum/reply_form.twig
+    - [ ] forum/thread_form.twig
+- [ ] [issue] Bulma typography is inconsistent across a single page.
+- [ ] [issue] Fieldset in: 
+    - [ ] sessions/overrides.twig
+    - [ ] signup/fields/choice.twig
+- [ ] Calendar icon in:
+    - [ ] agenda/index.twig
+    - [ ] agenda/single.twig
+    - [ ] commissies/_agenda.twig
+    - [ ] search/\_single_agendapunt.twig
+- [ ] [issue] Bulma dl styling is ugly
+- [ ] [issue] Multiline select is broken
+- [ ] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
+- [ ] Lines of media objects are not always wished for, especially in nested media objects.
+    - [ ] comments on photobook main page
+- [ ] A bootstrap style "link" button may be desired
+    - [ ] like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
+    - [ ] like button on photo
+    - [ ] Fix by making everything buttons
+- [ ] [issue] Level-right doesn't work if there's no level-left
+- [ ] [issue] Same for pagination 
+    - [ ] weblog/index.twig
+    - [ ] agenda/index.twig
+- [ ] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
+    - [ ] commissies/index.twig
+    - [ ] fotoboek/\_path.twig
+    - [ ] fotoboek/single.twig
+    - [ ] fotoboekreacties/\_comment.twig
+- [ ] [issue] No margin around dropdown in .buttons
+    - [ ] agenda/index.twig
+- [ ] Why does a .number make form elements rounded?
+- [ ] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
+    - [ ] signup/list_entries.twig
+- [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
+    - [ ] signup/list_entries.twig
+- [ ] Buttons don't work that well as card-footer-item
+    - [ ] signup/form_form.twig
+- [ ] fullwidth/expanding select? maybe?
 
 
 ## Other
 
-- Remove profile signature, it isn't used and didn't fit in the design
-- Remove language switch from profile
-- Almanac form is weird. May need some backend improvements (filter on filter). 
-- Titles in pages behave weird. Maybe some backend improvements?
-- Transpose columns in session/overrides.twig and committeebattle/form.twig
-- Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
-- Old committee page was better. But at least it's bulma now :)
-- Single committee page is crap now.
-- Working groups page needs major redesign.
-- Photo origin path in fotoboek/\_path.twig is ugly html.
-- Redesign photobook: rendering of books could be better. May need some backend changes. 
-- Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
-- Consistent HTML structure (how to use headers, article footer etc)
-- Embedded mailing list form doesn't seem to work…
-- Fix select fields
-- Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
-- Move Headings inside of articles, unless header. Got to do proper HTML5 :)
-- Error 500. What if link_static is broken? Or i18n?
-- Poll on mobile doesn't work that well.
+- [ ] Remove profile signature, it isn't used and didn't fit in the design
+- [ ] Remove language switch from profile
+- [ ] Almanac form is weird. May need some backend improvements (filter on filter). 
+- [ ] Titles in pages behave weird. Maybe some backend improvements?
+- [ ] Transpose columns in session/overrides.twig and committeebattle/form.twig
+- [ ] Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
+- [×] Old committee page was better. But at least it's bulma now :)
+- [ ] Single committee page is crap now.
+- [ ] Working groups page needs major redesign.
+- [ ] Photo origin path in fotoboek/\_path.twig is ugly html.
+- [ ] Redesign photobook: rendering of books could be better. May need some backend changes. 
+- [ ] Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
+- [ ] Consistent HTML structure (how to use headers, article footer etc)
+- [ ] Embedded mailing list form doesn't seem to work…
+- [ ] Fix select fields
+- [ ] Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
+- [ ] Move Headings inside of articles, unless header. Got to do proper HTML5 :)
+- [ ] Error 500. What if link_static is broken? Or i18n?
+- [ ] Poll on mobile doesn't work that well.
+- [ ] Photo privacy form doesn't return to original photo
 
 
 # Pending Design Decisions
 
-- Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
-- If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
-- How to display metadata? Eg. forum messages, announcements, search results, photo album
-- Icons in buttons?
-- How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
-- Deprecate horizontal banner rotator?
-- Redesign inclusion process (lidworden)
-- Notification system?
+- [ ] Standardise edit/delete/whatever buttons (announcements vs forum vs editable)
+- [ ] If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
+- [ ] How to display metadata? Eg. forum messages, announcements, search results, photo album
+- [ ] Icons in buttons?
+- [ ] How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
+- [ ] Deprecate horizontal banner rotator?
+- [ ] Redesign inclusion process (lidworden)
+- [ ] Notification system?

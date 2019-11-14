@@ -1,7 +1,7 @@
 <div class="media">
 	{% if iter.has_photo and not iter.is_private('foto') %}
 		<figure class="media-left">
-			<a class="image is-128x128" href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-image-popup="modal" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
+			<a class="image is-128x128" href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-popup="image" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
 				<img class="is-rounded" src="{{ link('foto.square', member=iter, width=256, timestamp=iter.photo_mtime) }}" width="128">
 			</a>
 		</figure>
