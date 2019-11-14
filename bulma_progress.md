@@ -210,11 +210,11 @@
     - [×] forum/thread_form.twig
     - [×] mailinglijsten/archive_single.twig
     - [×] show/form.twig
-- [ ] Preview (page) content
-    - [ ] forum/poll_form.twig
-    - [ ] forum/reply_form.twig
-    - [ ] forum/thread_form.twig
-    - [ ] see previous list
+- [×] Preview (page) content
+    - [×] forum/poll_form.twig
+    - [×] forum/reply_form.twig
+    - [×] forum/thread_form.twig
+    - [×] see previous list
 - [-] [issue] Modals [GLOBAL]
     - [×] Impersonate
     - [ ] [maybe] Forum delete thread/message

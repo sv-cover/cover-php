@@ -84,7 +84,7 @@
 				<div id="beschrijving-tab" class="is-active">
 					{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
 				</div>
-				<div id="beschrijving-preview-tab" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
+				<div id="beschrijving-preview-tab" class="content-preview box" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>

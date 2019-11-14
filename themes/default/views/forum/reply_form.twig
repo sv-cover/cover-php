@@ -42,7 +42,7 @@
 				<div id="forum-message" class="is-active">
 					{{ html_textarea_field('message', iter, rows=15, id='reply-field', autofocus='end') }}
 				</div>
-				<div id="forum-message-preview" class="is-invisible" data-preview-source="#reply-field" data-preview-url="forum.php?view=preview">
+				<div id="forum-message-preview" class="content-preview box" data-preview-source="#reply-field" data-preview-url="forum.php?view=preview">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
