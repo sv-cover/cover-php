@@ -1,4 +1,5 @@
 $committee-padding: 1.25rem
+$committee-gradient: linear-gradient(to bottom right, rgba($purple, .4), rgba($cover-blue, .4))
 $name-padding: 0 $committee-padding
 $name-line-height: $title-line-height + .8
 $name-size: $size-5
@@ -9,7 +10,7 @@ a.committee
     position: relative
     padding: 0
     padding-top: 66.6666% // is-3by2
-    background: $black
+    background: $committee-gradient, $black
     color: $white
 
     & > .image,
@@ -35,7 +36,7 @@ a.committee
             +overlay
             display: block
             content: ''
-            background: linear-gradient(to bottom right, rgba($purple, .4), rgba($cover-blue, .4))
+            background: $committee-gradient
 
         .image
             filter: saturate(20%)
