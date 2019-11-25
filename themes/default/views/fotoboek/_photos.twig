@@ -3,9 +3,12 @@
 {% macro gallery(book, photos) %}
     <ul class="gallery columns is-multiline is-mobile">
     {% for photo in photos %}
+        {# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
         {% set size = photo.get_scaled_size(null, 600) %}
-        {# force proper flexbox scaling though flex-basis. 1/3 works better than 1/2, for some reason. #}
-        <li class="photo column" style="flex-basis: {{ size[0]/3 }}px;">
+
+        {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
+        {% set basis = ((size[0] / 100)|round) * 50 %}
+        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }}">
             <a href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}">
                 <img 
                     src="{{ photo.get_url(null, 600) }}"
