@@ -43,15 +43,7 @@ a.committee
 
 
     .name
-        background: $cover-red
-        box-decoration-break: clone
-        color: $cover-red-invert
-        line-height: $name-line-height
-        display: inline-block
-        font-size: $name-size
-        font-weight: $title-weight
-        margin-bottom: 0
-        padding: $name-padding
+        +boxed-title($name-size, $name-line-height, $name-padding)
 
     .summary
         color: $white

@@ -1,0 +1,101 @@
+$gallery-gap: .25rem
+$gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000
+
+
+.gallery
+    margin-top: -$gallery-gap
+    margin-right: -$gallery-gap
+    margin-left: -$gallery-gap
+    align-items: stretch
+    justify-content: flex-start
+
+    &:last-child
+        margin-bottom: -$gallery-gap
+
+    &::after
+        content: ''
+        flex-grow: 10
+
+    .photo
+        flex-shrink: 1
+        flex-grow: 1
+        height: 300px
+        padding: $gallery-gap
+
+        a
+            position: relative
+            display: block
+            height: 100%
+            overflow: hidden
+    
+            &:hover img
+                transform: scale(1.05)
+
+            &:focus
+                outline: 2px solid $cover-red
+
+            img
+                display: block
+                min-height: 100%
+                width: 100%
+                max-width: none
+                object-fit: cover
+                transition: transform .5s ease-in-out
+
+            .title,
+            .controls
+                position: absolute
+                right: 0
+                left: 0
+                font-size: $size-6
+                white-space: nowrap
+                text-overflow: ellipsis
+                overflow: hidden
+                color: $white
+                font-weight: $title-weight
+                text-shadow: 0px 0px 3px rgba($black, 0.9)
+
+            .title
+                top: 0
+                padding: .25rem .5rem .5rem .5rem
+                background: linear-gradient(to bottom, rgba($black, .5) , transparent)
+
+            .controls
+                bottom: 0
+                padding: .5rem .5rem .25rem .5rem
+                background: linear-gradient(to top, rgba($black, .5) , transparent)
+                font-size: $size-7
+                font-weight: normal
+
+        @each $bin in $gallery-basis-bins
+            &.has-basis-#{$bin}
+                flex-basis: round($bin / 1.5) * 1px
+
+
++until($widescreen)
+    .gallery .photo
+        height: 200px
+
+        @each $bin in $gallery-basis-bins
+            &.has-basis-#{$bin}
+                flex-basis: round($bin / 2) * 1px
+
+
++until($tablet)
+    .gallery .photo
+        flex-basis: 33.3333% !important
+        flex-grow: 0
+        height: auto
+        
+        a
+            width: 100%
+            padding-top: 100%
+            position: relative
+            
+            .title
+                display: none
+
+            img
+                +overlay
+                height: 100%
+                width: 100%

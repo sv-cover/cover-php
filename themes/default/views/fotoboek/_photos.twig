@@ -1,6 +1,8 @@
 {% import _self as fotoboek %}
 
-{% macro gallery(book, photos) %}
+{% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
+
+{% macro gallery(photos, context) %}
     <ul class="gallery columns is-multiline is-mobile">
     {% for photo in photos %}
         {# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
@@ -9,12 +11,30 @@
         {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
         {% set basis = ((size[0] / 100)|round) * 50 %}
         <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }}">
-            <a href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}">
+            <a 
+                href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
+                {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
+            >
                 <img 
                     src="{{ photo.get_url(null, 600) }}"
                     {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
                 >
-            
+                {% if photo.beschrijving %}
+                    <span class="title">{{ photo.beschrijving }}</span>
+                {% endif %}
+
+                {% set num_likes = context.likes[photo.id] is defined ? context.likes[photo.id] : 0 %}
+                {% if photo.num_reacties > 0 or num_likes > 0 %}
+                    <div class="controls">
+                        {% if photo.num_reacties > 0 %}
+                            <span class="comments">{{ __N('%d comment', '%d comments', photo.num_reacties) }}</span>
+                        {% endif %}
+
+                        {% if num_likes > 0 %}
+                            <span class="like-button" title="{{ __N('%d member liked this photo', '%d members liked this photo', num_likes) }}"><span class="like-count">{{ num_likes }}</span></span>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </a>
         </li>
     {% endfor %}
@@ -25,13 +45,13 @@
 
 {% if photos.unread is defined %}
     <h2>{{ __('New since your last visit') }}</h2>
-    {{ fotoboek.gallery(book, photos.unread) }}
+    {{ fotoboek.gallery(photos.unread, _context) }}
 {% endif %}
 
 {% if photos.read is defined %}
     {% if photos.unread is defined %}
         <h2>{{ __('Older photos') }}</h2>
     {% endif %}
-    {{ fotoboek.gallery(book, photos.read) }}
+    {{ fotoboek.gallery(photos.read, _context) }}
 {% endif %}
 
