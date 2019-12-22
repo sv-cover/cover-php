@@ -1,37 +1,14 @@
 import Bulma from '@vizuaalog/bulmajs/src/core';
 
-const GALLERY_ANIMATION_INTERVAL_MIN = 5
-const GALLERY_ANIMATION_INTERVAL_RANGE = 10
-const GALLERY_ANIMATION_INTERVAL_BOOK_WEIGHT = .5
+const GALLERY_ANIMATION_MIN = 1
+const GALLERY_ANIMATION_RANGE = 1
+const GALLERY_ANIMATION_COOLDOWN = 5
 const GALLERY_BOOK_WIDTH = .1
 
 
-class PhotoGallery {
-    /**
-     * Get the root class this plugin is responsible for.
-     * This will tell the core to match this plugin to an element with a .modal class.
-     * @returns {string} The class this plugin is responsible for.
-     */
-    static getRootClass() {
-        return 'book-gallery';
-    }
-
-
-    /**
-     * Handle parsing the DOMs data attribute API.
-     * @param {HTMLElement} element The root element for this instance
-     * @return {undefined}
-     */
-    static parse(element) {
-        element.querySelectorAll('.book').forEach(el => {
-            new PhotoGallery({
-                element: el
-            });
-        });
-    }
-
-    constructor(options) {
-        this.element = options.element;
+class PhotoGalleryThumbnail {
+    constructor(element) {
+        this.element = element;
         this.container = this.element.querySelector('.thumbnail-images');
         this.images = [];
 
@@ -46,22 +23,12 @@ class PhotoGallery {
             if (images[i].classList.contains('active'))
                 this.active = i;
         }
-
-        this.interval_min = GALLERY_ANIMATION_INTERVAL_MIN;
-        this.interval_range = GALLERY_ANIMATION_INTERVAL_RANGE + document.querySelectorAll('.book-gallery .book').length * GALLERY_ANIMATION_INTERVAL_BOOK_WEIGHT;
-
-        this.animate(true);
     }
 
-    animate(first = false) {
-        const min = first ? 0 : this.interval_min;
-        const next = Math.floor((Math.random() * this.interval_range + min) * 1000);
-        setTimeout(() => {
-            this.flipImages();
-        }, next);
-    }
+    animate() {
+        if (this.active === undefined)
+            return
 
-    flipImages() {
         let current = this.images[this.active];
         current.classList.remove('active');
 
@@ -84,7 +51,74 @@ class PhotoGallery {
 
         this.images[this.active] = clone;
         this.active = nextIdx;
+        this.lastAnimation = new Date();
+    }
+
+    isAvailable() {
+        const bounding = this.element.getBoundingClientRect();
+        const topVisible = bounding.top >= 0 && bounding.top <= (window.innerHeight || document.documentElement.clientHeight);
+        const bottomVisible = bounding.bottom >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+
+        let isAllowed = true;
+        if (this.lastAnimation)
+            isAllowed = (new Date() - this.lastAnimation) > (GALLERY_ANIMATION_COOLDOWN * 1000);
+
+        return isAllowed && (topVisible || bottomVisible);
+    }
+}
+
+class PhotoGallery {
+    /**
+     * Get the root class this plugin is responsible for.
+     * This will tell the core to match this plugin to an element with a .modal class.
+     * @returns {string} The class this plugin is responsible for.
+     */
+    static getRootClass() {
+        return 'book-gallery';
+    }
+
+
+    /**
+     * Handle parsing the DOMs data attribute API.
+     * @param {HTMLElement} element The root element for this instance
+     * @return {undefined}
+     */
+    static parse(element) {
+        new PhotoGallery({
+            element: element
+        });
+    }
+
+    constructor(options) {
+        this.element = options.element;
+        this.thumbnails = [];
+
+        this.element.querySelectorAll('.book').forEach(element => {
+            this.thumbnails.push(new PhotoGalleryThumbnail(element));
+        });
+
         this.animate();
+    }
+
+    animate() {
+        const next = Math.floor((Math.random() * GALLERY_ANIMATION_RANGE + GALLERY_ANIMATION_MIN) * 1000);
+        setTimeout(() => {
+            this.animateThumbnail();
+            this.animate();
+        }, next);
+    }
+
+    animateThumbnail() {
+        let available = [];
+        for (let i = 0; i < this.thumbnails.length; i++) {
+            if (this.thumbnails[i].isAvailable())
+                available.push(i);
+        }
+
+        const idx = available[Math.floor(Math.random() * available.length)];
+
+        if (idx)
+            this.thumbnails[idx].animate();
     }
 }
 
