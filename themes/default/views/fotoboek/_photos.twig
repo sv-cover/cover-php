@@ -1,8 +1,15 @@
-{% import _self as fotoboek %}
+{% import _self as album %}
 
 {% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
+{% set my_likes = global.auth.logged_in() ? global.models.PhotobookLike.get_for_lid(global.identity.member) : [] %}
+
+{% macro classnames(photo, context) %}
+    {%- if context.my_likes[photo.id] is defined %}liked{% endif -%}
+    {# {%- if visibility[photo.id] is defined and visibility[photo.id] == false %} hidden{% endif -%} #}
+{% endmacro %}
 
 {% macro gallery(photos, context) %}
+    {% import _self as album %}
     <ul class="gallery columns is-multiline is-mobile">
     {% for photo in photos %}
         {# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
@@ -10,7 +17,7 @@
 
         {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
         {% set basis = ((size[0] / 100)|round) * 50 %}
-        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }}">
+        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ album.classnames(photo, context) }}">
             <a 
                 href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
                 {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
@@ -25,33 +32,48 @@
 
                 {% set num_likes = context.likes[photo.id] is defined ? context.likes[photo.id] : 0 %}
                 {% if photo.num_reacties > 0 or num_likes > 0 %}
-                    <div class="controls">
+                    <ul class="controls">
                         {% if photo.num_reacties > 0 %}
-                            <span class="comments">{{ __N('%d comment', '%d comments', photo.num_reacties) }}</span>
+                            <li class="comments" title="{{ __N('%d comment', '%d comments', photo.num_reacties) }}">
+                                <i class="fas fa-comment" aria-hidden="true"></i>
+                                {{ photo.num_reacties }}
+                                <span class="is-sr-only">{{ __N('comment', 'comments', photo.num_reacties) }}</span>
+                            </li>
                         {% endif %}
 
+                        {% set liked = context.my_likes[photo.id] is defined %}
                         {% if num_likes > 0 %}
-                            <span class="like-button" title="{{ __N('%d member liked this photo', '%d members liked this photo', num_likes) }}"><span class="like-count">{{ num_likes }}</span></span>
+                            <li class="likes" title="{{ __N('%d member liked this photo.', '%d members liked this photo.', num_likes) }} {% if liked %}{{ __('You liked this photo.')}}{% endif %}">
+                                <i
+                                    class="fas fa-heart {% if liked %}has-text-cover{% endif %}" 
+                                    aria-hidden="true"
+                                ></i>
+                                {{ num_likes }}
+                                <span class="is-sr-only">
+                                    {{ __N('like.', 'likes.', num_likes) }}
+                                    {% if liked %}{{ __('You liked this photo.')}}{% endif %}
+                                </span>
+                            </li>
                         {% endif %}
-                    </div>
+                    </ul>
                 {% endif %}
             </a>
         </li>
     {% endfor %}
     </ul>
-{% endmacro %}
+{% endmacro gallery %}
 
 {% set photos = photos|group_by('read_status') %}
 
 {% if photos.unread is defined %}
     <h2>{{ __('New since your last visit') }}</h2>
-    {{ fotoboek.gallery(photos.unread, _context) }}
+    {{ album.gallery(photos.unread, _context) }}
 {% endif %}
 
 {% if photos.read is defined %}
     {% if photos.unread is defined %}
         <h2>{{ __('Older photos') }}</h2>
     {% endif %}
-    {{ fotoboek.gallery(photos.read, _context) }}
+    {{ album.gallery(photos.read, _context) }}
 {% endif %}
 

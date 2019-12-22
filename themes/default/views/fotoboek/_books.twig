@@ -1,9 +1,24 @@
 {% if books|length > 0 %}
-<article class="columns is-multiline is-mobile">
+<article class="book-gallery columns is-multiline">
 {% for book in books %}
-	<div id="book_{{ book.id }}" class="column is-2-desktop is-one-quarter-tablet is-half-mobile {{ book.read_status }}">
-		<a href="fotoboek.php?book={{ book.id }}">
-			<div class="icon is-large" title="Photobook">
+	<div id="book_{{ book.id }}" class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd {{ book.read_status }}">
+		<a href="fotoboek.php?book={{ book.id }}" class="book">
+			<div class="overlay">
+				<h2 class="title">{{ book.titel }}</h2>
+				{# <div><small>{{ view.summary(book) }}</small></div> #}
+			</div>
+			<div class="thumbnail-images columns is-gapless is-mobile">
+				{% for photo in view.thumbnail_photos(book, 3) %}
+					<div class="column image {{ loop.first ? 'active' : '' }}">
+						<figure>
+			                <img
+			                    src="{{ photo.get_url(null, 600) }}"
+			                >
+						</figure>
+					</div>
+				{% endfor %}
+			</div>
+{# 			<div class="icon is-large" title="Photobook">
 				<span class="fa-layers fa-fw fa-2x">
 					<i class="fas fa-folder-open" aria-hidden="true"></i>
 					{% if book.read_status == 'unread' %}
@@ -13,13 +28,9 @@
 						<span class="is-sr-only">Photobook</span>
 					{% endif %}
 				</span>
-			</div>
+			</div> #}
 
 			{# <img src="{{ link_static('images/book.png') }}" class="book_thumb"> #}
-			<div>
-				{{ book.titel }} 
-				<div><small>{{ view.summary(book) }}</small></div>
-			</div>
 		</a>
 		{% if user_can_update book %}
 		<div class="level is-mobile">

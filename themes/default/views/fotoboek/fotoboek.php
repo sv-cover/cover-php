@@ -222,6 +222,12 @@
 			return $model->get_random_photos($count);
 		}
 
+		public function thumbnail_photos(DataIterPhotobook $book, $count)
+		{
+			$model = get_model('DataModelPhotobook');
+			return $model->get_photos_recursive($book, $count, true, 0.69);
+		}
+
 		public function is_person(DataIterPhotobookFace $face)
 		{
 			return (bool) $face['lid_id'];
