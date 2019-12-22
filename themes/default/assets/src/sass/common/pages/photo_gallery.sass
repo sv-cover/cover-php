@@ -2,7 +2,7 @@ $gallery-gap: .25rem
 $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000
 
 
-.book-gallery
+.book-gallery, .gallery
     margin-top: -$gallery-gap
     margin-right: -$gallery-gap
     margin-left: -$gallery-gap
@@ -12,23 +12,54 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
     &:last-child
         margin-bottom: -$gallery-gap
 
+    &:not(:last-child)
+        margin-bottom: $gallery-gap
+
     &>.column
         padding: $gallery-gap
 
+.book-gallery
     a.book
         display: block
         position: relative
         padding: 0
         padding-top: 50% // is-square
 
+        &:focus
+            outline: 2px solid $cover-red
+
         .title
             +boxed-title($size-6)
+
+        .visibility
+            display: inline-block
+            position: absolute
+            right: 0
+            bottom: 0
+            padding: .25rem 0
+            width: 10%
+            text-align: center
+            color: $white
 
         .overlay
             +overlay
             padding: 1.25rem 1rem 0 0
             top: 0
             z-index: 5
+
+        .new-badge
+            position: absolute
+            top: -$gallery-gap
+            right: -$gallery-gap
+            padding: .25ch 1rem
+            background: $black
+            color: $white
+            border: $control-border-width solid $white
+            font-weight: $weight-semibold
+            transform: rotate(3deg)
+            box-shadow: $box-shadow
+            font-size: $size-7
+            z-index: 6
 
         .thumbnail-images
             @extend .is-3by2
@@ -48,7 +79,7 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
 
             .image
                 flex: 0 0 10%
-                transition: all 1s ease-in-out
+                transition: flex 1s ease-in-out
                 overflow: hidden
                 position: relative
 
@@ -94,15 +125,6 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
 
 
 .gallery
-    margin-top: -$gallery-gap
-    margin-right: -$gallery-gap
-    margin-left: -$gallery-gap
-    align-items: stretch
-    justify-content: flex-start
-
-    &:last-child
-        margin-bottom: -$gallery-gap
-
     &::after
         content: ''
         flex-grow: 10
