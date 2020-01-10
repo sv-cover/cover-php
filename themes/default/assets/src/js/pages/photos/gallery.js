@@ -1,9 +1,11 @@
 import {Bulma} from 'cover-style-system/src/js';
 
-const GALLERY_ANIMATION_MIN = 1
-const GALLERY_ANIMATION_RANGE = 1
-const GALLERY_ANIMATION_COOLDOWN = 5
-const GALLERY_BOOK_WIDTH = .1
+const GALLERY_ANIMATION_MIN = 1;
+const GALLERY_ANIMATION_RANGE = 1;
+const GALLERY_ANIMATION_COOLDOWN = 5;
+const GALLERY_BOOK_WIDTH = .1;
+
+const NOT_ANIMATABLE_EXCEPTION = 'Needs at least 2 images for animation.';
 
 
 class PhotoGalleryThumbnail {
@@ -13,6 +15,10 @@ class PhotoGalleryThumbnail {
         this.images = [];
 
         let images = this.element.querySelectorAll('.thumbnail-images .image');
+
+        if (images.length < 2)
+            throw NOT_ANIMATABLE_EXCEPTION;
+
         for (let i = 0; i < images.length; i++) {
             this.images.push(images[i]);
 
@@ -65,6 +71,14 @@ class PhotoGalleryThumbnail {
 
         return isAllowed && (topVisible || bottomVisible);
     }
+
+    handleResize() {
+        for (let image of this.images) {            
+            let fig = image.querySelector('figure');
+            let width = this.element.clientWidth * (1 - (this.images.length - 1) * GALLERY_BOOK_WIDTH * 0.09);
+            fig.style.width = Math.ceil(width) + 'px';
+        }
+    }
 }
 
 class PhotoGallery {
@@ -94,8 +108,15 @@ class PhotoGallery {
         this.thumbnails = [];
 
         this.element.querySelectorAll('.book').forEach(element => {
-            this.thumbnails.push(new PhotoGalleryThumbnail(element));
+            try {
+                this.thumbnails.push(new PhotoGalleryThumbnail(element));
+            } catch (e) {
+                if (e != NOT_ANIMATABLE_EXCEPTION)
+                    throw e;
+            }
         });
+
+        window.addEventListener('resize', this.handleResize.bind(this));
 
         this.animate();
     }
@@ -119,6 +140,11 @@ class PhotoGallery {
 
         if (idx)
             this.thumbnails[idx].animate();
+    }
+
+    handleResize() {
+        for (let thumbnail of this.thumbnails)
+            thumbnail.handleResize();
     }
 }
 
