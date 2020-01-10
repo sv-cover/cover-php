@@ -21,14 +21,18 @@ class PhotoGalleryAdmin {
     constructor(options) {
         this.element = options.element;
         this.bookId = options.bookId;
+
+        // Set defaults
         this.selectedIds = [];
         this.sortableLists = [];
         this.sortableActive = false;
 
+        // Init functionality
         this.initCheckboxes();
         this.initDeleteButton();
         this.initSortable();
 
+        // Disable selection based controls
         this.element.querySelectorAll('.photo-selection-control').forEach( el => {
             el.disabled = true;
         });
@@ -51,11 +55,14 @@ class PhotoGalleryAdmin {
 
     initDeleteButton() {
         const button = this.element.querySelector('#delete-selected-photos-button');
-
         button.addEventListener('click', this.handleDelete.bind(this));
+
+        // Grab url from html
+        this.deletePhotosUrl = button.dataset.deletePhotosUrl;
     }
 
     initSortable() {
+        // Init sort button and grab urls from html
         this.sortableButton = this.element.querySelector('#order-photos-button');
         this.sortableButton.addEventListener('click', this.handleSortable.bind(this));
         this.photoOrderUrl = this.sortableButton.dataset.photoOrderUrl;
@@ -92,10 +99,10 @@ class PhotoGalleryAdmin {
     handlePhotoSelect(event) {
         if (event.target.checked)
             this.selectedIds.push(event.target.value);
-        else
+        else // Remove all instances of ID
             this.selectedIds = this.selectedIds.filter(x => x != event.target.value);
 
-
+        // Toggle selection based controlls (if needed)
         this.element.querySelectorAll('.photo-selection-control').forEach( el => {
             el.disabled = this.selectedIds.length === 0;
         });
@@ -105,39 +112,49 @@ class PhotoGalleryAdmin {
         if (this.selectedIds.length === 0)
             return;
 
-        const params = new URLSearchParams({
-            book: this.bookId,
-            view: 'delete_photos'
-        });
+        // Deconstruct url from template
+        let url = new URL(this.deletePhotosUrl, window.location.href);
+        const params = new URLSearchParams(url.search);
 
+        // Add ID parameters
         for (let id of this.selectedIds)
             params.append('photo_id[]', id);
 
-        const request = fetch('fotoboek.php?' + params.toString());
+        // Reconstruct url
+        url.search = params.toString();
+
+        // Execute request and load modal
+        const request = fetch(url.toString());
         new AutoPopup({contentType: 'modal'}, request);
     }
 
     handleSortable(event) {
         if (this.sortableActive) {
+            // Deactivate sorting
             this.sortableActive = false;
+            this.sortableButton.classList.remove('is-active');
+
             for (let list of this.sortableLists) {
                 list.option("disabled", true);
                 list.el.classList.remove('is-sortable');
             }
-            this.sortableButton.classList.remove('is-active');
         } else {
+            // Activate sorting
             this.sortableActive = true;
+            this.sortableButton.classList.add('is-active');
+
             for (let list of this.sortableLists){
                 list.option("disabled", false);
                 list.el.classList.add('is-sortable');
             }
-            this.sortableButton.classList.add('is-active');
         }
     }
 
     handleSort(url, event) {
+        // Collect and submit new order
         const list = Sortable.get(event.to);
         const data = new FormData();
+        
         for (let id of list.toArray())
             data.append('order[]', id);
 
