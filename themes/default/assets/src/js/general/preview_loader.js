@@ -1,4 +1,4 @@
-import Bulma from '@vizuaalog/bulmajs/src/core';
+import {Bulma} from 'cover-style-system/src/js';
 
 
 class PreviewLoader {

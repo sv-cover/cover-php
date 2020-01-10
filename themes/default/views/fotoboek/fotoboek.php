@@ -55,6 +55,13 @@
 			return $this->render('add_photos.twig', compact('book', 'success', 'errors'));
 		}
 
+		public function render_delete_photos(DataIterPhotobook $book, array $photos)
+		{
+			$action_url = $_SERVER['REQUEST_URI'];
+			$ids = $_GET['photo_id'];
+			return $this->render('confirm_delete_photos.twig', compact('book', 'photos', 'ids', 'action_url'));
+		}
+
 		public function render_competition()
 		{
 			$taggers = get_db()->query('

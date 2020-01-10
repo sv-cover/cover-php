@@ -1,4 +1,4 @@
-import Bulma from '@vizuaalog/bulmajs/src/core';
+import {Bulma} from 'cover-style-system/src/js';
 
 const GALLERY_ANIMATION_MIN = 1
 const GALLERY_ANIMATION_RANGE = 1
@@ -123,6 +123,6 @@ class PhotoGallery {
 }
 
 
-Bulma.registerPlugin('photos', PhotoGallery);
+Bulma.registerPlugin('photos_gallery', PhotoGallery);
 
 export default PhotoGallery;

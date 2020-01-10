@@ -553,16 +553,25 @@
 		{
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
+
+			if (!isset($_GET['photo_id']))
+				throw new RuntimeException('photo parameter missing');
+
+			$photos = [];
+
+			foreach ($_GET['photo_id'] as $id)
+				if ($photo = $this->model->get_iter($id))
+					$photos[] = $photo;
 			
 			if ($this->_form_is_submitted('delete_photos'))
 			{
-				if (isset($_POST['photo']))
-					foreach ($_POST['photo'] as $id)
-						if ($photo = $this->model->get_iter($id))
-							$this->model->delete($photo);
+				foreach ($photos as $photo)
+					$this->model->delete($photo);
+
+				return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
 			}
 			
-			return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
+			return $this->view->render_delete_photos($book, $photos);
 		}
 
 		protected function _view_mark_read(DataIterPhotobook $book)

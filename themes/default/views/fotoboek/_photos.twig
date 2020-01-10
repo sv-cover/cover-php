@@ -17,7 +17,7 @@
 
         {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
         {% set basis = ((size[0] / 100)|round) * 50 %}
-        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ album.classnames(photo, context) }}">
+        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ album.classnames(photo, context) }}" data-id="{{ photo.id }}">
             <a 
                 href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
                 {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
@@ -66,14 +66,18 @@
 {% set photos = photos|group_by('read_status') %}
 
 {% if photos.unread is defined %}
-    <h2>{{ __('New since your last visit') }}</h2>
-    {{ album.gallery(photos.unread, _context) }}
+    <article>
+        <h2>{{ __('New since your last visit') }}</h2>
+        {{ album.gallery(photos.unread, _context) }}
+    </article>
 {% endif %}
 
 {% if photos.read is defined %}
-    {% if photos.unread is defined %}
-        <h2>{{ __('Older photos') }}</h2>
-    {% endif %}
-    {{ album.gallery(photos.read, _context) }}
+    <article>
+        {% if photos.unread is defined %}
+            <h2>{{ __('Older photos') }}</h2>
+        {% endif %}
+        {{ album.gallery(photos.read, _context) }}
+    </article>
 {% endif %}
 
