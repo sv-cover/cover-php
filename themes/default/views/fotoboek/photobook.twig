@@ -110,13 +110,24 @@
 								<span class="is-sr-only">{{ __('Add photos') }}</span>
 							</span>
 						</a>
-						<a id="order-photos-button" class="button" title="{{ __("Reorder photos") }}">
+						<button 
+							id="order-photos-button"
+							class="button"
+							title="{{ __("Reorder photos") }}"
+							data-photo-order-url="{{ controller.json_link_to_update_photo_order(book) }}"
+							data-book-order-url="{{ controller.json_link_to_update_book_order(book) }}"
+						>
 							<span class="icon">
 								<i class="fas fa-arrows-alt" aria-hidden="true"></i>
 								<span class="is-sr-only">{{ __("Reorder photos") }}</span>
 							</span>
-						</a>
-						<button id="delete-selected-photos-button" class="button photo-selection-control" href="#" title="{{ __('Delete selected photos') }}">
+						</button>
+						<button 
+							id="delete-selected-photos-button"
+							class="button photo-selection-control" 
+							title="{{ __('Delete selected photos') }}"
+							data-delete-photos-url="fotoboek.php?book={{ book.id }}&amp;view=delete_photos"
+						>
 							<span class="icon">
 								<i class="fas fa-trash" aria-hidden="true"></i>
 								<span class="is-sr-only">{{ __('Delete selected photos') }}</span>

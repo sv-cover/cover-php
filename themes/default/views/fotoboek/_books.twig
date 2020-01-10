@@ -1,7 +1,7 @@
 {% if books|length > 0 %}
 <article class="book-gallery columns is-multiline">
 {% for book in books %}
-	<div id="book_{{ book.id }}" class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd {{ book.read_status }}">
+	<div id="book_{{ book.id }}" class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd {{ book.read_status }}" data-id="{{ book.id }}">
 		<a href="fotoboek.php?book={{ book.id }}" class="book">
 			<div class="overlay">
 				<h2 class="title">{{ book.titel }}</h2>
