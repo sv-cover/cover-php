@@ -293,7 +293,7 @@
     - [ ] search/\_single_agendapunt.twig
 - [ ] [issue] Bulma dl styling is ugly
 - [ ] [issue] Multiline select is broken
-- [ ] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
+- [×] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
 - [ ] Lines of media objects are not always wished for, especially in nested media objects.
     - [ ] comments on photobook main page
 - [ ] A bootstrap style "link" button may be desired
@@ -319,6 +319,10 @@
 - [ ] Buttons don't work that well as card-footer-item
     - [ ] signup/form_form.twig
 - [ ] fullwidth/expanding select? maybe?
+- [ ] Buttons don't work as dropdown-item
+    - [ ] fotoboek/photobook.twig (manage dropdown for photocee)
+- [ ] Button addons spacing between last 2 is broken. See 
+    - [ ] fotoboek/photobook.twig (download + mark as seen)
 
 
 ## Other

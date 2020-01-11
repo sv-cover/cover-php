@@ -11,169 +11,160 @@
 		data-permissions="admin"
 	{% endif %}
 >
-	<header>
-		{% if book.id is not same as(0) %}
-			<div class="level">
-				<div class="level-left">
-					{{ include('_path.twig') }}
-				</div>
-				<div class="level-right buttons">
-					{% if book.previous_book and user_can_read book.previous_book %}
-						<a href="fotoboek.php?book={{ book.previous_book.id }}" class="button">
-							<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
-							<span>{{ book.previous_book.titel }}</span>
-						</a>
-					{% endif %}	
-					{% if book.next_book and user_can_read book.next_book %}
-						<a href="fotoboek.php?book={{ book.next_book.id }}" class="button">
-							<span>{{ book.next_book.titel }}</span>
-							<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-						</a>
-					{% endif %}
-				</div>
-			</div>
-		{% endif %}
-
+	<article>
 		<div class="level">
 			<div class="level-left">
-				<h1 class="title">{{ book.has('titel') ? book.titel : __('Photo book') }}</h1>
+				{% if book.id is not same as(0) %}
+					<a href="fotoboek.php?book={{ book.parent.id }}" class="button">
+						<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+						<span>{{__('Back to')}} {{ book.parent.titel }}</span>
+					</a>
+				{% endif %}
 			</div>
-			{# Controls, if applicable #}
 			<div class="level-right">
 				<div class="field is-grouped">
 					<div class="control">
-					{# Apparently, .buttons doesn't really like the form, so .field it is… #}
-					<div class="field has-addons">
-						{% if controller.policy.user_can_download_book(book) %}
-						<p class="control">
-							<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button" title="{{ __('Download photo book') }}" data-popup="modal">
-								<span class="icon">
-									<i class="fas fa-download" aria-hidden="true"></i>
-									<span class="is-sr-only">{{ __('Download photo book') }}</span>
-								</span>
-							</a>
-						</p>
-						{% endif %}
-
-						{% if controller.policy.user_can_mark_as_read(book) %}
-						<form class="control" method="post" action="fotoboek.php?book={{ book.id }}&amp;view=mark_book_read" class="control" title="{{ __('Mark all books as seen') }}">
-							<button type="submit" class="button">
-								<span class="icon">
-									<i class="fas fa-check" aria-hidden="true"></i>
-									<span class="is-sr-only">{{ __('Mark all books as seen') }}</span>
-								</span>
-							</button>
-						</form>
-						{% endif %}
-
-						{% if user_can_update book %}
-						<p class="control">
-							<a href="fotoboek.php?book={{ book.id }}&amp;view=update_book" class="button" title="{{ __('Modify photo book') }}">
-								<span class="icon">
-									<i class="fas fa-pencil-alt"></i>
-									<span class="is-sr-only">{{ __('Modify photo book') }}</span>
-								</span>
-							</a>
-						</p>
-						{% endif %}
-
-						{% if user_can_delete book %}
-						<p class="control">
-							<a href="fotoboek.php?book={{ book.id }}&amp;view=delete_book" class="button" title="{{ __('Delete photo book') }}">
-								<span class="icon">
-									<i class="fas fa-folder-minus"></i>
-									<span class="is-sr-only">{{ __('Delete photo book') }}</span>
-								</span>
-							</a>
-						</p>
-						{% endif %}
-					</div>
+						{# Apparently, .buttons doesn't really like the form, so .field it is… #}
+						<div class="field has-addons">
+							{% if controller.policy.user_can_download_book(book) %}
+							<p class="control">
+								<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button" title="{{ __('Download photo book') }}" data-popup="modal">
+									<span class="icon">
+										<i class="fas fa-download" aria-hidden="true"></i>
+										<span class="is-sr-only">{{ __('Download photo book') }}</span>
+									</span>
+								</a>
+							</p>
+							{% endif %}
+							{% if controller.policy.user_can_mark_as_read(book) %}
+							<form class="control" method="post" action="fotoboek.php?book={{ book.id }}&amp;view=mark_book_read" class="control" title="{{ __('Mark all books as seen') }}">
+								<button type="submit" class="button">
+									<span class="icon">
+										<i class="fas fa-check" aria-hidden="true"></i>
+										<span class="is-sr-only">{{ __('Mark all books as seen') }}</span>
+									</span>
+								</button>
+							</form>
+							{% endif %}
+						</div>
 					</div>
 
-					{% if user_can_create book.new_book %}
-					<div class="control">
-						<a href="fotoboek.php?book={{ book.id }}&amp;view=add_book" class="button" title="{{ __('New photo book') }}">
-							<span class="icon">
-								<i class="fas fa-folder-plus" aria-hidden="true"></i>
-								<span class="is-sr-only">{{ __('New photo book') }}</span>
-							</span>
-						</a>
-					</div>
-					{% endif %}
-
-					{% if user_can_update book %}
-					<div class="control">
-					<div class="buttons has-addons">
-						<a href="fotoboek.php?book={{ book.id }}&amp;view=add_photos" class="button" title="{{ __('Add photos') }}">
-							<span class="icon">
-								<i class="fas fa-plus" aria-hidden="true"></i>
-								<span class="is-sr-only">{{ __('Add photos') }}</span>
-							</span>
-						</a>
-						<button 
-							id="order-photos-button"
-							class="button"
-							title="{{ __("Reorder photos") }}"
-							data-photo-order-url="{{ controller.json_link_to_update_photo_order(book) }}"
-							data-book-order-url="{{ controller.json_link_to_update_book_order(book) }}"
-						>
-							<span class="icon">
-								<i class="fas fa-arrows-alt" aria-hidden="true"></i>
-								<span class="is-sr-only">{{ __("Reorder photos") }}</span>
-							</span>
-						</button>
-						<button 
-							id="delete-selected-photos-button"
-							class="button photo-selection-control" 
-							title="{{ __('Delete selected photos') }}"
-							data-delete-photos-url="fotoboek.php?book={{ book.id }}&amp;view=delete_photos"
-						>
-							<span class="icon">
-								<i class="fas fa-trash" aria-hidden="true"></i>
-								<span class="is-sr-only">{{ __('Delete selected photos') }}</span>
-							</span>
-						</button>
-					</div>
-					</div>
+					{% if user_can_update book or user_can_delete book or user_can_create book.new_book %}
+						<div class="dropdown is-hoverable is-right">
+							<div class="dropdown-trigger">
+								<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+									<span>{{ __('Manage') }}</span>
+									<span class="icon is-small">
+										<i class="fas fa-angle-down" aria-hidden="true"></i>
+									</span>
+								</button>
+							</div>
+							<div class="dropdown-menu" id="dropdown-menu" role="menu">
+								<div class="dropdown-content">
+									{% if user_can_update book %}
+										<a href="fotoboek.php?book={{ book.id }}&amp;view=add_photos" class="dropdown-item">
+											<span class="icon">
+												<i class="fas fa-plus" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Add photos') }}</span>
+										</a>
+										<button 
+											id="order-photos-button"
+											class="dropdown-item button"
+											data-photo-order-url="{{ controller.json_link_to_update_photo_order(book) }}"
+											data-book-order-url="{{ controller.json_link_to_update_book_order(book) }}"
+										>
+											<span class="icon">
+												<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+											</span>
+											<span>{{ __("Reorder photos") }}</span>
+										</button>
+										<button 
+											id="delete-selected-photos-button"
+											class="dropdown-item button photo-selection-control"
+											data-delete-photos-url="fotoboek.php?book={{ book.id }}&amp;view=delete_photos"
+										>
+											<span class="icon">
+												<i class="fas fa-trash" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Delete selected photos') }}</span>
+										</button>
+										<hr class="dropdown-divider">
+									{% endif %}
+									{% if user_can_create book.new_book %}
+										<a href="fotoboek.php?book={{ book.id }}&amp;view=add_book" class="dropdown-item">
+											<span class="icon">
+												<i class="fas fa-folder-plus" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('New photo book') }}</span>
+										</a>
+									{% endif %}
+									{% if user_can_update book or user_can_delete book %}
+										<hr class="dropdown-divider">
+									{% endif %}
+									{% if user_can_update book %}
+										<a href="fotoboek.php?book={{ book.id }}&amp;view=update_book" class="dropdown-item">
+											<span class="icon">
+												<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Modify photo book') }}</span>
+										</a>
+									{% endif %}
+									{% if user_can_delete book %}
+										<a href="fotoboek.php?book={{ book.id }}&amp;view=delete_book" class="dropdown-item" data-popup="modal">
+											<span class="icon">
+												<i class="fas fa-folder-minus" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Delete photo book') }}</span>
+										</a>
+									{% endif %}
+								</div>
+							</div>
+						</div>
 					{% endif %}
 				</div>
 			</div>
 		</div>
+	</article>
 
-		{# introduction to the Photo book page, only visible in the root book #}
-		{% if book.id is same as (0) %}
-			<div class="content">
-				<p>{{ __('Welcome to Covers photo book. This part of the site is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo book.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
-				
-			</div>
-		{% endif %}
-	</header>
+	<header class="hero is-light">
+		<div class="hero-body">
+			<div class="content has-text-centered is-centered">
+				<h1 class="title">{{ book.has('titel') ? book.titel : __('Photo book') }}</h1>
+				{% if book.id is same as (0) %}
+					<div class="description">
+						{# introduction to the Photo book page, only visible in the root book #}
+						<p>{{ __('Welcome to Covers photo book, which is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo book.')|e|format('<a href="commissies.php?commissie=' ~ constant('COMMISSIE_FOTOCIE') ~ '">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
+					</div>
+				{% else %}
+					<div class="meta">
+					 	{% if book.has_value('date') %}
+							<span class="date">{{ book.date|date('d-m-Y') }}</span>
+						{% endif %}
+						{% if book.num_books > 0 %}
+							<span class="divider"></span>
+							<span class="num_books">{{__N('%d book', '%d books', book.num_books)}}</span>
+						{% endif %}
+						{% if book.num_photos > 0 %} 
+							<span class="divider"></span>
+							<span class="num_photos">{{__N('%d photo', '%d photos', book.num_photos)}}</span>
+						{% endif %}
+					</div>
+					{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 
+						<div class="description">
+							<p>{{ book.beschrijving }}</p>
+						</div>
+					{% endif %}
+				{% endif %}
 
-	<article>
-		{# information about who made the photo's, and when #}
-		<div class="media">
-			<div class="media-content content">
 				{% if book.has_value('fotograaf') %}
-					<div>
-						<strong>{{ __('Photographer') }}:</strong>
-						{{ book.fotograaf }}
-					</div>
-				{% endif %}
-			 	{% if book.has_value('date') %}
-			 		<div>
-						<strong>{{ __('Date') }}:</strong>
-						{{ book.date|date('d-m-Y') }}
-					</div>
-				{% endif %}
-				{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 
-					<div class="content">
-						<strong>{{ __('Description') }}:</strong><br>
-						{{ book.beschrijving }}
+					<div class="photographer">
+						By: {{ book.fotograaf }}
 					</div>
 				{% endif %}
 			</div>
 		</div>
-	</article>
+	</header>
 
 	{% if book.num_books == 0 and book.num_photos == 0 %}
 		<article>
@@ -188,12 +179,8 @@
 	{% if book.id is same as(0) and global.auth.logged_in() %}
 		{{ include('_recent_comments.twig', {comments:view.recent_comments(10)}) }}
 	{% endif %}
-
-	{# and if there are no photos on this page, show a few random photos for discovery in the bottom. They are not confused with the photos of a book. #}
-	{% if book.num_photos == 0 and global.identity.is_member %}
-		{% include('_random_photos.twig') %}
-	{% endif %}
 </div>
 </section>
 
 {% endblock %}
+ 
