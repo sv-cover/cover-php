@@ -124,7 +124,8 @@ class PhotoGallery {
     animate() {
         const next = Math.floor((Math.random() * GALLERY_ANIMATION_RANGE + GALLERY_ANIMATION_MIN) * 1000);
         setTimeout(() => {
-            this.animateThumbnail();
+            if (!document.hidden) // Don't animate when page is not active
+                this.animateThumbnail();
             this.animate();
         }, next);
     }
