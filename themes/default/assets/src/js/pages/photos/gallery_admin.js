@@ -161,6 +161,12 @@ class PhotoGalleryAdmin {
         fetch(url, {
             method: 'POST',
             body: new URLSearchParams(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('The order could not be saved. Generally, this happens when the book is automatically generated or you don’t have permission to update the book.');
+            }
+        }).catch(error => {
+            alert(error);
         });
     }
 }
