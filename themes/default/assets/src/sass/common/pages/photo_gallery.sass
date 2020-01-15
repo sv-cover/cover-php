@@ -2,7 +2,7 @@ $gallery-gap: .25rem
 $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950 1000
 
 
-.photo-gallery 
+.photo-book 
     header
         margin: 2 * $gallery-gap 0
 
@@ -19,9 +19,8 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
 
             &::after
                 content: '▪'
-                // content: '▪'
 
-.book-gallery, .gallery
+.book-gallery, .photo-gallery
     margin-top: -$gallery-gap
     margin-right: -$gallery-gap
     margin-left: -$gallery-gap
@@ -40,7 +39,7 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
         padding: $gallery-gap
 
 .book-gallery
-    a.book
+    .book a
         display: block
         position: relative
         padding: 0
@@ -145,14 +144,14 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
             background: rgba($black, 0)
 
     &.is-sortable
-        &> .column
+        .book
             +animation-wiggle(var(--wiggle-duration), var(--wiggle-delay))
 
-        a.book
-            cursor: move
+            a
+                cursor: move
 
 
-.gallery
+.photo-gallery
     &::after
         content: ''
         flex-grow: 10
@@ -234,7 +233,7 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
                 cursor: move
 
 +until($widescreen)
-    .gallery .photo
+    .photo-gallery .photo
         height: 200px
 
         @each $bin in $gallery-basis-bins
@@ -243,7 +242,7 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
 
 
 +until($tablet)
-    .gallery .photo
+    .photo-gallery .photo
         flex-basis: 33.3333% !important
         flex-grow: 0
         height: auto

@@ -3,7 +3,7 @@ import Sortable from 'sortablejs';
 
 class PhotoGalleryAdmin {
     static parseDocument(context) {
-        const elements = context.querySelectorAll('.photo-gallery[data-permissions=admin]');
+        const elements = context.querySelectorAll('.photo-book[data-permissions=admin]');
 
         Bulma.each(elements, element => {
             new PhotoGalleryAdmin({
@@ -39,7 +39,7 @@ class PhotoGalleryAdmin {
     }
 
     initCheckboxes() {
-        let elements = this.element.querySelectorAll('.gallery .photo');
+        let elements = this.element.querySelectorAll('.photo-gallery .photo');
 
         Bulma.each(elements, element => {
             let checkbox = document.createElement('input');
@@ -69,7 +69,7 @@ class PhotoGalleryAdmin {
         this.bookOrderUrl = this.sortableButton.dataset.bookOrderUrl;
 
         // Init sortable photo galleries
-        const photo_galleries = this.element.querySelectorAll('.gallery');
+        const photo_galleries = this.element.querySelectorAll('.photo-gallery');
         Bulma.each(photo_galleries, element => {
             this.sortableLists.push(new Sortable(element, {
                 disabled: 'true',
@@ -83,13 +83,13 @@ class PhotoGalleryAdmin {
         Bulma.each(book_galleries, element => {
             this.sortableLists.push(new Sortable(element, {
                 disabled: 'true',
-                handle: '.book',
+                handle: '.book a',
                 onUpdate: this.handleSort.bind(this, this.bookOrderUrl)
             }));
         });
 
         // Randomise wiggle
-        this.element.querySelectorAll('.gallery > .photo, .book-gallery > .column').forEach( element => {
+        this.element.querySelectorAll('.photo-gallery > .photo, .book-gallery > .book').forEach( element => {
             const duration = getComputedStyle(element).getPropertyValue('--wiggle-duration');
             const delay = -1 * parseFloat(duration) * Math.random();
             element.style.setProperty("--wiggle-delay", delay + 's');
@@ -135,7 +135,7 @@ class PhotoGalleryAdmin {
             this.sortableButton.classList.remove('is-active');
 
             for (let list of this.sortableLists) {
-                list.option("disabled", true);
+                list.option('disabled', true);
                 list.el.classList.remove('is-sortable');
             }
         } else {
@@ -144,7 +144,7 @@ class PhotoGalleryAdmin {
             this.sortableButton.classList.add('is-active');
 
             for (let list of this.sortableLists){
-                list.option("disabled", false);
+                list.option('disabled', false);
                 list.el.classList.add('is-sortable');
             }
         }

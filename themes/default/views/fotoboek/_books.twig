@@ -1,8 +1,9 @@
 {% if books|length > 0 %}
-<article class="book-gallery columns is-multiline">
+<article>
+<ul class="book-gallery columns is-multiline">
 {% for book in books %}
-	<div id="book_{{ book.id }}" class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd {{ book.read_status }}" data-id="{{ book.id }}">
-		<a href="fotoboek.php?book={{ book.id }}" class="book">
+	<li id="book_{{ book.id }}" class="book column is-half-tablet is-one-third-desktop is-one-quarter-fullhd {{ book.read_status }}" data-id="{{ book.id }}">
+		<a href="fotoboek.php?book={{ book.id }}">
 			<div class="overlay">
 				<h2 class="title">{{ book.titel }}</h2>
 				{% if user_can_update book and book.visibility is not same as(null) %}
@@ -52,7 +53,8 @@
 				{% endfor %}
 			</div>
 		</a>
-	</div>
+	</li>
 {% endfor %}
+</ul>
 </article>
 {% endif %}

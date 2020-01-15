@@ -10,7 +10,7 @@
 
 {% macro gallery(photos, context) %}
     {% import _self as album %}
-    <ul class="gallery columns is-multiline is-mobile">
+    <ul class="photo-gallery columns is-multiline is-mobile">
     {% for photo in photos %}
         {# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
         {% set size = photo.get_scaled_size(null, 600) %}

@@ -5,7 +5,7 @@
 {% block page %}
 <section class="section">
 <div 
-	class="container photo-gallery"
+	class="container photo-book"
 	data-book-id="{{ book.id }}"
 	{% if user_can_update book or user_can_create book.new_book %}
 		data-permissions="admin"

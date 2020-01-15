@@ -107,7 +107,7 @@ class PhotoGallery {
         this.element = options.element;
         this.thumbnails = [];
 
-        this.element.querySelectorAll('.book').forEach(element => {
+        this.element.querySelectorAll('.book a').forEach(element => {
             try {
                 this.thumbnails.push(new PhotoGalleryThumbnail(element));
             } catch (e) {
@@ -150,6 +150,6 @@ class PhotoGallery {
 }
 
 
-Bulma.registerPlugin('photos_gallery', PhotoGallery);
+Bulma.registerPlugin('photo_gallery', PhotoGallery);
 
 export default PhotoGallery;
