@@ -468,7 +468,7 @@
 				if (is_dir($entry))
 					$entries[] = path_subtract($entry, get_config_value('path_to_photos'));
 
-			sort($entries);
+			rsort($entries);
 			return $this->view->render_json($entries);
 		}
 		
