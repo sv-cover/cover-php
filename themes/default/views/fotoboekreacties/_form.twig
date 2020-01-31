@@ -1,11 +1,11 @@
-<form class="media" id="comment-form" name="freactie" action="{{ iter.has_id ? controller.link_to_update(iter) : controller.link_to_create }}" method="post" data-partial-selector=".photo-comments" data-placement-selector=".photo-comments">
+<form class="media photo-comment" id="comment-form" name="freactie" action="{{ iter.has_id ? controller.link_to_update(iter) : controller.link_to_create }}" method="post" data-partial-selector=".photo-comments" data-placement-selector=".photo-comments">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
 		{{ html_nonce('create', iter) }}
 	{% endif %}
 	<figure class="media-left">
-		<p class="image is-64x64">
+		<p class="image avatar">
 			{% if iter.has_id %}
 				<img class="is-rounded" src="{{ link('foto.square', member=iter.author, width=128) }}" alt="Photo of {{ iter.author|personal_full_name }}">
 			{% else %}
@@ -24,17 +24,15 @@
 			</p>
 		</div>
 		<div class="field">
-			<div class="control buttons">
-				<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
-				{% if iter.has_id %}
-				<a href="{{ controller.link_to_read(iter) }}"
-						data-partial-selector="#comment{{ iter.id }}"
-						data-placement-selector=".replyBox"
-						class="button">
-					{{ __('Return to photo') }}
-				</a>
-				{% endif %}
-			</div>
+			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
+			{% if iter.has_id %}
+			<a href="{{ controller.link_to_read(iter) }}"
+					data-partial-selector="#comment{{ iter.id }}"
+					data-placement-selector=".replyBox"
+					class="button">
+				{{ __('Return to photo') }}
+			</a>
+			{% endif %}
 		</div>
 	</div>
 </form>

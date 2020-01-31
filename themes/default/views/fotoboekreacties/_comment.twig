@@ -1,6 +1,6 @@
-<div class="media" id="comment{{ iter.id }}">
+<div class="media photo-comment" id="comment{{ iter.id }}">
 	<figure class="media-left">
-		<p class="image is-64x64">
+		<p class="image avatar">
 			<img class="is-rounded" src="{{ link('foto.square', member=iter.author, width=128) }}" alt="Photo of {{ iter.author|personal_full_name }}">
 		</p>
 	</figure>
@@ -10,61 +10,54 @@
 				<strong>
 					<a href="profiel.php?lid={{ iter.author.id }}">{{ iter.author|personal_full_name }}</a>
 				</strong>
-				&ndash;
-				<small>
-					{{ iter.date|date('l j F, H:i') }}
-				</small>
 				<br>
 				{{ iter.reactie|parse_markup }}
 			</p>
 		</div>
-		<nav class="level is-mobile">
+		<div class="controls level is-mobile">
 			<div class="level-left">
 				{% if global.auth.logged_in %}
-					{% set liked = iter.is_liked_by(global.identity.member)%}
+					{% set liked = iter.is_liked_by(global.identity.member) %}
 					<form class="level-item"
 							method="post"
 							action="{{ controller.link_to_like(iter) }}"
 							data-partial-selector="#comment{{ iter.id }}"
 							data-placement-selector="#comment{{ iter.id }}">
 						<input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
-						<span title="{{ iter.likes > 0 ? __N('%d member likes this', '%s members like this', iter.likes)|e('html_attr') : '' }}">
-							{# Oof, don't like that &nbsp; #}
-							{{ iter.likes }}&nbsp;
-							<span class="is-sr-only">{{- __N('like', 'likes', iter.likes) -}}</span>
-						</span>
-						<button type="submit" class="button is-text is-paddingless" title="{{ liked ? __('Unlike comment') : __('Like comment') }}">
-							<span class="icon is-small">
-								{% if liked %}
-									<i class="fas fa-heart has-text-danger" aria-hidden="true"></i>
-									<span class="is-sr-only">{{ __('You like this comment. Click to unlike.') }}</span>
-								{% else %}
-									<i class="far fa-heart has-text-link" aria-hidden="true"></i>
-									<span class="is-sr-only">{{ __('Like comment') }}</span>
-								{% endif %}
-							</span>
+						<button type="submit" class="button is-text icon" title="{{ liked ? __('Unlike comment') : __('Like comment') }}">
+							{% if liked %}
+								<i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('You like this comment. Click to unlike.') }}</span>
+							{% else %}
+								<i class="fas fa-heart" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Like comment') }}</span>
+							{% endif %}
 						</button>
+						{% if iter.likes %}
+							<span title="{{ iter.likes > 0 ? __N('%d person likes this', '%s people like this', iter.likes)|e('html_attr') : '' }}">
+								{{ iter.likes }}
+								<span class="is-sr-only">{{ __N('like', 'likes', iter.likes) }}</span>
+							</span>
+						{% endif %}
 					</form>
 				{% endif %}
 				{% if user_can_update iter %}
 					<a class="level-item"
 							href="{{ controller.link_to_update(iter) }}"
-							data-partial-selector="#comment-form"
-							data-placement-selector="#comment{{ iter.id }}"
-							title="{{ __('Modify comment') }}">
+							data-popup="modal"
+							title="{{ __('Edit comment') }}">
 						<span class="icon is-small">
 							<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 						</span>
 						<span class="is-sr-only">
-							{{ __('Modify comment') }}
+							{{ __('Edit comment') }}
 						</span>
 					</a>
 				{% endif %}
 				{% if user_can_delete iter %}
 					<a class="level-item"
 							href="{{ controller.link_to_delete(iter) }}"
-							data-partial-selector="#confirm-delete-comment-form"
-							data-placement-selector="modal"
+							data-popup="modal"
 							title="{{ __('Delete comment') }}">
 						<span class="icon is-small">
 							<i class="fas fa-trash" aria-hidden="true"></i>
@@ -75,6 +68,11 @@
 					</a>
 				{% endif %}
 			</div>	
-		</nav>
+			<div class="level-right">
+				<span class="is-size-7">
+					{{ iter.date|date('j F Y, H:i') }}
+				</span>
+			</div>
+		</div>
 	</div>
 </div>

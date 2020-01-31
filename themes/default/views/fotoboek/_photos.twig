@@ -43,7 +43,7 @@
 
                         {% set liked = context.my_likes[photo.id] is defined %}
                         {% if num_likes > 0 %}
-                            <li class="likes" title="{{ __N('%d member liked this photo.', '%d members liked this photo.', num_likes) }} {% if liked %}{{ __('You liked this photo.')}}{% endif %}">
+                            <li class="likes" title="{{ __N('%d person liked this photo.', '%d people liked this photo.', num_likes) }} {% if liked %}{{ __('You liked this photo.')}}{% endif %}">
                                 <i
                                     class="fas fa-heart {% if liked %}has-text-cover{% endif %}" 
                                     aria-hidden="true"

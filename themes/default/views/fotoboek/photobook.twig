@@ -138,16 +138,24 @@
 					</div>
 				{% else %}
 					<div class="meta">
+						{% set meta_count = 0 %}
 					 	{% if book.has_value('date') %}
-							<span class="date">{{ book.date|date('d-m-Y') }}</span>
+							<span class="date">{{ book.date|date('j F Y') }}</span>
+							{% set meta_count = meta_count + 1 %}
 						{% endif %}
 						{% if book.num_books > 0 %}
-							<span class="divider"></span>
+							{% if meta_count > 0 %}
+								<span class="divider"></span>
+							{% endif %}
 							<span class="num_books">{{__N('%d book', '%d books', book.num_books)}}</span>
+							{% set meta_count = meta_count + 1 %}
 						{% endif %}
 						{% if book.num_photos > 0 %} 
-							<span class="divider"></span>
+							{% if meta_count > 0 %}
+								<span class="divider"></span>
+							{% endif %}
 							<span class="num_photos">{{__N('%d photo', '%d photos', book.num_photos)}}</span>
+							{% set meta_count = meta_count + 1 %}
 						{% endif %}
 					</div>
 					{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 

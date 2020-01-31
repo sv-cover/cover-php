@@ -1,18 +1,13 @@
-<article>
-	<h2 class="title is-4">Comments</h2>
-	{% if comments|length == 0 %}
-		<p>{{ __('There are no comments yet') }}</p>
-	{% else %}
-		{% for comment in comments %}
-			{{ include('@theme/fotoboekreacties/_comment.twig', {iter: comment}) }}
-		{% endfor %}
-	{% endif %}
-	
-	{% set new_reactie = controller.new_iter({auteur: global.identity.get('id', null) }) %}
-	{% if user_can_create new_reactie %}
-		{{ include('@theme/fotoboekreacties/_form.twig', {
-			iter: new_reactie,
-			errors: []
-		}) }}
-	{% endif %}
-</article>
+{% if comments|length > 0 %}
+	{% for comment in comments %}
+		{{ include('@theme/fotoboekreacties/_comment.twig', {iter: comment}) }}
+	{% endfor %}
+{% endif %}
+
+{% set new_reactie = controller.new_iter({auteur: global.identity.get('id', null) }) %}
+{% if user_can_create new_reactie %}
+	{{ include('@theme/fotoboekreacties/_form.twig', {
+		iter: new_reactie,
+		errors: []
+	}) }}
+{% endif %}
