@@ -35,153 +35,158 @@
     <nav>
         {% set nav = book.get_neighbours(photo) %}
         {% if nav.previous %}
-        <a id="photo-previous" class="icon" href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" title="{{ __('Go to the previous photo') }}">
-            <i class="fas fa-chevron-left fa-fw" aria-hidden="true"></i>
-            <span class="is-sr-only">{{ __('Previous') }}</span>
+        <a class="photo-previous" href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" title="{{ __('Go to the previous photo') }}">
+            <span class="icon">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                <span class="is-sr-only">{{ __('Previous') }}</span>
+            </span>
         </a>
         {% endif %}
 
         {% if nav.next %}
-        <a id="photo-next" class="icon" href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.next.id }}" title="{{ __('Go to next photo') }}">
-            <i class="fas fa-chevron-right fa-fw" aria-hidden="true"></i>
-            <span class="is-sr-only">{{ __('Next') }}</span>
+        <a class="photo-next" href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.next.id }}" title="{{ __('Go to next photo') }}">
+            <span class="icon">
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                <span class="is-sr-only">{{ __('Next') }}</span>
+            </span>
         </a>
         {% endif %}
+        <a class="photo-parent button is-text" href="fotoboek.php?book={{ photo.book.id }}">
+            <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+            <span>{{__('Back to')}} {{ photo.book.titel }}</span>
+        </a>
     </nav>
 </section>
 
-<section class="section photo-meta">
-    {% if photo.beschrijving %}
-        <h1 class="name" title="{{ photo.beschrijving }}">
-            {{- photo.beschrijving -}}
-        </h1>
-    {% endif %}
+<section class="section photo-info">
+    <div class="photo-meta">
+        {% if photo.beschrijving %}
+            <h1 class="name" title="{{ photo.beschrijving }}">
+                {{- photo.beschrijving -}}
+            </h1>
+        {% endif %}
 
-    <div class="book">
-        <a href="fotoboek.php?book={{ book.id }}#photo_{{ photo.id }}">{{ book.titel }}</a>
-        {% if photo.book.id != book.id %}
-            <span class="orignal-book">
-                {{ __('from') }} <a href="fotoboek.php?book={{ photo.book.id }}#photo_{{ photo.id }}">{{ photo.book.titel }}</a>
-            </span>
-        {% endif %}        
-    </div>
-
-    {% if book.has_value('date') %}
-        <div class="date">{{ book.date|date('j F Y') }}</div>
-    {% endif %}
-
-    {% if photo.faces|user_can_read|length > 0 %}
-        <div class="faces">
-            <span class="icon has-text-grey">
-                <i class="fas fa-user-tag fa-fw" aria-hidden="true"></i>
-                <span class="is-sr-only">{{ __('A photo with') }}</span>
-            </span>
-            {{ photo.faces|user_can_read|map_macro('photo_macros.format_face_label')|human_join(',')|raw }}
-        </div>
-    {% endif %}
-
-    <div class="photo-options dropdown is-hoverable is-right">
-        <div class="dropdown-trigger">
-            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    <span class="is-sr-only">{{ __('Options') }}</span>
+        <div class="book">
+            <a href="fotoboek.php?book={{ book.id }}#photo_{{ photo.id }}" title="{{ book.titel }}">{{ book.titel }}</a>
+            {% if photo.book.id != book.id %}
+                <span class="orignal-book">
+                    {{ __('from') }}
+                    <a href="fotoboek.php?book={{ photo.book.id }}#photo_{{ photo.id }}" title="{{ photo.book.titel }}">{{ photo.book.titel }}</a>
                 </span>
-            </button>
+            {% endif %}        
         </div>
-        <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-                {% if user_can_update book %}
-                    <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;view=delete_photos&amp;photo_id[]={{ photo.id }}" data-popup="modal">
-                        {{ __('Delete photo') }}
-                    </a>
-                    <hr class="dropdown-divider">
-                {% endif %}
-                {% if global.identity.member.id in photo.faces|select('lid_id') %}
-                    <a class="dropdown-item" href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-popup="modal">
-                        {{ __('Visibility') }}
-                    </a>
-                    <hr class="dropdown-divider">
-                {% endif %}
-                <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download">
-                    {{ __('Download photo') }}
-                </a>
 
-                <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}">
-                    {{ __('Copy link') }}
-                </a>
+        {% if book.has_value('date') %}
+            <div class="date">{{ book.date|date('j F Y') }}</div>
+        {% endif %}
+
+        {% if photo.faces|user_can_read|length > 0 %}
+            <div class="faces">
+                <span class="icon has-text-grey">
+                    <i class="fas fa-user-tag fa-fw" aria-hidden="true"></i>
+                    <span class="is-sr-only">{{ __('A photo with') }}</span>
+                </span>
+                {{ photo.faces|user_can_read|map_macro('photo_macros.format_face_label')|human_join(',')|raw }}
+            </div>
+        {% endif %}
+
+        <div class="photo-options dropdown is-hoverable is-right">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        <span class="is-sr-only">{{ __('Options') }}</span>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    {% if user_can_update book %}
+                        <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;view=delete_photos&amp;photo_id[]={{ photo.id }}" data-popup="modal">
+                            {{ __('Delete photo') }}
+                        </a>
+                        <hr class="dropdown-divider">
+                    {% endif %}
+                    {% if global.identity.member.id in photo.faces|select('lid_id') %}
+                        <a class="dropdown-item" href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-popup="modal">
+                            {{ __('Visibility') }}
+                        </a>
+                        <hr class="dropdown-divider">
+                    {% endif %}
+                    <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download">
+                        {{ __('Download photo') }}
+                    </a>
+
+                    <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}">
+                        {{ __('Copy link') }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</section>
 
-<section class="section photo-interaction">
-    {% if global.auth.logged_in %}
-        <div class="controls level is-mobile">
-            {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
-            <form class="level-item" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
-                <input type="hidden" name="action" value="toggle">
-                <button type="submit"  class="button is-text icon"
-                        title="{{ liked ? __('Unlike photo') : __('Like photo') }}"
-                        data-title="{{ [__('Unlike photo'), __('Like photo')]|json_encode|e('html_attr') }}"
-                        >
-                        {% if liked %}
-                            <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
-                            <span class="is-sr-only">{{ __('You like this photo. Click to unlike.') }}</span>
-                        {% else %}
-                            <i class="fas fa-heart" aria-hidden="true"></i>
-                            <span class="is-sr-only">{{ __('Like photo') }}</span>
-                        {% endif %}
-                </button>
-                {% if photo.likes|length %}
-                    <span class="is-size-6" title="{{ photo.likes|length > 0 ? __N('%d person likes this photo', '%s people like this photo', photo.likes|length)|e('html_attr') : '' }}">
-                        {{ photo.likes|length }}
-                        <span class="is-sr-only">{{ __N('like', 'likes', photo.likes|length) }}</span>
-                    </span>
+    <div class="photo-interaction">
+        {% if global.auth.logged_in %}
+            <div class="controls level is-mobile">
+                {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
+                <form class="level-item" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
+                    <input type="hidden" name="action" value="toggle">
+                    <button type="submit"  class="button is-text icon"
+                            title="{{ liked ? __('Unlike photo') : __('Like photo') }}"
+                            data-title="{{ [__('Unlike photo'), __('Like photo')]|json_encode|e('html_attr') }}"
+                            >
+                            {% if liked %}
+                                <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+                                <span class="is-sr-only">{{ __('You like this photo. Click to unlike.') }}</span>
+                            {% else %}
+                                <i class="fas fa-heart" aria-hidden="true"></i>
+                                <span class="is-sr-only">{{ __('Like photo') }}</span>
+                            {% endif %}
+                    </button>
+                    {% if photo.likes|length %}
+                        <span class="is-size-6" title="{{ photo.likes|length > 0 ? __N('%d person likes this photo', '%s people like this photo', photo.likes|length)|e('html_attr') : '' }}">
+                            {{ photo.likes|length }}
+                            <span class="is-sr-only">{{ __N('like', 'likes', photo.likes|length) }}</span>
+                        </span>
+                    {% endif %}
+                </form>
+
+                {% if user_can_create controller.faces_controller.new_iter %}
+                    <a class="level-item" title="{{ __('Tag people') }}">
+                        <span class="icon">
+                            <i class="fas fa-tag" aria-hidden="true"></i>
+                        </span>
+                        <span class="is-sr-only">
+                            {{ __('Tag people') }}
+                        </span>
+                    </a>
                 {% endif %}
-            </form>
 
-            {% if user_can_create controller.faces_controller.new_iter %}
-                <a class="level-item" title="{{ __('Tag people') }}">
+                <a class="level-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download" title="{{ __('Download photo') }}">
                     <span class="icon">
-                        <i class="fas fa-tag" aria-hidden="true"></i>
+                        <i class="fas fa-download" aria-hidden="true"></i>
                     </span>
                     <span class="is-sr-only">
-                        {{ __('Tag people') }}
+                        {{ __('Download photo') }}
                     </span>
                 </a>
-            {% endif %}
 
-            <a class="level-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download" title="{{ __('Download photo') }}">
-                <span class="icon">
-                    <i class="fas fa-download" aria-hidden="true"></i>
-                </span>
-                <span class="is-sr-only">
-                    {{ __('Download photo') }}
-                </span>
-            </a>
+                <a class="level-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}" title="{{ __('Copy link') }}">
+                    <span class="icon">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i>
+                    </span>
+                    <span class="is-sr-only">
+                        {{ __('Copy link') }}
+                    </span>
+                </a>
+            </div>
+        {% endif %}
 
-            <a class="level-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}" title="{{ __('Copy link') }}">
-                <span class="icon">
-                    <i class="fas fa-share-alt" aria-hidden="true"></i>
-                </span>
-                <span class="is-sr-only">
-                    {{ __('Copy link') }}
-                </span>
-            </a>
+        <div class="comments">
+            {{ include('@theme/fotoboekreacties/index.twig', {comments: photo.comments, controller: controller.comments_controller}) }}
         </div>
-    {% endif %}
-
-{#     {% if photo.likes|length %}
-        <div class="likes">
-            <strong>{{ photo.likes|length }}</strong> {{ __N('like', 'likes', photo.likes|length) }}
-        </div>
-    {% endif %} #}
-
-    <div class="comments">
-        {{ include('@theme/fotoboekreacties/index.twig', {comments: photo.comments, controller: controller.comments_controller}) }}
     </div>
- </section>
+</section>
 
 </article>
 {% endblock %}
