@@ -99,7 +99,7 @@
 			if (get_auth()->logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
 				$this->model->toggle($this->photo, get_identity()->get('id'));
 
-			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+			if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 				return $this->view->render_json([
 					'liked' => get_auth()->logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))

@@ -219,7 +219,7 @@ class PhotoInfo {
         if (result)
             alert(element.dataset.successMessage);
         else
-            alert('Error during copy!');
+            alert('Oops, unable to copy!');
     }
 
 }

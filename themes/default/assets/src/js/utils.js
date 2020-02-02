@@ -25,7 +25,6 @@ export function copyTextToClipboard(text) {
     try {
         let successful = document.execCommand('copy');
     } catch (err) {
-        console.log('Oops, unable to copy');
         return false;
     }
 
