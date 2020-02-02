@@ -37,13 +37,13 @@ class PhotoCarousel {
         if (nextButton)
             nextButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                this.navigate('next', nextButton.href);
+                this.navigate('next');
             });
 
         if (previousButton)
             previousButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                this.navigate('previous', previousButton.href);
+                this.navigate('previous');
             });
     }
 
@@ -98,14 +98,10 @@ class PhotoCarousel {
         return newPicture;
     }
 
-    async navigate(direction, link=null) {
+    async navigate(direction) {
         // Backup old stuff
         const oldCurrent = this.current;
         const oldCurrentPicture = this.currentPicture;
-
-        // don't navigate to the same photo twice.
-        if (oldCurrent[direction] != link)
-            return;
 
         
         // Load next picture in direction
@@ -258,6 +254,7 @@ class SinglePhoto {
         this.carousel = new PhotoCarousel(window.location.href, this.photo, this.photoInfo);
         this.navigation = this.photo.querySelector('.photo-navigation');
         this.initFullscreen();
+        document.addEventListener('keydown', this.handleKeydown.bind(this));
     }
 
     initFullscreen() {
@@ -318,6 +315,35 @@ class SinglePhoto {
     handleFullscreenNavToggle(event) {
         if (document.fullscreenElement)
             this.navigation.hidden = !this.navigation.hidden;
+    }
+
+    handleKeydown(event) {
+        // Don't prevent normal keyboard usage
+        if (['TEXTAREA', 'INPUT'].indexOf(event.target.nodeName) !== -1)
+            return;
+
+        // Don't prevent normal keyboard shortcuts
+        if (event.shiftKey || event.metaKey || event.ctrlKey)
+            return;
+
+        switch (event.code) {
+            case "Left": // IE/Edge specific value
+            case "ArrowLeft":
+                this.carousel.navigate('previous');
+                break;
+            case "Right": // IE/Edge specific value
+            case "ArrowRight":
+                this.carousel.navigate('next');
+                break
+            case "KeyC":
+                this.element.querySelector('#field-reactie').focus();
+                break;
+            case "Esc": // IE/Edge specific value
+            case "Escape":
+                event.preventDefault(); // Esc stops reload
+                window.location.assign(this.element.querySelector('.photo-parent').href);
+                break;
+        }
     }
 }
 
