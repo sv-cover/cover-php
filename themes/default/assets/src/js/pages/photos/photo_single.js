@@ -1,9 +1,9 @@
 import {Bulma} from 'cover-style-system/src/js';
+import {copyTextToClipboard} from '../../utils';
 
 
 class PhotoCarousel {
     constructor(link, photo, info) {
-
         // Initialise cache
         this.cache = {};
         this.cache[link] = {};
@@ -156,8 +156,7 @@ class PhotoCarousel {
 
         // Schedule changes on for transition end
         if (this.hasTransition) {
-            newCurrentPicture.addEventListener('transitioncancel', this.renderNavigationEnd.bind(this));
-            newCurrentPicture.addEventListener('transitionend', this.renderNavigationEnd.bind(this));
+            newCurrentPicture.addEventListener('transitionend', this.renderNavigationEnd.bind(this), {once: true});
         } else {
             this.renderNavigationEnd();
         }
@@ -192,12 +191,37 @@ class PhotoCarousel {
         const newInfo = this.current.info;
         this.info.replaceWith(newInfo);
         this.info = newInfo;
-        Bulma.traverseDOM(newInfo);
+        new PhotoInfo(newInfo, this.current.photo);
+
+        document.dispatchEvent(new CustomEvent('partial-content-loaded', { bubbles: true, detail: newInfo }));
 
         // Update parent link
         const parentLink = this.navigation.querySelector('.photo-parent');
         parentLink.replaceWith(this.current.photo.querySelector('.photo-parent').cloneNode(true));
     }
+}
+
+class PhotoInfo {
+    constructor(element, photo) {
+        this.element = element;
+        this.initCopyLink();
+    }
+
+    initCopyLink() {
+        this.element.querySelectorAll('.photo-copy-link').forEach(element => {
+            element.addEventListener('click', this.handleCopy.bind(this, element));
+        });
+    }
+
+    handleCopy(element, event) {
+        event.preventDefault();
+        let result = copyTextToClipboard(element.href);
+        if (result)
+            alert(element.dataset.successMessage);
+        else
+            alert('Error during copy!');
+    }
+
 }
 
 class SinglePhoto {
@@ -230,6 +254,7 @@ class SinglePhoto {
         this.element = options.element;
         this.photo = options.element.querySelector('.photo');
         this.photoInfo = options.element.querySelector('.photo-info');
+        new PhotoInfo(this.photoInfo, this.photo);
         this.carousel = new PhotoCarousel(window.location.href, this.photo, this.photoInfo);
         this.navigation = this.photo.querySelector('.photo-navigation');
         this.initFullscreen();
@@ -297,5 +322,6 @@ class SinglePhoto {
 }
 
 SinglePhoto.parseDocument(document);
+document.addEventListener('partial-content-loaded', event => SinglePhoto.parseDocument(event.detail));
 
 export default SinglePhoto;

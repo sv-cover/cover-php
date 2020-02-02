@@ -120,7 +120,7 @@
                         {{ __('Download photo') }}
                     </a>
 
-                    <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}">
+                    <a class="dropdown-item photo-copy-link" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}" data-success-message="{{ __('Link to photo copied!') }}">
                         {{ __('Copy link') }}
                     </a>
                 </div>
@@ -174,7 +174,7 @@
                     </span>
                 </a>
 
-                <a class="level-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}" title="{{ __('Copy link') }}">
+                <a class="level-item photo-copy-link" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}" title="{{ __('Copy link') }}" data-success-message="{{ __('Link to photo copied!') }}">
                     <span class="icon">
                         <i class="fas fa-share-alt" aria-hidden="true"></i>
                     </span>
