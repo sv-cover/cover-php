@@ -17,7 +17,7 @@
 
         {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
         {% set basis = ((size[0] / 100)|round) * 50 %}
-        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ album.classnames(photo, context) }}" data-id="{{ photo.id }}">
+        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ album.classnames(photo, context) }}" data-id="{{ photo.id }}" id="photo-{{ photo.id }}">
             <a 
                 href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
                 {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
