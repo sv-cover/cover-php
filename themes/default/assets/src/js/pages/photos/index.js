@@ -1,3 +1,4 @@
 import './gallery';
 import './gallery_admin';
-import './photos_add';
+import './photo_add';
+import './photo_single';

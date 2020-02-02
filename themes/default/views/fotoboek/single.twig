@@ -21,6 +21,7 @@
 <section class="photo">
     <figure class="image {{ photo.orientation }}">
         <picture>
+            <source srcset="{{ photo.get_url(2400, 2400) }} 2400w">
             <source srcset="{{ photo.get_url(1800, 1800) }} 1800w">
             <source srcset="{{ photo.get_url(1200, 1200) }} 1200w, {{ photo.get_url(1800, 1800) }} 1.5x">
             <source srcset="{{ photo.get_url(900, 900) }} 900w, {{ photo.get_url(1800, 1800) }} 2x">
@@ -32,7 +33,7 @@
             > 
         </picture>
     </figure>
-    <nav>
+    <nav data-enter-fullscreen-text="{{ __('Enter fullscreen') }}" data-exit-fullscreen-text="{{ __('Exit fullscreen') }}">
         {% set nav = book.get_neighbours(photo) %}
         {% if nav.previous %}
         <a class="photo-previous" href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" title="{{ __('Go to the previous photo') }}">
