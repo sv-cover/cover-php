@@ -1,13 +1,11 @@
 {% extends '@layout/layout.twig' %}
 
 {% block page %}
-<section class="section">
+<section>
 	{% set editable = global.models.Editable.get_iter_from_title('Startpagina') %}
 	<article class="container is-content-optimized">
 		<div class="level">
-		    <div class="level-left">
-		        <h1 class="title">{{ editable.get_title }}</h1>
-		    </div>
+		{# Delete the title #}
 		    {% if user_can_update editable %}
 		        <div class="buttons level-right">
 		            <a href="{{ link('editable.update', editable=editable) }}" class="button">
@@ -21,10 +19,28 @@
 		        </div>
 		    {% endif %}
 		</div>
-		<div class="content">
+	</article>
+</section>	
+
+<section class="section">
+	<div class="containerMinimised columns is-centered"> 
+        	<div class="calendar">
+			{{ include('@theme/homepage/_agenda.twig') }}
+			</div>
+        	<div class="coverCarousel">
+			</div>
+	</div>
+	
+	<div class="containerMinimised columns is-centered ">
+		<div class=" inner1">
+			<h1 class="title">{{ editable.get_title }}</h1>
+		</div>
+
+		<div class=" inner2">
 			{{ editable.locale_content|parse_markup }}
 		</div>
-	</article>
+	</div>	
+
 </section>
 
 <section class="section">
@@ -33,21 +49,23 @@
 		<a href="{{ banner.url|e('html_attr') }}"><img src="images/sponsors/{{ banner.filename|e('url') }}" class="frontpage_banner"></a>
 	{% endfor %}
 	</div> #}
-	<div class="container columns is-centered">
-		<div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-			{{ include('@theme/homepage/_agenda.twig') }}
-			{{ include('@theme/homepage/_birthdays.twig') }}
-			{{ include('@theme/homepage/_poll.twig') }}
+
+	 <div class="container columns is-centered"> 
+		{#<div class="column is-one-third-desktop is-one-quarter-widescreen is-one-quarter-widescreen">#}
+		<div>
+			{#{{ include('@theme/homepage/_agenda.twig') }}#}
+		</div>	
+			{#{{ include('@theme/homepage/_birthdays.twig') }}#}
+			{#{{ include('@theme/homepage/_poll.twig') }}#}
 		</div>
-		<div class="column is-content-optimized">
+		{#<div class="column is-content-optimized">
 			{{ include('@theme/announcements/announcements.twig', {
 				'controller': global.controllers.announcements,
 				'model': global.models.Announcement,
 				'policy': global.policies.Announcement,
 				'iters': global.models.Announcement.get_latest()
 			}) }}
-		</div>
+		</div>#}
 	</div>
 </section>
 {% endblock %}
-	
