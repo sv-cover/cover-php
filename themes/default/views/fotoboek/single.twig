@@ -132,8 +132,8 @@
         {% if global.auth.logged_in %}
             <div class="controls level is-mobile">
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
-                <form class="level-item" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
-                    <input type="hidden" name="action" value="toggle">
+                <form class="level-item like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
+                    <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
                     <button type="submit"  class="button is-text icon"
                             title="{{ liked ? __('Unlike photo') : __('Like photo') }}"
                             data-title="{{ [__('Unlike photo'), __('Like photo')]|json_encode|e('html_attr') }}"

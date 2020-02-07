@@ -67,9 +67,23 @@
 
 		public function run_likes(DataIter $iter)
 		{
-			if (isset($_POST['action']))
+			$action = null;
+			$response_json = false;
+
+			if ($_SERVER["CONTENT_TYPE"] === 'application/json')
 			{
-				switch ($_POST['action']) {
+				$response_json = true;
+				$json = file_get_contents('php://input');
+				$data = json_decode($json);
+				if (isset($data->action))
+					$action = $data->action;
+			}
+			elseif (isset($_POST['action']))
+				$action = $_POST['action'];
+
+			if (get_auth()->logged_in() && isset($action))
+			{
+				switch ($action) {
 					case 'like':
 						$iter->like(get_identity()->member());
 						break;
@@ -79,7 +93,13 @@
 				}
 			}
 
-			return $this->run_read($iter);
+			if ($response_json)
+				return $this->view->render_json([
+					'liked' => get_auth()->logged_in() && $iter->is_liked_by(get_identity()->member()),
+					'likes' => $iter->likes
+				]);
+
+			return $this->view->redirect($this->link_to_read($iter));
 		}
 	}
 
@@ -96,17 +116,39 @@
 
 		public function run()
 		{
-			if (get_auth()->logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
-				$this->model->toggle($this->photo, get_identity()->get('id'));
+			$action = null;
+			$response_json = false;
 
-			if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+			if ($_SERVER["CONTENT_TYPE"] === 'application/json')
+			{
+				$response_json = true;
+				$json = file_get_contents('php://input');
+				$data = json_decode($json);
+				if (isset($data->action))
+					$action = $data->action;
+			}
+			elseif (isset($_POST['action']))
+				$action = $_POST['action'];
+
+			if (get_auth()->logged_in() && isset($action))
+			{
+				switch ($action) {
+					case 'like':
+						$this->model->like($this->photo, get_identity()->get('id'));
+						break;
+					case 'unlike':
+						$this->model->unlike($this->photo, get_identity()->get('id'));
+						break;
+				}
+			}
+
+			if ($response_json)
 				return $this->view->render_json([
 					'liked' => get_auth()->logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
-			}
-			else
-				return $this->view->redirect('fotoboek.php?photo=' . $this->photo->get_id());
+
+			return $this->view->redirect('fotoboek.php?photo=' . $this->photo->get_id());
 		}
 	}
 
