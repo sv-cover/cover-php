@@ -7,6 +7,34 @@ $control-shadow-sub-1: 0 0 .5em rgba($scheme-invert, 0.5)
 $control-shadow-sub-2: 0 0 2px rgba($scheme-invert, 0.75)
 $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
 
+
+
+.photo-comment, 
+.photo-info,
+.photo-info-fullscreen
+    .controls .level-item
+        color: $grey
+
+        .button
+            font-size: inherit
+            color: $grey
+            padding: 0
+
+            &:focus
+                background: none
+                box-shadow: none
+
+        .count
+            line-height: 1
+            margin-left: .7ch
+
+        &:hover
+            color: $link-hover
+
+            .button
+                color: $link-hover
+                background: none
+
 .photo-single
     .section:not(:first-child)
         padding-top: 0
@@ -52,81 +80,130 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                     object-position: center
             
 
-        nav a, nav button
-            position: absolute
-            color: $white
-            text-shadow: $control-shadow
-
+        nav
             .icon
-                position: relative
-                transition: left $control-transition-timing, right $control-transition-timing
                 filter: drop-shadow($control-shadow-sub-1) drop-shadow($control-shadow-sub-2)
 
-            &.photo-next,
-            &.photo-previous
-                display: flex
-                justify-content: center
-                align-items: center
-                top: 0
-                bottom: 0
-                width: auto
-                padding: 0 $photo-padding
-                height: 100%
-                box-sizing: content-box
-                font-size: $size-4
-                z-index: 10
-
-                &:focus .icon,
-                &:active .icon
-                    outline: 1px dotted $white
-                    outline-offset: $photo-padding/3
-
-            &.photo-next
+            .photo-info-fullscreen
+                display: none
+                position: absolute
                 right: 0
+                bottom: 0
+                left: 0
+                justify-content: flex-end
+                color: $white
+                padding: $photo-padding
+                z-index: 11
+                
+                .name,
+                .controls .level-item
+                    filter: drop-shadow($control-shadow-sub-1) drop-shadow($control-shadow-sub-2)
+
+                .name
+                    flex-grow: 1
+
+                .controls .level-item
+                    color: $white
+                    
+                    .icon
+                        filter: none
+
+                    .button
+                        color: $white
+
+                    .count[hidden]
+                        display: block !important
+
+                    &:not(:last-child)
+                        margin-right: $photo-padding
+
+                    &:hover
+                        color: $white
+
+                        .button
+                            color: $grey-light
+
+            & > a,
+            & > button
+                position: absolute
+                color: $white
 
                 .icon
+                    position: relative
+                    transition: left $control-transition-timing, right $control-transition-timing
+
+                &.photo-next,
+                &.photo-previous
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    top: 0
+                    bottom: 0
+                    width: auto
+                    padding: 0 $photo-padding
+                    height: 100%
+                    box-sizing: content-box
+                    font-size: $size-4
+                    z-index: 10
+
+                    &:focus .icon,
+                    &:active .icon
+                        outline: 1px dotted $white
+                        outline-offset: $photo-padding/3
+
+                &.photo-next
                     right: 0
 
-                &:hover .icon
-                    right: $control-icon-offset
+                    .icon
+                        right: 0
 
-            &.photo-parent,
-            &.photo-previous
-                left: 0
+                    &:hover .icon
+                        right: $control-icon-offset
 
-                .icon
+                &.photo-parent,
+                &.photo-previous
                     left: 0
 
-                &:hover .icon
-                    left: $control-icon-offset
-            
-            &.photo-enter-fullscreen,
-            &.photo-exit-fullscreen,
-            &.photo-parent
-                top: 0
-                height: auto
-                padding: $photo-padding
-                text-decoration: none
-                z-index: 11
+                    .icon
+                        left: 0
 
-                &:hover, &:focus, &:active
-                    color: $white
-                    background: none
-                    text-decoration: underline
+                    &:hover .icon
+                        left: $control-icon-offset
+                
+                &.photo-enter-fullscreen,
+                &.photo-exit-fullscreen,
+                &.photo-parent
+                    top: 0
+                    height: auto
+                    padding: $photo-padding
+                    text-decoration: none
+                    z-index: 11
 
-                &:focus, &:active
-                    outline: 1px dotted $white
-                    outline-offset: -$photo-padding/1.5
+                    &:hover, &:focus, &:active
+                        color: $white
+                        background: none
+                        text-decoration: underline
 
-            &.photo-enter-fullscreen,
-            &.photo-exit-fullscreen
-                right: 0
+                    &:focus, &:active
+                        outline: 1px dotted $white
+                        outline-offset: -$photo-padding/1.5
 
-                .icon
-                    margin: 0
+                &.photo-enter-fullscreen,
+                &.photo-exit-fullscreen
+                    right: 0
 
-            &.photo-parent
-                left: 0
+                    .icon
+                        margin: 0
+
+                &.photo-parent
+                    left: 0
+                    filter: drop-shadow($control-shadow-sub-1) drop-shadow($control-shadow-sub-2)
+
+                    .icon
+                        filter: none
+
+        &.is-fullscreen nav .photo-info-fullscreen
+            display: flex
 
 
     .photo-meta
@@ -168,31 +245,7 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
 
         .comments
             margin-top: $photo-padding
-
-        // Both photo controls and comment controls
-        .controls
-            .level-item
-                color: $grey
-
-                .button
-                    font-size: inherit
-                    color: $grey
-                    padding: 0
-
-                .likes-count:not([hidden])
-                    line-height: 1
-                    margin-left: .7ch
-
-                &:hover
-                    color: $link-hover
-
-                    .button
-                        color: $link-hover
-                        background: none
-
-                        &:focus
-                            box-shadow: none
-        
+       
         // Photo controls
         &>.controls
             border-top: 1px solid $border-light

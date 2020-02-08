@@ -132,7 +132,7 @@
         {% if global.auth.logged_in %}
             <div class="controls level is-mobile">
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
-                <form class="level-item like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
+                <form class="level-item like-form photo-like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
                     <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
                     <button type="submit"  class="button is-text icon"
                             title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"
@@ -147,13 +147,13 @@
                                 <span class="is-sr-only">{{ __('Like photo') }}</span>
                             {% endif %}
                     </button>
-                    <span class="likes-count"
+                    <span class="count"
                         {% if photo.likes|length == 0 %}hidden{% endif %}
                         title="{{ photo.likes|length > 0 ? __N('%d person likes this photo', '%d people like this photo', photo.likes|length)|e('html_attr') : '' }}"
                         data-title="{{ [__('person likes this photo'), __('people like this photo') ]|json_encode|e('html_attr') }}"
                         data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
                     >
-                        <span class="likes-count-number is-size-6">{{ photo.likes|length }}</span>
+                        <span class="count-number is-size-6">{{ photo.likes|length }}</span>
                         <span class="is-sr-only">{{ __N('like', 'likes', photo.likes|length) }}</span>
                     </span>
                 </form>
@@ -189,7 +189,11 @@
             </div>
         {% endif %}
 
-        <div class="comments">
+        <div class="comments" 
+            data-count="{{ photo.comments|length|e('html_attr') }}"
+            data-icon-class="fa-comments"
+            data-text="{{ [__('comment'), __('comments') ]|json_encode|e('html_attr') }}"
+        >
             {{ include('@theme/fotoboekreacties/index.twig', {comments: photo.comments, controller: controller.comments_controller}) }}
         </div>
     </div>

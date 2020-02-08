@@ -11,6 +11,7 @@ class PhotoCarousel {
 
         // Initialise elements
         this.info = info;
+        this.photo = photo;
 
         this.carousel = photo.querySelector('.carousel');
         this.currentPicture = photo.querySelector('.image');
@@ -187,7 +188,7 @@ class PhotoCarousel {
         const newInfo = this.current.info;
         this.info.replaceWith(newInfo);
         this.info = newInfo;
-        new PhotoInfo(newInfo, this.current.photo);
+        new PhotoInfo(newInfo, this.photo);
 
         document.dispatchEvent(new CustomEvent('partial-content-loaded', { bubbles: true, detail: newInfo }));
 
@@ -200,14 +201,90 @@ class PhotoCarousel {
 class PhotoInfo {
     constructor(element, photo) {
         this.element = element;
+        this.photo = photo;
         this.initCopyLink();
         this.initLikeButtons();
+        this.initFullscreenInfo();
     }
 
     initCopyLink() {
         this.element.querySelectorAll('.photo-copy-link').forEach(element => {
             element.addEventListener('click', this.handleCopy.bind(this, element));
         });
+    }
+
+    initFullscreenInfo() {
+        let containerElement = document.createElement('div');
+        containerElement.classList.add('photo-info-fullscreen');
+
+        let controlsElement = document.createElement('div');
+        controlsElement.classList.add('controls', 'level');
+
+        const title = this.element.querySelector('h1.name');
+        if (title)
+            containerElement.append(title.cloneNode(true));
+
+        const likeButton = this.element.querySelector('.photo-like-form');
+        if (likeButton)
+            controlsElement.append(likeButton.cloneNode(true));
+
+        const comments = this.element.querySelector('.photo-interaction .comments');
+        if (comments) {
+            let containerElement = document.createElement('div');
+            containerElement.classList.add('comments', 'level-item');
+
+            let iconElement = document.createElement('span');
+            iconElement.classList.add('icon');
+
+            let faElement = document.createElement('i');
+            faElement.classList.add('fas', comments.dataset.iconClass);
+            faElement.setAttribute('aria-hidden', true);
+
+            let countNode = document.createTextNode(comments.dataset.count);
+            let countElement = document.createElement('span');
+            countElement.classList.add('count');
+
+            let srElement = document.createElement('span');
+            srElement.classList.add('is-sr-only');
+            
+            const texts = JSON.parse(comments.dataset.srText || '["", ""]');
+            if (comments.dataset.count === 1) {
+                containerElement.title = texts[0];
+                srElement.append(document.createTextNode(texts[0]));
+            } else {
+                containerElement.title = texts[1];
+                srElement.append(document.createTextNode(texts[1]));
+            }
+
+            iconElement.append(faElement);
+
+            countElement.append(countNode);
+            countElement.append(srElement);
+
+            containerElement.append(iconElement);
+            containerElement.append(countElement);
+            controlsElement.append(containerElement);
+        }
+
+
+        this.initLikeButtons(controlsElement);
+        containerElement.append(controlsElement);
+
+        const currentInfo = this.photo.querySelector('.photo-info-fullscreen');
+        if (currentInfo)
+            currentInfo.replaceWith(containerElement);
+        else
+            this.photo.querySelector('.photo-navigation').append(containerElement);
+    }
+
+    initLikeButtons(element=undefined) {
+        if (!element)
+            element = this.element;
+
+        element.querySelectorAll('.like-form').forEach(element => {
+            element.reset();
+            element.addEventListener('submit', this.handleLike.bind(this));
+        });    
     }
 
     handleCopy(element, event) {
@@ -220,9 +297,12 @@ class PhotoInfo {
     }
 
     async handleLike(event) {
+        // Don't submit form
         event.preventDefault();
+
         const form = event.target;
 
+        // Prepare request (meta) data
         const data = {
             'action': form.action.value,
         };
@@ -233,11 +313,12 @@ class PhotoInfo {
             'body': JSON.stringify(data),
         };
 
+        // Perform request
         // Use getAttribute, because field called action exists.
         const response = await fetch(form.getAttribute('action'), init);
-
         const result = await response.json();
 
+        // Reflect button change
         const button = form.querySelector('button[type=submit]');
         const buttonTitles = JSON.parse(button.dataset.title || '["", ""]');
         const buttonSrTexts = JSON.parse(button.dataset.srText || '["", ""]');
@@ -254,11 +335,12 @@ class PhotoInfo {
             button.querySelector('.is-sr-only').textContent = buttonSrTexts[1];
         }
 
-        const likesCount = form.querySelector('.likes-count');
+        // Reflect counter change
+        const likesCount = form.querySelector('.count');
         const lcTitles = JSON.parse(likesCount.dataset.title || '["", ""]');
         const lcSrTexts = JSON.parse(likesCount.dataset.srText || '["", ""]');
 
-        likesCount.querySelector('.likes-count-number').textContent = result.likes;
+        likesCount.querySelector('.count-number').textContent = result.likes;
         if (result.likes > 0) {
             likesCount.hidden = false;
             if (result.likes === 1) {
@@ -393,11 +475,17 @@ class SinglePhoto {
             case "KeyC":
                 this.element.querySelector('#field-reactie').focus();
                 break;
-            case "Esc": // IE/Edge specific value
-            case "Escape":
-                event.preventDefault(); // Esc stops reload
-                window.location.assign(this.element.querySelector('.photo-parent').href);
+            case "KeyF":
+                if (document.fullscreenElement)
+                    document.exitFullscreen();
+                else
+                    this.photo.requestFullscreen();
                 break;
+            // case "Esc": // IE/Edge specific value
+            // case "Escape":
+            //     event.preventDefault(); // Esc stops reload
+            //     window.location.assign(this.element.querySelector('.photo-parent').href);
+            //     break;
         }
     }
 }

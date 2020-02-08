@@ -37,13 +37,13 @@
 								<span class="is-sr-only">{{ __('Like comment') }}</span>
 							{% endif %}
 						</button>
-	                    <span class="likes-count"
+	                    <span class="count"
 		                    {% if not iter.likes %}hidden{% endif %}
 	                        title="{{ iter.likes > 0 ? __N('%d person likes this comment', '%s people like this comment', iter.likes)|e('html_attr') : '' }}"
 	                        data-title="{{ [__('person likes this comment'), __('people like this comment') ]|json_encode|e('html_attr') }}"
 	                        data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
 	                    >
-	                        <span class="likes-count-number">{{ iter.likes }}</span>
+	                        <span class="count-number">{{ iter.likes }}</span>
 	                        <span class="is-sr-only">{{ __N('like', 'likes', iter.likes) }}</span>
 	                    </span>
 					</form>
