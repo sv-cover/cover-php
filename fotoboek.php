@@ -83,20 +83,24 @@
 
 			if (get_auth()->logged_in() && isset($action))
 			{
-				switch ($action) {
-					case 'like':
-						$iter->like(get_identity()->member());
-						break;
-					case 'unlike':
-						$iter->unlike(get_identity()->member());
-						break;
+				try {
+					switch ($action) {
+						case 'like':
+							$iter->like(get_identity()->member());
+							break;
+						case 'unlike':
+							$iter->unlike(get_identity()->member());
+							break;
+					}
+				} catch (Exception $e) {
+					// Don't break duplicate requests
 				}
 			}
 
 			if ($response_json)
 				return $this->view->render_json([
 					'liked' => get_auth()->logged_in() && $iter->is_liked_by(get_identity()->member()),
-					'likes' => $iter->likes
+					'likes' => $iter->get_likes(),
 				]);
 
 			return $this->view->redirect($this->link_to_read($iter));
@@ -132,13 +136,17 @@
 
 			if (get_auth()->logged_in() && isset($action))
 			{
-				switch ($action) {
-					case 'like':
-						$this->model->like($this->photo, get_identity()->get('id'));
-						break;
-					case 'unlike':
-						$this->model->unlike($this->photo, get_identity()->get('id'));
-						break;
+				try {
+					switch ($action) {
+						case 'like':
+							$this->model->like($this->photo, get_identity()->get('id'));
+							break;
+						case 'unlike':
+							$this->model->unlike($this->photo, get_identity()->get('id'));
+							break;
+					}
+				} catch (Exception $e) {
+					// Don't break duplicate requests
 				}
 			}
 

@@ -18,13 +18,17 @@
 			<div class="level-left">
 				{% if global.auth.logged_in %}
 					{% set liked = iter.is_liked_by(global.identity.member) %}
-					<form class="level-item"
+					<form class="level-item like-form"
 							method="post"
 							action="{{ controller.link_to_like(iter) }}"
 							data-partial-selector="#comment{{ iter.id }}"
 							data-placement-selector="#comment{{ iter.id }}">
 						<input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
-						<button type="submit" class="button is-text icon" title="{{ liked ? __('Unlike comment') : __('Like comment') }}">
+						<button type="submit" class="button is-text icon" 
+							title="{{ liked ? __('You like this comment. Unlike comment') : __('Like comment') }}"
+                            data-title="{{ [__('You like this comment. Unlike comment'), __('Like comment')]|json_encode|e('html_attr') }}"
+                            data-sr-text="{{ [__('You like this comment. Click to unlike.'), __('Like comment') ]|json_encode|e('html_attr') }}"
+                        >
 							{% if liked %}
 								<i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
 								<span class="is-sr-only">{{ __('You like this comment. Click to unlike.') }}</span>
@@ -33,12 +37,15 @@
 								<span class="is-sr-only">{{ __('Like comment') }}</span>
 							{% endif %}
 						</button>
-						{% if iter.likes %}
-							<span title="{{ iter.likes > 0 ? __N('%d person likes this', '%s people like this', iter.likes)|e('html_attr') : '' }}">
-								{{ iter.likes }}
-								<span class="is-sr-only">{{ __N('like', 'likes', iter.likes) }}</span>
-							</span>
-						{% endif %}
+	                    <span class="likes-count"
+		                    {% if not iter.likes %}hidden{% endif %}
+	                        title="{{ iter.likes > 0 ? __N('%d person likes this comment', '%s people like this comment', iter.likes)|e('html_attr') : '' }}"
+	                        data-title="{{ [__('person likes this comment'), __('people like this comment') ]|json_encode|e('html_attr') }}"
+	                        data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
+	                    >
+	                        <span class="likes-count-number">{{ iter.likes }}</span>
+	                        <span class="is-sr-only">{{ __N('like', 'likes', iter.likes) }}</span>
+	                    </span>
 					</form>
 				{% endif %}
 				{% if user_can_update iter %}

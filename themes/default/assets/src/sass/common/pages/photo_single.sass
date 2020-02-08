@@ -179,8 +179,9 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                     color: $grey
                     padding: 0
 
-                    &:not(:last-child)
-                        margin-right: .7ch
+                .likes-count:not([hidden])
+                    line-height: 1
+                    margin-left: .7ch
 
                 &:hover
                     color: $link-hover

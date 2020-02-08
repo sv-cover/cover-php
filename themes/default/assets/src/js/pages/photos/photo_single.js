@@ -201,6 +201,7 @@ class PhotoInfo {
     constructor(element, photo) {
         this.element = element;
         this.initCopyLink();
+        this.initLikeButtons();
     }
 
     initCopyLink() {
@@ -216,6 +217,60 @@ class PhotoInfo {
             alert(element.dataset.successMessage);
         else
             alert('Oops, unable to copy!');
+    }
+
+    async handleLike(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const data = {
+            'action': form.action.value,
+        };
+
+        const init = {
+            'method': 'POST',
+            'headers': { 'Content-Type': 'application/json' },
+            'body': JSON.stringify(data),
+        };
+
+        // Use getAttribute, because field called action exists.
+        const response = await fetch(form.getAttribute('action'), init);
+
+        const result = await response.json();
+
+        const button = form.querySelector('button[type=submit]');
+        const buttonTitles = JSON.parse(button.dataset.title || '["", ""]');
+        const buttonSrTexts = JSON.parse(button.dataset.srText || '["", ""]');
+
+        if (result.liked) {
+            form.action.value = 'unlike';
+            form.querySelector('.fa-heart').classList.add('has-text-cover');
+            button.title = buttonTitles[0];
+            button.querySelector('.is-sr-only').textContent = buttonSrTexts[0];
+        } else {
+            form.action.value = 'like';
+            form.querySelector('.fa-heart').classList.remove('has-text-cover');
+            button.title = buttonTitles[1];
+            button.querySelector('.is-sr-only').textContent = buttonSrTexts[1];
+        }
+
+        const likesCount = form.querySelector('.likes-count');
+        const lcTitles = JSON.parse(likesCount.dataset.title || '["", ""]');
+        const lcSrTexts = JSON.parse(likesCount.dataset.srText || '["", ""]');
+
+        likesCount.querySelector('.likes-count-number').textContent = result.likes;
+        if (result.likes > 0) {
+            likesCount.hidden = false;
+            if (result.likes === 1) {
+                likesCount.title = `${result.likes} ${lcTitles[0]}`;
+                likesCount.querySelector('.is-sr-only').textContent = lcSrTexts[0];
+            } else {
+                likesCount.title = `${result.likes} ${lcTitles[1]}`;
+                likesCount.querySelector('.is-sr-only').textContent = lcSrTexts[1];
+            }
+        } else {
+            likesCount.hidden = true;
+        }
     }
 
 }
