@@ -103,7 +103,6 @@ class PhotoCarousel {
         // Backup old stuff
         const oldCurrent = this.current;
         const oldCurrentPicture = this.currentPicture;
-
         
         // Load next picture in direction
         this.currentPicture = await this[direction + 'Picture'];
@@ -111,6 +110,7 @@ class PhotoCarousel {
         if (!this.currentPicture) {
             if (oldCurrent[direction])
                 console.log('Failed at loading picture' + oldCurrent[direction]);
+            this.currentPicture = oldCurrentPicture;
             return;
         }
 
