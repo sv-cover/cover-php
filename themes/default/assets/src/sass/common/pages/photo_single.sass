@@ -1,11 +1,13 @@
 $photo-padding: $block-spacing
 $photo-info-width: 25em
 $photo-transition-timing: 600ms ease-out
-$control-transition-timing: 150ms ease-in-out
-$control-icon-offset: -.25ch
-$control-shadow-sub-1: 0 0 .5em rgba($scheme-invert, 0.5)
-$control-shadow-sub-2: 0 0 2px rgba($scheme-invert, 0.75)
-$control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
+$photo-icon-color: $grey !default
+$photo-control-border-color: $grey-lightest !default
+$photo-control-transition-timing: 150ms ease-in-out
+$photo-control-icon-offset: -.25ch
+$photo-control-shadow-sub-1: 0 0 .5em rgba($black, 0.5)
+$photo-control-shadow-sub-2: 0 0 2px rgba($black, 0.75)
+$photo-control-shadow: $photo-control-shadow-sub-1, $photo-control-shadow-sub-2
 
 
 
@@ -13,11 +15,11 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
 .photo-info,
 .photo-info-fullscreen
     .controls .level-item
-        color: $grey
+        color: $photo-icon-color
 
         .button
             font-size: inherit
-            color: $grey
+            color: $photo-icon-color
             padding: 0
 
             &:focus
@@ -84,7 +86,7 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
 
         nav
             .icon
-                filter: drop-shadow($control-shadow-sub-1) drop-shadow($control-shadow-sub-2)
+                filter: drop-shadow($photo-control-shadow-sub-1) drop-shadow($photo-control-shadow-sub-2)
 
             .photo-info-fullscreen
                 display: none
@@ -99,7 +101,7 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                 
                 .name,
                 .controls .level-item
-                    filter: drop-shadow($control-shadow-sub-1) drop-shadow($control-shadow-sub-2)
+                    filter: drop-shadow($photo-control-shadow-sub-1) drop-shadow($photo-control-shadow-sub-2)
 
                 .name
                     flex-grow: 1
@@ -132,7 +134,7 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
 
                 .icon
                     position: relative
-                    transition: left $control-transition-timing, right $control-transition-timing
+                    transition: left $photo-control-transition-timing, right $photo-control-transition-timing
 
                 &.photo-next,
                 &.photo-previous
@@ -160,7 +162,7 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                         right: 0
 
                     &:hover .icon
-                        right: $control-icon-offset
+                        right: $photo-control-icon-offset
 
                 &.photo-parent,
                 &.photo-previous
@@ -170,7 +172,7 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                         left: 0
 
                     &:hover .icon
-                        left: $control-icon-offset
+                        left: $photo-control-icon-offset
                 
                 &.photo-enter-fullscreen,
                 &.photo-exit-fullscreen,
@@ -201,7 +203,7 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
 
                 &.photo-parent
                     left: 0
-                    filter: drop-shadow($control-shadow-sub-1) drop-shadow($control-shadow-sub-2)
+                    filter: drop-shadow($photo-control-shadow-sub-1) drop-shadow($photo-control-shadow-sub-2)
 
                     .icon
                         filter: none
@@ -239,6 +241,9 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
         .name
             font-weight: $title-weight
 
+        .faces .icon
+            color: $photo-icon-color
+
     .photo-interaction
         margin-top: $photo-padding
         
@@ -252,8 +257,8 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
        
         // Photo controls
         &>.controls
-            border-top: 1px solid $border-light
-            border-bottom: 1px solid $border-light
+            border-top: 1px solid $photo-control-border-color
+            border-bottom: 1px solid $photo-control-border-color
             padding: $photo-padding/2 0
 
             .level-item

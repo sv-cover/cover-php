@@ -85,7 +85,7 @@
 
         {% if photo.faces|user_can_read|length > 0 %}
             <div class="faces">
-                <span class="icon has-text-grey">
+                <span class="icon">
                     <i class="fas fa-user-tag fa-fw" aria-hidden="true"></i>
                     <span class="is-sr-only">{{ __('A photo with') }}</span>
                 </span>
@@ -110,7 +110,7 @@
                         </a>
                         <hr class="dropdown-divider">
                     {% endif %}
-                    {% if global.identity.member.id in photo.faces|select('lid_id') %}
+                    {% if global.auth.logged_in and global.identity.member.id in photo.faces|select('lid_id') %}
                         <a class="dropdown-item" href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-popup="modal">
                             {{ __('Visibility') }}
                         </a>
