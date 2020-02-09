@@ -19,9 +19,11 @@ class PhotoCarousel {
         this.currentPicture.classList.add('current');
         this.currentPicture.dataset.link = link;
 
+        // Initialise different navigation modes
         this.navigation = photo.querySelector('.photo-navigation');
         this.initNavigation();
         this.initGestures();
+        window.onpopstate = this.handleHistory.bind(this);
 
         // Detect transitions
         const styles = window.getComputedStyle(this.currentPicture);
@@ -108,7 +110,7 @@ class PhotoCarousel {
         return newPicture;
     }
 
-    async navigate(direction) {
+    async navigate(direction, updateHistory=true) {
         // Backup old stuff
         const oldCurrent = this.current;
         const oldCurrentPicture = this.currentPicture;
@@ -136,7 +138,8 @@ class PhotoCarousel {
         }
 
         // Update history & DOM
-        history.pushState({}, document.title, oldCurrent[direction]);
+        if (updateHistory)
+            history.pushState({}, document.title, oldCurrent[direction]);
         this.renderNavigation(direction, oldCurrentPicture, this.currentPicture);
     }
 
@@ -151,7 +154,7 @@ class PhotoCarousel {
 
             if (previousPicture)
                 previousPicture.remove();
-        } else {
+        } else if (direction === 'previous') {
             const nextPicture = this.carousel.querySelector('.image.next');
             newCurrentPicture.classList.remove('previous');
             oldCurrentPicture.classList.replace('current', 'next');
@@ -171,7 +174,7 @@ class PhotoCarousel {
         });
 
         // Schedule changes on for transition end
-        if (this.hasTransition) {
+        if (direction && this.hasTransition) {
             newCurrentPicture.addEventListener('transitionend', this.renderNavigationEnd.bind(this), {once: true});
         } else {
             this.renderNavigationEnd();
@@ -214,6 +217,36 @@ class PhotoCarousel {
         // Update parent link
         const parentLink = this.navigation.querySelector('.photo-parent');
         parentLink.replaceWith(this.current.photo.querySelector('.photo-parent').cloneNode(true));
+    }
+
+    async handleHistory(event) {
+        // If direction is known, navigate properly WITHOUT changing history
+        if (document.location == this.current.next) {
+            this.navigate('next', false);
+        } else if (document.location == this.current.previous) {
+            this.navigate('previous', false);
+        } else {
+            // Otherwise, navigate by intimidation
+            const oldCurrent = this.current;
+            const oldCurrentPicture = this.currentPicture;
+
+            // Empty carousel
+            while (this.carousel.firstChild)
+                this.carousel.removeChild(this.carousel.firstChild);
+
+
+            // Load current picture into DOM directly
+            this.current = this.cache[document.location];
+            const newCurrentPicture = await this.stagePhoto(document.location, 'current');
+            this.currentPicture = newCurrentPicture;
+
+            // Stage next and previous
+            this.nextPicture = this.stagePhoto(this.current.next, 'next');
+            this.previousPicture = this.stagePhoto(this.current.previous, 'previous');
+
+            // Perform DOM modifications
+            this.renderNavigation(false, oldCurrentPicture, this.currentPicture);
+        }
     }
 
     handlePan(event) {
