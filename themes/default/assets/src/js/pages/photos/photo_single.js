@@ -214,24 +214,32 @@ class PhotoInfo {
     }
 
     initFullscreenInfo() {
+        // Create container
         let containerElement = document.createElement('div');
         containerElement.classList.add('photo-info-fullscreen');
 
+        // Create controls element
         let controlsElement = document.createElement('div');
         controlsElement.classList.add('controls', 'level');
 
+        // Fetch title and add to container
         const title = this.element.querySelector('h1.name');
         if (title)
             containerElement.append(title.cloneNode(true));
 
+        // Fetch like button and add to controls
         const likeButton = this.element.querySelector('.photo-like-form');
         if (likeButton)
             controlsElement.append(likeButton.cloneNode(true));
 
+        // Init like button functionality
+        this.initLikeButtons(controlsElement);
+
+        // Create comments icon and append to controls
         const comments = this.element.querySelector('.photo-interaction .comments');
         if (comments) {
-            let containerElement = document.createElement('div');
-            containerElement.classList.add('comments', 'level-item');
+            let commentsElement = document.createElement('div');
+            commentsElement.classList.add('comments', 'level-item');
 
             let iconElement = document.createElement('span');
             iconElement.classList.add('icon');
@@ -249,10 +257,10 @@ class PhotoInfo {
             
             const texts = JSON.parse(comments.dataset.srText || '["", ""]');
             if (comments.dataset.count === 1) {
-                containerElement.title = texts[0];
+                commentsElement.title = texts[0];
                 srElement.append(document.createTextNode(texts[0]));
             } else {
-                containerElement.title = texts[1];
+                commentsElement.title = texts[1];
                 srElement.append(document.createTextNode(texts[1]));
             }
 
@@ -261,15 +269,13 @@ class PhotoInfo {
             countElement.append(countNode);
             countElement.append(srElement);
 
-            containerElement.append(iconElement);
-            containerElement.append(countElement);
-            controlsElement.append(containerElement);
+            commentsElement.append(iconElement);
+            commentsElement.append(countElement);
+            controlsElement.append(commentsElement);
         }
-
-
-        this.initLikeButtons(controlsElement);
         containerElement.append(controlsElement);
 
+        // Replace if already exists, otherwise append to navigation
         const currentInfo = this.photo.querySelector('.photo-info-fullscreen');
         if (currentInfo)
             currentInfo.replaceWith(containerElement);
@@ -289,11 +295,11 @@ class PhotoInfo {
 
     handleCopy(element, event) {
         event.preventDefault();
-        let result = copyTextToClipboard(element.href);
-        if (result)
-            alert(element.dataset.successMessage);
-        else
-            alert('Oops, unable to copy!');
+        if (window.confirm(element.dataset.copyQuestion)) { 
+            let result = copyTextToClipboard(element.href);
+            if (!result)
+                alert('Oops, unable to copy!');
+        }
     }
 
     async handleLike(event) {
