@@ -62,7 +62,6 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                 height: 100%
                 top: 0
                 left: 0
-                transition: left $photo-transition-timing
                 z-index: 1
 
                 &.previous
@@ -78,6 +77,9 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                     height: 100%
                     object-fit: contain
                     object-position: center
+
+            &.is-animated figure.image
+                transition: left $photo-transition-timing
             
 
         nav
@@ -183,10 +185,12 @@ $control-shadow: $control-shadow-sub-1, $control-shadow-sub-2
                         color: $white
                         background: none
                         text-decoration: underline
+                        box-shadow: none
 
                     &:focus, &:active
                         outline: 1px dotted $white
                         outline-offset: -$photo-padding/1.5
+                        
 
                 &.photo-enter-fullscreen,
                 &.photo-exit-fullscreen

@@ -1,4 +1,5 @@
 import {Bulma} from 'cover-style-system/src/js';
+import Hammer from 'hammerjs';
 import {copyTextToClipboard} from '../../utils';
 
 
@@ -20,6 +21,7 @@ class PhotoCarousel {
 
         this.navigation = photo.querySelector('.photo-navigation');
         this.initNavigation();
+        this.initGestures();
 
         // Detect transitions
         const styles = window.getComputedStyle(this.currentPicture);
@@ -28,6 +30,13 @@ class PhotoCarousel {
         // Start preloading photos
         this.nextPicture = this.stagePhoto(this.current.next, 'next');
         this.previousPicture = this.stagePhoto(this.current.previous, 'previous');
+    }
+
+    initGestures() {
+        let hammer = new Hammer(this.photo);
+        hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+        hammer.on('swipe', this.handleSwipe.bind(this));
+        hammer.on('pan', this.handlePan.bind(this));
     }
 
     initNavigation() {
@@ -151,6 +160,16 @@ class PhotoCarousel {
                 nextPicture.remove();   
         }
 
+        // Reset left positions in case it has changed by handlePan
+        this.carousel.querySelectorAll('.image').forEach( (el) => {
+            let base = '0%';
+            if (el.classList.contains('previous'))
+                base = '-100%';
+            else if (el.classList.contains('next'))
+                base = '100%';
+            el.style.left = base;
+        });
+
         // Schedule changes on for transition end
         if (this.hasTransition) {
             newCurrentPicture.addEventListener('transitionend', this.renderNavigationEnd.bind(this), {once: true});
@@ -195,6 +214,71 @@ class PhotoCarousel {
         // Update parent link
         const parentLink = this.navigation.querySelector('.photo-parent');
         parentLink.replaceWith(this.current.photo.querySelector('.photo-parent').cloneNode(true));
+    }
+
+    handlePan(event) {
+        if (event.eventType & (Hammer.INPUT_START | Hammer.INPUT_MOVE)) {
+            // If start/move, move carousel items by deltaX.
+            // Disable animation to make it smoother
+            this.carousel.classList.remove('is-animated');
+            this.carousel.querySelectorAll('.image').forEach( (el) => {
+                let base = '0%';
+                if (el.classList.contains('previous'))
+                    base = '-100%';
+                else if (el.classList.contains('next'))
+                    base = '100%';
+                el.style.left = `calc(${base} + ${event.deltaX}px)`;
+            });
+        } else {
+            // If cancel/end, commit.
+
+            // Reenable animations
+            this.carousel.classList.add('is-animated');
+
+            // Wait for the DOM to be rerendered, create observer
+            const observer = new MutationObserver((mutationsList, observer) => {
+                for(let mutation of mutationsList) {
+                    if (mutation.type === 'attributes') {
+                        // Should navigate if move is bigger than 50% and not canceled.
+                        let shouldNavigate = Math.abs(event.deltaX) > this.carousel.offsetWidth / 2 && event.eventType != Hammer.INPUT_CANCEL;
+
+                        // Navigate if should navigate and a next/previous photo is available
+                        if (shouldNavigate && event.deltaX < 0 && this.current.next)
+                            this.navigate('next');
+                        else if (shouldNavigate && event.deltaX > 0 && this.current.previous)
+                            this.navigate('previous');
+                        else
+                            // Reset view if no navigation
+                            this.carousel.querySelectorAll('.image').forEach( (el) => {
+                                let base = '0%';
+                                if (el.classList.contains('previous'))
+                                    base = '-100%';
+                                else if (el.classList.contains('next'))
+                                    base = '100%';
+                                el.style.left = base;
+                            });
+                    }
+                }
+
+                // Observation done.
+                observer.disconnect();
+            });
+
+            // Enable observer
+            observer.observe(this.carousel, { attributes: true });
+        }
+    }
+
+    handleSwipe(event) {
+        // Swipe swipe directions are in the direction of the movement, so the other way around in terms of navigation
+        if (event.direction == Hammer.DIRECTION_LEFT)
+            this.navigate('next');
+        else if (event.direction == Hammer.DIRECTION_RIGHT)
+            this.navigate('previous');
+        else if (event.direction & Hammer.DIRECTION_VERTICAL) {
+            if (document.fullscreenElement)
+                document.exitFullscreen();
+        }
     }
 }
 
