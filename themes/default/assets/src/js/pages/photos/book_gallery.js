@@ -8,7 +8,7 @@ const GALLERY_BOOK_WIDTH = .1;
 const NOT_ANIMATABLE_EXCEPTION = 'Needs at least 2 images for animation.';
 
 
-class PhotoGalleryThumbnail {
+class BookGalleryThumbnail {
     constructor(element) {
         this.element = element;
         this.container = this.element.querySelector('.thumbnail-images');
@@ -81,7 +81,7 @@ class PhotoGalleryThumbnail {
     }
 }
 
-class PhotoGallery {
+class BookGallery {
     /**
      * Get the root class this plugin is responsible for.
      * This will tell the core to match this plugin to an element with a .modal class.
@@ -98,7 +98,7 @@ class PhotoGallery {
      * @return {undefined}
      */
     static parse(element) {
-        new PhotoGallery({
+        new BookGallery({
             element: element
         });
     }
@@ -109,7 +109,7 @@ class PhotoGallery {
 
         this.element.querySelectorAll('.book a').forEach(element => {
             try {
-                this.thumbnails.push(new PhotoGalleryThumbnail(element));
+                this.thumbnails.push(new BookGalleryThumbnail(element));
             } catch (e) {
                 if (e != NOT_ANIMATABLE_EXCEPTION)
                     throw e;
@@ -150,6 +150,6 @@ class PhotoGallery {
 }
 
 
-Bulma.registerPlugin('photo_gallery', PhotoGallery);
+Bulma.registerPlugin('book_gallery', BookGallery);
 
-export default PhotoGallery;
+export default BookGallery;
