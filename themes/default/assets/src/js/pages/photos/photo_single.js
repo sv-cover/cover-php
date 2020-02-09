@@ -57,14 +57,12 @@ class PhotoCarousel {
         if (nextButton)
             nextButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                console.log('haa');
                 this.navigate('next');
             });
 
         if (previousButton)
             previousButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                console.log('hooo');
                 this.navigate('previous');
             });
     }
