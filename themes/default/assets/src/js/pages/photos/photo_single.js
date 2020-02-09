@@ -20,6 +20,7 @@ class PhotoCarousel {
         this.currentPicture.dataset.link = link;
 
         // Initialise different navigation modes
+        this.isNavigating = false;
         this.navigation = photo.querySelector('.photo-navigation');
         this.initNavigation();
         this.initGestures();
@@ -35,10 +36,17 @@ class PhotoCarousel {
     }
 
     initGestures() {
-        let hammer = new Hammer(this.photo);
-        hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-        hammer.on('swipe', this.handleSwipe.bind(this));
-        hammer.on('pan', this.handlePan.bind(this));
+        // Create manager and initialise gestures
+        let mc = new Hammer.Manager(this.photo);
+        let pan = new Hammer.Pan();
+        let swipe = new Hammer.Swipe({ direction: Hammer.DIRECTION_ALL });
+
+        mc.add([pan, swipe]);
+        pan.recognizeWith(swipe);
+
+        // Bind events
+        mc.on('swipe', this.handleSwipe.bind(this));
+        mc.on('pan', this.handlePan.bind(this));
     }
 
     initNavigation() {
@@ -49,12 +57,14 @@ class PhotoCarousel {
         if (nextButton)
             nextButton.addEventListener('click', (event) => {
                 event.preventDefault();
+                console.log('haa');
                 this.navigate('next');
             });
 
         if (previousButton)
             previousButton.addEventListener('click', (event) => {
                 event.preventDefault();
+                console.log('hooo');
                 this.navigate('previous');
             });
     }
@@ -111,6 +121,12 @@ class PhotoCarousel {
     }
 
     async navigate(direction, updateHistory=true) {
+        // Only navigate if not already navigating
+        if (this.isNavigating)
+            return
+
+        this.isNavigating = true;
+
         // Backup old stuff
         const oldCurrent = this.current;
         const oldCurrentPicture = this.currentPicture;
@@ -141,6 +157,7 @@ class PhotoCarousel {
         if (updateHistory)
             history.pushState({}, document.title, oldCurrent[direction]);
         this.renderNavigation(direction, oldCurrentPicture, this.currentPicture);
+        this.isNavigating = false;
     }
 
     renderNavigation(direction, oldCurrentPicture, newCurrentPicture) {
@@ -265,15 +282,14 @@ class PhotoCarousel {
         } else {
             // If cancel/end, commit.
 
-            // Reenable animations
-            this.carousel.classList.add('is-animated');
-
             // Wait for the DOM to be rerendered, create observer
             const observer = new MutationObserver((mutationsList, observer) => {
                 for(let mutation of mutationsList) {
                     if (mutation.type === 'attributes') {
                         // Should navigate if move is bigger than 50% and not canceled.
-                        let shouldNavigate = Math.abs(event.deltaX) > this.carousel.offsetWidth / 2 && event.eventType != Hammer.INPUT_CANCEL;
+                        let shouldNavigate = Math.abs(event.deltaX) > this.carousel.offsetWidth / 2 
+
+                        shouldNavigate = shouldNavigate && event.eventType != Hammer.INPUT_CANCEL;
 
                         // Navigate if should navigate and a next/previous photo is available
                         if (shouldNavigate && event.deltaX < 0 && this.current.next)
@@ -299,6 +315,9 @@ class PhotoCarousel {
 
             // Enable observer
             observer.observe(this.carousel, { attributes: true });
+
+            // Reenable animations
+            this.carousel.classList.add('is-animated');
         }
     }
 
@@ -314,6 +333,7 @@ class PhotoCarousel {
         }
     }
 }
+
 
 class PhotoInfo {
     constructor(element, photo) {
@@ -480,17 +500,8 @@ class PhotoInfo {
 
 }
 
+
 class SinglePhoto {
-
-    /**
-     * Get the root class this plugin is responsible for.
-     * This will tell the core to match this plugin to an element with a .modal class.
-     * @returns {string} The class this plugin is responsible for.
-     */
-    static getRootClass() {
-        return 'photo-single';
-    }
-
     static parseDocument(context) {
         const elements = context.querySelectorAll('.photo-single');
 
