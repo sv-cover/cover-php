@@ -224,7 +224,7 @@ class PhotoCarousel {
 
     renderNavigationEnd() {
         // Update info
-        const newInfo = this.current.info;
+        const newInfo = this.current.info.cloneNode(true);
         this.info.replaceWith(newInfo);
         this.info = newInfo;
         new PhotoInfo(newInfo, this.photo);
