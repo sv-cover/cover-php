@@ -11,7 +11,7 @@
 		data-permissions="admin"
 	{% endif %}
 >
-	<article>
+	<article class="controls">
 		<div class="level">
 			<div class="level-left">
 				{% if book.id is not same as(0) %}
@@ -23,6 +23,7 @@
 			</div>
 			<div class="level-right">
 				<div class="field is-grouped">
+					{% if controller.policy.user_can_download_book(book) or controller.policy.user_can_mark_as_read(book) %}
 					<div class="control">
 						{# Apparently, .buttons doesn't really like the form, so .field it is… #}
 						<div class="field has-addons">
@@ -48,6 +49,7 @@
 							{% endif %}
 						</div>
 					</div>
+					{% endif %}
 
 					{% if user_can_update book or user_can_delete book or user_can_create book.new_book %}
 						<div class="dropdown is-hoverable is-right">
@@ -183,11 +185,14 @@
 		{{ include('_photos.twig', {photos: book.photos}) }}
 	{% endif %}
 
+</div>
+</section>
+
+<section class="section">
 	{# show the top n comments on the front page (same one as with the info) #}
 	{% if book.id is same as(0) and global.auth.logged_in() %}
 		{{ include('_recent_comments.twig', {comments:view.recent_comments(10)}) }}
 	{% endif %}
-</div>
 </section>
 
 {% endblock %}

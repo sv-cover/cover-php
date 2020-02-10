@@ -111,7 +111,7 @@
                         <hr class="dropdown-divider">
                     {% endif %}
                     {% if global.auth.logged_in and global.identity.member.id in photo.faces|select('lid_id') %}
-                        <a class="dropdown-item" href="fotoboek.php?photo={{ photo.id }}&amp;module=privacy" data-popup="modal">
+                        <a class="dropdown-item" href="fotoboek.php?photo={{ photo.id }}&amp;book={{ book.id }}&amp;module=privacy" data-popup="modal">
                             {{ __('Visibility') }}
                         </a>
                         <hr class="dropdown-divider">
@@ -132,7 +132,7 @@
         {% if global.auth.logged_in %}
             <div class="controls level is-mobile">
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
-                <form class="level-item like-form photo-like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;module=likes">
+                <form class="level-item like-form photo-like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;book={{ book.id }}&amp;module=likes">
                     <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
                     <button type="submit"  class="button is-text icon"
                             title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"

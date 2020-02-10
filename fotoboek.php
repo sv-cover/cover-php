@@ -118,6 +118,16 @@
 			$this->view = new View($this);
 		}
 
+		public function link_to_photo()
+		{
+			$arguments = [
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			];
+
+			return parent::link($arguments);
+		}
+
 		public function run()
 		{
 			$action = null;
@@ -156,7 +166,7 @@
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
 
-			return $this->view->redirect('fotoboek.php?photo=' . $this->photo->get_id());
+			return $this->view->redirect($this->link_to_photo());
 		}
 	}
 
@@ -227,6 +237,16 @@
 			$this->view = View::byName('fotoboek', $this);
 		}
 
+		public function link_to_photo()
+		{
+			$arguments = [
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			];
+
+			return parent::link($arguments);
+		}
+
 		protected function run_impl()
 		{
 			if (!get_auth()->logged_in())
@@ -241,6 +261,8 @@
 					$this->model->mark_hidden($this->photo, $member);
 				else
 					$this->model->mark_visible($this->photo, $member);
+	
+				return $this->view->redirect($this->link_to_photo());
 			}
 			
 			return $this->view->render_privacy($this->photo, $this->model->is_visible($this->photo, $member) ? 'visible' : 'hidden');

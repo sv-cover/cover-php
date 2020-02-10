@@ -294,8 +294,8 @@
 - [ ] [issue] Bulma dl styling is ugly
 - [ ] [issue] Multiline select is broken
 - [×] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
-- [ ] Lines of media objects are not always wished for, especially in nested media objects.
-    - [ ] comments on photobook main page
+- [×] Lines of media objects are not always wished for, especially in nested media objects.
+    - [×] comments on photobook main page
 - [ ] A bootstrap style "link" button may be desired
     - [ ] like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
     - [ ] like button on photo

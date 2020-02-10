@@ -3,9 +3,14 @@
 {% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
 {% set my_likes = global.auth.logged_in() ? global.models.PhotobookLike.get_for_lid(global.identity.member) : [] %}
 
+{% set visibility = [] %}
+{% if book is instance_of('DataIterFacesPhotobook') %}
+    {% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
+{% endif %}
+
 {% macro classnames(photo, context) %}
     {%- if context.my_likes[photo.id] is defined %}liked{% endif -%}
-    {# {%- if visibility[photo.id] is defined and visibility[photo.id] == false %} hidden{% endif -%} #}
+    {%- if context.visibility[photo.id] is defined and context.visibility[photo.id] == false %} privacy-hidden{% endif -%}
 {% endmacro %}
 
 {% macro gallery(photos, context) %}
@@ -17,6 +22,7 @@
 
         {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
         {% set basis = ((size[0] / 100)|round) * 50 %}
+        {% set visibility_hidden = context.visibility[photo.id] is defined and context.visibility[photo.id] == false %}
         <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ album.classnames(photo, context) }}" data-id="{{ photo.id }}" id="photo-{{ photo.id }}">
             <a 
                 href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
@@ -38,7 +44,7 @@
                 {% endif %}
 
                 {% set num_likes = context.likes[photo.id] is defined ? context.likes[photo.id] : 0 %}
-                {% if photo.num_reacties > 0 or num_likes > 0 %}
+                {% if photo.num_reacties > 0 or num_likes > 0  or visibility_hidden %}
                     <ul class="controls">
                         {% if photo.num_reacties > 0 %}
                             <li class="comments" title="{{ __N('%d comment', '%d comments', photo.num_reacties) }}">
@@ -59,6 +65,14 @@
                                 <span class="is-sr-only">
                                     {{ __N('like.', 'likes.', num_likes) }}
                                     {% if liked %}{{ __('You liked this photo.')}}{% endif %}
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% if visibility_hidden %}
+                            <li title="{{ __('Hidden from your personal album for other people') }}">
+                                <i class="fas fa-eye-slash" aria-hidden="true"></i>
+                                <span class="is-sr-only">
+                                    {{ __('Hidden from your personal album for other people')}}
                                 </span>
                             </li>
                         {% endif %}
