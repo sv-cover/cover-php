@@ -63,7 +63,19 @@
 
 <section class="section photo-info">
     <div class="photo-meta">
-        {% if photo.beschrijving %}
+        {% if user_can_update book %}
+            {% if photo.beschrijving %}
+                <h1>
+                    <a class="name" href="fotoboek.php?book={{book.id}}&amp;photo={{photo.id}}&amp;view=update_photo" title="{{ photo.beschrijving }}" data-popup="modal">
+                        {{- photo.beschrijving -}}    
+                    </a>
+                </h1>                
+            {% else %}
+                <a class="name placeholder" href="fotoboek.php?book={{book.id}}&amp;photo={{photo.id}}&amp;view=update_photo" data-popup="modal">
+                    {{- __('Add photo title') -}}
+                </a>
+            {% endif %}
+        {% elseif photo.beschrijving %}
             <h1 class="name" title="{{ photo.beschrijving }}">
                 {{- photo.beschrijving -}}
             </h1>
@@ -105,6 +117,9 @@
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
                     {% if user_can_update book %}
+                        <a class="dropdown-item" href="fotoboek.php?book={{book.id}}&amp;photo={{photo.id}}&amp;view=update_photo" data-popup="modal">
+                            {{- __('Edit title') -}}
+                        </a>
                         <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;view=delete_photos&amp;photo_id[]={{ photo.id }}" data-popup="modal">
                             {{ __('Delete photo') }}
                         </a>

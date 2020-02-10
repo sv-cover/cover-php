@@ -236,7 +236,7 @@
 - [ ] Whatever is happening on the committee form
 - [×] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
 - [×] Everything in fotoboek/\_photos.twig
-- [ ] Change photo name (photocee functionality)
+- [×] Change photo name (photocee functionality)
 - [×] Fotoboek/single.twig
 - [×] Add photo's to photobook
 - [ ] Sticker map

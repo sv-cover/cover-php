@@ -440,7 +440,7 @@
 			}
 		}
 
-		private function _view_update_photo(DataIterPhoto $photo)
+		private function _view_update_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_update($photo->get_book()))
 				throw new UnauthorizedException();
@@ -449,10 +449,10 @@
 			{
 				$photo->set('beschrijving', $_POST['beschrijving']);
 				$this->model->update($photo);
-				$this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
+				return $this->view->redirect($this->link(['book' => $book->get_id(), 'photo' => $photo->get_id()]));
 			}
 			
-			return $this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
+			return $this->view->render_update_photo($book, $photo, null, []);
 		}
 
 		private function _view_list_photos(DataIterPhotobook $book)
@@ -981,7 +981,7 @@
 				case 'update_photo':
 					if (!$photo)
 						throw new NotFoundException('Missing photo parameter');
-					return $this->_view_update_photo($photo);
+					return $this->_view_update_photo($photo, $book);
 
 				case 'update_photo_order':
 					return $this->_view_update_photo_order($book);

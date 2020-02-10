@@ -50,6 +50,11 @@
 			return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
 		}
 
+		public function render_update_photo(DataIterPhotobook $book, DataIterPhoto $photo, $success, array $errors)
+		{
+			return $this->render('photo_form.twig', compact('book', 'photo', 'errors'));
+		}
+
 		public function render_add_photos(DataIterPhotobook $book, $success, array $errors)
 		{
 			return $this->render('add_photos.twig', compact('book', 'success', 'errors'));
