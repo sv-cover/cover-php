@@ -234,11 +234,11 @@
     - [ ] tagging people in photo album
 - [ ] Whatever is happening in search results :P
 - [ ] Whatever is happening on the committee form
-- [ ] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
-- [ ] Everything in fotoboek/\_photos.twig
+- [×] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
+- [×] Everything in fotoboek/\_photos.twig
 - [ ] Change photo name (photocee functionality)
-- [ ] Fotoboek/single.twig
-- [ ] Add photo's to photobook
+- [×] Fotoboek/single.twig
+- [×] Add photo's to photobook
 - [ ] Sticker map
 - [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
 - [ ] Stuff happening in mailijnlijsten/single.twig
@@ -246,6 +246,7 @@
 - [ ] Autocomplete in lidworden/lidworden.twig
 - [ ] Profile page
 - [ ] Improve Dark Theme switch JS (is inline now, should be pulled out)
+- [ ] Photo tagging
 
 ## Bulma extensions / custom CSS
 
@@ -257,7 +258,7 @@
     - [ ] Poll in forum/_poll.twig
     - [ ] Search statistics in search/index.twig.
     - [ ] Individual parts of commissies/archive.twig
-    - [ ] Single photo fotoboek/single.twig
+    - [×] Single photo fotoboek/single.twig
     - [ ] header in mailinglists/archive_single.twig
     - [ ] header in agenda/single.twig
     - [ ] article in signup/form_form.twig
@@ -297,8 +298,8 @@
 - [×] Lines of media objects are not always wished for, especially in nested media objects.
     - [×] comments on photobook main page
 - [ ] A bootstrap style "link" button may be desired
-    - [ ] like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
-    - [ ] like button on photo
+    - [×] like button in photo book comments, has to be button because form. But the rest are true links. Looks fine now, except on hover.
+    - [×] like button on photo
     - [ ] Fix by making everything buttons
 - [ ] [issue] Level-right doesn't work if there's no level-left
 - [ ] [issue] Same for pagination 
@@ -306,9 +307,9 @@
     - [ ] agenda/index.twig
 - [ ] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
     - [ ] commissies/index.twig
-    - [ ] fotoboek/\_path.twig
-    - [ ] fotoboek/single.twig
-    - [ ] fotoboekreacties/\_comment.twig
+    - [×] fotoboek/\_path.twig
+    - [×] fotoboek/single.twig
+    - [×] fotoboekreacties/\_comment.twig
 - [ ] [issue] No margin around dropdown in .buttons
     - [ ] agenda/index.twig
 - [ ] Why does a .number make form elements rounded?
@@ -336,9 +337,9 @@
 - [×] Old committee page was better. But at least it's bulma now :)
 - [ ] Single committee page is crap now.
 - [ ] Working groups page needs major redesign.
-- [ ] Photo origin path in fotoboek/\_path.twig is ugly html.
-- [ ] Redesign photobook: rendering of books could be better. May need some backend changes. 
-- [ ] Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
+- [×] Photo origin path in fotoboek/\_path.twig is ugly html.
+- [×] Redesign photobook: rendering of books could be better. May need some backend changes. 
+- [-] Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
 - [ ] Consistent HTML structure (how to use headers, article footer etc)
 - [ ] Embedded mailing list form doesn't seem to work…
 - [ ] Fix select fields
