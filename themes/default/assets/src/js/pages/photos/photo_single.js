@@ -38,7 +38,7 @@ class PhotoCarousel {
     initGestures() {
         // Create manager and initialise gestures
         let mc = new Hammer.Manager(this.photo);
-        let pan = new Hammer.Pan();
+        let pan = new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL });
         let swipe = new Hammer.Swipe({ direction: Hammer.DIRECTION_ALL });
 
         mc.add([pan, swipe]);
@@ -134,7 +134,7 @@ class PhotoCarousel {
 
         if (!this.currentPicture) {
             if (oldCurrent[direction])
-                console.log('Failed at loading picture' + oldCurrent[direction]);
+                console.error('Failed at loading picture' + oldCurrent[direction]);
             this.currentPicture = oldCurrentPicture;
             return;
         }
@@ -355,7 +355,7 @@ class PhotoInfo {
 
         // Create controls element
         let controlsElement = document.createElement('div');
-        controlsElement.classList.add('controls', 'level');
+        controlsElement.classList.add('controls', 'level', 'is-mobile');
 
         // Fetch title and add to container
         const title = this.element.querySelector('h1.name');
