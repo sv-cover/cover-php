@@ -164,19 +164,19 @@ class PhotoCarousel {
         newCurrentPicture.classList.add('current');
 
         if (direction === 'next') {
-            const previousPicture = this.carousel.querySelector('.image.previous');
+            const previousPictures = this.carousel.querySelectorAll('.image.previous');
             newCurrentPicture.classList.remove('next');
             oldCurrentPicture.classList.replace('current', 'previous');
 
-            if (previousPicture)
-                previousPicture.remove();
+            if (previousPictures)
+                previousPictures.forEach( el => el.remove());
         } else if (direction === 'previous') {
-            const nextPicture = this.carousel.querySelector('.image.next');
+            const nextPictures = this.carousel.querySelectorAll('.image.next');
             newCurrentPicture.classList.remove('previous');
             oldCurrentPicture.classList.replace('current', 'next');
 
-            if (nextPicture)
-                nextPicture.remove();   
+            if (nextPictures)
+                nextPictures.forEach( el => el.remove());  
         }
 
         // Reset left positions in case it has changed by handlePan
