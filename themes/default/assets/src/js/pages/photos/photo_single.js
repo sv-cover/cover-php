@@ -136,6 +136,7 @@ class PhotoCarousel {
             if (oldCurrent[direction])
                 console.error('Failed at loading picture' + oldCurrent[direction]);
             this.currentPicture = oldCurrentPicture;
+            this.isNavigating = false;
             return;
         }
 
@@ -179,6 +180,7 @@ class PhotoCarousel {
         }
 
         // Reset left positions in case it has changed by handlePan
+        this.carousel.classList.add('is-animated');
         this.carousel.querySelectorAll('.image').forEach( (el) => {
             let base = '0%';
             if (el.classList.contains('previous'))
