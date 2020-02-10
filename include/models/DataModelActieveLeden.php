@@ -34,7 +34,7 @@
 					committee_members a
 				LEFT JOIN leden l ON
 					a.member_id = l.id
-				RIGHT JOIN commissies c ON 
+				JOIN commissies c ON 
 					a.committee_id = c.id
 					$committee_conditions
 				GROUP BY

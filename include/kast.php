@@ -25,17 +25,17 @@ class KastAPI
 
 	public function getAccount($cover_id)
 	{
-		return $this->_request(sprintf('%s/users/%d', $this->api_root, $cover_id));
+		return $this->_request(sprintf('%s/users/%d/', $this->api_root, $cover_id));
 	}
 
 	public function getStatus($cover_id)
 	{
-		return $this->_request(sprintf('%s/users/%d/status', $this->api_root, $cover_id));
+		return $this->_request(sprintf('%s/users/%d/status/', $this->api_root, $cover_id));
 	}
 
-	public function getHistory($cover_id)
+	public function getHistory($cover_id, $limit=10)
 	{
-		return $this->_request(sprintf('%s/users/%d/history', $this->api_root, $cover_id));
+		return $this->_request(sprintf('%s/users/%d/history/?limit=%d', $this->api_root, $cover_id, $limit));
 	}
 
 	protected function _request($url)
@@ -47,7 +47,11 @@ class KastAPI
 			'X-App' => $this->api_app_id
 		);
 
-		$message = \Symfony\Component\HttpFoundation\Request::create(parse_url($url, PHP_URL_PATH), 'GET');
+		$sign_url = parse_url($url, PHP_URL_PATH);
+		if ($query = parse_url($url, PHP_URL_QUERY))
+			$sign_url .= '?' . $query;
+
+		$message = \Symfony\Component\HttpFoundation\Request::create($sign_url, 'GET');
 		$message->headers->replace($headers);
 
 		$this->context->signer()->sign($message);

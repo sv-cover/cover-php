@@ -198,7 +198,7 @@ class ProfielView extends View
 		try {
 			$kast_api = get_kast();
 			$status = $kast_api->getStatus($iter['id']);
-			$history = $kast_api->getHistory($iter['id']);
+			$history = $kast_api->getHistory($iter['id'], 20);
 			return $this->render('kast_tab.twig', compact('iter', 'status', 'history'));
 		} catch (Exception $exception) {
 			return $this->render('kast_tab_exception.twig', compact('iter', 'exception'));
