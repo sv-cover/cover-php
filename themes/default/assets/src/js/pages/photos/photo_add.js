@@ -50,6 +50,7 @@ class AddPhotosAdmin {
     initPhotoSelector() {
         this.photoSelector = this.element.querySelector('#photo-selector tbody');
         this.photoTemplate = this.photoSelector.querySelector('#photo-template');
+        this.photoTemplate.removeAttribute('id');
         this.photoTemplate.remove();
     }
 
@@ -190,7 +191,7 @@ class AddPhotosAdmin {
         // Fill path input
         let pathInputElement = element.querySelector('input[type=hidden]');
         pathInputElement.name = baseName + '[path]';
-        pathInputElement.val = photo['path'];
+        pathInputElement.value = photo['path'];
 
         // Set description and input controls depending on whether the photo is already added to the book.
         let descriptionInputElement = element.querySelector('.description input');
