@@ -88,7 +88,7 @@
 
 {% if photos.unread is defined %}
     <article>
-        <h2>{{ __('New since your last visit') }}</h2>
+        <h2 class="title is-4">{{ __('New since your last visit') }}</h2>
         {{ album.gallery(photos.unread, _context) }}
     </article>
 {% endif %}
@@ -96,7 +96,7 @@
 {% if photos.read is defined %}
     <article>
         {% if photos.unread is defined %}
-            <h2>{{ __('Older photos') }}</h2>
+            <h2 class="title is-4">{{ __('Older photos') }}</h2>
         {% endif %}
         {{ album.gallery(photos.read, _context) }}
     </article>
