@@ -2,6 +2,7 @@
 
 require_once 'include/init.php';
 require_once 'include/member.php';
+require_once 'include/markup.php';
 require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
 
@@ -360,6 +361,25 @@ class ControllerApi extends Controller
 		return ['success' => true];
 	}
 
+	public function api_secretary_update_terms($version, $terms)
+	{
+		$config = get_model('DataModelConfiguratie');
+		$terms_title = $config->get_value('terms_conditions_page', 'Voorwaarden aanmelden');
+
+		$editable_model = get_model('DataModelEditable');
+		$iter = $editable_model->get_iter_from_title($terms_title);
+
+		$rendered = markup_format_terms(json_decode($terms, true));
+
+		$iter->set('content', $rendered);
+		$iter->set('content_en', $rendered);
+		$editable_model->update($iter);
+
+		$config->set_value('terms_conditions_version', $version);
+
+		return ['success' => true];
+	}
+
 	private function assert_auth_api_application()
 	{
 		$model = get_model('DataModelApplication');
@@ -463,6 +483,11 @@ class ControllerApi extends Controller
 			// Do post member_id and mailinglist, which may be an email address or an id
 			case 'secretary_subscribe_member_to_mailinglist':
 				$response = $this->api_secretary_subscribe_member_to_mailinglist($_POST['member_id'], $_POST['mailinglist']);
+				break;
+
+			// POST api.php?method=secretary_update_terms
+			case 'secretary_update_terms':
+				$response = $this->api_secretary_update_terms($_POST['version'], $_POST['terms']);
 				break;
 
 			default:
