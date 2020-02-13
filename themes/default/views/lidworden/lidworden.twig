@@ -140,13 +140,12 @@
 
 		<fieldset>
 			<legend>{{ __('Conditions') }}</legend>
-			{% if user_can_update voorwaarden %}
-				<div class="controls inline">
-					<a href="{{ link('editable.update', editable=voorwaarden)|e('html_attr') }}" class="edit-link">{{ __('Modify conditions') }}</a>
-				</div>
-			{% endif %}
+			{{ html_input_hidden('terms_conditions_version', terms_conditions_version) }}
 		
 			{{ voorwaarden.locale_content|parse_markup }}
+
+			{{ html_input_checkbox('terms_conditions_agree', null) }}
+			{{ html_label(__('I agree to the terms and conditions'), 'terms_conditions_agree', errors=errors, required=true) }}
 		</fieldset>
 
 		<fieldset>

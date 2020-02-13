@@ -82,6 +82,8 @@
 				'membership_year_of_enrollment' => [function($x) { return $x > 1900 && $x < 2100; }],
 				'authorization' => [function($x) { return $x == 'yes'; }],
 				'option_mailing' => [],
+				'terms_conditions_agree' => [function($x) { return $x == 'yes'; }],
+				'terms_conditions_version' => [$non_empty],
 				'spam' => [function($x) { return in_array(strtolower($_POST['spam']), array('groen', 'green', 'coverrood', 'cover red')); }]
 			);
 
