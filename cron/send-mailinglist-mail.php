@@ -6,8 +6,8 @@ chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/send-mailinglist-mail.php';
 
-use \Cover\email\mailinglist\get_error_message;
-use \Cover\email\mailinglist\send_mailinglist_mail;
+use function \Cover\email\mailinglist\get_error_message;
+use function \Cover\email\mailinglist\send_mailinglist_mail;
 
 function verbose(int $return_value): int
 {

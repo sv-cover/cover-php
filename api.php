@@ -6,8 +6,8 @@ require_once 'include/send-mailinglist-mail.php';
 require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
 
-use \Cover\email\mailinglist\get_error_message;
-use \Cover\email\mailinglist\send_mailinglist_mail;
+use function \Cover\email\mailinglist\get_error_message;
+use function \Cover\email\mailinglist\send_mailinglist_mail;
 
 class ControllerApi extends Controller
 {
@@ -367,14 +367,18 @@ class ControllerApi extends Controller
 
 	public function api_send_mailinglist_mail()
 	{
-		$buffer_stream = fopen('php://input', 'r+');
-		stream_copy_to_stream(STDIN, $buffer_stream);
+		$input = fopen('php://input', 'r+');
+		$buffer_stream = fopen('php://temp', 'r+');
+		stream_copy_to_stream($input, $buffer_stream);
 
+		ob_start();
 		$return_value = send_mailinglist_mail($buffer_stream);
+		ob_end_clean();
 
 		if ($return_value !== 0)
 			return [
 				'success' => false,
+				'code' => $return_value,
 				'message' => get_error_message($return_value),
 			];
 
@@ -489,7 +493,7 @@ class ControllerApi extends Controller
 			// POST api.php?method=send_mailinglist_mail
 			// Post body is the raw email
 			case 'send_mailinglist_mail':
-				$response = $this->send_mailinglist_mail();
+				$response = $this->api_send_mailinglist_mail();
 				break;
 
 			default:

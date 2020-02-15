@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 declare(strict_types=1);
 
@@ -49,7 +48,7 @@ function parse_email_address(string $email)
 
 function parse_email_addresses(string $emails): array
 {
-	return array_filter(array_map('parse_email_address', explode(',', $emails)));
+	return array_filter(array_map(__NAMESPACE__ . '\parse_email_address', explode(',', $emails)));
 }
 
 /**
@@ -79,8 +78,8 @@ function process_message_to_all_committees(MessagePart $message, string $to, str
 	$to = strtolower($to); // case insensitive please
 
 	$destinations = [
-		'committees' => DataModelCommissie::TYPE_COMMITTEE,
-		'workingroups' => DataModelCommissie::TYPE_WORKING_GROUP
+		'committees' => $committee_model::TYPE_COMMITTEE,
+		'workingroups' => $committee_model::TYPE_WORKING_GROUP
 	];
 
 	// Validate whether it is actually addressed to the committee (or working group) mailing list
@@ -188,12 +187,12 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 	switch ($lijst['toegang'])
 	{
 		// Everyone can send mail to this list
-		case DataModelMailinglist::TOEGANG_IEDEREEN:
+		case $mailinglijsten_model::TOEGANG_IEDEREEN:
 			// No problem, you can mail
 			break;
 
 		// Only people on the list can send mail to the list
-		case DataModelMailinglist::TOEGANG_DEELNEMERS:
+		case $mailinglijsten_model::TOEGANG_DEELNEMERS:
 			foreach ($aanmeldingen as $aanmelding)
 				if (strcasecmp($aanmelding['email'], $from) === 0)
 					break 2;
@@ -206,13 +205,13 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
 
 		// Only people who sent mail from an *@svcover.nl address can send to the list
-		case DataModelMailinglist::TOEGANG_COVER:
+		case $mailinglijsten_model::TOEGANG_COVER:
 			if (!preg_match('/\@svcover.nl$/i', $from))
 				return RETURN_NOT_ALLOWED_NOT_COVER;
 			break;
 
 		// Only the owning committee can send mail to this list.
-		case DataModelMailinglist::TOEGANG_EIGENAAR:
+		case $mailinglijsten_model::TOEGANG_EIGENAAR:
 			if (!in_array($from, $lijst['committee']['email_addresses']))
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
 			break;
@@ -326,9 +325,11 @@ function send_message(MessagePart $message, string $email): int
 
 	$env = array();
 
+	$sendmail_bin = getenv('SENDMAIL') || explode(' ', ini_get('sendmail_path'))[0];
+
 	// Start sendmail with the target email address as argument
 	$sendmail = proc_open(
-		getenv('SENDMAIL') . ' -oi ' . escapeshellarg($email),
+		$sendmail_bin . ' -oi ' . escapeshellarg($email),
 		$descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
