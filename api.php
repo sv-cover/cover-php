@@ -403,7 +403,7 @@ class ControllerApi extends Controller
 		if (empty($_SERVER['HTTP_X_HASH']) || $post_hash != $_SERVER['HTTP_X_HASH'])
 			throw new Exception('Checksum does not match');
 
-		return true;
+		return $app;
 	}
 
 	public function run_impl()
@@ -412,8 +412,11 @@ class ControllerApi extends Controller
 			? $_GET['method']
 			: 'main';
 
-		if (preg_match('/^secretary_/i', $method))
-			$this->assert_auth_api_application();
+		// TODO: Needs better authentication
+		if ($_SERVER['REQUEST_METHOD'] === 'POST')
+			$app = $this->assert_auth_api_application();
+		else
+			$app = null;
 
 		switch ($method)
 		{
@@ -461,44 +464,56 @@ class ControllerApi extends Controller
 				$response = $this->api_get_committees($_GET['member_id']);
 				break;
 
-			// POST api.php?method=secretary_read_member
-			// Submit POST member_id=709
-			case 'secretary_read_member':
-				$response = $this->api_secretary_read_member($_POST['member_id']);
-				break;
-
-			// POST api.php?method=secretary_create_member
-			case 'secretary_create_member':
-				$response = $this->api_secretary_create_member();
-				break;
-
-			// POST api.php?method=secretary_update_member&member_id=709
-			// Note that $_POST['id'] must also match $_GET['member_id']
-			case 'secretary_update_member':
-				$response = $this->api_secretary_update_member($_GET['member_id']);
-				break;
-
-			// POST api.php?method=secretary_delete_member&member_id=709
-			// Note that $_POST['id'] must also match $_GET['member_id']
-			case 'secretary_delete_member':
-				$response = $this->api_secretary_delete_member($_GET['member_id']);
-				break;
-
-			// POST api.php?method=secretary_subscribe_member_to_mailinglist
-			// Do post member_id and mailinglist, which may be an email address or an id
-			case 'secretary_subscribe_member_to_mailinglist':
-				$response = $this->api_secretary_subscribe_member_to_mailinglist($_POST['member_id'], $_POST['mailinglist']);
-				break;
-
-			// POST api.php?method=send_mailinglist_mail
-			// Post body is the raw email
-			case 'send_mailinglist_mail':
-				$response = $this->api_send_mailinglist_mail();
-				break;
-
 			default:
-				throw new InvalidArgumentException("Unknown method \"$method\".");
+				if (!$app || !$app['is_admin'])
+					throw new InvalidArgumentException("Unknown method \"$method\".");
 				break;
+		}
+
+		// TODO: this is really ugly. Maybe API needs a good old rewrite
+		if ($app && $app['is_admin'])
+		{
+			switch ($method)
+			{
+				// POST api.php?method=secretary_read_member
+				// Submit POST member_id=709
+				case 'secretary_read_member':
+					$response = $this->api_secretary_read_member($_POST['member_id']);
+					break;
+
+				// POST api.php?method=secretary_create_member
+				case 'secretary_create_member':
+					$response = $this->api_secretary_create_member();
+					break;
+
+				// POST api.php?method=secretary_update_member&member_id=709
+				// Note that $_POST['id'] must also match $_GET['member_id']
+				case 'secretary_update_member':
+					$response = $this->api_secretary_update_member($_GET['member_id']);
+					break;
+
+				// POST api.php?method=secretary_delete_member&member_id=709
+				// Note that $_POST['id'] must also match $_GET['member_id']
+				case 'secretary_delete_member':
+					$response = $this->api_secretary_delete_member($_GET['member_id']);
+					break;
+
+				// POST api.php?method=secretary_subscribe_member_to_mailinglist
+				// Do post member_id and mailinglist, which may be an email address or an id
+				case 'secretary_subscribe_member_to_mailinglist':
+					$response = $this->api_secretary_subscribe_member_to_mailinglist($_POST['member_id'], $_POST['mailinglist']);
+					break;
+
+				// POST api.php?method=send_mailinglist_mail
+				// Post body is the raw email
+				case 'send_mailinglist_mail':
+					$response = $this->api_send_mailinglist_mail();
+					break;
+
+				default:
+					throw new InvalidArgumentException("Unknown method \"$method\".");
+					break;
+			}
 		}
 
 		header('Content-Type: application/json');
