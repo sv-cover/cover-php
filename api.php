@@ -2,8 +2,12 @@
 
 require_once 'include/init.php';
 require_once 'include/member.php';
+require_once 'include/send-mailinglist-mail.php';
 require_once 'include/policies/policy.php';
 require_once 'include/controllers/Controller.php';
+
+use \Cover\email\mailinglist\get_error_message;
+use \Cover\email\mailinglist\send_mailinglist_mail;
 
 class ControllerApi extends Controller
 {
@@ -360,6 +364,23 @@ class ControllerApi extends Controller
 		return ['success' => true];
 	}
 
+
+	public function api_send_mailinglist_mail()
+	{
+		$buffer_stream = fopen('php://input', 'r+');
+		stream_copy_to_stream(STDIN, $buffer_stream);
+
+		$return_value = send_mailinglist_mail($buffer_stream);
+
+		if ($return_value !== 0)
+			return [
+				'success' => false,
+				'message' => get_error_message($return_value),
+			];
+
+		return [ 'success' => true ];
+	}
+
 	private function assert_auth_api_application()
 	{
 		$model = get_model('DataModelApplication');
@@ -463,6 +484,12 @@ class ControllerApi extends Controller
 			// Do post member_id and mailinglist, which may be an email address or an id
 			case 'secretary_subscribe_member_to_mailinglist':
 				$response = $this->api_secretary_subscribe_member_to_mailinglist($_POST['member_id'], $_POST['mailinglist']);
+				break;
+
+			// POST api.php?method=send_mailinglist_mail
+			// Post body is the raw email
+			case 'send_mailinglist_mail':
+				$response = $this->send_mailinglist_mail();
 				break;
 
 			default:
