@@ -317,7 +317,7 @@ function send_message(MessagePart $message, string $email): int
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
 		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-		1 => array("file", "php://stderr", "w"),  // stdout is a pipe that the child will write to
+		1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
 		2 => array("file", "php://stderr", "a")   // stderr is a file to write to
 	);
 
@@ -325,11 +325,14 @@ function send_message(MessagePart $message, string $email): int
 
 	$env = array();
 
-	$sendmail_bin = getenv('SENDMAIL') || explode(' ', ini_get('sendmail_path'))[0];
+	if (getenv('SENDMAIL'))
+		$sendmail_path = getenv('SENDMAIL');
+	else 
+		$sendmail_path = ini_get('sendmail_path');
 
 	// Start sendmail with the target email address as argument
 	$sendmail = proc_open(
-		$sendmail_bin . ' -oi ' . escapeshellarg($email),
+		$sendmail_path . ' -oi ' . escapeshellarg($email),
 		$descriptors, $pipes, $cwd, $env);
 
 	// Write message to the stdin of sendmail
