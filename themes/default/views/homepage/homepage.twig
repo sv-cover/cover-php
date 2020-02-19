@@ -22,26 +22,118 @@
 	</article>
 </section>	
 
-<section class="section">
-	<div class="containerMinimised columns is-centered"> 
+<section class="sectionMargin">
+	<div class="containerMinimised is-centered"> 
         	<div class="calendar">
 			{{ include('@theme/homepage/_agenda.twig') }}
 			</div>
 	</div>
 	
-	<div class="containerMinimised columns is-centered">
+	<div class="containerMinimised is-centered">
 			<h1 class="title">{{ editable.get_title }}</h1>
 	</div>
 
-	<div class="containerMinimised columns is-centered">
-		<p class="text">{{ editable.locale_content|parse_markup }}</p> 
-	</div>
-	</div>	
+	<article class="message is-dark">
+  		<div class="message-body">
+  			{{ editable.locale_content|parse_markup }}
+  		</div>
+	</article>
+</section>
 
+<section class="columns is-centered test is-variable is-8">
+			<div class="column is-one-third">
+				<div class="card">
+		<div class="card-image">
+			<figure class="image is-4by3">
+			<img src="https://www.svcover.nl/fotoboek.php?view=scaled&photo=54589&width=1600&height=1600" alt="Placeholder image">
+			</figure>
+		</div>
+		<div class="card-content">
+			<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">John Smith</p>
+				<p class="subtitle is-6">@johnsmith</p>
+			</div>
+			</div>
+
+			<div class="content">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+			Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+			<a href="#">#css</a> <a href="#">#responsive</a>
+			<br>
+			<time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+			</div>
+		</div>
+		</div>
+			</div>
+			<div class="column is-one-third">
+			<div class="card">
+		<div class="card-image">
+			<figure class="image is-4by3">
+			<img src="https://www.svcover.nl/fotoboek.php?view=scaled&photo=53517&width=1600&height=1600" alt="Placeholder image">
+			</figure>
+		</div>
+		<div class="card-content">
+			<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">John Smith</p>
+				<p class="subtitle is-6">@johnsmith</p>
+			</div>
+			</div>
+
+			<div class="content">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+			Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+			<a href="#">#css</a> <a href="#">#responsive</a>
+			<br>
+			<time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+			</div>
+		</div>
+		</div></div>
+			<div class="column is-one-third">
+			<div class="card">
+		<div class="card-image">
+			<figure class="image is-4by3">
+			<img src="https://www.svcover.nl/fotoboek.php?view=scaled&photo=54581&width=1600&height=1600" alt="Placeholder image">
+			</figure>
+		</div>
+		<div class="card-content">
+			<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">John Smith</p>
+				<p class="subtitle is-6">@johnsmith</p>
+			</div>
+			</div>
+
+			<div class="content">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+			Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+			<a href="#">#css</a> <a href="#">#responsive</a>
+			<br>
+			<time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+			</div>
+		</div>
+		</div>
+			</div>
 </section>
 
 <section class="section">
-<div
+
 </section>
 
 <section class="hero is-medium has-carousel">
