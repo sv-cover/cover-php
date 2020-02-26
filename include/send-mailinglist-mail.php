@@ -325,8 +325,9 @@ function send_message(MessagePart $message, string $email): int
 
 	if (getenv('SENDMAIL'))
 		$sendmail_path = getenv('SENDMAIL');
-	else 
-		$sendmail_path = ini_get('sendmail_path');
+	else
+		// Strip args from sendmail path in ini
+		list($sendmail_path) = explode(' ', ini_get('sendmail_path'));
 
 	// Start sendmail with the target email address as argument
 	$sendmail = proc_open(
