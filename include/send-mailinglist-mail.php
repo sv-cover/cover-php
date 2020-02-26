@@ -26,8 +26,6 @@ define('RETURN_FAILURE_MESSAGE_EMPTY', 502);
 define('RETURN_MARKED_AS_SPAM', 503);
 define('RETURN_MAIL_LOOP_DETECTED', 504);
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
 function parse_email_address(string $email)
 {

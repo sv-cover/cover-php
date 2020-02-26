@@ -9,6 +9,9 @@ require_once 'include/send-mailinglist-mail.php';
 use function \Cover\email\mailinglist\get_error_message;
 use function \Cover\email\mailinglist\send_mailinglist_mail;
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 function verbose(int $return_value): int
 {
 	if ($return_value !== 0)
