@@ -447,20 +447,20 @@
 		return htmlspecialchars($text, ENT_QUOTES, WEBSITE_ENCODING);
 	}
 
-	function markup_format_terms(Array $terms, $level=0) {
+	function markup_format_terms(array $terms, $level=0) {
 		$markup_terms = '';
 
-		if (array_key_exists('title', $terms) && !empty($terms['title']) )
+		if (!empty($terms['title']) )
 			$markup_terms .= sprintf('[h%1$d]%2$s[/h%1$d]', $level + 2, $terms['title']);
 
-		if (array_key_exists('text', $terms) && !empty($terms['text']) )
+		if (!empty($terms['text']) )
 			$markup_terms .= $terms['text'];
 
-		if (array_key_exists('articles', $terms) && !empty($terms['articles']) ) {
+		if (!empty($terms['articles']) ) {
 			ksort($terms['articles']);
 
 			$articles = '';
-			foreach ($terms['articles'] as $key => $article)
+			foreach ($terms['articles'] as $article)
 				$articles .= sprintf('[li]%s[/li]', markup_format_terms($article, $level + 1));
 
 			$markup_terms .= sprintf('[ol]%s[/ol]', $articles);
