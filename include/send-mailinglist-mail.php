@@ -156,7 +156,7 @@ function process_message_to_committee(MessagePart $message, string $to, DataIter
 	return 0;
 }
 
-function process_message_to_mailinglist(MessagePart $message, string $to, string $from, DataIterMailinglist &$lijst = null): int
+function process_message_to_mailinglist(MessagePart $message, string $to, string $from, \DataIterMailinglist &$lijst = null): int
 {
 	$mailinglijsten_model = get_model('DataModelMailinglist');
 
@@ -296,7 +296,7 @@ function process_return_to_sender(MessagePart $message, string $from, $destinati
 	return send_message($reply, $from);
 }
 
-function send_welcome_mail(DataIterMailinglist $lijst, string $to): int
+function send_welcome_mail(\DataIterMailinglist $lijst, string $to): int
 {
 	$message = new \Cover\email\MessagePart();
 
@@ -401,7 +401,8 @@ function send_mailinglist_mail($buffer_stream): int
 	if (!$message->header('From') || !$from = parse_email_address($message->header('From')))
 		return RETURN_COULD_NOT_DETERMINE_SENDER;
 
-	if (!$message->header('Envelope-To') || !$destinations = parse_email_addresses($message->header('Envelope-To')))
+	$destinations_header = $message->header('Envelope-To') ?? $message->header('To')
+	if (!$destinations = parse_email_addresses($destinations_header))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
 	if ($message->header('X-Spam-Flag') == 'YES')
