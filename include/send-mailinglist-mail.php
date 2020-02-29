@@ -401,7 +401,7 @@ function send_mailinglist_mail($buffer_stream): int
 	if (!$message->header('From') || !$from = parse_email_address($message->header('From')))
 		return RETURN_COULD_NOT_DETERMINE_SENDER;
 
-	$destinations_header = $message->header('Envelope-To') ?? $message->header('To')
+	$destinations_header = $message->header('Envelope-To') ?? $message->header('To');
 	if (!$destinations = parse_email_addresses($destinations_header))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
