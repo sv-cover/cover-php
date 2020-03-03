@@ -22,165 +22,83 @@
 	</article>
 </section>	
 
-<section class="sectionMargin">
-	<div class="containerMinimised is-centered"> 
-        	<div class="calendar">
-			{{ include('@theme/homepage/_agenda.twig') }}
-			</div>
-	</div>
-	
-	<div class="containerMinimised is-centered">
-			<h1 class="title">{{ editable.get_title }}</h1>
-	</div>
-
-	<article class="message is-dark">
-  		<div class="message-body">
-  			{{ editable.locale_content|parse_markup }}
-  		</div>
-	</article>
-</section>
-
-<section class="columns is-centered test is-variable is-8">
-			<div class="column is-one-third">
-				<div class="card">
-		<div class="card-image">
-			<figure class="image is-4by3">
-			<img src="https://www.svcover.nl/fotoboek.php?view=scaled&photo=54589&width=1600&height=1600" alt="Placeholder image">
-			</figure>
-		</div>
-		<div class="card-content">
-			<div class="media">
-			<div class="media-left">
-				<figure class="image is-48x48">
-				<img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-				</figure>
-			</div>
-			<div class="media-content">
-				<p class="title is-4">John Smith</p>
-				<p class="subtitle is-6">@johnsmith</p>
-			</div>
-			</div>
-
-			<div class="content">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-			Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-			<a href="#">#css</a> <a href="#">#responsive</a>
-			<br>
-			<time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-			</div>
-		</div>
-		</div>
-			</div>
-			<div class="column is-one-third">
-			<div class="card">
-		<div class="card-image">
-			<figure class="image is-4by3">
-			<img src="https://www.svcover.nl/fotoboek.php?view=scaled&photo=53517&width=1600&height=1600" alt="Placeholder image">
-			</figure>
-		</div>
-		<div class="card-content">
-			<div class="media">
-			<div class="media-left">
-				<figure class="image is-48x48">
-				<img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-				</figure>
-			</div>
-			<div class="media-content">
-				<p class="title is-4">John Smith</p>
-				<p class="subtitle is-6">@johnsmith</p>
-			</div>
-			</div>
-
-			<div class="content">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-			Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-			<a href="#">#css</a> <a href="#">#responsive</a>
-			<br>
-			<time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-			</div>
-		</div>
-		</div></div>
-			<div class="column is-one-third">
-			<div class="card">
-		<div class="card-image">
-			<figure class="image is-4by3">
-			<img src="https://www.svcover.nl/fotoboek.php?view=scaled&photo=54581&width=1600&height=1600" alt="Placeholder image">
-			</figure>
-		</div>
-		<div class="card-content">
-			<div class="media">
-			<div class="media-left">
-				<figure class="image is-48x48">
-				<img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-				</figure>
-			</div>
-			<div class="media-content">
-				<p class="title is-4">John Smith</p>
-				<p class="subtitle is-6">@johnsmith</p>
-			</div>
-			</div>
-
-			<div class="content">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-			Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-			<a href="#">#css</a> <a href="#">#responsive</a>
-			<br>
-			<time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-			</div>
-		</div>
-		</div>
-			</div>
-</section>
-
-<section class="section">
-
-</section>
-
-<section class="hero is-medium has-carousel">
-			<div id="carousel-demo" class="hero-carousel">
-				<div class="item-1">
-					<!-- Slide Content -->
-					dsdsdsd
+<section class="half-half">
+	<section class="sectionMargin">
+		<div class="containerMinimised is-centered"> 
+				<div class="calendar">
+				{{ include('@theme/homepage/_agenda.twig') }}
 				</div>
-				<div class="item-2">
-					<!-- Slide Content -->
-					dsdsd
+		</div>
+		
+		<div class="containerMinimised is-centered">
+				<h1 class="title">{{ editable.get_title }}</h1>
+		</div>
+		<div class="">
+			<article class="message is-dark">
+				<div class="message-body">
+					{{ editable.locale_content|parse_markup }}
 				</div>
-				<div class="item-3">
-					<!-- Slide Content -->
-					dsdsds
+			</article>
+		</div>
+	</section>
+</section>
+
+<section class="has-bg-cover">
+	<section class="sectionMargin">
+		<div class="container">
+			<div class="columns">
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						First, the social aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We organise weekly borrels, monthly socials and tons of other activities.</p>
+				</div>
+				<div class="column">
+					<figure class="image is-256x256">
+					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
+				 </figure>
 				</div>
 			</div>
-			<div class="hero-head"></div>
-			<div class="hero-body"></div>
-			<div class="hero-foot"></div>
-</section>
-
-
-
-<section class="section">
-	{# <div class="bannerRotator">
-	{% for banner in global.models.Banner.get_from_file('images/sponsors/data.json') %}
-		<a href="{{ banner.url|e('html_attr') }}"><img src="images/sponsors/{{ banner.filename|e('url') }}" class="frontpage_banner"></a>
-	{% endfor %}
-	</div> #}
-
-	 <div class="container columns is-centered"> 
-		{#<div class="column is-one-third-desktop is-one-quarter-widescreen is-one-quarter-widescreen">#}
-		<div>
-			{#{{ include('@theme/homepage/_agenda.twig') }}#}
-		</div>	
-			{#{{ include('@theme/homepage/_birthdays.twig') }}#}
-			{#{{ include('@theme/homepage/_poll.twig') }}#}
 		</div>
-		{#<div class="column is-content-optimized">
-			{{ include('@theme/announcements/announcements.twig', {
-				'controller': global.controllers.announcements,
-				'model': global.models.Announcement,
-				'policy': global.policies.Announcement,
-				'iters': global.models.Announcement.get_latest()
-			}) }}
-		</div>#}
-	</div>
+		<div class="container">
+			<div class="columns ">
+				<div class="column ">
+				 <figure class="image is-256x256">
+				 <div class="cent">
+				 		<img src="https://assets-ouch.icons8.com/preview/848/8ec7d27c-2d06-4a41-8fc5-1aa889c71895.png">
+				 </div>
+				 </figure>
+				</div>
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						Second, the study aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We organise study support lectures about our degree programs. You can join workshops that either dig deeper into materials, or offer some fresh knowledge. You can also find help using our tutoring system!</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="columns">
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						Third, the career aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We also offer career oriented events. Regularly, we have companies over to hold talks about certain career paths. You will find this interesting if you want to talk to students who finished their studies and now work at companies or if you are interested in what companies are up to in general.</p>
+				</div>
+				<div class="column">
+				<div class="cent">
+					<figure class="image is-256x256">
+					<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
+				 	</figure>
+					 </div>
+				</div>
+			</div>
+		</div>
+	</section>
 </section>
+{# <section class="section">
+
+</section> #}
+
+{# the missing part is in a file called missing part #}
 {% endblock %}

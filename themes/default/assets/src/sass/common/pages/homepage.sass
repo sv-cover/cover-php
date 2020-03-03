@@ -1,11 +1,12 @@
 @charset "utf-8"
-
+$cover-color-red: #C8102E
 
 .container-fancy 
   max-width: 768px
   margin: 0 auto
   background-color: #88d8b0
   height: 100px
+
 
 .calendar   
   width: 30% 
@@ -17,10 +18,22 @@
   justify-content: space-around 
  
 .sectionMargin
-  margin: auto auto auto 15% 
+  padding-top: 50px
+  margin: auto 15% auto 15% 
 
-.test
-  padding: 3rem 15rem
+.half-half
+  background: linear-gradient(180deg, #ffffff 90%,$cover-color-red 10%)
+.image.is-256x256
+  height: 256px
+  width: 256px
+.cent
+  justify-content: center
+
+.has-bg-cover
+  background: $cover-color-red
+
+.back.is-red
+    background-color: $cover-color-red
 
 .containerMinimised  
   margin:  auto auto auto auto
