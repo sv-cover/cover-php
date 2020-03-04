@@ -1,6 +1,6 @@
 @charset "utf-8"
 $cover-color-red: #C8102E
-
+$cover-color-blue: #36749d
 .container-fancy 
   max-width: 768px
   margin: 0 auto
@@ -23,11 +23,15 @@ $cover-color-red: #C8102E
 
 .half-half
   background: linear-gradient(180deg, #ffffff 90%,$cover-color-red 10%)
-.image.is-256x256
-  height: 256px
-  width: 256px
-.cent
-  justify-content: center
+
+@media(max-width: 1024px)
+  .reverse-row-order 
+    flex-direction: column-reverse;
+    display: flex
+    
+.is-vertical-center
+  display: flex
+  align-items: center
 
 .has-bg-cover
   background: $cover-color-red
@@ -65,3 +69,19 @@ $cover-color-red: #C8102E
   background-repeat: no-repeat 
   background-position: 50% 50% 
  
+.become-member-sign
+  position: fixed
+  background-color: $cover-color-blue
+  width: 50px
+  height: 200px
+  display: flex
+  justify-content: center
+  align-content: center
+  color: #ffffff
+  border-style: solid
+  
+  
+.writing
+  text-align: center
+  writing-mode: vertical-lr 
+  transform: rotate(180deg)
