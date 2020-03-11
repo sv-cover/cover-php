@@ -312,6 +312,8 @@ function send_welcome_mail(\DataIterMailinglist $lijst, string $to): int
 
 function send_message(MessagePart $message, string $email): int
 {
+	$message->addHeader('X-Mailing-List-Destination', $email);
+
 	// Set up the proper pipes and thingies for the sendmail call;
 	$descriptors = array(
 		0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
@@ -401,7 +403,7 @@ function send_mailinglist_mail($buffer_stream): int
 	if (!$message->header('From') || !$from = parse_email_address($message->header('From')))
 		return RETURN_COULD_NOT_DETERMINE_SENDER;
 
-	$destinations_header = $message->header('Envelope-To') ?? $message->header('To');
+	$destinations_header = $message->header('Envelope-To') ?? $message->header('X-Mailing-List-Destination') ?? $message->header('To');
 	if (!$destinations = parse_email_addresses($destinations_header))
 		return RETURN_COULD_NOT_DETERMINE_DESTINATION;
 
