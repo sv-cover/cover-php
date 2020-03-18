@@ -49,23 +49,7 @@ function parse_email_addresses(string $emails): array
 	return array_filter(array_map(__NAMESPACE__ . '\parse_email_address', explode(',', $emails)));
 }
 
-/**
- * Sends mail to committees@svcover.nl and workinggroups@svcover.nl to all
- * committees or all working groups. [COMMISSIE] and [COMMITTEE] in the
- * plain message will be replaced with the name of the committee. 
- * 
- * @param $message the raw message body
- * @param $to destination address, ideally committees@svcover.nl
- *            or workinggroups@svcover.nl.
- * @param $from the email address of the sender. Must end in @svcover.nl or
- *              the function will return RETURN_NOT_ALLOWED_NOT_COVER.
- * 
- * @return RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST if the mail is not
- * addressed to one of those email addresses.
- * @return RETURN_NOT_ALLOWED_NOT_COVER if the mail was not sent from an
- * address ending in @svcover.nl.
- */
-function process_message_to_all_committees(MessagePart $message, string $to, string $from): int
+function validate_message_to_all_committees(MessagePart $message, string &$to, string $from, array &$destinations=null, string &$loop_id=null)
 {
 	$committee_model = get_model('DataModelCommissie');
 
@@ -93,37 +77,48 @@ function process_message_to_all_committees(MessagePart $message, string $to, str
 	if (in_array($loop_id, $message->headers('X-Loop')))
 		return RETURN_MAIL_LOOP_DETECTED;
 
-	$message->addHeader('X-Loop', $loop_id);
-
-	$committees = $committee_model->get($destinations[$to]); // Get all committees of that type, not including hidden committees (such as board)
-
-	foreach ($committees as $committee)
-	{
-		$email = $committee['login'] . '@svcover.nl';
-
-		echo "Sending mail to " . $committee['naam'] . " <" . $email . ">: ";
-		
-		$variables = array(
-			'[COMMISSIE]' => $committee['naam'],
-			'[COMMITTEE]' => $committee['naam']
-		);
-
-		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
-			return str_ireplace(array_keys($variables), array_values($variables), $text);
-		});
-
-		echo send_message($personalized_message, $email), "\n";
-	}
-
 	return 0;
 }
 
-function process_message_to_committee(MessagePart $message, string $to, DataIterCommissie &$committee = null): int
+/**
+ * Sends mail to committees@svcover.nl and workinggroups@svcover.nl to all
+ * committees or all working groups. [COMMISSIE] and [COMMITTEE] in the
+ * plain message will be replaced with the name of the committee. 
+ * 
+ * @param $message the raw message body
+ * @param $to destination address, ideally committees@svcover.nl
+ *            or workinggroups@svcover.nl.
+ * @param $from the email address of the sender. Must end in @svcover.nl or
+ *              the function will return RETURN_NOT_ALLOWED_NOT_COVER.
+ * 
+ * @return RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST if the mail is not
+ * addressed to one of those email addresses.
+ * @return RETURN_NOT_ALLOWED_NOT_COVER if the mail was not sent from an
+ * address ending in @svcover.nl.
+ */
+function process_message_to_all_committees(MessagePart $message, string $to, string $from): int
+{
+	$result = validate_message_to_all_committees($message, $to, $from);
+
+	if ($result === 0)
+	{
+		$queue = get_model('DataModelMailinglistQueue');
+		$queue->queue($message->toString(), $to, 'all_committees');
+	}
+
+	return $result;
+}
+
+function validate_message_to_committee(MessagePart $message, string $to, \DataIterCommissie &$committee=null, string &$loop_id=null)
 {
 	$commissie_model = get_model('DataModelCommissie');
 
 	// Find that committee
-	if (!($committee = $commissie_model->get_from_email($to)))
+	if (!$committee)
+		$committee = $commissie_model->get_from_email($to);
+
+	// Error if still no committee
+	if (!$committee)
 		return RETURN_COULD_NOT_DETERMINE_COMMITTEE;
 
 	$loop_id = sprintf('committee-%d', $committee['id']);
@@ -131,86 +126,72 @@ function process_message_to_committee(MessagePart $message, string $to, DataIter
 	if (in_array($loop_id, $message->headers('X-Loop')))
 		return RETURN_MAIL_LOOP_DETECTED;
 
-	$message->addHeader('X-Loop', $loop_id);
-
-	$members = $committee->get_members();
-
-	foreach ($members as $member)
-	{
-		echo "Sending mail to " . $member['voornaam'] . " <" . $member['email'] . ">: ";
-
-		$variables = array(
-			'[NAAM]' => $member['voornaam'],
-			'[NAME]' => $member['voornaam'],
-			'[COMMISSIE]' => $committee['naam'],
-			'[COMMITTEE]' => $committee['naam']
-		);
-
-		$personalized_message = \Cover\email\personalize($message, function($text) use ($variables) {
-			return str_ireplace(array_keys($variables), array_values($variables), $text);
-		});
-
-		echo send_message($personalized_message, $member['email']), "\n";
-	}
-
 	return 0;
 }
 
-function process_message_to_mailinglist(MessagePart $message, string $to, string $from, \DataIterMailinglist &$lijst = null): int
+function process_message_to_committee(MessagePart $message, string $to, \DataIterCommissie &$committee=null): int
 {
-	$mailinglijsten_model = get_model('DataModelMailinglist');
+	$result = validate_message_to_committee($message, $to, $from, $committee);
+
+	if ($result === 0)
+	{
+		$queue = get_model('DataModelMailinglistQueue');
+		$queue->queue($message->toString(), $to, 'committee');
+	}
+
+	return $result;
+}
+
+
+function validate_message_to_mailinglist(MessagePart $message, string $to, string $from, \DataIterMailinglist &$list=null, array &$subscriptions=null, string &$loop_id=null)
+{
+	$mailinglist_model = get_model('DataModelMailinglist');
 
 	// Find that mailing list
-	if (!($lijst = $mailinglijsten_model->get_iter_by_address($to)))
+	if (!$list)
+		$list = $mailinglist_model->get_iter_by_address($to);
+
+	// Error if still no list
+	if (!$list)
 		return RETURN_COULD_NOT_DETERMINE_LIST;
 
-	$loop_id = sprintf('mailinglist-%d', $lijst['id']);
+	$loop_id = sprintf('mailinglist-%d', $list['id']);
 
 	if (in_array($loop_id, $message->headers('X-Loop')))
 		return RETURN_MAIL_LOOP_DETECTED;
 
-	$message->addHeader('X-Loop', $loop_id);
-
-	// Append '[Cover]' or whatever tag is defined for this list to the subject
-	// but do so only if it is set.
-	if (!empty($lijst['tag']))
-		$message->setHeader('Subject', preg_replace(
-			'/^(?!(?:Re:\s*)?\[' . preg_quote($lijst['tag'], '/') . '\])(.+?)$/im',
-			'[' . $lijst['tag'] . '] $1',
-			$message->header('Subject'), 1));
-
 	// Find everyone who is subscribed to that list
-	$aanmeldingen = $lijst['subscriptions'];
+	$subscriptions = $list['subscriptions'];
 
-	switch ($lijst['toegang'])
+	switch ($list['toegang'])
 	{
 		// Everyone can send mail to this list
-		case $mailinglijsten_model::TOEGANG_IEDEREEN:
+		case $mailinglist_model::TOEGANG_IEDEREEN:
 			// No problem, you can mail
 			break;
 
 		// Only people on the list can send mail to the list
-		case $mailinglijsten_model::TOEGANG_DEELNEMERS:
-			foreach ($aanmeldingen as $aanmelding)
+		case $mailinglist_model::TOEGANG_DEELNEMERS:
+			foreach ($subscriptions as $aanmelding)
 				if (strcasecmp($aanmelding['email'], $from) === 0)
 					break 2;
 
 			// Also test whether the owner is sending mail, he should also be accepted.
-			if (in_array($from, $lijst['committee']['email_addresses']))
+			if (in_array($from, $list['committee']['email_addresses']))
 				break;
 			
 			// Nope, access denied
 			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
 
 		// Only people who sent mail from an *@svcover.nl address can send to the list
-		case $mailinglijsten_model::TOEGANG_COVER:
+		case $mailinglist_model::TOEGANG_COVER:
 			if (!preg_match('/\@svcover.nl$/i', $from))
 				return RETURN_NOT_ALLOWED_NOT_COVER;
 			break;
 
 		// Only the owning committee can send mail to this list.
-		case $mailinglijsten_model::TOEGANG_EIGENAAR:
-			if (!in_array($from, $lijst['committee']['email_addresses']))
+		case $mailinglist_model::TOEGANG_EIGENAAR:
+			if (!in_array($from, $list['committee']['email_addresses']))
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
 			break;
 
@@ -218,67 +199,21 @@ function process_message_to_mailinglist(MessagePart $message, string $to, string
 			return RETURN_NOT_ALLOWED_UNKNOWN_POLICY;
 	}
 
-	if ($lijst->sends_email_on_first_email() && !$lijst['archive']->contains_email_from($from))
-		send_welcome_mail($lijst, $from);
+	return 0;
+}
 
-	foreach ($aanmeldingen as $aanmelding)
+function process_message_to_mailinglist(MessagePart $message, string $to, string $from, \DataIterMailinglist &$list = null): int
+{
+	$list = null;
+	$result = validate_message_to_mailinglist($message, $to, $from, $list);
+
+	if ($result === 0)
 	{
-		// Skip subscriptions without an e-mail address silently
-		if (trim($aanmelding['email']) == '')
-			continue;
-
-		echo "Sending mail to " . $aanmelding['naam'] . " <" . $aanmelding['email'] . ">: ";
-
-		$unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
-		$archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $lijst['id']);
-
-		// Personize the message for the receiver
-		$personalized_message = \Cover\email\personalize($message, function($text, $content_type) use ($aanmelding, $lijst, $unsubscribe_url, $archive_url) {
-			$use_html = $content_type !== null && preg_match('/^text\/html/', $content_type);
-
-			// Escape function depends on content type (text/html is treated differently)
-			$escape = $use_html
-				? function($text, $entities = ENT_COMPAT) { return htmlspecialchars($text, $entities, 'utf-8'); }
-				: function($text, $entities = null) { return $text; };
-
-			$variables = array(
-				'[NAAM]' => $escape($aanmelding['naam']),
-				'[NAME]' => $escape($aanmelding['naam']),
-				'[MAILINGLIST]' => $escape($lijst['naam'])
-			);
-
-			if ($aanmelding['lid_id'])
-				$variables['[LID_ID]'] = $aanmelding['lid_id'];
-
-			$variables['[UNSUBSCRIBE_URL]'] = $escape($unsubscribe_url, ENT_QUOTES);
-
-			$variables['[UNSUBSCRIBE]'] = sprintf(($use_html
-				? '<a href="%s">Click here to unsubscribe from the %s mailinglist.</a>'
-				: 'To unsubscribe from the %2$s mailinglist, go to %1$s'),
-					$escape($unsubscribe_url),
-					$escape($lijst['naam']));
-
-			// Add an unsubscribe link to the footer when there isn't already a link in there, and
-			// if users can unsubscribe from the list (i.e. public lists)
-			if ($content_type !== null
-				&& $lijst['publiek']
-				&& strpos($text, '[UNSUBSCRIBE]') === false
-				&& strpos($text, '[UNSUBSCRIBE_URL]') === false)
-				$text .= sprintf($use_html
-					? "<div><hr style=\"border:0;border-top:1px solid #ccc\"><small>You are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]</small></div>"
-					: "\n\n---\nYou are receiving this mail because you are subscribed to the %s mailinglist. [UNSUBSCRIBE]",
-					$escape($lijst['naam']));
-
-			return str_ireplace(array_keys($variables), array_values($variables), $text);
-		});
-
-		$personalized_message->setHeader('List-Unsubscribe', sprintf('<%s>', $unsubscribe_url));
-		$personalized_message->setHeader('List-Archive', sprintf('<%s>', $archive_url));
-
-		echo send_message($personalized_message, $aanmelding['email']), "\n";
+		$queue = get_model('DataModelMailinglistQueue');
+		$queue->queue($message->toString(), $to, 'mailinglist', $list);
 	}
 
-	return 0;
+	return $result;
 }
 
 function process_return_to_sender(MessagePart $message, string $from, $destination, $return_code): int

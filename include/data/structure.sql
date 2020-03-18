@@ -607,7 +607,8 @@ CREATE TABLE registrations (
 CREATE TABLE applications (
     key VARCHAR(255) NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
-    secret TEXT NOT NULL
+    secret TEXT NOT NULL,
+    is_admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 --
@@ -675,5 +676,17 @@ CREATE TABLE sign_up_entry_values(
     field_id INTEGER NOT NULL REFERENCES sign_up_fields (id) ON UPDATE CASCADE ON DELETE CASCADE,
     value TEXT NOT NULL,
     PRIMARY KEY (entry_id, field_id)
+);
+
+
+CREATE TABLE mailinglijsten_berichten (
+    id SERIAL PRIMARY KEY,
+    destination varchar NOT NULL,
+    destination_type varchar NOT NULL DEFAULT 'mailinglist',
+    mailinglist_id integer DEFAULT NULL REFERENCES mailinglijsten (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
+    message TEXT NOT NULL,
+    status varchar NOT NULL DEFAULT 'waiting',
+    queued_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    processing_on timestamp without time zone
 );
 
