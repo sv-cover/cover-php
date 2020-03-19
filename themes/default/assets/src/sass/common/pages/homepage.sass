@@ -26,7 +26,7 @@ $cover-color-blue: #36749d
 
 @media(max-width: 1024px)
   .reverse-row-order 
-    flex-direction: column-reverse;
+    flex-direction: column-reverse 
     display: flex
     
 .is-vertical-center
@@ -70,6 +70,7 @@ $cover-color-blue: #36749d
   background-position: 50% 50% 
  
 .become-member-sign
+  margin-top: 20px
   position: fixed
   background-color: $cover-color-blue
   width: 50px
@@ -79,9 +80,200 @@ $cover-color-blue: #36749d
   align-content: center
   color: #ffffff
   border-style: solid
+<<<<<<< HEAD
   margin-top: 50px
+=======
+  z-index: 1
+  transition: 0.5s
+  
+>>>>>>> a019ed3c082488a85e682ca47f5f045303cc0b7d
   
 .writing
   text-align: center
   writing-mode: vertical-lr 
   transform: rotate(180deg)
+
+.sidebar 
+  height: 192px
+  width: 0px
+  position: fixed
+  z-index: 1
+  top: 116px
+  left: 0
+  background-color: $cover-color-blue
+  overflow-x: hidden
+  transition: 0.5s
+  padding-top: 60px
+  display: flex
+  border-bottom: none
+
+
+.sidebar a 
+  padding: 8px 8px 8px 32px
+  text-decoration: none
+  font-size: 25px
+  color: #4952a7
+  display: block
+  transition: 0.3s
+
+.sidebar a:hover 
+  color: #f1f1f1
+
+.sidebar .closebtn 
+  position: absolute
+  top: 0
+  right: 25px
+  font-size: 36px
+  margin-left: 50px
+
+
+.arrow  
+  background: #fff 
+  height: 3px 
+  width: 30px 
+  margin: 0 auto 
+  position: relative 
+  cursor: pointer
+
+  &:before,
+  &:after  
+    content: "" 
+    background: #fff 
+    position: absolute 
+    height: 3px 
+    width: 15px 
+   
+
+  &:before  
+    right: -3px 
+    bottom: -4px 
+    transform: rotate(-45deg) 
+   
+
+  &:after  
+    right: -3px 
+    top: -4px 
+    transform: rotate(45deg) 
+ 
+
+// Animation 1
+#animation1  
+  & + label > .arrow  
+    &:before  
+      animation: animation-1-before-reverse 1s ease 0s 1 alternate both 
+     
+
+    &:after  
+      animation: animation-1-after-reverse 1s ease 0s 1 alternate both 
+     
+   
+
+  &:checked  
+    & + label > .arrow  
+      &:before  
+        animation: animation-1-before 1s ease 0s 1 alternate both 
+       
+
+      &:after  
+        animation: animation-1-after 1s ease 0s 1 alternate both 
+   
+ 
+
+@keyframes animation-1-after  
+  0%  
+    right: -3px 
+    top: -4px 
+    transform: rotate(45deg) 
+   
+
+  50%  
+    width: 3px 
+    border-radius: 50% 
+    top: -20px 
+    left: 15px 
+   
+
+  100%  
+    left: -3px 
+    bottom: -4px 
+    transform: rotate(135deg) 
+    height: 3px 
+    width: 15px 
+    background: #fff 
+   
+ 
+@keyframes animation-1-before  
+  0%  
+    right: -3px 
+    bottom: -4px 
+    transform: rotate(-45deg) 
+   
+
+  50%  
+    width: 3px 
+    border-radius: 50% 
+    bottom: -20px 
+    left: 15px 
+   
+
+  100%  
+    left: -3px 
+    bottom: -4px 
+    transform: rotate(-135deg) 
+    height: 3px 
+    width: 15px 
+    background: #fff 
+   
+ 
+@keyframes animation-1-after-reverse  
+  0%  
+    left: -3px 
+    bottom: -4px 
+    transform: rotate(135deg) 
+    height: 3px 
+    width: 15px 
+    background: #fff 
+   
+
+  50%  
+    width: 3px 
+    border-radius: 50% 
+    top: -20px 
+    left: 15px 
+   
+
+  100%  
+    right: -3px 
+    top: -4px 
+    transform: rotate(45deg) 
+   
+ 
+@keyframes animation-1-before-reverse  
+  0%  
+    left: -3px 
+    bottom: -4px 
+    transform: rotate(-135deg) 
+    height: 3px 
+    width: 15px 
+    background: #fff 
+   
+
+  50%  
+    width: 3px 
+    border-radius: 50% 
+    bottom: -20px 
+    left: 15px 
+   
+
+  100%  
+    right: -3px 
+    bottom: -4px 
+    transform: rotate(-45deg) 
+  
+input 
+  display: none
+
+
+label 
+  margin-bottom: 100px
+  display: block
