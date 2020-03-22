@@ -2,20 +2,20 @@
 <?php
 declare(strict_types=1);
 
-chdir(dirname(__FILE__) . '/..');
-
 namespace Cover\email\mailinglist\queue;
+
+chdir(dirname(__FILE__) . '/..');
 
 require_once 'include/init.php';
 require_once 'include/email.php';
 require_once 'include/send-mailinglist-mail.php';
 
 use \Cover\email\MessagePart;
-use function \Cover\email\mailinglist\get_error_message;
 use function \Cover\email\mailinglist\send_mailinglist_mail;
 use function \Cover\email\mailinglist\validate_message_to_all_committees;
 use function \Cover\email\mailinglist\validate_message_to_committee;
-use function \Cover\email\mailinglist\validate_message_to_committee;
+use function \Cover\email\mailinglist\validate_message_to_mailinglist;
+use function \Cover\email\mailinglist\parse_email_address;
 use function \Cover\email\mailinglist\send_welcome_mail;
 use function \Cover\email\mailinglist\send_message;
 use function \Cover\email\mailinglist\get_error_message as _get_error_message;
@@ -69,7 +69,7 @@ function send_message_to_committee(MessagePart $message, string $to, \DataIterCo
     $committee = null;
     $loop_id = null;
 
-    $result = validate_message_to_committee($message, $to, $from, $committee, $loop_id);
+    $result = validate_message_to_committee($message, $to, $committee, $loop_id);
 
     if ($result !== 0)
         return $result;
@@ -107,7 +107,7 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
     $subscriptions = null;
     $loop_id = null;
 
-    $result = validate_message_to_committee($message, $to, $from, $list, $subscriptions, $loop_id);
+    $result = validate_message_to_mailinglist($message, $to, $from, $list, $subscriptions, $loop_id);
 
     if ($result !== 0)
         return $result;
@@ -126,19 +126,19 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
     if ($list->sends_email_on_first_email() && !$list['archive']->contains_email_from($from))
         send_welcome_mail($list, $from);
 
-    foreach ($aanmeldingen as $aanmelding)
+    foreach ($subscriptions as $subscription)
     {
         // Skip subscriptions without an e-mail address silently
-        if (trim($aanmelding['email']) == '')
+        if (trim($subscription['email']) == '')
             continue;
 
-        echo "Sending mail to " . $aanmelding['naam'] . " <" . $aanmelding['email'] . ">: ";
+        echo "Sending mail to " . $subscription['naam'] . " <" . $subscription['email'] . ">: ";
 
-        $unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($aanmelding['abonnement_id']));
+        $unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($subscription['abonnement_id']));
         $archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $list['id']);
 
         // Personize the message for the receiver
-        $personalized_message = \Cover\email\personalize($message, function($text, $content_type) use ($aanmelding, $list, $unsubscribe_url, $archive_url) {
+        $personalized_message = \Cover\email\personalize($message, function($text, $content_type) use ($subscription, $list, $unsubscribe_url, $archive_url) {
             $use_html = $content_type !== null && preg_match('/^text\/html/', $content_type);
 
             // Escape function depends on content type (text/html is treated differently)
@@ -147,13 +147,13 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
                 : function($text, $entities = null) { return $text; };
 
             $variables = array(
-                '[NAAM]' => $escape($aanmelding['naam']),
-                '[NAME]' => $escape($aanmelding['naam']),
+                '[NAAM]' => $escape($subscription['naam']),
+                '[NAME]' => $escape($subscription['naam']),
                 '[MAILINGLIST]' => $escape($list['naam'])
             );
 
-            if ($aanmelding['lid_id'])
-                $variables['[LID_ID]'] = $aanmelding['lid_id'];
+            if ($subscription['lid_id'])
+                $variables['[LID_ID]'] = $subscription['lid_id'];
 
             $variables['[UNSUBSCRIBE_URL]'] = $escape($unsubscribe_url, ENT_QUOTES);
 
@@ -180,7 +180,7 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
         $personalized_message->setHeader('List-Unsubscribe', sprintf('<%s>', $unsubscribe_url));
         $personalized_message->setHeader('List-Archive', sprintf('<%s>', $archive_url));
 
-        echo send_message($personalized_message, $aanmelding['email']), "\n";
+        echo send_message($personalized_message, $subscription['email']), "\n";
     }
 
     return 0;
@@ -200,7 +200,7 @@ function get_error_message(int $return_value): string
 
 function process_mailinglist_queue(): int
 {
-    $queue_model = get_model('DataModelMailinglist');
+    $queue_model = get_model('DataModelMailinglistQueue');
 
     $queue = $queue_model->find(['status' => 'waiting']);
 
@@ -216,9 +216,12 @@ function process_mailinglist_queue(): int
         if ($queued_message->get('destination_type') === 'all_committees')
             $result = send_message_to_all_committees($message, $queued_message->get('destination'), $from);
         elseif ($queued_message->get('destination_type') === 'committee')
-            $result = send_message_to_committee($message, $queued_message->get('destination'), $from);
+            $result = send_message_to_committee($message, $queued_message->get('destination'));
         elseif ($queued_message->get('destination_type') === 'mailinglist')
-            $result = send_message_to_mailinglist($message, $queued_message->get('destination'), $from, get_model('DataModelMailinglist')->get_iter($queued_message->get('mailinglist'));
+        {
+            $mailinglist = $queued_message->get('mailinglist');
+            $result = send_message_to_mailinglist($message, $queued_message->get('destination'), $from, $mailinglist);
+        }
         else
             $result = UNKNOWN_LIST_TYPE;
 
@@ -237,7 +240,7 @@ function process_mailinglist_queue(): int
 
 function main(): int
 {
-    return $process_mailinglist_queue();
+    return process_mailinglist_queue();
 }
 
-exit(verbose(main()));
+exit(main());

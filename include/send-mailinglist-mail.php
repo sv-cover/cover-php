@@ -131,7 +131,7 @@ function validate_message_to_committee(MessagePart $message, string $to, \DataIt
 
 function process_message_to_committee(MessagePart $message, string $to, \DataIterCommissie &$committee=null): int
 {
-	$result = validate_message_to_committee($message, $to, $from, $committee);
+	$result = validate_message_to_committee($message, $to, $committee);
 
 	if ($result === 0)
 	{
@@ -330,7 +330,7 @@ function send_mailinglist_mail($buffer_stream): int
 	}
 	
 	$lijst = null;
-	$comissie = null;
+	$committee = null;
 
 	// Test at least the sender already
 	if (!$message->header('From') || !$from = parse_email_address($message->header('From')))
@@ -347,7 +347,7 @@ function send_mailinglist_mail($buffer_stream): int
 
 	foreach (array_unique($destinations) as $destination)
 	{
-		$commissie = null;
+		$committee = null;
 
 		// First try if this message is addressed to committees@svcover.nl
 		$return_code = process_message_to_all_committees($message, $destination, $from);
@@ -355,7 +355,7 @@ function send_mailinglist_mail($buffer_stream): int
 		if ($return_code === RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST)
 		{
 			// Then try sending the message to a committee
-			$return_code = process_message_to_committee($message, $destination, $commissie);
+			$return_code = process_message_to_committee($message, $destination, $committee);
 
 			// If that didn't work, try sending it to a mailing list
 			if ($return_code === RETURN_COULD_NOT_DETERMINE_COMMITTEE)
@@ -368,7 +368,7 @@ function send_mailinglist_mail($buffer_stream): int
 		// Archive the message.
 		rewind($buffer_stream);
 		$archief = get_model('DataModelMailinglistArchive');
-		$archief->archive($buffer_stream, $from, $lijst, $commissie, $return_code);
+		$archief->archive($buffer_stream, $from, $lijst, $committee, $return_code);
 
 		if ($return_code !== 0)
 			process_return_to_sender($message, $from, $destination, $return_code);

@@ -1,4 +1,4 @@
-CREATE TABLE mailinglijsten_berichten (
+CREATE TABLE mailinglijsten_queue (
     id SERIAL PRIMARY KEY,
     destination varchar NOT NULL,
     destination_type varchar NOT NULL DEFAULT 'mailinglist',
