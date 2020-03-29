@@ -1,3 +1,5 @@
+$partners-background-color: $scheme-main-ter !default
+
 @function space-around-columns($num-columns)
     $space-between: 2 * $column-gap * ($num-columns - 1)
     $space-around: 2 * $section-padding-horizontal
@@ -26,10 +28,12 @@
 
 .partners
     --column-count: 2
-    
+    background: $partners-background-color
+
+
     .title
         font-size: $size-6
-        color: $text-light
+        // color: $text-light
 
     .container:not(:last-child)
         margin-bottom: $block-spacing
