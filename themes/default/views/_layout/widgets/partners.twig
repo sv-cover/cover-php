@@ -1,16 +1,25 @@
+{% import _self as partners %}
+
+{% macro single(banner) %}
+	<div class="column">
+		<a class="partner" href="{{ banner.url }}" target="_blank">
+			<figure class="image">
+				{% if banner.filename_dark is defined %}
+					<img class="darkmode" src="images/banners/{{ banner.filename_dark }}">
+				{% endif %}
+				<img class="default" src="images/banners/{{ banner.filename }}">
+			</figure>
+		</a>
+	</div>
+{% endmacro %}
+
 <div class="section partners">
 {% if global.models.Banner.main_sponsors|length > 0 %}
 	<div class="container main-partners">
 		<h4 class="title has-text-centered">{{ __N('Main partner', 'Main partners', global.models.Banner.main_sponsors|length) }}</h4>
 		<div class="columns is-multiline is-centered is-mobile">
 			{% for banner in global.models.Banner.main_sponsors %}
-				<div class="column">
-					<a class="partner" href="{{ banner.url }}" target="_blank">
-						<figure class="image">
-							<img src="images/banners/{{ banner.filename }}">
-						</figure>
-					</a>
-				</div>
+				{{ partners.single(banner)}}
 			{% endfor %}
 		</div>
 	</div>
@@ -22,13 +31,7 @@
 		<div class="collapse">
 			<div class="collapse-content columns is-multiline is-centered is-mobile" id="sponsorCollapseContent" aria-expanded="false">
 				{% for banner in global.models.Banner.partners %}
-					<div class="column">
-						<a class="partner" href="{{ banner.url }}" target="_blank">
-							<figure class="image">
-								<img src="images/banners/{{ banner.filename }}">
-							</figure>
-						</a>
-					</div>
+					{{ partners.single(banner)}}
 				{% endfor %}
 			</div>
 			<div class="controls">
