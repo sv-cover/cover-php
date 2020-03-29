@@ -231,16 +231,16 @@ function process_return_to_sender(MessagePart $message, string $from, $destinati
 	return send_message($reply, $from);
 }
 
-function send_welcome_mail(\DataIterMailinglist $lijst, string $to): int
+function send_welcome_mail(\DataIterMailinglist $list, string $to): int
 {
 	$message = new \Cover\email\MessagePart();
 
 	$message->setHeader('To', $to);
-	$message->setHeader('From', sprintf('%s <%s>', $lijst['naam'], $lijst['adres']));
+	$message->setHeader('From', sprintf('%s <%s>', $list['naam'], $list['adres']));
 	$message->setHeader('Reply-To', 'AC/DCee Cover <webcie@rug.nl>');
-	$message->setHeader('Subject', (string) $lijst['on_first_email_subject']);
-	$message->addBody('text/plain', strip_tags($lijst['on_first_email_message']));
-	$message->addBody('text/html', $lijst['on_first_email_message']);
+	$message->setHeader('Subject', (string) $list['on_first_email_subject']);
+	$message->addBody('text/plain', strip_tags($list['on_first_email_message']));
+	$message->addBody('text/html', $list['on_first_email_message']);
 
 	return send_message($message, $to);
 }
@@ -331,7 +331,7 @@ function send_mailinglist_mail($buffer_stream): int
 		return RETURN_COULD_NOT_PARSE_MESSAGE;
 	}
 	
-	$lijst = null;
+	$list = null;
 	$committee = null;
 
 	// Test at least the sender already
@@ -363,14 +363,14 @@ function send_mailinglist_mail($buffer_stream): int
 			if ($return_code === RETURN_COULD_NOT_DETERMINE_COMMITTEE)
 			{
 				// Process the message: parse it and send it to the list.
-				$return_code = process_message_to_mailinglist($message, $destination, $from, $lijst);
+				$return_code = process_message_to_mailinglist($message, $destination, $from, $list);
 			}
 		}
 
 		// Archive the message.
 		rewind($buffer_stream);
 		$archief = get_model('DataModelMailinglistArchive');
-		$archief->archive($buffer_stream, $from, $lijst, $committee, $return_code);
+		$archief->archive($buffer_stream, $from, $list, $committee, $return_code);
 
 		if ($return_code !== 0)
 			process_return_to_sender($message, $from, $destination, $return_code);
