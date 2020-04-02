@@ -2,6 +2,35 @@ $footer-main-background-color: $grey-lightest !default
 
 .footer-main
     background: $footer-main-background-color
+    text-align: center
+    color: $grey-dark
+
+    a
+        color: inherit
+
+        &:active,
+        &:focus,
+        &:hover
+            text-decoration: underline
+
+        &:active
+            color: $link-active
+
+        &:focus
+            color: $link-focus
+
+        &:hover
+            color: $link-hover
+
+
++tablet
+    .footer-main ul li
+        display: inline-block
+        margin: 0 $column-gap
+
+        &.divider::before
+            display: inline
+            content: '▪'
 
 .image
     img.darkmode
