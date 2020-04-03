@@ -1,13 +1,37 @@
 import bulmaCarousel from 'bulma-carousel/dist/js/bulma-carousel.min.js';
+import modalCard from 'bulma-modal-fx/dist/js/modal-fx';
+
 
 // Initialize all elements with carousel class.
 bulmaCarousel.attach('#carousel-demo', {
     slidesToScroll: 1,
-    slidesToShow: 2
+    slidesToShow: 1
 });
 
+bulmaCarousel.attach('#carousel-demo2', {
+  slidesToScroll: 1,
+  slidesToShow: 3
+});
+
+<<<<<<< HEAD
 document.getElementById("spani").addEventListener("click", openNav);
 // document.getElementById("mySidebar").addEventListener("click", closeNav);
+=======
+
+document.getElementById("main").addEventListener("click", openNav);
+document.getElementById("mySidebar").addEventListener("click", closeNav);
+>>>>>>> c4e5b9936c09d046232245b76c34e6a46f13f121
+
+// document.getElementById("testNews").addEventListener("click", openCard);
+// document.getElementById("delete").addEventListener("click",closeCard);
+
+function openCard(){
+  document.getElementById("testCard").classList.add ("is-active");
+}
+
+function closeCard(){
+  document.getElementById("testCard").classList.remove ("is-active");
+}
 
 function openNav() {
     console.log(document.getElementById("mySidebar").style.width);
