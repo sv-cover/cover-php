@@ -45,7 +45,7 @@ function send_message_to_all_committees(MessagePart $message, string $to, string
     {
         $email = $committee['login'] . '@svcover.nl';
 
-        echo date("Y-m-d H:i:s") . " - Sending mail for " . $to . " to " . $committee['naam'] . " <" . $email . ">: ";
+        echo "Sending mail to " . $committee['naam'] . " <" . $email . ">: ";
         
         $variables = array(
             '[COMMISSIE]' => $committee['naam'],
@@ -80,7 +80,7 @@ function send_message_to_committee(MessagePart $message, string $to, \DataIterCo
 
     foreach ($members as $member)
     {
-        echo date("Y-m-d H:i:s") . " - Sending mail for " . $to . " to " . $member['voornaam'] . " <" . $member['email'] . ">: ";
+        echo "Sending mail to " . $member['voornaam'] . " <" . $member['email'] . ">: ";
 
         $variables = array(
             '[NAAM]' => $member['voornaam'],
@@ -132,7 +132,7 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
         if (trim($subscription['email']) == '')
             continue;
 
-        echo date("Y-m-d H:i:s") . " - Sending mail for " . $to . " to " . $subscription['naam'] . " <" . $subscription['email'] . ">: ";
+        echo "Sending mail to " . $subscription['naam'] . " <" . $subscription['email'] . ">: ";
 
         $unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($subscription['abonnement_id']));
         $archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $list['id']);
