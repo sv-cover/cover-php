@@ -13,14 +13,8 @@ bulmaCarousel.attach('#carousel-demo2', {
   slidesToShow: 3
 });
 
-<<<<<<< HEAD
 document.getElementById("spani").addEventListener("click", openNav);
 // document.getElementById("mySidebar").addEventListener("click", closeNav);
-=======
-
-document.getElementById("main").addEventListener("click", openNav);
-document.getElementById("mySidebar").addEventListener("click", closeNav);
->>>>>>> c4e5b9936c09d046232245b76c34e6a46f13f121
 
 // document.getElementById("testNews").addEventListener("click", openCard);
 // document.getElementById("delete").addEventListener("click",closeCard);
