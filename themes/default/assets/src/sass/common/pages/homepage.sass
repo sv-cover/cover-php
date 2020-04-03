@@ -70,36 +70,38 @@ $cover-color-blue: #36749d
   background-position: 50% 50% 
  
 .become-member-sign
-  margin-top: 20px
+  top: 112px
   position: fixed
   background-color: $cover-color-blue
-  width: 50px
-  height: 200px
+  width: 80px
+  height: 250px
   display: flex
   justify-content: center
   align-content: center
   color: #ffffff
   border-style: solid
   z-index: 1
-  transition: 0.5s
+  transition: 1.5s
   
   
 .writing
   text-align: center
+  padding-top: 40px 
   writing-mode: vertical-lr 
+  font-weight: bold
   transform: rotate(180deg)
 
 .sidebar 
-  height: 192px
+  height: 203px
   width: 0px
   position: fixed
   z-index: 1
-  top: 116px
+  top: 114px
   left: 0
   background-color: $cover-color-blue
-  overflow-x: hidden
-  transition: 0.5s
-  padding-top: 60px
+  overflow: hidden
+  transition: 1.5s
+  padding-top: 10px
   display: flex
   border-bottom: none
 
@@ -110,7 +112,7 @@ $cover-color-blue: #36749d
   font-size: 25px
   color: #4952a7
   display: block
-  transition: 0.3s
+  transition: 1s
 
 .sidebar a:hover 
   color: #f1f1f1
@@ -122,154 +124,76 @@ $cover-color-blue: #36749d
   font-size: 36px
   margin-left: 50px
 
-
-.arrow  
-  background: #fff 
-  height: 3px 
-  width: 30px 
-  margin: 0 auto 
-  position: relative 
-  cursor: pointer
-
-  &:before,
-  &:after  
-    content: "" 
-    background: #fff 
-    position: absolute 
-    height: 3px 
-    width: 15px 
-   
-
-  &:before  
-    right: -3px 
-    bottom: -4px 
-    transform: rotate(-45deg) 
-   
-
-  &:after  
-    right: -3px 
-    top: -4px 
-    transform: rotate(45deg) 
- 
-
-// Animation 1
-#animation1  
-  & + label > .arrow  
-    &:before  
-      animation: animation-1-before-reverse 1s ease 0s 1 alternate both 
-     
-
-    &:after  
-      animation: animation-1-after-reverse 1s ease 0s 1 alternate both 
-     
-   
-
-  &:checked  
-    & + label > .arrow  
-      &:before  
-        animation: animation-1-before 1s ease 0s 1 alternate both 
-       
-
-      &:after  
-        animation: animation-1-after 1s ease 0s 1 alternate both 
-   
- 
-
-@keyframes animation-1-after  
-  0%  
-    right: -3px 
-    top: -4px 
-    transform: rotate(45deg) 
-   
-
-  50%  
-    width: 3px 
-    border-radius: 50% 
-    top: -20px 
-    left: 15px 
-   
-
-  100%  
-    left: -3px 
-    bottom: -4px 
-    transform: rotate(135deg) 
-    height: 3px 
-    width: 15px 
-    background: #fff 
-   
- 
-@keyframes animation-1-before  
-  0%  
-    right: -3px 
-    bottom: -4px 
-    transform: rotate(-45deg) 
-   
-
-  50%  
-    width: 3px 
-    border-radius: 50% 
-    bottom: -20px 
-    left: 15px 
-   
-
-  100%  
-    left: -3px 
-    bottom: -4px 
-    transform: rotate(-135deg) 
-    height: 3px 
-    width: 15px 
-    background: #fff 
-   
- 
-@keyframes animation-1-after-reverse  
-  0%  
-    left: -3px 
-    bottom: -4px 
-    transform: rotate(135deg) 
-    height: 3px 
-    width: 15px 
-    background: #fff 
-   
-
-  50%  
-    width: 3px 
-    border-radius: 50% 
-    top: -20px 
-    left: 15px 
-   
-
-  100%  
-    right: -3px 
-    top: -4px 
-    transform: rotate(45deg) 
-   
- 
-@keyframes animation-1-before-reverse  
-  0%  
-    left: -3px 
-    bottom: -4px 
-    transform: rotate(-135deg) 
-    height: 3px 
-    width: 15px 
-    background: #fff 
-   
-
-  50%  
-    width: 3px 
-    border-radius: 50% 
-    bottom: -20px 
-    left: 15px 
-   
-
-  100%  
-    right: -3px 
-    bottom: -4px 
-    transform: rotate(-45deg) 
   
-input 
-  display: none
+.arrow--l-r
+  width: 2rem
+  height: 1.5rem
+  display: inline-block
+  position: absolute
+  margin: 0 1rem  
+  cursor: pointer; 
 
+  &.left span
+    &:nth-child(4)
+      transform: rotate(-45deg)
 
-label 
-  margin-bottom: 100px
-  display: block
+    &:nth-child(5)
+      transform: rotate(45deg)
+
+  &.right span
+    &:nth-child(1)
+      transform: rotate(-45deg)
+
+    &:nth-child(2)
+      transform: rotate(45deg)
+
+  span
+    position: absolute
+    height: 0.25rem
+    background-color: #efefef
+    transition: transform 1.8s ease
+
+    &:nth-child(1), &:nth-child(2), &:nth-child(4), &:nth-child(5)
+      width: 0.625rem
+      top: 0.625rem
+
+    &:nth-child(1)
+      right: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: bottom right
+
+    &:nth-child(2)
+      right: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: top right
+
+    &:nth-child(3)
+      width: 2rem
+      top: 0.64rem
+
+    &:nth-child(4)
+      left: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: bottom left
+
+    &:nth-child(5)
+      left: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: top left
+
+.child 
+  position: absolute
+  bottom: 0
+  left: 5px
+  padding-bottom: 30px
+
+.line
+  width: 80px
+  height: 205px
+  border-bottom: solid white
+  position: absolute
+      
