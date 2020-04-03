@@ -1,0 +1,13 @@
+'bash.exe' is not recognized as an internal or external command,
+operable program or batch file.
+'bash.exe' is not recognized as an internal or external command,
+operable program or batch file.
+'wsl' is not recognized as an internal or external command,
+operable program or batch file.
+The system cannot find the path specified.
+'-oi' is not recognized as an internal or external command,
+operable program or batch file.
+'sendmail' is not recognized as an internal or external command,
+operable program or batch file.
+'sendmail' is not recognized as an internal or external command,
+operable program or batch file.
