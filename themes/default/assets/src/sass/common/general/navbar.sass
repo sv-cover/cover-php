@@ -1,0 +1,53 @@
+.navbar .applications
+    .tool-set
+        padding: 1rem
+
+        &:not(:first-child)
+            border-top: $navbar-divider-height solid $navbar-divider-background-color
+
+        .title
+            color: $navbar-item-color
+
+    .tool
+        color: $navbar-item-color
+        display: flex
+        flex-flow: column nowrap
+        align-items: center
+
+        &:active
+            background: $navbar-dropdown-item-active-background-color
+            color: $navbar-dropdown-item-active-color
+
+        &:focus
+            outline: 1px dotted
+            outline-offset: -$column-gap
+
+        &:hover
+            color: $navbar-dropdown-item-hover-color
+            background: $navbar-dropdown-item-hover-background-color
+
+        .name
+            text-align: center
+
+        .icon img
+            // same size as .fa-stack.fa-lg
+            font-size: 1.3333333333em
+            max-height: 2em
+            height: 2em
+
++tablet
+    .navbar .applications.navbar-item.has-dropdown
+        position: relative
+
+        .navbar-dropdown
+            top: 100%
+            right: auto
+            left: 0
+            min-width: 0
+
+            &.is-right
+                right: 0
+                left: auto
+
+            .navbar-dropdown-content
+                width: 20rem

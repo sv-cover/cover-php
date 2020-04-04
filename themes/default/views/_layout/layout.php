@@ -129,10 +129,18 @@ class LayoutViewHelper
 			'label' => __(''),
 			'items' => [
 				[
+					'icon' => [
+						'fa' => 'fas fa-comments',
+						'color' => 'cover',
+					],
 					'url' => 'forum.php',
 					'label' => __('Forum')
 				],
 				[
+					'icon' => [
+						'fa' => 'fas fa-map-marked-alt',
+						'color' => 'cover',
+					],
 					'url' => 'stickers.php',
 					'label' => __('Sticker map')
 				]
@@ -143,26 +151,44 @@ class LayoutViewHelper
 			'label' => __('Tools'),
 			'items' => [
 				[
+					'icon' => [
+						'fa' => 'fas fa-book',
+						'color' => 'cover',
+					],
 					'url' => 'https://wiki.svcover.nl/',
 					'target' => '_blank',
 					'label' => __('Wiki')
 				],
 				[
+					'icon' => [
+						'img' => '/images/applications/sd.png',
+					],
 					'url' => 'https://sd.svcover.nl/',
 					'target' => '_blank',
 					'label' => __('Documents & Templates')
 				],
 				[
+					'icon' => [
+						'fa' => 'fas fa-tshirt',
+						'color' => 'cover',
+					],
 					'url' => 'https://merchandise.svcover.nl/',
 					'target' => '_blank', 
 					'label' => __('Merchandise')
 				],
 				[
+					'icon' => [
+						'fa' => 'fas fa-graduation-cap',
+						'color' => 'cover',
+					],
 					'url' => 'https://studysupport.svcover.nl/',
 					'target' => '_blank',
 					'label' => __('Exams & Summaries')
 				],
 				[
+					'icon' => [
+						'img' => '/images/applications/tutoring.svg',
+					],
 					'url' => 'https://tutoring.svcover.nl/',
 					'target' => '_blank',
 					'label' => __('Tutoring')
@@ -177,6 +203,9 @@ class LayoutViewHelper
 
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
 			$tools['external']['items'][] = [
+				'icon' => [
+					'img' => '/images/applications/mail.svg',
+				],
 				'url' => 'https://webmail.svcover.nl/',
 				'label' => __('Webmail'),
 				'target' => '_blank',
@@ -184,12 +213,22 @@ class LayoutViewHelper
 			];
 
 			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-mail-bulk',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'mailinglijsten.php',
 				'label' => __('Mailing lists'),
 				'title' => __('Manage your committee\'s mailing lists.')
 			];
 
 			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-list-alt',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'signup.php',
 				'label' => __('Forms'),
 				'title' => __('Manage your committee\'s sign-up forms.')
@@ -200,12 +239,26 @@ class LayoutViewHelper
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-plus',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'show.php?view=create',
 				'label' => __('Make a page'),
 				'title' => __('Make a new content page on the website.')
 			];
 
 			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-user-plus',
+					'color' => 'cover',
+				],
+				'icon' => [
+					'fa' => 'fas fa-calendar',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'lidworden.php?view=pending-confirmation',
 				'label' => __('Pending registrations'),
 				'title' => __('People who signed up for Cover, but did not yet confirm their email address.')
@@ -215,12 +268,22 @@ class LayoutViewHelper
 		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-calendar',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'agenda.php?agenda_moderate',
 				'label' => __('Calendar'),
 				'title' => __('Moderate calendar items.')
 			];
 
 			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-user-friends',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'actieveleden.php',
 				'label' => __('Active Members'),
 				'title' => __('All active committee members according to the website.')
@@ -230,6 +293,11 @@ class LayoutViewHelper
 		
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-cog',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'settings.php',
 				'label' => __('Settings'),
 				'title' => __('Manage a few of the website\'s settings.')
