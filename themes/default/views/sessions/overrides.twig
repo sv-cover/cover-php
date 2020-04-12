@@ -36,13 +36,13 @@
 				
 				<fieldset class="field">
 					<legend>
-						{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }, label=__('Override member id')) }}
+						{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }, label=__('Override member')) }}
 					</legend>
 
 					<div class="field">
-						{{ html_label(__('Member id'), 'override_member_id') }}
+						{{ html_label(__('Member'), 'override_member_id') }}
 						<div class="control">
-							{{ html_input_text('override_member_id', {'override_member_id': global.identity.get_override_member() ? global.identity.get_override_member().id : null}, data_autocomplete='member_id') }}
+							{{ html_input_text('override_member_id', {'override_member_id': global.identity.get_override_member() ? global.identity.get_override_member().id : null}, data_autocomplete='member_id', data_name=global.identity.get_override_member() ? global.identity.get_override_member().full_name : null) }}
 						</div>
 					</div>
 				</fieldset>

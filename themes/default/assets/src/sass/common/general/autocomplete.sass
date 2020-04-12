@@ -1,0 +1,25 @@
+.autocomplete-list
+    position: absolute
+    right: 0
+    left: 0
+    background: $dropdown-content-background-color
+    box-shadow: $dropdown-content-shadow
+    z-index: 50
+
+    .autoComplete_result
+        padding: 0.375rem 1rem
+        margin: 0
+
+        &:hover,
+        &.autoComplete_selected
+            background: $background
+            cursor: pointer
+
+        .autoComplete_highlighted
+            font-weight: $weight-semibold
+
+        &+.autoComplete_result
+            border-top: 1px solid $border-light
+
+    .media.profile
+        align-items: center
