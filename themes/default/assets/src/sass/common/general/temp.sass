@@ -1,0 +1,71 @@
+.columns-vertical
+    // General settings
+    columns: 1
+    margin-left: (-$column-gap)
+    margin-right: (-$column-gap)
+    margin-top: (-$column-gap)
+
+    &:last-child
+        margin-bottom: (-$column-gap)
+
+    &:not(:last-child)
+        margin-bottom: calc(1.5rem - #{$column-gap})
+
+    // Modifiers
+    &.is-gapless
+        margin-left: 0
+        margin-right: 0
+        margin-top: 0
+
+        & > .column
+            margin: 0
+            padding: 0 !important
+
+        &:not(:last-child)
+            margin-bottom: 1.5rem
+
+        &:last-child
+            margin-bottom: 0
+
+    &.is-fill-balance
+        column-fill: balance
+
+    &.is-fill-auto
+        column-fill: auto
+
+    // Numbers of columns for all viewports
+    &.is-mobile
+        @for $i from 1 through 12
+            &.has-#{$i}
+                columns: $i
+    
+    +mobile
+        @for $i from 1 through 12
+            &.has-#{$i}-mobile
+                columns: $i
+
+    +tablet
+        @for $i from 1 through 12
+            &.has-#{$i},
+            &.has-#{$i}-tablet
+                columns: $i
+    
+    +touch
+        @for $i from 1 through 12
+            &.has-#{$i}-touch
+                columns: $i
+
+    +desktop
+        @for $i from 1 through 12
+            &.has-#{$i}-desktop
+                columns: $i
+
+    +widescreen
+        @for $i from 1 through 12
+            &.has-#{$i}-widescreen
+                columns: $i
+
+    +fullhd
+        @for $i from 1 through 12
+            &.has-#{$i}-fullhd
+                columns: $i

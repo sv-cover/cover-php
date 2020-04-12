@@ -21,13 +21,11 @@
 					</legend>
 					
 					<label class="label">{{ __('Committees') }}</label>
-					<ul class="columns is-multiline">
+					<ul class="columns-vertical has-2-mobile has-3-tablet">
 						{% for committee in committees %}
-						<li class="column is-half-mobile is-one-third-tablet is-one-quarter-desktop">
-							<div class="field">
-								<div class="control">
-									{{ html_input_checkbox('override_committee_ids[]', {override_committee_ids: global.identity.get_override_committees()}, value=committee.id, id='field-override-committee-' ~ committee.id, label=committee.naam) }}
-								</div>
+						<li class="column">
+							<div class="control">
+								{{ html_input_checkbox('override_committee_ids[]', {override_committee_ids: global.identity.get_override_committees()}, value=committee.id, id='field-override-committee-' ~ committee.id, label=committee.naam) }}
 							</div>
 						</li>
 						{% endfor %}
