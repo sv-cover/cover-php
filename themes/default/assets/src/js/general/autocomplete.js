@@ -5,6 +5,7 @@ class Autocomplete {
         this.element = this.initUi(options.element);
         this.autocomplete = this.initAutocomplete(options.config);
         this.resultsListVisible = true;
+        this.hasFocus = false;
         this.initFocusEvents();
     }
 
@@ -17,7 +18,12 @@ class Autocomplete {
                 const result = document.createElement('li');
                 result.setAttribute('class', 'no_result');
                 result.setAttribute('tabindex', '1');
-                result.innerHTML = 'No Results';
+
+                if (overrides.noResultsText)
+                    result.append(document.createTextNode(overrides.noResultsText));
+                else
+                    result.append(document.createTextNode('No results'));
+
                 if (this.getResultsListElement())
                     this.getResultsListElement().append(result);
             },
@@ -73,8 +79,14 @@ class Autocomplete {
     }
 
     initFocusEvents() {
-        this.sourceElement.addEventListener('focus', () => this.toggleResultsList(true));
-        this.sourceElement.addEventListener('blur', () => this.toggleResultsList(false));
+        this.sourceElement.addEventListener('focus', () => {
+            this.hasFocus = true;
+            this.toggleResultsList(true);
+        });
+        this.sourceElement.addEventListener('blur', () => {
+            this.hasFocus = false;
+            this.toggleResultsList(false);
+        });
     }
 
     handleSelection(feedback) {
@@ -96,40 +108,36 @@ class Autocomplete {
         source.removeAttribute('id');
         source.classList.add('autocomplete-list');
 
-        this.updateResultsListPosition();
+        this.monitorPosition();
     }
 
-    toggleResultsList(isVisible) {
-        this.resultsListVisible = isVisible;
+    toggleResultsList(isVisible=null) {
+        if (isVisible !== null)
+            this.resultsListVisible = isVisible;
 
         if (!this.getResultsListElement())
             return;
 
-        if (isVisible)
+        if (this.resultsListVisible) {
+            const bodyRect = document.body.getBoundingClientRect();
+            const sourceRect = this.sourceElement.getBoundingClientRect();
+            this.getResultsListElement().style.top = sourceRect.bottom - bodyRect.top + 'px';
+            this.getResultsListElement().style.left = sourceRect.left - bodyRect.left + 'px';
+            this.getResultsListElement().style.width = sourceRect.width + 'px';
             this.getResultsListElement().hidden = false;
+        }
         else
             this.getResultsListElement().hidden = true;
     }
 
-    updateResultsListPosition() {
+    monitorPosition() {
         let ticking = false;
-
-        const updatePosition = () => {
-            if (this.resultsListVisible && this.getResultsListElement()) {
-                const bodyRect = document.body.getBoundingClientRect();
-                const sourceRect = this.sourceElement.getBoundingClientRect();
-                this.getResultsListElement().style.top = sourceRect.bottom - bodyRect.top + 'px';
-                this.getResultsListElement().style.left = sourceRect.left - bodyRect.left + 'px';
-                this.getResultsListElement().style.width = sourceRect.width + 'px';
-            }
-            this.toggleResultsList(this.resultsListVisible);
-        };
 
         window.addEventListener('scroll', (event) => {
           if (!ticking) {
             window.requestAnimationFrame(() => {
-              updatePosition();
-              ticking = false;
+                this.toggleResultsList();
+                ticking = false;
             });
 
             ticking = true;
@@ -139,14 +147,14 @@ class Autocomplete {
         const sourceElementObserver = new IntersectionObserver(
             (entries, observer) => {
                 for (const entry of entries)
-                    this.resultsListVisible = entry.isIntersecting;
-                updatePosition();
+                    this.resultsListVisible = this.hasFocus && entry.isIntersecting;
+                this.toggleResultsList();
             }
         );
 
         sourceElementObserver.observe(this.sourceElement);
 
-        updatePosition();
+        this.toggleResultsList();
     }
 }
 

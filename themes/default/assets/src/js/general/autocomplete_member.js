@@ -25,6 +25,7 @@ class AutocompleteMember extends Autocomplete{
                 cache: false
             },
             searchEngine: 'loose',
+            noResultsText: 'No members found :(',
         }));
     }
 
