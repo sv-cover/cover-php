@@ -198,16 +198,6 @@ class HTMLTwigExtension extends Twig_Extension
 			}
 		}
 
-		$hidden_field = self::_input_field($name, null, [
-			'type' => 'hidden',
-			'value' => '',
-			'nopost' => true,
-			'id' => null
-		]);
-
-		if (substr($field, -2, 2) == '[]')
-			$hidden_field = '';
-
 		$checkbox_field = self::_input_field($name, null, $params);
 
 		if ($label) {
@@ -216,6 +206,16 @@ class HTMLTwigExtension extends Twig_Extension
 			$id = isset($params['id']) ? preg_replace('/^field-/', '', $params['id'], 1) : $name;
 			$checkbox_field = self::_label(sprintf('%s %s', $checkbox_field, $label), $id, $params);
 		}
+
+		if (!empty($params['add_hidden']))
+			$hidden_field = self::_input_field($name, null, [
+				'type' => 'hidden',
+				'value' => '',
+				'nopost' => true,
+				'id' => null
+			]);
+		else
+			$hidden_field = '';
 
 		return $hidden_field . $checkbox_field;
 	}

@@ -7,7 +7,7 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" action="{{ link('sessions.overrides') }} ">
+		<form method="post" class="session-overrides-form" action="{{ link('sessions.overrides') }} ">
 			{{ html_nonce('session_overrides') }}
 			{{ html_input_hidden('referrer', referrer) }}
 			<header class="modal-card-head">
@@ -15,11 +15,10 @@
 			</header>
 			<section class="modal-card-body">
 				<div class="field">
-				  	{# <input id="switchRtlExample" type="checkbox" name="switchRtlExample" class="switch is-rtl" checked="checked"> #}
-					{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }, class='switch is-rounded is-full-width is-rtl') }}
+					{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }, class='switch is-rounded is-full-width is-rtl', data_target='#override-committees-fieldset') }}
 				  	<label for="field-override_committees">{{__('Override committee memberships')}}</label>
 				</div>
-				<fieldset class="fieldset">
+				<fieldset class="fieldset" id="override-committees-fieldset">
 					<legend>
 						{{ __('Committees') }}
 					</legend>
@@ -33,11 +32,10 @@
 				</fieldset>
 				
 				<div class="field">
-				  	{# <input id="switchRtlExample" type="checkbox" name="switchRtlExample" class="switch is-rtl" checked="checked"> #}
-					{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }, class='switch is-rounded is-full-width is-rtl') }}
+					{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }, class='switch is-rounded is-full-width is-rtl', data_target='#override-member-fieldset') }}
 				  	<label for="field-override_member">{{__('Override member')}}</label>
 				</div>
-				<fieldset class="fieldset">
+				<fieldset class="fieldset" id="override-member-fieldset">
 					<legend>{{__('Member')}}</legend>
 
 					<div class="field">
