@@ -95,3 +95,15 @@
         +tmp-switch-size($size-medium)
     &.is-large
         +tmp-switch-size($size-large)
+
+.fieldset
+    @extend .box
+    
+    legend
+        font-weight: $label-weight
+        float: left
+        width: 100%
+        margin-bottom: 0.75rem // same as field
+
+    legend + *
+        clear: both

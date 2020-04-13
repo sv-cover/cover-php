@@ -284,9 +284,9 @@
     - [ ] forum/reply_form.twig
     - [ ] forum/thread_form.twig
 - [ ] [issue] Bulma typography is inconsistent across a single page.
-- [ ] [issue] Fieldset in: 
-    - [ ] sessions/overrides.twig
-    - [ ] signup/fields/choice.twig
+- [×] [issue] Fieldset in: 
+    - [×] sessions/overrides.twig
+    - [×] signup/fields/choice.twig
 - [ ] Calendar icon in:
     - [ ] agenda/index.twig
     - [ ] agenda/single.twig

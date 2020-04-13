@@ -19,12 +19,11 @@
 					{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }, class='switch is-rounded is-full-width is-rtl') }}
 				  	<label for="field-override_committees">{{__('Override committee memberships')}}</label>
 				</div>
-				<fieldset class="field">
+				<fieldset class="fieldset">
 					<legend>
 						{{ __('Committees') }}
 					</legend>
-
-					<ul class="columns-vertical has-2-mobile has-3-tablet">
+					<ul class="columns-vertical has-2-mobile has-3-tablet is-gapless">
 						{% for committee in committees %}
 						<li class="column control">
 							{{ html_input_checkbox('override_committee_ids[]', {override_committee_ids: global.identity.get_override_committees()}, value=committee.id, id='field-override-committee-' ~ committee.id, label=committee.naam) }}
@@ -38,7 +37,7 @@
 					{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }, class='switch is-rounded is-full-width is-rtl') }}
 				  	<label for="field-override_member">{{__('Override member')}}</label>
 				</div>
-				<fieldset class="field">
+				<fieldset class="fieldset">
 					<legend>{{__('Member')}}</legend>
 
 					<div class="field">
