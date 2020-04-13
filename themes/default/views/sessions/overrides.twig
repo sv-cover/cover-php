@@ -14,31 +14,35 @@
 				<p class="modal-card-title">{{ __('Impersonate a user') }}</p>
 			</header>
 			<section class="modal-card-body">
-				
+				<div class="field">
+				  	{# <input id="switchRtlExample" type="checkbox" name="switchRtlExample" class="switch is-rtl" checked="checked"> #}
+					{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }, class='switch is-rounded is-full-width is-rtl') }}
+				  	<label for="field-override_committees">{{__('Override committee memberships')}}</label>
+				</div>
 				<fieldset class="field">
 					<legend>
-						{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }, label=__('Override committee memberships') ) }}
+						{{ __('Committees') }}
 					</legend>
-					
-					<label class="label">{{ __('Committees') }}</label>
+
 					<ul class="columns-vertical has-2-mobile has-3-tablet">
 						{% for committee in committees %}
-						<li class="column">
-							<div class="control">
-								{{ html_input_checkbox('override_committee_ids[]', {override_committee_ids: global.identity.get_override_committees()}, value=committee.id, id='field-override-committee-' ~ committee.id, label=committee.naam) }}
-							</div>
+						<li class="column control">
+							{{ html_input_checkbox('override_committee_ids[]', {override_committee_ids: global.identity.get_override_committees()}, value=committee.id, id='field-override-committee-' ~ committee.id, label=committee.naam) }}
 						</li>
 						{% endfor %}
 					</ul>
 				</fieldset>
 				
+				<div class="field">
+				  	{# <input id="switchRtlExample" type="checkbox" name="switchRtlExample" class="switch is-rtl" checked="checked"> #}
+					{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }, class='switch is-rounded is-full-width is-rtl') }}
+				  	<label for="field-override_member">{{__('Override member')}}</label>
+				</div>
 				<fieldset class="field">
-					<legend>
-						{{ html_input_checkbox('override_member', {'override_member': global.identity.get_override_member() is not same as(null) }, label=__('Override member')) }}
-					</legend>
+					<legend>{{__('Member')}}</legend>
 
 					<div class="field">
-						{{ html_label(__('Member'), 'override_member_id') }}
+						{{ html_label(__('Member name'), 'override_member_id', class="is-sr-only") }}
 						<div class="control">
 							{{ html_input_text('override_member_id', {'override_member_id': global.identity.get_override_member() ? global.identity.get_override_member().id : null}, data_autocomplete='member_id', data_name=global.identity.get_override_member() ? global.identity.get_override_member().full_name : null) }}
 						</div>

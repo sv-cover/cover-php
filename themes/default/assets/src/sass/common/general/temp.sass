@@ -69,3 +69,29 @@
         @for $i from 1 through 12
             &.has-#{$i}-fullhd
                 columns: $i
+
+=tmp-switch-size($size)
+    $switch-height: $size * 1.5
+    $switch-width: $switch-height * 2
+    $paddle-width: $switch-height - ($switch-paddle-offset * 2)
+    $paddle-active-offset: $switch-width - $paddle-width - ($switch-paddle-offset * 1.5)
+
+    &.is-full-width + label
+        display: inline-block
+        width: 100%
+
+    &.is-rtl + label::after
+            right: $paddle-active-offset
+
+
+    &:checked.is-rtl + label::after
+        right: $switch-paddle-offset
+
+.switch[type="checkbox"]
+    +tmp-switch-size($size-normal)
+    &.is-small
+        +tmp-switch-size($size-small)
+    &.is-medium
+        +tmp-switch-size($size-medium)
+    &.is-large
+        +tmp-switch-size($size-large)
