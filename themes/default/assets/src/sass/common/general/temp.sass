@@ -107,3 +107,29 @@
 
     legend + *
         clear: both
+
+.table.is-aligned
+    margin-right: -.75rem
+    margin-left: -.75rem
+
+    &.is-fullwidth
+        width: calc(100% + 1.5rem)
+
+    &.is-narrow
+        margin-right: -.5rem
+        margin-left: -.5rem
+
+        &.is-fullwidth
+            width: calc(100% + 1rem)
+
+    tr.is-vcentered td,
+    tr.is-vcentered th,
+    td.is-vcentered,
+    th.is-vcentered
+        vertical-align: middle
+
+    tr.is-vbottom td,
+    tr.is-vbottom th,
+    td.is-vbottom,
+    th.is-vbottom
+        vertical-align: bottom

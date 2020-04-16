@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group') }}</h1>
-<form method="post" action="{{ view.get_form_action(iter) }}">
+<form class="committees-form" method="post" action="{{ view.get_form_action(iter) }}">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
@@ -36,7 +36,7 @@
 	</div>
 
 	<div class="field">
-		<table class="table is-fullwidth">
+		<table class="table is-fullwidth is-hoverable is-aligned">
 			<thead>
 				<tr>
 					<th>{{ __('Member') }}</th>
@@ -44,16 +44,21 @@
 					<th></th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="member-function-list">
 				{% if iter.has_id() %}
 					{% for member in iter.members %}
-						<tr>
-							<td>{{ member|full_name_ignore_privacy }}</td>
+						<tr class="is-vcentered">
+							<td class="name">{{ member|full_name_ignore_privacy }}</td>
 							<td>
-								<input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="input is-small autocomplete-function">
+								<input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="input is-small" data-autocomplete="data" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
 							</td>
 							<td class="has-text-right">
-								<button type="button" class="button is-small remove-button" title="{{ __('Remove member from committee') }}">&times;</button>
+								<button type="button" class="button is-small remove-button" title="{{ __('Remove member from committee') }}">
+								    <span class="icon is-small">
+										<i class="fas fa-user-times" aria-hidden="true"></i>
+										<span class="is-sr-only">{{ __('Remove member from committee') }}</span>
+									</span>
+								</button>
 							</td>
 						</tr>
 					{% endfor %}
@@ -62,10 +67,10 @@
 			<tfoot>
 				<tr>
 					<td>
-						<input class="input" type="text" class="committee-member-name" placeholder="{{ __('Name') }}">
+						<input class="input committee-member-name" type="text" placeholder="{{ __('Name') }}" data-autocomplete="member_id">
 					</td>
 					<td>
-						<input class="input" type="text" class="committee-member-function autocomplete-function" placeholder="{{ __('Function') }}">
+						<input class="input committee-member-function" type="text" placeholder="{{ __('Function') }}" data-autocomplete="data" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
 					</td>
 					<td class="has-text-right">
 						<button type="button" class="button add-button">{{ __('Add') }}</button>
@@ -73,6 +78,23 @@
 				</tr>
 			</tfoot>
 		</table>
+
+		<template id="member-function-row">
+			<tr class="is-vcentered">
+				<td class="name"></td>
+				<td>
+					<input type="text" class="input is-small function" data-autocomplete="data" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
+				</td>
+				<td class="has-text-right">
+					<button type="button" class="button is-small remove-button" title="{{ __('Remove member from committee') }}">
+					    <span class="icon is-small">
+							<i class="fas fa-user-times" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Remove member from committee') }}</span>
+						</span>
+					</button>
+				</td>
+			</tr>
+		</template> 
 	</div>
 
 	<div class="field">
@@ -100,64 +122,4 @@
 	</div>
 </form>
 
-<script>
-jQuery(function($) {
-	var $form = $('form .committee-members')
-		$member = $form.find('input.committee-member-name'),
-		$fun = $form.find('input.committee-member-function')
-		$add = $form.find('button.add-button');
-
-	$member.autocompleteAlmanac({
-		select: function(event, ui) {
-			$(this).data('member-id', ui.item.id).val(ui.item.name);
-			$fun.focus();
-			return false;
-		}
-	});
-
-	$form.find('.autocomplete-function').autocomplete({
-			delay: 0,
-			minLength: 0,
-			source: {{ model.get_functies|flip|values|json_encode|raw }}
-		})
-		.focus(function(e) {
-			$(this).autocomplete('search', '');
-		});
-
-	$add.click(function(e) {
-		if (!$member.data('member-id'))
-			return;
-
-		var $row = $('<tr>');
-
-		$('<td>').text($member.val()).appendTo($row);
-
-		$('<input type="text">')
-			.attr('name', 'members[' + $member.data('member-id') + ']')
-			.val($fun.val())
-			.appendTo($('<td>').appendTo($row));
-
-		$('<button type="button">')
-			.addClass('remove-button button')
-			.html('&times;')
-			.appendTo($('<td>').appendTo($row));
-
-		$form.find('table tbody').append($row);
-
-		$fun.val('');
-		$member.data('member-id', '').val('').focus();
-	});
-
-	$fun.keypress(function(e) {
-		if (e.keyCode == $.ui.keyCode.ENTER) {
-			e.preventDefault();
-			$add.click();
-		}
-	});
-
-	$form.on('click', '.remove-button', function(e) {
-		$(this).closest('tr').remove();
-	});
-});
-</script>
 {% endblock %}
