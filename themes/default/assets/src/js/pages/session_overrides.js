@@ -57,6 +57,6 @@ class SessionOverridesForm {
 }
 
 
-Bulma.registerPlugin('preview-loader', SessionOverridesForm);
+Bulma.registerPlugin('session-overrides', SessionOverridesForm);
 
 export default SessionOverridesForm;

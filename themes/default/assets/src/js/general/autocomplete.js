@@ -7,6 +7,10 @@ class Autocomplete {
         this.resultsListVisible = true;
         this.hasFocus = false;
         this.initFocusEvents();
+        this.sourceElement.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter')
+                event.preventDefault();
+        });
     }
 
     generateConfig(overrides) {
@@ -65,10 +69,7 @@ class Autocomplete {
         containerElement.classList.add('autocomplete');
 
         let newSourceInput = sourceInput.cloneNode(true);
-        newSourceInput.type = 'hidden';
-        newSourceInput.removeAttribute('id');
-        newSourceInput.removeAttribute('class');
-        newSourceInput.classList.add('autocomplete-target'); 
+        newSourceInput.autocomplete = 'off';
 
         containerElement.append(newSourceInput);
 
@@ -90,8 +91,10 @@ class Autocomplete {
     }
 
     handleSelection(feedback) {
-        if (this.autocomplete)
+        if (this.autocomplete && this.autocomplete.data.key)
             this.sourceElement.value = feedback.selection.value[this.autocomplete.data.key[0]];
+        else if (this.autocomplete)
+            this.sourceElement.value = feedback.selection.value;
     }
 
     getResultsListElement() {

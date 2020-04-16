@@ -597,7 +597,7 @@ class SinglePhoto {
         if (event.shiftKey || event.metaKey || event.ctrlKey)
             return;
 
-        switch (event.code) {
+        switch (event.key) {
             case "Left": // IE/Edge specific value
             case "ArrowLeft":
                 this.carousel.navigate('previous');
@@ -609,7 +609,8 @@ class SinglePhoto {
             case "KeyC":
                 this.element.querySelector('#field-reactie').focus();
                 break;
-            case "KeyF":
+            case "f":
+            case "F":
                 if (document.fullscreenElement)
                     document.exitFullscreen();
                 else

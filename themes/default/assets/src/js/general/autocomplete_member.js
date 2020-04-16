@@ -48,7 +48,6 @@ class AutocompleteMember extends Autocomplete{
         let newMemberIdInput = memberIdInput.cloneNode(true);
         newMemberIdInput.type = 'hidden';
         newMemberIdInput.removeAttribute('id');
-        newMemberIdInput.removeAttribute('class');
         newMemberIdInput.classList.add('autocomplete-target'); 
 
         containerElement.append(newMemberIdInput);
