@@ -26,9 +26,9 @@
 </article>
 <article class="level">
 	<div class="level-left buttons">
-		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="button" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Add member') }}</a>
+		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="button" data-popup="modal">{{ __('Add member') }}</a>
 
-		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="button" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Subscribe a non-member') }}</a>
+		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="button" data-popup="modal">{{ __('Subscribe a non-member') }}</a>
 
 		<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}" class="button">{{ __('Archived messages') }}</a>
 	</div>
@@ -94,52 +94,4 @@
 		</figure>
 	</div>
 </article>
-
-<script>
-jQuery(function($) {
-	function split(val) {
-		return val.split(/,\s*/);
-	}
-
-	function extractLast(term) {
-		return split(term).pop();
-	}
-
-	$('.mailinglist-header + form').append(
-		$('<a>')
-			.addClass('button')
-			.attr({'href': '#mailinglist-settings'})
-			.text({{ __('Modify mailing list properties')|json_encode|raw }}));
-	
-	$('#lid_id')
-		.bind('keydown', function(e) {
-			if (event.keyCode === $.ui.keyCode.TAB
-				&& $(this).data('ui-autocomplete').menu.active)
-				e.preventDefault();
-		})
-		.autocompleteAlmanac({
-			source: function(request, response) {
-				$.getJSON('almanak.php', {
-					'search': extractLast(request.term)
-				}, response);
-			},
-			search: function() {
-				// custom minLength
-				if (extractLast(this.value).length < 2)
-					return false;
-			},
-			select: function(event, ui) {
-				var terms = split(this.value);
-				// remove the current input
-				terms.pop();
-				// add the selected item
-				terms.push(ui.item.id);
-				// add placeholder to get the comma-and-space at the end
-				terms.push('');
-				this.value = terms.join(', ');
-				return false;
-			}
-		});
-});
-</script>
 {% endblock %}

@@ -442,7 +442,7 @@ class DataModelMailinglistSubscription extends DataModel
 		if (!$subscription->is_active())
 			return;
 
-		$subscription['opgezegd_op'] = (new DateTime())->format('Y-m-d H:i:s');
+		$subscription['opgezegd_op'] = new DatabaseLiteral('CURRENT_TIMESTAMP');
 
 		if ($this->_is_opt_out_subscription_id($subscription['id']))
 			return $this->unsubscribe_member($subscription['mailinglist'], $subscription['lid']);
