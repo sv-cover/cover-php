@@ -109,36 +109,4 @@
 		</div>
 	</div>
 </form>
-
-<script type="text/javascript">
-	
-	function check_checkbox(box, div) {
-		box = document.getElementById(box);
-		div = document.getElementById(div);
-		
-		if (box.getAttribute("checked") === "checked")
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-		
-	}
-
-	function set_visibility(elem, div) {
-		div = document.getElementById(div);
-
-		if (elem.checked)
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-	}
-
-	jQuery('input[name=facebook_id]').change(function(e) {
-		var expr = /^https:\/\/www\.facebook\.com\/events\/(\d+)\//;
-		var match = $(this).val().match(expr);
-
-		if (match)
-			$(this).val(match[1]);
-	});
-</script>
-</div>
 {% endblock %}
