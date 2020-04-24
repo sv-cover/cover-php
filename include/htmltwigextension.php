@@ -316,9 +316,9 @@ class HTMLTwigExtension extends Twig_Extension
 		if (isset($params['errors']))
 			if ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))
 				if (isset($params['class']))
-					$params['class'] .= ' error';
+					$params['class'] .= ' is-danger';
 				else
-					$params['class'] = 'error';
+					$params['class'] = 'is-danger';
 		unset($params['errors']);
 
 		// Is the id overriden?
@@ -398,9 +398,9 @@ class HTMLTwigExtension extends Twig_Extension
 
 		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($name, $params['errors'])) || isset($params['errors'][$name]))) {
 			if (isset($params['class']))
-				$params['class'] = $params['class'] . '_error';
+				$params['class'] = $params['class'] . ' is-danger';
 			else
-				$params['class'] = 'error';
+				$params['class'] = 'is-danger';
 		}
 
 		unset($params['errors']);

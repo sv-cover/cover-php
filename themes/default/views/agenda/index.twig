@@ -39,13 +39,13 @@
 				</div>
 			{% endif %}
 		    {% if user_can_create controller.new_iter %}
-				<a href="{{ controller.link_to_create() }}" class="button">{{ __('New calendar event') }}</a>
+				<a href="{{ controller.link_to_create() }}" class="button">{{ __('New event') }}</a>
 			{% endif%}
 		</div>
 	</div>
 	{% if not global.auth.logged_in %}
 		<div class="notification">
-			{{ __('Log in to view hidden calendar events.') }}
+			{{ __('Log in to view hidden events.') }}
 		</div>
 	{% endif %}
 	<nav class="pagination is-centered" role="navigation" aria-label="pagination">
