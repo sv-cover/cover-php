@@ -227,13 +227,13 @@
     - [×] photo visibility form (photos in photos of member book)
     - [ ] view photo modal
     - [ ] create sticker in sticker map
-    - [ ] Mailinglist subscribe forms
+    - [×] Mailinglist subscribe forms
 - [ ] Autocomplete
-    - [ ] session/overrides.twig (autocomlete member)
-    - [ ] committeebattle/form.twig (member)
+    - [×] session/overrides.twig (autocomlete member)
+    - [×] committeebattle/form.twig (member)
     - [ ] tagging people in photo album
 - [ ] Whatever is happening in search results :P
-- [ ] Whatever is happening on the committee form
+- [×] Whatever is happening on the committee form
 - [×] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
 - [×] Everything in fotoboek/\_photos.twig
 - [×] Change photo name (photocee functionality)
@@ -241,11 +241,11 @@
 - [×] Add photo's to photobook
 - [ ] Sticker map
 - [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
-- [ ] Stuff happening in mailijnlijsten/single.twig
+- [×] Stuff happening in mailijnlijsten/single.twig
 - [ ] Fancyness in signup/form_form.twig
 - [ ] Autocomplete in lidworden/lidworden.twig
 - [ ] Profile page
-- [ ] Improve Dark Theme switch JS (is inline now, should be pulled out)
+- [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
 - [ ] Photo tagging
 
 ## Bulma extensions / custom CSS
@@ -293,7 +293,8 @@
     - [ ] commissies/_agenda.twig
     - [ ] search/\_single_agendapunt.twig
 - [ ] [issue] Bulma dl styling is ugly
-- [ ] [issue] Multiline select is broken
+- [×] [issue] Multiple select is broken
+    - [×] committeebattle\form.twig
 - [×] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
 - [×] Lines of media objects are not always wished for, especially in nested media objects.
     - [×] comments on photobook main page
@@ -312,7 +313,7 @@
     - [×] fotoboekreacties/\_comment.twig
 - [ ] [issue] No margin around dropdown in .buttons
     - [ ] agenda/index.twig
-- [ ] Why does a .number make form elements rounded?
+- [×] Why does a .number make form elements rounded? Bulma legacy, apparently. Don't use .number.
 - [ ] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
     - [ ] signup/list_entries.twig
 - [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
@@ -332,7 +333,7 @@
 - [ ] Remove language switch from profile
 - [ ] Almanac form is weird. May need some backend improvements (filter on filter). 
 - [ ] Titles in pages behave weird. Maybe some backend improvements?
-- [ ] Transpose columns in session/overrides.twig and committeebattle/form.twig
+- [×] Transpose columns in session/overrides.twig and committeebattle/form.twig
 - [ ] Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
 - [×] Old committee page was better. But at least it's bulma now :)
 - [ ] Single committee page is crap now.
@@ -347,7 +348,7 @@
 - [ ] Move Headings inside of articles, unless header. Got to do proper HTML5 :)
 - [ ] Error 500. What if link_static is broken? Or i18n?
 - [ ] Poll on mobile doesn't work that well.
-- [ ] Photo privacy form doesn't return to original photo
+- [×] Photo privacy form doesn't return to original photo
 
 
 # Pending Design Decisions
