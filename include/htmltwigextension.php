@@ -101,9 +101,6 @@ class HTMLTwigExtension extends Twig_Extension
 		if (!isset($params['type']))
 			$params['type'] = 'text';
 
-		if (!isset($params['class']))
-			$params['class'] = 'text';
-
 		return self::input_field($name, $data, $params);
 	}
 
@@ -111,9 +108,6 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		$params['type'] = 'password';
 		$params['nopost'] = true;
-
-		if (!isset($params['class']))
-			$params['class'] = 'text';
 		
 		return self::input_field($name, null, $params);
 	}
@@ -121,9 +115,6 @@ class HTMLTwigExtension extends Twig_Extension
 	static public function input_number($name, $data, array $params = array())
 	{
 		$params['type'] = 'number';
-
-		if (!isset($params['class']))
-			$params['class'] = 'number';
 		
 		return self::input_field($name, $data, $params);
 	}
@@ -134,9 +125,6 @@ class HTMLTwigExtension extends Twig_Extension
 
 		if (!isset($params['placeholder']))
 			$params['placeholder'] = sprintf(__('E.g. %d-9-20'), date('Y'));
-
-		if (!isset($params['class']))
-			$params['class'] = 'date';
 		
 		return self::input_field($name, $data, $params);
 	}
@@ -150,9 +138,6 @@ class HTMLTwigExtension extends Twig_Extension
 		
 		if (!isset($params['placeholder']))
 			$params['placeholder'] = sprintf(__('E.g. %d-9-20 11:00'), date('Y'));
-
-		if (!isset($params['class']))
-			$params['class'] = 'datetime';
 		
 		return self::input_field($name, $data, $params);
 	}
@@ -281,7 +266,7 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		$params['type'] = 'submit';
 		$params['nopost'] = true;
-		
+
 		if (!isset($params['class']))
 			$params['class'] = 'button';
 		
