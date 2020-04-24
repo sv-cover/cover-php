@@ -50,7 +50,7 @@
 						<tr class="is-vcentered">
 							<td class="name">{{ member|full_name_ignore_privacy }}</td>
 							<td>
-								<input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="input is-small" data-autocomplete="data" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
+								<input type="text" name="members[{{ member.id }}]" value="{{ member.functie }}" class="input is-small" data-autocomplete="json" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
 							</td>
 							<td class="has-text-right">
 								<button type="button" class="button is-small remove-button" title="{{ __('Remove member from committee') }}">
@@ -70,7 +70,7 @@
 						<input class="input committee-member-name" type="text" placeholder="{{ __('Name') }}" data-autocomplete="member_id">
 					</td>
 					<td>
-						<input class="input committee-member-function" type="text" placeholder="{{ __('Function') }}" data-autocomplete="data" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
+						<input class="input committee-member-function" type="text" placeholder="{{ __('Function') }}" data-autocomplete="json" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
 					</td>
 					<td class="has-text-right">
 						<button type="button" class="button add-button">{{ __('Add') }}</button>
