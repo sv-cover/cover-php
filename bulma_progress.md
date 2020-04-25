@@ -318,13 +318,13 @@
     - [ ] signup/list_entries.twig
 - [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
     - [ ] signup/list_entries.twig
-- [ ] Buttons don't work that well as card-footer-item
-    - [ ] signup/form_form.twig
+- [×] Buttons don't work that well as card-footer-item
+    - [×] signup/form_form.twig
 - [ ] fullwidth/expanding select? maybe?
-- [ ] Buttons don't work as dropdown-item
-    - [ ] fotoboek/photobook.twig (manage dropdown for photocee)
 - [ ] Button addons spacing between last 2 is broken. See 
     - [ ] fotoboek/photobook.twig (download + mark as seen)
+- [×] Buttons don't work as dropdown-item
+    - [×] fotoboek/photobook.twig (manage dropdown for photocee)
 
 
 ## Other

@@ -133,3 +133,21 @@
     td.is-vbottom,
     th.is-vbottom
         vertical-align: bottom
+
+button.dropdown-item
+    background-color: inherit
+    border: none
+
+    &[disabled]
+        cursor: not-allowed
+        opacity: $button-disabled-opacity
+
+button.card-footer-item
+    background-color: inherit
+    border: none
+    cursor: pointer
+    color: $link
+    font-size: inherit // Button text is small for some reason, this fixes it :S
+
+    &:hover
+        color: $link-hover

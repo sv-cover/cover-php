@@ -114,8 +114,8 @@
 			</form>
 			
 			<footer class="card-footer">
-				<button type="submit" class="button card-footer-item hide-if-submit-on-change" form="field-{{field.id}}-update">{{ __('Modify field') }}</button>
-				<button type="submit" class="button card-footer-item" form="field-{{field.id}}-delete">{{ __('Delete field') }}</button>
+				<button type="submit" class="card-footer-item hide-if-submit-on-change" form="field-{{field.id}}-update">{{ __('Modify field') }}</button>
+				<button type="submit" class="card-footer-item" form="field-{{field.id}}-delete">{{ __('Delete field') }}</button>
 				{# What is this magic? #}
 				<form id="field-{{field.id}}-delete" action="{{ controller.link({view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
 					{{ html_nonce('delete_form_field', form, field) }}
