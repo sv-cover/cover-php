@@ -311,8 +311,8 @@
     - [×] fotoboek/\_path.twig
     - [×] fotoboek/single.twig
     - [×] fotoboekreacties/\_comment.twig
-- [ ] [issue] No margin around dropdown in .buttons
-    - [ ] agenda/index.twig
+- [×] [issue] No margin around dropdown in .buttons. No use .field.is-grouped instead (see bulma doc).
+    - [×] agenda/index.twig
 - [×] Why does a .number make form elements rounded? Bulma legacy, apparently. Don't use .number.
 - [ ] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
     - [ ] signup/list_entries.twig
@@ -321,10 +321,10 @@
 - [×] Buttons don't work that well as card-footer-item
     - [×] signup/form_form.twig
 - [ ] fullwidth/expanding select? maybe?
-- [ ] Button addons spacing between last 2 is broken. See 
-    - [ ] fotoboek/photobook.twig (download + mark as seen)
 - [×] Buttons don't work as dropdown-item
     - [×] fotoboek/photobook.twig (manage dropdown for photocee)
+- [×] Button addons spacing between last 2 is broken. See 
+    - [×] fotoboek/photobook.twig (download + mark as seen)
 
 
 ## Other

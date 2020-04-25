@@ -8,38 +8,42 @@
 		<div class="level-left">
 			<h1 class="title">{{ view.title }}</h1>
 		</div>
-		<div class="level-right buttons">
+		<div class="level-right field is-grouped">
 			{% if global.auth.logged_in %}
-				<div class="dropdown is-hoverable">
-					<div class="dropdown-trigger">
-						<button class="button" aria-haspopup="true" aria-controls="export-menu">
-							<span>{{ __('Export') }}</span>
-							<span class="icon is-small">
-								<i class="fas fa-angle-down" aria-hidden="true"></i>
-							</span>
-						</button>
-					</div>
-					<div class="dropdown-menu" id="export-menu" role="menu">
-						<div class="dropdown-content">
-							<div class="dropdown-item">
-								<p>{{ __('Add the Cover Calendar to your own calendar') }}</p>
+				<div class="control">
+					<div class="dropdown is-hoverable">
+						<div class="dropdown-trigger">
+							<button class="button" aria-haspopup="true" aria-controls="export-menu">
+								<span>{{ __('Export') }}</span>
+								<span class="icon is-small">
+									<i class="fas fa-angle-down" aria-hidden="true"></i>
+								</span>
+							</button>
+						</div>
+						<div class="dropdown-menu" id="export-menu" role="menu">
+							<div class="dropdown-content">
+								<div class="dropdown-item">
+									<p>{{ __('Add the Cover Calendar to your own calendar') }}</p>
+								</div>
+								<hr class="dropdown-divider">
+								<a class="dropdown-item" href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">
+									Google Calendar
+								</a>
+								<a class="dropdown-item" href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">
+									Outlook.com
+								</a>
+								<a class="dropdown-item" href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">
+									iCloud/other
+								</a>
 							</div>
-							<hr class="dropdown-divider">
-							<a class="dropdown-item" href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">
-								Google Calendar
-							</a>
-							<a class="dropdown-item" href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">
-								Outlook.com
-							</a>
-							<a class="dropdown-item" href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">
-								iCloud/other
-							</a>
 						</div>
 					</div>
 				</div>
 			{% endif %}
 		    {% if user_can_create controller.new_iter %}
-				<a href="{{ controller.link_to_create() }}" class="button">{{ __('New event') }}</a>
+		    	<div class="control">
+					<a href="{{ controller.link_to_create() }}" class="button">{{ __('New event') }}</a>
+		    	</div>
 			{% endif%}
 		</div>
 	</div>
