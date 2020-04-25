@@ -279,10 +279,14 @@
     - [ ] almanak/index.twig
     - [ ] commissies/_leden.twig
     - [ ] commissies/working_groups.twig
-- [ ] Tabs in form field (for preview rendering) should be closer to field in:
-    - [ ] forum/poll_form.twig
-    - [ ] forum/reply_form.twig
-    - [ ] forum/thread_form.twig
+- [×] Tabs in form field (for preview rendering) should be closer to field in:
+    - [×] forum/poll_form.twig
+    - [×] forum/reply_form.twig
+    - [×] forum/thread_form.twig
+    - [×] agenda/form.twig:
+    - [×] announcements/form.twig
+    - [×] show/form.twig
+    - [×] signup/configuration/editable.twig
 - [ ] [issue] Bulma typography is inconsistent across a single page.
 - [×] [issue] Fieldset in: 
     - [×] sessions/overrides.twig
