@@ -314,8 +314,8 @@
 - [×] [issue] No margin around dropdown in .buttons. No use .field.is-grouped instead (see bulma doc).
     - [×] agenda/index.twig
 - [×] Why does a .number make form elements rounded? Bulma legacy, apparently. Don't use .number.
-- [ ] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
-    - [ ] signup/list_entries.twig
+- [×] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
+    - [×] signup/list_entries.twig
 - [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
     - [ ] signup/list_entries.twig
 - [×] Buttons don't work that well as card-footer-item
