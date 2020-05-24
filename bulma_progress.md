@@ -296,7 +296,7 @@
     - [ ] agenda/single.twig
     - [ ] commissies/_agenda.twig
     - [ ] search/\_single_agendapunt.twig
-- [ ] [issue] Bulma dl styling is ugly
+- [×] [issue] Bulma dl styling is ugly
 - [×] [issue] Multiple select is broken
     - [×] committeebattle\form.twig
 - [×] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
