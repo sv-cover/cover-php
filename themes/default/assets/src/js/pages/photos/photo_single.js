@@ -281,43 +281,31 @@ class PhotoCarousel {
             });
         } else {
             // If cancel/end, commit.
-
-            // Wait for the DOM to be rerendered, create observer
-            const observer = new MutationObserver((mutationsList, observer) => {
-                for(let mutation of mutationsList) {
-                    if (mutation.type === 'attributes') {
-                        // Should navigate if move is bigger than 50% and not canceled.
-                        let shouldNavigate = Math.abs(event.deltaX) > this.carousel.offsetWidth / 2 
-
-                        shouldNavigate = shouldNavigate && event.eventType != Hammer.INPUT_CANCEL;
-
-                        // Navigate if should navigate and a next/previous photo is available
-                        if (shouldNavigate && event.deltaX < 0 && this.current.next)
-                            this.navigate('next');
-                        else if (shouldNavigate && event.deltaX > 0 && this.current.previous)
-                            this.navigate('previous');
-                        else
-                            // Reset view if no navigation
-                            this.carousel.querySelectorAll('.image').forEach( (el) => {
-                                let base = '0%';
-                                if (el.classList.contains('previous'))
-                                    base = '-100%';
-                                else if (el.classList.contains('next'))
-                                    base = '100%';
-                                el.style.left = base;
-                            });
-                    }
-                }
-
-                // Observation done.
-                observer.disconnect();
-            });
-
-            // Enable observer
-            observer.observe(this.carousel, { attributes: true });
-
             // Reenable animations
             this.carousel.classList.add('is-animated');
+
+            // Should navigate if move is bigger than 50% and not canceled.
+            // This step also triggers a reflow, which is essential to make the animations work
+            let shouldNavigate = Math.abs(event.deltaX) > this.carousel.offsetWidth / 2;
+
+            shouldNavigate = shouldNavigate && event.eventType != Hammer.INPUT_CANCEL;
+
+            // Navigate if should navigate and a next/previous photo is available
+            if (shouldNavigate && event.deltaX < 0 && this.current.next)
+                this.navigate('next');
+            else if (shouldNavigate && event.deltaX > 0 && this.current.previous)
+                this.navigate('previous');
+            else {
+                // Reset view if no navigation
+                this.carousel.querySelectorAll('.image').forEach( (el) => {
+                    let base = '0%';
+                    if (el.classList.contains('previous'))
+                        base = '-100%';
+                    else if (el.classList.contains('next'))
+                        base = '100%';
+                    el.style.left = base;
+                });
+            }
         }
     }
 
