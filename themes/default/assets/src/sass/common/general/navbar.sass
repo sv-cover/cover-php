@@ -79,8 +79,10 @@
 
 
     .applications
-        .tool-set
+        .navbar-item.tool-set
+            display: block
             padding: 1rem
+            white-space: normal
 
             &:not(:first-child)
                 border-top: $navbar-divider-height solid $navbar-divider-background-color
@@ -129,5 +131,6 @@
                 right: 0
                 left: auto
 
-            .navbar-dropdown-content
-                width: 20rem
+    .applications
+        .navbar-item.tool-set
+            width: 20rem

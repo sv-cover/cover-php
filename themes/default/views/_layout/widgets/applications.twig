@@ -8,9 +8,8 @@
         </span>
     </a>
     <div class="navbar-dropdown is-right">
-        <div class="navbar-dropdown-content">
         {% for tool_set_id, tool_set in view.layout.tools %}
-            <div class="tool-set">
+            <div class="navbar-item tool-set">
                 {% if tool_set.label %}
                     <div class="title is-6 has-text-centered">
                         {{ tool_set.label }}
@@ -43,6 +42,5 @@
                 </div>
             </div>
         {% endfor %}
-        </div>
     </div>
 </div>
