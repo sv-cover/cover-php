@@ -432,7 +432,14 @@ class PhotoInfo {
 
     handleCopy(element, event) {
         event.preventDefault();
-        if (window.confirm(element.dataset.copyQuestion)) { 
+        if (navigator.share) {
+            navigator.share({
+                title: `Ticket voor ${this.event.name}`,
+                url: element.href
+            }).catch(
+                (e) => console.error(e)
+            );
+        } else if (window.confirm(element.dataset.copyQuestion)) { 
             let result = copyTextToClipboard(element.href);
             if (!result)
                 alert('Oops, unable to copy!');

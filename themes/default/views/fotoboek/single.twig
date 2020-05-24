@@ -135,8 +135,13 @@
                         {{ __('Download photo') }}
                     </a>
 
-                    <a class="dropdown-item photo-copy-link" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}" data-copy-question="{{ __('Do you want to copy a link to this photo?') }}">
-                        {{ __('Copy link') }}
+                    <a
+                        class="dropdown-item photo-copy-link"
+                        href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}"
+                        data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
+                        data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"
+                    >
+                        {{ __('Share photo') }}
                     </a>
                 </div>
             </div>
@@ -193,12 +198,18 @@
                     </span>
                 </a>
 
-                <a class="level-item photo-copy-link" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}" title="{{ __('Copy link') }}" data-copy-question="{{ __('Do you want to copy a link to this photo?') }}">
+                <a
+                    class="level-item photo-copy-link"
+                    href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}"
+                    title="{{ __('Share photo') }}"
+                    data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
+                    data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"
+                >
                     <span class="icon">
                         <i class="fas fa-share-alt" aria-hidden="true"></i>
                     </span>
                     <span class="is-sr-only">
-                        {{ __('Copy link') }}
+                        {{ __('Share photo') }}
                     </span>
                 </a>
             </div>
