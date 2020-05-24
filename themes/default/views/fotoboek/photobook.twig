@@ -23,36 +23,29 @@
 			</div>
 			<div class="level-right">
 				<div class="field is-grouped">
-					{% if controller.policy.user_can_download_book(book) or controller.policy.user_can_mark_as_read(book) %}
-					<div class="control">
-						{# Apparently, .buttons doesn't really like the form, so .field it is… #}
-						<div class="field has-addons">
-							{% if controller.policy.user_can_download_book(book) %}
-							<p class="control">
-								<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button" title="{{ __('Download photo book') }}" data-popup="modal">
-									<span class="icon">
-										<i class="fas fa-download" aria-hidden="true"></i>
-										<span class="is-sr-only">{{ __('Download photo book') }}</span>
-									</span>
-								</a>
-							</p>
-							{% endif %}
-							{% if controller.policy.user_can_mark_as_read(book) %}
-							<form class="control" method="post" action="fotoboek.php?book={{ book.id }}&amp;view=mark_book_read" class="control" title="{{ __('Mark all books as seen') }}">
-								<button type="submit" class="button">
-									<span class="icon">
-										<i class="fas fa-check" aria-hidden="true"></i>
-										<span class="is-sr-only">{{ __('Mark all books as seen') }}</span>
-									</span>
-								</button>
-							</form>
-							{% endif %}
-						</div>
-					</div>
+					{% if controller.policy.user_can_download_book(book) %}
+						<p class="control">
+							<a href="fotoboek.php?book={{ book.id }}&amp;view=confirm_download_book" class="button" title="{{ __('Download photo book') }}" data-popup="modal">
+								<span class="icon">
+									<i class="fas fa-download" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Download photo book') }}</span>
+								</span>
+							</a>
+						</p>
+					{% endif %}
+					{% if controller.policy.user_can_mark_as_read(book) %}
+						<form class="control" method="post" action="fotoboek.php?book={{ book.id }}&amp;view=mark_book_read" class="control" title="{{ __('Mark all books as seen') }}">
+							<button type="submit" class="button">
+								<span class="icon">
+									<i class="fas fa-check" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Mark all books as seen') }}</span>
+								</span>
+							</button>
+						</form>
 					{% endif %}
 
 					{% if user_can_update book or user_can_delete book or user_can_create book.new_book %}
-						<div class="dropdown is-hoverable is-right">
+						<div class="control dropdown is-hoverable is-right">
 							<div class="dropdown-trigger">
 								<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
 									<span>{{ __('Manage') }}</span>
