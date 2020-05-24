@@ -3,7 +3,7 @@
 {% block title view.title ~ ' – ' ~ parent() %}
 
 {% block content %}
-<header>
+<header  class="block">
 	<div class="level">
 		<div class="level-left">
 			<h1 class="title">{{ view.title }}</h1>
@@ -72,7 +72,7 @@
 	</nav>
 </header>
 
-<article>
+<article class="block">
 {% set curmaand = -1 %}
 {% set showyear = true %}
 

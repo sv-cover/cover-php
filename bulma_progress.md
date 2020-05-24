@@ -250,22 +250,22 @@
 
 ## Bulma extensions / custom CSS
 
-- [ ] [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
-    - [ ] Pagination bar in:
-        - [ ] forum/forum.twig
-        - [ ] forum/thread.twig
-        - [ ] weblog/index.twig
-    - [ ] Poll in forum/_poll.twig
-    - [ ] Search statistics in search/index.twig.
-    - [ ] Individual parts of commissies/archive.twig
+- [-] [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
+    - [×] Pagination bar in:
+        - [×] forum/forum.twig
+        - [×] forum/thread.twig
+        - [×] weblog/index.twig
+    - [×] Poll in forum/_poll.twig
+    - [×] Search statistics in search/index.twig.
+    - [×] Individual parts of commissies/archive.twig
     - [×] Single photo fotoboek/single.twig
-    - [ ] header in mailinglists/archive_single.twig
-    - [ ] header in agenda/single.twig
-    - [ ] article in signup/form_form.twig
-    - [ ] cards in signup/form_form.twig
-    - [ ] entire form in lidworden/lidworden.twig
+    - [×] header in mailinglists/archive_single.twig
+    - [×] header in agenda/single.twig
+    - [×] article in signup/form_form.twig
+    - [×] cards in signup/form_form.twig
+    - [×] entire form in lidworden/lidworden.twig
     - [ ] article on any profile page
-    - [ ] article in \_layout/500.twig
+    - [×] article in \_layout/500.twig
     - [ ] article anywhere basically
 - [ ] [issue] Divider (like the one of semantic ui)
     - [ ] \_layout/401.twig
@@ -307,11 +307,11 @@
     - [×] like button on photo
     - [ ] Fix by making everything buttons
 - [ ] [issue] Level-right doesn't work if there's no level-left
-- [ ] [issue] Same for pagination 
+- [ ] [issue] Same for pagination
     - [ ] weblog/index.twig
     - [ ] agenda/index.twig
-- [ ] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
-    - [ ] commissies/index.twig
+- [×] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
+    - [×] commissies/index.twig
     - [×] fotoboek/\_path.twig
     - [×] fotoboek/single.twig
     - [×] fotoboekreacties/\_comment.twig
