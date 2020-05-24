@@ -197,9 +197,14 @@ class LayoutViewHelper
 		];
 
 		$tools['admin'] = [
-			'label' => __('Admin'),
+			'label' => __('Committee'),
 			'items' => []
 		];
+
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_EASY))
+			$tools['admin']['label'] = __('Admin');
 
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
 			$tools['external']['items'][] = [
