@@ -77,7 +77,7 @@ class LayoutViewHelper
 				],
 				[
 					'url' => 'show.php?id=18',
-					'label' => __('Become a member/donor')
+					'label' => __('Become a member/contributor')
 				],
 				// [
 				// 	'url' => 'show.php?id=30',
