@@ -274,7 +274,8 @@
     - [×] lidworden/known_member.twig
     - [×] lidworden/pending.twig
 -   [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
-- [ ] [issue] Narrow content container for improved readability. Probably with TOC sidebar.
+- [×] [issue] Narrow content container for improved readability. 
+- [ ] [issue] TOC sidebar.
 - [ ] Almanak rendering. Last row is weird, images are not centered.
     - [ ] almanak/index.twig
     - [ ] commissies/_leden.twig
@@ -287,7 +288,7 @@
     - [×] announcements/form.twig
     - [×] show/form.twig
     - [×] signup/configuration/editable.twig
-- [ ] [issue] Bulma typography is inconsistent across a single page.
+- [×] [issue] Bulma typography is inconsistent across a single page.
 - [×] [issue] Fieldset in: 
     - [×] sessions/overrides.twig
     - [×] signup/fields/choice.twig
