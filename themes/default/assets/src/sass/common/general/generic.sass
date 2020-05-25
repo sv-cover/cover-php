@@ -24,13 +24,10 @@ $footer-main-background-color: $grey-lightest !default
 
 
 +tablet
-    .footer-main ul li
+    .footer-main ul li,
+    .footer-main ul li.divider // override default devider margin
         display: inline-block
         margin: 0 $column-gap
-
-        &.divider::before
-            display: inline
-            content: '▪'
 
 .image
     img.darkmode

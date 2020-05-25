@@ -267,12 +267,12 @@
     - [ ] article on any profile page
     - [×] article in \_layout/500.twig
     - [ ] article anywhere basically
-- [ ] [issue] Divider (like the one of semantic ui)
-    - [ ] \_layout/401.twig
-    - [ ] sessions/_login_widget.twig (to separate the form from the become a member button)
-    - [ ] boeken/go_to_login.twig
-    - [ ] lidworden/known_member.twig
-    - [ ] lidworden/pending.twig
+- [×] [issue] Divider (like the one of semantic ui)
+    - [×] \_layout/401.twig
+    - [×] sessions/_login_widget.twig (to separate the form from the become a member button)
+    - [×] boeken/go_to_login.twig
+    - [×] lidworden/known_member.twig
+    - [×] lidworden/pending.twig
 -   [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - [ ] [issue] Narrow content container for improved readability. Probably with TOC sidebar.
 - [ ] Almanak rendering. Last row is weird, images are not centered.
