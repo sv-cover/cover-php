@@ -8,7 +8,8 @@ class DataIterApplication extends DataIter
 		return [
 			'key',
 			'name',
-			'secret'
+			'secret',
+			'is_admin'
 		];
 	}
 }
