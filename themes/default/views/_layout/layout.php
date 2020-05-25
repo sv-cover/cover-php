@@ -68,10 +68,6 @@ class LayoutViewHelper
 					'label' => __('Committees')
 				],
 				[
-					'url' => 'workinggroups.php',
-					'label' => __('Working groups')
-				],
-				[
 					'url' => 'show.php?id=28',
 					'label' => __('Sister unions')
 				],
