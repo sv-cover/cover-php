@@ -39,7 +39,7 @@
 						'starting_year' => $lid->get('beginjaar'),
 						'first_name' => member_first_name($lid),
 						'name' => member_full_name($lid));
-				}, $iters));
+				}, array_values($iters)));
 			else
 				return $this->view->render_index($iters, compact('search'));
 		}

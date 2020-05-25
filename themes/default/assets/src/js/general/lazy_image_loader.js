@@ -37,6 +37,7 @@ class LazyImageLoader {
         let threshold = Math.max(MIN_THRESHOLD, document.documentElement.clientHeight);
         let options = {
           rootMargin: `${threshold}px 0px`,
+          threshold: 0,
         };
 
         // Create & init observer

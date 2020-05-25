@@ -22,7 +22,7 @@
 	<p>{{ __N('There is currently %d sign-up.', 'There are currently %d sign-ups.', form.entries|length) }}</p>
 	<form action="{{ controller.link({view: 'delete_entries', form: form.id}) }}" method="post">
 		{{ html_nonce('delete_entries', form) }}
-		<div class="field is-scrollable">
+		<div class="field table-container">
 			<table class="table is-fullwidth">
 				<thead>
 					<tr>

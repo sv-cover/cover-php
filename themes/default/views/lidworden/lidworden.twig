@@ -3,11 +3,11 @@
 {% block title __('Membership application form') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<header>
+<header class="block">
 	<h1 class="title">{{ __('Membership application form') }}</h1>
 	<p class="subtitle is-4">{{ __('Become a member!') }}</p>
 </header>
-<article>
+<article class="block">
 	{% if errors|length > 0 %}
 		<p class="notification is-danger">{{ __("You haven't filled in all the fields correctly.") }}</p>
 	{% endif %}

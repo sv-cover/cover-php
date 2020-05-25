@@ -15,7 +15,7 @@
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
 		
-	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	    <script defer src="https://use.fontawesome.com/releases/v5.10.2/js/all.js"></script>
 	</head>
 	<body class="has-navbar-fixed-top">
 		{% block menu %}
@@ -55,17 +55,29 @@
 			</section>
 		{% endblock %}
 
-		<section class="section">
-			<div class="container">
-			{{ include('@layout/widgets/banners.twig') }}
-			</div>
-		</section>
-
-		<footer class="footer">
-			<div class="content has-text-centered is-centered">
-				<a href="show.php?id=17">{{ __('Contact') }}</a>
-				&mdash; <a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
-				&mdash; <a href="https://bitbucket.org/cover-webcie/cover-php/issues">{{ __('Report a bug')}}</a>
+		<footer>
+			{{ include('@layout/widgets/partners.twig') }}
+			<div class="footer footer-main">
+				<ul>
+				{% spaceless %}
+					<li>
+						<a href="show.php?id=17">{{ __('Contact') }}</a>
+					</li>
+					<li class="divider" role="separator"></li>
+					<li>
+						<a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
+					</li>
+					<li class="divider" role="separator"></li>
+					<li>
+						<a href="https://bitbucket.org/cover-webcie/cover-php/issues">{{ __('Report a bug')}}</a>
+					</li>
+				{% endspaceless %}
+				</ul>
+				{# <div class="content has-text-centered is-centered">
+					
+					&mdash; 
+					&mdash; 
+				</div> #}
 			</div>
 		</footer>
 

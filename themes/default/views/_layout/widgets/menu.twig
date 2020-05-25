@@ -1,6 +1,11 @@
 <nav class="navbar is-cover is-fixed-top" role="navigation" aria-label="main navigation">
 	<div class="container is-flex">
 		<div class="navbar-brand is-inline-flex">
+			<a role="button" class="navbar-burger is-hoverable" aria-label="menu" aria-expanded="false" data-trigger data-target="navbar-main" tabindex=0 >
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
 			<a class="navbar-item cover-logo" href="/">
 				<img src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
 			</a>
@@ -31,11 +36,6 @@
 			{{ include('@layout/widgets/search.twig') }}
 			{{ include('@layout/widgets/applications.twig') }}
 			{{ include('@layout/widgets/login.twig') }}
-			<a role="button" class="navbar-burger is-hoverable" aria-label="menu" aria-expanded="false" data-trigger data-target="navbar-main">
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
-			</a>
 		</div>
 	</div>
 </nav>

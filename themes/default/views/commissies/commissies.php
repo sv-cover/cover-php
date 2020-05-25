@@ -60,11 +60,6 @@ class CommissiesView extends CRUDView
 		return $model->get_lid_for_functie(COMMISSIE_BESTUUR, 'commissioner of internal affairs');
 	}
 
-	public function render_working_groups($iters)
-	{
-		return $this->twig->render('working_groups.twig', compact('iters'));
-	}
-
 	public function render_archive($iters)
 	{
 		return $this->twig->render('archive.twig', compact('iters'));

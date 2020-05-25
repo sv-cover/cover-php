@@ -101,9 +101,6 @@ class HTMLTwigExtension extends Twig_Extension
 		if (!isset($params['type']))
 			$params['type'] = 'text';
 
-		if (!isset($params['class']))
-			$params['class'] = 'text';
-
 		return self::input_field($name, $data, $params);
 	}
 
@@ -111,9 +108,6 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		$params['type'] = 'password';
 		$params['nopost'] = true;
-
-		if (!isset($params['class']))
-			$params['class'] = 'text';
 		
 		return self::input_field($name, null, $params);
 	}
@@ -121,9 +115,6 @@ class HTMLTwigExtension extends Twig_Extension
 	static public function input_number($name, $data, array $params = array())
 	{
 		$params['type'] = 'number';
-
-		if (!isset($params['class']))
-			$params['class'] = 'number';
 		
 		return self::input_field($name, $data, $params);
 	}
@@ -134,9 +125,6 @@ class HTMLTwigExtension extends Twig_Extension
 
 		if (!isset($params['placeholder']))
 			$params['placeholder'] = sprintf(__('E.g. %d-9-20'), date('Y'));
-
-		if (!isset($params['class']))
-			$params['class'] = 'date';
 		
 		return self::input_field($name, $data, $params);
 	}
@@ -150,9 +138,6 @@ class HTMLTwigExtension extends Twig_Extension
 		
 		if (!isset($params['placeholder']))
 			$params['placeholder'] = sprintf(__('E.g. %d-9-20 11:00'), date('Y'));
-
-		if (!isset($params['class']))
-			$params['class'] = 'datetime';
 		
 		return self::input_field($name, $data, $params);
 	}
@@ -198,16 +183,6 @@ class HTMLTwigExtension extends Twig_Extension
 			}
 		}
 
-		$hidden_field = self::_input_field($name, null, [
-			'type' => 'hidden',
-			'value' => '',
-			'nopost' => true,
-			'id' => null
-		]);
-
-		if (substr($field, -2, 2) == '[]')
-			$hidden_field = '';
-
 		$checkbox_field = self::_input_field($name, null, $params);
 
 		if ($label) {
@@ -216,6 +191,16 @@ class HTMLTwigExtension extends Twig_Extension
 			$id = isset($params['id']) ? preg_replace('/^field-/', '', $params['id'], 1) : $name;
 			$checkbox_field = self::_label(sprintf('%s %s', $checkbox_field, $label), $id, $params);
 		}
+
+		if (!empty($params['add_hidden']))
+			$hidden_field = self::_input_field($name, null, [
+				'type' => 'hidden',
+				'value' => '',
+				'nopost' => true,
+				'id' => null
+			]);
+		else
+			$hidden_field = '';
 
 		return $hidden_field . $checkbox_field;
 	}
@@ -281,7 +266,7 @@ class HTMLTwigExtension extends Twig_Extension
 	{
 		$params['type'] = 'submit';
 		$params['nopost'] = true;
-		
+
 		if (!isset($params['class']))
 			$params['class'] = 'button';
 		
@@ -316,9 +301,9 @@ class HTMLTwigExtension extends Twig_Extension
 		if (isset($params['errors']))
 			if ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))
 				if (isset($params['class']))
-					$params['class'] .= ' error';
+					$params['class'] .= ' is-danger';
 				else
-					$params['class'] = 'error';
+					$params['class'] = 'is-danger';
 		unset($params['errors']);
 
 		// Is the id overriden?
@@ -398,9 +383,9 @@ class HTMLTwigExtension extends Twig_Extension
 
 		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($name, $params['errors'])) || isset($params['errors'][$name]))) {
 			if (isset($params['class']))
-				$params['class'] = $params['class'] . '_error';
+				$params['class'] = $params['class'] . ' is-danger';
 			else
-				$params['class'] = 'error';
+				$params['class'] = 'is-danger';
 		}
 
 		unset($params['errors']);

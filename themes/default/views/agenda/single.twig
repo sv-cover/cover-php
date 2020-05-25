@@ -17,7 +17,7 @@
 	</div>
 {% endif %}
 
-<header>
+<header class="block">
 	
 	<!-- Event name -->
 	<div class="level">
@@ -34,6 +34,14 @@
 		<div class="level-right">
 			<div class="field is-grouped">
 				<div class="control">
+					<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" class="button" title="{{  __('Show on Facebook') }}">
+						<span class="icon">
+							<i class="fab fa-facebook-square" aria-hidden="true"></i>
+							<span class="is-sr-only">{{  __('Show on Facebook') }}</span>
+						</span>
+					</a>
+				</div>
+				<div class="control">
 					<a href="agenda.php" class="button">{{  __('Complete calendar') }}</a>
 				</div>
 
@@ -43,27 +51,25 @@
 				</div>
 				{% endif %}
 
-				{% if user_can_delete iter or user_can_update iter %}
-				<div class="control">
-				<div class="buttons has-addons">
-					{% if user_can_delete iter %}
+				{% if user_can_delete iter %}
+					<div class="control">
 						<a href="{{ controller.link_to_delete(iter) }}" class="button" title="{{  __('Delete event') }}">
 							<span class="icon">
 								<i class="fas fa-trash" aria-hidden="true"></i>
 								<span class="is-sr-only">{{  __('Delete event') }}</span>
 							</span>
 						</a>
-					{% endif %}
-					{% if user_can_update iter %}
+					</div>
+				{% endif %}
+				{% if user_can_update iter %}
+					<div class="control">
 						<a href="{{ controller.link_to_update(iter) }}" class="button" title="{{  __('Modify event') }}">
 							<span class="icon">
 								<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 								<span class="is-sr-only">{{  __('Modify event') }}</span>
 							</span>
 						</a>
-					{% endif %}
-				</div>
-				</div>
+					</div>
 				{% endif %}
 		</div>
 	</div>
@@ -124,7 +130,7 @@
 </header>
 
 <!-- Actual event -->
-<article>
+<article class="block">
 	<div class="content">
 		<p>{{  __('Date & time') }}: {{  iter|period }}<br>
 		{% if iter.locatie %}

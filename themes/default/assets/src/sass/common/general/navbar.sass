@@ -1,0 +1,136 @@
+@keyframes background-breathe-red
+    0%
+        background-color: rgba($cover-red, .75)
+
+    50%
+        background-color: rgba($cover-red, 0)
+    
+    100%
+        background-color: rgba($cover-red, .75)
+
+
+.navbar
+    .user
+        .dark-mode-switch
+            width: 100%
+            display: flex
+            justify-content: space-between
+            align-items: center
+
+            // Align switch correctly
+            .switch + label
+                padding-left: 2.25rem
+
+        &.is-impersonating
+            .navbar-link.profile .icon
+                position: relative
+
+                &::before
+                    display: block
+                    content: ''
+                    position: absolute
+                    top: 0
+                    right: 0
+                    bottom: 0
+                    left: 0
+                    z-index: 10
+                    background-color: rgba($cover-red, .75)
+                    animation: background-breathe-red 2s ease infinite
+
+            .impersonate-link::after
+                display: inline-block
+                content: ''
+                height: .5rem
+                width: .5rem
+                border-radius: 50%
+                background-color: rgba($cover-red, .75)
+                animation: background-breathe-red 2s ease infinite
+                vertical-align: middle
+
+        .navbar-link.profile .icon
+            border: 1.5px solid $white
+            border-radius: 50%
+            overflow: hidden
+
+            img
+                border-radius: 50%
+                height: $icon-dimensions
+                width: $icon-dimensions
+
+        .navbar-item.profile
+            &:hover
+                background: none
+
+            .image
+                margin-right: 1rem
+
+                img
+                    max-height: none
+
+            .user-info
+                .name
+                    color: $navbar-item-color
+                    font-weight: $title-weight
+                    display: block
+
+        .navbar-divider
+            display: block
+
+
+
+    .applications
+        .navbar-item.tool-set
+            display: block
+            padding: 1rem
+            white-space: normal
+
+            &:not(:first-child)
+                border-top: $navbar-divider-height solid $navbar-divider-background-color
+
+            .title
+                color: $navbar-item-color
+
+        .tool
+            color: $navbar-item-color
+            display: flex
+            flex-flow: column nowrap
+            align-items: center
+
+            &:active
+                background: $navbar-dropdown-item-active-background-color
+                color: $navbar-dropdown-item-active-color
+
+            &:focus
+                outline: 1px dotted
+                outline-offset: -$column-gap
+
+            &:hover
+                color: $navbar-dropdown-item-hover-color
+                background: $navbar-dropdown-item-hover-background-color
+
+            .name
+                text-align: center
+
+            .icon img
+                // same size as .fa-stack.fa-lg
+                font-size: 1.3333333333em
+                max-height: 2em
+                height: 2em
+
++tablet
+    .navbar .applications.navbar-item.has-dropdown
+        position: relative
+
+        .navbar-dropdown
+            top: 100%
+            right: auto
+            left: 0
+            min-width: 0
+
+            &.is-right
+                right: 0
+                left: auto
+
+    .applications
+        .navbar-item.tool-set
+            width: 20rem

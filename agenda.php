@@ -23,7 +23,7 @@
 			/* If this is the tot field and we don't use tot
 			 * then set that value to null and return true
 			 */
-			if ($name == 'tot' && !get_post('use_tot'))
+			if ($name == 'tot' && empty(trim($value)))
 				return null;
 			
 			try {
@@ -51,16 +51,10 @@
 		
 		public function _check_locatie($name, $value)
 		{
-			$locatie = get_post('use_locatie');
-			check_value_checkbox($name, $locatie);
-
-			if (!$locatie)
-				return null;
-			
 			$locatie = get_post('locatie');
 
-			if (!$locatie)
-				return false;
+			if (empty(trim($locatie)))
+				return null;
 
 			return $this->_check_length('locatie', $locatie);
 		}
@@ -70,8 +64,10 @@
 			if (trim($value) == '')
 				return null;
 
-			if (strlen($value) <= 20  && ctype_digit($value))
-				return $value;
+			$result = preg_match('/^https:\/\/www\.facebook\.com\/events\/(\d+)\//', $value, $matches);
+
+			if ($result	&& strlen($matches[1]) <= 20 && ctype_digit($matches[1]))
+				return $matches[1];
 
 			return false;
 		}

@@ -227,13 +227,13 @@
     - [×] photo visibility form (photos in photos of member book)
     - [ ] view photo modal
     - [ ] create sticker in sticker map
-    - [ ] Mailinglist subscribe forms
+    - [×] Mailinglist subscribe forms
 - [ ] Autocomplete
-    - [ ] session/overrides.twig (autocomlete member)
-    - [ ] committeebattle/form.twig (member)
+    - [×] session/overrides.twig (autocomlete member)
+    - [×] committeebattle/form.twig (member)
     - [ ] tagging people in photo album
 - [ ] Whatever is happening in search results :P
-- [ ] Whatever is happening on the committee form
+- [×] Whatever is happening on the committee form
 - [×] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
 - [×] Everything in fotoboek/\_photos.twig
 - [×] Change photo name (photocee functionality)
@@ -241,59 +241,65 @@
 - [×] Add photo's to photobook
 - [ ] Sticker map
 - [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
-- [ ] Stuff happening in mailijnlijsten/single.twig
+- [×] Stuff happening in mailijnlijsten/single.twig
 - [ ] Fancyness in signup/form_form.twig
 - [ ] Autocomplete in lidworden/lidworden.twig
 - [ ] Profile page
-- [ ] Improve Dark Theme switch JS (is inline now, should be pulled out)
+- [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
 - [ ] Photo tagging
 
 ## Bulma extensions / custom CSS
 
-- [ ] [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
-    - [ ] Pagination bar in:
-        - [ ] forum/forum.twig
-        - [ ] forum/thread.twig
-        - [ ] weblog/index.twig
-    - [ ] Poll in forum/_poll.twig
-    - [ ] Search statistics in search/index.twig.
-    - [ ] Individual parts of commissies/archive.twig
+- [-] [issue] Vertically padded container. Sometimes a container element for vertical grouping would be nice.
+    - [×] Pagination bar in:
+        - [×] forum/forum.twig
+        - [×] forum/thread.twig
+        - [×] weblog/index.twig
+    - [×] Poll in forum/_poll.twig
+    - [×] Search statistics in search/index.twig.
+    - [×] Individual parts of commissies/archive.twig
     - [×] Single photo fotoboek/single.twig
-    - [ ] header in mailinglists/archive_single.twig
-    - [ ] header in agenda/single.twig
-    - [ ] article in signup/form_form.twig
-    - [ ] cards in signup/form_form.twig
-    - [ ] entire form in lidworden/lidworden.twig
+    - [×] header in mailinglists/archive_single.twig
+    - [×] header in agenda/single.twig
+    - [×] article in signup/form_form.twig
+    - [×] cards in signup/form_form.twig
+    - [×] entire form in lidworden/lidworden.twig
     - [ ] article on any profile page
-    - [ ] article in \_layout/500.twig
+    - [×] article in \_layout/500.twig
     - [ ] article anywhere basically
-- [ ] [issue] Divider (like the one of semantic ui)
-    - [ ] \_layout/401.twig
-    - [ ] sessions/_login_widget.twig (to separate the form from the become a member button)
-    - [ ] boeken/go_to_login.twig
-    - [ ] lidworden/known_member.twig
-    - [ ] lidworden/pending.twig
+- [×] [issue] Divider (like the one of semantic ui)
+    - [×] \_layout/401.twig
+    - [×] sessions/_login_widget.twig (to separate the form from the become a member button)
+    - [×] boeken/go_to_login.twig
+    - [×] lidworden/known_member.twig
+    - [×] lidworden/pending.twig
 -   [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
-- [ ] [issue] Narrow content container for improved readability. Probably with TOC sidebar.
+- [×] [issue] Narrow content container for improved readability. 
+- [ ] [issue] TOC sidebar.
 - [ ] Almanak rendering. Last row is weird, images are not centered.
     - [ ] almanak/index.twig
     - [ ] commissies/_leden.twig
     - [ ] commissies/working_groups.twig
-- [ ] Tabs in form field (for preview rendering) should be closer to field in:
-    - [ ] forum/poll_form.twig
-    - [ ] forum/reply_form.twig
-    - [ ] forum/thread_form.twig
-- [ ] [issue] Bulma typography is inconsistent across a single page.
-- [ ] [issue] Fieldset in: 
-    - [ ] sessions/overrides.twig
-    - [ ] signup/fields/choice.twig
+- [×] Tabs in form field (for preview rendering) should be closer to field in:
+    - [×] forum/poll_form.twig
+    - [×] forum/reply_form.twig
+    - [×] forum/thread_form.twig
+    - [×] agenda/form.twig:
+    - [×] announcements/form.twig
+    - [×] show/form.twig
+    - [×] signup/configuration/editable.twig
+- [×] [issue] Bulma typography is inconsistent across a single page.
+- [×] [issue] Fieldset in: 
+    - [×] sessions/overrides.twig
+    - [×] signup/fields/choice.twig
 - [ ] Calendar icon in:
     - [ ] agenda/index.twig
     - [ ] agenda/single.twig
     - [ ] commissies/_agenda.twig
     - [ ] search/\_single_agendapunt.twig
-- [ ] [issue] Bulma dl styling is ugly
-- [ ] [issue] Multiline select is broken
+- [×] [issue] Bulma dl styling is ugly
+- [×] [issue] Multiple select is broken
+    - [×] committeebattle\form.twig
 - [×] Static button disables title attribute (css: `pointer-events: none`). Fix this or find something better for photobook visibility in book icons.
 - [×] Lines of media objects are not always wished for, especially in nested media objects.
     - [×] comments on photobook main page
@@ -302,28 +308,28 @@
     - [×] like button on photo
     - [ ] Fix by making everything buttons
 - [ ] [issue] Level-right doesn't work if there's no level-left
-- [ ] [issue] Same for pagination 
+- [ ] [issue] Same for pagination
     - [ ] weblog/index.twig
     - [ ] agenda/index.twig
-- [ ] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
-    - [ ] commissies/index.twig
+- [×] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
+    - [×] commissies/index.twig
     - [×] fotoboek/\_path.twig
     - [×] fotoboek/single.twig
     - [×] fotoboekreacties/\_comment.twig
-- [ ] [issue] No margin around dropdown in .buttons
-    - [ ] agenda/index.twig
-- [ ] Why does a .number make form elements rounded?
-- [ ] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
-    - [ ] signup/list_entries.twig
+- [×] [issue] No margin around dropdown in .buttons. No use .field.is-grouped instead (see bulma doc).
+    - [×] agenda/index.twig
+- [×] Why does a .number make form elements rounded? Bulma legacy, apparently. Don't use .number.
+- [×] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
+    - [×] signup/list_entries.twig
 - [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
     - [ ] signup/list_entries.twig
-- [ ] Buttons don't work that well as card-footer-item
-    - [ ] signup/form_form.twig
+- [×] Buttons don't work that well as card-footer-item
+    - [×] signup/form_form.twig
 - [ ] fullwidth/expanding select? maybe?
-- [ ] Buttons don't work as dropdown-item
-    - [ ] fotoboek/photobook.twig (manage dropdown for photocee)
-- [ ] Button addons spacing between last 2 is broken. See 
-    - [ ] fotoboek/photobook.twig (download + mark as seen)
+- [×] Buttons don't work as dropdown-item
+    - [×] fotoboek/photobook.twig (manage dropdown for photocee)
+- [×] Button addons spacing between last 2 is broken. See 
+    - [×] fotoboek/photobook.twig (download + mark as seen)
 
 
 ## Other
@@ -332,7 +338,7 @@
 - [ ] Remove language switch from profile
 - [ ] Almanac form is weird. May need some backend improvements (filter on filter). 
 - [ ] Titles in pages behave weird. Maybe some backend improvements?
-- [ ] Transpose columns in session/overrides.twig and committeebattle/form.twig
+- [×] Transpose columns in session/overrides.twig and committeebattle/form.twig
 - [ ] Former boards page is weird / unintuitive. Best solution: improve committees/groups and make it more automated.
 - [×] Old committee page was better. But at least it's bulma now :)
 - [ ] Single committee page is crap now.
@@ -347,7 +353,7 @@
 - [ ] Move Headings inside of articles, unless header. Got to do proper HTML5 :)
 - [ ] Error 500. What if link_static is broken? Or i18n?
 - [ ] Poll on mobile doesn't work that well.
-- [ ] Photo privacy form doesn't return to original photo
+- [×] Photo privacy form doesn't return to original photo
 
 
 # Pending Design Decisions

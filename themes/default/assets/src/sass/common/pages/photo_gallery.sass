@@ -26,13 +26,6 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
         .photographer
             font-size: $size-7
 
-        .meta .divider
-            margin: 0 .75ch
-            color: $text-light
-
-            &::after
-                content: '▪'
-
 +until($tablet)
     .photo-book > .controls .level-right .dropdown.is-right .dropdown-menu
         left: 0
@@ -54,22 +47,22 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
 
 
 +until($tablet)
-    .media
-        flex-wrap: wrap
+    .recent-comments
+        .media
+            flex-wrap: wrap
 
-        .media-left
-            flex-basis: 100%
+            .media-left
+                flex-basis: 100%
 
-        .media-content
-            padding-top: 0.75rem
+            .media-content
+                padding-top: 0.75rem
 
-        .thumbnail.image
-            height: 96px
-            width: 100%
+            .thumbnail.image
+                height: 96px
+                width: 100%
 
-            img
-                object-fit: contain
-
+                img
+                    object-fit: contain
 
 
 .book-gallery,
@@ -104,7 +97,7 @@ $gallery-basis-bins: 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900
         display: block
         position: relative
         padding: 0
-        padding-top: 50% // is-square
+        padding-top: 50% // is-2by1
 
         &:focus
             outline: 2px solid $cover-red

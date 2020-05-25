@@ -159,11 +159,7 @@ class View
 			$base = [get_theme_data('assets/dist/css/cover-dark.css')];
 		else
 			$base = [get_theme_data('assets/dist/css/cover.css')];
-		return array_merge($base, [
-			// get_theme_data('styles/font-awesome.min.css'),
-			// get_theme_data('styles/jquery-ui.min.css'),
-			// get_theme_data('style.css')
-		]);
+		return array_merge($base, []);
 	}
 
 	public function layout()

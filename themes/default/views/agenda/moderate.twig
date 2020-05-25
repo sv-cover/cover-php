@@ -5,9 +5,9 @@
 {% block content %}
 <h1 class="title">{{ __('Calendar') }}</h1>
 {% if iters|length == 0 %}
-	<p>{{ __('There are no calendar events waiting for approval.') }}</p>
+	<p>{{ __('There are no events waiting for approval.') }}</p>
 {% else %}
-	<p>{{ __('The calendar events below are put up for approval.') }}</p>
+	<p>{{ __('The events below are put up for approval.') }}</p>
 	<form name="agenda_moderate" action="" method="post">
 		{{ html_nonce('moderate') }}
 		<table class="field table is-fullwidth" id="table_moderate">
@@ -39,11 +39,11 @@
 					<tr id="punt{{ item.id }}" class="{% if item.id == highlighted_id %}is-selected{% endif %}">
 						<td class="has-text-centered">
 							<label for="cancel_{{ item.id }}" class="is-sr-only">{{__('Accept event %s')|format( item.kop )}}</label>
-							{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accept calendar event')) }}
+							{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accept event')) }}
 						</td>
 						<td class="has-text-centered">
 							<label for="cancel_{{ item.id }}" class="is-sr-only">{{__('Reject event %s')|format( item.kop )}}</label>
-							{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Reject calendar event')) }}
+							{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Reject event')) }}
 						</td>
 						<td>
 							<a href="agenda.php?agenda_id={{ item.id|e('url') }}">{{ item.kop }}</a>

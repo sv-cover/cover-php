@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<header>
+<header class="block">
 	<nav class="breadcrumb" aria-label="breadcrumbs">
 		<ul>
 			<li><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a></li>
@@ -20,7 +20,7 @@
 	</div>
 </header>
 
-<article>
+<article class="block">
 	{% if error %}
 		<div class="content">
 			<p>Could not parse message due to the following error</p>
