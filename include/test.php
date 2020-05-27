@@ -348,7 +348,7 @@ trait MemberTestTrait
 			'email' => self::$member_email,
 			'geboortedatum' => '1988-01-01',
 			'geslacht' => 'm',
-			'privacy' => 958698063,
+			'privacy' => 958435335,
 			'type' => MEMBER_STATUS_LID,
 			'nick' => 'unittest',
 			'member_from' => '2010-10-01',
