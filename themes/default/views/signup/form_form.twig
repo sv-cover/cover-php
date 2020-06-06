@@ -86,44 +86,33 @@
 </article>
 
 {% if form.has_id %}
-<article class="block">
+<article class="block signup-form-form">
 	<h2 class="title is-4">{{ __('Fields & layout') }}</h2>
-	<form action="{{ controller.link({view: 'create_form_field', form: form.id}) }}" method="post" class="block">
+
+	<div class="block sortable signup-form-field-list" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}" data-sortable-handle=".sortable-handle">
+	{% for field in form.fields %}
+		{{ include('_field_configuration.twig') }}
+	{% endfor %}
+	</div>
+
+	<form class="card block signup-form-field-form" action="{{ controller.link({view: 'create_form_field', form: form.id}) }}" method="post" data-async-action="{{ controller.link({view: 'create_form_field', form: form.id, mode: 'single'}) }}">
 		{{ html_nonce('create_form_field', form) }}
-		<div class="field is-grouped">
-			<div class="control">
+		<div class="card-content">
+			<div class="field">
 				{{ html_label(__('Add new'), 'field_type') }}
+				<div class="control">
+					<div class="select is-fullwidth">
+						{{html_select_field('field_type', view.available_field_types, null, required=true)}}
+					</div>				
+				</div>
 			</div>
-			<div class="control">
-				<div class="select">
-					{{html_select_field('field_type', view.available_field_types, null, required=true)}}
-				</div>				
-			</div>
-			<div class="control">
-				<button type="submit" class="button">{{ __('Add field') }}</button>
+			<div class="field is-grouped is-grouped-right">
+				<div class="control">
+					<button type="submit" class="button is-primary">{{ __('Add field') }}</button>
+				</div>
 			</div>
 		</div>
 	</form>
-	
-	<div data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}">
-	{% for field in form.fields %}
-		<div class="card block" id="form-field-{{field.id}}" data-sortable-id="{{ field.id }}">
-			<form id="field-{{field.id}}-update" action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-submit-on-change="{&quot;action&quot;:&quot;update&quot;}">
-				{{ html_nonce('update_form_field', form, field) }}
-				{{ field.render_configuration(view, errors.namespace(field.id))|raw }}
-			</form>
-			
-			<footer class="card-footer">
-				<button type="submit" class="card-footer-item hide-if-submit-on-change" form="field-{{field.id}}-update">{{ __('Modify field') }}</button>
-				<button type="submit" class="card-footer-item" form="field-{{field.id}}-delete">{{ __('Delete field') }}</button>
-				{# What is this magic? #}
-				<form id="field-{{field.id}}-delete" action="{{ controller.link({view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
-					{{ html_nonce('delete_form_field', form, field) }}
-				</form>
-			</footer>
-		</div>
-	{% endfor %}
-	</div>
 </article>
 {% endif %}
 
