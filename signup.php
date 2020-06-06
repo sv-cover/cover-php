@@ -236,8 +236,13 @@ class ControllerSignUpForms extends Controller
 		if (!get_policy($this->form_model)->user_can_update($form))
 			throw new UnauthorizedException('You cannot update this form.');
 
-		if ($this->_form_is_submitted('create_form_field', $form))
-			$this->field_model->insert($form->new_field($_POST['field_type']));
+		if ($this->_form_is_submitted('create_form_field', $form)) {
+			$field = $form->new_field($_POST['field_type']);
+			$this->field_model->insert($field);
+
+			if (isset($_GET['mode']) && $_GET['mode'] === 'single')
+				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $form, 'errors' => new ErrorSet()]);
+		}
 
 		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
 	}
