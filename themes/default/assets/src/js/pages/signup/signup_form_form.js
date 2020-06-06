@@ -1,16 +1,21 @@
 import {Bulma} from 'cover-style-system/src/js';
-import Sortable from 'sortablejs';
 
 
-class SignupFormForm {
+class SignupFormField {
     static parseDocument(context) {
-        const elements = context.querySelectorAll('.signup-form-form');
+        const elements = context.querySelectorAll('.signup-form-field');
 
         Bulma.each(elements, element => {
-            new SignupFormForm({
+            new SignupFormField({
                 element: element,
             });
         });
+
+        if (context.matches && context.matches('.signup-form-field')) {
+            new SignupFormField({
+                element: context,
+            });
+        }
     }
 
     constructor(options) {
@@ -19,10 +24,15 @@ class SignupFormForm {
         const deleteButtons = this.element.querySelectorAll('.card-header .signup-form-field-delete-button');
         for (let element of deleteButtons)
             element.hidden = false;
+
+        const sortHandles = this.element.querySelectorAll('.sortable-handle');
+        for (let element of sortHandles)
+            element.hidden = false;
     }
 }
 
 
-SignupFormForm.parseDocument(document);
+SignupFormField.parseDocument(document);
+document.addEventListener('partial-content-loaded', event => SignupFormField.parseDocument(event.detail));
 
-export default SignupFormForm;
+export default SignupFormField;
