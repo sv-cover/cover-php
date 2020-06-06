@@ -325,7 +325,7 @@
     - [ ] signup/list_entries.twig
 - [×] Buttons don't work that well as card-footer-item
     - [×] signup/form_form.twig
-- [ ] fullwidth/expanding select? maybe?
+- [×] fullwidth/expanding select? maybe? - Already exists. `.is-fullwidth` works.
 - [×] Buttons don't work as dropdown-item
     - [×] fotoboek/photobook.twig (manage dropdown for photocee)
 - [×] Button addons spacing between last 2 is broken. See 
@@ -354,6 +354,7 @@
 - [ ] Error 500. What if link_static is broken? Or i18n?
 - [ ] Poll on mobile doesn't work that well.
 - [×] Photo privacy form doesn't return to original photo
+- [ ] Sanity check disabled inline-action
 
 
 # Pending Design Decisions
