@@ -89,7 +89,7 @@
 <article class="block signup-form">
 	<h2 class="title is-4">{{ __('Fields & layout') }}</h2>
 
-	<div class="block sortable signup-form-field-list" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}" data-sortable-handle=".sortable-handle">
+	<div class="block sortable signup-form-field-list" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}" data-sortable-handle=".card-header" data-sortable-filter=".signup-form-field-delete-button">
 	{% for field in form.fields %}
 		{{ include('_field_configuration.twig') }}
 	{% endfor %}

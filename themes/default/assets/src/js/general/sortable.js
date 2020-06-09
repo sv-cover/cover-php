@@ -6,6 +6,7 @@ import Sortable from 'sortablejs';
  * Supports the following data options:
  *
  * sortable-handle = selector to find the sortable handle (default none, the entire item is the handle)
+ * sortable-filter = selector that do not lead to dragging (default none)
  * sortable-action = the url to POST the order to
  */
 class BasicSortable {
@@ -16,6 +17,7 @@ class BasicSortable {
             new BasicSortable({
                 element: element,
                 handle: element.dataset.sortableHandle,
+                filter: element.dataset.sortableFilter,
                 action: element.dataset.sortableAction,
             });
         });
@@ -29,6 +31,7 @@ class BasicSortable {
         // Init sortable
         const sortableOptions = {
             handle: options.handle ? options.handle : '',
+            filter: options.filter ? options.filter : '',
             onUpdate: this.handleSortableUpdate.bind(this),
         };
         this.sortable = Sortable.create(options.element, sortableOptions);

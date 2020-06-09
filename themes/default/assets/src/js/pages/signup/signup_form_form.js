@@ -30,7 +30,8 @@ class SignupFormField {
             element.hidden = false;
 
         const footer = this.element.querySelector('.card-footer');
-        footer.hidden = true;
+        if (footer)
+            footer.hidden = true;
     }
 }
 
