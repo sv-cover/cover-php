@@ -1,6 +1,14 @@
 import {Bulma} from 'cover-style-system/src/js';
-import Sortable from 'sortablejs';
 
+/**
+ * InlineAction plugin to submit forms and load links asynchronously and inject result in DOM.
+ * Supports the following data options:
+ *
+ * placement-selector = selector for the target element in current DOM. This attribute enables the plugin
+ * placement-method = "append" | "replace" (default)
+ * partial-selector = selector to find partial subtree in the destination DOM. (default: "body")
+ * async-action = action to submit form, if different from fallback
+ */
 class InlineAction {
     static parseDocument(context) {
         const elements = context.querySelectorAll('a[data-placement-selector],form[data-placement-selector]');
@@ -39,23 +47,28 @@ class InlineAction {
     async fetchDocument() {
         let url, init;
 
+        // Prepare request
         if (this.type === 'a') {
+            // Follow link if anchor
             url = this.element.href;
             init = {
                 method: 'GET',
             };
         } else if (this.type === 'form') {
+            // Submit if form
             url = this.element.dataset.asyncAction || this.element.action;
             const data = new FormData(this.element);
             init = {
-                method: this.element.method,
+                method: this.element.method.toUpperCase(),
                 body: new URLSearchParams(data),
             };
         }
 
+        // Execute request
         const response = await fetch(url, init);
         const text = await response.text();
 
+        // Parse response to DOM
         return (new DOMParser()).parseFromString(text, 'text/html');
     }
 
@@ -64,13 +77,17 @@ class InlineAction {
         if (event.shiftKey || event.metaKey || event.ctrlKey)
             return;
 
+        // Don't follow links or use default form submit
         event.preventDefault();
 
+        // Find destination
         const target = document.querySelector(this.placementSelector);
 
+        // Fetch partial
         const doc = await this.fetchDocument();
         const partial = doc.querySelector(this.partialSelector);
 
+        // Place partial in destination position
         if (this.placementMethod === 'replace')
             target.replaceWith(partial);
         else if (this.placementMethod === 'append')
@@ -78,6 +95,7 @@ class InlineAction {
         else
             console.error(`Unsupported inline action placement method: ${this.placementMethod}`);
 
+        // Make sure all JS is applied to partial
         document.dispatchEvent(new CustomEvent('partial-content-loaded', { bubbles: true, detail: partial }));
     }
 }
