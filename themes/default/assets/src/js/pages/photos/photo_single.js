@@ -601,7 +601,8 @@ class SinglePhoto {
             case "ArrowRight":
                 this.carousel.navigate('next');
                 break
-            case "KeyC":
+            case "c":
+            case "C":
                 this.element.querySelector('#field-reactie').focus();
                 break;
             case "f":

@@ -247,6 +247,7 @@
 - [ ] Profile page
 - [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
 - [ ] Photo tagging
+- [ ] Bring InlineAction closer to AutoPopup
 
 ## Bulma extensions / custom CSS
 
@@ -354,8 +355,10 @@
 - [ ] Error 500. What if link_static is broken? Or i18n?
 - [ ] Poll on mobile doesn't work that well.
 - [×] Photo privacy form doesn't return to original photo
-- [ ] Sanity check disabled inline-action
-
+- [ ] Sanity check disabled InlineAction
+- [ ] Auto-save indicator
+- [ ] InlineAction destination fade
+- [ ] AutoSubmitForm feedback
 
 # Pending Design Decisions
 
