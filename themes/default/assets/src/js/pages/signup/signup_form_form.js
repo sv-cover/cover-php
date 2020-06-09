@@ -28,6 +28,9 @@ class SignupFormField {
         const sortHandles = this.element.querySelectorAll('.sortable-handle');
         for (let element of sortHandles)
             element.hidden = false;
+
+        const footer = this.element.querySelector('.card-footer');
+        footer.hidden = true;
     }
 }
 
