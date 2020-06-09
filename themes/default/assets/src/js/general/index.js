@@ -2,6 +2,7 @@ import './darkmode';
 import './lazy_image_loader';
 import './autocomplete';
 import './autocomplete_member';
+import './auto_submit_form';
 import './partners';
 import './preview_loader';
 import './inline_action';

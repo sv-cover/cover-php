@@ -240,7 +240,7 @@ class ControllerSignUpForms extends Controller
 			$field = $form->new_field($_POST['field_type']);
 			$this->field_model->insert($field);
 
-			if (isset($_GET['mode']) && $_GET['mode'] === 'single')
+			if (isset($_GET['action']) && $_GET['action'] === 'add')
 				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $form, 'errors' => new ErrorSet()]);
 		}
 

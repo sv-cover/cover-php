@@ -19,7 +19,7 @@
             </span>
         </button>
     </header>
-    <form id="field-{{field.id}}-update" class="card-content" action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-submit-on-change="{&quot;action&quot;:&quot;update&quot;}">
+    <form id="field-{{field.id}}-update" class="card-content auto-submit" action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-auto-submit-extra-data="{&quot;action&quot;:&quot;update&quot;}">
         {{ html_nonce('update_form_field', form, field) }}
         {{ field.render_configuration(view, errors.namespace(field.id))|raw }}
     </form>
@@ -29,7 +29,7 @@
     </form>
     
     <footer class="card-footer">
-        <button type="submit" class="card-footer-item hide-if-submit-on-change" form="field-{{field.id}}-update">{{ __('Modify field') }}</button>
+        <button type="submit" class="card-footer-item" form="field-{{field.id}}-update" data-auto-submit-hide>{{ __('Modify field') }}</button>
         <button type="submit" class="card-footer-item" form="field-{{field.id}}-delete">{{ __('Delete field') }}</button>
     </footer>
 </div>

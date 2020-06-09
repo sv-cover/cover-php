@@ -99,7 +99,7 @@
 		class="card block signup-form-field-form"
 		method="post"
 		action="{{ controller.link({view: 'create_form_field', form: form.id}) }}"
-		data-async-action="{{ controller.link({view: 'create_form_field', form: form.id, mode: 'single'}) }}"
+		data-async-action="{{ controller.link({view: 'create_form_field', form: form.id, action: 'add'}) }}"
 		data-partial-selector=".signup-form-field"
 		data-placement-selector=".signup-form-field-list"
 		data-placement-method="append"
