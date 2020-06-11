@@ -192,9 +192,9 @@ class ControllerSignUpForms extends Controller
 		}
 
 		if ($success)
-			return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+			return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]) . '#signup-form-fields');
 		else
-			return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+			return $this->view->render('create_form_form.twig', compact('form', 'success', 'errors'));
 	}
 
 	public function run_update_form()
@@ -212,7 +212,7 @@ class ControllerSignUpForms extends Controller
 			if ($this->_update($this->form_model, $form, $_POST, $errors))
 				$success = true;
 
-		return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+		return $this->view->render('update_form_form.twig', compact('form', 'success', 'errors'));
 	}
 
 	public function run_delete_form()
@@ -268,7 +268,7 @@ class ControllerSignUpForms extends Controller
 			if ($field->process_configuration($_POST, $errors->namespace($field['id'])))
 				$this->field_model->update($field);
 			else
-				return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+				return $this->view->render('update_form_form.twig', compact('form', 'success', 'errors'));
 		}
 
 		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));

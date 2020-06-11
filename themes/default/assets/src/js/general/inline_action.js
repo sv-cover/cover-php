@@ -7,7 +7,7 @@ import {Bulma} from 'cover-style-system/src/js';
  * placement-selector = selector for the target element in current DOM. This attribute enables the plugin
  * placement-method = "append" | "replace" (default)
  * partial-selector = selector to find partial subtree in the destination DOM. (default: "body")
- * async-action = action to submit form, if different from fallback
+ * async-action = href for anchor or action to submit form, if different from fallback
  */
 class InlineAction {
     static parseDocument(context) {
@@ -50,7 +50,7 @@ class InlineAction {
         // Prepare request
         if (this.type === 'a') {
             // Follow link if anchor
-            url = this.element.href;
+            url = this.element.dataset.asyncAction || this.element.href;
             init = {
                 method: 'GET',
             };

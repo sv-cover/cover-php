@@ -36,7 +36,7 @@
 	{% if success %}
 		<p>{{ __('Success! You have signed up.') }}</p>
 	{% else %}
-		<form action="{{ entry.has_id ? controller.link({view: 'update_entry', form: form.id, entry: entry.id}) : controller.link({view: 'create_entry', form: form.id}) }}" method="post">
+		<form id="signup-entry-form" action="{{ entry.has_id ? controller.link({view: 'update_entry', form: form.id, entry: entry.id}) : controller.link({view: 'create_entry', form: form.id}) }}" method="post">
 			{% if entry.has_id %}
 				{{ html_nonce('update_entry', entry) }}
 			{% else %}
