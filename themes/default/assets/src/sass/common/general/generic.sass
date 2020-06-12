@@ -40,6 +40,7 @@ $footer-main-background-color: $grey-lightest !default
 .sortable-handle
     cursor: grab
 
+
 // TODO: implement in cover style system
 button.card-header-icon
     background-color: inherit
@@ -52,3 +53,23 @@ button.card-header-icon
 // TODO: implement in cover style system
 .button.is-baseline
     vertical-align: baseline
+
+.table
+    td, th
+        &.is-truncated
+            max-width: 30ch
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+
+        &.is-sticky
+            position: sticky
+            left: 0
+            background: rgba($body-background-color, 0.95)
+            background-clip: padding-box
+            box-shadow: 0.25em 0 .5em -0.0625em rgba($scheme-invert, .1)
+
+            &.is-right
+                box-shadow: -0.25em 0 .5em -0.0625em rgba($scheme-invert, .1)
+                right: 0
+                left: auto

@@ -248,6 +248,9 @@
 - [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
 - [ ] Photo tagging
 - [ ] Bring InlineAction closer to AutoPopup
+- [ ] Replace inline JS
+    - [ ] Select all in signup/list_entries.twig
+- [ ] sticky rows/columns hide shadow
 
 ## Bulma extensions / custom CSS
 
