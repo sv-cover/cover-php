@@ -242,7 +242,7 @@
 - [ ] Sticker map
 - [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
 - [×] Stuff happening in mailijnlijsten/single.twig
-- [ ] Fancyness in signup/form_form.twig
+- [×] Fancyness in signup/form_form.twig
 - [ ] Autocomplete in lidworden/lidworden.twig
 - [ ] Profile page
 - [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
@@ -251,6 +251,7 @@
 - [ ] Replace inline JS
     - [ ] Select all in signup/list_entries.twig
 - [ ] sticky rows/columns hide shadow
+- [ ] autopopup form submit
 
 ## Bulma extensions / custom CSS
 
@@ -362,6 +363,7 @@
 - [ ] Auto-save indicator
 - [ ] InlineAction destination fade
 - [ ] AutoSubmitForm feedback
+- [ ] Confirmation before signup entry deletion
 
 # Pending Design Decisions
 
