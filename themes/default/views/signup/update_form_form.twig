@@ -10,6 +10,7 @@
 	{% if form.has_id and user_can_delete form %}
 		<div class="level-right buttons">	
 			<a href="{{ controller.link({'view': 'delete_form', 'form': form.id}) }}" class="button" data-popup="modal">{{ __('Delete form') }}</a>
+			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="button">{{ __('Show sign-ups') }}</a>
 		</div>
 	{% endif %}
 </header>

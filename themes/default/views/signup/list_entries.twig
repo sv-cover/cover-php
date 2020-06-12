@@ -5,13 +5,14 @@
 {% block page %}
 <section class="section signup-entries">
 <div class="container">
+
 <header class="level">
 	<div class="level-left">
 		<h1 class="title">{{ __('Sign-ups') }}</h1>
 	</div>
 	<div class="level-right buttons">		
 		{% if user_can_create form.new_entry(global.identity.member) %}
-			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}" class="button">{{ __('New sign-up') }}</a>
+			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id, 'action': 'modal'}) }}" class="button" data-popup="modal">{{ __('New sign-up') }}</a>
 		{% endif %}
 		{% if user_can_update form %}
 			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="button">{{ __('Modify form') }}</a>
@@ -68,7 +69,7 @@
 								{% endfor %}
 								<td class="is-sticky is-right has-text-right is-vcentered">
 									{% if user_can_update entry %}
-										<a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id}) }}" title="{{ __('Edit sign-up') }}">
+										<a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id, 'action': 'modal'}) }}" data-popup="modal" title="{{ __('Edit sign-up') }}">
 											<span class="icon is-small">
 												<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 											</span>

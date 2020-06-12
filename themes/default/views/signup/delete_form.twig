@@ -18,7 +18,7 @@
                 </div>
             </section>
             <footer class="modal-card-foot">
-                <a href="{{ controller.link({view: 'update_form', form: form.id}) }}" class="button">{{ __('Back to form') }}</a>
+                <a href="{{ controller.link({view: 'update_form', form: form.id}) }}" class="button" data-dismiss="modal">{{ __('Back to form') }}</a>
                 <button type="submit" class="button is-danger">{{ __('Delete form')  }}</button>
             </footer>
         </form>

@@ -1,25 +1,10 @@
-{% extends '@layout/layout.twig' %}
+{% extends is_modal ? './_entry_form_modal.twig' : './_entry_form_regular.twig' %}
 
 {% block title __('Form') ~ ' – ' ~ parent() %}
+{% block entry_form_title %}{{ __('Form') }}{% endblock %}
 
-{% block content %}
-<header class="level">
-	<div class="level-left">
-		<h1 class="title">{{ __('Form') }}</h1>
-	</div>
-	{% if form.has_id and user_can_update form %}
-		<div class="level-right buttons">
-			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="button">{{ __('Modify form') }}</a>
-			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="button">{{ __('Show sign-ups') }}</a>
-		</div>
-	{% endif %}
-</header>
-<div class="pageheading">
-	<div class="controls inline">
-	</div>
-	
-</div>
-<div class="messageBox">
+
+{% block entry_form_header %}
 	{% if not form.is_open %}
 	<div class="notification is-danger">
 		<h3>{{ __('The registrations are closed.') }}</h3>
@@ -32,7 +17,9 @@
 		{% endif %}
 	</div>
 	{% endif %}
+{% endblock %}
 
+{% block entry_form_form %}
 	{% if success %}
 		<p>{{ __('Success! You have signed up.') }}</p>
 	{% else %}
@@ -55,7 +42,7 @@
 				{{ field.render(view, entry)|raw }}
 			{% endfor %}
 
-			{% if user_can_create entry or user_can_update entry %}
+			{% if not is_modal and (user_can_create entry or user_can_update entry) %}
 			<div class="field">
 				<div class="control buttons">
 					<button class="button is-primary" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
@@ -64,5 +51,9 @@
 			{% endif %}
 		</form>
 	{% endif %}
-</div>
+{% endblock %}
+
+{% block entry_form_buttons %}
+    <a href="#" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+	<button form="signup-entry-form" class="button is-primary" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
 {% endblock %}
