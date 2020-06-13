@@ -59,22 +59,16 @@ ul.controls li
     &:not(:last-child)
         margin-right: 0.75rem
 
-.table
-    td, th
-        &.is-truncated
-            max-width: 30ch
-            overflow: hidden
-            text-overflow: ellipsis
-            white-space: nowrap
+.modal.filemanager
+    .modal-card
+        width: 80ch
+        max-width: 100%
+    .modal-card-body
+        padding: 0
+    .modal-card-foot:empty
+        display: none
+    iframe
+        width: 80ch
+        height: 600px
+        vertical-align: top
 
-        &.is-sticky
-            position: sticky
-            left: 0
-            background: rgba($body-background-color, 0.95)
-            background-clip: padding-box
-            box-shadow: 0.25em 0 .5em -0.0625em rgba($scheme-invert, .1)
-
-            &.is-right
-                box-shadow: -0.25em 0 .5em -0.0625em rgba($scheme-invert, .1)
-                right: 0
-                left: auto

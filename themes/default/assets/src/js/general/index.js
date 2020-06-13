@@ -3,6 +3,7 @@ import './lazy_image_loader';
 import './autocomplete';
 import './autocomplete_member';
 import './auto_submit_form';
+import './filemanager_field';
 import './inline_action';
 import './growing_list';
 import './partners';

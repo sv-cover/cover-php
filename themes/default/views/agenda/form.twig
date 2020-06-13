@@ -7,7 +7,7 @@
 
 <form class="vertical-form" name="agenda_form" action="{{ view.get_form_action(iter) }}" method="post">
 	{% if errors %}
-		<p class="notification is-danger">{{ __("You haven't filled in all the fields correctly") }}</p>
+		<p class="notification is-danger">{{ __("You haven't filled in all fields correctly") }}</p>
 	{% endif %}
 
 	{% if iter.has_id %}
@@ -60,7 +60,7 @@
 	<div class="field">
 		{{ html_label(__('Image'), 'image_url', errors=errors) }}
 		<div class="control" id="agenda_image_url">
-			{{ html_input_text('image_url', iter, maxlength=255, errors=errors) }}
+			{{ html_input_text('image_url', iter, maxlength=255, errors=errors, data_filemanager='true', data_filemanager_cta='Choose an image…', data_filemanager_url=get_config_value('filemanager_root', '')) }}
 		</div>
 	</div>
 
