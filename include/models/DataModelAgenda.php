@@ -14,6 +14,7 @@
 				'van',
 				'tot',
 				'locatie',
+				'image_url',
 				'private',
 				'extern',
 				'facebook_id',

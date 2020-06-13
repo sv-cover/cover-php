@@ -57,6 +57,10 @@
 		// Used to enable people without a SEPA bank account to become a member
         'no_iban_string' => 'OUTSIDESEPAAREA',
 
+		// For including uploads through filemanager
+		'filemanager_root' => 'https://filemanager.svcover.nl',
+        'filemanager_image_extensions' => ['jpg', 'jpeg', 'png', 'svg', 'webp'],
+
 		// For the Website calling the API of Secretary to propose new members
 		'secretary_root' => 'http://localhost:8000/api/',
 		'secretary_user' => 'website',

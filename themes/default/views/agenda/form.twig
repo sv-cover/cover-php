@@ -58,6 +58,13 @@
 	</div>
 
 	<div class="field">
+		{{ html_label(__('Image'), 'image_url', errors=errors) }}
+		<div class="control" id="agenda_image_url">
+			{{ html_input_text('image_url', iter, maxlength=255, errors=errors) }}
+		</div>
+	</div>
+
+	<div class="field">
 		{{ html_label(__('Link to Facebook event'), 'facebook_id', errors=errors) }}
 		<div class="control">
 			{{ html_input_text('facebook_id', iter, size='20', errors=errors) }}

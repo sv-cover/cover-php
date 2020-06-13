@@ -174,6 +174,7 @@ CREATE TABLE agenda (
     van timestamp with time zone NOT NULL,
     tot timestamp with time zone,
     locatie character varying(100),
+    image_url character varying(255) DEFAULT NULL,
     private smallint DEFAULT 0, -- boolean
     extern smallint NOT NULL DEFAULT 0, -- boolean
     facebook_id character varying(20) DEFAULT NULL,
