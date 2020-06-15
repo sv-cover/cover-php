@@ -35,14 +35,12 @@
 			{% endif %}
 			
 			{% for field in form.fields %}
-				<div>
-					{{ field.render(view, entry)|raw }}
-				</div>
+				{{ field.render(view, entry)|raw }}
 			{% endfor %}
 
 			<div class="field">
 				<div class="control buttons">
-					<button class="button is-primary" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
+					<button class="button is-primary" type="submit">{{ entry.has_id ? __('Modify sign-up') : __('Sign me up') }}</button>
 				</div>
 			</div>
 		</form>

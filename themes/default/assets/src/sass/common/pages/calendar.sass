@@ -1,0 +1,64 @@
+$event-overlay-padding: 1.25rem
+
+.calendar-single
+    .event-header
+        @extend %block
+        background: $cover-gradient, $black
+        display: block
+        position: relative
+        height: 10rem
+        
+        &.has-image
+            padding: 0
+            padding-top: 50% // is-2by1
+
+        & > .image
+            @extend .is-2by1
+            +overlay
+            overflow: hidden
+
+            img
+                min-height: 100%
+                object-fit: cover
+        
+        .overlay
+            +overlay
+            z-index: 5
+            padding-top: $event-overlay-padding
+            padding-right: 1rem
+            padding-bottom: $event-overlay-padding
+            padding-left: 0
+            top: auto
+            height: auto
+
+        .boxed-title-wrapper
+            display: block
+            &:not(:last-child)
+                margin-bottom: .5rem
+        
+        .name
+            // Limit number of lines in browsers that support it to "deal" with long titles
+            display: -webkit-box
+            -webkit-box-orient: vertical
+            -webkit-line-clamp: 2
+            overflow: hidden
+            text-overflow: ellipsis
+            color: $white
+            font-size: $size-5
+            h1
+                +boxed-title($size-4)
+            +mobile
+                font-size: $size-4
+                h1
+                    +boxed-title($size-5)
+
+        .date
+            span
+                +boxed-title($size-6)            
+                +mobile
+                    +boxed-title($size-7)
+    
+    .event-details
+        @extend %block
+        +tablet
+            flex-direction: row-reverse
