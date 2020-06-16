@@ -1,5 +1,12 @@
 $event-overlay-padding: 1.25rem
 
+=max-lines($num-lines: 2)
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: $num-lines
+    overflow: hidden
+    text-overflow: ellipsis
+
 .calendar-single
     .event-header
         @extend %block
@@ -38,11 +45,7 @@ $event-overlay-padding: 1.25rem
         
         .name
             // Limit number of lines in browsers that support it to "deal" with long titles
-            display: -webkit-box
-            -webkit-box-orient: vertical
-            -webkit-line-clamp: 2
-            overflow: hidden
-            text-overflow: ellipsis
+            +max-lines(2)
             color: $white
             font-size: $size-5
             h1
@@ -62,3 +65,11 @@ $event-overlay-padding: 1.25rem
         @extend %block
         +tablet
             flex-direction: row-reverse
+
+
+.event-list
+    .event
+        .name
+            // Limit number of lines in browsers that support it to "deal" with long titles
+            +max-lines(2)
+            color: $white

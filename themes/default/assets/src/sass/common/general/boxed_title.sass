@@ -1,0 +1,14 @@
+$boxed-title-distance: .5rem !default
+
+.boxed-title-wrapper
+    display: block
+    &:not(:last-child)
+        margin-bottom: $boxed-title-distance
+
+.boxed-title
+    +boxed-title($size-5)
+
+    @each $size in $sizes
+        $i: index($sizes, $size)
+        &.is-#{$i}
+            font-size: $size

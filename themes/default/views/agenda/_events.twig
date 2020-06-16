@@ -1,0 +1,39 @@
+{% set current_month = -1 %}
+{% set show_year = true %}
+
+<ul class="event-list columns is-multiline">
+{% for event in events %}
+    {% if current_month != event.van|date('n') %}
+        <li class="column is-full">
+            <h2 class="title is-4">
+                {{ months[event.van|date('n')] }}
+                {% if show_year %}{{ event.van|date('Y') }}{% endif %}
+            </h2>
+        </li>
+        {% set current_month = event.van|date('n') %}
+    {% endif %}
+    <li class="event column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd">
+        <a href="{{ controller.link_to_read(event) }}" class="cover-thumbnail is-2by1">
+            <div class="overlay">
+                <div class="date boxed-title-wrapper">
+                    <span class="boxed-title is-size-7 has-text-weight-normal">
+                        {{ event|period_full_short }}
+                    </span>
+                </div>
+                <div class="name boxed-title-wrapper">
+                    <h3 class="boxed-title is-size-6">
+                        {{ event.kop }}
+                    </h3>
+                </div>
+            </div>
+            {% if event.image_url %}
+                <figure class="image">
+                    <img src="{{ event.image_url }}" alt="{{ event.kop }}">
+                </figure>
+            {% endif %}
+        </a>
+    </li>
+{% else %}
+    <li class="column is-full has-text-centered">{{ __('No events found :(') }}</li>
+{% endfor %}
+</ul>
