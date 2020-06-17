@@ -1,4 +1,26 @@
-<div class="box">
+<div class="event-signup-form">
+{% if user_can_update form %}
+    <div class="dropdown is-hoverable is-right is-pulled-right">
+        <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    <span class="is-sr-only">{{ __('Form options') }}</span>
+                </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+            	<a href="signup.php?view=update_form&amp;form={{ form.id }}" class="dropdown-item">
+            		{{ __('Modify form') }}
+            	</a>
+				<a href="signup.php?view=list_entries&amp;form={{ form.id }}" class="dropdown-item">
+					{{ __('Show sign-ups') }}
+				</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
 {% for entry in form.get_entries_for_member(global.identity.member) %}
 	<p>{{ __('You signed up on %s.')|format(entry.created_on|date('d-m-Y H:i')) }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Show my registration') }}</a>.{% endif %}</p>
 {% else %}
@@ -44,15 +66,6 @@
 				</div>
 			</div>
 		</form>
-	{% endif %}
-	{% if user_can_update form %}
-		<nav class="level is-mobile">
-			<div class="level-left"></div>{# a level-right apparently needs a level-left to function #}
-			<div class="level-right buttons">
-				<a href="signup.php?view=update_form&amp;form={{ form.id }}" class="button">{{ __('Modify form') }}</a>
-				<a href="signup.php?view=list_entries&amp;form={{ form.id }}" class="button">{{ __('Show sign-ups') }}</a>
-			</div>
-		</nav>
 	{% endif %}
 {% endfor %}
 </div>

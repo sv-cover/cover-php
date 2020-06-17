@@ -4,22 +4,6 @@
 {% block page %}
 <article class="section calendar-single">
 <div class="container block">
-{% if iter.is_proposal %}
-	<div class="notification is-danger">
-		{% if iter.replacement_for == 0 %}
-			<p >{{ __('This activity has not yet been published. It still needs to be accepted by the Board.') }}</p>
-		{% else %}
-			<p>{{ __('This revision of the activity has not yet been published.') }}</p>
-		{% endif %}
-	</div>
-{% endif %}
-
-{% if mutation %}
-	<div class="notification is-danger">
-		<p>{{ __('There is <a href="%s">a change on this activity</a> that is not yet published.')|format(mutation.get_absolute_url()|e('html'))|raw }}</p>
-	</div>
-{% endif %}
-
 <div class="level is-mobile controls">
 	<div class="level-left">
 		<div class="control">
@@ -84,6 +68,22 @@
 		</div>
 	</div>
 </div>
+
+{% if iter.is_proposal %}
+	<div class="notification is-danger">
+		{% if iter.replacement_for == 0 %}
+			<p >{{ __('This activity has not yet been published. It still needs to be accepted by the Board.') }}</p>
+		{% else %}
+			<p>{{ __('This revision of the activity has not yet been published.') }}</p>
+		{% endif %}
+	</div>
+{% endif %}
+
+{% if mutation %}
+	<div class="notification is-danger">
+		<p>{{ __('There is <a href="%s">a change on this activity</a> that is not yet published.')|format(mutation.get_absolute_url()|e('html'))|raw }}</p>
+	</div>
+{% endif %}
 
 <header class="event-header {% if iter.image_url %}has-image{% endif %}">
 	<div class="overlay">
@@ -151,11 +151,13 @@
 		{% if global.auth.logged_in %}
 			{% for form in iter.signup_forms %}
 				{% if user_can_read form %}
+					<hr>
 					{{ include('signup_form.twig', {form: form}) }}
 				{% endif %}
 			{% endfor %}
 		{% else %}
-			<div class="box content">
+			<hr>
+			<div class="content">
 				<h2>Sign up</h2>
 				<p>{{ __('Your registrion will be linked to your account, so you need to login to register for this activity. ') }}</p>
 				<p>
