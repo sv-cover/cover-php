@@ -1,0 +1,52 @@
+{% macro format_period(event, h_class='', h_tag='h3') %}
+    {% set current_year = 'now'|date('Y') %}
+    {% set academic_year = 'now'|academic_year %}
+    {% set hide_year = event.van|academic_year == academic_year and event.tot|academic_year == academic_year %}
+    {% set hide_year = hide_year or (event.van|date('Y') == current_year and event.tot|date('Y') == current_year) %}
+    {% set date_format = hide_year ? 'D, M j' : 'D, M j, Y' %}
+    <div class="event-period">
+        <{{ h_tag }} class="row {{h_class}}">
+            <span class="date">{{ __('Date') }}</span>
+            <span class="time">{{ __('Time') }}</span>
+        </{{ h_tag }}>
+        {% if not event.tot or event.tot == event.van %}
+            <div class="row">
+                <span class="date">{{ event.van|date(date_format) }}</span>
+                <span class="time">
+                    <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">
+                        {{ event.van|date('G:i') }}
+                    </time>
+                </span>
+            </div>
+        {% elseif event.van|slice(0, 10) != event.tot|slice(0, 10) %}
+            <div class="row">
+                <span class="date">{{ event.van|date(date_format) }}</span>
+                <span class="time">
+                    <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">
+                        {{ event.van|date('G:i') }}
+                    </time>
+                </span>
+            </div>
+            <div class="row">
+                <span class="date">
+                    {{ __('till') }}
+                    {{ event.tot|date(date_format) }}
+                </span>
+                <span class="time">
+                    <time class="dt-end" datetime="{{ event.tot|date('Y-m-d H:i') }}">
+                        {{ event.tot|date('G:i') }}
+                    </time>
+                </span>
+            </div>
+        {% else %}
+            <div class="row">
+                <span class="date">{{ event.van|date(date_format) }}</span>
+                <span class="time">
+                    <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">{{ event.van|date('G:i') }}</time>
+                    –
+                    <time class="dt-start" datetime="{{ event.tot|date('Y-m-d H:i') }}">{{ event.tot|date('G:i') }}</time>
+                </span>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}

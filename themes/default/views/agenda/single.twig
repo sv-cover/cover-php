@@ -1,4 +1,5 @@
 {% extends '@layout/layout.twig' %}
+{% import 'macros.twig' as macros %}
 
 {% block page %}
 <article class="section calendar-single">
@@ -22,7 +23,7 @@
 <div class="level is-mobile controls">
 	<div class="level-left">
 		<div class="control">
-			<a href="agenda.php" class="button">
+			<a href="{{ controller.link({'year': iter.van|date('n') < 9 ? iter.van|date('Y') - 1 : iter.van|date('Y') }) }}" class="button">
 				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 				<span class="is-hidden-mobile">{{__('Back to calendar')}}</span>
 				<span class="is-hidden-tablet">{{__('Back')}}</span>
@@ -112,8 +113,9 @@
 			{% if iter.signup_forms %}
 				<a href="#event-signup" class="button is-primary is-fullwidth">Sign up</a>
 			{% endif %}
-			<h3>{{  __('Date & time') }}</h3>
-			<p>{{  iter|period }}</p>
+			{# <h3>{{  __('Date & time') }}</h3> #}
+			{{ macros.format_period(iter) }}
+			{# <p>{{  iter|period }}</p> #}
 
 			{% if iter.locatie %}
 				<h3>{{  __('Location') }}</h3>

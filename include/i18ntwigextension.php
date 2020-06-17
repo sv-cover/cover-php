@@ -77,7 +77,16 @@ class I18NTwigExtension extends Twig_Extension
 				array_multisort(...$sort_args);
 
 				return $iters;
-			})
+			}),
+			new Twig_SimpleFilter('academic_year', function($date) {
+				if ( is_string($date) )
+					$date = new DateTime($date);
+
+				if ($date->format('n') < 9)
+					return $date->format('Y') - 1;
+
+				return $date->format('Y');
+			}),
 		];
 	}
 

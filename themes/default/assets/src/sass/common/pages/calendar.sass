@@ -67,9 +67,44 @@ $event-overlay-padding: 1.25rem
             flex-direction: row-reverse
 
 
+html
+    scroll-behavior: smooth
+
+
 .event-list
     .event
         .name
             // Limit number of lines in browsers that support it to "deal" with long titles
             +max-lines(2)
             color: $white
+
+.event-period
+    display: table
+    width: 100%
+    &:not(:first-child)
+        margin-top: $block-spacing
+    .row
+        display: table-row
+        .date,
+        .time
+            display: table-cell
+        .time
+            padding-left: 1rem
+            min-width: 8ch
+        &.title
+            padding-bottom: $block-spacing
+
+.content
+    .event-period
+        h1.row > *
+            padding-bottom: 0.5em
+        h2.row > *
+            padding-bottom: 0.5714em
+        h3.row > *
+            padding-bottom: 0.6666em
+        h4.row > *
+            padding-bottom: 0.8em
+        h5.row > *
+            padding-bottom: 0.8888em
+        h6.row > *
+            padding-bottom: 1em
