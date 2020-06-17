@@ -410,23 +410,6 @@
 		return agenda_format_period($iter, $format);
 	}
 
-	function agenda_short_full_period_for_display(DataIterAgenda $iter)
-	{	
-		// Same time? Only display start time.
-		if ($iter->get('van') == $iter->get('tot'))
-			$format = __('$from_dayname_short, $from_month_short $from_day, $from_time');
-
-		// Not the same end date? Show the day range instead of the times
-		elseif ($iter->get('van_datetime')->format('w') != $iter->get('tot_datetime')->format('w') - (intval($iter->get('tot_datetime')->format('G')) < 10 ? 1 : 0))
-		{
-			$format = __('$from_dayname_short, $from_month_short $from_day – $till_dayname_short, $till_month_short $till_day');
-		}
-		else
-			$format = __('$from_dayname_short, $from_month_short $from_day, $from_time – $till_time');
-
-		return agenda_format_period($iter, $format);
-	}
-
 	function agenda_short_period_for_display(DataIterAgenda $iter)
 	{	
 		$months = get_short_months();

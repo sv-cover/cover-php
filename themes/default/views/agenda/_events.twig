@@ -1,5 +1,6 @@
 {% set current_month = -1 %}
 {% set show_year = true %}
+{% import 'macros.twig' as macros %}
 
 <ul class="event-list columns is-multiline">
 {% for event in events %}
@@ -17,7 +18,7 @@
             <div class="overlay">
                 <div class="date boxed-title-wrapper">
                     <span class="boxed-title is-size-7 has-text-weight-normal">
-                        {{ event|period_full_short }}
+                        {{ macros.format_period_short(event) }}
                     </span>
                 </div>
                 <div class="name boxed-title-wrapper">

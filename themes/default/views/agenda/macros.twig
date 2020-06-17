@@ -1,3 +1,12 @@
+{# Formats event period according to the following logic:
+ # If the event has no end time, it will display the start date and time.
+ # If the event ends on the same day it started, it will display the start date
+ #     and time, and the end time.
+ # If the event starts and ends on different days, it will display the start 
+ #     date and time, and the end date and time.
+ # If the event starts and ends in the current academic year or calendar year,
+ #     the year is displayed next to the start and end dates in all cases.
+ #}
 {% macro format_period(event, h_class='', h_tag='h3') %}
     {% set current_year = 'now'|date('Y') %}
     {% set academic_year = 'now'|academic_year %}
@@ -18,7 +27,7 @@
                     </time>
                 </span>
             </div>
-        {% elseif event.van|slice(0, 10) != event.tot|slice(0, 10) %}
+        {% elseif event.van|date('Ymd') != event.tot|date('Ymd') %}
             <div class="row">
                 <span class="date">{{ event.van|date(date_format) }}</span>
                 <span class="time">
@@ -44,9 +53,39 @@
                 <span class="time">
                     <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">{{ event.van|date('G:i') }}</time>
                     –
-                    <time class="dt-start" datetime="{{ event.tot|date('Y-m-d H:i') }}">{{ event.tot|date('G:i') }}</time>
+                    <time class="dt-end" datetime="{{ event.tot|date('Y-m-d H:i') }}">{{ event.tot|date('G:i') }}</time>
                 </span>
             </div>
         {% endif %}
     </div>
+{% endmacro %}
+
+{# Formats event period in a compact fashion, according to the following logic:
+ # If the event has no end time, it will display the start date and time.
+ # If the event ends on the same day it started, it will display the start date
+ #     and time, and the end time.
+ # If the event starts and ends on different days, it will display the start 
+ #     date and time, and the end date and time. Unless the event ends on the 
+ #     next day before 09:00 and takes shorter than 12 hours. Then it will be
+ #     formatted as if it started and ended on the same day, as this is shorter
+ #     but doesn't add much confusion.
+ #}
+{% macro format_period_short(event) %}
+    {% if not event.tot or event.tot == event.van %}
+        <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">
+            {{ event.van|date('D, M j, G:i') }}
+        </time>
+    {% elseif event.van|date('Ymd') != event.tot|date('Ymd') and ( event.van|date_modify('+1 day')|date('Ymd') != event.tot|date('Ymd') or event.tot|date('G') > 9 or event.van|date_modify('+12 hours') < event.tot ) %}
+        <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">
+            {{ event.van|date('D, M j') }}
+        </time>
+        –
+        <time class="dt-end" datetime="{{ event.tot|date('Y-m-d H:i') }}">
+            {{ event.tot|date('D, M j') }}
+        </time>
+    {% else %}
+        <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">{{ event.van|date('D, M j, G:i') }}</time>
+        –
+        <time class="dt-end" datetime="{{ event.tot|date('Y-m-d H:i') }}">{{ event.tot|date('G:i') }}</time>
+    {% endif %}
 {% endmacro %}
