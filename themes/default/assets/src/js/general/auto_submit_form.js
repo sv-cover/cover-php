@@ -87,7 +87,7 @@ class AutoSubmitForm {
 
     handleKeyDown(event) {
         // Don't use default submit on enter. That's it.
-        if (event.key === 'Enter')
+        if (event.key === 'Enter' && event.target.tagName.toLowerCase() !== 'textarea')
             event.preventDefault();    
     }
 
