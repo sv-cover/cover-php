@@ -364,6 +364,8 @@
 - [ ] InlineAction destination fade
 - [ ] AutoSubmitForm feedback
 - [ ] Confirmation before signup entry deletion
+- [ ] Sort out cookie policy (dark mode + calendar mode + remember me)
+- [ ] Add rel="noopener noreferrer" to all target="blank" links
 
 # Pending Design Decisions
 
