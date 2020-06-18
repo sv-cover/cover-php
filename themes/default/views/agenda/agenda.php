@@ -170,4 +170,11 @@
 
 			return $punten;
 		}
+
+		public function list_view_mode()
+		{
+			$cookie = $_COOKIE['cover_calendar_mode'] ?? 'grid';
+			// Explicitly test, to prevent weird data
+			return $cookie === 'list' ? 'list' : 'grid';
+		}
 	}

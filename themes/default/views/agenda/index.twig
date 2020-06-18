@@ -4,7 +4,7 @@
 
 {% block page %}
 <article class="section">
-<div class="container calendar">
+<div class="container calendar {% if view.list_view_mode() == 'list' %}is-list{% endif %}">
 <header class="block">
 	<nav class="level is-mobile" role="navigation" aria-label="pagination">
 		<div class="level-left">
@@ -50,6 +50,20 @@
 		</div>
 		<div class="level-right field is-grouped">
 			{% if global.auth.logged_in %}
+				<div class="control">
+					<button class="button calendar-list-view-button" title="{{  __('Grid view') }}" data-target-mode="grid"hidden>
+						<span class="icon">
+							<i class="fas fa-th-large" aria-hidden="true"></i>
+							<span class="is-sr-only">{{  __('Grid view') }}</span>
+						</span>
+					</button>
+					<button class="button calendar-list-view-button" title="{{  __('List view') }}" data-target-mode="list" hidden>
+						<span class="icon">
+							<i class="fas fa-th-list" aria-hidden="true"></i>
+							<span class="is-sr-only">{{  __('List view') }}</span>
+						</span>
+					</button>
+				</div>
 				<div class="control">
 					<div class="dropdown is-hoverable">
 						<div class="dropdown-trigger">

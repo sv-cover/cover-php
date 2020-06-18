@@ -19,7 +19,7 @@ $event-overlay-padding: 1.25rem
             padding: 0
             padding-top: 50% // is-2by1
 
-        & > .image
+        > .image
             @extend .is-2by1
             +overlay
             overflow: hidden
@@ -71,17 +71,100 @@ html
     scroll-behavior: smooth
 
 
-.event-list
-    .event
-        &.is-proposal
-            opacity: .75
-            transition: opacity .125s ease-in-out
-            &:hover
-                opacity: 1
-        .name
-            // Limit number of lines in browsers that support it to "deal" with long titles
-            +max-lines(2)
-            color: $white
+.calendar:not(.is-list)
+    .event-list
+        .event
+            > a
+                @extend .cover-thumbnail
+                @extend .is-2by1
+            
+            .date, .name, .label-pending
+                @extend .boxed-title-wrapper
+                > *
+                    @extend .boxed-title
+
+            .date
+                > *
+                    font-size: $size-7
+                    font-weight: $weight-normal
+
+            .name
+                // Limit number of lines in browsers that support it to "deal" with long titles
+                +max-lines(2)
+                color: $white
+                > *
+                    font-size: $size-6
+
+            .label-pending
+                > *
+                    font-size: $size-7
+                    color: $black
+                    background: $warning
+
+            &.is-proposal
+                opacity: .75
+                transition: opacity .125s ease-in-out
+                &:hover
+                    opacity: 1
+
+
+.calendar.is-list
+    .event-list
+        margin: 0
+        .column
+            padding: 0
+        .month-title:not(:first-child)
+            margin-top: $block-spacing
+            margin-bottom: $block-spacing
+        .event
+            flex: 0 0 100%
+            padding: 1rem 0
+            & + .event
+                border-top: 1px solid $media-border-color
+            > a
+                @extend .media
+                margin: -1rem
+                padding: 1rem
+        
+                > .image
+                    @extend .media-left
+                    order: -1
+                    img
+                        min-height: 100%
+                        object-fit: cover
+                > .overlay
+                    @extend .media-content
+
+                .date
+                    color: $text
+                
+                .name > *
+                    @extend .title
+                    @extend .is-5
+
+                .date, .name
+                    margin-bottom: .25rem
+
+                .label-pending
+                    @extend .tag
+                    @extend .is-warning
+
+                &:hover
+                    background: $background
+
+            &:not(.has-image) > a::before
+                @extend .media-left
+                content: ''
+                display: block
+                background: $cover-gradient, $black
+
+            >a > .image,
+            &:not(.has-image) > a::before
+                height: 96px
+                width: 96px
+                +desktop
+                    height: 96px
+                    width: 192px
 
 .event-period
     display: table
