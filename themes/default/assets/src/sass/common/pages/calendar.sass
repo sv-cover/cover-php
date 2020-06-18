@@ -73,6 +73,11 @@ html
 
 .event-list
     .event
+        &.is-proposal
+            opacity: .75
+            transition: opacity .125s ease-in-out
+            &:hover
+                opacity: 1
         .name
             // Limit number of lines in browsers that support it to "deal" with long titles
             +max-lines(2)

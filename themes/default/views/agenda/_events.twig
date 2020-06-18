@@ -13,7 +13,7 @@
         </li>
         {% set current_month = event.van|date('n') %}
     {% endif %}
-    <li class="event column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd">
+    <li class="event {% if event.image_url %}has-image{% endif %} {% if event.is_proposal() %}is-proposal{% endif %} column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd">
         <a href="{{ controller.link_to_read(event) }}" class="cover-thumbnail is-2by1">
             <div class="overlay">
                 <div class="date boxed-title-wrapper">
@@ -26,6 +26,13 @@
                         {{ event.kop }}
                     </h3>
                 </div>
+                {% if event.is_proposal() %}
+                    <div class="label-pending boxed-title-wrapper">
+                        <span class="boxed-title is-size-7 has-text-black has-background-warning">
+                            {{ __('Waiting for approval') }}
+                        </span>
+                    </div>
+                {% endif %}
             </div>
             {% if event.image_url %}
                 <figure class="image">
