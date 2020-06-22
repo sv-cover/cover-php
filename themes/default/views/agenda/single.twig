@@ -3,7 +3,7 @@
 
 {% block page %}
 <article class="section calendar-single">
-<div class="container block">
+<div class="container has-sidebar block">
 <div class="level is-mobile controls">
 	<div class="level-left">
 		<div class="control">
@@ -108,8 +108,8 @@
 <!-- Actual event -->
 <section class="event-details columns">
 	<h2 class="is-sr-only">{{ __('Event information') }}</h2>
-	<div class="column is-narrow-tablet is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
-		<div class="content">
+	<div class="column is-sidebar">
+		<div class="content" data-sticky>
 			{% if iter.signup_forms %}
 				<a href="#event-signup" class="button is-primary is-fullwidth">Sign up</a>
 			{% endif %}
@@ -137,43 +137,43 @@
 			{% endif %}
 		</div>
 	</div>
-	<div class="column">
+	<div class="column is-content">
 		<div class="content">
 			{{ iter.beschrijving|parse_markup }}
 		</div>
+		{% if iter.signup_forms %}
+		<div id="event-signup" class="block">
+			{% if global.auth.logged_in %}
+				{% for form in iter.signup_forms %}
+					{% if user_can_read form %}
+						<hr>
+						{{ include('signup_form.twig', {form: form}) }}
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<hr>
+				<div class="content">
+					<h2>Sign up</h2>
+					<p>{{ __('Your registrion will be linked to your account, so you need to login to register for this activity. ') }}</p>
+					<p>
+						{{ 
+							__(
+								'If you\'re not a member and still want to join, that might be possible. Contact the %s for more information.'
+							)|e('html')|format(
+								'<a href="mailto:%s@svcover.nl">%s</a>'|format(iter.committee.login|e('html'), iter.committee.naam|e('html'))
+							)|raw
+						}}
+					</p>
+					<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id={{ iter.id }}" class="button is-primary">{{ __('Log in') }}</a>
+				</div>
+			{% endif %}
+		</div>
+		{% endif %}
 	</div>
 </section>
 </div>
 
 <div class="container block is-content-optimized">
-<section id="event-signup" class="block">
-	{% if iter.signup_forms %}
-		{% if global.auth.logged_in %}
-			{% for form in iter.signup_forms %}
-				{% if user_can_read form %}
-					<hr>
-					{{ include('signup_form.twig', {form: form}) }}
-				{% endif %}
-			{% endfor %}
-		{% else %}
-			<hr>
-			<div class="content">
-				<h2>Sign up</h2>
-				<p>{{ __('Your registrion will be linked to your account, so you need to login to register for this activity. ') }}</p>
-				<p>
-					{{ 
-						__(
-							'If you\'re not a member and still want to join, that might be possible. Contact the %s for more information.'
-						)|e('html')|format(
-							'<a href="mailto:%s@svcover.nl">%s</a>'|format(iter.committee.login|e('html'), iter.committee.naam|e('html'))
-						)|raw
-					}}
-				</p>
-				<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id={{ iter.id }}" class="button is-primary">{{ __('Log in') }}</a>
-			</div>
-		{% endif %}
-	{% endif %}
-</section>
 </div>
 </article>
 {% endblock %}

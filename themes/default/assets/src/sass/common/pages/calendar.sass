@@ -21,6 +21,9 @@ $event-overlay-padding: 1.25rem
         @extend %block
         +tablet
             flex-direction: row-reverse
+    .is-sidebar > .content
+        position: sticky
+        top: $navbar-height + $block-spacing
 
 .calendar:not(.is-list)
     .event-list
@@ -96,13 +99,22 @@ $event-overlay-padding: 1.25rem
                 content: ''
                 display: block
                 background: $cover-gradient, $black
-            >a > .image,
+            > a > .image,
             &:not(.has-image) > a::before
                 height: 96px
                 width: 96px
                 +desktop
                     height: 96px
                     width: 192px
+            &.is-proposal
+                > a > .image,
+                &:not(.has-image) > a::before
+                    opacity: .75
+                    transition: opacity .125s ease-in-out
+                &:hover
+                    > a > .image,
+                    &:not(.has-image) > a::before
+                        opacity: 1
 
 .event-period
     display: table

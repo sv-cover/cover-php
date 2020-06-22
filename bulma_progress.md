@@ -250,7 +250,7 @@
 - [ ] Bring InlineAction closer to AutoPopup
 - [ ] Replace inline JS
     - [ ] Select all in signup/list_entries.twig
-- [ ] sticky rows/columns hide shadow
+- [×] sticky rows/columns hide shadow
 - [ ] autopopup form submit
 
 ## Bulma extensions / custom CSS
