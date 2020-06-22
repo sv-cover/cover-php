@@ -109,32 +109,48 @@
 <section class="event-details columns">
 	<h2 class="is-sr-only">{{ __('Event information') }}</h2>
 	<div class="column is-sidebar">
-		<div class="content" data-sticky>
-			{% if iter.signup_forms %}
-				<a href="#event-signup" class="button is-primary is-fullwidth">Sign up</a>
-			{% endif %}
-			{# <h3>{{  __('Date & time') }}</h3> #}
-			{{ macros.format_period(iter) }}
-			{# <p>{{  iter|period }}</p> #}
+		<div class="is-sticky">
+			<div class="event-sidebar-sticky-header cover-thumbnail is-2by1 {% if iter.image_url %}has-image{% endif %}">
+				<div class="overlay is-bottom">
+					<div class="name boxed-title-wrapper">
+						<span class="boxed-title is-size-6">
+							{{ iter.kop }}
+						</span>
+					</div>
+				</div>
+				{% if iter.image_url %}
+					<figure class="image">
+						<img src="{{ iter.image_url }}" alt="{{ iter.kop }}">
+					</figure>
+				{% endif %}
+			</div>
+			<div class="content">
+				{% if iter.signup_forms %}
+					<a href="#event-signup" class="button is-primary is-fullwidth">Sign up</a>
+				{% endif %}
+				{# <h3>{{  __('Date & time') }}</h3> #}
+				{{ macros.format_period(iter) }}
+				{# <p>{{  iter|period }}</p> #}
 
-			{% if iter.locatie %}
-				<h3>{{  __('Location') }}</h3>
-				<p>{{ iter.locatie }}</p>
-			{% endif %}
-			
-			{% if iter.extern %}
-				<h3>{{  __('Organiser') }}</h3>
-				<p>
-					<div class="has-text-danger">{{  __('This activity is not organised by Cover.') }}</div>
-					{% if iter.committee %}
-						{{  __('Placed by') }}:
-						<a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a>
-					{% endif %}
-				</p>
-			{% elseif iter.committee %}
-				<h3>{{  __('Organiser') }}</h3>
-				<p><a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></p>
-			{% endif %}
+				{% if iter.locatie %}
+					<h3>{{  __('Location') }}</h3>
+					<p>{{ iter.locatie }}</p>
+				{% endif %}
+				
+				{% if iter.extern %}
+					<h3>{{  __('Organiser') }}</h3>
+					<p>
+						<div class="has-text-danger">{{  __('This activity is not organised by Cover.') }}</div>
+						{% if iter.committee %}
+							{{  __('Placed by') }}:
+							<a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a>
+						{% endif %}
+					</p>
+				{% elseif iter.committee %}
+					<h3>{{  __('Organiser') }}</h3>
+					<p><a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></p>
+				{% endif %}
+			</div>
 		</div>
 	</div>
 	<div class="column is-content">

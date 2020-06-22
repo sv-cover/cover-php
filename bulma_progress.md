@@ -366,6 +366,7 @@
 - [ ] Confirmation before signup entry deletion
 - [ ] Sort out cookie policy (dark mode + calendar mode + remember me)
 - [ ] Add rel="noopener noreferrer" to all target="blank" links
+- [ ] Full reduced motion support
 
 # Pending Design Decisions
 

@@ -8,8 +8,12 @@ $event-overlay-padding: 1.25rem
     text-overflow: ellipsis
 
 .calendar-single
-    .event-header
+    .event-header,
+    .event-sidebar-sticky-header
         @extend %block
+        &:not(.has-image)
+            padding-top: 0
+            height: 10rem
         .name
             // Limit number of lines in browsers that support it to "deal" with long titles
             +max-lines(2)
@@ -21,9 +25,29 @@ $event-overlay-padding: 1.25rem
         @extend %block
         +tablet
             flex-direction: row-reverse
-    .is-sidebar > .content
+    .is-sidebar > .is-sticky
         position: sticky
         top: $navbar-height + $block-spacing
+        .event-sidebar-sticky-header
+            height: 0
+            transition: .25s ease-in
+            transition-property: height, margin-bottom
+            margin-bottom: 0
+            &.has-image
+                overflow: hidden
+                padding-top: 0
+                transition-property: height, margin-bottom, padding-top
+            &:not(.has-image)
+                overflow: hidden
+        &.is-stuck
+            .event-sidebar-sticky-header
+                margin-bottom: $block-spacing
+                &.has-image
+                    height: auto
+                    padding-top: 50%
+                &:not(.has-image)
+                    height: 6rem
+
 
 .calendar:not(.is-list)
     .event-list
