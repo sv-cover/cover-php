@@ -38,7 +38,7 @@
 	<form action="{{ controller.link({view: 'delete_entries', form: form.id}) }}" method="post">
 		{{ html_nonce('delete_entries', form) }}
 		<div class="table-container">
-			<table class="signup-entries-table table is-fullwidth">
+			<table class="signup-entries-table table is-fullwidth is-hoverable">
 				<thead>
 					<tr>
 						<th class="is-sticky">
@@ -50,7 +50,7 @@
 								<th class="column-field-type-{{field.type}} is-truncated" title="{{ column|capitalize }}">{{ column|capitalize }}</th>
 							{% endfor %}
 						{% endfor %}
-						<th>Sign-up date</th>
+						<th class="is-truncated">Sign-up date</th>
 						<th class="is-sticky is-right"></th>
 					</tr>
 				</thead>
@@ -83,7 +83,7 @@
 						{% endif %}
 					{% else %}
 						<tr>
-							<td colspan="{{ form.fields|length + 3}}" class="has-text-centered has-text-grey">
+							<td colspan="{{ form.fields|length + 4}}" class="has-text-centered has-text-grey">
 								{{ __('No sign-ups :(') }}
 							</td>
 						</tr>
