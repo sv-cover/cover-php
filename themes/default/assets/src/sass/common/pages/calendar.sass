@@ -25,28 +25,32 @@ $event-overlay-padding: 1.25rem
         @extend %block
         +tablet
             flex-direction: row-reverse
-    .is-sidebar > .is-sticky
-        position: sticky
-        top: $navbar-height + $block-spacing
-        .event-sidebar-sticky-header
-            height: 0
-            transition: .25s ease-in
-            transition-property: height, margin-bottom
-            margin-bottom: 0
-            &.has-image
-                overflow: hidden
-                padding-top: 0
-                transition-property: height, margin-bottom, padding-top
-            &:not(.has-image)
-                overflow: hidden
-        &.is-stuck
+    .event-sidebar-sticky-header
+        display: none
+    +desktop
+        .is-sidebar > .is-sticky
+            position: sticky
+            top: $navbar-height + $block-spacing
             .event-sidebar-sticky-header
-                margin-bottom: $block-spacing
+                display: block
+                height: 0
+                transition: .25s ease-in
+                transition-property: height, margin-bottom
+                margin-bottom: 0
                 &.has-image
-                    height: auto
-                    padding-top: 50%
+                    overflow: hidden
+                    padding-top: 0
+                    transition-property: height, margin-bottom, padding-top
                 &:not(.has-image)
-                    height: 6rem
+                    overflow: hidden
+            &.is-stuck
+                .event-sidebar-sticky-header
+                    margin-bottom: $block-spacing
+                    &.has-image
+                        height: auto
+                        padding-top: 50%
+                    &:not(.has-image)
+                        height: 6rem
 
 
 .calendar:not(.is-list)
