@@ -67,6 +67,14 @@
 			return $this['locatie'];
 		}
 
+		public function get_image($width=null)
+		{
+			$filemanager_root = get_config_value('filemanager_root', 'https://filemanager.svcover.nl');
+			if (!$width)
+				return sprintf('%s/%s', $filemanager_root, $this['image_url']);
+			return sprintf('%s/images/resize?f=%s&w=%d', $filemanager_root, urlencode($this['image_url']), $width);
+		}
+
 		public function get_committee()
 		{
 			return get_model('DataModelCommissie')->get_iter($this->data['committee_id']);

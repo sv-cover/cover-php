@@ -36,7 +36,14 @@
             </div>
             {% if event.image_url %}
                 <figure class="image">
-                    <img src="{{ event.image_url }}" alt="{{ event.kop }}">
+                    <picture>
+                        <source srcset="{{ event.get_image(600) }} 600w, {{ event.get_image(1200) }} 2x">
+                        <source srcset="{{ event.get_image(400) }} 400w, {{ event.get_image(800) }} 2x">
+                        <img
+                            src="{{ event.get_image(600) }}"
+                            data-preview="{{ event.get_image(400) }}"
+                        > 
+                    </picture>
                 </figure>
             {% endif %}
         </a>

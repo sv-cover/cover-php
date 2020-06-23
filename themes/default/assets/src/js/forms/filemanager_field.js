@@ -157,7 +157,7 @@ class FilemanagerField {
 
     pickFile(file) {
         // Derrive correct url
-        const fileUrl = `${this.filemanagerUrl}/${file.fullPath}`;
+        const fileUrl = `${file.fullPath}`;
 
         // Set url everywhere
         this.inputElement.value = fileUrl;

@@ -69,11 +69,6 @@
 			if (strlen($value) > 255)
 				return false;
 
-			// Only accept images from the filemanager
-			$filemanager_root = get_config_value('filemanager_root', 'https://filemanager.svcover.nl');
-			if (substr($value, 0, strlen($filemanager_root)) != $filemanager_root)
-				return false;
-
 			// Only accept image file (using naive extension check)
 			$ext = pathinfo(parse_url($value, PHP_URL_PATH), PATHINFO_EXTENSION);
 			$allowed_exts = get_config_value('filemanager_image_extensions', ['jpg', 'jpeg', 'png']);
