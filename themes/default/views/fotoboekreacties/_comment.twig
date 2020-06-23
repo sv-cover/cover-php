@@ -21,8 +21,8 @@
 					<form class="level-item like-form"
 							method="post"
 							action="{{ controller.link_to_like(iter) }}"
-							data-partial-selector="#comment{{ iter.id }}"
-							data-placement-selector="#comment{{ iter.id }}">
+							{# data-partial-selector="#comment{{ iter.id }}"
+							data-placement-selector="#comment{{ iter.id }}"#}>
 						<input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
 						<button type="submit" class="button is-text icon" 
 							title="{{ liked ? __('You like this comment. Unlike comment') : __('Like comment') }}"

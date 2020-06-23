@@ -2,7 +2,9 @@
 
 {% block title __('Sign-up forms') ~ ' – ' ~ parent() %}
 
-{% block content %}
+{% block page %}
+<section class="section signup-forms">
+<div class="container">
 <header class="level">
 	<div class="level-left">
 		<h1 class="title">{{ __('Sign-up forms') }}</h1>
@@ -14,29 +16,77 @@
 	{% endif %}
 </header>
 
-<article>
-	<table class="table is-fullwidth">
+<article class="block">
+<div class="table-container">
+	<table class="signup-forms-table table is-fullwidth is-hoverable">
 		<thead>
 			<tr>
-				<th>{{ __('Form') }}</th>
-				<th>{{ __('Activity') }}</th>
-				<th class="has-text-right">{{ __('Subscriptions') }}</th>
+				<th class="is-truncated">{{ __('Form') }}</th>
+				<th class="is-truncated">{{ __('Activity') }}</th>
+				<th class="has-text-right is-truncated">{{ __('Activity date') }}</th>
+				<th class="is-truncated">{{ __('Status') }}</th>
+				<th class="has-text-right is-truncated">{{ __('Sign-ups') }}</th>
+				<th class="is-sticky is-right"></th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for form in forms|sort_by('created_on desc') %}
 				<tr>
-					<td><a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></td>
-					<td>
+					<td class="is-truncated">
+						<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a>
+					</td>
+					<td class="is-truncated">
 						{% if form.agenda_id %}
-							<a href="agenda.php?agenda_id={{form.agenda_id}}">{{ form.agenda_item.kop }} ({{ form.agenda_item|period }})</a>
+							<a href="agenda.php?agenda_id={{form.agenda_id}}">{{ form.agenda_item.kop }}</a>
 						{% endif %}
 					</td>
-					<td class="has-text-right">{{ form.signup_count }}</td>
+					<td class="has-text-right is-truncated">
+						{% if form.agenda_id %}
+							{{ form.agenda_item.van|date('Y-m-d') }}
+						{% endif %}
+					</td>
+					<td class="is-truncated">
+						{% if form.is_open %}
+							<span class="tag is-success">Open</span>
+						{% else %}
+							<span class="tag">Closed</span>
+						{% endif %}
+					</td>
+					<td class="has-text-right is-truncated">
+						{{ form.signup_count }}
+					</td>
+					<td class="is-sticky is-right has-text-right">
+						<ul class="controls">
+						{% spaceless %}
+							{% if user_can_update form %}
+								<li>
+									<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" title="{{ __('Modify form') }}">
+										<span class="icon is-small">
+											<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+										</span>
+										<span class="is-sr-only">
+											{{ __('Modify form') }}
+										</span>
+									</a>
+								</li>
+							{% endif %}
+							<li>
+								<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" title="{{ __('View sign-ups') }}">
+									<span class="icon is-small">
+										<i class="fas fa-list-alt" aria-hidden="true"></i>
+									</span>
+									<span class="is-sr-only">
+										{{ __('View sign-ups') }}
+									</span>
+								</a>
+							</li>
+						{% endspaceless %}
+						</ul>
+					</td>
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="3" class="has-text-centered content">
+					<td colspan="4" class="has-text-centered content">
 						<p>
 							{% if global.identity.member.committees|length > 1 %}
 								{{ __('None of you committees is managing any sign-up forms.') }}
@@ -56,5 +106,8 @@
 			{% endfor %}
 		</tbody>
 	</table>
+</div>
 </article>
+</div>
+</section>
 {% endblock %}

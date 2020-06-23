@@ -242,11 +242,16 @@
 - [ ] Sticker map
 - [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
 - [×] Stuff happening in mailijnlijsten/single.twig
-- [ ] Fancyness in signup/form_form.twig
+- [×] Fancyness in signup/form_form.twig
 - [ ] Autocomplete in lidworden/lidworden.twig
 - [ ] Profile page
 - [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
 - [ ] Photo tagging
+- [ ] Bring InlineAction closer to AutoPopup
+- [ ] Replace inline JS
+    - [ ] Select all in signup/list_entries.twig
+- [×] sticky rows/columns hide shadow
+- [ ] autopopup form submit
 
 ## Bulma extensions / custom CSS
 
@@ -309,8 +314,8 @@
     - [ ] Fix by making everything buttons
 - [ ] [issue] Level-right doesn't work if there's no level-left
 - [ ] [issue] Same for pagination
-    - [ ] weblog/index.twig
-    - [ ] agenda/index.twig
+    - [×] weblog/index.twig - removed weblog
+    - [×] agenda/index.twig
 - [×] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
     - [×] commissies/index.twig
     - [×] fotoboek/\_path.twig
@@ -321,11 +326,11 @@
 - [×] Why does a .number make form elements rounded? Bulma legacy, apparently. Don't use .number.
 - [×] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
     - [×] signup/list_entries.twig
-- [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
-    - [ ] signup/list_entries.twig
+- [×] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
+    - [×] signup/list_entries.twig
 - [×] Buttons don't work that well as card-footer-item
     - [×] signup/form_form.twig
-- [ ] fullwidth/expanding select? maybe?
+- [×] fullwidth/expanding select? maybe? - Already exists. `.is-fullwidth` works.
 - [×] Buttons don't work as dropdown-item
     - [×] fotoboek/photobook.twig (manage dropdown for photocee)
 - [×] Button addons spacing between last 2 is broken. See 
@@ -354,7 +359,15 @@
 - [ ] Error 500. What if link_static is broken? Or i18n?
 - [ ] Poll on mobile doesn't work that well.
 - [×] Photo privacy form doesn't return to original photo
-
+- [ ] Sanity check disabled InlineAction
+- [ ] Auto-save indicator
+- [ ] InlineAction destination fade
+- [ ] AutoSubmitForm feedback
+- [ ] Confirmation before signup entry deletion
+- [ ] Sort out cookie policy (dark mode + calendar mode + remember me)
+- [ ] Add rel="noopener noreferrer" to all target="blank" links
+- [ ] Full reduced motion support
+- [ ] source set generator
 
 # Pending Design Decisions
 

@@ -171,6 +171,15 @@
 		
 		return $days;
 	}
+
+	function get_short_days() {
+		static $days = null;
+		
+		if (!$days)
+			$days = Array(__('Sun'), __('Mon'), __('Tue'), __('Wed'), __('Thu'), __('Fri'), __('Sat'), __('Sun'));
+		
+		return $days;
+	}
 	
 	/** @group Functions
 	  * Convenient function to get an array of month names
@@ -443,15 +452,17 @@
 	function agenda_format_period(DataIterAgenda $iter, $format)
 	{
 		$days = get_days();
+		$short_days = get_short_days();
 		$months = get_months();
+		$short_months = get_short_months();
 
 		$van = $iter['van_datetime'];
 		$tot = $iter['tot_datetime'];
 
 		$format = preg_replace(
 			[
-				'/(\$from_[a-z]+(\|[a-z]+)?\b)(.+\$from_[a-z]+(\|[a-z]+)?\b)?/',
-				'/(\$till_[a-z]+(\|[a-z]+)?\b)(.+\$till_[a-z]+(\|[a-z]+)?\b)?/'
+				'/(\$from_[a-z_]+(\|[a-z]+)?\b)(.+\$from_[a-z_]+(\|[a-z]+)?\b)?/',
+				'/(\$till_[a-z_]+(\|[a-z]+)?\b)(.+\$till_[a-z_]+(\|[a-z]+)?\b)?/'
 			],
 			[
 				'<time class="dt-start" datetime="' . $van->format('Y-m-d H:i') . '">$0</time>',
@@ -461,12 +472,16 @@
 		
 		return format_string($format, array(
 			'from_dayname' => $days[$van->format('w')],
+			'from_dayname_short' => $short_days[$van->format('w')],
 			'from_day' => $van->format('j'),
 			'from_month' => $months[$van->format('n')],
+			'from_month_short' => $short_months[$van->format('n')],
 			'from_time' => agenda_time_for_display($iter, 'van'),
 			'till_dayname' => $days[$tot->format('w')],
+			'till_dayname_short' => $short_days[$tot->format('w')],
 			'till_day' => $tot->format('j'),
 			'till_month' => $months[$tot->format('n')],
+			'till_month_short' => $short_months[$tot->format('n')],
 			'till_time' => agenda_time_for_display($iter, 'tot')
 		));
 	}

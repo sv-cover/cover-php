@@ -33,7 +33,7 @@ class Partners {
 
     handleResize() {
         const collapses = this.element.querySelectorAll('.collapse');
-        const columns = parseInt(getComputedStyle(this.element).getPropertyValue('--column-count'));
+        const columns = parseInt(getComputedStyle(this.element).getPropertyValue('--column-count'), 10);
 
         for (const collapse of collapses) {
             collapse.classList.remove('is-disabled');

@@ -32,3 +32,43 @@ $footer-main-background-color: $grey-lightest !default
 .image
     img.darkmode
         display: none
+
+.sortable-chosen,
+.sortable-chosen .sortable-handle
+    cursor: grabbing
+
+.sortable-handle
+    cursor: grab
+
+
+// TODO: implement in cover style system
+button.card-header-icon
+    background-color: inherit
+    border: none
+    font-size: inherit
+    color: $grey
+    &:hover
+        color: $link-hover!important
+
+// TODO: implement in cover style system
+.button.is-baseline
+    vertical-align: baseline
+
+ul.controls li
+    display: inline-block
+    &:not(:last-child)
+        margin-right: 0.75rem
+
+.modal.filemanager
+    .modal-card
+        width: 80ch
+        max-width: 100%
+    .modal-card-body
+        padding: 0
+    .modal-card-foot:empty
+        display: none
+    iframe
+        width: 80ch
+        height: 600px
+        vertical-align: top
+

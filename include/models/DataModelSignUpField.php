@@ -37,6 +37,11 @@ class DataIterSignUpField extends DataIter
 		return get_model('DataModelSignUpForm')->get_iter($this['form_id']);
 	}
 
+	public function get_type_label()
+	{
+		return get_model('DataModelSignUpField')->field_types[$this['type']]['label'];
+	}
+
 	public function process(array $post_data, &$error)
 	{
 		return $this->widget()->process($post_data, $error);

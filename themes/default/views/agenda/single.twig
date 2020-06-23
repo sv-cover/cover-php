@@ -1,6 +1,74 @@
 {% extends '@layout/layout.twig' %}
+{% import 'macros.twig' as macros %}
 
-{% block content %}
+{% block page %}
+<article class="section calendar-single">
+<div class="container has-sidebar block">
+<div class="level is-mobile controls">
+	<div class="level-left">
+		<div class="control">
+			<a href="{{ controller.link({'year': iter.van|date('n') < 9 ? iter.van|date('Y') - 1 : iter.van|date('Y') }) }}" class="button">
+				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+				<span class="is-hidden-mobile">{{__('Back to calendar')}}</span>
+				<span class="is-hidden-tablet">{{__('Back')}}</span>
+			</a>
+		</div>
+	</div>
+	<div class="level-right">
+		<div class="field is-grouped">
+			<div class="control">
+				<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" rel="noopener noreferrer" class="button" title="{{  __('Show on Facebook') }}">
+					<span class="icon">
+						<i class="fab fa-facebook-square" aria-hidden="true"></i>
+						<span class="is-sr-only">{{  __('Show on Facebook') }}</span>
+					</span>
+				</a>
+			</div>
+			{% if user_can_update iter or user_can_delete iter or user_can_create iter.new_signup_form %}
+				<div class="control dropdown is-hoverable is-right">
+					<div class="dropdown-trigger">
+						<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+							<span>{{ __('Manage') }}</span>
+							<span class="icon is-small">
+								<i class="fas fa-angle-down" aria-hidden="true"></i>
+							</span>
+						</button>
+					</div>
+					<div class="dropdown-menu" id="dropdown-menu" role="menu">
+						<div class="dropdown-content">
+							{% if user_can_create iter.new_signup_form %}
+								<a href="signup.php?view=create_form&amp;agenda={{iter.id}}" class="dropdown-item">
+									<span class="icon">
+										<i class="fas fa-list-alt" aria-hidden="true"></i>
+									</span>
+									<span>{{ __('New sign-up form') }}</span>
+								</a>
+								<hr class="dropdown-divider">
+							{% endif %}
+							{% if user_can_update iter %}
+								<a href="{{ controller.link_to_update(iter) }}" class="dropdown-item">
+									<span class="icon">
+										<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+									</span>
+									<span>{{  __('Modify event') }}</span>
+								</a>
+							{% endif %}
+							{% if user_can_delete iter %}
+								<a href="{{ controller.link_to_delete(iter) }}" class="dropdown-item">
+									<span class="icon">
+										<i class="fas fa-trash" aria-hidden="true"></i>
+									</span>
+									<span>{{  __('Delete event') }}</span>
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
 {% if iter.is_proposal %}
 	<div class="notification is-danger">
 		{% if iter.replacement_for == 0 %}
@@ -17,163 +85,122 @@
 	</div>
 {% endif %}
 
-<header class="block">
-	
-	<!-- Event name -->
-	<div class="level">
-		<div class="level-left">
-			<h1 class="title">
-				<!-- Calendar icon -->
-				<span class="calendar-icon">
-					<span class="month">{{ iter.van|date('M') }}</span>
-					<span class="day">{{ iter.van|date('d') }}</span>{# Ew… No space after this thing…
-				 #}</span>:
+<header class="event-header cover-thumbnail is-2by1 {% if iter.image_url %}has-image{% endif %}">
+	<div class="overlay is-bottom">
+		<div class="date boxed-title-wrapper">
+			<span class="boxed-title has-text-weight-normal is-size-6 is-size-7-mobile">
+				{{ iter.van|date('F d') }}
+			</span>
+		</div>
+		<div class="name boxed-title-wrapper">
+			<h1 class="boxed-title is-size-4 is-size-5-mobile">
 				{{ iter.kop }}
 			</h1>
 		</div>
-		<div class="level-right">
-			<div class="field is-grouped">
-				<div class="control">
-					<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" class="button" title="{{  __('Show on Facebook') }}">
-						<span class="icon">
-							<i class="fab fa-facebook-square" aria-hidden="true"></i>
-							<span class="is-sr-only">{{  __('Show on Facebook') }}</span>
-						</span>
-					</a>
-				</div>
-				<div class="control">
-					<a href="agenda.php" class="button">{{  __('Complete calendar') }}</a>
-				</div>
-
-				{% if user_can_create iter.new_signup_form %}
-				<div class="control">
-					<a href="signup.php?view=create_form&amp;agenda={{iter.id}}" class="button">{{ __('New sign-up form') }}</a>
-				</div>
-				{% endif %}
-
-				{% if user_can_delete iter %}
-					<div class="control">
-						<a href="{{ controller.link_to_delete(iter) }}" class="button" title="{{  __('Delete event') }}">
-							<span class="icon">
-								<i class="fas fa-trash" aria-hidden="true"></i>
-								<span class="is-sr-only">{{  __('Delete event') }}</span>
-							</span>
-						</a>
-					</div>
-				{% endif %}
-				{% if user_can_update iter %}
-					<div class="control">
-						<a href="{{ controller.link_to_update(iter) }}" class="button" title="{{  __('Modify event') }}">
-							<span class="icon">
-								<i class="fas fa-pencil-alt" aria-hidden="true"></i>
-								<span class="is-sr-only">{{  __('Modify event') }}</span>
-							</span>
-						</a>
-					</div>
-				{% endif %}
-		</div>
 	</div>
-
-
-{# 	<!-- Facebook Cover photo (or fallback photo) -->
-	{% set cover_photo = view.cover_photo(iter) %}
-	{% if cover_photo %}
-	<div class="event-cover-photo">
-		<!-- On Facebook this image is shown in an 784x295 area -->
-		<div style="{{ 'left: -%0.2F%%; top: -%0.2F%%'|format(cover_photo.x, cover_photo.y) }}">
-			<img src="{{ cover_photo.src }}" style="position: absolute; left: 0; right:0; top:0">
-		</div>
-	</div>
+	{% if iter.image_url %}
+		<figure class="image">
+			<picture>
+				<source srcset="{{ iter.get_image(1000) }} 1000w, {{ iter.get_image(2000) }} 2x">
+				<source srcset="{{ iter.get_image(600) }} 600w, {{ iter.get_image(1200) }} 2x">
+				<source srcset="{{ iter.get_image(400) }} 400w, {{ iter.get_image(800) }} 2x">
+				<img
+					src="{{ iter.get_image(1000) }}"
+					data-preview="{{ iter.get_image(400) }}"
+				> 
+			</picture>
+		</figure>
 	{% endif %}
-
-
-	<!-- Facebook attendees -->
-	{% set attendees = view.attendees(iter) %}
-	{% if attendees %}
-	<ul class="event-attendees inline-profile-list">
-	{% for attendee in attendees %}
-		<li>
-			<a href="https://facebook.com/{{ attendee.id }}" target="_new">
-				<img src="https://graph.facebook.com/{{ attendee.id }}/picture/?width=100&amp;height=100">
-				<span class="name">{{ attendee.name }}</span>
-			</a>
-		</li>
-	{% endfor %}
-	</ul>
-	{% endif %}
-
-	<!-- Facebook RSVP status -->
-	{% if get_config_value('enable_facebook_rsvp', false) %}
-		{% set rsvp_status = view.rsvp_status(iter) %}
-		{% if rsvp_status %}
-		<div class="rsvp-status-button dropdown-button">
-			<span class="current button" tabindex="0">{{ view.rsvp_status_text(rsvp_status) }}</span>
-			<form method="post">
-				<input type="hidden" name="agenda_id" value="{{ iter.id }}">
-				<ul class="dropdown-menu">
-					<li><button type="submit" name="rsvp_status" value="attending">{{ __('Going') }}</button></li>
-					<li><button type="submit" name="rsvp_status" value="maybe">{{ __('Maybe') }}</button></li>
-					<li><button type="submit" name="rsvp_status" value="declined">{{ __('Not going') }}</button></li>
-				</ul>
-			</form>
-		</div>
-		{% elseif iter.facebook_id %}
-		<div class="rsvp-status-button">
-			<a href="{{ view.facebook.coverLoginURL }}" class="button">{{ __('Connect to Facebook') }}</a>
-		</div>
-		{% endif %}
-	{% elseif get_config_value('enable_facebook', false) and iter.facebook_id %}
-	<div class="rsvp-status-button">
-		<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" class="button">{{ __('Show on Facebook') }}</a>
-	</div>
-	{% endif %} #}
 </header>
 
 <!-- Actual event -->
-<article class="block">
-	<div class="content">
-		<p>{{  __('Date & time') }}: {{  iter|period }}<br>
-		{% if iter.locatie %}
-			{{  __('Location') }}: {{ iter.locatie }}<br>
-		{% endif %}
-		</p>
-		
-		<!-- If the event is organised externally, add a clear notice to it -->
-		{% if iter.extern %}
-			<p class="has-text-danger">{{  __('This activity is not organised by Cover.') }}</p>
-		{% endif %}
+<section class="event-details columns">
+	<h2 class="is-sr-only">{{ __('Event information') }}</h2>
+	<div class="column is-sidebar">
+		<div class="is-sticky">
+			<div class="event-sidebar-sticky-header cover-thumbnail is-2by1 {% if iter.image_url %}has-image{% endif %}">
+				<div class="overlay is-bottom">
+					<div class="name boxed-title-wrapper">
+						<span class="boxed-title is-size-6">
+							{{ iter.kop }}
+						</span>
+					</div>
+				</div>
+				{% if iter.image_url %}
+					<figure class="image">
+						<source srcset="{{ iter.get_image(300) }} 400w, {{ iter.get_image(600) }} 2x">
+						<img
+							src="{{ iter.get_image(300) }}"
+						> 
+					</figure>
+				{% endif %}
+			</div>
+			<div class="content">
+				{% if iter.signup_forms %}
+					<a href="#event-signup" class="button is-primary is-fullwidth">Sign up</a>
+				{% endif %}
+				{# <h3>{{  __('Date & time') }}</h3> #}
+				{{ macros.format_period(iter) }}
+				{# <p>{{  iter|period }}</p> #}
 
-		<!-- Formatted description of the event -->
-		<p>{{ iter.beschrijving|parse_markup }}</p>
-
-		<!-- Some meta-data -->
-		{% if iter.committee %}
-		<p><small>{{  __('Placed by') }}: <a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></small></p>
+				{% if iter.locatie %}
+					<h3>{{  __('Location') }}</h3>
+					<p>{{ iter.locatie }}</p>
+				{% endif %}
+				
+				{% if iter.extern %}
+					<h3>{{  __('Organiser') }}</h3>
+					<p>
+						<div class="has-text-danger">{{  __('This activity is not organised by Cover.') }}</div>
+						{% if iter.committee %}
+							{{  __('Placed by') }}:
+							<a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a>
+						{% endif %}
+					</p>
+				{% elseif iter.committee %}
+					<h3>{{  __('Organiser') }}</h3>
+					<p><a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="column is-content">
+		<div class="content">
+			{{ iter.beschrijving|parse_markup }}
+		</div>
+		{% if iter.signup_forms %}
+		<div id="event-signup" class="block">
+			{% if global.auth.logged_in %}
+				{% for form in iter.signup_forms %}
+					{% if user_can_read form %}
+						<hr>
+						{{ include('signup_form.twig', {form: form}) }}
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<hr>
+				<div class="content">
+					<h2>Sign up</h2>
+					<p>{{ __('Your registrion will be linked to your account, so you need to login to register for this activity. ') }}</p>
+					<p>
+						{{ 
+							__(
+								'If you\'re not a member and still want to join, that might be possible. Contact the %s for more information.'
+							)|e('html')|format(
+								'<a href="mailto:%s@svcover.nl">%s</a>'|format(iter.committee.login|e('html'), iter.committee.naam|e('html'))
+							)|raw
+						}}
+					</p>
+					<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id={{ iter.id }}" class="button is-primary">{{ __('Log in') }}</a>
+				</div>
+			{% endif %}
+		</div>
 		{% endif %}
 	</div>
+</section>
+</div>
 
-	{% if iter.signup_forms %}
-		{% if global.auth.logged_in %}
-			{% for form in iter.signup_forms %}
-				{% if user_can_read form %}
-					{{ include('signup_form.twig', {form: form}) }}
-				{% endif %}
-			{% endfor %}
-		{% else %}
-			<div class="box content">
-				<p>{{ __('Your registrion will be linked to your account, so you need to login to register for this activity. ') }}</p>
-				<p>
-					{{ 
-						__(
-							'If you\'re not a member and still want to join, that might be possible. Contact the %s for more information.'
-						)|e('html')|format(
-							'<a href="mailto:%s@svcover.nl">%s</a>'|format(iter.committee.login|e('html'), iter.committee.naam|e('html'))
-						)|raw
-					}}
-				</p>
-				<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id={{ iter.id }}" class="button is-primary">{{ __('Log in') }}</a>
-			</div>
-		{% endif %}
-	{% endif %}
+<div class="container block is-content-optimized">
+</div>
 </article>
 {% endblock %}

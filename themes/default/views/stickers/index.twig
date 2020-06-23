@@ -9,7 +9,7 @@
 	</div>
 	{% if user_can_create controller.new_iter %}
 	<div class="level-right buttons">
-		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="button" data-placement-selector="modal" data-partial-selector=".add-sticker-form">
+		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="button" {# data-placement-selector="modal" data-partial-selector=".add-sticker-form" #}>
 			{{ __('New sticker') }}
 		</a>
 	</div>

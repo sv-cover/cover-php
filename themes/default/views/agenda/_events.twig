@@ -1,0 +1,54 @@
+{% set current_month = -1 %}
+{% set show_year = true %}
+{% import 'macros.twig' as macros %}
+
+<ul class="event-list columns is-multiline">
+{% for event in events %}
+    {% if current_month != event.van|date('n') %}
+        <li class="month-title column is-full">
+            <h2 class="title is-4">
+                {{ months[event.van|date('n')] }}
+                {% if show_year %}{{ event.van|date('Y') }}{% endif %}
+            </h2>
+        </li>
+        {% set current_month = event.van|date('n') %}
+    {% endif %}
+    <li class="event {% if event.image_url %}has-image{% endif %} {% if event.is_proposal() %}is-proposal{% endif %} column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd">
+        <a href="{{ controller.link_to_read(event) }}">
+            <div class="overlay">
+                <div class="date">
+                    <span>
+                        {{ macros.format_period_short(event) }}
+                    </span>
+                </div>
+                <div class="name">
+                    <h3>
+                        {{ event.kop }}
+                    </h3>
+                </div>
+                {% if event.is_proposal() %}
+                    <div class="label-pending">
+                        <span>
+                            {{ __('Waiting for approval') }}
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+            {% if event.image_url %}
+                <figure class="image">
+                    <picture>
+                        <source srcset="{{ event.get_image(600) }} 600w, {{ event.get_image(1200) }} 2x">
+                        <source srcset="{{ event.get_image(400) }} 400w, {{ event.get_image(800) }} 2x">
+                        <img
+                            src="{{ event.get_image(600) }}"
+                            data-preview="{{ event.get_image(400) }}"
+                        > 
+                    </picture>
+                </figure>
+            {% endif %}
+        </a>
+    </li>
+{% else %}
+    <li class="column is-full has-text-centered">{{ __('No events found :(') }}</li>
+{% endfor %}
+</ul>

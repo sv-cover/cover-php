@@ -1,38 +1,44 @@
-<header class="card-header">
-	<h3 class="card-header-title">{{ __('Multiple choice question') }}</h3>
-	{# Ugh. Want this in form_form.twig #}
-	<div class="card-header-icon sortable-drag-handle" title="Drag me to reorder"></div>
-</header>
-<div class="card-content">
-	<div class="field">
-		{{ html_label('Label above the options', 'description', errors=errors, id='field-' ~ name ~ '-description') }}
-		<div class="control">
-			{{ html_input_text('description', data, errors=errors, for='field-' ~ name ~ '-description') }}
-		</div>
+<div class="field">
+	{{ html_label('Label above the options', 'description', errors=errors, id='field-' ~ name ~ '-description') }}
+	<div class="control">
+		{{ html_input_text('description', data, errors=errors, for='field-' ~ name ~ '-description') }}
 	</div>
-	<div class="field">
-		<label for="field-{{ name }}-options" class="label">{{__('Options')}}</label>
-		<ol data-growing-list id="field-{{ name }}-options">
-			{% for option in data.options %}
-				<li class="field">
-					<span class="drag-handle"></span>
+</div>
+<div class="field">
+	<label for="field-{{ name }}-options" class="label">{{__('Options')}}</label>
+	<noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
+	<ol id="field-{{ name }}-options" class="growing-list" data-growing-list-template="#field-{{ name }}-template" data-growing-list-sortable>
+		{% for option in data.options %}
+			<li class="field">
+				<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
 					{{ html_input_text('options[]', data, field='options['~ loop.index0 ~']', id='field-' ~ name ~ '-option-' ~ loop.index0) }}
-				</li>
-			{% endfor %}
-			<li class="field" data-template>
-				<span class="drag-handle"></span>
-				<input class="input" type="text" name="options[]">
+					<span class="icon is-right">
+							<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Drag field to reorder options') }}</span>
+					</span>
+				</div>
 			</li>
-		</ol>
+		{% endfor %}
+	</ol>
+	<template id="field-{{ name }}-template">
+		<li class="field">
+			<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
+				<input class="input" type="text" name="options[]">
+				<span class="icon is-right">
+						<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+						<span class="is-sr-only">{{ __('Drag field to reorder options') }}</span>
+				</span>
+			</div>
+		</li>
+	</template>
+</div>
+<div class="field">
+	<div class="control">
+		{{ html_input_checkbox('allow_multiple', data, errors=errors, id='field-' ~ name ~ '-allow-multiple', label=__('Allow multiple options to be picked')) }}
 	</div>
-	<div class="field">
-		<div class="control">
-			{{ html_input_checkbox('allow_multiple', data, errors=errors, id='field-' ~ name ~ '-allow-multiple', label=__('Allow multiple options to be picked')) }}
-		</div>
-	</div>
-	<div class="field">
-		<div class="control">
-			{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required', label=__('Picking an option is mandatory')) }}
-		</div>
+</div>
+<div class="field">
+	<div class="control">
+		{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required', label=__('Picking an option is mandatory')) }}
 	</div>
 </div>

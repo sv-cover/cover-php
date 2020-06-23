@@ -87,6 +87,7 @@ CREATE TABLE public.agenda (
     van timestamp with time zone NOT NULL,
     tot timestamp with time zone,
     locatie character varying(100),
+    image_url character varying(255) DEFAULT NULL,
     private smallint DEFAULT 0,
     extern smallint DEFAULT 0 NOT NULL,
     facebook_id character varying(20),

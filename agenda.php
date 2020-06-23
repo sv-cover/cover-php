@@ -58,6 +58,25 @@
 
 			return $this->_check_length('locatie', $locatie);
 		}
+		
+		public function _check_image_url($name, $value)
+		{
+			// Image is optional
+			if (empty(trim($value)))
+				return null;
+
+			// Max length == 255
+			if (strlen($value) > 255)
+				return false;
+
+			// Only accept image file (using naive extension check)
+			$ext = pathinfo(parse_url($value, PHP_URL_PATH), PATHINFO_EXTENSION);
+			$allowed_exts = get_config_value('filemanager_image_extensions', ['jpg', 'jpeg', 'png']);
+			if (in_array(strtolower($ext), $allowed_exts))
+				return $value;
+
+			return false;
+		}
 
 		public function _check_facebook_id($name, $value)
 		{
@@ -66,8 +85,11 @@
 
 			$result = preg_match('/^https:\/\/www\.facebook\.com\/events\/(\d+)\//', $value, $matches);
 
-			if ($result	&& strlen($matches[1]) <= 20 && ctype_digit($matches[1]))
-				return $matches[1];
+			if ($result)
+				$value = $matches[1];
+			
+			if (strlen($value) <= 20  && ctype_digit($value))
+				return $value;
 
 			return false;
 		}
@@ -93,6 +115,7 @@
 					array('name' => 'van', 'function' => array($this, '_check_datum')),
 					array('name' => 'tot', 'function' => array($this, '_check_datum')),
 					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
+					array('name' => 'image_url', 'function' => array($this, '_check_image_url')),
 					array('name' => 'private', 'function' => 'check_value_checkbox'),
 					array('name' => 'extern', 'function' => 'check_value_checkbox'),
 					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
@@ -168,8 +191,8 @@
 
 			$skip_confirmation = false;
 
-			// If you update the facebook-id, description or location, no need to reconfirm.
-			if (!array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'locatie')))
+			// If you update the facebook-id, description, image or location, no need to reconfirm.
+			if (!array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'image_url', 'locatie')))
 				$skip_confirmation = true;
 
 			// Placeholders for e-mail
