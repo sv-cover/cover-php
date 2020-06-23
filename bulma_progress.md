@@ -314,8 +314,8 @@
     - [ ] Fix by making everything buttons
 - [ ] [issue] Level-right doesn't work if there's no level-left
 - [ ] [issue] Same for pagination
-    - [ ] weblog/index.twig
-    - [ ] agenda/index.twig
+    - [×] weblog/index.twig - removed weblog
+    - [×] agenda/index.twig
 - [×] Sometimes, an inline element doesn't have space around it if there's space in the HTML, triggering a need for `&nbsp;`
     - [×] commissies/index.twig
     - [×] fotoboek/\_path.twig
@@ -326,8 +326,8 @@
 - [×] Why does a .number make form elements rounded? Bulma legacy, apparently. Don't use .number.
 - [×] A table-responsive like element would be nice (or probably an .is-scrollable modifier)
     - [×] signup/list_entries.twig
-- [ ] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
-    - [ ] signup/list_entries.twig
+- [×] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
+    - [×] signup/list_entries.twig
 - [×] Buttons don't work that well as card-footer-item
     - [×] signup/form_form.twig
 - [×] fullwidth/expanding select? maybe? - Already exists. `.is-fullwidth` works.
@@ -367,6 +367,7 @@
 - [ ] Sort out cookie policy (dark mode + calendar mode + remember me)
 - [ ] Add rel="noopener noreferrer" to all target="blank" links
 - [ ] Full reduced motion support
+- [ ] source set generator
 
 # Pending Design Decisions
 
