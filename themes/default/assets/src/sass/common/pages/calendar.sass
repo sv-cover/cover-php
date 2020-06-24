@@ -21,37 +21,30 @@ $event-overlay-padding: 1.25rem
             font-size: $size-5
             +mobile
                 font-size: $size-4
+    .event-header
+        +desktop
+            z-index: 1
+            border-bottom: $block-spacing solid $body-background-color
+            &:not(:last-child)
+                margin-bottom: 0
     .event-details
         @extend %block
         +tablet
             flex-direction: row-reverse
     .event-sidebar-sticky-header
+        --ratio-visible: 1
         display: none
     +desktop
         .is-sidebar > .is-sticky
             position: sticky
             top: $navbar-height + $block-spacing
+            margin-top: -($sidebar-width / 2) - $block-spacing
             .event-sidebar-sticky-header
                 display: block
-                height: 0
-                transition: .25s ease-in
-                transition-property: height, margin-bottom
-                margin-bottom: 0
-                &.has-image
-                    overflow: hidden
-                    padding-top: 0
-                    transition-property: height, margin-bottom, padding-top
+                opacity: calc(.25 + var(--ratio-visible) * .75)
                 &:not(.has-image)
-                    overflow: hidden
-            &.is-stuck
-                .event-sidebar-sticky-header
-                    margin-bottom: $block-spacing
-                    &.has-image
-                        height: auto
-                        padding-top: 50%
-                    &:not(.has-image)
-                        height: 6rem
-
+                    margin-top: ($sidebar-width / 2) - 6rem
+                    height: 6rem
 
 .calendar:not(.is-list)
     .event-list
