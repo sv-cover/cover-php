@@ -129,6 +129,16 @@
 			else
 				return 'portrait';
 		}
+
+		public function is_type($type)
+		{
+			if ($type === 'committee')
+				return $this['type'] === DataModelCommissie::TYPE_COMMITTEE;
+			elseif ($type === 'working_group')
+				return $this['type'] === DataModelCommissie::TYPE_WORKING_GROUP;
+			else
+				return $this['type'] === DataModelCommissie::TYPE_OTHER;
+		}
 	}
 
 	/**

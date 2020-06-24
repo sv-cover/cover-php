@@ -4,19 +4,56 @@
 	{{ iter.naam }} – {{ parent() }}
 {% endblock %}
 
-{% block content %}
-
-<div class="level">
+{% block page %}
+<article class="section committee-single">
+<div class="container is-content-optimized block">
+<div class="level is-mobile controls">
 	<div class="level-left">
-		<h1 class="title">{{ iter.naam }}</h1>
-	</div>
-	<div class="buttons level-right">
-		{% if user_can_update iter %}
-			<a href="{{ controller.link_to_update(iter) }}" class="button">{{ __('Modify %s')|format(view.available_committee_types[iter.type]) }}</a>
+		{% if iter.is_type('committee') %}
+			<a href="{{ controller.link({}) }}" class="button">
+				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+				<span>{{__('All committees')}}</span>
+			</a>
+		{% elseif  iter.is_type('working_group') %}
+			<a href="{{ controller.link({}) }}" class="button">
+				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+				<span>{{__('All working groups')}}</span>
+			</a>
 		{% endif %}
-		
-		{% if user_can_update iter.page %}
-			<a href="{{ link('editable.update', editable=iter.page) }}" class="button">{{ __('Modify %s page')|format(view.available_committee_types[iter.type]) }}</a>
+	</div>
+	<div class="level-right">
+		{% if user_can_update iter or user_can_update iter.page %}
+			<div class="dropdown is-hoverable is-right">
+				<div class="dropdown-trigger">
+					<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+						<span>{{ __('Manage') }}</span>
+						<span class="icon is-small">
+							<i class="fas fa-angle-down" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+				<div class="dropdown-menu" id="dropdown-menu" role="menu">
+					<div class="dropdown-content">
+						{% if user_can_update iter %}
+							<a href="{{ controller.link_to_update(iter) }}" class="dropdown-item">
+								<span class="icon">
+									<i class="fas fa-users-cog" aria-hidden="true"></i>
+								</span>
+								<span>{{ __('Modify %s')|format(view.available_committee_types[iter.type]) }}</span>
+							</a>
+						{% endif %}
+						
+						{% if user_can_update iter.page %}
+							<a href="{{ link('editable.update', editable=iter.page) }}" class="dropdown-item">
+								<span class="icon">
+									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+								</span>
+								<span>{{ __('Modify %s page')|format(view.available_committee_types[iter.type]) }}</span>
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
 		{% endif %}
 	</div>
 </div>
@@ -27,21 +64,68 @@
 		<p>{{ __('Cool! We’ve notified the Commissioner of Internal Affairs for you!') }}</p>
 	</div>
 {% elseif iter.has_vacancy %}
-	{{ include('_leden_gezocht.twig') }}
+	{{ include('_members_wanted.twig') }}
 {% endif %}
 
-<div class="committee-page messageBox">
-	{{ include('_foto.twig') }}
+<header class="committee-header cover-thumbnail {% if iter.photo %}has-image{% endif %}">
+	<div class="overlay is-bottom">
+		<div class="name boxed-title-wrapper">
+			<h1 class="boxed-title is-size-4 is-size-5-mobile">
+				{{ iter.naam }}
+			</h1>
+		</div>
+	</div>
+	{% if iter.photo %}
+		<figure class="image">
+			<img src="{{ iter.photo.url }}"  alt="{{ __('Photo of %s')|format(iter.naam) }}">
+		</figure>
+	{% endif %}
+</header>
 
-	{{ include('_contact.twig') }}
-
-	<div class="content">		
+<section class="committee-info block">
+	<h2 class="is-sr-only">{{ __('Committee information') }}</h2>
+	{% if iter.website %}
+		<a href="{{ iter.website }}" target="_blank" rel="noopener noreferrer" class="button is-primary is-fullwidth block">
+			{{ __('%s website')|format(iter.naam) }}
+		</a>
+	{% endif %}
+	<div class="content">
 		{{ iter.page.locale_content|parse_markup }}
 	</div>
 
-	{{ include('_leden.twig') }}
+	<h3 class="title is-5">{{ __('Members') }}</h3>
+	{{ include('_members.twig') }}
+	
+</section>
 
-	{{ include('_agenda.twig') }}
+{% set activities = view.get_activities(iter) %}
+{% if activities %}
+<section class="committee-events block">
+	<h2 class="title is-5">{{ __('Upcoming %s events')|format(iter.naam) }}</h2>
+	{{ include('@theme/agenda/_events.twig', {events: activities, group_by_month: false}) }}
+</section>
+{% endif %}
+
+<section class="committee-contact block">	
+	<h2 class="title is-5">{{ __('Contact') }}</h2>
+	<ul>
+		<li>
+			<span class="icon"><i class="fas fa-at" aria-hidden="true"></i></span>
+			<a href="mailto:{{iter.login|url_encode}}@svcover.nl">
+				{{ __('%s')|format(iter.login ~ '@svcover.nl') }}
+			</a>
+		</li>
+		{% if iter.website %}
+		<li>
+			<span class="icon"><i class="fas fa-globe" aria-hidden="true"></i></span>
+			<a href="{{ iter.website }}" target="_blank" rel="noopener noreferrer">
+				{{ __('%s website')|format(iter.naam) }}
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+</section>
+
 </div>
-
+</article>
 {% endblock %}

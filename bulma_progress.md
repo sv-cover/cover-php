@@ -335,7 +335,7 @@
     - [×] fotoboek/photobook.twig (manage dropdown for photocee)
 - [×] Button addons spacing between last 2 is broken. See 
     - [×] fotoboek/photobook.twig (download + mark as seen)
-
+- [ ] Inconsistent .title/.content>>>h# margins
 
 ## Other
 

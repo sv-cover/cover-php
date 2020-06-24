@@ -83,3 +83,40 @@ a.committee
 
     &:focus
         outline: $control-border-width solid $cover-red
+
+
+.committee-single
+    .committee-header
+        min-height: 10rem
+    .members-list
+        @extend %block
+        display: flex
+        flex-flow: row wrap
+        .profile
+            > a,
+            &.mascot
+                display: flex
+                align-items: center
+                flex-flow: column nowrap
+                &:hover
+                    background: none
+                .image
+                    flex-shrink: 0
+                    +mobile
+                        height: 96px
+                        width: 96px
+                    img
+                        max-height: none
+                .user-info
+                    > *
+                        color: $navbar-item-color
+                        display: block
+                        text-align: center
+                    .name
+                        font-weight: $title-weight
+                    .function
+                        font-size: $size-7
+    .event-list
+        +tablet
+            .event
+                flex-basis: 50% !important
