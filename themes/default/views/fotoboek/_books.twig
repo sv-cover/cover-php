@@ -47,17 +47,17 @@
 					{% set size = photo.get_scaled_size(null, 600) %}
 					<div class="column image {{ loop.first ? 'active' : '' }}">
 						<figure>
-			                <img
-			                	class="lazy"
-			                    data-src="{{ photo.get_url(null, 600) }}"
-			                    {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
-			                >
-			                <noscript>
-				                <img
-				                    src="{{ photo.get_url(null, 600) }}"
-				                    {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
-				                >
-			                </noscript>
+							<noscript>
+								<img
+									src="{{ photo.get_url(null, 600) }}"
+									{% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+								>
+							</noscript>
+							<img
+								class="lazy"
+								data-src="{{ photo.get_url(null, 600) }}"
+								{% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+							>
 						</figure>
 					</div>
 				{% endfor %}

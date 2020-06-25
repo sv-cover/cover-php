@@ -28,17 +28,17 @@
                 href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
                 {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
             >
-                <img 
-                    class="lazy"
-                    data-src="{{ photo.get_url(null, 600) }}"
-                    {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
-                >
                 <noscript>
                     <img 
                         src="{{ photo.get_url(null, 600) }}"
                         {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
                     >
                 </noscript>
+                <img 
+                    class="lazy"
+                    data-src="{{ photo.get_url(null, 600) }}"
+                    {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+                >
                 {% if photo.beschrijving %}
                     <span class="title">{{ photo.beschrijving }}</span>
                 {% endif %}
