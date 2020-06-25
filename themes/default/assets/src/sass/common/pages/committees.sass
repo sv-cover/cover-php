@@ -86,8 +86,39 @@ a.committee
 
 
 .committee-single
+    &.has-photo-portrait
+        .committe-photo-portrait
+            display: none
+            max-width: 50%
+            position: relative
+            +widescreen
+                display: block
+            .image
+                position: absolute
+                top: $column-gap
+                right: $column-gap
+                bottom: $column-gap
+                left: $column-gap
+                background: $black
+                img
+                    height: 100%
+                    object-fit: contain
+                    object-position: center
+        > .columns 
+            > .column.is-content
+                padding: $section-padding
+            +until-widescreen
+                justify-content: center
+            +widescreen
+                > .column.is-content
+                    padding-right: $section-padding-horizontal + $column-gap
+                    padding-left: $column-gap
     .committee-header
         min-height: 10rem
+    .event-list
+        +tablet
+            .event
+                flex-basis: 50% !important
     .members-list
         @extend %block
         display: flex
@@ -116,7 +147,65 @@ a.committee
                         font-weight: $title-weight
                     .function
                         font-size: $size-7
-    .event-list
-        +tablet
-            .event
-                flex-basis: 50% !important
+        +tablet-only
+            &.has-4,
+            &.has-7,
+            &.has-10,
+            &.has-13
+                &::after,
+                &::before
+                    content: ''
+                    display: block
+                    flex-basis: 16%
+                &::before
+                    order: 1
+                .profile
+                    order: 2
+                &::after
+                    order: 3
+            &.has-4
+                .profile:nth-of-type(n+3)
+                    order: 4
+            &.has-7
+                .profile:nth-of-type(-n+3)
+                    order: 0
+                .profile:nth-of-type(n+6)
+                    order: 4
+            &.has-10
+                .profile:nth-of-type(-n+6)
+                    order: 0
+                .profile:nth-of-type(n+9)
+                    order: 4
+            &.has-13
+                .profile:nth-of-type(-n+9)
+                    order: 0
+                .profile:nth-of-type(n+12)
+                    order: 4
+        +desktop
+            &.has-5,
+            &.has-9,
+            &.has-13
+                &::after,
+                &::before
+                    content: ''
+                    display: block
+                    flex-basis: 12.5%
+                &::before
+                    order: 1
+                .profile
+                    order: 2
+                &::after
+                    order: 3
+            &.has-5
+                .profile:nth-of-type(n+4)
+                    order: 4
+            &.has-9
+                .profile:nth-of-type(-n+4)
+                    order: 0
+                .profile:nth-of-type(n+8)
+                    order: 4
+            &.has-13
+                .profile:nth-of-type(-n+8)
+                    order: 0
+                .profile:nth-of-type(n+12)
+                    order: 4

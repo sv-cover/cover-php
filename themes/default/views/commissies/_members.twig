@@ -1,6 +1,6 @@
 {% set members = iter.members %}
 {% if members|length > 0 %}
-	<ul class="members-list columns is-mobile is-centered">
+	<ul class="members-list columns is-mobile is-centered has-{{ members|length + iter.mascots|length }}">
 	{% for member in members %}
 		{% if user_can_read member %}
 			<li class="profile column is-half-mobile is-one-third-tablet is-one-quarter-desktop">

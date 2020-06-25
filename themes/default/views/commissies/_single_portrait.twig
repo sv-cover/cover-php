@@ -1,0 +1,51 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+	{{ iter.naam }} – {{ parent() }}
+{% endblock %}
+
+{% block page %}
+<article class="committee-single has-photo-portrait">
+<div class="columns">
+	<div class="column committe-photo-portrait">
+		<figure class="image">
+			<img src="{{ iter.photo.url }}"  alt="{{ __('Photo of %s')|format(iter.naam) }}">
+		</figure>
+	</div>
+	<div class="column is-content">
+		{% block committee_controls %}{% endblock %}
+
+		<header class="committee-header cover-thumbnail {% if iter.photo %}has-image{% endif %} is-hidden-widescreen is-block-touch is-block-desktop-only">
+			<div class="overlay is-bottom">
+				<div class="name boxed-title-wrapper">
+					<h1 class="boxed-title is-size-4 is-size-5-mobile">
+						{{ iter.naam }}
+					</h1>
+				</div>
+			</div>
+			{% if iter.photo %}
+				<figure class="image">
+					<img src="{{ iter.photo.url }}"  alt="{{ __('Photo of %s')|format(iter.naam) }}">
+				</figure>
+			{% endif %}
+		</header>
+
+		<header class="block is-hidden-touch is-hidden-desktop-only is-block-widescreen">
+			<h1 class="title is-size-3">
+				{{ iter.naam }}
+			</h1>
+		</header>
+
+		{% block committee_header %}{% endblock %}
+
+		{% block committee_interest %}{% endblock %}
+
+		{% block committee_info %}{% endblock %}
+
+		{% block committee_events %}{% endblock %}
+
+		{% block committee_contact %}{% endblock %}
+	</div>
+</div>
+</article>
+{% endblock %}
