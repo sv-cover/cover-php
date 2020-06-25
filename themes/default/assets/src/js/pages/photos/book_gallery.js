@@ -72,10 +72,10 @@ class BookGalleryThumbnail {
         return isAllowed && (topVisible || bottomVisible);
     }
 
-    handleResize() {
+    handleResize(element_width) {
         for (let image of this.images) {            
             let fig = image.querySelector('figure');
-            let width = this.element.clientWidth * (1 - (this.images.length - 1) * GALLERY_BOOK_WIDTH * 0.09);
+            let width = element_width * (1 - (this.images.length - 1) * GALLERY_BOOK_WIDTH * 0.09);
             fig.style.width = Math.ceil(width) + 'px';
         }
     }
@@ -144,8 +144,13 @@ class BookGallery {
     }
 
     handleResize() {
-        for (let thumbnail of this.thumbnails)
-            thumbnail.handleResize();
+        let thumbnail_width = null;
+        for (let thumbnail of this.thumbnails) {
+            if (!thumbnail_width)
+                thumbnail_width =  thumbnail.element.clientWidth;
+
+            thumbnail.handleResize(thumbnail_width);
+        }
     }
 }
 
