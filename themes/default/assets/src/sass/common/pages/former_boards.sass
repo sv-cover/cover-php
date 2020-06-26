@@ -1,0 +1,25 @@
+.former-boards
+    .hero
+        background: $background
+    .board
+        @extend %block
+        background: $background
+        display: flex
+        flex-direction: column
+        .board-info
+            padding: 2 * $column-gap
+        +widescreen
+            flex-direction: row
+            &:nth-child(even)
+                flex-direction: row-reverse
+            &.has-image
+                .board-photo
+                    flex: 1 1 45%
+                    background: $black
+                    img
+                        height: 100%
+                        object-fit: cover
+                .board-info
+                    flex: 0 0 55%
+            .board-info
+                flex: 1 1 100%

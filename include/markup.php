@@ -42,7 +42,7 @@
 		}
 	}
 	
-	function _markup_parse_links(&$markup, &$placeholders)
+	function _markup_parse_links(&$markup, $header_offset, &$placeholders)
 	{
 		$count = 0;
 
@@ -54,7 +54,7 @@
 
 			$target = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST) ? ' target="_blank"' : '';
 
-			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $match[1] . '">' . markup_parse($match[2], $placeholders) . '</a>';
+			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $match[1] . '">' . markup_parse($match[2], $header_offset, $placeholders) . '</a>';
 			
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
@@ -240,12 +240,12 @@
 		}, $markup);
 	}
 	
-	function _markup_parse_header(&$markup) {
+	function _markup_parse_header(&$markup, $header_offset=0) {
 		$markup = preg_replace_callback(
 			'/\[h(?P<level>\d)(?<classes>(\.[a-z-])*)\](?P<content>.+?)\[\/h\\1\]\s*/is',
-			function($match) {
+			function($match) use ($header_offset) {
 				return sprintf('<h%d class="%s">%s</h%1$d>',
-					$match['level'],
+					max(min(intval($match['level']) + $header_offset, 6), 1),
 					str_replace('.', ' ', $match['classes']),
 					$match['content']);
 			}, $markup);
@@ -328,7 +328,7 @@
 	  *
 	  * @result a string with all the markup replaced by html
 	  */
-	function markup_parse($markup, &$placeholders = null) {
+	function markup_parse($markup, $header_offset=0, &$placeholders = null) {
 		if (!$placeholders)
 			$placeholders = array();
 		
@@ -356,7 +356,7 @@
 		_markup_parse_embed($markup, $placeholders);
 		
 		/* Filter [url] */
-		_markup_parse_links($markup, $placeholders);
+		_markup_parse_links($markup, $header_offset, $placeholders);
 
 		/* Replace scary stuff and re-replace not so very scary stuff */
 		$markup = htmlspecialchars($markup, ENT_NOQUOTES);
@@ -384,7 +384,7 @@
 		_markup_parse_simple($markup);
 
 		/* Parse header */
-		_markup_parse_header($markup);
+		_markup_parse_header($markup, $header_offset);
 		
 		/* Parse macros */
 		_markup_parse_macros($markup);
