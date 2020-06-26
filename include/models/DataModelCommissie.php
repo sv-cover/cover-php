@@ -269,12 +269,18 @@
 		{
 			static $functies = array(
 				'Chairman' => 6,
+				'Chairwoman' => 6,
+				'Chairperson' => 6,
+				'Chair' => 6,
 				'Secretary' => 5,
 				'Treasurer' => 4,
 				'Commissioner of Internal Affairs' => 3,
 				'Commissioner of External Affairs' => 2,
 				'Commissioner of Educational Affairs' => 1,
 				'Vice-chairman' => 0,
+				'Vice-chairwoman' => 0,
+				'Vice-chairperson' => 0,
+				'Vice-chair' => 0,
 				'General Member' => -1);
 			
 			return $functies;

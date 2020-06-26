@@ -70,7 +70,7 @@
 						<input class="input committee-member-name" type="text" placeholder="{{ __('Name') }}" data-autocomplete="member_id">
 					</td>
 					<td>
-						<input class="input committee-member-function" type="text" placeholder="{{ __('Function') }}" data-autocomplete="json" data-autocomplete-src="{{ model.get_functies|flip|values|json_encode|e }}">
+						<input class="input committee-member-function" type="text" placeholder="{{ __('Function') }}" data-autocomplete="json" data-autocomplete-src="{{ model.get_functies|keys|json_encode|e }}">
 					</td>
 					<td class="has-text-right">
 						<button type="button" class="button add-button">{{ __('Add') }}</button>

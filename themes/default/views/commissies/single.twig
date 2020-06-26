@@ -101,8 +101,8 @@
 		<ul>
 			<li>
 				<span class="icon"><i class="fas fa-at" aria-hidden="true"></i></span>
-				<a href="mailto:{{iter.login|url_encode}}@svcover.nl">
-					{{ __('%s')|format(iter.login ~ '@svcover.nl') }}
+				<a href="mailto:{{ iter.get_email() }}">
+					{{ iter.get_email() }}
 				</a>
 			</li>
 			{% if iter.website %}
