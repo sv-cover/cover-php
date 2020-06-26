@@ -75,14 +75,6 @@ class LayoutViewHelper
 					'url' => 'show.php?id=18',
 					'label' => __('Become a member/contributor')
 				],
-				// [
-				// 	'url' => 'show.php?id=30',
-				// 	'label' => __('Documents'),
-				// ],
-				[
-					'url' => 'almanak.php',
-					'label' => __('Almanac')
-				]
 			]
 		];
 
@@ -126,6 +118,14 @@ class LayoutViewHelper
 			'items' => [
 				[
 					'icon' => [
+						'fa' => 'fas fa-users',
+						'color' => 'cover',
+					],
+					'url' => 'almanak.php',
+					'label' => __('Almanac')
+				],
+				[
+					'icon' => [
 						'fa' => 'fas fa-comments',
 						'color' => 'cover',
 					],
@@ -139,7 +139,7 @@ class LayoutViewHelper
 					],
 					'url' => 'stickers.php',
 					'label' => __('Sticker map')
-				]
+				],
 			]
 		];
 
@@ -270,23 +270,12 @@ class LayoutViewHelper
 			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 			$tools['admin']['items'][] = [
 				'icon' => [
-					'fa' => 'fas fa-calendar',
-					'color' => 'dark',
-					'icon_color' => 'light'
-				],
-				'url' => 'agenda.php?agenda_moderate',
-				'label' => __('Calendar'),
-				'title' => __('Moderate calendar items.')
-			];
-
-			$tools['admin']['items'][] = [
-				'icon' => [
 					'fa' => 'fas fa-user-friends',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
 				'url' => 'actieveleden.php',
-				'label' => __('Active Members'),
+				'label' => __('Active members'),
 				'title' => __('All active committee members according to the website.')
 			];
 		}
