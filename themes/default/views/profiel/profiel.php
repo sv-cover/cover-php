@@ -26,7 +26,7 @@ class ProfielView extends View
 		return [
 			'public' => [
 				'visible' => true,
-				'label' => member_full_name($iter, BE_PERSONAL),
+				'label' =>  __('Public page'),
 				'icon' => 'fas fa-globe'
 				// 'body' => function () use ($model, $iter, $personal_fields) {
 				// 	$this->render_partial('public', compact('model', 'iter', 'personal_fields'));
@@ -34,7 +34,7 @@ class ProfielView extends View
 			],
 			'personal' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Personal')
+				'label' => __('Personal details')
 				// 'body' => function () use ($model, $iter, $errors, $personal_fields) {
 				// 	$this->render_partial('personal', compact('model', 'iter', 'errors', 'personal_fields'));
 				// }
@@ -128,7 +128,7 @@ class ProfielView extends View
 				'name' => 'telefoonnummer'
 			],
 			[
-				'label' => __('E-mail address'),
+				'label' => __('E-mail'),
 				'name' => 'email'
 			]
 		];
@@ -380,5 +380,10 @@ class ProfielView extends View
 	public function hostname($url)
 	{
 		return parse_url($url, PHP_URL_HOST);
+	}
+
+	public function user_can_download_vcard()
+	{
+		return get_identity()->is_member();
 	}
 }

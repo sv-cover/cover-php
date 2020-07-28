@@ -4,22 +4,10 @@
 
 {% block tab_content %}
 <article>
-	<div class="level">
-		<div class="level-left">
-			<h2 class="title is-4">{{ __('Personal') }}</h2>
-		</div>
-		{% if can_download_vcard %}
-			<div class="level-right buttons">
-				<a href="profiel.php?lid={{ iter.id }}&amp;view=export_vcard" class="button" title="{{ __('Download vCard') }}">
-					<span class="icon">
-						<i class="fas fa-address-card" aria-hidden="true"></i>
-						<span class="is-sr-only">{{ __('Download vCard') }}</span>
-					</span>
-				</a>
-			</div>
-		{% endif %}
+	<div class="is-hidden-desktop">
+		{{ include('_profile_widget.twig') }}
 	</div>
-	
+	<h2 class="title is-4">{{ __('About') }}</h2>	
 	
 	{% if is_current_user %}
 	<p class="content is-small">
@@ -52,18 +40,6 @@
 		<dt>{{ html_label(__('Status'), 'status') }}</dt>
 		<dd class="data-public">{{ view.member_type_to_string(iter.type) }}</dd>
 	</dl>
-
-	{% set facebook_of_iter = global.models.PhotobookFace.get_book([iter]) %}
-	{% if user_can_read facebook_of_iter %}
-		<a href="fotoboek.php?book={{ facebook_of_iter.id|e('url') }}" class="button">
-			<span class="icon">
-				<i class="fas fa-images" aria-hidden="true"></i>
-			</span>
-			<span>
-				{{ __('Photos of %s')|format(iter|first_name) }}
-			</span>
-		</a>
-	{% endif %}
 </article>
 
 {% if committees|length > 0 %}
