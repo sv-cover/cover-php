@@ -283,12 +283,12 @@
 		
 		protected function _sort_leden($a, $b)
 		{
-			$pattern = '/\s*[,\/]\s*/';
+			$pattern = '/\s*[,\/&]|and\s*/';
 
 			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a['functie'])));
 			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b['functie'])));
 			
-			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
+			return $bfunctie <=> $afunctie;
 		}
 		
 		private function _get_members(DataIterCommissie $committee)
