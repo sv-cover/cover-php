@@ -12,7 +12,7 @@
 			</div>
 		</div>
 		
-		<div class="columns">
+		<div class="columns tabs-wrapper is-vertical">
 			{% if show_tabs %}
 				<aside class="column is-sidebar">
 					<p class="is-hidden-desktop">
@@ -36,7 +36,7 @@
 					</nav>
 				</aside>
 			{% endif %}
-			<div class="column is-" id="{{ active_tab }}-tab">
+			<div class="column is-content">
 				<p class="menu-label is-hidden-desktop">
 					backbutton
 				</p>
@@ -49,7 +49,9 @@
 						{% endif %}
 					</div>
 				{% endif %}
-				{% block tab_content %}{% endblock %}
+				<div class="tabs-content">
+					<div id="{{ active_tab }}-tab" class="is-active">{% block tab_content %}{% endblock %}</div>
+				</div>
 			</div>
 		</div>
 	</div>
