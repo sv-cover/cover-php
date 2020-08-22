@@ -296,15 +296,19 @@
 			
 			return isset($functies[$functie]) ? $functies[$functie] : 0;
 		}
+
+		protected function _split_functie($functie)
+		{
+			$pattern = '/\s*[,\/&]|and\s*/';
+			return preg_split($pattern, $functie);
+		}
 		
 		protected function _sort_leden($a, $b)
 		{
-			$pattern = '/\s*[,\/]\s*/';
-
-			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a['functie'])));
-			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b['functie'])));
+			$afunctie = max(array_map(array($this, '_get_functie'), $this->_split_functie($a['functie'])));
+			$bfunctie = max(array_map(array($this, '_get_functie'), $this->_split_functie($b['functie'])));
 			
-			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
+			return $bfunctie <=> $afunctie;
 		}
 		
 		private function _get_members(DataIterCommissie $committee)
@@ -358,8 +362,9 @@
 			$leden = $this->get_members($committee);
 
 			foreach ($leden as $lid)
-				if (strcasecmp($lid->get('functie'), $functie) === 0)
-					return $lid;
+				foreach ($this->_split_functie($lid->get('functie')) as $f)
+					if (strcasecmp(trim($f), $functie) === 0)
+						return $lid;
 
 			return null;
 		}
