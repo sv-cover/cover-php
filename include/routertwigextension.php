@@ -29,8 +29,8 @@ class RouterTwigExtension extends Twig_Extension
 				'update' => 'show.php?view=update&id=$editable[id]'
 			],
 			'foto' => [
-				'portrait' => 'https://svcover.nl/foto.php?format=portrait&width=$width&lid_id=$member[id]',
-				'square' => 'https://svcover.nl/foto.php?format=square&width=$width&lid_id=$member[id]'
+				'portrait' => 'foto.php?format=portrait&width=$width&lid_id=$member[id]',
+				'square' => 'foto.php?format=square&width=$width&lid_id=$member[id]'
 			]
 		];
 	}
