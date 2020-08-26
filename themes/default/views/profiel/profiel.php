@@ -34,7 +34,7 @@ class ProfielView extends View
 			],
 			'personal' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Personal details')
+				'label' => __('Personal data')
 				// 'body' => function () use ($model, $iter, $errors, $personal_fields) {
 				// 	$this->render_partial('personal', compact('model', 'iter', 'errors', 'personal_fields'));
 				// }

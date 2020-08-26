@@ -1,4 +1,4 @@
-$profile-widget-spacing: 1rem // TODO: $media-spacing
+$profile-widget-spacing: 1.5rem
 
 .profile-widget
     display: flex
@@ -42,6 +42,12 @@ $profile-widget-spacing: 1rem // TODO: $media-spacing
         position: sticky
         top: calc(#{$navbar-height} - 1px) // Make sticky observer work correctly
         z-index: $navbar-fixed-z - 1 // Just behind navbar
+    .tabs.profile-navigation
+        li a
+            display: flex
+            justify-content: space-between
+            .icon
+                color: $grey
     +touch
         padding: 0
         margin-top: 0
@@ -56,3 +62,8 @@ $profile-widget-spacing: 1rem // TODO: $media-spacing
                 position: sticky
                 top: calc(#{$navbar-height} - 1px)
                 z-index: $navbar-fixed-z - 1
+    +desktop
+        .field.is-horizontal
+            .field-label
+                flex: 0 0 128px // Same width as profile picture
+                margin-right: $profile-widget-spacing
