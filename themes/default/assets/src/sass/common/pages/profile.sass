@@ -1,5 +1,5 @@
 $profile-widget-spacing: 1rem // TODO: $media-spacing
-// $tabs-border-bottom-width: 2px
+
 .profile-widget
     display: flex
     align-items: center
@@ -37,29 +37,22 @@ $profile-widget-spacing: 1rem // TODO: $media-spacing
             .webpage
                 font-size: $size-5
 
-.tabs.is-vertical
-    height: 100%
-    display: block
-    overflow: visible
-    border-right: $tabs-border-bottom-color $tabs-border-bottom-style $tabs-border-bottom-width
-    a
-        justify-content: flex-start
-        border-bottom: none
-        border-right-color: $tabs-border-bottom-color
-        border-right-style: $tabs-border-bottom-style
-        border-right-width: $tabs-border-bottom-width
-        margin-right: -#{$tabs-border-bottom-width}
-        margin-bottom: 0
-        &:hover
-            border-right-color: $tabs-link-hover-border-bottom-color
-    li
-        &.is-active
-            a
-                border-right-color: $tabs-link-active-border-bottom-color
-    ul
+.profile-page
+    .tabs-back
         position: sticky
-        top: $navbar-height + $block-spacing
-        display: block
-        flex-direction: column
-        align-items: stretch
-        border-bottom: none
+        top: calc(#{$navbar-height} - 1px) // Make sticky observer work correctly
+        z-index: $navbar-fixed-z - 1 // Just behind navbar
+    +touch
+        padding: 0
+        margin-top: 0
+        .tabs-wrapper.is-vertical
+            &.is-enriched
+                min-height: calc(100vh - #{$navbar-height} + #{2 * $column-gap})
+            & > .column
+                flex-basis: 100%
+                & > .tabs-content > *
+                    padding: $block-spacing $section-padding-horizontal
+            .tabs-back
+                position: sticky
+                top: calc(#{$navbar-height} - 1px)
+                z-index: $navbar-fixed-z - 1

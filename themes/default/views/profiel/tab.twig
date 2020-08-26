@@ -4,7 +4,7 @@
 
 {% block page %}
 {% set show_tabs = view.tabs(iter)|filter(t => t.visible)|length > 1 %}
-<div class="section">
+<div class="section profile-page">
 	<div class="container {% if show_tabs %}has-sidebar{% else %}has-content{% endif %}">
 		<div class="columns is-hidden-touch">
 			<div class="column is-content {% if show_tabs %}is-offset-sidebar{% endif %}">
@@ -12,14 +12,14 @@
 			</div>
 		</div>
 		
-		<div class="columns tabs-wrapper is-vertical">
+		<div class="columns tabs-wrapper is-vertical" data-history>
 			{% if show_tabs %}
 				<aside class="column is-sidebar">
-					<p class="is-hidden-desktop">
-						{{ iter|full_name }}
-					</p>
 					<nav class="tabs is-vertical">
 						<ul>
+							<li class="tabs-title">
+								{{ iter|full_name }}
+							</li>
 							{% for tab_name, tab in view.tabs(iter) %}
 								{% if tab.visible %}
 									<li class="{{ tab_name == active_tab ? 'is-active' : '' }} {{ tab.class is defined ? tab.class : '' }}">
@@ -37,9 +37,10 @@
 				</aside>
 			{% endif %}
 			<div class="column is-content">
-				<p class="menu-label is-hidden-desktop">
-					backbutton
-				</p>
+				<button class="button tabs-back" data-sticky hidden>
+					<span class="icon" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+					<span>{{ __('Profile settings') }}</span>
+				</button>
 				{% if errors is defined and errors|length > 0 %}
 					<div class="notification is-danger content">
 						<p>{{ __('You haven\'t filled in all the fields correctly') }}</p>
