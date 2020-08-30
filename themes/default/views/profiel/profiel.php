@@ -120,11 +120,11 @@ class ProfielView extends View
 				'name' => 'postcode'
 			],
 			[
-				'label' => __('Place of residence'),
+				'label' => __('Town'),
 				'name' => 'woonplaats'
 			],
 			[
-				'label' => __('Phone number'),
+				'label' => __('Phone'),
 				'name' => 'telefoonnummer'
 			],
 			[

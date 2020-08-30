@@ -3,55 +3,92 @@
 {% set active_tab = 'public' %}
 
 {% block tab_content %}
-<article>
-	<div class="is-hidden-desktop">
+<article class="block">
+	<div class="is-hidden-desktop block">
 		{{ include('_profile_widget.twig') }}
 	</div>
-	<h2 class="title is-4">{{ __('About') }}</h2>	
-	
+	<div class="profile-field">
+		<div class="field-body">
+			<h2 class="title is-4">{{ __('About') }}</h2>	
+		</div>
+	</div>
+
 	{% if is_current_user %}
-	<p class="content is-small">
-		{{ __('Change who can see these personal details on the <a href="%s">privacy tab</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}
-	</p>
+	<div class="profile-field">
+		<div class="field-body">
+			<p class="content is-small">
+				{{ __('Change who can see these personal details on the <a href="%s">privacy tab</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}
+			</p>
+		</div>
+	</div>
 	{% endif %}
 	
-	<dl class="profile">
-	{% for field in view.personal_fields %}
-		{% set field_visibility = model.get_privacy_for_field(iter, field.name) %}
-		{% if field_visibility == constant('DataModelMember::VISIBLE_TO_EVERYONE') %}
-			<dt>{{ html_label(field.label, field.name) }}</dt>
-			<dd class="data-public">{{ view.format_member_data(iter, field.name)|raw }}</dd>
-		{% elseif field_visibility == constant('DataModelMember::VISIBLE_TO_MEMBERS') %}
-			{% if global.identity.is_member or global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
-				<dt>{{ html_label(field.label, field.name) }}</dt>
-				<dd class="data-members-only">
-					{{ view.format_member_data(iter, field.name)|raw }}
-					<i class="fas fa-lock" title="{{ __('Only visible for logged-in members.')|e('html_attr') }}"></i>
-				</dd>
+	<div class="profile-information">
+		{% for field in view.personal_fields %}
+			{% set field_visibility = model.get_privacy_for_field(iter, field.name) %}
+			{% if field_visibility == constant('DataModelMember::VISIBLE_TO_EVERYONE') %}
+				<div class="profile-field">
+					<div class="field-label">{{ field.label }}</div>
+					<div class="field-body data-public">{{ view.format_member_data(iter, field.name)|raw }}</div>
+				</div>
+			{% elseif field_visibility == constant('DataModelMember::VISIBLE_TO_MEMBERS') %}
+				{% if global.identity.is_member or global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
+					<div class="profile-field">
+						<div class="field-label">{{ field.label }}</div>
+						<div class="field-body data-members-only">
+							{{ view.format_member_data(iter, field.name)|raw }}
+							<span class="icon is-small">
+								<i class="fas fa-lock" title="{{ __('Only visible for logged-in members')|e('html_attr') }}" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Only visible for logged-in members') }}</span>
+							</span>
+						</div>
+					</div>
+				{% endif %}
+			{% elseif global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
+				<div class="profile-field">
+					<div class="field-label">{{ field.label }}</div>
+					<div class="field-body data-private">
+						{{ view.format_member_data(iter, field.name)|raw }}
+						<span class="icon is-small">
+							<i class="fas fa-eye-slash" title="{{ __('Private')|e('html_attr') }}" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Private') }}</span>
+						</span>
+					</div>
+				</div>
 			{% endif %}
-		{% elseif global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
-			<dt>{{ html_label(field.label, field.name) }}</dt>
-			<dd class="data-private">
-				{{ view.format_member_data(iter, field.name)|raw }}
-				<i class="fas fa-eye-slash" title="{{ __('Private')|e('html_attr') }}"></i>
-			</dd>
-		{% endif %}
-	{% endfor %}
-		<dt>{{ html_label(__('Status'), 'status') }}</dt>
-		<dd class="data-public">{{ view.member_type_to_string(iter.type) }}</dd>
-	</dl>
+		{% endfor %}
+		<div class="profile-field">
+			<div class="field-label">{{ __('Status') }}</div>
+			<div class="field-body data-public">{{ view.member_type_to_string(iter.type) }}</div>
+		</div>
+	</div>
 </article>
 
 {% if committees|length > 0 %}
-<article>
-	<h2 class="title is-4">{{ __('Committees & Working groups') }}</h2>
-	<p>{{ __('%s is a member of the following committees:')|format(iter|first_name) }}</p>
-	<ul class="committee-list">
+{% set working_groups = committees|filter(c => c.type == constant('DataModelCommissie::TYPE_WORKING_GROUP'))|length %}
+<article class="block">
+	<div class="profile-field">
+		<div class="field-body">
+			{% if working_groups == committees|length %}
+				<h2 class="title is-4">{{ __('Working groups') }}</h2>
+			{% elseif working_groups > 0 %}
+				<h2 class="title is-4">{{ __('Committees & Working groups') }}</h2>
+			{% else %}
+				<h2 class="title is-4">{{ __('Committees') }}</h2>
+			{% endif %}
+		</div>
+	</div>
+	<div class="profile-field">
+		<div class="field-body">
+			<p>{{ __('%s is a member of the following committees:')|format(iter|first_name) }}</p>
+		</div>
+	</div>
+	<ul class="profile-committees">
 		{% for committee in committees %}
-		<li>
-			<a class="committee" href="{{ committee.get_absolute_url()|e('html_attr') }}">{{ committee.naam }}</a>
-			<span class="position">({{ __translate_parts(committee.functie, ',/') }})</span>
-		</li>
+			<li>
+				<a class="committee-name" href="{{ committee.get_absolute_url()|e('html_attr') }}">{{ committee.naam }}</a>
+				<div class="committee-position">{{ __translate_parts(committee.functie, ',\/&') }}</div>
+			</li>
 		{% endfor %}
 	</ul>
 </article>

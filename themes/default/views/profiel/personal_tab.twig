@@ -5,34 +5,38 @@
 {% block tab_content %}
 <article>
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=personal" method="post">
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body"><h2 class="title is-4">{{ __('Personal data') }}</h2></div>
 		</div>
 		{{ html_nonce('personal', iter) }}
 		{% for field in view.personal_fields %}
-			<div class="field is-horizontal">
-				<div class="field-label {% if field.read_only is not defined %}is-normal{% endif %}">
-					{{ html_label(field.label, field.name, errors=errors) }}
-				</div>
-				<div class="field-body">
-					<div class="field is-expanded">
-					{% if field.read_only is not defined %}
-						<div class="control">
-							{{ html_input_text(field.name, iter, errors=errors) }}
+			{% if field.read_only is not defined %}
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						{{ html_label(field.label, field.name, errors=errors) }}
+					</div>
+					<div class="field-body">
+						<div class="field is-expanded">
+							<div class="control">
+								{{ html_input_text(field.name, iter, errors=errors) }}
+							</div>
 						</div>
-					{% else %}
-						<div class="control">
-							{% if field.name == 'geboortedatum' %}
-								{{ iter[field.name]|date('d-m-Y') }}
-							{% else %}
-								{{ iter[field.name] }}
-							{% endif %}
-						</div>
-					{% endif %}
 					</div>
 				</div>
-			</div>
+			{% else %}
+				<div class="profile-field">
+					<div class="field-label">
+						{{ field.label }}
+					</div>
+					<div class="field-body">
+						{% if field.name == 'geboortedatum' %}
+							{{ iter[field.name]|date('d-m-Y') }}
+						{% else %}
+							{{ iter[field.name] }}
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
 		{% endfor %}
 	
 		<div class="field is-horizontal">

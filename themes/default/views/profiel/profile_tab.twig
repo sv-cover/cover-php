@@ -6,15 +6,13 @@
 <section class="block">
 	<form action="profiel.php?lid={{ iter.id }}&amp;view=profile" method="post">
 		{{ html_nonce('profile', iter) }}
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				<h2 class="title is-4">{{ __('Profile Information') }}</h2>
 			</div>
 		</div>
 
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				{{ __('Your profile details are used to give your profile page a personal touch.') }}
 			</div>
@@ -59,8 +57,7 @@
 			</div>
 		</div>
 
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				<button type="submit" class="button">{{ __('Save') }}</button>
 			</div>
@@ -71,22 +68,19 @@
 <section class="block">
 	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=photo" method="post" enctype="multipart/form-data">
 		{{ html_nonce('photo', iter) }}
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				<h2 class="title is-4">{{ __('Change Photo') }}</h2>
 			</div>
 		</div>
 
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				{{ __('Your photo is not only used on this website, but also in the yearbook. You want to use a more recent photo? Send in the best version you have! Submissions are processed by hand, so it might take a while for the new photo to show up.') }}
 			</div>
 		</div>
 
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				<div class="field">
 					<div class="file">
@@ -111,8 +105,7 @@
 <section class="block">
 	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=profile" method="post">
 		{{ html_nonce('password', iter) }}
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				<h2 class="title is-4">{{ __('Change Password') }}</h2>
 			</div>
@@ -149,7 +142,7 @@
 
 		<div class="field is-horizontal">
 			<div class="field-label is-normal">
-				{{ html_label(__('Confirm password'), 'wachtwoord_opnieuw', errors=errors) }}
+				{{ html_label(__('Repeat'), 'wachtwoord_opnieuw', errors=errors) }}
 			</div>
 			<div class="field-body">
 				<div class="field">
@@ -160,8 +153,7 @@
 			</div>
 		</div>
 
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
+		<div class="profile-field">
 			<div class="field-body">
 				<button type="submit" class="button">{{ __('Change password') }}</button>
 			</div>
