@@ -134,6 +134,15 @@ class ProfielView extends View
 		];
 	}
 
+	public function privacy_options()
+	{
+		return [
+			DataModelMember::VISIBLE_TO_EVERYONE => __('Everyone'),
+			DataModelMember::VISIBLE_TO_MEMBERS => __('Only logged in members'),
+			DataModelMember::VISIBLE_TO_NONE => __('Nobody'),
+		];
+	}
+
 	public function render_public_tab(DataIterMember $iter)
 	{
 		$can_download_vcard = get_identity()->is_member();
