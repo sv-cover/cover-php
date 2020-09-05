@@ -4,7 +4,7 @@
 
 {% block tab_content %}
 <article>
-	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="post">
+	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="POST" data-auto-submit>
 		{{ html_nonce('privacy', iter) }}
 
 		<div class="profile-field">
@@ -13,7 +13,10 @@
 			</div>
 		</div>
 		<div class="profile-field">
-			<p class="field-body">{{ __('Modify your privacy preferences to indicate who can see what info.') }}</p>
+			<div class="field-body content">
+				<p>{{ __('Modify your privacy preferences to indicate who can see what info.') }}</p>
+				<p hidden data-auto-submit-visible>{{ __('Changes become effective immediately.') }}</p>
+			</div>
 		</div>
 		{% for field in fields %}
 			<div class="field is-horizontal">
@@ -32,9 +35,9 @@
 			</div>
 		{% endfor %}
 
-		<div class="profile-field">
+		<div class="profile-field" data-auto-submit-hidden>
 			<div class="field-body">
-				<button type="submit" class="button is-primary">{{ __('Save') }}</button>
+				<button type="submit" class="button is-primary" data-auto-submit-hidden>{{ __('Save') }}</button>
 			</div>
 		</div>
 	</form>

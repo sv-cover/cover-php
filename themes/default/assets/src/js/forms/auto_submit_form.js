@@ -8,11 +8,11 @@ import {Bulma} from 'cover-style-system/src/js';
  * submit-extra-data = [JSON Object] contains fields to add to data before submission
  * async-action = action to submit form, if different from fallback
  * 
- * Disables buttons that submit the form if they have the boolean data option auto-submit-hide
+ * Disables buttons that submit the form if they have the boolean data option auto-submit-hidden
  */
 class AutoSubmitForm {
     static parseDocument(context) {
-        const elements = context.querySelectorAll('form.auto-submit');
+        const elements = context.querySelectorAll('form.auto-submit, form[data-auto-submit]');
 
         Bulma.each(elements, element => {
             new AutoSubmitForm({
@@ -32,16 +32,19 @@ class AutoSubmitForm {
         this.buttons = options.buttons;
 
         this.initSwitches();
-        this.initButtons();
+        this.initVisibility();
         this.setupEvents();
     }
 
-    initButtons() {
-        // Disable buttons that are allowed to be disabled by boolean data attribute
+    initVisibility() {
+        // Disable buttons that are allowed to be disabled by boolean data attribute (include buttons outside of the form)
         for (let button of this.buttons) {
-            if (button.dataset.autoSubmitHide != null && button.dataset.autoSubmitHide.toLowerCase() !== 'false')
+            if (button.dataset.autoSubmitHidden != null && button.dataset.autoSubmitHidden.toLowerCase() !== 'false')
                 button.hidden = true;
         }
+
+        this.element.querySelectorAll('[data-auto-submit-hidden]').forEach(element => element.hidden = true);
+        this.element.querySelectorAll('[data-auto-submit-visible]').forEach(element => element.hidden = false);
     }
 
     /**
