@@ -309,17 +309,15 @@ class ControllerProfiel extends Controller
 
 		$mailing_list = $model->get_iter($_POST['mailing_list_id']);
 
-		switch ($_POST['action'])
-		{
-			case 'subscribe':
-				if (get_policy($model)->user_can_subscribe($mailing_list))
-					$subscription_model->subscribe_member($mailing_list, $iter);
-				break;
+		$subscribe = (empty($_POST['action']) && !empty($_POST['subscribe']) && $_POST['subscribe'] == 'yes') 
+				  || (!empty($_POST['action']) && $_POST['action'] == 'subscribe');
 
-			case 'unsubscribe':
-				if (get_policy($model)->user_can_unsubscribe($mailing_list))
-					$subscription_model->unsubscribe_member($mailing_list, $iter);
-				break;
+		if ($subscribe) {
+			if (get_policy($model)->user_can_subscribe($mailing_list))
+				$subscription_model->subscribe_member($mailing_list, $iter);
+		} else {
+			if (get_policy($model)->user_can_unsubscribe($mailing_list))
+				$subscription_model->unsubscribe_member($mailing_list, $iter);	
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=mailing_lists');

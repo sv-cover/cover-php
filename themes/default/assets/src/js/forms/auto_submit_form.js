@@ -95,12 +95,16 @@ class AutoSubmitForm {
     }
 
     submit() {
-        const url = this.element.dataset.asyncAction || this.element.action;
+        const url = this.element.dataset.asyncAction || this.element.getAttribute('action');
         
         // Append extra data to formdata
-        const data = new FormData(this.element);
+        let data = new FormData(this.element);
         for (let key in this.extraData)
             data.append(key, this.extraData[key]);
+
+        for (let el of this.element)
+            if (el.dataset.autoSubmitExclude != null && el.dataset.autoSubmitExclude.toLowerCase() !== 'false')
+                data.delete(el.name);
 
         // Prepare and submit
         const init = {
