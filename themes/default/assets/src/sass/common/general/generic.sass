@@ -81,5 +81,25 @@ ul.controls li
         height: 600px
         vertical-align: top
 
-.is-nowrap
-    white-space: nowrap
++mobile
+    .media-content
+        overflow: visible
+
+.table
+    td,
+    th
+        &.is-truncated
+            position: relative
+            & > span
+                display: block
+                position: absolute
+                top: 0
+                right: 0
+                bottom: 0
+                left: 0
+                padding: $table-cell-padding
+                overflow: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
+        &.is-nowrap
+            white-space: nowrap

@@ -3,67 +3,117 @@
 {% set active_tab = 'incassomatic' %}
 
 {% block tab_content %}
-<article>
+<header class="block">
 	<h2 class="title is-4">{{ __('Incass-o-matic') }}</h2>
-	<h3 class="subtitle is-5">{{ __('Contract') }}</h3>
-	<p>{{ __('Signed and active since %s.')|format(contract.start_datum|date('j-n-Y')) }}</p>
-</article>
-
-<article>
-	<p>{{ __("Your fifteen most recent direct debits.") }}</p>
-	<table class="table is-fullwidth">
-	{% if debits_per_batch[""] is defined %}
-		<thead>
-			<tr>
-				<th colspan="3"><h3 class="title is-5">{{ __('To be debited') }}</h3></th>
-			</tr>
-			<tr>
-				<th>{{ __('Description') }}</th>
-				<th class="has-text-right">{{ __('Price') }}</th>
-				<th class="has-text-right">{{ __('Date') }}</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for debit in debits_per_batch[""] %}
-			<tr>
-				<td>{{ debit.omschrijving }}</td>
-				<td class="has-text-right">
-					&euro;&nbsp;{{ '%0.2f'|format(debit.bedrag / 100) }}
-				</td>
-				<td class="has-text-right">
-					<time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	{% endif %}
-	{% for batch_id, debits in debits_per_batch if batch_id != "" %}
-		<thead>
-			<tr>
-				<th colspan="3">
-					<h3 class="title is-5">{{ __('Debit batch %d')|format(batch_id) }}</h3> <small>{{ debits[0].batch.verwerkingsdatum|date('j-n-Y') }}</small>
-				</th>
-			</tr>
-			<tr>
-				<th>{{ __('Description') }}</th>
-				<th class="has-text-right">{{ __('Price') }}</th>
-				<th class="has-text-right">{{ __('Date') }}</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for debit in debits %}
-			<tr>
-				<td>{{ debit.omschrijving }}</td>
-				<td class="has-text-right">
-					&euro;&nbsp;{{ '%0.2f'|format(debit.bedrag / 100) }}
-				</td>
-				<td class="has-text-right">
-					<time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	{% endfor %}
+	<p>{{ __('Your contract has been active since %s.')|format(contract.start_datum|date('j-n-Y')) }}</p>
+</header>
+<section class="block">
+	<div class="level is-mobile">
+		<div class="level-left">
+			<h3 class="title is-5 level-item">{{ __('To be debited') }}</h3>
+		</div>
+		<div class="level-right">
+			<div class="level-item is-size-5 has-text-weight-semibold">
+				€ {{ debits_per_batch[""]|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
+			</div>
+		</div>
+	</div>
+	<p>
+		{{ __('These will be debited from your bank account soon, most likely around the end of the month.') }}
+	</p>
+	<table class="table is-fullwidth is-hoverable is-aligned direct-debit-table">
+		{% if debits_per_batch[""] is defined %}
+			<thead>
+				<tr>
+					<th>{{ __('Description') }}</th>
+					<th class="amount-field">{{ __('Amount') }}</th>
+					<th class="date-field">{{ __('Date') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for debit in debits_per_batch[""] %}
+				<tr>
+					<td class="is-truncated">
+						<span>{{ debit.omschrijving }}</span>
+					</td>
+					<td class="amount-field">
+						€ {{ (debit.bedrag / 100)|number_format(2) }}
+					</td>
+					<td class="date-field">
+						<time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<th>{{ __('Total') }}</th>
+					<th class="date-field has-text-right">
+						€ {{ debits_per_batch[""]|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
+					</th>
+					<th></th>
+				</tr>
+			</tfoot>
+		{% endif %}
 	</table>
-</article>
+</section>
+<section class="block">
+	<h3 class="title is-5">{{ __("Recent Direct Debits") }}</h3>
+
+	{% for batch_id, debits in debits_per_batch if batch_id != "" %}
+		<div class="media">
+			<div class="media-content collapse">
+				<div class="controls media">
+					<div class="media-content">
+						<h4 class="title is-6">
+							{{ __('Debit batch %d')|format(batch_id) }}
+						</h4>
+						<div class="subtitle is-6">
+							<p>{{ debits[0].batch.verwerkingsdatum|date('j-n-Y') }}</p>
+							<a href="#batch-{{batch_id}}" class="collapse-trigger" aria-controls="batch-{{batch_id}}">{{__('details…')}}</a>
+						</div>
+					</div>
+					<div class="media-right has-text-weight-semibold">
+						€ {{ debits|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
+					</div>
+				</div>
+				<div class="collapse-content" id="batch-{{batch_id}}">
+					<table class="table is-fullwidth is-hoverable is-aligned  direct-debit-table">
+						<thead>
+							<tr>
+								<th>{{ __('Description') }}</th>
+								<th class="amount-field">{{ __('Amount') }}</th>
+								<th class="date-field">{{ __('Date') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for debit in debits %}
+							<tr>
+								<td class="is-truncated">
+									<span>{{ debit.omschrijving }}</span>
+								</td>
+								<td class="amount-field">
+									&euro;&nbsp;{{ '%0.2f'|format(debit.bedrag / 100) }}
+								</td>
+								<td class="date-field">
+									<time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>{{ __('Total') }}</th>
+								<th class="amount-field">
+									€ {{ debits|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
+								</th>
+								<th class="date-field">{{ debits[0].batch.verwerkingsdatum|date('j-n-Y') }}</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+</section>
 {% endblock %}
