@@ -47,10 +47,10 @@
 						<th>#</th>
 						{% for field in form.fields %}
 							{% for column in field.column_labels|values %}
-								<th class="column-field-type-{{field.type}} is-truncated" title="{{ column|capitalize }}">{{ column|capitalize }}</th>
+								<th class="column-field-type-{{field.type}} is-truncated" title="{{ column|capitalize }}"><span>{{ column|capitalize }}</span></th>
 							{% endfor %}
 						{% endfor %}
-						<th class="is-truncated">Sign-up date</th>
+						<th class="is-nowrap">Sign-up date</th>
 						<th class="is-sticky is-right"></th>
 					</tr>
 				</thead>
@@ -65,7 +65,7 @@
 									<td>{{ loop.index }}</td>
 								{% endif %}
 								{% for column, value in entry.export %}
-									<td class="is-truncated" title="{{value}}">{{ value }}</td>
+									<td class="is-truncated" title="{{value}}"><span>{{ value }}</span></td>
 								{% endfor %}
 								<td class="is-sticky is-right has-text-right is-vcentered">
 									{% if user_can_update entry %}

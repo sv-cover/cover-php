@@ -328,7 +328,7 @@
     - [×] signup/list_entries.twig
 - [×] A is-truncated (white-space: nowrap; text-overflow: ellipsis;) would be nice.
     - [×] signup/list_entries.twig
-    - [ ] Now make it behave correctly in table cells
+    - [×] Now make it behave correctly in table cells
 - [×] Buttons don't work that well as card-footer-item
     - [×] signup/form_form.twig
 - [×] fullwidth/expanding select? maybe? - Already exists. `.is-fullwidth` works.

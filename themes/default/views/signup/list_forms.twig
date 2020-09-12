@@ -21,38 +21,38 @@
 	<table class="signup-forms-table table is-fullwidth is-hoverable">
 		<thead>
 			<tr>
-				<th class="is-truncated">{{ __('Form') }}</th>
-				<th class="is-truncated">{{ __('Activity') }}</th>
-				<th class="has-text-right is-truncated">{{ __('Activity date') }}</th>
-				<th class="is-truncated">{{ __('Status') }}</th>
-				<th class="has-text-right is-truncated">{{ __('Sign-ups') }}</th>
-				<th class="is-sticky is-right"></th>
+				<th class="is-nowrap">{{ __('Form') }}</th>
+				<th class="is-nowrap">{{ __('Activity') }}</th>
+				<th class="has-text-right is-nowrap">{{ __('Activity date') }}</th>
+				<th class="is-nowrap">{{ __('Status') }}</th>
+				<th class="has-text-right is-nowrap">{{ __('Sign-ups') }}</th>
+				<th class="is-sticky is-right is-nowrap"></th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for form in forms|sort_by('created_on desc') %}
 				<tr>
 					<td class="is-truncated">
-						<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a>
+						<span><a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></span>
 					</td>
 					<td class="is-truncated">
 						{% if form.agenda_id %}
-							<a href="agenda.php?agenda_id={{form.agenda_id}}">{{ form.agenda_item.kop }}</a>
+							<span><a href="agenda.php?agenda_id={{form.agenda_id}}">{{ form.agenda_item.kop }}</a></span>
 						{% endif %}
 					</td>
 					<td class="has-text-right is-truncated">
 						{% if form.agenda_id %}
-							{{ form.agenda_item.van|date('Y-m-d') }}
+							<span>{{ form.agenda_item.van|date('Y-m-d') }}</span>
 						{% endif %}
 					</td>
-					<td class="is-truncated">
+					<td>
 						{% if form.is_open %}
 							<span class="tag is-success">Open</span>
 						{% else %}
 							<span class="tag">Closed</span>
 						{% endif %}
 					</td>
-					<td class="has-text-right is-truncated">
+					<td class="has-text-right">
 						{{ form.signup_count }}
 					</td>
 					<td class="is-sticky is-right has-text-right">
