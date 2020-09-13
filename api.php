@@ -248,7 +248,7 @@ class ControllerApi extends Controller
 		}
 		
 		$member = new DataIterMember($model, $data['id'], $data);
-		$member['privacy'] = 958698063;
+		$member['privacy'] = 958435335;
 
 		// Create profile for this member
 		$nick = member_full_name($member, IGNORE_PRIVACY);

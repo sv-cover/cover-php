@@ -1,5 +1,4 @@
 [
-	{"filename":"tno.png", "filename_dark": "tno_dark.png", "url":"https://www.tno.nl/nl/career/"},
 	{"filename":"belsimpel.png", "filename_dark":"belsimpel_dark.png","url":"https://werkenbijbelsimpel.nl/","type":"main-sponsor"},
 	{"filename":"axonlogo.png", "url":"http://www.axonline.nl/", "weight": 1},
 	{"filename":"invariant.png", "url":"https://www.invariant.nl/", "weight": 1},
@@ -7,11 +6,9 @@
     {"filename":"asml.png", "filename_dark":"asml_dark.png","url":"https://www.asml.com/students"},
     {"filename":"dataprovider.png", "filename_dark":"dataprovider_dark.png","url":"https://www.dataprovider.com/careers/"},
 	{"filename":"nedap.png", "filename_dark":"nedap_dark.png", "url":"https://lifeatnedap.com/"},
-    {"filename":"thefactore.png", "filename_dark":"thefactore_dark.png", "url":"https://tfe.nl/vacatures/"},
 	{"filename":"gat_van_groningen.jpg", "url":"http://tgatvangroningen.nl/"},
     {"filename":"rdw.png", "filename_dark":"rdw_dark.png", "url": "https://www.werkenbijderdw.nl"},
-    {"filename":"tkp.png", "filename_dark":"tkp_dark.png", "url": "https://www.werkenbijtkp.nl/vakgebieden/ict?utm_source=cover&utm_medium=website&utm_campaign=studievereniging"},
 	{"filename":"duo.png", "filename_dark":"duo_dark.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"},
-    {"filename":"atos.png", "url": "https://atos.net/nl/nederland/werken-bij-atos-nederland"},
-    {"filename":"pwc.png", "filename_dark":"pwc_dark.png", "url": "https://www.pwc.nl/"}
+    {"filename":"pwc.png", "filename_dark":"pwc_dark.png", "url": "https://www.pwc.nl/"},
+    {"filename":"accenture.png", "filename_dark":"accenture_dark.png", "url": "https://www.werkenbijaccenture.nl/?utm_medium=Referral%20&utm_source=cover&utm_campaign=Company_page&utm_content=Home_page"}
 ]
