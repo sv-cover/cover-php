@@ -28,12 +28,9 @@ function init_sentry()
 	if (!sentry_get_client())
 		return;
 
-	$client->tags_context([
-		'locale' => i18n_get_locale()
-	]);
-
 	Sentry\configureScope(function (Sentry\State\Scope $scope): void {
 		$scope->setTag('locale', 'i18n_get_locale()');
+
 		if (get_auth()->logged_in()) {
 			$scope->setUser([
 				'id' => get_identity()->get('id'),
