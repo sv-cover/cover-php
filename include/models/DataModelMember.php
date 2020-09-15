@@ -220,7 +220,10 @@
 		{
 			$row = $this->db->query_first('SELECT EXTRACT(EPOCH FROM foto_mtime) as mtime FROM lid_fotos WHERE lid_id = ' . $iter->get_id() . ' ORDER BY id DESC LIMIT 1');
 
-			return (int) $row['mtime'] - 7200; // timezone difference?
+			if ($row)
+				return (int) $row['mtime'] - 7200; // timezone difference?
+
+			return 0;
  		}
 
 		public function set_photo(DataIter $iter, $fh)
