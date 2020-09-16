@@ -301,6 +301,9 @@
 		
 		protected function run_impl()
 		{
+			if (empty($_GET['lid_id']))
+				return new Exception('No member ID provided');
+
 			$iter = $this->model->get_iter($_GET['lid_id']);
 
 			if (isset($_GET['format']))

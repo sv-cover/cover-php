@@ -290,9 +290,9 @@ class ControllerProfiel extends Controller
 		{
 			send_mail_with_attachment(
 				'acdcee@svcover.nl',
-				'New yearbook photo for ' . $iter['naam'],
-				"{$iter['naam']} would like to use the attached photo as their new profile picture.",
-				sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email']),
+				'New yearbook photo for ' . $iter['full_name'],
+				"{$iter['full_name']} would like to use the attached photo as their new profile picture.",
+				sprintf('Reply-to: %s <%s>', $iter['full_name'], $iter['email']),
 				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
 			$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
