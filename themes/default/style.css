@@ -2491,7 +2491,8 @@ body.modal-open {
 	overflow: hidden;
 }
 
-.markup-image {
+.markup-image,
+.markup-video {
 	max-width: 100%;
 }
 

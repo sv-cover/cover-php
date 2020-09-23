@@ -203,8 +203,23 @@
 
 		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match))
 		{
+			$placeholder = sprintf('#YOUTUBE%d#', $count++);
+			$placeholders[$placeholder] = '<div class="youtube-container"><iframe src="//www.youtube-nocookie.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe></div>';
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
+	}
+
+	function _markup_parse_video(&$markup, &$placeholders)
+	{
+		static $count = 0;
+
+		while (preg_match('/\[video=(.+?)\]/', $markup, $match))
+		{
+			if (!filter_var($match[1], FILTER_VALIDATE_URL))
+				return $match[0];
+
 			$placeholder = sprintf('#VIDEO%d#', $count++);
-			$placeholders[$placeholder] = '<div class="youtube-container"><iframe src="//www.youtube.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe></div>';
+			$placeholders[$placeholder] = '<video class="markup-video" src="' . $match[1] . '" controls><a href="' . $match[1] . '">Watch video</a></video>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
@@ -348,10 +363,12 @@
 		/* Replace [mailiginlist] embed */
 		_markup_parse_mailinglist($markup, $placeholders);
 
-		/* Parse [img=] and [youtube=] */
+		/* Parse [img=], [youtube=] [video=] */
 		_markup_parse_images($markup, $placeholders);
 
 		_markup_parse_youtube($markup, $placeholders);
+
+		_markup_parse_video($markup, $placeholders);
 
 		_markup_parse_embed($markup, $placeholders);
 		
