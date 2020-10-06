@@ -1,0 +1,97 @@
+figcaption.faces
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+
+.face
+    position: absolute
+    border-radius: 4px
+    border: 2px solid rgba(0, 0, 0, 0.2)
+    opacity: 0
+    transition: opacity 100ms
+
+.face:hover
+    z-index: 10
+
+.face:hover,
+.face.highlight,
+    opacity: 1.0
+
+
+.face .delete-button
+    width: 20px
+    height: 20px
+    background: transparent
+    border: none
+    color: white
+    font: 12px sans-serif
+    cursor: pointer
+    position: absolute
+    right: 0
+    top: 0
+    display: block
+
+.face .delete-button:hover
+    background: rgba(0, 0, 0, 0.8)
+
+.face .tag-label,
+.face .tag-search
+    display: inline-block
+    position: absolute
+    left: 50%
+    bottom: -30px
+    -moz-transform: translate(-50%, 0)
+    -webkit-transform: translate(-50%, 0)
+    transform: translate(-50%, 0)
+    background: rgba(0, 0, 0, 0.8)
+    color: white
+    padding: 0 10px
+    border-radius: 4px
+    font: 13px/26px sans-serif
+    z-index: 1
+    white-space: nowrap
+
+.face .tag-label
+    text-align: center
+
+.face .tag-search
+    width: 150px
+    z-index: 2
+
+.face .tag-label a.name
+    display: inline-block
+    white-space: nowrap
+    color: white
+    font-weight: normal
+
+.face .tag-label a.name[href='#']
+    text-decoration: none
+    cursor: default
+
+.face.untagged .tag-label a.name
+    font-style: italic
+    cursor: pointer
+
+.face .tag-label .suggested-face + a.name
+    display: none
+
+.face .tag-label .button-group
+    display: flex
+    margin: 0 -10px /* compensate for the padding of .tag-label */
+    border-top: 1px solid rgba(255, 255, 255, 0.25)
+
+.face .tag-label .button-group button
+    flex: 1 0 auto
+    font: inherit
+    color: white
+    background: rgba(255, 255, 255, 0.0)
+    border: 0
+    cursor: pointer
+
+.face .tag-label .button-group button + button
+    border-left: 1px solid rgba(255, 255, 255, 0.25)
+
+.face .tag-label .button-group button:hover
+    background: rgba(255, 255, 255, 0.2)

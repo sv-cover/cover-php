@@ -33,6 +33,43 @@
                     data-preview="{{ photo.get_url(null, 400) }}"
                 > 
             </picture>
+            <figcaption class="faces" hidden>
+                {% for face in photo.faces if user_can_read face %}
+                    <div
+                        id="face_{{ face.id }}"
+                        class="face {{ face.lid_id or face.custom_label ? 'tagged' : 'untagged' }}"
+                        data-position="{{ face.position|json_encode() }}"
+                        {%- if user_can_delete face -%}
+                            data-delete-action="{{ controller.faces_controller.json_link_to_delete(face) }}"
+                        {%- endif -%}
+                        {%- if user_can_update face -%}
+                            data-update-action="{{ controller.faces_controller.json_link_to_update(face) }}"
+                        {%- endif -%}
+                    >
+                        <!-- name label (and hidden update form) -->
+                        <div class="tag-label">
+                            {% if face.lid_id is not null %}
+                                <a href="profiel.php?lid={{ face.lid.id }}" class="name">{{ face.lid|personal_full_name }}</a>
+                            {% elseif face.custom_label is not null %}
+                                <a class="name" href="#">{{ face.custom_label }}</a>
+                            {% elseif user_can_update face %}
+                                {% if face.suggested_member %}
+                                    <div class="suggested-face" data-member-id="{{ face.suggested_member.id }}">
+                                        Is this <a href="{{ link('profiel.read', member=face.suggested_member)|e('html_attr') }}" class="name">{{ face.suggested_member|personal_full_name }}</a>?
+                                        <div class="button-group">
+                                            <button class="yes">Yes</button>
+                                            <button class="no">No</button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <a class="name" href="#">{{ __('Click to tag') }}</a>
+                            {% else %}
+                                <a class="name" href="#">{{ __('Not yet tagged') }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %} 
+            </figcaption>
         </figure>
     </div>
     <nav class="photo-navigation" data-enter-fullscreen-text="{{ __('Enter fullscreen') }}" data-exit-fullscreen-text="{{ __('Exit fullscreen') }}">
