@@ -46,6 +46,7 @@
                             data-update-action="{{ controller.faces_controller.json_link_to_update(face) }}"
                         {%- endif -%}
                     >
+
                         <!-- name label (and hidden update form) -->
                         <div class="tag-label">
                             {% if face.lid_id is not null %}
@@ -216,7 +217,7 @@
                 </form>
 
                 {% if user_can_create controller.faces_controller.new_iter %}
-                    <a class="level-item" title="{{ __('Tag people') }}">
+                    <a class="level-item photo-tag-button" title="{{ __('Tag people') }}">
                         <span class="icon">
                             <i class="fas fa-tag" aria-hidden="true"></i>
                         </span>
