@@ -169,27 +169,6 @@ class Face {
         mc.on('pinch', this.handlePinch.bind(this));
     }
 
-    updatePostion(realWidth, realHeight, offsetX, offsetY) {
-        this.imgScale = {
-            offsetX: offsetX,
-            offsetY: offsetY,
-            width: realWidth,
-            height: realHeight,
-        };
-
-        this._updatePostion();
-    }
-
-    _updatePostion(pos=null) {
-        if (!pos)
-            pos = this.getAbsolutePosition();
-
-        this.element.style.setProperty('top', `${pos.y}px`);
-        this.element.style.setProperty('left', `${pos.x}px`);
-        this.element.style.setProperty('height', `${pos.h}px`);
-        this.element.style.setProperty('width', `${pos.w}px`);
-    }
-
     async handleDelete(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -216,11 +195,10 @@ class Face {
         if (!this.canTag)
             return;
 
-        const newPos = this.getUpdatedPosition(delta.x, delta.y, 0, 0);
+        const newPos = this.calculateNewPosition(delta.x, delta.y, 0, 0);
 
         if (type === 'end') {
-            this.setPosition(newPos);
-            this._updatePostion();
+            this.commitPosition(newPos);
         } else if (type === 'move') {
             this._updatePostion(newPos);
         }
@@ -230,11 +208,10 @@ class Face {
         if (!this.canTag)
             return;
 
-        const newPos = this.getUpdatedPosition(0, 0, delta.x, delta.y);
+        const newPos = this.calculateNewPosition(0, 0, delta.x, delta.y);
 
         if (type === 'end') {
-            this.setPosition(newPos);
-            this._updatePostion();
+            this.commitPosition(newPos);
         } else if (type === 'move') {
             this._updatePostion(newPos);
         }
@@ -249,11 +226,10 @@ class Face {
         const dw = oldPos.w * event.scale;
         const dh = oldPos.h * event.scale;
 
-        const newPos = this.getUpdatedPosition(-dw/2, -dh/2, dw, dh);
+        const newPos = this.calculateNewPosition(-dw/2, -dh/2, dw, dh);
 
         if (event.eventType & Hammer.INPUT_END) {
-            this.setPosition(newPos);
-            this._updatePostion();
+            this.commitPosition(newPos);
         } else if (event.eventType & Hammer.INPUT_CANCEL) {
             this._updatePostion();
         } else {
@@ -261,7 +237,33 @@ class Face {
         }
     }
 
-    getUpdatedPosition(dx, dy, dw, dh) {
+    async submitUpdate(data) {        
+        if (this.element.dataset.updateAction) {
+            const formData = new FormData();
+
+            for (const name in data)
+                formData.append(name, data[name]);
+
+            const init = {
+                'method': 'POST',
+                'headers': {
+                    'Accept': 'application/json',
+                },
+                'body': new URLSearchParams(formData),
+            };
+            const response = await fetch (this.element.dataset.updateAction, init);
+
+            if (!response.ok) {
+                throw new Error('Error during update');
+            }
+        }
+    }
+
+    /****
+     * Position stuff
+     */ 
+
+    calculateNewPosition(dx, dy, dw, dh) {
         const oldPos = this.getAbsolutePosition();
         let newPos = {
             x: oldPos.x + dx,
@@ -311,15 +313,18 @@ class Face {
         return newPos;
     }
 
-    setPosition(newAbsPos) {
-        this.position = {
+    commitPosition(newAbsPos) {
+        const newPos = {
             x: (newAbsPos.x - this.imgScale.offsetX) / this.imgScale.width,
             y: (newAbsPos.y - this.imgScale.offsetY) / this.imgScale.height,
             w: newAbsPos.w / this.imgScale.width,
             h: newAbsPos.h / this.imgScale.height,
         };
 
-        this._updatePostion();
+        this.submitUpdate(newPos).then(() => {
+                this.position = newPos;
+                this._updatePostion();
+        }).catch(() => {/* Revert to initial position */});
     }
 
     getAbsolutePosition() {
@@ -329,6 +334,27 @@ class Face {
             w: (this.imgScale.width * this.position.w) + this.deltaPosition.w,
             h: (this.imgScale.height * this.position.h) + this.deltaPosition.h,
         };
+    }
+
+    _updatePostion(pos=null) {
+        if (!pos)
+            pos = this.getAbsolutePosition();
+
+        this.element.style.setProperty('top', `${pos.y}px`);
+        this.element.style.setProperty('left', `${pos.x}px`);
+        this.element.style.setProperty('height', `${pos.h}px`);
+        this.element.style.setProperty('width', `${pos.w}px`);
+    }
+
+    updatePostion(realWidth, realHeight, offsetX, offsetY) {
+        this.imgScale = {
+            offsetX: offsetX,
+            offsetY: offsetY,
+            width: realWidth,
+            height: realHeight,
+        };
+
+        this._updatePostion();
     }
 }
 
