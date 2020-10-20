@@ -93,6 +93,8 @@ class DragHandler {
 
 class Face {
     constructor(options) {
+        this.options = options;
+
         this.parent = options.parent;
         this.data = options.data
         this.element = options.template.content.firstElementChild.cloneNode(true);
@@ -235,7 +237,8 @@ class Face {
 
             if (response.ok) {
                 this.element.remove();
-                // TODO: Update list
+                if (this.options.onDelete)
+                    this.options.onDelete(this);
             }
             // TODO: handle errors
         }
@@ -517,6 +520,7 @@ class PhotoFaces {
                 data: face,
                 imgScale: this.getScale.bind(this),
                 enabled: () => this.isTagging,
+                onDelete: this.handleDeleteFace.bind(this),
             }));
         }
     }
@@ -591,6 +595,12 @@ class PhotoFaces {
     handleResize() {
         if (this.imgElement.complete)
             this.updateScale();
+    }
+
+    handleDeleteFace(face) {
+        const idx = this.faces.indexOf(face);
+        if (idx >= 0)
+            this.faces.splice(idx,1);
     }
 }
 
