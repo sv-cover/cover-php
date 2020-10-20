@@ -356,6 +356,11 @@ class CRUDView extends View
 		if ($policy->user_can_delete($iter))
 			$links['delete'] = $this->controller->json_link_to_delete($iter);
 
-		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
+		if (method_exists($this->controller, 'get_data_for_iter'))
+			$data = $this->controller->get_data_for_iter($iter);
+		else
+			$data = $iter->data;
+
+		return array_merge($data, array('__id' => $iter->get_id(), '__links' => $links));
 	}
 }

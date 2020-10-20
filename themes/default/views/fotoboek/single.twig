@@ -33,8 +33,34 @@
                     data-preview="{{ photo.get_url(null, 400) }}"
                 > 
             </picture>
-            <figcaption class="faces" hidden>
-                {% for face in photo.faces if user_can_read face %}
+            <figcaption class="faces" hidden data-api-url="{{ controller.faces_controller.link([]) }}">
+                <template class="face-template">
+                    <div class="face">
+                        <button class="delete is-small" type="button" data-delete hidden></button>
+                        <div class="tag-label" data-label data-label-member hidden>
+                            <a class="name" data-name></a>
+                        </div>
+                        <div class="tag-label" data-label data-label-custom hidden>
+                            <span class="name" data-name></span>
+                        </div>
+                        <div class="tag-label" data-label data-label-untagged hidden>
+                            <button class="name" data-name>{{ __('Click to tag') }}</button>
+                        </div>
+                        <div class="tag-label" data-label data-label-untagged-noedit hidden>
+                            <button class="name" data-name>{{ __('Not yet tagged') }}</button>
+                        </div>
+                        <div class="tag-label" data-label data-label-suggested hidden>
+                            <div class="suggested-face">
+                                {{ __('Is this %s?')|e|format('<a class="name" data-name></a>')|raw }}
+                                <div class="button-group">
+                                    <button type="button" data-button-yes>{{  __('Yes') }}</button>
+                                    <button type="button" data-button-no>{{  __('No') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+{#                 {% for face in photo.faces if user_can_read face %}
                     <div
                         id="face_{{ face.id }}"
                         class="face {{ face.lid_id or face.custom_label ? 'tagged' : 'untagged' }}"
@@ -69,7 +95,7 @@
                             {% endif %}
                         </div>
                     </div>
-                {% endfor %} 
+                {% endfor %}  #}
             </figcaption>
         </figure>
     </div>

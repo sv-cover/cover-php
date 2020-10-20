@@ -1,7 +1,10 @@
 import {Bulma} from 'cover-style-system/src/js';
+import AutocompleteMember from '../../forms/autocomplete_member';
 import Hammer from 'hammerjs';
 
+
 const PHOTO_FACE_MIN_SIZE = 2;
+
 
 class DragHandler {
     constructor({element, onStart=null, onEnd=null, onMove=null, enabled=true, stopPropagation=false}) {
@@ -35,6 +38,9 @@ class DragHandler {
 
     handleStart(event) {
         if (!this.isEnabled())
+            return;
+
+        if (event.target instanceof HTMLInputElement)
             return;
 
         if (this.stopPropagation)
@@ -87,78 +93,42 @@ class DragHandler {
 
 class Face {
     constructor(options) {
-        this.element = options.element;
-        this.canTag = false;
-        this.imgScale = {
-            offsetX: 0,
-            offsetY: 0,
-            width: 0,
-            height: 0,
-        }
-        this.position = JSON.parse(this.element.dataset.position);
-        this.deltaPosition = {
-            x: 0,
-            y: 0,
-            w: 0,
-            h: 0,
-        };
+        this.parent = options.parent;
+        this.data = options.data
+        this.element = options.template.content.firstElementChild.cloneNode(true);
+        this._imgScale = options.imgScale;
+        this._canTag = options.enabled;
+
         this.init();
     }
 
     init() {
-        if (this.element.dataset.updateAction) {
-            this.createResizeGrip('is-horizontal');
-            this.createResizeGrip('is-vertical');
-            this.createResizeGrip('is-diagonal');
-            this.enableGestures();
-        }
+        this._initDelete();
+        this._initResize();
+        this.render();
+        this.parent.append(this.element);
     }
 
-    createResizeGrip(cls) {
-        let grip = document.createElement('span');
-        grip.classList.add('resize', cls);
-        this.element.append(grip);
-        
-        new DragHandler({
-            element: grip,
-            enabled: () => this.canTag,
-            stopPropagation: true,
-            onMove: this.handleResize.bind(this, 'move'),
-            onEnd: this.handleResize.bind(this, 'end'),
-        });
+    _initDelete() {
+        this.delete = this.element.querySelector('[data-delete]');
+        this.delete.addEventListener('click', this.handleDelete.bind(this));
     }
 
-    disableTagging() {
-        this.canTag = false;
+    _initResize() {
+        this._initResizeGrip('is-horizontal');
+        this._initResizeGrip('is-vertical');
+        this._initResizeGrip('is-diagonal');
 
-        this.element.querySelector('.delete').remove();
-
-        for (const el of this.element.querySelectorAll('.resize'))
-            el.remove();
-    }
-
-    enableTagging() {
-        this.canTag = true;
-
-        if (this.element.dataset.deleteAction) {
-            let deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete', 'is-small');
-            deleteButton.addEventListener('click', this.handleDelete.bind(this));
-            this.element.append(deleteButton);
-        }
-    }
-
-    enableGestures() {
         new DragHandler({
             element: this.element,
-            enabled: () => this.canTag,
+            enabled: () => this.canUpdate() && this.canTag(),
             stopPropagation: true,
             onMove: this.handleMove.bind(this, 'move'),
             onEnd: this.handleMove.bind(this, 'end'),
         });
 
         let mc = new Hammer.Manager(this.element, {
-            enabled: () => this.canTag,
+            enabled: () => this.canUpdate() && this.canTag(),
         });
 
         const pinch = new Hammer.Pinch();
@@ -169,11 +139,91 @@ class Face {
         mc.on('pinch', this.handlePinch.bind(this));
     }
 
+    _initResizeGrip(cls) {
+        let grip = document.createElement('span');
+        grip.classList.add('resize', cls);
+        this.element.append(grip);
+
+        new DragHandler({
+            element: grip,
+            enabled: () => this.canUpdate() && this.canTag(),
+            stopPropagation: true,
+            onMove: this.handleResize.bind(this, 'move'),
+            onEnd: this.handleResize.bind(this, 'end'),
+        });
+    }
+
+    render(intent='all') {
+        if (intent === 'state' || intent === 'all') {
+            this._renderLabel();
+            this._renderDelete();
+        }
+
+        if (intent === 'position' || intent === 'all') {
+            this._renderPosition();
+        }
+    }
+
+    _renderLabel() {        
+        for (let label of this.element.querySelectorAll('[data-label]'))
+            label.hidden = true;
+    }
+
+    _renderPosition(pos=null) {
+        if (!pos)
+            pos = this.getPosition();
+
+        this.element.style.setProperty('top', `${pos.y}px`);
+        this.element.style.setProperty('left', `${pos.x}px`);
+        this.element.style.setProperty('height', `${pos.h}px`);
+        this.element.style.setProperty('width', `${pos.w}px`);
+    }
+
+    _renderDelete() {
+        if (this.canDelete() && this.canTag())
+            this.delete.hidden = false;
+        else
+            this.delete.hidden = true;
+    }
+
+    canDelete() {
+        return !!this.data.__links.delete;
+    }
+
+    canUpdate() {
+        return !!this.data.__links.update;
+    }
+
+    canTag() {
+        if (this._canTag instanceof Function)
+            return this._canTag();
+        return this._canTag;        
+    }
+
+    getImgScale() {
+        if (this._imgScale instanceof Function)
+            return this._imgScale();
+        return this._imgScale;
+    }
+
+    getPosition() {
+        // TODO: Cache somehow?
+        const imgScale = this.getImgScale();
+        return {
+            x: (imgScale.w * this.data.x) + imgScale.x,
+            y: (imgScale.h * this.data.y) + imgScale.y,
+            w: (imgScale.w * this.data.w),
+            h: (imgScale.h * this.data.h),
+        };
+    }
+
+    // Handlers
+
     async handleDelete(event) {
         event.preventDefault();
         event.stopPropagation();
 
-        if (this.element.dataset.deleteAction) {
+        if (this.canDelete()) {
             const init = {
                 'method': 'POST',
                 'headers': {
@@ -181,7 +231,7 @@ class Face {
                     'Content-Type': 'application/json',
                 },
             };
-            const response = await fetch (this.element.dataset.deleteAction, init);
+            const response = await fetch(this.data.__links.delete, init);
 
             if (response.ok) {
                 this.element.remove();
@@ -198,9 +248,29 @@ class Face {
         const newPos = this.calculateNewPosition(delta.x, delta.y, 0, 0);
 
         if (type === 'end') {
-            this.commitPosition(newPos);
+            this.updatePosition(newPos);
         } else if (type === 'move') {
-            this._updatePostion(newPos);
+            this._renderPosition(newPos);
+        }
+    }
+
+    handlePinch(event) {
+        if (!this.canTag)
+            return;
+
+        const oldPos = this.getPosition();
+
+        const dw = oldPos.w * event.scale;
+        const dh = oldPos.h * event.scale;
+
+        const newPos = this.calculateNewPosition(-dw/2, -dh/2, dw, dh);
+
+        if (event.eventType & Hammer.INPUT_END) {
+            this.updatePosition(newPos);
+        } else if (event.eventType & Hammer.INPUT_CANCEL) {
+            this._renderPosition();
+        } else {
+            this._renderPosition(newPos);
         }
     }
 
@@ -211,34 +281,14 @@ class Face {
         const newPos = this.calculateNewPosition(0, 0, delta.x, delta.y);
 
         if (type === 'end') {
-            this.commitPosition(newPos);
+            this.updatePosition(newPos);
         } else if (type === 'move') {
-            this._updatePostion(newPos);
+            this._renderPosition(newPos);
         }
     }
 
-    handlePinch(event) {
-        if (!this.canTag)
-            return;
-
-        const oldPos = this.getAbsolutePosition();
-
-        const dw = oldPos.w * event.scale;
-        const dh = oldPos.h * event.scale;
-
-        const newPos = this.calculateNewPosition(-dw/2, -dh/2, dw, dh);
-
-        if (event.eventType & Hammer.INPUT_END) {
-            this.commitPosition(newPos);
-        } else if (event.eventType & Hammer.INPUT_CANCEL) {
-            this._updatePostion();
-        } else {
-            this._updatePostion(newPos);
-        }
-    }
-
-    async submitUpdate(data) {        
-        if (this.element.dataset.updateAction) {
+    async submitUpdate(data) {
+        if (this.canUpdate()) {
             const formData = new FormData();
 
             for (const name in data)
@@ -251,20 +301,22 @@ class Face {
                 },
                 'body': new URLSearchParams(formData),
             };
-            const response = await fetch (this.element.dataset.updateAction, init);
+
+            const response = await fetch(this.data.__links.update, init);
 
             if (!response.ok) {
                 throw new Error('Error during update');
             }
+
+            const result = await response.json();
+            this.data = result.iter
         }
     }
 
-    /****
-     * Position stuff
-     */ 
-
     calculateNewPosition(dx, dy, dw, dh) {
-        const oldPos = this.getAbsolutePosition();
+        const oldPos = this.getPosition();
+        const imgScale = this.getImgScale();
+
         let newPos = {
             x: oldPos.x + dx,
             y: oldPos.y + dy,
@@ -283,29 +335,29 @@ class Face {
         }
 
         // too far to the left
-        if (newPos.x < this.imgScale.offsetX)
-            newPos.x = this.imgScale.offsetX;
+        if (newPos.x < imgScale.x)
+            newPos.x = imgScale.x;
 
         // too wide or too far to the right
-        if (newPos.x + newPos.w > this.imgScale.width + this.imgScale.offsetX) {
+        if (newPos.x + newPos.w > imgScale.w + imgScale.x) {
             if (dx !== 0) {
-                newPos.x = this.imgScale.width + this.imgScale.offsetX - newPos.w;
+                newPos.x = imgScale.w + imgScale.x - newPos.w;
             } else {
-                newPos.w = this.imgScale.width + this.imgScale.offsetX - newPos.x;
+                newPos.w = imgScale.w + imgScale.x - newPos.x;
                 newPos.h = newPos.w;
             }
         }
 
         // too far to the top
-        if (newPos.y < this.imgScale.offsetY)
-            newPos.y = this.imgScale.offsetY;
+        if (newPos.y < imgScale.y)
+            newPos.y = imgScale.y;
 
         // too tall or too far to the bottom
-        if (newPos.y + newPos.h > this.imgScale.height + this.imgScale.offsetY) {
+        if (newPos.y + newPos.h > imgScale.h + imgScale.y) {
             if (dx !== 0) {
-                newPos.y = this.imgScale.height + this.imgScale.offsetY - newPos.h;
+                newPos.y = imgScale.h + imgScale.y - newPos.h;
             } else {
-                newPos.h = this.imgScale.height + this.imgScale.offsetY - newPos.y;
+                newPos.h = imgScale.h + imgScale.y - newPos.y;
                 newPos.w = newPos.h; // this should work, as we can only shrink here
             }
         }
@@ -313,49 +365,85 @@ class Face {
         return newPos;
     }
 
-    commitPosition(newAbsPos) {
+    async updatePosition(newAbsPos) {
+        const imgScale = this.getImgScale();
+
         const newPos = {
-            x: (newAbsPos.x - this.imgScale.offsetX) / this.imgScale.width,
-            y: (newAbsPos.y - this.imgScale.offsetY) / this.imgScale.height,
-            w: newAbsPos.w / this.imgScale.width,
-            h: newAbsPos.h / this.imgScale.height,
+            x: (newAbsPos.x - imgScale.x) / imgScale.w,
+            y: (newAbsPos.y - imgScale.y) / imgScale.h,
+            w: newAbsPos.w / imgScale.w,
+            h: newAbsPos.h / imgScale.h,
         };
 
-        this.submitUpdate(newPos).then(() => {
-                this.position = newPos;
-                this._updatePostion();
-        }).catch(() => {/* Revert to initial position */});
+        try {
+            await this.submitUpdate(newPos);
+        } finally {
+            this.render('position');
+        }
     }
 
-    getAbsolutePosition() {
-        return {
-            x: (this.imgScale.width * this.position.x) + this.imgScale.offsetX + this.deltaPosition.x,
-            y: (this.imgScale.height * this.position.y) + this.imgScale.offsetY + this.deltaPosition.y,
-            w: (this.imgScale.width * this.position.w) + this.deltaPosition.w,
-            h: (this.imgScale.height * this.position.h) + this.deltaPosition.h,
-        };
+}
+
+
+class TaggedFace extends Face {
+    _renderLabel() {
+        super._renderLabel();
+
+        if (this.data.member_id) {
+            let label = this.element.querySelector('[data-label-member]');
+            label.hidden = false;
+            let name = label.querySelector('[data-name]');
+            name.textContent = this.data.member_full_name;
+            name.href = this.data.member_url;
+        } else if (this.data.custom_label) {
+            let label = this.element.querySelector('[data-label-custom]');
+            label.hidden = false;
+            let name = label.querySelector('[data-name]');
+            name.textContent = this.data.custom_label;
+        }
+        // TODO: Fallback
     }
+}
 
-    _updatePostion(pos=null) {
-        if (!pos)
-            pos = this.getAbsolutePosition();
 
-        this.element.style.setProperty('top', `${pos.y}px`);
-        this.element.style.setProperty('left', `${pos.x}px`);
-        this.element.style.setProperty('height', `${pos.h}px`);
-        this.element.style.setProperty('width', `${pos.w}px`);
+class UnTaggedFace extends Face {
+    _renderLabel() {
+        super._renderLabel();
+
+        if (this.canUpdate()) {
+            let label = this.element.querySelector('[data-label-untagged]');
+            label.hidden = false;
+        } else {
+            let label = this.element.querySelector('[data-label-untagged-noedit]');
+            label.hidden = false;
+        }
     }
+}
 
-    updatePostion(realWidth, realHeight, offsetX, offsetY) {
-        this.imgScale = {
-            offsetX: offsetX,
-            offsetY: offsetY,
-            width: realWidth,
-            height: realHeight,
-        };
 
-        this._updatePostion();
+class SuggestedFace extends Face {
+    _renderLabel() {
+        super._renderLabel();
+
+        if (this.data.suggested_id) {
+            let label = this.element.querySelector('[data-label-suggested]');
+            label.hidden = false;
+            let name = label.querySelector('[data-name]');
+            name.textContent = this.data.suggested_full_name;
+            name.href = this.data.suggested_url;
+        }
+        // TODO: Fallback
     }
+}
+
+
+function faceFactory(options) {
+    if (options.data.member_id || options.data.custom_label)
+        return new TaggedFace(options);
+    else if (options.data.suggested_id)
+        return new SuggestedFace(options);
+    else
+        return new UnTaggedFace(options);
 }
 
 
@@ -380,16 +468,19 @@ class PhotoFaces {
         this.tagLists = options.tagLists;
         this.tagButtons = options.tagButtons;
         this.imgElement = this.element.querySelector('img');
-        this.facesElement = this.element.querySelector('.faces');
-        this.faces = [];
 
+        this.facesElement = this.element.querySelector('.faces');
+        this.faceTemplate = this.facesElement.querySelector('.face-template');
+        this.faceTemplate.remove();
+
+        this.faces = [];
         this.init();
     }
 
     init() {
         this.initFaces();
 
-        this.imgElement.addEventListener('load', this.updatePositions.bind(this));
+        this.imgElement.addEventListener('load', this.updateScale.bind(this));
         window.addEventListener('resize', this.handleResize.bind(this));
         this.isTagging = false;
 
@@ -402,35 +493,70 @@ class PhotoFaces {
             button.addEventListener('click', this.handleToggleTagging.bind(this));
     }
 
-    initFaces() {
+    async initFaces() {
+        const init = {
+            'method': 'GET',
+            'headers': {
+                'Accept': 'application/json',
+            },
+        };
+
+        const response = await fetch (this.facesElement.dataset.apiUrl, init);
+        
+        if (!response.ok)
+            return;
+        
+        const data = await response.json();
+
         this.faces = [];
 
-        for (const face of this.facesElement.querySelectorAll('.face')) {
-            this.faces.push(new Face({
-                element: face,
+        for (const face of data.iters) {
+            this.faces.push(faceFactory({
+                parent: this.facesElement,
+                template: this.faceTemplate,
+                data: face,
+                imgScale: this.getScale.bind(this),
+                enabled: () => this.isTagging,
             }));
         }
     }
 
-    updatePositions() {
+    getScale() {
+        if (!this._scale)        
+            this._scale = {
+                x: 0,
+                y: 0,
+                w: this.imgElement.width,
+                h: this.imgElement.height,
+            };
+        return this._scale;
+    }
+
+    updateScale() {
         const ratioY = this.imgElement.height / this.imgElement.naturalHeight;
         const ratioX = this.imgElement.width / this.imgElement.naturalWidth;
 
-        let offsetX = 0;
-        let offsetY = 0;
-        let realHeight = this.imgElement.height;
-        let realWidth = this.imgElement.width;
+        this._scale = {
+            x: 0,
+            y: 0,
+            w: this.imgElement.width,
+            h: this.imgElement.height,
+        };
 
         if (ratioY > ratioX) {
-            realHeight = this.imgElement.naturalHeight * ratioX;
-            offsetY = (this.imgElement.height - realHeight) / 2;
+            this._scale.h = this.imgElement.naturalHeight * ratioX;
+            this._scale.y = (this.imgElement.height - this._scale.h) / 2;
         } else if (ratioX > ratioY) {
-            realWidth = this.imgElement.naturalWidth * ratioY;
-            offsetX = (this.imgElement.width - realWidth) / 2;
+            this._scale.w = this.imgElement.naturalWidth * ratioY;
+            this._scale.x = (this.imgElement.width - this._scale.w) / 2;
         }
 
+        this.render('position');
+    }
+
+    render(intent='all') {
         for (const face of this.faces)
-            face.updatePostion(realWidth, realHeight, offsetX, offsetY);
+            face.render(intent);
     }
 
     disableTagging() {
@@ -441,8 +567,7 @@ class PhotoFaces {
         for (const button of this.tagButtons)
             button.classList.remove('is-active');
 
-        for (const face of this.faces)
-            face.disableTagging();
+        this.render('state');
     }
 
     enableTagging() {
@@ -450,8 +575,7 @@ class PhotoFaces {
 
         this.facesElement.classList.add('is-active');
 
-        for (const face of this.faces)
-            face.enableTagging();
+        this.render('state');
 
         for (const button of this.tagButtons)
             button.classList.add('is-active');
@@ -466,7 +590,7 @@ class PhotoFaces {
 
     handleResize() {
         if (this.imgElement.complete)
-            this.updatePositions();
+            this.updateScale();
     }
 }
 

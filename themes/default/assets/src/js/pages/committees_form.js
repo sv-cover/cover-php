@@ -41,7 +41,7 @@ class CommitteesForm {
 
         // Init template
         const template = this.element.querySelector('#member-function-row');
-        let clone = template.content.cloneNode(true);
+        let clone = template.content.firstElementChild.cloneNode(true);
         
         // Fill name
         let nameTdElement = clone.querySelector('.name');

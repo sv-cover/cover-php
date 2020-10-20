@@ -214,6 +214,33 @@
 			return $this->model->get_for_photo($this->photo);
 		}
 
+		public function get_data_for_iter(DataIterPhotobookFace $iter)
+		{
+			if ($iter['lid_id'])
+				$suggested_member = null;
+			else
+				$suggested_member = $iter['suggested_member'];
+
+			if ($suggested_member && !get_policy($suggested_member)->user_can_read($suggested_member))
+				$suggested_member = null;
+	
+			return [
+				'id' => $iter['id'],
+				'photo_id' => $iter['foto_id'],
+				'x' => $iter['x'],
+				'y' => $iter['y'],
+				'h' => $iter['h'],
+				'w' => $iter['w'],
+				'member_id' => $iter['lid_id'],
+				'member_full_name' => $iter['lid'] ? member_full_name($iter['lid'], BE_PERSONAL) : null,
+				'member_url' => $iter['lid_id'] ? sprintf('profiel.php?lid=%d', $iter['lid_id']) : null,
+				'custom_label' => $iter['custom_label'],
+				'suggested_id' => $suggested_member ? $suggested_member['id'] : null,
+				'suggested_full_name' => $suggested_member ? member_full_name($suggested_member, BE_PERSONAL) : null,
+				'suggested_url' => $suggested_member ? sprintf('profiel.php?lid=%d', $suggested_member['id']) : null,
+			];
+		}
+
 		public function link(array $arguments)
 		{
 			$arguments['photo'] = $this->photo->get_id();
