@@ -96,7 +96,7 @@ class Face {
         this.options = options;
 
         this.parent = options.parent;
-        this.data = options.data
+        this.data = options.data;
         this.element = options.template.content.firstElementChild.cloneNode(true);
         this._imgScale = options.imgScale;
         this._canTag = options.enabled;
@@ -219,29 +219,63 @@ class Face {
         };
     }
 
+    replace(newFace) {
+        this.element.remove();
+        if (this.options.onReplace)
+            this.options.onReplace(this, newFace);
+    }
+
+    async submitUpdate(data) {
+        if (!this.canUpdate())
+            return;
+
+        const formData = new FormData();
+
+        for (const name in data)
+            formData.append(name, data[name]);
+
+        const init = {
+            'method': 'POST',
+            'headers': {
+                'Accept': 'application/json',
+            },
+            'body': new URLSearchParams(formData),
+        };
+
+        const response = await fetch(this.data.__links.update, init);
+
+        if (!response.ok) {
+            throw new Error('Error during update');
+        }
+
+        const result = await response.json();
+        this.data = result.iter
+    }
+
     // Handlers
 
     async handleDelete(event) {
         event.preventDefault();
         event.stopPropagation();
 
-        if (this.canDelete()) {
-            const init = {
-                'method': 'POST',
-                'headers': {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            };
-            const response = await fetch(this.data.__links.delete, init);
+        if (!this.canDelete());
+            return;
 
-            if (response.ok) {
-                this.element.remove();
-                if (this.options.onDelete)
-                    this.options.onDelete(this);
-            }
-            // TODO: handle errors
+        const init = {
+            'method': 'POST',
+            'headers': {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        };
+        const response = await fetch(this.data.__links.delete, init);
+
+        if (response.ok) {
+            this.element.remove();
+            if (this.options.onDelete)
+                this.options.onDelete(this);
         }
+        // TODO: handle errors
     }
 
     handleMove(type, event, delta) {
@@ -287,32 +321,6 @@ class Face {
             this.updatePosition(newPos);
         } else if (type === 'move') {
             this._renderPosition(newPos);
-        }
-    }
-
-    async submitUpdate(data) {
-        if (this.canUpdate()) {
-            const formData = new FormData();
-
-            for (const name in data)
-                formData.append(name, data[name]);
-
-            const init = {
-                'method': 'POST',
-                'headers': {
-                    'Accept': 'application/json',
-                },
-                'body': new URLSearchParams(formData),
-            };
-
-            const response = await fetch(this.data.__links.update, init);
-
-            if (!response.ok) {
-                throw new Error('Error during update');
-            }
-
-            const result = await response.json();
-            this.data = result.iter
         }
     }
 
@@ -425,17 +433,64 @@ class UnTaggedFace extends Face {
 
 
 class SuggestedFace extends Face {
+    init() {
+        super.init();
+        this._initButtons();
+    }
+
+    _initButtons() {
+        const acceptButton = this.element.querySelector('[data-button-yes]');
+        acceptButton.addEventListener('click', this.handleAccept.bind(this));
+
+        const rejectButton = this.element.querySelector('[data-button-no]');
+        rejectButton.addEventListener('click', this.handleReject.bind(this));
+    }
+
     _renderLabel() {
         super._renderLabel();
 
-        if (this.data.suggested_id) {
+        if (this.data.suggested_id && this.canUpdate()) {
             let label = this.element.querySelector('[data-label-suggested]');
             label.hidden = false;
             let name = label.querySelector('[data-name]');
             name.textContent = this.data.suggested_full_name;
             name.href = this.data.suggested_url;
+        } else {
+            let label = this.element.querySelector('[data-label-untagged-noedit]');
+            label.hidden = false;
         }
-        // TODO: Fallback
+    }
+
+    async handleAccept() {
+        if (!this.canUpdate())
+            return;
+
+        const data = {
+            'lid_id': this.options.data.suggested_id,
+        };
+
+        try {
+            await this.submitUpdate(data);
+
+            // this.data is updated if successful
+            this.options.data = this.data;
+
+            this.replace(new TaggedFace(this.options));
+        } catch (e) {
+            // TODO: Provide feedback
+        }
+    }
+
+    handleReject() {
+        if (!this.canUpdate())
+            return;
+
+        // Just to prevent confusion…
+        this.options.data.suggested_id = null;
+        this.options.data.suggested_full_name = null;
+        this.options.data.suggested_url = null;
+
+        this.replace(new UnTaggedFace(this.options));
     }
 }
 
@@ -521,6 +576,7 @@ class PhotoFaces {
                 imgScale: this.getScale.bind(this),
                 enabled: () => this.isTagging,
                 onDelete: this.handleDeleteFace.bind(this),
+                onReplace: this.handleReplaceFace.bind(this),
             }));
         }
     }
@@ -601,6 +657,11 @@ class PhotoFaces {
         const idx = this.faces.indexOf(face);
         if (idx >= 0)
             this.faces.splice(idx,1);
+    }
+
+    handleReplaceFace(oldFace, newFace) {
+        this.handleDeleteFace(oldFace);
+        this.faces.push(newFace);
     }
 }
 
