@@ -14,7 +14,10 @@ class AutocompleteBase {
 
         // Init autocomplete
         this.element = this.initUi(options.element);
-        this.autocomplete = this.initAutocomplete(options.config);
+        if (options.config)
+            this.autocomplete = this.initAutocomplete(options.config);
+        else
+            this.autocomplete = this.initAutocomplete({});
         this.initFocusEvents();
 
         // Don't submit form on keyboard selection (enter)

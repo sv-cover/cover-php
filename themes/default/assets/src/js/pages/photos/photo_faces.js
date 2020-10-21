@@ -418,16 +418,103 @@ class TaggedFace extends Face {
 
 
 class UnTaggedFace extends Face {
+    init() {
+        this._initAutocomplete();
+        super.init();
+
+        if (this.options.isActive)
+            this.setActive(true);
+    }
+
+    _initAutocomplete() {
+        this.isActive = false;
+
+        // Init Autocomplete element
+        this.autocompleteLabelElement = this.element.querySelector('[data-label-autocomplete]');
+        this.autocomplete = new AutocompleteMember({
+            element: this.autocompleteLabelElement.querySelector('[data-autocomplete-placeholder]'),
+            keepIdField: false,
+            config: {
+                onSelection: this.handleSelection.bind(this),
+                noResults: () => {/* Literally do nothing */},
+            }
+        });
+
+        // Handle additional events (for custom tag and more)
+        this.autocomplete.sourceElement.addEventListener('keydown', this.handleKeyDown.bind(this));
+        this.autocomplete.sourceElement.addEventListener('autoComplete', this.handleAutocomplete.bind(this));
+
+        // Make sure the tag button triggers autocomplete
+        const tagButton = this.element.querySelector('[data-button-tag]');
+        tagButton.addEventListener('click', () => this.setActive(true));
+    }
+
     _renderLabel() {
         super._renderLabel();
 
-        if (this.canUpdate()) {
+        if (this.canUpdate() && this.isActive) {
+            this.autocompleteLabelElement.hidden = false;
+            this.autocomplete.sourceElement.focus();
+        } else if (this.canUpdate()) {
             let label = this.element.querySelector('[data-label-untagged]');
             label.hidden = false;
         } else {
             let label = this.element.querySelector('[data-label-untagged-noedit]');
             label.hidden = false;
         }
+    }
+
+    setActive(value) {
+        this.isActive = value;
+        this.render('state');
+
+        if (!value)
+            this.autocomplete.sourceElement.value = '';
+        else if (this.options.setEnableTagging)
+            this.options.setEnableTagging();
+    }
+
+    async submitSelection(data) {
+        if (!this.canUpdate())
+            return;
+
+        try {
+            await this.submitUpdate(data);
+
+            // this.data is updated if successful
+            this.options.data = this.data;
+
+            this.replace(new TaggedFace(this.options));
+        } catch (e) {
+            // TODO: Provide feedback
+        }
+    }
+
+    handleSelection(feedback) {
+        this.submitSelection({
+            'lid_id': feedback.selection.value.id,
+        });
+    }
+
+    handleKeyDown(event) {
+        if (event.key === 'Tab' && this.hasSuggestions) {
+            // Don't tab away when suggestions
+            event.preventDefault();
+        } else if (event.key === 'Enter' && !this.hasSuggestions) {
+            // Submit custom tag
+            event.preventDefault();
+            this.submitSelection({
+                'custom_label': this.autocomplete.sourceElement.value,
+            });
+        } else if (event.key === 'Escape' || event.key === 'Esc') {
+            // Allow escape
+            event.preventDefault();
+            this.setActive(false);
+        }
+    }
+
+    handleAutocomplete(event) {
+        this.hasSuggestions = !!event.detail.matches;
     }
 }
 
@@ -490,6 +577,8 @@ class SuggestedFace extends Face {
         this.options.data.suggested_full_name = null;
         this.options.data.suggested_url = null;
 
+        // Focus autocomplete
+        this.options.isActive = true;
         this.replace(new UnTaggedFace(this.options));
     }
 }
@@ -577,6 +666,7 @@ class PhotoFaces {
                 enabled: () => this.isTagging,
                 onDelete: this.handleDeleteFace.bind(this),
                 onReplace: this.handleReplaceFace.bind(this),
+                setEnableTagging: this.enableTagging.bind(this),
             }));
         }
     }

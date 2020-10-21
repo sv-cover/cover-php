@@ -14,22 +14,22 @@ class AutocompleteMember extends AutocompleteBase {
         Bulma.each(elements, element => {
             new AutocompleteMember({
                 element: element,
+                keepIdField: true,
             });
         });
     }
 
-
     initAutocomplete(config) {
         // Set config
-        return super.initAutocomplete({
-            data: {
-                src: this.fetchMembers.bind(this),
-                key: ['name'],
-                cache: false
-            },
-            searchEngine: 'loose',
-            noResultsText: 'No members found :(',
-        });
+        config.data = {
+            src: this.fetchMembers.bind(this),
+            key: ['name'],
+            cache: false
+        };
+        config.searchEngine = 'loose';
+        if (!config.noResultsText)
+            config.noResultsText = 'No members found :(';
+        return super.initAutocomplete(config);
     }
 
     initUi(memberIdInput) {
@@ -42,21 +42,28 @@ class AutocompleteMember extends AutocompleteBase {
         memberIdInput.classList.forEach(cls => nameInputElement.classList.add(cls));
         nameInputElement.type = 'text';
         nameInputElement.autocomplete = 'off';
-        nameInputElement.placeholder = memberIdInput.placeholder;
         nameInputElement.id = memberIdInput.id;
         nameInputElement.classList.add('autocomplete-source');
+
+        if (memberIdInput instanceof HTMLInputElement)
+            nameInputElement.placeholder = memberIdInput.placeholder;
+        else
+            nameInputElement.placeholder = 'Type a name';
 
         if (memberIdInput.dataset.name)
             nameInputElement.value = memberIdInput.dataset.name;
 
-        // Convert original input element to hidden element. This is used to actually submit the data.
-        let newMemberIdInput = memberIdInput.cloneNode(true);
-        newMemberIdInput.type = 'hidden';
-        newMemberIdInput.removeAttribute('id');
-        newMemberIdInput.classList.add('autocomplete-target'); 
+        if (!('keepIdField' in this.options) || this.options.keepIdField) {
+            // Convert original input element to hidden element. This is used to actually submit the data.
+            let newMemberIdInput = memberIdInput.cloneNode(true);
+            newMemberIdInput.type = 'hidden';
+            newMemberIdInput.removeAttribute('id');
+            newMemberIdInput.classList.add('autocomplete-target');
+    
+            containerElement.append(newMemberIdInput);
+        }
 
         // Build component
-        containerElement.append(newMemberIdInput);
         containerElement.append(nameInputElement);
 
         // Place in DOM
@@ -64,7 +71,9 @@ class AutocompleteMember extends AutocompleteBase {
 
         // Allow direct access to the source and target inputs from elswehere
         this.sourceElement = nameInputElement;
-        this.targetElement = newMemberIdInput;
+        if (typeof newMemberIdInput !== 'undefined')
+            this.targetElement = newMemberIdInput;
+
         return containerElement;
     }
 
@@ -91,7 +100,8 @@ class AutocompleteMember extends AutocompleteBase {
 
     handleSelection(feedback) {
         // Place ID and name in their corresponding input elements
-        this.targetElement.value = feedback.selection.value.id;
+        if (typeof this.targetElement !== 'undefined')
+            this.targetElement.value = feedback.selection.value.id;
         this.sourceElement.value = feedback.selection.value.name;
     }
 

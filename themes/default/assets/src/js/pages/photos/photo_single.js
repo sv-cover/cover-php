@@ -267,6 +267,9 @@ class PhotoCarousel {
     }
 
     handlePan(event) {
+        if (event.target instanceof HTMLInputElement)
+            return;
+
         if (event.eventType & (Hammer.INPUT_START | Hammer.INPUT_MOVE)) {
             // If start/move, move carousel items by deltaX.
             // Disable animation to make it smoother
