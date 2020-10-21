@@ -576,7 +576,7 @@ class TagList {
         for (let idx = 0; idx < labels.length; idx++) {
             if (idx > 0 && idx < labels.length - 1)
                 this.listElement.append(', ');
-            else if (idx === labels.length - 1)
+            else if (labels.length > 1 && idx === labels.length - 1)
                 this.listElement.append(` ${this.listElement.dataset.glue} `);
 
             this.listElement.append(labels[idx]);
