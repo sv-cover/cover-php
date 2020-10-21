@@ -271,6 +271,13 @@ class Face {
         return this._imgScale;
     }
 
+    getLabel() {
+        return {
+            label: this.data.member_id ? this.data.member_full_name : this.data.custom_label,
+            label_url: this.data.member_id ? this.data.member_url : null,
+        };
+    }
+
     getPosition() {
         // TODO: Cache somehow?
         const imgScale = this.getImgScale();
@@ -280,6 +287,13 @@ class Face {
             w: (imgScale.w * this.data.w),
             h: (imgScale.h * this.data.h),
         };
+    }
+
+    setHighlighted(value) {
+        if (value)
+            this.element.classList.add('is-highlighted');
+        else
+            this.element.classList.remove('is-highlighted');
     }
 
     replace(newFace) {
@@ -605,12 +619,100 @@ function faceFactory(options) {
 }
 
 
+class TagList {
+    constructor(options) {
+        console.log('hello');
+        this.element = options.element;
+        this._faces = options.faces;
+        this.listElement = this.element.querySelector('.face-list');
+        this.template = this.element.querySelector('.face-template');
+        this.template.remove();
+
+        this.render();
+    }
+
+    render() {
+        let labels = [];
+        let unknownCount = 0;
+
+        for (const face of this.getFaces()) {
+            if (face.getLabel().label)
+                labels.push(this._renderLabel(face));
+            else
+                unknownCount++;
+        }
+
+        if (unknownCount > 0)
+            labels.push(this._renderUnknownLabel(unknownCount));
+
+        while (this.listElement.firstChild)
+            this.listElement.removeChild(this.listElement.firstChild);
+
+        for (let idx = 0; idx < labels.length; idx++) {
+            if (idx > 0 && idx < labels.length - 1)
+                this.listElement.append(', ');
+            else if (idx === labels.length - 1)
+                this.listElement.append(` ${this.listElement.dataset.glue} `);
+
+            this.listElement.append(labels[idx]);
+        }
+    }
+
+    _renderLabel(face) {
+        let element = this.template.content.firstElementChild.cloneNode(true);
+        let label = face.getLabel();
+
+        if (label.label_url) {
+            let el = element.querySelector('[data-label-url]');
+            el.href = label.label_url;
+            el.textContent = label.label;
+            el.hidden = false;
+        } else if (label.label) {
+            let el = element.querySelector('[data-label-text]');
+            el.textContent = label.label;
+            el.hidden = false;
+        } else {
+            let el = element.querySelector('[data-label-other]');
+            el.hidden = false;
+        }
+
+        element.addEventListener('mouseover', () => face.setHighlighted(true));
+        element.addEventListener('mouseout', () => face.setHighlighted(false));
+
+        return element;
+    }
+
+    _renderUnknownLabel(count) {
+        let element = this.template.content.firstElementChild.cloneNode(true);
+        let el = element.querySelector('[data-label-unknown]');
+        el.hidden = false;
+        el.querySelector('[data-count]').textContent = `${count}`;
+        
+        if (count === 1) {
+            el.querySelector('[data-singular]').hidden = false;
+            el.querySelector('[data-plural]').hidden = true;
+        } else {
+            el.querySelector('[data-singular]').hidden = true;
+            el.querySelector('[data-plural]').hidden = false;
+        }
+
+        return element;
+    }
+
+    getFaces() {
+        if (this._faces instanceof Function)
+            return this._faces();
+        return this._faces;
+    }
+}
+
+
 class PhotoFaces {
     static parseDocument(context) {
         const elements = context.querySelectorAll('.photo-single .photo .image');
 
         Bulma.each(elements, element => {
-            const tagLists = element.closest('.photo-single').querySelectorAll('.photo-image .faces');
+            const tagLists = element.closest('.photo-single').querySelectorAll('.photo-info .faces');
             const tagButtons = element.closest('.photo-single').querySelectorAll('.photo-tag-button');
 
             new PhotoFaces({
@@ -622,8 +724,8 @@ class PhotoFaces {
     }
 
     constructor(options) {
+        this.options = options;
         this.element = options.element;
-        this.tagLists = options.tagLists;
         this.tagButtons = options.tagButtons;
         this.imgElement = this.element.querySelector('img');
 
@@ -631,12 +733,14 @@ class PhotoFaces {
         this.faceTemplate = this.facesElement.querySelector('.face-template');
         this.faceTemplate.remove();
 
-        this.faces = [];
         this.init();
     }
 
     init() {
-        this.initFaces();
+        this.faces = [];
+        this.tagLists = [];
+
+        this._initFaces().then(() => this._initTagLists());
 
         this.imgElement.addEventListener('load', this.updateScale.bind(this));
         window.addEventListener('resize', this.handleResize.bind(this));
@@ -644,16 +748,18 @@ class PhotoFaces {
         this.imgElement.addEventListener('click', this.handleImageClick.bind(this));
         this.isTagging = false;
 
-        this.initButtons();
+        this._initButtons();
         this.facesElement.hidden = false;
     }
 
-    initButtons() {
-        for (const button of this.tagButtons)
+    _initButtons() {
+        for (const button of this.tagButtons) {
             button.addEventListener('click', this.handleToggleTagging.bind(this));
+            button.hidden = false;
+        }
     }
 
-    async initFaces() {
+    async _initFaces() {
         const init = {
             'method': 'GET',
             'headers': {
@@ -673,6 +779,16 @@ class PhotoFaces {
 
         for (const face of data.iters)
             this._createFace(face);
+    }
+
+    _initTagLists() {
+        this.tagLists = [];
+
+        for (const list of this.options.tagLists)
+            this.tagLists.push(new TagList({
+                element: list,
+                faces: () => this.faces,
+            }));
     }
 
     getScale() {
@@ -709,6 +825,11 @@ class PhotoFaces {
     }
 
     render(intent='all') {
+        if (intent === 'state' || intent === 'all') {
+            for (const tagList of this.tagLists)
+                tagList.render();
+        }
+
         for (const face of this.faces)
             face.render(intent);
     }
@@ -804,11 +925,13 @@ class PhotoFaces {
         const idx = this.faces.indexOf(face);
         if (idx >= 0)
             this.faces.splice(idx,1);
+        this.render('state');
     }
 
     replaceFace(oldFace, newFace) {
         this.deleteFace(oldFace);
         this.faces.push(newFace);
+        this.render('state');
     }
 
     async submitFace(data) {

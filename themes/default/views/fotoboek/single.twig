@@ -2,8 +2,10 @@
 
 {% block title book.titel ~ ' – ' ~ parent() %}
 
+{% import _self as photo_macros %}
 
-{% macro format_face_label(face) -%}
+{%- macro format_face_label(face) -%}
+<span class="face-label">
     {%- if face.lid_id is not null -%}
         <a href="profiel.php?lid={{ face.lid.id }}" data-face-id="{{ face.id }}">{{ face.lid|personal_full_name }}</a>
     {%- elseif face.custom_label != '' -%}
@@ -11,9 +13,20 @@
     {%- else -%}
         <span data-face-id="{{ face.id }}">{{ __('Unknown') }}</span>
     {%- endif -%}
+</span>
 {%- endmacro -%}
 
-{% import _self as photo_macros %}
+{%- macro format_face_labels(faces, photo_macros) -%}
+    {% set known_faces = faces|filter(f => f.lid_id is not null or f.custom_label != '')  %}
+    {% set known_faces = known_faces|map_macro('photo_macros.format_face_label')  %}
+    {% set unknown_count = faces|length - known_faces|length  %}
+
+    {% if unknown_count > 0 %}
+        {% set known_faces = known_faces|merge([__N('%d Unknown', '%d Unknown', unknown_count)]) %}
+    {% endif %}
+
+    {{ known_faces|human_join(',')|raw }}
+{%- endmacro -%}
 
 {% block page %}
 <article class="photo-single">
@@ -63,42 +76,6 @@
                         </div>
                     </div>
                 </template>
-{#                 {% for face in photo.faces if user_can_read face %}
-                    <div
-                        id="face_{{ face.id }}"
-                        class="face {{ face.lid_id or face.custom_label ? 'tagged' : 'untagged' }}"
-                        data-position="{{ face.position|json_encode() }}"
-                        {%- if user_can_delete face -%}
-                            data-delete-action="{{ controller.faces_controller.json_link_to_delete(face) }}"
-                        {%- endif -%}
-                        {%- if user_can_update face -%}
-                            data-update-action="{{ controller.faces_controller.json_link_to_update(face) }}"
-                        {%- endif -%}
-                    >
-
-                        <!-- name label (and hidden update form) -->
-                        <div class="tag-label">
-                            {% if face.lid_id is not null %}
-                                <a href="profiel.php?lid={{ face.lid.id }}" class="name">{{ face.lid|personal_full_name }}</a>
-                            {% elseif face.custom_label is not null %}
-                                <a class="name" href="#">{{ face.custom_label }}</a>
-                            {% elseif user_can_update face %}
-                                {% if face.suggested_member %}
-                                    <div class="suggested-face" data-member-id="{{ face.suggested_member.id }}">
-                                        Is this <a href="{{ link('profiel.read', member=face.suggested_member)|e('html_attr') }}" class="name">{{ face.suggested_member|personal_full_name }}</a>?
-                                        <div class="button-group">
-                                            <button class="yes">Yes</button>
-                                            <button class="no">No</button>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                <a class="name" href="#">{{ __('Click to tag') }}</a>
-                            {% else %}
-                                <a class="name" href="#">{{ __('Not yet tagged') }}</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}  #}
             </figcaption>
         </figure>
     </div>
@@ -168,7 +145,23 @@
                     <i class="fas fa-user-tag fa-fw" aria-hidden="true"></i>
                     <span class="is-sr-only">{{ __('A photo with') }}</span>
                 </span>
-                {{ photo.faces|user_can_read|map_macro('photo_macros.format_face_label')|human_join(',')|raw }}
+                <span class="face-list" data-glue="{{ __('and') }}">
+                    {{ photo_macros.format_face_labels(photo.faces|user_can_read, photo_macros) }}
+                </span>
+                {% apply spaceless %}
+                    <template class="face-template">
+                        <span class="face-label">
+                            <a data-label-url hidden></a>
+                            <span data-label-text hidden></span>
+                            <span data-label-other hidden>{{ __('Unknown') }}</span>
+                            <span data-label-unknown hidden>
+                                <span data-count></span>
+                                <span data-singular>&nbsp;{{ __('Unknown') }}</span>
+                                <span data-plural>&nbsp;{{ __('Unknown') }}</span>
+                            </span>
+                        </span>
+                    </template>
+                {% endapply %}
             </div>
         {% endif %}
 
@@ -221,14 +214,15 @@
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
                 <form class="level-item like-form photo-like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;book={{ book.id }}&amp;module=likes">
                     <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
-                    <button type="submit"  class="button is-text icon"
+                    <button type="submit" class="button is-text icon"
                             title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"
                             data-title="{{ [__('You like this photo. Unlike photo'), __('Like photo')]|json_encode|e('html_attr') }}"
                             data-sr-text="{{ [__('You like this photo. Click to unlike.'), __('Like photo') ]|json_encode|e('html_attr') }}"
                     >
                             {% if liked %}
                                 <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
-                                <span class="is-sr-only">{{ __('You like this photo. Click to unlike.') }}</span>
+                                <span class="is-sr-only">{{ 
+                                    __('You like this photo. Click to unlike.') }}</span>
                             {% else %}
                                 <i class="fas fa-heart" aria-hidden="true"></i>
                                 <span class="is-sr-only">{{ __('Like photo') }}</span>
@@ -246,7 +240,7 @@
                 </form>
 
                 {% if user_can_create controller.faces_controller.new_iter %}
-                    <a class="level-item photo-tag-button" title="{{ __('Tag people') }}">
+                    <a class="level-item photo-tag-button" title="{{ __('Tag people') }}" hidden>
                         <span class="icon">
                             <i class="fas fa-tag" aria-hidden="true"></i>
                         </span>
