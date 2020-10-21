@@ -4,7 +4,70 @@ import Hammer from 'hammerjs';
 
 
 const PHOTO_FACE_MIN_SIZE = 2;
+const PHOTO_FACE_DEFAULT_SIZE = 0.1;
+const PHOTO_FACE_MIN_DEFAULT_SIZE = 50;
 
+
+function calculateFacePosition(pos, scale, delta=null) {
+    if (!delta)
+        delta = { x: 0, y: 0, w: 0, h: 0 };
+
+    let newPos = {
+        x: pos.x + delta.x,
+        y: pos.y + delta.y,
+        w: pos.w + delta.w,
+        h: pos.h + delta.h,
+    };
+
+    // Ensure squareness
+    newPos.h = Math.max(newPos.h, newPos.w);
+    newPos.w = newPos.h;
+
+    // too small
+    if (newPos.h < PHOTO_FACE_MIN_SIZE) {
+        newPos.h = PHOTO_FACE_MIN_SIZE;
+        newPos.w = PHOTO_FACE_MIN_SIZE;
+    }
+
+    // too far to the left
+    if (newPos.x < scale.x)
+        newPos.x = scale.x;
+
+    // too wide or too far to the right
+    if (newPos.x + newPos.w > scale.w + scale.x) {
+        if (delta.w !== 0 || delta.h !== 0) {
+            newPos.w = scale.w + scale.x - newPos.x;
+            newPos.h = newPos.w;
+        } else {
+            newPos.x = scale.w + scale.x - newPos.w;
+        }
+    }
+
+    // too far to the top
+    if (newPos.y < scale.y)
+        newPos.y = scale.y;
+
+    // too tall or too far to the bottom
+    if (newPos.y + newPos.h > scale.h + scale.y) {
+        if (delta.w !== 0 || delta.h !== 0) {
+            newPos.h = scale.h + scale.y - newPos.y;
+            newPos.w = newPos.h; // this should work, as we can only shrink here
+        } else {
+            newPos.y = scale.h + scale.y - newPos.h;
+        }
+    }
+
+    return newPos;
+}
+
+function calculateRelativeFacePosition(pos, scale) {
+    return {
+        x: (pos.x - scale.x) / scale.w,
+        y: (pos.y - scale.y) / scale.h,
+        w: pos.w / scale.w,
+        h: pos.h / scale.h,
+    };
+}
 
 class DragHandler {
     constructor({element, onStart=null, onEnd=null, onMove=null, enabled=true, stopPropagation=false}) {
@@ -258,7 +321,7 @@ class Face {
         event.preventDefault();
         event.stopPropagation();
 
-        if (!this.canDelete());
+        if (!this.canDelete())
             return;
 
         const init = {
@@ -325,67 +388,15 @@ class Face {
     }
 
     calculateNewPosition(dx, dy, dw, dh) {
-        const oldPos = this.getPosition();
-        const imgScale = this.getImgScale();
-
-        let newPos = {
-            x: oldPos.x + dx,
-            y: oldPos.y + dy,
-            w: oldPos.w + dw,
-            h: oldPos.h + dh,
-        };
-
-        // Ensure squareness
-        newPos.h = Math.max(newPos.h, newPos.w);
-        newPos.w = newPos.h;
-
-        // too small
-        if (newPos.h < PHOTO_FACE_MIN_SIZE) {
-            newPos.h = PHOTO_FACE_MIN_SIZE;
-            newPos.w = PHOTO_FACE_MIN_SIZE;
-        }
-
-        // too far to the left
-        if (newPos.x < imgScale.x)
-            newPos.x = imgScale.x;
-
-        // too wide or too far to the right
-        if (newPos.x + newPos.w > imgScale.w + imgScale.x) {
-            if (dx !== 0) {
-                newPos.x = imgScale.w + imgScale.x - newPos.w;
-            } else {
-                newPos.w = imgScale.w + imgScale.x - newPos.x;
-                newPos.h = newPos.w;
-            }
-        }
-
-        // too far to the top
-        if (newPos.y < imgScale.y)
-            newPos.y = imgScale.y;
-
-        // too tall or too far to the bottom
-        if (newPos.y + newPos.h > imgScale.h + imgScale.y) {
-            if (dx !== 0) {
-                newPos.y = imgScale.h + imgScale.y - newPos.h;
-            } else {
-                newPos.h = imgScale.h + imgScale.y - newPos.y;
-                newPos.w = newPos.h; // this should work, as we can only shrink here
-            }
-        }
-
-        return newPos;
+        const pos = this.getPosition();
+        const scale = this.getImgScale();
+        const delta = { x: dx, y: dy, w: dw, h: dh };
+        return calculateFacePosition(pos, scale, delta);
     }
 
     async updatePosition(newAbsPos) {
         const imgScale = this.getImgScale();
-
-        const newPos = {
-            x: (newAbsPos.x - imgScale.x) / imgScale.w,
-            y: (newAbsPos.y - imgScale.y) / imgScale.h,
-            w: newAbsPos.w / imgScale.w,
-            h: newAbsPos.h / imgScale.h,
-        };
-
+        const newPos = calculateRelativeFacePosition(newAbsPos, imgScale);
         try {
             await this.submitUpdate(newPos);
         } finally {
@@ -629,6 +640,8 @@ class PhotoFaces {
 
         this.imgElement.addEventListener('load', this.updateScale.bind(this));
         window.addEventListener('resize', this.handleResize.bind(this));
+
+        this.imgElement.addEventListener('click', this.handleImageClick.bind(this));
         this.isTagging = false;
 
         this.initButtons();
@@ -655,20 +668,11 @@ class PhotoFaces {
         
         const data = await response.json();
 
+        this.createUrl = data.__links.create;
         this.faces = [];
 
-        for (const face of data.iters) {
-            this.faces.push(faceFactory({
-                parent: this.facesElement,
-                template: this.faceTemplate,
-                data: face,
-                imgScale: this.getScale.bind(this),
-                enabled: () => this.isTagging,
-                onDelete: this.handleDeleteFace.bind(this),
-                onReplace: this.handleReplaceFace.bind(this),
-                setEnableTagging: this.enableTagging.bind(this),
-            }));
-        }
+        for (const face of data.iters)
+            this._createFace(face);
     }
 
     getScale() {
@@ -743,15 +747,110 @@ class PhotoFaces {
             this.updateScale();
     }
 
-    handleDeleteFace(face) {
+    _createFace(data) {
+        const face = faceFactory({
+            parent: this.facesElement,
+            template: this.faceTemplate,
+            data: data,
+            imgScale: this.getScale.bind(this),
+            enabled: () => this.isTagging,
+            onDelete: this.deleteFace.bind(this),
+            onReplace: this.replaceFace.bind(this),
+            setEnableTagging: this.enableTagging.bind(this),
+        })
+        this.faces.push(face);
+        return face;
+    }
+
+    async createFace(x, y) {
+        if (!this.createUrl)
+            return;
+
+        // Calculate size
+        const scale = this.getScale();
+        const size = Math.max(
+            scale.w * PHOTO_FACE_DEFAULT_SIZE,
+            scale.h * PHOTO_FACE_DEFAULT_SIZE,
+            PHOTO_FACE_MIN_DEFAULT_SIZE
+        );
+        let pos = {
+            x: x - size/2,
+            y: y - size/2,
+            w: size,
+            h: size,
+        }
+        pos = calculateFacePosition(pos, scale);
+        pos = calculateRelativeFacePosition(pos, scale);
+
+        // Create temporary face
+        const face = this._createFace({
+            ...pos,
+            __links: {},
+        });
+
+        try {
+            // Submit data
+            const result = await this.submitFace(pos);
+            // Replace temporary face
+            face.options.data = result;
+            face.options.isActive = true;
+            face.replace(faceFactory(face.options));
+        } catch (e) {
+            // TODO: Provide feedback
+        }
+    }
+
+    deleteFace(face) {
         const idx = this.faces.indexOf(face);
         if (idx >= 0)
             this.faces.splice(idx,1);
     }
 
-    handleReplaceFace(oldFace, newFace) {
-        this.handleDeleteFace(oldFace);
+    replaceFace(oldFace, newFace) {
+        this.deleteFace(oldFace);
         this.faces.push(newFace);
+    }
+
+    async submitFace(data) {
+        const formData = new FormData();
+
+        for (const name in data)
+            formData.append(name, data[name]);
+
+        const init = {
+            'method': 'POST',
+            'headers': {
+                'Accept': 'application/json',
+            },
+            'body': new URLSearchParams(formData),
+        };
+
+        const response = await fetch(this.createUrl, init);
+
+        if (!response.ok) {
+            throw new Error('Error during create');
+        }
+
+        const result = await response.json();
+        return result.iter;
+    }
+
+    handleImageClick(event) {
+        const scale = this.getScale();
+        const is_inside = (
+            event.offsetX > scale.x
+            && event.offsetX < (scale.x + scale.w)
+            && event.offsetY > scale.y
+            && event.offsetY < (scale.y + scale.h)
+        );
+
+        if (!is_inside || !this.isTagging || !this.createUrl)
+            return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.createFace(event.offsetX, event.offsetY);
     }
 }
 
