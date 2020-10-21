@@ -1,6 +1,7 @@
 import {Bulma} from 'cover-style-system/src/js';
 import Hammer from 'hammerjs';
 import {copyTextToClipboard} from '../../utils';
+import PhotoFaces from './photo_faces.js'
 
 
 class PhotoCarousel {
@@ -18,6 +19,9 @@ class PhotoCarousel {
         this.currentPicture = photo.querySelector('.image');
         this.currentPicture.classList.add('current');
         this.currentPicture.dataset.link = link;
+
+        // Update face tagging
+        this.updateFaces(this.currentPicture);
 
         // Initialise different navigation modes
         this.isNavigating = false;
@@ -93,7 +97,7 @@ class PhotoCarousel {
         // Parse doc
         const doc = (new DOMParser()).parseFromString(result, 'text/html');
         const photo = doc.querySelector('.photo-single .photo');
-        const info = doc.querySelector('.photo-single .photo-info')
+        const info = doc.querySelector('.photo-single .photo-info');
 
         // Add to cache
         return this.cachePhoto(link, photo, info);
@@ -228,12 +232,29 @@ class PhotoCarousel {
         this.info.replaceWith(newInfo);
         this.info = newInfo;
         new PhotoInfo(newInfo, this.photo);
+        
+        // Update face tagging
+        this.updateFaces(this.currentPicture);
 
         document.dispatchEvent(new CustomEvent('partial-content-loaded', { bubbles: true, detail: newInfo }));
 
         // Update parent link
         const parentLink = this.navigation.querySelector('.photo-parent');
         parentLink.replaceWith(this.current.photo.querySelector('.photo-parent').cloneNode(true));
+    }
+
+    updateFaces(photo) {
+        if (this.faces)
+            this.faces.disableTagging();
+
+        const tagLists = photo.closest('.photo-single').querySelectorAll('.photo-tag-list');
+        const tagButtons = photo.closest('.photo-single').querySelectorAll('.photo-tag-button');
+
+        this.faces = new PhotoFaces({
+            element: photo,
+            tagLists: tagLists,
+            tagButtons: tagButtons,
+        });
     }
 
     async handleHistory(event) {
@@ -250,7 +271,6 @@ class PhotoCarousel {
             // Empty carousel
             while (this.carousel.firstChild)
                 this.carousel.removeChild(this.carousel.firstChild);
-
 
             // Load current picture into DOM directly
             this.current = this.cache[document.location];

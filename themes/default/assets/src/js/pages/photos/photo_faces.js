@@ -552,7 +552,6 @@ class TagList {
         this._faces = options.faces;
         this.listElement = this.element.querySelector('.face-list');
         this.template = this.element.querySelector('.face-template');
-        this.template.remove();
 
         this.render();
     }
@@ -638,7 +637,7 @@ class PhotoFaces {
         const elements = context.querySelectorAll('.photo-single .photo .image');
 
         Bulma.each(elements, element => {
-            const tagLists = element.closest('.photo-single').querySelectorAll('.photo-info .faces');
+            const tagLists = element.closest('.photo-single').querySelectorAll('.photo-tag-list');
             const tagButtons = element.closest('.photo-single').querySelectorAll('.photo-tag-button');
 
             new PhotoFaces({
@@ -657,7 +656,6 @@ class PhotoFaces {
 
         this.facesElement = this.element.querySelector('.faces');
         this.faceTemplate = this.facesElement.querySelector('.face-template');
-        this.faceTemplate.remove();
 
         this.init();
     }
@@ -909,7 +907,8 @@ class PhotoFaces {
 }
 
 
-PhotoFaces.parseDocument(document);
-document.addEventListener('partial-content-loaded', event => PhotoFaces.parseDocument(event.detail));
+// Disabled, currently handled by photo_single.js
+// PhotoFaces.parseDocument(document);
+// document.addEventListener('partial-content-loaded', event => PhotoFaces.parseDocument(event.detail));
 
 export default PhotoFaces;
