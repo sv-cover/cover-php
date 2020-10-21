@@ -36,7 +36,7 @@ class ControllerCommissies extends ControllerCRUD
 		if (!parent::_update($iter, $data, $errors))
 			return false;
 
-		$this->model->set_members($iter, $data['members'] ? $data['members'] : array());
+		$this->model->set_members($iter, empty($data['members']) ? [] : $data['members']);
 
 		return true;
 	}
