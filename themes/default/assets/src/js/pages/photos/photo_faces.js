@@ -1,5 +1,6 @@
 import {Bulma} from 'cover-style-system/src/js';
 import AutocompleteMember from '../../forms/autocomplete_member';
+import { DragHandler } from '../../utils';
 import Hammer from 'hammerjs';
 
 
@@ -69,90 +70,6 @@ function calculateRelativeFacePosition(pos, scale) {
     };
 }
 
-class DragHandler {
-    constructor({element, onStart=null, onEnd=null, onMove=null, enabled=true, stopPropagation=false}) {
-        this.element = element;
-        this.enabled = enabled;
-        this.stopPropagation = stopPropagation;
-
-        this.onStart = onStart;
-        this.onEnd = onEnd;
-        this.onMove = onMove;
-
-        this.start = false;
-
-        // Handle Start
-        element.addEventListener('pointerdown', this.handleStart.bind(this));
-        
-        // Handle Move (even if moved of target)
-        element.addEventListener('pointermove', this.handleMove.bind(this));
-        document.addEventListener('pointermove', this.handleMove.bind(this));
-
-        // Handle End (even if moved of target)
-        element.addEventListener('pointerup', this.handleEnd.bind(this));
-        document.addEventListener('pointerup', this.handleEnd.bind(this));
-    }
-
-    isEnabled() {
-        if (this.enabled instanceof Function)
-            return this.enabled();
-        return this.enabled;
-    }
-
-    handleStart(event) {
-        if (!this.isEnabled())
-            return;
-
-        if (event.target instanceof HTMLInputElement)
-            return;
-
-        if (this.stopPropagation)
-            event.stopPropagation();
-
-        this.start = {
-            x: event.clientX,
-            y: event.clientY,
-        };
-
-        if (this.onStart)
-            this.onStart(event, {x: 0, y:0});
-    }
-
-    handleEnd(event) {
-        if (!this.isEnabled() || !this.start)
-            return;
-
-        if (this.stopPropagation)
-            event.stopPropagation();
-
-        const delta = {
-            x: event.clientX - this.start.x,
-            y: event.clientY - this.start.y,
-        };
-
-        this.start = false;
-
-        if (this.onEnd)
-            this.onEnd(event, delta);
-    }
-
-    handleMove(event) {
-        if (!this.isEnabled() || !this.start)
-            return;
-
-        if (this.stopPropagation)
-            event.stopPropagation();
-
-        const delta = {
-            x: event.clientX - this.start.x,
-            y: event.clientY - this.start.y,
-        };
-
-        if (this.onMove)
-            this.onMove(event, delta);
-    }
-}
-
 
 class Face {
     constructor(options) {
@@ -166,6 +83,8 @@ class Face {
 
         this.init();
     }
+
+    // Initialisation
 
     init() {
         this._initDelete();
@@ -218,6 +137,8 @@ class Face {
         });
     }
 
+    // Rendering
+
     render(intent='all') {
         if (intent === 'state' || intent === 'all') {
             this._renderLabel();
@@ -250,6 +171,8 @@ class Face {
         else
             this.delete.hidden = true;
     }
+
+    // Getters/Setters
 
     canDelete() {
         return !!this.data.__links.delete;
@@ -294,39 +217,6 @@ class Face {
             this.element.classList.add('is-highlighted');
         else
             this.element.classList.remove('is-highlighted');
-    }
-
-    replace(newFace) {
-        this.element.remove();
-        if (this.options.onReplace)
-            this.options.onReplace(this, newFace);
-    }
-
-    async submitUpdate(data) {
-        if (!this.canUpdate())
-            return;
-
-        const formData = new FormData();
-
-        for (const name in data)
-            formData.append(name, data[name]);
-
-        const init = {
-            'method': 'POST',
-            'headers': {
-                'Accept': 'application/json',
-            },
-            'body': new URLSearchParams(formData),
-        };
-
-        const response = await fetch(this.data.__links.update, init);
-
-        if (!response.ok) {
-            throw new Error('Error during update');
-        }
-
-        const result = await response.json();
-        this.data = result.iter
     }
 
     // Handlers
@@ -401,11 +291,46 @@ class Face {
         }
     }
 
+    // Utilities
+
     calculateNewPosition(dx, dy, dw, dh) {
         const pos = this.getPosition();
         const scale = this.getImgScale();
         const delta = { x: dx, y: dy, w: dw, h: dh };
         return calculateFacePosition(pos, scale, delta);
+    }
+
+    replace(newFace) {
+        this.element.remove();
+        if (this.options.onReplace)
+            this.options.onReplace(this, newFace);
+    }
+
+    async submitUpdate(data) {
+        if (!this.canUpdate())
+            return;
+
+        const formData = new FormData();
+
+        for (const name in data)
+            formData.append(name, data[name]);
+
+        const init = {
+            'method': 'POST',
+            'headers': {
+                'Accept': 'application/json',
+            },
+            'body': new URLSearchParams(formData),
+        };
+
+        const response = await fetch(this.data.__links.update, init);
+
+        if (!response.ok) {
+            throw new Error('Error during update');
+        }
+
+        const result = await response.json();
+        this.data = result.iter
     }
 
     async updatePosition(newAbsPos) {
@@ -417,7 +342,6 @@ class Face {
             this.render('position');
         }
     }
-
 }
 
 
@@ -428,16 +352,17 @@ class TaggedFace extends Face {
         if (this.data.member_id) {
             let label = this.element.querySelector('[data-label-member]');
             label.hidden = false;
-            let name = label.querySelector('[data-name]');
-            name.textContent = this.data.member_full_name;
-            name.href = this.data.member_url;
+            label.textContent = this.data.member_full_name;
+            label.href = this.data.member_url;
         } else if (this.data.custom_label) {
             let label = this.element.querySelector('[data-label-custom]');
             label.hidden = false;
-            let name = label.querySelector('[data-name]');
-            name.textContent = this.data.custom_label;
+            label.textContent = this.data.custom_label;
+        } else {
+            // Fallback
+            let label = this.element.querySelector('[data-label-untagged-noedit]');
+            label.hidden = false;
         }
-        // TODO: Fallback
     }
 }
 
@@ -455,10 +380,10 @@ class UnTaggedFace extends Face {
         this.isActive = false;
 
         // Init Autocomplete element
-        this.autocompleteLabelElement = this.element.querySelector('[data-label-autocomplete]');
         this.autocomplete = new AutocompleteMember({
-            element: this.autocompleteLabelElement.querySelector('[data-autocomplete-placeholder]'),
+            element: this.element.querySelector('[data-autocomplete-placeholder]'),
             keepIdField: false,
+            onHide: () => this.setActive(false),
             config: {
                 onSelection: this.handleSelection.bind(this),
                 noResults: () => {/* Literally do nothing */},
@@ -470,7 +395,7 @@ class UnTaggedFace extends Face {
         this.autocomplete.sourceElement.addEventListener('autoComplete', this.handleAutocomplete.bind(this));
 
         // Make sure the tag button triggers autocomplete
-        const tagButton = this.element.querySelector('[data-button-tag]');
+        const tagButton = this.element.querySelector('[data-button-autocomplete]');
         tagButton.addEventListener('click', () => this.setActive(true));
     }
 
@@ -478,7 +403,8 @@ class UnTaggedFace extends Face {
         super._renderLabel();
 
         if (this.canUpdate() && this.isActive) {
-            this.autocompleteLabelElement.hidden = false;
+            let label = this.element.querySelector('[data-label-autocomplete]');
+            label.hidden = false;
             this.autocomplete.sourceElement.focus();
         } else if (this.canUpdate()) {
             let label = this.element.querySelector('[data-label-untagged]');
@@ -568,6 +494,7 @@ class SuggestedFace extends Face {
             name.textContent = this.data.suggested_full_name;
             name.href = this.data.suggested_url;
         } else {
+            // Fallback
             let label = this.element.querySelector('[data-label-untagged-noedit]');
             label.hidden = false;
         }
@@ -621,7 +548,6 @@ function faceFactory(options) {
 
 class TagList {
     constructor(options) {
-        console.log('hello');
         this.element = options.element;
         this._faces = options.faces;
         this.listElement = this.element.querySelector('.face-list');
@@ -740,10 +666,13 @@ class PhotoFaces {
         this.faces = [];
         this.tagLists = [];
 
-        this._initFaces().then(() => this._initTagLists());
-
         this.imgElement.addEventListener('load', this.updateScale.bind(this));
         window.addEventListener('resize', this.handleResize.bind(this));
+        
+        this._initFaces().then(() => {
+            this._initTagLists();
+            this.updateScale();
+        });
 
         this.imgElement.addEventListener('click', this.handleImageClick.bind(this));
         this.isTagging = false;
@@ -792,7 +721,7 @@ class PhotoFaces {
     }
 
     getScale() {
-        if (!this._scale)        
+        if (!this._scale)
             this._scale = {
                 x: 0,
                 y: 0,
@@ -837,6 +766,7 @@ class PhotoFaces {
     disableTagging() {
         this.isTagging = false;
 
+        this.element.classList.remove('is-tagging');
         this.facesElement.classList.remove('is-active');
 
         for (const button of this.tagButtons)
@@ -848,6 +778,7 @@ class PhotoFaces {
     enableTagging() {
         this.isTagging = true;
 
+        this.element.classList.add('is-tagging');
         this.facesElement.classList.add('is-active');
 
         this.render('state');

@@ -50,29 +50,25 @@
                 <template class="face-template">
                     <div class="face">
                         <button class="delete is-small" type="button" data-delete hidden></button>
-                        <div class="tag-label" data-label data-label-member hidden>
-                            <a class="name" data-name></a>
-                        </div>
-                        <div class="tag-label" data-label data-label-custom hidden>
-                            <span class="name" data-name></span>
-                        </div>
-                        <div class="tag-label" data-label data-label-untagged hidden>
-                            <button class="name" data-button-tag>{{ __('Click to tag') }}</button>
-                        </div>
-                        <div class="tag-label" data-label data-label-untagged-noedit hidden>
-                            <span class="name" data-name>{{ __('Not yet tagged') }}</span>
-                        </div>
-                        <div class="tag-label" data-label data-label-suggested hidden>
-                            <div class="suggested-face">
+                        <a class="tag" data-label data-label-member hidden></a>
+                        <span class="tag" data-label data-label-custom hidden></span>
+                        <button class="tag is-unknown" type="button" data-label data-label-untagged data-button-autocomplete hidden>
+                            {{ __('Click to tag') }}
+                        </button>
+                        <span class="tag is-unknown" data-label data-label-untagged-noedit hidden>
+                            {{ __('Not yet tagged') }}
+                        </span>
+                        <div class="tag is-suggested" data-label data-label-suggested hidden>
+                            <div class="suggestion">
                                 {{ __('Is this %s?')|e|format('<a class="name" data-name></a>')|raw }}
-                                <div class="button-group">
-                                    <button type="button" data-button-yes>{{  __('Yes') }}</button>
-                                    <button type="button" data-button-no>{{  __('No') }}</button>
-                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button type="button" data-button-yes>{{  __('Yes') }}</button>
+                                <button type="button" data-button-no>{{  __('No') }}</button>
                             </div>
                         </div>
-                        <div class="tag-label" data-label data-label-autocomplete hidden>
-                            <span data-autocomplete-placeholder></span>
+                        <div data-label data-label-autocomplete hidden>
+                            <span class="tag is-medium" data-autocomplete-placeholder></span>
                         </div>
                     </div>
                 </template>
@@ -214,7 +210,7 @@
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
                 <form class="level-item like-form photo-like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;book={{ book.id }}&amp;module=likes">
                     <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
-                    <button type="submit" class="button is-text icon"
+                    <button type="submit"  class="button is-text icon"
                             title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"
                             data-title="{{ [__('You like this photo. Unlike photo'), __('Like photo')]|json_encode|e('html_attr') }}"
                             data-sr-text="{{ [__('You like this photo. Click to unlike.'), __('Like photo') ]|json_encode|e('html_attr') }}"

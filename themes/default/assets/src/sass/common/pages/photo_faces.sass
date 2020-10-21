@@ -1,141 +1,104 @@
+$photo-face-border-color: rgba($black, 0.25)
 $photo-face-resize-width: 8px
+$photo-face-button-border: 1px solid rgba($white, 0.25)
 
 figcaption.faces
     .face
         position: absolute
         border-radius: 4px
-        border: 2px solid rgba($black, 0.2)
+        border: 2px solid rgba($black, 0.25)
         opacity: 0
         transition: opacity 100ms
         z-index: 5
-
         &:hover
             z-index: 20
-
         &:hover,
         &.is-highlighted,
             opacity: 1.0
-
         .delete
             position: absolute
             top: 2px
             right: 2px
-            z-index: 11 // above resize
-
+            z-index: 11 // above .resize
         .resize
             display: none
             position: absolute
             z-index: 1
-
             &.is-horizontal
                 left: 0
                 bottom: -$photo-face-resize-width / 2
                 right: 0
                 height: $photo-face-resize-width
                 cursor: ns-resize
-
             &.is-vertical
                 top: 0
                 right: -$photo-face-resize-width / 2
                 bottom: 0
                 width: $photo-face-resize-width
                 cursor: ew-resize
-
             &.is-diagonal
                 right: -$photo-face-resize-width / 2
                 bottom: -$photo-face-resize-width / 2
-                width: $photo-face-resize-width
-                height: $photo-face-resize-width
+                width: $photo-face-resize-width * 3 // Needs extra space for icon hitbox
+                height: $photo-face-resize-width * 3
                 cursor: nwse-resize
                 z-index: 2
-
-
+                +resize-handle-icon(1.5px, (-$photo-face-resize-width / 2) - 2px)
+        .tag
+            position: absolute
+            bottom: -2.5em // Tag height is 2em
+            left: 50%
+            transform: translate(-50%, 0)
+            background-color: rgba($black, 0.8)
+            color: $white
+            border: none
+            z-index: 1
+            &.is-unknown,
+            a.name
+                color: $white
+                font-style: italic
+            a:hover
+                text-decoration: underline
+            &.is-suggested
+                display: inline-block
+                white-space: normal
+                height: auto
+                bottom: -4.5em 
+                overflow: hidden
+                .suggestion,
+                .button-group
+                    height: 2em
+                .suggestion
+                    white-space: nowrap
+                    line-height: 2em
+                .button-group
+                    display: flex
+                    margin: 0 -.75em // Compensate for tag padding
+                    border-top: $photo-face-button-border
+                    button
+                        flex: 1 0 auto
+                        font: inherit
+                        color: white
+                        background: rgba($white, 0.0)
+                        border: 0
+                        cursor: pointer
+                        + button
+                            border-left: $photo-face-button-border
+                        &:hover
+                            background: rgba($white, 0.2)
+        button.tag
+            cursor: pointer
     &.is-active
         cursor: crosshair
-
         .face
             opacity: 1.0
             cursor: pointer
             border-color: rgba($black, 0.6)
             z-index: 20
-
             .resize
                 display: block
 
-
-
-.face .delete-button
-    width: 20px
-    height: 20px
-    background: transparent
-    border: none
-    color: white
-    font: 12px sans-serif
-    cursor: pointer
-    position: absolute
-    right: 0
-    top: 0
-    display: block
-
-.face .delete-button:hover
-    background: rgba(0, 0, 0, 0.8)
-
-.face .tag-label,
-.face .tag-search
-    display: inline-block
-    position: absolute
-    left: 50%
-    bottom: -30px
-    -moz-transform: translate(-50%, 0)
-    -webkit-transform: translate(-50%, 0)
-    transform: translate(-50%, 0)
-    background: rgba(0, 0, 0, 0.8)
-    color: white
-    padding: 0 10px
-    border-radius: 4px
-    font: 13px/26px sans-serif
-    z-index: 1
-    white-space: nowrap
-
-.face .tag-label
-    text-align: center
-
-.face .tag-search
-    width: 150px
-    z-index: 2
-
-.face .tag-label a.name
-    display: inline-block
-    white-space: nowrap
-    color: white
-    font-weight: normal
-
-.face .tag-label a.name[href='#']
-    text-decoration: none
-    cursor: default
-
-.face.untagged .tag-label a.name
-    font-style: italic
-    cursor: pointer
-
-.face .tag-label .suggested-face + a.name
-    display: none
-
-.face .tag-label .button-group
-    display: flex
-    margin: 0 -10px /* compensate for the padding of .tag-label */
-    border-top: 1px solid rgba(255, 255, 255, 0.25)
-
-.face .tag-label .button-group button
-    flex: 1 0 auto
-    font: inherit
-    color: white
-    background: rgba(255, 255, 255, 0.0)
-    border: 0
-    cursor: pointer
-
-.face .tag-label .button-group button + button
-    border-left: 1px solid rgba(255, 255, 255, 0.25)
-
-.face .tag-label .button-group button:hover
-    background: rgba(255, 255, 255, 0.2)
+.photo-single
+    .image
+        &.is-tagging
+            cursor: crosshair

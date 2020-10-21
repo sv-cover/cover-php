@@ -337,7 +337,7 @@ class CRUDView extends View
 
 		return $this->render_json(array(
 			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
-			'_links' => $links
+			'__links' => $links
 		));
 	}
 

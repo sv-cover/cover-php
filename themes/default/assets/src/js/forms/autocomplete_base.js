@@ -154,9 +154,13 @@ class AutocompleteBase {
             this.getResultsListElement().style.top = sourceRect.bottom - bodyRect.top + 'px';
             this.getResultsListElement().style.left = sourceRect.left - bodyRect.left + 'px';
             this.getResultsListElement().style.width = sourceRect.width + 'px';
+
             // Toggle
             this.getResultsListElement().hidden = false;
         } else {
+            if (this.options.onHide)
+                this.options.onHide();
+
             this.getResultsListElement().hidden = true;
         }
     }

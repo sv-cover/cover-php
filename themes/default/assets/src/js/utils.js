@@ -50,3 +50,87 @@ export function copyTextToClipboard(text) {
 
     return true;
 }
+
+export class DragHandler {
+    constructor({element, onStart=null, onEnd=null, onMove=null, enabled=true, stopPropagation=false}) {
+        this.element = element;
+        this.enabled = enabled;
+        this.stopPropagation = stopPropagation;
+
+        this.onStart = onStart;
+        this.onEnd = onEnd;
+        this.onMove = onMove;
+
+        this.start = false;
+
+        // Handle Start
+        element.addEventListener('pointerdown', this.handleStart.bind(this));
+        
+        // Handle Move (even if moved of target)
+        element.addEventListener('pointermove', this.handleMove.bind(this));
+        document.addEventListener('pointermove', this.handleMove.bind(this));
+
+        // Handle End (even if moved of target)
+        element.addEventListener('pointerup', this.handleEnd.bind(this));
+        document.addEventListener('pointerup', this.handleEnd.bind(this));
+    }
+
+    isEnabled() {
+        if (this.enabled instanceof Function)
+            return this.enabled();
+        return this.enabled;
+    }
+
+    handleStart(event) {
+        if (!this.isEnabled())
+            return;
+
+        if (event.target instanceof HTMLInputElement)
+            return;
+
+        if (this.stopPropagation)
+            event.stopPropagation();
+
+        this.start = {
+            x: event.clientX,
+            y: event.clientY,
+        };
+
+        if (this.onStart)
+            this.onStart(event, {x: 0, y:0});
+    }
+
+    handleEnd(event) {
+        if (!this.isEnabled() || !this.start)
+            return;
+
+        if (this.stopPropagation)
+            event.stopPropagation();
+
+        const delta = {
+            x: event.clientX - this.start.x,
+            y: event.clientY - this.start.y,
+        };
+
+        this.start = false;
+
+        if (this.onEnd)
+            this.onEnd(event, delta);
+    }
+
+    handleMove(event) {
+        if (!this.isEnabled() || !this.start)
+            return;
+
+        if (this.stopPropagation)
+            event.stopPropagation();
+
+        const delta = {
+            x: event.clientX - this.start.x,
+            y: event.clientY - this.start.y,
+        };
+
+        if (this.onMove)
+            this.onMove(event, delta);
+    }
+}
