@@ -226,12 +226,12 @@
     - [×] delete photo album button in album icon
     - [×] photo visibility form (photos in photos of member book)
     - [ ] view photo modal
-    - [ ] create sticker in sticker map
+    - [×] create sticker in sticker map
     - [×] Mailinglist subscribe forms
-- [ ] Autocomplete
+- [×] Autocomplete
     - [×] session/overrides.twig (autocomlete member)
     - [×] committeebattle/form.twig (member)
-    - [ ] tagging people in photo album
+    - [×] tagging people in photo album
 - [ ] Whatever is happening in search results :P
 - [×] Whatever is happening on the committee form
 - [×] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
@@ -239,17 +239,17 @@
 - [×] Change photo name (photocee functionality)
 - [×] Fotoboek/single.twig
 - [×] Add photo's to photobook
-- [ ] Sticker map
+- [×] Sticker map
 - [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
 - [×] Stuff happening in mailijnlijsten/single.twig
 - [×] Fancyness in signup/form_form.twig
 - [ ] Autocomplete in lidworden/lidworden.twig
-- [ ] Profile page
+- [×] Profile page
 - [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
-- [ ] Photo tagging
+- [×] Photo tagging
 - [ ] Bring InlineAction closer to AutoPopup
-- [ ] Replace inline JS
-    - [ ] Select all in signup/list_entries.twig
+- [×] Replace inline JS
+    - [×] Select all in signup/list_entries.twig
 - [×] sticky rows/columns hide shadow
 - [ ] autopopup form submit
 
@@ -281,10 +281,10 @@
 -   [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - [×] [issue] Narrow content container for improved readability. 
 - [ ] [issue] TOC sidebar.
-- [ ] Almanak rendering. Last row is weird, images are not centered.
+- [-] Almanak rendering. Last row is weird, images are not centered.
     - [ ] almanak/index.twig
-    - [ ] commissies/_leden.twig
-    - [ ] commissies/working_groups.twig
+    - [×] commissies/_leden.twig
+    - [×] commissies/working_groups.twig
 - [×] Tabs in form field (for preview rendering) should be closer to field in:
     - [×] forum/poll_form.twig
     - [×] forum/reply_form.twig
