@@ -1,13 +1,10 @@
 import {Bulma, AutoPopup} from 'cover-style-system/src/js';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
-
+import {createMap, createMarker} from './utils';
 
 const DEFAULT_ZOOM = 12;
 const DEFAULT_LAT = 53.219386; // Martinitoren
 const DEFAULT_LNG = 6.568210; // Martinitoren
-
-mapboxgl.accessToken = process.env.MAPBOX_GL_ACCESS_TOKEN;
-
 
 class StickerMap {
     /**
@@ -33,7 +30,6 @@ class StickerMap {
     constructor(options) {
         this.element = options.element;
         this.mapElement = this.element.querySelector('.map');
-        this.markerTemplate = this.element.querySelector('[data-map-marker-template]');
         this.popupTemplate = this.element.querySelector('[data-map-popup-template]');
         this.defaults = this.getInitialState();
         this.createButtons = this.element.querySelectorAll('[data-add-sticker-button]');
@@ -42,13 +38,10 @@ class StickerMap {
     }
 
     initMap() {
-        this.map = new mapboxgl.Map({
+        this.map = createMap({
             container: this.mapElement,
-            style: 'mapbox://styles/cover-webcie/ckgmvq7wp1co719qufha5u0bz?optimize=true',
             center: [this.defaults.lng, this.defaults.lat],
             zoom: this.defaults.zoom,
-            dragRotate: false,
-            pitchWithRotate: false,
         });
 
         this.map.addControl(new mapboxgl.NavigationControl({
@@ -77,12 +70,7 @@ class StickerMap {
         geojson.features.sort((a,b) => b.geometry.coordinates[1] - a.geometry.coordinates[1]);
 
         for (let sticker of geojson.features) {
-            const markerElement = this.markerTemplate.content.firstElementChild.cloneNode(true);
-
-            let marker = new mapboxgl.Marker({
-                element: markerElement,
-                offset: [0, -18]
-            });
+            let marker = createMarker();
             marker.setLngLat(sticker.geometry.coordinates);
             marker.setPopup(this.initPopup(sticker));
             marker.addTo(this.map);

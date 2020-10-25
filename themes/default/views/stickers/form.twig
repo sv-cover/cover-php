@@ -36,13 +36,11 @@
 				<div
 					class="field location-picker"
 					data-label="{{ __('Location') }}*"
-					data-help-text="{{ __('Drag the marker to select a the location') }}"
+					data-help-text="{{ __('Drag the marker or click the map to select a location') }}"
 					data-lat-field="lat"
 					data-lng-field="lng"
 					data-zoom="{{ global.GET.zoom ?? '' }}"
-					data-marker-template="[data-map-marker-template]"
 				>
-					<template data-map-marker-template>{% include 'marker.svg' %}</template>
 					<div class="field">
 						{{ html_label(__('Latitude'), 'lat', errors=errors, required=true) }}
 						<div class="control">
