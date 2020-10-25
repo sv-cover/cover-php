@@ -6,12 +6,12 @@ class StickersView extends CRUDView
 
 	protected $model;
 
-	// public function scripts()
-	// {
-	// 	return array_merge(parent::scripts(), [
-	// 		get_theme_data('data/stickers.js')
-	// 	]);
-	// }
+	public function scripts()
+	{
+		return array_merge(parent::scripts(), [
+			get_theme_data('assets/dist/js/maps.js'),
+		]);
+	}
 
 	public function stylesheets()
 	{

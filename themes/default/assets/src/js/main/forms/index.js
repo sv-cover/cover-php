@@ -4,4 +4,3 @@ import './auto_submit_form';
 import './filemanager_field';
 import './growing_list';
 import './sortable';
-import './location_picker';
