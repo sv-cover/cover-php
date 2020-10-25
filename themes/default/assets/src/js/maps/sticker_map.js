@@ -7,23 +7,13 @@ const DEFAULT_LAT = 53.219386; // Martinitoren
 const DEFAULT_LNG = 6.568210; // Martinitoren
 
 class StickerMap {
-    /**
-     * Get the root class this plugin is responsible for.
-     * This will tell the core to match this plugin to an element with a .modal class.
-     * @returns {string} The class this plugin is responsible for.
-     */
-    static getRootClass() {
-        return 'sticker-map';
-    }
-
-    /**
-     * Handle parsing the DOMs data attribute API.
-     * @param {HTMLElement} element The root element for this instance
-     * @return {undefined}
-     */
-    static parse(element) {
-        new StickerMap({
-            element: element,
+    static parseDocument(context) {
+        const elements = context.querySelectorAll('.sticker-map');
+    
+        Bulma.each(elements, element => {
+            new StickerMap({
+                element: element,
+            });
         });
     }
 
@@ -234,7 +224,7 @@ class StickerMap {
     }
 }
 
-
-Bulma.registerPlugin('sticker-map', StickerMap);
+StickerMap.parseDocument(document);
+document.addEventListener('partial-content-loaded', event => StickerMap.parseDocument(event.detail));
 
 export default StickerMap;

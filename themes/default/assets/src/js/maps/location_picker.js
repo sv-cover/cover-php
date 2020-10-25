@@ -7,29 +7,20 @@ const DEFAULT_ZOOM = 15;
 const DEFAULT_LAT = 53.219386; // Martinitoren
 const DEFAULT_LNG = 6.568210; // Martinitoren
 
-class LocationPicker {
-    /**
-     * Get the root class this plugin is responsible for.
-     * This will tell the core to match this plugin to an element with a .modal class.
-     * @returns {string} The class this plugin is responsible for.
-     */
-    static getRootClass() {
-        return 'location-picker';
-    }
 
-    /**
-     * Handle parsing the DOMs data attribute API.
-     * @param {HTMLElement} element The root element for this instance
-     * @return {undefined}
-     */
-    static parse(element) {
-        new LocationPicker({
-            element: element,
-            label: element.dataset.label || 'Location',
-            helpText: element.dataset.helpText,
-            latField: element.dataset.latField || 'lat',
-            lngField: element.dataset.lngField || 'lng',
-            zoom: element.dataset.zoom || DEFAULT_ZOOM,
+class LocationPicker {
+    static parseDocument(context) {
+        const elements = context.querySelectorAll('.location-picker');
+    
+        Bulma.each(elements, element => {
+            new LocationPicker({
+                element: element,
+                label: element.dataset.label || 'Location',
+                helpText: element.dataset.helpText,
+                latField: element.dataset.latField || 'lat',
+                lngField: element.dataset.lngField || 'lng',
+                zoom: element.dataset.zoom || DEFAULT_ZOOM,
+            });
         });
     }
 
@@ -128,6 +119,7 @@ class LocationPicker {
     }
 }
 
-Bulma.registerPlugin('locatin-picker', LocationPicker);
+LocationPicker.parseDocument(document);
+document.addEventListener('partial-content-loaded', event => LocationPicker.parseDocument(event.detail));
 
 export default LocationPicker;
