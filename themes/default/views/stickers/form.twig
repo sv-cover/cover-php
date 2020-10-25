@@ -39,6 +39,7 @@
 					data-help-text="{{ __('Drag the marker to select a the location') }}"
 					data-lat-field="lat"
 					data-lng-field="lng"
+					data-zoom="{{ global.GET.zoom ?? '' }}"
 					data-marker-template="[data-map-marker-template]"
 				>
 					<template data-map-marker-template>{% include 'marker.svg' %}</template>

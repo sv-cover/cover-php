@@ -31,6 +31,7 @@ class LocationPicker {
             helpText: element.dataset.helpText,
             latField: element.dataset.latField || 'lat',
             lngField: element.dataset.lngField || 'lng',
+            zoom: element.dataset.zoom || DEFAULT_ZOOM,
             markerTemplate: element.dataset.markerTemplate,
         });
     }
@@ -92,7 +93,9 @@ class LocationPicker {
             container: mapElement,
             style: 'mapbox://styles/cover-webcie/ckgmvq7wp1co719qufha5u0bz?optimize=true',
             center: coordinates,
-            zoom: DEFAULT_ZOOM
+            zoom: options.zoom,
+            dragRotate: false,
+            pitchWithRotate: false,
         });
 
         map.addControl(new mapboxgl.NavigationControl({

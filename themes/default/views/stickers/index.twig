@@ -29,7 +29,7 @@
 		</section>
 	</noscript>
 	<section class="map-container">
-		<div class="map" data-geojson-url="{{ controller.link_to_geojson() }}"></div>
+		<div class="map" data-geojson-url="{{ controller.link_to_geojson() }}" data-create-url="{{ controller.link_to_create() }}"></div>
 		<template data-map-marker-template>{% include 'marker.svg' %}</template>
 		<template data-map-popup-template>
 			<div class="card">

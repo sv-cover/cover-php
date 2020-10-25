@@ -46,7 +46,9 @@ class StickerMap {
             container: this.mapElement,
             style: 'mapbox://styles/cover-webcie/ckgmvq7wp1co719qufha5u0bz?optimize=true',
             center: [this.defaults.lng, this.defaults.lat],
-            zoom: this.defaults.zoom
+            zoom: this.defaults.zoom,
+            dragRotate: false,
+            pitchWithRotate: false,
         });
 
         this.map.addControl(new mapboxgl.NavigationControl({
@@ -57,6 +59,7 @@ class StickerMap {
 
         this.map.on('dragend', this.handleMapViewChange.bind(this));
         this.map.on('zoomend', this.handleMapViewChange.bind(this));
+        this.map.on('dblclick', this.handleMapDoubleClick.bind(this));
 
         this.handleMapViewChange();
 
@@ -201,6 +204,21 @@ class StickerMap {
         }
     }
 
+    handleMapDoubleClick(event) {
+        event.preventDefault();
+
+        const url = new URL(this.mapElement.dataset.createUrl, window.location.href);
+        let searchParams = url.searchParams;
+
+        searchParams.set('lat', event.lngLat.lat);
+        searchParams.set('lng', event.lngLat.lng);
+        searchParams.set('zoom', this.map.getZoom());
+
+        url.search = searchParams.toString();
+
+        this.handlePopup(url, event);
+    }
+
     handleMapViewChange() {
         const center = this.map.getCenter();
         const data = {
@@ -214,7 +232,8 @@ class StickerMap {
     }
 
     handlePopup(url, event) {
-        document.exitFullscreen();
+        if (document.fullscreenElement)
+            document.exitFullscreen();
 
         url = new URL(url, window.location.href);
         let params = url.searchParams;
