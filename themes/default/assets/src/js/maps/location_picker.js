@@ -118,8 +118,8 @@ class LocationPicker {
     }
 
     handleLocate(event) {
-        this.marker.setLngLat([event.coordinates.longitude, event.coordinates.latitude]);
-        this.setCoordinates(event.coordinates.longitude, event.coordinates.latitude);
+        this.marker.setLngLat([event.coords.longitude, event.coords.latitude]);
+        this.setCoordinates(event.coords.longitude, event.coords.latitude);
     }
 
     setCoordinates(lng, lat) {
