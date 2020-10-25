@@ -2,69 +2,94 @@
 
 {% block title __('Sticker map') ~ ' – ' ~ parent() %}
 
-{% block content %}
-<header class="level">
-	<div class="level-left">
-		<h1 class="title">{{ __('Sticker map') }}</h1>
-	</div>
-	{% if user_can_create controller.new_iter %}
-	<div class="level-right buttons">
-		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="button" {# data-placement-selector="modal" data-partial-selector=".add-sticker-form" #}>
-			{{ __('New sticker') }}
-		</a>
-	</div>
-	{% endif %}
-</header>
-
-<article id="sticker-map">
-	<div id="sticker-info-window">
-		<a href="" class="sticker-photo" target="_new">
-			<figure>
-				<img src="">
-			</figure>
-		</a>
-		<div class="content">
-			<h3 class="sticker-label"></h3>
-			<small class="sticker-user">{{ __('Placed by') }} <a href="#"></a></small>
-			<p class="sticker-description"></p>
+{% block page %}
+<article class="sticker-map">
+	<header class="section">
+		<div class="level">
+			<div class="level-left">
+				<h1 class="title">{{ __('Sticker map') }}</h1>
+			</div>
+			{% if user_can_create controller.new_iter %}
+			<div class="level-right buttons">
+				<a href="{{ controller.link_to_create() }}" class="button" data-popup="modal" data-add-sticker-button>
+					<span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+					<span>{{ __('New sticker') }}</span>
+				</a>
+			</div>
+			{% endif %}
 		</div>
-		<div>
-			<form method="post" action="" class="field">
-				<input type="hidden" name="_nonce">
-				<button type="submit" class="button">
-					<span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
-					<span>{{ __('Delete sticker') }}</span>
-				</button>
-			</form>
-			
-			<form method="post" action="" enctype="multipart/form-data" class="field">
-				<div class="field">
-					<div class="control">
-						<div class="file">
-							<label class="file-label" for="field-photo">
-								<input id="field-photo" class="file-input" type="file" name="photo" accept="image/jpeg">
-								<span class="file-cta">
-									<span class="file-icon">
-										<i class="fas fa-upload" aria-hidden="true"></i>
-									</span>
-									<span class="file-label">
-										{{ __('Choose photo…') }}
-									</span>
-								</span>
-							</label>
-						</div>
-					</div>
-					<p class="help">
-						{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}
-					</p>
+	</header>
+	<noscript>
+		<section class="section">
+			<div class="container">
+				<div class="notification is-danger">
+					{{ __("Sorry, but this page won't function without JavaScript. Please enable JavaScript to see the sticker map.") }}
 				</div>
-			</form>
-		</div>
-	</div>
+			</div>
+		</section>
+	</noscript>
+	<section class="map-container">
+		<div class="map" data-geojson-url="{{ controller.link_to_geojson() }}"></div>
+		<template data-map-marker-template>{% include 'marker.svg' %}</template>
+		<template data-map-popup-template>
+			<div class="card">
+				<a class="card-image" target="_new" data-sticker-image hidden>
+					<figure>
+						<img src="">
+					</figure>
+				</a>
+				<div class="card-content">
+					<div class="content">
+						<h2 class="title is-6" data-sticker-label hidden></h2>
+						<p class="subtitle is-7" data-sticker-user hidden>
+							{{ __('Placed by') }} <a data-sticker-user-link></a>	
+						</p>
+						<p data-sticker-description hidden></p>
+						<p class="has-text-grey is-size-7" data-sticker-time hidden>{{ __('Added on') }}&nbsp;</p>
+					</div>
+				</div>
+
+				<footer class="card-footer" data-sticker-controls hidden>
+					<button type="button" class="card-footer-item" data-sticker-delete hidden>
+						{{ __('Delete') }}
+					</button>
+					<button type="button" class="card-footer-item" data-sticker-upload-image hidden>
+						{{ __('Add photo') }}
+					</button>
+{# 					<form method="post" action="" class="card-footer-item">
+						<input type="hidden" name="_nonce">
+					</form> #}
+					
+{# 					<form method="post" action="" enctype="multipart/form-data" class="field">
+						<div class="field">
+							<div class="control">
+								<div class="file">
+									<label class="file-label" for="field-photo">
+										<input id="field-photo" class="file-input" type="file" name="photo" accept="image/jpeg">
+										<span class="file-cta">
+											<span class="file-icon">
+												<i class="fas fa-upload" aria-hidden="true"></i>
+											</span>
+											<span class="file-label">
+												{{ __('Upload photo…') }}
+											</span>
+										</span>
+									</label>
+								</div>
+							</div>
+							<p class="help">
+								{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}
+							</p>
+						</div>
+					</form> #}
+				</footer>
+			</div>
+		</template>
+	</section>
 </article>
 
 <!-- TODO: misschien Google Maps vervangen met iets mooiers/vrijers, bijv. OSM? -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&amp;sensor=false"></script>
+{#<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&amp;sensor=false"></script>
 <script type="text/javascript">
 	var stickers = {{ view.encodeStickers(iters)|raw }};
 
@@ -167,5 +192,5 @@
 			google.maps.event.addListener(marker, 'click', showInfoWindow);
 		});
 	});
-</script>
+</script>#}
 {% endblock %}

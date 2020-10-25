@@ -1,4 +1,4 @@
-import {Bulma, AutoPopup} from 'cover-style-system/src/js';
+import {Bulma} from 'cover-style-system/src/js';
 
 
 const SELECT_SIZE = 10;

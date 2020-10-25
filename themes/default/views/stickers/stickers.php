@@ -6,11 +6,26 @@ class StickersView extends CRUDView
 
 	protected $model;
 
-	public function scripts()
+	// public function scripts()
+	// {
+	// 	return array_merge(parent::scripts(), [
+	// 		get_theme_data('data/stickers.js')
+	// 	]);
+	// }
+
+	public function stylesheets()
 	{
-		return array_merge(parent::scripts(), [
-			get_theme_data('data/stickers.js')
+		return array_merge(parent::stylesheets(), [
+			'https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css'
 		]);
+	}
+
+	public function render_delete(DataIter $iter, $success, $errors)
+	{
+		if ($success)
+			return $this->redirect($this->controller->link_to_next());
+
+		return parent::render_delete($iter, $success, $errors);
 	}
 
 	public function render_photo(DataIter $iter)
@@ -21,6 +36,11 @@ class StickersView extends CRUDView
 		header('Content-Type: image/jpeg');
 
 		return $this->controller->model()->getPhoto($iter);
+	}
+
+	public function render_add_photo(DataIter $iter, $error)
+	{
+		return $this->render('add_photo.twig', compact('iter', 'error'));
 	}
 
 	public function render_photo_thumbnail(DataIter $iter)

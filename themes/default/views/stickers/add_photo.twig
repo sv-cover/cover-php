@@ -1,0 +1,45 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<div class="modal is-static">
+	<div class="modal-card">
+		<form method="POST" action="{{ controller.link_to_add_photo(iter) }}" enctype="multipart/form-data">
+			{{ html_nonce('add_photo', iter) }}
+			<header class="modal-card-head">
+				<p class="modal-card-title">{{ __('Upload photo for sticker') }}</p>
+			</header>
+			<section class="modal-card-body">
+				<div class="field">
+					<div class="control">
+						<div class="file">
+							<label class="file-label" for="field-photo">
+								<input id="field-photo" class="file-input" type="file" name="photo" accept="image/jpeg">
+								<span class="file-cta">
+									<span class="file-icon">
+										<i class="fas fa-upload" aria-hidden="true"></i>
+									</span>
+									<span class="file-label">
+										{{ __('Select photo…') }}
+									</span>
+								</span>
+							</label>
+						</div>
+					</div>
+					{% if error %}
+						<p class="help is-danger">
+							{{ error }}
+						</p>
+					{% endif %}
+					<p class="help">
+						{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}
+					</p>
+				</div>
+			</section>
+			<footer class="modal-card-foot">
+				<a href="{{ controller.link_to_next() }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
+				<button type="submit" class="button is-danger">{{ __('Upload photo') }}</button>
+			</footer>
+		</form>
+	</div>
+</div>
+{% endblock %}

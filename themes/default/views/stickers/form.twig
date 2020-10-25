@@ -3,43 +3,68 @@
 {% block title (iter.has_id ? __('Update sticker') : __('Add a new sticker')) ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1 class="title">{{ iter.has_id ? __('Update sticker') : __('Add a new sticker') }}</h1>
-<form method="post" action="{{ view.get_form_action(iter) }}">
-	<input type="hidden" name="lat">
-	<input type="hidden" name="lng">
+<div class="modal is-static">
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<h1 class="modal-card-title">{{ iter.has_id ? __('Update sticker') : __('Add a new sticker') }}</h1>
+		</header>
+		<section class="modal-card-body">
+			<form id="sticker-form" method="POST" action="{{ view.get_form_action(iter) }}">
+				<input type="hidden" name="lat">
+				<input type="hidden" name="lng">
 
-	{% if iter.has_id %}
-		{{ html_nonce('update', iter) }}
-	{% else %}
-		{{ html_nonce('create', iter) }}
-	{% endif %}
+				{% if iter.has_id %}
+					{{ html_nonce('update', iter) }}
+				{% else %}
+					{{ html_nonce('create', iter) }}
+				{% endif %}
 
-	<div class="field">
-		{{ html_label(__('Label'), 'label', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_input_text('label', iter, required='required', placeholder=__('E.g. on a lamppost')) }}
-		</div>
+				<div class="field">
+					{{ html_label(__('Label'), 'label', errors=errors, required=true) }}
+					<div class="control">
+						{{ html_input_text('label', iter, required='required', placeholder=__('E.g. on a lamppost')) }}
+					</div>
+				</div>
+
+				<div class="field">
+					{{ html_label(__('Description'), 'omschrijving', errors=errors) }}
+					<div class="control">
+						{{ html_textarea_field('omschrijving', iter) }}
+					</div>
+				</div>
+
+				<div
+					class="field location-picker"
+					data-label="{{ __('Location') }}*"
+					data-help-text="{{ __('Drag the marker to select a the location') }}"
+					data-lat-field="lat"
+					data-lng-field="lng"
+					data-marker-template="[data-map-marker-template]"
+				>
+					<template data-map-marker-template>{% include 'marker.svg' %}</template>
+					<div class="field">
+						{{ html_label(__('Latitude'), 'lat', errors=errors, required=true) }}
+						<div class="control">
+							{{ html_input_number('lat', iter) }}
+						</div>
+					</div>
+					<div class="field">
+						{{ html_label(__('Longitude'), 'lng', errors=errors, required=true) }}
+						<div class="control">
+							{{ html_input_number('lng', iter) }}
+						</div>
+					</div>
+				</div>
+			</form>
+		</section>
+		<footer class="modal-card-foot">
+			<a href="{{ controller.link_to_next() }}" class="button" data-dismiss="modal">
+				{{ __('Return to map') }}
+			</a>
+			<button type="submit" class="button is-primary" form="sticker-form">
+				{{ __('Add sticker to map') }}
+			</button>
+		</footer>
 	</div>
-
-	<div class="field">
-		{{ html_label(__('Message'), 'omschrijving', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_textarea_field('omschrijving', iter) }}
-		</div>
-	</div>
-
-	<div class="field">
-		<label class="label" for="sticker-location">{{ __('Location') }} <small></small></label>
-		<p class="help">{{ __('Drag or right click to place the marker') }}</p>
-		<div class="sticker-location-picker">
-			<div class="sticker-location-map"></div>
-		</div>
-	</div>
-
-	<div class="field">
-		<div class="control">
-			<button type="submit" class="button is-primary">{{ __('Add sticker to map') }}</button>
-		</div>
-	</div>
-</form>
+</div>
 {% endblock %}

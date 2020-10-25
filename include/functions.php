@@ -1183,3 +1183,10 @@
 		if ($profiles)
     		$image->profileImage('icc', $profiles['icc']);
 	}
+
+	function is_safe_redirect($redirect)
+	{
+		$redirect_parts = parse_url($redirect);
+		return in_array($redirect_parts['scheme'], ['http', 'https'])
+			&& $redirect_parts['host'] == $_SERVER['HTTP_HOST'];
+	}
