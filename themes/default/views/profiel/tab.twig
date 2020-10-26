@@ -12,7 +12,7 @@
 			</div>
 		</div>
 		
-		<div class="columns tabs-wrapper is-vertical" data-history>
+		<div class="columns {% if show_tabs %}tabs-wrapper is-vertical{% endif %}" data-history>
 			{% if show_tabs %}
 				<aside class="column is-sidebar">
 					<nav class="tabs is-vertical profile-navigation">
@@ -39,10 +39,12 @@
 				</aside>
 			{% endif %}
 			<div class="column is-content">
-				<button class="button tabs-back" data-sticky hidden>
-					<span class="icon" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
-					<span>{{ __('Profile settings') }}</span>
-				</button>
+				{% if show_tabs %}
+					<button class="button tabs-back" data-sticky hidden>
+						<span class="icon" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+						<span>{{ __('Profile settings') }}</span>
+					</button>
+				{% endif %}
 				{% if errors is defined and errors|length > 0 %}
 					<div class="notification is-danger content">
 						<p>{{ __('You haven\'t filled in all the fields correctly') }}</p>
