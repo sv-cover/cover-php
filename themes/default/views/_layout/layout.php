@@ -122,7 +122,7 @@ class LayoutViewHelper
 						'color' => 'cover',
 					],
 					'url' => 'almanak.php',
-					'label' => __('Almanac')
+					'label' => __('Members')
 				],
 				[
 					'icon' => [

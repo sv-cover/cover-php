@@ -281,8 +281,8 @@
 -   [×] Non-hidden mobile navbar options (like search, login, apps, hamburger). A bit like JFV does it (or Google)
 - [×] [issue] Narrow content container for improved readability. 
 - [ ] [issue] TOC sidebar.
-- [-] Almanak rendering. Last row is weird, images are not centered.
-    - [ ] almanak/index.twig
+- [×] Almanak rendering. Last row is weird, images are not centered.
+    - [×] almanak/index.twig
     - [×] commissies/_leden.twig
     - [×] commissies/working_groups.twig
 - [×] Tabs in form field (for preview rendering) should be closer to field in:
