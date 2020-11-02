@@ -619,16 +619,29 @@
 		  *
 		  * @result an array of active years
 		  */
-		public function get_distinct_years()
+		public function get_distinct_years($all=false)
 		{
-			$rows = $this->db->query("SELECT DISTINCT beginjaar
+			if (
+				$all 
+				|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			)
+   				$query = "SELECT DISTINCT beginjaar
 						FROM leden
-						ORDER BY beginjaar ASC");
-			$rows = $this->_rows_to_iters($rows);
-			$years = array();
-			foreach ($rows as $row) {
-				array_push($years,$row['beginjaar']);
-			}
+						ORDER BY beginjaar ASC";
+			else 
+   				$query = "SELECT DISTINCT beginjaar
+						FROM leden
+						WHERE donor_from < NOW() AND (donor_till IS NULL OR donor_till > NOW())
+						   OR member_from < NOW() AND (member_till IS NULL OR member_till > NOW())
+						ORDER BY beginjaar ASC";
+
+			$rows = $this->db->query($query);
+
+			$years = [];
+			foreach ($rows as $row)
+				$years[] = $row['beginjaar'];
+
 			return $years;
 		}
 
