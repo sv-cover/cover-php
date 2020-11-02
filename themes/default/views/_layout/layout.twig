@@ -32,24 +32,12 @@
 		{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
 		{% endif %}
 		
-		{% if global.auth.logged_in() %}
-			{% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
-			{% if  agenda_items_to_moderate|length > 0  or global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
-				<section class="section">
-					<div class="container">
-						{% if agenda_items_to_moderate|length > 0 %}
-							<div class="notification">
-								<a href="agenda.php?view=moderate">{{ __N(
-									'There is %d activity waiting for your confirmation',
-									'There are %d activities waiting for your confirmation', agenda_items_to_moderate|length) }}</a>
-							</div>
-						{% endif %}
-						{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
-							<div class="notification">{{ __('Your application hasn\'t been accepted yet by our secretary. Until then some parts of the website are not yet accessible, such as all the photo albums and contact information of members.') }}</div>
-						{% endif %}
-					</div>
-				</section>
-			{% endif %}
+		{% if global.auth.logged_in() and global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+			<section class="section">
+				<div class="container is-content-optimized">
+					<div class="notification">{{ __('Your application hasn\'t been accepted yet by our [secretary. Until then some parts of the website are not yet accessible, such as all ]the photo albums and contact information of members.') }}</div>
+				</div>
+			</section>
 		{% endif %}
 	
 		

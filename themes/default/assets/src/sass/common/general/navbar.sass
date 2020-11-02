@@ -117,6 +117,28 @@
                 max-height: 2em
                 height: 2em
 
+    .notifications
+        &.has-unread .navbar-link .icon
+            position: relative
+            &::after
+                content: ''
+                display: block
+                height: .75em
+                width: .75em
+                position: absolute
+                top: 0em
+                right: 0em
+                background-color: $cover-red
+                border: 1.5px solid $white
+                border-radius: 100%
+        .navbar-item.cover-notification
+            white-space: normal
+            display: block
+            padding: 1rem
+        .navbar-divider
+            display: block
+
+
 +tablet
     .navbar .applications.navbar-item.has-dropdown
         position: relative
@@ -131,6 +153,6 @@
                 right: 0
                 left: auto
 
-    .applications
-        .navbar-item.tool-set
-            width: 20rem
+    .applications .navbar-item.tool-set,
+    .notifications .navbar-item.cover-notification
+        width: 20rem
