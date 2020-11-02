@@ -80,10 +80,10 @@
 									<p>{{ __('Add the Cover Calendar to your own calendar') }}</p>
 								</div>
 								<hr class="dropdown-divider">
-								<a class="dropdown-item" href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">
+								<a class="dropdown-item" href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank" rel="noopener noreferrer">
 									Google Calendar
 								</a>
-								<a class="dropdown-item" href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">
+								<a class="dropdown-item" href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank" rel="noopener noreferrer">
 									Outlook.com
 								</a>
 								<a class="dropdown-item" href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">

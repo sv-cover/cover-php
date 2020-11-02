@@ -72,9 +72,11 @@
 
 			$host = parse_url($match[0], PHP_URL_HOST);
 
-			$target = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST) ? ' target="_blank"' : '';
+			$is_external = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST);
+			$rel = $is_external ? ' rel="noopener noreferrer nofollow"' : ' rel="nofollow"';
+			$target = $is_external ? ' target="_blank"' : '';
 
-			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
+			$placeholders[$placeholder] = '<a' . $target . $rel . ' href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
 
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
