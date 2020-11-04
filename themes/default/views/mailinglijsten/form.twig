@@ -44,13 +44,17 @@
 		</div>
 		<p class="help">{{ __('Which committee may subscribe and unsubscribe people to this list?') }}</p class="help">
 	</div>
-	<div>
+	<div class="field">
 		{{ html_label(__('Name'), 'naam', errors=errors) }}
-		{{ html_input_text('naam', iter, errors=errors) }}
+		<div class="control">
+			{{ html_input_text('naam', iter, errors=errors) }}
+		</div>
 	</div>
-	<div>
+	<div class="field">
 		{{ html_label(__('Description'), 'omschrijving', errors=errors) }}
-		{{ html_textarea_field('omschrijving', iter) }}
+		<div class="control">
+			{{ html_textarea_field('omschrijving', iter) }}
+		</div>
 	</div>
 	<div class="field">
 		{{ html_label(__('Tag'), 'tag', errors=errors) }}
@@ -86,8 +90,8 @@
 	</div>
 	{% if iter.has_id %}
 	<div class="field">
-		<label class="label" for="automessages">{{ __('Automatic emails') }}</label>
-		<div id="automessages">
+		<p class="label">{{ __('Automatic emails') }}</p>
+		<div class="content">
 			{% if iter.sends_email_on_subscribing %}
 				<p>{{ __('This mailing list sends everyone who is added or adds theirselves an email automatically.') }} <a href="{{ controller.link_to_update_autoresponder(iter, 'on_subscription') }}">{{ __('Modify message') }}</a></p>
 			{% elseif iter.type == constant('DataModelMailinglist::TYPE_OPT_IN') %}
@@ -104,7 +108,7 @@
 	{% endif %}
 	<div class="field">
 		<div class="control">
-			<button class="button is-primary" type="submit">{{ iter.has_id() ? __('Modify mailing list') : __('Add list') }}</button>
+			<button class="button is-primary" type="submit">{{ iter.has_id() ? __('Modify mailing list') : __('Create mailing list') }}</button>
 		</div>
 	</div>
 </form>

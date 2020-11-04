@@ -3,79 +3,104 @@
 {% block title message.subject ~ ' – ' ~ list.naam ~ ' – ' ~ parent() %}
 
 {% block content %}
-
 <header class="block">
-	<nav class="breadcrumb" aria-label="breadcrumbs">
-		<ul>
-			<li><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a></li>
-			<li><a href="{{ controller.link_to_read(list)|e('html_attr') }}">{{ list.naam }}</a></li>
-			<li class="is-active"><a href="{{ link_to('archive_index', list)|e('html_attr') }}">{{ __('Archived messages') }}</a></li>
-		</ul>
+	<nav class="level is-mobile">
+		<div class="level-left">
+			<a href="{{ link_to('archive_index', list)|e('html_attr') }}" class="level-item button">
+				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+				<span class="is-hidden-mobile">{{ __('Back to %s')|format(list.naam) }}</span>
+				<span class="is-hidden-tablet">{{ __('Back') }}</span>
+			</a>
+		</div>
 	</nav>
-	<div class="content">
-		<p>
-			{# TODO: clean this up… #}
-			{{ __('Message from the archive of %s, processed on %s (return code %s)')|e('html')|format('<a href="%s">%s</a>'|format(controller.link_to_read(list)|e('html_attr'), list.naam|e('html'))|raw, message.verwerkt_op|date(), message.return_code)|raw }}
-		</p>
-	</div>
+	{% if subject is not null %}
+		<h1 class="title">{{ subject }}</h1>
+	{% else %}
+		<h1 class="title">{{ __('Message to %s')|format(list.naam) }}</h1>
+	{% endif %}
 </header>
 
-<article class="block">
+<section class="mailing-list-message">
+	<ul class="block">
+		<li>
+			<strong>{{ __('From') }}:</strong>
+			{{ message.sender }}
+		</li>
+		<li>
+			<strong>{{ __('To') }}:</strong>
+			<a href="{{ controller.link_to_read(list)|e('html_attr') }}">
+				{{ list.naam }} &lt;{{ list.adres }}&gt;
+			</a>
+		</li>
+		<li>
+			<strong>{{ __('Processed') }}:</strong>
+			{{ message.verwerkt_op|date() }}
+		</li>
+		{% if subject is not null %}
+			<li>
+				<strong>{{ __('Subject') }}:</strong>
+				{{ subject }}
+			</li>
+		{% endif %}
+		<li>
+			<strong>{{ __('Return code') }}:</strong>
+			{{ message.return_code }} ({{ view.readable_status(message.return_code) }})
+		</li>
+	</ul>
+
 	{% if error %}
 		<div class="content">
 			<p>Could not parse message due to the following error</p>
 			<p>{{error}}</p>
 		</div>
 	{% else %}
-		{% if subject is not null %}
-			<h1 class="title">{{ subject }}</h1>
-		{% endif %}
 		<div class="tabs-wrapper">
 			<div class="tabs is-toggle">
 				<ul>
+					{% set active = 'raw' %}
 					{% if html_body is not null %}
-						<li><a href="#email-html-body">{{ __('Formatted') }}</a></li>
+						{% if active == 'raw' %}
+							{% set active = 'html' %}
+						{% endif %}
+						<li {% if active == 'html' %}class="is-active"{% endif %}>
+							<a href="#email-html-body">{{ __('Formatted') }}</a>
+						</li>
 					{% endif %}
 					{% if text_body is not null %}
-						<li><a href="#email-text-body">{{ __('Plain text') }}</a></li>
+						{% if active == 'raw' %}
+							{% set active = 'plain' %}
+						{% endif %}
+						<li {% if active == 'plain' %}class="is-active"{% endif %}>
+							<a href="#email-text-body">{{ __('Plain text') }}</a>
+						</li>
 					{% endif %}
-					<li class="is-active"><a href="#email-raw">Raw</a></li>
+					<li {% if active == 'raw' %}class="is-active"{% endif %}>
+						<a href="#email-raw">Raw</a>
+					</li>
 				</ul>
 			</div>
 
 			<div class="tabs-content">
-				<div id="email-html-body">
-					<iframe sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" target="_blank" srcdoc="{{html_body|e('html_attr')}}" style="width: 100%; height: 400px; border: 1px solid #ccc; background: #fff" onload="makeLegible(this)"></iframe>
-					<script>
-						function makeLegible(iframe) {
-							// "inherit" the font
-							var doc = iframe.contentWindow.document;
-							doc.body.style.font = getComputedStyle(iframe.parentNode).font;
-
-							// Make sure links open in new windows
-							var base = doc.createElement('base');
-							base.target = '_blank';
-							doc.head.appendChild(base);
-						}
-					</script>
+				<div id="email-html-body" {% if active == 'html' %}class="is-active"{% endif %}>
+					<h2 class="is-sr-only">{{ __('Formatted email') }}</h2>
+					<iframe 
+						class="mailing-list-message-formatted"
+						sandbox="allow-same-origin"
+						title="{{ __('Formatted email content') }}"
+						srcdoc="{{ html_body|e('html_attr') }}"
+					></iframe>
 				</div>
-				<div id="email-text-body">
-					<pre style="white-space: pre-wrap; 
-						white-space: -moz-pre-wrap; 
-						white-space: -pre-wrap; 
-						white-space: -o-pre-wrap; 
-						word-wrap: break-word;">{{ text_body }}</pre>
+				<div id="email-text-body" {% if active == 'plain' %}class="is-active"{% endif %}>
+					<h2 class="is-sr-only">{{ __('Plain text email') }}</h2>
+					<pre class="mailing-list-message-plain">{{ text_body }}</pre>
 				</div>
-				<div id="email-raw" class="is-active">	
-					<pre style="white-space: pre-wrap; 
-						white-space: -moz-pre-wrap; 
-						white-space: -pre-wrap; 
-						white-space: -o-pre-wrap; 
-						word-wrap: break-word;">{{ message.bericht }}</pre>
+				<div id="email-raw" {% if active == 'raw' %}class="is-active"{% endif %}>	
+					<h2 class="is-sr-only">{{ __('Raw email') }}</h2>
+					<pre class="mailing-list-message-raw">{{ message.bericht }}</pre>
 				</div>
 			</div>
 		</div>
 	{% endif %}
-</article>
+</section>
 
 {% endblock %}

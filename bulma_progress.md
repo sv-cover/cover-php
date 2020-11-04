@@ -353,7 +353,7 @@
 - [×] Redesign photobook: rendering of books could be better. May need some backend changes. 
 - [-] Photo modal still needs to be implemented, and better than in the previous design (more mobile friendly).
 - [ ] Consistent HTML structure (how to use headers, article footer etc)
-- [ ] Embedded mailing list form doesn't seem to work…
+- [×] Embedded mailing list form doesn't seem to work… - they do, through ControllerMailinglijsten.run_embedded
 - [ ] Fix select fields
 - [ ] Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
 - [ ] Move Headings inside of articles, unless header. Got to do proper HTML5 :)
@@ -376,7 +376,7 @@
 - [ ] If a committee member stops being a member, they are invisible to non-admins on the committee page. Is this a good idea?
 - [ ] How to display metadata? Eg. forum messages, announcements, search results, photo album
 - [ ] Icons in buttons?
-- [ ] How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
+- [×] How to do subnavigation in mailinglists? Current solution doesn't have h1 (needed for sr)
 - [ ] Deprecate horizontal banner rotator?
 - [ ] Redesign inclusion process (lidworden)
 - [ ] Notification system?

@@ -41,7 +41,7 @@
 
 	{% if form.has_id %}
 		<article id="signup-form-fields" class="signup-form">
-			{# <h2 class="title is-4">{{ __('Fields & layout') }}</h2> #}
+			<h2 class="is-sr-only">{{ __('Fields & layout') }}</h2>
 			{% if form.is_open %}
 				<div class="notification is-danger">
 					<button class="delete"></button>
