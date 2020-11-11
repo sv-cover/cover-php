@@ -24,77 +24,25 @@
 </div>
 
 {% if results is not null %}
-<div class="level">
-	<div class="level-left">
-		<p class="level-item">
-			{{ __N('There is %d search result.', 'There are %d search results.', results|length) }}
-			{% if errors %}
-				{{ __N('Search results from the %s category are missing due to errors.', 'Search results from the categories %s are missing due to errors.', errors|human_join, errors|length) }}
-			{% endif %}
-		</p>
+<div class="search-results">
+	<div class="block">
+		<p>{{ __N('%d result', '%d results', results|length) }}</p>
+		{% if errors %}
+			<p>{{ __N('Results from the %s category are missing due to errors.', 'Results from the categories %s are missing due to errors.', errors|human_join, errors|length) }}<x/p>
+		{% endif %}
 	</div>
+	{% for result in results %}
+		<section data-search-relevance="{{ '%0.2F'|format(result.search_relevance) }}" class="media search-result">
+			<div class="media-content">
+				{{ include('_single_' ~ result.search_type ~ '.twig', {result: result, query:query}) }}
+			</div>
+		</section>
+	{% endfor %}
 </div>
-{% for result in results %}
-	<article data-search-relevance="{{ '%0.2F'|format(result.search_relevance) }}" class="media">
-		<div class="media-content">
-			{{ include('_single_' ~ result.search_type ~ '.twig', {result: result, query:query}) }}
-		</div>
-	</article>
-{% endfor %}
 {% endif %}
 <!--
 	{% for category, time in timings %}
 		{{ category }} {{ (time * 1000)|round(2) }}ms
 	{% endfor %}
 -->
-<script>
-jQuery(function($) {
-	var links = $('.search-results > li h2 > a');
-
-	// Prioritize tabs on the links
-	links.each(function(i) {
-		$(this).attr('tabindex', i + 1);
-	});
-
-	// Color the background according to the focussed status of the result
-	links.on('focus', function(e) {
-		$(this).closest('li').addClass('focussed');
-	});
-
-	links.on('blur', function(e) {
-		$(this).closest('li').removeClass('focussed');
-	});
-
-	// Focus first search result
-	if (links.length > 0)
-		links.first().focus();
-
-	$('.search-results').on('keydown', function(e) {
-		var current_focus = 0;
-
-		// Find currently focussed link
-		links.each(function(i) {
-			if ($(this).is(':focus')) {
-				current_focus = i;
-				return false;
-			}
-		});
-
-		// Move the focus up or down (and wrap around)
-		switch (e.keyCode) {
-			case 40:
-				links[(links.length + current_focus + 1) % links.length].focus();
-				e.preventDefault();
-				break;
-
-			case 38:
-				links[(links.length + current_focus - 1) % links.length].focus();
-				e.preventDefault();
-				break;
-		}
-	});
-});
-</script>
-<script src="{{ link_static('data/flowgallery.js')|e('html_attr') }}"></script>
-<script>$('.search-results .photos.flow-gallery').flowgallery();</script>
 {% endblock %}

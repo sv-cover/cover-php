@@ -1,11 +1,13 @@
 <h2 class="title is-5">
-	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.naam }}</a>
-	{% if result.search_match_reason == 'committee_member_match' %}
-		<small class="match-reason">{{ __('%s is a member of this committee')|format(
-			'<a href="profiel.php?lid=%d">%s</a>'|format(result.search_match_committee_member_id,
-				result.search_match_committee_member_id|full_name|e('html')))|raw }}</small>
-	{% else %}
-		<small>{{ __('Committee') }}</small>
-	{% endif %}
+	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.naam }}</a>
 </h2>
-<p class="content">{{ result.summary }}</p>
+{% if result.search_match_reason == 'committee_member_match' %}
+	<p class="subtitle is-7 match-reason">{{ __('%s is a member of this committee')|format(
+		'<a href="profiel.php?lid=%d">%s</a>'|format(result.search_match_committee_member_id,
+			result.search_match_committee_member_id|full_name|e('html')))|raw }}</p>
+{% else %}
+	<p class="subtitle is-7">{{ __('Committee') }}</p>
+{% endif %}
+<div class="content">
+    {{ result.summary }}
+</div>

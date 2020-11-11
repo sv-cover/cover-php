@@ -232,7 +232,7 @@
     - [×] session/overrides.twig (autocomlete member)
     - [×] committeebattle/form.twig (member)
     - [×] tagging people in photo album
-- [ ] Whatever is happening in search results :P
+- [×] Whatever is happening in search results :P
 - [×] Whatever is happening on the committee form
 - [×] All the things fotoboek/photobook.twig is doing to make the life of the photocee easier
 - [×] Everything in fotoboek/\_photos.twig
@@ -340,8 +340,8 @@
 
 ## Other
 
-- [ ] Remove profile signature, it isn't used and didn't fit in the design
-- [ ] Remove language switch from profile
+- [×] Remove profile signature, it isn't used and didn't fit in the design
+- [×] Remove language switch from profile
 - [ ] Almanac form is weird. May need some backend improvements (filter on filter). 
 - [ ] Titles in pages behave weird. Maybe some backend improvements?
 - [×] Transpose columns in session/overrides.twig and committeebattle/form.twig
@@ -355,7 +355,7 @@
 - [ ] Consistent HTML structure (how to use headers, article footer etc)
 - [×] Embedded mailing list form doesn't seem to work… - they do, through ControllerMailinglijsten.run_embedded
 - [ ] Fix select fields
-- [ ] Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
+- [×] Find a better implementation for agenda/signup_form.twig. Box clearly doesn't work, but I can't get card or panel to work convincingly :(
 - [ ] Move Headings inside of articles, unless header. Got to do proper HTML5 :)
 - [ ] Error 500. What if link_static is broken? Or i18n?
 - [ ] Poll on mobile doesn't work that well.

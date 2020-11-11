@@ -1,5 +1,6 @@
 import './photos';
 import './signup';
+import './search';
 import './session_overrides';
 import './calendar';
 import './calendar_single';

@@ -1,0 +1,61 @@
+$search-result-internal-spacing: .5rem
+
+.search-results
+    .search-result
+        padding: 0
+        margin: 0
+        .media-content
+            margin: 0 -1rem
+            padding: 1rem
+            max-width: calc(100% + 2rem)
+        &:hover,
+        &:focus-within
+            .media-content
+                background: $background
+        .title, .subtitle
+            margin-bottom: $search-result-internal-spacing
+        .subtitle
+            margin-top: $subtitle-negative-margin + ($block-spacing - $search-result-internal-spacing)
+        .keyword
+            font-weight: $weight-bold
+        .glue
+            color: $light
+            &::after,
+            &::before
+                content: ' ' // unicode no-break space
+        .search-activity-meta
+            display: flex
+            flex-wrap: wrap
+            max-width: 100%
+            margin-bottom: $search-result-internal-spacing
+            .property
+                flex-basis: 100%
+                white-space: nowrap
+                &.is-truncated
+                    overflow: hidden
+                    text-overflow: ellipsis
+            +from($tablet)
+                flex-wrap: nowrap
+                .property
+                    flex-basis: auto
+                    + .property
+                        margin-left: 1rem
+        .search-photos
+            height: 150px
+            overflow: hidden
+            .photo-gallery .photo
+                height: 150px
+                @each $bin in $gallery-basis-bins
+                    &.has-basis-#{$bin}
+                        flex-basis: round($bin / 3) * 1px
+            +until($tablet)
+                height: 100px
+                .photo-gallery .photo
+                    height: 100px
+                    flex-grow: 1
+                    a
+                        padding-top: 0
+                        width: auto
+                    @each $bin in $gallery-basis-bins
+                        &.has-basis-#{$bin}
+                            flex-basis: round($bin / 4) * 1px !important

@@ -1,20 +1,37 @@
-{% import _self as album %}
+{% import _self as macros %}
 
-{% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
-{% set my_likes = global.auth.logged_in() ? global.models.PhotobookLike.get_for_lid(global.identity.member) : [] %}
-
-{% set visibility = [] %}
-{% if book is instance_of('DataIterFacesPhotobook') %}
-    {% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
-{% endif %}
 
 {% macro classnames(photo, context) %}
     {%- if context.my_likes[photo.id] is defined %}liked{% endif -%}
     {%- if context.visibility[photo.id] is defined and context.visibility[photo.id] == false %} privacy-hidden{% endif -%}
 {% endmacro %}
 
+
 {% macro gallery(photos, context) %}
-    {% import _self as album %}
+    {% import _self as macros %}
+
+    {# Make sure the context is how we expect it to be, in case this macro is called from somewhere else #}
+    {% if context.likes is not defined %}
+        {% set context = context|merge({'likes': global.models.PhotobookLike.count_for_photos(photos)}) %}
+    {% endif  %}
+
+    {% if context.my_likes is not defined %}
+        {% if global.auth.logged_in() %}
+            {% set context = context|merge({'my_likes': global.models.PhotobookLike.get_for_lid(global.identity.member)}) %}
+        {% else %}
+            {% set context = context|merge({'my_likes': []}) %}
+        {% endif %}
+    {% endif %}
+
+    {% if context.visibility is not defined %}
+        {% if context.book is instance_of('DataIterFacesPhotobook') %}
+            {% set context = context|merge({'visibility': global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member)}) %}
+        {% else %}
+            {% set context = context|merge({'visibility': []}) %}
+        {% endif %}
+    {% endif %}
+
+    {# Now render #}
     <ul class="photo-gallery columns is-multiline is-mobile">
     {% for photo in photos %}
         {# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
@@ -23,7 +40,7 @@
         {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
         {% set basis = ((size[0] / 100)|round) * 50 %}
         {% set visibility_hidden = context.visibility[photo.id] is defined and context.visibility[photo.id] == false %}
-        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ album.classnames(photo, context) }}" data-id="{{ photo.id }}" id="photo-{{ photo.id }}">
+        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ macros.classnames(photo, context) }}" data-id="{{ photo.id }}" id="photo-{{ photo.id }}">
             <a 
                 href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
                 {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
@@ -84,12 +101,22 @@
     </ul>
 {% endmacro gallery %}
 
+{# Prepare context: make sure the hard things are done only once #}
+{% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
+{% set my_likes = global.auth.logged_in() ? global.models.PhotobookLike.get_for_lid(global.identity.member) : [] %}
+
+{% set visibility = [] %}
+{% if book is instance_of('DataIterFacesPhotobook') %}
+    {% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
+{% endif %}
+
 {% set photos = photos|group_by('read_status') %}
 
+{# Actually render albums #}
 {% if photos.unread is defined %}
     <article>
         <h2 class="title is-4">{{ __('New since your last visit') }}</h2>
-        {{ album.gallery(photos.unread, _context) }}
+        {{ macros.gallery(photos.unread, _context) }}
     </article>
 {% endif %}
 
@@ -98,7 +125,7 @@
         {% if photos.unread is defined %}
             <h2 class="title is-4">{{ __('Older photos') }}</h2>
         {% endif %}
-        {{ album.gallery(photos.read, _context) }}
+        {{ macros.gallery(photos.read, _context) }}
     </article>
 {% endif %}
 
