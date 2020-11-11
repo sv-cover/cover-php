@@ -98,7 +98,7 @@
 			&& !$identity->member_in_committee(COMMISSIE_BESTUUR)
 			&& !$identity->member_in_committee(COMMISSIE_KANDIBESTUUR)
 			&& $model->is_private($iter, 'naam'))
-			return __('Unknown');
+			return __('Anonymous');
 
 		return format_string($format, $iter);
 	}

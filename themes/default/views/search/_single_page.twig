@@ -1,4 +1,6 @@
 <h2 class="title is-5">
-    <a href="{{ result.absolute_url|e('html_attr') }}">{{ result.title }}</a>
+    <a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.title }}</a>
 </h2>
-<p class="content">{{ result.locale_content|strip_markup|excerpt(query_parts, 50)|raw }}</p>
+<div class="content">
+    {{ result.locale_content|strip_markup|excerpt(query_parts, 50)|raw }}
+</div>

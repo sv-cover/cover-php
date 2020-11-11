@@ -1,0 +1,61 @@
+.add-photos
+    #folder-selector
+        overflow-x: auto
+        white-space: nowrap
+        border: $control-border-width solid $border
+        background: $body-background-color
+
+        select
+            min-width: 25%
+            vertical-align: top
+            border: none
+            background: $body-background-color
+            color: $text
+
+    #photo-selector
+
+        .table tr > td
+            vertical-align: middle
+
+            &:first-child
+                padding-left: 0
+
+            &:last-child
+                padding-right: 0
+
+        .thumbnail
+            box-sizing: content-box
+            max-width: 96px
+
+            figure
+                background: $scheme-main-ter
+                height: 64px
+                width: 96px
+            
+            img
+                object-fit: contain
+                height: 100%
+
+        .created-on,
+        .path
+            white-space: nowrap
+            font-size: $size-7
+
+        .created-on
+            text-align: right
+
+        .description
+            min-width: 10em
+
+        .path
+            width: 25%
+            min-width: 10em
+            max-width: 0
+            overflow: hidden
+            text-overflow: ellipsis
+
+    .form-controls
+        position: sticky
+        bottom: 0
+        background: $body-background-color
+        padding-top: 0.5rem

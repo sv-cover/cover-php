@@ -1,13 +1,13 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Modify calendar event') : __('Add a calendar event')) ~ ' – ' ~ parent() %}
+{% block title (iter.has_id ? __('Modify event') : __('Add an event')) ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1 class="title">{{ iter.has_id ? __('Modify calendar event') : __('Add a calendar event') }}</h1>
+<h1 class="title">{{ iter.has_id ? __('Modify event') : __('Add an event') }}</h1>
 
 <form class="vertical-form" name="agenda_form" action="{{ view.get_form_action(iter) }}" method="post">
 	{% if errors %}
-		<p class="notification is-danger">{{ __("You haven't filled in all the fields correctly") }}</p>
+		<p class="notification is-danger">{{ __("You haven't filled in all fields correctly") }}</p>
 	{% endif %}
 
 	{% if iter.has_id %}
@@ -17,7 +17,7 @@
 	{% endif %}
 	
 	<div class="field">
-		{{ html_label(__('Head'), 'kop', errors=errors, required=true) }}
+		{{ html_label(__('Title'), 'kop', errors=errors, required=true) }}
 		<div class="control">
 			{{ html_input_text('kop', iter, maxlength=100, required=true) }}
 		</div>
@@ -33,7 +33,7 @@
 	</div>
 
 	<div class="field">
-		{{ html_label(__('Starting time'), 'van', errors=errors, required=true) }}
+		{{ html_label(__('Start'), 'van', errors=errors, required=true) }}
 		<div class="control">
 			{{ html_input_datetime('van', iter, errors=errors, required=true) }}
 		</div>
@@ -41,8 +41,7 @@
 
 	<div class="field">
 		<label for="tot" class="label">
-			{{ html_input_checkbox('use_tot', iter, value='yes', id='agenda_use_tot', onclick='set_visibility(this, \'agenda_tot\')', class='field-toggle') }}
-			{{ __('End time') }}
+			{{ __('End') }}
 		</label>
 		<div class="control" id="agenda_tot">
 			{{ html_input_datetime('tot', iter, errors=errors) }}
@@ -51,24 +50,30 @@
 
 	<div class="field">
 		<label for="locatie" class="label">
-			{{ html_input_checkbox('use_locatie', iter, value='yes', id='agenda_use_locatie', onclick='set_visibility(this, \'agenda_locatie\')', class='field-toggle') }}
 			{{ __('Location') }}
 		</label>
 		<div class="control" id="agenda_locatie">
-			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='location') }}
+			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='url', data_autocomplete_src='/agenda.php?view=suggest-location&limit=100&search=', data_autocomplete_max_results=15) }}
 		</div>
 	</div>
 
 	<div class="field">
-		{{ html_label(__('Facebook Event'), 'facebook_id', errors=errors) }}
+		{{ html_label(__('Image'), 'image_url', errors=errors) }}
+		<div class="control" id="agenda_image_url">
+			{{ html_input_text('image_url', iter, maxlength=255, errors=errors, data_filemanager='true', data_filemanager_cta='Choose an image…', data_filemanager_url=get_config_value('filemanager_root', '')) }}
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Link to Facebook event'), 'facebook_id', errors=errors) }}
 		<div class="control">
-			{{ html_input_text('facebook_id', iter, size='20') }}
+			{{ html_input_text('facebook_id', iter, size='20', errors=errors) }}
 		</div>
 	</div>
 
 	<div class="field">
-		{{ html_label(__('Description'), 'beschrijving', errors=errors) }}
-		<div class="tabs-wrapper">
+		{{ html_label(__('Description'), 'beschrijving', errors=errors, required=true) }}
+		<div class="tabs-wrapper is-condensed">
 			<div class="tabs is-toggle">
 				<ul>
 					<li class="is-active">
@@ -84,7 +89,7 @@
 				<div id="beschrijving-tab" class="is-active">
 					{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
 				</div>
-				<div id="beschrijving-preview-tab" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
+				<div id="beschrijving-preview-tab" class="content-preview box" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
@@ -106,43 +111,9 @@
 	<div class="field">
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">
-				{{ iter.has_id ? __('Modify calendar event') : __('Create calendar event') }}
+				{{ iter.has_id ? __('Modify event') : __('Create event') }}
 			</button>
 		</div>
 	</div>
 </form>
-
-<script type="text/javascript">
-	check_checkbox("agenda_use_tot", "agenda_tot");
-	check_checkbox("agenda_use_locatie", "agenda_locatie");
-	
-	function check_checkbox(box, div) {
-		box = document.getElementById(box);
-		div = document.getElementById(div);
-		
-		if (box.getAttribute("checked") === "checked")
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-		
-	}
-
-	function set_visibility(elem, div) {
-		div = document.getElementById(div);
-
-		if (elem.checked)
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-	}
-
-	jQuery('input[name=facebook_id]').change(function(e) {
-		var expr = /^https:\/\/www\.facebook\.com\/events\/(\d+)\//;
-		var match = $(this).val().match(expr);
-
-		if (match)
-			$(this).val(match[1]);
-	});
-</script>
-</div>
 {% endblock %}

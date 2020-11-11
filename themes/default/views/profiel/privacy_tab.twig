@@ -4,38 +4,40 @@
 
 {% block tab_content %}
 <article>
-	<h2 class="title is-4">{{ __('Privacy settings') }}</h2>
-
-	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="post">
+	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="POST" data-auto-submit>
 		{{ html_nonce('privacy', iter) }}
-		<div class="field">
-			<p>{{ __('Modify your privacy preferences to indicate who can see what info.') }}</p>
+
+		<div class="profile-field">
+			<div class="field-body">
+				<h2 class="title is-4">{{ __('Privacy settings') }}</h2>
+			</div>
 		</div>
+		<div class="profile-field">
+			<div class="field-body content">
+				<p>{{ __('Modify your privacy preferences to indicate who can see what info.') }}</p>
+				<p hidden data-auto-submit-visible>{{ __('Changes become effective immediately.') }}</p>
+			</div>
+		</div>
+		{% for field in fields %}
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					{{ html_label(field.label, field.name, errors=errors) }}
+				</div>
+				<div class="field-body">
+					<div class="field is-expanded">
+						<div class="control">
+							<div class="select is-fullwidth">
+								{{ html_select_field(field.name, view.privacy_options(), field.data, required=true) }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
 
-		<table class="field table is-fullwidth">
-			<thead>
-				<tr>
-					<td></td>
-					<th>{{ __('Nobody') }}</th>
-					<th>{{ __('Members') }}</th>
-					<th>{{ __('Everyone') }}</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for field in fields %}
-				<tr>
-					<th>{{ field.label }}</th>
-					<td>{{ html_input_radio(field.name, field.data, constant('DataModelMember::VISIBLE_TO_NONE')) }}</td>
-					<td>{{ html_input_radio(field.name, field.data, constant('DataModelMember::VISIBLE_TO_MEMBERS')) }}</td>
-					<td>{{ html_input_radio(field.name, field.data, constant('DataModelMember::VISIBLE_TO_EVERYONE')) }}</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-
-		<div class="field">
-			<div class="control buttons">
-				<button type="submit" class="button is-primary">{{ __('Save') }}</button>
+		<div class="profile-field" data-auto-submit-hidden>
+			<div class="field-body">
+				<button type="submit" class="button is-primary" data-auto-submit-hidden>{{ __('Save') }}</button>
 			</div>
 		</div>
 	</form>

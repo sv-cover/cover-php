@@ -5,7 +5,15 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>Error! – Cover</title>=
+		<link rel="shortcut icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-64x64.png" sizes="64x64">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-128x128.png" sizes="128x128">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-192x192.png" sizes="192x192">
+		<link rel="apple-touch-icon" href="filename='images/apple-touch-icon-180x180.png">
+		<meta name="msapplication-TileImage" content="images/favicon-270x270.png">
+
+
+		<title>Error! – Cover</title>
 
         <link rel="stylesheet" href="themes/default/assets/dist/css/cover.css" type="text/css">
 
@@ -21,9 +29,9 @@
 			</div>
 		</nav>
 
-		<section class="section">
+		<article class="section">
 			<div class="container">
-				<article>
+				<section class="block">
 					<h1 class="title">Error!</h1>
 					<div class="content">
 						<p>{{ __('Sorry, something went horribly wrong. Please try again in a bit or contact the WebCie (webcie@svcover.nl)') }}</p>
@@ -37,16 +45,16 @@
 
 						<p><a href="index.php" class="button">{{ __('Back to homepage') }}</a></p>
 					</div>
-				</article>
+				</section>
 				{% block content %}{% endblock %}
 				{% if global.config.show_exceptions %}
-					<article>
+					<section class="block">
 						<h2 class="title is-4">Error information</h2>
 						<pre>{{ exception }}</pre>
-					</article>
+					</section>
 				{% endif %}
 			</div>
-		</section>
+		</article>
 
 		<script src="https://cdn.ravenjs.com/3.14.0/raven.min.js"></script>
 		<script>

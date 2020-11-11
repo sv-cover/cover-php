@@ -1,223 +1,131 @@
+{% import _self as macros %}
+
+
+{% macro classnames(photo, context) %}
+    {%- if context.my_likes[photo.id] is defined %}liked{% endif -%}
+    {%- if context.visibility[photo.id] is defined and context.visibility[photo.id] == false %} privacy-hidden{% endif -%}
+{% endmacro %}
+
+
+{% macro gallery(photos, context) %}
+    {% import _self as macros %}
+
+    {# Make sure the context is how we expect it to be, in case this macro is called from somewhere else #}
+    {% if context.likes is not defined %}
+        {% set context = context|merge({'likes': global.models.PhotobookLike.count_for_photos(photos)}) %}
+    {% endif  %}
+
+    {% if context.my_likes is not defined %}
+        {% if global.auth.logged_in() %}
+            {% set context = context|merge({'my_likes': global.models.PhotobookLike.get_for_lid(global.identity.member)}) %}
+        {% else %}
+            {% set context = context|merge({'my_likes': []}) %}
+        {% endif %}
+    {% endif %}
+
+    {% if context.visibility is not defined %}
+        {% if context.book is instance_of('DataIterFacesPhotobook') %}
+            {% set context = context|merge({'visibility': global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member)}) %}
+        {% else %}
+            {% set context = context|merge({'visibility': []}) %}
+        {% endif %}
+    {% endif %}
+
+    {# Now render #}
+    <ul class="photo-gallery columns is-multiline is-mobile">
+    {% for photo in photos %}
+        {# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
+        {% set size = photo.get_scaled_size(null, 600) %}
+
+        {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
+        {% set basis = ((size[0] / 100)|round) * 50 %}
+        {% set visibility_hidden = context.visibility[photo.id] is defined and context.visibility[photo.id] == false %}
+        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ macros.classnames(photo, context) }}" data-id="{{ photo.id }}" id="photo-{{ photo.id }}">
+            <a 
+                href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
+                {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
+            >
+                <noscript>
+                    <img 
+                        src="{{ photo.get_url(null, 600) }}"
+                        {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+                    >
+                </noscript>
+                <img 
+                    class="lazy"
+                    data-src="{{ photo.get_url(null, 600) }}"
+                    {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+                >
+                {% if photo.beschrijving %}
+                    <span class="title">{{ photo.beschrijving }}</span>
+                {% endif %}
+
+                {% set num_likes = context.likes[photo.id] is defined ? context.likes[photo.id] : 0 %}
+                {% if photo.num_reacties > 0 or num_likes > 0  or visibility_hidden %}
+                    <ul class="controls">
+                        {% if photo.num_reacties > 0 %}
+                            <li class="comments" title="{{ __N('%d comment', '%d comments', photo.num_reacties) }}">
+                                <i class="fas fa-comment" aria-hidden="true"></i>
+                                {{ photo.num_reacties }}
+                                <span class="is-sr-only">{{ __N('comment', 'comments', photo.num_reacties) }}</span>
+                            </li>
+                        {% endif %}
+
+                        {% set liked = context.my_likes[photo.id] is defined %}
+                        {% if num_likes > 0 %}
+                            <li class="likes" title="{{ __N('%d person liked this photo.', '%d people liked this photo.', num_likes) }} {% if liked %}{{ __('You liked this photo.')}}{% endif %}">
+                                <i
+                                    class="fas fa-heart {% if liked %}has-text-cover{% endif %}" 
+                                    aria-hidden="true"
+                                ></i>
+                                {{ num_likes }}
+                                <span class="is-sr-only">
+                                    {{ __N('like.', 'likes.', num_likes) }}
+                                    {% if liked %}{{ __('You liked this photo.')}}{% endif %}
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% if visibility_hidden %}
+                            <li title="{{ __('Hidden from your personal album for other people') }}">
+                                <i class="fas fa-eye-slash" aria-hidden="true"></i>
+                                <span class="is-sr-only">
+                                    {{ __('Hidden from your personal album for other people')}}
+                                </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endmacro gallery %}
+
+{# Prepare context: make sure the hard things are done only once #}
 {% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
 {% set my_likes = global.auth.logged_in() ? global.models.PhotobookLike.get_for_lid(global.identity.member) : [] %}
 
 {% set visibility = [] %}
 {% if book is instance_of('DataIterFacesPhotobook') %}
-	{% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
+    {% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
 {% endif %}
-
-{% import _self as fotoboek %}
-
-{% macro classnames(photo) %}
-	{%- if my_likes[photo.id] is defined %}liked{% endif -%}
-	{%- if visibility[photo.id] is defined and visibility[photo.id] == false %} hidden{% endif -%}
-{% endmacro %}
-
-{% macro flowgallery(book, photos) %}
-{% import _self as fotoboek %}
-<ul class="columns flow-gallery is-multiline">
-	<!-- add the 'grid-gallery' class for awesomeness -->
-	{% for photo in photos %}
-	<li id="photo_{{ photo.id }}" data-id="{{ photo.id }}" class="column is-narrow thumbnail {{ fotoboek.classnames(photo) }}">
-		<a href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}">
-			{% set size = photo.get_scaled_size(null, 400) %}
-			{# With working js, the src attr shoudl be data-src #}
-			<img src="{{ photo.get_url(null, 400) }}" {% if size %} width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}>
-			<noscript><img src="{{ photo.get_url(null, 400) }}" {% if size %} width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}></noscript>
-			{% if likes[photo.id] is defined %}
-				<span class="like-button" title="{{ __N('%d member liked this photo', '%d members liked this photo', likes[photo.id]) }}"><span class="like-count">{{ likes[photo.id] }}</span></span>
-			{% endif %}
-			{% if visibility[photo.id] is defined and visibility[photo.id] == false %}
-			<span class="privacy">{{ __('Hidden from index') }}</span>
-			{% endif %}
-			{% if photo.num_reacties > 0 %}
-			<span class="comments">{{ __N('%d comment', '%d comments', photo.num_reacties) }}</span>
-			{% endif %}
-			{% if photo.beschrijving %}
-			<span class="description">{{ photo.beschrijving }}</span>
-			{% endif %}
-		</a>
-	</li>
-	{% endfor %}
-</ul>
-{% endmacro %}
 
 {% set photos = photos|group_by('read_status') %}
 
+{# Actually render albums #}
 {% if photos.unread is defined %}
-	<h2>{{ __('New since your last visit') }}</h2>
-	{{ fotoboek.flowgallery(book, photos.unread) }}
+    <article>
+        <h2 class="title is-4">{{ __('New since your last visit') }}</h2>
+        {{ macros.gallery(photos.unread, _context) }}
+    </article>
 {% endif %}
 
 {% if photos.read is defined %}
-	{% if photos.unread is defined %}
-		<h2>{{ __('Older photos') }}</h2>
-	{% endif %}
-	{{ fotoboek.flowgallery(book, photos.read) }}
+    <article>
+        {% if photos.unread is defined %}
+            <h2 class="title is-4">{{ __('Older photos') }}</h2>
+        {% endif %}
+        {{ macros.gallery(photos.read, _context) }}
+    </article>
 {% endif %}
 
-<script src="{{ link_static('data/flowgallery.js') }}"></script>
-<script>$('.photos.flow-gallery').flowgallery();</script>
-<script>
-var $modal, $target;
-
-var cache = {};
-
-var closeModal = function() {
-	// Detach the $target separately because these nodes (the photos)
-	// should stay loaded and keep their events attached.
-	$(document.body).removeClass('modal-open');
-	$target.detach(); 
-	$modal.remove();
-	$modal = $target = null;
-};
-
-var getModal = function() {
-	if (!$modal) {
-		$modal = $('<div class="modal photo-modal" tabindex="-1">'),
-		$modalWindow = $('<div class="window photo-window">').appendTo($modal),
-		$closeButton = $('<button class="close-button">&times;</button>').appendTo($modalWindow);
-
-		$target = $('<div>').appendTo($modalWindow);
-
-		$(document.body).addClass('modal-open').append($modal);
-
-		// Close the modal on clicking the close button
-		$closeButton.on('click', function(e) {
-			e.preventDefault();
-			closeModal();
-		});
-
-		// If the modal itself (the backdrop, that is) then close it
-		$modal.on('click', function(e) {
-			if (e.target == $modal.get(0)) {
-				e.preventDefault();
-				closeModal();
-			}
-		});
-
-		// Close the model on pressing the escape key while inside
-		$modal.on('keydown.nav', function(e) {
-			// Don't prevent normal keyboard usage
-			if (['TEXTAREA', 'INPUT'].indexOf(e.target.nodeName) !== -1)
-				return;
-
-			// Don't prevent normal keyboard shortcuts
-			if (e.shiftKey || e.metaKey || e.ctrlKey)
-				return;
-
-			switch (e.keyCode) {
-				case 27: // escape
-					if ($modal.parent()) {
-						e.preventDefault();
-						closeModal();
-					}
-					break;
-
-				case 37: // left arrow
-					$modal.find('.navigation .previous').click();
-					e.preventDefault();
-					break;
-
-				case 39: // right arrow
-					$modal.find('.navigation .next').click();
-					e.preventDefault();
-					break;
-
-				case 67: // 'c'
-					$modal.find('.add-comment-link').click();
-					e.preventDefault();
-					break;
-
-				case 76: // 'l'
-					$modal.find('.like-button').click();
-					e.preventDefault();
-					break;
-
-				case 84: // 't'
-					$modal.find('#tagging-toggle').click();
-					e.preventDefault();
-					break;
-			}
-		});
-
-		$modal.focus();
-	}
-
-	return $modal;
-}
-
-var prefetchPhotoLink = function(link) {
-	if (!cache[link]) {
-		cache[link] = $.Deferred();
-
-		var el = $('<div>').load(link + ' #foto', function() {
-			// First of all, fire the partially loaded thingy
-			$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
-
-			// Remove the message box style, we don't use it
-			$(this).find('#foto').removeClass('messageBox');
-
-			// Remove the slides, we don't use them here.
-			$(this).find('.slides').remove();
-
-			// Hook into the 'next' and 'prev' links
-			$(this).find('.navigation .next, .navigation .previous').click(function(e) {
-				if (e.ctrlKey || e.shiftKey || e.metaKey)
-					return;
-
-				e.preventDefault();
-
-				loadPhotoLink($(this).attr('href'));
-			});
-
-			cache[link].resolve($(this));
-		});
-	}
-
-	return cache[link];
-};
-
-var loadPhotoLink = function(link) {
-	$target.detach();
-
-	var $loading = $('<div>').addClass('loading-text').text('Loading…').appendTo($modal.find('.window'));
-
-	prefetchPhotoLink(link).then(function($el) {
-		$loading.replaceWith($el);
-		$target = $el;
-
-		// Prefetch the next photo
-		$el.find('.navigation .next').each(function() {
-			prefetchPhotoLink($(this).attr('href'));
-		});
-	});
-};
-
-$('.photos').on('mouseover mouseout touchstart', '.thumbnail > a', function(e) {
-	switch (e.type) {
-		case 'mouseover':
-		case 'touchstart':
-			var preload = (function() {
-				prefetchPhotoLink($(this).attr('href'));
-			}).bind(this);
-			$(this).data('timeout', setTimeout(preload, 200));
-			break;
-		case 'mouseout':
-			var timeout = $(this).data('timeout');
-			if (timeout) clearTimeout(timeout);
-			break;
-	}
-});
-
-$('.photos').on('click', '.thumbnail > a', function(e) {
-	if (e.ctrlKey || e.shiftKey || e.metaKey)
-		return;
-
-	e.preventDefault();
-
-	getModal();
-
-	loadPhotoLink($(this).attr('href'));
-});
-</script>

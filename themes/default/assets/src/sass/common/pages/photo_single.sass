@@ -1,0 +1,324 @@
+$photo-padding: $block-spacing
+$photo-info-width: 25em
+$photo-transition-timing: 600ms ease-out
+$photo-icon-color: $grey !default
+$photo-icon-active-color: $link !default
+$photo-control-border-color: $grey-lightest !default
+$photo-control-transition-timing: 150ms ease-in-out
+$photo-control-icon-offset: -.25ch
+$photo-control-shadow-sub-1: 0 0 .5em rgba($black, 0.5)
+$photo-control-shadow-sub-2: 0 0 2px rgba($black, 0.75)
+$photo-control-shadow: $photo-control-shadow-sub-1, $photo-control-shadow-sub-2
+
+
+
+.photo-comment, 
+.photo-info,
+.photo-info-fullscreen
+    .controls .level-item
+        color: $photo-icon-color
+
+        .button
+            font-size: inherit
+            color: $photo-icon-color
+            padding: 0
+
+            &:focus
+                background: none
+                box-shadow: none
+
+        .count
+            line-height: 1
+            margin-left: .7ch
+
+        &:hover
+            color: $link-hover
+
+            .button
+                color: $link-hover
+                background: none
+
+        &.is-active
+            color: $link
+
+.photo-single
+    .section:not(:first-child)
+        padding-top: 0
+        padding-bottom: 0
+
+    .photo
+        position: relative
+        height: 60vh
+        background: $black
+
+        &:-webkit-full-screen
+            width: 100%
+            height: 100%
+
+        
+        .carousel
+            position: relative
+            overflow: hidden
+            width: 100%
+            height: 100%
+
+            figure.image
+                position: absolute
+                width: 100%
+                height: 100%
+                top: 0
+                left: 0
+
+                img
+                    position: relative
+                    width: 100%
+                    height: 100%
+                    object-fit: contain
+                    object-position: center
+                    z-index: 1
+    
+                &.previous
+                    left: -100%
+                    img
+                        z-index: 0
+
+                &.next
+                    left: 100%
+                    img
+                        z-index: 2
+
+
+            &.is-animated figure.image
+                transition: left $photo-transition-timing
+            
+
+        nav
+            .icon
+                filter: drop-shadow($photo-control-shadow-sub-1) drop-shadow($photo-control-shadow-sub-2)
+
+            .photo-info-fullscreen
+                display: none
+                position: absolute
+                right: 0
+                bottom: 0
+                left: 0
+                justify-content: flex-end
+                color: $white
+                padding: $photo-padding
+                z-index: 11
+                
+                .name,
+                .controls .level-item
+                    filter: drop-shadow($photo-control-shadow-sub-1) drop-shadow($photo-control-shadow-sub-2)
+
+                .name
+                    flex-grow: 1
+
+                .controls .level-item
+                    color: $white
+                    
+                    .icon
+                        filter: none
+
+                    .button
+                        box-shadow: none
+                        color: $white
+
+                    .count[hidden]
+                        display: block !important
+
+                    &:not(:last-child)
+                        margin-right: $photo-padding
+
+                    &:hover
+                        color: $white
+
+                        .button
+                            color: $grey-light
+
+            & > a,
+            & > button
+                position: absolute
+                color: $white
+                box-shadow: none
+
+                .icon
+                    position: relative
+                    transition: left $photo-control-transition-timing, right $photo-control-transition-timing
+
+                &.photo-next,
+                &.photo-previous
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    top: 0
+                    bottom: 0
+                    width: auto
+                    padding: 0 $photo-padding
+                    height: 100%
+                    box-sizing: content-box
+                    font-size: $size-4
+                    z-index: 10
+
+                    &:focus .icon,
+                    &:active .icon
+                        outline: 1px dotted $white
+                        outline-offset: $photo-padding/3
+
+                &.photo-next
+                    right: 0
+
+                    .icon
+                        right: 0
+
+                    &:hover .icon
+                        right: $photo-control-icon-offset
+
+                &.photo-parent,
+                &.photo-previous
+                    left: 0
+
+                    .icon
+                        left: 0
+
+                    &:hover .icon
+                        left: $photo-control-icon-offset
+                
+                &.photo-enter-fullscreen,
+                &.photo-exit-fullscreen,
+                &.photo-parent
+                    top: 0
+                    height: auto
+                    padding: $photo-padding
+                    text-decoration: none
+                    z-index: 11
+
+                    &:hover, &:focus, &:active
+                        color: $white
+                        background: none
+                        text-decoration: underline
+                        box-shadow: none
+
+                    &:focus, &:active
+                        outline: 1px dotted $white
+                        outline-offset: -$photo-padding/1.5
+                        
+
+                &.photo-enter-fullscreen,
+                &.photo-exit-fullscreen
+                    right: 0
+
+                    .icon
+                        margin: 0
+
+                &.photo-parent
+                    left: 0
+                    filter: drop-shadow($photo-control-shadow-sub-1) drop-shadow($photo-control-shadow-sub-2)
+
+                    .icon
+                        filter: none
+
+        &.is-fullscreen nav .photo-info-fullscreen
+            display: flex
+
+
+    .photo-meta
+        display: flex
+        flex-flow: row wrap
+        align-items: center
+        margin-top: $photo-padding
+        margin-bottom: $photo-padding
+
+        &>*
+            flex: 2 0 100%
+            order: 2
+
+        &>:first-child
+            flex: 1 1
+            order: 0
+            margin-right: $photo-padding
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+
+        &>:nth-child(2)
+            margin-top: $photo-padding/2
+
+        .photo-options
+            flex: 0 1
+            order: 1
+            
+        .name
+            font-weight: $title-weight
+
+        a.name
+            color: $text
+
+            &.placeholder
+                color: $text-light
+                font-style: italic
+
+        .photo-tag-list .icon
+            color: $photo-icon-color
+
+    .photo-interaction
+        margin-top: $photo-padding
+        
+        .comments,
+        .controls,
+        .likes
+            margin: $photo-padding/2 0
+
+        .comments
+            margin-top: $photo-padding
+       
+        // Photo controls
+        &>.controls
+            border-top: 1px solid $photo-control-border-color
+            border-bottom: 1px solid $photo-control-border-color
+            padding: $photo-padding/2 0
+
+            .level-item
+                flex-grow: 0
+                flex-basis: 2em
+                font-size: $size-5
+
+                &:first-child
+                    justify-content: flex-start
+
+                &:last-child
+                    justify-content: flex-end
+
+.photo-comment
+    .avatar
+        width: 32px
+        height: 32px
+
+    .controls
+        align-items: baseline
+
+        .level-item:not(:last-child)
+            margin-right: $photo-padding
+
+
++from($desktop)
+    .photo-single
+        display: flex
+        flex-flow: row nowrap
+        align-items: stretch
+        min-height: calc(100vh - #{$navbar-height})
+        max-height: calc(100vh - #{$navbar-height})
+        box-shadow: $box-shadow
+        
+        .photo
+            flex: 1 1
+            height: auto
+
+        .photo-info
+            flex: 0 0 $photo-info-width
+            max-width: 40%
+            overflow-y: auto
+
+            .photo-meta > :first-child
+                // Correct for whitespace: no-wrap messing with width of .photo-info
+                width: 0

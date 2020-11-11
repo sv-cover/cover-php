@@ -1,8 +1,9 @@
 {% if global.auth.logged_in %}
-<div class="navbar-item has-dropdown is-hoverable-desktop">
-    <a class="navbar-link is-arrowless" tabindex="0">
+<div class="navbar-item has-dropdown is-hoverable-desktop user {% if global.identity.can_impersonate and global.identity.is_impersonating %}is-impersonating{% endif %}">
+    <a class="navbar-link is-arrowless profile" tabindex="0">
         <span class="icon">
-            <i class="fas fa-user"></i>
+            {# <i class="fas fa-user"></i> #}
+            <img src="{{ link('foto.square', member=global.identity.member, width=64) }}" aria-hidden="true">
             <span class="is-sr-only">
                 {{ __('User') }}
             </span>
@@ -10,30 +11,46 @@
     </a>
     <div class="navbar-dropdown is-right">
         {% if global.auth.logged_in %}
-            {% if global.identity.can_impersonate %}
-                <a class="navbar-item" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-popup="modal">
-                    {{ __('Impersonate…') }}
+            <div class="navbar-item profile">
+                <a class="image is-48x48" href="{{ link('profiel.read', member=global.identity.member) }}">
+                    <img class="is-rounded" src="{{ link('foto.square', member=global.identity.member, width=96) }}" aria-hidden="true">
                 </a>
-                <hr class="navbar-divider">
-            {% endif %}
-
-            <div class="navbar-item">
-                {{ __('Logged in') }}: {{ global.identity.member.voornaam }}
+                <div class="user-info">
+                    <a class="name" href="{{ link('profiel.read', member=global.identity.member) }}">
+                        {{ global.identity.member.full_name }}
+                    </q>
+                    
+                    {% if global.identity.can_impersonate %}
+                        <a class="impersonate-link" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-popup="modal">
+                            {{ __('Impersonate') }}
+                        </a>
+                    {% endif %}
+                </div>
             </div>
-            <a class="navbar-item" href="{{ link('profiel.read', member=global.identity.member) }}">
-                {{ __('Profile') }}
-            </a>
-            <a class="navbar-item" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">
-                {{ __('Logout') }}
-            </a>
+
+
             <hr class="navbar-divider">
+
             <form class="navbar-item">
-                <div class="field">                        
-                    {{ __('Dark mode') }}
-                    <input id="dark-mode-switch" type="checkbox" name="dark-mode-switch" class="switch is-small is-rounded dark-mode-switch" {{ view.layout.color_mode == 'dark' ? 'checked' : ''}}>
-                    <label for="dark-mode-switch"><span class="is-sr-only">{{ __('Toggle dark mode') }}</span></label>
+                <div class="field dark-mode-switch">
+                    <div aria-hidden="true">
+                        {{ __('Dark mode') }}
+                    </div>
+                    <div class="control">
+                        <input id="dark-mode-switch" type="checkbox" name="dark-mode-switch" class="switch is-small is-rounded" {{ view.layout.color_mode == 'dark' ? 'checked' : ''}}>
+                        <label for="dark-mode-switch"><span class="is-sr-only">{{ __('Toggle dark mode') }}</span></label>
+                    </div>
                 </div>
             </form>
+
+            <hr class="navbar-divider">
+
+            <a class="navbar-item" href="{{ link('profiel.read', member=global.identity.member) }}">
+                {{ __('Your profile') }}
+            </a>
+            <a class="navbar-item" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">
+                {{ __('Log out') }}
+            </a>
         {% endif %}
     </div>
 </div>

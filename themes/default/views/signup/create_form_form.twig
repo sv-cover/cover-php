@@ -1,0 +1,15 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (form.has_id ? __('Modify form') : __('Add form')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ form.has_id ? __('Modify form') : __('Create form') }}</h1>
+	</div>
+</header>
+
+<article class="block">
+	{{ include('_form_form.twig') }}
+</article>
+{% endblock %}

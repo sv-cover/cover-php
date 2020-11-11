@@ -1,145 +1,97 @@
-{% extends '@layout/layout.twig' %}
+{% extends './_single_layout.twig' %}
 
-{% block title iter.naam ~ ' – ' ~ __('Mailing lists') ~ ' – ' ~ parent() %}
-
-{% block content %}
-<header class="level">
-	<div class="level-left">
-		<nav class="breadcrumb" aria-label="breadcrumbs">
-			<ul>
-				<li><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a></li>
-				<li class="is-active"><a href="#" aria-current="page">{{ iter.naam }}</a></li>
-			</ul>
-		</nav>
-	</div>
-	{% if user_can_update iter %}
-		<div class="level-right buttons">
-			<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="button">{{ __('Modify mailing list properties') }}</a>
-		</div>
-	{% endif %}
-</header>
-<article>
-	<p>
-		<em>{{ __('Address') }}: {{ iter.adres }}</em>
-		{{ iter.omschrijving|parse_markup }}
-	</p>
-</article>
-<article class="level">
-	<div class="level-left buttons">
-		<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="button" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Add member') }}</a>
-
-		<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="button" data-partial-selector=".messageBox > .vertical-form" data-placement-selector="modal">{{ __('Subscribe a non-member') }}</a>
-
-		<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}" class="button">{{ __('Archived messages') }}</a>
-	</div>
-</article>
-<article>
+{% block tab_content %}
+<section id="mailing-list-subscriptions">
+	<h2 class="is-sr-only">{{ __('Subscriptions') }}</h2>
 	<form method="post" action="{{ controller.link_to('unsubscribe', iter)|e('html_attr') }}">
 		{{ html_nonce('unsubscribe', iter) }}
-		<table class="field table is-fullwidth">
-			<thead>
-				<tr>
-					<th></th>
-					<th>{{ __('Name') }}</th>
-					<th>{{ __('E-mail address') }}</th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for subscription in iter.subscriptions %}
-				<tr>
-					<td>
-						<label class="is-sr-only" for="{{ view.uid(subscription) }}">{{ __('Unsubscribe')}} {{ subscription.lid_id ? subscription.lid|full_name() : subscription.naam }}</label>
-						<input type="checkbox" id="{{ view.uid(subscription) }}" name="unsubscribe[]" value="{{ subscription.id }}">
-					</td>
-					{% if subscription.lid_id %}
-						<td>
-							<a href="profiel.php?lid={{ subscription.lid_id }}">{{ subscription.lid|full_name() }}
+		<div class="level">
+			<div class="level-left">
+				<div class="level-item">
+					<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="button is-fullwidth" data-popup="modal">
+						{{ __('Subscribe member') }}
+					</a>
+				</div>
+
+				<div class="level-item">
+					<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="button is-fullwidth" data-popup="modal">
+						{{ __('Subscribe non-member') }}
+					</a>
+				</div>
+
+				<div class="level-item">
+					<button class="button is-fullwidth" type="submit">{{ __('Unsubscribe selected') }}</button>
+				</div>
+			</div>
+		</div>
+		<div class="table-container">
+			<table class="field table is-fullwidth">
+				<thead>
+					<tr>
+						<th class="is-sticky"></th>
+						<th>{{ __('Name') }}</th>
+						<th>{{ __('E-mail address') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for subscription in iter.subscriptions %}
+					<tr>
+						<td class="is-sticky">
+							<label class="is-sr-only" for="{{ view.uid(subscription) }}">{{ __('Unsubscribe')}} {{ subscription.lid_id ? subscription.lid|full_name() : subscription.naam }}</label>
+							<input type="checkbox" id="{{ view.uid(subscription) }}" name="unsubscribe[]" value="{{ subscription.id }}">
 						</td>
-						<td>
-							{{ subscription.lid.is_private('email') ? __('Unknown') : subscription.email }}
+						{% if subscription.lid_id %}
+							<td>
+								<a href="profiel.php?lid={{ subscription.lid_id }}">{{ subscription.lid|full_name() }}
+							</td>
+							<td>
+								{{ subscription.lid.is_private('email') ? __('Unknown') : subscription.email }}
+							</td>
+						{% else %}
+							<td>{{ subscription.naam }}</td>
+							<td>{{ subscription.email }}</td>
+						{% endif %}
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="3">
+							<p class="has-text-centered">
+								{{ __('Nobody is subscribed to this list') }}
+							</p>
 						</td>
-					{% else %}
-						<td>{{ subscription.naam }}</td>
-						<td>{{ subscription.email }}</td>
-					{% endif %}
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-		<div class="field">
-			<div class="control buttons">
-				<button class="button is-primary" type="submit">{{ __('Unsubscribe selected') }}</button>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="level">
+			<div class="level-left">
+				<div class="level-item">
+					<button class="button is-fullwidth" type="submit">{{ __('Unsubscribe selected') }}</button>
+				</div>
 			</div>
 		</div>
 	</form>	
-</article>
-<article>
-	<h2 class="title is-4">Statistics</h2>
+</section>
+<section id="mailing-list-statistics">
+	<h2 class="is-sr-only">{{ __('Statistics') }}</h2>
 	<div class="columns is-multiline">
 		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Starting year') }}</figcaption>
 			{{ view.barchart(iter.get_reach('beginjaar'))|raw }}
-			<figcaption>{{ __('Starting year') }}</figcaption>
 		</figure>
 		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Age') }}</figcaption>
 			{{ view.barchart(iter.get_reach('leeftijd'))|raw }}
-			<figcaption>{{ __('Age') }}</figcaption>
 		</figure>
 		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Committees') }}</figcaption>
 			{{ view.barchart(iter.get_reach('committee_count'))|raw }}
-			<figcaption>{{ __('Committees') }}</figcaption>
 		</figure>
 		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Type') }}</figcaption>
 			{{ view.barchart(iter.get_reach('type'))|raw }}
-			<figcaption>{{ __('Type') }}</figcaption>
 		</figure>
 	</div>
-</article>
-
-<script>
-jQuery(function($) {
-	function split(val) {
-		return val.split(/,\s*/);
-	}
-
-	function extractLast(term) {
-		return split(term).pop();
-	}
-
-	$('.mailinglist-header + form').append(
-		$('<a>')
-			.addClass('button')
-			.attr({'href': '#mailinglist-settings'})
-			.text({{ __('Modify mailing list properties')|json_encode|raw }}));
-	
-	$('#lid_id')
-		.bind('keydown', function(e) {
-			if (event.keyCode === $.ui.keyCode.TAB
-				&& $(this).data('ui-autocomplete').menu.active)
-				e.preventDefault();
-		})
-		.autocompleteAlmanac({
-			source: function(request, response) {
-				$.getJSON('almanak.php', {
-					'search': extractLast(request.term)
-				}, response);
-			},
-			search: function() {
-				// custom minLength
-				if (extractLast(this.value).length < 2)
-					return false;
-			},
-			select: function(event, ui) {
-				var terms = split(this.value);
-				// remove the current input
-				terms.pop();
-				// add the selected item
-				terms.push(ui.item.id);
-				// add placeholder to get the comma-and-space at the end
-				terms.push('');
-				this.value = terms.join(', ');
-				return false;
-			}
-		});
-});
-</script>
+</section>
 {% endblock %}

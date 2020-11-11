@@ -42,7 +42,7 @@
 		}
 	}
 	
-	function _markup_parse_links(&$markup, &$placeholders)
+	function _markup_parse_links(&$markup, $header_offset, &$placeholders)
 	{
 		$count = 0;
 
@@ -54,7 +54,7 @@
 
 			$target = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST) ? ' target="_blank"' : '';
 
-			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $match[1] . '">' . markup_parse($match[2], $placeholders) . '</a>';
+			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $match[1] . '">' . markup_parse($match[2], $header_offset, $placeholders) . '</a>';
 			
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
@@ -72,9 +72,11 @@
 
 			$host = parse_url($match[0], PHP_URL_HOST);
 
-			$target = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST) ? ' target="_blank"' : '';
+			$is_external = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST);
+			$rel = $is_external ? ' rel="noopener noreferrer nofollow"' : ' rel="nofollow"';
+			$target = $is_external ? ' target="_blank"' : '';
 
-			$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
+			$placeholders[$placeholder] = '<a' . $target . $rel . ' href="' . $url . '">' . (strlen($match[0]) > 60 ? (substr($match[0], 0, 28) . '...' . substr($match[0], -29)) : $match[0]) . '</a>';
 
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
@@ -203,8 +205,23 @@
 
 		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match))
 		{
+			$placeholder = sprintf('#YOUTUBE%d#', $count++);
+			$placeholders[$placeholder] = '<figure class="image is-16by9 youtube"><iframe class="has-ratio" src="https://www.youtube-nocookie.com/embed/' . $match[1] . '" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></figure>';
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
+	}
+
+	function _markup_parse_video(&$markup, &$placeholders)
+	{
+		static $count = 0;
+
+		while (preg_match('/\[video=(.+?)\]/', $markup, $match))
+		{
+			if (!filter_var($match[1], FILTER_VALIDATE_URL))
+				return $match[0];
+
 			$placeholder = sprintf('#VIDEO%d#', $count++);
-			$placeholders[$placeholder] = '<iframe src="//www.youtube.com/embed/' . $match[1] . '" frameborder="0" allowfullscreen></iframe>';
+			$placeholders[$placeholder] = '<video class="markup-video" src="' . $match[1] . '" controls><a href="' . $match[1] . '">Watch video</a></video>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
@@ -240,12 +257,12 @@
 		}, $markup);
 	}
 	
-	function _markup_parse_header(&$markup) {
+	function _markup_parse_header(&$markup, $header_offset=0) {
 		$markup = preg_replace_callback(
 			'/\[h(?P<level>\d)(?<classes>(\.[a-z-])*)\](?P<content>.+?)\[\/h\\1\]\s*/is',
-			function($match) {
+			function($match) use ($header_offset) {
 				return sprintf('<h%d class="%s">%s</h%1$d>',
-					$match['level'],
+					max(min(intval($match['level']) + $header_offset, 6), 1),
 					str_replace('.', ' ', $match['classes']),
 					$match['content']);
 			}, $markup);
@@ -328,7 +345,7 @@
 	  *
 	  * @result a string with all the markup replaced by html
 	  */
-	function markup_parse($markup, &$placeholders = null) {
+	function markup_parse($markup, $header_offset=0, &$placeholders = null) {
 		if (!$placeholders)
 			$placeholders = array();
 		
@@ -348,15 +365,17 @@
 		/* Replace [mailiginlist] embed */
 		_markup_parse_mailinglist($markup, $placeholders);
 
-		/* Parse [img=] and [youtube=] */
+		/* Parse [img=], [youtube=] [video=] */
 		_markup_parse_images($markup, $placeholders);
 
 		_markup_parse_youtube($markup, $placeholders);
 
+		_markup_parse_video($markup, $placeholders);
+
 		_markup_parse_embed($markup, $placeholders);
 		
 		/* Filter [url] */
-		_markup_parse_links($markup, $placeholders);
+		_markup_parse_links($markup, $header_offset, $placeholders);
 
 		/* Replace scary stuff and re-replace not so very scary stuff */
 		$markup = htmlspecialchars($markup, ENT_NOQUOTES);
@@ -384,7 +403,7 @@
 		_markup_parse_simple($markup);
 
 		/* Parse header */
-		_markup_parse_header($markup);
+		_markup_parse_header($markup, $header_offset);
 		
 		/* Parse macros */
 		_markup_parse_macros($markup);

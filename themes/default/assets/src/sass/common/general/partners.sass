@@ -1,0 +1,125 @@
+$partners-background-color: $scheme-main-ter !default
+
+@function space-around-columns($num-columns)
+    $space-between: 2 * $column-gap * ($num-columns - 1)
+    $space-around: 2 * $section-padding-horizontal
+    @return $space-between + $space-around
+
+@function n-rows-height($num-columns, $num-rows:1, $total-width:100vw, $cell-aspect:0.666666)
+    $h-spacing: space-around-columns(3) / $num-columns // unit: rem
+    $total-h-spacing: $h-spacing * $cell-aspect * $num-rows //unit: rem
+    $base-width: $total-width / $num-columns // unit: vw
+    $total-base-width: $base-width * $cell-aspect * $num-rows // unit: vw
+    $total-v-spacing: 2 * $column-gap * $num-rows // unit: rem
+    @return calc(#{$total-base-width} - #{$total-h-spacing} + #{$total-v-spacing})
+
+
+=partners-columns($num-columns)
+    .partners
+        --column-count: #{$num-columns}
+
+        .collapse .collapse-content
+            &:not(.is-visible)
+                height: n-rows-height($num-columns, 1)
+
+            &.is-transitioning-in
+                height: n-rows-height($num-columns, 2)
+
+
+.partners
+    --column-count: 2
+    background: $partners-background-color
+
+
+    .title
+        font-size: $size-6
+        // color: $text-light
+
+    .container:not(:last-child)
+        margin-bottom: $block-spacing
+
+    .columns
+        justify-content: flex-start
+
+    .column
+        flex: 0 1 calc(100% / var(--column-count))
+
+        .partner
+            position: relative
+            display: block
+            padding-top: 66.6666% // is-3by2
+            filter: saturate(0%)
+            opacity: .75
+            transition: opacity 150ms ease-in-out, saturate 150ms ease-in-out
+
+            &:hover,
+            &:focus
+                opacity: 1
+                filter: saturate(100%)
+
+            &:focus
+                outline: 1px dotted
+
+            .image
+                +overlay
+                overflow: hidden
+
+                img
+                    width: 100%
+                    height: 100%
+                    object-fit: contain
+
+    .main-partners
+        .columns
+            justify-content: center
+
+        .column
+            flex: 0 0 calc(2 * 100% / var(--column-count))
+
+    .collapse
+        &.is-disabled
+            .collapse-content,
+            .collapse-content:not(.is-visible)
+                height: auto
+
+            .controls
+                display: none
+            
+
+        .collapse-content
+            visibility: visible
+
+            &:not(.is-visible)
+                height: n-rows-height(2, 1)
+
+            &.is-transitioning-in
+                height: n-rows-height(2, 2)
+
+        .controls
+            text-align: center
+
++from($mobile)
+    +partners-columns(3)
+
++tablet
+    +partners-columns(4)
+
++desktop
+    .partners
+        --column-count: 6
+
+        .collapse
+            .collapse-content,
+            .collapse-content:not(.is-visible)
+                height: auto
+
+            .controls
+                display: none
+
++widescreen
+    .partners
+        --column-count: 8
+
++fullhd
+    .partners
+        --column-count: 10

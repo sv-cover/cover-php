@@ -3,18 +3,22 @@
 {% block title __('No access') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<article>
+<article class="block">
 	<h1 class="title">{{ __('No access') }}</h1>
 	<div class="content">
-	{% block error_message %}
-		<p>{{ exception.message|default(__('Access to this part of the website is restricted.')) }}</p>
-	{% endblock %}
-	{% if not global.auth.logged_in %}
-		<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
-		<span class="separator">{{ __('or') }}</span>
-		<a href="lidworden.php" class="button register">{{ __('Become a member') }}</a>
-		<p>{{ __('…or back to <a href="%s">the homepage</a>')|format('/')|raw }}</p>
+		{% block error_message %}
+			<p>{{ exception.message|default(__('Access to this part of the website is restricted.')) }}</p>
+		{% endblock %}
+		{% if not global.auth.logged_in %}
+			<p>
+				<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" class="button is-primary is-fullwidth">{{ __('Log in') }}</a>
+				<div class="divider is-fullwidth">{{ __('or') }}</div>
+				<a href="/lidworden.php" class="button is-fullwidth">{{ __('Become a member') }}</a>
+			</p>
+			<p>
+				<a href="/" class="button is-text is-fullwidth">{{ __('back to the homepage') }}</a>
+			</p>
+		{% endif %}
 	</div>
-	{% endif %}
 </article>
 {% endblock %}

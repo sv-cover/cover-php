@@ -1,0 +1,90 @@
+$footer-main-background-color: $grey-lightest !default
+
+.footer-main
+    background: $footer-main-background-color
+    text-align: center
+    color: $grey-dark
+
+    a
+        color: inherit
+
+        &:active,
+        &:focus,
+        &:hover
+            text-decoration: underline
+
+        &:active
+            color: $link-active
+
+        &:focus
+            color: $link-focus
+
+        &:hover
+            color: $link-hover
+
+    ul li.divider
+        display: none
+
+
++tablet
+    .footer-main ul li,
+    .footer-main ul li.divider // override default devider margin
+        display: inline-block
+        margin: 0 $column-gap
+
+.barchart
+    width: 100%
+    height: auto
+
+.image
+    img.darkmode
+        display: none
+
+.sortable-chosen,
+.sortable-chosen .sortable-handle
+    cursor: grabbing
+
+.sortable-handle
+    cursor: grab
+
+figure.youtube
+    margin: 0
+
+// TODO: implement in cover style system
+button.card-header-icon
+    background-color: inherit
+    border: none
+    font-size: inherit
+    color: $grey
+    &:hover
+        color: $link-hover!important
+
+// TODO: implement in cover style system
+.button.is-baseline
+    vertical-align: baseline
+
+.image.is-centered
+    margin-left: auto
+    margin-right: auto
+
+ul.controls li
+    display: inline-block
+    &:not(:last-child)
+        margin-right: 0.75rem
+
+.modal.filemanager
+    .modal-card
+        width: 80ch
+        max-width: 100%
+    .modal-card-body
+        padding: 0
+    .modal-card-foot:empty
+        display: none
+    iframe
+        width: 80ch
+        height: 600px
+        vertical-align: top
+
++mobile
+    .media-content
+        overflow: visible

@@ -1,76 +1,70 @@
 {% if books|length > 0 %}
-<article class="columns is-multiline is-mobile">
+<article>
+<ul class="book-gallery columns is-multiline">
 {% for book in books %}
-	<div id="book_{{ book.id }}" class="column is-2-desktop is-one-quarter-tablet is-half-mobile {{ book.read_status }}">
+	<li id="book_{{ book.id }}" class="book column is-half-tablet is-one-third-desktop is-one-quarter-fullhd {{ book.read_status }}" data-id="{{ book.id }}">
 		<a href="fotoboek.php?book={{ book.id }}">
-			<div class="icon is-large" title="Photobook">
-				<span class="fa-layers fa-fw fa-2x">
-					<i class="fas fa-folder-open" aria-hidden="true"></i>
-					{% if book.read_status == 'unread' %}
-						<span class="fa-layers-counter has-text-danger" aria-hidden="true"></span>
-						<span class="is-sr-only">Photobook with new photo's</span>
-					{% else %}
-						<span class="is-sr-only">Photobook</span>
+			<div class="overlay">
+				<h2 class="title">{{ book.titel }}</h2>
+				{% if user_can_update book and book.visibility is not same as(null) %}
+					{% if book.visibility == constant('DataModelPhotobook::VISIBILITY_PUBLIC') %}
+						<span class="visibility" title="{{ __('Public') }}">
+							<span class="icon">
+								<i class="fas fa-globe fa-fw" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Public') }}</span>
+							</span>
+						</span>
+					{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_MEMBERS') %}
+						<span class="visibility" title="{{ __('Only logged in members') }}">
+							<span class="icon">
+								<i class="fas fa-user fa-fw" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Only logged in members') }}</span>
+							</span>
+						</span>
+					{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS') %}
+						<span class="visibility" title="{{ __('Only logged in active members') }}">
+							<span class="icon">
+								<i class="fas fa-user-check fa-fw" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Only logged in active members') }}</span>
+							</span>
+						</span>
+					{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_PHOTOCEE') %}
+						<span class="visibility" title="{{ __('Only logged in members of the PhotoCee') }}">
+							<span class="icon">
+								<i class="fas fa-lock fa-fw" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Only logged in members of the PhotoCee') }}</span>
+							</span>
+						</span>
 					{% endif %}
-				</span>
+				{% endif %}
 			</div>
-
-			{# <img src="{{ link_static('images/book.png') }}" class="book_thumb"> #}
-			<div>
-				{{ book.titel }} 
-				<div><small>{{ view.summary(book) }}</small></div>
+			{% if book.read_status == 'unread' %}
+				<div class="new-badge">{{ __('New!') }}</div>
+			{% endif %}
+			<div class="thumbnail-images columns is-gapless is-mobile">
+				{% for photo in view.thumbnail_photos(book, 3) %}
+					{# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
+					{% set size = photo.get_scaled_size(null, 600) %}
+					<div class="column image {{ loop.first ? 'active' : '' }}">
+						<figure>
+							<noscript>
+								<img
+									src="{{ photo.get_url(null, 600) }}"
+									{% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+								>
+							</noscript>
+							<img
+								class="lazy"
+								data-src="{{ photo.get_url(null, 600) }}"
+								{% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+							>
+						</figure>
+					</div>
+				{% endfor %}
 			</div>
 		</a>
-		{% if user_can_update book %}
-		<div class="level is-mobile">
-			<a href="fotoboek.php?view=update_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Modify photo album') }}">
-				<span class="icon is-small">
-					<i class="fas fa-pencil-alt"></i>
-					<span class="is-sr-only">{{ __('Modify photo album') }}</span>
-				</span>
-			</a>
-			{% if user_can_delete book %}
-			<a href="fotoboek.php?view=delete_book&amp;book={{ book.id }}" class="level-item button is-small" title="{{ __('Delete photo album') }}" data-popup="modal">
-				<span class="icon is-small">
-					<i class="fas fa-trash"></i>
-					<span class="is-sr-only">{{ __('Delete photo album') }}</span>
-				</span>
-			</a>
-			{% endif %}
-			{% if user_can_update book and book.visibility is not same as(null) %}
-				{% if book.visibility == constant('DataModelPhotobook::VISIBILITY_PUBLIC') %}
-					<span class="level-item button is-small is-static" title="{{ __('Public') }}">
-						<span class="icon">
-							<i class="fas fa-globe" aria-hidden="true"></i>
-							<span class="is-sr-only">{{ __('Public') }}</span>
-						</span>
-					</span>
-				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_MEMBERS') %}
-					<span class="level-item button is-small is-static" title="{{ __('Only logged in members') }}">
-						<span class="icon">
-							<i class="fas fa-user" aria-hidden="true"></i>
-							<span class="is-sr-only">{{ __('Only logged in members') }}</span>
-						</span>
-					</span>
-				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS') %}
-					<span class="level-item button is-small is-static" title="{{ __('Only logged in active members') }}">
-						<span class="icon">
-							<i class="fas fa-user-check" aria-hidden="true"></i>
-							<span class="is-sr-only">{{ __('Only logged in active members') }}</span>
-						</span>
-					</span>
-				{% elseif book.visibility == constant('DataModelPhotobook::VISIBILITY_PHOTOCEE') %}
-					<span class="level-item button is-small is-static" title="{{ __('Only logged in members of the PhotoCee') }}">
-						<span class="icon">
-							<i class="fas fa-lock" aria-hidden="true"></i>
-							<span class="is-sr-only">{{ __('Only logged in members of the PhotoCee') }}</span>
-						</span>
-					</span>
-				{% endif %}
-			{% endif %}
-		</div>
-		{% endif %}
-	</div>
+	</li>
 {% endfor %}
+</ul>
 </article>
 {% endif %}

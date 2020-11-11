@@ -12,22 +12,18 @@
 
 		<div class="field">
 			{{ html_label(__('Members'), 'member_ids[]', errors=errors) }}
-			<div class="select">
+			<div class="select is-multiple">
 				{{ html_select_field('member_ids[]', view.active_member_options, iter, field='member_ids', multiple=true) }}
 			</div>
+			<p class="help">You can select multiple members</p>
 		</div>
 
 		<fieldset class="field">
 			<legend class="label">{{ __('Committees') }}</legend>
-			<ul class="columns is-multiline">
+			<ul class="columns-vertical has-2-mobile has-3-tablet is-gapless">
 				{% for committee in view.committee_options %}
-				<li class="column is-half-mobile is-one-third-tablet is-one-quarter-desktop">
-					<div class="field">
-						<div class="control">
-							{{ html_input_checkbox('committee_ids[]', iter, value=committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' '), label=committee.naam) }}
-							
-						</div>
-					</div>
+				<li class="column control">
+					{{ html_input_checkbox('committee_ids[]', iter, value=committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' '), label=committee.naam) }}
 				</li>
 				{% endfor %}
 			</ul>
@@ -36,7 +32,7 @@
 		<div class="field">
 			{{ html_label(__('Points'), 'points', errors=errors, required=true) }}
 			<div class="control">
-				{{ html_input_text('points', iter, errors=errors, type='number') }}
+				{{ html_input_number('points', iter, errors=errors) }}
 			</div>
 		</div>
 

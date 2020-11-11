@@ -27,7 +27,7 @@
 
 	<div class="field">
 		{{ html_label(__('Message'), 'message', errors=errors) }}
-		<div class="tabs-wrapper">
+		<div class="tabs-wrapper is-condensed">
 			<div class="tabs is-toggle">
 				<ul>
 					<li class="is-active">
@@ -42,7 +42,7 @@
 				<div id="forum-message" class="is-active">
 					{{ html_textarea_field('message', message, rows=15) }}
 				</div>
-				<div id="forum-message-preview" class="is-invisible" data-preview-source="#forum-message textarea" data-preview-url="forum.php?view=preview">
+				<div id="forum-message-preview" class="content-preview box" data-preview-source="#forum-message textarea" data-preview-url="forum.php?view=preview">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>

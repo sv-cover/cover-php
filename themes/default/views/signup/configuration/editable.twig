@@ -1,30 +1,23 @@
-<header class="card-header">
-	<h3 class="card-header-title">{{ __('Titles and text (layout)') }}</h3>
-	{# Ugh. Want this in form_form.twig #}
-	<div class="card-header-icon sortable-drag-handle" title="Drag me to reorder"></div>
-</header>
-<div class="card-content">
-	<div class="field">
-		{{ html_label(__('Content'), 'content') }}
-		<div class="tabs-wrapper">
-			<div class="tabs is-toggle">
-				<ul>
-					<li class="is-active">
-						<a href="#editable-{{name}}-content">{{ __('Raw') }}</a>
-					</li>
-					<li>
-						<a href="#editable-{{name}}-content-preview">{{ __('Preview') }}</a>
-					</li>
-				</ul>
-			</div>
+<div class="field">
+	{{ html_label(__('Content'), 'content') }}
+	<div class="tabs-wrapper is-condensed">
+		<div class="tabs is-toggle">
+			<ul>
+				<li class="is-active">
+					<a href="#editable-{{name}}-content">{{ __('Raw') }}</a>
+				</li>
+				<li>
+					<a href="#editable-{{name}}-content-preview">{{ __('Preview') }}</a>
+				</li>
+			</ul>
+		</div>
 
-			<div class="tabs-content">
-				<div id="editable-{{name}}-content">
-					{{ html_textarea_field('content', data, rows=4) }}
-				</div>
-				<div id="editable-{{name}}-content-preview" data-preview-source="#editable-{{name}}-content textarea" data-preview-url="show.php?view=preview">
-					<span class="loading">{{ __('Loading preview…') }}</span>
-				</div>
+		<div class="tabs-content">
+			<div id="editable-{{name}}-content" class="is-active">
+				{{ html_textarea_field('content', data, rows=4) }}
+			</div>
+			<div id="editable-{{name}}-content-preview" class="content-preview box content" data-preview-source="#editable-{{name}}-content textarea" data-preview-url="show.php?view=preview&amp;lang=nl">
+				<span class="loading">{{ __('Loading preview…') }}</span>
 			</div>
 		</div>
 	</div>

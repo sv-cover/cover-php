@@ -2,93 +2,63 @@
 
 {% block title iter|personal_full_name ~ ' – ' ~ parent() %}
 
-{% block content %}
-<header>
-	<h1 class="title">{{ __('Profile of %s')|format(iter|full_name) }}</h1>
-	
-	{% if errors is defined and errors|length > 0 %}
-	<div class="notification is-danger content">
-		<p>{{ __('You haven\'t filled in all the fields correctly') }}</p>
-		
-		{% if error_message is defined %}
-			<p>{{ error_message|nl2br }}</p>
-		{% endif %}
-	</div>
-	{% endif %}
-
-	{{ include('_profile_widget.twig') }}
-</header>
-
-<div>
-	<div class="tabs-wrapper">
-		<div class="tabs">
-			<ul>
-				{% for tab_name, tab in view.tabs(iter) %}
-					{% if tab.visible %}
-						<li class="{{ tab_name == active_tab ? 'is-active' : '' }} {{ tab.class is defined ? tab.class : '' }}">
-							<a href="profiel.php?lid={{ iter.id }}&amp;view={{ tab_name }}#{{ tab_name }}-tab">
-								{%- if tab.icon is defined -%}
-									<span class="icon is-small"><i class="{{ tab.icon }}" aria-hidden="true"></i></span>
-								{%- endif -%}
-								<span>{{ tab.label }}</span>
-							</a>
-						</li>
-					{% endif %}
-				{% endfor %}
-			</ul>
+{% block page %}
+{% set show_tabs = view.tabs(iter)|filter(t => t.visible)|length > 1 %}
+<div class="section profile-page">
+	<div class="container {% if show_tabs %}has-sidebar{% else %}has-content{% endif %}">
+		<div class="columns is-hidden-touch">
+			<div class="column is-content {% if show_tabs %}is-offset-sidebar{% endif %}">
+				{{ include('_profile_widget.twig') }}
+			</div>
 		</div>
-		<div class="tabs-content">
-			<div id="{{ active_tab }}-tab">
-				{% block tab_content %}{% endblock %}
+		
+		<div class="columns {% if show_tabs %}tabs-wrapper is-vertical{% endif %}" data-history>
+			{% if show_tabs %}
+				<aside class="column is-sidebar">
+					<nav class="tabs is-vertical profile-navigation">
+						<ul>
+							<li class="tabs-title">
+								{{ iter|full_name }}
+							</li>
+							{% for tab_name, tab in view.tabs(iter) %}
+								{% if tab.visible %}
+									<li class="{{ tab_name == active_tab ? 'is-active' : '' }} {{ tab.class is defined ? tab.class : '' }}">
+										<a href="profiel.php?lid={{ iter.id }}&amp;view={{ tab_name }}#{{ tab_name }}-tab">
+											<span>{{ tab.label }}</span>
+											{%- if tab.icon is defined -%}
+												<span class="icon is-small">
+													<i class="{{ tab.icon }}" aria-hidden="true"></i>
+												</span>
+											{%- endif -%}
+										</a>
+									</li>
+								{% endif %}
+							{% endfor %}
+						</ul>
+					</nav>
+				</aside>
+			{% endif %}
+			<div class="column is-content">
+				{% if show_tabs %}
+					<button class="button tabs-back" data-sticky hidden>
+						<span class="icon" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+						<span>{{ __('Profile settings') }}</span>
+					</button>
+				{% endif %}
+				{% if errors is defined and errors|length > 0 %}
+					<div class="notification is-danger content">
+						<p>{{ __('You haven\'t filled in all the fields correctly') }}</p>
+						
+						{% if error_message is defined %}
+							<p>{{ error_message|nl2br }}</p>
+						{% endif %}
+					</div>
+				{% endif %}
+				<div class="tabs-content">
+					<div id="{{ active_tab }}-tab" class="is-active">{% block tab_content %}{% endblock %}</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script>
-	$(function() {
-		/* Todo: integrate this with the tabs in common.js */
-		$('#profile-tab-container > .tab-sidebar .nav-tabs li a').on('click', function(e) {
-			$(this).closest('.nav-tabs').find('li').removeClass('active');
-			$('#profile-tab-container > .tab-content > .tab-pane').removeClass('active');
-
-			$(this).closest('li').addClass('active');
-
-			var tabName = $(this).attr('href').match(/view=([a-z_]+)/)[1] + '-tab';
-
-			var tab = $('#profile-tab-container > .tab-content #' + tabName);
-			if (tab.length) {
-				tab.addClass('active');
-			} else {
-				tab = $('<div>').attr('id', tabName).addClass('tab-pane active')
-				tab.html('<div class="loading-indicator"><i class="fa fa-spinner fa-pulse"></i></div>');
-				tab.load($(this).attr('href') + ' #profile-tab-container > .tab-content > .tab-pane#' + tabName, function() {
-					$(document.body).trigger(jQuery.Event('partial-content-loaded', {target: $(this)}));
-				});
-				$('#profile-tab-container > .tab-content').append(tab);
-			}
-
-			if (window.history.pushState) {
-				e.preventDefault();
-				window.history.pushState({'tabName' : tabName}, $(this).text(), $(this).attr('href'));
-			}
-		});
-	});
-
-	$(document).on('ready partial-content-loaded', function(loaded) {
-		$(loaded.target).find('form.toggle-action-button').on('submit', function(e) {
-			e.preventDefault();
-			var $form = $(this);
-			var id = $form.attr('id');
-
-			var tmp = document.createDocumentFragment();
-			$(tmp).load($form.attr('action'), $form.serializeArray(), function() {
-				var btn = tmp.querySelector('#' + id);
-				$form.get(0).className = btn.className;
-				$form.find('input[type=hidden]').remove();
-				$form.append(btn.querySelectorAll('input[type=hidden]'));
-			});
-		});
-	});
-</script>
 {% endblock %}

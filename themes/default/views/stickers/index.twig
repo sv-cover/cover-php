@@ -2,170 +2,67 @@
 
 {% block title __('Sticker map') ~ ' – ' ~ parent() %}
 
-{% block content %}
-<header class="level">
-	<div class="level-left">
-		<h1 class="title">{{ __('Sticker map') }}</h1>
-	</div>
-	{% if user_can_create controller.new_iter %}
-	<div class="level-right buttons">
-		<a href="{{ controller.link_to_create() }}" id="add-sticker-button" class="button" data-placement-selector="modal" data-partial-selector=".add-sticker-form">
-			{{ __('New sticker') }}
-		</a>
-	</div>
-	{% endif %}
-</header>
-
-<article id="sticker-map">
-	<div id="sticker-info-window">
-		<a href="" class="sticker-photo" target="_new">
-			<figure>
-				<img src="">
-			</figure>
-		</a>
-		<div class="content">
-			<h3 class="sticker-label"></h3>
-			<small class="sticker-user">{{ __('Placed by') }} <a href="#"></a></small>
-			<p class="sticker-description"></p>
+{% block page %}
+<article class="sticker-map">
+	<header class="section">
+		<div class="level">
+			<div class="level-left">
+				<h1 class="title">{{ __('Sticker map') }}</h1>
+			</div>
+			{% if user_can_create controller.new_iter %}
+			<div class="level-right buttons">
+				<a href="{{ controller.link_to_create() }}" class="button" data-popup="modal" data-add-sticker-button>
+					<span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+					<span>{{ __('New sticker') }}</span>
+				</a>
+			</div>
+			{% endif %}
 		</div>
-		<div>
-			<form method="post" action="" class="field">
-				<input type="hidden" name="_nonce">
-				<button type="submit" class="button">
-					<span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
-					<span>{{ __('Delete sticker') }}</span>
-				</button>
-			</form>
-			
-			<form method="post" action="" enctype="multipart/form-data" class="field">
-				<div class="field">
-					<div class="control">
-						<div class="file">
-							<label class="file-label" for="field-photo">
-								<input id="field-photo" class="file-input" type="file" name="photo" accept="image/jpeg">
-								<span class="file-cta">
-									<span class="file-icon">
-										<i class="fas fa-upload" aria-hidden="true"></i>
-									</span>
-									<span class="file-label">
-										{{ __('Choose photo…') }}
-									</span>
-								</span>
-							</label>
-						</div>
-					</div>
-					<p class="help">
-						{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}
-					</p>
+	</header>
+	<noscript>
+		<section class="section">
+			<div class="container">
+				<div class="notification is-danger">
+					{{ __("Sorry, but this page won't function without JavaScript. Please enable JavaScript to see the sticker map.") }}
 				</div>
-			</form>
-		</div>
-	</div>
+			</div>
+		</section>
+	</noscript>
+	<section class="map-container">
+		<div
+			class="map"
+			data-geojson-url="{{ controller.link_to_geojson() }}"
+			data-create-url="{{ controller.link_to_create() }}"
+			data-marker="{{ link_static('images/map_marker.svg') }}"
+		></div>
+		<template data-map-popup-template>
+			<div class="card">
+				<a class="card-image" target="_new" data-sticker-image hidden>
+					<figure>
+						<img src="">
+					</figure>
+				</a>
+				<div class="card-content">
+					<div class="content">
+						<h2 class="title is-6" data-sticker-label hidden></h2>
+						<p class="subtitle is-7" data-sticker-user hidden>
+							{{ __('Placed by') }} <a data-sticker-user-link></a>	
+						</p>
+						<p data-sticker-description hidden></p>
+						<p class="has-text-grey is-size-7" data-sticker-time hidden>{{ __('Added on') }}&nbsp;</p>
+					</div>
+				</div>
+
+				<footer class="card-footer" data-sticker-controls hidden>
+					<button type="button" class="card-footer-item" data-sticker-delete hidden>
+						{{ __('Delete') }}
+					</button>
+					<button type="button" class="card-footer-item" data-sticker-upload-image hidden>
+						{{ __('Add photo') }}
+					</button>
+				</footer>
+			</div>
+		</template>
+	</section>
 </article>
-
-<!-- TODO: misschien Google Maps vervangen met iets mooiers/vrijers, bijv. OSM? -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN22N-bX3aSaGfy9w9-oeUsnFRlB-1FiI&amp;sensor=false"></script>
-<script type="text/javascript">
-	var stickers = {{ view.encodeStickers(iters)|raw }};
-
-	var highlightedStickerId = /sticker=(\d+)/.test(document.location.href)
-		? document.location.href.match(/sticker=(\d+)/)[1]
-		: null;
-
-	var removeLink = {{ controller.link_to_delete(model.new_iter({'id': 'XXX'}))|json_encode()|raw }};
-
-	var addPhotoLink = {{ controller.link_to_add_photo(model.new_iter({'id': 'XXX'}))|json_encode()|raw }};
-
-	// Initialize the sticker map
-	$(function() {
-		var canvas = $('#sticker-map');
-
-		var description = $('#sticker-info-window').detach();
-
-		var mapOptions = {
-			center: new google.maps.LatLng({{ view.location }}),
-			zoom: 12,
-			streetViewControl: false
-		};
-
-		var map = new google.maps.Map(canvas.get(0), mapOptions);
-
-		var infoWindow = new google.maps.InfoWindow({
-			content: description.get(0),
-			maxWidth: 300
-		});
-
-		canvas.data('google-map', map);
-
-		description.find('input[type=file]').change(function(e) {
-			if (this.value)
-				this.form.submit();
-		});
-
-		description.find('.remove-sticker-form').submit(function(e) {
-			if (!confirm({{ __('Are you sure you want to delete your sticker from the map?')|json_encode()|raw }}))
-				e.preventDefault();
-		})
-
-		// Place a marker for each of the stickers
-		$.each(stickers, function() {
-			var sticker = this;
-
-			var marker = new google.maps.Marker({
-				title: sticker.label,
-				position: new google.maps.LatLng(sticker.lat,sticker.lng),
-				map: map
-			});
-
-			var showInfoWindow = function() {
-				// Fill in the fields
-				description.find('input[name=id]').val(sticker.id);
-				description.find('.sticker-label').text(sticker.label);
-				description.find('.sticker-description').text(sticker.omschrijving);
-				description.find('.controls').toggle(sticker.editable);
-				description.find('.sticker-photo').toggle(sticker.foto != null);
-				description.find('.sticker-user').toggle(sticker.toegevoegd_door_naam != null);
-				description.find('.remove-sticker-form').prop('action', removeLink.replace(/XXX/, sticker.id));
-				description.find('.remove-sticker-form input[name=_nonce]').val(sticker.delete_nonce);
-				description.find('.add-photo-form').prop('action', addPhotoLink.replace(/XXX/, sticker.id));
-
-				// If it is known who added this sticker, show the 'by-line'
-				if (sticker.toegevoegd_door_naam)
-					description.find('.sticker-user > a')
-						.attr('href', 'profiel.php?lid=' + sticker.toegevoegd_door_id)
-						.text(sticker.toegevoegd_door_naam);
-
-				if (sticker.foto) {
-					description.find('.sticker-photo').attr('href', sticker.foto);
-					description.find('.sticker-photo > img').attr('src', sticker.foto + '&thumbnail=true');
-				}
-
-				// Pop open the window at the place of the marker
-				infoWindow.open(map, marker);
-			};
-
-			// If this is the newly added marker, animate it
-			if (highlightedStickerId == sticker.id)
-			{
-				// Remove the marker from the map (so it doesn't already show up)
-				marker.setMap(null); 
-
-				// When the map is loaded, drop the marker
-				var listener = google.maps.event.addListener(map, 'tilesloaded', function() {
-					marker.setMap(map);
-					marker.setAnimation(google.maps.Animation.DROP);
-
-					// Also open up the info window
-					setTimeout(showInfoWindow, 500);
-
-					// Remove this listener so it won't drop a second time
-					google.maps.event.removeListener(listener);
-				});
-			}
-
-			// Also, when clicking a marker, fill the info window and open it.
-			google.maps.event.addListener(marker, 'click', showInfoWindow);
-		});
-	});
-</script>
 {% endblock %}

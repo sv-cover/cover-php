@@ -3,41 +3,59 @@
 {% block title __("Add photos") ~ ' – ' ~ parent() %}
 
 {% block content %}
-<header>
-	{{ include('_path.twig') }}
-	<h1 class="title">{{ __('Photo album') }} – {{ __("Add photos") }}</h1>
-</header>
-<article>
-
-	{% if errors|length > 0 %}
-		<div class="errors">
-			{% for error in errors %}
-				<p>{{ error }}</p>
-			{% endfor %}
-		</div>
-	{% endif %}
-
-	<div id="folder-selector"></div>
+<article
+	class="add-photos"
+	data-api-base-url="fotoboek.php?book={{ book.id|e('url') }}"
+	data-photo-base-url="fotoboek.php?photo="
+>
+	<h1 class="title">{{ __("Add photos to") }} {{ book.titel }}</h1>
 
 	<form id="add-photos-form" action="fotoboek.php?book={{ book.id|e('url') }}&amp;view=add_photos" method="post">
 		{{ html_nonce('add_photos', book) }}
-		<ul id="photo-selector">
-			<li>
-				<span class="add-control">
-					<input type="checkbox" name="photo[$index][add]" value="true" checked="checked">
-					<a href="fotoboek.php?photo=$id" target="_blank">&#10004;</a>
-				</span>
-				<img class="thumbnail">
-				<span class="description">
-					<input type="text" name="photo[$index][description]" placeholder="{{ __('Omschrijving')|e('html_attr') }}">
-				</span>
-				<span class="filename"></span>
-				<span class="created-on"></span>
-				<input type="hidden" name="photo[$index][path]">
-			</li>
-		</ul>
+
+		{% if errors|length > 0 %}
+			<div class="field errors">
+				{% for error in errors %}
+					<p class="notification is-danger">
+						<button class="delete"></button>
+						{{ error }}
+					</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		<div id="folder-selector" class="field"></div>
+
+		<div class="table-container field" id="photo-selector">
+			<table class="table is-fullwidth">
+				<tbody>
+					<tr id="photo-template">
+						<td class="thumbnail">
+							<figure class="media-left image">
+								<img>
+							</figure>
+						</td>
+						<td class="add-control">
+							<input type="checkbox" name="photo[$index][add]" value="true" checked="checked">
+							<a class="icon has-text-success" href="fotoboek.php?photo=$id" target="_blank" title="{{ __('This photo has been added tho this book already') }}">
+								<i class="fas fa-check-square fa-fw" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('This photo has been added tho this book already') }}</span>
+							</a>
+						</td>
+						<td class="description">
+							<input class="input" type="text" name="photo[$index][description]" placeholder="{{ __('Description')|e('html_attr') }}">
+						</td>
+						<td class="path">
+							<span class="filename"></span>
+							<input type="hidden" name="photo[$index][path]">
+						</td>
+						<td class="created-on"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		
-		<div class="field">
+		<div class="field form-controls">
 			<div class="content buttons">
 				<button type="submit" class="button is-primary">{{ __("Add photos") }}</button>
 				<a href="fotoboek.php?book={{ book.id|e('url') }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
@@ -45,139 +63,4 @@
 		</div>
 	</form>
 </article>
-
-<script>
-var baseurl = 'fotoboek.php?book={{ book.id|e('url') }}';
-
-jQuery(function($) {
-	function basename(path) {
-		var match = path.match(/\/([^\/]+)$/);
-		return match ? match[1] : path;
-	}
-
-	function load_folders(path, ol) {
-		$.getJSON(baseurl + '&view=add_photos_list_folders&path=' + encodeURIComponent(path)).then(function(data) {
-			$.each(data, function(index, folder) {
-				$('<li>')
-					.data('folder', folder)
-					.text(basename(folder))
-					.appendTo(ol);
-			});
-		});
-	}
-
-	var stream = null;
-
-	var $photo_template = $('#photo-selector li').detach();
-
-	function load_photos(path, $ol) {
-		if (stream)
-			stream.close();
-
-		var index = 0;
-
-		stream = new EventSource(baseurl + '&view=add_photos_list_photos&path=' + encodeURIComponent(path));
-		stream.addEventListener('error', function(e) {
-			if (e.readyState != EventSource.CLOSED)
-				return;
-			
-			$('<li>')
-				.addClass('error-section')
-				.text(e.message)
-				.appendTo($ol);
-		});
-
-		stream.addEventListener('end', function(e) {
-			stream.close();
-		});
-
-		stream.addEventListener('photo', function(e) {
-			var photo = JSON.parse(e.data);
-
-			var $li = $photo_template.clone();
-			$li.data('sort-order', Date.parse(photo['created_on'].replace(' ', 'T')));
-
-			// Try to find a node of a photo taken after this one and insert this one before that
-			$ol.find('li').each(function(i, li) {
-				if ($(li).data('sort-order') > $li.data('sort-order')) {
-					$li.insertBefore(li);
-					return false;
-				}
-			});
-
-			// If it hasn't been inserted by insertion sort, append it to the end.
-			if (!$li.parent().length)
-				$li.appendTo($ol);
-
-			if (photo['id'] != null) {
-				$li.find('.add-control input').remove();
-				$li.find('.add-control a')
-					.attr('href', 'fotoboek.php?photo=' + photo['id']);
-			} else {
-				$li.find('.add-control a').remove();
-				$li.find('.add-control input')
-					.attr('name', 'photo[' + index + '][add]');
-			}
-				
-			$li.find('.thumbnail')
-				.attr('src', photo['thumbnail']);
-
-			if (photo['id'] == null) {
-				$li.find('.description input')
-					.attr('name', 'photo[' + index + '][description]')
-					.val(photo['description']);
-			} else {
-				$li.find('.description input').remove();
-				$li.find('.description').text(photo['description']);
-			}
-			
-			$li.find('.filename')
-				.text(basename(photo['path']))
-				.attr('description', photo['path']);
-
-			$li.find('.created-on')
-				.text(photo['created_on']);
-
-			$li.find('input[type=hidden]')
-				.attr('name', 'photo[' + index + '][path]')
-				.val(photo['path']);
-
-			index++;
-		}, false);
-	}
-
-	load_folders('', $('<ol>').appendTo('#folder-selector'));
-
-	$('#folder-selector').on('click', 'li', function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-
-		$(this).parent('ol').find('li').removeClass('selected');
-		$(this).addClass('selected');
-
-		var ol = $(this).parent('ol').next('ol');
-		if (ol.length)
-			ol.empty();
-		else
-			ol = $('<ol>').insertAfter($(this).parent('ol'));
-
-		// Remove all next columns
-		ol.parent().find('ol').slice(ol.parent().find('ol').index(ol) + 1).remove();
-
-		// Scroll all the way to the right
-		e.delegateTarget.scrollLeft = e.delegateTarget.scrollWidth - e.delegateTarget.clientWidth;
-
-		load_folders($(this).data('folder'), ol);
-		
-		load_photos($(this).data('folder'), $('#photo-selector').empty());
-	});
-
-	// Disable the input fields once submitting has started
-	$('#add-photos-form').submit(function() {
-		setTimeout(function() {
-			$('#add-photos-form').find('input, button').attr('disabled', true);
-		}, 10);
-	});
-})
-</script>
 {% endblock %}

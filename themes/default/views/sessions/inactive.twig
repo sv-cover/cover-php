@@ -2,5 +2,5 @@
 
 {% block content %}
 <h1 class="title">{{ __('Log in') }}</h1>
-<p>{{ __('Your account is no longer active because you are currently not a member nor a donor of Cover. Do you want to become one (again), or do you want your access to the site reinstated for other purposes? Contact the secretary, %s (secretary@svcover.nl).')|format(global.models.Commissie.get_lid_for_functie(constant('COMMISSIE_BESTUUR'), 'secretaris')|full_name) }}</p>
+<p>{{ __('Your account is no longer active because you are currently not a member nor a contributor of Cover. Do you want to become one (again), or do you want your access to the site reinstated for other purposes? Contact the secretary, %s (secretary@svcover.nl).')|format(global.models.Commissie.get_lid_for_functie(constant('COMMISSIE_BESTUUR'), 'secretaris')|full_name) }}</p>
 {% endblock %}

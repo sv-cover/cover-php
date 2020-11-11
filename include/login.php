@@ -71,8 +71,6 @@
 		$referrer = $referrer =  $_SERVER['PHP_SELF'] . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
 		
 		$attributes['href'] = 'sessions.php?view=login&referrer=' . urlencode($referrer);
-		$attributes['data-placement-selector'] = 'modal';
-		$attributes['data-partial-selector'] = '#login-form';
 
 		$make_attribute = function($key, $value) {
 			return sprintf('%s="%s"', $key, markup_format_attribute($value));

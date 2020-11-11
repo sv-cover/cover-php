@@ -48,14 +48,16 @@
 				{{ __('Number of votes') }}: {{ poll.total_votes }}
 			</div>
 		</div>
-		<div class="level">
-			<div class="level-left">
-				{% if not global.auth.logged_in %}
-					<a class="level-item button" href="{{ link('sessions.login') }}" data-placement-selector="modal" data-partial-selector="#login-form">{{ __('Log in to vote') }}</a>
-				{% elseif global.models.Poll.can_create_new_poll %}
-					<a class="level-item button" href="forum.php?forum={{ poll.forum_id }}&amp;view=create_poll">{{ __('New poll ') }}</a>
-				{% endif %}
+		{% if link_title %}
+			<div class="level">
+				<div class="level-left">
+					{% if not global.auth.logged_in %}
+						<a class="level-item button" href="{{ link('sessions.login') }}">{{ __('Log in to vote') }}</a>
+					{% elseif global.models.Poll.can_create_new_poll %}
+						<a class="level-item button" href="forum.php?forum={{ poll.forum_id }}&amp;view=create_poll">{{ __('New poll ') }}</a>
+					{% endif %}
+				</div>
 			</div>
-		</div>
+		{% endif %}
 	{% endif %}
 {% endmacro %}

@@ -1,4 +1,4 @@
-<div class="navbar-item has-dropdown is-hoverable-desktop">
+<div class="navbar-item has-dropdown is-hoverable-desktop applications">
     <a class="navbar-link is-arrowless" tabindex="0">
         <span class="icon">
             <i class="fas fa-th"></i>
@@ -9,17 +9,38 @@
     </a>
     <div class="navbar-dropdown is-right">
         {% for tool_set_id, tool_set in view.layout.tools %}
-            {% if not loop.first %}
-                <hr class="navbar-divider">
-            {% endif %}
-            {% if tool_set.label %}
-                <div class="navbar-item">
-                    {{ tool_set.label }}
+            <div class="navbar-item tool-set">
+                {% if tool_set.label %}
+                    <div class="title is-6 has-text-centered">
+                        {{ tool_set.label }}
+                    </div>
+                {% endif %}
+                <div class="columns is-multiline is-mobile">
+                    {% for tool in tool_set.items %}
+                        <a href="{{ tool.url }}"
+                           class="column is-one-third tool"
+                           target="{{ tool.target|default() }}"
+                           {% if tool.title is defined %}title="{{ tool.title }}"{% endif %}
+                        >
+                            {% if tool.icon is defined and tool.icon.img is defined %}
+                                <span class="icon is-large" aria-hidden="true">
+                                    <img src="{{tool.icon.img }}">
+                                </span>
+                            {% elseif tool.icon is defined and tool.icon.fa is defined %}
+                                <span class="icon is-large" aria-hidden="true">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x has-text-{{ tool.icon.color ?? 'cover' }}"></i>
+                                        <i class="{{ tool.icon.fa }} fa-stack-1x {{ tool.icon.icon_color is defined ? "has-text-#{tool.icon.icon_color}" : 'fa-inverse' }}"></i>
+                                    </span>
+                                </span>
+                            {% endif %}
+                            <span class="name">
+                                {{ tool.label }}
+                            </span>
+                        </a>
+                    {% endfor %}
                 </div>
-            {% endif %}
-            {% for tool in tool_set.items %}
-                <a href="{{ tool.url }}" class="navbar-item" target="{{ tool.target|default() }}" {% if tool.title is defined %} title="{{ tool.title }}"{% endif %}>{{ tool.label }}</a>
-            {% endfor %}
+            </div>
         {% endfor %}
     </div>
 </div>

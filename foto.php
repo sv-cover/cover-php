@@ -198,9 +198,9 @@
 			if ($member->is_private('naam'))
 				$text = '?';
 			else
-				$text = sprintf('%s%s',
-					substr(trim($member->get('voornaam')), 0, 1),
-					substr(trim($member->get('achternaam')), 0, 1));
+				$text = mb_strtoupper(sprintf('%s%s',
+					mb_substr(trim($member->get('voornaam')), 0, 1),
+					mb_substr(trim($member->get('achternaam')), 0, 1)));
 
 			switch ($format)
 			{
@@ -236,7 +236,7 @@
 			$imagick->newImage($width, $height, $background);
 
 			$draw->setFillColor($foreground);
-			$draw->setFont('fonts/verdana.ttf');
+			$draw->setFont(realpath ('./fonts/FiraSans-Regular.ttf'));
 			$draw->setFontSize($width / 2);
 			$draw->setTextAntialias(true);
 
@@ -301,6 +301,9 @@
 		
 		protected function run_impl()
 		{
+			if (empty($_GET['lid_id']))
+				return new Exception('No member ID provided');
+
 			$iter = $this->model->get_iter($_GET['lid_id']);
 
 			if (isset($_GET['format']))

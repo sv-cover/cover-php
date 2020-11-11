@@ -4,10 +4,16 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		
-		<link rel="icon" type="image/png" href="images/favicon.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">
+
+		<link rel="shortcut icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-64x64.png" sizes="64x64">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-128x128.png" sizes="128x128">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-192x192.png" sizes="192x192">
+		<link rel="apple-touch-icon" href="filename='images/apple-touch-icon-180x180.png">
+		<meta name="msapplication-TileImage" content="images/favicon-270x270.png">
+
 		<link rel="search" href="opensearch.xml"  type="application/opensearchdescription+xml" title="Cover">
+
 		<title>{% block title %}Cover{% endblock %}</title>
 		
 
@@ -15,7 +21,7 @@
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
 		
-	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	    <script defer src="https://use.fontawesome.com/releases/v5.10.2/js/all.js"></script>
 	</head>
 	<body class="has-navbar-fixed-top">
 		{% block menu %}
@@ -26,24 +32,12 @@
 		{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
 		{% endif %}
 		
-		{% if global.auth.logged_in() %}
-			{% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
-			{% if  agenda_items_to_moderate|length > 0  or global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
-				<section class="section">
-					<div class="container">
-						{% if agenda_items_to_moderate|length > 0 %}
-							<div class="notification">
-								<a href="agenda.php?view=moderate">{{ __N(
-									'There is %d activity waiting for your confirmation',
-									'There are %d activities waiting for your confirmation', agenda_items_to_moderate|length) }}</a>
-							</div>
-						{% endif %}
-						{% if global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
-							<div class="notification">{{ __('Your application hasn\'t been accepted yet by our secretary. Until then some parts of the website are not yet accessible, such as all the photo albums and contact information of members.') }}</div>
-						{% endif %}
-					</div>
-				</section>
-			{% endif %}
+		{% if global.auth.logged_in() and global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+			<section class="section">
+				<div class="container is-content-optimized">
+					<div class="notification">{{ __('Your application hasn\'t been accepted yet by our [secretary. Until then some parts of the website are not yet accessible, such as all ]the photo albums and contact information of members.') }}</div>
+				</div>
+			</section>
 		{% endif %}
 	
 		
@@ -55,17 +49,29 @@
 			</section>
 		{% endblock %}
 
-		<section class="section">
-			<div class="container">
-			{{ include('@layout/widgets/banners.twig') }}
-			</div>
-		</section>
-
-		<footer class="footer">
-			<div class="content has-text-centered is-centered">
-				<a href="show.php?id=17">{{ __('Contact') }}</a>
-				&mdash; <a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
-				&mdash; <a href="https://bitbucket.org/cover-webcie/cover-php/issues">{{ __('Report a bug')}}</a>
+		<footer>
+			{{ include('@layout/widgets/partners.twig') }}
+			<div class="footer footer-main">
+				<ul>
+				{% spaceless %}
+					<li>
+						<a href="show.php?id=17">{{ __('Contact') }}</a>
+					</li>
+					<li class="divider" role="separator"></li>
+					<li>
+						<a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
+					</li>
+					<li class="divider" role="separator"></li>
+					<li>
+						<a href="https://bitbucket.org/cover-webcie/cover-php/issues">{{ __('Report a bug')}}</a>
+					</li>
+				{% endspaceless %}
+				</ul>
+				{# <div class="content has-text-centered is-centered">
+					
+					&mdash; 
+					&mdash; 
+				</div> #}
 			</div>
 		</footer>
 

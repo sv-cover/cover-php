@@ -2474,7 +2474,8 @@ font-size: 10px;
 	overflow: hidden;
 }
 
-.old .markup-image {
+.old .markup-image,
+.old .markup-video {
 	max-width: 100%;
 }
 

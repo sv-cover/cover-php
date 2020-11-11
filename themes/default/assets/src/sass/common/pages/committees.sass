@@ -1,6 +1,6 @@
 $committee-padding: 1.25rem
-$name-padding: 0 $committee-padding
-$name-line-height: $title-line-height + .8
+$name-padding: .2em $committee-padding
+$name-line-height: $title-line-height + .4
 $name-size: $size-5
 $overlay-transition-timing: 150ms ease-in-out
 
@@ -9,7 +9,7 @@ a.committee
     position: relative
     padding: 0
     padding-top: 66.6666% // is-3by2
-    background: $black
+    background: $cover-gradient, $black
     color: $white
 
     & > .image,
@@ -35,22 +35,14 @@ a.committee
             +overlay
             display: block
             content: ''
-            background: linear-gradient(to bottom right, rgba($purple, .4), rgba($cover-blue, .4))
+            background: $cover-gradient
 
         .image
             filter: saturate(20%)
 
 
     .name
-        background: $cover-red
-        box-decoration-break: clone
-        color: $cover-red-invert
-        line-height: $name-line-height
-        display: inline-block
-        font-size: $name-size
-        font-weight: $title-weight
-        margin-bottom: 0
-        padding: $name-padding
+        +boxed-title($name-size, $name-line-height, $name-padding)
 
     .summary
         color: $white
@@ -91,3 +83,39 @@ a.committee
 
     &:focus
         outline: $control-border-width solid $cover-red
+
+
+.committee-single
+    &.has-photo-portrait
+        .committe-photo-portrait
+            display: none
+            max-width: 50%
+            position: relative
+            +widescreen
+                display: block
+            .image
+                position: absolute
+                top: $column-gap
+                right: $column-gap
+                bottom: $column-gap
+                left: $column-gap
+                background: $black
+                img
+                    height: 100%
+                    object-fit: contain
+                    object-position: center
+        > .columns 
+            > .column.is-content
+                padding: $section-padding
+            +until-widescreen
+                justify-content: center
+            +widescreen
+                > .column.is-content
+                    padding-right: $section-padding-horizontal + $column-gap
+                    padding-left: $column-gap
+    .committee-header
+        min-height: 10rem
+    .event-list
+        +tablet
+            .event
+                flex-basis: 50% !important

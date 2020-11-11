@@ -1,0 +1,19 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        {{ html_nonce('delete_form', form) }}
+        <header class="modal-card-head">
+            <p class="modal-card-title">{% block entry_form_title %}{% endblock %}</p>
+        </header>
+        <section class="modal-card-body">
+            {% block entry_form_header %}{% endblock %}
+            {% block entry_form_form %}{% endblock %}
+        </section>
+        <footer class="modal-card-foot">
+            {% block entry_form_buttons %}{% endblock %}
+        </footer>
+    </div>
+</div>
+{% endblock %}

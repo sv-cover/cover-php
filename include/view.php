@@ -159,11 +159,7 @@ class View
 			$base = [get_theme_data('assets/dist/css/cover-dark.css')];
 		else
 			$base = [get_theme_data('assets/dist/css/cover.css')];
-		return array_merge($base, [
-			// get_theme_data('styles/font-awesome.min.css'),
-			// get_theme_data('styles/jquery-ui.min.css'),
-			// get_theme_data('style.css')
-		]);
+		return array_merge($base, []);
 	}
 
 	public function layout()
@@ -341,7 +337,7 @@ class CRUDView extends View
 
 		return $this->render_json(array(
 			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
-			'_links' => $links
+			'__links' => $links
 		));
 	}
 
@@ -360,6 +356,11 @@ class CRUDView extends View
 		if ($policy->user_can_delete($iter))
 			$links['delete'] = $this->controller->json_link_to_delete($iter);
 
-		return array_merge($iter->data, array('__id' => $iter->get_id(), '__links' => $links));
+		if (method_exists($this->controller, 'get_data_for_iter'))
+			$data = $this->controller->get_data_for_iter($iter);
+		else
+			$data = $iter->data;
+
+		return array_merge($data, array('__id' => $iter->get_id(), '__links' => $links));
 	}
 }
