@@ -3,7 +3,7 @@
 {% block title __('No access') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<article class="block">
+<section class="block">
 	<h1 class="title">{{ __('No access') }}</h1>
 	<div class="content">
 		{% block error_message %}
@@ -20,5 +20,5 @@
 			</p>
 		{% endif %}
 	</div>
-</article>
+</section>
 {% endblock %}
