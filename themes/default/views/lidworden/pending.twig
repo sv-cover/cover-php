@@ -31,51 +31,55 @@
 <article class="block">
 	<form method="post" action="">
 		{{ html_nonce('pending') }}
-		<table class="table is-fullwidth">
-			<col>
-			<col>
-			<col>
-			<col>
-			<thead>
-				<tr>
-					<th></th>
-					<th>{{ __('Name') }}</th>
-					<th>{{ __('Email') }}</th>
-					<th>{{ __('Registered on') }}</th>
-					<th>{{ __('Confirmation link') }}<sup>3</sup></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for row in registrations %}
+		<div class="table-container">
+			<table class="table is-fullwidth is-hoverable">
+				<col>
+				<col>
+				<col>
+				<col>
+				<thead>
 					<tr>
-						<td><input type="checkbox" name="confirmation_code[]" value="{{ row.confirmation_code|e('html_attr') }}"></td>
-						<td>
-							{{ view.full_name(row) }}
-							{{ view.search_link_for_full_name(row)|raw }}
-						</td>
-						<td>
-							{{ row.data.email_address }}
-							{{ view.search_link_for_email_address(row)|raw }}
-						</td>
-						<td>{{ row.registered_on|date }}</td>
-						{% if row.confirmed_on %}
-							<td>Confirmed<sup>2</sup></td>
-						{% else %}
-							<td><input class="input is-small" type="text" value="{{ 'https://www.svcover.nl/lidworden.php?confirmation_code=%s'|format(row.confirmation_code|e('url'))|e('html_attr') }}"></td>
-						{% endif %}
-						<td class="has-text-right">
-							<a href="lidworden.php?view=pending-confirmation&amp;confirmation_code={{ row.confirmation_code|e('url') }}" title="{{ __('Edit registration') }}">
-								<span class="icon">
-									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
-									<span class="is-sr-only">{{ __('Edit registration') }}</span>
-								</span>
-							</a>
-						</td>
+						<th class="is-sticky"></th>
+						<th class="is-nowrap">{{ __('Name') }}</th>
+						<th class="is-nowrap">{{ __('Email') }}</th>
+						<th class="is-nowrap">{{ __('Registered on') }}</th>
+						<th class="is-nowrap">{{ __('Confirmation link') }}<sup>3</sup></th>
+						<th></th>
 					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{% for row in registrations %}
+						<tr>
+							<td class="is-sticky">
+								<input type="checkbox" name="confirmation_code[]" value="{{ row.confirmation_code|e('html_attr') }}">
+							</td>
+							<td class="is-nowrap">
+								{{ view.full_name(row) }}
+								{{ view.search_link_for_full_name(row)|raw }}
+							</td>
+							<td class="is-nowrap">
+								{{ row.data.email_address }}
+								{{ view.search_link_for_email_address(row)|raw }}
+							</td>
+							<td class="is-nowrap">{{ row.registered_on|date }}</td>
+							{% if row.confirmed_on %}
+								<td>Confirmed<sup>2</sup></td>
+							{% else %}
+								<td><input class="input is-small" type="text" value="{{ 'https://www.svcover.nl/lidworden.php?confirmation_code=%s'|format(row.confirmation_code|e('url'))|e('html_attr') }}"></td>
+							{% endif %}
+							<td class="has-text-right">
+								<a href="lidworden.php?view=pending-confirmation&amp;confirmation_code={{ row.confirmation_code|e('url') }}" title="{{ __('Edit registration') }}">
+									<span class="icon">
+										<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+										<span class="is-sr-only">{{ __('Edit registration') }}</span>
+									</span>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 		<div class="field">
 			<div class="label">Apply action to selection</div>
 			<ul class="control buttons">	

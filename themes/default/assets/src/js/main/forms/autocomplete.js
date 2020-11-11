@@ -13,6 +13,7 @@ import AutocompleteBase from './autocomplete_base';
  * autocomplete-no-results = string, will be displayed in case of no results. default: empty (nothing will be displayed)
  * autocomplete-threshold = number, threshold for displaying suggestions. default: 0
  * autocomplete-max-results = number, maximum number of suggestions to display at once. default: 5
+ * autocomplete-mock-select = boolean data option to make autocomplete behave like a select that allows custom values
  */
 class Autocomplete extends AutocompleteBase {
     static parseDocument(context) {
@@ -40,6 +41,11 @@ class Autocomplete extends AutocompleteBase {
 
             if (element.dataset.autocompleteMaxResults)
                 options.maxResults = element.dataset.autocompleteMaxResults;
+
+            options.mockSelect = (
+                element.dataset.autocompleteMockSelect != null 
+                && element.dataset.autocompleteMockSelect.toLowerCase() !== 'false'
+            );
 
             new Autocomplete(options);
         });
@@ -77,6 +83,15 @@ class Autocomplete extends AutocompleteBase {
             options.noResultsText = this.sourceElement.dataset.autocompleteNoResults;
         else
             options.noResults = () => {};
+
+        if (this.options.mockSelect) {
+            options.trigger = {
+                event: ['input', 'focus'], // autoCompleteJS event
+                condition: () => true, // condition trigger
+            };
+            if (!this.options.searchEngine)
+                options.searchEngine = (query, record) => this.autocomplete.search(query, record) || record;
+        }
 
         return super.initAutocomplete(options);
     }

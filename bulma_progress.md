@@ -243,7 +243,7 @@
 - [ ] WYSIWYG editor in mailinglijsten/autoresponder_form.twig (long term)
 - [×] Stuff happening in mailijnlijsten/single.twig
 - [×] Fancyness in signup/form_form.twig
-- [ ] Autocomplete in lidworden/lidworden.twig
+- [×] Autocomplete in lidworden/lidworden.twig
 - [×] Profile page
 - [×] Improve Dark Theme switch JS (is inline now, should be pulled out)
 - [×] Photo tagging
