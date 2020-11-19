@@ -1,0 +1,171 @@
+$event-overlay-padding: 1.25rem
+
+=max-lines($num-lines: 2)
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: $num-lines
+    overflow: hidden
+    text-overflow: ellipsis
+
+.calendar-single
+    .event-header,
+    .event-sidebar-sticky-header
+        @extend %block
+        &:not(.has-image)
+            padding-top: 0
+            height: 10rem
+        .name
+            // Limit number of lines in browsers that support it to "deal" with long titles
+            +max-lines(2)
+            color: $white
+            font-size: $size-5
+            +mobile
+                font-size: $size-4
+    .event-header
+        +desktop
+            z-index: 1
+            border-bottom: $block-spacing solid $body-background-color
+            &:not(:last-child)
+                margin-bottom: 0
+    .event-details
+        @extend %block
+        +tablet
+            flex-direction: row-reverse
+    .event-sidebar-sticky-header
+        --ratio-visible: 1
+        display: none
+    +desktop
+        .is-sidebar > .is-sticky
+            position: sticky
+            top: $navbar-height + $block-spacing
+            margin-top: -($sidebar-width / 2) - $block-spacing
+            .event-sidebar-sticky-header
+                display: block
+                opacity: calc(.25 + var(--ratio-visible) * .75)
+                &:not(.has-image)
+                    margin-top: ($sidebar-width / 2) - 6rem
+                    height: 6rem
+
+.calendar:not(.is-list),
+.committee-single
+    .event-list
+        .event
+            > a
+                @extend .cover-thumbnail
+                @extend .is-2by1
+            .date, .name, .label-pending
+                @extend .boxed-title-wrapper
+                > *
+                    @extend .boxed-title
+            .date
+                > *
+                    font-size: $size-3
+                    font-weight: $weight-normal
+            .name
+                // Limit number of lines in browsers that support it to "deal" with long titles
+                +max-lines(2)
+                color: $white
+                font-size: $size-6
+                > *
+                    font-size: $size-6
+            .label-pending
+                > *
+                    font-size: $size-7
+                    color: $black
+                    background: $warning
+            &.is-proposal
+                opacity: .75
+                transition: opacity .125s ease-in-out
+                &:hover
+                    opacity: 1
+
+.calendar.is-list
+    .event-list
+        margin: 0
+        .column
+            padding: 0
+        .month-title:not(:first-child)
+            margin-top: $block-spacing
+        .month-title
+            margin-bottom: $block-spacing
+        .event
+            flex: 0 0 100%
+            padding: 1rem 0
+            & + .event
+                border-top: 1px solid $media-border-color
+            > a
+                @extend .media
+                margin: -1rem
+                padding: 1rem
+                > .image
+                    @extend .media-left
+                    order: -1
+                    img
+                        min-height: 100%
+                        object-fit: cover
+                > .overlay
+                    @extend .media-content
+                .date
+                    color: $text
+                .name > *
+                    @extend .title
+                    @extend .is-5
+                .date, .name
+                    margin-bottom: 0.25rem
+                .label-pending
+                    @extend .tag
+                    @extend .is-warning
+                &:hover
+                    background: $background
+            &:not(.has-image) > a::before
+                @extend .media-left
+                content: ''
+                display: block
+                background: $cover-gradient, $black
+            > a > .image,
+            &:not(.has-image) > a::before
+                height: 96px
+                width: 96px
+                +desktop
+                    height: 96px
+                    width: 192px
+            &.is-proposal
+                > a > .image,
+                &:not(.has-image) > a::before
+                    opacity: .75
+                    transition: opacity .125s ease-in-out
+                &:hover
+                    > a > .image,
+                    &:not(.has-image) > a::before
+                        opacity: 1
+
+.event-period
+    display: table
+    width: 100%
+    &:not(:first-child)
+        margin-top: $block-spacing
+    .row
+        display: table-row
+        .date,
+        .time
+            display: table-cell
+        .time
+            padding-left: 1rem
+            min-width: 8ch
+        &.title
+            padding-bottom: $block-spacing
+
+.content
+    .event-period
+        h1.row > *
+            padding-bottom: 0.5em
+        h2.row > *
+            padding-bottom: 0.5714em
+        h3.row > *
+            padding-bottom: 0.6666em
+        h4.row > *
+            padding-bottom: 0.8em
+        h5.row > *
+            padding-bottom: 0.8888em
+        h6.row > *
+            padding-bottom: 1em

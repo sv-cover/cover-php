@@ -1,0 +1,21 @@
+{% set _content = block('content') %}
+{% set _footer = block('footer') %}
+
+{% if _content is not empty %}
+    <article class="card" style=">
+    	<header class="card-header">
+            <h2 class="card-header-title">
+        		{% block title %}{% endblock %}
+            </h2>
+    	</header>
+    	<div class="card-content" id="menu_{% block name %}{% endblock %}">
+    		{% block content %}{% endblock %}
+    	</div>
+        {% set _footer = block('footer') %}
+        {% if _footer is not empty %}
+            <footer class="card-footer">
+                {{ _footer|raw }}
+            </footer>
+        {% endif %}
+    </article>
+{% endif %}

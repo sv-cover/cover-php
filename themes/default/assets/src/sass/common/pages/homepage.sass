@@ -13,7 +13,7 @@ $cover-color-blue: #36749d
 .calendar   
   width: 30% 
   height: 450px 
-  background-color: rgb(199, 191, 191) 
+  background-color: rgb(255, 255, 255) 
   margin: 1px 
   display: flex 
   align-items: center 
@@ -37,6 +37,14 @@ $cover-color-blue: #36749d
 
 .has-bg-cover
   background: $cover-color-red
+
+.has-cover-bg
+    background: linear-gradient(to bottom right, rgba(168, 73, 148, 0.4), rgba(54, 116, 157, 0.4)), #0a0a0a
+    display: block
+    position: relative
+    padding: 0
+        padding-top: 0px
+    min-height: 5rem
 
 .back.is-red
     background-color: $cover-color-red
@@ -198,4 +206,7 @@ $cover-color-blue: #36749d
   height: 205px
   border-bottom: solid white
   position: absolute
-      
+
+.is-sticky
+  position: sticky
+  top: 0
