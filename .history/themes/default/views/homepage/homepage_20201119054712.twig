@@ -1,0 +1,346 @@
+{% extends '@layout/layout.twig' %}
+
+{% block page %}
+<section>
+	{% set editable = global.models.Editable.get_iter_from_title('Startpagina') %}
+	<article class="container is-content-optimized">
+		<div class="level">
+		{# Delete the title #}
+		    {% if user_can_update editable %}
+		        <div class="buttons level-right">
+		            <a href="{{ link('editable.update', editable=editable) }}" class="button">
+		                <span class="icon is-small">
+		                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+		                </span>
+		                <span>
+		                    {{ __('Modify introduction') }}
+		                </span>
+		            </a>
+		        </div>
+		    {% endif %}
+		</div>
+	</article>
+</section>
+
+<section>
+	<div id="mySidebar" class="sidebar">
+	Become a member Become a member Become a member Become a member Become a member Become a member Become a member
+	Become a member Become a member Become a member Become a member Become a member Become a member Become a member 
+	</div>
+
+
+	<div id="main" class="become-member-sign">
+		<h3 class="is-size-5 writing">Become a member</h3>
+		<div class="line"></div>
+		<div class="child">
+			<span class="arrow--l-r right" id="spani">
+			<span></span><span></span><span></span>
+			<span></span><span></span>
+			</span>
+		</div>
+	</div>
+
+
+
+</section>
+
+{# <section class="half-half">
+	<section class="sectionMargin">
+		<div class="containerMinimised is-centered columns is-gapless"> 
+
+			<div class="calendar column is-one-third">
+				{{ include('@theme/homepage/_agenda.twig') }}
+			</div>
+
+			<section class="hero is-medium has-carousel column">
+				 <div id="carousel-demo" class="hero-carousel">
+						<div class='has-background is-active'>
+						<img class="is-background" src="https://www.svcover.nl/documenten/Announcement_banners/20192020/Gala_banner.jpg" alt="" />
+						</div>
+						<div class='has-background'>
+						<img class="is-background" src="https://www.svcover.nl/documenten/Announcement_banners/20192020/LAN_banner.jpg" alt="" />
+						</div>
+						<div class='has-background'>
+						<img class="is-background" src="https://wikiki.github.io/images/sushi.jpg" alt="" />
+						</div>
+						<div class='has-background'>
+						<img class="is-background" src="https://wikiki.github.io/images/life.jpg" alt="" />
+						</div>
+						<div class='has-background'>
+						<img class="is-background" src="https://wikiki.github.io/images/life.jpg" alt="" />
+						</div>
+						<div class='has-background'>
+						<img class="is-background" src="https://wikiki.github.io/images/life.jpg" alt="" />
+						</div>
+  				</div>
+				<div class="hero-head"></div>
+				<div class="hero-body"></div>
+				<div class="hero-foot"></div>
+			</section>
+		</div>
+	</section>	
+</section> #}
+
+<section class="half-half">
+	<section class="sectionMargin">
+		
+			<div class="containerMinimised is-centered">
+					<h1 class="title">{{ editable.get_title }}</h1>
+			</div>
+			<div class="">
+				<article class="message is-dark">
+					<div class="message-body">
+						{{ editable.locale_content|parse_markup }}
+					</div>
+					<p> Find out more </p>
+					<a href="#collapsible-card" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+						<span class="icon">
+							<i class="fas fa-angle-down" aria-hidden="true">
+							Find out more
+							</i>
+						</span>
+					</a>
+					<div id="collapsible-card" class="is-collapsible">
+						<div class="card-content">
+							<section class="has-bg-cover">
+								<section class="sectionMargin">
+									<div class="container">
+										<div class="columns is-vcentered">
+											<div class="column">
+												<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+													First, the social aspect
+												</h3>
+												<p class="has-text-white has-text-centered">We organise weekly borrels, monthly socials and tons of other activities.</p>
+											</div>
+											<div class="column">
+												<figure class="image container is-256x256 ">
+													<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
+												</figure>
+											</div>
+										</div>
+									</div>
+									<div class="container">
+										<div class="columns reverse-row-order ">
+											<div class="column ">
+												<figure class="image container is-256x256">
+													<img src="https://assets-ouch.icons8.com/preview/848/8ec7d27c-2d06-4a41-8fc5-1aa889c71895.png">
+												</figure>
+											</div>
+											<div class="column">
+												<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+													Second, the study aspect
+												</h3>
+												<p class="has-text-white has-text-centered">We organise study support lectures about our degree programs. You can join workshops that either dig deeper into materials, or offer some fresh knowledge. You can also find help using our tutoring system!</p>
+											</div>
+										</div>
+									</div>
+									<div class="container">
+										<div class="columns is-vcentered">
+											<div class="column">
+												<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+													Third, the career aspect
+												</h3>
+												<p class="has-text-white has-text-centered">We also offer career oriented events. Regularly, we have companies over to hold talks about certain career paths. You will find this interesting if you want to talk to students who finished their studies and now work at companies or if you are interested in what companies are up to in general.</p>
+											</div>
+											<div class="column">
+												<div class="cent">
+													<figure class="image container is-256x256">
+														<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
+													</figure>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</section>
+						</div>
+					</div>
+				</article>
+			</div>
+		
+	</section>	
+</section>
+
+{# Carrousel for the annoncements #}
+{# <section class="sectionMargin">
+	<div class="containerMinimised is-centered">
+		<section class="hero is-xlarge has-carousel">
+				<div class="containerMinimised is-centered">
+						<h1 class="title is-centered">Announcements</h1>
+				</div>
+				 <div id="carousel-demo2" class="carousel">
+					<div class="item-1 modal-button" data-target="modal-card">
+						<div class="columns is-centered">
+							<div class="column is-10" >
+							<div class="card is-shady">
+								<div class="card-image " >
+									<figure class="image is-4by3"> <!-- <figure class="image is-128x128">-->
+										<img src="https://www.svcover.nl/documenten/Announcement_banners/20192020/Applications_XXIX.png" alt="Placeholder image">
+									</figure>
+								</div>
+								<div class="card-content">
+								<div class="content">
+									<h4> Board applications OPEN!</h4>
+									<p>As of now, the applications for board XXIX are open! A board year at Cover is an amazing experience where you develop yourself in many ways whilst having a great time. As there are aspects of a board year that are hard to describe on paper we are available to ‘grab a coffee’ over Skype or answer all your questions through WhatsApp.</p>
+									<span class="button is-link " > More info....</span>
+								</div>
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="item-2">
+						<div class="columns is-centered">
+							<div class="column is-10">
+							<div class="card is-shady">
+								<div class="card-image " >
+									<figure class="image is-4by3"> <!-- <figure class="image is-128x128">-->
+										<img src="https://www.svcover.nl/documenten/Announcement_banners/20192020/Applications_XXIX.png" alt="Placeholder image">
+									</figure>
+								</div>
+								<div class="card-content">
+								<div class="content">
+									<h4> Board applications OPEN!</h4>
+									<p>As of now, the applications for board XXIX are open! A board year at Cover is an amazing experience where you develop yourself in many ways whilst having a great time. As there are aspects of a board year that are hard to describe on paper we are available to ‘grab a coffee’ over Skype or answer all your questions through WhatsApp.</p>
+									<span class="button is-link modal-button" data-target="modal-card"> More info....</span>
+								</div>
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="item-3">
+						<div class="columns is-centered">
+							<div class="column is-10">
+							<div class="card is-shady">
+								<div class="card-image " >
+									<figure class="image is-4by3"> <!-- <figure class="image is-128x128">-->
+										<img src="https://www.svcover.nl/documenten/Announcement_banners/20192020/Applications_XXIX.png" alt="Placeholder image">
+									</figure>
+								</div>
+								<div class="card-content">
+								<div class="content">
+									<h4> Board applications OPEN!</h4>
+									<p>As of now, the applications for board XXIX are open! A board year at Cover is an amazing experience where you develop yourself in many ways whilst having a great time. As there are aspects of a board year that are hard to describe on paper we are available to ‘grab a coffee’ over Skype or answer all your questions through WhatsApp.</p>
+									<span class="button is-link modal-button" data-target="modal-card" > More info....</span>
+								</div>
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="item-4">
+						<div class="columns is-centered">
+							<div class="column is-10">
+							<div class="card is-shady">
+								<div class="card-image " >
+									<figure class="image is-4by3"> <!-- <figure class="image is-128x128">-->
+										<img src="https://i.imgur.com/7nqjiS3.jpg" alt="Placeholder image">
+									</figure>
+								</div>
+								<div class="card-content">
+								<div class="content">
+									<h4> See here all previous Announcements!</h4>
+									<p>See all that Cover announced.</p>
+									<span class="button is-link modal-button" data-target="modal-card"> More info....</span>
+								</div>
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+  				</div>
+				<div class="hero-head"></div>
+				<div class="hero-body"></div>
+				<div class="hero-foot"></div>
+			</section>
+	</div>
+</section> #}
+
+{# <div class="modal" id="modal-card">
+ 
+  <div class="modal-background"></div>
+  <button class="delete modal-close" aria-label=""></button>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Board XXIX</p>
+     
+    </header>
+    <section class="modal-card-body">
+	<figure class="image"> <!-- <figure class="image is-128x128">-->
+		<img src="https://www.svcover.nl/documenten/Announcement_banners/20192020/Applications_XXIX.png" alt="Placeholder image">
+	</figure>
+	<br>
+	<br>
+	Dear members,
+	<br>
+	<br>
+	As of now, the applications for board XXIX are open! A board year at Cover is an amazing experience where you develop yourself in many ways whilst having a great time. As there are aspects of a board year that are hard to describe on paper we are available to ‘grab a coffee’ over Skype or answer all your questions through WhatsApp.
+	<br>
+	For more information on the procedure of applying and the functions in the board you can look at the guide for how to apply. The application deadline is April 19th at 23:59 so send your motivational letter and CV to apply@svcover.nl before that time!
+	<br>
+	<br>
+	Kind regards,
+	<br>
+	Board XXVIII
+    </section>
+  </div>
+</div> #}
+
+{# <section class="has-bg-cover">
+	<section class="sectionMargin">
+		<div class="container">
+			<div class="columns is-vcentered">
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						First, the social aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We organise weekly borrels, monthly socials and tons of other activities.</p>
+				</div>
+				<div class="column">
+				<figure class="image container is-256x256 ">
+					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
+				 </figure>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="columns reverse-row-order ">
+				<div class="column ">
+				 <figure class="image container is-256x256">
+				 		<img src="https://assets-ouch.icons8.com/preview/848/8ec7d27c-2d06-4a41-8fc5-1aa889c71895.png">
+				 </figure>
+				</div>
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						Second, the study aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We organise study support lectures about our degree programs. You can join workshops that either dig deeper into materials, or offer some fresh knowledge. You can also find help using our tutoring system!</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="columns is-vcentered">
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						Third, the career aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We also offer career oriented events. Regularly, we have companies over to hold talks about certain career paths. You will find this interesting if you want to talk to students who finished their studies and now work at companies or if you are interested in what companies are up to in general.</p>
+				</div>
+				<div class="column">
+				<div class="cent">
+					<figure class="image container is-256x256">
+					<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
+				 	</figure>
+					 </div>
+				</div>
+			</div>
+		</div>
+	</section>
+</section> #}
+{# <section class="section">
+
+</section> #}
+
+{# the missing part is in a file called missing part #}
+{% endblock %}
