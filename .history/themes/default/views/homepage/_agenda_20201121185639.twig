@@ -10,11 +10,11 @@
 {% if agenda_items|length > 0 %}
 	<ol>
 		{% for item in agenda_items|slice(0, 3) %}
-		<div class="card is-calendar"> 
+		<div class="card is-calenda"> 
 			<li class="by-committee-{{item.committee.login}}">
 			
 				<a href="agenda.php?agenda_id={{ item.id }}">
-					<h3 class="card-header-title is-4 is-centered is-calendar">{{ item.kop }}</h3>
+					<h3 class="card-header-title is-4">{{ item.kop }}</h3>
 					<div class="calendar-icon">
 						<span class="month">{{ item.van|date('M') }}</span>
 						<span class="day">{{ item.van|date('d') }}</span>

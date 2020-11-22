@@ -46,13 +46,10 @@
 <section class="half-half">
 	<section class="sectionMargin">
 		<div class="containerMinimised is-centered columns is-gapless"> 
-		{# Calendar #}
-		
 			<div class="calendar column is-one-third">
 				{{ include('@theme/homepage/_agenda.twig') }}
 			</div>
-
-		{# Carousel #}
+			
 			<section class="hero is-medium has-carousel column">
 				 <div id="carousel-demo" class="hero-carousel has-cover-bg event-header">
 				 	{% set agenda_items = view.layout.agenda %}

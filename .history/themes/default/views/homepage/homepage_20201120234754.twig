@@ -23,37 +23,36 @@
 </section>
 
 {# Become a member banner#}
+
 <section>
 	{% if global.auth.logged_in == 1 %}
-	{# If we want to extend the banner #}
-	{# <div id="mySidebar" class="sidebar"></div> #}
+	<div id="mySidebar" class="sidebar">
+		
+	</div>
 
-	<div id="main" class=" button become-member-sign">
+	<div id="main" class="become-member-sign">
 		<h3 class="is-size-5 writing">Become a member</h3>
-		{# Arrow #}
-		{# <div class="line"></div>
-		{# <div class="child">
+		<div class="line"></div>
+		<div class="child">
 			<span class="arrow--l-r right" id="spani">
 			<span></span><span></span><span></span>
 			<span></span><span></span>
 			</span>
-		</div> #}
+		</div>
 	</div>
 	{% endif %}
 </section>
 
-{# Calendar + Carousels #}
 <section class="half-half">
 	<section class="sectionMargin">
 		<div class="containerMinimised is-centered columns is-gapless"> 
-		{# Calendar #}
-		
+
 			<div class="calendar column is-one-third">
 				{{ include('@theme/homepage/_agenda.twig') }}
 			</div>
 
-		{# Carousel #}
 			<section class="hero is-medium has-carousel column">
+			
 				 <div id="carousel-demo" class="hero-carousel has-cover-bg event-header">
 				 	{% set agenda_items = view.layout.agenda %}
 					{% for item in agenda_items|slice(0, 3) %}
@@ -81,7 +80,7 @@
 			</section>
 		</div>
 		
-		{# <div class="containerMinimised is-centered">
+		<div class="containerMinimised is-centered">
 				<h1 class="title">{{ editable.get_title }}</h1>
 		</div>
 		<div class="">
@@ -90,14 +89,15 @@
 					{{ editable.locale_content|parse_markup }}
 				</div>
 			</article>
-		</div> #}
+		</div>
 	</section>
 </section>
+{# Carrousel for the announcements #}
 
-
-{# Announcements #}
 <section class = "section">
+
 	<div class="container columns is-centered">
+		
 		<div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd">
 			{{ include('@theme/homepage/_poll.twig') }}
 		</div>
