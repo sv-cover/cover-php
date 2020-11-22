@@ -1,10 +1,12 @@
 @import "bulma-carousel/src/sass/index.sass"
-@import '~@creativebulma/bulma-collapsible/src/sass/index.sass';
-
 
 @charset "utf-8"
 $cover-color-red: #C8102E
 $cover-color-blue: #36749d
+
+
+.is-full-height
+  height: 100%
 .container-fancy 
   max-width: 768px
   margin: 0 auto
@@ -26,10 +28,7 @@ $cover-color-blue: #36749d
   margin: auto 15% auto 15% 
 
 .half-half
-  background: linear-gradient(180deg, #ffffff 10%,$cover-color-red 90%)
-
-.half-half-collapsible
-  background: linear-gradient(180deg, $cover-color-red 100%, #ffffff 0%)  
+  background: linear-gradient(180deg, #ffffff 90%,$cover-color-red 10%)
 
 @media(max-width: 1024px)
   .reverse-row-order 
@@ -119,6 +118,7 @@ $cover-color-blue: #36749d
   padding-top: 10px
   display: flex
   border-bottom: none
+
 
 .sidebar a 
   padding: 8px 8px 8px 32px
@@ -210,25 +210,6 @@ $cover-color-blue: #36749d
   height: 205px
   border-bottom: solid white
   position: absolute
-      
-.font-white
-  color: white
-
-.p-collapsible
-  font-weight: bold
-  text-align: center
-
-.icon-style
-  color: #ffffff
-.icon-style:hover
-  color: #000000
-
-// a[aria-expanded=true] .fa-chevron-right {
-//    display: none;
-// }
-// a[aria-expanded=false] .fa-chevron-down {
-//    display: none;
-// }  
 
 .is-sticky
   position: sticky
