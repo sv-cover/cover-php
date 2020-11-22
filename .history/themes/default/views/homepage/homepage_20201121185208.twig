@@ -39,76 +39,18 @@
 			</span>
 		</div> #}
 	</div>
-
-
-
+	{% endif %}
 </section>
 
-<<<<<<< HEAD:include/.history/themes/default/views/homepage/homepage_20200403181011.twig
-
-{# <section class="section">
-	<div class="container">
-		<!-- Start Carousel -->
-		<div id="carousel-demo" class="carousel">
-			<div class="item-1">
-<figure class="image container is-256x256">
-					<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
-				 	</figure>			</div>
-			<div class="item-2">
-<figure class="image container is-256x256">
-					<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
-				 	</figure>			</div>
-			<div class="item-3">
-<figure class="image container is-256x256">
-					<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
-				 	</figure>			</div>
-			<div class="item-4">
-<figure class="image container is-256x256">
-					<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
-				 	</figure>			</div>
-			<div class="item-5">
-<figure class="image container is-256x256 ">
-					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
-				 </figure>			</div>
-			<div class="item-6">
-<figure class="image container is-256x256 ">
-					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
-				 </figure>			</div>
-			<div class="item-7">
-<figure class="image container is-256x256 ">
-					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
-				 </figure>			</div>
-			<div class="item-8">
-<figure class="image container is-256x256 ">
-					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
-				 </figure>			</div>
-			<div class="item-9">
-<figure class="image container is-256x256 ">
-					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
-				 </figure>			</div>
-		</div>
-		<!-- End Carousel -->
-	</div>
-</section> #}
-
-<section class="half-half">
-	<section class="sectionMargin">
-		<div class="containerMinimised is-centered"> 
-				<div class="calendar">
-				{{ include('@theme/homepage/_agenda.twig') }}
-				</div>
-=======
 {# Calendar + Carousels #}
 <section class="half-half">
 	<section class="sectionMargin">
 		<div class="containerMinimised is-centered columns is-gapless"> 
 		{# Calendar #}
-		
 			<div class="calendar column is-one-third">
 				{{ include('@theme/homepage/_agenda.twig') }}
 			</div>
-
-		{# Carousel #}
+		
 			<section class="hero is-medium has-carousel column">
 				 <div id="carousel-demo" class="hero-carousel has-cover-bg event-header">
 				 	{% set agenda_items = view.layout.agenda %}
@@ -135,7 +77,6 @@
 				<div class="hero-body"></div>
 				<div class="hero-foot"></div>
 			</section>
->>>>>>> 37f3522e84878befd4e104735b8bc7224ec8691b:themes/default/views/homepage/homepage.twig
 		</div>
 		
 		{# <div class="containerMinimised is-centered">
@@ -151,9 +92,6 @@
 	</section>
 </section>
 
-<<<<<<< HEAD:include/.history/themes/default/views/homepage/homepage_20200403181011.twig
-<section class="has-bg-cover">
-=======
 
 {# Announcements #}
 <section class = "section">
@@ -173,7 +111,6 @@
 </section>
 
 {# <section class="has-bg-cover">
->>>>>>> 37f3522e84878befd4e104735b8bc7224ec8691b:themes/default/views/homepage/homepage.twig
 	<section class="sectionMargin">
 		<div class="container">
 			<div class="columns is-vcentered">
@@ -223,7 +160,7 @@
 			</div>
 		</div>
 	</section>
-</section>
+</section> #}
 {# <section class="section">
 
 </section> #}
