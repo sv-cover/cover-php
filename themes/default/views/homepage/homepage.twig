@@ -22,14 +22,27 @@
 	</article>
 </section> -->
 
-{# Become a member banner#}
+{# Become a member banner for mobile#}
 <section>
-	{% if global.auth.logged_in == 1 %}
+	{% if global.auth.logged_in == 0 %}
+		<a href="https://www.svcover.nl/lidworden.php?utm_source=svcover.nl&utm_medium=banner&utm_campaign=member%20registration">
+			<div class="button become-member-mobile is-hidden-tablet">
+				<h3 class="is-size-5 writing-mobile">Become a member</h3>
+			</div>	
+		</a>	
+	{% endif %}
+</section>
+
+{# Become a member banner for full screen#}
+<section>
+	{% if global.auth.logged_in == 0 %}
 	{# If we want to extend the banner #}
 	{# <div id="mySidebar" class="sidebar"></div> #}
-
-	<div id="main" class=" button become-member-sign">
-		<h3 class="is-size-5 writing">Become a member</h3>
+		<a href="https://www.svcover.nl/lidworden.php?utm_source=svcover.nl&utm_medium=banner&utm_campaign=member%20registration">
+			<div id="main" class=" button become-member-sign-fullscreen is-hidden-mobile">
+				<h3 class="is-size-5 writing">Become a member</h3>
+			</div>
+		</a>
 		{# Arrow #}
 		{# <div class="line"></div>
 		{# <div class="child">
@@ -38,7 +51,6 @@
 			<span></span><span></span>
 			</span>
 		</div> #}
-	</div>
 	{% endif %}
 </section>
 
@@ -47,7 +59,6 @@
 	<section class="sectionMargin">
 		<div class="containerMinimised is-centered columns is-gapless"> 
 		{# Calendar #}
-		
 			<div class="column is-one-third">
 				{{ include('@theme/homepage/_agenda.twig') }}
 			</div>
@@ -84,9 +95,14 @@
 				<div class="hero-foot"></div>
 			</section>
 		</div>
-		
-		{# <div class="containerMinimised is-centered">
-				<h1 class="title">{{ editable.get_title }}</h1>
+	</section>
+</section>
+
+{# Infortmation about association #}
+<section class="half-half">
+	<section class="sectionMargin">
+		<div class="containerMinimised is-centered">
+			<h1 class="title">{{ editable.get_title }}</h1>
 		</div>
 		<div class="">
 			<article class="message is-dark">
@@ -94,8 +110,8 @@
 					{{ editable.locale_content|parse_markup }}
 				</div>
 			</article>
-		</div> #}
-	</section>
+		</div>
+	</section>	
 </section>
 
 
