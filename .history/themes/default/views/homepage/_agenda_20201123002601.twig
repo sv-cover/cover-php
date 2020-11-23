@@ -1,0 +1,60 @@
+{% extends '@theme/homepage/_card_calendar.twig' %}
+
+{% block name 'agenda' %}
+
+{% block title __('Calendar') %}
+
+{% block content %}
+{% set agenda_items = view.layout.agenda %}
+
+{% if agenda_items|length > 0 %}
+	<ol>
+		{% for item in agenda_items|slice(0, 3) %}
+
+		<article class="event">
+			<li class="by-committee-{{item.committee.login}}">
+			<div class="columns">
+				<div class="column is-one-third">
+				</div>
+				<div class="column">
+				
+				</div>
+			</div>
+			
+		</article>
+		<div class="card is-calendar"> 
+			<li class="by-committee-{{item.committee.login}}">
+			
+				<a href="agenda.php?agenda_id={{ item.id }}">
+					<div class="card-header is-small-calendar">
+						<h3 class="card-header-title is-4 is-capitalized  has-text-weight-bold is-centered is-calendar-title is-small">{{ item.kop }}</h3>
+					</div>
+					<div class="card-content is-calendar has-text-weight-semibold">
+						<div class="calendar-icon">
+							<span class="month is-uppercase">{{ item.van|date('M') }}</span>
+							<span class="day">{{ item.van|date('d') }}</span>
+						</div>
+						{% if item.extern %}
+							<span class="details">{{ __('External activity') }}</span>
+						{% else %}
+							<span class="details">{{ item|period_short }}</span>
+						{% endif %}
+						{% if item.is_proposal() %}
+							<span class="label-pending">{{ __('Not yet published') }}</span>
+						{% endif %}
+					</div>
+				</a>
+				
+			</li>
+		</div>
+		{% endfor %}
+	</ol>
+{% else %}
+	<p class="container-fancy">{{ __('There are no activities on the calendar at the moment.') }}</p>
+{% endif %}
+
+{% endblock %}
+
+{% block footer %}
+	<a href="agenda.php" class="card-footer-item">{{ __('Complete calendar') }}</a>
+{% endblock %}
