@@ -56,7 +56,7 @@
 
 {# Calendar + Carousels #}
 <section class="half-half">
-	<section class="">
+	<section class="sectionMargin">
 		<div class="containerMinimised is-centered columns is-gapless"> 
 		{# Calendar #}
 			<div class="column is-one-third">
@@ -64,11 +64,11 @@
 			</div>
 
 		{# Carousel #}
-			<section class="hero is-medium has-carousel column is-hidden-touch">
+			<section class="hero is-medium has-carousel column is-hidden-mobile is-hidden-tablet">
 				 <div id="carousel-demo" class="hero-carousel event-header">
 				 	{% set agenda_items = view.layout.agenda %}
 					{% for item in agenda_items|slice(0, 4) %}
-					<div class="is-active cover-thumbnail is-2by1 is-full-height">
+					<div class="is-active cover-thumbnail is-3by1 is-full-height">
 						<div class="overlay is-bottom">
 							<div class="date boxed-title-wrapper">
 								<span class="boxed-title has-text-weight-normal is-size-6 is-size-7-mobile">

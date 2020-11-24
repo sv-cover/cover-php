@@ -14,13 +14,13 @@
 		<div class="event">
 			<li class="by-committee-{{item.committee.login}}">
 				<a href="agenda.php?agenda_id={{ item.id }}">
-					<div class="columns">
-						<div class="column  is-one-quarter event-date">
+					<div class="columns is-centered">
+						<div class="column is-one-quarter event-date">
 							<span class="month is-uppercase">{{ item.van|date('M') }}</span>
 							<span class="day">{{ item.van|date('d') }}</span>
 						</div>
 						<div class="column event-details">
-							<h3 class="is-4 is-capitalized">{{ item.kop }}</h3>
+							<h3 class="is-4 is-capitalized is-centered">{{ item.kop }}</h3>
 							{% if item.extern %}
 							<span class="details">{{ __('External activity') }}</span>
 							{% else %}
