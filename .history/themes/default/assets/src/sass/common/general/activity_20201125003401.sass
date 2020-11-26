@@ -1,0 +1,62 @@
+$white: #ffffff
+$black: #000000
+
+$cover-gradient: linear-gradient(to bottom right, rgba(168, 73, 148, 0.4), rgba(54, 116, 157, 0.4)), #0a0a0a
+$event-shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02) !default
+$event-padding: 0 0 1rem 1rem
+$cover-blue: #36749D
+
+$event-date-bg-color: transparent !default
+$event-color-text: $white
+
+$event-details-bg-color: $white
+
+.event
+    background: $cover-gradient
+    box-shadow: $event-shadow
+    max-width: 100%
+    position: relative
+    padding: $event-padding
+    margin: 1.5rem
+
+.event-date
+    background-color: $event-date-bg-color
+    color: $event-color-text
+    font-size: large
+    display: flex
+    align-items: center
+    justify-content: center
+    
+.event-details
+    background-color: $event-details-bg-color
+    width: 100%
+    padding-top: 0rem
+    padding-bottom: 0rem
+    &:hover
+        background-color: rgba(0, 0, 0, 0)
+    &:hover .
+
+        
+
+.is-event-title
+    font-size: 120%
+    font-weight: bold
+
+.is-black-text
+    color: $black
+    &
+
+.is-event-date
+    font-weight: lighter
+    font-size: 140%
+    margin-right: 0.5rem
+
+
+.is-half-height
+  height: 20rem
+  overflow: hidden
+  margin-bottom: 1rem
+  &:hover
+    height: max-content
+
+

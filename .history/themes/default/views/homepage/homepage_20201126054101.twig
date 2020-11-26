@@ -1,0 +1,192 @@
+{% extends '@layout/layout.twig' %}
+
+{% block page %}
+<section>
+	{% set editable = global.models.Editable.get_iter_from_title('Startpagina') %}
+	<article class="container is-content-optimized">
+		<div class="level">
+		{# Delete the title #}
+		    {% if user_can_update editable %}
+		        <div class="buttons level-right">
+		            <a href="{{ link('editable.update', editable=editable) }}" class="button">
+		                <span class="icon is-small">
+		                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+		                </span>
+		                <span>
+		                    {{ __('Modify introduction') }}
+		                </span>
+		            </a>
+		        </div>
+		    {% endif %}
+		</div>
+	</article>
+</section> 
+
+{# Become a member banner for mobile#}
+<section>
+	{% if global.auth.logged_in == 0 %}
+		<a href="https://www.svcover.nl/lidworden.php?utm_source=svcover.nl&utm_medium=banner&utm_campaign=member%20registration">
+			<div class="button become-member-mobile is-hidden-tablet">
+				<h3 class="is-size-5 writing-mobile">Become a member</h3>
+			</div>	
+		</a>	
+	{% endif %}
+</section>
+
+{# Become a member banner for full screen#}
+<section>
+	{% if global.auth.logged_in == 0 %}
+	{# If we want to extend the banner #}
+	{# <div id="mySidebar" class="sidebar"></div> #}
+		<a href="https://www.svcover.nl/lidworden.php?utm_source=svcover.nl&utm_medium=banner&utm_campaign=member%20registration">
+			<div id="main" class=" button become-member-sign-fullscreen is-hidden-mobile">
+				<h3 class="is-size-5 writing">Become a member</h3>
+			</div>
+		</a>
+		{# Arrow #}
+		{# <div class="line"></div>
+		{# <div class="child">
+			<span class="arrow--l-r right" id="spani">
+			<span></span><span></span><span></span>
+			<span></span><span></span>
+			</span>
+		</div> #}
+	{% endif %}
+</section>
+
+{# Calendar + Carousels #}
+<section class="">
+	<section class="">
+		<div class="containerMinimised is-centered columns is-gapless reverse-row-order"> 
+		{# Calendar #}
+			<div class="column is-one-third-fullhd is-one-third-widescreen is-one-third-desktop is-full-width">
+				{{ include('@theme/homepage/_agenda.twig') }}
+			</div>
+
+		{# Carousel #}
+			<section class="hero has-carousel column container-fancy">
+				 <div id="carousel-demo" class="hero-carousel carousel event-header">
+				 	{% set agenda_items = view.layout.agenda %}
+					{% for item in agenda_items|slice(0, 4) %}
+					<div class="is-active cover-thumbnail is-3by1 is-full-height">
+						<div class="overlay is-bottom-overlay is-top-overlay">
+							<div class="date boxed-title-wrapper">
+								<span class="boxed-title has-text-weight-normal is-size-6 is-size-7-touch">
+									{{ item.van|date('F d') }}
+								</span>
+							</div>
+							<div class="name boxed-title-wrapper">
+								<h1 class="boxed-title is-size-4 is-size-5-touch">
+									{{ item.kop }}
+								</h1>
+							</div>
+						</div>
+						<figure class="image">
+							<picture>
+								<source srcset="{{ item.get_image(1000) }} 1000w, {{ item.get_image(2000) }} 2x">
+								<source srcset="{{ item.get_image(600) }} 600w, {{ item.get_image(1200) }} 2x">
+								<source srcset="{{ item.get_image(400) }} 400w, {{ item.get_image(800) }} 2x">
+								<img class="is-background" src="{{ item.get_image(1000) }}"
+								data-preview="{{ item.get_image(400) }}" alt="" />
+							</picture>
+						</figure>
+					</div>
+					{% endfor %}
+  				</div>
+				<div class="hero-head"></div>
+				<div class="hero-body"></div>
+				<div class="hero-foot"></div>
+			</section>
+		</div>
+	</section>
+</section>
+
+{# Information about association #}
+<p class="marquee">
+<span class="is-scroll-text"> Cover is the study association for Artificial Intelligence and Computing Science at the University of Groningen &nbsp;</span>
+
+</p>
+<p class="marquee marquee2">
+<span class="is-scroll-text">
+	Cover is the study association for Artificial Intelligence and Computing Science at the University of Groningen &nbsp;</span>
+</p>
+
+
+
+
+{# Announcements #}
+<section class = "section">
+	<div class="container columns is-centered">
+		<div class="column is-one-fifth-desktop is-one-fifth-widescreen is-one-fifth-fullhd is-one-quarter-tablet">
+			<div class="is-sticky">
+				{{ include('@theme/homepage/_poll.twig') }}
+			</div>
+		</div>
+		<div class="column is-content-optimized">
+			{{ include('@theme/announcements/announcements.twig', {
+				'controller': global.controllers.announcements,
+				'model': global.models.Announcement,
+				'policy': global.policies.Announcement,
+				'iters': global.models.Announcement.get_latest()
+			}) }}
+		</div>
+	</div>
+</section>
+
+{# <section class="has-bg-cover">
+	<section class="sectionMargin">
+		<div class="container">
+			<div class="columns is-vcentered">
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						First, the social aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We organise weekly borrels, monthly socials and tons of other activities.</p>
+				</div>
+				<div class="column">
+				<figure class="image container is-256x256 ">
+					<img src="https://assets-ouch.icons8.com/preview/388/72a4ece0-721d-4b86-b1f8-5963ca0d8341.png">
+				 </figure>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="columns reverse-row-order ">
+				<div class="column ">
+				 <figure class="image container is-256x256">
+				 		<img src="https://assets-ouch.icons8.com/preview/848/8ec7d27c-2d06-4a41-8fc5-1aa889c71895.png">
+				 </figure>
+				</div>
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						Second, the study aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We organise study support lectures about our degree programs. You can join workshops that either dig deeper into materials, or offer some fresh knowledge. You can also find help using our tutoring system!</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="columns is-vcentered">
+				<div class="column">
+					<h3 class="is-size-3 has-text-white has-text-centered has-text-weight-semibold">
+						Third, the career aspect
+					</h3>
+					<p class="has-text-white has-text-centered">We also offer career oriented events. Regularly, we have companies over to hold talks about certain career paths. You will find this interesting if you want to talk to students who finished their studies and now work at companies or if you are interested in what companies are up to in general.</p>
+				</div>
+				<div class="column">
+				<div class="cent">
+					<figure class="image container is-256x256">
+					<img src="https://assets-ouch.icons8.com/preview/510/f4abb05e-75f8-4c47-a62f-d9f8a263e588.png">
+				 	</figure>
+					 </div>
+				</div>
+			</div>
+		</div>
+	</section>
+</section> #}
+{# <section class="section">
+
+</section> #}
+
+{# the missing part is in a file called missing part #}
+{% endblock %}

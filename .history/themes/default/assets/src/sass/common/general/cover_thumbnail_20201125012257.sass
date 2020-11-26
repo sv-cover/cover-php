@@ -1,0 +1,138 @@
+$cover-thumbnail-overlay-padding: 1.25rem 1rem 1.25rem 0 !default
+
+.cover-thumbnail
+    @extend %block
+    background: $cover-gradient, $black
+    display: block
+    position: relative
+    padding: 0
+    min-height: 5rem
+
+    .overlay
+        +overlay
+        padding: $cover-thumbnail-overlay-padding
+        z-index: 5
+        &.is-bottom
+            top: auto
+            height: auto
+        &.is-middle
+            top: 50%
+            height: auto
+
+    &.is-square,
+    &.is-1by1,
+    &.is-5by4,
+    &.is-4by3,
+    &.is-3by2,
+    &.is-5by3,
+    &.is-16by9,
+    &.is-2by1,
+    &.is-3by1,
+    &.is-4by5,
+    &.is-3by4,
+    &.is-2by3,
+    &.is-3by5,
+    &.is-9by16,
+    &.is-1by2,
+    &.is-1by3,
+        > .image
+            @extend %overlay
+            overflow: hidden
+
+            img
+                @extend %overlay
+                height: 100%
+                width: 100%
+                object-fit: cover
+
+    &.is-square,
+    &.is-1by1,
+    &.is-square > .image,
+    &.is-1by1 > .image
+        padding-top: 100%
+    &.is-5by4,
+    &.is-5by4 > .image
+        padding-top: 80%
+    &.is-4by3,
+    &.is-4by3 > .image
+        padding-top: 75%
+    &.is-3by2,
+    &.is-3by2 > .image
+        padding-top: 66.6666%
+    &.is-5by3,
+    &.is-5by3 > .image
+        padding-top: 60%
+    &.is-16by9,
+    & .is-16by9> .image
+        padding-top: 56.25%
+    &.is-2by1,
+    &.is-2by1 > .image
+        padding-top: 50%
+    &.is-3by1,
+    &.is-3by1 > .image
+        padding-top: 33.3333%
+    &.is-4by5,
+    &.is-4by5 > .image
+        padding-top: 125%
+    &.is-3by4,
+    &.is-3by4 > .image
+        padding-top: 133.3333%
+    &.is-2by3,
+    &.is-2by3 > .image
+        padding-top: 150%
+    &.is-3by5,
+    &.is-3by5 > .image
+        padding-top: 166.6666%
+    &.is-9by16,
+    & .is-9by16> .image
+        padding-top: 177.7777%
+    &.is-1by2,
+    &.is-1by2 > .image
+        padding-top: 200%
+    &.is-1by3,
+    &.is-1by3 > .image
+        padding-top: 300%
+
+header.cover-thumbnail
+    +mobile
+        margin-left: -$section-padding-horizontal
+        margin-right: -$section-padding-horizontal
+
+        &.is-square,
+        &.is-1by1,
+            padding-top: calc(100% + 2 * #{$section-padding-horizontal})
+        &.is-5by4,
+            padding-top: calc(80% + 2 * #{$section-padding-horizontal})
+        &.is-4by3,
+            padding-top: calc(75% + 2 * #{$section-padding-horizontal})
+        &.is-3by2,
+            padding-top: calc(66.6666% + 2 * #{$section-padding-horizontal})
+        &.is-5by3,
+            padding-top: calc(60% + 2 * #{$section-padding-horizontal})
+        &.is-16by9,
+            padding-top: calc(56.25% + 2 * #{$section-padding-horizontal})
+        &.is-2by1,
+            padding-top: calc(50% + 2 * #{$section-padding-horizontal})
+        &.is-3by1,
+            padding-top: calc(33.3333% + 2 * #{$section-padding-horizontal})
+        &.is-4by5,
+            padding-top: calc(125% + 2 * #{$section-padding-horizontal})
+        &.is-3by4,
+            padding-top: calc(133.3333% + 2 * #{$section-padding-horizontal})
+        &.is-2by3,
+            padding-top: calc(150% + 2 * #{$section-padding-horizontal})
+        &.is-3by5,
+            padding-top: calc(166.6666% + 2 * #{$section-padding-horizontal})
+        &.is-9by16,
+            padding-top: calc(177.7777% + 2 * #{$section-padding-horizontal})
+        &.is-1by2,
+            padding-top: calc(200% + 2 * #{$section-padding-horizontal})
+        &.is-1by3,
+            padding-top: calc(300% + 2 * #{$section-padding-horizontal})
+
+a.cover-thumbnail
+    outline: 0px solid $cover-red
+    transition: outline .125s ease-in
+    &:hover,
+    &:focus
+        outline: 4px solid $cover-red

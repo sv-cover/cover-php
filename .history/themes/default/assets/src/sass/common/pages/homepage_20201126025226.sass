@@ -1,0 +1,264 @@
+@import "bulma-carousel/src/sass/index.sass"
+@import "@creativebulma/bulma-collapsible/src/sass/index.sass"
+
+@charset "utf-8"
+$cover-color-red: rgb(200, 16, 46)
+$cover-color-blue: #36749D
+$cover-color-light-blue: #25B7C5
+$cover-color-yellow: #FCDF00
+$white: #ffffff
+
+
+
+
+.is-full-height
+  height: 100%
+
+.container-fancy 
+  width: 100%
+  text-align: center
+  min-height: 20rem
+
+
+.calendar-div   
+  width: 30% 
+  height: 450px 
+  background-color: rgb(255, 255, 255) 
+  margin: 1px 
+  display: flex 
+  align-items: center 
+  justify-content: space-around 
+ 
+.sectionMargin
+  padding-top: 50px
+  margin: auto 15% auto 15% 
+
+.half-half
+  background: linear-gradient(180deg, $white 90%,$cover-color-red 10%)
+
+
+    
+.is-vertical-center
+  display: flex
+  align-items: center
+
+.has-bg-cover
+  background: $cover-color-red
+
+.has-cover-bg
+  background: linear-gradient(to bottom right, rgba(168, 73, 148, 0.4), rgba(54, 116, 157, 0.4)), #0a0a0a
+  display: block
+  position: relative
+  padding: 0
+  padding-top: 0px
+  min-height: 5rem
+
+.back-is-red
+  background-color: $cover-color-red
+
+.containerMinimised  
+  margin:  auto auto auto auto
+  position: relative 
+  width: 100%
+  height: auto 
+  padding: 25px 0px 25px 0px 
+
+.text
+  text-align: center
+    
+   
+.containerDescription  
+  background-color: #0074D9 
+  width: 100px 
+  height: 100px 
+  display: inline-block 
+   
+
+.coverCarousel  
+  min-height: 20px 
+ 
+.become-member-sign-fullscreen
+  top: 112px
+  position: fixed
+  background-color: $cover-color-blue
+  width: 50px
+  height: 200px
+  display: flex
+  justify-content: center
+  align-content: center
+  color: $white
+  border-style: solid
+  z-index: 1
+  //transition: 1.5s
+  &:hover
+    color: $white
+    background-color: $cover-color-light-blue
+    transition: 0.2s
+  
+.become-member-mobile
+  background-color: $cover-color-blue
+  width: 100%
+  height: 50px
+  position: fixed
+  color: $white
+  display: flex
+  justify-content: center
+  align-content: center
+  z-index: 1
+  border-style: solid
+  &:hover
+    color: $white
+    background-color: $cover-color-light-blue
+    transition: 0.2s
+
+.writing-mobile
+  font-weight: bold  
+
+.writing
+  text-align: center
+  writing-mode: vertical-lr 
+  font-weight: bold
+  transform: rotate(180deg)
+
+.sidebar 
+  height: 203px
+  width: 0px
+  position: fixed
+  z-index: 1
+  top: 114px
+  left: 0
+  background-color: $cover-color-blue
+  overflow: hidden
+  transition: 1.5s
+  padding-top: 10px
+  display: flex
+  border-bottom: none
+
+
+.sidebar a 
+  padding: 8px 8px 8px 32px
+  text-decoration: none
+  font-size: 25px
+  color: $cover-color-blue
+  display: block
+  transition: 1s
+
+.sidebar a:hover 
+  color: #f1f1f1
+
+.sidebar .closebtn 
+  position: absolute
+  top: 0
+  right: 25px
+  font-size: 36px
+  margin-left: 50px
+
+  
+.arrow--l-r
+  width: 2rem
+  height: 1.5rem
+  display: inline-block
+  position: absolute
+  margin: 0 1rem  
+  cursor: pointer
+
+  &.left span
+    &:nth-child(4)
+      transform: rotate(-45deg)
+
+    &:nth-child(5)
+      transform: rotate(45deg)
+
+  &.right span
+    &:nth-child(1)
+      transform: rotate(-45deg)
+
+    &:nth-child(2)
+      transform: rotate(45deg)
+
+  span
+    position: absolute
+    height: 0.25rem
+    background-color: #efefef
+    transition: transform 1.8s ease
+
+    &:nth-child(1), &:nth-child(2), &:nth-child(4), &:nth-child(5)
+      width: 0.625rem
+      top: 0.625rem
+
+    &:nth-child(1)
+      right: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: bottom right
+
+    &:nth-child(2)
+      right: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: top right
+
+    &:nth-child(3)
+      width: 2rem
+      top: 0.64rem
+
+    &:nth-child(4)
+      left: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: bottom left
+
+    &:nth-child(5)
+      left: 0
+      width: 0.85rem
+      height: 0.2rem
+      transform-origin: top left
+
+.child 
+  position: absolute
+  bottom: 0
+  left: 5px
+  padding-bottom: 30px
+
+.line
+  width: 80px
+  height: 205px
+  border-bottom: solid white
+  position: absolute
+
+
+.background-info
+  background-color: $cover-color-red  
+
+.align-text
+  padding-top: 50px
+  padding-bottom: 10px
+  margin: auto 15% auto 15%
+
+.align-text-more
+  padding-top: 15px
+  text-align: center
+  color: $white
+  font-size: 35px
+  font-weight: bold  
+
+.icon-style
+  color: $white
+  &:hover
+    color: #000000
+
+.is-about-section
+  overflow: hidden
+
+.is-text-center
+  text-align: center
+
+.is-middle-overlay
+  top: 50%
+  height: auto
+
+    
+@media(max-width: 950px)
+  .reverse-row-order 
+    flex-direction: column-reverse
+    justify-content: space-evenly

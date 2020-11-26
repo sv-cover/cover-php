@@ -1,0 +1,20 @@
+{% set _content = block('content') %}
+{% set _footer = block('footer') %}
+
+{% if _content is not empty %}
+	<div class="calendar-main is-calendar-box">
+
+		<header class="calendar-header is-calendar">
+			<h2 class="calendar-header-title is-calendar-title"> {% block title %}{% endblock %}
+				</h2>
+			</header>
+			<div class="calendar-content is-calendar" id="menu_{% block name %}{% endblock %}"> {% block content %}{% endblock %}
+				</div>
+				{% set _footer = block('footer') %}
+				{% if _footer is not empty %}
+					<footer class="calendar-footer">
+						{{ _footer|raw }}
+					</footer>
+				{% endif %}
+			</div>
+		{% endif %}

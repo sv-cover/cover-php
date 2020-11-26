@@ -1,0 +1,77 @@
+<div class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Announcements') }}</h1>
+	</div>
+	{# Normally I would use controller.new_iter here, but this template is embedded
+	in the homepage and no controller is passed in. This is also the reason that
+	the controller isn't used to generate the links, as is done in all the other
+	CRUD-based views. #}
+	{% if user_can_create global.models.Announcement.new_iter %}
+		<div class="level-right buttons">
+			<a href="announcements.php?view=create" class="button">{{ __('New announcement') }}</a>
+		</div>
+	{% endif %}
+</div>
+
+
+{% for item in iters if user_can_read item %}
+<div class="card is-half-height collapse">
+	{# <div class="card-image ">
+		<figure
+			class="image is-4by3">
+			<!-- <figure class="image is-128x128">-->
+			<img src="https://www.svcover.nl/documenten/Announcement_banners/20192020/Applications_XXIX.png" alt="Placeholder image">
+		</figure>
+	</div> #}
+	<div class="card-content">
+		<h4 class="title">
+			<a href="announcements.php?view=read&amp;id={{ item.id }}" class="permalink">{{ item.subject }}</a>
+		</h4>
+		<div class="media-content">
+			<nav class="level-right">
+				{% if user_can_update item %}
+					<a class="level-item" href="announcements.php?view=update&amp;id={{ item.id }}" title="{{ __('Modify announcement') }}">
+						<span class="icon is-small">
+							<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+						</span>
+						<span class="is-sr-only">
+							{{ __('Modify announcement') }}
+						</span>
+					</a>
+				{% endif %}
+				{% if user_can_delete item %}
+					<a class="level-item" href="announcements.php?view=delete&amp;id={{ item.id }}" title="{{ __('Delete announcement') }}" data-popup="modal">
+						<span class="icon is-small">
+							<i class="fas fa-trash" aria-hidden="true"></i>
+						</span>
+						<span class="is-sr-only">
+							{{ __('Delete announcement') }}
+						</span>
+					</a>
+				{% endif %}
+			</nav>
+			<p class="subtitle is-6">
+				<small>
+					{{ __('By') }}:
+					<a href="commissies.php?commissie={{ item.committee.login }}">{{ item.committee.naam }}</a>
+					{{ __('on') }}
+					{{ item.created_on|date() }}
+				</small>
+			</p>
+		</div>
+	</div>
+	<div class="card-content collapse-content">
+
+		<p class="subtitle has-text-left">
+			{{ item.message|parse_markup }}
+		</p>
+	</div>
+<div class="controls">
+	<a href="#sponsorCollapseContent" class="collapse-trigger" aria-controls="sponsorCollapseContent">Read More</a>
+</div>
+
+</div>
+
+{% endfor %}
+
+<p class="align-center"><a href="announcements.php">{{ __('Show all announcements') }}</a></p>

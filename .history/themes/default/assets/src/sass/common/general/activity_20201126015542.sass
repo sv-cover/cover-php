@@ -1,0 +1,82 @@
+$white: #ffffff
+$black: #000000
+$grey: #787887
+
+$cover-gradient: linear-gradient(to bottom right, rgba(168, 73, 148, 0.4), rgba(54, 116, 157, 0.4)), #0a0a0a
+$event-shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02) !default
+$event-padding: 0 0 1rem 1rem
+$cover-blue: #36749D
+$cover-color-red: rgb(200, 16, 46)
+
+
+
+$event-date-bg-color: transparent !default
+$event-color-text: $white
+
+$event-details-bg-color: $white
+$event-bg-color: $cover-blue
+
+        
+
+.event-in-calendar
+    background: $grey
+    box-shadow: $event-shadow
+    max-width: 100%
+    position: relative
+    padding: $event-padding
+    margin: 1.5rem
+    height: auto
+
+.event-date
+    background-color: $cover-gradient
+    color: $event-color-text
+    font-size: large
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: center
+    padding: 1rem
+
+.event-details
+    background-color: $event-details-bg-color
+    width: 100%
+    padding-top: 0rem
+    padding-bottom: 0rem
+    &.is-active,
+    &:hover
+        background-color: transparentize($white,1)
+
+    &:hover .is-black-text
+        color: $white !important
+    &.is-active .is-black-text
+        color: $white
+
+.is-event-title
+    font-size: 110%
+    font-weight: 600
+
+.is-black-text
+    color: $black
+    &.is-duartion
+        padd
+        
+
+.is-event-date
+    font-weight: lighter
+    font-size: 130%
+
+
+.is-half-height
+    overflow: hidden
+    margin-bottom: 1rem
+    &.is-long-text
+        height: 20rem
+        visibility: visible !important
+
+.is-not-active-read-more
+    visibility: hidden
+    
+.is-active-read-more
+    display: flex
+    align-items: center
+    justify-content: center
