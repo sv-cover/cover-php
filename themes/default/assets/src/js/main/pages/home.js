@@ -47,6 +47,7 @@ for(var i = 0; i < carousels.length; i++) {
 }
 
 
+
 // document.getElementById("spani").addEventListener("click", openNav);
 // document.getElementById("mySidebar").addEventListener("click", closeNav);
 
