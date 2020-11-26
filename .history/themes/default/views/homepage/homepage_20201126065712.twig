@@ -1,7 +1,7 @@
 {% extends '@layout/layout.twig' %}
 
 {% block page %}
-<!-- <section>
+<section>
 	{% set editable = global.models.Editable.get_iter_from_title('Startpagina') %}
 	<article class="container is-content-optimized">
 		<div class="level">
@@ -20,7 +20,7 @@
 		    {% endif %}
 		</div>
 	</article>
-</section> -->
+</section>
 
 {# Become a member banner for mobile#}
 <section>
@@ -102,14 +102,12 @@
 </section>
 
 {# Information about association #}
-<div>
 <p class="marquee">
 <span class="is-scroll-text is-size-4-touch is-uppercase is-bold-and-red">
 	Cover is the study association for Artificial Intelligence and Computing Science at the University of Groningen
 &nbsp;</span></p><p class="marquee marquee2"><span class="is-scroll-text is-size-4-touch is-uppercase is-bold-and-red">
 
 Cover is the study association for Artificial Intelligence and Computing Science at the University of Groningen &nbsp;</span></p>
-</div>
 
 {# <section class="background-info">
 	<section class="align-text">
@@ -171,7 +169,7 @@ Cover is the study association for Artificial Intelligence and Computing Science
 	</section>	
 </section> #}
 
-<section class="hero is-light" style="margin-top: 4rem;">
+<section class="hero is-light">
 	<div class="hero-body columns is-desktop is-vcentered">
 		<div class="content column has-centered-text is-centered is-half-widescreen is-half-fullhd is-half-desktop is-vcentered">
 			<h2 class="title is-size-2-widescreen">{{ editable.get_title }}</h2>
