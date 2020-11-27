@@ -27,7 +27,6 @@ var carousels = bulmaCarousel.attach('.carousel', {
   ],
 });
 
-
 // Activate the event in the calendar that corresponds with the one in the carousel
 
 for(var i = 0; i < carousels.length; i++) {
@@ -114,3 +113,24 @@ for (let element of half) {
       h[1].classList.add("collapse-content")
   }
 }
+
+//Align text for the info section
+function resizeHeight(){
+  var info_text_div = document.getElementsByClassName("information")
+  var info_text = document.getElementsByClassName("text-information") 
+  var max = 0
+
+  for (let element of info_text)
+  {
+    if (element.clientHeight > max)
+      max = element.clientHeight
+  }
+
+  for (let element of info_text_div)
+    {
+        element.style.minHeight  = max+"px"
+    }
+    console.log(max)
+} 
+resizeHeight()
+window.addEventListener('resize', resizeHeight)

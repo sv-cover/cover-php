@@ -17,6 +17,8 @@ $min-height-carousel: 20rem
 
 .container-fancy 
   width: 100%
+  padding-left: 5rem
+  padding-right: 5rem
   min-height: $min-height-carousel
 
 .calendar-div   
@@ -248,7 +250,9 @@ $min-height-carousel: 20rem
       
 .section-top
   margin-top: 2rem  
-
+  &.is-low
+    margin-top: 1rem
+    margin-bottom: 1rem
 .section-bottom
   margin-bottom: 1rem  
 
@@ -290,6 +294,10 @@ $min-height-carousel: 20rem
   position: sticky
   top: 3.25rem  //min-height of navbar
 
+.is-sticky-double
+  position: sticky
+  top: 6.50rem
+
 .is-image-activities
   height: 200px !important
   object-fit: contain
@@ -308,6 +316,9 @@ $min-height-carousel: 20rem
     display: flex
     align-items: center
     justify-content: center
+
+.is-lowerd
+  margin-top: 1.5rem  
 
 .no-mragin-bottom
     margin-bottom: 0 !important
