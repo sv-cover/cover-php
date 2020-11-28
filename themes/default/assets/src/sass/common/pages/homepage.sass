@@ -118,30 +118,6 @@ $event-bg-color: $blue
         position: sticky
         top: 6.50rem
 
-    .is-half-height
-            overflow: hidden
-            margin-bottom: 1rem
-            &.is-long-text
-                    height: $announcement-base-height
-                    visibility: visible !important
-
-    .is-not-active-read-more
-            visibility: hidden
-            
-    .is-active-read-more
-            display: flex
-            align-items: center
-            justify-content: center
-
-    
-    .announcement
-        &.collapse .collapse-content
-            &:not(.is-visible) 
-                height: $announcement-base-height
-
-            &.is-transitioning-in
-                height: $announcement-base-height + 10rem
-
     .calendar-main
         background-color: $calendar-background-color
         box-shadow: $calendar-shadow
@@ -277,4 +253,27 @@ $event-bg-color: $blue
         font-weight: lighter
         font-size: 130%
 
+
+.announcements
+    .is-half-height
+            overflow: hidden
+            &.is-long-text
+                visibility: visible !important
+
+    .is-not-active-read-more
+            visibility: hidden
+            
+    .is-active-read-more
+            display: flex
+            align-items: center
+            justify-content: center
+
+    
+    .announcement
+        &.collapse .collapse-content
+            &:not(.is-visible) 
+                height: $announcement-base-height
+
+            &.is-transitioning-in
+                height: $announcement-base-height + 5rem
 

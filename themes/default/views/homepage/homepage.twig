@@ -122,8 +122,8 @@
 
 {# Announcements #}
 <section class="section">
-	<div class="container is-fluid columns">
-		<div class="column is-one-fifth-desktop">
+	<div class="container has-sidebar columns">
+		<div class="column is-sidebar">
 			{% if global.auth.logged_in == 0 %}
 			<div class="is-sticky-double">
 				{{ include('@theme/homepage/_poll.twig') }}
@@ -134,7 +134,7 @@
 			</div>
 			{% endif %}
 		</div>
-		<div class="column is-content-optimized">
+		<div class="column is-content announcements">
 			{{ include('@theme/announcements/announcements.twig', {
 				'controller': global.controllers.announcements,
 				'model': global.models.Announcement,

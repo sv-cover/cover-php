@@ -2,4 +2,8 @@
 
 {% block title __('Announcements') ~ ' – ' ~ parent() %}
 
-{% block content include('announcements.twig') %}
+{% block content %}
+<article class="announcements">
+    {{ include('announcements.twig') }}
+</article>
+{% endblock %}
