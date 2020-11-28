@@ -6,15 +6,15 @@
 
 		<header class="calendar-header is-calendar ">
 			<h2 class="calendar-header-title is-calendar-title"> {% block title %}{% endblock %}
-				</h2>
-			</header>
-			<div class="calendar-content is-calendar container-fancy" id="menu_{% block name %}{% endblock %}"> {% block content %}{% endblock %}
-				</div>
-				{% set _footer = block('footer') %}
-				{% if _footer is not empty %}
-					<footer class="calendar-footer">
-						{{ _footer|raw }}
-					</footer>
-				{% endif %}
-			</div>
+			</h2>
+		</header>
+		<div class="calendar-content is-calendar container-fancy" id="menu_{% block name %}{% endblock %}"> {% block content %}{% endblock %}
+	</div>
+	{% set _footer = block('footer') %}
+		{% if _footer is not empty %}
+			<footer class="calendar-footer">
+				{{ _footer|raw }}
+			</footer>
 		{% endif %}
+	</div>
+{% endif %}
