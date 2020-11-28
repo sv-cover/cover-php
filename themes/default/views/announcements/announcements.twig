@@ -15,18 +15,19 @@
 
 
 {% for item in iters if user_can_read item %}
-<div class="card is-half-height collapse">
-	{# <div class="card-image ">
-		<figure
-			class="image is-4by3">
-			<!-- <figure class="image is-128x128">-->
-			<img src="https://www.svcover.nl/documenten/Announcement_banners/20192020/Applications_XXIX.png" alt="Placeholder image">
-		</figure>
-	</div> #}
+<div class="card is-half-height collapse announcement">
 	<div class="card-content">
-		<h4 class="title no-mragin-bottom is-size-4-touch">
+		<h4 class="title is-size-4-touch">
 			<a href="announcements.php?view=read&amp;id={{ item.id }}" class="permalink">{{ item.subject }}</a>
 		</h4>
+		<p class="subtitle is-6">
+			<small>
+				{{ __('By') }}:
+				<a href="commissies.php?commissie={{ item.committee.login }}">{{ item.committee.naam }}</a>
+				{{ __('on') }}
+				{{ item.created_on|date() }}
+			</small>
+		</p>
 		<div class="media-content">
 			<nav class="level-right">
 				{% if user_can_update item %}
@@ -50,14 +51,6 @@
 					</a>
 				{% endif %}
 			</nav>
-			<p class="subtitle is-6">
-				<small>
-					{{ __('By') }}:
-					<a href="commissies.php?commissie={{ item.committee.login }}">{{ item.committee.naam }}</a>
-					{{ __('on') }}
-					{{ item.created_on|date() }}
-				</small>
-			</p>
 		</div>
 	</div>
 	<div id="text-{{loop.index}}" class="card-content long-announcement">
