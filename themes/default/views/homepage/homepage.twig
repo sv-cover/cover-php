@@ -1,14 +1,11 @@
 {% extends '@layout/layout.twig' %}
 
 {% block page %}
-<section>
-	
-</section>
-
+<article class="homepage">
 {# Become a member banner for mobile#}
 <section>
 	{% if global.auth.logged_in == 0 %}
-		<a href="lidworden.php?utm_source=svcover.nl&utm_medium=banner&utm_campaign=member%20registration">
+		<a href="lidworden.php?utm_source=svcover.nl&nbsp;utm_medium=banner&nbsp;utm_campaign=member%20registration">
 			<div class="button become-member-mobile">
 				<h3 class="is-size-5 writing-mobile">Become a member</h3>
 			</div>	
@@ -183,7 +180,7 @@
 		</div>
 	</div>
 </section>
-
+</article>
 
 {# the missing part is in a file called missing part #}
 {% endblock %}
