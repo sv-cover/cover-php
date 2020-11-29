@@ -1,5 +1,17 @@
 import bulmaCarousel from 'bulma-carousel/dist/js/bulma-carousel.min.js';
 
+function containedScrollIntoView(element) {
+  // element.scrollIntoView, but only inside scrollparent
+  const scrollParent = element.closest('.scroll-container');
+  const rect = element.getBoundingClientRect();
+  const newPos = Math.max((scrollParent.clientHeight - rect.height) / 2, 0) - element.offsetTop;
+
+  scrollParent.scrollTo({
+    top: newPos,
+    behavior: 'smooth'
+  });
+}
+
 // Initialize all elements with carousel class.
 var carousels = bulmaCarousel.attach('.carousel', {
     slidesToScroll: 1,
@@ -28,24 +40,26 @@ var carousels = bulmaCarousel.attach('.carousel', {
 
 // Activate the event in the calendar that corresponds with the one in the carousel
 
-for(var i = 0; i < carousels.length; i++) {
+for(let i = 0; i < carousels.length; i++) {
   //  The carousel event listener only activates after the first slide
   // so we have to set up the first event manually
   document.getElementById('event-0').classList.add('is-active')
   
 	carousels[i].on('before:show', state => {
     // deactivate the rest of the events
-    for (var i = 0; i < state.length; ++i)
-        document.getElementById('event-' + i).classList.remove('is-active')
+    for (let i = 0; i < state.length; ++i)
+      document.getElementById('event-' + i).classList.remove('is-active')
 
     // the first slide is actually the second one so we need some math to get the order right
-    var event = 'event-' + ((state.index + 1) % state.length)
-    document.getElementById(event).classList.add('is-active')
-    document.getElementById(event).scrollIntoView({behavior: 'smooth', block: 'center'})
+    let event = 'event-' + ((state.index + 1) % state.length)
+    let element = document.getElementById(event);
+    element.classList.add('is-active');
+    containedScrollIntoView(element.closest('.event'));
 	});
 }
 
 // Resize carousels with window
+// TODO: This is still really buggy...
 window.addEventListener('resize', () => {
   for (let carousel of carousels) {
     carousel.reset();
@@ -56,7 +70,7 @@ window.addEventListener('resize', () => {
 const half = document.getElementsByClassName("is-half-height")
 
 for (let element of half) {
-  var h = element.getElementsByClassName("card-content")
+  let h = element.getElementsByClassName("card-content")
   if (h[1] && h[1].clientHeight > 400){
       element.getElementsByClassName("controls")[0].classList.remove("is-not-active-read-more")
       element.getElementsByClassName("controls")[0].classList.add("is-active-read-more")
