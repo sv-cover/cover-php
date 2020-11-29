@@ -41,8 +41,16 @@ for(var i = 0; i < carousels.length; i++) {
     // the first slide is actually the second one so we need some math to get the order right
     var event = 'event-' + ((state.index + 1) % state.length)
     document.getElementById(event).classList.add('is-active')
+    document.getElementById(event).scrollIntoView({behavior: 'smooth', block: 'center'})
 	});
 }
+
+// Resize carousels with window
+window.addEventListener('resize', () => {
+  for (let carousel of carousels) {
+    carousel.reset();
+  }
+});
 
 // Get the announcements that are too long and make them collapsible
 const half = document.getElementsByClassName("is-half-height")

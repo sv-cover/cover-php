@@ -3,24 +3,26 @@
 {% block page %}
 <article class="homepage">
 {# Become a member banner for mobile#}
-<section>
-	{% if global.auth.logged_in == 0 %}
+{% if global.auth.logged_in == 0 %}
+	<section>
         <a href="lidworden.php?utm_source=svcover.nl&nbsp;utm_medium=banner&nbsp;utm_campaign=member%20registration" class="button is-primary is-fullwidth has-text-weight-semibold become-member-mobile">
             Become a member
         </a>   	
-	{% endif %}
-</section>
+	</section>
+{% endif %}
 
 
 {# Calendar + Carousels #}
-	<section class="is-lowerd">
+{{ include('@theme/homepage/_calendar.twig') }}
+
+{# 	<section class="is-lowerd">
 		<div class="container-calendar-and-car is-centered columns is-gapless reverse-row-order"> 
-		{# Calendar #}
+		{# Calendar #
 			<div class="column is-one-third-desktop is-full-width">
 				{{ include('@theme/homepage/_agenda.twig') }}
 			</div>
 
-		{# Carousel #}
+		{# Carousel #
 			<section class="hero has-carousel column container-fancy">
 				 <div id="carousel-demo" class="hero-carousel carousel event-header">
 				 	{% set agenda_items = view.layout.agenda %}
@@ -52,7 +54,7 @@
   				</div>
 			</section>
 		</div>
-	</section>
+	</section> #}
 
 {# Information about association #}
 
