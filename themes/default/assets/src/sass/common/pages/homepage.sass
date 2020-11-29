@@ -64,60 +64,64 @@ $event-bg-color: $blue
                 .image
                     img
                         height: 15rem
-
-
-    .is-full-height
-        height: 100%
-
-    .container-fancy 
-        width: 100%
-        padding-left: 5rem
-        padding-right: 5rem
-        min-height: $min-height-carousel
-
-    .container-calendar-and-car  
-        margin:  auto auto auto auto
-        position: relative 
-        width: 100%
-        height: auto 
-        padding: 25px 0px 25px 0px 
-        min-height: $min-height-carousel
         
-    .become-member-mobile
-        background-color: $blue
-        width: 100%
-        height: 50px
-        position: fixed
-        color: $white
-        display: flex
-        justify-content: center
-        align-content: center
+    .become-member
+        height: $navbar-height
+        position: sticky
+        top: $navbar-height
         z-index: 11
-        border-style: solid
-        &:hover
-            color: $white
-            background-color: $cyan
-            transition: 0.2s
+        .button
+            height: 100%
+        // background-color: $blue
+        // width: 100%
+        // color: $white
+        // display: flex
+        // justify-content: center
+        // align-content: center
+        // z-index: 11
+        // border-style: solid
+        // &:hover
+        //     color: $white
+        //     background-color: $cyan
+        //     transition: 0.2s
 
-    .is-bottom-overlay
-            top: auto    !important
-            height: auto !important
-            bottom: 2rem !important
-
-    @media(max-width: 950px)
-        .is-full-width
-            width: 100% !important
-        .reverse-row-order
-                display: flex 
-                flex-direction: column-reverse
 
     .is-sticky
         position: sticky
-        top: 3.25rem  //min-height of navbar
+        top: $navbar-height + $block-spacing
 
     .is-sticky-double
         position: sticky
-        top: 6.50rem
+        top: $navbar-height * 2 + $block-spacing
+
+    // .is-bottom-overlay
+    //         top: auto    !important
+    //         height: auto !important
+    //         bottom: 2rem !important
+
+    // .is-full-height
+    //     height: 100%
+
+    // @media(max-width: 950px)
+    //     .is-full-width
+    //         width: 100% !important
+    //     .reverse-row-order
+    //             display: flex 
+    //             flex-direction: column-reverse
+    
+    // .container-fancy 
+    //     width: 100%
+    //     padding-left: 5rem
+    //     padding-right: 5rem
+    //     min-height: $min-height-carousel
+
+    // .container-calendar-and-car  
+    //     margin:  auto auto auto auto
+    //     position: relative 
+    //     width: 100%
+    //     height: auto 
+    //     padding: 25px 0px 25px 0px 
+    //     min-height: $min-height-carousel
 
     // .calendar-main
     //     background-color: $calendar-background-color
@@ -306,7 +310,7 @@ $event-bg-color: $blue
         border: none
         box-shadow: none
         width: 20px
-        opacity: .5
+        opacity: .8
         &:hover
             opacity: 1
         svg
