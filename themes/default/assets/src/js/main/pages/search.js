@@ -1,4 +1,4 @@
-import {Bulma, Collapse} from 'cover-style-system/src/js';
+import {Bulma} from 'cover-style-system/src/js';
 
 
 class SearchResults {

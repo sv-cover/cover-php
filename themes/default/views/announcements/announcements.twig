@@ -15,20 +15,14 @@
 
 
 {% for item in iters if user_can_read item %}
-<div class="card is-half-height collapse announcement block">
+<div class="card is-half-height announcement block">
 	<div class="card-content">
-		<div class="level">
+		<div class="level is-marginless">
 			<div class="level-left">
 				<div>
 					<h4 class="title is-5">
 						{{ item.subject }}
 					</h4>
-					<p class="subtitle is-7">
-							{{ __('By') }}:
-							<a href="commissies.php?commissie={{ item.committee.login }}">{{ item.committee.naam }}</a>
-							{{ __('on') }}
-							{{ item.created_on|date() }}
-					</p>
 				</div>
 			</div>
 			{% if user_can_update item or user_can_delete item %}
@@ -72,6 +66,12 @@
 				</div>
 			{% endif %}
 		</div>
+		<p class="subtitle is-7">
+			{{ __('By') }}:
+			<a href="commissies.php?commissie={{ item.committee.login }}">{{ item.committee.naam }}</a>
+			{{ __('on') }}
+			{{ item.created_on|date() }}
+		</p>
 	</div>
 	<div id="text-{{loop.index}}" class="card-content long-announcement">
 		<p class=" has-text-left is-size-6-touch">

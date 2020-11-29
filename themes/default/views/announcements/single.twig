@@ -11,28 +11,46 @@
 					{{ iter.subject }}
 				</h1>
 			</div>
-			<nav class="level-right">
-				{% if user_can_update iter %}
-					<a class="level-item" href="{{ controller.link_to_update(iter) }}" title="{{ __('Modify announcement') }}">
-						<span class="icon is-small">
-							<i class="fas fa-pencil-alt" aria-hidden="true"></i>
-						</span>
-						<span class="is-sr-only">
-							{{ __('Modify announcement') }}
-						</span>
-					</a>
-				{% endif %}
-				{% if user_can_delete iter %}
-					<a class="level-item" href="{{ controller.link_to_delete(iter) }}" title="{{ __('Delete announcement') }}" data-popup="modal">
-						<span class="icon is-small">
-							<i class="fas fa-trash" aria-hidden="true"></i>
-						</span>
-						<span class="is-sr-only">
-							{{ __('Delete announcement') }}
-						</span>
-					</a>
-				{% endif %}
-			</nav>
+			{% if user_can_update iter or user_can_delete iter %}
+				<div class="level-right">
+					<div class="dropdown is-hoverable is-right">
+						<div class="dropdown-trigger">
+							<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+								<span>{{ __('Manage') }}</span>
+								<span class="icon is-small">
+									<i class="fas fa-angle-down" aria-hidden="true"></i>
+								</span>
+							</button>
+						</div>
+						<div class="dropdown-menu" id="dropdown-menu" role="menu">
+							<div class="dropdown-content">
+								<a class="dropdown-item" href="announcements.php?view=read&amp;id={{ iter.id }}" title="{{ __('Modify announcement') }}">
+									<span class="icon">
+										<i class="fas fa-link" aria-hidden="true"></i>
+									</span>
+									<span>{{ __('Link announcement') }}</span>
+								</a>
+								{% if user_can_update iter %}
+									<a class="dropdown-item" href="announcements.php?view=update&amp;id={{ iter.id }}" title="{{ __('Modify announcement') }}">
+										<span class="icon">
+											<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+										</span>
+										<span>{{ __('Modify announcement') }}</span>
+									</a>
+								{% endif %}
+								{% if user_can_delete iter %}
+									<a class="dropdown-item" href="announcements.php?view=delete&amp;id={{ iter.id }}" title="{{ __('Delete announcement') }}" data-popup="modal">
+										<span class="icon">
+											<i class="fas fa-trash" aria-hidden="true"></i>
+										</span>
+										<span>{{ __('Delete announcement') }}</span>
+									</a>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
 		</div>
 		<p class="subtitle is-6">
 			<small>
