@@ -100,9 +100,12 @@ $event-overlay-padding: 1.25rem
                 > .image
                     @extend .media-left
                     order: -1
+                    overflow: hidden
                     img
-                        min-height: 100%
+                        height: 100%
+                        width: 100%
                         object-fit: cover
+                        object-position: center
                 > .overlay
                     @extend .media-content
                 .date
