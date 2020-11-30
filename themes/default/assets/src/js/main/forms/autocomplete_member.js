@@ -53,9 +53,10 @@ class AutocompleteMember extends AutocompleteBase {
         if (memberIdInput.dataset.name)
             nameInputElement.value = memberIdInput.dataset.name;
 
+        let newMemberIdInput;
         if (!('keepIdField' in this.options) || this.options.keepIdField) {
             // Convert original input element to hidden element. This is used to actually submit the data.
-            let newMemberIdInput = memberIdInput.cloneNode(true);
+            newMemberIdInput = memberIdInput.cloneNode(true);
             newMemberIdInput.type = 'hidden';
             newMemberIdInput.removeAttribute('id');
             newMemberIdInput.classList.add('autocomplete-target');
