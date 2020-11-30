@@ -1,14 +1,12 @@
 [
-	{"filename":"belsimpel.png", "filename_dark":"belsimpel_dark.png","url":"https://werkenbijbelsimpel.nl/","type":"main-sponsor"},
-	{"filename":"axonlogo.png", "url":"http://www.axonline.nl/", "weight": 1},
-	{"filename":"invariant.png", "url":"https://www.invariant.nl/", "weight": 1},
-	{"filename":"nsvki.png", "url":"http://nsvki.nl/", "weight": 1},
+    {"filename":"belsimpel.png", "filename_dark":"belsimpel_dark.png","url":"https://werkenbijbelsimpel.nl/","type":"main-sponsor"},
+    {"filename":"axonlogo.png", "url":"http://www.axonline.nl/", "weight": 1},
+    {"filename":"invariant.png", "url":"https://www.invariant.nl/", "weight": 1},
+    {"filename":"nsvki.png", "url":"http://nsvki.nl/", "weight": 1},
     {"filename":"asml.png", "filename_dark":"asml_dark.png","url":"https://www.asml.com/students"},
     {"filename":"dataprovider.png", "filename_dark":"dataprovider_dark.png","url":"https://www.dataprovider.com/careers/"},
-	{"filename":"nedap.png", "filename_dark":"nedap_dark.png", "url":"https://lifeatnedap.com/"},
-	{"filename":"gat_van_groningen.jpg", "url":"http://tgatvangroningen.nl/"},
     {"filename":"rdw.png", "filename_dark":"rdw_dark.png", "url": "https://www.werkenbijderdw.nl"},
-	{"filename":"duo.png", "filename_dark":"duo_dark.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"},
-    {"filename":"pwc.png", "filename_dark":"pwc_dark.png", "url": "https://www.pwc.nl/"},
+    {"filename":"duo.png", "filename_dark":"duo_dark.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"},
+    {"filename":"exellys.png", "filename_dark":"exellys_dark.png", "url": "https://www.exellys.com/en-GB/tech-jobs-and-careers/"},
     {"filename":"accenture.png", "filename_dark":"accenture_dark.png", "url": "https://www.werkenbijaccenture.nl/?utm_medium=Referral%20&utm_source=cover&utm_campaign=Company_page&utm_content=Home_page"}
 ]
