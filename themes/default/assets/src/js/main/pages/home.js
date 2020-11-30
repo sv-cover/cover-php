@@ -1,5 +1,5 @@
 import bulmaCarousel from 'bulma-carousel/dist/js/bulma-carousel.min.js';
-import { Collapse} from 'cover-style-system/src/js';
+import { Collapse } from 'cover-style-system/src/js';
 
 function containedScrollIntoView(element) {
   // element.scrollIntoView, but only inside scrollparent
@@ -77,7 +77,10 @@ for (let element of half) {
       element.getElementsByClassName("controls")[0].classList.add("is-active-read-more")
       h[1].classList.add("is-half-height")
       h[1].classList.add("is-long-text")
-      h[1].classList.add("collapse-content")
-      let collapse = new Collapse({element: element.closest('.card')});
+      h[1].classList.add("collapse-content");
+
+      let collapse_element = element.closest('.card');
+      collapse_element.classList.add('collapse');
+      new Collapse({element: collapse_element});
   }
 }
