@@ -359,6 +359,8 @@ class LayoutViewHelper
 
 	public function promotional_header()
 	{
+		return false;
+
 		if (!get_auth()->logged_in())
 			return 'promotional-header.twig';
 		
