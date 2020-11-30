@@ -32,14 +32,15 @@
 			</div>
 		</nav>
 
-
-		{% block page %}
-			<section class="section">
-				<div class="container is-content-optimized">
-					{% block content %}{% endblock %}
-				</div>
-			</section>
-		{% endblock %}
+		<main class="main">
+			{% block page %}
+				<article class="section">
+					<div class="container is-content-optimized">
+						{% block content %}{% endblock %}
+					</div>
+				</article>
+			{% endblock %}
+		</main>
 
 		<footer class="footer">
 			<div class="content has-text-centered is-centered">

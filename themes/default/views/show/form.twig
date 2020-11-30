@@ -63,7 +63,7 @@
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify page') : __('Create page') }}</button>
 			{% if iter.has_id %}
-				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Show page') }}</a>
+				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Back to page') }}</a>
 			{% endif %}
 		</div>
 	</div>
