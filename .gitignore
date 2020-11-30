@@ -13,5 +13,5 @@
 node_modules
 themes/default/assets/dist
 .env
-.history
-.vscode
+/.history
+/.vscode
