@@ -5,10 +5,8 @@
 	{"filename":"nsvki.png","url":"http://nsvki.nl/", "weight": 1},
     {"filename":"asml.jpg","url":"https://www.asml.com/students"},
     {"filename":"dataprovider.png","url":"https://www.dataprovider.com/careers/"},
-	{"filename":"nedap.png", "url":"https://lifeatnedap.com/"},
-	{"filename":"gat_van_groningen.jpg", "url":"http://tgatvangroningen.nl/"},
     {"filename":"rdw.png", "url": "https://www.werkenbijderdw.nl"},
 	{"filename":"duo.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"},
-    {"filename":"pwc.png", "url": "https://www.pwc.nl/"},
+    {"filename":"exellys.png", "url": "https://www.exellys.com/en-GB/tech-jobs-and-careers/"},
     {"filename":"accenture.png", "url": "https://www.werkenbijaccenture.nl/?utm_medium=Referral%20&utm_source=cover&utm_campaign=Company_page&utm_content=Home_page"}
 ]
