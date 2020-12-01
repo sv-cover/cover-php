@@ -1,3 +1,5 @@
+{% import '@theme/agenda/macros.twig' as macros %}
+
 {% set events = view.layout.agenda %}
 <section class="calendar">
     <div class="columns is-multiline">
@@ -20,10 +22,10 @@
                                                 {% if item.extern %}
                                                     <span class="details is-duration">{{ __('External activity') }}</span>
                                                 {% else %}
-                                                    <span class="details is-duration">{{ item|period_short }}</span>
+                                                    <span class="details is-duration">{{ macros.format_time(item) }}</span>
                                                 {% endif %}
                                                 {% if item.is_proposal() %}
-                                                    <span class="label-pending is-duration">{{ __('Not yet published') }}</span>
+                                                    <span class="label-pending is-duration">{{ __('Waiting for approval') }}</span>
                                                 {% endif %}
                                             </div>
                                         </div>

@@ -89,3 +89,25 @@
         <time class="dt-end" datetime="{{ event.tot|date('Y-m-d H:i') }}">{{ event.tot|date('G:i') }}</time>
     {% endif %}
 {% endmacro %}
+
+{# Formats event period time in a somewhat reasonable fashion #}
+{% macro format_time(event) %}
+    {% if not event.tot or event.tot == event.van %}
+        <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">
+            {{ __('starts at') }} {{ event.van|date('G:i') }}
+        </time>
+    {% elseif event.van|date('Ymd') != event.tot|date('Ymd') and ( event.van|date_modify('+1 day')|date('Ymd') != event.tot|date('Ymd') or event.tot|date('G') > 9 or event.van|date_modify('+12 hours') < event.tot ) %}
+        <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">
+            {{ event.van|date('D, M j') }}
+        </time>
+        –
+        <time class="dt-end" datetime="{{ event.tot|date('Y-m-d H:i') }}">
+            {{ event.tot|date('D, M j') }}
+        </time>
+    {% else %}
+        <time class="dt-start" datetime="{{ event.van|date('Y-m-d H:i') }}">{{ event.van|date('G:i') }}</time>
+        –
+        <time class="dt-end" datetime="{{ event.tot|date('Y-m-d H:i') }}">{{ event.tot|date('G:i') }}</time>
+    {% endif %}
+{% endmacro %}
+
