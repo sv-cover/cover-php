@@ -55,15 +55,17 @@
                                 </h1>
                             </div>
                         </div>
-                        <figure class="image">
-                            <picture>
-                                <source srcset="{{ item.get_image(1000) }} 1000w, {{ item.get_image(2000) }} 2x">
-                                <source srcset="{{ item.get_image(600) }} 600w, {{ item.get_image(1200) }} 2x">
-                                <source srcset="{{ item.get_image(400) }} 400w, {{ item.get_image(800) }} 2x">
-                                <img class="is-background" src="{{ item.get_image(1000) }}"
-                                data-preview="{{ item.get_image(400) }}" alt="">
-                            </picture>
-                        </figure>
+                        {% if item.image_url %}
+                            <figure class="image">
+                                <picture>
+                                    <source srcset="{{ item.get_image(1000) }} 1000w, {{ item.get_image(2000) }} 2x">
+                                    <source srcset="{{ item.get_image(600) }} 600w, {{ item.get_image(1200) }} 2x">
+                                    <source srcset="{{ item.get_image(400) }} 400w, {{ item.get_image(800) }} 2x">
+                                    <img class="is-background" src="{{ item.get_image(1000) }}"
+                                    data-preview="{{ item.get_image(400) }}" alt="">
+                                </picture>
+                            </figure>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
