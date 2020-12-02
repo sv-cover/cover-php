@@ -7,56 +7,56 @@
 	<h2 class="title is-4">{{ __('Incass-o-matic') }}</h2>
 	<p>{{ __('Your contract has been active since %s.')|format(contract.start_datum|date('j-n-Y')) }}</p>
 </header>
-<section class="block">
-	<div class="level is-mobile">
-		<div class="level-left">
-			<h3 class="title is-5 level-item">{{ __('To be debited') }}</h3>
-		</div>
-		<div class="level-right">
-			<div class="level-item is-size-5 has-text-weight-semibold">
-				€ {{ debits_per_batch[""]|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
+{% if debits_per_batch[""] is defined %}
+	<section class="block">
+		<div class="level is-mobile">
+			<div class="level-left">
+				<h3 class="title is-5 level-item">{{ __('To be debited') }}</h3>
+			</div>
+			<div class="level-right">
+				<div class="level-item is-size-5 has-text-weight-semibold">
+					€ {{ debits_per_batch[""]|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
+				</div>
 			</div>
 		</div>
-	</div>
-	<p>
-		{{ __('These will be debited from your bank account soon, most likely around the end of the month.') }}
-	</p>
-	<table class="table is-fullwidth is-hoverable is-aligned direct-debit-table">
-		{% if debits_per_batch[""] is defined %}
-			<thead>
-				<tr>
-					<th>{{ __('Description') }}</th>
-					<th class="amount-field">{{ __('Amount') }}</th>
-					<th class="date-field">{{ __('Date') }}</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for debit in debits_per_batch[""] %}
-				<tr>
-					<td class="is-truncated">
-						<span>{{ debit.omschrijving }}</span>
-					</td>
-					<td class="amount-field">
-						€ {{ (debit.bedrag / 100)|number_format(2) }}
-					</td>
-					<td class="date-field">
-						<time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time>
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-			<tfoot>
-				<tr>
-					<th>{{ __('Total') }}</th>
-					<th class="date-field has-text-right">
-						€ {{ debits_per_batch[""]|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
-					</th>
-					<th></th>
-				</tr>
-			</tfoot>
-		{% endif %}
-	</table>
-</section>
+		<p>
+			{{ __('These will be debited from your bank account soon, most likely around the end of the month.') }}
+		</p>
+		<table class="table is-fullwidth is-hoverable is-aligned direct-debit-table">
+				<thead>
+					<tr>
+						<th>{{ __('Description') }}</th>
+						<th class="amount-field">{{ __('Amount') }}</th>
+						<th class="date-field">{{ __('Date') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for debit in debits_per_batch[""] %}
+					<tr>
+						<td class="is-truncated">
+							<span>{{ debit.omschrijving }}</span>
+						</td>
+						<td class="amount-field">
+							€ {{ (debit.bedrag / 100)|number_format(2) }}
+						</td>
+						<td class="date-field">
+							<time datetime="{{ debit.aangemaakt|date(constant('DateTime::ISO8601'))|e('html_attr') }}" title="{{ debit.aangemaakt|date('j-n-Y H:i:s')|e('html_attr') }}">{{ debit.aangemaakt|date_relative }}</time>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>{{ __('Total') }}</th>
+						<th class="date-field has-text-right">
+							€ {{ debits_per_batch[""]|reduce((carry, d) => carry + d.bedrag / 100)|number_format(2) }}
+						</th>
+						<th></th>
+					</tr>
+				</tfoot>
+		</table>
+	</section>
+{% endif %}
 <section class="block">
 	<h3 class="title is-5">{{ __("Recent Direct Debits") }}</h3>
 
