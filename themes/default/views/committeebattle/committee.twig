@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ iter.naam }}</h1>
-{% include '@theme/commissies/_leden.twig' with {'view': view.committee_view, 'model': committee_model, 'iter': iter} %}
+{% include '@theme/commissies/_members.twig' with {'view': view.committee_view, 'model': committee_model, 'iter': iter} %}
 
 <article>
 	<h2 class="title is-4">{{ __('Points') }}</h2>
