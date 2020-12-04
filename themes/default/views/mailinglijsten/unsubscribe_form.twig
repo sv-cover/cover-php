@@ -1,17 +1,17 @@
 {% extends '@layout/layout_without_menu.twig' %}
 
-{% block title __('Unsubscribe from %s')|format(subscription.mailinglist.naam) ~ ' – ' ~ parent() %}
+{% block title __('Unsubscribe from %s')|format(list.naam) ~ ' – ' ~ parent() %}
 
 {% block content %}
 <h1 class="title">{{ __('Mailing list') }}</h1>
 
 {% if not subscription.is_active %}
-	<p>{{ __('You are no longer subscribed to the <em>%s</em> mailing list.')|format(subscription.mailinglist.naam|e('html'))|raw }}</p>
+	<p>{{ __('You are no longer subscribed to the <em>%s</em> mailing list.')|format(list.naam|e('html'))|raw }}</p>
 {% else %}
 	<form method="post" action="mailinglijsten.php?abonnement_id={{ subscription.id|e('url') }}">
 		{{ html_nonce('unsubscribe', subscription) }}
 		<div class="field">
-			<p>{{ __('You are about to unsubscribe from the <em>%s</em> mailing list. Are you sure you want to continue?')|format(subscription.mailinglist.naam|e('html'))|raw }}</p>
+			<p>{{ __('You are about to unsubscribe from the <em>%s</em> mailing list. Are you sure you want to continue?')|format(list.naam|e('html'))|raw }}</p>
 		</div>
 		<div class="field">
 			<div class="control buttons">
