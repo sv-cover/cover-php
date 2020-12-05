@@ -36,3 +36,25 @@ export function createMarker(options=null) {
 
     return new mapboxgl.Marker(options);
 }
+
+
+export function checkMapboxSupport(element) {
+    let message = element.querySelector('[data-unsupported-message]')
+
+    if (mapboxgl.supported()) {
+        if (message)
+            message.remove();
+        return true;
+    }
+
+    if (!message) {
+        message = document.createElement('div');
+        message.classList.add('notification');
+        message.innerHTML = 'This map requires WebGL support. Please check that you are using a supported browser and that <a href="https://get.webgl.org/" target="_blank" rel="noopener noreferrer" >WebGL is enabled</a>.';
+        element.appendChild(message);
+    }
+
+    message.hidden = false;
+
+    return false;
+}

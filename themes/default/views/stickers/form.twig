@@ -41,6 +41,9 @@
 					data-lng-field="lng"
 					data-zoom="{{ global.GET.zoom ?? '' }}"
 				>
+					<div class="notification is-danger is-light" data-unsupported-message hidden>
+						This location picker uses WebGL for a better experience. Please check that you are using a supported browser and that <a href="https://get.webgl.org/" target="_blank" rel="noopener noreferrer" >WebGL is enabled</a>.
+					</div>
 					<div class="field">
 						{{ html_label(__('Latitude'), 'lat', errors=errors, required=true) }}
 						<div class="control">

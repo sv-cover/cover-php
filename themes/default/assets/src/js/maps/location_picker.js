@@ -1,6 +1,6 @@
 import {Bulma} from 'cover-style-system/src/js';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
-import {createMap, createMarker} from './utils';
+import {checkMapboxSupport, createMap, createMarker} from './utils';
 
 
 const DEFAULT_ZOOM = 15;
@@ -38,7 +38,8 @@ class LocationPicker {
         if (!this.lngField.value)
             this.lngField.value = DEFAULT_LNG;
 
-        this.initUI(options);
+        if (checkMapboxSupport(this.element))
+            this.initUI(options);
     }
 
     initUI(options) {

@@ -34,7 +34,13 @@
 			data-geojson-url="{{ controller.link_to_geojson() }}"
 			data-create-url="{{ controller.link_to_create() }}"
 			data-marker="{{ link_static('images/map_marker.svg') }}"
-		></div>
+		>
+			<div class="container is-fluid" data-unsupported-message hidden>
+				<div class="notification is-danger is-light">
+					The sticker map uses WebGL. Please check that you are using a supported browser and that <a href="https://get.webgl.org/" target="_blank" rel="noopener noreferrer" >WebGL is enabled</a>.
+				</div>
+			</div>
+		</div>
 		<template data-map-popup-template>
 			<div class="card">
 				<a class="card-image" target="_new" data-sticker-image hidden>

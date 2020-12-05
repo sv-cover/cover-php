@@ -1,6 +1,6 @@
 import {Bulma, AutoPopup} from 'cover-style-system/src/js';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
-import {createMap, createMarker} from './utils';
+import {checkMapboxSupport, createMap, createMarker} from './utils';
 
 const DEFAULT_ZOOM = 12;
 const DEFAULT_LAT = 53.219386; // Martinitoren
@@ -24,7 +24,8 @@ class StickerMap {
         this.defaults = this.getInitialState();
         this.createButtons = this.element.querySelectorAll('[data-add-sticker-button]');
 
-        this.initMap();
+        if (checkMapboxSupport(this.mapElement))
+            this.initMap();
     }
 
     initMap() {
