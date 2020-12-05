@@ -18,6 +18,9 @@
 	</head>
 	<body>
 		<div class="world">
+			<div class="new-website-notification">
+				This is the old version of our website, which is no longer maintained. Check out the new version of this page on <a href="https://www.svcover.nl{{ global.server.REQUEST_URI }}">the new website</a>.
+			</div>
 			<div class="header clearfix">
 				{% if global.auth.logged_in() %}
 					{% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
