@@ -1,12 +1,5 @@
 [
-	{"filename":"belsimpel.png","url":"https://werkenbijbelsimpel.nl/","type":"main-sponsor"},
 	{"filename":"axonlogo.png","url":"http://www.axonline.nl/", "weight": 1},
 	{"filename":"invariant.png","url":"https://www.invariant.nl/", "weight": 1},
-	{"filename":"nsvki.png","url":"http://nsvki.nl/", "weight": 1},
-    {"filename":"asml.jpg","url":"https://www.asml.com/students"},
-    {"filename":"dataprovider.png","url":"https://www.dataprovider.com/careers/"},
-    {"filename":"rdw.png", "url": "https://www.werkenbijderdw.nl"},
-	{"filename":"duo.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"},
-    {"filename":"exellys.png", "url": "https://www.exellys.com/en-GB/tech-jobs-and-careers/"},
-    {"filename":"accenture.png", "url": "https://www.werkenbijaccenture.nl/?utm_medium=Referral%20&utm_source=cover&utm_campaign=Company_page&utm_content=Home_page"}
+	{"filename":"nsvki.png","url":"http://nsvki.nl/", "weight": 1}
 ]
