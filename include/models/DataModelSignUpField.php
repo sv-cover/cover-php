@@ -125,7 +125,7 @@ class DataModelSignUpField extends DataModel
 			],
 			'name' => [
 				'class' => \fields\Name::class,
-				'label' => __('Full name')
+				'label' => __('Full name field')
 			],
 			'address' => [
 				'class' => \fields\Address::class,
@@ -135,9 +135,13 @@ class DataModelSignUpField extends DataModel
 				'class' => \fields\Email::class,
 				'label' => __('E-mail address field')
 			],
+			'phone' => [
+				'class' => \fields\Phone::class,
+				'label' => __('Phone number field')
+			],
 			'bankaccount' => [
 				'class' => \fields\BankAccount::class,
-				'label' => __('Bank account number')
+				'label' => __('Bank account number field')
 			],
 			'editable' => [
 				'class' => \fields\Editable::class,
