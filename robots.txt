@@ -1,3 +1,7 @@
 User-agent: *
 Disallow: *.pdf
 Disallow: /fotoboek.php
+Disallow: /almanak.php
+Disallow: /profiel.php
+Disallow: /foto.php
+Disallow: /committeebattle.php
