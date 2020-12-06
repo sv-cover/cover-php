@@ -1,6 +1,6 @@
 # Quick Install Guide
 
-This guide has been written for Ubuntu 18.04 LTS and tested on Ubuntu 18.04 on Windows Subsystem for Linux (WSL).
+This guide has been written for Ubuntu 20.04 LTS and tested on Ubuntu 20.04 on Windows Subsystem for Linux 2 (WSL2).
 
 ## Step 1: Installation
 
@@ -14,7 +14,7 @@ sudo apt upgrade
 Install PHP (with extensions):
 
 ```bash
-apt install php7.2 php7.2-cli php7.2-pgsql php7.2-curl php7.2-mbstring php7.2-zip php7.2-bcmath php7.2-xml
+sudo apt install php php-cli php-pgsql php-curl php-mbstring php-zip php-bcmath php-xml
 ```
 
 Install Postgres:
@@ -23,12 +23,21 @@ Install Postgres:
 sudo apt install postgresql postgresql-contrib
 ```
 
-Install Composer: follow [this guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-composer-on-ubuntu-18-04)
+Install Composer:
+
+```bash
+sudo apt install composer
+```
 
 
 ## Step 2: Setup Database
 
 Start the postgres service (if it hasn't started yet):
+
+```bash
+sudo systemctl start postgresql
+```
+or if you're in WSL:
 
 ```bash
 sudo service postgresql start
@@ -48,7 +57,7 @@ Create a database:
 sudo -u postgres createdb -O webcie --encoding=UTF8 --template=template0 webcie
 ```
 
-If you get `WARNING:  could not flush dirty data: Function not implemented` (may happen on WSL), interrupt (`CTRL+C`) and do the following:  
+If you get `WARNING:  could not flush dirty data: Function not implemented` (may happen on WSL1), interrupt (`CTRL+C`) and do the following:  
 
 Open `/etc/postgresql/<postgres version number>/main/postgresql.conf` and change the following settings:
 
