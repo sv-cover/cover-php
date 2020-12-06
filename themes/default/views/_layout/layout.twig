@@ -50,7 +50,7 @@
 		{% endblock %}
 	</main>
 
-	{{ include('@layout/widgets/footer.twig') }}
+	{{ include('@layout/widgets/footer.twig', {'render_sponsors': true}) }}
 
 
 	{% for script in view.scripts %}

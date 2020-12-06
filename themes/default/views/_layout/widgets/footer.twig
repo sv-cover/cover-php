@@ -1,5 +1,7 @@
 <footer>
-    {{ include('@layout/widgets/partners.twig') }}
+    {% if render_sponsors is not defined or render_sponsors %}
+        {{ include('@layout/widgets/partners.twig') }}
+    {% endif %}
     <div class="footer footer-main">
         <ul>
         {% spaceless %}
