@@ -182,7 +182,6 @@ class ControllerProfiel extends Controller
 			array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
 			array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
 			array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
-			array('name' => 'taal', 'function' => array($this, '_check_language'))
 		);
 		
 		$data = check_values($check, $errors);
