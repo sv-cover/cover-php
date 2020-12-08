@@ -33,6 +33,8 @@ class ControllerCommissies extends ControllerCRUD
 
 	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
+		$data['hidden'] = (array_key_exists('hidden', $data) && $data['hidden'] === 'yes');
+
 		if (!parent::_update($iter, $data, $errors))
 			return false;
 

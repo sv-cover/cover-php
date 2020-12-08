@@ -116,7 +116,7 @@
 				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to all committees') }}</a>
 			{% endif %}
 			{% if iter.has_id and not iter.hidden and user_can_delete iter %}
-				<a href="{{ controller.link_to_delete(iter) }}" class="button">{{ __('Deactivate') }}</a>
+				<a href="{{ controller.link_to_delete(iter) }}" class="button" data-popup="modal">{{ __('Deactivate') }}</a>
 			{% endif %}
 		</div>
 	</div>
