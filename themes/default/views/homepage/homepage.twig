@@ -1,31 +1,152 @@
 {% extends '@layout/layout.twig' %}
 
-{% block content %}
+{% block page %}
+<article class="homepage">
+{# Become a member banner for mobile#}
+{% if global.auth.logged_in == 0 %}
+	<section class="become-member">
+        <a href="lidworden.php?utm_source=svcover.nl&nbsp;utm_medium=banner&nbsp;utm_campaign=member%20registration" class="button is-primary is-fullwidth has-text-weight-semibold">
+            Become a member
+        </a>   	
+	</section>
+{% endif %}
 
-{% set editable = global.models.Editable.get_iter_from_title('Startpagina') %}
-<div class="pageheading">
-	{% if user_can_update editable %}
-	<div class="controls inline">
-		<a href="{{ link('editable.update', editable=editable) }}" class="edit-link">{{ __('Modify introduction') }}</a>
+
+{# Calendar + Carousels #}
+{{ include('@theme/homepage/_calendar.twig') }}
+
+{# 	<section class="is-lowerd">
+		<div class="container-calendar-and-car is-centered columns is-gapless reverse-row-order"> 
+		{# Calendar #
+			<div class="column is-one-third-desktop is-full-width">
+				{{ include('@theme/homepage/_agenda.twig') }}
+			</div>
+
+		{# Carousel #
+			<section class="hero has-carousel column container-fancy">
+				 <div id="carousel-demo" class="hero-carousel carousel event-header">
+				 	{% set agenda_items = view.layout.agenda %}
+					{% for item in agenda_items|slice(0, 4) %}
+					<div class="is-active cover-thumbnail is-3by1 is-full-height">
+						<div class="overlay is-bottom-overlay is-top-overlay">
+							<div class="date boxed-title-wrapper">
+								<span class="boxed-title has-text-weight-normal is-size-6 is-size-7-touch">
+									{{ item.van|date('F d') }}
+								</span>
+							</div>
+							<div class="name boxed-title-wrapper">
+								<h1 class="boxed-title is-size-4 is-size-5-touch">
+									{{ item.kop }}
+								</h1>
+							</div>
+						</div>
+						<figure class="image">
+							<picture>
+								<source srcset="{{ item.get_image(1000) }} 1000w, {{ item.get_image(2000) }} 2x">
+								<source srcset="{{ item.get_image(600) }} 600w, {{ item.get_image(1200) }} 2x">
+								<source srcset="{{ item.get_image(400) }} 400w, {{ item.get_image(800) }} 2x">
+								<img class="is-background" src="{{ item.get_image(1000) }}"
+								data-preview="{{ item.get_image(400) }}" alt="">
+							</picture>
+						</figure>
+					</div>
+					{% endfor %}
+  				</div>
+			</section>
+		</div>
+	</section> #}
+
+{# Information about association #}
+
+
+{# Fun description about association #}
+<section class="section has-background-cover has-text-white cover-info">
+	<div class="container is-fullhd">
+		<h2 class="title is-3 is-size-5-touch">
+			Cover is the study association for Artificial Intelligence and Computing Science offering three types of activities:
+		</h2>
+
+		<ul class="columns is-variable is-5">
+			<li class="cover-info-item column is-one-third-desktop">
+				<div class="block">
+					<figure class="image">
+						<img src="{{ link_static('images/homepage/social.png') }}">
+					</figure>
+					<h3 class="title">Social</h3>
+					<p>
+						We organise weekly borrels, monthly socials and tons of other activities. If you are interested in these topics and also want to have a genuinely good time, drop by the Cover room in the Bernoulliborg on Zernike campus (0041a), because that's where we live. We are open on weekdays from 11:00 to 17:00. {# Are you interested in the upcoming activities of Cover? Take a look at our agenda.  #}
+					</p>
+				</div class="block">
+	            <div class="buttons is-centered">
+	                <a href="commissies.php" class="button is-cover is-inverted is-outlined is-size-5-tablet is-size-6-mobile">
+	                    Committees
+	                </a>
+	            </div>
+			</li>
+			<li class="cover-info-item column is-one-third-desktop">
+				<div class="block">
+					<figure class="image">
+						<img src="{{ link_static('images/homepage/study.png') }}">
+					</figure>
+					<h3 class="title">Study</h3>
+					<p>
+						We organise study support lectures about our degree programs. You can join workshops that either dig deeper into materials, or offer some fresh knowledge. You can also find help using our tutoring system!
+					</p>
+				</div>
+	            <div class="buttons is-centered">
+	                <a href="https://studysupport.svcover.nl/" class="button is-cover is-inverted is-outlined is-size-5-tablet is-size-6-mobile">
+	                    Previous Exams
+	                </a>
+	                <a href="https://tutoring.svcover.nl/accounts/login" class="button is-cover is-inverted is-outlined is-size-5-tablet is-size-6-mobile">
+	                    Tutoring
+	                </a>
+	            </div>
+			</li>
+			<li class="cover-info-item column is-one-third-desktop">
+				<div class="block">
+					<figure class="image">
+						<img src="{{ link_static('images/homepage/career.png') }}">
+					</figure>
+					<h3 class="title">Career</h3>
+					<p>
+						We also offer career oriented events. Regularly, we have companies over to hold talks about certain career paths. You will find this interesting if you want to talk to students who finished their studies and now work at companies or if you are interested in what companies are up to in general.
+					</p>
+				</div>
+	            <div class="buttons is-centered">
+	                <a href="show.php?id=31" class="button is-cover is-inverted is-outlined is-size-5-tablet is-size-6-mobile">
+	                    Internships
+	                </a>
+	            </div>
+			</li>
+		</ul>
 	</div>
-	{% endif %}
-	<h1>{{ editable.get_title }}</h1>
-</div>
-<div class="messageBox">
-{{ editable.locale_content|parse_markup }}
-</div>
+</section>
 
-<div class="bannerRotator">
-{% for banner in global.models.Banner.get_from_file('images/sponsors/data.json') %}
-	<a href="{{ banner.url|e('html_attr') }}"><img src="images/sponsors/{{ banner.filename|e('url') }}" class="frontpage_banner"></a>
-{% endfor %}
-</div>
+{# Announcements #}
+<section class="section">
+	<div class="container has-sidebar columns">
+		<div class="column is-sidebar">
+			{% if global.auth.logged_in == 0 %}
+			<div class="is-sticky-double">
+				{{ include('@theme/homepage/_poll.twig') }}
+			</div>
+			{% else %}
+			<div class="is-sticky">
+				{{ include('@theme/homepage/_poll.twig') }}
+			</div>
+			{% endif %}
+		</div>
+		<div class="column is-content announcements">
+			{{ include('@theme/announcements/announcements.twig', {
+				'controller': global.controllers.announcements,
+				'model': global.models.Announcement,
+				'policy': global.policies.Announcement,
+				'iters': global.models.Announcement.get_latest()
+			}) }}
+		</div>
+	</div>
+</section>
+</article>
 
-{{ include('@theme/announcements/announcements.twig', {
-	'controller': global.controllers.announcements,
-	'model': global.models.Announcement,
-	'policy': global.policies.Announcement,
-	'iters': global.models.Announcement.get_latest()
-}) }}
-
+{# the missing part is in a file called missing part #}
 {% endblock %}

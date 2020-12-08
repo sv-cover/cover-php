@@ -1,0 +1,57 @@
+{% if global.auth.logged_in() %}
+    {% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
+
+    {% set user_has_birthday_today = view.layout.jarigen|filter(m => m.id == global.identity.member.id )|length > 0 %}
+    {% set user_is_unconfirmed =  global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+    {% set user_can_moderate_agenda = global.policies.Agenda.user_can_moderate(global.models.Agenda.new_iter({'replacement_for': true})) %}
+    
+    {% set has_notification = agenda_items_to_moderate|length > 0  or user_is_unconfirmed or user_has_birthday_today %}
+    {% set force_notification = user_is_unconfirmed %}
+
+    {% if has_notification or user_can_moderate_agenda %}
+        <div class="navbar-item has-dropdown is-hoverable-desktop notifications {% if has_notification %}has-unread{% endif %}">
+            <a class="navbar-link is-arrowless" tabindex="0">
+                <span class="icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="is-sr-only">
+                        {{ __('Notifications') }}
+                    </span>
+                </span>
+            </a>
+            <div class="navbar-dropdown is-right">
+                <div class="navbar-item">
+                    <h2 class="title is-6">{{ __('Notifications') }}</h2>
+                </div>
+                
+                <hr class="navbar-divider">
+
+                {% if user_has_birthday_today %}
+                    <div class="navbar-item cover-notification is-size-5">
+                        {{ __('Happy birthday, %s!')|format(global.identity.member|first_name) }} 🥳
+                    </div>
+                {% endif %}
+
+                {% if agenda_items_to_moderate|length > 0 %}
+                    <a href="agenda.php?view=moderate" class="navbar-item cover-notification">
+                        {{ __N(
+                        'There is %d event waiting for your confirmation',
+                        'There are %d events waiting for your confirmation', agenda_items_to_moderate|length) }}
+                    </a>    
+                {% endif %}
+
+                {% if user_is_unconfirmed %}
+                    <div class="navbar-item cover-notification">
+                        {{ __('Your application hasn\'t been accepted yet by our secretary. Until then some parts of the website are not yet accessible, such as all the photo albums and contact information of members.') }}
+                    </div>
+                {% endif %}
+
+
+                {% if not has_notification %}
+                    <div class="navbar-item cover-notification has-text-grey">
+                        {{ __('There are no new notifications :)') }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

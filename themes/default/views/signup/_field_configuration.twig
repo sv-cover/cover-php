@@ -1,0 +1,35 @@
+<div class="card block signup-form-field" id="form-field-{{field.id}}" data-id="{{ field.id }}">
+    <header class="card-header">
+        <div class="card-header-icon sortable-handle has-text-grey" title="{{ __('Drag me to reorder fields') }}" hidden>
+            <span class="icon">
+                {# unscientific research has shown that this is the best icon to indicate drag and drop #}
+                <i class="fas fa-arrows-alt" aria-hidden="true"></i>
+                <span class="is-sr-only">{{ __('Drag me to reorder fields') }}</span>
+            </span>
+
+        </div>
+        <h3 class="card-header-title">
+            {{ field.type_label }}
+        </h3>
+        {# <div class="card-header-icon sortable-drag-handle"></div> #}
+        <button type="submit" class="card-header-icon signup-form-field-delete-button" form="field-{{field.id}}-delete" title="{{ __('Delete field') }}" hidden>
+            <span class="icon">
+                <i class="fas fa-trash" aria-hidden="true"></i>
+                <span class="is-sr-only">{{ __('Delete field') }}</span>
+            </span>
+        </button>
+    </header>
+    <form id="field-{{field.id}}-update" class="card-content" action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-auto-submit-extra-data="{&quot;action&quot;:&quot;update&quot;}" data-auto-submit>
+        {{ html_nonce('update_form_field', form, field) }}
+        {{ field.render_configuration(view, errors.namespace(field.id))|raw }}
+    </form>
+
+    <form id="field-{{field.id}}-delete" class="signup-form-field-delete-form" action="{{ controller.link({view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
+        {{ html_nonce('delete_form_field', form, field) }}
+    </form>
+    
+    <footer class="card-footer">
+        <button type="submit" class="card-footer-item" form="field-{{field.id}}-update" data-auto-submit-hidden>{{ __('Modify field') }}</button>
+        <button type="submit" class="card-footer-item" form="field-{{field.id}}-delete">{{ __('Delete field') }}</button>
+    </footer>
+</div>

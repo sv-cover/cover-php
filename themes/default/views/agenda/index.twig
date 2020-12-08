@@ -1,100 +1,116 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title view.title ~ ' :: ' ~ parent() %}
+{% block title view.title ~ ' – ' ~ parent() %}
 
-{% block content %}
-<div class="pageHeading">
-	{% if user_can_create controller.new_iter %}
-		<div class="controls inline"><a href="{{ controller.link_to_create() }}" class="create-link">{{ __('New calendar event') }}</a></div>
-	{% endif %}
-	<h1>{{ view.title }}</h1>
-</div>
-
-<div class="messageBox">
-{% if not global.auth.logged_in %}
-	<p class="italic">{{ __('Log in to view hidden calendar events.') }}</p>
-{% endif %}
-
-<div class="navigation">
-	{% if view.previous_year %}
-	<a href="agenda.php?year={{ view.previous_year }}" class="previous">
-		{{ __('Show the complete year %d-%d')|format(view.previous_year, view.previous_year + 1) }}
-	</a>
-	{% endif %}
-
-	{% if view.next_year %}
-	<a href="agenda.php?year={{ view.next_year }}" class="next">
-		{{ __('Show the complete year %d-%d')|format(view.next_year, view.next_year + 1) }}
-	</a>
-	{% elseif globals.GET.year is defined %}
-	<a href="agenda.php" class="next">
-		{{ __('Show current agenda') }}
-	</a>
-	{% endif %}
-</div>
-
-{% set curmaand = -1 %}
-{% set showyear = true %}
-
-{% if iters|length == 0 %}
-	<p>{{ __('There are no activities on the calendar at the moment.') }}</p>
-{% else %}
-	<section class="agenda">
-{% for punt in iters %}
-	{% if curmaand != punt.van|date('n') %}
-		<h2>
-			{{ months[punt.van|date('n')] }}
-			{% if show_year %}{{ punt.van|date('Y') }}{% endif %}
-		</h2>
-		{% set curmaand = punt.van|date('n') %}
-	{% endif %}
-	<div class="h-event by-committee-{{punt.committee.login}}">
-		<div class="calendar-icon">
-			<span class="month">{{ punt.van|date('M') }}</span>
-			<span class="day">{{ punt.van|date('d') }}</span>
+{% block page %}
+<article class="section">
+<div class="container calendar {% if view.list_view_mode() == 'list' %}is-list{% endif %}">
+<header class="block">
+	<nav class="level is-mobile" role="navigation" aria-label="pagination">
+		<div class="level-left">
+			{% if view.previous_year %}
+				<a href="{{ controller.link({'year': view.previous_year}) }}" class="level-item button">
+					<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+					{% if view.selected_year is null %}
+						<span>{{ __('Archive') }}</span>
+					{% else %}
+						<span class="is-hidden-mobile">
+							{{ view.previous_year }}-{{ view.previous_year + 1 }}
+						</span>
+						<span class="is-hidden-tablet">
+							{{ view.previous_year }}/{{ (view.previous_year % 100) + 1 }}
+						</span>
+					{% endif %}
+				</a>
+			{% endif %}
 		</div>
-		<h3><a class="agendalink" href="{{ controller.link_to_read(punt) }}">{{ punt.kop }}</a></h3>
-		{% if punt.is_proposal %}
-			<p class="label-pending">{{ __('Not yet published') }}</p>
-		{% endif %}
-		
-		<p>{{ punt|period }}</p>
-
-		{% if punt.locatie %}
-			<p class="location">{{ __('Location') }}: <span class="p-location">{{ punt.locatie }}</span></p>
-		{% endif %}
-
-		{% if punt.extern %}
-			<p>{{  __('This activity is not organised by Cover.') }}</p>
-		{% endif %}
-
-		<p class="p-summary details">
-			{{ punt.beschrijving|parse_markup }}
-		</p>
-
-		<ul class="actions">
-			{%- if user_can_delete punt %}
-			<li><a href="{{ controller.link_to_delete(punt) }}">{{ __('Delete') }}</a></li>
-			{% endif -%}
-			{%- if user_can_update punt %}
-			<li><a href="{{ controller.link_to_update(punt) }}">{{ __('Modify') }}</a></li>
-			{% endif -%}
-		</ul>
+		<div class="level-right">
+			{% if view.next_year %}
+				<a href="{{ controller.link({'year': view.next_year}) }}" class="level-item button">
+					<span class="is-hidden-mobile">
+						{{ view.next_year }}-{{ view.next_year + 1 }}
+					</span>
+					<span class="is-hidden-tablet">
+						{{ view.next_year }}/{{ (view.next_year % 100) + 1 }}
+					</span>
+					<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+				</a>
+			{% elseif view.selected_year is not null %}
+				<a href="agenda.php" class="level-item button">
+					<span class="is-hidden-mobile">{{ __('Upcoming events') }}</span>
+					<span class="is-hidden-tablet">{{ __('Upcoming') }}</span>
+					<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+				</a>
+			{% endif %}
+		</div>
+	</nav>
+	<div class="level">
+		<div class="level-left">
+			<h1 class="title">{{ view.title }}</h1>
+		</div>
+		<div class="level-right field is-grouped">
+			{% if global.auth.logged_in %}
+				<div class="control">
+					<button class="button calendar-list-view-button" title="{{  __('Grid view') }}" data-target-mode="grid"hidden>
+						<span class="icon">
+							<i class="fas fa-th-large" aria-hidden="true"></i>
+							<span class="is-sr-only">{{  __('Grid view') }}</span>
+						</span>
+					</button>
+					<button class="button calendar-list-view-button" title="{{  __('List view') }}" data-target-mode="list" hidden>
+						<span class="icon">
+							<i class="fas fa-th-list" aria-hidden="true"></i>
+							<span class="is-sr-only">{{  __('List view') }}</span>
+						</span>
+					</button>
+				</div>
+				<div class="control">
+					<div class="dropdown">
+						<div class="dropdown-trigger">
+							<button class="button" aria-haspopup="true" aria-controls="export-menu">
+								<span>{{ __('Export') }}</span>
+								<span class="icon is-small">
+									<i class="fas fa-angle-down" aria-hidden="true"></i>
+								</span>
+							</button>
+						</div>
+						<div class="dropdown-menu" id="export-menu" role="menu">
+							<div class="dropdown-content">
+								<div class="dropdown-item">
+									<p>{{ __('Add the Cover Calendar to your own calendar') }}</p>
+								</div>
+								<hr class="dropdown-divider">
+								<a class="dropdown-item" href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank" rel="noopener noreferrer">
+									Google Calendar
+								</a>
+								<a class="dropdown-item" href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank" rel="noopener noreferrer">
+									Outlook.com
+								</a>
+								<a class="dropdown-item" href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">
+									iCloud/other
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		    {% if user_can_create controller.new_iter %}
+		    	<div class="control">
+					<a href="{{ controller.link_to_create() }}" class="button">{{ __('New event') }}</a>
+		    	</div>
+			{% endif%}
+		</div>
 	</div>
-{% endfor %}
-</section>
-{% endif %}
+	{% if not global.auth.logged_in %}
+		<div class="notification">
+			{{ __('Log in to view hidden events.') }}
+		</div>
+	{% endif %}
+</header>
 
-{% if global.auth.logged_in %}
-<footer class="alt-section">
-	<p>
-		{{ __('Add the Cover Calendar to your own calendar:') }}
-		<a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Google Calendar</a>,
-		<a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">Outlook.com</a>
-		{{ __('or') }}
-		<a href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank">iCloud/other</a>
-	</p>
-</footer>
-{% endif %}
+<section class="block">
+	{{ include('_events.twig', {events: iters}) }}
+</section>
 </div>
+</article>
 {% endblock %}

@@ -4,9 +4,11 @@ class PolicyMailinglist implements Policy
 {
 	public function user_can_create(DataIter $iter)
 	{
-		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_EASY);
+		// Only AC/DCee members can create a mailing list
+		return get_identity()->member_in_committee(COMMISSIE_EASY);
+		// return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+		// 	|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+		// 	|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
 	public function user_can_read(DataIter $iter)

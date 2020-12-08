@@ -1,65 +1,71 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Modify page') : __('Make a page')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id ? __('Modify page') : __('Make a page')) ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id ? __('Modify page') : __('Make a page') }}</h1>
-<div class="messageBox">
-	<form method="post" action="{{ view.get_form_action(iter) }}" class="vertical-form">
-		{% if iter.has_id %}
-			{{ html_nonce('update', iter) }}
-		{% else %}
-			{{ html_nonce('create', iter) }}
-		{% endif %}
-		
-		{% if controller.can_set_titel(iter) %}
-		<div>
-			{{ html_label(__('Identifier'), 'titel', errors=errors, required=true) }}
-			{{ html_input_text('titel', iter) }}
-			<small>{{ __('This value is often used in the code base to refer to a specific page.') }}</small>
-		</div>
-		{% endif %}
+<h1 class="title">{{ iter.has_id ? __('Modify page') : __('Make a page') }}</h1>
+
+<form method="post" action="{{ view.get_form_action(iter) }}">
+	{% if iter.has_id %}
+		{{ html_nonce('update', iter) }}
+	{% else %}
+		{{ html_nonce('create', iter) }}
+	{% endif %}
 	
-		{% if controller.can_set_committee_id(iter) %}
-		<div>
-			{{ html_label(__('Owner'), 'committee_id', errors=errors, required=true) }}
-			{{ html_select_field('committee_id', view.available_committees(iter), iter, required=true) }}
+	{% if controller.can_set_titel(iter) %}
+	<div class="field">
+		{{ html_label(__('Identifier'), 'titel', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_text('titel', iter) }}
 		</div>
-		{% endif %}
+		<p class="help">{{ __('This value is often used in the code base to refer to a specific page.') }}</p>
+	</div>
+	{% endif %}
 
-		<div class="tab-container">
-			<ul class="nav-tabs horizontal">
-			{# Disabled Dutch page editor as the website should be available in English only
-				<li{% if view.preferred_tab(iter) == 'nl' %} class="active"{% endif %}><a href="#content-nl">{{ __('Dutch') }}</a></li>
-				<li><a href="#content-nl-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
-			#}
-				<li{% if view.preferred_tab(iter) == 'en' %} class="active"{% endif %}><a href="#content-en">{{ __('English') }}</a></li>
-				<li><a href="#content-en-preview" class="connected-tab" title="Click to preview"><i class="fa fa-eye" aria-hidden="true"></i></a></li>
-			</ul>
-			{# Disabled Dutch page editor as the website should be available in English only
- 			<div class="tab-panel" id="content-nl">
-				{{ html_textarea_field('content', iter, rows=25) }}
-			</div>
-			#}
-			<div class="tab-panel" id="content-en">
-				{{ html_textarea_field('content_en', iter, rows=25) }}
-			</div>
-			{# Disabled Dutch page editor as the website should be available in English only
-			<div class="tab-panel markup-region" id="content-nl-preview" data-preview-source="#content-nl textarea" data-preview-url="show.php?view=preview&amp;lang=nl">
-				<span class="loading">{{ __('Loading preview…') }}</span>
-			</div>
-			#}
-			<div class="tab-panel markup-region" id="content-en-preview" data-preview-source="#content-en textarea" data-preview-url="show.php?view=preview&amp;lang=en">
-				<span class="loading">{{ __('Loading preview…') }}</span>
+	{% if controller.can_set_committee_id(iter) %}
+	<div class="field">
+		{{ html_label(__('Owner'), 'committee_id', errors=errors, required=true) }}
+		<div class="control">
+			<div class="select">
+				{{ html_select_field('committee_id', view.available_committees(iter), iter, required=true) }}
 			</div>
 		</div>
+	</div>
+	{% endif %}
 
-		<div>
-			<button type="submit" class="button">{{ iter.has_id ? __('Modify page') : __('Create page') }}</button>
+
+	<div class="field">
+		{{ html_label(__('Page content'), 'content_en', errors=errors) }}
+		<div class="tabs-wrapper is-condensed">
+			<div class="tabs is-toggle">
+				<ul>
+					<li class="is-active">
+						<a href="#content-en">{{ __('Raw') }}</a>
+					</li>
+					<li>
+						<a href="#content-en-preview">{{ __('Preview') }}</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="tabs-content">
+				<div id="content-en" class="is-active">
+					{{ html_textarea_field('content_en', iter, rows=25) }}
+				</div>
+				<div id="content-en-preview" class="content-preview box content" data-preview-source="#content-en textarea" data-preview-url="show.php?view=preview">
+					<span class="loading">{{ __('Loading preview…') }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify page') : __('Create page') }}</button>
 			{% if iter.has_id %}
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Show page') }}</a>
+				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Back to page') }}</a>
 			{% endif %}
 		</div>
-	</form>
-</div>
+	</div>
+</form>
 {% endblock %}

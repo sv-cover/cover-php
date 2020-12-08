@@ -3,16 +3,19 @@
 {% set active_tab = 'sessions' %}
 
 {% block tab_content %}
-<section>
-	<h2>{{ __('Sessions') }}</h2>
-	<p>{{ __('Here all currently open sessions listed which are logged-in to your account.') }}</p>
+<article>
+	<h2 class="title is-4">{{ __('Sessions') }}</h2>
 	<form method="post" action="sessions.php?view=sessions&amp;member_id={{ iter.id|e('url') }}">
 		{{ html_nonce('delete_sessions') }}
 		{{ html_input_hidden('referer', 'profiel.php?lid=%d&view=sessions'|format(iter.id|e('url'))) }}
-		<table class="full-width-table">
+		<div class="field">
+			<p>{{ __('These all devices/browsers which are currently logged-in to your account.') }}</p>
+		</div>
+		<table class="field table is-fullwidth is-hoverable is-aligned">
 			<thead>
 				<tr>
-					<th colspan="2">{{ __('IP-address') }}</th>
+					<th></th>
+					<th>{{ __('IP-address') }}</th>
 					<th>{{ __('Application') }}</th>
 					<th>{{ __('Logged in') }}</th>
 					<th>{{ __('Last active') }}</th>
@@ -30,7 +33,11 @@
 				{% endfor %}
 			</tbody>
 		</table>
-		<button type="submit" class="button" name="destroy" value="yes">{{ __('End selected sessions') }}</button>
+		<div class="field">
+			<div class="control buttons">
+				<button type="submit" class="button is-danger" name="destroy" value="yes">{{ __('End selected sessions') }}</button>
+			</div>
+		</div>
 	</form>
-</section>
+</article>
 {% endblock %}

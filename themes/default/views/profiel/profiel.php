@@ -14,27 +14,27 @@ function empty_to_http_formatter($value) {
 
 class ProfielView extends View
 {
-	public function stylesheets()
-	{
-		return array_merge(parent::stylesheets(), [
-			get_theme_data('styles/profiel.css')
-		]);
-	}
+	// public function stylesheets()
+	// {
+	// 	return array_merge(parent::stylesheets(), [
+	// 		get_theme_data('styles/profiel.css')
+	// 	]);
+	// }
 
 	public function tabs(DataIterMember $iter)
 	{
 		return [
 			'public' => [
 				'visible' => true,
-				'label' => member_full_name($iter, BE_PERSONAL),
-				'class' => 'fa-icon icon-public'
+				'label' =>  __('Public page'),
+				'icon' => 'fas fa-globe'
 				// 'body' => function () use ($model, $iter, $personal_fields) {
 				// 	$this->render_partial('public', compact('model', 'iter', 'personal_fields'));
 				// }
 			],
 			'personal' => [
 				'visible' => $this->is_current_member($iter),
-				'label' => __('Personal')
+				'label' => __('Personal data')
 				// 'body' => function () use ($model, $iter, $errors, $personal_fields) {
 				// 	$this->render_partial('personal', compact('model', 'iter', 'errors', 'personal_fields'));
 				// }
@@ -120,17 +120,26 @@ class ProfielView extends View
 				'name' => 'postcode'
 			],
 			[
-				'label' => __('Place of residence'),
+				'label' => __('Town'),
 				'name' => 'woonplaats'
 			],
 			[
-				'label' => __('Phone number'),
+				'label' => __('Phone'),
 				'name' => 'telefoonnummer'
 			],
 			[
-				'label' => __('E-mail address'),
+				'label' => __('E-mail'),
 				'name' => 'email'
 			]
+		];
+	}
+
+	public function privacy_options()
+	{
+		return [
+			DataModelMember::VISIBLE_TO_EVERYONE => __('Everyone'),
+			DataModelMember::VISIBLE_TO_MEMBERS => __('Only logged in members'),
+			DataModelMember::VISIBLE_TO_NONE => __('Nobody'),
 		];
 	}
 
@@ -198,7 +207,7 @@ class ProfielView extends View
 		try {
 			$kast_api = get_kast();
 			$status = $kast_api->getStatus($iter['id']);
-			$history = $kast_api->getHistory($iter['id']);
+			$history = $kast_api->getHistory($iter['id'], 20);
 			return $this->render('kast_tab.twig', compact('iter', 'status', 'history'));
 		} catch (Exception $exception) {
 			return $this->render('kast_tab_exception.twig', compact('iter', 'exception'));
@@ -209,11 +218,14 @@ class ProfielView extends View
 	{
 		require_once 'include/incassomatic.php';
 
-		$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');
-		$treasurer_link = sprintf('<a href="profiel.php?lid=%d">%s</a>',
-			$treasurer['id'], markup_format_text(member_full_name($treasurer)));
-
 		try {
+			$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');
+			if ($treasurer)
+				$treasurer_link = sprintf('<a href="profiel.php?lid=%d">%s</a>',
+					$treasurer['id'], markup_format_text(member_full_name($treasurer)));
+			else
+				$treasurer_link = null;
+			
 			$incasso_api = \incassomatic\shared_instance();
 			$contracts = $incasso_api->getContracts($iter);
 
@@ -370,7 +382,7 @@ class ProfielView extends View
 			MEMBER_STATUS_LID => __('Member'),
 			MEMBER_STATUS_LID_AF => __('Previously a member'),
 			MEMBER_STATUS_ERELID => __('Honorary Member'),
-			MEMBER_STATUS_DONATEUR => __('Donor'),
+			MEMBER_STATUS_DONATEUR => __('Contributor'),
 			MEMBER_STATUS_UNCONFIRMED => __('To be processed')
 		];
 
@@ -380,5 +392,10 @@ class ProfielView extends View
 	public function hostname($url)
 	{
 		return parse_url($url, PHP_URL_HOST);
+	}
+
+	public function user_can_download_vcard()
+	{
+		return get_identity()->is_member();
 	}
 }

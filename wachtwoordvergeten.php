@@ -40,9 +40,11 @@ class ControllerWachtwoordVergeten extends Controller
 
 		if ($this->_form_is_submitted('reset', $token)) {
 			if (!$this->_is_good_password($token['member'], $_POST['password'])) {
+				$success = false;
 				$errors[] = 'password';
 			}
 			elseif ($_POST['password'] !== $_POST['password_repeat']) {
+				$success = false;
 				$errors[] = 'password_repeat';
 			}
 			else {

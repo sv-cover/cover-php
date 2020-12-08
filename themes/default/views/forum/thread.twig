@@ -1,129 +1,146 @@
 {% extends '@layout/layout.twig' %}
+{% import "@theme/forum/_poll.twig" as poll %}
 
-{% block title thread.subject ~ ' :: ' ~ forum.name ~ ' :: ' ~ parent() %}
+{% block title thread.subject ~ ' – ' ~ forum.name ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
-
-<div class="topbar">
-	{% if max > 0 %}
-		{{ view.page_navigation('forum.php?thread=' ~ thread.id, page, max)|raw }}
-	{% endif %}
-	{% if user_can_create thread.new_message %}
-		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button new-reply-button">
-			<img src="{{ link_static('images/new.png') }}" alt="{{ __('nieuw') }}" title="{{ __('Add a new message') }}">
-			{{ __('New comment') }}
-		</a>
-	{% endif %}
-	{% if user_can_delete thread %}
-		<a href="forum.php?thread={{ thread.id }}&amp;view=delete" class="button delete-button">
-			<img src="{{ link_static('images/delete.png') }}" alt="{{ __('delete') }}" title="{{ __('Delete topic') }}">
-			{{ __('Delete topic') }}
-		</a>
-	{% endif %}
-	{% if user_can_update thread %}
-		<div class="text_right">
-			<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
-				{{ html_nonce('move_thread', thread) }}
-				{{ html_label(__('Move message to'), 'forum_id') }}
-				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
-				<input type="image" src="{{ link_static('images/next.png') }}">
-			</form>
-		</div>
-	{% endif %}
+<div class="level">
+	<div class="level-left">
+		<h1 class="title"><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
+	</div>
 </div>
 
-<table class="forum thread">
-	<colgroup>
-		<col class="author">
-		<col class="message">
-	</colgroup>
-	<thead>
-		<tr class="separator">
-			<td colspan="2">{{ thread.subject }}</td>
-		</tr>
-	</thead>
-	<tbody>
+<article class="block">
+	<div class="level">
+		<div class="level-left">
+			<h2 class="title is-4">{{ thread.subject }}</h2>
+		</div>
+		<div class="buttons level-right">
+			{% if user_can_create thread.new_message %}
+				<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button">
+					<span class="icon is-small">
+						<i class="fas fa-comment" aria-hidden="true"></i>
+					</span>
+					<span>{{ __('New comment') }}</span>
+				</a>
+			{% endif %}
+			{% if user_can_delete thread %}
+				<a href="forum.php?thread={{ thread.id }}&amp;view=delete" class="button">
+					<span class="icon is-small">
+						<i class="fas fa-trash" aria-hidden="true"></i>
+					</span>
+					<span>{{ __('Delete topic') }}</span>
+				</a>
+			{% endif %}
+			{% if user_can_update thread %}
+				<div class="dropdown is-right">
+					<div class="dropdown-trigger">
+						<button class="button" aria-haspopup="true" aria-controls="dropdown-move-thread">
+							<span>{{ __('Move topic') }} </span>
+							<span class="icon is-small">
+								<i class="fas fa-angle-down" aria-hidden="true"></i>
+							</span>
+						</button>
+					</div>
+					<div class="dropdown-menu " id="dropdown-move-thread" role="menu">
+						<div class="dropdown-content">
+							<div class="dropdown-item">
+								<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
+									{{ html_nonce('move_thread', thread) }}
+							        <div class="field">
+							            <div class="control">
+											{{ html_label(__('Move message to'), 'forum_id') }}
+											<div class="select">
+												{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
+											</div>
+										</div>
+									</div>
+									<div class="control">
+							            <button type="submit" class="button is-primary is-fullwidth">
+							                {{ __('Move') }}
+							            </button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
 	{% for message in messages if user_can_read message %}
 		{% set author = model.get_author_info(message, 'author') %}
 		{% set author_link = view.get_author_link(message) %}
-		<tr id="p{{ message.id }}" class="{{ loop.index is odd ? 'r0' : 'r1' }}">
-			<td class="author">
-				{% if author_link %}
-					<a href="{{ author_link|e('html_attr') }}" class="bold">{{ author.name }}</a>
-				{% else %}
-					<span class="bold">{{ author.name }}</span>
-				{% endif %}
-				<br>
-				{% if author.avatar %}
-					<img class="avatar" src="{{ author.avatar|e('html_attr') }}" alt="Avatar">
-				{% endif %}
-				<br>
-				{% set author_stats = model.get_author_stats(message) %}
-				<span class="smaller">
-					{{ __('Posts') }}: {{ author_stats.posts }}<br>
-					({{ '%02.02f'|format(author_stats.percentage_of_total) }})
-				</span>
-			</td>
-			<td class="message">
-				<div class="right">{{ message.date|date('d-m-Y H:i') }}</div>
-				<div class="right">
-					{% if user_can_update message %}
-						<a href="forum.php?thread={{ thread.id }}&amp;view=update&amp;message={{ message.id }}">
-							<img src="{{ link_static('images/edit_small.png') }}"
-							     alt="{{ __('Modify') }}"
-							     title="{{ __('Modify message') }}">
-						</a>
+		{% set author_photo = view.get_author_photo(message) %}
+		<div class="media">
+			<figure class="media-left">
+				<p class="image is-64x64">
+					{% if author.avatar %}
+						<img class="is-rounded" src="{{ author.avatar|e('html_attr') }}" alt="Avatar of {{ author.name }}">
+					{% elseif author_photo %}
+						<img class="is-rounded" src="{{ author_photo|e('html_attr') }}" alt="Photo of {{ author.name }}">
 					{% endif %}
-		
-					{% if user_can_delete message %}
-						<a href="forum.php?thread={{ thread.id }}&amp;view=delete&amp;message={{ message.id }}">
-							<img src="{{ link_static('images/delete_small.png') }}"
-							     alt="{{ __('Delete') }}"
-							     title="{{ __('Delete message') }}">
-						</a>
-					{% endif %}
-	
-					{% if user_can_create thread.new_message %}
-						<a href="forum.php?thread={{ thread.id }}&amp;view=reply&amp;quote_message={{ message.id }}">
-							<img src="{{ link_static('images/quote.png') }}"
-							     alt="{{ __('Quote') }}"
-							     title="{{ __('Quote the selected part of the message') }}">
-						</a>
+				</p>
+			</figure>
+			<div class="media-content">
+				<div class="content">
+					<p>
+						<strong>
+							{% if author_link %}
+								<a href="{{ author_link|e('html_attr') }}">{{ author.name }}</a>
+							{% else %}
+								{{ author.name }}
+							{% endif %}
+						</strong>
+						&ndash;
+						<small>
+							{{ message.date|date('d-m-Y H:i') }}
+						</small>
+						<br>
+						{{ message.message|parse_markup }}
+					</p>
+					{% if thread.poll and page == 0 and loop.first %}
+						<div class="box">
+							{{ poll.render_poll(global.models.Poll.from_thread(thread)) }}
+						</div>
 					{% endif %}
 				</div>
-
-				{{ message.message|parse_markup }}
-
-				{% if thread.poll and page == 0 and loop.first %}
-					<div class="forum_poll">
-						{{ include('_poll.twig', {poll: global.models.Poll.from_thread(thread)}) }}
-					</div>
-				{% endif %}
-			</td>
-		</tr>
-	{% endfor %}
-	</tbody>
-</table>
-<div class="bar">
-	{% if max > 0 %}
-		{{ view.page_navigation('forum.php?thread=' ~ thread.id, page, max)|raw }}
-	{% endif %}
-	{% if user_can_create thread.new_message %}
-		<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button">
-			<img src="{{ link_static('images/new.png') }}" alt="{{ __('New') }}" title="{{ __('New comment') }}">
-			{{ __('New comment') }}
-		</a>
-	{% endif %}
-	{% if user_can_update thread %}
-		<div class="text_right">
-			<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
-				{{ html_nonce('move_thread', thread) }}
-				{{ html_label(__('Move message to'), 'forum_id') }}
-				{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
-				<input type="image" src="{{ link_static('images/next.png') }}">
-			</form>
+				<nav class="level is-mobile">
+					<div class="level-left">
+						{% if user_can_update message %}
+							<a class="level-item" href="forum.php?thread={{ thread.id }}&amp;view=update&amp;message={{ message.id }}" title="{{ __('Modify message') }}">
+								<span class="icon is-small">
+									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Modify message') }}</span>
+								</span>
+							</a>
+						{% endif %}
+						{% if user_can_delete message %}
+							<a class="level-item" href="forum.php?thread={{ thread.id }}&amp;view=delete&amp;message={{ message.id }}" title="{{ __('Delete message') }}">
+								<span class="icon is-small">
+									<i class="fas fa-trash" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Delete message') }}</span>
+								</span>
+							</a>
+						{% endif %}
+					</div>	
+				</nav>
+			</div>
+			<div class="media-right">
+				<a href="forum.php?thread={{ thread.id }}&amp;view=reply&amp;quote_message={{ message.id }}" title="{{ __('Quote message') }}">
+					<span class="icon is-small">
+						<i class="fas fa-reply" aria-hidden="true"></i>
+						<span class="is-sr-only">{{ __('Quote message') }}</span>
+					</span>
+				</a>
+			</div>
 		</div>
-	{% endif %}
-</div>
+	{% endfor %}
+</article>
+
+{% if max > 0 %}
+	{{ view.page_navigation('forum.php?thread=' ~ thread.id, page, max)|raw }}
+{% endif %}
+
 {% endblock %}

@@ -1,27 +1,73 @@
-<div class="commissie-member profile-widget round">
-	{% if iter.has_photo and not iter.is_private('foto') %}
-	<a href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-image-popup="modal" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
-		<img src="foto.php?lid_id={{ iter.id }}&amp;format=square&amp;width=200&amp;timestamp={{ iter.photo_mtime }}" width="150">
-	</a>
-	{% else %}
-	<img src="foto.php?lid_id={{ iter.id }}&amp;format=square&amp;width=200&amp;timestamp={{ iter.photo_mtime }}" width="150">
-	{% endif %}
-
+<div class="field is-grouped  is-grouped-right">
 	{% if global.identity.member_in_committee(constant('COMMISSIE_EASY')) %}
-	<form id="upload-photo" action="profiel.php?lid={{iter.id}}&amp;view=photo" method="post" enctype="multipart/form-data">
-		{{ html_nonce('photo', iter) }}
-		<div class="file-upload-button button">
-			<span>{{ __('Choose photo') }}&hellip;</span>
-			<input type="file" name="photo" accept="image/jpeg" title="{{ __('Only JPEG-images are allowed.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
+		<form id="upload-photo" class="control" action="profiel.php?lid={{iter.id}}&amp;view=photo" method="post" enctype="multipart/form-data">
+			{{ html_nonce('photo', iter) }}
+			<div class="field">
+				<div class="file">
+					<label class="file-label">
+						<input class="file-input" type="file" name="photo" accept="image/jpeg" title="{{ __('Only JPEG-images are allowed.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
+						<span class="file-cta">
+							<span class="file-icon">
+								<i class="fas fa-upload"></i>
+							</span>
+							<span class="file-label">
+								{{ __('Upload photo' )}}
+							</span>
+						</span>
+					</label>
+				</div>
+			</div>
+		</form>
+	{% endif %}
+	{% if view.user_can_download_vcard() %}
+		<div class="control">
+			<a href="profiel.php?lid={{ iter.id }}&amp;view=export_vcard" class="button" title="{{ __('Download vCard') }}">
+				<span class="icon">
+					<i class="fas fa-address-card" aria-hidden="true"></i>
+				</span>
+				<span>{{ __('vCard') }}</span>
+			</a>
 		</div>
-	</form>
 	{% endif %}
-
-	{% if iter.nick != '' and not iter.is_private('naam') %}
-	<h3 class="nickname">{{ iter.nick }}</h3>
+	{% set photobook_of_iter = global.models.PhotobookFace.get_book([iter]) %}
+	{% if user_can_read photobook_of_iter %}
+		<div class="control">
+			<a href="fotoboek.php?book={{ photobook_of_iter.id|e('url') }}" class="button">
+				<span class="icon">
+					<i class="fas fa-images" aria-hidden="true"></i>
+				</span>
+				<span>
+					{{ __('Photos') }}
+				</span>
+			</a>
+		</div>
 	{% endif %}
-
-	{% if iter.homepage is defined %}
-	<a href="{{ iter.homepage|e('html_attr') }}" target="_blank" rel="nofollow noopener">{{ view.hostname(iter.homepage) }}</a>
+</div>
+<div class="profile-widget">
+	{% if iter.has_photo and not iter.is_private('foto') %}
+		<figure class="profile-photo">
+			<a class="image is-128x128" href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-popup="image" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
+				<img class="is-rounded" src="{{ link('foto.square', member=iter, width=256, timestamp=iter.photo_mtime) }}" width="128">
+			</a>
+		</figure>
+	{% else %}
+		<figure class="profile-photo image is-128x128">
+			<img class="is-rounded" src="{{ link('foto.square', member=iter, width=256, timestamp=iter.photo_mtime) }}" width="150">
+		</figure>
 	{% endif %}
+	
+	<div class="profile-info">
+		<h1 class="name">
+			{{ iter|full_name }}
+			{% if iter.nick != '' and iter.nick != iter|full_name and not iter.is_private('naam') %}
+				<span class="nickname">({{ iter.nick }})</span>
+			{% endif %}
+		</h1>
+		
+		{% if iter.homepage is defined %}
+			<p class="webpage">
+				<a href="{{ iter.homepage|e('html_attr') }}" target="_blank" rel="nofollow noopener">{{ view.hostname(iter.homepage) }}</a>
+			</p>
+		{% endif %}
+	</div>
 </div>

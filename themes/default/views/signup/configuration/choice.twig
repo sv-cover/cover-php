@@ -1,40 +1,44 @@
-<div class="field-type-choice vertical-form">
-	<h3 class="field-type">{{ __('Multiple choice question') }}</h3>
-	<fieldset>
-		<legend>Appearance</legend>
-		<div>
-			{{ html_label('Label above the options', 'description', errors=errors, id='field-' ~ name ~ '-description') }}
-			{{ html_input_text('description', data, errors=errors, for='field-' ~ name ~ '-description') }}
-		</div>
-	</fieldset>
-	<fieldset>
-		<legend>Options</legend>
-		<ol data-growing-list>
-			{% for option in data.options %}
-				<li>
-					<span class="drag-handle"></span>
+<div class="field">
+	{{ html_label('Label above the options', 'description', errors=errors, id='field-' ~ name ~ '-description') }}
+	<div class="control">
+		{{ html_input_text('description', data, errors=errors, for='field-' ~ name ~ '-description') }}
+	</div>
+</div>
+<div class="field">
+	<label for="field-{{ name }}-options" class="label">{{__('Options')}}</label>
+	<noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
+	<ol id="field-{{ name }}-options" class="growing-list" data-growing-list-template="#field-{{ name }}-template" data-growing-list-sortable>
+		{% for option in data.options %}
+			<li class="field">
+				<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
 					{{ html_input_text('options[]', data, field='options['~ loop.index0 ~']', id='field-' ~ name ~ '-option-' ~ loop.index0) }}
-				</li>
-			{% endfor %}
-			<li data-template>
-				<span class="drag-handle"></span>
-				<input type="text" name="options[]">
+					<span class="icon is-right">
+							<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Drag field to reorder options') }}</span>
+					</span>
+				</div>
 			</li>
-		</ol>
-		<div class="checkbox">
-			<label>
-				{{ html_input_checkbox('allow_multiple', data, errors=errors, id='field-' ~ name ~ '-allow-multiple') }}
-				{{ __('Allow multiple options to be picked') }}
-			</label>
-		</div>
-	</fieldset>
-	<fieldset>
-		<legend>Required</legend>
-		<div class="checkbox">
-			<label>
-				{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required') }}
-				{{ __('Picking an option is mandatory') }}
-			</label>
-		</div>
-	</fieldset>
+		{% endfor %}
+	</ol>
+	<template id="field-{{ name }}-template">
+		<li class="field">
+			<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
+				<input class="input" type="text" name="options[]">
+				<span class="icon is-right">
+						<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+						<span class="is-sr-only">{{ __('Drag field to reorder options') }}</span>
+				</span>
+			</div>
+		</li>
+	</template>
+</div>
+<div class="field">
+	<div class="control">
+		{{ html_input_checkbox('allow_multiple', data, errors=errors, id='field-' ~ name ~ '-allow-multiple', label=__('Allow multiple options to be picked')) }}
+	</div>
+</div>
+<div class="field">
+	<div class="control">
+		{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required', label=__('Picking an option is mandatory')) }}
+	</div>
 </div>

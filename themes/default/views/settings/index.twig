@@ -1,44 +1,42 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Settings') ~ ' :: ' ~ parent() %}
+{% block title __('Settings') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Settings') }}</h1>
-<div class="messageBox">
-	<table class="full-width-table">
-		<thead>
-			<tr>
-				<th>{{ __('Key') }}</th>
-				<th colspan="2">{{ __('Value') }}</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for item in iters %}
-				{% if user_can_read item %}
-					<tr>
-						<td>{{ item.key }}</td>
-						<td><pre>{{ item.value }}</pre></td>
-						<td class="actions">
-							{% if user_can_update item %}
-								<a href="{{ controller.link_to_update(item)|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#settings-form">{{ __('Modify') }}</a>
-							{% endif %}
-							{% if user_can_delete item %}
-								<a href="{{ controller.link_to_delete(item)|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#delete-settings-form">{{ __('Delete') }}</a>
-							{% endif %}
-						</td>
-					</tr>
-				{% endif %}
-			{% endfor %}
-		</tbody>
-		{% if user_can_create controller.new_iter %}
-		<tfoot>
-			<tr>
-				<td colspan="3">
-					<a href="{{ controller.link_to_create|e('html_attr') }}" data-placement-selector="modal" data-partial-selector="#settings-form">{{ __('Add a new key') }}</a>
-				</td>
-			</tr>
-		</tfoot>
-		{% endif %}
-	</table>
-</div>
+<h1 class="title">{{ __('Settings') }}</h1>
+<table class="table is-fullwidth">
+	<thead>
+		<tr>
+			<th>{{ __('Key') }}</th>
+			<th colspan="2">{{ __('Value') }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in iters %}
+			{% if user_can_read item %}
+				<tr>
+					<td>{{ item.key }}</td>
+					<td><code>{{ item.value }}</code></td>
+					<td class="has-text-right">
+						{% if user_can_update item %}
+							<a href="{{ controller.link_to_update(item)|e('html_attr') }}" {# data-placement-selector="modal" data-partial-selector="#settings-form" #}>{{ __('Modify') }}</a>
+						{% endif %}
+						{% if user_can_delete item %}
+							<a href="{{ controller.link_to_delete(item)|e('html_attr') }}" {# data-placement-selector="modal" data-partial-selector="#delete-settings-form" #}>{{ __('Delete') }}</a>
+						{% endif %}
+					</td>
+				</tr>
+			{% endif %}
+		{% endfor %}
+	</tbody>
+	{% if user_can_create controller.new_iter %}
+	<tfoot>
+		<tr>
+			<td colspan="3">
+				<a href="{{ controller.link_to_create|e('html_attr') }}" {# data-placement-selector="modal" data-partial-selector="#settings-form" #} class="button">{{ __('Add a new key') }}</a>
+			</td>
+		</tr>
+	</tfoot>
+	{% endif %}
+</table>
 {% endblock %}

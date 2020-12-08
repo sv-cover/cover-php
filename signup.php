@@ -88,6 +88,8 @@ class ControllerSignUpForms extends Controller
 
 		$success = false;
 
+		$is_modal = isset($_GET['action']) && $_GET['action'] === 'modal';
+
 		if ($this->_form_is_submitted('create_entry', $form)) {
 			// If the form submitted a member-id (i.e. a logged-in member filled it in) then
 			// check whether that member is indeed the logged-in member and assign the entry
@@ -123,7 +125,7 @@ class ControllerSignUpForms extends Controller
 			// and everyone else will just see the form with a success message
 		}
 
-		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success'));
+		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success', 'is_modal'));
 	}
 
 	public function run_update_entry()
@@ -140,6 +142,8 @@ class ControllerSignUpForms extends Controller
 
 		$success = false;
 
+		$is_modal = isset($_GET['action']) && $_GET['action'] === 'modal';
+
 		if ($this->_form_is_submitted('update_entry', $entry)) {
 			if (!get_policy($this->entry_model)->user_can_update($entry))
 				throw new UnauthorizedException('You cannot update this entry.');
@@ -148,9 +152,15 @@ class ControllerSignUpForms extends Controller
 				$this->entry_model->update($entry);
 				$success = true;
 			}
+			
+			// Redirect admins back to the entry index
+			if ($success && get_policy($form)->user_can_update($form))
+				return $this->view->redirect($this->link(['view' => 'list_entries', 'form' => $form['id']]));
+
+			// and everyone else will just see the form with a success message
 		}
 
-		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success'));
+		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success', 'is_modal'));
 	}
 
 	public function run_list_forms()
@@ -192,9 +202,9 @@ class ControllerSignUpForms extends Controller
 		}
 
 		if ($success)
-			return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+			return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]) . '#signup-form-fields');
 		else
-			return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+			return $this->view->render('create_form_form.twig', compact('form', 'success', 'errors'));
 	}
 
 	public function run_update_form()
@@ -212,7 +222,7 @@ class ControllerSignUpForms extends Controller
 			if ($this->_update($this->form_model, $form, $_POST, $errors))
 				$success = true;
 
-		return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+		return $this->view->render('update_form_form.twig', compact('form', 'success', 'errors'));
 	}
 
 	public function run_delete_form()
@@ -236,8 +246,13 @@ class ControllerSignUpForms extends Controller
 		if (!get_policy($this->form_model)->user_can_update($form))
 			throw new UnauthorizedException('You cannot update this form.');
 
-		if ($this->_form_is_submitted('create_form_field', $form))
-			$this->field_model->insert($form->new_field($_POST['field_type']));
+		if ($this->_form_is_submitted('create_form_field', $form)) {
+			$field = $form->new_field($_POST['field_type']);
+			$this->field_model->insert($field);
+
+			if (isset($_GET['action']) && $_GET['action'] === 'add')
+				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $form, 'errors' => new ErrorSet()]);
+		}
 
 		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
 	}
@@ -263,7 +278,7 @@ class ControllerSignUpForms extends Controller
 			if ($field->process_configuration($_POST, $errors->namespace($field['id'])))
 				$this->field_model->update($field);
 			else
-				return $this->view->render('form_form.twig', compact('form', 'success', 'errors'));
+				return $this->view->render('update_form_form.twig', compact('form', 'success', 'errors'));
 		}
 
 		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));

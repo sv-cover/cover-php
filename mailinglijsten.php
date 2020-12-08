@@ -70,7 +70,19 @@ class ControllerMailinglijsten extends ControllerCRUD
 
 	protected function run_unsubscribe_confirm($subscription_id)
 	{
-		$subscription = $this->subscription_model->get_iter($subscription_id);
+		try {
+			$subscription = $this->subscription_model->get_iter($subscription_id);
+			$list = $subscription['mailinglist'];
+		} catch (DataIterNotFoundException $e) {
+			if (preg_match('/^(\d+)\-(\d+)$/', $subscription_id, $match))
+				$subscription = $this->subscription_model->new_iter([
+					'opgezegd_op' => '1993-09-20 00:00:00',
+					'lid_id' => (int) $match[2],
+					'mailinglijst_id' => (int) $match[1],
+				]);
+			else
+				throw $e;
+		}
 
 		$list = $subscription['mailinglist'];
 

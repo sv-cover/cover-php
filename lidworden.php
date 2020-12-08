@@ -61,6 +61,9 @@
 				'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
 				'iban' => [
 					function($x) {
+						if (!empty(get_config_value('no_iban_string'))) {
+							return $x === get_config_value('no_iban_string') || \IsoCodes\Iban::validate($x);
+						}
 						return \IsoCodes\Iban::validate($x);
 					},
 					function($x) {

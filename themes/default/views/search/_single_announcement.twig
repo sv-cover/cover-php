@@ -1,9 +1,13 @@
-<h2>
-	<a href="{{ result.absolute_url|e('html_attr') }}">{{ result.subject }}</a>
-	<small>{{ __('Announcement made by %s in %d')|format(
+<h2 class="title is-5">
+	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.subject }}</a>
+</h2>
+<p class="subtitle is-7">
+    {{ __('Announcement from %s on %s')|format(
 		'<a href="commissies.php?commissie=%s">%s</a>'|format(
 			result.committee.login|e('url'),
 			result.committee.naam|e('html')),
-			result.created_on|date('Y'))|raw }}</small>
-</h2>
-<p>{{ result.message|strip_markup|excerpt(query_parts, 50)|raw }}</p>
+			result.created_on|date('Y-m-d'))|raw }}
+</p>
+<div class="content">
+    {{ result.message|strip_markup|excerpt(query_parts, 50)|raw }}
+</div>

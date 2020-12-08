@@ -1,34 +1,42 @@
-<div class="headNav">
-	<ul>
-	{% for menu_id, menu in view.layout.top_menu %}
-		{% if menu.submenu is defined %}
-		<li class="dropDown{% if menu.className is defined %} {{ menu.className }}{% endif %}"{%if menu.title is defined %} title="{{ menu.title }}"{% endif %}><a drop="{{ menu_id }}" href="" onclick="return false;">{{ menu.label }}</a></li>
-		{% else %}
-		<li{% if menu.className is defined %} class="{{ menu.className }}"{% endif %}{%if menu.title is defined %} title="{{ menu.title }}"{% endif %}><a href="{{ menu.url }}" target="{{ menu.target|default('') }}">{{ menu.label }}</a></li>
-		{% endif %}
-	{% endfor %}
-	</ul>
+<nav class="navbar is-cover is-fixed-top" role="navigation" aria-label="main navigation">
+	<div class="container is-fullhd is-flex">
+		<div class="navbar-brand is-inline-flex">
+			<a role="button" class="navbar-burger is-hoverable" aria-label="menu" aria-expanded="false" data-trigger data-target="navbar-main" tabindex=0 >
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+			<a class="navbar-item cover-logo" href="/">
+				<img src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
+			</a>
+		</div>
 
-{# Disabled language switcher as the website should be available in English only
-	<form method="post" id="language-switch" action="index.php">
-		<input type="hidden" name="submindexlanguage" value="1">
-		<input type="hidden" name="return_to" value="{{ global.server.REQUEST_URI }}">
-		{% for code, language in global.i18n.languages %}
-			<label id="lang-{{ code }}">
-				<input type="radio" name="language" value="{{ code }}" {% if code == global.i18n.language %}checked="checked"{% endif %}>
-				<span>{{ code|upper }}</span>
-			</label>
-		{% endfor %}
-		<button type="submit">{{ __('Change Language') }}</button>
-	</form>
-#}
-</div>
-<div class="subNav">
-	{% for menu_id, menu in view.layout.top_menu if menu.submenu is defined %}
-		<ul id="{{ menu_id }}" class="expander">
-			{% for submenu_item in menu.submenu %}
-				<li{% if submenu_item.className is defined %} class="{{ submenu_item.className }}"{% endif %}{%if submenu_item.title is defined %} title="{{ submenu_item.title }}"{% endif %}><a href="{{ submenu_item.url }}" target="{{ submenu_item.target|default() }}">{{ submenu_item.label }}</a></li>
+		<div id="navbar-main" class="navbar-menu">
+			<div class="navbar-start">
+			{% for menu_id, menu in view.layout.top_menu %}
+				{% if menu.submenu is defined %}
+					<div class="navbar-item has-dropdown is-hoverable">
+						<a class="navbar-link is-arrowless"{% if menu.title is defined %} title="{{ menu.title }}"{% endif %} tabindex="0">
+							{{ menu.label }}
+						</a>
+						<div class="navbar-dropdown">
+							{% for submenu_item in menu.submenu %}
+								<a href="{{ submenu_item.url }}" class="navbar-item" target="{{ submenu_item.target|default() }}" {% if submenu_item.title is defined %} title="{{ submenu_item.title }}"{% endif %}>{{ submenu_item.label }}</a>
+							{% endfor %}
+						</div>
+					</div>
+				{% else %}
+					<a href="{{ menu.url }}"  target="{{ menu.target|default('') }}" class="navbar-item" {% if menu.title is defined %} title="{{ menu.title }}"{% endif %}>{{ menu.label }}</a>
+				{% endif %}
 			{% endfor %}
-		</ul>
-	{% endfor %}
-</div>
+			</div>
+
+		</div>	
+		<div class="navbar-controls">
+			{{ include('@layout/widgets/search.twig') }}
+			{{ include('@layout/widgets/applications.twig') }}
+			{{ include('@layout/widgets/notifications.twig') }}
+			{{ include('@layout/widgets/login.twig') }}
+		</div>
+	</div>
+</nav>

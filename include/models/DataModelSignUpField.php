@@ -37,6 +37,11 @@ class DataIterSignUpField extends DataIter
 		return get_model('DataModelSignUpForm')->get_iter($this['form_id']);
 	}
 
+	public function get_type_label()
+	{
+		return get_model('DataModelSignUpField')->field_types[$this['type']]['label'];
+	}
+
 	public function process(array $post_data, &$error)
 	{
 		return $this->widget()->process($post_data, $error);
@@ -120,7 +125,7 @@ class DataModelSignUpField extends DataModel
 			],
 			'name' => [
 				'class' => \fields\Name::class,
-				'label' => __('Full name')
+				'label' => __('Full name field')
 			],
 			'address' => [
 				'class' => \fields\Address::class,
@@ -130,9 +135,13 @@ class DataModelSignUpField extends DataModel
 				'class' => \fields\Email::class,
 				'label' => __('E-mail address field')
 			],
+			'phone' => [
+				'class' => \fields\Phone::class,
+				'label' => __('Phone number field')
+			],
 			'bankaccount' => [
 				'class' => \fields\BankAccount::class,
-				'label' => __('Bank account number')
+				'label' => __('Bank account number field')
 			],
 			'editable' => [
 				'class' => \fields\Editable::class,

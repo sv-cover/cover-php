@@ -1,55 +1,130 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Former boards') ~ ' :: ' ~ parent() %}
+{% block title __('Former boards') ~ ' – ' ~ parent() %}
 
-{% block content %}
-<div class="timeline-container">
-	<div class="timeline-line"></div>
-	<div class="timeline">
-		<div class="timeline-event has-header">
-			{% set introduction = global.models.Editable.get_iter_from_title('Oudbesturenpagina') %}
-			{{ include('@layout/editable.twig', {'editable': introduction}) }}
-		</div>
-	{% for bestuur in iters %}
-		<div id="{{ bestuur.login }}" class="bestuur timeline-event has-header">
-			<div class="pageheading">
-				{% if user_can_update bestuur %}
-				<div class="controls inline">
-					<a href="{{ controller.link_to_update(bestuur) }}">
-						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('modify') }}" title="{{ __('Modify board') }}">
-					</a>
+{% set header = global.models.Editable.get_iter_from_title('Oudbesturenpagina') %}
+{% set footer = global.models.Editable.get_iter_from_title('Oprichting Cover') %}
+
+{% block page %}
+<article class="section former-boards">
+<div class="container is-max-widescreen">
+<div class="level">
+	<div class="level-left"></div>
+	<div class="level-right">
+		{% if user_can_update header or user_can_create controller.new_iter %}
+			<div class="dropdown is-right">
+				<div class="dropdown-trigger">
+					<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+						<span>{{ __('Manage') }}</span>
+						<span class="icon is-small">
+							<i class="fas fa-angle-down" aria-hidden="true"></i>
+						</span>
+					</button>
 				</div>
-				{% endif %}
-				<h1>{{ bestuur.page.get_title }}</h1>
+				<div class="dropdown-menu" id="dropdown-menu" role="menu">
+					<div class="dropdown-content">
+						{% if user_can_create controller.new_iter %}
+							<a href="{{ controller.link_to_create() }}" class="dropdown-item">
+								<span class="icon">
+									<i class="fas fa-plus" aria-hidden="true"></i>
+								</span>
+								<span>{{ __('Add board') }}</span>
+							</a>
+						{% endif %}
+						
+						{% if user_can_update header %}
+							<a href="{{ link('editable.update', editable=header) }}" class="dropdown-item">
+								<span class="icon">
+									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+								</span>
+								<span>{{ __('Modify header') }}</span>
+							</a>
+						{% endif %}
+					</div>
+				</div>
 			</div>
-			<div class="messageBox">
-				{% if view.has_bestuursfoto(bestuur) %}
-					<img class="board-photo" src="{{ view.get_bestuursfoto(bestuur) }}" width="100%%">
-				{% endif %}
-				{% if user_can_update bestuur.page %}
-				<div class="controls inline">
-					<a href="{{ link('editable.update', editable=bestuur.page) }}">
-						<img src="{{ link_static('images/edit.png') }}" alt="{{ __('modify') }}" title="{{ __('Modify board') }}">
-					</a>
-				</div>
-				{% endif %}
-				<div class="content">
-					{{ view.parse_bestuursfoto(bestuur, bestuur.page.locale_content|parse_markup)|raw }}
-				</div>
-			</div>
-		</div>
-	{% endfor %}
-
-	<div class="timeline-event full-width">
-		{% set foundation = global.models.Editable.get_iter_from_title('Oprichting Cover') %}
-		{{ include('@layout/editable.twig', {'editable': foundation}) }}
-	</div>
-
-	{% if user_can_create controller.new_iter %}
-		<div class="timeline-footer">
-			<a href="{{ controller.link_to_create() }}" class="add-new-bestuur button">{{ __('Add a new board...') }}</a>
-		</div>
-	{% endif %}
+		{% endif %}
 	</div>
 </div>
+
+<header class="hero is-light block">
+	<div class="hero-body">
+		<div class="content has-text-centered is-centered">
+			<h1 class="title">{{ header.get_title }}</h1>
+			{{ header.locale_content|parse_markup }}
+		</div>
+	</div>
+</header>
+
+<div class="block">
+{% for board in iters %}
+	<section id="{{ board.login }}" class="board {% if view.has_bestuursfoto(board) %}has-image{% endif %}">
+		{% if view.has_bestuursfoto(board) %}
+			<figure class="board-photo image">
+				<img src="{{ view.get_bestuursfoto(board) }}" alt="Photo of {{ board.page.get_title }}">
+			</figure>
+		{% endif %}
+
+		<div class="board-info">
+			{% if user_can_update board or user_can_update board.page %}
+				<div class="dropdown is-right is-pulled-right">
+					<div class="dropdown-trigger">
+						<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+							<span class="icon is-small">
+								<i class="fas fa-angle-down" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Board options') }}</span>
+							</span>
+						</button>
+					</div>
+					<div class="dropdown-menu" id="dropdown-menu" role="menu">
+						<div class="dropdown-content">
+							{% if user_can_update board %}
+								<a href="{{ controller.link_to_update(board) }}" class="dropdown-item">{{ __('Modify board') }}</a>
+							{% endif %}
+							{% if user_can_update board %}
+								<a href="{{ link('editable.update', editable=board.page) }}" class="dropdown-item">{{ __('Modify content') }}</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			{% endif %}
+			
+			<div class="content is-full-width">
+				<h2>{{ board.page.get_title }}</h2>
+				{{ view.parse_bestuursfoto(board, board.page.locale_content|parse_markup(1))|raw }}
+			</div>
+		</div>
+	</section>
+{% endfor %}
+</div>
+
+<footer class="hero is-light block">
+	<div class="hero-body">
+		{% if user_can_update footer %}
+			<div class="dropdown is-right is-pulled-right">
+				<div class="dropdown-trigger">
+					<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+						<span class="icon is-small">
+							<i class="fas fa-angle-down" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Footer options') }}</span>
+						</span>
+					</button>
+				</div>
+				<div class="dropdown-menu" id="dropdown-menu" role="menu">
+					<div class="dropdown-content">
+						<a href="{{ link('editable.update', editable=header) }}" class="dropdown-item">
+							<span>{{ __('Modify content') }}</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		<div class="content has-text-centered is-centered">
+			<h2 class="title is-4">{{ footer.get_title }}</h2>
+			{{ footer.locale_content|parse_markup }}
+		</div>
+	</div>
+</footer>
+</div>
+</article>
 {% endblock %}

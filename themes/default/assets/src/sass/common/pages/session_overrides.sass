@@ -1,0 +1,20 @@
+.session-overrides-form
+    .fieldset
+        margin-bottom: 0
+        padding-top: 0
+        padding-bottom: 0
+        transition: height $collapse-out-speed ease-in-out, margin $collapse-out-speed ease-in-out, padding $collapse-out-speed ease-in-out
+
+        &.is-visible
+            transition: height $collapse-in-speed ease-in, margin $collapse-in-speed ease-in, padding $collapse-in-speed ease-in
+            margin-bottom: $block-spacing
+            padding-top: $box-padding
+            padding-bottom: $box-padding
+
+        &.is-transitioning-out
+            margin-bottom: 0
+            padding-top: 0
+            padding-bottom: 0
+
+    .collapse:last-child .fieldset.is-visible
+        margin-bottom: 0

@@ -1,34 +1,40 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title view.get_label(iter, __('Add a new key'), __('Modify key')) ~ ' :: ' ~ parent() %}
+{% block title view.get_label(iter, __('Add a new key'), __('Modify key')) ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ view.get_label(iter, __('Add a new key'), __('Modify key')) }}</h1>
-<div class="messageBox">
-	<form id="settings-form" method="post" action="{{ view.get_form_action(iter)|e('html_attr') }}" class="vertical-form">
-		{% if iter.id != null %}
-			{{ html_nonce('update', iter) }}
-			<div>
-				{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
+<h1 class="title">{{ view.get_label(iter, __('Add a new key'), __('Modify key')) }}</h1>
+<form id="settings-form" method="post" action="{{ view.get_form_action(iter)|e('html_attr') }}">
+	{% if iter.id != null %}
+		{{ html_nonce('update', iter) }}
+		<div class="field">
+			{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('key', iter, disabled='disabled') }}
 			</div>
-		{% else %}
-			{{ html_nonce('create', iter) }}
-			<div>
-				{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
+		</div>
+	{% else %}
+		{{ html_nonce('create', iter) }}
+		<div class="field">
+			{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
+			<div class="control">
 				{{ html_input_text('key', iter, required='required', maxlength=100) }}
 			</div>
-		{% endif %}
+		</div>
+	{% endif %}
 
-		<div>
-			{{ html_label(__('Value'), 'value', errors=errors, required=true) }}
+	<div class="field">
+		{{ html_label(__('Value'), 'value', errors=errors, required=true) }}
+		<div class="control">
 			{{ html_textarea_field('value', iter) }}
 		</div>
+	</div>
 
-		<div>
-			<button type="submit" class="button">{{ view.get_label(iter, __('Add key'), __('Modify key')) }}</button>
-			<a href="{{ controller.link_to_index|e('html_attr') }}">{{ __('Back to settings') }}</a>
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">{{ view.get_label(iter, __('Add key'), __('Modify key')) }}</button>
+			<a href="{{ controller.link_to_index|e('html_attr') }}" class="button">{{ __('Back to settings') }}</a>
 		</div>
-	</form>
-</div>
+	</div>
+</form>
 {% endblock %}

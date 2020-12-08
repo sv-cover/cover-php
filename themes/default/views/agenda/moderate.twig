@@ -1,109 +1,123 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Calendar') ~ ' :: ' ~ parent() %}
+{% block title __('Calendar') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Calendar') }}</h1>
-<div class="messageBox">
-	{% if iters|length == 0 %}
-		<p>{{ __('There are no calendar events waiting for approval.') }}</p>
-	{% else %}
-		<p>{{ __('The calendar events below are put up for approval.') }}</p>
-		<form name="agenda_moderate" action="" method="post">
-			{{ html_nonce('moderate') }}
-			<table class="full-width-table" id="table_moderate">
-				<thead>
-					<tr class="header">
-						<th class="text_center">
-							<img src="{{ link_static('images/accept.png')|e('html_attr') }}" title="{{ __('Accept calendar event')|e('html_attr') }}">
-						</th>
-						<th class="text_center">
-							<img src="{{ link_static('images/cancel.png')|e('html_attr') }}" title="{{ __('Deny calendar event')|e('html_attr') }}">
-						</th>
-						<th>{{ __('Head') }}</th>
-						<th>{{ __('Date') }}</th>
-						<th>{{ __('Committee') }}</th>
-						<th>{{ __('Private') }}</th>
+<h1 class="title">{{ __('Calendar') }}</h1>
+{% if iters|length == 0 %}
+	<p>{{ __('There are no events waiting for approval.') }}</p>
+{% else %}
+	<p>{{ __('The events below are put up for approval.') }}</p>
+	<form name="agenda_moderate" action="" method="post">
+		{{ html_nonce('moderate') }}
+		<table class="field table is-fullwidth" id="table_moderate">
+			<thead>
+				<tr>
+					<th class="has-text-centered">
+						<a href="javascript:accept_all();" title="{{ __('Mark all events as accepted')}}">
+							<span class="icon">
+								<i class="fas fa-check" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Mark all events as accepted')}}</span>
+							</span>
+						</a>
+					</th>
+					<th class="has-text-centered">
+						<a href="javascript:cancel_all();" title="{{ __('Mark all events as rejected')}}">
+						<span class="icon">
+							<i class="fas fa-times" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Mark all events as rejected')}}</span>
+						</span>
+					</th>
+					<th>{{ __('Name') }}</th>
+					<th>{{ __('Date') }}</th>
+					<th>{{ __('Committee') }}</th>
+					<th>{{ __('Private') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in iters %}
+					<tr id="punt{{ item.id }}" class="{% if item.id == highlighted_id %}is-selected{% endif %}">
+						<td class="has-text-centered">
+							<label for="cancel_{{ item.id }}" class="is-sr-only">{{__('Accept event %s')|format( item.kop )}}</label>
+							{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accept event')) }}
+						</td>
+						<td class="has-text-centered">
+							<label for="cancel_{{ item.id }}" class="is-sr-only">{{__('Reject event %s')|format( item.kop )}}</label>
+							{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Reject event')) }}
+						</td>
+						<td>
+							<a href="agenda.php?agenda_id={{ item.id|e('url') }}">{{ item.kop }}</a>
+						</td>
+						<td>
+							{{ item|period }}
+						</td>
+						<td>
+							{{ item.committee.naam }}
+						</td>
+						<td>
+							{{ html_input_checkbox('private_' ~ item.id, item, value='yes', field='private', title=__('Only visible to members')) }}
+						</td>
 					</tr>
-				</thead>
-				<tbody>
-					{% for item in iters %}
-						<tr id="punt{{ item.id }}" class="{% if item.id == highlighted_id %}highlight{% endif %}">
-							<td>{{ html_input_radio('action_' ~ item.id, null, 'accept', id='accept_' ~ item.id, onclick='action_clicked("%d", true)'|format(item.id), title=__('Accept calendar event')) }}</td>
-							<td>{{ html_input_radio('action_' ~ item.id, null, 'cancel', id='cancel_' ~ item.id, onclick='action_clicked("%d", false)'|format(item.id), title=__('Deny calendar event')) }}</td>
-							<td><a href="agenda.php?agenda_id={{ item.id|e('url') }}">{{ item.kop }}</a></td>
-							<td>{{ item|period }}</td>
-							<td>{{ item.committee.naam }}</td>
-							<td>{{ html_input_checkbox('private_' ~ item.id, item, value='yes', field='private', title=__('Only visible to members')) }}</td>
-						</tr>
-	
-						<tr id="comment_{{ item.id }}">
-							<td colspan="2"></td>
-							<td colspan="5">{{ html_textarea_field('comment_' ~ item.id, null, null, rows='4') }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-				<tfoot>
-					<tr>
-						<td class="text_center">
-							<a href="javascript:accept_all();">
-								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Mark all calendar items as accepted')|e('html_attr') }}">
-							</a>
-						</td>
-						<td class="text_center">
-							<a href="javascript:cancel_all();">
-								<img src="{{ link_static('images/up.png')|e('html_attr') }}" title="{{ __('Mark all calendar items as denied')|e('html_attr') }}">
-							</a>
-						</td>
-						<td colspan="5" class="submit">
-							<button type="submit" class="button" name="submmoderate" value="yes">{{ __('Apply changes') }}</button>
+
+					<tr id="comment_{{ item.id }}">
+						<td colspan="2"></td>
+						<td colspan="5" class="field">
+							{{ html_label(__('Rejection message'), 'comment_' ~ item.id) }}
+							{{ html_textarea_field('comment_' ~ item.id, null, null, rows='3') }}
+							<p class="help">{{__('Reason for rejection. This will be emailed to the committee.')}}</p>
 						</td>
 					</tr>
-				</tfoot>
-			</table>
-		</form>
-		<script type="text/javascript">
-			var ids = {{ [0]|merge(iters|select('id'))|json_encode|raw }};
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<td colspan="2"></td>
+				<td colspan="5">
+					<button type="submit" class="button is-primary" name="submmoderate" value="yes">{{ __('Apply changes') }}</button>
+				</td>		
+			</tfoot>
+		</table>
+	</form>
+	<script type="text/javascript">
+		var ids = {{ [0]|merge(iters|select('id'))|json_encode|raw }};
 
-			function action_clicked(id, accept) {
-				var div = document.getElementById("comment_" + id);
+		function action_clicked(id, accept) {
+			var div = document.getElementById("comment_" + id);
 
-				if (accept)
-					div.style.display = "none";
-				else
-					div.style.display = "";
-			}
-			
-			function set_all(accept) {
-				for (i = 1; i < ids.length; i++) {
-					var id = ids[i];
-					
-					if (accept)
-						radio = document.getElementById("accept_" + id);
-					else
-						radio = document.getElementById("cancel_" + id);
-					
-					radio.checked = true;
-					action_clicked(id, accept);
-				}				
-			}
-			
-			function accept_all() {
-				set_all(true);
-			}
-			
-			function cancel_all() {
-				set_all(false);
-			}
-			
-			for (var i = 1; i < ids.length; i++) {
+			if (accept)
+				div.style.display = "none";
+			else
+				div.style.display = "";
+		}
+		
+		function set_all(accept) {
+			for (i = 1; i < ids.length; i++) {
 				var id = ids[i];
+				
+				if (accept)
+					radio = document.getElementById("accept_" + id);
+				else
+					radio = document.getElementById("cancel_" + id);
+				
+				radio.checked = true;
+				action_clicked(id, accept);
+			}				
+		}
+		
+		function accept_all() {
+			set_all(true);
+		}
+		
+		function cancel_all() {
+			set_all(false);
+		}
+		
+		for (var i = 1; i < ids.length; i++) {
+			var id = ids[i];
 
-				/* Check radio state */
-				cancel = document.getElementById("cancel_" + id);
-				action_clicked(id, !cancel.checked);
-			}
-		</script>
-	{% endif %}
-</div>
+			/* Check radio state */
+			cancel = document.getElementById("cancel_" + id);
+			action_clicked(id, !cancel.checked);
+		}
+	</script>
+{% endif %}
 {% endblock %}

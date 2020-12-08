@@ -1,35 +1,52 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<link rel="icon" type="image/png" href="images/favicon.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">		
-		<title>{% block title %}Cover :: {{ __('Study Association for Artificial Intelligence and Computing Science') }}{% endblock %}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="shortcut icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-64x64.png" sizes="64x64">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-128x128.png" sizes="128x128">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-192x192.png" sizes="192x192">
+		<link rel="apple-touch-icon" href="filename='images/apple-touch-icon-180x180.png">
+		<meta name="msapplication-TileImage" content="images/favicon-270x270.png">
+	
+		<title>{% block title %}Cover{% endblock %}</title>
 		
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
 		{% for stylesheet in view.stylesheets %}
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
 		{% endfor %}
-		
+	</head>
+	<body class="has-navbar-fixed-top">
+		<nav class="navbar is-cover is-fixed-top" role="navigation" aria-label="main navigation">
+			<div class="container">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="/">
+						<img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<main class="main">
+			{% block page %}
+				<article class="section">
+					<div class="container is-content-optimized">
+						{% block content %}{% endblock %}
+					</div>
+				</article>
+			{% endblock %}
+		</main>
+
+		{{ include('@layout/widgets/footer.twig', {'render_sponsors': false}) }}
+
 		{% for script in view.scripts %}
 		<script src="{{ script }}"></script>
 		{% endfor %}
-	</head>
-	<body class="without-menu">
-		<div class="world">
-			<div class="header clearfix">
-				<a href="/"><img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="logo"></a>
-			</div>
-			<div class="container clearfix">
-				<div class="center column" id="contents">
-					{% block content %}{% endblock %}
-				</div>
-			</div>
-			<div class="footer">
-				<a href="show.php?id=17">{{ __('Contact') }}</a>
-				&mdash; <a href="//sd.svcover.nl/Privacy%20Statement/Privacy%20statement.pdf">{{ __('Privacy statement') }}</a>
-			</div>
-		</div>
 
 		{% if view.layout.has_alert %}
 			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>

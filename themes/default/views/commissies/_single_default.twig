@@ -1,0 +1,40 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+	{{ iter.naam }} – {{ parent() }}
+{% endblock %}
+
+{% block page %}
+<article class="section committee-single">
+<div class="container is-content-optimized block">
+
+{% block committee_controls %}{% endblock %}
+
+<header class="committee-header cover-thumbnail {% if iter.photo %}has-image{% endif %}">
+	<div class="overlay is-bottom">
+		<div class="name boxed-title-wrapper">
+			<h1 class="boxed-title is-size-4 is-size-5-mobile">
+				{{ iter.naam }}
+			</h1>
+		</div>
+	</div>
+	{% if iter.photo %}
+		<figure class="image">
+			<img src="{{ iter.photo.url }}"  alt="{{ __('Photo of %s')|format(iter.naam) }}">
+		</figure>
+	{% endif %}
+</header>
+
+{% block committee_header %}{% endblock %}
+
+{% block committee_interest %}{% endblock %}
+
+{% block committee_info %}{% endblock %}
+
+{% block committee_events %}{% endblock %}
+
+{% block committee_contact %}{% endblock %}
+
+</div>
+</article>
+{% endblock %}

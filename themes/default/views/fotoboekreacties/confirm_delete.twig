@@ -1,15 +1,23 @@
 {% extends '@layout/layout.twig' %}
 
 {% block content %}
-<h1>{{ __('Remove comment') }}</h1>
-<div class="messageBox">
-	<form id="confirm-delete-comment-form" method="post" action="{{ controller.link_to_delete(iter)|e('html_attr') }}" class="vertical-form">
-		{{ html_nonce('delete', iter) }}
-		<p>{{ __('Are you certain you want to delete the comment posted by <em>%s</em>?')|format(iter.auteur|personal_full_name|e('html'))|raw }}</p>
-		<div>
-			<button type="submit" class="button">{{ __('Remove comment') }}</button>
-			<a href="{{ controller.link_to_read(iter) }}">{{ __('Return to photo') }}</a>
-		</div>
-	</form>
+<div class="modal is-static">
+	<div class="modal-card">
+		<form method="post" action="{{ controller.link_to_delete(iter) }}">
+			{{ html_nonce('delete', iter) }}
+			<header class="modal-card-head">
+				<p class="modal-card-title">{{ __('Delete comment') }}</p>
+			</header>
+			<section class="modal-card-body">
+				<div class="field">
+					<p>{{ __('Are you sure you want to delete the comment posted by <em>%s</em>?')|format(iter.auteur|personal_full_name|e('html'))|raw }}</p>
+				</div>
+			</section>
+			<footer class="modal-card-foot">
+				<a href="{{ controller.link_to_read(iter) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
+				<button type="submit" class="button is-danger">{{ __('Delete comment') }}</button>
+			</footer>
+		</form>
+	</div>
 </div>
 {% endblock %}

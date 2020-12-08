@@ -2,6 +2,7 @@
 require_once 'include/form.php';
 require_once 'include/markup.php';
 require_once 'include/svg.php';
+require_once 'include/send-mailinglist-mail.php';
 
 class MailinglijstenView extends CRUDView
 {
@@ -94,11 +95,18 @@ class MailinglijstenView extends CRUDView
 
 	public function render_embedded(DataIterMailinglist $list, DataModelMailinglist $model)
 	{
-		return $this->render('embedded.twig', compact('list', 'embedded'));
+		return $this->render('embedded.twig', compact('list'));
 	}
 
 	public function barchart($data)
 	{
-		return \cover\svg\barchart($data);
+		return \Cover\svg\barchart($data);
+	}
+
+	public function readable_status($code)
+	{
+		if ($code == 0)
+			return 'Success';
+		return \Cover\email\mailinglist\get_error_message($code);
 	}
 }

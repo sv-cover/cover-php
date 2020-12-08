@@ -1,14 +1,55 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Not found') ~ ' :: ' ~ parent() %}
+{% block title __('Not found') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Not found') }}</h1>
-<div class="messageBox">
-	<section class="error-section">
-		<p>{{ exception.message }}</p>
-	</section>
-	<p>{{ __('Do you think this is a mistake? Report it to the AC/DCee at acdcee@svcover.nl!') }}</p>
-	<p class="align-center"><a href="index.php">{{ __('Back to homepage') }}</a></p>
-</div>
+<article>
+    <header class="block">
+        <h1 class="title is-1">{{ __('404: Oops!') }}</h1>
+        <p class="subtitle is-4">{{ __("We couldn't find this page…") }}</p>
+
+        <form method="get" action="search.php">
+            <div class="field has-addons">
+                <div class="control is-expanded">
+                    <label for="field-query" class="is-sr-only">{{ __('Search query') }}</label>
+                    <input class="input is-medium" type="search" name="query" id="field-query" placeholder="{{ __('Type here to search…')|e('html_attr') }}" tabindex="1" autofocus>
+                </div>
+                <div class="control">
+                    <button class="button is-medium" type="submit">
+                        <span class="icon">
+                            <i class="fas fa-search"></i>
+                            <span class="is-sr-only">{{ __('Search') }}</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </header>
+    <section class="block">
+        <h2 class="title is-5">{{ __('Are you perhaps looking for information about…') }}</h2>
+        <ul class="columns-vertical has-2-tablet is-gapless">
+            <li>
+                <a href="/agenda.php">{{ __('Events') }}</a>
+            </li>
+            <li>
+                <a href="/fotoboek.php">{{ __('Photos') }}</a>
+            </li>
+            <li>
+                <a href="/commissies.php">{{ __('Committees') }}</a>
+            </li>
+            <li>
+                <a href="/commissies.php?commissie=board">{{ __('Board') }}</a>
+            </li>
+            <li>
+                <a href="/index.php">{{ __('Homepage') }}</a>
+            </li>
+            <li>
+                <a href="/show.php?id=17">{{ __('Contact') }}</a>
+            </li>
+        </ul>
+        <div class="content">
+        	<p>{{ __('Do you think this page is gone by mistake? Report it to the AC/DCee at %s!')|e('html')|format('<a href="mailto:acdcee@svcover.nl">acdcee@svcover.nl</a>')|raw }}</p>
+        </div>
+    </section>
+</article>
 {% endblock %}

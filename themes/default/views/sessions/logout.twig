@@ -1,12 +1,10 @@
 {% extends '@layout/layout.twig' %}
 
 {% block title %}
-	{{ __('Logout') }} :: {{ parent() }}
+	{{ __('Logout') }} – {{ parent() }}
 {% endblock %}
 
 {% block content %}
-<h1>{{ __('Logout') }}</h1>
-<div id="logout-form" class="messageBox">
-	<p>{{ __('Your session has been ended.') }}</p>
-</div>
+<h1 class="title">{{ __('Logout') }}</h1>
+<p>{{ __('Your session has been ended.') }}</p>
 {% endblock %}

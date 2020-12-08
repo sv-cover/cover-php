@@ -1,8 +1,18 @@
-<div id="path" class="fotoboek_path">{{ view.path(book, photo is defined ? photo : null)|join(' / ')|raw }}</div>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>{{ view.path(book, photo is defined ? photo : null)|join('')|raw }}</ul>
+</nav>
+
 
 {% if photo is defined and photo.book.id != book.id %}
-<div class="fotoboek_path original_path">
-	{{ __('This photo originates from') }}
-	{{ view.path(photo.book, photo)|join(' / ')|raw }}
-</div>	
+<div class="level">
+    <div class="level-left">
+        {# Ugh. This should be done better. #}
+        <p>{{ __('This photo originates from') }}: &nbsp;</p>
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+            <ul>
+                {{ view.path(photo.book, photo)|join('')|raw }}
+            </ul>
+        </nav>	
+    </div>
+</div>
 {% endif %}

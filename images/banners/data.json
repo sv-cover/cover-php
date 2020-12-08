@@ -1,16 +1,12 @@
 [
-	{"filename":"tno.jpg","url":"https://www.tno.nl/nl/career/","type":"main-sponsor"},
-	{"filename":"belsimpel.png","url":"https://werkenbijbelsimpel.nl/","type":"main-sponsor"},
-	{"filename":"axonlogo.png","url":"http://www.axonline.nl/", "weight": 1},
-	{"filename":"invariant.png","url":"https://www.invariant.nl/", "weight": 1},
-	{"filename":"nsvki.png","url":"http://nsvki.nl/", "weight": 1},
-    {"filename":"asml.jpg","url":"https://www.workingatasml.com/students?ppc=CAM-104"},
-    {"filename":"dataprovider.png","url":"https://www.dataprovider.com/careers/"},
-	{"filename":"ing.png","url":"https://www.ing.jobs/Netherlands/Home.htm"},
-	{"filename":"nedap.png", "url":"https://lifeatnedap.com/"},
-    {"filename":"thefactore.png", "url":"https://tfe.nl/vacatures/"},
-	{"filename":"gat_van_groningen.jpg", "url":"http://tgatvangroningen.nl/"},
-    {"filename":"rdw.png", "url": "https://www.werkenbijderdw.nl"},
-    {"filename":"tkp.png", "url": "https://www.werkenbijtkp.nl/vakgebieden/ict?utm_source=cover&utm_medium=website&utm_campaign=studievereniging"},
-	{"filename":"duo.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"}
+    {"filename":"belsimpel.png?redesign", "filename_dark":"belsimpel_dark.png","url":"https://werkenbijbelsimpel.nl/","type":"main-sponsor"},
+    {"filename":"axonlogo.png?redesign", "url":"http://www.axonline.nl/", "weight": 1},
+    {"filename":"invariant.png?redesign", "url":"https://www.invariant.nl/", "weight": 1},
+    {"filename":"nsvki.png?redesign", "url":"http://nsvki.nl/", "weight": 1},
+    {"filename":"asml.png?redesign", "filename_dark":"asml_dark.png","url":"https://www.asml.com/students"},
+    {"filename":"dataprovider.png?redesign", "filename_dark":"dataprovider_dark.png","url":"https://www.dataprovider.com/careers/"},
+    {"filename":"rdw.png?redesign", "filename_dark":"rdw_dark.png", "url": "https://www.werkenbijderdw.nl"},
+    {"filename":"duo.png?redesign", "filename_dark":"duo_dark.png", "url": "https://duo.nl/organisatie/werken-bij-duo/"},
+    {"filename":"exellys.png?redesign", "filename_dark":"exellys_dark.png", "url": "https://www.exellys.com/en-GB/tech-jobs-and-careers/"},
+    {"filename":"accenture.png?redesign", "filename_dark":"accenture_dark.png", "url": "https://www.werkenbijaccenture.nl/?utm_medium=Referral%20&utm_source=cover&utm_campaign=Company_page&utm_content=Home_page"}
 ]

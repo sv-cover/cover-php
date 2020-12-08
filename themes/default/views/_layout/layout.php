@@ -5,60 +5,29 @@ class LayoutViewHelper
 	public function top_menu()
 	{
 		$menus = [];
-		
-		$menus['home'] = [
-			'label' => __('Home'),
-			'url' => 'index.php'
-		];
 
-		$menus['vereniging'] = [
-			'label' => __('Association'),
+		$menus['activities'] = [
+			'label' => __('Activities'),
 			'submenu' => [
 				[
-					'url' => 'commissies.php?commissie=board',
-					'label' => __('Governing Board')
+					'url' => 'agenda.php',
+					'label' => __('Calendar'),
+					'title' => __('Upcoming activities')
 				],
 				[
-					'url' => 'besturen.php',
-					'label' => __('Former Boards')
-				],
-				[
-					'url' => 'commissies.php',
-					'label' => __('Committees')
-				],
-				[
-					'url' => 'workinggroups.php',
-					'label' => __('Working groups')
-				],
-				[
-					'url' => 'show.php?id=28',
-					'label' => __('Sister unions')
-				],
-				[
-					'url' => 'show.php?id=18',
-					'label' => __('Become a member/donor')
-				],
-				[
-					'url' => 'show.php?id=30',
-					'label' => __('Documents'),
-				],
-				[
-					'url' => 'weblog.php',
-					'label' => __('Weblog')
+					'url' => 'fotoboek.php',
+					'label' => __('Photos'),
+					'title' => __('Photos of activities of Cover.')
 				]
 			]
 		];
 
-		$menus['leden'] = [
-			'label' => __('Members'),
-			'submenu' => [
-				['url' => 'almanak.php', 'label' => __('Almanac')],
-				['url' => 'https://wiki.svcover.nl/', 'target' => '_blank', 'label' => __('Wiki')],
-				['url' => 'https://sd.svcover.nl/', 'target' => '_blank', 'label' => __('Documents & Templates')],
-				['url' => 'stickers.php', 'label' => __('Sticker map')],
-				['url' => 'https://merchandise.svcover.nl/', 'target' => '_blank', 'label' => __('Merchandise')]
-			]
-		];
+		// $menus['leden'] = [
+		// 	'label' => __('Members'),
+		// 	'submenu' => [
+
+		// 	]
+		// ];
 
 		$menus['studie'] = [
 			'label' => __('Education'),
@@ -83,44 +52,184 @@ class LayoutViewHelper
 			]
 		];
 
-		$menus['forum'] = [
-			'url' => 'forum.php',
-			'label' => __('Forum')
+		$menus['vereniging'] = [
+			'label' => __('Association'),
+			'submenu' => [
+				[
+					'url' => 'commissies.php?commissie=board',
+					'label' => __('Governing Board')
+				],
+				[
+					'url' => 'besturen.php',
+					'label' => __('Former Boards')
+				],
+				[
+					'url' => 'commissies.php',
+					'label' => __('Committees')
+				],
+				[
+					'url' => 'show.php?id=28',
+					'label' => __('Sister unions')
+				],
+				[
+					'url' => 'show.php?id=18',
+					'label' => __('Become a member/contributor')
+				],
+			]
 		];
 
-		$menus['fotoboek'] = [
-			'url' => 'fotoboek.php',
-			'label' => __('Photos'),
-			'title' => __('Photos of activities of Cover.')
-		];
+		// $menus['forum'] = [
+		// 	'url' => 'forum.php',
+		// 	'label' => __('Forum')
+		// ];
+
+		// $menus['fotoboek'] = [
+		// 	'url' => 'fotoboek.php',
+		// 	'label' => __('Photos'),
+		// 	'title' => __('Photos of activities of Cover.')
+		// ];
 
 		$menus['contact'] = [
 			'label' => __('Contact'),
 			'url' => 'show.php?id=17'
 		];
 
-		$menus['admin'] = [
-			'label' => __('Tools'),
-			'title' => __('These are tools available to you because you are a member of a committee.'),
-			'className' => 'authorized-only',
-			'submenu' => []
+		// $menus['admin'] = [
+		// 	'label' => __('Tools'),
+		// 	'title' => __('These are tools available to you because you are a member of a committee.'),
+		// 	'className' => 'authorized-only',
+		// 	'submenu' => []
+		// ];
+		
+		// Filter out any empty menu items (I'm looking at you, admin menu!)
+		$menus = array_filter($menus, function($menu) {
+			return isset($menu['url']) || !empty($menu['submenu']);
+		});
+
+		return $menus;
+	}
+
+	public function tools()
+	{
+		$tools = [];
+
+		$tools['internal'] = [
+			'label' => __(''),
+			'items' => [
+				[
+					'icon' => [
+						'fa' => 'fas fa-users',
+						'color' => 'cover',
+					],
+					'url' => 'almanak.php',
+					'label' => __('Members')
+				],
+				[
+					'icon' => [
+						'fa' => 'fas fa-comments',
+						'color' => 'cover',
+					],
+					'url' => 'forum.php',
+					'label' => __('Forum')
+				],
+				[
+					'icon' => [
+						'fa' => 'fas fa-map-marked-alt',
+						'color' => 'cover',
+					],
+					'url' => 'stickers.php',
+					'label' => __('Sticker map')
+				],
+			]
 		];
 
+		$tools['external'] = [
+			'label' => __('Tools'),
+			'items' => [
+				[
+					'icon' => [
+						'fa' => 'fas fa-book',
+						'color' => 'cover',
+					],
+					'url' => 'https://wiki.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Wiki')
+				],
+				[
+					'icon' => [
+						'img' => '/images/applications/sd.png',
+					],
+					'url' => 'https://sd.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Documents & Templates')
+				],
+				[
+					'icon' => [
+						'fa' => 'fas fa-tshirt',
+						'color' => 'cover',
+					],
+					'url' => 'https://merchandise.svcover.nl/',
+					'target' => '_blank', 
+					'label' => __('Merchandise')
+				],
+				[
+					'icon' => [
+						'fa' => 'fas fa-graduation-cap',
+						'color' => 'cover',
+					],
+					'url' => 'https://studysupport.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Exams & Summaries')
+				],
+				[
+					'icon' => [
+						'img' => '/images/applications/tutoring.svg',
+					],
+					'url' => 'https://tutoring.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Tutoring')
+				]
+			]
+		];
+
+		$tools['admin'] = [
+			'label' => __('Committee'),
+			'items' => []
+		];
+
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
+			get_identity()->member_in_committee(COMMISSIE_EASY))
+			$tools['admin']['label'] = __('Admin');
+
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
-			$menus['admin']['submenu'][] = [
+			$tools['external']['items'][] = [
+				'icon' => [
+					'img' => '/images/applications/mail.svg',
+				],
 				'url' => 'https://webmail.svcover.nl/',
 				'label' => __('Webmail'),
 				'target' => '_blank',
 				'title' => __('Webmail for Cover email accounts.')
 			];
 
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-mail-bulk',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'mailinglijsten.php',
 				'label' => __('Mailing lists'),
 				'title' => __('Manage your committee\'s mailing lists.')
 			];
 
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-list-alt',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'signup.php',
 				'label' => __('Forms'),
 				'title' => __('Manage your committee\'s sign-up forms.')
@@ -130,53 +239,67 @@ class LayoutViewHelper
 		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-plus',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'show.php?view=create',
 				'label' => __('Make a page'),
 				'title' => __('Make a new content page on the website.')
 			];
 
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-user-plus',
+					'color' => 'cover',
+				],
+				'icon' => [
+					'fa' => 'fas fa-calendar',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'lidworden.php?view=pending-confirmation',
 				'label' => __('Pending registrations'),
 				'title' => __('People who signed up for Cover, but did not yet confirm their email address.')
 			];
-
-			// $menus['admin']['submenu'][] = [
-			// 	'url' => 'forum.php?admin=forums',
-			// 	'label' => 'Forum'
-			// ];
 		}
 
 		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-			$menus['admin']['submenu'][] = [
-				'url' => 'agenda.php?agenda_moderate',
-				'label' => __('Calendar'),
-				'title' => __('Moderate calendar items.')
-			];
-
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-user-friends',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'actieveleden.php',
-				'label' => __('Active Members'),
+				'label' => __('Active members'),
 				'title' => __('All active committee members according to the website.')
 			];
 		}
+
 		
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
-			$menus['admin']['submenu'][] = [
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-cog',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
 				'url' => 'settings.php',
 				'label' => __('Settings'),
 				'title' => __('Manage a few of the website\'s settings.')
 			];
 		}
-		
+
 		// Filter out any empty menu items (I'm looking at you, admin menu!)
-		$menus = array_filter($menus, function($menu) {
-			return isset($menu['url']) || !empty($menu['submenu']);
+		$tools = array_filter($tools, function($tool) {
+			return !empty($tool['items']);
 		});
 
-		return $menus;
+		return $tools;
 	}
 
 	public function agenda()
@@ -214,6 +337,12 @@ class LayoutViewHelper
 		return array_filter($model->get_proposed(), [get_policy($model), 'user_can_moderate']);
 	}
 
+
+	public function color_mode()
+	{
+		return $_COOKIE['cover_color_mode'] ?? 'light';
+	}
+
 	public function has_alert()
 	{
 		return isset($_SESSION['alert']) && $_SESSION['alert'] != '';
@@ -230,6 +359,8 @@ class LayoutViewHelper
 
 	public function promotional_header()
 	{
+		return false;
+
 		if (!get_auth()->logged_in())
 			return 'promotional-header.twig';
 		

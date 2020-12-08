@@ -1,0 +1,31 @@
+{% set members = iter.members %}
+{% if members|length > 0 %}
+	<ul class="members-list columns is-mobile is-centered is-balanced has-{{ members|length + iter.mascots|length }}">
+	{% for member in members %}
+		{% if user_can_read member %}
+			<li class="profile column is-half-mobile is-one-third-tablet is-one-quarter-desktop">
+				<a href="profiel.php?lid={{ member.id }}">
+					<figure class="image is-128x128">
+						<img class="is-rounded" width="128" height="128" src="{{ link('foto.square', member=member, width=256) }}" alt="{{ __('Photo of %s')|format(member|full_name) }}">
+					</figure>
+					<div class="profile-info">
+						<span class="name">{{ member|personal_full_name }}</span>
+						<span class="function">{{ member.functie|translate_parts(',/') }}</span>
+					</div>
+				</a>
+			</li>
+		{% endif %}
+	{% endfor %}
+	{% for mascot in iter.mascots %}
+		<li class="profile mascot column is-half-mobile is-one-third-tablet is-one-quarter-desktop">
+			<figure class="image is-128x128">
+				<img class="is-rounded" width="128" height="128" src="{{ mascot.photo }}" alt="{{ __('Photo of %s')|format(mascot.name) }}">
+			</figure>
+			<div class="profile-info">
+				<span class="name">{{ mascot.name }}</span>
+				<span class="function">{{ mascot.functie|translate_parts(',/') }}</span>
+			</div>
+		</li>
+	{% endfor %}
+	</ul>
+{% endif %}

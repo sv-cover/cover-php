@@ -4,12 +4,12 @@ class CommissiesView extends CRUDView
 {
 	protected $__file = __FILE__;
 
-	public function stylesheets()
-	{
-		return array_merge(
-			parent::stylesheets(),
-			[get_theme_data('styles/commissies.css')]);
-	}
+	// public function stylesheets()
+	// {
+	// 	return array_merge(
+	// 		parent::stylesheets(),
+	// 		// [get_theme_data('styles/commissies.css')]);
+	// }
 
 	public function get_committee_battle_banner_photos($iter)
 	{
@@ -57,12 +57,7 @@ class CommissiesView extends CRUDView
 	public function commissioner_of_internal_affairs()
 	{
 		$model = get_model('DataModelCommissie');
-		return $model->get_lid_for_functie(COMMISSIE_BESTUUR, 'commissaris intern');
-	}
-
-	public function render_working_groups($iters)
-	{
-		return $this->twig->render('working_groups.twig', compact('iters'));
+		return $model->get_lid_for_functie(COMMISSIE_BESTUUR, 'commissioner of internal affairs');
 	}
 
 	public function render_archive($iters)

@@ -1,13 +1,13 @@
 {% extends '@layout/layout.twig' %}
 
 {% block content %}
-<h1>{{ __('Membership application form') }}</h1>
-<div class="messageBox">
+<article class="content">
+    <h1 class="title">{{ __('Membership application form') }}</h1>
 	<p>{{ __('Your email address is already known to us, which means you are already in our member administration! In this case it is easier to quickly contact the secretary of Cover via secretary@svcover.nl.') }}</p>
-	<div class="call-to-action-or-block">
-		<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
-		<span class="separator">{{ __('or') }}</span>
-		<a href="wachtwoordvergeten.php" class="button reset-password">{{ __('Reset your password') }}</a>
-	</div>
-</div>
+    <p>
+		<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" class="button is-primary is-fullwidth">{{ __('Log in') }}</a>
+		<div class="divider is-fullwidth">{{ __('or') }}</div>
+		<a href="wachtwoordvergeten.php" class="button  is-fullwidth">{{ __('Reset your password') }}</a>
+    </p>
+</article>
 {% endblock %}

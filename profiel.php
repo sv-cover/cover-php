@@ -182,7 +182,6 @@ class ControllerProfiel extends Controller
 			array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
 			array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
 			array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
-			array('name' => 'taal', 'function' => array($this, '_check_language'))
 		);
 		
 		$data = check_values($check, $errors);
@@ -290,9 +289,9 @@ class ControllerProfiel extends Controller
 		{
 			send_mail_with_attachment(
 				'acdcee@svcover.nl',
-				'New yearbook photo for ' . $iter['naam'],
-				"{$iter['naam']} would like to use the attached photo as their new profile picture.",
-				sprintf('Reply-to: %s <%s>', $iter['naam'], $iter['email']),
+				'New yearbook photo for ' . $iter['full_name'],
+				"{$iter['full_name']} would like to use the attached photo as their new profile picture.",
+				sprintf('Reply-to: %s <%s>', $iter['full_name'], $iter['email']),
 				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
 
 			$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
@@ -309,17 +308,15 @@ class ControllerProfiel extends Controller
 
 		$mailing_list = $model->get_iter($_POST['mailing_list_id']);
 
-		switch ($_POST['action'])
-		{
-			case 'subscribe':
-				if (get_policy($model)->user_can_subscribe($mailing_list))
-					$subscription_model->subscribe_member($mailing_list, $iter);
-				break;
+		$subscribe = (empty($_POST['action']) && !empty($_POST['subscribe']) && $_POST['subscribe'] == 'yes') 
+				  || (!empty($_POST['action']) && $_POST['action'] == 'subscribe');
 
-			case 'unsubscribe':
-				if (get_policy($model)->user_can_unsubscribe($mailing_list))
-					$subscription_model->unsubscribe_member($mailing_list, $iter);
-				break;
+		if ($subscribe) {
+			if (get_policy($model)->user_can_subscribe($mailing_list))
+				$subscription_model->subscribe_member($mailing_list, $iter);
+		} else {
+			if (get_policy($model)->user_can_unsubscribe($mailing_list))
+				$subscription_model->unsubscribe_member($mailing_list, $iter);	
 		}
 
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=mailing_lists');

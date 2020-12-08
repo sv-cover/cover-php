@@ -67,19 +67,43 @@
 
 		public function run_likes(DataIter $iter)
 		{
-			if (isset($_POST['action']))
+			$action = null;
+			$response_json = false;
+
+			if ($_SERVER["CONTENT_TYPE"] === 'application/json')
 			{
-				switch ($_POST['action']) {
-					case 'like':
-						$iter->like(get_identity()->member());
-						break;
-					case 'unlike':
-						$iter->unlike(get_identity()->member());
-						break;
+				$response_json = true;
+				$json = file_get_contents('php://input');
+				$data = json_decode($json);
+				if (isset($data->action))
+					$action = $data->action;
+			}
+			elseif (isset($_POST['action']))
+				$action = $_POST['action'];
+
+			if (get_auth()->logged_in() && isset($action))
+			{
+				try {
+					switch ($action) {
+						case 'like':
+							$iter->like(get_identity()->member());
+							break;
+						case 'unlike':
+							$iter->unlike(get_identity()->member());
+							break;
+					}
+				} catch (Exception $e) {
+					// Don't break duplicate requests
 				}
 			}
 
-			return $this->run_read($iter);
+			if ($response_json)
+				return $this->view->render_json([
+					'liked' => get_auth()->logged_in() && $iter->is_liked_by(get_identity()->member()),
+					'likes' => $iter->get_likes(),
+				]);
+
+			return $this->view->redirect($this->link_to_read($iter));
 		}
 	}
 
@@ -94,19 +118,55 @@
 			$this->view = new View($this);
 		}
 
+		public function link_to_photo()
+		{
+			$arguments = [
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			];
+
+			return parent::link($arguments);
+		}
+
 		public function run()
 		{
-			if (get_auth()->logged_in() && isset($_POST['action']) && $_POST['action'] == 'toggle')
-				$this->model->toggle($this->photo, get_identity()->get('id'));
+			$action = null;
+			$response_json = false;
 
-			if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+			if ($_SERVER["CONTENT_TYPE"] === 'application/json')
+			{
+				$response_json = true;
+				$json = file_get_contents('php://input');
+				$data = json_decode($json);
+				if (isset($data->action))
+					$action = $data->action;
+			}
+			elseif (isset($_POST['action']))
+				$action = $_POST['action'];
+
+			if (get_auth()->logged_in() && isset($action))
+			{
+				try {
+					switch ($action) {
+						case 'like':
+							$this->model->like($this->photo, get_identity()->get('id'));
+							break;
+						case 'unlike':
+							$this->model->unlike($this->photo, get_identity()->get('id'));
+							break;
+					}
+				} catch (Exception $e) {
+					// Don't break duplicate requests
+				}
+			}
+
+			if ($response_json)
 				return $this->view->render_json([
 					'liked' => get_auth()->logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
-			}
-			else
-				return $this->view->redirect('fotoboek.php?photo=' . $this->photo->get_id());
+
+			return $this->view->redirect($this->link_to_photo());
 		}
 	}
 
@@ -154,6 +214,33 @@
 			return $this->model->get_for_photo($this->photo);
 		}
 
+		public function get_data_for_iter(DataIterPhotobookFace $iter)
+		{
+			if ($iter['lid_id'])
+				$suggested_member = null;
+			else
+				$suggested_member = $iter['suggested_member'];
+
+			if ($suggested_member && !get_policy($suggested_member)->user_can_read($suggested_member))
+				$suggested_member = null;
+	
+			return [
+				'id' => $iter['id'],
+				'photo_id' => $iter['foto_id'],
+				'x' => $iter['x'],
+				'y' => $iter['y'],
+				'h' => $iter['h'],
+				'w' => $iter['w'],
+				'member_id' => $iter['lid_id'],
+				'member_full_name' => $iter['lid'] ? member_full_name($iter['lid'], BE_PERSONAL) : null,
+				'member_url' => $iter['lid_id'] ? sprintf('profiel.php?lid=%d', $iter['lid_id']) : null,
+				'custom_label' => $iter['custom_label'],
+				'suggested_id' => $suggested_member ? $suggested_member['id'] : null,
+				'suggested_full_name' => $suggested_member ? member_full_name($suggested_member, BE_PERSONAL) : null,
+				'suggested_url' => $suggested_member ? sprintf('profiel.php?lid=%d', $suggested_member['id']) : null,
+			];
+		}
+
 		public function link(array $arguments)
 		{
 			$arguments['photo'] = $this->photo->get_id();
@@ -177,6 +264,16 @@
 			$this->view = View::byName('fotoboek', $this);
 		}
 
+		public function link_to_photo()
+		{
+			$arguments = [
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			];
+
+			return parent::link($arguments);
+		}
+
 		protected function run_impl()
 		{
 			if (!get_auth()->logged_in())
@@ -191,6 +288,8 @@
 					$this->model->mark_hidden($this->photo, $member);
 				else
 					$this->model->mark_visible($this->photo, $member);
+	
+				return $this->view->redirect($this->link_to_photo());
 			}
 			
 			return $this->view->render_privacy($this->photo, $this->model->is_visible($this->photo, $member) ? 'visible' : 'hidden');
@@ -368,7 +467,7 @@
 			}
 		}
 
-		private function _view_update_photo(DataIterPhoto $photo)
+		private function _view_update_photo(DataIterPhoto $photo, DataIterPhotobook $book)
 		{
 			if (!$this->policy->user_can_update($photo->get_book()))
 				throw new UnauthorizedException();
@@ -377,10 +476,10 @@
 			{
 				$photo->set('beschrijving', $_POST['beschrijving']);
 				$this->model->update($photo);
-				$this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
+				return $this->view->redirect($this->link(['book' => $book->get_id(), 'photo' => $photo->get_id()]));
 			}
 			
-			return $this->view->redirect('fotoboek.php?photo=' . $photo->get_id());
+			return $this->view->render_update_photo($book, $photo, null, []);
 		}
 
 		private function _view_list_photos(DataIterPhotobook $book)
@@ -468,7 +567,7 @@
 				if (is_dir($entry))
 					$entries[] = path_subtract($entry, get_config_value('path_to_photos'));
 
-			sort($entries);
+			rsort($entries);
 			return $this->view->render_json($entries);
 		}
 		
@@ -553,16 +652,25 @@
 		{
 			if (!$this->policy->user_can_update($book))
 				throw new UnauthorizedException();
+
+			if (!isset($_GET['photo_id']))
+				throw new RuntimeException('photo parameter missing');
+
+			$photos = [];
+
+			foreach ($_GET['photo_id'] as $id)
+				if ($photo = $this->model->get_iter($id))
+					$photos[] = $photo;
 			
 			if ($this->_form_is_submitted('delete_photos'))
 			{
-				if (isset($_POST['photo']))
-					foreach ($_POST['photo'] as $id)
-						if ($photo = $this->model->get_iter($id))
-							$this->model->delete($photo);
+				foreach ($photos as $photo)
+					$this->model->delete($photo);
+
+				return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
 			}
 			
-			return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
+			return $this->view->render_delete_photos($book, $photos);
 		}
 
 		protected function _view_mark_read(DataIterPhotobook $book)
@@ -900,7 +1008,7 @@
 				case 'update_photo':
 					if (!$photo)
 						throw new NotFoundException('Missing photo parameter');
-					return $this->_view_update_photo($photo);
+					return $this->_view_update_photo($photo, $book);
 
 				case 'update_photo_order':
 					return $this->_view_update_photo_order($book);

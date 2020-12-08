@@ -1,29 +1,42 @@
-{% extends '@layout/layout.twig' %}
+{% extends './_single_layout.twig' %}
 
-{% block title __('Archives of %s')|format(list.naam) ~ ' :: ' ~ __('Mailing lists') ~ ' :: ' ~ parent() %}
+{% set iter = list %}
+{% set active_tab = 'archive' %}
 
-{% block content %}
-<h1><a href="{{ controller.link_to_index()|e('html_attr') }}">{{ __('Mailing lists') }}</a> / <a href="{{ controller.link_to_read(list)|e('html_attr') }}">{{ list.naam }}</a> / {{ __('Archived messages') }}</h1>
-<div class="messageBox">
-	<table class="full-width-table">
+{% block tab_content %}
+<section id="mailing-list-archive" class="is-active">
+	<h2 class="is-sr-only">{{ __('Message archive')}}</h2>
+	<table class="table is-fullwidth">
 		<thead>
 			<tr>
 				<th>{{ __('Subject') }}</th>
 				<th>{{ __('Sender') }}</th>
 				<th>{{ __('Date') }}</th>
-				<th width="40">{{ __('Status') }}</th>
+				<th class="has-text-right">{{ __('Status') }}</th>
 			</tr>
 		</thead>
 		<tbody>
 		{% for message in messages %}
 			<tr>
-				<td><a href="{{ link_to('archive_read', list, message_id=message.id)|e('html_attr') }}">{{ message.subject|default('<No subject>') }}</a></td>
-				<td>{{ message.sender }}</td>
-				<td>{{ message.verwerkt_op|date() }}</td>
-				<td class="numeric">{{ message.return_code }}</td>
+				<td class="is-truncated" title="{{ message.subject|default('<No subject>') }}">
+					<span><a href="{{ link_to('archive_read', list, message_id=message.id)|e('html_attr') }}">{{ message.subject|default('<No subject>') }}</a></span>
+				</td>
+				<td class="is-truncated" title="{{ message.sender }}"><span>{{ message.sender }}</span></td>
+				<td class="is-nowrap">{{ message.verwerkt_op|date() }}</td>
+				<td class="has-text-right" title="{{ view.readable_status(message.return_code) }}">
+					{{ message.return_code }}
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="4">
+					<p class="has-text-centered">
+						{{ __('No messages have been send to this list') }}
+					</p>
+				</td>
 			</tr>
 		{% endfor %}
 		</tbody>
 	</table>
-</div>
+</section>
 {% endblock %}

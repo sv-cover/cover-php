@@ -37,11 +37,11 @@ function text_excerpt($text, $keywords, $radius = 30,
 	while (preg_match($keyword_pattern, $text, $matches, PREG_OFFSET_CAPTURE, $offset))
 	{
 		$chunks[] = array(
-			find_word_bound($text, $matches[0][1] - $radius),
+			find_word_bound($text, max($matches[0][1] - $radius, 0)),
 			find_word_bound($text, $matches[0][1] + $radius));
 
 		// Continue searching after this match
-		$offset = $matches[0][1] + strlen($matches[0][0]);
+		$offset = $matches[0][1] + mb_strlen($matches[0][0]);
 	}
 
 	// Merge the chunks if they overlap
@@ -62,11 +62,15 @@ function text_excerpt($text, $keywords, $radius = 30,
 
 	foreach ($chunks as $chunk)
 	{
-		$excerpt = htmlspecialchars(substr($text, $chunk[0], $chunk[1] - $chunk[0] - 1));
+		$excerpt = htmlspecialchars(mb_substr($text, $chunk[0], $chunk[1] - $chunk[0] - 1));
 
 		// Highlight keywords
-		$excerpts[] = preg_replace($keyword_pattern, $highlight_format, $excerpt);
+		if (!empty($excerpt))
+			$excerpts[] = preg_replace($keyword_pattern, $highlight_format, $excerpt);
 	}
+
+	if (!empty($chunks) && end($chunks)[1] < mb_strlen($text))
+		$excerpts[] = '';
 
 	return utf8_encode(implode($glue, $excerpts));
 }
@@ -87,6 +91,6 @@ function parse_search_query($query)
 function normalize_search_rank($rank)
 {
 	$relevance = floatval($rank);
-			
-	return $relevance / ($relevance + 1);		
+
+	return $relevance / ($relevance + 1);
 }

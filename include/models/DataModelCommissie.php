@@ -129,6 +129,16 @@
 			else
 				return 'portrait';
 		}
+
+		public function is_type($type)
+		{
+			if ($type === 'committee')
+				return $this['type'] === DataModelCommissie::TYPE_COMMITTEE;
+			elseif ($type === 'working_group')
+				return $this['type'] === DataModelCommissie::TYPE_WORKING_GROUP;
+			else
+				return $this['type'] === DataModelCommissie::TYPE_OTHER;
+		}
 	}
 
 	/**
@@ -259,12 +269,18 @@
 		{
 			static $functies = array(
 				'Chairman' => 6,
+				'Chairwoman' => 6,
+				'Chairperson' => 6,
+				'Chair' => 6,
 				'Secretary' => 5,
 				'Treasurer' => 4,
 				'Commissioner of Internal Affairs' => 3,
 				'Commissioner of External Affairs' => 2,
 				'Commissioner of Educational Affairs' => 1,
 				'Vice-chairman' => 0,
+				'Vice-chairwoman' => 0,
+				'Vice-chairperson' => 0,
+				'Vice-chair' => 0,
 				'General Member' => -1);
 			
 			return $functies;
@@ -280,15 +296,19 @@
 			
 			return isset($functies[$functie]) ? $functies[$functie] : 0;
 		}
+
+		protected function _split_functie($functie)
+		{
+			$pattern = '/\s*[,\/&]|and\s*/';
+			return preg_split($pattern, $functie);
+		}
 		
 		protected function _sort_leden($a, $b)
 		{
-			$pattern = '/\s*[,\/]\s*/';
-
-			$afunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $a['functie'])));
-			$bfunctie = max(array_map(array($this, '_get_functie'), preg_split($pattern, $b['functie'])));
+			$afunctie = max(array_map(array($this, '_get_functie'), $this->_split_functie($a['functie'])));
+			$bfunctie = max(array_map(array($this, '_get_functie'), $this->_split_functie($b['functie'])));
 			
-			return $afunctie == $bfunctie ? 0 : $afunctie < $bfunctie ? 1 : -1;
+			return $bfunctie <=> $afunctie;
 		}
 		
 		private function _get_members(DataIterCommissie $committee)
@@ -342,8 +362,9 @@
 			$leden = $this->get_members($committee);
 
 			foreach ($leden as $lid)
-				if (strcasecmp($lid->get('functie'), $functie) === 0)
-					return $lid;
+				foreach ($this->_split_functie($lid->get('functie')) as $f)
+					if (strcasecmp(trim($f), $functie) === 0)
+						return $lid;
 
 			return null;
 		}

@@ -886,7 +886,7 @@
 			return $this->_rows_to_iters($rows);
 		}
 
-		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false)
+		public function get_photos_recursive(DataIterPhotobook $book, $max = 0, $random = false, $seed = null)
 		{
 			$query = sprintf("
 				WITH RECURSIVE book_children (id, visibility, parents) AS (
@@ -917,6 +917,9 @@
 
 			if ($max > 0)
 				$query .= sprintf(' LIMIT %d', $max);
+
+			if ($random && $seed !== null)
+				$this->db->query(sprintf("SET seed TO %s", $seed));
 
 			$rows = $this->db->query($query);
 			

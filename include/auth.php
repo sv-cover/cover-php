@@ -221,6 +221,12 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 		$session->update();
 	}
 
+	public function is_impersonating()
+	{
+		return $this->session_provider->logged_in()
+			&& ($this->get_override_member() !== null || $this->get_override_committees() !== null);
+	}
+
 	public function can_impersonate()
 	{
 		return true;

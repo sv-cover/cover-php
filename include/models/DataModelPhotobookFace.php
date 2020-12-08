@@ -46,10 +46,10 @@ class DataIterPhotobookFace extends DataIter
 	public function get_position()
 	{
 		return array(
-			'x' => 100 * $this->get('x'),
-			'y' => 100 * $this->get('y'),
-			'w' => 100 * $this->get('w'),
-			'h' => 100 * $this->get('h')
+			'x' => $this->get('x'),
+			'y' => $this->get('y'),
+			'w' => $this->get('w'),
+			'h' => $this->get('h')
 		);
 	}
 }

@@ -7,12 +7,12 @@
 		 * Configuration
 		 */
 
-		public function stylesheets()
-		{
-			return array_merge(parent::stylesheets(), [
-				get_theme_data('styles/fotoboek.css')
-			]);
-		}
+		// public function stylesheets()
+		// {
+		// 	return array_merge(parent::stylesheets(), [
+		// 		get_theme_data('styles/fotoboek.css')
+		// 	]);
+		// }
 
 		/**
 		 * Render methods, called from the controller
@@ -50,9 +50,21 @@
 			return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
 		}
 
+		public function render_update_photo(DataIterPhotobook $book, DataIterPhoto $photo, $success, array $errors)
+		{
+			return $this->render('photo_form.twig', compact('book', 'photo', 'errors'));
+		}
+
 		public function render_add_photos(DataIterPhotobook $book, $success, array $errors)
 		{
 			return $this->render('add_photos.twig', compact('book', 'success', 'errors'));
+		}
+
+		public function render_delete_photos(DataIterPhotobook $book, array $photos)
+		{
+			$action_url = $_SERVER['REQUEST_URI'];
+			$ids = $_GET['photo_id'];
+			return $this->render('confirm_delete_photos.twig', compact('book', 'photos', 'ids', 'action_url'));
 		}
 
 		public function render_competition()
@@ -159,9 +171,11 @@
 					$anchor = '';
 
 				if (get_policy($parents[$i])->user_can_read($parents[$i]))
-					$path[] = sprintf('<a href="fotoboek.php?book=%s%s">%s</a>',
+					$path[] = sprintf('<li%s><a href="fotoboek.php?book=%s%s"%s>%s</a></li>',
+						$i == count($parents) - 1 ? ' class="is-active"' : '',
 						urlencode($parents[$i]->get_id()),
 						$anchor,
+						$i == count($parents) - 1 ? ' aria-current="page"' : '',
 						markup_format_text($parents[$i]['titel']));
 				else
 					$path[] = markup_format_text($parents[$i]['titel']);
@@ -181,7 +195,7 @@
 				$subtitle[] = sprintf(_ngettext('%d photo', '%d photos', $book['num_photos']), $book['num_photos']);
 			
 			if (count($subtitle) > 0)
-				return sprintf('<small class="fotoboek_highlight">(%s)</small>', markup_format_text(implode_human($subtitle)));
+				return implode_human($subtitle);
 			else
 				return '';
 		}
@@ -218,6 +232,12 @@
 		{
 			$model = get_model('DataModelPhotobook');
 			return $model->get_random_photos($count);
+		}
+
+		public function thumbnail_photos(DataIterPhotobook $book, $count)
+		{
+			$model = get_model('DataModelPhotobook');
+			return $model->get_photos_recursive($book, $count, true, 0.69);
 		}
 
 		public function is_person(DataIterPhotobookFace $face)

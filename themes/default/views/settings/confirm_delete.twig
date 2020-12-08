@@ -1,17 +1,19 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Delete key') ~ ' :: ' ~ parent() %}
+{% block title __('Delete key') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Delete key') }}</h1>
-<div class="messageBox">
-	<form method="post" id="delete-settings-form" action="{{ controller.link_to_delete(iter)|e('html_attr') }}" class="vertical-form">
-		{{ html_nonce('delete', iter) }}
-		<p>{{ __('Are you certain you want to delete the key <em>%s</em>?')|format(iter.key|e('html'))|raw }}</p>
-		<div>
-			<button type="submit" class="button">{{ __('Delete key') }}</button>
-			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}">{{ __('Back to settings') }}</a>
-		</div>
-	</form>
-</div>
+<h1 class="title">{{ __('Delete key') }}</h1>
+<form method="post" id="delete-settings-form" action="{{ controller.link_to_delete(iter)|e('html_attr') }}">
+	{{ html_nonce('delete', iter) }}
+    <div class="field">
+    	<p>{{ __('Are you certain you want to delete the key <em>%s</em>?')|format(iter.key|e('html'))|raw }}</p>
+    </div>
+	<div class="field">
+        <div class="control buttons">
+    		<button type="submit" class="button is-danger">{{ __('Delete key') }}</button>
+    		<a href="{{ controller.link_to_read(iter)|e('html_attr') }}" class="button">{{ __('Back to settings') }}</a>
+        </div>
+	</div>
+</form>
 {% endblock %}

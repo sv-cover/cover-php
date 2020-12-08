@@ -1,19 +1,20 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title iter.naam ~ ' :: Committee Battle :: ' ~ parent()  %}
+{% block title iter.naam ~ ' – Committee Battle – ' ~ parent()  %}
 
 {% block content %}
-<h1>{{ iter.naam }}</h1>
-<div class="messageBox">
-	{% include '@theme/commissies/_leden.twig' with {'view': view.committee_view, 'model': committee_model, 'iter': iter} %}
+<h1 class="title">{{ iter.naam }}</h1>
+{% include '@theme/commissies/_members.twig' with {'view': view.committee_view, 'model': committee_model, 'iter': iter} %}
 
-	<table class="full-width-table">
+<article>
+	<h2 class="title is-4">{{ __('Points') }}</h2>
+	<table class="table is-fullwidth">
 		<thead>
 			<tr>
 				<th>{{ __('Date') }}</th>
 				<th>{{ __('Reason') }}</th>
 				<th>{{ __('Points') }}</th>
-				<th></th>
+				<th class="has-text-right"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -22,28 +23,25 @@
 				<td>{{ score.awarded_on|date('d-m-Y') }}</td>
 				<td>
 					{{ score.awarded_for }}
-					<ul class="inline-profile-list">
 					{% for member in score.members %}
-						<li><a href="{{ link('profiel.read', member=member)|e('html_attr') }}" class="committee-member">
-							<img src="{{ link('foto.square', member=member, width=50)|e('html_attr') }}" width="25">
-							<span class="name">{{ member|personal_full_name }}</span>
-						</a></li>
+						<a href="{{ link('profiel.read', member=member)|e('html_attr') }}" class="image is-16x16 is-inline-block">
+							<img class="is-rounded" src="{{ link('foto.square', member=member, width=50)|e('html_attr') }}" width="25" title="{{ member|personal_full_name }}">
+							<span class="is-sr-only">{{ member|personal_full_name }}</span>
+						</a>
 					{% endfor %}
-					</ul>
 				</td>
 				<td>{{ score.points }}</td>
-				<td>
+				<td  class="has-text-right">
 					{% if user_can_update score %}
-						<a href="{{ controller.link_to_update(score)|e('html_attr') }}" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Edit') }}</a>
+						<a href="{{ controller.link_to_update(score)|e('html_attr') }}" class="button">{{ __('Edit') }}</a>
 					{% endif %}
 					{% if user_can_delete score %}
-						<a href="{{ controller.link_to_delete(score)|e('html_attr') }}" class="button" data-placement-selector="modal" data-partial-selector=".committee-battle-form">{{ __('Delete') }}</a>
+						<a href="{{ controller.link_to_delete(score)|e('html_attr') }}" class="button">{{ __('Delete') }}</a>
 					{% endif %}
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-</div>
-{% include '@theme/commissies/_navigation.twig' with {'view': view.committee_view, 'iters': committees, 'iter': iter} %}
+</article>
 {% endblock %}

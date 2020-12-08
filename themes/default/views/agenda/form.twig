@@ -1,122 +1,119 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Modify calendar event') : __('Add a calendar event')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id ? __('Modify event') : __('Add an event')) ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.has_id ? __('Modify calendar event') : __('Add a calendar event') }}</h1>
-
-<div class="messageBox">
-{% if errors %}
-	<p><span class="error">{{ __("You haven't filled in all the fields correctly") }}</span></p>
-{% endif %}
+<h1 class="title">{{ iter.has_id ? __('Modify event') : __('Add an event') }}</h1>
 
 <form class="vertical-form" name="agenda_form" action="{{ view.get_form_action(iter) }}" method="post">
+	{% if errors %}
+		<p class="notification is-danger">{{ __("You haven't filled in all fields correctly") }}</p>
+	{% endif %}
+
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
 		{{ html_nonce('create', iter) }}
 	{% endif %}
 	
-	<div>
-		{{ html_label(__('Head'), 'kop', errors=errors, required=true) }}
-		{{ html_input_text('kop', iter, maxlength=100, required=true) }}
+	<div class="field">
+		{{ html_label(__('Title'), 'kop', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_text('kop', iter, maxlength=100, required=true) }}
+		</div>
 	</div>
 
-	<div>
+	<div class="field">
 		{{ html_label(__('Committee'), 'committee_id', errors=errors, required=true) }}
-		{{ html_select_field('committee_id', view.available_committees, iter, required=true) }}
+		<div class="control">
+			<div class="select">
+				{{ html_select_field('committee_id', view.available_committees, iter, required=true) }}
+			</div>
+		</div>
 	</div>
 
-	<div>
-		{{ html_label(__('Starting time'), 'van', errors=errors, required=true) }}
-		{{ html_input_datetime('van', iter, errors=errors, required=true) }}
+	<div class="field">
+		{{ html_label(__('Start'), 'van', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_datetime('van', iter, errors=errors, required=true) }}
+		</div>
 	</div>
 
-	<div>
-		{{ html_label(__('End time'), 'tot', errors=errors) }}
-		{{ html_input_checkbox('use_tot', iter, value='yes', id='agenda_use_tot', onclick='set_visibility(this, \'agenda_tot\')', class='field-toggle') }}
-		<div id="agenda_tot">
+	<div class="field">
+		<label for="tot" class="label">
+			{{ __('End') }}
+		</label>
+		<div class="control" id="agenda_tot">
 			{{ html_input_datetime('tot', iter, errors=errors) }}
 		</div>
 	</div>
 
-	<div>
-		{{ html_label(__('Location'), 'locatie', errors=errors) }}
-		{{ html_input_checkbox('use_locatie', iter, value='yes', id='agenda_use_locatie', onclick='set_visibility(this, \'agenda_locatie\')', class='field-toggle') }}
-		<div id="agenda_locatie">
-			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='location') }}
+	<div class="field">
+		<label for="locatie" class="label">
+			{{ __('Location') }}
+		</label>
+		<div class="control" id="agenda_locatie">
+			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='url', data_autocomplete_src='/agenda.php?view=suggest-location&limit=100&search=', data_autocomplete_max_results=15) }}
 		</div>
 	</div>
 
-	<div>
-		{{ html_label(__('Facebook Event'), 'facebook_id', errors=errors) }}
-		{{ html_input_text('facebook_id', iter, size='20') }}
+	<div class="field">
+		{{ html_label(__('Image'), 'image_url', errors=errors) }}
+		<div class="control" id="agenda_image_url">
+			{{ html_input_text('image_url', iter, maxlength=255, errors=errors, data_filemanager='true', data_filemanager_cta='Choose an image…', data_filemanager_url=get_config_value('filemanager_root', '')) }}
+		</div>
 	</div>
-	
-	<div>
-		<div class="tab-container">
-			<ul class="nav-tabs horizontal">
-				<li class="active"><a href="#beschrijving-tab">{{ __('Description') }}</a></li>
-				<li><a href="#beschrijving-preview-tab">{{ __('Preview') }}</a></li>
-			</ul>
-			<div id="beschrijving-tab" class="tab-panel">
-				{{ html_label(__('Description'), 'beschrijving', errors=errors) }}
-				{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
+
+	<div class="field">
+		{{ html_label(__('Link to Facebook event'), 'facebook_id', errors=errors) }}
+		<div class="control">
+			{{ html_input_text('facebook_id', iter, size='20', errors=errors) }}
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Description'), 'beschrijving', errors=errors, required=true) }}
+		<div class="tabs-wrapper is-condensed">
+			<div class="tabs is-toggle">
+				<ul>
+					<li class="is-active">
+						<a href="#beschrijving-tab">{{ __('Raw') }}</a>
+					</li>
+					<li>
+						<a href="#beschrijving-preview-tab">{{ __('Preview') }}</a>
+					</li>
+				</ul>
 			</div>
-			<div class="tab-panel" id="beschrijving-preview-tab" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
-				<span class="loading">{{ __('Loading preview…') }}</span>
+
+			<div class="tabs-content">
+				<div id="beschrijving-tab" class="is-active">
+					{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
+				</div>
+				<div id="beschrijving-preview-tab" class="content-preview box" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
+					<span class="loading">{{ __('Loading preview…') }}</span>
+				</div>
 			</div>
 		</div>
 	</div>
 			
-	<div>
-		{{ html_input_checkbox('private', iter) }}
-		{{ html_label(__('Only visible to members'), 'private', errors=errors) }}
+	<div class="field">
+		<div class="control">
+			{{ html_input_checkbox('private', iter, label=__('Only visible to members'), errors=errors) }}
+		</div>
 	</div>
 	
-	<div>
-		{{ html_input_checkbox('extern', iter) }}
-		{{ html_label(__('External activity'), 'extern', errors=errors) }}
+	<div class="field">
+		<div class="control">
+			{{ html_input_checkbox('extern', iter, label=__('External activity'), errors=errors) }}
+		</div>
 	</div>
 				
-	<div>
-		<button type="submit" class="button">
-			{{ iter.has_id ? __('Modify calendar event') : __('Create calendar event') }}
-		</button>
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">
+				{{ iter.has_id ? __('Modify event') : __('Create event') }}
+			</button>
+		</div>
 	</div>
 </form>
-
-<script type="text/javascript">
-	check_checkbox("agenda_use_tot", "agenda_tot");
-	check_checkbox("agenda_use_locatie", "agenda_locatie");
-	
-	function check_checkbox(box, div) {
-		box = document.getElementById(box);
-		div = document.getElementById(div);
-		
-		if (box.getAttribute("checked") === "checked")
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-		
-	}
-
-	function set_visibility(elem, div) {
-		div = document.getElementById(div);
-
-		if (elem.checked)
-			div.style.display = "block";
-		else
-			div.style.display = "none";
-	}
-
-	jQuery('input[name=facebook_id]').change(function(e) {
-		var expr = /^https:\/\/www\.facebook\.com\/events\/(\d+)\//;
-		var match = $(this).val().match(expr);
-
-		if (match)
-			$(this).val(match[1]);
-	});
-</script>
-</div>
 {% endblock %}

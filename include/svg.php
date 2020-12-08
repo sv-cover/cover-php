@@ -1,8 +1,8 @@
 <?php
 
-namespace cover\svg;
+namespace Cover\svg;
 
-function barchart($data)
+function barchart($data, $class='barchart')
 {
 	// Inspiration: https://bost.ocks.org/mike/bar/3/
 
@@ -45,7 +45,7 @@ function barchart($data)
 			$bar_width / 2 + $padding + ($bar_width + 2 * $padding) * $i,
 			$partition);
 
-		$bars[] = sprintf('<rect class="barchart-bar" x="%d" y="%d" width="%d" height="%d" fill="brown"><title>%d</title></rect>',
+		$bars[] = sprintf('<rect class="barchart-bar" x="%d" y="%d" width="%d" height="%d" fill="#36749d"><title>%d</title></rect>',
 			$padding + ($bar_width + 2 * $padding) * $i,
 			$chart_height - $bar_height,
 			$bar_width,
@@ -70,7 +70,7 @@ function barchart($data)
 	}
 
 	return sprintf('
-		<svg width="%d" height="%d">
+		<svg width="%d" height="%d" class="%s" viewbox="0 0 %1$d %2$d">
 			<g transform="translate(40, -20)">
 				<g class="axis axis--x" transform="translate(0, %2$d)" fill="none" font-size="10" font-family="sans-serif" text-anchor="middle">
 					%s
@@ -84,6 +84,7 @@ function barchart($data)
 		</svg>',
 			$chart_width,
 			$chart_height,
+			markup_format_attribute($class),
 			implode("\n", $x_ticks),
 			implode("\n", $y_ticks),
 			implode("\n", $bars));

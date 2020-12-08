@@ -1,30 +1,30 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Active Members') ~ ' :: ' ~ parent() %}
+{% block title __('Active Members') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Active Members') }}</h1>
-<div class="messageBox">
+<h1 class="title">{{ __('Active Members') }}</h1>
+<div class="content">
 	<p>{{ __('Taking all committees and working groups together, there are currently <strong>%d</strong> active Cover members.')|format(iters|length)|raw }}</p>
-<table class="full-width-table">
+</div>
+<table class="table is-hoverable is-fullwidth">
 	<thead>
-		<tr class="header">
+		<tr>
 			<th>{{ __('ID') }}</th>
 			<th>{{ __('Name') }}</th>
 			<th>{{ __('Email') }}</th>
-			<th style="text-align: right">{{ __('Committees/Working groups') }}</th>
+			<th class="has-text-right">{{ __('Committees/Working groups') }}</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for iter in iters %}
-			<tr>
-				<td>{{ iter.id }}</td>
-				<td><a href="{{ link('profiel.read', member=iter) }}">{{ iter|full_name_ignore_privacy }}</a></td>
-				<td>{{ iter.email }}</td>
-				<td style="text-align: right">{{ iter.commissie_count }}</td>
-			</tr>
-		{% endfor %}
+	{% for iter in iters %}
+		<tr>
+			<td>{{ iter.id }}</td>
+			<td><a href="{{ link('profiel.read', member=iter) }}">{{ iter|full_name_ignore_privacy }}</a></td>
+			<td>{{ iter.email }}</td>
+			<td class="has-text-right">{{ iter.commissie_count }}</td>
+		</tr>
+	{% endfor %}
 	</tbody>
 </table>
-</div>
 {% endblock %}

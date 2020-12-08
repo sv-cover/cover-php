@@ -1,15 +1,16 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Order books') ~ ' :: ' ~ parent() %}
+{% block title __('Order books') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ __('Order books') }}</h1>
-<div class="messageBox">
+<h1 class="title">{{ __('Order books') }}</h1>
+
+<div class="content">
 	<p>To order books with a 10% discount, you need to be a member of Cover.</p>
-	<div class="call-to-action-or-block">
-		<a href="lidworden.php" class="button register">{{ __('Become a member') }}</a>
-		<span class="separator">{{ __('or') }}</span>
-		<a href="sessions.php?view=login&amp;referrer=boeken.php" data-placement-selector="modal" data-partial-selector="#login-form" class="button login">{{ __('Log in') }}</a>
+	<div>
+		<a href="sessions.php?view=login&amp;referrer=boeken.php" class="button is-fullwidth is-primary">{{ __('Log in') }}</a>
+		<div class="divider is-fullwidth">{{ __('or') }}</div>
+		<a href="lidworden.php" class="button is-fullwidth">{{ __('Become a member') }}</a>
 	</div>
 </div>
 {% endblock %}

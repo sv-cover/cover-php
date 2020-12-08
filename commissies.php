@@ -16,11 +16,6 @@ class ControllerCommissies extends ControllerCRUD
 		$this->view = View::byName('commissies', $this);
 	}
 
-	protected function _index()
-	{
-		return $this->model->get(DataModelCommissie::TYPE_COMMITTEE);
-	}
-
 	protected function _create(DataIter $iter, array $data, array &$errors)
 	{
 		// Prevent DataIterCommissie::set_members from being called too early
@@ -38,10 +33,12 @@ class ControllerCommissies extends ControllerCRUD
 
 	protected function _update(DataIter $iter, array $data, array &$errors)
 	{
+		$data['hidden'] = (array_key_exists('hidden', $data) && $data['hidden'] === 'yes');
+
 		if (!parent::_update($iter, $data, $errors))
 			return false;
 
-		$this->model->set_members($iter, $data['members'] ? $data['members'] : array());
+		$this->model->set_members($iter, empty($data['members']) ? [] : $data['members']);
 
 		return true;
 	}
@@ -64,6 +61,22 @@ class ControllerCommissies extends ControllerCRUD
 			return $this->model->get_from_name($id);
 		else
 			return parent::_read($id);
+	}
+
+	/**
+	 * Override ControllerCRUD::run_index to also restrict the model to the same type as the iter.
+	 */ 
+	public function run_index()
+	{
+		$committees = $this->model->get(DataModelCommissie::TYPE_COMMITTEE);			
+		$working_groups = $this->model->get(DataModelCommissie::TYPE_WORKING_GROUP);
+
+		$iters = [
+			'committees' => array_filter($committees, array(get_policy($this->model), 'user_can_read')),
+			'working_groups' => array_filter($working_groups, array(get_policy($this->model), 'user_can_read')),
+		];
+
+		return $this->view()->render_index($iters);
 	}
 
 	/**
@@ -117,16 +130,6 @@ class ControllerCommissies extends ControllerCRUD
 			$arguments[$this->_var_id] = $iter['login'];
 
 		return $this->link($arguments);
-	}
-
-	/**
-	 * Index page that shows only working groups.
-	 */
-	public function run_working_groups()
-	{
-		$iters = $this->model->get(DataModelCommissie::TYPE_WORKING_GROUP);
-
-		return $this->view->render_working_groups($iters); 
 	}
 
 	/**

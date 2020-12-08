@@ -1,51 +1,38 @@
-{% extends '@layout/layout.twig' %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=9">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block title %}
-{{ __('Log in') }} :: {{ parent() }}
-{% endblock %}
+        <title>{{ __('Log in') }} – Cover</title>
+        {% for stylesheet in view.stylesheets %}
+        <link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
+        {% endfor %}
+    </head>
+    <body class="has-navbar-fixed-top">
+        <nav class="navbar is-fixed-top is-cover" role="navigation" aria-label="main navigation">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="/">
+                        <img class="cover-logo" src="{{ link_static('images/cover_logo.png') }}" alt="Cover">
+                    </a>
+                </div>
+            </div>
+        </nav>
 
-{% block content %}
-<h1>{{ __('Log in') }}</h1>
-<div class="messageBox">
-	<form id="login-form" method="post" action="{{ link('sessions.login') }}" class="vertical-form">
-		<img src="{{ link_static('images/cover_logo_black.png') }}" class="cover-logo" alt="Cover">
+        <section class="section">
+            <div class="container columns is-centered">
+                <div class="column is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-third-fullhd">
+                    <article class="box">
+                        <h1 class="title">{{ __('Log in') }}</h1>
 
-		<ul class="nav-tabs horizontal">
-			<li class="active"><a href="{{ link('sessions.login') }}">{{ __('Log in') }}</a></li>
-			<li><a href="lidworden.php#contents">{{ __('Sign up') }}</a></li>
-		</ul>
+                        {% from '@theme/sessions/_login_widget.twig' import login_form %}
 
-		{% if error_message %}
-		<div class="error-section">
-			<p>{{ error_message }}</p>
-		</div>
-		{% endif %}
-
-		{{ html_input_hidden('referrer', referrer) }}
-		<div>
-			{{ html_label(__('E-mail address'), 'email', errors=errors, required=true) }} 
-			{{ html_input_text('email', null, placeholder=__('E-mail address'), autofocus=true) }}
-		</div>
-
-		<div>
-			{{ html_label(__('Password'), 'password', errors=errors, required=true) }}
-			{{ html_input_password('password', placeholder=__('Password')) }}
-		</div>
-
-		<div>
-			{{ html_input_checkbox('remember', {'remember': 'yes'}, value='yes') }}
-			{{ html_label(__('Keep me logged in'), 'remember', errors=errors) }}
-		</div>
-
-		<div class="controls">
-			<button type="submit" class="button primary">
-				{{ __('Log in') }}
-				{% if external_domain %}
-					<small>{{ __('and continue to %s')|format(external_domain) }}</small>
-				{% endif %}
-			</button>
-			<a href="wachtwoordvergeten.php">{{ __('Forgot your password?') }}</a>
-		</div>
-	</form>
-</div>
-{% endblock %}
+                        {{ login_form(errors, error_message, referrer, external_domain) }}
+                    </article>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

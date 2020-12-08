@@ -36,7 +36,8 @@ class LidwordenView extends View
 	public function search_link($conditions)
 	{
 		$url = 'https://secretary.svcover.nl/administration/everyone/?' . http_build_query($conditions);
-		return sprintf('<a href="%s" target="_blank" title="Search for this in Secretary"><img src="themes/default/images/search.png" width="12" height="12"></a>', markup_format_attribute($url));
+		return sprintf('<a href="%s" target="_blank" title="%s"><span class="icon"><i class="fas fa-search" aria-hidden="true"></i><span class="is-sr-only">%2$s</span></span></a>', 
+					markup_format_attribute($url), __('Search for this in Secretary'));
 	}
 
 	public function full_name($row)

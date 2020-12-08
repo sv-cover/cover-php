@@ -36,7 +36,7 @@
 					return __('Honorary Member');
 
 				case MEMBER_STATUS_DONATEUR:
-					return __('Donor');
+					return __('Contributor');
 			}
 		}
 

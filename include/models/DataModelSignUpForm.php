@@ -119,10 +119,12 @@ class DataIterSignUpForm extends DataIter
 
 	public function is_open()
 	{
-		if (!$this['open_on'] || new DateTime($this['open_on']) > new DateTime())
+		$open_on = is_string($this['open_on']) ? new DateTime($this['open_on']) : $this['open_on'];
+		if (!$open_on || $open_on > new DateTime())
 			return false;
 
-		if ($this['closed_on'] && new DateTime($this['closed_on']) < new DateTime())
+		$closed_on = is_string($this['closed_on']) ? new DateTime($this['closed_on']) : $this['closed_on'];
+		if ($closed_on && $closed_on < new DateTime())
 			return false;
 
 		if (!empty($this['participant_limit']) && $this['signup_count'] >= $this['participant_limit'])
