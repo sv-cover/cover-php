@@ -137,7 +137,7 @@ class ControllerSignUpForms extends Controller
 		if (!get_policy($this->form_model)->user_can_read($form))
 			throw new UnauthorizedException('You cannot access this form.');
 
-		if (!get_policy($this->form_model)->user_can_read($entry))
+		if (!get_policy($this->entry_model)->user_can_read($entry))
 			throw new UnauthorizedException('You cannot access this entry.');
 
 		$success = false;
