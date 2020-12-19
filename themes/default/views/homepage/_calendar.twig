@@ -70,7 +70,14 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                {% if events|length < 2 %}
+                {% if events|length == 1 %}
+                    <div class="is-active cover-thumbnail is-2by1">
+                        {# Placeholder #}
+                    </div>
+                {% elseif events|length == 0 %}
+                    <div class="is-active cover-thumbnail is-2by1">
+                        {# Placeholder #}
+                    </div>
                     <div class="is-active cover-thumbnail is-2by1">
                         {# Placeholder #}
                     </div>
