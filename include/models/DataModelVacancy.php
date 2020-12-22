@@ -11,12 +11,55 @@ class DataIterVacancy extends DataIter implements SearchResult
 		    'title',
 		    'description',
 		    'type',
+		    'study_phase',
 		    'url',
-		    'company',
-		    'hours',
-		    'experience',
-		    'study_year',
-		    'created'
+		    'partner_id',
+		    'partner_name',
+		    'created_on',
+		    'updated_on',
+		];
+	}
+
+	static public function rules()
+	{
+		return [
+			'title' => [
+				'required' => true,
+				'validate' => ['not_empty']
+			],
+			'description' => [
+				'required' => true
+			],
+			'type' => [
+				'clean' => 'intval',
+				'validate' => [
+					'not_empty',
+					function($type) {
+						return in_array($type, [
+							DataModelVacancy::TYPE_FULL_TIME,
+							DataModelVacancy::TYPE_PART_TIME,
+							DataModelVacancy::TYPE_INTERNSHIP,
+							DataModelVacancy::TYPE_GRADUATION_PROJECT,
+							DataModelVacancy::TYPE_OTHER,
+						]);
+					}
+				]
+			],
+			'study_phase' => [
+				'clean' => 'intval',
+				'validate' => [
+					'not_empty',
+					function($type) {
+						return in_array($type, [
+							DataModelVacancy::STUDY_PHASE_BSC,
+							DataModelVacancy::STUDY_PHASE_MSC,
+							DataModelVacancy::STUDY_PHASE_BSC_GRADUATED,
+							DataModelVacancy::STUDY_PHASE_MSC_GRADUATED,
+							DataModelVacancy::STUDY_PHASE_OTHER,
+						]);
+					}
+				]
+			],
 		];
 	}
 
@@ -38,6 +81,18 @@ class DataIterVacancy extends DataIter implements SearchResult
 
 class DataModelVacancy extends DataModel implements SearchProvider
 {
+	const TYPE_FULL_TIME = 0;
+	const TYPE_PART_TIME = 1;
+	const TYPE_INTERNSHIP = 2;
+	const TYPE_GRADUATION_PROJECT = 3;
+	const TYPE_OTHER = 4;
+
+	const STUDY_PHASE_BSC = 0;
+	const STUDY_PHASE_MSC = 1;
+	const STUDY_PHASE_BSC_GRADUATED = 2;
+	const STUDY_PHASE_MSC_GRADUATED = 3;
+	const STUDY_PHASE_OTHER = 4;
+
 	public $dataiter = 'DataIterVacancy';
 
 	public function __construct($db)
@@ -45,59 +100,20 @@ class DataModelVacancy extends DataModel implements SearchProvider
 		parent::__construct($db, 'vacancies');
 	}
 
+	public function update(DataIter $iter)
+	{
+		$iter['last_modified'] = new DateTime();
+
+		return parent::update($iter);
+	}
+
 	protected function _id_string($id, $table = null)
 	{
 		return sprintf("%s.id = %d", $table !== null ? $table : $this->table, $id);
 	}
 
-	/* protected */ function _generate_query($conditions)
-	{
-		return "SELECT
-				{$this->table}.id,
-				{$this->table}.title,
-		    	{$this->table}.description,
-		    	{$this->table}.type,
-		    	{$this->table}.url,
-		    	{$this->table}.company,
-		    	{$this->table}.hours,
-		    	{$this->table}.experience,
-		    	{$this->table}.study_year,
-				TO_CHAR({$this->table}.created, 'DD-MM-YYYY, HH24:MI') AS created
-			FROM
-				{$this->table}"
-			. ($conditions ? " WHERE $conditions" : "")
-			. " ORDER BY {$this->table}.created DESC";
-
-	}
-
-	public function get_latest($count = 5)
-	{
-		$query = $this->_generate_query('') . ' LIMIT ' . intval($count);
-
-		$rows = $this->db->query($query);
-		
-		return $this->_rows_to_iters($rows);
-	}
-
 	public function search($query, $limit = null)
 	{
-		$query = $this->db->escape_string($query);
-
-		$query = $this->_generate_query("title ILIKE '%{$query}%' 
-										 OR description ILIKE '%{$query}%'
-										 OR company ILIKE '%{$query}%'");
-
-		if ($limit !== null)
-			$query = sprintf('%s LIMIT %d', $query, $limit);
-
-		$rows = $this->db->query($query);
-
-		$iters = $this->_rows_to_iters($rows);
-
-		$policy = get_policy($this);
-
-		return array_filter($iters, function($iter) use ($policy) {
-			return $policy->user_can_read($iter);
-		});
+		return [];
 	}
 }
