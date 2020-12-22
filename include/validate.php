@@ -1,5 +1,10 @@
 <?php
 
+class StopValidation extends Exception
+{
+	//
+}
+
 function validate_not_empty($value)
 {
 	return strlen($value) > 0;
@@ -42,9 +47,41 @@ function validate_datetime($value)
 	}
 }
 
+function validate_filemanger_file($value)
+{
+	// Max length == 255
+	if (strlen($value) > 255)
+		return false;
+
+	// Only accept image file (using naive extension check)
+	$ext = pathinfo(parse_url($value, PHP_URL_PATH), PATHINFO_EXTENSION);
+	$allowed_exts = get_config_value('filemanager_image_extensions', ['jpg', 'jpeg', 'png']);
+	return in_array(strtolower($ext), $allowed_exts);
+}
+
+/** A validator for optional fields.
+  * Why? The valication chain will be executed on empty values. This validator
+  * allows to stop the validation chain on empty values, so that non-empty 
+  * values can be validated. This implementation is analogous to the WTForms
+  * Python library.
+  */
+function validate_optional($value)
+{
+	if (empty($value))
+		throw new StopValidation();
+	return true;
+}
+
 function trim_string($value)
 {
 	return is_string($value) ? trim($value) : $value;
+}
+
+function clean_checkbox($value) {
+	if ($value == 'yes' || $value == 'on')
+		return 1;
+	else
+		return 0;
 }
 
 function validate_dataiter(DataIter $iter, array $data, &$errors)
@@ -57,9 +94,11 @@ function validate_dataiter(DataIter $iter, array $data, &$errors)
 	// have access to all submitted (and maybe invalid) data.
 	foreach ($rules as $field => $options)
 	{
-		$cleaner = isset($options['clean']) ? $options['clean'] : 'trim_string';
+		$required = $options['required'] ?? false;
 
-		$required = isset($options['required']) ? $options['required'] : false;
+		$is_checkbox = $options['is_checkbox'] ?? false;
+
+		$cleaner = $options['clean'] ?? ($is_checkbox ? 'clean_checkbox' : 'trim_string');
 
 		if (!isset($data[$field])) {
 			if (!$iter->has_id() && $required) {
@@ -67,11 +106,11 @@ function validate_dataiter(DataIter $iter, array $data, &$errors)
 				continue;
 			}
 
-			if ($iter->has_id())
-				continue;
-
-			if (isset($options['default']))
+			if (!$iter->has_id() && isset($options['default']))
 				$data[$field] = call_user_func($options['default'], $field, $iter);
+			elseif ($is_checkbox)
+				// None required checkbox has a default of false, unless set otherwise
+				$data[$field] = false;
 			else
 				continue;
 		}
@@ -82,18 +121,23 @@ function validate_dataiter(DataIter $iter, array $data, &$errors)
 	foreach ($rules as $field => $options)
 	{
 		// Only check fields that are submitted. Requirement checks have been done in the previous loop.
+
 		if (!isset($out[$field]))
 			continue;
 
-		$validators = isset($options['validate']) ? $options['validate'] : [];
+		$validators = $options['validate'] ?? [];
 
 		foreach ($validators as $validator)
 		{
 			if (is_string($validator))
 				$validator = 'validate_' . $validator;
 
-			if (!call_user_func($validator, $out[$field], $field, $iter, $out)) {
-				$errors[] = $field;
+			try {
+				if (!call_user_func($validator, $out[$field], $field, $iter, $out)) {
+					$errors[] = $field;
+					break;
+				}
+			} catch (StopValidation $e) {
 				break;
 			}
 		}

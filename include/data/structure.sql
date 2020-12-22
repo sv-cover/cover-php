@@ -514,8 +514,8 @@ CREATE TABLE mailinglijsten (
     has_members boolean NOT NULL DEFAULT TRUE, -- condition for opt-out lists
     has_contributors boolean NOT NULL DEFAULT FALSE, -- condition for opt-out lists
     has_starting_year integer DEFAULT NULL, -- condition for opt-out lists
-    on_subscribtion_subject TEXT DEFAULT NULL,
-    on_subscribtion_message TEXT DEFAULT NULL,
+    on_subscription_subject TEXT DEFAULT NULL,
+    on_subscription_message TEXT DEFAULT NULL,
     on_first_email_subject TEXT DEFAULT NULL,
     on_first_email_message TEXT DEFAULT NULL
 );
