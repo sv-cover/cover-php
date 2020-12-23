@@ -53,6 +53,7 @@ class DataIterPartner extends DataIter implements SearchResult
 				'validate' => ['filemanger_file'],
 			],
 			'logo_dark_url' => [
+				'clean' => 'clean_empty',
 				'validate' => ['optional', 'filemanger_file'],
 			],
 			'hidden' => [
@@ -75,6 +76,16 @@ class DataIterPartner extends DataIter implements SearchResult
 	public function get_absolute_url()
 	{
 		return sprintf('vacancies.php?view=read&id=%d', $this->get_id());
+	}
+
+	public function get_logo($width=null)
+	{
+		return get_filemanager_url($this['logo_url'], $width);
+	}
+
+	public function get_logo_dark($width=null)
+	{
+		return get_filemanager_url($this['logo_dark_url'], $width);
 	}
 }
 

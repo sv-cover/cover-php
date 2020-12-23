@@ -1,6 +1,6 @@
 <?php
-	require_once 'include/init.php';
-	require_once 'include/controllers/ControllerCRUD.php';
+require_once 'include/init.php';
+require_once 'include/controllers/ControllerCRUD.php';
 
 class ControllerVacancies extends ControllerCRUD{
 
@@ -11,17 +11,9 @@ class ControllerVacancies extends ControllerCRUD{
 		$this->view = View::byName('vacancies', $this);
 	}
 
-	protected function _validate(DataIter $iter, array $data, array &$errors)
+	public function run_preview()
 	{
-		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
-			$errors[] = 'not_board';
-
-		if(strlen($data['title']) == 0)
-		{
-			$errors[] = 'title';
-		}
-
-		return count($errors) === 0 ? $data : false;
+		return markup_parse($_POST['description']);
 	}
 }
 

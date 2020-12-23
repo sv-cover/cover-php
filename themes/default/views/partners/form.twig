@@ -1,0 +1,74 @@
+{% extends '@layout/layout.twig' %}
+
+
+{% block title (iter.has_id ? __('Edit partner') : __('New partner')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ iter.has_id ? __('Edit partner') : __('New partner') }}</h1>
+<form method="post" action="{{ view.get_form_action(iter) }}">
+	{% if iter.has_id %}
+		{{ html_nonce('update', iter) }}
+	{% else %}
+		{{ html_nonce('create', iter) }}
+	{% endif %} 
+
+	<div class="field">
+		{{ html_label(__('Name'), 'name', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_text('name', iter, required=true, errors=errors) }}
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Type'), 'type', errors=errors, required=true) }}
+		<div class="control">
+			<div class="select">
+				{{ html_select_field('type', view.type_options, iter, errors=errors, required=true) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Url'), 'url', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_text('url', iter, type='url', errors=errors, required=true) }}
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Logo'), 'logo_url', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_text('logo_url', iter, maxlength=255, errors=errors, required=true, data_filemanager='true', data_filemanager_cta='Choose an image…', data_filemanager_url=get_config_value('filemanager_root', '')) }}
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Logo (dark mode)'), 'logo_dark_url', errors=errors) }}
+		<div class="control">
+			{{ html_input_text('logo_dark_url', iter, maxlength=255, errors=errors, data_filemanager='true', data_filemanager_cta='Choose an image…', data_filemanager_url=get_config_value('filemanager_root', '')) }}
+		</div>
+		<p class="help">
+			{{ __('Dark mode version of the logo, defaults to the normal logo if not provided') }}
+		</p>
+	</div>
+
+	<div class="field">
+		<div class="control">
+			{{ html_input_checkbox('hidden', iter, label=__('Hidden'), errors=errors) }}
+		</div>
+	</div>
+
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">
+				{{ iter.has_id ? __('Modify partner') : __('Create partner') }}
+			</button>
+			{% if iter.has_id %}
+				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Back to partner') }}</a>
+			{% else %}
+				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to all partners') }}</a>
+			{% endif %}
+		</div>
+	</div>
+</form>
+{% endblock %}

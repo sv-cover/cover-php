@@ -1,75 +1,20 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title iter.title ~ ' :: ' ~ parent() %}
+{% block title iter.title ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1>{{ iter.title }}</h1>
-	<hr class="colorAccent type-{{ iter.type }}">
-	<div class="messageBox vacancy frontpage">
-		<div class="right">
-			{{ iter.created|date() }}
-		</div>
-
-		<div class="companyDetails">
-			<div class="companyImage">
-				{% if view.get_logo(iter.company) %}
-					<img src="{{ view.get_logo(iter.company)|e('html_attr') }}">
-				{% endif %}
-			</div>
-			<div class="col-3">
-				<dl>
-					<span class="title">
-						<h2>{{ iter.title }}</h2>
-					</span>
-					{% if iter.company %}
-						<h3>{{ iter.company }}</h3>
-					{% endif %}
-					{% if iter.type %}
-						<h3>{{view.get_type(iter.type)}}</h3>
-					{% endif %}
-					{% if iter.study_year and view.get_type(iter.type) != "Voor afgestudeerden" %}
-						<dt><b>{{ __('Studiejaar') }}</b><dt>
-						<dd>{{ view.get_study_year(iter.study_year) }}</dd>
-					{% endif %}
-				</dl>
-			</div>
-			<div class="col-3">
-				<dl> 
-					{% if iter.hours %}
-						<dt><b>{{ __('Tijd') }}</b></dt>
-						<dd>{{view.get_hours(iter.hours) }}</dd>
-					{% endif %}
-					<br>
-					{% if iter.experience %}
-						<dt><b>{{ __('Ervaring') }}</b></dt> 
-						<dd>{{iter.experience}}</dd>
-					{% endif %}
-					<br>
-					{% if iter.url %}
-						<dt><b><a href="{{ iter.url|e('html_attr') }}">{{ __('Meer info op de website') }}</a></b></dt>
-					{% endif %}
-				</dl>
-			</div>
-		</div>
-		
-		<hr class="separator after">
-
-		<div class="description">
-			{{ iter.description|parse_markup }}
-		</div>
-
-		<ul class="actions">
-			<li><a href="{{ controller.link_to_index() }}">{{ __('Alle vacatures bekijken') }}</a></li>
-			{% if user_can_update iter %}
-			<li><a href="{{ controller.link_to_update(iter)|e('html_attr') }}"
-				data-partial-selector="#vacancy-form"
-				data-placement-selector="modal">{{ __('Wijzig') }}</a></li>
-			{% endif %}
-			{% if user_can_delete iter %}
-			<li><a href="{{ controller.link_to_delete(iter)|e('html_attr') }}"
-				data-partial-selector=".messageBox > form.vertical-form"
-				data-placement-selector="modal">{{ __('Verwijder') }}</a></li>
-			{% endif %}
-		</ul>
-	</div>
+	{% if iter.partner %}
+		<figure class="image block">
+		    {% if iter.partner.logo_dark_url is defined %}
+		        <img class="darkmode" src="{{ iter.partner.get_logo_dark(700) }}">
+		    {% endif %}
+		    <img class="default" src="{{ iter.partner.get_logo(700) }}">
+		</figure>
+	{% endif %}
+    <h1 class="title">
+        {{ iter.title }}
+    </h1>
+    <div class="content">
+        {{ iter.description|parse_markup }}
+    </div>
 {% endblock %}

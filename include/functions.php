@@ -1190,3 +1190,11 @@
 		return in_array($redirect_parts['scheme'], ['http', 'https'])
 			&& $redirect_parts['host'] == $_SERVER['HTTP_HOST'];
 	}
+
+	function get_filemanager_url($path, $width=null)
+	{
+		$filemanager_root = get_config_value('filemanager_root', 'https://filemanager.svcover.nl');
+		if (!$width)
+			return sprintf('%s/%s', $filemanager_root, $path);
+		return sprintf('%s/images/resize?f=%s&w=%d', $filemanager_root, urlencode($path), $width);
+	}

@@ -1,0 +1,87 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+    {{ iter.name }} – {{ parent() }}
+{% endblock %}
+
+{% block page %}
+<article class="section partner-single">
+<div class="container has-sidebar block">
+    <div class="level is-mobile controls">
+        <div class="level-left">
+            <a href="{{ controller.link({}) }}" class="button">
+                <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+                <span>{{__('All partners')}}</span>
+            </a>
+        </div>
+        <div class="level-right">
+            <div class="field is-grouped">
+                {% if user_can_update iter or user_can_delete iter %}
+                    <div class="control dropdown is-right">
+                        <div class="dropdown-trigger">
+                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>{{ __('Manage') }}</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                {% if user_can_update iter %}
+                                    <a href="{{ controller.link_to_update(iter) }}" class="dropdown-item">
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                        </span>
+                                        <span>{{  __('Modify partner') }}</span>
+                                    </a>
+                                {% endif %}
+                                {% if user_can_delete iter %}
+                                    <a href="{{ controller.link_to_delete(iter) }}" class="dropdown-item">
+                                        <span class="icon">
+                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                        </span>
+                                        <span>{{  __('Delete partner') }}</span>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-content">
+            <figure class="image is-hidden-desktop block">
+                {% if iter.logo_dark_url is defined %}
+                    <img class="darkmode" src="{{ iter.get_logo_dark(700) }}">
+                {% endif %}
+                <img class="default" src="{{ iter.get_logo(700) }}">
+            </figure>
+            <h1 class="title">
+                {{ iter.name }}
+            </h1>
+            <div class="content">
+            </div>
+        </div>
+        <div class="column is-sidebar">
+            <figure class="image is-hidden-touch block">
+                {% if iter.logo_dark_url is defined %}
+                    <img class="darkmode" src="{{ iter.get_logo_dark(300) }}">
+                {% endif %}
+                <img class="default" src="{{ iter.get_logo(300) }}">
+            </figure>
+            <div class="content block">
+                <p>
+                    <span class="icon"><i class="fas fa-globe" aria-hidden="true"></i></span>
+                    <a href="{{ iter.url }}" target="_blank" rel="noopener noreferrer">
+                        {{ __('%s website')|format(iter.name) }}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</article>
+{% endblock %}

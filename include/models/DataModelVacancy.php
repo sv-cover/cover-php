@@ -25,16 +25,18 @@ class DataIterVacancy extends DataIter implements SearchResult
 		return [
 			'title' => [
 				'required' => true,
-				'validate' => ['not_empty']
+				'validate' => ['not_empty'],
 			],
 			'description' => [
-				'required' => true
+				'required' => true,
 			],
 			'type' => [
+				'required' => true,
 				'clean' => 'intval',
 				'validate' => [
 					'not_empty',
 					function($type) {
+						var_dump($type);
 						return in_array($type, [
 							DataModelVacancy::TYPE_FULL_TIME,
 							DataModelVacancy::TYPE_PART_TIME,
@@ -43,9 +45,10 @@ class DataIterVacancy extends DataIter implements SearchResult
 							DataModelVacancy::TYPE_OTHER,
 						]);
 					}
-				]
+				],
 			],
 			'study_phase' => [
+				'required' => true,
 				'clean' => 'intval',
 				'validate' => [
 					'not_empty',
@@ -57,6 +60,46 @@ class DataIterVacancy extends DataIter implements SearchResult
 							DataModelVacancy::STUDY_PHASE_MSC_GRADUATED,
 							DataModelVacancy::STUDY_PHASE_OTHER,
 						]);
+					}
+				],
+			],
+			'url' => [
+				'required' => true,
+				'validate' => [
+					function($url) {
+						return filter_var($url, FILTER_VALIDATE_URL) !== FALSE;
+					}
+				],
+			],
+			'partner_id' => [
+				// partner_id XOR partner_name is required, this is validated at partner_name
+				'clean' => function($value) {
+					return $value ? intval($value) : null;
+				},
+				'validate' => [
+					'optional',
+					function($partner_id) {
+						try {
+							$partner = get_model('DataModelPartner')->get_iter($partner_id);
+						} catch (DataIterNotFoundException $e) {
+							return false;
+						}
+
+						return true;
+					}
+				]
+			],
+			'partner_name' => [
+				// OK, this XOR thing is inconvenient. Ideally, we would use the 'clean_empty'
+				// cleaner on this field, but that would break validation, which we need for the XOR
+				// thing. Without 'clean_empty' an emptystring would end up in the database, but
+				// null would be more desirable. Therefore, the DataIter->set() function is
+				// overridden to set empty values on partner_name to null. Ideally, this would be
+				// fixed with more robust form handling.
+				'required' => true,
+				'validate' => [
+					function($partner_name, $field, $iter, $data) {
+						return empty($partner_name) xor !isset($data['partner_id']);
 					}
 				]
 			],
@@ -76,6 +119,21 @@ class DataIterVacancy extends DataIter implements SearchResult
 	public function get_absolute_url()
 	{
 		return sprintf('vacancies.php?view=read&id=%d', $this->get_id());
+	}
+
+	public function get_partner()
+	{
+		if (isset($this->data['partner_id']))
+			return get_model('DataModelPartner')->get_iter($this->data['partner_id']);
+		return null;
+	}
+
+	public function set($field, $value)
+	{
+		// Fix for limitations of the valication chain.
+		if ($field == 'partner_name' && empty($value))
+			$value = null;
+		return parent::set($field, $value);
 	}
 }
 

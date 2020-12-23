@@ -77,6 +77,13 @@ function trim_string($value)
 	return is_string($value) ? trim($value) : $value;
 }
 
+function clean_empty($value)
+{
+	$value = trim_string($value);
+
+	return empty($value) ? null : $value;
+}
+
 function clean_checkbox($value) {
 	if ($value == 'yes' || $value == 'on')
 		return 1;
