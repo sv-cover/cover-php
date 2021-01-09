@@ -1,5 +1,7 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const webpack = require("webpack");
+const autoprefixer = require("autoprefixer");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
@@ -38,7 +40,7 @@ module.exports = {
             },
             {
                 test: /\.(sa|sc|c)ss$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
             }
         ]
     },
@@ -46,5 +48,12 @@ module.exports = {
         new Dotenv(),
         new MiniCssExtractPlugin({ filename: '[name].css', }),
         new CompressionPlugin({ exclude: /.+\.html/ }),
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                postcss: [
+                    autoprefixer()
+                ]
+            }
+        }),
     ],
 };
