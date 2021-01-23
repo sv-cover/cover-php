@@ -2,4 +2,46 @@
 
 {% block title __('Vacancies') ~ ' – ' ~ parent() %}
 
-{% block content include('vacancies.twig') %}
+{% block content %}
+<header class="level">
+    <div class="level-left">
+        <h1 class="title">{{ __('Vacancies') }}</h1>
+    </div>
+    <div class="level-right buttons">
+        {% if user_can_create controller.new_iter %}
+            <a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">
+                {{ __('New vacancy')  }}
+            </a>
+        {% endif %}
+    </div>
+</header>
+<section class="block">
+    <ul class="vacancy-list">
+        {% for iter in iters %}
+            <li class="vacancy {% if iter.partner %}has-image{% endif %}">
+                <a class="media" href="{{ controller.link_to_read(iter) }}">
+                    {% if iter.partner %}
+                        <figure class="media-left image">
+                            {% if iter.partner.logo_dark_url is defined %}
+                                <img class="darkmode" src="{{ iter.partner.get_logo_dark(700) }}">
+                            {% endif %}
+                            <img class="default" src="{{ iter.partner.get_logo(700) }}">
+                        </figure>
+                    {% endif %}
+                    <div class="media-content">
+                        <h2 class="title is-5">{{ iter.title }}</h2>
+                    </div>
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <td colspan="6">
+                    <p class="has-text-centered">
+                        {{ __('No vacancies found :(') }}
+                    </p>
+                </td>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

@@ -36,7 +36,6 @@ class DataIterVacancy extends DataIter implements SearchResult
 				'validate' => [
 					'not_empty',
 					function($type) {
-						var_dump($type);
 						return in_array($type, [
 							DataModelVacancy::TYPE_FULL_TIME,
 							DataModelVacancy::TYPE_PART_TIME,
@@ -160,7 +159,7 @@ class DataModelVacancy extends DataModel implements SearchProvider
 
 	public function update(DataIter $iter)
 	{
-		$iter['last_modified'] = new DateTime();
+		$iter['updated_on'] = new DateTime();
 
 		return parent::update($iter);
 	}

@@ -1,0 +1,30 @@
+$vacancy-list-logo-width-touch: 96px
+$vacancy-list-logo-height-touch: 96px
+$vacancy-list-logo-width-desktop: 192px
+$vacancy-list-logo-height-desktop: auto
+
+.vacancy-list
+    .vacancy
+        padding: 1rem 0
+        & + .vacancy
+            border-top: 1px solid $media-border-color
+        .media
+            margin: -1rem
+            padding: 1rem
+            &:hover
+                background: $background
+        &:not(.has-image) > .media::before
+            @extend .media-left
+            content: ''
+            display: block
+            background: $cover-gradient, $black
+        .media-left,
+        &:not(.has-image) .media::before
+            width: $vacancy-list-logo-width-touch
+            height: $vacancy-list-logo-height-touch
+            +desktop
+                width: $vacancy-list-logo-width-desktop
+                height: $vacancy-list-logo-height-desktop
+        &:not(.has-image) .media::before
+            +desktop
+                height: $vacancy-list-logo-height-touch

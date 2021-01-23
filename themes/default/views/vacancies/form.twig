@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (iter.has_id ? __('Edit vacancy') : __('New vacancy')) ~ ' :: ' ~ parent() %}
+{% block title (iter.has_id ? __('Edit vacancy') : __('New vacancy')) ~ ' – ' ~ parent() %}
 
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Edit vacancy') : __('New vacancy') }}</h1>
@@ -21,9 +21,12 @@
 	<div class="field">
 		{{ html_label(__('Company'), 'partner_name', errors=errors, required=true) }}
 		<div class="control">
-			{{ html_input_text('partner_name', iter, errors=errors) }} {# required is validated server side only, because XOR condition #}
-			{{ html_input_hidden('partner_id', iter.partner_id) }}
+			{{ html_input_text('partner_name', iter, errors=errors, data_autocomplete='partner_name', data_autocomplete_src='/partners.php?view=autocomplete&search=') }} {# required is validated server side only, because XOR condition #}
+			{{ html_input_hidden('partner_id', iter.partner_id, data_partner_id_field=true, data_partner_name=iter.partner ? iter.partner.name : '') }}
 		</div>
+		<p class="help">
+			{{ __("Select autocompleted partner, or type the name of the company if there's no partner for this company.") }}
+		</p>
 	</div>
 
 	<div class="field">
@@ -47,7 +50,7 @@
 	<div class="field">
 		{{ html_label(__('URL'), 'url', errors=errors, required=true) }}
 		<div class="control">
-			{{ html_input_text('url', iter, errors=errors, required=true) }}
+			{{ html_input_text('url', iter, type='url', errors=errors, required=true) }}
 		</div>
 	</div>
 

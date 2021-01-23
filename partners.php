@@ -10,6 +10,21 @@ class ControllerPartners extends ControllerCRUD
 
 		$this->view = View::byName('partners', $this);
 	}
+
+    public function run_autocomplete()
+    {
+        $partners = $this->model->find(['name__contains' => $_GET['search']]);
+
+        $data = [];
+
+        foreach ($partners as $partner)
+            $data[] = [
+                'id' => $partner['id'],
+                'name' => $partner['name'],
+            ];
+
+        return $this->view->render_json($data);
+    }
 }
 
 $controller = new ControllerPartners();

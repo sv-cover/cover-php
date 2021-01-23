@@ -11,6 +11,17 @@ class ControllerVacancies extends ControllerCRUD{
 		$this->view = View::byName('vacancies', $this);
 	}
 
+    protected function _index()
+    {
+        $iters = parent::_index();
+
+        usort($iters, function($a, $b) {
+            return strcasecmp($a['title'], $b['title']);
+        });
+
+        return $iters;
+    }
+
 	public function run_preview()
 	{
 		return markup_parse($_POST['description']);
