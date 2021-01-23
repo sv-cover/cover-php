@@ -37,7 +37,7 @@
                                     </a>
                                 {% endif %}
                                 {% if user_can_delete iter %}
-                                    <a href="{{ controller.link_to_delete(iter) }}" class="dropdown-item">
+                                    <a href="{{ controller.link_to_delete(iter) }}" class="dropdown-item" data-popup="modal">
                                         <span class="icon">
                                             <i class="fas fa-trash" aria-hidden="true"></i>
                                         </span>

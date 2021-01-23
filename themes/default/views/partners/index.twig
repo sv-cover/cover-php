@@ -2,45 +2,47 @@
 
 {% block title __('Partners') ~ ' – ' ~ parent() %}
 
-{% block page %}
-<article class="section">
-<div class="container">
-    <header class="level">
-        <div class="level-left">
-            <h1 class="title">{{ __('Partners') }}</h1>
-        </div>
-        <div class="level-right buttons">
+{% block content %}
+<header class="level">
+    <div class="level-left">
+        <h1 class="title">{{ __('Partners') }}</h1>
+    </div>
+    <div class="level-right buttons">
+        {% if user_can_create controller.new_iter %}
             <a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">
                 {{ __('New partner')  }}
             </a>
-        </div>
-    </header>
-    <section class="table-container">
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>{{ __('Name') }}</th>
-                    <th class="has-text-right"></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for partner in iters %}
-                <tr>
-                    <td>{{ partner.name }}</td>
-                    <td class="has-text-right"></td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="6">
-                        <p class="has-text-centered">
-                            {{ __('No partners found :(') }}
-                        </p>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </section>
-</div>
-</article>
+        {% endif %}
+    </div>
+</header>
+<section class="table-container">
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>{{ __('Name') }}</th>
+                <th class="has-text-right"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for partner in iters %}
+            <tr>
+                <td>
+                    <a href="{{ controller.link_to_read(partner) }}">
+                        {{ partner.name }}
+                    </a>
+                </td>
+                <td class="has-text-right"></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">
+                    <p class="has-text-centered">
+                        {{ __('No partners found :(') }}
+                    </p>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
 {% endblock %}

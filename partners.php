@@ -11,6 +11,17 @@ class ControllerPartners extends ControllerCRUD
 		$this->view = View::byName('partners', $this);
 	}
 
+    protected function _index()
+    {
+        $iters = parent::_index();
+
+        usort($iters, function($a, $b) {
+            return strcasecmp($a['name'], $b['name']);
+        });
+
+        return $iters;
+    }
+
     public function run_autocomplete()
     {
         $partners = $this->model->find(['name__contains' => $_GET['search']]);
