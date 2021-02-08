@@ -11,6 +11,9 @@
     {% endif %}
 
     {{ html_nonce('club') }}
+    <p class="field">
+        {{ __('Fill out this form to propose your own club! After submission, the board will review your proposal and help you get started. For more information about clubs and the process of founding one, please review the %s.')|e('html')|format('<a href="https://sd.svcover.nl/Association/Guidelines%20Clubs.pdf" target="_blank">Club Guidelines</a>')|raw }}
+    </p>
 
     <div class="field">
         {{ html_label(__('Club name'), 'club_name', errors=errors, required=true) }}
