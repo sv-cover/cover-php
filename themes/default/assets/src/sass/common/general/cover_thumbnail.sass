@@ -37,6 +37,7 @@ $cover-thumbnail-overlay-padding: 1.25rem 1rem 1.25rem 0 !default
     &.is-1by3,
         > .image
             @extend %overlay
+            height: 0px // fix for an apparent webkit bug
             overflow: hidden
 
             img
