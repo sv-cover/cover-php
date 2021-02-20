@@ -7,6 +7,9 @@ import {Bulma} from 'cover-style-system/src/js';
  *
  * submit-extra-data = [JSON Object] contains fields to add to data before submission
  * async-action = action to submit form, if different from fallback
+ * use-native-submit = Boolean attribute. Uses native submit instead of ajax if present.
+ * allow-submit-on-enter = Boolean attribute. Uses native submit instead of ajax if present.
+ * visibility-selector = selector for elements outside the form that needs visibility changed based on auto submit
  * 
  * Disables buttons that submit the form if they have the boolean data option auto-submit-hidden
  */
@@ -21,15 +24,22 @@ class AutoSubmitForm {
                 extraData: JSON.parse(element.dataset.autoSubmitExtraData || null) || {},
                 // Buttons may exist outside of field, but assume they're always inside context
                 buttons: Array.from(context.querySelectorAll('button')).filter(btn => btn.form === element),
+                externalElements: element.dataset.visibilitySelector ? Array.from(context.querySelectorAll(element.dataset.visibilitySelector)) : [],
+                useNativeSubmit: (element.dataset.useNativeSubmit != null
+                    && element.dataset.useNativeSubmit.toLowerCase() !== 'false'),
+                allowSubmitOnEnter: (element.dataset.allowSubmitOnEnter != null
+                    && element.dataset.allowSubmitOnEnter.toLowerCase() !== 'false'),
             });
         });
 
     }
 
     constructor(options) {
+        this.options = options;
         this.element = options.element;
         this.extraData = options.extraData;
         this.buttons = options.buttons;
+        this.externalElements = options.externalElements;
 
         this.initSwitches();
         this.initVisibility();
@@ -41,6 +51,13 @@ class AutoSubmitForm {
         for (let button of this.buttons) {
             if (button.dataset.autoSubmitHidden != null && button.dataset.autoSubmitHidden.toLowerCase() !== 'false')
                 button.hidden = true;
+        }
+
+        for (let element of this.externalElements) {
+            if (element.dataset.autoSubmitHidden != null && element.dataset.autoSubmitHidden.toLowerCase() !== 'false')
+                element.hidden = true;
+            if (element.dataset.autoSubmitVisible != null && element.dataset.autoSubmitVisible.toLowerCase() !== 'false')
+                element.hidden = false;
         }
 
         this.element.querySelectorAll('[data-auto-submit-hidden]').forEach(element => element.hidden = true);
@@ -90,11 +107,16 @@ class AutoSubmitForm {
 
     handleKeyDown(event) {
         // Don't use default submit on enter. That's it.
-        if (event.key === 'Enter' && event.target.tagName.toLowerCase() !== 'textarea')
+        if (!this.options.allowSubmitOnEnter && event.key === 'Enter' && event.target.tagName.toLowerCase() !== 'textarea')
             event.preventDefault();    
     }
 
     submit() {
+        if (this.options.useNativeSubmit) {
+            this.element.submit();
+            return;
+        }
+
         const url = this.element.dataset.asyncAction || this.element.getAttribute('action');
         
         // Append extra data to formdata

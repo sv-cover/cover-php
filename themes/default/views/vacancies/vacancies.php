@@ -38,4 +38,39 @@ class VacanciesView extends CRUDView
 		$filter = array_intersect_key($_GET, array_flip(get_model('DataModelVacancy')::FILTER_FIELDS));
 		return $this->render('index.twig', compact('iters', 'filter'));
 	}
+
+	public function get_filter_tags($filter)
+	{
+		$tags = [];
+
+		foreach ($filter as $field => $values) {
+			if (!is_array($values))
+				$values = [$values];
+
+			foreach ($values as $val) {
+				$tag = [];
+				if ($field === 'partner') {
+					$partner = array_find($this->partners(), function ($item) use ($val) { return $item['id'] == $val; });
+					if (empty($partner)) {
+						$tag['name'] = $val;
+						$tag['for'] = sprintf('field-partner-%s', $val);
+					} else {
+						$tag['name'] = $partner['name'];
+						$tag['for'] = sprintf('field-partner-%s', $partner['id']);
+					}
+				} elseif ($field === 'type') {
+					$tag['name'] = $this->type_options()[$val];
+					$tag['for'] = sprintf('field-type-%s', $val);
+				} elseif ($field === 'study_phase') {
+					$tag['name'] = $this->study_phase_options()[$val];
+					$tag['for'] = sprintf('field-study_phase-%s', $val);
+				}
+
+				if (!empty($tag))
+					$tags[] = $tag;
+			}
+		}
+
+		return $tags;
+	}
 }

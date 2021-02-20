@@ -16,11 +16,11 @@
     </div>
 </header>
 <section class="block">
-    <form method="GET">
+    <form method="GET" data-auto-submit data-allow-submit-on-enter data-use-native-submit data-visibility-selector="[data-filter-tags]">
         <div class="field has-addons">
             <div class="control is-expanded">
                 {{ html_label(__('Search'), 'query', class='is-sr-only') }}
-                {{ html_input_text('query', filter, type='search') }}
+                {{ html_input_text('query', filter, type='search', placeholder=__('Type here to search vacancies…')) }}
             </div>
             <div class="control">
                 <button class="button" type="submit">
@@ -31,7 +31,7 @@
                 </button>
             </div>
         </div>
-        <div class="field is-grouped">
+        <div class="field is-grouped is-grouped-multiline">
             <div class="control">
                 <div class="dropdown">
                     <div class="dropdown-trigger">
@@ -45,7 +45,7 @@
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
                             {% for value, name in view.type_options() %}
-                                <label class="checkbox dropdown-item" for="field-type-{{value}}">
+                                <label class="checkbox dropdown-item" for="field-type-{{value}}" data-auto-submit-no-switch>
                                     {{ html_input_checkbox('type[]', filter, id='field-type-' ~ value, value=value) }}
                                     {{ name }}
                                 </label>
@@ -67,7 +67,7 @@
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
                             {% for value, name in view.study_phase_options() %}
-                                <label class="checkbox dropdown-item" for="field-study_phase-{{value}}">
+                                <label class="checkbox dropdown-item" for="field-study_phase-{{value}}" data-auto-submit-no-switch>
                                     {{ html_input_checkbox('study_phase[]', filter, id='field-study_phase-' ~ value, value=value) }}
                                     {{ name }}
                                 </label>
@@ -90,7 +90,7 @@
                         <div class="dropdown-content">
                             {% for partner in view.partners() %}
                                 {% set value = partner['id'] ?? partner['name'] %}
-                                <label class="checkbox dropdown-item" for="field-partner-{{ value }}">
+                                <label class="checkbox dropdown-item" for="field-partner-{{ value }}" data-auto-submit-no-switch>
                                     {{ html_input_checkbox('partner[]', filter, id='field-partner-' ~ value, value=value) }}
                                     {{ partner['name'] }}
                                 </label>
@@ -103,6 +103,30 @@
     </form>
 </section>
 <section class="block">
+    <div class="columns is-mobile">
+        <div class="column">
+            <div class="field is-grouped is-grouped-multiline" data-filter-tags data-auto-submit-visible hidden>
+                <p class="control">
+                    <small>{{ __('Filter:') }}</small>
+                </p>
+                {% for tag in view.get_filter_tags(filter) %}
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag">{{ tag.name }}</span>
+                            <label class="tag is-delete" type="button" for="{{ tag.for }}"><span class="is-sr-only">{{ __('Delete filter') }}</span></label>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="control">
+                        <small>{{ __('All vacancies') }}</small>
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+        <p class="column is-narrow">
+            <small>{{ __N('%d vacancy', '%d vacancies', iters|length) }}</small>
+        </p>
+    </div>
     <ul class="vacancy-list">
         {% for iter in iters %}
             <li class="vacancy {% if iter.partner %}has-image{% endif %}">
