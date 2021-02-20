@@ -639,7 +639,7 @@ CREATE TABLE vacancies(
     title character varying(255) NOT NULL,
     description text NOT NULL,
     type integer NOT NULL,
-    url character varying(255) NOT NULL,
+    url character varying(255),
     study_phase integer NOT NULL,
     partner_id integer DEFAULT NULL REFERENCES partners (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     partner_name character varying(255) DEFAULT NULL,

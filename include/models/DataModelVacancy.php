@@ -63,8 +63,9 @@ class DataIterVacancy extends DataIter implements SearchResult
 				],
 			],
 			'url' => [
-				'required' => true,
+				'clean' => 'clean_empty',
 				'validate' => [
+					'optional',
 					function($url) {
 						return filter_var($url, FILTER_VALIDATE_URL) !== FALSE;
 					}
