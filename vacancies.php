@@ -13,13 +13,8 @@ class ControllerVacancies extends ControllerCRUD{
 
     protected function _index()
     {
-        $iters = parent::_index();
-
-        usort($iters, function($a, $b) {
-            return strcasecmp($a['title'], $b['title']);
-        });
-
-        return $iters;
+        $filter_conditions = array_intersect_key($_GET, array_flip($this->model::FILTER_FIELDS));
+        return $this->model->filter($filter_conditions);
     }
 
 	public function run_preview()

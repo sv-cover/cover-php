@@ -16,6 +16,93 @@
     </div>
 </header>
 <section class="block">
+    <form method="GET">
+        <div class="field has-addons">
+            <div class="control is-expanded">
+                {{ html_label(__('Search'), 'query', class='is-sr-only') }}
+                {{ html_input_text('query', filter, type='search') }}
+            </div>
+            <div class="control">
+                <button class="button" type="submit">
+                    <span class="icon">
+                        <i class="fas fa-search"></i>
+                        <span class="is-sr-only">{{ __('Search') }}</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <div class="dropdown">
+                    <div class="dropdown-trigger">
+                        <button class="button" type="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span>{{ __('Type') }}</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            {% for value, name in view.type_options() %}
+                                <label class="checkbox dropdown-item" for="field-type-{{value}}">
+                                    {{ html_input_checkbox('type[]', filter, id='field-type-' ~ value, value=value) }}
+                                    {{ name }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="control">
+                <div class="dropdown">
+                    <div class="dropdown-trigger">
+                        <button class="button" type="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span>{{ __('Study Phase') }}</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            {% for value, name in view.study_phase_options() %}
+                                <label class="checkbox dropdown-item" for="field-study_phase-{{value}}">
+                                    {{ html_input_checkbox('study_phase[]', filter, id='field-study_phase-' ~ value, value=value) }}
+                                    {{ name }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="control">
+                <div class="dropdown">
+                    <div class="dropdown-trigger">
+                        <button class="button" type="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span>{{ __('Company') }}</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            {% for partner in view.partners() %}
+                                {% set value = partner['id'] ?? partner['name'] %}
+                                <label class="checkbox dropdown-item" for="field-partner-{{ value }}">
+                                    {{ html_input_checkbox('partner[]', filter, id='field-partner-' ~ value, value=value) }}
+                                    {{ partner['name'] }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+<section class="block">
     <ul class="vacancy-list">
         {% for iter in iters %}
             <li class="vacancy {% if iter.partner %}has-image{% endif %}">
@@ -30,6 +117,13 @@
                     {% endif %}
                     <div class="media-content">
                         <h2 class="title is-5">{{ iter.title }}</h2>
+                        <div>
+                            {{ view.type_options[iter.type] }}
+                            {{ view.study_phase_options[iter.study_phase] }}
+                        </div>
+                        {# {% if iter.url %}
+                            <a href="{{ iter.url }}">{{ __('Website') }}</a>
+                        {% endif %} #}
                     </div>
                 </a>
             </li>

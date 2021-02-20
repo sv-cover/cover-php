@@ -151,6 +151,8 @@ class DataModelVacancy extends DataModel implements SearchProvider
 	const STUDY_PHASE_MSC_GRADUATED = 3;
 	const STUDY_PHASE_OTHER = 4;
 
+	const FILTER_FIELDS = ['query', 'partner', 'study_phase', 'type'];
+
 	public $dataiter = 'DataIterVacancy';
 
 	public function __construct($db)
@@ -173,5 +175,86 @@ class DataModelVacancy extends DataModel implements SearchProvider
 	public function search($query, $limit = null)
 	{
 		return [];
+	}
+
+	protected function _generate_filter_conditions(array $conditions=[])
+	{
+		$search = [];
+		$filter = [];
+
+		foreach ($conditions as $field => $values) {
+			if (!is_array($values))
+				$values = [$values];
+
+			foreach ($values as $val) {
+				if ($field === 'query') {
+					$val =  $this->db->quote_value('%' . $val . '%');
+					$search[] = sprintf('title ILIKE %s', $val);
+					$search[] = sprintf('description ILIKE %s', $val);
+				} elseif ($field === 'partner') {
+					if (is_numeric($val))
+						$filter[] = sprintf('partner_id =  %s', $this->db->quote_value($val));
+					else
+						$filter[] = sprintf('partner_name ILIKE %s', $this->db->quote_value($val));
+				} else {
+					$filter[] = sprintf('%s =  %s', $field, $val);
+				}
+			}
+		}
+
+		$prepared = [];
+
+		if (!empty($search))
+			$prepared[] = new DatabaseLiteral('(' . implode(' OR ', $search) . ')');
+
+		if (!empty($filter))
+			$prepared[] = new DatabaseLiteral('(' . implode(' OR ', $filter) . ')');
+
+		return $prepared;
+	}
+
+	public function filter(array $conditions=[])
+	{
+		$filter_conditions = $this->_generate_filter_conditions($conditions);
+
+		if (!empty($filter_conditions))
+			$filter_conditions = $this->_generate_conditions_from_array($filter_conditions);
+
+		$query = sprintf(
+			"SELECT *
+			   FROM {$this->table} 
+			   %s
+			  ORDER BY LOWER(title)
+			",
+			(!empty($filter_conditions) ? " WHERE {$filter_conditions}" : "")
+		);
+
+		$rows = $this->db->query($query);
+
+		return $this->_rows_to_iters($rows);
+	}
+
+	public function partners()
+	{
+		$rows = $this->db->query('
+			SELECT NULL AS id
+				  ,t1.name AS name
+			  FROM (
+			  		SELECT DISTINCT partner_name AS name
+			  		  FROM vacancies
+			         WHERE partner_name IS NOT NULL
+			       ) AS t1
+
+			UNION
+
+			SELECT t2.id AS id
+				  ,p.name AS name
+			  FROM partners  AS P JOIN (
+			  		SELECT DISTINCT partner_id AS id
+			  		  FROM vacancies
+			  	     WHERE partner_id IS NOT NULL
+			       ) t2 ON p.id = t2.id;
+		');
+		return $rows;
 	}
 }
