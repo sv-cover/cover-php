@@ -75,7 +75,7 @@ class DataIterPartner extends DataIter implements SearchResult
 
 	public function get_absolute_url()
 	{
-		return sprintf('vacancies.php?view=read&id=%d', $this->get_id());
+		return sprintf('partners.php?view=read&id=%d', $this->get_id());
 	}
 
 	public function get_logo($width=null)

@@ -1,3 +1,4 @@
+$property-icon-color: $grey !default
 $footer-main-background-color: $grey-lightest !default
 
 html, body
@@ -97,6 +98,16 @@ ul.controls li
         height: 600px
         vertical-align: top
 
+.property .icon
+    color: $property-icon-color
+
 +mobile
     .media-content
         overflow: visible
+
+
+// Sticky sidebar
++desktop
+    .is-sidebar > .is-sticky
+        position: sticky
+        top: $navbar-height + $block-spacing

@@ -2,7 +2,9 @@
 
 {% block title iter.title ~ ' – ' ~ parent() %}
 
-{% block content %}
+{% block page %}
+<article class="section vacancy-single">
+<div class="container has-sidebar block">
     <div class="level is-mobile controls">
         <div class="level-left">
             <a href="{{ controller.link({}) }}" class="button">
@@ -47,18 +49,73 @@
             </div>
         </div>
     </div>
-	{% if iter.partner %}
-		<figure class="image block">
-		    {% if iter.partner.logo_dark_url is defined %}
-		        <img class="darkmode" src="{{ iter.partner.get_logo_dark(700) }}">
-		    {% endif %}
-		    <img class="default" src="{{ iter.partner.get_logo(700) }}">
-		</figure>
-	{% endif %}
-    <h1 class="title">
-        {{ iter.title }}
-    </h1>
-    <div class="content">
-        {{ iter.description|parse_markup }}
+    <div class="columns vacancy-details">
+        <aside class="column is-sidebar">
+            <h2 class="is-sr-only">{{ __('Vacancy details') }}</h2>
+            <div class="is-sticky">
+                {% if iter.partner %}
+                    <figure class="image block">
+                        {% if iter.partner.logo_dark_url is defined %}
+                            <img class="darkmode" src="{{ iter.partner.get_logo_dark(700) }}">
+                        {% endif %}
+                        <img class="default" src="{{ iter.partner.get_logo(700) }}">
+                    </figure>
+                {% endif %}
+                <div class="content block">
+                    <p class="property" title="{{ __('Company') }}">
+                        <span class="icon">
+                            <i class="fas fa-building" aria-hidden="true"></i>
+                            <span class="is-sr-only">{{ __('Company') }}:</span>    
+                        </span>
+                        {% if iter.partner %}
+                            <a href="{{ iter.partner.absolute_url }}">
+                                {{ iter.partner.name }}
+                            </a>
+                        {% else %}
+                            {{ iter.partner_name }}
+                        {% endif %}
+                    </p>
+                    <p class="property" title="{{ __('Job type') }}">
+                        <span class="icon">
+                            <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+                            <span class="is-sr-only">{{ __('Job type') }}:</span>    
+                        </span>
+                        {{ view.type_options[iter.type] }}
+                    </p>
+                    <p class="property" title="{{ __('Skill level') }}">
+                        <span class="icon">
+                            <i class="fas fa-user-graduate" aria-hidden="true"></i>
+                            <span class="is-sr-only">{{ __('Skill level') }}:</span>    
+                        </span>
+                        {{ view.study_phase_options[iter.study_phase] }}
+                    </p>
+                    {% if iter.url %}
+                        <p class="property">
+                            <span class="icon">
+                                <i class="fas fa-globe" aria-hidden="true"></i>
+                            </span>
+                            <a href="{{ iter.url }}">{{ __('Details') }}</a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </aside>
+        <div class="column is-content">
+            <h1 class="title">
+                {{ iter.title }}
+            </h1>
+            <div class="content block">
+                {{ iter.description|parse_markup }}
+            </div>
+
+            {% if iter.url %}
+                {# TODO: markup doesn't render <p>'s, so this can be included in the content block as soon as we've fixed that #}
+                <p>
+                    <a href="{{ iter.url }}">{{ __('More information…') }}</a>
+                </p>
+            {% endif %}
+        </div>
     </div>
+</div>
+</article>
 {% endblock %}

@@ -2,12 +2,15 @@ $vacancy-list-logo-width-touch: 96px
 $vacancy-list-logo-height-touch: 96px
 $vacancy-list-logo-width-desktop: 192px
 $vacancy-list-logo-height-desktop: auto
+$vacancy-list-description-max-lines: 3
 
 .vacancy-list
     .vacancy
         padding: 1rem 0
         & + .vacancy
             border-top: 1px solid $media-border-color
+        a
+            color: $text
         .media
             margin: -1rem
             padding: 1rem
@@ -28,3 +31,21 @@ $vacancy-list-logo-height-desktop: auto
         &:not(.has-image) .media::before
             +desktop
                 height: $vacancy-list-logo-height-touch
+        ul.properties
+            @extend %block
+            margin-top: $subtitle-negative-margin
+            li
+                display: inline-block
+        .description
+            margin-top: $subtitle-negative-margin
+            max-height: 1em * $body-line-height * $vacancy-list-description-max-lines
+            overflow: hidden
+            display: -webkit-box
+            -webkit-box-orient: vertical
+            -webkit-line-clamp: $vacancy-list-description-max-lines
+
+.vacancy-single
+    .vacancy-details
+        @extend %block
+        +tablet
+            flex-direction: row-reverse
