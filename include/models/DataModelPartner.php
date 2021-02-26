@@ -8,6 +8,7 @@ class DataIterPartner extends DataIter implements SearchResult
 	static public function fields()
 	{
 		return [
+			'id',
 		    'name',
 		    'type',
 		    'url',
@@ -87,6 +88,11 @@ class DataIterPartner extends DataIter implements SearchResult
 	{
 		return get_filemanager_url($this['logo_dark_url'], $width);
 	}
+
+	public function get_vacancies()
+	{
+		return get_model('DataModelVacancy')->find(['partner_id' => $this->get_id()]);
+	}	
 }
 
 class DataModelPartner extends DataModel implements SearchProvider

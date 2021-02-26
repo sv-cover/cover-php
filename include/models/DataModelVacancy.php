@@ -8,6 +8,7 @@ class DataIterVacancy extends DataIter implements SearchResult
 	static public function fields()
 	{
 		return [
+			'id',
 		    'title',
 		    'description',
 		    'type',

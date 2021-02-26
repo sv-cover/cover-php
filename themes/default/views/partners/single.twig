@@ -65,22 +65,57 @@
             <div class="content">
             </div>
         </div>
-        <div class="column is-sidebar">
-            <figure class="image is-hidden-touch block">
-                {% if iter.logo_dark_url is defined %}
-                    <img class="darkmode" src="{{ iter.get_logo_dark(300) }}">
-                {% endif %}
-                <img class="default" src="{{ iter.get_logo(300) }}">
-            </figure>
-            <div class="content block">
-                <p>
-                    <span class="icon"><i class="fas fa-globe" aria-hidden="true"></i></span>
-                    <a href="{{ iter.url }}" target="_blank" rel="noopener noreferrer">
-                        {{ __('%s website')|format(iter.name) }}
-                    </a>
-                </p>
+        <aside class="column is-sidebar">
+            <h2 class="is-sr-only">{{ __('Partner details') }}</h2>
+            <div class="is-sticky">
+                <figure class="image is-hidden-touch block">
+                    {% if iter.logo_dark_url is defined %}
+                        <img class="darkmode" src="{{ iter.get_logo_dark(300) }}">
+                    {% endif %}
+                    <img class="default" src="{{ iter.get_logo(300) }}">
+                </figure>
+                <div class="content block">
+                    <p class="property">
+                        <span class="icon"><i class="fas fa-globe" aria-hidden="true"></i></span>
+                        <a href="{{ iter.url }}" target="_blank" rel="noopener noreferrer">
+                            {{ __('%s website')|format(iter.name) }}
+                        </a>
+                    </p>
+                    {% set vacancies = iter.vacancies %}
+                    {% if vacancies|length > 0 %}
+                        <h3>{{ __('Vacancies') }}</h3>
+                        <ul class="vacancy-list">
+                            {% for vacancy in iter.vacancies %}
+                                <li class="vacancy">
+                                    <a href="{{ vacancy.absolute_url }}">
+                                        <h4 class="title">{{ vacancy.title }}</h4>                                    
+                                        <ul class="properties is-size-7">
+                                        {% spaceless %}
+                                            <li class="property" title="{{ __('Job type') }}">
+                                                <span class="icon is-small">
+                                                    <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+                                                    <span class="is-sr-only">{{ __('Job type') }}:</span>    
+                                                </span>
+                                                {{ view.vacancy_type_options[vacancy.type] }}
+                                            </li>
+                                            <li class="divider" role="separator"></li>
+                                            <li class="property" title="{{ __('Skill level') }}">
+                                                <span class="icon is-small">
+                                                    <i class="fas fa-user-graduate" aria-hidden="true"></i>
+                                                    <span class="is-sr-only">{{ __('Skill level') }}:</span>    
+                                                </span>
+                                                {{ view.vacancy_study_phase_options[vacancy.study_phase] }}
+                                            </li>
+                                        {% endspaceless %}
+                                        </ul>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        </aside>
     </div>
 </div>
 </article>

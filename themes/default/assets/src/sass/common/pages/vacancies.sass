@@ -9,8 +9,6 @@ $vacancy-list-description-max-lines: 3
         padding: 1rem 0
         & + .vacancy
             border-top: 1px solid $media-border-color
-        a
-            color: $text
         .media
             margin: -1rem
             padding: 1rem
@@ -31,6 +29,10 @@ $vacancy-list-description-max-lines: 3
         &:not(.has-image) .media::before
             +desktop
                 height: $vacancy-list-logo-height-touch
+        .title,
+        .properties,
+        .description
+            color: $text
         ul.properties
             @extend %block
             margin-top: $subtitle-negative-margin
@@ -43,6 +45,23 @@ $vacancy-list-description-max-lines: 3
             display: -webkit-box
             -webkit-box-orient: vertical
             -webkit-line-clamp: $vacancy-list-description-max-lines
+
+    .partner-single &
+        list-style: none
+        margin-left: 0
+        .vacancy
+            @extend %block
+            padding: 0
+            & + .vacancy
+                border-top: none
+        a
+            .title
+                font-weight: $weight-normal
+                color: inherit
+        ul.properties
+            list-style: none
+            margin-left: 0
+
 
 .vacancy-single
     .vacancy-details
