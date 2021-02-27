@@ -14,8 +14,9 @@ class DataIterPartner extends DataIter implements SearchResult
 		    'url',
 		    'logo_url',
 		    'logo_dark_url',
-		    'page_id',
-		    'hidden',
+		    'profile',
+		    'has_banner_visible',
+		    'has_profile_visible',
 		    'created_on',
 		];
 	}
@@ -57,7 +58,14 @@ class DataIterPartner extends DataIter implements SearchResult
 				'clean' => 'clean_empty',
 				'validate' => ['optional', 'filemanger_file'],
 			],
-			'hidden' => [
+			'profile' => [
+				'clean' => 'clean_empty',
+			],
+			'has_banner_visible' => [
+				'is_checkbox' => true,
+				'clean' => 'clean_checkbox',
+			],
+			'has_profile_visible' => [
 				'is_checkbox' => true,
 				'clean' => 'clean_checkbox',
 			],

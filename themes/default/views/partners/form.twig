@@ -53,8 +53,39 @@
 	</div>
 
 	<div class="field">
+		{{ html_label(__('Profile'), 'profile', errors=errors) }}
+		<div class="tabs-wrapper is-condensed">
+			<div class="tabs is-toggle">
+				<ul>
+					<li class="is-active">
+						<a href="#profile-tab">{{ __('Raw') }}</a>
+					</li>
+					<li>
+						<a href="#profile-preview-tab">{{ __('Preview') }}</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="tabs-content">
+				<div id="profile-tab" class="is-active">
+					{{ html_textarea_field('profile', iter, errors=errors, rows=10) }}
+				</div>
+				<div id="profile-preview-tab" class="content-preview box content" data-preview-source="#profile-tab textarea" data-preview-url="partners.php?view=preview">
+					<span class="loading">{{ __('Loading preview…') }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
 		<div class="control">
-			{{ html_input_checkbox('hidden', iter, label=__('Hidden'), errors=errors) }}
+			{{ html_input_checkbox('has_banner_visible', iter, label=__('Banner visible'), errors=errors) }}
+		</div>
+	</div>
+
+	<div class="field">
+		<div class="control">
+			{{ html_input_checkbox('has_profile_visible', iter, label=__('Profile visible'), errors=errors) }}
 		</div>
 	</div>
 

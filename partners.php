@@ -36,6 +36,11 @@ class ControllerPartners extends ControllerCRUD
 
         return $this->view->render_json($data);
     }
+
+    public function run_preview()
+    {
+        return markup_parse($_POST['profile']);
+    }
 }
 
 $controller = new ControllerPartners();

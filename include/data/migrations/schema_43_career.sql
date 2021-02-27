@@ -5,8 +5,9 @@ CREATE TABLE partners(
     url character varying(255) NOT NULL,
     logo_url character varying(255) NOT NULL,
     logo_dark_url character varying(255) DEFAULT NULL,
-    page_id integer DEFAULT NULL REFERENCES pages (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
-    hidden integer NOT NULL DEFAULT 0, -- Deactivated
+    profile text,
+    has_banner_visible integer NOT NULL DEFAULT 0, -- Not visible
+    has_profile_visible integer NOT NULL DEFAULT 0, -- Not visible
     created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
 );
 
