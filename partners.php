@@ -37,6 +37,13 @@ class ControllerPartners extends ControllerCRUD
         return $this->view->render_json($data);
     }
 
+    public function run_index()
+    {
+        if (!get_policy($this->model)->user_can_update($this->new_iter()))
+            return $this->view->redirect('/career.php');
+        return parent::run_index();
+    }
+
     public function run_preview()
     {
         return markup_parse($_POST['profile']);
