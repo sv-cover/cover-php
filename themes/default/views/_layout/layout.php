@@ -22,13 +22,6 @@ class LayoutViewHelper
 			]
 		];
 
-		// $menus['leden'] = [
-		// 	'label' => __('Members'),
-		// 	'submenu' => [
-
-		// 	]
-		// ];
-
 		$menus['studie'] = [
 			'label' => __('Education'),
 			'submenu' => [
@@ -42,14 +35,9 @@ class LayoutViewHelper
 			]
 		];
 
-		$menus['bedrijven'] = [
+		$menus['career'] = [
 			'label' => __('Career'),
-			'submenu' => [
-				['url' => 'show.php?id=51', 'label' => __('Company profiles')],
-				['url' => 'show.php?id=54', 'label' => __('Vacancies')],
-				['url' => 'show.php?id=31', 'label' => __('Internships/Graduate programs')],
-				['url' => 'show.php?id=56', 'label' => __('Sponsorship opportunities')]
-			]
+			'url' => '/career.php'
 		];
 
 		$menus['vereniging'] = [
@@ -78,28 +66,10 @@ class LayoutViewHelper
 			]
 		];
 
-		// $menus['forum'] = [
-		// 	'url' => 'forum.php',
-		// 	'label' => __('Forum')
-		// ];
-
-		// $menus['fotoboek'] = [
-		// 	'url' => 'fotoboek.php',
-		// 	'label' => __('Photos'),
-		// 	'title' => __('Photos of activities of Cover.')
-		// ];
-
 		$menus['contact'] = [
 			'label' => __('Contact'),
 			'url' => 'show.php?id=17'
 		];
-
-		// $menus['admin'] = [
-		// 	'label' => __('Tools'),
-		// 	'title' => __('These are tools available to you because you are a member of a committee.'),
-		// 	'className' => 'authorized-only',
-		// 	'submenu' => []
-		// ];
 		
 		// Filter out any empty menu items (I'm looking at you, admin menu!)
 		$menus = array_filter($menus, function($menu) {
@@ -277,6 +247,16 @@ class LayoutViewHelper
 				'url' => 'actieveleden.php',
 				'label' => __('Active members'),
 				'title' => __('All active committee members according to the website.')
+			];
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-building',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
+				'url' => 'partners.php',
+				'label' => __('Partners'),
+				'title' => __('All partner profiles and banners.')
 			];
 		}
 

@@ -50,7 +50,7 @@
             </div>
         </div>
     </header>
-    <article class="section vacancies-section">
+    <article class="section vacancies-section" id="vacancies">
         {% set vacancies_page = global.models.Editable.get_iter_from_title('vacancies') %}
         <div class="container is-content-optimized">
             <div class="level">
@@ -93,7 +93,7 @@
             </div>
         </div>
     </article>
-    <article class="section">
+    <article class="section" id="profiles">
         {% set partners_page = global.models.Editable.get_iter_from_title('partners') %}
         <div class="container is-content-optimized">
             <div class="level">
