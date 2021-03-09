@@ -100,7 +100,20 @@ class DataIterPartner extends DataIter implements SearchResult
 	public function get_vacancies()
 	{
 		return get_model('DataModelVacancy')->find(['partner_id' => $this->get_id()]);
-	}	
+	}
+
+	public function get_sort_order()
+	{
+		switch ($this['type'] ?? DataModelPartner::TYPE_SPONSOR)
+		{
+			case DataModelPartner::TYPE_MAIN_SPONSOR:
+				return 0;
+			case DataModelPartner::TYPE_SPONSOR:
+				return 1;
+			default:
+				return 2;
+		}
+	}
 }
 
 class DataModelPartner extends DataModel implements SearchProvider
@@ -126,5 +139,15 @@ class DataModelPartner extends DataModel implements SearchProvider
 	public function search($query, $limit = null)
 	{
 		return [];
+	}
+
+	public function shuffle(&$iters)
+	{
+		// Shuffle the banners
+		shuffle($iters);
+
+		usort($iters, function($a, $b) {
+			return $a['sort_order'] <=> $b['sort_order'];
+		});
 	}
 }

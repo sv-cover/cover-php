@@ -1,7 +1,10 @@
 <?php
+require_once 'include/models/DataModelPartner.php';
 
 class LayoutViewHelper
 {
+	private $_partners = null;
+
 	public function top_menu()
 	{
 		$menus = [];
@@ -287,6 +290,33 @@ class LayoutViewHelper
 		$model = get_model('DataModelAgenda');
 
 		return array_filter($model->get_agendapunten(), [get_policy($model), 'user_can_read']);
+	}
+
+	protected function _get_partners(Array $include = [], Array $exclude = [])
+	{
+		if (!isset($this->_partners)) {
+			$model = get_model('DataModelPartner');
+			$this->_partners = array_filter($model->find(['has_banner_visible' => 1]), [get_policy($model), 'user_can_read']);
+			$model->shuffle($this->_partners);
+		}
+
+		if (!empty($include) || !empty($exclude))
+			return array_filter($this->_partners, function($partner) use ($include, $exclude) {
+				return (empty($include) || in_array($partner['type'], $include))
+					&& (empty($exclude) || !in_array($partner['type'], $exclude));
+			});
+
+		return $this->_partners;
+	}
+
+	public function partners()
+	{
+		return $this->_get_partners([], [DataModelPartner::TYPE_MAIN_SPONSOR]);
+	}
+
+	public function main_partners()
+	{
+		return $this->_get_partners([DataModelPartner::TYPE_MAIN_SPONSOR]);
 	}
 
 	public function jarigen()
