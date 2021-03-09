@@ -13,3 +13,21 @@ $boxed-title-distance: .5rem !default
         $i: index($sizes, $size)
         &.is-#{$i}
             font-size: $size
+        &.is-#{$i}-mobile
+            +mobile
+                font-size: $size
+        &.is-#{$i}-touch
+            +touch
+                font-size: $size
+        &.is-#{$i}-tablet
+            +tablet
+                font-size: $size
+        &.is-#{$i}-desktop
+            +desktop
+                font-size: $size
+        &.is-#{$i}-widescreen
+            +widescreen
+                font-size: $size
+        &.is-#{$i}-fullhd
+            +fullhd
+                font-size: $size

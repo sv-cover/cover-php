@@ -14,6 +14,11 @@
         </div>
     </div>
     <div class="field is-grouped is-grouped-multiline">
+        {% if has_all_button is defined and has_all_button %}
+            <div class="control">
+                <a href="/vacancies.php" class="button">{{ __('All vacancies') }}</a>
+            </div>
+        {% endif %}
         <div class="control">
             <div class="dropdown">
                 <div class="dropdown-trigger">
