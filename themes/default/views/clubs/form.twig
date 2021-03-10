@@ -1,0 +1,74 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Propose a club') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Propose a club') }}</h1>
+
+<form name="club_form"  method="post">
+    {% if errors %}
+        <p class="notification is-danger">{{ __("You haven't filled in all fields correctly") }}</p>
+    {% endif %}
+
+    {{ html_nonce('club') }}
+    <p class="field">
+        {{ __('Fill out this form to propose your own club! After submission, the board will review your proposal and help you get started. For more information about clubs and the process of founding one, please review the %s.')|e('html')|format('<a href="https://sd.svcover.nl/Association/Guidelines%20Clubs.pdf" target="_blank">Club Guidelines</a>')|raw }}
+    </p>
+
+    <div class="field">
+        {{ html_label(__('Club name'), 'club_name', errors=errors, required=true) }}
+        <div class="control">
+            {{ html_input_text('club_name', data, errors=errors, required=true) }}
+        </div>
+    </div>
+
+    <div class="field">
+        {{ html_label(__('Description'), 'description', errors=errors, required=true) }}
+        <div class="control">
+            {{ html_textarea_field('description', data, errors=errors, required=true, cols=50, rows=2) }}
+        </div>
+        <p class="help">{{ __('What is this club for?') }}</p>
+    </div>
+
+    <div class="field">
+        {{ html_label(__('Motivation'), 'motivation', errors=errors, required=true) }}
+        <div class="control">
+            {{ html_textarea_field('motivation', data, errors=errors, required=true, cols=50, rows=2) }}
+        </div>
+        <p class="help">{{ __('Why do you want to start this club?') }}</p>
+    </div>
+
+    <div class="field">
+        {{ html_label(__('Members'), 'members', errors=errors, required=true) }}
+        <div class="control">
+            {{ html_textarea_field('members', data, errors=errors, required=true, cols=50, rows=2) }}
+        </div>
+        <p class="help">{{ __('Do you know people who are interesed in joining? List their names here!') }}</p>
+    </div>
+
+    <div class="field">
+        {{ html_label(__('Email'), 'email', errors=errors, required=true) }}
+        <div class="control">
+            {{ html_input_text('email', data, type='email', errors=errors, required=true) }}
+        </div>
+        <p class="help">{{ __('We need to know how to contact you for questions!') }}</p>
+    </div>
+
+    <div class="field">
+        {{ html_label(__('Phone'), 'phone', errors=errors, required=true) }}
+        <div class="control">
+            {{ html_input_text('phone', data, errors=errors, required=true) }}
+        </div>
+        <p class="help">{{ __('We need to know how to contact you for questions!') }}</p>
+    </div>
+                
+    <div class="field">
+        <div class="control buttons">
+            <button type="submit" class="button is-primary">
+                {{ __('Submit proposal') }}
+            </button>
+            <a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to clubs') }}</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

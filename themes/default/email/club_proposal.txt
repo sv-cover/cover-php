@@ -1,0 +1,44 @@
+Subject: Club proposed
+From: noreply@svcover.nl
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+<body>
+<p>Hey!</p>
+
+<p>$member[full_name]|markup_format_text proposed to start the $data[club_name]|markup_format_text club. Here’s their proposal.</p>
+
+<table>
+    <tr>
+        <th>Club</th>
+        <td>$data[club_name]|markup_format_text</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>$data[description]|markup_format_text</td>
+    </tr>
+    <tr>
+        <th>Motivation</th>
+        <td>$data[motivation]|markup_format_text</td>
+    </tr>
+    <tr>
+        <th>Members</th>
+        <td>$data[members]|markup_format_text</td>
+    </tr>
+    <tr>
+        <th>Contact Email</th>
+        <td><a href="mailto:$data[email]|markup_format_attribute">$data[email]|markup_format_text</a></td>
+    </tr>
+    <tr>
+        <th>Contact Phone</th>
+        <td>$data[phone]|markup_format_text</td>
+    </tr>
+</table>
+
+<p>Just so you know ;)</p>
+
+<p>Kind regards,<br>the Website</p>
+
+</body>
+</html>

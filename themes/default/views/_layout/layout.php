@@ -59,6 +59,10 @@ class LayoutViewHelper
 					'label' => __('Committees')
 				],
 				[
+					'url' => 'clubs.php',
+					'label' => __('Clubs')
+				],
+				[
 					'url' => 'show.php?id=28',
 					'label' => __('Sister unions')
 				],
