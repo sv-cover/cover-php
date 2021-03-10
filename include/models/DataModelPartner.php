@@ -74,12 +74,12 @@ class DataIterPartner extends DataIter implements SearchResult
 
 	public function get_search_relevance()
 	{
-		return 0.5;
+		return floatval($this->data['search_relevance']);
 	}
 	
 	public function get_search_type()
 	{
-		return 'vacancy';
+		return 'partner';
 	}
 
 	public function get_absolute_url()
@@ -136,9 +136,43 @@ class DataModelPartner extends DataModel implements SearchProvider
 		return parent::update($iter);
 	}
 
-	public function search($query, $limit = null)
+	public function search($search_query, $limit = null)
 	{
-		return [];
+		// More or less analogous to DataModelAgenda
+		$query = "
+			WITH
+				search_items AS (
+					SELECT
+						id,
+						setweight(to_tsvector(name), 'A') || setweight(to_tsvector(profile), 'B') body
+					FROM
+						{$this->table}
+				),
+				matching_items AS (
+					SELECT
+						id,
+						body,
+						ts_rank_cd(body, query) as search_relevance
+					FROM
+						search_items,
+						plainto_tsquery('english', :keywords) query
+					WHERE
+						body @@ query
+				)
+			SELECT
+				p.*,
+				m.search_relevance
+			FROM
+				matching_items m
+			LEFT JOIN {$this->table} p ON
+				p.id = m.id
+			";
+
+		if ($limit !== null)
+			$query .= sprintf(" LIMIT %d", $limit);
+
+		$rows = $this->db->query($query, false, [':keywords' => $search_query]);
+		return $this->_rows_to_iters($rows);
 	}
 
 	public function shuffle(&$iters)

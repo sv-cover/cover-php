@@ -1,0 +1,19 @@
+<h2 class="title is-5">
+	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.name }}</a>
+</h2>
+{% if not result.has_profile_visible %}
+    <p class="subtitle is-7">{{ __('Partner') }}</p>
+{% else %}
+    <p class="subtitle is-7">{{ __('Company Profile') }}</p>
+    <div class="content">
+        {% set content = result.profile|strip_markup|excerpt(query_parts, 50) %}
+        {% if content %}
+            {{ content|raw }}
+        {% else %}
+            {{ result.profile|strip_markup|slice(0, 50) }}
+            {% if result.profile|strip_markup|length > 50 %}
+                <span class="glue">…</span>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endif %}
