@@ -109,7 +109,7 @@ class DataIterVacancy extends DataIter implements SearchResult
 
 	public function get_search_relevance()
 	{
-		return 0.5;
+		return floatval($this->data['search_relevance']);
 	}
 	
 	public function get_search_type()
@@ -173,11 +173,6 @@ class DataModelVacancy extends DataModel implements SearchProvider
 		return sprintf("%s.id = %d", $table !== null ? $table : $this->table, $id);
 	}
 
-	public function search($query, $limit = null)
-	{
-		return [];
-	}
-
 	protected function _generate_filter_conditions(array $conditions=[])
 	{
 		$search = [];
@@ -237,12 +232,12 @@ class DataModelVacancy extends DataModel implements SearchProvider
 
 	public function partners()
 	{
-		$rows = $this->db->query('
+		$rows = $this->db->query("
 			SELECT NULL AS id
 				  ,t1.name AS name
 			  FROM (
 			  		SELECT DISTINCT partner_name AS name
-			  		  FROM vacancies
+			  		  FROM {$this->table}
 			         WHERE partner_name IS NOT NULL
 			       ) AS t1
 
@@ -252,10 +247,49 @@ class DataModelVacancy extends DataModel implements SearchProvider
 				  ,p.name AS name
 			  FROM partners  AS P JOIN (
 			  		SELECT DISTINCT partner_id AS id
-			  		  FROM vacancies
+			  		  FROM {$this->table}
 			  	     WHERE partner_id IS NOT NULL
 			       ) t2 ON p.id = t2.id;
-		');
+		");
 		return $rows;
+	}
+
+	public function search($search_query, $limit = null)
+	{
+		// More or less analogous to DataModelAgenda
+		$query = "
+			WITH
+				search_items AS (
+					SELECT
+						id,
+						setweight(to_tsvector(title), 'A') || setweight(to_tsvector(description), 'B') body
+					FROM
+						{$this->table}
+				),
+				matching_items AS (
+					SELECT
+						id,
+						body,
+						ts_rank_cd(body, query) as search_relevance
+					FROM
+						search_items,
+						plainto_tsquery('english', :keywords) query
+					WHERE
+						body @@ query
+				)
+			SELECT
+				v.*,
+				m.search_relevance
+			FROM
+				matching_items m
+			LEFT JOIN {$this->table} v ON
+				v.id = m.id
+			";
+
+		if ($limit !== null)
+			$query .= sprintf(" LIMIT %d", $limit);
+
+		$rows = $this->db->query($query, false, [':keywords' => $search_query]);
+		return $this->_rows_to_iters($rows);
 	}
 }

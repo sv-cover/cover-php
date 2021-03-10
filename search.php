@@ -40,6 +40,10 @@ class SearchController extends Controller
 				'category_name' => __('partners')
 			],
 			[
+				'model' => get_model('DataModelVacancy'),
+				'category_name' => __('vacancies')
+			],
+			[
 				'model' => get_model('DataModelForum'),
 				'category_name' => __('forum topics')
 			],
