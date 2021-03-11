@@ -18,7 +18,7 @@
                 <div class="user-info">
                     <a class="name" href="{{ link('profiel.read', member=global.identity.member) }}">
                         {{ global.identity.member.full_name }}
-                    </q>
+                    </a>
                     
                     {% if global.identity.can_impersonate %}
                         <a class="impersonate-link" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-popup="modal">
