@@ -6,6 +6,9 @@ stickers:
   path: /stickers
   controller: App\Controller\StickersController
 
+profile_picture:
+  path: /profile_picture
+  controller: App\Controller\ProfilePictureController
 
 legacy:
   path: /{name}.php
@@ -14,6 +17,10 @@ legacy:
     map:
       index:
         controller: App\Controller\HomepageController
+        parameters: { _route: homepage }
+      foto:
+        controller: App\Controller\ProfilePictureController
+        parameters: { _route: profile_picture }
       stickers:
         controller: App\Controller\StickersController
         parameters: { _route: stickers }

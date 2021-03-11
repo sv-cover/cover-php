@@ -1,8 +1,10 @@
 <?php
+	namespace App\Controller;
+
 	require_once 'include/init.php';
 	require_once 'include/controllers/Controller.php';
 	
-	class Controllerfoto extends Controller
+	class ProfilePictureController extends \Controller
 	{
 		const FORMAT_PORTRAIT = 'portrait';
 		const FORMAT_SQUARE = 'square';
@@ -16,7 +18,7 @@
 		{
 			$this->model = get_model('DataModelMember');
 
-			$this->view = new View($this);
+			$this->view = new \View($this);
 		}
 
 		protected function _get_placeholder_type($member)
@@ -32,7 +34,7 @@
 			return $type == self::TYPE_PLACEHOLDER_PUBLIC || $type == self::TYPE_PLACEHOLDER_PRIVATE;
 		}
 
-		protected function _format_cache_file_path(DataIterMember $member, $width, $height, $type)
+		protected function _format_cache_file_path(\DataIterMember $member, $width, $height, $type)
 		{
 			$file_path_format = get_config_value('path_to_scaled_profile_picture', null);
 
@@ -44,7 +46,7 @@
 			return sprintf($file_path_format, $member->get_id(), $width, $height, $type, $extension);
 		}
 
-		protected function _open_cache_stream(DataIterMember $member, $width, $height, $type, $mode)
+		protected function _open_cache_stream(\DataIterMember $member, $width, $height, $type, $mode)
 		{
 			$file_path = $this->_format_cache_file_path($member, $width, $height, $type);
 
@@ -54,11 +56,11 @@
 			if (!file_exists($file_path))
 			{
 				// If we were trying to read, stop trying, it won't work, the file does not exist
-				if ($mode{0} == 'r')
+				if ($mode[0] == 'r')
 					return null;
 
 				// However, if we were trying to write, make sure the directory exists and make it otherwise.
-				if ($mode{0} == 'w' && !file_exists(dirname($file_path)))
+				if ($mode[0] == 'w' && !file_exists(dirname($file_path)))
 					mkdir(dirname($file_path), 0777, true);
 			}
 
@@ -81,7 +83,7 @@
 			fpassthru($fout);
 		}
 
-		protected function _view_cached(DataIterMember $member, $width, $height, $type)
+		protected function _view_cached(\DataIterMember $member, $width, $height, $type)
 		{
 			$file_path = $this->_format_cache_file_path($member, $width, $height, $type);
 
@@ -109,14 +111,14 @@
 			return true;
 		}
 
-		protected function _generate_original(DataIterMember $member)
+		protected function _generate_original(\DataIterMember $member)
 		{
 			$photo = $this->model->get_photo_stream($member);
 			
 			if (!$photo)
-				throw new NotFoundException('Member has no photo');
+				throw new \NotFoundException('Member has no photo');
 
-			$imagick = new Imagick();
+			$imagick = new \Imagick();
 			$imagick->readImageFile($photo['foto']);
 
 			apply_image_orientation($imagick);
@@ -143,14 +145,14 @@
 			return true;
 		}
 
-		protected function _generate_thumbnail(DataIterMember $member, $format, $width)
+		protected function _generate_thumbnail(\DataIterMember $member, $format, $width)
 		{
 			$photo = $this->model->get_photo_stream($member);
 			
 			if (!$photo)
-				throw new NotFoundException('Member has no photo');
+				throw new \NotFoundException('Member has no photo');
 
-			$imagick = new Imagick();
+			$imagick = new \Imagick();
 			$imagick->readImageFile($photo['foto']);
 
 			apply_image_orientation($imagick);
@@ -193,7 +195,7 @@
 			return true;
 		}
 
-		protected function _generate_placeholder(DataIterMember $member, $format, $width)
+		protected function _generate_placeholder(\DataIterMember $member, $format, $width)
 		{
 			if ($member->is_private('naam'))
 				$text = '?';
@@ -214,8 +216,8 @@
 					break;
 			}
 
-			$imagick = new Imagick();
-			$draw = new ImagickDraw();
+			$imagick = new \Imagick();
+			$draw = new \ImagickDraw();
 
 			$hash = md5($member->get('voornaam') . $member->get('achternaam'));
 			$random_r = hexdec(substr($hash, 0, 2));
@@ -230,7 +232,7 @@
 			$s_b = 0.072 * $random_b;
 			assert($s_r + $s_g + $s_b >= 0.5);
 
-			$background = new ImagickPixel(sprintf('#%02x%02x%02x', $random_r, $random_g, $random_b));
+			$background = new \ImagickPixel(sprintf('#%02x%02x%02x', $random_r, $random_g, $random_b));
 			$foreground = '#fff';
 
 			$imagick->newImage($width, $height, $background);
@@ -267,7 +269,7 @@
 			return true;
 		}
 
-		protected function _view_thumbnail(DataIterMember $member, $format)
+		protected function _view_thumbnail(\DataIterMember $member, $format)
 		{
 			$format = in_array($format, [self::FORMAT_SQUARE, self::FORMAT_PORTRAIT])
 				? $format
@@ -287,13 +289,13 @@
 					or $this->_generate_thumbnail($member, $format, $width);
 		}
 
-		protected function _view_photo(DataIterMember $member)
+		protected function _view_photo(\DataIterMember $member)
 		{
 			if ($this->model->is_private($member, 'foto'))
-				throw new UnauthorizedException('Photo is private');
+				throw new \UnauthorizedException('Photo is private');
 
 			if (!$this->model->has_picture($member))
-				return new NotFoundException('Member has no photo');
+				return new \NotFoundException('Member has no photo');
 
 			return $this->_view_cached($member, 0, 0, self::TYPE_ORIGINAL)
 				or $this->_generate_original($member);
@@ -302,7 +304,7 @@
 		protected function run_impl()
 		{
 			if (empty($_GET['lid_id']))
-				return new Exception('No member ID provided');
+				return new \Exception('No member ID provided');
 
 			$iter = $this->model->get_iter($_GET['lid_id']);
 
@@ -312,6 +314,3 @@
 				return $this->_view_photo($iter);
 		}
 	}
-	
-	$controller = new Controllerfoto();
-	$controller->run();
