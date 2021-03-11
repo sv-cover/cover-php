@@ -9,28 +9,28 @@ class RouterTwigExtension extends Twig_Extension
 		$this->routes = [
 			'sessions' => [
 				'login' => function($args) {
-					return edit_url('sessions.php?view=login',
+					return edit_url('/sessions.php?view=login',
 						['referrer' => isset($args['referrer'])
 							? $args['referrer']
 							: $_SERVER['REQUEST_URI']]);
 				},
 				'logout' => function($args) {
-					return edit_url('sessions.php?view=logout', $args);
+					return edit_url('/sessions.php?view=logout', $args);
 				},
-				'sessions' => 'sessions.php?view=sessions',
+				'sessions' => '/sessions.php?view=sessions',
 				'overrides'=> function($args) {
-					return edit_url('sessions.php?view=overrides', $args);
+					return edit_url('/sessions.php?view=overrides', $args);
 				}
 			],
 			'profiel' => [
-				'read' => 'profiel.php?lid=$member[id]'
+				'read' => '/profiel.php?lid=$member[id]'
 			],
 			'editable' => [
-				'update' => 'show.php?view=update&id=$editable[id]'
+				'update' => '/show.php?view=update&id=$editable[id]'
 			],
 			'foto' => [
-				'portrait' => 'foto.php?format=portrait&width=$width&lid_id=$member[id]',
-				'square' => 'foto.php?format=square&width=$width&lid_id=$member[id]'
+				'portrait' => '/foto.php?format=portrait&width=$width&lid_id=$member[id]',
+				'square' => '/foto.php?format=square&width=$width&lid_id=$member[id]'
 			]
 		];
 	}

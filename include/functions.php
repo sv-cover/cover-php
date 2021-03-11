@@ -574,9 +574,9 @@
 	
 	function get_theme_data($file, $include_filemtime = true) {
 		if (!file_exists('themes/' . get_theme() . '/' . $file) || get_theme() == 'default')
-			$path = 'themes/default/' . $file;
+			$path = '/themes/default/' . $file;
 		else
-			$path = 'themes/' . get_theme() . '/' . $file;
+			$path = '/themes/' . get_theme() . '/' . $file;
 
 		if ($include_filemtime && file_exists($path))
 			$path .= '?' . filemtime($path);

@@ -10,12 +10,12 @@ class LayoutViewHelper
 			'label' => __('Activities'),
 			'submenu' => [
 				[
-					'url' => 'agenda.php',
+					'url' => '/agenda.php',
 					'label' => __('Calendar'),
 					'title' => __('Upcoming activities')
 				],
 				[
-					'url' => 'fotoboek.php',
+					'url' => '/fotoboek.php',
 					'label' => __('Photos'),
 					'title' => __('Photos of activities of Cover.')
 				]
@@ -32,11 +32,11 @@ class LayoutViewHelper
 		$menus['studie'] = [
 			'label' => __('Education'),
 			'submenu' => [
-				['url' => 'show.php?id=149', 'label' => __('Degree Programmes')],
-				['url' => 'show.php?id=24', 'label' => __('Alumni')],
-				['url' => 'boeken.php', 'label' => __('Order books')],
-				['url' => 'show.php?id=27', 'label' => __('Student info')],
-				['url' => 'show.php?id=118', 'label' => __('Student representation')],
+				['url' => '/show.php?id=149', 'label' => __('Degree Programmes')],
+				['url' => '/show.php?id=24', 'label' => __('Alumni')],
+				['url' => '/boeken.php', 'label' => __('Order books')],
+				['url' => '/show.php?id=27', 'label' => __('Student info')],
+				['url' => '/show.php?id=118', 'label' => __('Student representation')],
 				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
 				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
 			]
@@ -45,10 +45,10 @@ class LayoutViewHelper
 		$menus['bedrijven'] = [
 			'label' => __('Career'),
 			'submenu' => [
-				['url' => 'show.php?id=51', 'label' => __('Company profiles')],
-				['url' => 'show.php?id=54', 'label' => __('Vacancies')],
-				['url' => 'show.php?id=31', 'label' => __('Internships/Graduate programs')],
-				['url' => 'show.php?id=56', 'label' => __('Sponsorship opportunities')]
+				['url' => '/show.php?id=51', 'label' => __('Company profiles')],
+				['url' => '/show.php?id=54', 'label' => __('Vacancies')],
+				['url' => '/show.php?id=31', 'label' => __('Internships/Graduate programs')],
+				['url' => '/show.php?id=56', 'label' => __('Sponsorship opportunities')]
 			]
 		];
 
@@ -56,27 +56,27 @@ class LayoutViewHelper
 			'label' => __('Association'),
 			'submenu' => [
 				[
-					'url' => 'commissies.php?commissie=board',
+					'url' => '/commissies.php?commissie=board',
 					'label' => __('Governing Board')
 				],
 				[
-					'url' => 'besturen.php',
+					'url' => '/besturen.php',
 					'label' => __('Former Boards')
 				],
 				[
-					'url' => 'commissies.php',
+					'url' => '/commissies.php',
 					'label' => __('Committees')
 				],
 				[
-					'url' => 'clubs.php',
+					'url' => '/clubs.php',
 					'label' => __('Clubs')
 				],
 				[
-					'url' => 'show.php?id=28',
+					'url' => '/show.php?id=28',
 					'label' => __('Sister unions')
 				],
 				[
-					'url' => 'show.php?id=18',
+					'url' => '/show.php?id=18',
 					'label' => __('Become a member/contributor')
 				],
 			]
@@ -95,7 +95,7 @@ class LayoutViewHelper
 
 		$menus['contact'] = [
 			'label' => __('Contact'),
-			'url' => 'show.php?id=17'
+			'url' => '/show.php?id=17'
 		];
 
 		// $menus['admin'] = [
@@ -125,7 +125,7 @@ class LayoutViewHelper
 						'fa' => 'fas fa-users',
 						'color' => 'cover',
 					],
-					'url' => 'almanak.php',
+					'url' => '/almanak.php',
 					'label' => __('Members')
 				],
 				[
@@ -133,7 +133,7 @@ class LayoutViewHelper
 						'fa' => 'fas fa-comments',
 						'color' => 'cover',
 					],
-					'url' => 'forum.php',
+					'url' => '/forum.php',
 					'label' => __('Forum')
 				],
 				[
@@ -141,7 +141,7 @@ class LayoutViewHelper
 						'fa' => 'fas fa-map-marked-alt',
 						'color' => 'cover',
 					],
-					'url' => 'stickers.php',
+					'url' => '/stickers.php',
 					'label' => __('Sticker map')
 				],
 			]
@@ -223,7 +223,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'mailinglijsten.php',
+				'url' => '/mailinglijsten.php',
 				'label' => __('Mailing lists'),
 				'title' => __('Manage your committee\'s mailing lists.')
 			];
@@ -234,7 +234,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'signup.php',
+				'url' => '/signup.php',
 				'label' => __('Forms'),
 				'title' => __('Manage your committee\'s sign-up forms.')
 			];
@@ -249,7 +249,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'show.php?view=create',
+				'url' => '/show.php?view=create',
 				'label' => __('Make a page'),
 				'title' => __('Make a new content page on the website.')
 			];
@@ -264,7 +264,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'lidworden.php?view=pending-confirmation',
+				'url' => '/lidworden.php?view=pending-confirmation',
 				'label' => __('Pending registrations'),
 				'title' => __('People who signed up for Cover, but did not yet confirm their email address.')
 			];
@@ -278,7 +278,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'actieveleden.php',
+				'url' => '/actieveleden.php',
 				'label' => __('Active members'),
 				'title' => __('All active committee members according to the website.')
 			];
@@ -292,7 +292,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'settings.php',
+				'url' => '/settings.php',
 				'label' => __('Settings'),
 				'title' => __('Manage a few of the website\'s settings.')
 			];
