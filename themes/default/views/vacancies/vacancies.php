@@ -8,7 +8,7 @@ class VacanciesView extends CRUDView
 	public function type_options()
 	{
 		return [
-			DataModelVacancy::TYPE_FULL_TIME => __('Fulltime'),
+			DataModelVacancy::TYPE_FULL_TIME => __('Full-time'),
 			DataModelVacancy::TYPE_PART_TIME => __('Part-time'),
 			DataModelVacancy::TYPE_INTERNSHIP => __('Internship'),
 			DataModelVacancy::TYPE_GRADUATION_PROJECT => __('Graduation project'),
