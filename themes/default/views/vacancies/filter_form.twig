@@ -81,6 +81,10 @@
                                 {{ html_input_checkbox('partner[]', filter, id='field-partner-' ~ value, value=value) }}
                                 {{ partner['name'] }}
                             </label>
+                        {% else %}
+                            <div class="dropdown-item">
+                                {{ __('No companies found…') }}
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
