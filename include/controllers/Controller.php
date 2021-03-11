@@ -5,6 +5,9 @@
 	require_once 'include/functions.php';
 	require_once 'include/markup.php';
 
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 	/** 
 	  * A class implementing the simplest controller. This class provides
 	  * viewing a simple static page by running the header view, then
@@ -16,6 +19,10 @@
 
 		protected $model;
 
+		protected $parameters;
+
+		protected $router;
+
 		public function view()
 		{
 			return $this->view;
@@ -26,8 +33,11 @@
 			return $this->model;
 		}
 		
-		public function run()
+		public function run(Array $parameters, UrlGeneratorInterface $router)
 		{
+			$this->parameters = $parameters;
+			$this->router = $router;
+
 			try {
 				try {
 					echo $this->run_impl();
@@ -109,7 +119,11 @@
 
 		public function link(array $arguments)
 		{
-			return sprintf('%s?%s', $_SERVER['SCRIPT_NAME'], http_build_query($arguments));
+			if (isset($this->router) && isset($this->parameters) && isset($this->parameters['_route']))
+				return $this->router->generate($this->parameters['_route'], $arguments);
+			else
+				// TODO: Should we even be allowed to be in this situation?
+				return sprintf('?%s', http_build_query($arguments));
 		}
 
 		final protected function get_content()

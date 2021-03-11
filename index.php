@@ -1,50 +1,37 @@
 <?php
-	require_once 'include/init.php';
-	require_once 'include/controllers/Controller.php';
-	
-	class ControllerHomepage extends Controller
-	{
-		public function __construct()
-		{
-			$this->view = View::byName('homepage', $this);
-		}
-			
-		protected function _process_language()
-		{
-			if (isset($_POST['language']) && i18n_valid_language($_POST['language']))
-			{
-				$language = $_POST['language'];
-				
-				$member_data = get_identity()->member();
-				
-				if ($member_data) {
-					/* Set language in profile of member */
-					$model = get_model('DataModelMember');
-					$iter = $model->get_iter($member_data['id']);
-					
-					$iter->set('taal', $language);
-					$model->update($iter);
-				} else {
-					/* Set language in session */
-					$_SESSION['taal'] = $language;
-				}
-			}
-			
-			$return_path = isset($_POST['return_to'])
-				? $_POST['return_to']
-				: 'index.php';
+require_once 'include/init.php';
 
-			return $this->view->redirect($return_path);
-		}
-		
-		protected function run_impl()
-		{
-			if (isset($_POST['submindexlanguage']))
-				return $this->_process_language();
-			else
-				return $this->view->render_homepage();
-		}		
-	}
-	
-	$controller = new ControllerHomepage();
-	$controller->run();
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+
+
+try
+{
+    $fileLocator = new FileLocator([__DIR__ . DIRECTORY_SEPARATOR . 'public']);
+    $loader = new YamlFileLoader($fileLocator);
+    $routes = $loader->load('routes.yaml');
+
+    $context = new RequestContext();
+    $context->fromRequest(Request::createFromGlobals());
+
+    // Routing can match routes with incoming requests
+    $matcher = new UrlMatcher($routes, $context);
+    $parameters = $matcher->match($context->getPathInfo());
+
+
+    $generator = new UrlGenerator($routes, $context);
+
+    $controller_class = $parameters['_controller'];
+    $controller = new $controller_class();
+    $controller->run($parameters, $generator);
+}
+catch (ResourceNotFoundException $e)
+{
+    $view = new \View();
+    echo $view->render_404_not_found(new \NotFoundException());
+}

@@ -1,0 +1,19 @@
+homepage:
+  path: /
+  controller: App\Controller\HomepageController
+
+stickers:
+  path: /stickers
+  controller: App\Controller\StickersController
+
+
+legacy:
+  path: /{name}.php
+  controller: App\Controller\LegacyController
+  defaults:
+    map:
+      index:
+        controller: App\Controller\HomepageController
+      stickers:
+        controller: App\Controller\StickersController
+        parameters: { _route: stickers }

@@ -1,17 +1,18 @@
 <?php
+namespace App\Controller;
 
 require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerStickers extends ControllerCRUD
+class StickersController extends \ControllerCRUD
 {
 	public function __construct()
 	{
-		$this->model = get_model('DataModelSticker');
+		$this->model = \get_model('DataModelSticker');
 
-		$this->view = View::byName('stickers', $this);
+		$this->view = \View::byName('stickers', $this);
 	}
 
-	protected function _create(DataIter $iter, array $data, array &$errors)
+	protected function _create(\DataIter $iter, array $data, array &$errors)
 	{
 		$data['toegevoegd_op'] = date('Y-m-d');
 		$data['toegevoegd_door'] = get_identity()->get('id');
@@ -32,7 +33,7 @@ class ControllerStickers extends ControllerCRUD
 		return $iter;
 	}
 
-	public function link_to($view, DataIter $iter = null, array $arguments = [])
+	public function link_to($view, \DataIter $iter = null, array $arguments = [])
 	{
 		if (!array_key_exists('next', $arguments) && !empty($_GET['next']) && is_safe_redirect($_GET['next']))
 			$arguments['next'] = $_GET['next'];
@@ -47,7 +48,7 @@ class ControllerStickers extends ControllerCRUD
 		return $this->link_to('index', null, ['next' => null]);
 	}
 
-	public function link_to_add_photo(DataIter $iter)
+	public function link_to_add_photo(\DataIter $iter)
 	{
 
 		return $this->link_to('add_photo', $iter);
@@ -58,17 +59,17 @@ class ControllerStickers extends ControllerCRUD
 		return $this->link_to('geojson');
 	}
 
-	public function link_to_photo(DataIter $iter)
+	public function link_to_photo(\DataIter $iter)
 	{
 		return $this->link_to('photo', $iter);
 	}
 
-	public function run_read(DataIter $iter)
+	public function run_read(\DataIter $iter)
 	{
 		return $this->view->redirect('stickers.php?point=' . $iter['id']);
 	}
 
-	public function run_photo(DataIter $iter)
+	public function run_photo(\DataIter $iter)
 	{
 		$thumbnail = !empty($_GET['thumbnail']);
 
@@ -78,7 +79,7 @@ class ControllerStickers extends ControllerCRUD
 			return $this->view->render_photo($iter);
 	}
 
-	protected function run_add_photo(DataIter $iter)
+	protected function run_add_photo(\DataIter $iter)
 	{
 		$error = null;
 
@@ -122,7 +123,7 @@ class ControllerStickers extends ControllerCRUD
 	{
 		$features = [];
 
-		$policy = get_policy($this->model());
+		$policy = \get_policy($this->model());
 
 		foreach ($this->model->get() as $iter)
 		{
@@ -161,5 +162,5 @@ class ControllerStickers extends ControllerCRUD
 
 }
 
-$controller = new ControllerStickers();
-$controller->run();
+// $controller = new ControllerStickers();
+// $controller->run();

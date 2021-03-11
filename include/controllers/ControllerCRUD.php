@@ -134,7 +134,11 @@ class ControllerCRUD extends Controller
 
 	public function link_to_index()
 	{
-		return $_SERVER['SCRIPT_NAME'];
+		if (isset($this->router) && isset($this->parameters) && isset($this->parameters['_route']))
+			return $this->router->generate($this->parameters['_route']);
+		else
+			// TODO: Should we even be allowed to be in this situation?
+			return '?';
 	}
 
 	public function run_create()
