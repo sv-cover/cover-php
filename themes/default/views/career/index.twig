@@ -137,7 +137,7 @@
             <ul class="columns is-mobile is-multiline">
                 {% for partner in partners %}
                     <li class="column is-half-mobile is-one-third-tablet">
-                        <a href="{{ partner.absolute_url }}" class="partner-profile">
+                        <a href="{{ partner.absolute_url }}" class="partner-profile" alt="{{ partner.name }}">
                             <figure class="image is-3by2">
                                 {% if partner.logo_dark_url %}
                                     <img class="darkmode" src="{{ partner.get_logo_dark(700) }}">
