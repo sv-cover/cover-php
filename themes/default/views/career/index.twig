@@ -58,7 +58,7 @@
                     <h2 class="title is-4">{{ __('Jobs & Internships') }}</h2>
                 </div>
                 <div class="level-right">
-                    {% if vacancies_page and user_can_update vacancies_page %}
+                    {% if vacancies_page and user_can_update vacancies_page or user_can_create global.models.Vacancy.new_iter()%}
                         <div class="dropdown is-right">
                             <div class="dropdown-trigger">
                                 <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -70,9 +70,16 @@
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                                 <div class="dropdown-content">
-                                    <a href="{{ link('editable.update', editable=vacancies_page) }}" class="dropdown-item">
-                                        {{ __('Modify description') }}
-                                    </a>
+                                    {% if vacancies_page and user_can_update vacancies_page %}
+                                        <a href="{{ link('editable.update', editable=vacancies_page) }}" class="dropdown-item">
+                                            {{ __('Modify description') }}
+                                        </a>
+                                    {% endif %}
+                                    {% if user_can_create global.models.Vacancy.new_iter() %}
+                                        <a href="/vacancies.php?view=create" class="dropdown-item">
+                                            {{ __('New vacancy') }}
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
