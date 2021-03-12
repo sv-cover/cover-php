@@ -1,15 +1,17 @@
 <?php
+	namespace App\Controller;
+
 	require_once 'include/init.php';
 	require_once 'include/controllers/Controller.php';
 	require_once 'include/secretary.php';
 	
-	class ControllerLidWorden extends Controller
+	class MembershipController extends \Controller
 	{
 		public function __construct()
 		{
 			$this->model = get_model('DataModelMember');
 
-			$this->view = View::byName('lidworden', $this);
+			$this->view = \View::byName('lidworden', $this);
 		}
 		
 		protected function _process_lidworden()
@@ -110,7 +112,7 @@
 				try {
 					$existing_member = $this->model->get_from_email($_POST['email_address']);
 					return $this->view->render('known_member.twig', compact('existing_member'));
-				} catch (DataIterNotFoundException $e) {
+				} catch (\DataIterNotFoundException $e) {
 					// All clear :)
 				}
 			}
@@ -147,7 +149,7 @@
 			$data_str = $db->query_value(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL", $db->escape_string($confirmation_code)));
 
 			if ($data_str === null)
-				throw new NotFoundException('Could not find registration code');
+				throw new \NotFoundException('Could not find registration code');
 
 			$data = json_decode($data_str, true);
 
@@ -177,7 +179,7 @@
 					// member to the leden table through the API).
 					$this->_process_confirm_secretary($confirmation_code);
 				}
-				catch (Exception $e)
+				catch (\Exception $e)
 				{
 					// Well, that didn't work out. Report the error to everybody.
 					// The registration will be marked as confirmed, but not deleted
@@ -201,7 +203,7 @@
 				}
 
 				return $this->view->redirect('lidworden.php?confirmed=true');
-			} catch (NotFoundException $e) {
+			} catch (\NotFoundException $e) {
 				return $this->view->render('not_found.twig');
 			}
 		}
@@ -214,7 +216,7 @@
 				$db->escape_string($confirmation_code)));
 
 			if (!$row)
-				throw new NotFoundException('Could not find registration code');
+				throw new \NotFoundException('Could not find registration code');
 
 			$data = json_decode($row['data'], true);
 
@@ -234,7 +236,7 @@
 				$db->escape_string($confirmation_code)));
 
 			if (!$row)
-				throw new NotFoundException('Could not find registration code');
+				throw new \NotFoundException('Could not find registration code');
 
 			$data = json_decode($row['data'], true);
 
@@ -248,7 +250,7 @@
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
 				!get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) &&
 				!get_identity()->member_in_committee(COMMISSIE_EASY))
-				throw new UnauthorizedException();
+				throw new \UnauthorizedException();
 
 			$db = get_db();
 
@@ -264,7 +266,7 @@
 							try {
 								$this->_process_confirm_secretary($confirmation_code);
 								$success++;
-							} catch (Exception $e) {
+							} catch (\Exception $e) {
 								sentry_report_exception($e);
 							}
 						}
@@ -311,7 +313,7 @@
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
 				!get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) &&
 				!get_identity()->member_in_committee(COMMISSIE_EASY))
-				throw new UnauthorizedException();
+				throw new \UnauthorizedException();
 
 			$db = get_db();
 
@@ -327,7 +329,7 @@
 				$db->escape_string($confirmation_code)));
 
 			if ($row === null)
-				throw new NotFoundException();
+				throw new \NotFoundException();
 
 			$row['data'] = json_decode($row['data'], true);
 
@@ -353,6 +355,3 @@
 			}
 		}
 	}
-	
-	$controller = new ControllerLidWorden();
-	$controller->run();

@@ -1,6 +1,8 @@
 <?php
 	require_once 'include/markup.php';
 
+	use App\Controller\PhotoCommentsController;
+
 	class FotoboekView extends CRUDView
 	{
 		/**
@@ -219,7 +221,7 @@
 
 		public function comment_controller_for_photo(DataIterPhoto $photo)
 		{
-			return new ControllerFotoboekComments($photo);
+			return new PhotoCommentsController($photo);
 		}
 
 		public function recent_comments($count)

@@ -140,7 +140,7 @@ class SessionsController extends \Controller
 					try {
 						$password_reset_model = get_model('DataModelPasswordResetToken');
 						$password_reset_model->invalidate_all(get_identity()->member());
-					} catch (Exception $e) {
+					} catch (\Exception $e) {
 						throw $e;
 						sentry_report_exception($e);
 					}

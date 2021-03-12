@@ -1,8 +1,10 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/controllers/Controller.php';
 
-class ControllerWachtwoordVergeten extends Controller
+class PasswordController extends \Controller
 {
 	public function __construct()
 	{
@@ -10,10 +12,10 @@ class ControllerWachtwoordVergeten extends Controller
 
 		$this->member_model = get_model('DataModelMember');
 
-		$this->view = View::byName('wachtwoordvergeten', $this);
+		$this->view = \View::byName('wachtwoordvergeten', $this);
 	}
 
-	protected function _is_good_password(DataIterMember $member, $password)
+	protected function _is_good_password(\DataIterMember $member, $password)
 	{
 		// Remove easy to guess stuff
 		$effective_password = str_ireplace([$member['voornaam'],$member['achternaam'],'cover','password'], '', $password);
@@ -30,7 +32,7 @@ class ControllerWachtwoordVergeten extends Controller
 	{
 		try {
 			$token = $this->model->get_iter($_GET['reset_token']);
-		} catch (DataIterNotFoundException $e) {
+		} catch (\DataIterNotFoundException $e) {
 			return $this->run_request();
 		}
 
@@ -86,7 +88,7 @@ class ControllerWachtwoordVergeten extends Controller
 
 				$success = true;
 			}
-		} catch (DataIterNotFoundException $e) {
+		} catch (\DataIterNotFoundException $e) {
 			$success = false;
 		}
 
@@ -101,6 +103,3 @@ class ControllerWachtwoordVergeten extends Controller
 			return $this->run_request();	
 	}
 }
-
-$controller = new ControllerWachtwoordVergeten();
-$controller->run();

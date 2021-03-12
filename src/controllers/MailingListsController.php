@@ -1,10 +1,11 @@
 <?php
+namespace App\Controller;
 
 require_once 'include/init.php';
 require_once 'include/member.php';
 require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerMailinglijsten extends ControllerCRUD
+class MailingListsController extends \ControllerCRUD
 {
 	private $message_model;
 
@@ -20,7 +21,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 
 		$this->member_model = get_model('DataModelMember');
 
-		$this->view = View::byName('mailinglijsten', $this);
+		$this->view = \View::byName('mailinglijsten', $this);
 	}
 
 	protected function _index()
@@ -34,15 +35,15 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return $iters;
 	}
 
-	public function link_to_update_autoresponder(DataIterMailinglist $list, $message)
+	public function link_to_update_autoresponder(\DataIterMailinglist $list, $message)
 	{
 		return $this->link(['id' => $list['id'], 'view' => 'update_autoresponder', 'autoresponder' => $message]);
 	}
 
-	protected function run_update_autoresponder(DataIterMailinglist $list)
+	protected function run_update_autoresponder(\DataIterMailinglist $list)
 	{
 		if (!get_policy($this->model)->user_can_update($list))
-			throw new Exception('You are not allowed to edit this ' . get_class($list) . '.');
+			throw new \Exception('You are not allowed to edit this ' . get_class($list) . '.');
 
 		$success = false;
 
@@ -51,7 +52,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 		$autoresponder = $_GET['autoresponder'];
 
 		if (!in_array($autoresponder, ['on_subscription', 'on_first_email']))
-			throw new InvalidArgumentException('Invalid value for autoresponder parameter');
+			throw new \InvalidArgumentException('Invalid value for autoresponder parameter');
 
 
 		if ($this->_form_is_submitted('update', $list))
@@ -73,7 +74,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 		try {
 			$subscription = $this->subscription_model->get_iter($subscription_id);
 			$list = $subscription['mailinglist'];
-		} catch (DataIterNotFoundException $e) {
+		} catch (\DataIterNotFoundException $e) {
 			if (preg_match('/^(\d+)\-(\d+)$/', $subscription_id, $match))
 				$subscription = $this->subscription_model->new_iter([
 					'opgezegd_op' => '1993-09-20 00:00:00',
@@ -92,7 +93,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return $this->view->render_unsubscribe_form($list, $subscription);
 	}
 
-	private function _subscribe_member(DataIterMailinglist $list, $member_id, &$errors)
+	private function _subscribe_member(\DataIterMailinglist $list, $member_id, &$errors)
 	{
 		$subscribe_ids = is_array($member_id)
 			? $member_id
@@ -108,7 +109,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return true;
 	}
 
-	private function _subscribe_guest(DataIterMailinglist $list, $data, &$errors)
+	private function _subscribe_guest(\DataIterMailinglist $list, $data, &$errors)
 	{
 		if (empty($data['naam']))
 			$errors[] = 'naam';
@@ -124,14 +125,14 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return false;
 	}
 
-	protected function run_subscribe_member(DataIterMailinglist $list)
+	protected function run_subscribe_member(\DataIterMailinglist $list)
 	{
 		// Todo: instead of checking whether current user can update the list,
 		// check whether they can create new subscription iterators according
 		// to the policy?
 
 		if (!get_policy($this->model)->user_can_update($list))
-			throw new UnauthorizedException('You cannot modify this mailing list');
+			throw new \UnauthorizedException('You cannot modify this mailing list');
 
 		$errors = array();
 
@@ -142,10 +143,10 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return $this->view->render_subscribe_member_form($list, $errors);
 	}
 
-	protected function run_subscribe_guest(DataIterMailinglist $list)
+	protected function run_subscribe_guest(\DataIterMailinglist $list)
 	{
 		if (!get_policy($this->model)->user_can_update($list))
-			throw new UnauthorizedException('You cannot modify this mailing list');
+			throw new \UnauthorizedException('You cannot modify this mailing list');
 
 		$errors = array();
 
@@ -156,10 +157,10 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return $this->view->render_subscribe_guest_form($list, $errors);
 	}
 
-	protected function run_unsubscribe(DataIterMailinglist $list)
+	protected function run_unsubscribe(\DataIterMailinglist $list)
 	{
 		if (!get_policy($this->model)->user_can_update($list))
-			throw new UnauthorizedException('You cannot modify this mailing list');
+			throw new \UnauthorizedException('You cannot modify this mailing list');
 
 		if ($this->_form_is_submitted('unsubscribe', $list) && !empty($_POST['unsubscribe']))
 		{
@@ -168,7 +169,7 @@ class ControllerMailinglijsten extends ControllerCRUD
 				$subscription = $this->subscription_model->get_iter($subscription_id);
 				
 				if ($subscription['mailinglijst_id'] != $list['id'])
-					throw new NotFoundException('Subscription not in this list');
+					throw new \NotFoundException('Subscription not in this list');
 
 				$subscription->cancel();
 			}
@@ -177,10 +178,10 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return $this->view->redirect($this->link_to_read($list));
 	}
 
-	protected function run_archive_index(DataIterMailinglist $list)
+	protected function run_archive_index(\DataIterMailinglist $list)
 	{
 		if (!$this->model->member_can_access_archive($list))
-			throw new UnauthorizedException('You cannot access the archives of this mailing list');
+			throw new \UnauthorizedException('You cannot access the archives of this mailing list');
 
 		$model = get_model('DataModelMailinglistArchive');
 
@@ -189,17 +190,17 @@ class ControllerMailinglijsten extends ControllerCRUD
 		return $this->view->render_archive_index($list, $messages);
 	}
 
-	protected function run_archive_read(DataIterMailinglist $list)
+	protected function run_archive_read(\DataIterMailinglist $list)
 	{
 		if (!$this->model->member_can_access_archive($list))
-			throw new UnauthorizedException('You cannot access the archives of this mailing list');
+			throw new \UnauthorizedException('You cannot access the archives of this mailing list');
 
 		$model = get_model('DataModelMailinglistArchive');
 
 		$message = $model->get_iter($_GET['message_id']);
 
 		if ($message['mailinglijst'] != $list->get_id())
-			throw new NotFoundException('No such message found in this mailing list');
+			throw new \NotFoundException('No such message found in this mailing list');
 
 		return $this->view->render_archive_read($list, $message);
 	}
@@ -237,9 +238,4 @@ class ControllerMailinglijsten extends ControllerCRUD
 
 		return $this->view->render_embedded($mailing_list, $this->model);
 	}
-}
-
-if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {
-	$controller = new ControllerMailinglijsten();
-	$controller->run();
 }

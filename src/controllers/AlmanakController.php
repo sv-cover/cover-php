@@ -1,15 +1,19 @@
 <?php
+	namespace App\Controller;
+
+	use ZipStream\ZipStream;
+
 	require_once 'include/init.php';
 	require_once 'include/member.php';
 	require_once 'include/controllers/Controller.php';
 	
-	class ControllerAlmanak extends Controller
+	class AlmanakController extends \Controller
 	{
 		public function __construct() 
 		{
 			$this->model = create_model('DataModelMember');
 
-			$this->view = View::byName('almanak', $this);
+			$this->view = \View::byName('almanak', $this);
 		}
 		
 		public function run_index_search($search)
@@ -62,7 +66,7 @@
 		public function run_index_status()
 		{
 			if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR))
-				throw new UnauthorizedException('Only the Board of Cover is allowed to search by status');
+				throw new \UnauthorizedException('Only the Board of Cover is allowed to search by status');
 
 			$status = $_GET['status'];
 			
@@ -76,7 +80,7 @@
 		public function run_export_csv()
 		{
 			if (!get_identity()->member_in_committee(COMMISSIE_ALMANAKCIE))
-				throw new UnauthorizedException('Only members of the YearbookCee committee are allowed to download these dumps.');
+				throw new \UnauthorizedException('Only members of the YearbookCee committee are allowed to download these dumps.');
 
 			$iters = $this->model->get_from_search_first_last(null, null);
 
@@ -106,7 +110,7 @@
 		public function run_export_photos()
 		{
 			if (!get_identity()->member_in_committee(COMMISSIE_ALMANAKCIE))
-				throw new UnauthorizedException('Only members of the YearbookCee committee are allowed to download these dumps.');
+				throw new \UnauthorizedException('Only members of the YearbookCee committee are allowed to download these dumps.');
 
 			// Flush all of the current output and turn of the buffer
 			while (ob_get_level() > 0 && ob_end_clean());
@@ -119,10 +123,10 @@
 
 			// Set up the output zip stream and just handle all files as large files
 			// (meaning no compression, streaming stead of reading into memory.)
-			$zip = new ZipStream\ZipStream('almanac-' . date('Y-m-d') . '.zip', [
-				ZipStream\ZipStream::OPTION_LARGE_FILE_SIZE => 1,
-				ZipStream\ZipStream::OPTION_LARGE_FILE_METHOD => 'store',
-				ZipStream\ZipStream::OPTION_OUTPUT_STREAM => fopen('php://output', 'wb')]);
+			$zip = new ZipStream('almanac-' . date('Y-m-d') . '.zip', [
+				ZipStream::OPTION_LARGE_FILE_SIZE => 1,
+				ZipStream::OPTION_LARGE_FILE_METHOD => 'store',
+				ZipStream::OPTION_OUTPUT_STREAM => fopen('php://output', 'wb')]);
 
 			// Now for each book find all photos and add them to the zip stream
 			$iters = $this->model->get_from_search_first_last(null, null);
@@ -167,6 +171,3 @@
 				return $this->view->render_index();
 		}
 	}
-	
-	$controller = new ControllerAlmanak();
-	$controller->run();

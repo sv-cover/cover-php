@@ -15,12 +15,11 @@ try {
 
     $context = new RequestContext();
     $context->fromRequest(Request::createFromGlobals());
-
     $router = new Router(
         $loader,
         'routes.yaml',
         [
-            'cache_dir' => get_config_value('routing_cache', 'tmp/router')
+            'cache_dir' => get_config_value('routing_cache')
         ],
         $context
     );

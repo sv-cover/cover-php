@@ -6,6 +6,7 @@
 	require_once 'include/cache.php';
 
 	use Embed\Embed;
+	use App\Controller\MailingListsController;
 
 	function str_replace_once($search, $replace, $subject)
 	{
@@ -324,8 +325,7 @@
 		while (preg_match('/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i', $markup, $match))
 		{
 			try {
-				require_once 'mailinglijsten.php';
-				$controller = new ControllerMailinglijsten();
+				$controller = new MailingListsController();
 				$content = $controller->run_embedded($match[1]);	
 			} catch (Exception $e) {
 				sentry_report_exception($e);

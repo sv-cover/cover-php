@@ -1,11 +1,12 @@
 <?php
+namespace App\Controller;
 
 require_once 'include/init.php';
 require_once 'include/controllers/Controller.php';
 require_once 'include/member.php';
 require_once 'include/validate.php';
 
-class ControllerSignUpForms extends Controller
+class SignUpFormsController extends \Controller
 {
 	public function __construct()
 	{
@@ -15,7 +16,7 @@ class ControllerSignUpForms extends Controller
 
 		$this->entry_model = get_model('DataModelSignUpEntry');
 
-		$this->view = View::byName('signup', $this);
+		$this->view = \View::byName('signup', $this);
 	}
 
 	protected function run_impl()
@@ -25,7 +26,7 @@ class ControllerSignUpForms extends Controller
 		if (method_exists($this, 'run_' . $view))
 			return call_user_func([$this, 'run_' . $view]);
 		else
-			throw new NotFoundException('No such view');
+			throw new \NotFoundException('No such view');
 	}
 
 	public function run_export_entries()
@@ -33,7 +34,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_read($form))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		$entries = array_filter($form['entries'], function($entry) {
 			return get_policy($entry)->user_can_read($entry);
@@ -53,7 +54,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_read($form))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		return $this->view->render('list_entries.twig', compact('form'));
 	}
@@ -63,7 +64,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_read($form))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		if ($this->_form_is_submitted('delete_entries', $form) && !empty($_POST['entries']))
 			foreach ($_POST['entries'] as $entry_id)
@@ -79,12 +80,12 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_read($form))
-			throw new UnauthorizedException('You cannot access this form.');
+			throw new \UnauthorizedException('You cannot access this form.');
 
 		$entry = $form->new_entry(null);
 
 		if (!get_policy($this->entry_model)->user_can_create($entry))
-			throw new UnauthorizedException('You cannot create new entries for this form.');
+			throw new \UnauthorizedException('You cannot create new entries for this form.');
 
 		$success = false;
 
@@ -109,7 +110,7 @@ class ControllerSignUpForms extends Controller
 					$email = parse_email_object("signup_confirmation.txt", ['entry' => $entry]);
 					$email->send($entry['member']['email']);
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				// Catch it, but it is not important for the rest of the process.
 				sentry_report_exception($e);
 			}
@@ -135,10 +136,10 @@ class ControllerSignUpForms extends Controller
 		$form = $entry['form'];
 
 		if (!get_policy($this->form_model)->user_can_read($form))
-			throw new UnauthorizedException('You cannot access this form.');
+			throw new \UnauthorizedException('You cannot access this form.');
 
 		if (!get_policy($this->entry_model)->user_can_read($entry))
-			throw new UnauthorizedException('You cannot access this entry.');
+			throw new \UnauthorizedException('You cannot access this entry.');
 
 		$success = false;
 
@@ -146,7 +147,7 @@ class ControllerSignUpForms extends Controller
 
 		if ($this->_form_is_submitted('update_entry', $entry)) {
 			if (!get_policy($this->entry_model)->user_can_update($entry))
-				throw new UnauthorizedException('You cannot update this entry.');
+				throw new \UnauthorizedException('You cannot update this entry.');
 		
 			if ($entry->process($_POST)) {
 				$this->entry_model->update($entry);
@@ -166,7 +167,7 @@ class ControllerSignUpForms extends Controller
 	public function run_list_forms()
 	{
 		if (!get_identity()->get('committees'))
-			throw new UnauthorizedException('Only committee members may create and manage forms.');
+			throw new \UnauthorizedException('Only committee members may create and manage forms.');
 
 		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
 			$forms = $this->form_model->get();
@@ -187,11 +188,11 @@ class ControllerSignUpForms extends Controller
 		}
 
 		if (!get_policy($this->form_model)->user_can_create($form))
-			throw new UnauthorizedException('You cannot create new forms.');
+			throw new \UnauthorizedException('You cannot create new forms.');
 
 		$success = false;
 
-		$errors = new ErrorSet();
+		$errors = new \ErrorSet();
 
 		if ($this->_form_is_submitted('create_form')) {
 			if ($this->_create($this->form_model, $form, $_POST, $errors))
@@ -212,11 +213,11 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_update($form))
-			throw new UnauthorizedException('You cannot update this form.');
+			throw new \UnauthorizedException('You cannot update this form.');
 
 		$success = false;
 
-		$errors = new ErrorSet();
+		$errors = new \ErrorSet();
 
 		if ($this->_form_is_submitted('update_form', $form))
 			if ($this->_update($this->form_model, $form, $_POST, $errors))
@@ -230,7 +231,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_delete($form))
-			throw new UnauthorizedException('You cannot delete this form.');
+			throw new \UnauthorizedException('You cannot delete this form.');
 
 		if ($this->_form_is_submitted('delete_form', $form))
 			if ($this->form_model->delete($form))
@@ -244,14 +245,14 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_update($form))
-			throw new UnauthorizedException('You cannot update this form.');
+			throw new \UnauthorizedException('You cannot update this form.');
 
 		if ($this->_form_is_submitted('create_form_field', $form)) {
 			$field = $form->new_field($_POST['field_type']);
 			$this->field_model->insert($field);
 
 			if (isset($_GET['action']) && $_GET['action'] === 'add')
-				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $form, 'errors' => new ErrorSet()]);
+				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $form, 'errors' => new \ErrorSet()]);
 		}
 
 		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
@@ -262,16 +263,16 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_update($form))
-			throw new UnauthorizedException('You cannot update this form.');
+			throw new \UnauthorizedException('You cannot update this form.');
 
 		$field = array_find($form['fields'], function($field) { return $field['id'] == $_GET['field']; });
 
 		if (!$field)
-			throw new NotFoundException('Field not part of this form');
+			throw new \NotFoundException('Field not part of this form');
 
 		$success = false;
 
-		$errors = new ErrorSet();
+		$errors = new \ErrorSet();
 
 		if ($this->_form_is_submitted('update_form_field', $form, $field))
 		{
@@ -289,7 +290,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_update($form))
-			throw new UnauthorizedException('You cannot update this form.');
+			throw new \UnauthorizedException('You cannot update this form.');
 
 		$field = $this->field_model->find_one([
 			'id' => $_GET['field'], 
@@ -297,7 +298,7 @@ class ControllerSignUpForms extends Controller
 		]);
 
 		if ($field === null)
-			throw new NotFoundException('Field not found.');
+			throw new \NotFoundException('Field not found.');
 
 		if ($this->_form_is_submitted('delete_form_field', $form, $field))
 		{
@@ -317,7 +318,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_update($form))
-			throw new UnauthorizedException('You cannot update this form.');
+			throw new \UnauthorizedException('You cannot update this form.');
 
 		$field = $this->field_model->find_one([
 			'id' => $_GET['field'],
@@ -326,7 +327,7 @@ class ControllerSignUpForms extends Controller
 		]);
 
 		if ($field === null)
-			throw new NotFoundException('Field not found.');
+			throw new \NotFoundException('Field not found.');
 
 		if ($this->_form_is_submitted('restore_form_field', $form, $field))
 		{
@@ -345,7 +346,7 @@ class ControllerSignUpForms extends Controller
 		$form = $this->form_model->get_iter($_GET['form']);
 
 		if (!get_policy($this->form_model)->user_can_update($form))
-			throw new UnauthorizedException('You cannot update this form.');
+			throw new \UnauthorizedException('You cannot update this form.');
 
 		$fields = $form['fields'];
 
@@ -360,7 +361,7 @@ class ControllerSignUpForms extends Controller
 		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
 	}
 
-	private function _create(DataModel $model, DataIter $iter, array $input, ErrorSet $errors)
+	private function _create(\DataModel $model, \DataIter $iter, array $input, \ErrorSet $errors)
 	{
 		$data = validate_dataiter($iter, $input, $errors);
 
@@ -372,7 +373,7 @@ class ControllerSignUpForms extends Controller
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?
 		// Well, yes, but sometimes a policy is picky about how you fill in the data!
 		if (!get_policy($model)->user_can_create($iter))
-			throw new UnauthorizedException('You cannot create new forms.');
+			throw new \UnauthorizedException('You cannot create new forms.');
 
 		$id = $model->insert($iter);
 
@@ -381,14 +382,14 @@ class ControllerSignUpForms extends Controller
 		return true;
 	}
 
-	private function _update(DataModel $model, DataIter $iter, array $input, ErrorSet $errors)
+	private function _update(\DataModel $model, \DataIter $iter, array $input, \ErrorSet $errors)
 	{
 		$data = validate_dataiter($iter, $input, $errors);
 
 		$iter->set_all($data);
 
 		if (!get_policy($model)->user_can_update($iter))
-			throw new UnauthorizedException('You cannot update this form');
+			throw new \UnauthorizedException('You cannot update this form');
 
 		$model->update($iter);
 
@@ -402,7 +403,7 @@ class ControllerSignUpForms extends Controller
 		];
 	}
 
-	private function _init_form_with_template(DataIter $form, $template)
+	private function _init_form_with_template(\DataIter $form, $template)
 	{
 		if ($template == 'paid_activity')
 		{
@@ -446,6 +447,3 @@ class ControllerSignUpForms extends Controller
 		return $this->form_model->new_iter();
 	}
 }
-
-$controller = new ControllerSignUpForms();
-$controller->run();

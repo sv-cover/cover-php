@@ -1,12 +1,14 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/controllers/Controller.php';
 
-class ControllerClubs extends Controller 
+class ClubsController extends \Controller 
 {
 	public function __construct()
 	{
-		$this->view = View::byName('clubs', $this);
+		$this->view = \View::byName('clubs', $this);
 	}
 
     // Copied from profiel
@@ -32,7 +34,7 @@ class ControllerClubs extends Controller
     public function run_propose_club()
     {
         if (!get_auth()->logged_in())
-            throw new UnauthorizedException();
+            throw new \UnauthorizedException();
 
         $fields = [
             ['name' => 'email', 'function' => [$this, '_check_email']],
@@ -93,6 +95,3 @@ class ControllerClubs extends Controller
         return call_user_func([$this, 'run_' . $view]);
     }
 }
-
-$controller = new ControllerClubs();
-$controller->run();

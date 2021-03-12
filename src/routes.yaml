@@ -2,17 +2,93 @@ homepage:
   path: /
   controller: App\Controller\HomepageController
 
+active_members:
+  path: /active_members
+  controller: App\Controller\ActiveMembersController
+
+almanak:
+  path: /almanak
+  controller: App\Controller\AlmanakController
+
+announcements:
+  path: /announcements
+  controller: App\Controller\AnnouncementsController
+
+api:
+  path: /api
+  controller: App\Controller\ApiController
+
+boards:
+  path: /boards
+  controller: App\Controller\BoardsController
+
+books:
+  path: /books
+  controller: App\Controller\BooksController
+
+calendar:
+  path: /calendar
+  controller: App\Controller\CalendarController
+
+clubs:
+  path: /clubs
+  controller: App\Controller\ClubsController
+
+committee_battle:
+  path: /committee_battle
+  controller: App\Controller\CommitteeBattleController
+
+committees:
+  path: /committees
+  controller: App\Controller\CommitteesController
+
+forum:
+  path: /forum
+  controller: App\Controller\ForumController
+
+join:
+  path: /join
+  controller: App\Controller\MembershipController
+
+mailing_lists:
+  path: /mailing_lists
+  controller: App\Controller\MailingListsController
+
+password:
+  path: /password
+  controller: App\Controller\PasswordController
+
 page:
   path: /page
   controller: App\Controller\PageController
+
+photos:
+  path: /photos
+  controller: App\Controller\PhotosController
+
+profile:
+  path: /profile
+  controller: App\Controller\ProfileController
 
 profile_picture:
   path: /profile_picture
   controller: App\Controller\ProfilePictureController
 
+search:
+  path: /search
+  controller: App\Controller\SearchController
+
 sessions:
   path: /sessions
   controller: App\Controller\SessionsController
+
+settings:
+  path: /settings
+  controller: App\Controller\SettingsController
+
+signup:
+  path: /signup
+  controller: App\Controller\SignUpFormsController
 
 stickers:
   path: /stickers
@@ -24,18 +100,75 @@ legacy:
   controller: App\Controller\LegacyController
   defaults:
     map:
-      index:
-        controller: App\Controller\HomepageController
-        parameters: { _route: homepage }
+      actieveleden:
+        controller: App\Controller\ActiveMembersController
+        parameters: { _route: active_members }
+      agenda:
+        controller: App\Controller\CalendarController
+        parameters: { _route: calendar }
+      almanak:
+        controller: App\Controller\AlmanakController
+        parameters: { _route: almanak }
+      announcements:
+        controller: App\Controller\AnnouncementsController
+        parameters: { _route: announcements }
+      api:
+        controller: App\Controller\ApiController
+        parameters: { _route: api }
+      besturen:
+        controller: App\Controller\BoardsController
+        parameters: { _route: boards }
+      boeken:
+        controller: App\Controller\BooksController
+        parameters: { _route: books }
+      clubs:
+        controller: App\Controller\ClubsController
+        parameters: { _route: clubs }
+      commissies:
+        controller: App\Controller\CommitteesController
+        parameters: { _route: committees }
+      committeebattle:
+        controller: App\Controller\CommitteeBattleController
+        parameters: { _route: committee_battle }
+      forum:
+        controller: App\Controller\ForumController
+        parameters: { _route: forum }
       foto:
         controller: App\Controller\ProfilePictureController
         parameters: { _route: profile_picture }
+      fotoboek:
+        controller: App\Controller\PhotosController
+        parameters: { _route: photos }
+      index:
+        controller: App\Controller\HomepageController
+        parameters: { _route: homepage }
+      lidworden:
+        controller: App\Controller\MembershipController
+        parameters: { _route: join }
+      mailinglijsten:
+        controller: App\Controller\MailingListsController
+        parameters: { _route: mailing_lists }
+      profiel:
+        controller: App\Controller\ProfileController
+        parameters: { _route: profile }
+      search:
+        controller: App\Controller\SearchController
+        parameters: { _route: search }
       sessions:
         controller: App\Controller\SessionsController
         parameters: { _route: sessions }
+      settings:
+        controller: App\Controller\SettingsController
+        parameters: { _route: settings }
       show:
         controller: App\Controller\PageController
         parameters: { _route: page }
+      signup:
+        controller: App\Controller\SignUpFormsController
+        parameters: { _route: signup }
       stickers:
         controller: App\Controller\StickersController
         parameters: { _route: stickers }
+      wachtwoordvergeten:
+        controller: App\Controller\PasswordController
+        parameters: { _route: password }

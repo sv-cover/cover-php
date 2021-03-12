@@ -1,9 +1,11 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
 require_once 'themes/default/views/commissies/commissies.php';
 
-class ControllerCommissies extends ControllerCRUD
+class CommitteesController extends \ControllerCRUD
 {	
 	protected $_var_id = 'commissie';
 
@@ -13,10 +15,10 @@ class ControllerCommissies extends ControllerCRUD
 	{
 		$this->model = get_model('DataModelCommissie');
 		
-		$this->view = View::byName('commissies', $this);
+		$this->view = \View::byName('commissies', $this);
 	}
 
-	protected function _create(DataIter $iter, array $data, array &$errors)
+	protected function _create(\DataIter $iter, array $data, array &$errors)
 	{
 		// Prevent DataIterCommissie::set_members from being called too early
 		$iter_data = $data;
@@ -31,7 +33,7 @@ class ControllerCommissies extends ControllerCRUD
 		return $iter;
 	}
 
-	protected function _update(DataIter $iter, array $data, array &$errors)
+	protected function _update(\DataIter $iter, array $data, array &$errors)
 	{
 		$data['hidden'] = (array_key_exists('hidden', $data) && $data['hidden'] === 'yes');
 
@@ -43,7 +45,7 @@ class ControllerCommissies extends ControllerCRUD
 		return true;
 	}
 
-	protected function _delete(DataIter $iter, array &$errors)
+	protected function _delete(\DataIter $iter, array &$errors)
 	{
 		// Some committees already have pages etc. We will mark the committee as hidden.
 		// That way they remain in the history of Cover and could, if needed, be reactivated.
@@ -68,8 +70,8 @@ class ControllerCommissies extends ControllerCRUD
 	 */ 
 	public function run_index()
 	{
-		$committees = $this->model->get(DataModelCommissie::TYPE_COMMITTEE);			
-		$working_groups = $this->model->get(DataModelCommissie::TYPE_WORKING_GROUP);
+		$committees = $this->model->get(\DataModelCommissie::TYPE_COMMITTEE);			
+		$working_groups = $this->model->get(\DataModelCommissie::TYPE_WORKING_GROUP);
 
 		$iters = [
 			'committees' => array_filter($committees, array(get_policy($this->model), 'user_can_read')),
@@ -82,13 +84,13 @@ class ControllerCommissies extends ControllerCRUD
 	/**
 	 * Override ControllerCRUD::run_read to also restrict the model to the same type as the iter.
 	 */ 
-	public function run_read(DataIter $iter)
+	public function run_read(\DataIter $iter)
 	{
 		if ($iter['hidden'])
-			throw new NotFoundException('This committee/group is no longer available');
+			throw new \NotFoundException('This committee/group is no longer available');
 
 		if (!get_policy($this->model)->user_can_read($iter))
-			throw new UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
+			throw new \UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
 
 		$iters = $this->model->get($iter['type']);
 
@@ -98,13 +100,13 @@ class ControllerCommissies extends ControllerCRUD
 		]);
 	}
 
-	public function run_show_interest(DataIter $iter)
+	public function run_show_interest(\DataIter $iter)
 	{
 		if (!get_identity()->is_member())
-			throw new UnauthorizedException('Only active members can apply for a committee');
+			throw new \UnauthorizedException('Only active members can apply for a committee');
 
 		if (!get_policy($this->model)->user_can_read($iter))
-			throw new UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
+			throw new \UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
 
 		if ($this->_form_is_submitted('show_interest', $iter)) {
 			$mail = parse_email_object("interst_in_committee.txt", [
@@ -122,7 +124,7 @@ class ControllerCommissies extends ControllerCRUD
 	/**
 	 * Override ControllerCRUD::link_to to use the login name instead of the id for better links.
 	 */
-	public function link_to($view, DataIter $iter = null, array $arguments = [])
+	public function link_to($view, \DataIter $iter = null, array $arguments = [])
 	{
 		$arguments[$this->_var_view] = $view;
 
@@ -154,7 +156,3 @@ class ControllerCommissies extends ControllerCRUD
 		return parent::run_impl();
 	}
 }
-
-$controller = new ControllerCommissies();
-$controller->run();
-

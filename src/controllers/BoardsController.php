@@ -1,26 +1,27 @@
 <?php
+namespace App\Controller;
 
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerBesturen extends ControllerCRUD
+class BoardsController extends \ControllerCRUD
 {
 	public function __construct()
 	{
 		$this->model = get_model('DataModelBesturen');
 
-		$this->view = View::byName('besturen', $this);
+		$this->view = \View::byName('besturen', $this);
 	}
 
 	protected function _get_title($iters = null)
 	{
-		if ($iters instanceof DataIter)
+		if ($iters instanceof \DataIter)
 			return $iters->get('naam');
 		else
 			return __('Boards');
 	}
 
-	protected function _validate(DataIter $iter, array $data, array &$errors)
+	protected function _validate(\DataIter $iter, array $data, array &$errors)
 	{
 		if (!$iter->has_id() && !isset($data['naam']))
 			$errors[] = 'naam';
@@ -35,7 +36,7 @@ class ControllerBesturen extends ControllerCRUD
 		return count($errors) === 0 ? $data : false;
 	}
 
-	protected function _create(DataIter $iter, array $data, array &$errors)
+	protected function _create(\DataIter $iter, array $data, array &$errors)
 	{
 		if (!$this->_validate($iter, $data, $errors))
 			return false;
@@ -58,7 +59,7 @@ class ControllerBesturen extends ControllerCRUD
 		return parent::_create($iter, $bestuur_data, $errors);
 	}
 
-	protected function _update(DataIter $bestuur, array $data, array &$errors)
+	protected function _update(\DataIter $bestuur, array $data, array &$errors)
 	{
 		if (!$this->_validate($bestuur, $data, $errors))
 			return false;
@@ -89,16 +90,13 @@ class ControllerBesturen extends ControllerCRUD
 		return -1 * strnatcmp($left->get('login'), $right->get('login'));
 	}
 
-	public function run_read(DataIter $iter)
+	public function run_read(\DataIter $iter)
 	{
 		return $this->view->redirect($this->link_to_read($iter));
 	}
 
-	public function link_to_read(DataIter $iter)
+	public function link_to_read(\DataIter $iter)
 	{
 		return sprintf('besturen.php#%s', urlencode($iter['login']));
 	}
 }
-
-$controller = new ControllerBesturen();
-$controller->run();

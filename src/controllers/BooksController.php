@@ -1,13 +1,14 @@
 <?php
+namespace App\Controller;
 
 require_once 'include/init.php';
 require_once 'include/controllers/Controller.php';
 
-class ControllerBoeken extends Controller
+class BooksController extends \Controller
 {
 	public function __construct()
 	{
-		$this->view = View::byName('boeken', $this);
+		$this->view = \View::byName('boeken', $this);
 	}
 
 	protected function run_impl()
@@ -21,6 +22,3 @@ class ControllerBoeken extends Controller
 			return $this->view->render_call_to_log_in();
 	}
 }
-
-$controller = new ControllerBoeken();
-$controller->run();

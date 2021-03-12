@@ -1,4 +1,6 @@
 <?php
+	namespace App\Controller;
+
 	require_once 'include/init.php';
 	require_once 'include/member.php';
 	require_once 'include/login.php';
@@ -7,7 +9,7 @@
 	require_once 'include/markup.php';
 	require_once 'include/controllers/ControllerCRUD.php';
 	
-	class ControllerAgenda extends ControllerCRUD
+	class CalendarController extends \ControllerCRUD
 	{
 		protected $_var_id = 'agenda_id';
 
@@ -15,7 +17,7 @@
 		{
 			$this->model = get_model('DataModelAgenda');
 
-			$this->view = View::byName('agenda', $this);
+			$this->view = \View::byName('agenda', $this);
 		}
 		
 		public function _check_datum($name, $value)
@@ -27,11 +29,11 @@
 				return null;
 			
 			try {
-				$date = new DateTime($value);
-				if ($date < new DateTime())
+				$date = new \DateTime($value);
+				if ($date < new \DateTime())
 					return false;
 				return $date->format('Y-m-d H:i');
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				return false;
 			}
 		}
@@ -127,7 +129,7 @@
 			if ($data['tot'] === null)
 				$data['tot'] = $data['van'];
 			
-			if (new DateTime($data['van']) > new DateTime($data['tot'])) {
+			if (new \DateTime($data['van']) > new \DateTime($data['tot'])) {
 				$errors[] = 'tot';
 				return false;
 			}
@@ -156,7 +158,7 @@
 			return $changed;
 		}
 		
-		protected function _create(DataIter $iter, array $data, array &$errors)
+		protected function _create(\DataIter $iter, array $data, array &$errors)
 		{
 			if (($data = $this->_check_values($iter, $errors)) === false)
 				return false;
@@ -184,7 +186,7 @@
 			return true;
 		}
 
-		protected function _update(DataIter $iter, array $data, array &$errors)
+		protected function _update(\DataIter $iter, array $data, array &$errors)
 		{
 			if (($data = $this->_check_values($iter, $errors)) === false)
 				return false;
@@ -251,7 +253,7 @@
 			return $punten;
 		}
 		
-		public function run_moderate(DataIterAgenda $item = null)
+		public function run_moderate(\DataIterAgenda $item = null)
 		{
 			if ($this->_form_is_submitted('moderate'))
 				if ($this->_moderate())
@@ -276,7 +278,7 @@
 				$iter = $this->model->get_iter($id);
 				
 				if (!get_policy($this->model)->user_can_moderate($iter))
-					throw new UnauthorizedException();
+					throw new \UnauthorizedException();
 
 				if ($value == 'accept') {
 					/* Accept agendapunt */
@@ -336,7 +338,7 @@
 			$facebook = get_facebook();
 
 			if (!$facebook->getUser())
-				throw new Exception('Could not get facebook user. Please try to reconnect your Facebook account.');
+				throw new \Exception('Could not get facebook user. Please try to reconnect your Facebook account.');
 
 			switch ($_POST['rsvp_status'])
 			{
@@ -347,7 +349,7 @@
 					break;
 
 				default:
-					throw new Exception('Unknown rsvp status');
+					throw new \Exception('Unknown rsvp status');
 			}
 
 			return $this->view->redirect('agenda.php?id=' . $iter['id']);
@@ -355,30 +357,30 @@
 
 		public function run_webcal()
 		{
-			$cal = new WebCal_Calendar('Cover');
+			$cal = new \WebCal_Calendar('Cover');
 			$cal->description = __('All activities of study association Cover');
 
-			$fromdate = new DateTime();
+			$fromdate = new \DateTime();
 			$fromdate = $fromdate->modify('-1 year')->format('Y-m-d');
 
 			$punten = array_filter($this->model->get($fromdate, null, true), [get_policy($this->model), 'user_can_read']);
 			
-			$timezone = new DateTimeZone('Europe/Amsterdam');
+			$timezone = new \DateTimeZone('Europe/Amsterdam');
 
 			foreach ($punten as $punt)
 			{
 				if (!get_policy($this->model)->user_can_read($punt))
 					continue;
 
-				$event = new WebCal_Event;
+				$event = new \WebCal_Event;
 				$event->uid = $punt->get_id() . '@svcover.nl';
-				$event->start = new DateTime($punt['van'], $timezone);
+				$event->start = new \DateTime($punt['van'], $timezone);
 
 				if ($punt['van'] != $punt['tot']) {
-					$event->end = new DateTime($punt['tot'], $timezone);
+					$event->end = new \DateTime($punt['tot'], $timezone);
 				}
 				else {
-					$event->end = new DateTime($punt['van'], $timezone);
+					$event->end = new \DateTime($punt['van'], $timezone);
 					$event->end->modify('+ 2 hour');
 				}
 				
@@ -397,7 +399,7 @@
 				try {
 					$external = file_get_contents($external_url);
 					$cal->inject($external);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					// if something goes wrong, just don't merge with external agenda
 				}
 			}
@@ -438,6 +440,3 @@
 			return parent::run_impl();
 		}
 	}
-	
-	$controller = new ControllerAgenda();
-	$controller->run();

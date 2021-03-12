@@ -1,4 +1,6 @@
 <?php
+namespace App\Controller;
+
 
 require_once 'include/init.php';
 require_once 'include/member.php';
@@ -9,7 +11,7 @@ require_once 'include/controllers/Controller.php';
 use function \Cover\email\mailinglist\get_error_message;
 use function \Cover\email\mailinglist\send_mailinglist_mail;
 
-class ControllerApi extends Controller
+class ApiController extends \Controller
 {
 	static protected $secretary_mapping = [
 		'voornaam' => 'first_name',
@@ -77,7 +79,7 @@ class ControllerApi extends Controller
 		// TODO this incidentally works because the session is read from $_GET[session_id] by
 		// the session provider. But the current session should be set more explicit.
 		if (!get_policy('DataModelAgenda')->user_can_read($agendapunt))
-			throw new UnauthorizedException('You are not authorized to read this event');
+			throw new \UnauthorizedException('You are not authorized to read this event');
 
 		$data = $agendapunt->data;
 		
@@ -93,7 +95,7 @@ class ControllerApi extends Controller
 		$user_model = get_model('DataModelMember');
 
 		if (!($member = $user_model->login($email, $password)))
-			throw new InvalidArgumentException('Invalid username or password');
+			throw new \InvalidArgumentException('Invalid username or password');
 
 		/** @var DataModelSession $session_model */
 		$session_model = get_model('DataModelSession');
@@ -124,13 +126,13 @@ class ControllerApi extends Controller
 		$session = $session_model->resume($session_id);
 
 		if (!$session)
-			throw new InvalidArgumentException('Invalid session id');
+			throw new \InvalidArgumentException('Invalid session id');
 
-		$auth = new ConstantSessionProvider($session);
+		$auth = new \ConstantSessionProvider($session);
 
 		$ident = get_identity_provider($auth);
 
-		$fields = array_merge(DataIterMember::fields(), ['type']);
+		$fields = array_merge(\DataIterMember::fields(), ['type']);
 
 		// Prepare data for member 
 		$member = $ident->member();
@@ -164,7 +166,7 @@ class ControllerApi extends Controller
 
 		$session = $session_model->get_iter($session_id);
 
-		$auth = new ConstantSessionProvider($session);
+		$auth = new \ConstantSessionProvider($session);
 
 		$ident = get_identity_provider($auth);
 
@@ -235,7 +237,7 @@ class ControllerApi extends Controller
 		$model = get_model('DataModelMember');
 
 		if (!isset($_POST['id']))
-			throw new InvalidArgumentException('Missing id field in POST');
+			throw new \InvalidArgumentException('Missing id field in POST');
 
 		$data = [
 			'id' => $_POST['id']
@@ -247,7 +249,7 @@ class ControllerApi extends Controller
 				$data[$field] = $_POST[$secretary_field];
 		}
 		
-		$member = new DataIterMember($model, $data['id'], $data);
+		$member = new \DataIterMember($model, $data['id'], $data);
 		$member['privacy'] = 958435335;
 
 		// Create profile for this member
@@ -287,7 +289,7 @@ class ControllerApi extends Controller
 	public function api_secretary_update_member($member_id)
 	{
 		if ($member_id != $_POST['id'])
-			throw new InvalidArgumentException('Person ids in GET and POST do not match up');
+			throw new \InvalidArgumentException('Person ids in GET and POST do not match up');
 
 		$model = get_model('DataModelMember');
 
@@ -315,7 +317,7 @@ class ControllerApi extends Controller
 		return ['success' => true, 'url' => ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
 	}
 
-	private function _send_welcome_mail(DataIterMember $member)
+	private function _send_welcome_mail(\DataIterMember $member)
 	{
 		// Create a password
 		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
@@ -340,7 +342,7 @@ class ControllerApi extends Controller
 	public function api_secretary_delete_member($member_id)
 	{
 		if ($member_id != $_POST['id'])
-			throw new InvalidArgumentException('Person ids in GET and POST do not match up');
+			throw new \InvalidArgumentException('Person ids in GET and POST do not match up');
 
 		$model = get_model('DataModelMember');
 
@@ -390,18 +392,18 @@ class ControllerApi extends Controller
 		$model = get_model('DataModelApplication');
 		
 		if (empty($_SERVER['HTTP_X_APP']))
-			throw new Exception('App name is missing');
+			throw new \Exception('App name is missing');
 
 		$app = $model->find_one(sprintf("key = '%s'", get_db()->escape_string($_SERVER['HTTP_X_APP'])));
 
 		if (!$app)
-			throw new Exception('No app with that name available');
+			throw new \Exception('No app with that name available');
 
 		$raw_post_data = file_get_contents('php://input');
 		$post_hash = sha1($raw_post_data . $app['secret']);
 
 		if (empty($_SERVER['HTTP_X_HASH']) || $post_hash != $_SERVER['HTTP_X_HASH'])
-			throw new Exception('Checksum does not match');
+			throw new \Exception('Checksum does not match');
 
 		return $app;
 	}
@@ -466,7 +468,7 @@ class ControllerApi extends Controller
 
 			default:
 				if (!$app || !$app['is_admin'])
-					throw new InvalidArgumentException("Unknown method \"$method\".");
+					throw new \InvalidArgumentException("Unknown method \"$method\".");
 				break;
 		}
 
@@ -511,7 +513,7 @@ class ControllerApi extends Controller
 					break;
 
 				default:
-					throw new InvalidArgumentException("Unknown method \"$method\".");
+					throw new \InvalidArgumentException("Unknown method \"$method\".");
 					break;
 			}
 		}
@@ -522,13 +524,10 @@ class ControllerApi extends Controller
 
 	protected function run_exception($e)
 	{
-		if (!($e instanceof InvalidArgumentException) && !($e instanceof UnauthorizedException))
+		if (!($e instanceof \InvalidArgumentException) && !($e instanceof \UnauthorizedException))
 			sentry_report_exception($e);
 		
 		header('Content-Type: application/json');
 		echo json_encode(array('success' => false, 'error' => $e->getMessage()));
 	}
 }
-
-$controller = new ControllerApi();
-$controller->run();

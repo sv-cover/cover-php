@@ -532,7 +532,7 @@
 
 	function parse_email_object($file, array $variables = array())
 	{
-		$path = get_theme_data('email/' . $file, false);
+		$path = 'themes/' . get_theme() . '/email/' . $file;
 
 		if (!file_exists($path))
 			throw new InvalidArgumentException("Cannot find file '{$file}' in any theme data");

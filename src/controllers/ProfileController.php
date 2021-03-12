@@ -1,4 +1,6 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/form.php';
 require_once 'include/member.php';
@@ -8,7 +10,7 @@ require_once 'include/secretary.php';
 require_once 'include/controllers/Controller.php';
 require_once 'include/email.php';
 
-class ControllerProfiel extends Controller
+class ProfileController extends \Controller
 {
 	public function __construct()
 	{
@@ -16,7 +18,7 @@ class ControllerProfiel extends Controller
 
 		$this->policy = get_policy($this->model);
 
-		$this->view = View::byName('profiel', $this);
+		$this->view = \View::byName('profiel', $this);
 
 		$this->sizes = [
 			'adres' => 255,
@@ -88,7 +90,7 @@ class ControllerProfiel extends Controller
 		return filter_var($value, FILTER_VALIDATE_EMAIL);
 	}
 
-	protected function _update_personal(DataIterMember $iter)
+	protected function _update_personal(\DataIterMember $iter)
 	{
 		$check = array(
 			array('name' => 'postcode', 'function' => array($this, '_check_size')),
@@ -152,7 +154,7 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=personal');
 	}
 
-	private function _report_changes_upstream(DataIterMember $iter, array $fields, array $old_values)
+	private function _report_changes_upstream(\DataIterMember $iter, array $fields, array $old_values)
 	{
 		// Inform the board that member info has been changed.
 		$subject = "Lidgegevens gewijzigd";
@@ -166,16 +168,16 @@ class ControllerProfiel extends Controller
 
 		try {
 			get_secretary()->updatePersonFromIterChanges($iter);
-		} catch (RuntimeException $e) {
+		} catch (\RuntimeException $e) {
 			// Todo: replace this with a serious more general logging call
 			error_log($e, 1, 'webcie@rug.nl', "From: webcie-cover-php@svcover.nl");
 		}
 	}
 
-	protected function _update_profile(DataIterMember $iter)
+	protected function _update_profile(\DataIterMember $iter)
 	{
 		if (!$this->policy->user_can_update($iter))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		$check = array(
 			array('name' => 'nick', 'function' => array(&$this, '_check_size')),
@@ -198,10 +200,10 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
 
-	protected function _update_password(DataIterMember $iter)
+	protected function _update_password(\DataIterMember $iter)
 	{
 		if (!$this->policy->user_can_update($iter))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		$errors = array();
 		$message = array();
@@ -238,7 +240,7 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('Location: profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
 
-	protected function _update_privacy(DataIterMember $iter)
+	protected function _update_privacy(\DataIterMember $iter)
 	{
 		/* Built privacy mask */
 		$fields = $this->model->get_privacy();
@@ -256,7 +258,7 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=privacy');
 	}
 
-	protected function _update_photo(DataIterMember $iter)
+	protected function _update_photo(\DataIterMember $iter)
 	{
 		$error = null;
 
@@ -279,7 +281,7 @@ class ControllerProfiel extends Controller
 		if (get_identity()->member_in_committee(COMMISSIE_EASY))
 		{
 			if (!($fh = fopen($_FILES['photo']['tmp_name'], 'rb')))
-				throw new RuntimeException(__('The uploaded file could not be opened.'));
+				throw new \RuntimeException(__('The uploaded file could not be opened.'));
 
 			$this->model->set_photo($iter, $fh);
 
@@ -300,7 +302,7 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
 
-	protected function _update_mailing_lists(DataIterMember $iter)
+	protected function _update_mailing_lists(\DataIterMember $iter)
 	{
 		$model = get_model('DataModelMailinglist');
 
@@ -322,10 +324,10 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=mailing_lists');
 	}
 	
-	public function run_personal(DataIterMember $iter)
+	public function run_personal(\DataIterMember $iter)
 	{
 		if (!$this->policy->user_can_update($iter))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		if ($this->_form_is_submitted('personal', $iter))
 			return $this->_update_personal($iter);
@@ -333,10 +335,10 @@ class ControllerProfiel extends Controller
 		return $this->view->render_personal_tab($iter);
 	}
 
-	public function run_profile(DataIterMember $iter)
+	public function run_profile(\DataIterMember $iter)
 	{
 		if (!$this->policy->user_can_update($iter))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		if ($this->_form_is_submitted('profile', $iter))
 			return $this->_update_profile($iter);
@@ -347,11 +349,11 @@ class ControllerProfiel extends Controller
 		return $this->view->render_profile_tab($iter);
 	}
 	
-	public function run_privacy(DataIterMember $iter)
+	public function run_privacy(\DataIterMember $iter)
 	{
 		if (!$this->policy->user_can_update($iter)
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		if ($this->_form_is_submitted('privacy', $iter))
 			return $this->_update_privacy($iter);
@@ -359,12 +361,12 @@ class ControllerProfiel extends Controller
 		return $this->view->render_privacy_tab($iter);
 	}
 
-	protected function run_photo(DataIterMember $iter)
+	protected function run_photo(\DataIterMember $iter)
 	{
 		// Only members themselves and the AC/DCee can change photos
 		if (!$this->policy->user_can_update($iter)
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		if ($this->_form_is_submitted('photo', $iter))
 			return $this->_update_photo($iter);
@@ -372,10 +374,10 @@ class ControllerProfiel extends Controller
 		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
 	}
 
-	protected function run_facebook(DataIterMember $iter)
+	protected function run_facebook(\DataIterMember $iter)
 	{
 		if ($iter->get('id') != get_identity()->get('id'))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		if ($this->_form_is_submitted('facebook', $iter))
 		{
@@ -388,21 +390,21 @@ class ControllerProfiel extends Controller
 		return $this->view->render_facebook_tab($iter);
 	}
 
-	public function run_export_vcard(DataIterMember $member)
+	public function run_export_vcard(\DataIterMember $member)
 	{
 		if (!get_identity()->is_member())
-			throw new UnauthorizedException('You need to log in to be able to export v-cards/');
+			throw new \UnauthorizedException('You need to log in to be able to export v-cards/');
 
 		if (!$this->policy->user_can_read($member))
-			throw new UnauthorizedException('This member is no longer a member of Cover.');
+			throw new \UnauthorizedException('This member is no longer a member of Cover.');
 
 		return $this->view->render_vcard($member);
 	}
 
-	public function run_export_incassocontract(DataIterMember $member)
+	public function run_export_incassocontract(\DataIterMember $member)
 	{
 		if (!$this->policy->user_can_update($member))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		require_once 'include/incassomatic.php';
 
@@ -415,20 +417,20 @@ class ControllerProfiel extends Controller
 		fclose($fh);
 	}
 
-	public function run_public(DataIterMember $member)
+	public function run_public(\DataIterMember $member)
 	{
 		if (!$this->policy->user_can_read($member))
-			throw new UnauthorizedException('This person is no longer a member of Cover, which is why they no longer have a public profile.');
+			throw new \UnauthorizedException('This person is no longer a member of Cover, which is why they no longer have a public profile.');
 
 		return $this->view->render_public_tab($member);
 	}
 
-	public function run_mailing_lists(DataIterMember $member)
+	public function run_mailing_lists(\DataIterMember $member)
 	{
 
 		if (!$this->policy->user_can_update($member)
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		if ($this->_form_is_submitted('mailing_list', $member))
 			return $this->_update_mailing_lists($member);
@@ -445,26 +447,26 @@ class ControllerProfiel extends Controller
 		// return $this->view->render_mailing_lists_tab($lists);
 	}
 
-	public function run_sessions(DataIterMember $member)
+	public function run_sessions(\DataIterMember $member)
 	{
 		if (!$this->policy->user_can_update($member))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		return $this->view->render_sessions_tab($member);
 	}
 
-	public function run_kast(DataIterMember $member)
+	public function run_kast(\DataIterMember $member)
 	{
 		if (!$this->policy->user_can_update($member))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		return $this->view->render_kast_tab($member);
 	}
 
-	public function run_incassomatic(DataIterMember $member)
+	public function run_incassomatic(\DataIterMember $member)
 	{
 		if (!$this->policy->user_can_update($member))
-			throw new UnauthorizedException();
+			throw new \UnauthorizedException();
 
 		return $this->view->render_incassomatic_tab($member);
 	}
@@ -475,7 +477,7 @@ class ControllerProfiel extends Controller
 
 		try {
 			$token = $model->get_iter($_GET['token']);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return $this->view->render_confirm_email(false);
 		}
 
@@ -514,11 +516,9 @@ class ControllerProfiel extends Controller
 			return $this->run_index();
 
 		if (!method_exists($this, 'run_' . $view))
-			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+			throw new \NotFoundException("View '$view' not implemented by " . get_class($this));
 
 		return call_user_func_array([$this, 'run_' . $view], [$iter]);
 	}
 }
 
-$controller = new ControllerProfiel();
-$controller->run();

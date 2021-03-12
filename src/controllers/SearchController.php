@@ -1,10 +1,12 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/search.php';
 require_once 'include/controllers/Controller.php';
 require_once 'include/view.php';
 	
-class SearchController extends Controller
+class SearchController extends \Controller
 {
 	protected $providers;
 
@@ -45,7 +47,7 @@ class SearchController extends Controller
 			],
 		];
 
-		$this->view = View::byName('search', $this);
+		$this->view = \View::byName('search', $this);
 	}
 
 	protected function _query($query, array &$errors = [], array &$timings = [])
@@ -58,7 +60,7 @@ class SearchController extends Controller
 				$start = microtime(true);
 				$results = array_merge($results, $provider['model']->search($query, 10));
 				$timings[$provider['category_name']] = microtime(true) - $start;
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				sentry_report_exception($e);
 				$errors[] = $provider['category_name'];
 			}
@@ -76,7 +78,7 @@ class SearchController extends Controller
 		$start = microtime(true);
 
 		// Sort them by relevance
-		usort($results, function(SearchResult $a, SearchResult $b) {
+		usort($results, function(\SearchResult $a, \SearchResult $b) {
 			return $a->get_search_relevance() < $b->get_search_relevance();
 		});
 
@@ -105,6 +107,3 @@ class SearchController extends Controller
 		return $this->view->render('index.twig', compact('query', 'query_parts', 'results', 'errors', 'timings'));
 	}
 }
-
-$controller = new SearchController();
-$controller->run();
