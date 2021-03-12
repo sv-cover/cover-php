@@ -1,23 +1,25 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerShow extends ControllerCRUD
+class PageController extends \ControllerCRUD
 {
 	public function __construct()
 	{
 		$this->model = get_model('DataModelEditable');
 
-		$this->view = View::byName('show', $this);
+		$this->view = \View::byName('page', $this);
 	}
 
 	/* These two can_set_* checks are used by the view to check whether it needs to display the fields */
-	public function can_set_titel(DataIter $iter)
+	public function can_set_titel(\DataIter $iter)
 	{
 		return !$iter->has_id() || get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
-	public function can_set_committee_id(DataIter $iter)
+	public function can_set_committee_id(\DataIter $iter)
 	{
 		return !$iter->has_id()
 			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
@@ -36,7 +38,7 @@ class ControllerShow extends ControllerCRUD
 		return $iter;
 	}
 
-	protected function _update(DataIter $iter, array $data, array &$errors)
+	protected function _update(\DataIter $iter, array $data, array &$errors)
 	{
 		$content_fields = ['content', 'content_en'];
 
@@ -84,7 +86,7 @@ class ControllerShow extends ControllerCRUD
 		return $success;
 	}
 
-	private function _prepare_mail(DataIter $iter, $difference)
+	private function _prepare_mail(\DataIter $iter, $difference)
 	{
 		$data = $iter->data;
 		$data['member_naam'] = member_full_name(get_identity()->member(), IGNORE_PRIVACY);
@@ -114,22 +116,22 @@ class ControllerShow extends ControllerCRUD
 		return $data;
 	}
 
-	public function run_preview(DataIterEditable $iter = null)
+	public function run_preview(\DataIterEditable $iter = null)
 	{
 		if ($_SERVER['REQUEST_METHOD'] != 'POST')
-			throw new RuntimeException('This page is only intended to preview submitted content');
+			throw new \RuntimeException('This page is only intended to preview submitted content');
 
-		$page = new DataIterEditable($this->model, null, $_POST);
+		$page = new \DataIterEditable($this->model, null, $_POST);
 
 		return $this->view->render_preview($page, isset($_GET['lang']) ? $_GET['lang'] : null);
 	}
 
 	public function run_index()
 	{
-		return $this->view->redirect('index.php'); // we don't have no index/sitemap (yet)
+		return $this->view->redirect('\\'); // we don't have no index/sitemap (yet)
 	}
 
-	public function run_read(DataIter $iter)
+	public function run_read(\DataIter $iter)
 	{
 		if ($committee = $this->_is_embedded_page($iter['id'], 'DataModelCommissie'))
 			return $this->view->redirect('commissies.php?id=' . $committee->get('login'), true);
@@ -149,6 +151,3 @@ class ControllerShow extends ControllerCRUD
 		return $model->get_from_page($page_id);
 	}
 }
-
-$controller = new ControllerShow();
-$controller->run();

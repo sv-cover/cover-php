@@ -1,6 +1,6 @@
 <?php
 
-class ShowView extends CRUDView
+class PageView extends CRUDView
 {
 	public function available_committees(DataIterEditable $iter)
 	{

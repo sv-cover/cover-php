@@ -2,6 +2,10 @@ homepage:
   path: /
   controller: App\Controller\HomepageController
 
+page:
+  path: /page
+  controller: App\Controller\PageController
+
 profile_picture:
   path: /profile_picture
   controller: App\Controller\ProfilePictureController
@@ -29,6 +33,9 @@ legacy:
       sessions:
         controller: App\Controller\SessionsController
         parameters: { _route: sessions }
+      show:
+        controller: App\Controller\PageController
+        parameters: { _route: page }
       stickers:
         controller: App\Controller\StickersController
         parameters: { _route: stickers }
