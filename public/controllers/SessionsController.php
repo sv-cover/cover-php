@@ -1,22 +1,23 @@
 <?php
+namespace App\Controller;
 
 require_once 'include/init.php';
 require_once 'include/member.php';
 require_once 'include/controllers/Controller.php';
 
-class ControllerSessions extends Controller
+class SessionsController extends \Controller
 {
 	public function __construct()
 	{
 		$this->model = get_model('DataModelSession');
 
-		$this->view = View::byName('sessions', $this);
+		$this->view = \View::byName('sessions', $this);
 	}
 
 	protected function run_view_overrides()
 	{
-		if (!(get_identity() instanceof ImpersonatingIdentityProvider))
-			throw new UnauthorizedException();
+		if (!(get_identity() instanceof \ImpersonatingIdentityProvider))
+			throw new \UnauthorizedException();
 
 		if (isset($_POST['referrer']))
 			$referrer = $_POST['referrer'];
@@ -60,7 +61,7 @@ class ControllerSessions extends Controller
 	protected function run_view_sessions()
 	{
 		if (!get_auth()->logged_in())
-			throw new UnauthorizedException('You need to login to manage your sessions');
+			throw new \UnauthorizedException('You need to login to manage your sessions');
 
 		if ($this->_form_is_submitted('delete_sessions'))
 		{
@@ -83,7 +84,7 @@ class ControllerSessions extends Controller
 						if ($session && $session->get_id() === $current_session->get_id())
 							$_SESSION['alert'] = __('Your session has been ended. You will need to log in again.');
 						
-					} catch (DataIterNotFoundException $e) {
+					} catch (\DataIterNotFoundException $e) {
 						// To bad Zubat!
 					}
 				}
@@ -153,7 +154,7 @@ class ControllerSessions extends Controller
 			}
 
 			return $this->view->render_login($errors, $error_message, $referrer, $external_domain);
-		} catch (InactiveMemberException $e) {
+		} catch (\InactiveMemberException $e) {
 			return $this->view->render('inactive.twig');
 		}
 	}
@@ -191,6 +192,3 @@ class ControllerSessions extends Controller
 		}
 	}
 }
-
-$controller = new ControllerSessions();
-$controller->run();

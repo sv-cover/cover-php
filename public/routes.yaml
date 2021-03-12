@@ -2,13 +2,18 @@ homepage:
   path: /
   controller: App\Controller\HomepageController
 
+profile_picture:
+  path: /profile_picture
+  controller: App\Controller\ProfilePictureController
+
+sessions:
+  path: /sessions
+  controller: App\Controller\SessionsController
+
 stickers:
   path: /stickers
   controller: App\Controller\StickersController
 
-profile_picture:
-  path: /profile_picture
-  controller: App\Controller\ProfilePictureController
 
 legacy:
   path: /{name}.php
@@ -21,6 +26,9 @@ legacy:
       foto:
         controller: App\Controller\ProfilePictureController
         parameters: { _route: profile_picture }
+      sessions:
+        controller: App\Controller\SessionsController
+        parameters: { _route: sessions }
       stickers:
         controller: App\Controller\StickersController
         parameters: { _route: stickers }
