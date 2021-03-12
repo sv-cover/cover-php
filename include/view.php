@@ -183,7 +183,8 @@ class View
 			$url = '//' . $parts['host'];
 		}
 
-		$url .= $parts['path'];
+		if (isset($parts['path']))
+			$url .= $parts['path'];
 
 		if (isset($parts['query']))
 			$url .= '?' . $parts['query'];
