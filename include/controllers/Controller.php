@@ -6,7 +6,7 @@
 	require_once 'include/markup.php';
 
 
-	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+	use Symfony\Component\Routing\RouterInterface;
 
 	/** 
 	  * A class implementing the simplest controller. This class provides
@@ -33,7 +33,7 @@
 			return $this->model;
 		}
 		
-		public function run(Array $parameters, UrlGeneratorInterface $router)
+		public function run(Array $parameters, RouterInterface $router)
 		{
 			$this->parameters = $parameters;
 			$this->router = $router;
