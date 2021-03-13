@@ -12,13 +12,13 @@ require_once 'include/email.php';
 
 class ProfileController extends \Controller
 {
-	public function __construct()
+	protected $view_name = 'profiel';
+
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelMember');
 
 		$this->policy = get_policy($this->model);
-
-		$this->view = \View::byName('profiel', $this);
 
 		$this->sizes = [
 			'adres' => 255,
@@ -38,6 +38,8 @@ class ProfileController extends \Controller
 			'woonplaats',
 			'email'
 		];
+
+		parent::__construct($request, $router);
 	}
 	
 	public function _check_size($name, $value)

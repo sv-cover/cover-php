@@ -5,13 +5,18 @@ require_once 'include/init.php';
 require_once 'include/member.php';
 require_once 'include/controllers/ControllerCRUD.php';
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
+
 class MailingListsController extends \ControllerCRUD
 {
 	private $message_model;
 
 	private $subscription_model;
 
-	public function __construct()
+	protected $view_name = 'mailinglijsten';
+
+	public function __construct(Request $request = null, RouterInterface $router = null)
 	{
 		$this->model = get_model('DataModelMailinglist');
 
@@ -21,7 +26,11 @@ class MailingListsController extends \ControllerCRUD
 
 		$this->member_model = get_model('DataModelMember');
 
-		$this->view = \View::byName('mailinglijsten', $this);
+		// Ideally, we would pass this to the parent, but since this constructor is called in markup.php, we need to handle the edge case where $request and $router may not be set.
+		$this->request = $request;
+		$this->router = $router;
+
+		$this->view = \View::byName($this->view_name, $this);
 	}
 
 	protected function _index()

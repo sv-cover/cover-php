@@ -9,11 +9,13 @@
 	
 	class AlmanakController extends \Controller
 	{
-		public function __construct() 
+		protected $view_name = 'almanak';
+
+		public function __construct($request, $router)
 		{
 			$this->model = create_model('DataModelMember');
 
-			$this->view = \View::byName('almanak', $this);
+			parent::__construct($request, $router);
 		}
 		
 		public function run_index_search($search)

@@ -4,15 +4,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class RouterTwigExtension extends Twig_Extension
 {
 	public $routes;
-	protected $controller;
+	protected $router;
 
-	public function __construct($controller)
+	public function __construct($router)
 	{
-		/* TODO: Ideally, we would receive an instance of UrlGeneratorInterface,
-		but that can't be done since this class is initiated in the constructor
-		of the view, which is initiated in the constructor of the controller,
-		which doesn't have access to the router yet. */
-		$this->controller = $controller;
+		$this->router = $router;
 		$this->routes = [
 			'sessions' => [
 				'login' => function($args) {
@@ -54,17 +50,15 @@ class RouterTwigExtension extends Twig_Extension
 	/* Analogous to Symfony's Twig function 'path' */
 	public function get_path(string $name, array $parameters = [], bool $relative = false)
 	{
-		$router = $this->controller->get_router();
 		$reference_type = $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH;
-		return $router->generate($name, $parameters, $reference_type);
+		return $this->router->generate($name, $parameters, $reference_type);
 	}
 
 	/* Analogous to Symfony's Twig function 'url' */
 	public function get_url(string $name, array $parameters = [], bool $schemeRelative = false)
 	{
-		$router = $this->controller->get_router();
 		$reference_type = $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL;
-		return $router->generate($name, $parameters, $reference_type);
+		return $this->router->generate($name, $parameters, $reference_type);
 	}
 
 	public function link_to($name, array $arguments = array())

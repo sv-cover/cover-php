@@ -30,12 +30,6 @@ class ApiController extends \Controller
 		'donor_from' => 'donorship_date_of_authorization',
 		'donor_till' => 'donorship_ended_on'
 	];
-		
-	public function __construct()
-	{
-		// Do nothing.
-	}
-
 
 	public function api_agenda($committees=null)
 	{

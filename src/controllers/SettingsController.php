@@ -6,11 +6,13 @@ require_once 'include/controllers/ControllerCRUD.php';
 
 class SettingsController extends \ControllerCRUD
 {
-	public function __construct()
-	{
+    protected $view_name = 'settings';
+
+    public function __construct($request, $router)
+    {
 		$this->model = get_model('DataModelConfiguratie');
 
-		$this->view = \View::byName('settings', $this);
+        parent::__construct($request, $router);
 	}
 
 	public function link_to_read(\DataIter $item)

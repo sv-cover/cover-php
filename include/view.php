@@ -100,7 +100,7 @@ class View
 		$this->twig->addExtension(new I18NTwigExtension());
 
 		require_once 'include/routertwigextension.php';
-		$this->twig->addExtension(new RouterTwigExtension($this->controller));
+		$this->twig->addExtension(new RouterTwigExtension($this->controller ? $this->controller->get_router() : null));
 
 		require_once 'include/htmltwigextension.php';
 		$this->twig->addExtension(new HTMLTwigExtension());
@@ -125,6 +125,7 @@ class View
 				'server' => $_SERVER,
 				'GET' => $_GET,
 				'POST' => $_POST,
+				'request' => $this->controller ? $this->controller->get_request() : null,
 				'i18n' => [
 					'language' => i18n_get_language(),
 					'languages' => i18n_get_languages()

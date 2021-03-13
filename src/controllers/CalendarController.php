@@ -13,11 +13,13 @@
 	{
 		protected $_var_id = 'agenda_id';
 
-        public function __construct()
+		protected $view_name = 'agenda';
+
+		public function __construct($request, $router)
 		{
 			$this->model = get_model('DataModelAgenda');
 
-			$this->view = \View::byName('agenda', $this);
+			parent::__construct($request, $router);
 		}
 		
 		public function _check_datum($name, $value)

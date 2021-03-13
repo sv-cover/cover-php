@@ -7,11 +7,13 @@ require_once 'include/controllers/Controller.php';
 
 class SessionsController extends \Controller
 {
-	public function __construct()
+	protected $view_name = 'sessions';
+
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelSession');
 
-		$this->view = \View::byName('sessions', $this);
+		parent::__construct($request, $router);
 	}
 
 	protected function run_view_overrides()

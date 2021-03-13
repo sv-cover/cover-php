@@ -6,6 +6,7 @@
 	require_once 'include/markup.php';
 
 
+	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\Routing\RouterInterface;
 
 	/** 
@@ -15,13 +16,30 @@
 	  */
 	class Controller
 	{
+		protected $view_name;
+
 		protected $view;
 
 		protected $model;
 
 		protected $parameters;
 
+		protected $request;
+
 		protected $router;
+
+		public function __construct(Request $request, RouterInterface $router, \View $view = null)
+		{
+			$this->request = $request;
+			$this->router = $router;
+
+			if (isset($view))
+				$this->view = $view;
+			elseif (isset($this->view_name))
+				$this->view = \View::byName($this->view_name, $this);
+			else
+				$this->view = new \View($this);
+		}
 
 		public function view()
 		{
@@ -33,11 +51,8 @@
 			return $this->model;
 		}
 		
-		public function run(Array $parameters, RouterInterface $router)
+		public function run()
 		{
-			$this->parameters = $parameters;
-			$this->router = $router;
-
 			try {
 				try {
 					echo $this->run_impl();
@@ -119,11 +134,16 @@
 
 		public function link(array $arguments)
 		{
-			if (isset($this->router) && isset($this->parameters) && isset($this->parameters['_route']))
-				return $this->router->generate($this->parameters['_route'], $arguments);
+			if (isset($this->router) && isset($this->request))
+				return $this->router->generate($this->request->attributes->get('_route'), $arguments);
 			else
 				// TODO: Should we even be allowed to be in this situation?
 				return sprintf('?%s', http_build_query($arguments));
+		}
+
+		public function get_request()
+		{
+			return $this->request;
 		}
 
 		public function get_router()

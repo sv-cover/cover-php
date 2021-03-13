@@ -7,11 +7,13 @@
 	
 	class MembershipController extends \Controller
 	{
-		public function __construct()
+		protected $view_name = 'lidworden';
+
+		public function __construct($request, $router)
 		{
 			$this->model = get_model('DataModelMember');
 
-			$this->view = \View::byName('lidworden', $this);
+			parent::__construct($request, $router);
 		}
 		
 		protected function _process_lidworden()

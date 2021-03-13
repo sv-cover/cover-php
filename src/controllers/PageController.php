@@ -6,11 +6,13 @@ require_once 'include/controllers/ControllerCRUD.php';
 
 class PageController extends \ControllerCRUD
 {
-	public function __construct()
+	protected $view_name = 'page';
+
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelEditable');
 
-		$this->view = \View::byName('page', $this);
+		parent::__construct($request, $router);
 	}
 
 	/* These two can_set_* checks are used by the view to check whether it needs to display the fields */

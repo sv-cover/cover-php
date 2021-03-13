@@ -6,10 +6,7 @@
 	
 	class HomepageController extends \Controller
 	{
-		public function __construct()
-		{
-			$this->view = \View::byName('homepage', $this);
-		}
+	    protected $view_name = 'homepage';
 			
 		protected function _process_language()
 		{

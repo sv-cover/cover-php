@@ -5,11 +5,13 @@ require_once 'include/controllers/ControllerCRUD.php';
 
 class StickersController extends \ControllerCRUD
 {
-	public function __construct()
+	protected $view_name = 'stickers';
+
+	public function __construct($request, $router)
 	{
 		$this->model = \get_model('DataModelSticker');
 
-		$this->view = \View::byName('stickers', $this);
+		parent::__construct($request, $router);
 	}
 
 	protected function _create(\DataIter $iter, array $data, array &$errors)

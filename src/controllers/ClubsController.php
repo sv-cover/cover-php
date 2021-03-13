@@ -6,10 +6,7 @@ require_once 'include/controllers/Controller.php';
 
 class ClubsController extends \Controller 
 {
-	public function __construct()
-	{
-		$this->view = \View::byName('clubs', $this);
-	}
+    protected $view_name = 'clubs';
 
     // Copied from profiel
     public function _check_phone($name, $value)

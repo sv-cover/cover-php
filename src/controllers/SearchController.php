@@ -10,7 +10,9 @@ class SearchController extends \Controller
 {
 	protected $providers;
 
-	public function __construct()
+	protected $view_name = 'search';
+
+	public function __construct($request, $router)
 	{
 		$this->providers = [
 			[
@@ -47,7 +49,7 @@ class SearchController extends \Controller
 			],
 		];
 
-		$this->view = \View::byName('search', $this);
+		parent::__construct($request, $router);
 	}
 
 	protected function _query($query, array &$errors = [], array &$timings = [])

@@ -221,7 +221,7 @@
 
 		public function comment_controller_for_photo(DataIterPhoto $photo)
 		{
-			return new PhotoCommentsController($photo);
+			return new PhotoCommentsController($photo, $this->controller->get_request(), $this->controller->get_router());
 		}
 
 		public function recent_comments($count)

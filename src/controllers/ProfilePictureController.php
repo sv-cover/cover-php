@@ -14,11 +14,11 @@
 		const TYPE_PLACEHOLDER_PRIVATE = 'placeholder-private';
 		const TYPE_PLACEHOLDER_PUBLIC = 'placeholder-public';
 
-		public function __construct()
+		public function __construct($request, $router)
 		{
 			$this->model = get_model('DataModelMember');
 
-			$this->view = new \View($this);
+			parent::__construct($request, $router);
 		}
 
 		protected function _get_placeholder_type($member)

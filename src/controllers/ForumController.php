@@ -21,11 +21,13 @@ class ForumController extends \Controller
 
 	const MAXIMUM_POLL_OPTION_COUNT = 10;
 
-	public function __construct()
-	{
+    protected $view_name = 'forum';
+
+    public function __construct($request, $router)
+    {
 		$this->model = get_model('DataModelForum');
 
-		$this->view = \View::byName('forum', $this);
+	   parent::__construct($request, $router);
 	}
 
 	private function _assert_access(\DataIterForum $forum, $authorid, $acl)

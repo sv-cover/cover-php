@@ -6,13 +6,15 @@ require_once 'include/controllers/Controller.php';
 
 class PasswordController extends \Controller
 {
-	public function __construct()
+	protected $view_name = 'wachtwoordvergeten';
+
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelPasswordResetToken');
 
 		$this->member_model = get_model('DataModelMember');
 
-		$this->view = \View::byName('wachtwoordvergeten', $this);
+		parent::__construct($request, $router);
 	}
 
 	protected function _is_good_password(\DataIterMember $member, $password)

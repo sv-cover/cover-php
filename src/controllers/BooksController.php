@@ -6,10 +6,7 @@ require_once 'include/controllers/Controller.php';
 
 class BooksController extends \Controller
 {
-	public function __construct()
-	{
-		$this->view = \View::byName('boeken', $this);
-	}
+    protected $view_name = 'boeken';
 
 	protected function run_impl()
 	{

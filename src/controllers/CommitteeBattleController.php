@@ -8,13 +8,15 @@ class CommitteeBattleController extends \ControllerCRUD
 {
 	protected $committee_model;
 
-	public function __construct()
+	protected $view_name = 'committeebattle';
+
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelCommitteeBattleScore');
 
-		$this->view = \View::byName('committeebattle', $this);
-
 		$this->committee_model = clone get_model('DataModelCommissie');
+
+		parent::__construct($request, $router);
 	}
 
 	protected function _index()

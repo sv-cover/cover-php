@@ -4,13 +4,16 @@ namespace App\Controller;
 require_once 'include/init.php';
 require_once 'include/controllers/Controller.php';
 
+
 class ActiveMembersController extends \Controller
 {
-	public function __construct()
+	protected $view_name = 'actieveleden';
+
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelActieveLeden');
 
-		$this->view = \View::byName('actieveleden', $this);
+		parent::__construct($request, $router);
 	}
 	
 	protected function run_impl()

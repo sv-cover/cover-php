@@ -8,8 +8,9 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class LegacyController extends \Controller
 {
-    public function run(Array $parameters, UrlGeneratorInterface $router)
+    public function run()
     {
+        $parameters = $this->request->attributes->get('_route_params');
         $name = $parameters['name'] ?? null;
         $map = $parameters['map'] ?? null;
         $route = $map[$name] ?? null;
@@ -17,8 +18,12 @@ class LegacyController extends \Controller
         if (empty($route))
             throw new ResourceNotFoundException();
 
+        $request = $this->request;
+        $request->attributes->add($route['parameters']);
+        $request->attributes->set('_controller', $route['controller']);
+
         $controller_class = $route['controller'];
-        $controller = new $controller_class();
-        $controller->run($route['parameters'], $router);
+        $controller = new $controller_class($this->request, $this->router);
+        $controller->run();
     }
 }

@@ -6,11 +6,13 @@ require_once 'include/controllers/ControllerCRUD.php';
 
 class BoardsController extends \ControllerCRUD
 {
-	public function __construct()
+	protected $view_name = 'besturen';
+
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelBesturen');
 
-		$this->view = \View::byName('besturen', $this);
+		parent::__construct($request, $router);
 	}
 
 	protected function _get_title($iters = null)

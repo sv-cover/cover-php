@@ -8,7 +8,9 @@ require_once 'include/validate.php';
 
 class SignUpFormsController extends \Controller
 {
-	public function __construct()
+	protected $view_name = 'signup';
+
+	public function __construct($request, $router)
 	{
 		$this->form_model = get_model('DataModelSignUpForm');
 
@@ -16,7 +18,7 @@ class SignUpFormsController extends \Controller
 
 		$this->entry_model = get_model('DataModelSignUpEntry');
 
-		$this->view = \View::byName('signup', $this);
+		parent::__construct($request, $router);
 	}
 
 	protected function run_impl()

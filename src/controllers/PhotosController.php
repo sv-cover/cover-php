@@ -19,13 +19,15 @@
 
 		protected $photo;
 
-		public function __construct(\DataIterPhoto $photo)
+		protected $view_name = 'fotoboekreacties';
+
+		public function __construct(\DataIterPhoto $photo, $request, $router)
 		{
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelPhotobookReactie');
 
-			$this->view = \View::byName('fotoboekreacties', $this);
+			parent::__construct($request, $router);
 		}
 
 		public function new_iter()
@@ -114,13 +116,13 @@
 
 	class PhotoLikesController extends \Controller
 	{
-		public function __construct(\DataIterPhoto $photo)
+		public function __construct(\DataIterPhoto $photo, $request, $router)
 		{
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelPhotobookLike');
 
-			$this->view = new \View($this);
+			parent::__construct($request, $router);
 		}
 
 		public function link_to_photo()
@@ -133,12 +135,8 @@
 			return parent::link($arguments);
 		}
 
-		public function run(Array $parameters, RouterInterface $router)
+		public function run()
 		{
-
-			$this->parameters = $parameters;
-			$this->router = $router;
-
 			$action = null;
 			$response_json = false;
 
@@ -185,11 +183,13 @@
 
 		protected $_var_id = 'face_id';
 
-		public function __construct(\DataIterPhoto $photo)
+		public function __construct(\DataIterPhoto $photo, $request, $router)
 		{
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelPhotobookFace');
+
+			parent::__construct($request, $router, false); // make sure parent doesn't initiate a view
 
 			$this->view = new \CRUDView($this);
 		}
@@ -264,13 +264,15 @@
 	{
 		protected $photo;
 
-		public function __construct(\DataIterPhoto $photo)
+		protected $view_name = 'fotoboek';
+
+		public function __construct(\DataIterPhoto $photo, $request, $router)
 		{
 			$this->photo = $photo;
 
 			$this->model = get_model('DataModelPhotobookPrivacy');
 
-			$this->view = \View::byName('fotoboek', $this);
+			parent::__construct($request, $router);
 		}
 
 		public function link_to_photo()
@@ -316,14 +318,16 @@
 		public $privacy_controller;
 
 		public $comments_controller;
+		
+		protected $view_name = 'fotoboek';
 
-		public function __construct()
+		public function __construct($request, $router)
 		{
 			$this->model = get_model('DataModelPhotobook');
 
 			$this->policy = get_policy($this->model);
 
-			$this->view = \View::byName('fotoboek', $this);
+			parent::__construct($request, $router);
 		}
 		
 		/* Helper functions for _check_foto_values */
@@ -974,10 +978,10 @@
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 
 			if ($photo) {
-				$this->comments_controller = new PhotoCommentsController($photo);
-				$this->likes_controller = new PhotoLikesController($photo);
-				$this->faces_controller = new PhotoFacesController($photo);
-				$this->privacy_controller = new PhotoPrivacyController($photo);
+				$this->comments_controller = new PhotoCommentsController($photo, $this->request, $this->router);
+				$this->likes_controller = new PhotoLikesController($photo, $this->request, $this->router);
+				$this->faces_controller = new PhotoFacesController($photo, $this->request, $this->router);
+				$this->privacy_controller = new PhotoPrivacyController($photo, $this->request, $this->router);
 			}
 
 			// Choose the correct view
@@ -987,13 +991,13 @@
 
 				switch ($_GET['module']) {
 					case 'comments':
-						return $this->comments_controller->run($this->parameters, $this->router);
+						return $this->comments_controller->run();
 					case 'likes':
-						return $this->likes_controller->run($this->parameters, $this->router);
+						return $this->likes_controller->run();
 					case 'faces':
-						return $this->faces_controller->run($this->parameters, $this->router);
+						return $this->faces_controller->run();
 					case 'privacy':
-						return $this->privacy_controller->run($this->parameters, $this->router);
+						return $this->privacy_controller->run();
 				}
 			}
 			

@@ -9,13 +9,15 @@ class CommitteesController extends \ControllerCRUD
 {	
 	protected $_var_id = 'commissie';
 
+	protected $view_name = 'commissies';
+
 	public $mode;
 
-	public function __construct()
+	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelCommissie');
 		
-		$this->view = \View::byName('commissies', $this);
+		parent::__construct($request, $router);
 	}
 
 	protected function _create(\DataIter $iter, array $data, array &$errors)

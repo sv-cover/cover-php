@@ -14,8 +14,10 @@ try {
     $file_locator = new FileLocator([__DIR__ . DIRECTORY_SEPARATOR . 'src']);
     $loader = new YamlFileLoader($file_locator);
 
+    $request = Request::createFromGlobals();
+
     $context = new RequestContext();
-    $context->fromRequest(Request::createFromGlobals());
+    $context->fromRequest($request);
     $router = new Router(
         $loader,
         'routes.yaml',
@@ -27,10 +29,15 @@ try {
     );
 
     $parameters = $router->match($context->getPathInfo());
-
     $controller_class = $parameters['_controller'];
-    $controller = new $controller_class();
-    $controller->run($parameters, $router);
+
+    $request->attributes->add($parameters);
+
+    unset($parameters['_route'], $parameters['_controller']);
+    $request->attributes->set('_route_params', $parameters);
+
+    $controller = new $controller_class($request, $router);
+    $controller->run();
 } catch (ResourceNotFoundException $e) {
     $view = new \View();
     echo $view->render_404_not_found(new \NotFoundException());
