@@ -1,7 +1,10 @@
 <?php
 
+require_once 'include/router.php';
+
 const ALLOW_SUBDOMAINS = 1;
 const ALLOW_EXTERNAL_DOMAINS = 2;
+
 
 /**
   * A Class implementing the default view. New views should subclass this one.
@@ -93,6 +96,8 @@ class View
 			'cache' => get_config_value('twig_cache', 'tmp/twig'),
 		));
 
+		$router = $this->controller ? $this->controller->get_router() : get_router();
+
 		require_once 'include/policytwigextension.php';
 		$this->twig->addExtension(new PolicyTwigExtension());
 
@@ -100,13 +105,13 @@ class View
 		$this->twig->addExtension(new I18NTwigExtension());
 
 		require_once 'include/routertwigextension.php';
-		$this->twig->addExtension(new RouterTwigExtension($this->controller ? $this->controller->get_router() : null));
+		$this->twig->addExtension(new RouterTwigExtension($router));
 
 		require_once 'include/htmltwigextension.php';
 		$this->twig->addExtension(new HTMLTwigExtension());
 
 		require_once 'themes/' . get_theme() . '/views/_layout/layout.php';
-		$this->layout = new LayoutViewHelper($this->controller ? $this->controller->get_router() : null);
+		$this->layout = new LayoutViewHelper($router);
 
 		foreach ($this->_globals() as $key => $var)
 			$this->twig->addGlobal($key, $var);
@@ -125,7 +130,7 @@ class View
 				'server' => $_SERVER,
 				'GET' => $_GET,
 				'POST' => $_POST,
-				'request' => $this->controller ? $this->controller->get_request() : null,
+				'request' => $this->controller ? $this->controller->get_request() : get_request(),
 				'i18n' => [
 					'language' => i18n_get_language(),
 					'languages' => i18n_get_languages()

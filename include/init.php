@@ -29,6 +29,9 @@
 	else
 		error_reporting(E_ALL);
 
+	/* Import composer packages */
+	require_once dirname(__FILE__) . '/../vendor/autoload.php';
+
 	require_once 'include/sentry.php';
 	require_once 'include/functions.php';
 	require_once 'include/i18n.php';
@@ -37,8 +40,6 @@
 
 	date_default_timezone_set('Europe/Amsterdam');
 
-	/* Import composer packages */
-	require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
 	/* Initialize session */
 	session_start();

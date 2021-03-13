@@ -217,33 +217,6 @@
         return bin2hex(random_bytes(($length-($length%2))/2));
 	}
 
-	/** @group Functions
-	  * Create properly encoded query string from $_SERVER['PHP_SELF'] 
-	  * and $_GET leaving out a set of variables. You can specify which
-	  * variables to leave out of the query string with the function
-	  * parameters (every parameter specifies a variable name to be left
-	  * out the query string)
-	  *
-	  * @result a query string in the form of <file>?var1=val1&var2=val2...
-	  */
-	function get_request() {
-		$self = $_SERVER['PHP_SELF'];
-		$args = func_get_args();
-		$query = '';
-
-		foreach ($_GET as $key => $value)
-			if (!in_array($key, $args)) {
-				if ($query == '')
-					$query .= '?';
-				else
-					$query .= '&';
-
-				$query .= urlencode($key) . '=' . urlencode($value);
-			}
-		
-		return $self . $query;
-	}
-
 	/**
 	 * Format a string with php-style variables with optional modifiers.
 	 * 
