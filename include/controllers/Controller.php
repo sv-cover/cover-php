@@ -126,6 +126,11 @@
 				return sprintf('?%s', http_build_query($arguments));
 		}
 
+		public function get_router()
+		{
+			return $this->router;
+		}
+
 		final protected function get_content()
 		{
 			throw new LogicException("Controller::get_content is no longer accepted");

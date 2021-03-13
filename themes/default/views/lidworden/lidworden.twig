@@ -190,7 +190,7 @@
 			</div>
 			{% if user_can_update voorwaarden %}
 				<div class="level-right buttons">
-					<a href="{{ link('editable.update', editable=voorwaarden)|e('html_attr') }}" class="button">{{ __('Modify conditions') }}</a>
+					<a href="{{ path('page', {view: 'update', id: voorwaarden.id}) }}" class="button">{{ __('Modify conditions') }}</a>
 				</div>
 			{% endif %}
 		</div>

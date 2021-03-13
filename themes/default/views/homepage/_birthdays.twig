@@ -15,7 +15,7 @@
                 <li><span style="font-weight: bold; color: #c60c30;">Cover!</span> ({{ view.layout.cover_leeftijd }})</li>
             {% endif %}
             {% for birthday_person in birthdays %}
-                <li><a href="{{ link('profiel.read', member=birthday_person) }}">{{ birthday_person|personal_full_name }} ({{ birthday_person.leeftijd }})</a></li>
+                <li><a href="{{ path('profile', {lid: birthday_person.id}) }}"">{{ birthday_person|personal_full_name }} ({{ birthday_person.leeftijd }})</a></li>
             {% endfor %}
         </ul>
 {% endif %}{% endblock %}

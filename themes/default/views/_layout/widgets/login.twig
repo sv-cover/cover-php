@@ -12,11 +12,11 @@
     <div class="navbar-dropdown is-right">
         {% if global.auth.logged_in %}
             <div class="navbar-item profile">
-                <a class="image is-48x48" href="{{ link('profiel.read', member=global.identity.member) }}">
+                <a class="image is-48x48" href="{{ path('profile', {lid: global.identity.member.id}) }}">
                     <img class="is-rounded" src="{{ link('foto.square', member=global.identity.member, width=96) }}" aria-hidden="true">
                 </a>
                 <div class="user-info">
-                    <a class="name" href="{{ link('profiel.read', member=global.identity.member) }}">
+                    <a class="name" href="{{ path('profile', {lid: global.identity.member.id}) }}">
                         {{ global.identity.member.full_name }}
                     </q>
                     
@@ -45,7 +45,7 @@
 
             <hr class="navbar-divider">
 
-            <a class="navbar-item" href="{{ link('profiel.read', member=global.identity.member) }}">
+            <a class="navbar-item" href="{{ path('profile', {lid: global.identity.member.id}) }}">
                 {{ __('Your profile') }}
             </a>
             <a class="navbar-item" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">

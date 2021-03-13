@@ -11,7 +11,7 @@
 	</div>
 	<div class="level-right buttons">
 		{% if editable is not same as(null) and user_can_update editable %}
-			<a href="{{ link('editable.update', editable=editable)|e('html_attr') }}" class="button">{{ __('Update description') }}</a>
+			<a href="{{ path('page', {view: 'update', id: editable.id}) }}" class="button">{{ __('Update description') }}</a>
 		{% endif %}
 		{% if user_can_create model.new_iter %}
 			<a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">{{ __('Award points') }}</a>
@@ -43,7 +43,7 @@
 				<td>
 					<a href="commissies.php?commissie={{ committee.login|e('url') }}">{{ committee.naam }}</a>
 					{% for member in committee.members %}
-						<a href="{{ link('profiel.read', member=member)|e('html_attr') }}" class="image is-16x16 is-inline-block">
+						<a href="{{ path('profile', {lid: member.id}) }}" class="image is-16x16 is-inline-block">
 							<img  class="is-rounded" src="{{ link('foto.square', member=member, width=50)|e('html_attr') }}" width="25" title="{{ member|personal_full_name }}">
 							<span class="is-sr-only">{{ member|personal_full_name }}</span>
 						</a>

@@ -20,7 +20,7 @@
 	{% for iter in iters %}
 		<tr>
 			<td>{{ iter.id }}</td>
-			<td><a href="{{ link('profiel.read', member=iter) }}">{{ iter|full_name_ignore_privacy }}</a></td>
+			<td><a href="{{ path('profile', {lid: iter.id}) }}">{{ iter|full_name_ignore_privacy }}</a></td>
 			<td>{{ iter.email }}</td>
 			<td class="has-text-right">{{ iter.commissie_count }}</td>
 		</tr>

@@ -6,7 +6,7 @@
 <header class="block">
 	<nav class="level is-mobile">
 		<div class="level-left">
-			<a href="{{ link_to('archive_index', list)|e('html_attr') }}" class="level-item button">
+			<a href="{{ path('mailing_lists', {view: 'archive_index', id: list.id}) }}" class="level-item button">
 				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 				<span class="is-hidden-mobile">{{ __('Back to %s')|format(list.naam) }}</span>
 				<span class="is-hidden-tablet">{{ __('Back') }}</span>
@@ -28,7 +28,7 @@
 		</li>
 		<li>
 			<strong>{{ __('To') }}:</strong>
-			<a href="{{ controller.link_to_read(list)|e('html_attr') }}">
+			<a href="{{ path('mailing_lists', {view: 'read', id: list.id}) }}">
 				{{ list.naam }} &lt;{{ list.adres }}&gt;
 			</a>
 		</li>

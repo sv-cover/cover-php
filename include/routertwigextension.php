@@ -1,11 +1,18 @@
 <?php
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RouterTwigExtension extends Twig_Extension
 {
 	public $routes;
+	protected $controller;
 
-	public function __construct()
+	public function __construct($controller)
 	{
+		/* TODO: Ideally, we would receive an instance of UrlGeneratorInterface,
+		but that can't be done since this class is initiated in the constructor
+		of the view, which is initiated in the constructor of the controller,
+		which doesn't have access to the router yet. */
+		$this->controller = $controller;
 		$this->routes = [
 			'sessions' => [
 				'login' => function($args) {
@@ -21,12 +28,6 @@ class RouterTwigExtension extends Twig_Extension
 				'overrides'=> function($args) {
 					return edit_url('/sessions.php?view=overrides', $args);
 				}
-			],
-			'profiel' => [
-				'read' => '/profiel.php?lid=$member[id]'
-			],
-			'editable' => [
-				'update' => '/show.php?view=update&id=$editable[id]'
 			],
 			'foto' => [
 				'portrait' => '/foto.php?format=portrait&width=$width&lid_id=$member[id]',
@@ -45,19 +46,25 @@ class RouterTwigExtension extends Twig_Extension
 		return [
 			// The old experiment
 			new Twig_SimpleFunction('link', [$this, 'link_to'], ['is_variadic' => true]),
-
-			new Twig_SimpleFunction('link_to',
-				[$this, 'link_to_via_controller'],
-				[
-					'is_variadic' => true,
-					'needs_context' => true
-				])
+			new Twig_SimpleFunction('path', [$this, 'get_path']),
+			new Twig_SimpleFunction('url', [$this, 'get_url']),
 		];
 	}
 
-	public function link_to_via_controller($context, $view, $iter = null, array $arguments = [])
+	/* Analogous to Symfony's Twig function 'path' */
+	public function get_path(string $name, array $parameters = [], bool $relative = false)
 	{
-		return $context['controller']->link_to($view, $iter, $arguments);
+		$router = $this->controller->get_router();
+		$reference_type = $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH;
+		return $router->generate($name, $parameters, $reference_type);
+	}
+
+	/* Analogous to Symfony's Twig function 'url' */
+	public function get_url(string $name, array $parameters = [], bool $schemeRelative = false)
+	{
+		$router = $this->controller->get_router();
+		$reference_type = $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL;
+		return $router->generate($name, $parameters, $reference_type);
 	}
 
 	public function link_to($name, array $arguments = array())

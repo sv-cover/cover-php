@@ -4,7 +4,7 @@
     </div>
     {% if user_can_update editable %}
         <div class="buttons level-right">
-            <a href="{{ link('editable.update', editable=editable) }}" class="button">
+            <a href="{{ path('page', {view: 'update', id: editable.id}) }}" class="button">
                 <span class="icon is-small">
                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                 </span>

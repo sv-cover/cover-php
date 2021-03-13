@@ -24,7 +24,7 @@
 				<td>
 					{{ score.awarded_for }}
 					{% for member in score.members %}
-						<a href="{{ link('profiel.read', member=member)|e('html_attr') }}" class="image is-16x16 is-inline-block">
+						<a href="{{ path('profile', {lid: member.id}) }}" class="image is-16x16 is-inline-block">
 							<img class="is-rounded" src="{{ link('foto.square', member=member, width=50)|e('html_attr') }}" width="25" title="{{ member|personal_full_name }}">
 							<span class="is-sr-only">{{ member|personal_full_name }}</span>
 						</a>

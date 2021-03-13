@@ -100,7 +100,7 @@ class View
 		$this->twig->addExtension(new I18NTwigExtension());
 
 		require_once 'include/routertwigextension.php';
-		$this->twig->addExtension(new RouterTwigExtension());
+		$this->twig->addExtension(new RouterTwigExtension($this->controller));
 
 		require_once 'include/htmltwigextension.php';
 		$this->twig->addExtension(new HTMLTwigExtension());

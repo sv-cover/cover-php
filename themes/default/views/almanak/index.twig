@@ -110,7 +110,7 @@
 		<ul class="members-list columns is-mobile">
 			{% for iter in iters %}
 			<li class="profile column is-half-mobile is-one-third-tablet is-one-quarter-desktop is-one-fifth-widescreen">
-				<a href="{{ link('profiel.read', member=iter) }}">	
+				<a href="{{ path('profile', {lid: iter.id}) }}">	
 					<figure class="image is-128x128">
 						<img class="is-rounded" width="128" height="128" src="{{ link('foto.square', member=iter, width=256) }}" alt="{{ __('Photo of %s')|format(iter|full_name) }}">
 					</figure>

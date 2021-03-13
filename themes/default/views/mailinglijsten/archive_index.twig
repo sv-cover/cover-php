@@ -19,7 +19,11 @@
 		{% for message in messages %}
 			<tr>
 				<td class="is-truncated" title="{{ message.subject|default('<No subject>') }}">
-					<span><a href="{{ link_to('archive_read', list, message_id=message.id)|e('html_attr') }}">{{ message.subject|default('<No subject>') }}</a></span>
+					<span>
+						<a href="{{ path('mailing_lists', {view: 'archive_read', id: list.id, message_id: message.id}) }}">
+							{{ message.subject|default('<No subject>') }}
+						</a>
+					</span>
 				</td>
 				<td class="is-truncated" title="{{ message.sender }}"><span>{{ message.sender }}</span></td>
 				<td class="is-nowrap">{{ message.verwerkt_op|date() }}</td>
