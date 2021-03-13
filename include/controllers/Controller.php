@@ -151,6 +151,15 @@
 			return $this->router;
 		}
 
+		public function get_parameter($key, $default=null)
+		{
+			if ($this !== $result = $this->request->attributes->get($key, $this)) {
+				return $result;
+			}
+
+			return $this->request->query->get($key, $default);
+		}
+
 		final protected function get_content()
 		{
 			throw new LogicException("Controller::get_content is no longer accepted");

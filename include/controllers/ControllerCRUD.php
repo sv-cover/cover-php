@@ -210,11 +210,13 @@ class ControllerCRUD extends Controller
 	{
 		$iter = null;
 
-		$view = isset($_GET[$this->_var_view]) ? $_GET[$this->_var_view] : null;
+		$view = $this->get_parameter($this->_var_view);
 
-		if (isset($_GET[$this->_var_id]) && $_GET[$this->_var_id] != '')
+		$id = $this->get_parameter($this->_var_id);
+
+		if (isset($id) && $id != '')
 		{
-			$iter = $this->_read($_GET[$this->_var_id]);
+			$iter = $this->_read($id);
 
 			if (!$view)
 				$view = 'read';

@@ -42,6 +42,12 @@ committees:
   path: /committees
   controller: App\Controller\CommitteesController
 
+contact:
+  path: /contact
+  controller: App\Controller\PageController
+  defaults:
+    id: 17
+
 forum:
   path: /forum
   controller: App\Controller\ForumController
@@ -75,7 +81,7 @@ password:
   controller: App\Controller\PasswordController
 
 page:
-  path: /page
+  path: /page/{id<\d+>}
   controller: App\Controller\PageController
 
 photos:

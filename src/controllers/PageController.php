@@ -125,7 +125,7 @@ class PageController extends \ControllerCRUD
 
 		$page = new \DataIterEditable($this->model, null, $_POST);
 
-		return $this->view->render_preview($page, isset($_GET['lang']) ? $_GET['lang'] : null);
+		return $this->view->render_preview($page, $this->get_parameter('lang'));
 	}
 
 	public function run_index()

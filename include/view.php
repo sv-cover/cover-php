@@ -106,7 +106,7 @@ class View
 		$this->twig->addExtension(new HTMLTwigExtension());
 
 		require_once 'themes/' . get_theme() . '/views/_layout/layout.php';
-		$this->layout = new LayoutViewHelper();
+		$this->layout = new LayoutViewHelper($this->controller ? $this->controller->get_router() : null);
 
 		foreach ($this->_globals() as $key => $var)
 			$this->twig->addGlobal($key, $var);

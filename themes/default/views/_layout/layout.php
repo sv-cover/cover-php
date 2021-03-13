@@ -1,7 +1,16 @@
 <?php
 
+use Symfony\Component\Routing\RouterInterface;
+
 class LayoutViewHelper
 {
+	protected $router;
+
+	public function __construct($router)
+	{
+		$this->router = $router;
+	}
+
 	public function top_menu()
 	{
 		$menus = [];
@@ -95,7 +104,7 @@ class LayoutViewHelper
 
 		$menus['contact'] = [
 			'label' => __('Contact'),
-			'url' => '/show.php?id=17'
+			'url' => $this->router->generate('contact'),
 		];
 
 		// $menus['admin'] = [
