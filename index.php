@@ -1,5 +1,6 @@
 <?php
 require_once 'include/init.php';
+require_once 'include/routing.php';
 
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RequestContext;
@@ -19,7 +20,8 @@ try {
         $loader,
         'routes.yaml',
         [
-            'cache_dir' => get_config_value('routing_cache')
+            'matcher_class' => RedirectableCompiledUrlMatcher::class,
+            'cache_dir' => get_config_value('routing_cache'),
         ],
         $context
     );
