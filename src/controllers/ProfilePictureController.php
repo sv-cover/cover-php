@@ -92,14 +92,24 @@
 				return false;
 
 			// If it is outdated, close it again and tell our caller that we can't serve it.
-			if ($this->model->get_photo_mtime($member) > filemtime($file_path))
+			if (!$this->_is_placeholder($type) && $this->model->get_photo_mtime($member) > filemtime($file_path))
 			{
 				fclose($fh);
 				return false;
 			}
 
-			// Send an extra header with the mtime to make debugging the cache easier
-			header('X-Cache: ' . date('r', filemtime($file_path)));
+			$last_modified = gmdate(DATE_RFC1123,filemtime($file_path));
+
+			// Don't send a file if the browser has a cached one already
+			if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $last_modified) {
+				header('Pragma: public');
+				header('Cache-Control: max-age=86400');
+				http_response_code(304);
+				fclose($fh);
+				return true;
+			}
+
+			header('Last-Modified: ' . $last_modified);
 
 			// Serve the actual stream including the appropriate headers
 			$this->_serve_stream($fh,
@@ -250,8 +260,10 @@
 				0, // angl
 				$text);
 
+			// Height is 0 in cache name for portrait 
+			$cache_height = $format === self::FORMAT_PORTRAIT ? 0 : $height;
 			// Oh shit cache not writable? Fall back to a temp stream.
-			$fout = $this->_open_cache_stream($member, $width, $height, $this->_get_placeholder_type($member), 'w+') or $fout = fopen('php://temp', 'w+');
+			$fout = $this->_open_cache_stream($member, $width, $cache_height, $this->_get_placeholder_type($member), 'w+') or $fout = fopen('php://temp', 'w+');
 
 			$imagick->setImageFormat('png');
 			$imagick->writeImageFile($fout);
@@ -261,7 +273,7 @@
 			$file_size = ftell($fout);
 			rewind($fout);
 
-			$this->_serve_stream($fout, 'image/png', $file_size);
+			// $this->_serve_stream($fout, 'image/png', $file_size);
 
 			// And clean up.
 			fclose($fout);
@@ -275,9 +287,7 @@
 				? $format
 				: self::FORMAT_PORTRAIT;
 
-			$width = isset($_GET['width'])
-				? min(intval($_GET['width']), 600)
-				: 600;
+			$width = min(intval($this->get_parameter('width') ?? 600), 600);
 
 			$height = $format == self::FORMAT_SQUARE ? $width : 0;
 
@@ -303,13 +313,16 @@
 		
 		protected function run_impl()
 		{
-			if (empty($_GET['lid_id']))
+			$member_id = $this->get_parameter('lid_id');
+			if (empty($member_id))
 				return new \Exception('No member ID provided');
 
-			$iter = $this->model->get_iter($_GET['lid_id']);
+			$iter = $this->model->get_iter($member_id);
 
-			if (isset($_GET['format']))
-				return $this->_view_thumbnail($iter, $_GET['format']);
+			$format = $this->get_parameter('format');
+
+			if (isset($format))
+				return $this->_view_thumbnail($iter, $format);
 			else 
 				return $this->_view_photo($iter);
 		}

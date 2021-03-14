@@ -1,7 +1,7 @@
 <div class="media photo-comment" id="comment{{ iter.id }}">
 	<figure class="media-left">
 		<p class="image avatar">
-			<img class="is-rounded" src="{{ link('foto.square', member=iter.author, width=128) }}" alt="Photo of {{ iter.author|personal_full_name }}">
+			<img class="is-rounded" src="{{ path('profile_picture', {lid_id: iter.author.id, format: 'square', width: 128}) }}" alt="Photo of {{ iter.author|personal_full_name }}">
 		</p>
 	</figure>
 	<div class="media-content">

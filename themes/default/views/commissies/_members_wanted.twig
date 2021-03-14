@@ -18,7 +18,7 @@
 		<div class="columns is-vcentered">
 			<a href="profiel.php?lid={{ commissioner.id }}" class="column is-narrow has-text-centered-mobile">
 				<figure class="image is-64x64 is-centered">
-					<img class="is-rounded" width="64" height="64" src="{{ link('foto.square', member=commissioner, width=256) }}" alt="{{ __('Photo of %s')|format(commissioner|full_name) }}">
+					<img class="is-rounded" width="64" height="64" src="{{ path('profile_picture', {lid_id: commissioner.id, format: 'square', width: 256}) }}" alt="{{ __('Photo of %s')|format(commissioner|full_name) }}">
 				</figure>
 			</a>
 			<div class="column has-text-centered-mobile">

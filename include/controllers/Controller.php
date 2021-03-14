@@ -28,7 +28,7 @@
 
 		protected $router;
 
-		public function __construct(Request $request, RouterInterface $router, \View $view = null)
+		public function __construct(Request $request, RouterInterface $router, $view = null)
 		{
 			$this->request = $request;
 			$this->router = $router;

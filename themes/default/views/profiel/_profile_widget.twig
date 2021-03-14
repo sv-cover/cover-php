@@ -46,13 +46,13 @@
 <div class="profile-widget">
 	{% if iter.has_photo and not iter.is_private('foto') %}
 		<figure class="profile-photo">
-			<a class="image is-128x128" href="foto.php?lid_id={{ iter.id }}&amp;timestamp={{ iter.photo_mtime }}" data-popup="image" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
-				<img class="is-rounded" src="{{ link('foto.square', member=iter, width=256, timestamp=iter.photo_mtime) }}" width="128">
+			<a class="image is-128x128" href="{{ path('profile_picture', {lid_id: iter.id, timestamp:iter.photo_mtime}) }}" data-popup="image" title="{{ __('Click to enlarge the photo')|e('html_attr') }}">
+				<img class="is-rounded" src="{{ path('profile_picture', {lid_id: iter.id, format: 'square', width: 256, timestamp:iter.photo_mtime}) }}" width="128">
 			</a>
 		</figure>
 	{% else %}
 		<figure class="profile-photo image is-128x128">
-			<img class="is-rounded" src="{{ link('foto.square', member=iter, width=256, timestamp=iter.photo_mtime) }}" width="150">
+			<img class="is-rounded" src="{{ path('profile_picture', {lid_id: iter.id, format: 'square', width: 256}) }}" width="150">
 		</figure>
 	{% endif %}
 	

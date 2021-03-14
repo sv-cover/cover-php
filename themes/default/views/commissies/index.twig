@@ -31,9 +31,9 @@
 					{% if user_can_read member %}
 						<figure class="column image">
 							<noscript>
-								<img src="{{ link('foto.portrait', member=member, width=512) }}" alt="{{ __('Photo of %s')|format(member|full_name) }}">
+								<img src="{{ path('profile_picture', {lid_id: member.id, format: 'portrait', width: 512}) }}" alt="{{ __('Photo of %s')|format(member|full_name) }}">
 							</noscript>
-							<img class="lazy" data-src="{{ link('foto.portrait', member=member, width=512) }}" alt="{{ __('Photo of %s')|format(member|full_name) }}">
+							<img class="lazy" data-src="{{ path('profile_picture', {lid_id: member.id, format: 'portrait', width: 512}) }}" alt="{{ __('Photo of %s')|format(member|full_name) }}">
 						</figure>
 					{% endif %}
 				{% endfor %}

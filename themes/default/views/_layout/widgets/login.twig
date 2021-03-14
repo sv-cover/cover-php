@@ -3,7 +3,7 @@
     <a class="navbar-link is-arrowless profile" tabindex="0">
         <span class="icon">
             {# <i class="fas fa-user"></i> #}
-            <img src="{{ link('foto.square', member=global.identity.member, width=64) }}" aria-hidden="true">
+            <img src="{{ path('profile_picture', {lid_id: global.identity.member.id, format: 'square', width: 64}) }}" aria-hidden="true">
             <span class="is-sr-only">
                 {{ __('User') }}
             </span>
@@ -13,7 +13,7 @@
         {% if global.auth.logged_in %}
             <div class="navbar-item profile">
                 <a class="image is-48x48" href="{{ path('profile', {lid: global.identity.member.id}) }}">
-                    <img class="is-rounded" src="{{ link('foto.square', member=global.identity.member, width=96) }}" aria-hidden="true">
+                    <img class="is-rounded" src="{{ path('profile_picture', {lid_id: global.identity.member.id, format: 'square', width: 96}) }}" aria-hidden="true">
                 </a>
                 <div class="user-info">
                     <a class="name" href="{{ path('profile', {lid: global.identity.member.id}) }}">

@@ -93,8 +93,11 @@ profile:
   controller: App\Controller\ProfileController
 
 profile_picture:
-  path: /profile_picture
+  path: /profile_picture/{lid_id<\d+>}/{format}/{width<\d+>}
   controller: App\Controller\ProfilePictureController
+  defaults:
+    format: null
+    width: null
 
 search:
   path: /search
