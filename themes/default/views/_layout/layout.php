@@ -19,14 +19,14 @@ class LayoutViewHelper
 			'label' => __('Activities'),
 			'submenu' => [
 				[
-					'url' => '/agenda.php',
+					'url' => $this->router->generate('calendar'),
 					'label' => __('Calendar'),
 					'title' => __('Upcoming activities')
 				],
 				[
-					'url' => '/fotoboek.php',
+					'url' => $this->router->generate('photos'),
 					'label' => __('Photos'),
-					'title' => __('Photos of activities of Cover.')
+					'title' => __('Photos of Cover\'s activities.')
 				]
 			]
 		];
@@ -41,11 +41,11 @@ class LayoutViewHelper
 		$menus['studie'] = [
 			'label' => __('Education'),
 			'submenu' => [
-				['url' => '/show.php?id=149', 'label' => __('Degree Programmes')],
-				['url' => '/show.php?id=24', 'label' => __('Alumni')],
-				['url' => '/boeken.php', 'label' => __('Order books')],
-				['url' => '/show.php?id=27', 'label' => __('Student info')],
-				['url' => '/show.php?id=118', 'label' => __('Student representation')],
+				['url' => $this->router->generate('page', ['id' => 149]), 'label' => __('Degree Programmes')],
+				['url' => $this->router->generate('page', ['id' => 24]),  'label' => __('Alumni')],
+				['url' => $this->router->generate('books'),               'label' => __('Order books')],
+				['url' => $this->router->generate('page', ['id' => 27]),  'label' => __('Student info')],
+				['url' => $this->router->generate('page', ['id' => 118]), 'label' => __('Student representation')],
 				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
 				['url' => 'https://tutoring.svcover.nl/', 'target' => '_blank', 'label' => __('Tutoring')]
 			]
@@ -54,10 +54,10 @@ class LayoutViewHelper
 		$menus['bedrijven'] = [
 			'label' => __('Career'),
 			'submenu' => [
-				['url' => '/show.php?id=51', 'label' => __('Company profiles')],
-				['url' => '/show.php?id=54', 'label' => __('Vacancies')],
-				['url' => '/show.php?id=31', 'label' => __('Internships/Graduate programs')],
-				['url' => '/show.php?id=56', 'label' => __('Sponsorship opportunities')]
+				['url' => $this->router->generate('page', ['id' => 51]), 'label' => __('Company profiles')],
+				['url' => $this->router->generate('page', ['id' => 54]), 'label' => __('Vacancies')],
+				['url' => $this->router->generate('page', ['id' => 31]), 'label' => __('Internships/Graduate programs')],
+				['url' => $this->router->generate('page', ['id' => 56]), 'label' => __('Sponsorship opportunities')]
 			]
 		];
 
@@ -65,27 +65,27 @@ class LayoutViewHelper
 			'label' => __('Association'),
 			'submenu' => [
 				[
-					'url' => '/commissies.php?commissie=board',
-					'label' => __('Governing Board')
+					'url' => $this->router->generate('committees', ['commissie' => 'board']),
+					'label' => __('Board')
 				],
 				[
-					'url' => '/besturen.php',
+					'url' => $this->router->generate('boards'),
 					'label' => __('Former Boards')
 				],
 				[
-					'url' => '/commissies.php',
+					'url' => $this->router->generate('committees'),
 					'label' => __('Committees')
 				],
 				[
-					'url' => '/clubs.php',
+					'url' => $this->router->generate('clubs'),
 					'label' => __('Clubs')
 				],
 				[
-					'url' => '/show.php?id=28',
+					'url' => $this->router->generate('page', ['id' => 28]),
 					'label' => __('Sister unions')
 				],
 				[
-					'url' => '/show.php?id=18',
+					'url' => $this->router->generate('page', ['id' => 18]),
 					'label' => __('Become a member/contributor')
 				],
 			]
@@ -130,28 +130,28 @@ class LayoutViewHelper
 			'label' => __(''),
 			'items' => [
 				[
+					'label' => __('Members'),
+					'url' => $this->router->generate('almanak'),
 					'icon' => [
 						'fa' => 'fas fa-users',
 						'color' => 'cover',
 					],
-					'url' => '/almanak.php',
-					'label' => __('Members')
 				],
 				[
+					'label' => __('Forum'),
+					'url' => $this->router->generate('forum'),
 					'icon' => [
 						'fa' => 'fas fa-comments',
 						'color' => 'cover',
 					],
-					'url' => '/forum.php',
-					'label' => __('Forum')
 				],
 				[
+					'label' => __('Sticker map'),
+					'url' => $this->router->generate('stickers'),
 					'icon' => [
 						'fa' => 'fas fa-map-marked-alt',
 						'color' => 'cover',
 					],
-					'url' => '/stickers.php',
-					'label' => __('Sticker map')
 				],
 			]
 		];
@@ -160,47 +160,47 @@ class LayoutViewHelper
 			'label' => __('Tools'),
 			'items' => [
 				[
+					'label' => __('Wiki'),
+					'url' => 'https://wiki.svcover.nl/',
+					'target' => '_blank',
 					'icon' => [
 						'fa' => 'fas fa-book',
 						'color' => 'cover',
 					],
-					'url' => 'https://wiki.svcover.nl/',
-					'target' => '_blank',
-					'label' => __('Wiki')
 				],
 				[
+					'label' => __('Documents & Templates'),
+					'url' => 'https://sd.svcover.nl/',
+					'target' => '_blank',
 					'icon' => [
 						'img' => '/images/applications/sd.png',
 					],
-					'url' => 'https://sd.svcover.nl/',
-					'target' => '_blank',
-					'label' => __('Documents & Templates')
 				],
 				[
+					'label' => __('Merchandise'),
+					'url' => 'https://merchandise.svcover.nl/',
+					'target' => '_blank', 
 					'icon' => [
 						'fa' => 'fas fa-tshirt',
 						'color' => 'cover',
 					],
-					'url' => 'https://merchandise.svcover.nl/',
-					'target' => '_blank', 
-					'label' => __('Merchandise')
 				],
 				[
+					'label' => __('Exams & Summaries'),
+					'url' => 'https://studysupport.svcover.nl/',
+					'target' => '_blank',
 					'icon' => [
 						'fa' => 'fas fa-graduation-cap',
 						'color' => 'cover',
 					],
-					'url' => 'https://studysupport.svcover.nl/',
-					'target' => '_blank',
-					'label' => __('Exams & Summaries')
 				],
 				[
+					'label' => __('Tutoring'),
+					'url' => 'https://tutoring.svcover.nl/',
+					'target' => '_blank',
 					'icon' => [
 						'img' => '/images/applications/tutoring.svg',
 					],
-					'url' => 'https://tutoring.svcover.nl/',
-					'target' => '_blank',
-					'label' => __('Tutoring')
 				]
 			]
 		];
@@ -217,35 +217,35 @@ class LayoutViewHelper
 
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
 			$tools['external']['items'][] = [
+				'label' => __('Webmail'),
+				'title' => __('Webmail for Cover email accounts.'),
+				'url' => 'https://webmail.svcover.nl/',
+				'target' => '_blank',
 				'icon' => [
 					'img' => '/images/applications/mail.svg',
 				],
-				'url' => 'https://webmail.svcover.nl/',
-				'label' => __('Webmail'),
-				'target' => '_blank',
-				'title' => __('Webmail for Cover email accounts.')
 			];
 
 			$tools['admin']['items'][] = [
+				'label' => __('Mailing lists'),
+				'title' => __('Manage your committee\'s mailing lists.'),
+				'url' => $this->router->generate('mailing_lists'),
 				'icon' => [
 					'fa' => 'fas fa-mail-bulk',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => '/mailinglijsten.php',
-				'label' => __('Mailing lists'),
-				'title' => __('Manage your committee\'s mailing lists.')
 			];
 
 			$tools['admin']['items'][] = [
+				'url' => $this->router->generate('signup'),
+				'label' => __('Forms'),
+				'title' => __('Manage your committee\'s sign-up forms.'),
 				'icon' => [
 					'fa' => 'fas fa-list-alt',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => '/signup.php',
-				'label' => __('Forms'),
-				'title' => __('Manage your committee\'s sign-up forms.')
 			];
 		}
 
@@ -253,14 +253,14 @@ class LayoutViewHelper
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
+				'label' => __('Make a page'),
+				'title' => __('Add content to the website.'),
+				'url' => $this->router->generate('page.create', ['view' => 'create']),
 				'icon' => [
 					'fa' => 'fas fa-plus',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => '/show.php?view=create',
-				'label' => __('Make a page'),
-				'title' => __('Make a new content page on the website.')
 			];
 
 			$tools['admin']['items'][] = [
@@ -273,7 +273,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => '/lidworden.php?view=pending-confirmation',
+				'url' => $this->router->generate('join', ['view' => 'pending-confirmation']),
 				'label' => __('Pending registrations'),
 				'title' => __('People who signed up for Cover, but did not yet confirm their email address.')
 			];
@@ -282,28 +282,28 @@ class LayoutViewHelper
 		if (get_identity() -> member_in_committee(COMMISSIE_BESTUUR) ||
 			get_identity() -> member_in_committee(COMMISSIE_KANDIBESTUUR)) {
 			$tools['admin']['items'][] = [
+				'label' => __('Active members'),
+				'title' => __('All active committee members according to the website.'),
+				'url' => $this->router->generate('active_members'),
 				'icon' => [
 					'fa' => 'fas fa-user-friends',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => '/actieveleden.php',
-				'label' => __('Active members'),
-				'title' => __('All active committee members according to the website.')
 			];
 		}
 
 		
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
+				'label' => __('Settings'),
+				'title' => __('Manage a few of the website\'s settings.'),
+				'url' => $this->router->generate('settings'),
 				'icon' => [
 					'fa' => 'fas fa-cog',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => '/settings.php',
-				'label' => __('Settings'),
-				'title' => __('Manage a few of the website\'s settings.')
 			];
 		}
 

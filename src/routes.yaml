@@ -76,9 +76,17 @@ password:
   path: /password
   controller: App\Controller\PasswordController
 
-page:
-  path: /page/{id<\d+>}
+page.create:
+  path: /page/create
   controller: App\Controller\PageController
+  defaults:
+    view: create
+
+page:
+  path: /page/{id<\d+>}/{view}
+  controller: App\Controller\PageController
+  defaults:
+    view: read
 
 photos:
   path: /photos
