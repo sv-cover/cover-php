@@ -21,7 +21,7 @@
                     </q>
                     
                     {% if global.identity.can_impersonate %}
-                        <a class="impersonate-link" href="{{ link('sessions.overrides', referrer=global.server.REQUEST_URI) }}" data-popup="modal">
+                        <a class="impersonate-link" href="{{ path('sessions', {view: 'overrides', referrer:global.server.REQUEST_URI}) }}" data-popup="modal">
                             {{ __('Impersonate') }}
                         </a>
                     {% endif %}
@@ -48,14 +48,14 @@
             <a class="navbar-item" href="{{ path('profile', {lid: global.identity.member.id}) }}">
                 {{ __('Your profile') }}
             </a>
-            <a class="navbar-item" href="{{ link('sessions.logout', referrer=global.server.REQUEST_URI) }}">
+            <a class="navbar-item" href="{{ logout_path(global.server.REQUEST_URI) }}">
                 {{ __('Log out') }}
             </a>
         {% endif %}
     </div>
 </div>
 {% else %}
-    <a class="navbar-item" href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}">
+    <a class="navbar-item" href="{{ login_path(global.server.REQUEST_URI) }}">
         {{ __('Log in') }}
     </a>
 {% endif %}

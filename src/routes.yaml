@@ -58,19 +58,15 @@ join:
 
 login:
   path: /login
-  controller: App\Controller\RedirectController
+  controller: App\Controller\SessionsController
   defaults:
-    route: sessions
     view: login
-    keepQueryParams: true
 
 logout:
   path: /logout
-  controller: App\Controller\RedirectController
+  controller: App\Controller\SessionsController
   defaults:
-    route: sessions
     view: logout
-    keepQueryParams: true
 
 mailing_lists:
   path: /mailing_lists

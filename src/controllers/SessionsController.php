@@ -174,7 +174,7 @@ class SessionsController extends \Controller
 
 	function run_impl()
 	{
-		switch (isset($_GET['view']) ? $_GET['view'] : null) {
+		switch ($this->get_parameter('view')) {
 			case 'sessions':
 				return $this->run_view_sessions();
 

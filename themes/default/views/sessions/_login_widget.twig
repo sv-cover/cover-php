@@ -1,6 +1,6 @@
 {% macro login_form(errors = [], error_message = null, referrer = null, external_domain = null) %}
 <div>
-    <form id="login-form" method="post" action="{{ link('sessions.login') }}">
+    <form id="login-form" method="post" action="{{ login_path() }}">
         {% if error_message %}
         <div class="error-section">
             <p>{{ error_message }}</p>

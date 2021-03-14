@@ -11,7 +11,7 @@
 		{% endblock %}
 		{% if not global.auth.logged_in %}
 			<p>
-				<a href="{{ link('sessions.login', referer=global.server.REQUEST_URI) }}" class="button is-primary is-fullwidth">{{ __('Log in') }}</a>
+				<a href="{{ login_path(global.server.REQUEST_URI) }}" class="button is-primary is-fullwidth">{{ __('Log in') }}</a>
 				<div class="divider is-fullwidth">{{ __('or') }}</div>
 				<a href="/lidworden.php" class="button is-fullwidth">{{ __('Become a member') }}</a>
 			</p>
