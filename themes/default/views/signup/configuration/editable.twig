@@ -16,7 +16,7 @@
 			<div id="editable-{{name}}-content" class="is-active">
 				{{ html_textarea_field('content', data, rows=4) }}
 			</div>
-			<div id="editable-{{name}}-content-preview" class="content-preview box content" data-preview-source="#editable-{{name}}-content textarea" data-preview-url="show.php?view=preview&amp;lang=nl">
+			<div id="editable-{{name}}-content-preview" class="content-preview box content" data-preview-source="#editable-{{name}}-content textarea" data-preview-url="{{ path('page.preview', {lang: 'nl'}) }}">
 				<span class="loading">{{ __('Loading preview…') }}</span>
 			</div>
 		</div>

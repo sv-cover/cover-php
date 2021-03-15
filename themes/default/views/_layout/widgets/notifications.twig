@@ -32,7 +32,7 @@
                 {% endif %}
 
                 {% if agenda_items_to_moderate|length > 0 %}
-                    <a href="agenda.php?view=moderate" class="navbar-item cover-notification">
+                    <a href="{{ path('calendar', {view: 'moderate'}) }}" class="navbar-item cover-notification">
                         {{ __N(
                         'There is %d event waiting for your confirmation',
                         'There are %d events waiting for your confirmation', agenda_items_to_moderate|length) }}

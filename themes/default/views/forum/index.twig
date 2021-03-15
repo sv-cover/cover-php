@@ -46,7 +46,7 @@
 			<div class="content">
 				<p>
 					<strong>
-						<a href="forum.php?forum={{ iter.id }}">{{ iter.name }}</a>
+						<a href="{{ path('forum', {forum: iter.id}) }}">{{ iter.name }}</a>
 					</strong>
 					&ndash;
 					<small>

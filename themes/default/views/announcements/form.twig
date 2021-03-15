@@ -54,7 +54,7 @@
 					<div id="message-tab" class="is-active">
 						{{ html_textarea_field('message', iter.data, errors=errors, rows=10) }}
 					</div>
-					<div id="message-preview-tab" class="content-preview box" data-preview-source="#message-tab textarea" data-preview-url="announcements.php?view=preview">
+					<div id="message-preview-tab" class="content-preview box" data-preview-source="#message-tab textarea" data-preview-url="{{ path('announcements', {view: 'preview'}) }}">
 						<span class="loading">{{ __('Loading preview…') }}</span>
 					</div>
 				</div>

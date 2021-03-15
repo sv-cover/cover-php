@@ -17,7 +17,7 @@
 	<div class="profile-field">
 		<div class="field-body">
 			<p class="content is-small">
-				{{ __('Change who can see these personal details on the <a href="%s">privacy tab</a>.')|format('profiel.php?lid=' ~ iter.id ~ '&amp;view=privacy')|raw }}
+				{{ __('Change who can see these personal details on the <a href="%s">privacy tab</a>.')|format(path('profile', {view: 'privacy', lid: iter.id}))|raw }}
 			</p>
 		</div>
 	</div>

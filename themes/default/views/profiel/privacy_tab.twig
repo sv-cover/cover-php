@@ -4,7 +4,7 @@
 
 {% block tab_content %}
 <article>
-	<form action="profiel.php?lid={{ iter.id }}&amp;view=privacy" method="POST" data-auto-submit>
+	<form action="{{ path('profile', {view: 'privacy', lid:iter.id}) }}" method="POST" data-auto-submit>
 		{{ html_nonce('privacy', iter) }}
 
 		<div class="profile-field">

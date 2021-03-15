@@ -121,6 +121,8 @@ class ForumView extends View
 
 	public function get_author_link(DataIter $message, $last = false)
 	{
+		$router = $this->controller->get_router();
+
 		if ($last && $message['last_author_type'])
 			$field = 'last_author';
 		else
@@ -130,12 +132,12 @@ class ForumView extends View
 			switch (intval($message[$field . '_type']))
 			{
 				case DataModelForum::TYPE_PERSON: /* Person */
-					return 'profiel.php?lid=' . $message[$field . '_id'];
+					return $router->generate('profile', ['lid' => $message[$field . '_id']]);
 				
 				case DataModelForum::TYPE_COMMITTEE: /* Commissie */
 					$committee_model = get_model('DataModelCommissie');
 					$committee = $committee_model->get_iter($message[$field . '_id']);
-					return 'commissies.php?commissie=' . urlencode($committee['login']);
+					return $router->generate('committees', ['commissie' => urlencode($committee['login'])]);
 				
 				default:
 					return null;
@@ -148,6 +150,8 @@ class ForumView extends View
 
 	public function get_author_photo(DataIter $message, $last = false)
 	{
+		$router = $this->controller->get_router();
+
 		if ($last && $message['last_author_type'])
 			$field = 'last_author';
 		else
@@ -157,7 +161,7 @@ class ForumView extends View
 			switch (intval($message[$field . '_type']))
 			{
 				case DataModelForum::TYPE_PERSON: /* Person */
-					return 'foto.php?&format=square&width=128&lid_id='. $message[$field . '_id'];
+					return $router->generate('profile_picture', ['format' => 'square', 'width' => 128, 'lid_id' => $message[$field . '_id']]);
 				
 				default:
 					return null;
@@ -221,10 +225,11 @@ class ForumView extends View
 
 	public function thread_page_links(DataIterForumThread $thread, $pages)
 	{
+		$router = $this->controller->get_router();
 		$links = [];
 
 		for ($page = 0; $page < $pages; ++$page)
-			$links[] = sprintf('<a href="forum.php?thread=%d&amp;page=%d">%d</a>', $thread['id'], $page, $page + 1);
+			$links[] = sprintf('<a href="%s">%d</a>', $router->generate('forum', ['thread'=> $thread['id'], 'page' => $page]), $page + 1);
 
 		return $links;
 	}

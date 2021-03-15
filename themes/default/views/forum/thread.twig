@@ -6,7 +6,9 @@
 {% block content %}
 <div class="level">
 	<div class="level-left">
-		<h1 class="title"><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
+		<h1 class="title">
+			<a href="{{ path('forum') }}">{{ __('Forum') }}</a> / <a href="{{ path('forum', {forum: forum.id}) }}">{{ forum.name }}</a>
+		</h1>
 	</div>
 </div>
 
@@ -17,7 +19,7 @@
 		</div>
 		<div class="buttons level-right">
 			{% if user_can_create thread.new_message %}
-				<a href="forum.php?thread={{ thread.id }}&amp;view=reply" class="button">
+				<a href="{{ path('forum', {view: 'reply', thread: thread.id}) }}" class="button">
 					<span class="icon is-small">
 						<i class="fas fa-comment" aria-hidden="true"></i>
 					</span>
@@ -25,7 +27,7 @@
 				</a>
 			{% endif %}
 			{% if user_can_delete thread %}
-				<a href="forum.php?thread={{ thread.id }}&amp;view=delete" class="button">
+				<a href="{{ path('forum', {view: 'delete', thread: thread.id}) }}" class="button">
 					<span class="icon is-small">
 						<i class="fas fa-trash" aria-hidden="true"></i>
 					</span>
@@ -45,7 +47,7 @@
 					<div class="dropdown-menu " id="dropdown-move-thread" role="menu">
 						<div class="dropdown-content">
 							<div class="dropdown-item">
-								<form method="post" action="forum.php?thread={{ thread.id }}&amp;view=move">
+								<form method="post" action="{{ path('forum', {view: 'move', thread: thread.id}) }}">
 									{{ html_nonce('move_thread', thread) }}
 							        <div class="field">
 							            <div class="control">
@@ -73,7 +75,7 @@
 		{% set author = model.get_author_info(message, 'author') %}
 		{% set author_link = view.get_author_link(message) %}
 		{% set author_photo = view.get_author_photo(message) %}
-		<div class="media">
+		<div class="media" id="p{{message.id}}">
 			<figure class="media-left">
 				<p class="image is-64x64">
 					{% if author.avatar %}
@@ -109,7 +111,7 @@
 				<nav class="level is-mobile">
 					<div class="level-left">
 						{% if user_can_update message %}
-							<a class="level-item" href="forum.php?thread={{ thread.id }}&amp;view=update&amp;message={{ message.id }}" title="{{ __('Modify message') }}">
+							<a class="level-item" href="{{ path('forum', {view: 'update', thread: thread.id, message: message.id}) }}" title="{{ __('Modify message') }}">
 								<span class="icon is-small">
 									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 									<span class="is-sr-only">{{ __('Modify message') }}</span>
@@ -117,7 +119,7 @@
 							</a>
 						{% endif %}
 						{% if user_can_delete message %}
-							<a class="level-item" href="forum.php?thread={{ thread.id }}&amp;view=delete&amp;message={{ message.id }}" title="{{ __('Delete message') }}">
+							<a class="level-item" href="{{ path('forum', {view: 'delete', thread: thread.id, message: message.id}) }}" title="{{ __('Delete message') }}">
 								<span class="icon is-small">
 									<i class="fas fa-trash" aria-hidden="true"></i>
 									<span class="is-sr-only">{{ __('Delete message') }}</span>
@@ -128,7 +130,7 @@
 				</nav>
 			</div>
 			<div class="media-right">
-				<a href="forum.php?thread={{ thread.id }}&amp;view=reply&amp;quote_message={{ message.id }}" title="{{ __('Quote message') }}">
+				<a href="{{ path('forum', {view: 'reply', thread: thread.id, quote_message: message.id}) }}" title="{{ __('Quote message') }}">
 					<span class="icon is-small">
 						<i class="fas fa-reply" aria-hidden="true"></i>
 						<span class="is-sr-only">{{ __('Quote message') }}</span>
@@ -140,7 +142,7 @@
 </article>
 
 {% if max > 0 %}
-	{{ view.page_navigation('forum.php?thread=' ~ thread.id, page, max)|raw }}
+	{{ view.page_navigation(path('forum', {thread: thread.id}), page, max)|raw }}
 {% endif %}
 
 {% endblock %}

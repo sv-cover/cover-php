@@ -24,14 +24,14 @@
 						</div>
 						<div class="dropdown-menu" id="dropdown-menu" role="menu">
 							<div class="dropdown-content">
-								<a class="dropdown-item" href="announcements.php?view=read&amp;id={{ iter.id }}" title="{{ __('Modify announcement') }}">
+								<a class="dropdown-item" href="{{ path('announcements', {view: 'read', id: iter.id}) }}" title="{{ __('Link announcement') }}">
 									<span class="icon">
 										<i class="fas fa-link" aria-hidden="true"></i>
 									</span>
 									<span>{{ __('Link announcement') }}</span>
 								</a>
 								{% if user_can_update iter %}
-									<a class="dropdown-item" href="announcements.php?view=update&amp;id={{ iter.id }}" title="{{ __('Modify announcement') }}">
+									<a class="dropdown-item" href="{{ path('announcements', {view: 'update', id: iter.id}) }}" title="{{ __('Modify announcement') }}">
 										<span class="icon">
 											<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 										</span>
@@ -39,7 +39,7 @@
 									</a>
 								{% endif %}
 								{% if user_can_delete iter %}
-									<a class="dropdown-item" href="announcements.php?view=delete&amp;id={{ iter.id }}" title="{{ __('Delete announcement') }}" data-popup="modal">
+									<a class="dropdown-item" href="{{ path('announcements', {view: 'delete', id: iter.id}) }}" title="{{ __('Delete announcement') }}" data-popup="modal">
 										<span class="icon">
 											<i class="fas fa-trash" aria-hidden="true"></i>
 										</span>
@@ -55,7 +55,7 @@
 		<p class="subtitle is-6">
 			<small>
 				{{ __('By') }}:
-				<a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a>
+				<a href="{{ path('committees', {commissie: iter.committee.login}) }}">{{ iter.committee.naam }}</a>
 				{{ __('on') }}
 				{{ iter.created_on|date() }}
 			</small>
@@ -68,7 +68,7 @@
 </article>
 <article class="media">
 	<div class="media-content has-text-centered">
-		<a href="{{ controller.link_to_index() }}">{{ __('Show all announcements') }}</a>
+		<a href="{{ path('announcements') }}">{{ __('Show all announcements') }}</a>
 	</div>
 </article>
 {% endblock %}

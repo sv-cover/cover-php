@@ -5,9 +5,9 @@
 {% block tab_content %}
 <article>
 	<h2 class="title is-4">{{ __('Sessions') }}</h2>
-	<form method="post" action="sessions.php?view=sessions&amp;member_id={{ iter.id|e('url') }}">
+	<form method="post" action="{{ path('sessions', {view: 'sessions', member_id: iter.id}) }}">
 		{{ html_nonce('delete_sessions') }}
-		{{ html_input_hidden('referer', 'profiel.php?lid=%d&view=sessions'|format(iter.id|e('url'))) }}
+		{{ html_input_hidden('referer', path('profile', {view: 'sessions', lid: iter.id})) }}
 		<div class="field">
 			<p>{{ __('These all devices/browsers which are currently logged-in to your account.') }}</p>
 		</div>

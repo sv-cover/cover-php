@@ -3,7 +3,8 @@
 </h2>
 {% if result.search_match_reason == 'committee_member_match' %}
 	<p class="subtitle is-7 match-reason">{{ __('%s is a member of this committee')|format(
-		'<a href="profiel.php?lid=%d">%s</a>'|format(result.search_match_committee_member_id,
+		'<a href="%s">%s</a>'|format(
+            path('profile', {lid: result.search_match_committee_member_id}),
 			result.search_match_committee_member_id|full_name|e('html')))|raw }}</p>
 {% else %}
 	<p class="subtitle is-7">{{ __('Committee') }}</p>

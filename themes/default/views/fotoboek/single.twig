@@ -7,7 +7,7 @@
 {%- macro format_face_label(face) -%}
 <span class="face-label">
     {%- if face.lid_id is not null -%}
-        <a href="profiel.php?lid={{ face.lid.id }}" data-face-id="{{ face.id }}">{{ face.lid|personal_full_name }}</a>
+        <a href="{{ path('profile', {lid:  face.lid.id}) }}" data-face-id="{{ face.id }}">{{ face.lid|personal_full_name }}</a>
     {%- elseif face.custom_label != '' -%}
         <span class="custom-label" data-face-id="{{ face.id }}">{{ face.custom_label }}</span>
     {%- else -%}
@@ -78,7 +78,7 @@
     <nav class="photo-navigation" data-enter-fullscreen-text="{{ __('Enter fullscreen') }}" data-exit-fullscreen-text="{{ __('Exit fullscreen') }}">
         {% set nav = book.get_neighbours(photo) %}
         {% if nav.previous %}
-        <a class="photo-previous" href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.previous.id }}" title="{{ __('Go to the previous photo') }}">
+        <a class="photo-previous" href="{{ path('photos', {book: book.id, photo: nav.previous.id}) }}" title="{{ __('Go to the previous photo') }}">
             <span class="icon">
                 <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 <span class="is-sr-only">{{ __('Previous') }}</span>
@@ -87,14 +87,14 @@
         {% endif %}
 
         {% if nav.next %}
-        <a class="photo-next" href="fotoboek.php?book={{ book.id }}&amp;photo={{ nav.next.id }}" title="{{ __('Go to next photo') }}">
+        <a class="photo-next" href="{{ path('photos', {book: book.id, photo: nav.next.id}) }}" title="{{ __('Go to next photo') }}">
             <span class="icon">
                 <i class="fas fa-chevron-right" aria-hidden="true"></i>
                 <span class="is-sr-only">{{ __('Next') }}</span>
             </span>
         </a>
         {% endif %}
-        <a class="photo-parent button is-text" href="fotoboek.php?book={{ book.id }}#photo-{{ photo.id }}">
+        <a class="photo-parent button is-text" href="{{ path('photos', {book: book.id}) }}#photo-{{ photo.id }}">
             <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
             <span>{{__('Back to')}} {{ book.titel }}</span>
         </a>
@@ -106,12 +106,12 @@
         {% if user_can_update book %}
             {% if photo.beschrijving %}
                 <h1>
-                    <a class="name" href="fotoboek.php?book={{book.id}}&amp;photo={{photo.id}}&amp;view=update_photo" title="{{ photo.beschrijving }}" data-popup="modal">
+                    <a class="name" href="{{ path('photos', {view: 'update_photo', book: book.id, photo: photo.id}) }}" title="{{ photo.beschrijving }}" data-popup="modal">
                         {{- photo.beschrijving -}}    
                     </a>
                 </h1>                
             {% else %}
-                <a class="name placeholder" href="fotoboek.php?book={{book.id}}&amp;photo={{photo.id}}&amp;view=update_photo" data-popup="modal">
+                <a class="name placeholder" href="{{ path('photos', {view: 'update_photo', book: book.id, photo: photo.id}) }}" data-popup="modal">
                     {{- __('Add photo title') -}}
                 </a>
             {% endif %}
@@ -122,11 +122,11 @@
         {% endif %}
 
         <div class="book">
-            <a href="fotoboek.php?book={{ book.id }}#photo_{{ photo.id }}" title="{{ book.titel }}">{{ book.titel }}</a>
+            <a href="{{ path('photos', {book: book.id}) }}#photo_{{ photo.id }}" title="{{ book.titel }}">{{ book.titel }}</a>
             {% if photo.book.id != book.id %}
                 <span class="orignal-book">
                     {{ __('from') }}
-                    <a href="fotoboek.php?book={{ photo.book.id }}#photo_{{ photo.id }}" title="{{ photo.book.titel }}">{{ photo.book.titel }}</a>
+                    <a href="{{ path('photos', {book: photo.book.id}) }}#photo_{{ photo.id }}" title="{{ photo.book.titel }}">{{ photo.book.titel }}</a>
                 </span>
             {% endif %}        
         </div>
@@ -173,27 +173,27 @@
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
                     {% if user_can_update book %}
-                        <a class="dropdown-item" href="fotoboek.php?book={{book.id}}&amp;photo={{photo.id}}&amp;view=update_photo" data-popup="modal">
+                        <a class="dropdown-item" href="{{ path('photos', {view: 'update_photo', book: book.id, photo: photo.id}) }}" data-popup="modal">
                             {{- __('Edit title') -}}
                         </a>
-                        <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;view=delete_photos&amp;photo_id[]={{ photo.id }}" data-popup="modal">
+                        <a class="dropdown-item" href="{{ path('photos', {view: 'delete_photos', book: book.id, 'photo_id[]': photo.id}) }}" data-popup="modal">
                             {{ __('Delete photo') }}
                         </a>
                         <hr class="dropdown-divider">
                     {% endif %}
                     {% if global.auth.logged_in and global.identity.member.id in photo.faces|select('lid_id') %}
-                        <a class="dropdown-item" href="fotoboek.php?photo={{ photo.id }}&amp;book={{ book.id }}&amp;module=privacy" data-popup="modal">
+                        <a class="dropdown-item" href="{{ path('photos', {module: 'privacy', book: book.id, photo: photo.id}) }}" data-popup="modal">
                             {{ __('Visibility') }}
                         </a>
                         <hr class="dropdown-divider">
                     {% endif %}
-                    <a class="dropdown-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download">
+                    <a class="dropdown-item" href="{{ path('photos', {view: 'download', book: book.id, photo: photo.id}) }}">
                         {{ __('Download photo') }}
                     </a>
 
                     <a
                         class="dropdown-item photo-copy-link"
-                        href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}"
+                        href="{{ url('photos', {book: book.id, photo: photo.id}) }}"
                         data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
                         data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"
                     >
@@ -208,7 +208,7 @@
         {% if global.auth.logged_in %}
             <div class="controls level is-mobile">
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
-                <form class="level-item like-form photo-like-form" method="post" action="fotoboek.php?photo={{ photo.id }}&amp;book={{ book.id }}&amp;module=likes">
+                <form class="level-item like-form photo-like-form" method="post" action="{{ path('photos', {module: 'likes', book: book.id, photo: photo.id}) }}">
                     <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
                     <button type="submit"  class="button is-text icon"
                             title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"
@@ -246,7 +246,7 @@
                     </a>
                 {% endif %}
 
-                <a class="level-item" href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}&amp;view=download" title="{{ __('Download photo') }}">
+                <a class="level-item" href="{{ path('photos', {view: 'download', book: book.id, photo: photo.id}) }}" title="{{ __('Download photo') }}">
                     <span class="icon">
                         <i class="fas fa-download" aria-hidden="true"></i>
                     </span>
@@ -257,7 +257,7 @@
 
                 <a
                     class="level-item photo-copy-link"
-                    href="fotoboek.php?book={{ book.id }}&amp;photo={{ photo.id }}"
+                    href="{{ url('photos', {book: book.id, photo: photo.id}) }}"
                     title="{{ __('Share photo') }}"
                     data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
                     data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"

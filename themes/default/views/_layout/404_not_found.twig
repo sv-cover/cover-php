@@ -8,7 +8,7 @@
         <h1 class="title is-1">{{ __('404: Oops!') }}</h1>
         <p class="subtitle is-4">{{ __("We couldn't find this page…") }}</p>
 
-        <form method="get" action="search.php">
+        <form method="get" action="{{ path('search') }}">
             <div class="field has-addons">
                 <div class="control is-expanded">
                     <label for="field-query" class="is-sr-only">{{ __('Search query') }}</label>
@@ -29,22 +29,22 @@
         <h2 class="title is-5">{{ __('Are you perhaps looking for information about…') }}</h2>
         <ul class="columns-vertical has-2-tablet is-gapless">
             <li>
-                <a href="/agenda.php">{{ __('Events') }}</a>
+                <a href="{{ path('calendar') }}">{{ __('Events') }}</a>
             </li>
             <li>
-                <a href="/fotoboek.php">{{ __('Photos') }}</a>
+                <a href="{{ path('photos') }}">{{ __('Photos') }}</a>
             </li>
             <li>
-                <a href="/commissies.php">{{ __('Committees') }}</a>
+                <a href="{{ path('committees') }}">{{ __('Committees') }}</a>
             </li>
             <li>
-                <a href="/commissies.php?commissie=board">{{ __('Board') }}</a>
+                <a href="{{ path('committees', {commissie: 'board'}) }}">{{ __('Board') }}</a>
             </li>
             <li>
-                <a href="/index.php">{{ __('Homepage') }}</a>
+                <a href="{{ path('homepage') }}">{{ __('Homepage') }}</a>
             </li>
             <li>
-                <a href="/show.php?id=17">{{ __('Contact') }}</a>
+                <a href="{{ path('contact') }}">{{ __('Contact') }}</a>
             </li>
         </ul>
         <div class="content">

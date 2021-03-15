@@ -1,8 +1,8 @@
 {% macro render_poll(poll, link_title = false) %}
 	{% if global.policies.Poll.user_can_vote(poll) %}
-		<form method="post" action="forum.php?thread={{ poll.id }}&amp;view=vote">
+		<form method="post" action="{{ path('forum', {view: 'vote', thread: poll.id}) }}">
 			{% if link_title %}
-				<a href="forum.php?thread={{poll.id}}"><h3 class="title is-5">{{poll.subject}}</h3></a>
+				<a href="{{ path('forum', {thread: poll.id}) }}"><h3 class="title is-5">{{poll.subject}}</h3></a>
 			{% else %}
 				<h3 class="title is-5">{{poll.subject}}</h3>
 			{% endif %}
@@ -23,7 +23,7 @@
 		</form>
 	{% else %}
 		{% if link_title %}
-			<a href="forum.php?thread={{poll.id}}"><h3 class="title is-5">{{poll.subject}}</h3></a>
+			<a href="{{ path('forum', {thread: poll.id}) }}"><h3 class="title is-5">{{poll.subject}}</h3></a>
 		{% else %}
 			<h3 class="title is-5">{{poll.subject}}</h3>
 		{% endif %}
@@ -54,7 +54,7 @@
 					{% if not global.auth.logged_in %}
 						<a class="level-item button" href="{{ login_path() }}">{{ __('Log in to vote') }}</a>
 					{% elseif global.models.Poll.can_create_new_poll %}
-						<a class="level-item button" href="forum.php?forum={{ poll.forum_id }}&amp;view=create_poll">{{ __('New poll ') }}</a>
+						<a class="level-item button" href="{{ path('forum', {view: 'create_poll', thread: poll.forum_id}) }}">{{ __('New poll ') }}</a>
 					{% endif %}
 				</div>
 			</div>

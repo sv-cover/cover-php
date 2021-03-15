@@ -22,13 +22,13 @@
 			</div>
 			<div class="level-right buttons">
 				{% if book.previous_book and user_can_read book.previous_book %}
-					<a href="fotoboek.php?view=people&amp;book={{ book.previous_book.id }}" class="button">
+					<a href="{{ path('photos', {view: 'people', book: book.previous_book.id}) }}" class="button">
 						<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 						<span>{{ book.previous_book.titel }}</span>
 					</a>
 				{% endif %}	
 				{% if book.next_book and user_can_read book.next_book %}
-					<a href="fotoboek.php?view=people&amp;book={{ book.next_book.id }}" class="button">
+					<a href="{{ path('photos', {view: 'people', book: book.next_book.id}) }}" class="button">
 						<span>{{ book.next_book.titel }}</span>
 						<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
 					</a>
@@ -59,11 +59,12 @@
 					{% if not lid_id %}
 						<h3 class="title is-6">Not tagged</h3>
 					{% else %}
-						<h3 class="title is-6">Tagged as <a href="profiel.php?lid={{lid_id}}">{{ lid_id }}</a></h3>
+						<h3 class="title is-6">Tagged as <a href="{{ path('profile', {lid: lid_id}) }}">{{ lid_id }}</a></h3>
 					{% endif %}
 					<div class="columns">
 						{% for face in lid_faces %}
-							<a class="column is-narrow" href="fotoboek.php?book={{ book.id }}&amp;photo={{ face.foto_id }}">{{ fotoboek.render_face(face) }}</a>
+							<a class="column is-narrow" href="{{ path('photos', {book: book.id, photo: face.foto_id}) }}
+							">{{ fotoboek.render_face(face) }}</a>
 						{% endfor %}
 					</div>
 				{% endfor %}

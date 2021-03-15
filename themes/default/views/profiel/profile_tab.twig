@@ -4,7 +4,7 @@
 
 {% block tab_content %}
 <section class="block">
-	<form action="profiel.php?lid={{ iter.id }}&amp;view=profile" method="post">
+	<form action="{{ path('profile', {view: 'profile', lid: iter.id}) }}" method="post">
 		{{ html_nonce('profile', iter) }}
 		<div class="profile-field">
 			<div class="field-body">
@@ -66,7 +66,7 @@
 </section>
 
 <section class="block">
-	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=photo" method="post" enctype="multipart/form-data">
+	<form action="{{ path('profile', {view: 'photo', lid: iter.id}) }}" method="post" enctype="multipart/form-data">
 		{{ html_nonce('photo', iter) }}
 		<div class="profile-field">
 			<div class="field-body">
@@ -103,7 +103,7 @@
 </section>
 
 <section class="block">
-	<form action="profiel.php?lid={{ iter.id|e('url') }}&amp;view=profile" method="post">
+	<form action="{{ path('profile', {view: 'profile', lid: iter.id}) }}" method="post">
 		{{ html_nonce('password', iter) }}
 		<div class="profile-field">
 			<div class="field-body">

@@ -53,7 +53,8 @@
 			{{ __('Location') }}
 		</label>
 		<div class="control" id="agenda_locatie">
-			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='url', data_autocomplete_src='/agenda.php?view=suggest-location&limit=100&search=', data_autocomplete_max_results=15) }}
+			{# TODO: Url generateion depends on parameters not being shuffled, maybe implement some placeholder #}
+			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='url', data_autocomplete_src=path('calendar', {view: 'suggest-location', limit: 100, search: ''}), data_autocomplete_max_results=15) }}
 		</div>
 	</div>
 
@@ -89,7 +90,7 @@
 				<div id="beschrijving-tab" class="is-active">
 					{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
 				</div>
-				<div id="beschrijving-preview-tab" class="content-preview box" data-preview-source="#beschrijving-tab textarea" data-preview-url="agenda.php?view=preview">
+				<div id="beschrijving-preview-tab" class="content-preview box" data-preview-source="#beschrijving-tab textarea" data-preview-url="{{ path('calendar', {view: 'preview'}) }}">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>

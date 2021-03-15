@@ -150,11 +150,6 @@
 			);
 		}
 
-		public function book_thumbnail(DataIterPhotobook $book)
-		{
-			return 'fotoboek.php?book_thumb=' . $book->get('id');
-		}
-
 		public function path(DataIterPhotobook $book, DataIterPhoto $photo = null)
 		{
 			$model = $this->controller->model();
@@ -173,9 +168,9 @@
 					$anchor = '';
 
 				if (get_policy($parents[$i])->user_can_read($parents[$i]))
-					$path[] = sprintf('<li%s><a href="fotoboek.php?book=%s%s"%s>%s</a></li>',
+					$path[] = sprintf('<li%s><a href="%s%s"%s>%s</a></li>',
 						$i == count($parents) - 1 ? ' class="is-active"' : '',
-						urlencode($parents[$i]->get_id()),
+						$this->controller->get_router()->generate('photo', ['book' => $parents[$i]->get_id()]),
 						$anchor,
 						$i == count($parents) - 1 ? ' aria-current="page"' : '',
 						markup_format_text($parents[$i]['titel']));
@@ -228,12 +223,6 @@
 		{
 			$model = get_model('DataModelPhotobookReactie');
 			return $model->get_latest($count);
-		}
-
-		public function random_photos($count)
-		{
-			$model = get_model('DataModelPhotobook');
-			return $model->get_random_photos($count);
 		}
 
 		public function thumbnail_photos(DataIterPhotobook $book, $count)

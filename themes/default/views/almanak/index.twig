@@ -26,10 +26,10 @@
 							<p>{{ __('YearbookCee downloads') }}</p>
 						</div>
 						<hr class="dropdown-divider">
-						<a class="dropdown-item" href="almanak.php?export=csv">
+						<a class="dropdown-item" href="{{ path('almanak', {export: 'csv'}) }}">
 							{{ __('CSV with personal details') }}
 						</a>
-						<a class="dropdown-item" href="almanak.php?export=photos">
+						<a class="dropdown-item" href="{{ path('almanak', {export: 'photos'}) }}">
 							{{ __('ZIP archive with profile pictures') }}
 						</a>
 					</div>
@@ -41,7 +41,7 @@
 
 <section class="block">
 	<h2 class="is-sr-only">{{ __('Search members') }}</h2>
-	<form name="almanak" action="almanak.php" method="GET">
+	<form name="almanak" action="{{ path('almanak') }}" method="GET">
 		<div class="field has-addons">
 			<div class="control is-expanded">
 				{{ html_label(__('Filter name'), 'search', class="is-sr-only") }}

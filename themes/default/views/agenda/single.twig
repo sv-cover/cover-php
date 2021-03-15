@@ -35,13 +35,15 @@
 					<div class="dropdown-menu" id="dropdown-menu" role="menu">
 						<div class="dropdown-content">
 							{% if user_can_create iter.new_signup_form %}
-								<a href="signup.php?view=create_form&amp;agenda={{iter.id}}" class="dropdown-item">
+								<a href="{{ path('signup', {view: 'create_form', agenda: iter.id}) }}" class="dropdown-item">
 									<span class="icon">
 										<i class="fas fa-list-alt" aria-hidden="true"></i>
 									</span>
 									<span>{{ __('New sign-up form') }}</span>
 								</a>
-								<hr class="dropdown-divider">
+								{% if user_can_update iter or user_can_delete iter %}
+									<hr class="dropdown-divider">
+								{% endif %}
 							{% endif %}
 							{% if user_can_update iter %}
 								<a href="{{ controller.link_to_update(iter) }}" class="dropdown-item">
@@ -151,12 +153,12 @@
 						<div class="has-text-danger">{{  __('This activity is not organised by Cover.') }}</div>
 						{% if iter.committee %}
 							{{  __('Placed by') }}:
-							<a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a>
+							<a href="{{ path('committees', {commissie: iter.committee.login}) }}">{{ iter.committee.naam }}</a>
 						{% endif %}
 					</p>
 				{% elseif iter.committee %}
 					<h3>{{  __('Organiser') }}</h3>
-					<p><a href="commissies.php?commissie={{ iter.committee.login }}">{{ iter.committee.naam }}</a></p>
+					<p><a href="{{ path('committees', {commissie: iter.committee.login}) }}">{{ iter.committee.naam }}</a></p>
 				{% endif %}
 			</div>
 		</div>
@@ -188,7 +190,7 @@
 							)|raw
 						}}
 					</p>
-					<a href="sessions.php?view=login&amp;referrer=agenda.php%3Fagenda_id={{ iter.id }}" class="button is-primary">{{ __('Log in') }}</a>
+					<a href="{{ login_path() }}" class="button is-primary">{{ __('Log in') }}</a>
 				</div>
 			{% endif %}
 		</div>

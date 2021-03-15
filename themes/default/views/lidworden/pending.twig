@@ -65,10 +65,10 @@
 							{% if row.confirmed_on %}
 								<td>Confirmed<sup>2</sup></td>
 							{% else %}
-								<td><input class="input is-small" type="text" value="{{ 'https://www.svcover.nl/lidworden.php?confirmation_code=%s'|format(row.confirmation_code|e('url'))|e('html_attr') }}"></td>
+								<td><input class="input is-small" type="text" value="{{ url('join', {confirmation_code: row.confirmation_code}) }}"></td>
 							{% endif %}
 							<td class="has-text-right">
-								<a href="lidworden.php?view=pending-confirmation&amp;confirmation_code={{ row.confirmation_code|e('url') }}" title="{{ __('Edit registration') }}">
+								<a href="{{ path('join', {view: 'pending-confirmation', confirmation_code: row.confirmation_code}) }}" title="{{ __('Edit registration') }}">
 									<span class="icon">
 										<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 										<span class="is-sr-only">{{ __('Edit registration') }}</span>

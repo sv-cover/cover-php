@@ -65,7 +65,7 @@
 </header>
 
 {% if get_config_value('committee_battle', false) %}
-<a href="committeebattle.php">
+<a href="{{ path('committee_battle') }}">
 	<section class="hero is-primary">
 		<div class="container">
 			<div class="hero-body" data-photos="{{ view.get_committee_battle_banner_photos(iters)|json_encode()|e('html_attr') }}">

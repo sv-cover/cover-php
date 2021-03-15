@@ -7,7 +7,7 @@
     <p>
 		<a href="{{ login_path(global.server.REQUEST_URI) }}" class="button is-primary is-fullwidth">{{ __('Log in') }}</a>
 		<div class="divider is-fullwidth">{{ __('or') }}</div>
-		<a href="wachtwoordvergeten.php" class="button  is-fullwidth">{{ __('Reset your password') }}</a>
+		<a href="{{ path('password') }}" class="button  is-fullwidth">{{ __('Reset your password') }}</a>
     </p>
 </article>
 {% endblock %}

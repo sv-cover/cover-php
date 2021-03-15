@@ -17,7 +17,7 @@
 				{# {{ include('_photos.twig', {photos: photos}) }} #}
 			</section>
 			<footer class="modal-card-foot">
-				<a href="fotoboek.php?book={{book.id}}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+				<a href="{{ path('photos', {book: book.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
 				<button type="submit" class="button is-danger">{{ __('Delete photos') }}</button>
 			</footer>
 		</form>

@@ -8,7 +8,7 @@
 		<div class="content">
 			<p>
 				<strong>
-					<a href="profiel.php?lid={{ iter.author.id }}">{{ iter.author|personal_full_name }}</a>
+					<a href="{{ path('profile', {lid: iter.author.id}) }}">{{ iter.author|personal_full_name }}</a>
 				</strong>
 				<br>
 				{{ iter.reactie|parse_markup }}

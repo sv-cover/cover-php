@@ -5,7 +5,7 @@
 {% block content %}
 <div class="level">
 	<div class="level-left">
-		<h1 class="title"><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a></h1>
+		<h1 class="title"><a href="{{ path('forum') }}">{{ __('Forum') }}</a> / <a href="{{ path('forum', {forum: forum.id}) }}">{{ forum.name }}</a></h1>
 	</div>
 </div>
 
@@ -54,7 +54,7 @@
 				<div id="forum-message" class="is-active">
 	                {{ html_textarea_field('message', message, rows=3, errors=errors) }}
 				</div>
-				<div id="forum-message-preview" class="content-preview box" data-preview-source="#forum-message textarea" data-preview-url="forum.php?view=preview">
+				<div id="forum-message-preview" class="content-preview box" data-preview-source="#forum-message textarea" data-preview-url="{{ path('forum', {view: 'preview'}) }}">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 	<div class="field">
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ __('Publish poll') }}</button>
-			<a href="forum.php?forum={{ forum.id }}" class="button">{{ __('Back to forum') }}</a>
+			<a href="{{ path('forum', {forum: forum.id}) }}" class="button">{{ __('Back to forum') }}</a>
 		</div>
 	</div>
 </form>

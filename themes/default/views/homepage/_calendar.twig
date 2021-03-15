@@ -11,7 +11,7 @@
                         <div class="events-list">
                             {% for item in events|slice(0, 4) %}
                                 <div class="event">
-                                    <a href="agenda.php?agenda_id={{ item.id }}">
+                                    <a href="{{ path('calendar', {agenda_id: item.id}) }}">
                                         <div class="columns is-mobile">
                                             <div class="column is-one-quarter event-date">
                                                 <span class="is-size-5-touch is-size-5-desktop month is-event-date is-uppercase">{{ item.van|date('M') }}</span>
@@ -36,7 +36,7 @@
                     {% else %}
                         <p>{{ __('There are no activities on the calendar at the moment.') }}</p>
                     {% endif %}
-                    <a href="agenda.php" class="complete-calendar-link">{{ __('Complete calendar') }}</a>
+                    <a href="{{ path('calendar') }}" class="complete-calendar-link">{{ __('Complete calendar') }}</a>
                 </div>
             </div>
         </div>

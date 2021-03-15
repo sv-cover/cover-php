@@ -9,8 +9,8 @@
     {% if result.extern %}
         {{ __('External activity from %d')|format(result.van|date('Y')) }}
     {% elseif result.committee %}
-        {% set committee_link = '<a href="commissies.php?commissie=%s">%s</a>'|format(
-            result.committee.login|e('url'),
+        {% set committee_link = '<a href="%s">%s</a>'|format(
+            path('committees', {commissie: result.committee.login}),
             result.committee.naam|e('html')) %}
         {{ __('Activity by %s from %d')|format(committee_link, result.van|date('Y')|e('html'))|raw }}
     {% else %}

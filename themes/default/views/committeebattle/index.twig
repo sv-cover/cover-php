@@ -41,7 +41,7 @@
 			<tr>
 				<td>{{ committee.position }}</td>
 				<td>
-					<a href="commissies.php?commissie={{ committee.login|e('url') }}">{{ committee.naam }}</a>
+					<a href="{{ path('committees', {commissie: committee.login}) }}">{{ committee.naam }}</a>
 					{% for member in committee.members %}
 						<a href="{{ path('profile', {lid: member.id}) }}" class="image is-16x16 is-inline-block">
 							<img  class="is-rounded" src="{{ path('profile_picture', {lid_id: member.id, format: 'square', width: 50}) }}" width="25" title="{{ member|personal_full_name }}">

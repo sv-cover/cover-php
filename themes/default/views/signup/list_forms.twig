@@ -37,7 +37,7 @@
 					</td>
 					<td class="is-truncated">
 						{% if form.agenda_id %}
-							<span><a href="agenda.php?agenda_id={{form.agenda_id}}">{{ form.agenda_item.kop }}</a></span>
+							<span><a href="{{ path('calendar', {agenda_id: form.agenda_id }) }}">{{ form.agenda_item.kop }}</a></span>
 						{% endif %}
 					</td>
 					<td class="has-text-right is-truncated">

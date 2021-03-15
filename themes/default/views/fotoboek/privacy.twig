@@ -6,7 +6,7 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" action="fotoboek.php?photo={{ photo.id|e('url') }}&amp;book={{ photo.scope.id }}&amp;module=privacy">
+		<form method="post" action="{{ path('photos', {module: 'privacy', book: photo.scope.id, photo: photo.id}) }}">
 			{{ html_nonce('privacy', photo) }}
 			<header class="modal-card-head">
 				<p class="modal-card-title">{{ __('Visibility of photo') }}</p>

@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<form method="post" action="forum.php?view=delete&amp;thread={{ iter.id }}">
+<form method="post" action="{{ path('forum', {view: 'delete', thread: iter.id}) }}">
 	{{ html_nonce('delete_thread', iter) }}
     <div class="field">
         <p>{{ __('Are you sure you want to delete the whole <em>%s</em> topic, including all its messages?')|format(iter.subject|e)|raw }}</p>
@@ -17,7 +17,7 @@
     <div class="field">
     	<div class="control buttons">
     		<button type="submit" class="button is-danger">{{ __('Delete topic')  }}</button>
-    		<a href="forum.php?thread={{ iter.id }}" class="button">{{ __('Back to topic') }}</a>
+    		<a href="{{ path('forum', {thread: iter.id}) }}" class="button">{{ __('Back to topic') }}</a>
     	</div>
     </div>
 </form>

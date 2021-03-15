@@ -36,7 +36,7 @@
 					<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
 				</a>
 			{% elseif view.selected_year is not null %}
-				<a href="agenda.php" class="level-item button">
+				<a href="{{ path('calendar') }}" class="level-item button">
 					<span class="is-hidden-mobile">{{ __('Upcoming events') }}</span>
 					<span class="is-hidden-tablet">{{ __('Upcoming') }}</span>
 					<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
@@ -80,13 +80,14 @@
 									<p>{{ __('Add the Cover Calendar to your own calendar') }}</p>
 								</div>
 								<hr class="dropdown-divider">
-								<a class="dropdown-item" href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank" rel="noopener noreferrer">
+								{% set webcal_url = 'webcal:' ~ url('calendar', {format: 'webcal', session_id: global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }, schemeRelative = true)%}
+								<a class="dropdown-item" href="https://calendar.google.com/calendar/render?cid={{ webcal_url }}" target="_blank" rel="noopener noreferrer">
 									Google Calendar
 								</a>
-								<a class="dropdown-item" href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank" rel="noopener noreferrer">
+								<a class="dropdown-item" href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&amp;url={{ webcal_url }}" target="_blank" rel="noopener noreferrer">
 									Outlook.com
 								</a>
-								<a class="dropdown-item" href="webcal://www.svcover.nl/agenda.php?format=webcal&session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}">
+								<a class="dropdown-item" href="{{ webcal_url }}">
 									iCloud/other
 								</a>
 							</div>

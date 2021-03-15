@@ -3,8 +3,8 @@
 </h2>
 <p class="subtitle is-7">
 {{ __('Forum message in %s from %s')|format(
-	'<a href="forum.php?forum=%d">%s</a>'|format(
-		result.thread.forum.id,
+	'<a href="%s">%s</a>'|format(
+		path('forum', {forum: result.thread.forum.id}),
 		result.thread.forum.name|e('html')),
 		result.date|date('M Y'))|raw }}
 </p>

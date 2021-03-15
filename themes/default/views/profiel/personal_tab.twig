@@ -4,7 +4,7 @@
 
 {% block tab_content %}
 <article>
-	<form action="profiel.php?lid={{ iter.id }}&amp;view=personal" method="post">
+	<form action="{{ path('profile', {view: 'personal', lid:iter.id}) }}" method="post">
 		<div class="profile-field">
 			<div class="field-body"><h2 class="title is-4">{{ __('Personal data') }}</h2></div>
 		</div>

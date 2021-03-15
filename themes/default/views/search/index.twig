@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="title">{{ __('Search') }}</h1>
 <div class="media block">
-	<form method="get" action="search.php" class="media-content">
+	<form method="get" action="{{ path('search') }}" class="media-content">
 		<div class="field has-addons">
 			<div class="control is-expanded">
 				<label for="field-query" class="is-sr-only">{{ __('Search query') }}</label>

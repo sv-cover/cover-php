@@ -4,7 +4,9 @@
 
 <div class="level">
 	<div class="level-left">
-		<h1 class="title"><a href="forum.php">{{ __('Forum') }}</a> / <a href="forum.php?forum={{ forum.id }}">{{ forum.name }}</a> / <a href="forum.php?thread={{ thread.id }}">{{ thread.subject }}</a></h1>
+		<h1 class="title">
+			<a href="{{ path('forum') }}">{{ __('Forum') }}</a> / <a href="{{ path('forum', {forum: forum.id}) }}">{{ forum.name }}</a> / <a href="{{ path('forum', {thread: thread.id}) }}">{{ thread.subject }}</a>
+		</h1>
 	</div>
 </div>
 
@@ -42,7 +44,7 @@
 				<div id="forum-message" class="is-active">
 					{{ html_textarea_field('message', iter, rows=15, id='reply-field', autofocus='end') }}
 				</div>
-				<div id="forum-message-preview" class="content-preview box" data-preview-source="#reply-field" data-preview-url="forum.php?view=preview">
+				<div id="forum-message-preview" class="content-preview box" data-preview-source="#reply-field" data-preview-url="{{ path('forum', {view: 'preview'}) }}">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
@@ -53,7 +55,7 @@
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify message') : __('Publish message') }}</button>
 			{% if iter.has_id %}
-				<a href="forum.php?message={{ iter.id }}" class="button">{{ __('Show message in thread') }}</a>
+				<a href="{{ path('forum', {message: iter.id}) }}" class="button">{{ __('Show message in thread') }}</a>
 			{% endif %}
 		</div>
 </div>

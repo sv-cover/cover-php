@@ -1,7 +1,7 @@
 import {Bulma} from 'cover-style-system/src/js';
 import AutocompleteBase from './autocomplete_base';
 
-const AUTOCOMPLETE_MEMBER_URL = '/almanak.php';
+const AUTOCOMPLETE_MEMBER_URL = '/almanak';
 const AUTOCOMPLETE_MEMBER_LIMIT = 15;
 
 /**
@@ -117,7 +117,7 @@ class AutocompleteMember extends AutocompleteBase {
         // Create img element
         let imgElement = document.createElement('img');
         imgElement.classList.add('is-rounded');
-        imgElement.src = `/foto.php?lid_id=${data.value.id} &format=square&width=64`;
+        imgElement.src = `/profile_picture/${data.value.id}/square/64`;
 
         // Append img to .image
         photoElement.append(imgElement);

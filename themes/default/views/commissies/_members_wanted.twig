@@ -16,7 +16,7 @@
 	<button class="delete"></button>
 	{% if commissioner %}
 		<div class="columns is-vcentered">
-			<a href="profiel.php?lid={{ commissioner.id }}" class="column is-narrow has-text-centered-mobile">
+			<a href="{{ path('profile', {lid: commissioner.id}) }}" class="column is-narrow has-text-centered-mobile">
 				<figure class="image is-64x64 is-centered">
 					<img class="is-rounded" width="64" height="64" src="{{ path('profile_picture', {lid_id: commissioner.id, format: 'square', width: 256}) }}" alt="{{ __('Photo of %s')|format(commissioner|full_name) }}">
 				</figure>

@@ -9,8 +9,7 @@
 	</small>
 </h2>
 <p class="subtitle is-7">
-	{{ __('Photo album in %s')|format('<a href="fotoboek.php?book=%d">%s</a>'|format(
-			result.parent.id, result.parent.titel|e('html')))|raw }}
+	{{ __('Photo album in %s')|format('<a href="%s">%s</a>'|format(path('photos', {book: result.parent.id}), result.parent.titel|e('html')))|raw }}
 </p>
 {% if result.num_photos > 0 %}
 	<p class="is-sr-only">{{ view.photobook_summary(result) }}</p>

@@ -82,6 +82,12 @@ page.create:
   defaults:
     view: create
 
+page.preview:
+  path: /page/preview
+  controller: App\Controller\PageController
+  defaults:
+    view: preview
+
 page:
   path: /page/{id<\d+>}/{view}
   controller: App\Controller\PageController

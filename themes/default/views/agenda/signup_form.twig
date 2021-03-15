@@ -11,10 +11,10 @@
         </div>
         <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-            	<a href="signup.php?view=update_form&amp;form={{ form.id }}" class="dropdown-item">
+            	<a href="{{ path('signup', {view: 'update_form', form: form.id}) }}" class="dropdown-item">
             		{{ __('Modify form') }}
             	</a>
-				<a href="signup.php?view=list_entries&amp;form={{ form.id }}" class="dropdown-item">
+				<a href="{{ path('signup', {view: 'list_entries', form: form.id}) }}" class="dropdown-item">
 					{{ __('Show sign-ups') }}
 				</a>
             </div>
@@ -22,7 +22,12 @@
     </div>
 {% endif %}
 {% for entry in form.get_entries_for_member(global.identity.member) %}
-	<p>{{ __('You signed up on %s.')|format(entry.created_on|date('d-m-Y H:i')) }} {% if user_can_update entry %}<a href="signup.php?view=update_entry&amp;form={{form.id}}&amp;entry={{entry.id}}">{{ __('Show my registration') }}</a>.{% endif %}</p>
+	<p>
+        {{ __('You signed up on %s.')|format(entry.created_on|date('d-m-Y H:i')) }}
+        {% if user_can_update entry %}
+            <a href="{{ path('signup', {view: 'update_entry', form: form.id, entry: entry.id}) }}">{{ __('Show my registration') }}</a>.
+        {% endif %}
+    </p>
 {% else %}
 	{% set entry = form.new_entry(global.identity.member) %}
 	{% if not form.is_open %}
@@ -46,7 +51,7 @@
 		{% endif %}
 	{% endif %}
 	{% if user_can_create entry %}
-		<form action="{{ 'signup.php?view=create_entry&form=' ~ form.id }}" method="post">
+		<form action="{{ path('signup', {view: 'create_entry', form: form.id}) }}" method="post">
 			{{ html_input_hidden('return-path', controller.link_to_read(form.agenda_item)) }}
 			{{ html_input_hidden('member_id', entry.member_id) }}
 			

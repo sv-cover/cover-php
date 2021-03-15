@@ -14,7 +14,7 @@
         {% set current_month = event.van|date('n') %}
     {% endif %}
     <li class="event {% if event.image_url %}has-image{% endif %} {% if event.is_proposal() %}is-proposal{% endif %} column is-half-tablet is-one-third-widescreen is-one-quarter-fullhd">
-        <a href="agenda.php?agenda_id={{ event.id }}">
+        <a href="{{ path('calendar', {agenda_id: event.id}) }}">
             <div class="overlay">
                 <div class="date">
                     <span>

@@ -18,7 +18,7 @@
 			<tbody>
 			{% for row in taggers %}
 				<tr>
-					<td><a href="profiel.php?lid={{ row.id|e('url') }}">{{ row.voornaam }}</a></td>
+					<td><a href="{{ path('profile', {lid: row.id}) }}">{{ row.voornaam }}</a></td>
 					<td class="has-text-right">{{ row.tags }}</td>
 					<td class="has-text-right">{{ row.favorite }}</td>
 				</tr>
@@ -38,7 +38,7 @@
 			<tbody>
 			{% for row in tagged %}
 				<tr>
-					<td><a href="profiel.php?lid={{ row.id|e('url') }}">{{ row.voornaam }}</a></td>
+					<td><a href="{{ path('profile', {lid: row.id}) }}">{{ row.voornaam }}</a></td>
 					<td class="has-text-right">{{ row.tags }}</td>
 				</tr>
 			{% endfor %}

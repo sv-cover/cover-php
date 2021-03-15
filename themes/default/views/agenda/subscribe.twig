@@ -8,15 +8,16 @@
 		<p>{{ __('Add your Cover calendar to your personal calendar to stay up-to-date on the latest activities, always.') }}</p>
 	</div>
 		{% if global.auth.logged_in %}
+			{% set webcal_url = 'webcal:' ~ url('calendar', {format: 'webcal', session_id: global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }, schemeRelative = true)%}
 			<div class="buttons">
-				<a href="https://calendar.google.com/calendar/render?cid={{'webcal://www.svcover.nl/agenda.php?format=webcal&session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').get('session_id') }}" target="_blank" class="button">{{ __('Add to my %s')|format('Google Calendar') }}</a>
-				<a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&amp;url={{'webcal://www.svcover.nl/agenda.php?format=webcal%26session_id='|url_encode }}{{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" target="_blank" class="button">{{ __('Add to my %s')|format('Outlook.com') }}</a>
-				<a href="webcal://www.svcover.nl/agenda.php?format=webcal&amp;session_id={{ global.models.Session.getForApplication(global.identity.get('id'), 'calendar').session_id }}" class="button">{{ __('Add to my %s')|format('iCloud/other') }}</a>
+				<a href="https://calendar.google.com/calendar/render?cid={{ webcal_url }}" target="_blank" class="button">{{ __('Add to my %s')|format('Google Calendar') }}</a>
+				<a href="http://calendar.live.com/calendar/calendar.aspx?rru=addsubscription&amp;url={{ webcal_url }}" target="_blank" class="button">{{ __('Add to my %s')|format('Outlook.com') }}</a>
+				<a href="{{ webcal_url }}" class="button">{{ __('Add to my %s')|format('iCloud/other') }}</a>
 			</div>
 		{% else %}
 			<div class="box content">
 				<p>{{ __('The link to the Cover calendar is personalized to let you also see the activities that only you as a member of Cover may see. Therefore, you need to login first.') }}</p> 
-				<a href="sessions.php?view=login&amp;referrer={{ 'agenda.php?view=subscribe'|url_encode }}" class="button is-primary">{{ __('Log in') }}</a>
+				<a href="{{ login_path() }}" class="button is-primary">{{ __('Log in') }}</a>
 			</div>
 		{% endif %}
 	</div>

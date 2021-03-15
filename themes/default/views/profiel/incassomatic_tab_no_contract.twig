@@ -18,7 +18,7 @@
     </p>
 
 	<p class="has-text-centered">
-		<a href="profiel.php?view=export_incassocontract&amp;lid={{ iter.id|e('url') }}" class="button is-large" target="_blank">{{ __('Download contract') }}</a>
+		<a href="{{ path('profile', {view: 'export_incassocontract', lid:iter.id}) }}" class="button is-large" target="_blank">{{ __('Download contract') }}</a>
 	</p>
 
 	<p>{{ __("As soon as your contract has been processed, you can view your direct debits here every moment of the day. Both freshly created direct debit transactions as well as already debited ones will be displayed here.") }}</p>

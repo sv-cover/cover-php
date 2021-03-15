@@ -42,7 +42,7 @@
 						</td>
 						{% if subscription.lid_id %}
 							<td>
-								<a href="profiel.php?lid={{ subscription.lid_id }}">{{ subscription.lid|full_name() }}
+								<a href="{{ path('profile', {lid: subscription.lid_id}) }}">{{ subscription.lid|full_name() }}
 							</td>
 							<td>
 								{{ subscription.lid.is_private('email') ? __('Unknown') : subscription.email }}

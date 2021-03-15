@@ -42,7 +42,7 @@
         {% set visibility_hidden = context.visibility[photo.id] is defined and context.visibility[photo.id] == false %}
         <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ macros.classnames(photo, context) }}" data-id="{{ photo.id }}" id="photo-{{ photo.id }}">
             <a 
-                href="fotoboek.php?book={{ context.book.id }}&amp;photo={{ photo.id }}"
+                href="{{ path('photos', {book: context.book.id, photo: photo.id}) }}"
                 {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
             >
                 <noscript>

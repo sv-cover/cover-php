@@ -8,7 +8,7 @@
 	CRUD-based views. #}
 	{% if user_can_create global.models.Announcement.new_iter %}
 		<div class="level-right buttons">
-			<a href="announcements.php?view=create" class="button">{{ __('New announcement') }}</a>
+			<a href="{{ path('announcements', {view: 'create'}) }}" class="button">{{ __('New announcement') }}</a>
 		</div>
 	{% endif %}
 </div>
@@ -38,14 +38,14 @@
 						</div>
 						<div class="dropdown-menu" id="dropdown-menu" role="menu">
 							<div class="dropdown-content">
-								<a class="dropdown-item" href="announcements.php?view=read&amp;id={{ item.id }}" title="{{ __('Modify announcement') }}">
+								<a class="dropdown-item" href="{{ path('announcements', {view: 'read', id: item.id}) }}" title="{{ __('Link announcement') }}">
 									<span class="icon">
 										<i class="fas fa-link" aria-hidden="true"></i>
 									</span>
 									<span>{{ __('Link announcement') }}</span>
 								</a>
 								{% if user_can_update item %}
-									<a class="dropdown-item" href="announcements.php?view=update&amp;id={{ item.id }}" title="{{ __('Modify announcement') }}">
+									<a class="dropdown-item" href="{{ path('announcements', {view: 'update', id: item.id}) }}" title="{{ __('Modify announcement') }}">
 										<span class="icon">
 											<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 										</span>
@@ -53,7 +53,7 @@
 									</a>
 								{% endif %}
 								{% if user_can_delete item %}
-									<a class="dropdown-item" href="announcements.php?view=delete&amp;id={{ item.id }}" title="{{ __('Delete announcement') }}" data-popup="modal">
+									<a class="dropdown-item" href="{{ path('announcements', {view: 'delete', id: item.id}) }}" title="{{ __('Delete announcement') }}" data-popup="modal">
 										<span class="icon">
 											<i class="fas fa-trash" aria-hidden="true"></i>
 										</span>
@@ -68,7 +68,7 @@
 		</div>
 		<p class="subtitle is-7">
 			{{ __('By') }}:
-			<a href="commissies.php?commissie={{ item.committee.login }}">{{ item.committee.naam }}</a>
+			<a href="{{ path('committees', {commissie: item.committee.login}) }}">{{ item.committee.naam }}</a>
 			{{ __('on') }}
 			{{ item.created_on|date() }}
 		</p>
@@ -85,4 +85,6 @@
 
 {% endfor %}
 
-<p class="align-center"><a href="announcements.php">{{ __('Show all announcements') }}</a></p>
+<p class="align-center">
+	<a href="{{ path('announcements') }}">{{ __('Show all announcements') }}</a>
+</p>

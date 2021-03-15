@@ -22,7 +22,7 @@
 					id="mailinglijst-{{ mailing_list.id|e('url') }}-toggle"
 					class="list-group-item-action toggle-action-button {{ mailing_list.subscribed ? 'toggle-state-active' : '' }}"
 					method="post"
-					action="profiel.php?lid={{ iter.id }}&amp;view=mailing_lists"
+					action="{{ path('profile', {view: 'mailing_lists', lid:iter.id}) }}"
 					data-auto-submit
 				>
 					{{ html_nonce('mailing_list', iter) }}

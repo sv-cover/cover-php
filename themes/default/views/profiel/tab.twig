@@ -23,7 +23,7 @@
 							{% for tab_name, tab in view.tabs(iter) %}
 								{% if tab.visible %}
 									<li class="{{ tab_name == active_tab ? 'is-active' : '' }} {{ tab.class is defined ? tab.class : '' }}">
-										<a href="profiel.php?lid={{ iter.id }}&amp;view={{ tab_name }}#{{ tab_name }}-tab">
+										<a href="{{ path('profile', {lid: iter.id, view: tab_name}) }}#{{ tab_name }}-tab">
 											<span>{{ tab.label }}</span>
 											{%- if tab.icon is defined -%}
 												<span class="icon is-small">

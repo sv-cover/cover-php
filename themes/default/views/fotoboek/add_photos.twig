@@ -5,12 +5,13 @@
 {% block content %}
 <article
 	class="add-photos"
-	data-api-base-url="fotoboek.php?book={{ book.id|e('url') }}"
-	data-photo-base-url="fotoboek.php?photo="
+	data-api-base-url="{{ path('photos', {book: book.id}) }}"
+	{# TODO: Fix url,  this is going to break #}
+	data-photo-base-url="{{ path('photos', {photo: ''}) }}"
 >
 	<h1 class="title">{{ __("Add photos to") }} {{ book.titel }}</h1>
 
-	<form id="add-photos-form" action="fotoboek.php?book={{ book.id|e('url') }}&amp;view=add_photos" method="post">
+	<form id="add-photos-form" action="{{ path('photos', {view: 'add_photos', book: book.id}) }}" method="post">
 		{{ html_nonce('add_photos', book) }}
 
 		{% if errors|length > 0 %}
@@ -37,7 +38,7 @@
 						</td>
 						<td class="add-control">
 							<input type="checkbox" name="photo[$index][add]" value="true" checked="checked">
-							<a class="icon has-text-success" href="fotoboek.php?photo=$id" target="_blank" title="{{ __('This photo has been added tho this book already') }}">
+							<a class="icon has-text-success" href="{{ path('photos', {photo: '$id'}) }}" target="_blank" title="{{ __('This photo has been added tho this book already') }}">
 								<i class="fas fa-check-square fa-fw" aria-hidden="true"></i>
 								<span class="is-sr-only">{{ __('This photo has been added tho this book already') }}</span>
 							</a>
@@ -58,7 +59,7 @@
 		<div class="field form-controls">
 			<div class="content buttons">
 				<button type="submit" class="button is-primary">{{ __("Add photos") }}</button>
-				<a href="fotoboek.php?book={{ book.id|e('url') }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
+				<a href="{{ path('photos', {book: book.id}) }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
 			</div>
 		</div>
 	</form>
