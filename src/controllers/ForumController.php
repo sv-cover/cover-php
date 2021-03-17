@@ -682,7 +682,7 @@ class ForumController extends \Controller
 
 		if ($this->_form_is_submitted('delete_thread', $thread))
 			if ($this->model->delete_thread($thread))
-				return $this->view->redirect(sprintf('forum.php?forum=%d', $thread['forum_id']));
+				return $this->view->redirect($this->generate_url('forum', ['forum' => $thread['forum_id']]));
 
 		return $this->view->render_thread_delete($thread);
 	}
@@ -704,7 +704,7 @@ class ForumController extends \Controller
 			$this->model->move_thread($thread, $target_forum);
 		}
 
-		return $this->view->redirect(sprintf('forum.php?thread=%d', $thread['id']));
+		return $this->view->redirect($this->generate_url('forum', ['thread' => $thread['id']]));
 	}
 
 	public function run_thread_reply(\DataIterForumThread $thread)
@@ -760,14 +760,14 @@ class ForumController extends \Controller
 
 		if ($this->_form_is_submitted('delete_message', $message))
 			if ($this->model->delete_message($message))
-				return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d', $thread['id'], $thread['num_thread_pages']));
+				return $this->view->redirect($this->generate_url('forum', ['thread' => $thread['id'], 'page' => $thread['num_thread_pages']]));
 
 		return $this->view->render_message_delete($message);
 	}
 
 	public function run_message_single(\DataIterForumMessage $message)
 	{
-		return $this->view->redirect(sprintf('forum.php?thread=%d&page=%d#p%d', $message['thread_id'], $message['thread_page'], $message['id']));
+		return $this->view->redirect(sprintf('%s#p%d', $this->generate_url('forum', ['thread' => $message['thread_id'], 'page' => $message['thread_page']]), $message['id']));
 	}
 
 	public function run_poll_create(\DataIterForum $forum)
@@ -822,7 +822,7 @@ class ForumController extends \Controller
 				throw new \LogicException('Could not increment vote. Invalid poll option somehow?');
 		}
 
-		return $this->view->redirect('forum.php?thread=' . $thread['id']);
+		return $this->view->redirect($this->generate_url('forum', ['thread' => $thread['id']]));
 	}
 	
 	public function run_index()
@@ -856,7 +856,7 @@ class ForumController extends \Controller
 		$thread->forum = $forum->get('id');
 		$this->model->update_thread($thread);
 		
-		return $this->view->redirect('forum.php?thread=' . $thread->get('id'));
+		return $this->view->redirect($this->generate_url('forum', ['thread' => $thread->get('id')]));
 	}
 
 	protected function run_impl()

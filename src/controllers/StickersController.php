@@ -68,7 +68,7 @@ class StickersController extends \ControllerCRUD
 
 	public function run_read(\DataIter $iter)
 	{
-		return $this->view->redirect('stickers.php?point=' . $iter['id']);
+		return $this->view->redirect($this->generate_url('stickers', ['point' => $iter['id']]));
 	}
 
 	public function run_photo(\DataIter $iter)
@@ -145,7 +145,7 @@ class StickersController extends \ControllerCRUD
 						'description' => $iter['omschrijving'],
 						'photo_url' => $iter['foto'] ? $this->link_to_photo($iter) : null,
 						'added_on' => $iter['toegevoegd_op'],
-						'added_by_url' => $iter['toegevoegd_door'] ? sprintf('profiel.php?lid=%d', $iter['toegevoegd_door']) : null,
+						'added_by_url' => $iter['toegevoegd_door'] ? $this->generate_url('profile', ['lid' => $iter['toegevoegd_door']]) : null,
 						'added_by_name' => $iter['toegevoegd_door']
 							? member_full_name($iter['member'], BE_PERSONAL)
 							: null,
@@ -163,6 +163,3 @@ class StickersController extends \ControllerCRUD
 	}
 
 }
-
-// $controller = new ControllerStickers();
-// $controller->run();

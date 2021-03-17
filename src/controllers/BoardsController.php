@@ -99,6 +99,6 @@ class BoardsController extends \ControllerCRUD
 
 	public function link_to_read(\DataIter $iter)
 	{
-		return sprintf('besturen.php#%s', urlencode($iter['login']));
+		return sprintf('%s#%s', $this->generate_url('boards'), urlencode($iter['login']));
 	}
 }

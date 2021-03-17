@@ -170,7 +170,7 @@
 				if (get_policy($parents[$i])->user_can_read($parents[$i]))
 					$path[] = sprintf('<li%s><a href="%s%s"%s>%s</a></li>',
 						$i == count($parents) - 1 ? ' class="is-active"' : '',
-						$this->controller->get_router()->generate('photo', ['book' => $parents[$i]->get_id()]),
+						$this->controller->generate_url('photo', ['book' => $parents[$i]->get_id()]),
 						$anchor,
 						$i == count($parents) - 1 ? ' aria-current="page"' : '',
 						markup_format_text($parents[$i]['titel']));

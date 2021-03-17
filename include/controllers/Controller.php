@@ -8,6 +8,7 @@
 
 	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\Routing\RouterInterface;
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 	/** 
 	  * A class implementing the simplest controller. This class provides
@@ -139,6 +140,13 @@
 			else
 				// TODO: Should we even be allowed to be in this situation?
 				return sprintf('?%s', http_build_query($arguments));
+		}
+
+		public function generate_url(string $name, array $parameters = [], int $reference_type = UrlGeneratorInterface::ABSOLUTE_PATH)
+		{
+			if (!isset($this->router))
+				throw new LogicException('Router not set on controller');
+			return $this->router->generate($name, $parameters, $reference_type);
 		}
 
 		public function get_request()

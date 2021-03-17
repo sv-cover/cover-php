@@ -136,13 +136,13 @@ class PageController extends \ControllerCRUD
 	public function run_read(\DataIter $iter)
 	{
 		if ($committee = $this->_is_embedded_page($iter['id'], 'DataModelCommissie'))
-			return $this->view->redirect('commissies.php?id=' . $committee->get('login'), true);
+			return $this->view->redirect($this->generate_url('committees', ['commissie' => $committee->get('login')]), true);
 		elseif ($board = $this->_is_embedded_page($iter['id'], 'DataModelBesturen'))
-			return $this->view->redirect('besturen.php#' .  rawurlencode($board->get('login')), true);
+			return $this->view->redirect(sprintf('%s#%s', $this->generate_url('boards'), rawurlencode($board->get('login'))), true);
 		elseif ($iter['id'] == 26) // TODO this is a dirty hackish way :(
-			return $this->view->redirect('boeken.php');
+			return $this->view->redirect($this->generate_url('books'));
 		elseif ($iter['id'] == 21)
-			return $this->view->redirect('index.php');
+			return $this->view->redirect($this->generate_url('homepage'));
 		else
 			return parent::run_read($iter);
 	}

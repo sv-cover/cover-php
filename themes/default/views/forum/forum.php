@@ -121,8 +121,6 @@ class ForumView extends View
 
 	public function get_author_link(DataIter $message, $last = false)
 	{
-		$router = $this->controller->get_router();
-
 		if ($last && $message['last_author_type'])
 			$field = 'last_author';
 		else
@@ -132,12 +130,12 @@ class ForumView extends View
 			switch (intval($message[$field . '_type']))
 			{
 				case DataModelForum::TYPE_PERSON: /* Person */
-					return $router->generate('profile', ['lid' => $message[$field . '_id']]);
+					return $this->controller->generate_url('profile', ['lid' => $message[$field . '_id']]);
 				
 				case DataModelForum::TYPE_COMMITTEE: /* Commissie */
 					$committee_model = get_model('DataModelCommissie');
 					$committee = $committee_model->get_iter($message[$field . '_id']);
-					return $router->generate('committees', ['commissie' => urlencode($committee['login'])]);
+					return $this->controller->generate_url('committees', ['commissie' => urlencode($committee['login'])]);
 				
 				default:
 					return null;
@@ -150,8 +148,6 @@ class ForumView extends View
 
 	public function get_author_photo(DataIter $message, $last = false)
 	{
-		$router = $this->controller->get_router();
-
 		if ($last && $message['last_author_type'])
 			$field = 'last_author';
 		else
@@ -161,7 +157,7 @@ class ForumView extends View
 			switch (intval($message[$field . '_type']))
 			{
 				case DataModelForum::TYPE_PERSON: /* Person */
-					return $router->generate('profile_picture', ['format' => 'square', 'width' => 128, 'lid_id' => $message[$field . '_id']]);
+					return $this->controller->generate_url('profile_picture', ['format' => 'square', 'width' => 128, 'lid_id' => $message[$field . '_id']]);
 				
 				default:
 					return null;
@@ -225,11 +221,10 @@ class ForumView extends View
 
 	public function thread_page_links(DataIterForumThread $thread, $pages)
 	{
-		$router = $this->controller->get_router();
 		$links = [];
 
 		for ($page = 0; $page < $pages; ++$page)
-			$links[] = sprintf('<a href="%s">%d</a>', $router->generate('forum', ['thread'=> $thread['id'], 'page' => $page]), $page + 1);
+			$links[] = sprintf('<a href="%s">%d</a>', $this->controller->generate_url('forum', ['thread'=> $thread['id'], 'page' => $page]), $page + 1);
 
 		return $links;
 	}

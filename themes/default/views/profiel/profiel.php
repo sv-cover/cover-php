@@ -222,7 +222,7 @@ class ProfielView extends View
 			$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');
 			if ($treasurer)
 				$treasurer_link = sprintf('<a href="%s">%s</a>',
-					$this->controller->get_router()->generate('profile', ['lid' => $treasurer['id']]),
+					$this->controller->generate_url('profile', ['lid' => $treasurer['id']]),
 					markup_format_text(member_full_name($treasurer)));
 			else
 				$treasurer_link = null;
@@ -354,7 +354,7 @@ class ProfielView extends View
 		switch ($field) {
 			case 'beginjaar':
 				return sprintf('<a href="%s">%d</a>',
-					$this->controller->get_router()->generate('almanak', ['search_year' => $iter['beginjaar']]),
+					$this->controller->generate_url('almanak', ['search_year' => $iter['beginjaar']]),
 					$iter['beginjaar']);
 			case 'adres':
 				return sprintf('<a href="%s" target="_blank">%s</a>',

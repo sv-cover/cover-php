@@ -153,7 +153,7 @@ class ProfileController extends \Controller
 			$_SESSION['alert'] = __('We’ve sent a confirmation mail to your new email address.');
 		}
 
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=personal');
+		return $this->view->redirect($this->generate_url('profile', ['view' => 'personal', 'lid' => $iter['id']]));
 	}
 
 	private function _report_changes_upstream(\DataIterMember $iter, array $fields, array $old_values)
@@ -199,7 +199,7 @@ class ProfileController extends \Controller
 		
 		$this->model->update($iter);
 		
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
+		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
 	}
 
 	protected function _update_password(\DataIterMember $iter)
@@ -257,7 +257,7 @@ class ProfileController extends \Controller
 		$iter->set('privacy', $mask);
 		$this->model->update($iter);
 		
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=privacy');
+		return $this->view->redirect($this->generate_url('profile', ['view' => 'privacy', 'lid' => $iter['id']]));
 	}
 
 	protected function _update_photo(\DataIterMember $iter)
@@ -301,7 +301,7 @@ class ProfileController extends \Controller
 			$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
 		}
 
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
+		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
 	}
 
 	protected function _update_mailing_lists(\DataIterMember $iter)
@@ -323,7 +323,7 @@ class ProfileController extends \Controller
 				$subscription_model->unsubscribe_member($mailing_list, $iter);	
 		}
 
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=mailing_lists');
+		return $this->view->redirect($this->generate_url('profile', ['view' => 'mailing_lists', 'lid' => $iter['id']]));
 	}
 	
 	public function run_personal(\DataIterMember $iter)
@@ -373,7 +373,7 @@ class ProfileController extends \Controller
 		if ($this->_form_is_submitted('photo', $iter))
 			return $this->_update_photo($iter);
 
-		return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=profile');
+		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
 	}
 
 	protected function run_facebook(\DataIterMember $iter)
@@ -386,7 +386,7 @@ class ProfileController extends \Controller
 			if (get_post('facebook_action') == 'unlink')
 				get_facebook()->destroySession();
 
-			return $this->view->redirect('profiel.php?lid=' . $iter['id'] . '&view=facebook');
+			return $this->view->redirect($this->generate_url('profile', ['view' => 'facebook', 'lid' => $iter['id']]));
 		}
 		
 		return $this->view->render_facebook_tab($iter);
@@ -500,7 +500,7 @@ class ProfileController extends \Controller
 
 	public function run_index()
 	{
-		return $this->view->redirect('almanak.php');
+		return $this->view->redirect($this->generate_url('almanak'));
 	}
 
 	protected function run_impl()

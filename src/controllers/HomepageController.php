@@ -31,7 +31,7 @@
 			
 			$return_path = isset($_POST['return_to'])
 				? $_POST['return_to']
-				: 'index.php';
+				: $this->generate_url('homepage');
 
 			return $this->view->redirect($return_path);
 		}

@@ -259,7 +259,7 @@
 		{
 			if ($this->_form_is_submitted('moderate'))
 				if ($this->_moderate())
-					return $this->view->redirect('agenda.php');
+					return $this->view->redirect($this->generate_url('calendar'));
 
 			$agenda_items = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
 
@@ -354,7 +354,7 @@
 					throw new \Exception('Unknown rsvp status');
 			}
 
-			return $this->view->redirect('agenda.php?id=' . $iter['id']);
+			return $this->view->redirect($this->generate_url('calendar', ['id' => $iter['id']]));
 		}
 
 		public function run_webcal()

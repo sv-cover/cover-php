@@ -141,7 +141,7 @@
 
 			$this->_send_confirmation_mail($confirmation_code);
 
-			return $this->view->redirect('lidworden.php?verzonden=true');
+			return $this->view->redirect($this->generate_url('join', ['verzonden' => 'true']));
 		}
 
 		private function _send_confirmation_mail($confirmation_code)
@@ -204,7 +204,7 @@
 						implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
 				}
 
-				return $this->view->redirect('lidworden.php?confirmed=true');
+				return $this->view->redirect($this->generate_url('join', ['confirmed' => 'true']));
 			} catch (\NotFoundException $e) {
 				return $this->view->render('not_found.twig');
 			}
@@ -324,7 +324,7 @@
 					['data' => json_encode($_POST['data'])],
 					sprintf('confirmation_code = %s', $db->quote($confirmation_code)));
 
-				return $this->view->redirect('lidworden.php?view=pending-confirmation');
+				return $this->view->redirect($this->generate_url('join', ['view' => 'pending-confirmation']));
 			}
 
 			$row = $db->query_first(sprintf("SELECT * FROM registrations WHERE confirmation_code = '%s'",

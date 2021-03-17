@@ -26,7 +26,7 @@ class SessionsController extends \Controller
 		elseif (isset($_GET['referrer']))
 			$referrer = $_GET['referrer'];
 		else
-			$referrer = 'index.php';
+			$referrer = $this->generate_url('homepage');
 
 		if ($this->_form_is_submitted('session_overrides'))
 		{
@@ -54,7 +54,7 @@ class SessionsController extends \Controller
 
 			return isset($_POST['referrer'])
 				? $this->view->redirect($_POST['referrer'])
-				: $this->view->redirect('sessions.php?view=overrides');
+				: $this->view->redirect($this->generate_url('sessions', ['view' => 'overrides']));
 		}
 
 		return $this->view->render_overrides($referrer);
@@ -92,14 +92,15 @@ class SessionsController extends \Controller
 				}
 			}
 
-			return $this->view->redirect(isset($_POST['referer']) ? $_POST['referer'] : 'sessions.php');
+			return $this->view->redirect(isset($_POST['referer']) ? $_POST['referer'] : $this->generate_url('sessions'));
 		}
 
-		return $this->view->redirect('profiel.php?lid=' . get_identity()->get('id') . '&view=sessions');
+		return $this->view->redirect($this->generate_url('profile', ['view' => 'sessions', 'lid' => get_identity()->get('id')]));
 	}
 
 	protected function _resolve_referrer($referrer) {
-		while (preg_match('/^\/?sessions.php\?view=login&referrer=(.+?)$/', $referrer, $match))
+		// TODO: find a way to make this better
+		while (preg_match('/^\/?sessions\.php\?view=login&referrer=(.+?)$/', $referrer, $match))
 			$referrer = rawurldecode($match[1]);
 
 		return $referrer;
@@ -129,7 +130,7 @@ class SessionsController extends \Controller
 				$external_domain = null;
 
 			// Prevent returning to the logout link
-			if ($external_domain === null && $referrer == '/sessions.php?view=logout')
+			if ($external_domain === null && in_array($referrer, ['/sessions.php?view=logout', $this->generate_url('logout'), $this->generate_url('sessions', ['view' => 'logout'])]))
 				$referrer = null;
 
 
@@ -147,7 +148,7 @@ class SessionsController extends \Controller
 						sentry_report_exception($e);
 					}
 
-					return $this->view->redirect($referrer ? $referrer : 'index.php', false, ALLOW_SUBDOMAINS);
+					return $this->view->redirect($referrer ? $referrer : $this->generate_url('homepage'), false, ALLOW_SUBDOMAINS);
 				}
 				else {
 					$errors = ['email', 'password'];

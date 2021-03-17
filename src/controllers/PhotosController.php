@@ -242,11 +242,11 @@
 				'w' => $iter['w'],
 				'member_id' => $iter['lid_id'],
 				'member_full_name' => $iter['lid'] ? member_full_name($iter['lid'], BE_PERSONAL) : null,
-				'member_url' => $iter['lid_id'] ? sprintf('profiel.php?lid=%d', $iter['lid_id']) : null,
+				'member_url' => $iter['lid_id'] ? $this->generate_url('profile', ['lid' => $iter['lid_id']]) : null,
 				'custom_label' => $iter['custom_label'],
 				'suggested_id' => $suggested_member ? $suggested_member['id'] : null,
 				'suggested_full_name' => $suggested_member ? member_full_name($suggested_member, BE_PERSONAL) : null,
-				'suggested_url' => $suggested_member ? sprintf('profiel.php?lid=%d', $suggested_member['id']) : null,
+				'suggested_url' => $suggested_member ? $this->generate_url('profile', ['lid' => $suggested_member['id']]) : null,
 			];
 		}
 
@@ -396,7 +396,7 @@
 				if (count($errors) === 0)
 				{
 					$new_book_id = $this->model->insert_book($iter);
-					return $this->view->redirect('fotoboek.php?book=' . $new_book_id);
+					return $this->view->redirect($this->generate_url('photos', ['book' => $new_book_id]));
 				}
 			}
 
@@ -423,7 +423,7 @@
 					$book->set_all($data);
 					$this->model->update_book($book);
 
-					return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
+					return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
 				}
 			}
 			
@@ -633,7 +633,7 @@
 				}
 				
 				if (count($errors) == 0)
-					return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
+					return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
 				else
 					$success = false;
 			}
@@ -652,7 +652,7 @@
 			{
 				if ($_POST['confirm_delete'] == $book->get('titel')) {
 					$this->model->delete_book($book);
-					return $this->view->redirect('fotoboek.php?book=' . $book->get('parent_id'));
+					return $this->view->redirect($this->generate_url('photos', ['book' => $book->get('parent_id')]));
 				}
 
 				$errors[] = 'confirm_delete';
@@ -680,7 +680,7 @@
 				foreach ($photos as $photo)
 					$this->model->delete($photo);
 
-				return $this->view->redirect('fotoboek.php?book=' . $book->get_id());
+				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
 			}
 			
 			return $this->view->render_delete_photos($book, $photos);
@@ -691,7 +691,7 @@
 			if (get_auth()->logged_in())
 				$this->model->mark_read_recursively(get_identity()->get('id'), $book);
 
-			return $this->view->redirect(sprintf('fotoboek.php?book=%d', $book->get_id()));
+			return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
 		}
 
 		protected function _view_download_photo(\DataIterPhoto $photo)
@@ -973,7 +973,7 @@
 				// This occurs when $book is not the book that contains $photo.
 				// So we redirect to $photo, and let that figure out $book.
 				// No undefined state.
-				return $this->view->redirect('fotoboek.php?photo=' . $photo['id']);
+				return $this->view->redirect($this->generate_url('photos', ['photo' => $photo['id']]));
 			}
 
 			// If there is a photo, also initialize the appropriate auxiliary controllers 

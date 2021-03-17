@@ -33,9 +33,9 @@ class RouterTwigExtension extends Twig_Extension
 	}
 
 	/* Analogous to Symfony's Twig function 'url' */
-	public function get_url(string $name, array $parameters = [], bool $schemeRelative = false)
+	public function get_url(string $name, array $parameters = [], bool $scheme_relative = false)
 	{
-		$reference_type = $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL;
+		$reference_type = $scheme_relative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL;
 		return $this->router->generate($name, $parameters, $reference_type);
 	}
 
