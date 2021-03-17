@@ -1,6 +1,9 @@
 <?php
 	require_once 'include/data/DataModel.php';
 	require_once 'include/search.php';
+	require_once 'include/router.php';
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 	class PermissionStatus
 	{
@@ -376,9 +379,11 @@
 			return 'forum_message';
 		}
 
-		public function get_absolute_url()
+		public function get_absolute_path($url = false)
 		{
-			return sprintf('forum.php?thread=%d&page=%d#p%d', $this['thread_id'], $this['thread_page'], $this['id']);
+			$router = get_router();
+			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+			return sprintf('%s#p%d', $router->generate('forum', ['thread' => $this['thread_id'], 'page' => $this['thread_page']], $reference_type), $this['id']);
 		}
 	}
 

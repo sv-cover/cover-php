@@ -1,6 +1,9 @@
 <?php
 
 require_once 'include/data/DataModel.php';
+require_once 'include/router.php';
+
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DataIterEmailConfirmationToken extends DataIter
 {
@@ -21,7 +24,8 @@ class DataIterEmailConfirmationToken extends DataIter
 
 	public function get_link()
 	{
-		return 'https://www.svcover.nl/profiel.php?view=confirm_email&token=' . urlencode($this['key']);
+		$router = get_router();
+		return $router->generate('profile', ['view' => 'confirm_email', 'token' => $this['key']], UrlGeneratorInterface::ABSOLUTE_URL);
 	}
 }
 

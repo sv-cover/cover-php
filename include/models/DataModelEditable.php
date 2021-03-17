@@ -1,6 +1,9 @@
 <?php
 	require_once 'include/data/DataModel.php';
 	require_once 'include/search.php';
+	require_once 'include/router.php';
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 	class DataIterEditable extends DataIter implements SearchResult
 	{
@@ -90,9 +93,11 @@
 			return 'page';
 		}
 
-		public function get_absolute_url()
+		public function get_absolute_path($url = false)
 		{
-			return sprintf('show.php?id=%d', $this->get_id());
+			$router = get_router();
+			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+			return $router->generate('page', ['id' => $this->get_id()], $reference_type);
 		}
 	}
 

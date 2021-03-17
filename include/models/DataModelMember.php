@@ -2,6 +2,9 @@
 	require_once 'include/search.php';
 	require_once 'include/login.php';
 	require_once 'include/data/DataModel.php';
+	require_once 'include/router.php';
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 	class DataIterMember extends DataIter implements SearchResult
 	{
@@ -137,9 +140,11 @@
 			return 'member';
 		}
 
-		public function get_absolute_url()
+		public function get_absolute_path($url = false)
 		{
-			return sprintf('profiel.php?lid=%d', $this->get_id());
+			$router = get_router();
+			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+			return $router->generate('profile', ['lid' => $this->get_id()], $reference_type);
 		}
 
 		public function has_photo()

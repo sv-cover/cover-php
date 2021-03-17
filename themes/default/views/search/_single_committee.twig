@@ -1,5 +1,5 @@
 <h2 class="title is-5">
-	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.naam }}</a>
+	<a href="{{ result.absolute_path|e('html_attr') }}" data-search-main-link>{{ result.naam }}</a>
 </h2>
 {% if result.search_match_reason == 'committee_member_match' %}
 	<p class="subtitle is-7 match-reason">{{ __('%s is a member of this committee')|format(

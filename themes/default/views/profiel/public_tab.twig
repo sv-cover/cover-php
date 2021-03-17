@@ -86,7 +86,7 @@
 	<ul class="profile-committees">
 		{% for committee in committees %}
 			<li>
-				<a class="committee-name" href="{{ committee.get_absolute_url()|e('html_attr') }}">{{ committee.naam }}</a>
+				<a class="committee-name" href="{{ committee.absolute_path|e('html_attr') }}">{{ committee.naam }}</a>
 				<div class="committee-position">{{ __translate_parts(committee.functie, ',\/&') }}</div>
 			</li>
 		{% endfor %}

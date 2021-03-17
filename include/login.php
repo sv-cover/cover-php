@@ -65,17 +65,3 @@
 
 		return get_identity()->is_member();
 	}
-
-	function login_link($label, array $attributes = array())
-	{
-		$referrer = $referrer =  $_SERVER['PHP_SELF'] . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
-		
-		$attributes['href'] = 'sessions.php?view=login&referrer=' . urlencode($referrer);
-
-		$make_attribute = function($key, $value) {
-			return sprintf('%s="%s"', $key, markup_format_attribute($value));
-		};
-
-		return sprintf('<a %s>%s</a>', implode(' ', array_map($make_attribute, array_keys($attributes), array_values($attributes))), $label);
-	}
-

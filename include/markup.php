@@ -4,6 +4,7 @@
 
 	require_once 'include/smileys.php';
 	require_once 'include/cache.php';
+	require_once 'include/router.php';
 
 	use Embed\Embed;
 	use App\Controller\MailingListsController;
@@ -283,8 +284,10 @@
 		
 		try {
 			$iter = $model->get_from_name($commissie);
+
+			$router = get_router();
 		
-			return '<a href="show.php?id=' . $iter->get('page_id') . '">' . markup_format_text($iter->get('naam')) . '</a>';
+			return '<a href="' . $router->generate('page', ['id' => $iter->get('page_id')]) . '">' . markup_format_text($iter->get('naam')) . '</a>';
 		} catch (DataIterNotFoundException $e) {
 			return '';
 		}

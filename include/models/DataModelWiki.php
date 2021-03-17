@@ -22,7 +22,7 @@ class DataIterWiki extends DataIter implements SearchResult
 		return 'wiki';
 	}
 
-	public function get_absolute_url()
+	public function get_absolute_path($url = false)
 	{
 		return sprintf(get_config_value('wiki_public_url'), $this->get('id'));
 	}

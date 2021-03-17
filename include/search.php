@@ -11,7 +11,7 @@ interface SearchResult
 	
 	public function get_search_type();
 
-	public function get_absolute_url();
+	public function get_absolute_path($url = false);
 }
 
 function text_excerpt($text, $keywords, $radius = 30,

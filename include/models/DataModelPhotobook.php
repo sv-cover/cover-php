@@ -2,6 +2,9 @@
 	require_once 'include/search.php';
 	require_once 'include/data/DataModel.php';
 	require_once 'include/policies/policy.php';
+	require_once 'include/router.php';
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 	class DataIterPhoto extends DataIter
 	{
@@ -150,9 +153,11 @@
 			return path_concat(get_config_value('path_to_photos'), $this->get('filepath'));
 		}
 
+		// TODO: This won't work as soon the url to scaled photos stops using query parmeters
 		public function get_url($width = null, $height = null)
 		{
-			$url = get_config_value('url_to_scaled_photo', 'fotoboek.php?view=scaled');
+			$router = get_router();
+			$url = get_config_value('url_to_scaled_photo', $router->generate('photos', ['view' => 'scaled']));
 
 			$params = array('photo' => $this->get_id());
 
@@ -409,9 +414,11 @@
 			return 'fotoboek';
 		}
 
-		public function get_absolute_url()
+		public function get_absolute_path($url = false)
 		{
-			return sprintf('fotoboek.php?book=%s', urlencode($this->get_id()));
+			$router = get_router();
+			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+			return $router->generate('photos', ['book' => $this->get_id()], $reference_type);
 		}
 
 		public function get_key_photos($limit)

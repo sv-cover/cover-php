@@ -263,7 +263,7 @@ class ApiController extends \Controller
 		if ($member->is_member())
 			$this->_send_welcome_mail($member);
 
-		return ['success' => true, 'url' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+		return ['success' => true, 'url' => $member->get_absolute_path(true)];
 	}
 
 	public function api_secretary_read_member($member_id)
@@ -308,7 +308,7 @@ class ApiController extends \Controller
 		if (!$member_is_member && $member->is_member())
 			$this->_send_welcome_mail($member);
 
-		return ['success' => true, 'url' => ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $member->get_absolute_url()];
+		return ['success' => true, 'url' => $member->get_absolute_path(true)];
 	}
 
 	private function _send_welcome_mail(\DataIterMember $member)

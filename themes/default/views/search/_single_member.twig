@@ -15,7 +15,7 @@
 	</figure>
 	<div class="profile-info">
 		<h2 class="title is-5">
-			<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result|full_name }}</a>
+			<a href="{{ result.absolute_path|e('html_attr') }}" data-search-main-link>{{ result|full_name }}</a>
 		</h2>
 		{% if status is not null %}
 			<p class="subtitle is-7">{{ status }}</p>

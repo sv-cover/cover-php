@@ -103,7 +103,7 @@ class SearchController extends \Controller
 			$results = $this->_query($query, $errors, $timings);
 
 			if (isset($_GET['im_feeling']) && $_GET['im_feeling'] == 'lucky' && count($results) > 0)
-				return $this->view->redirect($results[0]->get_absolute_url(), false, ALLOW_SUBDOMAINS);
+				return $this->view->redirect($results[0]->get_absolute_path(), false, ALLOW_SUBDOMAINS);
 		}
 
 		return $this->view->render('index.twig', compact('query', 'query_parts', 'results', 'errors', 'timings'));

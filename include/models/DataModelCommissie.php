@@ -2,6 +2,9 @@
 	require_once 'include/search.php';
 	require_once 'include/data/DataModel.php';
 	require_once 'include/models/DataModelMember.php';
+	require_once 'include/router.php';
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 	
 	class DataIterCommissie extends DataIter implements SearchResult
 	{
@@ -60,9 +63,11 @@
 			return 'committee';
 		}
 
-		public function get_absolute_url()
+		public function get_absolute_path($url = false)
 		{
-			return sprintf('commissies.php?commissie=%s', urlencode($this->get('login')));
+			$router = get_router();
+			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+			return $router->generate('committees', ['commissie' => $this->get('login')], $reference_type);
 		}
 
 		public function has_vacancy_deadline()

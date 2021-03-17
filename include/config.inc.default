@@ -33,8 +33,9 @@
 
 		// Optionally you can configure a different url for the photos, e.g.
 		// https://www.svcover.nl/fotoboek.php?view=scaled for when you don't
-		// have access to the photos locally.
-		'url_to_scaled_photo' => 'fotoboek.php?view=scaled',
+		// have access to the photos locally. Remove or set null for default 
+		// value based on router.
+		'url_to_scaled_photo' => null,
 
 		'path_to_scaled_photo' => 'tmp/photos/%d/%dx%d.jpg',
 

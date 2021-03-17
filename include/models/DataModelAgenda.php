@@ -1,6 +1,9 @@
 <?php
 	require_once 'include/data/DataModel.php';
 	require_once 'include/search.php';
+	require_once 'include/router.php';
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 	
 	class DataIterAgenda extends DataIter implements SearchResult
 	{
@@ -32,9 +35,11 @@
 			return 'agendapunt';
 		}
 
-		public function get_absolute_url()
+		public function get_absolute_path($url = false)
 		{
-			return sprintf('agenda.php?agenda_id=%d', $this->get_id());
+			$router = get_router();
+			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+			return $router->generate('calendar', ['agenda_id' => $this->get_id()], $reference_type);
 		}
 
 		public function get_van_datetime()

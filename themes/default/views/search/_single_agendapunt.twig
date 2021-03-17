@@ -1,6 +1,6 @@
 {% from '@theme/agenda/macros.twig' import format_period_short %}
 <h2 class="title is-5">
-	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.kop }}</a>
+	<a href="{{ result.absolute_path|e('html_attr') }}" data-search-main-link>{{ result.kop }}</a>
     <small>
         {{ result.van|date('Y, M j') }}
     </small>

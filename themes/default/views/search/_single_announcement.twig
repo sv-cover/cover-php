@@ -1,5 +1,5 @@
 <h2 class="title is-5">
-	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.subject }}</a>
+	<a href="{{ result.absolute_path|e('html_attr') }}" data-search-main-link>{{ result.subject }}</a>
 </h2>
 <p class="subtitle is-7">
     {{ __('Announcement from %s on %s')|format(

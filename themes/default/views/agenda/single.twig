@@ -81,7 +81,7 @@
 
 {% if mutation %}
 	<div class="notification is-danger">
-		<p>{{ __('There is <a href="%s">a change on this activity</a> that is not yet published.')|format(mutation.get_absolute_url()|e('html'))|raw }}</p>
+		<p>{{ __('There is <a href="%s">a change on this activity</a> that is not yet published.')|format(mutation.get_absolute_path()|e('html'))|raw }}</p>
 	</div>
 {% endif %}
 
