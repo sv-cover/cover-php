@@ -1,7 +1,7 @@
 <nav class="navbar is-cover is-fixed-top" role="navigation" aria-label="main navigation">
 	<div class="container is-fullhd is-flex">
 		<div class="navbar-brand is-inline-flex">
-			<a role="button" class="navbar-burger is-hoverable" aria-label="menu" aria-expanded="false" data-trigger data-target="navbar-main" tabindex=0 >
+			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-trigger data-target="navbar-main" tabindex=0 >
 				<span aria-hidden="true"></span>
 				<span aria-hidden="true"></span>
 				<span aria-hidden="true"></span>
@@ -15,7 +15,7 @@
 			<div class="navbar-start">
 			{% for menu_id, menu in view.layout.top_menu %}
 				{% if menu.submenu is defined %}
-					<div class="navbar-item has-dropdown is-hoverable">
+					<div class="navbar-item has-dropdown">
 						<a class="navbar-link is-arrowless"{% if menu.title is defined %} title="{{ menu.title }}"{% endif %} tabindex="0">
 							{{ menu.label }}
 						</a>

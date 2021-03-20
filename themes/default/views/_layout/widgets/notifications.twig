@@ -9,7 +9,7 @@
     {% set force_notification = user_is_unconfirmed %}
 
     {% if has_notification or user_can_moderate_agenda %}
-        <div class="navbar-item has-dropdown is-hoverable-desktop notifications {% if has_notification %}has-unread{% endif %}">
+        <div class="navbar-item has-dropdown notifications {% if has_notification %}has-unread{% endif %}">
             <a class="navbar-link is-arrowless" tabindex="0">
                 <span class="icon">
                     <i class="fas fa-bell"></i>

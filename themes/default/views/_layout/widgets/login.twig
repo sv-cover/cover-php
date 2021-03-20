@@ -1,5 +1,5 @@
 {% if global.auth.logged_in %}
-<div class="navbar-item has-dropdown is-hoverable-desktop user {% if global.identity.can_impersonate and global.identity.is_impersonating %}is-impersonating{% endif %}">
+<div class="navbar-item has-dropdown user {% if global.identity.can_impersonate and global.identity.is_impersonating %}is-impersonating{% endif %}">
     <a class="navbar-link is-arrowless profile" tabindex="0">
         <span class="icon">
             {# <i class="fas fa-user"></i> #}
