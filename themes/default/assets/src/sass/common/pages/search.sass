@@ -23,23 +23,22 @@ $search-result-internal-spacing: .5rem
             &::after,
             &::before
                 content: ' ' // unicode no-break space
-        .search-activity-meta
-            display: flex
-            flex-wrap: wrap
-            max-width: 100%
+
+        .search-result-meta
             margin-bottom: $search-result-internal-spacing
             .property
-                flex-basis: 100%
-                white-space: nowrap
                 &.is-truncated
+                    white-space: nowrap
                     overflow: hidden
                     text-overflow: ellipsis
+                    vertical-align: top
+            .divider
+                display: none
             +from($tablet)
-                flex-wrap: nowrap
-                .property
-                    flex-basis: auto
-                    + .property
-                        margin-left: 1rem
+                li,
+                .divider
+                    display: inline-block
+
         .search-photos
             height: 150px
             overflow: hidden

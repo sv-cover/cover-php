@@ -1,0 +1,47 @@
+<h2 class="title is-5">
+	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.title }}</a>
+</h2>
+<p class="subtitle is-7">
+    {{ __('Vacancy at') }}
+    {% if result.partner %}
+        <a href="{{ result.partner.absolute_url }}">
+            {{ result.partner.name }}
+        </a>
+    {% else %}
+        <a href="/vacancies.php?query=&amp;partner[]={{ result.partner_name }}">
+            {{ result.partner_name }}
+        </a>
+    {% endif %}
+</p>
+<ul class="search-result-meta is-size-7">
+{% spaceless %}
+    <li class="property" title="{{ __('Job type') }}">
+        <span class="icon is-small">
+            <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+            <span class="is-sr-only">{{ __('Job type') }}:</span>    
+        </span>
+        {{ global.views.vacancies.type_options[result.type] }}
+    </li>
+    <li class="divider" role="separator"></li>
+    <li class="property" title="{{ __('Skill level') }}">
+        <span class="icon is-small">
+            <i class="fas fa-user-graduate" aria-hidden="true"></i>
+            <span class="is-sr-only">{{ __('Skill level') }}:</span>    
+        </span>
+        {{ global.views.vacancies.study_phase_options[result.study_phase] }}
+    </li>
+{% endspaceless %}
+</ul>
+<div class="content">
+    {% set content = result.description|strip_markup|excerpt(query_parts, 150) %}
+    {% if content %}
+        {{ content|raw }}
+    {% else %}
+        {% spaceless %}
+            {{ result.description|strip_markup|slice(0, 150) }}
+            {% if result.description|strip_markup|length > 150 %}
+                <span class="glue">…</span>
+            {% endif %}
+        {% endspaceless %}
+    {% endif %}
+</div>

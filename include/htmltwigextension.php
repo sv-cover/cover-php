@@ -406,8 +406,11 @@ class HTMLTwigExtension extends Twig_Extension
 		$for = isset($params['for']) ? $params['for'] : sprintf('field-%s', $field);
 		
 		if (isset($params['errors']) && ((is_array($params['errors']) && in_array($field, $params['errors'])) || isset($params['errors'][$field]))) {
-			$params['class'] = (isset($params['class']) ? ($params['class'] . '_') : '') . 'error';
-			$classes[] = 'label_error';
+			if (isset($params['class']))
+				$params['class'] = $params['class'] . ' is-danger';
+			else
+				$params['class'] = 'is-danger';
+			$classes[] = 'is-danger';
 		}
 
 		if (isset($params['required']) && $params['required']) {
