@@ -9,7 +9,7 @@
     </div>
     <div class="level-right buttons">
         {% if user_can_create controller.new_iter %}
-            <a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">
+            <a href="{{ path('partners', {view: 'create'}) }}" class="button">
                 {{ __('New partner')  }}
             </a>
         {% endif %}
@@ -31,7 +31,7 @@
         {% for partner in iters %}
             <tr>
                 <td class="is-nowrap">
-                    <a href="{{ controller.link_to_read(partner) }}">
+                    <a href="{{ path('partners', {id: partner.id}) }}">
                         {{ partner.name }}
                     </a>
                 </td>
@@ -55,7 +55,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="/vacancies.php?query=&amp;partner[]={{ partner.id }}">
+                    <a href="{{ path('vacancies', {'partner[]': partner.id}) }}">
                         {{ partner.vacancies|length }}
                     </a>
                 </td>
@@ -64,7 +64,7 @@
                         {% spaceless %}
                             {% if user_can_delete partner %}
                                 <li>
-                                    <a href="{{ controller.link_to_delete(partner) }}" title="{{ __('Delete partner') }}"  data-popup="modal">
+                                    <a href="{{ path('partners', {view: 'delete', id: partner.id}) }}" title="{{ __('Delete partner') }}"  data-popup="modal">
                                         <span class="icon is-small">
                                             <i class="fas fa-trash" aria-hidden="true"></i>
                                         </span>
@@ -76,7 +76,7 @@
                             {% endif %}
                             {% if user_can_update partner %}
                                 <li>
-                                    <a href="{{ controller.link_to_update(partner) }}" title="{{ __('Modify partner') }}">
+                                    <a href="{{ path('partners', {view: 'update', id: partner.id}) }}" title="{{ __('Modify partner') }}">
                                         <span class="icon is-small">
                                             <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                         </span>

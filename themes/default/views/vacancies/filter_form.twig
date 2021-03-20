@@ -1,4 +1,4 @@
-<form method="GET" action="/vacancies.php" data-auto-submit data-allow-submit-on-enter data-use-native-submit data-visibility-selector="[data-filter-tags]">
+<form method="GET" action="{{ path('vacancies') }}" data-auto-submit data-allow-submit-on-enter data-use-native-submit data-visibility-selector="[data-filter-tags]">
     <div class="field has-addons">
         <div class="control is-expanded">
             {{ html_label(__('Search'), 'query', class='is-sr-only') }}
@@ -16,7 +16,7 @@
     <div class="field is-grouped is-grouped-multiline">
         {% if has_all_button is defined and has_all_button %}
             <div class="control">
-                <a href="/vacancies.php" class="button">{{ __('All vacancies') }}</a>
+                <a href="{{ path('vacancies') }}" class="button">{{ __('All vacancies') }}</a>
             </div>
         {% endif %}
         <div class="control">

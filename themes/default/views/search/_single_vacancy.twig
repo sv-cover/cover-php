@@ -1,14 +1,14 @@
-<h2 class="title is-5">
-	<a href="{{ result.absolute_url|e('html_attr') }}" data-search-main-link>{{ result.title }}</a>
+F<h2 class="title is-5">
+	<a href="{{ result.absolute_path }}" data-search-main-link>{{ result.title }}</a>
 </h2>
 <p class="subtitle is-7">
     {{ __('Vacancy at') }}
     {% if result.partner %}
-        <a href="{{ result.partner.absolute_url }}">
+        <a href="{{ result.partner.absolute_path }}">
             {{ result.partner.name }}
         </a>
     {% else %}
-        <a href="/vacancies.php?query=&amp;partner[]={{ result.partner_name }}">
+        <a href="{{ path('vacancies', {'partner[]': result.partner_name}) }}">
             {{ result.partner_name }}
         </a>
     {% endif %}

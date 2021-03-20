@@ -7,7 +7,7 @@
 <div class="container has-sidebar block">
     <div class="level is-mobile controls">
         <div class="level-left">
-            <a href="{{ controller.link({}) }}" class="button">
+            <a href="{{ path('vacancies') }}" class="button">
                 <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
                 <span>{{__('All vacancies')}}</span>
             </a>
@@ -27,7 +27,7 @@
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 {% if user_can_update iter %}
-                                    <a href="{{ controller.link_to_update(iter) }}" class="dropdown-item">
+                                    <a href="{{ path('vacancies', {view: 'update', id: iter.id}) }}" class="dropdown-item">
                                         <span class="icon">
                                             <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                         </span>
@@ -35,7 +35,7 @@
                                     </a>
                                 {% endif %}
                                 {% if user_can_delete iter %}
-                                    <a href="{{ controller.link_to_delete(iter) }}" class="dropdown-item" data-popup="modal">
+                                    <a href="{{ path('vacancies', {view: 'delete', id: iter.id}) }}" class="dropdown-item" data-popup="modal">
                                         <span class="icon">
                                             <i class="fas fa-trash" aria-hidden="true"></i>
                                         </span>
@@ -68,7 +68,7 @@
                             <span class="is-sr-only">{{ __('Company') }}:</span>    
                         </span>
                         {% if iter.partner %}
-                            <a href="{{ iter.partner.absolute_url }}">
+                            <a href="{{ iter.partner.absolute_path }}">
                                 {{ iter.partner.name }}
                             </a>
                         {% else %}

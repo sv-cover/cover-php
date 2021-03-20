@@ -27,7 +27,7 @@
 	<div class="field">
 		{{ html_label(__('Part of'), 'parent', errors=errors, required=false) }}
 		<div class="control">
-			<a href="fotoboek.php?book={{ book.parent.id }}" id="parent">{{ book.parent.titel }}</a>
+			<a href="{{ path('photos', {book: book.parent.id}) }}" id="parent">{{ book.parent.titel }}</a>
 		</div>
 	</div>
 

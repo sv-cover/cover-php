@@ -1,15 +1,18 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerVacancies extends ControllerCRUD
+class VacanciesController extends \ControllerCRUD
 {
+    protected $view_name = 'vacancies';
 
-	public function __construct()
+	public function __construct($request, $router)
 	{
-		$this->model = get_model('DataModelVacancy');
+		$this->model = \get_model('DataModelVacancy');
 
-		$this->view = View::byName('vacancies', $this);
+        parent::__construct($request, $router);
 	}
 
     protected function _index()
@@ -23,6 +26,3 @@ class ControllerVacancies extends ControllerCRUD
 		return markup_parse($_POST['description']);
 	}
 }
-
-$controller = new ControllerVacancies();
-$controller->run();

@@ -30,6 +30,10 @@ calendar:
   path: /calendar
   controller: App\Controller\CalendarController
 
+career:
+  path: /career
+  controller: App\Controller\CareerController
+
 clubs:
   path: /clubs
   controller: App\Controller\ClubsController
@@ -72,10 +76,6 @@ mailing_lists:
   path: /mailing_lists
   controller: App\Controller\MailingListsController
 
-password:
-  path: /password
-  controller: App\Controller\PasswordController
-
 page.create:
   path: /page/create
   controller: App\Controller\PageController
@@ -93,6 +93,14 @@ page:
   controller: App\Controller\PageController
   defaults:
     view: read
+
+partners:
+  path: /partners
+  controller: App\Controller\PartnersController
+
+password:
+  path: /password
+  controller: App\Controller\PasswordController
 
 photos:
   path: /photos
@@ -129,6 +137,9 @@ stickers:
   path: /stickers
   controller: App\Controller\StickersController
 
+vacancies:
+  path: /vacancies
+  controller: App\Controller\VacanciesController
 
 legacy:
   path: /{name}.php
@@ -156,6 +167,9 @@ legacy:
       boeken:
         controller: App\Controller\BooksController
         parameters: { _route: books }
+      career:
+        controller: App\Controller\CareerController
+        parameters: { _route: career }
       clubs:
         controller: App\Controller\ClubsController
         parameters: { _route: clubs }
@@ -183,6 +197,9 @@ legacy:
       mailinglijsten:
         controller: App\Controller\MailingListsController
         parameters: { _route: mailing_lists }
+      partners:
+        controller: App\Controller\PartnersController
+        parameters: { _route: partners }
       profiel:
         controller: App\Controller\ProfileController
         parameters: { _route: profile }
@@ -204,6 +221,9 @@ legacy:
       stickers:
         controller: App\Controller\StickersController
         parameters: { _route: stickers }
+      vacancies:
+        controller: App\Controller\VacanciesController
+        parameters: { _route: vacancies }
       wachtwoordvergeten:
         controller: App\Controller\PasswordController
         parameters: { _route: password }

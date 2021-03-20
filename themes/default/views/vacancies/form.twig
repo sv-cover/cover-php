@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Edit vacancy') : __('New vacancy') }}</h1>
-<form method="post" action="{{ view.get_form_action(iter) }}">
+<form method="post" action="{{ (iter and iter.has_id) ? path('vacancies', {view:  'update', id: iter.id}) : path('vacancies', {view: 'create'}) }}">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
@@ -21,7 +21,8 @@
 	<div class="field">
 		{{ html_label(__('Company'), 'partner_name', errors=errors, required=true) }}
 		<div class="control">
-			{{ html_input_text('partner_name', iter, errors=errors, data_autocomplete='partner_name', data_autocomplete_src='/partners.php?view=autocomplete&search=') }} {# required is validated server side only, because XOR condition #}
+			{# TODO: this workd, but placeholder for search would be better #}
+			{{ html_input_text('partner_name', iter, errors=errors, data_autocomplete='partner_name', data_autocomplete_src=path('partners', {view: 'autocomplete', search: ''})) }} {# required is validated server side only, because XOR condition #}
 			{{ html_input_hidden('partner_id', iter.partner_id, data_partner_id_field=true, data_partner_name=iter.partner ? iter.partner.name : '') }}
 		</div>
 		<p class="help">
@@ -72,7 +73,7 @@
 				<div id="description-tab" class="is-active">
 					{{ html_textarea_field('description', iter, errors=errors, required=true, rows=10) }}
 				</div>
-				<div id="description-preview-tab" class="content-preview box content" data-preview-source="#description-tab textarea" data-preview-url="vacancies.php?view=preview">
+				<div id="description-preview-tab" class="content-preview box content" data-preview-source="#description-tab textarea" data-preview-url="{{ path('vacancies', {view: 'preview'}) }}">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
@@ -83,9 +84,9 @@
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify vacancy') : __('Create vacancy') }}</button>
 			{% if iter.has_id %}
-				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Back to vacancy') }}</a>
+				<a href="{{ path('vacancies', {id: iter.id}) }}" class="button">{{ __('Back to vacancy') }}</a>
 			{% else %}
-				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to all vacancies') }}</a>
+				<a href="{{ path('vacancies') }}" class="button">{{ __('Back to all vacancies') }}</a>
 			{% endif %}
 		</div>
 	</div>

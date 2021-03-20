@@ -1,14 +1,12 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/controllers/Controller.php';
 
-class ControllerCareer extends Controller
+class CareerController extends \Controller
 {
-
-	public function __construct()
-	{
-		$this->view = View::byName('career', $this);
-	}
+    protected $view_name = 'career';
 
     public function run_impl()
     {
@@ -21,6 +19,3 @@ class ControllerCareer extends Controller
         return $this->view->render_index($partners);
     }
 }
-
-$controller = new ControllerCareer();
-$controller->run();

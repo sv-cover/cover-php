@@ -30,7 +30,7 @@
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
-                                <a href="{{ link('editable.update', editable=header) }}" class="dropdown-item">
+                                <a href="{{ path('page', {view: 'update', id: header.id}) }}" class="dropdown-item">
                                     {{ __('Modify header') }}
                                 </a>
                             </div>
@@ -71,12 +71,12 @@
                             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                                 <div class="dropdown-content">
                                     {% if vacancies_page and user_can_update vacancies_page %}
-                                        <a href="{{ link('editable.update', editable=vacancies_page) }}" class="dropdown-item">
+                                        <a href="{{ path('page', {view: 'update', id: vacancies_page.id}) }}" class="dropdown-item">
                                             {{ __('Modify description') }}
                                         </a>
                                     {% endif %}
                                     {% if user_can_create global.models.Vacancy.new_iter() %}
-                                        <a href="/vacancies.php?view=create" class="dropdown-item">
+                                        <a href="{{ path('vacancies', {view: 'create'}) }}" class="dropdown-item">
                                             {{ __('New vacancy') }}
                                         </a>
                                     {% endif %}
@@ -121,12 +121,12 @@
                             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                                 <div class="dropdown-content">
                                     {% if partners_page and user_can_update partners_page %}
-                                        <a href="{{ link('editable.update', editable=partners_page) }}" class="dropdown-item">
+                                        <a href="{{ path('page', {view: 'update', id: partners_page.id}) }}" class="dropdown-item">
                                             {{ __('Modify description') }}
                                         </a>
                                     {% endif %}
                                     {% if user_can_create global.models.Partner.new_iter() %}
-                                        <a href="/partners.php" class="dropdown-item">
+                                        <a href="{{ path('partners') }}" class="dropdown-item">
                                             {{ __('Manage partners') }}
                                         </a>
                                     {% endif %}
@@ -144,7 +144,7 @@
             <ul class="columns is-mobile is-multiline">
                 {% for partner in partners %}
                     <li class="column is-half-mobile is-one-third-tablet">
-                        <a href="{{ partner.absolute_url }}" class="partner-profile" alt="{{ partner.name }}">
+                        <a href="{{ partner.absolute_path }}" class="partner-profile" alt="{{ partner.name }}">
                             <figure class="image is-3by2">
                                 {% if partner.logo_dark_url %}
                                     <img class="darkmode" src="{{ partner.get_logo_dark(700) }}">

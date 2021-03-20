@@ -49,7 +49,7 @@ class LayoutViewHelper
 
 		$menus['career'] = [
 			'label' => __('Career'),
-			'url' => '/career.php'
+			'url' => $this->router->generate('career'),
 		];
 
 		$menus['vereniging'] = [
@@ -270,7 +270,7 @@ class LayoutViewHelper
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'partners.php',
+				'url' => $this->router->generate('partners'),
 				'label' => __('Partners'),
 				'title' => __('All partner profiles and banners.')
 			];

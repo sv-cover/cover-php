@@ -239,7 +239,7 @@ class ProfileController extends \Controller
 
 		$_SESSION['alert'] = __('Your password has been changed.');
 
-		return $this->view->redirect('Location: profiel.php?lid=' . $iter['id'] . '&view=profile');
+		return $this->view->redirect($this->generate_url('profile', ['lid' => $iter['id'], 'view' => 'profile']));
 	}
 
 	protected function _update_privacy(\DataIterMember $iter)

@@ -10,8 +10,8 @@
             <h1 class="title">{{ __('Vacancies') }}</h1>
         </div>
         <div class="level-right buttons">
-            {% if user_can_update header %}
-                <a href="{{ link('editable.update', editable=header) }}" class="button">
+            {% if header and user_can_update header %}
+                <a href="{{ path('page', {view: 'update', id: header.id}) }}" class="button">
                     <span class="icon">
                         <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                     </span>
@@ -19,7 +19,7 @@
                 </a>
             {% endif %}
             {% if user_can_create controller.new_iter %}
-                <a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">
+                <a href="{{ path('vacancies', {view: 'create'}) }}" class="button">
                     <span class="icon">
                         <i class="fas fa-plus" aria-hidden="true"></i>
                     </span>
@@ -66,7 +66,7 @@
     <ul class="vacancy-list">
         {% for iter in iters %}
             <li class="vacancy {% if iter.partner %}has-image{% endif %}">
-                <a class="media" href="{{ controller.link_to_read(iter) }}">
+                <a class="media" href="{{ path('vacancies', {id: iter.id}) }}">
                     {% if iter.partner %}
                         <figure class="media-left image">
                             {% if iter.partner.logo_dark_url is defined %}

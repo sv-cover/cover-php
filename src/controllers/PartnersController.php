@@ -1,14 +1,18 @@
 <?php
+namespace App\Controller;
+
 require_once 'include/init.php';
 require_once 'include/controllers/ControllerCRUD.php';
 
-class ControllerPartners extends ControllerCRUD
+class PartnersController extends \ControllerCRUD
 {
-	public function __construct()
+    protected $view_name = 'partners';
+
+    public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelPartner');
 
-		$this->view = View::byName('partners', $this);
+        parent::__construct($request, $router);
 	}
 
     protected function _index()
@@ -40,7 +44,7 @@ class ControllerPartners extends ControllerCRUD
     public function run_index()
     {
         if (!get_policy($this->model)->user_can_update($this->new_iter()))
-            return $this->view->redirect('/career.php');
+            return $this->view->redirect($this->generate_url('career'));
         return parent::run_index();
     }
 
@@ -49,6 +53,3 @@ class ControllerPartners extends ControllerCRUD
         return markup_parse($_POST['profile']);
     }
 }
-
-$controller = new ControllerPartners();
-$controller->run();

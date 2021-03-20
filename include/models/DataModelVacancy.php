@@ -1,7 +1,9 @@
 <?php
 require_once 'include/search.php';
 require_once 'include/data/DataModel.php';
-require_once 'include/models/DataModelCommissie.php';
+require_once 'include/router.php';
+
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DataIterVacancy extends DataIter implements SearchResult
 {
@@ -117,9 +119,11 @@ class DataIterVacancy extends DataIter implements SearchResult
 		return 'vacancy';
 	}
 
-	public function get_absolute_url()
+	public function get_absolute_path($url = false)
 	{
-		return sprintf('vacancies.php?view=read&id=%d', $this->get_id());
+		$router = get_router();
+		$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
+		return $router->generate('vacancies', ['id' => $this->get_id()], $reference_type);
 	}
 
 	public function get_partner()

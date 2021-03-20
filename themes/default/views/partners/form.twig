@@ -5,7 +5,7 @@
 
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Edit partner') : __('New partner') }}</h1>
-<form method="post" action="{{ view.get_form_action(iter) }}">
+<form method="post" action="{{ (iter and iter.has_id) ? path('partners', {view:  'update', id: iter.id}) : path('partners', {view: 'create'}) }}">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
@@ -70,7 +70,7 @@
 				<div id="profile-tab" class="is-active">
 					{{ html_textarea_field('profile', iter, errors=errors, rows=10) }}
 				</div>
-				<div id="profile-preview-tab" class="content-preview box content" data-preview-source="#profile-tab textarea" data-preview-url="partners.php?view=preview">
+				<div id="profile-preview-tab" class="content-preview box content" data-preview-source="#profile-tab textarea" data-preview-url="{{ path('partners', {view: 'preview'}) }}">
 					<span class="loading">{{ __('Loading preview…') }}</span>
 				</div>
 			</div>
@@ -95,9 +95,9 @@
 				{{ iter.has_id ? __('Modify partner') : __('Create partner') }}
 			</button>
 			{% if iter.has_id %}
-				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Back to partner') }}</a>
+				<a href="{{ path('partners', {id: iter.id}) }}" class="button">{{ __('Back to partner') }}</a>
 			{% else %}
-				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to all partners') }}</a>
+				<a href="{{ path('partners') }}" class="button">{{ __('Back to all partners') }}</a>
 			{% endif %}
 		</div>
 	</div>
