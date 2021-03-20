@@ -56,6 +56,7 @@ class DataIterMailinglist extends DataIter
 				]
 			],
 			'publiek' => [
+				'is_checkbox' => true,
 				'clean' => function($value) {
 					// Bit of a hack because I chose to use the boolean type here in the
 					// database table instead of just an integer, which is used more often
@@ -88,11 +89,13 @@ class DataIterMailinglist extends DataIter
 				'required' => true
 			],
 			'has_members' => [
+				'is_checkbox' => true,
 				'clean' => function($value) {
 					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
 				}				
 			],
 			'has_contributors' => [
+				'is_checkbox' => true,
 				'clean' => function($value) {
 					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
 				}

@@ -18,7 +18,7 @@
                 <div class="user-info">
                     <a class="name" href="{{ path('profile', {lid: global.identity.member.id}) }}">
                         {{ global.identity.member.full_name }}
-                    </q>
+                    </a>
                     
                     {% if global.identity.can_impersonate %}
                         <a class="impersonate-link" href="{{ path('sessions', {view: 'overrides', referrer:global.server.REQUEST_URI}) }}" data-popup="modal">

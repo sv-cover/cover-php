@@ -18,20 +18,23 @@
     {% endif %}
 
 </p>
-<div class="search-activity-meta">
-    <div class="property">
+<ul class="search-result-meta is-size-7">
+{% spaceless %}
+    <li class="property" title="{{ __('Date & time') }}">
         <span class="icon is-small is-size-7"><i class="fas fa-calendar-day" aria-hidden="true"></i></span>
         <strong class="is-sr-only">{{ __('Date & time') }}</strong>
         {{ format_period_short(result) }}
-    </div>
+    </li>
     {% if result.locatie %}
-        <div class="property is-truncated">
+        <li class="divider" role="separator"></li>
+        <li class="property is-truncated" title="{{ __('Location') }}">
             <span class="icon is-small is-size-7"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
             <strong class="is-sr-only">{{ __('Location') }}</strong>
             {{ result.locatie }}
-        </div>
+        </li>
     {% endif %}
-</div>
+{% endspaceless %}
+</ul>
 <div class="content">
     {{ result.beschrijving|strip_markup|excerpt(query_parts, 50)|raw  }}
 </div>

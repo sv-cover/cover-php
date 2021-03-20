@@ -141,6 +141,9 @@ class View
 				'controllers' => new TwigAccessor(function($controller) {
 					return null;
 				}),
+				'views' => new TwigAccessor(function($view) {
+					return View::byName($view);
+				}),
 				'policies' => new TwigAccessor(function($model) {
 					return get_policy('DataModel' . $model);
 				}),

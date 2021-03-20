@@ -1,9 +1,12 @@
 <?php
+require_once 'include/models/DataModelPartner.php';
 
 use Symfony\Component\Routing\RouterInterface;
 
 class LayoutViewHelper
 {
+	private $_partners = null;
+
 	protected $router;
 
 	public function __construct($router)
@@ -31,13 +34,6 @@ class LayoutViewHelper
 			]
 		];
 
-		// $menus['leden'] = [
-		// 	'label' => __('Members'),
-		// 	'submenu' => [
-
-		// 	]
-		// ];
-
 		$menus['studie'] = [
 			'label' => __('Education'),
 			'submenu' => [
@@ -51,14 +47,9 @@ class LayoutViewHelper
 			]
 		];
 
-		$menus['bedrijven'] = [
+		$menus['career'] = [
 			'label' => __('Career'),
-			'submenu' => [
-				['url' => $this->router->generate('page', ['id' => 51]), 'label' => __('Company profiles')],
-				['url' => $this->router->generate('page', ['id' => 54]), 'label' => __('Vacancies')],
-				['url' => $this->router->generate('page', ['id' => 31]), 'label' => __('Internships/Graduate programs')],
-				['url' => $this->router->generate('page', ['id' => 56]), 'label' => __('Sponsorship opportunities')]
-			]
+			'url' => '/career.php'
 		];
 
 		$menus['vereniging'] = [
@@ -91,28 +82,10 @@ class LayoutViewHelper
 			]
 		];
 
-		// $menus['forum'] = [
-		// 	'url' => 'forum.php',
-		// 	'label' => __('Forum')
-		// ];
-
-		// $menus['fotoboek'] = [
-		// 	'url' => 'fotoboek.php',
-		// 	'label' => __('Photos'),
-		// 	'title' => __('Photos of activities of Cover.')
-		// ];
-
 		$menus['contact'] = [
 			'label' => __('Contact'),
 			'url' => $this->router->generate('contact'),
 		];
-
-		// $menus['admin'] = [
-		// 	'label' => __('Tools'),
-		// 	'title' => __('These are tools available to you because you are a member of a committee.'),
-		// 	'className' => 'authorized-only',
-		// 	'submenu' => []
-		// ];
 		
 		// Filter out any empty menu items (I'm looking at you, admin menu!)
 		$menus = array_filter($menus, function($menu) {
@@ -291,6 +264,16 @@ class LayoutViewHelper
 					'icon_color' => 'light'
 				],
 			];
+			$tools['admin']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-building',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
+				'url' => 'partners.php',
+				'label' => __('Partners'),
+				'title' => __('All partner profiles and banners.')
+			];
 		}
 
 		
@@ -320,6 +303,33 @@ class LayoutViewHelper
 		$model = get_model('DataModelAgenda');
 
 		return array_filter($model->get_agendapunten(), [get_policy($model), 'user_can_read']);
+	}
+
+	protected function _get_partners(Array $include = [], Array $exclude = [])
+	{
+		if (!isset($this->_partners)) {
+			$model = get_model('DataModelPartner');
+			$this->_partners = array_filter($model->find(['has_banner_visible' => 1]), [get_policy($model), 'user_can_read']);
+			$model->shuffle($this->_partners);
+		}
+
+		if (!empty($include) || !empty($exclude))
+			return array_filter($this->_partners, function($partner) use ($include, $exclude) {
+				return (empty($include) || in_array($partner['type'], $include))
+					&& (empty($exclude) || !in_array($partner['type'], $exclude));
+			});
+
+		return $this->_partners;
+	}
+
+	public function partners()
+	{
+		return $this->_get_partners([], [DataModelPartner::TYPE_MAIN_SPONSOR]);
+	}
+
+	public function main_partners()
+	{
+		return $this->_get_partners([DataModelPartner::TYPE_MAIN_SPONSOR]);
 	}
 
 	public function jarigen()
