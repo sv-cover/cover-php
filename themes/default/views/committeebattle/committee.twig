@@ -33,10 +33,10 @@
 				<td>{{ score.points }}</td>
 				<td  class="has-text-right">
 					{% if user_can_update score %}
-						<a href="{{ controller.link_to_update(score)|e('html_attr') }}" class="button">{{ __('Edit') }}</a>
+						<a href="{{ path('committee_battle', {view: 'update', id: score.id}) }}" class="button">{{ __('Edit') }}</a>
 					{% endif %}
 					{% if user_can_delete score %}
-						<a href="{{ controller.link_to_delete(score)|e('html_attr') }}" class="button">{{ __('Delete') }}</a>
+						<a href="{{ path('committee_battle', {view: 'delete', id: score.id}) }}" class="button">{{ __('Delete') }}</a>
 					{% endif %}
 				</td>
 			</tr>

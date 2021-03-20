@@ -12,12 +12,12 @@
 	</div>
 	<div class="level-right buttons">		
 		{% if user_can_create form.new_entry(global.identity.member) %}
-			<a href="{{ controller.link({'view': 'create_entry', 'form': form.id, 'action': 'modal'}) }}" class="button" data-popup="modal">{{ __('New sign-up') }}</a>
+			<a href="{{ path('signup', {'view': 'create_entry', 'form': form.id, 'action': 'modal'}) }}" class="button" data-popup="modal">{{ __('New sign-up') }}</a>
 		{% endif %}
 		{% if user_can_update form %}
-			<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" class="button">{{ __('Modify form') }}</a>
+			<a href="{{ path('signup', {'view': 'update_form', 'form': form.id}) }}" class="button">{{ __('Modify form') }}</a>
 		{% endif %}
-		<a href="{{ controller.link({'view': 'export_entries', 'form': form.id}) }}" class="button">{{ __('Download as CSV') }}</a>
+		<a href="{{ path('signup', {'view': 'export_entries', 'form': form.id}) }}" class="button">{{ __('Download as CSV') }}</a>
 	</div>
 </header>
 
@@ -35,7 +35,7 @@
 {% endif %}
 
 <article class="block">
-	<form action="{{ controller.link({view: 'delete_entries', form: form.id}) }}" method="post">
+	<form action="{{ path('signup', {view: 'delete_entries', form: form.id}) }}" method="post">
 		{{ html_nonce('delete_entries', form) }}
 		<div class="table-container">
 			<table class="signup-entries-table table is-fullwidth is-hoverable">
@@ -60,7 +60,7 @@
 							<tr>
 								<td class="is-sticky"><input type="checkbox" name="entries[]" value="{{ entry.id }}"></td>
 								{% if user_can_update entry %}
-									<td><a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id}) }}">{{ loop.index }}</a></td>
+									<td><a href="{{ path('signup', {'view': 'update_entry', 'entry': entry.id}) }}">{{ loop.index }}</a></td>
 								{% else %}
 									<td>{{ loop.index }}</td>
 								{% endif %}
@@ -69,7 +69,7 @@
 								{% endfor %}
 								<td class="is-sticky is-right has-text-right is-vcentered">
 									{% if user_can_update entry %}
-										<a href="{{ controller.link({'view': 'update_entry', 'entry': entry.id, 'action': 'modal'}) }}" data-popup="modal" title="{{ __('Edit sign-up') }}">
+										<a href="{{ path('signup', {'view': 'update_entry', 'entry': entry.id, 'action': 'modal'}) }}" data-popup="modal" title="{{ __('Edit sign-up') }}">
 											<span class="icon is-small">
 												<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 											</span>

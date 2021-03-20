@@ -9,6 +9,7 @@
 	require_once 'include/controllers/ControllerCRUD.php';
 
 	use Symfony\Component\Routing\RouterInterface;
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 	use ZipStream\ZipStream;
 	
 	class PhotoCommentsController extends \ControllerCRUD
@@ -38,38 +39,34 @@
 			return $iter;
 		}
 
+		public function path(string $view, \DataIter $iter = null, bool $json = false)
+		{
+			$parameters = [];
+
+			if ($json)
+				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+
+			if ($view === 'read')
+			{
+				$parameters['photo'] = $this->photo['id'];
+				$parameters['book'] = $this->photo['scope']['id'];
+				return sprintf('%s#comment%d', $this->generate_url('photos', $parameters), $iter->get_id());
+			}
+
+			$parameters[$this->_var_view] = $view;
+			$parameters['photo'] = $this->photo['id'];
+			$parameters['book'] = $this->photo['scope']['id'];
+			$parameters['module'] = 'comments';
+
+			if (isset($iter))
+				$parameters[$this->_var_id] = $iter->get_id();
+
+			return $this->generate_url('photos', $parameters);
+		}
+
 		protected function _index()
 		{
 			return $this->model->get_for_photo($this->photo);
-		}
-
-		public function link(array $arguments)
-		{
-			$arguments['photo'] = $this->photo['id'];
-
-			$arguments['book'] = $this->photo['scope']['id'];
-
-			$arguments['module'] = 'comments';
-
-			return parent::link($arguments);
-		}
-
-		public function link_to_index()
-		{
-			return parent::link([
-				'photo' => $this->photo['id'],
-				'book' => $this->photo['scope']['id'],
-			]);
-		}
-
-		public function link_to_read(\DataIter $iter)
-		{
-			return sprintf('%s#comment%d', $this->link_to_index(), $iter->get_id());
-		}
-
-		public function link_to_like(\DataIter $iter)
-		{
-			return $this->link([$this->_var_view => 'likes', $this->_var_id => $iter->get_id()]);
 		}
 
 		public function run_likes(\DataIter $iter)
@@ -110,7 +107,12 @@
 					'likes' => $iter->get_likes(),
 				]);
 
-			return $this->view->redirect($this->link_to_read($iter));
+			$redirect_url = $this->generate_url('photos', [
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			]);
+
+			return $this->view->redirect(sprintf('%s#comment%d', $redirect_url, $iter->get_id()));
 		}
 	}
 
@@ -123,16 +125,6 @@
 			$this->model = get_model('DataModelPhotobookLike');
 
 			parent::__construct($request, $router);
-		}
-
-		public function link_to_photo()
-		{
-			$arguments = [
-				'photo' => $this->photo['id'],
-				'book' => $this->photo['scope']['id'],
-			];
-
-			return parent::link($arguments);
 		}
 
 		public function run()
@@ -173,7 +165,10 @@
 					'likes' => count($this->model->get_for_photo($this->photo))
 				]);
 
-			return $this->view->redirect($this->link_to_photo());
+			return $this->view->redirect($this->generate_url('photos', [
+				'photo' => $this->photo['id'],
+				'book' => $this->photo['scope']['id'],
+			]));
 		}
 	}
 
@@ -192,6 +187,26 @@
 			parent::__construct($request, $router, false); // make sure parent doesn't initiate a view
 
 			$this->view = new \CRUDView($this);
+		}
+
+		public function path(string $view, \DataIter $iter = null, bool $json = false)
+		{
+			$parameters = [
+				$this->_var_view => $view,
+				'photo' => $this->photo->get_id(),
+				'module' => 'faces',
+			];
+
+
+			if (isset($iter))
+			{
+				$parameters[$this->_var_id] = $iter->get_id();
+
+				if ($json)
+					$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+			}
+
+			return $this->generate_url('photos', $parameters);
 		}
 
 		protected function _create(\DataIter $iter, array $data, array &$errors)
@@ -249,15 +264,6 @@
 				'suggested_url' => $suggested_member ? $this->generate_url('profile', ['lid' => $suggested_member['id']]) : null,
 			];
 		}
-
-		public function link(array $arguments)
-		{
-			$arguments['photo'] = $this->photo->get_id();
-
-			$arguments['module'] = 'faces';
-
-			return parent::link($arguments);
-		}
 	}
 
 	class PhotoPrivacyController extends \Controller
@@ -275,16 +281,6 @@
 			parent::__construct($request, $router);
 		}
 
-		public function link_to_photo()
-		{
-			$arguments = [
-				'photo' => $this->photo['id'],
-				'book' => $this->photo['scope']['id'],
-			];
-
-			return parent::link($arguments);
-		}
-
 		protected function run_impl()
 		{
 			if (!get_auth()->logged_in())
@@ -300,7 +296,10 @@
 				else
 					$this->model->mark_visible($this->photo, $member);
 	
-				return $this->view->redirect($this->link_to_photo());
+				return $this->view->redirect($this->generate_url('photos', [
+					'photo' => $this->photo['id'],
+					'book' => $this->photo['scope']['id'],
+				]));
 			}
 			
 			return $this->view->render_privacy($this->photo, $this->model->is_visible($this->photo, $member) ? 'visible' : 'hidden');
@@ -489,7 +488,7 @@
 			{
 				$photo->set('beschrijving', $_POST['beschrijving']);
 				$this->model->update($photo);
-				return $this->view->redirect($this->link(['book' => $book->get_id(), 'photo' => $photo->get_id()]));
+				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id(), 'photo' => $photo->get_id()]));
 			}
 			
 			return $this->view->render_update_photo($book, $photo, null, []);
@@ -916,13 +915,13 @@
 		public function json_link_to_update_book_order(\DataIterPhotobook $book)
 		{
 			$nonce = nonce_generate(nonce_action_name('update_book_order', [$book]));
-			return $this->link(['view' => 'update_book_order', 'book' => $book['id'], '_nonce' => $nonce]);
+			return $this->generate_url('photos', ['view' => 'update_book_order', 'book' => $book['id'], '_nonce' => $nonce]);
 		}
 
 		public function json_link_to_update_photo_order(\DataIterPhotobook $book)
 		{
 			$nonce = nonce_generate(nonce_action_name('update_photo_order', [$book]));
-			return $this->link(['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
+			return $this->generate_url('photos', ['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
 		}
 
 		protected function run_impl()

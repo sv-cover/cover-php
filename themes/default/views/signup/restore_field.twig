@@ -7,7 +7,7 @@
 <div class="signup-form-field is-deleted" id="form-field-{{field.id}}">
 	<form 
         method="post"
-        action="{{ controller.link({view: 'restore_form_field', form: form.id, field: field.id}) }}"
+        action="{{ path('signup', {view: 'restore_form_field', form: form.id, field: field.id}) }}"
         data-partial-selector="#form-field-{{field.id}}"
         data-placement-selector="#form-field-{{field.id}}"
     >

@@ -8,6 +8,8 @@
 	require_once 'include/webcal.php';
 	require_once 'include/markup.php';
 	require_once 'include/controllers/ControllerCRUD.php';
+
+	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 	
 	class CalendarController extends \ControllerCRUD
 	{
@@ -20,6 +22,23 @@
 			$this->model = get_model('DataModelAgenda');
 
 			parent::__construct($request, $router);
+		}
+
+		public function path(string $view, \DataIter $iter = null, bool $json = false)
+		{
+			$parameters = [
+				'view' => $view,
+			];
+
+			if (isset($iter))
+			{
+				$parameters['id'] = $iter->get_id();
+
+				if ($json)
+					$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+			}
+
+			return $this->generate_url('calendar', $parameters);
 		}
 		
 		public function _check_datum($name, $value)
@@ -391,7 +410,7 @@
 					: sprintf('%s: %s', $punt['committee__naam'], $punt['kop']);
 				$event->description = markup_strip($punt['beschrijving']);
 				$event->location = $punt->get('locatie');
-				$event->url = path_concat(ROOT_DIR_URI, $this->link_to_read($punt));
+				$event->url = $this->generate_url('calendar', ['agenda_id' => $punt->get_id()], UrlGeneratorInterface::ABSOLUTE_URL);
 				$cal->add_event($event);
 			}
 

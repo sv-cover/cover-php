@@ -12,7 +12,7 @@
 	</div>
 	{% if user_can_create controller.new_iter %}
 		<div class="level-right buttons">
-			<a href="{{ controller.link_to_create() }}" class="button">{{ __('New committee') }}</a>
+			<a href="{{ path('committees', {view: 'create'}) }}" class="button">{{ __('New committee') }}</a>
 		</div>
 	{% endif %}
 </div>
@@ -36,7 +36,7 @@
 					<td>{{ view.available_committee_types[committee.type] }}</td>
 					<td class="has-text-right">
 						{% if not committee.hidden and user_can_delete committee %}
-							<a href="{{ controller.link_to_delete(committee) }}" data-popup="modal">
+							<a href="{{ path('committees', {view: 'delete', commissie: committee.login}) }}" data-popup="modal">
 								<span class="icon">
 									<i class="fas fa-trash" aria-hidden="true"></i>
 								</span>
@@ -44,7 +44,7 @@
 							</a>
 						{% endif %}
 						{% if user_can_update committee %}
-							<a href="{{ controller.link_to_update(committee) }}">
+							<a href="{{ path('committees', {view: 'update', commissie: committee.login}) }}">
 								<span class="icon">
 									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 								</span>
@@ -75,7 +75,7 @@
 					<td>{{ view.available_committee_types[committee.type] }}</td>
 					<td class="has-text-right">
 						{% if user_can_update committee %}
-							<a href="{{ controller.link_to_update(committee) }}">
+							<a href="{{ path('committees', {view: 'update', commissie: committee.login}) }}">
 								<span class="icon">
 									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 								</span>

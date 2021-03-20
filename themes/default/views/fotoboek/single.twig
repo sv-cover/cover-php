@@ -46,7 +46,7 @@
                     data-preview="{{ photo.get_url(null, 400) }}"
                 > 
             </picture>
-            <figcaption class="faces" hidden data-api-url="{{ controller.faces_controller.link([]) }}">
+            <figcaption class="faces" hidden data-api-url="{{ path('photos', {module: 'faces', photo: photo.id}) }}">
                 <template class="face-template">
                     <div class="face">
                         <button class="delete is-small" type="button" data-delete hidden></button>

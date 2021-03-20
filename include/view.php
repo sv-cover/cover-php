@@ -239,13 +239,6 @@ class View
 
 class CRUDView extends View
 {
-	public function get_form_action(DataIter $iter = null)
-	{
-		return $iter && $iter->has_id()
-			? $this->controller->link_to_update($iter)
-			: $this->controller->link_to_create();
-	}
-
 	public function get_label(DataIter $iter = null, $create_label, $update_label)
 	{
 		return $iter && $iter->has_id() ? $update_label : $create_label;
@@ -260,7 +253,7 @@ class CRUDView extends View
 
 			default:
 				if ($success)
-					return $this->redirect($this->controller->link_to_index());
+					return $this->redirect($this->controller->path('index'));
 				else
 					return $this->render('confirm_delete.twig', compact('iter', 'errors'));
 		}
@@ -278,7 +271,7 @@ class CRUDView extends View
 
 			default:
 				if ($success)
-					return $this->redirect($this->controller->link_to_read($iter));
+					return $this->redirect($this->controller->path('read', $iter));
 				else
 					return $this->render('form.twig', compact('iter', 'errors'));
 		}
@@ -308,7 +301,7 @@ class CRUDView extends View
 
 			default:
 				if ($success)
-					return $this->redirect($this->controller->link_to_read($iter));
+					return $this->redirect($this->controller->path('read', $iter));
 				else
 					return $this->render('form.twig', compact('iter', 'errors'));
 		}
@@ -339,8 +332,8 @@ class CRUDView extends View
 
 		$new_iter = $this->controller->model()->new_iter();
 
-		if (get_policy($new_iter)->user_can_create($new_iter)) 
-			$links['create'] = $this->controller->json_link_to_create();
+		if (get_policy($new_iter)->user_can_create($new_iter))
+			$links['create'] = $this->controller->path('create', $new_iter, true);
 
 		return $this->render_json(array(
 			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
@@ -355,13 +348,13 @@ class CRUDView extends View
 		$policy = get_policy($this->controller->model());
 
 		if ($policy->user_can_read($iter))
-			$links['read'] = $this->controller->json_link_to_read($iter);
+			$links['read'] = $this->controller->path('read', $iter, true);
 
 		if ($policy->user_can_update($iter))
-			$links['update'] = $this->controller->json_link_to_update($iter);
+			$links['update'] = $this->controller->path('update', $iter, true);
 
 		if ($policy->user_can_delete($iter))
-			$links['delete'] = $this->controller->json_link_to_delete($iter);
+			$links['delete'] = $this->controller->path('delete', $iter, true);
 
 		if (method_exists($this->controller, 'get_data_for_iter'))
 			$data = $this->controller->get_data_for_iter($iter);

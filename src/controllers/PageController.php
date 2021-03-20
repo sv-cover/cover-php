@@ -40,6 +40,29 @@ class PageController extends \ControllerCRUD
 		return $iter;
 	}
 
+	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	{
+		$parameters = [];
+
+		if ($json)
+			$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+
+		if ($view === 'create')
+			return $this->generate_url('page.create', $parameters);
+
+		if ($view === 'preview')
+			return $this->generate_url('page.preview', $parameters);
+
+		$parameters = [
+			'view' => $view,
+		];
+
+		if (isset($iter))
+			$parameters['id'] = $iter->get_id();
+
+		return $this->generate_url('page', $parameters);
+	}
+
 	protected function _update(\DataIter $iter, array $data, array &$errors)
 	{
 		$content_fields = ['content', 'content_en'];
@@ -130,7 +153,7 @@ class PageController extends \ControllerCRUD
 
 	public function run_index()
 	{
-		return $this->view->redirect('\\'); // we don't have no index/sitemap (yet)
+		return $this->view->redirect($this->generate_url('homepage')); // we don't have no index/sitemap (yet)
 	}
 
 	public function run_read(\DataIter $iter)

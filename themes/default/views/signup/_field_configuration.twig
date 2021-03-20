@@ -19,12 +19,12 @@
             </span>
         </button>
     </header>
-    <form id="field-{{field.id}}-update" class="card-content" action="{{ controller.link({view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-auto-submit-extra-data="{&quot;action&quot;:&quot;update&quot;}" data-auto-submit>
+    <form id="field-{{field.id}}-update" class="card-content" action="{{ path('signup', {view: 'update_form_field', form: form.id, field: field.id}) }}" method="post" data-auto-submit-extra-data="{&quot;action&quot;:&quot;update&quot;}" data-auto-submit>
         {{ html_nonce('update_form_field', form, field) }}
         {{ field.render_configuration(view, errors.namespace(field.id))|raw }}
     </form>
 
-    <form id="field-{{field.id}}-delete" class="signup-form-field-delete-form" action="{{ controller.link({view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
+    <form id="field-{{field.id}}-delete" class="signup-form-field-delete-form" action="{{ path('signup', {view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
         {{ html_nonce('delete_form_field', form, field) }}
     </form>
     

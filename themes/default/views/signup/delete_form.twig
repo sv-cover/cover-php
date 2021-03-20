@@ -6,7 +6,7 @@
 
 <div class="modal is-static">
     <div class="modal-card">
-        <form method="post" action="{{ controller.link({view: 'delete_form', 'form': form.id}) }}">
+        <form method="post" action="{{ path('signup', {view: 'delete_form', 'form': form.id}) }}">
             {{ html_nonce('delete_form', form) }}
             <header class="modal-card-head">
                 <p class="modal-card-title">{{ __('Delete form') }}</p>
@@ -18,7 +18,7 @@
                 </div>
             </section>
             <footer class="modal-card-foot">
-                <a href="{{ controller.link({view: 'update_form', form: form.id}) }}" class="button" data-dismiss="modal">{{ __('Back to form') }}</a>
+                <a href="{{ path('signup', {view: 'update_form', form: form.id}) }}" class="button" data-dismiss="modal">{{ __('Back to form') }}</a>
                 <button type="submit" class="button is-danger">{{ __('Delete form')  }}</button>
             </footer>
         </form>

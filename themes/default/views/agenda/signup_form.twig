@@ -52,7 +52,7 @@
 	{% endif %}
 	{% if user_can_create entry %}
 		<form action="{{ path('signup', {view: 'create_entry', form: form.id}) }}" method="post">
-			{{ html_input_hidden('return-path', controller.link_to_read(form.agenda_item)) }}
+			{{ html_input_hidden('return-path', path('calendar', {agenda_id: form.agenda_item.id})) }}
 			{{ html_input_hidden('member_id', entry.member_id) }}
 			
 			{% if entry.has_id %}

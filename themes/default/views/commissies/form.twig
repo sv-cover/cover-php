@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group') }}</h1>
-<form class="committees-form" method="post" action="{{ view.get_form_action(iter) }}">
+<form class="committees-form" method="post" action="{{ (iter and iter.has_id) ? path('committees', {view:  'update', id: iter.id}) : path('committees', {view: 'create'}) }}">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
@@ -111,12 +111,12 @@
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ iter.has_id() ? __('Modify %s')|format(view.available_committee_types[iter.type]) : __('Create new committee/working group') }}</button>
 			{% if iter.has_id %}
-				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Return to %s')|format(view.available_committee_types[iter.type]) }}</a>
+				<a href="{{ path('committees', {commissie: iter.login}) }}" class="button">{{ __('Return to %s')|format(view.available_committee_types[iter.type]) }}</a>
 			{% else %}
-				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to all committees') }}</a>
+				<a href="{{ path('committees') }}" class="button">{{ __('Back to all committees') }}</a>
 			{% endif %}
 			{% if iter.has_id and not iter.hidden and user_can_delete iter %}
-				<a href="{{ controller.link_to_delete(iter) }}" class="button" data-popup="modal">{{ __('Deactivate') }}</a>
+				<a href="{{ path('committees', {view: 'delete', commissie: iter.login}) }}" class="button" data-popup="modal">{{ __('Deactivate') }}</a>
 			{% endif %}
 		</div>
 	</div>

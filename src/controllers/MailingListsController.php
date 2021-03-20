@@ -33,6 +33,23 @@ class MailingListsController extends \ControllerCRUD
 		$this->view = \View::byName($this->view_name, $this);
 	}
 
+	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	{
+		$parameters = [
+			'view' => $view,
+		];
+
+		if (isset($iter))
+		{
+			$parameters['id'] = $iter->get_id();
+
+			if ($json)
+				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+		}
+
+		return $this->generate_url('mailing_lists', $parameters);
+	}
+
 	protected function _index()
 	{
 		$iters = parent::_index();
@@ -42,11 +59,6 @@ class MailingListsController extends \ControllerCRUD
 		});
 
 		return $iters;
-	}
-
-	public function link_to_update_autoresponder(\DataIterMailinglist $list, $message)
-	{
-		return $this->link(['id' => $list['id'], 'view' => 'update_autoresponder', 'autoresponder' => $message]);
 	}
 
 	protected function run_update_autoresponder(\DataIterMailinglist $list)
@@ -147,7 +159,7 @@ class MailingListsController extends \ControllerCRUD
 
 		if ($this->_form_is_submitted('subscribe_member', $list))
 			if ($this->_subscribe_member($list, $_POST['member_id'], $errors))
-				return $this->view->redirect($this->link_to_read($list));
+				return $this->view->redirect($this->generate_url('mailing_lists', ['view' => 'read', $this->_var_id => $list->get_id()]));
 
 		return $this->view->render_subscribe_member_form($list, $errors);
 	}
@@ -161,7 +173,7 @@ class MailingListsController extends \ControllerCRUD
 
 		if ($this->_form_is_submitted('subscribe_guest', $list))
 			if ($this->_subscribe_guest($list, $_POST, $errors))
-				return $this->view->redirect($this->link_to_read($list));
+				return $this->view->redirect($this->generate_url('mailing_lists', ['view' => 'read', $this->_var_id => $list->get_id()]));
 
 		return $this->view->render_subscribe_guest_form($list, $errors);
 	}
@@ -184,7 +196,7 @@ class MailingListsController extends \ControllerCRUD
 			}
 		}
 
-		return $this->view->redirect($this->link_to_read($list));
+		return $this->view->redirect($this->generate_url('mailing_lists', ['view' => 'read', $this->_var_id => $list->get_id()]));
 	}
 
 	protected function run_archive_index(\DataIterMailinglist $list)

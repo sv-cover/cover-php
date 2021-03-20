@@ -10,7 +10,7 @@
 		</div>
 		{% if user_can_update iter %}
 			<div class="buttons level-right">
-				<a href="{{ controller.link_to_update(iter) }}" class="button">
+				<a href="{{ path('page', {view: 'update', id: iter.id}) }}" class="button">
 					<span class="icon is-small">
 						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 					</span>

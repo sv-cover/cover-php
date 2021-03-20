@@ -23,8 +23,6 @@
 
 		protected $model;
 
-		protected $parameters;
-
 		protected $request;
 
 		protected $router;
@@ -133,20 +131,18 @@
 			return $answer;
 		}
 
-		public function link(array $arguments)
-		{
-			if (isset($this->router) && isset($this->request))
-				return $this->router->generate($this->request->attributes->get('_route'), $arguments);
-			else
-				// TODO: Should we even be allowed to be in this situation?
-				return sprintf('?%s', http_build_query($arguments));
-		}
-
 		public function generate_url(string $name, array $parameters = [], int $reference_type = UrlGeneratorInterface::ABSOLUTE_PATH)
 		{
 			if (!isset($this->router))
 				throw new LogicException('Router not set on controller');
 			return $this->router->generate($name, $parameters, $reference_type);
+		}
+
+		public function get_referrer(string $key = 'referrer')
+		{
+			if (!empty($_GET[$key]) && is_safe_redirect($_GET[$key]))
+				return $_GET[$key];
+			return null;
 		}
 
 		public function get_request()

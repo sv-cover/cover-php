@@ -14,6 +14,23 @@ class StickersController extends \ControllerCRUD
 		parent::__construct($request, $router);
 	}
 
+	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	{
+		$parameters = [
+			'view' => $view,
+		];
+
+		if (isset($iter))
+		{
+			$parameters['id'] = $iter->get_id();
+
+			if ($json)
+				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+		}
+
+		return $this->generate_url('stickers', $parameters);
+	}
+
 	protected function _create(\DataIter $iter, array $data, array &$errors)
 	{
 		$data['toegevoegd_op'] = date('Y-m-d');
@@ -33,37 +50,6 @@ class StickersController extends \ControllerCRUD
 			$iter['lng'] = $_GET['lng'];
 
 		return $iter;
-	}
-
-	public function link_to($view, \DataIter $iter = null, array $arguments = [])
-	{
-		if (!array_key_exists('next', $arguments) && !empty($_GET['next']) && is_safe_redirect($_GET['next']))
-			$arguments['next'] = $_GET['next'];
-
-		return parent::link_to($view, $iter, $arguments);
-	}
-
-	public function link_to_next()
-	{
-		if (!empty($_GET['next']) && is_safe_redirect($_GET['next']))
-			return $_GET['next'];
-		return $this->link_to('index', null, ['next' => null]);
-	}
-
-	public function link_to_add_photo(\DataIter $iter)
-	{
-
-		return $this->link_to('add_photo', $iter);
-	}
-
-	public function link_to_geojson()
-	{
-		return $this->link_to('geojson');
-	}
-
-	public function link_to_photo(\DataIter $iter)
-	{
-		return $this->link_to('photo', $iter);
 	}
 
 	public function run_read(\DataIter $iter)
@@ -113,7 +99,7 @@ class StickersController extends \ControllerCRUD
 				$this->view->delete_thumbnail($iter);
 
 				// Ensure we're redirecting to point
-				$next_url = edit_url($this->link_to_next(), ['point' => $iter['id']]);
+				$next_url = edit_url($this->get_referrer() ?? $this->generate_url('stickers'), ['point' => $iter['id']]);
 				return $this->view->redirect($next_url);
 			}
 		}
@@ -143,15 +129,15 @@ class StickersController extends \ControllerCRUD
 						'id' => $iter['id'],
 						'label' => $iter['label'],
 						'description' => $iter['omschrijving'],
-						'photo_url' => $iter['foto'] ? $this->link_to_photo($iter) : null,
+						'photo_url' => $iter['foto'] ? $this->generate_url('stickers', ['view' => 'photo', 'id' => $iter->get_id()]) : null,
 						'added_on' => $iter['toegevoegd_op'],
 						'added_by_url' => $iter['toegevoegd_door'] ? $this->generate_url('profile', ['lid' => $iter['toegevoegd_door']]) : null,
 						'added_by_name' => $iter['toegevoegd_door']
 							? member_full_name($iter['member'], BE_PERSONAL)
 							: null,
 						'editable' => $policy->user_can_update($iter),
-						'add_photo_url' => $policy->user_can_update($iter) ? $this->link_to_add_photo($iter) : null,
-						'delete_url' => $policy->user_can_delete($iter) ? $this->link_to_delete($iter) : null,
+						'add_photo_url' => $policy->user_can_update($iter) ? $this->generate_url('stickers', ['view' => 'add_photo', 'id' => $iter->get_id()]) : null,
+						'delete_url' => $policy->user_can_delete($iter) ? $this->generate_url('stickers', ['view' => 'delete', 'id' => $iter->get_id()]) : null,
 					]
 				];
 		}

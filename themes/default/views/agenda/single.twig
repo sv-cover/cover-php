@@ -6,7 +6,7 @@
 <div class="container has-sidebar block">
 <div class="level is-mobile controls">
 	<div class="level-left">
-		<a href="{{ controller.link({'year': iter.van|date('n') < 9 ? iter.van|date('Y') - 1 : iter.van|date('Y') }) }}" class="button">
+		<a href="{{ path('calendar', {'year': iter.van|date('n') < 9 ? iter.van|date('Y') - 1 : iter.van|date('Y') }) }}" class="button">
 			<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 			<span class="is-hidden-mobile">{{__('Back to calendar')}}</span>
 			<span class="is-hidden-tablet">{{__('Back')}}</span>
@@ -46,7 +46,7 @@
 								{% endif %}
 							{% endif %}
 							{% if user_can_update iter %}
-								<a href="{{ controller.link_to_update(iter) }}" class="dropdown-item">
+								<a href="{{ path('calendar', {view: 'update', agenda_id: iter.id}) }}" class="dropdown-item">
 									<span class="icon">
 										<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 									</span>
@@ -54,7 +54,7 @@
 								</a>
 							{% endif %}
 							{% if user_can_delete iter %}
-								<a href="{{ controller.link_to_delete(iter) }}" class="dropdown-item">
+								<a href="{{ path('calendar', {view: 'delete', agenda_id: iter.id}) }}" class="dropdown-item">
 									<span class="icon">
 										<i class="fas fa-trash" aria-hidden="true"></i>
 									</span>

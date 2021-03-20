@@ -20,6 +20,23 @@ class CommitteesController extends \ControllerCRUD
 		parent::__construct($request, $router);
 	}
 
+	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	{
+		$parameters = [
+			'view' => $view,
+		];
+
+		if (isset($iter))
+		{
+			$parameters['id'] = $iter->get_id();
+
+			if ($json)
+				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+		}
+
+		return $this->generate_url('committees', $parameters);
+	}
+
 	protected function _create(\DataIter $iter, array $data, array &$errors)
 	{
 		// Prevent DataIterCommissie::set_members from being called too early
@@ -117,23 +134,10 @@ class CommitteesController extends \ControllerCRUD
 			]);
 			$mail->send('intern@svcover.nl');
 
-			return $this->view->redirect($this->link_to('read', $iter, ['interest_reported' => true]));
+			return $this->view->redirect($this->generate_url('committees', ['view' => 'read', $this->_var_id => $iter['login'], 'interest_reported' => true]));
 		}
 
-		return $this->view->redirect($this->link_to_read($iter));
-	}
-
-	/**
-	 * Override ControllerCRUD::link_to to use the login name instead of the id for better links.
-	 */
-	public function link_to($view, \DataIter $iter = null, array $arguments = [])
-	{
-		$arguments[$this->_var_view] = $view;
-
-		if ($iter !== null)
-			$arguments[$this->_var_id] = $iter['login'];
-
-		return $this->link($arguments);
+		return $this->view->redirect($this->generate_url('committees', ['view' => 'read', $this->_var_id => $iter['login']]));
 	}
 
 	/**

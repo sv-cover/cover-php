@@ -15,8 +15,20 @@ class SettingsController extends \ControllerCRUD
         parent::__construct($request, $router);
 	}
 
-	public function link_to_read(\DataIter $item)
-	{
-		return $this->link_to_index();
-	}
+    public function path(string $view, \DataIter $iter = null, bool $json = false)
+    {
+        $parameters = [
+            'view' => $view,
+        ];
+
+        if (isset($iter))
+        {
+            $parameters['id'] = $iter->get_id();
+
+            if ($json)
+                $parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+        }
+
+        return $this->generate_url('settings', $parameters);
+    }
 }

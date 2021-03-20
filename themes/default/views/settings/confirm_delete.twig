@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ __('Delete key') }}</h1>
-<form method="post" id="delete-settings-form" action="{{ controller.link_to_delete(iter)|e('html_attr') }}">
+<form method="post" id="delete-settings-form" action="{{ path('settings', {view: 'delete', id: iter.id}) }}">
 	{{ html_nonce('delete', iter) }}
     <div class="field">
     	<p>{{ __('Are you certain you want to delete the key <em>%s</em>?')|format(iter.key|e('html'))|raw }}</p>
@@ -12,7 +12,7 @@
 	<div class="field">
         <div class="control buttons">
     		<button type="submit" class="button is-danger">{{ __('Delete key') }}</button>
-    		<a href="{{ controller.link_to_read(iter)|e('html_attr') }}" class="button">{{ __('Back to settings') }}</a>
+    		<a href="{{ path('settings') }}" class="button">{{ __('Back to settings') }}</a>
         </div>
 	</div>
 </form>

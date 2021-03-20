@@ -3,7 +3,7 @@
 
 {% macro committee_card(committee) %}
 <div class="column is-half-tablet is-one-third-desktop is-one-quarter-fullhd">
-	<a href="{{ controller.link_to_read(committee) }}" class="committee">
+	<a href="{{ path('committees', {commissie: committee.login}) }}" class="committee">
 		<div class="overlay">
 			<h2 class="name">
 				{{ committee.naam }}
@@ -57,8 +57,8 @@
 		{% if user_can_create controller.new_iter %}
 		<div class="level-right buttons">
 			{# If someone can create, someone can probably also reactivate #}
-			<a href="{{ controller.link_to('archive') }}" class="button">{{ __('Committee archive') }}</a>
-			<a href="{{ controller.link_to_create() }}" class="button">{{ __('New committee') }}</a>
+			<a href="{{ path('committees', {view: 'archive'}) }}" class="button">{{ __('Committee archive') }}</a>
+			<a href="{{ path('committees', {view: 'create'}) }}" class="button">{{ __('New committee') }}</a>
 		</div>
 		{% endif %}
 	</div>

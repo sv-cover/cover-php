@@ -3,7 +3,7 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="POST" action="{{ controller.link_to_add_photo(iter) }}" enctype="multipart/form-data">
+		<form method="POST" action="{{ path('stickers', {view: 'add_photo', id: iter.id, referrer: controller.get_referrer()}) }}" enctype="multipart/form-data">
 			{{ html_nonce('add_photo', iter) }}
 			<header class="modal-card-head">
 				<p class="modal-card-title">{{ __('Upload photo for sticker') }}</p>
@@ -36,7 +36,7 @@
 				</div>
 			</section>
 			<footer class="modal-card-foot">
-				<a href="{{ controller.link_to_next() }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
+				<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
 				<button type="submit" class="button is-danger">{{ __('Upload photo') }}</button>
 			</footer>
 		</form>

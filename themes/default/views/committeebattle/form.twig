@@ -6,8 +6,8 @@
 <h1 class="title">{{ view.get_label(iter, __('Award points'), __('Update points')) }}</h1>
 <div class="messageBox">
 	<form method="post" action="{{ iter and iter.has_id
-			? controller.link_to_update(iter)
-			: controller.link_to_create() }}" class="vertical-form committee-battle-form">
+			? path('committee_battle', {view: 'update', id: iter.id})
+			: path('committee_battle', {view: 'create'}) }}" class="vertical-form committee-battle-form">
 		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create', iter) }}
 
 		<div class="field">
@@ -46,7 +46,7 @@
 		<div class="field">
 			<div class="control buttons">
 				<button type="submit" class="button is-primary">{{ view.get_label(iter, __('Add points'), __('Update points')) }}</button>
-				<a href="{{ controller.link_to_index() }}" class="button">{{ __('Back to index') }}</a>
+				<a href="{{ path('committee_battle') }}" class="button">{{ __('Back to index') }}</a>
 			</div>
 		</div>
 	</form>

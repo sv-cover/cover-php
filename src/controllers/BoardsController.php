@@ -15,6 +15,23 @@ class BoardsController extends \ControllerCRUD
 		parent::__construct($request, $router);
 	}
 
+	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	{
+		$parameters = [
+			'view' => $view,
+		];
+
+		if (isset($iter))
+		{
+			$parameters['id'] = $iter->get_id();
+
+			if ($json)
+				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+		}
+
+		return $this->generate_url('boards', $parameters);
+	}
+
 	protected function _get_title($iters = null)
 	{
 		if ($iters instanceof \DataIter)
@@ -94,11 +111,6 @@ class BoardsController extends \ControllerCRUD
 
 	public function run_read(\DataIter $iter)
 	{
-		return $this->view->redirect($this->link_to_read($iter));
-	}
-
-	public function link_to_read(\DataIter $iter)
-	{
-		return sprintf('%s#%s', $this->generate_url('boards'), urlencode($iter['login']));
+		return $this->view->redirect(sprintf('%s#%s', $this->generate_url('boards'), urlencode($iter['login'])));
 	}
 }

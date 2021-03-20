@@ -23,7 +23,7 @@ class StickersView extends CRUDView
 	public function render_delete(DataIter $iter, $success, $errors)
 	{
 		if ($success)
-			return $this->redirect($this->controller->link_to_next());
+			return $this->redirect($this->controller->get_referrer() ?? $this->controller->generate_url('stickers'));
 
 		return parent::render_delete($iter, $success, $errors);
 	}
@@ -97,35 +97,5 @@ class StickersView extends CRUDView
 		}
 		else
 			return '53.20, 6.56'; // Groningen
-	}
-
-	public function encodeStickers($iters)
-	{
-		$stickers = array();
-
-		$policy = get_policy($this->controller->model());
-
-		foreach ($iters as $iter)
-		{
-			$sticker = array(
-				'id' => $iter['id'],
-				'label' => $iter['label'],
-				'omschrijving' => $iter['omschrijving'],
-				'lat' => $iter['lat'],
-				'lng' => $iter['lng'],
-				'foto' => $iter['foto'] ? $this->controller->link_to_photo($iter) : null,
-				'toegevoegd_op' => $iter['toegevoegd_op'],
-				'toegevoegd_door_id' => $iter['toegevoegd_door'],
-				'toegevoegd_door_naam' => $iter['toegevoegd_door']
-					? member_full_name($iter['member'], BE_PERSONAL)
-					: null,
-				'editable' => $policy->user_can_update($iter),
-				'delete_nonce' => nonce_generate(nonce_action_name('delete', [$iter]))
-			);
-
-			$stickers[] = $sticker;
-		}
-
-		return json_encode($stickers);
 	}
 }

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="modal is-static">
     <div class="modal-card">
-        <form method="post" action="{{ controller.link_to_delete(iter) }}">
+        <form method="post" action="{{ path('committees', {view: 'delete', commissie: iter.login}) }}">
             {{ html_nonce('delete', iter) }}
             <header class="modal-card-head">
                 <h1 class="modal-card-title">{{ __('Deactivate committee') }}</h1>
@@ -16,7 +16,7 @@
                 </div>
             </section>
             <footer class="modal-card-foot">
-                <a href="{{ controller.link_to_read(iter) }}" class="button" data-dismiss="modal">{{ __('Back to committee page') }}</a>
+                <a href="{{ path('committees', {commissie: iter.login}) }}" class="button" data-dismiss="modal">{{ __('Back to committee page') }}</a>
                 <button type="submit" class="button is-danger">{{ __('Deactivate committee')  }}</button>
             </footer>
         </form>

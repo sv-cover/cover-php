@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Modify page') : __('Make a page') }}</h1>
 
-<form method="post" action="{{ view.get_form_action(iter) }}">
+<form method="post" action="{{ (iter and iter.has_id) ? path('page', {view:  'update', id: iter.id}) : path('page.create') }}">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
@@ -63,7 +63,7 @@
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify page') : __('Create page') }}</button>
 			{% if iter.has_id %}
-				<a href="{{ controller.link_to_read(iter) }}" class="button">{{ __('Back to page') }}</a>
+				<a href="{{ path('page', {id: iter.id}) }}" class="button">{{ __('Back to page') }}</a>
 			{% endif %}
 		</div>
 	</div>

@@ -9,7 +9,7 @@
 			<h1 class="modal-card-title">{{ iter.has_id ? __('Update sticker') : __('Add a new sticker') }}</h1>
 		</header>
 		<section class="modal-card-body">
-			<form id="sticker-form" method="POST" action="{{ view.get_form_action(iter) }}">
+			<form id="sticker-form" method="POST" action="{{ (iter and iter.has_id) ? path('settings', {view:  'update', id: iter.id, referrer: controller.get_referrer()}) : path('settings', {view: 'create', referrer: controller.get_referrer()}) }}">
 				<input type="hidden" name="lat">
 				<input type="hidden" name="lng">
 
@@ -60,7 +60,8 @@
 			</form>
 		</section>
 		<footer class="modal-card-foot">
-			<a href="{{ controller.link_to_next() }}" class="button" data-dismiss="modal">
+			asdf {{ controller.get_referrer() }}
+			<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">
 				{{ __('Return to map') }}
 			</a>
 			<button type="submit" class="button is-primary" form="sticker-form">

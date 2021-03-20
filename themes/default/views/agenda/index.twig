@@ -9,7 +9,7 @@
 	<nav class="level is-mobile" role="navigation" aria-label="pagination">
 		<div class="level-left">
 			{% if view.previous_year %}
-				<a href="{{ controller.link({'year': view.previous_year}) }}" class="level-item button">
+				<a href="{{ path('calendar', {'year': view.previous_year}) }}" class="level-item button">
 					<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 					{% if view.selected_year is null %}
 						<span>{{ __('Archive') }}</span>
@@ -26,7 +26,7 @@
 		</div>
 		<div class="level-right">
 			{% if view.next_year %}
-				<a href="{{ controller.link({'year': view.next_year}) }}" class="level-item button">
+				<a href="{{ path('calendar', {'year': view.next_year}) }}" class="level-item button">
 					<span class="is-hidden-mobile">
 						{{ view.next_year }}-{{ view.next_year + 1 }}
 					</span>
@@ -97,7 +97,7 @@
 			{% endif %}
 		    {% if user_can_create controller.new_iter %}
 		    	<div class="control">
-					<a href="{{ controller.link_to_create() }}" class="button">{{ __('New event') }}</a>
+					<a href="{{ path('calendar', {view: 'create'}) }}" class="button">{{ __('New event') }}</a>
 		    	</div>
 			{% endif%}
 		</div>

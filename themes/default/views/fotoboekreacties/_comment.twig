@@ -20,7 +20,7 @@
 					{% set liked = iter.is_liked_by(global.identity.member) %}
 					<form class="level-item like-form"
 							method="post"
-							action="{{ controller.link_to_like(iter) }}"
+							action="{{ controller.path('likes', iter) }}"
 							{# data-partial-selector="#comment{{ iter.id }}"
 							data-placement-selector="#comment{{ iter.id }}"#}>
 						<input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
@@ -50,7 +50,7 @@
 				{% endif %}
 				{% if user_can_update iter %}
 					<a class="level-item"
-							href="{{ controller.link_to_update(iter) }}"
+							href="{{ controller.path('update', iter) }}"
 							data-popup="modal"
 							title="{{ __('Edit comment') }}">
 						<span class="icon is-small">
@@ -63,7 +63,7 @@
 				{% endif %}
 				{% if user_can_delete iter %}
 					<a class="level-item"
-							href="{{ controller.link_to_delete(iter) }}"
+							href="{{ controller.path('delete', iter) }}"
 							data-popup="modal"
 							title="{{ __('Delete comment') }}">
 						<span class="icon is-small">

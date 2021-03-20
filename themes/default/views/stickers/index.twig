@@ -11,7 +11,7 @@
 			</div>
 			{% if user_can_create controller.new_iter %}
 			<div class="level-right buttons">
-				<a href="{{ controller.link_to_create() }}" class="button" data-popup="modal" data-add-sticker-button>
+				<a href="{{ path('stickers', {view: 'create'}) }}" class="button" data-popup="modal" data-add-sticker-button>
 					<span class="icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
 					<span>{{ __('New sticker') }}</span>
 				</a>
@@ -31,8 +31,8 @@
 	<section class="map-container">
 		<div
 			class="map"
-			data-geojson-url="{{ controller.link_to_geojson() }}"
-			data-create-url="{{ controller.link_to_create() }}"
+			data-geojson-url="{{ path('stickers', {view: 'geojson'}) }}"
+			data-create-url="{{ path('stickers', {view: 'create'}) }}"
 			data-marker="{{ link_static('images/map_marker.svg') }}"
 		>
 			<div class="container is-fluid" data-unsupported-message hidden>

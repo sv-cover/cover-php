@@ -6,7 +6,7 @@
 <header class="block">
 	<nav class="level is-mobile">
 		<div class="level-left">
-			<a href="{{ controller.link_to_index()|e('html_attr') }}" class="level-item button">
+			<a href="{{ path('mailing_lists') }}" class="level-item button">
 				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 				<span class="is-hidden-mobile">{{ __('Back to mailing lists') }}</span>
 				<span class="is-hidden-tablet">{{ __('Back') }}</span>
@@ -14,7 +14,7 @@
 		</div>
 		{% if user_can_update iter %}
 			<div class="level-right buttons">
-				<a href="{{ controller.link_to_update(iter)|e('html_attr') }}" class="button">
+				<a href="{{ path('mailing_lists', {view: 'update', id: iter.id}) }}" class="button">
 					{{ __('Modify mailing list') }}
 				</a>
 			</div>
@@ -30,13 +30,13 @@
 <div class="tabs">
 	<ul>
 	    <li {% if active_tab is not defined or active_tab == 'subscriptions' %}class="is-active"{% endif %}>
-	    	<a href="{{ controller.link_to_read(iter)|e('html_attr') }}#mailing-list-subscriptions">{{ __('Subscriptions') }}</a>
+	    	<a href="{{ path('mailing_lists', {id: iter.id}) }}#mailing-list-subscriptions">{{ __('Subscriptions') }}</a>
 	    </li>
 	    <li {% if active_tab is not defined or active_tab == 'statistics' %}class="is-active"{% endif %}>
-	    	<a href="{{ controller.link_to_read(iter)|e('html_attr') }}#mailing-list-statistics">{{ __('Statistics') }}</a>
+	    	<a href="{{ path('mailing_lists', {id: iter.id}) }}#mailing-list-statistics">{{ __('Statistics') }}</a>
 	    </li>
 	    <li {% if active_tab is not defined or active_tab == 'archive' %}class="is-active"{% endif %}>
-	    	<a href="{{ controller.link_to('archive_index', iter)|e('html_attr') }}#mailing-list-archive">{{ __('Message archive') }}</a>
+	    	<a href="{{ path('mailing_lists', {view: 'archive_index', id: iter.id}) }}#mailing-list-archive">{{ __('Message archive') }}</a>
 	    </li>
 	</ul>
 </div>

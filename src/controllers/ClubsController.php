@@ -64,7 +64,7 @@ class ClubsController extends \Controller
                 $mail = parse_email_object("club_proposal.txt", compact('data', 'member'));
                 $mail->send(get_config_value('email_bestuur'));
                 $_SESSION['alert'] = __('Club proposal submitted! You should hear from the board soon!');
-                return $this->view->redirect($this->link_to_index());
+                return $this->view->redirect($this->generate_url('clubs'));
             }
         }
 
@@ -74,16 +74,6 @@ class ClubsController extends \Controller
     public function run_index()
     {
         return $this->view->render_index();
-    }
-
-    public function link_to_index()
-    {
-        return $this->link([]);
-    }
-
-    public function link_to_propose_club()
-    {
-        return $this->link(['view' => 'propose_club']);
     }
 
     protected function run_impl()

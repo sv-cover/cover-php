@@ -11,7 +11,7 @@
 	</div>
 	{% if user_can_create controller.new_form %}
 		<div class="level-right buttons">	
-			<a href="{{ controller.link({'view': 'create_form'}) }}" class="button">{{ __('New sign-up form') }}</a>
+			<a href="{{ path('signup', {'view': 'create_form'}) }}" class="button">{{ __('New sign-up form') }}</a>
 		</div>
 	{% endif %}
 </header>
@@ -33,7 +33,7 @@
 			{% for form in forms|sort_by('created_on desc') %}
 				<tr>
 					<td class="is-truncated">
-						<span><a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></span>
+						<span><a href="{{ path('signup', {'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></span>
 					</td>
 					<td class="is-truncated">
 						{% if form.agenda_id %}
@@ -60,7 +60,7 @@
 						{% spaceless %}
 							{% if user_can_update form %}
 								<li>
-									<a href="{{ controller.link({'view': 'update_form', 'form': form.id}) }}" title="{{ __('Modify form') }}">
+									<a href="{{ path('signup', {'view': 'update_form', 'form': form.id}) }}" title="{{ __('Modify form') }}">
 										<span class="icon is-small">
 											<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 										</span>
@@ -71,7 +71,7 @@
 								</li>
 							{% endif %}
 							<li>
-								<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" title="{{ __('View sign-ups') }}">
+								<a href="{{ path('signup', {'view': 'list_entries', 'form': form.id}) }}" title="{{ __('View sign-ups') }}">
 									<span class="icon is-small">
 										<i class="fas fa-list-alt" aria-hidden="true"></i>
 									</span>

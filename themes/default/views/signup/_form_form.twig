@@ -1,4 +1,4 @@
-<form method="post" action="{{ form.has_id ? controller.link({'view': 'update_form', 'form': form.id}) : controller.link({'view': 'create_form'}) }}">
+<form method="post" action="{{ form.has_id ? path('signup', {'view': 'update_form', 'form': form.id}) : path('signup', {'view': 'create_form'}) }}">
     {% if form.has_id %}
         {{ html_nonce('update_form', form) }}
     {% else %}

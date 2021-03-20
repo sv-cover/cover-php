@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ __('Delete points') }}</h1>
-<form method="post" action="{{ controller.link_to_delete(iter)|e('html_attr') }}">
+<form method="post" action="{{ path('committee_battle', {view: 'delete', id: iter.id}) }}">
 	{{ html_nonce('delete', iter) }}
     <div class="field">
     	<p>{{ __('Are you sure you want to delete the points awarded for <em>%s</em>?')|format(iter.awarded_for|e('html'))|raw }}</p>
@@ -12,7 +12,8 @@
 	<div class="field">
         <div class="control buttons">
     		<button type="submit" class="button is-danger">{{ __('Delete points') }}</button>
-    		<a href="{{ controller.link_to_read(iter)|e('html_attr') }}" class="button">{{ __('Back to committee page') }}</a>
+            {# TODO: make this button actually go back to the committee page #}
+    		<a href="{{ path('committee_battle') }}" class="button">{{ __('Back to committee page') }}</a>
         </div>
 	</div>
 </form>

@@ -78,67 +78,9 @@ class ControllerCRUD extends Controller
 		return $this->model->new_iter();
 	}
 
-	public function link_to($view, DataIter $iter = null, array $arguments = [])
+	public function path(string $view, DataIter $iter = null, bool $json = false)
 	{
-		$arguments[$this->_var_view] = $view;
-
-		if ($iter !== null)
-			$arguments[$this->_var_id] = $iter->get_id();
-
-		return $this->link($arguments);
-	}
-
-	public function link_to_create()
-	{
-		return $this->link_to('create');
-	}
-
-	public function link_to_read(DataIter $iter)
-	{
-		return $this->link_to('read', $iter);
-	}
-
-	public function link_to_update(DataIter $iter)
-	{
-		return $this->link_to('update', $iter);
-	}
-
-	public function link_to_delete(DataIter $iter)
-	{
-		return $this->link_to('delete', $iter);
-	}
-
-	public function json_link_to_create()
-	{
-		$new_iter = $this->model()->new_iter();
-		$nonce = nonce_generate(nonce_action_name('create', [$new_iter]));
-		return $this->link([$this->_var_view => 'create', '_nonce' => $nonce]);
-	}
-
-	public function json_link_to_read(DataIter $iter)
-	{
-		return $this->link_to('read', $iter, []);
-	}
-
-	public function json_link_to_update(DataIter $iter)
-	{
-		$nonce = nonce_generate(nonce_action_name('update', [$iter]));
-		return $this->link_to('update', $iter, ['_nonce' => $nonce]);
-	}
-
-	public function json_link_to_delete(DataIter $iter)
-	{
-		$nonce = nonce_generate(nonce_action_name('delete', [$iter]));
-		return $this->link_to('delete', $iter, ['_nonce' => $nonce]);
-	}
-
-	public function link_to_index()
-	{
-		if (isset($this->router) && isset($this->parameters) && isset($this->parameters['_route']))
-			return $this->router->generate($this->parameters['_route']);
-		else
-			// TODO: Should we even be allowed to be in this situation?
-			return '?';
+		throw new LogicException('ContollerCrud::path not implemented');
 	}
 
 	public function run_create()

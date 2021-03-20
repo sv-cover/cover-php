@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ view.get_label(iter, __('Add a new key'), __('Modify key')) }}</h1>
-<form id="settings-form" method="post" action="{{ view.get_form_action(iter)|e('html_attr') }}">
+<form id="settings-form" method="post" action="{{ (iter and iter.has_id) ? path('settings', {view:  'update', id: iter.id}) : path('settings', {view: 'create'}) }}">
 	{% if iter.id != null %}
 		{{ html_nonce('update', iter) }}
 		<div class="field">
@@ -33,7 +33,7 @@
 	<div class="field">
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ view.get_label(iter, __('Add key'), __('Modify key')) }}</button>
-			<a href="{{ controller.link_to_index|e('html_attr') }}" class="button">{{ __('Back to settings') }}</a>
+			<a href="{{ path('settings') }}" class="button">{{ __('Back to settings') }}</a>
 		</div>
 	</div>
 </form>

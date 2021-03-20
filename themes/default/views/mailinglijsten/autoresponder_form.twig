@@ -4,11 +4,12 @@
 
 {% block content %}
 <h1 class="title">{{ __('Modify message') }}</h1>
-<form method="post" action="{{ controller.link_to_update_autoresponder(iter, autoresponder)|e('html_attr') }}">
+<form method="post" action="{{ path('mailing_lists', {view: 'update_autoresponder', id: iter.id, autoresponder: autoresponder}) }}">
+    {{ html_nonce('update', iter) }}
 	<div class="field">
-		{{ html_label(__('Subject'), autoresponder ~ '_subject', errors=errors, required=true) }}
+		{{ html_label(__('Subject'), autoresponder ~ '_subject', errors=errors) }}
 		<div class="control">
-			{{ html_input_text(autoresponder ~ '_subject', iter, errors=errors, required=true) }}
+			{{ html_input_text(autoresponder ~ '_subject', iter, errors=errors) }}
 		</div>
 	</div>
 
@@ -22,7 +23,7 @@
 	<div class="field">
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ __('Change email') }}</button>
-			<a href="{{ controller.link_to_read(iter)|e('html_attr') }}" class="button">{{ __('Return to mailing list') }}</a>
+			<a href="{{ path('mailing_lists', {view: 'update', id: iter.id}) }}" class="button">{{ __('Return to mailing list') }}</a>
 		</div>
 	</div>
 </form>

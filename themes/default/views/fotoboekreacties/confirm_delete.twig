@@ -3,7 +3,7 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" action="{{ controller.link_to_delete(iter) }}">
+		<form method="post" action="{{ controller.path('delete', iter) }}">
 			{{ html_nonce('delete', iter) }}
 			<header class="modal-card-head">
 				<p class="modal-card-title">{{ __('Delete comment') }}</p>
@@ -14,7 +14,7 @@
 				</div>
 			</section>
 			<footer class="modal-card-foot">
-				<a href="{{ controller.link_to_read(iter) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
+				<a href="{{ controller.path('read', iter) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
 				<button type="submit" class="button is-danger">{{ __('Delete comment') }}</button>
 			</footer>
 		</form>

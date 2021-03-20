@@ -9,8 +9,8 @@
 	</div>
 	{% if form.has_id and user_can_delete form %}
 		<div class="level-right buttons">	
-			<a href="{{ controller.link({'view': 'delete_form', 'form': form.id}) }}" class="button" data-popup="modal">{{ __('Delete form') }}</a>
-			<a href="{{ controller.link({'view': 'list_entries', 'form': form.id}) }}" class="button">{{ __('Show sign-ups') }}</a>
+			<a href="{{ path('signup', {'view': 'delete_form', 'form': form.id}) }}" class="button" data-popup="modal">{{ __('Delete form') }}</a>
+			<a href="{{ path('signup', {'view': 'list_entries', 'form': form.id}) }}" class="button">{{ __('Show sign-ups') }}</a>
 		</div>
 	{% endif %}
 </header>
@@ -26,7 +26,7 @@
 	    </li>
 	    <li>
 	    	<a  href="#signup-form-preview"
-				data-async-action="{{ controller.link({'view': 'create_entry', 'form': form.id}) }}"
+				data-async-action="{{ path('signup', {'view': 'create_entry', 'form': form.id}) }}"
 				data-partial-selector="#signup-entry-form"
 				data-placement-selector="#signup-entry-form"
 	    	>{{ __('Preview') }}</a>
@@ -50,7 +50,7 @@
 				</div>
 			{% endif %}
 
-			<div class="block sortable signup-form-field-list" data-sortable-action="{{ controller.link({view: 'update_form_field_order', form: form.id}) }}" data-sortable-handle=".card-header" data-sortable-filter=".signup-form-field-delete-button">
+			<div class="block sortable signup-form-field-list" data-sortable-action="{{ path('signup', {view: 'update_form_field_order', form: form.id}) }}" data-sortable-handle=".card-header" data-sortable-filter=".signup-form-field-delete-button">
 			{% for field in form.fields %}
 				{{ include('_field_configuration.twig') }}
 			{% endfor %}
@@ -59,8 +59,8 @@
 			<form 
 				class="card block signup-form-field-form"
 				method="post"
-				action="{{ controller.link({view: 'create_form_field', form: form.id}) }}"
-				data-async-action="{{ controller.link({view: 'create_form_field', form: form.id, action: 'add'}) }}"
+				action="{{ path('signup', {view: 'create_form_field', form: form.id}) }}"
+				data-async-action="{{ path('signup', {view: 'create_form_field', form: form.id, action: 'add'}) }}"
 				data-partial-selector=".signup-form-field"
 				data-placement-selector=".signup-form-field-list"
 				data-placement-method="append"

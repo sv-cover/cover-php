@@ -3,7 +3,7 @@
 {% block content %}
 <div class="modal is-static">
     <div class="modal-card">
-        <form name="freactie" action="{{ iter.has_id ? controller.link_to_update(iter) : controller.link_to_create }}" method="post">
+        <form name="freactie" action="{{ iter.has_id ? controller.path('update', iter) : controller.path('create') }}" method="post">
             {% if iter.has_id %}
                 {{ html_nonce('update', iter) }}
             {% else %}
@@ -28,7 +28,7 @@
                 </div>
             </section>
             <footer class="modal-card-foot">
-                <a href="{{ controller.link_to_read(iter) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
+                <a href="{{ controller.path('read', iter) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
                 <button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
             </footer>
         </form>

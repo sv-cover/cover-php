@@ -3,7 +3,7 @@
 
 {% macro interest_button(committee) %}
 	{% if global.identity.is_member and not global.identity.member_in_committee(committee.id) %}
-		<form action="{{ controller.link_to('show_interest', committee) }}" method="post">
+		<form action="{{ path('committees', {view: 'show_interest', commissie: committee.login}) }}" method="post">
 			{{ html_nonce('show_interest', committee) }}
 			<button type="submit" class="button is-outlined">{{ __('I’m interested!') }}</button>
 		</form>

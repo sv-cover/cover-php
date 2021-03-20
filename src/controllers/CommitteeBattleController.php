@@ -19,6 +19,23 @@ class CommitteeBattleController extends \ControllerCRUD
 		parent::__construct($request, $router);
 	}
 
+	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	{
+		$parameters = [
+			'view' => $view,
+		];
+
+		if (isset($iter))
+		{
+			$parameters['id'] = $iter->get_id();
+
+			if ($json)
+				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+		}
+
+		return $this->generate_url('committee_battle', $parameters);
+	}
+
 	protected function _index()
 	{
 		$committees = $this->committee_model->get(\DataModelCommissie::TYPE_COMMITTEE);
@@ -45,14 +62,6 @@ class CommitteeBattleController extends \ControllerCRUD
 			$committee['position'] = $committee['score'] === 0 ? 0 : array_search($committee['score'], $score_position, true) + 1;
 
 		return $committees;
-	}
-
-	public function link_to_read(\DataIter $iter)
-	{
-		if ($iter instanceof \DataIterCommissie)
-			return $this->link_to('committee', null, ['committee' => $iter['id']]);
-		else
-			return $this->link_to_index();
 	}
 
 	public function run_committee()

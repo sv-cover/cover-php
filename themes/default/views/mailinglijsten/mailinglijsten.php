@@ -49,7 +49,7 @@ class MailinglijstenView extends CRUDView
 	public function render_autoresponder_form(DataIterMailinglist $iter, $autoresponder, $success, $errors)
 	{
 		return $success
-			? $this->redirect($this->controller->link_to_update($iter))
+			? $this->redirect($this->controller->generate_url('mailing_lists', ['view' => 'update', 'id' => $iter->get_id()]))
 			: $this->render('autoresponder_form.twig', compact('iter', 'autoresponder', 'success', 'errors'));
 	}
 

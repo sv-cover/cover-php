@@ -8,7 +8,7 @@
 <div class="box content has-text-centered">
     <p>{{ __('Are you interesed in starting your own club? No problem! Just fill out the club proposal form and the board will help you get started!') }}</p>
     {% if global.auth.logged_in %}
-        <a href="{{ controller.link_to_propose_club() }}" class="button is-medium is-primary">
+        <a href="{{ path('clubs', {view: 'propose_club'}) }}" class="button is-medium is-primary">
             {{ __('Propose a club') }}
         </a>
     {% else %}

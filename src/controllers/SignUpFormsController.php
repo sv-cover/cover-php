@@ -74,7 +74,7 @@ class SignUpFormsController extends \Controller
 					if (get_policy($this->entry_model)->user_can_delete($entry))
 						$this->entry_model->delete($entry);
 
-		return $this->view->redirect($this->link(['view' => 'list_entries', 'form' => $form['id']]));
+		return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $form['id']]));
 	}
 
 	public function run_create_entry()
@@ -123,7 +123,7 @@ class SignUpFormsController extends \Controller
 
 			// Redirect admins back to the entry index
 			if ($success && get_policy($form)->user_can_update($form))
-				return $this->view->redirect($this->link(['view' => 'list_entries', 'form' => $form['id']]));
+				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $form['id']]));
 
 			// and everyone else will just see the form with a success message
 		}
@@ -158,7 +158,7 @@ class SignUpFormsController extends \Controller
 			
 			// Redirect admins back to the entry index
 			if ($success && get_policy($form)->user_can_update($form))
-				return $this->view->redirect($this->link(['view' => 'list_entries', 'form' => $form['id']]));
+				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $form['id']]));
 
 			// and everyone else will just see the form with a success message
 		}
@@ -205,7 +205,7 @@ class SignUpFormsController extends \Controller
 		}
 
 		if ($success)
-			return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]) . '#signup-form-fields');
+			return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]) . '#signup-form-fields');
 		else
 			return $this->view->render('create_form_form.twig', compact('form', 'success', 'errors'));
 	}
@@ -237,7 +237,7 @@ class SignUpFormsController extends \Controller
 
 		if ($this->_form_is_submitted('delete_form', $form))
 			if ($this->form_model->delete($form))
-				return $this->view->redirect($this->link(['view' => 'list_forms']));
+				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_forms']));
 
 		return $this->view->render('delete_form.twig', compact('form'));
 	}
@@ -257,7 +257,7 @@ class SignUpFormsController extends \Controller
 				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $form, 'errors' => new \ErrorSet()]);
 		}
 
-		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+		return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]));
 	}
 
 	public function run_update_form_field()
@@ -284,7 +284,7 @@ class SignUpFormsController extends \Controller
 				return $this->view->render('update_form_form.twig', compact('form', 'success', 'errors'));
 		}
 
-		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+		return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]));
 	}
 
 	public function run_delete_form_field()
@@ -305,7 +305,7 @@ class SignUpFormsController extends \Controller
 		if ($this->_form_is_submitted('delete_form_field', $form, $field))
 		{
 			$this->field_model->delete($field);
-			return $this->view->redirect($this->link([
+			return $this->view->redirect($this->generate_url('signup', [
 				'view' => 'restore_form_field',
 				'form' => $form['id'],
 				'field' => $field['id']
@@ -334,7 +334,7 @@ class SignUpFormsController extends \Controller
 		if ($this->_form_is_submitted('restore_form_field', $form, $field))
 		{
 			$this->field_model->restore($field);
-			return $this->view->redirect($this->link([
+			return $this->view->redirect($this->generate_url('signup', [
 				'view' => 'update_form',
 				'form' => $form['id']
 			]));
@@ -360,7 +360,7 @@ class SignUpFormsController extends \Controller
 
 		$this->field_model->update_order($fields);
 
-		return $this->view->redirect($this->link(['view' => 'update_form', 'form' => $form['id']]));
+		return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]));
 	}
 
 	private function _create(\DataModel $model, \DataIter $iter, array $input, \ErrorSet $errors)

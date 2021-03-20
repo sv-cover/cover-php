@@ -217,7 +217,7 @@ class StickerMap {
         url = new URL(url, window.location.href);
         let params = url.searchParams;
 
-        params.set('next', window.location.href);
+        params.set('referrer', window.location.href);
 
         // Execute request and load modal
         const request = fetch(url.toString());

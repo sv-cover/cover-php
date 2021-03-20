@@ -3,18 +3,18 @@
 {% block tab_content %}
 <section id="mailing-list-subscriptions">
 	<h2 class="is-sr-only">{{ __('Subscriptions') }}</h2>
-	<form method="post" action="{{ controller.link_to('unsubscribe', iter)|e('html_attr') }}">
+	<form method="post" action="{{ path('mailing_lists', {view: 'unsubscribe', id: iter.id}) }}">
 		{{ html_nonce('unsubscribe', iter) }}
 		<div class="level">
 			<div class="level-left">
 				<div class="level-item">
-					<a href="{{ controller.link_to('subscribe_member', iter)|e('html_attr') }}" class="button is-fullwidth" data-popup="modal">
+					<a href="{{ path('mailing_lists', {view: 'subscribe_member', id: iter.id}) }}" class="button is-fullwidth" data-popup="modal">
 						{{ __('Subscribe member') }}
 					</a>
 				</div>
 
 				<div class="level-item">
-					<a href="{{ controller.link_to('subscribe_guest', iter)|e('html_attr') }}" class="button is-fullwidth" data-popup="modal">
+					<a href="{{ path('mailing_lists', {view: 'subscribe_guest', id: iter.id}) }}" class="button is-fullwidth" data-popup="modal">
 						{{ __('Subscribe non-member') }}
 					</a>
 				</div>

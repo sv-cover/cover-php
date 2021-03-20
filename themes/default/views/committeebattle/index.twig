@@ -14,7 +14,7 @@
 			<a href="{{ path('page', {view: 'update', id: editable.id}) }}" class="button">{{ __('Update description') }}</a>
 		{% endif %}
 		{% if user_can_create model.new_iter %}
-			<a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">{{ __('Award points') }}</a>
+			<a href="{{ path('committee_battle', {view: 'create'}) }}" class="button">{{ __('Award points') }}</a>
 		{% endif %}
 	</div>
 </div>
@@ -49,7 +49,7 @@
 						</a>
 					{% endfor %}
 				</td>
-				<td><a href="{{ controller.link_to_read(committee)|e('html_attr') }}">{{ committee.score }}</a></td>
+				<td><a href="{{ path('committee_battle', {view: 'committee', committee: committee.id}) }}">{{ committee.score }}</a></td>
 			</tr>
 			{% endfor %}
 		</tbody>
