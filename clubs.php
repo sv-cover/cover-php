@@ -41,6 +41,7 @@ class ControllerClubs extends Controller
             'description',
             'members',
             'motivation',
+            'communication_platform',
         ];
 
         $member = get_identity()->member();
@@ -52,6 +53,7 @@ class ControllerClubs extends Controller
             'description' => null,
             'members' => null,
             'motivation' => null,
+            'communication_platform' => null,
         ];
 
         $errors = [];

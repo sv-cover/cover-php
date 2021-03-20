@@ -47,6 +47,14 @@
     </div>
 
     <div class="field">
+        {{ html_label(__('Preferred communication platform(s)'), 'communication_platform', errors=errors, required=true) }}
+        <div class="control">
+            {{ html_input_text('communication_platform', data, errors=errors, required=true, placeholder=__('WhatsApp, Discord, etc')) }}
+        </div>
+        <p class="help">{{ __('The board will create a communication channel for you. Which platform(s) do you prefer for that?') }}</p>
+    </div>
+
+    <div class="field">
         {{ html_label(__('Email'), 'email', errors=errors, required=true) }}
         <div class="control">
             {{ html_input_text('email', data, type='email', errors=errors, required=true) }}
