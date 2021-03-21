@@ -97,7 +97,7 @@ composer install
 Install Node dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
 Load barebone database:
