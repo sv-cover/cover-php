@@ -148,7 +148,7 @@ function monkeyPatch (agent) {
 let mainDialog = {}
 Object.assign(mainDialog, {
     title: "Hi, I'm Clippy! What can I do for you?",
-    text: "I'm Cover's new digital assistent and can make your life easier! What do you need help with?",
+    text: "I'm Cover's new digital assistent and I can make your life easier! What do you need help with?",
     options: [
         {
             text: 'I want to join a club',
