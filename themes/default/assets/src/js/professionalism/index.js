@@ -2,7 +2,7 @@ import $ from 'jquery'
 import clippy from 'clippyjs'
 
 
-function buildDialog (options) {
+function buildDialog (options, agent) {
     let container = document.createElement('div');
     container.classList.add('cover-clippy-dialog', 'content');
 
@@ -43,7 +43,18 @@ function buildDialog (options) {
                 link.addEventListener('click', () => this.speak(this._complete, option.speak, option.hold || false));
             else if (option.dialog)
                 link.addEventListener('click', () => this.choice(this._complete, option.dialog));
-
+            else if (option.animation === 'random')
+                link.addEventListener('click', () => {
+                    this._complete();
+                    this._finishHideBalloon();
+                    agent.animate();
+                });
+            else if (option.animation)
+                link.addEventListener('click', () => {
+                    this._complete();
+                    this._finishHideBalloon();
+                    agent.play(option.animation);
+                }); 
 
             link.append(option.text);
 
@@ -128,7 +139,7 @@ function monkeyPatch (agent) {
 
 
         // c.html('');
-        c.html(buildDialog.call(this, options));
+        c.html(buildDialog.call(this, options, agent));
 
         this.reposition();
     }
@@ -154,6 +165,10 @@ Object.assign(mainDialog, {
         {
             text: 'Help me pass my General Linguistics exam!',
             link: '/agenda.php?agenda_id=3503',
+        },
+        {
+            text: 'I\'m bored',
+            animation: 'random',
         },
         {
             text: 'I want to have fun',
