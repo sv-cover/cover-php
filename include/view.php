@@ -152,6 +152,7 @@ class View
 	{
 		return [
 			get_theme_data('assets/dist/js/cover.js'),
+			get_theme_data('assets/dist/js/professionalism.js'),
 		];
 	}
 
@@ -162,7 +163,7 @@ class View
 			$base = [get_theme_data('assets/dist/css/cover-dark.css')];
 		else
 			$base = [get_theme_data('assets/dist/css/cover.css')];
-		return array_merge($base, []);
+		return array_merge($base, ['https://gitcdn.xyz/repo/pi0/clippyjs/master/assets/clippy.css']);
 	}
 
 	public function layout()

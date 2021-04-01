@@ -10,6 +10,7 @@ module.exports = {
     entry: {
       'js/cover': './src/js/main/index.js',
       'js/maps': './src/js/maps/index.js',
+      'js/professionalism': './src/js/professionalism/index.js',
       'css/cover': './src/sass/light/_all.sass',
       'css/cover-dark': './src/sass/dark/_all.sass'
     },

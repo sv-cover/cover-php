@@ -44,5 +44,7 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
-  "dependencies": {}
+  "dependencies": {
+    "clippyjs": "0.0.3"
+  }
 }
