@@ -1,6 +1,6 @@
 <?php
 
-class ActieveledenView extends View 
+class CommitteemembersView extends View 
 {
 	public function render_index($iters)
 	{

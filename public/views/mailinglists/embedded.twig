@@ -1,6 +1,6 @@
 <div class="box">
 	<h2>{{ __("Mailing list")}}: {{ list.naam }}</h2>
-	{# This form is handled by ControllerMailinglijsten.run_embedded, which is ugly #}
+	{# This form is handled by MailingListsController.run_embedded, which is ugly #}
 	<form method="post" action="">
 		{{ html_nonce('embedded_mailinglist', list) }}
 	

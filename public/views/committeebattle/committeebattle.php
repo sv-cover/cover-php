@@ -4,7 +4,7 @@ class CommitteeBattleView extends CRUDView
 {
 	public function committee_view()
 	{
-		return View::byName('commissies', $this->controller);
+		return View::byName('committees', $this->controller);
 	}
 
 	public function committee_options()

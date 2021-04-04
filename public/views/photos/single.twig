@@ -277,7 +277,7 @@
             data-icon-class="fa-comments"
             data-text="{{ [__('comment'), __('comments') ]|json_encode|e('html_attr') }}"
         >
-            {{ include('@theme/fotoboekreacties/index.twig', {comments: photo.comments, controller: controller.comments_controller}) }}
+            {{ include('@theme/photocomments/index.twig', {comments: photo.comments, controller: controller.comments_controller}) }}
         </div>
     </div>
 </section>

@@ -4,7 +4,7 @@ require_once 'src/framework/markup.php';
 require_once 'src/framework/svg.php';
 require_once 'src/framework/send-mailinglist-mail.php';
 
-class MailinglijstenView extends CRUDView
+class MailinglistsView extends CRUDView
 {
 	public function committee_options()
 	{

@@ -5,13 +5,13 @@ require_once 'src/framework/init.php';
 require_once 'src/controllers/Controller.php';
 
 
-class ActiveMembersController extends \Controller
+class CommitteeMembersController extends \Controller
 {
-	protected $view_name = 'actieveleden';
+	protected $view_name = 'committeemembers';
 
 	public function __construct($request, $router)
 	{
-		$this->model = get_model('DataModelActieveLeden');
+		$this->model = get_model('DataModelCommitteeMembers');
 
 		parent::__construct($request, $router);
 	}

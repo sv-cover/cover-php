@@ -12,7 +12,7 @@ function empty_to_http_formatter($value) {
 }
 
 
-class ProfielView extends View
+class ProfileView extends View
 {
 	public function tabs(DataIterMember $iter)
 	{

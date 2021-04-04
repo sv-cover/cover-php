@@ -6,7 +6,7 @@ require_once 'src/controllers/Controller.php';
 
 class BooksController extends \Controller
 {
-    protected $view_name = 'boeken';
+    protected $view_name = 'books';
 
 	protected function run_impl()
 	{

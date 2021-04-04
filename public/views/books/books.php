@@ -1,6 +1,6 @@
 <?php
 
-class BoekenView extends View
+class BooksView extends View
 {
 	public function render_call_to_action($webshop_link)
 	{

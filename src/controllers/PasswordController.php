@@ -6,7 +6,7 @@ require_once 'src/controllers/Controller.php';
 
 class PasswordController extends \Controller
 {
-	protected $view_name = 'wachtwoordvergeten';
+	protected $view_name = 'password';
 
 	public function __construct($request, $router)
 	{

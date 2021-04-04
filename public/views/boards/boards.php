@@ -1,6 +1,6 @@
 <?php
 
-class BesturenView extends CRUDView
+class BoardsView extends CRUDView
 {
 	public function get_summary($page_id)
 	{
@@ -11,12 +11,12 @@ class BesturenView extends CRUDView
 
 	public function has_bestuursfoto($bestuur)
 	{
-		return file_exists('public/images/besturen/' . $bestuur->get('login') . '.jpg');
+		return file_exists('public/images/boards/' . $bestuur->get('login') . '.jpg');
 	}
 
 	public function get_bestuursfoto($bestuur)
 	{
-		return 'images/besturen/' . $bestuur->get('login') . '.jpg';
+		return 'images/boards/' . $bestuur->get('login') . '.jpg';
 	}
 
 	public function parse_bestuursfoto($bestuur, $html)

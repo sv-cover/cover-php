@@ -7,7 +7,7 @@
 	
 	class MembershipController extends \Controller
 	{
-		protected $view_name = 'lidworden';
+		protected $view_name = 'membership';
 
 		public function __construct($request, $router)
 		{

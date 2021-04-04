@@ -1,6 +1,6 @@
 {% extends '@layout/layout.twig' %}
 
-{% import _self as fotoboek %}
+{% import _self as macros %}
 
 {% macro render_face(face) %}
 	{% set size = face.photo.get_scaled_size(null, 400) %}
@@ -64,7 +64,7 @@
 					<div class="columns">
 						{% for face in lid_faces %}
 							<a class="column is-narrow" href="{{ path('photos', {book: book.id, photo: face.foto_id}) }}
-							">{{ fotoboek.render_face(face) }}</a>
+							">{{ macros.render_face(face) }}</a>
 						{% endfor %}
 					</div>
 				{% endfor %}

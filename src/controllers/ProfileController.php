@@ -12,7 +12,7 @@ require_once 'src/framework/email.php';
 
 class ProfileController extends \Controller
 {
-	protected $view_name = 'profiel';
+	protected $view_name = 'profile';
 
 	public function __construct($request, $router)
 	{

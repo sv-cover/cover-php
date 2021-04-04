@@ -14,7 +14,7 @@ class MailingListsController extends \ControllerCRUD
 
 	private $subscription_model;
 
-	protected $view_name = 'mailinglijsten';
+	protected $view_name = 'mailinglists';
 
 	public function __construct(Request $request = null, RouterInterface $router = null)
 	{

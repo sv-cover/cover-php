@@ -257,7 +257,7 @@ class LayoutViewHelper
 			$tools['admin']['items'][] = [
 				'label' => __('Active members'),
 				'title' => __('All active committee members according to the website.'),
-				'url' => $this->router->generate('active_members'),
+				'url' => $this->router->generate('committee_members'),
 				'icon' => [
 					'fa' => 'fas fa-user-friends',
 					'color' => 'dark',

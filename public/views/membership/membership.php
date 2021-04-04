@@ -1,6 +1,6 @@
 <?php
 
-class LidwordenView extends View
+class MembershipView extends View
 {
 	public function render_form(array $errors = array())
 	{

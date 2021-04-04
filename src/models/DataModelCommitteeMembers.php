@@ -4,7 +4,7 @@
 	/**
 	  * A class implementing active member data
 	  */
-	class DataModelActieveLeden extends DataModel
+	class DataModelCommitteeMembers extends DataModel
 	{
 		public function __construct($db)
 		{

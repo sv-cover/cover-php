@@ -20,7 +20,7 @@
 
 		protected $photo;
 
-		protected $view_name = 'fotoboekreacties';
+		protected $view_name = 'photocomments';
 
 		public function __construct(\DataIterPhoto $photo, $request, $router)
 		{
@@ -270,7 +270,7 @@
 	{
 		protected $photo;
 
-		protected $view_name = 'fotoboek';
+		protected $view_name = 'photos';
 
 		public function __construct(\DataIterPhoto $photo, $request, $router)
 		{
@@ -318,7 +318,7 @@
 
 		public $comments_controller;
 		
-		protected $view_name = 'fotoboek';
+		protected $view_name = 'photos';
 
 		public function __construct($request, $router)
 		{

@@ -2,7 +2,7 @@
 	require_once 'src/framework/login.php';
 	require_once 'src/framework/markup.php';
 	
-	class AgendaView extends CRUDView
+	class CalendarView extends CRUDView
 	{
 		public $facebook = null;
 

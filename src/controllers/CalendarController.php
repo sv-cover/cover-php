@@ -15,7 +15,7 @@
 	{
 		protected $_var_id = 'agenda_id';
 
-		protected $view_name = 'agenda';
+		protected $view_name = 'calendar';
 
 		public function __construct($request, $router)
 		{

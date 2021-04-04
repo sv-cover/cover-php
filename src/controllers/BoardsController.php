@@ -6,7 +6,7 @@ require_once 'src/controllers/ControllerCRUD.php';
 
 class BoardsController extends \ControllerCRUD
 {
-	protected $view_name = 'besturen';
+	protected $view_name = 'boards';
 
 	public function __construct($request, $router)
 	{

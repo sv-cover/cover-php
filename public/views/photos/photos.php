@@ -3,7 +3,7 @@
 
 	use App\Controller\PhotoCommentsController;
 
-	class FotoboekView extends CRUDView
+	class PhotosView extends CRUDView
 	{
 		/**
 		 * Render methods, called from the controller

@@ -8,7 +8,7 @@ class CommitteesController extends \ControllerCRUD
 {	
 	protected $_var_id = 'commissie';
 
-	protected $view_name = 'commissies';
+	protected $view_name = 'committees';
 
 	public $mode;
 

@@ -2,10 +2,6 @@ homepage:
   path: /
   controller: App\Controller\HomepageController
 
-active_members:
-  path: /active_members
-  controller: App\Controller\ActiveMembersController
-
 almanak:
   path: /almanak
   controller: App\Controller\AlmanakController
@@ -41,6 +37,10 @@ clubs:
 committee_battle:
   path: /committee_battle
   controller: App\Controller\CommitteeBattleController
+
+committee_members:
+  path: /committee_members
+  controller: App\Controller\CommitteeMembersController
 
 committees:
   path: /committees
@@ -147,8 +147,8 @@ legacy:
   defaults:
     map:
       actieveleden:
-        controller: App\Controller\ActiveMembersController
-        parameters: { _route: active_members }
+        controller: App\Controller\CommiteeMembersController
+        parameters: { _route: committee_members }
       agenda:
         controller: App\Controller\CalendarController
         parameters: { _route: calendar }
