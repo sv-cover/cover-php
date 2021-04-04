@@ -1,13 +1,13 @@
 <?php
 	namespace App\Controller;
 
-	require_once 'include/init.php';
-	require_once 'include/member.php';
-	require_once 'include/login.php';
-	require_once 'include/form.php';
-	require_once 'include/webcal.php';
-	require_once 'include/markup.php';
-	require_once 'include/controllers/ControllerCRUD.php';
+	require_once 'src/framework/init.php';
+	require_once 'src/framework/member.php';
+	require_once 'src/framework/login.php';
+	require_once 'src/framework/form.php';
+	require_once 'src/framework/webcal.php';
+	require_once 'src/framework/markup.php';
+	require_once 'src/controllers/ControllerCRUD.php';
 
 	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 	
@@ -355,7 +355,7 @@
 			if (!$iter['facebook_id'])
 				return;
 
-			require_once 'include/facebook.php';
+			require_once 'src/framework/facebook.php';
 			$facebook = get_facebook();
 
 			if (!$facebook->getUser())

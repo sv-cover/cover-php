@@ -3,7 +3,7 @@
 ini_set('memory_limit', '512M');
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/init.php';
+require_once 'src/framework/init.php';
 
 $translation_table = array();
 

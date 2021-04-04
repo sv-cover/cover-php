@@ -1,5 +1,5 @@
 <?php
-	include('../include/init.php');
+	include('../src/framework/init.php');
 
 	if (!isset($_GET['menu'])) {
 		echo __('There is a problem with the menu, if this keeps occuring, contact the Easy at easy@ai.rug.nl');

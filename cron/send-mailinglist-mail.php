@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/send-mailinglist-mail.php';
+require_once 'src/framework/send-mailinglist-mail.php';
 
 use function \Cover\email\mailinglist\get_error_message;
 use function \Cover\email\mailinglist\send_mailinglist_mail;

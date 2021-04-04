@@ -77,11 +77,11 @@ Clone the repository and `cd` into its directory. If you're using WSL make sure 
 Copy the config files:
 
 ```bash
-cp include/config.inc.default include/config.inc
-cp include/data/DBIds.php.default include/data/DBIds.php
+cp config/config.inc.default config/config.inc
+cp config/DBIds.php.default config/DBIds.php
 ```
 
-Adjust `include/data/DBIds.php` to match your database settings.
+Adjust `config/DBIds.php` to match your database settings.
 
 Install PHP dependencies:
 
@@ -92,7 +92,7 @@ composer install
 Load barebone database:
 
 ```bash
-sudo -u postgres psql webcie < include/data/webcie-minimal.sql
+sudo -u postgres psql webcie < src/data/webcie-minimal.sql
 ```
 
 Set password for test user (ID = 1):
@@ -128,9 +128,9 @@ Some things will not work with this setup.
 
 ### Fixing config
 
-Photo albums will not show photos. To fix this, change the `url_to_scaled_photo` setting in `include/config.inc` to `'https://www.svcover.nl/fotoboek.php?view=scaled'`,
+Photo albums will not show photos. To fix this, change the `url_to_scaled_photo` setting in `config/config.inc` to `'https://www.svcover.nl/fotoboek.php?view=scaled'`,
 
-Some pages will complain that you didn't configure a nonce salt. To fix this, change the `nonce_salt` setting in `include/config.inc` to any string of your liking (or generate one according to the instructions).
+Some pages will complain that you didn't configure a nonce salt. To fix this, change the `nonce_salt` setting in `config/config.inc` to any string of your liking (or generate one according to the instructions).
 
 ### ImageMagick
 

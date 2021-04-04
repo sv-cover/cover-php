@@ -1,10 +1,10 @@
 <?php
 namespace App\Controller;
 
-require_once 'include/init.php';
-require_once 'include/controllers/Controller.php';
-require_once 'include/member.php';
-require_once 'include/validate.php';
+require_once 'src/framework/init.php';
+require_once 'src/framework/member.php';
+require_once 'src/framework/validate.php';
+require_once 'src/controllers/Controller.php';
 
 class SignUpFormsController extends \Controller
 {
@@ -101,7 +101,7 @@ class SignUpFormsController extends \Controller
 				$entry['member_id'] = (int) $_POST['member_id'];
 
 			// Process the posted values. This will delegate all data handling to the classes
-			// in includes/fields/*.php
+			// in src/fields/*.php
 			if ($entry->process($_POST)) {
 				$this->entry_model->insert($entry);
 				$success = true;

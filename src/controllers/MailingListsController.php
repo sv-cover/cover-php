@@ -1,9 +1,9 @@
 <?php
 namespace App\Controller;
 
-require_once 'include/init.php';
-require_once 'include/member.php';
-require_once 'include/controllers/ControllerCRUD.php';
+require_once 'src/framework/init.php';
+require_once 'src/framework/member.php';
+require_once 'src/controllers/ControllerCRUD.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;

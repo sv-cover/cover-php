@@ -1,12 +1,12 @@
 <?php
 	namespace App\Controller;
 
-	require_once 'include/init.php';
-	require_once 'include/member.php';
-	require_once 'include/form.php';
-	require_once 'include/http.php';
-	require_once 'include/controllers/Controller.php';
-	require_once 'include/controllers/ControllerCRUD.php';
+	require_once 'src/framework/init.php';
+	require_once 'src/framework/member.php';
+	require_once 'src/framework/form.php';
+	require_once 'src/framework/http.php';
+	require_once 'src/controllers/Controller.php';
+	require_once 'src/controllers/ControllerCRUD.php';
 
 	use Symfony\Component\Routing\RouterInterface;
 	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

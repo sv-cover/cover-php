@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=9">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="shortcut icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-64x64.png" sizes="64x64">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-128x128.png" sizes="128x128">
+		<link rel="shortcut icon" type="image/png"  href="images/favicon-192x192.png" sizes="192x192">
+		<link rel="apple-touch-icon" href="filename='images/apple-touch-icon-180x180.png">
+		<meta name="msapplication-TileImage" content="images/favicon-270x270.png">
+
+
+		<title>Error! – Cover</title>
+
+        <link rel="stylesheet" href="/public/assets/dist/css/cover.css" type="text/css">
+
+	</head>
+	<body class="has-navbar-fixed-top">
+		<nav class="navbar is-cover is-fixed-top" role="navigation" aria-label="main navigation">
+			<div class="container">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="/">
+						<img class="cover-logo" src="/public/images/cover_logo.png" alt="Cover">
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<article class="section">
+			<div class="container">
+				<section class="block">
+					<h1 class="title">Error!</h1>
+					<div class="content">
+						<p>{{ __('Sorry, something went horribly wrong. Please try again in a bit or contact the WebCie (webcie@svcover.nl)') }}</p>
+
+						{% if sentry_id %}
+						<p>
+							Sentry event id: <code>{{ sentry_id }}</code><br>
+							<button class="button" onclick="reportUserFeedback()">Provide feedback</button>
+						</p>
+						{% endif %}
+
+						<p><a href="{{ path('homepage') }}" class="button">{{ __('Go to the homepage') }}</a></p>
+					</div>
+				</section>
+				{% block content %}{% endblock %}
+				{% if global.config.show_exceptions %}
+					<section class="block">
+						<h2 class="title is-4">Error information</h2>
+						<pre>{{ exception }}</pre>
+					</section>
+				{% endif %}
+			</div>
+		</article>
+
+		<script src="https://cdn.ravenjs.com/3.14.0/raven.min.js"></script>
+		<script>
+			function reportUserFeedback() {
+				Raven.config({{ global.config.sentry_public_url|json_encode()|raw }});
+				{% if global.auth.logged_in %}
+				Raven.setUserContext({ id: {{ global.identity.member.id|json_encode()|raw }} });
+				{% endif %}
+				Raven.showReportDialog({ eventId: {{ sentry_id|json_encode()|raw }} });
+			}
+		</script>
+	</body>
+</html>

@@ -1,10 +1,10 @@
 <?php
 namespace App\Controller;
 
-require_once 'include/init.php';
-require_once 'include/search.php';
-require_once 'include/controllers/Controller.php';
-require_once 'include/view.php';
+require_once 'src/framework/init.php';
+require_once 'src/framework/search.php';
+require_once 'src/controllers/Controller.php';
+require_once 'src/framework/view.php';
 	
 class SearchController extends \Controller
 {

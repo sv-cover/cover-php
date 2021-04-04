@@ -6,9 +6,9 @@ namespace Cover\email\mailinglist\queue;
 
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/init.php';
-require_once 'include/email.php';
-require_once 'include/send-mailinglist-mail.php';
+require_once 'src/framework/init.php';
+require_once 'src/framework/email.php';
+require_once 'src/framework/send-mailinglist-mail.php';
 
 use \Cover\email\MessagePart;
 use function \Cover\email\mailinglist\send_mailinglist_mail;

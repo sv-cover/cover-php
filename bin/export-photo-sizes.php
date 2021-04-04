@@ -2,8 +2,8 @@
 <?php
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/init.php';
-require_once 'include/terminal.php';
+require_once 'src/framework/init.php';
+require_once 'src/framework/terminal.php';
 
 $photo_model = get_model('DataModelPhotobook');
 

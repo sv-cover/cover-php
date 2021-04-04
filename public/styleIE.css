@@ -1,0 +1,32 @@
+.container
+{
+	width		: 642px !important;
+}
+
+.topMenu
+{
+	width		: 994px !important;
+}
+
+.header
+{
+	width		: 954px !important;
+}
+
+hr.colorAccent
+{
+	margin-bottom: -15px;
+	position: relative;
+	top: 5px;
+}
+hr.menu_contents
+{
+	margin-top: -15px;
+	position: relative;
+	top: -10px;
+}
+
+.logButton
+{
+	background-color: rgb(221,221,221);
+}

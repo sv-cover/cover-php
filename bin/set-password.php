@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require 'include/init.php';
+require 'src/framework/init.php';
 
 function input($prompt) {
 	echo $prompt;

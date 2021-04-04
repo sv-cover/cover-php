@@ -1,9 +1,9 @@
 <?php
 	namespace App\Controller;
 
-	require_once 'include/init.php';
-	require_once 'include/controllers/Controller.php';
-	require_once 'include/secretary.php';
+	require_once 'src/framework/init.php';
+	require_once 'src/controllers/Controller.php';
+	require_once 'src/framework/secretary.php';
 	
 	class MembershipController extends \Controller
 	{

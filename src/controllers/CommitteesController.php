@@ -1,9 +1,8 @@
 <?php
 namespace App\Controller;
 
-require_once 'include/init.php';
-require_once 'include/controllers/ControllerCRUD.php';
-require_once 'themes/default/views/commissies/commissies.php';
+require_once 'src/framework/init.php';
+require_once 'src/controllers/ControllerCRUD.php';
 
 class CommitteesController extends \ControllerCRUD
 {	

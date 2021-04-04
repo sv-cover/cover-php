@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-require_once 'include/controllers/ControllerCRUD.php';
+require_once 'src/controllers/ControllerCRUD.php';
 
 class StickersController extends \ControllerCRUD
 {

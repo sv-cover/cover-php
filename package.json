@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "webpack --config webpack.config.js --mode development --watch",
-    "build": "rm -r ./themes/default/assets/dist && webpack --mode production"
+    "build": "rm -r ./public/assets/dist && webpack --mode production"
   },
   "repository": {
     "type": "git",

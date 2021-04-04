@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
-    context: __dirname + '/themes/default/assets',
+    context: __dirname + '/public/assets',
     entry: {
       'js/cover': './src/js/main/index.js',
       'js/maps': './src/js/maps/index.js',
@@ -14,8 +14,8 @@ module.exports = {
       'css/cover-dark': './src/sass/dark/_all.sass'
     },
     output: {
-        path: __dirname + '/themes/default/assets/dist',
-        publicPath: '/themes/default/assets/dist/',
+        path: __dirname + '/public/assets/dist',
+        publicPath: '/assets/dist/',
         filename: '[name].js',
     },
     module: {
