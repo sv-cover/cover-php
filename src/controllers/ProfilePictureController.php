@@ -247,7 +247,7 @@
 			$imagick->newImage($width, $height, $background);
 
 			$draw->setFillColor($foreground);
-			$draw->setFont(realpath ('./fonts/FiraSans-Regular.ttf'));
+			$draw->setFont(realpath ('public/fonts/FiraSans-Regular.ttf'));
 			$draw->setFontSize($width / 2);
 			$draw->setTextAntialias(true);
 
