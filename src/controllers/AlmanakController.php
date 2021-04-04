@@ -3,9 +3,8 @@
 
 	use ZipStream\ZipStream;
 
-	require_once 'src/framework/init.php';
 	require_once 'src/framework/member.php';
-	require_once 'src/controllers/Controller.php';
+	require_once 'src/framework/controllers/Controller.php';
 	
 	class AlmanakController extends \Controller
 	{

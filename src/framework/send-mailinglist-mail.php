@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Cover\email\mailinglist;
 
-require_once 'src/framework/init.php';
+require_once 'src/init.php';
 require_once 'src/framework/email.php';
 
 use \Cover\email\MessagePart;

@@ -2,7 +2,7 @@
 	if (!defined('IN_SITE'))
 		return;
 
-	require_once 'src/framework/data.php';
+	require_once 'src/framework/data/data.php';
 	require_once 'src/framework/auth.php';
 
 	function login($email, $pass, $remember = false)

@@ -53,7 +53,7 @@
 				? $dbids[$environment]['class']
 				: 'DatabasePDO';
 
-			require_once 'src/data/' . $database_class . '.php';
+			require_once 'src/framework/data/' . $database_class . '.php';
 
 			if (!isset($dbids[$environment]))
 				throw new RuntimeException("No database configuration for environment '$environment'");

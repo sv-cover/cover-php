@@ -1,5 +1,7 @@
 <?php
 
+// TODO: This doesn't seem to be used
+
 class URL_TokenParser extends Twig_TokenParser
 {
 	public function parse(Twig_Token $token)

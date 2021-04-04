@@ -1,10 +1,9 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/init.php';
 require_once 'src/framework/member.php';
 require_once 'src/framework/validate.php';
-require_once 'src/controllers/Controller.php';
+require_once 'src/framework/controllers/Controller.php';
 
 class SignUpFormsController extends \Controller
 {

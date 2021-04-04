@@ -97,16 +97,16 @@ class View
 
 		$router = $this->controller ? $this->controller->get_router() : get_router();
 
-		require_once 'src/framework/policytwigextension.php';
+		require_once 'src/framework/twig/policytwigextension.php';
 		$this->twig->addExtension(new PolicyTwigExtension());
 
-		require_once 'src/framework/i18ntwigextension.php';
+		require_once 'src/framework/twig/i18ntwigextension.php';
 		$this->twig->addExtension(new I18NTwigExtension());
 
-		require_once 'src/framework/routertwigextension.php';
+		require_once 'src/framework/twig/routertwigextension.php';
 		$this->twig->addExtension(new RouterTwigExtension($router));
 
-		require_once 'src/framework/htmltwigextension.php';
+		require_once 'src/framework/twig/htmltwigextension.php';
 		$this->twig->addExtension(new HTMLTwigExtension());
 
 		require_once 'public/views/_layout/layout.php';

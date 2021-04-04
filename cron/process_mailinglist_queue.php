@@ -6,7 +6,7 @@ namespace Cover\email\mailinglist\queue;
 
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'src/framework/init.php';
+require_once 'src/init.php';
 require_once 'src/framework/email.php';
 require_once 'src/framework/send-mailinglist-mail.php';
 

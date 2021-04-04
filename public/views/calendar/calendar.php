@@ -12,7 +12,7 @@
 
 			if (get_config_value('enable_facebook', false))
 			{
-				require_once 'src/framework/facebook.php';
+				require_once 'src/services/facebook.php';
 				$this->facebook = get_facebook();
 			}
 		}

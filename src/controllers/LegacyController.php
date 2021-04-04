@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/controllers/Controller.php';
+require_once 'src/framework/controllers/Controller.php';
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;

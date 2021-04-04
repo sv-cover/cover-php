@@ -2,7 +2,7 @@
 chdir (dirname(__FILE__) . '/..');
 set_include_path ( dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' );
 
-require_once 'src/framework/init.php';
+require_once 'src/init.php';
 require_once 'src/framework/router.php';
 
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;

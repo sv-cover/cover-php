@@ -1,6 +1,6 @@
 <?php
 
-require_once 'src/framework/init.php';
+require_once 'src/init.php';
 require_once 'src/framework/test.php';
 
 use PHPUnit\Framework\TestCase;

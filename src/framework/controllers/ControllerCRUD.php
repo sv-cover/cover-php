@@ -1,9 +1,9 @@
 <?php
 
-require_once 'src/framework/init.php';
-require_once 'src/policies/policy.php';
-require_once 'src/controllers/Controller.php';
+require_once 'src/init.php';
+require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/validate.php';
+require_once 'src/framework/policy.php';
 
 class ControllerCRUD extends Controller
 {

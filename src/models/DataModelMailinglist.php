@@ -1,6 +1,6 @@
 <?php
 
-require_once 'src/data/DataModel.php';
+require_once 'src/framework/data/DataModel.php';
 require_once 'src/models/DataModelMember.php'; // Required for MEMBER_STATUS_LID_AF
 require_once 'src/framework/email.php';
 

@@ -1,13 +1,12 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/init.php';
 require_once 'src/framework/form.php';
 require_once 'src/framework/member.php';
 require_once 'src/framework/login.php';
-require_once 'src/framework/facebook.php';
-require_once 'src/framework/secretary.php';
-require_once 'src/controllers/Controller.php';
+require_once 'src/services/facebook.php';
+require_once 'src/services/secretary.php';
+require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/email.php';
 
 class ProfileController extends \Controller
@@ -408,7 +407,7 @@ class ProfileController extends \Controller
 		if (!$this->policy->user_can_update($member))
 			throw new \UnauthorizedException();
 
-		require_once 'src/framework/incassomatic.php';
+		require_once 'src/services/incassomatic.php';
 
 		$incasso_api = \incassomatic\shared_instance();
 

@@ -1,9 +1,8 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/init.php';
 require_once 'src/framework/member.php';
-require_once 'src/controllers/ControllerCRUD.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 /**
  * Class ControllerAnnouncements

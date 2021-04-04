@@ -1,5 +1,5 @@
 <?php
-	require_once 'src/data/DataModel.php';
+	require_once 'src/framework/data/DataModel.php';
 	require_once 'src/models/DataModelForum.php';
 
 	class DataIterPollOption extends DataIter

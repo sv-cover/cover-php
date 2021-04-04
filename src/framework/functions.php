@@ -4,7 +4,7 @@
 
 	require_once 'src/framework/config.php';
 	require_once 'src/framework/exception.php';
-	require_once 'src/framework/data.php';
+	require_once 'src/framework/data/data.php';
 	require_once 'src/framework/view.php';
 
 	function _dump(...$args) {

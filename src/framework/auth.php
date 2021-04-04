@@ -1,6 +1,6 @@
 <?php
 
-require_once 'src/framework/data.php';
+require_once 'src/framework/data/data.php';
 require_once 'src/framework/functions.php';
 
 interface IdentityProvider

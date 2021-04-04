@@ -51,7 +51,7 @@ class BankAccount implements \SignUpFieldType
 			return null;
 
 		try {
-			require_once 'src/framework/incassomatic.php';
+			require_once 'src/services/incassomatic.php';
 
 			$incasso_api = \incassomatic\shared_instance();
 			$contracts = $incasso_api->getContracts($member);

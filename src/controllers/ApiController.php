@@ -2,11 +2,10 @@
 namespace App\Controller;
 
 
-require_once 'src/framework/init.php';
 require_once 'src/framework/member.php';
 require_once 'src/framework/send-mailinglist-mail.php';
-require_once 'src/policies/policy.php';
-require_once 'src/controllers/Controller.php';
+require_once 'src/framework/policy.php';
+require_once 'src/framework/controllers/Controller.php';
 
 use function \Cover\email\mailinglist\get_error_message;
 use function \Cover\email\mailinglist\send_mailinglist_mail;

@@ -1,8 +1,8 @@
 <?php
-	require_once 'src/data/DataModel.php';
+	require_once 'src/framework/data/DataModel.php';
 	require_once 'src/framework/search.php';
 	require_once 'src/framework/router.php';
-	require_once 'src/policies/policy.php';
+	require_once 'src/framework/policy.php';
 
 	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

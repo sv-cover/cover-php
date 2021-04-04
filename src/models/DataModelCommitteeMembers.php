@@ -1,5 +1,5 @@
 <?php
-	require_once 'src/data/DataModel.php';
+	require_once 'src/framework/data/DataModel.php';
 
 	/**
 	  * A class implementing active member data

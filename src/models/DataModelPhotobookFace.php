@@ -1,6 +1,6 @@
 <?php
 
-require_once 'src/data/DataModel.php';
+require_once 'src/framework/data/DataModel.php';
 require_once 'src/models/DataModelPhotobook.php';
 
 class DataIterPhotobookFace extends DataIter

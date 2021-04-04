@@ -1,6 +1,6 @@
 <?php
 
-require_once 'src/framework/facebook.php';
+require_once 'src/services/facebook.php';
 
 use JeroenDesloovere\VCard\VCard;
 
@@ -195,7 +195,7 @@ class ProfileView extends View
 
 	public function render_kast_tab(DataIterMember $iter)
 	{
-		require_once 'src/framework/kast.php';
+		require_once 'src/services/kast.php';
 
 		try {
 			$kast_api = get_kast();
@@ -209,7 +209,7 @@ class ProfileView extends View
 
 	public function render_incassomatic_tab(DataIterMember $iter)
 	{
-		require_once 'src/framework/incassomatic.php';
+		require_once 'src/services/incassomatic.php';
 
 		try {
 			$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');

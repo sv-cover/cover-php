@@ -32,11 +32,11 @@
 	/* Import composer packages */
 	require_once 'vendor/autoload.php';
 
-	require_once 'src/framework/sentry.php';
+	require_once 'src/services/sentry.php';
 	require_once 'src/framework/functions.php';
 	require_once 'src/framework/i18n.php';
 	require_once 'src/framework/constants.php';
-	require_once 'src/policies/policy.php';
+	require_once 'src/framework/policy.php';
 
 	date_default_timezone_set('Europe/Amsterdam');
 
