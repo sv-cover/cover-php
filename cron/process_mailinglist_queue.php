@@ -8,6 +8,7 @@ chdir(dirname(__FILE__) . '/..');
 
 require_once 'src/init.php';
 require_once 'src/framework/email.php';
+require_once 'src/framework/router.php';
 require_once 'src/framework/send-mailinglist-mail.php';
 
 use \Cover\email\MessagePart;
@@ -19,6 +20,8 @@ use function \Cover\email\mailinglist\parse_email_address;
 use function \Cover\email\mailinglist\send_welcome_mail;
 use function \Cover\email\mailinglist\send_message;
 use function \Cover\email\mailinglist\get_error_message as _get_error_message;
+
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -102,6 +105,7 @@ function send_message_to_committee(MessagePart $message, string $to, \DataIterCo
 function send_message_to_mailinglist(MessagePart $message, string $to, string $from, \DataIterMailinglist &$list=null): int
 {
     $mailinglist_model = get_model('DataModelMailinglist');
+    $router = get_router();
 
     $list = null;
     $subscriptions = null;
@@ -134,8 +138,8 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
 
         echo date("Y-m-d H:i:s") . " - Sending mail for " . $to . " to " . $subscription['naam'] . " <" . $subscription['email'] . ">: ";
 
-        $unsubscribe_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?abonnement_id=%s', urlencode($subscription['abonnement_id']));
-        $archive_url = ROOT_DIR_URI . sprintf('mailinglijsten.php?view=archive_index&id=%d', $list['id']);
+        $unsubscribe_url = $router->generate('mailing_lists', ['abonnement_id' => $subscription['abonnement_id']], UrlGeneratorInterface::ABSOLUTE_URL);
+        $archive_url =  $router->generate('mailing_lists', ['view' => 'archive_index', 'id'=> $list['id']], UrlGeneratorInterface::ABSOLUTE_URL);
 
         // Personize the message for the receiver
         $personalized_message = \Cover\email\personalize($message, function($text, $content_type) use ($subscription, $list, $unsubscribe_url, $archive_url) {
