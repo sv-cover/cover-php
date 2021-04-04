@@ -34,10 +34,9 @@ function init_sentry()
 		if (get_auth()->logged_in()) {
 			$scope->setUser([
 				'id' => get_identity()->get('id'),
-				'email' => get_identity()->get('email')
+				'email' => get_identity()->get('email'),
+				'session_id' => get_auth()->get_session()->get('id')
 			]);
-
-			$scope->setExtra('session_id', get_auth()->get_session()->get('id'));
 		}
 	});
 }
