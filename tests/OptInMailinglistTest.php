@@ -14,7 +14,7 @@ class OptInMailinglistTest extends TestCase
 
 	private $mailinglist;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		$model = get_model('DataModelMailinglist');
 
@@ -37,7 +37,7 @@ class OptInMailinglistTest extends TestCase
 		$this->mailinglist = $list;
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		$model = get_model('DataModelMailinglist');
 

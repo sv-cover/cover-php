@@ -1,4 +1,6 @@
-<?php namespace cover\test;
+<?php
+
+namespace cover\test;
 
 class MailCatcherMessage
 {
@@ -68,9 +70,9 @@ class MailCatcher
 
 	public function __construct()
 	{
-		$this->sendmail = realpath(dirname(__FILE__) . '/../bin/fake-sendmail.sh');
+		$this->sendmail = realpath(dirname(__FILE__) . '/../../bin/fake-sendmail.sh');
 
-		$this->socket_file = rtrim(getenv('TMPDIR'), '/') . '/cover-php-test-' . uniqid();
+		$this->socket_file = rtrim(sys_get_temp_dir(), '/') . '/cover-php-test-' . uniqid();
 
 		$this->socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
 
@@ -148,11 +150,11 @@ class Response
 function path_to_php_cgi_binary()
 {
 	// First try the php-cgi binary that is part of this PHP distribution
-	if (is_executable(PHP_BINDIR . '/php-cgi'))
-		return PHP_BINDIR . '/php-cgi';
+	if (is_executable(PHP_BINDIR . '/php'))
+		return PHP_BINDIR . '/php';
 
 	// If that doens't work, try the globally installed php-cgi
-	$php_cgi = exec('which php-cgi', $output, $ret_val);
+	$php_cgi = exec('which php', $output, $ret_val);
 
 	if ($ret_val !== 0)
 		throw new \RuntimeException('Could not locate php-cgi binary');
@@ -160,6 +162,7 @@ function path_to_php_cgi_binary()
 	return $php_cgi;
 }
 
+// TODO: This is not compatible with Symfony router
 function simulate_request($path, $params)
 {
 	$path = ltrim($path, '/');
@@ -206,8 +209,7 @@ function simulate_request($path, $params)
 	];
 
 	$php_cgi = path_to_php_cgi_binary();
-
-	$proc = proc_open(implode(' ', [$php_cgi] + $program_options + [$path]), $descriptors, $pipes, getcwd(), $env);
+	$proc = proc_open(implode(' ', array_merge([$php_cgi], $program_options, [$path])), $descriptors, $pipes, getcwd(), $env);
 
 	if (!is_resource($proc))
 		throw new \RuntimeException('Could not start CGI process');
@@ -325,7 +327,7 @@ trait MemberTestTrait
 
 	static public $member_password;
 
-	static public function setUpBeforeClass()
+	static public function setUpBeforeClass(): void
 	{
 		// Set up account
 		$model = get_model('DataModelMember');
@@ -362,7 +364,7 @@ trait MemberTestTrait
 		$model->set_password($member, self::$member_password);
 	}
 
-	public static function tearDownAfterClass()
+	public static function tearDownAfterClass(): void
 	{
 		// Delete account
 		$model = get_model('DataModelMember');
@@ -398,7 +400,7 @@ trait SessionTestTrait
 
 	static public $cover_session;
 
-	static public function setUpBeforeClass()
+	static public function setUpBeforeClass(): void
 	{
 		self::setUpMember();
 
@@ -411,7 +413,7 @@ trait SessionTestTrait
 		self::$cover_session = $model->create(self::getMemberId(), 'TestCase', '1 HOUR');
 	}
 
-	static public function tearDownAfterClass()
+	static public function tearDownAfterClass(): void
 	{
 		self::tearDownMember();
 
