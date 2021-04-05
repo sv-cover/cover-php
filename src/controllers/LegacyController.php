@@ -13,7 +13,7 @@ class LegacyController extends \Controller
         if (empty(\sentry_get_client()))
             return;
 
-        \Sentry\configureScope(function (\Sentry\State\Scope $scope): void {
+        \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($name, $match): void {
             $scope->setTag('legacy_script', $name);
             $scope->setTag('legacy_match', $match);
 
