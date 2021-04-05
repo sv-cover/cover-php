@@ -30,11 +30,11 @@ Copy the contents of the file `config/DBIds.php.default` file to a file named `c
 Do the same for `config/config.inc.default`. Copy its contents to `config/config.inc` and adjust the values where needed.
 
 ### Set up a bare database
-Run the `src/data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website:
+Run the `data/structure.sql` script on your database. This should give you the basic database structure and content necessary to run the website:
 
 ```bash
 createdb --encoding=UTF8 --template=template0 webcie 
-cat src/data/structure.sql | psql webcie
+cat data/structure.sql | psql webcie
 ```
 
 That should be it, the website should work now. You can log in with:  
@@ -42,11 +42,11 @@ email: `user@example.com`
 password: `password`
 
 ### Use barbone database
-Running the `src/data/webcie-minimal.sql` script on your database will install a barebone database with some data but no personal data. It contains a user with the email address `test@svcover.nl` and ID 1. You can set a password with the `bin\set-password.php` script.
+Running the `data/webcie-minimal.sql` script on your database will install a barebone database with some data but no personal data. It contains a user with the email address `test@svcover.nl` and ID 1. You can set a password with the `bin\set-password.php` script.
 
 ```bash
 createdb --encoding=UTF8 --template=template0 webcie 
-psql webcie < src/data/webcie-minimal.sql
+psql webcie < data/webcie-minimal.sql
 ```
 
 ### Copy the database of the live site

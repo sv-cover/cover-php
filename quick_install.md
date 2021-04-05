@@ -92,7 +92,7 @@ composer install
 Load barebone database:
 
 ```bash
-sudo -u postgres psql webcie < src/data/webcie-minimal.sql
+sudo -u postgres psql webcie < data/webcie-minimal.sql
 ```
 
 Set password for test user (ID = 1):
