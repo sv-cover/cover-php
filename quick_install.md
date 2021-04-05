@@ -29,6 +29,11 @@ Install Composer:
 sudo apt install composer
 ```
 
+Install Node:
+
+```bash
+sudo apt install nodejs
+```
 
 ## Step 2: Setup Database
 
@@ -89,6 +94,12 @@ Install PHP dependencies:
 composer install
 ```
 
+Install Node dependencies:
+
+```bash
+npm ci
+```
+
 Load barebone database:
 
 ```bash
@@ -104,6 +115,11 @@ php bin/set-password.php
 
 ## Step 4: Run locally
 
+To build the front-end:
+
+```bash
+npm run build
+```
 
 To run the website, execute the following in the root folder of your repository:
 
