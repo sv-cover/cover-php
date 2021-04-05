@@ -16,6 +16,7 @@ If you want to contribute code please fork this repository, create a new branch 
 
 To run the Cover site locally, you can follow the instructions in [quick_install.md](quick_install.md). This guide has been written for Ubuntu 18.04 (stand alone or on Windows Subsystem for Linux).
 
+### Dependencies
 To run the Cover site you need a webserver with PHP (at least 7.0 I guess) compiled with imagick, libgd and PostgresSQL support. You will also need a PostgresSQL database. (8.2, 9.3 and 10 all seem to work so I guess it doesn't really matter which version.)
 
 To get all the dependencies, run composer in the root directory of your repository. There should be a file named `composer.json` in there:
@@ -23,6 +24,8 @@ To get all the dependencies, run composer in the root directory of your reposito
 ```bash
 composer install
 ```
+### Configure webserver
+The router requires some configuration for your webserver. Instructions for this are provided in the [Symfony Documentation](https://symfony.com/doc/current/setup/web_server_configuration.html0).
 
 ## Setting up the database
 Copy the contents of the file `config/DBIds.php.default` file to a file named `config/DBIds.php` and input your own database configuration data.

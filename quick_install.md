@@ -108,7 +108,7 @@ php bin/set-password.php
 To run the website, execute the following in the root folder of your repository:
 
 ```bash
-php -S localhost:8000/
+php -t public -S localhost:8000/
 ```
 
 Now, you should be able to load `localhost:8000/` in a browser and log in with `test@svcover.nl` and the password you just set.
@@ -116,7 +116,7 @@ Now, you should be able to load `localhost:8000/` in a browser and log in with `
 If php crashes on a segmentation fault, try running the following command instead: 
 
 ```bash
-php -d opcache.enable=0 -d opcache.enable_cli=0 -S localhost:8000/
+php -d opcache.enable=0 -d opcache.enable_cli=0 -t public -S localhost:8000/
 ```
 
 Please note that the barebone database is quite empty. If you need more content, you should add it yourself. The `test@svcover.nl` user is a member of the AC/DCee in this setup, so you should be able to do anything you need with this user. Feel free to create more users if you want.
