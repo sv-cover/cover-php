@@ -19,10 +19,10 @@ class LegacyController extends \Controller
 
             // Most of these are redundant, but it would be nice to have anyway
             $scope->setContext('legacy', [
-                'method' => $_SERVER['REQUEST_METHOD'],
-                'uri' => $_SERVER['REQUEST_URI'],
-                'query' => $_SERVER['QUERY_STRING'],
-                'referer' => $_SERVER['HTTP_REFERER'],
+                'method' => $_SERVER['REQUEST_METHOD'] ?? null,
+                'uri' => $_SERVER['REQUEST_URI'] ?? null,
+                'query' => $_SERVER['QUERY_STRING'] ?? null,
+                'referer' => $_SERVER['HTTP_REFERER'] ?? null,
                 'match' => $match,
             ]);
         });
