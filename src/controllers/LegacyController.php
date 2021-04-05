@@ -10,10 +10,10 @@ class LegacyController extends \Controller
 {
     public function report($name, $match)
     {
-        if (empty(sentry_get_client()))
+        if (empty(\sentry_get_client()))
             return;
 
-        Sentry\configureScope(function (Sentry\State\Scope $scope): void {
+        \Sentry\configureScope(function (\Sentry\State\Scope $scope): void {
             $scope->setTag('legacy_script', $name);
             $scope->setTag('legacy_match', $match);
 
