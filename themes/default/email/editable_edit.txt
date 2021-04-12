@@ -1,13 +1,13 @@
-$member_naam heeft namens $commissie_naam de volgende pagina gewijzigd:
+$member_naam changed the following page on behalf of the $commissie_naam :
 
-Titel: $titel
-Taal:  $taal
+Title: 	 $titel
+Language: $taal
 
 $page
 
-Bekijk de nieuwe pagina op: ROOT_DIR_URIshow.php?id=$id
+You can see the new page here: ROOT_DIR_URIshow.php?id=$id
 
-Met vriendelijke groeten,
+Kind Regards,
 
 
-De WebCie
+The WebCie

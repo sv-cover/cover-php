@@ -1,8 +1,8 @@
-$member_naam heeft namens het bestuur het agendapunt $kop geweigerd om de volgende reden:
+$member_naam has declined the agenda item $kop on behalf of the Board for the following reason:
 
 $reden
 
-Met vriendelijke groeten (we're just the messenger),
+Kind Regards (we're just the messenger),
 
 
-De WebCie
+The WebCie

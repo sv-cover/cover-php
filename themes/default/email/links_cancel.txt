@@ -1,8 +1,8 @@
-$member_naam heeft namens het bestuur de link $titel geweigerd om de volgende reden:
+$member_naam has declined the link with title $titel on behalf of the Board for the following reason:
 
 $reden
 
-Met vriendelijke groeten (we're just the messenger),
+Kind Regards (we're just the messenger),
 
 
-De WebCie
+The WebCie
