@@ -74,6 +74,7 @@ class DataIterMailinglist extends DataIter
 							DataModelMailinglist::TOEGANG_DEELNEMERS,
 							DataModelMailinglist::TOEGANG_COVER,
 							DataModelMailinglist::TOEGANG_EIGENAAR,
+							DataModelMailinglist::TOEGANG_COVER_DEELNEMERS,
 						]);
 					}
 				]
@@ -193,6 +194,7 @@ class DataModelMailinglist extends DataModel
 	const TOEGANG_DEELNEMERS = 2;
 	const TOEGANG_COVER = 3;
 	const TOEGANG_EIGENAAR = 4;
+	const TOEGANG_COVER_DEELNEMERS = 5;
 
 	const TYPE_OPT_IN = 1;
 	const TYPE_OPT_OUT = 2;

@@ -20,7 +20,8 @@ define('RETURN_NOT_ADDRESSED_TO_COMMITTEE_MAILINGLIST', 201);
 define('RETURN_NOT_ALLOWED_NOT_SUBSCRIBED', 401);
 define('RETURN_NOT_ALLOWED_NOT_COVER', 402);
 define('RETURN_NOT_ALLOWED_NOT_OWNER', 403);
-define('RETURN_NOT_ALLOWED_UNKNOWN_POLICY', 404);
+define('RETURN_NOT_ALLOWED_NOT_SUBSCRIBED_NOT_COVER', 404);
+define('RETURN_NOT_ALLOWED_UNKNOWN_POLICY', 405);
 
 define('RETURN_FAILURE_MESSAGE_EMPTY', 502);
 define('RETURN_MARKED_AS_SPAM', 503);
@@ -195,6 +196,17 @@ function validate_message_to_mailinglist(MessagePart $message, string $to, strin
 				return RETURN_NOT_ALLOWED_NOT_OWNER;
 			break;
 
+		// Only the owning committee can send mail to this list.
+		case $mailinglist_model::TOEGANG_COVER_DEELNEMERS:
+			foreach ($subscriptions as $aanmelding)
+				if (strcasecmp($aanmelding['email'], $from) === 0)
+					break 2;
+
+			if (preg_match('/\@svcover.nl$/i', $from))
+				break;
+
+			return RETURN_NOT_ALLOWED_NOT_SUBSCRIBED;
+
 		default:
 			return RETURN_NOT_ALLOWED_UNKNOWN_POLICY;
 	}
@@ -299,6 +311,9 @@ function get_error_message(int $return_value): string
 
 		case RETURN_NOT_ALLOWED_NOT_COVER:
 			return "Not allowed: Sender does not match *@svcover.nl.";
+
+		case RETURN_NOT_ALLOWED_NOT_SUBSCRIBED_NOT_COVER:
+			return "Not allowed: Sender not subscribed to list and does not match *@svcover.nl.";
 
 		case RETURN_NOT_ALLOWED_NOT_OWNER:
 			return "Not allowed: Sender not the owner of the list.";

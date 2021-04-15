@@ -30,9 +30,10 @@ class MailinglistsView extends CRUDView
 	{
 		return array(
 			DataModelMailinglist::TOEGANG_IEDEREEN => __('Everyone'),
-			DataModelMailinglist::TOEGANG_DEELNEMERS => __('Only people subscribed to this mailing list'),
+			DataModelMailinglist::TOEGANG_DEELNEMERS => __('Only people subscribed to this list (and the list owner)'),
 			DataModelMailinglist::TOEGANG_COVER => __('Only *@svcover.nl addresses'),
-			DataModelMailinglist::TOEGANG_EIGENAAR => __('Only the committee this list belongs to')
+			DataModelMailinglist::TOEGANG_EIGENAAR => __('Only the committee that owns this list')
+			DataModelMailinglist::TOEGANG_COVER_DEELNEMERS => __('People subscribed to this list and *@svcover.nl addresses'),
 		);
 	}
 
