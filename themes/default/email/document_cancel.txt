@@ -1,8 +1,8 @@
-$member_naam heeft namens het bestuur het document $titel geweigerd om de volgende reden:
+$member_naam has rejected the document $titel on behalf of the Board for the following reason:
 
 $reden
 
-Met vriendelijke groeten (we're just the messenger),
+Kind Regards (we're just the messenger),
 
 
-De WebCie
+The WebCie

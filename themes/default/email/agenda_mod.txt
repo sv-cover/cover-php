@@ -1,15 +1,15 @@
-$member_naam heeft namens de $commissie_naam het volgende agendapunt gewijzigd:
+$member_naam has changed the following agenda point on behalf of the $commissie_naam :
 
-Kop:     $kop
-Van:     $van
-Tot:     $tot
-Locatie: $locatie
+Name:     $kop
+From:     $van
+Until:    $tot
+Location: $locatie
 
 $beschrijving
 
-Je kunt op de pagina ROOT_DIR_URIagenda.php?agenda_moderate=$id#$id dit agendapunt goedkeuren (of weigeren).
+You can approve (or decline) this agenda item on ROOT_DIR_URIagenda.php?agenda_moderate=$id#$id .
 
-Met vriendelijke groeten,
+Kind Regards,
 
 
-De WebCie
+The WebCie
