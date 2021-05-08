@@ -69,7 +69,7 @@
                 <a class="media" href="{{ controller.link_to_read(iter) }}">
                     {% if iter.partner %}
                         <figure class="media-left image">
-                            {% if iter.partner.logo_dark_url is defined %}
+                            {% if iter.partner.logo_dark_url %}
                                 <img class="darkmode" src="{{ iter.partner.get_logo_dark(700) }}">
                             {% endif %}
                             <img class="default" src="{{ iter.partner.get_logo(700) }}">

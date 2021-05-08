@@ -54,7 +54,7 @@
     <div class="columns">
         <div class="column is-content">
             <figure class="image is-hidden-desktop block">
-                {% if iter.logo_dark_url is defined %}
+                {% if iter.logo_dark_url %}
                     <img class="darkmode" src="{{ iter.get_logo_dark(700) }}">
                 {% endif %}
                 <img class="default" src="{{ iter.get_logo(700) }}">
@@ -70,7 +70,7 @@
             <h2 class="is-sr-only">{{ __('Partner details') }}</h2>
             <div class="is-sticky">
                 <figure class="image is-hidden-touch block">
-                    {% if iter.logo_dark_url is defined %}
+                    {% if iter.logo_dark_url %}
                         <img class="darkmode" src="{{ iter.get_logo_dark(300) }}">
                     {% endif %}
                     <img class="default" src="{{ iter.get_logo(300) }}">
