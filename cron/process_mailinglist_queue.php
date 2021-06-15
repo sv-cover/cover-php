@@ -181,6 +181,7 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
         $personalized_message->setHeader('List-Archive', sprintf('<%s>', $archive_url));
 
         echo send_message($personalized_message, $subscription['email']), "\n";
+        sleep(10);
     }
 
     return 0;
