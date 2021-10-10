@@ -125,6 +125,32 @@ class LayoutViewHelper
 			'items' => [
 				[
 					'icon' => [
+						'fa' => 'fas fa-graduation-cap',
+						'color' => 'cover',
+					],
+					'url' => 'https://studysupport.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Exams & Summaries')
+				],
+				[
+					'icon' => [
+						'img' => '/images/applications/tutoring.svg',
+					],
+					'url' => 'https://tutoring.svcover.nl/',
+					'target' => '_blank',
+					'label' => __('Tutoring')
+				],
+				[
+					'icon' => [
+						'fa' => 'fas fa-tshirt',
+						'color' => 'cover',
+					],
+					'url' => 'https://merchandise.svcover.nl/',
+					'target' => '_blank', 
+					'label' => __('Merchandise')
+				],
+				[
+					'icon' => [
 						'fa' => 'fas fa-book',
 						'color' => 'cover',
 					],
@@ -140,32 +166,6 @@ class LayoutViewHelper
 					'target' => '_blank',
 					'label' => __('Documents & Templates')
 				],
-				[
-					'icon' => [
-						'fa' => 'fas fa-tshirt',
-						'color' => 'cover',
-					],
-					'url' => 'https://merchandise.svcover.nl/',
-					'target' => '_blank', 
-					'label' => __('Merchandise')
-				],
-				[
-					'icon' => [
-						'fa' => 'fas fa-graduation-cap',
-						'color' => 'cover',
-					],
-					'url' => 'https://studysupport.svcover.nl/',
-					'target' => '_blank',
-					'label' => __('Exams & Summaries')
-				],
-				[
-					'icon' => [
-						'img' => '/images/applications/tutoring.svg',
-					],
-					'url' => 'https://tutoring.svcover.nl/',
-					'target' => '_blank',
-					'label' => __('Tutoring')
-				]
 			]
 		];
 
@@ -182,10 +182,31 @@ class LayoutViewHelper
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
 			$tools['external']['items'][] = [
 				'icon' => [
+					'fa' => 'fas fa-print',
+					'color' => 'cover',
+				],
+				'url' => 'https://myprint.svcover.nl/',
+				'label' => __('Printer'),
+				'target' => '_blank',
+				'title' => __("Print documents on Cover's printer")
+			];
+
+			$tools['external']['items'][] = [
+				'icon' => [
+					'img' => '/images/applications/reclaim.svg',
+				],
+				'url' => 'https://reclaim.svcover.nl/',
+				'label' => __('Reclaim'),
+				'target' => '_blank',
+				'title' => __('Claim your expenses.')
+			];
+
+			$tools['external']['items'][] = [
+				'icon' => [
 					'img' => '/images/applications/mail.svg',
 				],
-				'url' => 'https://webmail.svcover.nl/',
-				'label' => __('Webmail'),
+				'url' => 'https://mail.svcover.nl/',
+				'label' => __('Mail'),
 				'target' => '_blank',
 				'title' => __('Webmail for Cover email accounts.')
 			];
