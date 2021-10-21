@@ -339,6 +339,31 @@
 		}
 	}
 
+	function _markup_parse_membersonly(&$markup, &$placeholders)
+	{
+		// Find [membersonly]email/id[/membersonly] placeholders and replace
+		// them by content or a login cta.
+
+		$count = 0;
+
+		while (preg_match('/\[membersonly(=(?P<title>[^\]]+))?\](?P<content>.+?)\[\/membersonly\]/is', $markup, $match))
+		{
+			if (get_auth()->logged_in())
+				$content = markup_parse($match['content']);
+			else
+				$content = sprintf('<p>This content is only visible for members.</p><a href="sessions.php?view=login&amp;referrer=%s" class="button is-primary">%s</a>', urlencode($_SERVER['REQUEST_URI']), __('Log in'));
+
+			$placeholder = sprintf('#MEMBERSONLY%d#', $count++);
+
+			if ($match['title'])
+				$placeholders[$placeholder] = sprintf('<div class="box"><h2>%s</h2>%s</div>', $match['title'], $content);
+			else
+				$placeholders[$placeholder] = sprintf('<div class="box">%s</div>', $content);
+
+			$markup = str_replace_once($match[0], $placeholder, $markup);
+		}
+	}
+
 	/** @group Markup
 	  * Parse markup
 	  * @markup the markup to parse
@@ -362,8 +387,11 @@
 		/* Filter code tags */
 		_markup_parse_code($markup, $placeholders);
 
-		/* Replace [mailiginlist] embed */
+		/* Replace [mailinglist] embed */
 		_markup_parse_mailinglist($markup, $placeholders);
+
+		/* Replace [membersonly] */
+		_markup_parse_membersonly($markup, $placeholders);
 
 		/* Parse [img=], [youtube=] [video=] */
 		_markup_parse_images($markup, $placeholders);
