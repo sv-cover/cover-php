@@ -126,7 +126,12 @@ class ControllerShow extends ControllerCRUD
 
 	public function run_index()
 	{
-		return $this->view->redirect('index.php'); // we don't have no index/sitemap (yet)
+		if (get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+			|| get_identity()->member_in_committee(COMMISSIE_EASY))
+			return parent::run_index();
+		else
+			return $this->view->redirect('index.php'); // we don't have a public index/sitemap
 	}
 
 	public function run_read(DataIter $iter)

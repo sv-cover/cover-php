@@ -1,0 +1,92 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Pages') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<article class="section">
+<div class="container">
+    <header class="level">
+        <div class="level-left">
+            <h1 class="title">{{ __('Pages') }}</h1>
+        </div>
+        <div class="level-right buttons">
+            <a href="{{ controller.link_to_create()|e('html_attr') }}" class="button">
+                {{ __('New page')  }}
+            </a>
+        </div>
+    </header>
+
+    <section class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th class="is-nowrap">{{ __('ID') }}</th>
+                    <th class="is-nowrap">{{ __('Identifier') }}</th>
+                    <th class="is-nowrap">{{ __('Owner') }}</th>
+                    <th class="is-nowrap">{{ __('Title') }}</th>
+                    <th class="is-nowrap">{{ __('Content') }}</th>
+                    {# <th class="is-nowrap">{{ __('Content (NL)') }}</th> {# currently unused #}
+                    {# <th class="is-nowrap">{{ __('Content (DE)') }}</th> {# currently unused #}
+                    <th class="has-text-right is-nowrap">{{ __('Last modified') }}</th>
+                    <th class="is-sticky is-right is-nowrap"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for page in iters|sort_by('id asc') %}
+                <tr>
+                    <td><a href="{{ controller.link_to_read(page) }}">{{ page.id }}</a></td>
+                    <td class="is-truncated" title="{{ page.titel }}">
+                        <span>{{ page.titel }}</span>{# "identifier" in the form #}
+                    </td>
+                    <td>{{ page.committee.naam }}</td>
+                    <td class="is-truncated" title="{{ page.title }}">
+                        <span>{{ page.title }}</span>{# the title according to the current locale #}
+                    </td>
+                    <td class="is-truncated" title="{{ page.content_en }}">
+                        <span>{{ page.content_en|slice(0,50) }}</span>
+                    </td>
+                    {# <td class="is-truncated" title="{{ page.content }}">
+                        <span>{{ page.content|slice(0,50) }}</span> {# currently unused 
+                    </td> #}
+                    {# <td class="is-truncated" title="{{ page.content_de }}">
+                        <span>{{ page.content_de|slice(0,50) }}</span> {# currently unused 
+                    </td> #}
+                    <td class="has-text-right no-wrap">
+                        {% if page.last_modified %}
+                            {{ page.last_modified|date('Y-m-d') }}
+                        {% endif %}
+                    </td>
+                    <td class="is-sticky is-right has-text-right is-nowrap">
+                        <ul class="controls">
+                        {% spaceless %}
+                            {% if user_can_update page %}
+                                <li>
+                                    <a href="{{ controller.link_to_update(page) }}" title="{{ __('Modify page') }}">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                        </span>
+                                        <span class="is-sr-only">
+                                            {{ __('Modify page') }}
+                                        </span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endspaceless %}
+                        </ul>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">
+                        <p class="has-text-centered">
+                            {{ __('There are currently no pages.') }}
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+</article>
+{% endblock %}

@@ -239,13 +239,13 @@ class LayoutViewHelper
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
 				'icon' => [
-					'fa' => 'fas fa-plus',
+					'fa' => 'fas fa-file-alt',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
-				'url' => 'show.php?view=create',
-				'label' => __('Make a page'),
-				'title' => __('Make a new content page on the website.')
+				'url' => 'show.php',
+				'label' => __('Pages'),
+				'title' => __('View and manage pages.')
 			];
 
 			$tools['admin']['items'][] = [
