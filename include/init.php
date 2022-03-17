@@ -19,7 +19,7 @@
 		throw new AssertionException($message, $script, $line);
 	});
 	
-	set_error_handler(function($severity, $message, $file, $line, $vars) {
+	set_error_handler(function($severity, $message, $file, $line, $vars=null) {
 		if (error_reporting() & $severity)
 			throw new ErrorException($message, 0, $severity, $file, $line);
 	});
