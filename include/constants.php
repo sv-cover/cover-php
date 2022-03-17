@@ -15,7 +15,7 @@
 	define('COMMISSIE_EASY', 1);
 	define('COMMISSIE_BOEKCIE', 3);
 	define('COMMISSIE_FOTOCIE', 7);
-	define('COMMISSIE_PRCIE', 10);
+	define('COMMISSIE_COMEXA', 26);
 	define('COMMISSIE_ALMANAKCIE',4);
 	
 	define('NETWORK_AI', 0);
