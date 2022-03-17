@@ -57,6 +57,11 @@
                         <small>{{ __('All vacancies') }}</small>
                     </p>
                 {% endfor %}
+                {% if view.get_filter_tags(filter) %}
+                    <div class="control">
+                        <a href="?"><small>clear filters</small></a>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <p class="column is-narrow">
