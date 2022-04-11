@@ -295,7 +295,7 @@ class DatabasePDO
 		if ($value === null)
 			return 'NULL';
 		elseif ($value instanceof DateTime)
-			return sprintf("'%s'", $value->format('Y-m-d H:i:s P'));
+			return sprintf("'%s'", $value->format('Y-m-d H:i:s'));
 		elseif ($value instanceof DatabaseLiteral)
 			return $value->toSQL();
 		elseif (is_int($value))
@@ -324,7 +324,7 @@ class DatabasePDO
 
 		// Values that actually fill placeholders
 		elseif ($value instanceof DateTime)
-			$values[$placeholder] = $value->format('Y-m-d H:i:s P');
+			$values[$placeholder] = $value->format('Y-m-d H:i:s');
 		elseif (is_string($value))
 			$values[$placeholder] = $value;
 		elseif (is_resource($value) && get_resource_type($value) === 'stream')
