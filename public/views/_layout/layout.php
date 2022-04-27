@@ -247,14 +247,14 @@ class LayoutViewHelper
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
-				'label' => __('Make a page'),
-				'title' => __('Add content to the website.'),
-				'url' => $this->router->generate('page.create', ['view' => 'create']),
 				'icon' => [
 					'fa' => 'fas fa-file-alt',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
+				'url' => $this->router->generate('page.list'),
+				'label' => __('Pages'),
+				'title' => __('View and manage pages.')
 			];
 
 			$tools['admin']['items'][] = [
