@@ -32,7 +32,7 @@ class LegacyController extends \Controller
             \Sentry\captureMessage(sprintf('Legacy URL visited %s', $name));
         } else {
             $message = sprintf(
-                'Script: "%s", Method: "%s", URI: "%s", Query: "%s", Referrer: "%s", Match: "%s", IP: "%s", User: "%s"',
+                'Script: "%s", Method: "%s", URI: "%s", Query: "%s", Referrer: "%s", Match: "%s", IP: "%s", User: "%s", User-agent: "%s"',
                 $name,
                 $_SERVER['REQUEST_METHOD'] ?? null,
                 $_SERVER['REQUEST_URI'] ?? null,
@@ -41,6 +41,7 @@ class LegacyController extends \Controller
                 $match,
                 $_SERVER['REMOTE_ADDR'] ?? null,
                 get_auth()->logged_in() ? get_identity()->get('id') : null,
+                $_SERVER['HTTP_USER_AGENT'] ?? null,
             );
 
             if (get_config_value('path_to_legacy_controller_log'))
