@@ -2,6 +2,7 @@ $vacancy-list-logo-width-touch: 96px
 $vacancy-list-logo-height-touch: 96px
 $vacancy-list-logo-width-desktop: 192px
 $vacancy-list-logo-height-desktop: auto
+$vacancy-list-logo-max-height-desktop: 128px // is-3by2
 $vacancy-list-description-max-lines: 3
 
 .vacancy-list
@@ -15,11 +16,12 @@ $vacancy-list-description-max-lines: 3
             &:hover
                 background: $background
         &:not(.has-image) > .media::before
-            @extend .media-left
             content: ''
             display: block
             background: $cover-gradient, $black
-        .media-left,
+            // media-left (@extend is buggy here)
+            flex: 0 0 auto
+            margin-right: 1rem
         &:not(.has-image) .media::before
             width: $vacancy-list-logo-width-touch
             height: $vacancy-list-logo-height-touch
@@ -29,6 +31,18 @@ $vacancy-list-description-max-lines: 3
         &:not(.has-image) .media::before
             +desktop
                 height: $vacancy-list-logo-height-touch
+        .media-left
+            width: $vacancy-list-logo-width-touch
+            height: $vacancy-list-logo-height-touch
+            overflow: hidden
+            display: flex                
+            +desktop
+                width: $vacancy-list-logo-width-desktop
+                height: $vacancy-list-logo-height-desktop
+                max-height: $vacancy-list-logo-max-height-desktop
+            img
+                width: 100%
+                object-fit: contain
         .title,
         .properties,
         .description

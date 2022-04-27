@@ -73,8 +73,9 @@
 			header('Cache-Control: max-age=86400');
 			header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 
-			if ($length !== null)
-				header(sprintf('Content-Length: %d', $length));
+			// Content-Length seems to break HTTP/2
+			// if ($length !== null)
+			// 	header(sprintf('Content-Length: %d', $length));
 
 			if ($type !== null)
 				header(sprintf('Content-Type: %s', $type));

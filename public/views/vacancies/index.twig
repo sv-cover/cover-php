@@ -57,6 +57,11 @@
                         <small>{{ __('All vacancies') }}</small>
                     </p>
                 {% endfor %}
+                {% if view.get_filter_tags(filter) %}
+                    <div class="control">
+                        <a href="{{ path('vacancies') }}"><small>clear filters</small></a>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <p class="column is-narrow">
@@ -69,7 +74,7 @@
                 <a class="media" href="{{ path('vacancies', {id: iter.id}) }}">
                     {% if iter.partner %}
                         <figure class="media-left image">
-                            {% if iter.partner.logo_dark_url is defined %}
+                            {% if iter.partner.logo_dark_url %}
                                 <img class="darkmode" src="{{ iter.partner.get_logo_dark(700) }}">
                             {% endif %}
                             <img class="default" src="{{ iter.partner.get_logo(700) }}">

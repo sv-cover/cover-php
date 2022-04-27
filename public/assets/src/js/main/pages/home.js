@@ -45,7 +45,9 @@ function init_homepage(element) {
   for(let i = 0; i < carousels.length; i++) {
     //  The carousel event listener only activates after the first slide
     // so we have to set up the first event manually
-    document.getElementById('event-0').classList.add('is-active')
+    let event0 = document.getElementById('event-0');
+    if (event0)
+      event0.classList.add('is-active');
     
   	carousels[i].on('before:show', state => {
       // deactivate the rest of the events

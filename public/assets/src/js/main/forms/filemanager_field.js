@@ -119,7 +119,12 @@ class FilemanagerField {
 
     initModal() {
         // Init iframe and modal
-        const src = `${this.filemanagerUrl}/fileman`;
+        let src = new URL(`${this.filemanagerUrl}/fileman`);
+        if (this.element.value) {
+            let searchParams = src.searchParams;
+            searchParams.set('selected', this.element.value);
+            src.search = searchParams.toString();
+        }
         const body = `<iframe src="${src}" title="Filemanager Window"></iframe>`;
         this.modal = Bulma.create('modal', {
             root: this.element,
