@@ -76,6 +76,10 @@ mailing_lists:
   path: /mailing_lists
   controller: App\Controller\MailingListsController
 
+page.list:
+  path: /page
+  controller: App\Controller\PageController
+
 page.create:
   path: /page/create
   controller: App\Controller\PageController

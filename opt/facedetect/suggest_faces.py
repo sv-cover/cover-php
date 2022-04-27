@@ -8,7 +8,7 @@ import sys
 import os
 from random import random
 
-conn = psycopg2.connect("dbname=webcie")
+conn = psycopg2.connect("dbname=website")
 cur = conn.cursor()
 icur = conn.cursor()
 

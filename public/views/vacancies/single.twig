@@ -55,7 +55,7 @@
             <div class="is-sticky">
                 {% if iter.partner %}
                     <figure class="image block">
-                        {% if iter.partner.logo_dark_url is defined %}
+                        {% if iter.partner.logo_dark_url %}
                             <img class="darkmode" src="{{ iter.partner.get_logo_dark(700) }}">
                         {% endif %}
                         <img class="default" src="{{ iter.partner.get_logo(700) }}">

@@ -45,6 +45,11 @@
 			];
 		}
 
+		public function get_committee()
+		{
+			return get_model('DataModelCommissie')->get_iter($this->data['committee_id']);
+		}
+
 		public function get_locale_content($language = null)
 		{
 			if (!$language && $this->has_value('search_language'))

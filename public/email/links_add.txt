@@ -1,15 +1,15 @@
-$member_naam heeft de volgende link toegevoegd:
+$member_naam added the following link:
 
-Categorie: $categorie
-Titel:     $titel
+Category: $categorie
+Title:     $titel
 Url:	   $url
 
-Beschrijving:
+Description:
 $beschrijving
 
-Je kunt op de pagina ROOT_DIR_URIlinks.php?links_moderate=$id#$id deze link goedkeuren (of weigeren).
+You can approve (or reject) this link on the ROOT_DIR_URIlinks.php?links_moderate=$id#$id page
 
-Met vriendelijke groeten,
+Kind Regards,
 
 
-De WebCie
+The WebCie

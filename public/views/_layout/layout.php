@@ -137,7 +137,7 @@ class LayoutViewHelper
 					'url' => 'https://wiki.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'fa' => 'fas fa-book',
+						'fa' => 'fas fa-graduation-cap',
 						'color' => 'cover',
 					],
 				],
@@ -146,7 +146,7 @@ class LayoutViewHelper
 					'url' => 'https://sd.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'img' => '/images/applications/sd.png',
+						'img' => '/images/applications/tutoring.svg',
 					],
 				],
 				[
@@ -163,7 +163,7 @@ class LayoutViewHelper
 					'url' => 'https://studysupport.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'fa' => 'fas fa-graduation-cap',
+						'fa' => 'fas fa-book',
 						'color' => 'cover',
 					],
 				],
@@ -172,7 +172,7 @@ class LayoutViewHelper
 					'url' => 'https://tutoring.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'img' => '/images/applications/tutoring.svg',
+						'img' => '/images/applications/sd.png',
 					],
 				]
 			]
@@ -189,6 +189,27 @@ class LayoutViewHelper
 			$tools['admin']['label'] = __('Admin');
 
 		if (get_identity()->member_in_committee()) { // Member in any committee at all
+			$tools['external']['items'][] = [
+				'icon' => [
+					'fa' => 'fas fa-print',
+					'color' => 'cover',
+				],
+				'url' => 'https://myprint.svcover.nl/',
+				'label' => __('Printer'),
+				'target' => '_blank',
+				'title' => __("Print documents on Cover's printer")
+			];
+
+			$tools['external']['items'][] = [
+				'icon' => [
+					'img' => '/images/applications/reclaim.svg',
+				],
+				'url' => 'https://reclaim.svcover.nl/',
+				'label' => __('Reclaim'),
+				'target' => '_blank',
+				'title' => __('Claim your expenses.')
+			];
+
 			$tools['external']['items'][] = [
 				'label' => __('Webmail'),
 				'title' => __('Webmail for Cover email accounts.'),
@@ -226,14 +247,14 @@ class LayoutViewHelper
 			get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR) ||
 			get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
-				'label' => __('Make a page'),
-				'title' => __('Add content to the website.'),
-				'url' => $this->router->generate('page.create', ['view' => 'create']),
 				'icon' => [
-					'fa' => 'fas fa-plus',
+					'fa' => 'fas fa-file-alt',
 					'color' => 'dark',
 					'icon_color' => 'light'
 				],
+				'url' => $this->router->generate('page.list'),
+				'label' => __('Pages'),
+				'title' => __('View and manage pages.')
 			];
 
 			$tools['admin']['items'][] = [

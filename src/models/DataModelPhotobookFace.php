@@ -249,7 +249,7 @@ class DataModelPhotobookFace extends DataModel
 		}
 
 		$command = sprintf('%s opt/facedetect/suggest_faces.py %s %s >> %s 2>&1 & echo $!',
-			escapeshellarg(get_config_value('path_to_python', 'python')),
+			escapeshellcmd(get_config_value('path_to_python', 'python')),
 			escapeshellarg(get_config_value('path_to_photos')),
 			implode(' ', $photo_ids),
 			escapeshellarg(get_config_value('path_to_suggest_faces_log', '/dev/null')));

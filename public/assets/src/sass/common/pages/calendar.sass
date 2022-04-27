@@ -98,9 +98,11 @@ $event-overlay-padding: 1.25rem
                 margin: -1rem
                 padding: 1rem
                 > .image
-                    @extend .media-left
                     order: -1
                     overflow: hidden
+                    // media-left (@extend is buggy here)
+                    flex: 0 0 auto
+                    margin-right: 1rem
                     img
                         height: 100%
                         width: 100%
@@ -121,10 +123,12 @@ $event-overlay-padding: 1.25rem
                 &:hover
                     background: $background
             &:not(.has-image) > a::before
-                @extend .media-left
                 content: ''
                 display: block
                 background: $cover-gradient, $black
+                // media-left (@extend is buggy here)
+                flex: 0 0 auto
+                margin-right: 1rem
             > a > .image,
             &:not(.has-image) > a::before
                 height: 96px
