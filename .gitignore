@@ -4,14 +4,14 @@
 /phpmyadmin
 /phppgadmin
 /webmail
-/include/config.inc
-/include/data/DBIds.php
+/config/config.inc
+/config/DBIds.php
 /vendor
 /logs
 /test
 /tmp
 node_modules
-themes/default/assets/dist
+public/assets/dist
 .env
 /.history
 */.history

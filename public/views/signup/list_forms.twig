@@ -1,0 +1,113 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Sign-up forms') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<section class="section signup-forms">
+<div class="container">
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Sign-up forms') }}</h1>
+	</div>
+	{% if user_can_create controller.new_form %}
+		<div class="level-right buttons">	
+			<a href="{{ path('signup', {'view': 'create_form'}) }}" class="button">{{ __('New sign-up form') }}</a>
+		</div>
+	{% endif %}
+</header>
+
+<article class="block">
+<div class="table-container">
+	<table class="signup-forms-table table is-fullwidth is-hoverable">
+		<thead>
+			<tr>
+				<th class="is-nowrap">{{ __('Form') }}</th>
+				<th class="is-nowrap">{{ __('Activity') }}</th>
+				<th class="has-text-right is-nowrap">{{ __('Activity date') }}</th>
+				<th class="is-nowrap">{{ __('Status') }}</th>
+				<th class="has-text-right is-nowrap">{{ __('Sign-ups') }}</th>
+				<th class="is-sticky is-right is-nowrap"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for form in forms|sort_by('created_on desc') %}
+				<tr>
+					<td class="is-truncated">
+						<span><a href="{{ path('signup', {'view': 'list_entries', 'form': form.id}) }}">{{ form.description }}</a></span>
+					</td>
+					<td class="is-truncated">
+						{% if form.agenda_id %}
+							<span><a href="{{ path('calendar', {agenda_id: form.agenda_id }) }}">{{ form.agenda_item.kop }}</a></span>
+						{% endif %}
+					</td>
+					<td class="has-text-right is-truncated">
+						{% if form.agenda_id %}
+							<span>{{ form.agenda_item.van|date('Y-m-d') }}</span>
+						{% endif %}
+					</td>
+					<td>
+						{% if form.is_open %}
+							<span class="tag is-success">Open</span>
+						{% else %}
+							<span class="tag">Closed</span>
+						{% endif %}
+					</td>
+					<td class="has-text-right">
+						{{ form.signup_count }}
+					</td>
+					<td class="is-sticky is-right has-text-right is-nowrap">
+						<ul class="controls">
+						{% spaceless %}
+							{% if user_can_update form %}
+								<li>
+									<a href="{{ path('signup', {'view': 'update_form', 'form': form.id}) }}" title="{{ __('Modify form') }}">
+										<span class="icon is-small">
+											<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+										</span>
+										<span class="is-sr-only">
+											{{ __('Modify form') }}
+										</span>
+									</a>
+								</li>
+							{% endif %}
+							<li>
+								<a href="{{ path('signup', {'view': 'list_entries', 'form': form.id}) }}" title="{{ __('View sign-ups') }}">
+									<span class="icon is-small">
+										<i class="fas fa-list-alt" aria-hidden="true"></i>
+									</span>
+									<span class="is-sr-only">
+										{{ __('View sign-ups') }}
+									</span>
+								</a>
+							</li>
+						{% endspaceless %}
+						</ul>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="4" class="has-text-centered content">
+						<p>
+							{% if global.identity.member.committees|length > 1 %}
+								{{ __('None of you committees is managing any sign-up forms.') }}
+							{% else %}
+								{{ __('Your committee is not managing any sign-up forms.') }}
+							{% endif %}
+						</p>
+						<p>
+							{% if user_can_create controller.new_form %}
+								{{ __('To create a new form, click the ‘New sign-up form’ button above this table, or go to the activity and click the link in the footer.')}}
+							{% else %}
+								{{ __('Right now this feature is being tested by a few committees. If you want to use this feature for your activity as well, contact the AC/DCee.') }}
+							{% endif %}
+						</p>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+</article>
+</div>
+</section>
+{% endblock %}

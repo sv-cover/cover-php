@@ -1,0 +1,27 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Delete form') ~ ' – ' ~ parent() %}
+
+{% block content %}
+
+<div class="modal is-static">
+    <div class="modal-card">
+        <form method="post" action="{{ path('signup', {view: 'delete_form', 'form': form.id}) }}">
+            {{ html_nonce('delete_form', form) }}
+            <header class="modal-card-head">
+                <p class="modal-card-title">{{ __('Delete form') }}</p>
+            </header>
+            <section class="modal-card-body">
+                <div class="field content">
+                    <p>{{ __('Are you sure you want to delete this sign-up form?') }}</p>
+                    <p class="has-text-danger">{{ __('This will also delete all registrations. There is no way to undo this action.') }}</p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <a href="{{ path('signup', {view: 'update_form', form: form.id}) }}" class="button" data-dismiss="modal">{{ __('Back to form') }}</a>
+                <button type="submit" class="button is-danger">{{ __('Delete form')  }}</button>
+            </footer>
+        </form>
+    </div>
+</div>
+{% endblock %}

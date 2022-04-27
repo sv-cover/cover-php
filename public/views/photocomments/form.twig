@@ -1,0 +1,37 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        <form name="freactie" action="{{ iter.has_id ? controller.path('update', iter) : controller.path('create') }}" method="post">
+            {% if iter.has_id %}
+                {{ html_nonce('update', iter) }}
+            {% else %}
+                {{ html_nonce('create', iter) }}
+            {% endif %}
+            <header class="modal-card-head">
+                {% if iter.has_id %}
+                    <p class="modal-card-title">{{ __('Edit comment') }}</p>
+                {% else %}
+                    <p class="modal-card-title">{{ __('Create comment') }}</p>
+                {% endif %}
+            </header>
+            <section class="modal-card-body">
+                <div class="field">
+                    <label for="reactie" class="label is-sr-only">{{__('Comment')}}</label>
+                    <p class="control">
+                        {{ html_textarea_field('reactie', iter.data,
+                            errors=errors,
+                            placeholder=__('Type your comment here…'),
+                            rows=3) }}
+                    </p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <a href="{{ controller.path('read', iter) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
+                <button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
+            </footer>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
 <?php
 
-require_once 'include/init.php';
-require_once 'include/test.php';
+require_once 'src/init.php';
+require_once 'src/framework/test.php';
 
 use PHPUnit\Framework\TestCase;
 use cover\test\EmailTestTrait;
@@ -14,7 +14,7 @@ class OptInMailinglistTest extends TestCase
 
 	private $mailinglist;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		$model = get_model('DataModelMailinglist');
 
@@ -37,7 +37,7 @@ class OptInMailinglistTest extends TestCase
 		$this->mailinglist = $list;
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		$model = get_model('DataModelMailinglist');
 

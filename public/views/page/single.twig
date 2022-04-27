@@ -1,0 +1,35 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title iter.get_title ~ ' – ' ~ parent() %}
+
+{% block content %}
+<header class="block">
+	<div class="level">
+		<div class="level-left">
+			<h1 class="title">{{ iter.get_title }}</h1>
+		</div>
+		{% if user_can_update iter %}
+			<div class="buttons level-right">
+				<a href="{{ path('page', {view: 'update', id: iter.id}) }}" class="button">
+					<span class="icon is-small">
+						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+					</span>
+					<span>
+						{{ __('Modify page') }}
+					</span>
+				</a>
+			</div>
+		{% endif %}
+	</div>
+	{% if iter.last_modified %}
+		<p class="subtitle is-7 has-text-dark is-italic">
+			{{ __('Last updated on %s')|format(iter.last_modified|date_relative) }}
+		</p>
+	{% endif %}
+</header>
+
+<section class="content block" id="page_{{ iter.id }}">
+	{{ iter.locale_content|parse_markup }}
+</section>
+
+{% endblock %}

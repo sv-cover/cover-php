@@ -1,0 +1,26 @@
+{% extends "@layout/layout.twig" %}
+
+{% block title __('Edit pending registration') ~ ' –  '~ parent() %}
+
+{% block content %}
+<h1 class="title">{{__('Edit pending registration')}}</h1>
+<form action="" method="post" class="vertical-form">
+	{{ html_nonce('update_pending', registration.confirmation_code) }}
+
+	{% for field, value in registration.data %}
+	<div class="field">
+		{{ html_label(field, 'data[' ~ field ~ ']')  }}
+		<div class="control">
+			{{ html_input_text('data[' ~ field ~ ']', {}, value=value) }}
+		</div>
+	</div>
+	{% endfor %}
+
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-danger">{{ __('Modify') }}</button>
+			<a href="{{ path('join', {view: 'pending-confirmation'}) }}" class="button">{{ __('Back') }}</a>
+		</div>
+	</div>
+</form>
+{% endblock %}

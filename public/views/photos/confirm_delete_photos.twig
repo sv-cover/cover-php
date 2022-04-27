@@ -1,0 +1,26 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Delete photos') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="modal is-static">
+	<div class="modal-card">
+		<form method="post" action="{{ action_url }}">
+			{{ html_nonce('delete_photos') }}
+			<header class="modal-card-head">
+				<p class="modal-card-title">{{ __('Delete photos') }}</p>
+			</header>
+			<section class="modal-card-body">
+				<div class="field">
+					<p>{{ __('Are you sure you want to delete %d photos from the <em>%s</em> photo book?')|format(photos|length, book.titel|e)|raw }}</p>
+				</div>
+				{# {{ include('_photos.twig', {photos: photos}) }} #}
+			</section>
+			<footer class="modal-card-foot">
+				<a href="{{ path('photos', {book: book.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+				<button type="submit" class="button is-danger">{{ __('Delete photos') }}</button>
+			</footer>
+		</form>
+	</div>
+</div>
+{% endblock %}

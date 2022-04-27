@@ -1,0 +1,21 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Restore field') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Restore field') }}</h1>
+<div class="signup-form-field is-deleted" id="form-field-{{field.id}}">
+	<form 
+        method="post"
+        action="{{ path('signup', {view: 'restore_form_field', form: form.id, field: field.id}) }}"
+        data-partial-selector="#form-field-{{field.id}}"
+        data-placement-selector="#form-field-{{field.id}}"
+    >
+		{{ html_nonce('restore_form_field', form, field) }}
+        <p>
+            {{ __('Deleted %s field…')|format(field.model.field_types[field.type].label|lower) }}
+            <button type="submit" class="button is-text is-baseline">{{ __('Restore')  }}</button>
+        </p>
+	</form>
+</div>
+{% endblock %}

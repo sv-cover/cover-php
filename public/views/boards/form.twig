@@ -1,0 +1,37 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Modify board') : __('Add a new board')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ iter.has_id ? __('Modify board') : __('Add a new board') }}</h1>
+
+<form method="post" action="{{ (iter and iter.has_id) ? path('boards', {view:  'update', id: iter.id}) : path('boards', {view: 'create'}) }}">
+	{% if iter.has_id %}
+		{{ html_nonce('update', iter) }}
+	{% else %}
+		{{ html_nonce('create', iter) }}
+	{% endif %}
+	
+	<div class="field">
+		{{ html_label(__('Board name'), 'naam', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_text('naam', iter, required='required', placeholder='Board XXII') }}
+		</div>
+	</div>
+
+	<div class="field">
+		{{ html_label(__('Sort order name'), 'login', errors=errors, required=true) }}
+		<div class="control">
+			{{ html_input_text('login', iter, required='required', placeholder='bestuur22') }}
+		</div>
+		<p class="help">{{ __('This value is not visible and is solely used for determining the order of the boards.') }}</p>
+	</div>		
+
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify board') : __('Add board') }}</button>
+			<a href="{{ path('boards') }}" class="button">{{ __('Back to the former boards') }}</a>
+		</div>
+	</div>
+</form>
+{% endblock %}

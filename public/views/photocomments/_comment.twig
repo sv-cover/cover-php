@@ -1,0 +1,85 @@
+<div class="media photo-comment" id="comment{{ iter.id }}">
+	<figure class="media-left">
+		<p class="image avatar">
+			<img class="is-rounded" src="{{ path('profile_picture', {lid_id: iter.author.id, format: 'square', width: 128}) }}" alt="Photo of {{ iter.author|personal_full_name }}">
+		</p>
+	</figure>
+	<div class="media-content">
+		<div class="content">
+			<p>
+				<strong>
+					<a href="{{ path('profile', {lid: iter.author.id}) }}">{{ iter.author|personal_full_name }}</a>
+				</strong>
+				<br>
+				{{ iter.reactie|parse_markup }}
+			</p>
+		</div>
+		<div class="controls level is-mobile">
+			<div class="level-left">
+				{% if global.auth.logged_in %}
+					{% set liked = iter.is_liked_by(global.identity.member) %}
+					<form class="level-item like-form"
+							method="post"
+							action="{{ controller.path('likes', iter) }}"
+							{# data-partial-selector="#comment{{ iter.id }}"
+							data-placement-selector="#comment{{ iter.id }}"#}>
+						<input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
+						<button type="submit" class="button is-text icon" 
+							title="{{ liked ? __('You like this comment. Unlike comment') : __('Like comment') }}"
+                            data-title="{{ [__('You like this comment. Unlike comment'), __('Like comment')]|json_encode|e('html_attr') }}"
+                            data-sr-text="{{ [__('You like this comment. Click to unlike.'), __('Like comment') ]|json_encode|e('html_attr') }}"
+                        >
+							{% if liked %}
+								<i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('You like this comment. Click to unlike.') }}</span>
+							{% else %}
+								<i class="fas fa-heart" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Like comment') }}</span>
+							{% endif %}
+						</button>
+	                    <span class="count"
+		                    {% if not iter.likes %}hidden{% endif %}
+	                        title="{{ iter.likes > 0 ? __N('%d person likes this comment', '%s people like this comment', iter.likes)|e('html_attr') : '' }}"
+	                        data-title="{{ [__('person likes this comment'), __('people like this comment') ]|json_encode|e('html_attr') }}"
+	                        data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
+	                    >
+	                        <span class="count-number">{{ iter.likes }}</span>
+	                        <span class="is-sr-only">{{ __N('like', 'likes', iter.likes) }}</span>
+	                    </span>
+					</form>
+				{% endif %}
+				{% if user_can_update iter %}
+					<a class="level-item"
+							href="{{ controller.path('update', iter) }}"
+							data-popup="modal"
+							title="{{ __('Edit comment') }}">
+						<span class="icon is-small">
+							<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+						</span>
+						<span class="is-sr-only">
+							{{ __('Edit comment') }}
+						</span>
+					</a>
+				{% endif %}
+				{% if user_can_delete iter %}
+					<a class="level-item"
+							href="{{ controller.path('delete', iter) }}"
+							data-popup="modal"
+							title="{{ __('Delete comment') }}">
+						<span class="icon is-small">
+							<i class="fas fa-trash" aria-hidden="true"></i>
+						</span>
+						<span class="is-sr-only">
+							{{ __('Delete comment') }}
+						</span>
+					</a>
+				{% endif %}
+			</div>	
+			<div class="level-right">
+				<span class="is-size-7">
+					{{ iter.date|date('j F Y, H:i') }}
+				</span>
+			</div>
+		</div>
+	</div>
+</div>

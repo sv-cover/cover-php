@@ -2,7 +2,7 @@
 <?php
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/init.php';
+require_once 'src/init.php';
 
 $agenda_model = get_model('DataModelAgenda');
 

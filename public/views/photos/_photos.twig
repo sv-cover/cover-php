@@ -1,0 +1,131 @@
+{% import _self as macros %}
+
+
+{% macro classnames(photo, context) %}
+    {%- if context.my_likes[photo.id] is defined %}liked{% endif -%}
+    {%- if context.visibility[photo.id] is defined and context.visibility[photo.id] == false %} privacy-hidden{% endif -%}
+{% endmacro %}
+
+
+{% macro gallery(photos, context) %}
+    {% import _self as macros %}
+
+    {# Make sure the context is how we expect it to be, in case this macro is called from somewhere else #}
+    {% if context.likes is not defined %}
+        {% set context = context|merge({'likes': global.models.PhotobookLike.count_for_photos(photos)}) %}
+    {% endif  %}
+
+    {% if context.my_likes is not defined %}
+        {% if global.auth.logged_in() %}
+            {% set context = context|merge({'my_likes': global.models.PhotobookLike.get_for_lid(global.identity.member)}) %}
+        {% else %}
+            {% set context = context|merge({'my_likes': []}) %}
+        {% endif %}
+    {% endif %}
+
+    {% if context.visibility is not defined %}
+        {% if context.book is instance_of('DataIterFacesPhotobook') %}
+            {% set context = context|merge({'visibility': global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member)}) %}
+        {% else %}
+            {% set context = context|merge({'visibility': []}) %}
+        {% endif %}
+    {% endif %}
+
+    {# Now render #}
+    <ul class="photo-gallery columns is-multiline is-mobile">
+    {% for photo in photos %}
+        {# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
+        {% set size = photo.get_scaled_size(null, 600) %}
+
+        {# Set flex-basis to bins close to their scaled width, with a min of 200 and a max of 1000 #}
+        {% set basis = ((size[0] / 100)|round) * 50 %}
+        {% set visibility_hidden = context.visibility[photo.id] is defined and context.visibility[photo.id] == false %}
+        <li class="photo column has-basis-{{ min(max(basis, 200), 1000) }} {{ macros.classnames(photo, context) }}" data-id="{{ photo.id }}" id="photo-{{ photo.id }}">
+            <a 
+                href="{{ path('photos', {book: context.book.id, photo: photo.id}) }}"
+                {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
+            >
+                <noscript>
+                    <img 
+                        src="{{ photo.get_url(null, 600) }}"
+                        {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+                    >
+                </noscript>
+                <img 
+                    class="lazy"
+                    data-src="{{ photo.get_url(null, 600) }}"
+                    {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+                >
+                {% if photo.beschrijving %}
+                    <span class="title">{{ photo.beschrijving }}</span>
+                {% endif %}
+
+                {% set num_likes = context.likes[photo.id] is defined ? context.likes[photo.id] : 0 %}
+                {% if photo.num_reacties > 0 or num_likes > 0  or visibility_hidden %}
+                    <ul class="controls">
+                        {% if photo.num_reacties > 0 %}
+                            <li class="comments" title="{{ __N('%d comment', '%d comments', photo.num_reacties) }}">
+                                <i class="fas fa-comment" aria-hidden="true"></i>
+                                {{ photo.num_reacties }}
+                                <span class="is-sr-only">{{ __N('comment', 'comments', photo.num_reacties) }}</span>
+                            </li>
+                        {% endif %}
+
+                        {% set liked = context.my_likes[photo.id] is defined %}
+                        {% if num_likes > 0 %}
+                            <li class="likes" title="{{ __N('%d person liked this photo.', '%d people liked this photo.', num_likes) }} {% if liked %}{{ __('You liked this photo.')}}{% endif %}">
+                                <i
+                                    class="fas fa-heart {% if liked %}has-text-cover{% endif %}" 
+                                    aria-hidden="true"
+                                ></i>
+                                {{ num_likes }}
+                                <span class="is-sr-only">
+                                    {{ __N('like.', 'likes.', num_likes) }}
+                                    {% if liked %}{{ __('You liked this photo.')}}{% endif %}
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% if visibility_hidden %}
+                            <li title="{{ __('Hidden from your personal album for other people') }}">
+                                <i class="fas fa-eye-slash" aria-hidden="true"></i>
+                                <span class="is-sr-only">
+                                    {{ __('Hidden from your personal album for other people')}}
+                                </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endmacro gallery %}
+
+{# Prepare context: make sure the hard things are done only once #}
+{% set likes = global.models.PhotobookLike.count_for_photos(photos) %}
+{% set my_likes = global.auth.logged_in() ? global.models.PhotobookLike.get_for_lid(global.identity.member) : [] %}
+
+{% set visibility = [] %}
+{% if book is instance_of('DataIterFacesPhotobook') %}
+    {% set visibility = global.models.PhotobookPrivacy.get_visibility_for_photos(photos, global.identity.member) %}
+{% endif %}
+
+{% set photos = photos|group_by('read_status') %}
+
+{# Actually render albums #}
+{% if photos.unread is defined %}
+    <article>
+        <h2 class="title is-4">{{ __('New since your last visit') }}</h2>
+        {{ macros.gallery(photos.unread, _context) }}
+    </article>
+{% endif %}
+
+{% if photos.read is defined %}
+    <article>
+        {% if photos.unread is defined %}
+            <h2 class="title is-4">{{ __('Older photos') }}</h2>
+        {% endif %}
+        {{ macros.gallery(photos.read, _context) }}
+    </article>
+{% endif %}
+

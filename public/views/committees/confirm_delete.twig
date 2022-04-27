@@ -1,0 +1,25 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Deactivate committee') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        <form method="post" action="{{ path('committees', {view: 'delete', commissie: iter.login}) }}">
+            {{ html_nonce('delete', iter) }}
+            <header class="modal-card-head">
+                <h1 class="modal-card-title">{{ __('Deactivate committee') }}</h1>
+            </header>
+            <section class="modal-card-body">
+                <div class="field content">
+                    <p>{{ __('Are you sure you want to deactivate the <em>%s</em> committee? You can always reactivate a committee from the Commitee Archive page.')|format(iter.naam|e('html'))|raw }}</p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <a href="{{ path('committees', {commissie: iter.login}) }}" class="button" data-dismiss="modal">{{ __('Back to committee page') }}</a>
+                <button type="submit" class="button is-danger">{{ __('Deactivate committee')  }}</button>
+            </footer>
+        </form>
+    </div>
+</div>
+{% endblock %}

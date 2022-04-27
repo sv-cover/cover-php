@@ -1,0 +1,102 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title forum.name ~ ' – ' ~ __('Forum') ~ ' – ' ~ parent() %}
+
+{% block content %}
+
+<article class="block">
+	<div class="level">
+		<div class="level-left">
+			<h1 class="title"><a href="{{ path('forum') }}">{{ __('Forum') }}</a> / {{ forum.name }}</h1>
+		</div>
+		<div class="buttons level-right">
+			{% if user_can_create forum.new_thread %}
+				<a href="{{ path('forum', {view: 'create', forum: forum.id}) }}" class="button">
+					<span class="icon is-small">
+						<i class="fas fa-comments" aria-hidden="true"></i>
+					</span>
+					<span>{{ __('New Topic') }}</span>
+				</a>
+			{% endif %}
+			{% if user_can_create forum.new_poll %}
+				<a href="{{ path('forum', {view: 'create_poll', forum: forum.id}) }}" class="button">
+					<span class="icon is-small">
+						<i class="fas fa-poll-h" aria-hidden="true"></i>
+					</span>
+					<span>{{ __('New poll') }}</span>
+				</a>
+			{% endif %}
+		</div>
+	</div>
+
+
+	{% for thread in threads %}
+		{% set author = model.get_author_info(thread, 'author') %}
+		{% set last_author = model.get_author_info(thread, 'last_author') %}
+		{% set thread_pages = thread.num_thread_pages %}
+		<div class="media">
+			<div class="media-left">
+				{% if thread.poll %}
+					<span class="icon is-large" title="Poll">
+						<span class="is-sr-only">Poll</span>
+						<span class="fa-layers fa-fw fa-2x">
+							<i class="fas fa-poll-h" aria-hidden="true"></i>
+							{% if view.has_unread_messages(thread) %}
+								<span class="fa-layers-counter has-text-danger" aria-hidden="true"></span>
+								<span class="is-sr-only">New messages</span>
+							{% endif %}
+						</span>
+					</span>
+				{% else %}
+					<span class="icon is-large" title="Conversation">
+						<span class="is-sr-only">Conversation</span>
+						<span class="fa-layers fa-fw fa-2x">
+							<i class="fas fa-comments" aria-hidden="true"></i>
+							{% if view.has_unread_messages(thread) %}
+								<span class="fa-layers-counter has-text-danger" aria-hidden="true"></span>
+								<span class="is-sr-only">New messages</span>
+							{% endif %}
+						</span>
+					</span>
+				{% endif %}
+			</div>
+			<div class="media-content">
+				<div class="content">
+					<p>
+						<strong>
+							<a href="{{ path('forum', {thread: thread.id}) }}" class="subject">{{ thread.subject }}</a>
+						</strong>
+						&ndash;
+						<small>
+							{{ __('by') }}
+							<a href="{{ view.get_author_link(thread)|e('html_attr') }}">{{ author.name }}</a>
+						</small>
+						<br>
+						<small>
+							{{ thread.num_messages }}
+							{{ __N('comment', 'comments', thread.num_messages )}}
+						</small>
+						{% if thread.date %}
+							&ndash;
+							<small>
+								<a href="{{ path('forum', {thread: thread.id, page: thread_pages - 1}) }}#{{ thread.last_id == thread.id ? 't' : 'p' }}{{ thread.last_id }}">
+									{{ __('Last comment') }}
+								</a>
+								{{ __('by') }}
+								<a href="{{ view.get_author_link(thread, true)|e('html_attr') }}">{{ last_author.name }}</a>
+								{{ __('on') }}
+								{{ thread.last_date|date('d-m-Y H:i') }}
+							</small>
+						{% endif %}
+					</p>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+</article>
+
+{% if max > 0 %}
+	{{ view.page_navigation(path('forum', {forum: forum.id}), page, max)|raw }}
+{% endif %}
+
+{% endblock %}

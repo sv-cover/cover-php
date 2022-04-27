@@ -1,0 +1,55 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Not found') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<article>
+    <header class="block">
+        <h1 class="title is-1">{{ __('404: Oops!') }}</h1>
+        <p class="subtitle is-4">{{ __("We couldn't find this page…") }}</p>
+
+        <form method="get" action="{{ path('search') }}">
+            <div class="field has-addons">
+                <div class="control is-expanded">
+                    <label for="field-query" class="is-sr-only">{{ __('Search query') }}</label>
+                    <input class="input is-medium" type="search" name="query" id="field-query" placeholder="{{ __('Type here to search…')|e('html_attr') }}" tabindex="1" autofocus>
+                </div>
+                <div class="control">
+                    <button class="button is-medium" type="submit">
+                        <span class="icon">
+                            <i class="fas fa-search"></i>
+                            <span class="is-sr-only">{{ __('Search') }}</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </header>
+    <section class="block">
+        <h2 class="title is-5">{{ __('Are you perhaps looking for information about…') }}</h2>
+        <ul class="columns-vertical has-2-tablet is-gapless">
+            <li>
+                <a href="{{ path('calendar') }}">{{ __('Events') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('photos') }}">{{ __('Photos') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('committees') }}">{{ __('Committees') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('committees', {commissie: 'board'}) }}">{{ __('Board') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('homepage') }}">{{ __('Homepage') }}</a>
+            </li>
+            <li>
+                <a href="{{ path('contact') }}">{{ __('Contact') }}</a>
+            </li>
+        </ul>
+        <div class="content">
+        	<p>{{ __('Do you think this page is gone by mistake? Report it to the AC/DCee at %s!')|e('html')|format('<a href="mailto:acdcee@svcover.nl">acdcee@svcover.nl</a>')|raw }}</p>
+        </div>
+    </section>
+</article>
+{% endblock %}

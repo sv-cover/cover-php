@@ -1,0 +1,148 @@
+{% extends '@layout/layout.twig' %}
+{% import "@theme/forum/_poll.twig" as poll %}
+
+{% block title thread.subject ~ ' – ' ~ forum.name ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="level">
+	<div class="level-left">
+		<h1 class="title">
+			<a href="{{ path('forum') }}">{{ __('Forum') }}</a> / <a href="{{ path('forum', {forum: forum.id}) }}">{{ forum.name }}</a>
+		</h1>
+	</div>
+</div>
+
+<article class="block">
+	<div class="level">
+		<div class="level-left">
+			<h2 class="title is-4">{{ thread.subject }}</h2>
+		</div>
+		<div class="buttons level-right">
+			{% if user_can_create thread.new_message %}
+				<a href="{{ path('forum', {view: 'reply', thread: thread.id}) }}" class="button">
+					<span class="icon is-small">
+						<i class="fas fa-comment" aria-hidden="true"></i>
+					</span>
+					<span>{{ __('New comment') }}</span>
+				</a>
+			{% endif %}
+			{% if user_can_delete thread %}
+				<a href="{{ path('forum', {view: 'delete', thread: thread.id}) }}" class="button">
+					<span class="icon is-small">
+						<i class="fas fa-trash" aria-hidden="true"></i>
+					</span>
+					<span>{{ __('Delete topic') }}</span>
+				</a>
+			{% endif %}
+			{% if user_can_update thread %}
+				<div class="dropdown is-right">
+					<div class="dropdown-trigger">
+						<button class="button" aria-haspopup="true" aria-controls="dropdown-move-thread">
+							<span>{{ __('Move topic') }} </span>
+							<span class="icon is-small">
+								<i class="fas fa-angle-down" aria-hidden="true"></i>
+							</span>
+						</button>
+					</div>
+					<div class="dropdown-menu " id="dropdown-move-thread" role="menu">
+						<div class="dropdown-content">
+							<div class="dropdown-item">
+								<form method="post" action="{{ path('forum', {view: 'move', thread: thread.id}) }}">
+									{{ html_nonce('move_thread', thread) }}
+							        <div class="field">
+							            <div class="control">
+											{{ html_label(__('Move message to'), 'forum_id') }}
+											<div class="select">
+												{{ html_select_field('forum_id', view.writeable_forums, {forum_id: thread.forum_id}, required=true) }}
+											</div>
+										</div>
+									</div>
+									<div class="control">
+							            <button type="submit" class="button is-primary is-fullwidth">
+							                {{ __('Move') }}
+							            </button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	{% for message in messages if user_can_read message %}
+		{% set author = model.get_author_info(message, 'author') %}
+		{% set author_link = view.get_author_link(message) %}
+		{% set author_photo = view.get_author_photo(message) %}
+		<div class="media" id="p{{message.id}}">
+			<figure class="media-left">
+				<p class="image is-64x64">
+					{% if author.avatar %}
+						<img class="is-rounded" src="{{ author.avatar|e('html_attr') }}" alt="Avatar of {{ author.name }}">
+					{% elseif author_photo %}
+						<img class="is-rounded" src="{{ author_photo|e('html_attr') }}" alt="Photo of {{ author.name }}">
+					{% endif %}
+				</p>
+			</figure>
+			<div class="media-content">
+				<div class="content">
+					<p>
+						<strong>
+							{% if author_link %}
+								<a href="{{ author_link|e('html_attr') }}">{{ author.name }}</a>
+							{% else %}
+								{{ author.name }}
+							{% endif %}
+						</strong>
+						&ndash;
+						<small>
+							{{ message.date|date('d-m-Y H:i') }}
+						</small>
+						<br>
+						{{ message.message|parse_markup }}
+					</p>
+					{% if thread.poll and page == 0 and loop.first %}
+						<div class="box">
+							{{ poll.render_poll(global.models.Poll.from_thread(thread)) }}
+						</div>
+					{% endif %}
+				</div>
+				<nav class="level is-mobile">
+					<div class="level-left">
+						{% if user_can_update message %}
+							<a class="level-item" href="{{ path('forum', {view: 'update', thread: thread.id, message: message.id}) }}" title="{{ __('Modify message') }}">
+								<span class="icon is-small">
+									<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Modify message') }}</span>
+								</span>
+							</a>
+						{% endif %}
+						{% if user_can_delete message %}
+							<a class="level-item" href="{{ path('forum', {view: 'delete', thread: thread.id, message: message.id}) }}" title="{{ __('Delete message') }}">
+								<span class="icon is-small">
+									<i class="fas fa-trash" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Delete message') }}</span>
+								</span>
+							</a>
+						{% endif %}
+					</div>	
+				</nav>
+			</div>
+			<div class="media-right">
+				<a href="{{ path('forum', {view: 'reply', thread: thread.id, quote_message: message.id}) }}" title="{{ __('Quote message') }}">
+					<span class="icon is-small">
+						<i class="fas fa-reply" aria-hidden="true"></i>
+						<span class="is-sr-only">{{ __('Quote message') }}</span>
+					</span>
+				</a>
+			</div>
+		</div>
+	{% endfor %}
+</article>
+
+{% if max > 0 %}
+	{{ view.page_navigation(path('forum', {thread: thread.id}), page, max)|raw }}
+{% endif %}
+
+{% endblock %}

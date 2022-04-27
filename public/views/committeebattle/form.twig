@@ -1,0 +1,54 @@
+{% extends "@layout/layout.twig" %}
+
+{% block title view.get_label(iter, __('Award points'), __('Update points')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ view.get_label(iter, __('Award points'), __('Update points')) }}</h1>
+<div class="messageBox">
+	<form method="post" action="{{ iter and iter.has_id
+			? path('committee_battle', {view: 'update', id: iter.id})
+			: path('committee_battle', {view: 'create'}) }}" class="vertical-form committee-battle-form">
+		{{ iter.has_id ? html_nonce('update', iter) : html_nonce('create', iter) }}
+
+		<div class="field">
+			{{ html_label(__('Members'), 'member_ids[]', errors=errors) }}
+			<div class="select is-multiple">
+				{{ html_select_field('member_ids[]', view.active_member_options, iter, field='member_ids', multiple=true) }}
+			</div>
+			<p class="help">You can select multiple members</p>
+		</div>
+
+		<fieldset class="field">
+			<legend class="label">{{ __('Committees') }}</legend>
+			<ul class="columns-vertical has-2-mobile has-3-tablet is-gapless">
+				{% for committee in view.committee_options %}
+				<li class="column control">
+					{{ html_input_checkbox('committee_ids[]', iter, value=committee.id, id='field-committee-' ~ committee.id, data_member_ids=committee.member_ids|join(' '), label=committee.naam) }}
+				</li>
+				{% endfor %}
+			</ul>
+		</fieldset>
+
+		<div class="field">
+			{{ html_label(__('Points'), 'points', errors=errors, required=true) }}
+			<div class="control">
+				{{ html_input_number('points', iter, errors=errors) }}
+			</div>
+		</div>
+
+		<div class="field">
+			{{ html_label(__('Reason'), 'awarded_for', errors=errors, required=true) }}
+			<div class="control">
+				{{ html_textarea_field('awarded_for', iter, errors=errors) }}
+			</div>
+		</div>
+
+		<div class="field">
+			<div class="control buttons">
+				<button type="submit" class="button is-primary">{{ view.get_label(iter, __('Add points'), __('Update points')) }}</button>
+				<a href="{{ path('committee_battle') }}" class="button">{{ __('Back to index') }}</a>
+			</div>
+		</div>
+	</form>
+</div>
+{% endblock %}
