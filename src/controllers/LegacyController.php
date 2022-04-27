@@ -45,7 +45,7 @@ class LegacyController extends \Controller
             );
 
             if (get_config_value('path_to_legacy_controller_log'))
-                error_log($message . "\n", 3, get_config_value('path_to_legacy_controller_log'));
+                error_log(date('c') . ' - ' . $message . "\n", 3, get_config_value('path_to_legacy_controller_log'));
             else
                 error_log('Legacy URL visited - ' . $message);
         }
