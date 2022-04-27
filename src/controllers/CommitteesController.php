@@ -26,7 +26,7 @@ class CommitteesController extends \ControllerCRUD
 
 		if (isset($iter))
 		{
-			$parameters['id'] = $iter->get_id();
+			$parameters[$this->_var_id] = $iter['login'];
 
 			if ($json)
 				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));

@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="title">{{ iter.has_id() ? __('Modify committee/working group') : __('Add a new committee/working group') }}</h1>
-<form class="committees-form" method="post" action="{{ (iter and iter.has_id) ? path('committees', {view:  'update', id: iter.id}) : path('committees', {view: 'create'}) }}">
+<form class="committees-form" method="post" action="{{ (iter and iter.has_id) ? path('committees', {view:  'update', commissie: iter.login}) : path('committees', {view: 'create'}) }}">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}
