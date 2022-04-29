@@ -178,7 +178,7 @@ function signup_format_entry(DataIterSignUpEntry $entry)
 		if ($field['type'] == 'checkbox') {
 			$label = $field->column_labels();
 
-			if ($data[key($label)]) {
+			if (!empty($data[key($label)])) {
 				$rows[] = sprintf('<tr><td style="text-align:left" colspan="2">✓ %s</td></tr>',
 					markup_format_text(current($label)));
 			} else {
