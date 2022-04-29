@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Modify event') : __('Add an event') }}</h1>
 
-<form class="vertical-form" name="agenda_form" action="{{ (iter and iter.has_id) ? path('calendar', {view:  'update', id: iter.id}) : path('calendar', {view: 'create'}) }}" method="post">
+<form class="vertical-form" name="agenda_form" action="{{ (iter and iter.has_id) ? path('calendar', {view:  'update', agenda_id: iter.id}) : path('calendar', {view: 'create'}) }}" method="post">
 	{% if errors %}
 		<p class="notification is-danger">{{ __("You haven't filled in all fields correctly") }}</p>
 	{% endif %}

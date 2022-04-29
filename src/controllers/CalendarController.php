@@ -31,7 +31,7 @@
 
 			if (isset($iter))
 			{
-				$parameters['id'] = $iter->get_id();
+				$parameters[$this->_var_id] = $iter->get_id();
 
 				if ($json)
 					$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
@@ -372,7 +372,7 @@
 					throw new \Exception('Unknown rsvp status');
 			}
 
-			return $this->view->redirect($this->generate_url('calendar', ['id' => $iter['id']]));
+			return $this->view->redirect($this->generate_url('calendar', [$this->_var_id => $iter['id']]));
 		}
 
 		public function run_webcal()
