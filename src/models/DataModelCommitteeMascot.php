@@ -7,7 +7,7 @@ class DataModelCommitteeMascot
 	public function __construct($db)
 	{
 		try {
-			$data = file_get_contents('images/mascots/data.json');
+			$data = file_get_contents('public/images/mascots/data.json');
 			$this->mascots = json_decode($data, true);
 		} catch (Exception $e) {
 			$this->mascots = [];
