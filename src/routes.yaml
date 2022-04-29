@@ -115,7 +115,7 @@ profile:
   controller: App\Controller\ProfileController
 
 profile_picture:
-  path: /profile_picture/{lid_id<\d+>}/{format}/{width<\d+>}
+  path: /profile/{lid_id<\d+>}/picture/{format}/{width<\d+>}
   controller: App\Controller\ProfilePictureController
   defaults:
     format: null
