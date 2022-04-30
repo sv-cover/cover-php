@@ -844,8 +844,9 @@
 			if (!get_policy($photo)->user_can_read($photo))
 				throw new \UnauthorizedException('You may need to log in to view this photo');
 
-			$width = isset($_GET['width']) ? min($_GET['width'], 1600) : null;
-			$height = isset($_GET['height']) ? min($_GET['height'], 1600) : null;
+			// 2400 is the biggest dimension requested in the templates
+			$width = isset($_GET['width']) ? min($_GET['width'], 2400) : null;
+			$height = isset($_GET['height']) ? min($_GET['height'], 2400) : null;
 
 			$cache_status = null;
 
