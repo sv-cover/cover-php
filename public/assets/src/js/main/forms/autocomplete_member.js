@@ -117,7 +117,7 @@ class AutocompleteMember extends AutocompleteBase {
         // Create img element
         let imgElement = document.createElement('img');
         imgElement.classList.add('is-rounded');
-        imgElement.src = `/profile_picture/${data.value.id}/square/64`;
+        imgElement.src = `/profile/${data.value.id}/picture/square/64`;
 
         // Append img to .image
         photoElement.append(imgElement);
