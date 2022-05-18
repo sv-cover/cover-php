@@ -21,6 +21,7 @@
 <section class="content block">
     {% if view.is_device_session and not global.identity.is_device %}
         <figure class="image">
+            {# Use external service to create QR code. Since this is for admin functionality and it doesn't share any personal data, it's fine. Please consider GDPR if you're planning to copy this for somewhere else. Documentation: https://goqr.me/api/ #}
             <img src="https://api.qrserver.com/v1/create-qr-code/?data={{ url('device_sessions.update', {id: global.auth.get_session().id}) }}&amp;size=1000x1000&amp;qzone=4">
         </figure>
         <p>
