@@ -14,8 +14,36 @@ class DeviceSessionsController extends \ControllerCRUD
         parent::__construct($request, $router);
 	}
 
+    public function path(string $view, \DataIter $iter = null, bool $json = false)
+    {
+        $parameters = [];
+
+        if ($json)
+            $parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
+
+        if ($view === 'create')
+            return $this->generate_url('device_sessions.create', $parameters);
+
+        if ($view === 'delete')
+            return $this->generate_url('device_sessions.delete', $parameters);
+
+        if ($view === 'logout')
+            return $this->generate_url('device_sessions.logout', $parameters);
+
+        $parameters = [
+            'view' => $view,
+        ];
+
+        if (isset($iter))
+            $parameters['id'] = $iter->get_id();
+
+        return $this->generate_url('device_sessions', $parameters);
+    }
+
     protected function _index()
     {
+        if (!get_identity()->member_in_committee(COMMISSIE_EASY))
+            throw new \UnauthorizedException();
         return $this->model->find(['type' => 'device']);
     }
 
@@ -26,7 +54,7 @@ class DeviceSessionsController extends \ControllerCRUD
             $this->view = \View::byName($this->view_name, $this);
         }
 
-        return $this->view()->render_create();
+        return $this->view()->render_create_session();
     }
 
     public function run_logout()
@@ -34,5 +62,10 @@ class DeviceSessionsController extends \ControllerCRUD
         if (is_a(get_identity(), 'DeviceIdentityProvider'))
             get_auth()->logout();
         $this->view->redirect($this->generate_url('device_sessions'));
+    }
+
+    public function run_read(\DataIter $iter)
+    {
+        return $this->view()->redirect($this->generate_url('device_sessions'));
     }
 }

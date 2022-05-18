@@ -1,13 +1,13 @@
 <?php
 
-class DevicesessionsView extends View
+class DevicesessionsView extends CRUDView
 {
     public function render_index($iters) {
         $sessions_view = View::byName('sessions');
         return $this->render('index.twig', compact('iters', 'sessions_view'));
     }
 
-    public function render_create() {
+    public function render_create_session() {
         return $this->render('create.twig');
     }
 

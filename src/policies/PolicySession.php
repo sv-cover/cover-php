@@ -2,6 +2,7 @@
 
 require_once 'src/framework/auth.php';
 
+// NB: this policy is currently only used for device sessions.
 class PolicySession implements Policy
 {
 	public function user_can_create(DataIter $session)
@@ -21,7 +22,9 @@ class PolicySession implements Policy
 
 	public function user_can_update(DataIter $session)
 	{
-		return false;
+		// Only AC/DCee can update sessions, and only device sessions.
+		return $session['type'] === 'device'
+		    && get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
 
 	public function user_can_delete(DataIter $session)

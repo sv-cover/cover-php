@@ -139,6 +139,18 @@ device_sessions.create:
   defaults:
     view: create
 
+device_sessions.delete:
+  path: /sessions/device/{id}/delete
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: delete
+
+device_sessions.update:
+  path: /sessions/device/{id}/update
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: update
+
 device_sessions.logout:
   path: /sessions/device/logout
   controller: App\Controller\DeviceSessionsController
