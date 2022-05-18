@@ -485,8 +485,11 @@ INSERT INTO profielen_privacy VALUES (9, 'foto');
 -- Log in sessions
 -- 
 
+
+CREATE TYPE session_type AS ENUM ('member', 'device');
 CREATE TABLE sessions (
     session_id character(40) NOT NULL PRIMARY KEY,
+    type session_type NOT NULL DEFAULT 'member',
     member_id integer REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
     created_on timestamp with time zone,
     ip_address inet,
@@ -494,7 +497,9 @@ CREATE TABLE sessions (
     timeout interval,
     application text,
     override_member_id integer DEFAULT NULL REFERENCES leden (id) ON UPDATE SET NULL ON DELETE SET NULL,
-    override_committees varchar(255) DEFAULT NULL
+    override_committees varchar(255) DEFAULT NULL,
+    device_enabled boolean NOT NULL DEFAULT FALSE,
+    device_name varchar(255) DEFAULT NULL
 );
 
 --

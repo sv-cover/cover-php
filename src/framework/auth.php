@@ -7,6 +7,7 @@ interface IdentityProvider
 {
 	public function is_member();
 	public function is_donor();
+	public function is_device();
 	public function member_in_committee($committee = null);
 	public function can_impersonate();
 	public function member();
@@ -27,6 +28,11 @@ class GuestIdentityProvider implements IdentityProvider
 	}
 
 	public function is_donor()
+	{
+		return false;
+	}
+
+	public function is_device()
 	{
 		return false;
 	}
@@ -77,6 +83,11 @@ class MemberIdentityProvider implements IdentityProvider
 	{
 		return $this->session_provider->logged_in()
 			&& $this->member()->is_donor();
+	}
+
+	public function is_device()
+	{
+		return false;
 	}
 
 	public function member_in_committee($committee = null)
@@ -233,6 +244,46 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 	}
 }
 
+
+/**
+ * DeviceIdentityProvider: An identity provider for devices that are supposed to
+ * have similar access to certains resources as members. For example, the
+ * promotion/digital signage screen in the Cover room should display photo books
+ * and the calendar as it appears to members.
+ * 
+ * Device sessions have to be enabled before they become useful: every device
+ * can create a device session by navigating to the correct url, but only admins
+ * can enable device sessions. Disabled device sessions will appear as guest
+ * sessions / anonymous users / non logged in sessions.
+ * 
+ * Note that device sessions will appear as not logged in, so 
+ * get_auth()-logged_in() will return false, even if a device session is active.
+ * This is not ideal, but done for ease of implementation: the notion that a
+ * get_identity()->member() will return a member if get_auth()->logged_in()
+ * returns true, is ingrained in the codebase and would cause a lot of problems
+ * if device sessions would appear as logged in.
+ * 
+ * Device sessions can be checked for using get_identity()->is_device(), which
+ * returns true only if the current session is an active device session.
+ * 
+ * Hope this makes sense! - Martijn Luinstra, May 2022
+ */
+class DeviceIdentityProvider extends GuestIdentityProvider
+{
+	protected $session_provider;
+
+	public function __construct(SessionProvider $session_provider)
+	{
+		$this->session_provider = $session_provider;
+	}
+
+	public function is_device()
+	{
+		$session = $this->session_provider->get_session();
+		return $session['device_enabled'];
+	}
+}
+
 class CookieSessionProvider implements SessionProvider
 {
 	/**
@@ -248,7 +299,8 @@ class CookieSessionProvider implements SessionProvider
 	/**
 	 * @var bool
 	 */
-	private $logged_in;
+
+	private $is_restored = false;
 
 	public function __construct()
 	{
@@ -269,7 +321,7 @@ class CookieSessionProvider implements SessionProvider
 	protected function resume_session()
 	{
 		$this->session = $this->session_model->resume($this->get_session_id());
-		return $this->logged_in = (bool) $this->session;
+		$this->is_restored = true;
 	}
 
 	public function login($email, $password, $remember, $application)
@@ -295,7 +347,7 @@ class CookieSessionProvider implements SessionProvider
 			$this->session->get('session_id'),
 			$cookie_time);
 
-		return $this->logged_in = true;
+		return true;
 	}
 
 	public function logout()
@@ -309,24 +361,47 @@ class CookieSessionProvider implements SessionProvider
 
 		set_domain_cookie('cover_session_id', null);
 
-		$this->logged_in = false;
-
+		$this->is_restored = false;
 		$this->session = null;
 
 		return true;
 	}
 
+	public function create_device_session($application)
+	{
+		if ($this->logged_in())
+			return false;
+
+		$this->session = $this->session_model->create(
+			null,
+			$application,
+			'99 YEAR',
+			'device'
+		);
+
+		// Set the cookie.
+		$cookie_time = time() + 24 * 3600 * 365 * 99;
+
+		set_domain_cookie('cover_session_id',
+			$this->session->get('session_id'),
+			$cookie_time);
+
+		return true;
+	}
+
+
 	public function logged_in()
 	{
-		if ($this->logged_in === null)
-			$this->resume_session();
-
-		return $this->logged_in;
+		$session = $this->get_session();
+		// device sessions will appear as not logged in, see DeviceIdentityProvider
+		return !empty($session) && $session['type'] === 'member';
 	}
 
 	public function get_session()
 	{
-		return $this->logged_in() ? $this->session : null;
+		if (!$this->is_restored)
+			$this->resume_session();
+		return $this->session ?? null;
 	}
 }
 
@@ -355,8 +430,10 @@ class ConstantSessionProvider implements SessionProvider
 
 function get_identity_provider(SessionProvider $authenticator)
 {
-	if (!$authenticator->logged_in())
+	if (empty($authenticator->get_session()))
 		$identity = new GuestIdentityProvider();
+	elseif ($authenticator->get_session()->get('type') === 'device')
+		$identity = new DeviceIdentityProvider($authenticator);
 	else
 		$identity = new MemberIdentityProvider($authenticator);
 
@@ -378,14 +455,14 @@ function get_auth()
 
 function get_identity()
 {
-	static $identity, $identity_is_logged_in;
+	static $identity, $session = false;
 
 	$authenticator = get_auth();
 
-	if ($identity === null || $authenticator->logged_in() !== $identity_is_logged_in)
+	if ($identity === null || $authenticator->get_session() !== $session)
 	{
 		$identity = get_identity_provider(get_auth());
-		$identity_is_logged_in = $authenticator->logged_in();
+		$session = $authenticator->get_session();
 	}
 
 	return $identity;

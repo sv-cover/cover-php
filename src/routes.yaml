@@ -129,6 +129,22 @@ sessions:
   path: /sessions
   controller: App\Controller\SessionsController
 
+device_sessions:
+  path: /sessions/device
+  controller: App\Controller\DeviceSessionsController
+
+device_sessions.create:
+  path: /sessions/device/create
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: create
+
+device_sessions.logout:
+  path: /sessions/device/logout
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: logout
+
 settings:
   path: /settings
   controller: App\Controller\SettingsController

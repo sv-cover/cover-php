@@ -54,7 +54,7 @@ class PolicyPhotobook implements Policy
 					return false;
 
 		// Older photo books are not visible for non-members
-		if (get_identity()->is_member())
+		if (get_identity()->is_member() || get_identity()->is_device())
 			return true;
 
 		if ($book['date'] === null)
@@ -118,7 +118,7 @@ class PolicyPhotobook implements Policy
 		if (get_identity()->member_in_committee())
 			return DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS;
 
-		if (get_identity()->is_member())
+		if (get_identity()->is_member() || get_identity()->is_device())
 			return DataModelPhotobook::VISIBILITY_MEMBERS;
 
 		else // Donors are also treated as PUBLIC

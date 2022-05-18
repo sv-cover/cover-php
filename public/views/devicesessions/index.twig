@@ -1,0 +1,55 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Device Sessions') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<article class="section">
+<div class="container">
+    <header class="level">
+        <div class="level-left">
+            <h1 class="title">{{ __('Device Sessions') }}</h1>
+        </div>
+        <div class="level-right buttons">
+            <a href="{{ path('page.create') }}" class="button">
+                {{ __('New page')  }}
+            </a>
+        </div>
+    </header>
+
+    <section class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th class="is-nowrap">{{ __('Device Name') }}</th>
+                    <th class="is-nowrap">{{ __('Enabled') }}</th>
+                    <th class="is-nowrap">{{ __('IP-address') }}</th>
+                    <th class="is-nowrap">{{ __('Application') }}</th>
+                    <th class="is-nowrap">{{ __('Logged in') }}</th>
+                    <th class="is-nowrap">{{ __('Last active') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for session in iters %}
+                <tr>
+                    <td>{{ session.device_name }}</td>
+                    <td>{{ session.device_enabled }}</td>
+                    <td>{{ session.ip_address }}</td>
+                    <td>{{ sessions_view.format_application(session.application)|raw }}</td>
+                    <td>{{ sessions_view.format_time(session.created_on)|raw }}</td>
+                    <td>{{ sessions_view.format_time(session.last_active_on)|raw }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">
+                        <p class="has-text-centered">
+                            {{ __('There are currently no device sessions.') }}
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+</article>
+{% endblock %}

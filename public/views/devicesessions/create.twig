@@ -1,0 +1,26 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Device Sessions') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<article class="section">
+<div class="container">
+    <header class="level">
+        <div class="level-left">
+            <h1 class="title">{{ __('Device Sessions') }}</h1>
+        </div>
+    </header>
+
+    <section>
+        {% if not global.identity.is_device() %}
+            Not device!
+        {% elseif global.identity.is_device() %}
+            Device!
+            <a href="{{ path('device_sessions.logout') }}">{{ __('Logout') }}</a>
+        {% else %}
+            No active session!
+        {% endif %}
+    </section>
+</div>
+</article>
+{% endblock %}
