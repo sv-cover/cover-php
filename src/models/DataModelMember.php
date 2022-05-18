@@ -416,9 +416,10 @@
 				return true;
 
 			// Only visible to members, and I am not a member? -> private.
-			elseif (($value & self::VISIBLE_TO_MEMBERS) && !get_identity()->is_member())
+			// Devices also can see data only visible to members
+			elseif (($value & self::VISIBLE_TO_MEMBERS) && !get_identity()->is_member() && !get_identity()->is_device())
 				return true;
-			
+
 			// Otherwise, not private
 			else
 				return false;

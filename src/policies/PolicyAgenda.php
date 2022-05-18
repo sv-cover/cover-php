@@ -21,7 +21,8 @@ class PolicyAgenda implements Policy
 		// Private agenda items can only be seen by people who could attend it
 		if ($agenda_item['private'])
 			return get_identity()->is_member()
-				|| get_identity()->is_donor();
+				|| get_identity()->is_donor()
+				|| get_identity()->is_device();
 
 		// By default all agenda items are accessible
 		return true;
