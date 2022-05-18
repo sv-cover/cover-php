@@ -300,6 +300,16 @@ class LayoutViewHelper
 		
 		if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
 			$tools['admin']['items'][] = [
+				'label' => __('Device sessions'),
+				'title' => __('Manage device sessions.'),
+				'url' => $this->router->generate('device_sessions'),
+				'icon' => [
+					'fa' => 'fas fa-desktop',
+					'color' => 'dark',
+					'icon_color' => 'light'
+				],
+			];
+			$tools['admin']['items'][] = [
 				'label' => __('Settings'),
 				'title' => __('Manage a few of the website\'s settings.'),
 				'url' => $this->router->generate('settings'),
