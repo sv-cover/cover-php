@@ -254,9 +254,9 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
  * Device sessions have to be enabled before they become useful: every device
  * can create a device session by navigating to the correct url, but only admins
  * can enable device sessions. Disabled device sessions will appear as guest
- * sessions / anonymous users / non logged in sessions.
+ * sessions / anonymous users / not-logged-in sessions.
  * 
- * Note that device sessions will appear as not logged in, so 
+ * Note that device sessions will appear as not logged-in, so 
  * get_auth()-logged_in() will return false, even if a device session is active.
  * This is not ideal, but done for ease of implementation: the notion that a
  * get_identity()->member() will return a member if get_auth()->logged_in()
