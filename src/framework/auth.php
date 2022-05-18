@@ -247,7 +247,7 @@ class ImpersonatingIdentityProvider extends MemberIdentityProvider
 
 /**
  * DeviceIdentityProvider: An identity provider for devices that are supposed to
- * have similar access to certains resources as members. For example, the
+ * have similar access to certain resources as members. For example, the
  * promotion/digital signage screen in the Cover room should display photo books
  * and the calendar as it appears to members.
  * 

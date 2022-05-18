@@ -21,7 +21,7 @@ class DeviceSessionsController extends \ControllerCRUD
 
     public function run_create()
     {
-        if (!is_a(get_identity(), 'DeviceIdentityProvider')) {
+        if (!get_auth()->logged_in() && !is_a(get_identity(), 'DeviceIdentityProvider')) {
             $response = get_auth()->create_device_session(!empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null);
             $this->view = \View::byName($this->view_name, $this);
         }
