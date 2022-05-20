@@ -5,17 +5,6 @@
 
 	class PhotosView extends CRUDView
 	{	
-		private $view_name;
-
-		public function stylesheets()
-		{
-			if ($this->view_name === 'slide')
-				return array_merge(parent::stylesheets(), [
-					get_theme_data('assets/dist/css/slide.css'),
-				]);
-			return parent::stylesheets();
-		}
-
 		/**
 		 * Render methods, called from the controller
 		 */
@@ -138,7 +127,6 @@
 
 		public function render_slide(DataIterPhotobook $book, array $photos)
 		{
-			$this->view_name = 'slide';
 			return $this->render('slide.twig', compact('book', 'photos'));
 		}
 
