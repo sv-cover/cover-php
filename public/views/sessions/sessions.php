@@ -38,7 +38,8 @@ class SessionsView extends View
 	{
 		$known_browsers = array(
 			'Firefox' => 'Firefox',
-			'Microsoft Edge' => 'Edge',
+			'Microsoft Edge (Legacy)' => 'Edge',
+			'Microsoft Edge' => 'Edg',
 			'Internet Explorer' => 'MSIE',
 			'IE Mobile' => 'IEMobile',
 			'iPad' => 'iPad',

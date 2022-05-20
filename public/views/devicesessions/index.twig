@@ -1,0 +1,103 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Device Sessions') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<article class="section">
+<div class="container">
+    <header class="level">
+        <div class="level-left">
+            <h1 class="title">{{ __('Device Sessions') }}</h1>
+        </div>
+        <div class="level-right buttons">
+            <a href="{{ path('device_sessions.create') }}" class="button">
+                {{ __('New session')  }}
+            </a>
+        </div>
+    </header>
+    <section class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th class="is-nowrap">{{ __('Device Name') }}</th>
+                    <th class="is-nowrap">{{ __('Enabled') }}</th>
+                    <th class="is-nowrap">{{ __('IP-address') }}</th>
+                    <th class="is-nowrap">{{ __('Application') }}</th>
+                    <th class="is-nowrap">{{ __('Logged in') }}</th>
+                    <th class="is-nowrap">{{ __('Last active') }}</th>
+                    <th class="is-sticky is-right is-nowrap"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for session in iters|sort_by('created_on asc') %}
+                <tr>
+                    <td>{{ session.device_name|default(__('Unnamed device')) }}</td>
+                    <td>
+                        {% if session.device_enabled %}
+                            <span class="tag is-success">Enabled</span>
+                        {% else %}
+                            <span class="tag">Disabled</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ session.ip_address }}</td>
+                    <td>{{ sessions_view.format_application(session.application)|raw }}</td>
+                    <td>{{ sessions_view.format_time(session.created_on)|raw }}</td>
+                    <td>{{ sessions_view.format_time(session.last_active_on)|raw }}</td>
+                    <td class="is-sticky is-right has-text-right is-nowrap">
+                        <ul class="controls">
+                        {% spaceless %}
+                            {% if user_can_delete session %}
+                                <li>
+                                    <a href="{{ path('device_sessions.delete', {id: session.id}) }}" title="{{ __('Delete session') }}" data-popup="modal">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                        </span>
+                                        <span class="is-sr-only">
+                                            {{ __('Delete session') }}
+                                        </span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if user_can_update session %}
+                                <li>
+                                    <a href="{{ path('device_sessions.update', {id: session.id}) }}" title="{{ __('Modify session') }}">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                        </span>
+                                        <span class="is-sr-only">
+                                            {{ __('Modify session') }}
+                                        </span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endspaceless %}
+                        </ul>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">
+                        <p class="has-text-centered">
+                            {{ __('There are currently no device sessions.') }}
+                        </p>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <article class="content is-centered notification">
+        <h2>{{ __('About / how to use') }}</h2>
+        <p>
+            {{ __("Device sessions enable devices to have similar access to certain resources as members. For example, the promotion/digital signage screen in the Cover room should display photo books, committee members and the calendar as they appear to members.") }}            
+        </p>
+        <p>
+            {{ __("Any device can start a device session by visiting %s, but it won't be active untill an admin (AC/DCee) has enabled it. Only enabled device sessions have special access. A device session and a normal user cannot be active in the same browser at the same time.")|e|format('<a href="%s">%1$s</a>'|format(url('device_sessions.create')))|raw }}
+         </p>
+        <p>
+            {{ __("Device sessions have access to very limited resources, and mostly act like a not-logged-in user. Regardless, care should be taken with enableing device sessions, as they can potentially leak data that should be available to members only.") }}
+        </p>
+    </article>
+</div>
+</article>
+{% endblock %}

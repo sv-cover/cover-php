@@ -1,0 +1,30 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Edit device session') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Edit device session') }}</h1>
+<form method="post" action="{{ path('device_sessions.update', {id: iter.id}) }}">
+    {{ html_nonce('update', iter) }}
+
+    <div class="field">
+        {{ html_label(__('Device name'), 'device_name', errors=errors) }}
+        <div class="control">
+            {{ html_input_text('device_name', iter, errors=errors) }}
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            {{ html_input_checkbox('device_enabled', iter, label=__('Device enabled'), errors=errors) }}
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control buttons">
+            <button type="submit" class="button is-primary">{{ __('Modify device session') }}</button>
+            <a href="{{ path('device_sessions') }}" class="button">{{ __('Back to device sessions') }}</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

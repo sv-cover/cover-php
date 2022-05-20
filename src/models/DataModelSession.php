@@ -8,6 +8,7 @@ class DataIterSession extends DataIter
 	{
 		return [
 			'session_id',
+			'type',
 			'member_id',
 			'ip_address',
 			'application',
@@ -15,7 +16,26 @@ class DataIterSession extends DataIter
 			'last_active_on',
 			'timeout',
 			'override_member_id',
-			'override_committees'
+			'override_committees',
+			'device_enabled',
+			'device_name',
+		];
+	}
+
+	static public function rules()
+	{
+		return [
+			'device_name' => [
+				'clean' => 'clean_empty',
+			],
+			'device_enabled' => [
+				'is_checkbox' => true,
+				'clean' => function($value) {
+					// Bit of a hack because I chose to use the boolean type here in the
+					// database table instead of just an integer, which is used more often
+					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
+				}
+			],
 		];
 	}
 }
@@ -59,13 +79,22 @@ class DataModelSession extends DataModel
 			return $data;
 	}
 
-	public function create($member_id, $application, $timeout = '7 DAY')
+	public function create($member_id, $application, $timeout = '7 DAY', $type = 'member')
 	{
+		if ($type !== 'member' && $type !== 'device')
+			throw new InvalidArgumentException('Invalid session type');
+
+		if ($type === 'member' && empty($member_id))
+			throw new InvalidArgumentException('No member ID provided for member session');
+		elseif ($type === 'device' && !empty($member_id))
+			throw new InvalidArgumentException('Member ID provided for device session');
+
 		$session_id = bin2hex(openssl_random_pseudo_bytes(20));
 
 		$data = array(
 			'session_id' => $session_id,
-			'member_id' => (int) $member_id,
+			'type' => $type,
+			'member_id' => $type === 'member' ? (int) $member_id : null,
 			'ip_address' => $_SERVER['REMOTE_ADDR'],
 			'application' => $application,
 			'created_on' => new DateTime(),
