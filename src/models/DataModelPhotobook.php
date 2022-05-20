@@ -599,6 +599,7 @@
 				WHERE
 					c.visibility <= %d
 					AND c.date IS NOT NULL
+					AND c.title NOT LIKE 'Regret Repository'
 				GROUP BY
 					c.id
 				HAVING
