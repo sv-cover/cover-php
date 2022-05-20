@@ -1,0 +1,27 @@
+@import "../common/pages/photo_gallery"
+
+// Black is not black enough
+$background: #000000
+
+$gallery-gap: $gallery-gap * 2
+$photo-height: 100vh / 3
+
+.photo-slide
+    background: $background
+
+    .photo-gallery
+        margin-top: 0
+        gap: $gallery-gap
+        .photo
+            height: calc(#{$photo-height} - #{(2 * $gallery-gap) / 3})
+            padding: 0
+
+            @each $bin in $gallery-basis-bins
+                &.has-basis-#{$bin}
+                    flex-basis: calc(#{$bin / 450} * #{$photo-height})
+
+
+    +until($tablet)
+        .photo-gallery .photo
+            flex-basis: calc(33.3333% - #{(2 * $gallery-gap) / 3}) !important
+            height: auto !important

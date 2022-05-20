@@ -11,7 +11,8 @@ module.exports = {
       'js/cover': './src/js/main/index.js',
       'js/maps': './src/js/maps/index.js',
       'css/cover': './src/sass/light/_all.sass',
-      'css/cover-dark': './src/sass/dark/_all.sass'
+      'css/cover-dark': './src/sass/dark/_all.sass',
+      'css/slide': './src/sass/slide/_all.sass',
     },
     output: {
         path: __dirname + '/public/assets/dist',
