@@ -935,10 +935,12 @@
 
 		protected function run_impl()
 		{
-			if (isset($_GET['view']) && $_GET['view'] == 'competition')
+			$view = $this->get_parameter('view');
+
+			if (!empty($view) && $view == 'competition')
 				return $this->view->render_competition();
 
-			if (isset($_GET['view']) && $_GET['view'] == 'slide')
+			if (!empty($view) && $view == 'slide')
 				return $this->run_slide();
 
 			$photo = null;
