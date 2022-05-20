@@ -1,3 +1,4 @@
+$boxed-title-padding: .2em 2rem
 $cover-thumbnail-overlay-padding: 2.5rem 2rem 2.5rem 0
 
 html
@@ -10,3 +11,6 @@ html
 
     .overlay
         padding: $cover-thumbnail-overlay-padding
+
+    .boxed-title
+        +boxed-title($size-5, $boxed-title-line-height, $boxed-title-padding)
