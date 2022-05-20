@@ -148,6 +148,19 @@ class CommitteesController extends \ControllerCRUD
 		return $this->view->render_archive($iters);
 	}
 
+	public function run_slide()
+	{
+		// for debugging purposes
+		if (isset($_GET['commissie'])) {
+			$committee = $this->model->get_from_name($_GET['commissie']);
+		}
+		else {
+			// Pick a random commissie
+			$committee = $this->model->get_random(\DataModelCommissie::TYPE_COMMITTEE);
+		}
+		return $this->view->render_slide($committee);
+	}
+
 	/**
 	 * Override the default ControllerCRUD::run_impl to allow either ?commissie= and ?id=.
 	 */

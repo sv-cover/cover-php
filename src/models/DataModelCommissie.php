@@ -93,19 +93,19 @@
 		public function get_thumbnail()
 		{
 			return self::find_image(array(
-				'images/committees/' . $this->get('login') . 'tn.gif',
-				'images/committees/' . $this->get('login') . 'tn.png',
-				'images/committees/' . $this->get('login') . 'tn.jpg',
-				'images/committees/logos/' . $this->get('login') . '.png'
+				'/images/committees/' . $this->get('login') . 'tn.gif',
+				'/images/committees/' . $this->get('login') . 'tn.png',
+				'/images/committees/' . $this->get('login') . 'tn.jpg',
+				'/images/committees/logos/' . $this->get('login') . '.png'
 			));
 		}
 
 		public function get_photo()
 		{
 			$path = self::find_image(array(
-				'images/committees/' . $this->get('login') . '.gif',
-				'images/committees/' . $this->get('login') . '.png',
-				'images/committees/' . $this->get('login') . '.jpg'
+				'/images/committees/' . $this->get('login') . '.gif',
+				'/images/committees/' . $this->get('login') . '.png',
+				'/images/committees/' . $this->get('login') . '.jpg'
 			));
 
 			return $path === null ? null : [

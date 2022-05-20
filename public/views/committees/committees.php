@@ -58,6 +58,11 @@ class CommitteesView extends CRUDView
 		return $this->twig->render('archive.twig', compact('iters'));
 	}
 
+	public function render_slide(DataIterCommissie $committee)
+	{
+		return $this->render('slide.twig', compact('committee'));
+	}
+
 	public function available_committee_types()
 	{
 		return [

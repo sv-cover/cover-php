@@ -1,0 +1,69 @@
+$committee-padding: 1.25em
+$boxed-title-distance: 1rem !default
+
+.committee-slide
+    display: block
+    position: relative
+    background: $cover-gradient, $black
+    color: $white
+
+    & > .image,
+    .member-images
+        +overlay
+        overflow: hidden
+        
+        &::before
+            +overlay
+            display: block
+            content: ''
+            background: rgba($black, 0)
+            z-index: 1
+
+        img
+            height: 100%
+            min-height: 100%
+            object-fit: cover
+
+    .member-images
+        &::after
+            +overlay
+            display: block
+            content: ''
+            background: $cover-gradient
+
+        .image
+            filter: saturate(20%)
+
+    .overlay 
+        .boxed-title-wrapper:not(:last-child)
+            margin-bottom: $boxed-title-distance
+        .members
+            &.has-vacancy
+                max-width: calc(100% - 15rem)
+                width: auto
+                .boxed-title
+                    position: relative
+            .name
+                // Wrapped names look weird
+                white-space: nowrap
+                &:not(:nth-last-child(2)):not(:last-child):not(.vacancy-badge)::after
+                    display: inline
+                    content: ','
+                &:nth-last-child(2):not(.vacancy-badge)::after
+                    display: inline
+                    content: ' &'
+
+    .vacancy-badge
+        position: absolute
+        top: -1em
+        left: calc(100% - 5em)
+        padding: .25ch $committee-padding
+        background: $black
+        color: $white
+        border: $control-border-width solid $white
+        font-size: $size-4
+        font-weight: $weight-semibold
+        transform: rotate(10deg)
+        box-shadow: $box-shadow
+        z-index: 6
+        white-space: nowrap

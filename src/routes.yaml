@@ -46,6 +46,12 @@ committees:
   path: /committees
   controller: App\Controller\CommitteesController
 
+committees.slide:
+  path: /committees/slide
+  controller: App\Controller\CommitteesController
+  defaults:
+    view: slide
+
 contact:
   path: /contact
   controller: App\Controller\PageController
