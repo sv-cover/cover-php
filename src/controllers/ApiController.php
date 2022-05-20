@@ -125,6 +125,10 @@ class ApiController extends \Controller
 
 		$ident = get_identity_provider($auth);
 
+		// Can't do anything with a device session
+		if (is_a($ident, 'DeviceIdentityProvider'))
+			return [];
+
 		$fields = array_merge(\DataIterMember::fields(), ['type']);
 
 		// Prepare data for member 
