@@ -110,6 +110,12 @@ photos:
   path: /photos
   controller: App\Controller\PhotosController
 
+photos.slide:
+  path: /photos/slide
+  controller: App\Controller\PhotosController
+  defaults:
+    view: slide
+
 profile:
   path: /profile
   controller: App\Controller\ProfileController
