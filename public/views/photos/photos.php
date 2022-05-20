@@ -125,6 +125,11 @@
 			return $this->render('people.twig', compact('book', 'clusters'));
 		}
 
+		public function render_slide(DataIterPhotobook $book, array $photos)
+		{
+			return $this->render('slide.twig', compact('book', 'photos'));
+		}
+
 		/**
 		 * Helper functions, called from the templates
 		 */

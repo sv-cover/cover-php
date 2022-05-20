@@ -1,0 +1,7 @@
+{% extends '@layout/layout_slide.twig' %}
+
+{% block title book.has('titel') ? book.titel : __('Photo book') ~ ' – ' ~ parent() %}
+
+{% block page %}
+    {{ include('_photos.twig', {photos: photos}) }}
+{% endblock %}

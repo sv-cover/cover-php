@@ -924,10 +924,22 @@
 			return $this->generate_url('photos', ['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
 		}
 
+		protected function run_slide() {
+			$book = $this->model->get_random_book();
+			$photos = $this->model->get_photos($book);
+
+			shuffle($photos);
+
+			return $this->view->render_slide($book, $photos);
+		}
+
 		protected function run_impl()
 		{
 			if (isset($_GET['view']) && $_GET['view'] == 'competition')
 				return $this->view->render_competition();
+
+			if (isset($_GET['view']) && $_GET['view'] == 'slide')
+				return $this->run_slide();
 
 			$photo = null;
 			$book = null;
