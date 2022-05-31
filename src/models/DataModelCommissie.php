@@ -544,12 +544,15 @@
 			return $this->_rows_to_iters($this->db->query($query));
 		}
 
-		public function get_random($type = null)
+		public function get_random($type = null, $include_board = false)
 		{
 			$conditions = "c.hidden <> 1";
 
 			if ($type !== null)
 				$conditions .= sprintf(" AND type = %d", $type);
+
+			if ($include_board)
+				$conditions .= sprintf(" OR id = %d", COMMISSIE_BESTUUR);
 
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c

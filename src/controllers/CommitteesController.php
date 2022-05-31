@@ -156,7 +156,7 @@ class CommitteesController extends \ControllerCRUD
 		}
 		else {
 			// Pick a random commissie
-			$committee = $this->model->get_random(\DataModelCommissie::TYPE_COMMITTEE);
+			$committee = $this->model->get_random(\DataModelCommissie::TYPE_COMMITTEE, true);
 		}
 		return $this->view->render_slide($committee);
 	}
