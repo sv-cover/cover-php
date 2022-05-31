@@ -1,5 +1,4 @@
 $committee-padding: 1.25em
-$boxed-title-distance: 1rem !default
 
 .committee-slide
     display: block
@@ -34,9 +33,7 @@ $boxed-title-distance: 1rem !default
         .image
             filter: saturate(20%)
 
-    .overlay 
-        .boxed-title-wrapper:not(:last-child)
-            margin-bottom: $boxed-title-distance
+    .overlay
         .members
             &.has-vacancy
                 max-width: calc(100% - 15rem)

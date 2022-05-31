@@ -42,6 +42,11 @@
 			return $this->render('moderate.twig', compact('iters', 'highlighted_id'));
 		}
 
+		public function render_slide($iters)
+		{
+			return $this->twig->render('slide.twig', compact('iters'));
+		}
+
 		public function render_401_unauthorized(UnauthorizedException $e)
 		{
 			header('Status: 401 Unauthorized');

@@ -26,6 +26,12 @@ calendar:
   path: /calendar
   controller: App\Controller\CalendarController
 
+calendar.slide:
+  path: /calendar/slide
+  controller: App\Controller\CalendarController
+  defaults:
+    view: slide
+
 career:
   path: /career
   controller: App\Controller\CareerController

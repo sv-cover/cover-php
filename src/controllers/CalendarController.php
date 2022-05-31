@@ -449,6 +449,12 @@
 			return $this->view->render('subscribe.twig');
 		}
 
+		public function run_slide()
+		{
+			$events = $this->model->get_agendapunten();
+			return $this->view->render_slide($events);
+		}
+
 		protected function run_impl()
 		{
 			// Compatibility
