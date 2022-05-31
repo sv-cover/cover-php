@@ -552,7 +552,7 @@
 				$conditions .= sprintf(" AND type = %d", $type);
 
 			if ($include_board)
-				$conditions .= sprintf(" OR id = %d", COMMISSIE_BESTUUR);
+				$conditions = sprintf("(%s) OR id = %d", $conditions, COMMISSIE_BESTUUR);
 
 			$row = $this->db->query_first("SELECT c.* 
 					FROM commissies c
