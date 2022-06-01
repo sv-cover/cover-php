@@ -98,6 +98,14 @@
 										<hr class="dropdown-divider">
 									{% endif %}
 									{% if user_can_update book %}
+										{% if book.get_photos() %}
+											<a href="{{ path('photos', {view: 'people', book: book.id}) }}" class="dropdown-item">
+												<span class="icon">
+													<i class="fas fa-portrait" aria-hidden="true"></i>
+												</span>
+												<span>{{ __('Inspect face detection') }}</span>
+											</a>
+										{% endif %}
 										<a href="{{ path('photos', {view: 'update_book', book: book.id}) }}" class="dropdown-item">
 											<span class="icon">
 												<i class="fas fa-pencil-alt" aria-hidden="true"></i>

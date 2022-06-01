@@ -13,44 +13,34 @@
 {% block title book.has('titel') ? book.titel : __('Photo book') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<header>
-	{# Photo book navigation. Hidden in book 0: there is no parent, next and prev book which results in an empty space. #}
-	{% if book.id is not same as(0) %}
-		<div class="level">
-			<div class="level-left">
-				{{ include('_path.twig') }}
-			</div>
-			<div class="level-right buttons">
-				{% if book.previous_book and user_can_read book.previous_book %}
-					<a href="{{ path('photos', {view: 'people', book: book.previous_book.id}) }}" class="button">
-						<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
-						<span>{{ book.previous_book.titel }}</span>
-					</a>
-				{% endif %}	
-				{% if book.next_book and user_can_read book.next_book %}
-					<a href="{{ path('photos', {view: 'people', book: book.next_book.id}) }}" class="button">
-						<span>{{ book.next_book.titel }}</span>
-						<span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-					</a>
-				{% endif %}
-			</div>
+<header class="block">
+	<div class="level">
+		<div class="level-left">
+			{% if book.id is not same as(0) %}
+				<a href="{{ path('photos', {book: book.id}) }}" class="button">
+					<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+					<span>{{__('Back to')}} {{ book.titel }}</span>
+				</a>
+			{% endif %}
 		</div>
-	{% endif %}
+		<div class="level-right buttons">
+			{% if user_can_update book and book.get_photos() %}
+			<form action="" method="post">
+				{{ html_nonce('cluster_photos', book) }}
+				<button type="submit" class="button">{{ __("Re-run face detection") }}</button>
+			</form>
+			{% endif %}
+		</div>
+	</div>
 
 	<div class="level">
 		<div class="level-left">
-			<h1 class="title">{{ __('Faces') }}</h1>
 		</div>
-		{% if user_can_update book %}
-		<form action="" method="post" class="level-right buttons">
-			{{ html_nonce('cluster_photos', book) }}
-			<button type="submit" class="button">{{ __("Re-run face detection") }}</button>
-		</form>
-		{% endif %}
 	</div>
+	<h1 class="title">{{ __('Faces in') }} {{ book.titel }}</h1>
 </header>
 
-<article>		
+<article>
 	{% for cluster, faces in clusters %}
 		<div class="media">
 			<div class="media-content">
@@ -71,6 +61,8 @@
 			</div>
 		</div>
 	{% endfor %}
-	</ul>
+	<a href="{{ path('photos', {view: 'competition'}) }}" class="button">
+		{{ __('Face tag statistics') }}
+	</a>
 </article>
 {% endblock %}
