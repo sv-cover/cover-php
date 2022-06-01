@@ -18,8 +18,8 @@
 
 		{% for stylesheet in view.stylesheets %}
 		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
-		<link rel="stylesheet" href="/assets/dist/css/slide.css" type="text/css">
 		{% endfor %}
+		<link rel="stylesheet" href="{{ static_path('assets/dist/css/slide.css') }}" type="text/css">
 	</head>
 	<body>
 		{% block page %}

@@ -543,10 +543,15 @@
 
 	
 	function get_theme_data($file, $include_filemtime = true) {
-		$path = '/' . $file;
+		if (substr($file, 0, 1) === '/')
+			$path = $file;
+		else
+			$path = '/' . $file;
 
-		if ($include_filemtime && file_exists($path))
-			$path .= '?' . filemtime($path);
+		$abs_path = realpath($_SERVER["DOCUMENT_ROOT"]) . $path;
+
+		if ($include_filemtime && file_exists($abs_path))
+			$path .= '?' . filemtime($abs_path);
 
 		return $path;
 	}

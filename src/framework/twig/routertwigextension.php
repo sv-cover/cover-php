@@ -22,6 +22,7 @@ class RouterTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('url', [$this, 'get_url']),
 			new Twig_SimpleFunction('login_path', [$this, 'get_login_path']),
 			new Twig_SimpleFunction('logout_path', [$this, 'get_logout_path']),
+			new Twig_SimpleFunction('static_path', [$this, 'get_static_path']),
 		];
 	}
 
@@ -53,5 +54,10 @@ class RouterTwigExtension extends Twig_Extension
 			$referrer = $_SERVER['REQUEST_URI'];
 
 		return $this->get_path($name, compact('referrer'));
+	}
+
+	public function get_static_path(string $file, bool $include_filemtime = true)
+	{
+		return get_theme_data($file, $include_filemtime);
 	}
 }
