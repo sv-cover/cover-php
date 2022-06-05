@@ -22,6 +22,7 @@
 	</div>
 	<div class="level-right">
 		<div class="field is-grouped">
+			{% if iter.facebook_id %}
 			<div class="control">
 				<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" rel="noopener noreferrer" class="button" title="{{  __('Show on Facebook') }}">
 					<span class="icon">
@@ -30,6 +31,7 @@
 					</span>
 				</a>
 			</div>
+			{% endif %}
 			{% if user_can_update iter or user_can_delete iter or user_can_create iter.new_signup_form %}
 				<div class="control dropdown is-right">
 					<div class="dropdown-trigger">
