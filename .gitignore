@@ -20,3 +20,4 @@ public/assets/dist
 npm-debug.log
 .DS_Store
 /public/adminer.php
+package-lock.json
