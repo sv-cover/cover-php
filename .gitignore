@@ -18,3 +18,4 @@ public/assets/dist
 /.vscode
 */.vscode
 npm-debug.log
+.DS_Store
