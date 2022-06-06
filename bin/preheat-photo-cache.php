@@ -214,7 +214,7 @@ function process_photo(DataIterPhoto $photo)
 	}
 
 	foreach (get_config_value('precomputed_photo_scales', array()) as $dimesions)
-		fclose($photo->get_resource($dimesions[0], $dimesions[1], $force_update));
+		$photo->get_resource($dimesions[0], $dimesions[1], $force_update);
 }
 
 if ($options['slave'])

@@ -128,11 +128,11 @@ photos.photo:
   defaults:
     view: read
 
-photos.photo.raw:
-  path: /photos/photo/{photo<\d+>}/raw/{width<\d+|original>}/{height<\d+>}
+photos.photo.scaled:
+  path: /photos/photo/{photo<\d+>}/scaled/{width<\d+>}/{height<\d+>}
   controller: App\Controller\PhotosController
   defaults:
-    view: read
+    view: scaled
     height: null
 
 photos.book:

@@ -449,32 +449,6 @@ class PhotoBooksController extends \Controller
 		return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
 	}
 
-	protected function _view_download_photo(\DataIterPhoto $photo)
-	{
-		// Note again that this function ignores the view completely and produces output on its own.
-
-		// We don't want 'guests' to download our originals
-		if (!get_auth()->logged_in())
-			throw new \UnauthorizedException();
-
-		// Also, you need at least read access to this photo
-		if (!get_policy($photo)->user_can_read($photo))
-			throw new \UnauthorizedException();
-
-		if (!$photo->file_exists())
-			throw new \NotFoundException('Could not find original file');
-
-		if (preg_match('/\.(jpg|gif)$/i', $photo->get('filepath'), $match))
-			header('Content-Type: image/' . strtolower($match[1]));
-
-		header('Content-Disposition: attachment; filename="' . addslashes(basename($photo->get('filepath'))) . '"');
-		header('Content-Length: ' . filesize($photo->get_full_path()));
-
-		$fh = $photo->get_resource();
-		fpassthru($fh);
-		fclose($fh);
-	}
-
 	protected function _view_download_book(\DataIterPhotobook $root_book)
 	{
 		// This function does not use the $view but produces its own output via ZipStream.
@@ -594,35 +568,6 @@ class PhotoBooksController extends \Controller
 		}
 
 		return $this->view->render_download_photobook($root_book, $total_photos, $total_file_size);
-	}
-
-	protected function _view_scaled_photo(\DataIterPhoto $photo)
-	{
-		if (!get_policy($photo)->user_can_read($photo))
-			throw new \UnauthorizedException('You may need to log in to view this photo');
-
-		// 2400 is the biggest dimension requested in the templates
-		$width = isset($_GET['width']) ? min($_GET['width'], 2400) : null;
-		$height = isset($_GET['height']) ? min($_GET['height'], 2400) : null;
-
-		$cache_status = null;
-
-		// First open the resource because this could throw a 404 exception with
-		// the appropriate headers.
-		$fhandle = $photo->get_resource($width, $height, !empty($_GET['skip_cache']), $cache_status);
-		
-		header('Pragma: public');
-		header('Cache-Control: max-age=86400');
-		header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-		header('X-Cache-Status: ' . $cache_status);
-		
-		if (substr($photo['filepath'], -3, 3) == 'gif')
-			header('Content-Type: image/gif');
-		else
-			header('Content-Type: image/jpeg');
-		
-		fpassthru($fhandle);
-		fclose($fhandle);
 	}
 
 	protected function _view_read_book(\DataIterPhotobook $book)
@@ -748,21 +693,11 @@ class PhotoBooksController extends \Controller
 			case 'add_photos_list_photos':
 				return $this->_view_list_photos($book);
 
-			case 'download':
-				if (!$photo)
-					throw new \NotFoundException('Missing photo parameter');
-				return $this->_view_download_photo($photo);
-
 			case 'download_book':
 				return $this->_view_download_book($book);
 
 			case 'confirm_download_book':
 				return $this->_view_confirm_download_book($book);
-
-			case 'scaled':
-				if (!$photo)
-					throw new \NotFoundException('Missing photo parameter');
-				return $this->_view_scaled_photo($photo);
 
 			case 'people':
 				return $this->_view_people($book);
