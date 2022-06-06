@@ -119,6 +119,14 @@ class PhotosController extends \ControllerCRUD
         else
             header('Content-Type: image/jpeg');
 
+        if (get_config_value('nginx_accel_path_to_cache') && get_config_value('nginx_accel_url_to_cache')) {
+            $file_name = path_subtract($file_path, get_config_value('nginx_accel_path_to_cache'));
+            $accel_path = path_concat(get_config_value('nginx_accel_url_to_cache'), $file_name);
+            header('X-Accel-Redirect: ' . $accel_path);
+            header('X-Test-path: ' . $accel_path);
+            exit;
+        }
+
         $fhandle = fopen($file_path, 'rb');
         fpassthru($fhandle);
         fclose($fhandle);
