@@ -250,21 +250,6 @@ class PhotoBooksController extends \Controller
 		}
 	}
 
-	private function _view_update_photo(\DataIterPhoto $photo, \DataIterPhotobook $book)
-	{
-		if (!$this->policy->user_can_update($photo->get_book()))
-			throw new \UnauthorizedException();
-
-		if ($_SERVER['REQUEST_METHOD'] == 'POST')
-		{
-			$photo->set('beschrijving', $_POST['beschrijving']);
-			$this->model->update($photo);
-			return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id(), 'photo' => $photo->get_id()]));
-		}
-		
-		return $this->view->render_update_photo($book, $photo, null, []);
-	}
-
 	private function _view_list_photos(\DataIterPhotobook $book)
 	{
 		if (!$this->policy->user_can_update($book))
@@ -640,16 +625,6 @@ class PhotoBooksController extends \Controller
 		fclose($fhandle);
 	}
 
-	protected function _view_read_photo(\DataIterPhoto $photo, \DataIterPhotobook $book)
-	{
-		if (!get_policy($photo)->user_can_read($photo))
-			throw new \UnauthorizedException();
-
-		$photos = $book->get_photos();
-
-		return $this->view->render_photo($book, $photo);
-	}
-
 	protected function _view_read_book(\DataIterPhotobook $book)
 	{
 		if (!$this->policy->user_can_read($book))
@@ -758,11 +733,6 @@ class PhotoBooksController extends \Controller
 			case 'add_photos':
 				return $this->_view_add_photos($book);
 
-			case 'update_photo':
-				if (!$photo)
-					throw new \NotFoundException('Missing photo parameter');
-				return $this->_view_update_photo($photo, $book);
-
 			case 'update_photo_order':
 				return $this->_view_update_photo_order($book);
 
@@ -798,10 +768,7 @@ class PhotoBooksController extends \Controller
 				return $this->_view_people($book);
 
 			default:
-				if ($photo)
-					return $this->_view_read_photo($photo, $book);
-				else
-					return $this->_view_read_book($book);
+				return $this->_view_read_book($book);
 		}
 	}
 }

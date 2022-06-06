@@ -49,6 +49,29 @@ class PhotosController extends \ControllerCRUD
         return $this->view->render_photo($this->get_book(), $iter);
     }
 
+    public function run_update(\DataIter $iter)
+    {
+        if (!get_policy($this->model)->user_can_read($iter->get_book()))
+            throw new \UnauthorizedException('You are not allowed to update this photo.');
+
+        if ($this->_form_is_submitted('update', $iter)) {
+            $iter->set('beschrijving', $_POST['beschrijving']);
+            $this->model->update($iter);
+            return $this->view->redirect($this->generate_url('photos', [
+                'book' => $this->get_book()->get_id(),
+                'photo' => $iter->get_id()
+            ]));
+        }
+
+        return $this->view->render_update_photo($this->get_book(), $iter, null, []);
+    }
+
+    // Compatibility with old views
+    public function run_update_photo(\DataIter $iter)
+    {
+        return $this->run_update($iter);
+    }
+
     public function run_create()
     {
         throw new \NotFoundException();
