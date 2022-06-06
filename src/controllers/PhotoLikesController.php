@@ -6,10 +6,10 @@ require_once 'src/framework/controllers/Controller.php';
 
 class PhotoLikesController extends \Controller
 {
-    public function __construct(\DataIterPhoto $photo, $request, $router)
-    {
-        $this->photo = $photo;
+    use PhotoBookRouteHelper;
 
+    public function __construct($request, $router)
+    {
         $this->model = get_model('DataModelPhotobookLike');
 
         parent::__construct($request, $router);
@@ -17,6 +17,9 @@ class PhotoLikesController extends \Controller
 
     public function run()
     {
+        if (!$this->get_photo())
+            throw new \RuntimeException('You cannot access the photo auxiliary functions without also selecting a photo');
+
         $action = null;
         $response_json = false;
 
@@ -36,10 +39,10 @@ class PhotoLikesController extends \Controller
             try {
                 switch ($action) {
                     case 'like':
-                        $this->model->like($this->photo, get_identity()->get('id'));
+                        $this->model->like($this->get_photo(), get_identity()->get('id'));
                         break;
                     case 'unlike':
-                        $this->model->unlike($this->photo, get_identity()->get('id'));
+                        $this->model->unlike($this->get_photo(), get_identity()->get('id'));
                         break;
                 }
             } catch (\Exception $e) {
@@ -49,13 +52,13 @@ class PhotoLikesController extends \Controller
 
         if ($response_json)
             return $this->view->render_json([
-                'liked' => get_auth()->logged_in() && $this->model->is_liked($this->photo, get_identity()->get('id')),
-                'likes' => count($this->model->get_for_photo($this->photo))
+                'liked' => get_auth()->logged_in() && $this->model->is_liked($this->get_photo(), get_identity()->get('id')),
+                'likes' => count($this->model->get_for_photo($this->get_photo()))
             ]);
 
         return $this->view->redirect($this->generate_url('photos', [
-            'photo' => $this->photo['id'],
-            'book' => $this->photo['scope']['id'],
+            'photo' => $this->get_photo()['id'],
+            'book' => $this->get_photo()['scope']['id'],
         ]));
     }
 }

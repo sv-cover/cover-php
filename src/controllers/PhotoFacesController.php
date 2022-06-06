@@ -6,14 +6,14 @@ require_once 'src/framework/controllers/ControllerCRUD.php';
 
 class PhotoFacesController extends \ControllerCRUD
 {
+    use PhotoBookRouteHelper;
+
     protected $_var_view = 'faces_view';
 
     protected $_var_id = 'face_id';
 
-    public function __construct(\DataIterPhoto $photo, $request, $router)
+    public function __construct($request, $router)
     {
-        $this->photo = $photo;
-
         $this->model = get_model('DataModelPhotobookFace');
 
         parent::__construct($request, $router, false); // make sure parent doesn't initiate a view
@@ -25,7 +25,7 @@ class PhotoFacesController extends \ControllerCRUD
     {
         $parameters = [
             $this->_var_view => $view,
-            'photo' => $this->photo->get_id(),
+            'photo' => $this->get_photo()->get_id(),
             'module' => 'faces',
         ];
 
@@ -43,7 +43,7 @@ class PhotoFacesController extends \ControllerCRUD
 
     protected function _create(\DataIter $iter, array $data, array &$errors)
     {
-        $data['foto_id'] = $this->photo->get_id();
+        $data['foto_id'] = $this->get_photo()->get_id();
         $data['tagged_by'] = get_identity()->get('id');
         $data['tagged_on'] = new \DateTime();
 
@@ -67,7 +67,7 @@ class PhotoFacesController extends \ControllerCRUD
 
     protected function _index()
     {
-        return $this->model->get_for_photo($this->photo);
+        return $this->model->get_for_photo($this->get_photo());
     }
 
     public function get_data_for_iter(\DataIterPhotobookFace $iter)
@@ -95,5 +95,12 @@ class PhotoFacesController extends \ControllerCRUD
             'suggested_full_name' => $suggested_member ? member_full_name($suggested_member, BE_PERSONAL) : null,
             'suggested_url' => $suggested_member ? $this->generate_url('profile', ['lid' => $suggested_member['id']]) : null,
         ];
+    }
+
+    protected function run_impl()
+    {
+        if (!$this->get_photo())
+            throw new \RuntimeException('You cannot access the photo auxiliary functions without also selecting a photo');
+        return parent::run_impl();
     }
 }

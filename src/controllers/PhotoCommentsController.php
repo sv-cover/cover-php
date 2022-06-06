@@ -5,18 +5,16 @@ require_once 'src/framework/controllers/ControllerCRUD.php';
 
 class PhotoCommentsController extends \ControllerCRUD
 {
+    use PhotoBookRouteHelper;
+
     protected $_var_view = 'comment_view';
 
     protected $_var_id = 'comment_id';
 
-    protected $photo;
-
     protected $view_name = 'photocomments';
 
-    public function __construct(\DataIterPhoto $photo, $request, $router)
+    public function __construct($request, $router)
     {
-        $this->photo = $photo;
-
         $this->model = get_model('DataModelPhotobookReactie');
 
         parent::__construct($request, $router);
@@ -25,7 +23,7 @@ class PhotoCommentsController extends \ControllerCRUD
     public function new_iter()
     {
         $iter = parent::new_iter();
-        $iter->set('foto', $this->photo->get_id());
+        $iter->set('foto', $this->get_photo()->get_id());
         $iter->set('auteur', get_identity()->get('id'));
         return $iter;
     }
@@ -39,14 +37,14 @@ class PhotoCommentsController extends \ControllerCRUD
 
         if ($view === 'read')
         {
-            $parameters['photo'] = $this->photo['id'];
-            $parameters['book'] = $this->photo['scope']['id'];
+            $parameters['photo'] = $this->get_photo()['id'];
+            $parameters['book'] = $this->get_photo()['scope']['id'];
             return sprintf('%s#comment%d', $this->generate_url('photos', $parameters), $iter->get_id());
         }
 
         $parameters[$this->_var_view] = $view;
-        $parameters['photo'] = $this->photo['id'];
-        $parameters['book'] = $this->photo['scope']['id'];
+        $parameters['photo'] = $this->get_photo()['id'];
+        $parameters['book'] = $this->get_photo()['scope']['id'];
         $parameters['module'] = 'comments';
 
         if (isset($iter))
@@ -57,7 +55,7 @@ class PhotoCommentsController extends \ControllerCRUD
 
     protected function _index()
     {
-        return $this->model->get_for_photo($this->photo);
+        return $this->model->get_for_photo($this->get_photo());
     }
 
     public function run_likes(\DataIter $iter)
@@ -99,10 +97,22 @@ class PhotoCommentsController extends \ControllerCRUD
             ]);
 
         $redirect_url = $this->generate_url('photos', [
-            'photo' => $this->photo['id'],
-            'book' => $this->photo['scope']['id'],
+            'photo' => $this->get_photo()['id'],
+            'book' => $this->get_photo()['scope']['id'],
         ]);
 
         return $this->view->redirect(sprintf('%s#comment%d', $redirect_url, $iter->get_id()));
+    }
+
+    protected function run_impl()
+    {
+        if (!$this->get_photo())
+            throw new \RuntimeException('You cannot access the photo auxiliary functions without also selecting a photo');
+        return parent::run_impl();
+    }
+
+    public function set_photo(\DataIterPhoto $photo)
+    {
+        $this->photo = $photo;
     }
 }

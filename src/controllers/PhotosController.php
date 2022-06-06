@@ -10,8 +10,83 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ZipStream\ZipStream;
 
+
+trait PhotoBookRouteHelper
+{
+	private $photo = false;
+	private $book = false;
+
+	private function init() {
+		$photo = null;
+		$book = null;
+
+		$photo_id = $this->get_parameter('photo');
+		$book_id = $this->get_parameter('book');
+
+		$model = get_model('DataModelPhotobook');
+
+		// Single photo page
+		if (!empty($photo_id))
+			$photo = $model->get_iter($photo_id);
+
+		// Book index page
+		if (!empty($book_id) && ctype_digit($book_id) && intval($book_id) > 0) {
+			$book = $model->get_book($book_id);
+		}
+		// Likes book page
+		elseif (!empty($book_id) && $book_id == 'liked') {
+			$book = get_model('DataModelPhotobookLike')->get_book(get_identity()->member());
+		}
+		// All photos who a certain member is (or mutiple are) tagged in page
+		elseif (!empty($book_id) && preg_match('/^member_(\d+(?:_\d+)*)$/', $book_id, $match)) {
+			$members = array();
+
+			foreach (explode('_', $match[1]) as $member_id)
+				$members[] = get_model('DataModelMember')->get_iter($member_id);
+
+			$book = get_model('DataModelPhotobookFace')->get_book($members);
+		}
+		// If there is a photo, then use the book of that one
+		elseif ($photo) {
+			$book = $photo->get_book();
+		}
+		// And otherwise the root book index page
+		else {
+			$book = $model->get_root_book();
+		}
+
+		try {
+			if ($photo && $book)
+				$photo['scope'] = $book;
+		} catch (\LogicException $e) {
+			// This occurs when $book is not the book that contains $photo.
+			// So we redirect to $photo, and let that figure out $book.
+			// No undefined state.
+			throw \RedirectException($this->generate_url('photos', ['photo' => $photo['id']]));
+		}
+
+		$this->photo = $photo;
+		$this->book = $book;
+	}
+
+	protected function get_photo() {
+		if ($this->photo === false)
+			$this->init();
+		return $this->photo;
+	}
+
+	protected function get_book() {
+		if ($this->book === false)
+			$this->init();
+		return $this->book;
+	}
+}
+
+
 class PhotosController extends \Controller
 {
+	use PhotoBookRouteHelper;
+
 	public $policy;
 
 	public $faces_controller;
@@ -648,76 +723,26 @@ class PhotosController extends \Controller
 		if (!empty($view) && $view == 'slide')
 			return $this->run_slide();
 
-		$photo = null;
-		$book = null;
-
-		// Single photo page
-		if (isset($_GET['photo']) && $_GET['photo']) {
-			$photo = $this->model->get_iter($_GET['photo']);
-		}
-
-		// Book index page
-		if (isset($_GET['book'])
-			&& ctype_digit($_GET['book'])
-			&& intval($_GET['book']) > 0) {
-			$book = $this->model->get_book($_GET['book']);
-		}
-		// Likes book page
-		elseif (isset($_GET['book']) && $_GET['book'] == 'liked') {
-			$book = get_model('DataModelPhotobookLike')->get_book(get_identity()->member());
-		}
-		// All photos who a certain member is (or mutiple are) tagged in page
-		elseif (isset($_GET['book']) && preg_match('/^member_(\d+(?:_\d+)*)$/', $_GET['book'], $match)) {
-			$members = array();
-
-			foreach (explode('_', $match[1]) as $member_id)
-				$members[] = get_model('DataModelMember')->get_iter($member_id);
-
-			$book = get_model('DataModelPhotobookFace')->get_book($members);
-		}
-		// If there is a photo, then use the book of that one
-		elseif ($photo) {
-			$book = $photo->get_book();
-		}
-		// And otherwise the root book index page
-		else {
-			$book = $this->model->get_root_book();
-		}
-
-		try {
-			if ($photo && $book)
-				$photo['scope'] = $book;
-		} catch (\LogicException $e) {
-			// This occurs when $book is not the book that contains $photo.
-			// So we redirect to $photo, and let that figure out $book.
-			// No undefined state.
-			return $this->view->redirect($this->generate_url('photos', ['photo' => $photo['id']]));
-		}
-
-		// If there is a photo, also initialize the appropriate auxiliary controllers 
-		if ($photo) {
-			$this->comments_controller = new PhotoCommentsController($photo, $this->request, $this->router);
-			$this->likes_controller = new PhotoLikesController($photo, $this->request, $this->router);
-			$this->faces_controller = new PhotoFacesController($photo, $this->request, $this->router);
-			$this->privacy_controller = new PhotoPrivacyController($photo, $this->request, $this->router);
-		}
-
 		// Choose the correct view
-		if (isset($_GET['module'])) {
-			if (!$photo)
-				throw new \RuntimeException('You cannot access the photo auxiliary functions without also selecting a photo');
-
-			switch ($_GET['module']) {
+		if (!empty($this->get_parameter('module'))) {
+			switch ($this->get_parameter('module')) {
 				case 'comments':
-					return $this->comments_controller->run();
+					$controller = new PhotoCommentsController($this->request, $this->router);
+					return $controller->run();
 				case 'likes':
-					return $this->likes_controller->run();
+					$controller = new PhotoLikesController($this->request, $this->router);
+					return $controller->run();
 				case 'faces':
-					return $this->faces_controller->run();
+					$controller = new PhotoFacesController($this->request, $this->router);
+					return $controller->run();
 				case 'privacy':
-					return $this->privacy_controller->run();
+					$controller = new PhotoPrivacyController($this->request, $this->router);
+					return $controller->run();
 			}
 		}
+
+		$photo = $this->get_photo();
+		$book = $this->get_book();
 		
 		switch (isset($_GET['view']) ? $_GET['view'] : null)
 		{
