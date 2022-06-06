@@ -102,15 +102,17 @@ class PhotosController extends \ControllerCRUD
 
         $last_modified = gmdate(DATE_RFC1123,filemtime($file_path));
 
+        $cache_expires = 180*24*3600;
+
         header('Pragma: public');
-        header('Cache-Control: public, max-age=86400');
+        header('Cache-Control: public, max-age=' . $cache_expires);
         // Don't send a file if the browser has a cached one already
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $last_modified) {
             http_response_code(304);
             return;
         }
 
-        header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+        header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + $cache_expires));
         header('Last-Modified: ' . $last_modified);
         header('X-Cache-Status: ' . $cache_status);
         
