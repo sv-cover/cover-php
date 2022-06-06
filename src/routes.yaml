@@ -120,11 +120,36 @@ password:
 
 photos:
   path: /photos
+  controller: App\Controller\PhotoBooksController
+
+photos.photo:
+  path: /photos/photo/{photo<\d+>}/{view}
   controller: App\Controller\PhotosController
+  defaults:
+    view: read
+
+photos.photo.raw:
+  path: /photos/photo/{photo<\d+>}/raw/{width<\d+|original>}/{height<\d+>}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: read
+    height: null
+
+photos.book:
+  path: /photos/book/{book<\d+|member(_\d+)+>}
+  controller: App\Controller\PhotoBooksController
+  defaults:
+    view: read
+
+photos.book.photo:
+  path: /photos/book/{book<\d+|member(_\d+)+>}/photo/{photo<\d+>}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: read
 
 photos.slide:
   path: /photos/slide
-  controller: App\Controller\PhotosController
+  controller: App\Controller\PhotoBooksController
   defaults:
     view: slide
 

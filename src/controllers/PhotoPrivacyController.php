@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+require_once 'src/controllers/PhotoBooksController.php';
 require_once 'src/framework/controllers/Controller.php';
 
 class PhotoPrivacyController extends \Controller
