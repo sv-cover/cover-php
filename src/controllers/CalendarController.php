@@ -455,14 +455,11 @@
 			return $this->view->render_slide($events);
 		}
 
-		protected function run_impl()
+		public function get_parameter($key, $default=null)
 		{
 			// Compatibility
-			if (isset($_GET['format']) && $_GET['format'] == 'webcal') {
-				$_GET['view'] = 'webcal';
-				unset($_GET['format']);
-			}
-
-			return parent::run_impl();
+			if ($key == 'view' && parent::get_parameter('format') == 'webcal')
+				return 'webcal';
+			return parent::get_parameter($key, $default);
 		}
 	}
