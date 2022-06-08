@@ -9,7 +9,7 @@ class PhotoFacesController extends \ControllerCRUD
 {
     use PhotoBookRouteHelper;
 
-    protected $_var_view = 'faces_view';
+    protected $_var_view = 'view';
 
     protected $_var_id = 'face_id';
 
@@ -27,7 +27,6 @@ class PhotoFacesController extends \ControllerCRUD
         $parameters = [
             $this->_var_view => $view,
             'photo' => $this->get_photo()->get_id(),
-            'module' => 'faces',
         ];
 
 
@@ -39,7 +38,10 @@ class PhotoFacesController extends \ControllerCRUD
                 $parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
         }
 
-        return $this->generate_url('photos', $parameters);
+        if ($view === 'read' || $view === 'update' || $view === 'delete')
+            return $this->generate_url('photos.photo.faces.single', $parameters);
+
+        return $this->generate_url('photos.photo.faces', $parameters);
     }
 
     protected function _create(\DataIter $iter, array $data, array &$errors)

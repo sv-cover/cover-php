@@ -46,7 +46,7 @@
                     data-preview="{{ photo.get_url(null, 400) }}"
                 > 
             </picture>
-            <figcaption class="faces" hidden data-api-url="{{ path('photos', {module: 'faces', photo: photo.id}) }}">
+            <figcaption class="faces" hidden data-api-url="{{ path('photos.photo.faces', {photo: photo.id}) }}">
                 <template class="face-template">
                     <div class="face">
                         <button class="delete is-small" type="button" data-delete hidden></button>
@@ -182,12 +182,12 @@
                         <hr class="dropdown-divider">
                     {% endif %}
                     {% if global.auth.logged_in and global.identity.member.id in photo.faces|select('lid_id') %}
-                        <a class="dropdown-item" href="{{ path('photos', {module: 'privacy', book: book.id, photo: photo.id}) }}" data-popup="modal">
+                        <a class="dropdown-item" href="{{ path('photos.book.photo.privacy', {book: book.id, photo: photo.id}) }}" data-popup="modal">
                             {{ __('Visibility') }}
                         </a>
                         <hr class="dropdown-divider">
                     {% endif %}
-                    <a class="dropdown-item" href="{{ path('photos', {view: 'download', book: book.id, photo: photo.id}) }}">
+                    <a class="dropdown-item" href="{{ path('photos.book.photo', {view: 'download', book: book.id, photo: photo.id}) }}">
                         {{ __('Download photo') }}
                     </a>
 
@@ -208,7 +208,7 @@
         {% if global.auth.logged_in %}
             <div class="controls level is-mobile">
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
-                <form class="level-item like-form photo-like-form" method="post" action="{{ path('photos', {module: 'likes', book: book.id, photo: photo.id}) }}">
+                <form class="level-item like-form photo-like-form" method="post" action="{{ path('photos.book.photo.likes', {book: book.id, photo: photo.id}) }}">
                     <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
                     <button type="submit"  class="button is-text icon"
                             title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"
@@ -277,7 +277,7 @@
             data-icon-class="fa-comments"
             data-text="{{ [__('comment'), __('comments') ]|json_encode|e('html_attr') }}"
         >
-            {{ include('@theme/photocomments/index.twig', {comments: photo.comments, controller: view.comment_controller_for_photo(photo)}) }}
+            {{ include('@theme/photocomments/index.twig', {comments: photo.comments, photo: photo, book: book}) }}
         </div>
     </div>
 </section>

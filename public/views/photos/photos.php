@@ -1,8 +1,6 @@
 <?php
 	require_once 'src/framework/markup.php';
 
-	use App\Controller\PhotoCommentsController;
-
 	class PhotosView extends CRUDView
 	{	
 		/**
@@ -206,13 +204,6 @@
 				array_values(array_reverse($prev)),
 				array($photo),
 				array_values($next));
-		}
-
-		public function comment_controller_for_photo(DataIterPhoto $photo)
-		{
-			$controller = new PhotoCommentsController($this->controller->get_request(), $this->controller->get_router());
-			$controller->set_photo($photo);
-			return $controller;
 		}
 
 		public function recent_comments($count)

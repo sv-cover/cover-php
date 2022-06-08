@@ -13,9 +13,8 @@
 					</a>
 				</figure>
 				<div class="media-content">
-					{% set photo_comment_controller = view.comment_controller_for_photo((comment_group|first).photo) %}
 					{% for comment in comment_group|reverse %}
-						{{ include('@theme/photocomments/_comment.twig', {controller:photo_comment_controller, iter:comment}) }}
+						{{ include('@theme/photocomments/_comment.twig', {iter:comment, photo:(comment_group|first).photo, book:(comment_group|first).photo.scope}) }}
 					{% endfor %}
 				</div>
 			</div>

@@ -36,22 +36,29 @@ class PhotoCommentsController extends \ControllerCRUD
         if ($json)
             $parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
 
-        if ($view === 'read')
-        {
-            $parameters['photo'] = $this->get_photo()['id'];
-            $parameters['book'] = $this->get_photo()['scope']['id'];
-            return sprintf('%s#comment%d', $this->generate_url('photos', $parameters), $iter->get_id());
-        }
 
         $parameters[$this->_var_view] = $view;
         $parameters['photo'] = $this->get_photo()['id'];
         $parameters['book'] = $this->get_photo()['scope']['id'];
-        $parameters['module'] = 'comments';
 
         if (isset($iter))
             $parameters[$this->_var_id] = $iter->get_id();
 
-        return $this->generate_url('photos', $parameters);
+        if ($view === 'read' || $view === 'index')
+        {
+            return $this->generate_url('photos.book.photo', [
+                'book' => $parameters['book'],
+                'photo' => $parameters['photo']
+            ]);
+        }
+
+        if ($view === 'update' || $view === 'delete' || $view === 'likes')
+        {
+            return $this->generate_url('photos.book.photo.comments.single', $parameters);
+        }
+
+        // Only create is left by this point…
+        return $this->generate_url('photos.book.photo.comments', $parameters);
     }
 
     protected function _index()
@@ -97,12 +104,10 @@ class PhotoCommentsController extends \ControllerCRUD
                 'likes' => $iter->get_likes(),
             ]);
 
-        $redirect_url = $this->generate_url('photos', [
+        return $this->view->redirect($this->generate_url('photos', [
             'photo' => $this->get_photo()['id'],
             'book' => $this->get_photo()['scope']['id'],
-        ]);
-
-        return $this->view->redirect(sprintf('%s#comment%d', $redirect_url, $iter->get_id()));
+        ]));
     }
 
     protected function run_impl()

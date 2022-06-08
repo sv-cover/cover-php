@@ -16,7 +16,7 @@ class PhotoLikesController extends \Controller
         parent::__construct($request, $router);
     }
 
-    public function run()
+    public function run_impl()
     {
         if (!$this->get_photo())
             throw new \RuntimeException('You cannot access the photo auxiliary functions without also selecting a photo');

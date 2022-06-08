@@ -1,3 +1,11 @@
+{% if photo is not defined %}
+	{% set photo = iter.photo %}
+{% endif %}
+
+{% if book is not defined %}
+	{% set book = photo.scope %}
+{% endif %}
+
 <div class="media photo-comment" id="comment{{ iter.id }}">
 	<figure class="media-left">
 		<p class="image avatar">
@@ -20,9 +28,7 @@
 					{% set liked = iter.is_liked_by(global.identity.member) %}
 					<form class="level-item like-form"
 							method="post"
-							action="{{ controller.path('likes', iter) }}"
-							{# data-partial-selector="#comment{{ iter.id }}"
-							data-placement-selector="#comment{{ iter.id }}"#}>
+							action="{{ path('photos.book.photo.comments.single', {comment_view: 'likes', comment_id: iter.id, photo: photo.id, book: book.id}) }}">
 						<input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
 						<button type="submit" class="button is-text icon" 
 							title="{{ liked ? __('You like this comment. Unlike comment') : __('Like comment') }}"
@@ -50,7 +56,7 @@
 				{% endif %}
 				{% if user_can_update iter %}
 					<a class="level-item"
-							href="{{ controller.path('update', iter) }}"
+							href="{{ path('photos.book.photo.comments.single', {comment_view: 'update',comment_id: iter.id,  photo: photo.id, book: book.id}) }}"
 							data-popup="modal"
 							title="{{ __('Edit comment') }}">
 						<span class="icon is-small">
@@ -63,7 +69,7 @@
 				{% endif %}
 				{% if user_can_delete iter %}
 					<a class="level-item"
-							href="{{ controller.path('delete', iter) }}"
+							href="{{ path('photos.book.photo.comments.single', {comment_view: 'delete',comment_id: iter.id,  photo: photo.id, book: book.id}) }}"
 							data-popup="modal"
 							title="{{ __('Delete comment') }}">
 						<span class="icon is-small">
