@@ -622,6 +622,58 @@ class PhotoBooksController extends \Controller
 		return $this->generate_url('photos', ['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
 	}
 
+	protected function run_competition() {
+		$taggers = get_db()->query('
+			SELECT
+				l.id,
+				l.voornaam,
+				COUNT(f_f.id) tags,
+				(SELECT
+					fav_l.voornaam
+				FROM
+					foto_faces fav_faces
+				LEFT JOIN leden fav_l ON
+					fav_l.id = fav_faces.lid_id
+				WHERE
+					fav_faces.tagged_by = l.id
+				GROUP BY
+					fav_l.id
+				ORDER BY
+					COUNT(fav_l.id) DESC
+				LIMIT 1) favorite
+			FROM
+				foto_faces f_f
+			LEFT JOIN leden l ON
+				l.id = f_f.tagged_by
+			WHERE
+				f_f.lid_id IS NOT NULL
+			GROUP BY
+				l.id
+			ORDER BY
+				tags DESC');
+
+		$tagged = get_db()->query('
+			SELECT
+				l.id,
+				l.voornaam,
+				COUNT(f_f.id) tags
+			FROM
+				foto_faces f_f
+			LEFT JOIN leden l ON
+				l.id = f_f.lid_id
+			WHERE
+				f_f.lid_id IS NOT NULL
+			GROUP BY
+				l.id
+			HAVING
+				COUNT(f_f.id) > 50
+			ORDER BY
+				tags DESC');
+
+		return $this->view->render_competition($taggers, $tagged);
+	}
+
+
 	protected function run_slide() {
 		$book = $this->model->get_random_book();
 		$photos = $this->model->get_photos($book);
@@ -636,7 +688,7 @@ class PhotoBooksController extends \Controller
 		$view = $this->get_parameter('view');
 
 		if (!empty($view) && $view == 'competition')
-			return $this->view->render_competition();
+			return $this->run_competition();
 
 		if (!empty($view) && $view == 'slide')
 			return $this->run_slide();
