@@ -404,7 +404,7 @@
 		{
 			$router = get_router();
 			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
-			return $router->generate('photos', ['book' => $this->get_id()], $reference_type);
+			return $router->generate('photos.book', ['book' => $this->get_id()], $reference_type);
 		}
 
 		public function get_key_photos($limit)

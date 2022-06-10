@@ -2,7 +2,7 @@
 
 {% set form_title = book.id > 0 ? __('Modify photo album') : __('Add a new photo album') %}
 
-{% set form_action = book.id > 0 ? path('photos', {book: book.id, view: 'update_book'}) : path('photos', {book: book.parent.id, view: 'add_book'}) %}
+{% set form_action = book.id > 0 ? path('photos.book', {book: book.id, view: 'update_book'}) : path('photos.book', {book: book.parent.id, view: 'add_book'}) %}
 
 {% set form_submit_button = book.id > 0 ? __('Modify photo album') : __('Add photo album') %}
 
@@ -27,7 +27,7 @@
 	<div class="field">
 		{{ html_label(__('Part of'), 'parent', errors=errors, required=false) }}
 		<div class="control">
-			<a href="{{ path('photos', {book: book.parent.id}) }}" id="parent">{{ book.parent.titel }}</a>
+			<a href="{{ path('photos.book', {book: book.parent.id}) }}" id="parent">{{ book.parent.titel }}</a>
 		</div>
 	</div>
 
@@ -65,9 +65,9 @@
 		<div class="control buttons">
 			<button type="submit" class="button is-primary">{{ form_submit_button }}</button>
 			{% if book.id > 0 %}
-				<a href="{{ path('photos', {book: book.id}) }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
+				<a href="{{ path('photos.book', {book: book.id}) }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
 			{% else %}
-				<a href="{{ path('photos', {book: book.parent.id}) }}" class="button">{{ __('Return to %s')|format(book.parent.titel) }}</a>
+				<a href="{{ path('photos.book', {book: book.parent.id}) }}" class="button">{{ __('Return to %s')|format(book.parent.titel) }}</a>
 			{% endif %}
 		</div>
 	</div>

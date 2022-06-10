@@ -5,14 +5,13 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="get" action="{{ path('photos') }}" id="download-photo-book-form">
-			<input type="hidden" name="book" value="{{ book.id }}">
+		<form method="get" action="{{ path('photos.book', {view: 'download_book', book: book.id}) }}" id="download-photo-book-form">
 			<header class="modal-card-head">
 				<p class="modal-card-title">{{ __('Download photo book') }}</p>
 			</header>
 			<section class="modal-card-body">
 				<div class="field">
-					<p>{{ __('Are you sure you want to download <a href="%s">%s</a> and all of its sub books?')|format(path('photos', {book: book.id}), book.titel|e)|raw }}</p>
+					<p>{{ __('Are you sure you want to download <a href="%s">%s</a> and all of its sub books?')|format(path('photos.book', {book: book.id}), book.titel|e)|raw }}</p>
 				</div>
 
 				<div class="field">
@@ -20,8 +19,8 @@
 				</div>
 			</section>
 			<footer class="modal-card-foot">
-				<a href="{{ path('photos', {book: book.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-				<button type="submit" class="button is-primary" name="view" value="download_book">{{ __('Download as a ZIP (%s)')|format(total_file_size|human_file_size) }}</button>
+				<a href="{{ path('photos.book', {book: book.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+				<button type="submit" class="button is-primary">{{ __('Download as a ZIP (%s)')|format(total_file_size|human_file_size) }}</button>
 			</footer>
 		</form>
 	</div>

@@ -15,7 +15,7 @@
 		<div class="level">
 			<div class="level-left">
 				{% if book.id is not same as(0) %}
-					<a href="{{ path('photos', {book: book.parent.id}) }}" class="button">
+					<a href="{{ path('photos.book', {book: book.parent.id}) }}" class="button">
 						<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 						<span>{{__('Back to')}} {{ book.parent.titel }}</span>
 					</a>
@@ -25,7 +25,7 @@
 				<div class="field is-grouped">
 					{% if controller.policy.user_can_download_book(book) %}
 						<p class="control">
-							<a href="{{ path('photos', {view: 'confirm_download_book', book: book.id}) }}" class="button" title="{{ __('Download photo book') }}" data-popup="modal">
+							<a href="{{ path('photos.book', {view: 'confirm_download_book', book: book.id}) }}" class="button" title="{{ __('Download photo book') }}" data-popup="modal">
 								<span class="icon">
 									<i class="fas fa-download" aria-hidden="true"></i>
 									<span class="is-sr-only">{{ __('Download photo book') }}</span>
@@ -34,7 +34,7 @@
 						</p>
 					{% endif %}
 					{% if controller.policy.user_can_mark_as_read(book) %}
-						<form class="control" method="post" action="{{ path('photos', {view: 'mark_book_read', book: book.id}) }}" class="control" title="{{ __('Mark all books as seen') }}">
+						<form class="control" method="post" action="{{ path('photos.book', {view: 'mark_book_read', book: book.id}) }}" class="control" title="{{ __('Mark all books as seen') }}">
 							<button type="submit" class="button">
 								<span class="icon">
 									<i class="fas fa-check" aria-hidden="true"></i>
@@ -57,7 +57,7 @@
 							<div class="dropdown-menu" id="dropdown-menu" role="menu">
 								<div class="dropdown-content">
 									{% if user_can_update book %}
-										<a href="{{ path('photos', {view: 'add_photos', book: book.id}) }}" class="dropdown-item">
+										<a href="{{ path('photos.book', {view: 'add_photos', book: book.id}) }}" class="dropdown-item">
 											<span class="icon">
 												<i class="fas fa-plus" aria-hidden="true"></i>
 											</span>
@@ -77,7 +77,7 @@
 										<button 
 											id="delete-selected-photos-button"
 											class="dropdown-item photo-selection-control"
-											data-delete-photos-url="{{ path('photos', {view: 'delete_photos', book: book.id}) }}"
+											data-delete-photos-url="{{ path('photos.book', {view: 'delete_photos', book: book.id}) }}"
 										>
 											<span class="icon">
 												<i class="fas fa-trash" aria-hidden="true"></i>
@@ -87,7 +87,7 @@
 										<hr class="dropdown-divider">
 									{% endif %}
 									{% if user_can_create book.new_book %}
-										<a href="{{ path('photos', {view: 'add_book', book: book.id}) }}" class="dropdown-item">
+										<a href="{{ path('photos.book', {view: 'add_book', book: book.id}) }}" class="dropdown-item">
 											<span class="icon">
 												<i class="fas fa-folder-plus" aria-hidden="true"></i>
 											</span>
@@ -99,14 +99,14 @@
 									{% endif %}
 									{% if user_can_update book %}
 										{% if book.get_photos() %}
-											<a href="{{ path('photos', {view: 'people', book: book.id}) }}" class="dropdown-item">
+											<a href="{{ path('photos.book', {view: 'people', book: book.id}) }}" class="dropdown-item">
 												<span class="icon">
 													<i class="fas fa-portrait" aria-hidden="true"></i>
 												</span>
 												<span>{{ __('Inspect face detection') }}</span>
 											</a>
 										{% endif %}
-										<a href="{{ path('photos', {view: 'update_book', book: book.id}) }}" class="dropdown-item">
+										<a href="{{ path('photos.book', {view: 'update_book', book: book.id}) }}" class="dropdown-item">
 											<span class="icon">
 												<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 											</span>
@@ -114,7 +114,7 @@
 										</a>
 									{% endif %}
 									{% if user_can_delete book %}
-										<a href="{{ path('photos', {view: 'delete_book', book: book.id}) }}" class="dropdown-item" data-popup="modal">
+										<a href="{{ path('photos.book', {view: 'delete_book', book: book.id}) }}" class="dropdown-item" data-popup="modal">
 											<span class="icon">
 												<i class="fas fa-folder-minus" aria-hidden="true"></i>
 											</span>

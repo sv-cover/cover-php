@@ -104,7 +104,7 @@ class PhotoCommentsController extends \ControllerCRUD
                 'likes' => $iter->get_likes(),
             ]);
 
-        return $this->view->redirect($this->generate_url('photos', [
+        return $this->view->redirect($this->generate_url('photos.book.photo', [
             'photo' => $this->get_photo()['id'],
             'book' => $this->get_photo()['scope']['id'],
         ]));

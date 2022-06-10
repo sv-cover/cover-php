@@ -158,23 +158,23 @@ photos.photo.privacy:
     view: read
 
 photos.book.photo.likes:
-  path: /photos/book/{book<\d+|member(_\d+)+>}/photo/{photo<\d+>}/likes
+  path: /photos/book/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/likes
   controller: App\Controller\PhotoLikesController
 
 photos.book.photo.comments.single:
-  path: /photos/book/{book<\d+|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_id<\d+>}/{comment_view}
+  path: /photos/book/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_id<\d+>}/{comment_view}
   controller: App\Controller\PhotoCommentsController
   defaults:
     view: read
 
 photos.book.photo.comments:
-  path: /photos/book/{book<\d+|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_view}
+  path: /photos/book/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_view}
   controller: App\Controller\PhotoCommentsController
   defaults:
     view: index
 
 photos.book.photo.privacy:
-  path: /photos/book/{book<\d+|member(_\d+)+>}/photo/{photo<\d+>}/privacy/{view}
+  path: /photos/book/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/privacy/{view}
   controller: App\Controller\PhotoPrivacyController
   defaults:
     view: read
@@ -187,16 +187,22 @@ photos.photo:
     view: read
 
 photos.book:
-  path: /photos/book/{book<\d+|member(_\d+)+>}
+  path: /photos/book/{book<\d+|liked|member(_\d+)+>}/{view}
   controller: App\Controller\PhotoBooksController
   defaults:
     view: read
 
 photos.book.photo:
-  path: /photos/book/{book<\d+|member(_\d+)+>}/photo/{photo<\d+>}/{view}
+  path: /photos/book/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/{view}
   controller: App\Controller\PhotosController
   defaults:
     view: read
+
+photos.competition:
+  path: /photos/competition
+  controller: App\Controller\PhotoBooksController
+  defaults:
+    view: competition
 
 photos.slide:
   path: /photos/slide

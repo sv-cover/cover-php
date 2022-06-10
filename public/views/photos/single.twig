@@ -78,7 +78,7 @@
     <nav class="photo-navigation" data-enter-fullscreen-text="{{ __('Enter fullscreen') }}" data-exit-fullscreen-text="{{ __('Exit fullscreen') }}">
         {% set nav = book.get_neighbours(photo) %}
         {% if nav.previous %}
-        <a class="photo-previous" href="{{ path('photos', {book: book.id, photo: nav.previous.id}) }}" title="{{ __('Go to the previous photo') }}">
+        <a class="photo-previous" href="{{ path('photos.book.photo', {book: book.id, photo: nav.previous.id}) }}" title="{{ __('Go to the previous photo') }}">
             <span class="icon">
                 <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 <span class="is-sr-only">{{ __('Previous') }}</span>
@@ -87,14 +87,14 @@
         {% endif %}
 
         {% if nav.next %}
-        <a class="photo-next" href="{{ path('photos', {book: book.id, photo: nav.next.id}) }}" title="{{ __('Go to next photo') }}">
+        <a class="photo-next" href="{{ path('photos.book.photo', {book: book.id, photo: nav.next.id}) }}" title="{{ __('Go to next photo') }}">
             <span class="icon">
                 <i class="fas fa-chevron-right" aria-hidden="true"></i>
                 <span class="is-sr-only">{{ __('Next') }}</span>
             </span>
         </a>
         {% endif %}
-        <a class="photo-parent button is-text" href="{{ path('photos', {book: book.id}) }}#photo-{{ photo.id }}">
+        <a class="photo-parent button is-text" href="{{ path('photos.book', {book: book.id}) }}#photo-{{ photo.id }}">
             <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
             <span>{{__('Back to')}} {{ book.titel }}</span>
         </a>
@@ -106,12 +106,12 @@
         {% if user_can_update book %}
             {% if photo.beschrijving %}
                 <h1>
-                    <a class="name" href="{{ path('photos', {view: 'update_photo', book: book.id, photo: photo.id}) }}" title="{{ photo.beschrijving }}" data-popup="modal">
+                    <a class="name" href="{{ path('photos.book.photo', {view: 'update', book: book.id, photo: photo.id}) }}" title="{{ photo.beschrijving }}" data-popup="modal">
                         {{- photo.beschrijving -}}    
                     </a>
                 </h1>                
             {% else %}
-                <a class="name placeholder" href="{{ path('photos', {view: 'update_photo', book: book.id, photo: photo.id}) }}" data-popup="modal">
+                <a class="name placeholder" href="{{ path('photos.book.photo', {view: 'update', book: book.id, photo: photo.id}) }}" data-popup="modal">
                     {{- __('Add photo title') -}}
                 </a>
             {% endif %}
@@ -122,11 +122,11 @@
         {% endif %}
 
         <div class="book">
-            <a href="{{ path('photos', {book: book.id}) }}#photo_{{ photo.id }}" title="{{ book.titel }}">{{ book.titel }}</a>
+            <a href="{{ path('photos.book', {book: book.id}) }}#photo_{{ photo.id }}" title="{{ book.titel }}">{{ book.titel }}</a>
             {% if photo.book.id != book.id %}
                 <span class="orignal-book">
                     {{ __('from') }}
-                    <a href="{{ path('photos', {book: photo.book.id}) }}#photo_{{ photo.id }}" title="{{ photo.book.titel }}">{{ photo.book.titel }}</a>
+                    <a href="{{ path('photos.book', {book: photo.book.id}) }}#photo_{{ photo.id }}" title="{{ photo.book.titel }}">{{ photo.book.titel }}</a>
                 </span>
             {% endif %}        
         </div>
@@ -173,10 +173,10 @@
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
                     {% if user_can_update book %}
-                        <a class="dropdown-item" href="{{ path('photos', {view: 'update_photo', book: book.id, photo: photo.id}) }}" data-popup="modal">
+                        <a class="dropdown-item" href="{{ path('photos.book.photo', {view: 'update', book: book.id, photo: photo.id}) }}" data-popup="modal">
                             {{- __('Edit title') -}}
                         </a>
-                        <a class="dropdown-item" href="{{ path('photos', {view: 'delete_photos', book: book.id, 'photo_id[]': photo.id}) }}" data-popup="modal">
+                        <a class="dropdown-item" href="{{ path('photos.book', {view: 'delete_photos', book: book.id, 'photo_id[]': photo.id}) }}" data-popup="modal">
                             {{ __('Delete photo') }}
                         </a>
                         <hr class="dropdown-divider">
@@ -193,7 +193,7 @@
 
                     <a
                         class="dropdown-item photo-copy-link"
-                        href="{{ url('photos', {book: book.id, photo: photo.id}) }}"
+                        href="{{ url('photos.book.photo', {book: book.id, photo: photo.id}) }}"
                         data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
                         data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"
                     >
@@ -246,7 +246,7 @@
                     </a>
                 {% endif %}
 
-                <a class="level-item" href="{{ path('photos', {view: 'download', book: book.id, photo: photo.id}) }}" title="{{ __('Download photo') }}">
+                <a class="level-item" href="{{ path('photos.book.photo', {view: 'download', book: book.id, photo: photo.id}) }}" title="{{ __('Download photo') }}">
                     <span class="icon">
                         <i class="fas fa-download" aria-hidden="true"></i>
                     </span>
@@ -257,7 +257,7 @@
 
                 <a
                     class="level-item photo-copy-link"
-                    href="{{ url('photos', {book: book.id, photo: photo.id}) }}"
+                    href="{{ url('photos.book.photo', {book: book.id, photo: photo.id}) }}"
                     title="{{ __('Share photo') }}"
                     data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
                     data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"

@@ -172,7 +172,7 @@ class PhotoBooksController extends \Controller
 			if (count($errors) === 0)
 			{
 				$new_book_id = $this->model->insert_book($iter);
-				return $this->view->redirect($this->generate_url('photos', ['book' => $new_book_id]));
+				return $this->view->redirect($this->generate_url('photos.book', ['book' => $new_book_id]));
 			}
 		}
 
@@ -199,7 +199,7 @@ class PhotoBooksController extends \Controller
 				$book->set_all($data);
 				$this->model->update_book($book);
 
-				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
+				return $this->view->redirect($this->generate_url('photos.book', ['book' => $book->get_id()]));
 			}
 		}
 		
@@ -394,7 +394,7 @@ class PhotoBooksController extends \Controller
 			}
 			
 			if (count($errors) == 0)
-				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
+				return $this->view->redirect($this->generate_url('photos.book', ['book' => $book->get_id()]));
 			else
 				$success = false;
 		}
@@ -413,7 +413,7 @@ class PhotoBooksController extends \Controller
 		{
 			if ($_POST['confirm_delete'] == $book->get('titel')) {
 				$this->model->delete_book($book);
-				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get('parent_id')]));
+				return $this->view->redirect($this->generate_url('photos.book', ['book' => $book->get('parent_id')]));
 			}
 
 			$errors[] = 'confirm_delete';
@@ -441,7 +441,7 @@ class PhotoBooksController extends \Controller
 			foreach ($photos as $photo)
 				$this->model->delete($photo);
 
-			return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
+			return $this->view->redirect($this->generate_url('photos.book', ['book' => $book->get_id()]));
 		}
 		
 		return $this->view->render_delete_photos($book, $photos);
@@ -452,7 +452,7 @@ class PhotoBooksController extends \Controller
 		if (get_auth()->logged_in())
 			$this->model->mark_read_recursively(get_identity()->get('id'), $book);
 
-		return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
+		return $this->view->redirect($this->generate_url('photos.book', ['book' => $book->get_id()]));
 	}
 
 	protected function _view_download_book(\DataIterPhotobook $root_book)
@@ -613,13 +613,13 @@ class PhotoBooksController extends \Controller
 	public function json_link_to_update_book_order(\DataIterPhotobook $book)
 	{
 		$nonce = nonce_generate(nonce_action_name('update_book_order', [$book]));
-		return $this->generate_url('photos', ['view' => 'update_book_order', 'book' => $book['id'], '_nonce' => $nonce]);
+		return $this->generate_url('photos.book', ['view' => 'update_book_order', 'book' => $book['id'], '_nonce' => $nonce]);
 	}
 
 	public function json_link_to_update_photo_order(\DataIterPhotobook $book)
 	{
 		$nonce = nonce_generate(nonce_action_name('update_photo_order', [$book]));
-		return $this->generate_url('photos', ['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
+		return $this->generate_url('photos.book', ['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
 	}
 
 	protected function run_slide() {
@@ -666,7 +666,7 @@ class PhotoBooksController extends \Controller
 
 		$photo = $this->get_photo();
 		$book = $this->get_book();
-		
+
 		switch ($view)
 		{
 			case 'add_book':

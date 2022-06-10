@@ -32,7 +32,7 @@
 	{% set photobook_of_iter = global.models.PhotobookFace.get_book([iter]) %}
 	{% if user_can_read photobook_of_iter %}
 		<div class="control">
-			<a href="{{ path('photos', {book:photobook_of_iter.id}) }}" class="button">
+			<a href="{{ path('photos.book', {book:photobook_of_iter.id}) }}" class="button">
 				<span class="icon">
 					<i class="fas fa-images" aria-hidden="true"></i>
 				</span>

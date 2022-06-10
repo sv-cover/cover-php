@@ -17,7 +17,7 @@
 	<div class="level">
 		<div class="level-left">
 			{% if book.id is not same as(0) %}
-				<a href="{{ path('photos', {book: book.id}) }}" class="button">
+				<a href="{{ path('photos.book', {book: book.id}) }}" class="button">
 					<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
 					<span>{{__('Back to')}} {{ book.titel }}</span>
 				</a>
@@ -53,7 +53,7 @@
 					{% endif %}
 					<div class="columns">
 						{% for face in lid_faces %}
-							<a class="column is-narrow" href="{{ path('photos', {book: book.id, photo: face.foto_id}) }}
+							<a class="column is-narrow" href="{{ path('photos.book.photo', {book: book.id, photo: face.foto_id}) }}
 							">{{ macros.render_face(face) }}</a>
 						{% endfor %}
 					</div>
@@ -61,7 +61,7 @@
 			</div>
 		</div>
 	{% endfor %}
-	<a href="{{ path('photos', {view: 'competition'}) }}" class="button">
+	<a href="{{ path('photos.competition') }}" class="button">
 		{{ __('Face tag statistics') }}
 	</a>
 </article>
