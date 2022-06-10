@@ -43,14 +43,14 @@
 			{% endif %}
 			<div class="thumbnail-images columns is-gapless is-mobile">
 				{% for photo in view.thumbnail_photos(book, 3) %}
-					{# All photo's are rendered at 2× resolution, to accomodate for high-res screens. #}
-					{% set size = photo.get_scaled_size(null, 600) %}
+					{% set size = photo.get_scaled_size(null, 300) %}
 					<div class="column image {{ loop.first ? 'active' : '' }}">
 						<figure>
 							<img
 								loading="lazy"
-								src="{{ photo.get_url(null, 600) }}"
-								{% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
+								srcset="{{ photo.get_url(null, 300) }} 1x, {{ photo.get_url(null, 600) }} 2x"
+								src="{{ photo.get_url(null, 300) }}"
+								{% if size %}width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}
 							>
 						</figure>
 					</div>

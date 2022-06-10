@@ -109,13 +109,10 @@
 	{% if iter.image_url %}
 		<figure class="image">
 			<picture>
-				<source srcset="{{ iter.get_image(1000) }} 1000w, {{ iter.get_image(2000) }} 2x">
-				<source srcset="{{ iter.get_image(600) }} 600w, {{ iter.get_image(1200) }} 2x">
-				<source srcset="{{ iter.get_image(400) }} 400w, {{ iter.get_image(800) }} 2x">
-				<img
-					src="{{ iter.get_image(1000) }}"
-					data-preview="{{ iter.get_image(400) }}"
-				> 
+				<source srcset="{{ iter.get_image(400) }} 1x, {{ iter.get_image(600) }} 1.5x, {{ iter.get_image(800) }} 2x" media="(max-width: 400px)">
+				<source srcset="{{ iter.get_image(600) }} 1x, {{ iter.get_image(900) }} 1.5x, {{ iter.get_image(1200) }} 2x" media="(max-width: 600px)">
+				<source srcset="{{ iter.get_image(1000) }} 1x, {{ iter.get_image(1500) }} 1.5x, {{ iter.get_image(2000) }} 2x">
+				<img src="{{ iter.get_image(1000) }}"> 
 			</picture>
 		</figure>
 	{% endif %}
@@ -136,10 +133,7 @@
 				</div>
 				{% if iter.image_url %}
 					<figure class="image">
-						<source srcset="{{ iter.get_image(300) }} 400w, {{ iter.get_image(600) }} 2x">
-						<img
-							src="{{ iter.get_image(300) }}"
-						> 
+						<img srcset="{{ iter.get_image(300) }} 1x, {{ iter.get_image(600) }} 2x" src="{{ iter.get_image(300) }}"> 
 					</figure>
 				{% endif %}
 			</div>

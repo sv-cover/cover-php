@@ -35,16 +35,13 @@
     <div class="carousel is-animated">
         <figure class="image">
             <picture>
-                <source srcset="{{ photo.get_url(2400, 2400) }} 2400w">
-                <source srcset="{{ photo.get_url(1800, 1800) }} 1800w">
-                <source srcset="{{ photo.get_url(1200, 1200) }} 1200w, {{ photo.get_url(1800, 1800) }} 1.5x, {{ photo.get_url(2400, 2400) }} 2x">
-                <source srcset="{{ photo.get_url(900, 900) }} 900w, {{ photo.get_url(1800, 1800) }} 2x">
-                <source srcset="{{ photo.get_url(600, 600) }} 600w, {{ photo.get_url(1200, 1200) }} 2x">
-                <source srcset="{{ photo.get_url(400, 400) }} 400w, {{ photo.get_url(800, 800) }} 2x">
-                <img
-                    src="{{ photo.get_url(1800, 1800) }}"
-                    data-preview="{{ photo.get_url(null, 400) }}"
-                > 
+                <source srcset="{{ photo.get_url(400, 400) }} 1x, {{ photo.get_url(800, 800) }} 2x" media="(max-width: 400px)">
+                <source srcset="{{ photo.get_url(600, 600) }} 1x, {{ photo.get_url(1200, 1200) }} 2x" media="(max-width: 600px)">
+                <source srcset="{{ photo.get_url(900, 900) }} 1x, {{ photo.get_url(1800, 1800) }} 2x" media="(max-width: 900px)">
+                <source srcset="{{ photo.get_url(1200, 1200) }} 1x, {{ photo.get_url(1800, 1800) }} 1.5x, {{ photo.get_url(2400, 2400) }} 2x"  media="(max-width: 1200px)">
+                <source srcset="{{ photo.get_url(1800, 1800) }} 1x" media="(max-width: 1800px)">
+                <source srcset="{{ photo.get_url(2400, 2400) }} 1x">
+                <img src="{{ photo.get_url(1800, 1800) }}"> 
             </picture>
             <figcaption class="faces" hidden data-api-url="{{ path('photos.faces', {photo: photo.id}) }}">
                 <template class="face-template">
