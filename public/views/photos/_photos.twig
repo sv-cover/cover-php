@@ -45,15 +45,9 @@
                 href="{{ path('photos.photo', {book: context.book.id, photo: photo.id}) }}"
                 {% if photo.beschrijving %}title="{{ photo.beschrijving }}"{% endif %}
             >
-                <noscript>
-                    <img 
-                        src="{{ photo.get_url(null, 600) }}"
-                        {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
-                    >
-                </noscript>
                 <img 
-                    class="lazy"
-                    data-src="{{ photo.get_url(null, 600) }}"
+                    loading="lazy"
+                    src="{{ photo.get_url(null, 600) }}"
                     {% if size %}width="{{ size[0]/2 }}" height="{{ size[1]/2 }}"{% endif %}
                 >
                 {% if photo.beschrijving %}
