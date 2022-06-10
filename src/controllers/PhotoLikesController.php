@@ -57,7 +57,7 @@ class PhotoLikesController extends \Controller
                 'likes' => count($this->model->get_for_photo($this->get_photo()))
             ]);
 
-        return $this->view->redirect($this->generate_url('photos.book.photo', [
+        return $this->view->redirect($this->generate_url('photos.photo', [
             'photo' => $this->get_photo()['id'],
             'book' => $this->get_photo()['scope']['id'],
         ]));

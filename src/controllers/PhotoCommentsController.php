@@ -46,7 +46,7 @@ class PhotoCommentsController extends \ControllerCRUD
 
         if ($view === 'read' || $view === 'index')
         {
-            return $this->generate_url('photos.book.photo', [
+            return $this->generate_url('photos.photo', [
                 'book' => $parameters['book'],
                 'photo' => $parameters['photo']
             ]);
@@ -54,11 +54,11 @@ class PhotoCommentsController extends \ControllerCRUD
 
         if ($view === 'update' || $view === 'delete' || $view === 'likes')
         {
-            return $this->generate_url('photos.book.photo.comments.single', $parameters);
+            return $this->generate_url('photos.comments.single', $parameters);
         }
 
         // Only create is left by this point…
-        return $this->generate_url('photos.book.photo.comments', $parameters);
+        return $this->generate_url('photos.comments', $parameters);
     }
 
     protected function _index()
@@ -104,7 +104,7 @@ class PhotoCommentsController extends \ControllerCRUD
                 'likes' => $iter->get_likes(),
             ]);
 
-        return $this->view->redirect($this->generate_url('photos.book.photo', [
+        return $this->view->redirect($this->generate_url('photos.photo', [
             'photo' => $this->get_photo()['id'],
             'book' => $this->get_photo()['scope']['id'],
         ]));

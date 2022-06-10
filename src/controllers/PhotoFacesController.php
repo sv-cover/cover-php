@@ -39,9 +39,9 @@ class PhotoFacesController extends \ControllerCRUD
         }
 
         if ($view === 'read' || $view === 'update' || $view === 'delete')
-            return $this->generate_url('photos.photo.faces.single', $parameters);
+            return $this->generate_url('photos.faces.single', $parameters);
 
-        return $this->generate_url('photos.photo.faces', $parameters);
+        return $this->generate_url('photos.faces', $parameters);
     }
 
     protected function _create(\DataIter $iter, array $data, array &$errors)

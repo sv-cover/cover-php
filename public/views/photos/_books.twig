@@ -3,7 +3,7 @@
 <ul class="book-gallery columns is-multiline">
 {% for book in books %}
 	<li id="book_{{ book.id }}" class="book column is-half-tablet is-one-third-desktop is-one-quarter-fullhd {{ book.read_status }}" data-id="{{ book.id }}">
-		<a href="{{ path('photos.book', {book: book.id}) }}">
+		<a href="{{ path('photos', {book: book.id}) }}">
 			<div class="overlay">
 				<h2 class="title">{{ book.titel }}</h2>
 				{% if user_can_update book and book.visibility is not same as(null) %}

@@ -37,7 +37,7 @@ class PhotoPrivacyController extends \Controller
             else
                 $this->model->mark_visible($photo, $member);
 
-            return $this->view->redirect($this->generate_url('photos.book.photo', [
+            return $this->view->redirect($this->generate_url('photos.photo', [
                 'photo' => $photo['id'],
                 'book' => $photo['scope']['id'],
             ]));

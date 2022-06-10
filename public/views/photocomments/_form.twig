@@ -1,4 +1,4 @@
-<form class="media photo-comment" id="comment-form" name="freactie" action="{{ iter.has_id ? path('photos.book.photo.comments.single', {comment_view: 'update', comment_id: iter.id, photo: photo.id, book: book.id}) : path('photos.book.photo.comments', {comment_view: 'create', photo: photo.id, book: book.id}) }}" method="post">
+<form class="media photo-comment" id="comment-form" name="freactie" action="{{ iter.has_id ? path('photos.comments.single', {comment_view: 'update', comment_id: iter.id, photo: photo.id, book: book.id}) : path('photos.comments', {comment_view: 'create', photo: photo.id, book: book.id}) }}" method="post">
 	{% if iter.has_id %}
 		{{ html_nonce('update', iter) }}
 	{% else %}

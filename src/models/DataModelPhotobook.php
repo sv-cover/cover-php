@@ -156,7 +156,7 @@
 		public function get_url($width = 0, $height = 0)
 		{
 			$router = get_router();
-			return $router->generate('photos.photo.scaled', [
+			return $router->generate('photos.scaled', [
 				'photo' => $this->get_id(),
 				'width' => (int) $width,
 				'height' => (int) $height,
@@ -404,7 +404,7 @@
 		{
 			$router = get_router();
 			$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
-			return $router->generate('photos.book', ['book' => $this->get_id()], $reference_type);
+			return $router->generate('photos', ['book' => $this->get_id()], $reference_type);
 		}
 
 		public function get_key_photos($limit)

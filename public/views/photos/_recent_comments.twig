@@ -4,7 +4,7 @@
 		{% if user_can_read comment_group|first.photo %}
 			<div class="media">
 				<figure class="media-left">
-					<a href="{{ path('photos.photo', {photo: (comment_group|first).photo.id}) }}" class="thumbnail image">
+					<a href="{{ path('photos.photo.single', {photo: (comment_group|first).photo.id}) }}" class="thumbnail image">
 						<img src="{{ (comment_group|first).photo.get_url(null, 400)|e('html_attr') }}"
 							height="100"
 							title="{{ '%s / %s'|format(
