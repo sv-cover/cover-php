@@ -62,7 +62,13 @@ trait PhotoBookRouteHelper
 			// This occurs when $book is not the book that contains $photo.
 			// So we redirect to $photo, and let that figure out $book.
 			// No undefined state.
-			throw new \RedirectException($this->generate_url('photos', ['photo' => $photo['id']]));
+			throw new \RedirectException($this->generate_url(
+				$this->request->attributes->get('_route'),
+				array_merge(
+					$this->request->attributes->get('_route_params'),
+					['book' => $photo['boek']],
+				),
+			));
 		}
 
 		$this->photo = $photo;
