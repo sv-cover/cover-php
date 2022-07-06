@@ -5,8 +5,12 @@
 
 {# Highlight only events with images #}
 {% set events_with_image = iters|filter(x => x.image_url is not null)|keys %}
-{% set idx = global.GET['cover-screen-iteration']|default(random(0, events_with_image|length - 1)) % events_with_image|length  %}
-{% set highlighted_event = events_with_image|length > 0 ? iters[events_with_image[idx]] : null %}
+{% if events_with_image|length > 0 %}
+    {% set idx = global.GET['cover-screen-iteration']|default(random(0, events_with_image|length - 1)) % events_with_image|length  %}
+    {% set highlighted_event = iters[events_with_image[idx]] %}
+{% else %}
+    {% set highlighted_event = null %}
+{% endif %}
 
 {% block page %}
 <div class="slide calendar-slide columns">
@@ -54,6 +58,9 @@
                     </div>
                 </div>
             </div>
+        {% else %}
+            <p>{{ __('Nothing planned :(') }}</p>
+            <p>{{ __('Do you have an idea? Contact the board!') }}</p>
         {% endfor %}
     </div>
 </div>
