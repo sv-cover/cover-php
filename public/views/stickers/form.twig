@@ -9,7 +9,7 @@
 			<h1 class="modal-card-title">{{ iter.has_id ? __('Update sticker') : __('Add a new sticker') }}</h1>
 		</header>
 		<section class="modal-card-body">
-			<form id="sticker-form" method="POST" action="{{ (iter and iter.has_id) ? path('settings', {view:  'update', id: iter.id, referrer: controller.get_referrer()}) : path('settings', {view: 'create', referrer: controller.get_referrer()}) }}">
+			<form id="sticker-form" method="POST" action="{{ (iter and iter.has_id) ? path('stickers', {view:  'update', id: iter.id, referrer: controller.get_referrer()}) : path('stickers', {view: 'create', referrer: controller.get_referrer()}) }}">
 				<input type="hidden" name="lat">
 				<input type="hidden" name="lng">
 
@@ -20,7 +20,7 @@
 				{% endif %}
 
 				<div class="field">
-					{{ html_label(__('Label'), 'label', errors=errors, required=true) }}
+					{{ html_label(__('Where did you stick it?'), 'label', errors=errors, required=true) }}
 					<div class="control">
 						{{ html_input_text('label', iter, required='required', placeholder=__('E.g. on a lamppost')) }}
 					</div>
