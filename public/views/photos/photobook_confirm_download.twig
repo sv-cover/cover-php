@@ -5,8 +5,7 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="get" action="{{ path('photos') }}" id="download-photo-book-form">
-			<input type="hidden" name="book" value="{{ book.id }}">
+		<form method="get" action="{{ path('photos', {view: 'download_book', book: book.id}) }}" id="download-photo-book-form">
 			<header class="modal-card-head">
 				<p class="modal-card-title">{{ __('Download photo book') }}</p>
 			</header>
@@ -21,7 +20,7 @@
 			</section>
 			<footer class="modal-card-foot">
 				<a href="{{ path('photos', {book: book.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-				<button type="submit" class="button is-primary" name="view" value="download_book">{{ __('Download as a ZIP (%s)')|format(total_file_size|human_file_size) }}</button>
+				<button type="submit" class="button is-primary">{{ __('Download as a ZIP (%s)')|format(total_file_size|human_file_size) }}</button>
 			</footer>
 		</form>
 	</div>

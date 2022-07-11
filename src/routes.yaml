@@ -118,15 +118,86 @@ password:
   path: /password
   controller: App\Controller\PasswordController
 
-photos:
-  path: /photos
-  controller: App\Controller\PhotosController
+################################################################################
+# Photos
+################################################################################
+
+# Special cases first
+photos.competition:
+  path: /photos/competition
+  controller: App\Controller\PhotoBooksController
+  defaults:
+    view: competition
 
 photos.slide:
   path: /photos/slide
-  controller: App\Controller\PhotosController
+  controller: App\Controller\PhotoBooksController
   defaults:
     view: slide
+
+# Endpoints for photos without books
+photos.faces.single:
+  path: /photos/photo/{photo<\d+>}/faces/{face_id<\d+>}/{view}
+  controller: App\Controller\PhotoFacesController
+  defaults:
+    view: read
+
+photos.faces:
+  path: /photos/photo/{photo<\d+>}/faces/{view}
+  controller: App\Controller\PhotoFacesController
+  defaults:
+    view: index
+
+photos.scaled:
+  path: /photos/photo/{photo<\d+>}/scaled/{width<\d+>}/{height<\d+>}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: scaled
+    height: null
+
+# Comes after all the others to prevent conflict with the view parameter
+photos.photo.single:
+  path: /photos/photo/{photo<\d+>}/{view}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: read
+
+# Endpoints for photos with books
+photos.likes:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/likes
+  controller: App\Controller\PhotoLikesController
+
+photos.comments.single:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_id<\d+>}/{comment_view}
+  controller: App\Controller\PhotoCommentsController
+  defaults:
+    view: read
+
+photos.comments:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_view}
+  controller: App\Controller\PhotoCommentsController
+  defaults:
+    view: index
+
+photos.privacy:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/privacy/{view}
+  controller: App\Controller\PhotoPrivacyController
+  defaults:
+    view: read
+
+# 'photos' and 'photos.photo' come after all the others to prevent conflict with the view parameter
+photos.photo:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/{view}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: read
+
+photos:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/{view}
+  controller: App\Controller\PhotoBooksController
+  defaults:
+    view: read
+    book: 0
 
 profile:
   path: /profile

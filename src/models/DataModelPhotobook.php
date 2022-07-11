@@ -153,21 +153,14 @@
 			return path_concat(get_config_value('path_to_photos'), $this->get('filepath'));
 		}
 
-		// TODO: This won't work as soon the url to scaled photos stops using query parmeters
-		public function get_url($width = null, $height = null)
+		public function get_url($width = 0, $height = 0)
 		{
 			$router = get_router();
-			$url = get_config_value('url_to_scaled_photo', $router->generate('photos', ['view' => 'scaled']));
-
-			$params = array('photo' => $this->get_id());
-
-			if ($width)
-				$params['width'] = (int) $width;
-
-			if ($height)
-				$params['height'] = (int) $height;
-
-			return edit_url($url, $params);
+			return $router->generate('photos.scaled', [
+				'photo' => $this->get_id(),
+				'width' => (int) $width,
+				'height' => (int) $height,
+			]);
 		}
 
 		public function file_exists()
@@ -189,27 +182,24 @@
 			if (!$this->file_exists())
 				throw new NotFoundException("Could not find original file ({$this->get('filepath')}) of photo {$this->get_id()}.");
 			
-			// Special case of no width and height -> use original file
-			if (!$width && !$height) {
-				$cache_status = 'original';
-				return fopen($this->get_full_path(), 'rb');
-			}
-
-			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
-
-			list($scaled_width, $scaled_height, $scale) = $this->get_scaled_size($width, $height);
-
 			$cache_status = 'hit';
 
+			list($scaled_width, $scaled_height, $scale) = $this->get_scaled_size($width, $height);
+			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
+
 			// If we are upscaling, just use the original image
-			if ($scale > 1.0)
-				$scaled_path = $this->get_full_path();
+			// But do cache original (only once), makes it easier to serve.
+			if ($scale > 1.0 || (!$width && !$height)) {
+				$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $this->get('width'), $this->get('height'));
+
+				if (!file_exists($scaled_path) || filesize($scaled_path) === 0 || $skip_cache) {
+					$cache_status = 'miss';
+					copy($this->get_full_path(), $scaled_path);
+				}
+			}
 
 			// If we are using a scaled image but it doesn't exist, create it :D
-			elseif (!file_exists($scaled_path)
-				|| filesize($scaled_path) === 0
-				|| $skip_cache)
-			{
+			elseif (!file_exists($scaled_path) || filesize($scaled_path) === 0 || $skip_cache) {
 				$cache_status = 'miss';
 				
 				if (!file_exists(dirname($scaled_path)))
@@ -220,8 +210,7 @@
 				$imagick->readImage($this->get_full_path());
 
 				// Is it a GIF image? Scale each frame individually 
-				if ($imagick->getImageFormat() == 'GIF')
-				{
+				if ($imagick->getImageFormat() == 'GIF') {
 					$gifmagick = $imagick->coalesceImages();
 
 					do {
@@ -230,12 +219,9 @@
 
 					$imagick = $gifmagick->deconstructImages();
 					$imagick->writeImagesFile($fhandle);
-				}
-				else
-				{
+				} else {
 					// Rotate the image according to the EXIF data
-					switch($imagick->getImageOrientation())
-					{
+					switch($imagick->getImageOrientation()) {
 						case Imagick::ORIENTATION_BOTTOMRIGHT:
 							$imagick->rotateImage('#000', 180); // rotate 180 degrees
 							break; 
@@ -265,7 +251,7 @@
 				fclose($fhandle);
 			}
 			
-			return fopen($scaled_path, 'rb');
+			return $scaled_path;
 		}
 
 		public function get_exif_data()

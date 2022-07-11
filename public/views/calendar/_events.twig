@@ -37,12 +37,9 @@
             {% if event.image_url %}
                 <figure class="image">
                     <picture>
-                        <source srcset="{{ event.get_image(600) }} 600w, {{ event.get_image(1200) }} 2x">
-                        <source srcset="{{ event.get_image(400) }} 400w, {{ event.get_image(800) }} 2x">
-                        <img
-                            src="{{ event.get_image(600) }}"
-                            data-preview="{{ event.get_image(400) }}"
-                        > 
+                        <source srcset="{{ event.get_image(600) }} 1x, {{ event.get_image(900) }} 1.5x, {{ event.get_image(1200) }} 2x" media="(min-width: 400px) and (max-width: 600px)">
+                        <source srcset="{{ event.get_image(400) }} 1x, {{ event.get_image(600) }} 1.5x, {{ event.get_image(800) }} 2x">
+                        <img src="{{ event.get_image(600) }}"> 
                     </picture>
                 </figure>
             {% endif %}

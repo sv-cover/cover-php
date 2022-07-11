@@ -1,13 +1,13 @@
 {% if comments|length > 0 %}
 	{% for comment in comments %}
-		{{ include('@theme/photocomments/_comment.twig', {iter: comment}) }}
+		{{ include('@theme/photocomments/_comment.twig', {iter: comment, photo:photo, book:book}) }}
 	{% endfor %}
 {% endif %}
 
-{% set new_reactie = controller.new_iter({auteur: global.identity.get('id', null) }) %}
+{% set new_reactie = global.models.PhotobookReactie.new_iter({auteur: global.identity.get('id', null) }) %}
 {% if user_can_create new_reactie %}
 	{{ include('@theme/photocomments/_form.twig', {
-		iter: new_reactie,
+		iter: new_reactie, photo:photo, book:book,
 		errors: []
 	}) }}
 {% endif %}

@@ -15,47 +15,6 @@
 {# Calendar + Carousels #}
 {{ include('@theme/homepage/_calendar.twig') }}
 
-{# 	<section class="is-lowerd">
-		<div class="container-calendar-and-car is-centered columns is-gapless reverse-row-order"> 
-		{# Calendar #
-			<div class="column is-one-third-desktop is-full-width">
-				{{ include('@theme/homepage/_agenda.twig') }}
-			</div>
-
-		{# Carousel #
-			<section class="hero has-carousel column container-fancy">
-				 <div id="carousel-demo" class="hero-carousel carousel event-header">
-				 	{% set agenda_items = view.layout.agenda %}
-					{% for item in agenda_items|slice(0, 4) %}
-					<div class="is-active cover-thumbnail is-3by1 is-full-height">
-						<div class="overlay is-bottom-overlay is-top-overlay">
-							<div class="date boxed-title-wrapper">
-								<span class="boxed-title has-text-weight-normal is-size-6 is-size-7-touch">
-									{{ item.van|date('F d') }}
-								</span>
-							</div>
-							<div class="name boxed-title-wrapper">
-								<h1 class="boxed-title is-size-4 is-size-5-touch">
-									{{ item.kop }}
-								</h1>
-							</div>
-						</div>
-						<figure class="image">
-							<picture>
-								<source srcset="{{ item.get_image(1000) }} 1000w, {{ item.get_image(2000) }} 2x">
-								<source srcset="{{ item.get_image(600) }} 600w, {{ item.get_image(1200) }} 2x">
-								<source srcset="{{ item.get_image(400) }} 400w, {{ item.get_image(800) }} 2x">
-								<img class="is-background" src="{{ item.get_image(1000) }}"
-								data-preview="{{ item.get_image(400) }}" alt="">
-							</picture>
-						</figure>
-					</div>
-					{% endfor %}
-  				</div>
-			</section>
-		</div>
-	</section> #}
-
 {# Information about association #}
 
 

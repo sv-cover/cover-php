@@ -60,11 +60,10 @@
                         {% if item.image_url %}
                             <figure class="image">
                                 <picture>
-                                    <source srcset="{{ item.get_image(1000) }} 1000w, {{ item.get_image(2000) }} 2x">
-                                    <source srcset="{{ item.get_image(600) }} 600w, {{ item.get_image(1200) }} 2x">
-                                    <source srcset="{{ item.get_image(400) }} 400w, {{ item.get_image(800) }} 2x">
-                                    <img class="is-background" src="{{ item.get_image(1000) }}"
-                                    data-preview="{{ item.get_image(400) }}" alt="">
+                                    <source srcset="{{ item.get_image(400) }} 1x, {{ item.get_image(600) }} 1.5x, {{ item.get_image(800) }} 2x"  media="(max-width: 400px)">
+                                    <source srcset="{{ item.get_image(600) }} 1x, {{ item.get_image(900) }} 1.5x, {{ item.get_image(1200) }} 2x" media="(max-width: 600px)">
+                                    <source srcset="{{ item.get_image(1000) }} 1x, {{ item.get_image(1500) }} 1.5x, {{ item.get_image(2000) }} 2x">
+                                    <img class="is-background" src="{{ item.get_image(1000) }}">
                                 </picture>
                             </figure>
                         {% endif %}
