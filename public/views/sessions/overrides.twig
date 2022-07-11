@@ -7,13 +7,13 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" class="session-overrides-form" action="{{ path('sessions', {view: 'overrides'}) }} ">
-			{{ html_nonce('session_overrides') }}
-			{{ html_input_hidden('referrer', referrer) }}
-			<header class="modal-card-head">
-				<p class="modal-card-title">{{ __('Impersonate a user') }}</p>
-			</header>
-			<section class="modal-card-body">
+		<header class="modal-card-head">
+			<p class="modal-card-title">{{ __('Impersonate a user') }}</p>
+		</header>
+		<section class="modal-card-body">
+			<form id="session-overrides-form" method="post" class="session-overrides-form" action="{{ path('sessions', {view: 'overrides'}) }} ">
+				{{ html_nonce('session_overrides') }}
+				{{ html_input_hidden('referrer', referrer) }}
 				<div class="field">
 					{{ html_input_checkbox('override_committees', {'override_committees': global.identity.get_override_committees() is not same as(null) }, class='switch is-rounded is-full-width is-rtl', data_target='#override-committees-fieldset') }}
 				  	<label for="field-override_committees">{{__('Override committee memberships')}}</label>
@@ -45,11 +45,11 @@
 						</div>
 					</div>
 				</fieldset>
-			</section>
-			<footer class="modal-card-foot">
-				<button type="submit" class="button is-primary">{{ __('Apply') }}</button>
-			</footer>
-		</form>
+			</form>
+		</section>
+		<footer class="modal-card-foot">
+			<button type="submit" class="button is-primary" form="session-overrides-form">{{ __('Apply') }}</button>
+		</footer>
 	</div>
 </div>
 {% endblock %}

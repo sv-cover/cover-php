@@ -1,16 +1,16 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Subscribe a member') ~ ' – ' ~ parent() %}
+{% block title __('Subscribe a non-member') ~ ' – ' ~ parent() %}
 
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" action="{{ path('mailing_lists', {view: 'subscribe_guest', id: list.id}) }}">
-			{{ html_nonce('subscribe_guest', list) }}
-			<header class="modal-card-head">
-				<p class="modal-card-title">{{ __('Subscribe a non-member') }}</p>
-			</header>
-			<section class="modal-card-body">
+		<header class="modal-card-head">
+			<p class="modal-card-title">{{ __('Subscribe a non-member') }}</p>
+		</header>
+		<section class="modal-card-body">
+			<form id="subscribe-non-member-form" method="post" action="{{ path('mailing_lists', {view: 'subscribe_guest', id: list.id}) }}">
+				{{ html_nonce('subscribe_guest', list) }}
 				<div class="field">
 					{{ html_label(__('Name'), 'naam', errors=errors, required=true) }}
 					<div class="control">
@@ -23,12 +23,12 @@
 						{{ html_input_text('email', [], type='email', errors=errors, required=true) }}
 					</div>
 				</div>
-			</section>
-			<footer class="modal-card-foot">
-				<a href="{{ path('mailing_lists', {id: list.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-				<button type="submit" class="button is-primary">{{ __('Subscribe') }}</button>
-			</footer>
-		</form>
+			</form>
+		</section>
+		<footer class="modal-card-foot">
+			<a href="{{ path('mailing_lists', {id: list.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+			<button type="submit" class="button is-primary" form="subscribe-non-member-form">{{ __('Subscribe') }}</button>
+		</footer>
 	</div>
 </div>
 {% endblock %}

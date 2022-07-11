@@ -3,12 +3,12 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="POST" action="{{ path('stickers', {view: 'add_photo', id: iter.id, referrer: controller.get_referrer()}) }}" enctype="multipart/form-data">
-			{{ html_nonce('add_photo', iter) }}
-			<header class="modal-card-head">
-				<p class="modal-card-title">{{ __('Upload photo for sticker') }}</p>
-			</header>
-			<section class="modal-card-body">
+		<header class="modal-card-head">
+			<p class="modal-card-title">{{ __('Upload photo for sticker') }}</p>
+		</header>
+		<section class="modal-card-body">
+			<form id="sticker-photo-form" method="POST" action="{{ path('stickers', {view: 'add_photo', id: iter.id, referrer: controller.get_referrer()}) }}" enctype="multipart/form-data">
+				{{ html_nonce('add_photo', iter) }}
 				<div class="field">
 					<div class="control">
 						<div class="file">
@@ -34,12 +34,12 @@
 						{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}
 					</p>
 				</div>
-			</section>
-			<footer class="modal-card-foot">
-				<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
-				<button type="submit" class="button is-danger">{{ __('Upload photo') }}</button>
-			</footer>
-		</form>
+			</form>
+		</section>
+		<footer class="modal-card-foot">
+			<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
+			<button type="submit" class="button is-danger" form="sticker-photo-form">{{ __('Upload photo') }}</button>
+		</footer>
 	</div>
 </div>
 {% endblock %}

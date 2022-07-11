@@ -5,24 +5,24 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" action="{{ path('mailing_lists', {view: 'subscribe_member', id: list.id}) }}">
-			{{ html_nonce('subscribe_member', list) }}
-			<header class="modal-card-head">
-				<p class="modal-card-title">{{ __('Add member') }}</p>
-			</header>
-			<section class="modal-card-body">
+		<header class="modal-card-head">
+			<p class="modal-card-title">{{ __('Add member') }}</p>
+		</header>
+		<section class="modal-card-body">
+			<form id="subscribe-member-form" method="post" action="{{ path('mailing_lists', {view: 'subscribe_member', id: list.id}) }}">
+				{{ html_nonce('subscribe_member', list) }}
 				<div class="field">
 					{{ html_label(__('Member'), 'member_id') }}
 					<div class="control">
 						{{ html_input_text('member_id', [], autofocus=true, data_autocomplete='member_id') }}
 					</div>
 				</div>
-			</section>
-			<footer class="modal-card-foot">
-				<a href="{{ path('mailing_lists', {id: list.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-				<button type="submit" class="button is-primary">{{ __('Subscribe') }}</button>
-			</footer>
-		</form>
+			</form>
+		</section>
+		<footer class="modal-card-foot">
+			<a href="{{ path('mailing_lists', {id: list.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+			<button type="submit" class="button is-primary" form="subscribe-member-form">{{ __('Subscribe') }}</button>
+		</footer>
 	</div>
 </div>
 {% endblock %}

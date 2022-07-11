@@ -6,12 +6,12 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" action="{{ path('photos.privacy', {book: photo.scope.id, photo: photo.id}) }}">
-			{{ html_nonce('privacy', photo) }}
-			<header class="modal-card-head">
-				<p class="modal-card-title">{{ __('Visibility of photo') }}</p>
-			</header>
-			<section class="modal-card-body">
+		<header class="modal-card-head">
+			<p class="modal-card-title">{{ __('Visibility of photo') }}</p>
+		</header>
+		<section class="modal-card-body">
+			<form id="photo-visibility-form" method="post" action="{{ path('photos.privacy', {book: photo.scope.id, photo: photo.id}) }}">
+				{{ html_nonce('privacy', photo) }}
 				{# Not .image, because of scaling #}
 				<figure>
 					<img src="{{ photo.get_url(null, 400)|e('html_attr') }}" {{ 'width="%d" height="%d"'|vformat(photo.get_scaled_size(400, 400))|raw }}>
@@ -26,11 +26,11 @@
 						{{ html_input_radio('visibility', {'visibility': visibility }, 'hidden', label=__('Hide from my personal photo album')) }}
 					</div>
 				</div>
-			</section>
-			<footer class="modal-card-foot">
-				<button type="submit" class="button is-primary">{{ __('Change visibility') }}</button>
-			</footer>
-		</form>
+			</form>
+		</section>
+		<footer class="modal-card-foot">
+			<button type="submit" class="button is-primary" form="photo-visibility-form">{{ __('Change visibility') }}</button>
+		</footer>
 	</div>
 </div>
 {% endblock %}

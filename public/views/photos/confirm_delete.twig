@@ -5,12 +5,12 @@
 {% block content %}
 <div class="modal is-static">
 	<div class="modal-card">
-		<form method="post" action="{{ path('photos', {view: 'delete_book', book: iter.id}) }}">
-			{{ html_nonce('delete', iter) }}
-			<header class="modal-card-head">
-				<p class="modal-card-title">{{ __('Delete photo book') }}</p>
-			</header>
-			<section class="modal-card-body">
+		<header class="modal-card-head">
+			<p class="modal-card-title">{{ __('Delete photo book') }}</p>
+		</header>
+		<section class="modal-card-body">
+			<form id="delete-book-form" method="post" action="{{ path('photos', {view: 'delete_book', book: iter.id}) }}">
+				{{ html_nonce('delete', iter) }}
 				<div class="field">
 					<p>{{ __('Are you sure you want to delete the <em>%s</em> photo book?')|format(iter.titel|e)|raw }}</p>
 				</div>
@@ -20,12 +20,12 @@
 						{{ html_input_text('confirm_delete', null, errors=errors, required=true) }}
 					</div>
 				</div>
-			</section>
-			<footer class="modal-card-foot">
-				<a href="{{ path('photos', {book: iter.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-				<button type="submit" class="button is-danger">{{ __('Delete photo book') }}</button>
-			</footer>
-		</form>
+			</form>
+		</section>
+		<footer class="modal-card-foot">
+			<a href="{{ path('photos', {book: iter.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+			<button type="submit" class="button is-danger" form="delete-book-form">{{ __('Delete photo book') }}</button>
+		</footer>
 	</div>
 </div>
 {% endblock %}
