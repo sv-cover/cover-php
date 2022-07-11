@@ -66,6 +66,8 @@ class PhotoGalleryAdmin {
     initSortable() {
         // Init sort button and grab urls from html
         this.sortableButton = this.element.querySelector('#order-photos-button');
+        if (!this.sortableButton)
+            return;
         this.sortableButton.addEventListener('click', this.handleSortable.bind(this));
         this.photoOrderUrl = this.sortableButton.dataset.photoOrderUrl;
         this.bookOrderUrl = this.sortableButton.dataset.bookOrderUrl;
