@@ -41,6 +41,12 @@
 
 		'path_to_scaled_profile_picture' => 'tmp/profiles/%d/%dx%d-%s.%s',
 
+		// Set both path_to_scaled_photo and nginx_accell_path_to_scaled_photo 
+		// to enable NGINX X-Accel. Don't forget to update nginx config. The
+		// path is replaced by url in full file path.
+		// 'nginx_accel_path_to_cache' => 'tmp/',
+		// 'nginx_accel_url_to_cache' => '/protected_cache/',
+
 		'precomputed_photo_scales' => array(
 			[2400, 2400], // different sizes for different media
 			[1800, 1800],

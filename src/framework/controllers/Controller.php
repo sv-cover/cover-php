@@ -83,6 +83,8 @@
 				return $this->run_404_not_found($e);
 			elseif ($e instanceof UnauthorizedException)
 				return $this->run_401_unauthorized($e);
+			elseif ($e instanceof RedirectException)
+				return $this->view()->redirect($e->getMessage());
 			else
 				return $this->run_500_internal_server_error($e);
 		}

@@ -61,10 +61,12 @@ class AddPhotosAdmin {
 
     loadFolders(path, element) {
         // Deconstruct url from template
-        let url = new URL(this.apiBaseUrl, window.location.href);
+        let url = new URL(
+            this.apiBaseUrl.replace('view_placeholder', 'add_photos_list_folders'),
+            window.location.href
+        );
         const params = new URLSearchParams(url.search);
 
-        params.append('view', 'add_photos_list_folders');
         params.append('path', path);
 
         // Reconstruct url
@@ -94,10 +96,12 @@ class AddPhotosAdmin {
             this.photoSelector.removeChild(this.photoSelector.firstChild);
 
         // Deconstruct url from template
-        let url = new URL(this.apiBaseUrl, window.location.href);
+        let url = new URL(
+            this.apiBaseUrl.replace('view_placeholder', 'add_photos_list_photos'),
+            window.location.href
+        );
         const params = new URLSearchParams(url.search);
 
-        params.append('view', 'add_photos_list_photos');
         params.append('path', path);
 
         // Reconstruct url
@@ -197,7 +201,7 @@ class AddPhotosAdmin {
         let descriptionInputElement = element.querySelector('.description input');
         if (photo['id'] != null) {
             element.querySelector('.add-control input').remove();
-            element.querySelector('.add-control a').href = this.photoBaseUrl + photo['id'];
+            element.querySelector('.add-control a').href = this.photoBaseUrl.replace('999999999', photo['id']);
 
             descriptionInputElement.remove();
             element.querySelector('.description').append(document.createTextNode(photo['description']));

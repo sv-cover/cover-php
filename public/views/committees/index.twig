@@ -20,20 +20,18 @@
 		
 		{% if committee.thumbnail %}
 			<figure class="image">
-				<noscript>
-					<img src="{{ committee.thumbnail }}" alt="Photo of {{ committee.naam }}">
-				</noscript>
-				<img class="lazy" data-src="{{ committee.thumbnail }}" alt="Photo of {{ committee.naam }}">
+				<img loading="lazy" src="{{ committee.thumbnail }}" alt="Photo of {{ committee.naam }}">
 			</figure>
 		{% elseif committee.members|length > 0 %}
 			<div class="member-images columns is-gapless is-mobile">
 				{% for member in committee.members %}
 					{% if user_can_read member %}
 						<figure class="column image">
-							<noscript>
-								<img src="{{ path('profile_picture', {lid_id: member.id, format: 'portrait', width: 512}) }}" alt="{{ __('Photo of %s')|format(member|full_name) }}">
-							</noscript>
-							<img class="lazy" data-src="{{ path('profile_picture', {lid_id: member.id, format: 'portrait', width: 512}) }}" alt="{{ __('Photo of %s')|format(member|full_name) }}">
+							<img
+								loading="lazy"
+								src="{{ path('profile_picture', {lid_id: member.id, format: 'portrait', width: 512}) }}"
+								alt="{{ __('Photo of %s')|format(member|full_name) }}"
+							>
 						</figure>
 					{% endif %}
 				{% endfor %}
