@@ -55,10 +55,12 @@ class PhotoGalleryAdmin {
 
     initDeleteButton() {
         const button = this.element.querySelector('#delete-selected-photos-button');
-        button.addEventListener('click', this.handleDelete.bind(this));
+        if (button) {
+            button.addEventListener('click', this.handleDelete.bind(this));
 
-        // Grab url from html
-        this.deletePhotosUrl = button.dataset.deletePhotosUrl;
+            // Grab url from html
+            this.deletePhotosUrl = button.dataset.deletePhotosUrl;
+        }
     }
 
     initSortable() {
