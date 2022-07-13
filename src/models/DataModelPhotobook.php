@@ -187,6 +187,11 @@
 			list($scaled_width, $scaled_height, $scale) = $this->get_scaled_size($width, $height);
 			$scaled_path = sprintf(get_config_value('path_to_scaled_photo'), $this->get_id(), $width, $height);
 
+			// Create cache directory if needed
+			$scaled_dir = dirname($scaled_path);
+			if (!is_dir($scaled_dir))
+				mkdir($scaled_dir, 0770, true);
+
 			// If we are upscaling, just use the original image
 			// But do cache original (only once), makes it easier to serve.
 			if ($scale > 1.0 || (!$width && !$height)) {
