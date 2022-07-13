@@ -187,6 +187,9 @@ class DataModelVacancy extends DataModel implements SearchProvider
 				$values = [$values];
 
 			foreach ($values as $val) {
+				// skip empty values
+				if (empty($val))
+					continue;
 				if ($field === 'query') {
 					$val =  $this->db->quote_value('%' . $val . '%');
 					$search[] = sprintf('title ILIKE %s', $val);
