@@ -38,8 +38,19 @@ $committee-padding: 1.25em
             &.has-vacancy
                 max-width: calc(100% - 15rem)
                 width: auto
-                .boxed-title
-                    position: relative
+                position: relative
+                .boxed-title::after
+                    display: block
+                    content: ''
+                    box-sizing: content-box
+                    width: 100%
+                    height: 1.525em
+                    padding: 0.1em 2.5rem
+                    position: absolute
+                    top: -.1em
+                    right: 2em
+                    z-index: -1
+                    background: $cover
             .name
                 // Wrapped names look weird
                 white-space: nowrap

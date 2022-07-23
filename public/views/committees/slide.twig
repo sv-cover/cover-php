@@ -11,10 +11,10 @@
             </h1>
         </div>
         <div class="members boxed-title-wrapper {% if committee.has_vacancy %}has-vacancy{% endif %}">
+            {% if committee.has_vacancy %}
+                <div class="vacancy-badge">{{ __('Looking for new members!') }}</div>
+            {% endif %}
             <div class="boxed-title has-text-weight-normal is-size-4 is-size-6-touch is-size-7-mobile">
-                {% if committee.has_vacancy %}
-                    <div class="vacancy-badge">{{ __('Looking for new members!') }}</div>
-                {% endif %}
                 {% for member in committee.members %}
                     {% if user_can_read member %}
                         <span class="name">{{ member|personal_full_name }}</span>
