@@ -14,7 +14,19 @@ class PolicyPhotobook implements Policy
 		if (!preg_match('/^(?P<year>\d{4})-\d{1,2}-\d{1,2}$/', $book['date'], $match))
 			return false;
 
-		return get_identity()->member()->is_member_on(new DateTime($match[0]));
+		$book_date = new DateTime($book['date']);
+		$book_year_end = intval($book_date->format('Y'));
+		if (intval($book_date->format('n')) >= 8)
+			$book_year_end++;
+
+		/* A person should be able to see their book if:
+		 * - they were member at the time of the book
+		 * - they were member at the "end" of the academic year the book was created in.
+		 * The end for academic year is set to the first of August, as some members join before
+		 * September, and sometimes the first activtities of the year are still in August.
+		 */ 
+		return get_identity()->member()->is_member_on($book_date)
+			|| get_identity()->member()->is_member_on(new DateTime($book_end_year . '-08-01'));
 	}
 
 	private function _inside_public_period(DataIter $book)
@@ -89,7 +101,7 @@ class PolicyPhotobook implements Policy
 		if (!get_identity()->member())
 			return false;
 
-		if (get_identity()->is_member() || ($book['date'] && get_identity()->member()->is_member_on(new DateTime($book['date']))))
+		if (get_identity()->is_member() || $this->_was_member_at_the_time($book))
 			return $this->user_can_read($book);
 
 		return false;
