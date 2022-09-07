@@ -26,7 +26,7 @@ class PolicyPhotobook implements Policy
 		 * September, and sometimes the first activtities of the year are still in August.
 		 */ 
 		return get_identity()->member()->is_member_on($book_date)
-			|| get_identity()->member()->is_member_on(new DateTime($book_end_year . '-08-01'));
+			|| get_identity()->member()->is_member_on(new DateTime($book_year_end . '-08-01'));
 	}
 
 	private function _inside_public_period(DataIter $book)
