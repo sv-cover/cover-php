@@ -19,11 +19,11 @@ class PolicyPhotobook implements Policy
 		if (intval($book_date->format('n')) >= 8)
 			$book_year_end++;
 
-		/* A person should be able to see their book if:
-		 * - they were member at the time of the book
+		/* A person should be able to see this book if:
+		 * - they were member at the time of the book.
 		 * - they were member at the "end" of the academic year the book was created in.
 		 * The end for academic year is set to the first of August, as some members join before
-		 * September, and sometimes the first activtities of the year are still in August.
+		 * September, and sometimes the first activities of the year are still in August.
 		 */ 
 		return get_identity()->member()->is_member_on($book_date)
 			|| get_identity()->member()->is_member_on(new DateTime($book_year_end . '-08-01'));
