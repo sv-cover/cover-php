@@ -6,7 +6,7 @@
         "ronanguilloux/isocodes": "~1.2",
         "99designs/http-signatures": "~2.0",
         "jeroendesloovere/vcard": "~1.2",
-        "twig/twig": "^1.43",
+        "twig/twig": "^2.0",
         "giggsey/libphonenumber-for-php": "^7.7",
         "embed/embed": "^3.0",
         "sentry/sdk": "^2.2",

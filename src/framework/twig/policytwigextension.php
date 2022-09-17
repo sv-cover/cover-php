@@ -1,8 +1,10 @@
 <?php
 
-abstract class Policy_Twig_Node_Expression_UserCan extends Twig_Node_Expression
+use Twig\Node\Expression\AbstractExpression;
+
+abstract class Policy_Twig_Node_Expression_UserCan extends AbstractExpression
 {
-    public function __construct(Twig_NodeInterface $node, $lineno)
+    public function __construct(AbstractExpression $node, $lineno)
     {
         parent::__construct(array('node' => $node), array(), $lineno);
     }
@@ -65,19 +67,19 @@ class PolicyTwigExtension extends Twig_Extension
 			[
 				'user_can_create' => [
 					'precedence' => 50, 
-					'class' => 'Policy_Twig_Node_Expression_UserCanCreate'
+					'class' => Policy_Twig_Node_Expression_UserCanCreate::class
 				],
 				'user_can_read' => [
 					'precedence' => 50,
-					'class' => 'Policy_Twig_Node_Expression_UserCanRead'
+					'class' => Policy_Twig_Node_Expression_UserCanRead::class
 				],
 				'user_can_update' => [
 					'precedence' => 50,
-					'class' => 'Policy_Twig_Node_Expression_UserCanUpdate'
+					'class' => Policy_Twig_Node_Expression_UserCanUpdate::class
 				],
 				'user_can_delete' => [
 					'precedence' => 50,
-					'class' => 'Policy_Twig_Node_Expression_UserCanDelete'
+					'class' => Policy_Twig_Node_Expression_UserCanDelete::class
 				]
             ],
             [] // binary
