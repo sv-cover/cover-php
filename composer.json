@@ -4,7 +4,7 @@
         "maennchen/zipstream-php": "0.3.*",
         "camspiers/porter-stemmer": "~1.0",
         "ronanguilloux/isocodes": "~1.2",
-        "99designs/http-signatures": "~2.0",
+        "99designs/http-signatures": "^4.0",
         "jeroendesloovere/vcard": "~1.2",
         "twig/twig": "^2.0",
         "giggsey/libphonenumber-for-php": "^7.7",
@@ -14,7 +14,12 @@
         "symfony/config": "^5.2",
         "symfony/expression-language": "^5.2",
         "symfony/yaml": "^5.2",
-        "symfony/apache-pack": "^1.0"
+        "symfony/apache-pack": "^1.0",
+        "symfony/form": "^5.4",
+        "symfony/validator": "^5.4",
+        "symfony/twig-bridge": "^5.4",
+        "symfony/http-foundation": "^5.4",
+        "symfony/security-csrf": "^5.4"
     },
     "require-dev": {
         "facebook/webdriver": "^1.5",
@@ -25,7 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\Controller\\": "src/controllers/"
+            "App\\Controller\\": "src/controllers/",
+            "App\\Form\\": "src/Form/"
         }
     }
 }

@@ -1,113 +1,156 @@
 <?php
-	if (!defined('IN_SITE'))
-		return;
 
-	/** @group Form
-	  * A check function which checks if a value is a non empty
-	  * @name the name of the POST value
-	  * @value reference; the value
-	  *
-	  * @result true when value is non empty, false otherwise
-	  */	
-	function check_value_empty($name, $value) {
-		if (!isset($value) || !trim($value))
-			return false;
-		else
-			return $value;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
+use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
+use Symfony\Component\Validator\Validation;
+
+
+function get_csrf_manager()
+{
+	static $csrf_manager;
+	if (!isset($csrf_manager)) {
+		// TODO: use SessionTokenStorage after proper HttpFoundation integration
+		$csrf_generator = new UriSafeTokenGenerator();
+		$csrf_storage = new NativeSessionTokenStorage();
+		$csrf_manager = new CsrfTokenManager($csrf_generator, $csrf_storage);
 	}
 
-	/** @group Form
-	  * A check function which checks if a value is a valid number. Besides
-	  * checking this function will also convert the value to a float
-	  * @name the name of the POST value
-	  * @value reference; the value
-	  *
-	  * @result true when value is a number, false otherwise
-	  */
-	function check_value_tofloat($name, $value) {
-		if (!is_numeric($value))
-			return false;
-		else
-			return floatval($value);
-	}
-	
-	/** @group Form
-	  * A check function which checks if a value is a valid number. Besides
-	  * checking this function will also convert the value to an int
-	  * @name the name of the POST value
-	  * @value reference; the value
-	  *
-	  * @result true when value is a number, false otherwise
-	  */
-	function check_value_toint($name, $value) {
-		if (!is_numeric($value))
-			return false;
-		else
-			return intval($value);
-	}
-	
-	/** @group Form
-	  * A check function which formats a checkbox value. It sets the
-	  * POST value to 1 if the value is either 'yes' or 'on' and to 0
-	  * otherwise
-	  * @name the name of the POST value
-	  * @value reference; the value
-	  *
-	  * @result always true
-	  */
-	function check_value_checkbox($name, $value) {
-		if ($value == 'yes' || $value == 'on')
-			return 1;
-		else
-			return 0;
-	}
-	
-	/** @group Form
-	  * A function which checks if POSTed values are valid and optionally
-	  * formats values
-	  *
-	  * @check an array of values to check. Each item in this array
-	  * is either a a string (the name of a field) or an associative array 
-	  * containing a 'name' key (the name of a field) and a 'function' 
-	  * key containing the check function to call. If only a name is
-	  * specified the default check function (#check_value_empty) will
-	  * be used. Check functions have two parameters: name and value and 
-	  * returns either false on error or true when the value is valid. 
-	  * The value parameter is passed by reference to allow formatting
-	  * the value. Common check functions available are: 
-	  * #check_value_toint and #check_value_checkbox
-	  * @errors reference; will be set to an array of fields that didn't
-	  * successfully check
-	  *
-	  * @result an array with name => value values
-	  */
-	function check_values($check, &$errors, array $data = null) {
-		$fields = array();
-		$errors = array();
+	return $csrf_manager;
+}
 
-		foreach ($check as $item) {
-			if (!is_array($item)) {
-				$name = $item;
-				$func = 'check_value_empty';
-			} else {
-				$name = $item['name'];
+function get_form_factory()
+{
+	static $form_factory;
 
-				if (isset($item['function']))
-					$func = $item['function'];
-				else
-					$func = 'check_value_empty';
-			}
-			
-			$result = call_user_func($func, $name, isset($data) ? $data[$name] : get_post($name));
-			
-			if ($result === false)
-				$errors[] = $name;
+	if (!isset($form_factory)) {
+		// creates the validator - details will vary
+		$validator = Validation::createValidator();
+
+		$form_factory = Forms::createFormFactoryBuilder()
+		    ->addExtension(new HttpFoundationExtension())
+			->addExtension(new ValidatorExtension($validator))
+			->addExtension(new CsrfExtension(get_csrf_manager()))
+			->getFormFactory();
+	}
+
+	return $form_factory;
+}
+
+
+if (!defined('IN_SITE'))
+	return;
+
+/** @group Form
+  * A check function which checks if a value is a non empty
+  * @name the name of the POST value
+  * @value reference; the value
+  *
+  * @result true when value is non empty, false otherwise
+  */	
+function check_value_empty($name, $value) {
+	if (!isset($value) || !trim($value))
+		return false;
+	else
+		return $value;
+}
+
+/** @group Form
+  * A check function which checks if a value is a valid number. Besides
+  * checking this function will also convert the value to a float
+  * @name the name of the POST value
+  * @value reference; the value
+  *
+  * @result true when value is a number, false otherwise
+  */
+function check_value_tofloat($name, $value) {
+	if (!is_numeric($value))
+		return false;
+	else
+		return floatval($value);
+}
+
+/** @group Form
+  * A check function which checks if a value is a valid number. Besides
+  * checking this function will also convert the value to an int
+  * @name the name of the POST value
+  * @value reference; the value
+  *
+  * @result true when value is a number, false otherwise
+  */
+function check_value_toint($name, $value) {
+	if (!is_numeric($value))
+		return false;
+	else
+		return intval($value);
+}
+
+/** @group Form
+  * A check function which formats a checkbox value. It sets the
+  * POST value to 1 if the value is either 'yes' or 'on' and to 0
+  * otherwise
+  * @name the name of the POST value
+  * @value reference; the value
+  *
+  * @result always true
+  */
+function check_value_checkbox($name, $value) {
+	if ($value == 'yes' || $value == 'on')
+		return 1;
+	else
+		return 0;
+}
+
+/** @group Form
+  * A function which checks if POSTed values are valid and optionally
+  * formats values
+  *
+  * @check an array of values to check. Each item in this array
+  * is either a a string (the name of a field) or an associative array 
+  * containing a 'name' key (the name of a field) and a 'function' 
+  * key containing the check function to call. If only a name is
+  * specified the default check function (#check_value_empty) will
+  * be used. Check functions have two parameters: name and value and 
+  * returns either false on error or true when the value is valid. 
+  * The value parameter is passed by reference to allow formatting
+  * the value. Common check functions available are: 
+  * #check_value_toint and #check_value_checkbox
+  * @errors reference; will be set to an array of fields that didn't
+  * successfully check
+  *
+  * @result an array with name => value values
+  */
+function check_values($check, &$errors, array $data = null) {
+	$fields = array();
+	$errors = array();
+
+	foreach ($check as $item) {
+		if (!is_array($item)) {
+			$name = $item;
+			$func = 'check_value_empty';
+		} else {
+			$name = $item['name'];
+
+			if (isset($item['function']))
+				$func = $item['function'];
 			else
-				$fields[$name] = $result;
+				$func = 'check_value_empty';
 		}
 		
-		return $fields;
+		$result = call_user_func($func, $name, isset($data) ? $data[$name] : get_post($name));
+		
+		if ($result === false)
+			$errors[] = $name;
+		else
+			$fields[$name] = $result;
 	}
+	
+	return $fields;
+}
 
 /**
  * Class that helps collect errors when validating a form.
