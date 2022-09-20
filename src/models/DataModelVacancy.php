@@ -11,101 +11,15 @@ class DataIterVacancy extends DataIter implements SearchResult
 	{
 		return [
 			'id',
-		    'title',
-		    'description',
-		    'type',
-		    'study_phase',
-		    'url',
-		    'partner_id',
-		    'partner_name',
-		    'created_on',
-		    'updated_on',
-		];
-	}
-
-	static public function rules()
-	{
-		return [
-			'title' => [
-				'required' => true,
-				'validate' => ['not_empty'],
-			],
-			'description' => [
-				'required' => true,
-			],
-			'type' => [
-				'required' => true,
-				'clean' => 'intval',
-				'validate' => [
-					'not_empty',
-					function($type) {
-						return in_array($type, [
-							DataModelVacancy::TYPE_FULL_TIME,
-							DataModelVacancy::TYPE_PART_TIME,
-							DataModelVacancy::TYPE_INTERNSHIP,
-							DataModelVacancy::TYPE_GRADUATION_PROJECT,
-							DataModelVacancy::TYPE_OTHER,
-						]);
-					}
-				],
-			],
-			'study_phase' => [
-				'required' => true,
-				'clean' => 'intval',
-				'validate' => [
-					'not_empty',
-					function($type) {
-						return in_array($type, [
-							DataModelVacancy::STUDY_PHASE_BSC,
-							DataModelVacancy::STUDY_PHASE_MSC,
-							DataModelVacancy::STUDY_PHASE_BSC_GRADUATED,
-							DataModelVacancy::STUDY_PHASE_MSC_GRADUATED,
-							DataModelVacancy::STUDY_PHASE_OTHER,
-						]);
-					}
-				],
-			],
-			'url' => [
-				'clean' => 'clean_empty',
-				'validate' => [
-					'optional',
-					function($url) {
-						return filter_var($url, FILTER_VALIDATE_URL) !== FALSE;
-					}
-				],
-			],
-			'partner_id' => [
-				// partner_id XOR partner_name is required, this is validated at partner_name
-				'clean' => function($value) {
-					return $value ? intval($value) : null;
-				},
-				'validate' => [
-					'optional',
-					function($partner_id) {
-						try {
-							$partner = get_model('DataModelPartner')->get_iter($partner_id);
-						} catch (DataIterNotFoundException $e) {
-							return false;
-						}
-
-						return true;
-					}
-				]
-			],
-			'partner_name' => [
-				// OK, this XOR thing is inconvenient. Ideally, we would use the 'clean_empty'
-				// cleaner on this field, but that would break validation, which we need for the XOR
-				// thing. Without 'clean_empty' an emptystring would end up in the database, but
-				// null would be more desirable. Therefore, the DataIter->set() function is
-				// overridden to set empty values on partner_name to null. Ideally, this would be
-				// fixed with more robust form handling.
-				'required' => true,
-				'validate' => [
-					function($partner_name, $field, $iter, $data) {
-						return empty($partner_name) xor !isset($data['partner_id']);
-					}
-				]
-			],
+			'title',
+			'description',
+			'type',
+			'study_phase',
+			'url',
+			'partner_id',
+			'partner_name',
+			'created_on',
+			'updated_on',
 		];
 	}
 
@@ -243,20 +157,20 @@ class DataModelVacancy extends DataModel implements SearchProvider
 			SELECT NULL AS id
 				  ,t1.name AS name
 			  FROM (
-			  		SELECT DISTINCT partner_name AS name
-			  		  FROM {$this->table}
-			         WHERE partner_name IS NOT NULL
-			       ) AS t1
+					SELECT DISTINCT partner_name AS name
+					  FROM {$this->table}
+					 WHERE partner_name IS NOT NULL
+				   ) AS t1
 
 			UNION
 
 			SELECT t2.id AS id
 				  ,p.name AS name
 			  FROM partners  AS P JOIN (
-			  		SELECT DISTINCT partner_id AS id
-			  		  FROM {$this->table}
-			  	     WHERE partner_id IS NOT NULL
-			       ) t2 ON p.id = t2.id;
+					SELECT DISTINCT partner_id AS id
+					  FROM {$this->table}
+					 WHERE partner_id IS NOT NULL
+				   ) t2 ON p.id = t2.id;
 		");
 		return $rows;
 	}
