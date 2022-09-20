@@ -1,0 +1,23 @@
+{% block markup_widget %}
+    <div class="tabs-wrapper is-condensed">
+        <div class="tabs is-toggle">
+            <ul>
+                <li class="is-active">
+                    <a href="#{{id}}-tab">{{ __('Raw') }}</a>
+                </li>
+                <li>
+                    <a href="#{{id}}-preview-tab">{{ __('Preview') }}</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tabs-content">
+            <div id="{{id}}-tab" class="is-active">
+                {{ form_widget(form) }}
+            </div>
+            <div id="{{id}}-preview-tab" class="content-preview box content" data-preview-source="#{{id}}" data-preview-url="{{ path('page.preview') }}" data-preview-field="content_en">
+                <span class="loading">{{ __('Loading preview…') }}</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -21,7 +21,8 @@ class PreviewLoader {
         new PreviewLoader({
             element: element,
             source: element.dataset.previewSource,
-            url: element.dataset.previewUrl
+            url: element.dataset.previewUrl,
+            field: element.dataset.previewField || null,
         });
     }
 
@@ -30,6 +31,7 @@ class PreviewLoader {
         this.url = options.url;
         this.source = document.querySelector(options.source);
         this.form = options.element.closest('form');
+        this.field = options.field;
 
         if (!this.source)
             throw new Error('Preview source not found for "' + options.source + '"');
@@ -38,9 +40,17 @@ class PreviewLoader {
     }
 
     async fetchPreview() {
+        let data;
+        if (this.field) {
+            data = new FormData();
+            data.set(this.field, this.source.value);
+        } else {
+            data = new FormData(this.form);
+        }
+
         const response = await fetch(this.url, {
             method: 'POST',
-            body: new FormData(this.form)
+            body: data,
         });
      
         if (!response.ok) {
