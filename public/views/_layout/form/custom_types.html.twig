@@ -21,3 +21,12 @@
         </div>
     </div>
 {% endblock %}
+
+{% block filemanager_widget %}
+    {%- set attr = attr|merge({
+        'data-filemanager': true,
+        'data-filemanager-cta': __("Choose an image…"),
+        'data-filemanager-url': get_config_value('filemanager_root', '')
+    }) -%}
+    {{- block('form_widget_simple') -}}
+{% endblock %}
