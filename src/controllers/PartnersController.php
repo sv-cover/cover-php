@@ -1,11 +1,14 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUD.php';
+use App\Form\Type\PartnerType;
 
-class PartnersController extends \ControllerCRUD
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
+
+class PartnersController extends \ControllerCRUDForm
 {
     protected $view_name = 'partners';
+    protected $form_type = PartnerType::class;
 
     public function __construct($request, $router)
 	{
@@ -62,10 +65,5 @@ class PartnersController extends \ControllerCRUD
         if (!get_policy($this->model)->user_can_update($this->new_iter()))
             return $this->view->redirect($this->generate_url('career'));
         return parent::run_index();
-    }
-
-    public function run_preview()
-    {
-        return markup_parse($_POST['profile']);
     }
 }
