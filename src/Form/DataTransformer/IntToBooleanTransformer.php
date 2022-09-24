@@ -8,6 +8,9 @@ class IntToBooleanTransformer implements DataTransformerInterface
 {
     public function transform($value): bool
     {
+        if ($value === null)
+            return false;
+
         if (!\is_int($value))
             throw new TransformationFailedException('Expected an Integer.');
 
@@ -16,6 +19,9 @@ class IntToBooleanTransformer implements DataTransformerInterface
 
     public function reverseTransform($value): int
     {
+        if ($value === null)
+            return 0;
+
         if (!\is_bool($value))
             throw new TransformationFailedException('Expected a Boolean.');
 
