@@ -94,6 +94,10 @@ class View
 
 		$loader->addPath('public/views/signup/configuration', 'form_configuration');
 
+		$app_variable_reflection = new \ReflectionClass('\Symfony\Bridge\Twig\AppVariable');
+		$vendor_twig_bridge_directory = dirname($app_variable_reflection->getFileName());
+		// the path to your other templates
+		$loader->addPath($vendor_twig_bridge_directory.'/Resources/views', 'symfony');
 
 		$this->twig = new Twig_Environment($loader, array(
 			'debug' => true,
