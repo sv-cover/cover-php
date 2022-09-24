@@ -7,8 +7,6 @@
 
 
 {{ form_start(form) }}
-	{# CSRF token #}
-	{{ form_row(form._token) }}
 	{# Global errors #}
 	{{ form_errors(form) }}
 	{{ form_row(form.title) }}
@@ -29,7 +27,7 @@
 	{{ form_row(form.description) }}
 	<div class="field">
 		<div class="control buttons">
-			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify vacancy') : __('Create vacancy') }}</button>
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify vacancy') : __('Create vacancy')}) }}
 			{% if iter.has_id %}
 				<a href="{{ path('vacancies', {id: iter.id}) }}" class="button">{{ __('Back to vacancy') }}</a>
 			{% else %}
@@ -37,5 +35,5 @@
 			{% endif %}
 		</div>
 	</div>
-{{ form_end(form, {render_rest: false}) }}
+{{ form_end(form) }}
 {% endblock %}

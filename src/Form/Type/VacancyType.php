@@ -4,11 +4,9 @@ namespace App\Form\Type;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Symfony\Component\Form\Extension\Core\DataTransformer\IntegerToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,16 +22,18 @@ class VacancyType extends AbstractType implements EventSubscriberInterface
     {
         $builder
             ->add('title', TextType::class, [
+                'label' => __('Title'),
                 'constraints' => new NotBlank(),
             ])
             ->add('partner_id', IntegerType::class, [
-                'label' => 'Company',
+                'label' => __('Company'),
                 'required' => false,
             ])
             ->add('partner_name', TextType::class, [
                 'required' => false
             ])
             ->add('type', ChoiceType::class, [
+                'label' => __('Type'),
                 'choices'  => [
                     __('Full-time')          => \DataModelVacancy::TYPE_FULL_TIME,
                     __('Part-time')          => \DataModelVacancy::TYPE_PART_TIME,
@@ -43,6 +43,7 @@ class VacancyType extends AbstractType implements EventSubscriberInterface
                 ],
             ])
             ->add('study_phase', ChoiceType::class, [
+                'label' => __('Study phase'),
                 'choices'  => [
                     __('Bachelor Student')   => \DataModelVacancy::STUDY_PHASE_BSC,
                     __('Master Student')     => \DataModelVacancy::STUDY_PHASE_MSC,
@@ -52,12 +53,15 @@ class VacancyType extends AbstractType implements EventSubscriberInterface
                 ],
             ])
             ->add('url', UrlType::class, [
+                'label' => __('URL'),
                 'required' => false,
                 'default_protocol' => null, // if not, it renders as text type…
                 'constraints' => new Url(),
             ])
-            ->add('description', MarkupType::class)
-            ->add('save', SubmitType::class)
+            ->add('description', MarkupType::class, [
+                'label' => __('Description'),
+            ])
+            ->add('submit', SubmitType::class)
         ;
 
         // Telling the form builder about the event subscriber used to validate the partner xor requirement
