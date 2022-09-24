@@ -1,11 +1,14 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUD.php';
+use App\Form\Type\PageType;
 
-class PageController extends \ControllerCRUD
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
+
+class PageController extends \ControllerCRUDForm
 {
 	protected $view_name = 'page';
+    protected $form_type = PageType::class;
 
 	public function __construct($request, $router)
 	{
@@ -14,26 +17,12 @@ class PageController extends \ControllerCRUD
 		parent::__construct($request, $router);
 	}
 
-	/* These two can_set_* checks are used by the view to check whether it needs to display the fields */
-	public function can_set_titel(\DataIter $iter)
-	{
-		return !$iter->has_id() || get_identity()->member_in_committee(COMMISSIE_EASY);
-	}
-
-	public function can_set_committee_id(\DataIter $iter)
-	{
-		return !$iter->has_id()
-			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-			|| get_identity()->member_in_committee(COMMISSIE_EASY);
-	}
-
 	public function new_iter()
 	{
 		$iter = parent::new_iter();
 
 		// Default to owner = board
-		if ($this->can_set_committee_id($iter))
+		if (PageType::canSetCommitteeId($iter))
 			$iter['committee_id'] = COMMISSIE_BESTUUR;
 
 		return $iter;
@@ -62,17 +51,15 @@ class PageController extends \ControllerCRUD
 		return $this->generate_url('page', $parameters);
 	}
 
-	protected function _update(\DataIter $iter, array $data, array &$errors)
+	protected function _process_update(\DataIter $iter)
 	{
-		$content_fields = ['content', 'content_en'];
+		$content_fields = ['content_en'];
 
-		// Store the current values for diffing 
-		$old_data = array();
-		foreach ($content_fields as $field)
-			$old_data[$field] = $iter->data[$field];
+		// Retrieve old data for diffing ($iter has already been updated by the form)
+		$old_iter = $this->model->get_iter($iter['id']);
 
 		// Update as usual
-		$success = parent::_update($iter, $data, $errors);
+		$success = parent::_process_update($iter);
 
 		// If the update succeeded (i.e. _validate came through positive)
 		// send a notification email to those who are interested.
@@ -81,7 +68,7 @@ class PageController extends \ControllerCRUD
 			foreach ($content_fields as $field)
 			{
 				// Only notify about changed content, skip equal stuff
-				if ($iter->data[$field] == $old_data[$field])
+				if ($iter->data[$field] == $old_iter->data[$field])
 					continue;
 
 				$diff = implode("\n", [
@@ -89,7 +76,7 @@ class PageController extends \ControllerCRUD
 					$iter->data[$field],
 					'', '',
 					'Old content:',
-					$old_data[$field]
+					$old_iter->data[$field]
 				]);
 				
 				$mail_data = $this->_prepare_mail($iter, $diff);
@@ -142,6 +129,9 @@ class PageController extends \ControllerCRUD
 
 	public function run_preview(\DataIterEditable $iter = null)
 	{
+        if (!get_auth()->logged_in())
+            throw new \UnauthorizedException();
+
 		if ($_SERVER['REQUEST_METHOD'] != 'POST')
 			throw new \RuntimeException('This page is only intended to preview submitted content');
 

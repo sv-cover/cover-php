@@ -13,35 +13,10 @@
 				'id',
 				'committee_id',
 				'titel',
-				'content',
+				'content', // NL, not used anymore
 				'content_en',
-				'content_de', // not used anymore,
+				'content_de', // not used anymore
 				'last_modified'
-			];
-		}
-
-		static public function rules()
-		{
-			return [
-				'committee_id' => [
-					'required' => true,
-					'validate' => [
-						'committee', 
-						function($committee_id, $field, $iter) {
-							return !$iter->has_id()
-								|| get_identity()->member_in_committee($committee_id)
-								|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-								|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
-								|| get_identity()->member_in_committee(COMMISSIE_EASY);
-						}
-					]
-				],
-				'titel' => [
-					'required' => true
-				],
-				'content' => [],
-				'content_en' => []
-				// Explicitly no rule for last_modified
 			];
 		}
 
