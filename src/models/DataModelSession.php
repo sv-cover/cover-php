@@ -21,23 +21,6 @@ class DataIterSession extends DataIter
 			'device_name',
 		];
 	}
-
-	static public function rules()
-	{
-		return [
-			'device_name' => [
-				'clean' => 'clean_empty',
-			],
-			'device_enabled' => [
-				'is_checkbox' => true,
-				'clean' => function($value) {
-					// Bit of a hack because I chose to use the boolean type here in the
-					// database table instead of just an integer, which is used more often
-					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
-				}
-			],
-		];
-	}
 }
 
 /**

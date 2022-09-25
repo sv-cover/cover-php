@@ -1,6 +1,6 @@
 <?php
 
-class DevicesessionsView extends CRUDView
+class DevicesessionsView extends CRUDFormView
 {
     public function render_index($iters) {
         $sessions_view = View::byName('sessions');
