@@ -575,4 +575,44 @@
 			
 			return $this->_row_to_iter($row);
 		}
+
+		public function get_committee_choices_for_iter(DataIter $iter, string $committee_id_field = 'committee_id')
+		{
+			$options = [
+				'member' => [],
+				'all' => []
+			];
+
+			// At least populate my list of committees
+			foreach (\get_identity()->member()->get('committees') as $committee)
+				$options['member'][$this->get_naam($committee)] = $committee;
+
+			// And if I am very important, also populate the all list. That there are doubles is not a problem.
+			if (
+				\get_identity()->member_in_committee(COMMISSIE_BESTUUR)
+				|| \get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
+				|| \get_identity()->member_in_committee(COMMISSIE_EASY)
+			)
+				foreach ($this->get(null, true) as $committee)
+					$options['all'][$committee->get('naam')] = $committee->get_id();
+
+			$result = [
+				__('Your committees') => $options['member'],
+				__('All committees') => $options['all']
+			];
+
+			// Add the current committee as option if it isn't already (for editing)
+			if (
+				$iter
+				&& !empty($iter[$committee_id_field])
+				&& !in_array($iter[$committee_id_field], array_merge($options['member'], $options['all']))
+			)
+				return array_merge(
+					[$this->get_naam($iter[$committee_id_field]) => $iter[$committee_id_field]],
+					$result
+				);
+		
+			// Empty groups will be pruned anyway
+			return $result;
+		}
 	}

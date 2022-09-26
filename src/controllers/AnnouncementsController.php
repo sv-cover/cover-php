@@ -1,16 +1,18 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/member.php';
-require_once 'src/framework/controllers/ControllerCRUD.php';
+use App\Form\Type\AnnouncementType;
+
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 /**
  * Class ControllerAnnouncements
  * @property DataModelAnnouncement $model;
  */
-class AnnouncementsController extends \ControllerCRUD
+class AnnouncementsController extends \ControllerCRUDForm
 {
 	protected $view_name = 'announcements';
+    protected $form_type = AnnouncementType::class;
 
 	public function __construct($request, $router)
 	{
@@ -34,10 +36,5 @@ class AnnouncementsController extends \ControllerCRUD
 		}
 
 		return $this->generate_url('announcements', $parameters);
-	}
-
-	public function run_preview()
-	{
-		return markup_parse($_POST['message']);
 	}
 }

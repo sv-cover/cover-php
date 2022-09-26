@@ -4,73 +4,24 @@
 
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Modify announcement') : __('Add a new announcement') }}</h1>
-<div class="messageBox announcement">
-	<form method="post" action="{{ (iter and iter.has_id) ? path('announcements', {view:  'update', id: iter.id}) : path('announcements', {view: 'create'}) }}">
-		{% if iter.has_id %}
-			{{ html_nonce('update', iter) }}
-		{% else %}
-			{{ html_nonce('create', iter) }}
-		{% endif %}
-		
-		<div class="field">
-			{{ html_label(__('Post as committee'), 'committee_id', errors=errors, required=true) }}
-			<div class="control">
-				<div class="select">
-					{{ html_select_field('committee_id', view.get_committee_options(iter), iter.data, required=true) }}
-				</div>
-			</div>
-		</div>
 
-		<div class="field">
-			{{ html_label(__('Visible to'), 'visibility', errors=errors, required=true) }}
-			<div class="control">
-				<div class="select">
-					{{ html_select_field('visibility', view.get_visibility_options(), iter.data, required=true) }}
-				</div>
-			</div>
-		</div>		
-
-		<div class="field">
-			{{ html_label(__('Subject'), 'subject', errors=errors, required=true) }}
-			<div class="control">
-				{{ html_input_text('subject', iter.data, required=true) }}
-			</div>
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form.committee_id) }}
+	{{ form_row(form.visibility) }}
+	{{ form_row(form.subject) }}
+	{{ form_row(form.message, {'attr': {'rows': 10}}) }}
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify announcement') : __('Post announcement')}) }}
+			{% if iter.has_id %}
+			<a href="{{ path('announcements', {id: iter.id}) }}" class="button">{{ __('Back to announcement') }}</a>
+			{% else %}
+			<a href="{{ path('announcements') }}" class="button">{{ __('Back to all announcements') }}</a>
+			{% endif %}
 		</div>
-
-		<div class="field">
-			{{ html_label(__('Message'), 'message', errors=errors, required=true) }}
-			<div class="tabs-wrapper is-condensed">
-				<div class="tabs is-toggle">
-					<ul>
-						<li class="is-active">
-							<a href="#message-tab">{{ __('Raw') }}</a>
-						</li>
-						<li>
-							<a href="#message-preview-tab">{{ __('Preview') }}</a>
-						</li>
-					</ul>
-				</div>
-				<div class="tabs-content">
-					<div id="message-tab" class="is-active">
-						{{ html_textarea_field('message', iter.data, errors=errors, rows=10) }}
-					</div>
-					<div id="message-preview-tab" class="content-preview box" data-preview-source="#message-tab textarea" data-preview-url="{{ path('announcements', {view: 'preview'}) }}">
-						<span class="loading">{{ __('Loading preview…') }}</span>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="field">
-			<div class="control buttons">
-				<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify announcement') : __('Post announcement') }}</button>
-				{% if iter.has_id %}
-				<a href="{{ path('announcements', {id: iter.id}) }}" class="button">{{ __('Back to announcement') }}</a>
-				{% else %}
-				<a href="{{ path('announcements') }}" class="button">{{ __('Back to all announcements') }}</a>
-				{% endif %}
-			</div>
-		</div>
-	</form>
-</div>
+	</div>
+{{ form_end(form) }}
 {% endblock %}
