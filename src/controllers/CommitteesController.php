@@ -133,7 +133,7 @@ class CommitteesController extends \ControllerCRUD
 			$mail->send('intern@svcover.nl');
 
             if (get_config_value('path_to_committee_interest_log'))
-                error_log(sprintf("%s - %s (%d) is interested in %s.\n", date('c'), $member['full_name'], $member['id'], $committee['naam']), 3, get_config_value('path_to_committee_interest_log'));
+                error_log(sprintf("%s - %s (%d) is interested in %s.\n", date('c'), get_identity()->member()['full_name'], get_identity()->member()['id'], $iter['naam']), 3, get_config_value('path_to_committee_interest_log'));
 
 			return $this->view->redirect($this->generate_url('committees', ['view' => 'read', $this->_var_id => $iter['login'], 'interest_reported' => true]));
 		}
