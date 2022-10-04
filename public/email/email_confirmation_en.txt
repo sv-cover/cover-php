@@ -1,5 +1,5 @@
 Subject: [Cover] Confirm your email address
-From: webcie@ai.rug.nl
+From: Study Association Cover <noreply@svcover.nl>
 Content-Type: text/html; charset=UTF-8
 
 <!DOCTYPE html>

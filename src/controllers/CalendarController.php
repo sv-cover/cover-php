@@ -201,7 +201,7 @@
 				get_config_value('defer_email_to', get_config_value('email_bestuur')),
 				'Nieuw agendapunt ' . $data['kop'],
 				parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
-				"From: webcie@ai.rug.nl\r\n");
+				"From: Study Association Cover <noreply@svcover.nl>\r\n");
 
 			return true;
 		}
@@ -248,7 +248,7 @@
 					get_config_value('defer_email_to', get_config_value('email_bestuur')),
 					'Gewijzigd agendapunt ' . $data['kop'] . ($mod->get('kop') != $iter->get('kop') ? ' was ' . $iter->get('kop') : ''),
 					parse_email('agenda_mod.txt', array_merge($data, $placeholders, array('id' => $override_id))),
-					"From: webcie@ai.rug.nl\r\n");
+					"From: Study Association Cover <noreply@svcover.nl>\r\n");
 			}
 
 			return true;
@@ -323,7 +323,7 @@
 					$commissie_model = get_model('DataModelCommissie');
 					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['committee_id']));
 
-					mail($email, $subject, $body, "From: webcie@ai.rug.nl\r\n");
+					mail($email, $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\n");
 					$cancelled[] = $commissie_model->get_naam($iter['committee_id']);
 				}
 			}

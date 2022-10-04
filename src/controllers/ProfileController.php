@@ -164,8 +164,8 @@ class ProfileController extends \Controller
 		foreach ($fields as $field)
 			$body .= sprintf("%s:\t%s (was: %s)\n", $field, $iter[$field] ? $iter[$field] : "<verwijderd>", $old_values[$field]);
 			
-		mail('administratie@svcover.nl', $subject, $body, "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
-		mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: webcie@ai.rug.nl\r\nContent-Type: text/plain; charset=UTF-8");
+		mail('administratie@svcover.nl', $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
+		mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
 
 		try {
 			get_secretary()->updatePersonFromIterChanges($iter);
