@@ -126,14 +126,14 @@ class CommitteesController extends \ControllerCRUD
 			throw new \UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
 
 		if ($this->_form_is_submitted('show_interest', $iter)) {
+            if (get_config_value('path_to_committee_interest_log'))
+                error_log(sprintf("%s - %s (%d) is interested in %s.\n", date('c'), get_identity()->member()['full_name'], get_identity()->member()['id'], $iter['naam']), 3, get_config_value('path_to_committee_interest_log'));
+
 			$mail = parse_email_object("interst_in_committee.txt", [
 				'committee' => $iter,
 				'member' => get_identity()->member()
 			]);
 			$mail->send('intern@svcover.nl');
-
-            if (get_config_value('path_to_committee_interest_log'))
-                error_log(sprintf("%s - %s (%d) is interested in %s.\n", date('c'), get_identity()->member()['full_name'], get_identity()->member()['id'], $iter['naam']), 3, get_config_value('path_to_committee_interest_log'));
 
 			return $this->view->redirect($this->generate_url('committees', ['view' => 'read', $this->_var_id => $iter['login'], 'interest_reported' => true]));
 		}
