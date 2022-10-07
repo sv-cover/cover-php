@@ -39,7 +39,7 @@ class SinglePhoto {
 
         // Add event listeners for full screen to buttons
         this.enterFullscreenButton.addEventListener('click', this.handleEnterFullscreen.bind(this));
-        this.exitFullscreenButton.addEventListener('click', this.handleFullscreenChange.bind(this));
+        this.exitFullscreenButton.addEventListener('click', this.handleExitFullscreen.bind(this));
 
         // Add buttons to navigation
         this.navigation.append(this.enterFullscreenButton);
@@ -47,7 +47,7 @@ class SinglePhoto {
 
         // Detect full screen changes
         document.addEventListener('fullscreenchange', this.handleFullscreenChange.bind(this));
-        document.addEventListener('webkitfullscreenchange', this.handleExitFullscreen.bind(this));
+        document.addEventListener('webkitfullscreenchange', this.handleFullscreenChange.bind(this));
 
         // Toggle navigation
         this.photo.querySelector('.carousel').addEventListener('click', this.handleFullscreenNavToggle.bind(this));
