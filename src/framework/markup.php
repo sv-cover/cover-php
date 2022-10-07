@@ -225,6 +225,47 @@
 		}
 	}
 
+	function _markup_parse_person(&$markup, &$placeholders)
+    	{
+    		$count = 0;
+    		while (preg_match("/\[person (image=(?P<image>[^\]]+))? (name=(?P<name>[^\]]+))? (position=(?P<position>[^\]]+))?\](?P<content>.+?)\[\/person\]/is", $markup, $match))
+    		{
+
+                $content = explode("\n",$match['content']);
+
+    			$placeholder = sprintf('#PERSON%d#', $count++);
+
+    			$placeholders[$placeholder] = '
+    			<div class="person">
+    			    <div class="columns">
+    			        <div class="column is-one-quarter">';
+    			        if($match['image'])
+    			            $placeholders[$placeholder] .= '<img src="'.$match['image'].'" alt="person profile" class="person-image" />';
+    			        if($match['name'])
+    			            $placeholders[$placeholder] .= '<span class="person-name">'.$match['name'].'</span>';
+    			        if($match['position'])
+    			            $placeholders[$placeholder] .= '<span class="person-position">'.$match['position'].'</span>';
+
+    			        $placeholders[$placeholder] .= '</div>
+    			        <div class="column">';
+    			foreach($content as $contentParagraph){
+    			if($contentParagraph!='\n\n')
+    			    $placeholders[$placeholder] .= '
+    			    <p>
+    			    '.$contentParagraph.'
+    			    </p>
+    			    ';
+    			}
+    			$placeholders[$placeholder].='
+    			        </div>
+    			    </div>
+    			</div>
+    			';
+
+    			$markup = str_replace_once($match[0], $placeholder, $markup);
+    		}
+    	}
+
 	function _markup_parse_embed(&$markup, &$placeholders)
 	{
 		static $count = 0;
@@ -384,6 +425,9 @@
 
 		$markup = preg_replace('/\[prive\].*?\[\/prive\]/ism', '', $markup);
 
+		/* Parse person blocks */
+        _markup_parse_person($markup, $placeholders);
+
 		/* Filter code tags */
 		_markup_parse_code($markup, $placeholders);
 
@@ -445,7 +489,7 @@
 		/* CHECK: this is bad! */
 		/* $markup .= '</I></B></U></S></UL></LI>';*/
 	
-		/* Put codes and links back */
+		/* Put codes and linkss back */
 		_markup_parse_placeholders($markup, $placeholders);
 
 		return $markup;
