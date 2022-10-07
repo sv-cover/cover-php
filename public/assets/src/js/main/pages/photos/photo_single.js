@@ -38,8 +38,8 @@ class SinglePhoto {
         this.exitFullscreenButton.hidden = true;
 
         // Add event listeners for full screen to buttons
-        this.enterFullscreenButton.addEventListener('click', () => this.photo.requestFullscreen());
-        this.exitFullscreenButton.addEventListener('click', () => document.exitFullscreen());
+        this.enterFullscreenButton.addEventListener('click', this.handleEnterFullscreen.bind(this));
+        this.exitFullscreenButton.addEventListener('click', this.handleFullscreenChange.bind(this));
 
         // Add buttons to navigation
         this.navigation.append(this.enterFullscreenButton);
@@ -47,6 +47,7 @@ class SinglePhoto {
 
         // Detect full screen changes
         document.addEventListener('fullscreenchange', this.handleFullscreenChange.bind(this));
+        document.addEventListener('webkitfullscreenchange', this.handleExitFullscreen.bind(this));
 
         // Toggle navigation
         this.photo.querySelector('.carousel').addEventListener('click', this.handleFullscreenNavToggle.bind(this));
@@ -73,8 +74,22 @@ class SinglePhoto {
         return buttonElement;
     }
 
+    handleEnterFullscreen() {
+        if (this.photo.requestFullscreen)
+            this.photo.requestFullscreen();
+        else if (this.photo.webkitRequestFullscreen)
+            this.photo.webkitRequestFullscreen();
+    }
+
+    handleExitFullscreen() {
+        if (document.exitFullscreen)
+            document.exitFullscreen();
+        else if (document.webkitExitFullscreen)
+            document.webkitExitFullscreen();
+    }
+
     handleFullscreenChange(event) {
-        if (document.fullscreenElement) {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
             this.enterFullscreenButton.hidden = true;
             this.exitFullscreenButton.hidden = false;
             this.photo.classList.add('is-fullscreen');
@@ -87,7 +102,7 @@ class SinglePhoto {
     }
 
     handleFullscreenNavToggle(event) {
-        if (document.fullscreenElement)
+        if (document.fullscreenElement || document.webkitFullscreenElement)
             this.navigation.hidden = !this.navigation.hidden;
     }
 
@@ -115,10 +130,10 @@ class SinglePhoto {
                 break;
             case "f":
             case "F":
-                if (document.fullscreenElement)
-                    document.exitFullscreen();
+                if (document.fullscreenElement || document.webkitFullscreenElement)
+                    this.handleExitFullscreen();
                 else
-                    this.photo.requestFullscreen();
+                    this.handleEnterFullscreen();
                 break;
             // case "Esc": // IE/Edge specific value
             // case "Escape":
