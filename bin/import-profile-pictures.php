@@ -2,7 +2,7 @@
 <?php
 define('IN_SITE', true);
 
-chdir(dirname(__FILE__) . '/..');
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__) . '/..'));
 include('src/framework/config.php');
 include('src/framework/data/data.php');
 
