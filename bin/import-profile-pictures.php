@@ -19,7 +19,7 @@ function find_member_id($name)
 {
         global $db;
 
-        $result = $db->query("SELECT id FROM leden WHERE (voornaam || CASE  WHEN char_length(tussenvoegsel) > 0 THEN ' ' || tussenvoegsel ELSE '' END || ' ' || achternaam) = '" . pg_escape_string($name) . "'");
+        $result = $db->query("SELECT id FROM leden WHERE LOWER((voornaam || CASE  WHEN char_length(tussenvoegsel) > 0 THEN ' ' || tussenvoegsel ELSE '' END || ' ' || achternaam)) = LOWER('" . pg_escape_string($name) . "')");
 
         if (count($result) > 1) {
                 echo "WARNING: multiple members named '$name' found.\n";
