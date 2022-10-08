@@ -37,16 +37,16 @@ function insert_photo($member_id, $name, $data)
 {
         global $db;
 
-        $result = $db->query("SELECT * FROM \"lid_fotos\" WHERE \"member_id\" = " . $member_id);
+        $result = $db->query("SELECT * FROM \"lid_fotos\" WHERE \"lid_id\" = " . $member_id);
 
         if (count($result) > 0) {
                 echo "WARNING: '$name' already has a profile picture.\n";
                 return;
         }
 
-        $db->query("DELETE FROM \"lid_fotos\" WHERE \"member_id\" = " . $member_id);
+        $db->query("DELETE FROM \"lid_fotos\" WHERE \"lid_id\" = " . $member_id);
 
-        $db->query("INSERT INTO \"lid_fotos\" (\"id\", \"member_id\", \"foto\") VALUES (nextval('lid_fotos_id_seq'::regclass), " . $member_id . ", '" . pg_escape_bytea($data) . "')");
+        $db->query("INSERT INTO \"lid_fotos\" (\"id\", \"lid_id\", \"foto\") VALUES (nextval('lid_fotos_id_seq'::regclass), " . $member_id . ", '" . pg_escape_bytea($data) . "')");
 
         // echo($db->get_last_error(). "\n");
 }
