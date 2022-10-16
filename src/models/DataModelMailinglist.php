@@ -28,99 +28,6 @@ class DataIterMailinglist extends DataIter
 		];
 	}
 
-	static public function rules()
-	{
-		return [
-			'adres' => [
-				'clean' => 'strtolower',
-				'required' => true,
-				'validate' => ['email', 'not_empty']
-			],
-			'naam' => [
-				'required' => true,
-				'validate' => ['not_empty']
-			],
-			'omschrijving' => [
-				'required' => true
-			],
-			'type' => [
-				'clean' => 'intval',
-				'validate' => [
-					'not_empty',
-					function($type) {
-						return in_array($type, [
-							DataModelMailinglist::TYPE_OPT_IN,
-							DataModelMailinglist::TYPE_OPT_OUT
-						]);
-					}
-				]
-			],
-			'publiek' => [
-				'is_checkbox' => true,
-				'clean' => function($value) {
-					// Bit of a hack because I chose to use the boolean type here in the
-					// database table instead of just an integer, which is used more often
-					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
-				}
-			],
-			'toegang' => [
-				'required' => true,
-				'clean' => 'intval',
-				'validate' => [
-					'not_empty',
-					function($toegang) {
-						return in_array($toegang, [
-							DataModelMailinglist::TOEGANG_IEDEREEN,
-							DataModelMailinglist::TOEGANG_DEELNEMERS,
-							DataModelMailinglist::TOEGANG_COVER,
-							DataModelMailinglist::TOEGANG_EIGENAAR,
-							DataModelMailinglist::TOEGANG_COVER_DEELNEMERS,
-						]);
-					}
-				]
-			],
-			'commissie' => [
-				'required' => true,
-				'validate' => [
-					'not_empty',
-					'committee'
-				]
-			],
-			'tag' => [
-				'required' => true
-			],
-			'has_members' => [
-				'is_checkbox' => true,
-				'clean' => function($value) {
-					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
-				}				
-			],
-			'has_contributors' => [
-				'is_checkbox' => true,
-				'clean' => function($value) {
-					return new DatabaseLiteral($value ? 'TRUE' : 'FALSE');
-				}
-			],
-			'has_starting_year' => [
-				'clean' => function($value) {
-					return $value ? intval($value) : null;
-				}
-			],
-			'on_subscription_subject' => [
-				'validate' => []
-			],
-			'on_subscription_message' => [
-				'validate' => []
-			],
-			'on_first_email_subject' => [
-				'validate' => []
-			],
-			'on_first_email_message' => [
-				'validate' => []
-			]
-		];
-	}
-
 	public function bevat_lid(DataIterMember $member)
 	{
 		return get_model('DataModelMailinglistSubscription')->is_subscribed($this, $member);
@@ -136,7 +43,7 @@ class DataIterMailinglist extends DataIter
 	{
 		return strlen($this['on_first_email_subject']) > 0
 			&& strlen($this['on_first_email_message']) > 0;
-	} 
+	}
 
 	public function get_subscriptions()
 	{

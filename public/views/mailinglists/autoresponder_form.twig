@@ -4,27 +4,17 @@
 
 {% block content %}
 <h1 class="title">{{ __('Modify message') }}</h1>
-<form method="post" action="{{ path('mailing_lists', {view: 'update_autoresponder', id: iter.id, autoresponder: autoresponder}) }}">
-    {{ html_nonce('update', iter) }}
-	<div class="field">
-		{{ html_label(__('Subject'), autoresponder ~ '_subject', errors=errors) }}
-		<div class="control">
-			{{ html_input_text(autoresponder ~ '_subject', iter, errors=errors) }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Message'), autoresponder ~ '_message', errors=errors) }}
-		<div class="control">
-			{{ html_textarea_field(autoresponder ~ '_message', iter, errors=errors, rows=10) }}
-		</div>
-	</div>
-
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form[autoresponder ~ '_subject'], {'mark_required': true}) }}
+	{{ form_row(form[autoresponder ~ '_message'], {'mark_required': true, 'attr': {'rows': 10}}) }}
 	<div class="field">
 		<div class="control buttons">
-			<button type="submit" class="button is-primary">{{ __('Change email') }}</button>
+			{{ form_widget(form.submit, {'label': __('Change email')}) }}
 			<a href="{{ path('mailing_lists', {view: 'update', id: iter.id}) }}" class="button">{{ __('Return to mailing list') }}</a>
 		</div>
 	</div>
-</form>
+{{ form_end(form) }}
 {% endblock %}

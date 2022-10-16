@@ -2,7 +2,7 @@
 	<h2>{{ __("Mailing list")}}: {{ list.naam }}</h2>
 	{# This form is handled by MailingListsController.run_embedded, which is ugly #}
 	<form method="post" action="">
-		{{ html_nonce('embedded_mailinglist', list) }}
+		{{ form_row(form._token) }}
 	
 		<p>
 			<em>{{ list.adres }}:</em>
@@ -14,24 +14,14 @@
 				<p>{{ __('Sign in to subscribe to this mailing list.') }}</p>
 			</div>
 		{% elseif list.bevat_lid(global.identity.member) %}
-			<input type="hidden" name="action" value="unsubscribe">
 			<div class="field">
 				<p>{{ __('You are subscribed to this mailinglist.') }}</p>
 			</div>
 			{% if global.policies.Mailinglist.user_can_unsubscribe(list) %}
-				<div class="field">
-					<div class="control">
-						<button type="submit is-primary" class="button">{{ __('Unsubscribe') }}</button>
-					</div>
-				</div>
+				{{ form_row(form.unsubscribe, {'label': __('Unsubscribe'), 'is_primary': false}) }}
 			{% endif %}
 		{% elseif global.policies.Mailinglist.user_can_subscribe(list) %}
-			<input type="hidden" name="action" value="subscribe">
-			<div class="field">
-				<div class="control">
-					<button type="submit" class="button is-primary">{{ __('Subscribe') }}</button>
-				</div>
-			</div>
+			{{ form_row(form.subscribe, {'label': __('Subscribe'), 'is_primary': false}) }}
 		{% endif %}
 	</form>
 </div>

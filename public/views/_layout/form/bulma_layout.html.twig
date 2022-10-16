@@ -50,6 +50,13 @@
 {%- endblock checkbox_widget -%}
 
 {%- block button_widget -%}
+    {%- if is_primary is not defined -%}
+        {% if type is defined and type == 'submit' %}
+            {%- set is_primary = true -%}
+        {% else %}
+            {%- set is_primary = false -%}
+        {%- endif -%}
+    {%- endif -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
@@ -61,7 +68,7 @@
         {%- endif -%}
     {%- endif -%}
     {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' button')|trim}) -%}
-    {% if type is defined and type == 'submit' %}
+    {% if is_primary %}
         {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' is-primary')|trim}) -%}
     {%- endif -%}
     <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
@@ -204,8 +211,11 @@
 {%- endblock form_row -%}
 
 {%- block button_row -%}
+    {%- set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' field')|trim}) -%}
     <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
-        {{- form_widget(form) -}}
+        <div class="control">
+            {{- form_widget(form) -}}
+        </div>
     </div>
 {%- endblock button_row -%}
 
