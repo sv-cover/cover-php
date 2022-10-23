@@ -16,6 +16,19 @@
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}>
 {%- endblock form_widget_simple -%}
 
+{%- block form_widget_compound -%}
+    {%- if form is rootform -%}
+        {{ form_errors(form) }}
+        {{- block('form_rows') -}}
+        {{- form_rest(form) -}}
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- block('form_rows') -}}
+            {{- form_rest(form) -}}
+        </div>
+    {%- endif -%}
+{%- endblock form_widget_compound -%}
+
 {%- block textarea_widget -%}
     {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' textarea')|trim}) -%}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
@@ -45,9 +58,26 @@
     </div>
 {%- endblock choice_widget_collapsed -%}
 
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            {{- form_widget(child, {
+                parent_label_class: label_attr.class|default(''),
+                translation_domain: choice_translation_domain,
+                valid: valid,
+                mark_required: multiple,
+            }) -}}
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded %}
+
 {%- block checkbox_widget -%}
     {{- form_label(form, null, { widget: parent() }) -}}
 {%- endblock checkbox_widget -%}
+
+{%- block radio_widget -%}
+    {{- form_label(form, null, { widget: parent() }) -}}
+{%- endblock radio_widget %}
 
 {%- block button_widget -%}
     {%- if is_primary is not defined -%}

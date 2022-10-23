@@ -5,6 +5,10 @@ require_once 'src/framework/member.php';
 require_once 'src/framework/validate.php';
 require_once 'src/framework/controllers/Controller.php';
 
+use App\Form\Type\SignUpFormType;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 class SignUpFormsController extends \Controller
 {
 	protected $view_name = 'signup';
@@ -180,51 +184,73 @@ class SignUpFormsController extends \Controller
 
 	public function run_create_form()
 	{
-		$form = $this->new_form();
+		$iter = $this->new_form();
+
+		if (!get_policy($this->form_model)->user_can_create($iter))
+			throw new \UnauthorizedException('You cannot create new forms.');
 
 		if (isset($_GET['agenda'])) {
-			$activity = get_model('DataModelAgenda')->get_iter($_GET['agenda']);
-			$form['committee_id'] = $activity['committee_id'];
-			$form['agenda_id'] = $activity['id'];
+			$iter['agenda_id'] = $_GET['agenda'];
+			// agenda_item will be automatically queried based on the previously set agenda_id
+			$iter['committee_id'] = $iter['agenda_item']['committee_id'];
 		}
 
-		if (!get_policy($this->form_model)->user_can_create($form))
-			throw new \UnauthorizedException('You cannot create new forms.');
+		$form = $this->createForm(SignUpFormType::class, $iter, ['mapped' => false]);
+		$form->add('template', ChoiceType::class, [
+            'label' => __('Template'),
+            'choices' => [
+            	__('Sign-up form for a paid activitee') => 'paid_activity',
+            ],
+            'help' => __('Choose a template to start with a set of predefined fields.'),
+            'placeholder' => __('Empty form'),
+            'mapped' => false,
+            'required' => false,
+        ]);
+		$form->handleRequest($this->get_request());
 
 		$success = false;
 
-		$errors = new \ErrorSet();
-
-		if ($this->_form_is_submitted('create_form')) {
-			if ($this->_create($this->form_model, $form, $_POST, $errors))
+		if ($form->isSubmitted() && $form->isValid()) {
+			if ($this->_process_create($this->form_model, $iter))
 				$success = true;
 
-			if ($success && !empty($_POST['template']))
-				$this->_init_form_with_template($form, $_POST['template']);
+			if ($success && !empty($form->get('template')->getData()))
+				$this->_init_form_with_template($iter, $form->get('template')->getData());
 		}
 
 		if ($success)
-			return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]) . '#signup-form-fields');
+			return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $iter['id']]) . '#signup-form-fields');
 		else
-			return $this->view->render('create_form_form.twig', compact('form', 'success', 'errors'));
+			return $this->view->render('create_form_form.twig', [
+				'iter' => $iter,
+				'form' => $form->createView(),
+			]);
 	}
 
 	public function run_update_form()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_update($form))
+		if (!get_policy($this->form_model)->user_can_update($iter))
 			throw new \UnauthorizedException('You cannot update this form.');
+
+		$form = $this->createForm(SignUpFormType::class, $iter, ['mapped' => false]);
+		$form->handleRequest($this->get_request());
 
 		$success = false;
 
 		$errors = new \ErrorSet();
 
-		if ($this->_form_is_submitted('update_form', $form))
-			if ($this->_update($this->form_model, $form, $_POST, $errors))
+		// if ($this->_form_is_submitted('update_form', $form))
+		if ($form->isSubmitted() && $form->isValid())
+			if ($this->_process_update($this->form_model, $iter))
 				$success = true;
+			// if ($this->_update($this->form_model, $form, $_POST, $errors))
 
-		return $this->view->render('update_form_form.twig', compact('form', 'success', 'errors'));
+		return $this->view->render('update_form_form.twig',  [
+			'iter' => $iter,
+			'form' => $form->createView(),
+		]);
 	}
 
 	public function run_delete_form()
@@ -261,29 +287,30 @@ class SignUpFormsController extends \Controller
 
 	public function run_update_form_field()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_update($form))
+		if (!get_policy($this->form_model)->user_can_update($iter))
 			throw new \UnauthorizedException('You cannot update this form.');
 
-		$field = array_find($form['fields'], function($field) { return $field['id'] == $_GET['field']; });
+		$field = array_find($iter['fields'], function($field) { return $field['id'] == $_GET['field']; });
 
 		if (!$field)
 			throw new \NotFoundException('Field not part of this form');
 
-		$success = false;
+		$form = $field->get_configuration_form();
+		$form->handleRequest($this->get_request());
 
-		$errors = new \ErrorSet();
-
-		if ($this->_form_is_submitted('update_form_field', $form, $field))
+		if ($form->isSubmitted() && $form->isValid() && $field->process_configuration($form))
 		{
-			if ($field->process_configuration($_POST, $errors->namespace($field['id'])))
-				$this->field_model->update($field);
-			else
-				return $this->view->render('update_form_form.twig', compact('form', 'success', 'errors'));
+			$this->field_model->update($field);
+			return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $iter['id']]));
 		}
 
-		return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]));
+		return $this->view->render('update_form_field.twig', [
+			'iter' => $iter,
+			'field' => $field,
+			'form' => $form->createView(),
+		]);
 	}
 
 	public function run_delete_form_field()
@@ -383,6 +410,20 @@ class SignUpFormsController extends \Controller
 		return true;
 	}
 
+	protected function _process_create(\DataModel $model, \DataIter $iter)
+	{
+		// Huh, why are we checking again? Didn't we already check in the run_create() method?
+		// Well, yes, but sometimes a policy is picky about how you fill in the data!
+		if (!\get_policy($iter)->user_can_create($iter))
+			throw new \UnauthorizedException('You are not allowed to create this DataIter according to the policy.');
+
+		$id = $model->insert($iter);
+
+		$iter->set_id($id);
+
+		return true;
+	}
+
 	private function _update(\DataModel $model, \DataIter $iter, array $input, \ErrorSet $errors)
 	{
 		$data = validate_dataiter($iter, $input, $errors);
@@ -395,6 +436,11 @@ class SignUpFormsController extends \Controller
 		$model->update($iter);
 
 		return true;
+	}
+
+	protected function _process_update(\DataModel $model, \DataIter $iter)
+	{
+		return $model->update($iter) > 0;
 	}
 
 	public function available_templates()
@@ -445,6 +491,11 @@ class SignUpFormsController extends \Controller
 
 	public function new_form()
 	{
-		return $this->form_model->new_iter();
+		$iter = $this->form_model->new_iter();
+
+		// Default to created_on = now
+		$iter['created_on'] = new \DateTime('now');
+
+		return $iter;
 	}
 }

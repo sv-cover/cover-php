@@ -1,16 +1,16 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title (form.has_id ? __('Modify form') : __('Add form')) ~ ' – ' ~ parent() %}
+{% block title (iter.has_id ? __('Modify form') : __('Add form')) ~ ' – ' ~ parent() %}
 
 {% block content %}
 <header class="level">
 	<div class="level-left">
-		<h1 class="title">{{ form.has_id ? __('Modify form') : __('Create form') }}</h1>
+		<h1 class="title">{{ iter.has_id ? __('Modify form') : __('Create form') }}</h1>
 	</div>
-	{% if form.has_id and user_can_delete form %}
+	{% if iter.has_id and user_can_delete iter %}
 		<div class="level-right buttons">	
-			<a href="{{ path('signup', {'view': 'delete_form', 'form': form.id}) }}" class="button" data-popup="modal">{{ __('Delete form') }}</a>
-			<a href="{{ path('signup', {'view': 'list_entries', 'form': form.id}) }}" class="button">{{ __('Show sign-ups') }}</a>
+			<a href="{{ path('signup', {'view': 'delete_form', 'form': iter.id}) }}" class="button" data-popup="modal">{{ __('Delete form') }}</a>
+			<a href="{{ path('signup', {'view': 'list_entries', 'form': iter.id}) }}" class="button">{{ __('Show sign-ups') }}</a>
 		</div>
 	{% endif %}
 </header>
@@ -26,7 +26,7 @@
 	    </li>
 	    <li>
 	    	<a  href="#signup-form-preview"
-				data-async-action="{{ path('signup', {'view': 'create_entry', 'form': form.id}) }}"
+				data-async-action="{{ path('signup', {'view': 'create_entry', 'form': iter.id}) }}"
 				data-partial-selector="#signup-entry-form"
 				data-placement-selector="#signup-entry-form"
 	    	>{{ __('Preview') }}</a>
@@ -39,10 +39,10 @@
 		{{ include('_form_form.twig') }}
 	</article>
 
-	{% if form.has_id %}
-		<article id="signup-form-fields" class="signup-form">
+	{% if iter.has_id %}
+		<article id="signup-form-fields" class="signup-form is-active">
 			<h2 class="is-sr-only">{{ __('Fields & layout') }}</h2>
-			{% if form.is_open %}
+			{% if iter.is_open %}
 				<div class="notification is-danger">
 					<button class="delete"></button>
 					<strong>{{ __('Warning!') }}</strong>
@@ -50,29 +50,29 @@
 				</div>
 			{% endif %}
 
-			<div class="block sortable signup-form-field-list" data-sortable-action="{{ path('signup', {view: 'update_form_field_order', form: form.id}) }}" data-sortable-handle=".card-header" data-sortable-filter=".signup-form-field-delete-button">
-			{% for field in form.fields %}
-				{{ include('_field_configuration.twig') }}
+			<div class="block sortable signup-form-field-list" data-sortable-action="{{ path('signup', {view: 'update_form_field_order', form: iter.id}) }}" data-sortable-handle=".card-header" data-sortable-filter=".signup-form-field-delete-button">
+			{% for field in iter.fields %}
+				{{ include('_field_configuration.twig',  {form: iter, errors: []}) }}
 			{% endfor %}
 			</div>
 
 			<form 
 				class="card block signup-form-field-form"
 				method="post"
-				action="{{ path('signup', {view: 'create_form_field', form: form.id}) }}"
-				data-async-action="{{ path('signup', {view: 'create_form_field', form: form.id, action: 'add'}) }}"
+				action="{{ path('signup', {view: 'create_form_field', form: iter.id}) }}"
+				data-async-action="{{ path('signup', {view: 'create_form_field', form: iter.id, action: 'add'}) }}"
 				data-partial-selector=".signup-form-field"
 				data-placement-selector=".signup-form-field-list"
 				data-placement-method="append"
 			>
-				{{ html_nonce('create_form_field', form) }}
+				{{ html_nonce('create_form_field', iter) }}
 				<div class="card-content">
 					<div class="field">
 						{{ html_label(__('Add new'), 'field_type') }}
 						<div class="control">
 							<div class="select is-fullwidth">
 								{{html_select_field('field_type', view.available_field_types, null, required=true)}}
-							</div>				
+							</div>
 						</div>
 					</div>
 					<div class="field is-grouped is-grouped-right">

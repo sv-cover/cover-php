@@ -12,9 +12,9 @@ interface SignUpFieldType
 	// Render the form field
 	public function render($renderer, $value, $error);
 
-	public function process_configuration(array $post_data, ErrorSet $errors);
+	public function process_configuration($form);
 
-	public function render_configuration($renderer, ErrorSet $errors);
+	public function render_configuration($renderer, array $form_attr);
 
 	// Store the current configuration as an associative array
 	public function configuration();

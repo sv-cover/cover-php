@@ -1,66 +1,14 @@
-<form method="post" action="{{ form.has_id ? path('signup', {'view': 'update_form', 'form': form.id}) : path('signup', {'view': 'create_form'}) }}">
-    {% if form.has_id %}
-        {{ html_nonce('update_form', form) }}
-    {% else %}
-        {{ html_nonce('create_form') }}
+{{ form_start(form) }}
+    {# Global errors #}
+    {{ form_errors(form) }}
+    {# Fields #}
+    {{ form_row(form.committee_id) }}
+    {{ form_row(form.agenda_id) }}
+    {{ form_row(form.open_on) }}
+    {{ form_row(form.closed_on) }}
+    {{ form_row(form.participant_limit) }}
+    {% if form.template is defined %}
+        {{ form_row(form.template) }}
     {% endif %}
-
-    <div class="field">
-        {{ html_label(__('Committee'), 'committee_id', errors=errors, required=true) }}
-        <div class="control">
-            <div class="select">
-                {{ html_select_field('committee_id', view.available_committees, form, required=true) }}
-            </div>
-        </div>
-    </div>
-
-    <div class="field">
-        {{ html_label(__('Activity'), 'agenda_id', errors=errors) }}
-        <div class="control">
-            <div class="select">
-                {{ html_select_field('agenda_id', view.available_activitees, form) }}
-            </div>
-        </div>
-        <p class="help">{{ __('If you link the form to an activity, it will be shown next to the calendar entry.') }}</p>
-    </div>
-
-    <div class="field">
-        {{ html_label(__('Open date'), 'open_on', errors=errors)  }}
-        <div class="control">
-            {{ html_input_datetime('open_on', form, errors=errors) }}
-        </div>
-        <p class="help">{{ __("People will be able to register from this date. Make sure you don't open registrations before you finished configuring the sign-up form.") }}</p>
-    </div>
-    <div class="field">
-        {{ html_label(__('Deadline'), 'closed_on', errors=errors)  }}
-        <div class="control">
-            {{ html_input_datetime('closed_on', form, errors=errors) }}
-        </div>
-        <p class="help">{{ __('If you do not have a deadline, leave this field blank.') }}</p>
-    </div>
-    <div class="field">
-        {{ html_label(__('Participant limit'), 'participant_limit', errors=errors) }}
-        <div class="control">
-            {{ html_input_number('participant_limit', form, errors=errors, min=0) }}
-        </div>
-        <p class="help">{{ __('If you do not have a participant limit, leave this field blank.') }}</p>
-    </div>
-
-    {% if not form.has_id %}
-        <div class="field">
-            {{ html_label(__('Template'), 'template', errors=errors)  }}
-            <div class="control">
-                <div class="select">
-                    {{ html_select_field('template', controller.available_templates, null, errors=errors) }}
-                </div>
-            </div>
-            <p class="help">{{ __('Choose a template to start with a set of predefined fields.') }}</p>
-        </div>          
-    {% endif %}
-
-    <div class="field">
-        <div class="control buttons">
-            <button class="button is-primary" type="submit">{{ form.has_id() ? __('Modify form') : __('Create form') }}</button>
-        </div>
-    </div>
-</form>
+    {{ form_row(form.submit, {'label': iter.has_id() ? __('Modify form') : __('Create form')}) }}
+{{ form_end(form) }}

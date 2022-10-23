@@ -60,11 +60,16 @@ class DataIterSignUpField extends DataIter
 		return $this->widget()->render($renderer, $value, $entry->error_for_field($this));
 	}
 
-	public function process_configuration(array $post_data, ErrorSet $errors)
+	public function get_configuration_form()
+	{
+		return $this->widget()->get_configuration_form();
+	}
+
+	public function process_configuration($form)
 	{
 		$widget = $this->widget();
 
-		if (!$widget->process_configuration($post_data, $errors))
+		if (!$widget->process_configuration($form))
 			return false;
 		
 		$this['properties'] = $widget->configuration();
@@ -72,9 +77,9 @@ class DataIterSignUpField extends DataIter
 		return true;
 	}
 
-	public function render_configuration($renderer, ErrorSet $errors)
+	public function render_configuration($renderer, array $form_attr)
 	{
-		return $this->widget()->render_configuration($renderer, $errors);
+		return $this->widget()->render_configuration($renderer, $form_attr);
 	}
 
 	public function configure($callback)
@@ -141,7 +146,7 @@ class DataModelSignUpField extends DataModel
 			],
 			'bankaccount' => [
 				'class' => \fields\BankAccount::class,
-				'label' => __('Bank account number field')
+				'label' => __('Bank account (IBAN) field')
 			],
 			'editable' => [
 				'class' => \fields\Editable::class,

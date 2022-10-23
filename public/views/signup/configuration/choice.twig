@@ -1,44 +1,40 @@
-<div class="field">
-	{{ html_label('Label above the options', 'description', errors=errors, id='field-' ~ name ~ '-description') }}
-	<div class="control">
-		{{ html_input_text('description', data, errors=errors, for='field-' ~ name ~ '-description') }}
-	</div>
-</div>
-<div class="field">
-	<label for="field-{{ name }}-options" class="label">{{__('Options')}}</label>
-	<noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
-	<ol id="field-{{ name }}-options" class="growing-list" data-growing-list-template="#field-{{ name }}-template" data-growing-list-sortable>
-		{% for option in data.options %}
+{{ form_start(form, form_attr) }}
+	{# Render token first for better vertical spacing #}
+	{{ form_widget(form._token) }}
+	{# Skip submit button, this is taken care of by caller #}
+	{% do form_row(form.submit, {attr: {'data-auto-submit-hidden': true}}) %}
+	{{ form_row(form.description) }}
+	<div class="field">
+		{% set name = 'banaan' %}
+		{{ form_label(form.options)}}
+		<noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
+		<ol id="{{form.options.vars.id}}-options" class="growing-list" data-growing-list-template="#{{form.options.vars.id}}-template" data-growing-list-sortable>
+			{% for optionField in form.options %}
+				<li class="field">
+					<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
+						{{ form_widget(optionField) }}
+						<span class="icon is-right">
+								<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('Drag field to reorder options') }}</span>
+						</span>
+					</div>
+					{{ form_errors(optionField) }}
+				</li>
+			{% endfor %}
+		</ol>
+		<template id="{{form.options.vars.id}}-template">
 			<li class="field">
 				<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
-					{{ html_input_text('options[]', data, field='options['~ loop.index0 ~']', id='field-' ~ name ~ '-option-' ~ loop.index0) }}
+					{{ form_widget(form.options.vars.prototype) }}
 					<span class="icon is-right">
 							<i class="fas fa-arrows-alt" aria-hidden="true"></i>
 							<span class="is-sr-only">{{ __('Drag field to reorder options') }}</span>
 					</span>
 				</div>
 			</li>
-		{% endfor %}
-	</ol>
-	<template id="field-{{ name }}-template">
-		<li class="field">
-			<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
-				<input class="input" type="text" name="options[]">
-				<span class="icon is-right">
-						<i class="fas fa-arrows-alt" aria-hidden="true"></i>
-						<span class="is-sr-only">{{ __('Drag field to reorder options') }}</span>
-				</span>
-			</div>
-		</li>
-	</template>
-</div>
-<div class="field">
-	<div class="control">
-		{{ html_input_checkbox('allow_multiple', data, errors=errors, id='field-' ~ name ~ '-allow-multiple', label=__('Allow multiple options to be picked')) }}
+		</template>
+		{# This make sure Symfony won't try to render the widget again… #}
+		{% do form.options.setRendered() %}
 	</div>
-</div>
-<div class="field">
-	<div class="control">
-		{{ html_input_checkbox('required', data, errors=errors, id='field-' ~ name ~ '-required', label=__('Picking an option is mandatory')) }}
-	</div>
-</div>
+	{{ form_rest(form) }}
+{{ form_end(form) }}
