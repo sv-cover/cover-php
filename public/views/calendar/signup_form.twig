@@ -51,26 +51,21 @@
 		{% endif %}
 	{% endif %}
 	{% if user_can_create entry %}
-		<form action="{{ path('signup', {view: 'create_entry', form: form.id}) }}" method="post">
-			{{ html_input_hidden('return-path', path('calendar', {agenda_id: form.agenda_item.id})) }}
-			{{ html_input_hidden('member_id', entry.member_id) }}
-			
-			{% if entry.has_id %}
-				{{ html_nonce('update_entry', entry) }}
-			{% else %}
-				{{ html_nonce('create_entry', form) }}
-			{% endif %}
-			
-			{% for field in form.fields %}
-				{{ field.render(view, entry)|raw }}
-			{% endfor %}
-
+		{% set _form = form.get_form(entry, {'return_path': path('calendar', {agenda_id: form.agenda_item.id})}).createView() %}
+		{{ form_start(_form, {'action': path('signup', {view: 'create_entry', form: form.id})}) }}
+			{# Global errors #}
+			{{ form_errors(_form) }}
+			{# Cache submit button #}
+			{% set submit_button = form_widget(_form.submit, {'label': entry.has_id ? __('Modify entry') : __('Sign me up')}) %}
+			{# Render fields #}
+			{{ form_rest(_form) }}
+			{# Render submit button #}
 			<div class="field">
 				<div class="control buttons">
-					<button class="button is-primary" type="submit">{{ entry.has_id ? __('Modify sign-up') : __('Sign me up') }}</button>
+					{{ submit_button|raw }}
 				</div>
 			</div>
-		</form>
+		{{ form_end(_form) }}
 	{% endif %}
 {% endfor %}
 </div>

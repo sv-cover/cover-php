@@ -48,3 +48,9 @@
     }) -%}
     {{- block('form_widget_simple') -}}
 {% endblock %}
+
+{% block presentation_row %}
+    <div class="field content">
+        {{ content|parse_markup }}
+    </div>
+{% endblock %}

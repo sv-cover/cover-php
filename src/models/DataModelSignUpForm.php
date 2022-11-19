@@ -2,8 +2,14 @@
 
 require_once 'src/framework/data/DataModel.php';
 
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 class DataIterSignUpForm extends DataIter
 {
+	private $_form;
+
 	static public function fields()
 	{
 		return [
@@ -80,6 +86,31 @@ class DataIterSignUpForm extends DataIter
 		];
 	}
 
+	public function get_form(DataIterSignUpEntry $entry, array $defaults = [])
+	{
+		if (!isset($this->_form))
+		{
+			if ($entry['member_id'])
+				$defaults['member_id'] = $entry['member_id'];
+			$data = array_merge($entry->get_form_data(), $defaults);
+			$builder = \get_form_factory()
+				->createNamedBuilder(sprintf('form-%s', $this['id']), FormType::class, $data);
+
+			foreach ($this->get_fields() as $field)
+				$field->build_form($builder);
+
+			$builder
+				->add('return_path', HiddenType::class)
+				->add('member_id', HiddenType::class)
+				->add('submit', SubmitType::class, [
+					'label' => __('Sign me up'),
+				]);
+
+			$this->_form = $builder->getForm();
+		}
+		return $this->_form;
+	}
+
 	public function get_fields()
 	{
 		return get_model('DataModelSignUpField')->find(['form_id' => $this['id']]);
@@ -135,11 +166,14 @@ class DataIterSignUpForm extends DataIter
 
 	public function new_entry(DataIterMember $member = null)
 	{
-		return get_model('DataModelSignUpEntry')->new_iter([
+		$iter = get_model('DataModelSignUpEntry')->new_iter([
 			'form_id' => $this['id'],
 			'member_id' => $member ? $member['id'] : null,
 			'created_on' => date('Y-m-d H:i:s')
 		]);
+		if ($member)
+			$iter->prefill();
+		return $iter;
 	}
 
 	public function get_entries_for_member(DataIterMember $member)

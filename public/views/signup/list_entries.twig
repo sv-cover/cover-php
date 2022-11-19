@@ -12,7 +12,7 @@
 	</div>
 	<div class="level-right buttons">		
 		{% if user_can_create form.new_entry(global.identity.member) %}
-			<a href="{{ path('signup', {'view': 'create_entry', 'form': form.id, 'action': 'modal'}) }}" class="button" data-popup="modal">{{ __('New sign-up') }}</a>
+			<a href="{{ path('signup', {'view': 'create_entry', 'form': form.id, 'action': 'modal', prefill: 'false'}) }}" class="button" data-popup="modal">{{ __('New sign-up') }}</a>
 		{% endif %}
 		{% if user_can_update form %}
 			<a href="{{ path('signup', {'view': 'update_form', 'form': form.id}) }}" class="button">{{ __('Modify form') }}</a>

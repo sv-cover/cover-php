@@ -2,11 +2,15 @@
 
 namespace fields;
 
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -45,44 +49,54 @@ class Choice implements \SignUpFieldType
 		];
 	}
 
-	public function process(array $post_data, &$error)
+	public function process(Form $form)
 	{
-		$options = $post_data[$this->name] ?? [];
-
-		if (!is_array($options))
-			$options = [$options];
-
-		if (array_diff($options, $this->options) != []) {
-			$error = 'Unknown option';
-			return false;
-		}
-
-		if ($this->required && count($options) === 0) {
-			$error = 'Required';
-			return false;
-		}
-
-		if (!$this->allow_multiple && count($options) > 1) {
-			$error = 'You can only pick a single option';
-			return false;
-		}
-
-		return json_encode($options);
+		return json_encode($form->get($this->name)->getData());
 	}
 
-	public function suggest(\DataIterMember $member)
+	public function prefill(\DataIterMember $member)
 	{
 		return null;
 	}
 
-	public function render($renderer, $value, $error)
+	public function build_form(FormBuilderInterface $builder)
 	{
-		return $renderer->render('@form_fields/choice.twig', [
-			'name' => $this->name,
-			'data' => [$this->name => (array) json_decode($value, true)],
-			'configuration' => $this->configuration(),
-			'errors' => $error ? [$this->name => $error] : []
-		]);
+		$builder
+			->add($this->name, ChoiceType::class, [
+				'label' => $this->description,
+				'required' => $this->required,
+				'constraints' => $this->required ? new Assert\NotBlank(['message' => $this->allow_multiple ? __('Pick at least one option.') : __('Pick an option.')]) : [],
+				'choices' => array_combine($this->options, $this->options),
+				'expanded' => true,
+				'placeholder' => false, // Prevent "None" option when !required && !allow_multiple
+				'multiple' => $this->allow_multiple
+			]);
+		$builder->get($this->name)->addModelTransformer(new CallbackTransformer(
+			function ($value) {
+				if ($this->allow_multiple)
+				{
+					// ChoiceField expects array if multiple
+					if (is_array($value))
+						return $value;
+					return [$value];
+				}
+				else
+				{
+					// ChoiceField does not expect an array if not multiple
+					if (!is_array($value))
+						return $value;
+					if (count($value) == 0)
+						return '';
+					return $value[0];
+				}
+            },
+            function ($value) {
+            	// We always expect an array
+				if (is_array($value))
+					return $value;
+				return [$value];
+            },
+		));
 	}
 
 	public function get_configuration_form()
@@ -119,7 +133,7 @@ class Choice implements \SignUpFieldType
 		return $this->_form;
 	}
 
-	public function process_configuration($form)
+	public function process_configuration(Form $form)
 	{
 		$this->description = $form->get('description')->getData();
 		$this->required = $form->get('required')->getData();
@@ -131,7 +145,7 @@ class Choice implements \SignUpFieldType
 	public function render_configuration($renderer, array $form_attr)
 	{
 		$form = $this->get_configuration_form();
-		return $renderer->render('@form_configuration/choice.twig', [
+		return $renderer->render('@theme/signup/configuration/choice.twig', [
 			'form' => $form->createView(),
 			'form_attr' => $form_attr,
 		]);
@@ -140,6 +154,11 @@ class Choice implements \SignUpFieldType
 	public function column_labels()
 	{
 		return [$this->name => $this->description];
+	}
+
+	public function get_form_data($value)
+	{
+		return [$this->name => (array) json_decode($value, true)];
 	}
 
 	public function export($value)

@@ -61,12 +61,14 @@
 {%- block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
         {%- for child in form %}
-            {{- form_widget(child, {
-                parent_label_class: label_attr.class|default(''),
-                translation_domain: choice_translation_domain,
-                valid: valid,
-                mark_required: multiple,
-            }) -}}
+            <div class="control">
+                {{- form_widget(child, {
+                    parent_label_class: label_attr.class|default(''),
+                    translation_domain: choice_translation_domain,
+                    valid: valid,
+                    show_mark: false,
+                }) -}}{#- Properly transfer the 'required' property, and make sure things are never marked required -#}
+            </div>
         {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded %}
@@ -136,6 +138,9 @@
 {%- endblock form_label -%}
 
 {%- block form_label_content -%}
+    {%- if show_mark is not defined -%}
+        {%- set show_mark = true -%}
+    {%- endif -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
@@ -160,10 +165,12 @@
         {%- endif -%}
     {%- endif -%}
     {# Required/optional indicator #}
-    {% if not required and not mark_required %}
-        <span class="tag is-rounded">optional</span>
-    {% elseif required and mark_required %}
-        <span class="tag is-rounded">required</span>
+    {% if show_mark %}
+        {% if not required and not mark_required %}
+            <span class="tag is-rounded">optional</span>
+        {% elseif required and mark_required %}
+            <span class="tag is-rounded">required</span>
+        {%- endif -%}
     {%- endif -%}
 {%- endblock form_label_content -%}
 
@@ -184,7 +191,7 @@
             {# Default is true, whereas for normal label default is false #}
             {%- set mark_required = true -%}
         {%- endif -%}
-        {%- if mark_required is defined -%}
+        {%- if label_class is defined -%}
             {%- set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' ' ~ label_class)|trim}) -%}
         {%- else -%}
             {%- set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' checkbox')|trim}) -%}

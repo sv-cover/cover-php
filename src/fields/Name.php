@@ -5,6 +5,10 @@ namespace fields;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class Name implements \SignUpFieldType
@@ -36,18 +40,12 @@ class Name implements \SignUpFieldType
 			'autofill' => (bool) $this->autofill
 		];
 	}
-
-	public function process(array $post_data, &$error)
+	public function process(Form $form)
 	{
-		$value = trim($post_data[$this->name] ?? '');
-
-		if ($this->required && $value == '')
-			$error = __('Value required');
-
-		return $value;
+		return $form->get($this->name)->getData();
 	}
 
-	public function suggest(\DataIterMember $member)
+	public function prefill(\DataIterMember $member)
 	{
 		if (!$this->autofill)
 			return null;
@@ -55,14 +53,17 @@ class Name implements \SignUpFieldType
 		return $member['full_name'];
 	}
 
-	public function render($renderer, $value, $error)
+	public function build_form(FormBuilderInterface $builder)
 	{
-		return $renderer->render('@form_fields/name.twig', [
-			'name' => $this->name,
-			'data' => [$this->name => $value],
-			'configuration' => $this->configuration(),
-			'errors' => $error ? [$this->name => $error] : []
-		]);
+		$builder
+			->add($this->name, TextType::class, [
+				'label' => __('Full name'),
+				'required' => $this->required,
+				'constraints' => $this->required ? new Assert\NotBlank() : [],
+				'attr' => [
+					'placeholder' => __('E.g. John von Neumann'),
+				],
+			]);
 	}
 
 	public function get_configuration_form()
@@ -86,7 +87,7 @@ class Name implements \SignUpFieldType
 		return $this->_form;
 	}
 
-	public function process_configuration($form)
+	public function process_configuration(Form $form)
 	{
 		$this->required = $form->get('required')->getData();
 		$this->autofill = $form->get('autofill')->getData();
@@ -96,7 +97,7 @@ class Name implements \SignUpFieldType
 	public function render_configuration($renderer, array $form_attr)
 	{
 		$form = $this->get_configuration_form();
-		return $renderer->render('@form_configuration/field.twig', [
+		return $renderer->render('@theme/signup/configuration/field.twig', [
 			'form' => $form->createView(),
 			'form_attr' => $form_attr,
 		]);
@@ -105,6 +106,11 @@ class Name implements \SignUpFieldType
 	public function column_labels()
 	{
 		return [$this->name => $this->label];
+	}
+
+	public function get_form_data($value)
+	{
+		return $this->export($value);
 	}
 
 	public function export($value)

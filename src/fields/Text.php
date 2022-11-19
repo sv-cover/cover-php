@@ -6,7 +6,10 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Text implements \SignUpFieldType
@@ -41,29 +44,32 @@ class Text implements \SignUpFieldType
 		];
 	}
 
-	public function process(array $post_data, &$error)
+	public function process(Form $form)
 	{
-		$value = trim($post_data[$this->name] ?? '');
-
-		if ($this->required && $value == '')
-			$error = __('Value required');
-
-		return $value;
+		return $form->get($this->name)->getData();
 	}
 
-	public function suggest(\DataIterMember $member)
+	public function prefill(\DataIterMember $member)
 	{
 		return null;
 	}
 
-	public function render($renderer, $value, $error)
+	public function build_form(FormBuilderInterface $builder)
 	{
-		return $renderer->render('@form_fields/text.twig', [
-			'name' => $this->name,
-			'data' => [$this->name => $value],
-			'configuration' => $this->configuration(),
-			'errors' => $error ? [$this->name => $error] : []
-		]);
+		if ($this->multiline)
+			$builder
+				->add($this->name, TextAreaType::class, [
+					'label' => $this->label,
+					'required' => $this->required,
+					'constraints' => $this->required ? new Assert\NotBlank() : [],
+				]);
+		else
+			$builder
+				->add($this->name, TextType::class, [
+					'label' => $this->label,
+					'required' => $this->required,
+					'constraints' => $this->required ? new Assert\NotBlank() : [],
+				]);
 	}
 	
 	public function get_configuration_form()
@@ -95,7 +101,7 @@ class Text implements \SignUpFieldType
 		return $this->_form;
 	}
 
-	public function process_configuration($form)
+	public function process_configuration(Form $form)
 	{
 		$this->label = $form->get('label')->getData();
 		$this->required = $form->get('required')->getData();
@@ -106,7 +112,7 @@ class Text implements \SignUpFieldType
 	public function render_configuration($renderer, array $form_attr)
 	{
 		$form = $this->get_configuration_form();
-		return $renderer->render('@form_configuration/field.twig', [
+		return $renderer->render('@theme/signup/configuration/field.twig', [
 			'form' => $form->createView(),
 			'form_attr' => $form_attr,
 		]);
@@ -115,6 +121,11 @@ class Text implements \SignUpFieldType
 	public function column_labels()
 	{
 		return [$this->name => $this->label];
+	}
+
+	public function get_form_data($value)
+	{
+		return $this->export($value);
 	}
 
 	public function export($value)

@@ -90,10 +90,6 @@ class View
 		// And add a shortcut to the layout directory through @layout
 		$loader->addPath('public/views/_layout', 'layout');
 
-		$loader->addPath('public/views/signup/fields', 'form_fields');
-
-		$loader->addPath('public/views/signup/configuration', 'form_configuration');
-
 		$app_variable_reflection = new \ReflectionClass('\Symfony\Bridge\Twig\AppVariable');
 		$vendor_twig_bridge_directory = dirname($app_variable_reflection->getFileName());
 		// the path to your other templates

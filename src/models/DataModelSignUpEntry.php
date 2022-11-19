@@ -2,6 +2,8 @@
 
 require_once 'src/framework/data/DataModel.php';
 
+use Symfony\Component\Form\Form;
+
 class DataIterSignUpEntry extends DataIter
 {
 	public $errors = [];
@@ -19,6 +21,16 @@ class DataIterSignUpEntry extends DataIter
 	public function get_form()
 	{
 		return get_model('DataModelSignUpForm')->get_iter($this['form_id']);
+	}
+
+	public function get_form_data()
+	{
+		$data = [];
+
+		foreach ($this['form']['fields'] as $field)
+			$data = array_merge($data, $field->get_form_data($this));
+
+		return $data;		
 	}
 
 	public function get_member()
@@ -64,23 +76,24 @@ class DataIterSignUpEntry extends DataIter
 		return $this['values'][$field['id']] ?? $default;
 	}
 
-	public function error_for_field(DataIterSignUpField $field)
+	public function prefill()
 	{
-		return $this->errors[$field['id']] ?? null;
-	}
-
-	public function process(array $post_data)
-	{
-		$this->errors = [];
-
 		$field_values = [];
 
 		foreach ($this['form']['fields'] as $field)
-			$field_values[$field['id']] = $field->process($post_data, $this->errors[$field['id']]);
+			$field_values[$field['id']] = $field->prefill($this['member']);
 
 		$this['values'] = $field_values;
+	}
 
-		return count(array_filter($this->errors)) == 0;
+	public function process(Form $form)
+	{
+		$field_values = [];
+
+		foreach ($this['form']['fields'] as $field)
+			$field_values[$field['id']] = $field->process($form);
+
+		$this['values'] = $field_values;
 	}
 
 	public function export()

@@ -1,0 +1,15 @@
+{% extends is_modal ? './_entry_form_modal.twig' : './_entry_form_regular.twig' %}
+
+{% block title __('Form') ~ ' – ' ~ parent() %}
+{% block entry_form_title %}{{ __('Form') }}{% endblock %}
+
+{% block entry_form_header %}
+{% endblock %}
+
+{% block entry_form_form %}
+	<p>{{ __('Success! You have signed up.') }}</p>
+{% endblock %}
+
+{% block entry_form_buttons %}
+	<a href="#" class="button" data-dismiss="modal">{{ __('Close') }}</a>
+{% endblock %}

@@ -5,6 +5,10 @@ namespace fields;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Address implements \SignUpFieldType
 {
@@ -31,19 +35,15 @@ class Address implements \SignUpFieldType
 		];
 	}
 
-	public function process(array $post_data, &$error)
+	public function process(Form $form)
 	{
-		$address = trim($post_data[$this->name . '-address'] ?? '');
-
-		$city = trim($post_data[$this->name . '-city'] ?? '');
-
-		if ($this->required && ($address == '' || $city == ''))
-			$error = __('Value required');
-
-		return json_encode(compact('address', 'city'));
+		return json_encode([
+			'address' => $form->get($this->name . '-address')->getData(),
+			'city' => $form->get($this->name . '-city')->getData(),
+		]);
 	}
 
-	public function suggest(\DataIterMember $member)
+	public function prefill(\DataIterMember $member)
 	{
 		if (!$this->autofill)
 			return null;
@@ -54,25 +54,26 @@ class Address implements \SignUpFieldType
 		]);
 	}
 
-	public function render($renderer, $value, $error)
+	public function build_form(FormBuilderInterface $builder)
 	{
-		if ($value !== null)
-			$data = json_decode($value, true);
-		else
-			$data = [];
-
-		return $renderer->render('@form_fields/address.twig', [
-			'name' => $this->name,
-			'configuration' => $this->configuration(),
-			'data' => [
-				$this->name . '-address' => $data['address'] ?? '',
-				$this->name . '-city' => $data['city'] ?? ''
-			],
-			'errors' => $error ? [
-				$this->name . '-address' => $error,
-				$this->name . '-city' => $error
-			] : []
-		]);
+		$builder
+			->add($this->name . '-address', TextType::class, [
+				'label' => __('Address'),
+				'required' => $this->required,
+				'constraints' => $this->required ? new Assert\NotBlank() : [],
+				'attr' => [
+					'placeholder' => __('E.g. Nijenborgh 9'),
+				],
+				'help' => __('Street name + number'),
+			])
+			->add($this->name . '-city', TextType::class, [
+				'label' => __('Place of residence'),
+				'required' => $this->required,
+				'constraints' => $this->required ? new Assert\NotBlank() : [],
+				'attr' => [
+					'placeholder' => __('E.g. Groningen'),
+				],
+			]);
 	}
 
 	public function get_configuration_form()
@@ -96,7 +97,7 @@ class Address implements \SignUpFieldType
 		return $this->_form;
 	}
 
-	public function process_configuration($form)
+	public function process_configuration(Form $form)
 	{
 		$this->required = $form->get('required')->getData();
 		$this->autofill = $form->get('autofill')->getData();
@@ -106,7 +107,7 @@ class Address implements \SignUpFieldType
 	public function render_configuration($renderer, array $form_attr)
 	{
 		$form = $this->get_configuration_form();
-		return $renderer->render('@form_configuration/field.twig', [
+		return $renderer->render('@theme/signup/configuration/field.twig', [
 			'form' => $form->createView(),
 			'form_attr' => $form_attr,
 		]);
@@ -118,6 +119,11 @@ class Address implements \SignUpFieldType
 			$this->name . '-address' => 'address',
 			$this->name . '-city' => 'place of residence'
 		];
+	}
+
+	public function get_form_data($value)
+	{
+		return $this->export($value);
 	}
 
 	public function export($value)

@@ -82,36 +82,33 @@ class SignUpFormsController extends \Controller
 
 	public function run_create_entry()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_read($form))
+		if (!get_policy($this->form_model)->user_can_read($iter))
 			throw new \UnauthorizedException('You cannot access this form.');
 
-		$entry = $form->new_entry(null);
+		if ($this->get_parameter('prefill', 'true') === 'false')
+			$entry = $iter->new_entry(null);
+		else
+			$entry = $iter->new_entry(get_identity()->member());
 
 		if (!get_policy($this->entry_model)->user_can_create($entry))
 			throw new \UnauthorizedException('You cannot create new entries for this form.');
 
-		$success = false;
+		$form = $iter->get_form($entry);
+		$form->handleRequest($this->get_request());
 
-		$is_modal = isset($_GET['action']) && $_GET['action'] === 'modal';
-
-		if ($this->_form_is_submitted('create_entry', $form)) {
-			// If the form submitted a member-id (i.e. a logged-in member filled it in) then
-			// check whether that member is indeed the logged-in member and assign the entry
-			// to them if so.
-			if (!empty($_POST['member_id']) && get_identity()->get('id') == $_POST['member_id'])
-				$entry['member_id'] = (int) $_POST['member_id'];
+		if ($form->isSubmitted() && $form->isValid()) {
+			if (!empty($form->get('member_id')->getData()))
+				$entry['member_id'] = (int) $form->get('member_id')->getData();
 
 			// Process the posted values. This will delegate all data handling to the classes
 			// in src/fields/*.php
-			if ($entry->process($_POST)) {
-				$this->entry_model->insert($entry);
-				$success = true;
-			}
+			$entry->process($form);
+			$this->entry_model->insert($entry);
 
 			try {
-				if ($success && !empty($entry['member_id']) && $form['agenda_item']) {
+				if (!empty($entry['member_id']) && $iter['agenda_item']) {
 					$email = parse_email_object("signup_confirmation.txt", ['entry' => $entry]);
 					$email->send($entry['member']['email']);
 				}
@@ -120,53 +117,69 @@ class SignUpFormsController extends \Controller
 				sentry_report_exception($e);
 			}
 
-			// Redirect submissions from elsewhere back to their return-path
-			if ($success && !empty($_POST['return-path']))
-				return $this->view->redirect($_POST['return-path']);
+			if (!empty($form->get('return_path')->getData()))
+				return $this->view->redirect($form->get('return_path')->getData());
 
 			// Redirect admins back to the entry index
-			if ($success && get_policy($form)->user_can_update($form))
-				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $form['id']]));
+			if (get_policy($iter)->user_can_update($iter))
+				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $iter['id']]));
 
-			// and everyone else will just see the form with a success message
+			return $this->view->render('entry_form_success.twig', [
+				'iter' => $iter,
+				'entry' => $entry,
+				'is_modal' => $this->get_parameter('action', '') === 'modal',
+			]);
 		}
 
-		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success', 'is_modal'));
+		return $this->view->render('entry_form.twig', [
+			'form' => $form->createView(),
+			'iter' => $iter,
+			'entry' => $entry,
+			'is_modal' => $this->get_parameter('action', '') === 'modal',
+		]);
 	}
 
 	public function run_update_entry()
 	{
 		$entry = $this->entry_model->get_iter($_GET['entry']);
 
-		$form = $entry['form'];
+		$iter = $entry['form'];
 
-		if (!get_policy($this->form_model)->user_can_read($form))
+		if (!get_policy($this->form_model)->user_can_read($iter))
 			throw new \UnauthorizedException('You cannot access this form.');
 
 		if (!get_policy($this->entry_model)->user_can_read($entry))
 			throw new \UnauthorizedException('You cannot access this entry.');
 
-		$success = false;
+		$form = $iter->get_form($entry);
+		$form->handleRequest($this->get_request());
 
-		$is_modal = isset($_GET['action']) && $_GET['action'] === 'modal';
-
-		if ($this->_form_is_submitted('update_entry', $entry)) {
+		if ($form->isSubmitted() && $form->isValid()) {
 			if (!get_policy($this->entry_model)->user_can_update($entry))
 				throw new \UnauthorizedException('You cannot update this entry.');
-		
-			if ($entry->process($_POST)) {
-				$this->entry_model->update($entry);
-				$success = true;
-			}
 			
-			// Redirect admins back to the entry index
-			if ($success && get_policy($form)->user_can_update($form))
-				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $form['id']]));
+			// Process the posted values. This will delegate all data handling to the classes
+			// in src/fields/*.php
+			$entry->process($form);
+			$this->entry_model->insert($entry);
 
-			// and everyone else will just see the form with a success message
+			// Redirect admins back to the entry index
+			if (get_policy($iter)->user_can_update($iter))
+				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $iter['id']]));
+
+			return $this->view->render('entry_form_success.twig', [
+				'iter' => $iter,
+				'entry' => $entry,
+				'is_modal' => $this->get_parameter('action', '') === 'modal',
+			]);
 		}
 
-		return $this->view->render('entry_form.twig', compact('form', 'entry', 'success', 'is_modal'));
+		return $this->view->render('entry_form.twig', [
+			'form' => $form->createView(),
+			'iter' => $iter,
+			'entry' => $entry,
+			'is_modal' => $this->get_parameter('action', '') === 'modal',
+		]);
 	}
 
 	public function run_list_forms()
@@ -197,15 +210,15 @@ class SignUpFormsController extends \Controller
 
 		$form = $this->createForm(SignUpFormType::class, $iter, ['mapped' => false]);
 		$form->add('template', ChoiceType::class, [
-            'label' => __('Template'),
-            'choices' => [
-            	__('Sign-up form for a paid activitee') => 'paid_activity',
-            ],
-            'help' => __('Choose a template to start with a set of predefined fields.'),
-            'placeholder' => __('Empty form'),
-            'mapped' => false,
-            'required' => false,
-        ]);
+			'label' => __('Template'),
+			'choices' => [
+				__('Sign-up form for a paid activitee') => 'paid_activity',
+			],
+			'help' => __('Choose a template to start with a set of predefined fields.'),
+			'placeholder' => __('Empty form'),
+			'mapped' => false,
+			'required' => false,
+		]);
 		$form->handleRequest($this->get_request());
 
 		$success = false;
