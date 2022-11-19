@@ -15,7 +15,7 @@
 				{# Fields #}
 				{{ form_row(form.name) }}
 				{{ form_row(form.email) }}
-				{% set submit_button = form_widget(form.submit, {'label': __('Subscribe'), 'attr': {'form': 'subscribe-non-member-form'}})%}
+				{% set submit_button = form_widget(form.submit, {'label': __('Subscribe'), 'attr': {'form': 'subscribe-non-member-form'}}) %}
 			{{ form_end(form) }}
 		</section>
 		<footer class="modal-card-foot">

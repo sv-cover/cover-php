@@ -24,7 +24,7 @@ class MailinglistType extends AbstractType
     {
         $builder
             ->add('adres', EmailType::class, [
-                'label' => __('List email address'),
+                'label' => __('List e-mail address'),
                 'constraints' => [new NotBlank(), new Email()],
                 'attr' => [
                     'placeholder' => __('e.g. listname@svcover.nl'),

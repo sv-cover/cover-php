@@ -70,6 +70,7 @@ class VacancyType extends AbstractType implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
+        // TODO: see if this works better https://www.strangebuzz.com/en/snippets/add-a-custom-conditional-validation-on-a-symfony-form
         return [
             FormEvents::SUBMIT => 'validatePartner',
         ];
