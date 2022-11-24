@@ -23,69 +23,6 @@ class DataIterSignUpForm extends DataIter
 		];
 	}
 
-	static public function rules()
-	{
-		return [
-			'committee_id' => [
-				'validate' => ['committee']
-			],
-			'created_on' => [
-				'default' => function() {
-					return new DateTime('now');
-				},
-				'validate' => ['datetime']
-			],
-			'open_on' => [
-				'clean' => function($value) {
-					try {
-						return $value ? new DateTime($value) : null;
-					} catch (Exception $e) {
-						return $value; // the validate will catch the invalid value next
-					}
-				},
-				'validate' => ['datetime']
-			],
-			'closed_on' => [
-				'clean' => function($value) {
-					try {
-						return $value ? new DateTime($value) : null;
-					} catch (Exception $e) {
-						return $value; // the validate will catch the invalid value next
-					}
-				},
-				'validate' => ['datetime']
-			],
-			'participant_limit' => [
-				'clean' => function($value) {
-					return $value !== '' ? intval($value) : null;
-				}
-			],
-			'agenda_id' => [
-				'clean' => function($value) {
-					return $value ? intval($value) : null;
-				},
-				'validate' => [
-					function($agenda_id, $field, $iter, $data) {
-						// Null is fine
-						if ($agenda_id === null)
-							return true;
-
-						// But if it is filled in, it has to be an activity organized by the
-						// committee that owns this form.
-						$committee_id = $data['committee_id'] ?? $iter['committee_id'];
-
-						if ($committee_id === null)
-							return false;
-
-						$agenda_item = get_model('DataModelAgenda')->get_iter($agenda_id);
-
-						return $agenda_item['committee_id'] == $committee_id;
-					}
-				]
-			]
-		];
-	}
-
 	public function get_form(DataIterSignUpEntry $entry, array $defaults = [])
 	{
 		if (!isset($this->_form))

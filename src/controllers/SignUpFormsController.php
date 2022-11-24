@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 require_once 'src/framework/member.php';
-require_once 'src/framework/validate.php';
 require_once 'src/framework/controllers/Controller.php';
 
 use App\Form\Type\SignUpFormType;
@@ -462,27 +461,6 @@ class SignUpFormsController extends \Controller
 		return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]));
 	}
 
-	private function _create(\DataModel $model, \DataIter $iter, array $input, \ErrorSet $errors)
-	{
-		$data = validate_dataiter($iter, $input, $errors);
-
-		if ($data === false)
-			return false;
-
-		$iter->set_all($data);
-
-		// Huh, why are we checking again? Didn't we already check in the run_create() method?
-		// Well, yes, but sometimes a policy is picky about how you fill in the data!
-		if (!get_policy($model)->user_can_create($iter))
-			throw new \UnauthorizedException('You cannot create new forms.');
-
-		$id = $model->insert($iter);
-
-		$iter->set_id($id);
-
-		return true;
-	}
-
 	protected function _process_create(\DataModel $model, \DataIter $iter)
 	{
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?
@@ -493,20 +471,6 @@ class SignUpFormsController extends \Controller
 		$id = $model->insert($iter);
 
 		$iter->set_id($id);
-
-		return true;
-	}
-
-	private function _update(\DataModel $model, \DataIter $iter, array $input, \ErrorSet $errors)
-	{
-		$data = validate_dataiter($iter, $input, $errors);
-
-		$iter->set_all($data);
-
-		if (!get_policy($model)->user_can_update($iter))
-			throw new \UnauthorizedException('You cannot update this form');
-
-		$model->update($iter);
 
 		return true;
 	}
