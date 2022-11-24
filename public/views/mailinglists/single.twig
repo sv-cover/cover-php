@@ -4,7 +4,7 @@
 <section id="mailing-list-subscriptions">
 	<h2 class="is-sr-only">{{ __('Subscriptions') }}</h2>
 	<form method="post" action="{{ path('mailing_lists', {view: 'unsubscribe', id: iter.id}) }}">
-		<input type="hidden" name="form[_token]" value="{{ csrf_token('unsubscribe_14') }}">
+		<input type="hidden" name="form[_token]" value="{{ csrf_token('unsubscribe_' ~ iter.id) }}">
 		<div class="level">
 			<div class="level-left">
 				<div class="level-item">

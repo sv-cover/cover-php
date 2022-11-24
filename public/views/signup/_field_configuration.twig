@@ -30,9 +30,18 @@
         id: 'field-' ~ field.id ~ '-update',
     })|raw }}
 
-    <form id="field-{{field.id}}-delete" class="signup-form-field-delete-form" action="{{ path('signup', {view: 'delete_form_field', form: form.id, field: field.id}) }}" data-partial-selector="#form-field-{{field.id}}" data-placement-selector="#form-field-{{field.id}}" method="post">
-        {{ html_nonce('delete_form_field', form, field) }}
-    </form>
+    {% set delete_form = controller.get_delete_form(field).createView() %}
+    {{ form_start(delete_form, {
+        id: 'field-' ~ field.id ~ '-delete',
+        action: path('signup', {view: 'delete_form_field', form: form.id, field: field.id}),
+        attr: {
+            class: 'signup-form-field-delete-form',
+            'data-partial-selector': '#form-field-' ~ field.id,
+            'data-placement-selector': '#form-field-' ~ field.id,
+        },
+    }) }}
+        {% do delete_form.submit.setRendered() %}{# We're rendering the button ourselves #}
+    {{ form_end(delete_form) }}
     
     <footer class="card-footer">
         <button type="submit" class="card-footer-item" form="field-{{field.id}}-update" data-auto-submit-hidden>{{ __('Modify field') }}</button>

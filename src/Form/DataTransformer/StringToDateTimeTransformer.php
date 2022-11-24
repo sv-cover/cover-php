@@ -14,6 +14,10 @@ class StringToDateTimeTransformer extends DateTimeToStringTransformer
     public function reverseTransform($value): ?string
     {
         $transformed = parent::transform($value);
-        return empty($transformed) ? null : $transformed;
+
+        if (empty($transformed))
+            return null;
+
+        return $transformed;
     }
 }

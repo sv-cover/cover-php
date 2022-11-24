@@ -8,6 +8,7 @@ require_once 'src/framework/controllers/Controller.php';
 use App\Form\Type\SignUpFormType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class SignUpFormsController extends \Controller
 {
@@ -22,6 +23,31 @@ class SignUpFormsController extends \Controller
 		$this->entry_model = get_model('DataModelSignUpEntry');
 
 		parent::__construct($request, $router);
+	}
+
+	public function get_delete_form(\DataIter $iter = null)
+	{
+		$form = $this->createFormBuilder($iter)
+			->add('submit', SubmitType::class, ['label' => 'Delete'])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
+	}
+
+	public function get_field_form()
+	{
+		// Field form is not initiated with an iter for data, as field_type is needed to create an iter.
+		$form = $this->createFormBuilder()
+			->add('field_type', ChoiceType::class, [
+				'choices' => array_flip(array_map(
+					function($type) { return $type['label']; },
+					$this->field_model->field_types
+				)),
+			])
+			->add('submit', SubmitType::class, ['label' => 'Add field'])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
 	protected function run_impl()
@@ -66,18 +92,33 @@ class SignUpFormsController extends \Controller
 
 	public function run_delete_entries()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_read($form))
+		if (!get_policy($this->form_model)->user_can_read($iter))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('delete_entries', $form) && !empty($_POST['entries']))
-			foreach ($_POST['entries'] as $entry_id)
-				if ($entry = $this->entry_model->find_one(['form_id' => $form['id'], 'id' => $entry_id]))
-					if (get_policy($this->entry_model)->user_can_delete($entry))
-						$this->entry_model->delete($entry);
+		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'form_' . $iter['id'] . '_delete_entries'])
+			->add('entries', ChoiceType::class, [
+				'expanded' => true,
+				'multiple' => true,
+				'choices' => $iter->get_entries(),
+				'choice_label' => function ($entity) {
+					return $entity['id'];
+				},
+				'choice_value' => function ($entity) {
+					return $entity['id'];
+				},
+			])
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
 
-		return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $form['id']]));
+		if ($form->isSubmitted() && $form->isValid())
+			foreach ($form->get('entries')->getData() as $entry)
+				if (get_policy($this->entry_model)->user_can_delete($entry))
+					$this->entry_model->delete($entry);
+
+		return $this->view->redirect($this->generate_url('signup', ['view' => 'list_entries', 'form' => $iter['id']]));
 	}
 
 	public function run_create_entry()
@@ -254,48 +295,52 @@ class SignUpFormsController extends \Controller
 
 		$errors = new \ErrorSet();
 
-		// if ($this->_form_is_submitted('update_form', $form))
 		if ($form->isSubmitted() && $form->isValid())
 			if ($this->_process_update($this->form_model, $iter))
 				$success = true;
-			// if ($this->_update($this->form_model, $form, $_POST, $errors))
 
 		return $this->view->render('update_form_form.twig',  [
 			'iter' => $iter,
 			'form' => $form->createView(),
+			'field_form' => $this->get_field_form()->createView(),
 		]);
 	}
 
 	public function run_delete_form()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_delete($form))
+		if (!get_policy($this->form_model)->user_can_delete($iter))
 			throw new \UnauthorizedException('You cannot delete this form.');
 
-		if ($this->_form_is_submitted('delete_form', $form))
-			if ($this->form_model->delete($form))
+		$form = $this->get_delete_form($iter);
+
+		if ($form->isSubmitted() && $form->isValid())
+			if ($this->form_model->delete($iter))
 				return $this->view->redirect($this->generate_url('signup', ['view' => 'list_forms']));
 
-		return $this->view->render('delete_form.twig', compact('form'));
+		return $this->view->render('delete_form.twig', ['form' => $form->createView(), 'iter' => $iter]);
 	}
 
 	public function run_create_form_field()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_update($form))
+		if (!get_policy($this->form_model)->user_can_update($iter))
 			throw new \UnauthorizedException('You cannot update this form.');
 
-		if ($this->_form_is_submitted('create_form_field', $form)) {
-			$field = $form->new_field($_POST['field_type']);
+		$form = $this->get_field_form();
+
+		if ($form->isSubmitted() && $form->isValid())
+		{
+			$field = $iter->new_field($form->get('field_type')->getData());
 			$this->field_model->insert($field);
 
 			if (isset($_GET['action']) && $_GET['action'] === 'add')
-				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $form, 'errors' => new \ErrorSet()]);
+				return $this->view->render('single_field.twig', ['field' => $field, 'form' => $iter]);
 		}
 
-		return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $form['id']]));
+		return $this->view->redirect($this->generate_url('signup', ['view' => 'update_form', 'form' => $iter['id']]));
 	}
 
 	public function run_update_form_field()
@@ -328,58 +373,73 @@ class SignUpFormsController extends \Controller
 
 	public function run_delete_form_field()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_update($form))
+		if (!get_policy($this->form_model)->user_can_update($iter))
 			throw new \UnauthorizedException('You cannot update this form.');
 
 		$field = $this->field_model->find_one([
 			'id' => $_GET['field'], 
-			'form_id' => $form['id']
+			'form_id' => $iter['id']
 		]);
 
 		if ($field === null)
 			throw new \NotFoundException('Field not found.');
 
-		if ($this->_form_is_submitted('delete_form_field', $form, $field))
+		$form = $this->get_delete_form($field);
+
+		if ($form->isSubmitted() && $form->isValid())
 		{
 			$this->field_model->delete($field);
 			return $this->view->redirect($this->generate_url('signup', [
 				'view' => 'restore_form_field',
-				'form' => $form['id'],
+				'form' => $iter['id'],
 				'field' => $field['id']
 			]));
 		}
 
-		return $this->view->render('delete_field.twig', compact('form', 'field'));
+		return $this->view->render('delete_field.twig', [
+			'form' => $form->createView(),
+			'iter' => $iter,
+			'field' => $field,
+		]);
 	}
 
 	public function run_restore_form_field()
 	{
-		$form = $this->form_model->get_iter($_GET['form']);
+		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_update($form))
+		if (!get_policy($this->form_model)->user_can_update($iter))
 			throw new \UnauthorizedException('You cannot update this form.');
 
 		$field = $this->field_model->find_one([
 			'id' => $_GET['field'],
-			'form_id' => $form['id'],
+			'form_id' => $iter['id'],
 			'deleted' => true
 		]);
 
 		if ($field === null)
 			throw new \NotFoundException('Field not found.');
 
-		if ($this->_form_is_submitted('restore_form_field', $form, $field))
+		$form = $this->createFormBuilder($field)
+			->add('submit', SubmitType::class, ['label' => 'Restore'])
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid())
 		{
 			$this->field_model->restore($field);
 			return $this->view->redirect($this->generate_url('signup', [
 				'view' => 'update_form',
-				'form' => $form['id']
+				'form' => $iter['id']
 			]));
 		}
 
-		return $this->view->render('restore_field.twig', compact('form', 'field'));
+		return $this->view->render('restore_field.twig', [
+			'form' => $form->createView(),
+			'iter' => $iter,
+			'field' => $field,
+		]);
 	}
 
 	public function run_update_form_field_order()

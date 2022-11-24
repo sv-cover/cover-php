@@ -20,14 +20,14 @@
 
 {# Cache submit button #}
 {% set submit_button = form_widget(form.submit, {
-	'label': entry.has_id ? __('Modify entry') : __('Sign me up'),
-	'attr': {'form': 'signup-entry-form'},
+	label: entry.has_id ? __('Modify entry') : __('Sign me up'),
+	attr: {'form': 'signup-entry-form'},
 }) %}
 
 {% block entry_form_form %}
 	{{ form_start(form, {
-		'id': 'signup-entry-form',
-		'action': entry.has_id ? path('signup', {view: 'update_entry', form: iter.id, entry: entry.id}) : path('signup', {view: 'create_entry', form: iter.id}),
+		id: 'signup-entry-form',
+		action: entry.has_id ? path('signup', {view: 'update_entry', form: iter.id, entry: entry.id}) : path('signup', {view: 'create_entry', form: iter.id}),
 	}) }}
 		{# Global errors #}
 		{{ form_errors(form) }}
