@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -34,7 +34,7 @@ class PageFormType extends AbstractType
             if ($this->canSetTitel($iter))
                 $form->add('titel', TextType::class, [
                     'label' => __('Identifier'),
-                    'constraints' => new NotBlank(),
+                    'constraints' => new Assert\NotBlank(),
                     'help' => __('This value is often used in the code base to refer to a specific page.'),
                 ]);
 

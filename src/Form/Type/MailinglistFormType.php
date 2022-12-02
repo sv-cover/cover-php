@@ -14,8 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class MailinglistFormType extends AbstractType
@@ -25,7 +24,7 @@ class MailinglistFormType extends AbstractType
         $builder
             ->add('adres', EmailType::class, [
                 'label' => __('List e-mail address'),
-                'constraints' => [new NotBlank(), new Email()],
+                'constraints' => [new Assert\NotBlank(), new Assert\Email()],
                 'attr' => [
                     'placeholder' => __('e.g. listname@svcover.nl'),
                 ]
@@ -51,14 +50,14 @@ class MailinglistFormType extends AbstractType
             ])
             ->add('naam', TextType::class, [
                 'label' => __('Name'),
-                'constraints' => new NotBlank(),
+                'constraints' => new Assert\NotBlank(),
             ])
             ->add('omschrijving', TextareaType::class, [
                 'label' => __('Description'),
             ])
             ->add('tag', TextType::class, [
                 'label' => __('Tag'),
-                'constraints' => new NotBlank(),
+                'constraints' => new Assert\NotBlank(),
                 'help' => __('Puts \'[<tag>]\' before the email subject, leave blank for none.')
             ])
             ->add('publiek', CheckboxType::class, [

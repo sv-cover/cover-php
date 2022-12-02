@@ -6,7 +6,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class DeviceSessionFormType extends AbstractType
@@ -16,7 +16,7 @@ class DeviceSessionFormType extends AbstractType
         $builder
             ->add('device_name', TextType::class, [
                 'label' => __('Device name'),
-                'constraints' => new NotBlank(),
+                'constraints' => new Assert\NotBlank(),
             ])
             ->add('device_enabled', CheckboxType::class, [
                 'label'    => __('Device enabled'),

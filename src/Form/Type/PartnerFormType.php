@@ -8,8 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Url;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 use App\Form\DataTransformer\IntToBooleanTransformer;
@@ -22,7 +21,7 @@ class PartnerFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => __('Name'),
-                'constraints' => new NotBlank(),
+                'constraints' => new Assert\NotBlank(),
             ])
             ->add('type', ChoiceType::class, [
                 'label' => __('Type'),
@@ -35,7 +34,7 @@ class PartnerFormType extends AbstractType
             ->add('url', UrlType::class, [
                 'label' => __('URL'),
                 'default_protocol' => null, // if not, it renders as text type…
-                'constraints' => new Url(),
+                'constraints' => new Assert\Url(),
             ])
             ->add('logo_url', FilemanagerFileType::class, [
                 'label' => __('Logo'),

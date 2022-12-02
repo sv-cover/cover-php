@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class AnnouncementFormType extends AbstractType
@@ -27,7 +27,7 @@ class AnnouncementFormType extends AbstractType
             ])
             ->add('subject', TextType::class, [
                 'label' => __('Subject'),
-                'constraints' => new NotBlank(),
+                'constraints' => new Assert\NotBlank(),
             ])
             ->add('message', MarkupType::class, [
                 'label' => __('Message'),

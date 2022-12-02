@@ -12,8 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Url;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class VacancyFormType extends AbstractType implements EventSubscriberInterface
@@ -23,7 +22,7 @@ class VacancyFormType extends AbstractType implements EventSubscriberInterface
         $builder
             ->add('title', TextType::class, [
                 'label' => __('Title'),
-                'constraints' => new NotBlank(),
+                'constraints' => new Assert\NotBlank(),
             ])
             ->add('partner_id', IntegerType::class, [
                 'label' => __('Company'),
@@ -56,7 +55,7 @@ class VacancyFormType extends AbstractType implements EventSubscriberInterface
                 'label' => __('URL'),
                 'required' => false,
                 'default_protocol' => null, // if not, it renders as text type…
-                'constraints' => new Url(),
+                'constraints' => new Assert\Url(),
             ])
             ->add('description', MarkupType::class, [
                 'label' => __('Description'),
