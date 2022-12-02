@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
 
-class VacancyType extends AbstractType implements EventSubscriberInterface
+class VacancyFormType extends AbstractType implements EventSubscriberInterface
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

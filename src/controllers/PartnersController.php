@@ -1,14 +1,14 @@
 <?php
 namespace App\Controller;
 
-use App\Form\Type\PartnerType;
+use App\Form\Type\PartnerFormType;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 class PartnersController extends \ControllerCRUDForm
 {
     protected $view_name = 'partners';
-    protected $form_type = PartnerType::class;
+    protected $form_type = PartnerFormType::class;
 
     public function __construct($request, $router)
 	{

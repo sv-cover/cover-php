@@ -4,8 +4,8 @@ namespace App\Controller;
 require_once 'src/framework/member.php';
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
-use App\Form\Type\MailinglistType;
-use App\Form\Type\MemberType;
+use App\Form\Type\MailinglistFormType;
+use App\Form\Type\MemberIdType;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -28,7 +28,7 @@ class MailingListsController extends \ControllerCRUDForm
 
 	protected $view_name = 'mailinglists';
 
-	protected $form_type = MailinglistType::class;
+	protected $form_type = MailinglistFormType::class;
 
 	public function __construct(Request $request = null, RouterInterface $router = null)
 	{
@@ -178,7 +178,7 @@ class MailingListsController extends \ControllerCRUDForm
 			throw new \UnauthorizedException('You cannot modify this mailing list');
 
 		$form = $this->createFormBuilder()
-			->add('member_id', MemberType::class, [
+			->add('member_id', MemberIdType::class, [
 				'label' => __('Member'),
 			])
 			->add('submit', SubmitType::class)

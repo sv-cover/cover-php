@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
-class AnnouncementType extends AbstractType
+class AnnouncementFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

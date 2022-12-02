@@ -1,14 +1,14 @@
 <?php
 namespace App\Controller;
 
-use App\Form\Type\DeviceSessionType;
+use App\Form\Type\DeviceSessionFormType;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 class DeviceSessionsController extends \ControllerCRUDForm
 {
     protected $view_name = 'devicesessions';
-    protected $form_type = DeviceSessionType::class;
+    protected $form_type = DeviceSessionFormType::class;
 
 	public function __construct($request, $router)
 	{

@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
-class MailinglistType extends AbstractType
+class MailinglistFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

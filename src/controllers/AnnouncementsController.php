@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\Form\Type\AnnouncementType;
+use App\Form\Type\AnnouncementFormType;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
@@ -12,7 +12,7 @@ require_once 'src/framework/controllers/ControllerCRUDForm.php';
 class AnnouncementsController extends \ControllerCRUDForm
 {
 	protected $view_name = 'announcements';
-    protected $form_type = AnnouncementType::class;
+    protected $form_type = AnnouncementFormType::class;
 
 	public function __construct($request, $router)
 	{

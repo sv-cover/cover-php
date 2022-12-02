@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints\Url;
 use App\Form\DataTransformer\IntToBooleanTransformer;
 
 
-class PartnerType extends AbstractType
+class PartnerFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -37,10 +37,10 @@ class PartnerType extends AbstractType
                 'default_protocol' => null, // if not, it renders as text type…
                 'constraints' => new Url(),
             ])
-            ->add('logo_url', FilemanagerType::class, [
+            ->add('logo_url', FilemanagerFileType::class, [
                 'label' => __('Logo'),
             ])
-            ->add('logo_dark_url', FilemanagerType::class, [
+            ->add('logo_dark_url', FilemanagerFileType::class, [
                 'label' => __('Logo (dark mode)'),
                 'required' => false,
                 'help' => __('Dark mode version of the logo, defaults to the normal logo if not provided'),

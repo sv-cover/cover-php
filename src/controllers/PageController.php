@@ -1,14 +1,14 @@
 <?php
 namespace App\Controller;
 
-use App\Form\Type\PageType;
+use App\Form\Type\PageFormType;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 class PageController extends \ControllerCRUDForm
 {
 	protected $view_name = 'page';
-    protected $form_type = PageType::class;
+    protected $form_type = PageFormType::class;
 
 	public function __construct($request, $router)
 	{
@@ -22,7 +22,7 @@ class PageController extends \ControllerCRUDForm
 		$iter = parent::new_iter();
 
 		// Default to owner = board
-		if (PageType::canSetCommitteeId($iter))
+		if (PageFormType::canSetCommitteeId($iter))
 			$iter['committee_id'] = COMMISSIE_BESTUUR;
 
 		return $iter;

@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Form\DataTransformer\StringToDateTimeTransformer;
 
 
-class SignUpFormType extends AbstractType
+class SignUpFormFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

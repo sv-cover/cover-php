@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Form type for DataModelEditable (aka "Page")
  */
-class PageType extends AbstractType
+class PageFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
