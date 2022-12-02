@@ -1,5 +1,5 @@
 Subject: $member[voornaam] is interested in $committee[naam]
-From: webcie@ai.rug.nl
+From: Study Association Cover <noreply@svcover.nl>
 Cc: $member[email]
 Reply-to: $member[email]
 Content-Type: text/html; charset=UTF-8

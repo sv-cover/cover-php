@@ -1,5 +1,5 @@
 Subject: [Cover] Bevestig je e-mailadres
-From: webcie@ai.rug.nl
+From: Study Association Cover <noreply@svcover.nl>
 Content-Type: text/html; charset=UTF-8
 
 <!DOCTYPE html>

@@ -1,5 +1,5 @@
 Subject: [Cover] You've signed up for $entry[form][agenda_item][kop]|markup_format_text
-From: webcie@ai.rug.nl
+From: Study Association Cover <noreply@svcover.nl>
 Content-Type: text/html; charset=UTF-8
 
 <!DOCTYPE html>

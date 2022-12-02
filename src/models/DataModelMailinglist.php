@@ -203,7 +203,7 @@ class DataModelMailinglist extends DataModel
 		$message = new \Cover\email\MessagePart();
 
 		$message->setHeader('From', 'Cover Mail Monkey <monkies@svcover.nl>');
-		$message->setHeader('Reply-To', 'Cover WebCie <webcie@ai.rug.nl>');
+		$message->setHeader('Reply-To', 'Cover WebCie <webcie@rug.nl>');
 		$message->addBody('text/plain', strip_tags($personalized_message));
 		$message->addBody('text/html', $personalized_message);
 

@@ -146,7 +146,7 @@ class LayoutViewHelper
 					'url' => 'https://sd.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'img' => '/images/applications/tutoring.svg',
+						'img' => '/images/applications/sd.png',
 					],
 				],
 				[
@@ -172,7 +172,7 @@ class LayoutViewHelper
 					'url' => 'https://tutoring.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'img' => '/images/applications/sd.png',
+						'img' => '/images/applications/tutoring.svg',
 					],
 				]
 			]

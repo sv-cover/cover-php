@@ -7,7 +7,7 @@
 		'report_errors' => true,
 		'show_exceptions' => true,
 		'show_queries' => false,
-		'report_to' => 'webcie@ai.rug.nl',
+		'report_to' => 'webcie@rug.nl',
 		
 		/* Bestuur */
 		'email_bestuur' => 'bestuur@svcover.nl',

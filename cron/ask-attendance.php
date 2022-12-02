@@ -28,7 +28,7 @@ foreach ($agenda_items as $agenda_item)
 	$subject = sprintf("Attendance of '%s'", $agenda_item['kop']);
 
 	$headers = array(
-		'From: webcie@ai.rug.nl',
+		'From: Study Association Cover <noreply@svcover.nl>',
 		'Reply-to: intern@svcover.nl');
 
 	mail($email_address, $subject, $email, implode("\r\n", $headers));
