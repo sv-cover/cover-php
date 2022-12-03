@@ -21,7 +21,10 @@ class FilemanagerFileType extends AbstractType
             'constraints' => [
                 new Length(['max' => 255]),
                 new FilemanagerFile(),
-            ]
+            ],
+            'attr' => [
+                'maxlength' => 255,
+            ],
         ]);
     }
 }

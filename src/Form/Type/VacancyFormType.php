@@ -1,21 +1,19 @@
 <?php
 namespace App\Form\Type;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
-class VacancyFormType extends AbstractType implements EventSubscriberInterface
+class VacancyFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -64,29 +62,25 @@ class VacancyFormType extends AbstractType implements EventSubscriberInterface
         ;
 
         // Telling the form builder about the event subscriber used to validate the partner xor requirement
-        $builder->addEventSubscriber($this);
-    } 
-
-    public static function getSubscribedEvents()
-    {
-        // TODO: see if this works better https://www.strangebuzz.com/en/snippets/add-a-custom-conditional-validation-on-a-symfony-form
-        return [
-            FormEvents::SUBMIT => 'validatePartner',
-        ];
+        // $builder->addEventSubscriber($this);
     }
- 
-    public function validatePartner(FormEvent $event)
+
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $submittedData = $event->getData();
- 
-        if (!(empty($submittedData['partner_id']) xor empty($submittedData['partner_name']))) {
-            // This will be a global error message on the form, not on any specific field
-            throw new TransformationFailedException(
-                'either partner_id or partner_name must be set',
-                0, // code
-                null, // previous
-                __('Either Company or Partner name must be set, but not both.'), // user message
-            );
+        // Validate iter, so we can validate constraints depending on other fields.
+        $resolver->setDefaults([
+            'constraints' => [
+                new Assert\Callback([$this, 'validate_iter']),
+            ],
+        ]);
+    }
+
+    public function validate_iter(\DataIterVacancy $iter, ExecutionContextInterface $context): void
+    {
+        if (!(empty($iter['partner_id']) xor empty($iter['partner_name']))) {
+            $context->buildViolation(__('Either Company or Partner name must be set, but not both.'))
+                ->atPath('partner_name') // partner_id is hidden
+                ->addViolation();
         }
     }
 }

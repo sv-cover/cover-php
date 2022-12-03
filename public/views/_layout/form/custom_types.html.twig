@@ -33,7 +33,7 @@
     </div>
 {% endblock %}
 
-{% block filemanager_widget %}
+{% block filemanager_file_widget %}
     {%- set attr = attr|merge({
         'data-filemanager': true,
         'data-filemanager-cta': __("Choose an image…"),
@@ -42,7 +42,7 @@
     {{- block('form_widget_simple') -}}
 {% endblock %}
 
-{% block member_widget %}
+{% block member_id_widget %}
     {%- set attr = attr|merge({
         'data-autocomplete': 'member_id',
     }) -%}

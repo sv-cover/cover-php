@@ -23,21 +23,18 @@ class SignUpFormFormType extends AbstractType
         $builder
             ->add('open_on', DateTimeType::class, [
                 'label' => __('Open date'),
-                'constraints' => new Assert\DateTime(),
                 'help' => __("People will be able to register from this date. Make sure you don't open registrations before you finished configuring the sign-up form."),
                 'required' => false,
                 'widget' => 'single_text',
             ])
             ->add('closed_on', DateTimeType::class, [
                 'label' => __('Deadline'),
-                'constraints' => new Assert\DateTime(),
                 'help' => __("If you do not have a deadline, leave this field blank."),
                 'required' => false,
                 'widget' => 'single_text',
             ])
             ->add('participant_limit', IntegerType::class, [
                 'label' => __('Participant limit'),
-                'constraints' => new Assert\DateTime(),
                 'help' => __("If you do not have a participant limit, leave this field blank."),
                 'required' => false,
             ])

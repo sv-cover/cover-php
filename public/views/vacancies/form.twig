@@ -17,6 +17,8 @@
 			{{ form_widget(form.partner_name, {'attr': {'data-autocomplete': 'partner_name','data-autocomplete-src': path('partners', {view: 'autocomplete', search: ''})}, 'required': true}) }} {# the combined partner field is required, even if it's parts aren't #}
 			{{ form_widget(form.partner_id, {'attr': {'data-partner-id-field': '','data-partner-name': iter.partner ? iter.partner.name : '', 'hidden': ''}}) }}
 		</div>
+		{{ form_errors(form.partner_name) }}
+		{{ form_errors(form.partner_id) }}
 		<p class="help">
 			{{ __("Select autocompleted partner, or type the name of the company if there's no partner for this company.") }}
 		</p>

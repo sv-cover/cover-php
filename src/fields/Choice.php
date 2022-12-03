@@ -89,13 +89,13 @@ class Choice implements \SignUpFieldType
 						return '';
 					return $value[0];
 				}
-            },
-            function ($value) {
-            	// We always expect an array
+			},
+			function ($value) {
+				// We always expect an array
 				if (is_array($value))
 					return $value;
 				return [$value];
-            },
+			},
 		));
 	}
 
