@@ -248,16 +248,14 @@
 			return $this->insert($new_item);
 		}
 		
-		public function propose_update(DataIterAgenda $replacement, DataIterAgenda $current)
+		public function propose_update(DataIterAgenda $iter)
 		{
-			if (!$current->has_id())
+			if (!$iter->has_id())
 				throw new InvalidArgumentException('The item to replace has no id');
-
-			if ($replacement->has_id())
-				throw new InvalidArgumentException('How come the proposed replacement already has an id?');
 			
-			$replacement->set('replacement_for', $current->get_id());
-			return $this->insert($replacement);
+			$iter->set('replacement_for', $iter->get_id());
+			$iter->set_id(null);
+			return $this->insert($iter);
 		}
 
 		public function accept_proposal(DataIterAgenda $proposal)

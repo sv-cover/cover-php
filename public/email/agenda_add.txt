@@ -1,4 +1,4 @@
-$member_naam added the following Agenda Point on behalf of the $commissie_naam :
+$member_naam added the following event on behalf of the $commissie_naam :
 
 Name:     $kop
 From:     $van
@@ -7,10 +7,9 @@ Location: $locatie
 
 $beschrijving
 
-You can approve (or decline) this agenda item on ROOT_DIR_URIagenda.php?view=moderate&agenda_id=$id .
+You can approve (or decline) this event on ROOT_DIR_URIagenda.php?view=moderate&agenda_id=$id .
 
 Kind Regards,
 
 
-The WebCie
-
+The Website

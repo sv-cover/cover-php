@@ -6,15 +6,19 @@
 	require_once 'src/framework/form.php';
 	require_once 'src/framework/webcal.php';
 	require_once 'src/framework/markup.php';
-	require_once 'src/framework/controllers/ControllerCRUD.php';
+	require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
+	use App\Form\Type\EventFormType;
 	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 	
-	class CalendarController extends \ControllerCRUD
+	class CalendarController extends \ControllerCRUDForm
 	{
 		protected $_var_id = 'agenda_id';
 
 		protected $view_name = 'calendar';
+
+	    protected $form_type = EventFormType::class;
 
 		public function __construct($request, $router)
 		{
@@ -177,81 +181,94 @@
 
 			return $changed;
 		}
-		
-		protected function _create(\DataIter $iter, array $data, array &$errors)
+
+		protected function _process_create(\DataIter $iter)
 		{
-			if (($data = $this->_check_values($iter, $errors)) === false)
-				return false;
+			// Huh, why are we checking again? Didn't we already check in the run_create() method?
+			// Well, yes, but sometimes a policy is picky about how you fill in the data!
+			if (!\get_policy($iter)->user_can_create($iter))
+				throw new \UnauthorizedException('You are not allowed to create this DataIter according to the policy.');
 
-			// Placeholders for e-mail
-			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
-				'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
-			);
+			// Some things break without end date (tot), so set end date to start date (van)
+			if (empty($iter['tot']))
+				$iter['tot'] = $iter['van'];
 
-			$iter->set_all($data);
-
-			$id = $this->model->propose_insert($iter, true);
+			$id = $this->model->propose_insert($iter);
 
 			$iter->set_id($id);
-				
-			$_SESSION['alert'] = __('The new calendar event is now waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
+
+			$_SESSION['alert'] = __('The new event is now waiting for approval. Once the board has accepted the event, it will be published on the website.');
+
+			$placeholders = [
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($iter['committee_id']),
+				'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
+			];
 
 			mail(
 				get_config_value('defer_email_to', get_config_value('email_bestuur')),
-				'Nieuw agendapunt ' . $data['kop'],
-				parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
-				"From: Study Association Cover <noreply@svcover.nl>\r\n");
+				'New event ' . $iter['kop'],
+				parse_email('agenda_add.txt', array_merge($iter->data, $placeholders, ['id' => $id])),
+				"From: Study Association Cover <noreply@svcover.nl>\r\n"
+			);
 
 			return true;
 		}
 
-		protected function _update(\DataIter $iter, array $data, array &$errors)
+		public function run_update(\DataIter $iter)
 		{
-			if (($data = $this->_check_values($iter, $errors)) === false)
-				return false;
+			if (!\get_policy($this->model)->user_can_update($iter))
+				throw new \UnauthorizedException('You are not allowed to edit this ' . get_class($iter) . '.');
 
-			$skip_confirmation = false;
+			$orig = \DataIterAgenda::from_iter($iter);
 
-			// If you update the facebook-id, description, image or location, no need to reconfirm.
-			if (!array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'image_url', 'locatie')))
-				$skip_confirmation = true;
+			$success = false;
 
-			// Placeholders for e-mail
-			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
-				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
+			$form = $this->get_form($iter);
 
-			// Previous exists and there is no need to let the board confirm it
-			if ($skip_confirmation)
-			{
-				foreach ($data as $field => $value)
-					$iter[$field] = $value;
+			if ($form->isSubmitted() && $form->isValid()) {
+				// We could set $skip_confirmation in one statement, but I find this more readable
+				$skip_confirmation = false;
 
-				$this->model->update($iter);
+				// If you update the facebook-id, description, image or location, no need to reconfirm.
+				if (!array_diff($this->_changed_values($orig, $iter->data), ['facebook_id', 'beschrijving', 'image_url', 'locatie']))
+					$skip_confirmation = true;
 
-				$_SESSION['alert'] = __('The changes you\'ve made to this activity have been published.');
+				// Unless the event was in the past, then we need confirmation as we most likely shouldn't be changing things anyway
+				if ((empty($orig['tot_datetime']) && $orig['van_datetime'] < new \DateTime()) || $orig['tot_datetime'] < new \DateTime())
+					$skip_confirmation = false;
+
+				// Previous exists and there is no need to let the board confirm it
+				if ($skip_confirmation)
+				{
+					$this->model->update($iter);
+
+					$_SESSION['alert'] = __("The changes you've made to this event have been published.");
+				}
+
+				// Previous item exists but it needs to be confirmed first.
+				else
+				{
+					$override_id = $this->model->propose_update($iter);
+
+					$_SESSION['alert'] = __('The changes to the event are waiting for approval. Once the board has accepted the changes, they will be published on the website.');
+
+					$placeholders = [
+						'commissie_naam' => get_model('DataModelCommissie')->get_naam($iter['committee_id']),
+						'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
+					];
+
+					mail(
+						get_config_value('defer_email_to', get_config_value('email_bestuur')),
+						'Updated event ' . $iter['kop'] . ($iter->get('kop') != $orig->get('kop') ? ' was ' . $orig->get('kop') : ''),
+						parse_email('agenda_mod.txt', array_merge($iter->data, $placeholders, ['id' => $override_id])),
+						"From: Study Association Cover <noreply@svcover.nl>\r\n"
+					);
+				}
+
+				$success = true;
 			}
 
-			// Previous item exists but it needs to be confirmed first.
-			else
-			{
-				$mod = $this->model->new_iter();
-
-				$mod->set_all($data);
-
-				$override_id = $this->model->propose_update($mod, $iter);
-
-				$_SESSION['alert'] = __('The changes to the calendar event are waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
-
-				mail(
-					get_config_value('defer_email_to', get_config_value('email_bestuur')),
-					'Gewijzigd agendapunt ' . $data['kop'] . ($mod->get('kop') != $iter->get('kop') ? ' was ' . $iter->get('kop') : ''),
-					parse_email('agenda_mod.txt', array_merge($data, $placeholders, array('id' => $override_id))),
-					"From: Study Association Cover <noreply@svcover.nl>\r\n");
-			}
-
-			return true;
+			return $this->view()->render_update($iter, $form, $success);
 		}
 
 		protected function _index()
@@ -396,12 +413,11 @@
 				$event->uid = $punt->get_id() . '@svcover.nl';
 				$event->start = new \DateTime($punt['van'], $timezone);
 
-				if ($punt['van'] != $punt['tot']) {
-					$event->end = new \DateTime($punt['tot'], $timezone);
-				}
-				else {
+				if (empty($punt['tot']) || $punt['van'] == $punt['tot']) {
 					$event->end = new \DateTime($punt['van'], $timezone);
 					$event->end->modify('+ 2 hour');
+				} else {
+					$event->end = new \DateTime($punt['tot'], $timezone);
 				}
 				
 				$event->summary = $punt['extern']
