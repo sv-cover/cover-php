@@ -48,144 +48,6 @@
 
 			return $this->generate_url('calendar', $parameters);
 		}
-		
-		public function _check_datum($name, $value)
-		{
-			/* If this is the tot field and we don't use tot
-			 * then set that value to null and return true
-			 */
-			if ($name == 'tot' && empty(trim($value)))
-				return null;
-			
-			try {
-				$date = new \DateTime($value);
-				if ($date < new \DateTime())
-					return false;
-				return $date->format('Y-m-d H:i');
-			} catch (\Exception $e) {
-				return false;
-			}
-		}
-		
-		public function _check_length($name, $value)
-		{
-			$lengths = array('kop' => 100, 'locatie' => 100);
-
-			if (!$value)
-				return false;
-			
-			if (isset($lengths[$name]) && strlen($value) > $lengths[$name])
-				return false;
-			
-			return $value;
-		}
-		
-		public function _check_locatie($name, $value)
-		{
-			$locatie = get_post('locatie');
-
-			if (empty(trim($locatie)))
-				return null;
-
-			return $this->_check_length('locatie', $locatie);
-		}
-		
-		public function _check_image_url($name, $value)
-		{
-			// Image is optional
-			if (empty(trim($value)))
-				return null;
-
-			// Max length == 255
-			if (strlen($value) > 255)
-				return false;
-
-			// Only accept image file (using naive extension check)
-			$ext = pathinfo(parse_url($value, PHP_URL_PATH), PATHINFO_EXTENSION);
-			$allowed_exts = get_config_value('filemanager_image_extensions', ['jpg', 'jpeg', 'png']);
-			if (in_array(strtolower($ext), $allowed_exts))
-				return $value;
-
-			return false;
-		}
-
-		public function _check_facebook_id($name, $value)
-		{
-			if (trim($value) == '')
-				return null;
-
-			$result = preg_match('/^https:\/\/www\.facebook\.com\/events\/(\d+)\//', $value, $matches);
-
-			if ($result)
-				$value = $matches[1];
-			
-			if (strlen($value) <= 20  && ctype_digit($value))
-				return $value;
-
-			return false;
-		}
-
-		public function _check_commissie($name, $value)
-		{
-			if (get_identity()->member_in_committee($value)
-				|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
-				return $value;
-			
-			return false;
-		}
-
-		protected function _check_values($iter, &$errors)
-		{
-			/* Check/format all the items */
-			$data = check_values(
-				array(
-					array('name' => 'kop', 'function' => array($this, '_check_length')),
-					'beschrijving',
-					array('name' => 'committee_id', 'function' => array($this, '_check_commissie')),
-					array('name' => 'van', 'function' => array($this, '_check_datum')),
-					array('name' => 'tot', 'function' => array($this, '_check_datum')),
-					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
-					array('name' => 'image_url', 'function' => array($this, '_check_image_url')),
-					array('name' => 'private', 'function' => 'check_value_checkbox'),
-					array('name' => 'extern', 'function' => 'check_value_checkbox'),
-					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
-				$errors);
-
-			if (count($errors) > 0)
-				return false;
-
-			if ($data['tot'] === null)
-				$data['tot'] = $data['van'];
-			
-			if (new \DateTime($data['van']) > new \DateTime($data['tot'])) {
-				$errors[] = 'tot';
-				return false;
-			}
-		
-			return $data;
-		}
-
-		public function _changed_values($iter, $data)
-		{
-			$changed = array();
-
-			foreach ($data as $field => $value)
-			{
-				$current = $iter[$field];
-
-				// Unfortunately, we need to 'normalize' the time fields for this to work
-				if ($field == 'van' || $field == 'tot') {
-					$current = strtotime($iter[$field]);
-					$value = strtotime($value);
-				}
-
-				if ($current != $value)
-					$changed[] = $field;
-			}
-
-			return $changed;
-		}
 
 		protected function _process_create(\DataIter $iter)
 		{
@@ -296,7 +158,10 @@
 		public function run_moderate(\DataIterAgenda $iter = null)
 		{
 			$events = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
-			return $this->view->render_moderate($events, $iter ? $iter['id'] : null);
+			return $this->view->render('moderate.twig', [
+				'iters' => $events,
+				'highlighted_id' => $iter ? $iter['id'] : null,
+			]);
 		}
 		
 		public function run_moderate_accept(\DataIterAgenda $iter)
@@ -462,11 +327,6 @@
 			return $this->view->render_json($locations, $limit);
 		}
 
-		public function run_preview()
-		{
-			return markup_parse($_POST['beschrijving']);
-		}
-
 		public function run_subscribe()
 		{
 			return $this->view->render('subscribe.twig');
@@ -475,7 +335,7 @@
 		public function run_slide()
 		{
 			$events = $this->model->get_agendapunten();
-			return $this->view->render_slide($events);
+			return $this->view->render('slide.twig', ['iters' => $events]);
 		}
 
 		public function get_parameter($key, $default=null)
