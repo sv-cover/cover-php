@@ -7,7 +7,7 @@ Location: $locatie
 
 $beschrijving
 
-You can approve (or decline) this event on ROOT_DIR_URIagenda.php?view=moderate&agenda_id=$id .
+You can approve (or decline) this event on ROOT_DIR_URIagenda.php?view=moderate&agenda_id=$id#event_$id .
 
 Kind Regards,
 

@@ -94,6 +94,44 @@
 				'agenda_id' => $this['id']
 			]);
 		}
+
+		public function get_updated_fields(\DataIterAgenda $other = null)
+		{
+			// Still allow comparison with any DataIterAgenda if provided as other
+			if (empty($this['replacement_for']) && empty($other))
+				return [];
+
+			if (empty($other))
+				$other = $this->model->get_iter($this['replacement_for']);
+
+			$updates = [];
+
+			foreach ($this->data as $field => $value)
+			{
+				if ($field === 'replacement_for' || $field === 'id' || substr($field, 0, 11) === 'committee__')
+					continue;
+
+				$other_value = $other[$field];
+
+				// Unfortunately, we need to 'normalize' the time fields for this to work
+				if ($field == 'van' || $field == 'tot')
+				{
+					$other_value = strtotime($other[$field]);
+					$value = strtotime($value);
+				}
+
+				if ($field == 'committee_id')
+				{
+					$other_value = ['id' => $other_value, 'name' => $other['committee__naam'], 'login' => $other['committee__login']];
+					$value = ['id' => $value, 'name' => $this['committee__naam'], 'login' => $this['committee__login']];
+				}
+
+				if ($other_value != $value)
+					$updates[$field] = [$value, $other_value];
+			}
+
+			return $updates;
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider

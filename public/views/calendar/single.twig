@@ -81,17 +81,33 @@
 
 {% if iter.is_proposal %}
 	<div class="notification is-danger">
-		{% if iter.replacement_for == 0 %}
-			<p >{{ __('This activity has not yet been published. It still needs to be accepted by the Board.') }}</p>
-		{% else %}
-			<p>{{ __('This revision of the activity has not yet been published.') }}</p>
-		{% endif %}
+		<div class="columns is-vcentered">
+			<div class="column has-text-centered-mobile">
+				{% if iter.replacement_for == 0 %}
+					<p>
+						{{ __('This event has not yet been published. It still needs to be accepted by the Board.') }}
+					</p>
+				{% else %}
+					<p>
+						{{ __('This revision of the event has not yet been published.') }}
+						<a href="{{ path('calendar', {agenda_id: iter.replacement_for}) }} ">{{ __('View original') }}</a>
+					</p>
+				{% endif %}
+			</div>
+			{% if global.policies.Agenda.user_can_moderate(iter) %}
+				<div class="column is-narrow has-text-centered-mobile">
+					<a href="{{ path('calendar', {view: 'moderate', agenda_id: iter.id}) }}#event_{{ iter.id }}" class="button is-white is-outlined">
+						{{ __('Moderate') }}
+					</a>
+				</div>
+			{% endif %}
+		</div>
 	</div>
 {% endif %}
 
 {% if mutation %}
 	<div class="notification is-danger">
-		<p>{{ __('There is <a href="%s">a change on this activity</a> that is not yet published.')|format(mutation.get_absolute_path()|e('html'))|raw }}</p>
+		<p>{{ __('There is an <a href="%s">unpublished change</a> for this event.')|format(mutation.get_absolute_path()|e('html'))|raw }}</p>
 	</div>
 {% endif %}
 

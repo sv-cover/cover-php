@@ -9,6 +9,11 @@
 	require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 	use App\Form\Type\EventFormType;
+	use App\Form\DataTransformer\IntToBooleanTransformer;
+
+	use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+	use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+	use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 	
@@ -18,7 +23,7 @@
 
 		protected $view_name = 'calendar';
 
-	    protected $form_type = EventFormType::class;
+		protected $form_type = EventFormType::class;
 
 		public function __construct($request, $router)
 		{
@@ -161,7 +166,7 @@
 			return $data;
 		}
 
-		protected function _changed_values($iter, $data)
+		public function _changed_values($iter, $data)
 		{
 			$changed = array();
 
@@ -184,10 +189,8 @@
 
 		protected function _process_create(\DataIter $iter)
 		{
-			// Huh, why are we checking again? Didn't we already check in the run_create() method?
-			// Well, yes, but sometimes a policy is picky about how you fill in the data!
 			if (!\get_policy($iter)->user_can_create($iter))
-				throw new \UnauthorizedException('You are not allowed to create this DataIter according to the policy.');
+				throw new \UnauthorizedException('You are not allowed to create events!');
 
 			// Some things break without end date (tot), so set end date to start date (van)
 			if (empty($iter['tot']))
@@ -230,7 +233,7 @@
 				$skip_confirmation = false;
 
 				// If you update the facebook-id, description, image or location, no need to reconfirm.
-				if (!array_diff($this->_changed_values($orig, $iter->data), ['facebook_id', 'beschrijving', 'image_url', 'locatie']))
+				if (!array_diff(array_keys($iter->get_updated_fields($orig)), ['facebook_id', 'beschrijving', 'image_url', 'locatie']))
 					$skip_confirmation = true;
 
 				// Unless the event was in the past, then we need confirmation as we most likely shouldn't be changing things anyway
@@ -290,74 +293,78 @@
 			return $punten;
 		}
 		
-		public function run_moderate(\DataIterAgenda $item = null)
+		public function run_moderate(\DataIterAgenda $iter = null)
 		{
-			if ($this->_form_is_submitted('moderate'))
-				if ($this->_moderate())
-					return $this->view->redirect($this->generate_url('calendar'));
-
-			$agenda_items = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
-
-			return $this->view->render_moderate($agenda_items, $item ? $item['id'] : null);
+			$events = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
+			return $this->view->render_moderate($events, $iter ? $iter['id'] : null);
 		}
 		
-		protected function _moderate()
+		public function run_moderate_accept(\DataIterAgenda $iter)
 		{
-			$cancelled = array();
+			if (!get_policy($this->model)->user_can_moderate($iter))
+				throw new \UnauthorizedException();
 
-			foreach ($_POST as $field => $value)
+			$builder = $this->createFormBuilder($iter, ['csrf_token_id' => 'event_accept_' . $iter['id']])
+				->add('private', CheckboxType::class, [
+					'label'    => __('Only visible to members'),
+					'required' => false,
+				])
+				->add('extern', CheckboxType::class, [
+					'label'    => __('This event is not organised by Cover'),
+					'required' => false,
+				])
+				->add('submit', SubmitType::class, ['label' => 'Accept event']);
+			$builder->get('private')->addModelTransformer(new IntToBooleanTransformer());
+			$builder->get('extern')->addModelTransformer(new IntToBooleanTransformer());
+			$form = $builder->getForm();
+			$form->handleRequest($this->get_request());
+
+			if ($form->isSubmitted() && $form->isValid())
+				$this->model->accept_proposal($iter);
+
+			return $this->view->redirect($this->generate_url('calendar', ['view' => 'moderate']));
+		}
+
+		public function run_moderate_reject(\DataIterAgenda $iter)
+		{
+			if (!get_policy($this->model)->user_can_moderate($iter))
+				throw new \UnauthorizedException();
+
+			$form = $this->createFormBuilder()
+				->add('reason', TextareaType::class, [
+					'label' => __('Reason for rejection'),
+					'required' => false,
+					'help' => __('This will be emailed to the committee.'),
+				])
+				->add('submit', SubmitType::class, ['label' => 'Reject event'])
+				->getForm();
+			$form->handleRequest($this->get_request());
+
+			if ($form->isSubmitted() && $form->isValid())
 			{
-				if (!preg_match('/action_([0-9]+)/i', $field, $matches))
-					continue;
+				/* Remove agendapunt and inform owner of the agendapunt */
+				$this->model->reject_proposal($iter);
 				
-				$id = $matches[1];
+				$data = $iter->data;
+				$data['member_name'] = member_full_name(null, IGNORE_PRIVACY);
+				$data['reason'] = $form->get('reason')->getData();
 
-				$iter = $this->model->get_iter($id);
+				$subject = 'Rejected event: ' . $iter['kop'];
+				$body = parse_email('agenda_cancel.txt', $data);
 				
-				if (!get_policy($this->model)->user_can_moderate($iter))
-					throw new \UnauthorizedException();
+				$committee_model = get_model('DataModelCommissie');
+				$email = get_config_value('defer_email_to', $committee_model->get_email($iter['committee_id']));
 
-				if ($value == 'accept') {
-					/* Accept agendapunt */
+				mail($email, $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\n");
 
-					// If it is marked private, set that perference first.
-					$iter['private'] = !empty($_POST['private_' . $iter['id']]) ? 1 : 0;
-					
-					$iter->update();
-					
-					$this->model->accept_proposal($iter);
-				} elseif ($value == 'cancel') {
-					/* Remove agendapunt and inform owner of the agendapunt */
-					$this->model->reject_proposal($iter);
-					
-					$data = $iter->data;
-					$data['member_naam'] = member_full_name(null, IGNORE_PRIVACY);
-					$data['reden'] = get_post('comment_' . $id);
-
-					$subject = 'Agendapunt ' . $iter['kop'] . ' geweigerd';
-					$body = parse_email('agenda_cancel.txt', $data);
-					
-					$commissie_model = get_model('DataModelCommissie');
-					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['committee_id']));
-
-					mail($email, $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\n");
-					$cancelled[] = $commissie_model->get_naam($iter['committee_id']);
-				}
+				$_SESSION['alert'] = sprintf(
+					__('The %s has been notified that their event has been rejected.'),
+					$committee_model->get_naam($iter['committee_id'])
+				);
+				return $this->view->redirect($this->generate_url('calendar', ['view' => 'moderate']));
 			}
-			
-			$cancelled_un = array_unique($cancelled);
-			$s = implode(', ', $cancelled_un);
 
-			if (count($cancelled_un) == 1)
-				if (count($cancelled) == 1) {
-					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar event.'), $s);
-				} else {
-					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar events.'), $s);
-				}
-			elseif (count($cancelled_un) > 0)
-				$_SESSION['alert'] = sprintf(__('The committees %s have been notified of the denying of the calendar events.'), $s);
-			
-			return true;
+			return $this->view->render('confirm_reject.twig', ['iter' => $iter, 'form' => $form->createView()]);
 		}
 
 		public function run_rsvp_status($iter)

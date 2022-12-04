@@ -81,7 +81,7 @@ class EventFormType extends AbstractType
                 'required' => false,
             ])
             ->add('extern', CheckboxType::class, [
-                'label'    => __('This activity is not organised by Cover'),
+                'label'    => __('This event is not organised by Cover'),
                 'required' => false,
             ])
             ->add('submit', SubmitType::class)
