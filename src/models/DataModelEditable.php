@@ -16,8 +16,14 @@
 				'content', // NL, not used anymore
 				'content_en',
 				'content_de', // not used anymore
+				'cover_image_url',
 				'last_modified'
 			];
+		}
+
+		public function get_cover_image($width=null)
+		{
+			return get_filemanager_url($this['cover_image_url'], $width);
 		}
 
 		public function get_committee()

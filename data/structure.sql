@@ -100,6 +100,7 @@ CREATE TABLE pages (
     content text,
     content_en text,
     content_de text,
+    cover_image_url character varying(255) DEFAULT NULL,
     last_modified timestamp without time zone DEFAULT NULL
 );
 
