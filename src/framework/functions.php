@@ -785,11 +785,19 @@
 		if ($value === null)
 			$cookie_time = 1;
 
-		$secure = !empty($_SERVER['HTTPS']);
+		$options = [
+			'expires' => $cookie_time,
+			'path' => '/',
+			'domain' => $domain, 
+			'httponly' => true,
+		];
 
-		$http_only = true;
+		if (!empty($_SERVER['HTTPS'])) {
+			$options['secure'] = true;
+			$options['samesite'] = 'None';
+		}
 
-		setcookie($name, $value, $cookie_time, '/', $domain, $secure, $http_only);
+		setcookie($name, $value, $options);
 
 		if ($cookie_time === 0 || $cookie_time > time())
 			$_COOKIE[$name] = $value;
