@@ -26,6 +26,31 @@
 			return get_filemanager_url($this['cover_image_url'], $width);
 		}
 
+		public function get_cover_image_orientation()
+		{
+			$filemanager_root = get_config_value('filemanager_root', 'https://filemanager.svcover.nl');
+			$resize_exts = get_config_value('filemanager_image_resize_extensions', ['jpg', 'jpeg', 'png']);
+
+			if (empty($this['cover_image_url']) || !in_array(pathinfo($this['cover_image_url'], PATHINFO_EXTENSION), $resize_exts))
+				return false; // Can't determine size
+
+			$result = file_get_contents(sprintf('%s/images/size?f=%s', $filemanager_root, urlencode($this['cover_image_url'])));
+			try {
+				$result = json_decode($result);
+				$width = $result->width;
+				$height = $result->height;
+			} catch (\Exception $e) {
+				return false;
+			}
+
+			if ($width == $height)
+				return 'square';
+			if ($width > $height)
+				return 'landscape';
+			else
+				return 'portrait';
+		}
+
 		public function get_committee()
 		{
 			return get_model('DataModelCommissie')->get_iter($this->data['committee_id']);

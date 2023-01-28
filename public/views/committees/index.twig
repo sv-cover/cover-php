@@ -18,9 +18,17 @@
 			<div class="vacancy-badge">{{ __('Looking for new members!') }}</div>
 		{% endif %}
 		
-		{% if committee.thumbnail %}
+
+		{% if committee.page.cover_image_url %}
 			<figure class="image">
-				<img loading="lazy" src="{{ committee.thumbnail }}" alt="Photo of {{ committee.naam }}">
+				<img 
+					loading="lazy"
+					srcset="{{ committee.page.get_cover_image(400) }} 400w,
+							{{ committee.page.get_cover_image(600) }} 600w"
+					sizes="100vw"
+					src="{{ committee.page.get_cover_image(600) }}"
+					alt="{{ __('Committee photo of %s')|format(committee.naam) }}"
+				>
 			</figure>
 		{% elseif committee.members|length > 0 %}
 			<div class="member-images columns is-gapless is-mobile">

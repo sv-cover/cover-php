@@ -1,4 +1,4 @@
-{% extends iter.photo and iter.photo.orientation == 'portrait' ? './_single_portrait.twig' : './_single_default.twig' %}
+{% extends iter.page.cover_image_url and iter.page.cover_image_orientation == 'portrait' ? './_single_portrait.twig' : './_single_default.twig' %}
 
 {% block title %}
 	{{ iter.naam }} – {{ parent() }}
