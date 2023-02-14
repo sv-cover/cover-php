@@ -1,6 +1,14 @@
 {% extends '@layout/layout.twig' %}
 {% import 'macros.twig' as macros %}
 
+{% block title %}
+    {{ iter.kop }} - Cover
+{% endblock %}
+
+{% block ogimage %}
+    {{ iter.get_image(1000) }}
+{% endblock %}
+
 {% block page %}
 <article class="section calendar-single">
 <div class="container has-sidebar block">
