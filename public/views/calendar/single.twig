@@ -2,7 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block title %}
-    {{ iter.kop }} - Cover
+    {% block title iter.kop ~ ' – ' ~ parent() %}
 {% endblock %}
 
 {% block ogimage %}
