@@ -13,12 +13,11 @@
 	<link rel="apple-touch-icon" href="/images/apple-touch-icon-180x180.png">
 	<meta name="msapplication-TileImage" content="/images/favicon-270x270.png">
 
-    <meta property="og:title" content="{% block title %}Cover{% endblock %}" />
+    <title>{% block title %}Cover{% endblock %}</title>
+    <meta property="og:title" content="{{ block('title') }}" />
     <meta property="og:image" content="{% block ogimage %}/images/ogimage.jpg{% endblock %}">
 
 	<link rel="search" href="/opensearch.xml"  type="application/opensearchdescription+xml" title="Cover">
-
-	<title>{% block title %}Cover{% endblock %}</title>
 
 	{% for stylesheet in view.stylesheets %}
 	<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">

@@ -1,9 +1,7 @@
 {% extends '@layout/layout.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block title %}
-    {% block title iter.kop ~ ' – ' ~ parent() %}
-{% endblock %}
+{% block title iter.kop ~ ' – ' ~ parent() %}
 
 {% block ogimage %}
     {{ iter.get_image(1000) }}
