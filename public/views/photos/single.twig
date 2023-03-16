@@ -35,13 +35,13 @@
     <div class="carousel is-animated">
         <figure class="image">
             <picture>
-                <source srcset="{{ photo.get_url(400, 400) }} 1x, {{ photo.get_url(800, 800) }} 2x" media="(max-width: 400px)">
-                <source srcset="{{ photo.get_url(600, 600) }} 1x, {{ photo.get_url(1200, 1200) }} 2x" media="(max-width: 600px)">
-                <source srcset="{{ photo.get_url(900, 900) }} 1x, {{ photo.get_url(1800, 1800) }} 2x" media="(max-width: 900px)">
-                <source srcset="{{ photo.get_url(1200, 1200) }} 1x, {{ photo.get_url(1800, 1800) }} 1.5x, {{ photo.get_url(2400, 2400) }} 2x"  media="(max-width: 1200px)">
-                <source srcset="{{ photo.get_url(1800, 1800) }} 1x" media="(max-width: 1800px)">
-                <source srcset="{{ photo.get_url(2400, 2400) }} 1x">
-                <img src="{{ photo.get_url(1800, 1800) }}"> 
+                <source srcset="{{ photo.get_url(400, 400, book.id) }} 1x, {{ photo.get_url(800, 800, book.id) }} 2x" media="(max-width: 400px)">
+                <source srcset="{{ photo.get_url(600, 600, book.id) }} 1x, {{ photo.get_url(1200, 1200, book.id) }} 2x" media="(max-width: 600px)">
+                <source srcset="{{ photo.get_url(900, 900, book.id) }} 1x, {{ photo.get_url(1800, 1800, book.id) }} 2x" media="(max-width: 900px)">
+                <source srcset="{{ photo.get_url(1200, 1200, book.id) }} 1x, {{ photo.get_url(1800, 1800, book.id) }} 1.5x, {{ photo.get_url(2400, 2400, book.id) }} 2x"  media="(max-width: 1200px)">
+                <source srcset="{{ photo.get_url(1800, 1800, book.id) }} 1x" media="(max-width: 1800px)">
+                <source srcset="{{ photo.get_url(2400, 2400, book.id) }} 1x">
+                <img src="{{ photo.get_url(1800, 1800, book.id) }}"> 
             </picture>
             <figcaption class="faces" hidden data-api-url="{{ path('photos.faces', {photo: photo.id}) }}">
                 <template class="face-template">

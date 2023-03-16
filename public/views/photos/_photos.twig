@@ -46,8 +46,8 @@
             >
                 <img 
                     loading="lazy"
-                    srcset="{{ photo.get_url(null, 300) }} 1x, {{ photo.get_url(null, 600) }} 2x"
-                    src="{{ photo.get_url(null, 300) }}"
+                    srcset="{{ photo.get_url(null, 300, context.book.id) }} 1x, {{ photo.get_url(null, 600, context.book.id) }} 2x"
+                    src="{{ photo.get_url(null, 300, context.book.id) }}"
                     {% if size %}width="{{ size[0] }}" height="{{ size[1] }}"{% endif %}
                 >
                 {% if photo.beschrijving %}
