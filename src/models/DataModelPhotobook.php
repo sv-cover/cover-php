@@ -153,9 +153,16 @@
 			return path_concat(get_config_value('path_to_photos'), $this->get('filepath'));
 		}
 
-		public function get_url($width = 0, $height = 0)
+		public function get_url($width = 0, $height = 0, $scope=null)
 		{
 			$router = get_router();
+			if (!empty($scope))
+				return $router->generate('photos.photo.scaled', [
+					'photo' => $this->get_id(),
+					'width' => (int) $width,
+					'height' => (int) $height,
+					'book' => $scope,
+				]);
 			return $router->generate('photos.scaled', [
 				'photo' => $this->get_id(),
 				'width' => (int) $width,

@@ -185,6 +185,13 @@ photos.privacy:
   defaults:
     view: read
 
+photos.photo.scaled:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/scaled/{width<\d+>}/{height<\d+>}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: scaled
+    height: null
+
 # 'photos' and 'photos.photo' come after all the others to prevent conflict with the view parameter
 photos.photo:
   path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/{view}

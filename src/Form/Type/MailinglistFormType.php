@@ -23,7 +23,7 @@ class MailinglistFormType extends AbstractType
     {
         $builder
             ->add('adres', EmailType::class, [
-                'label' => __('List e-mail address'),
+                'label' => __('List email address'),
                 'constraints' => [new Assert\NotBlank(), new Assert\Email()],
                 'attr' => [
                     'placeholder' => __('e.g. listname@svcover.nl'),
