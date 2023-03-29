@@ -23,11 +23,19 @@
             </div>
         </div>
     </div>
-
     
-    {% if committee.photo %}
+    {% if iter.page.cover_image_url %}
         <figure class="image">
-            <img src="{{ committee.photo.url }}" alt="Photo of {{ committee.naam }}">
+            <img 
+                srcset="{{ iter.page.get_cover_image(400) }} 400w,
+                        {{ iter.page.get_cover_image(600) }} 600w,
+                        {{ iter.page.get_cover_image(1000) }} 1000w,
+                        {{ iter.page.get_cover_image(1600) }} 1600w,
+                        {{ iter.page.get_cover_image(1920) }} 1920w"
+                sizes="100vw"
+                src="{{ iter.page.get_cover_image(1920) }}"
+                alt="{{ __('Committee photo of %s')|format(iter.naam) }}"
+            >
         </figure>
     {% elseif committee.members|length > 0 %}
         <div class="member-images columns is-gapless is-mobile">

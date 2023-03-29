@@ -90,51 +90,6 @@
 			return get_model('DataModelCommissie')->get_email_addresses($this);
 		}
 
-		public function get_thumbnail()
-		{
-			return self::find_image(array(
-				'/images/committees/' . $this->get('login') . 'tn.gif',
-				'/images/committees/' . $this->get('login') . 'tn.png',
-				'/images/committees/' . $this->get('login') . 'tn.jpg',
-				'/images/committees/logos/' . $this->get('login') . '.png'
-			));
-		}
-
-		public function get_photo()
-		{
-			$path = self::find_image(array(
-				'/images/committees/' . $this->get('login') . '.gif',
-				'/images/committees/' . $this->get('login') . '.png',
-				'/images/committees/' . $this->get('login') . '.jpg'
-			));
-
-			return $path === null ? null : [
-				'url' => $path,
-				'orientation' => self::get_orientation($path)
-			];
-		}
-
-		static private function find_image($search_paths, $base_path='public/')
-		{
-			foreach ($search_paths as $path)
-				if (file_exists($base_path . $path))
-					return $path;
-
-			return null;
-		}
-
-		static private function get_orientation($path, $base_path='public/')
-		{
-			list($width, $height) = getimagesize($base_path . $path);
-
-			if ($width == $height)
-				return 'square';
-			if ($width > $height)
-				return 'landscape';
-			else
-				return 'portrait';
-		}
-
 		public function is_type($type)
 		{
 			if ($type === 'committee')

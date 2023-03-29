@@ -9,13 +9,21 @@
 <div class="columns">
 	<div class="column committe-photo-portrait">
 		<figure class="image">
-			<img src="{{ iter.photo.url }}"  alt="{{ __('Photo of %s')|format(iter.naam) }}">
+			<img 
+				srcset="{{ iter.page.get_cover_image(400) }} 400w,
+						{{ iter.page.get_cover_image(600) }} 600w,
+						{{ iter.page.get_cover_image(1000) }} 1000w,
+						{{ iter.page.get_cover_image(1600) }} 1600w"
+				sizes="50vw" {# Half of default #}
+				src="{{ iter.page.get_cover_image(1600) }}"
+				alt="{{ __('Committee photo of %s')|format(iter.naam) }}"
+			>
 		</figure>
 	</div>
 	<div class="column is-content">
 		{% block committee_controls %}{% endblock %}
 
-		<header class="committee-header cover-thumbnail {% if iter.photo %}has-image{% endif %} is-hidden-widescreen is-block-touch is-block-desktop-only">
+		<header class="committee-header cover-thumbnail {% if iter.page.cover_image_url %}has-image{% endif %} is-hidden-widescreen is-block-touch is-block-desktop-only">
 			<div class="overlay is-bottom">
 				<div class="name boxed-title-wrapper">
 					<h1 class="boxed-title is-size-4 is-size-5-mobile">
@@ -23,9 +31,17 @@
 					</h1>
 				</div>
 			</div>
-			{% if iter.photo %}
+			{% if iter.page.cover_image_url %}
 				<figure class="image">
-					<img src="{{ iter.photo.url }}"  alt="{{ __('Photo of %s')|format(iter.naam) }}">
+					<img 
+						srcset="{{ iter.page.get_cover_image(400) }} 400w,
+								{{ iter.page.get_cover_image(600) }} 600w,
+								{{ iter.page.get_cover_image(1000) }} 1000w,
+								{{ iter.page.get_cover_image(1600) }} 1600w"
+						sizes="100vw"
+						src="{{ iter.page.get_cover_image(1600) }}"
+						alt="{{ __('Committee photo of %s')|format(iter.naam) }}"
+					>
 				</figure>
 			{% endif %}
 		</header>

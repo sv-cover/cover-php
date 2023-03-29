@@ -7,14 +7,16 @@
 <div class="career">
     <header class="hero has-image is-medium is-thumbnail">
         <figure class="hero-image">
-            <img 
-                srcset="{{ link_static('images/career/header_480w.jpg') }} 480w,
-                        {{ link_static('images/career/header_960w.jpg') }} 960w,
-                        {{ link_static('images/career/header_1920w.jpg') }} 1920w"
-                sizes="100vw"
-                src="{{ link_static('images/career/header_1920w.jpg') }}"
-                alt="{{ __('Photo of people seated around a conference table during a networking event.') }}"
-            >
+            {% if header.cover_image_url %}
+                <img 
+                    srcset="{{ header.get_cover_image(480) }} 480w,
+                            {{ header.get_cover_image(960) }} 960w,
+                            {{ header.get_cover_image(1200) }} 1200w,
+                            {{ header.get_cover_image(1920) }} 1920w"
+                    sizes="100vw"
+                    src="{{ header.get_cover_image(1920) }}"
+                >
+            {% endif %}
         </figure>
         <div class="hero-body">
             <div class="container is-content-optimized">

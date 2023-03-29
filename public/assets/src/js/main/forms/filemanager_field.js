@@ -53,6 +53,9 @@ class FilemanagerField {
      *         i.fa
      *       span.file-label
      *     span.file-name
+     *     button.button // only visible if field is optional
+     *       span.icon
+     *         i.fas.fa-times
      */
     initUI(options) {
         // Init wrappers
@@ -106,7 +109,25 @@ class FilemanagerField {
             this.fileNameElement = fileNameElement;
         }
 
-        // Construct main component
+
+        // Construct delete button
+        let deleteIconElement = document.createElement('span');
+        deleteIconElement.classList.add('icon');
+
+        let deleteIconFaElement = document.createElement('i');
+        deleteIconFaElement.classList.add('fas', 'fa-times');
+
+        let deleteButtonElement = document.createElement('button');
+        deleteButtonElement.classList.add('button');
+        deleteButtonElement.ariaLabel = 'Delete file';
+        deleteButtonElement.type = 'button';
+
+        deleteIconElement.appendChild(deleteIconFaElement);
+        deleteButtonElement.appendChild(deleteIconElement);
+
+        labelElement.appendChild(deleteButtonElement);
+
+        // Construct entire component
         containerElement.appendChild(labelElement);
 
         // Place in DOM
@@ -115,14 +136,18 @@ class FilemanagerField {
         // Store stuff for later access
         this.element = containerElement;
         this.inputElement = inputElement;
+        this.deleteElement = deleteButtonElement;
+
+        // Set delete visibility. Only visible if a file is selected and the field is optional.
+        this.deleteElement.hidden = (!this.inputElement.value || this.inputElement.required);
     }
 
     initModal() {
         // Init iframe and modal
         let src = new URL(`${this.filemanagerUrl}/fileman`);
-        if (this.element.value) {
+        if (this.inputElement.value) {
             let searchParams = src.searchParams;
-            searchParams.set('selected', this.element.value);
+            searchParams.set('selected', this.inputElement.value);
             src.search = searchParams.toString();
         }
         const body = `<iframe src="${src}" title="Filemanager Window"></iframe>`;
@@ -140,6 +165,7 @@ class FilemanagerField {
 
     setupEvents() {
         this.element.addEventListener('click', this.handleClick.bind(this));
+        this.deleteElement.addEventListener('click', this.handleDelete.bind(this));
         window.addEventListener('message', this.handleMessage.bind(this), false);
     }
 
@@ -152,6 +178,12 @@ class FilemanagerField {
         this.modal.open();
     }
 
+    handleDelete(event) {
+        // Delete button is inside hitbox for regular click event, so don't propagate.
+        event.stopPropagation();
+        this.pickFile(null);
+    }
+
     handleMessage(event) {
         // Make sure the message originates from our own iframe
         if (this.filemanagerIframe.contentWindow === event.source) {
@@ -161,8 +193,11 @@ class FilemanagerField {
     }
 
     pickFile(file) {
+        let fileUrl = '';
+
         // Derrive correct url
-        const fileUrl = `${file.fullPath}`;
+        if (file)
+            fileUrl = `${file.fullPath}`;
 
         // Set url everywhere
         this.inputElement.value = fileUrl;
@@ -170,6 +205,9 @@ class FilemanagerField {
             this.fileNameElement.innerText = fileUrl;
             this.fileNameElement.title = fileUrl;
         }
+
+        // Set delete visibility. Only visible if a file is selected and the field is optional.
+        this.deleteElement.hidden = (!this.inputElement.value || this.inputElement.required);
 
         // Close modal
         this.modal.close();

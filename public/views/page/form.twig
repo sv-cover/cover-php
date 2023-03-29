@@ -16,6 +16,7 @@
 		{{ form_row(form.committee_id) }}
 	{% endif %}
 	{{ form_row(form.content_en, {'attr': {'rows': 25}}) }}
+	{{ form_row(form.cover_image_url) }}
 	<div class="field">
 		<div class="control buttons">
 			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify page') : __('Create page')}) }}

@@ -24,6 +24,10 @@ class PageFormType extends AbstractType
                 'label' => __('Page Content'),
                 'required' => false,
             ])
+            ->add('cover_image_url', FilemanagerFileType::class, [
+                'label' => __('Image'),
+                'required' => false,
+            ])
             ->add('submit', SubmitType::class)
         ;
 

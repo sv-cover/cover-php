@@ -53,7 +53,10 @@ class PageController extends \ControllerCRUDForm
 
 	protected function _process_update(\DataIter $iter)
 	{
-		$content_fields = ['content_en'];
+		$content_fields = [
+			'cover_image_url' => 'photo',
+			'content_en' => 'content',
+		];
 
 		// Retrieve old data for diffing ($iter has already been updated by the form)
 		$old_iter = $this->model->get_iter($iter['id']);
@@ -65,32 +68,39 @@ class PageController extends \ControllerCRUDForm
 		// send a notification email to those who are interested.
 		if ($success)
 		{
-			foreach ($content_fields as $field)
+			$updates = [];
+			$subjects = [];
+
+			foreach ($content_fields as $field => $name)
 			{
 				// Only notify about changed content, skip equal stuff
 				if ($iter->data[$field] == $old_iter->data[$field])
 					continue;
 
-				$diff = implode("\n", [
-					'New content:',
+				$updates[] = sprintf(
+					"New %1\$s:\n%2\$s\n\nOld %1\$s:\n%3\$s",
+					$name,
 					$iter->data[$field],
-					'', '',
-					'Old content:',
-					$old_iter->data[$field]
-				]);
-				
-				$mail_data = $this->_prepare_mail($iter, $diff);
+					$old_iter->data[$field],
+				);
+				$subjects[] = sprintf('Page %s', $name);
+			}
 
-				$mail_data['taal'] = $field == 'content' ? 'nl' : 'en';
-				
-				if (!empty($mail_data['email']))
-				{
-					$body = parse_email('editable_edit.txt', $mail_data);
-					$subject = sprintf('Page %s has been updated on the Cover website', $mail_data['titel']);
+			// Collect all 
+			$mail_data = $this->_prepare_mail($iter, implode("\n\n---\n\n", $updates));
 
-					foreach ($mail_data['email'] as $email)
-						@mail($email, $subject, $body, "From: acdcee@svcover.nl\r\n");
-				}
+			if (!empty($mail_data['email']))
+			{
+				$body = parse_email('editable_edit.txt', $mail_data);
+
+				$subject = sprintf(
+					'[Cover website] %s updated: %s',
+					count($subjects) == 1 ? $subjects[0] :  'Page',
+					$mail_data['titel']
+				);
+	
+				foreach ($mail_data['email'] as $email)
+					@mail($email, $subject, $body, "From: acdcee@svcover.nl\r\n");
 			}
 		}
 

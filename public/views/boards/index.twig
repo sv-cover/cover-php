@@ -58,10 +58,18 @@
 
 <div class="block">
 {% for board in iters %}
-	<section id="{{ board.login }}" class="board {% if view.has_bestuursfoto(board) %}has-image{% endif %}">
-		{% if view.has_bestuursfoto(board) %}
+	<section id="{{ board.login }}" class="board {% if board.page.cover_image_url %}has-image{% endif %}">
+		{% if board.page.cover_image_url %}
 			<figure class="board-photo image">
-				<img src="{{ view.get_bestuursfoto(board) }}" alt="Photo of {{ board.page.get_title }}">
+				<img 
+					srcset="{{ board.page.get_cover_image(400) }} 400w,
+							{{ board.page.get_cover_image(600) }} 600w,
+							{{ board.page.get_cover_image(1000) }} 1000w,
+							{{ board.page.get_cover_image(1600) }} 1600w"
+					sizes="100vw"
+					src="{{ board.page.get_cover_image(1600) }}"
+					alt="Photo of {{ board.page.get_title }}"
+				>
 			</figure>
 		{% endif %}
 
@@ -81,7 +89,7 @@
 							{% if user_can_update board %}
 								<a href="{{ path('boards', {view: 'update', id: board.id}) }}" class="dropdown-item">{{ __('Modify board') }}</a>
 							{% endif %}
-							{% if user_can_update board %}
+							{% if user_can_update board.page %}
 								<a href="{{ path('page', {view: 'update', id: board.page.id}) }}" class="dropdown-item">{{ __('Modify content') }}</a>
 							{% endif %}
 						</div>
@@ -91,7 +99,7 @@
 			
 			<div class="content is-full-width">
 				<h2>{{ board.page.get_title }}</h2>
-				{{ view.parse_bestuursfoto(board, board.page.locale_content|parse_markup(1))|raw }}
+				{{ board.page.locale_content|parse_markup(1) }}
 			</div>
 		</div>
 	</section>
