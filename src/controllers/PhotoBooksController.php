@@ -519,8 +519,8 @@ class PhotoBooksController extends \Controller
 					continue;
 
 				// Skip things that are not files. Apparently, there are some of those…
-			    if (!is_file($path))
-			        continue;
+				if (!is_file($photo->get_full_path()))
+					continue;
 
 				// Skip photo's you cannot access
 				if (!get_policy($photo)->user_can_read($photo))
