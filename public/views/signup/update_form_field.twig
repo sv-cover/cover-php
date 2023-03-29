@@ -1,0 +1,17 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Modify form field') ~ ' – ' ~ parent() %}
+
+{% block content %}
+
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Modify form field') }}</h1>
+	</div>
+</header>
+
+<section class="block">
+	{{ field.render_configuration(view, {action: path('signup', {view: 'update_form_field', form: iter.id, field: field.id}), id: 'field-' ~ field.id ~ '-update'})|raw }}
+    <button type="submit" class="button is-primary" form="field-{{field.id}}-update">{{ __('Modify field') }}</button>
+</section>
+{% endblock %}

@@ -5,116 +5,37 @@
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Modify event') : __('Add an event') }}</h1>
 
-<form class="vertical-form" name="agenda_form" action="{{ (iter and iter.has_id) ? path('calendar', {view:  'update', agenda_id: iter.id}) : path('calendar', {view: 'create'}) }}" method="post">
-	{% if errors %}
-		<p class="notification is-danger">{{ __("You haven't filled in all fields correctly") }}</p>
-	{% endif %}
-
-	{% if iter.has_id %}
-		{{ html_nonce('update', iter) }}
-	{% else %}
-		{{ html_nonce('create', iter) }}
-	{% endif %}
-	
-	<div class="field">
-		{{ html_label(__('Title'), 'kop', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_input_text('kop', iter, maxlength=100, required=true) }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Committee'), 'committee_id', errors=errors, required=true) }}
-		<div class="control">
-			<div class="select">
-				{{ html_select_field('committee_id', view.available_committees, iter, required=true) }}
-			</div>
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Start'), 'van', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_input_datetime('van', iter, errors=errors, required=true) }}
-		</div>
-	</div>
-
-	<div class="field">
-		<label for="tot" class="label">
-			{{ __('End') }}
-		</label>
-		<div class="control" id="agenda_tot">
-			{{ html_input_datetime('tot', iter, errors=errors) }}
-		</div>
-	</div>
-
-	<div class="field">
-		<label for="locatie" class="label">
-			{{ __('Location') }}
-		</label>
-		<div class="control" id="agenda_locatie">
-			{# TODO: Url generateion depends on parameters not being shuffled, maybe implement some placeholder #}
-			{{ html_input_text('locatie', iter, maxlength=100, data_autocomplete='url', data_autocomplete_src=path('calendar', {view: 'suggest-location', limit: 100, search: ''}), data_autocomplete_max_results=15) }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Image'), 'image_url', errors=errors) }}
-		<div class="control" id="agenda_image_url">
-			{{ html_input_text('image_url', iter, maxlength=255, errors=errors, data_filemanager='true', data_filemanager_cta='Choose an image…', data_filemanager_url=get_config_value('filemanager_root', '')) }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Link to Facebook event'), 'facebook_id', errors=errors) }}
-		<div class="control">
-			{{ html_input_text('facebook_id', iter, size='20', errors=errors) }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Description'), 'beschrijving', errors=errors, required=true) }}
-		<div class="tabs-wrapper is-condensed">
-			<div class="tabs is-toggle">
-				<ul>
-					<li class="is-active">
-						<a href="#beschrijving-tab">{{ __('Raw') }}</a>
-					</li>
-					<li>
-						<a href="#beschrijving-preview-tab">{{ __('Preview') }}</a>
-					</li>
-				</ul>
-			</div>
-
-			<div class="tabs-content">
-				<div id="beschrijving-tab" class="is-active">
-					{{ html_textarea_field('beschrijving', iter, errors=errors, cols=50, rows=7) }}
-				</div>
-				<div id="beschrijving-preview-tab" class="content-preview box" data-preview-source="#beschrijving-tab textarea" data-preview-url="{{ path('calendar', {view: 'preview'}) }}">
-					<span class="loading">{{ __('Loading preview…') }}</span>
-				</div>
-			</div>
-		</div>
-	</div>
-			
-	<div class="field">
-		<div class="control">
-			{{ html_input_checkbox('private', iter, label=__('Only visible to members'), errors=errors) }}
-		</div>
-	</div>
-	
-	<div class="field">
-		<div class="control">
-			{{ html_input_checkbox('extern', iter, label=__('This activity is not organised by Cover'), errors=errors) }}
-		</div>
-	</div>
-				
+{{ form_start(form, {
+	action: (iter and iter.has_id) ? path('calendar', {view:  'update', agenda_id: iter.id}) : path('calendar', {view: 'create'})
+}) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form.kop) }}
+	{{ form_row(form.committee_id) }}
+	{{ form_row(form.van) }}
+	{{ form_row(form.tot) }}
+	{# TODO: Url generation for autocomplete depends on parameters not being shuffled, maybe implement some placeholder #}
+	{{ form_row(form.locatie, {attr: {
+		'data-autocomplete': 'url',
+		'data-autocomplete-src': path('calendar', {view: 'suggest-location', limit: 100, search: ''}),
+		'data-autocomplete-max-results': 15
+	}}) }}
+	{{ form_row(form.image_url) }}
+	{{ form_row(form.facebook_id) }}
+	{{ form_row(form.beschrijving) }}
+	{{ form_row(form.private) }}
+	{{ form_row(form.extern) }}
 	<div class="field">
 		<div class="control buttons">
-			<button type="submit" class="button is-primary">
-				{{ iter.has_id ? __('Modify event') : __('Create event') }}
-			</button>
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify event') : __('Create event')}) }}
+			{% if iter.has_id %}
+				<a href="{{ path('calendar', {agenda_id: iter.id}) }}" class="button">{{ __('Back to event') }}</a>
+			{% else %}
+				<a href="{{ path('calendar') }}" class="button">{{ __('Back to calendar') }}</a>
+			{% endif %}
 		</div>
 	</div>
-</form>
+{{ form_end(form) }}
+
 {% endblock %}

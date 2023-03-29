@@ -6,9 +6,13 @@
 	require_once 'src/framework/markup.php';
 
 
+	use Symfony\Component\Form\Extension\Core\Type\FormType;
+	use Symfony\Component\Form\FormBuilderInterface;
+	use Symfony\Component\Form\FormInterface;
+	use Symfony\Component\Form\Forms;
 	use Symfony\Component\HttpFoundation\Request;
-	use Symfony\Component\Routing\RouterInterface;
 	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+	use Symfony\Component\Routing\RouterInterface;
 
 	/** 
 	  * A class implementing the simplest controller. This class provides
@@ -169,5 +173,22 @@
 		final protected function get_content()
 		{
 			throw new LogicException("Controller::get_content is no longer accepted");
+		}
+
+		/**
+		 * Creates and returns a Form instance from the type of the form.
+		 */
+		protected function createForm(string $type, $data = null, array $options = []): FormInterface
+		{ 	
+			return get_form_factory()->create($type, $data, $options);
+		}
+
+		
+		/**
+		 * Creates and returns a form builder instance.
+		 */
+		protected function createFormBuilder($data = null, array $options = []): FormBuilderInterface
+		{
+			return get_form_factory()->createBuilder(FormType::class, $data, $options);
 		}
 	}

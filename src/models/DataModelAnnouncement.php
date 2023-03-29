@@ -20,20 +20,6 @@ class DataIterAnnouncement extends DataIter implements SearchResult
 		];
 	}
 
-	static public function rules()
-	{
-		return array_merge(parent::rules(), [
-			'subject' => [
-				'required' => true,
-				'validate' => ['not_empty']
-			],
-			'message' => [
-				'required' => true,
-				'validate' => ['not_empty']
-			]
-		]);
-	}
-
 	public function get_committee()
 	{
 		return $this->getIter('committee', 'DataIterCommissie');

@@ -10,8 +10,8 @@
 {% macro format_period(event, h_class='', h_tag='h3') %}
     {% set current_year = 'now'|date('Y') %}
     {% set academic_year = 'now'|academic_year %}
-    {% set hide_year = event.van|academic_year == academic_year and event.tot|academic_year == academic_year %}
-    {% set hide_year = hide_year or (event.van|date('Y') == current_year and event.tot|date('Y') == current_year) %}
+    {% set hide_year = event.van|academic_year == academic_year and (not event.tot or event.tot|academic_year == academic_year) %}
+    {% set hide_year = hide_year or (event.van|date('Y') == current_year and (not event.tot or event.tot|date('Y') == current_year)) %}
     {% set date_format = hide_year ? 'D, M j' : 'D, M j, Y' %}
     <div class="event-period">
         <{{ h_tag }} class="row {{h_class}}">

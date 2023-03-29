@@ -28,6 +28,7 @@ class GrowingList {
                 element: element,
                 template: template,
                 inputSelector: element.dataset.growingListInput || 'input',
+                placeholder: element.dataset.growingListPlaceholder || '__name__',
                 maxLength: element.dataset.growingListMaxLength || Number.MAX_SAFE_INTEGER,
                 isSortable: (element.dataset.growingListSortable != null
                     && element.dataset.growingListSortable.toLowerCase() !== 'false'),
@@ -42,6 +43,7 @@ class GrowingList {
         this.template = options.template;
         this.maxLength = options.maxLength;
         this.inputSelector = options.inputSelector;
+        this.placeholder = options.placeholder;
 
         // Init sortable
         if (options.isSortable) {
@@ -70,8 +72,11 @@ class GrowingList {
         // Add a field if no fields, or if the last field is no longer empty unless maxLength is reached
         const inputs = this.getInputs();
         if ((inputs.length === 0 || inputs[inputs.length-1].value != '' && inputs.length <= this.maxLength))  {
-            const clone = this.template.content.cloneNode(true);
-            this.element.appendChild(clone);
+            // Replace stuff to keep Symfony happy
+            let template = this.template.cloneNode(true);
+            template.innerHTML = template.innerHTML.replace(new RegExp(this.placeholder, 'g'), inputs.length);
+            const clone = template.content.cloneNode(true);
+            this.element.appendChild(clone)
         }
     }
 
@@ -130,6 +135,17 @@ class GrowingList {
     }
 
     handleSortableUpdate(event) {
+        // Recalculate id's and names to keep Symfony happy
+        const templateInput = this.template.content.querySelector(`[name*="${this.placeholder}"]`);
+        if (templateInput) {
+            const id = templateInput.id;
+            const name = templateInput.name;
+            for (const [idx, input] of this.getInputs().entries()) {
+                input.id = id.replace(new RegExp(this.placeholder, 'g'), idx);
+                input.name = name.replace(new RegExp(this.placeholder, 'g'), idx);
+            }
+        }
+
         // Dispatch change for autosubmit
         this.element.dispatchEvent(new Event('change', {'bubbles':true}));
     }

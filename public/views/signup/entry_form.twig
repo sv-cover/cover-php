@@ -3,9 +3,8 @@
 {% block title __('Form') ~ ' – ' ~ parent() %}
 {% block entry_form_title %}{{ __('Form') }}{% endblock %}
 
-
 {% block entry_form_header %}
-	{% if not form.is_open %}
+	{% if not iter.is_open %}
 	<div class="notification is-danger">
 		<h3>{{ __('The registrations are closed.') }}</h3>
 		{% if (not entry.has_id and user_can_create entry) %}
@@ -19,41 +18,35 @@
 	{% endif %}
 {% endblock %}
 
+{# Cache submit button #}
+{% set submit_button = form_widget(form.submit, {
+	label: entry.has_id ? __('Modify entry') : __('Sign me up'),
+	attr: {'form': 'signup-entry-form'},
+}) %}
+
 {% block entry_form_form %}
-	{% if success %}
-		<p>{{ __('Success! You have signed up.') }}</p>
-	{% else %}
-		<form id="signup-entry-form" action="{{ entry.has_id ? path('signup', {view: 'update_entry', form: form.id, entry: entry.id}) : path('signup', {view: 'create_entry', form: form.id}) }}" method="post">
-			{% if entry.has_id %}
-				{{ html_nonce('update_entry', entry) }}
-			{% else %}
-				{{ html_nonce('create_entry', form) }}
-			{% endif %}
-
-			{% if global.POST['return-path'] is defined %}
-				{{ html_input_hidden('return-path', global.POST['return-path']) }}
-			{% endif %}
-
-			{% if not entry.has_id %}
-				{{ html_input_hidden('member_id', entry.member_id) }}
-			{% endif %}
-
-			{% for field in form.fields %}
-				{{ field.render(view, entry)|raw }}
-			{% endfor %}
-
-			{% if not is_modal and (user_can_create entry or user_can_update entry) %}
+	{{ form_start(form, {
+		id: 'signup-entry-form',
+		action: entry.has_id ? path('signup', {view: 'update_entry', form: iter.id, entry: entry.id}) : path('signup', {view: 'create_entry', form: iter.id}),
+	}) }}
+		{# Global errors #}
+		{{ form_errors(form) }}
+		{# Render fields #}
+		{{ form_rest(form) }}
+		{# Render submit button #}
+		{% if not is_modal and (user_can_create entry or user_can_update entry) %}
 			<div class="field">
-				<div class="control buttons">
-					<button class="button is-primary" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
+				<div class="control buttons">	
+					{{ submit_button|raw }}
 				</div>
 			</div>
-			{% endif %}
-		</form>
-	{% endif %}
+		{% endif %}
+	{{ form_end(form) }}
 {% endblock %}
 
 {% block entry_form_buttons %}
-    <a href="#" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-	<button form="signup-entry-form" class="button is-primary" type="submit">{{ entry.has_id ? __('Modify entry') : __('Sign me up') }}</button>
+	<a href="#" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+	{% if (user_can_create entry or user_can_update entry) %}
+		{{ submit_button|raw }}
+	{% endif %}
 {% endblock %}

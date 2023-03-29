@@ -360,6 +360,16 @@
 		{
 			return $this->data;
 		}
+
+		public function __get($field)
+		{
+			return $this->get($field);
+		}
+
+		public function __set($field, $value)
+		{
+			return $this->set($field, $value);
+		}
 	}
 
 	class GenericDataIter extends DataIter

@@ -12,7 +12,7 @@
 	</div>
 	<div class="level-right buttons">		
 		{% if user_can_create form.new_entry(global.identity.member) %}
-			<a href="{{ path('signup', {'view': 'create_entry', 'form': form.id, 'action': 'modal'}) }}" class="button" data-popup="modal">{{ __('New sign-up') }}</a>
+			<a href="{{ path('signup', {'view': 'create_entry', 'form': form.id, 'action': 'modal', prefill: 'false'}) }}" class="button" data-popup="modal">{{ __('New sign-up') }}</a>
 		{% endif %}
 		{% if user_can_update form %}
 			<a href="{{ path('signup', {'view': 'update_form', 'form': form.id}) }}" class="button">{{ __('Modify form') }}</a>
@@ -36,7 +36,7 @@
 
 <article class="block">
 	<form action="{{ path('signup', {view: 'delete_entries', form: form.id}) }}" method="post">
-		{{ html_nonce('delete_entries', form) }}
+		<input type="hidden" name="form[_token]" value="{{ csrf_token('form_' ~ form.id ~ '_delete_entries') }}">
 		<div class="table-container">
 			<table class="signup-entries-table table is-fullwidth is-hoverable">
 				<thead>
@@ -58,7 +58,10 @@
 					{% for entry in form.entries %}
 						{% if user_can_read entry %}
 							<tr>
-								<td class="is-sticky"><input type="checkbox" name="entries[]" value="{{ entry.id }}"></td>
+								<td class="is-sticky">
+									<label class="is-sr-only" for="delete-entry-{{ entry.id }}">{{ __('Delete signup') }}</label>
+									<input type="checkbox" id="delete-entry-{{ entry.id }}" name="form[entries][]" value="{{ entry.id }}">
+								</td>
 								{% if user_can_update entry %}
 									<td><a href="{{ path('signup', {'view': 'update_entry', 'entry': entry.id}) }}">{{ loop.index }}</a></td>
 								{% else %}
@@ -95,7 +98,7 @@
 			<div class="contol buttons">
 				<button type="submit" class="button is-danger">{{ __('Remove selected sign-ups') }}</button>
 			</div>
-		</div>
+		</div> 
 	</form>
 </article>
 </div>

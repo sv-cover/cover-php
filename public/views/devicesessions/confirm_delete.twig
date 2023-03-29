@@ -10,7 +10,7 @@
         </header>
         <section class="modal-card-body">
             <form id="delete-device-session-form" method="post" action="{{ path('device_sessions.delete', {id: iter.id}) }}">
-                {{ html_nonce('delete', iter) }}
+                {{ form_row(form._token) }}
                 <p>
                     {{ __('Are you sure you want to remove this device session?') }}
                     <em>{{ iter.device_name|default(__('Unnamed device')) }}</em> at <em>{{ iter.ip_address }}</em>

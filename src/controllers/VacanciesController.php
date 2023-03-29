@@ -1,17 +1,21 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUD.php';
+use App\Form\Type\VacancyFormType;
 
-class VacanciesController extends \ControllerCRUD
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
+
+class VacanciesController extends \ControllerCRUDForm
 {
     protected $view_name = 'vacancies';
+    protected $form_type = VacancyFormType::class;
 
 	public function __construct($request, $router)
 	{
 		$this->model = \get_model('DataModelVacancy');
 
         parent::__construct($request, $router);
+
 	}
 
     public function path(string $view, \DataIter $iter = null, bool $json = false)
@@ -36,9 +40,4 @@ class VacanciesController extends \ControllerCRUD
         $filter_conditions = array_intersect_key($_GET, array_flip($this->model::FILTER_FIELDS));
         return $this->model->filter($filter_conditions);
     }
-
-	public function run_preview()
-	{
-		return markup_parse($_POST['description']);
-	}
 }

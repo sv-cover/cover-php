@@ -5,66 +5,26 @@
 {% block content %}
 <h1 class="title">{{ iter.has_id ? __('Modify page') : __('Make a page') }}</h1>
 
-<form method="post" action="{{ (iter and iter.has_id) ? path('page', {view:  'update', id: iter.id}) : path('page.create') }}">
-	{% if iter.has_id %}
-		{{ html_nonce('update', iter) }}
-	{% else %}
-		{{ html_nonce('create', iter) }}
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{% if form.titel is defined %}
+		{{ form_row(form.titel) }}
 	{% endif %}
-	
-	{% if controller.can_set_titel(iter) %}
-	<div class="field">
-		{{ html_label(__('Identifier'), 'titel', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_input_text('titel', iter) }}
-		</div>
-		<p class="help">{{ __('This value is often used in the code base to refer to a specific page.') }}</p>
-	</div>
+	{% if form.committee_id is defined %}
+		{{ form_row(form.committee_id) }}
 	{% endif %}
-
-	{% if controller.can_set_committee_id(iter) %}
-	<div class="field">
-		{{ html_label(__('Owner'), 'committee_id', errors=errors, required=true) }}
-		<div class="control">
-			<div class="select">
-				{{ html_select_field('committee_id', view.available_committees(iter), iter, required=true) }}
-			</div>
-		</div>
-	</div>
-	{% endif %}
-
-	<div class="field">
-		{{ html_label(__('Page content'), 'content_en', errors=errors) }}
-		<div class="tabs-wrapper is-condensed">
-			<div class="tabs is-toggle">
-				<ul>
-					<li class="is-active">
-						<a href="#content-en">{{ __('Raw') }}</a>
-					</li>
-					<li>
-						<a href="#content-en-preview">{{ __('Preview') }}</a>
-					</li>
-				</ul>
-			</div>
-
-			<div class="tabs-content">
-				<div id="content-en" class="is-active">
-					{{ html_textarea_field('content_en', iter, rows=25) }}
-				</div>
-				<div id="content-en-preview" class="content-preview box content" data-preview-source="#content-en textarea" data-preview-url="{{ path('page.preview') }}">
-					<span class="loading">{{ __('Loading preview…') }}</span>
-				</div>
-			</div>
-		</div>
-	</div>
-
+	{{ form_row(form.content_en, {'attr': {'rows': 25}}) }}
 	<div class="field">
 		<div class="control buttons">
-			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify page') : __('Create page') }}</button>
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify page') : __('Create page')}) }}
 			{% if iter.has_id %}
 				<a href="{{ path('page', {id: iter.id}) }}" class="button">{{ __('Back to page') }}</a>
+			{% else %}
+				<a href="{{ path('page.list') }}" class="button">{{ __('Back to all pages') }}</a>
 			{% endif %}
 		</div>
 	</div>
-</form>
+{{ form_end(form) }}
 {% endblock %}

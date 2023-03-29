@@ -94,6 +94,44 @@
 				'agenda_id' => $this['id']
 			]);
 		}
+
+		public function get_updated_fields(\DataIterAgenda $other = null)
+		{
+			// Still allow comparison with any DataIterAgenda if provided as other
+			if (empty($this['replacement_for']) && empty($other))
+				return [];
+
+			if (empty($other))
+				$other = $this->model->get_iter($this['replacement_for']);
+
+			$updates = [];
+
+			foreach ($this->data as $field => $value)
+			{
+				if ($field === 'replacement_for' || $field === 'id' || substr($field, 0, 11) === 'committee__')
+					continue;
+
+				$other_value = $other[$field];
+
+				// Unfortunately, we need to 'normalize' the time fields for this to work
+				if ($field == 'van' || $field == 'tot')
+				{
+					$other_value = strtotime($other[$field]);
+					$value = strtotime($value);
+				}
+
+				if ($field == 'committee_id')
+				{
+					$other_value = ['id' => $other_value, 'name' => $other['committee__naam'], 'login' => $other['committee__login']];
+					$value = ['id' => $value, 'name' => $this['committee__naam'], 'login' => $this['committee__login']];
+				}
+
+				if ($other_value != $value)
+					$updates[$field] = [$value, $other_value];
+			}
+
+			return $updates;
+		}
 	}
 
 	class DataModelAgenda extends DataModel implements SearchProvider
@@ -248,16 +286,14 @@
 			return $this->insert($new_item);
 		}
 		
-		public function propose_update(DataIterAgenda $replacement, DataIterAgenda $current)
+		public function propose_update(DataIterAgenda $iter)
 		{
-			if (!$current->has_id())
+			if (!$iter->has_id())
 				throw new InvalidArgumentException('The item to replace has no id');
-
-			if ($replacement->has_id())
-				throw new InvalidArgumentException('How come the proposed replacement already has an id?');
 			
-			$replacement->set('replacement_for', $current->get_id());
-			return $this->insert($replacement);
+			$iter->set('replacement_for', $iter->get_id());
+			$iter->set_id(null);
+			return $this->insert($iter);
 		}
 
 		public function accept_proposal(DataIterAgenda $proposal)

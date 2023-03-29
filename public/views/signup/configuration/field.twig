@@ -1,0 +1,7 @@
+{{ form_start(form, form_attr) }}
+	{# Render token first for better vertical spacing #}
+	{{ form_widget(form._token) }}
+	{# Skip submit button, this is taken care of by caller #}
+	{% do form_row(form.submit, {attr: {'data-auto-submit-hidden': true}}) %}
+	{{ form_rest(form) }}
+{{ form_end(form) }}

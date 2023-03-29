@@ -2,16 +2,21 @@
 
 require_once 'src/framework/router.php';
 
+use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\FormRenderer;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
+
 const ALLOW_SUBDOMAINS = 1;
 const ALLOW_EXTERNAL_DOMAINS = 2;
 
 
 /**
-  * A Class implementing the default view. New views should subclass this one.
-  * creating functions in the same directory as the view, with the extension .phtml
-  * will allow a call to function_name().
-  *
-  */
+	* A Class implementing the default view. New views should subclass this one.
+	* creating functions in the same directory as the view, with the extension .phtml
+	* will allow a call to function_name().
+	*
+	*/
 class ViewNotFoundException extends RuntimeException {
 	//
 }
@@ -33,7 +38,7 @@ class TwigAccessor
 
 class View
 {
-    static public function byName($view, Controller $controller = null)
+	static public function byName($view, Controller $controller = null)
 	{
 		$possible_paths = [
 			'public/views/' . $view . '/' . $view . '.php',
@@ -60,15 +65,15 @@ class View
 
 	protected $layout;
 
-    protected $twig;
+	protected $twig;
 
-    /**
-     * View constructor.
-     * @param Controller|null $controller
-     * @param null $path
-     * @throws Twig_Error_Loader
-     */
-    public function __construct(Controller $controller = null, $path = null)
+	/**
+	 * View constructor.
+	 * @param Controller|null $controller
+	 * @param null $path
+	 * @throws Twig_Error_Loader
+	 */
+	public function __construct(Controller $controller = null, $path = null)
 	{
 		// Default $path to @theme so View::render() is at least somewhat useful.
 		if (!$path)
@@ -85,15 +90,29 @@ class View
 		// And add a shortcut to the layout directory through @layout
 		$loader->addPath('public/views/_layout', 'layout');
 
-		$loader->addPath('public/views/signup/fields', 'form_fields');
-
-		$loader->addPath('public/views/signup/configuration', 'form_configuration');
+		$app_variable_reflection = new \ReflectionClass('\Symfony\Bridge\Twig\AppVariable');
+		$vendor_twig_bridge_directory = dirname($app_variable_reflection->getFileName());
+		// the path to your other templates
+		$loader->addPath($vendor_twig_bridge_directory.'/Resources/views', 'symfony');
 
 		$this->twig = new Twig_Environment($loader, array(
 			'debug' => true,
 			'strict_variables' => true,
 			'cache' => get_config_value('twig_cache', 'tmp/twig'),
 		));
+
+		$form_themes = [
+			'@layout/form/bulma_layout.html.twig',
+			'@layout/form/custom_types.html.twig'
+		];
+		$form_engine = new TwigRendererEngine($form_themes, $this->twig);
+		$this->twig->addRuntimeLoader(new FactoryRuntimeLoader([
+				FormRenderer::class => function () use ($form_engine) {
+						return new FormRenderer($form_engine, get_csrf_manager());
+				},
+		]));
+
+		$this->twig->addExtension(new FormExtension());
 
 		$router = $this->controller ? $this->controller->get_router() : get_router();
 
@@ -239,8 +258,58 @@ class View
 	}
 }
 
+trait JSONView {
+	protected function _send_json_single(DataIter $iter)
+	{
+		return $this->render_json(array(
+			'iter' => $this->_json_augment_iter($iter)
+		));
+	}
+
+	protected function _send_json_index(array $iters)
+	{
+		$links = array();
+
+		$new_iter = $this->controller->model()->new_iter();
+
+		if (get_policy($new_iter)->user_can_create($new_iter))
+			$links['create'] = $this->controller->path('create', $new_iter, true);
+
+		return $this->render_json(array(
+			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
+			'__links' => $links
+		));
+	}
+
+	protected function _json_augment_iter(DataIter $iter)
+	{
+		$links = array();
+
+		$policy = get_policy($this->controller->model());
+
+		if ($policy->user_can_read($iter))
+			$links['read'] = $this->controller->path('read', $iter, true);
+
+		if ($policy->user_can_update($iter))
+			$links['update'] = $this->controller->path('update', $iter, true);
+
+		if ($policy->user_can_delete($iter))
+			$links['delete'] = $this->controller->path('delete', $iter, true);
+
+		if (method_exists($this->controller, 'get_data_for_iter'))
+			$data = $this->controller->get_data_for_iter($iter);
+		else
+			$data = $iter->data;
+
+		return array_merge($data, array('__id' => $iter->get_id(), '__links' => $links));
+	}
+}
+
+
 class CRUDView extends View
 {
+	use JSONView;
+
 	public function get_label(DataIter $iter = null, $create_label, $update_label)
 	{
 		return $iter && $iter->has_id() ? $update_label : $create_label;
@@ -320,49 +389,93 @@ class CRUDView extends View
 				return $this->render('index.twig', compact('iters'));
 		}
 	}
+}
 
-	protected function _send_json_single(DataIter $iter)
+class CRUDFormView extends View
+{
+	use JSONView;
+
+	protected function render_errors($form)
 	{
-		return $this->render_json(array(
-			'iter' => $this->_json_augment_iter($iter)
-		));
+		$errors = [];
+		foreach ($form->getErrors(true, true) as $error) {
+			$errors[$error->getOrigin()->getName()] = $error->getMessage();
+		}
+		return $errors;
 	}
 
-	protected function _send_json_index(array $iters)
+	public function render_delete(DataIter $iter, $form, $success)
 	{
-		$links = array();
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				return $this->render_json($this->render_errors($form));
 
-		$new_iter = $this->controller->model()->new_iter();
-
-		if (get_policy($new_iter)->user_can_create($new_iter))
-			$links['create'] = $this->controller->path('create', $new_iter, true);
-
-		return $this->render_json(array(
-			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
-			'__links' => $links
-		));
+			default:
+				if ($success)
+					return $this->redirect($this->controller->path('index'));
+				else
+					return $this->render('confirm_delete.twig', ['iter' => $iter, 'form' => $form->createView()]);
+		}
 	}
 
-	protected function _json_augment_iter(DataIter $iter)
+	public function render_create(DataIter $iter, $form, $success)
 	{
-		$links = array();
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				if ($success)
+					return $this->_send_json_single($iter);
+				else
+					return $this->render_json($this->render_errors($form));
 
-		$policy = get_policy($this->controller->model());
+			default:
+				if ($success)
+					return $this->redirect($this->controller->path('read', $iter));
+				else
+					return $this->render('form.twig', ['iter' => $iter, 'form' => $form->createView()]);
+		}
+	}
 
-		if ($policy->user_can_read($iter))
-			$links['read'] = $this->controller->path('read', $iter, true);
+	public function render_read(DataIter $iter, array $extra = [])
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				return $this->_send_json_single($iter);
 
-		if ($policy->user_can_update($iter))
-			$links['update'] = $this->controller->path('update', $iter, true);
+			default:
+				return $this->render('single.twig', array_merge($extra, compact('iter')));
+		}
+	}
 
-		if ($policy->user_can_delete($iter))
-			$links['delete'] = $this->controller->path('delete', $iter, true);
+	public function render_update(DataIter $iter, $form, $success)
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				if ($success)
+					return $this->_send_json_single($iter);
+				else
+					return $this->render_json($this->render_errors($form));
 
-		if (method_exists($this->controller, 'get_data_for_iter'))
-			$data = $this->controller->get_data_for_iter($iter);
-		else
-			$data = $iter->data;
+			default:
+				if ($success)
+					return $this->redirect($this->controller->path('read', $iter));
+				else
+					return $this->render('form.twig', ['iter' => $iter, 'form' => $form->createView()]);
+		}
+	}
 
-		return array_merge($data, array('__id' => $iter->get_id(), '__links' => $links));
+	public function render_index($iters)
+	{
+		switch ($this->_get_preferred_response())
+		{
+			case 'application/json':
+				return $this->_send_json_index($iters);
+
+			default:
+				return $this->render('index.twig', compact('iters'));
+		}
 	}
 }

@@ -2,7 +2,7 @@
 	require_once 'src/framework/login.php';
 	require_once 'src/framework/markup.php';
 	
-	class CalendarView extends CRUDView
+	class CalendarView extends CRUDFormView
 	{
 		public $facebook = null;
 
@@ -37,37 +37,11 @@
 			return $this->twig->render('single.twig', array_merge(compact('iter', 'mutation'), $extra));
 		}
 
-		public function render_moderate($iters, $highlighted_id)
-		{
-			return $this->render('moderate.twig', compact('iters', 'highlighted_id'));
-		}
-
-		public function render_slide($iters)
-		{
-			return $this->twig->render('slide.twig', compact('iters'));
-		}
-
 		public function render_401_unauthorized(UnauthorizedException $e)
 		{
 			header('Status: 401 Unauthorized');
 			header('WWW-Authenticate: FormBased');
 			return $this->render('unauthorized.twig', ['exception' => $e]);
-		}
-
-		public function cover_photo(DataIterAgenda $item)
-		{
-			if (!$this->facebook)
-				return null;
-
-			if (!$item['facebook_id'])
-				return null;
-			
-			if ($cover_photo = $this->facebook->getCoverPhoto($item['facebook_id']))
-				return $cover_photo;
-			else
-				return array(
-					'src' => get_theme_data('images/default_cover_photo.png'),
-					'x' => 0, 'y' => 0);
 		}
 
 		public function attendees(DataIterAgenda $item)
@@ -108,22 +82,6 @@
 			}
 		}
 
-		public function available_committees()
-		{
-			$commissies = array();
-
-			$model = get_model('DataModelCommissie');
-
-			if (get_identity()->member_in_committee(COMMISSIE_BESTUUR) || get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
-				foreach ($model->get(null, true) as $commissie)
-					$commissies[$commissie->get_id()] = $commissie->get('naam');
-			else
-				foreach (get_identity()->member()->get('committees') as $commissie)
-					$commissies[$commissie] = $model->get_naam($commissie);
-
-			return $commissies;
-		}
-
 		public function title()
 		{
 			$title = $this->selected_year()
@@ -159,21 +117,6 @@
 				&& $year != $this->current_year()
 				? $year + 1
 				: null;
-		}
-
-		public function paged_agendapunten()
-		{
-			$selected_year = $this->selected_year();
-
-			if ($selected_year === null)
-				return $this->model->get_agendapunten();
-			
-			$from = sprintf('%d-09-01', $selected_year);
-			$till = sprintf('%d-08-31', $selected_year + 1);
-
-			$punten = $this->model->get($from, $till, true);
-
-			return $punten;
 		}
 
 		public function list_view_mode()

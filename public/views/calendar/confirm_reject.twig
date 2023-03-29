@@ -1,0 +1,33 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Reject event') ~ ' – ' ~ parent() %}
+
+{% block content %}
+
+<div class="modal is-static">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Reject event') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {
+                id: 'reject-event-form',
+                action: path('calendar', {view: 'moderate_reject', agenda_id: iter.id}),
+            }) }}
+                {% set submit_button = form_widget(form.submit, {
+                    label: __('Reject event'),
+                    is_primary: false,
+                    attr: {form: 'reject-event-form', class: 'is-danger'},
+                }) %}
+                <div class="field content">
+                    <p>{{ __('Are you sure you want to reject this event?') }} <em>{{ iter.kop }}</em></p>
+                </div>
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('calendar', {view: 'moderate'}) }}" class="button" data-dismiss="modal">{{ __('Back') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
+</div>
+{% endblock %}

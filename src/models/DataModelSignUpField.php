@@ -3,6 +3,9 @@
 require_once 'src/framework/data/DataModel.php';
 require_once 'src/framework/fields.php';
 
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
+
 class DataIterSignUpField extends DataIter
 {
 	static public function fields()
@@ -37,34 +40,41 @@ class DataIterSignUpField extends DataIter
 		return get_model('DataModelSignUpForm')->get_iter($this['form_id']);
 	}
 
+	public function get_form_data(DataIterSignUpEntry $entry = null)
+	{
+		return $this->widget()->get_form_data($entry ? $entry->value_for_field($this) : null);
+	}
+
 	public function get_type_label()
 	{
 		return get_model('DataModelSignUpField')->field_types[$this['type']]['label'];
 	}
 
-	public function process(array $post_data, &$error)
+	public function prefill(\DataIterMember $member)
 	{
-		return $this->widget()->process($post_data, $error);
+		return $this->widget()->prefill($member);
 	}
 
-	public function render($renderer, DataIterSignUpEntry $entry)
+	public function process(Form $form)
 	{
-		// First try to get the value for the field
-		$value = $entry->value_for_field($this, null);
-
-		// If that wasn't set, try to set it based on the entry's associated member
-		if ($value === null && $entry['member'])
-			$value = $this->widget()->suggest($entry['member']);
-
-		// Now render it
-		return $this->widget()->render($renderer, $value, $entry->error_for_field($this));
+		return $this->widget()->process($form);
 	}
 
-	public function process_configuration(array $post_data, ErrorSet $errors)
+	public function build_form(FormBuilderInterface $form_builder)
+	{
+		return $this->widget()->build_form($form_builder);
+	}
+
+	public function get_configuration_form()
+	{
+		return $this->widget()->get_configuration_form();
+	}
+
+	public function process_configuration(Form $form)
 	{
 		$widget = $this->widget();
 
-		if (!$widget->process_configuration($post_data, $errors))
+		if (!$widget->process_configuration($form))
 			return false;
 		
 		$this['properties'] = $widget->configuration();
@@ -72,9 +82,9 @@ class DataIterSignUpField extends DataIter
 		return true;
 	}
 
-	public function render_configuration($renderer, ErrorSet $errors)
+	public function render_configuration($renderer, array $form_attr)
 	{
-		return $this->widget()->render_configuration($renderer, $errors);
+		return $this->widget()->render_configuration($renderer, $form_attr);
 	}
 
 	public function configure($callback)
@@ -141,7 +151,7 @@ class DataModelSignUpField extends DataModel
 			],
 			'bankaccount' => [
 				'class' => \fields\BankAccount::class,
-				'label' => __('Bank account number field')
+				'label' => __('Bank account (IBAN) field')
 			],
 			'editable' => [
 				'class' => \fields\Editable::class,

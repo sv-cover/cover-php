@@ -2,6 +2,14 @@
 
 namespace fields;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Email implements \SignUpFieldType
 {
 	public $name;
@@ -10,13 +18,13 @@ class Email implements \SignUpFieldType
 
 	public $required;
 
-	public $multiline;
+	private $_form;
 
 	public function __construct($name, array $configuration)
 	{
 		$this->name = $name;
 
-		$this->label = $configuration['label'] ?? 'Email';
+		$this->label = $configuration['label'] ?? 'E-mail';
 
 		$this->required = $configuration['required'] ?? false;
 
@@ -32,20 +40,12 @@ class Email implements \SignUpFieldType
 		];
 	}
 
-	public function process(array $post_data, &$error)
+	public function process(Form $form)
 	{
-		$value = trim($post_data[$this->name] ?? '');
-
-		if ($value != '' && filter_var($value, FILTER_VALIDATE_EMAIL) === false)
-			$error = __('Invalid e-mail address');
-
-		if ($this->required && $value == '')
-			$error = __('Value required');
-
-		return $value;
+		return $form->get($this->name)->getData();
 	}
 
-	public function suggest(\DataIterMember $member)
+	public function prefill(\DataIterMember $member)
 	{
 		if (!$this->autofill)
 			return null;
@@ -53,36 +53,68 @@ class Email implements \SignUpFieldType
 		return $member['email'];
 	}
 
-	public function render($renderer, $value, $error)
+	public function build_form(FormBuilderInterface $builder)
 	{
-		return $renderer->render('@form_fields/email.twig', [
-			'name' => $this->name,
-			'data' => [$this->name => $value],
-			'configuration' => $this->configuration(),
-			'errors' => $error ? [$this->name => $error] : []
-		]);
+		$builder
+            ->add($this->name, EmailType::class, [
+                'label' => __('E-mail'),
+				'required' => $this->required,
+                'constraints' => array_filter([
+                	$this->required ? new Assert\NotBlank() : null,
+                	new Assert\Email()
+                ]),
+                'attr' => [
+                    'placeholder' => __('E.g. john@gmail.com'),
+                ]
+            ]);
 	}
 
-	public function process_configuration(array $post_data, \ErrorSet $errors)
+	public function get_configuration_form()
 	{
-		$this->label = strval($post_data['label'] ?? $this->label);
-		$this->required = !empty($post_data['required']);
-		$this->autofill = !empty($post_data['autofill']);
+		if (!isset($this->_form))
+			$this->_form = \get_form_factory()
+				->createNamedBuilder(sprintf('form-field-%s', $this->name), FormType::class, $this->configuration())
+				->add('required', CheckboxType::class, [
+					'label' => __('Filling in email is mandatory.'),
+					'required' => false,
+				])
+				->add('autofill', CheckboxType::class, [
+					'label' => __('Autofill this field with member data.'),
+					'required' => false,
+					'help' => __('Disable if people are not supposed to fill in their own information.'),
+				])
+				->add('submit', SubmitType::class, [
+					'label' => __('Modify field'),
+				])
+				->getForm();
+		return $this->_form;
+	}
+
+	public function process_configuration(Form $form)
+	{
+		$this->required = $form->get('required')->getData();
+		$this->autofill = $form->get('autofill')->getData();
 		return true;
 	}
 
-	public function render_configuration($renderer, \ErrorSet $errors)
+	public function render_configuration($renderer, array $form_attr)
 	{
-		return $renderer->render('@form_configuration/email.twig', [
-			'name' => $this->name,
-			'data' => $this->configuration(),
-			'errors' => $errors
+		$form = $this->get_configuration_form();
+		return $renderer->render('@theme/signup/configuration/field.twig', [
+			'form' => $form->createView(),
+			'form_attr' => $form_attr,
 		]);
 	}
 
 	public function column_labels()
 	{
 		return [$this->name => $this->label];
+	}
+
+
+	public function get_form_data($value)
+	{
+		return $this->export($value);
 	}
 
 	public function export($value)

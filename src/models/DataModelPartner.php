@@ -23,57 +23,6 @@ class DataIterPartner extends DataIter implements SearchResult
 		];
 	}
 
-	static public function rules()
-	{
-		return [
-			'name' => [
-				'required' => true,
-				'validate' => ['not_empty'],
-			],
-			'type' => [
-				'required' => true,
-				'clean' => 'intval',
-				'validate' => [
-					'not_empty',
-					function($type) {
-						return in_array($type, [
-							DataModelPartner::TYPE_SPONSOR,
-							DataModelPartner::TYPE_MAIN_SPONSOR,
-							DataModelPartner::TYPE_OTHER,
-						]);
-					}
-				],
-			],
-			'url' => [
-				'required' => true,
-				'validate' => [
-					function($url) {
-						return filter_var($url, FILTER_VALIDATE_URL) !== FALSE;
-					}
-				],
-			],
-			'logo_url' => [
-				'required' => true,
-				'validate' => ['filemanger_file'],
-			],
-			'logo_dark_url' => [
-				'clean' => 'clean_empty',
-				'validate' => ['optional', 'filemanger_file'],
-			],
-			'profile' => [
-				'clean' => 'clean_empty',
-			],
-			'has_banner_visible' => [
-				'is_checkbox' => true,
-				'clean' => 'clean_checkbox',
-			],
-			'has_profile_visible' => [
-				'is_checkbox' => true,
-				'clean' => 'clean_checkbox',
-			],
-		];
-	}
-
 	public function get_search_relevance()
 	{
 		return floatval($this->data['search_relevance']);

@@ -2,8 +2,14 @@
 
 require_once 'src/framework/data/DataModel.php';
 
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 class DataIterSignUpForm extends DataIter
 {
+	private $_form;
+
 	static public function fields()
 	{
 		return [
@@ -17,67 +23,29 @@ class DataIterSignUpForm extends DataIter
 		];
 	}
 
-	static public function rules()
+	public function get_form(DataIterSignUpEntry $entry, array $defaults = [])
 	{
-		return [
-			'committee_id' => [
-				'validate' => ['committee']
-			],
-			'created_on' => [
-				'default' => function() {
-					return new DateTime('now');
-				},
-				'validate' => ['datetime']
-			],
-			'open_on' => [
-				'clean' => function($value) {
-					try {
-						return $value ? new DateTime($value) : null;
-					} catch (Exception $e) {
-						return $value; // the validate will catch the invalid value next
-					}
-				},
-				'validate' => ['datetime']
-			],
-			'closed_on' => [
-				'clean' => function($value) {
-					try {
-						return $value ? new DateTime($value) : null;
-					} catch (Exception $e) {
-						return $value; // the validate will catch the invalid value next
-					}
-				},
-				'validate' => ['datetime']
-			],
-			'participant_limit' => [
-				'clean' => function($value) {
-					return $value !== '' ? intval($value) : null;
-				}
-			],
-			'agenda_id' => [
-				'clean' => function($value) {
-					return $value ? intval($value) : null;
-				},
-				'validate' => [
-					function($agenda_id, $field, $iter, $data) {
-						// Null is fine
-						if ($agenda_id === null)
-							return true;
+		if (!isset($this->_form))
+		{
+			if ($entry['member_id'])
+				$defaults['member_id'] = $entry['member_id'];
+			$data = array_merge($entry->get_form_data(), $defaults);
+			$builder = \get_form_factory()
+				->createNamedBuilder(sprintf('form-%s', $this['id']), FormType::class, $data);
 
-						// But if it is filled in, it has to be an activity organized by the
-						// committee that owns this form.
-						$committee_id = $data['committee_id'] ?? $iter['committee_id'];
+			foreach ($this->get_fields() as $field)
+				$field->build_form($builder);
 
-						if ($committee_id === null)
-							return false;
+			$builder
+				->add('return_path', HiddenType::class)
+				->add('member_id', HiddenType::class)
+				->add('submit', SubmitType::class, [
+					'label' => __('Sign me up'),
+				]);
 
-						$agenda_item = get_model('DataModelAgenda')->get_iter($agenda_id);
-
-						return $agenda_item['committee_id'] == $committee_id;
-					}
-				]
-			]
-		];
+			$this->_form = $builder->getForm();
+		}
+		return $this->_form;
 	}
 
 	public function get_fields()
@@ -135,11 +103,14 @@ class DataIterSignUpForm extends DataIter
 
 	public function new_entry(DataIterMember $member = null)
 	{
-		return get_model('DataModelSignUpEntry')->new_iter([
+		$iter = get_model('DataModelSignUpEntry')->new_iter([
 			'form_id' => $this['id'],
 			'member_id' => $member ? $member['id'] : null,
 			'created_on' => date('Y-m-d H:i:s')
 		]);
+		if ($member)
+			$iter->prefill();
+		return $iter;
 	}
 
 	public function get_entries_for_member(DataIterMember $member)

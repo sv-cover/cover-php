@@ -1,0 +1,314 @@
+{% use "@symfony/Form/form_div_layout.html.twig" %}
+{# https://github.com/symfony/twig-bridge/blob/6.1/Resources/views/Form/form_div_layout.html.twig #}
+
+{# Widgets #}
+
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' input')|trim}) -%}
+    {%- if not valid -%}
+        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' is-danger')|trim}) -%}
+    {%- endif -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}>
+{%- endblock form_widget_simple -%}
+
+{%- block form_widget_compound -%}
+    {%- if form is rootform -%}
+        {{ form_errors(form) }}
+        {{- block('form_rows') -}}
+        {{- form_rest(form) -}}
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- block('form_rows') -}}
+            {{- form_rest(form) -}}
+        </div>
+    {%- endif -%}
+{%- endblock form_widget_compound -%}
+
+{%- block textarea_widget -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' textarea')|trim}) -%}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{%- endblock textarea_widget -%}
+
+{%- block choice_widget_collapsed -%}
+    {%- if wrapper_attr is not defined -%}
+        {%- set wrapper_attr = {} -%}
+    {%- endif -%}
+    {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
+        {% set required = false %}
+    {%- endif -%}
+    {%- set wrapper_attr = wrapper_attr|merge({'class': (wrapper_attr.class|default('') ~ ' select')|trim}) -%}
+    {%- if multiple -%}
+        {%- set wrapper_attr = wrapper_attr|merge({'class': (wrapper_attr.class|default('') ~ ' is-multiple')|trim}) -%}
+    {%- endif -%}
+    <div  {% with { attr: wrapper_attr } %}{{ block('attributes') }}{% endwith %}>
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {%- if placeholder is not none -%}
+                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+            {%- endif -%}
+            {%- if preferred_choices|length > 0 -%}
+                {% set options = preferred_choices %}
+                {% set render_preferred_choices = true %}
+                {{- block('choice_widget_options') -}}
+                {%- if choices|length > 0 and separator is not none -%}
+                    <option disabled="disabled">{{ separator }}</option>
+                {%- endif -%}
+            {%- endif -%}
+            {%- set options = choices -%}
+            {%- set render_preferred_choices = false -%}
+            {{- block('choice_widget_options') -}}
+        </select>
+    </div>
+{%- endblock choice_widget_collapsed -%}
+
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div class="control">
+                {{- form_widget(child, {
+                    parent_label_class: label_attr.class|default(''),
+                    translation_domain: choice_translation_domain,
+                    valid: valid,
+                    show_mark: false,
+                }) -}}{#- Properly transfer the 'required' property, and make sure things are never marked required -#}
+            </div>
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded %}
+
+{%- block checkbox_widget -%}
+    {{- form_label(form, null, { widget: parent() }) -}}
+{%- endblock checkbox_widget -%}
+
+{%- block radio_widget -%}
+    {{- form_label(form, null, { widget: parent() }) -}}
+{%- endblock radio_widget %}
+
+{%- block button_widget -%}
+    {%- if is_primary is not defined -%}
+        {% if type is defined and type == 'submit' %}
+            {%- set is_primary = true -%}
+        {% else %}
+            {%- set is_primary = false -%}
+        {%- endif -%}
+    {%- endif -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- elseif label is not same as(false) -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' button')|trim}) -%}
+    {% if is_primary %}
+        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' is-primary')|trim}) -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+        {%- if translation_domain is same as(false) -%}
+            {%- if label_html is same as(false) -%}
+                {{- label -}}
+            {%- else -%}
+                {{- label|raw -}}
+            {%- endif -%}
+        {%- else -%}
+            {%- if label_html is same as(false) -%}
+                {{- label|trans(label_translation_parameters, translation_domain) -}}
+            {%- else -%}
+                {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
+            {%- endif -%}
+        {%- endif -%}
+    </button>
+{%- endblock button_widget -%}
+
+{# Labels #}
+
+{%- block form_label -%}
+    {% if label is not same as(false) -%}
+        {%- if mark_required is not defined -%}
+            {%- set mark_required = false -%}
+        {%- endif -%}
+        {%- set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' label')|trim}) -%}
+        {%- if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif -%}
+        <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
+            {{- block('form_label_content') -}}
+        </{{ element|default('label') }}>
+    {%- endif -%}
+{%- endblock form_label -%}
+
+{%- block form_label_content -%}
+    {%- if show_mark is not defined -%}
+        {%- set show_mark = true -%}
+    {%- endif -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {%- if translation_domain is same as(false) -%}
+        {%- if label_html is same as(false) -%}
+            {{- label -}}
+        {%- else -%}
+            {{- label|raw -}}
+        {%- endif -%}
+    {%- else -%}
+        {%- if label_html is same as(false) -%}
+            {{- label|trans(label_translation_parameters, translation_domain) -}}
+        {%- else -%}
+            {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
+        {%- endif -%}
+    {%- endif -%}
+    {# Required/optional indicator #}
+    {% if show_mark %}
+        {% if not required and not mark_required %}
+            <span class="tag is-rounded">optional</span>
+        {% elseif required and mark_required %}
+            <span class="tag is-rounded">required</span>
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_label_content -%}
+
+{% block checkbox_label -%}
+    {% set label_class = 'checkbox' %}
+    {{- block('checkbox_radio_label') -}}
+{%- endblock checkbox_label %}
+
+{% block radio_label -%}
+    {% set label_class = 'radio' %}
+    {{- block('checkbox_radio_label') -}}
+{%- endblock radio_label %}
+
+{%- block checkbox_radio_label -%}
+    {#- Do not display the label if widget is not defined in order to prevent double label rendering -#}
+    {%- if widget is defined -%}
+        {%- if mark_required is not defined -%}
+            {# Default is true, whereas for normal label default is false #}
+            {%- set mark_required = true -%}
+        {%- endif -%}
+        {%- if label_class is defined -%}
+            {%- set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' ' ~ label_class)|trim}) -%}
+        {%- else -%}
+            {%- set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' checkbox')|trim}) -%}
+        {%- endif -%}
+        {%- if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif -%}
+        <label{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}>
+            {{- widget|raw }}
+            {{ block('form_label_content') -}}
+        </label>
+    {%- endif -%}
+{%- endblock checkbox_radio_label %}
+
+{# Help #}
+
+{% block form_help -%}
+    {%- if help is not empty -%}
+        {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' help')|trim}) -%}
+        <div id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>
+            {%- if translation_domain is same as(false) -%}
+                {%- if help_html is same as(false) -%}
+                    {{- help -}}
+                {%- else -%}
+                    {{- help|raw -}}
+                {%- endif -%}
+            {%- else -%}
+                {%- if help_html is same as(false) -%}
+                    {{- help|trans(help_translation_parameters, translation_domain) -}}
+                {%- else -%}
+                    {{- help|trans(help_translation_parameters, translation_domain)|raw -}}
+                {%- endif -%}
+            {%- endif -%}
+        </div>
+    {%- endif -%}
+{%- endblock form_help %}
+
+{# Rows #}
+
+{%- block form_row -%}
+    {%- set widget_attr = {} -%}
+    {%- set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' field')|trim}) -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div {% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_label(form) -}}
+        <div class="control">
+            {{- form_widget(form, widget_attr) -}}
+        </div>
+        {{- form_errors(form) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock form_row -%}
+
+{%- block button_row -%}
+    {%- set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' field')|trim}) -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        <div class="control">
+            {{- form_widget(form) -}}
+        </div>
+    </div>
+{%- endblock button_row -%}
+
+{%- block hidden_row -%}
+    {{ form_widget(form) }}
+{%- endblock hidden_row -%}
+
+{# Misc #}
+
+{%- block form_start -%}
+    {%- do form.setMethodRendered() -%}
+    {% set method = method|upper %}
+    {%- if method in ["GET", "POST"] -%}
+        {% set form_method = method %}
+    {%- else -%}
+        {% set form_method = "POST" %}
+    {%- endif -%}
+    <form{% if id != '' %} id="{{ id }}"{% endif %} {% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {%- if form_method != method -%}
+        <input type="hidden" name="_method" value="{{ method }}">
+    {%- endif -%}
+{%- endblock form_start -%}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        {%- for error in errors -%}
+            <p class="help is-danger">{{ error.message }}</p>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{%- block form_rest -%}
+    {% for child in form -%}
+        {% if not child.rendered %}
+            {{- form_row(child) -}}
+        {% endif %}
+    {%- endfor -%}
+
+    {% if not form.methodRendered and form is rootform %}
+        {%- do form.setMethodRendered() -%}
+        {% set method = method|upper %}
+        {%- if method in ["GET", "POST"] -%}
+            {% set form_method = method %}
+        {%- else -%}
+            {% set form_method = "POST" %}
+        {%- endif -%}
+
+        {%- if form_method != method -%}
+            <input type="hidden" name="_method" value="{{ method }}">
+        {%- endif -%}
+    {% endif -%}
+{% endblock form_rest %}

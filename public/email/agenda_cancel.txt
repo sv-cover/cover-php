@@ -1,8 +1,7 @@
-$member_naam has declined the agenda item $kop on behalf of the Board for the following reason:
+$member_name has declined the event $kop on behalf of the Board for the following reason:
 
-$reden
+$reason
 
 Kind Regards (we're just the messenger),
 
-
-The WebCie
+The Website

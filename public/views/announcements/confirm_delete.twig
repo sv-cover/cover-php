@@ -10,7 +10,7 @@
         </header>
         <section class="modal-card-body">
             <form method="post" id="delete-announcement-form" action="{{ path('announcements', {view: 'delete', id: iter.id}) }}">
-                {{ html_nonce('delete', iter) }}
+                {{ form_row(form._token) }}
                 <p>{{ __('Are you sure you want to delete the announcement <em>%s</em>?')|format(iter.subject|e('html'))|raw }}</p>
             </form>
         </section>

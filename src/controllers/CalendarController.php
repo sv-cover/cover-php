@@ -6,15 +6,24 @@
 	require_once 'src/framework/form.php';
 	require_once 'src/framework/webcal.php';
 	require_once 'src/framework/markup.php';
-	require_once 'src/framework/controllers/ControllerCRUD.php';
+	require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
+	use App\Form\Type\EventFormType;
+	use App\Form\DataTransformer\IntToBooleanTransformer;
+
+	use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+	use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+	use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 	use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 	
-	class CalendarController extends \ControllerCRUD
+	class CalendarController extends \ControllerCRUDForm
 	{
 		protected $_var_id = 'agenda_id';
 
 		protected $view_name = 'calendar';
+
+		protected $form_type = EventFormType::class;
 
 		public function __construct($request, $router)
 		{
@@ -39,219 +48,92 @@
 
 			return $this->generate_url('calendar', $parameters);
 		}
-		
-		public function _check_datum($name, $value)
+
+		protected function _process_create(\DataIter $iter)
 		{
-			/* If this is the tot field and we don't use tot
-			 * then set that value to null and return true
-			 */
-			if ($name == 'tot' && empty(trim($value)))
-				return null;
-			
-			try {
-				$date = new \DateTime($value);
-				if ($date < new \DateTime())
-					return false;
-				return $date->format('Y-m-d H:i');
-			} catch (\Exception $e) {
-				return false;
-			}
-		}
-		
-		public function _check_length($name, $value)
-		{
-			$lengths = array('kop' => 100, 'locatie' => 100);
+			if (!\get_policy($iter)->user_can_create($iter))
+				throw new \UnauthorizedException('You are not allowed to create events!');
 
-			if (!$value)
-				return false;
-			
-			if (isset($lengths[$name]) && strlen($value) > $lengths[$name])
-				return false;
-			
-			return $value;
-		}
-		
-		public function _check_locatie($name, $value)
-		{
-			$locatie = get_post('locatie');
+			// Some things break without end date (tot), so set end date to start date (van)
+			if (empty($iter['tot']))
+				$iter['tot'] = $iter['van'];
 
-			if (empty(trim($locatie)))
-				return null;
-
-			return $this->_check_length('locatie', $locatie);
-		}
-		
-		public function _check_image_url($name, $value)
-		{
-			// Image is optional
-			if (empty(trim($value)))
-				return null;
-
-			// Max length == 255
-			if (strlen($value) > 255)
-				return false;
-
-			// Only accept image file (using naive extension check)
-			$ext = pathinfo(parse_url($value, PHP_URL_PATH), PATHINFO_EXTENSION);
-			$allowed_exts = get_config_value('filemanager_image_extensions', ['jpg', 'jpeg', 'png']);
-			if (in_array(strtolower($ext), $allowed_exts))
-				return $value;
-
-			return false;
-		}
-
-		public function _check_facebook_id($name, $value)
-		{
-			if (trim($value) == '')
-				return null;
-
-			$result = preg_match('/^https:\/\/www\.facebook\.com\/events\/(\d+)\//', $value, $matches);
-
-			if ($result)
-				$value = $matches[1];
-			
-			if (strlen($value) <= 20  && ctype_digit($value))
-				return $value;
-
-			return false;
-		}
-
-		public function _check_commissie($name, $value)
-		{
-			if (get_identity()->member_in_committee($value)
-				|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-				|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR))
-				return $value;
-			
-			return false;
-		}
-
-		protected function _check_values($iter, &$errors)
-		{
-			/* Check/format all the items */
-			$data = check_values(
-				array(
-					array('name' => 'kop', 'function' => array($this, '_check_length')),
-					'beschrijving',
-					array('name' => 'committee_id', 'function' => array($this, '_check_commissie')),
-					array('name' => 'van', 'function' => array($this, '_check_datum')),
-					array('name' => 'tot', 'function' => array($this, '_check_datum')),
-					array('name' => 'locatie', 'function' => array($this, '_check_locatie')),
-					array('name' => 'image_url', 'function' => array($this, '_check_image_url')),
-					array('name' => 'private', 'function' => 'check_value_checkbox'),
-					array('name' => 'extern', 'function' => 'check_value_checkbox'),
-					array('name' => 'facebook_id', 'function' => array($this, '_check_facebook_id'))),
-				$errors);
-
-			if (count($errors) > 0)
-				return false;
-
-			if ($data['tot'] === null)
-				$data['tot'] = $data['van'];
-			
-			if (new \DateTime($data['van']) > new \DateTime($data['tot'])) {
-				$errors[] = 'tot';
-				return false;
-			}
-		
-			return $data;
-		}
-
-		protected function _changed_values($iter, $data)
-		{
-			$changed = array();
-
-			foreach ($data as $field => $value)
-			{
-				$current = $iter[$field];
-
-				// Unfortunately, we need to 'normalize' the time fields for this to work
-				if ($field == 'van' || $field == 'tot') {
-					$current = strtotime($iter[$field]);
-					$value = strtotime($value);
-				}
-
-				if ($current != $value)
-					$changed[] = $field;
-			}
-
-			return $changed;
-		}
-		
-		protected function _create(\DataIter $iter, array $data, array &$errors)
-		{
-			if (($data = $this->_check_values($iter, $errors)) === false)
-				return false;
-
-			// Placeholders for e-mail
-			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
-				'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
-			);
-
-			$iter->set_all($data);
-
-			$id = $this->model->propose_insert($iter, true);
+			$id = $this->model->propose_insert($iter);
 
 			$iter->set_id($id);
-				
-			$_SESSION['alert'] = __('The new calendar event is now waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
+
+			$_SESSION['alert'] = __('The new event is now waiting for approval. Once the board has accepted the event, it will be published on the website.');
+
+			$placeholders = [
+				'commissie_naam' => get_model('DataModelCommissie')->get_naam($iter['committee_id']),
+				'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
+			];
 
 			mail(
 				get_config_value('defer_email_to', get_config_value('email_bestuur')),
-				'Nieuw agendapunt ' . $data['kop'],
-				parse_email('agenda_add.txt', array_merge($data, $placeholders, array('id' => $id))),
-				"From: Study Association Cover <noreply@svcover.nl>\r\n");
+				'New event ' . $iter['kop'],
+				parse_email('agenda_add.txt', array_merge($iter->data, $placeholders, ['id' => $id])),
+				"From: Study Association Cover <noreply@svcover.nl>\r\n"
+			);
 
 			return true;
 		}
 
-		protected function _update(\DataIter $iter, array $data, array &$errors)
+		public function run_update(\DataIter $iter)
 		{
-			if (($data = $this->_check_values($iter, $errors)) === false)
-				return false;
+			if (!\get_policy($this->model)->user_can_update($iter))
+				throw new \UnauthorizedException('You are not allowed to edit this ' . get_class($iter) . '.');
 
-			$skip_confirmation = false;
+			$orig = \DataIterAgenda::from_iter($iter);
 
-			// If you update the facebook-id, description, image or location, no need to reconfirm.
-			if (!array_diff($this->_changed_values($iter, $data), array('facebook_id', 'beschrijving', 'image_url', 'locatie')))
-				$skip_confirmation = true;
+			$success = false;
 
-			// Placeholders for e-mail
-			$placeholders = array(
-				'commissie_naam' => get_model('DataModelCommissie')->get_naam($data['committee_id']),
-				'member_naam' => member_full_name(null, IGNORE_PRIVACY));
+			$form = $this->get_form($iter);
 
-			// Previous exists and there is no need to let the board confirm it
-			if ($skip_confirmation)
-			{
-				foreach ($data as $field => $value)
-					$iter[$field] = $value;
+			if ($form->isSubmitted() && $form->isValid()) {
+				// We could set $skip_confirmation in one statement, but I find this more readable
+				$skip_confirmation = false;
 
-				$this->model->update($iter);
+				// If you update the facebook-id, description, image or location, no need to reconfirm.
+				if (!array_diff(array_keys($iter->get_updated_fields($orig)), ['facebook_id', 'beschrijving', 'image_url', 'locatie']))
+					$skip_confirmation = true;
 
-				$_SESSION['alert'] = __('The changes you\'ve made to this activity have been published.');
+				// Unless the event was in the past, then we need confirmation as we most likely shouldn't be changing things anyway
+				if ((empty($orig['tot_datetime']) && $orig['van_datetime'] < new \DateTime()) || $orig['tot_datetime'] < new \DateTime())
+					$skip_confirmation = false;
+
+				// Previous exists and there is no need to let the board confirm it
+				if ($skip_confirmation)
+				{
+					$this->model->update($iter);
+
+					$_SESSION['alert'] = __("The changes you've made to this event have been published.");
+				}
+
+				// Previous item exists but it needs to be confirmed first.
+				else
+				{
+					$override_id = $this->model->propose_update($iter);
+
+					$_SESSION['alert'] = __('The changes to the event are waiting for approval. Once the board has accepted the changes, they will be published on the website.');
+
+					$placeholders = [
+						'commissie_naam' => get_model('DataModelCommissie')->get_naam($iter['committee_id']),
+						'member_naam' => member_full_name(get_identity()->member(), IGNORE_PRIVACY)
+					];
+
+					mail(
+						get_config_value('defer_email_to', get_config_value('email_bestuur')),
+						'Updated event ' . $iter['kop'] . ($iter->get('kop') != $orig->get('kop') ? ' was ' . $orig->get('kop') : ''),
+						parse_email('agenda_mod.txt', array_merge($iter->data, $placeholders, ['id' => $override_id])),
+						"From: Study Association Cover <noreply@svcover.nl>\r\n"
+					);
+				}
+
+				$success = true;
 			}
 
-			// Previous item exists but it needs to be confirmed first.
-			else
-			{
-				$mod = $this->model->new_iter();
-
-				$mod->set_all($data);
-
-				$override_id = $this->model->propose_update($mod, $iter);
-
-				$_SESSION['alert'] = __('The changes to the calendar event are waiting for approval. Once the governing board has accepted the event, it shall be placed on the website.');
-
-				mail(
-					get_config_value('defer_email_to', get_config_value('email_bestuur')),
-					'Gewijzigd agendapunt ' . $data['kop'] . ($mod->get('kop') != $iter->get('kop') ? ' was ' . $iter->get('kop') : ''),
-					parse_email('agenda_mod.txt', array_merge($data, $placeholders, array('id' => $override_id))),
-					"From: Study Association Cover <noreply@svcover.nl>\r\n");
-			}
-
-			return true;
+			return $this->view()->render_update($iter, $form, $success);
 		}
 
 		protected function _index()
@@ -273,74 +155,81 @@
 			return $punten;
 		}
 		
-		public function run_moderate(\DataIterAgenda $item = null)
+		public function run_moderate(\DataIterAgenda $iter = null)
 		{
-			if ($this->_form_is_submitted('moderate'))
-				if ($this->_moderate())
-					return $this->view->redirect($this->generate_url('calendar'));
-
-			$agenda_items = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
-
-			return $this->view->render_moderate($agenda_items, $item ? $item['id'] : null);
+			$events = array_filter($this->model->get_proposed(), [get_policy($this->model), 'user_can_moderate']);
+			return $this->view->render('moderate.twig', [
+				'iters' => $events,
+				'highlighted_id' => $iter ? $iter['id'] : null,
+			]);
 		}
 		
-		protected function _moderate()
+		public function run_moderate_accept(\DataIterAgenda $iter)
 		{
-			$cancelled = array();
+			if (!get_policy($this->model)->user_can_moderate($iter))
+				throw new \UnauthorizedException();
 
-			foreach ($_POST as $field => $value)
+			$builder = $this->createFormBuilder($iter, ['csrf_token_id' => 'event_accept_' . $iter['id']])
+				->add('private', CheckboxType::class, [
+					'label'    => __('Only visible to members'),
+					'required' => false,
+				])
+				->add('extern', CheckboxType::class, [
+					'label'    => __('This event is not organised by Cover'),
+					'required' => false,
+				])
+				->add('submit', SubmitType::class, ['label' => 'Accept event']);
+			$builder->get('private')->addModelTransformer(new IntToBooleanTransformer());
+			$builder->get('extern')->addModelTransformer(new IntToBooleanTransformer());
+			$form = $builder->getForm();
+			$form->handleRequest($this->get_request());
+
+			if ($form->isSubmitted() && $form->isValid())
+				$this->model->accept_proposal($iter);
+
+			return $this->view->redirect($this->generate_url('calendar', ['view' => 'moderate']));
+		}
+
+		public function run_moderate_reject(\DataIterAgenda $iter)
+		{
+			if (!get_policy($this->model)->user_can_moderate($iter))
+				throw new \UnauthorizedException();
+
+			$form = $this->createFormBuilder()
+				->add('reason', TextareaType::class, [
+					'label' => __('Reason for rejection'),
+					'required' => false,
+					'help' => __('This will be emailed to the committee.'),
+				])
+				->add('submit', SubmitType::class, ['label' => 'Reject event'])
+				->getForm();
+			$form->handleRequest($this->get_request());
+
+			if ($form->isSubmitted() && $form->isValid())
 			{
-				if (!preg_match('/action_([0-9]+)/i', $field, $matches))
-					continue;
+				/* Remove agendapunt and inform owner of the agendapunt */
+				$this->model->reject_proposal($iter);
 				
-				$id = $matches[1];
+				$data = $iter->data;
+				$data['member_name'] = member_full_name(null, IGNORE_PRIVACY);
+				$data['reason'] = $form->get('reason')->getData();
 
-				$iter = $this->model->get_iter($id);
+				$subject = 'Rejected event: ' . $iter['kop'];
+				$body = parse_email('agenda_cancel.txt', $data);
 				
-				if (!get_policy($this->model)->user_can_moderate($iter))
-					throw new \UnauthorizedException();
+				$committee_model = get_model('DataModelCommissie');
+				$email = get_config_value('defer_email_to', $committee_model->get_email($iter['committee_id']));
 
-				if ($value == 'accept') {
-					/* Accept agendapunt */
+				mail($email, $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\n");
 
-					// If it is marked private, set that perference first.
-					$iter['private'] = !empty($_POST['private_' . $iter['id']]) ? 1 : 0;
-					
-					$iter->update();
-					
-					$this->model->accept_proposal($iter);
-				} elseif ($value == 'cancel') {
-					/* Remove agendapunt and inform owner of the agendapunt */
-					$this->model->reject_proposal($iter);
-					
-					$data = $iter->data;
-					$data['member_naam'] = member_full_name(null, IGNORE_PRIVACY);
-					$data['reden'] = get_post('comment_' . $id);
-
-					$subject = 'Agendapunt ' . $iter['kop'] . ' geweigerd';
-					$body = parse_email('agenda_cancel.txt', $data);
-					
-					$commissie_model = get_model('DataModelCommissie');
-					$email = get_config_value('defer_email_to', $commissie_model->get_email($iter['committee_id']));
-
-					mail($email, $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\n");
-					$cancelled[] = $commissie_model->get_naam($iter['committee_id']);
-				}
+				$_SESSION['alert'] = sprintf(
+					__('The %s has been notified that their event has been rejected.'),
+					$committee_model->get_naam($iter['committee_id'])
+				);
+				return $this->view->redirect($this->generate_url('calendar', ['view' => 'moderate']));
 			}
-			
-			$cancelled_un = array_unique($cancelled);
-			$s = implode(', ', $cancelled_un);
 
-			if (count($cancelled_un) == 1)
-				if (count($cancelled) == 1) {
-					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar event.'), $s);
-				} else {
-					$_SESSION['alert'] = sprintf(__('The committee %s has been notified of the denying of the calendar events.'), $s);
-				}
-			elseif (count($cancelled_un) > 0)
-				$_SESSION['alert'] = sprintf(__('The committees %s have been notified of the denying of the calendar events.'), $s);
-			
-			return true;
+			return $this->view->render('confirm_reject.twig', ['iter' => $iter, 'form' => $form->createView()]);
 		}
 
 		public function run_rsvp_status($iter)
@@ -396,12 +285,11 @@
 				$event->uid = $punt->get_id() . '@svcover.nl';
 				$event->start = new \DateTime($punt['van'], $timezone);
 
-				if ($punt['van'] != $punt['tot']) {
-					$event->end = new \DateTime($punt['tot'], $timezone);
-				}
-				else {
+				if (empty($punt['tot']) || $punt['van'] == $punt['tot']) {
 					$event->end = new \DateTime($punt['van'], $timezone);
 					$event->end->modify('+ 2 hour');
+				} else {
+					$event->end = new \DateTime($punt['tot'], $timezone);
 				}
 				
 				$event->summary = $punt['extern']
@@ -439,11 +327,6 @@
 			return $this->view->render_json($locations, $limit);
 		}
 
-		public function run_preview()
-		{
-			return markup_parse($_POST['beschrijving']);
-		}
-
 		public function run_subscribe()
 		{
 			return $this->view->render('subscribe.twig');
@@ -452,7 +335,7 @@
 		public function run_slide()
 		{
 			$events = $this->model->get_agendapunten();
-			return $this->view->render_slide($events);
+			return $this->view->render('slide.twig', ['iters' => $events]);
 		}
 
 		public function get_parameter($key, $default=null)

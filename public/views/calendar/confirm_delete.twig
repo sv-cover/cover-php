@@ -4,16 +4,21 @@
 
 {% block content %}
 <h1 class="title">{{ __('Delete event') }}</h1>
-<form method="post" action="{{ path('calendar', {view: 'delete', agenda_id: iter.id}) }}">
-	{{ html_nonce('delete', iter) }}
-    <div class="field">
-    	<p>{{ __('Are you certain you want to delete the event <em>%s</em>?')|format(iter.kop|e('html'))|raw }}</p>
-    </div>
+{{ form_start(form, {
+	action: path('calendar', {view: 'delete', agenda_id: iter.id}),
+}) }}
 	<div class="field">
-        <div class="control buttons">
-    		<button type="submit" class="button is-danger">{{ __('Delete event')  }}</button>
-    		<a href="{{ path('calendar', {agenda_id: iter.id}) }}" class="button">{{ __('Back to event') }}</a>
-        </div>
+		<p>{{ __('Are you certain you want to delete the event <em>%s</em>?')|format(iter.kop|e('html'))|raw }}</p>
 	</div>
-</form>
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {
+				label: __('Delete event'),
+				is_primary: false,
+				attr: {class: 'is-danger'},
+			}) }}
+			<a href="{{ path('calendar', {agenda_id: iter.id}) }}" class="button">{{ __('Back to event') }}</a>
+		</div>
+	</div>
+{{ form_end(form) }}
 {% endblock %}

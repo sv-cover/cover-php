@@ -50,9 +50,12 @@ $event-overlay-padding: 1.25rem
 .committee-single
     .event-list
         .event
-            > a
+            > a,
+            .card-image
                 @extend .cover-thumbnail
                 @extend .is-2by1
+            .card-image:not(:last-child)
+                margin-bottom: 0
             .date, .name, .label-pending
                 @extend .boxed-title-wrapper
                 > *
@@ -78,6 +81,8 @@ $event-overlay-padding: 1.25rem
                 transition: opacity .125s ease-in-out
                 &:hover
                     opacity: 1
+            &.card.is-active
+                outline: 4px solid $cover-red
 
 .calendar.is-list
     .event-list

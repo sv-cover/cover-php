@@ -1,7 +1,4 @@
-{% set _content = block('content') %}
-{% set _footer = block('footer') %}
-
-{% if _content is not empty %}
+{% if block('content') is defined and block('content') is not empty %}
     <article class="card" >
 
     	<header class="card-header">
@@ -12,10 +9,9 @@
     	<div class="card-content" id="menu_{% block name %}{% endblock %}">
     		{% block content %}{% endblock %}
     	</div>
-        {% set _footer = block('footer') %}
-        {% if _footer is not empty %}
+        {% if block('footer') is defined and block('footer') is not empty %}
             <footer class="card-footer">
-                {{ _footer|raw }}
+                {{ block('footer') }}
             </footer>
         {% endif %}
     </article>

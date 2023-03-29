@@ -10,7 +10,7 @@
         </header>
         <section class="modal-card-body">
             <form id="delete-vacancy-form" method="post" action="{{ path('vacancies', {view: 'delete', id: iter.id}) }}">
-                {{ html_nonce('delete', iter) }}
+                {{ form_row(form._token) }}
                 <p>
                     {{ __('Are you sure you want to remove this vacancy?') }}
                     <em>{{ iter.title }}</em>

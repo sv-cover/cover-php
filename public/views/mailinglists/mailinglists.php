@@ -4,7 +4,7 @@ require_once 'src/framework/markup.php';
 require_once 'src/framework/svg.php';
 require_once 'src/framework/send-mailinglist-mail.php';
 
-class MailinglistsView extends CRUDView
+class MailinglistsView extends CRUDFormView
 {
 	public function committee_options()
 	{
@@ -42,26 +42,26 @@ class MailinglistsView extends CRUDView
 		return sprintf('aanmelding%s', $abonnement['abonnement_id'] ? $abonnement['abonnement_id'] : $abonnement['lid_id']);
 	}
 
-	public function render_unsubscribe_form(DataIterMailinglist $list, DataIterMailinglistSubscription $subscription)
+	public function render_unsubscribe_form(DataIterMailinglist $list, DataIterMailinglistSubscription $subscription, $form)
 	{
-		return $this->render('unsubscribe_form.twig', compact('list', 'subscription'));
+		return $this->render('unsubscribe_form.twig', ['list' => $list, 'subscription' => $subscription, 'form' => $form->createView()]);
 	}
 
-	public function render_autoresponder_form(DataIterMailinglist $iter, $autoresponder, $success, $errors)
+	public function render_autoresponder_form(DataIterMailinglist $iter, $form, $autoresponder, $success)
 	{
 		return $success
 			? $this->redirect($this->controller->generate_url('mailing_lists', ['view' => 'update', 'id' => $iter->get_id()]))
-			: $this->render('autoresponder_form.twig', compact('iter', 'autoresponder', 'success', 'errors'));
+			: $this->render('autoresponder_form.twig', ['iter' => $iter, 'form' => $form->createView(), 'autoresponder' => $autoresponder, 'success' => $success]);
 	}
 
-	public function render_subscribe_member_form(DataIterMailinglist $list, array $errors)
+	public function render_subscribe_member_form(DataIterMailinglist $list, $form)
 	{
-		return $this->render('subscribe_member_form.twig', compact('list', 'errors'));
+		return $this->render('subscribe_member_form.twig', ['list' => $list, 'form' => $form->createView()]);
 	}
 
-	public function render_subscribe_guest_form(DataIterMailinglist $list, array $errors)
+	public function render_subscribe_guest_form(DataIterMailinglist $list, $form)
 	{
-		return $this->render('subscribe_guest_form.twig', compact('list', 'errors'));
+		return $this->render('subscribe_guest_form.twig', ['list' => $list, 'form' => $form->createView()]);
 	}
 
 	public function render_archive_index(DataIterMailinglist $list, $messages)
@@ -94,9 +94,9 @@ class MailinglistsView extends CRUDView
 		return $this->render('archive_single.twig', compact('list', 'message', 'subject', 'html_body', 'text_body', 'error'));
 	}
 
-	public function render_embedded(DataIterMailinglist $list, DataModelMailinglist $model)
+	public function render_embedded(DataIterMailinglist $list, $form)
 	{
-		return $this->render('embedded.twig', compact('list'));
+		return $this->render('embedded.twig', ['list' => $list, 'form' => $form->createView()]);
 	}
 
 	public function barchart($data)
