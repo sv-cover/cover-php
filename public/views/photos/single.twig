@@ -74,8 +74,7 @@
         {% set nav = book.get_neighbours(photo) %}
         {% if nav.previous %}
         <a class="photo-previous" href="{{ path('photos.photo', {book: book.id, photo: nav.previous.id}) }}" title="{{ __('Go to the previous photo') }}">
-            <span class="ic
-        <span data-face-id="{{ face.id }}">{{ __('Unknown') }}</span>on">
+            <span class="icon">
                 <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 <span class="is-sr-only">{{ __('Previous') }}</span>
             </span>
