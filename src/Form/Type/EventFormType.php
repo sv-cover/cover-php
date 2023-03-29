@@ -65,7 +65,7 @@ class EventFormType extends AbstractType
             ->add('image_url', FilemanagerFileType::class, [
                 'label' => __('Image'),
                 'required' => false,
-                'help' => __('This image will neatly decorate your event page, and help stand out on the homepage.')
+                'help' => __("This image will neatly decorate your event page, and help stand it out on the homepage. Design hint: the image will always be cropped to a 2:1 ratio (with one exception, when it's a 1:1 (square) cropped out of the centre).")
             ])
             ->add('facebook_id', TextType::class, [
                 'label' => __('Link to Facebook event'),
