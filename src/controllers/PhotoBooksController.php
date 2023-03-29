@@ -543,7 +543,7 @@ class PhotoBooksController extends \Controller
 				else
 					$metadata->setTime(new \DateTime(sprintf('@%d', filectime($photo->get_full_path()))));
 				
-				if ($photo->has_value('beschrijving'))
+				if (!empty($photo->get('beschrijving')))
 					$metadata->setComment($photo->get('beschrijving'));
 
 				// And finally add the photo to the actual stream
