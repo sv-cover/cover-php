@@ -42,8 +42,8 @@ class VacanciesView extends CRUDFormView
 
 	private function get_tag($field, $value)
 	{
-		// Don't render empty filters, but 0 is not empty
-		if (empty($value) && $value !== 0)
+		// Don't render empty filters
+		if (!isset($value) || $value === '')
 			return [];
 
 		$tag = [];
