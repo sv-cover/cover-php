@@ -40,6 +40,31 @@ class VacanciesView extends CRUDFormView
 		return $this->render('index.twig', compact('iters', 'filter'));
 	}
 
+	private function get_tag($field, $value)
+	{
+		$tag = [];
+		if ($field === 'partner') {
+			$partner = array_find(
+				$this->partners(),
+				function ($item) use ($value) { return $item['id'] == $value; }
+			);
+			if (!empty($partner)){
+				$tag['name'] = $partner['name'];
+				$tag['for'] = sprintf('field-partner-%s', $partner['id']);
+			} elseif (!empty($value)) {
+				$tag['name'] = $value;
+				$tag['for'] = sprintf('field-partner-%s', $value);
+			}
+		} elseif ($field === 'type') {
+			$tag['name'] = $this->type_options()[$value];
+			$tag['for'] = sprintf('field-type-%s', $value);
+		} elseif ($field === 'study_phase') {
+			$tag['name'] = $this->study_phase_options()[$value];
+			$tag['for'] = sprintf('field-study_phase-%s', $value);
+		}
+		return $tag;
+	}
+
 	public function get_filter_tags($filter)
 	{
 		$tags = [];
@@ -49,22 +74,10 @@ class VacanciesView extends CRUDFormView
 				$values = [$values];
 
 			foreach ($values as $val) {
-				$tag = [];
-				if ($field === 'partner') {
-					$partner = array_find($this->partners(), function ($item) use ($val) { return $item['id'] == $val; });
-					if (empty($partner)) {
-						$tag['name'] = $val;
-						$tag['for'] = sprintf('field-partner-%s', $val);
-					} else {
-						$tag['name'] = $partner['name'];
-						$tag['for'] = sprintf('field-partner-%s', $partner['id']);
-					}
-				} elseif ($field === 'type') {
-					$tag['name'] = $this->type_options()[$val];
-					$tag['for'] = sprintf('field-type-%s', $val);
-				} elseif ($field === 'study_phase') {
-					$tag['name'] = $this->study_phase_options()[$val];
-					$tag['for'] = sprintf('field-study_phase-%s', $val);
+				try {
+					$tag = $this->get_tag($field, $val);
+				} catch (Exception $e) {
+					continue;
 				}
 
 				if (!empty($tag))
