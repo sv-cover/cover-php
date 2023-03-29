@@ -28,13 +28,6 @@ class I18NTwigExtension extends Twig_Extension
 			new Twig_SimpleFilter('period', 'agenda_period_for_display', ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('date_relative', 'format_date_relative'),
 			new Twig_SimpleFilter('vformat', 'vsprintf'),
-			new Twig_SimpleFilter('map', function($iterable, $callback) {
-				return array_map($callback, $iterable);
-			}),
-			new Twig_SimpleFilter('map_macro', function($context, $iterable, $callback) {
-				list($macro_context, $macro_name) = explode('.', $callback);
-				return array_map([$context[$macro_context], 'get' . $macro_name], $iterable);
-			}, ['needs_context' => true]),
 			new Twig_SimpleFilter('human_join', 'implode_human'),
 			new Twig_SimpleFilter('human_file_size', 'human_file_size'),
 			new Twig_SimpleFilter('flip', 'array_flip'),

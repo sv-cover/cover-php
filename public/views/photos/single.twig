@@ -2,8 +2,6 @@
 
 {% block title book.titel ~ ' – ' ~ parent() %}
 
-{% import _self as photo_macros %}
-
 {%- macro format_face_label(face) -%}
 <span class="face-label">
     {%- if face.lid_id is not null -%}
@@ -11,14 +9,14 @@
     {%- elseif face.custom_label != '' -%}
         <span class="custom-label" data-face-id="{{ face.id }}">{{ face.custom_label }}</span>
     {%- else -%}
-        <span data-face-id="{{ face.id }}">{{ __('Unknown') }}</span>
+        <span data-face-id="{{ face.id ?? '' }}">{{ __('Unknown') }}</span>
     {%- endif -%}
 </span>
 {%- endmacro -%}
 
-{%- macro format_face_labels(faces, photo_macros) -%}
+{%- macro format_face_labels(faces) -%}
     {% set known_faces = faces|filter(f => f.lid_id is not null or f.custom_label != '')  %}
-    {% set known_faces = known_faces|map_macro('photo_macros.format_face_label')  %}
+    {% set known_faces = known_faces|map(f => _self.format_face_label(f)) %}
     {% set unknown_count = faces|length - known_faces|length  %}
 
     {% if unknown_count > 0 %}
@@ -76,7 +74,8 @@
         {% set nav = book.get_neighbours(photo) %}
         {% if nav.previous %}
         <a class="photo-previous" href="{{ path('photos.photo', {book: book.id, photo: nav.previous.id}) }}" title="{{ __('Go to the previous photo') }}">
-            <span class="icon">
+            <span class="ic
+        <span data-face-id="{{ face.id }}">{{ __('Unknown') }}</span>on">
                 <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 <span class="is-sr-only">{{ __('Previous') }}</span>
             </span>
@@ -139,7 +138,7 @@
                     <span class="is-sr-only">{{ __('A photo with') }}</span>
                 </span>
                 <span class="face-list" data-glue="{{ __('and') }}">
-                    {{ photo_macros.format_face_labels(photo.faces|user_can_read, photo_macros) }}
+                    {{ _self.format_face_labels(photo.faces|user_can_read, _self) }}
                 </span>
                 {% apply spaceless %}
                     <template class="face-template">
