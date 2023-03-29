@@ -42,18 +42,22 @@ class VacanciesView extends CRUDFormView
 
 	private function get_tag($field, $value)
 	{
+		// Don't render empty filters, but 0 is not empty
+		if (empty($value) && $value !== 0)
+			return [];
+
 		$tag = [];
 		if ($field === 'partner') {
 			$partner = array_find(
 				$this->partners(),
 				function ($item) use ($value) { return $item['id'] == $value; }
 			);
-			if (!empty($partner)){
-				$tag['name'] = $partner['name'];
-				$tag['for'] = sprintf('field-partner-%s', $partner['id']);
-			} elseif (!empty($value)) {
+			if (empty($partner)){
 				$tag['name'] = $value;
 				$tag['for'] = sprintf('field-partner-%s', $value);
+			} else {
+				$tag['name'] = $partner['name'];
+				$tag['for'] = sprintf('field-partner-%s', $partner['id']);
 			}
 		} elseif ($field === 'type') {
 			$tag['name'] = $this->type_options()[$value];
