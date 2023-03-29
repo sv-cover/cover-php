@@ -124,10 +124,19 @@
 
 			// Set up the output zip stream and just handle all files as large files
 			// (meaning no compression, streaming stead of reading into memory.)
-			$zip = new ZipStream('almanac-' . date('Y-m-d') . '.zip', [
-				ZipStream::OPTION_LARGE_FILE_SIZE => 1,
-				ZipStream::OPTION_LARGE_FILE_METHOD => 'store',
-				ZipStream::OPTION_OUTPUT_STREAM => fopen('php://output', 'wb')]);
+
+			// Apparently nginx doesn't like zipstream
+			header('X-Accel-Buffering: no');
+
+			// Set up the output zip stream and just handle all files as large files
+			// (meaning no compression, streaming instead of reading into memory.)
+			$options = new \ZipStream\Option\Archive();
+			$options->setLargeFileSize(1);
+			$options->setLargeFileMethod(\ZipStream\Option\Method::STORE());
+			$options->setSendHttpHeaders(true);
+			$options->setOutputStream(fopen('php://output', 'wb'));
+
+			$zip = new ZipStream('almanac-' . date('Y-m-d') . '.zip', $options);
 
 			// Now for each book find all photos and add them to the zip stream
 			$iters = $this->model->get_from_search_first_last(null, null);
@@ -147,7 +156,8 @@
 				if (($data = $this->model->get_photo_stream($iter)) === null)
 					continue;
 
-				$metadata = ['time' => $this->model->get_photo_mtime($iter)];
+				$metadata = new \ZipStream\Option\File();
+				$metadata->setTime(new \DateTime(sprintf('@%d', $this->model->get_photo_mtime($iter))));
 
 				// And finally add the photo to the actual stream
 				$zip->addFileFromStream(sprintf('%d.jpg', $iter->get_id()), $data['foto'], $metadata);

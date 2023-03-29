@@ -486,12 +486,18 @@ class PhotoBooksController extends \Controller
 			array_map(curry_call_method('get_id'), $books),
 			$books);
 
+		// Apparently nginx doesn't like zipstream
+		header('X-Accel-Buffering: no');
+
 		// Set up the output zip stream and just handle all files as large files
-		// (meaning no compression, streaming stead of reading into memory.)
-		$zip = new ZipStream(sanitize_filename($root_book->get('titel')) . '.zip', [
-			ZipStream::OPTION_LARGE_FILE_SIZE => 1,
-			ZipStream::OPTION_LARGE_FILE_METHOD => 'store',
-			ZipStream::OPTION_OUTPUT_STREAM => fopen('php://output', 'wb')]);
+		// (meaning no compression, streaming instead of reading into memory.)
+		$options = new \ZipStream\Option\Archive();
+		$options->setLargeFileSize(1);
+		$options->setLargeFileMethod(\ZipStream\Option\Method::STORE());
+		$options->setSendHttpHeaders(true);
+		$options->setOutputStream(fopen('php://output', 'wb'));
+
+		$zip = new ZipStream(sanitize_filename($root_book->get('titel')) . '.zip', $options);
 
 		// Now for each book find all photos and add them to the zip stream
 		foreach ($books as $book)
@@ -529,22 +535,19 @@ class PhotoBooksController extends \Controller
 				// Let's just assume that the filename the photo already has is sane and safe
 				$photo_path = $book_path . '/' . basename($photo->get('filepath'));
 
-				// Add meta data to the zip file if available
-				$metadata = array();
+				// Add meta data to the zip file if availabley();
+				$metadata = new \ZipStream\Option\File();
 
 				if ($photo->has_value('created_on'))
-					$metadata['time'] = strtotime($photo->get('created_on'));
+					$metadata->setTime(new \DateTime($photo->get('created_on')));
 				else
-					$metadata['time'] = filectime($photo->get_full_path());
+					$metadata->setTime(new \DateTime(sprintf('@%d', filectime($photo->get_full_path()))));
 				
 				if ($photo->has_value('beschrijving'))
-					$metadata['comment'] = $photo->get('beschrijving');
+					$metadata->setComment($photo->get('beschrijving'));
 
 				// And finally add the photo to the actual stream
-				$zip->addFileFromPath(
-					$photo_path,
-					$photo->get_full_path(),
-					$metadata);
+				$zip->addFileFromPath($photo_path, $photo->get_full_path(), $metadata);
 			}
 		}
 
