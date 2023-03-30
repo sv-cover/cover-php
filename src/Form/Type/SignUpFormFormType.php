@@ -84,7 +84,6 @@ class SignUpFormFormType extends AbstractType
             && !\get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
             && !\get_identity()->member_in_committee(COMMISSIE_EASY)
         )
-            var_dump(\get_identity()->member()->get('committees'));
             $filter['committee_id__in'] = \get_identity()->member()->get('committees');
 
         $events = get_model('DataModelAgenda')->find($filter);
