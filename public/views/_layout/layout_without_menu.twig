@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=9">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="shortcut icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+		<link rel="shortcut icon" type="image/png"  href="/images/favicon-64x64.png" sizes="64x64">
+		<link rel="shortcut icon" type="image/png"  href="/images/favicon-128x128.png" sizes="128x128">
+		<link rel="shortcut icon" type="image/png"  href="/images/favicon-192x192.png" sizes="192x192">
+		<link rel="apple-touch-icon" href="filename='/images/apple-touch-icon-180x180.png">
+		<meta name="msapplication-TileImage" content="/images/favicon-270x270.png">
+	
+		<title>{% block title %}Cover{% endblock %}</title>
+		
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+		{% for stylesheet in view.stylesheets %}
+		<link rel="stylesheet" href="{{ stylesheet }}" type="text/css">
+		{% endfor %}
+	</head>
+	<body class="has-navbar-fixed-top">
+		<nav class="navbar is-cover is-fixed-top" role="navigation" aria-label="main navigation">
+			<div class="container">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="/">
+						<img class="cover-logo" src="{{ link_static('/images/cover_logo.png') }}" alt="Cover">
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<main class="main">
+			{% block page %}
+				<article class="section">
+					<div class="container is-content-optimized">
+						{% block content %}{% endblock %}
+					</div>
+				</article>
+			{% endblock %}
+		</main>
+
+		{{ include('@layout/widgets/footer.twig', {'render_sponsors': false}) }}
+
+		{% for script in view.scripts %}
+		<script src="{{ script }}"></script>
+		{% endfor %}
+
+		{% if view.layout.has_alert %}
+			<script>alert({{ view.layout.pop_alert|json_encode|raw }})</script>
+		{% endif %}
+
+		<!-- Sentry -->
+		{% if global.config.sentry_public_url %}
+			<script src="https://cdn.ravenjs.com/3.10.0/raven.min.js"></script>
+			<script>
+				Raven.config({{ global.config.sentry_public_url|json_encode()|raw }}).install();
+				{% if global.auth.logged_in %}
+				Raven.setUserContext({ user_id: {{ global.identity.member.id|json_encode()|raw }} });
+				{% endif %}
+			</script>
+		{% endif %}
+
+		{% if global.db.history|length > 0 %}
+			<script>
+				console.info('Total number of queries run: %d (%0.1fms)', {{ global.db.history|length }}, {{ global.db.history|select('duration')|sum * 1000 }});
+				console.groupCollapsed("Queries");
+				{% for query in global.db.history %}
+				console.info("Duration: %0.3fms: %s", {{query.duration * 1000}}, {{query.query|json_encode()|raw}}, {{ query.backtrace|json_encode()|raw }});
+				{% endfor %}
+				console.groupEnd();
+			</script>
+		{% endif %}
+	</body>
+</html>

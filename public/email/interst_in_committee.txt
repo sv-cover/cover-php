@@ -1,0 +1,19 @@
+Subject: $member[voornaam] is interested in $committee[naam]
+From: Study Association Cover <noreply@svcover.nl>
+Cc: $member[email]
+Reply-to: $member[email]
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+<body>
+<p>Hey,</p>
+
+<p><a href="https://www.svcover.nl/profiel.php?lid=$member[id]">$member[full_name]|markup_format_text</a> indicated they are interested in the $committee[naam]|markup_format_text.</p>
+
+<p>Just so you know ;)</p>
+
+<p>Kind regards,<br>the Website</p>
+
+</body>
+</html>

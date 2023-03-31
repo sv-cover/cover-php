@@ -1,0 +1,74 @@
+{% extends '@layout/layout_slide.twig' %}
+{% import '@theme/calendar/macros.twig' as macros %}
+
+{% block title 'Calendar – ' ~ parent() %}
+
+{# Highlight only events with images #}
+{% set events_with_image = iters|filter(x => x.image_url is not null)|keys %}
+{% if events_with_image|length > 0 %}
+    {% set idx = global.GET['cover-screen-iteration']|default(random(0, events_with_image|length - 1)) % events_with_image|length  %}
+    {% set highlighted_event = iters[events_with_image[idx]] %}
+{% else %}
+    {% set highlighted_event = null %}
+{% endif %}
+
+{% block page %}
+<div class="slide calendar-slide columns">
+    <div class="column cover-thumbnail">
+        {% if highlighted_event %}
+            <div class="overlay is-bottom">
+                <div class="date boxed-title-wrapper">
+                    <span class="boxed-title has-text-weight-normal is-size-4 is-size-6-touch is-size-7-mobile">
+                        {{ highlighted_event.van|date('F d') }}
+                    </span>
+                </div>
+                <div class="name boxed-title-wrapper">
+                    <h2 class="boxed-title is-size-2-widescreen is-size-3-desktop is-size-4-tablet is-size-5-mobile">
+                        {{ highlighted_event.kop }}
+                    </h2>
+                </div>
+            </div>
+            <figure class="image">
+                <img
+                    srcset="{{ highlighted_event.get_image(400) }} 400w,
+                            {{ highlighted_event.get_image(600) }} 600w,
+                            {{ highlighted_event.get_image(1000) }} 1000w,
+                            {{ highlighted_event.get_image(2000) }} 2000w"
+                    sizes="(max-width: 400px) 400px,
+                           (max-width: 600px) 600px,
+                           (max-width: 1000px) 1000px,
+                           2000px"
+                    src="{{ highlighted_event.get_image(1000) }}"
+                > 
+            </figure>
+        {% endif %}
+    </div>
+    <div class="events-list column">
+        <h1 class="title is-3 is-sticky">{{ __('Upcoming Events') }}</h1>
+        {% for event in iters %}
+            <div class="event columns is-mobile {% if event == highlighted_event %}is-active{% endif %}">
+                <div class="event-date column is-uppercase">
+                    <span>{{ event.van|date('M') }}</span>
+                    <span>{{ event.van|date('d') }}</span>
+                </div>
+                <div class="event-details column">
+                    <h2 class="event-title is-capitalized">{{ event.kop }}</h2>
+                    <div class="event-time">
+                        {{ macros.format_time(event) }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>{{ __('Nothing planned :(') }}</p>
+            <p>{{ __('Do you have an idea? Contact the board!') }}</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+const activeEvent = document.querySelector('.event.is-active');
+if (activeEvent)
+    activeEvent.scrollIntoView({block: 'center'});
+</script>
+
+{% endblock %}

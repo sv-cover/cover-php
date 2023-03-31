@@ -1,0 +1,78 @@
+{% extends 'tab.twig' %}
+
+{% set active_tab = 'kast' %}
+
+{% block tab_content %}
+<header class="block">
+	<h2 class="title is-4">{{ __('Consumptions in K.A.S.T.') }}</h2>
+	{% if not status.active %}
+		<div class="notification is-danger">
+			<button class="delete"></button>
+			<div class="level is-mobile">
+				<div class="level-left">
+					<div class="level-item">
+						<span class="icon is-medium" aria-hidden="true">
+							<i class="fas fa-exclamation-circle fa-2x"></i>
+						</span>
+					</div>
+					<div class="level-item">
+						{{ __('Your account is inactive!') }}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</header>
+
+<section class="block">
+	<h3 class="title is-5">{{ __('Balance') }}</h3>
+	<p {% if status.balance < 0 %}class="has-text-danger"{% endif %}>
+		€ {{ (status.balance/100)|number_format(2) }}
+	</p>
+</section>
+
+<section>
+	<h3 class="title is-5">{{ __('Recent Purchases') }}</h3>
+	<p>{{ __('Your twenty most recent purchases') }}</p>
+	<table class="table is-fullwidth is-hoverable is-aligned consumptions-table">
+		<thead>
+			<tr>
+				<th class="">{{ __('Product') }}</th>
+				<th class="amount-field">{{ __('Price') }}</th>
+				<th class="date-field">{{ __('Date') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for purchase in history %}
+				{% if purchase.class_name == 'Purchase' %}
+					<tr class="{{ purchase.admin ? 'purchase-admin' : '' }} {{ not purchase.valid ? 'purchase-reverted' : '' }}"
+						title="{{ purchase.admin ? __('Admin Purchase') : '' }} {{ not purchase.valid ? __('Undone') : '' }}">
+						<td class="is-truncated">
+							<span>{{ purchase.product_name }}</span>
+						</td>
+						<td class="amount-field">
+							€ -{{ (purchase.amount_euros/100)|number_format(2) }}
+						</td>
+						<td class="date-field">
+							{{ purchase.timestamp|date_relative }}
+						</td>
+					</tr>
+				{% elseif purchase.class_name == 'TopUp' %}
+					<tr class="{{ purchase.admin ? 'purchase-admin' : '' }} {{ not purchase.valid ? 'purchase-reverted' : '' }}"
+						title="{{ purchase.admin ? __('Admin Top Up') : '' }} {{ not purchase.valid ? __('Undone') : '' }}">
+						<td class="is-truncated">
+							<span>{{ purchase.purchase_category_name }}</span>
+						</td>
+						<td class="amount-field">
+							€ {{ (purchase.amount_euros/100)|number_format(2) }}
+						</td>
+						<td class="date-field">
+							{{ purchase.timestamp|date_relative }}
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

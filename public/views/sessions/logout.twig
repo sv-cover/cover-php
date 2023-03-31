@@ -1,0 +1,10 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+	{{ __('Logout') }} – {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<h1 class="title">{{ __('Logout') }}</h1>
+<p>{{ __('Your session has been ended.') }}</p>
+{% endblock %}

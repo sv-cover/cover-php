@@ -1,0 +1,49 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Face tag statistics') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Face tag statistics') }}</h1>
+<article class="columns">
+	<div class="column">
+		<h2 class="title is-4">{{ __('Most active taggers') }}</h2>
+		<table class="table is-fullwidth">
+			<thead>
+				<tr>
+					<th>{{ __('Name') }}</th>
+					<th class="has-text-right">{{ __('Count') }}</th>
+					<th class="has-text-right">{{ __('Favorite') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for row in taggers %}
+				<tr>
+					<td><a href="{{ path('profile', {lid: row.id}) }}">{{ row.voornaam }}</a></td>
+					<td class="has-text-right">{{ row.tags }}</td>
+					<td class="has-text-right">{{ row.favorite }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>	
+	</div>
+	<div class="column">		
+		<h2 class="title is-4">{{ __('Most tagged members') }}</h2>
+		<table class="table is-fullwidth">
+			<thead>
+				<tr>
+					<th>{{ __('Name') }}</th>
+					<th class="has-text-right">{{ __('Times tagged') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for row in tagged %}
+				<tr>
+					<td><a href="{{ path('profile', {lid: row.id}) }}">{{ row.voornaam }}</a></td>
+					<td class="has-text-right">{{ row.tags }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</article>
+{% endblock %}

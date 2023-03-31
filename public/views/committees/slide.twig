@@ -1,0 +1,56 @@
+{% extends '@layout/layout_slide.twig' %}
+
+{% block title committee.naam ~ ' – ' ~ parent() %}
+
+{% block page %}
+<div class="slide committee-slide cover-thumbnail">
+    <div class="overlay is-bottom">
+        <div class="name boxed-title-wrapper">
+            <h1 class="boxed-title is-size-1-fullhd is-size-2-widescreen is-size-3-desktop is-size-4-tablet is-size-5-mobile">
+                {{ committee.naam }}
+            </h1>
+        </div>
+        <div class="members boxed-title-wrapper {% if committee.has_vacancy %}has-vacancy{% endif %}">
+            {% if committee.has_vacancy %}
+                <div class="vacancy-badge">{{ __('Looking for new members!') }}</div>
+            {% endif %}
+            <div class="boxed-title has-text-weight-normal is-size-4 is-size-6-touch is-size-7-mobile">
+                {% for member in committee.members %}
+                    {% if user_can_read member %}
+                        <span class="name">{{ member|personal_full_name }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    {% if committee.page.cover_image_url %}
+        <figure class="image">
+            <img 
+                srcset="{{ committee.page.get_cover_image(400) }} 400w,
+                        {{ committee.page.get_cover_image(600) }} 600w,
+                        {{ committee.page.get_cover_image(1000) }} 1000w,
+                        {{ committee.page.get_cover_image(1600) }} 1600w,
+                        {{ committee.page.get_cover_image(1920) }} 1920w"
+                sizes="100vw"
+                src="{{ committee.page.get_cover_image(1920) }}"
+                alt="{{ __('Committee photo of %s')|format(committee.naam) }}"
+            >
+        </figure>
+    {% elseif committee.members|length > 0 %}
+        <div class="member-images columns is-gapless is-mobile">
+            {% for member in committee.members %}
+                {% if user_can_read member %}
+                    <figure class="column image">
+                        <img
+                            loading="lazy"
+                            src="{{ path('profile_picture', {lid_id: member.id, format: 'portrait', width: 512}) }}"
+                            alt="{{ __('Photo of %s')|format(member|full_name) }}"
+                        >
+                    </figure>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

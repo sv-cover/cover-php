@@ -1,0 +1,47 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title iter.naam ~ ' – Committee Battle – ' ~ parent()  %}
+
+{% block content %}
+<h1 class="title">{{ iter.naam }}</h1>
+{% include '@theme/committees/_members.twig' with {'view': view.committee_view, 'model': committee_model, 'iter': iter} %}
+
+<article>
+	<h2 class="title is-4">{{ __('Points') }}</h2>
+	<table class="table is-fullwidth">
+		<thead>
+			<tr>
+				<th>{{ __('Date') }}</th>
+				<th>{{ __('Reason') }}</th>
+				<th>{{ __('Points') }}</th>
+				<th class="has-text-right"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for score in scores %}
+			<tr>
+				<td>{{ score.awarded_on|date('d-m-Y') }}</td>
+				<td>
+					{{ score.awarded_for }}
+					{% for member in score.members %}
+						<a href="{{ path('profile', {lid: member.id}) }}" class="image is-16x16 is-inline-block">
+							<img class="is-rounded" src="{{ path('profile_picture', {lid_id: member.id, format: 'square', width: 50}) }}" width="25" title="{{ member|personal_full_name }}">
+							<span class="is-sr-only">{{ member|personal_full_name }}</span>
+						</a>
+					{% endfor %}
+				</td>
+				<td>{{ score.points }}</td>
+				<td  class="has-text-right">
+					{% if user_can_update score %}
+						<a href="{{ path('committee_battle', {view: 'update', id: score.id}) }}" class="button">{{ __('Edit') }}</a>
+					{% endif %}
+					{% if user_can_delete score %}
+						<a href="{{ path('committee_battle', {view: 'delete', id: score.id}) }}" class="button">{{ __('Delete') }}</a>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</article>
+{% endblock %}

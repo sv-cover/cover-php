@@ -1,0 +1,63 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+
+<div class="level">
+	<div class="level-left">
+		<h1 class="title">
+			<a href="{{ path('forum') }}">{{ __('Forum') }}</a> / <a href="{{ path('forum', {forum: forum.id}) }}">{{ forum.name }}</a> / <a href="{{ path('forum', {thread: thread.id}) }}">{{ thread.subject }}</a>
+		</h1>
+	</div>
+</div>
+
+
+<form action="" method="post">
+	{% if iter.has_id %}
+		{{ html_nonce('update_message', iter) }}
+	{% else %}
+		{{ html_nonce('reply', thread) }}
+	{% endif %}
+
+	<div class="field">
+		{{ html_label(__('Author'), 'unified_author', errors=errors, required=true) }}
+		<div class="control">
+			<div class="select">
+				{{ html_select_field('unified_author', unified_authors, iter, errors=errors, required=true) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+        {{ html_label(__('Message'), 'reply-field', errors=errors) }}
+		<div class="tabs-wrapper is-condensed">
+			<div class="tabs is-toggle">
+				<ul>
+					<li class="is-active">
+						<a href="#forum-message">{{ __('Raw') }}</a>
+					</li>
+					<li>
+						<a href="#forum-message-preview">{{ __('Preview') }}</a>
+					</li>
+				</ul>
+			</div>
+			<div class="tabs-content">
+				<div id="forum-message" class="is-active">
+					{{ html_textarea_field('message', iter, rows=15, id='reply-field', autofocus='end') }}
+				</div>
+				<div id="forum-message-preview" class="content-preview box" data-preview-source="#reply-field" data-preview-url="{{ path('forum', {view: 'preview'}) }}">
+					<span class="loading">{{ __('Loading preview…') }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<div class="control buttons">
+			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify message') : __('Publish message') }}</button>
+			{% if iter.has_id %}
+				<a href="{{ path('forum', {message: iter.id}) }}" class="button">{{ __('Show message in thread') }}</a>
+			{% endif %}
+		</div>
+</div>
+</form>
+{% endblock %}

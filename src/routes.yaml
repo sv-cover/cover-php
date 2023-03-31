@@ -1,0 +1,357 @@
+homepage:
+  path: /
+  controller: App\Controller\HomepageController
+
+almanak:
+  path: /almanak
+  controller: App\Controller\AlmanakController
+
+announcements:
+  path: /announcements
+  controller: App\Controller\AnnouncementsController
+
+api:
+  path: /api
+  controller: App\Controller\ApiController
+
+boards:
+  path: /boards
+  controller: App\Controller\BoardsController
+
+books:
+  path: /books
+  controller: App\Controller\BooksController
+
+calendar:
+  path: /calendar
+  controller: App\Controller\CalendarController
+
+calendar.slide:
+  path: /calendar/slide
+  controller: App\Controller\CalendarController
+  defaults:
+    view: slide
+
+career:
+  path: /career
+  controller: App\Controller\CareerController
+
+clubs:
+  path: /clubs
+  controller: App\Controller\ClubsController
+
+committee_battle:
+  path: /committee_battle
+  controller: App\Controller\CommitteeBattleController
+
+committee_members:
+  path: /committee_members
+  controller: App\Controller\CommitteeMembersController
+
+committees:
+  path: /committees
+  controller: App\Controller\CommitteesController
+
+committees.slide:
+  path: /committees/slide
+  controller: App\Controller\CommitteesController
+  defaults:
+    view: slide
+
+contact:
+  path: /contact
+  controller: App\Controller\PageController
+  defaults:
+    id: 17
+
+forum:
+  path: /forum
+  controller: App\Controller\ForumController
+
+join:
+  path: /join
+  controller: App\Controller\MembershipController
+
+login:
+  path: /login
+  controller: App\Controller\SessionsController
+  defaults:
+    view: login
+
+logout:
+  path: /logout
+  controller: App\Controller\SessionsController
+  defaults:
+    view: logout
+
+mailing_lists:
+  path: /mailing_lists
+  controller: App\Controller\MailingListsController
+
+page.list:
+  path: /page
+  controller: App\Controller\PageController
+
+page.create:
+  path: /page/create
+  controller: App\Controller\PageController
+  defaults:
+    view: create
+
+page.preview:
+  path: /page/preview
+  controller: App\Controller\PageController
+  defaults:
+    view: preview
+
+page:
+  path: /page/{id<\d+>}/{view}
+  controller: App\Controller\PageController
+  defaults:
+    view: read
+
+partners:
+  path: /partners
+  controller: App\Controller\PartnersController
+
+password:
+  path: /password
+  controller: App\Controller\PasswordController
+
+################################################################################
+# Photos
+################################################################################
+
+# Special cases first
+photos.competition:
+  path: /photos/competition
+  controller: App\Controller\PhotoBooksController
+  defaults:
+    view: competition
+
+photos.slide:
+  path: /photos/slide
+  controller: App\Controller\PhotoBooksController
+  defaults:
+    view: slide
+
+# Endpoints for photos without books
+photos.faces.single:
+  path: /photos/photo/{photo<\d+>}/faces/{face_id<\d+>}/{view}
+  controller: App\Controller\PhotoFacesController
+  defaults:
+    view: read
+
+photos.faces:
+  path: /photos/photo/{photo<\d+>}/faces/{view}
+  controller: App\Controller\PhotoFacesController
+  defaults:
+    view: index
+
+photos.scaled:
+  path: /photos/photo/{photo<\d+>}/scaled/{width<\d+>}/{height<\d+>}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: scaled
+    height: null
+
+# Comes after all the others to prevent conflict with the view parameter
+photos.photo.single:
+  path: /photos/photo/{photo<\d+>}/{view}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: read
+
+# Endpoints for photos with books
+photos.likes:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/likes
+  controller: App\Controller\PhotoLikesController
+
+photos.comments.single:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_id<\d+>}/{comment_view}
+  controller: App\Controller\PhotoCommentsController
+  defaults:
+    view: read
+
+photos.comments:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/comments/{comment_view}
+  controller: App\Controller\PhotoCommentsController
+  defaults:
+    view: index
+
+photos.privacy:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/privacy/{view}
+  controller: App\Controller\PhotoPrivacyController
+  defaults:
+    view: read
+
+photos.photo.scaled:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/scaled/{width<\d+>}/{height<\d+>}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: scaled
+    height: null
+
+# 'photos' and 'photos.photo' come after all the others to prevent conflict with the view parameter
+photos.photo:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/photo/{photo<\d+>}/{view}
+  controller: App\Controller\PhotosController
+  defaults:
+    view: read
+
+photos:
+  path: /photos/{book<\d+|liked|member(_\d+)+>}/{view}
+  controller: App\Controller\PhotoBooksController
+  defaults:
+    view: read
+    book: 0
+
+profile:
+  path: /profile
+  controller: App\Controller\ProfileController
+
+profile_picture:
+  path: /profile/{lid_id<\d+>}/picture/{format}/{width<\d+>}
+  controller: App\Controller\ProfilePictureController
+  defaults:
+    format: null
+    width: null
+
+search:
+  path: /search
+  controller: App\Controller\SearchController
+
+sessions:
+  path: /sessions
+  controller: App\Controller\SessionsController
+
+device_sessions:
+  path: /sessions/device
+  controller: App\Controller\DeviceSessionsController
+
+device_sessions.create:
+  path: /sessions/device/create
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: create
+
+device_sessions.delete:
+  path: /sessions/device/{id}/delete
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: delete
+
+device_sessions.update:
+  path: /sessions/device/{id}/update
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: update
+
+device_sessions.logout:
+  path: /sessions/device/logout
+  controller: App\Controller\DeviceSessionsController
+  defaults:
+    view: logout
+
+settings:
+  path: /settings
+  controller: App\Controller\SettingsController
+
+signup:
+  path: /signup
+  controller: App\Controller\SignUpFormsController
+
+stickers:
+  path: /stickers
+  controller: App\Controller\StickersController
+
+vacancies:
+  path: /vacancies
+  controller: App\Controller\VacanciesController
+
+legacy:
+  path: /{name}.php
+  controller: App\Controller\LegacyController
+  defaults:
+    map:
+      actieveleden:
+        controller: App\Controller\CommiteeMembersController
+        parameters: { _route: committee_members }
+      agenda:
+        controller: App\Controller\CalendarController
+        parameters: { _route: calendar }
+      almanak:
+        controller: App\Controller\AlmanakController
+        parameters: { _route: almanak }
+      announcements:
+        controller: App\Controller\AnnouncementsController
+        parameters: { _route: announcements }
+      api:
+        controller: App\Controller\ApiController
+        parameters: { _route: api }
+      besturen:
+        controller: App\Controller\BoardsController
+        parameters: { _route: boards }
+      boeken:
+        controller: App\Controller\BooksController
+        parameters: { _route: books }
+      career:
+        controller: App\Controller\CareerController
+        parameters: { _route: career }
+      clubs:
+        controller: App\Controller\ClubsController
+        parameters: { _route: clubs }
+      commissies:
+        controller: App\Controller\CommitteesController
+        parameters: { _route: committees }
+      committeebattle:
+        controller: App\Controller\CommitteeBattleController
+        parameters: { _route: committee_battle }
+      forum:
+        controller: App\Controller\ForumController
+        parameters: { _route: forum }
+      foto:
+        controller: App\Controller\ProfilePictureController
+        parameters: { _route: profile_picture }
+      fotoboek:
+        controller: App\Controller\PhotosController
+        parameters: { _route: photos }
+      index:
+        controller: App\Controller\HomepageController
+        parameters: { _route: homepage }
+      lidworden:
+        controller: App\Controller\MembershipController
+        parameters: { _route: join }
+      mailinglijsten:
+        controller: App\Controller\MailingListsController
+        parameters: { _route: mailing_lists }
+      partners:
+        controller: App\Controller\PartnersController
+        parameters: { _route: partners }
+      profiel:
+        controller: App\Controller\ProfileController
+        parameters: { _route: profile }
+      search:
+        controller: App\Controller\SearchController
+        parameters: { _route: search }
+      sessions:
+        controller: App\Controller\SessionsController
+        parameters: { _route: sessions }
+      settings:
+        controller: App\Controller\SettingsController
+        parameters: { _route: settings }
+      show:
+        controller: App\Controller\PageController
+        parameters: { _route: page }
+      signup:
+        controller: App\Controller\SignUpFormsController
+        parameters: { _route: signup }
+      stickers:
+        controller: App\Controller\StickersController
+        parameters: { _route: stickers }
+      vacancies:
+        controller: App\Controller\VacanciesController
+        parameters: { _route: vacancies }
+      wachtwoordvergeten:
+        controller: App\Controller\PasswordController
+        parameters: { _route: password }

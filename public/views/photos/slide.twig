@@ -1,0 +1,16 @@
+{% extends '@layout/layout_slide.twig' %}
+
+{% block title book.has('titel') ? book.titel : __('Photo book') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<div class="slide photo-slide cover-thumbnail">
+    <div class="overlay is-bottom">
+        <div class="boxed-title-wrapper">
+            <h1 class="boxed-title is-size-1-fullhd is-size-2-widescreen is-size-3-desktop is-size-4-tablet is-size-5-mobile">
+                {{ book.titel }}
+            </h1>
+        </div>
+    </div>
+    {{ include('_photos.twig', {photos: photos}) }}
+</div>
+{% endblock %}

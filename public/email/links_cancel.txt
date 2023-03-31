@@ -1,0 +1,8 @@
+$member_naam has declined the link with title $titel on behalf of the Board for the following reason:
+
+$reden
+
+Kind Regards (we're just the messenger),
+
+
+The WebCie

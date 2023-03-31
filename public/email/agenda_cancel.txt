@@ -1,0 +1,7 @@
+$member_name has declined the event $kop on behalf of the Board for the following reason:
+
+$reason
+
+Kind Regards (we're just the messenger),
+
+The Website

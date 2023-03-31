@@ -1,0 +1,41 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Edit vacancy') : __('New vacancy')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ iter.has_id ? __('Edit vacancy') : __('New vacancy') }}</h1>
+
+
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{{ form_row(form.title) }}
+	<div class="field">
+		{{ form_label(form.partner_id) }}
+		<div class="control">
+			{# TODO: this workd, but placeholder for search would be better #}
+			{{ form_widget(form.partner_name, {'attr': {'data-autocomplete': 'partner_name','data-autocomplete-src': path('partners', {view: 'autocomplete', search: ''})}, 'required': true}) }} {# the combined partner field is required, even if it's parts aren't #}
+			{{ form_widget(form.partner_id, {'attr': {'data-partner-id-field': '','data-partner-name': iter.partner ? iter.partner.name : '', 'hidden': ''}}) }}
+		</div>
+		{{ form_errors(form.partner_name) }}
+		{{ form_errors(form.partner_id) }}
+		<p class="help">
+			{{ __("Select autocompleted partner, or type the name of the company if there's no partner for this company.") }}
+		</p>
+	</div>
+	{{ form_row(form.type) }}
+	{{ form_row(form.study_phase) }}
+	{{ form_row(form.url) }}
+	{{ form_row(form.description) }}
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify vacancy') : __('Create vacancy')}) }}
+			{% if iter.has_id %}
+				<a href="{{ path('vacancies', {id: iter.id}) }}" class="button">{{ __('Back to vacancy') }}</a>
+			{% else %}
+				<a href="{{ path('vacancies') }}" class="button">{{ __('Back to all vacancies') }}</a>
+			{% endif %}
+		</div>
+	</div>
+{{ form_end(form) }}
+{% endblock %}

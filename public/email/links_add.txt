@@ -1,0 +1,15 @@
+$member_naam added the following link:
+
+Category: $categorie
+Title:     $titel
+Url:	   $url
+
+Description:
+$beschrijving
+
+You can approve (or reject) this link on the ROOT_DIR_URIlinks.php?links_moderate=$id#$id page
+
+Kind Regards,
+
+
+The WebCie

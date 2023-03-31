@@ -1,0 +1,137 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Members') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<article class="section">
+<div class="container is-max-widescreen">
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Members (Almanac)') }}</h1>
+	</div>
+	<div class="level-right">
+		{% if iters is null and global.identity.member_in_committee(constant('COMMISSIE_ALMANAKCIE')) %}
+			<div class="dropdown is-right">
+				<div class="dropdown-trigger">
+					<button class="button" aria-haspopup="true" aria-controls="export-menu">
+						<span>{{ __('Export') }}</span>
+						<span class="icon is-small">
+							<i class="fas fa-angle-down" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+				<div class="dropdown-menu" id="export-menu" role="menu">
+					<div class="dropdown-content">
+						<div class="dropdown-item">
+							<p>{{ __('YearbookCee downloads') }}</p>
+						</div>
+						<hr class="dropdown-divider">
+						<a class="dropdown-item" href="{{ path('almanak', {export: 'csv'}) }}">
+							{{ __('CSV with personal details') }}
+						</a>
+						<a class="dropdown-item" href="{{ path('almanak', {export: 'photos'}) }}">
+							{{ __('ZIP archive with profile pictures') }}
+						</a>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+</header>
+
+<section class="block">
+	<h2 class="is-sr-only">{{ __('Search members') }}</h2>
+	<form name="almanak" action="{{ path('almanak') }}" method="GET">
+		<div class="field has-addons">
+			<div class="control is-expanded">
+				{{ html_label(__('Filter name'), 'search', class="is-sr-only") }}
+				{{ html_input_text('search', params, size=40, tabindex=1, placeholder=__('Search members by name…') ) }}
+			</div>
+			<div class="control">
+				<button class="button" type="submit">
+	                <span class="icon">
+	                    <i class="fas fa-search"></i>
+	                    <span class="is-sr-only">{{ __('Search') }}</span>
+	                </span>
+	            </button>
+			</div>
+		</div>
+
+		{% if global.identity.member_in_committee(constant('COMMISSIE_BESTUUR')) %}
+		<div class="field">
+			<div class="control">
+				<div class="is-sr-only">{{ __('Filter membership status') }}</div>
+				<div class="tabs is-toggle" id="status">
+					<ul>
+						<li class="{% if params.status == constant('MEMBER_STATUS_LID') %}is-active{% endif %}">
+							<a href="?status={{ constant('MEMBER_STATUS_LID') }}">{{ __('Member') }}</a>
+						</li>
+						<li class="{% if params.status == constant('MEMBER_STATUS_LID_AF') %}is-active{% endif %}">
+							<a href="?status={{ constant('MEMBER_STATUS_LID_AF') }}">{{ __('Former member') }}</a>
+						</li>
+						<li class="{% if params.status == constant('MEMBER_STATUS_DONATEUR') %}is-active{% endif %}">
+							<a href="?status={{ constant('MEMBER_STATUS_DONATEUR') }}">{{ __('Contributor') }}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+
+		<div class="field">
+			<div class="control">
+				<div class="tabs is-toggle" id="starting-year">
+					<div class="is-sr-only">{{ __('Filter starting year') }}</div>
+					<ul>
+						{% for year in model.get_distinct_years|reverse if year != '' %}
+							<li class="{% if params.year == year %}is-active{% endif %}">
+								<a href="?search_year={{ year }}">{{ year }}</a>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>
+
+<hr>
+
+<div class="block">
+	<h2 class="is-sr-only">{{ __('Search results') }}</h2>
+	{% if iters is null %}
+		<div class="content block">
+			<p>{{ __('Make a selection above to view members') }}</p>
+		</div>
+	{% else %}
+		<div class="content block">
+			<p>{{ __N('There is <em>%d</em> member that coincide with your search criteria.', 'There are <em>%d</em> members that coincide with your search criteria.', iters|length)|raw }}</p>
+		</div>
+		<ul class="members-list columns is-mobile">
+			{% for iter in iters %}
+			<li class="profile column is-half-mobile is-one-third-tablet is-one-quarter-desktop is-one-fifth-widescreen">
+				<a href="{{ path('profile', {lid: iter.id}) }}">	
+					<figure class="image is-128x128">
+						<img
+							loading="lazy"
+							class="is-rounded"
+							width="128" height="128"
+							src="{{ path('profile_picture', {lid_id: iter.id, format: 'square', width: 256}) }}" 
+							alt="{{ __('Photo of %s')|format(iter|full_name) }}"
+						>
+					</figure>
+					<div class="profile-info">
+						<span class="name">{{ iter|personal_full_name }}</span>
+						{% if view.status_label(iter) %}
+							<span class="status">{{ view.status_label(iter) }}</span>
+						{% endif %}
+					</div>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+</div>
+</div>
+</article>
+{% endblock %}

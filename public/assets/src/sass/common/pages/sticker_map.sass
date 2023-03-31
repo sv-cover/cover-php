@@ -1,0 +1,32 @@
+.sticker-map
+    height: calc(100vh - #{$navbar-height})
+    display: flex
+    flex-flow: column nowrap
+    .map-container
+        flex: 1 1 100%
+        .map
+            height: 100%
+    .mapboxgl-popup
+        max-width: 80vw !important // override value set by js
+        font-family: $family-primary
+        font-size: $size-normal
+        +tablet
+            max-width: 50vw !important // override value set by js
+        +desktop
+            max-width: 40vw !important // override value set by js
+        +widescreen
+            max-width: 30vw !important // override value set by js
+        +fullhd
+            max-width: 20vw !important // override value set by js
+    .mapboxgl-popup-content
+        padding: 0
+        .card
+            box-shadow: none
+            .card-footer-item
+                white-space: nowrap
+        .mapboxgl-popup-close-button
+            @extend .delete
+            position: absolute
+            top: 0.5rem // Same as notification
+            right: 0.5rem // Same as notification
+            z-index: 10

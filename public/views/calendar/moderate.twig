@@ -1,0 +1,154 @@
+{% extends '@layout/layout.twig' %}
+{% import '@theme/calendar/macros.twig' as macros %}
+
+{% block title __('Calendar') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<section class="calendar">
+	<h1 class="title">{{ __('Moderate calendar') }}</h1>
+	<div class="event-list">
+	{% for event in iters %}
+		<div id="event_{{ event.id }}" class="card block event {% if event.id == highlighted_id %}is-active{% endif %}">
+			<div class="card-image">
+				<div class="overlay is-bottom">
+					{% if event.replacement_for != 0 %}
+						<div class="label-pending">
+							<span>
+								{{ __('Updated event') }}
+							</span>
+						</div>
+					{% endif %}
+					<div class="date">
+						<span>
+							{{ macros.format_period_short(event) }}
+						</span>
+					</div>
+					<div class="name">
+						<h3>
+							{{ event.kop }}
+						</h3>
+					</div>
+				</div>
+				{% if event.image_url %}
+					<figure class="image">
+						<picture>
+							<source srcset="{{ event.get_image(600) }} 1x, {{ event.get_image(900) }} 1.5x, {{ event.get_image(1200) }} 2x" media="(min-width: 400px) and (max-width: 600px)">
+							<source srcset="{{ event.get_image(400) }} 1x, {{ event.get_image(600) }} 1.5x, {{ event.get_image(800) }} 2x">
+							<img src="{{ event.get_image(600) }}"> 
+						</picture>
+					</figure>
+				{% endif %}
+			</div>
+			<div class="card-content">
+				<form id="event_{{ event.id }}_form" method="post" action="{{ path('calendar', {view: 'moderate_accept', agenda_id: event.id}) }}">
+					<input type="hidden" name="form[_token]" value="{{ csrf_token('event_accept_' ~ event.id) }}">
+					{% if event.replacement_for == 0 %}
+						{# New value #}
+						<div class="field content">
+							<p class="control">
+								<strong>{{  __('Committee') }}</strong>:
+								<a href="{{ path('committees', {commissie: event.committee.login}) }}">{{ event.committee.naam }}</a>,
+								<strong>{{  __('Location') }}</strong>:
+								{{ event.locatie|default(__('not specified')) }}
+							</p>
+						</div>
+						<div class="field">
+							<div class="control">
+								<label class="checkbox" for="event_{{ event.id }}_form_private">
+									<input type="checkbox" id="event_{{ event.id }}_form_private" name="form[private]" value="1" {% if event.private %}checked{% endif %}>
+									{{ __('Only visible to members (private)') }}
+								</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="control">
+								<label class="checkbox" for="event_{{ event.id }}_form_extern">
+									<input type="checkbox" id="event_{{ event.id }}_form_extern" name="form[extern]" value="1" {% if event.extern %}checked{% endif %}>
+									{{ __('Mark event as not organised by Cover') }}
+								</label>
+							</div>
+						</div>
+					{% else %}
+						<p>{{ __('The following fields have been changed:') }}</p>
+						{# Update #}
+						{% set field_names = {
+							'kop': __('Title'),
+							'van': __('Start'),
+							'tot': __('End'),
+							'locatie': __('Location'),
+							'image_url': __('Image'),
+							'facebook_id': __('Facebook event'),
+							'beschrijving': __('Description'),
+							'private': __('Visibility'),
+							'extern': __('Organiser'),
+							'committee_id': __('Committee'),
+						}%}
+						<ul>
+						{% for field, change in event.updated_fields %}
+							<li>
+								<strong>{{ field_names[field]|default(__('Unknown')) }}</strong>:
+								{% if field == 'van' or field == 'tot' %}
+									{{ change[0]|date('Y-m-d H:i') }}
+									(<em>{{ __('was') }}</em> {{ change[1]|date('Y-m-d H:i') }})
+								{% elseif field == 'kop' or field == 'locatie' %}
+									{{ change[0] }}
+									(<em>{{ __('was') }}</em> {{ change[1] }})
+								{% elseif field == 'committee_id' %}
+									<a href="{{ path('committees', {commissie: change[0].login}) }}">{{ change[0].name }}</a>
+									(<em>{{ __('was') }}</em> <a href="{{ path('committees', {commissie: change[1].login}) }}">{{ change[1].name }}</a>)
+								{% elseif field == 'private' %}
+									{% if change[0] %}
+										{{ __('members only (<em>was</em> everyone)')|raw }}
+									{% else %}
+										{{ __('everyone (<em>was</em> members only)')|raw }}
+									{% endif %}
+								{% elseif field == 'extern' %}
+									{% if change[0] %}
+										{{ __('external (<em>was</em> Cover)')|raw }}
+									{% else %}
+										{{ __('Cover (<em>was</em> external)')|raw }}
+									{% endif %}
+								{% elseif field == 'facebook_id' %}
+									{% if change[0] %}
+										<a href="https://www.facebook.com/events/{{ change[0] }}/" target="_blank" rel="noopener noreferrer">event</a>
+									{% else %}
+										{{ __('not set') }}
+									{% endif %}
+									(<em>{{ __('was') }}</em> 
+									{% if change[1] %}
+										<a href="https://www.facebook.com/events/{{ change[1] }}/" target="_blank" rel="noopener noreferrer">event</a>
+									{%- else -%}
+										{{ __('not set') }}
+									{%- endif -%})
+								{% else %}
+									{# Don't know what to do #}
+									<a href="{{ path('calendar', {agenda_id: event.replacement_for}) }}">{{ __('original') }}</a>
+									|
+									<a href="{{ path('calendar', {agenda_id: event.id}) }}">{{ __('updated') }}</a>
+								{% endif %}
+							</li>
+						{% else %}
+							<li>{{ __('Somehow the event was updated, but no fields have changed. Weird.') }}</li>
+						{% endfor %}
+						</ul>
+					{% endif %}
+				</form>
+			</div>
+			<div class="card-footer">
+				<button type="submit" form="event_{{ event.id }}_form" class="card-footer-item">
+					{{ __('Approve') }}
+				</button>
+				<a href="{{ path('calendar', {agenda_id: event.id}) }}" class="card-footer-item">
+					{{ __('View event') }}
+				</a>
+				<a class="card-footer-item" href="{{ path('calendar', {view: 'moderate_reject', agenda_id: event.id}) }}" data-popup="modal">
+					{{ __('Reject') }}
+				</a>
+			</div>
+		</div>
+	{% else %}
+		<p>{{ __('There are no events waiting for approval.') }}</p>
+	{% endfor %}
+	</div>
+</section>
+{% endblock %}

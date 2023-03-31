@@ -1,0 +1,43 @@
+{% import _self as macros %}
+
+{% macro single(partner) %}
+	<div class="column">
+		<a class="partner" href="{{ partner.url }}" target="_blank">
+			<figure class="image">
+				{% if partner.logo_dark_url %}
+					<img class="darkmode" src="{{ partner.get_logo_dark(700) }}" alt="{{ partner.name }}">
+				{% endif %}
+				<img class="default" src="{{ partner.get_logo(700) }}" alt="{{ partner.name }}">
+			</figure>
+		</a>
+	</div>
+{% endmacro %}
+
+<div class="section partners">
+{% if view.layout.main_partners|length > 0 %}
+	<div class="container main-partners">
+		<h4 class="title has-text-centered">{{ __N('Main partner', 'Main partners', view.layout.main_partners|length) }}</h4>
+		<div class="columns is-multiline is-centered is-mobile">
+			{% for partner in view.layout.main_partners %}
+				{{ macros.single(partner)}}
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}
+
+{% if view.layout.partners|length > 0 %}
+	<div class="container">
+		<h4 class="title has-text-centered">{{ __N('Partner', 'Partners', view.layout.partners|length) }}</h4>
+		<div class="collapse">
+			<div class="collapse-content columns is-multiline is-centered is-mobile" id="sponsorCollapseContent" aria-expanded="false">
+				{% for partner in view.layout.partners %}
+					{{ macros.single(partner)}}
+				{% endfor %}
+			</div>
+			<div class="controls">
+				<a href="#sponsorCollapseContent" class="collapse-trigger" aria-controls="sponsorCollapseContent">{{__('more partners…')}}</a>
+			</div>
+		</div>
+	</div>
+{% endif %}
+</div>

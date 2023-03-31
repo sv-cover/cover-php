@@ -1,0 +1,9 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Announcements') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<article class="announcements">
+    {{ include('announcements.twig') }}
+</article>
+{% endblock %}

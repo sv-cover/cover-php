@@ -1,0 +1,14 @@
+{{ form_start(form) }}
+    {# Global errors #}
+    {{ form_errors(form) }}
+    {# Fields #}
+    {{ form_row(form.committee_id) }}
+    {{ form_row(form.agenda_id) }}
+    {{ form_row(form.open_on) }}
+    {{ form_row(form.closed_on) }}
+    {{ form_row(form.participant_limit) }}
+    {% if form.template is defined %}
+        {{ form_row(form.template) }}
+    {% endif %}
+    {{ form_row(form.submit, {'label': iter.has_id() ? __('Modify form') : __('Create form')}) }}
+{{ form_end(form) }}

@@ -2,7 +2,7 @@
 <?php
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/init.php';
+require_once 'src/init.php';
 
 $agenda_model = get_model('DataModelAgenda');
 
@@ -28,7 +28,7 @@ foreach ($agenda_items as $agenda_item)
 	$subject = sprintf("Attendance of '%s'", $agenda_item['kop']);
 
 	$headers = array(
-		'From: webcie@ai.rug.nl',
+		'From: Study Association Cover <noreply@svcover.nl>',
 		'Reply-to: intern@svcover.nl');
 
 	mail($email_address, $subject, $email, implode("\r\n", $headers));

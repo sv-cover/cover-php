@@ -1,0 +1,97 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Modify form') : __('Add form')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">{{ iter.has_id ? __('Modify form') : __('Create form') }}</h1>
+	</div>
+	{% if iter.has_id and user_can_delete iter %}
+		<div class="level-right buttons">	
+			<a href="{{ path('signup', {'view': 'delete_form', 'form': iter.id}) }}" class="button" data-popup="modal">{{ __('Delete form') }}</a>
+			<a href="{{ path('signup', {'view': 'list_entries', 'form': iter.id}) }}" class="button">{{ __('Show sign-ups') }}</a>
+		</div>
+	{% endif %}
+</header>
+
+<div class="tabs-wrapper">
+<div class="tabs">
+	<ul>
+		<li class="is-active">
+			<a href="#signup-form-settings">{{ __('Settings') }}</a>
+		</li>
+		<li>
+			<a href="#signup-form-fields">{{ __('Fields & Layout') }}</a>
+		</li>
+		<li>
+			<a  href="#signup-form-preview"
+				data-async-action="{{ path('signup', {'view': 'create_entry', 'form': iter.id}) }}"
+				data-partial-selector="#signup-entry-form"
+				data-placement-selector="#signup-entry-form"
+			>{{ __('Preview') }}</a>
+		</li>
+	</ul>
+</div>
+
+<div class="tabs-content">
+	<article id="signup-form-settings" class="is-active">
+		{{ include('_form_form.twig') }}
+	</article>
+
+	{% if iter.has_id %}
+		<article id="signup-form-fields" class="signup-form is-active">
+			<h2 class="is-sr-only">{{ __('Fields & layout') }}</h2>
+			{% if iter.is_open %}
+				<div class="notification is-danger">
+					<button class="delete"></button>
+					<strong>{{ __('Warning!') }}</strong>
+					{{ __('Registrations are open. Changes made here will be published immediately.') }}
+				</div>
+			{% endif %}
+
+			<div class="block sortable signup-form-field-list" data-sortable-action="{{ path('signup', {view: 'update_form_field_order', form: iter.id}) }}" data-sortable-handle=".card-header" data-sortable-filter=".signup-form-field-delete-button">
+			{% for field in iter.fields %}
+				{{ include('_field_configuration.twig',  {form: iter, errors: []}) }}
+			{% endfor %}
+			</div>
+
+			{{ form_start(field_form, {
+				action: path('signup', {view: 'create_form_field', form: iter.id}),
+				attr: {
+					class: 'card block signup-form-field-form',
+					'data-async-action': path('signup', {view: 'create_form_field', form: iter.id, action: 'add'}),
+					'data-partial-selector': '.signup-form-field',
+					'data-placement-selector': '.signup-form-field-list',
+					'data-placement-method': 'append',
+				},
+			}) }}
+				<div class="card-content">
+					{# Global errors #}
+					{{ form_errors(field_form) }}
+					{# Fields #}
+					{{ form_row(field_form.field_type, {label: __('Add new field'), wrapper_attr: {class: 'is-fullwidth'}}) }}
+					<div class="field is-grouped is-grouped-right">
+						<div class="control">
+						    {{ form_row(field_form.submit, {label:__('Add field')}) }}
+						</div>
+					</div>
+				</div>
+			{{ form_end(field_form) }}
+		</article>
+
+		<article id="signup-form-preview">
+			<div class="notification">
+				<button class="delete"></button>
+				<strong>{{ __('This is an active preview.') }}</strong>
+				{{ __('Data submitted through here will be added to the registrations.') }}
+			</div>
+			<div id="signup-entry-form">
+				<span class="loading">{{ __('Loading…') }}</span>
+			</div>
+		</article>
+	{% endif %}
+</div>
+</div>
+
+{% endblock %}

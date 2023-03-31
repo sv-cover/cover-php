@@ -1,0 +1,114 @@
+$profile-widget-spacing: 1.5rem
+
+.profile-widget
+    display: flex
+    align-items: center
+    .profile-photo
+        flex: 0 0 auto
+        margin-right: $profile-widget-spacing
+        .image,
+        &.image
+            +mobile
+                height: 64px
+                width: 64px
+            +tablet
+                height: 96px
+                width: 96px
+            +desktop
+                height: 128px
+                width: 128px
+    .profile-info
+        flex: 1 1 auto
+        text-align: left
+        .name
+            font-weight: $title-weight
+            font-size: $size-4
+        .nickname
+            font-weight: $subtitle-weight
+            font-size: $size-5
+            color: $grey
+        .webpage
+            font-size: $size-6
+        +tablet
+            .name
+                font-size: $size-3
+            .nickname
+                font-size: $size-4
+            .webpage
+                font-size: $size-5
+
+.profile-page
+    .tabs-back
+        position: sticky
+        top: calc(#{$navbar-height} - 1px) // Make sticky observer work correctly
+        z-index: $navbar-fixed-z - 1 // Just behind navbar
+    .tabs.profile-navigation
+        li a
+            display: flex
+            justify-content: space-between
+            .icon
+                color: $grey
+    .profile-field
+        &:not(:last-child)
+            margin-bottom: 0.75rem
+        .field-label
+            font-weight: $label-weight
+            margin-right: $profile-widget-spacing
+            white-space: nowrap
+            text-overflow: ellipsis
+            overflow: hidden
+        .field-body
+            display: block
+            .icon
+                color: $grey
+                font-size: $size-7
+    .profile-committees
+        li:not(:last-child)
+            margin-bottom: 0.75rem
+        .committee-name
+            font-weight: $label-weight
+    +touch
+        padding: 0
+        margin-top: 0
+        .tabs-wrapper.is-vertical
+            &.is-enriched
+                min-height: calc(100vh - #{$navbar-height} + #{2 * $column-gap})
+            & > .column
+                flex-basis: 100%
+                & > .tabs-content > *
+                    padding: $block-spacing $section-padding-horizontal
+            .tabs-back
+                position: sticky
+                top: calc(#{$navbar-height} - 1px)
+                z-index: $navbar-fixed-z - 1
+    +tablet
+        .profile-field
+            display: flex
+            flex-flow: row nowrap
+            .field-body
+                &:first-child
+                    flex: 0 0 calc(83.333% - #{$profile-widget-spacing} * .83333)
+                    margin-left: auto
+        .profile-committees
+            width: calc(83.333% - #{$profile-widget-spacing} * .83333)
+            margin-left: auto
+    +desktop
+        .field.is-horizontal,
+        .profile-field
+            .field-label
+                flex: 0 0 128px // Same width as profile picture
+                margin-right: $profile-widget-spacing
+            .field-body:first-child
+                margin-left: calc(128px + #{$profile-widget-spacing})
+        .profile-committees
+                padding-left: calc(128px + #{$profile-widget-spacing})
+                width: 100%
+                margin-left: 0
+
+.consumptions-table,
+.direct-debit-table
+    .amount-field,
+    .date-field
+        width: 12ch
+        white-space: nowrap
+        text-align: right !important

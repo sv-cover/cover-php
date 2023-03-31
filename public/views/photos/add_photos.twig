@@ -1,0 +1,67 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __("Add photos") ~ ' – ' ~ parent() %}
+
+{% block content %}
+<article
+	class="add-photos"
+	data-api-base-url="{{ path('photos', {view: 'view_placeholder', book: book.id}) }}"
+	{# Placeholder has to be numbers for photos.photo.single, otherwise regex wil break. #}
+	data-photo-base-url="{{ path('photos.photo.single', {photo: 999999999}) }}"
+>
+	<h1 class="title">{{ __("Add photos to") }} {{ book.titel }}</h1>
+
+	<form id="add-photos-form" action="{{ path('photos', {view: 'add_photos', book: book.id}) }}" method="post">
+		{{ html_nonce('add_photos', book) }}
+
+		{% if errors|length > 0 %}
+			<div class="field errors">
+				{% for error in errors %}
+					<p class="notification is-danger">
+						<button class="delete"></button>
+						{{ error }}
+					</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		<div id="folder-selector" class="field"></div>
+
+		<div class="table-container field" id="photo-selector">
+			<table class="table is-fullwidth">
+				<tbody>
+					<tr id="photo-template">
+						<td class="thumbnail">
+							<figure class="media-left image">
+								<img>
+							</figure>
+						</td>
+						<td class="add-control">
+							<input type="checkbox" name="photo[$index][add]" value="true" checked="checked">
+							<a class="icon has-text-success" href="{{ path('photos.photo.single', {photo: 999999999}) }}" target="_blank" title="{{ __('This photo has been added tho this book already') }}">
+								<i class="fas fa-check-square fa-fw" aria-hidden="true"></i>
+								<span class="is-sr-only">{{ __('This photo has been added tho this book already') }}</span>
+							</a>
+						</td>
+						<td class="description">
+							<input class="input" type="text" name="photo[$index][description]" placeholder="{{ __('Description')|e('html_attr') }}">
+						</td>
+						<td class="path">
+							<span class="filename"></span>
+							<input type="hidden" name="photo[$index][path]">
+						</td>
+						<td class="created-on"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="field form-controls">
+			<div class="content buttons">
+				<button type="submit" class="button is-primary">{{ __("Add photos") }}</button>
+				<a href="{{ path('photos', {book: book.id}) }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
+			</div>
+		</div>
+	</form>
+</article>
+{% endblock %}

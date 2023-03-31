@@ -1,0 +1,21 @@
+{
+    "herocee": [
+        {
+            "name": "Koda",
+            "functie": "Care bear",
+            "photo": "images/mascots/koda.jpg"
+        }
+    ],
+    "roomcee": [
+        {
+            "name": "Chewbarka",
+            "functie": "Commissioner of Cuddles",
+            "photo": "images/mascots/chewbarka.jpg"
+        },
+        {
+            "name": "Pumpkin",
+            "functie": "Commissioner of Gezellig",
+            "photo": "images/mascots/pumpkin.webp"
+        }
+    ]
+}

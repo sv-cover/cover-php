@@ -1,0 +1,39 @@
+$boxed-title-padding: .2em 1rem
+$boxed-title-line-height: $title-line-height + .4
+
+=boxed-title($font-size: $size-5, $line-height: $boxed-title-line-height, $padding: $boxed-title-padding)
+    background: $cover-red
+    box-decoration-break: clone
+    color: $cover-red-invert
+    line-height: $line-height
+    display: inline
+    font-size: $font-size
+    font-weight: $title-weight
+    margin-bottom: 0
+    padding: $padding
+
+=animation-wiggle($duration: .5s, $delay: 0s)
+    animation-name: wiggle
+    animation-iteration-count: infinite
+    animation-delay: var(--wiggle-delay)
+    animation-duration: var(--wiggle-duration)
+
+=resize-handle-icon($base:2px, $offset:0px, $color:$black-ter)
+    &::after,
+    &::before
+        content: ''
+        display: block
+        position: absolute
+        right: 0
+        bottom: 0
+        width: $base
+        background: $color
+        border-radius: $base/2
+    &::after
+        height: $base*5
+        box-shadow: $base*-2 $base*-2 $color, $base*-2 $base*2 $color, $base*-2 0 $color
+        transform: translate($offset, $offset) translate(0, 2*$base) rotate(45deg) translate(-2*$base, 0)
+    &::before
+        height: $base
+        z-index: 20
+        transform: translate($offset, $offset)

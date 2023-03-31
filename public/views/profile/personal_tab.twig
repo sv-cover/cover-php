@@ -1,0 +1,59 @@
+{% extends 'tab.twig' %}
+
+{% set active_tab = 'personal' %}
+
+{% block tab_content %}
+<article>
+	<form action="{{ path('profile', {view: 'personal', lid:iter.id}) }}" method="post">
+		<div class="profile-field">
+			<div class="field-body"><h2 class="title is-4">{{ __('Personal data') }}</h2></div>
+		</div>
+		{{ html_nonce('personal', iter) }}
+		{% for field in view.personal_fields %}
+			{% if field.read_only is not defined %}
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						{{ html_label(field.label, field.name, errors=errors) }}
+					</div>
+					<div class="field-body">
+						<div class="field is-expanded">
+							<div class="control">
+								{{ html_input_text(field.name, iter, errors=errors) }}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<div class="profile-field">
+					<div class="field-label">
+						{{ field.label }}
+					</div>
+					<div class="field-body">
+						{% if field.name == 'geboortedatum' %}
+							{{ iter[field.name]|date('d-m-Y') }}
+						{% else %}
+							{{ iter[field.name] }}
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	
+		<div class="field is-horizontal">
+			<div class="field-label"></div>
+			<div class="field-body">
+				<div class="field">
+					<div class="control buttons">
+						<button type="submit" class="button is-primary">{{ __('Save') }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="field is-horizontal">
+			<div class="field-label"></div>
+			<div class="field-body">{{ __("Do you want to change personal information that you can't change here? That's still possible! Just contact the secretary.") }}</div>
+		</div>
+	</form>
+</article>
+{% endblock %}

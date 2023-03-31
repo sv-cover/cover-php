@@ -1,0 +1,27 @@
+<div class="box">
+	<h2>{{ __("Mailing list")}}: {{ list.naam }}</h2>
+	{# This form is handled by MailingListsController.run_embedded, which is ugly #}
+	<form method="post" action="">
+		{{ form_row(form._token) }}
+	
+		<p>
+			<em>{{ list.adres }}:</em>
+			{{ list.omschrijving|parse_markup }}
+		</p>
+
+		{% if not global.auth.logged_in %}
+			<div class="field">
+				<p>{{ __('Sign in to subscribe to this mailing list.') }}</p>
+			</div>
+		{% elseif list.bevat_lid(global.identity.member) %}
+			<div class="field">
+				<p>{{ __('You are subscribed to this mailinglist.') }}</p>
+			</div>
+			{% if global.policies.Mailinglist.user_can_unsubscribe(list) %}
+				{{ form_row(form.unsubscribe, {'label': __('Unsubscribe'), 'is_primary': false}) }}
+			{% endif %}
+		{% elseif global.policies.Mailinglist.user_can_subscribe(list) %}
+			{{ form_row(form.subscribe, {'label': __('Subscribe'), 'is_primary': false}) }}
+		{% endif %}
+	</form>
+</div>

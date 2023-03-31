@@ -2,7 +2,7 @@
 <?php
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/init.php';
+require_once 'src/init.php';
 
 $sticker_model = get_model('DataModelSticker');
 

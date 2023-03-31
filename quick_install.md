@@ -1,6 +1,6 @@
 # Quick Install Guide
 
-This guide has been written for Ubuntu 18.04 LTS and tested on Ubuntu 18.04 on Windows Subsystem for Linux (WSL).
+This guide has been written for Ubuntu 20.04 LTS and tested on Ubuntu 20.04 on Windows Subsystem for Linux 2 (WSL2).
 
 ## Step 1: Installation
 
@@ -14,7 +14,7 @@ sudo apt upgrade
 Install PHP (with extensions):
 
 ```bash
-apt install php7.2 php7.2-cli php7.2-pgsql php7.2-curl php7.2-mbstring php7.2-zip php7.2-bcmath php7.2-xml
+sudo apt install php php-cli php-pgsql php-curl php-mbstring php-zip php-bcmath php-xml
 ```
 
 Install Postgres:
@@ -23,12 +23,26 @@ Install Postgres:
 sudo apt install postgresql postgresql-contrib
 ```
 
-Install Composer: follow [this guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-composer-on-ubuntu-18-04)
+Install Composer:
 
+```bash
+sudo apt install composer
+```
+
+Install Node:
+
+```bash
+sudo apt install nodejs
+```
 
 ## Step 2: Setup Database
 
 Start the postgres service (if it hasn't started yet):
+
+```bash
+sudo systemctl start postgresql
+```
+or if you're in WSL:
 
 ```bash
 sudo service postgresql start
@@ -48,7 +62,7 @@ Create a database:
 sudo -u postgres createdb -O webcie --encoding=UTF8 --template=template0 webcie
 ```
 
-If you get `WARNING:  could not flush dirty data: Function not implemented` (may happen on WSL), interrupt (`CTRL+C`) and do the following:  
+If you get `WARNING:  could not flush dirty data: Function not implemented` (may happen on WSL1), interrupt (`CTRL+C`) and do the following:  
 
 Open `/etc/postgresql/<postgres version number>/main/postgresql.conf` and change the following settings:
 
@@ -68,11 +82,11 @@ Clone the repository and `cd` into its directory. If you're using WSL make sure 
 Copy the config files:
 
 ```bash
-cp include/config.inc.default include/config.inc
-cp include/data/DBIds.php.default include/data/DBIds.php
+cp config/config.inc.default config/config.inc
+cp config/DBIds.php.default config/DBIds.php
 ```
 
-Adjust `include/data/DBIds.php` to match your database settings.
+Adjust `config/DBIds.php` to match your database settings.
 
 Install PHP dependencies:
 
@@ -80,10 +94,16 @@ Install PHP dependencies:
 composer install
 ```
 
+Install Node dependencies:
+
+```bash
+npm ci
+```
+
 Load barebone database:
 
 ```bash
-sudo -u postgres psql webcie < include/data/webcie-minimal.sql
+sudo -u postgres psql webcie < data/webcie-minimal.sql
 ```
 
 Set password for test user (ID = 1):
@@ -95,11 +115,16 @@ php bin/set-password.php
 
 ## Step 4: Run locally
 
+To build the front-end:
+
+```bash
+npm run build
+```
 
 To run the website, execute the following in the root folder of your repository:
 
 ```bash
-php -S localhost:8000/
+php -t public -S localhost:8000/
 ```
 
 Now, you should be able to load `localhost:8000/` in a browser and log in with `test@svcover.nl` and the password you just set.
@@ -107,7 +132,7 @@ Now, you should be able to load `localhost:8000/` in a browser and log in with `
 If php crashes on a segmentation fault, try running the following command instead: 
 
 ```bash
-php -d opcache.enable=0 -d opcache.enable_cli=0 -S localhost:8000/
+php -d opcache.enable=0 -d opcache.enable_cli=0 -t public -S localhost:8000/
 ```
 
 Please note that the barebone database is quite empty. If you need more content, you should add it yourself. The `test@svcover.nl` user is a member of the AC/DCee in this setup, so you should be able to do anything you need with this user. Feel free to create more users if you want.
@@ -119,9 +144,9 @@ Some things will not work with this setup.
 
 ### Fixing config
 
-Photo albums will not show photos. To fix this, change the `url_to_scaled_photo` setting in `include/config.inc` to `'https://www.svcover.nl/fotoboek.php?view=scaled'`,
+Photo albums will not show photos. To fix this, change the `url_to_scaled_photo` setting in `config/config.inc` to `'https://www.svcover.nl/fotoboek.php?view=scaled'`,
 
-Some pages will complain that you didn't configure a nonce salt. To fix this, change the `nonce_salt` setting in `include/config.inc` to any string of your liking (or generate one according to the instructions).
+Some pages will complain that you didn't configure a nonce salt. To fix this, change the `nonce_salt` setting in `config/config.inc` to any string of your liking (or generate one according to the instructions).
 
 ### ImageMagick
 

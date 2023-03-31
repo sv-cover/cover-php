@@ -1,0 +1,23 @@
+$member_naam heeft het volgende document toegevoegd:
+
+Vak:     $vak
+Titel:	 $titel
+Bestand: $bestand
+
+Voor dit vak gelden de volgende restricties:
+
+Aantekeningen:	$aantekeningen
+Tentamens:	$tentamens
+Bijzonderheden:	$bijzonderheden
+
+Ga naar de volgende URL om het bestand te downloaden:
+
+ROOT_DIR_URIstudieondersteuning.php?download=$id
+
+Je kunt op de pagina ROOT_DIR_URIstudieondersteuning.php?so_moderate=$id#$id dit agendapunt goedkeuren (of weigeren).
+Let op! controleer het bestand eerst op virussen voordat je het opent.
+
+Met vriendelijke groeten,
+
+
+De WebCie

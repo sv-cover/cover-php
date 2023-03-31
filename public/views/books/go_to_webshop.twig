@@ -1,0 +1,13 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Order books') ~ ' – ' ~ parent() %}
+
+{% block content %}
+{{ include('@layout/editable.twig', {editable: global.models.Editable.get_iter_from_title('Boeken bestellen')}) }}
+
+<div class="box">
+    <a href="{{ webshop_link }}" class="button is-large is-primary" target="_blank" rel="noopener noreferrer nofollow">
+        {{ __('Continue to the StudyStore webshop') }}
+    </a>
+</div>
+{% endblock %}

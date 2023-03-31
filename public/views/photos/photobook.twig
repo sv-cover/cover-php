@@ -1,0 +1,201 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title book.has('titel') ? book.titel : __('Photo book') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<section class="section">
+<div 
+	class="container is-widescreen photo-book"
+	data-book-id="{{ book.id }}"
+	{% if user_can_update book or user_can_create book.new_book %}
+		data-permissions="admin"
+	{% endif %}
+>
+	<article class="controls">
+		<div class="level">
+			<div class="level-left">
+				{% if book.id is not same as(0) %}
+					<a href="{{ path('photos', {book: book.parent.id}) }}" class="button">
+						<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+						<span>{{__('Back to')}} {{ book.parent.titel }}</span>
+					</a>
+				{% endif %}
+			</div>
+			<div class="level-right">
+				<div class="field is-grouped">
+					{% if controller.policy.user_can_download_book(book) %}
+						<p class="control">
+							<a href="{{ path('photos', {view: 'confirm_download_book', book: book.id}) }}" class="button" title="{{ __('Download photo book') }}" data-popup="modal">
+								<span class="icon">
+									<i class="fas fa-download" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Download photo book') }}</span>
+								</span>
+							</a>
+						</p>
+					{% endif %}
+					{% if controller.policy.user_can_mark_as_read(book) %}
+						<form class="control" method="post" action="{{ path('photos', {view: 'mark_book_read', book: book.id}) }}" class="control" title="{{ __('Mark all books as seen') }}">
+							<button type="submit" class="button">
+								<span class="icon">
+									<i class="fas fa-check" aria-hidden="true"></i>
+									<span class="is-sr-only">{{ __('Mark all books as seen') }}</span>
+								</span>
+							</button>
+						</form>
+					{% endif %}
+
+					{% if user_can_update book or user_can_delete book or user_can_create book.new_book %}
+						<div class="control dropdown is-right">
+							<div class="dropdown-trigger">
+								<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+									<span>{{ __('Manage') }}</span>
+									<span class="icon is-small">
+										<i class="fas fa-angle-down" aria-hidden="true"></i>
+									</span>
+								</button>
+							</div>
+							<div class="dropdown-menu" id="dropdown-menu" role="menu">
+								<div class="dropdown-content">
+									{% if user_can_update book %}
+										<a href="{{ path('photos', {view: 'add_photos', book: book.id}) }}" class="dropdown-item">
+											<span class="icon">
+												<i class="fas fa-plus" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Add photos') }}</span>
+										</a>
+										<button 
+											id="order-photos-button"
+											class="dropdown-item"
+											data-photo-order-url="{{ controller.json_link_to_update_photo_order(book) }}"
+											data-book-order-url="{{ controller.json_link_to_update_book_order(book) }}"
+										>
+											<span class="icon">
+												<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+											</span>
+											<span>{{ __("Reorder photos") }}</span>
+										</button>
+										<button 
+											id="delete-selected-photos-button"
+											class="dropdown-item photo-selection-control"
+											data-delete-photos-url="{{ path('photos', {view: 'delete_photos', book: book.id}) }}"
+										>
+											<span class="icon">
+												<i class="fas fa-trash" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Delete selected photos') }}</span>
+										</button>
+										<hr class="dropdown-divider">
+									{% endif %}
+									{% if user_can_create book.new_book %}
+										<a href="{{ path('photos', {view: 'add_book', book: book.id}) }}" class="dropdown-item">
+											<span class="icon">
+												<i class="fas fa-folder-plus" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('New photo book') }}</span>
+										</a>
+									{% endif %}
+									{% if user_can_update book or user_can_delete book %}
+										<hr class="dropdown-divider">
+									{% endif %}
+									{% if user_can_update book %}
+										{% if book.get_photos() %}
+											<a href="{{ path('photos', {view: 'people', book: book.id}) }}" class="dropdown-item">
+												<span class="icon">
+													<i class="fas fa-portrait" aria-hidden="true"></i>
+												</span>
+												<span>{{ __('Inspect face detection') }}</span>
+											</a>
+										{% endif %}
+										<a href="{{ path('photos', {view: 'update_book', book: book.id}) }}" class="dropdown-item">
+											<span class="icon">
+												<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Modify photo book') }}</span>
+										</a>
+									{% endif %}
+									{% if user_can_delete book %}
+										<a href="{{ path('photos', {view: 'delete_book', book: book.id}) }}" class="dropdown-item" data-popup="modal">
+											<span class="icon">
+												<i class="fas fa-folder-minus" aria-hidden="true"></i>
+											</span>
+											<span>{{ __('Delete photo book') }}</span>
+										</a>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</article>
+
+	<header class="hero is-light">
+		<div class="hero-body">
+			<div class="content has-text-centered is-centered">
+				<h1 class="title">{{ book.has('titel') ? book.titel : __('Photo book') }}</h1>
+				{% if book.id is same as (0) %}
+					<div class="description">
+						{# introduction to the Photo book page, only visible in the root book #}
+						<p>{{ __('Welcome to Cover’s photo book, which is maintained by the %s. Please inform the PhotoCee when you made photos at an activity so they can add them to the photo book.')|e|format(
+							'<a href="' ~ path('committees', {commissie: constant('COMMISSIE_FOTOCIE')}) ~'">' ~ __('PhotoCee')  ~ '</a>')|raw }}</p>
+					</div>
+				{% else %}
+					<div class="meta">
+						{% set meta_count = 0 %}
+					 	{% if book.has_value('date') %}
+							<span class="date">{{ book.date|date('j F Y') }}</span>
+							{% set meta_count = meta_count + 1 %}
+						{% endif %}
+						{% if book.num_books > 0 %}
+							{% if meta_count > 0 %}
+								<span class="divider"></span>
+							{% endif %}
+							<span class="num_books">{{__N('%d book', '%d books', book.num_books)}}</span>
+							{% set meta_count = meta_count + 1 %}
+						{% endif %}
+						{% if book.num_photos > 0 %} 
+							{% if meta_count > 0 %}
+								<span class="divider"></span>
+							{% endif %}
+							<span class="num_photos">{{__N('%d photo', '%d photos', book.num_photos)}}</span>
+							{% set meta_count = meta_count + 1 %}
+						{% endif %}
+					</div>
+					{% if book.has_value('beschrijving') and book.beschrijving|length > 0 %} 
+						<div class="description">
+							<p>{{ book.beschrijving }}</p>
+						</div>
+					{% endif %}
+				{% endif %}
+
+				{% if book.has_value('fotograaf') %}
+					<div class="photographer">
+						By: {{ book.fotograaf }}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</header>
+
+	{% if book.num_books == 0 and book.num_photos == 0 %}
+		<article>
+			<p>{{ __('There are no photos in this photo book yet') }}</p>
+		</article>
+	{% else %}
+		{{ include('_books.twig', {books: book.books|user_can_read}) }}
+		{{ include('_photos.twig', {photos: book.photos}) }}
+	{% endif %}
+
+</div>
+</section>
+
+<section class="section">
+	{# show the top n comments on the front page (same one as with the info) #}
+	{% if book.id is same as(0) and global.auth.logged_in() %}
+		{{ include('_recent_comments.twig', {comments:view.recent_comments(10)}) }}
+	{% endif %}
+</section>
+
+{% endblock %}
+ 

@@ -1,0 +1,15 @@
+.map
+    .map-marker-cover
+        background-image: urlFor('images/map_marker.svg')
+        background-size: contain
+        width: 26px
+        height: 36px
+        cursor: pointer
+
+.location-picker
+    .map
+        height: $textarea-min-height * 2
+        border: $control-border-width solid $input-border-color
+        border-radius: $input-radius
+    .help + .map
+        margin-top: 0.25rem

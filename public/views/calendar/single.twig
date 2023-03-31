@@ -1,0 +1,228 @@
+{% extends '@layout/layout.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title iter.kop ~ ' – ' ~ parent() %}
+
+{% block ogimage %}
+    {{ iter.get_image(1000) }}
+{% endblock %}
+
+{% block page %}
+<article class="section calendar-single">
+<div class="container has-sidebar block">
+<div class="level is-mobile controls">
+	<div class="level-left">
+		{% if iter.van|date('U') > 'now'|date('U') %}
+			<a href="{{ path('calendar') }}" class="button">
+				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+				<span class="is-hidden-mobile">{{__('Back to calendar')}}</span>
+				<span class="is-hidden-tablet">{{__('Back')}}</span>
+			</a>
+		{% else %}
+			<a href="{{ path('calendar', {'year': iter.van|date('n') < 9 ? iter.van|date('Y') - 1 : iter.van|date('Y') }) }}" class="button">
+				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+				<span class="is-hidden-mobile">{{__('Back to calendar')}}</span>
+				<span class="is-hidden-tablet">{{__('Back')}}</span>
+			</a>
+		{% endif %}
+	</div>
+	<div class="level-right">
+		<div class="field is-grouped">
+			{% if iter.facebook_id %}
+				<div class="control">
+					<a href="https://www.facebook.com/events/{{ iter.facebook_id }}/" target="_blank" rel="noopener noreferrer" class="button" title="{{  __('Show on Facebook') }}">
+						<span class="icon">
+							<i class="fab fa-facebook-square" aria-hidden="true"></i>
+							<span class="is-sr-only">{{  __('Show on Facebook') }}</span>
+						</span>
+					</a>
+				</div>
+			{% endif %}
+			{% if user_can_update iter or user_can_delete iter or user_can_create iter.new_signup_form %}
+				<div class="control dropdown is-right">
+					<div class="dropdown-trigger">
+						<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+							<span>{{ __('Manage') }}</span>
+							<span class="icon is-small">
+								<i class="fas fa-angle-down" aria-hidden="true"></i>
+							</span>
+						</button>
+					</div>
+					<div class="dropdown-menu" id="dropdown-menu" role="menu">
+						<div class="dropdown-content">
+							{% if user_can_create iter.new_signup_form %}
+								<a href="{{ path('signup', {view: 'create_form', agenda: iter.id}) }}" class="dropdown-item">
+									<span class="icon">
+										<i class="fas fa-list-alt" aria-hidden="true"></i>
+									</span>
+									<span>{{ __('New sign-up form') }}</span>
+								</a>
+								{% if user_can_update iter or user_can_delete iter %}
+									<hr class="dropdown-divider">
+								{% endif %}
+							{% endif %}
+							{% if user_can_update iter %}
+								<a href="{{ path('calendar', {view: 'update', agenda_id: iter.id}) }}" class="dropdown-item">
+									<span class="icon">
+										<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+									</span>
+									<span>{{  __('Modify event') }}</span>
+								</a>
+							{% endif %}
+							{% if user_can_delete iter %}
+								<a href="{{ path('calendar', {view: 'delete', agenda_id: iter.id}) }}" class="dropdown-item">
+									<span class="icon">
+										<i class="fas fa-trash" aria-hidden="true"></i>
+									</span>
+									<span>{{  __('Delete event') }}</span>
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+{% if iter.is_proposal %}
+	<div class="notification is-danger">
+		<div class="columns is-vcentered">
+			<div class="column has-text-centered-mobile">
+				{% if iter.replacement_for == 0 %}
+					<p>
+						{{ __('This event has not yet been published. It still needs to be accepted by the Board.') }}
+					</p>
+				{% else %}
+					<p>
+						{{ __('This revision of the event has not yet been published.') }}
+						<a href="{{ path('calendar', {agenda_id: iter.replacement_for}) }} ">{{ __('View original') }}</a>
+					</p>
+				{% endif %}
+			</div>
+			{% if global.policies.Agenda.user_can_moderate(iter) %}
+				<div class="column is-narrow has-text-centered-mobile">
+					<a href="{{ path('calendar', {view: 'moderate', agenda_id: iter.id}) }}#event_{{ iter.id }}" class="button is-white is-outlined">
+						{{ __('Moderate') }}
+					</a>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+{% endif %}
+
+{% if mutation %}
+	<div class="notification is-danger">
+		<p>{{ __('There is an <a href="%s">unpublished change</a> for this event.')|format(mutation.get_absolute_path()|e('html'))|raw }}</p>
+	</div>
+{% endif %}
+
+<header class="event-header cover-thumbnail is-2by1 {% if iter.image_url %}has-image{% endif %}">
+	<div class="overlay is-bottom">
+		<div class="date boxed-title-wrapper">
+			<span class="boxed-title has-text-weight-normal is-size-6 is-size-7-mobile">
+				{{ iter.van|date('F d') }}
+			</span>
+		</div>
+		<div class="name boxed-title-wrapper">
+			<h1 class="boxed-title is-size-4 is-size-5-mobile">
+				{{ iter.kop }}
+			</h1>
+		</div>
+	</div>
+	{% if iter.image_url %}
+		<figure class="image">
+			<picture>
+				<source srcset="{{ iter.get_image(400) }} 1x, {{ iter.get_image(600) }} 1.5x, {{ iter.get_image(800) }} 2x" media="(max-width: 400px)">
+				<source srcset="{{ iter.get_image(600) }} 1x, {{ iter.get_image(900) }} 1.5x, {{ iter.get_image(1200) }} 2x" media="(max-width: 600px)">
+				<source srcset="{{ iter.get_image(1000) }} 1x, {{ iter.get_image(1500) }} 1.5x, {{ iter.get_image(2000) }} 2x">
+				<img src="{{ iter.get_image(1000) }}"> 
+			</picture>
+		</figure>
+	{% endif %}
+</header>
+
+<!-- Actual event -->
+<section class="event-details columns">
+	<h2 class="is-sr-only">{{ __('Event information') }}</h2>
+	<div class="column is-sidebar">
+		<div class="is-sticky">
+			<div class="event-sidebar-sticky-header cover-thumbnail is-2by1 {% if iter.image_url %}has-image{% endif %}">
+				<div class="overlay is-bottom">
+					<div class="name boxed-title-wrapper">
+						<span class="boxed-title is-size-6">
+							{{ iter.kop }}
+						</span>
+					</div>
+				</div>
+				{% if iter.image_url %}
+					<figure class="image">
+						<img srcset="{{ iter.get_image(300) }} 1x, {{ iter.get_image(600) }} 2x" src="{{ iter.get_image(300) }}"> 
+					</figure>
+				{% endif %}
+			</div>
+			<div class="content">
+				{% if iter.signup_forms %}
+					<a href="#event-signup" class="button is-primary is-fullwidth">Sign up</a>
+				{% endif %}
+
+				{{ macros.format_period(iter) }}
+
+				{% if iter.locatie %}
+					<h3>{{  __('Location') }}</h3>
+					<p>{{ iter.locatie }}</p>
+				{% endif %}
+				
+				{% if iter.extern %}
+					<h3>{{  __('Organiser') }}</h3>
+					<p>
+						<div class="has-text-danger">{{  __('This activity is not organised by Cover.') }}</div>
+						{% if iter.committee %}
+							{{  __('Placed by') }}:
+							<a href="{{ path('committees', {commissie: iter.committee.login}) }}">{{ iter.committee.naam }}</a>
+						{% endif %}
+					</p>
+				{% elseif iter.committee %}
+					<h3>{{  __('Organiser') }}</h3>
+					<p><a href="{{ path('committees', {commissie: iter.committee.login}) }}">{{ iter.committee.naam }}</a></p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="column is-content">
+		<div class="content">
+			{{ iter.beschrijving|parse_markup }}
+		</div>
+		{% if iter.signup_forms %}
+		<div id="event-signup" class="block">
+			{% if global.auth.logged_in %}
+				{% for form in iter.signup_forms %}
+					{% if user_can_read form %}
+						<hr>
+						{{ include('signup_form.twig', {form: form}) }}
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<hr>
+				<div class="content">
+					<h2>Sign up</h2>
+					<p>{{ __('Your registration will be linked to your account, so you need to login to register for this activity. ') }}</p>
+					<p>
+						{{ 
+							__(
+								'If you\'re not a member and still want to join, that might be possible. Contact the %s for more information.'
+							)|e('html')|format(
+								'<a href="mailto:%s@svcover.nl">%s</a>'|format(iter.committee.login|e('html'), iter.committee.naam|e('html'))
+							)|raw
+						}}
+					</p>
+					<a href="{{ login_path() }}" class="button is-primary">{{ __('Log in') }}</a>
+				</div>
+			{% endif %}
+		</div>
+		{% endif %}
+	</div>
+</section>
+</div>
+</article>
+{% endblock %}

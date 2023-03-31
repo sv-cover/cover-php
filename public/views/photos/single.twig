@@ -1,0 +1,281 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title book.titel ~ ' – ' ~ parent() %}
+
+{%- macro format_face_label(face) -%}
+<span class="face-label">
+    {%- if face.lid_id is not null -%}
+        <a href="{{ path('profile', {lid:  face.lid.id}) }}" data-face-id="{{ face.id }}">{{ face.lid|personal_full_name }}</a>
+    {%- elseif face.custom_label != '' -%}
+        <span class="custom-label" data-face-id="{{ face.id }}">{{ face.custom_label }}</span>
+    {%- else -%}
+        <span data-face-id="{{ face.id ?? '' }}">{{ __('Unknown') }}</span>
+    {%- endif -%}
+</span>
+{%- endmacro -%}
+
+{%- macro format_face_labels(faces) -%}
+    {% set known_faces = faces|filter(f => f.lid_id is not null or f.custom_label != '')  %}
+    {% set known_faces = known_faces|map(f => _self.format_face_label(f)) %}
+    {% set unknown_count = faces|length - known_faces|length  %}
+
+    {% if unknown_count > 0 %}
+        {% set known_faces = known_faces|merge([__N('%d Unknown', '%d Unknown', unknown_count)]) %}
+    {% endif %}
+
+    {{ known_faces|human_join(',')|raw }}
+{%- endmacro -%}
+
+{% block page %}
+<article class="photo-single">
+
+<section class="photo">
+    <div class="carousel is-animated">
+        <figure class="image">
+            <picture>
+                <source srcset="{{ photo.get_url(400, 400, book.id) }} 1x, {{ photo.get_url(800, 800, book.id) }} 2x" media="(max-width: 400px)">
+                <source srcset="{{ photo.get_url(600, 600, book.id) }} 1x, {{ photo.get_url(1200, 1200, book.id) }} 2x" media="(max-width: 600px)">
+                <source srcset="{{ photo.get_url(900, 900, book.id) }} 1x, {{ photo.get_url(1800, 1800, book.id) }} 2x" media="(max-width: 900px)">
+                <source srcset="{{ photo.get_url(1200, 1200, book.id) }} 1x, {{ photo.get_url(1800, 1800, book.id) }} 1.5x, {{ photo.get_url(2400, 2400, book.id) }} 2x"  media="(max-width: 1200px)">
+                <source srcset="{{ photo.get_url(1800, 1800, book.id) }} 1x" media="(max-width: 1800px)">
+                <source srcset="{{ photo.get_url(2400, 2400, book.id) }} 1x">
+                <img src="{{ photo.get_url(1800, 1800, book.id) }}"> 
+            </picture>
+            <figcaption class="faces" hidden data-api-url="{{ path('photos.faces', {photo: photo.id}) }}">
+                <template class="face-template">
+                    <div class="face">
+                        <button class="delete is-small" type="button" data-delete hidden></button>
+                        <a class="tag" data-label data-label-member hidden></a>
+                        <span class="tag" data-label data-label-custom hidden></span>
+                        <button class="tag is-unknown" type="button" data-label data-label-untagged data-button-autocomplete hidden>
+                            {{ __('Click to tag') }}
+                        </button>
+                        <span class="tag is-unknown" data-label data-label-untagged-noedit hidden>
+                            {{ __('Not yet tagged') }}
+                        </span>
+                        <div class="tag is-suggested" data-label data-label-suggested hidden>
+                            <div class="suggestion">
+                                {{ __('Is this %s?')|e|format('<a class="name" data-name></a>')|raw }}
+                            </div>
+                            <div class="button-group">
+                                <button type="button" data-button-yes>{{  __('Yes') }}</button>
+                                <button type="button" data-button-no>{{  __('No') }}</button>
+                            </div>
+                        </div>
+                        <div data-label data-label-autocomplete hidden>
+                            <span class="tag is-medium" data-autocomplete-placeholder></span>
+                        </div>
+                    </div>
+                </template>
+            </figcaption>
+        </figure>
+    </div>
+    <nav class="photo-navigation" data-enter-fullscreen-text="{{ __('Enter fullscreen') }}" data-exit-fullscreen-text="{{ __('Exit fullscreen') }}">
+        {% set nav = book.get_neighbours(photo) %}
+        {% if nav.previous %}
+        <a class="photo-previous" href="{{ path('photos.photo', {book: book.id, photo: nav.previous.id}) }}" title="{{ __('Go to the previous photo') }}">
+            <span class="icon">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                <span class="is-sr-only">{{ __('Previous') }}</span>
+            </span>
+        </a>
+        {% endif %}
+
+        {% if nav.next %}
+        <a class="photo-next" href="{{ path('photos.photo', {book: book.id, photo: nav.next.id}) }}" title="{{ __('Go to next photo') }}">
+            <span class="icon">
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                <span class="is-sr-only">{{ __('Next') }}</span>
+            </span>
+        </a>
+        {% endif %}
+        <a class="photo-parent button is-text" href="{{ path('photos', {book: book.id}) }}#photo-{{ photo.id }}">
+            <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+            <span>{{__('Back to')}} {{ book.titel }}</span>
+        </a>
+    </nav>
+</section>
+
+<section class="section photo-info">
+    <div class="photo-meta">
+        {% if user_can_update book %}
+            {% if photo.beschrijving %}
+                <h1>
+                    <a class="name" href="{{ path('photos.photo', {view: 'update', book: book.id, photo: photo.id}) }}" title="{{ photo.beschrijving }}" data-popup="modal">
+                        {{- photo.beschrijving -}}    
+                    </a>
+                </h1>                
+            {% else %}
+                <a class="name placeholder" href="{{ path('photos.photo', {view: 'update', book: book.id, photo: photo.id}) }}" data-popup="modal">
+                    {{- __('Add photo title') -}}
+                </a>
+            {% endif %}
+        {% elseif photo.beschrijving %}
+            <h1 class="name" title="{{ photo.beschrijving }}">
+                {{- photo.beschrijving -}}
+            </h1>
+        {% endif %}
+
+        <div class="book">
+            <a href="{{ path('photos', {book: book.id}) }}#photo_{{ photo.id }}" title="{{ book.titel }}">{{ book.titel }}</a>
+            {% if photo.book.id != book.id %}
+                <span class="orignal-book">
+                    {{ __('from') }}
+                    <a href="{{ path('photos', {book: photo.book.id}) }}#photo_{{ photo.id }}" title="{{ photo.book.titel }}">{{ photo.book.titel }}</a>
+                </span>
+            {% endif %}        
+        </div>
+
+        {% if book.has_value('date') %}
+            <div class="date">{{ book.date|date('j F Y') }}</div>
+        {% endif %}
+
+        {% if photo.faces|user_can_read|length > 0 %}
+            <div class="photo-tag-list">
+                <span class="icon">
+                    <i class="fas fa-user-tag fa-fw" aria-hidden="true"></i>
+                    <span class="is-sr-only">{{ __('A photo with') }}</span>
+                </span>
+                <span class="face-list" data-glue="{{ __('and') }}">
+                    {{ _self.format_face_labels(photo.faces|user_can_read, _self) }}
+                </span>
+                {% apply spaceless %}
+                    <template class="face-template">
+                        <span class="face-label">
+                            <a data-label-url hidden></a>
+                            <span data-label-text hidden></span>
+                            <span data-label-other hidden>{{ __('Unknown') }}</span>
+                            <span data-label-unknown hidden>
+                                <span data-count></span>
+                                <span data-singular>&nbsp;{{ __('Unknown') }}</span>
+                                <span data-plural>&nbsp;{{ __('Unknown') }}</span>
+                            </span>
+                        </span>
+                    </template>
+                {% endapply %}
+            </div>
+        {% endif %}
+
+        <div class="photo-options dropdown is-right">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        <span class="is-sr-only">{{ __('Options') }}</span>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    {% if user_can_update book %}
+                        <a class="dropdown-item" href="{{ path('photos.photo', {view: 'update', book: book.id, photo: photo.id}) }}" data-popup="modal">
+                            {{- __('Edit title') -}}
+                        </a>
+                        <a class="dropdown-item" href="{{ path('photos', {view: 'delete_photos', book: book.id, 'photo_id[]': photo.id}) }}" data-popup="modal">
+                            {{ __('Delete photo') }}
+                        </a>
+                        <hr class="dropdown-divider">
+                    {% endif %}
+                    {% if global.auth.logged_in and global.identity.member.id in photo.faces|select('lid_id') %}
+                        <a class="dropdown-item" href="{{ path('photos.privacy', {book: book.id, photo: photo.id}) }}" data-popup="modal">
+                            {{ __('Visibility') }}
+                        </a>
+                        <hr class="dropdown-divider">
+                    {% endif %}
+                    <a class="dropdown-item" href="{{ path('photos.photo', {view: 'download', book: book.id, photo: photo.id}) }}">
+                        {{ __('Download photo') }}
+                    </a>
+
+                    <a
+                        class="dropdown-item photo-copy-link"
+                        href="{{ url('photos.photo', {book: book.id, photo: photo.id}) }}"
+                        data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
+                        data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"
+                    >
+                        {{ __('Share photo') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="photo-interaction">
+        {% if global.auth.logged_in %}
+            <div class="controls level is-mobile">
+                {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
+                <form class="level-item like-form photo-like-form" method="post" action="{{ path('photos.likes', {book: book.id, photo: photo.id}) }}">
+                    <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
+                    <button type="submit"  class="button is-text icon"
+                            title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"
+                            data-title="{{ [__('You like this photo. Unlike photo'), __('Like photo')]|json_encode|e('html_attr') }}"
+                            data-sr-text="{{ [__('You like this photo. Click to unlike.'), __('Like photo') ]|json_encode|e('html_attr') }}"
+                    >
+                            {% if liked %}
+                                <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+                                <span class="is-sr-only">{{ 
+                                    __('You like this photo. Click to unlike.') }}</span>
+                            {% else %}
+                                <i class="fas fa-heart" aria-hidden="true"></i>
+                                <span class="is-sr-only">{{ __('Like photo') }}</span>
+                            {% endif %}
+                    </button>
+                    <span class="count"
+                        {% if photo.likes|length == 0 %}hidden{% endif %}
+                        title="{{ photo.likes|length > 0 ? __N('%d person likes this photo', '%d people like this photo', photo.likes|length)|e('html_attr') : '' }}"
+                        data-title="{{ [__('person likes this photo'), __('people like this photo') ]|json_encode|e('html_attr') }}"
+                        data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
+                    >
+                        <span class="count-number is-size-6">{{ photo.likes|length }}</span>
+                        <span class="is-sr-only">{{ __N('like', 'likes', photo.likes|length) }}</span>
+                    </span>
+                </form>
+
+                {% if global.models.PhotobookFace.new_iter %}
+                    <a class="level-item photo-tag-button" title="{{ __('Tag people') }}" hidden>
+                        <span class="icon">
+                            <i class="fas fa-tag" aria-hidden="true"></i>
+                        </span>
+                        <span class="is-sr-only">
+                            {{ __('Tag people') }}
+                        </span>
+                    </a>
+                {% endif %}
+
+                <a class="level-item" href="{{ path('photos.photo', {view: 'download', book: book.id, photo: photo.id}) }}" title="{{ __('Download photo') }}">
+                    <span class="icon">
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                    </span>
+                    <span class="is-sr-only">
+                        {{ __('Download photo') }}
+                    </span>
+                </a>
+
+                <a
+                    class="level-item photo-copy-link"
+                    href="{{ url('photos.photo', {book: book.id, photo: photo.id}) }}"
+                    title="{{ __('Share photo') }}"
+                    data-copy-question="{{ __('Do you want to copy a link to this photo?') }}"
+                    data-share-title="{{ __('Photo from %s')|format(photo.book.titel) }}"
+                >
+                    <span class="icon">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i>
+                    </span>
+                    <span class="is-sr-only">
+                        {{ __('Share photo') }}
+                    </span>
+                </a>
+            </div>
+        {% endif %}
+
+        <div class="comments" 
+            data-count="{{ photo.comments|length|e('html_attr') }}"
+            data-icon-class="fa-comments"
+            data-text="{{ [__('comment'), __('comments') ]|json_encode|e('html_attr') }}"
+        >
+            {{ include('@theme/photocomments/index.twig', {comments: photo.comments, photo: photo, book: book}) }}
+        </div>
+    </div>
+</section>
+
+</article>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends is_modal ? './_entry_form_modal.twig' : './_entry_form_regular.twig' %}
+
+{% block title __('Form') ~ ' – ' ~ parent() %}
+{% block entry_form_title %}{{ __('Form') }}{% endblock %}
+
+{% block entry_form_header %}
+	{% if not iter.is_open %}
+	<div class="notification is-danger">
+		<h3>{{ __('The registrations are closed.') }}</h3>
+		{% if (not entry.has_id and user_can_create entry) %}
+			<p>{{ __('You can see this form because you are allowed to sign up people outside of the sign-up period.') }}</p>
+		{% elseif (entry.has_id and user_can_update entry) %}
+			<p>{{ __('You can see this entry because you are allowed to modify entries for this form.') }}</p>
+		{% else %}
+			<p>{{ __('You can see your entry, but you cannot change it anymore. If you would like to change something, ask a committee member.') }}</p>
+		{% endif %}
+	</div>
+	{% endif %}
+{% endblock %}
+
+{# Cache submit button #}
+{% set submit_button = form_widget(form.submit, {
+	label: entry.has_id ? __('Modify entry') : __('Sign me up'),
+	attr: {'form': 'signup-entry-form'},
+}) %}
+
+{% block entry_form_form %}
+	{{ form_start(form, {
+		id: 'signup-entry-form',
+		action: entry.has_id ? path('signup', {view: 'update_entry', form: iter.id, entry: entry.id}) : path('signup', {view: 'create_entry', form: iter.id}),
+	}) }}
+		{# Global errors #}
+		{{ form_errors(form) }}
+		{# Render fields #}
+		{{ form_rest(form) }}
+		{# Render submit button #}
+		{% if not is_modal and (user_can_create entry or user_can_update entry) %}
+			<div class="field">
+				<div class="control buttons">	
+					{{ submit_button|raw }}
+				</div>
+			</div>
+		{% endif %}
+	{{ form_end(form) }}
+{% endblock %}
+
+{% block entry_form_buttons %}
+	<a href="#" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+	{% if (user_can_create entry or user_can_update entry) %}
+		{{ submit_button|raw }}
+	{% endif %}
+{% endblock %}

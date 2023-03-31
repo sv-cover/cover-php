@@ -1,0 +1,90 @@
+<div class="level">
+	<div class="level-left">
+		<h1 class="title">{{ __('Announcements') }}</h1>
+	</div>
+	{# Normally I would use controller.new_iter here, but this template is embedded
+	in the homepage and no controller is passed in. This is also the reason that
+	the controller isn't used to generate the links, as is done in all the other
+	CRUD-based views. #}
+	{% if user_can_create global.models.Announcement.new_iter %}
+		<div class="level-right buttons">
+			<a href="{{ path('announcements', {view: 'create'}) }}" class="button">{{ __('New announcement') }}</a>
+		</div>
+	{% endif %}
+</div>
+
+
+{% for item in iters if user_can_read item %}
+<div class="card is-half-height announcement block">
+	<div class="card-content">
+		<div class="level is-marginless">
+			<div class="level-left">
+				<div>
+					<h4 class="title is-5">
+						{{ item.subject }}
+					</h4>
+				</div>
+			</div>
+			{% if user_can_update item or user_can_delete item %}
+				<div class="level-right">
+					<div class="dropdown is-right">
+						<div class="dropdown-trigger">
+							<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+								<span>{{ __('Manage') }}</span>
+								<span class="icon is-small">
+									<i class="fas fa-angle-down" aria-hidden="true"></i>
+								</span>
+							</button>
+						</div>
+						<div class="dropdown-menu" id="dropdown-menu" role="menu">
+							<div class="dropdown-content">
+								<a class="dropdown-item" href="{{ path('announcements', {view: 'read', id: item.id}) }}" title="{{ __('Link announcement') }}">
+									<span class="icon">
+										<i class="fas fa-link" aria-hidden="true"></i>
+									</span>
+									<span>{{ __('Link announcement') }}</span>
+								</a>
+								{% if user_can_update item %}
+									<a class="dropdown-item" href="{{ path('announcements', {view: 'update', id: item.id}) }}" title="{{ __('Modify announcement') }}">
+										<span class="icon">
+											<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+										</span>
+										<span>{{ __('Modify announcement') }}</span>
+									</a>
+								{% endif %}
+								{% if user_can_delete item %}
+									<a class="dropdown-item" href="{{ path('announcements', {view: 'delete', id: item.id}) }}" title="{{ __('Delete announcement') }}" data-popup="modal">
+										<span class="icon">
+											<i class="fas fa-trash" aria-hidden="true"></i>
+										</span>
+										<span>{{ __('Delete announcement') }}</span>
+									</a>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+		<p class="subtitle is-7">
+			{{ __('By') }}:
+			<a href="{{ path('committees', {commissie: item.committee.login}) }}">{{ item.committee.naam }}</a>
+			{{ __('on') }}
+			{{ item.created_on|date() }}
+		</p>
+	</div>
+	<div id="text-{{loop.index}}" class="card-content long-announcement">
+		<p class=" has-text-left is-size-6-touch">
+			{{ item.message|parse_markup }}
+		</p>
+	</div>
+	<div class="controls is-not-active-read-more">
+		<a href="text-{{loop.index}}" class="collapse-trigger" aria-controls="text-{{loop.index}}">Read More</a>
+	</div>
+</div>
+
+{% endfor %}
+
+<p class="align-center">
+	<a href="{{ path('announcements') }}">{{ __('Show all announcements') }}</a>
+</p>

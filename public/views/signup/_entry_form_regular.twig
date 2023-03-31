@@ -1,0 +1,16 @@
+{% extends '@layout/layout.twig' %}
+
+{% block content %}
+<header class="level">
+	<div class="level-left">
+		<h1 class="title">
+			{% block entry_form_title %}{% endblock %}
+		</h1>
+	</div>
+</header>
+
+<article class="block">
+    {% block entry_form_header %}{% endblock %}
+    {% block entry_form_form %}{% endblock %}
+</article>
+{% endblock %}

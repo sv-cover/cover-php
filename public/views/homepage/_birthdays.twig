@@ -1,0 +1,21 @@
+{% extends '@theme/homepage/_card.twig' %}
+
+{% set birthdays = view.layout.jarigen %}
+{% set cover_birthday = view.layout.is_cover_jarig() %}
+{% set count_birthdays = birthdays|length + (cover_birthday ? 1 : 0) %}
+
+{% block name 'birthdays' %}
+
+{% block title __('Birthdays') %}
+
+{% block content %}{% if count_birthdays > 0 %}
+        {{ __N('There is %d birthday today:', 'There are %d birthdays today:', count_birthdays) }}<br>
+        <ul>
+            {% if cover_birthday %}
+                <li><span style="font-weight: bold; color: #c60c30;">Cover!</span> ({{ view.layout.cover_leeftijd }})</li>
+            {% endif %}
+            {% for birthday_person in birthdays %}
+                <li><a href="{{ path('profile', {lid: birthday_person.id}) }}"">{{ birthday_person|personal_full_name }} ({{ birthday_person.leeftijd }})</a></li>
+            {% endfor %}
+        </ul>
+{% endif %}{% endblock %}

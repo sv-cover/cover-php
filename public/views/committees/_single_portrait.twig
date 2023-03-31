@@ -1,0 +1,67 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title %}
+	{{ iter.naam }} – {{ parent() }}
+{% endblock %}
+
+{% block page %}
+<article class="committee-single has-photo-portrait">
+<div class="columns">
+	<div class="column committe-photo-portrait">
+		<figure class="image">
+			<img 
+				srcset="{{ iter.page.get_cover_image(400) }} 400w,
+						{{ iter.page.get_cover_image(600) }} 600w,
+						{{ iter.page.get_cover_image(1000) }} 1000w,
+						{{ iter.page.get_cover_image(1600) }} 1600w"
+				sizes="50vw" {# Half of default #}
+				src="{{ iter.page.get_cover_image(1600) }}"
+				alt="{{ __('Committee photo of %s')|format(iter.naam) }}"
+			>
+		</figure>
+	</div>
+	<div class="column is-content">
+		{% block committee_controls %}{% endblock %}
+
+		<header class="committee-header cover-thumbnail {% if iter.page.cover_image_url %}has-image{% endif %} is-hidden-widescreen is-block-touch is-block-desktop-only">
+			<div class="overlay is-bottom">
+				<div class="name boxed-title-wrapper">
+					<h1 class="boxed-title is-size-4 is-size-5-mobile">
+						{{ iter.naam }}
+					</h1>
+				</div>
+			</div>
+			{% if iter.page.cover_image_url %}
+				<figure class="image">
+					<img 
+						srcset="{{ iter.page.get_cover_image(400) }} 400w,
+								{{ iter.page.get_cover_image(600) }} 600w,
+								{{ iter.page.get_cover_image(1000) }} 1000w,
+								{{ iter.page.get_cover_image(1600) }} 1600w"
+						sizes="100vw"
+						src="{{ iter.page.get_cover_image(1600) }}"
+						alt="{{ __('Committee photo of %s')|format(iter.naam) }}"
+					>
+				</figure>
+			{% endif %}
+		</header>
+
+		<header class="block is-hidden-touch is-hidden-desktop-only is-block-widescreen">
+			<h1 class="title is-size-3">
+				{{ iter.naam }}
+			</h1>
+		</header>
+
+		{% block committee_header %}{% endblock %}
+
+		{% block committee_interest %}{% endblock %}
+
+		{% block committee_info %}{% endblock %}
+
+		{% block committee_events %}{% endblock %}
+
+		{% block committee_contact %}{% endblock %}
+	</div>
+</div>
+</article>
+{% endblock %}

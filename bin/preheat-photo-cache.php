@@ -3,8 +3,8 @@
 ini_set('memory_limit', '512M');
 chdir(dirname(__FILE__) . '/..');
 
-require_once 'include/init.php';
-require_once 'include/terminal.php';
+require_once 'src/init.php';
+require_once 'src/framework/terminal.php';
 
 $photo_model = get_model('DataModelPhotobook');
 
@@ -214,7 +214,7 @@ function process_photo(DataIterPhoto $photo)
 	}
 
 	foreach (get_config_value('precomputed_photo_scales', array()) as $dimesions)
-		fclose($photo->get_resource($dimesions[0], $dimesions[1], $force_update));
+		$photo->get_resource($dimesions[0], $dimesions[1], $force_update);
 }
 
 if ($options['slave'])

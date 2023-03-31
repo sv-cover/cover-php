@@ -1,0 +1,13 @@
+<h2 class="title is-5">
+	<a href="{{ result.absolute_path|e('html_attr') }}" data-search-main-link>{{ result.thread.subject }}</a>
+</h2>
+<p class="subtitle is-7">
+{{ __('Forum message in %s from %s')|format(
+	'<a href="%s">%s</a>'|format(
+		path('forum', {forum: result.thread.forum.id}),
+		result.thread.forum.name|e('html')),
+		result.date|date('M Y'))|raw }}
+</p>
+<div class="content">
+    {{ result.message|strip_markup|excerpt(query_parts, 50)|raw }}
+</div>

@@ -1,0 +1,31 @@
+Beste $voornaam,
+
+Welkom bij Cover, de studievereniging voor Informatica en Kunstmatige Intelligentie aan de Rijksuniversiteit Groningen! Wij hopen in de komende jaren bij te kunnen dragen aan zowel je studie als je studentenleven.
+
+Cover organiseert namelijk allerlei activiteiten voor haar leden: studiegerelateerde activiteiten zoals studie ondersteuningsmomenten, symposia en lezingen waar je kennis over het vakgebied wordt verbreed en daarnaast nog vele ontspannende activiteiten zoals borrels en film- en spellenavonden. Om te zien welke activiteiten de komende weken zullen plaatsvinden, kun je kijken op https://www.svcover.nl.
+
+* Ben je een eerstejaars student? Vergeet je dan niet in te schrijven voor ons introductiekamp! Kijk op https://introcee.nl voor meer informatie!
+
+Als lid van Cover heb je automatisch een profiel gekregen op onze website. Dit account geeft je de verschillende mogelijkheden, waaronder online je gegevens wijzigen.
+Je inloggegevens vind je aan het einde van dit mailtje.
+We raden je aan je wachtwoord te veranderen en indien gewenst je privacyinstellingen aan te passen. Standaard zijn je profielfoto en naam voor een ieder zichtbaar, je geboortedatum, telefoonnummer, email adres en startjaar alleen voor ingelogde leden zichtbaar en je adres, woonplaats en postcode voor iedereen verborgen. Verder kun je op de website je boeken bestellen, het forum bezoeken en foto’s bekijken.
+
+Naast de website bezitten wij ook nog een verenigingskamer (Bernoulliborg kamer 5161.0041a). Deze gezellige ontmoetingsplek is uitstekend voor even bijkomen, gamen en gewoon lol hebben met medestudenten. Ook kun je bij deze kamer goedkoop eten en drinken halen (er wordt geen winst op gemaakt). Om iets te kunnen halen moet je een account in KAST, ons kruisjes systeem, hebben. Voor je gemak hebben wij dat al aangemaakt en er staat tegoed op voor vijf consumpties!
+
+Verder heeft lid zijn van Cover de volgende voordelen:
+- 15% korting bij Shirt a la Minute.
+
+Daarnaast heb je bij Cover ook de mogelijkheid om je te verbreden door commissiewerk te doen. Kijk op https://www.svcover.nl/commissies.php om er achter te komen welke commissies onze vereniging kent. Wil je meer weten over deze mogelijkheden dan kun je contact opnemen met de Commissaris Intern via intern@svcover.nl!
+
+Mocht je nog vragen hebben, kun je ze mailen naar board@svcover.nl of een van de bestuursleden aanspreken in onze kamer.
+
+
+
+Vriendelijke groet,
+
+Het Coverbestuur
+
+-----------------------------
+
+Voordat je kan inloggen heb je nog een wachtwoord nodig. Stel er een in via deze link:
+$password_link

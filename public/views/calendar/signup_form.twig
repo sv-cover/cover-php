@@ -1,0 +1,71 @@
+<div class="event-signup-form">
+{% if user_can_update form %}
+    <div class="dropdown is-right is-pulled-right">
+        <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    <span class="is-sr-only">{{ __('Form options') }}</span>
+                </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+            	<a href="{{ path('signup', {view: 'update_form', form: form.id}) }}" class="dropdown-item">
+            		{{ __('Modify form') }}
+            	</a>
+				<a href="{{ path('signup', {view: 'list_entries', form: form.id}) }}" class="dropdown-item">
+					{{ __('Show sign-ups') }}
+				</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% for entry in form.get_entries_for_member(global.identity.member) %}
+	<p>
+        {{ __('You signed up on %s.')|format(entry.created_on|date('d-m-Y H:i')) }}
+        {% if user_can_update entry %}
+            <a href="{{ path('signup', {view: 'update_entry', form: form.id, entry: entry.id}) }}">{{ __('Show my registration') }}</a>.
+        {% endif %}
+    </p>
+{% else %}
+	{% set entry = form.new_entry(global.identity.member) %}
+	{% if not form.is_open %}
+		{% if user_can_create entry %}
+			<div class="notification is-danger">
+				<h2 class="title is-4">{{ __('The registrations are closed.') }}</h2>
+				<p>{{ __('You can see this form because you are allowed to sign up people outside of the sign-up period.') }}</p>
+			</div>
+		{% else %}
+			<p>
+				{% if form.open_on is null %}
+					{{ __('The sign-up form will soon be available on this page.')}}
+				{% elseif form.open_on is future %}
+					{{ __('The registrations will open on %s.')|format(form.open_on|date('d-m-Y, H:i')) }}
+				{% elseif form.closed_on is past %}
+					{{ __('The registrations are closed. The deadline was %s.')|format(form.closed_on|date('d-m-Y H:i')) }}
+				{% else %}
+					{{ __('The registrations are closed. The participant limit has been exceeded.') }}
+				{% endif %}
+			</p>
+		{% endif %}
+	{% endif %}
+	{% if user_can_create entry %}
+		{% set _form = form.get_form(entry, {'return_path': path('calendar', {agenda_id: form.agenda_item.id})}).createView() %}
+		{{ form_start(_form, {'action': path('signup', {view: 'create_entry', form: form.id})}) }}
+			{# Global errors #}
+			{{ form_errors(_form) }}
+			{# Cache submit button #}
+			{% set submit_button = form_widget(_form.submit, {'label': entry.has_id ? __('Modify entry') : __('Sign me up')}) %}
+			{# Render fields #}
+			{{ form_rest(_form) }}
+			{# Render submit button #}
+			<div class="field">
+				<div class="control buttons">
+					{{ submit_button|raw }}
+				</div>
+			</div>
+		{{ form_end(_form) }}
+	{% endif %}
+{% endfor %}
+</div>

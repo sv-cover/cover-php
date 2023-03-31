@@ -1,0 +1,15 @@
+$member_naam changed the following task:
+
+Task:         $taak
+Priority:   $prioriteit
+Handled:  $afgehandeld
+Description: 
+
+$beschrijving
+
+ROOT_DIR_URItaken.php?taak=$id
+
+Kind Regards,
+
+
+The WebCie

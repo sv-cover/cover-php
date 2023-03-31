@@ -1,0 +1,106 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title message.subject ~ ' – ' ~ list.naam ~ ' – ' ~ parent() %}
+
+{% block content %}
+<header class="block">
+	<nav class="level is-mobile">
+		<div class="level-left">
+			<a href="{{ path('mailing_lists', {view: 'archive_index', id: list.id}) }}" class="level-item button">
+				<span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+				<span class="is-hidden-mobile">{{ __('Back to %s')|format(list.naam) }}</span>
+				<span class="is-hidden-tablet">{{ __('Back') }}</span>
+			</a>
+		</div>
+	</nav>
+	{% if subject is not null %}
+		<h1 class="title">{{ subject }}</h1>
+	{% else %}
+		<h1 class="title">{{ __('Message to %s')|format(list.naam) }}</h1>
+	{% endif %}
+</header>
+
+<section class="mailing-list-message">
+	<ul class="block">
+		<li>
+			<strong>{{ __('From') }}:</strong>
+			{{ message.sender }}
+		</li>
+		<li>
+			<strong>{{ __('To') }}:</strong>
+			<a href="{{ path('mailing_lists', {view: 'read', id: list.id}) }}">
+				{{ list.naam }} &lt;{{ list.adres }}&gt;
+			</a>
+		</li>
+		<li>
+			<strong>{{ __('Processed') }}:</strong>
+			{{ message.verwerkt_op|date() }}
+		</li>
+		{% if subject is not null %}
+			<li>
+				<strong>{{ __('Subject') }}:</strong>
+				{{ subject }}
+			</li>
+		{% endif %}
+		<li>
+			<strong>{{ __('Return code') }}:</strong>
+			{{ message.return_code }} ({{ view.readable_status(message.return_code) }})
+		</li>
+	</ul>
+
+	{% if error %}
+		<div class="content">
+			<p>Could not parse message due to the following error</p>
+			<p>{{error}}</p>
+		</div>
+	{% else %}
+		<div class="tabs-wrapper">
+			<div class="tabs is-toggle">
+				<ul>
+					{% set active = 'raw' %}
+					{% if html_body is not null %}
+						{% if active == 'raw' %}
+							{% set active = 'html' %}
+						{% endif %}
+						<li {% if active == 'html' %}class="is-active"{% endif %}>
+							<a href="#email-html-body">{{ __('Formatted') }}</a>
+						</li>
+					{% endif %}
+					{% if text_body is not null %}
+						{% if active == 'raw' %}
+							{% set active = 'plain' %}
+						{% endif %}
+						<li {% if active == 'plain' %}class="is-active"{% endif %}>
+							<a href="#email-text-body">{{ __('Plain text') }}</a>
+						</li>
+					{% endif %}
+					<li {% if active == 'raw' %}class="is-active"{% endif %}>
+						<a href="#email-raw">Raw</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="tabs-content">
+				<div id="email-html-body" {% if active == 'html' %}class="is-active"{% endif %}>
+					<h2 class="is-sr-only">{{ __('Formatted email') }}</h2>
+					<iframe 
+						class="mailing-list-message-formatted"
+						sandbox="allow-same-origin"
+						title="{{ __('Formatted email content') }}"
+						srcdoc="{{ html_body|e('html_attr') }}"
+					></iframe>
+				</div>
+				<div id="email-text-body" {% if active == 'plain' %}class="is-active"{% endif %}>
+					<h2 class="is-sr-only">{{ __('Plain text email') }}</h2>
+					<pre class="mailing-list-message-plain">{{ text_body }}</pre>
+				</div>
+				<div id="email-raw" {% if active == 'raw' %}class="is-active"{% endif %}>	
+					<h2 class="is-sr-only">{{ __('Raw email') }}</h2>
+					<pre class="mailing-list-message-raw">{{ message.bericht }}</pre>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</section>
+
+{% endblock %}

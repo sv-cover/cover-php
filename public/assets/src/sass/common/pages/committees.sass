@@ -1,0 +1,121 @@
+$committee-padding: 1.25rem
+$name-padding: .2em $committee-padding
+$name-line-height: $title-line-height + .4
+$name-size: $size-5
+$overlay-transition-timing: 150ms ease-in-out
+
+a.committee
+    display: block
+    position: relative
+    padding: 0
+    padding-top: 66.6666% // is-3by2
+    background: $cover-gradient, $black
+    color: $white
+
+    & > .image,
+    .member-images
+        // Does not need ratio, that's already taken care of by .committee
+        +overlay
+        overflow: hidden
+        
+        &::before
+            +overlay
+            display: block
+            content: ''
+            background: rgba($black, 0)
+            transition: background $overlay-transition-timing
+            z-index: 1
+
+        img
+            height: 100%
+            object-fit: cover
+
+    .member-images
+        &::after
+            +overlay
+            display: block
+            content: ''
+            background: $cover-gradient
+
+        .image
+            filter: saturate(20%)
+
+
+    .name
+        +boxed-title($name-size, $name-line-height, $name-padding)
+
+    .summary
+        color: $white
+        padding: $committee-padding
+        font-size: $size-7
+
+    .overlay
+        +overlay
+        overflow: hidden
+        padding: $committee-padding 0
+        top: calc(100% - #{$name-size * $name-line-height + 2 * $committee-padding})
+        transition: top $overlay-transition-timing
+        z-index: 5
+    
+    .vacancy-badge
+        position: absolute
+        top: -.5rem
+        right: -.5rem
+        padding: .25ch $committee-padding
+        background: $black
+        color: $white
+        border: $control-border-width solid $white
+        font-weight: $weight-semibold
+        transform: rotate(3deg)
+        box-shadow: $box-shadow
+        z-index: 6
+
+    &:hover,
+    &:focus        
+        & > .image,
+        .member-images
+            &::before
+                background: rgba($black, .8)
+
+        .overlay
+            top: 0
+            bottom: 0
+
+    &:focus
+        outline: $control-border-width solid $cover-red
+
+
+.committee-single
+    &.has-photo-portrait
+        .committe-photo-portrait
+            display: none
+            max-width: 50%
+            position: relative
+            +widescreen
+                display: block
+            .image
+                position: absolute
+                top: $column-gap
+                right: $column-gap
+                bottom: $column-gap
+                left: $column-gap
+                background: $black
+                img
+                    height: 100%
+                    object-fit: contain
+                    object-position: center
+        > .columns 
+            > .column.is-content
+                padding: $section-padding
+            +until-widescreen
+                justify-content: center
+            +widescreen
+                > .column.is-content
+                    padding-right: $section-padding-horizontal + $column-gap
+                    padding-left: $column-gap
+    .committee-header
+        min-height: 10rem
+    .event-list
+        +tablet
+            .event
+                flex-basis: 50% !important

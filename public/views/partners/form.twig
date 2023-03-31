@@ -1,0 +1,32 @@
+{% extends '@layout/layout.twig' %}
+
+
+{% block title (iter.has_id ? __('Edit partner') : __('New partner')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ iter.has_id ? __('Edit partner') : __('New partner') }}</h1>
+
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form.name) }}
+	{{ form_row(form.type) }}
+	{{ form_row(form.url) }}
+	{{ form_row(form.logo_url) }}
+	{{ form_row(form.logo_dark_url) }}
+	{{ form_row(form.profile) }}
+	{{ form_row(form.has_banner_visible) }}
+	{{ form_row(form.has_profile_visible) }}
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify partner') : __('Create partner')}) }}
+			{% if iter.has_id %}
+				<a href="{{ path('partners', {id: iter.id}) }}" class="button">{{ __('Back to partner') }}</a>
+			{% else %}
+				<a href="{{ path('partners') }}" class="button">{{ __('Back to all partners') }}</a>
+			{% endif %}
+		</div>
+	</div>
+{{ form_end(form) }}
+{% endblock %}

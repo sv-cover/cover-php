@@ -1,0 +1,55 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Device Sessions') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<header class="block">
+    {% if global.identity.is_member and global.identity.member_in_committee(constant('COMMISSIE_EASY')) %}
+        <nav class="level is-mobile">
+            <div class="level-left">
+                <a href="{{ path('device_sessions') }}" class="level-item button">
+                    <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+                    <span class="is-hidden-mobile">{{ __('Back to device sessions') }}</span>
+                    <span class="is-hidden-tablet">{{ __('Back') }}</span>
+                </a>
+            </div>
+        </nav>
+    {% endif %}
+    <h1 class="title">{{ __('Create Device Session') }}</h1>
+</header>
+
+<section class="content block">
+    {% if view.is_device_session and not global.identity.is_device %}
+        <figure class="image">
+            {# Use external service to create QR code. Since this is for admin functionality and it doesn't share any personal data, it's fine. Please consider GDPR if you're planning to copy this for somewhere else. Documentation: https://goqr.me/api/ #}
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data={{ url('device_sessions.update', {id: global.auth.get_session().id}) }}&amp;size=1000x1000&amp;qzone=4">
+        </figure>
+        <p>
+            {{ __("Scan this code with an admin account to enable a device session on this device. If you don't know what a device session is, you don't need one.")}}
+        </p>
+        <p>
+            {{ __("No longer want a device session on this device?") }} <a href="{{ path('device_sessions.logout') }}">{{ __('Logout device session') }}</a>.
+        </p>
+    {% elseif view.is_device_session and global.identity.is_device %}
+        <p>
+            {{ __("You're all set! The current device session is succesfully enabled.") }}
+        </p>
+        <p>
+            {{ __("No longer want a device session on this device?") }} <a href="{{ path('device_sessions.logout') }}">{{ __('Logout device session') }}</a>.
+        </p>
+    {% elseif global.identity.is_member or global.identity.is_donor %}
+        <p>
+            {{ __("You're currently logged in as a member (%s), so you can't create a device session on this device. Please logout first.")|format(global.identity.member.full_name) }}
+        </p>
+        {% if global.identity.member_in_committee(constant('COMMISSIE_EASY')) %}
+            <p>
+                {{ __("Want to create a device session on an other device? Simply open %s on it and follow the instructions.")|e|format('<a href="%s">%1$s</a>'|format(url('device_sessions.create')))|raw }}
+            </p>
+        {% endif %}
+    {% else %}
+        <p>
+            {{ __("No active sesssion! A device session should have been initiated, but that didn't happen. Maybe something went wrong?")}}
+        </p>
+    {% endif %}
+</section>
+{% endblock %}

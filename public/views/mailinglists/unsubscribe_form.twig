@@ -1,0 +1,25 @@
+{% extends '@layout/layout_without_menu.twig' %}
+
+{% block title __('Unsubscribe from %s')|format(list.naam) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Mailing list') }}</h1>
+
+{% if not subscription.is_active %}
+	<p>{{ __('You are no longer subscribed to the <em>%s</em> mailing list.')|format(list.naam|e('html'))|raw }}</p>
+{% else %}
+	{{ form_start(form) }}
+		{# Global errors #}
+		{{ form_errors(form) }}
+		<div class="field">
+			<p>{{ __('You are about to unsubscribe from the <em>%s</em> mailing list. Are you sure you want to continue?')|format(list.naam|e('html'))|raw }}</p>
+		</div>
+		<div class="field">
+			<div class="control buttons">
+				{{ form_widget(form.submit, {'label': __('Unsubscribe me'), 'is_primary': false, 'attr': {'class': 'is-danger'}}) }}
+				<a href="{{ path('homepage') }}" class="button">{{ __('No, I was just curious') }}</a>
+			</div>
+		</div>
+	{{ form_end(form) }}
+{% endif %}
+{% endblock %}

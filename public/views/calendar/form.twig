@@ -1,0 +1,41 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Modify event') : __('Add an event')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ iter.has_id ? __('Modify event') : __('Add an event') }}</h1>
+
+{{ form_start(form, {
+	action: (iter and iter.has_id) ? path('calendar', {view:  'update', agenda_id: iter.id}) : path('calendar', {view: 'create'})
+}) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form.kop) }}
+	{{ form_row(form.committee_id) }}
+	{{ form_row(form.van) }}
+	{{ form_row(form.tot) }}
+	{# TODO: Url generation for autocomplete depends on parameters not being shuffled, maybe implement some placeholder #}
+	{{ form_row(form.locatie, {attr: {
+		'data-autocomplete': 'url',
+		'data-autocomplete-src': path('calendar', {view: 'suggest-location', limit: 100, search: ''}),
+		'data-autocomplete-max-results': 15
+	}}) }}
+	{{ form_row(form.image_url) }}
+	{{ form_row(form.facebook_id) }}
+	{{ form_row(form.beschrijving) }}
+	{{ form_row(form.private) }}
+	{{ form_row(form.extern) }}
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify event') : __('Create event')}) }}
+			{% if iter.has_id %}
+				<a href="{{ path('calendar', {agenda_id: iter.id}) }}" class="button">{{ __('Back to event') }}</a>
+			{% else %}
+				<a href="{{ path('calendar') }}" class="button">{{ __('Back to calendar') }}</a>
+			{% endif %}
+		</div>
+	</div>
+{{ form_end(form) }}
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Forgot your password?') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Forgot your password?') }}</h1>
+{% if success is same as(true) %}
+	<div class="content">
+		<p>{{ __('An e-mail has been sent to %s. Follow the instructions in the mail to confirm your request for a new password.')|format(email_address) }}</p>
+	</div>
+{% else %}
+	<form method="post" action="">
+		{{ html_nonce('request') }}
+		{% if success is same as(false) %}
+			<div class="field has-text-danger">
+				<p>{{ __('There is no account with the given E-mail address (%s).')|format(email_address) }}</p>
+			</div>
+		{% endif %}
+
+		{% if not success %}
+			<div class="field">
+				<p>{{ __('Fill in your email address and click on `Reset password`. You will then receive an email with further instructions.') }}</p>
+			</div>
+			
+			<div class="field">
+				{{ html_label(__('Email'), 'email', required=true) }}
+				<div class="control">
+					{{ html_input_text('email', null, type='email', required=true) }}
+				</div>
+			</div>
+
+			<div class="field">
+				<div class="control">
+					<button type="submit" class="button is-primary">{{ __('Reset password') }}</button>
+				</div>
+			</div>
+		{% endif %}
+	</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Modify announcement') : __('Add a new announcement')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ iter.has_id ? __('Modify announcement') : __('Add a new announcement') }}</h1>
+
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form.committee_id) }}
+	{{ form_row(form.visibility) }}
+	{{ form_row(form.subject) }}
+	{{ form_row(form.message, {'attr': {'rows': 10}}) }}
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify announcement') : __('Post announcement')}) }}
+			{% if iter.has_id %}
+			<a href="{{ path('announcements', {id: iter.id}) }}" class="button">{{ __('Back to announcement') }}</a>
+			{% else %}
+			<a href="{{ path('announcements') }}" class="button">{{ __('Back to all announcements') }}</a>
+			{% endif %}
+		</div>
+	</div>
+{{ form_end(form) }}
+{% endblock %}

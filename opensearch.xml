@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-  <ShortName>Cover</ShortName>
-  <Image width="16" height="16" type="image/x-icon">https://www.svcover.nl/images/favicon.png</Image>
-  <Url type="text/html" template="https://www.svcover.nl/search.php?query={searchTerms}" />
-</OpenSearchDescription>

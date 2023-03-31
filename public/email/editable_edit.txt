@@ -1,0 +1,13 @@
+Page "$titel" was updated by $member_naam on behalf of the $commissie_naam. The changes are listed below.
+
+You can see the new page here: ROOT_DIR_URIpage/$id
+
+
+Kind Regards,
+
+The Website
+
+
+---
+
+$page

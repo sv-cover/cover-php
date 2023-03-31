@@ -1,0 +1,20 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Modify message') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Modify message') }}</h1>
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form[autoresponder ~ '_subject'], {'mark_required': true}) }}
+	{{ form_row(form[autoresponder ~ '_message'], {'mark_required': true, 'attr': {'rows': 10}}) }}
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {'label': __('Change email')}) }}
+			<a href="{{ path('mailing_lists', {view: 'update', id: iter.id}) }}" class="button">{{ __('Return to mailing list') }}</a>
+		</div>
+	</div>
+{{ form_end(form) }}
+{% endblock %}

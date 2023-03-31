@@ -1,0 +1,21 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Edit device session') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Edit device session') }}</h1>
+
+{{ form_start(form) }}
+    {# Global errors #}
+    {{ form_errors(form) }}
+    {# Fields #}
+    {{ form_row(form.device_name) }}
+    {{ form_row(form.device_enabled) }}
+    <div class="field">
+        <div class="control buttons">
+            {{ form_widget(form.submit, {'label': __('Modify device session')}) }}
+            <a href="{{ path('device_sessions') }}" class="button">{{ __('Back to device sessions') }}</a>
+        </div>
+    </div>
+{{ form_end(form) }}
+{% endblock %}

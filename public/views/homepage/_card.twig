@@ -1,0 +1,18 @@
+{% if block('content') is defined and block('content') is not empty %}
+    <article class="card" >
+
+    	<header class="card-header">
+            <h2 class="card-header-title">
+        		{% block title %}{% endblock %}
+            </h2>
+    	</header>
+    	<div class="card-content" id="menu_{% block name %}{% endblock %}">
+    		{% block content %}{% endblock %}
+    	</div>
+        {% if block('footer') is defined and block('footer') is not empty %}
+            <footer class="card-footer">
+                {{ block('footer') }}
+            </footer>
+        {% endif %}
+    </article>
+{% endif %}

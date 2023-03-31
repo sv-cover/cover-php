@@ -1,0 +1,78 @@
+$committee-padding: 1.25em
+
+.committee-slide
+    display: block
+    position: relative
+    background: $cover-gradient, $black
+    color: $white
+
+    & > .image,
+    .member-images
+        +overlay
+        overflow: hidden
+        
+        &::before
+            +overlay
+            display: block
+            content: ''
+            background: rgba($black, 0)
+            z-index: 1
+
+        img
+            height: 100%
+            min-height: 100%
+            object-fit: cover
+
+    .member-images
+        &::after
+            +overlay
+            display: block
+            content: ''
+            background: $cover-gradient
+
+        .image
+            filter: saturate(20%)
+
+    .overlay
+        .members
+            &.has-vacancy
+                max-width: calc(100% - 15rem)
+                width: auto
+                position: relative
+                display: inline-block
+                .boxed-title::after
+                    display: block
+                    content: ''
+                    box-sizing: content-box
+                    width: 100%
+                    height: 1.525em
+                    padding: 0.1em 2.5rem
+                    position: absolute
+                    top: -.1em
+                    right: 2em
+                    z-index: -1
+                    background: $cover
+            .name
+                // Wrapped names look weird
+                white-space: nowrap
+                &:not(:nth-last-child(2)):not(:last-child):not(.vacancy-badge)::after
+                    display: inline
+                    content: ','
+                &:nth-last-child(2):not(.vacancy-badge)::after
+                    display: inline
+                    content: ' &'
+
+    .vacancy-badge
+        position: absolute
+        top: -1em
+        left: calc(100% - 5em)
+        padding: .25ch $committee-padding
+        background: $black
+        color: $white
+        border: $control-border-width solid $white
+        font-size: $size-4
+        font-weight: $weight-semibold
+        transform: rotate(10deg)
+        box-shadow: $box-shadow
+        z-index: 6
+        white-space: nowrap

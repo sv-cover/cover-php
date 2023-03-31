@@ -1,0 +1,13 @@
+$member_naam has assigned you the following task:
+
+Task:         $taak
+Description: 
+
+$beschrijving
+
+ROOT_DIR_URItaken.php?taak=$id
+
+Kind Regards,
+
+
+The WebCie

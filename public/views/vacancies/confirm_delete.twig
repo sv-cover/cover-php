@@ -1,0 +1,26 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Delete vacancy') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Delete vacancy') }}</p>
+        </header>
+        <section class="modal-card-body">
+            <form id="delete-vacancy-form" method="post" action="{{ path('vacancies', {view: 'delete', id: iter.id}) }}">
+                {{ form_row(form._token) }}
+                <p>
+                    {{ __('Are you sure you want to remove this vacancy?') }}
+                    <em>{{ iter.title }}</em>
+                </p>
+            </form>
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('vacancies', {id: iter.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+            <button type="submit" class="button is-danger" form="delete-vacancy-form">{{ __('Delete vacancy') }}</button>
+        </footer>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Mailing lists') ~ ' – ' ~ parent() %}
+
+{% block page %}
+<article class="section">
+<div class="container">
+	<header class="level">
+		<div class="level-left">
+			<h1 class="title">{{ __('Mailing lists') }}</h1>
+		</div>
+		<div class="level-right buttons">
+			<a href="{{ path('mailing_lists', {view: 'create'}) }}" class="button">
+				{{ __('New mailing list')  }}
+			</a>
+		</div>
+	</header>
+
+	<section class="table-container">
+		<table class="table is-fullwidth">
+			<thead>
+				<tr>
+					<th>{{ __('Name') }}</th>
+					<th>{{ __('Address') }}</th>
+					<th>{{ __('Owner') }}</th>
+					<th>{{ __('Visibility') }}</th>
+					<th class="has-text-right" title="{{ __('messages in last 30 days') }}">{{ __('Activity') }}</th>
+					<th class="has-text-right" title="{{ __('subscriber count') }}">{{ __('Reach') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for mailinglist in iters %}
+				<tr>
+					<td><a href="{{ path('mailing_lists', {id: mailinglist.id}) }}">{{ mailinglist.naam }}</a></td>
+					<td>{{ mailinglist.adres }}</td>
+					<td>{{ mailinglist.committee.naam }}</td>
+					<td>{{ mailinglist.publiek ? __('Public') : __('Private') }}</td>
+					<td class="has-text-right">{{ mailinglist.archive.count(30) }}</td>
+					<td class="has-text-right">{{ mailinglist.reach }}</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="6">
+						<p class="has-text-centered">
+							{% if global.identity.member and global.identity.member.committees|length > 1 %}
+								{{ __('None of you committees is managing any mailing lists.') }}
+							{% else %}
+								{{ __('Your committee is not managing any mailing lists.') }}
+							{% endif %}
+							<br>{{ __('If you need one, ask the AC/DCee to make one for you.') }}
+						</p>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</section>
+</div>
+</article>
+{% endblock %}

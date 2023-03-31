@@ -1,0 +1,20 @@
+$boxed-title-padding: .2em 2.5rem
+$boxed-title-distance: 1rem !default
+$cover-thumbnail-overlay-padding: 2.5rem 2rem 2.5rem 0
+
+html
+    overflow: hidden
+
+.slide
+    width: 100%
+    min-height: 100%
+    overflow: hidden
+
+    .overlay
+        padding: $cover-thumbnail-overlay-padding
+
+    .boxed-title-wrapper:not(:last-child)
+        margin-bottom: $boxed-title-distance
+
+    .boxed-title
+        +boxed-title($size-5, $boxed-title-line-height, $boxed-title-padding)

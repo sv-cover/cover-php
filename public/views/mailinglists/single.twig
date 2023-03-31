@@ -1,0 +1,97 @@
+{% extends './_single_layout.twig' %}
+
+{% block tab_content %}
+<section id="mailing-list-subscriptions">
+	<h2 class="is-sr-only">{{ __('Subscriptions') }}</h2>
+	<form method="post" action="{{ path('mailing_lists', {view: 'unsubscribe', id: iter.id}) }}">
+		<input type="hidden" name="form[_token]" value="{{ csrf_token('unsubscribe_' ~ iter.id) }}">
+		<div class="level">
+			<div class="level-left">
+				<div class="level-item">
+					<a href="{{ path('mailing_lists', {view: 'subscribe_member', id: iter.id}) }}" class="button is-fullwidth" data-popup="modal">
+						{{ __('Subscribe member') }}
+					</a>
+				</div>
+
+				<div class="level-item">
+					<a href="{{ path('mailing_lists', {view: 'subscribe_guest', id: iter.id}) }}" class="button is-fullwidth" data-popup="modal">
+						{{ __('Subscribe non-member') }}
+					</a>
+				</div>
+
+				<div class="level-item">
+					<button class="button is-fullwidth" type="submit">{{ __('Unsubscribe selected') }}</button>
+				</div>
+			</div>
+		</div>
+		<div class="table-container">
+			<table class="field table is-fullwidth">
+				<thead>
+					<tr>
+						<th class="is-sticky"></th>
+						<th>{{ __('Name') }}</th>
+						<th>{{ __('E-mail address') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for subscription in iter.subscriptions %}
+					<tr>
+						<td class="is-sticky">
+							<label class="is-sr-only" for="{{ view.uid(subscription) }}">{{ __('Unsubscribe')}} {{ subscription.lid_id ? subscription.lid|full_name() : subscription.naam }}</label>
+							<input type="checkbox" id="{{ view.uid(subscription) }}" name="form[unsubscribe][]" value="{{ subscription.id }}">
+						</td>
+						{% if subscription.lid_id %}
+							<td>
+								<a href="{{ path('profile', {lid: subscription.lid_id}) }}">{{ subscription.lid|full_name() }}
+							</td>
+							<td>
+								{{ subscription.lid.is_private('email') ? __('Unknown') : subscription.email }}
+							</td>
+						{% else %}
+							<td>{{ subscription.naam }}</td>
+							<td>{{ subscription.email }}</td>
+						{% endif %}
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="3">
+							<p class="has-text-centered">
+								{{ __('Nobody is subscribed to this list') }}
+							</p>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="level">
+			<div class="level-left">
+				<div class="level-item">
+					<button class="button is-fullwidth" type="submit">{{ __('Unsubscribe selected') }}</button>
+				</div>
+			</div>
+		</div>
+	</form>	
+</section>
+<section id="mailing-list-statistics">
+	<h2 class="is-sr-only">{{ __('Statistics') }}</h2>
+	<div class="columns is-multiline">
+		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Starting year') }}</figcaption>
+			{{ view.barchart(iter.get_reach('beginjaar'))|raw }}
+		</figure>
+		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Age') }}</figcaption>
+			{{ view.barchart(iter.get_reach('leeftijd'))|raw }}
+		</figure>
+		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Committees') }}</figcaption>
+			{{ view.barchart(iter.get_reach('committee_count'))|raw }}
+		</figure>
+		<figure class="column is-half">
+			<figcaption class="has-text-centered">{{ __('Type') }}</figcaption>
+			{{ view.barchart(iter.get_reach('type'))|raw }}
+		</figure>
+	</div>
+</section>
+{% endblock %}

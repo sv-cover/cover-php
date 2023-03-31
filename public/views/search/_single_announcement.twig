@@ -1,0 +1,13 @@
+<h2 class="title is-5">
+	<a href="{{ result.absolute_path|e('html_attr') }}" data-search-main-link>{{ result.subject }}</a>
+</h2>
+<p class="subtitle is-7">
+    {{ __('Announcement from %s on %s')|format(
+		'<a href="%s">%s</a>'|format(
+			path('committees', {commissie: result.committee.login}),
+			result.committee.naam|e('html')),
+			result.created_on|date('Y-m-d'))|raw }}
+</p>
+<div class="content">
+    {{ result.message|strip_markup|excerpt(query_parts, 50)|raw }}
+</div>
