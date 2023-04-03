@@ -46,13 +46,13 @@ class AutocompleteCompany extends Autocomplete {
         this.partnerNameInput.value = event.target.value;
     }
 
-    handleSelection(feedback) {
+    handleSelection(event) {
         // Place ID and name in their corresponding input elements
         if (typeof this.partnerIdInput !== 'undefined') {
-            this.partnerIdInput.value = feedback.selection.value.id;
+            this.partnerIdInput.value = event.detail.selection.value.id;
             this.partnerNameInput.value = '';
         }
-        this.sourceElement.value = feedback.selection.value.name;
+        this.sourceElement.value = event.detail.selection.value.name;
     }
 }
 

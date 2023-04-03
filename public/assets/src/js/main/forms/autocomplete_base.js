@@ -10,7 +10,6 @@ class AutocompleteBase {
     constructor(options) {
         this.options = options;
         this.resultsListVisible = true;
-        this.hasFocus = false;
 
         // Init autocomplete
         this.element = this.initUi(options.element);
@@ -18,13 +17,9 @@ class AutocompleteBase {
             this.autocomplete = this.initAutocomplete(options.config);
         else
             this.autocomplete = this.initAutocomplete({});
-        this.initFocusEvents();
 
-        // Don't submit form on keyboard selection (enter)
-        this.sourceElement.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter')
-                event.preventDefault();
-        });
+        this.sourceElement.addEventListener('selection', this.handleSelection.bind(this));
+        this.sourceElement.addEventListener('open', this.monitorPosition.bind(this), {once: true});
     }
 
     generateConfig(overrides) {
@@ -33,31 +28,26 @@ class AutocompleteBase {
             selector: () => this.sourceElement,
             threshold: 2,
             highlight: true,
-            noResults: () => {
-                const result = document.createElement('li');
-                result.setAttribute('class', 'no_result');
-                result.setAttribute('tabindex', '1');
-
-                if (overrides.noResultsText)
-                    result.append(document.createTextNode(overrides.noResultsText));
-                else
-                    result.append(document.createTextNode('No results'));
-
-                if (this.getResultsListElement())
-                    this.getResultsListElement().append(result);
+            diacritics: true,
+            events: {
+                input: {
+                    focus: this.handleFocus.bind(this),
+                },
             },
-            onSelection: this.handleSelection.bind(this),
         };
 
         const defaultResultsList = {
-            render: true,
-            container: this.renderResultsList.bind(this),
-            destination: document.body,
+            element: this.renderResultsList.bind(this, overrides),
+            class: 'autocomplete-list',
+            noResults: true,
+            destination: () => document.body,
             position: 'beforeend',
         };
 
         const defaultResultItem = {
-            content: this.renderResult.bind(this),
+            class: 'autocomplete-result',
+            highlight: 'is-highlighted',
+            selected: 'is-selected',
         };
 
         // Override default config
@@ -71,7 +61,6 @@ class AutocompleteBase {
             config.resultsList = defaultResultsList;
             config.resultItem = defaultResultItem;
         }
-
         return config;
     }
 
@@ -98,74 +87,61 @@ class AutocompleteBase {
         return containerElement;
     }
 
-    initFocusEvents() {
-        // Show the autocomplete list when source element gets focused
-        this.sourceElement.addEventListener('focus', () => {
-            this.hasFocus = true;
-            this.toggleResultsList(true);
-        });
-        // Hide the autocomplete list when source element gets unfocused
-        this.sourceElement.addEventListener('blur', () => {
-            this.hasFocus = false;
-            this.toggleResultsList(false);
-        });
-    }
-
-    handleSelection(feedback) {
-        if (this.autocomplete && this.autocomplete.data.key)
+    handleSelection(event) {
+        if (this.autocomplete && this.autocomplete.data.keys)
             // If key is set, assume object value and select item based on first key
-            this.sourceElement.value = feedback.selection.value[this.autocomplete.data.key[0]];
+            this.sourceElement.value = event.detail.selection.value[this.autocomplete.data.keys[0]];
         else if (this.autocomplete)
             // If no key, the assume string value instead
-            this.sourceElement.value = feedback.selection.value;
+            this.sourceElement.value = event.detail.selection.value;
     }
 
-    getResultsListElement() {
-        if (this.autocomplete)
-            return this.autocomplete.resultsList.view;
-        return null;
+    handleFocus() {
+        // Should we show?
+        const trigger = this.autocomplete.trigger?.();
+        const inputValue = this.autocomplete.input.value;
+        if (trigger || inputValue.length) {
+            // Position just to be sure. May not be necessary…
+            this.positionResultsList(true);
+            this.autocomplete.start();
+        }
     }
 
-    renderResult(data, source) {
-        source.innerHTML = data.match;
+    renderResultsList(overrides, list, data) {
+        if (!data.results.length)
+            this.renderNoResults(overrides, list, data);
     }
 
-    renderResultsList(source) {
-        // Override id and use class instead. Multiple autocompletes on a page should be possible.
-        source.removeAttribute('id');
-        source.classList.add('autocomplete-list');
+    renderNoResults(overrides, list, data) {
+        const result = document.createElement('li');
+        result.classList.add('autocomplete-no-result');
+        result.setAttribute('tabindex', '1');
 
-        // Monitor the on screen position of the autocomplete
-        this.monitorPosition();
+        if (overrides.noResultsText)
+            result.append(document.createTextNode(overrides.noResultsText));
+        else
+            result.append(document.createTextNode(`No results for “${data.query}”`));
+
+        list.append(result);
     }
 
-    toggleResultsList(isVisible=null) {
-        if (isVisible !== null)
-            this.resultsListVisible = isVisible;
-
-        if (!this.getResultsListElement())
-            // No resultlist to toggle/position
+    positionResultsList(force) {
+        if (!this.autocomplete)
+            // No resultlist to position
             return;
 
-        if (this.resultsListVisible) {
-            // Postion result list correctly
+        if (force || (this.autocomplete.isOpen && this.resultsListVisible)) {
             const bodyRect = document.body.getBoundingClientRect();
             const sourceRect = this.sourceElement.getBoundingClientRect();
-            this.getResultsListElement().style.top = sourceRect.bottom - bodyRect.top + 'px';
-            this.getResultsListElement().style.left = sourceRect.left - bodyRect.left + 'px';
-            this.getResultsListElement().style.width = sourceRect.width + 'px';
-
-            // Toggle
-            this.getResultsListElement().hidden = false;
-        } else {
-            if (this.options.onHide)
-                this.options.onHide();
-
-            this.getResultsListElement().hidden = true;
+            this.autocomplete.list.style.top = sourceRect.bottom - bodyRect.top + 'px';
+            this.autocomplete.list.style.left = sourceRect.left - bodyRect.left + 'px';
+            this.autocomplete.list.style.width = sourceRect.width + 'px';
         }
     }
 
     monitorPosition() {
+        console.log('hoi');
+
         let ticking = false;
 
         // Update resultslist position on scroll.
@@ -174,7 +150,7 @@ class AutocompleteBase {
         window.addEventListener('scroll', (event) => {
           if (!ticking) {
             window.requestAnimationFrame(() => {
-                this.toggleResultsList();
+                this.positionResultsList();
                 ticking = false;
             });
 
@@ -186,15 +162,16 @@ class AutocompleteBase {
         const sourceElementObserver = new IntersectionObserver(
             (entries, observer) => {
                 for (const entry of entries)
-                    this.resultsListVisible = this.hasFocus && entry.isIntersecting;
-                this.toggleResultsList();
+                    this.resultsListVisible = entry.isIntersecting;
+                this.positionResultsList();
             }
         );
 
         sourceElementObserver.observe(this.sourceElement);
+        window.addEventListener('resize', this.positionResultsList.bind(this));
 
-        // Apply initial settings
-        this.toggleResultsList();
+        // Force initial positioning
+        this.positionResultsList();
     }
 }
 

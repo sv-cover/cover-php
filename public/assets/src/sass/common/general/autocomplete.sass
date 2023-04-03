@@ -1,4 +1,4 @@
-.autocomplete-list:not(:empty)
+.autocomplete-list:not(:empty),
     position: absolute
     right: 0
     left: 0
@@ -9,25 +9,27 @@
     padding-top: $dropdown-content-padding-top
     z-index: 50
 
-    .autoComplete_result,
-    .no_result
+    .autocomplete-result,
+    .autocomplete-no-result
         padding: 0.375rem 1rem
         margin: 0
         user-select: none
 
-    .autoComplete_result
+    .autocomplete-result
         &:hover,
-        &.autoComplete_selected
+        &[aria-selected="true"],
+        &.is-selected
             background: $background
             cursor: pointer
 
-        .autoComplete_highlighted
+        .is-highlighted
             font-weight: $weight-semibold
+            background: none
 
-        &+.autoComplete_result
+        &+.autocomplete-result
             border-top: 1px solid $border-light
 
-    .no_result
+    .autocomplete-no-result
         cursor: not-allowed
 
     .media.profile
