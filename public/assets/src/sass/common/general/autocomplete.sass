@@ -7,6 +7,7 @@
     box-shadow: $dropdown-content-shadow
     padding-bottom: $dropdown-content-padding-bottom
     padding-top: $dropdown-content-padding-top
+    color: $text
     z-index: 50
 
     .autocomplete-result,
@@ -23,8 +24,9 @@
             cursor: pointer
 
         .is-highlighted
-            font-weight: $weight-semibold
             background: none
+            color: $text
+            font-weight: $weight-bold
 
         &+.autocomplete-result
             border-top: 1px solid $border-light
