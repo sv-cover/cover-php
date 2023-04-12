@@ -102,11 +102,11 @@ class AutocompleteMember extends AutocompleteBase {
         return data;
     }
 
-    handleSelection(feedback) {
+    handleSelection(event) {
         // Place ID and name in their corresponding input elements
         if (typeof this.targetElement !== 'undefined')
-            this.targetElement.value = feedback.selection.value.id;
-        this.sourceElement.value = feedback.selection.value.name;
+            this.targetElement.value = event.detail.selection.value.id;
+        this.sourceElement.value = event.detail.selection.value.name;
     }
 
     renderResult(item, data) {
