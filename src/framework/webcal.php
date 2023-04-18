@@ -108,36 +108,54 @@ class WebCal_Event extends WebCal
 	
 	public function export()
 	{
+		$start = $this->start;
+		if (!($this->start instanceof DateTime))
+			// Use Cover birthday in case of parse errors…
+			$start = new DateTime($this->start) ?? new DateTime('1993-09-20');
 		
-		$start = $this->start instanceof DateTime
-			? $this->start->format('U')
-			: $this->start;
-		
-		$end = $this->end instanceof DateTime
-			? $this->end->format('U')
-			: $this->end;
+		$end = $this->end;
+		if ($this->end && !($this->end instanceof DateTime))
+			// End is optional, so no need for fallback
+			$end = new DateTime($this->end);
+
+		$headers = [];
 
 		$out = array('BEGIN:VEVENT');
 
 		// Is this an whole day event? If so, only add the date.
-		if (date('Hi', $start) == '0000' && (!$end || date('Hi', $end) == '0000'))
+		if ($start->format('Hi') == '0000' && (!$end || $end->format('Hi') == '0000'))
 		{
 			// Is there an end date? Yes? Good! Otherwise, make the event one day long.
 			if (!$end)
-				$end = $start + 24 * 3600;
+				$end = DateTime::createFromInterface($start)->modify('+1 day');
 			
-			$out[] = 'DTSTART;VALUE=DATE:' . date('Ymd', $start);
-			$out[] = 'DTEND;VALUE=DATE:' . date('Ymd', $end);
+			$out[] = 'DTSTART;VALUE=DATE:' . $start->format('Ymd');
+			$out[] = 'DTEND;VALUE=DATE:' . $end->format('Ymd');
+		}
+		// Maybe it's a multiday event?
+		elseif ($end && $end->diff($start)->days >= 1)
+		{
+			$out[] = 'DTSTART;VALUE=DATE:' . $start->format('Ymd');
+			$out[] = 'DTEND;VALUE=DATE:' . $end->format('Ymd');
+
+			// Use array_merge to get these headers to the top
+			$headers = array_merge([
+				'Start: ' . $start->format('Y-m-d H:i'),
+				'End: ' . $end->format('Y-m-d H:i'),
+			], $headers);
 		}
 		// No it is not, just add date and time.
 		else
 		{
-			// Is there an end time? Yes? Good! Otherwise let the event be till the end of the day.
+			$start->setTimezone(new DateTimeZone('GMT'));
+			// Is there an end time? No? Let the event be till the end of the day.
 			if (!$end)
-				$end = mktime(0, 0, 0, gmdate('n', $start), gmdate('j', $start), gmdate('Y', $start)) + 24 * 3600;
+				$end = DateTime::createFromInterface($start)->modify('00:00:00')->modify('+1 day');
+			else
+				$end->setTimezone(new DateTimeZone('GMT'));
 
-			$out[] = 'DTSTART:' . gmdate('Ymd\THis\Z', $start);
-			$out[] = 'DTEND:' . gmdate('Ymd\THis\Z', $end);
+			$out[] = 'DTSTART:' . $start->format('Ymd\THis\Z');
+			$out[] = 'DTEND:' . $end->format('Ymd\THis\Z');
 		}
 
 		// Add some optional fields to the calendar item
@@ -148,14 +166,22 @@ class WebCal_Event extends WebCal
 		if ($this->summary)
 			$out[] = 'SUMMARY:' . $this->_encode($this->summary);
 
-		if ($this->description)
-			$out[] = 'DESCRIPTION:' . $this->_encode($this->description);
-
 		if ($this->location)
 			$out[] = 'LOCATION:' . $this->_encode($this->location);
 
 		if ($this->url)
-			$out[] = 'URL;VALUE=URI:' . $this->_encode($this->url);
+			$headers[] = 'More information: ' . $this->url;
+
+		if ($this->description && !empty($headers))
+			$this->description = sprintf("%s\n\n%s", implode("\n", $headers), $this->description);
+		elseif(!empty($headers))
+			$this->description = implode("\n", $headers);
+		$out[] = 'DESCRIPTION:' . $this->_encode($this->description ?? '');
+
+
+		// URL is used for ics url
+		// if ($this->url)
+		// 	$out[] = 'URL;VALUE=URI:' . $this->_encode($this->url);
 
 		$out[] = 'END:VEVENT';
 		
