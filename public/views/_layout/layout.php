@@ -78,13 +78,12 @@ class LayoutViewHelper
 					'url' => $this->router->generate('page', ['id' => 18]),
 					'label' => __('Become a member/contributor')
 				],
+				[
+				  'label' => __('Well-being'),
+				  'url' => $this->router->generate('page', ['id' => 213]),
+				],
 			]
 		];
-
-    $menus['well-being'] = [
-      'label' => __('Well-being'),
-      'url' => $this->router->generate('page', ['id' => 213]),
-    ];
 
 		$menus['contact'] = [
 			'label' => __('Contact'),
@@ -179,15 +178,15 @@ class LayoutViewHelper
 						'img' => '/images/applications/tutoring.svg',
 					],
 				],
-        [
-          'label' => __('Submit an Idea'),
-          'url' => 'https://ideas.svcover.nl/',
-          'target' => '_blank',
-          'icon' => [
-            'fa' => 'fas fa-lightbulb',
-            'color' => 'cover',
-          ],
-        ]
+				[
+					'label' => __('Submit an Idea'),
+					'url' => 'https://ideas.svcover.nl/',
+					'target' => '_blank',
+					'icon' => [
+						'fa' => 'fas fa-lightbulb',
+						'color' => 'cover',
+					],
+				],
 			]
 		];
 
