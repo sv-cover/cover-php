@@ -38,7 +38,7 @@ class LayoutViewHelper
 			'label' => __('Education'),
 			'submenu' => [
 				['url' => $this->router->generate('page', ['id' => 149]), 'label' => __('Degree Programmes')],
-				['url' => $this->router->generate('page', ['id' => 24]),  'label' => __('Alumni')],
+				// ['url' => $this->router->generate('page', ['id' => 24]),  'label' => __('Alumni')],
 				['url' => $this->router->generate('page', ['id' => 27]),  'label' => __('Student info')],
 				['url' => $this->router->generate('page', ['id' => 118]), 'label' => __('Student representation')],
 				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
@@ -180,11 +180,10 @@ class LayoutViewHelper
 				],
 				[
 					'label' => __('Submit an Idea'),
-					'url' => 'https://ideas.svcover.nl/',
+					'url' => 'https://idea.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'fa' => 'fas fa-lightbulb',
-						'color' => 'cover',
+						'img' => '/images/applications/idea.png',
 					],
 				],
 			]
