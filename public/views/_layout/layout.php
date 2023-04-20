@@ -183,7 +183,7 @@ class LayoutViewHelper
 					'url' => 'https://idea.svcover.nl/',
 					'target' => '_blank',
 					'icon' => [
-						'img' => '/images/applications/idea.png',
+						'img' => '/images/applications/idea.svg',
 					],
 				],
 			]
