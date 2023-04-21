@@ -16,7 +16,7 @@
 			{% for menu_id, menu in view.layout.top_menu %}
 				{% if menu.submenu is defined %}
 					<div class="navbar-item has-dropdown is-hoverable">
-						<a class="navbar-link is-arrowless"{% if menu.title is defined %} title="{{ menu.title }}"{% endif %} tabindex="0">
+						<a {% if menu.url is defined %}href="{{ menu.url }}"{% endif %} class="navbar-link is-arrowless"{% if menu.title is defined %} title="{{ menu.title }}"{% endif %} tabindex="0">
 							{{ menu.label }}
 						</a>
 						<div class="navbar-dropdown">

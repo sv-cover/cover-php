@@ -2,6 +2,9 @@
 
 {% block title iter.get_title ~ ' – ' ~ parent() %}
 
+{% block ogimage %}
+    {{ iter.get_cover_image(1200) }}
+{% endblock %}
 
 {% macro render_controls(iter, container_class='') %}
 	{% if user_can_update iter %}

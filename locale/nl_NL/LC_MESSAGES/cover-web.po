@@ -3545,7 +3545,7 @@ msgid "Former Boards"
 msgstr "Vorige besturen"
 
 #: themes/default/views/_layout/layout.php:35
-msgid "Sister unions"
+msgid "Sister Associations"
 msgstr "Zusterverenigingen"
 
 #: themes/default/views/_layout/layout.php:39

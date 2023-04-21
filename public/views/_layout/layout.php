@@ -49,6 +49,24 @@ class LayoutViewHelper
 		$menus['career'] = [
 			'label' => __('Career'),
 			'url' => $this->router->generate('career'),
+      'submenu' => [
+        [
+          'url' => $this->router->generate('vacancies'),
+          'label' => __('Vacancies')
+        ],
+        [
+          'url' => $this->router->generate('career').'#profiles',
+          'label' => __('Company Profiles')
+        ],
+        [
+          'url' => $this->router->generate('committees', array('commissie' => 'comexa')).'#events',
+          'label' => __('Career Events')
+        ],
+        [
+          'url' => $this->router->generate('page', ['id' => 214]),
+          'label' => __('Information for Companies')
+        ]
+      ]
 		];
 
 		$menus['vereniging'] = [
@@ -72,7 +90,7 @@ class LayoutViewHelper
 				],
 				[
 					'url' => $this->router->generate('page', ['id' => 28]),
-					'label' => __('Sister unions')
+					'label' => __('Sister Associations')
 				],
 				[
 					'url' => $this->router->generate('page', ['id' => 18]),
