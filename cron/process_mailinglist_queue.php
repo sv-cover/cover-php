@@ -207,8 +207,10 @@ function process_mailinglist_queue(): int
 {
     $queue_model = get_model('DataModelMailinglistQueue');
 
-    // Query every iteration to prevent race conditions. Array_shift returns NULL if no results
-    while ($queued_message = array_shift($queue_model->find(['status' => 'waiting'])))
+    $queue = $queue_model->find(['status' => 'waiting']);
+
+    // Array_shift returns NULL if no results
+    while ($queued_message = array_shift($queue))
     {
         $queued_message->set('status', 'processing');
         $queued_message->set('processing_on', new \DateTime());
@@ -237,6 +239,9 @@ function process_mailinglist_queue(): int
             $queued_message->set('status', sprintf('error_%s', $message));
             $queued_message->update();
         }
+
+        // Query every iteration to prevent race conditions
+        $queue = $queue_model->find(['status' => 'waiting']);
     }
 
     return 0;
