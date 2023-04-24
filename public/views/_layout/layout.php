@@ -72,7 +72,7 @@ class LayoutViewHelper
 				],
 				[
 					'url' => $this->router->generate('page', ['id' => 28]),
-					'label' => __('Sister unions')
+					'label' => __('Sister Associations')
 				],
 				[
 					'url' => $this->router->generate('page', ['id' => 18]),
