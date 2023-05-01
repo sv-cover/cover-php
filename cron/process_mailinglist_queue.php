@@ -21,6 +21,7 @@ use function \Cover\email\mailinglist\send_welcome_mail;
 use function \Cover\email\mailinglist\send_message;
 use function \Cover\email\mailinglist\get_error_message as _get_error_message;
 
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 error_reporting(E_ALL);
@@ -106,6 +107,9 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
 {
     $mailinglist_model = get_model('DataModelMailinglist');
     $router = get_router();
+    $context = new RequestContext();
+    $context->setHost(get_config_value('default_host', 'svcover.nl'));
+    $router->setContect($context);
 
     $list = null;
     $subscriptions = null;
