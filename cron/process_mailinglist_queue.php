@@ -109,6 +109,7 @@ function send_message_to_mailinglist(MessagePart $message, string $to, string $f
     $router = get_router();
     $context = new RequestContext();
     $context->setHost(get_config_value('default_host', 'svcover.nl'));
+    $context->setScheme(get_config_value('default_scheme', 'https'));
     $router->setContext($context);
 
     $list = null;
