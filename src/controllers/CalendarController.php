@@ -335,6 +335,7 @@
 		public function run_slide()
 		{
 			$events = $this->model->get_agendapunten();
+			$events = array_filter($events, array(get_policy($this->model), 'user_can_read'));
 			return $this->view->render('slide.twig', ['iters' => $events]);
 		}
 
