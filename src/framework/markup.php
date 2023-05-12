@@ -9,7 +9,8 @@
 	use Embed\Embed;
 	use App\Controller\MailingListsController;
 
-	function str_replace_once($search, $replace, $subject) {
+	function str_replace_once($search, $replace, $subject)
+	{
 		$pos = strpos($subject, $search);
 
 		if ($pos === false)
@@ -18,7 +19,8 @@
 		return substr_replace($subject, $replace, $pos, strlen($search));
 	}
 
-	function _markup_parse_code_real($code) {
+	function _markup_parse_code_real($code)
+	{
 		$code = htmlspecialchars($code, ENT_NOQUOTES);
 		$code = str_replace("\n", '<br/>', $code);
 
@@ -31,7 +33,8 @@
 		return '<code class="code" title="Code"><pre>' . $code . '</pre></code>';
 	}
 
-	function _markup_parse_code(&$markup, &$placeholders) {
+	function _markup_parse_code(&$markup, &$placeholders)
+	{
 		$count = 0;
 
 		while (preg_match("/( *?\[code(=(.+?))?\](.*?)\[\/code\])/is", $markup, $match)) {
@@ -41,7 +44,8 @@
 		}
 	}
 
-	function _markup_parse_links(&$markup, $header_offset, &$placeholders) {
+	function _markup_parse_links(&$markup, $header_offset, &$placeholders)
+	{
 		$count = 0;
 
 		while (preg_match('/\[url=(.*?)\](.*?)\[\/url\]/is', $markup, $match)) {
@@ -57,7 +61,8 @@
 		}
 	}
 
-	function _markup_parse_urls(&$markup, &$placeholders) {
+	function _markup_parse_urls(&$markup, &$placeholders)
+	{
 		$linkcount = 0;
 
 		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)[A-Za-z0-9.-]+|(?:www.)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w\-_]*)?\??(?:[\-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match)) {
@@ -77,7 +82,8 @@
 		}
 	}
 
-	function _markup_parse_quotes_real($matches) {
+	function _markup_parse_quotes_real($matches)
+	{
 		if (substr($matches[3], 0, 2) == "\n") {
 			$matches[3] = substr($matches[3], 2);
 		}
@@ -87,12 +93,14 @@
 			return '<div class="quote" title="quote"><br />' . $matches[3];
 	}
 
-	function _markup_parse_quotesend_real($matches) {
+	function _markup_parse_quotesend_real($matches)
+	{
 		return '</div>';
 	}
 
 
-	function _markup_parse_quotes(&$markup) {
+	function _markup_parse_quotes(&$markup)
+	{
 
 		$markup = preg_replace_callback('/\[quote(=([^\]]+))?\](.*?)/ims', '_markup_parse_quotes_real', $markup);
 		$markup = preg_replace_callback('/\[\/quote\]/ims', '_markup_parse_quotesend_real', $markup);
@@ -100,13 +108,15 @@
 	}
 
 
-	function _markup_prepare_table_row($match, &$maxcol) {
+	function _markup_prepare_table_row($match, &$maxcol)
+	{
 		$col = substr_count($match, '||') + 1;
 
 		$maxcol = max($col, $maxcol);
 	}
 
-	function _markup_parse_table_row($match, $maxcol) {
+	function _markup_parse_table_row($match, $maxcol)
+	{
 		if ($match == '')
 			return "";
 
@@ -120,7 +130,8 @@
 		return '<tr><td' . $colspan . '>' . str_replace('||', '</td><td>', $match) . '</td></tr>';
 	}
 
-	function _markup_parse_table_real($matches) {
+	function _markup_parse_table_real($matches)
+	{
 		$class = $matches[2];
 		$contents = trim($matches[3]);
 		$result = '';
@@ -147,11 +158,13 @@
 		return $result . '</table>';
 	}
 
-	function _markup_parse_table(&$markup) {
+	function _markup_parse_table(&$markup)
+	{
 		$markup = preg_replace_callback('/\[table( ([a-z-]+))?\](.*?)\[\/table\]/is', '_markup_parse_table_real', $markup);
 	}
 
-	function _markup_parse_spaces(&$markup) {
+	function _markup_parse_spaces(&$markup)
+	{
 		while (preg_match('/ ( +?)/', $markup, $matches)) {
 			$sp = "";
 			$sp = str_pad($sp, strlen($matches[0]) * 6, '&nbsp;');
@@ -159,7 +172,8 @@
 		}
 	}
 
-	function _markup_parse_smileys(&$markup) {
+	function _markup_parse_smileys(&$markup)
+	{
 		$smileys_path = 'images/smileys';
 
 		$markup = trim($markup);
@@ -169,7 +183,8 @@
 			$markup = preg_replace('/' . $code . '/i', '<img src="' . $smileys_path . '/' . $image . '" alt="' . $image . '"/>', $markup);
 	}
 
-	function _markup_parse_simple(&$markup) {
+	function _markup_parse_simple(&$markup)
+	{
 		// TODO: Replace this beast with something that has a stack!
 		$tags = array('[i]', '[/i]', '[b]', '[/b]', '[u]', '[/u]', '[s]', '[/s]', '[ol]', '[/ol]', '[ul]', '[/ul]', '[li]', '[/li]', '[center]', '[/center]', '[hl]', '[/hl]', '[small]', '[/small]');
 		$replace = array('<i>', '</i>', '<b>', '</b>', '<u>', '</u>', '<s>', '</s>', '<ol>', '</ol>', '<ul>', '</ul>', '<li>', '</li>', '<div class="text_center">', '</div>', '<span class="highlight">', '</span>', '<small>', '</small>');
@@ -177,7 +192,8 @@
 		$markup = str_replace($tags, $replace, $markup);
 	}
 
-	function _markup_parse_images(&$markup, &$placeholders) {
+	function _markup_parse_images(&$markup, &$placeholders)
+	{
 		static $count = 0;
 
 		while (preg_match('/\[img(?P<classes>(\.[a-z-]+)*)=(?P<url>.+?)\]/', $markup, $match)) {
@@ -189,7 +205,8 @@
 		}
 	}
 
-	function _markup_parse_fontawesome(&$markup, &$placeholders) {
+	function _markup_parse_fontawesome(&$markup, &$placeholders)
+	{
 		static $count = 0;
 
 		while (preg_match('/\[fontawesome=([^\]]+)\]/', $markup, $match)) {
@@ -199,7 +216,8 @@
 		}
 	}
 
-	function _markup_parse_member(&$markup, &$placeholders) {
+	function _markup_parse_member(&$markup, &$placeholders)
+	{
 		static $count = 0;
 
 		while (preg_match('/\[member\s+name="([^"]+)"\s*(?:position="([^"]+)")?\s*(?:email="([^"]+)")?\s*(?:image="([^"]+)")?\](.*?)\[\/member\]/s', $markup, $match)) {
@@ -237,7 +255,8 @@
 		}
 	}
 
-	function _markup_parse_youtube(&$markup, &$placeholders) {
+	function _markup_parse_youtube(&$markup, &$placeholders)
+	{
 		static $count = 0;
 
 		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match)) {
@@ -247,7 +266,8 @@
 		}
 	}
 
-	function _markup_parse_video(&$markup, &$placeholders) {
+	function _markup_parse_video(&$markup, &$placeholders)
+	{
 		static $count = 0;
 
 		while (preg_match('/\[video=(.+?)\]/', $markup, $match)) {
@@ -260,7 +280,8 @@
 		}
 	}
 
-	function _markup_parse_embed(&$markup, &$placeholders) {
+	function _markup_parse_embed(&$markup, &$placeholders)
+	{
 		static $count = 0;
 
 		$cache = get_cache();
@@ -290,7 +311,8 @@
 		}, $markup);
 	}
 
-	function _markup_parse_header(&$markup, $header_offset = 0) {
+	function _markup_parse_header(&$markup, $header_offset = 0)
+	{
 		$markup = preg_replace_callback(
 			'/\[h(?P<level>\d)(?<classes>(\.[a-z-])*)\](?P<content>.+?)\[\/h\\1\]\s*/is',
 			function($match) use ($header_offset) {
@@ -301,12 +323,14 @@
 			}, $markup);
 	}
 
-	function _markup_parse_placeholders(&$markup, $placeholders) {
+	function _markup_parse_placeholders(&$markup, $placeholders)
+	{
 		foreach ($placeholders as $placeholder => $content)
 			$markup = str_replace_once($placeholder, $content, $markup);
 	}
 
-	function _markup_process_macro_commissie($commissie) {
+	function _markup_process_macro_commissie($commissie)
+	{
 		static $model = null;
 
 		if ($model === null)
@@ -323,18 +347,21 @@
 		}
 	}
 
-	function _markup_parse_macro_real($matches) {
+	function _markup_parse_macro_real($matches)
+	{
 		if (!function_exists('_markup_process_macro_' . $matches[1]))
 			return $matches[0];
 
 		return call_user_func('_markup_process_macro_' . $matches[1], $matches[2]);
 	}
 
-	function _markup_parse_macros(&$markup) {
+	function _markup_parse_macros(&$markup)
+	{
 		$markup = preg_replace_callback('/\[\[([a-z_]+)\((.*?)\)\]\]/', '_markup_parse_macro_real', $markup);
 	}
 
-	function _markup_parse_emails(&$markup, &$placeholders) {
+	function _markup_parse_emails(&$markup, &$placeholders)
+	{
 		$count = 0;
 
 		while (preg_match('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $markup, $match)) {
@@ -346,7 +373,8 @@
 		}
 	}
 
-	function _markup_parse_mailinglist(&$markup, &$placeholders) {
+	function _markup_parse_mailinglist(&$markup, &$placeholders)
+	{
 		// Find [mailinglist]email/id[/mailinglist] placeholders
 		// and replace them by clickable stuff.
 
@@ -368,7 +396,8 @@
 		}
 	}
 
-	function _markup_parse_membersonly(&$markup, &$placeholders) {
+	function _markup_parse_membersonly(&$markup, &$placeholders)
+	{
 		// Find [membersonly]email/id[/membersonly] placeholders and replace
 		// them by content or a login cta.
 
@@ -397,7 +426,8 @@
 	 *
 	 * @result a string with all the markup replaced by html
 	 */
-	function markup_parse($markup, $header_offset = 0, &$placeholders = null) {
+	function markup_parse($markup, $header_offset = 0, &$placeholders = null)
+	{
 		if (!$placeholders)
 			$placeholders = array();
 
@@ -489,7 +519,8 @@
 	 * @markup text with bb-code
 	 * @result text stripped from bb-code
 	 */
-	function markup_strip($markup) {
+	function markup_strip($markup)
+	{
 		return preg_replace('/\[[^\[\]\s]*\]/', '', $markup);
 	}
 
@@ -499,7 +530,8 @@
 	 *
 	 * @result the cleaned up string
 	 */
-	function markup_clean($text) {
+	function markup_clean($text)
+	{
 		return preg_replace('/(\/(li|div|ul|ol|h[0-9]+)[^>]*>)\s*<br\/?>/im', '$1', $text);
 	}
 
@@ -510,7 +542,8 @@
 	 *
 	 * @result the formatted text
 	 */
-	function markup_format_text($text) {
+	function markup_format_text($text)
+	{
 		$text = htmlspecialchars($text, ENT_COMPAT, WEBSITE_ENCODING);
 
 		/*$text = str_replace('&','&amp;',$str);
@@ -521,6 +554,7 @@
 		return $text;
 	}
 
-	function markup_format_attribute($text) {
+	function markup_format_attribute($text)
+	{
 		return htmlspecialchars($text, ENT_QUOTES, WEBSITE_ENCODING);
 	}
