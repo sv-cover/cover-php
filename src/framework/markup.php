@@ -135,10 +135,10 @@
 		if (preg_match_all('/^\s*\|\|(.*?)\|\|\s*$/smu', $contents, $matches)) {
 			$maxcol = 0;
 
-			foreach($matches[1] as $match)
+			foreach ($matches[1] as $match)
 				_markup_prepare_table_row($match, $maxcol);
 
-			foreach($matches[1] as $match)
+			foreach ($matches[1] as $match)
 				$result .= _markup_parse_table_row($match, $maxcol);
 		} else {
 			$result .= sprintf('<!-- cannot parse table %s -->', $contents);
@@ -165,7 +165,7 @@
 		$markup = trim($markup);
 		$smileys = get_smileys();
 
-		foreach($smileys as $code => $image)
+		foreach ($smileys as $code => $image)
 			$markup = preg_replace('/' . $code . '/i', '<img src="' . $smileys_path . '/' . $image . '" alt="' . $image . '"/>', $markup);
 	}
 
@@ -279,7 +279,7 @@
 
 				$html = $embed->code;
 
-			} catch(Exception $e) {
+			} catch (Exception $e) {
 				$html = sprintf('<a href="%s">%1$s</a> <small>(could not embed due to error: <pre>%s</pre>)</small>', markup_format_text($match[1]), $e);
 			}
 
@@ -302,7 +302,7 @@
 	}
 
 	function _markup_parse_placeholders(&$markup, $placeholders) {
-		foreach($placeholders as $placeholder => $content)
+		foreach ($placeholders as $placeholder => $content)
 			$markup = str_replace_once($placeholder, $content, $markup);
 	}
 
@@ -318,7 +318,7 @@
 			$router = get_router();
 
 			return '<a href="' . $router->generate('page', ['id' => $iter->get('page_id')]) . '">' . markup_format_text($iter->get('naam')) . '</a>';
-		} catch(DataIterNotFoundException $e) {
+		} catch (DataIterNotFoundException $e) {
 			return '';
 		}
 	}
@@ -356,7 +356,7 @@
 			try {
 				$controller = new MailingListsController();
 				$content = $controller->run_embedded($match[1]);
-			} catch(Exception $e) {
+			} catch (Exception $e) {
 				sentry_report_exception($e);
 				$content = sprintf('<pre>%s</pre>', $e->getMessage());
 			}
