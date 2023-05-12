@@ -22,7 +22,7 @@
 		$code = htmlspecialchars($code, ENT_NOQUOTES);
 		$code = str_replace("\n", '<br/>', $code);
 
-		while(preg_match('/ ( +?)/', $code, $matches)) {
+		while (preg_match('/ ( +?)/', $code, $matches)) {
 			$sp = "";
 			$sp = str_pad($sp, strlen($matches[0]) * 6, '&nbsp;');
 			$code = preg_replace('/ ( +?)/', $sp, $code, 1);
@@ -34,7 +34,7 @@
 	function _markup_parse_code(&$markup, &$placeholders) {
 		$count = 0;
 
-		while(preg_match("/( *?\[code(=(.+?))?\](.*?)\[\/code\])/is", $markup, $match)) {
+		while (preg_match("/( *?\[code(=(.+?))?\](.*?)\[\/code\])/is", $markup, $match)) {
 			$placeholder = sprintf('#CODE%d#', $count++);
 			$placeholders[$placeholder] = _markup_parse_code_real($match[4]);
 			$markup = str_replace_once($match[0], $placeholder, $markup);
@@ -44,7 +44,7 @@
 	function _markup_parse_links(&$markup, $header_offset, &$placeholders) {
 		$count = 0;
 
-		while(preg_match('/\[url=(.*?)\](.*?)\[\/url\]/is', $markup, $match)) {
+		while (preg_match('/\[url=(.*?)\](.*?)\[\/url\]/is', $markup, $match)) {
 			$placeholder = sprintf('#LINK%d#', $count++);
 
 			$host = parse_url($match[1], PHP_URL_HOST);
@@ -60,7 +60,7 @@
 	function _markup_parse_urls(&$markup, &$placeholders) {
 		$linkcount = 0;
 
-		while(preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)[A-Za-z0-9.-]+|(?:www.)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w\-_]*)?\??(?:[\-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match)) {
+		while (preg_match("/((([A-Za-z]{3,9}:(?:\/\/)?)[A-Za-z0-9.-]+|(?:www.)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w\-_]*)?\??(?:[\-\+=&;%@.\w_]*)#?(?:[\w]*))?)/i", $markup, $match)) {
 			$url = preg_match('~^https?://~', $match[0]) ? $match[0] : 'http://' . $match[0];
 
 			$placeholder = sprintf('#URL%d#', $linkcount++);
@@ -152,7 +152,7 @@
 	}
 
 	function _markup_parse_spaces(&$markup) {
-		while(preg_match('/ ( +?)/', $markup, $matches)) {
+		while (preg_match('/ ( +?)/', $markup, $matches)) {
 			$sp = "";
 			$sp = str_pad($sp, strlen($matches[0]) * 6, '&nbsp;');
 			$markup = preg_replace('/ ( +?)/', $sp, $markup, 1);
@@ -180,7 +180,7 @@
 	function _markup_parse_images(&$markup, &$placeholders) {
 		static $count = 0;
 
-		while(preg_match('/\[img(?P<classes>(\.[a-z-]+)*)=(?P<url>.+?)\]/', $markup, $match)) {
+		while (preg_match('/\[img(?P<classes>(\.[a-z-]+)*)=(?P<url>.+?)\]/', $markup, $match)) {
 			$placeholder = sprintf('#IMAGE%d#', $count++);
 			$placeholders[$placeholder] = sprintf('<img class="%s" src="%s">',
 				str_replace('.', ' ', $match['classes']),
@@ -192,7 +192,7 @@
 	function _markup_parse_fontawesome(&$markup, &$placeholders) {
 		static $count = 0;
 
-		while(preg_match('/\[fontawesome=([^\]]+)\]/', $markup, $match)) {
+		while (preg_match('/\[fontawesome=([^\]]+)\]/', $markup, $match)) {
 			$placeholder = sprintf('#FONTAWESOME%d#', $count++);
 			$placeholders[$placeholder] = '<i class="fa ' . $match[1] . '"></i>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
@@ -202,7 +202,7 @@
 	function _markup_parse_member(&$markup, &$placeholders) {
 		static $count = 0;
 
-		while(preg_match('/\[member\s+name="([^"]+)"\s*(?:position="([^"]+)")?\s*(?:email="([^"]+)")?\s*(?:image="([^"]+)")?\](.*?)\[\/member\]/s', $markup, $match)) {
+		while (preg_match('/\[member\s+name="([^"]+)"\s*(?:position="([^"]+)")?\s*(?:email="([^"]+)")?\s*(?:image="([^"]+)")?\](.*?)\[\/member\]/s', $markup, $match)) {
 
 			$placeholder = sprintf('#MEMBER%d#', $count++);
 
@@ -240,7 +240,7 @@
 	function _markup_parse_youtube(&$markup, &$placeholders) {
 		static $count = 0;
 
-		while(preg_match('/\[youtube=(.+?)\]/', $markup, $match)) {
+		while (preg_match('/\[youtube=(.+?)\]/', $markup, $match)) {
 			$placeholder = sprintf('#YOUTUBE%d#', $count++);
 			$placeholders[$placeholder] = '<figure class="image is-16by9 youtube"><iframe class="has-ratio" src="https://www.youtube-nocookie.com/embed/' . $match[1] . '" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></figure>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
@@ -250,7 +250,7 @@
 	function _markup_parse_video(&$markup, &$placeholders) {
 		static $count = 0;
 
-		while(preg_match('/\[video=(.+?)\]/', $markup, $match)) {
+		while (preg_match('/\[video=(.+?)\]/', $markup, $match)) {
 			if (!filter_var($match[1], FILTER_VALIDATE_URL))
 				return $match[0];
 
@@ -337,7 +337,7 @@
 	function _markup_parse_emails(&$markup, &$placeholders) {
 		$count = 0;
 
-		while(preg_match('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $markup, $match)) {
+		while (preg_match('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $markup, $match)) {
 			$placeholder = sprintf('#EMAIL%d#', $count++);
 			$placeholders[$placeholder] = sprintf('<a rel="nofollow" href="mailto:%s">%s</a>',
 				rawurlencode($match[0]), markup_format_text($match[0]));
@@ -352,7 +352,7 @@
 
 		$count = 0;
 
-		while(preg_match('/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i', $markup, $match)) {
+		while (preg_match('/\[mailinglist\]([^\[]+)\[\/mailinglist\]/i', $markup, $match)) {
 			try {
 				$controller = new MailingListsController();
 				$content = $controller->run_embedded($match[1]);
@@ -374,7 +374,7 @@
 
 		$count = 0;
 
-		while(preg_match('/\[membersonly(=(?P<title>[^\]]+))?\](?P<content>.+?)\[\/membersonly\]/is', $markup, $match)) {
+		while (preg_match('/\[membersonly(=(?P<title>[^\]]+))?\](?P<content>.+?)\[\/membersonly\]/is', $markup, $match)) {
 			if (get_auth()->logged_in())
 				$content = markup_parse($match['content']);
 			else
