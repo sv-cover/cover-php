@@ -1,5 +1,5 @@
 <?php
-	if(!defined('IN_SITE'))
+	if (!defined('IN_SITE'))
 		return;
 
 	require_once 'src/framework/smileys.php';
@@ -12,7 +12,7 @@
 	function str_replace_once($search, $replace, $subject) {
 		$pos = strpos($subject, $search);
 
-		if($pos === false)
+		if ($pos === false)
 			return $subject;
 
 		return substr_replace($subject, $replace, $pos, strlen($search));
@@ -78,10 +78,10 @@
 	}
 
 	function _markup_parse_quotes_real($matches) {
-		if(substr($matches[3], 0, 2) == "\n") {
+		if (substr($matches[3], 0, 2) == "\n") {
 			$matches[3] = substr($matches[3], 2);
 		}
-		if($matches[2])
+		if ($matches[2])
 			return '<div class="quote" title="quote"><span class="author">' . $matches[2] . '</span>: ' . $matches[3];
 		else
 			return '<div class="quote" title="quote"><br />' . $matches[3];
@@ -107,12 +107,12 @@
 	}
 
 	function _markup_parse_table_row($match, $maxcol) {
-		if($match == '')
+		if ($match == '')
 			return "";
 
 		$col = substr_count($match, '||') + 1;
 
-		if($col < $maxcol)
+		if ($col < $maxcol)
 			$colspan = ' colspan="' . (($maxcol - $col) + 1) . '"';
 		else
 			$colspan = '';
@@ -125,14 +125,14 @@
 		$contents = trim($matches[3]);
 		$result = '';
 
-		if(!$class)
+		if (!$class)
 			$class = 'table';
 		else
 			$class = 'table ' . $class;
 
 		$result = '<table class="' . $class . '">';
 
-		if(preg_match_all('/^\s*\|\|(.*?)\|\|\s*$/smu', $contents, $matches)) {
+		if (preg_match_all('/^\s*\|\|(.*?)\|\|\s*$/smu', $contents, $matches)) {
 			$maxcol = 0;
 
 			foreach($matches[1] as $match)
@@ -214,11 +214,11 @@
 
 			$html = '';
 			$html .= "<div class='member-block'>";
-			if($image) {
+			if ($image) {
 				$html .= "<div class='member-block-image' style='background-image: url(" . $image . ");'>";
 				$html .= "<div class='member-image-overlay'>";
 				$html .= "<h3 class='boxed-title'>" . $name . "</h3>";
-				if($position) {
+				if ($position) {
 					$html .= "<h4 class='boxed-title'>" . $position . "</h4>";
 				}
 				$html .= "</div>";
@@ -251,7 +251,7 @@
 		static $count = 0;
 
 		while(preg_match('/\[video=(.+?)\]/', $markup, $match)) {
-			if(!filter_var($match[1], FILTER_VALIDATE_URL))
+			if (!filter_var($match[1], FILTER_VALIDATE_URL))
 				return $match[0];
 
 			$placeholder = sprintf('#VIDEO%d#', $count++);
@@ -266,13 +266,13 @@
 		$cache = get_cache();
 
 		$markup = preg_replace_callback('/\[embed\](.+?)\[\/embed\]/', function($match) use ($cache, &$placeholders, &$count) {
-			if(!filter_var($match[1], FILTER_VALIDATE_URL))
+			if (!filter_var($match[1], FILTER_VALIDATE_URL))
 				return $match[0];
 
 			try {
 				$embed = $cache->get($match[1]);
 
-				if($embed === null) {
+				if ($embed === null) {
 					$embed = Embed::create($match[1]);
 					$cache->put($match[1], $embed, 48 * 3600);
 				}
@@ -309,7 +309,7 @@
 	function _markup_process_macro_commissie($commissie) {
 		static $model = null;
 
-		if($model === null)
+		if ($model === null)
 			$model = get_model('DataModelCommissie');
 
 		try {
@@ -324,7 +324,7 @@
 	}
 
 	function _markup_parse_macro_real($matches) {
-		if(!function_exists('_markup_process_macro_' . $matches[1]))
+		if (!function_exists('_markup_process_macro_' . $matches[1]))
 			return $matches[0];
 
 		return call_user_func('_markup_process_macro_' . $matches[1], $matches[2]);
@@ -375,14 +375,14 @@
 		$count = 0;
 
 		while(preg_match('/\[membersonly(=(?P<title>[^\]]+))?\](?P<content>.+?)\[\/membersonly\]/is', $markup, $match)) {
-			if(get_auth()->logged_in())
+			if (get_auth()->logged_in())
 				$content = markup_parse($match['content']);
 			else
 				$content = sprintf('<p>This content is only visible for members.</p><a href="sessions.php?view=login&amp;referrer=%s" class="button is-primary">%s</a>', urlencode($_SERVER['REQUEST_URI']), __('Log in'));
 
 			$placeholder = sprintf('#MEMBERSONLY%d#', $count++);
 
-			if($match['title'])
+			if ($match['title'])
 				$placeholders[$placeholder] = sprintf('<div class="box"><h2>%s</h2>%s</div>', $match['title'], $content);
 			else
 				$placeholders[$placeholder] = sprintf('<div class="box">%s</div>', $content);
@@ -398,7 +398,7 @@
 	 * @result a string with all the markup replaced by html
 	 */
 	function markup_parse($markup, $header_offset = 0, &$placeholders = null) {
-		if(!$placeholders)
+		if (!$placeholders)
 			$placeholders = array();
 
 		$markup .= "\n";
