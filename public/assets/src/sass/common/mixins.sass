@@ -4,8 +4,9 @@ $boxed-title-line-height: $title-line-height + .4
 =boxed-title($font-size: $size-5, $line-height: $boxed-title-line-height, $padding: $boxed-title-padding)
     background: $cover-red
     box-decoration-break: clone
-    color: $cover-red-invert
-    line-height: $line-height
+    // Make sure it works inside .content, so !important
+    color: $cover-red-invert !important
+    line-height: $line-height !important
     display: inline
     font-size: $font-size
     font-weight: $title-weight

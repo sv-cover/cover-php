@@ -1,8 +1,7 @@
 .member-block
     background-color: $background
-    @media(min-width: 1200px)
-        &
-            display: flex
+    @media(min-width: $widescreen)
+        display: flex
 
 
     .member-block-details
@@ -11,20 +10,15 @@
         p
             font-size: $size-6
 
-    h3
-        color: white
-
     .cover-thumbnail
         margin-bottom: 0
         display: block
         min-height: 200px
 
-        @media(min-width: 1200px)
-            &
-                width: 35%
+        @media(min-width: $widescreen)
+            width: 35%
 
         figure
-            margin: 0
             height: 100%
 
             img

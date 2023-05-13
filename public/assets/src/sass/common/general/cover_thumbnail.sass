@@ -19,6 +19,11 @@ $cover-thumbnail-overlay-padding: 1.25rem 1rem 1.25rem 0 !default
             top: 50%
             height: auto
 
+    // Make sure it works inside .content
+    > .image,
+    > .image:not(:first-child)
+        margin: 0
+
     &.is-square,
     &.is-1by1,
     &.is-5by4,
