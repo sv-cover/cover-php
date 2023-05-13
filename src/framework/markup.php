@@ -220,34 +220,43 @@
 	{
 		static $count = 0;
 
-		while (preg_match('/\[member\s+name="([^"]+)"\s*(?:position="([^"]+)")?\s*(?:email="([^"]+)")?\s*(?:image="([^"]+)")?\](.*?)\[\/member\]/s', $markup, $match)) {
+		while (preg_match('/\[member\s+name="([^"]+)"\s*(?:position="([^"]+)")?\s*(?:image="([^"]+)")?\](.*?)\[\/member\]/s', $markup, $match)) {
 
 			$placeholder = sprintf('#MEMBER%d#', $count++);
 
 			$name = $match[1];
-			$position = isset($match[2]) ? $match[2] : null;
-			$email = isset($match[3]) ? $match[3] : null;
-			$image = isset($match[4]) ? $match[4] : null;
-			$content = markup_parse($match[5]);
+			$position = $match[2] ?? null;
+			$image = $match[3] ?? null;
+			$content = markup_parse($match[4]);
 
-			$html = '';
-			$html .= "<div class='member-block'>";
-			if ($image) {
-				$html .= "<div class='member-block-image' style='background-image: url(" . $image . ");'>";
-				$html .= "<div class='member-image-overlay'>";
-				$html .= "<h3 class='boxed-title'>" . $name . "</h3>";
-				if ($position) {
-					$html .= "<h4 class='boxed-title'>" . $position . "</h4>";
-				}
-				$html .= "</div>";
-				$html .= "</div>";
-			}
-			$html .= "<div class='member-block-details'>";
-			$html .= "<p>";
-			$html .= $content;
-			$html .= "</p>";
-			$html .= "</div>";
-			$html .= "</div>";
+			$html = '<div class="member-block">';
+				$html .= '<div class="cover-thumbnail has-image">';
+					$html .= '<div class="overlay is-bottom">';
+						$html .= '<div class="name boxed-title-wrapper">';
+							$html .= '<h3 class="boxed-title is-size-5-mobile">';
+								$html .= $name;
+							$html .= '</h3>';
+						$html .= '</div>';
+						if($position) {
+							$html .= '<div class="boxed-title-wrapper">';
+								$html .= '<span class="boxed-title has-text-weight-normal is-size-6">';
+									$html .= '<i>' . $position . '</i>';
+								$html .= '</span>';
+							$html .= '</div>';
+						}
+					$html .= '</div>';
+					$html .= '<figure class="image">';
+						if($image) {
+							$html .= '<img src="' . $image . '" />';
+						}
+					$html .= '</figure>';
+				$html .= '</div>';
+				$html .= '<div class="member-block-details column">';
+					$html .= '<p>';
+						$html .= $content;
+					$html .= '</p>';
+				$html .= '</div>';
+			$html .= '</div>';
 
 			$placeholders[$placeholder] = $html;
 
