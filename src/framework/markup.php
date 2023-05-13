@@ -211,7 +211,7 @@
 
 		while (preg_match('/\[fontawesome=([^\]]+)\]/', $markup, $match)) {
 			$placeholder = sprintf('#FONTAWESOME%d#', $count++);
-			$placeholders[$placeholder] = '<i class="fa ' . $match[1] . '"></i>';
+			$placeholders[$placeholder] = '<span class="icon" aria-label=”X”><i class="fa ' . $match[1] . '"></i></span>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
