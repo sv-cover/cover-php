@@ -209,9 +209,16 @@
 	{
 		static $count = 0;
 
-		while (preg_match('/\[fontawesome=([^\]]+)\]/', $markup, $match)) {
+		while (preg_match('/\[fontawesome\s+icon="([^"]+)"\s*(?:label="([^"]+)")?\]/', $markup, $match)) {
 			$placeholder = sprintf('#FONTAWESOME%d#', $count++);
-			$placeholders[$placeholder] = '<span class="icon" aria-label=”X”><i class="fa ' . $match[1] . '"></i></span>';
+			$label = $match[2] ?? null;
+			if($label){
+				$label_info = 'aria-label="'.$label.'"';
+			} else {
+				$label_info = 'aria-hidden="true"';
+			}
+
+			$placeholders[$placeholder] = '<i class="fa ' . $match[1] . '" ' . $label_info . '></i>';
 			$markup = str_replace_once($match[0], $placeholder, $markup);
 		}
 	}
@@ -230,7 +237,7 @@
 			$content = markup_parse($match[4]);
 
 			$html = '<div class="member-block">';
-				$html .= '<div class="cover-thumbnail has-image">';
+				$html .= '<div class="cover-thumbnail">';
 					$html .= '<div class="overlay is-bottom">';
 						$html .= '<div class="name boxed-title-wrapper">';
 							$html .= '<h3 class="boxed-title is-size-5-mobile">';
@@ -247,7 +254,7 @@
 					$html .= '</div>';
 					$html .= '<figure class="image">';
 						if($image) {
-							$html .= '<img src="' . $image . '" />';
+							$html .= '<img src="' . $image . '" alt="Picture of '.$name.'" />';
 						}
 					$html .= '</figure>';
 				$html .= '</div>';
