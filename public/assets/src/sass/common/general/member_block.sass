@@ -1,8 +1,10 @@
 .member-block
     background-color: $background
+
     @media(min-width: $widescreen)
         display: flex
-
+        &:nth-of-type(even)
+            flex-direction: row-reverse
 
     .member-block-details
         padding: $box-padding
