@@ -75,6 +75,10 @@ class LayoutViewHelper
 					'label' => __('Sister Associations')
 				],
 				[
+					'url' => $this->router->generate('page', ['id' => 215]),
+					'label' => __('History')
+				],
+				[
 					'url' => $this->router->generate('page', ['id' => 18]),
 					'label' => __('Become a member/contributor')
 				],
