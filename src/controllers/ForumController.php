@@ -20,10 +20,10 @@ class ForumController extends \Controller
 
 	const MAXIMUM_POLL_OPTION_COUNT = 10;
 
-    protected $view_name = 'forum';
+	protected $view_name = 'forum';
 
-    public function __construct($request, $router)
-    {
+	public function __construct($request, $router)
+	{
 		$this->model = get_model('DataModelForum');
 
 	   parent::__construct($request, $router);
@@ -216,366 +216,366 @@ class ForumController extends \Controller
 		if (!$message->editable())
 			throw new \UnauthorizedException('You do not have permission to edit this message.');
 	}
-    
-    /*
-    private function _view_admin($sub, DataIterForum $forum)
-    {
-        $this->_assert_admin();
-        
-        return $this->view->render_admin($forum, array('sub' => $sub));
-    }
-    
-    private function _process_forum_order()
-    {
-        $this->_assert_admin();
-        
-        $order = explode(';', get_post('forum_order'));
-        $headers = $this->model->get_headers();
-        $delete = array();
-        
-        foreach ($headers as $header)
-            $delete['-' . $header->get('id')] = $header;
+	
+	/*
+	private function _view_admin($sub, DataIterForum $forum)
+	{
+		$this->_assert_admin();
+		
+		return $this->view->render_admin($forum, array('sub' => $sub));
+	}
+	
+	private function _process_forum_order()
+	{
+		$this->_assert_admin();
+		
+		$order = explode(';', get_post('forum_order'));
+		$headers = $this->model->get_headers();
+		$delete = array();
+		
+		foreach ($headers as $header)
+			$delete['-' . $header->get('id')] = $header;
 
-        for ($i = 0; $i < count($order); $i++) {
-            $info = explode('=', $order[$i], 2);
+		for ($i = 0; $i < count($order); $i++) {
+			$info = explode('=', $order[$i], 2);
 
-            if (substr($info[0], 0, 1) == '-') {
-                // Header
-                if ($info[0] == '-') {
-                    // New header
-                    $iter = new DataIterForumHeader($this->model, -1, array(
-                            'name' => $info[1],
-                            'position' => $i + 1));
-                    $this->model->insert_header($iter);
-                } elseif (isset($delete[$info[0]])) {
-                    $header = $delete[$info[0]];
-                    $header->set('name', $info[1]);
-                    $header->set('position', $i + 1);
+			if (substr($info[0], 0, 1) == '-') {
+				// Header
+				if ($info[0] == '-') {
+					// New header
+					$iter = new DataIterForumHeader($this->model, -1, array(
+							'name' => $info[1],
+							'position' => $i + 1));
+					$this->model->insert_header($iter);
+				} elseif (isset($delete[$info[0]])) {
+					$header = $delete[$info[0]];
+					$header->set('name', $info[1]);
+					$header->set('position', $i + 1);
 
-                    $this->model->update_header($header);
-                    unset($delete[$info[0]]);
-                }                   
-            } else {
-                $iter = $this->model->get_iter($info[0]);
-                $iter->set('position', $i + 1);
-                $this->model->update($iter);
-            }
-        }
-        
-        foreach ($delete as $id => $header)
-            $this->model->delete_header($header);
-        
-        return $this->view->redirect('forum.php?admin=forums');
-    }
-    
-    private function _process_forum_forums()
-    {
-        $this->_assert_admin();
-        
-        $all_errors = array();
-        
-        foreach ($_POST as $key => $value) {
-            if (strncmp($key, 'name_', 5) != 0)
-                continue;
-            
-            $id = substr($key, 5);
-            $forum = $this->model->get_iter($id);
-            
-            if (get_post('del_' . $id) == 'yes') {
-                $this->model->delete($forum);
-            } else {
-                $data = check_values(array('name_' . $id, 'description_' . $id), $errors);
-                
-                if (count($errors) == 0) {
-                    $forum->set('name', $data['name_' . $id]);
-                    $forum->set('description', $data['description_' . $id]);
-                    $this->model->update($forum);
-                } else {
-                    $all_errors += $errors;
-                }
-            }
-        }
-        
-        if (count($all_errors) > 0) {
-            return $this->view->render_admin(null, array('sub' => 'forums', 'errors' => $all_errors));
-        } else {
-            return $this->view->redirect('forum.php?admin=forums');
-        }
-    }
-    
-    private function _process_forum_nieuw()
-    {
-        $this->_assert_admin();
-        
-        $data = check_values(array('name', 'description'), $errors);
-        
-        if (count($errors) > 0)
-            return $this->view->render_admin(null, array('sub' => 'forums', 'errors' => $errors));
-                    
-        $iter = new DataIterForum($this->model, -1, $data);
-        $this->model->insert($iter);
-        
-        return $this->view->redirect('forum.php?admin=forums');
-    }
-    
-    private function _process_forum_rights(DataIterForum $forum) 
-    {
-        $this->_assert_admin();
-        
-        $acls = $this->model->get_acls();
-        
-        foreach ($_POST as $key => $value) {
-            if (strncmp($key, 'right_', 6) != 0)
-                continue;
-            
-            $id = substr($key, 6);
-            $acl = $this->model->get_acl($id);
-            
-            if (!$acl)
-                continue;
-            
-            if (get_post('del_' . $id) == 'yes') {
-                $this->model->delete_acl($acl);
-            } else {
-                $i = 0;
-                $perms = 0;
-                
-                foreach ($acls as $perm) {
-                    if (get_post('acl_' . $id . '_' . $i) == 'yes')
-                        $perms |= $perm;
+					$this->model->update_header($header);
+					unset($delete[$info[0]]);
+				}                   
+			} else {
+				$iter = $this->model->get_iter($info[0]);
+				$iter->set('position', $i + 1);
+				$this->model->update($iter);
+			}
+		}
+		
+		foreach ($delete as $id => $header)
+			$this->model->delete_header($header);
+		
+		return $this->view->redirect('forum.php?admin=forums');
+	}
+	
+	private function _process_forum_forums()
+	{
+		$this->_assert_admin();
+		
+		$all_errors = array();
+		
+		foreach ($_POST as $key => $value) {
+			if (strncmp($key, 'name_', 5) != 0)
+				continue;
+			
+			$id = substr($key, 5);
+			$forum = $this->model->get_iter($id);
+			
+			if (get_post('del_' . $id) == 'yes') {
+				$this->model->delete($forum);
+			} else {
+				$data = check_values(array('name_' . $id, 'description_' . $id), $errors);
+				
+				if (count($errors) == 0) {
+					$forum->set('name', $data['name_' . $id]);
+					$forum->set('description', $data['description_' . $id]);
+					$this->model->update($forum);
+				} else {
+					$all_errors += $errors;
+				}
+			}
+		}
+		
+		if (count($all_errors) > 0) {
+			return $this->view->render_admin(null, array('sub' => 'forums', 'errors' => $all_errors));
+		} else {
+			return $this->view->redirect('forum.php?admin=forums');
+		}
+	}
+	
+	private function _process_forum_nieuw()
+	{
+		$this->_assert_admin();
+		
+		$data = check_values(array('name', 'description'), $errors);
+		
+		if (count($errors) > 0)
+			return $this->view->render_admin(null, array('sub' => 'forums', 'errors' => $errors));
+					
+		$iter = new DataIterForum($this->model, -1, $data);
+		$this->model->insert($iter);
+		
+		return $this->view->redirect('forum.php?admin=forums');
+	}
+	
+	private function _process_forum_rights(DataIterForum $forum) 
+	{
+		$this->_assert_admin();
+		
+		$acls = $this->model->get_acls();
+		
+		foreach ($_POST as $key => $value) {
+			if (strncmp($key, 'right_', 6) != 0)
+				continue;
+			
+			$id = substr($key, 6);
+			$acl = $this->model->get_acl($id);
+			
+			if (!$acl)
+				continue;
+			
+			if (get_post('del_' . $id) == 'yes') {
+				$this->model->delete_acl($acl);
+			} else {
+				$i = 0;
+				$perms = 0;
+				
+				foreach ($acls as $perm) {
+					if (get_post('acl_' . $id . '_' . $i) == 'yes')
+						$perms |= $perm;
 
-                    $i++;
-                }
-                
-                $acl->set('permissions', $perms);
-                $this->model->update_acl($acl);
-            }
-        }
-        
-        return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
-    }
-    
-    private function _process_forum_rights_nieuw(DataIterForum $forum)
-    {
-        $this->_assert_admin();
-        
-        $uid = null;
-        
-        switch (intval(get_post('type'))) {
-            case DataModelForum::TYPE_ANONYMOUS: // Everyone
-                $uid = -1;
-            break;
-            case DataModelForum::TYPE_PERSON: // Member
-                $id = intval(get_post('member'));
+					$i++;
+				}
+				
+				$acl->set('permissions', $perms);
+				$this->model->update_acl($acl);
+			}
+		}
+		
+		return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
+	}
+	
+	private function _process_forum_rights_nieuw(DataIterForum $forum)
+	{
+		$this->_assert_admin();
+		
+		$uid = null;
+		
+		switch (intval(get_post('type'))) {
+			case DataModelForum::TYPE_ANONYMOUS: // Everyone
+				$uid = -1;
+			break;
+			case DataModelForum::TYPE_PERSON: // Member
+				$id = intval(get_post('member'));
 
-                if ($id != 0) {
-                    $member_model = get_model('DataModelMember');
-                    $member = $member_model->get_iter($id);
-                
-                    if ($member)
-                        $uid = $id;
-                }
-            break;
-            case DataModelForum::TYPE_COMMITTEE: // Commissie
-                $id = intval(get_post('commissie'));
-                
-                if ($id == -1)
-                    $uid = -1;
-                elseif ($id != 0 || get_post('commissie') == '0') {
-                    $commissie_model = get_model('DataModelCommissie');
-                    $commissie = $commissie_model->get_iter($id);
-                    
-                    if ($commissie)
-                        $uid = $id;
-                }
-            break;
-            case DataModelForum::TYPE_GROUP: // Group
-                $id = intval(get_post('group'));
-                
-                if ($id == -1)
-                    $uid = -1;
-                elseif ($id != 0) {
-                    $group = $this->model->get_group($id);
-                    
-                    if ($group)
-                        $uid = $id;
-                }
-            break;
-            default:
-                return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
-        }
-        
-        if ($uid === null)
-            return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
-        
-        $acls = $this->model->get_acls();
-        $perm_names = array('read' => $acls[0], 'write' => $acls[1], 'reply' => $acls[2], 'poll' => $acls[3]);
-        $perms = 0;
-        
-        foreach ($perm_names as $key => $value)
-            $perms |= get_post($key) == 'yes' ? $value : 0;
-        
-        $iter = new DataIterForumPermission($this->model, -1, array(
-                'forumid' => intval($forum->get('id')),
-                'type' => intval(get_post('type')),
-                'uid' => $uid,
-                'permissions' => $perms));
+				if ($id != 0) {
+					$member_model = get_model('DataModelMember');
+					$member = $member_model->get_iter($id);
+				
+					if ($member)
+						$uid = $id;
+				}
+			break;
+			case DataModelForum::TYPE_COMMITTEE: // Commissie
+				$id = intval(get_post('commissie'));
+				
+				if ($id == -1)
+					$uid = -1;
+				elseif ($id != 0 || get_post('commissie') == '0') {
+					$commissie_model = get_model('DataModelCommissie');
+					$commissie = $commissie_model->get_iter($id);
+					
+					if ($commissie)
+						$uid = $id;
+				}
+			break;
+			case DataModelForum::TYPE_GROUP: // Group
+				$id = intval(get_post('group'));
+				
+				if ($id == -1)
+					$uid = -1;
+				elseif ($id != 0) {
+					$group = $this->model->get_group($id);
+					
+					if ($group)
+						$uid = $id;
+				}
+			break;
+			default:
+				return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
+		}
+		
+		if ($uid === null)
+			return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
+		
+		$acls = $this->model->get_acls();
+		$perm_names = array('read' => $acls[0], 'write' => $acls[1], 'reply' => $acls[2], 'poll' => $acls[3]);
+		$perms = 0;
+		
+		foreach ($perm_names as $key => $value)
+			$perms |= get_post($key) == 'yes' ? $value : 0;
+		
+		$iter = new DataIterForumPermission($this->model, -1, array(
+				'forumid' => intval($forum->get('id')),
+				'type' => intval(get_post('type')),
+				'uid' => $uid,
+				'permissions' => $perms));
 
-        $this->model->insert_acl($iter);
+		$this->model->insert_acl($iter);
 
-        return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
-    }
-    
-    private function _process_forum_groups()
-    {
-        $this->_assert_admin();
-        
-        $all_errors = array();
+		return $this->view->redirect('forum.php?admin=rights&forum=' . $forum->get('id'));
+	}
+	
+	private function _process_forum_groups()
+	{
+		$this->_assert_admin();
+		
+		$all_errors = array();
 
-        foreach ($_POST as $key => $value)
-        {
-            if (strncmp($key, 'group_', 6) != 0)
-                continue;
-            
-            $id = substr($key, 6);
-            $group = $this->model->get_group($id);
-            
-            if (!$group)
-                continue;
-            
-            if (get_post('del_' . $id) == 'yes') {
-                $this->model->delete_group($group);
-            } else {
-                $data = check_values(array(
-                        array('name' => 'name_' . $id, 'function' => array(&$this, '_check_group_name'))), $errors);
-                
-                if (count($errors) > 0) {
-                    $all_errors += $errors;
-                    continue;
-                }
+		foreach ($_POST as $key => $value)
+		{
+			if (strncmp($key, 'group_', 6) != 0)
+				continue;
+			
+			$id = substr($key, 6);
+			$group = $this->model->get_group($id);
+			
+			if (!$group)
+				continue;
+			
+			if (get_post('del_' . $id) == 'yes') {
+				$this->model->delete_group($group);
+			} else {
+				$data = check_values(array(
+						array('name' => 'name_' . $id, 'function' => array(&$this, '_check_group_name'))), $errors);
+				
+				if (count($errors) > 0) {
+					$all_errors += $errors;
+					continue;
+				}
 
-                $group->set('name', $data['name_' . $id]);
-                $this->model->update_group($group);
-            }
-        }
-        
-        if (count($all_errors) > 0) {
-            return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => $all_errors));
-        } else {
-            return $this->view->redirect('forum.php?admin=groups');
-        }
-    }
-    
-    public function _check_group_name($name, $value)
-    {
-        if (!$value)
-            return false;
-        
-        if (strlen($value) > 50)
-            return false;
-        
-        return $value;
-    }
-    
-    private function _process_forum_groups_nieuw()
-    {
-        $this->_assert_admin();
-        
-        $data = check_values(array(
-                array('name' => 'name', 'function' => array(&$this, '_check_group_name'))), 
-                $errors);
-        
-        if (count($errors) > 0)
-            return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => $errors));
-        
-        $iter = new DataIterForumGroup($this->model, -1, $data);
-        $this->model->insert_group($iter);
+				$group->set('name', $data['name_' . $id]);
+				$this->model->update_group($group);
+			}
+		}
+		
+		if (count($all_errors) > 0) {
+			return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => $all_errors));
+		} else {
+			return $this->view->redirect('forum.php?admin=groups');
+		}
+	}
+	
+	public function _check_group_name($name, $value)
+	{
+		if (!$value)
+			return false;
+		
+		if (strlen($value) > 50)
+			return false;
+		
+		return $value;
+	}
+	
+	private function _process_forum_groups_nieuw()
+	{
+		$this->_assert_admin();
+		
+		$data = check_values(array(
+				array('name' => 'name', 'function' => array(&$this, '_check_group_name'))), 
+				$errors);
+		
+		if (count($errors) > 0)
+			return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => $errors));
+		
+		$iter = new DataIterForumGroup($this->model, -1, $data);
+		$this->model->insert_group($iter);
 
-        return $this->view->redirect('forum.php?admin=groups');
-    }
-    
-    private function _process_forum_groups_members()
-    {
-        $this->_assert_admin();
-        
-        // Check group
-        $group = $this->model->get_group(get_post('guid'));
-        
-        if (!$group)
-            return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => array('guid')));
-        
-        switch (intval(get_post('type'))) {
-            case DataModelForum::TYPE_ANONYMOUS:
-                $uid = -1;
-            break;
-            case DataModelForum::TYPE_PERSON:
-                $id = intval(get_post('member'));
+		return $this->view->redirect('forum.php?admin=groups');
+	}
+	
+	private function _process_forum_groups_members()
+	{
+		$this->_assert_admin();
+		
+		// Check group
+		$group = $this->model->get_group(get_post('guid'));
+		
+		if (!$group)
+			return $this->view->render_admin(null, array('sub' => 'groups', 'errors' => array('guid')));
+		
+		switch (intval(get_post('type'))) {
+			case DataModelForum::TYPE_ANONYMOUS:
+				$uid = -1;
+			break;
+			case DataModelForum::TYPE_PERSON:
+				$id = intval(get_post('member'));
 
-                if ($id != 0) {
-                    $member_model = get_model('DataModelMember');
-                    $member = $member_model->get_iter($id);
-                    $uid = $member->get('id');
-                }
-            break;
-            case DataModelForum::TYPE_COMMITTEE:
-                $id = intval(get_post('commissie'));
-                
-                if ($id == -1)
-                    $uid = -1;
-                elseif ($id != 0 || get_post('commissie') == '0') {
-                    $commissie_model = get_model('DataModelCommissie');
-                    $commissie = $commissie_model->get_iter($id);
-                    $uid = $commissie->get('id');
-                }
-            break;
-            default:
-                return $this->view->redirect('forum.php?admin=groups');
-            break;
-        }
-        
-        $iter = new DataIterForumGroupMember($this->model, -1, array(
-                'guid' => intval($group->get('id')),
-                'type' => intval(get_post('type')),
-                'uid' => $uid));
+				if ($id != 0) {
+					$member_model = get_model('DataModelMember');
+					$member = $member_model->get_iter($id);
+					$uid = $member->get('id');
+				}
+			break;
+			case DataModelForum::TYPE_COMMITTEE:
+				$id = intval(get_post('commissie'));
+				
+				if ($id == -1)
+					$uid = -1;
+				elseif ($id != 0 || get_post('commissie') == '0') {
+					$commissie_model = get_model('DataModelCommissie');
+					$commissie = $commissie_model->get_iter($id);
+					$uid = $commissie->get('id');
+				}
+			break;
+			default:
+				return $this->view->redirect('forum.php?admin=groups');
+			break;
+		}
+		
+		$iter = new DataIterForumGroupMember($this->model, -1, array(
+				'guid' => intval($group->get('id')),
+				'type' => intval(get_post('type')),
+				'uid' => $uid));
 
-        $this->model->insert_group_member($iter);
-        return $this->view->redirect('forum.php?admin=groups');
-    }
-    
-    private function _process_forum_special()
-    {
-        $this->_assert_admin();
-        
-        $specials = array('poll', 'news', 'weblog');
-        $config_model = get_model('DataModelConfiguratie');
+		$this->model->insert_group_member($iter);
+		return $this->view->redirect('forum.php?admin=groups');
+	}
+	
+	private function _process_forum_special()
+	{
+		$this->_assert_admin();
+		
+		$specials = array('poll', 'news', 'weblog');
+		$config_model = get_model('DataModelConfiguratie');
 
-        foreach ($specials as $special) {
-            if (!isset($_POST[$special]))
-                continue;
-            
-            $iter = $config_model->get_iter($special . '_forum');
-            
-            $forum = $this->model->get_iter(get_post($special));
-            
-            $iter->set('value', intval($forum->get('id')));
+		foreach ($specials as $special) {
+			if (!isset($_POST[$special]))
+				continue;
+			
+			$iter = $config_model->get_iter($special . '_forum');
+			
+			$forum = $this->model->get_iter(get_post($special));
+			
+			$iter->set('value', intval($forum->get('id')));
 
-            $config_model->update($iter);
-        }
-        
-        return $this->view->redirect('forum.php?admin=special');
-    }
-    
-    private function _process_forum_groups_del_member($id)
-    {
-        $this->_assert_admin();
+			$config_model->update($iter);
+		}
+		
+		return $this->view->redirect('forum.php?admin=special');
+	}
+	
+	private function _process_forum_groups_del_member($id)
+	{
+		$this->_assert_admin();
 
-        $member = $this->model->get_group_member($id);
-        
-        $this->model->delete_group_member($member);
-    
-        return $this->view->redirect('forum.php?admin=groups');
-    }
-    */
+		$member = $this->model->get_group_member($id);
+		
+		$this->model->delete_group_member($member);
+	
+		return $this->view->redirect('forum.php?admin=groups');
+	}
+	*/
 
 	private function _create_message(\DataIterForumMessage $message, array $data, array &$errors)
 	{

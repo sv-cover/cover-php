@@ -11,18 +11,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class DeviceSessionFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('device_name', TextType::class, [
-                'label' => __('Device name'),
-                'constraints' => new Assert\NotBlank(),
-            ])
-            ->add('device_enabled', CheckboxType::class, [
-                'label'    => __('Device enabled'),
-                'required' => false,
-            ])
-            ->add('submit', SubmitType::class)
-        ;
-    }
+	public function buildForm(FormBuilderInterface $builder, array $options): void
+	{
+		$builder
+			->add('device_name', TextType::class, [
+				'label' => __('Device name'),
+				'constraints' => new Assert\NotBlank(),
+			])
+			->add('device_enabled', CheckboxType::class, [
+				'label'    => __('Device enabled'),
+				'required' => false,
+			])
+			->add('submit', SubmitType::class)
+		;
+	}
 }

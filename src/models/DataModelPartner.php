@@ -11,15 +11,15 @@ class DataIterPartner extends DataIter implements SearchResult
 	{
 		return [
 			'id',
-		    'name',
-		    'type',
-		    'url',
-		    'logo_url',
-		    'logo_dark_url',
-		    'profile',
-		    'has_banner_visible',
-		    'has_profile_visible',
-		    'created_on',
+			'name',
+			'type',
+			'url',
+			'logo_url',
+			'logo_dark_url',
+			'profile',
+			'has_banner_visible',
+			'has_profile_visible',
+			'created_on',
 		];
 	}
 

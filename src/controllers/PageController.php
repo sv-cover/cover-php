@@ -8,7 +8,7 @@ require_once 'src/framework/controllers/ControllerCRUDForm.php';
 class PageController extends \ControllerCRUDForm
 {
 	protected $view_name = 'page';
-    protected $form_type = PageFormType::class;
+	protected $form_type = PageFormType::class;
 
 	public function __construct($request, $router)
 	{
@@ -139,8 +139,8 @@ class PageController extends \ControllerCRUDForm
 
 	public function run_preview(\DataIterEditable $iter = null)
 	{
-        if (!get_auth()->logged_in())
-            throw new \UnauthorizedException();
+		if (!get_auth()->logged_in())
+			throw new \UnauthorizedException();
 
 		if ($_SERVER['REQUEST_METHOD'] != 'POST')
 			throw new \RuntimeException('This page is only intended to preview submitted content');

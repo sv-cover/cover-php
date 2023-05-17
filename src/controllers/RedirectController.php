@@ -7,25 +7,25 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
-  * A controller more or less analogous to Symfony's RedirectController. This is
-  * used to make redirecting routes.
-  *
-  * Usage:
-  * ======
-  *
-  * Available parameters when redirecting to a route:
-  * - route: the name of the route to redirect to
-  * - keepQueryParams: this will merge the $_GET params into the array with
-  *     parameter used when generating the redirect url.
-  * - permanent: if true, HTTP status 301 will be used
-  * - [name]: any parameter you want to pass to the route
-  *
-  * Available parameters when redirecting to a url:
-  * - path: the url to redirect to
-  * - permanent: if true, HTTP status 301 will be used
-  * - allowSubdomain: enables redirect to a subdomain of current domain if true
-  * - allowExternalDomain: enables redirect to an external domain if true
-  */
+ * A controller more or less analogous to Symfony's RedirectController. This is
+ * used to make redirecting routes.
+ *
+ * Usage:
+ * ======
+ *
+ * Available parameters when redirecting to a route:
+ * - route: the name of the route to redirect to
+ * - keepQueryParams: this will merge the $_GET params into the array with
+ *     parameter used when generating the redirect url.
+ * - permanent: if true, HTTP status 301 will be used
+ * - [name]: any parameter you want to pass to the route
+ *
+ * Available parameters when redirecting to a url:
+ * - path: the url to redirect to
+ * - permanent: if true, HTTP status 301 will be used
+ * - allowSubdomain: enables redirect to a subdomain of current domain if true
+ * - allowExternalDomain: enables redirect to an external domain if true
+ */
 class RedirectController extends \Controller
 {
 	public function redirect_route($parameters)

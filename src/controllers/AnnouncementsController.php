@@ -12,7 +12,7 @@ require_once 'src/framework/controllers/ControllerCRUDForm.php';
 class AnnouncementsController extends \ControllerCRUDForm
 {
 	protected $view_name = 'announcements';
-    protected $form_type = AnnouncementFormType::class;
+	protected $form_type = AnnouncementFormType::class;
 
 	public function __construct($request, $router)
 	{

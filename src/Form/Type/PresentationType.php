@@ -14,27 +14,27 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class PresentationType extends BaseType
 {
-    public function getParent(): ?string
-    {
-        return null;
-    }
+	public function getParent(): ?string
+	{
+		return null;
+	}
 
-    public function getBlockPrefix(): string
-    {
-        return 'presentation';
-    }
+	public function getBlockPrefix(): string
+	{
+		return 'presentation';
+	}
 
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
+	public function configureOptions(OptionsResolver $resolver)
+	{
+		parent::configureOptions($resolver);
 
-        $resolver->setDefault('auto_initialize', false);
-        $resolver->setDefault('content', '');
-    }
+		$resolver->setDefault('auto_initialize', false);
+		$resolver->setDefault('content', '');
+	}
 
-    public function buildView(FormView $view, FormInterface $form, array $options): void
-    {
-        parent::buildView($view, $form, $options);
-        $view->vars['content'] = $options['content'];
-    }
+	public function buildView(FormView $view, FormInterface $form, array $options): void
+	{
+		parent::buildView($view, $form, $options);
+		$view->vars['content'] = $options['content'];
+	}
 }

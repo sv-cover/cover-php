@@ -53,10 +53,10 @@ class WebCal_Calendar extends WebCal
 
 	public function export()
 	{
-	 	$out = array_merge(
-	 		['BEGIN:VCALENDAR'],
-	 		$this->export_headers()
-	 	);
+		$out = array_merge(
+			['BEGIN:VCALENDAR'],
+			$this->export_headers()
+		);
 		
 		foreach ($this->events as $event)
 			$out[] = $event->export();

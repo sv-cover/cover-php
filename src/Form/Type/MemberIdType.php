@@ -10,18 +10,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MemberIdType extends AbstractType
 {
-    public function getParent(): string
-    {
-        return IntegerType::class;
-    }
+	public function getParent(): string
+	{
+		return IntegerType::class;
+	}
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'constraints' => [
-                new NotBlank(),
-                new Member(),
-            ],
-        ]);
-    }
+	public function configureOptions(OptionsResolver $resolver): void
+	{
+		$resolver->setDefaults([
+			'constraints' => [
+				new NotBlank(),
+				new Member(),
+			],
+		]);
+	}
 }

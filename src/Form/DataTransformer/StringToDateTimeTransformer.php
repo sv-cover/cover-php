@@ -6,18 +6,18 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 class StringToDateTimeTransformer extends DateTimeToStringTransformer 
 {
-    public function transform($value): ?\DateTime
-    {
-        return parent::reverseTransform($value);
-    }
+	public function transform($value): ?\DateTime
+	{
+		return parent::reverseTransform($value);
+	}
 
-    public function reverseTransform($value): ?string
-    {
-        $transformed = parent::transform($value);
+	public function reverseTransform($value): ?string
+	{
+		$transformed = parent::transform($value);
 
-        if (empty($transformed))
-            return null;
+		if (empty($transformed))
+			return null;
 
-        return $transformed;
-    }
+		return $transformed;
+	}
 }

@@ -1,74 +1,74 @@
 <?php
-	if (!defined('IN_SITE'))
-		return;
+if (!defined('IN_SITE'))
+	return;
 
-	/** @group Configuration
-	  * Get the configuration hash
-	  *
-	  * @result a hash containing the configuration
-	  */
-	function get_config() {
-		static $config = null;
-		
-		if ($config == null)
-			include('config/config.inc');
-		
-		return $config;
-	}
+/** @group Configuration
+  * Get the configuration hash
+  *
+  * @result a hash containing the configuration
+  */
+function get_config() {
+	static $config = null;
 	
-	/** @group Configuration
-	  * Get a configuration value
-	  * @key the configuration option to get
-	  * @default the default value if the option can't be found
-	  *
-	  * @result the configuration value
-	  */
-	function get_config_value($key, $default = null)
-	{
-		$not_found = new stdClass();
+	if ($config == null)
+		include('config/config.inc');
+	
+	return $config;
+}
 
-		// First try dynamic config
-		try {
-			$value = get_dynamic_config_value($key, $not_found);
-		} catch (LogicException $e) {
-			trigger_error($e, E_USER_WARNING);
-			$value = $not_found;
-		}
+/** @group Configuration
+  * Get a configuration value
+  * @key the configuration option to get
+  * @default the default value if the option can't be found
+  *
+  * @result the configuration value
+  */
+function get_config_value($key, $default = null)
+{
+	$not_found = new stdClass();
 
-		// Then try static config
-		if ($value === $not_found)
-			$value = get_static_config_value($key, $not_found);
-
-		// and if all that fails, return default value
-		if ($value === $not_found)
-			$value = $default;
-
-		return $value;
+	// First try dynamic config
+	try {
+		$value = get_dynamic_config_value($key, $not_found);
+	} catch (LogicException $e) {
+		trigger_error($e, E_USER_WARNING);
+		$value = $not_found;
 	}
 
+	// Then try static config
+	if ($value === $not_found)
+		$value = get_static_config_value($key, $not_found);
 
-	function get_static_config_value($key, $default = null)
-	{
-		$config = get_config();
-		return isset($config[$key])
-			? $config[$key]
-			: $default;
-	}
+	// and if all that fails, return default value
+	if ($value === $not_found)
+		$value = $default;
 
-	function get_dynamic_config_value($key, $default = null)
-	{
-		static $in_call;
+	return $value;
+}
 
-		if ($in_call)
-			throw new LogicException('Calling get_dynamic_config_value while calling get_dynamic_config_value. Recursion!');
 
-		$in_call = true;
+function get_static_config_value($key, $default = null)
+{
+	$config = get_config();
+	return isset($config[$key])
+		? $config[$key]
+		: $default;
+}
 
-		$model = get_model('DataModelConfiguratie');
-		$value = $model->get_value($key, $default);
+function get_dynamic_config_value($key, $default = null)
+{
+	static $in_call;
 
-		$in_call = false;
+	if ($in_call)
+		throw new LogicException('Calling get_dynamic_config_value while calling get_dynamic_config_value. Recursion!');
 
-		return $value;
-	}
+	$in_call = true;
+
+	$model = get_model('DataModelConfiguratie');
+	$value = $model->get_value($key, $default);
+
+	$in_call = false;
+
+	return $value;
+}
 ?>

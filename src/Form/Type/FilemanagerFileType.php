@@ -10,21 +10,21 @@ use Symfony\Component\Validator\Constraints\Length;
 
 class FilemanagerFileType extends AbstractType
 {
-    public function getParent(): string
-    {
-        return TextType::class;
-    }
+	public function getParent(): string
+	{
+		return TextType::class;
+	}
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'constraints' => [
-                new Length(['max' => 255]),
-                new FilemanagerFile(),
-            ],
-            'attr' => [
-                'maxlength' => 255,
-            ],
-        ]);
-    }
+	public function configureOptions(OptionsResolver $resolver): void
+	{
+		$resolver->setDefaults([
+			'constraints' => [
+				new Length(['max' => 255]),
+				new FilemanagerFile(),
+			],
+			'attr' => [
+				'maxlength' => 255,
+			],
+		]);
+	}
 }

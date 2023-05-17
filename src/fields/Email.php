@@ -56,17 +56,17 @@ class Email implements \SignUpFieldType
 	public function build_form(FormBuilderInterface $builder)
 	{
 		$builder
-            ->add($this->name, EmailType::class, [
-                'label' => __('E-mail'),
+			->add($this->name, EmailType::class, [
+				'label' => __('E-mail'),
 				'required' => $this->required,
-                'constraints' => array_filter([
-                	$this->required ? new Assert\NotBlank() : null,
-                	new Assert\Email()
-                ]),
-                'attr' => [
-                    'placeholder' => __('E.g. john@gmail.com'),
-                ]
-            ]);
+				'constraints' => array_filter([
+					$this->required ? new Assert\NotBlank() : null,
+					new Assert\Email()
+				]),
+				'attr' => [
+					'placeholder' => __('E.g. john@gmail.com'),
+				]
+			]);
 	}
 
 	public function get_configuration_form()

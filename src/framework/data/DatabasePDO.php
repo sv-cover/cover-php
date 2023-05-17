@@ -1,8 +1,8 @@
 <?php
 /**
-  * This class provides a postgresql backend with commonly used functions
-  * like insert, update and delete
-  */
+ * This class provides a postgresql backend with commonly used functions
+ * like insert, update and delete
+ */
 
 class DatabasePDO
 {
@@ -16,10 +16,10 @@ class DatabasePDO
 	private $transaction_counter = 0;
 
 	/**
-	  * Create new postgresql database
-	  * @dbid a hash with database information (host, port, user, password, 
-	  * dbname)
-	  */
+	 * Create new postgresql database
+	 * @dbid a hash with database information (host, port, user, password, 
+	 * dbname)
+	 */
 	public function __construct(array $dbid)
 	{
 		$params = array();
@@ -53,24 +53,24 @@ class DatabasePDO
 	}
 
 	/**
-	  * Get the last occurred error
-	  *
-	  * @result a string with the last error
-	  */
+		* Get the last occurred error
+		*
+		* @result a string with the last error
+		*/
 	public function get_last_error()
 	{
 		return implode(': ', $this->resource->errorInfo());
 	}
 	
 	/**
-	  * Query the database with any query
-	  * @query a string with the query
-	  * @indices optional; true if the returned array should also 
-	  * be accessible with indices
-	  *
-	  * @result an array with for each row a hash with the values (with 
-	  * keys being the column names) or null if an error occurred
-	  */
+		* Query the database with any query
+		* @query a string with the query
+		* @indices optional; true if the returned array should also 
+		* be accessible with indices
+		*
+		* @result an array with for each row a hash with the values (with 
+		* keys being the column names) or null if an error occurred
+		*/
 	public function query($query, $indices = false, array $input_parameters = [])
 	{
 		$start = microtime(true);
@@ -122,14 +122,14 @@ class DatabasePDO
 	}
 	
 	/**
-	  * Query the database with any query and return only the first row
-	  * @query a string with the query
-		  * @indices optional; true if the returned array should also 
-		  * be accessible with indices
-	  *
-	  * @result a hash with the values (with keys being the column names)
-	  * or null if there are no results (or an error occurred)
-	  */
+	 * Query the database with any query and return only the first row
+	 * @query a string with the query
+	 * @indices optional; true if the returned array should also 
+	 * be accessible with indices
+	 *
+	 * @result a hash with the values (with keys being the column names)
+	 * or null if there are no results (or an error occurred)
+	 */
 	public function query_first($query, $indices = false, array $input_parameters = [])
 	{
 		$rows = $this->query($query, $indices, $input_parameters);
@@ -137,11 +137,11 @@ class DatabasePDO
 	}
 	
 	/**
-	  * Query the database with any query and return a single value of
-	  * the first row 
-	  * @param query a string with the query
-	  * @return result a value or null if there are no results
-	  */
+	 * Query the database with any query and return a single value of
+	 * the first row 
+	 * @param query a string with the query
+	 * @return result a value or null if there are no results
+	 */
 	public function query_value($query, array $input_parameters = [])
 	{
 		$row = $this->query_first($query, true, $input_parameters);
@@ -167,12 +167,12 @@ class DatabasePDO
 	}
 	
 	/**
-	  * Insert a new row into a table in the database
-	  * @param table the table to insert the new row in
-	  * @param values a hash containing the values to insert. The key each item
-	  * in the hash is the column name, the value the column value. Strings
-	  * will automatically be escaped (except for special SQL functions)
-	  */
+	 * Insert a new row into a table in the database
+	 * @param table the table to insert the new row in
+	 * @param values a hash containing the values to insert. The key each item
+	 * in the hash is the column name, the value the column value. Strings
+	 * will automatically be escaped (except for special SQL functions)
+	 */
 	public function insert($table, array $values)
 	{
 		$query = 'INSERT INTO "' . $table . '"';
@@ -199,7 +199,7 @@ class DatabasePDO
 		$query = $query . ' ' . $k . ') ' . $v . ');';
 
 		/* Save last insertion table so we can use it in 
-		   get_last_insert_id */
+			 get_last_insert_id */
 		$this->last_insert_table = $table;
 
 		/* Execute query */
@@ -207,30 +207,30 @@ class DatabasePDO
 	}
 	
 	/**
-	  * Get the last insert id (uses currval("<last_table>_id_sec")
-	  * This is not done automatically because not every table has a
-	  * auto increment (serial) column, and calling it on a table
-	  * which has none causes an error to occur.
-	  * @return mixed the id of the last inserted row
-	  */
+	 * Get the last insert id (uses currval("<last_table>_id_sec")
+	 * This is not done automatically because not every table has a
+	 * auto increment (serial) column, and calling it on a table
+	 * which has none causes an error to occur.
+	 * @return mixed the id of the last inserted row
+	 */
 	public function get_last_insert_id()
 	{
 		return $this->query_value(sprintf("SELECT currval('%s_id_seq'::regclass)", $this->last_insert_table));
 	}
 	
 	/**
-	  * Update an existing row in a table
-	  * @table the table to update a row in
-	  * @values a hash containing the values to insert. The key each item
-	  * in the hash is the column name, the value the column value. Strings
-	  * will automatically be escaped (except for special SQL functions)
-	  * @condition the WHERE part in the update query, this specifies which
-	  * rows will be affected
-	  * @literals optional; the fields that should be used literally in 
-	  * the query
-	  *
-	  * @result true if the update was successful, false otherwise 
-	  */
+	 * Update an existing row in a table
+	 * @table the table to update a row in
+	 * @values a hash containing the values to insert. The key each item
+	 * in the hash is the column name, the value the column value. Strings
+	 * will automatically be escaped (except for special SQL functions)
+	 * @condition the WHERE part in the update query, this specifies which
+	 * rows will be affected
+	 * @literals optional; the fields that should be used literally in 
+	 * the query
+	 *
+	 * @result true if the update was successful, false otherwise 
+	 */
 	public function update($table, array $values, $condition)
 	{
 		// Is there anything to update? Otherwise, hey, easy job!
@@ -267,11 +267,11 @@ class DatabasePDO
 	}
 
 	/**
-	  * Escape a string so it can be used in queries
-	  * @s the string to be escaped (not surrounded by quotes)
-	  *
-	  * @result the escaped string
-	  */
+	 * Escape a string so it can be used in queries
+	 * @s the string to be escaped (not surrounded by quotes)
+	 *
+	 * @result the escaped string
+	 */
 	public function escape_string($s)
 	{
 		return substr($this->resource->quote($s), 1, -1);
@@ -336,15 +336,15 @@ class DatabasePDO
 	}
 
 	/**
-	  * Delete one or more rows from a table
-	  * @table the table to delete a row from
-	  * @condition the WHERE part of the delete query. All matched rows
-	  * are deleted
-	  * @limit optional; how many rows should be deleted. This doesn't
-	  * work for postgresql but is there for compatibility
-	  *
-	  * @result true if delete was successful, false otherwise
-	  */
+	 * Delete one or more rows from a table
+	 * @table the table to delete a row from
+	 * @condition the WHERE part of the delete query. All matched rows
+	 * are deleted
+	 * @limit optional; how many rows should be deleted. This doesn't
+	 * work for postgresql but is there for compatibility
+	 *
+	 * @result true if delete was successful, false otherwise
+	 */
 	public function delete($table, $condition, array $input_parameters = [])
 	{
 		if (!$condition)
