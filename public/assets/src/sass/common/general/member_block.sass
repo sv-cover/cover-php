@@ -1,0 +1,27 @@
+.member-block
+    background-color: $background
+    @media(min-width: $widescreen)
+        display: flex
+
+
+    .member-block-details
+        padding: $box-padding
+
+        p
+            font-size: $size-6
+
+    .cover-thumbnail
+        margin-bottom: 0
+        display: block
+        min-height: 200px
+
+        @media(min-width: $widescreen)
+            width: 35%
+
+        figure
+            height: 100%
+
+            img
+                height: 100%
+                width: 100%
+                object-fit: cover
