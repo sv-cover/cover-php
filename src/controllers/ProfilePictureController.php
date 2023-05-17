@@ -13,6 +13,8 @@
 		const TYPE_PLACEHOLDER_PRIVATE = 'placeholder-private';
 		const TYPE_PLACEHOLDER_PUBLIC = 'placeholder-public';
 
+		const MAX_WIDTH = 2000;
+
 		public function __construct($request, $router)
 		{
 			$this->model = get_model('DataModelMember');
@@ -287,7 +289,7 @@
 				? $format
 				: self::FORMAT_PORTRAIT;
 
-			$width = min(intval($this->get_parameter('width') ?? 600), 600);
+			$width = min(intval($this->get_parameter('width') ?? self::MAX_WIDTH), self::MAX_WIDTH);
 
 			$height = $format == self::FORMAT_SQUARE ? $width : 0;
 
