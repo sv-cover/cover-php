@@ -83,8 +83,12 @@ class LayoutViewHelper
 					'label' => __('Become a member/contributor')
 				],
 				[
-				  'label' => __('Well-being'),
-				  'url' => $this->router->generate('page', ['id' => 213]),
+					'url' => $this->router->generate('page', ['id' => 214]),
+					'label' => __('Information for companies')
+				],
+				[
+					'label' => __('Well-being'),
+					'url' => $this->router->generate('page', ['id' => 213]),
 				],
 			]
 		];
