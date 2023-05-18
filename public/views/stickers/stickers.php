@@ -1,5 +1,5 @@
 <?php
-	
+
 class StickersView extends CRUDView
 {
 	protected $__file = __FILE__;

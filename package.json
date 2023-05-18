@@ -22,7 +22,7 @@
     "@babel/core": "^7.17.9",
     "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
     "@babel/preset-env": "^7.16.11",
-    "@tarekraafat/autocomplete.js": "^7.2.0",
+    "@tarekraafat/autocomplete.js": "^10.2.7",
     "@vizuaalog/bulmajs": "^0.10.1",
     "autoprefixer": "^10.4.7",
     "babel-loader": "^8.2.5",

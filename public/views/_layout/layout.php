@@ -38,8 +38,7 @@ class LayoutViewHelper
 			'label' => __('Education'),
 			'submenu' => [
 				['url' => $this->router->generate('page', ['id' => 149]), 'label' => __('Degree Programmes')],
-				['url' => $this->router->generate('page', ['id' => 24]),  'label' => __('Alumni')],
-				['url' => $this->router->generate('books'),               'label' => __('Order books')],
+				// ['url' => $this->router->generate('page', ['id' => 24]),  'label' => __('Alumni')],
 				['url' => $this->router->generate('page', ['id' => 27]),  'label' => __('Student info')],
 				['url' => $this->router->generate('page', ['id' => 118]), 'label' => __('Student representation')],
 				['url' => 'https://studysupport.svcover.nl/', 'target' => '_blank', 'label' => __('Exams & Summaries')],
@@ -73,11 +72,23 @@ class LayoutViewHelper
 				],
 				[
 					'url' => $this->router->generate('page', ['id' => 28]),
-					'label' => __('Sister unions')
+					'label' => __('Sister Associations')
+				],
+				[
+					'url' => $this->router->generate('page', ['id' => 215]),
+					'label' => __('History')
 				],
 				[
 					'url' => $this->router->generate('page', ['id' => 18]),
 					'label' => __('Become a member/contributor')
+				],
+				[
+					'url' => $this->router->generate('page', ['id' => 214]),
+					'label' => __('Information for companies')
+				],
+				[
+					'label' => __('Well-being'),
+					'url' => $this->router->generate('page', ['id' => 213]),
 				],
 			]
 		];
@@ -174,7 +185,15 @@ class LayoutViewHelper
 					'icon' => [
 						'img' => '/images/applications/tutoring.svg',
 					],
-				]
+				],
+				[
+					'label' => __('Submit an Idea'),
+					'url' => 'https://idea.svcover.nl/',
+					'target' => '_blank',
+					'icon' => [
+						'img' => '/images/applications/idea.svg',
+					],
+				],
 			]
 		];
 

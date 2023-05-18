@@ -11,37 +11,37 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 function get_router()
 {
-    static $router;
+	static $router;
 
-    if (!isset($router)) {
-        $file_locator = new FileLocator([__DIR__ . '/..']);
-        $loader = new YamlFileLoader($file_locator);
+	if (!isset($router)) {
+		$file_locator = new FileLocator([__DIR__ . '/..']);
+		$loader = new YamlFileLoader($file_locator);
 
-        $context = new RequestContext();
-        $context->fromRequest(get_request());
+		$context = new RequestContext();
+		$context->fromRequest(get_request());
 
-        $router = new Router(
-            $loader,
-            'routes.yaml',
-            [
-                'matcher_class' => RedirectableCompiledUrlMatcher::class,
-                'cache_dir' => get_config_value('routing_cache'),
-            ],
-            $context
-        );
-    }
+		$router = new Router(
+			$loader,
+			'routes.yaml',
+			[
+				'matcher_class' => RedirectableCompiledUrlMatcher::class,
+				'cache_dir' => get_config_value('routing_cache'),
+			],
+			$context
+		);
+	}
 
-    return $router;
+	return $router;
 }
 
 function get_request()
 {
-    static $request;
+	static $request;
 
-    if (!isset($request))
-        $request = Request::createFromGlobals();
+	if (!isset($request))
+		$request = Request::createFromGlobals();
 
-    return $request;
+	return $request;
 }
 
 
@@ -50,13 +50,13 @@ function get_request()
   */
 class RedirectableCompiledUrlMatcher extends CompiledUrlMatcher implements RedirectableUrlMatcherInterface
 {
-    public function redirect(string $path, string $route, string $scheme = null): array
-    {
-        return [
-            '_controller' => 'App\\Controller\\RedirectController',
-            'path' => $path,
-            'permanent' => true,
-            '_route' => $route,
-        ];
-    }
+	public function redirect(string $path, string $route, string $scheme = null): array
+	{
+		return [
+			'_controller' => 'App\\Controller\\RedirectController',
+			'path' => $path,
+			'permanent' => true,
+			'_route' => $route,
+		];
+	}
 }

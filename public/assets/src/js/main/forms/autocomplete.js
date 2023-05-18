@@ -11,7 +11,7 @@ import AutocompleteBase from './autocomplete_base';
  * autocomplete-src-key = string, key to identify value in object type datasource
  * autocomplete-search-engine = "strict" | "loose" (default)
  * autocomplete-no-results = string, will be displayed in case of no results. default: empty (nothing will be displayed)
- * autocomplete-threshold = number, threshold for displaying suggestions. default: 0
+ * autocomplete-threshold = number, threshold for displaying suggestions. default: 1
  * autocomplete-max-results = number, maximum number of suggestions to display at once. default: 5
  * autocomplete-mock-select = boolean data option to make autocomplete behave like a select that allows custom values
  */
@@ -54,9 +54,11 @@ class Autocomplete extends AutocompleteBase {
     initAutocomplete(config) {
         // Simple options
         let options = {
-            threshold: this.options.threshold || 0,
+            threshold: this.options.threshold || 1,
             searchEngine: this.options.searchEngine || 'loose',
-            maxResults: this.options.maxResults || 5,
+            resultsList: {
+                maxResults: this.options.maxResults || 5,
+            }
         };
 
         // Data source
@@ -76,32 +78,30 @@ class Autocomplete extends AutocompleteBase {
         }
 
         if (this.options.srcKey)
-            options.data.key = [this.options.srcKey];
+            options.data.keys = [this.options.srcKey];
 
         // No results
         if (this.sourceElement.dataset.autocompleteNoResults)
             options.noResultsText = this.sourceElement.dataset.autocompleteNoResults;
         else
-            options.noResults = () => {};
+            options.resultsList.noResults = false;
 
         if (this.options.mockSelect) {
-            options.trigger = {
-                event: ['input', 'focus'], // autoCompleteJS event
-                condition: () => true, // condition trigger
-            };
+            options.trigger = () => true;
+            options.threshold = 0;
             if (!this.options.searchEngine)
-                options.searchEngine = (query, record) => this.autocomplete.search(query, record) || record;
+                options.searchEngine = (query, record) => {
+                    return query ? this.autocomplete.search(query, record) : record;
+                };
         }
 
         return super.initAutocomplete(options);
     }
 
-    async fetchData(baseUrl) {
-        const query = this.sourceElement.value;
-
+    async fetchData(baseUrl, query) {
         // Don't fetch data if the query is too short
-        if (this.autocomplete && query.length <= this.autocomplete.threshold)
-            return;
+        if (this.autocomplete && query.length < this.autocomplete.threshold)
+            return [];
 
         // Prepare request
         const url = baseUrl + query;

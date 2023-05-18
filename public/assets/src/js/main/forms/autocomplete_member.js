@@ -23,10 +23,15 @@ class AutocompleteMember extends AutocompleteBase {
         // Set config
         config.data = {
             src: this.fetchMembers.bind(this),
-            key: ['name'],
-            cache: false
+            keys: ['name'],
+            cache: false,
         };
         config.searchEngine = 'loose';
+        config.diacritics = true;
+        config.resultItem = {
+            ...config.resultItem,
+            element: this.renderResult.bind(this),
+        };
         if (!config.noResultsText)
             config.noResultsText = 'No members found :(';
         return super.initAutocomplete(config);
@@ -78,12 +83,10 @@ class AutocompleteMember extends AutocompleteBase {
         return containerElement;
     }
 
-    async fetchMembers() {
-        const query = this.sourceElement.value;
-
+    async fetchMembers(query) {
         // Don't fetch data if the query is too short
-        if (this.autocomplete && query.length <= this.autocomplete.threshold)
-            return;
+        if (this.autocomplete && query.length < this.autocomplete.threshold)
+            return [];
 
         // Prepare request
         const url = `${AUTOCOMPLETE_MEMBER_URL}?search=${query}&limit=${AUTOCOMPLETE_MEMBER_LIMIT}`;
@@ -99,16 +102,20 @@ class AutocompleteMember extends AutocompleteBase {
         return data;
     }
 
-    handleSelection(feedback) {
+    handleSelection(event) {
         // Place ID and name in their corresponding input elements
         if (typeof this.targetElement !== 'undefined')
-            this.targetElement.value = feedback.selection.value.id;
-        this.sourceElement.value = feedback.selection.value.name;
+            this.targetElement.value = event.detail.selection.value.id;
+        this.sourceElement.value = event.detail.selection.value.name;
     }
 
-    renderResult(data, source) {
+    renderResult(item, data) {
+        // Clear item
+        while (item.firstChild)
+            item.removeChild(item.firstChild);
+
         // Use a media element for result
-        source.classList.add('profile', 'media');
+        item.classList.add('profile', 'media');
 
         // Create .image Bulma element (also serves as media-left)
         let photoElement = document.createElement('figure');
@@ -139,8 +146,8 @@ class AutocompleteMember extends AutocompleteBase {
         containerElement.append(startingYearElement);
 
         // Build result element
-        source.append(photoElement);
-        source.append(containerElement);
+        item.append(photoElement);
+        item.append(containerElement);
     }
 }
 

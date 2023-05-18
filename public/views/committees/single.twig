@@ -100,7 +100,7 @@
 {% block committee_events %}
 	{% set activities = view.get_activities(iter) %}
 	{% if activities %}
-	<section class="committee-events block">
+	<section class="committee-events block" id="events">
 		<h2 class="title is-5">{{ __('Upcoming %s events')|format(iter.naam) }}</h2>
 		{{ include('@theme/calendar/_events.twig', {events: activities, group_by_month: false}) }}
 	</section>

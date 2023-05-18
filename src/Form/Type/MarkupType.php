@@ -6,8 +6,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class MarkupType extends AbstractType
 {
-    public function getParent(): string
-    {
-        return TextareaType::class;
-    }
+	public function getParent(): string
+	{
+		return TextareaType::class;
+	}
 }
