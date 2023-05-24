@@ -68,8 +68,8 @@
 	</article>
 
 	{% set working_groups = committees|filter(c => c.type == constant('DataModelCommissie::TYPE_WORKING_GROUP')) %}
-	{% set committees = committees|filter(c => c.type == constant('DataModelCommissie::TYPE_COMMITTEE')) %}
 	{% set others = committees|filter(c => c.type == constant('DataModelCommissie::TYPE_OTHER')) %}
+	{% set committees = committees|filter(c => c.type == constant('DataModelCommissie::TYPE_COMMITTEE')) %}
 	<article class="block">
 		<div class="profile-field">
 			<div class="field-body">
