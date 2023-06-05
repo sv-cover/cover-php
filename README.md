@@ -82,3 +82,5 @@ You can use Poedit to update the \*.po and \*.mo files with cover the English tr
 Save and Update!
 
 Have fun!
+
+Changes for Luca!
