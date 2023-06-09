@@ -8,7 +8,7 @@ require_once 'src/framework/webcal.php';
 require_once 'src/framework/markup.php';
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
-use App\Form\Type\EventFormType;
+use App\Form\EventType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -23,7 +23,7 @@ class CalendarController extends \ControllerCRUDForm
 
 	protected $view_name = 'calendar';
 
-	protected $form_type = EventFormType::class;
+	protected $form_type = EventType::class;
 
 	public function __construct($request, $router)
 	{

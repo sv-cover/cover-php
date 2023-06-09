@@ -1,6 +1,7 @@
 <?php
-namespace App\Form\Type;
+namespace App\Form;
 
+use App\Form\Type\MarkupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

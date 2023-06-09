@@ -1,6 +1,10 @@
 <?php
-namespace App\Form\Type;
+namespace App\Form;
 
+use App\Form\DataTransformer\IntToBooleanTransformer;
+use App\Form\DataTransformer\StringToDateTimeTransformer;
+use App\Form\Type\FilemanagerFileType;
+use App\Form\Type\MarkupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
@@ -18,11 +22,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-use App\Form\DataTransformer\IntToBooleanTransformer;
-use App\Form\DataTransformer\StringToDateTimeTransformer;
 
-
-class EventFormType extends AbstractType
+class EventType extends AbstractType
 {
 	private $_iter;
 

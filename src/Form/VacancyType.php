@@ -1,6 +1,7 @@
 <?php
-namespace App\Form\Type;
+namespace App\Form;
 
+use App\Form\Type\MarkupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
-class VacancyFormType extends AbstractType
+class VacancyType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{

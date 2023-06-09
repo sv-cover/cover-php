@@ -4,7 +4,7 @@ namespace App\Controller;
 require_once 'src/framework/member.php';
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
-use App\Form\Type\MailinglistFormType;
+use App\Form\MailinglistType;
 use App\Form\Type\MemberIdType;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,7 +28,7 @@ class MailingListsController extends \ControllerCRUDForm
 
 	protected $view_name = 'mailinglists';
 
-	protected $form_type = MailinglistFormType::class;
+	protected $form_type = MailinglistType::class;
 
 	public function __construct(Request $request = null, RouterInterface $router = null)
 	{

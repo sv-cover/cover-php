@@ -1,5 +1,5 @@
 <?php
-namespace App\Form\Type;
+namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Form\DataTransformer\StringToDateTimeTransformer;
 
 
-class SignUpFormFormType extends AbstractType
+class SignUpFormType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
