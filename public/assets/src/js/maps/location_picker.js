@@ -26,8 +26,8 @@ class LocationPicker {
 
     constructor(options) {
         this.element = options.element;
-        this.latField = this.element.querySelector(`[name=${options.latField}]`);
-        this.lngField = this.element.querySelector(`[name=${options.lngField}]`);
+        this.latField = this.element.querySelector(`[name="${options.latField}"]`);
+        this.lngField = this.element.querySelector(`[name="${options.lngField}"]`);
 
         if (!this.latField || !this.lngField)
             throw Error('Location Picker: lat field or lng field not provided');

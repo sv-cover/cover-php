@@ -1,6 +1,6 @@
 <?php
 
-class StickersView extends CRUDView
+class StickersView extends CRUDFormView
 {
 	protected $__file = __FILE__;
 
@@ -20,12 +20,12 @@ class StickersView extends CRUDView
 		]);
 	}
 
-	public function render_delete(DataIter $iter, $success, $errors)
+	public function render_delete(DataIter $iter, $form, $success)
 	{
 		if ($success)
 			return $this->redirect($this->controller->get_referrer() ?? $this->controller->generate_url('stickers'));
 
-		return parent::render_delete($iter, $success, $errors);
+		return parent::render_delete($iter, $form, $success);
 	}
 
 	public function render_photo(DataIter $iter)
@@ -36,11 +36,6 @@ class StickersView extends CRUDView
 		header('Content-Type: image/jpeg');
 
 		return $this->controller->model()->getPhoto($iter);
-	}
-
-	public function render_add_photo(DataIter $iter, $error)
-	{
-		return $this->render('add_photo.twig', compact('iter', 'error'));
 	}
 
 	public function render_photo_thumbnail(DataIter $iter)

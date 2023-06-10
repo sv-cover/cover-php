@@ -1,11 +1,17 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUD.php';
+use App\Form\StickerType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class StickersController extends \ControllerCRUD
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
+
+class StickersController extends \ControllerCRUDForm
 {
 	protected $view_name = 'stickers';
+	protected $form_type = StickerType::class;
 
 	public function __construct($request, $router)
 	{
@@ -31,12 +37,12 @@ class StickersController extends \ControllerCRUD
 		return $this->generate_url('stickers', $parameters);
 	}
 
-	protected function _create(\DataIter $iter, array $data, array &$errors)
+	protected function _process_create(\DataIter $iter)
 	{
-		$data['toegevoegd_op'] = date('Y-m-d');
-		$data['toegevoegd_door'] = get_identity()->get('id');
+		$iter['toegevoegd_op'] = date('Y-m-d');
+		$iter['toegevoegd_door'] = get_identity()->get('id');
 
-		return parent::_create($iter, $data, $errors);
+		return parent::_process_create($iter);
 	}
 
 	public function new_iter()
@@ -54,7 +60,11 @@ class StickersController extends \ControllerCRUD
 
 	public function run_read(\DataIter $iter)
 	{
-		return $this->view->redirect($this->generate_url('stickers', ['point' => $iter['id']]));
+		return $this->view->redirect($this->generate_url('stickers', [
+			'point' => $iter['id'],
+			'lat' => $iter['lat'],
+			'lng' => $iter['lng'],
+		]));
 	}
 
 	public function run_photo(\DataIter $iter)
@@ -69,42 +79,46 @@ class StickersController extends \ControllerCRUD
 
 	protected function run_add_photo(\DataIter $iter)
 	{
-		$error = null;
+		if (!get_policy($this->model)->user_can_update($iter))
+			throw new \UnauthorizedException(__("You're not allowed to upload a photo for this sticker."));
 
-		if ($iter && $this->_form_is_submitted('add_photo', $iter))
-		{
-			if (!get_policy($this->model)->user_can_update($iter))
-				$error = __("You're not allowed to upload a photo for this sticker");
+		$form = $this->createFormBuilder()
+			->add('photo', FileType::class, [
+				'label' => __('Photo'),
+				'help' => __('Add a photo to this sticker. Only JPEG-images are allowed.'),
+				'constraints' => [
+					new Assert\Image([
+						'maxSize' => ini_get('upload_max_filesize'),
+						'mimeTypes' => [
+							'image/jpeg',
+						],
+						'mimeTypesMessage' => __('Please upload a valid JPEG-image.'),
+						'sizeNotDetectedMessage' => __('The uploaded file doesn’t appear to be an image.'),
+					])
+				],
+				'attr' => [
+					'accept' => 'image/jpeg',
+				],
+			])
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
 
-			elseif ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
-				$error = sprintf(__('The image file is too large. The maximum file size is %s.'),
-					ini_get('upload_max_filesize') . ' bytes');
+		if ($form->isSubmitted() && $form->isValid()) {
+			$file = $form['photo']->getData();
 
-			elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
-				$error = sprintf(__('The image hasn’t been uploaded correctly. PHP reports error code %d.'), $_FILES['photo']['error']);
+			// Set the new photo
+			$this->model->setPhoto($iter, fopen($file->getPathname(), 'rb'));
 
-			elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
-				$error = __('The image file is not a file uploaded by PHP.');
+			// Delete the old one from the cache
+			$this->view->delete_thumbnail($iter);
 
-			elseif (!($image_meta = @getimagesize($_FILES['photo']['tmp_name'])))
-				$error = __("The uploaded file doesn't appear to be an image.");
-
-			else {
-				// No errors!
-
-				// Set the new photo
-				$this->model->setPhoto($iter, fopen($_FILES['photo']['tmp_name'], 'rb'));
-
-				// Delete the old one from the cache
-				$this->view->delete_thumbnail($iter);
-
-				// Ensure we're redirecting to point
-				$next_url = edit_url($this->get_referrer() ?? $this->generate_url('stickers'), ['point' => $iter['id']]);
-				return $this->view->redirect($next_url);
-			}
+			// Ensure we're redirecting to point
+			$next_url = edit_url($this->get_referrer() ?? $this->generate_url('stickers'), ['point' => $iter['id']]);
+			return $this->view->redirect($next_url);
 		}
 
-		return $this->view->render_add_photo($iter, $error);
+		return $this->view->render('add_photo.twig', ['iter' => $iter, 'form' => $form->createView()]);
 	}
 
 	protected function run_geojson()

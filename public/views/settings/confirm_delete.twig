@@ -3,7 +3,6 @@
 {% block title __('Delete setting') ~ ' – ' ~ parent() %}
 
 {% block content %}
-
 <div class="modal is-static">
     <div class="modal-card">
         <header class="modal-card-head">
@@ -14,7 +13,7 @@
                 <div class="field">
                     <p>{{ __('Are you sure you want to delete the key <em>%s</em>?')|format(iter.key|e('html'))|raw }}</p>
                 </div>
-                {% set submit_button = form_widget(form.submit, {'label': __('Delete setting'), 'attr': {'form': 'delete-setting-form'}}) %}
+                {% set submit_button = form_widget(form.submit, {'label': __('Delete setting'), 'attr': {'form': 'delete-setting-form', 'class': 'is-danger'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

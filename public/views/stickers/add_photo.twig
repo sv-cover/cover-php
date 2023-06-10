@@ -7,38 +7,26 @@
 			<p class="modal-card-title">{{ __('Upload photo for sticker') }}</p>
 		</header>
 		<section class="modal-card-body">
-			<form id="sticker-photo-form" method="POST" action="{{ path('stickers', {view: 'add_photo', id: iter.id, referrer: controller.get_referrer()}) }}" enctype="multipart/form-data">
-				{{ html_nonce('add_photo', iter) }}
+			{{ form_start(form, {'id': 'sticker-photo-form', 'action': path('stickers', {view: 'add_photo', id: iter.id, referrer: controller.get_referrer()}) }) }}
+				{# Global errors #}
+				{{ form_errors(form) }}
+
+				{# Fields #}
 				<div class="field">
 					<div class="control">
-						<div class="file">
-							<label class="file-label" for="field-photo">
-								<input id="field-photo" class="file-input" type="file" name="photo" accept="image/jpeg">
-								<span class="file-cta">
-									<span class="file-icon">
-										<i class="fas fa-upload" aria-hidden="true"></i>
-									</span>
-									<span class="file-label">
-										{{ __('Select photo…') }}
-									</span>
-								</span>
-							</label>
-						</div>
+						{{ form_widget(form.photo, {'cta': __('Select photo…'), 'attr': {'class': 'has-name is-fullwidth'}}) }}
 					</div>
-					{% if error %}
-						<p class="help is-danger">
-							{{ error }}
-						</p>
-					{% endif %}
-					<p class="help">
-						{{ __('Add a photo to this sticker. Only JPEG-images are allowed.') }}
-					</p>
+					{{ form_errors(form.photo) }}
+					{{ form_help(form.photo) }}
 				</div>
-			</form>
+
+				{# Cache submit button #}
+				{% set submit_button = form_widget(form.submit, {'label': __('Upload photo'), 'attr': {'form': 'sticker-photo-form', 'class': 'is-danger'}}) %}
+			{{ form_end(form) }}
 		</section>
 		<footer class="modal-card-foot">
 			<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
-			<button type="submit" class="button is-danger" form="sticker-photo-form">{{ __('Upload photo') }}</button>
+			{{ submit_button|raw }}
 		</footer>
 	</div>
 </div>
