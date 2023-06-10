@@ -8,7 +8,7 @@
 	action: path('calendar', {view: 'delete', agenda_id: iter.id}),
 }) }}
 	<div class="field">
-		<p>{{ __('Are you certain you want to delete the event <em>%s</em>?')|format(iter.kop|e('html'))|raw }}</p>
+		<p>{{ __('Are you sure you want to delete the event <em>%s</em>?')|format(iter.kop|e('html'))|raw }}</p>
 	</div>
 	<div class="field">
 		<div class="control buttons">
