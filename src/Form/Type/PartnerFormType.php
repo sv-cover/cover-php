@@ -53,7 +53,7 @@ class PartnerFormType extends AbstractType
 				'required' => false,
 			])
 			->add('has_profile_visible', CheckboxType::class, [
-				'label'    => __('Show profile on carreer page'),
+				'label'    => __('Show profile on career page'),
 				'required' => false,
 			])
 			->add('submit', SubmitType::class)
