@@ -33,7 +33,7 @@ class PartnerFormType extends AbstractType
 			])
 			->add('url', UrlType::class, [
 				'label' => __('URL'),
-				'default_protocol' => null, // if not, it renders as text typeâ€¦
+				'default_protocol' => null, // if not, it renders as text typeÉ
 				'constraints' => new Assert\Url(),
 			])
 			->add('logo_url', FilemanagerFileType::class, [
@@ -53,7 +53,7 @@ class PartnerFormType extends AbstractType
 				'required' => false,
 			])
 			->add('has_profile_visible', CheckboxType::class, [
-				'label'    => __('Show profile on carreer page'),
+				'label'    => __('Show profile on career page'),
 				'required' => false,
 			])
 			->add('submit', SubmitType::class)
