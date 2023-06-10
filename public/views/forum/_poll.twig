@@ -54,7 +54,7 @@
 					{% if not global.auth.logged_in %}
 						<a class="level-item button" href="{{ login_path() }}">{{ __('Log in to vote') }}</a>
 					{% elseif global.models.Poll.can_create_new_poll %}
-						<a class="level-item button" href="{{ path('forum', {view: 'create_poll', thread: poll.forum_id}) }}">{{ __('New poll ') }}</a>
+						<a class="level-item button" href="{{ path('forum', {view: 'create_poll', forum: poll.forum_id}) }}">{{ __('New poll ') }}</a>
 					{% endif %}
 				</div>
 			</div>
