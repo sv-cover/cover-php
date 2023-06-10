@@ -33,7 +33,7 @@ class PartnerFormType extends AbstractType
 			])
 			->add('url', UrlType::class, [
 				'label' => __('URL'),
-				'default_protocol' => null, // if not, it renders as text typeÉ
+				'default_protocol' => null, // if not, it renders as text typeâ€¦
 				'constraints' => new Assert\Url(),
 			])
 			->add('logo_url', FilemanagerFileType::class, [
