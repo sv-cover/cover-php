@@ -140,8 +140,6 @@ class AutocompleteBase {
     }
 
     monitorPosition() {
-        console.log('hoi');
-
         let ticking = false;
 
         // Update resultslist position on scroll.
