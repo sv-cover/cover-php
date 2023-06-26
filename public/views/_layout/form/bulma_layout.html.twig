@@ -34,6 +34,20 @@
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 {%- endblock textarea_widget -%}
 
+
+{%- block choice_widget -%}
+    {% if expanded and 'chips' in attr.class|default('') %}
+        {%- set wrapper_attr = attr|merge({'class': ''|trim}) -%}
+        <div {% with { attr: wrapper_attr } %}{{ block('widget_container_attributes') }}{% endwith %}>
+            {{- block('choice_widget_expanded_chips') -}}
+        </div>
+    {% elseif expanded %}
+        {{- block('choice_widget_expanded') -}}
+    {% else %}
+        {{- block('choice_widget_collapsed') -}}
+    {% endif %}
+{%- endblock choice_widget -%}
+
 {%- block choice_widget_collapsed -%}
     {%- if wrapper_attr is not defined -%}
         {%- set wrapper_attr = {} -%}
@@ -70,7 +84,6 @@
         {%- for child in form %}
             <div class="control">
                 {{- form_widget(child, {
-                    parent_label_class: label_attr.class|default(''),
                     translation_domain: choice_translation_domain,
                     valid: valid,
                     show_mark: false,
@@ -80,13 +93,54 @@
     </div>
 {%- endblock choice_widget_expanded %}
 
+
+{%- block choice_widget_expanded_chips -%}
+    {% for group_label, choice in choices %}
+        {%- if choice is iterable -%}
+            <fieldset class="block">
+                <legend class="label">
+                    {{ choice_translation_domain is same as(false) ? group_label : group_label|trans({}, choice_translation_domain) }}
+                </legend>
+                <div class="chips">
+                    {%- with {choices: choice} -%}{{- block('choice_widget_expanded_chips') -}}{%- endwith -%}
+                </div>
+            </fieldset>
+        {%- else -%}
+            {# Find child #}
+            {%- set child = form|filter(c => not c.isRendered() and c.vars.value == choice.value)|first -%}
+            {# {%- set child.vars.attr = child.vars.attr|merge({'class': (child.vars.attr.class|default('') ~ ' chip')|trim}) -%} #}
+            {%- if child -%}
+                {{- form_widget(child, {
+                    translation_domain: choice_translation_domain,
+                    valid: valid,
+                    show_mark: false,
+                    attr: {
+                        class: 'chip',
+                    },
+                }) -}}
+            {%- endif -%}
+        {%- endif -%}
+    {% endfor %}
+{%- endblock choice_widget_expanded_chips %}
+
 {%- block checkbox_widget -%}
-    {{- form_label(form, null, { widget: parent() }) -}}
+    {%- set widget = parent() -%}
+    {{- block('checkbox_radio_widget') -}}
 {%- endblock checkbox_widget -%}
 
 {%- block radio_widget -%}
-    {{- form_label(form, null, { widget: parent() }) -}}
+    {%- set widget = parent() -%}
+    {{- block('checkbox_radio_widget') -}}
 {%- endblock radio_widget %}
+
+{%- block checkbox_radio_widget -%}
+    {%- if 'chip' in attr.class|default('')  or 'switch' in attr.class|default('')  -%}
+        {{- widget|raw -}}
+        {{- form_label(form, null, { widget: '', label_class: '' }) -}}
+    {%- else -%}
+        {{- form_label(form, null, { widget: widget }) -}}
+    {%- endif -%}
+{%- endblock checkbox_radio_widget %}
 
 {%- block button_widget -%}
     {%- if is_primary is not defined -%}
@@ -204,12 +258,16 @@
 {%- endblock form_label_content -%}
 
 {% block checkbox_label -%}
-    {% set label_class = 'checkbox' %}
+    {%- if label_class is not defined -%}
+        {% set label_class = 'checkbox' %}
+    {%- endif -%}
     {{- block('checkbox_radio_label') -}}
 {%- endblock checkbox_label %}
 
 {% block radio_label -%}
-    {% set label_class = 'radio' %}
+    {%- if label_class is not defined -%}
+        {% set label_class = 'radio' %}
+    {%- endif -%}
     {{- block('checkbox_radio_label') -}}
 {%- endblock radio_label %}
 
