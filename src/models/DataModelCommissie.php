@@ -531,43 +531,43 @@ class DataModelCommissie extends DataModel implements SearchProvider
 		return $this->_row_to_iter($row);
 	}
 
-	public function get_committee_choices_for_iter(DataIter $iter, string $committee_id_field = 'committee_id')
+	public function get_committee_choices($show_own = true)
 	{
-		$options = [
-			'member' => [],
-			'all' => []
-		];
-
-		// At least populate my list of committees
-		foreach (\get_identity()->member()->get('committees') as $committee)
-			$options['member'][$this->get_naam($committee)] = $committee;
-
-		// And if I am very important, also populate the all list. That there are doubles is not a problem.
-		if (
+		$is_admin = (
 			\get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| \get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
 			|| \get_identity()->member_in_committee(COMMISSIE_EASY)
-		)
-			foreach ($this->get(null, true) as $committee)
-				$options['all'][$committee->get('naam')] = $committee->get_id();
+		);
 
-		$result = [
-			__('Your committees') => $options['member'],
-			__('All committees') => $options['all']
+		$iters = $this->get(null, true);
+
+		$options = [
+			'member' => [],
+			'committees' => [],
+			'working_groups' => [],
+			'other' => [],
+			'archived' => [],
 		];
 
-		// Add the current committee as option if it isn't already (for editing)
-		if (
-			$iter
-			&& !empty($iter[$committee_id_field])
-			&& !in_array($iter[$committee_id_field], array_merge($options['member'], $options['all']))
-		)
-			return array_merge(
-				[$this->get_naam($iter[$committee_id_field]) => $iter[$committee_id_field]],
-				$result
-			);
-	
-		// Empty groups will be pruned anyway
-		return $result;
+		foreach ($iters as $iter) {
+			if ($show_own && $is_admin && \get_identity()->member_in_committee($iter->get_id()))
+				$options['member'][$iter->get('naam')] = $iter->get_id();
+			if ($iter['hidden'])
+				$options['archived'][$iter->get('naam')] = $iter->get_id();
+			elseif ($iter['type'] === \DataModelCommissie::TYPE_COMMITTEE)
+				$options['committees'][$iter->get('naam')] = $iter->get_id();
+			elseif ($iter['type'] === \DataModelCommissie::TYPE_WORKING_GROUP)
+				$options['working_groups'][$iter->get('naam')] = $iter->get_id();
+			else
+				$options['other'][$iter->get('naam')] = $iter->get_id();
+		}
+
+		return [
+			__('Your committees') => $show_own && $is_admin ? $options['member'] : [],
+			__('Committees') => $options['committees'],
+			__('Working groups') => $options['working_groups'],
+			__('Others') => $options['other'],
+			__('Archived') => $options['archived'],
+		];
 	}
 }

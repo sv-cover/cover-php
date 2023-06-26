@@ -1,6 +1,7 @@
 <?php
 namespace App\Form;
 
+use App\Form\Type\CommitteeIdType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,6 +22,7 @@ class SignUpFormType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		$builder
+			->add('committee_id', CommitteeIdType::class)
 			->add('open_on', DateTimeType::class, [
 				'label' => __('Open date'),
 				'help' => __("People will be able to register from this date. Make sure you don't open registrations before you finished configuring the sign-up form."),
@@ -58,15 +60,6 @@ class SignUpFormType extends AbstractType
 				'help' => __('If you link the form to an event, it will be shown next on the event page.'),
 				'placeholder' => __('— No event —'),
 				'required' => false,
-			]);
-
-			// No additional validation is needed, getCommitteeChoices makes sure we
-			// can only pick options we're allowed to pick.
-			$form->add('committee_id', ChoiceType::class, [
-				'label' => __('Committee'),
-				'choice_loader' => new CallbackChoiceLoader(function() use ($iter) {
-					return \get_model('DataModelCommissie')->get_committee_choices_for_iter($iter, 'commissie');
-				}),
 			]);
 		});
 

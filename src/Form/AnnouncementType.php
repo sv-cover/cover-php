@@ -2,6 +2,7 @@
 namespace App\Form;
 
 use App\Form\Type\MarkupType;
+use App\Form\Type\CommitteeIdType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,7 +14,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class AnnouncementFormType extends AbstractType
+class AnnouncementType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
@@ -33,21 +34,10 @@ class AnnouncementFormType extends AbstractType
 			->add('message', MarkupType::class, [
 				'label' => __('Message'),
 			])
+			->add('committee_id', CommitteeIdType::class, [
+				'label' => __('Post as committee'),
+			])
 			->add('submit', SubmitType::class)
 		;
-
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-			$iter = $event->getData();
-			$form = $event->getForm();
-
-			// No additional validation is needed, getCommitteeChoices makes sure we
-			// can only pick options we're allowed to pick.
-			$form->add('committee_id', ChoiceType::class, [
-				'label' => __('Post as committee'),
-				'choice_loader' => new CallbackChoiceLoader(function() use ($iter) {
-					return \get_model('DataModelCommissie')->get_committee_choices_for_iter($iter);
-				}),
-			]);
-		});
 	}
 }
