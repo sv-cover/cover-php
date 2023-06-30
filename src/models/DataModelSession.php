@@ -94,7 +94,7 @@ class DataModelSession extends DataModel
 
 	public function getActive($member_id)
 	{
-		$query = sprintf("SELECT * FROM {$this->table} WHERE member_id = %d AND last_active_on + timeout > NOW()", $member_id);
+		$query = sprintf("SELECT * FROM {$this->table} WHERE member_id = %d AND last_active_on + timeout > NOW() ORDER BY created_on", $member_id);
 
 		$result = $this->db->query($query);
 

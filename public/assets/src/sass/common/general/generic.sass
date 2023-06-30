@@ -76,6 +76,26 @@ button.card-header-icon
 .button.is-baseline
     vertical-align: baseline
 
+// TODO: implement in cover style system
+.button.is-ghost
+    background: none
+    border-color: transparent
+    color: $link
+    text-decoration: none
+    box-shadow: none
+    &:hover,
+    &.is-hovered
+        color: $link-hover
+        text-decoration: underline
+    .icon.is-small
+        height: 1em
+        width: 1em
+
+// TODO: implement in cover style system
+.button.p-0
+    padding: 0
+    height: auto
+
 .image.is-centered
     margin-left: auto
     margin-right: auto
