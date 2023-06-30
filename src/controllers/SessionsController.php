@@ -97,15 +97,6 @@ class SessionsController extends \Controller
 		]);
 	}
 
-	protected function run_view_sessions()
-	{
-		// TODO: is this view still used?
-		if (!get_auth()->logged_in())
-			throw new \UnauthorizedException('You need to login to manage your sessions');
-
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'sessions', 'lid' => get_identity()->get('id')]));
-	}
-
 	protected function run_view_delete()
 	{
 		if (!get_auth()->logged_in())
@@ -230,9 +221,6 @@ class SessionsController extends \Controller
 	function run_impl()
 	{
 		switch ($this->get_parameter('view')) {
-			case 'sessions':
-				return $this->run_view_sessions();
-
 			case 'delete':
 				return $this->run_view_delete();
 
@@ -247,7 +235,7 @@ class SessionsController extends \Controller
 
 			default:
 				return get_auth()->logged_in()
-					? $this->run_view_sessions()
+					? $this->view->redirect($this->generate_url('profile', ['view' => 'sessions', 'lid' => get_identity()->member()->get_id()]))
 					: $this->run_view_login();
 		}
 	}
