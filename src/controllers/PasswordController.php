@@ -1,6 +1,13 @@
 <?php
 namespace App\Controller;
 
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 require_once 'src/framework/controllers/Controller.php';
 
 class PasswordController extends \Controller
@@ -16,17 +23,15 @@ class PasswordController extends \Controller
 		parent::__construct($request, $router);
 	}
 
-	protected function _is_good_password(\DataIterMember $member, $password)
+	public function validate_password($value, ExecutionContextInterface $context, $payload, $member)
 	{
-		// Remove easy to guess stuff
-		$effective_password = str_ireplace([$member['voornaam'],$member['achternaam'],'cover','password'], '', $password);
+		$effective_password = str_ireplace([$member['voornaam'],$member['achternaam'],'cover','password'], '', $value);
 
 		// Short passwords, or very common passwords, are stupid.
-		if (strlen($effective_password) < 3)
-			return false;
-
-		// Anything else is ok for this website :P
-		return true;
+		if (strlen($effective_password) < 6)
+			$context->buildViolation(__('Your password is too short or too predictable. Try to make it longer and with more different characters.'))
+				->atPath('password')
+				->addViolation();
 	}
 
 	protected function run_reset()
@@ -37,63 +42,73 @@ class PasswordController extends \Controller
 			return $this->run_request();
 		}
 
-		$errors = [];
+		$form = $this->createFormBuilder()
+			->add('password', RepeatedType::class, [
+				'type' => PasswordType::class,
+				'invalid_message' => __('The two passwords are not the same.'),
+				'required' => true,
+				'first_options'  => ['label' => 'New Password'],
+				'second_options' => ['label' => 'Repeat Password'],
+				'constraints' => [
+					new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) use ($token) {
+						return $this->validate_password($value, $context, $payload, $token['member']);
+					}),
+				],
+			])
+			->add('submit', SubmitType::class, [
+				'label' => __('Change password'),
+			])
+			->getForm();
+		$form->handleRequest($this->get_request());
 
-		$success = null;
+		if ($form->isSubmitted() && $form->isValid()) {
+			$this->member_model->set_password($token['member'], $form['password']->getData());
 
-		if ($this->_form_is_submitted('reset', $token)) {
-			if (!$this->_is_good_password($token['member'], $_POST['password'])) {
-				$success = false;
-				$errors[] = 'password';
-			}
-			elseif ($_POST['password'] !== $_POST['password_repeat']) {
-				$success = false;
-				$errors[] = 'password_repeat';
-			}
-			else {
-				$this->member_model->set_password($token['member'], $_POST['password']);
+			$this->model->invalidate_all($token['member']);
 
-				$success = true;
-
-				$this->model->invalidate_all($token['member']);
-			}
+			return $this->view->render('reset_processed.twig');
 		}
 
-		return $this->view->render('reset_form.twig', compact('token', 'errors', 'success'));
+		return $this->view->render('reset_form.twig', [
+			'form' => $form->createView(),
+		]);
 	}
 
 	protected function run_request()
 	{
-		$success = null;
+		$form = $this->createFormBuilder()
+			->add('email', EmailType::class, [
+				'label' => __('Email'),
+				'constraints' => [new Assert\NotBlank(), new Assert\Email()],
+			])
+			->add('submit', SubmitType::class, [
+				'label' => __('Reset password'),
+			])
+			->getForm();
+		$form->handleRequest($this->get_request());
 
-		$email_address = null;
-
-		try {
-			if ($this->_form_is_submitted('request')) {
-				$email_address = $_POST['email'];
-
-				$member = $this->member_model->get_from_email($email_address);
+		if ($form->isSubmitted() && $form->isValid()) {
+			try {
+				$member = $this->member_model->get_from_email($form['email']->getData());
 
 				$token = $this->model->create_token_for_member($member);
 
-				$language_code = in_array($member['taal'], ['en', 'nl']) ? $member['taal'] : 'en';
-
-				$variables = array(
+				$email = parse_email_object("password_reset_en.txt", [
 					'naam' => $member['voornaam'],
 					'link' => $token['link']
-				);
-
-				$email = parse_email_object("password_reset_{$language_code}.txt", $variables);
-
+				]);
 				$email->send($member['email']);
-
-				$success = true;
+			} catch (\DataIterNotFoundException $e) {
+				// Do nothing, we don't want to give membership status based on email
 			}
-		} catch (\DataIterNotFoundException $e) {
-			$success = false;
+			return $this->view->render('request_processed.twig', [
+				'email' => $form['email']->getData(),
+			]);
 		}
 
-		return $this->view->render('request_form.twig', compact('email_address', 'success'));
+		return $this->view->render('request_form.twig', [
+			'form' => $form->createView(),
+		]);
 	}
 
 	protected function run_impl()

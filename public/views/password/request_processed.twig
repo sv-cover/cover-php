@@ -1,0 +1,10 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Forgot your password?') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Forgot your password?') }}</h1>
+<div class="content">
+	<p>{{ __("If we could find an account for %s, we've send a password reset email. Follow the instructions in the mail to confirm your request for a new password.")|format(email) }}</p>
+</div>
+{% endblock %}
