@@ -163,11 +163,15 @@
 			<p class="help">{{ __("Only required if your IBAN [i]does not[/i] start with 'NL'")|parse_markup }}</p>
 		</div>
 
-		<div class="field">
-			<div class="control">
-				{{ html_input_checkbox('authorization', null, errors=errors, required=true, label=__('I hereby authorize Cover to automatically deduct the membership fee from my bank account one time per year. (mandatory)')) }}
-			</div>
-		</div>
+        <div class="field">
+            <h3 class="label">SEPA direct debit mandate</h3>
+            <div class="control">
+                {{ html_input_checkbox('sepa_mandate', null, errors=errors, required=true, label=__('I hereby authorize Cover to automatically deduct the membership fee and additional costs for attending activities, and buying food and drinks from my bank account for de duration of my membership. (required)')) }}
+            </div>
+            <p class="help">
+                {{ __('By checking this box, you authorise (A) study association Cover (ID: NL48ZZZ400267070000) to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with the instructions from the Creditor. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank.') }}
+            </p>
+        </div>
 
 		<div class="field">
 			<h2 class="title is-5">{{ __('Mailing list') }}</h2>
@@ -195,10 +199,16 @@
 			{% endif %}
 		</div>
 		<div class="field">
-			<div class="box content">
+			<div class="content">
 				{{ voorwaarden.locale_content|parse_markup }}
 			</div>
 		</div>
+
+        <div class="field">
+            <div class="control">
+                {{ html_input_checkbox('terms_conditions_agree', null, errors=errors, required=true, label=__('I agree to the terms and conditions.')) }}
+            </div>
+        </div>
 	
 		<div class="field">
 			<h2 class="title is-5">{{ __('Intelligence test') }}</h2>

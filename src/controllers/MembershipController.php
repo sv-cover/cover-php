@@ -83,7 +83,8 @@ class MembershipController extends \Controller
 				function($x) { return strlen($x) == 0 || ctype_digit($x); },
 				function($x) { return ltrim($x, 'sS'); }],
 			'membership_year_of_enrollment' => [function($x) { return $x > 1900 && $x < 2100; }],
-			'authorization' => [function($x) { return $x == 'yes'; }],
+			'sepa_mandate' => [function($x) { return $x == 'yes'; }],
+            'terms_conditions_agree' => [function($x) { return $x == 'yes'; }],
 			'option_mailing' => [],
 			'spam' => [function($x) { return in_array(strtolower($_POST['spam']), array('groen', 'green', 'coverrood', 'cover red')); }]
 		);
