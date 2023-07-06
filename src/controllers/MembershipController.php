@@ -61,7 +61,6 @@ class MembershipController extends \Controller
 						? sprintf('%s-%s-%s', $match[3], $match[2], $match[1])
 						: $x;
 				}],
-			'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
 			'iban' => [
 				function($x) {
 					if (!empty(get_config_value('no_iban_string'))) {
