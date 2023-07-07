@@ -84,7 +84,6 @@ class MembershipController extends \Controller
 			'membership_year_of_enrollment' => [function($x) { return $x > 1900 && $x < 2100; }],
 			'sepa_mandate' => [function($x) { return $x == 'yes'; }],
             'terms_conditions_agree' => [function($x) { return $x == 'yes'; }],
-			'option_mailing' => [],
 			'spam' => [function($x) { return in_array(strtolower($_POST['spam']), array('groen', 'green', 'coverrood', 'cover red')); }]
 		);
 
@@ -118,6 +117,14 @@ class MembershipController extends \Controller
 			}
 		}
 
+		/* Mailing is opt-out. We can do this, because assocations are allowed to contact their members 
+		about activities without consent, as long as it is non-commercial. See this link (at nieuwsbrief)
+		https://www.declercq.com/kennisblog/wat-betekent-de-avg-voor-verenigingen/
+		For now, secretary subscribes members to this one, so send option_mailing to secretary…
+		*/
+		// TODO: Make mailing officially opt-out, with migration to explicitly opt-out everyone who didn't opt-in first…
+		$data['option_mailing'] = true;
+
 		if (count($errors) > 0)
 			return $this->view->render_form($errors);
 		
@@ -140,7 +147,7 @@ class MembershipController extends \Controller
 
 		$this->_send_confirmation_mail($confirmation_code);
 
-		return $this->view->redirect($this->generate_url('join', ['verzonden' => 'true']));
+		return $this->view->redirect($this->generate_url('join', ['submitted' => 'true']));
 	}
 
 	private function _send_confirmation_mail($confirmation_code)
@@ -343,7 +350,7 @@ class MembershipController extends \Controller
 			return $this->_process_lidworden();
 		elseif (isset($_GET['confirmation_code']) && !isset($_GET['view']))
 			return $this->_process_confirm($_GET['confirmation_code']);
-		else if (isset($_GET['verzonden']))
+		else if (isset($_GET['submitted']))
 			return $this->view->render_submitted();
 		else if (isset($_GET['confirmed']))
 			return $this->view->render_confirmed();
