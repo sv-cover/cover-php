@@ -91,11 +91,11 @@
 		</div>
 
 		<div class="field">
-			{{ html_label(__('E-mail address'), 'email_address', errors=errors, required=true) }}
+			{{ html_label(__('Email address'), 'email_address', errors=errors, required=true) }}
 			<div class="control">
 				{{ html_input_text('email_address', null, errors=errors, required=true, type='email') }}
 			</div>
-			<p class="help">{{ __('You will receive a confirmation email with a link. Your application will be processed after you have clicked the link.') }}</p>
+			<p class="help">{{ __('Please use your personal email, NOT your university email. Then we can still contact you about your membership after your graduation. We’ll send you an email with a confirmation link after completing this form.') }}</p>
 		</div>
 
 		<div class="field">
@@ -157,7 +157,7 @@
         <div class="field">
             <h3 class="label">SEPA direct debit mandate</h3>
             <div class="control">
-                {{ html_input_checkbox('sepa_mandate', null, errors=errors, required=true, label=__('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for de duration of my membership. (required)')) }}
+                {{ html_input_checkbox('sepa_mandate', null, errors=errors, required=true, label=__('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for the duration of my membership. (required)')) }}
             </div>
             <p class="help">
                 {{ __('By checking this box, you authorise (A) study association Cover (ID: NL48ZZZ400267070000) to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with the instructions from the Creditor. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank.') }}
