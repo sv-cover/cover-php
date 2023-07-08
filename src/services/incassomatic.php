@@ -37,31 +37,52 @@ class API
 		return $this->_get($this->api_root . 'contracten/', ['cover_id' => $member->get_id()]);
 	}
 
+	public function getCurrentContract(\DataIterMember $member)
+	{
+		$contracts = $this->getContracts($member);
+
+		// Only show valid contracts
+		return current(array_filter($contracts, function($contract) { return $contract->is_geldig; }));
+	}
+
 	public function getContractTemplatePDF(\DataIterMember $member)
 	{
 		return $this->_stream(sprintf('%scontracten/templates/%d', $this->api_root, $member['id']));
 	}
 
-	protected function _getRequest($url, array $data)
+	public function createContract(\DataIterMember $member)
 	{
-		$query = http_build_query($data);
+		$data = [
+			'cover_id' => $member->get_id(),
+			'start_datum' => date('Y-m-d'),
+			'method' => 'digital',
+		];
+		return $this->_post($this->api_root . 'contracten/', [], $data);
+	}
+
+	protected function _createRequest($method, $url, array $params, array $data = [])
+	{
+		$query = http_build_query($params);
+		$body = http_build_query($data);
 
 		$headers = array(
+			'Content-type' => 'application/x-www-form-urlencoded',
 			'Date' => gmdate('D, d M Y H:i:s T'),
 			'Host' => parse_url($url, PHP_URL_HOST),
 			'X-App' => $this->api_app_id,
-			'X-Hash' => sha1($query . $this->api_app_secret)
+			'X-Hash' => sha1($query . $body . $this->api_app_secret),
 		);
 
 		$options = array(
 			'http' => array(
+				'content' => $body,
 				'header'  => implode("", array_map(
 					function($key, $value) {
 						return sprintf("%s: %s\r\n", $key, $value);
 					},
 					array_keys($headers),
 					array_values($headers))),
-				'method'  => 'GET',
+				'method'  => $method,
 				'ignore_errors' => true
 			)
 		);
@@ -74,9 +95,9 @@ class API
 		];
 	}
 
-	protected function _get($url, array $data = array())
+	protected function _request($method, $url, array $params = [], array $data = [])
 	{
-		$request = $this->_getRequest($url, $data);
+		$request = $this->_createRequest($method, $url, $params, $data);
 
 		$response = \file_get_contents($request->url, false, $request->context);
 
@@ -89,17 +110,27 @@ class API
 		if (!$response)
 			throw new \RuntimeException('Could not do post request to ' . $url);
 
-		$data = json_decode($response);
+		$responseData = json_decode($response);
 
-		if ($data === null)
+		if ($responseData === null)
 			throw new \RuntimeException('Could not decode response as JSON: ' . $response);
 
-		return $data;
+		return $responseData;
 	}
 
-	protected function _stream($url, array $data = array())
+	protected function _get($url, array $params = [])
 	{
-		$request = $this->_getRequest($url, $data);
+		return $this->_request('GET', $url, $params);
+	}
+
+	protected function _post($url, array $params = [], array $data = [])
+	{
+		return $this->_request('POST', $url, $params, $data);
+	}
+
+	protected function _stream($url, array $params = [])
+	{
+		$request = $this->_createRequest('GET', $url, $params);
 		return fopen($request->url, 'rb', false, $request->context);
 	}
 }

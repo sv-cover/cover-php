@@ -5,7 +5,7 @@
 {% block tab_content %}
 <header class="block">
 	<h2 class="title is-4">{{ __('Incass-o-matic') }}</h2>
-	<p>{{ __('Your contract has been active since %s.')|format(contract.start_datum|date('j-n-Y')) }}</p>
+	<p>{{ __('Your mandate (reference %s) has been active since %s.')|format(contract.id, contract.start_datum|date('F j, Y')) }}</p>
 </header>
 {% if debits_per_batch[""] is defined %}
 	<section class="block">
@@ -114,6 +114,8 @@
 				</div>
 			</div>
 		</div>
+	{% else %}
+		<p class="is-italic">{{ __('No recent direct debits found…') }}</p>
 	{% endfor %}
 </section>
 {% endblock %}

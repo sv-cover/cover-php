@@ -44,6 +44,11 @@ class SecretaryAPI
 		return $this->postJSONWithToken(sprintf('persons/%d.json', $person_id), $data);
 	}
 
+	public function findPerson($person_id)
+	{
+		return $this->getJSONWithToken('persons/all.json?id=' . $person_id);
+	}
+
 	public function updatePersonFromIterChanges(DataIterMember $iter)
 	{
 		if (!$iter->has_id())
@@ -89,6 +94,18 @@ class SecretaryAPI
 		$data = json_decode($response);
 		
 		return $data;
+	}
+
+	protected function getJSONWithToken($url)
+	{
+		// Splice in the token authentication
+		list($user, $token) = explode(':', $this->token, 2);
+
+		// Add token to URL
+		$url = edit_url($url, ['user' => $user, 'token' => $token]);
+
+		// Request that JSON
+		return $this->getJSON($url);
 	}
 
 	protected function postJSONWithToken($url, array $data)
