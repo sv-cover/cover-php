@@ -749,7 +749,7 @@ class DataModelPhotobook extends DataModel
 						foto_boeken.id
 				) as f_b_read_status ON
 					f_b_read_status.id = foto_boeken.id",
-					get_identity()->get('beginjaar'),
+					get_identity()->get('beginjaar') ?? date('Y'),
 					get_policy($this)->get_access_level(),
 					get_identity()->get('id'));
 			

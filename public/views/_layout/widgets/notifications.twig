@@ -2,11 +2,11 @@
     {% set agenda_items_to_moderate = view.layout.agenda_items_to_moderate() %}
 
     {% set user_has_birthday_today = view.layout.jarigen|filter(m => m.id == global.identity.member.id )|length > 0 %}
-    {% set user_is_unconfirmed =  global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
+    {% set user_is_pending =  global.identity.is_pending() %}
     {% set user_can_moderate_agenda = global.policies.Agenda.user_can_moderate(global.models.Agenda.new_iter({'replacement_for': true})) %}
     
-    {% set has_notification = agenda_items_to_moderate|length > 0  or user_is_unconfirmed or user_has_birthday_today %}
-    {% set force_notification = user_is_unconfirmed %}
+    {% set has_notification = agenda_items_to_moderate|length > 0  or user_is_pending or user_has_birthday_today %}
+    {% set force_notification = user_is_pending %}
 
     {% if has_notification or user_can_moderate_agenda %}
         <div class="navbar-item has-dropdown is-hoverable-desktop notifications {% if has_notification %}has-unread{% endif %}">
@@ -39,9 +39,9 @@
                     </a>    
                 {% endif %}
 
-                {% if user_is_unconfirmed %}
+                {% if user_is_pending %}
                     <div class="navbar-item cover-notification">
-                        {{ __('Your application hasn\'t been accepted yet by our secretary. Until then some parts of the website are not yet accessible, such as all the photo albums and contact information of members.') }}
+                        {{ __('Your membership application hasn’t been accepted yet by our secretary. Some pages (for example photo albums and sign-up forms) won’t be accessible until then. This process might take up to a few days to complete.') }}
                     </div>
                 {% endif %}
 
