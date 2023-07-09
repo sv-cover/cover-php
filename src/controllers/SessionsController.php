@@ -162,7 +162,8 @@ class SessionsController extends \Controller
 				'attr' => [
 					'placeholder' => __('Email'),
 				],
-			])->add('password', PasswordType::class, [
+			])
+			->add('password', PasswordType::class, [
 				'label' => __('Password'),
 				'attr' => [
 					'placeholder' => __('Password'),
