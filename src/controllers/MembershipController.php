@@ -4,6 +4,8 @@ namespace App\Controller;
 require_once 'src/framework/controllers/Controller.php';
 require_once 'src/services/secretary.php';
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 class MembershipController extends \Controller
 {
 	protected $view_name = 'membership';
@@ -61,7 +63,6 @@ class MembershipController extends \Controller
 						? sprintf('%s-%s-%s', $match[3], $match[2], $match[1])
 						: $x;
 				}],
-			'gender' => [function($x) { return in_array($x, ['f', 'm', 'o']); }],
 			'iban' => [
 				function($x) {
 					if (!empty(get_config_value('no_iban_string'))) {
@@ -83,8 +84,8 @@ class MembershipController extends \Controller
 				function($x) { return strlen($x) == 0 || ctype_digit($x); },
 				function($x) { return ltrim($x, 'sS'); }],
 			'membership_year_of_enrollment' => [function($x) { return $x > 1900 && $x < 2100; }],
-			'authorization' => [function($x) { return $x == 'yes'; }],
-			'option_mailing' => [],
+			'sepa_mandate' => [function($x) { return $x == 'yes'; }],
+            'terms_conditions_agree' => [function($x) { return $x == 'yes'; }],
 			'spam' => [function($x) { return in_array(strtolower($_POST['spam']), array('groen', 'green', 'coverrood', 'cover red')); }]
 		);
 
@@ -118,6 +119,14 @@ class MembershipController extends \Controller
 			}
 		}
 
+		/* Mailing is opt-out. We can do this, because assocations are allowed to contact their members 
+		about activities without consent, as long as it is non-commercial. See this link (at nieuwsbrief)
+		https://www.declercq.com/kennisblog/wat-betekent-de-avg-voor-verenigingen/
+		For now, secretary subscribes members to this one, so send option_mailing to secretary…
+		*/
+		// TODO: Make mailing officially opt-out, with migration to explicitly opt-out everyone who didn't opt-in first…
+		$data['option_mailing'] = true;
+
 		if (count($errors) > 0)
 			return $this->view->render_form($errors);
 		
@@ -140,7 +149,7 @@ class MembershipController extends \Controller
 
 		$this->_send_confirmation_mail($confirmation_code);
 
-		return $this->view->redirect($this->generate_url('join', ['verzonden' => 'true']));
+		return $this->view->redirect($this->generate_url('join', ['submitted' => 'true']));
 	}
 
 	private function _send_confirmation_mail($confirmation_code)
@@ -152,14 +161,12 @@ class MembershipController extends \Controller
 		if ($data_str === null)
 			throw new \NotFoundException('Could not find registration code');
 
-		$data = json_decode($data_str, true);
+		$data = array_merge(json_decode($data_str, true), [
+			'link' => $this->generate_url('join', ['confirmation_code' => $confirmation_code], UrlGeneratorInterface::ABSOLUTE_URL),
+		]);
 
-		$mail = parse_email(
-			'lidworden_confirmation_' . strtolower(i18n_get_language()) . '.txt',
-			array_merge($data, compact('confirmation_code')));
-
-		mail($data['email_address'], __('Confirm membership application'), $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
+		$email = parse_email_object('join_confirm_membership.txt', $data);
+		$email->send($data['email_address']);
 	}
 
 	protected function _process_confirm($confirmation_code)
@@ -173,33 +180,31 @@ class MembershipController extends \Controller
 				['confirmed_on' => date('Y-m-d H:i:s')],
 				sprintf("confirmation_code = '%s'", get_db()->escape_string($confirmation_code)));
 
-			try
-			{
+			try {
 				// Try to add the member to Secretary. If this works out correctly
 				// the registration will be deleted (and Secretary will add the
 				// member to the leden table through the API).
 				$this->_process_confirm_secretary($confirmation_code);
-			}
-			catch (\Exception $e)
-			{
+			} catch (\Exception|\Error $e) {
 				// Well, that didn't work out. Report the error to everybody.
 				// The registration will be marked as confirmed, but not deleted
 				// so one can try again later when Secretary is available again.
 				sentry_report_exception($e);
 
-				mail('secretaris@svcover.nl',
-					'Lidaanvraag (niet verwerkt in Secretary)',
-					"Er is een nieuwe lidaanvraag ingediend.\n"
-					. "Helaas kon de aanmelding niet automatisch aan de ledenadmin worden toegevoegd, de WebCie is hierover geïnformeerd.\n"
-					. "De gegevens zijn in ieder geval te vinden op administratie@svcover.nl.",
-					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
-
 				mail('webcie@svcover.nl',
-					'Fout tijdens lidaanvraag',
-					'Er ging iets fout tijdens een lidaanvraag.'
-					.' Zie de error log van www voor ' . date('Y-m-d H:i:s') . "\n\n"
+					'Error during membership application',
+					"Something went wrong while trying to add a new member to Secretary.\n" .
+					"In case it helps, the confirmation code was: " . $confirmation_code . "\n" .
+					"Maybe the website error log for " . date('Y-m-d H:i:s') . " will provide more insight. Or this:\n\n"
 					. $e->getMessage() . "\n"
 					. $e->getTraceAsString(),
+					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+
+				mail('secretaris@svcover.nl',
+					'Error during membership application (member not added to Secretary)',
+					"Something went wrong while trying to add a new member to Secretary. The AC/DCee has been informed about this.\n" .
+					"You can find the application in the administratie@svcover.nl mailbox.\n" .
+					"In case it helps, the confirmation code was: " . $confirmation_code,
 					implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
 			}
 
@@ -221,12 +226,11 @@ class MembershipController extends \Controller
 
 		$data = json_decode($row['data'], true);
 
-		$mail = parse_email('lidworden.txt', $data);
+		$data['confirmation_code'] = $confirmation_code;
+		$data['name'] = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
 
-		$name = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
-
-		mail('administratie@svcover.nl', 'Lidaanvraag ' . $name, $mail,
-			implode("\r\n", ['Content-Type: text/plain; charset=UTF-8']));
+		$email = parse_email_object('join_administratie.txt', $data);
+		$email->send('administratie@svcover.nl');
 	}
 
 	protected function _process_confirm_secretary($confirmation_code)
@@ -343,7 +347,7 @@ class MembershipController extends \Controller
 			return $this->_process_lidworden();
 		elseif (isset($_GET['confirmation_code']) && !isset($_GET['view']))
 			return $this->_process_confirm($_GET['confirmation_code']);
-		else if (isset($_GET['verzonden']))
+		else if (isset($_GET['submitted']))
 			return $this->view->render_submitted();
 		else if (isset($_GET['confirmed']))
 			return $this->view->render_confirmed();

@@ -1,0 +1,58 @@
+Subject: [Cover] Welcome to Cover!
+From: Study Association Cover <noreply@svcover.nl>
+Reply-To: Cover Secretary <secretary@svcover.nl>
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+<body>
+<div style="font-family: Arial, Helvetica Neue, Helvetica, sans-serif;">
+    <p>Dear $voornaam,</p>
+
+    <p>
+        Welcome to Cover, the study association for Artificial Intelligence, Computing Science, and Computational Cognitive Science at the University of Groningen. We hope to contribute to your study and student life in the coming years.
+    </p>
+
+    <p>
+        As a member you can join the many activities Cover organises, from study support sessions to our monthly social. We also organise academic events relevant to the fields of AI and CS, such as symposia and talks, and events that help you focus on your future career. Additionally, there are many fun, relaxing and/or social activities for you to enjoy! For a full summary of our activities, have look at our <a href="https://www.svcover.nl">website</a>.
+    </p>
+
+    <p>
+        <em>Are you a first-year student? Don’t forget to sign up for our introductory camp! For more information visit <a href="https://introcee.svcover.nl">introcee.svcover.nl</a>.</em>
+    </p>
+
+    <p>
+        As part of the registration process, you need to setup your account on our website. With this account, you can sign up for activities, see all our pictures, explore career opportunities with our partners, and a whole host of other things! You’ll first need to set it up, though:
+    </p>
+    <p><a href="$password_link|markup_format_text">Set up your account now!</a></p>
+    <p>
+        We would like to advise you to evaluate your privacy settings. By default, your name and profile picture are visible to anyone, birth date, starting year, phone number and e-mail address are visible to logged-in members and your address, postal code and place of residence are private.
+    </p>
+    <p>
+        Did you know Cover has its own room in the Bernoulliborg? It’s room BB 5161.0041a, and you’ll find it on the ground floor. It’s the perfect place to take a break between your lectures, and a great spot to meet, play some games or just have fun with fellow students! You can also buy food and drinks in the Cover room, for a cheap price (we aim to not make a profit on it). It’s perfect for when you forgot your lunch or just need a snack. To get something, you pay using KAST (that’s our payment system on the touchscreen in the room). For your convenience, we’ve already created an account in KAST and put some balance on it. So your first few consumptions are on us!
+    </p>
+    <p>
+        You can get an even better experience by joining a committee! Cover is run by volunteers, and you can be one of them. Joining a committee is a great way to learn new skills, broaden your horizon and it’s a lot of fun. Check <a href="https://www.svcover.nl">the committee page on the website</a> to find out what kind of committees there are. To learn more, you can contact our Commissioner of Internal Affairs at <a href="mailto:intern@svcover.nl">intern@svcover.nl</a>.
+    </p>
+    <p>
+        Finally, don’t forget to connect with us on <a href="https://links.svcover.nl">our socials</a>. It’s the best way to stay updated!
+    </p>
+    <p>
+        If you have any further questions, you can send us an email at <a href="mailto:board@svcover.nl">board@svcover.nl</a>, or you can simply find a board member in our room in the Bernoulliborg.
+    </p>
+
+    <p>Kind regards,</p>
+
+    <p>The Board of Study Association Cover</p>
+</div>
+<div itemscope itemtype="http://schema.org/EmailMessage">
+    <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ConfirmAction">
+        <meta itemprop="name" content="Set up account">
+        <div itemprop="handler" itemscope itemtype="http://schema.org/HttpActionHandler">
+            <link itemprop="url" href="$password_link|markup_format_text">
+        </div>
+    </div>
+    <meta itemprop="description" content="Set up your Cover account">
+</div>
+</body>
+</html>

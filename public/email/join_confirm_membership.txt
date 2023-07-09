@@ -1,0 +1,34 @@
+Subject: [Cover] Confirm your membership application
+From: Study Association Cover <noreply@svcover.nl>
+Reply-To: Cover Secretary <secretary@svcover.nl>
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+<body>
+<div style="font-family: Arial, Helvetica Neue, Helvetica, sans-serif;">
+    <p>Dear $first_name,</p>
+
+    <p>Please confirm your email address to complete your membership application. Click this link to continue:</p>
+
+    <p><a href="$link|markup_format_attribute">Confirm your email address</a></p>
+
+    <p>After this step, your account will be made and you will receive a link to setup your account. And if everything goes according to plan, you will also be able to make purchases in the KAST system in our room.</p>
+
+    <p>Some functions that are only accessible for members, will be enabled after the secretary has confirmed and processed your registration. But that shouldn’t take too long :)</p>
+
+    <p>Kind regards,</p>
+
+    <p>Cover</p>
+</div>
+<div itemscope itemtype="http://schema.org/EmailMessage">
+    <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ConfirmAction">
+        <meta itemprop="name" content="Confirm email">
+        <div itemprop="handler" itemscope itemtype="http://schema.org/HttpActionHandler">
+            <link itemprop="url" href="$link|markup_format_text">
+        </div>
+    </div>
+    <meta itemprop="description" content="Confirm your email address">
+</div>
+</body>
+</html>

@@ -53,15 +53,6 @@
 		</div>
 
 		<div class="field">
-			{{ html_label(__('Gender'), 'gender', errors=errors, required=true) }}
-			<div class="control">
-				<div class="select">
-					{{ html_select_field('gender', {o: __('Unspecified'), m: __('Male'), f: __('Female')}, null, errors=errors, required=true, default='o') }}
-				</div>
-			</div>
-		</div>
-
-		<div class="field">
 			<h2 class="title is-5">{{ __('Address') }}</h2>
 		</div>
 
@@ -100,11 +91,11 @@
 		</div>
 
 		<div class="field">
-			{{ html_label(__('E-mail address'), 'email_address', errors=errors, required=true) }}
+			{{ html_label(__('Email address'), 'email_address', errors=errors, required=true) }}
 			<div class="control">
 				{{ html_input_text('email_address', null, errors=errors, required=true, type='email') }}
 			</div>
-			<p class="help">{{ __('You will receive a confirmation email with a link. Your application will be processed after you have clicked the link.') }}</p>
+			<p class="help">{{ __('Please use your personal email, NOT your university email. Then we can still contact you about your membership after your graduation. We’ll send you an email with a confirmation link after completing this form.') }}</p>
 		</div>
 
 		<div class="field">
@@ -163,30 +154,22 @@
 			<p class="help">{{ __("Only required if your IBAN [i]does not[/i] start with 'NL'")|parse_markup }}</p>
 		</div>
 
-		<div class="field">
-			<div class="control">
-				{{ html_input_checkbox('authorization', null, errors=errors, required=true, label=__('I hereby authorize Cover to automatically deduct the membership fee from my bank account one time per year. (mandatory)')) }}
-			</div>
-		</div>
-
-		<div class="field">
-			<h2 class="title is-5">{{ __('Mailing list') }}</h2>
-		</div>
-
-		<div class="field">
-			<p>{{ __("From time to time Cover sends an email about an upcoming activity. If you don't want to receive these emails anymore, you can very easily unsubscribe right here on the website.")}}
-		</div>
-
-		<div class="field">
-			<div class="control">
-				{{ html_input_checkbox('option_mailing', {'option_mailing': ''}, errors=errors, label=__('I want to receive emails about activities organized by Cover.')) }}
-			</div>
-			<p class="help">{{ __('We won\'t spam you and you can unsubscribe at any moment through this website.') }}</p>
-		</div>
+        <div class="field">
+            <h3 class="label">SEPA direct debit mandate</h3>
+            <div class="control">
+                {{ html_input_checkbox('sepa_mandate', null, errors=errors, required=true, label=__('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for the duration of my membership. (required)')) }}
+            </div>
+            <p class="help">
+                {{ __('By checking this box, you authorise (A) study association Cover (ID: NL48ZZZ400267070000) to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with the instructions from the Creditor. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank.') }}
+            </p>
+            <p class="help">
+            	{{ __('If you update your personal details or account number in your Cover account, these changes will be reflected in the mandate.') }}
+            </p>
+        </div>
 
 		<div class="level field">
 			<div class="level-left">
-				<h2 class="title is-5">{{ __('Conditions') }}</h2>
+				<h2 class="title is-5">{{ __('Terms and Conditions') }}</h2>
 			</div>
 			{% if user_can_update voorwaarden %}
 				<div class="level-right buttons">
@@ -195,10 +178,16 @@
 			{% endif %}
 		</div>
 		<div class="field">
-			<div class="box content">
+			<div class="content">
 				{{ voorwaarden.locale_content|parse_markup }}
 			</div>
 		</div>
+
+        <div class="field">
+            <div class="control">
+                {{ html_input_checkbox('terms_conditions_agree', null, errors=errors, required=true, label=__('I agree to the terms and conditions. (required)')) }}
+            </div>
+        </div>
 	
 		<div class="field">
 			<h2 class="title is-5">{{ __('Intelligence test') }}</h2>

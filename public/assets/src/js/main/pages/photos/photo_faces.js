@@ -385,14 +385,16 @@ class UnTaggedFace extends Face {
             keepIdField: false,
             onHide: () => this.setActive(false),
             config: {
-                onSelection: this.handleSelection.bind(this),
-                noResults: () => {/* Literally do nothing */},
+                resultsList: {
+                    noResults: false,
+                },
             }
         });
 
         // Handle additional events (for custom tag and more)
+        this.autocomplete.sourceElement.addEventListener('selection', this.handleSelection.bind(this));
         this.autocomplete.sourceElement.addEventListener('keydown', this.handleKeyDown.bind(this));
-        this.autocomplete.sourceElement.addEventListener('autoComplete', this.handleAutocomplete.bind(this));
+        this.autocomplete.sourceElement.addEventListener('results', this.handleResults.bind(this));
 
         // Make sure the tag button triggers autocomplete
         const tagButton = this.element.querySelector('[data-button-autocomplete]');
@@ -441,9 +443,9 @@ class UnTaggedFace extends Face {
         }
     }
 
-    handleSelection(feedback) {
+    handleSelection(event) {
         this.submitSelection({
-            'lid_id': feedback.selection.value.id,
+            'lid_id': event.detail.selection.value.id,
         });
     }
 
@@ -464,8 +466,8 @@ class UnTaggedFace extends Face {
         }
     }
 
-    handleAutocomplete(event) {
-        this.hasSuggestions = !!event.detail.matches;
+    handleResults(event) {
+        this.hasSuggestions = !!event.detail.matches.length;
     }
 }
 

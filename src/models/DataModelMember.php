@@ -82,8 +82,8 @@ class DataIterMember extends DataIter implements SearchResult
 		else if ($this->has_been_member())
 			return MEMBER_STATUS_LID_AF;
 		
-		else
-			return MEMBER_STATUS_UNCONFIRMED;
+		else if (!$this->has_been_donor())
+			return MEMBER_STATUS_PENDING;
 	}
 	
 	public function is_member()
@@ -94,6 +94,11 @@ class DataIterMember extends DataIter implements SearchResult
 	public function is_donor()
 	{
 		return $this->is_donor_on(new DateTime());
+	}
+
+	public function is_pending()
+	{
+		return !$this->is_member() && !$this->is_donor() && !$this->has_been_member() && !$this->has_been_donor();
 	}
 
 	public function is_member_on(DateTime $moment)
@@ -111,6 +116,11 @@ class DataIterMember extends DataIter implements SearchResult
 	public function has_been_member()
 	{
 		return $this['member_till'] && new DateTime($this['member_till']) < new DateTime();
+	}
+
+	public function has_been_donor()
+	{
+		return $this['donor_till'] && new DateTime($this['donor_till']) < new DateTime();
 	}
 
 	public function get_naam()
@@ -265,7 +275,7 @@ class DataModelMember extends DataModel implements SearchProvider
 			if (!$this->test_password($iter, $passwd))
 				return false;
 
-			if (!$iter->is_member() && !$iter->is_donor())
+			if (!$iter->is_member() && !$iter->is_donor() && $iter->is_pending())
 				throw new InactiveMemberException('This user is currently not a member nor a donor and can therefore not log in.');
 
 			return $iter;
@@ -666,7 +676,7 @@ class DataModelMember extends DataModel implements SearchProvider
 				$condition = "member_from < NOW()";
 				break;
 		
-			case MEMBER_STATUS_UNCONFIRMED:
+			case MEMBER_STATUS_PENDING:
 				$condition = "member_from IS NULL AND donor_from IS NULL";
 				break;
 
@@ -698,7 +708,7 @@ class DataModelMember extends DataModel implements SearchProvider
 			case MEMBER_STATUS_DONATEUR:
 				return __('Donor');
 
-			case MEMBER_STATUS_UNCONFIRMED:
+			case MEMBER_STATUS_PENDING:
 				return __('No status');
 
 			default:

@@ -9,6 +9,9 @@ require_once 'src/services/secretary.php';
 require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/email.php';
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 class ProfileController extends \Controller
 {
 	protected $view_name = 'profile';
@@ -402,22 +405,6 @@ class ProfileController extends \Controller
 		return $this->view->render_vcard($member);
 	}
 
-	public function run_export_incassocontract(\DataIterMember $member)
-	{
-		if (!$this->policy->user_can_update($member))
-			throw new \UnauthorizedException();
-
-		require_once 'src/services/incassomatic.php';
-
-		$incasso_api = \incassomatic\shared_instance();
-
-		$fh = $incasso_api->getContractTemplatePDF($member);
-
-		header('Content-Type: application/pdf');
-		fpassthru($fh);
-		fclose($fh);
-	}
-
 	public function run_public(\DataIterMember $member)
 	{
 		if (!$this->policy->user_can_read($member))
@@ -469,7 +456,103 @@ class ProfileController extends \Controller
 		if (!$this->policy->user_can_update($member))
 			throw new \UnauthorizedException();
 
-		return $this->view->render_incassomatic_tab($member);
+		require_once 'src/services/incassomatic.php';
+
+		try {
+			$incasso_api = \incassomatic\shared_instance();
+			$contract = $incasso_api->getCurrentContract($member);
+
+			if (!$contract)
+				return $this->view->redirect($this->generate_url('profile', [
+					'view' => 'incassomatic_create_mandate',
+					'lid' => $member['id']
+				]));
+
+			$debits = $incasso_api->getDebits($member, 15);
+		} catch (\Exception|\Error $exception) {
+			sentry_report_exception($exception);
+			return $this->view->render('incassomatic_tab_exception.twig', [
+				'iter' => $member,
+				'exception' => $exception,
+			]);
+		}
+		$debits_per_batch = array_group_by($debits, function($debit) { return $debit->batch_id; });
+
+		return $this->view->render('incassomatic_tab.twig', [
+			'iter' => $member,
+			'contract' => $contract,
+			// 'treasurer_link' => $treasurer_link,
+			'debits_per_batch' => $debits_per_batch,
+		]);
+	}
+
+	public function run_incassomatic_create_mandate(\DataIterMember $member)
+	{
+		if (!$this->policy->user_can_update($member))
+			throw new \UnauthorizedException();
+
+		require_once 'src/services/incassomatic.php';
+
+		try {			
+			$incasso_api = \incassomatic\shared_instance();
+			if ($incasso_api->getCurrentContract($member))
+				return $this->view->redirect($this->generate_url('profile', [
+					'view' => 'incassomatic',
+					'lid' => $member['id']
+				]));
+		} catch (\Exception|\Error $exception) {
+			sentry_report_exception($exception);
+			return $this->view->render('incassomatic_tab_exception.twig', [
+				'iter' => $member,
+				'exception' => $exception,
+			]);
+		}
+
+		$form = $this->createFormBuilder()
+			->add('sepa_mandate', CheckboxType::class, [
+				'label'    => __('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for the duration of my membership.'),
+				'required' => true,
+			])
+			->add('submit', SubmitType::class, ['label' => 'Sign mandate'])
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$response = $incasso_api->createContract($member);
+			return $this->view->redirect($this->generate_url('profile', [
+				'view' => 'incassomatic',
+				'lid' => $member['id']
+			]));
+		}
+
+		try {
+			$secretary_data = current(get_secretary()->findPerson($member->get_id()));
+		} catch (\Exception|Error $exception) {
+			sentry_report_exception($exception);
+			$secretary_data = [];
+		}
+
+		return $this->view->render('incassomatic_tab_no_contract.twig', [
+			'iter' => $member,
+			'form' => $form->createView(),
+			'secretary_data' => $secretary_data,
+		]);
+	}
+
+	public function run_export_incassocontract(\DataIterMember $member)
+	{
+		if (!$this->policy->user_can_update($member))
+			throw new \UnauthorizedException();
+
+		require_once 'src/services/incassomatic.php';
+
+		$incasso_api = \incassomatic\shared_instance();
+
+		$fh = $incasso_api->getContractTemplatePDF($member);
+
+		header('Content-Type: application/pdf');
+		fpassthru($fh);
+		fclose($fh);
 	}
 
 	public function run_confirm_email()

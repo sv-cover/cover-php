@@ -202,41 +202,9 @@ class ProfileView extends View
 			$status = $kast_api->getStatus($iter['id']);
 			$history = $kast_api->getHistory($iter['id'], 20);
 			return $this->render('kast_tab.twig', compact('iter', 'status', 'history'));
-		} catch (Exception $exception) {
+		} catch (Exception|Error $exception) {
+			var_dump('blorgh');
 			return $this->render('kast_tab_exception.twig', compact('iter', 'exception'));
-		}
-	}
-
-	public function render_incassomatic_tab(DataIterMember $iter)
-	{
-		require_once 'src/services/incassomatic.php';
-
-		try {
-			$treasurer = get_model('DataModelCommissie')->get_lid_for_functie(COMMISSIE_BESTUUR, 'treasurer');
-			if ($treasurer)
-				$treasurer_link = sprintf('<a href="%s">%s</a>',
-					$this->controller->generate_url('profile', ['lid' => $treasurer['id']]),
-					markup_format_text(member_full_name($treasurer)));
-			else
-				$treasurer_link = null;
-			
-			$incasso_api = \incassomatic\shared_instance();
-			$contracts = $incasso_api->getContracts($iter);
-
-			// Only show valid contracts
-			$contract = current(array_filter($contracts, function($contract) { return $contract->is_geldig; }));
-
-			if (!$contract)
-				return $this->render('incassomatic_tab_no_contract.twig', compact('iter', 'treasurer_link'));
-			
-			$debits = $incasso_api->getDebits($iter, 15);
-
-			$debits_per_batch = array_group_by($debits, function($debit) { return $debit->batch_id; });
-
-			return $this->render('incassomatic_tab.twig', compact('iter', 'contract', 'treasurer_link', 'debits_per_batch'));
-		} catch (Exception $exception) {
-			sentry_report_exception($exception);
-			return $this->render('incassomatic_tab_exception.twig', compact('iter', 'exception'));
 		}
 	}
 
@@ -376,10 +344,10 @@ class ProfileView extends View
 	{
 		$mapping = [
 			MEMBER_STATUS_LID => __('Member'),
-			MEMBER_STATUS_LID_AF => __('Previously a member'),
-			MEMBER_STATUS_ERELID => __('Honorary Member'),
+			MEMBER_STATUS_LID_AF => __('Former member'),
+			MEMBER_STATUS_ERELID => __('Honorary member'),
 			MEMBER_STATUS_DONATEUR => __('Contributor'),
-			MEMBER_STATUS_UNCONFIRMED => __('To be processed')
+			MEMBER_STATUS_PENDING => __('To be processed')
 		];
 
 		return $mapping[$type];

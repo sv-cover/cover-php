@@ -147,6 +147,9 @@ class SessionsController extends \Controller
 		if ($external_domain === null && in_array($referrer, ['/sessions.php?view=logout', $this->generate_url('logout'), $this->generate_url('sessions', ['view' => 'logout'])]))
 			$referrer = null;
 
+		if (get_auth()->logged_in())
+			return $this->view->redirect($referrer ? $referrer : $this->generate_url('homepage'), false, ALLOW_SUBDOMAINS);
+
 		$data = [
 			'referrer' => $referrer,
 			'remember' => true,

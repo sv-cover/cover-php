@@ -34,11 +34,9 @@
 	{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
 	{% endif %}
 	
-	{% if global.auth.logged_in() and global.identity.get('type', -1) == constant('MEMBER_STATUS_UNCONFIRMED') %}
-		<section class="section">
-			<div class="container is-content-optimized">
-				<div class="notification">{{ __('Your application hasn\'t been accepted yet by our [secretary. Until then some parts of the website are not yet accessible, such as all ]the photo albums and contact information of members.') }}</div>
-			</div>
+	{% if global.auth.logged_in() and global.identity.is_pending() %}
+		<section class="notification is-warning m-0">
+			<p>{{ __('Your membership application hasn’t been accepted yet by our secretary. Some pages won’t be accessible until then.') }}</p>
 		</section>
 	{% endif %}
 
