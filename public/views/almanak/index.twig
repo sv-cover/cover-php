@@ -44,8 +44,17 @@
 	<form name="almanak" action="{{ path('almanak') }}" method="GET">
 		<div class="field has-addons">
 			<div class="control is-expanded">
-				{{ html_label(__('Filter name'), 'search', class="is-sr-only") }}
-				{{ html_input_text('search', params, size=40, tabindex=1, placeholder=__('Search members by name…') ) }}
+				<input
+					type="text"
+					id="field-search"
+					class="input"
+					name="search"
+					value=""
+					size="40"
+					tabindex="1"
+					placeholder="{{ __('Search members by name…') }}"
+					aria-label="{{ __('Filter members by name') }}"
+				>
 			</div>
 			<div class="control">
 				<button class="button" type="submit">
