@@ -344,10 +344,10 @@ class ProfileView extends View
 	{
 		$mapping = [
 			MEMBER_STATUS_LID => __('Member'),
-			MEMBER_STATUS_LID_AF => __('Previously a member'),
-			MEMBER_STATUS_ERELID => __('Honorary Member'),
+			MEMBER_STATUS_LID_AF => __('Former member'),
+			MEMBER_STATUS_ERELID => __('Honorary member'),
 			MEMBER_STATUS_DONATEUR => __('Contributor'),
-			MEMBER_STATUS_UNCONFIRMED => __('To be processed')
+			MEMBER_STATUS_PENDING => __('To be processed')
 		];
 
 		return $mapping[$type];

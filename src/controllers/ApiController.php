@@ -240,6 +240,14 @@ class ApiController extends \Controller
 			'id' => $_POST['id']
 		];
 
+		try {
+			$existing = $model->get_iter($data['id']);
+			if ($existing)
+				throw new \InvalidArgumentException(sprintf('Member with ID %s already exists', $data['id']));
+		} catch (\DataIterNotFoundException $e) {
+			// all good
+		}
+
 		foreach (self::$secretary_mapping as $field => $secretary_field)
 		{
 			if (isset($_POST[$secretary_field]))
@@ -250,21 +258,17 @@ class ApiController extends \Controller
 		$member['privacy'] = 958435335;
 
 		// Create profile for this member
-		$nick = member_full_name($member, IGNORE_PRIVACY);
-		
-		if (strlen($nick) > 50)
-			$nick = $member['voornaam'];
-		
+		$nick = $member['voornaam'];
 		if (strlen($nick) > 50)
 			$nick = '';
-		
 		$member['nick'] = $nick;
-		
+
 		$model->insert($member);
 
-		// Only email new members (not historical updates) about their new password 
-		if ($member->is_member())
-			$this->_send_welcome_mail($member);
+		if (strtolower($this->get_parameter('send_email', 'true')) === 'true')
+			// Optionally send welcome mail to new members. This can be disabled by clients,
+			// for example when it's recreating an account for an existing/former member in a synchronisation task.
+			$this->api_secretary_send_welcome_mail($member->get_id());
 
 		return ['success' => true, 'url' => $member->get_absolute_path(true)];
 	}
@@ -307,33 +311,7 @@ class ApiController extends \Controller
 
 		$model->update($member);
 
-		// If this person just has become a member, send them the welcome email
-		if (!$member_is_member && $member->is_member())
-			$this->_send_welcome_mail($member);
-
 		return ['success' => true, 'url' => $member->get_absolute_path(true)];
-	}
-
-	private function _send_welcome_mail(\DataIterMember $member)
-	{
-		// Create a password
-		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
-		
-		// Setup e-mail
-		$data = $member->data;
-		$data['password_link'] = $token['link'];
-
-		$mail = implode("\n\n", [
-				'(For English version see below)',
-				parse_email('nieuwlid_nl.txt', $data),
-				'------------------',
-				parse_email('nieuwlid_en.txt', $data)]);
-
-		mail($data['email'], 'Website Cover', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
-
-		mail('administratie@svcover.nl', 'Website Cover (' . member_full_name($member, IGNORE_PRIVACY) . ')', $mail,
-			implode("\r\n", ['From: Cover <board@svcover.nl>', 'Content-Type: text/plain; charset=UTF-8']));
 	}
 
 	public function api_secretary_delete_member($member_id)
@@ -346,6 +324,34 @@ class ApiController extends \Controller
 		$member = $model->get_iter($member_id);
 
 		return ['success' => $model->delete($member)];
+	}
+
+	private function api_secretary_send_welcome_mail($member_id)
+	{
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+			// Do nothing if not post
+			return;
+
+		$model = get_model('DataModelMember');
+
+		$member = $model->get_iter($member_id);
+
+		// Create a password
+		$token = get_model('DataModelPasswordResetToken')->create_token_for_member($member);
+		
+		// Setup e-mail
+		$data = $member->data;
+		$data['password_link'] = $token['link'];
+
+		// Send email
+		$email = parse_email_object('join_welcome_email.txt', $data);
+		$email->send($data['email']);
+
+		// Send copy to adminstratie@svcover.nl
+		$email->subject = 'Welcome to Cover! (' . member_full_name($member, IGNORE_PRIVACY) . ')';
+		$email->send('administratie@svcover.nl');
+
+		return ['success' => true];
 	}
 
 	public function api_secretary_subscribe_member_to_mailinglist($member_id, $mailinglist)
@@ -495,6 +501,11 @@ class ApiController extends \Controller
 				// Note that $_POST['id'] must also match $_GET['member_id']
 				case 'secretary_delete_member':
 					$response = $this->api_secretary_delete_member($_GET['member_id']);
+					break;
+
+				// POST api.php?method=secretary_send_welcome_mail&member_id=709
+				case 'secretary_send_welcome_mail':
+					$response = $this->api_secretary_send_welcome_mail($_GET['member_id']);
 					break;
 
 				// POST api.php?method=secretary_subscribe_member_to_mailinglist

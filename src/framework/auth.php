@@ -7,6 +7,7 @@ interface IdentityProvider
 {
 	public function is_member();
 	public function is_donor();
+	public function is_pending();
 	public function is_device();
 	public function member_in_committee($committee = null);
 	public function can_impersonate();
@@ -28,6 +29,11 @@ class GuestIdentityProvider implements IdentityProvider
 	}
 
 	public function is_donor()
+	{
+		return false;
+	}
+
+	public function is_pending()
 	{
 		return false;
 	}
@@ -83,6 +89,12 @@ class MemberIdentityProvider implements IdentityProvider
 	{
 		return $this->session_provider->logged_in()
 			&& $this->member()->is_donor();
+	}
+
+	public function is_pending()
+	{
+		return $this->session_provider->logged_in()
+			&& $this->member()->is_pending();
 	}
 
 	public function is_device()
