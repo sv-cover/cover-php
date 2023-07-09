@@ -1,11 +1,16 @@
+Subject: Membership application $name
+From: Study Association Cover <noreply@svcover.nl>
+Content-Type: text/html; charset=UTF-8
+
 Dear secretary,
 
 The following membership registration was submitted today:
 
+Confirmation code: $confirmation_code
+
 First name: $first_name
-Family name prep: $family_name_preposition
+Infix: $family_name_preposition
 Family name: $family_name
-Gender: $gender
 
 Address: $street_name
 Postal code: $postal_code
@@ -20,7 +25,7 @@ Study: $membership_study_name $membership_study_phase
 Year of enrollment: $membership_year_of_enrollment
 IBAN: $iban
 BIC: $bic
-Authorization: $authorization
+SEPA mandate: $sepa_mandate
 
 Mailing: $option_mailing
 

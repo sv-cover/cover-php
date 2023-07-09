@@ -37,6 +37,7 @@
 			<div class="field-label">{{ __('BIC') }}</div>
 			<div class="field-body">{{ secretary_data.bic|default('N/A') }}</div>
 		</div>
+		<p>{{ __('If you update your personal details or account number in your Cover account, these changes will be reflected in the mandate.') }}</p>
 		{{ form_row(form.sepa_mandate) }}
 	{{ form_end(form) }}
 </article>

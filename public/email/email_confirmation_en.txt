@@ -5,7 +5,7 @@ Content-Type: text/html; charset=UTF-8
 <!DOCTYPE html>
 <html>
 <body>
-<p>Hey $naam,</p>
+<p>Dear $naam,</p>
 
 <p>You've changed your email address on the Cover website to $email|markup_format_text.</p>
 

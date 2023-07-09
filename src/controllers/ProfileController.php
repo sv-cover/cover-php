@@ -469,7 +469,7 @@ class ProfileController extends \Controller
 				]));
 
 			$debits = $incasso_api->getDebits($member, 15);
-		} catch (\Exception|Error $exception) {
+		} catch (\Exception|\Error $exception) {
 			sentry_report_exception($exception);
 			return $this->view->render('incassomatic_tab_exception.twig', [
 				'iter' => $member,
@@ -500,7 +500,7 @@ class ProfileController extends \Controller
 					'view' => 'incassomatic',
 					'lid' => $member['id']
 				]));
-		} catch (\Exception|Error $exception) {
+		} catch (\Exception|\Error $exception) {
 			sentry_report_exception($exception);
 			return $this->view->render('incassomatic_tab_exception.twig', [
 				'iter' => $member,
