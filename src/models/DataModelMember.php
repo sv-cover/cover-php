@@ -275,7 +275,8 @@ class DataModelMember extends DataModel implements SearchProvider
 			if (!$this->test_password($iter, $passwd))
 				return false;
 
-			if (!$iter->is_member() && !$iter->is_donor() && $iter->is_pending())
+			if (!$iter->is_member() && !$iter->is_donor() && !$iter->is_pending())
+				// Pending members can login and will be shown a message they don't have all access
 				throw new InactiveMemberException('This user is currently not a member nor a donor and can therefore not log in.');
 
 			return $iter;
