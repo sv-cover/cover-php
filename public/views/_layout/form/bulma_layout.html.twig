@@ -29,6 +29,19 @@
     {%- endif -%}
 {%- endblock form_widget_compound -%}
 
+{%- block collection_widget -%}
+    {# This is a minimum working implementation. At the very least, you'll probably need to set 'entry_options.label' to make it look decent. But it's probably best to customize the implementation in your form template. #}
+    <noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
+    <div id="{{ form.vars.id }}-options" class="growing-list" data-growing-list-template="#{{ form.vars.id }}-template">
+        {{- block('form_widget') -}}
+    </div>
+    {% if prototype is defined and not prototype.rendered %}
+        <template id="{{ form.vars.id }}-template">
+            {{ form_row(prototype) }}
+        </template>
+    {% endif %}
+{%- endblock collection_widget -%}
+
 {%- block textarea_widget -%}
     {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' textarea')|trim}) -%}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
@@ -37,8 +50,7 @@
 
 {%- block choice_widget -%}
     {% if expanded and 'chips' in attr.class|default('') %}
-        {%- set wrapper_attr = attr|merge({'class': ''|trim}) -%}
-        <div {% with { attr: wrapper_attr } %}{{ block('widget_container_attributes') }}{% endwith %}>
+        <div {{ block('widget_container_attributes') }}>
             {{- block('choice_widget_expanded_chips') -}}
         </div>
     {% elseif expanded %}

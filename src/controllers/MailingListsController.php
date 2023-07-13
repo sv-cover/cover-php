@@ -121,7 +121,7 @@ class MailingListsController extends \ControllerCRUDForm
 		$success = false;
 
 		if ($form->isSubmitted() && $form->isValid())
-			if ($this->_process_update($iter))
+			if ($this->_process_update($iter, $form))
 				$success = true;
 
 		return $this->view()->render_autoresponder_form($iter, $form, $autoresponder, $success);

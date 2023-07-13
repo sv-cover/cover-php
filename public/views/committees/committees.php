@@ -1,6 +1,6 @@
 <?php
 
-class CommitteesView extends CRUDView
+class CommitteesView extends CRUDFormView
 {
 	protected $__file = __FILE__;
 

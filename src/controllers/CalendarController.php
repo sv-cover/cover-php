@@ -11,6 +11,7 @@ require_once 'src/framework/controllers/ControllerCRUDForm.php';
 use App\Form\EventType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -49,7 +50,7 @@ class CalendarController extends \ControllerCRUDForm
 		return $this->generate_url('calendar', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter)
+	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
 		if (!\get_policy($iter)->user_can_create($iter))
 			throw new \UnauthorizedException('You are not allowed to create events!');

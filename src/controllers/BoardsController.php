@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Form\BoardType;
+use Symfony\Component\Form\FormInterface;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
@@ -42,7 +43,7 @@ class BoardsController extends \ControllerCRUDForm
 			return __('Boards');
 	}
 
-	protected function _process_create(\DataIter $iter)
+	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
 		$editable_model = get_model('DataModelEditable');
 
@@ -54,10 +55,10 @@ class BoardsController extends \ControllerCRUDForm
 
 		$iter['page_id'] = $editable_model->insert($page, true);
 
-		return parent::_process_create($iter);
+		return parent::_process_create($iter, $form);
 	}
 
-	protected function _process_update(\DataIter $iter)
+	protected function _process_update(\DataIter $iter, FormInterface $form)
 	{
 
 		$editable_model = get_model('DataModelEditable');
@@ -67,7 +68,7 @@ class BoardsController extends \ControllerCRUDForm
 	
 		$editable_model->update($editable);
 
-		return parent::_process_update($iter);
+		return parent::_process_update($iter, $form);
 	}
 
 	protected function _index()

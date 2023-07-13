@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Form\StickerType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,12 +38,12 @@ class StickersController extends \ControllerCRUDForm
 		return $this->generate_url('stickers', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter)
+	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
 		$iter['toegevoegd_op'] = date('Y-m-d');
 		$iter['toegevoegd_door'] = get_identity()->get('id');
 
-		return parent::_process_create($iter);
+		return parent::_process_create($iter, $form);
 	}
 
 	public function new_iter()

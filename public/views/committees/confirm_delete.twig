@@ -1,24 +1,24 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Deactivate committee') ~ ' – ' ~ parent() %}
+{% block title __('Deactivate group') ~ ' – ' ~ parent() %}
 
 {% block content %}
 <div class="modal is-static">
     <div class="modal-card">
         <header class="modal-card-head">
-            <h1 class="modal-card-title">{{ __('Deactivate committee') }}</h1>
+            <h1 class="modal-card-title">{{ __('Deactivate group') }}</h1>
         </header>
         <section class="modal-card-body">
-            <form id="deactivate-committee-form" method="post" action="{{ path('committees', {view: 'delete', commissie: iter.login}) }}">
-                {{ html_nonce('delete', iter) }}
-                <div class="field content">
-                    <p>{{ __('Are you sure you want to deactivate the <em>%s</em> committee? You can always reactivate a committee from the Commitee Archive page.')|format(iter.naam|e('html'))|raw }}</p>
+            {{ form_start(form, {'id': 'deactivate-group-form', 'action': path('committees', {view: 'delete', commissie: iter.login})}) }}
+                <div class="field">
+                    <p>{{ __('Are you sure you want to deactivate the <em>%s</em> group? You can always reactivate a group from the Commitee Archive page.')|format(iter.naam|e('html'))|raw }}</p>
                 </div>
-            </form>
+                {% set submit_button = form_widget(form.submit, {'label': __('Deactivate group'), 'attr': {'form': 'deactivate-group-form', 'class': 'is-danger'}}) %}
+            {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">
-            <a href="{{ path('committees', {commissie: iter.login}) }}" class="button" data-dismiss="modal">{{ __('Back to committee page') }}</a>
-            <button type="submit" class="button is-danger" form="deactivate-committee-form">{{ __('Deactivate committee')  }}</button>
+            <a href="{{ path('committees', {commissie: iter.login}) }}" class="button" data-dismiss="modal">{{ __('Back to group page') }}</a>
+            {{ submit_button|raw }}
         </footer>
     </div>
 </div>

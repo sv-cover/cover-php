@@ -293,6 +293,9 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	  */
 	public function get_members(DataIterCommissie $committee)
 	{
+		if (!$committee->has_id())
+			return [];
+
 		$member_model = get_model('DataModelMember');
 
 		$positions = $this->_get_members($committee);
@@ -333,11 +336,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	{
 		$this->db->delete('committee_members', sprintf('committee_id = %d', $committee->get_id()));
 
-		foreach ($members as $member_id => $position)
+		foreach ($members as $member)
 			$this->db->insert('committee_members', array(
 				'committee_id' => $committee->get_id(),
-				'member_id' => intval($member_id),
-				'functie' => $position));
+				'member_id' => intval($member['member_id']),
+				'functie' => $member['functie']));
 	}
 
 	public function get_for_member(DataIterMember $member)
