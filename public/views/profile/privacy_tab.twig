@@ -4,9 +4,7 @@
 
 {% block tab_content %}
 <article>
-	<form action="{{ path('profile', {view: 'privacy', lid:iter.id}) }}" method="POST" data-auto-submit>
-		{{ html_nonce('privacy', iter) }}
-
+	{{ form_start(form, {action: url('profile', {'view': 'privacy', 'lid': iter.id}), attr: {'data-auto-submit': true}}) }}
 		<div class="profile-field">
 			<div class="field-body">
 				<h2 class="title is-4">{{ __('Privacy settings') }}</h2>
@@ -18,28 +16,32 @@
 				<p hidden data-auto-submit-visible>{{ __('Changes become effective immediately.') }}</p>
 			</div>
 		</div>
-		{% for field in fields %}
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					{{ html_label(field.label, field.name, errors=errors) }}
-				</div>
-				<div class="field-body">
-					<div class="field is-expanded">
-						<div class="control">
-							<div class="select is-fullwidth">
-								{{ html_select_field(field.name, view.privacy_options(), field.data, required=true) }}
+
+		{# Global errors #}
+		{{ form_errors(form) }}
+			
+		{% for child in form -%}
+			{% if not child.rendered and child.vars.name not in ['_token', 'submit'] %}
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						{{- form_label(child) -}}
+					</div>
+					<div class="field-body">
+						<div class="field is-expanded">
+							<div class="control">
+								{{- form_widget(child) -}}
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		{% endfor %}
+			{% endif %}
+		{%- endfor -%}
 
 		<div class="profile-field" data-auto-submit-hidden>
 			<div class="field-body">
-				<button type="submit" class="button is-primary" data-auto-submit-hidden>{{ __('Save') }}</button>
+				{{ form_widget(form.submit, {'label': __('Save'), 'attr': {'data-auto-submit-hidden': true}}) }}
 			</div>
 		</div>
-	</form>
+	{{ form_end(form) }}
 </article>
 {% endblock %}

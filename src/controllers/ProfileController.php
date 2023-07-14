@@ -10,7 +10,9 @@ require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/email.php';
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 
 class ProfileController extends \Controller
 {
@@ -244,24 +246,6 @@ class ProfileController extends \Controller
 		return $this->view->redirect($this->generate_url('profile', ['lid' => $iter['id'], 'view' => 'profile']));
 	}
 
-	protected function _update_privacy(\DataIterMember $iter)
-	{
-		/* Built privacy mask */
-		$fields = $this->model->get_privacy();
-		$mask = 0;
-		
-		foreach ($fields as $field => $nr) {
-			$value = intval(get_post('privacy_' . $nr));
-			
-			$mask = $mask + ($value << ($nr * 3));
-		}
-		
-		$iter->set('privacy', $mask);
-		$this->model->update($iter);
-		
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'privacy', 'lid' => $iter['id']]));
-	}
-
 	protected function _update_photo(\DataIterMember $iter)
 	{
 		$error = null;
@@ -355,14 +339,63 @@ class ProfileController extends \Controller
 	
 	public function run_privacy(\DataIterMember $iter)
 	{
-		if (!$this->policy->user_can_update($iter)
-			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
+		if (!$this->policy->user_can_update($iter))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('privacy', $iter))
-			return $this->_update_privacy($iter);
+		// Load labels
+		$labels = [];
 
-		return $this->view->render_privacy_tab($iter);
+		foreach ($this->view->personal_fields() as $field)
+			$labels[$field['name']] = $field['label'];
+
+		// Stupid aliasses
+		$labels['naam'] = $labels['full_name'];
+		$labels['foto'] = __('Photo');
+
+		// Build form
+		$data = [];
+		$builder = $this->createFormBuilder();
+
+		foreach ($this->model()->get_privacy() as $field => $nr)
+			$builder->add($field, ChoiceType::class, [
+				'label' => $labels[$field] ?? $field,
+				'choices'  => [
+					__('Everyone') => \DataModelMember::VISIBLE_TO_EVERYONE,
+					__('Members') => \DataModelMember::VISIBLE_TO_MEMBERS,
+					__('Nobody') => \DataModelMember::VISIBLE_TO_NONE,
+				],
+				'expanded' => true,
+				'attr' => [
+					'class' => 'chips',
+				],
+				'data' => ($iter['privacy'] >> ($nr * 3)) & 7, // Not ideal, but neater than constructing something to pass to createFormBuilder
+			]);
+
+		$form = $builder
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		// Handle submission
+		if ($form->isSubmitted() && $form->isValid()) {
+			// Build privacy mask 
+			$mask = 0;
+			foreach ($this->model->get_privacy() as $field => $nr) {
+				$value = $form[$field]->getData();
+				$mask = $mask + ($value << ($nr * 3));
+			}
+			
+			// Update settings
+			$iter->set('privacy', $mask);
+			$this->model->update($iter);
+			
+			return $this->view->redirect($this->generate_url('profile', ['view' => 'privacy', 'lid' => $iter['id']]));
+		}
+
+		return $this->view->render('privacy_tab.twig', [
+			'iter' => $iter,
+			'form' => $form->createView(),
+		]);
 	}
 
 	protected function run_photo(\DataIterMember $iter)

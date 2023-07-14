@@ -127,15 +127,6 @@ class ProfileView extends View
 		];
 	}
 
-	public function privacy_options()
-	{
-		return [
-			DataModelMember::VISIBLE_TO_EVERYONE => __('Everyone'),
-			DataModelMember::VISIBLE_TO_MEMBERS => __('Only logged in members'),
-			DataModelMember::VISIBLE_TO_NONE => __('Nobody'),
-		];
-	}
-
 	public function render_public_tab(DataIterMember $iter)
 	{
 		$can_download_vcard = get_identity()->is_member();
@@ -160,29 +151,6 @@ class ProfileView extends View
 								  && !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
 
 		return $this->render('profile_tab.twig', compact('iter', 'error_message', 'errors', 'current_password_required'));
-	}
-
-	public function render_privacy_tab(DataIterMember $iter, $error_message = null, array $errors = [])
-	{
-		$fields = [];
-
-		$labels = [];
-
-		foreach ($this->personal_fields() as $field)
-			$labels[$field['name']] = $field['label'];
-
-		// Stupid aliasses
-		$labels['naam'] = $labels['full_name'];
-		$labels['foto'] = __('Photo');
-
-		foreach ($this->controller->model()->get_privacy() as $field => $nr)
-			$fields[] = [
-				'label' => $labels[$field] ?? $field,
-				'name' => 'privacy_' . $nr,
-				'data' => ['privacy_' . $nr => ($iter['privacy'] >> ($nr * 3)) & 7]
-			];
-		
-		return $this->render('privacy_tab.twig', compact('iter', 'error_message', 'errors', 'fields'));
 	}
 
 	public function render_sessions_tab(DataIterMember $iter)
