@@ -49,7 +49,7 @@ class ProfileView extends View
 				// }
 			],
 			'mailing_lists' => [
-				'visible' => $this->member_write_permission($iter),
+				'visible' => $this->is_current_member($iter),
 				'label' => __('Mailing lists')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('mailinglists', compact('iter'));
@@ -151,14 +151,6 @@ class ProfileView extends View
 								  && !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
 
 		return $this->render('profile_tab.twig', compact('iter', 'error_message', 'errors', 'current_password_required'));
-	}
-
-	public function render_sessions_tab(DataIterMember $iter)
-	{
-		$model = get_model('DataModelSession');
-		$sessions = $model->getActive($iter['id']);
-		$sessions_view = View::byName('sessions');
-		return $this->render('sessions_tab.twig', compact('iter', 'sessions', 'sessions_view'));
 	}
 
 	public function render_kast_tab(DataIterMember $iter)

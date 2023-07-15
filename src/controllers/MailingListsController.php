@@ -7,6 +7,7 @@ require_once 'src/framework/controllers/ControllerCRUDForm.php';
 use App\Form\MailinglistType;
 use App\Form\Type\MemberIdType;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -129,6 +130,10 @@ class MailingListsController extends \ControllerCRUDForm
 
 	protected function run_unsubscribe_confirm($subscription_id)
 	{
+		/**
+		 * Endpoint to allow people to unsubscribe through an unsubscribe link.
+		 * TODO: better naming to differentiate between admin and user actions
+		 */
 		try {
 			$subscription = $this->subscription_model->get_iter($subscription_id);
 			$list = $subscription['mailinglist'];
@@ -156,6 +161,48 @@ class MailingListsController extends \ControllerCRUDForm
 		return $this->view->render_unsubscribe_form($list, $subscription, $form);
 	}
 
+	protected function run_subscribe(\DataIterMailinglist $list)
+	{
+		/**
+		 * Endpoint to allow members to (un)subscribe from their profile page.
+		 * TODO: better naming to differentiate between admin and user actions
+		 */
+		if (!get_auth()->logged_in())
+			throw new \UnauthorizedException('You need to log in to manage your mailinglist subscriptions');
+
+		$member = get_identity()->member();
+
+		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'mailinglist_subscription_' . $list['id']])
+			->add('subscribe', CheckboxType::class, [
+				'label' => __('Subscribe'),
+				'required' => false,
+			])
+			->add('do_subscribe', SubmitType::class, ['label' => __('Subscribe')])
+			->add('do_unsubscribe', SubmitType::class, ['label' => __('Unsubscribe')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			// Subscribe changes only if JS works, otherwise do_subscribe and do_unsubscribe should override whatever value is set.
+			// So only subscribe if either do_subscribe is clicked or subscribe is checked without do_unsubscribe being clicked.
+			$subscribe = $form->get('do_subscribe')->isClicked()
+				|| ($form->get('subscribe')->getData() && !$form->get('do_unsubscribe')->isClicked());
+			if ($subscribe) {
+				if (get_policy($this->model)->user_can_subscribe($list))
+					$this->subscription_model->subscribe_member($list, $member);
+			} else {
+				if (get_policy($this->model)->user_can_unsubscribe($list))
+					$this->subscription_model->unsubscribe_member($list, $member);	
+			}
+		}
+
+		$referrer = $this->get_parameter(
+			'referrer',
+			$this->generate_url('profile', ['view' => 'mailing_lists', 'lid' => $member['id']])
+		);
+		return $this->view->redirect($referrer);
+	}
+
 	private function _subscribe_member(\DataIterMailinglist $list, $data)
 	{
 		$member = $this->member_model->get_iter($data['member_id']);
@@ -170,9 +217,14 @@ class MailingListsController extends \ControllerCRUDForm
 
 	protected function run_subscribe_member(\DataIterMailinglist $list)
 	{
-		// Todo: instead of checking whether current user can update the list,
-		// check whether they can create new subscription iterators according
-		// to the policy?
+		/**
+		 * Endpoint to allow list owners to manually subscribe members.
+		 *
+		 * TODO: better naming to differentiate between admin and user actions
+		 * TODO: instead of checking whether current user can update the list,
+		 * check whether they can create new subscription iterators according
+		 * to the policy?
+		 */
 
 		if (!get_policy($this->model)->user_can_update($list))
 			throw new \UnauthorizedException('You cannot modify this mailing list');
@@ -194,6 +246,11 @@ class MailingListsController extends \ControllerCRUDForm
 
 	protected function run_subscribe_guest(\DataIterMailinglist $list)
 	{
+		/**
+		 * Endpoint to allow list owners to manually subscribe non-members.
+		 *
+		 * TODO: better naming to differentiate between admin and user actions
+		 */
 		if (!get_policy($this->model)->user_can_update($list))
 			throw new \UnauthorizedException('You cannot modify this mailing list');
 
@@ -219,6 +276,9 @@ class MailingListsController extends \ControllerCRUDForm
 
 	protected function run_unsubscribe(\DataIterMailinglist $list)
 	{
+		/**
+		 * Endpoint to allow list owners to manually unsubscribe members and non-members.
+		 */
 		if (!get_policy($this->model)->user_can_update($list))
 			throw new \UnauthorizedException('You cannot modify this mailing list');
 

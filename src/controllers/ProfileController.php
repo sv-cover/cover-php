@@ -289,28 +289,6 @@ class ProfileController extends \Controller
 
 		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
 	}
-
-	protected function _update_mailing_lists(\DataIterMember $iter)
-	{
-		$model = get_model('DataModelMailinglist');
-
-		$subscription_model = get_model('DataModelMailinglistSubscription');
-
-		$mailing_list = $model->get_iter($_POST['mailing_list_id']);
-
-		$subscribe = (empty($_POST['action']) && !empty($_POST['subscribe']) && $_POST['subscribe'] == 'yes') 
-				  || (!empty($_POST['action']) && $_POST['action'] == 'subscribe');
-
-		if ($subscribe) {
-			if (get_policy($model)->user_can_subscribe($mailing_list))
-				$subscription_model->subscribe_member($mailing_list, $iter);
-		} else {
-			if (get_policy($model)->user_can_unsubscribe($mailing_list))
-				$subscription_model->unsubscribe_member($mailing_list, $iter);	
-		}
-
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'mailing_lists', 'lid' => $iter['id']]));
-	}
 	
 	public function run_personal(\DataIterMember $iter)
 	{
@@ -449,12 +427,8 @@ class ProfileController extends \Controller
 	public function run_mailing_lists(\DataIterMember $member)
 	{
 
-		if (!$this->policy->user_can_update($member)
-			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
+		if (!$this->policy->user_can_update($member))
 			throw new \UnauthorizedException();
-
-		if ($this->_form_is_submitted('mailing_list', $member))
-			return $this->_update_mailing_lists($member);
 
 		$model = get_model('DataModelMailinglist');
 		$mailing_lists = $model->get_for_member($member);
@@ -462,10 +436,11 @@ class ProfileController extends \Controller
 		$lists = array_filter($mailing_lists, function($list) {
 			// return true;
 			return get_policy($list)->user_can_subscribe($list);
+			// TODO: should we show all list a person is subscribed to?
+			// return get_policy($list)->user_can_subscribe($list) || $list['subscribed'];
 		});
 
 		return $this->view->render('mailing_lists_tab.twig', ['iter' => $member, 'mailing_lists' => $lists]);
-		// return $this->view->render_mailing_lists_tab($lists);
 	}
 
 	public function run_sessions(\DataIterMember $member)
@@ -473,7 +448,11 @@ class ProfileController extends \Controller
 		if (!$this->policy->user_can_update($member))
 			throw new \UnauthorizedException();
 
-		return $this->view->render_sessions_tab($member);
+		return $this->view->render('sessions_tab.twig', [
+			'iter' => $member,
+			'sessions' => $model->getActive($member['id']),
+			'sessions_view' => View::byName('sessions'),
+		]);
 	}
 
 	public function run_kast(\DataIterMember $member)
