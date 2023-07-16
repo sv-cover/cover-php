@@ -11,8 +11,18 @@ require_once 'src/framework/email.php';
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 class ProfileController extends \Controller
 {
@@ -46,6 +56,20 @@ class ProfileController extends \Controller
 		parent::__construct($request, $router);
 	}
 	
+	public function validate_password($value, ExecutionContextInterface $context, $payload, $member)
+	{
+		/**
+		 * Password validator. Same as in PasswordController
+		 */
+		$effective_password = str_ireplace([$member['voornaam'],$member['achternaam'],'cover','password'], '', $value);
+
+		// Short passwords, or very common passwords, are stupid.
+		if (strlen($effective_password) < 6)
+			$context->buildViolation(__('Your password is too short or too predictable. Try to make it longer and with more different characters.'))
+				->atPath('password')
+				->addViolation();
+	}
+
 	public function _check_size($name, $value)
 	{
 		if ($value === null || !isset($this->sizes[$name]))
@@ -180,146 +204,108 @@ class ProfileController extends \Controller
 		}
 	}
 
-	protected function _update_profile(\DataIterMember $iter)
-	{
-		if (!$this->policy->user_can_update($iter))
-			throw new \UnauthorizedException();
-
-		$check = array(
-			array('name' => 'nick', 'function' => array(&$this, '_check_size')),
-			array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
-			array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
-			array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
-		);
-		
-		$data = check_values($check, $errors);
-	
-		if (count($errors) > 0) {
-			$error = __('The following fields are to long: ') . implode(', ', array_map('field_for_display', $errors));
-			return $this->view->render_profile_tab($iter, $error, $errors);
-		}
-
-		$iter->set_all($data);
-		
-		$this->model->update($iter);
-		
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
+	protected function _get_profile_form(\DataIterMember $iter) {
+		$form = get_form_factory()->createNamedBuilder('profile', FormType::class, $iter)
+			->add('nick', TextType::class, [
+				'label' => __('Nickname'),
+				'required' => false,
+				'constraints' => [
+					new Assert\Length(['max' => 50]),
+				]
+			])
+			->add('avatar', UrlType::class, [
+				'label' => __('Avatar'),
+				'required' => false,
+				'default_protocol' => null, // if not, it renders as text type…
+				'constraints' => [
+					new Assert\Url(),
+					new Assert\Length(['max' => 100]),
+				],
+				'attr' => [
+					'placeholder' => 'https://',
+				],
+			])
+			->add('homepage', UrlType::class, [
+				'label' => __('Website'),
+				'required' => false,
+				'default_protocol' => null, // if not, it renders as text type…
+				'constraints' => [
+					new Assert\Url(),
+					new Assert\Length(['max' => 255]),
+				],
+				'attr' => [
+					'placeholder' => 'https://',
+				],
+			])
+			->add('submit', SubmitType::class, ['label' => __('Save')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
-	protected function _update_password(\DataIterMember $iter)
-	{
-		if (!$this->policy->user_can_update($iter))
-			throw new \UnauthorizedException();
-
-		$errors = array();
-		$message = array();
-
-		// Only test the old password if we are not a member of the board
-		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-			if (!isset($_POST['wachtwoord_oud']) || !$this->model->test_password($iter, $_POST['wachtwoord_oud'])) {
-				$errors[] = 'wachtwoord_oud';
-				$message[] = __('The current password is incorrect.');
-			}
-		}
-
-		if (!isset($_POST['wachtwoord_nieuw'])) {
-			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('The new password hasn\'t been filled in.');
-		} elseif (!isset($_POST['wachtwoord_opnieuw']) || $_POST['wachtwoord_nieuw'] !== $_POST['wachtwoord_opnieuw']) {
-			$errors[] = 'wachtwoord_opnieuw';
-			$message[] = __('The new password hasn\'t been filled in correctly twice.');
-		} elseif (strlen($_POST['wachtwoord_nieuw']) < 6) {
-			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('Your new password is too short.');
-		}
-		
-		if (count($errors) > 0) {
-			$error = implode("\n", $message);
-			return $this->view->render_profile_tab($iter, $error, $errors);
-		}
-		
-		$this->model->set_password($iter, $_POST['wachtwoord_nieuw']);
-
-		$_SESSION['alert'] = __('Your password has been changed.');
-
-		return $this->view->redirect($this->generate_url('profile', ['lid' => $iter['id'], 'view' => 'profile']));
+	protected function _get_password_form(\DataIterMember $iter) {
+		$form = get_form_factory()->createNamedBuilder('password', FormType::class)
+			->add('current', PasswordType::class, [
+				'label' => __('Current Password'),
+				'required' => true,
+				'constraints' => [
+					new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) use ($iter) {
+						if (!$this->model->test_password($iter, $value))
+							$context->buildViolation(__('That’s not your current password!'))
+								->atPath('current')
+								->addViolation();
+					}),
+				],
+			])
+			->add('password', RepeatedType::class, [
+				'type' => PasswordType::class,
+				'invalid_message' => __('The two passwords are not the same.'),
+				'required' => true,
+				'first_options'  => ['label' => 'New Password'],
+				'second_options' => ['label' => 'Repeat'],
+				'constraints' => [
+					new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) use ($iter) {
+						// Make sure new password is actually new. This is done here to make sure validate_password is implemented the same everywhere
+						if ($this->model->test_password($iter, $value))
+							$context->buildViolation(__('Your new password cannot be the same as your current password!'))
+								->atPath('password')
+								->addViolation();
+						return $this->validate_password($value, $context, $payload, $iter);
+					}),
+				],
+			])
+			->add('submit', SubmitType::class, ['label' => __('Change password')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
-	protected function _update_photo(\DataIterMember $iter)
-	{
-		$error = null;
-
-		if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
-			$error = sprintf(__('The image file is too large. The maximum file size is %s.'),
-				ini_get('upload_max_filesize') . ' bytes');
-
-		elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
-			$error = sprintf(__('The image hasn’t been uploaded correctly. PHP reports error code %d.'), $_FILES['photo']['error']);
-
-		elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
-			$error = __('The image file is not a file uploaded by PHP.');
-		
-		elseif (!($image_meta = getimagesize($_FILES['photo']['tmp_name'])))
-			$error = __('The uploaded file could not be read.');
-
-		if ($error)
-			return $this->view->render_profile_tab($iter, $error, array('photo'));
-
-		if (get_identity()->member_in_committee(COMMISSIE_EASY))
-		{
-			if (!($fh = fopen($_FILES['photo']['tmp_name'], 'rb')))
-				throw new \RuntimeException(__('The uploaded file could not be opened.'));
-
-			$this->model->set_photo($iter, $fh);
-
-			fclose($fh);
-		}
-		else
-		{
-			send_mail_with_attachment(
-				'acdcee@svcover.nl',
-				'New yearbook photo for ' . $iter['full_name'],
-				"{$iter['full_name']} would like to use the attached photo as their new profile picture.",
-				sprintf('Reply-to: %s <%s>', $iter['full_name'], $iter['email']),
-				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
-
-			$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
-		}
-
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
-	}
-	
-	public function run_personal(\DataIterMember $iter)
-	{
-		if (!$this->policy->user_can_update($iter))
-			throw new \UnauthorizedException();
-
-		if ($this->_form_is_submitted('personal', $iter))
-			return $this->_update_personal($iter);
-
-		return $this->view->render_personal_tab($iter);
+	// TODO: is public so it can be accessed from view. Make private after UI change
+	public function _get_photo_form() {
+		$form = $this->createFormBuilder()
+			->add('photo', FileType::class, [
+				'label' => __('Photo'),
+				'constraints' => [
+					new Assert\Image([
+						'maxSize' => ini_get('upload_max_filesize'),
+						'mimeTypes' => [
+							'image/jpeg',
+						],
+						'mimeTypesMessage' => __('Please upload a valid JPEG-image.'),
+						'sizeNotDetectedMessage' => __('The uploaded file doesn’t appear to be an image.'),
+					])
+				],
+				'attr' => [
+					'accept' => 'image/jpeg',
+				],
+			])
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
-	public function run_profile(\DataIterMember $iter)
-	{
-		if (!$this->policy->user_can_update($iter))
-			throw new \UnauthorizedException();
-
-		if ($this->_form_is_submitted('profile', $iter))
-			return $this->_update_profile($iter);
-
-		elseif ($this->_form_is_submitted('password', $iter))
-			return $this->_update_password($iter);
-
-		return $this->view->render_profile_tab($iter);
-	}
-	
-	public function run_privacy(\DataIterMember $iter)
-	{
-		if (!$this->policy->user_can_update($iter))
-			throw new \UnauthorizedException();
-
+	protected function _get_privacy_form(\DataIterMember $iter) {
 		// Load labels
 		$labels = [];
 
@@ -354,6 +340,57 @@ class ProfileController extends \Controller
 			->getForm();
 		$form->handleRequest($this->get_request());
 
+		return $form;
+	}
+
+	public function run_personal(\DataIterMember $iter)
+	{
+		if (!$this->policy->user_can_update($iter))
+			throw new \UnauthorizedException();
+
+		if ($this->_form_is_submitted('personal', $iter))
+			return $this->_update_personal($iter);
+
+		return $this->view->render_personal_tab($iter);
+	}
+
+	public function run_profile(\DataIterMember $iter)
+	{
+		if (!$this->policy->user_can_update($iter))
+			throw new \UnauthorizedException();
+
+		$profile_form = $this->_get_profile_form($iter);
+
+		if ($profile_form->isSubmitted() && $profile_form->isValid()) {
+			$this->model->update($iter);
+			return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
+		}
+
+		$password_form = $this->_get_password_form($iter);
+
+		if ($password_form->isSubmitted() && $password_form->isValid()) {
+			$this->model->set_password($iter, $password_form['password']->getData());
+			$_SESSION['alert'] = __('Your password has been changed.');
+			return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
+		}
+
+		$photo_form = $this->_get_photo_form();
+
+		return $this->view->render('profile_tab.twig', [
+			'iter' => $iter,
+			'profile_form' => $profile_form->createView(),
+			'photo_form' => $photo_form->createView(),
+			'password_form' => $password_form->createView(),
+		]);
+	}
+	
+	public function run_privacy(\DataIterMember $iter)
+	{
+		if (!$this->policy->user_can_update($iter))
+			throw new \UnauthorizedException();
+
+		$form = $this->_get_privacy_form($iter);
+
 		// Handle submission
 		if ($form->isSubmitted() && $form->isValid()) {
 			// Build privacy mask 
@@ -383,8 +420,31 @@ class ProfileController extends \Controller
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('photo', $iter))
-			return $this->_update_photo($iter);
+
+		$form = $this->_get_photo_form();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$file = $form['photo']->getData();
+			if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
+				$fh = fopen($file->getPathname(), 'rb');
+
+				if (!$fh)
+					throw new \RuntimeException(__('The uploaded file could not be opened.'));
+
+				$this->model->set_photo($iter, $fh);
+
+				fclose($fh);
+			} else {
+				$profile_link = $this->generate_url('profile', ['id' => $iter['id']], UrlGeneratorInterface::ABSOLUTE_URL);
+				send_mail_with_attachment(
+					'acdcee@svcover.nl',
+					'New yearbook photo for ' . $iter['full_name'],
+					"{$iter['full_name']} would like to use the attached photo as their new profile picture. Change it here: {$profile_link}",
+					sprintf('Reply-to: %s <%s>', $iter['full_name'], $iter['email']),
+					[$file->getClientOriginalName() => $file->getPathname()]);
+
+				$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
+			}
+		}
 
 		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
 	}
@@ -522,7 +582,7 @@ class ProfileController extends \Controller
 
 		$form = $this->createFormBuilder()
 			->add('sepa_mandate', CheckboxType::class, [
-				'label'    => __('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for the duration of my membership.'),
+				'label' => __('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for the duration of my membership.'),
 				'required' => true,
 			])
 			->add('submit', SubmitType::class, ['label' => 'Sign mandate'])

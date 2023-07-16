@@ -915,6 +915,7 @@ function is_same_domain($subdomain, $domain, $levels = 2)
  */
 function send_mail_with_attachment($to, $subject, $message, $additional_headers, array $attachments)
 {
+	// Alternative sendmail implementations may not like this "oi" flag, which could result in a broken pipe. Remove temporarily if you're running into issues on your test environment.
 	$fout = popen(ini_get('sendmail_path') . ' -oi', 'w');
 
 	if (!$fout)

@@ -145,14 +145,6 @@ class ProfileView extends View
 		return $this->render('personal_tab.twig', compact('iter', 'error_message', 'errors'));
 	}
 
-	public function render_profile_tab(DataIterMember $iter, $error_message = null, array $errors = [])
-	{
-		$current_password_required = !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-								  && !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
-
-		return $this->render('profile_tab.twig', compact('iter', 'error_message', 'errors', 'current_password_required'));
-	}
-
 	public function render_kast_tab(DataIterMember $iter)
 	{
 		require_once 'src/services/kast.php';
@@ -268,6 +260,10 @@ class ProfileView extends View
 			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_EASY);
+	}
+
+	public function get_photo_form() {
+		return $this->controller->_get_photo_form()->createView();
 	}
 
 	public function format_member_data(DataIterMember $iter, $field)

@@ -196,15 +196,16 @@
 
 {%- block file_widget -%}
     {%- set widget_attr = {'class': (attr.class|default('') ~ ' file')|trim} -%}
+    {%- set cta_attr = {'title': attr.title|default('')} -%}
     {%- set attr = attr|merge({'class': 'file-input'}) -%}
     <div {% with { attr: widget_attr } %}{{ block('attributes') }}{% endwith %}>
         <label class="file-label" for="{{ id }}">
             <input type="file" {{ block('widget_attributes') }}>
-            <span class="file-cta">
+            <span class="file-cta" {% with { attr: cta_attr } %}{{ block('attributes') }}{% endwith %}>
                 <span class="file-icon">
                     <i class="fas fa-upload" aria-hidden="true"></i>
                 </span>
-                <span class="file-label">{{ cta }}</span>
+                <span class="file-label">{{ cta|default('Browse…') }}</span>
             </span>
             {% if 'has-name' in widget_attr.class %}
                 <span class="file-name">

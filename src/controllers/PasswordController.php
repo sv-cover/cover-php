@@ -25,6 +25,9 @@ class PasswordController extends \Controller
 
 	public function validate_password($value, ExecutionContextInterface $context, $payload, $member)
 	{
+		/**
+		 * Password validator. Same as in ProfileController
+		 */
 		$effective_password = str_ireplace([$member['voornaam'],$member['achternaam'],'cover','password'], '', $value);
 
 		// Short passwords, or very common passwords, are stupid.

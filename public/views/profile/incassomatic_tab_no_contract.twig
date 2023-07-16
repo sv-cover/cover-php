@@ -9,7 +9,7 @@
 	<p>{{ __("With a continuous direct debit mandate, you no longer have to print and sign direct debit forms. No more going to the printer after buying new credits in KAST!") }}</p>
 
 	<h3 class="title is-4">{{ __('SEPA direct debit mandate') }}</h3>
-	{{ form_start(form, {action: url('profile', {'view': 'incassomatic_create_mandate', 'lid': iter.id})}) }}
+	{{ form_start(form, {action: path('profile', {'view': 'incassomatic_create_mandate', 'lid': iter.id})}) }}
 		{# Global errors #}
 		{{ form_errors(form) }}
 		<p>{{ __('By checking this box, you authorise (A) study association Cover (ID: NL48ZZZ400267070000) to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with the instructions from the Creditor. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank.') }}</p>
