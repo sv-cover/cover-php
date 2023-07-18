@@ -42,15 +42,21 @@ class PageFormType extends AbstractType
 					'help' => __('This value is often used in the code base to refer to a specific page.'),
 				]);
 
-			if ($this->canSetCommitteeId($iter))
-				// No additional validation is needed, getChoices makes sure we
-				// can only pick options we're allowed to pick.
-				$form->add('committee_id', ChoiceType::class, [
-					'label' => __('Owner'),
-					'choice_loader' => new CallbackChoiceLoader(function() use ($iter) {
-						return \get_model('DataModelCommissie')->get_committee_choices_for_iter($iter);
-					}),
-				]);
+			if ($this->canSetCommitteeId($iter)) {
+                // No additional validation is needed, getChoices makes sure we
+                // can only pick options we're allowed to pick.
+                $form->add('committee_id', ChoiceType::class, [
+                    'label' => __('Owner'),
+                    'choice_loader' => new CallbackChoiceLoader(function () use ($iter) {
+                        return \get_model('DataModelCommissie')->get_committee_choices_for_iter($iter);
+                    }),
+                ]);
+
+                $form->add('slug', TextType::class, [
+                    'label' => __('Slug'),
+                    'help' => __('This sets a custom URL for the page in the format of svcover.nl/<slug>. The slug must be unique (different from any other page)'),
+                ]);
+            }
 		});
 	}
 

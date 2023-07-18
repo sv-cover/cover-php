@@ -12,6 +12,9 @@
 	{% if form.titel is defined %}
 		{{ form_row(form.titel) }}
 	{% endif %}
+	{% if form.slug is defined %}
+		{{ form_row(form.slug) }}
+	{% endif %}
 	{% if form.committee_id is defined %}
 		{{ form_row(form.committee_id) }}
 	{% endif %}

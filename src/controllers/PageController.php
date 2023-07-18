@@ -41,12 +41,16 @@ class PageController extends \ControllerCRUDForm
 		if ($view === 'preview')
 			return $this->generate_url('page.preview', $parameters);
 
+        if($view === 'read' && $iter->slug)
+            return $this->generate_url('slug', ["slug" => $iter->slug]);
+
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
 			$parameters['id'] = $iter->get_id();
+
 
 		return $this->generate_url('page', $parameters);
 	}
@@ -173,6 +177,18 @@ class PageController extends \ControllerCRUDForm
 		else
 			return parent::run_read($iter);
 	}
+
+    public function run_impl(){
+        $route = $this->get_parameter('_route');
+        if($route == 'page.list'){
+            return $this->run_index();
+        } else if($route == 'slug') {
+            $iter = $this->model->get_iter_from_slug($this->get_parameter('_route_params')['slug']);
+            return $this->run_read($iter);
+        } else {
+            return parent::run_impl();
+        }
+    }
 
 	protected function _is_embedded_page($page_id, $model_name)
 	{

@@ -34,7 +34,7 @@
             <tbody>
             {% for page in iters|sort_by('id asc') %}
                 <tr>
-                    <td><a href="{{ path('page', {id: page.id}) }}">{{ page.id }}</a></td>
+                    <td><a href="{{ page.slug ? path('slug', {slug: page.slug}) : path('page', {id: page.id}) }}">{{ page.id }}</a></td>
                     <td class="is-truncated" title="{{ page.titel }}">
                         <span>{{ page.titel }}</span>{# "identifier" in the form #}
                     </td>
