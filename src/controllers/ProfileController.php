@@ -9,13 +9,16 @@ require_once 'src/services/secretary.php';
 require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/email.php';
 
+use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormInterface;
@@ -120,81 +123,17 @@ class ProfileController extends \Controller
 		return filter_var($value, FILTER_VALIDATE_EMAIL);
 	}
 
-	protected function _update_personal(\DataIterMember $iter)
-	{
-		$check = array(
-			array('name' => 'postcode', 'function' => array($this, '_check_size')),
-			array('name' => 'telefoonnummer', 'function' => array($this, '_check_phone')),
-			array('name' => 'adres', 'function' => array($this, '_check_size')),
-			array('name' => 'email', 'function' => array($this, '_check_email')),
-			array('name' => 'woonplaats', 'function' => array($this, '_check_size'))
-		);
-		
-		$data = check_values($check, $errors);
-
-		if (count($errors) > 0) {
-			$error = __('The following fields are not correctly filled in: ') . implode(', ', array_map('field_for_display', $errors));
-			return $this->view->render_personal_tab($iter, $error, $errors);
-		}
-		
-		// Get all field names that need to be set on the iterator
-		$fields = array_map(function($check) { return $check['name']; }, $check);
-		
-		// Remove the e-mail field, that is a special case
-		$fields = array_filter($fields, function($field) { return $field != 'email'; });
-
-		$old_values = $iter->data;
-		
-		foreach ($fields as $field) {
-			if (isset($data[$field]) && $data[$field] !== null)
-				$iter->set($field, $data[$field]);
-			else if (!isset($data[$field]) && get_post($field) !== null)
-				$iter->set($field, get_post($field));
-		}
-
-		if ($iter->has_changes())
-		{
-			$changed_fields = $iter->changed_fields();
-
-			$this->model->update($iter);
-		
-			$this->_report_changes_upstream($iter, $changed_fields, $old_values);
-		}
-
-		// If the email address has changed, add a confirmation.
-		if (isset($data['email']) && $data['email'] !== null && $data['email'] != $iter['email'])
-		{
-			$model = get_model('DataModelEmailConfirmationToken');
-
-			$token = $model->create_token($iter, $data['email']);
-
-			$language_code = strtolower(i18n_get_language());
-
-			$variables = [
-				'naam' => member_first_name($iter, IGNORE_PRIVACY),
-				'email' => $token['email'],
-				'link' => $token['link']
-			];
-
-			// Send the confirmation to the new email address
-			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($token['email']);
-			$_SESSION['alert'] = __('We’ve sent a confirmation mail to your new email address.');
-		}
-
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'personal', 'lid' => $iter['id']]));
-	}
-
-	private function _report_changes_upstream(\DataIterMember $iter, array $fields, array $old_values)
+	private function _report_changes_upstream(\DataIterMember $iter)
 	{
 		// Inform the board that member info has been changed.
-		$subject = "Lidgegevens gewijzigd";
-		$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
+		$subject = "Member details updated";
+		$body = sprintf("%s updated their member details:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
 		
-		foreach ($fields as $field)
-			$body .= sprintf("%s:\t%s (was: %s)\n", $field, $iter[$field] ? $iter[$field] : "<verwijderd>", $old_values[$field]);
+		foreach ($iter->secretary_changed_values() as $field => $value)
+			$body .= sprintf("%s:\t%s\n", $field, $value ?? "<deleted>");
 			
 		mail('administratie@svcover.nl', $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
-		mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
+		mail('secretaris@svcover.nl', $subject, sprintf("%s updated their member details:\n\nYou can see the changes in sectary or in the administratie@svcover.nl mailbox", member_full_name($iter, IGNORE_PRIVACY)), "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
 
 		try {
 			get_secretary()->updatePersonFromIterChanges($iter);
@@ -204,7 +143,72 @@ class ProfileController extends \Controller
 		}
 	}
 
-	protected function _get_profile_form(\DataIterMember $iter) {
+	protected function _get_personal_form(\DataIterMember $iter)
+	{
+		$form = $this->createFormBuilder($iter)
+			->add('adres', TextType::class, [
+				'label' => __('Address'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Length(['max' => 255]),
+				],
+			])
+			->add('postcode', TextType::class, [
+				'label' => __('Postal code'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Length(['max' => 7]),
+				],
+			])
+			->add('woonplaats', TextType::class, [
+				'label' => __('Town'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Length(['max' => 255]),
+				],
+			])
+			->add('telefoonnummer', TelType::class, [
+				'label' => __('Phone'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new AssertPhoneNumber(['defaultRegion' => 'NL']),
+					new Assert\Length(['max' => 20]),
+				]
+			])
+			->add('email', EmailType::class, [
+				'label' => __('Email'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Email(),
+					new Assert\Length(['max' => 255]),
+				],
+				'setter' => function (\DataIterMember &$member, string $value, FormInterface $form) {
+					// Prevent normal flow by doing nothing. Email requires special treatment.
+				},
+			])
+			->add('iban', TextType::class, [
+				'label' => __('IBAN'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Iban(),
+				],
+			])
+			->add('bic', TextType::class, [
+				'label' => __('BIC'),
+				'required' => false,
+				'constraints' => [
+					new Assert\Bic(),
+				],
+				'help' => __("BIC is required if your IBAN does not start with 'NL'"), // This is never validated for better UX. Treasurer can always look it up.
+			])
+			->add('submit', SubmitType::class, ['label' => __('Save')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
+	}
+
+	protected function _get_profile_form(\DataIterMember $iter)
+	{
 		$form = get_form_factory()->createNamedBuilder('profile', FormType::class, $iter)
 			->add('nick', TextType::class, [
 				'label' => __('Nickname'),
@@ -243,7 +247,8 @@ class ProfileController extends \Controller
 		return $form;
 	}
 
-	protected function _get_password_form(\DataIterMember $iter) {
+	protected function _get_password_form(\DataIterMember $iter)
+	{
 		$form = get_form_factory()->createNamedBuilder('password', FormType::class)
 			->add('current', PasswordType::class, [
 				'label' => __('Current Password'),
@@ -281,7 +286,8 @@ class ProfileController extends \Controller
 	}
 
 	// TODO: is public so it can be accessed from view. Make private after UI change
-	public function _get_photo_form() {
+	public function _get_photo_form()
+	{
 		$form = $this->createFormBuilder()
 			->add('photo', FileType::class, [
 				'label' => __('Photo'),
@@ -305,7 +311,8 @@ class ProfileController extends \Controller
 		return $form;
 	}
 
-	protected function _get_privacy_form(\DataIterMember $iter) {
+	protected function _get_privacy_form(\DataIterMember $iter)
+	{
 		// Load labels
 		$labels = [];
 
@@ -348,10 +355,41 @@ class ProfileController extends \Controller
 		if (!$this->policy->user_can_update($iter))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('personal', $iter))
-			return $this->_update_personal($iter);
+		$form = $this->_get_personal_form($iter);
 
-		return $this->view->render_personal_tab($iter);
+		if ($form->isSubmitted() && $form->isValid()) {
+			$updates = [];
+			if ($iter->has_secretary_changes()) {
+				$updates[] = 'other';
+				$this->model->update($iter);
+				$this->_report_changes_upstream($iter);
+			}
+
+			// If the email address has changed, add a confirmation.
+			if ($form['email']->getData() != $iter['email']) {
+				$updates[] = 'email';
+				$token = get_model('DataModelEmailConfirmationToken')->create_token($iter, $form['email']->getData());
+
+				$variables = [
+					'naam' => member_first_name($iter, IGNORE_PRIVACY),
+					'email' => $token['email'],
+					'link' => $token['link']
+				];
+
+				// Send the confirmation to the new email address
+				parse_email_object("profile_confirm_email.txt", $variables)->send($token['email']);
+			}
+
+			return $this->view->render('personal_tab_success.twig', [
+				'iter' => $iter,
+				'updates' => $updates,
+			]);
+		}
+
+		return $this->view->render('personal_tab.twig', [
+			'iter' => $iter,
+			'form' => $form->createView()
+		]);
 	}
 
 	public function run_profile(\DataIterMember $iter)
@@ -508,10 +546,12 @@ class ProfileController extends \Controller
 		if (!$this->policy->user_can_update($member))
 			throw new \UnauthorizedException();
 
+		$model = get_model('DataModelSession');
+
 		return $this->view->render('sessions_tab.twig', [
 			'iter' => $member,
 			'sessions' => $model->getActive($member['id']),
-			'sessions_view' => View::byName('sessions'),
+			'sessions_view' => \View::byName('sessions'),
 		]);
 	}
 
@@ -644,7 +684,7 @@ class ProfileController extends \Controller
 		$this->model->update($member);
 
 		// Report the changes to the secretary and to Secretary (the system...)
-		$this->_report_changes_upstream($member, ['email'], ['email' => $old_email]);
+		$this->_report_changes_upstream($member);
 
 		// Delete this and all other tokens for this user
 		$model->invalidate_all($token['member']);

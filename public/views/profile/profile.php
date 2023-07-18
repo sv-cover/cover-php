@@ -109,7 +109,7 @@ class ProfileView extends View
 				'name' => 'adres'
 			],
 			[
-				'label' => __('Zipcode'),
+				'label' => __('Postal code'),
 				'name' => 'postcode'
 			],
 			[
@@ -138,11 +138,6 @@ class ProfileView extends View
 		$committees = $model->get_for_member($iter);
 
 		return $this->render('public_tab.twig', compact('iter', 'is_current_user', 'can_download_vcard', 'committees'));
-	}
-
-	public function render_personal_tab(DataIterMember $iter, $error_message = null, array $errors = [])
-	{
-		return $this->render('personal_tab.twig', compact('iter', 'error_message', 'errors'));
 	}
 
 	public function render_kast_tab(DataIterMember $iter)

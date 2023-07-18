@@ -7,10 +7,12 @@ Content-Type: text/html; charset=UTF-8
 <body>
 <p>Dear $naam,</p>
 
-<p>You've changed your email address on the Cover website to $email|markup_format_text.</p>
+<p>It looks like you've changed your email address on the Cover website to $email|markup_format_text.</p>
 
-<p>Is this correct? Since you've received this email we suppose it is. However, please do confirm it by visiting this page:<br>
+<p>Is this correct? It probably is, but we just want to make sure! Please do confirm it by clicking this link:<br>
 <a href="$link|markup_format_attribute">$link|markup_format_text</a></p>
+
+<p>If it's not correct, just don't click the link. We'll keep your previous email.</p>
 
 <p>Kind regards,</p>
 

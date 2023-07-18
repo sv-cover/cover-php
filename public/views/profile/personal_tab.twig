@@ -1,59 +1,49 @@
 {% extends 'tab.twig' %}
 
+{% from '@theme/profile/macros.twig' import profile_field %}
+
 {% set active_tab = 'personal' %}
 
 {% block tab_content %}
 <article>
-	<form action="{{ path('profile', {view: 'personal', lid:iter.id}) }}" method="post">
+	{{ form_start(form, {action: path('profile', {'view': 'personal', 'lid': iter.id})}) }}
 		<div class="profile-field">
-			<div class="field-body"><h2 class="title is-4">{{ __('Personal data') }}</h2></div>
+			<div class="field-body">
+				<h2 class="title is-4">{{ __('Personal data') }}</h2>
+				{# Global errors #}
+				{{ form_errors(form) }}
+			</div>
 		</div>
-		{{ html_nonce('personal', iter) }}
-		{% for field in view.personal_fields %}
-			{% if field.read_only is not defined %}
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						{{ html_label(field.label, field.name, errors=errors) }}
-					</div>
-					<div class="field-body">
-						<div class="field is-expanded">
-							<div class="control">
-								{{ html_input_text(field.name, iter, errors=errors) }}
-							</div>
-						</div>
-					</div>
-				</div>
-			{% else %}
-				<div class="profile-field">
-					<div class="field-label">
-						{{ field.label }}
-					</div>
-					<div class="field-body">
-						{% if field.name == 'geboortedatum' %}
-							{{ iter[field.name]|date('d-m-Y') }}
-						{% else %}
-							{{ iter[field.name] }}
-						{% endif %}
-					</div>
-				</div>
-			{% endif %}
-		{% endfor %}
-	
+		<div class="profile-field">
+			<div class="field-label">{{ __('Name') }}</div>
+			<div class="field-body">{{ iter.full_name }}</div>
+		</div>
+		<div class="profile-field">
+			<div class="field-label">{{ __('Birthdate') }}</div>
+			<div class="field-body">{{ iter.geboortedatum|date('d-m-Y') }}</div>
+		</div>
+		<div class="profile-field">
+			<div class="field-label">{{ __('Starting year ') }}</div>
+			<div class="field-body">{{ iter.beginjaar }}</div>
+		</div>
+		{{ profile_field(form.email) }}
+		{{ profile_field(form.telefoonnummer) }}
+		{{ profile_field(form.adres) }}
+		{{ profile_field(form.postcode) }}
+		{{ profile_field(form.woonplaats) }}
+		{{ profile_field(form.iban) }}
+		{{ profile_field(form.bic, {mark_required: true}) }}
+		<div class="profile-field">
+			<div class="field-body">
+				{{ form_widget(form.submit) }}
+			</div>
+		</div>
 		<div class="field is-horizontal">
 			<div class="field-label"></div>
 			<div class="field-body">
-				<div class="field">
-					<div class="control buttons">
-						<button type="submit" class="button is-primary">{{ __('Save') }}</button>
-					</div>
-				</div>
+				<p>{{ __('Do you want to update personal information that you can’t change here? That’s possible! Just contact the secretary at <a href="mailto:secretary@svcover.nl">secretary@svcover.nl</a>.')|raw }}</p>
 			</div>
 		</div>
-
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
-			<div class="field-body">{{ __("Do you want to change personal information that you can't change here? That's still possible! Just contact the secretary.") }}</div>
-		</div>
-	</form>
+	{{ form_end(form) }}
 </article>
 {% endblock %}
