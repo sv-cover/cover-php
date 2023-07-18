@@ -3,6 +3,7 @@ namespace App\Controller;
 
 require_once 'src/framework/controllers/Controller.php';
 
+use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -13,26 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ClubsController extends \Controller 
 {
 	protected $view_name = 'clubs';
-
-	// Copied from profiel
-	public function _check_phone($name, $value)
-	{
-		try {
-			$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
-			$phone_number = $phone_util->parse($value, 'NL');
-			return $phone_util->isValidNumber($phone_number)
-				? $phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164)
-				: false;
-		} catch (\libphonenumber\NumberParseException $e) {
-			return false;
-		}
-	}
-
-	// Copied from profiel
-	public function _check_email($name, $value)
-	{
-		return filter_var($value, FILTER_VALIDATE_EMAIL);
-	}
 
 	public function run_propose_club()
 	{
@@ -77,7 +58,10 @@ class ClubsController extends \Controller
 			->add('phone', TelType::class, [
 				'label' => __('Phone number'),
 				'help' => __('We need to know how to contact you for questions!'),
-				'constraints' => new Assert\NotBlank(),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new AssertPhoneNumber(['defaultRegion' => 'NL']),
+				],
 			])
 			->add('submit', SubmitType::class, [
 				'label' => __('Submit proposal'),

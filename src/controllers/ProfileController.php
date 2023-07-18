@@ -73,56 +73,6 @@ class ProfileController extends \Controller
 				->addViolation();
 	}
 
-	public function _check_size($name, $value)
-	{
-		if ($value === null || !isset($this->sizes[$name]))
-			return $value;
-
-		if (strlen(trim($value)) === 0 && in_array($name, $this->required))
-			return false;
-
-		if (strlen(trim($value)) > $this->sizes[$name])
-			return false;
-		
-		return trim($value);
-	}
-
-	public function _check_geboortedatum($name, $value)
-	{
-		if (!preg_match('/([0-9]+)(-|\/)([0-9]+)(-|\/)([0-9]+)/', $value, $matches))
-			return false;
-		
-		return $matches[5] . '-' . $matches[3] . '-' . $matches[1];
-	}
-
-	public function _check_type($name, $value)
-	{
-		return $value !== null && is_numeric($value) && $value >=1 && $value <= 4;
-	}
-
-	public function _check_language($name, $value)
-	{
-		return in_array($value, array('nl', 'en')) ? $value : false;
-	}
-
-	public function _check_phone($name, $value)
-	{
-		try {
-			$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
-			$phone_number = $phone_util->parse($value, 'NL');
-			return $phone_util->isValidNumber($phone_number)
-				? $phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164)
-				: false;
-		} catch (\libphonenumber\NumberParseException $e) {
-			return false;
-		}
-	}
-
-	public function _check_email($name, $value)
-	{
-		return filter_var($value, FILTER_VALIDATE_EMAIL);
-	}
-
 	private function _report_changes_upstream(\DataIterMember $iter)
 	{
 		// Inform the board that member info has been changed.
@@ -637,17 +587,9 @@ class ProfileController extends \Controller
 			]));
 		}
 
-		try {
-			$secretary_data = current(get_secretary()->findPerson($member->get_id()));
-		} catch (\Exception|Error $exception) {
-			sentry_report_exception($exception);
-			$secretary_data = [];
-		}
-
 		return $this->view->render('incassomatic_tab_no_contract.twig', [
 			'iter' => $member,
 			'form' => $form->createView(),
-			'secretary_data' => $secretary_data,
 		]);
 	}
 
@@ -689,7 +631,7 @@ class ProfileController extends \Controller
 		// Delete this and all other tokens for this user
 		$model->invalidate_all($token['member']);
 
-		return $this->view->render_confirm_email(true);
+		$this->view->render('confirm_email.twig', ['success' => true]);
 	}
 
 	public function run_index()

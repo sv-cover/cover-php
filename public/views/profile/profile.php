@@ -4,13 +4,6 @@ require_once 'src/services/facebook.php';
 
 use JeroenDesloovere\VCard\VCard;
 
-function empty_to_http_formatter($value) {
-	if (!$value)
-		return 'http://';
-	else
-		return $value;
-}
-
 
 class ProfileView extends View
 {
@@ -237,11 +230,6 @@ class ProfileView extends View
 		$card->download();
 		
 		return null;
-	}
-
-	public function render_confirm_email($success)
-	{
-		return $this->render('confirm_email.twig', compact('success'));
 	}
 
 	function is_current_member(DataIterMember $iter)
