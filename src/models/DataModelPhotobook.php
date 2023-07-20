@@ -311,7 +311,11 @@ class DataIterPhotobook extends DataIter implements SearchResult
 
 	public function new_book()
 	{
-		return new DataIterPhotobook($this->model, null, ['parent_id' => $this['id']]);
+		// Create new iter with defaults
+		return new DataIterPhotobook($this->model, null, [
+			'parent_id' => $this['id'],
+			'visibility' => DataModelPhotobook::VISIBILITY_PUBLIC,
+		]);
 	}
 
 	public function get_books()

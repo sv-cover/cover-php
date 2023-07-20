@@ -4,66 +4,28 @@
 
 {% set form_action = book.id > 0 ? path('photos', {book: book.id, view: 'update_book'}) : path('photos', {book: book.parent.id, view: 'add_book'}) %}
 
-{% set form_submit_button = book.id > 0 ? __('Modify photo album') : __('Add photo album') %}
-
 {% block title form_title ~ ' – ' ~ parent() %}
 
 {% block content %}
 <h1 class="title">{{ form_title }}</h1>
-<form method="post" action="{{ form_action|e('html_attr') }}">
-	{% if book.id %}
-		{{ html_nonce('update_book', book) }}
-	{% else %}
-		{{ html_nonce('create_book', book.parent) }}
-	{% endif %}
-
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# fields #}
+	{{ form_row(form.titel) }}
 	<div class="field">
-		{{ html_label(__('Title'), 'titel', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_input_text('titel', book, required='required') }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Part of'), 'parent', errors=errors, required=false) }}
+		<label class="label">{{ __('Part of') }}</label>
 		<div class="control">
 			<a href="{{ path('photos', {book: book.parent.id}) }}" id="parent">{{ book.parent.titel }}</a>
 		</div>
 	</div>
-
-	<div class="field">
-		{{ html_label(__('Date (dd-mm-yyyy)'), 'date', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_input_text('date', book, required='required') }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Photographer'), 'fotograaf', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_input_text('fotograaf', book, required='required') }}
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Visible to'), 'visibility', errors=errors, required=true) }}
-		<div class="control">
-			<div class="select">
-				{{ html_select_field('visibility', view.visibility_options, book, required=true) }}
-			</div>
-		</div>
-	</div>
-
-	<div class="field">
-		{{ html_label(__('Description'), 'beschrijving', errors=errors) }}
-		<div class="control">
-			{{ html_textarea_field('beschrijving', book, errors=errors, rows=5) }}
-		</div>
-	</div>
-
+	{{ form_row(form.date) }}
+	{{ form_row(form.fotograaf) }}
+	{{ form_row(form.visibility) }}
+	{{ form_row(form.beschrijving) }}
 	<div class="field">
 		<div class="control buttons">
-			<button type="submit" class="button is-primary">{{ form_submit_button }}</button>
+			{{ form_widget(form.submit, {label: book.id > 0 ? __('Modify photo album') : __('Add photo album')}) }}
 			{% if book.id > 0 %}
 				<a href="{{ path('photos', {book: book.id}) }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
 			{% else %}
@@ -71,5 +33,5 @@
 			{% endif %}
 		</div>
 	</div>
-</form>
+{{ form_end(form) }}
 {% endblock %}

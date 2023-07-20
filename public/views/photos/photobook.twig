@@ -66,8 +66,8 @@
 										<button 
 											id="order-photos-button"
 											class="dropdown-item"
-											data-photo-order-url="{{ controller.json_link_to_update_photo_order(book) }}"
-											data-book-order-url="{{ controller.json_link_to_update_book_order(book) }}"
+											data-photo-order-url="{{ path('photos', {view: 'update_photo_order', book: book.id}) }}"
+											data-book-order-url="{{ path('photos', {view: 'update_book_order', book: book.id}) }}"
 										>
 											<span class="icon">
 												<i class="fas fa-arrows-alt" aria-hidden="true"></i>

@@ -51,7 +51,7 @@ class ControllerCRUDForm extends ControllerCRUD
 	public function get_delete_form(\DataIter $iter = null)
 	{
 		$form = $this->createFormBuilder($iter)
-			->add('submit', SubmitType::class, ['label' => 'Delete'])
+			->add('submit', SubmitType::class, ['label' => __('Delete')])
 			->getForm();
 		$form->handleRequest($this->get_request());
 		return $form;
@@ -68,11 +68,12 @@ class ControllerCRUDForm extends ControllerCRUD
 
 		$form = $this->get_form($iter);
 
-		if ($form->isSubmitted() && $form->isValid())
+		if ($form->isSubmitted() && $form->isValid()) {
 			if ($this->_process_create($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));
+		}
 
 		return $this->view()->render_create($iter, $form, $success);
 	}
@@ -86,11 +87,12 @@ class ControllerCRUDForm extends ControllerCRUD
 
 		$form = $this->get_form($iter);
 
-		if ($form->isSubmitted() && $form->isValid())
+		if ($form->isSubmitted() && $form->isValid()) {
 			if ($this->_process_update($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));
+		}
 
 		return $this->view()->render_update($iter, $form, $success);
 	}

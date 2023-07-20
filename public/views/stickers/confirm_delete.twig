@@ -4,22 +4,22 @@
 
 {% block content %}
 <div class="modal is-static">
-	<div class="modal-card">
-		<header class="modal-card-head">
-			<p class="modal-card-title">{{ __('Delete sticker') }}</p>
-		</header>
-		<section class="modal-card-body">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Delete sticker') }}</p>
+        </header>
+        <section class="modal-card-body">
             {{ form_start(form, {'id': 'delete-sticker-form', 'action': path('stickers', {view: 'delete', id: iter.id, referrer: controller.get_referrer()}) }) }}
                 <div class="field">
                     <p>{{ __('Are you sure you want to delete this sticker?') }}</p>
                 </div>
                 {% set submit_button = form_widget(form.submit, {'label': __('Delete sticker'), 'attr': {'form': 'delete-sticker-form', 'class': 'is-danger'}}) %}
             {{ form_end(form) }}
-		</section>
-		<footer class="modal-card-foot">
-			<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
             {{ submit_button|raw }}
-		</footer>
-	</div>
+        </footer>
+    </div>
 </div>
 {% endblock %}
