@@ -12,18 +12,6 @@ class PhotosView extends CRUDView
 		return $this->render('privacy.twig', compact('photo', 'visibility'));
 	}
 
-	public function render_photo(DataIterPhotobook $book, DataIterPhoto $photo)
-	{
-		$is_liked = get_auth()->logged_in() && get_model('DataModelPhotobookLike')->is_liked($photo, get_identity()->member()->get_id());
-
-		return $this->render('single.twig', compact('book', 'photo', 'is_liked'));
-	}
-
-	public function render_update_photo(DataIterPhotobook $book, DataIterPhoto $photo, $success, array $errors)
-	{
-		return $this->render('photo_form.twig', compact('book', 'photo', 'errors'));
-	}
-
 	/**
 	 * Helper functions, called from the templates
 	 */
