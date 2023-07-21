@@ -36,14 +36,14 @@ class CommitteeType extends AbstractType
 			->add('members', CollectionType::class, [
 				'label' => __('Members'),
 				'entry_type' => CommitteeMemberType::class,
+				'entry_options'  => [
+					'label' => __('Member'),
+				],
 				'allow_add' => true,
 				'allow_delete' => true,
 				'delete_empty' =>  function ($value = null) {
 					return !count(array_filter($value, function ($value) { return !empty($value); }));
 				},
-				'entry_options'  => [
-					'label' => __('Member'),
-				],
 				'required' => false,
 				'mapped' => false,
 			])

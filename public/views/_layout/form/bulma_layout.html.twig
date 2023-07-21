@@ -146,7 +146,9 @@
 {%- endblock radio_widget %}
 
 {%- block checkbox_radio_widget -%}
-    {%- if 'chip' in attr.class|default('')  or 'switch' in attr.class|default('')  -%}
+    {%- if render_label is defined and not render_label -%}
+        {{- widget|raw -}}
+    {%- elseif 'chip' in attr.class|default('')  or 'switch' in attr.class|default('')  -%}
         {{- widget|raw -}}
         {{- form_label(form, null, { widget: '', label_class: '' }) -}}
     {%- else -%}

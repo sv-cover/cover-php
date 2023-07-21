@@ -24,11 +24,6 @@ class PhotosView extends CRUDView
 		return $this->render('photo_form.twig', compact('book', 'photo', 'errors'));
 	}
 
-	public function render_add_photos(DataIterPhotobook $book, $success, array $errors)
-	{
-		return $this->render('add_photos.twig', compact('book', 'success', 'errors'));
-	}
-
 	/**
 	 * Helper functions, called from the templates
 	 */

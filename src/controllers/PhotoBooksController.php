@@ -6,12 +6,14 @@ require_once 'src/framework/http.php';
 require_once 'src/framework/controllers/Controller.php';
 
 use App\Form\PhotoBookType;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
+use App\Form\PhotoType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use ZipStream\ZipStream;
@@ -110,51 +112,6 @@ class PhotoBooksController extends \Controller
 		$this->policy = get_policy($this->model);
 
 		parent::__construct($request, $router);
-	}
-	
-	/* Helper functions for _check_foto_values */
-
-	public function _check_titel($name, $value)
-	{
-		return strlen($value) > 1 && strlen($value) < 256 ? $value : false;
-	}
-
-	public function _check_date($name, $value)
-	{
-		return preg_match('/^(?<day>\d{1,2})[ -\/](?<month>\d{1,2})[ -\/](?<year>\d{4})$/', $value, $match)
-			|| preg_match('/^(?<year>\d{4})[ -\/](?<month>\d{1,2})[ -\/](?<day>\d{1,2})$/', $value, $match)
-			? sprintf('%04d-%02d-%02d', $match['year'], $match['month'], $match['day'])
-			: null;
-	}
-
-	public function _check_fotograaf($name, $value)
-	{			
-		return strlen($value) < 256 ? $value : false;
-	}
-
-	public function _check_visibility($name, $value)
-	{
-		return in_array($value, array(
-			\DataModelPhotobook::VISIBILITY_PUBLIC,
-			\DataModelPhotobook::VISIBILITY_MEMBERS,
-			\DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS,
-			\DataModelPhotobook::VISIBILITY_PHOTOCEE
-		)) ? $value : false;
-	}
-	
-	protected function _check_fotoboek_values(&$errors)
-	{
-		$data = check_values(array(
-			array('name' => 'titel', 'function' => array($this, '_check_titel')),
-			array('name' => 'date', 'function' => array($this, '_check_date')),
-			array('name' => 'fotograaf', 'function' => array($this, '_check_fotograaf')),
-			array('name' => 'visibility', 'function' => array($this, '_check_visibility'))),
-			$errors);
-		
-		if (count($errors) == 0)
-			$data['beschrijving'] = $_POST['beschrijving'];
-		
-		return $data;
 	}
 
 	/* View functions */
@@ -337,40 +294,51 @@ class PhotoBooksController extends \Controller
 		if (!$this->policy->user_can_update($book))
 			throw new \UnauthorizedException();
 		
-		$errors = array();
+		$form = $this->createFormBuilder(null)
+			->add('photos', CollectionType::class, [
+				'label' => __('Photos'),
+				'entry_type' => PhotoType::class,
+				'entry_options' => [
+					'add_photo' => true
+				],
+				'allow_add' => true,
+				'allow_delete' => true,
+				'delete_empty' =>  function ($value = []) {
+					return empty($value['add']);
+				},
+				'prototype_data' => [
+					'add' => true,
+				],
+				'mapped' => false,
+			])		
+			->add('submit', SubmitType::class, ['label' => __('Re-run face detection')])
+			->getForm();
+		$form->handleRequest($this->get_request());
 
-		$success = null;
+		$errors = [];
 
-		if ($this->_form_is_submitted('add_photos', $book))
-		{
-			$photos = isset($_POST['photo']) ? $_POST['photo'] : [];
-			
-			$new_photos = array();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$photos = [];
 
-			foreach ($photos as $photo)
-			{
-				if (!isset($photo['add']))
-					continue;
-			
+			foreach ($form['photos']->getData() as $photo) {
 				try {
 					$iter = new \DataIterPhoto($this->model, -1, array(
 						'boek' => $book->get_id(),
-						'beschrijving' => $photo['description'],
-						'filepath' => $photo['path']));
+						'beschrijving' => $photo['beschrijving'],
+						'filepath' => $photo['filepath']));
 
 					if (!$iter->file_exists())
 						throw new \Exception("File not found");
 
 					$id = $this->model->insert($iter);
 					
-					$new_photos[] = new \DataIterPhoto($this->model, $id, $iter->data);
+					$photos[] = new \DataIterPhoto($this->model, $id, $iter->data);
 				} catch (\Exception $e) {
 					$errors[] = $e->getMessage();
 				}
 			}
 
-			if (count($new_photos))
-			{
+			if (count($photos)) {
 				// Update photo book last_update timestamp
 				$book['last_update'] = new \DateTime();
 				$this->model->update_book($book);
@@ -379,14 +347,16 @@ class PhotoBooksController extends \Controller
 				$face_model = get_model('DataModelPhotobookFace');
 				$face_model->refresh_faces($book->get_photos());
 			}
-			
+
 			if (count($errors) == 0)
 				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
-			else
-				$success = false;
 		}
 
-		return $this->view->render_add_photos($book, $success, $errors);
+		return $this->view->render('add_photos.twig', [
+			'book' => $book,
+			'errors' => $errors,
+			'form' => $form->createView(),			
+		]);
 	}
 	
 	protected function _view_delete_book(\DataIterPhotobook $book)
