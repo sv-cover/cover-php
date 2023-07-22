@@ -405,10 +405,7 @@ class PhotoBooksController extends \Controller
 			if ($photo = $this->model->get_iter($id))
 				$photos[] = $photo;
 
-		$form = $this->createFormBuilder(null, [
-				'csrf_token_id' => 'delete_photos_' . implode('_', $_GET['photo_id']),
-				'action' => $_SERVER['REQUEST_URI'],
-			])
+		$form = $this->createFormBuilder(null, ['action' => $_SERVER['REQUEST_URI']])
 			->add('submit', SubmitType::class, ['label' => __('Delete photos')])
 			->getForm();
 		$form->handleRequest($this->get_request());
@@ -428,7 +425,12 @@ class PhotoBooksController extends \Controller
 
 	protected function _view_mark_read(\DataIterPhotobook $book)
 	{
-		if (get_auth()->logged_in())
+		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'mark_book_read_' . $book->get_id()])
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid() && get_auth()->logged_in())
 			$this->model->mark_read_recursively(get_identity()->get('id'), $book);
 
 		return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));

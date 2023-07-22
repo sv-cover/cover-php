@@ -5,6 +5,14 @@ require_once 'src/controllers/PhotoBooksController.php';
 require_once 'src/framework/member.php';
 require_once 'src/framework/controllers/ControllerCRUD.php';
 
+/**
+ * Controller for face tagging in photo albums.
+ * Still uses ControllerCRUD (not ControllerCRUDForm), because it relies on the JSON responses, for
+ * which this feature seems to be the reason to exist. Trace these commits:
+ * d3552107bcffd8aab4c3af426ce7156ae72e3d68 - implementation of json in controllers
+ * 38a42d845dddd779d78e10ccc783d0dcb7512a97 - implementation of tagging (committeed a minute after the previous)
+ * 8c91b6c52e7549f11b69e8ec6badf41a8368f70a - JSON moved to CRUDView
+ */
 class PhotoFacesController extends \ControllerCRUD
 {
 	use PhotoBookRouteHelper;
