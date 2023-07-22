@@ -355,7 +355,7 @@ class PhotoBooksController extends \Controller
 		return $this->view->render('add_photos.twig', [
 			'book' => $book,
 			'errors' => $errors,
-			'form' => $form->createView(),			
+			'form' => $form->createView(),
 		]);
 	}
 	

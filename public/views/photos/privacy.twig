@@ -5,32 +5,27 @@
 
 {% block content %}
 <div class="modal is-static">
-	<div class="modal-card">
-		<header class="modal-card-head">
-			<p class="modal-card-title">{{ __('Visibility of photo') }}</p>
-		</header>
-		<section class="modal-card-body">
-			<form id="photo-visibility-form" method="post" action="{{ path('photos.privacy', {book: photo.scope.id, photo: photo.id}) }}">
-				{{ html_nonce('privacy', photo) }}
-				{# Not .image, because of scaling #}
-				<figure>
-					<img src="{{ photo.get_url(null, 400)|e('html_attr') }}" {{ 'width="%d" height="%d"'|vformat(photo.get_scaled_size(400, 400))|raw }}>
-				</figure>
-				
-				<div class="field">
-					<label class="label">{{ __('Visibility of this photo')}}</label>
-					<div class="control">
-						{{ html_input_radio('visibility', {'visibility': visibility }, 'visible', label=__('Show photo in my personal photo album')) }}
-					</div>
-					<div class="control">
-						{{ html_input_radio('visibility', {'visibility': visibility }, 'hidden', label=__('Hide from my personal photo album')) }}
-					</div>
-				</div>
-			</form>
-		</section>
-		<footer class="modal-card-foot">
-			<button type="submit" class="button is-primary" form="photo-visibility-form">{{ __('Change visibility') }}</button>
-		</footer>
-	</div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Visibility of photo') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {id: 'photo-visibility-form', action: path('photos.privacy', {book: photo.scope.id, photo: photo.id})}) }}
+                {# Not .image, because of scaling #}
+                <figure>
+                    <img src="{{ photo.get_url(null, 400)|e('html_attr') }}" {{ 'width="%d" height="%d"'|vformat(photo.get_scaled_size(400, 400))|raw }}>
+                </figure>
+                {# Global errors #}
+                {{ form_errors(form) }}
+                {# Fields #}
+                {{ form_row(form.visibility) }}
+                {% set submit_button = form_widget(form.submit, {attr: {form: 'photo-visibility-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('photos.photo', {book: photo.scope.id, photo: photo.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
 </div>
 {% endblock %}

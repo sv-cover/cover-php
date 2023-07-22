@@ -4,23 +4,23 @@
 
 {% block content %}
 <div class="modal is-static">
-	<div class="modal-card">
-		<header class="modal-card-head">
-			<p class="modal-card-title">{{ __('Update photo') }}</p>
-		</header>
-		<section class="modal-card-body">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Update photo') }}</p>
+        </header>
+        <section class="modal-card-body">
             {{ form_start(form, {'id': 'update-photo-form', 'action': path('photos.photo', {view: 'update', book: book.id, photo: photo.id}) }) }}
-				{# Global errors #}
-				{{ form_errors(form) }}
-				{# Fields #}
+                {# Global errors #}
+                {{ form_errors(form) }}
+                {# Fields #}
                 {{ form_row(form.beschrijving, {mark_required: true}) }}
                 {% set submit_button = form_widget(form.submit, {label: __('Update photo'), attr: {form: 'update-photo-form'}}) %}
             {{ form_end(form) }}
-		</section>
-		<footer class="modal-card-foot">
-			<a href="{{ path('photos.photo', {book: book.id, photo: photo.id}) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('photos.photo', {book: book.id, photo: photo.id}) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
             {{ submit_button|raw }}
-		</footer>
-	</div>
+        </footer>
+    </div>
 </div>
 {% endblock %}

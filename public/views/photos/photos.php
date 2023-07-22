@@ -2,16 +2,7 @@
 require_once 'src/framework/markup.php';
 
 class PhotosView extends CRUDView
-{	
-	/**
-	 * Render methods, called from the controller
-	 */
-
-	public function render_privacy(DataIterPhoto $photo, $visibility)
-	{
-		return $this->render('privacy.twig', compact('photo', 'visibility'));
-	}
-
+{
 	/**
 	 * Helper functions, called from the templates
 	 */
