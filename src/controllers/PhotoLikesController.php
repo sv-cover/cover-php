@@ -43,14 +43,10 @@ class PhotoLikesController extends \Controller
 
 		if (get_auth()->logged_in() && isset($action)) {
 			try {
-				switch ($action) {
-					case 'like':
-						$this->model->like($this->get_photo(), get_identity()->get('id'));
-						break;
-					case 'unlike':
-						$this->model->unlike($this->get_photo(), get_identity()->get('id'));
-						break;
-				}
+				if ($action === 'like')
+					$this->model->like($this->get_photo(), get_identity()->get('id'));
+				elseif ($action === 'unlike')
+					$this->model->unlike($this->get_photo(), get_identity()->get('id'));
 			} catch (\Exception $e) {
 				// Don't break duplicate requests
 			}
