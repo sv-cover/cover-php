@@ -55,7 +55,7 @@ class PhotoBookType extends AbstractType
 		;
 
 
-		// 'van' and 'tot' are strings in dataiter, with timezone info
+		// 'date' is string in dataiter
 		$builder->get('date')->addModelTransformer(new StringToDateTimeTransformer(null, null, 'Y-m-d'));
 	}
 }

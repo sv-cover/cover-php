@@ -208,6 +208,8 @@ function get_short_months() {
   * Generate a string with random characters of a certain length
   * @length optional; the length of the generated string 
   * (defaults to 8)
+  * 
+  * TODO: Replace with something that encodes more characters? a-zA-Z0-9 would be nice…
   *
   * @result a string with random characters
   */
