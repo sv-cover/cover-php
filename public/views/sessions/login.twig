@@ -30,11 +30,6 @@
                             <p class="subtitle is-6">{{ __('to continue to %s.')|format(external_domain) }}</p>
                         {% endif %}
 
-                        {% from '@theme/sessions/_login_widget.twig' import login_form %}
-
-                        {# {{ login_form(errors|default([]), error_message|default(''), referrer, external_domain) }} #}
-
-
                         {{ form_start(form, {action: login_path(referrer|default(null))}) }}
                             {# Global errors #}
                             {{ form_errors(form, {attr: {class: 'error-section'}}) }}
