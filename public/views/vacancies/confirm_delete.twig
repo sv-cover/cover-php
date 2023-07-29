@@ -9,17 +9,17 @@
             <p class="modal-card-title">{{ __('Delete vacancy') }}</p>
         </header>
         <section class="modal-card-body">
-            <form id="delete-vacancy-form" method="post" action="{{ path('vacancies', {view: 'delete', id: iter.id}) }}">
-                {{ form_row(form._token) }}
+            {{ form_start(form, {id: 'delete-vacancy-form', action: path('vacancies', {view: 'delete', id: iter.id}) }) }}
                 <p>
                     {{ __('Are you sure you want to remove this vacancy?') }}
                     <em>{{ iter.title }}</em>
                 </p>
-            </form>
+                {% set submit_button = form_widget(form.submit, {label: __('Delete vacancy'), is_primary: false, attr: {form: 'delete-vacancy-form', class: 'is-danger'}}) %}
+            {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">
             <a href="{{ path('vacancies', {id: iter.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-            <button type="submit" class="button is-danger" form="delete-vacancy-form">{{ __('Delete vacancy') }}</button>
+            {{ submit_button|raw }}
         </footer>
     </div>
 </div>

@@ -9,14 +9,14 @@
             <p class="modal-card-title">{{ __('Delete announcement') }}</p>
         </header>
         <section class="modal-card-body">
-            <form method="post" id="delete-announcement-form" action="{{ path('announcements', {view: 'delete', id: iter.id}) }}">
-                {{ form_row(form._token) }}
+            {{ form_start(form, {id: 'delete-announcement-form', action: path('announcements', {view: 'delete', id: iter.id}) }) }}
                 <p>{{ __('Are you sure you want to delete the announcement <em>%s</em>?')|format(iter.subject|e('html'))|raw }}</p>
-            </form>
+                {% set submit_button = form_widget(form.submit, {label: __('Delete announcement'), is_primary: false, attr: {form: 'delete-announcement-form', class: 'is-danger'}}) %}
+            {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">
             <a href="{{ path('announcements', {id: iter.id}) }}" class="button" data-dismiss="modal">{{ __('Back to announcement') }}</a>
-            <button type="submit" class="button is-danger" form="delete-announcement-form">{{ __('Delete announcement') }}</button>
+            {{ submit_button|raw }}
         </footer>
     </div>
 </div>
