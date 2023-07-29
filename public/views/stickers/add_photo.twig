@@ -14,14 +14,14 @@
 				{# Fields #}
 				<div class="field">
 					<div class="control">
-						{{ form_widget(form.photo, {'cta': __('Select photo…'), 'attr': {'class': 'has-name is-fullwidth'}}) }}
+						{{ form_widget(form.photo, {cta: __('Select photo…'), attr: {class: 'has-name is-fullwidth'}}) }}
 					</div>
 					{{ form_errors(form.photo) }}
 					{{ form_help(form.photo) }}
 				</div>
 
 				{# Cache submit button #}
-				{% set submit_button = form_widget(form.submit, {'label': __('Upload photo'), 'attr': {'form': 'sticker-photo-form', 'class': 'is-danger'}}) %}
+				{% set submit_button = form_widget(form.submit, {label: __('Upload photo'), color: 'danger', attr: {form: 'sticker-photo-form'}}) %}
 			{{ form_end(form) }}
 		</section>
 		<footer class="modal-card-foot">

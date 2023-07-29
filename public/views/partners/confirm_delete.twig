@@ -14,7 +14,7 @@
                     {{ __('Are you sure you want to remove this partner?') }}
                     <em>{{ iter.name }}</em>
                 </p>
-                {% set submit_button = form_widget(form.submit, {label: __('Delete partner'), is_primary: false, attr: {form: 'delete-partner-form', class: 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {label: __('Delete partner'), color: 'danger', attr: {form: 'delete-partner-form'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

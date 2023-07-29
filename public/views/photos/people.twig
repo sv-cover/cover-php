@@ -26,7 +26,7 @@
 		<div class="level-right buttons">
 			{% if user_can_update book and book.get_photos() %}
 	            {{ form_start(form) }}
-		            {{ form_widget(form.submit, {is_primary: false}) }}
+		            {{ form_widget(form.submit, {color: 'default'}) }}
 	            {{ form_end(form) }}
 			{% endif %}
 		</div>

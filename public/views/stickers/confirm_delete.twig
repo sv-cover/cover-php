@@ -13,7 +13,7 @@
                 <div class="field">
                     <p>{{ __('Are you sure you want to delete this sticker?') }}</p>
                 </div>
-                {% set submit_button = form_widget(form.submit, {'label': __('Delete sticker'), 'attr': {'form': 'delete-sticker-form', 'class': 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {label: __('Delete sticker'), color: 'danger', attr: {form: 'delete-sticker-form'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

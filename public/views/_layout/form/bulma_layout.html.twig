@@ -157,12 +157,12 @@
 {%- endblock checkbox_radio_widget %}
 
 {%- block button_widget -%}
-    {%- if is_primary is not defined -%}
-        {% if type is defined and type == 'submit' %}
-            {%- set is_primary = true -%}
-        {% else %}
-            {%- set is_primary = false -%}
-        {%- endif -%}
+    {# Set Color for BulmaButtonTypeExtension #}
+    {% if not color and type is defined and type == 'submit' %}
+        {%- set color = 'primary' -%}
+    {%- endif -%}
+    {% if color and not (color starts with 'is-') %}
+        {%- set color = 'is-' ~ color -%}
     {%- endif -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
@@ -174,10 +174,7 @@
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
-    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' button')|trim}) -%}
-    {% if is_primary %}
-        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' is-primary')|trim}) -%}
-    {%- endif -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' button' ~ ' ' ~ color)|trim}) -%}
     <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
         {%- if translation_domain is same as(false) -%}
             {%- if label_html is same as(false) -%}

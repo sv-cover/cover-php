@@ -12,7 +12,7 @@
 		</header>
 		<section class="modal-card-body">
             {{ form_start(form, {id: 'delete-photos-form'}) }}
-                {% set submit_button = form_widget(form.submit, {'attr': {'form': 'delete-photos-form', 'class': 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {color: 'danger', attr: {form: 'delete-photos-form'}}) %}
 				<div class="field">
 					<p>{{ __('Are you sure you want to delete %d photos from the <em>%s</em> photo book?')|format(photos|length, book.titel|e)|raw }}</p>
 				</div>

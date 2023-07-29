@@ -276,9 +276,9 @@ class RegistrationType extends AbstractType
 		*/
 		$builder->get('birth_date')->addModelTransformer(new CallbackTransformer(
 			function($value) {
-		        if (is_string($value))
-		        	return \DateTime::createFromFormat('Y-m-d', $value);
-		        return $value;
+				if (is_string($value))
+					return \DateTime::createFromFormat('Y-m-d', $value);
+				return $value;
 			},
 			fn($v) => $v
 		));

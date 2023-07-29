@@ -14,7 +14,7 @@
                     {{ __('Are you sure you want to remove this vacancy?') }}
                     <em>{{ iter.title }}</em>
                 </p>
-                {% set submit_button = form_widget(form.submit, {label: __('Delete vacancy'), is_primary: false, attr: {form: 'delete-vacancy-form', class: 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {label: __('Delete vacancy'), color: 'danger', attr: {form: 'delete-vacancy-form'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

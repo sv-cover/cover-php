@@ -24,7 +24,7 @@
 		{{ profile_field(profile_form.homepage, {mark_required: true}) }}
 		<div class="profile-field">
 			<div class="field-body">
-				{{ form_widget(profile_form.submit, {label: __('Save'), is_primary: false}) }}
+				{{ form_widget(profile_form.submit, {label: __('Save'), color: 'default'}) }}
 			</div>
 		</div>
 	{{ form_end(profile_form) }}
@@ -73,7 +73,7 @@
 		{{ profile_field(password_form.password.second) }}
 		<div class="profile-field">
 			<div class="field-body">
-				{{ form_widget(password_form.submit, {label: __('Change password'), is_primary: false}) }}
+				{{ form_widget(password_form.submit, {label: __('Change password'), color: 'default'}) }}
 			</div>
 		</div>
 	{{ form_end(password_form) }}

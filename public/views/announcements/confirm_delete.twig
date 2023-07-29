@@ -11,7 +11,7 @@
         <section class="modal-card-body">
             {{ form_start(form, {id: 'delete-announcement-form', action: path('announcements', {view: 'delete', id: iter.id}) }) }}
                 <p>{{ __('Are you sure you want to delete the announcement <em>%s</em>?')|format(iter.subject|e('html'))|raw }}</p>
-                {% set submit_button = form_widget(form.submit, {label: __('Delete announcement'), is_primary: false, attr: {form: 'delete-announcement-form', class: 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {label: __('Delete announcement'), color: 'danger', attr: {form: 'delete-announcement-form'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

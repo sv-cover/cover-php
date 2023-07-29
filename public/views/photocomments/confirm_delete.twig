@@ -11,7 +11,7 @@
 				<div class="field">
 					<p>{{ __('Are you sure you want to delete the comment posted by <em>%s</em>?')|format(iter.auteur|personal_full_name|e('html'))|raw }}</p>
 				</div>
-                {% set submit_button = form_widget(form.submit, {'label': __('Delete comment'), 'attr': {'form': 'delete-comment-form', 'class': 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {label: __('Delete comment'), color: 'danger', attr: {form: 'delete-comment-form'}}) %}
             {{ form_end(form) }}
 		</section>
 		<footer class="modal-card-foot">

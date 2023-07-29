@@ -13,7 +13,7 @@
                 <div class="field">
                     <p>{{ __('Are you sure you want to deactivate the <em>%s</em> group? You can always reactivate a group from the Commitee Archive page.')|format(iter.naam|e('html'))|raw }}</p>
                 </div>
-                {% set submit_button = form_widget(form.submit, {'label': __('Deactivate group'), 'attr': {'form': 'deactivate-group-form', 'class': 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {label: __('Deactivate group'), color: 'danger', attr: {form: 'deactivate-group-form'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

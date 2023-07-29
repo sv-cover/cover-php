@@ -12,7 +12,7 @@
 	{%- endfor -%}
 	<div class="field">
 		<div class="control buttons">
-			{{ form_widget(form.submit, {label: __('Modify registration'), is_primary: false, attr: {class: 'is-danger'}}) }}
+			{{ form_widget(form.submit, {label: __('Modify registration'), color: 'danger'}) }}
 			<a href="{{ path('join', {view: 'pending-confirmation'}) }}" class="button">{{ __('Back') }}</a>
 		</div>
 	</div>

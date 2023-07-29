@@ -14,7 +14,7 @@
                     <p>{{ __('Are you sure you want to delete the <em>%s</em> photo book?')|format(book.titel|e)|raw }}</p>
                 </div>
                 {{ form_row(form.titel) }}
-                {% set submit_button = form_widget(form.submit, {attr: {form: 'delete-book-form', class: 'is-danger'}}) %}
+                {% set submit_button = form_widget(form.submit, {color: 'danger', attr: {form: 'delete-book-form'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

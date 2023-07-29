@@ -96,8 +96,8 @@
 			<div class="label">Apply action to selection</div>
 			<div class="control buttons">
 				{{ form_widget(form.resend_confirmation, {label: 'Resend confirmation mail'}) }}
-				{{ form_widget(form.push_to_secretary, {is_primary: false, label: 'Push to Secretary¹'}) }}
-				{{ form_widget(form.delete, {is_primary: false, label: 'Cancel registrations', attr: {class: 'is-danger'}}) }}
+				{{ form_widget(form.push_to_secretary, {label: 'Push to Secretary¹', color: 'default'}) }}
+				{{ form_widget(form.delete, {label: 'Cancel registrations', color: 'danger'}) }}
 			</div>
 		</div>
 	{{ form_end(form) }}

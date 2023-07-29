@@ -7,11 +7,7 @@
 {{ form_start(form, {action: path('signup', {view: 'delete_form_field', form: iter.id, field: field.id})}) }}
 	<div class="field">
 		<div class="control buttons">
-			{{ form_widget(form.submit, {
-				label: __('Delete field'),
-				is_primary: false,
-				attr: {class: 'is-danger'},
-			}) }}
+			{{ form_widget(form.submit, {label: __('Delete field'),	color: 'danger'}) }}
 			<a href="{{ path('signup', {view: 'update_form', form: iter.id}) }}" class="button">{{ __('Back to form') }}</a>
 		</div>
 	</div>
