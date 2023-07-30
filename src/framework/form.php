@@ -1,6 +1,7 @@
 <?php
 
 use App\Form\Extension\BulmaButtonTypeExtension;
+use App\Form\Extension\BulmaCheckboxTypeExtension;
 use App\Form\Extension\BulmaChoiceTypeExtension;
 use App\Form\Extension\BulmaFileTypeExtension;
 use App\Form\Extension\ChipsChoiceTypeExtension;
@@ -41,6 +42,7 @@ function get_form_factory()
 			->addExtension(new CsrfExtension(get_csrf_manager()))
 			->addTypeExtensions([
 				new BulmaButtonTypeExtension(),
+				new BulmaCheckboxTypeExtension(),
 				new BulmaChoiceTypeExtension(),
 				new BulmaFileTypeExtension(),
 				new ChipsChoiceTypeExtension(),

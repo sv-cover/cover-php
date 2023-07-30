@@ -44,6 +44,7 @@ class SessionsController extends \Controller
 			->add('override_member', CheckboxType::class, [
 				'label' => __('Override member'),
 				'required' => false,
+				'switch' => true,
 			])
 			->add('override_member_id', MemberIdType::class, [
 				'label' => __('Member'),
@@ -55,6 +56,7 @@ class SessionsController extends \Controller
 			->add('override_committees', CheckboxType::class, [
 				'label' => __('Override committee memberships'),
 				'required' => false,
+				'switch' => true,
 			])
 			->add('override_committee_ids', CommitteeIdType::class, [
 				'required' => false,

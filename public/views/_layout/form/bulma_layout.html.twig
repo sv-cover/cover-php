@@ -49,7 +49,7 @@
 
 
 {%- block choice_widget -%}
-    {% if expanded and chips %}
+    {% if expanded and (chips ?? false) %}
         {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' chips')|trim}) -%}
         <div {{ block('widget_container_attributes') }}>
             {{- block('choice_widget_expanded_chips') -}}
@@ -127,9 +127,7 @@
                     translation_domain: choice_translation_domain,
                     valid: valid,
                     show_mark: false,
-                    attr: {
-                        class: 'chip',
-                    },
+                    chip: true,
                 }) -}}
             {%- endif -%}
         {%- endif -%}
@@ -137,11 +135,13 @@
 {%- endblock choice_widget_expanded_chips %}
 
 {%- block checkbox_widget -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ((chip ?? false) ? ' chip') ~ ((switch ?? false) ? ' switch  is-rounded'))|trim}) -%}
     {%- set widget = parent() -%}
     {{- block('checkbox_radio_widget') -}}
 {%- endblock checkbox_widget -%}
 
 {%- block radio_widget -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ((chip ?? false) ? ' chip') ~ ((switch ?? false) ? ' switch  is-rounded'))|trim}) -%}
     {%- set widget = parent() -%}
     {{- block('checkbox_radio_widget') -}}
 {%- endblock radio_widget %}
@@ -149,7 +149,7 @@
 {%- block checkbox_radio_widget -%}
     {%- if render_label is defined and not render_label -%}
         {{- widget|raw -}}
-    {%- elseif 'chip' in attr.class|default('')  or 'switch' in attr.class|default('')  -%}
+    {%- elseif (chip ?? false) or (switch ?? false) -%}
         {{- widget|raw -}}
         {{- form_label(form, null, { widget: '', label_class: '' }) -}}
     {%- else -%}
@@ -159,6 +159,9 @@
 
 {%- block button_widget -%}
     {# Set Color for BulmaButtonTypeExtension #}
+    {% if color is not defined %}
+        {%- set color = '' -%}
+    {%- endif -%}
     {% if not color and type is defined and type == 'submit' %}
         {%- set color = 'primary' -%}
     {%- endif -%}
