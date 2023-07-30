@@ -32,7 +32,7 @@
 		{{ profile_field(form.postcode) }}
 		{{ profile_field(form.woonplaats) }}
 		{{ profile_field(form.iban) }}
-		{{ profile_field(form.bic, {mark_required: true}) }}
+		{{ profile_field(form.bic, {optional_tag: false}) }}
 		<div class="profile-field">
 			<div class="field-body">
 				{{ form_widget(form.submit) }}

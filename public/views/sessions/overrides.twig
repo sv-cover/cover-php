@@ -21,7 +21,7 @@
 				{{ form_row(form.override_member, {attr: {class: 'is-full-width is-rtl', 'data-target': '#override-member-fieldset'}}) }}
 
 				<fieldset class="fieldset" id="override-member-fieldset">
-					{{ form_row(form.override_member_id, {mark_required: true}) }}
+					{{ form_row(form.override_member_id, {optional_tag: false}) }}
 				</fieldset>
 
 				{# Cache submit button #}

@@ -19,9 +19,9 @@
 				{{ form_errors(profile_form) }}
 			</div>
 		</div>
-		{{ profile_field(profile_form.nick, {mark_required: true}) }}
-		{{ profile_field(profile_form.avatar, {mark_required: true}) }}
-		{{ profile_field(profile_form.homepage, {mark_required: true}) }}
+		{{ profile_field(profile_form.nick, {optional_tag: false}) }}
+		{{ profile_field(profile_form.avatar, {optional_tag: false}) }}
+		{{ profile_field(profile_form.homepage, {optional_tag: false}) }}
 		<div class="profile-field">
 			<div class="field-body">
 				{{ form_widget(profile_form.submit, {label: __('Save'), color: 'default'}) }}

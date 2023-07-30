@@ -13,7 +13,7 @@
                 {# Global errors #}
                 {{ form_errors(form) }}
                 {# Fields #}
-                {{ form_row(form.beschrijving, {mark_required: true}) }}
+                {{ form_row(form.beschrijving, {optional_tag: false}) }}
                 {% set submit_button = form_widget(form.submit, {label: __('Update photo'), attr: {form: 'update-photo-form'}}) %}
             {{ form_end(form) }}
         </section>
