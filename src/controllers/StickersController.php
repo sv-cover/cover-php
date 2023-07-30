@@ -86,6 +86,7 @@ class StickersController extends \ControllerCRUDForm
 		$form = $this->createFormBuilder()
 			->add('photo', FileType::class, [
 				'label' => __('Photo'),
+				'cta' => __('Select photo…'),
 				'help' => __('Add a photo to this sticker. Only JPEG-images are allowed.'),
 				'constraints' => [
 					new Assert\Image([

@@ -44,7 +44,7 @@
 		</div>
 		<div class="profile-field">
 			<div class="field-body">
-				{{ form_widget(photo_form.photo, {cta: __('Choose photo…' ), attr: {title: __('Only JPEG images are allowed.')}}) }}
+				{{ form_widget(photo_form.photo, {attr: {title: __('Only JPEG images are allowed.')}}) }}
 				{# Global errors, there's only one field so they can be rendered here #}
 				{{ form_errors(photo_form) }}
 				{{ form_errors(photo_form.photo) }}

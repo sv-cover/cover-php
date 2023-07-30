@@ -2,6 +2,7 @@
 
 use App\Form\Extension\BulmaButtonTypeExtension;
 use App\Form\Extension\BulmaChoiceTypeExtension;
+use App\Form\Extension\BulmaFileTypeExtension;
 use App\Form\Extension\ChipsChoiceTypeExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
@@ -41,6 +42,7 @@ function get_form_factory()
 			->addTypeExtensions([
 				new BulmaButtonTypeExtension(),
 				new BulmaChoiceTypeExtension(),
+				new BulmaFileTypeExtension(),
 				new ChipsChoiceTypeExtension(),
 			])
 			->getFormFactory();

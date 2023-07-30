@@ -241,6 +241,7 @@ class ProfileController extends \Controller
 		$form = $this->createFormBuilder()
 			->add('photo', FileType::class, [
 				'label' => __('Photo'),
+				'cta' => __('Choose photo…'),
 				'constraints' => [
 					new Assert\Image([
 						'maxSize' => ini_get('upload_max_filesize'),
