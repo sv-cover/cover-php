@@ -75,10 +75,6 @@ class RegistrationType extends AbstractType
 					was introduced after we noticed people entered the current year. The 10 year limit
 					prevents this while still allowing extremely young students to register (which
 					happens sometimes) */
-					new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) {
-						var_dump($value);
-					}),
-
 					new Assert\LessThan([
 						'value' => '-10 years',
 						'message' => 'You need to be at least 10 years old!',
@@ -262,11 +258,11 @@ class RegistrationType extends AbstractType
 		;
 
 		// Define some transformers to ensure cleaner input
-		$builder->get('postal_code')->addViewTransformer(new CallbackTransformer('strtoupper', 'strtoupper'));
-		$builder->get('membership_student_number')->addViewTransformer(new CallbackTransformer(fn($v) => $v, fn($v) => ltrim($v, 'sS')));
-		$builder->get('iban')->addViewTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
-		$builder->get('bic')->addViewTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
-		$builder->get('spam')->addViewTransformer(new CallbackTransformer('strtolower', 'strtolower'));
+		$builder->get('postal_code')->addModelTransformer(new CallbackTransformer('strtoupper', 'strtoupper'));
+		$builder->get('membership_student_number')->addModelTransformer(new CallbackTransformer(fn($v) => $v, fn($v) => ltrim($v, 'sS')));
+		$builder->get('iban')->addModelTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
+		$builder->get('bic')->addModelTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
+		$builder->get('spam')->addModelTransformer(new CallbackTransformer('strtolower', 'strtolower'));
 
 		/* Transformers are run BEFORE constraints, rather annoyingly. This means we can't have any constraints that
 		expect dates and also use a tranformer to convert everything to strings (because our "ORM" wants it). This

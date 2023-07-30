@@ -87,8 +87,7 @@ class EventType extends AbstractType
 			->add('submit', SubmitType::class)
 		;
 
-		// Init committee_id field
-
+		// Cache iter
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 			$this->_iter = $event->getData();
 		});

@@ -52,7 +52,6 @@ class PhotoBookType extends AbstractType
 			->add('submit', SubmitType::class)
 		;
 
-
 		// 'date' is string in dataiter
 		$builder->get('date')->addModelTransformer(new StringToDateTimeTransformer(null, null, 'Y-m-d'));
 	}

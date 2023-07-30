@@ -121,7 +121,6 @@
         {%- else -%}
             {# Find child #}
             {%- set child = form|filter(c => not c.isRendered() and c.vars.value == choice.value)|first -%}
-            {# {%- set child.vars.attr = child.vars.attr|merge({'class': (child.vars.attr.class|default('') ~ ' chip')|trim}) -%} #}
             {%- if child -%}
                 {{- form_widget(child, {
                     translation_domain: choice_translation_domain,

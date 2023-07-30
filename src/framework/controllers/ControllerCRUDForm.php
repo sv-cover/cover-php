@@ -51,7 +51,7 @@ class ControllerCRUDForm extends ControllerCRUD
 	public function get_delete_form(\DataIter $iter = null)
 	{
 		$form = $this->createFormBuilder($iter)
-			->add('submit', SubmitType::class, ['label' => __('Delete')])
+			->add('submit', SubmitType::class, ['label' => __('Delete'), 'color' => 'danger'])
 			->getForm();
 		$form->handleRequest($this->get_request());
 		return $form;

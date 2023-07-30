@@ -61,9 +61,6 @@ class VacancyType extends AbstractType
 			])
 			->add('submit', SubmitType::class)
 		;
-
-		// Telling the form builder about the event subscriber used to validate the partner xor requirement
-		// $builder->addEventSubscriber($this);
 	}
 
 	public function configureOptions(OptionsResolver $resolver): void

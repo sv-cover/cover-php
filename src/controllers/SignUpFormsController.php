@@ -5,7 +5,6 @@ require_once 'src/framework/member.php';
 require_once 'src/framework/controllers/Controller.php';
 
 use App\Form\SignUpFormType;
-use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 

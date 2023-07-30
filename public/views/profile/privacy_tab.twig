@@ -21,8 +21,8 @@
 			</div>
 		</div>
 
-			
 		{% for child in form -%}
+			{# Cant use form_rest because of profile_field rendering #}
 			{% if not child.rendered and child.vars.name not in ['_token', 'submit'] %}
 				{{ profile_field(child) }}
 			{% endif %}
