@@ -26,11 +26,11 @@
 			<div class="field-label">{{ __('Starting year ') }}</div>
 			<div class="field-body">{{ iter.beginjaar }}</div>
 		</div>
-		{{ profile_field(form.email) }}
-		{{ profile_field(form.telefoonnummer) }}
-		{{ profile_field(form.adres) }}
-		{{ profile_field(form.postcode) }}
-		{{ profile_field(form.woonplaats) }}
+		{{ profile_field(form.email, {attr: {autocomplete: 'email'}}) }}
+		{{ profile_field(form.telefoonnummer, {attr: {autocomplete: 'tel'}}) }}
+		{{ profile_field(form.adres, {attr: {autocomplete: 'street-address'}}) }}
+		{{ profile_field(form.postcode, {attr: {autocomplete: 'postal-code'}}) }}
+		{{ profile_field(form.woonplaats, {attr: {autocomplete: 'address-level2'}}) }}
 		{{ profile_field(form.iban) }}
 		{{ profile_field(form.bic, {optional_tag: false}) }}
 		<div class="profile-field">

@@ -20,7 +20,7 @@
 				<div class="columns">
 					<div class="field column is-marginless">
 						{{ form_label(form.first_name) }}
-						<div class="control">{{ form_widget(form.first_name) }}</div>
+						<div class="control">{{ form_widget(form.first_name, {attr: {autocomplete: 'given-name'}}) }}</div>
 					</div>
 					<div class="field column is-marginless">
 						{{ form_label(form.family_name_preposition) }}
@@ -28,7 +28,7 @@
 					</div>
 					<div class="field column is-marginless">
 						{{ form_label(form.family_name) }}
-						<div class="control">{{ form_widget(form.family_name) }}</div>
+						<div class="control">{{ form_widget(form.family_name, {attr: {autocomplete: 'family-name'}}) }}</div>
 					</div>
 				</div>
 			</div>
@@ -40,28 +40,28 @@
 			{{ form_help(form.family_name_preposition) }}
 			{{ form_help(form.family_name) }}
 		</div>
-		{{ form_row(form.birth_date) }}
+		{{ form_row(form.birth_date, {attr: {autocomplete: 'bday'}}) }}
 
 		<div class="field">
 			<h2 class="title is-5">{{ __('Contact') }}</h2>
 		</div>
-		{{ form_row(form.email_address) }}
-		{{ form_row(form.phone_number) }}
+		{{ form_row(form.email_address, {attr: {autocomplete: 'email'}}) }}
+		{{ form_row(form.phone_number, {attr: {autocomplete: 'tel'}}) }}
 
 		<div class="field">
 			<h2 class="title is-5">{{ __('Address') }}</h2>
 		</div>
-		{{ form_row(form.street_name) }}
+		{{ form_row(form.street_name, {attr: {autocomplete: 'street-address'}}) }}
 		<div class="field">
 			<div>{# Getting around column margins is hard#}
 				<div class="columns">
 					<div class="field column is-marginless is-one-third">
 						{{ form_label(form.postal_code) }}
-						<div class="control">{{ form_widget(form.postal_code) }}</div>
+						<div class="control">{{ form_widget(form.postal_code, {attr: {autocomplete: 'postal-code'}}) }}</div>
 					</div>
 					<div class="field column is-marginless">
 						{{ form_label(form.place) }}
-						<div class="control">{{ form_widget(form.place) }}</div>
+						<div class="control">{{ form_widget(form.place, {attr: {autocomplete: 'address-level2'}}) }}</div>
 					</div>
 				</div>
 			</div>

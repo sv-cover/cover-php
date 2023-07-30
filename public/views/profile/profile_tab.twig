@@ -68,9 +68,9 @@
 				{{ form_errors(password_form) }}
 			</div>
 		</div>
-		{{ profile_field(password_form.current) }}
-		{{ profile_field(password_form.password.first) }}
-		{{ profile_field(password_form.password.second) }}
+		{{ profile_field(password_form.current, {attr: {autocomplete: 'current-password'}}) }}
+		{{ profile_field(password_form.password.first, {attr: {autocomplete: 'new-password'}}) }}
+		{{ profile_field(password_form.password.second, {attr: {autocomplete: 'new-password'}}) }}
 		<div class="profile-field">
 			<div class="field-body">
 				{{ form_widget(password_form.submit, {label: __('Change password'), color: 'default'}) }}
