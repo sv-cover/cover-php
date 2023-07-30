@@ -62,9 +62,7 @@ class SessionsController extends \Controller
 				'show_own' => false,
 				'multiple' => true,
 				'expanded' => true,
-				'attr' => [
-					'class' => 'chips',
-				],
+				'chips' => true,
 			])
 			->add('referrer', HiddenType::class, [
 				'required' => false,

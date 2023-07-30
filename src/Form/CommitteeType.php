@@ -25,9 +25,7 @@ class CommitteeType extends AbstractType
 					__('Other') => \DataModelCommissie::TYPE_OTHER,
 				],
 				'expanded' => true,
-				'attr' => [
-					'class' => 'chips',
-				],
+				'chips' => true,
 			])
 			->add('naam', TextType::class, [
 				'label' => __('Name'),

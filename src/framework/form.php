@@ -1,6 +1,8 @@
 <?php
 
 use App\Form\Extension\BulmaButtonTypeExtension;
+use App\Form\Extension\BulmaChoiceTypeExtension;
+use App\Form\Extension\ChipsChoiceTypeExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -37,7 +39,9 @@ function get_form_factory()
 			->addExtension(new ValidatorExtension($validator))
 			->addExtension(new CsrfExtension(get_csrf_manager()))
 			->addTypeExtensions([
-				new BulmaButtonTypeExtension()
+				new BulmaButtonTypeExtension(),
+				new BulmaChoiceTypeExtension(),
+				new ChipsChoiceTypeExtension(),
 			])
 			->getFormFactory();
 	}

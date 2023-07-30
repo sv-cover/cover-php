@@ -286,9 +286,7 @@ class ProfileController extends \Controller
 					__('Nobody') => \DataModelMember::VISIBLE_TO_NONE,
 				],
 				'expanded' => true,
-				'attr' => [
-					'class' => 'chips',
-				],
+				'chips' => true,
 				'data' => ($iter['privacy'] >> ($nr * 3)) & 7, // Not ideal, but neater than constructing something to pass to createFormBuilder
 			]);
 

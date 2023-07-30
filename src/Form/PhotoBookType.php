@@ -43,9 +43,7 @@ class PhotoBookType extends AbstractType
 					__('Only PhotoCee') => \DataModelPhotobook::VISIBILITY_PHOTOCEE,
 				],
 				'expanded' => true,
-				'attr' => [
-					'class' => 'chips',
-				],
+				'chips' => true,
 			])
 			->add('beschrijving', TextareaType::class, [
 				'label' => __('Description'),
