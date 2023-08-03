@@ -794,25 +794,6 @@ class DataModelMember extends DataModel implements SearchProvider
 		}
 	}
 
-	public function get_from_facebook_ids(array $ids)
-	{
-		$sql_ids = array_map(function($id) {
-			return sprintf("'%s'", $this->db->escape_string($id));
-		}, $ids);
-
-		$rows = $this->db->query("SELECT leden.*, facebook.data_value as facebook_id
-				FROM facebook
-				RIGHT JOIN leden ON leden.id = facebook.lid_id
-				WHERE facebook.data_key = 'user_id' and facebook.data_value IN ($sql_ids)");
-
-		$members = array();
-
-		foreach ($this->_rows_to_iters($rows) as $iter)
-			$members[$iter['facebook_id']] = $iter;
-
-		return $members;
-	}
-
 	/**
 	  * Check if a member already exists
 	  * @memberid the member id

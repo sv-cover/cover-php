@@ -4,7 +4,6 @@ namespace App\Controller;
 require_once 'src/framework/form.php';
 require_once 'src/framework/member.php';
 require_once 'src/framework/login.php';
-require_once 'src/services/facebook.php';
 require_once 'src/services/secretary.php';
 require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/email.php';
@@ -434,22 +433,6 @@ class ProfileController extends \Controller
 		}
 
 		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
-	}
-
-	protected function run_facebook(\DataIterMember $iter)
-	{
-		if ($iter->get('id') != get_identity()->get('id'))
-			throw new \UnauthorizedException();
-
-		if ($this->_form_is_submitted('facebook', $iter))
-		{
-			if (get_post('facebook_action') == 'unlink')
-				get_facebook()->destroySession();
-
-			return $this->view->redirect($this->generate_url('profile', ['view' => 'facebook', 'lid' => $iter['id']]));
-		}
-		
-		return $this->view->render_facebook_tab($iter);
 	}
 
 	public function run_export_vcard(\DataIterMember $member)

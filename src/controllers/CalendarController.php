@@ -233,38 +233,6 @@ class CalendarController extends \ControllerCRUDForm
 		return $this->view->render('confirm_reject.twig', ['iter' => $iter, 'form' => $form->createView()]);
 	}
 
-	public function run_rsvp_status($iter)
-	{
-		// If the id's for agenda items had been consistend, we could have stored attendance locally.
-		// Now, that would be a giant hack. Therefore, I defer that to some other moment in time.
-
-		if (!get_config_value('enable_facebook', false))
-			return;
-
-		if (!$iter['facebook_id'])
-			return;
-
-		require_once 'src/services/facebook.php';
-		$facebook = get_facebook();
-
-		if (!$facebook->getUser())
-			throw new \Exception('Could not get facebook user. Please try to reconnect your Facebook account.');
-
-		switch ($_POST['rsvp_status'])
-		{
-			case 'attending':
-			case 'maybe':
-			case 'declined':
-				$result = $facebook->api(sprintf('/%d/%s' , $iter['facebook_id'], $_POST['rsvp_status']), 'POST');
-				break;
-
-			default:
-				throw new \Exception('Unknown rsvp status');
-		}
-
-		return $this->view->redirect($this->generate_url('calendar', [$this->_var_id => $iter['id']]));
-	}
-
 	public function run_webcal()
 	{
 		$cal = new \WebCal_Calendar('Cover');

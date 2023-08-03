@@ -17,11 +17,6 @@ $config = array(
 	
 	'default_language' => 'en',
 
-	'facebook_app_id' => '',
-	'facebook_app_secret' => '',
-	'enable_facebook' => false,
-	'enable_facebook_rsvp' => false,
-
 	'enable_photos_read_status' => true,
 
 	// Absolute path to the root folder of all photos. The paths

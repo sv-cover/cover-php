@@ -1,6 +1,5 @@
 {
     "require": {
-        "facebook/php-sdk-v4" : "4.0.*",
         "maennchen/zipstream-php": "^2.2",
         "camspiers/porter-stemmer": "~1.0",
         "ronanguilloux/isocodes": "~1.2",
@@ -9,7 +8,6 @@
         "twig/twig": "^2.11",
         "giggsey/libphonenumber-for-php": "^8.13",
         "embed/embed": "^3.0",
-        "sentry/sdk": "^2.2",
         "symfony/routing": "^5.2",
         "symfony/config": "^5.2",
         "symfony/expression-language": "^5.2",
@@ -22,10 +20,11 @@
         "symfony/security-csrf": "^5.4",
         "symfony/intl": "^5.4",
         "symfony/mime": "^5.4",
-        "odolbeau/phone-number-bundle": "^3.9"
+        "odolbeau/phone-number-bundle": "^3.9",
+        "php-http/message-factory": "^1.1",
+        "sentry/sdk": "^3.5"
     },
     "require-dev": {
-        "facebook/webdriver": "^1.5",
         "phpunit/phpunit": "^9.5"
     },
     "scripts": {
@@ -37,6 +36,11 @@
             "App\\Form\\": "src/Form/",
             "App\\Validator\\": "src/Validator/",
             "fields\\": "src/fields/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }
