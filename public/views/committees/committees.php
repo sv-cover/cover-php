@@ -4,12 +4,6 @@ class CommitteesView extends CRUDFormView
 {
 	protected $__file = __FILE__;
 
-	public function get_committee_battle_banner_photos($iter)
-	{
-		$committee_photos = array_map(getter('thumbnail'), $iter);
-		return array_values(array_filter($committee_photos));
-	}
-
 	public function get_summary(DataIterCommissie $commissie)
 	{
 		return $commissie['page'] ? $commissie['page']['summary'] : '';

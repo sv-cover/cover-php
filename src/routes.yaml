@@ -40,10 +40,6 @@ clubs:
   path: /clubs
   controller: App\Controller\ClubsController
 
-committee_battle:
-  path: /committee_battle
-  controller: App\Controller\CommitteeBattleController
-
 committee_members:
   path: /committee_members
   controller: App\Controller\CommitteeMembersController
@@ -304,9 +300,6 @@ legacy:
       commissies:
         controller: App\Controller\CommitteesController
         parameters: { _route: committees }
-      committeebattle:
-        controller: App\Controller\CommitteeBattleController
-        parameters: { _route: committee_battle }
       forum:
         controller: App\Controller\ForumController
         parameters: { _route: forum }

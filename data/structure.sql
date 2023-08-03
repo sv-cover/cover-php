@@ -190,29 +190,6 @@ CREATE TABLE agenda (
 --     FOREIGN KEY (replacement_for) REFERENCES agenda (id);
 
 --
--- Committee battle scores!
---
-
-CREATE TABLE committee_battle_scores (
-    id SERIAL PRIMARY KEY,
-    points integer,
-    awarded_for text default '',
-    awarded_on timestamp without time zone
-);
-
-CREATE TABLE committee_battle_committees (
-    id SERIAL PRIMARY KEY,
-    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    committee_id integer NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE committee_battle_users (
-    id SERIAL PRIMARY KEY,
-    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
---
 -- Very basic persistent cache; is mainly used for Facebook stuff.
 --
 
