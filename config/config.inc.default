@@ -54,9 +54,6 @@ $config = array(
 		[null, 400] // size used for the thumbnails in comments
 	),
 
-	// Enable Committee battle
-	'committee_battle' => true,
-
 	// Used for forms & XSS prevention. Generate with `openssl rand -base64 64`.
 	'nonce_salt' => null, 
 
