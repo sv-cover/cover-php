@@ -477,8 +477,8 @@ class DataIterRootPhotobook extends DataIterPhotobook
 }
 
 /**
-  * A class implementing photo data
-  */
+ * A class implementing photo data
+ */
 class DataModelPhotobook extends DataModel
 {
 	const VISIBILITY_PUBLIC = 0;
@@ -506,11 +506,11 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Get a photo book
-	  * @id the id of the book
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get a photo book
+	 * @id the id of the book
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_book($id)
 	{
 		if ($id == 0)
@@ -583,11 +583,11 @@ class DataModelPhotobook extends DataModel
 	}
 
 	/**
-	  * Get a random photo book
-	  * @count the number of latest photo books to choose from
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get a random photo book
+	 * @count the number of latest photo books to choose from
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_random_book($count = 10)
 	{
 		$q = sprintf("
@@ -622,11 +622,11 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Get the book before a certain book
-	  * @book a #DataIter representing a book
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get the book before a certain book
+	 * @book a #DataIter representing a book
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_previous_book(DataIterPhotobook $book)
 	{
 		if (!$book['parent']) return null;
@@ -641,11 +641,11 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Get the book after a certain book
-	  * @book a #DataIter representing a book
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get the book after a certain book
+	 * @book a #DataIter representing a book
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_next_book(DataIterPhotobook $book)
 	{
 		if (!$book['parent']) return null;
@@ -660,11 +660,11 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Get all the books in a certain book
-	  * @book a #DataIter representing a book
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all the books in a certain book
+	 * @book a #DataIter representing a book
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_children(DataIterPhotobook $book, $metadata = null)
 	{
 		// TODO When we use PHP 5.6 this can be put as default parameter. For now, PHP does not support 'evaluated' expressions there.
@@ -791,11 +791,11 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Get a certain number of randomly selected photos
-	  * @num the number of random photos to select
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get a certain number of randomly selected photos
+	 * @num the number of random photos to select
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_random_photos($num)
 	{
 		$rows = $this->db->query(sprintf("
@@ -837,14 +837,14 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Get photos in a book
-	  * @book a #DataIter representing a book
-	  * @max optional; the maximum number of photos to get (specify
-	  * 0 for no maximum)
-	  * @random optional; whether to order the photos randomly
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get photos in a book
+	 * @book a #DataIter representing a book
+	 * @max optional; the maximum number of photos to get (specify
+	 * 0 for no maximum)
+	 * @random optional; whether to order the photos randomly
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_photos(DataIterPhotobook $book)
 	{
 		if (get_config_value('enable_photos_read_status', true) && get_auth()->logged_in())
@@ -937,11 +937,11 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Get all the parents of a book
-	  * @book a #DataIter representing a book
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all the parents of a book
+	 * @book a #DataIter representing a book
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_parents(DataIterPhotobook $book)
 	{
 		$result = array();
@@ -953,12 +953,12 @@ class DataModelPhotobook extends DataModel
 	}
 	
 	/**
-	  * Delete a photo. This will automatically delete any comments on
-	  * and faces tagged in the photo due to database table constraints.
-	  *
-	  * @iter a #DataIter representing a photo;
-	  * @result whether or not the delete was successful
-	  */
+	 * Delete a photo. This will automatically delete any comments on
+	 * and faces tagged in the photo due to database table constraints.
+	 *
+	 * @iter a #DataIter representing a photo;
+	 * @result whether or not the delete was successful
+	 */
 	public function delete(DataIter $iter)
 	{
 		$result = parent::delete($iter);
@@ -1000,24 +1000,24 @@ class DataModelPhotobook extends DataModel
 	}
 
 	/**
-	  * Insert a book
-	  * @iter a #DataIter representing a book
-	  *
-	  * @result whether or not the insert was successful
-	  */
+	 * Insert a book
+	 * @iter a #DataIter representing a book
+	 *
+	 * @result whether or not the insert was successful
+	 */
 	public function insert_book(DataIterPhotobook $iter)
 	{
 		return $this->_insert('foto_boeken', $iter, true);
 	}
 
 	/**
-	  * Delete a book. This will also delete all photos
-	  * and subbooks and all accompanying face tags, 
-	  * comments and scaled images in the cache.
-	  *
-	  * @param DataIterPhotobook $iter representing a book
-	  * @return boolean whether or not the delete was successful
-	  */		
+	 * Delete a book. This will also delete all photos
+	 * and subbooks and all accompanying face tags, 
+	 * comments and scaled images in the cache.
+	 *
+	 * @param DataIterPhotobook $iter representing a book
+	 * @return boolean whether or not the delete was successful
+	 */		
 	public function delete_book(DataIterPhotobook $iter)
 	{
 		if (!is_numeric($iter->get_id()))
@@ -1035,11 +1035,11 @@ class DataModelPhotobook extends DataModel
 	}
 
 	/**
-	  * Update a book
-	  *
-	  * @param DataIterPhotobook $iter representing a book
-	  * @return boolean whether or not the update was successful
-	  */		
+	 * Update a book
+	 *
+	 * @param DataIterPhotobook $iter representing a book
+	 * @return boolean whether or not the update was successful
+	 */		
 	public function update_book(DataIterPhotobook $iter)
 	{
 		return $this->_update('foto_boeken', $iter);

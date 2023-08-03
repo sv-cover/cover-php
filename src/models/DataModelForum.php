@@ -129,21 +129,21 @@ class DataIterForum extends DataIter
 	}
 	
 	/**
-	  * Get the number of pages in a forum
-	  * @forum a #DataIter representing a forum
-	  *
-	  * @result the number of pages in the forum
-	  */
+	 * Get the number of pages in a forum
+	 * @forum a #DataIter representing a forum
+	 *
+	 * @result the number of pages in the forum
+	 */
 	public function get_num_forum_pages()
 	{
 		return intval(ceil($this['num_threads'] / floatval($this->model->threads_per_page)));
 	}
 	
 	/**
-	  * Get permissions for a certain forum
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get permissions for a certain forum
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_rights()
 	{
 		$rows = $this->db->query('
@@ -190,17 +190,17 @@ class DataIterForum extends DataIter
 	}
 
 	// /**
-	//   * Get a number of last written threads in a forum
-	//   * @iter a #DataIter representing a forum
-	//   * @offset optional; the offset from which to get the last 
-	//   * written threads (defaults to no offset)
-	//   * @limit optional; the number of threads to get. The 
-	//   * default returns only the last thread
-	//   *
-	//   * @result if no limit is specified it returns the last
-	//   * thread in a forum as a #DataIter. It returns the last
-	//   * threads as an array of #DataIter otherwise
-	//   */
+	//  * Get a number of last written threads in a forum
+	//  * @iter a #DataIter representing a forum
+	//  * @offset optional; the offset from which to get the last 
+	//  * written threads (defaults to no offset)
+	//  * @limit optional; the number of threads to get. The 
+	//  * default returns only the last thread
+	//  *
+	//  * @result if no limit is specified it returns the last
+	//  * thread in a forum as a #DataIter. It returns the last
+	//  * threads as an array of #DataIter otherwise
+	//  */
 	public function get_threads($offset = -1, $limit = -1, $last_reply = true)
 	{
 		$rows = $this->db->query('
@@ -241,11 +241,11 @@ class DataIterForum extends DataIter
 	}
 	
 	/**
-	  * returns the last created thread in the forum
-	  *
-	  * @result the last thread as DataIterForum, or
-	  * null if there is no such thread
-	  */
+	 * returns the last created thread in the forum
+	 *
+	 * @result the last thread as DataIterForum, or
+	 * null if there is no such thread
+	 */
 	public function get_newest_thread()
 	{
 		$row = $this->db->query('
@@ -324,9 +324,9 @@ class DataIterForumMessage extends DataIter implements SearchResult
 	}
 
 	/**
-	  * Returns whether this message is the only message in the thread
-	  * @return bool true if the message is the only message in the thread
-	  */
+	 * Returns whether this message is the only message in the thread
+	 * @return bool true if the message is the only message in the thread
+	 */
 	public function is_only_message()
 	{
 		return $this['thread']['num_messages'] === 1;
@@ -483,21 +483,21 @@ class DataIterForumThread extends DataIter
 	}
 	
 	/**
-	  * Get the number of pages in a thread
-	  * @iter a #DataIter representing a thread
-	  *
-	  * @result the number of pages in the thread
-	  */
+	 * Get the number of pages in a thread
+	 * @iter a #DataIter representing a thread
+	 *
+	 * @result the number of pages in the thread
+	 */
 	public function get_num_thread_pages()
 	{
 		return intval(ceil($this['num_messages'] / floatval($this->model->messages_per_page)));
 	}
 	
 	/**
-	  * Get the first (initial) thread message
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get the first (initial) thread message
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_first_message()
 	{
 		$row = $this->db->query_first('
@@ -516,17 +516,17 @@ class DataIterForumThread extends DataIter
 	}
 
 	/**
-	  * Get replies from a thread on a certain page
-	  * @page reference; specifies the page of the thread to
-	  * get the messages for. It will be changed to fall inside the
-	  * bounds of the pages in the thread if necessary.
-	  * @max reference; will contain the maximum number of pages
-	  * in the thread
-	  *
-	  * @result an array of #DataIter containing the replies on
-	  * the specified page of the thread. It returns null when the
-	  * thread is not readable by the current user
-	  */
+	 * Get replies from a thread on a certain page
+	 * @page reference; specifies the page of the thread to
+	 * get the messages for. It will be changed to fall inside the
+	 * bounds of the pages in the thread if necessary.
+	 * @max reference; will contain the maximum number of pages
+	 * in the thread
+	 *
+	 * @result an array of #DataIter containing the replies on
+	 * the specified page of the thread. It returns null when the
+	 * thread is not readable by the current user
+	 */
 	public function get_messages($page, &$max)
 	{
 		$max = $this->get_num_thread_pages() - 1;
@@ -551,12 +551,12 @@ class DataIterForumThread extends DataIter
 	}
 
 	/**
-	  * Returns whether a thread contains unread messages for the
-	  * current user
-	  *
-	  * @result true if the thread as unread messages, false 
-	  * otherwise
-	  */
+	 * Returns whether a thread contains unread messages for the
+	 * current user
+	 *
+	 * @result true if the thread as unread messages, false 
+	 * otherwise
+	 */
 	public function has_unread_messages(DataIterMember $member)
 	{
 		/* Get visit info */
@@ -605,8 +605,8 @@ class DataIterForumHeader extends DataIter
 }
 
 /**
-  * A class implementing forum data
-  */
+ * A class implementing forum data
+ */
 class DataModelForum extends DataModel implements SearchProvider
 {
 	// Author types
@@ -630,32 +630,32 @@ class DataModelForum extends DataModel implements SearchProvider
 	private $_acl_cache = [];
 
 	/**
-	  * Create a new DataModelForum object
-	  * @db the database to use
-	  *
-	  * @result a new DataModelForum object
-	  */
+	 * Create a new DataModelForum object
+	 * @db the database to use
+	 *
+	 * @result a new DataModelForum object
+	 */
 	public function __construct($db) {
 		parent::__construct($db, 'forums');
 	}
 	
 	/**
-	  * Get the bitmasks of the possible permission types (ACL_READ,
-	  * ACL_WRITE, ACL_REPLY, ACL_POLL)
-	  *
-	  * @result an array containing the possible permission type bitmasks
-	  */
+	 * Get the bitmasks of the possible permission types (ACL_READ,
+	 * ACL_WRITE, ACL_REPLY, ACL_POLL)
+	 *
+	 * @result an array containing the possible permission type bitmasks
+	 */
 	public function get_acls()
 	{
 		return array(self::ACL_READ, self::ACL_WRITE, self::ACL_REPLY, self::ACL_POLL);
 	}
 	
 	/**
-	  * Get ACL bitmask from id
-	  * @id the id of the ACL bitmask to get
-	  *
-	  * @result the ACL bitmask
-	  */
+	 * Get ACL bitmask from id
+	 * @id the id of the ACL bitmask to get
+	 *
+	 * @result the ACL bitmask
+	 */
 	function get_acl($id)
 	{
 		$row = $this->db->query_first('
@@ -673,15 +673,15 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Check whether a certain commissie has permission to do
-	  * something in some forum
-	  * @forumid the forum to check the permissions for
-	  * @acl the permission bitmask to check for
-	  * @commissieid the commissie to check the permissions for
-	  *
-	  * @result true if the commissie has the correct permissions,
-	  * false otherwise
-	  */
+	 * Check whether a certain commissie has permission to do
+	 * something in some forum
+	 * @forumid the forum to check the permissions for
+	 * @acl the permission bitmask to check for
+	 * @commissieid the commissie to check the permissions for
+	 *
+	 * @result true if the commissie has the correct permissions,
+	 * false otherwise
+	 */
 	public function check_acl_commissie(DataIterForum $forum, $acl, $committee_id)
 	{
 		/* Check for general commissie perms */
@@ -716,17 +716,17 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Check if a certain member has permissions to do something
-	  * in a certain forum by permissions of a commissie he's in
-	  * @forumid the forum to check the permissions for
-	  * @acl the permission bitmask to check for
-	  * @member_id the member to check the permissions for
-	  * @member_info optional; the member info of the member (only
-	  * there for performance)
-	  *
-	  * @result true if member has the correct permissions by
-	  * the commissies he's in, false otherwise
-	  */
+	 * Check if a certain member has permissions to do something
+	 * in a certain forum by permissions of a commissie he's in
+	 * @forumid the forum to check the permissions for
+	 * @acl the permission bitmask to check for
+	 * @member_id the member to check the permissions for
+	 * @member_info optional; the member info of the member (only
+	 * there for performance)
+	 *
+	 * @result true if member has the correct permissions by
+	 * the commissies he's in, false otherwise
+	 */
 	protected function check_acl_commissies(DataIterForum $forum, $acl, IdentityProvider $identity)
 	{
 		foreach ($identity->get('committees', []) as $committee)
@@ -741,15 +741,15 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Check if a certain member has permissions to do something
-	  * in a certain forum by permissions of a group he's in
-	  * @forumid the forum to check the permissions for
-	  * @acl the permission bitmask to check for 
-	  * @member_id the member to check the permissions for
-	  *
-	  * @result true if member has the correct permissions by
-	  * the groups he's in, false otherwise
-	  */		
+	 * Check if a certain member has permissions to do something
+	 * in a certain forum by permissions of a group he's in
+	 * @forumid the forum to check the permissions for
+	 * @acl the permission bitmask to check for 
+	 * @member_id the member to check the permissions for
+	 *
+	 * @result true if member has the correct permissions by
+	 * the groups he's in, false otherwise
+	 */		
 	protected function check_acl_group(DataIterForum $forum, $acl, IdentityProvider $identity)
 	{
 		$sql_user_specific = $identity->member() !== null
@@ -778,11 +778,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * The default permissions which applies to forums that don't 
-	  * have any specific permissions set
-	  *
-	  * @result the default permission bitmask
-	  */
+	 * The default permissions which applies to forums that don't 
+	 * have any specific permissions set
+	 *
+	 * @result the default permission bitmask
+	 */
 	public function get_default_acl(IdentityProvider $identity)
 	{
 		return $identity->member() !== null
@@ -791,15 +791,15 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Check if a certain member has permissions to do something
-	  * in a certain forum by member permissions
-	  * @forumid the forum to check the permissions for
-	  * @acl the permission bitmask to check for 
-	  * @member the member to check the permissions for 
-	  *
-	  * @result true if member has the correct permissions, false 
-	  * otherwise
-	  */
+	 * Check if a certain member has permissions to do something
+	 * in a certain forum by member permissions
+	 * @forumid the forum to check the permissions for
+	 * @acl the permission bitmask to check for 
+	 * @member the member to check the permissions for 
+	 *
+	 * @result true if member has the correct permissions, false 
+	 * otherwise
+	 */
 	protected function check_acl_member(DataIterForum $forum, $acl, IdentityProvider $identity)
 	{
 		// Fetch the forum specific ACL policies
@@ -837,15 +837,15 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Check if a certain member has permissions to do something
-	  * in a certain forum (either personal, commissie or group)
-	  * @forumid the forum to check the permissions for
-	  * @acl the permission bitmask to check for (a value of -1
-	  * always succeeds)
-	  *
-	  * @result true if member has the correct permissions, false
-	  * otherwise
-	  */
+	 * Check if a certain member has permissions to do something
+	 * in a certain forum (either personal, commissie or group)
+	 * @forumid the forum to check the permissions for
+	 * @acl the permission bitmask to check for (a value of -1
+	 * always succeeds)
+	 *
+	 * @result true if member has the correct permissions, false
+	 * otherwise
+	 */
 	public function check_acl(DataIterForum $forum, $acl, IdentityProvider $identity)
 	{
 		$key = sprintf('%d|%d|%d', $forum['id'], $acl, $identity->get('id'));
@@ -873,10 +873,10 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get the forum headers (separators)
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get the forum headers (separators)
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_headers()
 	{
 		$rows = $this->db->query('
@@ -891,14 +891,14 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get a forum with optional permission checking
-	  * @forumid the forum to get
-	  * @acl optional; the permissions to check (defaults to -1
-	  * in which case the permission check always succeeds)
-	  *
-	  * @result a #DataIter if the forum could be found and
-	  * if permissions were met, false otherwise
-	  */
+	 * Get a forum with optional permission checking
+	 * @forumid the forum to get
+	 * @acl optional; the permissions to check (defaults to -1
+	 * in which case the permission check always succeeds)
+	 *
+	 * @result a #DataIter if the forum could be found and
+	 * if permissions were met, false otherwise
+	 */
 	public function get_iter($forum_id)
 	{
 		static $cache = [];
@@ -926,13 +926,13 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get all forums
-	  * @readable optional; if true then only return the forums
-	  * that are readable by the current user, returns all forums
-	  * otherwise. Defaults to true
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all forums
+	 * @readable optional; if true then only return the forums
+	 * that are readable by the current user, returns all forums
+	 * otherwise. Defaults to true
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get()
 	{
 		$rows = $this->db->query('
@@ -1004,11 +1004,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get a forum group
-	  * @id the forum group id
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get a forum group
+	 * @id the forum group id
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_group($id)
 	{
 		$row = $this->db->query_first('
@@ -1027,11 +1027,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get a group member
-	  * @id the group member id
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get a group member
+	 * @id the group member id
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_group_member($id)
 	{
 		$row = $this->db->query_first('
@@ -1049,11 +1049,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get all members of a certain group
-	  * @id the group id
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all members of a certain group
+	 * @id the group id
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_group_members(DataIterForumGroup $group)
 	{
 		$rows = $this->db->query('
@@ -1068,10 +1068,10 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get all member groups
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all member groups
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_groups()
 	{
 		$rows = $this->db->query('
@@ -1086,11 +1086,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get a thread by its ID
-	  * @param $id thread id
-	  * @throws DataIterNotFoundException if there is no thread with the specified id
-	  * @return DataIterForumThread
-	  */
+	 * Get a thread by its ID
+	 * @param $id thread id
+	 * @throws DataIterNotFoundException if there is no thread with the specified id
+	 * @return DataIterForumThread
+	 */
 	public function get_thread($id)
 	{
 		$row = $this->db->query_first(sprintf('
@@ -1114,18 +1114,18 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get threads from a forum on a certain page
-	  * @forum a #DataIter representing a forum
-	  * @page reference; specifies the page of the forum to
-	  * get the threads for. It will be changed to fall inside the
-	  * bounds of the pages in the forum if necessary.
-	  * @max reference; will contain the maximum number of pages
-	  * in the forum
-	  *
-	  * @result an array of #DataIter containing the threads on
-	  * the specified page of the forum. It returns null when the
-	  * forum is not readable by the current user
-	  */
+	 * Get threads from a forum on a certain page
+	 * @forum a #DataIter representing a forum
+	 * @page reference; specifies the page of the forum to
+	 * get the threads for. It will be changed to fall inside the
+	 * bounds of the pages in the forum if necessary.
+	 * @max reference; will contain the maximum number of pages
+	 * in the forum
+	 *
+	 * @result an array of #DataIter containing the threads on
+	 * the specified page of the forum. It returns null when the
+	 * forum is not readable by the current user
+	 */
 	public function get_threads(DataIterForum $forum, &$page, &$max)
 	{
 		$max = max($forum['num_forum_pages'] - 1, 0);
@@ -1137,11 +1137,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get a forum message
-	  * @id the id of the message
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get a forum message
+	 * @id the id of the message
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_message($id)
 	{
 		$row = $this->db->query_first('
@@ -1159,14 +1159,14 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get the number of posts for a certain author
-	  * @authorid optional; the id of the author. Defaults to
-	  * all authors
-	  * @author_type optional; the type of author. Defaults to
-	  * all types of authors
-	  *
-	  * @result the number of posts
-	  */
+	 * Get the number of posts for a certain author
+	 * @authorid optional; the id of the author. Defaults to
+	 * all authors
+	 * @author_type optional; the type of author. Defaults to
+	 * all types of authors
+	 *
+	 * @result the number of posts
+	 */
 	protected function _get_num_messages($author_id = -1, $author_type = -1)
 	{
 		static $posts = array();
@@ -1190,13 +1190,13 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get author statistics for a certain message
-	  * @message the message to get the statistics for
-	  * @total reference; the total number of posts made
-	  *
-	  * @result the number of posts made by the author of the
-	  * message
-	  */
+	 * Get author statistics for a certain message
+	 * @message the message to get the statistics for
+	 * @total reference; the total number of posts made
+	 *
+	 * @result the number of posts made by the author of the
+	 * message
+	 */
 	public function get_author_stats($message)
 	{
 		$stats = new stdClass();
@@ -1208,13 +1208,13 @@ class DataModelForum extends DataModel implements SearchProvider
 	
 	/**
 
-	  * Get author info (name, avatar, email) for a certain message
-	  * @message a #DataIter representing a message
-	  * @field the field (author, last_author) to get the info for
-	  *
-	  * @result an associative array containing the author
-	  * information
-	  */
+	 * Get author info (name, avatar, email) for a certain message
+	 * @message a #DataIter representing a message
+	 * @field the field (author, last_author) to get the info for
+	 *
+	 * @result an associative array containing the author
+	 * information
+	 */
 	public function get_author_info($message, $field)
 	{
 		static $authors = array();
@@ -1271,13 +1271,13 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get the name of the person/group/commissie of a certain
-	  * permission
-	  * @acl a #DataIter representing a permission
-	  *
-	  * @result a string with the name of the person/group/commissie
-	  * the permission belongs to
-	  */
+	 * Get the name of the person/group/commissie of a certain
+	 * permission
+	 * @acl a #DataIter representing a permission
+	 *
+	 * @result a string with the name of the person/group/commissie
+	 * the permission belongs to
+	 */
 	public function get_acl_name(DataIterForumPermission $acl)
 	{
 		switch ($acl->get('type'))
@@ -1322,11 +1322,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get the type of a certain permission
-	  * @acl a #DataIter representing a permission
-	  *
-	  * @result a string with the name of the type of permission
-	  */
+	 * Get the type of a certain permission
+	 * @acl a #DataIter representing a permission
+	 *
+	 * @result a string with the name of the type of permission
+	 */
 	public function get_acl_type(DataIterForumPermission $acl)
 	{
 		switch ($acl->get('author_type'))
@@ -1349,11 +1349,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Insert a thread
-	  * @iter an #DataIter representing a thread
-	  *
-	  * @result true if the insert was succesful, false otherwise
-	  */
+	 * Insert a thread
+	 * @iter an #DataIter representing a thread
+	 *
+	 * @result true if the insert was succesful, false otherwise
+	 */
 	public function insert_thread(DataIterForumThread $thread, DataIterForumMessage $message)
 	{
 		$this->db->beginTransaction();
@@ -1372,11 +1372,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/** 
-	  * Returns a #DataIter of the special forum ('weblog','news', or 'poll')
-	  * @param $name the name of the special forum
-	  *
-	  * @return a #DataIterForum of the specified forum or throws an exception
-	  */
+	 * Returns a #DataIter of the special forum ('weblog','news', or 'poll')
+	 * @param $name the name of the special forum
+	 *
+	 * @return a #DataIterForum of the specified forum or throws an exception
+	 */
 	public function get_special_forum($name)
 	{
 		$specials = array('poll', 'news', 'weblog');
@@ -1393,12 +1393,12 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get visit info
-	  * @forumid the id of the forum to get visit info for
-	  * @member_id the id of the member to get visit info for
-	  *
-	  * @result a #DataIter or null if no visit info could be found
-	  */
+	 * Get visit info
+	 * @forumid the id of the forum to get visit info for
+	 * @member_id the id of the member to get visit info for
+	 *
+	 * @result a #DataIter or null if no visit info could be found
+	 */
 	private function _get_visit_info_real(DataIterForum $forum, DataIterMember $member)
 	{
 		$row = $this->db->query_first('
@@ -1414,13 +1414,13 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get visit info. Creates a visit info entry if none exists
-	  * yet
-	  * @forumid the id of the forum to get visit info for
-	  * @member_id the id of the member to get visit info for
-	  *
-	  * @result a #DataIter
-	  */
+	 * Get visit info. Creates a visit info entry if none exists
+	 * yet
+	 * @forumid the id of the forum to get visit info for
+	 * @member_id the id of the member to get visit info for
+	 *
+	 * @result a #DataIter
+	 */
 	public function get_visit_info(DataIterForum $forum, DataIterMember $member)
 	{
 		$iter = $this->_get_visit_info_real($forum, $member);
@@ -1439,9 +1439,9 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Mark a thread to be read
-	  * @thread_id the id of the thread to mark as read
-	  */
+	 * Mark a thread to be read
+	 * @thread_id the id of the thread to mark as read
+	 */
 	public function mark_read(DataIterForumThread $thread, DataIterMember $member)
 	{
 		if ($member === null)
@@ -1469,9 +1469,9 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Mark a thread as unread
-	  * @threadid the id of the thread to mark as unread
-	  */
+	 * Mark a thread as unread
+	 * @threadid the id of the thread to mark as unread
+	 */
 	public function mark_unread(DataIterForumThread $thread)
 	{
 		/* Deletes all session reads for this thread so that
@@ -1480,10 +1480,10 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Update the last time a user has visited a forum
-	  * @param $forum optional; the iter of the forum the user has visited 
-	  * or null to update all the forums (defaults to null)
-	  */
+	 * Update the last time a user has visited a forum
+	 * @param $forum optional; the iter of the forum the user has visited 
+	 * or null to update all the forums (defaults to null)
+	 */
 	public function update_last_visit(DataIterMember $member, DataIterForum $forum = null)
 	{
 		if ($member === null)
@@ -1507,9 +1507,9 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Set a forum to be read
-	  * @forum_id the id of the forum to set to be read
-	  */
+	 * Set a forum to be read
+	 * @forum_id the id of the forum to set to be read
+	 */
 	public function set_forum_session_read(DataIterForum $forum, DataIterMember $member)
 	{
 		$visit = $this->get_visit_info($forum, $member);
@@ -1523,11 +1523,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Insert a message
-	  * @iter a #DataIter representing a message
-	  *
-	  * @result the id of the message if succesful, null otherwise
-	  */
+	 * Insert a message
+	 * @iter a #DataIter representing a message
+	 *
+	 * @result the id of the message if succesful, null otherwise
+	 */
 	public function insert_message(DataIterForumMessage $iter)
 	{
 		/* Mark the thread as unread */
@@ -1537,11 +1537,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Delete a forum. This function will also delete any
-	  * threads and replies in this forum as well as any 
-	  * permissions associated with it
-	  * @iter a #DataIter representing a forum
-	  */
+	 * Delete a forum. This function will also delete any
+	 * threads and replies in this forum as well as any 
+	 * permissions associated with it
+	 * @iter a #DataIter representing a forum
+	 */
 	public function delete(DataIter $iter)
 	{
 		parent::delete($iter);
@@ -1573,24 +1573,24 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Delete a permission
-	  * @iter a #DataIter representing a permission
-	  *
-	  * @result true if the delete was succesful, false otherwise
-	  */
+	 * Delete a permission
+	 * @iter a #DataIter representing a permission
+	 *
+	 * @result true if the delete was succesful, false otherwise
+	 */
 	public function delete_acl(DataIterForumPermission $iter)
 	{
 		return $this->_delete('forum_acl', $iter);
 	}
 
 	/**
-	  * Insert a permission. It will update the bitmask if 
-	  * a permission with the same forumid, type and uid already
-	  * exists
-	  * @iter a #DataIter representing a permission
-	  *
-	  * @result true if the insert was succesful, false otherwise
-	  */		
+	 * Insert a permission. It will update the bitmask if 
+	 * a permission with the same forumid, type and uid already
+	 * exists
+	 * @iter a #DataIter representing a permission
+	 *
+	 * @result true if the insert was succesful, false otherwise
+	 */		
 	public function insert_acl(DataIterForumPermission $iter)
 	{
 		$row = $this->db->query_first('
@@ -1615,34 +1615,34 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Update a permission
-	  * @iter a #DataIter representing a permission
-	  *
-	  * @result true if the update was succesful, false otherwise
-	  */
+	 * Update a permission
+	 * @iter a #DataIter representing a permission
+	 *
+	 * @result true if the update was succesful, false otherwise
+	 */
 	public function update_acl(DataIterForumPermission $iter)
 	{
 		return $this->_update('forum_acl', $iter);
 	}
 	
 	/**
-	  * Insert a group
-	  * @iter a #DataIter representing a group
-	  *
-	  * @result true if the insert was succesful, false otherwise
-	  */
+	 * Insert a group
+	 * @iter a #DataIter representing a group
+	 *
+	 * @result true if the insert was succesful, false otherwise
+	 */
 	public function insert_group(DataIterForumGroup $iter)
 	{
 		return $this->_insert('forum_group', $iter);
 	}
 	
 	/**
-	  * Delete a group. This function will also delete any 
-	  * members and permissions associated with the group
-	  * @iter a #DataIter representing a group
-	  *
-	  * @result true if the delete was succesful, false otherwise
-	  */
+	 * Delete a group. This function will also delete any 
+	 * members and permissions associated with the group
+	 * @iter a #DataIter representing a group
+	 *
+	 * @result true if the delete was succesful, false otherwise
+	 */
 	public function delete_group(DataIterForumGroup $iter)
 	{
 		$result = $this->_delete('forum_group', $iter);
@@ -1652,44 +1652,44 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Update a group
-	  * @iter a #DataIter representing a group
-	  *
-	  * @result true if the update was succesful, false otherwise
-	  */
+	 * Update a group
+	 * @iter a #DataIter representing a group
+	 *
+	 * @result true if the update was succesful, false otherwise
+	 */
 	public function update_group(DataIterForumGroup $iter)
 	{
 		return $this->_update('forum_group', $iter);
 	}
 	
 	/**
-	  * Insert a group member
-	  * @iter a #DataIter representing a group member
-	  *
-	  * @result true if the insert was succesful, false otherwise
-	  */
+	 * Insert a group member
+	 * @iter a #DataIter representing a group member
+	 *
+	 * @result true if the insert was succesful, false otherwise
+	 */
 	public function insert_group_member(DataIterForumGroupMember $iter)
 	{
 		return $this->_insert('forum_group_member', $iter);
 	}
 	
 	/**
-	  * Delete a group member
-	  * @iter a #DataIter representing a group member
-	  *
-	  * @result true if the delete was succesful, false otherwise
-	  */
+	 * Delete a group member
+	 * @iter a #DataIter representing a group member
+	 *
+	 * @result true if the delete was succesful, false otherwise
+	 */
 	public function delete_group_member(DataIterForumGroupMember $iter)
 	{
 		return $this->_delete('forum_group_member', $iter);
 	}
 	
 	/**
-	  * Perform actions when a commissie has been deleted. This
-	  * function will delete any associated permission or group
-	  * member with this commissie
-	  * @iter a #DataIter representing a commissie
-	  */
+	 * Perform actions when a commissie has been deleted. This
+	 * function will delete any associated permission or group
+	 * member with this commissie
+	 * @iter a #DataIter representing a commissie
+	 */
 	public function commissie_deleted(DataIterCommissie $iter)
 	{	
 		// Todo: again, should we bother doing the work the database constraints
@@ -1703,12 +1703,12 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Delete a thread. This function will delete any replies
-	  * in the thread as well
-	  * @iter a #DataIter representing a thread
-	  *
-	  * @result true if the delete was succesful, false otherwise
-	  */
+	 * Delete a thread. This function will delete any replies
+	 * in the thread as well
+	 * @iter a #DataIter representing a thread
+	 *
+	 * @result true if the delete was succesful, false otherwise
+	 */
 	public function delete_thread(DataIterForumThread $iter)
 	{
 		$this->db->beginTransaction();
@@ -1724,11 +1724,11 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Update a thread
-	  * @iter a #DataIter representing a thread
-	  *
-	  * @result true if the update was succesful, false otherwise
-	  */
+	 * Update a thread
+	 * @iter a #DataIter representing a thread
+	 *
+	 * @result true if the update was succesful, false otherwise
+	 */
 	public function update_thread(DataIterForumThread $iter)
 	{
 		return $this->_update('forum_threads', $iter);
@@ -1741,13 +1741,13 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Delete a message
-	  * @iter a #DataIter representing a message
-	  *
-	  * @result true if the delete was succesful, the id of the 
-	  * thread if the last message in a thread was removed, false
-	  * otherwise
-	  */
+	 * Delete a message
+	 * @iter a #DataIter representing a message
+	 *
+	 * @result true if the delete was succesful, the id of the 
+	 * thread if the last message in a thread was removed, false
+	 * otherwise
+	 */
 	public function delete_message(DataIterForumMessage $iter)
 	{
 		$ret = $this->_delete('forum_messages', $iter);
@@ -1764,44 +1764,44 @@ class DataModelForum extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Update a message
-	  * @iter a #DataIter representing a message
-	  *
-	  * @result true if the update was succesful, false otherwise
-	  */
+	 * Update a message
+	 * @iter a #DataIter representing a message
+	 *
+	 * @result true if the update was succesful, false otherwise
+	 */
 	public function update_message(DataIterForumMessage $iter) 
 	{
 		return $this->_update('forum_messages', $iter);
 	}
 	
 	/**
-	  * Update a forum header
-	  * @iter a #DataIter representing a forum header
-	  *
-	  * @result true if the update was succesful, false otherwise
-	  */
+	 * Update a forum header
+	 * @iter a #DataIter representing a forum header
+	 *
+	 * @result true if the update was succesful, false otherwise
+	 */
 	public function update_header(DataIterForumHeader $iter)
 	{
 		return $this->_update('forum_header', $iter);
 	}
 	
 	/**
-	  * Insert a forum header
-	  * @iter a #DataIter representing a forum header
-	  *
-	  * @result true if the insert was succesful, false otherwise
-	  */
+	 * Insert a forum header
+	 * @iter a #DataIter representing a forum header
+	 *
+	 * @result true if the insert was succesful, false otherwise
+	 */
 	public function insert_header(DataIterForumHeader $iter)
 	{
 		return $this->_insert('forum_header', $iter);
 	}
 	
 	/**
-	  * Delete a forum header
-	  * @iter a #DataIter representing a forum header
-	  *
-	  * @result true if the delete was succesful, false otherwise
-	  */
+	 * Delete a forum header
+	 * @iter a #DataIter representing a forum header
+	 *
+	 * @result true if the delete was succesful, false otherwise
+	 */
 	public function delete_header(DataIterForumHeader $iter)
 	{
 		return $this->_delete('forum_header', $iter);

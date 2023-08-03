@@ -102,8 +102,8 @@ class DataIterCommissie extends DataIter implements SearchResult
 }
 
 /**
-  * A class implementing the Commissie data
-  */
+ * A class implementing the Commissie data
+ */
 class DataModelCommissie extends DataModel implements SearchProvider
 {
 	const TYPE_COMMITTEE = 1;
@@ -118,12 +118,12 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get all commissies (optionally leaving out bestuur)
-	  * @include_bestuur optional; whether or not to include
-	  * bestuur
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all commissies (optionally leaving out bestuur)
+	 * @include_bestuur optional; whether or not to include
+	 * bestuur
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get($type = null, $include_hidden = false)
 	{
 		$conditions = [];
@@ -286,11 +286,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get all members of a specific commissie
-	  * @id the commissie id
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all members of a specific commissie
+	 * @id the commissie id
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_members(DataIterCommissie $committee)
 	{
 		if (!$committee->has_id())
@@ -376,11 +376,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get the login name of a specific commissie
-	  * @id the commissie id
-	  *
-	  * @result the login name
-	  */
+	 * Get the login name of a specific commissie
+	 * @id the commissie id
+	 *
+	 * @result the login name
+	 */
 	public function get_login($id) {
 		return $this->db->query_value('SELECT login 
 				FROM commissies 
@@ -398,23 +398,23 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get the email address of a commissie (composed of the
-	  * login name (see #DataModelCommissie::get_login))
-	  * @id the commissie id
-	  *
-	  * @result the commissie email address
-	  */
+	 * Get the email address of a commissie (composed of the
+	 * login name (see #DataModelCommissie::get_login))
+	 * @id the commissie id
+	 *
+	 * @result the commissie email address
+	 */
 	public function get_email($id)
 	{
 		return $this->get_iter($id)->get('email');
 	}
 	
 	/**
-	  * Get commissie name 
-	  * @id the commissie id 
-	  *
-	  * @result the commissie name
-	  */
+	 * Get commissie name 
+	 * @id the commissie id 
+	 *
+	 * @result the commissie name
+	 */
 	public function get_naam($id)
 	{
 		$value = $this->db->query_value('SELECT naam 
@@ -428,11 +428,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get commissie page id
-	  * @id the commissie id
-	  *
-	  * @result the commissie page id
-	  */
+	 * Get commissie page id
+	 * @id the commissie id
+	 *
+	 * @result the commissie page id
+	 */
 	public function get_page($id)
 	{
 		return $this->db->query_value('SELECT page 
@@ -441,11 +441,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Gets a commissie from name
-	  * @name the commissie name
-	  *
-	  * @result a #DataIter or null if not found
-	  */
+	 * Gets a commissie from name
+	 * @name the commissie name
+	 *
+	 * @result a #DataIter or null if not found
+	 */
 	public function get_from_name($name)
 	{
 		$row = $this->db->query_first("SELECT * 

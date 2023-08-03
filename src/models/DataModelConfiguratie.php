@@ -13,8 +13,8 @@ class DataIterConfiguratie extends DataIter
 }
 
 /**
-  * A class implementing configuration data
-  */
+ * A class implementing configuration data
+ */
 class DataModelConfiguratie extends DataModel
 {
 	private $_cache = array();
@@ -37,11 +37,11 @@ class DataModelConfiguratie extends DataModel
 	}
 	
 	/**
-	  * Get a configuration value
-	  * @key the name of the configuration value
-	  *
-	  * @result the configuration value
-	  */
+	 * Get a configuration value
+	 * @key the name of the configuration value
+	 *
+	 * @result the configuration value
+	 */
 	public function get_value($key, $default = null)
 	{
 		if (array_key_exists($key, $this->_cache))
@@ -65,12 +65,12 @@ class DataModelConfiguratie extends DataModel
 	}
 	
 	/**
-	  * Set the value of a configuration parameter
-	  * @key the name of the configuration parameter
-	  * @value the new value of the parameter
-	  *
-	  * @result void
-	  */
+	 * Set the value of a configuration parameter
+	 * @key the name of the configuration parameter
+	 * @value the new value of the parameter
+	 *
+	 * @result void
+	 */
 	public function set_value($key, $value)
 	{
 		$this->_cache[$key] = $value;
