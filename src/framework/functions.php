@@ -9,14 +9,14 @@ require_once 'src/framework/view.php';
 
 
 /** @group Functions
-  * Generate a string with random characters of a certain length
-  * @length optional; the length of the generated string 
-  * (defaults to 8)
-  * 
-  * TODO: Replace with something that encodes more characters? a-zA-Z0-9 would be nice…
-  *
-  * @result a string with random characters
-  */
+ * Generate a string with random characters of a certain length
+ * @length optional; the length of the generated string 
+ * (defaults to 8)
+ * 
+ * TODO: Replace with something that encodes more characters? a-zA-Z0-9 would be nice…
+ *
+ * @result a string with random characters
+ */
 function randstr($length = 8) {
 	$length = ($length < 4) ? 4 : $length;
 	return bin2hex(random_bytes(($length-($length%2))/2));
@@ -126,14 +126,14 @@ function edit_url($url, array $add = array(), array $remove = array())
 }
 
 /**
-  * Parse an email message and substitute variables and constants. The 
-  * function will first look for email in public/email and will
-  * fallback to the default theme if the file could not be found
-  * @param string the name of the email file to parse
-  * @param array the data to substitute
-  *
-  * @return string A string with substituted data and constants
-  */
+ * Parse an email message and substitute variables and constants. The 
+ * function will first look for email in public/email and will
+ * fallback to the default theme if the file could not be found
+ * @param string the name of the email file to parse
+ * @param array the data to substitute
+ *
+ * @return string A string with substituted data and constants
+ */
 function parse_email($email, $data)
 {
 	if (file_exists('public/email/' . $email))
@@ -225,12 +225,12 @@ function get_theme_data($file, $include_filemtime = true) {
 
 
 /** @group Functions
-  * Implode a list while separating it with , (except for the last item
-  * for which "and" is used instead of a comma
-  * @list the list to implode
-  *
-  * @result a string in the format item1, item2 and item3
-  */
+ * Implode a list while separating it with , (except for the last item
+ * for which "and" is used instead of a comma
+ * @list the list to implode
+ *
+ * @result a string in the format item1, item2 and item3
+ */
 function implode_human($list)
 {
 	$len = count($list);

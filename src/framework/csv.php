@@ -1,11 +1,11 @@
 <?php
 /** @group CSV
-  * Format an array as a CSV (comma separated values) line
-  * @fields an array of values to format
-  * @delim optional; the delimiter to use
-  *
-  * @result a CSV string
-  */
+ * Format an array as a CSV (comma separated values) line
+ * @fields an array of values to format
+ * @delim optional; the delimiter to use
+ *
+ * @result a CSV string
+ */
 function csv_row($fields, $delim = ';') {
 	$result = '';
 	

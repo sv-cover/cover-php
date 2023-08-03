@@ -24,8 +24,8 @@ class DataIterSession extends DataIter
 }
 
 /**
-	* A class implementing news data
-	*/
+ * A class implementing news data
+ */
 class DataModelSession extends DataModel
 {
 	public $dataiter = 'DataIterSession';
