@@ -3,7 +3,6 @@ if (!defined('IN_SITE'))
 	return;
 
 require_once 'src/framework/config.php';
-require_once 'src/framework/login.php';
 require_once 'src/framework/streams.php';
 require_once 'src/framework/gettext.php';
 

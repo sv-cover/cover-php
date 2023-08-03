@@ -163,7 +163,7 @@ class DatabasePDO
 		// Create a getter for the col (which is a function that returns
 		// $rows[$col]) and apply it to every row.
 		// I just love functional programming. #sorry #notsorry
-		return array_map(getter($col), $rows);
+		return array_map(fn($row) => $row[$col] ?? null, $rows);
 	}
 	
 	/**

@@ -1,7 +1,6 @@
 <?php
 require_once 'src/framework/data/DataModel.php';
 require_once 'src/framework/search.php';
-require_once 'src/framework/login.php';
 require_once 'src/framework/router.php';
 require_once 'src/services/secretary.php';
 

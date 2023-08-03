@@ -24,8 +24,6 @@ class I18NTwigExtension extends Twig_Extension
 				return $member ? member_full_name($member, IGNORE_PRIVACY) : null;
 			}),
 			new Twig_SimpleFilter('first_name', 'member_first_name'),
-			new Twig_SimpleFilter('period_short', 'agenda_short_period_for_display', ['is_safe' => ['html']]),
-			new Twig_SimpleFilter('period', 'agenda_period_for_display', ['is_safe' => ['html']]),
 			new Twig_SimpleFilter('date_relative', 'format_date_relative'),
 			new Twig_SimpleFilter('vformat', 'vsprintf'),
 			new Twig_SimpleFilter('human_join', 'implode_human'),

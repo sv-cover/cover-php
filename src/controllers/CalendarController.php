@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 require_once 'src/framework/member.php';
-require_once 'src/framework/login.php';
 require_once 'src/framework/form.php';
 require_once 'src/framework/webcal.php';
 require_once 'src/framework/markup.php';

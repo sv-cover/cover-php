@@ -1,18 +1,11 @@
 <?php
-require_once 'src/framework/login.php';
 require_once 'src/framework/markup.php';
 
 class CalendarView extends CRUDFormView
 {
 	public function render_index($iters)
 	{
-		$months = get_months();
-			
-		$days = get_days();
-
-		$show_year = $this->selected_year() != $this->current_year();
-
-		return $this->twig->render('index.twig', compact('iters', 'months', 'days', 'show_year'));
+		return $this->twig->render('index.twig', compact('iters'));
 	}
 
 	public function render_read(DataIter $iter, array $extra = [])
