@@ -433,19 +433,6 @@ CREATE TABLE public.email_confirmation_tokens (
 ALTER TABLE public.email_confirmation_tokens OWNER TO webcie;
 
 --
--- Name: facebook; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.facebook (
-    lid_id integer NOT NULL,
-    data_key character varying(255) NOT NULL,
-    data_value text NOT NULL
-);
-
-
-ALTER TABLE public.facebook OWNER TO webcie;
-
---
 -- Name: forum_acl_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
 
@@ -1922,14 +1909,6 @@ committee_battle	1
 --
 
 COPY public.email_confirmation_tokens (key, member_id, email, created_on) FROM stdin;
-\.
-
-
---
--- Data for Name: facebook; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.facebook (lid_id, data_key, data_value) FROM stdin;
 \.
 
 
@@ -4783,14 +4762,6 @@ ALTER TABLE ONLY public.email_confirmation_tokens
 
 
 --
--- Name: facebook facebook_pk; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.facebook
-    ADD CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key);
-
-
---
 -- Name: forum_group_member forum_group_member_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
 --
 
@@ -5225,14 +5196,6 @@ ALTER TABLE ONLY public.committee_email
 
 ALTER TABLE ONLY public.email_confirmation_tokens
     ADD CONSTRAINT email_confirmation_tokens_member_id_fkey FOREIGN KEY (member_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: facebook facebook_lid_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.facebook
-    ADD CONSTRAINT facebook_lid_id_fkey FOREIGN KEY (lid_id) REFERENCES public.leden(id);
 
 
 --

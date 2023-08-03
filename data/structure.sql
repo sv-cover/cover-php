@@ -582,17 +582,6 @@ CREATE TABLE stickers (
 );
 
 --
--- Facebook meta data (which is linked to a member)
---
-
-CREATE TABLE facebook (
-    lid_id INTEGER NOT NULL REFERENCES leden (id),
-    data_key VARCHAR(255) NOT NULL,
-    data_value TEXT NOT NULL,
-    CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key)
-);
-
---
 -- Announcements (simple posts)
 -- 
 
