@@ -29,10 +29,6 @@
 	{% block menu %}
 		{{ include('@layout/widgets/menu.twig') }}
 	{% endblock %}
-
-	{% if view.layout.promotional_header %}
-	{{ include('@layout/widgets/' ~ view.layout.promotional_header) }}
-	{% endif %}
 	
 	{% if global.auth.logged_in() and global.identity.is_pending() %}
 		<section class="notification is-warning m-0">

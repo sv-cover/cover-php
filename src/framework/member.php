@@ -3,29 +3,6 @@ require_once 'src/framework/data/data.php';
 require_once 'src/framework/auth.php';
 
 /** @group Member
-  * Check whether the currently logged in member is a member of
-  * a commissie. This function always returns true for members
-  * of the Easy commissie (see easy parameter)
-  * @id the id of the commissie to check
-  * @easy whether or not to always turn true when member is a member
-  * of the easy
-  *
-  * @result true if the currently logged in member is a member of
-  * the commissie with id `id'
-  */
-function member_in_commissie($id = null)
-{
-	trigger_error("member_in_commissie is deprecated, use get_identity()->member_in_committee() or member_in_committee()", E_USER_NOTICE);
-
-	return get_identity()->member_in_committee($id);
-}
-
-function member_in_committee($id = null)
-{
-	return get_identity()->member_in_committee($id);
-}
-
-/** @group Member
   * Return the nick name of the currently logged in member
   * @iter optional; iter to get the name of a specified member instead
   * of the currently logged in one

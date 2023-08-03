@@ -427,7 +427,6 @@ class LayoutViewHelper
 		return array_filter($model->get_proposed(), [get_policy($model), 'user_can_moderate']);
 	}
 
-
 	public function color_mode()
 	{
 		return $_COOKIE['cover_color_mode'] ?? 'light';
@@ -445,15 +444,5 @@ class LayoutViewHelper
 		unset($_SESSION['alert']);
 
 		return $alert;
-	}
-
-	public function promotional_header()
-	{
-		return false;
-
-		if (!get_auth()->logged_in())
-			return 'promotional-header.twig';
-
-		return null;
 	}
 }
