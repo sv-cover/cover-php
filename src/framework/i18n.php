@@ -3,76 +3,44 @@ if (!defined('IN_SITE'))
 	return;
 
 require_once 'src/framework/config.php';
-require_once 'src/framework/streams.php';
-require_once 'src/framework/gettext.php';
 
-/** @group i18n
-  * A gettext noop function. This will just return the message. It's used
-  * to be able to mark the message as a translatable string (by using
-  * gettext tools) but not actually translate it yet. A use case would be
-  * to only translate the message in certain circumstances.
-  * @message The message
-  *
-  * @result the same unaltered message
-  */
+/**
+ * @group i18n
+ * A gettext noop function. This will just return the message. It's used
+ * to be able to mark the message as a translatable string (by using
+ * gettext tools) but not actually translate it yet. A use case would be
+ * to only translate the message in certain circumstances.
+ * 
+ * @message The message
+ *
+ * @result the same unaltered message
+ */
 function N__($message) {
 	return $message;
 }
 
-/** @group i18n
-  * Initialize the internationalization stuff
-  *
-  */
+/**
+ * @group i18n
+ * Initialize the internationalization stuff
+ *
+ */
 function init_i18n() {
-	i18n_translation::set_path(dirname(__FILE__) . '/../locale');
-	i18n_translation::set_locale(i18n_get_locale());
-	
-	/* Set language to use */
+	/* Set language to use (locale needs to be available on OS) */
 	putenv('LANG='.i18n_get_locale().'.UTF-8');
 	setlocale(LC_ALL, i18n_get_locale().'.UTF-8');
-}
 
-class i18n_translation
-{
-	static private $root;
+	// Specify location of translation tables
+	bindtextdomain('cover-web', realpath(dirname(__FILE__) . '/../../locale'));
 
-	static private $reader;
-
-	static private $locale;
-
-	static public function get_reader() {
-		if (!self::$reader)
-			self::$reader = self::init_reader();
-
-		return self::$reader;
-	}
-
-	static public function set_path($path) {
-		self::$root = $path;
-		self::$reader = null;
-	}
-
-	static public function set_locale($locale) {
-		self::$locale = $locale;
-		self::$reader = null;
-	}
-
-	static private function init_reader() {
-		$translation = sprintf('%s/%s/LC_MESSAGES/cover-web.mo', self::$root, self::$locale);
-
-		$stream = file_exists($translation)
-			? new FileReader($translation)
-			: null;
-
-		return new gettext_reader($stream);
-	}
+	// Choose domain
+	textdomain('cover-web');	
 }
 
 function __($message_id) {
 	if ($message_id == '')
 		return '';
 
-	return i18n_translation::get_reader()->translate($message_id);
+	return gettext($message_id);
 }
 
 function __translate_parts($message, $separators = ',') {
@@ -117,18 +85,19 @@ function ordinal($n) {
 }
 
 function _ngettext($singular, $plural, $number) {
-	return i18n_translation::get_reader()->ngettext($singular, $plural, $number);
+	return ngettext($singular, $plural, $number);
 }
 
 function __N($singular, $plural, $number) {
 	return sprintf(_ngettext($singular, $plural, $number), $number);
 }
 
-/** @group i18n
-  * Get the current locale
-  *
-  * @result the current locale
-  */
+/**
+ * @group i18n
+ * Get the current locale
+ *
+ * @result the current locale
+ */
 function i18n_get_locale() {
 	// Bypass logic, the website should be English only now
 	return 'en_US';
@@ -158,11 +127,12 @@ function _i18n_language_map() {
 		'en_US' => 'en');
 }
 
-/** @group i18n
-  * Get all supported languages
-  *
-  * @result an associative array of support languages
-  */
+/**
+ * @group i18n
+ * Get all supported languages
+ *
+ * @result an associative array of support languages
+ */
 function i18n_get_languages() {
 	static $languages = null;
 	
@@ -176,23 +146,25 @@ function i18n_get_languages() {
 	return $languages;
 }
 
-/** @group i18n
-  * Checks whether a language is valid
-  * @language the language to check
-  *
-  * @result true if the language is valid, false otherwise
-  */
+/**
+ * @group i18n
+ * Checks whether a language is valid
+ * @language the language to check
+ *
+ * @result true if the language is valid, false otherwise
+ */
 function i18n_valid_language($language) {
 	$languages = i18n_get_languages();
 
 	return isset($languages[$language]);
 }
 
-/** @group i18n
-  * Get the current language (defaults to en)
-  *
-  * @result the current language
-  */
+/**
+ * @group i18n
+ * Get the current language (defaults to en)
+ *
+ * @result the current language
+ */
 function i18n_get_language() {
 	static $languages = null;
 
