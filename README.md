@@ -19,6 +19,7 @@ For development, it's easiest to setup a local install of the website. To do so,
 The codebase is largely custom, but we're in the process of migrating it to the Symfony framework. Why Symfony? It's highly modular so easy to migrate step-by-step. Additionally, we already used some of its components before. 
 
 Here's a list of the Symfony components that have currently been integrated:
+
 - [Forms](/docs/forms.md)
 - [Routing](https://symfony.com/doc/current/create_framework/routing.html)
 - [Twig](https://twig.symfony.com/doc/2.x/)
