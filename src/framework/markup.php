@@ -3,10 +3,8 @@ if (!defined('IN_SITE'))
 	return;
 
 require_once 'src/framework/smileys.php';
-require_once 'src/framework/cache.php';
 require_once 'src/framework/router.php';
 
-use Embed\Embed;
 use App\Controller\MailingListsController;
 
 function str_replace_once($search, $replace, $subject)
@@ -296,37 +294,6 @@ function _markup_parse_video(&$markup, &$placeholders)
 	}
 }
 
-function _markup_parse_embed(&$markup, &$placeholders)
-{
-	static $count = 0;
-
-	$cache = get_cache();
-
-	$markup = preg_replace_callback('/\[embed\](.+?)\[\/embed\]/', function($match) use ($cache, &$placeholders, &$count) {
-		if (!filter_var($match[1], FILTER_VALIDATE_URL))
-			return $match[0];
-
-		try {
-			$embed = $cache->get($match[1]);
-
-			if ($embed === null) {
-				$embed = Embed::create($match[1]);
-				$cache->put($match[1], $embed, 48 * 3600);
-			}
-
-			$html = $embed->code;
-
-		} catch (Exception $e) {
-			$html = sprintf('<a href="%s">%1$s</a> <small>(could not embed due to error: <pre>%s</pre>)</small>', markup_format_text($match[1]), $e);
-		}
-
-		$placeholder = sprintf('#EMBED%d#', $count++);
-		$placeholders[$placeholder] = sprintf('<div class="embed">%s</div>', $html);
-
-		return $placeholder;
-	}, $markup);
-}
-
 function _markup_parse_header(&$markup, $header_offset = 0)
 {
 	$markup = preg_replace_callback(
@@ -472,8 +439,6 @@ function markup_parse($markup, $header_offset = 0, &$placeholders = null)
 	_markup_parse_youtube($markup, $placeholders);
 
 	_markup_parse_video($markup, $placeholders);
-
-	_markup_parse_embed($markup, $placeholders);
 
 	_markup_parse_member($markup, $placeholders);
 
