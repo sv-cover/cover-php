@@ -1,7 +1,6 @@
 <?php
 require_once 'src/framework/form.php';
 require_once 'src/framework/markup.php';
-require_once 'src/framework/svg.php';
 require_once 'src/framework/send-mailinglist-mail.php';
 
 class MailinglistsView extends CRUDFormView
@@ -97,11 +96,6 @@ class MailinglistsView extends CRUDFormView
 	public function render_embedded(DataIterMailinglist $list, $form)
 	{
 		return $this->render('embedded.twig', ['list' => $list, 'form' => $form->createView()]);
-	}
-
-	public function barchart($data)
-	{
-		return \Cover\svg\barchart($data);
 	}
 
 	public function readable_status($code)
