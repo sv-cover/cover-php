@@ -219,19 +219,6 @@ CREATE TABLE public.besturen (
 ALTER TABLE public.besturen OWNER TO webcie;
 
 --
--- Name: cache; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.cache (
-    key character(40) NOT NULL,
-    value text NOT NULL,
-    expires integer NOT NULL
-);
-
-
-ALTER TABLE public.cache OWNER TO webcie;
-
---
 -- Name: commissies_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
 
@@ -1664,14 +1651,6 @@ COPY public.besturen (id, naam, login, website, page_id) FROM stdin;
 24	Board XXIII	bestuur23	\N	116
 25	Board XXIV: Evolution	bestuur24	\N	123
 26	Board XXV: BOLD	bestuur25	\N	131
-\.
-
-
---
--- Data for Name: cache; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.cache (key, value, expires) FROM stdin;
 \.
 
 
@@ -4498,14 +4477,6 @@ ALTER TABLE ONLY public.announcements
 
 ALTER TABLE ONLY public.applications
     ADD CONSTRAINT applications_pkey PRIMARY KEY (key);
-
-
---
--- Name: cache cache_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.cache
-    ADD CONSTRAINT cache_pkey PRIMARY KEY (key);
 
 
 --

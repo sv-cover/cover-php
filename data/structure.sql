@@ -190,17 +190,6 @@ CREATE TABLE agenda (
 --     FOREIGN KEY (replacement_for) REFERENCES agenda (id);
 
 --
--- Very basic persistent cache; is mainly used for Facebook stuff.
---
-
-CREATE TABLE cache (
-    key character(40) NOT NULL PRIMARY KEY,
-    value TEXT NOT NULL,
-    expires integer NOT NULL
-);
-
-
---
 -- Configuration table allows you to override stuff from config.inc
 -- using the interface in the website. Of course, these values are
 -- only accessible once a database connection has been set up. So

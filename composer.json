@@ -7,7 +7,6 @@
         "jeroendesloovere/vcard": "~1.2",
         "twig/twig": "^2.11",
         "giggsey/libphonenumber-for-php": "^8.13",
-        "embed/embed": "^3.0",
         "symfony/routing": "^5.2",
         "symfony/config": "^5.2",
         "symfony/expression-language": "^5.2",
