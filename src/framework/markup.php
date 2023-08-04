@@ -172,7 +172,7 @@ function _markup_parse_spaces(&$markup)
 
 function _markup_parse_smileys(&$markup)
 {
-	$smileys_path = 'images/smileys';
+	$smileys_path = '/images/smileys';
 
 	$markup = trim($markup);
 	$smileys = get_smileys();
