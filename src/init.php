@@ -33,10 +33,15 @@ else
 require_once 'vendor/autoload.php';
 
 require_once 'src/services/sentry.php';
-require_once 'src/framework/functions.php';
-require_once 'src/framework/i18n.php';
 require_once 'src/framework/constants.php';
+require_once 'src/framework/config.php';
+require_once 'src/framework/exception.php';
+require_once 'src/framework/data/data.php';
+require_once 'src/framework/functions.php';
+require_once 'src/framework/auth.php';
+require_once 'src/framework/i18n.php';
 require_once 'src/framework/policy.php';
+require_once 'src/framework/view.php';
 
 date_default_timezone_set('Europe/Amsterdam');
 

@@ -2,12 +2,6 @@
 if (!defined('IN_SITE'))
 	return;
 
-require_once 'src/framework/config.php';
-require_once 'src/framework/exception.php';
-require_once 'src/framework/data/data.php';
-require_once 'src/framework/view.php';
-
-
 /** @group Functions
  * Generate a string with random characters of a certain length
  * @length optional; the length of the generated string 
