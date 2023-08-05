@@ -522,8 +522,9 @@ class DataModelMember extends DataModel implements SearchProvider
 		static $privacy = null;
 
 		// Hack for these three fields which are often combined, and the correct alias
-		if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name')))
+		if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name', 'nick')))
 			$field = 'naam';
+
 
 		if ($privacy == null)
 			$privacy = $this->get_privacy();
