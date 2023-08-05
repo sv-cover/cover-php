@@ -1,8 +1,6 @@
 {
     "require": {
         "maennchen/zipstream-php": "^2.2",
-        "camspiers/porter-stemmer": "~1.0",
-        "ronanguilloux/isocodes": "~1.2",
         "99designs/http-signatures": "^4.0",
         "jeroendesloovere/vcard": "~1.2",
         "twig/twig": "^2.11",
