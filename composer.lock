@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0aa82e57aa4ab1a8cc5560f272c7719c",
+    "content-hash": "12bf06c361cc0314140c55de10ad7330",
     "packages": [
         {
             "name": "99designs/http-signatures",
@@ -112,40 +112,6 @@
                 "source": "https://github.com/Behat/Transliterator/tree/v1.5.0"
             },
             "time": "2022-03-30T09:27:43+00:00"
-        },
-        {
-            "name": "camspiers/porter-stemmer",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/camspiers/porter-stemmer.git",
-                "reference": "588088e9aaa6d81d711098cf60af2ef18b1a5798"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/camspiers/porter-stemmer/zipball/588088e9aaa6d81d711098cf60af2ef18b1a5798",
-                "reference": "588088e9aaa6d81d711098cf60af2ef18b1a5798",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Richard Heyes",
-                    "email": "support@rgraph.net"
-                }
-            ],
-            "description": "Porter Stemmer created by Richard Heyes",
-            "support": {
-                "issues": "https://github.com/camspiers/porter-stemmer/issues",
-                "source": "https://github.com/camspiers/porter-stemmer/tree/master"
-            },
-            "time": "2013-02-06T21:39:08+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -1763,91 +1729,6 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
-        },
-        {
-            "name": "ronanguilloux/isocodes",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ronanguilloux/IsoCodes.git",
-                "reference": "08aabd230ea963cba3aa5338319b1bffacbc0285"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ronanguilloux/IsoCodes/zipball/08aabd230ea963cba3aa5338319b1bffacbc0285",
-                "reference": "08aabd230ea963cba3aa5338319b1bffacbc0285",
-                "shasum": ""
-            },
-            "require": {
-                "ext-bcmath": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "@stable",
-                "pdepend/pdepend": "2.0.*",
-                "phploc/phploc": "*",
-                "phpmd/phpmd": "@stable",
-                "phpunit/phpunit": "~4.7",
-                "satooshi/php-coveralls": "dev-master",
-                "sebastian/phpcpd": "*",
-                "squizlabs/php_codesniffer": "2.0.x-dev"
-            },
-            "suggest": {
-                "gourmet/validation": "For CakePHP 3 integration",
-                "sllh/iso-codes-validator": "For Symfony or Silex integration with ease"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "IsoCodes": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Ronan Guilloux",
-                    "email": "ronan.guilloux@gmail.com",
-                    "homepage": "http://github.com/ronanguilloux",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP library, validating various ISO codes, such as IBAN, SWIFT/BIC, BBAN, RIB, Credit Card number, INSEE, VAT, NSS, Siren, Siret, Ssn, NINO, Zipcode (US, Canada, France...), ISBN & EAN13, Spanish CIF & NIF",
-            "homepage": "https://github.com/ronanguilloux/IsoCodes",
-            "keywords": [
-                "BBAN",
-                "BIC",
-                "CIF",
-                "Credit Card number",
-                "EAN13",
-                "IBAN",
-                "INSEE",
-                "ISBN",
-                "ISO codes",
-                "NIF",
-                "NINO",
-                "NSS",
-                "RIB",
-                "Siren",
-                "Siret",
-                "Ssn",
-                "swift",
-                "vat",
-                "zipcode"
-            ],
-            "support": {
-                "email": "ronan.guilloux@gmail.com",
-                "issues": "https://github.com/ronanguilloux/IsoCodes/issues",
-                "source": "https://github.com/ronanguilloux/IsoCodes/tree/master"
-            },
-            "time": "2015-06-22T19:37:41+00:00"
         },
         {
             "name": "sentry/sdk",
