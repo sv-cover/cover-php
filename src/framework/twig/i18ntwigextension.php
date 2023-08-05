@@ -89,7 +89,6 @@ class I18NTwigExtension extends Twig_Extension
 				return sprintf(_ngettext($singular, $plural, $count), $value);
 			}, ['variadic' => true]),
 			new Twig_SimpleFunction('__translate_parts', '__translate_parts'),
-			new Twig_SimpleFunction('link_static', 'get_theme_data'),
 			new Twig_SimpleFunction('get_config_value', 'get_config_value'),
 			new Twig_SimpleFunction('var_dump', function($value) {
 				ob_start();
