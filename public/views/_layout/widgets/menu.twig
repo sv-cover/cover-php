@@ -15,18 +15,18 @@
 			<div class="navbar-start">
 			{% for menu_id, menu in view.layout.top_menu %}
 				{% if menu.submenu is defined %}
-					<div class="navbar-item has-dropdown is-hoverable">
+					<div class="navbar-item has-dropdown is-hoverable {{ menu.class|default('') }}">
 						<a class="navbar-link is-arrowless"{% if menu.title is defined %} title="{{ menu.title }}"{% endif %} tabindex="0">
 							{{ menu.label }}
 						</a>
 						<div class="navbar-dropdown">
 							{% for submenu_item in menu.submenu %}
-								<a href="{{ submenu_item.url }}" class="navbar-item" target="{{ submenu_item.target|default() }}" {% if submenu_item.title is defined %} title="{{ submenu_item.title }}"{% endif %}>{{ submenu_item.label }}</a>
+								<a href="{{ submenu_item.url }}" class="navbar-item {{ menu.class|default('') }}" target="{{ submenu_item.target|default() }}" {% if submenu_item.title is defined %} title="{{ submenu_item.title }}"{% endif %}>{{ submenu_item.label }}</a>
 							{% endfor %}
 						</div>
 					</div>
 				{% else %}
-					<a href="{{ menu.url }}"  target="{{ menu.target|default('') }}" class="navbar-item" {% if menu.title is defined %} title="{{ menu.title }}"{% endif %}>{{ menu.label }}</a>
+					<a href="{{ menu.url }}"  target="{{ menu.target|default('') }}" class="navbar-item {{ menu.class|default('') }}" {% if menu.title is defined %} title="{{ menu.title }}"{% endif %}>{{ menu.label }}</a>
 				{% endif %}
 			{% endfor %}
 			</div>

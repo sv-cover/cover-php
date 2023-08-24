@@ -97,6 +97,23 @@ class LayoutViewHelper
 			'label' => __('Contact'),
 			'url' => $this->router->generate('contact'),
 		];
+
+		/*
+		Show highlight in menu if menu_highlight is configured in settings. Example:
+		{
+			"label": "Introduction 2023",
+			"url": "https://introcee.svcover.nl/"
+		}
+		*/
+		$highlight = json_decode(get_dynamic_config_value('menu_highlight', ''));
+		if (!empty($highlight) && !empty($highlight->label) && !empty($highlight->url))
+			$menus['highlight'] = [
+				'label' => $highlight->label,
+				'url' => $highlight->url,
+				'class' => $highlight->class ?? 'is-highlighted',
+				'title' => $highlight->title ?? null,
+				'target' => $highlight->target ?? null,
+			];
 		
 		// Filter out any empty menu items (I'm looking at you, admin menu!)
 		$menus = array_filter($menus, function($menu) {
