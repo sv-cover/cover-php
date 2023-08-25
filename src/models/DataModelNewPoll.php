@@ -114,12 +114,12 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 
 		// Only update after inserting to not break things on error. This does require filtering for the new ID
 		if (!empty($result))
-			$this->db->query('
+			$this->db->query("
 				UPDATE polls
-				   SET closed_on = NOW()
+				   SET closed_on = DATE_TRUNC('second', NOW()::timestamp)
 				 WHERE id != :inserted_id
 				   AND closed_on IS NULL
-			', false, ['inserted_id' => $result]);
+			", false, ['inserted_id' => $result]);
 
 		return $result;
 	}

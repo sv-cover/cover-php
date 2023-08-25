@@ -89,6 +89,30 @@
                             </span>
                         </a>
                     {% endif %}
+                    {% if poll.is_open and global.policies.NewPoll.user_can_close(poll) %}
+                        <a class="level-item"
+                            href="{{ path('poll', {view: 'close', id: poll.id}) }}"
+                            data-popup="modal"
+                            title="{{ __('Close poll') }}"
+                            aria-label="{{ __('Close poll') }}"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-lock" aria-hidden="true"></i>
+                            </span>
+                        </a>
+                    {% endif %}
+                    {% if not poll.is_open and global.policies.NewPoll.user_can_reopen(poll) %}
+                        <a class="level-item"
+                            href="{{ path('poll', {view: 'reopen', id: poll.id}) }}"
+                            data-popup="modal"
+                            title="{{ __('Reopen poll') }}"
+                            aria-label="{{ __('Reopen poll') }}"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-lock-open" aria-hidden="true"></i>
+                            </span>
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

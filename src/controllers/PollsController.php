@@ -2,10 +2,13 @@
 namespace App\Controller;
 
 use App\Form\PollType;
+use App\Form\DataTransformer\StringToDateTimeTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
@@ -101,10 +104,24 @@ class PollsController extends \ControllerCRUDForm
 	{
 		if (!\get_policy($this->model)->user_can_close($iter))
 			throw new \UnauthorizedException('You are not allowed to close this poll.');
+
 		$form = $this->createFormBuilder($iter)
 			->add('submit', SubmitType::class, ['label' => __('Close poll'), 'color' => 'danger'])
 			->getForm();
 		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$iter['closed_on'] = new \DateTime();
+			$this->model->update($iter);
+
+			$next_url = $this->get_parameter('referrer', $this->generate_url('poll.list'));
+			return $this->view->redirect($next_url);
+		}
+
+		return $this->view->render('confirm_close.twig',  [
+			'iter' => $iter,
+			'form' => $form->createView(),
+		]);
 	}
 
 
@@ -112,6 +129,35 @@ class PollsController extends \ControllerCRUDForm
 	{
 		if (!\get_policy($this->model)->user_can_close($iter))
 			throw new \UnauthorizedException('You are not allowed to re-open this poll.');
+
+		$iter['closed_on'] = null;
+
+		$builder = $this->createFormBuilder($iter)
+			->add('closed_on', DateTimeType::class, [
+				'label' => __('Closes on'),
+				'constraints' => new Assert\Callback([
+					'callback' => [PollType::class, 'validate_closed_on'],
+				]),
+				'widget' => 'single_text',
+				'required' => false,
+				'help' => __('People can vote until this date. If you provide no date, the poll closes as soon as the next poll is created.'),
+			])
+			->add('submit', SubmitType::class, ['label' => __('Reopen poll'), 'color' => 'danger']);
+		$builder->get('closed_on')->addModelTransformer(new StringToDateTimeTransformer(null, null, 'Y-m-d H:i:s'));
+		$form = $builder->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$this->model->update($iter);
+
+			$next_url = $this->get_parameter('referrer', $this->generate_url('poll.list'));
+			return $this->view->redirect($next_url);
+		}
+
+		return $this->view->render('confirm_reopen.twig',  [
+			'iter' => $iter,
+			'form' => $form->createView(),
+		]);
 	}
 
 	public function run_vote(\DataIter $iter)

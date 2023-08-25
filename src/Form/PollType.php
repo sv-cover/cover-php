@@ -61,11 +61,11 @@ class PollType extends AbstractType
 			->add('submit', SubmitType::class)
 		;
 
-		// 'van' and 'tot' are strings in dataiter, with timezone info
-		$builder->get('closed_on')->addModelTransformer(new StringToDateTimeTransformer(null, null, 'Y-m-d H:i:sT'));
+		// 'closed_on' is string in dataiter, with timezone info
+		$builder->get('closed_on')->addModelTransformer(new StringToDateTimeTransformer(null, null, 'Y-m-d H:i:s'));
 	}
 
-	public function validate_closed_on($value, ExecutionContextInterface $context, $payload) {
+	static public function validate_closed_on($value, ExecutionContextInterface $context, $payload) {
 		// Temporary solution, switch to Assert\GreaterThan once our modeldata is DateTime and not string
 		// e.g. new Assert\GreaterThan(['value' => 'now', 'message' => 'Date has to be in the future.'])
 
