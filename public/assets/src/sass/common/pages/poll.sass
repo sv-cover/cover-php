@@ -1,0 +1,45 @@
+$poll-result-background-color: $button-background-color
+$poll-result-margin: 0.5rem
+
+.poll
+    .poll-option
+        +control
+        position: relative
+        display: flex
+        border-width: 0
+        justify-content: space-between
+        &:not(:last-child)
+            margin-bottom: $poll-result-margin
+        label
+            flex: 1 1 100%
+            position: relative
+            height: 100%
+            span
+                position: absolute
+                top: 0
+                right: 0
+                bottom: 0
+                left: 0
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+        meter
+            -moz-appearance: none
+            // -webkit-appearance: none
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            width: 100%
+            height: $control-height
+            background: none
+            z-index: -1
+            &::-moz-meter-bar
+                background: $poll-result-background-color
+            &::-webkit-meter-bar
+                background: none
+                height: $control-height
+                border-radius: 0
+                border: none
+            &::-webkit-meter-optimum-value
+                background: $poll-result-background-color

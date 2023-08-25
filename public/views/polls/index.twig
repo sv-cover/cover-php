@@ -1,0 +1,98 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Polls') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<header class="level">
+    <div class="level-left">
+        <h1 class="title">{{ __('Polls') }}</h1>
+    </div>
+    <div class="level-right buttons">
+        {% if user_can_create controller.new_iter %}
+            <a href="{{ path('poll.create') }}" class="button">
+                <span class="icon is-small">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </span>
+                <span>{{ __('New poll')  }}</span>
+            </a>
+        {% endif %}
+    </div>
+</header>
+<section>
+{% for poll in iters %}
+    <div class="media poll">
+        <div class="media-content">
+            <a href="{{ path('poll', {view: 'vote', id: poll.id}) }}">asdasfd</a>
+            {% if poll.committee_id %}
+                Committee {{ poll.committee_id }}
+            {% elseif poll.member_id %}
+                Member {{ poll.member_id }}
+            {% else %}
+                {{ __('Anonymous') }}
+            {% endif %}
+            <div class="content">
+                {{ poll.question|parse_markup }}
+            </div>
+            {% if global.policies.NewPoll.user_can_vote(poll) %}
+                <form action="{{ path('poll', {view: 'vote', id: poll.id, referrer: global.server.REQUEST_URI}) }}" method="post">
+                    <input type="hidden" name="form[_token]" value="{{ csrf_token('vote_poll_' ~ poll.id) }}">
+                    {# Thou canst vote! #}
+                    <div class="buttons">
+                    {% for option in poll.options %}
+                        <button name="form[option]" value="{{ option.id }}" type="submit" class="button is-fullwidth">
+                            {{ option.option }}
+                        </button>
+                    {% endfor %}
+                    </div>
+                </form>
+            {% elseif not poll.is_open or poll.member_has_voted %}
+                {# Thou hath voted or Thou art too late! #}
+                {% for option in poll.options %}
+                <div class="poll-option" title="{{ option.option }}">
+                    {% set percentage = option.votes / max(poll.total_votes, 1) %}
+                    <label for="poll-option-{{ option.id }}-result" class="is-truncated">
+                        <span>
+                            {{ option.option }}
+                            {% if option.id == poll.member_vote %}
+                                <i class="far fa-check-circle" aria-hidden="true" title="{{ __('You voted for this option') }}"></i>
+                                <span class="is-sr-only">{{ __('You voted for this option') }}</span>
+                            {% endif %}
+                        </span>
+                    </label>
+                    <span class="percentage">
+                        {{ percentage|format_percent_number }}
+                    </span>
+                    <meter id="poll-option-{{ option.id }}-result" max="{{ max(poll.total_votes, 1) }}" value="{{ option.votes }}">
+                        {{ percentage|format_percent_number }}
+                    </meter>
+                </div>
+                {% endfor %}
+                <p>
+                    {{ __('Total votes') }}: {{ poll.total_votes }}
+                    {% if not poll.is_open %}
+                        <span class="divider"></span>
+                        {{ __('Final result') }}
+                    {% endif %}
+                </p>
+            {% endif %}
+            <div class="controls level is-mobile">
+                <div class="level-left">
+                    {% if user_can_delete poll %}
+                        <a class="level-item"
+                            href="{{ path('poll', {view: 'delete', id: poll.id}) }}"
+                            data-popup="modal"
+                            title="{{ __('Delete poll') }}"
+                            aria-label="{{ __('Delete poll') }}"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-trash" aria-hidden="true"></i>
+                            </span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</section>
+{% endblock %}
