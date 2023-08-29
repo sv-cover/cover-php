@@ -421,7 +421,7 @@ class ProfileController extends \Controller
 
 				fclose($fh);
 			} else {
-				$profile_link = $this->generate_url('profile', ['id' => $iter['id']], UrlGeneratorInterface::ABSOLUTE_URL);
+				$profile_link = $this->generate_url('profile', ['lid' => $iter['id']], UrlGeneratorInterface::ABSOLUTE_URL);
 				send_mail_with_attachment(
 					'acdcee@svcover.nl',
 					'New yearbook photo for ' . $iter['full_name'],
