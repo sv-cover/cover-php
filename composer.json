@@ -7,7 +7,7 @@
         "99designs/http-signatures": "^4.0",
         "jeroendesloovere/vcard": "~1.2",
         "twig/twig": "^2.11",
-        "giggsey/libphonenumber-for-php": "^7.7",
+        "giggsey/libphonenumber-for-php": "^8.13",
         "embed/embed": "^3.0",
         "sentry/sdk": "^2.2",
         "symfony/routing": "^5.2",
@@ -20,7 +20,9 @@
         "symfony/twig-bridge": "^5.4",
         "symfony/http-foundation": "^5.4",
         "symfony/security-csrf": "^5.4",
-        "symfony/intl": "^5.4"
+        "symfony/intl": "^5.4",
+        "symfony/mime": "^5.4",
+        "odolbeau/phone-number-bundle": "^3.9"
     },
     "require-dev": {
         "facebook/webdriver": "^1.5",

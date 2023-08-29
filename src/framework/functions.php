@@ -208,6 +208,8 @@ function get_short_months() {
   * Generate a string with random characters of a certain length
   * @length optional; the length of the generated string 
   * (defaults to 8)
+  * 
+  * TODO: Replace with something that encodes more characters? a-zA-Z0-9 would be nice…
   *
   * @result a string with random characters
   */
@@ -915,6 +917,7 @@ function is_same_domain($subdomain, $domain, $levels = 2)
  */
 function send_mail_with_attachment($to, $subject, $message, $additional_headers, array $attachments)
 {
+	// Alternative sendmail implementations may not like this "oi" flag, which could result in a broken pipe. Remove temporarily if you're running into issues on your test environment.
 	$fout = popen(ini_get('sendmail_path') . ' -oi', 'w');
 
 	if (!$fout)

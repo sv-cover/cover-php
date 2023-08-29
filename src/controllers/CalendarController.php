@@ -8,9 +8,10 @@ require_once 'src/framework/webcal.php';
 require_once 'src/framework/markup.php';
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
-use App\Form\Type\EventFormType;
+use App\Form\EventType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,7 +24,7 @@ class CalendarController extends \ControllerCRUDForm
 
 	protected $view_name = 'calendar';
 
-	protected $form_type = EventFormType::class;
+	protected $form_type = EventType::class;
 
 	public function __construct($request, $router)
 	{
@@ -49,7 +50,7 @@ class CalendarController extends \ControllerCRUDForm
 		return $this->generate_url('calendar', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter)
+	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
 		if (!\get_policy($iter)->user_can_create($iter))
 			throw new \UnauthorizedException('You are not allowed to create events!');

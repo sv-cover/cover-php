@@ -1,9 +1,9 @@
 <?php
-namespace App\Form\Type;
+namespace App\Form;
 
+use App\Form\Type\CommitteeIdType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -12,12 +12,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class MailinglistFormType extends AbstractType
+class MailinglistType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
@@ -47,6 +45,10 @@ class MailinglistFormType extends AbstractType
 					__('People subscribed to this list and *@svcover.nl addresses') => \DataModelMailinglist::TOEGANG_COVER_DEELNEMERS,
 				],
 				'help' => __('Who can send emails to this list?'),
+			])
+			->add('commissie', CommitteeIdType::class, [
+				'label' => __('Owner'),
+				'help' => __('Which committee may subscribe and unsubscribe people to this list?'),
 			])
 			->add('naam', TextType::class, [
 				'label' => __('Name'),
@@ -82,21 +84,6 @@ class MailinglistFormType extends AbstractType
 			])
 			->add('submit', SubmitType::class)
 		;
-
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-			$iter = $event->getData();
-			$form = $event->getForm();
-
-			// No additional validation is needed, getCommitteeChoices makes sure we
-			// can only pick options we're allowed to pick.
-			$form->add('commissie', ChoiceType::class, [
-				'label' => __('Owner'),
-				'choice_loader' => new CallbackChoiceLoader(function() use ($iter) {
-					return \get_model('DataModelCommissie')->get_committee_choices_for_iter($iter, 'commissie');
-				}),
-				'help' => __('Which committee may subscribe and unsubscribe people to this list?'),
-			]);
-		});
 
 		// Ensure list address is always lowercase. We only need to reverse-transform, but it doesn't hurt to do it both ways…
 		$builder->get('adres')->addModelTransformer(new CallbackTransformer('strtolower', 'strtolower'));

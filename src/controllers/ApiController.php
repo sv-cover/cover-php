@@ -296,8 +296,6 @@ class ApiController extends \Controller
 
 		$member = $model->get_iter($member_id);
 
-		$member_is_member = $member->is_member();
-
 		$reverse_mapping = array_flip(self::$secretary_mapping);
 
 		foreach ($_POST as $remote_field => $value)

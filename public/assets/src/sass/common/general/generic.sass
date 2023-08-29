@@ -64,6 +64,13 @@ figure.youtube
     margin: 0
 
 // TODO: implement in cover style system
+.table
+    td,
+    th
+        &.is-narrow
+            width: 0
+
+// TODO: implement in cover style system
 .m-0
     margin: 0!important
 
@@ -79,6 +86,31 @@ button.card-header-icon
 // TODO: implement in cover style system
 .button.is-baseline
     vertical-align: baseline
+
+// TODO: implement in cover style system
+.button.is-ghost
+    background: none
+    border-color: transparent
+    color: $link
+    text-decoration: none
+    box-shadow: none
+    &:hover,
+    &.is-hovered
+        color: $link-hover
+        text-decoration: underline
+    .icon.is-small
+        height: 1em
+        width: 1em
+
+// TODO: implement in cover style system
+.button.p-0
+    padding: 0
+    height: auto
+
+// TODO: implement in cover style system
+.tabs-wrapper.is-condensed
+    & > .level:not(:last-child)
+        margin-bottom: 0.5em
 
 .image.is-centered
     margin-left: auto
@@ -107,6 +139,8 @@ ul.controls li
 
 
 // Styled in accordance with https://uxmovement.com/forms/the-optimal-way-to-mark-optional-form-fields/
+.checkbox .tag,
+.radio .tag,
 .label .tag
     display: inline-block
     vertical-align: middle

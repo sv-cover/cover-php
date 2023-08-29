@@ -16,8 +16,8 @@
             }) }}
                 {% set submit_button = form_widget(form.submit, {
                     label: __('Delete form'),
-                    is_primary: false,
-                    attr: {form: 'delete-form-form', class: 'is-danger'},
+                    color: 'danger'
+                    attr: {form: 'delete-form-form'},
                 }) %}
                 <div class="field content">
                     <p>{{ __('Are you sure you want to delete this sign-up form?') }}</p>

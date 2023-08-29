@@ -4,6 +4,7 @@ namespace App\Controller;
 require_once 'src/controllers/PhotoBooksController.php';
 require_once 'src/framework/controllers/Controller.php';
 
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PhotoLikesController extends \Controller
 {
@@ -24,28 +25,28 @@ class PhotoLikesController extends \Controller
 		$action = null;
 		$response_json = false;
 
-		if ($_SERVER["CONTENT_TYPE"] === 'application/json')
-		{
+		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'like_photo_' . $this->get_photo()->get_id()])
+			->add('like', SubmitType::class)
+			->add('unlike', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($_SERVER["CONTENT_TYPE"] === 'application/json') {
 			$response_json = true;
 			$json = file_get_contents('php://input');
 			$data = json_decode($json);
 			if (isset($data->action))
 				$action = $data->action;
+		} elseif ($form->isSubmitted() && $form->isValid()) {
+			$action = $form->get('like')->isClicked() ? 'like' : 'unlike';
 		}
-		elseif (isset($_POST['action']))
-			$action = $_POST['action'];
 
-		if (get_auth()->logged_in() && isset($action))
-		{
+		if (get_auth()->logged_in() && isset($action)) {
 			try {
-				switch ($action) {
-					case 'like':
-						$this->model->like($this->get_photo(), get_identity()->get('id'));
-						break;
-					case 'unlike':
-						$this->model->unlike($this->get_photo(), get_identity()->get('id'));
-						break;
-				}
+				if ($action === 'like')
+					$this->model->like($this->get_photo(), get_identity()->get('id'));
+				elseif ($action === 'unlike')
+					$this->model->unlike($this->get_photo(), get_identity()->get('id'));
 			} catch (\Exception $e) {
 				// Don't break duplicate requests
 			}

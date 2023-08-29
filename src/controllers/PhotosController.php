@@ -2,14 +2,17 @@
 namespace App\Controller;
 
 require_once 'src/controllers/PhotoBooksController.php';
-require_once 'src/framework/controllers/ControllerCRUD.php';
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
-class PhotosController extends \ControllerCRUD
+use App\Form\PhotoType;
+
+class PhotosController extends \ControllerCRUDForm
 {
 	use PhotoBookRouteHelper;
 
 	protected $view_name = 'photos';
 	protected $_var_id = 'photo';
+	protected $form_type = PhotoType::class;
 
 	public function __construct($request, $router)
 	{
@@ -46,7 +49,13 @@ class PhotosController extends \ControllerCRUD
 		if (!get_policy($iter)->user_can_read($iter))
 			throw new \UnauthorizedException('You are not allowed to see this photo.');
 
-		return $this->view->render_photo($this->get_book(), $iter);
+		$is_liked = get_auth()->logged_in() && get_model('DataModelPhotobookLike')->is_liked($iter, get_identity()->member()->get_id());
+
+		return $this->view->render('single.twig', [
+			'book' => $this->get_book(),
+			'photo' => $iter,
+			'is_liked' => $is_liked,
+		]);
 	}
 
 	public function run_update(\DataIter $iter)
@@ -54,8 +63,10 @@ class PhotosController extends \ControllerCRUD
 		if (!get_policy($this->model)->user_can_read($iter->get_book()))
 			throw new \UnauthorizedException('You are not allowed to update this photo.');
 
-		if ($this->_form_is_submitted('update', $iter)) {
-			$iter->set('beschrijving', $_POST['beschrijving']);
+		$form = $this->get_form($iter);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$iter->set('beschrijving', $form['beschrijving']->getData());
 			$this->model->update($iter);
 			return $this->view->redirect($this->generate_url('photos', [
 				'book' => $this->get_book()->get_id(),
@@ -63,7 +74,11 @@ class PhotosController extends \ControllerCRUD
 			]));
 		}
 
-		return $this->view->render_update_photo($this->get_book(), $iter, null, []);
+		return $this->view->render('photo_form.twig',  [
+			'book' => $this->get_book(),
+			'photo' => $iter,
+			'form' => $form->createView(),
+		]);
 	}
 
 	// Compatibility with old views

@@ -4,6 +4,10 @@ namespace App\Controller;
 require_once 'src/framework/controllers/Controller.php';
 require_once 'src/services/secretary.php';
 
+use App\Form\RegistrationType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MembershipController extends \Controller
@@ -15,141 +19,6 @@ class MembershipController extends \Controller
 		$this->model = get_model('DataModelMember');
 
 		parent::__construct($request, $router);
-	}
-	
-	protected function _process_lidworden()
-	{
-		$non_empty = function($x) {
-			return strlen($x) > 0;
-		};
-
-		$fields = array(
-			'first_name' => [$non_empty],
-			'family_name_preposition' => [function($x) {
-				/*
-				if (strlen($x) > 0)
-					foreach (explode('/\s+/', strtolower($x), PREG_SPLIT_NO_EMPTY) as $part)
-						if (!in_array(trim($part), ['van', 'von', 'de', 'der', 'den', "d'", 'het', "'t", 'ten', 'af', 'aan', 'bij', 'het',
-							'onder', 'boven', 'in', 'op', 'over', "'s", 'te', 'ten', 'ter', 'tot', 'uit', 'uijt', 'vanden', 'ver', 'voor']))
-							return false;
-				*/
-				return true;
-			}, 'trim'],
-			'family_name' => [$non_empty],
-			'street_name' => [function($x) { return preg_match('/\d+/', $x); }],
-			'postal_code' => [function($x) { return preg_match('/^\d{4}\s*[a-z]{2}$/i', $x); }],
-			'place' => [$non_empty],
-			'phone_number' => [
-				function($x) {
-					return preg_match('/^\+?\d+$/', $x);
-				},
-				function($x) {
-					return str_replace(' ', '', $x);
-				}
-			],
-			'email_address' => [function($x) {
-				// Check whether the email address is something looking like an email address
-				return preg_match('/@\w+\.\w+/', $x);
-			}],
-			'birth_date' => [
-				function($x) {
-					return preg_match('/^((?:19|20)\d\d)\-([01]?\d)\-([0123]?\d)$/', $x, $match)
-						&& checkdate((int) $match[2], (int) $match[3], (int) $match[1])
-						&& $match[1] < (int) date('Y') - 9; // You need to be at least 10 years old ;)
-				},
-				function($x) {
-					// Turn date around if passed the other way
-					return preg_match('/^([0123]?\d)\-([01]?\d)\-((?:19|20)\d\d)$/', $x, $match)
-						? sprintf('%s-%s-%s', $match[3], $match[2], $match[1])
-						: $x;
-				}],
-			'iban' => [
-				function($x) {
-					if (!empty(get_config_value('no_iban_string'))) {
-						return $x === get_config_value('no_iban_string') || \IsoCodes\Iban::validate($x);
-					}
-					return \IsoCodes\Iban::validate($x);
-				},
-				function($x) {
-					return preg_replace('/[^A-Z0-9]/u', '', strtoupper($x));
-				}
-			],
-			'bic' => [
-				function($x) { return strlen($x) === 0 || \IsoCodes\SwiftBic::validate($x);},
-				function($x) { return trim($x); }
-			],
-			'membership_study_name' => [],
-			'membership_study_phase' => [function($x) { return in_array($x, ['b', 'm']); }],
-			'membership_student_number' => [
-				function($x) { return strlen($x) == 0 || ctype_digit($x); },
-				function($x) { return ltrim($x, 'sS'); }],
-			'membership_year_of_enrollment' => [function($x) { return $x > 1900 && $x < 2100; }],
-			'sepa_mandate' => [function($x) { return $x == 'yes'; }],
-            'terms_conditions_agree' => [function($x) { return $x == 'yes'; }],
-			'spam' => [function($x) { return in_array(strtolower($_POST['spam']), array('groen', 'green', 'coverrood', 'cover red')); }]
-		);
-
-		$errors = array();
-
-		$data = [];
-
-		foreach ($fields as $field => $properties)
-		{
-			$data[$field] = isset($_POST[$field]) ? $_POST[$field] : '';
-
-			if (isset($properties[1]))
-				$data[$field] = call_user_func_array($properties[1], [$data[$field]]);
-
-			if (isset($properties[0]))
-				if (!call_user_func_array($properties[0], [$data[$field]]))
-					$errors[] = $field;
-		}
-		
-		if (count(array_intersect(['first_name', 'family_name', 'family_name_preposition'], $errors)) > 0)
-			$errors[] = 'name';
-
-		// Test whether email is already used
-		// (already a member? Or previous member?)
-		if (!in_array('email_address', $errors)) {
-			try {
-				$existing_member = $this->model->get_from_email($_POST['email_address']);
-				return $this->view->render('known_member.twig', compact('existing_member'));
-			} catch (\DataIterNotFoundException $e) {
-				// All clear :)
-			}
-		}
-
-		/* Mailing is opt-out. We can do this, because assocations are allowed to contact their members 
-		about activities without consent, as long as it is non-commercial. See this link (at nieuwsbrief)
-		https://www.declercq.com/kennisblog/wat-betekent-de-avg-voor-verenigingen/
-		For now, secretary subscribes members to this one, so send option_mailing to secretary…
-		*/
-		// TODO: Make mailing officially opt-out, with migration to explicitly opt-out everyone who didn't opt-in first…
-		$data['option_mailing'] = true;
-
-		if (count($errors) > 0)
-			return $this->view->render_form($errors);
-		
-		$letters = array_merge(range('a', 'z'), range(0, 9));
-
-		$confirmation_code = 'c';
-
-		$confirmation_code_length = 31;
-
-		for ($i = 0; $i < $confirmation_code_length; ++$i)
-			$confirmation_code .= $letters[mt_rand(0, count($letters) - 1)];
-
-		// Store this info temporarily in the database and create a confirmation mail
-		$db = get_db();
-
-		$db->insert('registrations', [
-			'confirmation_code' => $confirmation_code,
-			'data' => json_encode($data),
-		]);
-
-		$this->_send_confirmation_mail($confirmation_code);
-
-		return $this->view->redirect($this->generate_url('join', ['submitted' => 'true']));
 	}
 
 	private function _send_confirmation_mail($confirmation_code)
@@ -169,7 +38,97 @@ class MembershipController extends \Controller
 		$email->send($data['email_address']);
 	}
 
-	protected function _process_confirm($confirmation_code)
+	protected function _process_confirm_mail($confirmation_code)
+	{
+		$db = get_db();
+
+		$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL",
+			$db->escape_string($confirmation_code)));
+
+		if (!$row)
+			throw new \NotFoundException('Could not find registration code');
+
+		$data = json_decode($row['data'], true);
+
+		$data['confirmation_code'] = $confirmation_code;
+		$data['name'] = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
+
+		$email = parse_email_object('join_administratie.txt', $data);
+		$email->send('administratie@svcover.nl');
+	}
+
+	protected function _process_confirm_secretary($confirmation_code)
+	{
+		$db = get_db();
+
+		$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'",
+			$db->escape_string($confirmation_code)));
+
+		if (!$row)
+			throw new \NotFoundException('Could not find registration code');
+
+		$data = json_decode($row['data'], true);
+
+		$response = get_secretary()->createPerson($data);
+
+		$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
+	}
+
+	public function run_registration()
+	{
+		$defaults = [
+			'membership_study_phase' => 'b',
+			'membership_year_of_enrollment' => time() < mktime(0, 0, 0, 7, 1, date('Y')) ? date('Y') - 1 : date('Y'),
+		];
+		$form = $this->createForm(RegistrationType::class, $defaults, ['mapped' => false]);
+		$form->handleRequest($this->get_request());
+
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$data = $form->getData();
+
+			// Test whether email is already used
+			// (already a member? Or previous member?)
+			try {
+				$existing_member = get_model('DataModelMember')->get_from_email($data['email_address']);
+				return $this->view->render('known_member.twig', compact('existing_member'));
+			} catch (\DataIterNotFoundException $e) {
+				// All clear :)
+			}
+
+			/* Mailing is opt-out. We can do this, because assocations are allowed to contact their members 
+			about activities without consent, as long as it is non-commercial. See this link (at nieuwsbrief)
+			https://www.declercq.com/kennisblog/wat-betekent-de-avg-voor-verenigingen/
+			For now, secretary subscribes members to this one, so send option_mailing to secretary…
+			*/
+			// TODO: Make mailing officially opt-out, with migration to explicitly opt-out everyone who didn't opt-in first…
+			$data['option_mailing'] = true;
+
+			// Converstion needs to be done here to not break validation. See comment in RegistrationType.
+			$data['birth_date'] = $data['birth_date']->format('Y-m-d');
+
+			// Same as email confirmation / password reset
+			$confirmation_code = randstr(40);
+
+			// Store this info temporarily in the database and send a confirmation mail
+			$db = get_db();
+			$db->insert('registrations', [
+				'confirmation_code' => $confirmation_code,
+				'data' => json_encode($data),
+			]);
+			$this->_send_confirmation_mail($confirmation_code);
+
+			return $this->view->redirect($this->generate_url('join', ['submitted' => 'true']));
+		}
+
+
+		return $this->view->render('form.twig', [
+			'terms' => get_model('DataModelEditable')->get_iter_from_title('Voorwaarden aanmelden'),
+			'form' => $form->createView(),
+		]);
+	}
+
+	protected function run_confirm($confirmation_code)
 	{
 		try {
 			// First, send a mail to administratie@svcover.nl for archiving purposes
@@ -214,42 +173,6 @@ class MembershipController extends \Controller
 		}
 	}
 
-	protected function _process_confirm_mail($confirmation_code)
-	{
-		$db = get_db();
-
-		$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s' AND confirmed_on IS NULL",
-			$db->escape_string($confirmation_code)));
-
-		if (!$row)
-			throw new \NotFoundException('Could not find registration code');
-
-		$data = json_decode($row['data'], true);
-
-		$data['confirmation_code'] = $confirmation_code;
-		$data['name'] = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
-
-		$email = parse_email_object('join_administratie.txt', $data);
-		$email->send('administratie@svcover.nl');
-	}
-
-	protected function _process_confirm_secretary($confirmation_code)
-	{
-		$db = get_db();
-
-		$row = $db->query_first(sprintf("SELECT data FROM registrations WHERE confirmation_code = '%s'",
-			$db->escape_string($confirmation_code)));
-
-		if (!$row)
-			throw new \NotFoundException('Could not find registration code');
-
-		$data = json_decode($row['data'], true);
-
-		$response = get_secretary()->createPerson($data);
-
-		$db->delete('registrations', sprintf("confirmation_code = '%s'", $db->escape_string($confirmation_code)));
-	}
-
 	public function run_pending_index()
 	{
 		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR) &&
@@ -258,45 +181,7 @@ class MembershipController extends \Controller
 			throw new \UnauthorizedException();
 
 		$db = get_db();
-
-		$message = null;
-
-		if ($this->_form_is_submitted('pending'))
-		{
-			switch (isset($_POST['action']) ? $_POST['action'] : null)
-			{
-				case 'push':
-					$success = 0;
-					foreach ($_POST['confirmation_code'] as $confirmation_code) {
-						try {
-							$this->_process_confirm_secretary($confirmation_code);
-							$success++;
-						} catch (\Exception $e) {
-							sentry_report_exception($e);
-						}
-					}
-					$message = sprintf('Added %d out of %d registrations to Secretary',
-						$success,
-						count($_POST['confirmation_code']));
-					break;
-
-				case 'resend':
-					foreach ($_POST['confirmation_code'] as $confirmation_code)
-						$this->_send_confirmation_mail($confirmation_code);
-					$message = sprintf('Resent %d confirmation emails', count($_POST['confirmation_code']));
-					break;
-
-				case 'delete':
-					if (count($_POST['confirmation_code']) > 0) {
-						$rows = $db->execute(sprintf("DELETE FROM registrations WHERE confirmation_code IN (%s)",
-							$db->quote_value($_POST['confirmation_code'])));
-						$message = sprintf('Deleted %d registrations', $rows);
-					}
-					break;
-			}
-		}
-
-		$registrations = $db->query("
+		$registrations_query = "
 			SELECT
 				confirmation_code,
 				data,
@@ -305,12 +190,72 @@ class MembershipController extends \Controller
 			FROM
 				registrations
 			ORDER BY
-				registerd_on DESC");
+				registerd_on DESC
+		";
+		$registrations = $db->query($registrations_query);
+
+		$form = $this->createFormBuilder()
+			->add('registration', ChoiceType::class, [
+				'expanded' => true,
+				'multiple' => true,
+				'choices' => array_map(fn($r) => (object) $r, $registrations),
+				'choice_label' => function ($entity) {
+					return $entity->confirmation_code ?? '';
+				},
+				'choice_value' => function ($entity) {
+					return $entity->confirmation_code ?? '';
+				},
+			])
+			->add('push_to_secretary', SubmitType::class)
+			->add('resend_confirmation', SubmitType::class)
+			->add('delete', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		$message = null;
+		if ($form->isSubmitted() && $form->isValid()) {
+			if ($form->get('push_to_secretary')->isClicked()) {
+				$success = 0;
+				foreach ($form->get('registration')->getData() as $registration) {
+					try {
+						$this->_process_confirm_secretary($registration->confirmation_code);
+						$success++;
+					} catch (\Exception $e) {
+						sentry_report_exception($e);
+					}
+				}
+				$message = sprintf(
+					'Added %d out of %d registrations to Secretary',
+					$success,
+					count($form->get('registration')->getData())
+				);
+			} elseif ($form->get('resend_confirmation')->isClicked()) {
+				foreach ($form->get('registration')->getData() as $registration)
+					$this->_send_confirmation_mail($registration->confirmation_code);
+				$message = sprintf(
+					'Resent %d confirmation emails',
+					count($form->get('registration')->getData())
+				);
+			} elseif ($form->get('delete')->isClicked() && count($form->get('registration')->getData()) > 0) {
+				$ids = array_map(fn($r) => $r->confirmation_code, $form->get('registration')->getData());
+				$rows = $db->execute(sprintf(
+					"DELETE FROM registrations WHERE confirmation_code IN (%s)",
+					$db->quote_value($ids)
+				));
+				$message = sprintf('Deleted %d registrations', $rows);
+			}
+			// Query registrations again. Things might have changed.
+			$registrations = $db->query($registrations_query);
+		}
 
 		foreach ($registrations as &$registration)
 			$registration['data'] = json_decode($registration['data'], true);
 
-		return $this->view->render_pending($registrations, $message);
+		return $this->view->render('pending.twig', [
+			'registrations' => $registrations,
+			'message' => $message,
+			'form' => $form->createView(),
+		]);
 	}
 
 	protected function run_pending_update($confirmation_code)
@@ -320,43 +265,49 @@ class MembershipController extends \Controller
 			!get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new \UnauthorizedException();
 
+		// Load data
 		$db = get_db();
+		$row = $db->query_first(sprintf("SELECT * FROM registrations WHERE confirmation_code = '%s'",
+			$db->escape_string($confirmation_code)));
+		if ($row === null)
+			throw new \NotFoundException();
+		$row['data'] = json_decode($row['data'], true);
 
-		if ($this->_form_is_submitted('update_pending', $confirmation_code)) {
+		// Create form
+		$form = $this->createForm(RegistrationType::class, $row['data'], ['mapped' => false]);
+		$form->handleRequest($this->get_request());
+
+		// Handle form
+		if ($form->isSubmitted() && $form->isValid()) {
+			$data = $form->getData();
+			// Converstion needs to be done here to not break validation. See comment in RegistrationType.
+			$data['birth_date'] = $data['birth_date']->format('Y-m-d');
 			$db->update('registrations',
-				['data' => json_encode($_POST['data'])],
-				sprintf('confirmation_code = %s', $db->quote($confirmation_code)));
-
+				['data' => json_encode($data)],
+				sprintf('confirmation_code = %s', $db->quote($confirmation_code))
+			);
 			return $this->view->redirect($this->generate_url('join', ['view' => 'pending-confirmation']));
 		}
 
-		$row = $db->query_first(sprintf("SELECT * FROM registrations WHERE confirmation_code = '%s'",
-			$db->escape_string($confirmation_code)));
-
-		if ($row === null)
-			throw new \NotFoundException();
-
-		$row['data'] = json_decode($row['data'], true);
-
-		return $this->view->render_pending_form($row);
+		return $this->view->render('pending_form.twig', [
+			'registration' => $row,
+			'form' => $form->createView(),
+		]);
 	}
 	
 	protected function run_impl()
 	{
-		if ($this->_form_is_submitted('sign_up'))
-			return $this->_process_lidworden();
-		elseif (isset($_GET['confirmation_code']) && !isset($_GET['view']))
-			return $this->_process_confirm($_GET['confirmation_code']);
-		else if (isset($_GET['submitted']))
-			return $this->view->render_submitted();
-		else if (isset($_GET['confirmed']))
-			return $this->view->render_confirmed();
-		else if (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation' && !empty($_GET['confirmation_code']))
+		if (isset($_GET['submitted']))
+			return $this->view->render('submitted.twig');
+		elseif (isset($_GET['confirmed']))
+			return $this->view->render('confirmed.twig');
+		elseif (!isset($_GET['view']) && !empty($_GET['confirmation_code']))
+			return $this->run_confirm($_GET['confirmation_code']);
+		elseif (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation' && !empty($_GET['confirmation_code']))
 			return $this->run_pending_update($_GET['confirmation_code']);
-		else if (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation')
+		elseif (isset($_GET['view']) && $_GET['view'] == 'pending-confirmation')
 			return $this->run_pending_index();
-		else {
-			return $this->view->render_form();
-		}
+		else
+			return $this->run_registration();
 	}
 }

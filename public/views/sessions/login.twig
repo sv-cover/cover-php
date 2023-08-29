@@ -23,13 +23,27 @@
 
         <section class="section">
             <div class="container columns is-centered">
-                <div class="column is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-third-fullhd">
+                <div class="column is-two-thirds-tablet is-half-widescreen is-one-third-fullhd">
                     <article class="box">
                         <h1 class="title">{{ __('Log in') }}</h1>
+                        {% if external_domain %}
+                            <p class="subtitle is-6">{{ __('to continue to %s.')|format(external_domain) }}</p>
+                        {% endif %}
 
-                        {% from '@theme/sessions/_login_widget.twig' import login_form %}
-
-                        {{ login_form(errors, error_message, referrer, external_domain) }}
+                        {{ form_start(form, {action: login_path(referrer|default(null))}) }}
+                            {# Global errors #}
+                            {{ form_errors(form, {attr: {class: 'error-section'}}) }}
+                            {# Fields #}
+                            {{ form_row(form.email) }}
+                            {{ form_row(form.password) }}
+                            {{ form_row(form.remember) }}
+                            {{ form_row(form.submit, {attr: {class: 'button is-primary is-fullwidth'}}) }}
+                            <div class="field">
+                                <a href="{{ path('password') }}">{{ __('Forgot your password?') }}</a>
+                            </div>
+                        {{ form_end(form) }}
+                        <div class="divider is-fullwidth">{{ __('or') }}</div>
+                        <a class="button is-fullwidth" href="{{ path('join') }}">Become a member</a>
                     </article>
                 </div>
             </div>

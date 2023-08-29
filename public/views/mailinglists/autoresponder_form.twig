@@ -8,8 +8,8 @@
 	{# Global errors #}
 	{{ form_errors(form) }}
 	{# Fields #}
-	{{ form_row(form[autoresponder ~ '_subject'], {'mark_required': true}) }}
-	{{ form_row(form[autoresponder ~ '_message'], {'mark_required': true, 'attr': {'rows': 10}}) }}
+	{{ form_row(form[autoresponder ~ '_subject'], {optional_tag: false}) }}
+	{{ form_row(form[autoresponder ~ '_message'], {optional_tag: false, attr: {rows: 10}}) }}
 	<div class="field">
 		<div class="control buttons">
 			{{ form_widget(form.submit, {'label': __('Change email')}) }}

@@ -1,6 +1,9 @@
 <?php
-namespace App\Form\Type;
+namespace App\Form;
 
+use App\Form\DataTransformer\IntToBooleanTransformer;
+use App\Form\Type\FilemanagerFileType;
+use App\Form\Type\MarkupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -11,10 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-use App\Form\DataTransformer\IntToBooleanTransformer;
-
-
-class PartnerFormType extends AbstractType
+class PartnerType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{

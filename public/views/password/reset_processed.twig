@@ -1,0 +1,11 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Change password') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('Change password') }}</h1>
+<div class="content">
+	<p>{{ __('Your password has been changed.') }}</p>
+	<p><a href="{{ login_path() }}" class="button is-primary">{{ __('Log in') }}</a></p>
+</div>
+{% endblock %}

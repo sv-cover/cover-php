@@ -16,7 +16,7 @@
 		</div>
 		<div class="field">
 			<div class="control buttons">
-				{{ form_widget(form.submit, {'label': __('Unsubscribe me'), 'is_primary': false, 'attr': {'class': 'is-danger'}}) }}
+				{{ form_widget(form.submit, {label: __('Unsubscribe me'), color: 'danger'}) }}
 				<a href="{{ path('homepage') }}" class="button">{{ __('No, I was just curious') }}</a>
 			</div>
 		</div>

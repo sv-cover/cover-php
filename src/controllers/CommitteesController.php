@@ -1,13 +1,21 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUD.php';
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
-class CommitteesController extends \ControllerCRUD
+use App\Form\CommitteeType;
+use App\Form\DataTransformer\IntToBooleanTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
+
+class CommitteesController extends \ControllerCRUDForm
 {	
 	protected $_var_id = 'commissie';
 
 	protected $view_name = 'committees';
+
+	protected $form_type = CommitteeType::class;
 
 	public $mode;
 
@@ -35,34 +43,37 @@ class CommitteesController extends \ControllerCRUD
 		return $this->generate_url('committees', $parameters);
 	}
 
-	protected function _create(\DataIter $iter, array $data, array &$errors)
+	public function new_iter()
 	{
-		// Prevent DataIterCommissie::set_members from being called too early
-		$iter_data = $data;
-		unset($iter_data['members']);
-
-		if (!parent::_create($iter, $iter_data, $errors))
-			return false;
-
-		if (!empty($data['members']))
-			$this->model->set_members($iter, $data['members']);
-
-		return $iter;
+		/* Set intial values in form (note the difference between an initial value and empty_data) */
+		return $this->model->new_iter(['type' => \DataModelCommissie::TYPE_COMMITTEE]);
 	}
 
-	protected function _update(\DataIter $iter, array $data, array &$errors)
+	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
-		$data['hidden'] = (array_key_exists('hidden', $data) && $data['hidden'] === 'yes');
-
-		if (!parent::_update($iter, $data, $errors))
+		if (!parent::_process_create($iter, $form))
 			return false;
 
-		$this->model->set_members($iter, empty($data['members']) ? [] : $data['members']);
+		$members = $form['members']->getData();
+		if (!empty($members))
+			$this->model->set_members($iter, $members);
 
 		return true;
 	}
 
-	protected function _delete(\DataIter $iter, array &$errors)
+	protected function _process_update(\DataIter $iter, FormInterface $form)
+	{
+		if (!parent::_process_update($iter, $form))
+			return false;
+
+		$members = $form['members']->getData();
+		if (!empty($members))
+			$this->model->set_members($iter, $members);
+
+		return true;
+	}
+
+	protected function _process_delete(\DataIter $iter)
 	{
 		// Some committees already have pages etc. We will mark the committee as hidden.
 		// That way they remain in the history of Cover and could, if needed, be reactivated.
@@ -117,15 +128,56 @@ class CommitteesController extends \ControllerCRUD
 		]);
 	}
 
+	public function run_update(\DataIter $iter)
+	{
+		if (!\get_policy($this->model)->user_can_update($iter))
+			throw new \UnauthorizedException('You are not allowed to edit this ' . get_class($iter) . '.');
+
+		$success = false;
+
+		$builder = get_form_factory()->createBuilder($this->form_type, $iter, ['mapped' => false]);
+
+		// Add field to reactivate deactivated groups
+		if (!empty($iter['hidden'])) {
+			$builder->add('hidden', CheckboxType::class, [
+				'label' => __('This group is deactivated.'),
+				'help' => __('Uncheck this box and submit to reactivate.'),
+				'required' => false,
+			]);
+			$builder->get('hidden')->addModelTransformer(new IntToBooleanTransformer());
+		}
+
+		// Populate members field
+		// TODO: this is terribly inefficiënt
+		$members = array_map(function($member) { return ['member_id' => $member['id'], 'functie' => $member['functie']];}, $iter->get_members());
+		$builder->get('members')->setData($members);
+
+		$form = $builder->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid())
+			if ($this->_process_update($iter, $form))
+				$success = true;
+			else
+				$form->addError(new FormError(__('Something went wrong while processing the form.')));
+
+		return $this->view()->render_update($iter, $form, $success);
+	}
+
 	public function run_show_interest(\DataIter $iter)
 	{
 		if (!get_identity()->is_member())
-			throw new \UnauthorizedException('Only active members can apply for a committee');
+			throw new \UnauthorizedException('Only members can apply for a committee');
 
 		if (!get_policy($this->model)->user_can_read($iter))
 			throw new \UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
 
-		if ($this->_form_is_submitted('show_interest', $iter)) {
+		$form = $this->createFormBuilder($iter, ['csrf_token_id' => 'committee_interest_' . $iter['id']])
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid()) {
 			if (get_config_value('path_to_committee_interest_log'))
 				error_log(sprintf("%s - %s (%d) is interested in %s.\n", date('c'), get_identity()->member()['full_name'], get_identity()->member()['id'], $iter['naam']), 3, get_config_value('path_to_committee_interest_log'));
 
@@ -156,8 +208,7 @@ class CommitteesController extends \ControllerCRUD
 		// for debugging purposes
 		if (isset($_GET['commissie'])) {
 			$committee = $this->model->get_from_name($_GET['commissie']);
-		}
-		else {
+		} else {
 			// Pick a random commissie
 			$committee = $this->model->get_random(\DataModelCommissie::TYPE_COMMITTEE, true);
 		}

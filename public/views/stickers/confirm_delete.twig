@@ -1,23 +1,25 @@
 {% extends '@layout/layout.twig' %}
 
+{% block title __('Delete sticker') ~ ' – ' ~ parent() %}
+
 {% block content %}
 <div class="modal is-static">
-	<div class="modal-card">
-		<header class="modal-card-head">
-			<p class="modal-card-title">{{ __('Delete sticker') }}</p>
-		</header>
-		<section class="modal-card-body">
-			<form id="delete-sticker-form" method="post" action="{{ path('stickers', {view: 'delete', id: iter.id, referrer: controller.get_referrer()}) }}">
-				{{ html_nonce('delete', iter) }}
-				<div class="field">
-					<p>{{ __('Are you sure you want to delete this sticker?') }}</p>
-				</div>
-			</form>
-		</section>
-		<footer class="modal-card-foot">
-			<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
-			<button type="submit" class="button is-danger" form="delete-sticker-form">{{ __('Delete sticker') }}</button>
-		</footer>
-	</div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Delete sticker') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {'id': 'delete-sticker-form', 'action': path('stickers', {view: 'delete', id: iter.id, referrer: controller.get_referrer()}) }) }}
+                <div class="field">
+                    <p>{{ __('Are you sure you want to delete this sticker?') }}</p>
+                </div>
+                {% set submit_button = form_widget(form.submit, {label: __('Delete sticker'), color: 'danger', attr: {form: 'delete-sticker-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">{{ __('Return to map') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
 </div>
 {% endblock %}

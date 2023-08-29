@@ -1,9 +1,10 @@
 <?php
-namespace App\Form\Type;
+namespace App\Form;
 
+use App\Form\Type\FilemanagerFileType;
+use App\Form\Type\CommitteeIdType;
+use App\Form\Type\MarkupType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Form type for DataModelEditable (aka "Page")
  */
-class PageFormType extends AbstractType
+class PageType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
@@ -45,11 +46,8 @@ class PageFormType extends AbstractType
 			if ($this->canSetCommitteeId($iter))
 				// No additional validation is needed, getChoices makes sure we
 				// can only pick options we're allowed to pick.
-				$form->add('committee_id', ChoiceType::class, [
+				$form->add('committee_id', CommitteeIdType::class, [
 					'label' => __('Owner'),
-					'choice_loader' => new CallbackChoiceLoader(function() use ($iter) {
-						return \get_model('DataModelCommissie')->get_committee_choices_for_iter($iter);
-					}),
 				]);
 		});
 	}

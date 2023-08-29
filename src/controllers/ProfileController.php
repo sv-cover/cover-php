@@ -9,8 +9,23 @@ require_once 'src/services/secretary.php';
 require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/email.php';
 
+use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 class ProfileController extends \Controller
 {
@@ -44,131 +59,31 @@ class ProfileController extends \Controller
 		parent::__construct($request, $router);
 	}
 	
-	public function _check_size($name, $value)
+	public function validate_password($value, ExecutionContextInterface $context, $payload, $member)
 	{
-		if ($value === null || !isset($this->sizes[$name]))
-			return $value;
+		/**
+		 * Password validator. Same as in PasswordController
+		 */
+		$effective_password = str_ireplace([$member['voornaam'],$member['achternaam'],'cover','password'], '', $value);
 
-		if (strlen(trim($value)) === 0 && in_array($name, $this->required))
-			return false;
-
-		if (strlen(trim($value)) > $this->sizes[$name])
-			return false;
-		
-		return trim($value);
+		// Short passwords, or very common passwords, are stupid.
+		if (strlen($effective_password) < 6)
+			$context->buildViolation(__('Your password is too short or too predictable. Try to make it longer and with more different characters.'))
+				->atPath('password')
+				->addViolation();
 	}
 
-	public function _check_geboortedatum($name, $value)
-	{
-		if (!preg_match('/([0-9]+)(-|\/)([0-9]+)(-|\/)([0-9]+)/', $value, $matches))
-			return false;
-		
-		return $matches[5] . '-' . $matches[3] . '-' . $matches[1];
-	}
-
-	public function _check_type($name, $value)
-	{
-		return $value !== null && is_numeric($value) && $value >=1 && $value <= 4;
-	}
-
-	public function _check_language($name, $value)
-	{
-		return in_array($value, array('nl', 'en')) ? $value : false;
-	}
-
-	public function _check_phone($name, $value)
-	{
-		try {
-			$phone_util = \libphonenumber\PhoneNumberUtil::getInstance();
-			$phone_number = $phone_util->parse($value, 'NL');
-			return $phone_util->isValidNumber($phone_number)
-				? $phone_util->format($phone_number, \libphonenumber\PhoneNumberFormat::E164)
-				: false;
-		} catch (\libphonenumber\NumberParseException $e) {
-			return false;
-		}
-	}
-
-	public function _check_email($name, $value)
-	{
-		return filter_var($value, FILTER_VALIDATE_EMAIL);
-	}
-
-	protected function _update_personal(\DataIterMember $iter)
-	{
-		$check = array(
-			array('name' => 'postcode', 'function' => array($this, '_check_size')),
-			array('name' => 'telefoonnummer', 'function' => array($this, '_check_phone')),
-			array('name' => 'adres', 'function' => array($this, '_check_size')),
-			array('name' => 'email', 'function' => array($this, '_check_email')),
-			array('name' => 'woonplaats', 'function' => array($this, '_check_size'))
-		);
-		
-		$data = check_values($check, $errors);
-
-		if (count($errors) > 0) {
-			$error = __('The following fields are not correctly filled in: ') . implode(', ', array_map('field_for_display', $errors));
-			return $this->view->render_personal_tab($iter, $error, $errors);
-		}
-		
-		// Get all field names that need to be set on the iterator
-		$fields = array_map(function($check) { return $check['name']; }, $check);
-		
-		// Remove the e-mail field, that is a special case
-		$fields = array_filter($fields, function($field) { return $field != 'email'; });
-
-		$old_values = $iter->data;
-		
-		foreach ($fields as $field) {
-			if (isset($data[$field]) && $data[$field] !== null)
-				$iter->set($field, $data[$field]);
-			else if (!isset($data[$field]) && get_post($field) !== null)
-				$iter->set($field, get_post($field));
-		}
-
-		if ($iter->has_changes())
-		{
-			$changed_fields = $iter->changed_fields();
-
-			$this->model->update($iter);
-		
-			$this->_report_changes_upstream($iter, $changed_fields, $old_values);
-		}
-
-		// If the email address has changed, add a confirmation.
-		if (isset($data['email']) && $data['email'] !== null && $data['email'] != $iter['email'])
-		{
-			$model = get_model('DataModelEmailConfirmationToken');
-
-			$token = $model->create_token($iter, $data['email']);
-
-			$language_code = strtolower(i18n_get_language());
-
-			$variables = [
-				'naam' => member_first_name($iter, IGNORE_PRIVACY),
-				'email' => $token['email'],
-				'link' => $token['link']
-			];
-
-			// Send the confirmation to the new email address
-			parse_email_object("email_confirmation_{$language_code}.txt", $variables)->send($token['email']);
-			$_SESSION['alert'] = __('We’ve sent a confirmation mail to your new email address.');
-		}
-
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'personal', 'lid' => $iter['id']]));
-	}
-
-	private function _report_changes_upstream(\DataIterMember $iter, array $fields, array $old_values)
+	private function _report_changes_upstream(\DataIterMember $iter)
 	{
 		// Inform the board that member info has been changed.
-		$subject = "Lidgegevens gewijzigd";
-		$body = sprintf("De gegevens van %s zijn gewijzigd:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
+		$subject = "Member details updated";
+		$body = sprintf("%s updated their member details:", member_full_name($iter, IGNORE_PRIVACY)) . "\n\n";
 		
-		foreach ($fields as $field)
-			$body .= sprintf("%s:\t%s (was: %s)\n", $field, $iter[$field] ? $iter[$field] : "<verwijderd>", $old_values[$field]);
+		foreach ($iter->secretary_changed_values() as $field => $value)
+			$body .= sprintf("%s:\t%s\n", $field, $value ?? "<deleted>");
 			
 		mail('administratie@svcover.nl', $subject, $body, "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
-		mail('secretaris@svcover.nl', $subject, sprintf("De gegevens van %s zijn gewijzigd:\n\nDe wijzigingen zijn te vinden op administratie@svcover.nl", member_full_name($iter, IGNORE_PRIVACY)), "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
+		mail('secretaris@svcover.nl', $subject, sprintf("%s updated their member details:\n\nYou can see the changes in sectary or in the administratie@svcover.nl mailbox", member_full_name($iter, IGNORE_PRIVACY)), "From: Study Association Cover <noreply@svcover.nl>\r\nContent-Type: text/plain; charset=UTF-8");
 
 		try {
 			get_secretary()->updatePersonFromIterChanges($iter);
@@ -178,165 +93,252 @@ class ProfileController extends \Controller
 		}
 	}
 
-	protected function _update_profile(\DataIterMember $iter)
+	protected function _get_personal_form(\DataIterMember $iter)
 	{
-		if (!$this->policy->user_can_update($iter))
-			throw new \UnauthorizedException();
-
-		$check = array(
-			array('name' => 'nick', 'function' => array(&$this, '_check_size')),
-			array('name' => 'avatar', 'function' => array(&$this, '_check_size')),
-			array('name' => 'onderschrift', 'function' => array(&$this, '_check_size')),
-			array('name' => 'homepage', 'function' => array(&$this, '_check_size')),
-		);
-		
-		$data = check_values($check, $errors);
-	
-		if (count($errors) > 0) {
-			$error = __('The following fields are to long: ') . implode(', ', array_map('field_for_display', $errors));
-			return $this->view->render_profile_tab($iter, $error, $errors);
-		}
-
-		$iter->set_all($data);
-		
-		$this->model->update($iter);
-		
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
+		$form = $this->createFormBuilder($iter)
+			->add('adres', TextType::class, [
+				'label' => __('Address'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Length(['max' => 255]),
+				],
+			])
+			->add('postcode', TextType::class, [
+				'label' => __('Postal code'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Length(['max' => 7]),
+				],
+			])
+			->add('woonplaats', TextType::class, [
+				'label' => __('Town'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Length(['max' => 255]),
+				],
+			])
+			->add('telefoonnummer', TelType::class, [
+				'label' => __('Phone'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new AssertPhoneNumber(['defaultRegion' => 'NL']),
+					new Assert\Length(['max' => 20]),
+				]
+			])
+			->add('email', EmailType::class, [
+				'label' => __('Email'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Email(),
+					new Assert\Length(['max' => 255]),
+				],
+				'setter' => function (\DataIterMember &$member, string $value, FormInterface $form) {
+					// Prevent normal flow by doing nothing. Email requires special treatment.
+				},
+			])
+			->add('iban', TextType::class, [
+				'label' => __('IBAN'),
+				'constraints' => [
+					new Assert\NotBlank(),
+					new Assert\Iban(),
+				],
+			])
+			->add('bic', TextType::class, [
+				'label' => __('BIC'),
+				'required' => false,
+				'constraints' => [
+					new Assert\Bic(),
+				],
+				'help' => __("BIC is required if your IBAN does not start with 'NL'"), // This is never validated for better UX. Treasurer can always look it up.
+			])
+			->add('submit', SubmitType::class, ['label' => __('Save')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
-	protected function _update_password(\DataIterMember $iter)
+	protected function _get_profile_form(\DataIterMember $iter)
 	{
-		if (!$this->policy->user_can_update($iter))
-			throw new \UnauthorizedException();
-
-		$errors = array();
-		$message = array();
-
-		// Only test the old password if we are not a member of the board
-		if (!get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-			&& !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)) {
-			if (!isset($_POST['wachtwoord_oud']) || !$this->model->test_password($iter, $_POST['wachtwoord_oud'])) {
-				$errors[] = 'wachtwoord_oud';
-				$message[] = __('The current password is incorrect.');
-			}
-		}
-
-		if (!isset($_POST['wachtwoord_nieuw'])) {
-			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('The new password hasn\'t been filled in.');
-		} elseif (!isset($_POST['wachtwoord_opnieuw']) || $_POST['wachtwoord_nieuw'] !== $_POST['wachtwoord_opnieuw']) {
-			$errors[] = 'wachtwoord_opnieuw';
-			$message[] = __('The new password hasn\'t been filled in correctly twice.');
-		} elseif (strlen($_POST['wachtwoord_nieuw']) < 6) {
-			$errors[] = 'wachtwoord_nieuw';
-			$message[] = __('Your new password is too short.');
-		}
-		
-		if (count($errors) > 0) {
-			$error = implode("\n", $message);
-			return $this->view->render_profile_tab($iter, $error, $errors);
-		}
-		
-		$this->model->set_password($iter, $_POST['wachtwoord_nieuw']);
-
-		$_SESSION['alert'] = __('Your password has been changed.');
-
-		return $this->view->redirect($this->generate_url('profile', ['lid' => $iter['id'], 'view' => 'profile']));
+		$form = get_form_factory()->createNamedBuilder('profile', FormType::class, $iter)
+			->add('nick', TextType::class, [
+				'label' => __('Nickname'),
+				'required' => false,
+				'constraints' => [
+					new Assert\Length(['max' => 50]),
+				]
+			])
+			->add('avatar', UrlType::class, [
+				'label' => __('Avatar'),
+				'required' => false,
+				'default_protocol' => null, // if not, it renders as text type…
+				'constraints' => [
+					new Assert\Url(),
+					new Assert\Length(['max' => 100]),
+				],
+				'attr' => [
+					'placeholder' => 'https://',
+				],
+			])
+			->add('homepage', UrlType::class, [
+				'label' => __('Website'),
+				'required' => false,
+				'default_protocol' => null, // if not, it renders as text type…
+				'constraints' => [
+					new Assert\Url(),
+					new Assert\Length(['max' => 255]),
+				],
+				'attr' => [
+					'placeholder' => 'https://',
+				],
+			])
+			->add('submit', SubmitType::class, ['label' => __('Save')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
-	protected function _update_privacy(\DataIterMember $iter)
+	protected function _get_password_form(\DataIterMember $iter)
 	{
-		/* Built privacy mask */
-		$fields = $this->model->get_privacy();
-		$mask = 0;
-		
-		foreach ($fields as $field => $nr) {
-			$value = intval(get_post('privacy_' . $nr));
-			
-			$mask = $mask + ($value << ($nr * 3));
-		}
-		
-		$iter->set('privacy', $mask);
-		$this->model->update($iter);
-		
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'privacy', 'lid' => $iter['id']]));
+		$form = get_form_factory()->createNamedBuilder('password', FormType::class)
+			->add('current', PasswordType::class, [
+				'label' => __('Current Password'),
+				'required' => true,
+				'constraints' => [
+					new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) use ($iter) {
+						if (!$this->model->test_password($iter, $value))
+							$context->buildViolation(__('That’s not your current password!'))
+								->atPath('current')
+								->addViolation();
+					}),
+				],
+			])
+			->add('password', RepeatedType::class, [
+				'type' => PasswordType::class,
+				'invalid_message' => __('The two passwords are not the same.'),
+				'required' => true,
+				'first_options'  => ['label' => 'New Password'],
+				'second_options' => ['label' => 'Repeat'],
+				'constraints' => [
+					new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) use ($iter) {
+						// Make sure new password is actually new. This is done here to make sure validate_password is implemented the same everywhere
+						if ($this->model->test_password($iter, $value))
+							$context->buildViolation(__('Your new password cannot be the same as your current password!'))
+								->atPath('password')
+								->addViolation();
+						return $this->validate_password($value, $context, $payload, $iter);
+					}),
+				],
+			])
+			->add('submit', SubmitType::class, ['label' => __('Change password')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
-	protected function _update_photo(\DataIterMember $iter)
+	// TODO: is public so it can be accessed from view. Make private after UI change
+	public function _get_photo_form()
 	{
-		$error = null;
-
-		if ($_FILES['photo']['error'] == UPLOAD_ERR_INI_SIZE)
-			$error = sprintf(__('The image file is too large. The maximum file size is %s.'),
-				ini_get('upload_max_filesize') . ' bytes');
-
-		elseif ($_FILES['photo']['error'] != UPLOAD_ERR_OK)
-			$error = sprintf(__('The image hasn’t been uploaded correctly. PHP reports error code %d.'), $_FILES['photo']['error']);
-
-		elseif (!is_uploaded_file($_FILES['photo']['tmp_name']))
-			$error = __('The image file is not a file uploaded by PHP.');
-		
-		elseif (!($image_meta = getimagesize($_FILES['photo']['tmp_name'])))
-			$error = __('The uploaded file could not be read.');
-
-		if ($error)
-			return $this->view->render_profile_tab($iter, $error, array('photo'));
-
-		if (get_identity()->member_in_committee(COMMISSIE_EASY))
-		{
-			if (!($fh = fopen($_FILES['photo']['tmp_name'], 'rb')))
-				throw new \RuntimeException(__('The uploaded file could not be opened.'));
-
-			$this->model->set_photo($iter, $fh);
-
-			fclose($fh);
-		}
-		else
-		{
-			send_mail_with_attachment(
-				'acdcee@svcover.nl',
-				'New yearbook photo for ' . $iter['full_name'],
-				"{$iter['full_name']} would like to use the attached photo as their new profile picture.",
-				sprintf('Reply-to: %s <%s>', $iter['full_name'], $iter['email']),
-				[$_FILES['photo']['name'] => $_FILES['photo']['tmp_name']]);
-
-			$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
-		}
-
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
+		$form = $this->createFormBuilder()
+			->add('photo', FileType::class, [
+				'label' => __('Photo'),
+				'cta' => __('Choose photo…'),
+				'constraints' => [
+					new Assert\Image([
+						'maxSize' => ini_get('upload_max_filesize'),
+						'mimeTypes' => [
+							'image/jpeg',
+						],
+						'mimeTypesMessage' => __('Please upload a valid JPEG-image.'),
+						'sizeNotDetectedMessage' => __('The uploaded file doesn’t appear to be an image.'),
+					])
+				],
+				'attr' => [
+					'accept' => 'image/jpeg',
+				],
+			])
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+		return $form;
 	}
 
-	protected function _update_mailing_lists(\DataIterMember $iter)
+	protected function _get_privacy_form(\DataIterMember $iter)
 	{
-		$model = get_model('DataModelMailinglist');
+		// Load labels
+		$labels = [];
 
-		$subscription_model = get_model('DataModelMailinglistSubscription');
+		foreach ($this->view->personal_fields() as $field)
+			$labels[$field['name']] = $field['label'];
 
-		$mailing_list = $model->get_iter($_POST['mailing_list_id']);
+		// Stupid aliasses
+		$labels['naam'] = $labels['full_name'];
+		$labels['foto'] = __('Photo');
 
-		$subscribe = (empty($_POST['action']) && !empty($_POST['subscribe']) && $_POST['subscribe'] == 'yes') 
-				  || (!empty($_POST['action']) && $_POST['action'] == 'subscribe');
+		// Build form
+		$data = [];
+		$builder = $this->createFormBuilder();
 
-		if ($subscribe) {
-			if (get_policy($model)->user_can_subscribe($mailing_list))
-				$subscription_model->subscribe_member($mailing_list, $iter);
-		} else {
-			if (get_policy($model)->user_can_unsubscribe($mailing_list))
-				$subscription_model->unsubscribe_member($mailing_list, $iter);	
-		}
+		foreach ($this->model()->get_privacy() as $field => $nr)
+			$builder->add($field, ChoiceType::class, [
+				'label' => $labels[$field] ?? $field,
+				'choices'  => [
+					__('Everyone') => \DataModelMember::VISIBLE_TO_EVERYONE,
+					__('Members') => \DataModelMember::VISIBLE_TO_MEMBERS,
+					__('Nobody') => \DataModelMember::VISIBLE_TO_NONE,
+				],
+				'expanded' => true,
+				'chips' => true,
+				'data' => ($iter['privacy'] >> ($nr * 3)) & 7, // Not ideal, but neater than constructing something to pass to createFormBuilder
+			]);
 
-		return $this->view->redirect($this->generate_url('profile', ['view' => 'mailing_lists', 'lid' => $iter['id']]));
+		$form = $builder
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		return $form;
 	}
-	
+
 	public function run_personal(\DataIterMember $iter)
 	{
 		if (!$this->policy->user_can_update($iter))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('personal', $iter))
-			return $this->_update_personal($iter);
+		$form = $this->_get_personal_form($iter);
 
-		return $this->view->render_personal_tab($iter);
+		if ($form->isSubmitted() && $form->isValid()) {
+			$updates = [];
+			if ($iter->has_secretary_changes()) {
+				$updates[] = 'other';
+				$this->model->update($iter);
+				$this->_report_changes_upstream($iter);
+			}
+
+			// If the email address has changed, add a confirmation.
+			if ($form['email']->getData() != $iter['email']) {
+				$updates[] = 'email';
+				$token = get_model('DataModelEmailConfirmationToken')->create_token($iter, $form['email']->getData());
+
+				$variables = [
+					'naam' => member_first_name($iter, IGNORE_PRIVACY),
+					'email' => $token['email'],
+					'link' => $token['link']
+				];
+
+				// Send the confirmation to the new email address
+				parse_email_object("profile_confirm_email.txt", $variables)->send($token['email']);
+			}
+
+			return $this->view->render('personal_tab_success.twig', [
+				'iter' => $iter,
+				'updates' => $updates,
+			]);
+		}
+
+		return $this->view->render('personal_tab.twig', [
+			'iter' => $iter,
+			'form' => $form->createView()
+		]);
 	}
 
 	public function run_profile(\DataIterMember $iter)
@@ -344,25 +346,58 @@ class ProfileController extends \Controller
 		if (!$this->policy->user_can_update($iter))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('profile', $iter))
-			return $this->_update_profile($iter);
+		$profile_form = $this->_get_profile_form($iter);
 
-		elseif ($this->_form_is_submitted('password', $iter))
-			return $this->_update_password($iter);
+		if ($profile_form->isSubmitted() && $profile_form->isValid()) {
+			$this->model->update($iter);
+			return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
+		}
 
-		return $this->view->render_profile_tab($iter);
+		$password_form = $this->_get_password_form($iter);
+
+		if ($password_form->isSubmitted() && $password_form->isValid()) {
+			$this->model->set_password($iter, $password_form['password']->getData());
+			$_SESSION['alert'] = __('Your password has been changed.');
+			return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
+		}
+
+		$photo_form = $this->_get_photo_form();
+
+		return $this->view->render('profile_tab.twig', [
+			'iter' => $iter,
+			'profile_form' => $profile_form->createView(),
+			'photo_form' => $photo_form->createView(),
+			'password_form' => $password_form->createView(),
+		]);
 	}
 	
 	public function run_privacy(\DataIterMember $iter)
 	{
-		if (!$this->policy->user_can_update($iter)
-			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
+		if (!$this->policy->user_can_update($iter))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('privacy', $iter))
-			return $this->_update_privacy($iter);
+		$form = $this->_get_privacy_form($iter);
 
-		return $this->view->render_privacy_tab($iter);
+		// Handle submission
+		if ($form->isSubmitted() && $form->isValid()) {
+			// Build privacy mask 
+			$mask = 0;
+			foreach ($this->model->get_privacy() as $field => $nr) {
+				$value = $form[$field]->getData();
+				$mask = $mask + ($value << ($nr * 3));
+			}
+			
+			// Update settings
+			$iter->set('privacy', $mask);
+			$this->model->update($iter);
+			
+			return $this->view->redirect($this->generate_url('profile', ['view' => 'privacy', 'lid' => $iter['id']]));
+		}
+
+		return $this->view->render('privacy_tab.twig', [
+			'iter' => $iter,
+			'form' => $form->createView(),
+		]);
 	}
 
 	protected function run_photo(\DataIterMember $iter)
@@ -372,8 +407,31 @@ class ProfileController extends \Controller
 			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
 			throw new \UnauthorizedException();
 
-		if ($this->_form_is_submitted('photo', $iter))
-			return $this->_update_photo($iter);
+
+		$form = $this->_get_photo_form();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$file = $form['photo']->getData();
+			if (get_identity()->member_in_committee(COMMISSIE_EASY)) {
+				$fh = fopen($file->getPathname(), 'rb');
+
+				if (!$fh)
+					throw new \RuntimeException(__('The uploaded file could not be opened.'));
+
+				$this->model->set_photo($iter, $fh);
+
+				fclose($fh);
+			} else {
+				$profile_link = $this->generate_url('profile', ['id' => $iter['id']], UrlGeneratorInterface::ABSOLUTE_URL);
+				send_mail_with_attachment(
+					'acdcee@svcover.nl',
+					'New yearbook photo for ' . $iter['full_name'],
+					"{$iter['full_name']} would like to use the attached photo as their new profile picture. Change it here: {$profile_link}",
+					sprintf('Reply-to: %s <%s>', $iter['full_name'], $iter['email']),
+					[$file->getClientOriginalName() => $file->getPathname()]);
+
+				$_SESSION['alert'] = __('Your photo has been submitted. It may take a while before it will be updated.');
+			}
+		}
 
 		return $this->view->redirect($this->generate_url('profile', ['view' => 'profile', 'lid' => $iter['id']]));
 	}
@@ -416,12 +474,8 @@ class ProfileController extends \Controller
 	public function run_mailing_lists(\DataIterMember $member)
 	{
 
-		if (!$this->policy->user_can_update($member)
-			&& !get_identity()->member_in_committee(COMMISSIE_EASY))
+		if (!$this->policy->user_can_update($member))
 			throw new \UnauthorizedException();
-
-		if ($this->_form_is_submitted('mailing_list', $member))
-			return $this->_update_mailing_lists($member);
 
 		$model = get_model('DataModelMailinglist');
 		$mailing_lists = $model->get_for_member($member);
@@ -429,10 +483,11 @@ class ProfileController extends \Controller
 		$lists = array_filter($mailing_lists, function($list) {
 			// return true;
 			return get_policy($list)->user_can_subscribe($list);
+			// TODO: should we show all list a person is subscribed to?
+			// return get_policy($list)->user_can_subscribe($list) || $list['subscribed'];
 		});
 
 		return $this->view->render('mailing_lists_tab.twig', ['iter' => $member, 'mailing_lists' => $lists]);
-		// return $this->view->render_mailing_lists_tab($lists);
 	}
 
 	public function run_sessions(\DataIterMember $member)
@@ -440,7 +495,13 @@ class ProfileController extends \Controller
 		if (!$this->policy->user_can_update($member))
 			throw new \UnauthorizedException();
 
-		return $this->view->render_sessions_tab($member);
+		$model = get_model('DataModelSession');
+
+		return $this->view->render('sessions_tab.twig', [
+			'iter' => $member,
+			'sessions' => $model->getActive($member['id']),
+			'sessions_view' => \View::byName('sessions'),
+		]);
 	}
 
 	public function run_kast(\DataIterMember $member)
@@ -510,7 +571,7 @@ class ProfileController extends \Controller
 
 		$form = $this->createFormBuilder()
 			->add('sepa_mandate', CheckboxType::class, [
-				'label'    => __('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for the duration of my membership.'),
+				'label' => __('I hereby authorize Cover to automatically deduct the membership fee, costs for attending activities, and additional costs (e.g. food and drinks) from my bank account for the duration of my membership.'),
 				'required' => true,
 			])
 			->add('submit', SubmitType::class, ['label' => 'Sign mandate'])
@@ -525,17 +586,9 @@ class ProfileController extends \Controller
 			]));
 		}
 
-		try {
-			$secretary_data = current(get_secretary()->findPerson($member->get_id()));
-		} catch (\Exception|Error $exception) {
-			sentry_report_exception($exception);
-			$secretary_data = [];
-		}
-
 		return $this->view->render('incassomatic_tab_no_contract.twig', [
 			'iter' => $member,
 			'form' => $form->createView(),
-			'secretary_data' => $secretary_data,
 		]);
 	}
 
@@ -572,12 +625,12 @@ class ProfileController extends \Controller
 		$this->model->update($member);
 
 		// Report the changes to the secretary and to Secretary (the system...)
-		$this->_report_changes_upstream($member, ['email'], ['email' => $old_email]);
+		$this->_report_changes_upstream($member);
 
 		// Delete this and all other tokens for this user
 		$model->invalidate_all($token['member']);
 
-		return $this->view->render_confirm_email(true);
+		$this->view->render('confirm_email.twig', ['success' => true]);
 	}
 
 	public function run_index()

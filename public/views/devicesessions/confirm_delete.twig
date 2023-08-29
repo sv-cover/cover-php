@@ -9,17 +9,17 @@
             <p class="modal-card-title">{{ __('Delete device session') }}</p>
         </header>
         <section class="modal-card-body">
-            <form id="delete-device-session-form" method="post" action="{{ path('device_sessions.delete', {id: iter.id}) }}">
-                {{ form_row(form._token) }}
+            {{ form_start(form, {id: 'delete-device-session-form', action: path('device_sessions.delete', {id: iter.id}) }) }}
                 <p>
                     {{ __('Are you sure you want to remove this device session?') }}
                     <em>{{ iter.device_name|default(__('Unnamed device')) }}</em> at <em>{{ iter.ip_address }}</em>
                 </p>
-            </form>
+                {% set submit_button = form_widget(form.submit, {label: __('Delete session'), color: 'danger', attr: {form: 'delete-device-session-form'}) %}
+            {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">
             <a href="{{ path('device_sessions') }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
-            <button type="submit" class="button is-danger" form="delete-device-session-form">{{ __('Delete session') }}</button>
+            {{ submit_button|raw }}
         </footer>
     </div>
 </div>

@@ -1,14 +1,15 @@
 <?php
 namespace App\Controller;
 
-use App\Form\Type\PageFormType;
+use App\Form\PageType;
+use Symfony\Component\Form\FormInterface;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 class PageController extends \ControllerCRUDForm
 {
 	protected $view_name = 'page';
-	protected $form_type = PageFormType::class;
+	protected $form_type = PageType::class;
 
 	public function __construct($request, $router)
 	{
@@ -22,7 +23,7 @@ class PageController extends \ControllerCRUDForm
 		$iter = parent::new_iter();
 
 		// Default to owner = board
-		if (PageFormType::canSetCommitteeId($iter))
+		if (PageType::canSetCommitteeId($iter))
 			$iter['committee_id'] = COMMISSIE_BESTUUR;
 
 		return $iter;
@@ -51,7 +52,7 @@ class PageController extends \ControllerCRUDForm
 		return $this->generate_url('page', $parameters);
 	}
 
-	protected function _process_update(\DataIter $iter)
+	protected function _process_update(\DataIter $iter, FormInterface $form)
 	{
 		$content_fields = [
 			'cover_image_url' => 'photo',
@@ -62,7 +63,7 @@ class PageController extends \ControllerCRUDForm
 		$old_iter = $this->model->get_iter($iter['id']);
 
 		// Update as usual
-		$success = parent::_process_update($iter);
+		$success = parent::_process_update($iter, $form);
 
 		// If the update succeeded (i.e. _validate came through positive)
 		// send a notification email to those who are interested.

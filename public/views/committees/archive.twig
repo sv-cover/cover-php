@@ -25,7 +25,7 @@
 				<th>{{ __('Name') }}</th>
 				<th>{{ __('Members') }}</th>
 				<th>{{ __('Type') }}</th>
-				<th></th>
+				<th class="is-narrow"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,7 +34,7 @@
 					<td>{{ committee.naam }}</td>
 					<td>{{ committee.member_count }}</td>
 					<td>{{ view.available_committee_types[committee.type] }}</td>
-					<td class="has-text-right">
+					<td class="has-text-right is-nowrap">
 						{% if not committee.hidden and user_can_delete committee %}
 							<a href="{{ path('committees', {view: 'delete', commissie: committee.login}) }}" data-popup="modal">
 								<span class="icon">
@@ -65,7 +65,7 @@
 			<tr>
 				<th>{{ __('Name') }}</th>
 				<th>{{ __('Type') }}</th>
-				<th></th>
+				<th class="is-narrow"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -73,7 +73,7 @@
 				<tr>
 					<td>{{ committee.naam }}</td>
 					<td>{{ view.available_committee_types[committee.type] }}</td>
-					<td class="has-text-right">
+					<td class="has-text-right is-nowrap">
 						{% if user_can_update committee %}
 							<a href="{{ path('committees', {view: 'update', commissie: committee.login}) }}">
 								<span class="icon">

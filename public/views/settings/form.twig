@@ -1,40 +1,20 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title view.get_label(iter, __('Add a new key'), __('Modify key')) ~ ' – ' ~ parent() %}
+{% block title iter.has_id ? __('Edit setting') : __('Add setting') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1 class="title">{{ view.get_label(iter, __('Add a new key'), __('Modify key')) }}</h1>
-<form id="settings-form" method="post" action="{{ (iter and iter.has_id) ? path('settings', {view:  'update', id: iter.id}) : path('settings', {view: 'create'}) }}">
-	{% if iter.id != null %}
-		{{ html_nonce('update', iter) }}
-		<div class="field">
-			{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
-			<div class="control">
-				{{ html_input_text('key', iter, disabled='disabled') }}
-			</div>
-		</div>
-	{% else %}
-		{{ html_nonce('create', iter) }}
-		<div class="field">
-			{{ html_label(__('Key'), 'key', errors=errors, required=true) }}
-			<div class="control">
-				{{ html_input_text('key', iter, required='required', maxlength=100) }}
-			</div>
-		</div>
-	{% endif %}
-
-	<div class="field">
-		{{ html_label(__('Value'), 'value', errors=errors, required=true) }}
-		<div class="control">
-			{{ html_textarea_field('value', iter) }}
-		</div>
-	</div>
-
+<h1 class="title">{{ iter.has_id ? __('Edit setting') : __('Add setting') }}</h1>
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{{ form_row(form.key, {attr: {readonly: iter.has_id}}) }}
+	{{ form_row(form.value) }}
 	<div class="field">
 		<div class="control buttons">
-			<button type="submit" class="button is-primary">{{ view.get_label(iter, __('Add key'), __('Modify key')) }}</button>
+			{{ form_widget(form.submit, {'label': iter.has_id ? __('Modify setting') : __('Add setting')}) }}
 			<a href="{{ path('settings') }}" class="button">{{ __('Back to settings') }}</a>
 		</div>
 	</div>
-</form>
+{{ form_end(form) }}
 {% endblock %}

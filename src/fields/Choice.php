@@ -67,7 +67,7 @@ class Choice implements \SignUpFieldType
 				'required' => $this->required,
 				'constraints' => $this->required ? new Assert\NotBlank(['message' => $this->allow_multiple ? __('Pick at least one option.') : __('Pick an option.')]) : [],
 				'choices' => array_combine($this->options, $this->options),
-				'expanded' => true,
+				'expanded' => true, // It would be nice to make these chips, but chips only work well with short labels and that's not guaranteed here.
 				'placeholder' => false, // Prevent "None" option when !required && !allow_multiple
 				'multiple' => $this->allow_multiple
 			]);

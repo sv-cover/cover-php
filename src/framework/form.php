@@ -1,5 +1,12 @@
 <?php
 
+use App\Form\Extension\BulmaButtonTypeExtension;
+use App\Form\Extension\BulmaCheckboxTypeExtension;
+use App\Form\Extension\BulmaChoiceTypeExtension;
+use App\Form\Extension\BulmaFileTypeExtension;
+use App\Form\Extension\ChipsChoiceTypeExtension;
+use App\Form\Extension\OptionalCheckboxTypeExtension;
+use App\Form\Extension\OptionalFormTypeExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -32,9 +39,18 @@ function get_form_factory()
 		$validator = Validation::createValidator();
 
 		$form_factory = Forms::createFormFactoryBuilder()
-		    ->addExtension(new HttpFoundationExtension())
+			->addExtension(new HttpFoundationExtension())
 			->addExtension(new ValidatorExtension($validator))
 			->addExtension(new CsrfExtension(get_csrf_manager()))
+			->addTypeExtensions([
+				new BulmaButtonTypeExtension(),
+				new BulmaCheckboxTypeExtension(),
+				new BulmaChoiceTypeExtension(),
+				new BulmaFileTypeExtension(),
+				new ChipsChoiceTypeExtension(),
+				new OptionalCheckboxTypeExtension(),
+				new OptionalFormTypeExtension(),
+			])
 			->getFormFactory();
 	}
 

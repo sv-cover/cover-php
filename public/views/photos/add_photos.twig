@@ -11,57 +11,70 @@
 >
 	<h1 class="title">{{ __("Add photos to") }} {{ book.titel }}</h1>
 
-	<form id="add-photos-form" action="{{ path('photos', {view: 'add_photos', book: book.id}) }}" method="post">
-		{{ html_nonce('add_photos', book) }}
+	{{ form_start(form, {id: 'add-photos-form' }) }}
+		{#-`Because this form only marginally uses Symfony forms, error reporting is horrendous. This horrible construction slightly improves the situation. -#}
+		{%- set form_errors = field_errors(form)|merge(field_errors(form.photos)) -%}
+		{%- for photoForm in form.photos -%}
+			{%- set form_errors = form_errors|merge(field_errors(photoForm)) -%}
+			{%- for field in photoForm -%}
+				{%- if not field.rendered and field.vars.name not in ['_token', 'submit'] -%}
+					{%- set form_errors = form_errors|merge(field_errors(field)) -%}
+				{%- endif -%}
+			{%- endfor -%}
+		{%- endfor -%}
 
-		{% if errors|length > 0 %}
+		{%- set errors = errors|merge(form_errors) -%}
+		{%- if errors|length > 0 -%}
 			<div class="field errors">
-				{% for error in errors %}
+				{%- for error in errors -%}
 					<p class="notification is-danger">
 						<button class="delete"></button>
 						{{ error }}
 					</p>
-				{% endfor %}
+				{%- endfor -%}
 			</div>
-		{% endif %}
+		{%- endif -%}
 
 		<div id="folder-selector" class="field"></div>
 
 		<div class="table-container field" id="photo-selector">
 			<table class="table is-fullwidth">
 				<tbody>
-					<tr id="photo-template">
-						<td class="thumbnail">
-							<figure class="media-left image">
-								<img>
-							</figure>
-						</td>
-						<td class="add-control">
-							<input type="checkbox" name="photo[$index][add]" value="true" checked="checked">
-							<a class="icon has-text-success" href="{{ path('photos.photo.single', {photo: 999999999}) }}" target="_blank" title="{{ __('This photo has been added tho this book already') }}">
-								<i class="fas fa-check-square fa-fw" aria-hidden="true"></i>
-								<span class="is-sr-only">{{ __('This photo has been added tho this book already') }}</span>
-							</a>
-						</td>
-						<td class="description">
-							<input class="input" type="text" name="photo[$index][description]" placeholder="{{ __('Description')|e('html_attr') }}">
-						</td>
-						<td class="path">
-							<span class="filename"></span>
-							<input type="hidden" name="photo[$index][path]">
-						</td>
-						<td class="created-on"></td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
+		<template id="photo-template">
+			<tr>
+				<td class="thumbnail">
+					<figure class="media-left image">
+						<img>
+					</figure>
+				</td>
+				<td class="add-control">
+					{{ form_widget(form.photos.vars.prototype.add, {render_label: false, attr: {'aria-label': field_label(form.photos.vars.prototype.add)}}) }}
+					<a class="icon has-text-success" href="{{ path('photos.photo.single', {photo: 999999999}) }}" target="_blank" title="{{ __('This photo has been added tho this book already') }}">
+						<i class="fas fa-check-square fa-fw" aria-hidden="true"></i>
+						<span class="is-sr-only">{{ __('This photo has been added tho this book already') }}</span>
+					</a>
+				</td>
+				<td class="description">
+					{{ form_widget(form.photos.vars.prototype.beschrijving, {attr: {placeholder: __('Photo title…'), 'aria-label': __('Photo title')}}) }}
+				</td>
+				<td class="path">
+					<span class="filename"></span>
+					{{ form_widget(form.photos.vars.prototype.filepath) }}
+				</td>
+				<td class="created-on"></td>
+			</tr>
+		</template>
+		{% do form.photos.setRendered() %}
 		
 		<div class="field form-controls">
 			<div class="content buttons">
-				<button type="submit" class="button is-primary">{{ __("Add photos") }}</button>
+				{{ form_widget(form.submit, {'label': __("Add photos")}) }}
 				<a href="{{ path('photos', {book: book.id}) }}" class="button">{{ __('Return to %s')|format(book.titel) }}</a>
 			</div>
 		</div>
-	</form>
+	{{ form_end(form) }}
 </article>
 {% endblock %}

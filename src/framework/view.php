@@ -258,6 +258,16 @@ class View
 	}
 }
 
+
+/**
+ * Trait to help implement JSON responses. The reason for this to exist seems to be photo face tagging. 
+ * 
+ * Trace the following commits:
+ * d3552107bcffd8aab4c3af426ce7156ae72e3d68 - implementation of json in controllers
+ * 38a42d845dddd779d78e10ccc783d0dcb7512a97 - implementation of tagging (committeed a minute after the previous)
+ * 8c91b6c52e7549f11b69e8ec6badf41a8368f70a - JSON moved to CRUDView
+ * bc1bcc2c30c7401db110adddd1d1d2a7eb5b7538 - Creation of this trait
+ */
 trait JSONView {
 	protected function _send_json_single(DataIter $iter)
 	{

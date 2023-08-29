@@ -5,10 +5,9 @@
 	{% do form_row(form.submit, {attr: {'data-auto-submit-hidden': true}}) %}
 	{{ form_row(form.description) }}
 	<div class="field">
-		{% set name = 'banaan' %}
 		{{ form_label(form.options)}}
 		<noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
-		<ol id="{{form.options.vars.id}}-options" class="growing-list" data-growing-list-template="#{{form.options.vars.id}}-template" data-growing-list-sortable>
+		<ol id="{{ form.options.vars.id }}-options" class="growing-list" data-growing-list-template="#{{ form.options.vars.id }}-template" data-growing-list-sortable>
 			{% for optionField in form.options %}
 				<li class="field">
 					<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
@@ -22,7 +21,7 @@
 				</li>
 			{% endfor %}
 		</ol>
-		<template id="{{form.options.vars.id}}-template">
+		<template id="{{ form.options.vars.id }}-template">
 			<li class="field">
 				<div class="control has-icons-right" title="{{ __('Drag field to reorder options') }}">
 					{{ form_widget(form.options.vars.prototype) }}

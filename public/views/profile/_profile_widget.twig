@@ -1,23 +1,15 @@
 <div class="field is-grouped  is-grouped-right">
 	{% if global.identity.member_in_committee(constant('COMMISSIE_EASY')) %}
-		<form id="upload-photo" class="control" action="{{ path('profile', {view: 'photo', lid:iter.id}) }}" method="post" enctype="multipart/form-data">
-			{{ html_nonce('photo', iter) }}
+		{% set photo_form = view.get_photo_form() %}
+		{{ form_start(photo_form, {action: path('profile', {view: 'photo', lid: iter.id}), attr: {class: 'control', 'data-auto-submit': true, 'data-use-native-submit': true}}) }}
 			<div class="field">
-				<div class="file">
-					<label class="file-label">
-						<input class="file-input" type="file" name="photo" accept="image/jpeg" title="{{ __('Only JPEG-images are allowed.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
-						<span class="file-cta">
-							<span class="file-icon">
-								<i class="fas fa-upload"></i>
-							</span>
-							<span class="file-label">
-								{{ __('Upload photo' )}}
-							</span>
-						</span>
-					</label>
-				</div>
+				{{ form_widget(photo_form.photo, {cta: __('Upload photo' ), attr: {title: __('Only JPEG images are allowed.')}}) }}
+				{{ form_errors(photo_form) }}
+				{{ form_errors(photo_form.photo) }}
+				{{ form_help(photo_form.photo) }}
 			</div>
-		</form>
+			{{ form_widget(photo_form.submit, {'label': __('Change Photo'), 'attr': {'data-auto-submit-hidden': true}}) }}
+		{{ form_end(photo_form) }}
 	{% endif %}
 	{% if view.user_can_download_vcard() %}
 		<div class="control">
