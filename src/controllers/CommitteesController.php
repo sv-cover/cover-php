@@ -51,7 +51,6 @@ class CommitteesController extends \ControllerCRUDForm
 
 	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
-		return false;
 		if (!parent::_process_create($iter, $form))
 			return false;
 

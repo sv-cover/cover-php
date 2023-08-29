@@ -115,7 +115,14 @@ class GrowingList {
 
     grow() {
         // Add a field if no fields, or if the last field is no longer empty unless maxLength is reached
-        if (this.element.childElementCount < this.maxLength && (!this.element.lastElementChild || !this.isEmpty(this.element.lastElementChild))) {
+        if (
+            this.element.childElementCount < this.maxLength
+            && (
+                !this.element.lastElementChild
+                || !this.isEmpty(this.element.lastElementChild)
+                || this.getInputs(this.element).length === 0 
+            )
+        ) {
             // Replace stuff to keep Symfony happy
             let template = this.template.cloneNode(true);
             template.innerHTML = template.innerHTML.replace(new RegExp(this.placeholder, 'g'), this.element.childElementCount);
@@ -162,6 +169,7 @@ class GrowingList {
     handleKeyDown(event) {
         // Focus next option on enter
         if (event.key === 'Enter') {
+            event.preventDefault();
             this.focus(event.target);
         }
 
