@@ -75,9 +75,13 @@ class RegistrationType extends AbstractType
 					was introduced after we noticed people entered the current year. The 10 year limit
 					prevents this while still allowing extremely young students to register (which
 					happens sometimes) */
-					new Assert\LessThan([
-						'value' => '-10 years',
-						'message' => 'You need to be at least 10 years old!',
+					// new Assert\LessThan([
+					// 	'value' => '-10 years',
+					// 	'message' => __('You need to be at least 10 years old!'),
+					// ]),
+					new Assert\Callback([
+						'callback' => [$this, 'validate_birthdate'],
+						'payload' => ['message' => __("You need to be at least 10 years old!")]
 					]),
 				],
 			])
@@ -263,20 +267,20 @@ class RegistrationType extends AbstractType
 		$builder->get('iban')->addModelTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
 		$builder->get('bic')->addModelTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
 		$builder->get('spam')->addModelTransformer(new CallbackTransformer('strtolower', 'strtolower'));
+		$builder->get('birth_date')->addModelTransformer(new StringToDateTimeTransformer(null, null, 'Y-m-d'));
+	}
 
-		/* Transformers are run BEFORE constraints, rather annoyingly. This means we can't have any constraints that
-		expect dates and also use a tranformer to convert everything to strings (because our "ORM" wants it). This
-		transformer makes sure the form always has a datetime to work with, but the conversion to string needs to happen
-		in the controller.
-		TODO: Remove once we've got a better ORM.
-		*/
-		$builder->get('birth_date')->addModelTransformer(new CallbackTransformer(
-			function($value) {
-				if (is_string($value))
-					return \DateTime::createFromFormat('Y-m-d', $value);
-				return $value;
-			},
-			fn($v) => $v
-		));
+	public function validate_birthdate($value, ExecutionContextInterface $context, $payload)
+	{
+		// Temporary solution, switch to Assert\LessThan once our modeldata is DateTime and not string
+
+		// Ignore empty values
+		if (empty($value))
+			return;
+
+		// Date can't be in the past, but only for new events
+		if (new \DateTime($value) > new \DateTime('-10 years'))
+			$context->buildViolation($payload['message'] ?? __('You need to be at least 10 years old!'))
+				->addViolation();
 	}
 }

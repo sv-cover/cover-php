@@ -104,9 +104,6 @@ class MembershipController extends \Controller
 			// TODO: Make mailing officially opt-out, with migration to explicitly opt-out everyone who didn't opt-in first…
 			$data['option_mailing'] = true;
 
-			// Converstion needs to be done here to not break validation. See comment in RegistrationType.
-			$data['birth_date'] = $data['birth_date']->format('Y-m-d');
-
 			// Same as email confirmation / password reset
 			$confirmation_code = randstr(40);
 
@@ -280,8 +277,6 @@ class MembershipController extends \Controller
 		// Handle form
 		if ($form->isSubmitted() && $form->isValid()) {
 			$data = $form->getData();
-			// Converstion needs to be done here to not break validation. See comment in RegistrationType.
-			$data['birth_date'] = $data['birth_date']->format('Y-m-d');
 			$db->update('registrations',
 				['data' => json_encode($data)],
 				sprintf('confirmation_code = %s', $db->quote($confirmation_code))
