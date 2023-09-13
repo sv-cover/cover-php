@@ -1,7 +1,6 @@
 <?php
 require_once 'src/framework/data/DataModel.php';
 require_once 'src/framework/search.php';
-require_once 'src/framework/login.php';
 require_once 'src/framework/router.php';
 require_once 'src/services/secretary.php';
 
@@ -523,8 +522,9 @@ class DataModelMember extends DataModel implements SearchProvider
 		static $privacy = null;
 
 		// Hack for these three fields which are often combined, and the correct alias
-		if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name')))
+		if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name', 'nick')))
 			$field = 'naam';
+
 
 		if ($privacy == null)
 			$privacy = $this->get_privacy();
@@ -792,25 +792,6 @@ class DataModelMember extends DataModel implements SearchProvider
 			default:
 				return __('Unknown');
 		}
-	}
-
-	public function get_from_facebook_ids(array $ids)
-	{
-		$sql_ids = array_map(function($id) {
-			return sprintf("'%s'", $this->db->escape_string($id));
-		}, $ids);
-
-		$rows = $this->db->query("SELECT leden.*, facebook.data_value as facebook_id
-				FROM facebook
-				RIGHT JOIN leden ON leden.id = facebook.lid_id
-				WHERE facebook.data_key = 'user_id' and facebook.data_value IN ($sql_ids)");
-
-		$members = array();
-
-		foreach ($this->_rows_to_iters($rows) as $iter)
-			$members[$iter['facebook_id']] = $iter;
-
-		return $members;
 	}
 
 	/**

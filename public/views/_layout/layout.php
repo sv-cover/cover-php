@@ -427,7 +427,6 @@ class LayoutViewHelper
 		return array_filter($model->get_proposed(), [get_policy($model), 'user_can_moderate']);
 	}
 
-
 	public function color_mode()
 	{
 		return $_COOKIE['cover_color_mode'] ?? 'light';
@@ -445,40 +444,5 @@ class LayoutViewHelper
 		unset($_SESSION['alert']);
 
 		return $alert;
-	}
-
-	public function promotional_header()
-	{
-		return false;
-
-		if (!get_auth()->logged_in())
-			return 'promotional-header.twig';
-		
-		if (basename($_SERVER['SCRIPT_NAME']) == 'index.php'
-			&& get_config_value('committee_battle', false))
-			return 'committee-battle-header.twig';
-
-		return null;
-	}
-
-	public function committee_battle_photos()
-	{
-		// $committees = get_identity()->get('committees');
-
-		// $model = get_model('DataModelCommitteeBattleScore');
-
-		// $scores = $model->get_scores_for_committees(array_map(function($id) {
-		// 	return ['id' => $id];
-		// }, $committees));
-
-		$committee_model = get_model('DataModelCommissie');
-		
-		$committees = $committee_model->get(DataModelCommissie::TYPE_COMMITTEE);
-
-		$committee_photos = array_map(getter('thumbnail'), $committees);
-		$committee_photos = array_values(array_filter($committee_photos));
-		// shuffle($committee_photos);
-
-		return $committee_photos;
 	}
 }

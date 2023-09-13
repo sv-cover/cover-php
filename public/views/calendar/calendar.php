@@ -1,31 +1,11 @@
 <?php
-require_once 'src/framework/login.php';
 require_once 'src/framework/markup.php';
 
 class CalendarView extends CRUDFormView
 {
-	public $facebook = null;
-
-	public function __construct(Controller $controller, $path)
-	{
-		parent::__construct($controller, $path);
-
-		if (get_config_value('enable_facebook', false))
-		{
-			require_once 'src/services/facebook.php';
-			$this->facebook = get_facebook();
-		}
-	}
-
 	public function render_index($iters)
 	{
-		$months = get_months();
-			
-		$days = get_days();
-
-		$show_year = $this->selected_year() != $this->current_year();
-
-		return $this->twig->render('index.twig', compact('iters', 'months', 'days', 'show_year'));
+		return $this->twig->render('index.twig', compact('iters'));
 	}
 
 	public function render_read(DataIter $iter, array $extra = [])
@@ -42,44 +22,6 @@ class CalendarView extends CRUDFormView
 		header('Status: 401 Unauthorized');
 		header('WWW-Authenticate: FormBased');
 		return $this->render('unauthorized.twig', ['exception' => $e]);
-	}
-
-	public function attendees(DataIterAgenda $item)
-	{
-		if (!$this->facebook)
-			return array();
-
-		if (!$item['facebook_id'])
-			return array();
-
-		return $this->facebook->getAttending($item->get('facebook_id'));
-	}
-
-	public function rsvp_status(DataIterAgenda $item)
-	{
-		throw new Exception('Not implemented at this moment');
-	}
-
-	public function rsvp_status_text($rsvp_status)
-	{
-		switch ($rsvp_status['rsvp_status'])
-		{
-			case 'unsure':
-				return __('I might go');
-
-			case 'attending':
-				return __('I\'m going');
-
-			case 'declined':
-				return __('I\'m not going');
-
-			case '':
-			case 'not_replied':
-				return __('Attend');
-
-			default:
-				return $rsvp_status['rsvp_status'];
-		}
 	}
 
 	public function title()

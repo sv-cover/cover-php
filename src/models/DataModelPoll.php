@@ -55,8 +55,8 @@ class DataIterPoll extends DataIterForumThread
 }
 
 /**
-  * A class implementing poll data
-  */
+ * A class implementing poll data
+ */
 class DataModelPoll extends DataModel
 {
 	public function __construct($db)

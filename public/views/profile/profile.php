@@ -1,7 +1,4 @@
 <?php
-
-require_once 'src/services/facebook.php';
-
 use JeroenDesloovere\VCard\VCard;
 
 
@@ -53,13 +50,6 @@ class ProfileView extends View
 				'label' => __('Sessions')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('sessions', compact('iter'));
-				// }
-			],
-			'facebook' => [
-				'visible' => $this->is_current_member($iter) && get_config_value('enable_facebook_rsvp', false),
-				'label' => __('Facebook')
-				// 'body' => function () use ($iter) {
-				// 	$this->render_partial('facebook', compact('iter'));
 				// }
 			],
 			'kast' => [

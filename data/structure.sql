@@ -190,40 +190,6 @@ CREATE TABLE agenda (
 --     FOREIGN KEY (replacement_for) REFERENCES agenda (id);
 
 --
--- Committee battle scores!
---
-
-CREATE TABLE committee_battle_scores (
-    id SERIAL PRIMARY KEY,
-    points integer,
-    awarded_for text default '',
-    awarded_on timestamp without time zone
-);
-
-CREATE TABLE committee_battle_committees (
-    id SERIAL PRIMARY KEY,
-    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    committee_id integer NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE committee_battle_users (
-    id SERIAL PRIMARY KEY,
-    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
---
--- Very basic persistent cache; is mainly used for Facebook stuff.
---
-
-CREATE TABLE cache (
-    key character(40) NOT NULL PRIMARY KEY,
-    value TEXT NOT NULL,
-    expires integer NOT NULL
-);
-
-
---
 -- Configuration table allows you to override stuff from config.inc
 -- using the interface in the website. Of course, these values are
 -- only accessible once a database connection has been set up. So
@@ -579,17 +545,6 @@ CREATE TABLE stickers (
   toegevoegd_door integer DEFAULT NULL REFERENCES leden (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET DEFAULT,
   foto bytea DEFAULT NULL,
   foto_mtime timestamp without time zone
-);
-
---
--- Facebook meta data (which is linked to a member)
---
-
-CREATE TABLE facebook (
-    lid_id INTEGER NOT NULL REFERENCES leden (id),
-    data_key VARCHAR(255) NOT NULL,
-    data_value TEXT NOT NULL,
-    CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key)
 );
 
 --

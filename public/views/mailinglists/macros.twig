@@ -1,0 +1,41 @@
+{# Inspiration: https://bost.ocks.org/mike/bar/3/ #}
+{% macro barchart(data, class='barchart') -%}
+    {%- set chart_width = 350 -%}
+    {%- set chart_height = 200 -%}
+    {%- set padding = 2 -%}
+    {%- set bar_width = ((chart_width - 40 - 2 * padding) / (data|length)) - 2 * padding -%}
+    {%- set data_max = max(data) -%}
+    {%- set data_scale = 1.0 / data_max -%}
+    {%- set bar_scale = (chart_height - 40) / data_max -%}
+    {%- set tick_scale = max(1, min(data_max, 10)) -%}
+    {%- set tick_scale = max(1, min(data_max, 10)) -%}
+    <svg width="{{ chart_width }}" height="{{ chart_height }}" class="{{ class|e('html_attr') }}" viewbox="0 0 {{ chart_width }} {{ chart_height }}">
+        <g transform="translate(40, -20)">
+            <g class="axis axis--x" transform="translate(0, {{ chart_height }})" fill="none" font-size="10" font-family="sans-serif" text-anchor="middle">
+                {% for partition, count in data -%}
+                    <g class="tick" transform="translate({{ bar_width / 2 + padding + (bar_width + 2 * padding) * loop.index0 }}, 0)">
+                        <line stroke="#000" y2="6" x1="0.5" x2="0.5"></line>
+                        <text fill="#000" y="9" x="0.5" dy="0.71em">{{ partition }}</text>
+                    </g>
+                {%- endfor %}
+            </g>
+            <g class="axis axis--y" fill="none" font-size="10" font-family="sans-serif" text-anchor="end">
+                <!--<path class="domain" stroke="#000" d="M-6,{{ chart_height }}.5H0.5H-6"></path>-->
+                {% for i in 0..tick_scale -%}
+                    {%- set value = (1.0 - loop.index0 / tick_scale) / data_scale -%}
+                    {%- set bar_height = value * bar_scale -%}
+                    <g class="tick" transform="translate(0, {{ chart_height - bar_height - padding }})">
+                        <line stroke="#000" x2="-6" y1="0.5" y2="0.5"></line>
+                        <text fill="#000" x="-9" y="0.5" dy="0.32em">{{ value|round }}</text>
+                    </g>
+                {%- endfor %}
+            </g>
+            {% for partition, count in data -%}
+                {%- set bar_height = count * bar_scale -%}
+                <rect class="barchart-bar" fill="#36749d" x="{{ padding + (bar_width + 2 * padding) * loop.index0 }}" y="{{ chart_height - bar_height }}" width="{{ bar_width }}" height="{{ bar_height }}">
+                    <title>{{ count }}</title>
+                </rect>
+            {%- endfor %}
+        </g>
+    </svg>
+{%- endmacro %}

@@ -115,7 +115,6 @@
     - [×] subscribe_member_form.twig
     - [×] unsubscribe_form.twig
 - [×] profiel
-    - [ ] _facebook.phtml (This is very old, can be deleted I think)
     - [×] _profile_widget.twig
     - [×] confirm_email.twig
     - [×] incassomatic_tab.twig

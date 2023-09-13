@@ -219,19 +219,6 @@ CREATE TABLE public.besturen (
 ALTER TABLE public.besturen OWNER TO webcie;
 
 --
--- Name: cache; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.cache (
-    key character(40) NOT NULL,
-    value text NOT NULL,
-    expires integer NOT NULL
-);
-
-
-ALTER TABLE public.cache OWNER TO webcie;
-
---
 -- Name: commissies_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
 
@@ -262,122 +249,6 @@ CREATE TABLE public.commissies (
 
 
 ALTER TABLE public.commissies OWNER TO webcie;
-
---
--- Name: committee_battle_committees; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.committee_battle_committees (
-    id integer NOT NULL,
-    score_id integer NOT NULL,
-    committee_id integer NOT NULL
-);
-
-
-ALTER TABLE public.committee_battle_committees OWNER TO webcie;
-
---
--- Name: committee_battle_committees_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_committees_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_committees_id_seq OWNER TO webcie;
-
---
--- Name: committee_battle_committees_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: webcie
---
-
-ALTER SEQUENCE public.committee_battle_committees_id_seq OWNED BY public.committee_battle_committees.id;
-
-
---
--- Name: committee_battle_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_scores_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_scores_id_seq OWNER TO webcie;
-
---
--- Name: committee_battle_scores; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.committee_battle_scores (
-    id integer DEFAULT nextval('public.committee_battle_scores_id_seq'::regclass) NOT NULL,
-    points integer,
-    awarded_for text DEFAULT ''::text,
-    awarded_on timestamp without time zone
-);
-
-
-ALTER TABLE public.committee_battle_scores OWNER TO webcie;
-
---
--- Name: committee_battle_scores_id_seq1; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_scores_id_seq1
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_scores_id_seq1 OWNER TO webcie;
-
---
--- Name: committee_battle_scores_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: webcie
---
-
-ALTER SEQUENCE public.committee_battle_scores_id_seq1 OWNED BY public.committee_battle_scores.id;
-
-
---
--- Name: committee_battle_users; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.committee_battle_users (
-    id integer NOT NULL,
-    score_id integer NOT NULL,
-    member_id integer NOT NULL
-);
-
-
-ALTER TABLE public.committee_battle_users OWNER TO webcie;
-
---
--- Name: committee_battle_users_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_users_id_seq OWNER TO webcie;
-
---
--- Name: committee_battle_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: webcie
---
-
-ALTER SEQUENCE public.committee_battle_users_id_seq OWNED BY public.committee_battle_users.id;
 
 
 --
@@ -431,19 +302,6 @@ CREATE TABLE public.email_confirmation_tokens (
 
 
 ALTER TABLE public.email_confirmation_tokens OWNER TO webcie;
-
---
--- Name: facebook; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.facebook (
-    lid_id integer NOT NULL,
-    data_key character varying(255) NOT NULL,
-    data_value text NOT NULL
-);
-
-
-ALTER TABLE public.facebook OWNER TO webcie;
 
 --
 -- Name: forum_acl_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -1494,20 +1352,6 @@ ALTER TABLE ONLY public.announcements ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
--- Name: committee_battle_committees id; Type: DEFAULT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees ALTER COLUMN id SET DEFAULT nextval('public.committee_battle_committees_id_seq'::regclass);
-
-
---
--- Name: committee_battle_users id; Type: DEFAULT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users ALTER COLUMN id SET DEFAULT nextval('public.committee_battle_users_id_seq'::regclass);
-
-
---
 -- Name: foto_faces id; Type: DEFAULT; Schema: public; Owner: webcie
 --
 
@@ -1811,14 +1655,6 @@ COPY public.besturen (id, naam, login, website, page_id) FROM stdin;
 
 
 --
--- Data for Name: cache; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.cache (key, value, expires) FROM stdin;
-\.
-
-
---
 -- Data for Name: commissies; Type: TABLE DATA; Schema: public; Owner: webcie
 --
 
@@ -1862,29 +1698,6 @@ COPY public.commissies (id, naam, login, website, page_id, hidden, vacancies, ty
 \.
 
 
---
--- Data for Name: committee_battle_committees; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.committee_battle_committees (id, score_id, committee_id) FROM stdin;
-\.
-
-
---
--- Data for Name: committee_battle_scores; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.committee_battle_scores (id, points, awarded_for, awarded_on) FROM stdin;
-\.
-
-
---
--- Data for Name: committee_battle_users; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.committee_battle_users (id, score_id, member_id) FROM stdin;
-\.
-
 
 --
 -- Data for Name: committee_email; Type: TABLE DATA; Schema: public; Owner: webcie
@@ -1913,7 +1726,6 @@ news_forum	27
 poll_forum	28
 boekcie_webshop_link	https://cover.itdepartment.nl/
 boeken_bestellen	1
-committee_battle	1
 \.
 
 
@@ -1922,14 +1734,6 @@ committee_battle	1
 --
 
 COPY public.email_confirmation_tokens (key, member_id, email, created_on) FROM stdin;
-\.
-
-
---
--- Data for Name: facebook; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.facebook (lid_id, data_key, data_value) FROM stdin;
 \.
 
 
@@ -4439,33 +4243,6 @@ SELECT pg_catalog.setval('public.besturen_id_seq', 26, true);
 SELECT pg_catalog.setval('public.commissies_id_seq', 45, true);
 
 
---
--- Name: committee_battle_committees_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_committees_id_seq', 1607, true);
-
-
---
--- Name: committee_battle_scores_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_scores_id_seq', 58, true);
-
-
---
--- Name: committee_battle_scores_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_scores_id_seq1', 1, false);
-
-
---
--- Name: committee_battle_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_users_id_seq', 30, true);
-
 
 --
 -- Name: forum_acl_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
@@ -4703,14 +4480,6 @@ ALTER TABLE ONLY public.applications
 
 
 --
--- Name: cache cache_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.cache
-    ADD CONSTRAINT cache_pkey PRIMARY KEY (key);
-
-
---
 -- Name: commissies commissies_login_key; Type: CONSTRAINT; Schema: public; Owner: webcie
 --
 
@@ -4724,30 +4493,6 @@ ALTER TABLE ONLY public.commissies
 
 ALTER TABLE ONLY public.commissies
     ADD CONSTRAINT commissies_pkey PRIMARY KEY (id);
-
-
---
--- Name: committee_battle_committees committee_battle_committees_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees
-    ADD CONSTRAINT committee_battle_committees_pkey PRIMARY KEY (id);
-
-
---
--- Name: committee_battle_scores committee_battle_scores_pkey1; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_scores
-    ADD CONSTRAINT committee_battle_scores_pkey1 PRIMARY KEY (id);
-
-
---
--- Name: committee_battle_users committee_battle_users_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users
-    ADD CONSTRAINT committee_battle_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -4780,14 +4525,6 @@ ALTER TABLE ONLY public.configuratie
 
 ALTER TABLE ONLY public.email_confirmation_tokens
     ADD CONSTRAINT email_confirmation_tokens_pkey PRIMARY KEY (key);
-
-
---
--- Name: facebook facebook_pk; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.facebook
-    ADD CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key);
 
 
 --
@@ -5180,38 +4917,6 @@ ALTER TABLE ONLY public.commissies
 
 
 --
--- Name: committee_battle_committees committee_battle_committees_committee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees
-    ADD CONSTRAINT committee_battle_committees_committee_id_fkey FOREIGN KEY (committee_id) REFERENCES public.commissies(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: committee_battle_committees committee_battle_committees_score_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees
-    ADD CONSTRAINT committee_battle_committees_score_id_fkey FOREIGN KEY (score_id) REFERENCES public.committee_battle_scores(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: committee_battle_users committee_battle_users_member_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users
-    ADD CONSTRAINT committee_battle_users_member_id_fkey FOREIGN KEY (member_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: committee_battle_users committee_battle_users_score_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users
-    ADD CONSTRAINT committee_battle_users_score_id_fkey FOREIGN KEY (score_id) REFERENCES public.committee_battle_scores(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: committee_email committee_email_committee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
 --
 
@@ -5225,14 +4930,6 @@ ALTER TABLE ONLY public.committee_email
 
 ALTER TABLE ONLY public.email_confirmation_tokens
     ADD CONSTRAINT email_confirmation_tokens_member_id_fkey FOREIGN KEY (member_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: facebook facebook_lid_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.facebook
-    ADD CONSTRAINT facebook_lid_id_fkey FOREIGN KEY (lid_id) REFERENCES public.leden(id);
 
 
 --

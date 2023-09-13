@@ -23,6 +23,7 @@ class RouterTwigExtension extends Twig_Extension
 			new Twig_SimpleFunction('login_path', [$this, 'get_login_path']),
 			new Twig_SimpleFunction('logout_path', [$this, 'get_logout_path']),
 			new Twig_SimpleFunction('static_path', [$this, 'get_static_path']),
+			new Twig_SimpleFunction('link_static', 'get_theme_data'),
 		];
 	}
 

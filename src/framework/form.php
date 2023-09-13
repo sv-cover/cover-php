@@ -62,12 +62,12 @@ if (!defined('IN_SITE'))
 	return;
 
 /** @group Form
-  * A check function which checks if a value is a non empty
-  * @name the name of the POST value
-  * @value reference; the value
-  *
-  * @result true when value is non empty, false otherwise
-  */	
+ * A check function which checks if a value is a non empty
+ * @name the name of the POST value
+ * @value reference; the value
+ *
+ * @result true when value is non empty, false otherwise
+ */	
 function check_value_empty($name, $value) {
 	if (!isset($value) || !trim($value))
 		return false;
@@ -76,13 +76,13 @@ function check_value_empty($name, $value) {
 }
 
 /** @group Form
-  * A check function which checks if a value is a valid number. Besides
-  * checking this function will also convert the value to a float
-  * @name the name of the POST value
-  * @value reference; the value
-  *
-  * @result true when value is a number, false otherwise
-  */
+ * A check function which checks if a value is a valid number. Besides
+ * checking this function will also convert the value to a float
+ * @name the name of the POST value
+ * @value reference; the value
+ *
+ * @result true when value is a number, false otherwise
+ */
 function check_value_tofloat($name, $value) {
 	if (!is_numeric($value))
 		return false;
@@ -91,13 +91,13 @@ function check_value_tofloat($name, $value) {
 }
 
 /** @group Form
-  * A check function which checks if a value is a valid number. Besides
-  * checking this function will also convert the value to an int
-  * @name the name of the POST value
-  * @value reference; the value
-  *
-  * @result true when value is a number, false otherwise
-  */
+ * A check function which checks if a value is a valid number. Besides
+ * checking this function will also convert the value to an int
+ * @name the name of the POST value
+ * @value reference; the value
+ *
+ * @result true when value is a number, false otherwise
+ */
 function check_value_toint($name, $value) {
 	if (!is_numeric($value))
 		return false;
@@ -106,14 +106,14 @@ function check_value_toint($name, $value) {
 }
 
 /** @group Form
-  * A check function which formats a checkbox value. It sets the
-  * POST value to 1 if the value is either 'yes' or 'on' and to 0
-  * otherwise
-  * @name the name of the POST value
-  * @value reference; the value
-  *
-  * @result always true
-  */
+ * A check function which formats a checkbox value. It sets the
+ * POST value to 1 if the value is either 'yes' or 'on' and to 0
+ * otherwise
+ * @name the name of the POST value
+ * @value reference; the value
+ *
+ * @result always true
+ */
 function check_value_checkbox($name, $value) {
 	if ($value == 'yes' || $value == 'on')
 		return 1;
@@ -122,24 +122,24 @@ function check_value_checkbox($name, $value) {
 }
 
 /** @group Form
-  * A function which checks if POSTed values are valid and optionally
-  * formats values
-  *
-  * @check an array of values to check. Each item in this array
-  * is either a a string (the name of a field) or an associative array 
-  * containing a 'name' key (the name of a field) and a 'function' 
-  * key containing the check function to call. If only a name is
-  * specified the default check function (#check_value_empty) will
-  * be used. Check functions have two parameters: name and value and 
-  * returns either false on error or true when the value is valid. 
-  * The value parameter is passed by reference to allow formatting
-  * the value. Common check functions available are: 
-  * #check_value_toint and #check_value_checkbox
-  * @errors reference; will be set to an array of fields that didn't
-  * successfully check
-  *
-  * @result an array with name => value values
-  */
+ * A function which checks if POSTed values are valid and optionally
+ * formats values
+ *
+ * @check an array of values to check. Each item in this array
+ * is either a a string (the name of a field) or an associative array 
+ * containing a 'name' key (the name of a field) and a 'function' 
+ * key containing the check function to call. If only a name is
+ * specified the default check function (#check_value_empty) will
+ * be used. Check functions have two parameters: name and value and 
+ * returns either false on error or true when the value is valid. 
+ * The value parameter is passed by reference to allow formatting
+ * the value. Common check functions available are: 
+ * #check_value_toint and #check_value_checkbox
+ * @errors reference; will be set to an array of fields that didn't
+ * successfully check
+ *
+ * @result an array with name => value values
+ */
 function check_values($check, &$errors, array $data = null) {
 	$fields = array();
 	$errors = array();

@@ -46,8 +46,8 @@ function get_request()
 
 
 /**
-  * Routing helper to make route matching agnostic to trailing slashes
-  */
+ * Routing helper to make route matching agnostic to trailing slashes
+ */
 class RedirectableCompiledUrlMatcher extends CompiledUrlMatcher implements RedirectableUrlMatcherInterface
 {
 	public function redirect(string $path, string $route, string $scheme = null): array
