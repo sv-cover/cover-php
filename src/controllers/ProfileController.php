@@ -597,7 +597,7 @@ class ProfileController extends \Controller
 		try {
 			$token = $model->get_iter($_GET['token']);
 		} catch (\Exception $e) {
-			return $this->view->render_confirm_email(false);
+			return $this->view->render('confirm_email.twig', ['success' => false]);
 		}
 
 		// Update the member's email address
