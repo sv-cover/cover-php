@@ -270,10 +270,11 @@ function format_date_relative($time)
 		if ($day_diff < 7) return sprintf(__('%d days ago'), $day_diff);
 		// if ($day_diff < 31) return sprintf(__('%d weken geleden'), floor($day_diff / 7));
 		// if ($day_diff < 60) return __('afgelopen maand');
-		return date('j-n-Y', $time);
+		if ($day_diff < 180) return date('F j', $time);
+		return date('F j, Y', $time);
 	}
 	else
-		return date('j-n-Y', $time);
+		return date('F j, Y', $time);
 }
 
 // almost dead: only used in View:byName

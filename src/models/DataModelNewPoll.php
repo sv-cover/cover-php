@@ -76,9 +76,19 @@ class DataIterNewPoll extends DataIter implements SearchResult
 		return [];
 	}
 
-	public function get_total_votes()
+	public function get_committee()
 	{
-		return $this->model->get_total_votes($this);
+		// has to be isset because board unfortunately has id=0. has to be $this->data, because reasons
+		if (isset($this->data['committee_id'])) 
+			return get_model('DataModelCommissie')->get_iter($this['committee_id']);
+		return null;
+	}
+
+	public function get_member()
+	{
+		if (!empty($this['member_id'])) 
+			return get_model('DataModelMember')->get_iter($this['member_id']);
+		return null;
 	}
 
 	public function get_member_has_voted(DataIterMember $member = null)
@@ -89,6 +99,11 @@ class DataIterNewPoll extends DataIter implements SearchResult
 	public function get_member_vote(DataIterMember $member = null)
 	{
 		return $this->model->get_member_vote($this, $member);
+	}
+
+	public function get_total_votes()
+	{
+		return $this->model->get_total_votes($this);
 	}
 
 	public function get_is_open()
@@ -106,6 +121,29 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 	public function __construct($db)
 	{
 		parent::__construct($db, 'polls');
+	}
+
+	public function count_polls($limit=1, $offset=0)
+	{
+		return $this->db->query_value('SELECT COUNT(*) FROM polls;');
+	}
+
+	public function get_polls($limit=1, $offset=0)
+	{
+		$rows = $this->db->query(
+			'SELECT *
+			   FROM polls
+			  ORDER BY created_on DESC
+			 OFFSET :offset
+			  LIMIT :limit
+			;',
+			false,
+			[
+				'limit' => $limit,
+				'offset' => $offset,
+			],
+		);
+		return $this->_rows_to_iters($rows);
 	}
 
 	public function insert(DataIter $iter)
@@ -191,6 +229,9 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 	{
 		if (!$member)
 			$member = get_identity()->member();
+
+		if (!$member)
+			return null;
 
 		$row = $this->db->query_first(
 			'SELECT poll_option_id

@@ -33,8 +33,8 @@ class PolicyNewPoll implements Policy
 		// User owns it or board/acdcee
 		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_EASY)
-			|| (isset($poll['committee_id']) && get_identity()->member_in_committee($form['committee_id']))
-			|| (!isset($poll['committee_id']) && get_identity()->get('id') == $poll['member_id'])
+			|| (isset($poll['committee']) && get_identity()->member_in_committee($poll['committee_id']))
+			|| (!isset($poll['committee']) && get_identity()->get('id') == $poll['member_id'])
 		;
 	}
 

@@ -1,7 +1,53 @@
 $poll-result-background-color: $button-background-color
 $poll-result-margin: 0.5rem
 
+$media-spacing: 1rem
+
+.poll-header
+    @extend %block
+    &::before
+        +tablet
+            content: ''
+            display: block
+            width: 64px
+            margin-right: $media-spacing
+
+.poll-pagination
+    @extend %block
+    +tablet
+        padding-left: calc(64px + #{$media-spacing})
+
 .poll
+    .committee-avatar
+        background: $cover
+        display: flex
+        align-items: center
+        justify-content: center
+        height: 100%
+        border-radius: 100%
+        color: $cover-invert
+    .poll-meta
+        display: flex
+        margin-bottom: 0.75rem
+        .image
+            display: inline-block
+            vertical-align: middle
+            margin-right: 0.75ch
+        ul
+            margin: 0
+            list-style: none
+            li
+                margin-top: 0
+            li.divider
+                display: none
+        +tablet
+            ul li,
+            ul li.divider // override default devider margin
+                display: inline-block
+                // margin: 0 $column-gap
+        // +mobile
+
+
     .poll-option
         +control
         position: relative

@@ -14,6 +14,8 @@ require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 class PollsController extends \ControllerCRUDForm
 {
+	CONST PAGE_SIZE = 10;
+
 	protected $view_name = 'polls';
 	protected $form_type = PollType::class;
 
@@ -67,6 +69,26 @@ class PollsController extends \ControllerCRUDForm
 			$this->model->set_options($iter, $options);
 
 		return true;
+	}
+
+	public function run_index()
+	{
+		$page = $this->get_parameter('page', 0);
+		$page_count = $this->model->count_polls() / $this::PAGE_SIZE;
+
+		if ($page > $page_count)
+			throw new \NotFoundException();
+
+		$iters = array_filter(
+			$this->model->get_polls($this::PAGE_SIZE, $page * $this::PAGE_SIZE),
+			[get_policy($this->model), 'user_can_read']
+		);
+
+		return $this->view()->render('index.twig', [
+			'iters' => $iters,
+			'page' => $page,
+			'page_count' => $page_count,
+		]);
 	}
 
 	public function run_create()
@@ -162,8 +184,13 @@ class PollsController extends \ControllerCRUDForm
 
 	public function run_vote(\DataIter $iter)
 	{
-		if (!\get_policy($this->model)->user_can_vote($iter))
-			throw new \UnauthorizedException('You are not allowed vote!');
+		if (!\get_policy($this->model)->user_can_vote($iter)) {
+			if (\get_auth()->logged_in())
+				throw new \UnauthorizedException('You are not allowed vote!');
+			return $this->view->redirect($this->generate_url('login', [
+				'referrer' =>  $this->generate_url('poll', ['id' => $iter->get_id()])
+			]));
+		}
 
 		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'vote_poll_' . $iter->get_id()])
 			->add('option', ChoiceType::class, [
