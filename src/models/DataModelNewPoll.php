@@ -46,14 +46,14 @@ class DataIterNewPoll extends DataIter implements SearchResult
 	
 	public function get_search_type()
 	{
-		return 'vacancy';
+		return 'poll';
 	}
 
 	public function get_absolute_path($url = false)
 	{
 		$router = get_router();
 		$reference_type = $url ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
-		return $router->generate('vacancies', ['id' => $this->get_id()], $reference_type);
+		return $router->generate('poll', ['id' => $this->get_id()], $reference_type);
 	}
 
 	public function get_options()
@@ -73,7 +73,7 @@ class DataIterNewPoll extends DataIter implements SearchResult
 
 	public function get_comments()
 	{
-		return [];
+		return get_model('DataModelPollComment')->get_for_poll($this);
 	}
 
 	public function get_committee()
@@ -128,12 +128,32 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 		return $this->db->query_value('SELECT COUNT(*) FROM polls;');
 	}
 
+	protected function _generate_query($where)
+	{
+		if (is_array($where))
+			$where = $this->_generate_conditions_from_array($where);
+
+		$where = $where ?: "1=1"; // no conditions means where true :)
+		return "
+			 SELECT polls.*
+			       ,COUNT(DISTINCT pc.id) AS comment_count
+			   FROM polls
+			   LEFT JOIN poll_comments AS pc ON pc.poll_id = polls.id
+			  WHERE {$where}
+			  GROUP BY polls.id
+			;"
+		;
+	}
+
 	public function get_polls($limit=1, $offset=0)
 	{
 		$rows = $this->db->query(
-			'SELECT *
+			'SELECT polls.*
+			       ,COUNT(DISTINCT pc.id) AS comment_count
 			   FROM polls
-			  ORDER BY created_on DESC
+			   LEFT JOIN poll_comments AS pc ON pc.poll_id = polls.id
+			  GROUP BY polls.id
+			  ORDER BY polls.created_on DESC
 			 OFFSET :offset
 			  LIMIT :limit
 			;',

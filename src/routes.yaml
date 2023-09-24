@@ -212,6 +212,18 @@ poll.create:
   defaults:
     view: create
 
+poll.comment.create:
+  path: /polls/{poll_id<\d+>}/comments/create
+  controller: App\Controller\PollCommentsController
+  defaults:
+    view: create
+
+poll.comment:
+  path: /polls/{poll_id<\d+>}/comments/{<\d+>}/{view}
+  controller: App\Controller\PollCommentsController
+  defaults:
+    view: read
+
 poll:
   path: /polls/{id<\d+>}/{view}
   controller: App\Controller\PollsController

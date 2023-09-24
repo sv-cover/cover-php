@@ -19,6 +19,154 @@
 </nav>
 {% endmacro %}
 
+{% macro render_poll(poll, show_comements = true) %}
+<div class="media poll">
+    <figure class="media-left is-hidden-mobile">
+        {% if poll.committee %}
+            <a class="image is-64x64" href="{{ path('committees', {commissie: poll.committee.login}) }}" title="{{ poll.committee.naam }}" aria-label="{{ poll.committee.naam }}">
+                <span class="committee-avatar" aria-hidden="true">
+                    <span class="icon is-large">
+                        <i class="fas fa-users fa-2x"></i>
+                    </span>
+                </span>
+            </a>
+        {% elseif poll.member %}
+            <a class="image is-64x64" href="{{ path('profile', {lid: poll.member.id}) }}" title="{{ poll.member.full_name }}" aria-label="{{ poll.member.full_name }}">
+                <img class="is-rounded" width="64" height="64" src="{{ path('profile_picture', {lid_id: poll.member.id, format: 'square', width: 128}) }}" alt="{{ __('Photo of %s')|format(poll.member|full_name) }}">
+            </a>
+        {% else %}
+            <div class="image is-64x64">
+                <span class="committee-avatar" title="{{ __('Anonymous') }}" aria-hidden="true">
+                    <span class="icon is-large">
+                        <i class="fas fa-user-secret fa-2x"></i>
+                    </span>
+                </span>
+            </div>
+        {% endif %}
+    </figure>
+    <div class="media-content">
+        <div class="content">
+            <div class="poll-meta">
+                <span class="is-hidden-tablet">
+                    {% if poll.committee %}
+                        <a class="image is-48x48" href="{{ path('committees', {commissie: poll.committee.login}) }}" title="{{ poll.committee.naam }}" aria-label="{{ poll.committee.naam }}">
+                            <span class="committee-avatar" aria-hidden="true">
+                                <span class="icon">
+                                    <i class="fas fa-users"></i>
+                                </span>
+                            </span>
+                        </a>
+                    {% elseif poll.member %}
+                        <a class="image is-48x48" href="{{ path('profile', {lid: poll.member.id}) }}" title="{{ poll.member.full_name }}" aria-label="{{ poll.member.full_name }}">
+                            <img class="is-rounded" width="48" height="48" src="{{ path('profile_picture', {lid_id: poll.member.id, format: 'square', width: 96}) }}" alt="{{ __('Photo of %s')|format(poll.member|full_name) }}">
+                        </a>
+                    {% else %}
+                        <span class="image is-48x48">
+                            <span class="committee-avatar" title="{{ __('Anonymous') }}" aria-hidden="true">
+                                <span class="icon">
+                                    <i class="fas fa-user-secret"></i>
+                                </span>
+                            </span>
+                        </span>
+                    {% endif %}
+                </span>
+                <ul>
+                {# {% spaceless %} #}
+                    <li>
+                        <strong>
+                            {% if poll.committee %}
+                                <a href="{{ path('committees', {commissie: poll.committee.login}) }}">
+                                    {{ poll.committee.naam }}
+                                </a>
+                            {% elseif poll.member %}
+                                <a href="{{ path('profile', {lid: poll.member.id}) }}">
+                                    {{ poll.member.full_name }}
+                                </a>
+                            {% else %}
+                                {{ __('Anonymous') }}
+                            {% endif %}
+                        </strong>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="is-size-7" title="{{ poll.created_on|date('d-m-Y H:i') }}">
+                        {# <small > #}
+                            {{ poll.created_on|date_relative }}
+                        {# </small> #}
+                    </li>
+                {# {% endspaceless %} #}
+                </ul>
+            </div>
+            <p>
+                {{ poll.question|parse_markup }}
+            </p>
+        </div>
+        <div class="block">
+            {% if not poll.is_open or poll.member_has_voted %}
+                {# Thou hath voted or thou art too late! #}
+                {% for option in poll.options %}
+                <div class="poll-option" title="{{ option.option }}">
+                    {% set percentage = option.votes / max(poll.total_votes, 1) %}
+                    <label for="poll-option-{{ option.id }}-result" class="is-truncated">
+                        <span>
+                            {{ option.option }}
+                            {% if option.id == poll.member_vote %}
+                                <i class="far fa-check-circle" aria-hidden="true" title="{{ __('You voted for this option') }}"></i>
+                                <span class="is-sr-only">{{ __('You voted for this option') }}</span>
+                            {% endif %}
+                        </span>
+                    </label>
+                    <span class="percentage">
+                        {{ percentage|format_percent_number }}
+                    </span>
+                    <meter id="poll-option-{{ option.id }}-result" max="{{ max(poll.total_votes, 1) }}" value="{{ option.votes }}">
+                        {{ percentage|format_percent_number }}
+                    </meter>
+                </div>
+                {% endfor %}
+                <p>
+                    {{ __('Total votes') }}: {{ poll.total_votes }}
+                    {% if not poll.is_open %}
+                        <span class="divider"></span>
+                        {{ __('Final result') }}
+                    {% endif %}
+                </p>
+            {# {% if global.policies.NewPoll.user_can_vote(poll) %} #}
+            {% else %}
+                {# Thou canst vote or thou art not logged in! (Vote view will redirect to login if needed. This way, we don't spoil the results.) #}
+                <form action="{{ path('poll', {view: 'vote', id: poll.id, referrer: global.server.REQUEST_URI}) }}" method="post">
+                    <input type="hidden" name="form[_token]" value="{{ csrf_token('vote_poll_' ~ poll.id) }}">
+                    <div class="buttons">
+                    {% for option in poll.options %}
+                        <button name="form[option]" value="{{ option.id }}" type="submit" class="button is-fullwidth">
+                            {{ option.option }}
+                        </button>
+                    {% endfor %}
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+        <div class="controls level is-mobile">
+            <div class="level-left">
+                {% if show_comements %}
+                    <a 
+                        class="level-item comments"
+                        href="{{ path('poll', {id: poll.id}) }}"
+                        title="{{ __N('%d comment', '%d comments', poll.comment_count) }}"
+                        aria-label="{{ __N('View poll and %d comment', 'View poll and %d comments', poll.comment_count) }}"
+                    >
+                        <span aria-hidden="true">
+                            <i class="fas fa-comment"></i>
+                            {{ poll.comment_count }}
+                        </span>
+                    </a>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
 {# 
 {% macro render_pagination(page, page_count, nav_size=5) %}
 {# Perfect pagination? This renders a more traditional pagination, but it's a responsive nightmare. The only advantage over simple previous/next buttons is that it offers fast navigation to the first and last page, but is that feature worth it? # }

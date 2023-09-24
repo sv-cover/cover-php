@@ -1,0 +1,194 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Polls') ~ ' – ' ~ parent() %}
+
+{% from '@theme/polls/macros.twig' import render_pagination, render_poll %}
+
+{% block content %}
+<header class="block">
+    <div class="level is-mobile">
+        <div class="level-left">
+            {% if user_can_create controller.new_iter %}
+                <a href="{{ path('poll.list') }}" class="button level-item">
+                    <span class="icon is-small">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                    </span>
+                    <span class="is-hidden-mobile">{{ __('Back to polls')  }}</span>
+                    <span class="is-hidden-tablet">{{ __('Back')  }}</span>
+                </a>
+            {% endif %}
+        </div>
+        <div class="level-right">
+            {% if global.policies.NewPoll.user_can_close(iter) or global.policies.NewPoll.user_can_close(iter) or user_can_delete iter %}
+                <div class="level-item dropdown is-right">
+                    <div class="dropdown-trigger">
+                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" aria-label="{{ __('Manage poll') }}">
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            {% if iter.is_open and global.policies.NewPoll.user_can_close(iter) %}
+                                <a class="dropdown-item"
+                                    href="{{ path('poll', {view: 'close', id: iter.id}) }}"
+                                    data-popup="modal"
+                                >
+                                    {{ __('Close poll') }}
+                                </a>
+                            {% endif %}
+                            {% if not iter.is_open and global.policies.NewPoll.user_can_reopen(iter) %}
+                                <a class="dropdown-item"
+                                    href="{{ path('poll', {view: 'reopen', id: iter.id}) }}"
+                                    data-popup="modal"
+                                >
+                                    {{ __('Reopen poll') }}
+                                </a>
+                            {% endif %}
+                            {% if user_can_delete iter %}
+                                <a class="dropdown-item"
+                                    href="{{ path('poll', {view: 'delete', id: iter.id}) }}"
+                                    data-popup="modal"
+                                >
+                                    {{ __('Delete poll') }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <h1 class="is-sr-only">{{ __('Poll') }}</h1>
+</header>
+<section>
+{{ render_poll(iter, false) }}
+{% for comment in iter.comments %}
+<div class="media poll">
+    <figure class="media-left is-hidden-mobile">
+        {% if comment.member %}
+            <a class="image is-64x64" href="{{ path('profile', {lid: comment.member.id}) }}" title="{{ comment.member.full_name }}" aria-label="{{ comment.member.full_name }}">
+                <img class="is-rounded" width="64" height="64" src="{{ path('profile_picture', {lid_id: comment.member.id, format: 'square', width: 128}) }}" alt="{{ __('Photo of %s')|format(comment.member|full_name) }}">
+            </a>
+        {% else %}
+            <div class="image is-64x64">
+                <span class="committee-avatar" title="{{ __('Anonymous') }}" aria-hidden="true">
+                    <span class="icon is-large">
+                        <i class="fas fa-user-secret fa-2x"></i>
+                    </span>
+                </span>
+            </div>
+        {% endif %}
+    </figure>
+    <div class="media-content">
+        <div class="content">
+            <div class="poll-meta">
+                <span class="is-hidden-tablet">
+                    {% if comment.member %}
+                        <a class="image is-48x48" href="{{ path('profile', {lid: comment.member.id}) }}" title="{{ comment.member.full_name }}" aria-label="{{ comment.member.full_name }}">
+                            <img class="is-rounded" width="48" height="48" src="{{ path('profile_picture', {lid_id: comment.member.id, format: 'square', width: 96}) }}" alt="{{ __('Photo of %s')|format(comment.member|full_name) }}">
+                        </a>
+                    {% else %}
+                        <span class="image is-48x48">
+                            <span class="committee-avatar" title="{{ __('Anonymous') }}" aria-hidden="true">
+                                <span class="icon">
+                                    <i class="fas fa-user-secret"></i>
+                                </span>
+                            </span>
+                        </span>
+                    {% endif %}
+                </span>
+                <ul>
+                {# {% spaceless %} #}
+                    <li>
+                        <strong>
+                            {% if comment.member %}
+                                <a href="{{ path('profile', {lid: comment.member.id}) }}">
+                                    {{ comment.member.full_name }}
+                                </a>
+                            {% else %}
+                                {{ __('Anonymous') }}
+                            {% endif %}
+                        </strong>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="is-size-7" title="{{ comment.created_on|date('d-m-Y H:i') }}">
+                        {# <small > #}
+                            {{ comment.created_on|date_relative }}
+                        {# </small> #}
+                    </li>
+                {# {% endspaceless %} #}
+                </ul>
+            </div>
+            <p>
+                {{ comment.comment|parse_markup }}
+            </p>
+        </div>
+        <div class="controls level is-mobile">
+            <div class="level-left">
+                {% if user_can_update comment %}
+                    <a
+                        class="level-item"
+                        href="{{ path('poll.comment', {view: 'update', poll_id: comment.poll_id, id: comment.id}) }}"
+                        data-popup="modal"
+                        title="{{ __('Edit comment') }}"
+                        aria-label="{{ __('Edit comment') }}"
+                    >
+                        <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                    </a>
+                {% endif %}
+                {% if user_can_delete comment %}
+                    <a
+                        class="level-item"
+                        href="{{ path('poll.comment', {view: 'delete', poll_id: comment.poll_id, id: comment.id}) }}"
+                        data-popup="modal"
+                        title="{{ __('Delete comment') }}"
+                        aria-label="{{ __('Delete comment') }}"
+                    >
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% set new_comment = global.models.PollComment.new_iter({member_id: global.identity.get('id', null) }) %}
+{% if user_can_create new_comment %}
+    <form 
+        class="media poll"
+        id="comment-form"
+        name="poll_comment"
+        action="{{ path('poll.comment.create', {poll_id: iter.id}) }}"
+        method="post"
+    >
+        <input type="hidden" name="poll_comment[_token]" value="{{ csrf_token('poll_' ~ iter.id ~ '_comment') }}">
+        <figure class="media-left is-hidden-mobile">
+            <p class="image is-64x64">
+                <img class="is-rounded" width="64" height="64" src="{{ path('profile_picture', {lid_id: global.identity.member.id, format: 'square', width: 128}) }}" alt="Photo of {{ global.identity.member|personal_full_name }}">
+            </p>
+        </figure>
+        <div class="media-content">
+            <div class="field">
+                <p class="control">
+                    <textarea 
+                        id="poll_comment_reactie"
+                        class="textarea"
+                        name="poll_comment[comment]"
+                        placeholder="{{ __('Type your comment here…') }}"
+                        aria-label="{{ __('Comment') }}"
+                        required
+                    ></textarea>
+                </p>
+            </div>
+            <div class="field is-grouped is-grouped-right">
+                <div class="control">
+                    <button type="submit" class="button is-primary">{{ __('Post comment') }}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endif %}
+</section>
+{% endblock %}
