@@ -419,7 +419,7 @@ class ProfileController extends \Controller
 
 				fclose($fh);
 			} else {
-				$profile_link = $this->generate_url('profile', ['id' => $iter['id']], UrlGeneratorInterface::ABSOLUTE_URL);
+				$profile_link = $this->generate_url('profile', ['lid' => $iter['id']], UrlGeneratorInterface::ABSOLUTE_URL);
 				send_mail_with_attachment(
 					'acdcee@svcover.nl',
 					'New yearbook photo for ' . $iter['full_name'],
@@ -597,7 +597,7 @@ class ProfileController extends \Controller
 		try {
 			$token = $model->get_iter($_GET['token']);
 		} catch (\Exception $e) {
-			return $this->view->render_confirm_email(false);
+			return $this->view->render('confirm_email.twig', ['success' => false]);
 		}
 
 		// Update the member's email address

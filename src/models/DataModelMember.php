@@ -197,7 +197,7 @@ class DataIterMember extends DataIter implements SearchResult
 		return $data['iban'] ?? null;
 	}
 
-	public function set_iban(string $iban)
+	public function set_iban(string $iban = null)
 	{
 		// May trigger API request (performance penalty). Only use when absolutely necessary.
 		$this->_get_secretary_data(); // make sure $this->_secretary_data is initiated
@@ -211,7 +211,7 @@ class DataIterMember extends DataIter implements SearchResult
 		return $data['bic'] ?? null;
 	}
 
-	public function set_bic(string $bic)
+	public function set_bic(string $bic = null)
 	{
 		// May trigger API request (performance penalty). Only use when absolutely necessary.
 		$this->_get_secretary_data(); // make sure $this->_secretary_data is initiated
