@@ -9,10 +9,18 @@ class PolicyNewPoll implements Policy
 	{
 		if (!get_auth()->logged_in())
 			return false;
-		return true;
-		// At least 7 days after the current poll, unless the current poll was the same author. Then it's 14 days.
-		// return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-		// 	|| get_identity()->member_in_committee(COMMISSIE_EASY);
+
+		$current_poll = get_model('DataModelNewPoll')->get_current();
+		if (!$current_poll)
+			return true;
+
+		// Members always have to wait 14 days between creating polls
+		if ($poll['committee_id'] === null && get_identity()->get('id') == $current_poll->member_id)
+			return new \DateTime($current_poll['created_on']) < new \DateTime("-14 days");
+
+		// If you didn't create the last poll, you'll have to wait untill it's closed or at least 7 days old
+		return !$current_poll['is_open']
+			|| new \DateTime($current_poll['created_on']) < new \DateTime("-7 days");
 	}
 
 	public function user_can_read(DataIter $poll)
@@ -33,8 +41,8 @@ class PolicyNewPoll implements Policy
 		// User owns it or board/acdcee
 		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_EASY)
-			|| (isset($poll['committee']) && get_identity()->member_in_committee($poll['committee_id']))
-			|| (!isset($poll['committee']) && get_identity()->get('id') == $poll['member_id'])
+			|| ($poll['committee_id'] !== null && get_identity()->member_in_committee($poll['committee_id']))
+			|| ($poll['committee_id'] === null && get_identity()->get('id') == $poll['member_id'])
 		;
 	}
 

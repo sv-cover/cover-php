@@ -10,7 +10,8 @@
         <h1 class="title">{{ __('Polls') }}</h1>
     </div>
     <div class="media-right buttons">
-        {% if user_can_create controller.new_iter %}
+        {% if global.auth.logged_in %}
+            {# Don't check policy, the poll create view will show an explanation if a logged in user is not allowed to create a poll #}
             <a href="{{ path('poll.create') }}" class="button">
                 <span class="icon is-small">
                     <i class="fa fa-plus" aria-hidden="true"></i>

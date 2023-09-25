@@ -1,0 +1,18 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Polls') ~ ' – ' ~ parent() %}
+
+{% from '@theme/polls/macros.twig' import render_pagination, render_poll %}
+
+{% block content %}
+<div class="content">
+    <h1 class="title">{{ __('New poll') }}</h1>
+    <p>{{ __('Sorry! You’re not allowed to create a new poll yet.') }}</p>
+    <p>{{ __('You can only create a poll if the previous poll is either closed or older than 7 days. If you also created the previous poll, you’ll have to wait 14 days to give others a chance to ask Cover their most burning questions first.') }}</p>
+    <p>
+        <a href="{{ path('poll.list') }}" class="button">
+            {{ __('Back to polls')  }}
+        </a>
+    </p>
+</div>
+{% endblock %}

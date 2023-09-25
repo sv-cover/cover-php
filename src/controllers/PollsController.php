@@ -95,8 +95,12 @@ class PollsController extends \ControllerCRUDForm
 	{
 		$iter = $this->new_iter();
 
-		if (!\get_policy($this->model)->user_can_create($iter))
+		if (!get_auth()->logged_in())
 			throw new \UnauthorizedException('You are not allowed to create polls.');
+
+		if (!\get_policy($this->model)->user_can_create($iter))
+			return $this->view()->render('no_create.twig');
+
 
 		$success = false;
 

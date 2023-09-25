@@ -79,7 +79,7 @@ class DataIterNewPoll extends DataIter implements SearchResult
 	public function get_committee()
 	{
 		// has to be isset because board unfortunately has id=0. has to be $this->data, because reasons
-		if (isset($this->data['committee_id'])) 
+		if (isset($this->data['committee_id']))
 			return get_model('DataModelCommissie')->get_iter($this['committee_id']);
 		return null;
 	}
@@ -155,7 +155,7 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 	public function get_polls($limit=1, $offset=0)
 	{
 		$rows = $this->db->query(
-			'SELECT polls.*
+			"SELECT polls.*
 			       ,COUNT(DISTINCT pc.id) AS comment_count
 			       ,COUNT(DISTINCT pl.id) AS like_count
 			   FROM polls
@@ -165,7 +165,7 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 			  ORDER BY polls.created_on DESC
 			 OFFSET :offset
 			  LIMIT :limit
-			;',
+			;",
 			false,
 			[
 				'limit' => $limit,
@@ -204,7 +204,17 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 
 	public function get_current()
 	{
-		$row = $this->db->query_first("SELECT * FROM {$this->table} ORDER BY created_on DESC LIMIT 1");
+		$row = $this->db->query_first("
+			SELECT polls.*
+			      ,COUNT(DISTINCT pc.id) AS comment_count
+			      ,COUNT(DISTINCT pl.id) AS like_count
+			  FROM {$this->table}
+			  LEFT JOIN poll_comments AS pc ON pc.poll_id = polls.id
+			  LEFT JOIN poll_likes AS pl ON pl.poll_id = polls.id
+			 GROUP BY polls.id
+			 ORDER BY polls.created_on
+			  DESC LIMIT 1
+		");
 		return $this->_row_to_iter($row, 'DataIterNewPoll');
 	}
 
