@@ -55,7 +55,6 @@
                     {{ __('Final result') }}
                 {% endif %}
             </p>
-        {# {% if global.policies.Poll.user_can_vote(poll) %} #}
         {% else %}
             {# Thou canst vote or thou art not logged in! (Vote view will redirect to login if needed. This way, we don't spoil the results.) #}
             <form action="{{ path('poll', {view: 'vote', id: poll.id, referrer: global.server.REQUEST_URI}) }}" method="post">
@@ -202,7 +201,6 @@
                 {% endif %}
             </span>
             <ul>
-            {# {% spaceless %} #}
                 <li>
                     <strong>
                         {% if poll.committee %}
@@ -220,82 +218,11 @@
                 </li>
                 <li class="divider"></li>
                 <li class="is-size-7" title="{{ poll.created_on|date('d-m-Y H:i') }}">
-                    {# <small > #}
-                        {{ poll.created_on|date_relative }}
-                    {# </small> #}
+                    {{ poll.created_on|date_relative }}
                 </li>
-            {# {% endspaceless %} #}
             </ul>
         </div>
         {{ _self.render_poll_widget(poll, show_comments) }}
     </div>
 </div>
 {% endmacro %}
-
-{# 
-{% macro render_pagination(page, page_count, nav_size=5) %}
-{# Perfect pagination? This renders a more traditional pagination, but it's a responsive nightmare. The only advantage over simple previous/next buttons is that it offers fast navigation to the first and last page, but is that feature worth it? # }
-{# <nav class="pagination poll-pagination" role="navigation" aria-label="Pagination">
-    {%- set page_max = page_count - 1 -%} {# Makes logic slightly easier to understand. # }
-    {% if page > 0 %}
-        <a href="{{ path('poll.list', {page: page - 1})}}" class="pagination-previous">
-            {# <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span> # }
-            <span>{{ __('Previous') }}</span>
-        </a>
-    {% endif %}
-    {% if page < page_max %}
-        <a href="{{ path('poll.list', {page: page + 1})}}" class="pagination-next">
-            <span>{{ __('Next') }}</span>
-            {# <span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span> # }
-        </a>
-    {% endif %}
-    {# Always show nav_size buttons, unless there are less pages # }
-    {% if page_count <= nav_size  %}
-        ads
-        {% set nav_min = 0 %}
-        {% set nav_max = page_max %}
-    {% elseif page < nav_size - 1 %}
-        {% set nav_min = 0 %}
-        {% set nav_max = nav_size - 2 %}
-    {% elseif page > page_max - (nav_size - 1) %}
-        {% set nav_min = page_max - (nav_size - 2) %}
-        {% set nav_max = page_max %}
-    {% else %}
-        {% set nav_min = max(0, page - ((nav_size - 2) // 2)) %}
-        {% set nav_max = min(page_max, page + ((nav_size - 2) // 2)) %}
-    {% endif %}
-    <ul class="pagination-list">
-        {% if nav_min > 0 %}
-            <li>
-                <a href="{{ path('poll.list', {page: 0})}}" class="pagination-link" aria-label="Go to page 1">1</a>
-            </li>
-        {% endif %}
-
-        {% if nav_min > 1 %}
-            <li><span class="pagination-ellipsis">&hellip;</span></li>
-        {% endif %}
-
-        {% for i in nav_min..nav_max %}
-            <li>
-                {% if i == page%}
-                    <a class="pagination-link is-current" aria-label="Page {{ i + 1 }}">{{ i + 1 }}</a>
-                {% else %}
-                    <a href="{{ path('poll.list', {page: i})}}" class="pagination-link" aria-label="Go to page {{ i + 1 }}">{{ i + 1 }}</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-
-        {% if nav_max < page_max - 1 %}
-            <li><span class="pagination-ellipsis">&hellip;</span></li>
-        {% endif %}
-
-        {% if nav_max < page_max %}
-            <li>
-                <a href="{{ path('poll.list', {page: page_max})}}" class="pagination-link" aria-label="Go to page {{ page_max + 1 }}">{{ page_max + 1 }}</a>
-            </li>
-        {% endif %}
-    </ul>
-</nav> # }
-{% endmacro %}
-#}
-

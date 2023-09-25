@@ -100,7 +100,6 @@
                     {% endif %}
                 </span>
                 <ul>
-                {# {% spaceless %} #}
                     <li>
                         <strong>
                             {% if comment.member %}
@@ -114,11 +113,8 @@
                     </li>
                     <li class="divider"></li>
                     <li class="is-size-7" title="{{ comment.created_on|date('d-m-Y H:i') }}">
-                        {# <small > #}
-                            {{ comment.created_on|date_relative }}
-                        {# </small> #}
+                        {{ comment.created_on|date_relative }}
                     </li>
-                {# {% endspaceless %} #}
                 </ul>
             </div>
             <p>
