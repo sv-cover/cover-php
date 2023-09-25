@@ -47,10 +47,6 @@ class SearchController extends \Controller
 				'category_name' => __('vacancies')
 			],
 			[
-				'model' => get_model('DataModelForum'),
-				'category_name' => __('forum topics')
-			],
-			[
 				'model' => get_model('DataModelNewPoll'),
 				'category_name' => __('polls')
 			],
