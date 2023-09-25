@@ -38,7 +38,7 @@ class DataModelPollLike extends DataModel
 		parent::__construct($db, 'poll_likes');
 	}
 
-	public function get_for_poll(DataIterNewPoll $poll)
+	public function get_for_poll(DataIterPoll $poll)
 	{
 		$rows = $this->db->query(
 			'SELECT *
@@ -53,7 +53,7 @@ class DataModelPollLike extends DataModel
 		return $this->_rows_to_iters($rows);
 	}
 
-	public function get_liked_by(DataIterNewPoll $poll, DataIterMember $member)
+	public function get_liked_by(DataIterPoll $poll, DataIterMember $member)
 	{
 		return $this->db->query_value(
 			'SELECT COUNT(id)
@@ -68,7 +68,7 @@ class DataModelPollLike extends DataModel
 		);
 	}
 
-	public function like(DataIterNewPoll $poll, DataIterMember $member)
+	public function like(DataIterPoll $poll, DataIterMember $member)
 	{
 		$this->db->insert($this->table, [
 			'poll_id' => $poll->get_id(),
@@ -76,7 +76,7 @@ class DataModelPollLike extends DataModel
 		]);
 	}
 
-	public function unlike(DataIterNewPoll $poll, DataIterMember $member)
+	public function unlike(DataIterPoll $poll, DataIterMember $member)
 	{
 		$this->db->delete($this->table, 'poll_id = :poll_id AND member_id = :member_id', [
 			'poll_id' => $poll->get_id(),

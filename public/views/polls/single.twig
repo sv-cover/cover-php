@@ -19,7 +19,7 @@
             {% endif %}
         </div>
         <div class="level-right">
-            {% if global.policies.NewPoll.user_can_close(iter) or global.policies.NewPoll.user_can_close(iter) or user_can_delete iter %}
+            {% if global.policies.Poll.user_can_close(iter) or global.policies.Poll.user_can_close(iter) or user_can_delete iter %}
                 <div class="level-item dropdown is-right">
                     <div class="dropdown-trigger">
                         <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" aria-label="{{ __('Manage poll') }}">
@@ -30,7 +30,7 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            {% if iter.is_open and global.policies.NewPoll.user_can_close(iter) %}
+                            {% if iter.is_open and global.policies.Poll.user_can_close(iter) %}
                                 <a class="dropdown-item"
                                     href="{{ path('poll', {view: 'close', id: iter.id}) }}"
                                     data-popup="modal"
@@ -38,7 +38,7 @@
                                     {{ __('Close poll') }}
                                 </a>
                             {% endif %}
-                            {% if not iter.is_open and global.policies.NewPoll.user_can_reopen(iter) %}
+                            {% if not iter.is_open and global.policies.Poll.user_can_reopen(iter) %}
                                 <a class="dropdown-item"
                                     href="{{ path('poll', {view: 'reopen', id: iter.id}) }}"
                                     data-popup="modal"

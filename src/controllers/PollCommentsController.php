@@ -42,7 +42,7 @@ class PollCommentsController extends \ControllerCRUDForm
 
 	protected function get_poll() {
 		if ($this->poll === false)
-			$this->poll = \get_model('DataModelNewPoll')->get_iter($this->get_parameter('poll_id'));
+			$this->poll = \get_model('DataModelPoll')->get_iter($this->get_parameter('poll_id'));
 		return $this->poll;
 	}
 

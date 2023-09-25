@@ -1,16 +1,16 @@
 <?php
 
 require_once 'src/framework/auth.php';
-require_once 'src/models/DataModelNewPoll.php';
+require_once 'src/models/DataModelPoll.php';
 
-class PolicyNewPoll implements Policy
+class PolicyPoll implements Policy
 {
 	public function user_can_create(DataIter $poll)
 	{
 		if (!get_auth()->logged_in())
 			return false;
 
-		$current_poll = get_model('DataModelNewPoll')->get_current();
+		$current_poll = get_model('DataModelPoll')->get_current();
 		if (!$current_poll)
 			return true;
 

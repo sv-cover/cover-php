@@ -8,7 +8,7 @@
 
 {% block content %}
 
-{% set current_poll = global.models.NewPoll.get_current() %}
+{% set current_poll = global.models.Poll.get_current() %}
 <div class="poll">
 	{% if current_poll %}
 		{{ poll.render_poll_widget(current_poll, true, true) }}

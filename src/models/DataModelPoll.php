@@ -6,7 +6,7 @@ require_once 'src/models/DataModelMember.php';
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class DataIterNewPollOption extends DataIter
+class DataIterPollOption extends DataIter
 {
 	static public function fields()
 	{
@@ -24,7 +24,7 @@ class DataIterNewPollOption extends DataIter
 	}
 }
 
-class DataIterNewPoll extends DataIter implements SearchResult
+class DataIterPoll extends DataIter implements SearchResult
 {
 	static public function fields()
 	{
@@ -119,9 +119,9 @@ class DataIterNewPoll extends DataIter implements SearchResult
 	}
 }
 
-class DataModelNewPoll extends DataModel implements SearchProvider
+class DataModelPoll extends DataModel implements SearchProvider
 {
-	public $dataiter = 'DataIterNewPoll';
+	public $dataiter = 'DataIterPoll';
 
 	public function __construct($db)
 	{
@@ -215,10 +215,10 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 			 ORDER BY polls.created_on
 			  DESC LIMIT 1
 		");
-		return $this->_row_to_iter($row, 'DataIterNewPoll');
+		return $this->_row_to_iter($row, 'DataIterPoll');
 	}
 
-	public function get_options(DataIterNewPoll $poll)
+	public function get_options(DataIterPoll $poll)
 	{
 		$rows = $this->db->query(
 			'SELECT po.*
@@ -239,10 +239,10 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 				':poll_id' => $poll->get_id(),
 			]
 		);
-		return $this->_rows_to_iters($rows, 'DataIterNewPollOption', compact('poll'));
+		return $this->_rows_to_iters($rows, 'DataIterPollOption', compact('poll'));
 	}
 
-	public function set_options(DataIterNewPoll $poll, array $options)
+	public function set_options(DataIterPoll $poll, array $options)
 	{
 		foreach ($options as $option)
 			$this->db->insert('poll_options', array(
@@ -250,7 +250,7 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 				'option' => $option));
 	}
 
-	public function get_total_votes(DataIterNewPoll $poll)
+	public function get_total_votes(DataIterPoll $poll)
 	{
 		$result = $this->db->query_value(
 			'SELECT count(*)
@@ -264,7 +264,7 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 		return $result ?? 0;
 	}
 
-	public function get_member_vote(DataIterNewPoll $poll, DataIterMember $member = null)
+	public function get_member_vote(DataIterPoll $poll, DataIterMember $member = null)
 	{
 		if (!$member)
 			$member = get_identity()->member();
@@ -286,7 +286,7 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 		return $row['poll_option_id'] ?? null;
 	}
 
-	public function set_member_vote(DataIterNewPollOption $option, DataIterMember $member = null)
+	public function set_member_vote(DataIterPollOption $option, DataIterMember $member = null)
 	{
 		if (!$member)
 			$member = get_identity()->member();

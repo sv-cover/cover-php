@@ -55,7 +55,7 @@
                     {{ __('Final result') }}
                 {% endif %}
             </p>
-        {# {% if global.policies.NewPoll.user_can_vote(poll) %} #}
+        {# {% if global.policies.Poll.user_can_vote(poll) %} #}
         {% else %}
             {# Thou canst vote or thou art not logged in! (Vote view will redirect to login if needed. This way, we don't spoil the results.) #}
             <form action="{{ path('poll', {view: 'vote', id: poll.id, referrer: global.server.REQUEST_URI}) }}" method="post">
@@ -72,7 +72,7 @@
     </div>
     <div class="controls level is-mobile">
         <div class="level-left">
-            {% if global.policies.NewPoll.user_can_like(poll) %}
+            {% if global.policies.Poll.user_can_like(poll) %}
                 {% set liked = poll.is_liked_by(global.identity.member) %}
                 <form class="level-item like-form" method="post"
                     action="{{ path('poll', {view: 'likes', id: poll.id}) }}"

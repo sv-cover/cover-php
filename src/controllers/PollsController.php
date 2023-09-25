@@ -21,7 +21,7 @@ class PollsController extends \ControllerCRUDForm
 
 	public function __construct($request, $router)
 	{
-		$this->model = \get_model('DataModelNewPoll');
+		$this->model = \get_model('DataModelPoll');
 
 		parent::__construct($request, $router);
 

@@ -24,7 +24,7 @@ class DataIterPollComment extends DataIter implements SearchResult
 
 	public function get_poll()
 	{
-		return get_model('DataModelNewPoll')->get_iter($this['poll_id']);
+		return get_model('DataModelPoll')->get_iter($this['poll_id']);
 	}
 
 	public function get_search_relevance()

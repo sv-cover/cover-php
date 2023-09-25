@@ -1,7 +1,7 @@
 <?php
 
 require_once 'src/framework/auth.php';
-require_once 'src/models/DataModelNewPoll.php';
+require_once 'src/models/DataModelPoll.php';
 
 class PolicyPollComment implements Policy
 {
