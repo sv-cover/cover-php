@@ -31,6 +31,24 @@ $media-spacing: 1rem
         color: $poll-icon-color
         &:not(:last-child)
             margin-right: $block-spacing
+        .button
+            font-size: inherit
+            color: $poll-icon-color
+            padding: 0
+
+            &:focus
+                background: none
+                box-shadow: none
+        .count
+            line-height: 1
+            margin-left: .7ch
+        &:hover
+            color: $link-hover
+            .button
+                color: $link-hover
+                background: none
+        &.is-active
+            color: $link
     .poll-meta
         display: flex
         margin-bottom: 0.75rem

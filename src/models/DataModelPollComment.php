@@ -44,11 +44,21 @@ class DataIterPollComment extends DataIter implements SearchResult
 		return $router->generate('poll', ['id' => $this['poll_id']], $reference_type);
 	}
 
+	public function get_likes()
+	{
+		return get_model('DataModelPollCommentLike')->get_for_poll_comment($this);
+	}
+
 	public function get_member()
 	{
 		if (!empty($this['member_id'])) 
 			return get_model('DataModelMember')->get_iter($this['member_id']);
 		return null;
+	}
+
+	public function is_liked_by(DataIterMember $member)
+	{
+		return get_model('DataModelPollCommentLike')->get_liked_by($this, $member) > 0;
 	}
 }
 
@@ -61,12 +71,32 @@ class DataModelPollComment extends DataModel implements SearchProvider
 		parent::__construct($db, 'poll_comments');
 	}
 
+	protected function _generate_query($where)
+	{
+		if (is_array($where))
+			$where = $this->_generate_conditions_from_array($where);
+
+		$where = $where ?: "1=1"; // no conditions means where true :)
+		return "
+			 SELECT poll_comments.*
+			       ,COUNT(DISTINCT pl.id) AS like_count
+			   FROM poll_comments
+			   LEFT JOIN poll_comment_likes AS pl ON pl.poll_comment_id = poll_comments.id
+			  WHERE {$where}
+			  GROUP BY poll_comments.id
+			;"
+		;
+	}
+
 	public function get_for_poll(DataIter $poll)
 	{
 		$rows = $this->db->query(
-			'SELECT *
-			   FROM poll_comments
+			'SELECT pc.*
+			       ,COUNT(DISTINCT pl.id) AS like_count
+			   FROM poll_comments AS pc
+			   LEFT JOIN poll_comment_likes AS pl ON pl.poll_comment_id = pc.id
 			  WHERE poll_id = :poll_id
+			  GROUP BY pc.id
 			  ORDER BY created_on ASC
 			;',
 			false,

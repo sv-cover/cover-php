@@ -37,6 +37,7 @@ CREATE TABLE poll_likes (
     member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve like, even if we don't have member
     created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
     -- no updated_on, likes cannot be updated
+    CONSTRAINT poll_like_uniq UNIQUE (poll_id, member_id)
 );
 
 CREATE TABLE poll_comment_likes (
@@ -45,4 +46,5 @@ CREATE TABLE poll_comment_likes (
     member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve like, even if we don't have member
     created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
     -- no updated_on, likes cannot be updated
+    CONSTRAINT poll_commment_like_uniq UNIQUE (poll_comment_id, member_id)
 );

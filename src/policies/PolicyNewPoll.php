@@ -60,4 +60,9 @@ class PolicyNewPoll implements Policy
 		return get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_EASY);
 	}
+
+	public function user_can_like(DataIter $poll)
+	{
+		return get_auth()->logged_in();
+	}
 }

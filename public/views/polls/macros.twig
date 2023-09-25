@@ -147,6 +147,53 @@
         </div>
         <div class="controls level is-mobile">
             <div class="level-left">
+                {% if global.policies.NewPoll.user_can_like(poll) %}
+                    {% set liked = poll.is_liked_by(global.identity.member) %}
+                    <form class="level-item like-form" method="post"
+                        action="{{ path('poll', {view: 'likes', id: poll.id}) }}"
+                        data-cta="{{ [__('You’ve liked this poll. Click to unlike.'), __('Like poll.') ]|json_encode|e('html_attr') }}"
+                    >
+                        <input type="hidden" name="form[_token]" value="{{ csrf_token('like_poll_' ~ poll.id) }}">
+                        <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}"> {# Needed for API #}
+                        {% if liked %}
+                            <button name="form[unlike]" type="submit" class="button is-text icon"
+                                title="{{ __('You’ve liked this poll. Click to unlike.') }}"
+                                aria-label="{{ __('You’ve liked this poll. Click to unlike.') }}"
+                            >
+                                <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+                            </button>
+                        {% else %}
+                            <button name="form[like]" type="submit" class="button is-text icon"
+                                title="{{ __('Like poll.') }}"
+                                aria-label="{{ __('Like poll.') }}">
+                                <i class="fas fa-heart" aria-hidden="true"></i>
+                            </button>
+                        {% endif %}
+                        <span class="count"
+                            {% if not poll.like_count %}hidden{% endif %}
+                            title="{{ poll.like_count > 0 ? __N('%d person likes this poll', '%s people like this poll', poll.like_count)|e('html_attr') : '' }}"
+                            data-title="{{ [__('person likes this poll'), __('people like this poll') ]|json_encode|e('html_attr') }}"
+                            data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
+                        >
+                            <span class="count-number">{{ poll.like_count }}</span>
+                            <span class="is-sr-only">{{ __N('like', 'likes', poll.like_count) }}</span>
+                        </span>
+                    </form>
+                {% else %}
+                    <a 
+                        class="level-item likes"
+                        title="{{ __N('%d like', '%d likes', poll.like_count) }}"
+                        aria-label="{{ __N('%d like', '%d likes', poll.like_count) }}"
+                    >
+                        <span aria-hidden="true">
+                            <i class="fas fa-heart"></i>
+                            <span class="count" {% if not poll.like_count %}hidden{% endif %}>
+                                {{ poll.like_count }}
+                                <span class="is-sr-only">{{ __N('like', 'likes', poll.like_count) }}</span>
+                            </span>
+                        </span>
+                    </a>
+                {% endif %}
                 {% if show_comements %}
                     <a 
                         class="level-item comments"
@@ -156,7 +203,7 @@
                     >
                         <span aria-hidden="true">
                             <i class="fas fa-comment"></i>
-                            {{ poll.comment_count }}
+                            <span class="count" {% if not poll.comment_count %}hidden{% endif %}>{{ poll.comment_count }}</span>
                         </span>
                     </a>
                 {% endif %}

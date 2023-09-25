@@ -31,4 +31,9 @@ class PolicyPollComment implements Policy
 	{
 		return $this->user_can_update($comment);
 	}
+
+	public function user_can_like(DataIter $comment)
+	{
+		return get_auth()->logged_in();
+	}
 }

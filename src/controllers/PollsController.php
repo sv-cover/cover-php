@@ -216,4 +216,55 @@ class PollsController extends \ControllerCRUDForm
 		$next_url = $this->get_parameter('referrer', $this->generate_url('poll.list'));
 		return $this->view->redirect($next_url);
 	}
+
+	public function run_likes(\DataIter $iter)
+	{
+		if (!\get_policy($this->model)->user_can_like($iter)) {
+			if (\get_auth()->logged_in())
+				throw new \UnauthorizedException('You are not allowed like polls!');
+			return $this->view->redirect($this->generate_url('login', [
+				'referrer' =>  $this->generate_url('poll', ['id' => $iter->get_id()])
+			]));
+		}
+
+		$action = null;
+		$response_json = false;
+
+		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'like_poll_' . $iter->get_id()])
+			->add('like', SubmitType::class)
+			->add('unlike', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($_SERVER["CONTENT_TYPE"] === 'application/json') {
+			$response_json = true;
+			$json = file_get_contents('php://input');
+			$data = json_decode($json);
+			if (isset($data->action))
+				$action = $data->action;
+		} elseif ($form->isSubmitted() && $form->isValid()) {
+			$action = $form->get('like')->isClicked() ? 'like' : 'unlike';
+		}
+
+		if (get_auth()->logged_in() && isset($action)) {
+			try {
+				if ($action === 'like')
+					\get_model('DataModelPollLike')->like($iter, get_identity()->member());
+				elseif ($action === 'unlike')
+					\get_model('DataModelPollLike')->unlike($iter, get_identity()->member());
+			} catch (\Exception $e) {
+				// Don't break duplicate requests
+			}
+		}
+
+		if ($response_json)
+			return $this->view->render_json([
+				'liked' => get_auth()->logged_in() && $iter->is_liked_by(get_identity()->member()),
+				'likes' => count($iter->get_likes()),
+			]);
+
+		return $this->view->redirect($this->generate_url('poll', [
+			'id' => $iter->get_id(),
+		]));
+	}
 }

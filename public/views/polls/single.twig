@@ -127,6 +127,53 @@
         </div>
         <div class="controls level is-mobile">
             <div class="level-left">
+                {% if global.policies.PollComment.user_can_like(comment) %}
+                    {% set liked = comment.is_liked_by(global.identity.member) %}
+                    <form class="level-item like-form" method="post"
+                        action="{{ path('poll.comment', {view: 'likes', poll_id: comment.poll_id, id: comment.id}) }}"
+                        data-cta="{{ [__('You’ve liked this comment. Click to unlike.'), __('Like comment.') ]|json_encode|e('html_attr') }}"
+                    >
+                        <input type="hidden" name="form[_token]" value="{{ csrf_token('like_poll_comment_' ~ comment.id) }}">
+                        <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}"> {# Needed for API #}
+                        {% if liked %}
+                            <button name="form[unlike]" type="submit" class="button is-text icon"
+                                title="{{ __('You’ve liked this comment. Click to unlike.') }}"
+                                aria-label="{{ __('You’ve liked this comment. Click to unlike.') }}"
+                            >
+                                <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+                            </button>
+                        {% else %}
+                            <button name="form[like]" type="submit" class="button is-text icon"
+                                title="{{ __('Like comment.') }}"
+                                aria-label="{{ __('Like comment.') }}">
+                                <i class="fas fa-heart" aria-hidden="true"></i>
+                            </button>
+                        {% endif %}
+                        <span class="count"
+                            {% if not comment.like_count %}hidden{% endif %}
+                            title="{{ comment.like_count > 0 ? __N('%d person likes this comment', '%s people like this comment', comment.like_count)|e('html_attr') : '' }}"
+                            data-title="{{ [__('person likes this comment'), __('people like this comment') ]|json_encode|e('html_attr') }}"
+                            data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
+                        >
+                            <span class="count-number">{{ comment.like_count }}</span>
+                            <span class="is-sr-only">{{ __N('like', 'likes', comment.like_count) }}</span>
+                        </span>
+                    </form>
+                {% else %}
+                    <a 
+                        class="level-item likes"
+                        title="{{ __N('%d like', '%d likes', comment.like_count) }}"
+                        aria-label="{{ __N('%d like', '%d likes', comment.like_count) }}"
+                    >
+                        <span aria-hidden="true">
+                            <i class="fas fa-heart"></i>
+                            <span class="count" {% if not comment.like_count %}hidden{% endif %}>
+                                {{ comment.like_count }}
+                                <span class="is-sr-only">{{ __N('like', 'likes', comment.like_count) }}</span>
+                            </span>
+                        </span>
+                    </a>
+                {% endif %}
                 {% if user_can_update comment %}
                     <a
                         class="level-item"

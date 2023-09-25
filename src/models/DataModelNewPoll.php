@@ -68,7 +68,7 @@ class DataIterNewPoll extends DataIter implements SearchResult
 
 	public function get_likes()
 	{
-		return [];
+		return get_model('DataModelPollLike')->get_for_poll($this);
 	}
 
 	public function get_comments()
@@ -112,6 +112,11 @@ class DataIterNewPoll extends DataIter implements SearchResult
 		// 	|| (empty($this['closed_on']) && \DataIter::is_same($this, $this->model->get_current())) // is latest
 		// ;
 	}
+
+	public function is_liked_by(DataIterMember $member)
+	{
+		return get_model('DataModelPollLike')->get_liked_by($this, $member) > 0;
+	}
 }
 
 class DataModelNewPoll extends DataModel implements SearchProvider
@@ -137,8 +142,10 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 		return "
 			 SELECT polls.*
 			       ,COUNT(DISTINCT pc.id) AS comment_count
+			       ,COUNT(DISTINCT pl.id) AS like_count
 			   FROM polls
 			   LEFT JOIN poll_comments AS pc ON pc.poll_id = polls.id
+			   LEFT JOIN poll_likes AS pl ON pl.poll_id = polls.id
 			  WHERE {$where}
 			  GROUP BY polls.id
 			;"
@@ -150,8 +157,10 @@ class DataModelNewPoll extends DataModel implements SearchProvider
 		$rows = $this->db->query(
 			'SELECT polls.*
 			       ,COUNT(DISTINCT pc.id) AS comment_count
+			       ,COUNT(DISTINCT pl.id) AS like_count
 			   FROM polls
 			   LEFT JOIN poll_comments AS pc ON pc.poll_id = polls.id
+			   LEFT JOIN poll_likes AS pl ON pl.poll_id = polls.id
 			  GROUP BY polls.id
 			  ORDER BY polls.created_on DESC
 			 OFFSET :offset

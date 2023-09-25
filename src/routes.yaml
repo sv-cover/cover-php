@@ -219,7 +219,7 @@ poll.comment.create:
     view: create
 
 poll.comment:
-  path: /polls/{poll_id<\d+>}/comments/{<\d+>}/{view}
+  path: /polls/{poll_id<\d+>}/comments/{id<\d+>}/{view}
   controller: App\Controller\PollCommentsController
   defaults:
     view: read
