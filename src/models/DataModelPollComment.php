@@ -24,7 +24,7 @@ class DataIterPollComment extends DataIter implements SearchResult
 
 	public function get_poll()
 	{
-		return get_model('DataModelPoll')->get_iter($this['poll_id']);
+		return get_model('DataModelNewPoll')->get_iter($this['poll_id']);
 	}
 
 	public function get_search_relevance()
@@ -115,7 +115,7 @@ class DataModelPollComment extends DataModel implements SearchProvider
 				search_items AS (
 					SELECT
 						id,
-						setweight(to_tsvector(question), 'A') body
+						setweight(to_tsvector(comment), 'A') body
 					FROM
 						{$this->table}
 				),
