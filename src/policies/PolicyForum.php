@@ -5,6 +5,7 @@ class PolicyForum extends PolicyForumAbstract
 {
 	public function user_can_create(DataIter $forum)
 	{
+		return false;
 		return $this->member_is_admin();
 	}	
 

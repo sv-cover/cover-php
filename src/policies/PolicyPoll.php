@@ -5,6 +5,7 @@ class PolicyPoll extends PolicyForumThread
 {
 	public function user_can_create(DataIter $poll)
 	{
+		return false;
 		if ($this->member_is_admin())
 			return true;
 

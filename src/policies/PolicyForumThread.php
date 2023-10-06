@@ -5,6 +5,7 @@ class PolicyForumThread extends PolicyForumAbstract
 {
 	public function user_can_create(DataIter $thread)
 	{
+		return false;
 		if (!get_auth()->logged_in())
 			return false;
 		

@@ -5,6 +5,7 @@ class PolicyForumMessage extends PolicyForumAbstract
 {
 	public function user_can_create(DataIter $message)
 	{
+		return false;
 		// First of all, you need to be logged in
 		if (!get_auth()->logged_in())
 			return false;
