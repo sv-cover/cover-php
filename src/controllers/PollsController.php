@@ -267,8 +267,9 @@ class PollsController extends \ControllerCRUDForm
 				'likes' => count($iter->get_likes()),
 			]);
 
-		return $this->view->redirect($this->generate_url('poll', [
+		$next_url = $this->get_parameter('referrer', $this->generate_url('poll', [
 			'id' => $iter->get_id(),
 		]));
+		return $this->view->redirect($next_url);
 	}
 }
