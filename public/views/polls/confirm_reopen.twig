@@ -1,0 +1,26 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Reopen poll') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Reopen poll') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {'id': 'reopen-poll-form', 'action': path('poll', {view: 'reopen', id: iter.id}) }) }}
+                <div class="field">
+                    <p>{{ __('Are you sure you want to reopen this poll? People can vote again immediately.') }}</p>
+                </div>
+                {{ form_row(form.closed_on) }}
+                {% set submit_button = form_widget(form.submit, {color: 'danger', attr: {form: 'reopen-poll-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('poll.list') }}" class="button" data-dismiss="modal">{{ __('Back to poll') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
+</div>
+{% endblock %}

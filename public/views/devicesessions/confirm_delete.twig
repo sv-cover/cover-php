@@ -14,7 +14,7 @@
                     {{ __('Are you sure you want to remove this device session?') }}
                     <em>{{ iter.device_name|default(__('Unnamed device')) }}</em> at <em>{{ iter.ip_address }}</em>
                 </p>
-                {% set submit_button = form_widget(form.submit, {label: __('Delete session'), color: 'danger', attr: {form: 'delete-device-session-form'}) %}
+                {% set submit_button = form_widget(form.submit, {label: __('Delete session'), color: 'danger', attr: {form: 'delete-device-session-form'}}) %}
             {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">

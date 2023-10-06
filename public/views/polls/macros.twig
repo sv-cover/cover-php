@@ -1,0 +1,228 @@
+{% macro render_pagination(page, page_count) %}
+<nav class="level is-mobile poll-pagination">
+    <div class="level-left">
+        {% if page > 0 %}
+            <a href="{{ path('poll.list', {page: page - 1})}}" class="level-item button">
+                <span class="icon"><i class="fas fa-arrow-left" aria-hidden="true"></i></span>
+                <span>{{ __('Previous') }}</span>
+            </a>
+        {% endif %}
+    </div>
+    <div class="level-right">
+        {% if page < page_count - 1 %}
+            <a href="{{ path('poll.list', {page: page + 1})}}" class="level-item button">
+                <span>{{ __('Next') }}</span>
+                <span class="icon"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+            </a>
+        {% endif %}
+    </div>
+</nav>
+{% endmacro %}
+
+{% macro render_poll_widget(poll, show_comments = true, show_create = false) %}
+    <div class="content">
+        <p>
+            {{ poll.question|parse_markup }}
+        </p>
+    </div>
+    <div class="block">
+        {% if not poll.is_open or poll.member_has_voted %}
+            {# Thou hath voted or thou art too late! #}
+            {% for option in poll.options %}
+            <div class="poll-option" title="{{ option.option }}">
+                {% set percentage = option.votes / max(poll.total_votes, 1) %}
+                <label for="poll-option-{{ option.id }}-result" class="is-truncated">
+                    <span>
+                        {{ option.option }}
+                        {% if option.id == poll.member_vote %}
+                            <i class="far fa-check-circle" aria-hidden="true" title="{{ __('You voted for this option') }}"></i>
+                            <span class="is-sr-only">{{ __('You voted for this option') }}</span>
+                        {% endif %}
+                    </span>
+                </label>
+                <span class="percentage">
+                    {{ percentage|format_percent_number }}
+                </span>
+                <meter id="poll-option-{{ option.id }}-result" max="{{ max(poll.total_votes, 1) }}" value="{{ option.votes }}">
+                    {{ percentage|format_percent_number }}
+                </meter>
+            </div>
+            {% endfor %}
+            <p>
+                {{ __('Total votes') }}: {{ poll.total_votes }}
+                {% if not poll.is_open %}
+                    <span class="divider"></span>
+                    {{ __('Final result') }}
+                {% endif %}
+            </p>
+        {% else %}
+            {# Thou canst vote or thou art not logged in! (Vote view will redirect to login if needed. This way, we don't spoil the results.) #}
+            <form action="{{ path('poll', {view: 'vote', id: poll.id, referrer: global.server.REQUEST_URI}) }}" method="post">
+                <input type="hidden" name="form[_token]" value="{{ csrf_token('vote_poll_' ~ poll.id) }}">
+                <div class="buttons">
+                {% for option in poll.options %}
+                    <button name="form[option]" value="{{ option.id }}" type="submit" class="button is-fullwidth">
+                        {{ option.option }}
+                    </button>
+                {% endfor %}
+                </div>
+            </form>
+        {% endif %}
+    </div>
+    <div class="controls level is-mobile">
+        <div class="level-left">
+            {% if global.policies.Poll.user_can_like(poll) %}
+                {% set liked = poll.is_liked_by(global.identity.member) %}
+                <form class="level-item like-form" method="post"
+                    action="{{ path('poll', {view: 'likes', id: poll.id}) }}"
+                    data-cta="{{ [__('You’ve liked this poll. Click to unlike.'), __('Like poll.') ]|json_encode|e('html_attr') }}"
+                >
+                    <input type="hidden" name="form[_token]" value="{{ csrf_token('like_poll_' ~ poll.id) }}">
+                    <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}"> {# Needed for API #}
+                    {% if liked %}
+                        <button name="form[unlike]" type="submit" class="button is-text icon"
+                            title="{{ __('You’ve liked this poll. Click to unlike.') }}"
+                            aria-label="{{ __('You’ve liked this poll. Click to unlike.') }}"
+                        >
+                            <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+                        </button>
+                    {% else %}
+                        <button name="form[like]" type="submit" class="button is-text icon"
+                            title="{{ __('Like poll.') }}"
+                            aria-label="{{ __('Like poll.') }}">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                        </button>
+                    {% endif %}
+                    <span class="count"
+                        {% if not poll.like_count %}hidden{% endif %}
+                        title="{{ poll.like_count > 0 ? __N('%d person likes this poll', '%s people like this poll', poll.like_count)|e('html_attr') : '' }}"
+                        data-title="{{ [__('person likes this poll'), __('people like this poll') ]|json_encode|e('html_attr') }}"
+                        data-sr-text="{{ [__('like'), __('likes') ]|json_encode|e('html_attr') }}"
+                    >
+                        <span class="count-number">{{ poll.like_count }}</span>
+                        <span class="is-sr-only">{{ __N('like', 'likes', poll.like_count) }}</span>
+                    </span>
+                </form>
+            {% else %}
+                <a 
+                    class="level-item likes"
+                    title="{{ __N('%d like', '%d likes', poll.like_count) }}"
+                    aria-label="{{ __N('%d like', '%d likes', poll.like_count) }}"
+                >
+                    <span aria-hidden="true">
+                        <i class="fas fa-heart"></i>
+                        <span class="count" {% if not poll.like_count %}hidden{% endif %}>
+                            {{ poll.like_count }}
+                            <span class="is-sr-only">{{ __N('like', 'likes', poll.like_count) }}</span>
+                        </span>
+                    </span>
+                </a>
+            {% endif %}
+            {% if show_comments %}
+                <a 
+                    class="level-item comments"
+                    href="{{ path('poll', {id: poll.id}) }}"
+                    title="{{ __N('%d comment', '%d comments', poll.comment_count) }}"
+                    aria-label="{{ __N('View poll and %d comment', 'View poll and %d comments', poll.comment_count) }}"
+                >
+                    <span aria-hidden="true">
+                        <i class="fas fa-comment"></i>
+                        <span class="count" {% if not poll.comment_count %}hidden{% endif %}>{{ poll.comment_count }}</span>
+                    </span>
+                </a>
+            {% endif %}
+        </div>
+        <div class="level-right">
+            {% if show_create and global.auth.logged_in %}
+                {# Don't check policy, the poll create view will show an explanation if a logged in user is not allowed to create a poll #}
+                <a
+                    href="{{ path('poll.create') }}"
+                    class="level-item"
+                    title="{{ __('New poll') }}"
+                    aria-label="{{ __('New poll') }}"
+                >
+                    <span class="icon is-small">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_poll(poll, show_comments = true) %}
+<div class="media poll">
+    <figure class="media-left is-hidden-mobile">
+        {% if poll.committee %}
+            <a class="image is-64x64" href="{{ path('committees', {commissie: poll.committee.login}) }}" title="{{ poll.committee.naam }}" aria-label="{{ poll.committee.naam }}">
+                <span class="committee-avatar" aria-hidden="true">
+                    <span class="icon is-large">
+                        <i class="fas fa-users fa-2x"></i>
+                    </span>
+                </span>
+            </a>
+        {% elseif poll.member %}
+            <a class="image is-64x64" href="{{ path('profile', {lid: poll.member.id}) }}" title="{{ poll.member.full_name }}" aria-label="{{ poll.member.full_name }}">
+                <img class="is-rounded" width="64" height="64" src="{{ path('profile_picture', {lid_id: poll.member.id, format: 'square', width: 128}) }}" alt="{{ __('Photo of %s')|format(poll.member|full_name) }}">
+            </a>
+        {% else %}
+            <div class="image is-64x64">
+                <span class="committee-avatar" title="{{ __('Anonymous') }}" aria-hidden="true">
+                    <span class="icon is-large">
+                        <i class="fas fa-user-secret fa-2x"></i>
+                    </span>
+                </span>
+            </div>
+        {% endif %}
+    </figure>
+    <div class="media-content">
+        <div class="poll-meta">
+            <span class="is-hidden-tablet">
+                {% if poll.committee %}
+                    <a class="image is-48x48" href="{{ path('committees', {commissie: poll.committee.login}) }}" title="{{ poll.committee.naam }}" aria-label="{{ poll.committee.naam }}">
+                        <span class="committee-avatar" aria-hidden="true">
+                            <span class="icon">
+                                <i class="fas fa-users"></i>
+                            </span>
+                        </span>
+                    </a>
+                {% elseif poll.member %}
+                    <a class="image is-48x48" href="{{ path('profile', {lid: poll.member.id}) }}" title="{{ poll.member.full_name }}" aria-label="{{ poll.member.full_name }}">
+                        <img class="is-rounded" width="48" height="48" src="{{ path('profile_picture', {lid_id: poll.member.id, format: 'square', width: 96}) }}" alt="{{ __('Photo of %s')|format(poll.member|full_name) }}">
+                    </a>
+                {% else %}
+                    <span class="image is-48x48">
+                        <span class="committee-avatar" title="{{ __('Anonymous') }}" aria-hidden="true">
+                            <span class="icon">
+                                <i class="fas fa-user-secret"></i>
+                            </span>
+                        </span>
+                    </span>
+                {% endif %}
+            </span>
+            <ul>
+                <li>
+                    <strong>
+                        {% if poll.committee %}
+                            <a href="{{ path('committees', {commissie: poll.committee.login}) }}">
+                                {{ poll.committee.naam }}
+                            </a>
+                        {% elseif poll.member %}
+                            <a href="{{ path('profile', {lid: poll.member.id}) }}">
+                                {{ poll.member.full_name }}
+                            </a>
+                        {% else %}
+                            {{ __('Anonymous') }}
+                        {% endif %}
+                    </strong>
+                </li>
+                <li class="divider"></li>
+                <li class="is-size-7" title="{{ poll.created_on|date('d-m-Y H:i') }}">
+                    {{ poll.created_on|date_relative }}
+                </li>
+            </ul>
+        </div>
+        {{ _self.render_poll_widget(poll, show_comments) }}
+    </div>
+</div>
+{% endmacro %}

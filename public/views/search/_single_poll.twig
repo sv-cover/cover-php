@@ -1,0 +1,23 @@
+<h2 class="title is-5">
+    <a href="{{ result.absolute_path|e('html_attr') }}" data-search-main-link>
+        {{ __('Poll') }}
+    </a>
+</h2>
+<p class="subtitle is-7">
+    {% if result.committee %}
+        {% set committee_link = '<a href="%s">%s</a>'|format(
+            path('committees', {commissie: result.committee.login}),
+            result.committee.naam|e('html')) %}
+        {{ __('%s asked on %s')|format(committee_link, result.created_on|date('F j, Y')|e('html'))|raw }}
+    {% elseif result.member %}
+        {% set member_link = '<a href="%s">%s</a>'|format(
+            path('profile', {lid: result.member.id}),
+            result.member|full_name|e('html')) %}
+        {{ __('%s asked on %s')|format(member_link, result.created_on|date('F j, Y')|e('html'))|raw }}
+    {% else %}
+        {{ __('Anonymous asked on %s'|format(result.created_on|date('F j, Y'))) }}
+    {% endif %}
+</p>
+<div class="content">
+    {{ result.question|strip_markup|excerpt(query_parts, 50)|raw }}
+</div>

@@ -5,6 +5,7 @@ require_once 'src/framework/router.php';
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
+use Twig\Extra\Intl\IntlExtension;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 const ALLOW_SUBDOMAINS = 1;
@@ -112,6 +113,7 @@ class View
 				},
 		]));
 
+		$this->twig->addExtension(new IntlExtension());
 		$this->twig->addExtension(new FormExtension());
 
 		$router = $this->controller ? $this->controller->get_router() : get_router();

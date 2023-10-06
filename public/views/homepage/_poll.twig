@@ -1,6 +1,6 @@
 {% extends '@theme/homepage/_card.twig' %}
     
-{% import "@theme/forum/_poll.twig" as poll %}
+{% import "@theme/polls/macros.twig" as poll %}
 
 {% block title __('Poll') %}
 
@@ -8,10 +8,13 @@
 
 {% block content %}
 
-{% if global.models.Poll.get_latest_poll() %}
-	{{ poll.render_poll(global.models.Poll.get_latest_poll(), true) }}
-{% else %}
-	<p>{{ __('There is no poll at the moment') }}</p>
-{% endif %}
+{% set current_poll = global.models.Poll.get_current() %}
+<div class="poll">
+	{% if current_poll %}
+		{{ poll.render_poll_widget(current_poll, true, true) }}
+	{% else %}
+		<p>{{ __('There is no poll at the moment') }}</p>
+	{% endif %}
+</div>
 
 {% endblock %}

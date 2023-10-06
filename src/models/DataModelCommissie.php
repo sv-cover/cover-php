@@ -210,10 +210,6 @@ class DataModelCommissie extends DataModel implements SearchProvider
 			// Remove members from committee
 			$this->set_members($iter, array());
 
-			// Remove forum permissions
-			$forum_model = get_model('DataModelForum');
-			$forum_model->commissie_deleted($iter);
-
 			$result = parent::delete($iter);
 
 			get_db()->commit();

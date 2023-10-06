@@ -139,10 +139,10 @@ class LayoutViewHelper
 					],
 				],
 				[
-					'label' => __('Forum'),
-					'url' => $this->router->generate('forum'),
+					'label' => __('Polls'),
+					'url' => $this->router->generate('poll.list'),
 					'icon' => [
-						'fa' => 'fas fa-comments',
+						'fa' => 'fas fa-poll-h',
 						'color' => 'cover',
 					],
 				],
