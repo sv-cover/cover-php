@@ -67,8 +67,7 @@ class CommitteesController extends \ControllerCRUDForm
 			return false;
 
 		$members = $form['members']->getData();
-		if (!empty($members))
-			$this->model->set_members($iter, $members);
+		$this->model->set_members($iter, empty($members) ? [] : $members);
 
 		return true;
 	}
