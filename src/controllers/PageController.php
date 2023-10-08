@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Form\PageType;
@@ -42,6 +43,9 @@ class PageController extends \ControllerCRUDForm
 		if ($view === 'preview')
 			return $this->generate_url('page.preview', $parameters);
 
+		if ($view === 'read' && $iter->slug)
+			return $this->generate_url('slug', ["slug" => $iter->slug]);
+
 		$parameters = [
 			'view' => $view,
 		];
@@ -67,13 +71,11 @@ class PageController extends \ControllerCRUDForm
 
 		// If the update succeeded (i.e. _validate came through positive)
 		// send a notification email to those who are interested.
-		if ($success)
-		{
+		if ($success) {
 			$updates = [];
 			$subjects = [];
 
-			foreach ($content_fields as $field => $name)
-			{
+			foreach ($content_fields as $field => $name) {
 				// Only notify about changed content, skip equal stuff
 				if ($iter->data[$field] == $old_iter->data[$field])
 					continue;
@@ -87,19 +89,18 @@ class PageController extends \ControllerCRUDForm
 				$subjects[] = sprintf('Page %s', $name);
 			}
 
-			// Collect all 
+			// Collect all
 			$mail_data = $this->_prepare_mail($iter, implode("\n\n---\n\n", $updates));
 
-			if (!empty($mail_data['email']))
-			{
+			if (!empty($mail_data['email'])) {
 				$body = parse_email('editable_edit.txt', $mail_data);
 
 				$subject = sprintf(
 					'[Cover website] %s updated: %s',
-					count($subjects) == 1 ? $subjects[0] :  'Page',
+					count($subjects) == 1 ? $subjects[0] : 'Page',
 					$mail_data['titel']
 				);
-	
+
 				foreach ($mail_data['email'] as $email)
 					@mail($email, $subject, $body, "From: acdcee@svcover.nl\r\n");
 			}
@@ -118,7 +119,7 @@ class PageController extends \ControllerCRUDForm
 
 		$in_bestuur = get_identity()->member_in_committee(COMMISSIE_BESTUUR);
 		$in_commissie = get_identity()->member_in_committee($iter['committee_id']);
-		
+
 		if (!$in_commissie && $in_bestuur) {
 			/* Bestuur changed something, notify commissie */
 			$data['commissie_naam'] = $commissie_model->get_naam(COMMISSIE_BESTUUR);
@@ -134,7 +135,7 @@ class PageController extends \ControllerCRUDForm
 				$commissie_model->get_email($iter['committee_id']),
 				$commissie_model->get_email(COMMISSIE_BESTUUR));
 		}
-		
+
 		return $data;
 	}
 
@@ -173,6 +174,19 @@ class PageController extends \ControllerCRUDForm
 			return $this->view->redirect($this->generate_url('homepage'));
 		else
 			return parent::run_read($iter);
+	}
+
+	public function run_impl()
+	{
+		$route = $this->get_parameter('_route');
+		if ($route == 'page.list') {
+			return $this->run_index();
+		} else if ($route == 'slug') {
+			$iter = $this->model->get_iter_from_slug($this->get_parameter('_route_params')['slug']);
+			return $this->run_read($iter);
+		} else {
+			return parent::run_impl();
+		}
 	}
 
 	protected function _is_embedded_page($page_id, $model_name)

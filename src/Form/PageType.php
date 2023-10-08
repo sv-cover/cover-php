@@ -29,8 +29,7 @@ class PageType extends AbstractType
 				'label' => __('Image'),
 				'required' => false,
 			])
-			->add('submit', SubmitType::class)
-		;
+			->add('submit', SubmitType::class);
 
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 			$iter = $event->getData();
@@ -43,12 +42,25 @@ class PageType extends AbstractType
 					'help' => __('This value is often used in the code base to refer to a specific page.'),
 				]);
 
-			if ($this->canSetCommitteeId($iter))
+			if ($this->canSetCommitteeId($iter)) {
 				// No additional validation is needed, getChoices makes sure we
 				// can only pick options we're allowed to pick.
 				$form->add('committee_id', CommitteeIdType::class, [
 					'label' => __('Owner'),
 				]);
+
+				$form->add('slug', TextType::class, [
+					'label' => __('Slug'),
+					'help' => __('This sets a custom URL for the page in the format of svcover.nl/<slug>. The slug must be unique (different from any other page)'),
+					'constraints' => new Assert\Regex([
+						'pattern' => '/^[a-z0-9_-]+$/',
+						'message' => __('Slug can only contain lower case letters, numbers, hyphens, and underscores.'),
+					]),
+					'attr' => [
+						'pattern' => '[a-z0-9_-]+',
+					],
+				]);
+			}
 		});
 	}
 

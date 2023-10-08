@@ -13,6 +13,7 @@ class DataIterEditable extends DataIter implements SearchResult
 			'id',
 			'committee_id',
 			'titel',
+            'slug',
 			'content', // NL, not used anymore
 			'content_en',
 			'content_de', // not used anymore
@@ -135,6 +136,11 @@ class DataModelEditable extends DataModel implements SearchProvider
 	{
 		return $this->find_one(['titel' => $title]);
 	}
+
+    public function get_iter_from_slug($slug)
+    {
+        return $this->find_one(['slug' => $slug]);
+    }
 
 	public function get_content($id)
 	{

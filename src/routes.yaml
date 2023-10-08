@@ -374,3 +374,7 @@ legacy:
       wachtwoordvergeten:
         controller: App\Controller\PasswordController
         parameters: { _route: password }
+
+slug:
+  path: /{slug}
+  controller: App\Controller\PageController
