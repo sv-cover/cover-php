@@ -1,14 +1,14 @@
 <?php
 namespace App\Controller;
 
-use App\Form\Type\VacancyFormType;
+use App\Form\VacancyType;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
 class VacanciesController extends \ControllerCRUDForm
 {
 	protected $view_name = 'vacancies';
-	protected $form_type = VacancyFormType::class;
+	protected $form_type = VacancyType::class;
 
 	public function __construct($request, $router)
 	{

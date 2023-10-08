@@ -136,19 +136,18 @@ class PhotoInfo {
 
         // Reflect button change
         const button = form.querySelector('button[type=submit]');
-        const buttonTitles = JSON.parse(button.dataset.title || '["", ""]');
-        const buttonSrTexts = JSON.parse(button.dataset.srText || '["", ""]');
+        const buttonTitles = JSON.parse(form.dataset.cta || '["", ""]');
 
         if (result.liked) {
             form.action.value = 'unlike';
             form.querySelector('.fa-heart').classList.add('has-text-cover');
             button.title = buttonTitles[0];
-            button.querySelector('.is-sr-only').textContent = buttonSrTexts[0];
+            button.setAttribute('aria-label', buttonTitles[0]);
         } else {
             form.action.value = 'like';
             form.querySelector('.fa-heart').classList.remove('has-text-cover');
             button.title = buttonTitles[1];
-            button.querySelector('.is-sr-only').textContent = buttonSrTexts[1];
+            button.setAttribute('aria-label', buttonTitles[1]);
         }
 
         // Reflect counter change

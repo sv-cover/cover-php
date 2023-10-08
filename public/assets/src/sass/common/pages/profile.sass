@@ -89,6 +89,12 @@ $profile-widget-spacing: 1.5rem
                 &:first-child
                     flex: 0 0 calc(83.333% - #{$profile-widget-spacing} * .83333)
                     margin-left: auto
+        .field.is-horizontal
+            .field-body
+                .chips
+                    // Make spacing correct with normal fields
+                    padding-top: 0.15em
+                    padding-bottom: 0.5em
         .profile-committees
             width: calc(83.333% - #{$profile-widget-spacing} * .83333)
             margin-left: auto

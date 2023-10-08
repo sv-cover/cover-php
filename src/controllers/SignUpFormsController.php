@@ -4,8 +4,7 @@ namespace App\Controller;
 require_once 'src/framework/member.php';
 require_once 'src/framework/controllers/Controller.php';
 
-use App\Form\Type\SignUpFormFormType;
-use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
+use App\Form\SignUpFormType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -248,7 +247,7 @@ class SignUpFormsController extends \Controller
 			$iter['committee_id'] = $iter['agenda_item']['committee_id'];
 		}
 
-		$form = $this->createForm(SignUpFormFormType::class, $iter, ['mapped' => false]);
+		$form = $this->createForm(SignUpFormType::class, $iter, ['mapped' => false]);
 		$form->add('template', ChoiceType::class, [
 			'label' => __('Template'),
 			'choices' => [
@@ -287,7 +286,7 @@ class SignUpFormsController extends \Controller
 		if (!get_policy($this->form_model)->user_can_update($iter))
 			throw new \UnauthorizedException('You cannot update this form.');
 
-		$form = $this->createForm(SignUpFormFormType::class, $iter, ['mapped' => false]);
+		$form = $this->createForm(SignUpFormType::class, $iter, ['mapped' => false]);
 		$form->handleRequest($this->get_request());
 
 		$success = false;

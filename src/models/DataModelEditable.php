@@ -114,8 +114,8 @@ class DataIterEditable extends DataIter implements SearchResult
 }
 
 /**
-  * A class implementing the Editable data
-  */
+ * A class implementing the Editable data
+ */
 class DataModelEditable extends DataModel implements SearchProvider
 {
 	public $dataiter = 'DataIterEditable';
@@ -126,12 +126,12 @@ class DataModelEditable extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Gets an editable page from a title
-	  * @title the title of the editable page
-	  * 
-	  * @result a #DataIter or null of no such page could be
-	  * found
-	  */
+	 * Gets an editable page from a title
+	 * @title the title of the editable page
+	 * 
+	 * @result a #DataIter or null of no such page could be
+	 * found
+	 */
 	public function get_iter_from_title($title)
 	{
 		return $this->find_one(['titel' => $title]);

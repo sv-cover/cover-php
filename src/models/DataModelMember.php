@@ -1,13 +1,16 @@
 <?php
 require_once 'src/framework/data/DataModel.php';
 require_once 'src/framework/search.php';
-require_once 'src/framework/login.php';
 require_once 'src/framework/router.php';
+require_once 'src/services/secretary.php';
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DataIterMember extends DataIter implements SearchResult
 {
+	private $_secretary_data;
+	private $_secretary_changes = [];
+
 	static public function fields()
 	{
 		return [
@@ -170,6 +173,79 @@ class DataIterMember extends DataIter implements SearchResult
 	public function get_photo_mtime()
 	{
 		return $this->model->get_photo_mtime($this);
+	}
+
+	private function _get_secretary_data()
+	{
+		// Intentionally private
+		if (!isset($this->_secretary_data)) {
+			try {
+				$result = current(get_secretary()->findPerson($this->get_id()));
+				$this->_secretary_data = (array) $result;
+			} catch (\Exception|Error $exception) {
+				sentry_report_exception($exception);
+				$this->_secretary_data = [];
+			}
+		}
+		return $this->_secretary_data;
+	}
+
+	public function get_iban()
+	{
+		// May trigger API request (performance penalty). Only use when absolutely necessary.
+		$data = $this->_get_secretary_data();
+		return $data['iban'] ?? null;
+	}
+
+	public function set_iban(string $iban = null)
+	{
+		// May trigger API request (performance penalty). Only use when absolutely necessary.
+		$this->_get_secretary_data(); // make sure $this->_secretary_data is initiated
+		$this->_secretary_data['iban'] = $iban;
+	}
+
+	public function get_bic()
+	{
+		// May trigger API request (performance penalty). Only use when absolutely necessary.
+		$data = $this->_get_secretary_data();
+		return $data['bic'] ?? null;
+	}
+
+	public function set_bic(string $bic = null)
+	{
+		// May trigger API request (performance penalty). Only use when absolutely necessary.
+		$this->_get_secretary_data(); // make sure $this->_secretary_data is initiated
+		$this->_secretary_data['bic'] = $bic;
+	}
+
+	protected function mark_changed($field) {
+		if (in_array($field, ['bic', 'iban']) && !in_array($field, $this->_secretary_changes))
+			$this->_secretary_changes[] = $field;
+		else
+			parent::mark_changed($field);
+	}
+
+	public function has_secretary_changes() {
+		// Are there any changes that should be reflected in secretary?
+		return (count($this->_secretary_changes) != 0) || $this->has_changes();
+	}
+
+	public function secretary_changed_fields() {
+		// Which fields that should be reflected in secretary have changed?
+		return array_merge($this->_secretary_changes, $this->changed_fields());
+	}
+
+	public function secretary_changed_values() {
+		// Which fields + values that should be reflected in secretary have changed?
+		return array_merge(
+			array_combine(
+				$this->_secretary_changes,
+				array_map(function($key) {
+					return $this->_secretary_data[$key];
+				}, $this->_secretary_changes)
+			),
+			$this->changed_values(),
+		);
 	}
 
 	/**
@@ -446,8 +522,9 @@ class DataModelMember extends DataModel implements SearchProvider
 		static $privacy = null;
 
 		// Hack for these three fields which are often combined, and the correct alias
-		if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name')))
+		if (in_array($field, array('voornaam', 'tussenvoegsel', 'achternaam', 'full_name', 'nick')))
 			$field = 'naam';
+
 
 		if ($privacy == null)
 			$privacy = $this->get_privacy();
@@ -715,25 +792,6 @@ class DataModelMember extends DataModel implements SearchProvider
 			default:
 				return __('Unknown');
 		}
-	}
-
-	public function get_from_facebook_ids(array $ids)
-	{
-		$sql_ids = array_map(function($id) {
-			return sprintf("'%s'", $this->db->escape_string($id));
-		}, $ids);
-
-		$rows = $this->db->query("SELECT leden.*, facebook.data_value as facebook_id
-				FROM facebook
-				RIGHT JOIN leden ON leden.id = facebook.lid_id
-				WHERE facebook.data_key = 'user_id' and facebook.data_value IN ($sql_ids)");
-
-		$members = array();
-
-		foreach ($this->_rows_to_iters($rows) as $iter)
-			$members[$iter['facebook_id']] = $iter;
-
-		return $members;
 	}
 
 	/**

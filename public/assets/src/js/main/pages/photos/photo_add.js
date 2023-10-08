@@ -12,6 +12,7 @@ class AddPhotosAdmin {
                 element: element,
                 apiBaseUrl: element.dataset.apiBaseUrl,
                 photoBaseUrl: element.dataset.photoBaseUrl,
+                placeholder: element.dataset.fieldNamePlaceholder || '__name__',
             });
         });
     }
@@ -25,6 +26,7 @@ class AddPhotosAdmin {
         this.element = options.element;
         this.apiBaseUrl = options.apiBaseUrl;
         this.photoBaseUrl = options.photoBaseUrl;
+        this.placeholder = options.placeholder;
         this.stream = null;
         this.initForm();
         this.initFolderSelector();
@@ -49,9 +51,7 @@ class AddPhotosAdmin {
 
     initPhotoSelector() {
         this.photoSelector = this.element.querySelector('#photo-selector tbody');
-        this.photoTemplate = this.photoSelector.querySelector('#photo-template');
-        this.photoTemplate.removeAttribute('id');
-        this.photoTemplate.remove();
+        this.photoTemplate = this.element.querySelector('#photo-template');
     }
 
     getBasename(path) {
@@ -125,7 +125,7 @@ class AddPhotosAdmin {
         // Prepare table structure
         let trElement = document.createElement('tr');
         let tdElement = document.createElement('td');
-        tdElement.colSpan = this.photoTemplate.childElementCount;
+        tdElement.colSpan = this.photoTemplate.content.firstElementChild.childElementCount;
 
         // Insert into DOM
         tdElement.append(notificationElement);
@@ -167,19 +167,13 @@ class AddPhotosAdmin {
         let photo = JSON.parse(event.data);
 
         // Clone template
-        let element = this.photoTemplate.cloneNode(true);
+        // Replace stuff to keep Symfony happy
+        let template = this.photoTemplate.cloneNode(true);
+        template.innerHTML = template.innerHTML.replace(new RegExp(this.placeholder, 'g'), this._photoIndex);
+        const element = template.content.cloneNode(true);
+
         const createdOn = Date.parse(photo['created_on'].replace(' ', 'T'));
-        const baseName = 'photo[' + this._photoIndex + ']';
-        element.dataset.sortOrder = createdOn;
-
-        // Insert at right chronological position or at the end of the list
-        for (let el of this.photoSelector.querySelectorAll('li.photo'))
-            if (el.dataset.sortOrder > createdOn)
-                this.photoSelector.insertBefore(element, el);
-
-        // If not inserted, insert at the end of the list
-        if (!element.parentElement)
-            this.photoSelector.append(element);
+        element.firstElementChild.dataset.sortOrder = createdOn;
 
         // Fill thumbnail
         element.querySelector('.thumbnail img').src = photo['thumbnail'];
@@ -193,12 +187,11 @@ class AddPhotosAdmin {
         element.querySelector('.created-on').append(document.createTextNode(photo['created_on']));
 
         // Fill path input
-        let pathInputElement = element.querySelector('input[type=hidden]');
-        pathInputElement.name = baseName + '[path]';
+        let pathInputElement = element.querySelector('input[name*=filepath]');
         pathInputElement.value = photo['path'];
 
         // Set description and input controls depending on whether the photo is already added to the book.
-        let descriptionInputElement = element.querySelector('.description input');
+        let descriptionInputElement = element.querySelector('input[name*=beschrijving]');
         if (photo['id'] != null) {
             element.querySelector('.add-control input').remove();
             element.querySelector('.add-control a').href = this.photoBaseUrl.replace('999999999', photo['id']);
@@ -207,11 +200,17 @@ class AddPhotosAdmin {
             element.querySelector('.description').append(document.createTextNode(photo['description']));
         } else {
             element.querySelector('.add-control a').remove();
-            element.querySelector('.add-control input').name = baseName + '[add]';
-
-            descriptionInputElement.name = baseName + '[description]';
             descriptionInputElement.value = photo['description'];
         }
+
+        // Insert at right chronological position or at the end of the list
+        for (let el of this.photoSelector.querySelectorAll('li.photo'))
+            if (el.dataset.sortOrder > createdOn)
+                this.photoSelector.insertBefore(element, el);
+
+        // If not inserted, insert at the end of the list
+        if (!element.parentElement)
+            this.photoSelector.append(element);
 
         this._photoIndex++;
     }

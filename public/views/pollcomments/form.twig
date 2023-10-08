@@ -1,0 +1,22 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title (iter.has_id ? __('Edit comment') : __('Comment on poll')) ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ iter.has_id ? __('Edit comment') : __('Comment on poll') }}</h1>
+
+{{ form_start(form, {
+    action: (iter and iter.has_id) ? path('poll.comment', {view:  'update', poll_id: iter.poll_id, id: iter.id}) : path('poll.comment.create', {poll_id: iter.poll_id})
+}) }}
+    {# Global errors #}
+    {{ form_errors(form) }}
+    {# Fields #}
+    {{ form_row(form.comment) }}
+    <div class="field">
+        <div class="control buttons">
+            {{ form_widget(form.submit, {'label': iter.has_id ? __('Edit comment') : __('Post comment')}) }}
+            <a href="{{ path('poll', {id: iter.poll_id}) }}" class="button">{{ __('Back to poll') }}</a>
+        </div>
+    </div>
+{{ form_end(form) }}
+{% endblock %}

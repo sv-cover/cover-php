@@ -1,0 +1,26 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Delete photo book') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Delete photo book') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {id: 'delete-book-form', action: path('photos', {view: 'delete_book', book: book.id}) }) }}
+                <div class="field">
+                    <p>{{ __('Are you sure you want to delete the <em>%s</em> photo book?')|format(book.titel|e)|raw }}</p>
+                </div>
+                {{ form_row(form.titel) }}
+                {% set submit_button = form_widget(form.submit, {color: 'danger', attr: {form: 'delete-book-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('photos', {book: book.id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
+</div>
+{% endblock %}

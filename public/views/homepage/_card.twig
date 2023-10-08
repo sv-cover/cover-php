@@ -6,7 +6,7 @@
         		{% block title %}{% endblock %}
             </h2>
     	</header>
-    	<div class="card-content" id="menu_{% block name %}{% endblock %}">
+    	<div class="card-content">
     		{% block content %}{% endblock %}
     	</div>
         {% if block('footer') is defined and block('footer') is not empty %}

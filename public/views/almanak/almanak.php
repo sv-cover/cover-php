@@ -1,6 +1,5 @@
 <?php
 require_once 'src/framework/member.php';
-require_once 'src/framework/csv.php';
 
 class AlmanakView extends View
 {
@@ -46,13 +45,13 @@ class AlmanakView extends View
 		header('Content-Type: application/force-download');
 		header('Content-Disposition: attachment; filename="almanak.csv"');
 
-		$delim = ','; // Used to be ';'
-
 		// Add Unicode byte order marker for Excel
 		echo chr(239) . chr(187) . chr(191);
 
-		// print the column headers
-		echo csv_row([
+		$out = fopen('php://output', 'w');
+
+		// column headers
+		fputcsv($out, [
 			'id',
 			'voornaam',
 			'tussenvoegsel',
@@ -63,14 +62,14 @@ class AlmanakView extends View
 			'woonplaats',
 			'email',
 			'geboortedatum',
-			'geslacht',
 			'telefoonnummer',
 			'studie',
 			'beginjaar',
-			'status'], $delim) . "\n";
+			'status',
+		]);
 
 		foreach ($iters as $item)
-			echo csv_row([
+			fputcsv($out, [
 				$item['id'],
 				$item['voornaam'],
 				$item['tussenvoegsel'],
@@ -81,11 +80,11 @@ class AlmanakView extends View
 				$item['woonplaats'],
 				$item['email'],
 				$item['geboortedatum'],
-				$item['geslacht'],
 				$item['telefoonnummer'],
 				$item['studie'],
 				$item['beginjaar'],
-				$item['status']], $delim) . "\n";
+				$item['status'],
+			]);
 
 		exit();
 	}

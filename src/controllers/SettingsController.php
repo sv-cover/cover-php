@@ -1,11 +1,14 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUD.php';
+use App\Form\SettingsType;
 
-class SettingsController extends \ControllerCRUD
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
+
+class SettingsController extends \ControllerCRUDForm
 {
 	protected $view_name = 'settings';
+	protected $form_type = SettingsType::class;
 
 	public function __construct($request, $router)
 	{
@@ -22,12 +25,17 @@ class SettingsController extends \ControllerCRUD
 
 		if (isset($iter))
 		{
-			$parameters['id'] = $iter->get_id();
+			$parameters['id'] = $iter['key'];
 
 			if ($json)
 				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
 		}
 
 		return $this->generate_url('settings', $parameters);
+	}
+
+	public function run_read(\DataIter $iter)
+	{
+		return $this->view->redirect($this->generate_url('settings'));
 	}
 }

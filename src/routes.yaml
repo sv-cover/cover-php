@@ -40,10 +40,6 @@ clubs:
   path: /clubs
   controller: App\Controller\ClubsController
 
-committee_battle:
-  path: /committee_battle
-  controller: App\Controller\CommitteeBattleController
-
 committee_members:
   path: /committee_members
   controller: App\Controller\CommitteeMembersController
@@ -63,10 +59,6 @@ contact:
   controller: App\Controller\PageController
   defaults:
     id: 17
-
-forum:
-  path: /forum
-  controller: App\Controller\ForumController
 
 join:
   path: /join
@@ -206,6 +198,39 @@ photos:
     view: read
     book: 0
 
+
+################################################################################
+# POlls
+################################################################################
+
+poll.list:
+  path: /polls
+  controller: App\Controller\PollsController
+
+poll.create:
+  path: /polls/create
+  controller: App\Controller\PollsController
+  defaults:
+    view: create
+
+poll.comment.create:
+  path: /polls/{poll_id<\d+>}/comments/create
+  controller: App\Controller\PollCommentsController
+  defaults:
+    view: create
+
+poll.comment:
+  path: /polls/{poll_id<\d+>}/comments/{id<\d+>}/{view}
+  controller: App\Controller\PollCommentsController
+  defaults:
+    view: read
+
+poll:
+  path: /polls/{id<\d+>}/{view}
+  controller: App\Controller\PollsController
+  defaults:
+    view: read
+
 profile:
   path: /profile
   controller: App\Controller\ProfileController
@@ -304,12 +329,6 @@ legacy:
       commissies:
         controller: App\Controller\CommitteesController
         parameters: { _route: committees }
-      committeebattle:
-        controller: App\Controller\CommitteeBattleController
-        parameters: { _route: committee_battle }
-      forum:
-        controller: App\Controller\ForumController
-        parameters: { _route: forum }
       foto:
         controller: App\Controller\ProfilePictureController
         parameters: { _route: profile_picture }

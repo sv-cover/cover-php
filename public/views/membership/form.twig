@@ -1,0 +1,150 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Membership application form') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<header class="block">
+	<h1 class="title">{{ __('Membership application form') }}</h1>
+	<p class="subtitle is-4">{{ __('Become a member!') }}</p>
+</header>
+<article class="block">
+	{{ form_start(form) }}
+		{# Global errors #}
+		{{ form_errors(form) }}
+		{# Fields #}
+		<div class="field">
+			<h2 class="title is-5">{{ __('Basic information') }}</h2>
+		</div>
+		<div class="field">
+			<div>{# Getting around column margins is hard#}
+				<div class="columns">
+					<div class="field column is-marginless">
+						{{ form_label(form.first_name) }}
+						<div class="control">{{ form_widget(form.first_name, {attr: {autocomplete: 'given-name'}}) }}</div>
+					</div>
+					<div class="field column is-marginless">
+						{{ form_label(form.family_name_preposition) }}
+						<div class="control">{{ form_widget(form.family_name_preposition) }}</div>
+					</div>
+					<div class="field column is-marginless">
+						{{ form_label(form.family_name) }}
+						<div class="control">{{ form_widget(form.family_name, {attr: {autocomplete: 'family-name'}}) }}</div>
+					</div>
+				</div>
+			</div>
+			{# Collect all help and errors at the end. This looks better, but it does mean that some care needs to be taken to be sure all is clear. #}
+			{{ form_errors(form.first_name) }}
+			{{ form_errors(form.family_name_preposition) }}
+			{{ form_errors(form.family_name) }}
+			{{ form_help(form.first_name) }}
+			{{ form_help(form.family_name_preposition) }}
+			{{ form_help(form.family_name) }}
+		</div>
+		{{ form_row(form.birth_date, {attr: {autocomplete: 'bday'}}) }}
+
+		<div class="field">
+			<h2 class="title is-5">{{ __('Contact') }}</h2>
+		</div>
+		{{ form_row(form.email_address, {attr: {autocomplete: 'email'}}) }}
+		{{ form_row(form.phone_number, {attr: {autocomplete: 'tel'}}) }}
+
+		<div class="field">
+			<h2 class="title is-5">{{ __('Address') }}</h2>
+		</div>
+		{{ form_row(form.street_name, {attr: {autocomplete: 'street-address'}}) }}
+		<div class="field">
+			<div>{# Getting around column margins is hard#}
+				<div class="columns">
+					<div class="field column is-marginless is-one-third">
+						{{ form_label(form.postal_code) }}
+						<div class="control">{{ form_widget(form.postal_code, {attr: {autocomplete: 'postal-code'}}) }}</div>
+					</div>
+					<div class="field column is-marginless">
+						{{ form_label(form.place) }}
+						<div class="control">{{ form_widget(form.place, {attr: {autocomplete: 'address-level2'}}) }}</div>
+					</div>
+				</div>
+			</div>
+			{# Collect all help and errors at the end. This looks better, but it does mean that some care needs to be taken to be sure all is clear. #}
+			{{ form_errors(form.postal_code) }}
+			{{ form_errors(form.place) }}
+			{{ form_help(form.postal_code) }}
+			{{ form_help(form.place) }}
+		</div>
+
+		<div class="field">
+			<h2 class="title is-5">{{ __('Study') }}</h2>
+		</div>
+		{{ form_row(form.membership_student_number) }}
+
+		<div class="field">
+			<div>{# Getting around column margins is hard#}
+				<div class="columns">
+					<div class="field column is-marginless">
+						{{ form_label(form.membership_study_name) }}
+						<div class="control">
+							<datalist id="study-options">
+								<option value="Artificial Intelligence"></option>
+								<option value="Computing Science"></option>
+								<option value="Computational Cognitive Science"></option>
+							</datalist>
+							{{ form_widget(form.membership_study_name, {attr: {'data-autocomplete': 'datalist', 'data-autocomplete-src': '#study-options', 'data-autocomplete-threshold': 0, 'data-autocomplete-mock-select': true}}) }}
+						</div>
+					</div>
+					<div class="field column is-marginless is-one-third">
+						{{ form_label(form.membership_study_phase) }}
+						<div class="control">{{ form_widget(form.membership_study_phase, {wrapper_attr: {class: 'is-fullwidth'}}) }}</div>
+					</div>
+				</div>
+			</div>
+			{# Collect all help and errors at the end. This looks better, but it does mean that some care needs to be taken to be sure all is clear. #}
+			{{ form_errors(form.membership_study_name) }}
+			{{ form_errors(form.membership_study_phase) }}
+			{{ form_help(form.membership_study_name) }}
+			{{ form_help(form.membership_study_phase) }}
+		</div>
+		{{ form_row(form.membership_year_of_enrollment) }}
+
+		<div class="field">
+			<h2 class="title is-5">{{ __('Payment') }}</h2>
+		</div>
+		{{ form_row(form.iban) }}
+		{{ form_row(form.bic) }}
+        <div class="field">
+            <h3 class="label">SEPA direct debit mandate</h3>
+            <div class="control">
+				{{ form_widget(form.sepa_mandate) }}
+            </div>
+			{{ form_errors(form.sepa_mandate) }}
+			{{ form_help(form.sepa_mandate) }}
+		</div>
+
+		<div class="level field">
+			<div class="level-left">
+				<h2 class="title is-5">{{ __('Terms and Conditions') }}</h2>
+			</div>
+			{% if user_can_update terms %}
+				<div class="level-right buttons">
+					<a href="{{ path('page', {view: 'update', id: terms.id}) }}" class="button">{{ __('Modify conditions') }}</a>
+				</div>
+			{% endif %}
+		</div>
+		<div class="field">
+			<div class="content">
+				{{ terms.locale_content|parse_markup }}
+			</div>
+		</div>
+		{{ form_row(form.terms_conditions_agree) }}
+
+		<div class="field">
+			<h2 class="title is-5">{{ __('Intelligence test') }}</h2>
+		</div>
+		{{ form_row(form.spam) }}
+		<div class="field">
+			<div class="control">
+				{{ form_widget(form.submit, {attr: {class: 'is-large'}}) }}
+			</div>
+		</div>
+	{{ form_end(form) }}
+</article>
+{% endblock %}

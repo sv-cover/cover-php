@@ -203,22 +203,26 @@
         {% if global.auth.logged_in %}
             <div class="controls level is-mobile">
                 {% set liked = global.identity.member.id in photo.likes|select('lid_id') %}
-                <form class="level-item like-form photo-like-form" method="post" action="{{ path('photos.likes', {book: book.id, photo: photo.id}) }}">
-                    <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}">
-                    <button type="submit"  class="button is-text icon"
-                            title="{{ liked ? __('You like this photo. Unlike photo') : __('Like photo') }}"
-                            data-title="{{ [__('You like this photo. Unlike photo'), __('Like photo')]|json_encode|e('html_attr') }}"
-                            data-sr-text="{{ [__('You like this photo. Click to unlike.'), __('Like photo') ]|json_encode|e('html_attr') }}"
-                    >
-                            {% if liked %}
-                                <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
-                                <span class="is-sr-only">{{ 
-                                    __('You like this photo. Click to unlike.') }}</span>
-                            {% else %}
-                                <i class="fas fa-heart" aria-hidden="true"></i>
-                                <span class="is-sr-only">{{ __('Like photo') }}</span>
-                            {% endif %}
-                    </button>
+                <form class="level-item like-form photo-like-form" method="post"
+                    action="{{ path('photos.likes', {book: book.id, photo: photo.id}) }}"
+                    data-cta="{{ [__('You’ve liked this photo. Click to unlike.'), __('Like photo.') ]|json_encode|e('html_attr') }}"
+                >
+                    <input type="hidden" name="form[_token]" value="{{ csrf_token('like_photo_' ~ photo.id) }}">
+                    <input type="hidden" name="action" value="{{liked ? 'unlike' : 'like'}}"> {# Needed for API #}
+                    {% if liked %}
+                        <button name="form[unlike]" type="submit" class="button is-text icon"
+                            title="{{ __('You’ve liked this photo. Click to unlike.') }}"
+                            aria-label="{{ __('You’ve liked this photo. Click to unlike.') }}"
+                        >
+                            <i class="fas fa-heart has-text-cover" aria-hidden="true"></i>
+                        </button>
+                    {% else %}
+                        <button name="form[like]" type="submit" class="button is-text icon"
+                            title="{{ __('Like photo.') }}"
+                            aria-label="{{ __('Like photo.') }}">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                        </button>
+                    {% endif %}
                     <span class="count"
                         {% if photo.likes|length == 0 %}hidden{% endif %}
                         title="{{ photo.likes|length > 0 ? __N('%d person likes this photo', '%d people like this photo', photo.likes|length)|e('html_attr') : '' }}"

@@ -9,64 +9,40 @@
 			<h1 class="modal-card-title">{{ iter.has_id ? __('Update sticker') : __('Add a new sticker') }}</h1>
 		</header>
 		<section class="modal-card-body">
-			<form id="sticker-form" method="POST" action="{{ (iter and iter.has_id) ? path('stickers', {view:  'update', id: iter.id, referrer: controller.get_referrer()}) : path('stickers', {view: 'create', referrer: controller.get_referrer()}) }}">
-				<input type="hidden" name="lat">
-				<input type="hidden" name="lng">
+            {{ form_start(form, {
+            	'id': 'sticker-form',
+            	'action': (iter and iter.has_id) ? path('stickers', {view:  'update', id: iter.id, referrer: controller.get_referrer()}) : path('stickers', {view: 'create', referrer: controller.get_referrer()})
+            }) }}
+				{# Global errors #}
+				{{ form_errors(form) }}
 
-				{% if iter.has_id %}
-					{{ html_nonce('update', iter) }}
-				{% else %}
-					{{ html_nonce('create', iter) }}
-				{% endif %}
-
-				<div class="field">
-					{{ html_label(__('Where did you stick it?'), 'label', errors=errors, required=true) }}
-					<div class="control">
-						{{ html_input_text('label', iter, required='required', placeholder=__('E.g. on a lamppost')) }}
-					</div>
-				</div>
-
-				<div class="field">
-					{{ html_label(__('Description'), 'omschrijving', errors=errors) }}
-					<div class="control">
-						{{ html_textarea_field('omschrijving', iter) }}
-					</div>
-				</div>
-
+				{# Fields #}
+				{{ form_row(form.label) }}
+				{{ form_row(form.omschrijving) }}
 				<div
 					class="field location-picker"
-					data-label="{{ __('Location') }}*"
+					data-label="{{ __('Location') }}"
 					data-help-text="{{ __('Drag the marker or click the map to select a location') }}"
-					data-lat-field="lat"
-					data-lng-field="lng"
+					data-lat-field="{{ '%s[%s]'|format(form.vars.name, form.lat.vars.name) }}"
+					data-lng-field="{{ '%s[%s]'|format(form.vars.name, form.lng.vars.name) }}"
 					data-zoom="{{ global.GET.zoom ?? '' }}"
 				>
 					<div class="notification is-danger is-light" data-unsupported-message hidden>
 						This location picker uses WebGL for a better experience. Please check that you are using a supported browser and that <a href="https://get.webgl.org/" target="_blank" rel="noopener noreferrer" >WebGL is enabled</a>.
 					</div>
-					<div class="field">
-						{{ html_label(__('Latitude'), 'lat', errors=errors, required=true) }}
-						<div class="control">
-							{{ html_input_number('lat', iter) }}
-						</div>
-					</div>
-					<div class="field">
-						{{ html_label(__('Longitude'), 'lng', errors=errors, required=true) }}
-						<div class="control">
-							{{ html_input_number('lng', iter) }}
-						</div>
-					</div>
+					{{ form_row(form.lat) }}
+					{{ form_row(form.lng) }}
 				</div>
-			</form>
+
+				{# Cache submit button #}
+                {% set submit_button = form_widget(form.submit, {'label': __('Add sticker to map'), 'attr': {'form': 'sticker-form'}}) %}
+            {{ form_end(form) }}
 		</section>
 		<footer class="modal-card-foot">
-			asdf {{ controller.get_referrer() }}
 			<a href="{{ controller.get_referrer() ?? path('stickers') }}" class="button" data-dismiss="modal">
 				{{ __('Return to map') }}
 			</a>
-			<button type="submit" class="button is-primary" form="sticker-form">
-				{{ __('Add sticker to map') }}
-			</button>
+            {{ submit_button|raw }}
 		</footer>
 	</div>
 </div>

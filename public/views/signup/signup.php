@@ -1,7 +1,5 @@
 <?php
 
-require_once 'src/framework/csv.php';
-
 class SignUpView extends View
 {
 	protected $__file = __FILE__;
@@ -14,19 +12,18 @@ class SignUpView extends View
 			header('Content-Disposition: attachment; filename="' . $filename . '"');
 		}
 
+		// Add Unicode byte order marker for Excel
+
+		echo chr(239) . chr(187) . chr(191);
 		if (count($entries) === 0)
 			return;
-		
-		$delim = ','; // Used to be ';'
-		$lb = "\r\n"; // Line break
 
-		// Add Unicode byte order marker for Excel
-		echo chr(239) . chr(187) . chr(191);
+		$out = fopen('php://output', 'w');
 
 		// print the column headers
-		echo csv_row($headers, $delim), $lb;
+		fputcsv($out, $headers);
 
 		foreach ($entries as $entry)
-			echo csv_row($entry, $delim), $lb;
+			fputcsv($out, $entry);
 	}
 }

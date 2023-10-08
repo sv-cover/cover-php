@@ -1,19 +1,25 @@
 {% extends '@layout/layout.twig' %}
 
-{% block title __('Delete key') ~ ' – ' ~ parent() %}
+{% block title __('Delete setting') ~ ' – ' ~ parent() %}
 
 {% block content %}
-<h1 class="title">{{ __('Delete key') }}</h1>
-<form method="post" id="delete-settings-form" action="{{ path('settings', {view: 'delete', id: iter.id}) }}">
-	{{ html_nonce('delete', iter) }}
-    <div class="field">
-    	<p>{{ __('Are you certain you want to delete the key <em>%s</em>?')|format(iter.key|e('html'))|raw }}</p>
+<div class="modal is-static">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Delete setting') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {'id': 'delete-setting-form', 'action': path('settings', {view: 'delete', id: iter.id})}) }}
+                <div class="field">
+                    <p>{{ __('Are you sure you want to delete the key <em>%s</em>?')|format(iter.key|e('html'))|raw }}</p>
+                </div>
+                {% set submit_button = form_widget(form.submit, {label: __('Delete setting'), color: 'danger', attr: {form: 'delete-setting-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('settings') }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+            {{ submit_button|raw }}
+        </footer>
     </div>
-	<div class="field">
-        <div class="control buttons">
-    		<button type="submit" class="button is-danger">{{ __('Delete key') }}</button>
-    		<a href="{{ path('settings') }}" class="button">{{ __('Back to settings') }}</a>
-        </div>
-	</div>
-</form>
+</div>
 {% endblock %}

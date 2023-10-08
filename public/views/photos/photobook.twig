@@ -34,11 +34,11 @@
 						</p>
 					{% endif %}
 					{% if controller.policy.user_can_mark_as_read(book) %}
-						<form class="control" method="post" action="{{ path('photos', {view: 'mark_book_read', book: book.id}) }}" class="control" title="{{ __('Mark all books as seen') }}">
-							<button type="submit" class="button">
+						<form class="control" method="post" action="{{ path('photos', {view: 'mark_book_read', book: book.id}) }}" class="control">
+				            <input type="hidden" name="form[_token]" value="{{ csrf_token('mark_book_read_' ~ book.id) }}">
+							<button type="submit" class="button" title="{{ __('Mark all books as seen') }}" aria-label="{{ __('Mark all books as seen') }}">
 								<span class="icon">
 									<i class="fas fa-check" aria-hidden="true"></i>
-									<span class="is-sr-only">{{ __('Mark all books as seen') }}</span>
 								</span>
 							</button>
 						</form>
@@ -66,8 +66,8 @@
 										<button 
 											id="order-photos-button"
 											class="dropdown-item"
-											data-photo-order-url="{{ controller.json_link_to_update_photo_order(book) }}"
-											data-book-order-url="{{ controller.json_link_to_update_book_order(book) }}"
+											data-photo-order-url="{{ path('photos', {view: 'update_photo_order', book: book.id}) }}"
+											data-book-order-url="{{ path('photos', {view: 'update_book_order', book: book.id}) }}"
 										>
 											<span class="icon">
 												<i class="fas fa-arrows-alt" aria-hidden="true"></i>

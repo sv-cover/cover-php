@@ -1,0 +1,25 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Delete poll comment') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Delete comment') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {id: 'delete-poll-comment-form', action: path('poll.comment', {view:  'delete', poll_id: iter.poll_id, id: iter.id})  }) }}
+                <p>
+                    {{ __('Are you sure you want to remove this comment?') }}
+                </p>
+                {% set submit_button = form_widget(form.submit, {label: __('Delete comment'), color: 'danger', attr: {form: 'delete-poll-comment-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('poll', {id: iter.poll_id}) }}" class="button" data-dismiss="modal">{{ __('Cancel') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
+</div>
+{% endblock %}

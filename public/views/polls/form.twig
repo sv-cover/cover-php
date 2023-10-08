@@ -1,0 +1,56 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title  __('New poll') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<h1 class="title">{{ __('New poll') }}</h1>
+
+
+{{ form_start(form) }}
+	{# Global errors #}
+	{{ form_errors(form) }}
+	{# Fields #}
+	{% if form.committee_id is defined %}
+		{{ form_row(form.committee_id, {optional_tag: false}) }}
+	{% endif %}
+	{{ form_row(form.question) }}
+	<div class="field">
+		{{ form_label(form.options, null, {optional_tag: false}) }}
+		<noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
+		<ol id="{{ form.options.vars.id }}-options" class="growing-list" data-growing-list-template="#{{ form.options.vars.id }}-template" data-growing-list-sortable  data-growing-list-max-length="10">
+			{% for optionField in form.options %}
+				<li class="field">
+					<div class="control has-icons-right" title="{{ __('Drag field to reorder choices') }}">
+						{{ form_widget(optionField, {attr: {'aria-label': __('Choice')}}) }}
+						<span class="icon is-right">
+							<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Drag field to reorder choices') }}</span>
+						</span>
+					</div>
+					{{ form_errors(optionField) }}
+				</li>
+			{% endfor %}
+		</ol>
+		<template id="{{ form.options.vars.id }}-template">
+			<li class="field">
+				<div class="control has-icons-right" title="{{ __('Drag field to reorder choices') }}">
+					{{ form_widget(form.options.vars.prototype, {attr: {'aria-label': __('Choice')}}) }}
+					<span class="icon is-right">
+							<i class="fas fa-arrows-alt" aria-hidden="true"></i>
+							<span class="is-sr-only">{{ __('Drag field to reorder choices') }}</span>
+					</span>
+				</div>
+			</li>
+		</template>
+		{# This make sure Symfony won't try to render the widget again… #}
+		{% do form.options.setRendered() %}
+	</div>
+	{{ form_row(form.closed_on) }}
+	<div class="field">
+		<div class="control buttons">
+			{{ form_widget(form.submit, {'label': __('Create poll')}) }}
+			<a href="{{ path('poll.list') }}" class="button">{{ __('Back to polls') }}</a>
+		</div>
+	</div>
+{{ form_end(form) }}
+{% endblock %}

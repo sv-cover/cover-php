@@ -1,5 +1,6 @@
 <?php
 require_once 'src/framework/form.php';
+require_once 'src/framework/markup.php';
 
 class HTMLTwigExtension extends Twig_Extension
 {

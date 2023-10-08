@@ -1,9 +1,11 @@
-<form class="media photo-comment" id="comment-form" name="freactie" action="{{ iter.has_id ? path('photos.comments.single', {comment_view: 'update', comment_id: iter.id, photo: photo.id, book: book.id}) : path('photos.comments', {comment_view: 'create', photo: photo.id, book: book.id}) }}" method="post">
-	{% if iter.has_id %}
-		{{ html_nonce('update', iter) }}
-	{% else %}
-		{{ html_nonce('create', iter) }}
-	{% endif %}
+<form 
+	class="media photo-comment"
+	id="comment-form"
+	name="photo_comment"
+	action="{{ iter.has_id ? path('photos.comments.single', {comment_view: 'update', comment_id: iter.id, photo: photo.id, book: book.id}) : path('photos.comments', {comment_view: 'create', photo: photo.id, book: book.id}) }}"
+	method="post"
+>
+    <input type="hidden" name="photo_comment[_token]" value="{{ csrf_token('photo_comment_' ~ photo.id ~ '_' ~ iter.id) }}">
 	<figure class="media-left">
 		<p class="image avatar">
 			{% if iter.has_id %}
@@ -15,21 +17,27 @@
 	</figure>
 	<div class="media-content">
 		<div class="field">
-			<label for="reactie" class="label is-sr-only">{{__('Comment')}}</label>
 			<p class="control">
-				{{ html_textarea_field('reactie', iter.data,
-					errors=errors,
-					placeholder=__('Type your comment here…'),
-					rows=3) }}
+				<textarea 
+					id="photo_comment_reactie"
+					class="textarea"
+					name="photo_comment[reactie]"
+					placeholder="{{ __('Type your comment here…') }}"
+					aria-label="{{ __('Comment') }}"
+					required
+				></textarea>
 			</p>
 		</div>
-		<div class="field">
-			<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
+		<div class="field is-grouped is-grouped-right">
+			<div class="control">
+				<button type="submit" class="button is-primary">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
+			</div>
 			{% if iter.has_id %}
-			<a href="{{ controller.path('read', iter) }}"
-					class="button">
-				{{ __('Return to photo') }}
-			</a>
+				<div class="control">
+					<a href="{{ controller.path('read', iter) }}" class="button">
+						{{ __('Return to photo') }}
+					</a>
+				</div>
 			{% endif %}
 		</div>
 	</div>

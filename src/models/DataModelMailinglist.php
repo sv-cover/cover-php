@@ -153,6 +153,8 @@ class DataModelMailinglist extends DataModel
 				ON o.mailinglijst_id = l.id
 				AND o.lid_id = ' . intval($member['id']) . '
 				AND o.opgezegd_op < NOW()
+			where
+			 	(l.has_starting_year IS NULL OR l.has_starting_year = ' . intval($member['beginjaar']) . ' )
 			GROUP BY
 				l.id,
 				l.naam

@@ -18,7 +18,9 @@ class SecretaryAPI
 		'telefoonnummer' => 'phone_number',
 		'beginjaar' => 'membership_year_of_enrollment',
 		'geboortedatum' => 'birth_date',
-		'geslacht' => 'gender'
+		'geslacht' => 'gender',
+		'iban' => 'iban',
+		'bic' => 'bic',
 	];
 
 	public function __construct($root, $user, $password)
@@ -54,12 +56,12 @@ class SecretaryAPI
 		if (!$iter->has_id())
 			throw new InvalidArgumentException('You can only submit updates for iters that have an id');
 
-		if (!$iter->has_changes())
+		if (!$iter->has_secretary_changes())
 			return null;
 
 		$data = [];
 		
-		foreach ($iter->changed_values() as $field => $value)
+		foreach ($iter->secretary_changed_values() as $field => $value)
 			$data[$this->mapping[$field]] = $value;
 
 		return $this->updatePerson($iter->get_id(), $data);

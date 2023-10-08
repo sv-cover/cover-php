@@ -3,11 +3,6 @@
 {% block title __('Pending registrations') ~ ' –  '~ parent() %}
 
 {% block content %}
-{% if message %}
-	<div class="warning-section">
-		<p>{{ message }}</p>
-	</div>
-{% endif %}
 
 <h1 class="title">{{__('Pending registrations')}}</h1>
 
@@ -29,8 +24,12 @@
 </article>
 
 <article class="block">
-	<form method="post" action="">
-		{{ html_nonce('pending') }}
+    {{ form_start(form) }}
+	    {% if message %}
+			<div class="notification is-danger">
+				<p>{{ message }}</p>
+			</div>
+		{% endif %}
 		<div class="table-container">
 			<table class="table is-fullwidth is-hoverable">
 				<col>
@@ -51,21 +50,32 @@
 					{% for row in registrations %}
 						<tr>
 							<td class="is-sticky">
-								<input type="checkbox" name="confirmation_code[]" value="{{ row.confirmation_code|e('html_attr') }}">
+								<input type="checkbox" name="form[registration][]" value="{{ row.confirmation_code|e('html_attr') }}" aria-label="Select registration">
 							</td>
 							<td class="is-nowrap">
-								{{ view.full_name(row) }}
-								{{ view.search_link_for_full_name(row)|raw }}
+								{% set name = [row.data.first_name, row.data.family_name_preposition, row.data.family_name]|filter(v => v)|join(' ') %}
+								{{ name }}
+								<a
+									href="https://secretary.svcover.nl/administration/everyone/?full_name={{ name }}"
+									target="_blank"
+									title="Search name in Secretary"
+									aria-title="Search name in Secretary"
+								><span class="icon"><i class="fas fa-search" aria-hidden="true"></i></span></a>
 							</td>
 							<td class="is-nowrap">
 								{{ row.data.email_address }}
-								{{ view.search_link_for_email_address(row)|raw }}
+								<a
+									href="https://secretary.svcover.nl/administration/everyone/?full_name=&amp;email_address={{ row.data.email_address }}"
+									target="_blank"
+									title="Search email in Secretary"
+									aria-title="Search email in Secretary"
+								><span class="icon"><i class="fas fa-search" aria-hidden="true"></i></span></a>
 							</td>
 							<td class="is-nowrap">{{ row.registered_on|date }}</td>
 							{% if row.confirmed_on %}
 								<td>Confirmed<sup>2</sup></td>
 							{% else %}
-								<td><input class="input is-small" type="text" value="{{ url('join', {confirmation_code: row.confirmation_code}) }}"></td>
+								<td><input class="input is-small" type="text" value="{{ url('join', {confirmation_code: row.confirmation_code}) }}" readonly></td>
 							{% endif %}
 							<td class="has-text-right">
 								<a href="{{ path('join', {view: 'pending-confirmation', confirmation_code: row.confirmation_code}) }}" title="{{ __('Edit registration') }}">
@@ -80,15 +90,17 @@
 				</tbody>
 			</table>
 		</div>
+		{{ form_errors(form.registration) }}
+		{% do form.registration.setRendered() %}
 		<div class="field">
 			<div class="label">Apply action to selection</div>
-			<ul class="control buttons">	
-				<button name="action" value="resend" class="button">Resend confirmation mail</button>
-				<button name="action" value="push" class="button is-primary">Push to Secretary<sup>1</sup></button>
-				<button name="action" value="delete" class="button is-danger">Cancel registrations</button>
-			</ul>
+			<div class="control buttons">
+				{{ form_widget(form.resend_confirmation, {label: 'Resend confirmation mail'}) }}
+				{{ form_widget(form.push_to_secretary, {label: 'Push to Secretary¹', color: 'default'}) }}
+				{{ form_widget(form.delete, {label: 'Cancel registrations', color: 'danger'}) }}
+			</div>
 		</div>
-	</form>
+	{{ form_end(form) }}
 </article>
 
 <article class="block content is-small">

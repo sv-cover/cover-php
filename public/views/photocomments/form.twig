@@ -11,26 +11,24 @@
             {% endif %}
         </header>
         <section class="modal-card-body">
-            <form id="photo-comment-form" name="freactie" action="{{ iter.has_id ? controller.path('update', iter) : controller.path('create') }}" method="post">
-                {% if iter.has_id %}
-                    {{ html_nonce('update', iter) }}
-                {% else %}
-                    {{ html_nonce('create', iter) }}
-                {% endif %}
+            {{ form_start(form, {id: 'photo-comment-form', action: iter.has_id ? controller.path('update', iter) : controller.path('create') }) }}
+                {# Global errors #}
+                {{ form_errors(form) }}
+                {# Fields #}
                 <div class="field">
                     <label for="reactie" class="label is-sr-only">{{__('Comment')}}</label>
                     <p class="control">
-                        {{ html_textarea_field('reactie', iter.data,
-                            errors=errors,
-                            placeholder=__('Type your comment here…'),
-                            rows=3) }}
+                        {{ form_widget(form.reactie, {attr: {'aria-label': __('Comment')}}) }}
                     </p>
+                    {{ form_errors(form.reactie) }}
+                    {{ form_help(form.reactie) }}
                 </div>
-            </form>
+                {% set submit_button = form_widget(form.submit, {attr: {form: 'photo-comment-form'}, label: iter.has_id ? __('Modify comment') : __('Post comment')}) %}
+            {{ form_end(form) }}
         </section>
         <footer class="modal-card-foot">
             <a href="{{ controller.path('read', iter) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
-            <button type="submit" class="button is-primary" form="photo-comment-form">{{ iter.has_id ? __('Modify comment') : __('Post comment') }}</button>
+            {{ submit_button|raw }}
         </footer>
     </div>
 </div>

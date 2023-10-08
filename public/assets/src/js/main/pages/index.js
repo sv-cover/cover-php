@@ -1,5 +1,6 @@
 import './home';
 import './photos';
+import './poll';
 import './signup';
 import './search';
 import './session_overrides';

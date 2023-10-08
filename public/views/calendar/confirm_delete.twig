@@ -8,15 +8,11 @@
 	action: path('calendar', {view: 'delete', agenda_id: iter.id}),
 }) }}
 	<div class="field">
-		<p>{{ __('Are you certain you want to delete the event <em>%s</em>?')|format(iter.kop|e('html'))|raw }}</p>
+		<p>{{ __('Are you sure you want to delete the event <em>%s</em>?')|format(iter.kop|e('html'))|raw }}</p>
 	</div>
 	<div class="field">
 		<div class="control buttons">
-			{{ form_widget(form.submit, {
-				label: __('Delete event'),
-				is_primary: false,
-				attr: {class: 'is-danger'},
-			}) }}
+			{{ form_widget(form.submit, {label: __('Delete event'),	color: 'danger'}) }}
 			<a href="{{ path('calendar', {agenda_id: iter.id}) }}" class="button">{{ __('Back to event') }}</a>
 		</div>
 	</div>
