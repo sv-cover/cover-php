@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS public.committee_battle_committees, public.committee_battle_users, public.committee_battle_scores;
+DROP SEQUENCE IF EXISTS public.committee_battle_committees_id_seq, public.committee_battle_scores_id_seq, public.committee_battle_scores_id_seq1, public.committee_battle_users_id_seq;

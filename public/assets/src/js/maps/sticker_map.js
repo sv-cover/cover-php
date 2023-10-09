@@ -110,9 +110,7 @@ class StickerMap {
             let el = popupElement.querySelector('[data-sticker-image] img');
             el.src = sticker.properties.photo_url;
             popupElement.querySelector('[data-sticker-image]').hidden = false;
-        }
-
-        if (sticker.properties.add_photo_url) {
+        } else if (sticker.properties.add_photo_url) {
             let button = popupElement.querySelector('[data-sticker-upload-image]');
             button.addEventListener('click', this.handlePopup.bind(this, sticker.properties.add_photo_url));
             button.hidden = false;

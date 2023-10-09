@@ -2,15 +2,15 @@
 namespace App\Controller;
 
 require_once 'src/framework/member.php';
-require_once 'src/framework/login.php';
 require_once 'src/framework/form.php';
 require_once 'src/framework/webcal.php';
 require_once 'src/framework/markup.php';
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 
-use App\Form\Type\EventFormType;
+use App\Form\EventType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,7 +23,7 @@ class CalendarController extends \ControllerCRUDForm
 
 	protected $view_name = 'calendar';
 
-	protected $form_type = EventFormType::class;
+	protected $form_type = EventType::class;
 
 	public function __construct($request, $router)
 	{
@@ -49,7 +49,7 @@ class CalendarController extends \ControllerCRUDForm
 		return $this->generate_url('calendar', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter)
+	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
 		if (!\get_policy($iter)->user_can_create($iter))
 			throw new \UnauthorizedException('You are not allowed to create events!');
@@ -230,38 +230,6 @@ class CalendarController extends \ControllerCRUDForm
 		}
 
 		return $this->view->render('confirm_reject.twig', ['iter' => $iter, 'form' => $form->createView()]);
-	}
-
-	public function run_rsvp_status($iter)
-	{
-		// If the id's for agenda items had been consistend, we could have stored attendance locally.
-		// Now, that would be a giant hack. Therefore, I defer that to some other moment in time.
-
-		if (!get_config_value('enable_facebook', false))
-			return;
-
-		if (!$iter['facebook_id'])
-			return;
-
-		require_once 'src/services/facebook.php';
-		$facebook = get_facebook();
-
-		if (!$facebook->getUser())
-			throw new \Exception('Could not get facebook user. Please try to reconnect your Facebook account.');
-
-		switch ($_POST['rsvp_status'])
-		{
-			case 'attending':
-			case 'maybe':
-			case 'declined':
-				$result = $facebook->api(sprintf('/%d/%s' , $iter['facebook_id'], $_POST['rsvp_status']), 'POST');
-				break;
-
-			default:
-				throw new \Exception('Unknown rsvp status');
-		}
-
-		return $this->view->redirect($this->generate_url('calendar', [$this->_var_id => $iter['id']]));
 	}
 
 	public function run_webcal()

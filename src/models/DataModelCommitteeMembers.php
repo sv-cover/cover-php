@@ -2,8 +2,8 @@
 require_once 'src/framework/data/DataModel.php';
 
 /**
-  * A class implementing active member data
-  */
+ * A class implementing active member data
+ */
 class DataModelCommitteeMembers extends DataModel
 {
 	public function __construct($db)

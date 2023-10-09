@@ -15,10 +15,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /** 
-  * A class implementing the simplest controller. This class provides
-  * viewing a simple static page by running the header view, then
-  * the specified view and then the footer view
-  */
+ * A class implementing the simplest controller. This class provides
+ * viewing a simple static page by running the header view, then
+ * the specified view and then the footer view
+ */
 class Controller
 {
 	protected $view_name;

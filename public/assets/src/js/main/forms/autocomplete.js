@@ -4,10 +4,12 @@ import AutocompleteBase from './autocomplete_base';
 /**
  * Autocomplete plugin for simple autocomplete elements. Supports the following data options:
  *
- * autocomplete = "data" | "url"
- * autocomplete-src = [JSON Array] if autocomplete = "data", can be array of strings or array of objects
+ * autocomplete = "json" | "url" | "datalist"
+ * autocomplete-src = [JSON Array] if autocomplete = "json", can be array of strings or array of objects
                       or
                       [URL String] if autocomplete = "url", search query will be appended at the end
+                      or
+                      [CSS selector] if autocomplete = "datalist"
  * autocomplete-src-key = string, key to identify value in object type datasource
  * autocomplete-search-engine = "strict" | "loose" (default)
  * autocomplete-no-results = string, will be displayed in case of no results. default: empty (nothing will be displayed)
@@ -17,7 +19,7 @@ import AutocompleteBase from './autocomplete_base';
  */
 class Autocomplete extends AutocompleteBase {
     static parseDocument(context) {
-        const elements = context.querySelectorAll('[data-autocomplete=json],[data-autocomplete=url]');
+        const elements = context.querySelectorAll('[data-autocomplete=json],[data-autocomplete=url],[data-autocomplete=datalist]');
 
         Bulma.each(elements, element => {
             let options = {
@@ -65,6 +67,11 @@ class Autocomplete extends AutocompleteBase {
         if (this.options.type === 'json')
             options.data = {
                 src: JSON.parse(this.options.src),
+                cache: true
+            };
+        else if (this.options.type === 'datalist')
+            options.data = {
+                src: [...(document.querySelector(this.options.src).options)].map(o => o.value),
                 cache: true
             };
         else if (this.options.type === 'url')

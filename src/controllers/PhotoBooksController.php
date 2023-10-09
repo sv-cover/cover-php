@@ -4,10 +4,18 @@ namespace App\Controller;
 require_once 'src/framework/form.php';
 require_once 'src/framework/http.php';
 require_once 'src/framework/controllers/Controller.php';
-require_once 'src/framework/controllers/ControllerCRUD.php';
 
-use Symfony\Component\Routing\RouterInterface;
+use App\Form\PhotoBookType;
+use App\Form\PhotoType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use ZipStream\ZipStream;
 
 
@@ -105,78 +113,28 @@ class PhotoBooksController extends \Controller
 
 		parent::__construct($request, $router);
 	}
-	
-	/* Helper functions for _check_foto_values */
-
-	public function _check_titel($name, $value)
-	{
-		return strlen($value) > 1 && strlen($value) < 256 ? $value : false;
-	}
-
-	public function _check_date($name, $value)
-	{
-		return preg_match('/^(?<day>\d{1,2})[ -\/](?<month>\d{1,2})[ -\/](?<year>\d{4})$/', $value, $match)
-			|| preg_match('/^(?<year>\d{4})[ -\/](?<month>\d{1,2})[ -\/](?<day>\d{1,2})$/', $value, $match)
-			? sprintf('%04d-%02d-%02d', $match['year'], $match['month'], $match['day'])
-			: null;
-	}
-
-	public function _check_fotograaf($name, $value)
-	{			
-		return strlen($value) < 256 ? $value : false;
-	}
-
-	public function _check_visibility($name, $value)
-	{
-		return in_array($value, array(
-			\DataModelPhotobook::VISIBILITY_PUBLIC,
-			\DataModelPhotobook::VISIBILITY_MEMBERS,
-			\DataModelPhotobook::VISIBILITY_ACTIVE_MEMBERS,
-			\DataModelPhotobook::VISIBILITY_PHOTOCEE
-		)) ? $value : false;
-	}
-	
-	protected function _check_fotoboek_values(&$errors)
-	{
-		$data = check_values(array(
-			array('name' => 'titel', 'function' => array($this, '_check_titel')),
-			array('name' => 'date', 'function' => array($this, '_check_date')),
-			array('name' => 'fotograaf', 'function' => array($this, '_check_fotograaf')),
-			array('name' => 'visibility', 'function' => array($this, '_check_visibility'))),
-			$errors);
-		
-		if (count($errors) == 0)
-			$data['beschrijving'] = $_POST['beschrijving'];
-		
-		return $data;
-	}
 
 	/* View functions */
 	
 	private function _view_create_book(\DataIterPhotobook $parent)
 	{
-		$iter = $parent->new_book();
+		$book = $parent->new_book();
 
-		if (!$this->policy->user_can_create($iter))
+		if (!$this->policy->user_can_create($book))
 			throw new \UnauthorizedException('You are not allowed to create new photo books inside this photo book.');
 
-		$errors = array();
+		$form = $this->createForm(PhotoBookType::class, $book, ['mapped' => false]);
+		$form->handleRequest($this->get_request());
 
-		if ($this->_form_is_submitted('create_book', $parent))
-		{
-			// TODO: Move this checking into the model layer..
-			$data = $this->_check_fotoboek_values($errors);
-			
-			$iter->set_all($data);
-				
-			if (count($errors) === 0)
-			{
-				$new_book_id = $this->model->insert_book($iter);
-				return $this->view->redirect($this->generate_url('photos', ['book' => $new_book_id]));
-			}
+		if ($form->isSubmitted() && $form->isValid()) {				
+			$new_book_id = $this->model->insert_book($book);
+			return $this->view->redirect($this->generate_url('photos', ['book' => $new_book_id]));
 		}
 
-		return $this->view->render_create_photobook($iter, null, $errors);
+		return $this->view->render('photobook_form.twig', [
+			'book' => $book,
+			'form' => $form->createView(),
+		]);
 	}
 	
 	private function _view_update_book(\DataIterPhotobook $book)
@@ -184,33 +142,22 @@ class PhotoBooksController extends \Controller
 		if (!$this->policy->user_can_update($book))
 			throw new \UnauthorizedException();
 
-		$errors = array();
+		$form = $this->createForm(PhotoBookType::class, $book, ['mapped' => false]);
+		$form->handleRequest($this->get_request());
 
-		$success = null;
-
-		if ($this->_form_is_submitted('update_book', $book))
-		{
-			$data = $this->_check_fotoboek_values($errors);
-
-			$success = false;
-
-			if (count($errors) == 0)
-			{
-				$book->set_all($data);
-				$this->model->update_book($book);
-
-				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
-			}
+		if ($form->isSubmitted() && $form->isValid()) {				
+			$this->model->update_book($book);
+			return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
 		}
-		
-		return $this->view->render_update_photobook($book, $success, $errors);
+	
+		return $this->view->render('photobook_form.twig', [
+			'book' => $book,
+			'form' => $form->createView(),
+		]);
 	}
 
 	private function _view_update_photo_order(\DataIterPhotobook $book)
 	{
-		if (!$this->_form_is_submitted('update_photo_order', $book))
-			throw new \RuntimeException('Missing nonce');
-
 		if (!$this->policy->user_can_update($book))
 			throw new \UnauthorizedException();
 
@@ -233,9 +180,6 @@ class PhotoBooksController extends \Controller
 
 	private function _view_update_book_order(\DataIterPhotobook $parent)
 	{
-		if (!$this->_form_is_submitted('update_book_order', $parent))
-			throw new \RuntimeException('Missing nonce');
-
 		if (!$this->policy->user_can_update($parent))
 			throw new \UnauthorizedException();
 
@@ -350,40 +294,51 @@ class PhotoBooksController extends \Controller
 		if (!$this->policy->user_can_update($book))
 			throw new \UnauthorizedException();
 		
-		$errors = array();
+		$form = $this->createFormBuilder(null)
+			->add('photos', CollectionType::class, [
+				'label' => __('Photos'),
+				'entry_type' => PhotoType::class,
+				'entry_options' => [
+					'add_photo' => true
+				],
+				'allow_add' => true,
+				'allow_delete' => true,
+				'delete_empty' =>  function ($value = []) {
+					return empty($value['add']);
+				},
+				'prototype_data' => [
+					'add' => true,
+				],
+				'mapped' => false,
+			])		
+			->add('submit', SubmitType::class, ['label' => __('Re-run face detection')])
+			->getForm();
+		$form->handleRequest($this->get_request());
 
-		$success = null;
+		$errors = [];
 
-		if ($this->_form_is_submitted('add_photos', $book))
-		{
-			$photos = isset($_POST['photo']) ? $_POST['photo'] : [];
-			
-			$new_photos = array();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$photos = [];
 
-			foreach ($photos as $photo)
-			{
-				if (!isset($photo['add']))
-					continue;
-			
+			foreach ($form['photos']->getData() as $photo) {
 				try {
 					$iter = new \DataIterPhoto($this->model, -1, array(
 						'boek' => $book->get_id(),
-						'beschrijving' => $photo['description'],
-						'filepath' => $photo['path']));
+						'beschrijving' => $photo['beschrijving'],
+						'filepath' => $photo['filepath']));
 
 					if (!$iter->file_exists())
 						throw new \Exception("File not found");
 
 					$id = $this->model->insert($iter);
 					
-					$new_photos[] = new \DataIterPhoto($this->model, $id, $iter->data);
+					$photos[] = new \DataIterPhoto($this->model, $id, $iter->data);
 				} catch (\Exception $e) {
 					$errors[] = $e->getMessage();
 				}
 			}
 
-			if (count($new_photos))
-			{
+			if (count($photos)) {
 				// Update photo book last_update timestamp
 				$book['last_update'] = new \DateTime();
 				$this->model->update_book($book);
@@ -392,14 +347,16 @@ class PhotoBooksController extends \Controller
 				$face_model = get_model('DataModelPhotobookFace');
 				$face_model->refresh_faces($book->get_photos());
 			}
-			
+
 			if (count($errors) == 0)
 				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
-			else
-				$success = false;
 		}
 
-		return $this->view->render_add_photos($book, $success, $errors);
+		return $this->view->render('add_photos.twig', [
+			'book' => $book,
+			'errors' => $errors,
+			'form' => $form->createView(),
+		]);
 	}
 	
 	protected function _view_delete_book(\DataIterPhotobook $book)
@@ -407,19 +364,32 @@ class PhotoBooksController extends \Controller
 		if (!$this->policy->user_can_delete($book))
 			throw new \UnauthorizedException();
 
-		$errors = array();
+		// Provide no iter, otherwise it will try to fill in the name as default
+		$form = $this->createFormBuilder()
+			->add('titel', TextType::class, [
+				'label' => __('To confirm, enter the name of the photo book you are about to entirely delete'),
+				'constraints' => [
+					new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) use ($book) {
+						if ($book->get('titel') != $value)
+							$context->buildViolation(__('Name doesn’t match book name.'))
+								->atPath('password')
+								->addViolation();
+					}),
+				],
+			])
+			->add('submit', SubmitType::class, ['label' => __('Delete photo book')])
+			->getForm();
+		$form->handleRequest($this->get_request());
 
-		if ($this->_form_is_submitted('delete', $book))
-		{
-			if ($_POST['confirm_delete'] == $book->get('titel')) {
-				$this->model->delete_book($book);
-				return $this->view->redirect($this->generate_url('photos', ['book' => $book->get('parent_id')]));
-			}
-
-			$errors[] = 'confirm_delete';
+		if ($form->isSubmitted() && $form->isValid()) {
+			$this->model->delete_book($book);
+			return $this->view->redirect($this->generate_url('photos', ['book' => $book->get('parent_id')]));
 		}
-		
-		return $this->view->render_delete($book, false, $errors);
+
+		return $this->view->render('confirm_delete_book.twig', [
+			'book' => $book,
+			'form' => $form->createView(),
+		]);
 	}
 	
 	protected function _view_delete_photos(\DataIterPhotobook $book)
@@ -431,25 +401,36 @@ class PhotoBooksController extends \Controller
 			throw new \RuntimeException('photo parameter missing');
 
 		$photos = [];
-
 		foreach ($_GET['photo_id'] as $id)
 			if ($photo = $this->model->get_iter($id))
 				$photos[] = $photo;
-		
-		if ($this->_form_is_submitted('delete_photos'))
-		{
+
+		$form = $this->createFormBuilder(null, ['action' => $_SERVER['REQUEST_URI']])
+			->add('submit', SubmitType::class, ['label' => __('Delete photos')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid()) {
 			foreach ($photos as $photo)
 				$this->model->delete($photo);
-
 			return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
 		}
-		
-		return $this->view->render_delete_photos($book, $photos);
+
+		return $this->view->render('confirm_delete_photos.twig', [
+			'book' => $book,
+			'photos' => $photos,
+			'form' => $form->createView(),
+		]);
 	}
 
 	protected function _view_mark_read(\DataIterPhotobook $book)
 	{
-		if (get_auth()->logged_in())
+		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'mark_book_read_' . $book->get_id()])
+			->add('submit', SubmitType::class)
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid() && get_auth()->logged_in())
 			$this->model->mark_read_recursively(get_identity()->get('id'), $book);
 
 		return $this->view->redirect($this->generate_url('photos', ['book' => $book->get_id()]));
@@ -580,7 +561,11 @@ class PhotoBooksController extends \Controller
 			}
 		}
 
-		return $this->view->render_download_photobook($root_book, $total_photos, $total_file_size);
+		return $this->view->render('photobook_confirm_download.twig', [
+			'book' => $root_book,
+			'total_photos' => $total_photos,
+			'total_file_size' => $total_file_size,
+		]);
 	}
 
 	protected function _view_read_book(\DataIterPhotobook $book)
@@ -588,7 +573,7 @@ class PhotoBooksController extends \Controller
 		if (!$this->policy->user_can_read($book))
 			throw new \UnauthorizedException();
 
-		$rendered_page = $this->view->render_photobook($book);
+		$rendered_page = $this->view->render('photobook.twig', compact('book'));
 
 		if (get_auth()->logged_in())
 			$this->model->mark_read(get_identity()->get('id'), $book);
@@ -601,32 +586,38 @@ class PhotoBooksController extends \Controller
 		if (!$this->policy->user_can_read($book))
 			throw new \UnauthorizedException();
 
-		$photos = $book->get_photos();
+		$face_model = get_model('DataModelPhotobookFace');
 
-		if ($this->_form_is_submitted('cluster_photos', $book)) {
+
+		$form = $this->createFormBuilder(null, ['csrf_token_id' => 'cluster_photos_' . $book->get_id()])
+			->add('submit', SubmitType::class, ['label' => __('Re-run face detection')])
+			->getForm();
+		$form->handleRequest($this->get_request());
+
+		if ($form->isSubmitted() && $form->isValid()) {
 			if (!$this->policy->user_can_update($book))
 				throw new \UnauthorizedException();
 			
-			$face_model = get_model('DataModelPhotobookFace');
+			$photos = $book->get_photos();
 			$face_model->refresh_faces($photos);
 		}
 
-		$face_model = get_model('DataModelPhotobookFace');
 		$faces = $face_model->get_for_book($book);
 
-		return $this->view->render_people($book, $faces);
-	}
+		$clusters = ['null' => []];
+		foreach ($faces as $face) {
+			$cluster_id = $face['cluster_id'] ? strval($face['cluster_id']) : 'null';
+			if (!isset($clusters[$cluster_id]))
+				$clusters[$cluster_id] = [];
 
-	public function json_link_to_update_book_order(\DataIterPhotobook $book)
-	{
-		$nonce = nonce_generate(nonce_action_name('update_book_order', [$book]));
-		return $this->generate_url('photos', ['view' => 'update_book_order', 'book' => $book['id'], '_nonce' => $nonce]);
-	}
+			$clusters[$cluster_id][] = $face;
+		}
 
-	public function json_link_to_update_photo_order(\DataIterPhotobook $book)
-	{
-		$nonce = nonce_generate(nonce_action_name('update_photo_order', [$book]));
-		return $this->generate_url('photos', ['view' => 'update_photo_order', 'book' => $book['id'], '_nonce' => $nonce]);
+		return $this->view->render('people.twig', [
+			'book' => $book,
+			'clusters' => $clusters,
+			'form' => $form->createView(),
+		]);
 	}
 
 	protected function run_competition() {
@@ -677,7 +668,10 @@ class PhotoBooksController extends \Controller
 			ORDER BY
 				tags DESC');
 
-		return $this->view->render_competition($taggers, $tagged);
+		return $this->view->render('competition.twig', [
+			'taggers' => $taggers,
+			'tagged' => $tagged,
+		]);
 	}
 
 
@@ -687,7 +681,10 @@ class PhotoBooksController extends \Controller
 
 		shuffle($photos);
 
-		return $this->view->render_slide($book, $photos);
+		return $this->view->render('slide.twig', [
+			'book' => $book,
+			'photos' => $photos,
+		]);
 	}
 
 	protected function run_impl()

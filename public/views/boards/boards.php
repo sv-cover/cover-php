@@ -1,6 +1,6 @@
 <?php
 
-class BoardsView extends CRUDView
+class BoardsView extends CRUDFormView
 {
 	
 }

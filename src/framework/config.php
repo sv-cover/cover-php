@@ -3,10 +3,10 @@ if (!defined('IN_SITE'))
 	return;
 
 /** @group Configuration
-  * Get the configuration hash
-  *
-  * @result a hash containing the configuration
-  */
+ * Get the configuration hash
+ *
+ * @result a hash containing the configuration
+ */
 function get_config() {
 	static $config = null;
 	
@@ -17,12 +17,12 @@ function get_config() {
 }
 
 /** @group Configuration
-  * Get a configuration value
-  * @key the configuration option to get
-  * @default the default value if the option can't be found
-  *
-  * @result the configuration value
-  */
+ * Get a configuration value
+ * @key the configuration option to get
+ * @default the default value if the option can't be found
+ *
+ * @result the configuration value
+ */
 function get_config_value($key, $default = null)
 {
 	$not_found = new stdClass();

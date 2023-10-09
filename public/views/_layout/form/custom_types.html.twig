@@ -45,6 +45,7 @@
 {% block member_id_widget %}
     {%- set attr = attr|merge({
         'data-autocomplete': 'member_id',
+        'data-name': member ? member.full_name : '',
     }) -%}
     {{- block('form_widget_simple') -}}
 {% endblock %}

@@ -17,11 +17,6 @@ $config = array(
 	
 	'default_language' => 'en',
 
-	'facebook_app_id' => '',
-	'facebook_app_secret' => '',
-	'enable_facebook' => false,
-	'enable_facebook_rsvp' => false,
-
 	'enable_photos_read_status' => true,
 
 	// Absolute path to the root folder of all photos. The paths
@@ -58,9 +53,6 @@ $config = array(
 		[null, 600], // size used for the thumbnails in photo books
 		[null, 400] // size used for the thumbnails in comments
 	),
-
-	// Enable Committee battle
-	'committee_battle' => true,
 
 	// Used for forms & XSS prevention. Generate with `openssl rand -base64 64`.
 	'nonce_salt' => null, 

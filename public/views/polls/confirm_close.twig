@@ -1,0 +1,25 @@
+{% extends '@layout/layout.twig' %}
+
+{% block title __('Close poll') ~ ' – ' ~ parent() %}
+
+{% block content %}
+<div class="modal is-static">
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Close poll') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {'id': 'close-poll-form', 'action': path('poll', {view: 'close', id: iter.id}) }) }}
+                <div class="field">
+                    <p>{{ __('Are you sure you want to close this poll?') }}</p>
+                </div>
+                {% set submit_button = form_widget(form.submit, {label: __('Close poll'), color: 'danger', attr: {form: 'close-poll-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('poll.list') }}" class="button" data-dismiss="modal">{{ __('Back to poll') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
+</div>
+{% endblock %}

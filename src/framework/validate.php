@@ -59,12 +59,13 @@ function validate_filemanger_file($value)
 	return in_array(strtolower($ext), $allowed_exts);
 }
 
-/** A validator for optional fields.
-  * Why? The valication chain will be executed on empty values. This validator
-  * allows to stop the validation chain on empty values, so that non-empty 
-  * values can be validated. This implementation is analogous to the WTForms
-  * Python library.
-  */
+/**
+ * A validator for optional fields.
+ * Why? The valication chain will be executed on empty values. This validator
+ * allows to stop the validation chain on empty values, so that non-empty 
+ * values can be validated. This implementation is analogous to the WTForms
+ * Python library.
+ */
 function validate_optional($value)
 {
 	if (empty($value))

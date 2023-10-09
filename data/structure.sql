@@ -192,40 +192,6 @@ CREATE TABLE agenda (
 --     FOREIGN KEY (replacement_for) REFERENCES agenda (id);
 
 --
--- Committee battle scores!
---
-
-CREATE TABLE committee_battle_scores (
-    id SERIAL PRIMARY KEY,
-    points integer,
-    awarded_for text default '',
-    awarded_on timestamp without time zone
-);
-
-CREATE TABLE committee_battle_committees (
-    id SERIAL PRIMARY KEY,
-    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    committee_id integer NOT NULL REFERENCES commissies (id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE committee_battle_users (
-    id SERIAL PRIMARY KEY,
-    score_id integer NOT NULL REFERENCES committee_battle_scores (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    member_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
---
--- Very basic persistent cache; is mainly used for Facebook stuff.
---
-
-CREATE TABLE cache (
-    key character(40) NOT NULL PRIMARY KEY,
-    value TEXT NOT NULL,
-    expires integer NOT NULL
-);
-
-
---
 -- Configuration table allows you to override stuff from config.inc
 -- using the interface in the website. Of course, these values are
 -- only accessible once a database connection has been set up. So
@@ -235,115 +201,6 @@ CREATE TABLE cache (
 CREATE TABLE configuratie (
     key character varying(100) NOT NULL PRIMARY KEY,
     value text NOT NULL
-);
-
---
--- The forums! Includes its own ACL system and group system. Pretty cool
--- because you can have both committees and single members in groups.
---
-
-CREATE TABLE forums (
-    id SERIAL PRIMARY KEY,
-    name character varying(50) NOT NULL,
-    description character varying(255) NOT NULL,
-    "position" integer DEFAULT 0 -- sort order
-);
-
-
-CREATE TABLE forum_acl (
-    id SERIAL PRIMARY KEY,
-    forum_id integer NOT NULL REFERENCES forums (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    author_type smallint, -- Todo: Maybe rewrite this author_id & author_type
-                          -- stuff to three columns and a table check so we can
-                          -- have proper foreign key constraints!
-    author_id integer,
-    permissions integer,
-    CONSTRAINT forum_acl_uniq UNIQUE (forum_id, author_id, author_type)
-);
-
-
-CREATE TABLE forum_group (
-    id SERIAL PRIMARY KEY,
-    name character varying(50)
-);
-
-
-CREATE TABLE forum_group_member (
-    id SERIAL PRIMARY KEY,
-    group_id integer REFERENCES forum_group (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    author_type smallint,
-    author_id integer
-);
-
-
-CREATE TABLE forum_header (
-    id SERIAL,
-    name character varying(150),
-    "position" integer
-);
-
-
-CREATE TABLE forum_lastvisits (
-    lid integer NOT NULL,
-    forum_id integer NOT NULL REFERENCES forums(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
-);
-
-
-CREATE TABLE forum_threads (
-    id SERIAL PRIMARY KEY,
-    forum_id integer NOT NULL REFERENCES forums(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    author_type smallint,
-    author_id integer,
-    subject character varying(250) NOT NULL,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    poll smallint DEFAULT 0 NOT NULL
-);
-
-CREATE INDEX ON forum_threads (forum_id);
-
-
-CREATE TABLE forum_messages (
-    id SERIAL PRIMARY KEY,
-    thread_id integer NOT NULL REFERENCES forum_threads(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    author_id integer NOT NULL,
-    author_type smallint DEFAULT 1,
-    message text NOT NULL,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
-);
-
-CREATE INDEX ON forum_messages (thread_id);
-
-
-CREATE TABLE forum_sessionreads (
-    lid_id integer NOT NULL,
-    forum_id integer NOT NULL REFERENCES forums(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    thread_id integer NOT NULL REFERENCES forum_threads(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    PRIMARY KEY (lid_id, forum_id, thread_id)
-);
-
-
-CREATE TABLE forum_visits (
-    lid_id integer NOT NULL REFERENCES leden (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    forum_id integer NOT NULL REFERENCES forums (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    lastvisit timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    sessiondate timestamp without time zone,
-    PRIMARY KEY (lid_id, forum_id)
-);
-
-
-CREATE TABLE pollopties (
-    id SERIAL PRIMARY KEY,
-    pollid integer NOT NULL REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    optie character varying(150) NOT NULL,
-    stemmen smallint DEFAULT 0 NOT NULL
-);
-
--- Todo: rename fields to lid_id and poll_id
-CREATE TABLE pollvoters (
-    lid integer NOT NULL REFERENCES leden (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    poll integer NOT NULL REFERENCES forum_threads (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (lid, poll)
 );
 
 
@@ -584,17 +441,6 @@ CREATE TABLE stickers (
 );
 
 --
--- Facebook meta data (which is linked to a member)
---
-
-CREATE TABLE facebook (
-    lid_id INTEGER NOT NULL REFERENCES leden (id),
-    data_key VARCHAR(255) NOT NULL,
-    data_value TEXT NOT NULL,
-    CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key)
-);
-
---
 -- Announcements (simple posts)
 -- 
 
@@ -723,4 +569,59 @@ CREATE TABLE sign_up_entry_values(
     field_id INTEGER NOT NULL REFERENCES sign_up_fields (id) ON UPDATE CASCADE ON DELETE CASCADE,
     value TEXT NOT NULL,
     PRIMARY KEY (entry_id, field_id)
+);
+
+
+--
+-- Polls
+--
+CREATE TABLE polls (
+    id serial PRIMARY KEY,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT,
+    committee_id integer DEFAULT NULL REFERENCES commissies (id) ON DELETE SET DEFAULT,
+    question text NOT NULL,
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    updated_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    closed_on timestamp without time zone DEFAULT NULL
+);
+
+CREATE TABLE poll_options (
+    id serial PRIMARY KEY,
+    poll_id integer NOT NULL REFERENCES polls (id) ON DELETE CASCADE,
+    option character varying(255) NOT NULL
+);
+
+CREATE TABLE poll_votes (
+    id serial PRIMARY KEY,
+    poll_option_id integer NOT NULL REFERENCES poll_options (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve vote, even if we don't have member
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+    -- no updated_on, votes cannot be updated
+);
+
+CREATE TABLE poll_comments (
+    id serial PRIMARY KEY,
+    poll_id integer NOT NULL REFERENCES polls (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT,  -- Preserve comment, even if we don't have member
+    comment text NOT NULL,
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    updated_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+);
+
+CREATE TABLE poll_likes (
+    id serial PRIMARY KEY,
+    poll_id integer NOT NULL REFERENCES polls (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve like, even if we don't have member
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+    -- no updated_on, likes cannot be updated
+    CONSTRAINT poll_like_uniq UNIQUE (poll_id, member_id)
+);
+
+CREATE TABLE poll_comment_likes (
+    id serial PRIMARY KEY,
+    poll_comment_id integer NOT NULL REFERENCES poll_comments (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve like, even if we don't have member
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+    -- no updated_on, likes cannot be updated
+    CONSTRAINT poll_commment_like_uniq UNIQUE (poll_comment_id, member_id)
 );

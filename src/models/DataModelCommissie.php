@@ -102,8 +102,8 @@ class DataIterCommissie extends DataIter implements SearchResult
 }
 
 /**
-  * A class implementing the Commissie data
-  */
+ * A class implementing the Commissie data
+ */
 class DataModelCommissie extends DataModel implements SearchProvider
 {
 	const TYPE_COMMITTEE = 1;
@@ -118,12 +118,12 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get all commissies (optionally leaving out bestuur)
-	  * @include_bestuur optional; whether or not to include
-	  * bestuur
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all commissies (optionally leaving out bestuur)
+	 * @include_bestuur optional; whether or not to include
+	 * bestuur
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get($type = null, $include_hidden = false)
 	{
 		$conditions = [];
@@ -210,10 +210,6 @@ class DataModelCommissie extends DataModel implements SearchProvider
 			// Remove members from committee
 			$this->set_members($iter, array());
 
-			// Remove forum permissions
-			$forum_model = get_model('DataModelForum');
-			$forum_model->commissie_deleted($iter);
-
 			$result = parent::delete($iter);
 
 			get_db()->commit();
@@ -296,13 +292,16 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get all members of a specific commissie
-	  * @id the commissie id
-	  *
-	  * @result an array of #DataIter
-	  */
+	 * Get all members of a specific commissie
+	 * @id the commissie id
+	 *
+	 * @result an array of #DataIter
+	 */
 	public function get_members(DataIterCommissie $committee)
 	{
+		if (!$committee->has_id())
+			return [];
+
 		$member_model = get_model('DataModelMember');
 
 		$positions = $this->_get_members($committee);
@@ -343,11 +342,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	{
 		$this->db->delete('committee_members', sprintf('committee_id = %d', $committee->get_id()));
 
-		foreach ($members as $member_id => $position)
+		foreach ($members as $member)
 			$this->db->insert('committee_members', array(
 				'committee_id' => $committee->get_id(),
-				'member_id' => intval($member_id),
-				'functie' => $position));
+				'member_id' => intval($member['member_id']),
+				'functie' => $member['functie']));
 	}
 
 	public function get_for_member(DataIterMember $member)
@@ -383,11 +382,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get the login name of a specific commissie
-	  * @id the commissie id
-	  *
-	  * @result the login name
-	  */
+	 * Get the login name of a specific commissie
+	 * @id the commissie id
+	 *
+	 * @result the login name
+	 */
 	public function get_login($id) {
 		return $this->db->query_value('SELECT login 
 				FROM commissies 
@@ -405,23 +404,23 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 
 	/**
-	  * Get the email address of a commissie (composed of the
-	  * login name (see #DataModelCommissie::get_login))
-	  * @id the commissie id
-	  *
-	  * @result the commissie email address
-	  */
+	 * Get the email address of a commissie (composed of the
+	 * login name (see #DataModelCommissie::get_login))
+	 * @id the commissie id
+	 *
+	 * @result the commissie email address
+	 */
 	public function get_email($id)
 	{
 		return $this->get_iter($id)->get('email');
 	}
 	
 	/**
-	  * Get commissie name 
-	  * @id the commissie id 
-	  *
-	  * @result the commissie name
-	  */
+	 * Get commissie name 
+	 * @id the commissie id 
+	 *
+	 * @result the commissie name
+	 */
 	public function get_naam($id)
 	{
 		$value = $this->db->query_value('SELECT naam 
@@ -435,11 +434,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Get commissie page id
-	  * @id the commissie id
-	  *
-	  * @result the commissie page id
-	  */
+	 * Get commissie page id
+	 * @id the commissie id
+	 *
+	 * @result the commissie page id
+	 */
 	public function get_page($id)
 	{
 		return $this->db->query_value('SELECT page 
@@ -448,11 +447,11 @@ class DataModelCommissie extends DataModel implements SearchProvider
 	}
 	
 	/**
-	  * Gets a commissie from name
-	  * @name the commissie name
-	  *
-	  * @result a #DataIter or null if not found
-	  */
+	 * Gets a commissie from name
+	 * @name the commissie name
+	 *
+	 * @result a #DataIter or null if not found
+	 */
 	public function get_from_name($name)
 	{
 		$row = $this->db->query_first("SELECT * 
@@ -541,43 +540,43 @@ class DataModelCommissie extends DataModel implements SearchProvider
 		return $this->_row_to_iter($row);
 	}
 
-	public function get_committee_choices_for_iter(DataIter $iter, string $committee_id_field = 'committee_id')
+	public function get_committee_choices($show_own = true)
 	{
-		$options = [
-			'member' => [],
-			'all' => []
-		];
-
-		// At least populate my list of committees
-		foreach (\get_identity()->member()->get('committees') as $committee)
-			$options['member'][$this->get_naam($committee)] = $committee;
-
-		// And if I am very important, also populate the all list. That there are doubles is not a problem.
-		if (
+		$is_admin = (
 			\get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| \get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
 			|| \get_identity()->member_in_committee(COMMISSIE_EASY)
-		)
-			foreach ($this->get(null, true) as $committee)
-				$options['all'][$committee->get('naam')] = $committee->get_id();
+		);
 
-		$result = [
-			__('Your committees') => $options['member'],
-			__('All committees') => $options['all']
+		$iters = $this->get(null, true);
+
+		$options = [
+			'member' => [],
+			'committees' => [],
+			'working_groups' => [],
+			'other' => [],
+			'archived' => [],
 		];
 
-		// Add the current committee as option if it isn't already (for editing)
-		if (
-			$iter
-			&& !empty($iter[$committee_id_field])
-			&& !in_array($iter[$committee_id_field], array_merge($options['member'], $options['all']))
-		)
-			return array_merge(
-				[$this->get_naam($iter[$committee_id_field]) => $iter[$committee_id_field]],
-				$result
-			);
-	
-		// Empty groups will be pruned anyway
-		return $result;
+		foreach ($iters as $iter) {
+			if ($show_own && $is_admin && \get_identity()->member_in_committee($iter->get_id()))
+				$options['member'][$iter->get('naam')] = $iter->get_id();
+			if ($iter['hidden'])
+				$options['archived'][$iter->get('naam')] = $iter->get_id();
+			elseif ($iter['type'] === \DataModelCommissie::TYPE_COMMITTEE)
+				$options['committees'][$iter->get('naam')] = $iter->get_id();
+			elseif ($iter['type'] === \DataModelCommissie::TYPE_WORKING_GROUP)
+				$options['working_groups'][$iter->get('naam')] = $iter->get_id();
+			else
+				$options['other'][$iter->get('naam')] = $iter->get_id();
+		}
+
+		return [
+			__('Your committees') => $show_own && $is_admin ? $options['member'] : [],
+			__('Committees') => $options['committees'],
+			__('Working groups') => $options['working_groups'],
+			__('Others') => $options['other'],
+			__('Archived') => $options['archived'],
+		];
 	}
 }

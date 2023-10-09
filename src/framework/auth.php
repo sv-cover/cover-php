@@ -354,7 +354,8 @@ class CookieSessionProvider implements SessionProvider
 		// inactive sessions will be removed from the database and rendered
 		// invalid automatically. A low value will cause people to be logged out.
 		$cookie_time = time() + 24 * 3600 * 31 * 12;
-
+		// TODO: set cookie_time to 0 if $remember == true, then session will end when browser closes
+ 
 		set_domain_cookie('cover_session_id',
 			$this->session->get('session_id'),
 			$cookie_time);

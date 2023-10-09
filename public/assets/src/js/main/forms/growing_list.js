@@ -53,39 +53,113 @@ class GrowingList {
             });
         }
 
-        this.setupEvents();
+        this.element.addEventListener('input', this.handleInput.bind(this));
+        this.element.addEventListener('keydown', this.handleKeyDown.bind(this));
+        this.setupEvents(this.element);
 
         // Init empty field
         this.grow();
     }
 
-    setupEvents() {
-        this.element.addEventListener('input', this.handleInput.bind(this));
-        this.element.addEventListener('keydown', this.handleKeyDown.bind(this));
+    setupEvents(element) {
+        for (let el of element.querySelectorAll('[data-growing-list-delete]'))
+            el.addEventListener('click', this.shrink.bind(this));
     }
 
-    getInputs() {
-        return this.element.querySelectorAll(this.inputSelector);
+
+    getInputs(element) {
+        if (element.parentElement !== this.element) {
+            // Find row that contains element
+            for (let el of this.element.children) {
+                if (el.contains(element)) {
+                    element = el;
+                    break;
+                }
+            }
+        }
+
+        const inputs = element.querySelectorAll(this.inputSelector);
+        if (inputs)
+            return [...inputs];
+        return [];
+    }
+
+    isEmpty(element) {
+        return this.getInputs(element)
+            .filter(e => e.type !== 'hidden') // don't care about hidden fields
+            .every(e => e.value == '');
+    }
+
+    focus(element, reverse=false, filter=null) {
+        let inputs = [...this.element.querySelectorAll(this.inputSelector)];
+        if (reverse)
+            inputs.reverse();
+
+        let idx = inputs.indexOf(element);
+        if (idx < 0)
+            return;
+
+        idx++;
+        while (idx < inputs.length) {
+            const input = inputs[idx];
+             // Can't focus hidden fields
+            if (inputs[idx].type !== 'hidden' && (!filter || filter(inputs[idx]))) {
+                // Place cursor at end of field
+                input.focus();
+                input.setSelectionRange(input.value.length, input.value.length);
+                return;
+            }
+            idx++;
+        }
     }
 
     grow() {
         // Add a field if no fields, or if the last field is no longer empty unless maxLength is reached
-        const inputs = this.getInputs();
-        if ((inputs.length === 0 || inputs[inputs.length-1].value != '' && inputs.length <= this.maxLength))  {
+        if (
+            this.element.childElementCount < this.maxLength
+            && (
+                !this.element.lastElementChild
+                || !this.isEmpty(this.element.lastElementChild)
+                || this.getInputs(this.element).length === 0 
+            )
+        ) {
             // Replace stuff to keep Symfony happy
             let template = this.template.cloneNode(true);
-            template.innerHTML = template.innerHTML.replace(new RegExp(this.placeholder, 'g'), inputs.length);
+            template.innerHTML = template.innerHTML.replace(new RegExp(this.placeholder, 'g'), this.element.childElementCount);
             const clone = template.content.cloneNode(true);
-            this.element.appendChild(clone)
+            this.setupEvents(clone);
+            this.element.appendChild(clone);
+            document.dispatchEvent(new CustomEvent('partial-content-loaded', { bubbles: true, detail: this.element.lastElementChild }));
         }
     }
 
-    focus(element) {
-        let input = element.querySelector(this.inputSelector);
+    shrink(event) {
+        let parent;
+        for (let el of this.element.children) {
+            if (el.contains(event.target)) {
+                parent = el;
+                break;
+            }
+        }
 
-        // Place cursor at end of field
-        input.focus();
-        input.setSelectionRange(input.value.length, input.value.length);
+        if (!parent)
+            return;
+
+        const active = document.activeElement;
+        if (parent === this.element.lastElementChild) {
+            this.focus(active, true);
+            return;
+        }
+
+        if (parent.contains(active) && active.matches(this.inputSelector)) {
+            // now focus the next or previous sibling.
+            if (parent.previousElementSibling)
+                this.focus(active, true, (el) => !parent.contains(el));
+            else if (parent.nextElementSibling)
+                this.focus(active, false, (el) => !parent.contains(el));
+        }
+
+        parent.remove();
     }
 
     handleInput(event) {
@@ -95,42 +169,17 @@ class GrowingList {
     handleKeyDown(event) {
         // Focus next option on enter
         if (event.key === 'Enter') {
-            let previous = null;
-            for (let el of this.element.children) {
-                if (previous && previous.contains(event.target)) {
-                    this.focus(el);
-                    break;
-                }
-                previous = el;
-            }
+            event.preventDefault();
+            this.focus(event.target);
         }
 
-        // Delete option on backspace in empty field
-        if (event.key === 'Backspace' && event.target.value == '') {
+        if (event.key === 'Backspace' && this.isEmpty(event.target)) {
+            // Delete option on backspace in empty rows
             event.preventDefault();
-
-            // Don't remove field if it's the last
-            if (this.getInputs().length <= 1)
-                return;
-
-            // Find previous element and remove current
-            let previous = null;
-            for (let el of this.element.children) {
-                if (el.contains(event.target)) {
-                    el.remove();
-                    break;
-                }
-                previous = el;
-            }
-
-            // Dispatch change for autosubmit
-            this.element.dispatchEvent(new Event('change', {'bubbles':true}));
-
-            // Focus on previous (or first in list)
-            if (previous)
-                this.focus(previous);
-            else
-                this.focus(this.element); // selects first, because querySelector
+            this.shrink(event);
+        } else if (event.key === 'Backspace' && event.target.value == '') {
+            // Allow navigation from empty subfields
+            this.focus(event.target, true);
         }
     }
 
@@ -140,9 +189,14 @@ class GrowingList {
         if (templateInput) {
             const id = templateInput.id;
             const name = templateInput.name;
-            for (const [idx, input] of this.getInputs().entries()) {
-                input.id = id.replace(new RegExp(this.placeholder, 'g'), idx);
-                input.name = name.replace(new RegExp(this.placeholder, 'g'), idx);
+            for (let idx = 0; idx < this.element.childElementCount; idx++) {
+                const element = this.element.children[idx];
+                for (const input of this.getInputs(element)) {
+                    if (input.id)
+                        input.id = id.replace(new RegExp(this.placeholder, 'g'), idx);
+                    if (input.name)
+                        input.name = name.replace(new RegExp(this.placeholder, 'g'), idx);
+                }
             }
         }
 

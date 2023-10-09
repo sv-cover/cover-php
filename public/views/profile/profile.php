@@ -1,15 +1,5 @@
 <?php
-
-require_once 'src/services/facebook.php';
-
 use JeroenDesloovere\VCard\VCard;
-
-function empty_to_http_formatter($value) {
-	if (!$value)
-		return 'http://';
-	else
-		return $value;
-}
 
 
 class ProfileView extends View
@@ -49,7 +39,7 @@ class ProfileView extends View
 				// }
 			],
 			'mailing_lists' => [
-				'visible' => $this->member_write_permission($iter),
+				'visible' => $this->is_current_member($iter),
 				'label' => __('Mailing lists')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('mailinglists', compact('iter'));
@@ -60,13 +50,6 @@ class ProfileView extends View
 				'label' => __('Sessions')
 				// 'body' => function () use ($iter) {
 				// 	$this->render_partial('sessions', compact('iter'));
-				// }
-			],
-			'facebook' => [
-				'visible' => $this->is_current_member($iter) && get_config_value('enable_facebook_rsvp', false),
-				'label' => __('Facebook')
-				// 'body' => function () use ($iter) {
-				// 	$this->render_partial('facebook', compact('iter'));
 				// }
 			],
 			'kast' => [
@@ -109,7 +92,7 @@ class ProfileView extends View
 				'name' => 'adres'
 			],
 			[
-				'label' => __('Zipcode'),
+				'label' => __('Postal code'),
 				'name' => 'postcode'
 			],
 			[
@@ -127,15 +110,6 @@ class ProfileView extends View
 		];
 	}
 
-	public function privacy_options()
-	{
-		return [
-			DataModelMember::VISIBLE_TO_EVERYONE => __('Everyone'),
-			DataModelMember::VISIBLE_TO_MEMBERS => __('Only logged in members'),
-			DataModelMember::VISIBLE_TO_NONE => __('Nobody'),
-		];
-	}
-
 	public function render_public_tab(DataIterMember $iter)
 	{
 		$can_download_vcard = get_identity()->is_member();
@@ -147,50 +121,6 @@ class ProfileView extends View
 		$committees = $model->get_for_member($iter);
 
 		return $this->render('public_tab.twig', compact('iter', 'is_current_user', 'can_download_vcard', 'committees'));
-	}
-
-	public function render_personal_tab(DataIterMember $iter, $error_message = null, array $errors = [])
-	{
-		return $this->render('personal_tab.twig', compact('iter', 'error_message', 'errors'));
-	}
-
-	public function render_profile_tab(DataIterMember $iter, $error_message = null, array $errors = [])
-	{
-		$current_password_required = !get_identity()->member_in_committee(COMMISSIE_BESTUUR)
-								  && !get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR);
-
-		return $this->render('profile_tab.twig', compact('iter', 'error_message', 'errors', 'current_password_required'));
-	}
-
-	public function render_privacy_tab(DataIterMember $iter, $error_message = null, array $errors = [])
-	{
-		$fields = [];
-
-		$labels = [];
-
-		foreach ($this->personal_fields() as $field)
-			$labels[$field['name']] = $field['label'];
-
-		// Stupid aliasses
-		$labels['naam'] = $labels['full_name'];
-		$labels['foto'] = __('Photo');
-
-		foreach ($this->controller->model()->get_privacy() as $field => $nr)
-			$fields[] = [
-				'label' => $labels[$field] ?? $field,
-				'name' => 'privacy_' . $nr,
-				'data' => ['privacy_' . $nr => ($iter['privacy'] >> ($nr * 3)) & 7]
-			];
-		
-		return $this->render('privacy_tab.twig', compact('iter', 'error_message', 'errors', 'fields'));
-	}
-
-	public function render_sessions_tab(DataIterMember $iter)
-	{
-		$model = get_model('DataModelSession');
-		$sessions = $model->getActive($iter['id']);
-		$sessions_view = View::byName('sessions');
-		return $this->render('sessions_tab.twig', compact('iter', 'sessions', 'sessions_view'));
 	}
 
 	public function render_kast_tab(DataIterMember $iter)
@@ -292,11 +222,6 @@ class ProfileView extends View
 		return null;
 	}
 
-	public function render_confirm_email($success)
-	{
-		return $this->render('confirm_email.twig', compact('success'));
-	}
-
 	function is_current_member(DataIterMember $iter)
 	{
 		return get_identity()->get('id') == $iter->get_id();
@@ -308,6 +233,10 @@ class ProfileView extends View
 			|| get_identity()->member_in_committee(COMMISSIE_BESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_KANDIBESTUUR)
 			|| get_identity()->member_in_committee(COMMISSIE_EASY);
+	}
+
+	public function get_photo_form() {
+		return $this->controller->_get_photo_form()->createView();
 	}
 
 	public function format_member_data(DataIterMember $iter, $field)

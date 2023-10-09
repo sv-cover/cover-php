@@ -19,10 +19,10 @@
 					<td><code>{{ item.value }}</code></td>
 					<td class="has-text-right">
 						{% if user_can_update item %}
-							<a href="{{ path('settings', {view: 'update', id: item.id}) }}" {# data-placement-selector="modal" data-partial-selector="#settings-form" #}>{{ __('Modify') }}</a>
+							<a href="{{ path('settings', {view: 'update', id: item.id}) }}">{{ __('Edit') }}</a>
 						{% endif %}
 						{% if user_can_delete item %}
-							<a href="{{ path('settings', {view: 'delete', id: item.id}) }}" {# data-placement-selector="modal" data-partial-selector="#delete-settings-form" #}>{{ __('Delete') }}</a>
+							<a href="{{ path('settings', {view: 'delete', id: item.id}) }}" data-popup="modal">{{ __('Delete') }}</a>
 						{% endif %}
 					</td>
 				</tr>
@@ -33,7 +33,7 @@
 	<tfoot>
 		<tr>
 			<td colspan="3">
-				<a href="{{ path('settings', {view: 'create'}) }}" {# data-placement-selector="modal" data-partial-selector="#settings-form" #} class="button">{{ __('Add a new key') }}</a>
+				<a href="{{ path('settings', {view: 'create'}) }}" class="button">{{ __('Add setting') }}</a>
 			</td>
 		</tr>
 	</tfoot>

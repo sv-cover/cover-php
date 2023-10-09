@@ -16,8 +16,8 @@
             {{ __('Deleted %s field…')|format(field.model.field_types[field.type].label|lower) }}
             {{ form_widget(form.submit, {
                 label: __('Restore'),
-                is_primary: false,
-                attr: {class: 'is-text is-baseline'},
+                color: 'text',
+                attr: {class: 'is-baseline'},
             }) }}
         </p>
     {{ form_end(form) }}

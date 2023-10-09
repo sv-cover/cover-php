@@ -16,10 +16,10 @@ function sentry_get_client()
 	return $client ? $client : null;
 }
 
-function sentry_report_exception($e, $attributes = [])
+function sentry_report_exception($e)
 {
-	if (sentry_get_client())
-		return Sentry\captureException($e, $attributes);
+	if (!sentry_get_client())
+		return Sentry\captureException($e);
 	return null;
 }
 

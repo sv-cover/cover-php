@@ -5,39 +5,39 @@
 {% block tab_content %}
 <article>
 	<h2 class="title is-4">{{ __('Sessions') }}</h2>
-	<form method="post" action="{{ path('sessions', {view: 'sessions', member_id: iter.id}) }}">
-		{{ html_nonce('delete_sessions') }}
-		{{ html_input_hidden('referer', path('profile', {view: 'sessions', lid: iter.id})) }}
-		<div class="field">
-			<p>{{ __('These all devices/browsers which are currently logged-in to your account.') }}</p>
-		</div>
-		<table class="field table is-fullwidth is-hoverable is-aligned">
-			<thead>
-				<tr>
-					<th></th>
-					<th>{{ __('IP-address') }}</th>
-					<th>{{ __('Application') }}</th>
-					<th>{{ __('Logged in') }}</th>
-					<th>{{ __('Last active') }}</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for session in sessions %}
-				<tr>
-					<td><input type="checkbox" name="sessions[]" value="{{ session.id|e('html_attr') }}"></td>
-					<td>{{ session.ip_address }}</td>
-					<td>{{ sessions_view.format_application(session.application)|raw }}</td>
-					<td>{{ sessions_view.format_time(session.created_on)|raw }}</td>
-					<td>{{ sessions_view.format_time(session.last_active_on)|raw }}</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		<div class="field">
-			<div class="control buttons">
-				<button type="submit" class="button is-danger" name="destroy" value="yes">{{ __('End selected sessions') }}</button>
-			</div>
-		</div>
-	</form>
+	<div class="field">
+		<p>{{ __('These all devices/browsers which are currently logged-in to your account.') }}</p>
+	</div>
+	<table class="field table is-fullwidth is-hoverable is-aligned">
+		<thead>
+			<tr>
+				<th>{{ __('IP-address') }}</th>
+				<th>{{ __('Application') }}</th>
+				<th>{{ __('Logged in') }}</th>
+				<th>{{ __('Last active') }}</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for session in sessions %}
+			<tr>
+				<td>{{ session.ip_address }}</td>
+				<td>{{ sessions_view.format_application(session.application)|raw }}</td>
+				<td>{{ sessions_view.format_time(session.created_on)|raw }}</td>
+				<td>{{ sessions_view.format_time(session.last_active_on)|raw }}</td>
+				<td class="has-text-right">
+					<form action="{{ path('sessions', {view: 'delete', id: session.id}) }}" method="post">
+						<input type="hidden" name="form[_token]" value="{{ csrf_token('session_delete_' ~ session.id) }}">
+						<button type="submit" class="button is-ghost p-0" aria-label="{{ __('End session') }}" title="{{ __('End session') }}">
+							<span class="icon is-small" aria-hidden="true">
+								<i class="fas fa-trash"></i>
+							</span>
+						</button>
+					</form>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 </article>
 {% endblock %}

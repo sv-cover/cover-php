@@ -1,7 +1,7 @@
 <?php
 /**
-  * This class provides access to a data row in a #DataModel
-  */
+ * This class provides access to a data row in a #DataModel
+ */
 abstract class DataIter implements JsonSerializable, ArrayAccess
 {
 	protected $model = null; /** The model the iter belongs to */

@@ -10,6 +10,22 @@
 
 
 .navbar
+    .navbar-start 
+        & > .navbar-item.is-highlighted,
+        & > a.navbar-item.is-highlighted
+            align-self: center
+            margin-left: 0.75rem
+            margin-right: 0.75rem
+            height: $control-height
+            padding-left: $button-padding-horizontal
+            padding-right: $button-padding-horizontal
+            background-color: $white
+            color: $cover
+            font-weight: $weight-bold
+            &:focus,
+            &:hover
+                color: $grey-darker
+                background-color: $white
     .user
         .dark-mode-switch
             width: 100%
@@ -156,3 +172,21 @@
     .applications .navbar-item.tool-set,
     .notifications .navbar-item.cover-notification
         width: 20rem
+
++touch
+    .navbar .navbar-start
+        display: flex
+        flex-flow: column nowrap
+        & > a.navbar-item.is-highlighted,
+        & > .navbar-item.is-highlighted
+            order: -1
+            color: $text
+            background-color: transparent
+            font-weight: $weight-bold
+            padding-left: 0.75rem
+            padding-right: 0.75rem
+            margin-left: 0
+            margin-right: 0
+            align-self: stretch
+            &:hover
+                background-color: $navbar-item-hover-background-color

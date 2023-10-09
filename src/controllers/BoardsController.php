@@ -1,11 +1,15 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUD.php';
+use App\Form\BoardType;
+use Symfony\Component\Form\FormInterface;
 
-class BoardsController extends \ControllerCRUD
+require_once 'src/framework/controllers/ControllerCRUDForm.php';
+
+class BoardsController extends \ControllerCRUDForm
 {
 	protected $view_name = 'boards';
+	protected $form_type = BoardType::class;
 
 	public function __construct($request, $router)
 	{
@@ -39,57 +43,32 @@ class BoardsController extends \ControllerCRUD
 			return __('Boards');
 	}
 
-	protected function _validate(\DataIter $iter, array $data, array &$errors)
+	protected function _process_create(\DataIter $iter, FormInterface $form)
 	{
-		if (!$iter->has_id() && !isset($data['naam']))
-			$errors[] = 'naam';
-		elseif (isset($data['naam']) && strlen(trim($data['naam'])) === 0)
-			$errors[] = 'naam';
-
-		if (!$iter->has_id() && !isset($data['login']))
-			$errors[] = 'login';
-		elseif (isset($data['login']) && !preg_match('/^[a-z0-9]+$/i', $data['login']))
-			$errors[] = 'login';
-
-		return count($errors) === 0 ? $data : false;
-	}
-
-	protected function _create(\DataIter $iter, array $data, array &$errors)
-	{
-		if (!$this->_validate($iter, $data, $errors))
-			return false;
-
 		$editable_model = get_model('DataModelEditable');
 
 		$page_data = array(
 			'committee_id' => COMMISSIE_BESTUUR,
-			'titel' => $data['naam']);
+			'titel' => $iter['naam']);
 
 		$page = $editable_model->new_iter($page_data);
 
-		$page_id = $editable_model->insert($page, true);
+		$iter['page_id'] = $editable_model->insert($page, true);
 
-		$bestuur_data = array(
-			'naam' => $data['naam'],
-			'login' => $data['login'],
-			'page_id' => $page_id);
-
-		return parent::_create($iter, $bestuur_data, $errors);
+		return parent::_process_create($iter, $form);
 	}
 
-	protected function _update(\DataIter $bestuur, array $data, array &$errors)
+	protected function _process_update(\DataIter $iter, FormInterface $form)
 	{
-		if (!$this->_validate($bestuur, $data, $errors))
-			return false;
-		
+
 		$editable_model = get_model('DataModelEditable');
 
-		$editable = $bestuur['page'];
-		$editable->set('titel', $data['naam']);
+		$editable = $iter['page'];
+		$editable->set('titel', $iter['naam']);
 	
 		$editable_model->update($editable);
 
-		return parent::_update($bestuur, $data, $errors);
+		return parent::_process_update($iter, $form);
 	}
 
 	protected function _index()

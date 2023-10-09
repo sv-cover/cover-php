@@ -219,19 +219,6 @@ CREATE TABLE public.besturen (
 ALTER TABLE public.besturen OWNER TO webcie;
 
 --
--- Name: cache; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.cache (
-    key character(40) NOT NULL,
-    value text NOT NULL,
-    expires integer NOT NULL
-);
-
-
-ALTER TABLE public.cache OWNER TO webcie;
-
---
 -- Name: commissies_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
 
@@ -262,122 +249,6 @@ CREATE TABLE public.commissies (
 
 
 ALTER TABLE public.commissies OWNER TO webcie;
-
---
--- Name: committee_battle_committees; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.committee_battle_committees (
-    id integer NOT NULL,
-    score_id integer NOT NULL,
-    committee_id integer NOT NULL
-);
-
-
-ALTER TABLE public.committee_battle_committees OWNER TO webcie;
-
---
--- Name: committee_battle_committees_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_committees_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_committees_id_seq OWNER TO webcie;
-
---
--- Name: committee_battle_committees_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: webcie
---
-
-ALTER SEQUENCE public.committee_battle_committees_id_seq OWNED BY public.committee_battle_committees.id;
-
-
---
--- Name: committee_battle_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_scores_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_scores_id_seq OWNER TO webcie;
-
---
--- Name: committee_battle_scores; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.committee_battle_scores (
-    id integer DEFAULT nextval('public.committee_battle_scores_id_seq'::regclass) NOT NULL,
-    points integer,
-    awarded_for text DEFAULT ''::text,
-    awarded_on timestamp without time zone
-);
-
-
-ALTER TABLE public.committee_battle_scores OWNER TO webcie;
-
---
--- Name: committee_battle_scores_id_seq1; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_scores_id_seq1
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_scores_id_seq1 OWNER TO webcie;
-
---
--- Name: committee_battle_scores_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: webcie
---
-
-ALTER SEQUENCE public.committee_battle_scores_id_seq1 OWNED BY public.committee_battle_scores.id;
-
-
---
--- Name: committee_battle_users; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.committee_battle_users (
-    id integer NOT NULL,
-    score_id integer NOT NULL,
-    member_id integer NOT NULL
-);
-
-
-ALTER TABLE public.committee_battle_users OWNER TO webcie;
-
---
--- Name: committee_battle_users_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.committee_battle_users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.committee_battle_users_id_seq OWNER TO webcie;
-
---
--- Name: committee_battle_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: webcie
---
-
-ALTER SEQUENCE public.committee_battle_users_id_seq OWNED BY public.committee_battle_users.id;
 
 
 --
@@ -432,257 +303,6 @@ CREATE TABLE public.email_confirmation_tokens (
 
 ALTER TABLE public.email_confirmation_tokens OWNER TO webcie;
 
---
--- Name: facebook; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.facebook (
-    lid_id integer NOT NULL,
-    data_key character varying(255) NOT NULL,
-    data_value text NOT NULL
-);
-
-
-ALTER TABLE public.facebook OWNER TO webcie;
-
---
--- Name: forum_acl_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.forum_acl_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.forum_acl_id_seq OWNER TO webcie;
-
---
--- Name: forum_acl; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_acl (
-    id integer DEFAULT nextval('public.forum_acl_id_seq'::regclass) NOT NULL,
-    forum_id integer NOT NULL,
-    author_type smallint,
-    author_id integer,
-    permissions integer
-);
-
-
-ALTER TABLE public.forum_acl OWNER TO webcie;
-
---
--- Name: forum_group_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.forum_group_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.forum_group_id_seq OWNER TO webcie;
-
---
--- Name: forum_group; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_group (
-    id integer DEFAULT nextval('public.forum_group_id_seq'::regclass) NOT NULL,
-    name character varying(50)
-);
-
-
-ALTER TABLE public.forum_group OWNER TO webcie;
-
---
--- Name: forum_group_member_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.forum_group_member_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.forum_group_member_id_seq OWNER TO webcie;
-
---
--- Name: forum_group_member; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_group_member (
-    id integer DEFAULT nextval('public.forum_group_member_id_seq'::regclass) NOT NULL,
-    group_id integer,
-    author_type smallint,
-    author_id integer
-);
-
-
-ALTER TABLE public.forum_group_member OWNER TO webcie;
-
---
--- Name: forum_header_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.forum_header_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.forum_header_id_seq OWNER TO webcie;
-
---
--- Name: forum_header; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_header (
-    id integer DEFAULT nextval('public.forum_header_id_seq'::regclass) NOT NULL,
-    name character varying(150),
-    "position" integer
-);
-
-
-ALTER TABLE public.forum_header OWNER TO webcie;
-
---
--- Name: forum_lastvisits; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_lastvisits (
-    lid integer NOT NULL,
-    forum_id integer NOT NULL,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
-);
-
-
-ALTER TABLE public.forum_lastvisits OWNER TO webcie;
-
---
--- Name: forum_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.forum_messages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.forum_messages_id_seq OWNER TO webcie;
-
---
--- Name: forum_messages; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_messages (
-    id integer DEFAULT nextval('public.forum_messages_id_seq'::regclass) NOT NULL,
-    thread_id integer NOT NULL,
-    author_id integer NOT NULL,
-    message text NOT NULL,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    author_type smallint DEFAULT 1
-);
-
-
-ALTER TABLE public.forum_messages OWNER TO webcie;
-
---
--- Name: forum_sessionreads; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_sessionreads (
-    lid_id integer NOT NULL,
-    forum_id integer NOT NULL,
-    thread_id integer NOT NULL
-);
-
-
-ALTER TABLE public.forum_sessionreads OWNER TO webcie;
-
---
--- Name: forum_threads_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.forum_threads_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.forum_threads_id_seq OWNER TO webcie;
-
---
--- Name: forum_threads; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_threads (
-    id integer DEFAULT nextval('public.forum_threads_id_seq'::regclass) NOT NULL,
-    forum_id integer NOT NULL,
-    author_id integer NOT NULL,
-    subject character varying(250) NOT NULL,
-    date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    author_type smallint DEFAULT 1,
-    poll smallint DEFAULT 0 NOT NULL
-);
-
-
-ALTER TABLE public.forum_threads OWNER TO webcie;
-
---
--- Name: forum_visits; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forum_visits (
-    lid_id integer NOT NULL,
-    forum_id integer NOT NULL,
-    lastvisit timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    sessiondate timestamp without time zone
-);
-
-
-ALTER TABLE public.forum_visits OWNER TO webcie;
-
---
--- Name: forums_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.forums_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.forums_id_seq OWNER TO webcie;
-
---
--- Name: forums; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.forums (
-    id integer DEFAULT nextval('public.forums_id_seq'::regclass) NOT NULL,
-    name character varying(50) NOT NULL,
-    description character varying(255) NOT NULL,
-    "position" integer DEFAULT 0
-);
-
-
-ALTER TABLE public.forums OWNER TO webcie;
 
 --
 -- Name: foto_boeken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -1188,45 +808,6 @@ CREATE TABLE public.passwords (
 
 ALTER TABLE public.passwords OWNER TO webcie;
 
---
--- Name: pollopties_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
---
-
-CREATE SEQUENCE public.pollopties_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.pollopties_id_seq OWNER TO webcie;
-
---
--- Name: pollopties; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.pollopties (
-    id integer DEFAULT nextval('public.pollopties_id_seq'::regclass) NOT NULL,
-    pollid integer NOT NULL,
-    optie character varying(150) NOT NULL,
-    stemmen smallint DEFAULT 0 NOT NULL
-);
-
-
-ALTER TABLE public.pollopties OWNER TO webcie;
-
---
--- Name: pollvoters; Type: TABLE; Schema: public; Owner: webcie
---
-
-CREATE TABLE public.pollvoters (
-    lid integer NOT NULL,
-    poll integer NOT NULL
-);
-
-
-ALTER TABLE public.pollvoters OWNER TO webcie;
 
 --
 -- Name: profielen_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
@@ -1472,6 +1053,62 @@ CREATE TABLE public.stickers (
 
 ALTER TABLE public.stickers OWNER TO webcie;
 
+
+--
+-- Polls
+--
+CREATE TABLE polls (
+    id serial PRIMARY KEY,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT,
+    committee_id integer DEFAULT NULL REFERENCES commissies (id) ON DELETE SET DEFAULT,
+    question text NOT NULL,
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    updated_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    closed_on timestamp without time zone DEFAULT NULL
+);
+
+CREATE TABLE poll_options (
+    id serial PRIMARY KEY,
+    poll_id integer NOT NULL REFERENCES polls (id) ON DELETE CASCADE,
+    option character varying(255) NOT NULL
+);
+
+CREATE TABLE poll_votes (
+    id serial PRIMARY KEY,
+    poll_option_id integer NOT NULL REFERENCES poll_options (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve vote, even if we don't have member
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+    -- no updated_on, votes cannot be updated
+);
+
+CREATE TABLE poll_comments (
+    id serial PRIMARY KEY,
+    poll_id integer NOT NULL REFERENCES polls (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT,  -- Preserve comment, even if we don't have member
+    comment text NOT NULL,
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone,
+    updated_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+);
+
+CREATE TABLE poll_likes (
+    id serial PRIMARY KEY,
+    poll_id integer NOT NULL REFERENCES polls (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve like, even if we don't have member
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+    -- no updated_on, likes cannot be updated
+    CONSTRAINT poll_like_uniq UNIQUE (poll_id, member_id)
+);
+
+CREATE TABLE poll_comment_likes (
+    id serial PRIMARY KEY,
+    poll_comment_id integer NOT NULL REFERENCES poll_comments (id) ON DELETE CASCADE,
+    member_id integer DEFAULT NULL REFERENCES leden (id) ON DELETE SET DEFAULT, -- Preserve like, even if we don't have member
+    created_on timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) without time zone
+    -- no updated_on, likes cannot be updated
+    CONSTRAINT poll_commment_like_uniq UNIQUE (poll_comment_id, member_id)
+);
+
+
 --
 -- Name: taken_id_seq; Type: SEQUENCE; Schema: public; Owner: webcie
 --
@@ -1491,20 +1128,6 @@ ALTER TABLE public.taken_id_seq OWNER TO webcie;
 --
 
 ALTER TABLE ONLY public.announcements ALTER COLUMN id SET DEFAULT nextval('public.announcements_id_seq'::regclass);
-
-
---
--- Name: committee_battle_committees id; Type: DEFAULT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees ALTER COLUMN id SET DEFAULT nextval('public.committee_battle_committees_id_seq'::regclass);
-
-
---
--- Name: committee_battle_users id; Type: DEFAULT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users ALTER COLUMN id SET DEFAULT nextval('public.committee_battle_users_id_seq'::regclass);
 
 
 --
@@ -1811,14 +1434,6 @@ COPY public.besturen (id, naam, login, website, page_id) FROM stdin;
 
 
 --
--- Data for Name: cache; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.cache (key, value, expires) FROM stdin;
-\.
-
-
---
 -- Data for Name: commissies; Type: TABLE DATA; Schema: public; Owner: webcie
 --
 
@@ -1862,29 +1477,6 @@ COPY public.commissies (id, naam, login, website, page_id, hidden, vacancies, ty
 \.
 
 
---
--- Data for Name: committee_battle_committees; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.committee_battle_committees (id, score_id, committee_id) FROM stdin;
-\.
-
-
---
--- Data for Name: committee_battle_scores; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.committee_battle_scores (id, points, awarded_for, awarded_on) FROM stdin;
-\.
-
-
---
--- Data for Name: committee_battle_users; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.committee_battle_users (id, score_id, member_id) FROM stdin;
-\.
-
 
 --
 -- Data for Name: committee_email; Type: TABLE DATA; Schema: public; Owner: webcie
@@ -1908,12 +1500,8 @@ COPY public.committee_members (id, member_id, committee_id, functie) FROM stdin;
 --
 
 COPY public.configuratie (key, value) FROM stdin;
-weblog_forum	26
-news_forum	27
-poll_forum	28
 boekcie_webshop_link	https://cover.itdepartment.nl/
 boeken_bestellen	1
-committee_battle	1
 \.
 
 
@@ -1924,94 +1512,6 @@ committee_battle	1
 COPY public.email_confirmation_tokens (key, member_id, email, created_on) FROM stdin;
 \.
 
-
---
--- Data for Name: facebook; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.facebook (lid_id, data_key, data_value) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_acl; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_acl (id, forum_id, author_type, author_id, permissions) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_group; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_group (id, name) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_group_member; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_group_member (id, group_id, author_type, author_id) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_header; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_header (id, name, "position") FROM stdin;
-\.
-
-
---
--- Data for Name: forum_lastvisits; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_lastvisits (lid, forum_id, date) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_messages; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_messages (id, thread_id, author_id, message, date, author_type) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_sessionreads; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_sessionreads (lid_id, forum_id, thread_id) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_threads; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_threads (id, forum_id, author_id, subject, date, author_type, poll) FROM stdin;
-\.
-
-
---
--- Data for Name: forum_visits; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forum_visits (lid_id, forum_id, lastvisit, sessiondate) FROM stdin;
-\.
-
-
---
--- Data for Name: forums; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.forums (id, name, description, "position") FROM stdin;
-28	Polls	Polls	0
-\.
 
 
 --
@@ -4295,22 +3795,6 @@ COPY public.passwords (lid_id, password) FROM stdin;
 
 
 --
--- Data for Name: pollopties; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.pollopties (id, pollid, optie, stemmen) FROM stdin;
-\.
-
-
---
--- Data for Name: pollvoters; Type: TABLE DATA; Schema: public; Owner: webcie
---
-
-COPY public.pollvoters (lid, poll) FROM stdin;
-\.
-
-
---
 -- Data for Name: profielen_privacy; Type: TABLE DATA; Schema: public; Owner: webcie
 --
 
@@ -4439,82 +3923,6 @@ SELECT pg_catalog.setval('public.besturen_id_seq', 26, true);
 SELECT pg_catalog.setval('public.commissies_id_seq', 45, true);
 
 
---
--- Name: committee_battle_committees_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_committees_id_seq', 1607, true);
-
-
---
--- Name: committee_battle_scores_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_scores_id_seq', 58, true);
-
-
---
--- Name: committee_battle_scores_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_scores_id_seq1', 1, false);
-
-
---
--- Name: committee_battle_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.committee_battle_users_id_seq', 30, true);
-
-
---
--- Name: forum_acl_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.forum_acl_id_seq', 104, true);
-
-
---
--- Name: forum_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.forum_group_id_seq', 13, true);
-
-
---
--- Name: forum_group_member_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.forum_group_member_id_seq', 43, true);
-
-
---
--- Name: forum_header_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.forum_header_id_seq', 8, true);
-
-
---
--- Name: forum_messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.forum_messages_id_seq', 11783, true);
-
-
---
--- Name: forum_threads_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.forum_threads_id_seq', 1500, true);
-
-
---
--- Name: forums_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.forums_id_seq', 49, true);
-
 
 --
 -- Name: foto_boeken_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
@@ -4608,13 +4016,6 @@ SELECT pg_catalog.setval('public.pages_id_seq', 139, true);
 
 
 --
--- Name: pollopties_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
---
-
-SELECT pg_catalog.setval('public.pollopties_id_seq', 1669, true);
-
-
---
 -- Name: profielen_id_seq; Type: SEQUENCE SET; Schema: public; Owner: webcie
 --
 
@@ -4703,14 +4104,6 @@ ALTER TABLE ONLY public.applications
 
 
 --
--- Name: cache cache_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.cache
-    ADD CONSTRAINT cache_pkey PRIMARY KEY (key);
-
-
---
 -- Name: commissies commissies_login_key; Type: CONSTRAINT; Schema: public; Owner: webcie
 --
 
@@ -4724,30 +4117,6 @@ ALTER TABLE ONLY public.commissies
 
 ALTER TABLE ONLY public.commissies
     ADD CONSTRAINT commissies_pkey PRIMARY KEY (id);
-
-
---
--- Name: committee_battle_committees committee_battle_committees_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees
-    ADD CONSTRAINT committee_battle_committees_pkey PRIMARY KEY (id);
-
-
---
--- Name: committee_battle_scores committee_battle_scores_pkey1; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_scores
-    ADD CONSTRAINT committee_battle_scores_pkey1 PRIMARY KEY (id);
-
-
---
--- Name: committee_battle_users committee_battle_users_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users
-    ADD CONSTRAINT committee_battle_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -4780,62 +4149,6 @@ ALTER TABLE ONLY public.configuratie
 
 ALTER TABLE ONLY public.email_confirmation_tokens
     ADD CONSTRAINT email_confirmation_tokens_pkey PRIMARY KEY (key);
-
-
---
--- Name: facebook facebook_pk; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.facebook
-    ADD CONSTRAINT facebook_pk PRIMARY KEY (lid_id, data_key);
-
-
---
--- Name: forum_group_member forum_group_member_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_group_member
-    ADD CONSTRAINT forum_group_member_pkey PRIMARY KEY (id);
-
-
---
--- Name: forum_threads forum_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_threads
-    ADD CONSTRAINT forum_messages_pkey PRIMARY KEY (id);
-
-
---
--- Name: forum_messages forum_replies_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_messages
-    ADD CONSTRAINT forum_replies_pkey PRIMARY KEY (id);
-
-
---
--- Name: forum_sessionreads forum_sessionreads_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_sessionreads
-    ADD CONSTRAINT forum_sessionreads_pkey PRIMARY KEY (lid_id, forum_id, thread_id);
-
-
---
--- Name: forum_visits forum_visits_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_visits
-    ADD CONSTRAINT forum_visits_pkey PRIMARY KEY (lid_id, forum_id);
-
-
---
--- Name: forums forums_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forums
-    ADD CONSTRAINT forums_pkey PRIMARY KEY (id);
 
 
 --
@@ -4975,14 +4288,6 @@ ALTER TABLE ONLY public.passwords
 
 
 --
--- Name: pollopties pollopties_pkey; Type: CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.pollopties
-    ADD CONSTRAINT pollopties_pkey PRIMARY KEY (id);
-
-
---
 -- Name: profielen_privacy profielen_privacy_field_key; Type: CONSTRAINT; Schema: public; Owner: webcie
 --
 
@@ -5062,20 +4367,6 @@ CREATE INDEX committee_email_committee_id_idx ON public.committee_email USING bt
 
 
 --
--- Name: forum_messages_thread_id_idx; Type: INDEX; Schema: public; Owner: webcie
---
-
-CREATE INDEX forum_messages_thread_id_idx ON public.forum_messages USING btree (thread_id);
-
-
---
--- Name: forum_threads_forum_id_idx; Type: INDEX; Schema: public; Owner: webcie
---
-
-CREATE INDEX forum_threads_forum_id_idx ON public.forum_threads USING btree (forum_id);
-
-
---
 -- Name: foto_boeken_parent; Type: INDEX; Schema: public; Owner: webcie
 --
 
@@ -5108,13 +4399,6 @@ CREATE INDEX foto_reacties_foto_idx ON public.foto_reacties USING btree (foto);
 --
 
 CREATE INDEX fotos_boek_hidden_idx ON public.fotos USING btree (boek, hidden);
-
-
---
--- Name: pollvoters_lid_poll_idx; Type: INDEX; Schema: public; Owner: webcie
---
-
-CREATE UNIQUE INDEX pollvoters_lid_poll_idx ON public.pollvoters USING btree (lid, poll);
 
 
 --
@@ -5180,38 +4464,6 @@ ALTER TABLE ONLY public.commissies
 
 
 --
--- Name: committee_battle_committees committee_battle_committees_committee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees
-    ADD CONSTRAINT committee_battle_committees_committee_id_fkey FOREIGN KEY (committee_id) REFERENCES public.commissies(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: committee_battle_committees committee_battle_committees_score_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_committees
-    ADD CONSTRAINT committee_battle_committees_score_id_fkey FOREIGN KEY (score_id) REFERENCES public.committee_battle_scores(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: committee_battle_users committee_battle_users_member_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users
-    ADD CONSTRAINT committee_battle_users_member_id_fkey FOREIGN KEY (member_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: committee_battle_users committee_battle_users_score_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.committee_battle_users
-    ADD CONSTRAINT committee_battle_users_score_id_fkey FOREIGN KEY (score_id) REFERENCES public.committee_battle_scores(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: committee_email committee_email_committee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
 --
 
@@ -5225,46 +4477,6 @@ ALTER TABLE ONLY public.committee_email
 
 ALTER TABLE ONLY public.email_confirmation_tokens
     ADD CONSTRAINT email_confirmation_tokens_member_id_fkey FOREIGN KEY (member_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: facebook facebook_lid_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.facebook
-    ADD CONSTRAINT facebook_lid_id_fkey FOREIGN KEY (lid_id) REFERENCES public.leden(id);
-
-
---
--- Name: forum_messages forum_messages_thread_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_messages
-    ADD CONSTRAINT forum_messages_thread_fkey FOREIGN KEY (thread_id) REFERENCES public.forum_threads(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: forum_sessionreads forum_sessionreads_lid_key; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_sessionreads
-    ADD CONSTRAINT forum_sessionreads_lid_key FOREIGN KEY (lid_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: forum_visits forum_visits_forum_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_visits
-    ADD CONSTRAINT forum_visits_forum_id_fkey FOREIGN KEY (forum_id) REFERENCES public.forums(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: forum_visits forum_visits_lid_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.forum_visits
-    ADD CONSTRAINT forum_visits_lid_id_fkey FOREIGN KEY (lid_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5457,30 +4669,6 @@ ALTER TABLE ONLY public.password_reset_tokens
 
 ALTER TABLE ONLY public.passwords
     ADD CONSTRAINT passwords_lid_id_fkey FOREIGN KEY (lid_id) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: pollopties pollopties_pollid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.pollopties
-    ADD CONSTRAINT pollopties_pollid_fkey FOREIGN KEY (pollid) REFERENCES public.forum_threads(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: pollvoters pollvoters_lid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.pollvoters
-    ADD CONSTRAINT pollvoters_lid_fkey FOREIGN KEY (lid) REFERENCES public.leden(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: pollvoters pollvoters_poll_fkey; Type: FK CONSTRAINT; Schema: public; Owner: webcie
---
-
-ALTER TABLE ONLY public.pollvoters
-    ADD CONSTRAINT pollvoters_poll_fkey FOREIGN KEY (poll) REFERENCES public.forum_threads(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

@@ -1,163 +1,81 @@
 {% extends 'tab.twig' %}
 
+{% from '@theme/profile/macros.twig' import profile_field %}
+
 {% set active_tab = 'profile' %}
 
 {% block tab_content %}
 <section class="block">
-	<form action="{{ path('profile', {view: 'profile', lid: iter.id}) }}" method="post">
-		{{ html_nonce('profile', iter) }}
+	{{ form_start(profile_form, {action: path('profile', {'view': 'profile', 'lid': iter.id})}) }}
 		<div class="profile-field">
 			<div class="field-body">
 				<h2 class="title is-4">{{ __('Profile Information') }}</h2>
 			</div>
 		</div>
-
 		<div class="profile-field">
 			<div class="field-body">
-				{{ __('Your profile details are used to give your profile page a personal touch.') }}
+				<p>{{ __('Your profile details are used to give your profile page a personal touch.') }}</p>
+				{# Global errors #}
+				{{ form_errors(profile_form) }}
 			</div>
 		</div>
-
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				{{ html_label(__('Nickname'), 'nick', errors=errors) }}
-			</div>
-			<div class="field-body">
-				<div class="field">
-					<div class="control">
-						{{ html_input_text('nick', iter) }}
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				{{ html_label(__('Avatar'), 'avatar', errors=errors) }}
-			</div>
-			<div class="field-body">
-				<div class="field">
-					<div class="control">
-						{{ html_input_text('avatar', iter, formatter='empty_to_http_formatter', placeholder='https://') }}
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				{{ html_label(__('Website'), 'homepage', errors=errors) }}
-			</div>
-			<div class="field-body">
-				<div class="field">
-					<div class="control">
-						{{ html_input_text('homepage', iter, formatter='empty_to_http_formatter', placeholder='https://') }}
-					</div>
-				</div>
-			</div>
-		</div>
-
+		{{ profile_field(profile_form.nick, {optional_tag: false}) }}
+		{{ profile_field(profile_form.avatar, {optional_tag: false}) }}
+		{{ profile_field(profile_form.homepage, {optional_tag: false}) }}
 		<div class="profile-field">
 			<div class="field-body">
-				<button type="submit" class="button">{{ __('Save') }}</button>
+				{{ form_widget(profile_form.submit, {label: __('Save'), color: 'default'}) }}
 			</div>
 		</div>
-	</form>
+	{{ form_end(profile_form) }}
 </section>
 
 <section class="block">
-	<form action="{{ path('profile', {view: 'photo', lid: iter.id}) }}" method="post" enctype="multipart/form-data">
-		{{ html_nonce('photo', iter) }}
+	{{ form_start(photo_form, {action: path('profile', {view: 'photo', lid: iter.id}), attr: {'data-auto-submit': true, 'data-use-native-submit': true}}) }}
 		<div class="profile-field">
 			<div class="field-body">
 				<h2 class="title is-4">{{ __('Change Photo') }}</h2>
 			</div>
 		</div>
-
 		<div class="profile-field">
 			<div class="field-body">
-				{{ __('Your photo is not only used on this website, but also in the yearbook. You want to use a more recent photo? Send in the best version you have! Submissions are processed by hand, so it might take a while for the new photo to show up.') }}
+				<p>{{ __('Your photo is not only used on this website, but also in the yearbook. You want to use a more recent photo? Send in the best version you have! Submissions are processed by hand, so it might take a while for the new photo to show up.') }}</p>
 			</div>
 		</div>
-
 		<div class="profile-field">
 			<div class="field-body">
-				<div class="field">
-					<div class="file">
-						<label class="file-label">
-							<input class="file-input" type="file" name="photo" accept="image/jpeg" title="{{ __('Only JPEG images are allowed.')|e('html_attr') }}" onchange="if (this.value) this.form.submit()">
-							<span class="file-cta">
-								<span class="file-icon">
-									<i class="fas fa-upload"></i>
-								</span>
-								<span class="file-label">
-									{{ __('Choose photo…' )}}
-								</span>
-							</span>
-						</label>
-					</div>
-				</div>
+				{{ form_widget(photo_form.photo, {attr: {title: __('Only JPEG images are allowed.')}}) }}
+				{# Global errors, there's only one field so they can be rendered here #}
+				{{ form_errors(photo_form) }}
+				{{ form_errors(photo_form.photo) }}
+				{{ form_help(photo_form.photo) }}
 			</div>
 		</div>
-	</form>
+		<div class="profile-field" data-auto-submit-hidden>
+			<div class="field-body">
+				{{ form_widget(photo_form.submit, {'label': __('Change Photo'), 'attr': {'data-auto-submit-hidden': true}}) }}
+			</div>
+		</div>
+	{{ form_end(photo_form) }}
 </section>
 
 <section class="block">
-	<form action="{{ path('profile', {view: 'profile', lid: iter.id}) }}" method="post">
-		{{ html_nonce('password', iter) }}
+	{{ form_start(password_form, {action: path('profile', {'view': 'profile', 'lid': iter.id})}) }}
 		<div class="profile-field">
 			<div class="field-body">
 				<h2 class="title is-4">{{ __('Change Password') }}</h2>
+				{# Global errors #}
+				{{ form_errors(password_form) }}
 			</div>
 		</div>
-
-		{% if current_password_required %}		
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					{{ html_label(__('Current password'), 'wachtwoord_oud', errors=errors) }}
-				</div>
-				<div class="field-body">
-					<div class="field">
-						<div class="control">
-							{{ html_input_password('wachtwoord_oud') }}
-						</div>
-					</div>
-				</div>
-			</div>
-		{% endif %}
-		
-
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				{{ html_label(__('New password'), 'wachtwoord_nieuw', errors=errors) }}
-			</div>
-			<div class="field-body">
-				<div class="field">
-					<div class="control">
-						{{ html_input_password('wachtwoord_nieuw') }}
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				{{ html_label(__('Repeat'), 'wachtwoord_opnieuw', errors=errors) }}
-			</div>
-			<div class="field-body">
-				<div class="field">
-					<div class="control">
-						{{ html_input_password('wachtwoord_opnieuw') }}
-					</div>
-				</div>
-			</div>
-		</div>
-
+		{{ profile_field(password_form.current, {attr: {autocomplete: 'current-password'}}) }}
+		{{ profile_field(password_form.password.first, {attr: {autocomplete: 'new-password'}}) }}
+		{{ profile_field(password_form.password.second, {attr: {autocomplete: 'new-password'}}) }}
 		<div class="profile-field">
 			<div class="field-body">
-				<button type="submit" class="button">{{ __('Change password') }}</button>
+				{{ form_widget(password_form.submit, {label: __('Change password'), color: 'default'}) }}
 			</div>
 		</div>
-	</form>
+	{{ form_end(password_form) }}
 </section>
 {% endblock %}

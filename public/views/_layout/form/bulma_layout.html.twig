@@ -29,10 +29,37 @@
     {%- endif -%}
 {%- endblock form_widget_compound -%}
 
+{%- block collection_widget -%}
+    {# This is a minimum working implementation. At the very least, you'll probably need to set 'entry_options.label' to make it look decent. But it's probably best to customize the implementation in your form template. #}
+    <noscript><p>{{ __('This feature needs JavaScript to work.') }}</p></noscript>
+    <div id="{{ form.vars.id }}-options" class="growing-list" data-growing-list-template="#{{ form.vars.id }}-template">
+        {{- block('form_widget') -}}
+    </div>
+    {% if prototype is defined and not prototype.rendered %}
+        <template id="{{ form.vars.id }}-template">
+            {{ form_row(prototype) }}
+        </template>
+    {% endif %}
+{%- endblock collection_widget -%}
+
 {%- block textarea_widget -%}
     {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' textarea')|trim}) -%}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 {%- endblock textarea_widget -%}
+
+
+{%- block choice_widget -%}
+    {% if expanded and (chips ?? false) %}
+        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' chips')|trim}) -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- block('choice_widget_expanded_chips') -}}
+        </div>
+    {% elseif expanded %}
+        {{- block('choice_widget_expanded') -}}
+    {% else %}
+        {{- block('choice_widget_collapsed') -}}
+    {% endif %}
+{%- endblock choice_widget -%}
 
 {%- block choice_widget_collapsed -%}
     {%- if wrapper_attr is not defined -%}
@@ -70,31 +97,75 @@
         {%- for child in form %}
             <div class="control">
                 {{- form_widget(child, {
-                    parent_label_class: label_attr.class|default(''),
                     translation_domain: choice_translation_domain,
                     valid: valid,
-                    show_mark: false,
+                    show_tag: false,
                 }) -}}{#- Properly transfer the 'required' property, and make sure things are never marked required -#}
             </div>
         {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded %}
 
+
+{%- block choice_widget_expanded_chips -%}
+    {% for group_label, choice in choices %}
+        {%- if choice is iterable -%}
+            <fieldset class="block">
+                <legend class="label">
+                    {{ choice_translation_domain is same as(false) ? group_label : group_label|trans({}, choice_translation_domain) }}
+                </legend>
+                <div class="chips">
+                    {%- with {choices: choice} -%}{{- block('choice_widget_expanded_chips') -}}{%- endwith -%}
+                </div>
+            </fieldset>
+        {%- else -%}
+            {# Find child #}
+            {%- set child = form|filter(c => not c.isRendered() and c.vars.value == choice.value)|first -%}
+            {%- if child -%}
+                {{- form_widget(child, {
+                    translation_domain: choice_translation_domain,
+                    valid: valid,
+                    show_tag: false,
+                    chip: true,
+                }) -}}
+            {%- endif -%}
+        {%- endif -%}
+    {% endfor %}
+{%- endblock choice_widget_expanded_chips %}
+
 {%- block checkbox_widget -%}
-    {{- form_label(form, null, { widget: parent() }) -}}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ((chip ?? false) ? ' chip') ~ ((switch ?? false) ? ' switch  is-rounded'))|trim}) -%}
+    {%- set widget = parent() -%}
+    {{- block('checkbox_radio_widget') -}}
 {%- endblock checkbox_widget -%}
 
 {%- block radio_widget -%}
-    {{- form_label(form, null, { widget: parent() }) -}}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ((chip ?? false) ? ' chip') ~ ((switch ?? false) ? ' switch  is-rounded'))|trim}) -%}
+    {%- set widget = parent() -%}
+    {{- block('checkbox_radio_widget') -}}
 {%- endblock radio_widget %}
 
+{%- block checkbox_radio_widget -%}
+    {%- if render_label is defined and not render_label -%}
+        {{- widget|raw -}}
+    {%- elseif (chip ?? false) or (switch ?? false) -%}
+        {{- widget|raw -}}
+        {{- form_label(form, null, { widget: '', label_class: '' }) -}}
+    {%- else -%}
+        {{- form_label(form, null, { widget: widget }) -}}
+    {%- endif -%}
+{%- endblock checkbox_radio_widget %}
+
 {%- block button_widget -%}
-    {%- if is_primary is not defined -%}
-        {% if type is defined and type == 'submit' %}
-            {%- set is_primary = true -%}
-        {% else %}
-            {%- set is_primary = false -%}
-        {%- endif -%}
+    {# Set Color for BulmaButtonTypeExtension #}
+    {% if color is not defined %}
+        {%- set color = '' -%}
+    {%- endif -%}
+    {% if not color and type is defined and type == 'submit' %}
+        {%- set color = 'primary' -%}
+    {%- endif -%}
+    {% if color and not (color starts with 'is-') %}
+        {%- set color = 'is-' ~ color -%}
     {%- endif -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
@@ -106,10 +177,7 @@
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
-    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' button')|trim}) -%}
-    {% if is_primary %}
-        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' is-primary')|trim}) -%}
-    {%- endif -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' button' ~ ' ' ~ color)|trim}) -%}
     <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
         {%- if translation_domain is same as(false) -%}
             {%- if label_html is same as(false) -%}
@@ -127,13 +195,33 @@
     </button>
 {%- endblock button_widget -%}
 
+
+{%- block file_widget -%}
+    {%- set widget_attr = {'class': (attr.class|default('') ~ ' file')|trim} -%}
+    {%- set cta_attr = {'title': attr.title|default('')} -%}
+    {%- set attr = attr|merge({'class': 'file-input'}) -%}
+    <div {% with { attr: widget_attr } %}{{ block('attributes') }}{% endwith %}>
+        <label class="file-label" for="{{ id }}">
+            <input type="file" {{ block('widget_attributes') }}>
+            <span class="file-cta" {% with { attr: cta_attr } %}{{ block('attributes') }}{% endwith %}>
+                <span class="file-icon">
+                    <i class="fas fa-upload" aria-hidden="true"></i>
+                </span>
+                <span class="file-label">{{ cta|default('Browse…') }}</span>
+            </span>
+            {% if 'has-name' in widget_attr.class %}
+                <span class="file-name">
+                    {{ attr.placeholder|default('') }}
+                </span>
+            {% endif %}
+        </label>
+    </div>
+{%- endblock file_widget -%}
+
 {# Labels #}
 
 {%- block form_label -%}
     {% if label is not same as(false) -%}
-        {%- if mark_required is not defined -%}
-            {%- set mark_required = false -%}
-        {%- endif -%}
         {%- set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' label')|trim}) -%}
         {%- if not compound -%}
             {% set label_attr = label_attr|merge({'for': id}) %}
@@ -145,8 +233,8 @@
 {%- endblock form_label -%}
 
 {%- block form_label_content -%}
-    {%- if show_mark is not defined -%}
-        {%- set show_mark = true -%}
+    {%- if show_tag is not defined -%}
+        {%- set show_tag = true -%}
     {%- endif -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
@@ -172,32 +260,32 @@
         {%- endif -%}
     {%- endif -%}
     {# Required/optional indicator #}
-    {% if show_mark %}
-        {% if not required and not mark_required %}
+    {% if show_tag %}
+        {% if not required and optional_tag ?? true %}
             <span class="tag is-rounded">optional</span>
-        {% elseif required and mark_required %}
+        {% elseif required and required_tag ?? false %}
             <span class="tag is-rounded">required</span>
         {%- endif -%}
     {%- endif -%}
 {%- endblock form_label_content -%}
 
 {% block checkbox_label -%}
-    {% set label_class = 'checkbox' %}
+    {%- if label_class is not defined -%}
+        {% set label_class = 'checkbox' %}
+    {%- endif -%}
     {{- block('checkbox_radio_label') -}}
 {%- endblock checkbox_label %}
 
 {% block radio_label -%}
-    {% set label_class = 'radio' %}
+    {%- if label_class is not defined -%}
+        {% set label_class = 'radio' %}
+    {%- endif -%}
     {{- block('checkbox_radio_label') -}}
 {%- endblock radio_label %}
 
 {%- block checkbox_radio_label -%}
     {#- Do not display the label if widget is not defined in order to prevent double label rendering -#}
     {%- if widget is defined -%}
-        {%- if mark_required is not defined -%}
-            {# Default is true, whereas for normal label default is false #}
-            {%- set mark_required = true -%}
-        {%- endif -%}
         {%- if label_class is defined -%}
             {%- set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' ' ~ label_class)|trim}) -%}
         {%- else -%}

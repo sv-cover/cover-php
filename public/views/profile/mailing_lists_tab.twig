@@ -22,33 +22,40 @@
 					id="mailinglijst-{{ mailing_list.id|e('url') }}-toggle"
 					class="list-group-item-action toggle-action-button {{ mailing_list.subscribed ? 'toggle-state-active' : '' }}"
 					method="post"
-					action="{{ path('profile', {view: 'mailing_lists', lid:iter.id}) }}"
+					action="{{ path('mailing_lists', {view: 'subscribe', id:mailing_list.id}) }}"
 					data-auto-submit
 				>
-					{{ html_nonce('mailing_list', iter) }}
-					{{ html_input_hidden('mailing_list_id', mailing_list.id) }}
+					<input type="hidden" name="form[_token]" value="{{ csrf_token('mailinglist_subscription_' ~ mailing_list.id) }}">
 
 					<div class="field">
 						<label class="checkbox" for="field-subscribe-{{ mailing_list.id }}">
-							{{ html_input_checkbox('subscribe', {'subscribe': mailing_list.subscribed}, id='field-subscribe-%d'|format(mailing_list.id), data_auto_submit_visible='data-auto-submit-visible', hidden='hidden') }}
+							<input
+								id="field-subscribe-{{ mailing_list.id }}"
+								type="checkbox"
+								name="form[subscribe]"
+								value="1"
+								{% if mailing_list.subscribed %}checked{% endif %}
+								data-auto-submit-visible
+								hidden
+								aria-label="{{ __('Subscribe to mailinglist') }}"
+							>
 							&ZeroWidthSpace;{# space for proper height #}
-							<span class="is-sr-only">Subscribe to mailinglist</span>
 						</label>
 					</div>
 
 					{# Fallback for no JS #}
 					{% if mailing_list.subscribed %}
-						<input type="hidden" name="action" value="unsubscribe" data-auto-submit-exclude>
 						<button 
 							type="submit"
+							name="form[do_unsubscribe]"
 							class="button"
 							title="{{ __('You are subscribed to this list. Click to unsubscribe.')|e('html_attr') }}"
 							data-auto-submit-hidden
 						>{{ __('Unsubscribe') }}</button>
 					{% else %}
-						<input type="hidden" name="action" value="subscribe" data-auto-submit-exclude>
 						<button 
 							type="submit"
+							name="form[do_subscribe]"
 							class="button"
 							title="{{ __('Click to subscribe.')|e('html_attr') }}"
 							data-auto-submit-hidden
@@ -59,9 +66,15 @@
 				{# This is still a form to make things consistent whether JS is applied or not #}
 				<form data-auto-submit>
 					<label class="checkbox" title="{{ __('You are subscribed to this list. You can ask the committee to unsubscribe you.')|e('html_attr') }}">
-						<input type="checkbox" disabled {% if mailing_list.subscribed %}checked{% endif %} data-auto-submit-visible hidden>
+						<input
+							type="checkbox"
+							{% if mailing_list.subscribed %}checked{% endif %}
+							data-auto-submit-visible
+							hidden
+							aria-label="{{ __('Subscribe to mailinglist') }}"
+							disabled
+						>
 						&ZeroWidthSpace;{# space for proper height #}
-						<span class="is-sr-only">Subscribe to mailinglist</span>
 					</label>
 
 					{# Fallback for no JS #}

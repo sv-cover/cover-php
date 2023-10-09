@@ -1,0 +1,16 @@
+{% macro profile_field(form, variables={}, label=null) %}
+    <div class="field is-horizontal">
+        <div class="field-label is-normal">
+            {{- form_label(form, null, variables) -}}
+        </div>
+        <div class="field-body">
+            <div class="field is-expanded">
+                <div class="control">
+                    {{- form_widget(form, variables) -}}
+                </div>
+                {{- form_errors(form) -}}
+                {{- form_help(form) -}}
+            </div>
+        </div>
+    </div>
+{% endmacro %}

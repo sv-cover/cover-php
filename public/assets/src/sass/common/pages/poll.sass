@@ -1,0 +1,112 @@
+$poll-icon-color: $grey !default
+$poll-result-background-color: $button-background-color
+$poll-result-margin: 0.5rem
+
+$media-spacing: 1rem
+
+.poll-header
+    @extend %block
+    &::before
+        +tablet
+            content: ''
+            display: block
+            width: 64px
+            margin-right: $media-spacing
+
+.poll-pagination
+    @extend %block
+    +tablet
+        padding-left: calc(64px + #{$media-spacing})
+
+.poll
+    .committee-avatar
+        background: $cover
+        display: flex
+        align-items: center
+        justify-content: center
+        height: 100%
+        border-radius: 100%
+        color: $cover-invert
+    .controls .level-item
+        color: $poll-icon-color
+        &:not(:last-child)
+            margin-right: $block-spacing
+        .button
+            font-size: inherit
+            color: $poll-icon-color
+            padding: 0
+
+            &:focus
+                background: none
+                box-shadow: none
+        .count
+            line-height: 1
+            margin-left: .7ch
+        &:hover
+            color: $link-hover
+            .button
+                color: $link-hover
+                background: none
+        &.is-active
+            color: $link
+    .poll-meta
+        display: flex
+        margin-bottom: 0.75rem
+        .image
+            display: inline-block
+            vertical-align: middle
+            margin-right: 0.75ch
+        ul
+            margin: 0
+            list-style: none
+            li
+                margin-top: 0
+            li.divider
+                display: none
+        +tablet
+            ul li,
+            ul li.divider // override default devider margin
+                display: inline-block
+    .poll-option
+        +control
+        position: relative
+        display: flex
+        border-width: 0
+        justify-content: space-between
+        z-index: 0 // fix issues with meter z-index
+        &:not(:last-child)
+            margin-bottom: $poll-result-margin
+        label
+            flex: 1 1 100%
+            position: relative
+            height: 100%
+            span
+                position: absolute
+                top: 0
+                right: 0
+                bottom: 0
+                left: 0
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+        meter
+            -moz-appearance: none
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            width: 100%
+            height: $control-height
+            background: none
+            z-index: -1
+            &::-moz-meter-bar
+                background: $poll-result-background-color
+            &::-webkit-meter-bar
+                background: none
+                height: $control-height
+                border-radius: 0
+                border: none
+            &::-webkit-meter-optimum-value
+                background: $poll-result-background-color
+        .percentage
+            height: 100%

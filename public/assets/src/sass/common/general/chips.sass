@@ -1,0 +1,53 @@
+$chip-background: $scheme-main-ter !default
+$chip-background-hover: $button-background-color !default
+$chip-check: $chip-background-hover !default
+$chip-check-hover: $button-hover-background-color !default
+
+.chips
+    @extend .buttons
+    .chip
+        display: none
+        & + label
+            @extend .button, .is-rounded
+            padding: 0.1em 0.75em
+            height: auto
+            background: $chip-background
+            &:hover
+                background: $chip-background-hover
+        &:checked + label
+            color: $link
+        // Radio
+        &[type=radio]:checked + label
+            border-color: $primary
+        // Checkbox
+        &[type=checkbox] + label
+            &::before
+                content: ''
+                display: block
+                height: 1em
+                width: 1em
+                background: $chip-check
+                border-radius: 100%
+                margin-right: 0.35em
+                margin-left: -0.4em
+            &:hover::before
+                background: $chip-check-hover
+        &[type=checkbox]:checked + label
+            position: relative
+            &::before
+                background: $primary
+            &::after
+                // Check icon, courtesy of css.gg
+                content: ''
+                display: block
+                box-sizing: border-box
+                position: absolute
+                left: .55em
+                top: .35em
+                width: .3em
+                height: .5em
+                border-width: 0 .15em .15em 0
+                border-style: solid
+                border-color: $primary-invert
+                transform-origin: bottom left
+                transform: rotate(45deg)

@@ -4,25 +4,23 @@
 
 {% block content %}
 <div class="modal is-static">
-	<div class="modal-card">
-		<header class="modal-card-head">
-			<p class="modal-card-title">{{ __('Update photo') }}</p>
-		</header>
-		<section class="modal-card-body">
-			<form id="update-photo-form" method="post" action="{{ path('photos.photo', {view: 'update', book: book.id, photo: photo.id}) }}">
-				{{ html_nonce('update', photo) }}
-				<div class="field">
-					{{ html_label(__('Title'), 'beschrijving', errors=errors) }}
-					<div class="control">
-						{{ html_input_text('beschrijving', photo, errors=errors) }}
-					</div>
-				</div>
-			</form>
-		</section>
-		<footer class="modal-card-foot">
-			<a href="{{ path('photos.photo', {book: book.id, photo: photo.id}) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
-			<button type="submit" class="button is-primary" form="update-photo-form">{{ __('Update photo') }}</button>
-		</footer>
-	</div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ __('Update photo') }}</p>
+        </header>
+        <section class="modal-card-body">
+            {{ form_start(form, {'id': 'update-photo-form', 'action': path('photos.photo', {view: 'update', book: book.id, photo: photo.id}) }) }}
+                {# Global errors #}
+                {{ form_errors(form) }}
+                {# Fields #}
+                {{ form_row(form.beschrijving, {optional_tag: false}) }}
+                {% set submit_button = form_widget(form.submit, {label: __('Update photo'), attr: {form: 'update-photo-form'}}) %}
+            {{ form_end(form) }}
+        </section>
+        <footer class="modal-card-foot">
+            <a href="{{ path('photos.photo', {book: book.id, photo: photo.id}) }}" class="button" data-dismiss="modal">{{ __('Return to photo') }}</a>
+            {{ submit_button|raw }}
+        </footer>
+    </div>
 </div>
 {% endblock %}
