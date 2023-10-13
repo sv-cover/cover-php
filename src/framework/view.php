@@ -261,233 +261,39 @@ class View
 }
 
 
-/**
- * Trait to help implement JSON responses. The reason for this to exist seems to be photo face tagging. 
- * 
- * Trace the following commits:
- * d3552107bcffd8aab4c3af426ce7156ae72e3d68 - implementation of json in controllers
- * 38a42d845dddd779d78e10ccc783d0dcb7512a97 - implementation of tagging (committeed a minute after the previous)
- * 8c91b6c52e7549f11b69e8ec6badf41a8368f70a - JSON moved to CRUDView
- * bc1bcc2c30c7401db110adddd1d1d2a7eb5b7538 - Creation of this trait
- */
-trait JSONView {
-	protected function _send_json_single(DataIter $iter)
-	{
-		return $this->render_json(array(
-			'iter' => $this->_json_augment_iter($iter)
-		));
-	}
-
-	protected function _send_json_index(array $iters)
-	{
-		$links = array();
-
-		$new_iter = $this->controller->model()->new_iter();
-
-		if (get_policy($new_iter)->user_can_create($new_iter))
-			$links['create'] = $this->controller->path('create', $new_iter, true);
-
-		return $this->render_json(array(
-			'iters' => array_map(array($this, '_json_augment_iter'), $iters),
-			'__links' => $links
-		));
-	}
-
-	protected function _json_augment_iter(DataIter $iter)
-	{
-		$links = array();
-
-		$policy = get_policy($this->controller->model());
-
-		if ($policy->user_can_read($iter))
-			$links['read'] = $this->controller->path('read', $iter, true);
-
-		if ($policy->user_can_update($iter))
-			$links['update'] = $this->controller->path('update', $iter, true);
-
-		if ($policy->user_can_delete($iter))
-			$links['delete'] = $this->controller->path('delete', $iter, true);
-
-		if (method_exists($this->controller, 'get_data_for_iter'))
-			$data = $this->controller->get_data_for_iter($iter);
-		else
-			$data = $iter->data;
-
-		return array_merge($data, array('__id' => $iter->get_id(), '__links' => $links));
-	}
-}
-
-
-class CRUDView extends View
-{
-	use JSONView;
-
-	public function get_label(DataIter $iter = null, $create_label, $update_label)
-	{
-		return $iter && $iter->has_id() ? $update_label : $create_label;
-	}
-
-	public function render_delete(DataIter $iter, $success, $errors)
-	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				return $this->render_json(compact('errors'));
-
-			default:
-				if ($success)
-					return $this->redirect($this->controller->path('index'));
-				else
-					return $this->render('confirm_delete.twig', compact('iter', 'errors'));
-		}
-	}
-
-	public function render_create(DataIter $iter, $success, $errors)
-	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					return $this->_send_json_single($iter);
-				else
-					return $this->render_json(compact('errors'));
-
-			default:
-				if ($success)
-					return $this->redirect($this->controller->path('read', $iter));
-				else
-					return $this->render('form.twig', compact('iter', 'errors'));
-		}
-	}
-
-	public function render_read(DataIter $iter, array $extra = [])
-	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				return $this->_send_json_single($iter);
-
-			default:
-				return $this->render('single.twig', array_merge($extra, compact('iter')));
-		}
-	}
-
-	public function render_update(DataIter $iter, $success, $errors)
-	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					return $this->_send_json_single($iter);
-				else
-					return $this->render_json(compact('errors'));
-
-			default:
-				if ($success)
-					return $this->redirect($this->controller->path('read', $iter));
-				else
-					return $this->render('form.twig', compact('iter', 'errors'));
-		}
-	}
-
-	public function render_index($iters)
-	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				return $this->_send_json_index($iters);
-
-			default:
-				return $this->render('index.twig', compact('iters'));
-		}
-	}
-}
-
 class CRUDFormView extends View
 {
-	use JSONView;
-
-	protected function render_errors($form)
-	{
-		$errors = [];
-		foreach ($form->getErrors(true, true) as $error) {
-			$errors[$error->getOrigin()->getName()] = $error->getMessage();
-		}
-		return $errors;
-	}
-
 	public function render_delete(DataIter $iter, $form, $success)
 	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				return $this->render_json($this->render_errors($form));
-
-			default:
-				if ($success)
-					return $this->redirect($this->controller->path('index'));
-				else
-					return $this->render('confirm_delete.twig', ['iter' => $iter, 'form' => $form->createView()]);
-		}
+		if ($success)
+			return $this->redirect($this->controller->path('index'));
+		else
+			return $this->render('confirm_delete.twig', ['iter' => $iter, 'form' => $form->createView()]);
 	}
 
 	public function render_create(DataIter $iter, $form, $success)
 	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					return $this->_send_json_single($iter);
-				else
-					return $this->render_json($this->render_errors($form));
-
-			default:
-				if ($success)
-					return $this->redirect($this->controller->path('read', $iter));
-				else
-					return $this->render('form.twig', ['iter' => $iter, 'form' => $form->createView()]);
-		}
+		if ($success)
+			return $this->redirect($this->controller->path('read', $iter));
+		else
+			return $this->render('form.twig', ['iter' => $iter, 'form' => $form->createView()]);
 	}
 
 	public function render_read(DataIter $iter, array $extra = [])
 	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				return $this->_send_json_single($iter);
-
-			default:
-				return $this->render('single.twig', array_merge($extra, compact('iter')));
-		}
+		return $this->render('single.twig', array_merge($extra, compact('iter')));
 	}
 
 	public function render_update(DataIter $iter, $form, $success)
 	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				if ($success)
-					return $this->_send_json_single($iter);
-				else
-					return $this->render_json($this->render_errors($form));
-
-			default:
-				if ($success)
-					return $this->redirect($this->controller->path('read', $iter));
-				else
-					return $this->render('form.twig', ['iter' => $iter, 'form' => $form->createView()]);
-		}
+		if ($success)
+			return $this->redirect($this->controller->path('read', $iter));
+		else
+			return $this->render('form.twig', ['iter' => $iter, 'form' => $form->createView()]);
 	}
 
 	public function render_index($iters)
 	{
-		switch ($this->_get_preferred_response())
-		{
-			case 'application/json':
-				return $this->_send_json_index($iters);
-
-			default:
-				return $this->render('index.twig', compact('iters'));
-		}
+		return $this->render('index.twig', compact('iters'));
 	}
 }

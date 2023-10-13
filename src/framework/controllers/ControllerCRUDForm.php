@@ -1,15 +1,19 @@
 <?php
 
 require_once 'src/init.php';
-require_once 'src/framework/controllers/ControllerCRUD.php';
+require_once 'src/framework/controllers/Controller.php';
 require_once 'src/framework/policy.php';
 
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ControllerCRUDForm extends ControllerCRUD
+class ControllerCRUDForm extends Controller
 {
+	protected $_var_view = 'view';
+
+	protected $_var_id = 'id';
+
 	protected $form_type;
 
 	// Equivalent for _create, but prevent issues with incompatible signature…
@@ -27,6 +31,11 @@ class ControllerCRUDForm extends ControllerCRUD
 		return true;
 	}
 
+	protected function _read($id)
+	{
+		return $this->model->get_iter($id);
+	}
+
 	// Equivalent for _update, but prevent issues with incompatible signature…
 	protected function _process_update(\DataIter $iter, FormInterface $form)
 	{
@@ -37,6 +46,24 @@ class ControllerCRUDForm extends ControllerCRUD
 	protected function _process_delete(\DataIter $iter)
 	{
 		return $this->model->delete($iter) > 0;
+	}
+
+	protected function _index()
+	{
+		return $this->model->get();
+	}
+
+	/**
+	 * The view needs an empty iter to check the user_can_create policy against.
+	 */
+	public function new_iter()
+	{
+		return $this->model->new_iter();
+	}
+
+	public function path(string $view, DataIter $iter = null, bool $json = false)
+	{
+		throw new LogicException('ContollerCrud::path not implemented');
 	}
 
 	public function get_form(\DataIter $iter = null)
@@ -78,6 +105,14 @@ class ControllerCRUDForm extends ControllerCRUD
 		return $this->view()->render_create($iter, $form, $success);
 	}
 
+	public function run_read(DataIter $iter)
+	{
+		if (!get_policy($this->model)->user_can_read($iter))
+			throw new UnauthorizedException('You are not allowed to read this ' . get_class($iter) . '.');
+
+		return $this->view()->render_read($iter);
+	}
+
 	public function run_update(\DataIter $iter)
 	{
 		if (!\get_policy($this->model)->user_can_update($iter))
@@ -111,5 +146,51 @@ class ControllerCRUDForm extends ControllerCRUD
 				$success = true;
 
 		return $this->view()->render_delete($iter, $form, $success);
+	}
+
+	public function run_index()
+	{
+		$iters = array_filter($this->_index(), array(get_policy($this->model), 'user_can_read'));
+
+		return $this->view()->render_index($iters);
+	}
+
+	protected function run_impl()
+	{
+		$iter = null;
+
+		$view = $this->get_parameter($this->_var_view);
+
+		$id = $this->get_parameter($this->_var_id);
+
+		if (isset($id) && $id != '')
+		{
+			$iter = $this->_read($id);
+
+			if (!$view)
+				$view = 'read';
+
+			if (!$iter)
+				throw new NotFoundException('ControllerCRUD::_read could not find the model instance.');
+		}
+
+		if (!$view)
+			$view = 'index';
+
+		$view = str_replace('-', '_', $view);
+
+		try {
+			$method = new ReflectionMethod($this, 'run_' . $view);
+
+			if ($method->getNumberOfRequiredParameters() > 1)
+				throw new LogicException('trying to call run_' . $view . ' which requires more than one argument');
+
+			if ($method->getNumberOfRequiredParameters() === 1 && $iter === null)
+				throw new NotFoundException($view . ' requires an iterator, but none was specified');
+
+			return call_user_func([$this, 'run_' . $view], $iter);
+		} catch (ReflectionException $e) {
+			throw new NotFoundException("View '$view' not implemented by " . get_class($this));
+		}
 	}
 }
