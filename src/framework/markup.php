@@ -2,7 +2,6 @@
 if (!defined('IN_SITE'))
 	return;
 
-require_once 'src/framework/smileys.php';
 require_once 'src/framework/router.php';
 
 use App\Controller\MailingListsController;
@@ -172,13 +171,25 @@ function _markup_parse_spaces(&$markup)
 
 function _markup_parse_smileys(&$markup)
 {
-	$smileys_path = '/images/smileys';
-
-	$markup = trim($markup);
-	$smileys = get_smileys();
-
-	foreach ($smileys as $code => $image)
-		$markup = preg_replace('/' . $code . '/i', '<img src="' . $smileys_path . '/' . $image . '" alt="' . $image . '"/>', $markup);
+	$smileys = [
+		'\&lt\;\:-\||\&lt\;\:\|' => '😳',
+		'\:-\)|\:\)' => '☺️',
+		'\:-\(|\:\(' => '☹️',
+		'\;-\)|\;\)' => '😉',
+		'\;-\(|\;\(' => '😢',
+		'\:-\||\:\|' => '😐',
+		'\:-@|\:@' => '😡',
+		'8-o|8o' => '😯',
+		'\:-d|\:d' => '😁',
+		'\:-p|\:p' => '😛',
+		'\:-s|\:s' => '🤢',
+		'x-p' => '😵',
+		'\[o[oe]ps\]' => '🤭',
+		'\[bye\]' => '👋',
+		'\[hug\]' => '🫂',
+	];
+	foreach ($smileys as $code => $emoji)
+		$markup = preg_replace('/' . $code . '/i', $emoji, $markup);
 }
 
 function _markup_parse_simple(&$markup)
