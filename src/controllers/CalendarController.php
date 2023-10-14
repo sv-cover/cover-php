@@ -44,7 +44,7 @@ class CalendarController extends \ControllerCRUDForm
 		return $this->generate_url('calendar', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
 		if (!\get_policy($iter)->user_can_create($iter))
 			throw new \UnauthorizedException('You are not allowed to create events!');

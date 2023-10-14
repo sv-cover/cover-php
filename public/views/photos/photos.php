@@ -1,7 +1,7 @@
 <?php
 require_once 'src/framework/markup.php';
 
-class PhotosView extends CRUDFormView
+class PhotosView extends CRUDView
 {
 	/**
 	 * Helper functions, called from the templates

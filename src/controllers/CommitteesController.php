@@ -44,9 +44,9 @@ class CommitteesController extends \ControllerCRUDForm
 		return $this->model->new_iter(['type' => \DataModelCommissie::TYPE_COMMITTEE]);
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
-		if (!parent::_process_create($iter, $form))
+		if (!parent::_create($iter, $form))
 			return false;
 
 		$members = $form['members']->getData();
@@ -56,9 +56,9 @@ class CommitteesController extends \ControllerCRUDForm
 		return true;
 	}
 
-	protected function _process_update(\DataIter $iter, FormInterface $form)
+	protected function _update(\DataIter $iter, FormInterface $form)
 	{
-		if (!parent::_process_update($iter, $form))
+		if (!parent::_update($iter, $form))
 			return false;
 
 		$members = $form['members']->getData();
@@ -67,7 +67,7 @@ class CommitteesController extends \ControllerCRUDForm
 		return true;
 	}
 
-	protected function _process_delete(\DataIter $iter)
+	protected function _delete(\DataIter $iter)
 	{
 		// Some committees already have pages etc. We will mark the committee as hidden.
 		// That way they remain in the history of Cover and could, if needed, be reactivated.
@@ -150,7 +150,7 @@ class CommitteesController extends \ControllerCRUDForm
 		$form->handleRequest($this->get_request());
 
 		if ($form->isSubmitted() && $form->isValid())
-			if ($this->_process_update($iter, $form))
+			if ($this->_update($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));

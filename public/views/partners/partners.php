@@ -1,6 +1,6 @@
 <?php
 
-class PartnersView extends CRUDFormView
+class PartnersView extends CRUDView
 {
 	public function type_options()
 	{

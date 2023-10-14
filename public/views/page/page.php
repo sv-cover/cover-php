@@ -1,6 +1,6 @@
 <?php
 
-class PageView extends CRUDFormView
+class PageView extends CRUDView
 {
 	public function render_preview(DataIterEditable $editable, $lang = null)
 	{

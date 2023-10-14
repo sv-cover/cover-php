@@ -3,13 +3,13 @@ namespace App\Controller;
 
 use App\Form\AnnouncementType;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 /**
  * Class ControllerAnnouncements
  * @property DataModelAnnouncement $model;
  */
-class AnnouncementsController extends \ControllerCRUDForm
+class AnnouncementsController extends \ControllerCRUD
 {
 	protected $view_name = 'announcements';
 	protected $form_type = AnnouncementType::class;

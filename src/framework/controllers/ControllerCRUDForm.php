@@ -17,7 +17,7 @@ class ControllerCRUDForm extends Controller
 	protected $form_type;
 
 	// Equivalent for _create, but prevent issues with incompatible signature…
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
 		// Huh, why are we checking again? Didn't we already check in the run_create() method?
 		// Well, yes, but sometimes a policy is picky about how you fill in the data!
@@ -37,13 +37,13 @@ class ControllerCRUDForm extends Controller
 	}
 
 	// Equivalent for _update, but prevent issues with incompatible signature…
-	protected function _process_update(\DataIter $iter, FormInterface $form)
+	protected function _update(\DataIter $iter, FormInterface $form)
 	{
 		return $this->model->update($iter) > 0;
 	}
 
 	// Equivalent for _delete, but prevent issues with incompatible signature…
-	protected function _process_delete(\DataIter $iter)
+	protected function _delete(\DataIter $iter)
 	{
 		return $this->model->delete($iter) > 0;
 	}
@@ -96,7 +96,7 @@ class ControllerCRUDForm extends Controller
 		$form = $this->get_form($iter);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			if ($this->_process_create($iter, $form))
+			if ($this->_create($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));
@@ -123,7 +123,7 @@ class ControllerCRUDForm extends Controller
 		$form = $this->get_form($iter);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			if ($this->_process_update($iter, $form))
+			if ($this->_update($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));
@@ -142,7 +142,7 @@ class ControllerCRUDForm extends Controller
 		$form = $this->get_delete_form($iter);
 
 		if ($form->isSubmitted() && $form->isValid())
-			if ($this->_process_delete($iter))
+			if ($this->_delete($iter))
 				$success = true;
 
 		return $this->view()->render_delete($iter, $form, $success);

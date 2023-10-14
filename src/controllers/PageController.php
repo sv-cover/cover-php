@@ -53,7 +53,7 @@ class PageController extends \ControllerCRUDForm
 		return $this->generate_url('page', $parameters);
 	}
 
-	protected function _process_update(\DataIter $iter, FormInterface $form)
+	protected function _update(\DataIter $iter, FormInterface $form)
 	{
 		$content_fields = [
 			'cover_image_url' => 'photo',
@@ -64,7 +64,7 @@ class PageController extends \ControllerCRUDForm
 		$old_iter = $this->model->get_iter($iter['id']);
 
 		// Update as usual
-		$success = parent::_process_update($iter, $form);
+		$success = parent::_update($iter, $form);
 
 		// If the update succeeded (i.e. _validate came through positive)
 		// send a notification email to those who are interested.

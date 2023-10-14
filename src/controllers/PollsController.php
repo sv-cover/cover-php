@@ -54,9 +54,9 @@ class PollsController extends \ControllerCRUDForm
 		return $this->generate_url('poll', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
-		if (!parent::_process_create($iter, $form))
+		if (!parent::_create($iter, $form))
 			return false;
 
 		$options = $form['options']->getData();
@@ -105,7 +105,7 @@ class PollsController extends \ControllerCRUDForm
 		$form->handleRequest($this->get_request());
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			if ($this->_process_create($iter, $form))
+			if ($this->_create($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));
