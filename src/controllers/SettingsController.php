@@ -17,19 +17,14 @@ class SettingsController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters['id'] = $iter['key'];
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('settings', $parameters);
 	}

@@ -291,8 +291,6 @@ class SignUpFormsController extends \Controller
 
 		$success = false;
 
-		$errors = new \ErrorSet();
-
 		if ($form->isSubmitted() && $form->isValid())
 			if ($this->_process_update($this->form_model, $iter))
 				$success = true;

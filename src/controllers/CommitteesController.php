@@ -26,19 +26,14 @@ class CommitteesController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters[$this->_var_id] = $iter['login'];
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('committees', $parameters);
 	}

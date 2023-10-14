@@ -35,19 +35,14 @@ class PollsController extends \ControllerCRUDForm
 		]);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters['id'] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		if ($view === 'index')
 			return $this->generate_url('poll.list');

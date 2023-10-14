@@ -54,12 +54,6 @@ $config = array(
 		[null, 400] // size used for the thumbnails in comments
 	),
 
-	// Used for forms & XSS prevention. Generate with `openssl rand -base64 64`.
-	'nonce_salt' => null, 
-
-	// Lifetime in seconds.
-	'nonce_lifetime' => 3600 * 12, 
-
 	// Used to enable people without a SEPA bank account to become a member
     'no_iban_string' => 'OUTSIDESEPAAREA',
 

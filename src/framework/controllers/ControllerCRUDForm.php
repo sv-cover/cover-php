@@ -61,7 +61,7 @@ class ControllerCRUDForm extends Controller
 		return $this->model->new_iter();
 	}
 
-	public function path(string $view, DataIter $iter = null, bool $json = false)
+	public function path(string $view, DataIter $iter = null)
 	{
 		throw new LogicException('ContollerCrud::path not implemented');
 	}

@@ -43,7 +43,7 @@ class PhotoFacesController extends \Controller
 		return array_merge($data, ['__id' => $iter->get_id(), '__links' => $links]);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			$this->_var_view => $view,
