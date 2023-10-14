@@ -18,7 +18,7 @@
 				<p>{{ __('You are subscribed to this mailinglist.') }}</p>
 			</div>
 			{% if global.policies.Mailinglist.user_can_unsubscribe(list) %}
-				{{ form_row(form.unsubscribe, {label: __('Unsubscribe'), color: 'default') }}
+				{{ form_row(form.unsubscribe, {label: __('Unsubscribe'), color: 'default'}) }}
 			{% endif %}
 		{% elseif global.policies.Mailinglist.user_can_subscribe(list) %}
 			{{ form_row(form.subscribe, {label: __('Subscribe'), color: 'default'}) }}
