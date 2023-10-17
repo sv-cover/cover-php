@@ -169,29 +169,6 @@ function _markup_parse_spaces(&$markup)
 	}
 }
 
-function _markup_parse_smileys(&$markup)
-{
-	$smileys = [
-		'\&lt\;\:-\||\&lt\;\:\|' => '😳',
-		'\:-\)|\:\)' => '☺️',
-		'\:-\(|\:\(' => '☹️',
-		'\;-\)|\;\)' => '😉',
-		'\;-\(|\;\(' => '😢',
-		'\:-\||\:\|' => '😐',
-		'\:-@|\:@' => '😡',
-		'8-o|8o' => '😯',
-		'\:-d|\:d' => '😁',
-		'\:-p|\:p' => '😛',
-		'\:-s|\:s' => '🤢',
-		'x-p' => '😵',
-		'\[o[oe]ps\]' => '🤭',
-		'\[bye\]' => '👋',
-		'\[hug\]' => '🫂',
-	];
-	foreach ($smileys as $code => $emoji)
-		$markup = preg_replace('/' . $code . '/i', $emoji, $markup);
-}
-
 function _markup_parse_simple(&$markup)
 {
 	// TODO: Replace this beast with something that has a stack!
@@ -476,9 +453,6 @@ function markup_parse($markup, $header_offset = 0, &$placeholders = null)
 
 	/* Parse bare links */
 	_markup_parse_urls($markup, $placeholders);
-
-	/* Parse smileys */
-	_markup_parse_smileys($markup);
 
 	/* Parse simple tags */
 	_markup_parse_simple($markup);
