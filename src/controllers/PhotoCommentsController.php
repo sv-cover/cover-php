@@ -2,12 +2,12 @@
 namespace App\Controller;
 
 require_once 'src/controllers/PhotoBooksController.php';
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\PhotoCommentType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class PhotoCommentsController extends \ControllerCRUDForm
+class PhotoCommentsController extends \ControllerCRUD
 {
 	use PhotoBookRouteHelper;
 

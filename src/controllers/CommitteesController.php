@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\CommitteeType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 
-class CommitteesController extends \ControllerCRUDForm
+class CommitteesController extends \ControllerCRUD
 {	
 	protected $_var_id = 'commissie';
 

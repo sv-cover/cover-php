@@ -1,11 +1,12 @@
+
 <?php
 namespace App\Controller;
 
 use App\Form\PartnerType;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class PartnersController extends \ControllerCRUDForm
+class PartnersController extends \ControllerCRUD
 {
 	protected $view_name = 'partners';
 	protected $form_type = PartnerType::class;

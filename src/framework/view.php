@@ -261,7 +261,7 @@ class View
 }
 
 
-class CRUDFormView extends View
+class CRUDView extends View
 {
 	public function render_delete(DataIter $iter, $form, $success)
 	{

@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ControllerCRUDForm extends Controller
+class ControllerCRUD extends Controller
 {
 	protected $_var_view = 'view';
 

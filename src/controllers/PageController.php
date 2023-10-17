@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Form\PageType;
 use Symfony\Component\Form\FormInterface;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class PageController extends \ControllerCRUDForm
+class PageController extends \ControllerCRUD
 {
 	protected $view_name = 'page';
 	protected $form_type = PageType::class;

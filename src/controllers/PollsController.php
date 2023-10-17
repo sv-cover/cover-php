@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class PollsController extends \ControllerCRUDForm
+class PollsController extends \ControllerCRUD
 {
 	CONST PAGE_SIZE = 10;
 

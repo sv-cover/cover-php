@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 require_once 'src/framework/member.php';
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\MailinglistType;
 use App\Form\Type\MemberIdType;
@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 
-class MailingListsController extends \ControllerCRUDForm
+class MailingListsController extends \ControllerCRUD
 {
 	private $message_model;
 

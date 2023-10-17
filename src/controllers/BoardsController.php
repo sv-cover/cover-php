@@ -4,9 +4,9 @@ namespace App\Controller;
 use App\Form\BoardType;
 use Symfony\Component\Form\FormInterface;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class BoardsController extends \ControllerCRUDForm
+class BoardsController extends \ControllerCRUD
 {
 	protected $view_name = 'boards';
 	protected $form_type = BoardType::class;

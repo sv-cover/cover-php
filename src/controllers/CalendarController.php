@@ -5,7 +5,7 @@ require_once 'src/framework/member.php';
 require_once 'src/framework/form.php';
 require_once 'src/framework/webcal.php';
 require_once 'src/framework/markup.php';
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\EventType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
-class CalendarController extends \ControllerCRUDForm
+class CalendarController extends \ControllerCRUD
 {
 	protected $_var_id = 'agenda_id';
 

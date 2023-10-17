@@ -2,11 +2,11 @@
 namespace App\Controller;
 
 require_once 'src/controllers/PhotoBooksController.php';
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\PhotoType;
 
-class PhotosController extends \ControllerCRUDForm
+class PhotosController extends \ControllerCRUD
 {
 	use PhotoBookRouteHelper;
 

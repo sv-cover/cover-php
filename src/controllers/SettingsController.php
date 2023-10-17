@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Form\SettingsType;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class SettingsController extends \ControllerCRUDForm
+class SettingsController extends \ControllerCRUD
 {
 	protected $view_name = 'settings';
 	protected $form_type = SettingsType::class;

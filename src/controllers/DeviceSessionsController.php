@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Form\DeviceSessionType;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class DeviceSessionsController extends \ControllerCRUDForm
+class DeviceSessionsController extends \ControllerCRUD
 {
 	protected $view_name = 'devicesessions';
 	protected $form_type = DeviceSessionType::class;

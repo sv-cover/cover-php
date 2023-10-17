@@ -7,9 +7,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints as Assert;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class StickersController extends \ControllerCRUDForm
+class StickersController extends \ControllerCRUD
 {
 	protected $view_name = 'stickers';
 	protected $form_type = StickerType::class;

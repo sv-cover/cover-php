@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class PollCommentsController extends \ControllerCRUDForm
+class PollCommentsController extends \ControllerCRUD
 {
 	protected $view_name = 'pollcomments';
 	protected $form_type = PollCommentType::class;
