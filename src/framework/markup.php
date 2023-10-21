@@ -221,6 +221,34 @@ function _markup_parse_fontawesome(&$markup, &$placeholders)
 	}
 }
 
+function _markup_parse_accordion(&$markup, &$placeholders)
+{
+	static $count = 0;
+
+	while (preg_match('/\[accordion\s+title="([^"]+)"?\](.*?)\[\/accordion\]/s', $markup, $match)) {
+
+		$placeholder = sprintf('#ACCORDION%d#', $count++);
+
+		$title = $match[1];
+		$content = markup_parse($match[2]);
+
+		$html = "<div class='accordion'>";
+			$html .= "<input name='accordion-checkbox' type='checkbox' id='accordion-$count' hidden />";
+			$html .= "<label for='accordion-$count'>";
+				$html .= "<div class='accordion-header'>";
+					$html .= "<h4>$title</h4>";
+					$html .= "<i class='accordion-icon fas fa-chevron-down'></i>";
+				$html .= "</div>";
+			$html .= "</label>";
+			$html .= "<p class='accordion-content'>$content</p>";
+		$html .= "</div>";
+
+		$placeholders[$placeholder] = $html;
+
+		$markup = str_replace_once($match[0], $placeholder, $markup);
+	}
+}
+
 function _markup_parse_member(&$markup, &$placeholders)
 {
 	static $count = 0;
@@ -441,6 +469,8 @@ function markup_parse($markup, $header_offset = 0, &$placeholders = null)
 	_markup_parse_video($markup, $placeholders);
 
 	_markup_parse_member($markup, $placeholders);
+
+	_markup_parse_accordion($markup, $placeholders);
 
 	_markup_parse_fontawesome($markup, $placeholders);
 

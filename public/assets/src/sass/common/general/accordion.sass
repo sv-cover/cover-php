@@ -1,0 +1,27 @@
+.accordion
+  .accordion-header
+    background: $grey-lightest !important
+    width: 100%
+    padding: $box-padding
+    position: relative
+    cursor: pointer
+
+    h4
+      margin-bottom: 0
+
+    .accordion-icon
+      position: absolute !important
+      right: $box-padding
+      top: 50%
+      transform: translateY(-50%)
+      transition: 0.3s ease all
+
+  input[name="accordion-checkbox"]:checked ~ label .accordion-header .accordion-icon
+    transform: translateY(-50%) rotate(-180deg) !important
+
+  p.accordion-content
+    display: none
+    padding: $box-padding
+
+  input[name="accordion-checkbox"]:checked ~ p.accordion-content
+    display: block
