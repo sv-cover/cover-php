@@ -170,17 +170,22 @@ class CalendarController extends \ControllerCRUDForm
 			throw new \UnauthorizedException();
 
 		$builder = $this->createFormBuilder($iter, ['csrf_token_id' => 'event_accept_' . $iter['id']])
-			->add('private', CheckboxType::class, [
+			->add('submit', SubmitType::class, ['label' => 'Accept event']);
+
+		// Can only override private and extern for new events.
+		if ($iter['replacement_for'] === 0) {
+			$builder->add('private', CheckboxType::class, [
 				'label'    => __('Only visible to members'),
 				'required' => false,
-			])
-			->add('extern', CheckboxType::class, [
+			]);
+			$builder->add('extern', CheckboxType::class, [
 				'label'    => __('This event is not organised by Cover'),
 				'required' => false,
-			])
-			->add('submit', SubmitType::class, ['label' => 'Accept event']);
-		$builder->get('private')->addModelTransformer(new IntToBooleanTransformer());
-		$builder->get('extern')->addModelTransformer(new IntToBooleanTransformer());
+			]);
+			$builder->get('private')->addModelTransformer(new IntToBooleanTransformer());
+			$builder->get('extern')->addModelTransformer(new IntToBooleanTransformer());
+		}
+
 		$form = $builder->getForm();
 		$form->handleRequest($this->get_request());
 
