@@ -34,7 +34,7 @@
             {% for option in poll.options %}
             <div class="poll-option" title="{{ option.option }}">
                 {% set percentage = option.votes / max(poll.total_votes, 1) %}
-                <label for="poll-option-{{ option.id }}-result" class="is-truncated">
+                <label for="poll-option-{{ option.id }}-result">
                     <span>
                         {{ option.option }}
                         {% if option.id == poll.member_vote %}
@@ -65,7 +65,7 @@
                 <div class="buttons">
                 {% for option in poll.options %}
                     <button name="form[option]" value="{{ option.id }}" type="submit" class="button is-fullwidth">
-                        {{ option.option }}
+                        <span>{{ option.option }}</span>
                     </button>
                 {% endfor %}
                 </div>
