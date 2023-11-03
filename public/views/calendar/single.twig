@@ -195,9 +195,9 @@
 		</div>
 		{% if iter.signup_forms %}
 		<div id="event-signup" class="block">
-			{% if global.auth.logged_in %}
+			{% if global.auth.logged_in or iter.has_external_signups() %}
 				{% for form in iter.signup_forms %}
-					{% if user_can_read form %}
+					{% if user_can_read form or form.allow_external %}
 						<hr>
 						{{ include('signup_form.twig', {form: form}) }}
 					{% endif %}

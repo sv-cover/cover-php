@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\PageType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 require_once 'src/framework/controllers/ControllerCRUDForm.php';
 

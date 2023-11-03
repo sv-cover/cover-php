@@ -4,6 +4,7 @@ namespace App\Form;
 use App\Form\Type\CommitteeIdType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -39,6 +40,11 @@ class SignUpFormType extends AbstractType
 				'label' => __('Participant limit'),
 				'help' => __("If you do not have a participant limit, leave this field blank."),
 				'required' => false,
+			])
+			->add('allow_external', CheckboxType::class, [
+				'label'    => __('Allow external sign-ups'),
+				'required' => false,
+				'help' => __("Please only turn this on after consultation with the board!"),
 			])
 			->add('submit', SubmitType::class)
 		;

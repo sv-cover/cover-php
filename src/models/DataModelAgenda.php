@@ -87,6 +87,15 @@ class DataIterAgenda extends DataIter implements SearchResult
 		return get_model('DataModelSignUpForm')->find(['agenda_id' => $this['id']]);
 	}
 
+	public function has_external_signups()
+	{
+		if(get_model('DataModelSignUpForm')->find(['agenda_id' => $this['id'], 'allow_external' => true]))
+		{
+			return true;
+		}
+		return false;
+	}
+
 	public function new_signup_form()
 	{
 		return get_model('DataModelSignUpForm')->new_iter([

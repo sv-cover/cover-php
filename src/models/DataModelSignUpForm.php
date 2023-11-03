@@ -19,7 +19,8 @@ class DataIterSignUpForm extends DataIter
 			'open_on',
 			'closed_on',
 			'participant_limit',
-			'agenda_id'
+			'agenda_id',
+			'allow_external'
 		];
 	}
 
@@ -84,6 +85,12 @@ class DataIterSignUpForm extends DataIter
 	{
 		return $this->data['signup_count'] ?? count($this['entries']);
 	}
+
+//	public function allows_external()
+//	{
+//		var_dump($this);
+//		return $this['allow_external'] ?? false;
+//	}
 
 	public function is_open()
 	{

@@ -123,7 +123,7 @@ class SignUpFormsController extends \Controller
 	{
 		$iter = $this->form_model->get_iter($_GET['form']);
 
-		if (!get_policy($this->form_model)->user_can_read($iter))
+		if (!get_policy($this->form_model)->user_can_read($iter) && !$iter['allow_external'])
 			throw new \UnauthorizedException('You cannot access this form.');
 
 		if ($this->get_parameter('prefill', 'true') === 'false')
@@ -131,7 +131,7 @@ class SignUpFormsController extends \Controller
 		else
 			$entry = $iter->new_entry(get_identity()->member());
 
-		if (!get_policy($this->entry_model)->user_can_create($entry))
+		if (!get_policy($this->entry_model)->user_can_create($entry) && !$iter['allow_external'])
 			throw new \UnauthorizedException('You cannot create new entries for this form.');
 
 		$form = $iter->get_form($entry);
@@ -147,6 +147,9 @@ class SignUpFormsController extends \Controller
 			$this->entry_model->insert($entry);
 
 			try {
+				// TODO: If the form has an email field, then send the email to that address.
+				// Otherwise, send it to the member's email address.
+
 				if (!empty($entry['member_id']) && $iter['agenda_item']) {
 					$email = parse_email_object("signup_confirmation.txt", ['entry' => $entry]);
 					$email->send($entry['member']['email']);
@@ -154,6 +157,14 @@ class SignUpFormsController extends \Controller
 			} catch (\Exception $e) {
 				// Catch it, but it is not important for the rest of the process.
 				sentry_report_exception($e);
+			}
+
+			if(empty($entry['member_id'])) {
+				return $this->view->render('entry_form_success.twig', [
+					'iter' => $iter,
+					'entry' => $entry,
+					'is_modal' => $this->get_parameter('action', '') === 'modal',
+				]);
 			}
 
 			if (!empty($form->get('return_path')->getData()))
