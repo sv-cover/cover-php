@@ -183,6 +183,10 @@ class PageController extends \ControllerCRUDForm
 			return $this->run_index();
 		} else if ($route == 'slug') {
 			$iter = $this->model->get_iter_from_slug($this->get_parameter('_route_params')['slug']);
+			if (!$iter) {
+				$view = new \View();
+				return $view->render_404_not_found(new \NotFoundException());
+			}
 			return $this->run_read($iter);
 		} else {
 			return parent::run_impl();
