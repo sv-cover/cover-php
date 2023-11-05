@@ -271,6 +271,7 @@ class ProfileController extends \Controller
 		// Stupid aliasses
 		$labels['naam'] = $labels['full_name'];
 		$labels['foto'] = __('Photo');
+		$labels['nick'] = __('Nickname');
 
 		// Build form
 		$data = [];

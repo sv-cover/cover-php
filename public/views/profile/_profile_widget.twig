@@ -51,7 +51,7 @@
 	<div class="profile-info">
 		<h1 class="name">
 			{{ iter|full_name }}
-			{% if iter.nick != '' and iter.nick != iter|full_name and not iter.is_private('naam') %}
+			{% if iter.nick != '' and iter.nick != iter|full_name and not iter.is_private('nick', true) %}
 				<span class="nickname">({{ iter.nick }})</span>
 			{% endif %}
 		</h1>
