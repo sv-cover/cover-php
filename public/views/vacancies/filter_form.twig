@@ -1,14 +1,28 @@
-<form id="vacancy-filter-form" method="GET" action="{{ path('vacancies') }}" data-auto-submit data-allow-submit-on-enter data-use-native-submit data-visibility-selector="[data-filter-tags]">
+<form
+    id="vacancy-filter-form"
+    method="GET"
+    action="{{ path('vacancies') }}"
+    data-auto-submit
+    data-allow-submit-on-enter
+    data-use-native-submit
+    data-visibility-selector="[data-filter-tags]"
+>
     <div class="field has-addons">
         <div class="control is-expanded">
-            {{ html_label(__('Search'), 'query', class='is-sr-only') }}
-            {{ html_input_text('query', filter, type='search', placeholder=__('Type here to search vacancies…')) }}
+            <input
+                type="search"
+                id="field-query"
+                name="query"
+                placeholder="{{ __('Type here to search vacancies…') }}"
+                class="input"
+                aria-label="{{ __('Filter vacancies') }}"
+                value="{{ filter.query|default('') }}"
+            >
         </div>
         <div class="control">
-            <button class="button" type="submit">
+            <button class="button" type="submit" aria-label="{{ __('Search') }}">
                 <span class="icon">
                     <i class="fas fa-search"></i>
-                    <span class="is-sr-only">{{ __('Search') }}</span>
                 </span>
             </button>
         </div>
@@ -33,7 +47,13 @@
                     <div class="dropdown-content">
                         {% for value, name in view.type_options() %}
                             <label class="checkbox dropdown-item" for="field-type-{{value}}" data-auto-submit-no-switch>
-                                {{ html_input_checkbox('type[]', filter, id='field-type-' ~ value, value=value) }}
+                                <input
+                                    type="checkbox"
+                                    name="type[]"
+                                    id="field-type-{{ value }}"
+                                    value="{{ value }}"
+                                    {% if value in filter.type|default([]) %}checked{% endif %}
+                                >
                                 {{ name }}
                             </label>
                         {% endfor %}
@@ -55,7 +75,13 @@
                     <div class="dropdown-content">
                         {% for value, name in view.study_phase_options() %}
                             <label class="checkbox dropdown-item" for="field-study_phase-{{value}}" data-auto-submit-no-switch>
-                                {{ html_input_checkbox('study_phase[]', filter, id='field-study_phase-' ~ value, value=value) }}
+                                <input
+                                    type="checkbox"
+                                    name="study_phase[]"
+                                    id="field-study_phase-{{ value }}"
+                                    value="{{ value }}"
+                                    {% if value in filter.study_phase|default([]) %}checked{% endif %}
+                                >
                                 {{ name }}
                             </label>
                         {% endfor %}
@@ -78,7 +104,13 @@
                         {% for partner in view.partners() %}
                             {% set value = partner['id'] ?? partner['name'] %}
                             <label class="checkbox dropdown-item" for="field-partner-{{ value }}" data-auto-submit-no-switch>
-                                {{ html_input_checkbox('partner[]', filter, id='field-partner-' ~ value, value=value) }}
+                                <input
+                                    type="checkbox"
+                                    name="partner[]"
+                                    id="field-partner-{{ value }}"
+                                    value="{{ value }}"
+                                    {% if value in filter.partner|default([]) %}checked{% endif %}
+                                >
                                 {{ partner['name'] }}
                             </label>
                         {% else %}

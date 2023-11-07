@@ -1,7 +1,7 @@
 <?php
 require_once 'src/framework/markup.php';
 
-class CalendarView extends CRUDFormView
+class CalendarView extends CRUDView
 {
 	public function render_index($iters)
 	{

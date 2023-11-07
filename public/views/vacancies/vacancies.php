@@ -1,7 +1,7 @@
 <?php
 require_once 'src/models/DataModelVacancy.php';
 
-class VacanciesView extends CRUDFormView
+class VacanciesView extends CRUDView
 {
 	private $_partners;
 

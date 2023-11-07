@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class PollsController extends \ControllerCRUDForm
+class PollsController extends \ControllerCRUD
 {
 	CONST PAGE_SIZE = 10;
 
@@ -35,19 +35,14 @@ class PollsController extends \ControllerCRUDForm
 		]);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters['id'] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		if ($view === 'index')
 			return $this->generate_url('poll.list');
@@ -59,9 +54,9 @@ class PollsController extends \ControllerCRUDForm
 		return $this->generate_url('poll', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
-		if (!parent::_process_create($iter, $form))
+		if (!parent::_create($iter, $form))
 			return false;
 
 		$options = $form['options']->getData();
@@ -110,7 +105,7 @@ class PollsController extends \ControllerCRUDForm
 		$form->handleRequest($this->get_request());
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			if ($this->_process_create($iter, $form))
+			if ($this->_create($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));

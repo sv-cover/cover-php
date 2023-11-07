@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Form\DeviceSessionType;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class DeviceSessionsController extends \ControllerCRUDForm
+class DeviceSessionsController extends \ControllerCRUD
 {
 	protected $view_name = 'devicesessions';
 	protected $form_type = DeviceSessionType::class;
@@ -17,12 +17,9 @@ class DeviceSessionsController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [];
-
-		if ($json)
-			$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
 
 		if ($view === 'create')
 			return $this->generate_url('device_sessions.create', $parameters);

@@ -2,11 +2,11 @@
 namespace App\Controller;
 
 require_once 'src/controllers/PhotoBooksController.php';
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\PhotoType;
 
-class PhotosController extends \ControllerCRUDForm
+class PhotosController extends \ControllerCRUD
 {
 	use PhotoBookRouteHelper;
 
@@ -21,20 +21,14 @@ class PhotosController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'photo' => $this->get_photo()->get_id(),
 		];
 
-
 		if (isset($iter))
-		{
 			$parameters[$this->_var_id] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('photos', $parameters);
 	}

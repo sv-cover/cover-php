@@ -1,6 +1,6 @@
 <?php
 
-class SettingsView extends CRUDFormView
+class SettingsView extends CRUDView
 {
 	//
 }

@@ -2,7 +2,6 @@
 if (!defined('IN_SITE'))
 	return;
 
-require_once 'src/framework/smileys.php';
 require_once 'src/framework/router.php';
 
 use App\Controller\MailingListsController;
@@ -168,17 +167,6 @@ function _markup_parse_spaces(&$markup)
 		$sp = str_pad($sp, strlen($matches[0]) * 6, '&nbsp;');
 		$markup = preg_replace('/ ( +?)/', $sp, $markup, 1);
 	}
-}
-
-function _markup_parse_smileys(&$markup)
-{
-	$smileys_path = '/images/smileys';
-
-	$markup = trim($markup);
-	$smileys = get_smileys();
-
-	foreach ($smileys as $code => $image)
-		$markup = preg_replace('/' . $code . '/i', '<img src="' . $smileys_path . '/' . $image . '" alt="' . $image . '"/>', $markup);
 }
 
 function _markup_parse_simple(&$markup)
@@ -465,9 +453,6 @@ function markup_parse($markup, $header_offset = 0, &$placeholders = null)
 
 	/* Parse bare links */
 	_markup_parse_urls($markup, $placeholders);
-
-	/* Parse smileys */
-	_markup_parse_smileys($markup);
 
 	/* Parse simple tags */
 	_markup_parse_simple($markup);

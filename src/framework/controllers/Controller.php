@@ -115,28 +115,6 @@ class Controller
 		return $this->view()->render('@layout/500.twig', ['exception' => $e, 'sentry_id' => $sentry_id]);
 	}
 
-	protected function _form_is_submitted($action, $args = [])
-	{
-		$args = func_get_args();
-		array_shift($args);
-		
-		// Turn _form_is_submitted('delete', iter) to 'delete_24'
-		$action_name = nonce_action_name($action, $args);
-
-		$nonce = null;
-
-		if (!empty($_POST['_nonce']))
-			$nonce = $_POST['_nonce'];
-		else if (!empty($_GET['_nonce']))
-			$nonce = $_GET['_nonce'];
-
-		$answer = $_SERVER['REQUEST_METHOD'] == 'POST'
-			&& $nonce !== null
-			&& nonce_verify($nonce, $action_name);
-
-		return $answer;
-	}
-
 	public function generate_url(string $name, array $parameters = [], int $reference_type = UrlGeneratorInterface::ABSOLUTE_PATH)
 	{
 		if (!isset($this->router))

@@ -5,7 +5,7 @@ require_once 'src/framework/member.php';
 require_once 'src/framework/form.php';
 require_once 'src/framework/webcal.php';
 require_once 'src/framework/markup.php';
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\EventType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
-class CalendarController extends \ControllerCRUDForm
+class CalendarController extends \ControllerCRUD
 {
 	protected $_var_id = 'agenda_id';
 
@@ -32,24 +32,19 @@ class CalendarController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters[$this->_var_id] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('calendar', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
 		if (!\get_policy($iter)->user_can_create($iter))
 			throw new \UnauthorizedException('You are not allowed to create events!');

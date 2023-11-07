@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Form\VacancyType;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class VacanciesController extends \ControllerCRUDForm
+class VacanciesController extends \ControllerCRUD
 {
 	protected $view_name = 'vacancies';
 	protected $form_type = VacancyType::class;
@@ -18,19 +18,14 @@ class VacanciesController extends \ControllerCRUDForm
 
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters['id'] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('vacancies', $parameters);
 	}

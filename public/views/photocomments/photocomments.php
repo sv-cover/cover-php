@@ -1,6 +1,6 @@
 <?php
 
-class PhotocommentsView extends CRUDFormView
+class PhotocommentsView extends CRUDView
 {
 	//
 }
