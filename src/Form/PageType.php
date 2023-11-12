@@ -59,6 +59,7 @@ class PageType extends AbstractType
 					'attr' => [
 						'pattern' => '[a-z0-9_-]+',
 					],
+					'required' => false,
 				]);
 			}
 		});
