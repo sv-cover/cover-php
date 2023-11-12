@@ -6,6 +6,9 @@ require_once 'src/framework/router.php';
 
 use App\Controller\MailingListsController;
 
+const EXCLUDE_ANCHORS = 1;
+
+
 function str_replace_once($search, $replace, $subject)
 {
 	$pos = strpos($subject, $search);
@@ -27,7 +30,7 @@ function _markup_parse_code_real($code)
 		$code = preg_replace('/ ( +?)/', $sp, $code, 1);
 	}
 
-	return '<code class="code" title="Code"><pre>' . $code . '</pre></code>';
+	return '<pre class="code" title="Code">' . $code . '</pre>';
 }
 
 function _markup_parse_code(&$markup, &$placeholders)
@@ -41,7 +44,7 @@ function _markup_parse_code(&$markup, &$placeholders)
 	}
 }
 
-function _markup_parse_links(&$markup, $header_offset, &$placeholders)
+function _markup_parse_links(&$markup, $header_offset, &$placeholders, $flags)
 {
 	$count = 0;
 
@@ -52,7 +55,7 @@ function _markup_parse_links(&$markup, $header_offset, &$placeholders)
 
 		$target = $host !== null && $host != parse_url(ROOT_DIR_URI, PHP_URL_HOST) ? ' target="_blank"' : '';
 
-		$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $match[1] . '">' . markup_parse($match[2], $header_offset, $placeholders) . '</a>';
+		$placeholders[$placeholder] = '<a rel="nofollow"' . $target . ' href="' . $match[1] . '">' . markup_parse($match[2], $header_offset, $placeholders, $flags | EXCLUDE_ANCHORS) . '</a>';
 
 		$markup = str_replace_once($match[0], $placeholder, $markup);
 	}
@@ -397,12 +400,10 @@ function _markup_parse_membersonly(&$markup, &$placeholders)
  *
  * @result a string with all the markup replaced by html
  */
-function markup_parse($markup, $header_offset = 0, &$placeholders = null)
+function markup_parse($markup, $header_offset = 0, &$placeholders = null, $flags = 0)
 {
 	if (!$placeholders)
 		$placeholders = array();
-
-	$markup .= "\n";
 
 	/* Just remove because the header isn't used in general view */
 	$markup = preg_replace('/\[h1\](.+?)\[\/h1\]\s*/ism', '', $markup);
@@ -433,7 +434,8 @@ function markup_parse($markup, $header_offset = 0, &$placeholders = null)
 	_markup_parse_fontawesome($markup, $placeholders);
 
 	/* Filter [url] */
-	_markup_parse_links($markup, $header_offset, $placeholders);
+	if (!($flags & EXCLUDE_ANCHORS))
+		_markup_parse_links($markup, $header_offset, $placeholders, $flags);
 
 	/* Replace scary stuff and re-replace not so very scary stuff */
 	$markup = htmlspecialchars($markup, ENT_NOQUOTES);
@@ -448,11 +450,11 @@ function markup_parse($markup, $header_offset = 0, &$placeholders = null)
 	/* Parse spaces */
 	_markup_parse_spaces($markup);
 
-	/* Parse bare e-mails */
-	_markup_parse_emails($markup, $placeholders);
-
-	/* Parse bare links */
-	_markup_parse_urls($markup, $placeholders);
+	/* Parse bare e-mails and urls */
+	if (!($flags & EXCLUDE_ANCHORS)) {
+		_markup_parse_emails($markup, $placeholders);
+		_markup_parse_urls($markup, $placeholders);
+	}
 
 	/* Parse simple tags */
 	_markup_parse_simple($markup);
