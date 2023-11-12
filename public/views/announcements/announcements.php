@@ -3,7 +3,7 @@ require_once 'src/framework/markup.php';
 require_once 'src/framework/form.php';
 require_once 'src/models/DataModelAnnouncement.php';
 
-class AnnouncementsView extends CRUDFormView
+class AnnouncementsView extends CRUDView
 {
 	public function get_committee_options(DataIter $iter = null)
 	{

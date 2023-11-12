@@ -1,6 +1,6 @@
 <?php
 
-class PollsView extends CRUDFormView
+class PollsView extends CRUDView
 {
     //
 }

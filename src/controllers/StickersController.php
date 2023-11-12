@@ -7,9 +7,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints as Assert;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class StickersController extends \ControllerCRUDForm
+class StickersController extends \ControllerCRUD
 {
 	protected $view_name = 'stickers';
 	protected $form_type = StickerType::class;
@@ -21,29 +21,24 @@ class StickersController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters['id'] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('stickers', $parameters);
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
 		$iter['toegevoegd_op'] = date('Y-m-d');
 		$iter['toegevoegd_door'] = get_identity()->get('id');
 
-		return parent::_process_create($iter, $form);
+		return parent::_create($iter, $form);
 	}
 
 	public function new_iter()

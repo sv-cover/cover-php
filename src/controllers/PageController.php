@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Form\PageType;
 use Symfony\Component\Form\FormInterface;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class PageController extends \ControllerCRUDForm
+class PageController extends \ControllerCRUD
 {
 	protected $view_name = 'page';
 	protected $form_type = PageType::class;
@@ -30,12 +30,9 @@ class PageController extends \ControllerCRUDForm
 		return $iter;
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [];
-
-		if ($json)
-			$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
 
 		if ($view === 'create')
 			return $this->generate_url('page.create', $parameters);
@@ -56,7 +53,7 @@ class PageController extends \ControllerCRUDForm
 		return $this->generate_url('page', $parameters);
 	}
 
-	protected function _process_update(\DataIter $iter, FormInterface $form)
+	protected function _update(\DataIter $iter, FormInterface $form)
 	{
 		$content_fields = [
 			'cover_image_url' => 'photo',
@@ -67,7 +64,7 @@ class PageController extends \ControllerCRUDForm
 		$old_iter = $this->model->get_iter($iter['id']);
 
 		// Update as usual
-		$success = parent::_process_update($iter, $form);
+		$success = parent::_update($iter, $form);
 
 		// If the update succeeded (i.e. _validate came through positive)
 		// send a notification email to those who are interested.
@@ -183,6 +180,9 @@ class PageController extends \ControllerCRUDForm
 			return $this->run_index();
 		} else if ($route == 'slug') {
 			$iter = $this->model->get_iter_from_slug($this->get_parameter('_route_params')['slug']);
+			if (!$iter) {
+				throw new \NotFoundException();
+			}
 			return $this->run_read($iter);
 		} else {
 			return parent::run_impl();

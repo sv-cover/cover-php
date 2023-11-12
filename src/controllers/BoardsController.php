@@ -4,9 +4,9 @@ namespace App\Controller;
 use App\Form\BoardType;
 use Symfony\Component\Form\FormInterface;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class BoardsController extends \ControllerCRUDForm
+class BoardsController extends \ControllerCRUD
 {
 	protected $view_name = 'boards';
 	protected $form_type = BoardType::class;
@@ -18,19 +18,14 @@ class BoardsController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters['id'] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('boards', $parameters);
 	}
@@ -43,7 +38,7 @@ class BoardsController extends \ControllerCRUDForm
 			return __('Boards');
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
 		$editable_model = get_model('DataModelEditable');
 
@@ -55,10 +50,10 @@ class BoardsController extends \ControllerCRUDForm
 
 		$iter['page_id'] = $editable_model->insert($page, true);
 
-		return parent::_process_create($iter, $form);
+		return parent::_create($iter, $form);
 	}
 
-	protected function _process_update(\DataIter $iter, FormInterface $form)
+	protected function _update(\DataIter $iter, FormInterface $form)
 	{
 
 		$editable_model = get_model('DataModelEditable');
@@ -68,7 +63,7 @@ class BoardsController extends \ControllerCRUDForm
 	
 		$editable_model->update($editable);
 
-		return parent::_process_update($iter, $form);
+		return parent::_update($iter, $form);
 	}
 
 	protected function _index()

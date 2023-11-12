@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
 use App\Form\CommitteeType;
 use App\Form\DataTransformer\IntToBooleanTransformer;
@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 
-class CommitteesController extends \ControllerCRUDForm
+class CommitteesController extends \ControllerCRUD
 {	
 	protected $_var_id = 'commissie';
 
@@ -26,19 +26,14 @@ class CommitteesController extends \ControllerCRUDForm
 		parent::__construct($request, $router);
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
 		];
 
 		if (isset($iter))
-		{
 			$parameters[$this->_var_id] = $iter['login'];
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
 
 		return $this->generate_url('committees', $parameters);
 	}
@@ -49,9 +44,9 @@ class CommitteesController extends \ControllerCRUDForm
 		return $this->model->new_iter(['type' => \DataModelCommissie::TYPE_COMMITTEE]);
 	}
 
-	protected function _process_create(\DataIter $iter, FormInterface $form)
+	protected function _create(\DataIter $iter, FormInterface $form)
 	{
-		if (!parent::_process_create($iter, $form))
+		if (!parent::_create($iter, $form))
 			return false;
 
 		$members = $form['members']->getData();
@@ -61,9 +56,9 @@ class CommitteesController extends \ControllerCRUDForm
 		return true;
 	}
 
-	protected function _process_update(\DataIter $iter, FormInterface $form)
+	protected function _update(\DataIter $iter, FormInterface $form)
 	{
-		if (!parent::_process_update($iter, $form))
+		if (!parent::_update($iter, $form))
 			return false;
 
 		$members = $form['members']->getData();
@@ -72,7 +67,7 @@ class CommitteesController extends \ControllerCRUDForm
 		return true;
 	}
 
-	protected function _process_delete(\DataIter $iter)
+	protected function _delete(\DataIter $iter)
 	{
 		// Some committees already have pages etc. We will mark the committee as hidden.
 		// That way they remain in the history of Cover and could, if needed, be reactivated.
@@ -155,7 +150,7 @@ class CommitteesController extends \ControllerCRUDForm
 		$form->handleRequest($this->get_request());
 
 		if ($form->isSubmitted() && $form->isValid())
-			if ($this->_process_update($iter, $form))
+			if ($this->_update($iter, $form))
 				$success = true;
 			else
 				$form->addError(new FormError(__('Something went wrong while processing the form.')));

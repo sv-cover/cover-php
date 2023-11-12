@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-require_once 'src/framework/controllers/ControllerCRUDForm.php';
+require_once 'src/framework/controllers/ControllerCRUD.php';
 
-class PollCommentsController extends \ControllerCRUDForm
+class PollCommentsController extends \ControllerCRUD
 {
 	protected $view_name = 'pollcomments';
 	protected $form_type = PollCommentType::class;
@@ -54,7 +54,7 @@ class PollCommentsController extends \ControllerCRUDForm
 		return $iter;
 	}
 
-	public function path(string $view, \DataIter $iter = null, bool $json = false)
+	public function path(string $view, \DataIter $iter = null)
 	{
 		$parameters = [
 			'view' => $view,
@@ -65,13 +65,7 @@ class PollCommentsController extends \ControllerCRUDForm
 			return $this->generate_url('poll', ['id' => $this->get_poll()->get_id()]);
 
 		if (isset($iter))
-		{
 			$parameters['id'] = $iter->get_id();
-
-			if ($json)
-				$parameters['_nonce'] = nonce_generate(nonce_action_name($view, [$iter]));
-		}
-
 
 		if ($view === 'create')
 			return $this->generate_url('poll.comment.create', $parameters);
