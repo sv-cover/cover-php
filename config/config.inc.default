@@ -89,5 +89,7 @@ $config = array(
 	'wiki_public_url' => 'https://wiki.svcover.nl/%s',
 
 	// url for merging internal ical with google ical
-	'url_to_external_ical' => 'https://calendar.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics'
+	'url_to_external_ical' => 'https://calendar.google.com/calendar/ical/s16ii08dg06pt83j0mblbnqfrc%40group.calendar.google.com/public/basic.ics',
+
+	'url_to_forum' => 'https://forum.svcover.nl',
 );

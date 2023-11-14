@@ -54,10 +54,10 @@ class RedirectController extends \Controller
 
 		// Extract flags
 		$allow_external_domains = !empty($parameters['allowExternalDomains']) ? ALLOW_EXTERNAL_DOMAINS : 0;
-		$allow_subdomains = !empty($parameters['allowExternalDomains']) ? ALLOW_SUBDOMAINS : 0;
+		$allow_subdomains = !empty($parameters['allowSubDomains']) ? ALLOW_SUBDOMAINS : 0;
 
 		// Redirect
-		return $this->view->redirect($parameters['path'], $permanent, $allow_external_domains & $allow_subdomains);
+		return $this->view->redirect($parameters['path'], $permanent, $allow_external_domains | $allow_subdomains);
 	}
 
 	public function run_impl()

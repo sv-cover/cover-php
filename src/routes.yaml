@@ -60,6 +60,10 @@ contact:
   defaults:
     id: 17
 
+forum:
+  path: /forum
+  controller: App\Controller\ForumController
+
 join:
   path: /join
   controller: App\Controller\MembershipController
@@ -329,6 +333,9 @@ legacy:
       commissies:
         controller: App\Controller\CommitteesController
         parameters: { _route: committees }
+      forum:
+        controller: App\Controller\ForumController
+        parameters: { _route: forum }
       foto:
         controller: App\Controller\ProfilePictureController
         parameters: { _route: profile_picture }
