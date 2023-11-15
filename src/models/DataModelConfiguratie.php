@@ -73,13 +73,12 @@ class DataModelConfiguratie extends DataModel
 	 */
 	public function set_value($key, $value)
 	{
-		$this->_cache[$key] = $value;
-
 		// Todo: You cannot set a value to null using this set-up
-
 		if (!is_null($this->get_value($key)))
-			$this->db->query_value('UPDATE configuratie SET value = \'' . $this->db->escape_string($value) . '\' WHERE key = \'' . $this->db->escape_string($key) . '\';');
+			$resp = $this->db->update('configuratie', ['value' => $value], 'key = \'' . $this->db->escape_string($key) . '\';');
 		else
-			$this->db->query_value('INSERT INTO configuratie (key, value) VALUES(\'' . $this->db->escape_string($key) . '\', \'' . $this->db->escape_string($value) . '\')');
+			$resp = $this->db->insert('configuratie', ['key' => $key, 'value' => $value]);
+
+		$this->_cache[$key] = $value;
 	}
 }
