@@ -71,9 +71,9 @@ $config = array(
 	'secretary_shared_secret' => 'p5mWhn1Ojmsi51w9QcNC',
 
 	// For the website calling the KAST API to read the current credit balance
-	'kast_root' => 'https://kast.svcover.nl/api',
-	'kast_app' => '',
-	'kast_secret' => '',
+	'kast_root' => 'https://kast.svcover.nl/api/',
+	'kast_user' => '',
+	'kast_password' => '',
 
 	// For the website calling Incassomatic to fetch the current balance and contract status.
 	'incassomatic_root' => 'https://incasso.svcover.nl/api/',

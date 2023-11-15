@@ -1,7 +1,6 @@
 {
     "require": {
         "maennchen/zipstream-php": "^2.2",
-        "99designs/http-signatures": "^4.0",
         "jeroendesloovere/vcard": "~1.2",
         "twig/twig": "^2.12",
         "giggsey/libphonenumber-for-php": "^8.13",

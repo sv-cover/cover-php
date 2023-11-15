@@ -133,7 +133,7 @@ class ProfileView extends View
 			$history = $kast_api->getHistory($iter['id'], 20);
 			return $this->render('kast_tab.twig', compact('iter', 'status', 'history'));
 		} catch (Exception|Error $exception) {
-			var_dump('blorgh');
+			sentry_report_exception($exception);
 			return $this->render('kast_tab_exception.twig', compact('iter', 'exception'));
 		}
 	}

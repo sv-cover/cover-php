@@ -4,66 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fc3d0c7fb6cabc4c571caac4739dd93",
+    "content-hash": "e963c26b0cea4f3704d4c6bf97714de5",
     "packages": [
-        {
-            "name": "99designs/http-signatures",
-            "version": "4.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/99designs/http-signatures-php.git",
-                "reference": "acb9d2e4f4661de9445fa5930b49a259bfd6175b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/99designs/http-signatures-php/zipball/acb9d2e4f4661de9445fa5930b49a259bfd6175b",
-                "reference": "acb9d2e4f4661de9445fa5930b49a259bfd6175b",
-                "shasum": ""
-            },
-            "require": {
-                "paragonie/random_compat": "^1.0|^2.0",
-                "php": ">=5.5",
-                "psr/http-message": "^1.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.11",
-                "guzzlehttp/psr7": "^1.2",
-                "phpunit/phpunit": "~4.8",
-                "symfony/http-foundation": "~2.8|~3.0",
-                "symfony/psr-http-message-bridge": "^1.0",
-                "zendframework/zend-diactoros": "^1.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "HttpSignatures\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paul Annesley",
-                    "email": "paul@99designs.com"
-                }
-            ],
-            "description": "Sign and verify HTTP messages",
-            "keywords": [
-                "hmac",
-                "http",
-                "https",
-                "signature",
-                "signed",
-                "signing"
-            ],
-            "support": {
-                "issues": "https://github.com/99designs/http-signatures-php/issues",
-                "source": "https://github.com/99designs/http-signatures-php/tree/master"
-            },
-            "time": "2017-05-04T01:36:17+00:00"
-        },
         {
             "name": "behat/transliterator",
             "version": "v1.5.0",
@@ -889,60 +831,6 @@
                 "source": "https://github.com/odolbeau/phone-number-bundle/tree/v3.9.2"
             },
             "time": "2023-07-06T18:41:41+00:00"
-        },
-        {
-            "name": "paragonie/random_compat",
-            "version": "v2.0.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "96c132c7f2f7bc3230723b66e89f8f150b29d5ae"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/96c132c7f2f7bc3230723b66e89f8f150b29d5ae",
-                "reference": "96c132c7f2f7bc3230723b66e89f8f150b29d5ae",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "*"
-            },
-            "suggest": {
-                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/random.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paragon Initiative Enterprises",
-                    "email": "security@paragonie.com",
-                    "homepage": "https://paragonie.com"
-                }
-            ],
-            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
-            "keywords": [
-                "csprng",
-                "polyfill",
-                "pseudorandom",
-                "random"
-            ],
-            "support": {
-                "email": "info@paragonie.com",
-                "issues": "https://github.com/paragonie/random_compat/issues",
-                "source": "https://github.com/paragonie/random_compat"
-            },
-            "time": "2022-02-16T17:07:03+00:00"
         },
         {
             "name": "php-http/client-common",

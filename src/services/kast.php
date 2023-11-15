@@ -8,71 +8,81 @@ class KastAPI
 
 	private $api_app_secret;
 
-	private $context;
+	private $token;
 
-	public function __construct($api_root, $app_id, $secret)
+	public function __construct($api_root, $user, $password)
 	{
 		$this->api_root = $api_root;
-		$this->api_app_id = $app_id;
-		$this->api_app_secret = $secret;
 
-		$this->context = new \HttpSignatures\Context([
-			'keys' => [$this->api_app_id => $this->api_app_secret],
-			'algorithm' => 'hmac-sha256',
-			'headers' => ['(request-target)', 'Host', 'Date', 'X-App'],
-		]);
+		$config = get_model('DataModelConfiguratie');
+		$this->token = json_decode($config->get_value('kast_token', null));
+
+		if (!$this->isValidToken($this->token)) {
+			$this->token = $this->requestToken($user, $password);
+			$config->set_value('kast_token', json_encode($this->token));
+		}
 	}
 
 	public function getAccount($cover_id)
 	{
-		return $this->_request(sprintf('%s/users/%d/', $this->api_root, $cover_id));
+		return $this->getJSON(sprintf('users/%d/', $cover_id));
 	}
 
 	public function getStatus($cover_id)
 	{
-		return $this->_request(sprintf('%s/users/%d/status/', $this->api_root, $cover_id));
+		return $this->getJSON(sprintf('users/%d/status/', $cover_id));
 	}
 
 	public function getHistory($cover_id, $limit=10)
 	{
-		return $this->_request(sprintf('%s/users/%d/history/?limit=%d', $this->api_root, $cover_id, $limit));
+		return $this->getJSON(sprintf('users/%d/history/?limit=%d', $cover_id, $limit));
 	}
 
-	protected function _request($url)
+	protected function isValidToken($token)
 	{
-		global $http_response_header;
-		$headers = array(
-			'Date' => gmdate('D, d M Y H:i:s T'),
-			'Host' => parse_url($url, PHP_URL_HOST),
-			'X-App' => $this->api_app_id
-		);
+		return isset($token->expiry) && new \DateTime() < new \DateTime($token->expiry);
+	}
 
-		$sign_url = parse_url($url, PHP_URL_PATH);
-		if ($query = parse_url($url, PHP_URL_QUERY))
-			$sign_url .= '?' . $query;
-
-		$message = \Symfony\Component\HttpFoundation\Request::create($sign_url, 'GET');
-		$message->headers->replace($headers);
-
-		$this->context->signer()->sign($message);
-
-		$headers['Authorization'] = $message->headers->get('Authorization');
-
+	protected function requestToken($user, $password)
+	{
 		$options = array(
 			'http' => array(
-				'header'  => implode("", array_map(
-					function($key, $value) {
-						return sprintf("%s: %s\r\n", $key, $value);
-					},
-					array_keys($headers),
-					array_values($headers))),
-				'method'  => 'GET',
+				'header'  => "Authorization: Basic " . base64_encode("$user:$password") . "\r\n",
+				'method'  => 'POST',
 				'ignore_errors' => true
 			)
 		);
 		$context  = stream_context_create($options);
 
-		$response = file_get_contents($url, false, $context);
+		$response = file_get_contents($this->api_root . 'auth/login/', false, $context);
+
+		if (empty($response))
+			throw new RuntimeException('Could not request new token: empty response');
+
+		$data = json_decode($response);
+
+		if (isset($data->detail))
+			throw new RuntimeException('Could not request new token: ' . $data->detail);
+
+		return $data;
+	}
+
+	protected function getJSON($url)
+	{
+		try {
+			$options = array(
+				'http' => array(
+					'header'  => "Authorization: Token " . $this->token->token . "\r\n",
+					'method'  => 'GET',
+					'ignore_errors' => true
+				)
+			);
+			$context  = stream_context_create($options);
+
+			$response = file_get_contents($this->api_root . $url, false, $context);
+		} catch (ErrorException $e) {
+			throw new RuntimeException('Could not send request to host.', 0, $e);
+		}
 
 		if (!preg_match('/^HTTP\/1\.\d\s(\d+)\s/', $http_response_header[0], $match))
 			throw new RuntimeException('Could not get HTTP STATUS response header');
@@ -85,9 +95,9 @@ class KastAPI
 
 		$data = json_decode($response);
 
-		if ($data === null)
+		if (!$data)
 			throw new RuntimeException('Could not decode response as JSON');
-
+		
 		return $data;
 	}
 }
@@ -99,8 +109,8 @@ function get_kast()
 	if (!$kast)
 		$kast = new KastAPI(
 			get_config_value('kast_root'),
-			get_config_value('kast_app'),
-			get_config_value('kast_secret'));
+			get_config_value('kast_user'),
+			get_config_value('kast_password'));
 
 	return $kast;
 }
