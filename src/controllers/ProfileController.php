@@ -29,30 +29,14 @@ class ProfileController extends \Controller
 {
 	protected $view_name = 'profile';
 
+	protected $policy;
+
+
 	public function __construct($request, $router)
 	{
 		$this->model = get_model('DataModelMember');
 
 		$this->policy = get_policy($this->model);
-
-		$this->sizes = [
-			'adres' => 255,
-			'postcode' => 7,
-			'woonplaats' => 255,
-			'email' => 255,
-			'telefoonnummer' => 20,
-			'avatar' => 100,
-			'homepage' => 255,
-			'nick' => 50,
-			'onderschrift' => 200
-		];
-
-		$this->required = [
-			'adres',
-			'postcode',
-			'woonplaats',
-			'email'
-		];
 
 		parent::__construct($request, $router);
 	}

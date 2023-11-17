@@ -31,6 +31,8 @@ class MailingListsController extends \ControllerCRUD
 
 	protected $form_type = MailinglistType::class;
 
+	protected $member_model;
+
 	public function __construct(Request $request = null, RouterInterface $router = null)
 	{
 		$this->model = get_model('DataModelMailinglist');

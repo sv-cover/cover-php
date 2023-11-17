@@ -262,11 +262,13 @@ class RegistrationType extends AbstractType
 		;
 
 		// Define some transformers to ensure cleaner input
-		$builder->get('postal_code')->addModelTransformer(new CallbackTransformer('strtoupper', 'strtoupper'));
-		$builder->get('membership_student_number')->addModelTransformer(new CallbackTransformer(fn($v) => $v, fn($v) => ltrim($v, 'sS')));
-		$builder->get('iban')->addModelTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
-		$builder->get('bic')->addModelTransformer(new CallbackTransformer('strtoupper', fn($v) => str_replace(' ', '', strtoupper($v))));
-		$builder->get('spam')->addModelTransformer(new CallbackTransformer('strtolower', 'strtolower'));
+		$strtoupper = fn($v) => strtoupper($v ?? '');
+		$strtolower = fn($v) => strtolower($v ?? '');
+		$builder->get('postal_code')->addModelTransformer(new CallbackTransformer($strtoupper, $strtoupper));
+		$builder->get('membership_student_number')->addModelTransformer(new CallbackTransformer(fn($v) => $v, fn($v) => ltrim($v ?? '', 'sS')));
+		$builder->get('iban')->addModelTransformer(new CallbackTransformer($strtoupper, fn($v) => str_replace(' ', '', strtoupper($v ?? ''))));
+		$builder->get('bic')->addModelTransformer(new CallbackTransformer($strtoupper, fn($v) => str_replace(' ', '', strtoupper($v ?? ''))));
+		$builder->get('spam')->addModelTransformer(new CallbackTransformer($strtolower, $strtolower));
 		$builder->get('birth_date')->addModelTransformer(new StringToDateTimeTransformer(null, null, 'Y-m-d'));
 	}
 

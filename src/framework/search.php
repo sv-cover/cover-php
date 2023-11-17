@@ -19,7 +19,7 @@ function text_excerpt($text, $keywords, $radius = 30,
 	$glue = '<span class="glue">...</span>')
 {
 	// Convert text to non-utf8 as the word bound do not work with those characters
-	$text = utf8_decode($text);
+	$text = mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8');
 
 	// Remove newlines and extra spaces from text
 	$text = preg_replace('/\s+/m', ' ', $text);
@@ -72,7 +72,7 @@ function text_excerpt($text, $keywords, $radius = 30,
 	if (!empty($chunks) && end($chunks)[1] < mb_strlen($text))
 		$excerpts[] = '';
 
-	return utf8_encode(implode($glue, $excerpts));
+	return mb_convert_encoding(implode($glue, $excerpts), 'UTF-8', 'ISO-8859-1');
 }
 
 function find_word_bound($text, $cursor)

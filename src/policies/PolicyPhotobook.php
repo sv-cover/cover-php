@@ -119,7 +119,7 @@ class PolicyPhotobook implements Policy
 			&& $book->get_id() 
 			
 			// which is not artificial (faces, likes) and has photos
-			&& ctype_digit($book->get_id()) && $book['num_books'] > 0;
+			&& ctype_digit((string) $book->get_id()) && $book['num_books'] > 0;
 	}
 
 	public function get_access_level()

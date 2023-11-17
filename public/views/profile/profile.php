@@ -191,7 +191,7 @@ class ProfileView extends View
 			if ($y + $size > $imagick->getImageHeight())
 				$y = 0;
 
-			$imagick->cropImage($size, $size, 0, $y);
+			$imagick->cropImage($size, $size, 0, intval($y));
 			$imagick->scaleImage(96, 0);
 
 			$imagick->setImageFormat('jpeg');

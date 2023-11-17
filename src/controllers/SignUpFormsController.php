@@ -12,6 +12,10 @@ class SignUpFormsController extends \Controller
 {
 	protected $view_name = 'signup';
 
+	protected $field_model;
+	protected $form_model;
+	protected $entry_model;
+
 	public function __construct($request, $router)
 	{
 		$this->form_model = get_model('DataModelSignUpForm');

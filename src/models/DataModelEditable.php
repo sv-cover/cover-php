@@ -80,7 +80,7 @@ class DataIterEditable extends DataIter implements SearchResult
 	{
 		$content = $this->get_locale_content($language);
 
-		return preg_match('/\[h1\](.+?)\[\/h1\]\s*/ism', $content, $match)
+		return isset($content) && preg_match('/\[h1\](.+?)\[\/h1\]\s*/ism', $content, $match)
 			? $match[1]
 			: $this->get('titel');
 	}

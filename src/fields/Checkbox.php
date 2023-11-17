@@ -13,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Checkbox implements \SignUpFieldType
 {
+	public $name;
+
 	public $description;
 
 	public $required;

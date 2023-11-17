@@ -336,27 +336,27 @@ abstract class DataIter implements JsonSerializable, ArrayAccess
 	}
 
 	/* ArrayAccess */
-	public function offsetGet($offset)
+	public function offsetGet($offset): mixed
 	{
 		return $this->get($offset);
 	}
 
-	public function offsetSet($offset, $value)
+	public function offsetSet($offset, $value): void
 	{
-		return $this->set($offset, $value);
+		$this->set($offset, $value);
 	}
 
-	public function offsetExists($offset)
+	public function offsetExists($offset): bool
 	{
 		return static::has_field($offset) || static::has_getter($offset) || $this->has_value($offset);
 	}
 
-	public function offsetUnset($offset)
+	public function offsetUnset($offset): void
 	{
-		return $this->unset_field($offset);
+		$this->unset_field($offset);
 	}
 
-	public function jsonSerialize()
+	public function jsonSerialize(): mixed
 	{
 		return $this->data;
 	}

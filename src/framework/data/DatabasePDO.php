@@ -274,7 +274,7 @@ class DatabasePDO
 	 */
 	public function escape_string($s)
 	{
-		return substr($this->resource->quote($s), 1, -1);
+		return substr($this->resource->quote($s ?? ''), 1, -1);
 	}
 
 	/**
@@ -282,7 +282,7 @@ class DatabasePDO
 	 */
 	public function quote($s)
 	{
-		return $this->resource->quote($s);
+		return $this->resource->quote($s ?? '');
 	}
 	
 	/**

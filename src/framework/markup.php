@@ -402,6 +402,9 @@ function _markup_parse_membersonly(&$markup, &$placeholders)
  */
 function markup_parse($markup, $header_offset = 0, &$placeholders = null, $flags = 0)
 {
+	if (empty($markup))
+		return '';
+
 	if (!$placeholders)
 		$placeholders = array();
 

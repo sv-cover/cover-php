@@ -133,7 +133,7 @@ class DataIterPhoto extends DataIter
 
 		$exif_data = $this->get_exif_data();
 
-		return strftime('%Y-%m-%d %H:%M:%S', isset($exif_data['DateTimeOriginal'])
+		return date('Y-m-d H:i:s', isset($exif_data['DateTimeOriginal'])
 			? strtotime($exif_data['DateTimeOriginal'])
 			: $exif_data['FileDateTime']);
 	}

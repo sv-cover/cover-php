@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Choice implements \SignUpFieldType
 {
+	public $name;
+
 	public $description;
 
 	public $options;
@@ -158,12 +160,12 @@ class Choice implements \SignUpFieldType
 
 	public function get_form_data($value)
 	{
-		return [$this->name => (array) json_decode($value, true)];
+		return [$this->name => (array) json_decode($value ?? '', true)];
 	}
 
 	public function export($value)
 	{
-		$options = (array) json_decode($value, true);
+		$options = (array) json_decode($value ?? '', true);
 		return [$this->name => implode('; ', $options)];
 	}
 }

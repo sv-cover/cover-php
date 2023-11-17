@@ -110,7 +110,7 @@ class EventType extends AbstractType
 				return sprintf('https://www.facebook.com/events/%s/', $value);
 			},
 			function ($value) {
-				if (empty(trim($value)))
+				if (empty($value) || empty(trim($value)))
 					return null;
 
 				$result = preg_match('/^https:\/\/www\.facebook\.com\/events\/(\d+)\//', $value, $matches);

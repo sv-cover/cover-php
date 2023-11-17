@@ -69,7 +69,7 @@ function format_string($format, $params)
 // almost dead: only used in framework/member.php:member_full_name
 function optional($value)
 {
-	return strlen($value) > 0 ? ' ' . $value : '';
+	return !empty($value) ? ' ' . $value : '';
 }
 
 
@@ -342,7 +342,7 @@ function set_domain_cookie($name, $value, $cookie_time = 0)
 		$options['samesite'] = 'None';
 	}
 
-	setcookie($name, $value, $options);
+	setcookie($name, $value ?? '', $options);
 
 	if ($cookie_time === 0 || $cookie_time > time())
 		$_COOKIE[$name] = $value;
@@ -618,6 +618,8 @@ function is_safe_redirect($redirect)
 
 function get_filemanager_url($path, $width=null)
 {
+	if (empty($path))
+		return '';
 	$filemanager_root = get_config_value('filemanager_root', 'https://filemanager.svcover.nl');
 	$resize_exts = get_config_value('filemanager_image_resize_extensions', ['jpg', 'jpeg', 'png']);
 	if (!$width || !in_array(pathinfo($path, PATHINFO_EXTENSION), $resize_exts))

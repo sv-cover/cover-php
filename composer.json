@@ -1,7 +1,7 @@
 {
     "require": {
         "maennchen/zipstream-php": "^2.2",
-        "jeroendesloovere/vcard": "~1.2",
+        "jeroendesloovere/vcard": "^1.7",
         "twig/twig": "^2.12",
         "giggsey/libphonenumber-for-php": "^8.13",
         "symfony/routing": "^5.2",

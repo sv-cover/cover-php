@@ -250,7 +250,7 @@ class PhotoBooksController extends \Controller
 					'id' => $id,
 					'description' => (string) $description,
 					'path' => $file_path,
-					'created_on' => strftime('%Y-%m-%d %H:%M:%S',
+					'created_on' => date('Y-m-d H:i:s',
 						isset($exif_data['DateTimeOriginal'])
 							? strtotime($exif_data['DateTimeOriginal'])
 							: $exif_data['FileDateTime']),

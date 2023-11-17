@@ -86,6 +86,7 @@ class MailinglistType extends AbstractType
 		;
 
 		// Ensure list address is always lowercase. We only need to reverse-transform, but it doesn't hurt to do it both ways…
-		$builder->get('adres')->addModelTransformer(new CallbackTransformer('strtolower', 'strtolower'));
+		$strtolower = fn($v) => strtolower($v ?? '');
+		$builder->get('adres')->addModelTransformer(new CallbackTransformer($strtolower, $strtolower));
 	}
 }

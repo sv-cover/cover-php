@@ -20,9 +20,9 @@ function filename_from_exif($photo)
 
 	if (isset($data['DateTimeOriginal'])) {
 		$timestamp = strtotime($data['DateTimeOriginal']);
-		return strftime('%Y%m%d-%H%M%S.jpg', $timestamp);
+		return date('Ymd-His', $timestamp) . '.jpg';
 	} elseif (isset($data['FileDateTime'])) {
-		return strftime('%Y%m%d-%H%M%S.jpg', $data['FileDateTime']);
+		return date('Ymd-His', $data['FileDateTime']) . '.jpg';
 	} else {
 		return normalize_filename(basename($photo));
 	}

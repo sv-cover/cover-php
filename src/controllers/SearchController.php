@@ -92,7 +92,7 @@ class SearchController extends \Controller
 
 		// Sort them by relevance
 		usort($results, function(\SearchResult $a, \SearchResult $b) {
-			return $a->get_search_relevance() < $b->get_search_relevance();
+			return $b->get_search_relevance() <=> $a->get_search_relevance();
 		});
 
 		$timings['_sorting'] = microtime(true) - $start;

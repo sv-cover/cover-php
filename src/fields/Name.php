@@ -19,6 +19,8 @@ class Name implements \SignUpFieldType
 
 	public $required;
 
+	public $autofill;
+
 	private $_form;
 
 	public function __construct($name, array $configuration)

@@ -51,7 +51,7 @@ class MembershipController extends \Controller
 		$data = json_decode($row['data'], true);
 
 		$data['confirmation_code'] = $confirmation_code;
-		$data['name'] = $data['first_name'] . (strlen($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
+		$data['name'] = $data['first_name'] . (!empty($data['family_name_preposition']) ? ' ' . $data['family_name_preposition'] : '') . ' ' . $data['family_name'];
 
 		$email = parse_email_object('join_administratie.txt', $data);
 		$email->send('administratie@svcover.nl');

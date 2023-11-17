@@ -69,7 +69,7 @@ class SecretaryAPI
 
 	protected function isValidToken($user_token_pair)
 	{
-		if (strpos($user_token_pair, ':') === false)
+		if (empty($user_token_pair) || strpos($user_token_pair, ':') === false)
 			return false;
 
 		list($user, $token) = explode(':', $user_token_pair, 2);

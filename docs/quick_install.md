@@ -14,7 +14,7 @@ sudo apt upgrade
 Install PHP (with extensions):
 
 ```bash
-sudo apt install php php-cli php-pgsql php-curl php-mbstring php-zip php-bcmath php-xml
+sudo apt install php php-cli php-pgsql php-curl php-mbstring php-zip php-bcmath php-xml php-intl
 ```
 
 Install Postgres:

@@ -35,14 +35,14 @@ class DataIterMailinglist extends DataIter
 
 	public function sends_email_on_subscribing()
 	{
-		return strlen($this['on_subscription_subject']) > 0
-			&& strlen($this['on_subscription_message']) > 0;
+		return !empty($this['on_subscription_subject'])
+			&& !empty($this['on_subscription_message']);
 	}
 
 	public function sends_email_on_first_email()
 	{
-		return strlen($this['on_first_email_subject']) > 0
-			&& strlen($this['on_first_email_message']) > 0;
+		return !empty($this['on_first_email_subject'])
+			&& !empty($this['on_first_email_message']);
 	}
 
 	public function get_subscriptions()
