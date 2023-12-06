@@ -1,0 +1,2 @@
+ALTER TABLE foto_boeken
+ALTER COLUMN titel TYPE VARCHAR(100);

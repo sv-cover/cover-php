@@ -20,7 +20,7 @@ class PhotoBookType extends AbstractType
 				'label' => __('Name'),
 				'constraints' => [
 					new Assert\NotBlank(),
-					new Assert\Length(['max' => 255]),
+					new Assert\Length(['max' => 100]),
 				],
 			])
 			->add('date', DateType::class, [
